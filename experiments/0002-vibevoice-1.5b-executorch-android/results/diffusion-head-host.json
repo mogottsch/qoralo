@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "component": "diffusion_head_cfg_prediction",
+  "status": "passed",
+  "source_revision": "6dd49cb7200c0367205a5f1e650244259e9e423d",
+  "model_revision": "c00898d257e6b46004e3e2866a47534085fb685a",
+  "fixture": {
+    "provenance": "first real diffusion-head invocation from locked CPU reference",
+    "seed": 42,
+    "cfg_scale": 1.3,
+    "timestep": {
+      "shape": [
+        1
+      ],
+      "dtype": "float32",
+      "numel": 1,
+      "sha256": "b438fd3a67fa223f053f24183a08ed2b94fd3d11d304e084199fe97ca190cf3d",
+      "finite": true,
+      "min": 999.0,
+      "max": 999.0,
+      "mean": 999.0
+    },
+    "expected_output_sha256": "acb1ac6bf78bdc9696f31ba2ffcbffe50dd18ab3ac189cc282d4943129a65b0b",
+    "deterministic_rerun_all_hashes_match": true,
+    "capture_wall_seconds": 31.901062636999995,
+    "capture_peak_rss_kib": 13191072
+  },
+  "runtime": {
+    "backend": "xnnpack",
+    "precision": "fp32",
+    "versions": {
+      "python": "3.11.13",
+      "torch": "2.11.0+cpu",
+      "executorch": "1.2.0"
+    },
+    "pte_bytes": 493152000,
+    "pte_sha256": "084e38749c38f92669ba816fcb9f2a71a7bdc47793b7de30e7f4554b46ab5b6d",
+    "export_wall_seconds": 14.167342024999016,
+    "export_peak_rss_kib": 2055000,
+    "load_seconds": 0.00018654399900697172,
+    "inference_seconds": 0.033037413000784,
+    "peak_rss_kib": 1015112
+  },
+  "comparison": {
+    "output_shape": [
+      1,
+      64
+    ],
+    "max_abs_error": 1.2218952178955078e-06,
+    "mean_abs_error": 3.7190329749137163e-07,
+    "atol": 1e-05,
+    "rtol": 0.0001,
+    "allclose": true
+  },
+  "abi": {
+    "inputs": [
+      "noisy_latent",
+      "timestep",
+      "positive_condition",
+      "negative_condition"
+    ],
+    "output": "cfg_guided_v_prediction",
+    "fixed_shapes": [
+      [
+        1,
+        64
+      ],
+      [
+        1
+      ],
+      [
+        1,
+        1536
+      ],
+      [
+        1,
+        1536
+      ]
+    ],
+    "dtype": "float32",
+    "cfg_scale": 1.3
+  },
+  "scope": {
+    "included": "prediction head plus classifier-free guidance combine",
+    "excluded": "DPM scheduler update and ten-step loop"
+  },
+  "warnings": [
+    "torchao optional CUTLASS and MXFP8 libraries did not load; neither is used by this FP32 graph.",
+    "The host CPU-info probe logged unavailable ARM sysfs paths; execution still passed."
+  ],
+  "android": {
+    "status": "not_run",
+    "reason": "Lane B was explicitly prohibited from using the phone during this run."
+  }
+}

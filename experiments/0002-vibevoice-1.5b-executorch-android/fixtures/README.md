@@ -1,4 +1,6 @@
-# Acoustic-decoder fixtures
+# Component fixtures
+
+## Acoustic decoder
 
 Raw fixture tensors are generated under the ignored directory:
 
@@ -36,3 +38,26 @@ python experiments/0001-vibevoice-1.5b-local-reference/prepare_official_source.p
 ```
 
 The capture reruns the locked CPU/FP32 reference with source revision `6dd49cb7200c0367205a5f1e650244259e9e423d`, model revision `c00898d257e6b46004e3e2866a47534085fb685a`, seed 42, CFG scale 1.3, and Carter/Maya voices. Generated audio remains ignored alongside the tensors.
+
+## Diffusion head
+
+[`diffusion-head-manifest.json`](diffusion-head-manifest.json) describes the first real prediction-head call from the same locked reference. The capture stops immediately after that call, so it retains real positive/negative language-model conditions without running all ten DPM steps or decoding audio. Two consecutive captures produced identical hashes for every tensor.
+
+The fixed FP32 ABI is:
+
+```text
+(noisy_latent [1,64], timestep [1],
+ positive_condition [1,1536], negative_condition [1,1536])
+    -> cfg_guided_v_prediction [1,64]
+```
+
+CFG scale 1.3 is frozen in this correctness graph. Scheduler state, the scheduler update, and the ten-step loop remain native-controller responsibilities. Generate the ignored `fixture.pt`, manifest, and log only in the lane-specific artifact directory:
+
+```bash
+ROOT=/home/moritz/dev/vibevoice-android-spike
+$ROOT/.venv/bin/python \
+  experiments/0002-vibevoice-1.5b-executorch-android/export/capture_diffusion_fixture.py \
+  --source $ROOT/artifacts/source/microsoft-vibevoice \
+  --model $ROOT/artifacts/models/microsoft-VibeVoice-1.5B \
+  --output $ROOT/artifacts/0002/lane-b/diffusion-head
+```

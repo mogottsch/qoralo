@@ -23,7 +23,10 @@ from acoustic_decoder import (  # noqa: E402
 )
 from android_io import read_float32_le, write_float32_le  # noqa: E402
 from diagnose_decoder import collect_probes  # noqa: E402
+from diffusion_head import DiffusionHeadStep  # noqa: E402
+from export_diffusion_step import validated_inputs  # noqa: E402
 from fixture_utils import snapshot_cache, tensor_metadata, tensor_sha256  # noqa: E402
+from speech_connectors import ConnectorRMSNorm, SpeechConnectorJoin  # noqa: E402
 from streaming_android_io import compare_tensor  # noqa: E402
 from streaming_decoder import (  # noqa: E402
     StaticTensorCache,
@@ -74,6 +77,11 @@ class Scale(torch.nn.Module):
 
     def forward(self, value):
         return value * self.factor
+
+
+class FakePredictionHead(torch.nn.Module):
+    def forward(self, noisy_latent, timestep, condition):
+        return noisy_latent + timestep[:, None] + condition[:, :64]
 
 
 class FakeComponentDecoder(torch.nn.Module):
@@ -172,6 +180,43 @@ class ExportHelperTests(unittest.TestCase):
         )
         torch.testing.assert_close(probes["stem"].output, torch.tensor([[[2.0]]]))
         torch.testing.assert_close(probes["head"].output, decoder(torch.ones(1, 1, 1)))
+
+    def test_diffusion_step_uses_documented_cfg_order(self):
+        wrapper = DiffusionHeadStep(FakePredictionHead(), cfg_scale=1.3)
+        noisy = torch.ones(1, 64)
+        timestep = torch.tensor([999.0])
+        positive = torch.full((1, 1536), 2.0)
+        negative = torch.full((1, 1536), -3.0)
+        result = wrapper(noisy, timestep, positive, negative)
+        expected_positive = noisy + timestep[:, None] + positive[:, :64]
+        expected_negative = noisy + timestep[:, None] + negative[:, :64]
+        torch.testing.assert_close(
+            result, expected_negative + 1.3 * (expected_positive - expected_negative)
+        )
+
+    def test_diffusion_fixture_input_validation_is_fixed_shape_fp32(self):
+        fixture = {
+            "noisy_latent": torch.ones(1, 64, dtype=torch.float64),
+            "timestep": torch.ones(1, dtype=torch.int64),
+            "positive_condition": torch.ones(1, 1536),
+            "negative_condition": torch.ones(1, 1536),
+        }
+        inputs = validated_inputs(fixture)
+        self.assertTrue(all(value.dtype == torch.float32 for value in inputs))
+        with self.assertRaisesRegex(SystemExit, "positive_condition shape"):
+            validated_inputs({**fixture, "positive_condition": torch.ones(2, 1536)})
+
+    def test_connector_join_has_tensor_only_additive_abi(self):
+        join = SpeechConnectorJoin(Scale(2), Scale(3))
+        acoustic = torch.ones(1, 64)
+        semantic = torch.ones(1, 64)
+        torch.testing.assert_close(join(acoustic, semantic), torch.full((1, 64), 5.0))
+
+    def test_connector_rms_norm_upcasts_variance(self):
+        norm = ConnectorRMSNorm(2, eps=1e-6)
+        value = torch.tensor([[3.0, 4.0]], dtype=torch.float32)
+        expected = value * torch.rsqrt(value.pow(2).mean(-1, keepdim=True) + 1e-6)
+        torch.testing.assert_close(norm(value), expected)
 
     def test_streaming_cache_abi_uses_stable_sorted_module_names(self):
         fixture = {
