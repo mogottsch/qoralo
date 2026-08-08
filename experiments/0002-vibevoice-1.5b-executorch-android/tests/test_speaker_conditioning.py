@@ -76,6 +76,13 @@ class SpeakerConditioningTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "selects"):
             conditioner(tokens, outputs, masks, ids, wrong_count)
 
+    def test_rejects_non_contiguous_boundary_tensor(self):
+        tokens, outputs, masks, ids, sequence_ids = self.fixture()
+        non_contiguous = tokens.transpose(1, 2).contiguous().transpose(1, 2)
+        self.assertFalse(non_contiguous.is_contiguous())
+        with self.assertRaisesRegex(ValueError, "contiguous"):
+            SpeakerConditioner()(non_contiguous, outputs, masks, ids, sequence_ids)
+
     def test_deterministic_and_input_tensors_are_not_mutated(self):
         args = self.fixture()
         snapshots = tuple(value.clone() for value in args)

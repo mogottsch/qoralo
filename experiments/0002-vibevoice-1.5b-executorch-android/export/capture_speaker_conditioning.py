@@ -101,6 +101,13 @@ def main() -> None:
         conditioned = SpeakerConditioner()(
             token_embeddings, pending["connector_outputs"], pending["prompt_mask"], speaker_ids, sequence_ids
         )
+        # Compare against the pinned model's actual replacement expression,
+        # rather than treating the reusable conditioner as its own reference.
+        pytorch_conditioned = token_embeddings.clone()
+        pytorch_conditioned[sequence_mask.detach().cpu().bool()] = pending["connector_outputs"][
+            pending["prompt_mask"]
+        ]
+        torch.testing.assert_close(conditioned, pytorch_conditioned, rtol=0, atol=0)
         captured.update(pending)
         captured.update({
             "speaker_ids": speaker_ids,
