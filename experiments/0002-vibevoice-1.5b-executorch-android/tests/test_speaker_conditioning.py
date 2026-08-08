@@ -76,6 +76,19 @@ class SpeakerConditioningTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "selects"):
             conditioner(tokens, outputs, masks, ids, wrong_count)
 
+    def test_mask_expansion_rejects_malformed_ids_and_shapes(self):
+        _, _, prompt_mask, speaker_ids, _ = self.fixture()
+        sequence_mask = torch.tensor([[True, True, True]])
+        cases = [
+            (sequence_mask, prompt_mask, torch.tensor([0, 0]), "unique"),
+            (sequence_mask, prompt_mask, torch.tensor([0, -1]), "non-negative"),
+            (sequence_mask.expand(2, -1), prompt_mask, speaker_ids, "batch size 1"),
+            (sequence_mask, prompt_mask[:, :1], speaker_ids, "expected"),
+        ]
+        for sequence_arg, prompt_arg, id_arg, message in cases:
+            with self.subTest(message=message), self.assertRaisesRegex(ValueError, message):
+                sequence_speaker_ids_from_masks(sequence_arg, prompt_arg, id_arg)
+
     def test_rejects_non_contiguous_boundary_tensor(self):
         tokens, outputs, masks, ids, sequence_ids = self.fixture()
         non_contiguous = tokens.transpose(1, 2).contiguous().transpose(1, 2)

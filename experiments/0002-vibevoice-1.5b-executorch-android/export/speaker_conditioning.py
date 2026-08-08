@@ -126,6 +126,9 @@ def sequence_speaker_ids_from_masks(
         raise ValueError("speaker_ids must be rank-1 int64 [N]")
     if prompt_mask.shape[0] != speaker_ids.numel():
         raise ValueError("prompt rows and speaker IDs differ")
+    ids = speaker_ids.tolist()
+    if any(value < 0 for value in ids) or len(ids) != len(set(ids)):
+        raise ValueError("speaker_ids must be unique non-negative values")
     total = int(prompt_mask.sum())
     if int(sequence_mask.sum()) != total:
         raise ValueError(f"sequence mask selects {int(sequence_mask.sum())} positions, expected {total}")
