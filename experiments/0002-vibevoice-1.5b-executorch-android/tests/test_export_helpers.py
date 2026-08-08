@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
@@ -20,6 +21,7 @@ from acoustic_decoder import (  # noqa: E402
     build_decoder_config,
     replace_constant_pad_modules,
 )
+from android_io import read_float32_le, write_float32_le  # noqa: E402
 from diagnose_decoder import collect_probes  # noqa: E402
 from fixture_utils import snapshot_cache, tensor_metadata, tensor_sha256  # noqa: E402
 
@@ -119,6 +121,21 @@ class ExportHelperTests(unittest.TestCase):
         value = torch.ones(1, 64, 1)
         result = NonStreamingDecoderProbe(FakeDecoder())(value)
         torch.testing.assert_close(result, value * 2)
+
+    def test_android_float32_little_endian_round_trip(self):
+        value = torch.tensor([[[-2.5], [0.25]]], dtype=torch.float32)
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "value.f32le"
+            write_float32_le(path, value)
+            result = read_float32_le(path, (1, 2, 1))
+        torch.testing.assert_close(result, value, rtol=0, atol=0)
+
+    def test_android_float32_reader_rejects_wrong_size(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "value.f32le"
+            path.write_bytes(b"short")
+            with self.assertRaisesRegex(ValueError, "Expected 8 bytes"):
+                read_float32_le(path, (2,))
 
     def test_internal_conv_padding_matches_causal_constant_padding(self):
         original = SConv1d("pad-test")

@@ -6,7 +6,7 @@ Export VibeVoice components to ExecuTorch, validate them against experiment 0001
 
 ## Status
 
-In progress. Calls 0 and 1 have been captured from a deterministic rerun. The fixed-shape FP32 non-streaming decoder probe now exports and passes the ExecuTorch 1.2 XNNPACK host runtime. Android execution and the explicit streaming-cache ABI remain.
+In progress. Calls 0 and 1 have been captured from a deterministic rerun. The fixed-shape FP32 non-streaming decoder probe now passes ExecuTorch 1.2/XNNPACK on both the host and Galaxy S23 Ultra. The explicit streaming-cache ABI remains.
 
 ## Current tooling
 
@@ -14,10 +14,13 @@ In progress. Calls 0 and 1 have been captured from a deterministic rerun. The fi
 - [`export/acoustic_decoder.py`](export/acoustic_decoder.py) constructs only `TokenizerDecoder` and reads only its tensors from the sharded checkpoint.
 - [`export/export_decoder.py`](export/export_decoder.py) exports a fixed `[1,64,1]` FP32 non-streaming operator-coverage probe to portable ExecuTorch or XNNPACK, with optional graph diagnostics and the verified causal-padding rewrite.
 - [`export/validate_pte.py`](export/validate_pte.py) executes a PTE with its saved input and writes a structured numerical comparison even when the runtime fails.
+- [`export/android_io.py`](export/android_io.py) serializes the fixed FP32 input and compares raw Android output with the PyTorch reference.
 - [`export/diagnose_decoder.py`](export/diagnose_decoder.py) exports fixed-shape stem, upsampler, stage, and composite micro-probes.
+- [`android/`](android/) contains the minimal debug-only ExecuTorch 1.2 runner and its repeatable ADB harness.
 - [`fixtures/README.md`](fixtures/README.md) documents the ignored fixture layout and capture command.
 - [`fixtures/acoustic-decoder-manifest.json`](fixtures/acoustic-decoder-manifest.json) records the captured shapes, dtypes, stable cache ordering, ranges, and hashes without committing tensors.
 - [`results/acoustic-decoder-host.json`](results/acoustic-decoder-host.json) records the host failure matrix, micro-probe evidence, rewrite, and passing result.
+- [`results/acoustic-decoder-android.json`](results/acoustic-decoder-android.json) records three device runs, memory observations, and the numerical comparison.
 
 The initial `.pte` is deliberately non-streaming. It isolates decoder operator coverage before the upstream Python dictionary cache is replaced by the final explicit tensor-cache ABI. It must not be treated as an audio-equivalent implementation of the captured streaming calls.
 
@@ -71,6 +74,31 @@ artifacts/venv-executorch-1.2/bin/python \
   experiments/0002-vibevoice-1.5b-executorch-android/export/validate_pte.py \
   artifacts/0002/acoustic-decoder-xnnpack.pte
 ```
+
+## FP32 Android result
+
+The matching ExecuTorch 1.2 Android AAR loaded the XNNPACK PTE from app-private storage and produced the expected `[1,1,3200]` FP32 output on the Galaxy S23 Ultra.
+
+| Metric | Result |
+|---|---:|
+| First cold inference | 8.078 s |
+| Subsequent inference | 4.551 s, 4.154 s, 6.628 s |
+| Subsequent median | 4.551 s |
+| Maximum process VmHWM | 1,602,328 KiB (~1.53 GiB) |
+| Maximum observed PSS | 1,401,425 KiB (~1.34 GiB) |
+| Maximum absolute error | `8.50e-10` |
+| Mean absolute error | `1.09e-11` |
+| Comparison | passed (`atol=1e-5`, `rtol=1e-4`) |
+
+All four device runs produced the same raw output SHA-256. The first run followed model transfer and includes cold filesystem/backend effects; later runs benefited from cached pages but still showed meaningful timing variability. Memory is app-reported `VmHWM` plus point-in-time PSS rather than a high-frequency external trace.
+
+Reproduce the Android build, install, app-private transfer, execution, retrieval, and comparison with:
+
+```bash
+experiments/0002-vibevoice-1.5b-executorch-android/android/run-decoder-probe.sh
+```
+
+The 1.375 GB FP32 module is a correctness artifact. The passing result establishes Android operator coverage but does not make this a practical deployment or validate streaming-cache behavior.
 
 ## Deployment design
 

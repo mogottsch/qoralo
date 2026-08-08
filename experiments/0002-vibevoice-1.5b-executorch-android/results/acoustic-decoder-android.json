@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "scope": "FP32 fixed-shape non-streaming acoustic-decoder Android probe",
+  "versions": {
+    "executorch": "1.2.0",
+    "backend": "xnnpack",
+    "android_plugin": "8.7.3"
+  },
+  "device": {
+    "manufacturer": "samsung",
+    "model": "SM-S918B",
+    "device": "dm3q",
+    "soc": "SM8550",
+    "android_release": "16",
+    "api_level": 36,
+    "abi": "arm64-v8a"
+  },
+  "artifacts": {
+    "pte": {
+      "bytes": 1375020420,
+      "sha256": "afe2dc5c4d5517d723c23f42672f306b60cf0ddc3e84b2fd3b2f0b217bbb3105"
+    },
+    "debug_apk": {
+      "bytes": 14939907,
+      "sha256": "3f2b5d62d98bbfc393b1ac8d3f98f112cc664ee9118d97ef57b3deaff6162279"
+    }
+  },
+  "runs": [
+    {
+      "run": 1,
+      "load_seconds": 0.024192292,
+      "inference_seconds": 8.077817653,
+      "memory_kib": {
+        "rss_before": 103904,
+        "rss_after_load": 113204,
+        "rss_after_inference": 1480604,
+        "process_hwm_peak": 1576600,
+        "pss_before": 26672,
+        "pss_after_load": 31135,
+        "pss_after_inference": 1390003,
+        "pss_peak_observed": 1390003
+      },
+      "output_sha256": "eb406e6e8e5532d781c62ca6c1421545f9e308ad6b67b7696af6758831130358"
+    },
+    {
+      "run": 2,
+      "load_seconds": 0.017234219,
+      "inference_seconds": 4.55087203,
+      "memory_kib": {
+        "rss_before": 109216,
+        "rss_after_load": 116916,
+        "rss_after_inference": 1483692,
+        "process_hwm_peak": 1585048,
+        "pss_before": 30090,
+        "pss_after_load": 33661,
+        "pss_after_inference": 1391029,
+        "pss_peak_observed": 1391029
+      },
+      "output_sha256": "eb406e6e8e5532d781c62ca6c1421545f9e308ad6b67b7696af6758831130358"
+    },
+    {
+      "run": 3,
+      "load_seconds": 0.006749532,
+      "inference_seconds": 4.153601717,
+      "memory_kib": {
+        "rss_before": 110604,
+        "rss_after_load": 116952,
+        "rss_after_inference": 1484096,
+        "process_hwm_peak": 1585136,
+        "pss_before": 30366,
+        "pss_after_load": 33772,
+        "pss_after_inference": 1391117,
+        "pss_peak_observed": 1391117
+      },
+      "output_sha256": "eb406e6e8e5532d781c62ca6c1421545f9e308ad6b67b7696af6758831130358"
+    },
+    {
+      "run": 4,
+      "load_seconds": 0.033557656,
+      "inference_seconds": 6.628385049,
+      "memory_kib": {
+        "rss_before": 104712,
+        "rss_after_load": 119996,
+        "rss_after_inference": 1499772,
+        "process_hwm_peak": 1602328,
+        "pss_before": 27525,
+        "pss_after_load": 31943,
+        "pss_after_inference": 1401425,
+        "pss_peak_observed": 1401425
+      },
+      "output_sha256": "eb406e6e8e5532d781c62ca6c1421545f9e308ad6b67b7696af6758831130358",
+      "note": "final rebuilt APK validation"
+    }
+  ],
+  "summary": {
+    "first_cold_inference_seconds": 8.077817653,
+    "subsequent_inference_seconds": [
+      4.55087203,
+      4.153601717,
+      6.628385049
+    ],
+    "subsequent_median_inference_seconds": 4.55087203,
+    "peak_process_hwm_kib": 1602328,
+    "peak_observed_pss_kib": 1401425
+  },
+  "comparison": {
+    "reference_output": {
+      "shape": [
+        1,
+        1,
+        3200
+      ],
+      "dtype": "float32",
+      "numel": 3200,
+      "sha256": "0842cca8dd2939419455cd7218b4cad184696c109c65f919f31c1e32576d0af0",
+      "finite": true,
+      "min": -8.814866305328906e-06,
+      "max": 8.3454571722541e-05,
+      "mean": 1.0693241847548052e-08
+    },
+    "android_output": {
+      "shape": [
+        1,
+        1,
+        3200
+      ],
+      "dtype": "float32",
+      "numel": 3200,
+      "sha256": "eb406e6e8e5532d781c62ca6c1421545f9e308ad6b67b7696af6758831130358",
+      "finite": true,
+      "min": -8.814880857244134e-06,
+      "max": 8.34546226542443e-05,
+      "mean": 1.0693699259434197e-08
+    },
+    "raw_output_sha256": "eb406e6e8e5532d781c62ca6c1421545f9e308ad6b67b7696af6758831130358",
+    "max_abs_error": 8.503775461576879e-10,
+    "mean_abs_error": 1.0857263872676715e-11,
+    "atol": 1e-05,
+    "rtol": 0.0001,
+    "allclose": true
+  },
+  "conclusion": "The unquantized rewritten decoder loads and executes correctly through the ExecuTorch 1.2 Android AAR with XNNPACK on the Galaxy S23 Ultra.",
+  "limitations": [
+    "The probe is non-streaming and does not expose the 34 cache tensors.",
+    "The 1.375 GB FP32 PTE is a correctness artifact, not a practical deployment.",
+    "The first run includes cold filesystem/backend effects; later runs benefited from cached pages.",
+    "Memory samples are app-reported VmHWM and point-in-time PSS, not a high-frequency external trace."
+  ]
+}
