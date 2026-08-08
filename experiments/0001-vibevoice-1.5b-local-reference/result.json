@@ -1,0 +1,41 @@
+{
+  "status": "success",
+  "model": {
+    "repository": "microsoft/VibeVoice-1.5B",
+    "revision": "c00898d257e6b46004e3e2866a47534085fb685a"
+  },
+  "source": {
+    "repository": "microsoft/VibeVoice",
+    "revision": "6dd49cb7200c0367205a5f1e650244259e9e423d"
+  },
+  "configuration": {
+    "device": "cpu",
+    "dtype": "float32",
+    "attention": "sdpa",
+    "seed": 42,
+    "cfg_scale": 1.3,
+    "diffusion_steps": 10,
+    "voices": ["Carter", "Maya"]
+  },
+  "result": {
+    "generation_seconds": 113.43,
+    "process_wall_seconds": 139.16,
+    "audio_seconds": 13.066667,
+    "real_time_factor": 8.68,
+    "peak_rss_kib": 13023192,
+    "input_tokens": 503,
+    "generated_tokens": 102,
+    "sample_rate_hz": 24000,
+    "channels": 1,
+    "codec": "pcm_s16le",
+    "output_bytes": 627244,
+    "output_sha256": "fb0152dc686836fe23d9c39c3b24c1de82398f51b9747f5e36ad1db819ce0358"
+  },
+  "gpu_attempt": {
+    "status": "failed",
+    "device": "NVIDIA GeForce RTX 3060 Laptop GPU",
+    "vram_mib": 6144,
+    "reason": "CUDA out of memory while loading checkpoint shard 3"
+  },
+  "human_listening_review": "pending"
+}

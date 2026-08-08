@@ -37,7 +37,8 @@ Large model files, converted models, generated audio, APKs, tensors, traces, and
 
 - [x] Target Android device identified.
 - [x] Candidate inference paths selected.
-- [ ] Produce the 15-second VibeVoice 1.5B local reference.
+- [x] Produce the 15-second VibeVoice 1.5B local reference (13.07 seconds generated on CPU).
+- [ ] Complete human listening review of the reference clip.
 - [ ] Export the first component with ExecuTorch.
 - [ ] Run the first component on Android.
 - [ ] Produce short end-to-end audio on Android.
