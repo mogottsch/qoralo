@@ -6,7 +6,24 @@ Export VibeVoice components to ExecuTorch, validate them against experiment 0001
 
 ## Status
 
-Ready to begin. Experiment 0001 produced the locked PyTorch reference.
+In progress. Experiment 0001 produced the locked PyTorch reference. Calls 0 and 1 have been captured from a deterministic rerun, and the first decoder-only export probe is implemented. `.pte` export, host comparison, and Android execution remain to be run and recorded.
+
+## Current tooling
+
+- [`export/capture_fixtures.py`](export/capture_fixtures.py) wraps the real streaming decode call and captures calls 0 and 1 with stable cache names.
+- [`export/acoustic_decoder.py`](export/acoustic_decoder.py) constructs only `TokenizerDecoder` and reads only its tensors from the sharded checkpoint.
+- [`export/export_decoder.py`](export/export_decoder.py) exports a fixed `[1,64,1]` FP32 non-streaming operator-coverage probe to portable ExecuTorch or XNNPACK.
+- [`fixtures/README.md`](fixtures/README.md) documents the ignored fixture layout and capture command.
+- [`fixtures/acoustic-decoder-manifest.json`](fixtures/acoustic-decoder-manifest.json) records the captured shapes, dtypes, stable cache ordering, ranges, and hashes without committing tensors.
+
+The initial `.pte` is deliberately non-streaming. It isolates decoder operator coverage before the upstream Python dictionary cache is replaced by the final explicit tensor-cache ABI. It must not be treated as an audio-equivalent implementation of the captured streaming calls.
+
+Run the first probe after fixture capture in a Python environment containing the ExecuTorch version paired with the Android AAR:
+
+```bash
+python experiments/0002-vibevoice-1.5b-executorch-android/export/export_decoder.py \
+  --backend xnnpack
+```
 
 ## Deployment design
 
