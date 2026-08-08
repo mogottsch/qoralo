@@ -1,5 +1,11 @@
 # Component fixtures
 
+The Qwen2 backbone's fixed prefill/decode contract and deferred heavy-RAM
+capture command are documented in
+[`qwen2-backbone-abi.md`](qwen2-backbone-abi.md), with the complete ordered
+shape contract in [`qwen2-backbone-abi.json`](qwen2-backbone-abi.json).
+
+
 ## Acoustic decoder
 
 Raw fixture tensors are generated under the ignored directory:

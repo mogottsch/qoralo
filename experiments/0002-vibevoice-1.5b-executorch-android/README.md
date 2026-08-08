@@ -6,7 +6,7 @@ Export VibeVoice components to ExecuTorch, validate them against experiment 0001
 
 ## Status
 
-In progress. The fixed-shape FP32 decoder passes ExecuTorch 1.2/XNNPACK on both the host and Galaxy S23 Ultra. The explicit 34-tensor streaming-cache ABI passes calls 0 and 1 on the host as eight sequential XNNPACK segments. A real, deterministic diffusion-head fixture now passes a one-call FP32 XNNPACK PTE on the host. Android streaming and diffusion execution remain.
+In progress. The fixed-shape FP32 decoder and explicit 34-tensor streaming-cache ABI pass on both the host and Galaxy S23 Ultra. A real deterministic diffusion-head fixture passes a one-call FP32 XNNPACK PTE on the host; Android diffusion execution remains. The Qwen2 prefill/single-token ABI is fixed at a 56-tensor, 1024-slot cache and passes tiny synthetic prefill/decode through strict export, XNNPACK lowering, and the host runtime without loading the checkpoint; real FP32 fixtures wait for the heavy-RAM slot.
 
 ## Current tooling
 
@@ -24,6 +24,10 @@ In progress. The fixed-shape FP32 decoder passes ExecuTorch 1.2/XNNPACK on both 
 - [`export/export_diffusion_step.py`](export/export_diffusion_step.py) exports the fixed CFG prediction to portable ExecuTorch or XNNPACK.
 - [`export/validate_diffusion_step.py`](export/validate_diffusion_step.py) runs the PTE and records a structured full-tensor comparison.
 - [`export/speech_connectors.py`](export/speech_connectors.py) scaffolds a connector-only loader and `(acoustic, semantic) -> LM embedding` tensor ABI; real paired fixture capture/export remain.
+- [`export/qwen2_backbone.py`](export/qwen2_backbone.py) defines fixed-capacity, explicitly ordered Qwen2 prefill/decode cache wrappers and the dense speaker-conditioning boundary.
+- [`export/export_qwen2_tiny.py`](export/export_qwen2_tiny.py) proves those wrappers with a tiny synthetic Qwen2 through strict export, XNNPACK, and the ExecuTorch host runtime.
+- [`export/capture_qwen2_fixtures.py`](export/capture_qwen2_fixtures.py) is the deferred heavy-RAM capture entry point for real prefill and next-positive decode fixtures.
+- [`fixtures/qwen2-backbone-abi.md`](fixtures/qwen2-backbone-abi.md) specifies sequence/mask/position semantics, the 56-cache order, native token-selection boundary, speaker boundary, and real-capture acceptance criteria.
 - [`android/`](android/) contains the minimal debug-only ExecuTorch 1.2 runner and its repeatable ADB harness.
 - [`fixtures/README.md`](fixtures/README.md) documents the ignored fixture layout and capture command.
 - [`fixtures/acoustic-decoder-manifest.json`](fixtures/acoustic-decoder-manifest.json) records the captured shapes, dtypes, stable cache ordering, ranges, and hashes without committing tensors.
