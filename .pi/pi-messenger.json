@@ -1,0 +1,27 @@
+{
+  "scopeToFolder": true,
+  "stuckThreshold": 900,
+  "stuckNotify": true,
+  "autoOverlay": true,
+  "autoOverlayPlanning": true,
+  "crew": {
+    "concurrency": {
+      "workers": 2,
+      "max": 3
+    },
+    "dependencies": "strict",
+    "coordination": "chatty",
+    "review": {
+      "enabled": true,
+      "maxIterations": 3
+    },
+    "planning": {
+      "maxPasses": 2
+    },
+    "work": {
+      "maxAttemptsPerTask": 3,
+      "maxWaves": 50,
+      "shutdownGracePeriodMs": 30000
+    }
+  }
+}
