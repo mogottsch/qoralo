@@ -16,6 +16,9 @@ sys.path.insert(0, str(EXPORT_DIR))
 from qwen2_backbone import (  # noqa: E402
     Qwen2Decode,
     Qwen2Prefill,
+    Qwen2PrefillFinal,
+    Qwen2PrefillLayer,
+    Qwen2PrefillPrepare,
     SpeakerConditioning,
     cache_tensor_names,
     flatten_cache,
@@ -223,6 +226,31 @@ class Qwen2BackboneTests(unittest.TestCase):
         for actual, expected in zip(actual_decode[2:], expected_cache):
             torch.testing.assert_close(actual[:, :, :4], expected)
             self.assertEqual(torch.count_nonzero(actual[:, :, 4:]).item(), 0)
+
+    def test_sequential_prefill_boundaries_preserve_exact_eager_result(self):
+        embeds = torch.randn(1, 3, 16)
+        mask = torch.tensor([[1, 1, 1, 0, 0, 0, 0, 0]])
+        positions = torch.arange(3).unsqueeze(0)
+        cache_positions = torch.arange(3)
+        expected = self.prefill(embeds, mask, positions, cache_positions)
+        options = dict(num_hidden_layers=2, num_key_value_heads=2,
+                       head_dim=4, cache_capacity=8)
+        hidden, causal, cos, sin = Qwen2PrefillPrepare(
+            self.backbone, **options
+        )(embeds, mask, positions, cache_positions)
+        caches = []
+        for index, layer in enumerate(self.backbone.layers):
+            zero = torch.zeros(1, 2, 8, 4)
+            stage = Qwen2PrefillLayer(layer, index)
+            stage_inputs = (hidden, causal, cache_positions, cos, sin, zero, zero)
+            torch.export.export(stage, stage_inputs, strict=True)
+            hidden, key, value = stage(*stage_inputs)
+            caches.extend((key, value))
+        hidden, logits = Qwen2PrefillFinal(
+            self.backbone.norm, self.lm_head
+        )(hidden)
+        for actual, reference in zip((hidden, logits, *caches), expected):
+            torch.testing.assert_close(actual, reference, rtol=0, atol=0)
 
     def test_prefill_and_decode_are_strict_exportable(self):
         embeds = torch.randn(1, 3, 16)
