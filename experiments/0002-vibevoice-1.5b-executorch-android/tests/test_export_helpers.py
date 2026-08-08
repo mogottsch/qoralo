@@ -26,6 +26,7 @@ from diagnose_decoder import collect_probes  # noqa: E402
 from diffusion_head import DiffusionHeadStep  # noqa: E402
 from diffusion_scheduler import DpmSolverState, ten_step_schedule  # noqa: E402
 from export_diffusion_step import validated_inputs  # noqa: E402
+from export_connectors import validated_inputs as validated_connector_inputs  # noqa: E402
 from fixture_utils import snapshot_cache, tensor_metadata, tensor_sha256  # noqa: E402
 from speech_connectors import ConnectorRMSNorm, SpeechConnectorJoin  # noqa: E402
 from streaming_android_io import (  # noqa: E402
@@ -39,6 +40,7 @@ from streaming_decoder import (  # noqa: E402
     segment_cache_names,
 )
 from validate_streaming_sequence import compare_outputs  # noqa: E402
+from validate_connectors import compare_output as compare_connector_output  # noqa: E402
 
 
 class SConv1d(torch.nn.Module):
@@ -244,6 +246,29 @@ class ExportHelperTests(unittest.TestCase):
         value = torch.tensor([[3.0, 4.0]], dtype=torch.float32)
         expected = value * torch.rsqrt(value.pow(2).mean(-1, keepdim=True) + 1e-6)
         torch.testing.assert_close(norm(value), expected)
+
+    def test_connector_abi_accepts_only_fixed_fp32_shapes_and_order(self):
+        fixture = {
+            "acoustic_features": torch.ones(1, 1, 64),
+            "semantic_features": torch.ones(1, 1, 128),
+        }
+        inputs = validated_connector_inputs(fixture)
+        self.assertEqual([tuple(value.shape) for value in inputs], [(1, 1, 64), (1, 1, 128)])
+        with self.assertRaisesRegex(ValueError, "input order"):
+            validated_connector_inputs(fixture, ("semantic_features", "acoustic_features"))
+        with self.assertRaisesRegex(ValueError, "acoustic_features shape"):
+            validated_connector_inputs({**fixture, "acoustic_features": torch.ones(1, 64)})
+        with self.assertRaisesRegex(ValueError, "semantic_features dtype"):
+            validated_connector_inputs({**fixture, "semantic_features": torch.ones(1, 1, 128, dtype=torch.float64)})
+
+    def test_connector_comparison_rejects_nonfinite_and_counts_mismatches(self):
+        expected = torch.zeros(1, 1, 3)
+        result = compare_connector_output(torch.tensor([[[0.0, 2e-5, float("nan")]]]), expected, 1e-5, 1e-4)
+        self.assertFalse(result["finite"])
+        self.assertFalse(result["allclose"])
+        self.assertEqual(result["mismatch_count"], 2)
+        with self.assertRaisesRegex(ValueError, "shape mismatch"):
+            compare_connector_output(torch.zeros(3), expected, 1e-5, 1e-4)
 
     def test_streaming_cache_abi_uses_stable_sorted_module_names(self):
         fixture = {

@@ -1,0 +1,299 @@
+{
+  "schema_version": 1,
+  "component": "speech_connector_join",
+  "status": "captured_and_frozen",
+  "provenance": {
+    "description": "paired calls in one diffusion-token generation iteration",
+    "source_revision": "6dd49cb7200c0367205a5f1e650244259e9e423d",
+    "model_revision": "c00898d257e6b46004e3e2866a47534085fb685a",
+    "model_index_sha256": "067db9b10fdecee3a5588aa00206794156c7125f5e85f3f2234e0e6d821ee629",
+    "transcript_sha256": "e971969aff3d1f3e656180adf90e3f727299a842b83b2237a8e3b4c578fdf7d1",
+    "seed": 42,
+    "cfg_scale": 1.3,
+    "device": "cpu",
+    "acoustic_call_index": 2,
+    "semantic_call_index": 3,
+    "same_generation_state": true
+  },
+  "generation_settings": {
+    "seed": 42,
+    "cfg_scale": 1.3,
+    "diffusion_inference_steps": 10,
+    "speakers": [
+      "Carter",
+      "Maya"
+    ],
+    "transcript_sha256": "e971969aff3d1f3e656180adf90e3f727299a842b83b2237a8e3b4c578fdf7d1"
+  },
+  "pairing": {
+    "rule": "the semantic connector call immediately follows the acoustic connector call in the same diffusion-token branch before next_inputs_embeds is updated",
+    "acoustic_call_index": 2,
+    "semantic_call_index": 3,
+    "same_generation_state": true
+  },
+  "abi": {
+    "inputs": [
+      {
+        "position": 0,
+        "name": "acoustic_features",
+        "shape": [
+          1,
+          1,
+          64
+        ],
+        "dtype": "float32"
+      },
+      {
+        "position": 1,
+        "name": "semantic_features",
+        "shape": [
+          1,
+          1,
+          128
+        ],
+        "dtype": "float32"
+      }
+    ],
+    "outputs": [
+      {
+        "position": 0,
+        "name": "joined_output",
+        "shape": [
+          1,
+          1,
+          1536
+        ],
+        "dtype": "float32"
+      }
+    ],
+    "operation": "acoustic_connector(acoustic_features) + semantic_connector(semantic_features)",
+    "malformed_policy": "reject missing, reordered, non-contiguous, non-finite, wrong-shape, or non-float32 inputs"
+  },
+  "tensors": {
+    "acoustic_features": {
+      "shape": [
+        1,
+        1,
+        64
+      ],
+      "dtype": "float32",
+      "numel": 64,
+      "sha256": "9bf7546b366fe18adb89f772a86615d8d412c6a013d134558223b41a30979364",
+      "finite": true,
+      "min": -0.7228529453277588,
+      "max": 0.8222026824951172,
+      "mean": 0.01636981964111328
+    },
+    "semantic_features": {
+      "shape": [
+        1,
+        1,
+        128
+      ],
+      "dtype": "float32",
+      "numel": 128,
+      "sha256": "31cd53f23d9b4b713d88e02766b8a0c8836fd7eba682ab25fc0269200bff0d0d",
+      "finite": true,
+      "min": -7.470602035522461,
+      "max": 9.946871757507324,
+      "mean": 0.37652772665023804
+    },
+    "acoustic_output": {
+      "shape": [
+        1,
+        1,
+        1536
+      ],
+      "dtype": "float32",
+      "numel": 1536,
+      "sha256": "1d329d19fb6c328f7c268d4a82bf142982ebf90821592a84c3882bdcd837a59e",
+      "finite": true,
+      "min": -3.162299871444702,
+      "max": 5.1685614585876465,
+      "mean": 0.005123698618263006
+    },
+    "semantic_output": {
+      "shape": [
+        1,
+        1,
+        1536
+      ],
+      "dtype": "float32",
+      "numel": 1536,
+      "sha256": "02b45ce4e9ef7be0320cce1efd7ff62011eeeed43329482605220134c3631a73",
+      "finite": true,
+      "min": -0.17969734966754913,
+      "max": 0.15309938788414001,
+      "mean": -0.000913617666810751
+    },
+    "joined_output": {
+      "shape": [
+        1,
+        1,
+        1536
+      ],
+      "dtype": "float32",
+      "numel": 1536,
+      "sha256": "ade9d84f99ff254666de013eafbfc75c0462e27c50ac63c3dd5e0b921b863bdf",
+      "finite": true,
+      "min": -3.0838961601257324,
+      "max": 5.273512363433838,
+      "mean": 0.004210079554468393
+    }
+  },
+  "weight_provenance": {
+    "model_revision": "c00898d257e6b46004e3e2866a47534085fb685a",
+    "model_index_sha256": "067db9b10fdecee3a5588aa00206794156c7125f5e85f3f2234e0e6d821ee629",
+    "connector_state_tensors": {
+      "acoustic": {
+        "fc1.weight": {
+          "shape": [
+            1536,
+            64
+          ],
+          "dtype": "float32",
+          "numel": 98304,
+          "sha256": "a3941bc877df02c720eb3b5280e93c8f9c16bec3e76f0779b52452bc6a97dee6",
+          "finite": true,
+          "min": -0.068359375,
+          "max": 0.0673828125,
+          "mean": -4.309139694669284e-05
+        },
+        "fc1.bias": {
+          "shape": [
+            1536
+          ],
+          "dtype": "float32",
+          "numel": 1536,
+          "sha256": "1b19ca9005e463d3d2a3deff38a689f49d882db07682963a5cdd174e0dd76268",
+          "finite": true,
+          "min": -0.05517578125,
+          "max": 0.055419921875,
+          "mean": -0.0009379255934618413
+        },
+        "norm.weight": {
+          "shape": [
+            1536
+          ],
+          "dtype": "float32",
+          "numel": 1536,
+          "sha256": "9fc21e64c43c6a166d26d0864d6d9df7d48e0b1789c59cb60199e7560f069a7f",
+          "finite": true,
+          "min": 0.353515625,
+          "max": 0.40625,
+          "mean": 0.3829345703125
+        },
+        "fc2.weight": {
+          "shape": [
+            1536,
+            1536
+          ],
+          "dtype": "float32",
+          "numel": 2359296,
+          "sha256": "6bb04633d25c3db166f95a33dd17ae0ec71e1241dbd5d1b207739466d88f0fe4",
+          "finite": true,
+          "min": -0.03759765625,
+          "max": 0.037109375,
+          "mean": -4.8108181545103434e-06
+        },
+        "fc2.bias": {
+          "shape": [
+            1536
+          ],
+          "dtype": "float32",
+          "numel": 1536,
+          "sha256": "32b85c8ef082b898f568051f873d211eead7e445b83429cdade17ea1e4451a76",
+          "finite": true,
+          "min": -0.03125,
+          "max": 0.0419921875,
+          "mean": 0.00043149161501787603
+        }
+      },
+      "semantic": {
+        "fc1.weight": {
+          "shape": [
+            1536,
+            128
+          ],
+          "dtype": "float32",
+          "numel": 196608,
+          "sha256": "6d599f2502bc2eb9a0e2f1916043a69bac55e978ef8ab1f0189fe79b601a62ef",
+          "finite": true,
+          "min": -0.400390625,
+          "max": 0.451171875,
+          "mean": 3.694577389978804e-05
+        },
+        "fc1.bias": {
+          "shape": [
+            1536
+          ],
+          "dtype": "float32",
+          "numel": 1536,
+          "sha256": "4c428c4e8d79283fef2c0fa36168e6a46063d1c2e30e46b0998f12c1e987ed5e",
+          "finite": true,
+          "min": -0.177734375,
+          "max": 0.189453125,
+          "mean": 0.001533947535790503
+        },
+        "norm.weight": {
+          "shape": [
+            1536
+          ],
+          "dtype": "float32",
+          "numel": 1536,
+          "sha256": "3aa2cfab8374c34d8c859b5db843776425d610e86fe92d8ccd7ce161d54e76bc",
+          "finite": true,
+          "min": -0.0003528594970703125,
+          "max": 0.384765625,
+          "mean": 0.10069645196199417
+        },
+        "fc2.weight": {
+          "shape": [
+            1536,
+            1536
+          ],
+          "dtype": "float32",
+          "numel": 2359296,
+          "sha256": "1d3badfd96d8bd2a49eea255d94c2f55d58970b927a8f87efcf12c58310cb35d",
+          "finite": true,
+          "min": -0.04296875,
+          "max": 0.0498046875,
+          "mean": -8.273478329101636e-07
+        },
+        "fc2.bias": {
+          "shape": [
+            1536
+          ],
+          "dtype": "float32",
+          "numel": 1536,
+          "sha256": "6d41c4c9956c144317ea446b0a08c0bf432115cda83dafc4f1399be0f410b1e4",
+          "finite": true,
+          "min": -0.031982421875,
+          "max": 0.037109375,
+          "mean": 0.00048825921840034425
+        }
+      }
+    }
+  },
+  "determinism": {
+    "captures": 2,
+    "all_tensor_hashes_match": true,
+    "capture_1": {
+      "wall_seconds": 58.13105176400131,
+      "peak_rss_kib": 13092724
+    },
+    "capture_2": {
+      "wall_seconds": 43.136005500000465,
+      "peak_rss_kib": 12975828
+    }
+  },
+  "artifact_policy": {
+    "committed": "manifest hashes and metadata only",
+    "ignored": [
+      "fixture.pt",
+      "*.pte",
+      "*.reference.pt",
+      "capture/export/runtime logs"
+    ]
+  }
+}

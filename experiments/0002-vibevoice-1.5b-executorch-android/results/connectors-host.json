@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "component": "speech_connector_join",
+  "status": "passed",
+  "conclusion": "Paired real connector inputs are deterministic; eager, exported-program, and XNNPACK runtime outputs pass the locked FP32 threshold.",
+  "source_revision": "6dd49cb7200c0367205a5f1e650244259e9e423d",
+  "model_revision": "c00898d257e6b46004e3e2866a47534085fb685a",
+  "fixture": {
+    "manifest": "fixtures/connectors-manifest.json",
+    "paired_same_generation_state": true,
+    "deterministic_repeat_all_hashes_match": true,
+    "input_hashes": [
+      "9bf7546b366fe18adb89f772a86615d8d412c6a013d134558223b41a30979364",
+      "31cd53f23d9b4b713d88e02766b8a0c8836fd7eba682ab25fc0269200bff0d0d"
+    ],
+    "expected_output_sha256": "ade9d84f99ff254666de013eafbfc75c0462e27c50ac63c3dd5e0b921b863bdf",
+    "capture_1": {
+      "wall_seconds": 58.13105176400131,
+      "peak_rss_kib": 13092724
+    },
+    "capture_2": {
+      "wall_seconds": 43.136005500000465,
+      "peak_rss_kib": 12975828
+    }
+  },
+  "abi": {
+    "inputs": [
+      {
+        "position": 0,
+        "name": "acoustic_features",
+        "shape": [
+          1,
+          1,
+          64
+        ],
+        "dtype": "float32"
+      },
+      {
+        "position": 1,
+        "name": "semantic_features",
+        "shape": [
+          1,
+          1,
+          128
+        ],
+        "dtype": "float32"
+      }
+    ],
+    "outputs": [
+      {
+        "position": 0,
+        "name": "joined_output",
+        "shape": [
+          1,
+          1,
+          1536
+        ],
+        "dtype": "float32"
+      }
+    ],
+    "operation": "acoustic_connector(acoustic_features) + semantic_connector(semantic_features)",
+    "malformed_policy": "reject missing, reordered, non-contiguous, non-finite, wrong-shape, or non-float32 inputs"
+  },
+  "comparison": {
+    "threshold": {
+      "atol": 1e-05,
+      "rtol": 0.0001,
+      "rationale": "repository FP32 component threshold; checks every output element and rejects non-finite values"
+    },
+    "eager_vs_capture_max_abs_error": 0.0,
+    "exported_program_vs_eager_max_abs_error": 0.0,
+    "runtime_vs_eager": {
+      "output": {
+        "shape": [
+          1,
+          1,
+          1536
+        ],
+        "dtype": "float32",
+        "numel": 1536,
+        "sha256": "c782011a07792f1298f1a0d62dcaae67475e94d1ce01aef079494df899ef195f",
+        "finite": true,
+        "min": -3.0838959217071533,
+        "max": 5.273510932922363,
+        "mean": 0.0042100828140974045
+      },
+      "finite": true,
+      "max_abs_error": 3.337860107421875e-06,
+      "mean_abs_error": 1.8212494978797622e-07,
+      "mismatch_count": 0,
+      "atol": 1e-05,
+      "rtol": 0.0001,
+      "allclose": true
+    }
+  },
+  "runtime": {
+    "backend": "xnnpack",
+    "precision": "fp32",
+    "versions": {
+      "python": "3.11.13",
+      "torch": "2.11.0+cpu",
+      "executorch": "1.2.0"
+    },
+    "delegation": {
+      "requested_backend": "xnnpack",
+      "partitioner": "XnnpackPartitioner",
+      "delegate_segments": 2
+    },
+    "pte_bytes": 20098944,
+    "pte_sha256": "557972f33f16d3519b2b29c8cc27f3f550c5daec3a58baa31946a76a0a58642b",
+    "export_wall_seconds": 8.651333762001741,
+    "export_peak_rss_kib": 529404,
+    "load_seconds": 0.0010044470000138972,
+    "inference_seconds": 0.0021900480023759883,
+    "peak_rss_kib": 474456
+  },
+  "tests": {
+    "malformed_abi_cases": [
+      "wrong input order",
+      "wrong acoustic shape",
+      "wrong semantic dtype",
+      "non-finite runtime output",
+      "wrong runtime output shape"
+    ],
+    "command": "artifacts/venv-executorch-1.2/bin/python experiments/0002-vibevoice-1.5b-executorch-android/tests/test_export_helpers.py",
+    "result": "23 tests passed"
+  },
+  "commands": [
+    "artifacts/venv-executorch-1.2/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/capture_connector_fixture.py",
+    "artifacts/venv-executorch-1.2/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/capture_connector_fixture.py --output artifacts/0002/lane-b/connectors/capture-2 --repeat-of artifacts/0002/lane-b/connectors/capture-1/fixture.pt",
+    "PATH=\"$PWD/artifacts/venv-executorch-1.2/bin:$PATH\" artifacts/venv-executorch-1.2/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/export_connectors.py",
+    "PATH=\"$PWD/artifacts/venv-executorch-1.2/bin:$PATH\" artifacts/venv-executorch-1.2/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/validate_connectors.py artifacts/0002/lane-b/connectors/connectors-xnnpack.pte"
+  ],
+  "artifacts": {
+    "large_artifacts_ignored": true,
+    "pte_path": "artifacts/0002/lane-b/connectors/connectors-xnnpack.pte",
+    "reference_path": "artifacts/0002/lane-b/connectors/connectors-xnnpack.reference.pt"
+  },
+  "commits": []
+}
