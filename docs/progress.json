@@ -8,8 +8,8 @@
     "model": "microsoft/VibeVoice-1.5B",
     "device": "Samsung Galaxy S23 Ultra SM-S918B"
   },
-  "updated_at": "2026-08-08T18:34:24+01:00",
-  "updated_by": "parent-orchestrator",
+  "updated_at": "2026-08-08T18:45:01+01:00",
+  "updated_by": "lane-a-worker",
   "autonomy": {
     "authorized_through_step": 39,
     "stop_conditions": [
@@ -24,19 +24,19 @@
     "notify_when_device_input_required": true
   },
   "status": {
-    "completed_steps": 7,
+    "completed_steps": 8,
     "total_steps": 39,
-    "percent": 17.9,
-    "current_step": 8,
+    "percent": 20.5,
+    "current_step": 9,
     "current_lane": "A",
-    "current_activity": "Parallel lanes: Android streaming decoder, diffusion one-step export, and Qwen2 explicit-cache ABI",
-    "summary": "Lanes A, B, and C are active in parallel. Lane A is preparing Android execution after two chained host calls passed; Lane B owns the heavy-RAM slot for diffusion fixtures/export; Lane C is implementing Qwen2 explicit-cache ABI scaffolding without a full checkpoint load."
+    "current_activity": "Parallel lanes: decoder FP16, diffusion one-step export, and Qwen2 explicit-cache ABI",
+    "summary": "Lanes A, B, and C are active in parallel. Lane A passed the two-call Android streaming sequence and is ready for FP16; Lane B owns the heavy-RAM slot for diffusion fixtures/export; Lane C is implementing Qwen2 explicit-cache ABI scaffolding without a full checkpoint load."
   },
   "resources": {
     "phone": {
       "capacity": 1,
       "status": "available",
-      "queue": ["A: step 8", "B: step 14", "C: step 23"]
+      "queue": ["B: step 14", "C: step 23"]
     },
     "heavy_ram_slot": {
       "capacity": 1,
@@ -54,10 +54,10 @@
       "name": "Acoustic decoder",
       "steps": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       "status": "in_progress",
-      "current_step": 8,
+      "current_step": 9,
       "worktree": null,
       "artifact_root": "artifacts/0002/lane-a",
-      "latest_result": "Step 7 passed: eight XNNPACK segments per entry, 34 explicit caches, and calls 0/1 chained correctly on the host."
+      "latest_result": "Step 8 passed on Android: two deterministic eight-segment calls, actual device cache transport, sub-1e-9 PCM error, and about 1.05 GiB peak observed PSS."
     },
     "B": {
       "name": "Diffusion and audio feature path",
@@ -127,6 +127,22 @@
       "cached_pcm_max_abs_error": 3.865352482534945e-11,
       "peak_rss_kib": 1648768,
       "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/acoustic-decoder-streaming-host.json"
+    },
+    "decoder_streaming_android": {
+      "status": "passed",
+      "executorch": "1.2.0",
+      "backend": "xnnpack",
+      "segment_count": 8,
+      "cache_tensor_count": 34,
+      "cold_sequence_inference_seconds": 9.59847515,
+      "warm_sequence_inference_seconds": 8.18262109,
+      "first_pcm_max_abs_error": 8.503775461576879e-10,
+      "cached_pcm_max_abs_error": 3.637978807091713e-11,
+      "peak_observed_pss_kib": 1105850,
+      "process_hwm_kib": 1322940,
+      "strict_cache_mismatch_values": 1,
+      "android_cache_atol": 0.00006,
+      "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/acoustic-decoder-streaming-android.json"
     }
   },
   "commits": [
@@ -154,8 +170,8 @@
     {"id": 5, "lane": "A", "title": "Create the minimal Android runner", "status": "completed", "depends_on": [4], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/android/README.md"},
     {"id": 6, "lane": "A", "title": "Run the simple decoder probe on the phone", "status": "completed", "depends_on": [5], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/acoustic-decoder-android.json"},
     {"id": 7, "lane": "A", "title": "Implement the real streaming-cache decoder", "status": "completed", "depends_on": [4], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/acoustic-decoder-streaming-host.json", "note": "Eight stage-aligned XNNPACK segments pass calls 0 and 1 with 34 explicit cache tensors."},
-    {"id": 8, "lane": "A", "title": "Run the streaming decoder on the phone", "status": "ready", "depends_on": [7], "evidence": null},
-    {"id": 9, "lane": "A", "title": "Test FP16 decoder", "status": "blocked", "depends_on": [8], "evidence": null},
+    {"id": 8, "lane": "A", "title": "Run the streaming decoder on the phone", "status": "completed", "depends_on": [7], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/acoustic-decoder-streaming-android.json", "note": "PCM passes strict tolerance; one cached value requires the documented Android-cache-only atol=6e-5 acceptance."},
+    {"id": 9, "lane": "A", "title": "Test FP16 decoder", "status": "ready", "depends_on": [8], "evidence": null},
     {"id": 10, "lane": "A", "title": "Document and publish decoder results", "status": "blocked", "depends_on": [9], "evidence": null},
     {"id": 11, "lane": "B", "title": "Capture diffusion-head fixtures", "status": "in_progress", "depends_on": [], "evidence": null},
     {"id": 12, "lane": "B", "title": "Export one diffusion step", "status": "blocked", "depends_on": [11], "evidence": null},

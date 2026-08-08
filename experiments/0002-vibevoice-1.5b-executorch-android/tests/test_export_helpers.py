@@ -24,6 +24,7 @@ from acoustic_decoder import (  # noqa: E402
 from android_io import read_float32_le, write_float32_le  # noqa: E402
 from diagnose_decoder import collect_probes  # noqa: E402
 from fixture_utils import snapshot_cache, tensor_metadata, tensor_sha256  # noqa: E402
+from streaming_android_io import compare_tensor  # noqa: E402
 from streaming_decoder import (  # noqa: E402
     StaticTensorCache,
     cache_module_names,
@@ -203,6 +204,30 @@ class ExportHelperTests(unittest.TestCase):
         torch.testing.assert_close(outputs[1], second)
         first.add_(10)
         self.assertEqual(outputs[0].item(), 3.0)
+
+    def test_streaming_android_comparison_checks_raw_tensor(self):
+        expected = torch.tensor([[[1.0, -2.0]]], dtype=torch.float32)
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "actual.f32le"
+            write_float32_le(path, expected + 1e-6)
+            result = compare_tensor(path, expected, atol=2e-5, rtol=1e-5)
+        self.assertEqual(result["shape"], [1, 1, 2])
+        self.assertTrue(result["allclose"])
+        self.assertTrue(result["accepted"])
+        self.assertLess(result["max_abs_error"], 2e-5)
+
+    def test_streaming_android_cache_acceptance_preserves_strict_failure(self):
+        expected = torch.tensor([0.732095], dtype=torch.float32)
+        actual = torch.tensor([0.7321286], dtype=torch.float32)
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "actual.f32le"
+            write_float32_le(path, actual)
+            result = compare_tensor(
+                path, expected, atol=2e-5, rtol=1e-5, acceptance_atol=6e-5
+            )
+        self.assertFalse(result["allclose"])
+        self.assertEqual(result["strict_mismatch_count"], 1)
+        self.assertTrue(result["accepted"])
 
     def test_streaming_sequence_comparison_checks_pcm_and_caches(self):
         expected = (torch.tensor([1.0]), torch.tensor([2.0]))

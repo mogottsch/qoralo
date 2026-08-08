@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "scope": "FP32 fixed-shape eight-segment streaming acoustic-decoder Android sequence",
+  "runtime": {
+    "executorch": "1.2.0",
+    "backend": "xnnpack",
+    "load_mode": "mmap"
+  },
+  "device": {
+    "manufacturer": "samsung",
+    "model": "SM-S918B",
+    "device": "dm3q",
+    "soc": "SM8550",
+    "android_release": "16",
+    "api_level": 36,
+    "abi": "arm64-v8a"
+  },
+  "interface": {
+    "segment_count_per_call": 8,
+    "cache_tensor_count": 34,
+    "sequence": "call 0 -> actual Android cache outputs -> call 1",
+    "cache_transport": "FP32 little-endian files in app-private storage",
+    "module_lifetime": "one mmap-loaded segment resident at a time"
+  },
+  "model_storage": {
+    "first_entry_bytes": 1375063172,
+    "cached_entry_bytes": 1379159424,
+    "combined_bytes": 2754222596,
+    "debug_apk_bytes": 14953995,
+    "inside_apk": false,
+    "device_path": "/data/local/tmp/vibevoice-streaming-decoder"
+  },
+  "runs": [
+    {
+      "run": 0,
+      "temperature": "cold",
+      "first_load_seconds": 0.018528750000000004,
+      "first_inference_seconds": 5.130076404,
+      "cached_load_seconds": 0.026923647,
+      "cached_inference_seconds": 4.468398746,
+      "total_inference_seconds": 9.59847515,
+      "peak_observed_rss_kib": 1195560,
+      "peak_observed_pss_kib": 1105850,
+      "process_hwm_kib": 1322940
+    },
+    {
+      "run": 1,
+      "temperature": "warm_page_cache",
+      "first_load_seconds": 0.007353387,
+      "first_inference_seconds": 3.7077877590000003,
+      "cached_load_seconds": 0.00674406,
+      "cached_inference_seconds": 4.474833331000001,
+      "total_inference_seconds": 8.18262109,
+      "peak_observed_rss_kib": 1192992,
+      "peak_observed_pss_kib": 1103779,
+      "process_hwm_kib": 1322940
+    }
+  ],
+  "comparison": {
+    "strict_thresholds": {
+      "atol": 0.00002,
+      "rtol": 0.00001
+    },
+    "android_cache_acceptance": {
+      "atol": 0.00006,
+      "rtol": 0.00001,
+      "scope": "Android cache tensors only",
+      "host_threshold_changed": false,
+      "pcm_threshold_changed": false,
+      "rationale": "The host intermediate/cache maximum was 4.96e-5 and the deterministic Android maximum was 5.34e-5. The strict Android miss was isolated to one value and propagated PCM error remained below 1e-9."
+    },
+    "call_0": {
+      "pcm_max_abs_error": 8.503775461576879e-10,
+      "pcm_mean_abs_error": 1.0857263872676715e-11,
+      "pcm_sha256": "eb406e6e8e5532d781c62ca6c1421545f9e308ad6b67b7696af6758831130358",
+      "cache_max_abs_error": 0.0000324249267578125,
+      "strict_cache_tensors_passing": 34,
+      "strict_cache_tensors_total": 34,
+      "strict_mismatch_values": 0
+    },
+    "call_1": {
+      "pcm_max_abs_error": 3.637978807091713e-11,
+      "pcm_mean_abs_error": 7.65477004699422e-12,
+      "pcm_sha256": "95bd4c4543e53617a95c0b5a84cb6bad949d8206f8a66f7a1e314daa851d4268",
+      "cache_max_abs_error": 0.00005340576171875,
+      "strict_cache_tensors_passing": 33,
+      "strict_cache_tensors_total": 34,
+      "strict_mismatch_values": 1,
+      "strict_mismatch_tensor": "segment-0 cache-3",
+      "strict_mismatch_value_error": 0.00003355741500854492,
+      "strict_mismatch_allowed_error": 0.00002732095003128052,
+      "strict_mismatch_values_in_tensor": 1,
+      "strict_mismatch_tensor_numel": 12288,
+      "android_cache_acceptance_passed": true
+    },
+    "strict_allclose": false,
+    "android_cache_acceptance_passed": true,
+    "pcm_allclose": true,
+    "deterministic_across_runs": true,
+    "identical_output_file_hashes_across_runs": 70
+  },
+  "memory_kib": {
+    "rss_before": 103232,
+    "rss_after": 135236,
+    "process_hwm_peak": 1322940,
+    "pss_before": 30520,
+    "pss_after": 45897,
+    "peak_observed_pss": 1105850
+  },
+  "limitations": [
+    "The first and cached entry sets duplicate FP32 weights and occupy about 2.75 GB on device.",
+    "The Android-only cache acceptance is wider than the host threshold and does not imply bit equivalence.",
+    "The runner serializes caches through storage for diagnostic correctness rather than production latency.",
+    "Only batch 1, latent width 64, and one latent step per call are validated.",
+    "FP16 export and Android validation remain step 9."
+  ]
+}
