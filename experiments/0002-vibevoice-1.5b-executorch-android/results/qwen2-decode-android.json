@@ -1133,11 +1133,13 @@
     "serial": "R5CW81PR8SY"
   },
   "commands": [
-    "PATH=\"$PWD/artifacts/venv-executorch-1.2/bin:$PATH\" artifacts/venv-executorch-1.2/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/package_qwen2_prefill.py --model artifacts/models/microsoft-VibeVoice-1.5B --fixture-dir artifacts/0002/lane-c/qwen2-fixtures --output artifacts/0002/lane-c/qwen2-prefill-android-package",
+    "flock artifacts/locks/heavy-ram.lock bash -lc 'PATH=$PWD/artifacts/venv-executorch-1.2/bin:$PATH artifacts/venv-executorch-1.2/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/package_qwen2_prefill.py --model artifacts/models/microsoft-VibeVoice-1.5B --fixture-dir artifacts/0002/lane-c/qwen2-fixtures --output artifacts/0002/lane-c/qwen2-prefill-android-package'",
     "PYTHON=$PWD/.venv/bin/python bash experiments/0002-vibevoice-1.5b-executorch-android/android/run-qwen2-probe.sh"
   ],
   "implementation_commits": [
-    "df8eca0d"
+    "df8eca0d",
+    "6a89b2cd",
+    "43bbce12"
   ],
   "conclusion": "Host chained prefill/decode packaging passed the bounded XNNPACK criterion with strict drift retained. Android execution is blocked solely on device unlock, so latency, memory, deterministic Android hashes, and Android correctness remain intentionally unreported."
 }
