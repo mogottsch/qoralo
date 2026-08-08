@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "component": "qwen2_real_prefill_decode_fixtures",
+  "precision": "fp32",
+  "status": "passed",
+  "fixture_files": [
+    "manifest.json",
+    "prefill.pt",
+    "decode.pt"
+  ],
+  "structure": {
+    "status": "passed",
+    "prefill_length": 503,
+    "decode_position": 503,
+    "cache_order": [
+      "layer_00_key",
+      "layer_00_value",
+      "layer_01_key",
+      "layer_01_value",
+      "layer_02_key",
+      "layer_02_value",
+      "layer_03_key",
+      "layer_03_value",
+      "layer_04_key",
+      "layer_04_value",
+      "layer_05_key",
+      "layer_05_value",
+      "layer_06_key",
+      "layer_06_value",
+      "layer_07_key",
+      "layer_07_value",
+      "layer_08_key",
+      "layer_08_value",
+      "layer_09_key",
+      "layer_09_value",
+      "layer_10_key",
+      "layer_10_value",
+      "layer_11_key",
+      "layer_11_value",
+      "layer_12_key",
+      "layer_12_value",
+      "layer_13_key",
+      "layer_13_value",
+      "layer_14_key",
+      "layer_14_value",
+      "layer_15_key",
+      "layer_15_value",
+      "layer_16_key",
+      "layer_16_value",
+      "layer_17_key",
+      "layer_17_value",
+      "layer_18_key",
+      "layer_18_value",
+      "layer_19_key",
+      "layer_19_value",
+      "layer_20_key",
+      "layer_20_value",
+      "layer_21_key",
+      "layer_21_value",
+      "layer_22_key",
+      "layer_22_value",
+      "layer_23_key",
+      "layer_23_value",
+      "layer_24_key",
+      "layer_24_value",
+      "layer_25_key",
+      "layer_25_value",
+      "layer_26_key",
+      "layer_26_value",
+      "layer_27_key",
+      "layer_27_value"
+    ],
+    "cache_tensor_count": 56,
+    "cache_shape": [
+      1,
+      2,
+      1024,
+      128
+    ],
+    "finite_float_tensor_count": 174,
+    "cache_handoff_exact": true,
+    "unused_slots_zero": true
+  },
+  "determinism": {
+    "status": "passed",
+    "exact": true,
+    "tensors_compared": 181
+  },
+  "wrapper_agreement": {
+    "status": "passed",
+    "prefill": {
+      "outputs": 58,
+      "max_abs_error": 1.7642974853515625e-05,
+      "mean_abs_error": 1.4667658514389842e-07,
+      "atol": 1e-05,
+      "rtol": 0.0001,
+      "allclose": true
+    },
+    "decode": {
+      "outputs": 58,
+      "max_abs_error": 7.62939453125e-06,
+      "mean_abs_error": 6.721208524160637e-09,
+      "atol": 1e-05,
+      "rtol": 0.0001,
+      "allclose": true
+    },
+    "wall_seconds": 16.691306673001236
+  },
+  "wall_seconds": 17.101497439001832,
+  "peak_rss_kib": 9086344,
+  "prefill": {
+    "shape": [
+      1,
+      503,
+      1536
+    ],
+    "dtype": "float32",
+    "numel": 772608,
+    "sha256": "9966a6cb06a3cf52b45c7c560abd7e992e827c30897a6a2c3c95b3dc382a1f81",
+    "finite": true,
+    "min": -5.567739486694336,
+    "max": 9.6826810836792,
+    "mean": -0.0003234554023947567
+  },
+  "decode": {
+    "shape": [
+      1,
+      1,
+      1536
+    ],
+    "dtype": "float32",
+    "numel": 1536,
+    "sha256": "ade9d84f99ff254666de013eafbfc75c0462e27c50ac63c3dd5e0b921b863bdf",
+    "finite": true,
+    "min": -3.0838961601257324,
+    "max": 5.273512363433838,
+    "mean": 0.004210079554468393
+  }
+}

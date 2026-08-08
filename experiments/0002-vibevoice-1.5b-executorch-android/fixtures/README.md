@@ -1,9 +1,11 @@
 # Component fixtures
 
-The Qwen2 backbone's fixed prefill/decode contract and deferred heavy-RAM
-capture command are documented in
+The Qwen2 backbone's fixed prefill/decode contract, completed heavy-RAM
+capture, exact determinism check, and real host export result are documented in
 [`qwen2-backbone-abi.md`](qwen2-backbone-abi.md), with the complete ordered
-shape contract in [`qwen2-backbone-abi.json`](qwen2-backbone-abi.json).
+shape contract in [`qwen2-backbone-abi.json`](qwen2-backbone-abi.json). Raw
+fixtures and PTEs remain ignored; committed summaries preserve hashes and the
+unwidened host numerical failure.
 
 
 ## Acoustic decoder

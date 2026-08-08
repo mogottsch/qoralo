@@ -6,7 +6,7 @@ Export VibeVoice components to ExecuTorch, validate them against experiment 0001
 
 ## Status
 
-In progress. The fixed-shape FP32 decoder and explicit 34-tensor streaming-cache ABI pass on both the host and Galaxy S23 Ultra. A real deterministic diffusion-head fixture passes one-step and native-orchestrated ten-step FP32 XNNPACK execution on Android. The Qwen2 prefill/single-token ABI is fixed at a 56-tensor, 1024-slot cache and passes tiny synthetic prefill/decode through strict export, XNNPACK lowering, and the host runtime without loading the checkpoint; real FP32 fixtures wait for the heavy-RAM slot.
+In progress. The fixed-shape FP32 decoder and explicit 34-tensor streaming-cache ABI pass on both the host and Galaxy S23 Ultra. A real deterministic diffusion-head fixture passes one-step and native-orchestrated ten-step FP32 XNNPACK execution on Android. Real locked-checkpoint Qwen2 prefill and next-token fixtures are exactly deterministic and pass the 56-cache eager wrappers. Both FP32 Qwen2 entries export and execute with XNNPACK on the host, but remain unaccepted because their finite outputs exceed the initial `atol=1e-5, rtol=1e-4` tolerance. No phone was used for the backbone result.
 
 ## Current tooling
 
@@ -29,7 +29,11 @@ In progress. The fixed-shape FP32 decoder and explicit 34-tensor streaming-cache
 - [`export/speech_connectors.py`](export/speech_connectors.py) scaffolds a connector-only loader and `(acoustic, semantic) -> LM embedding` tensor ABI; real paired fixture capture/export remain.
 - [`export/qwen2_backbone.py`](export/qwen2_backbone.py) defines fixed-capacity, explicitly ordered Qwen2 prefill/decode cache wrappers and the dense speaker-conditioning boundary.
 - [`export/export_qwen2_tiny.py`](export/export_qwen2_tiny.py) proves those wrappers with a tiny synthetic Qwen2 through strict export, XNNPACK, and the ExecuTorch host runtime.
-- [`export/capture_qwen2_fixtures.py`](export/capture_qwen2_fixtures.py) is the deferred heavy-RAM capture entry point for real prefill and next-positive decode fixtures.
+- [`export/capture_qwen2_fixtures.py`](export/capture_qwen2_fixtures.py) captures real prefill and next-positive decode fixtures from the locked generation.
+- [`export/validate_qwen2_fixtures.py`](export/validate_qwen2_fixtures.py) checks exact repeat determinism, finite tensors, mask/cache occupancy, all 56 ordered cache handoffs, and eager wrapper agreement.
+- [`export/qwen2_checkpoint.py`](export/qwen2_checkpoint.py) loads only the checkpoint's Qwen2 weights into the FP32 export wrapper.
+- [`export/export_qwen2_real.py`](export/export_qwen2_real.py) strictly exports either real entry and lowers it to ExecuTorch/XNNPACK.
+- [`export/validate_qwen2_pte.py`](export/validate_qwen2_pte.py) executes both real PTEs, compares every output, and feeds the actual prefill cache outputs into decode.
 - [`fixtures/qwen2-backbone-abi.md`](fixtures/qwen2-backbone-abi.md) specifies sequence/mask/position semantics, the 56-cache order, native token-selection boundary, speaker boundary, and real-capture acceptance criteria.
 - [`android/`](android/) contains the minimal debug-only ExecuTorch 1.2 runner and its repeatable ADB harness.
 - [`fixtures/README.md`](fixtures/README.md) documents the ignored fixture layout and capture command.
@@ -40,6 +44,8 @@ In progress. The fixed-shape FP32 decoder and explicit 34-tensor streaming-cache
 - [`results/acoustic-decoder-streaming-host.json`](results/acoustic-decoder-streaming-host.json) records the two-call host streaming sequence and selected segmented ABI.
 - [`results/diffusion-head-host.json`](results/diffusion-head-host.json) records the FP32 one-call XNNPACK export, resource use, and passing numerical comparison.
 - [`results/diffusion-head-android.json`](results/diffusion-head-android.json) records cold/warm one-call latency, two ten-step loop runs, memory, and numerical comparisons.
+- [`results/qwen2-fixtures-host.json`](results/qwen2-fixtures-host.json) records real fixture structure, exact repeat determinism, and all-output eager wrapper agreement.
+- [`results/qwen2-backbone-host.json`](results/qwen2-backbone-host.json) records the passing real exports and the preserved host numerical failure.
 
 The initial non-streaming `.pte` remains the Android operator-coverage baseline. Streaming uses separate first and cached entry sets with eight stage-aligned segments because the monolithic streaming graph terminates the host runtime.
 
@@ -246,6 +252,49 @@ experiments/0002-vibevoice-1.5b-executorch-android/android/run-diffusion-probe.s
 ```
 
 Connector scaffolding also loads the real acoustic and semantic connector weights without constructing the rest of VibeVoice and exposes `(acoustic [1,64], semantic [1,128]) -> combined LM embedding [1,1536]`. A real-weight smoke check produced a finite FP32 `[1,1536]` output. Paired generative capture/export was not attempted here because Lane C owns the exclusive heavy-RAM slot and a full-model capture would violate that resource boundary. Step 17 therefore remains pending; semantic-encoder cache ABI work was not started.
+
+## FP32 Qwen2 host result
+
+Two complete locked-generation captures produced byte-identical `manifest.json`,
+`prefill.pt`, and `decode.pt` files. The prefill has 503 conditioned embeddings;
+the next positive one-token call is at position 503. Validation checked 181 raw
+tensors between runs, all floating tensors are finite, every unused cache/mask
+slot is zero, and the prefill post-cache equals the decode pre-cache exactly.
+The normative 56-tensor order is layer ascending and key then value.
+
+The checkpoint-only FP32 loader and eager fixed-cache wrappers match all 58
+outputs per entry at the initial `atol=1e-5, rtol=1e-4`:
+
+| Metric | Prefill | Decode |
+|---|---:|---:|
+| Input sequence | 503 | 1 |
+| Wrapper max absolute error | `1.76e-5` | `7.63e-6` |
+| Wrapper mean absolute error | `1.47e-7` | `6.72e-9` |
+| Comparison | passed | passed |
+
+Both real entries also pass strict `torch.export`, lower to 284 XNNPACK delegate
+segments, emit a PTE, and execute on the ExecuTorch 1.2 host runtime. Decode
+consumes the **actual ExecuTorch prefill cache outputs**. The runtime result is
+not accepted at the initial tolerance, which is preserved rather than widened:
+
+| Metric | Prefill | Chained decode |
+|---|---:|---:|
+| PTE bytes | 6,175,515,904 | 6,175,505,536 |
+| Export peak RSS | 19,123,704 KiB | 19,144,148 KiB |
+| Host inference | 7.088 s | 0.513 s |
+| Outputs finite / compared | 58 / 58 | 58 / 58 |
+| Maximum absolute error | `4.73e-4` | `4.73e-4` |
+| Mean absolute error | `1.11e-6` | `1.08e-6` |
+| Values outside tolerance | 12,844 | 11,315 |
+| Strict comparison | failed | failed |
+
+The large maximum includes cache values for which relative tolerance often
+still passes; hidden state, logits, and several caches nevertheless contain
+strict mismatches. The PTEs and full diagnostic logs remain ignored under
+`artifacts/`. No Android run or quantization follows from this unaccepted
+baseline. Reproduction commands and exact hashes are in
+[`fixtures/qwen2-backbone-abi.md`](fixtures/qwen2-backbone-abi.md) and
+[`results/qwen2-backbone-host.json`](results/qwen2-backbone-host.json).
 
 ## Deployment design
 

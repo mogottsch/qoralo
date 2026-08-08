@@ -92,7 +92,7 @@ The Qwen2 modules consume **embeddings**, not token IDs:
 `last_hidden_state` remains an output because a selected speech-diffusion token
 uses it as the positive diffusion condition.
 
-## Local ExecuTorch/XNNPACK finding
+## Tiny ExecuTorch/XNNPACK finding
 
 With PyTorch 2.11.0, Transformers 4.51.3, and ExecuTorch 1.2.0, both tiny
 prefill and one-token decode wrappers pass strict `torch.export`, XNNPACK
@@ -103,42 +103,63 @@ and explicit static cache updates avoid the shape-growing `DynamicCache` that
 cannot be a reusable Android ABI. The environment emits non-fatal torchao
 extension warnings for incompatible optional CUTLASS/MXFP8 binaries.
 
-No phone, full checkpoint, or quantization was used. INT8/INT4 work remains
-blocked until real FP32 prefill and chained decode numerics pass.
+That tiny proof used no phone, full checkpoint, or quantization.
 
-## Deferred real-fixture capture (heavy RAM)
+## Real locked-checkpoint result (heavy RAM)
 
-Only run this after Lane B releases the heavy-RAM slot, from the main worktree
-whose ignored `artifacts/` contains the pinned source/model and `.venv`:
+The real capture was run twice with the locked transcript, voices, seed 42,
+CFG scale 1.3, FP32, and source/model revisions above. Both runs produced
+byte-identical `manifest.json`, `prefill.pt`, and `decode.pt` files. Prefill
+length is 503 and decode position is 503. Validation compared 181 raw tensors,
+confirmed finite outputs, exact ordered cache handoff, and zero unused slots.
+All 58 eager wrapper outputs per entry pass `atol=1e-5, rtol=1e-4`.
+
+Both 28-layer entries pass strict export and XNNPACK lowering (284 delegate
+segments each) and execute on the host. The 6.18 GB PTEs do **not** pass the
+initial numerical tolerance: prefill has 12,844 mismatched values and chained
+decode has 11,315, with `4.73e-4` maximum absolute error for each. Decode used
+the actual ExecuTorch prefill cache outputs. All runtime outputs remain finite.
+The tolerance is not widened, so Android and quantization remain blocked.
+
+Reproduce capture twice, structural/eager validation, export, and chained host
+execution from a worktree with access to the ignored model/source artifacts:
 
 ```bash
-cd /home/moritz/dev/vibevoice-android-spike
-/usr/bin/time -v .venv/bin/python \
-  experiments/0002-vibevoice-1.5b-executorch-android/export/capture_qwen2_fixtures.py \
-  --source artifacts/source/microsoft-vibevoice \
-  --model artifacts/models/microsoft-VibeVoice-1.5B \
-  --transcript experiments/0001-vibevoice-1.5b-local-reference/transcript.txt \
-  --cache-capacity 1024 \
-  --seed 42 --cfg-scale 1.3 \
-  --output artifacts/0002/lane-c/qwen2-fixtures \
-  2>&1 | tee artifacts/0002/lane-c/qwen2-fixture-capture.log
+PY=.venv/bin/python
+ETPY=artifacts/venv-executorch-1.2/bin/python
+EXP=experiments/0002-vibevoice-1.5b-executorch-android/export
+MODEL=artifacts/models/microsoft-VibeVoice-1.5B
+SOURCE=artifacts/source/microsoft-vibevoice
+FIXTURES=artifacts/0002/lane-c/qwen2-fixtures
+REPEAT=artifacts/0002/lane-c/qwen2-fixtures-repeat
+
+for OUTPUT in "$FIXTURES" "$REPEAT"; do
+  "$PY" "$EXP/capture_qwen2_fixtures.py" \
+    --source "$SOURCE" --model "$MODEL" \
+    --transcript experiments/0001-vibevoice-1.5b-local-reference/transcript.txt \
+    --cache-capacity 1024 --seed 42 --cfg-scale 1.3 --output "$OUTPUT"
+done
+
+"$PY" "$EXP/validate_qwen2_fixtures.py" "$FIXTURES" \
+  --repeat-dir "$REPEAT" --model "$MODEL" \
+  --output artifacts/0002/lane-c/qwen2-fixture-validation.json
+
+export PATH="$PWD/artifacts/tools/flatbuffers-25.12.19:$PATH"
+for ENTRY in prefill decode; do
+  "$ETPY" "$EXP/export_qwen2_real.py" --entry "$ENTRY" \
+    --model "$MODEL" --fixture-dir "$FIXTURES" \
+    --output "artifacts/0002/lane-c/qwen2-${ENTRY}-fp32-xnnpack.pte"
+done
+
+"$ETPY" "$EXP/validate_qwen2_pte.py" \
+  artifacts/0002/lane-c/qwen2-prefill-fp32-xnnpack.pte \
+  --decode-pte artifacts/0002/lane-c/qwen2-decode-fp32-xnnpack.pte \
+  --fixture-dir "$FIXTURES" \
+  --output artifacts/0002/lane-c/qwen2-prefill-decode-host.json
 ```
 
-Acceptance for that capture:
-
-1. `manifest.json`, `prefill.pt`, and `decode.pt` exist under the ignored lane
-   directory and record the locked source/model revisions, shapes, dtypes, and
-   SHA-256 for every tensor;
-2. prefill captures the already speaker-conditioned Qwen2 embedding sequence,
-   its speaker-position mask, explicit positions/mask, final hidden state,
-   logits, and all 56 padded post-caches;
-3. decode is the next positive one-token call at the prefill end position and
-   contains all 56 pre/post caches in normative order;
-4. the prefill length and decode position fit `C=1024`, unused cache/mask slots
-   are zero, and all floating outputs are finite;
-5. FP32 eager wrappers match captured hidden state, logits, and every occupied
-   cache (`atol=1e-5`, `rtol=1e-4` initially);
-6. strict export plus ExecuTorch/XNNPACK host execution passes both entries,
-   with decode consuming the **actual ExecuTorch prefill cache outputs**;
-7. only after those checks pass may Android execution or backbone quantization
-   begin.
+Raw fixtures, PTEs, generated audio, and logs stay under ignored `artifacts/`.
+Structured summaries are committed as
+[`../results/qwen2-fixtures-host.json`](../results/qwen2-fixtures-host.json) and
+[`../results/qwen2-backbone-host.json`](../results/qwen2-backbone-host.json).
+No phone was used.

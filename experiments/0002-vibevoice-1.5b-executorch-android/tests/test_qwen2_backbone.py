@@ -20,6 +20,9 @@ from qwen2_backbone import (  # noqa: E402
     cache_tensor_names,
     flatten_cache,
 )
+from qwen2_checkpoint import TiedLMHead  # noqa: E402
+from validate_qwen2_fixtures import compare_tuple  # noqa: E402
+from validate_qwen2_pte import compare_outputs  # noqa: E402
 
 
 class Qwen2BackboneTests(unittest.TestCase):
@@ -64,6 +67,44 @@ class Qwen2BackboneTests(unittest.TestCase):
         torch.testing.assert_close(actual[:, 1], speakers[:, 1])
         torch.testing.assert_close(actual[:, 2], tokens[:, 2])
 
+    def test_tied_lm_head_uses_embedding_weight(self):
+        hidden = torch.randn(1, 16)
+        head = TiedLMHead(self.backbone.embed_tokens.weight)
+        torch.testing.assert_close(
+            head(hidden),
+            torch.nn.functional.linear(hidden, self.backbone.embed_tokens.weight),
+        )
+        self.assertIs(head.weight, self.backbone.embed_tokens.weight)
+
+    def test_full_output_comparison_checks_every_cache(self):
+        expected = (torch.ones(1), torch.full((1,), 2.0), torch.full((1,), 3.0))
+        result = compare_tuple(
+            tuple(value + 1e-6 for value in expected),
+            expected,
+            label="tiny",
+            atol=1e-5,
+            rtol=1e-4,
+        )
+        self.assertEqual(result["outputs"], 3)
+        self.assertTrue(result["allclose"])
+        with self.assertRaises(AssertionError):
+            compare_tuple(
+                (*expected[:2], torch.full((1,), 4.0)),
+                expected,
+                label="tiny",
+                atol=1e-5,
+                rtol=1e-4,
+            )
+
+    def test_pte_comparison_preserves_strict_mismatch_details(self):
+        expected = tuple(torch.zeros(1) for _ in range(58))
+        actual = (*expected[:57], torch.full((1,), 2e-5))
+        result = compare_outputs(actual, expected, atol=1e-5, rtol=1e-4)
+        self.assertFalse(result["allclose"])
+        self.assertEqual(result["mismatch_count"], 1)
+        self.assertEqual(result["output_details"][-1]["name"], "layer_27_value")
+        self.assertTrue(result["all_finite"])
+
     def test_prefill_and_decode_match_dynamic_cache_reference(self):
         prefill_embeds = torch.randn(1, 3, 16)
         prefill_mask = torch.tensor([[1, 1, 1, 0, 0, 0, 0, 0]])
@@ -90,7 +131,8 @@ class Qwen2BackboneTests(unittest.TestCase):
             actual_prefill[0], expected_prefill.last_hidden_state[:, -1:, :]
         )
         torch.testing.assert_close(
-            actual_prefill[1], self.lm_head(expected_prefill.last_hidden_state[:, -1, :]).float()
+            actual_prefill[1],
+            self.lm_head(expected_prefill.last_hidden_state[:, -1, :]).float(),
         )
         expected_cache = flatten_cache(expected_prefill.past_key_values, 2)
         for actual, expected in zip(actual_prefill[2:], expected_cache):
@@ -122,7 +164,8 @@ class Qwen2BackboneTests(unittest.TestCase):
             actual_decode[0], expected_decode.last_hidden_state[:, -1:, :]
         )
         torch.testing.assert_close(
-            actual_decode[1], self.lm_head(expected_decode.last_hidden_state[:, -1, :]).float()
+            actual_decode[1],
+            self.lm_head(expected_decode.last_hidden_state[:, -1, :]).float(),
         )
         expected_cache = flatten_cache(expected_decode.past_key_values, 2)
         for actual, expected in zip(actual_decode[2:], expected_cache):
