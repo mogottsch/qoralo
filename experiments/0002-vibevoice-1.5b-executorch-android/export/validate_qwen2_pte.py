@@ -65,30 +65,45 @@ def compare_outputs(
     maximum = 0.0
     for name, actual_tensor, expected_tensor in zip(names, actual, expected):
         difference = (actual_tensor - expected_tensor).abs().float()
+        finite = bool(
+            torch.isfinite(actual_tensor).all()
+            and torch.isfinite(expected_tensor).all()
+            and torch.isfinite(difference).all()
+        )
+        # Non-finite values are always mismatches.  Use infinity for aggregate
+        # errors so NaNs cannot accidentally make an otherwise bad run pass.
+        safe_difference = torch.where(
+            torch.isfinite(difference),
+            difference,
+            torch.full_like(difference, torch.inf),
+        )
         mismatch_count = torch.count_nonzero(
             ~torch.isclose(actual_tensor, expected_tensor, atol=atol, rtol=rtol)
         ).item()
+        tensor_maximum = safe_difference.max().item()
+        tensor_mean = safe_difference.mean().item()
         details.append(
             {
                 "name": name,
-                "max_abs_error": difference.max().item(),
-                "mean_abs_error": difference.mean().item(),
+                "max_abs_error": tensor_maximum,
+                "mean_abs_error": tensor_mean,
                 "mismatch_count": mismatch_count,
                 "numel": difference.numel(),
-                "finite": bool(torch.isfinite(actual_tensor).all()),
+                "finite": finite,
             }
         )
-        maximum = max(maximum, difference.max().item())
-        total_error += difference.sum().item()
+        maximum = max(maximum, tensor_maximum)
+        total_error += safe_difference.sum().item()
         total_values += difference.numel()
         total_mismatches += mismatch_count
+    all_finite = all(item["finite"] for item in details)
     return {
         "outputs": len(actual),
         "max_abs_error": maximum,
         "mean_abs_error": total_error / total_values,
         "mismatch_count": total_mismatches,
-        "all_finite": all(item["finite"] for item in details),
-        "allclose": total_mismatches == 0,
+        "all_finite": all_finite,
+        "allclose": total_mismatches == 0 and all_finite,
         "atol": atol,
         "rtol": rtol,
         "output_details": details,

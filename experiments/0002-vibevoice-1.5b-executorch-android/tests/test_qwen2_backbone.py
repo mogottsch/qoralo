@@ -20,6 +20,11 @@ from qwen2_backbone import (  # noqa: E402
     cache_tensor_names,
     flatten_cache,
 )
+from diagnose_qwen2 import (  # noqa: E402
+    EXPECTED_NAMES,
+    aggregate_details,
+    evaluate_acceptance,
+)
 from qwen2_checkpoint import TiedLMHead  # noqa: E402
 from validate_qwen2_fixtures import compare_tuple  # noqa: E402
 from validate_qwen2_pte import compare_outputs  # noqa: E402
@@ -104,6 +109,53 @@ class Qwen2BackboneTests(unittest.TestCase):
         self.assertEqual(result["mismatch_count"], 1)
         self.assertEqual(result["output_details"][-1]["name"], "layer_27_value")
         self.assertTrue(result["all_finite"])
+
+    def test_diagnostic_aggregation_weights_means_and_counts_mismatches(self):
+        expected = tuple(torch.zeros(2) for _ in range(58))
+        actual = list(expected)
+        actual[0] = torch.tensor([2e-5, 0.0])
+        actual[2] = torch.tensor([3e-5, 3e-5])
+        comparison = compare_outputs(tuple(actual), expected, atol=1e-5, rtol=1e-4)
+        components = aggregate_details(comparison["output_details"])
+        self.assertEqual(components["last_hidden_state"]["mismatch_count"], 1)
+        self.assertEqual(components["cache"]["mismatch_count"], 2)
+        self.assertEqual(components["cache"]["outputs"], 56)
+        self.assertAlmostEqual(
+            components["cache"]["mean_abs_error"], 6e-5 / 112, places=12
+        )
+
+    def test_non_finite_output_is_rejected(self):
+        expected = tuple(torch.zeros(1) for _ in range(58))
+        actual = (*expected[:57], torch.tensor([float("nan")]))
+        comparison = compare_outputs(actual, expected, atol=1e-5, rtol=1e-4)
+        self.assertFalse(comparison["all_finite"])
+        self.assertEqual(comparison["mismatch_count"], 1)
+        self.assertEqual(comparison["max_abs_error"], float("inf"))
+        self.assertFalse(evaluate_acceptance(comparison)["bounded_xnnpack_accepted"])
+
+    def test_bounded_acceptance_preserves_strict_failure(self):
+        expected = tuple(torch.zeros(1) for _ in range(58))
+        actual = tuple(
+            torch.tensor([8e-5 if name != "layer_00_key" else 4.7e-4])
+            for name in EXPECTED_NAMES
+        )
+        comparison = compare_outputs(actual, expected, atol=1e-5, rtol=1e-4)
+        # Use realistic large output sizes when checking the aggregate mean cap.
+        for detail in comparison["output_details"]:
+            detail["mean_abs_error"] = 1e-6
+        comparison["mean_abs_error"] = 1e-6
+        acceptance = evaluate_acceptance(comparison)
+        self.assertFalse(acceptance["strict_accepted"])
+        self.assertTrue(acceptance["bounded_xnnpack_accepted"])
+        comparison["output_details"][2]["max_abs_error"] = 5.1e-4
+        self.assertFalse(evaluate_acceptance(comparison)["bounded_xnnpack_accepted"])
+
+    def test_acceptance_rejects_missing_cache_output(self):
+        expected = tuple(torch.zeros(1) for _ in range(58))
+        comparison = compare_outputs(expected, expected, atol=1e-5, rtol=1e-4)
+        comparison["output_details"].pop()
+        self.assertFalse(evaluate_acceptance(comparison)["complete_58_output_abi"])
+        self.assertFalse(evaluate_acceptance(comparison)["bounded_xnnpack_accepted"])
 
     def test_prefill_and_decode_match_dynamic_cache_reference(self):
         prefill_embeds = torch.randn(1, 3, 16)
