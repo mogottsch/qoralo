@@ -37,8 +37,10 @@ fi
 "$PYTHON" - "$PACKAGE_DIR/manifest.json" <<'PY'
 import hashlib,json,pathlib,sys
 p=pathlib.Path(sys.argv[1]); d=json.loads(p.read_text())
-assert d["status"] == "passed" and d["stage_count"] == 30
-assert d["host_revalidation"]["acceptance"]["bounded_xnnpack_accepted"]
+assert d["status"] == "passed" and d["stage_count"] == 60
+assert d["host_revalidation"]["prefill"]["acceptance"]["bounded_xnnpack_accepted"]
+assert d["host_revalidation"]["decode_from_prefill_outputs"]["acceptance"]["bounded_xnnpack_accepted"]
+assert d["host_revalidation"]["decode_from_prefill_outputs"]["cache_source"] == "packaged_prefill_stage_outputs"
 for stage in d["stages"]:
  f=p.parent/stage["file"]
  assert f.stat().st_size == stage["bytes"]
@@ -62,8 +64,8 @@ printf '{"package_bytes":%s,"device_free_bytes":%s,"mem_available_bytes":%s,"min
 (cd "$ANDROID_DIR" && "$GRADLE" --no-daemon :app:assembleDebug) | tee "$ARTIFACT_DIR/build.log"
 adb install -r -t "$ANDROID_DIR/app/build/outputs/apk/debug/app-debug.apk" | tee "$ARTIFACT_DIR/install.log"
 adb shell run-as "$PACKAGE" mkdir -p files/qwen2-package
-adb shell run-as "$PACKAGE" rm -f 'files/qwen2-package/*' 'files/output-*.f32le' files/qwen2-prefill-result.json
-for model in prepare.pte layer-{00..27}.pte final.pte; do
+adb shell run-as "$PACKAGE" rm -f 'files/qwen2-package/*' 'files/prefill-output-*.f32le' 'files/decode-output-*.f32le' files/qwen2-decode-result.json
+for model in prepare.pte layer-{00..27}.pte final.pte decode-prepare.pte decode-layer-{00..27}.pte decode-final.pte; do
   adb push "$PACKAGE_DIR/$model" "/data/local/tmp/$model" > "$ARTIFACT_DIR/push-$model.log"
   adb shell chmod 0644 "/data/local/tmp/$model"
   adb shell run-as "$PACKAGE" cp "/data/local/tmp/$model" "files/qwen2-package/$model"
@@ -73,7 +75,7 @@ adb push "$PACKAGE_DIR/manifest.json" /data/local/tmp/qwen2-package-manifest.jso
 adb shell chmod 0644 /data/local/tmp/qwen2-package-manifest.json
 adb shell run-as "$PACKAGE" cp /data/local/tmp/qwen2-package-manifest.json files/qwen2-package/manifest.json
 adb shell rm -f /data/local/tmp/qwen2-package-manifest.json
-for input in inputs-embeds.f32le attention-mask.i64le position-ids.i64le cache-position.i64le; do
+for input in prefill-inputs-embeds.f32le prefill-attention-mask.i64le prefill-position-ids.i64le prefill-cache-position.i64le decode-inputs-embeds.f32le decode-attention-mask.i64le decode-position-ids.i64le decode-cache-position.i64le; do
   adb push "$ARTIFACT_DIR/$input" "/data/local/tmp/$input" >/dev/null
   adb shell chmod 0644 "/data/local/tmp/$input"
   adb shell run-as "$PACKAGE" cp "/data/local/tmp/$input" "files/$input"
@@ -94,18 +96,20 @@ adb shell am force-stop "$PACKAGE"
 adb shell am start -W -n "$COMPONENT" | tee "$ARTIFACT_DIR/activity-start.log"
 COMPLETE=false
 for _ in $(seq 1 3600); do
-  if adb shell run-as "$PACKAGE" test -f files/qwen2-prefill-result.json; then COMPLETE=true; break; fi
+  if adb shell run-as "$PACKAGE" test -f files/qwen2-decode-result.json; then COMPLETE=true; break; fi
   sleep 1
 done
 adb logcat -d -s VibeVoiceQwen2:V ExecuTorch:V '*:S' > "$ARTIFACT_DIR/logcat.txt" || true
 [[ "$COMPLETE" == true ]] || { echo "Qwen2 probe timed out" >&2; exit 5; }
-adb exec-out run-as "$PACKAGE" cat files/qwen2-prefill-result.json > "$ARTIFACT_DIR/device-result.json"
+adb exec-out run-as "$PACKAGE" cat files/qwen2-decode-result.json > "$ARTIFACT_DIR/device-result.json"
 cat "$ARTIFACT_DIR/device-result.json"
 [[ $("$PYTHON" -c 'import json,sys;print(json.load(open(sys.argv[1]))["status"])' "$ARTIFACT_DIR/device-result.json") == passed ]] || exit 6
-for index in $(seq -w 0 57); do
-  adb exec-out run-as "$PACKAGE" cat "files/output-$index.f32le" > "$ARTIFACT_DIR/output-$index.f32le"
+for phase in prefill decode; do
+  for index in $(seq -w 0 57); do
+    adb exec-out run-as "$PACKAGE" cat "files/$phase-output-$index.f32le" > "$ARTIFACT_DIR/$phase-output-$index.f32le"
+  done
 done
-RESULT="$BASE/results/qwen2-prefill-android.json"
+RESULT="$BASE/results/qwen2-decode-android.json"
 "$PYTHON" "$EXPORT_DIR/qwen2_android_io.py" compare "$FIXTURE_DIR" "$ARTIFACT_DIR" \
   "$ARTIFACT_DIR/device-result.json" "$RESULT" \
   --package-manifest "$PACKAGE_DIR/manifest.json" \

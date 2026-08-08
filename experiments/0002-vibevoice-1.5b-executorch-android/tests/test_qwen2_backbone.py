@@ -31,6 +31,7 @@ from diagnose_qwen2 import (  # noqa: E402
 from qwen2_checkpoint import TiedLMHead  # noqa: E402
 from validate_qwen2_fixtures import compare_tuple  # noqa: E402
 from validate_qwen2_pte import compare_outputs  # noqa: E402
+from qwen2_android_io import _validate_control  # noqa: E402
 
 
 class Qwen2BackboneTests(unittest.TestCase):
@@ -159,6 +160,40 @@ class Qwen2BackboneTests(unittest.TestCase):
         comparison["output_details"].pop()
         self.assertFalse(evaluate_acceptance(comparison)["complete_58_output_abi"])
         self.assertFalse(evaluate_acceptance(comparison)["bounded_xnnpack_accepted"])
+
+    def test_android_decode_control_requires_real_normative_cache_handoff(self):
+        capacity = 8
+        caches = tuple(torch.zeros(1, 2, capacity, 128) for _ in range(56))
+        prefill = {
+            "inputs_embeds": torch.zeros(1, 3, 16),
+            "attention_mask": torch.tensor([[1, 1, 1, 0, 0, 0, 0, 0]]),
+            "post_cache": caches,
+        }
+        decode = {
+            "attention_mask": torch.tensor([[1, 1, 1, 1, 0, 0, 0, 0]]),
+            "position_ids": torch.tensor([[3]]),
+            "cache_position": torch.tensor([3]),
+            "pre_cache": tuple(value.clone() for value in caches),
+        }
+        self.assertEqual(_validate_control(prefill, decode)["decode_valid_length"], 4)
+        decode["pre_cache"] = (*decode["pre_cache"][:-1], torch.ones_like(caches[-1]))
+        with self.assertRaisesRegex(ValueError, "ABI index 55"):
+            _validate_control(prefill, decode)
+
+    def test_android_decode_control_rejects_invalid_position_mask_and_capacity(self):
+        capacity = 4
+        caches = tuple(torch.zeros(1, 2, capacity, 128) for _ in range(56))
+        prefill = {"inputs_embeds": torch.zeros(1, 3, 16),
+                   "attention_mask": torch.tensor([[1, 1, 1, 0]]), "post_cache": caches}
+        decode = {"attention_mask": torch.ones(1, capacity, dtype=torch.long),
+                  "position_ids": torch.tensor([[2]]), "cache_position": torch.tensor([3]),
+                  "pre_cache": caches}
+        with self.assertRaisesRegex(ValueError, "position_ids"):
+            _validate_control(prefill, decode)
+        decode["position_ids"] = torch.tensor([[3]])
+        decode["cache_position"] = torch.tensor([4])
+        with self.assertRaisesRegex(ValueError, "decode position"):
+            _validate_control(prefill, decode)
 
     def test_prefill_and_decode_match_dynamic_cache_reference(self):
         prefill_embeds = torch.randn(1, 3, 16)

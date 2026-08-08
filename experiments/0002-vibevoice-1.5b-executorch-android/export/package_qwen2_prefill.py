@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Export and host-validate a phone-safe, sequential Qwen2 prefill package."""
+"""Export and host-validate a phone-safe sequential Qwen2 prefill/decode package."""
 
 from __future__ import annotations
 
@@ -76,7 +76,9 @@ def main() -> None:
     args.output.mkdir(parents=True, exist_ok=True)
     started = time.perf_counter()
     fixture = torch.load(args.fixture_dir / "prefill.pt", map_location="cpu", weights_only=True)
+    decode_fixture = torch.load(args.fixture_dir / "decode.pt", map_location="cpu", weights_only=True)
     fixture_inputs = wrapper_inputs(fixture, False)
+    decode_fixture_inputs = wrapper_inputs(decode_fixture, False)
     cache_capacity = int(fixture_inputs[1].shape[1])
     backbone, lm_head = load_qwen2_backbone(args.model.resolve(), torch.float32)
     options = dict(num_hidden_layers=LAYERS, num_key_value_heads=2,
@@ -103,34 +105,80 @@ def main() -> None:
     final_path = args.output / "final.pte"
     stages.append({"kind": "final_norm_and_lm_head", **emit(final, (hidden,), final_path)})
     last_hidden, logits = execute(final_path, (hidden,))
-    comparison = compare_outputs(
-        (last_hidden, logits, *caches), expected_outputs(fixture), 1e-5, 1e-4
-    )
+    prefill_outputs = (last_hidden, logits, *caches)
+    comparison = compare_outputs(prefill_outputs, expected_outputs(fixture), 1e-5, 1e-4)
     acceptance = evaluate_acceptance(comparison)
+
+    # Decode is exported at its normative one-token static shape. Host validation
+    # deliberately consumes the caches produced above by the packaged prefill
+    # stages, never the fixture's pre_cache tensors.
+    decode_prepare = Qwen2PrefillPrepare(backbone, **options).eval()
+    decode_prepare_path = args.output / "decode-prepare.pte"
+    stages.append({"kind": "decode_prepare", **emit(
+        decode_prepare, decode_fixture_inputs, decode_prepare_path
+    )})
+    decode_hidden, decode_causal, decode_cos, decode_sin = execute(
+        decode_prepare_path, decode_fixture_inputs
+    )
+    decode_caches = []
+    for index, layer in enumerate(backbone.layers):
+        stage = Qwen2PrefillLayer(layer, index).eval()
+        stage_inputs = (
+            decode_hidden, decode_causal, decode_fixture_inputs[3],
+            decode_cos, decode_sin, caches[index * 2], caches[index * 2 + 1],
+        )
+        path = args.output / f"decode-layer-{index:02d}.pte"
+        stages.append({"kind": "decode_layer", "layer": index,
+                       **emit(stage, stage_inputs, path)})
+        decode_hidden, key, value = execute(path, stage_inputs)
+        decode_caches.extend((key, value))
+    decode_final_path = args.output / "decode-final.pte"
+    stages.append({"kind": "decode_final_norm_and_lm_head", **emit(
+        final, (decode_hidden,), decode_final_path
+    )})
+    decode_last_hidden, decode_logits = execute(decode_final_path, (decode_hidden,))
+    decode_comparison = compare_outputs(
+        (decode_last_hidden, decode_logits, *decode_caches),
+        expected_outputs(decode_fixture), 1e-5, 1e-4,
+    )
+    decode_acceptance = evaluate_acceptance(decode_comparison)
     total = sum(stage["bytes"] for stage in stages)
     manifest = {
         "schema_version": 1,
-        "component": "qwen2_prefill_android_sequential_package",
-        "status": "passed" if acceptance["bounded_xnnpack_accepted"] else "failed",
+        "component": "qwen2_prefill_decode_android_sequential_package",
+        "status": "passed" if (
+            acceptance["bounded_xnnpack_accepted"]
+            and decode_acceptance["bounded_xnnpack_accepted"]
+        ) else "failed",
         "precision": "fp32",
         "backend": "xnnpack",
         "packaging_rationale": (
             "The monolithic 6.18 GB graph predictably exceeds currently available phone memory "
             "once XNNPACK packs weights. These 30 graphs preserve FP32 operations and checkpoint "
-            "weights but load prepare, one decoder layer, and final head sequentially; the largest "
-            "resident model file, rather than their sum, bounds model mapping/packing pressure."
+            "weights but load prepare, one decoder layer, and final head sequentially for both "
+            "prefill and one-token decode; the largest resident model file, rather than their sum, "
+            "bounds model mapping/packing pressure."
         ),
         "graph_boundaries": {
             "prepare": "conditioned embeddings -> embeddings, causal mask, shared RoPE cos/sin",
             "decoder_layer_00_through_27": "hidden + mask/RoPE + one zero KV pair -> hidden + updated KV pair",
             "final": "layer-27 hidden -> final-norm hidden and FP32 logits",
+            "decode_prepare": "one token + position/mask -> causal mask and RoPE",
+            "decode_layer_00_through_27": "hidden + actual packaged-prefill KV pair -> hidden + updated KV pair",
+            "decode_final": "decode layer-27 hidden -> final-norm hidden and FP32 logits",
             "cache_order": cache_tensor_names(LAYERS),
         },
         "stages": stages,
         "stage_count": len(stages),
         "total_bytes": total,
         "largest_stage_bytes": max(stage["bytes"] for stage in stages),
-        "host_revalidation": {"strict": comparison, "acceptance": acceptance},
+        "host_revalidation": {
+            "prefill": {"strict": comparison, "acceptance": acceptance},
+            "decode_from_prefill_outputs": {
+                "strict": decode_comparison, "acceptance": decode_acceptance,
+                "cache_source": "packaged_prefill_stage_outputs",
+            },
+        },
         "versions": {
             "torch": torch.__version__,
             "executorch": importlib.metadata.version("executorch"),
