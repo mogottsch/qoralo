@@ -1,0 +1,1474 @@
+{
+  "schema_version": 1,
+  "component": "semantic_audio_encoder",
+  "status": "host_accepted",
+  "provenance": {
+    "source_revision": "6dd49cb7200c0367205a5f1e650244259e9e423d",
+    "model_revision": "c00898d257e6b46004e3e2866a47534085fb685a",
+    "model_index_sha256": "067db9b10fdecee3a5588aa00206794156c7125f5e85f3f2234e0e6d821ee629",
+    "input_source": "real chained call_000/call_001 acoustic decoder PCM from seed-42 locked generation"
+  },
+  "abi": {
+    "entry_points": {
+      "first": {
+        "inputs": [
+          {
+            "position": 0,
+            "name": "audio",
+            "shape": [
+              1,
+              1,
+              3200
+            ],
+            "dtype": "float32"
+          }
+        ],
+        "outputs": [
+          {
+            "position": 0,
+            "name": "semantic_features",
+            "shape": [
+              1,
+              1,
+              128
+            ],
+            "dtype": "float32"
+          },
+          {
+            "position": 1,
+            "name": "cache.downsample_layers.0.0",
+            "shape": [
+              1,
+              1,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 2,
+            "name": "cache.downsample_layers.1.0",
+            "shape": [
+              1,
+              32,
+              2
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 3,
+            "name": "cache.downsample_layers.2.0",
+            "shape": [
+              1,
+              64,
+              2
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 4,
+            "name": "cache.downsample_layers.3.0",
+            "shape": [
+              1,
+              128,
+              4
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 5,
+            "name": "cache.downsample_layers.4.0",
+            "shape": [
+              1,
+              256,
+              5
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 6,
+            "name": "cache.downsample_layers.5.0",
+            "shape": [
+              1,
+              512,
+              5
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 7,
+            "name": "cache.downsample_layers.6.0",
+            "shape": [
+              1,
+              1024,
+              8
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 8,
+            "name": "cache.head",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 9,
+            "name": "cache.stages.0.0.mixer.conv",
+            "shape": [
+              1,
+              32,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 10,
+            "name": "cache.stages.0.1.mixer.conv",
+            "shape": [
+              1,
+              32,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 11,
+            "name": "cache.stages.0.2.mixer.conv",
+            "shape": [
+              1,
+              32,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 12,
+            "name": "cache.stages.1.0.mixer.conv",
+            "shape": [
+              1,
+              64,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 13,
+            "name": "cache.stages.1.1.mixer.conv",
+            "shape": [
+              1,
+              64,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 14,
+            "name": "cache.stages.1.2.mixer.conv",
+            "shape": [
+              1,
+              64,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 15,
+            "name": "cache.stages.2.0.mixer.conv",
+            "shape": [
+              1,
+              128,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 16,
+            "name": "cache.stages.2.1.mixer.conv",
+            "shape": [
+              1,
+              128,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 17,
+            "name": "cache.stages.2.2.mixer.conv",
+            "shape": [
+              1,
+              128,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 18,
+            "name": "cache.stages.3.0.mixer.conv",
+            "shape": [
+              1,
+              256,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 19,
+            "name": "cache.stages.3.1.mixer.conv",
+            "shape": [
+              1,
+              256,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 20,
+            "name": "cache.stages.3.2.mixer.conv",
+            "shape": [
+              1,
+              256,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 21,
+            "name": "cache.stages.4.0.mixer.conv",
+            "shape": [
+              1,
+              512,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 22,
+            "name": "cache.stages.4.1.mixer.conv",
+            "shape": [
+              1,
+              512,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 23,
+            "name": "cache.stages.4.2.mixer.conv",
+            "shape": [
+              1,
+              512,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 24,
+            "name": "cache.stages.5.0.mixer.conv",
+            "shape": [
+              1,
+              1024,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 25,
+            "name": "cache.stages.5.1.mixer.conv",
+            "shape": [
+              1,
+              1024,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 26,
+            "name": "cache.stages.5.2.mixer.conv",
+            "shape": [
+              1,
+              1024,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 27,
+            "name": "cache.stages.6.0.mixer.conv",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 28,
+            "name": "cache.stages.6.1.mixer.conv",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 29,
+            "name": "cache.stages.6.2.mixer.conv",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 30,
+            "name": "cache.stages.6.3.mixer.conv",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 31,
+            "name": "cache.stages.6.4.mixer.conv",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 32,
+            "name": "cache.stages.6.5.mixer.conv",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 33,
+            "name": "cache.stages.6.6.mixer.conv",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 34,
+            "name": "cache.stages.6.7.mixer.conv",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          }
+        ]
+      },
+      "cached": {
+        "inputs": [
+          {
+            "position": 0,
+            "name": "audio",
+            "shape": [
+              1,
+              1,
+              3200
+            ],
+            "dtype": "float32"
+          },
+          {
+            "position": 1,
+            "name": "cache.downsample_layers.0.0",
+            "shape": [
+              1,
+              1,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 2,
+            "name": "cache.downsample_layers.1.0",
+            "shape": [
+              1,
+              32,
+              2
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 3,
+            "name": "cache.downsample_layers.2.0",
+            "shape": [
+              1,
+              64,
+              2
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 4,
+            "name": "cache.downsample_layers.3.0",
+            "shape": [
+              1,
+              128,
+              4
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 5,
+            "name": "cache.downsample_layers.4.0",
+            "shape": [
+              1,
+              256,
+              5
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 6,
+            "name": "cache.downsample_layers.5.0",
+            "shape": [
+              1,
+              512,
+              5
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 7,
+            "name": "cache.downsample_layers.6.0",
+            "shape": [
+              1,
+              1024,
+              8
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 8,
+            "name": "cache.head",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 9,
+            "name": "cache.stages.0.0.mixer.conv",
+            "shape": [
+              1,
+              32,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 10,
+            "name": "cache.stages.0.1.mixer.conv",
+            "shape": [
+              1,
+              32,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 11,
+            "name": "cache.stages.0.2.mixer.conv",
+            "shape": [
+              1,
+              32,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 12,
+            "name": "cache.stages.1.0.mixer.conv",
+            "shape": [
+              1,
+              64,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 13,
+            "name": "cache.stages.1.1.mixer.conv",
+            "shape": [
+              1,
+              64,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 14,
+            "name": "cache.stages.1.2.mixer.conv",
+            "shape": [
+              1,
+              64,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 15,
+            "name": "cache.stages.2.0.mixer.conv",
+            "shape": [
+              1,
+              128,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 16,
+            "name": "cache.stages.2.1.mixer.conv",
+            "shape": [
+              1,
+              128,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 17,
+            "name": "cache.stages.2.2.mixer.conv",
+            "shape": [
+              1,
+              128,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 18,
+            "name": "cache.stages.3.0.mixer.conv",
+            "shape": [
+              1,
+              256,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 19,
+            "name": "cache.stages.3.1.mixer.conv",
+            "shape": [
+              1,
+              256,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 20,
+            "name": "cache.stages.3.2.mixer.conv",
+            "shape": [
+              1,
+              256,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 21,
+            "name": "cache.stages.4.0.mixer.conv",
+            "shape": [
+              1,
+              512,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 22,
+            "name": "cache.stages.4.1.mixer.conv",
+            "shape": [
+              1,
+              512,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 23,
+            "name": "cache.stages.4.2.mixer.conv",
+            "shape": [
+              1,
+              512,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 24,
+            "name": "cache.stages.5.0.mixer.conv",
+            "shape": [
+              1,
+              1024,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 25,
+            "name": "cache.stages.5.1.mixer.conv",
+            "shape": [
+              1,
+              1024,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 26,
+            "name": "cache.stages.5.2.mixer.conv",
+            "shape": [
+              1,
+              1024,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 27,
+            "name": "cache.stages.6.0.mixer.conv",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 28,
+            "name": "cache.stages.6.1.mixer.conv",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 29,
+            "name": "cache.stages.6.2.mixer.conv",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 30,
+            "name": "cache.stages.6.3.mixer.conv",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 31,
+            "name": "cache.stages.6.4.mixer.conv",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 32,
+            "name": "cache.stages.6.5.mixer.conv",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 33,
+            "name": "cache.stages.6.6.mixer.conv",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 34,
+            "name": "cache.stages.6.7.mixer.conv",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          }
+        ],
+        "outputs": [
+          {
+            "position": 0,
+            "name": "semantic_features",
+            "shape": [
+              1,
+              1,
+              128
+            ],
+            "dtype": "float32"
+          },
+          {
+            "position": 1,
+            "name": "cache.downsample_layers.0.0",
+            "shape": [
+              1,
+              1,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 2,
+            "name": "cache.downsample_layers.1.0",
+            "shape": [
+              1,
+              32,
+              2
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 3,
+            "name": "cache.downsample_layers.2.0",
+            "shape": [
+              1,
+              64,
+              2
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 4,
+            "name": "cache.downsample_layers.3.0",
+            "shape": [
+              1,
+              128,
+              4
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 5,
+            "name": "cache.downsample_layers.4.0",
+            "shape": [
+              1,
+              256,
+              5
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 6,
+            "name": "cache.downsample_layers.5.0",
+            "shape": [
+              1,
+              512,
+              5
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 7,
+            "name": "cache.downsample_layers.6.0",
+            "shape": [
+              1,
+              1024,
+              8
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 8,
+            "name": "cache.head",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 9,
+            "name": "cache.stages.0.0.mixer.conv",
+            "shape": [
+              1,
+              32,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 10,
+            "name": "cache.stages.0.1.mixer.conv",
+            "shape": [
+              1,
+              32,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 11,
+            "name": "cache.stages.0.2.mixer.conv",
+            "shape": [
+              1,
+              32,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 12,
+            "name": "cache.stages.1.0.mixer.conv",
+            "shape": [
+              1,
+              64,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 13,
+            "name": "cache.stages.1.1.mixer.conv",
+            "shape": [
+              1,
+              64,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 14,
+            "name": "cache.stages.1.2.mixer.conv",
+            "shape": [
+              1,
+              64,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 15,
+            "name": "cache.stages.2.0.mixer.conv",
+            "shape": [
+              1,
+              128,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 16,
+            "name": "cache.stages.2.1.mixer.conv",
+            "shape": [
+              1,
+              128,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 17,
+            "name": "cache.stages.2.2.mixer.conv",
+            "shape": [
+              1,
+              128,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 18,
+            "name": "cache.stages.3.0.mixer.conv",
+            "shape": [
+              1,
+              256,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 19,
+            "name": "cache.stages.3.1.mixer.conv",
+            "shape": [
+              1,
+              256,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 20,
+            "name": "cache.stages.3.2.mixer.conv",
+            "shape": [
+              1,
+              256,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 21,
+            "name": "cache.stages.4.0.mixer.conv",
+            "shape": [
+              1,
+              512,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 22,
+            "name": "cache.stages.4.1.mixer.conv",
+            "shape": [
+              1,
+              512,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 23,
+            "name": "cache.stages.4.2.mixer.conv",
+            "shape": [
+              1,
+              512,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 24,
+            "name": "cache.stages.5.0.mixer.conv",
+            "shape": [
+              1,
+              1024,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 25,
+            "name": "cache.stages.5.1.mixer.conv",
+            "shape": [
+              1,
+              1024,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 26,
+            "name": "cache.stages.5.2.mixer.conv",
+            "shape": [
+              1,
+              1024,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 27,
+            "name": "cache.stages.6.0.mixer.conv",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 28,
+            "name": "cache.stages.6.1.mixer.conv",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 29,
+            "name": "cache.stages.6.2.mixer.conv",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 30,
+            "name": "cache.stages.6.3.mixer.conv",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 31,
+            "name": "cache.stages.6.4.mixer.conv",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 32,
+            "name": "cache.stages.6.5.mixer.conv",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 33,
+            "name": "cache.stages.6.6.mixer.conv",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          },
+          {
+            "position": 34,
+            "name": "cache.stages.6.7.mixer.conv",
+            "shape": [
+              1,
+              2048,
+              6
+            ],
+            "dtype": "float32",
+            "bound": "fixed causal context; replaced on every call"
+          }
+        ]
+      }
+    },
+    "cache_count": 34,
+    "cache_order": [
+      "downsample_layers.0.0",
+      "downsample_layers.1.0",
+      "downsample_layers.2.0",
+      "downsample_layers.3.0",
+      "downsample_layers.4.0",
+      "downsample_layers.5.0",
+      "downsample_layers.6.0",
+      "head",
+      "stages.0.0.mixer.conv",
+      "stages.0.1.mixer.conv",
+      "stages.0.2.mixer.conv",
+      "stages.1.0.mixer.conv",
+      "stages.1.1.mixer.conv",
+      "stages.1.2.mixer.conv",
+      "stages.2.0.mixer.conv",
+      "stages.2.1.mixer.conv",
+      "stages.2.2.mixer.conv",
+      "stages.3.0.mixer.conv",
+      "stages.3.1.mixer.conv",
+      "stages.3.2.mixer.conv",
+      "stages.4.0.mixer.conv",
+      "stages.4.1.mixer.conv",
+      "stages.4.2.mixer.conv",
+      "stages.5.0.mixer.conv",
+      "stages.5.1.mixer.conv",
+      "stages.5.2.mixer.conv",
+      "stages.6.0.mixer.conv",
+      "stages.6.1.mixer.conv",
+      "stages.6.2.mixer.conv",
+      "stages.6.3.mixer.conv",
+      "stages.6.4.mixer.conv",
+      "stages.6.5.mixer.conv",
+      "stages.6.6.mixer.conv",
+      "stages.6.7.mixer.conv"
+    ],
+    "reset_rule": "discard all caches and invoke first; zero-filled tensors are not equivalent to absent cache at the ABI boundary",
+    "bounds_rule": "batch=1, exactly 3200 PCM samples per call, every cache has its listed fixed context shape; reject missing, reordered, wrong dtype/shape, non-contiguous, or non-finite tensors"
+  },
+  "capture": {
+    "calls": 2,
+    "input_source": "real chained call_000/call_001 acoustic decoder PCM from seed-42 locked generation",
+    "call_1_audio": {
+      "shape": [
+        1,
+        1,
+        3200
+      ],
+      "dtype": "float32",
+      "numel": 3200,
+      "sha256": "102b393d745def5ae417195a93988583f427e9a26bdab242161c66210a351c8b",
+      "finite": true,
+      "min": -8.814829925540835e-06,
+      "max": 8.345458627445623e-05,
+      "mean": 1.0693312013643208e-08
+    },
+    "call_1_features": {
+      "shape": [
+        1,
+        1,
+        128
+      ],
+      "dtype": "float32",
+      "numel": 128,
+      "sha256": "31cd53f23d9b4b713d88e02766b8a0c8836fd7eba682ab25fc0269200bff0d0d",
+      "finite": true,
+      "min": -7.470602035522461,
+      "max": 9.946871757507324,
+      "mean": 0.37652772665023804
+    },
+    "call_2_audio": {
+      "shape": [
+        1,
+        1,
+        3200
+      ],
+      "dtype": "float32",
+      "numel": 3200,
+      "sha256": "5ab7efe89d6e218e60bcfab6eb8c1358631020bb4bbe129eb211a12c169b5904",
+      "finite": true,
+      "min": -7.072111998240871e-07,
+      "max": 8.12912617220718e-07,
+      "mean": 3.146901406125835e-09
+    },
+    "call_2_features": {
+      "shape": [
+        1,
+        1,
+        128
+      ],
+      "dtype": "float32",
+      "numel": 128,
+      "sha256": "e0a6b7f1d28a6a805db5c4cd464c5af3b087d16ed0bd95987423b0556382837c",
+      "finite": true,
+      "min": -8.213154792785645,
+      "max": 13.020486831665039,
+      "mean": 0.411291241645813
+    },
+    "call_2_pre_cache_equals_call_1_post_cache": true,
+    "determinism": {
+      "captures": 2,
+      "all_tensor_hashes_match": true,
+      "capture_1": {
+        "wall_seconds": 4.17333258299999,
+        "peak_rss_kib": 4124528
+      },
+      "capture_2": {
+        "wall_seconds": 3.985460473000046,
+        "peak_rss_kib": 4128464
+      }
+    }
+  },
+  "export": {
+    "backend": "xnnpack",
+    "precision": "fp32",
+    "versions": {
+      "python": "3.11.13",
+      "torch": "2.11.0+cpu",
+      "executorch": "1.2.0"
+    },
+    "entry_points": {
+      "first": {
+        "pte": {
+          "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/0002/lane-b/semantic-encoder/semantic-encoder-first-xnnpack.pte",
+          "bytes": 1378719616,
+          "sha256": "d616a66ad2593751d44208c18848e84f5d47e2457b1f1edddcb92fe4faee0fef"
+        },
+        "delegate_segments": 53,
+        "eager_vs_capture_max_abs_error": 0.0,
+        "exported_vs_eager_max_abs_error": 0.0
+      },
+      "cached": {
+        "pte": {
+          "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/0002/lane-b/semantic-encoder/semantic-encoder-cached-xnnpack.pte",
+          "bytes": 1378714368,
+          "sha256": "451c9928661eed0efe99ee5144f325f22cde4c73e8b45024ff185449226819b2"
+        },
+        "delegate_segments": 53,
+        "eager_vs_capture_max_abs_error": 0.0,
+        "exported_vs_eager_max_abs_error": 0.0
+      }
+    },
+    "measurement": {
+      "wall_seconds": 81.28295017200003,
+      "peak_rss_kib": 6226232
+    }
+  },
+  "host_validation": {
+    "schema_version": 1,
+    "component": "semantic_audio_encoder",
+    "backend": "xnnpack",
+    "thresholds": {
+      "strict_atol": 1e-05,
+      "rtol": 0.0001,
+      "cache_acceptance_atol": 0.001
+    },
+    "chaining": {
+      "call_2_cache_source": "actual ExecuTorch call_1 outputs[1:35]",
+      "cache_tensor_count": 34
+    },
+    "calls": [
+      {
+        "label": "call_1",
+        "semantic_features": {
+          "finite": true,
+          "allclose": true,
+          "mismatch_count": 0,
+          "bounded_cache_allclose": true,
+          "bounded_cache_mismatch_count": 0,
+          "max_abs_error": 1.0013580322265625e-05
+        },
+        "cache": {
+          "tensor_count": 34,
+          "strict_allclose": false,
+          "strict_mismatch_count": 2362,
+          "acceptance_atol": 0.001,
+          "accepted": true,
+          "acceptance_mismatch_count": 0,
+          "max_abs_error": 0.00037229061126708984
+        }
+      },
+      {
+        "label": "call_2_chained",
+        "semantic_features": {
+          "finite": true,
+          "allclose": true,
+          "mismatch_count": 0,
+          "bounded_cache_allclose": true,
+          "bounded_cache_mismatch_count": 0,
+          "max_abs_error": 2.193450927734375e-05
+        },
+        "cache": {
+          "tensor_count": 34,
+          "strict_allclose": false,
+          "strict_mismatch_count": 1117,
+          "acceptance_atol": 0.001,
+          "accepted": true,
+          "acceptance_mismatch_count": 0,
+          "max_abs_error": 0.000907599925994873
+        }
+      },
+      {
+        "label": "reset_call",
+        "semantic_features": {
+          "finite": true,
+          "allclose": true,
+          "mismatch_count": 0,
+          "bounded_cache_allclose": true,
+          "bounded_cache_mismatch_count": 0,
+          "max_abs_error": 1.0013580322265625e-05
+        },
+        "cache": {
+          "tensor_count": 34,
+          "strict_allclose": false,
+          "strict_mismatch_count": 2362,
+          "acceptance_atol": 0.001,
+          "accepted": true,
+          "acceptance_mismatch_count": 0,
+          "max_abs_error": 0.00037229061126708984
+        }
+      }
+    ],
+    "reset": {
+      "rule": "invoke first entry point with no cache tensors",
+      "bit_exact_with_initial_call": true
+    },
+    "timing_seconds": {
+      "load_two_programs": 1.274571702000003,
+      "call_1": 0.06703163300005599,
+      "call_2": 0.06544152099991152,
+      "total": 1.490443048999964
+    },
+    "peak_rss_kib": 3278108,
+    "runtime_outputs": {
+      "call_1_features": {
+        "shape": [
+          1,
+          1,
+          128
+        ],
+        "dtype": "float32",
+        "numel": 128,
+        "sha256": "145d73aab55ad332c731976c00d984a3f379b9fa52c8e03b5605e8d397895125",
+        "finite": true,
+        "min": -7.470598220825195,
+        "max": 9.94687557220459,
+        "mean": 0.37652841210365295
+      },
+      "call_2_features": {
+        "shape": [
+          1,
+          1,
+          128
+        ],
+        "dtype": "float32",
+        "numel": 128,
+        "sha256": "eba0716d1d5ad328fd2d46ddcf01d40a3edbd4a366fc667761771c95cda7dcc2",
+        "finite": true,
+        "min": -8.213165283203125,
+        "max": 13.020476341247559,
+        "mean": 0.41129112243652344
+      }
+    },
+    "accepted": true,
+    "conclusion": "accepted: real two-call XNNPACK runtime chain matches eager capture and reset is deterministic"
+  },
+  "acceptance_note": "Semantic features pass atol=1e-5/rtol=1e-4 on both calls. XNNPACK cache intermediates retain their strict mismatch counts and use an explicit atol=1e-3 bound; the actual bounded call-one runtime caches produce a strict-passing call-two semantic result.",
+  "artifact_policy": {
+    "committed": "ABI, manifest, result, scripts, tests, hashes and measurements",
+    "ignored": [
+      "fixture.pt",
+      "*.pte",
+      "*.reference.pt",
+      "logs"
+    ]
+  },
+  "commands": [
+    "flock artifacts/locks/heavy-ram.lock bash -lc 'PYTHONPATH=artifacts/source/microsoft-vibevoice .venv/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/capture_semantic_encoder.py --output artifacts/0002/lane-b/semantic-encoder/capture-1'",
+    "flock artifacts/locks/heavy-ram.lock bash -lc 'PYTHONPATH=artifacts/source/microsoft-vibevoice .venv/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/capture_semantic_encoder.py --output artifacts/0002/lane-b/semantic-encoder/capture-2 --repeat-of artifacts/0002/lane-b/semantic-encoder/capture-1/fixture.pt'",
+    "flock artifacts/locks/heavy-ram.lock bash -lc 'PATH=$PWD/artifacts/venv-executorch-1.2/bin:$PATH PYTHONPATH=artifacts/source/microsoft-vibevoice artifacts/venv-executorch-1.2/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/export_semantic_encoder.py'",
+    "flock artifacts/locks/heavy-ram.lock bash -lc 'PATH=$PWD/artifacts/venv-executorch-1.2/bin:$PATH artifacts/venv-executorch-1.2/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/validate_semantic_encoder.py'",
+    "python -m pytest experiments/0002-vibevoice-1.5b-executorch-android/tests/test_semantic_encoder.py"
+  ],
+  "commit_shas": [],
+  "conclusion": "accepted: real two-call XNNPACK runtime chain matches eager capture and reset is deterministic"
+}

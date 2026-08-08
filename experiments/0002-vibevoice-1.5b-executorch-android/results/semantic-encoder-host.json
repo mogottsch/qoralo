@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "component": "semantic_audio_encoder",
+  "backend": "xnnpack",
+  "thresholds": {
+    "strict_atol": 1e-05,
+    "rtol": 0.0001,
+    "cache_acceptance_atol": 0.001
+  },
+  "chaining": {
+    "call_2_cache_source": "actual ExecuTorch call_1 outputs[1:35]",
+    "cache_tensor_count": 34
+  },
+  "calls": [
+    {
+      "label": "call_1",
+      "semantic_features": {
+        "finite": true,
+        "allclose": true,
+        "mismatch_count": 0,
+        "bounded_cache_allclose": true,
+        "bounded_cache_mismatch_count": 0,
+        "max_abs_error": 1.0013580322265625e-05
+      },
+      "cache": {
+        "tensor_count": 34,
+        "strict_allclose": false,
+        "strict_mismatch_count": 2362,
+        "acceptance_atol": 0.001,
+        "accepted": true,
+        "acceptance_mismatch_count": 0,
+        "max_abs_error": 0.00037229061126708984
+      }
+    },
+    {
+      "label": "call_2_chained",
+      "semantic_features": {
+        "finite": true,
+        "allclose": true,
+        "mismatch_count": 0,
+        "bounded_cache_allclose": true,
+        "bounded_cache_mismatch_count": 0,
+        "max_abs_error": 2.193450927734375e-05
+      },
+      "cache": {
+        "tensor_count": 34,
+        "strict_allclose": false,
+        "strict_mismatch_count": 1117,
+        "acceptance_atol": 0.001,
+        "accepted": true,
+        "acceptance_mismatch_count": 0,
+        "max_abs_error": 0.000907599925994873
+      }
+    },
+    {
+      "label": "reset_call",
+      "semantic_features": {
+        "finite": true,
+        "allclose": true,
+        "mismatch_count": 0,
+        "bounded_cache_allclose": true,
+        "bounded_cache_mismatch_count": 0,
+        "max_abs_error": 1.0013580322265625e-05
+      },
+      "cache": {
+        "tensor_count": 34,
+        "strict_allclose": false,
+        "strict_mismatch_count": 2362,
+        "acceptance_atol": 0.001,
+        "accepted": true,
+        "acceptance_mismatch_count": 0,
+        "max_abs_error": 0.00037229061126708984
+      }
+    }
+  ],
+  "reset": {
+    "rule": "invoke first entry point with no cache tensors",
+    "bit_exact_with_initial_call": true
+  },
+  "timing_seconds": {
+    "load_two_programs": 1.274571702000003,
+    "call_1": 0.06703163300005599,
+    "call_2": 0.06544152099991152,
+    "total": 1.490443048999964
+  },
+  "peak_rss_kib": 3278108,
+  "runtime_outputs": {
+    "call_1_features": {
+      "shape": [
+        1,
+        1,
+        128
+      ],
+      "dtype": "float32",
+      "numel": 128,
+      "sha256": "145d73aab55ad332c731976c00d984a3f379b9fa52c8e03b5605e8d397895125",
+      "finite": true,
+      "min": -7.470598220825195,
+      "max": 9.94687557220459,
+      "mean": 0.37652841210365295
+    },
+    "call_2_features": {
+      "shape": [
+        1,
+        1,
+        128
+      ],
+      "dtype": "float32",
+      "numel": 128,
+      "sha256": "eba0716d1d5ad328fd2d46ddcf01d40a3edbd4a366fc667761771c95cda7dcc2",
+      "finite": true,
+      "min": -8.213165283203125,
+      "max": 13.020476341247559,
+      "mean": 0.41129112243652344
+    }
+  },
+  "accepted": true,
+  "conclusion": "accepted: real two-call XNNPACK runtime chain matches eager capture and reset is deterministic",
+  "artifact_sizes_and_hashes": {
+    "first": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/0002/lane-b/semantic-encoder/semantic-encoder-first-xnnpack.pte",
+      "bytes": 1378719616,
+      "sha256": "d616a66ad2593751d44208c18848e84f5d47e2457b1f1edddcb92fe4faee0fef"
+    },
+    "cached": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/0002/lane-b/semantic-encoder/semantic-encoder-cached-xnnpack.pte",
+      "bytes": 1378714368,
+      "sha256": "451c9928661eed0efe99ee5144f325f22cde4c73e8b45024ff185449226819b2"
+    }
+  },
+  "versions": {
+    "python": "3.11.13",
+    "torch": "2.11.0+cpu",
+    "executorch": "1.2.0"
+  },
+  "commands": [
+    "flock artifacts/locks/heavy-ram.lock bash -lc 'PYTHONPATH=artifacts/source/microsoft-vibevoice .venv/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/capture_semantic_encoder.py --output artifacts/0002/lane-b/semantic-encoder/capture-1'",
+    "flock artifacts/locks/heavy-ram.lock bash -lc 'PYTHONPATH=artifacts/source/microsoft-vibevoice .venv/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/capture_semantic_encoder.py --output artifacts/0002/lane-b/semantic-encoder/capture-2 --repeat-of artifacts/0002/lane-b/semantic-encoder/capture-1/fixture.pt'",
+    "flock artifacts/locks/heavy-ram.lock bash -lc 'PATH=$PWD/artifacts/venv-executorch-1.2/bin:$PATH PYTHONPATH=artifacts/source/microsoft-vibevoice artifacts/venv-executorch-1.2/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/export_semantic_encoder.py'",
+    "flock artifacts/locks/heavy-ram.lock bash -lc 'PATH=$PWD/artifacts/venv-executorch-1.2/bin:$PATH artifacts/venv-executorch-1.2/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/validate_semantic_encoder.py'",
+    "python -m pytest experiments/0002-vibevoice-1.5b-executorch-android/tests/test_semantic_encoder.py"
+  ],
+  "commit_shas": []
+}
