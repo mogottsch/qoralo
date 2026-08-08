@@ -1,0 +1,285 @@
+{
+  "schema_version": 1,
+  "component": "speaker_conditioning",
+  "status": "captured_and_frozen",
+  "provenance": {
+    "source_revision": "6dd49cb7200c0367205a5f1e650244259e9e423d",
+    "model_revision": "c00898d257e6b46004e3e2866a47534085fb685a",
+    "model_index_sha256": "067db9b10fdecee3a5588aa00206794156c7125f5e85f3f2234e0e6d821ee629",
+    "transcript_sha256": "e971969aff3d1f3e656180adf90e3f727299a842b83b2237a8e3b4c578fdf7d1",
+    "speakers": [
+      "Carter",
+      "Maya"
+    ],
+    "seed": 42,
+    "cfg_scale": 1.3,
+    "device": "cpu_fp32"
+  },
+  "speaker_hashes": {
+    "Carter": {
+      "prompt_features": {
+        "shape": [
+          208,
+          64
+        ],
+        "dtype": "float32",
+        "numel": 13312,
+        "sha256": "6ea114e633a3eb5d95d8b531dfbab7ff51b073e85d247efd6e85c2794b995f5d",
+        "finite": true,
+        "min": -5.024002552032471,
+        "max": 5.117676734924316,
+        "mean": 0.0032357522286474705
+      },
+      "connector_outputs": {
+        "shape": [
+          208,
+          1536
+        ],
+        "dtype": "float32",
+        "numel": 319488,
+        "sha256": "926d08c33d90cc89036ef00c736ba7bc423152313f166afe9b57d8c6e56bc708",
+        "finite": true,
+        "min": -5.567739486694336,
+        "max": 9.6826810836792,
+        "mean": 3.6052297218702734e-05
+      }
+    },
+    "Maya": {
+      "prompt_features": {
+        "shape": [
+          208,
+          64
+        ],
+        "dtype": "float32",
+        "numel": 13312,
+        "sha256": "0be32c0eb7c54e15e5ce5c000f2f49d17c37c04006d3e177cf6cdfb754e3d7df",
+        "finite": true,
+        "min": -4.985572338104248,
+        "max": 4.365322113037109,
+        "mean": -0.04004591703414917
+      },
+      "connector_outputs": {
+        "shape": [
+          204,
+          1536
+        ],
+        "dtype": "float32",
+        "numel": 313344,
+        "sha256": "7c3e42d8a412292606c98b02e1fbefd5f6ebc35e075e9433eadcc7b183fdb207",
+        "finite": true,
+        "min": -1.7615288496017456,
+        "max": 3.178408145904541,
+        "mean": -0.0008915284997783601
+      }
+    }
+  },
+  "abi": {
+    "capture_intermediate": {
+      "name": "prompt_features",
+      "shape": [
+        2,
+        208,
+        64
+      ],
+      "dtype": "float32",
+      "ownership": "produced once on host from pinned voice prompts; raw audio is discarded"
+    },
+    "inputs": [
+      {
+        "position": 0,
+        "name": "token_embeddings",
+        "shape": [
+          1,
+          503,
+          1536
+        ],
+        "dtype": "float32"
+      },
+      {
+        "position": 1,
+        "name": "connector_outputs",
+        "shape": [
+          2,
+          208,
+          1536
+        ],
+        "dtype": "float32"
+      },
+      {
+        "position": 2,
+        "name": "prompt_mask",
+        "shape": [
+          2,
+          208
+        ],
+        "dtype": "bool"
+      },
+      {
+        "position": 3,
+        "name": "speaker_ids",
+        "shape": [
+          2
+        ],
+        "dtype": "int64",
+        "values": [
+          0,
+          1
+        ]
+      },
+      {
+        "position": 4,
+        "name": "sequence_speaker_ids",
+        "shape": [
+          1,
+          503
+        ],
+        "dtype": "int64",
+        "sentinel": -1
+      }
+    ],
+    "outputs": [
+      {
+        "position": 0,
+        "name": "conditioned_embeddings",
+        "shape": [
+          1,
+          503,
+          1536
+        ],
+        "dtype": "float32"
+      }
+    ],
+    "replacement_rule": "for each speaker row, consume prompt_mask-valid connector frames in order and replace sequence positions carrying that speaker ID; -1 positions retain token embeddings",
+    "malformed_policy": "reject unknown/duplicate/negative IDs, count mismatches, wrong masks, shapes, dtypes, non-contiguous inputs, and non-finite floats"
+  },
+  "tensors": {
+    "prompt_features": {
+      "shape": [
+        2,
+        208,
+        64
+      ],
+      "dtype": "float32",
+      "numel": 26624,
+      "sha256": "3016fe6f504bb5563a54a431d0b40839afeef37bb79e6586feb1b5a61c64c25d",
+      "finite": true,
+      "min": -5.024002552032471,
+      "max": 5.117676734924316,
+      "mean": -0.018405085429549217
+    },
+    "connector_outputs": {
+      "shape": [
+        2,
+        208,
+        1536
+      ],
+      "dtype": "float32",
+      "numel": 638976,
+      "sha256": "e40eece2c193216363c18bdb747f864b912997b1119e9e031b34c364ed357d64",
+      "finite": true,
+      "min": -5.567739486694336,
+      "max": 9.6826810836792,
+      "mean": -0.00039629178354516625
+    },
+    "prompt_mask": {
+      "shape": [
+        2,
+        208
+      ],
+      "dtype": "bool",
+      "numel": 416,
+      "sha256": "29bec115ca10f8a55fb11ea67e9eb4700d9e61595fcfb379951ddb6a8893b3b9"
+    },
+    "speaker_ids": {
+      "shape": [
+        2
+      ],
+      "dtype": "int64",
+      "numel": 2,
+      "sha256": "9d34149fbd1fe777eb238799054c8cbfbce372255f219f8740838def9bfd02db"
+    },
+    "sequence_speaker_ids": {
+      "shape": [
+        1,
+        503
+      ],
+      "dtype": "int64",
+      "numel": 503,
+      "sha256": "759e6563d63a152fe36f1a76b40433184500349bfca4e0e320ebb52cce420e9e"
+    },
+    "token_embeddings": {
+      "shape": [
+        1,
+        503,
+        1536
+      ],
+      "dtype": "float32",
+      "numel": 772608,
+      "sha256": "6a7e7e4aeebeb2f587e8cd7dcf5f0b51d7a5ea755474d429a490b288adaed1cd",
+      "finite": true,
+      "min": -0.6796875,
+      "max": 0.546875,
+      "mean": 0.002279636450111866
+    },
+    "conditioned_embeddings": {
+      "shape": [
+        1,
+        503,
+        1536
+      ],
+      "dtype": "float32",
+      "numel": 772608,
+      "sha256": "9966a6cb06a3cf52b45c7c560abd7e992e827c30897a6a2c3c95b3dc382a1f81",
+      "finite": true,
+      "min": -5.567739486694336,
+      "max": 9.6826810836792,
+      "mean": -0.0003234554023947567
+    }
+  },
+  "speaker_layout": {
+    "Carter": {
+      "id": 0,
+      "valid_frames": 208
+    },
+    "Maya": {
+      "id": 1,
+      "valid_frames": 204
+    },
+    "selected_positions": 412,
+    "ordinary_positions": 91
+  },
+  "determinism": {
+    "captures": 2,
+    "all_tensor_hashes_match": true,
+    "capture_1": {
+      "wall_seconds": 23.328287788999887,
+      "peak_rss_kib": 13217868
+    },
+    "capture_2": {
+      "wall_seconds": 20.631254257000137,
+      "peak_rss_kib": 13219612
+    }
+  },
+  "state_ownership": {
+    "conditioning": "stateless",
+    "active_speaker": "native generation controller",
+    "switch": "SpeakerTransitionState.select increments transitions only when active ID changes",
+    "reset": "controller calls reset at utterance boundary; immutable prompt features are retained"
+  },
+  "raw_audio_policy": "voice WAV bytes and waveform tensors are inputs to capture only and are never saved, hashed, or committed",
+  "artifact_policy": {
+    "committed": "manifest hashes and metadata only",
+    "ignored": [
+      "voice WAVs",
+      "waveform tensors",
+      "fixture.pt",
+      "capture logs",
+      "generated audio"
+    ]
+  },
+  "commands": [
+    "flock artifacts/locks/heavy-ram.lock bash -lc 'PYTHONPATH=artifacts/source/microsoft-vibevoice .venv/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/capture_speaker_conditioning.py --output artifacts/0002/lane-c/speaker-conditioning/capture-1'",
+    "flock artifacts/locks/heavy-ram.lock bash -lc 'PYTHONPATH=artifacts/source/microsoft-vibevoice .venv/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/capture_speaker_conditioning.py --output artifacts/0002/lane-c/speaker-conditioning/capture-2 --repeat-of artifacts/0002/lane-c/speaker-conditioning/capture-1/fixture.pt'",
+    "artifacts/venv-executorch-1.2/bin/python -m pytest experiments/0002-vibevoice-1.5b-executorch-android/tests -q"
+  ]
+}

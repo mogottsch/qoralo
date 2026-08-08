@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "component": "speaker_conditioning",
+  "status": "passed",
+  "conclusion": "Pinned Carter and Maya prompt features and connector outputs are deterministic. The validated tensor-only boundary exactly reproduces PyTorch selected-position replacement, preserves ordinary token embeddings, and makes native switch/reset ownership explicit.",
+  "source_revision": "6dd49cb7200c0367205a5f1e650244259e9e423d",
+  "model_revision": "c00898d257e6b46004e3e2866a47534085fb685a",
+  "fixture": {
+    "manifest": "fixtures/speaker-conditioning-manifest.json",
+    "speakers": [
+      "Carter",
+      "Maya"
+    ],
+    "speaker_hashes": {
+      "Carter": {
+        "prompt_features": "6ea114e633a3eb5d95d8b531dfbab7ff51b073e85d247efd6e85c2794b995f5d",
+        "connector_outputs": "926d08c33d90cc89036ef00c736ba7bc423152313f166afe9b57d8c6e56bc708"
+      },
+      "Maya": {
+        "prompt_features": "0be32c0eb7c54e15e5ce5c000f2f49d17c37c04006d3e177cf6cdfb754e3d7df",
+        "connector_outputs": "7c3e42d8a412292606c98b02e1fbefd5f6ebc35e075e9433eadcc7b183fdb207"
+      }
+    },
+    "raw_audio_ignored": true,
+    "deterministic_repeat_all_hashes_match": true
+  },
+  "comparison": {
+    "reference": "pinned PyTorch inputs_embeds[speech_input_mask] = speech_embeds behavior",
+    "selected_positions": 412,
+    "ordinary_positions": 91,
+    "selected_max_abs_error": 0.0,
+    "ordinary_max_abs_error": 0.0,
+    "mismatch_count": 0,
+    "exact": true,
+    "conditioned_embeddings_sha256": "9966a6cb06a3cf52b45c7c560abd7e992e827c30897a6a2c3c95b3dc382a1f81"
+  },
+  "switching": {
+    "carter_id": 0,
+    "maya_id": 1,
+    "validated_sequence": "reset -> Carter -> Carter -> Maya -> reset",
+    "transition_count_before_reset": 1,
+    "ownership": "native generation controller, not exported model"
+  },
+  "validation": {
+    "malformed_cases": [
+      "duplicate speaker IDs",
+      "unknown speaker ID",
+      "ID below -1",
+      "prompt/sequence count mismatch",
+      "wrong mask shape",
+      "wrong hidden shape",
+      "wrong dtype",
+      "non-contiguous tensor",
+      "non-finite float"
+    ],
+    "tests": "43 passed"
+  },
+  "metrics": {
+    "capture_1_wall_seconds": 23.328287788999887,
+    "capture_2_wall_seconds": 20.631254257000137,
+    "capture_1_peak_rss_kib": 13217868,
+    "capture_2_peak_rss_kib": 13219612
+  },
+  "commands": [
+    "flock artifacts/locks/heavy-ram.lock bash -lc 'PYTHONPATH=artifacts/source/microsoft-vibevoice .venv/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/capture_speaker_conditioning.py --output artifacts/0002/lane-c/speaker-conditioning/capture-1'",
+    "flock artifacts/locks/heavy-ram.lock bash -lc 'PYTHONPATH=artifacts/source/microsoft-vibevoice .venv/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/capture_speaker_conditioning.py --output artifacts/0002/lane-c/speaker-conditioning/capture-2 --repeat-of artifacts/0002/lane-c/speaker-conditioning/capture-1/fixture.pt'",
+    "artifacts/venv-executorch-1.2/bin/python -m pytest experiments/0002-vibevoice-1.5b-executorch-android/tests -q"
+  ],
+  "artifacts": {
+    "large_artifacts_ignored": true,
+    "capture_root": "artifacts/0002/lane-c/speaker-conditioning"
+  },
+  "commits": [
+    "ad3ddfbc825de2294e5dea0bc527e6c9e13375d1"
+  ]
+}
