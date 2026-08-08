@@ -6,7 +6,7 @@ Export VibeVoice components to ExecuTorch, validate them against experiment 0001
 
 ## Status
 
-In progress. The fixed-shape FP32 decoder and explicit 34-tensor streaming-cache ABI pass on both the host and Galaxy S23 Ultra. A real deterministic diffusion-head fixture passes a one-call FP32 XNNPACK PTE on the host; Android diffusion execution remains. The Qwen2 prefill/single-token ABI is fixed at a 56-tensor, 1024-slot cache and passes tiny synthetic prefill/decode through strict export, XNNPACK lowering, and the host runtime without loading the checkpoint; real FP32 fixtures wait for the heavy-RAM slot.
+In progress. The fixed-shape FP32 decoder and explicit 34-tensor streaming-cache ABI pass on both the host and Galaxy S23 Ultra. A real deterministic diffusion-head fixture passes one-step and native-orchestrated ten-step FP32 XNNPACK execution on Android. The Qwen2 prefill/single-token ABI is fixed at a 56-tensor, 1024-slot cache and passes tiny synthetic prefill/decode through strict export, XNNPACK lowering, and the host runtime without loading the checkpoint; real FP32 fixtures wait for the heavy-RAM slot.
 
 ## Current tooling
 
@@ -23,6 +23,9 @@ In progress. The fixed-shape FP32 decoder and explicit 34-tensor streaming-cache
 - [`export/diffusion_head.py`](export/diffusion_head.py) loads only prediction-head checkpoint tensors and defines the four-input FP32 ABI.
 - [`export/export_diffusion_step.py`](export/export_diffusion_step.py) exports the fixed CFG prediction to portable ExecuTorch or XNNPACK.
 - [`export/validate_diffusion_step.py`](export/validate_diffusion_step.py) runs the PTE and records a structured full-tensor comparison.
+- [`export/diffusion_scheduler.py`](export/diffusion_scheduler.py) mirrors the locked ten-step DPM-Solver++ schedule without loading the full model.
+- [`export/validate_diffusion_loop.py`](export/validate_diffusion_loop.py) invokes the one-step PTE ten times and freezes a host loop reference for native comparison.
+- [`export/diffusion_android_io.py`](export/diffusion_android_io.py) serializes all four diffusion inputs plus the scheduler and compares phone outputs.
 - [`export/speech_connectors.py`](export/speech_connectors.py) scaffolds a connector-only loader and `(acoustic, semantic) -> LM embedding` tensor ABI; real paired fixture capture/export remain.
 - [`export/qwen2_backbone.py`](export/qwen2_backbone.py) defines fixed-capacity, explicitly ordered Qwen2 prefill/decode cache wrappers and the dense speaker-conditioning boundary.
 - [`export/export_qwen2_tiny.py`](export/export_qwen2_tiny.py) proves those wrappers with a tiny synthetic Qwen2 through strict export, XNNPACK, and the ExecuTorch host runtime.
@@ -36,6 +39,7 @@ In progress. The fixed-shape FP32 decoder and explicit 34-tensor streaming-cache
 - [`results/acoustic-decoder-android.json`](results/acoustic-decoder-android.json) records device runs, memory observations, and the numerical comparison.
 - [`results/acoustic-decoder-streaming-host.json`](results/acoustic-decoder-streaming-host.json) records the two-call host streaming sequence and selected segmented ABI.
 - [`results/diffusion-head-host.json`](results/diffusion-head-host.json) records the FP32 one-call XNNPACK export, resource use, and passing numerical comparison.
+- [`results/diffusion-head-android.json`](results/diffusion-head-android.json) records cold/warm one-call latency, two ten-step loop runs, memory, and numerical comparisons.
 
 The initial non-streaming `.pte` remains the Android operator-coverage baseline. Streaming uses separate first and cached entry sets with eight stage-aligned segments because the monolithic streaming graph terminates the host runtime.
 
@@ -217,9 +221,31 @@ $PY "$EXP/validate_diffusion_step.py" \
   "$ART/diffusion-step-xnnpack.pte" --output "$ART/host-result.json"
 ```
 
-Android was intentionally not used in this lane slice. The next diffusion action is to feed this exact PTE and fixture through the existing minimal runner, then implement the ten scheduler steps in native orchestration only after the one-call device comparison passes.
+## FP32 diffusion Android and native-loop result
 
-Connector scaffolding also loads the real acoustic and semantic connector weights without constructing the rest of VibeVoice and exposes `(acoustic [1,64], semantic [1,128]) -> combined LM embedding [1,1536]`. A real-weight smoke check produced a finite FP32 `[1,1536]` output. This is not step 17 completion: paired generative fixtures, export, and PyTorch/ExecuTorch comparison are still required. Semantic-encoder cache ABI work was not started.
+The Galaxy S23 Ultra runs the same 493,152,000-byte XNNPACK PTE through a dedicated four-input activity. The first invocation after a cold activity start is recorded separately from two same-process repeats. The Java controller then resets the captured latent, invokes the PTE at the ten locked timesteps, and applies FP32 DPM-Solver++ order-two midpoint updates outside the graph.
+
+| Metric | Result |
+|---|---:|
+| PTE mmap load | 0.0218 s |
+| One-step cold | 0.9029 s |
+| One-step warm repeats | 0.2148 s, 0.3371 s |
+| Ten-step loop runs | 1.6672 s, 1.2457 s |
+| Process VmHWM | 711,388 KiB |
+| Peak observed PSS | 522,263 KiB |
+| One-step maximum error | `1.18e-6` |
+| Ten-step final-latent maximum error | `2.26e-6` |
+| Comparison | passed (`atol=2e-5`, `rtol=1e-4`) |
+
+The ten-step reference uses ten host XNNPACK calls plus an independently implemented scheduler that was checked against the pinned Python scheduler. Android owns the loop and scheduler state; the PTE remains exactly one prediction-head/CFG call. This proves deterministic component orchestration for one captured condition pair, not text-to-audio generation. Memory is app-reported `VmHWM` and point-in-time PSS, not a high-frequency external trace.
+
+Reproduce host fixture generation, APK build/install, transfer, cold/warm execution, output retrieval, and comparison with:
+
+```bash
+experiments/0002-vibevoice-1.5b-executorch-android/android/run-diffusion-probe.sh
+```
+
+Connector scaffolding also loads the real acoustic and semantic connector weights without constructing the rest of VibeVoice and exposes `(acoustic [1,64], semantic [1,128]) -> combined LM embedding [1,1536]`. A real-weight smoke check produced a finite FP32 `[1,1536]` output. Paired generative capture/export was not attempted here because Lane C owns the exclusive heavy-RAM slot and a full-model capture would violate that resource boundary. Step 17 therefore remains pending; semantic-encoder cache ABI work was not started.
 
 ## Deployment design
 

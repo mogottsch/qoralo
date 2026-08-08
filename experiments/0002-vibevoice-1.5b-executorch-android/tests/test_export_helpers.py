@@ -24,6 +24,7 @@ from acoustic_decoder import (  # noqa: E402
 from android_io import read_float32_le, write_float32_le  # noqa: E402
 from diagnose_decoder import collect_probes  # noqa: E402
 from diffusion_head import DiffusionHeadStep  # noqa: E402
+from diffusion_scheduler import DpmSolverState, ten_step_schedule  # noqa: E402
 from export_diffusion_step import validated_inputs  # noqa: E402
 from fixture_utils import snapshot_cache, tensor_metadata, tensor_sha256  # noqa: E402
 from speech_connectors import ConnectorRMSNorm, SpeechConnectorJoin  # noqa: E402
@@ -205,6 +206,28 @@ class ExportHelperTests(unittest.TestCase):
         self.assertTrue(all(value.dtype == torch.float32 for value in inputs))
         with self.assertRaisesRegex(SystemExit, "positive_condition shape"):
             validated_inputs({**fixture, "positive_condition": torch.ones(2, 1536)})
+
+    def test_diffusion_schedule_matches_locked_ten_step_values(self):
+        timesteps, sigmas = ten_step_schedule()
+        self.assertEqual(
+            timesteps.tolist(), [999, 899, 799, 699, 599, 500, 400, 300, 200, 100]
+        )
+        self.assertEqual(sigmas.dtype, torch.float32)
+        self.assertEqual(len(sigmas), 11)
+        self.assertEqual(sigmas[-1].item(), 0.0)
+        self.assertAlmostEqual(sigmas[0].item(), 20291.302734375)
+
+    def test_diffusion_scheduler_runs_first_second_and_final_order(self):
+        _, sigmas = ten_step_schedule()
+        scheduler = DpmSolverState(sigmas)
+        sample = torch.linspace(-1, 1, 64).reshape(1, 64)
+        for index in range(10):
+            prediction = torch.full((1, 64), index / 10)
+            sample = scheduler.step(prediction, sample)
+        self.assertTrue(torch.isfinite(sample).all())
+        self.assertEqual(scheduler.step_index, 10)
+        self.assertAlmostEqual(sample[0, 0].item(), -1.7456469536, places=6)
+        self.assertAlmostEqual(sample[0, -1].item(), 0.2078655511, places=6)
 
     def test_connector_join_has_tensor_only_additive_abi(self):
         join = SpeechConnectorJoin(Scale(2), Scale(3))

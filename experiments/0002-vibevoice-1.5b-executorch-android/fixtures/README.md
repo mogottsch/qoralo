@@ -57,7 +57,7 @@ The fixed FP32 ABI is:
     -> cfg_guided_v_prediction [1,64]
 ```
 
-CFG scale 1.3 is frozen in this correctness graph. Scheduler state, the scheduler update, and the ten-step loop remain native-controller responsibilities. Generate the ignored `fixture.pt`, manifest, and log only in the lane-specific artifact directory:
+CFG scale 1.3 is frozen in this correctness graph. Scheduler state, the scheduler update, and the ten-step loop remain native-controller responsibilities. The Android harness also generates an ignored `diffusion-loop.reference.pt` by invoking this PTE at `[999, 899, 799, 699, 599, 500, 400, 300, 200, 100]`; it contains the eleven latents, ten guided predictions, and eleven DPM sigmas used to validate Java orchestration. Generate the ignored `fixture.pt`, manifest, and log only in the lane-specific artifact directory:
 
 ```bash
 ROOT=/home/moritz/dev/vibevoice-android-spike

@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "component": "diffusion_head_and_native_scheduler",
+  "fixture": {
+    "provenance": "locked first real diffusion invocation; seed 42; CFG 1.3; ten steps",
+    "manifest": "experiments/0002-vibevoice-1.5b-executorch-android/fixtures/diffusion-head-manifest.json"
+  },
+  "runtime": {
+    "executorch": "1.2.0",
+    "backend": "xnnpack"
+  },
+  "device": {
+    "manufacturer": "samsung",
+    "model": "SM-S918B",
+    "device": "dm3q",
+    "soc": "SM8550",
+    "android_release": "16",
+    "api_level": 36,
+    "abi": "arm64-v8a"
+  },
+  "pte": {
+    "bytes": 493152000,
+    "load_mode": "mmap"
+  },
+  "latency_seconds": {
+    "load": 0.021822447,
+    "one_step_cold": 0.902931718,
+    "one_step_warm": [
+      0.214801562,
+      0.337116614
+    ],
+    "one_step_warm_median": 0.275959088,
+    "ten_step_loop": [
+      1.667192604,
+      1.245713854
+    ]
+  },
+  "memory_kib": {
+    "rss_before": 103156,
+    "rss_after_load": 112276,
+    "rss_after_inference": 613548,
+    "process_hwm_peak": 711388,
+    "pss_before": 28884,
+    "pss_after_load": 32030,
+    "pss_after_inference": 522263,
+    "pss_peak_observed": 522263
+  },
+  "one_step_comparison": {
+    "reference_output": {
+      "shape": [
+        1,
+        64
+      ],
+      "dtype": "float32",
+      "numel": 64,
+      "sha256": "acb1ac6bf78bdc9696f31ba2ffcbffe50dd18ab3ac189cc282d4943129a65b0b",
+      "finite": true,
+      "min": -1.2538046836853027,
+      "max": 0.9118556976318359,
+      "mean": -0.026622772216796875
+    },
+    "android_output": {
+      "shape": [
+        1,
+        64
+      ],
+      "dtype": "float32",
+      "numel": 64,
+      "sha256": "7b6a47bd45bff56430afbad59af79fff97e6ed40cbae588b989ed180cd16b4af",
+      "finite": true,
+      "min": -1.2538042068481445,
+      "max": 0.9118560552597046,
+      "mean": -0.026622824370861053
+    },
+    "raw_output_sha256": "7b6a47bd45bff56430afbad59af79fff97e6ed40cbae588b989ed180cd16b4af",
+    "max_abs_error": 1.1771917343139648e-06,
+    "mean_abs_error": 3.691457095555961e-07,
+    "atol": 2e-05,
+    "rtol": 0.0001,
+    "allclose": true
+  },
+  "ten_step_loop": {
+    "orchestration": "Java controller invokes one-step PTE ten times and applies FP32 DPM-Solver++ order-two midpoint updates outside ExecuTorch",
+    "timesteps": [
+      999,
+      899,
+      799,
+      699,
+      599,
+      500,
+      400,
+      300,
+      200,
+      100
+    ],
+    "comparison": {
+      "reference_output": {
+        "shape": [
+          1,
+          64
+        ],
+        "dtype": "float32",
+        "numel": 64,
+        "sha256": "818bc8fbb7f1b91d3926c5d52f9834d25c0de250e037e9d1c32913896163f611",
+        "finite": true,
+        "min": -0.7228403091430664,
+        "max": 0.8221936225891113,
+        "mean": 0.016369840130209923
+      },
+      "android_output": {
+        "shape": [
+          1,
+          64
+        ],
+        "dtype": "float32",
+        "numel": 64,
+        "sha256": "cdd82d5908ea11927231f0d6ae698620f608178df66322c911faf9483d4c27ab",
+        "finite": true,
+        "min": -0.7228380441665649,
+        "max": 0.8221925497055054,
+        "mean": 0.01636986806988716
+      },
+      "raw_output_sha256": "cdd82d5908ea11927231f0d6ae698620f608178df66322c911faf9483d4c27ab",
+      "max_abs_error": 2.2649765014648438e-06,
+      "mean_abs_error": 4.677567631006241e-07,
+      "atol": 2e-05,
+      "rtol": 0.0001,
+      "allclose": true
+    }
+  },
+  "acceptance": {
+    "atol": 2e-05,
+    "rtol": 0.0001,
+    "one_step_passed": true,
+    "loop_passed": true
+  },
+  "limitations": [
+    "Cold/warm labels describe the first and repeated calls in one process; no high-frequency external memory trace was collected.",
+    "The loop uses one captured positive/negative condition pair and proves component orchestration, not text-to-audio generation.",
+    "FP32 PTE size and memory make this a correctness artifact, not a deployment candidate."
+  ]
+}
