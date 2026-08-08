@@ -5,6 +5,8 @@ description: Use whenever launching any subagent in this repository. Give every 
 
 # Long-running subagents
 
+The goal is to complete all 39 steps in `docs/progress.json` autonomously. Keep looping—launch, validate, integrate, update progress, and launch the next unblocked work—until all 39 steps are complete or a hard blocker in `autonomy.stop_conditions` requires the user. Never leave the fleet idle while an unblocked step remains.
+
 For every `subagent` workflow in this repository:
 
 - set `async: true`;
