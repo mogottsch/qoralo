@@ -23,6 +23,7 @@ The target phone is a Samsung Galaxy S23 Ultra (`SM-S918B`, Snapdragon 8 Gen 2, 
 - [`docs/plan.md`](docs/plan.md) — spike sequence and evidence requirements.
 - [`docs/runtimes.md`](docs/runtimes.md) — the four selected Android inference paths.
 - [`docs/decisions.md`](docs/decisions.md) — short chronological decision log.
+- [`docs/progress.json`](docs/progress.json) — canonical machine-readable status for the parallel work lanes and [live dashboard](https://preview.moket-home.de/vibevoice-android/).
 - [`docs/devices/`](docs/devices/) — target-device baselines.
 - [`experiments/`](experiments/) — one reproducible directory per experiment.
 - [`scripts/`](scripts/) — common inventory and benchmark helpers.
@@ -39,8 +40,8 @@ Large model files, converted models, generated audio, APKs, tensors, traces, and
 - [x] Candidate inference paths selected.
 - [x] Produce the 15-second VibeVoice 1.5B local reference (13.07 seconds generated on CPU).
 - [ ] Complete human listening review of the reference clip.
-- [ ] Export the first component with ExecuTorch.
-- [ ] Run the first component on Android.
+- [x] Export the first component with ExecuTorch.
+- [x] Run the first component on Android.
 - [ ] Produce short end-to-end audio on Android.
 - [ ] Evaluate LiteRT, ONNX Runtime Mobile, and Qualcomm QNN.
 - [ ] Repeat the relevant deployment tests with Realtime 0.5B.
