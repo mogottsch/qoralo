@@ -153,7 +153,7 @@ def compare(fixture_dir: Path, artifact_dir: Path, device_result: Path,
         "device": properties,
         "runtime": device.get("runtime", {"executorch": "1.2.0", "backend": "xnnpack", "precision": "fp32"}),
         "commands": [
-            "flock artifacts/locks/heavy-ram.lock .venv/bin/python export/package_qwen2_prefill.py --model artifacts/models/VibeVoice-1.5B --fixture-dir artifacts/0002/lane-c/qwen2-fixtures --output artifacts/0002/lane-c/qwen2-prefill-android-package",
+            "flock artifacts/locks/heavy-ram.lock bash -lc 'PATH=$PWD/artifacts/venv-executorch-1.2/bin:$PATH artifacts/venv-executorch-1.2/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/package_qwen2_prefill.py --model artifacts/models/microsoft-VibeVoice-1.5B --fixture-dir artifacts/0002/lane-c/qwen2-fixtures --output artifacts/0002/lane-c/qwen2-prefill-android-package'", 
             "android/run-qwen2-probe.sh",
             "python export/qwen2_android_io.py compare <fixture-dir> <artifact-dir> <device-result> results/qwen2-decode-android.json --package-manifest <manifest> --device-properties <properties> --preflight <preflight>",
         ],
