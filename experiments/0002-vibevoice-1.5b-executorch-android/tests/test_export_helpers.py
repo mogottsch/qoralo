@@ -28,7 +28,11 @@ from diffusion_scheduler import DpmSolverState, ten_step_schedule  # noqa: E402
 from export_diffusion_step import validated_inputs  # noqa: E402
 from fixture_utils import snapshot_cache, tensor_metadata, tensor_sha256  # noqa: E402
 from speech_connectors import ConnectorRMSNorm, SpeechConnectorJoin  # noqa: E402
-from streaming_android_io import compare_tensor  # noqa: E402
+from streaming_android_io import (  # noqa: E402
+    compare_tensor,
+    read_tensor_le,
+    write_tensor_le,
+)
 from streaming_decoder import (  # noqa: E402
     StaticTensorCache,
     cache_module_names,
@@ -272,6 +276,27 @@ class ExportHelperTests(unittest.TestCase):
         torch.testing.assert_close(outputs[1], second)
         first.add_(10)
         self.assertEqual(outputs[0].item(), 3.0)
+
+    def test_android_float16_little_endian_round_trip(self):
+        value = torch.tensor([[[-2.5], [0.25]]], dtype=torch.float32)
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "value.f16le"
+            write_tensor_le(path, value, "fp16")
+            result = read_tensor_le(path, (1, 2, 1), "fp16")
+        self.assertEqual(path.suffix, ".f16le")
+        self.assertEqual(result.dtype, torch.float16)
+        torch.testing.assert_close(result.float(), value, rtol=0, atol=0)
+
+    def test_streaming_android_comparison_checks_fp16_against_fp32(self):
+        expected = torch.tensor([0.123456], dtype=torch.float32)
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "actual.f16le"
+            write_tensor_le(path, expected, "fp16")
+            result = compare_tensor(
+                path, expected, atol=2e-3, rtol=2e-3, precision="fp16"
+            )
+        self.assertTrue(result["allclose"])
+        self.assertGreater(result["max_abs_error"], 0)
 
     def test_streaming_android_comparison_checks_raw_tensor(self):
         expected = torch.tensor([[[1.0, -2.0]]], dtype=torch.float32)

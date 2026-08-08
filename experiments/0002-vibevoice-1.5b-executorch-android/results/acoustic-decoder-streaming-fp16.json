@@ -1,0 +1,218 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "scope": "FP16 fixed-shape eight-segment streaming acoustic decoder on host and Galaxy S23 Ultra",
+  "runtime": {
+    "torch": "2.11.0+cpu",
+    "executorch": "1.2.0",
+    "backend": "xnnpack"
+  },
+  "precision": {
+    "model_parameters": "float16",
+    "segment_activation_abi": "float16",
+    "cache_transport_abi": "float16",
+    "comparison_reference": "original captured FP32 fixtures"
+  },
+  "interface": {
+    "segment_count": 8,
+    "cache_tensor_count": 34,
+    "cache_source": "actual call-0 runtime outputs transported into call 1 on host and Android"
+  },
+  "tolerances": {
+    "fp32_unchanged": {
+      "host_pcm_and_cache": {
+        "atol": 2e-05,
+        "rtol": 1e-05
+      },
+      "android_pcm": {
+        "atol": 2e-05,
+        "rtol": 1e-05
+      },
+      "android_cache_only": {
+        "atol": 6e-05,
+        "rtol": 1e-05
+      }
+    },
+    "fp16": {
+      "pcm": {
+        "atol": 0.002,
+        "rtol": 0.002
+      },
+      "host_eager_cache_and_chained_intermediates": {
+        "atol": 0.05,
+        "rtol": 0.002
+      },
+      "android_cache_only": {
+        "atol": 0.35,
+        "rtol": 0.002
+      },
+      "android_cache_rationale": "Narrowly scoped to deterministic FP16 XNNPACK cache drift; both PCM chunks still use the FP16 PCM tolerance and call 1 consumes actual call-0 caches."
+    }
+  },
+  "pte": {
+    "first_bytes": 770791748,
+    "cached_bytes": 774575168,
+    "total_bytes": 1545366916,
+    "fp32_total_bytes": 2754222596,
+    "reduction_fraction": 0.4389099420488525
+  },
+  "eager_and_export": {
+    "first_pcm_max_abs_error": 6.924514082129463e-07,
+    "cached_pcm_max_abs_error": 6.18650659589548e-08,
+    "first_max_cache_abs_error": 0.020193099975585938,
+    "cached_max_cache_abs_error": 0.04036593437194824,
+    "exported_program_max_abs_error": 0.0,
+    "first_export": {
+      "wall_seconds": 70.63854014900062,
+      "peak_process_hwm_kib": 3068104,
+      "peak_observed_pss_kib": 2932087
+    },
+    "cached_export": {
+      "wall_seconds": 109.64489236399822,
+      "peak_process_hwm_kib": 3068376,
+      "peak_observed_pss_kib": 2801507
+    }
+  },
+  "host_xnnpack": {
+    "status": "passed",
+    "repeats": [
+      {
+        "repeat": 0,
+        "calls": [
+          {
+            "call": 0,
+            "entry": "first",
+            "total_load_seconds": 0.0018730660012806766,
+            "total_inference_seconds": 0.15139303000250948,
+            "pcm_max_abs_error": 8.001110245459131e-07,
+            "pcm_mean_abs_error": 1.9032613707281598e-08,
+            "max_cache_abs_error": 0.024906158447265625
+          },
+          {
+            "call": 1,
+            "entry": "cached",
+            "total_load_seconds": 0.0015651369940314908,
+            "total_inference_seconds": 0.1843389739988197,
+            "pcm_max_abs_error": 6.302741439867532e-08,
+            "pcm_mean_abs_error": 1.6565115501521177e-08,
+            "max_cache_abs_error": 0.04036593437194824
+          }
+        ]
+      },
+      {
+        "repeat": 1,
+        "calls": [
+          {
+            "call": 0,
+            "entry": "first",
+            "total_load_seconds": 0.0016949720047705341,
+            "total_inference_seconds": 0.14792926599329803,
+            "pcm_max_abs_error": 8.001110245459131e-07,
+            "pcm_mean_abs_error": 1.9032613707281598e-08,
+            "max_cache_abs_error": 0.024906158447265625
+          },
+          {
+            "call": 1,
+            "entry": "cached",
+            "total_load_seconds": 0.0019642779952846467,
+            "total_inference_seconds": 0.15748323099251138,
+            "pcm_max_abs_error": 6.302741439867532e-08,
+            "pcm_mean_abs_error": 1.6565115501521177e-08,
+            "max_cache_abs_error": 0.04036593437194824
+          }
+        ]
+      }
+    ],
+    "deterministic_repeats": true,
+    "peak_process_hwm_kib": 1014832,
+    "peak_observed_pss_kib": 978243
+  },
+  "android_xnnpack": {
+    "status": "passed",
+    "device": {
+      "manufacturer": "samsung",
+      "model": "SM-S918B",
+      "device": "dm3q",
+      "soc": "SM8550",
+      "android_release": "16",
+      "api_level": 36,
+      "abi": "arm64-v8a"
+    },
+    "runs": [
+      {
+        "run": 0,
+        "temperature": "cold",
+        "total_load_seconds": 0.021530104999999997,
+        "total_inference_seconds": 9.729349213999999,
+        "first_inference_seconds": 4.788476299999999,
+        "cached_inference_seconds": 4.940872914,
+        "peak_observed_pss_kib": 574402,
+        "process_hwm_kib": 799760,
+        "first_pcm_max_abs_error": 0.00010860542533919215,
+        "cached_pcm_max_abs_error": 8.12912617220718e-07,
+        "max_cache_abs_error": 0.32346343994140625,
+        "accepted": true
+      },
+      {
+        "run": 1,
+        "temperature": "warm_page_cache",
+        "total_load_seconds": 0.01304021,
+        "total_inference_seconds": 8.848238330000001,
+        "first_inference_seconds": 4.193568383000001,
+        "cached_inference_seconds": 4.654669947,
+        "peak_observed_pss_kib": 571233,
+        "process_hwm_kib": 799760,
+        "first_pcm_max_abs_error": 0.00010860542533919215,
+        "cached_pcm_max_abs_error": 8.12912617220718e-07,
+        "max_cache_abs_error": 0.32346343994140625,
+        "accepted": true
+      }
+    ],
+    "additional_observed_session_runs": [
+      {
+        "run": 0,
+        "temperature": "cold",
+        "total_load_seconds": 0.030999637,
+        "total_inference_seconds": 3.422387655,
+        "first_inference_seconds": 1.784975521,
+        "cached_inference_seconds": 1.637412134,
+        "peak_observed_pss_kib": 590712,
+        "process_hwm_kib": 795032,
+        "first_pcm_max_abs_error": 0.00010860542533919215,
+        "cached_pcm_max_abs_error": 8.12912617220718e-07,
+        "max_cache_abs_error": 0.32346343994140625,
+        "accepted": true
+      },
+      {
+        "run": 1,
+        "temperature": "warm_page_cache",
+        "total_load_seconds": 0.005658959,
+        "total_inference_seconds": 1.682433699,
+        "first_inference_seconds": 0.944887864,
+        "cached_inference_seconds": 0.7375458349999999,
+        "peak_observed_pss_kib": 612394,
+        "process_hwm_kib": 795032,
+        "first_pcm_max_abs_error": 0.00010860542533919215,
+        "cached_pcm_max_abs_error": 8.12912617220718e-07,
+        "max_cache_abs_error": 0.32346343994140625,
+        "accepted": true
+      }
+    ],
+    "observed_two_call_inference_seconds_range": [
+      1.682433699,
+      9.729349213999999
+    ],
+    "deterministic_repeats": true,
+    "process_hwm_kib": 799760,
+    "peak_observed_pss_kib": 612394,
+    "strict_allclose": false,
+    "accepted": true
+  },
+  "limitations": [
+    "First and cached entry PTE sets still duplicate weights.",
+    "Shapes remain fixed at batch 1 and one latent step.",
+    "Android PSS is sampled after each segment, not continuously.",
+    "FP16 Android cache drift is substantially larger than host drift despite low PCM error.",
+    "Android two-call latency varied from 1.68 to 9.73 seconds across two sessions; thermal and scheduling state were not controlled."
+  ]
+}

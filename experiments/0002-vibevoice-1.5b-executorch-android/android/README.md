@@ -1,6 +1,6 @@
 # Minimal Android ExecuTorch runner
 
-This debug-only app provides a simple decoder probe, a segmented streaming probe, and a one-step/ten-step diffusion probe. It has no product UI.
+This debug-only app provides a simple decoder probe, an FP32/FP16 segmented streaming probe, and a one-step/ten-step diffusion probe. It has no product UI.
 
 The app uses `org.pytorch:executorch-android:1.2.0`, matching the exporter/runtime that produced the passing host artifact. Large models, fixtures, APKs, outputs, and logs stay under ignored `artifacts/`.
 
@@ -35,10 +35,17 @@ Override `ANDROID_HOME`, `GRADLE`, `MODEL`, `REFERENCE`, or `PYTHON` when needed
 ## Streaming run
 
 ```bash
+# Existing FP32 path and thresholds
 experiments/0002-vibevoice-1.5b-executorch-android/android/run-streaming-decoder-probe.sh
+
+# Native FP16 activation and cache ABI
+PRECISION=fp16 \
+  experiments/0002-vibevoice-1.5b-executorch-android/android/run-streaming-decoder-probe.sh
 ```
 
-This harness incrementally pushes eight first-entry and eight cached-entry PTEs to world-readable test storage, outside the APK. `StreamingProbeActivity` loads and destroys one segment at a time, saves all 34 call-0 caches in app-private storage, feeds those actual device tensors to call 1, and repeats the sequence for cold/warm-page-cache measurements. It retrieves both PCM chunks and all cache outputs for host comparison. The PTEs remain under `/data/local/tmp/vibevoice-streaming-decoder` so reruns skip unchanged multi-gigabyte transfers; remove that directory with ADB when no longer needed.
+This harness incrementally pushes eight first-entry and eight cached-entry PTEs to world-readable test storage, outside the APK. `StreamingProbeActivity` loads and destroys one segment at a time, saves all 34 call-0 caches in app-private storage, feeds those actual device tensors to call 1, and repeats the sequence for cold/warm-page-cache measurements. It retrieves both PCM chunks and all cache outputs for host comparison. FP16 uses Java `short[]` half-bit transport end to end rather than upcasting the runtime ABI. FP32 remains under `/data/local/tmp/vibevoice-streaming-decoder`; FP16 uses the separate `-fp16` root, so neither run overwrites the other and unchanged transfers are reused.
+
+FP16 retains strict `atol=2e-3, rtol=2e-3` PCM/cache reporting and additionally applies the documented `atol=0.35` to Android FP16 caches only. The wider cache acceptance covers the measured deterministic maximum (`0.32346`); it does not apply to PCM, host results, or FP32.
 
 ## Diffusion run
 

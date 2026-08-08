@@ -4,20 +4,29 @@ set -euo pipefail
 ROOT=$(git rev-parse --show-toplevel)
 ANDROID_DIR="$ROOT/experiments/0002-vibevoice-1.5b-executorch-android/android"
 EXPORT_DIR="$ROOT/experiments/0002-vibevoice-1.5b-executorch-android/export"
-ARTIFACT_DIR="$ROOT/artifacts/0002/android-streaming-decoder-probe"
-FIRST_DIR=${FIRST_DIR:-"$ROOT/artifacts/0002/acoustic-decoder-streaming-first-segments-1.2"}
-CACHED_DIR=${CACHED_DIR:-"$ROOT/artifacts/0002/acoustic-decoder-streaming-cached-segments-1.2"}
+PRECISION=${PRECISION:-fp32}
+if [[ "$PRECISION" != fp32 && "$PRECISION" != fp16 ]]; then
+  echo "PRECISION must be fp32 or fp16" >&2
+  exit 2
+fi
+PRECISION_SUFFIX=""
+[[ "$PRECISION" == fp16 ]] && PRECISION_SUFFIX="-fp16"
+ARTIFACT_DIR="$ROOT/artifacts/0002/android-streaming-decoder-probe$PRECISION_SUFFIX"
+FIRST_DIR=${FIRST_DIR:-"$ROOT/artifacts/0002/acoustic-decoder-streaming-first-segments$PRECISION_SUFFIX-1.2"}
+CACHED_DIR=${CACHED_DIR:-"$ROOT/artifacts/0002/acoustic-decoder-streaming-cached-segments$PRECISION_SUFFIX-1.2"}
 PYTHON=${PYTHON:-"$ROOT/artifacts/venv-executorch-1.2/bin/python"}
 GRADLE=${GRADLE:-"$ROOT/artifacts/tools/gradle-8.10.2/bin/gradle"}
 export ANDROID_HOME=${ANDROID_HOME:-/home/moritz/Android/Sdk}
 export ANDROID_SDK_ROOT="$ANDROID_HOME"
 PACKAGE=dev.moket.vibevoiceprobe
 COMPONENT="$PACKAGE/.StreamingProbeActivity"
-REMOTE_ROOT=/data/local/tmp/vibevoice-streaming-decoder
+REMOTE_ROOT="/data/local/tmp/vibevoice-streaming-decoder$PRECISION_SUFFIX"
+PRIVATE_SUFFIX="$PRECISION_SUFFIX"
 
 mkdir -p "$ARTIFACT_DIR/input" "$ARTIFACT_DIR/device-output"
 "$PYTHON" "$EXPORT_DIR/streaming_android_io.py" prepare \
-  "$FIRST_DIR" "$CACHED_DIR" "$ARTIFACT_DIR/input" >"$ARTIFACT_DIR/input-metadata.json"
+  "$FIRST_DIR" "$CACHED_DIR" "$ARTIFACT_DIR/input" --precision "$PRECISION" \
+  >"$ARTIFACT_DIR/input-metadata.json"
 
 (
   cd "$ANDROID_DIR"
@@ -46,13 +55,17 @@ for entry in first cached; do
   done
 done
 
-adb shell run-as "$PACKAGE" mkdir -p files/streaming-input
-adb shell run-as "$PACKAGE" rm -rf files/streaming-output files/streaming-result.json
+adb shell run-as "$PACKAGE" mkdir -p "files/streaming-input$PRIVATE_SUFFIX"
+adb shell run-as "$PACKAGE" rm -rf \
+  "files/streaming-output$PRIVATE_SUFFIX" "files/streaming-result$PRIVATE_SUFFIX.json"
+EXTENSION=f32le
+[[ "$PRECISION" == fp16 ]] && EXTENSION=f16le
 for call in 0 1; do
-  temporary="/data/local/tmp/vibevoice-streaming-call-$call.f32le"
-  adb push "$ARTIFACT_DIR/input/call-$call.f32le" "$temporary" >/dev/null
+  temporary="/data/local/tmp/vibevoice-streaming-call-$call.$EXTENSION"
+  adb push "$ARTIFACT_DIR/input/call-$call.$EXTENSION" "$temporary" >/dev/null
   adb shell chmod 0644 "$temporary"
-  adb shell run-as "$PACKAGE" cp "$temporary" "files/streaming-input/call-$call.f32le"
+  adb shell run-as "$PACKAGE" cp "$temporary" \
+    "files/streaming-input$PRIVATE_SUFFIX/call-$call.$EXTENSION"
   adb shell rm -f "$temporary"
 done
 
@@ -73,10 +86,11 @@ PY
 
 adb logcat -c
 adb shell am force-stop "$PACKAGE"
-adb shell am start -W -n "$COMPONENT" | tee "$ARTIFACT_DIR/activity-start.log"
+adb shell am start -W -n "$COMPONENT" --es precision "$PRECISION" \
+  | tee "$ARTIFACT_DIR/activity-start.log"
 COMPLETE=false
 for _ in $(seq 1 1800); do
-  if adb shell run-as "$PACKAGE" test -f files/streaming-result.json; then
+  if adb shell run-as "$PACKAGE" test -f "files/streaming-result$PRIVATE_SUFFIX.json"; then
     COMPLETE=true
     break
   fi
@@ -87,7 +101,8 @@ if [[ "$COMPLETE" != true ]]; then
   echo "Streaming probe did not produce result.json within 1800 seconds" >&2
   exit 1
 fi
-adb exec-out run-as "$PACKAGE" cat files/streaming-result.json >"$ARTIFACT_DIR/device-result.json"
+adb exec-out run-as "$PACKAGE" cat "files/streaming-result$PRIVATE_SUFFIX.json" \
+  >"$ARTIFACT_DIR/device-result.json"
 cat "$ARTIFACT_DIR/device-result.json"
 if [[ $("$PYTHON" -c 'import json,sys; print(json.load(open(sys.argv[1]))["status"])' "$ARTIFACT_DIR/device-result.json") != passed ]]; then
   echo "Android probe reported failure; see $ARTIFACT_DIR/logcat.txt" >&2
@@ -95,11 +110,12 @@ if [[ $("$PYTHON" -c 'import json,sys; print(json.load(open(sys.argv[1]))["statu
 fi
 rm -rf "$ARTIFACT_DIR/device-output"
 mkdir -p "$ARTIFACT_DIR/device-output"
-adb exec-out run-as "$PACKAGE" tar -C files/streaming-output -cf - . \
+adb exec-out run-as "$PACKAGE" tar -C "files/streaming-output$PRIVATE_SUFFIX" -cf - . \
   | tar -C "$ARTIFACT_DIR/device-output" -xf -
 "$PYTHON" "$EXPORT_DIR/streaming_android_io.py" compare \
   "$FIRST_DIR" "$CACHED_DIR" \
   "$ARTIFACT_DIR/device-result.json" "$ARTIFACT_DIR/device-output" \
   "$ARTIFACT_DIR/comparison.json" \
   --device-properties "$ARTIFACT_DIR/device-properties.json" \
+  --precision "$PRECISION" \
   | tee "$ARTIFACT_DIR/comparison.log"

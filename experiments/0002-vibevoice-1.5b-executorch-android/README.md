@@ -6,7 +6,7 @@ Export VibeVoice components to ExecuTorch, validate them against experiment 0001
 
 ## Status
 
-In progress. The fixed-shape FP32 decoder and explicit 34-tensor streaming-cache ABI pass on both the host and Galaxy S23 Ultra. A real deterministic diffusion-head fixture passes one-step and native-orchestrated ten-step FP32 XNNPACK execution on Android. Real locked-checkpoint Qwen2 prefill and next-token fixtures are exactly deterministic and pass the 56-cache eager wrappers. Both FP32 Qwen2 entries export and execute with XNNPACK on the host, but remain unaccepted because their finite outputs exceed the initial `atol=1e-5, rtol=1e-4` tolerance. No phone was used for the backbone result.
+In progress. The fixed-shape decoder and explicit 34-tensor streaming-cache ABI pass in FP32 and FP16 on both the host and Galaxy S23 Ultra. A real deterministic diffusion-head fixture passes one-step and native-orchestrated ten-step FP32 XNNPACK execution on Android. Real locked-checkpoint Qwen2 prefill and next-token fixtures are exactly deterministic and pass the 56-cache eager wrappers. Both FP32 Qwen2 entries export and execute with XNNPACK on the host, but remain unaccepted because their finite outputs exceed the initial `atol=1e-5, rtol=1e-4` tolerance. No phone was used for the backbone result.
 
 ## Current tooling
 
@@ -17,8 +17,10 @@ In progress. The fixed-shape FP32 decoder and explicit 34-tensor streaming-cache
 - [`export/android_io.py`](export/android_io.py) serializes the fixed FP32 input and compares raw Android output with the PyTorch reference.
 - [`export/diagnose_decoder.py`](export/diagnose_decoder.py) exports fixed-shape stem, upsampler, stage, and composite micro-probes.
 - [`export/streaming_decoder.py`](export/streaming_decoder.py) replaces Python dictionary caches with a stable tensor-only ABI.
-- [`export/export_streaming_segments.py`](export/export_streaming_segments.py) exports first and cached entry points as eight stage-aligned XNNPACK PTEs.
-- [`export/validate_streaming_sequence.py`](export/validate_streaming_sequence.py) chains actual call-0 cache outputs into call 1 and validates PCM plus all updated caches.
+- [`export/export_streaming_segments.py`](export/export_streaming_segments.py) exports FP32 or FP16 first and cached entry points as eight stage-aligned XNNPACK PTEs and checks eager plus exported-program output.
+- [`export/validate_streaming_sequence.py`](export/validate_streaming_sequence.py) chains actual call-0 cache outputs into call 1, validates PCM plus all updated caches, and checks deterministic host repeats.
+- [`export/run_streaming_decoder_fp16_host.sh`](export/run_streaming_decoder_fp16_host.sh) reproduces decoder-only FP16 exports and host validation while sampling VmHWM/PSS.
+- [`export/summarize_streaming_fp16.py`](export/summarize_streaming_fp16.py) rebuilds the committed FP16 structured result from ignored benchmark artifacts.
 - [`export/capture_diffusion_fixture.py`](export/capture_diffusion_fixture.py) captures the first real CFG prediction-head invocation from the locked reference and stops before scheduler iteration.
 - [`export/diffusion_head.py`](export/diffusion_head.py) loads only prediction-head checkpoint tensors and defines the four-input FP32 ABI.
 - [`export/export_diffusion_step.py`](export/export_diffusion_step.py) exports the fixed CFG prediction to portable ExecuTorch or XNNPACK.
@@ -41,7 +43,8 @@ In progress. The fixed-shape FP32 decoder and explicit 34-tensor streaming-cache
 - [`fixtures/diffusion-head-manifest.json`](fixtures/diffusion-head-manifest.json) records provenance, stable ABI order, tensor metadata, and exact hashes without committing tensors.
 - [`results/acoustic-decoder-host.json`](results/acoustic-decoder-host.json) records the host failure matrix, micro-probe evidence, rewrite, and passing result.
 - [`results/acoustic-decoder-android.json`](results/acoustic-decoder-android.json) records device runs, memory observations, and the numerical comparison.
-- [`results/acoustic-decoder-streaming-host.json`](results/acoustic-decoder-streaming-host.json) records the two-call host streaming sequence and selected segmented ABI.
+- [`results/acoustic-decoder-streaming-host.json`](results/acoustic-decoder-streaming-host.json) records the FP32 two-call host streaming sequence and selected segmented ABI.
+- [`results/acoustic-decoder-streaming-fp16.json`](results/acoustic-decoder-streaming-fp16.json) records eager/export/host/Android FP16 size, timing, memory, error, cache-transport, and repeat evidence.
 - [`results/diffusion-head-host.json`](results/diffusion-head-host.json) records the FP32 one-call XNNPACK export, resource use, and passing numerical comparison.
 - [`results/diffusion-head-android.json`](results/diffusion-head-android.json) records cold/warm one-call latency, two ten-step loop runs, memory, and numerical comparisons.
 - [`results/qwen2-fixtures-host.json`](results/qwen2-fixtures-host.json) records real fixture structure, exact repeat determinism, and all-output eager wrapper agreement.
@@ -183,7 +186,45 @@ Reproduce the APK build, incremental external PTE transfer, two device sequences
 experiments/0002-vibevoice-1.5b-executorch-android/android/run-streaming-decoder-probe.sh
 ```
 
-The two FP32 entry sets occupy 2,754,222,596 bytes on device. FP16 is the immediate next test; a practical package also needs to remove first/cached weight duplication or share weights outside separate PTEs.
+The two FP32 entry sets occupy 2,754,222,596 bytes on device. A practical package still needs to remove first/cached weight duplication or share weights outside separate PTEs.
+
+## FP16 streaming result
+
+The same eight-segment pipeline now supports native FP16 parameters, activations, and cache tensors. Both host and Android call 1 consume the **actual 34 FP16 cache tensors emitted by call 0**. No FP32 threshold was changed: the prior FP32 host/PCM `atol=2e-5, rtol=1e-5` and Android-cache-only `atol=6e-5` remain recorded unchanged.
+
+FP16 is compared with the original FP32 fixtures using explicit, separately scoped thresholds:
+
+- final PCM: `atol=2e-3, rtol=2e-3` everywhere;
+- host eager caches and chained host intermediate/cache outputs: `atol=5e-2, rtol=2e-3`;
+- Android caches only: `atol=3.5e-1, rtol=2e-3`.
+
+The Android cache threshold is not a hidden general relaxation. Android FP16 XNNPACK has deterministic cache drift up to `0.32346`, while call-0 and call-1 PCM errors remain `1.086e-4` and `8.129e-7`. The strict `2e-3` cache result is retained as false, both PCM chunks must pass the smaller PCM threshold, and call 1 must consume the actual device caches. This makes FP16 acceptable for this two-call correctness probe but flags cache drift for longer-sequence testing.
+
+| Metric | FP16 result |
+|---|---:|
+| First / cached PTE sets | 770,791,748 / 774,575,168 bytes |
+| Total PTE size | 1,545,366,916 bytes (43.89% below FP32) |
+| Eager first / cached PCM max error | `6.92e-7` / `6.19e-8` |
+| Exported-program max error vs eager | `0` |
+| Host first / cached inference, repeat 0 | 0.1514 s / 0.1843 s |
+| Host peak VmHWM / observed PSS | 1,014,832 / 978,243 KiB |
+| Android session A cold / warm two-call inference | 3.4224 s / 1.6824 s |
+| Android session B cold / warm two-call inference | 9.7293 s / 8.8482 s |
+| Android observed load range | 0.00566–0.0310 s |
+| Android VmHWM / peak observed PSS | 799,760 / 612,394 KiB |
+| Deterministic repeats | host and Android passed |
+
+Reproduce host eager/export/XNNPACK validation, then the Android run and summary:
+
+```bash
+experiments/0002-vibevoice-1.5b-executorch-android/export/run_streaming_decoder_fp16_host.sh
+PRECISION=fp16 \
+  experiments/0002-vibevoice-1.5b-executorch-android/android/run-streaming-decoder-probe.sh
+artifacts/venv-executorch-1.2/bin/python \
+  experiments/0002-vibevoice-1.5b-executorch-android/export/summarize_streaming_fp16.py
+```
+
+These commands load only the acoustic decoder, not the complete model. Generated PTEs, tensors, APKs, and raw logs stay under ignored `artifacts/`. Android output hashes were deterministic, but two-call latency varied from 1.682 to 9.729 seconds across two sessions; thermal and scheduler state were not controlled, so the FP16 speedup is not yet stable.
 
 ## FP32 diffusion-head host result
 

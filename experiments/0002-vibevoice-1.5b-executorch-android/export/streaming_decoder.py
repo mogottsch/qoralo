@@ -99,10 +99,20 @@ def _safe_streaming_sconv1d_class():
                         persistent=True,
                     )
             for width in range(1, self.context_size):
-                shift = torch.zeros(self.context_size, self.context_size)
+                shift = torch.zeros(
+                    self.context_size,
+                    self.context_size,
+                    dtype=inner.weight.dtype,
+                    device=inner.weight.device,
+                )
                 for output_position in range(self.context_size - width):
                     shift[output_position + width, output_position] = 1
-                insert = torch.zeros(width, self.context_size)
+                insert = torch.zeros(
+                    width,
+                    self.context_size,
+                    dtype=inner.weight.dtype,
+                    device=inner.weight.device,
+                )
                 for input_position in range(width):
                     insert[input_position, self.context_size - width + input_position] = 1
                 self.register_buffer(f"cache_shift_{width}", shift, persistent=True)
