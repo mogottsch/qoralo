@@ -8,7 +8,7 @@
     "model": "microsoft/VibeVoice-1.5B",
     "device": "Samsung Galaxy S23 Ultra SM-S918B"
   },
-  "updated_at": "2026-08-08T20:36:57+01:00",
+  "updated_at": "2026-08-08T20:40:00+01:00",
   "updated_by": "parent-orchestrator",
   "autonomy": {
     "authorized_through_step": 39,
@@ -24,13 +24,13 @@
     "notify_when_device_input_required": true
   },
   "status": {
-    "completed_steps": 19,
+    "completed_steps": 20,
     "total_steps": 39,
-    "percent": 48.7,
-    "current_step": 10,
-    "current_lane": "A",
-    "current_activity": "Paused after preserving all completed lane work; next gates are decoder publication, connectors, and Qwen2 drift diagnosis",
-    "summary": "Lane A FP16 and Lane B Android diffusion are validated. Real Qwen2 fixtures and exports are reproducible, but host XNNPACK outputs exceed the preserved numerical tolerance. All work is committed or staged for final validation; no subagents are running during the orchestration redesign."
+    "percent": 51.3,
+    "current_step": 17,
+    "current_lane": "B",
+    "current_activity": "Paused after preserving all completed lane work; next gates are connectors, semantic encoder, and Qwen2 drift diagnosis",
+    "summary": "Lane A is complete and published. Lane B Android diffusion is validated through the native ten-step loop. Real Qwen2 fixtures and exports are reproducible, but host XNNPACK outputs exceed the preserved numerical tolerance. All work is committed; no subagents are running during the orchestration redesign."
 
   },
   "resources": {
@@ -53,11 +53,11 @@
     "A": {
       "name": "Acoustic decoder",
       "steps": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-      "status": "in_progress",
+      "status": "completed",
       "current_step": 10,
       "worktree": null,
       "artifact_root": "artifacts/0002/lane-a",
-      "latest_result": "Step 9 passed: FP16 uses 1,545,366,916 PTE bytes, deterministic host/Android two-call execution with actual 34-cache transport, 1.09e-4 maximum Android PCM error, 795,032 KiB VmHWM, and 612,394 KiB peak observed PSS."
+      "latest_result": "Steps 9-10 passed and published: FP16 uses 1,545,366,916 PTE bytes, deterministic host/Android two-call execution with actual 34-cache transport, 1.09e-4 maximum Android PCM error, 799,760 KiB VmHWM, and 612,394 KiB peak observed PSS."
     },
     "B": {
       "name": "Diffusion and audio feature path",
@@ -232,7 +232,7 @@
     {"id": 7, "lane": "A", "title": "Implement the real streaming-cache decoder", "status": "completed", "depends_on": [4], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/acoustic-decoder-streaming-host.json", "note": "Eight stage-aligned XNNPACK segments pass calls 0 and 1 with 34 explicit cache tensors."},
     {"id": 8, "lane": "A", "title": "Run the streaming decoder on the phone", "status": "completed", "depends_on": [7], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/acoustic-decoder-streaming-android.json", "note": "PCM passes strict tolerance; one cached value requires the documented Android-cache-only atol=6e-5 acceptance."},
     {"id": 9, "lane": "A", "title": "Test FP16 decoder", "status": "completed", "depends_on": [8], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/acoustic-decoder-streaming-fp16.json", "note": "Native FP16 parameter/activation/cache ABI passes deterministic host and Android two-call sequences with actual 34-cache transport; explicit PCM, host-cache, and Android-cache tolerances are retained separately."},
-    {"id": 10, "lane": "A", "title": "Document and publish decoder results", "status": "ready", "depends_on": [9], "evidence": null},
+    {"id": 10, "lane": "A", "title": "Document and publish decoder results", "status": "completed", "depends_on": [9], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/README.md"},
     {"id": 11, "lane": "B", "title": "Capture diffusion-head fixtures", "status": "completed", "depends_on": [], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/fixtures/diffusion-head-manifest.json"},
     {"id": 12, "lane": "B", "title": "Export one diffusion step", "status": "completed", "depends_on": [11], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/export/export_diffusion_step.py"},
     {"id": 13, "lane": "B", "title": "Validate diffusion on the laptop", "status": "completed", "depends_on": [12], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/diffusion-head-host.json"},
