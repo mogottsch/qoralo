@@ -114,5 +114,6 @@ RESULT="$BASE/results/qwen2-decode-android.json"
   "$ARTIFACT_DIR/device-result.json" "$RESULT" \
   --package-manifest "$PACKAGE_DIR/manifest.json" \
   --device-properties "$ARTIFACT_DIR/device-properties.json" \
-  --preflight "$ARTIFACT_DIR/preflight.json"
+  --preflight "$ARTIFACT_DIR/preflight.json" \
+  --implementation-commit "$(git rev-parse HEAD)"
 cp "$RESULT" "$ARTIFACT_DIR/comparison.json"
