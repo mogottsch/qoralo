@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "scope": "FP32 fixed-shape non-streaming acoustic-decoder operator probe",
+  "versions": {
+    "python": "3.11.13",
+    "torch": "2.11.0+cpu",
+    "executorch": "1.2.0",
+    "backend": "xnnpack"
+  },
+  "input": {
+    "shape": [1, 64, 1],
+    "dtype": "float32",
+    "sha256": "528f8b45b2b2a96a093e2aa08fc371d73936db2859d9fb47ac12b0ac6900b024"
+  },
+  "rewrite": {
+    "name": "causal Conv1d internal symmetric padding plus right-output crop",
+    "replaced_sconv1d_modules": 28,
+    "eager_max_abs_error": 3.6629899113904685e-10,
+    "eager_mean_abs_error": 9.056580138611103e-12,
+    "reason": "ExecuTorch 1.0-1.2 assigns incompatible dim orders to rank-3 constant_pad_nd and cat tensors in this decoder. Moving zero padding into Conv1d and retaining only the causal output prefix avoids the invalid boundary while preserving eager output within tolerance."
+  },
+  "pte": {
+    "bytes": 1375020420,
+    "sha256": "afe2dc5c4d5517d723c23f42672f306b60cf0ddc3e84b2fd3b2f0b217bbb3105"
+  },
+  "host_result": {
+    "load_seconds": 0.00144285,
+    "inference_seconds": 0.067682623,
+    "peak_rss_kib": 1881128,
+    "output_shape": [1, 1, 3200],
+    "max_abs_error": 8.078586688498035e-10,
+    "mean_abs_error": 1.0118589993668436e-11,
+    "atol": 1e-5,
+    "rtol": 1e-4,
+    "allclose": true
+  },
+  "diagnostic_attempts": [
+    {
+      "executorch": "1.0.0",
+      "backend": "xnnpack",
+      "rewrite": false,
+      "status": "failed",
+      "error": "XNNPACK shape propagation failed with xnn_status_invalid_parameter at instruction 52"
+    },
+    {
+      "executorch": "1.1.0",
+      "backend": "xnnpack",
+      "rewrite": false,
+      "status": "failed",
+      "error": "XNNPACK shape propagation failed with xnn_status_invalid_parameter at instruction 52"
+    },
+    {
+      "executorch": "1.2.0",
+      "backend": "xnnpack",
+      "rewrite": false,
+      "status": "failed",
+      "error": "XNNPACK shape propagation failed with xnn_status_invalid_parameter at instruction 52"
+    },
+    {
+      "executorch": "1.2.0",
+      "backend": "portable",
+      "rewrite": false,
+      "status": "failed",
+      "error": "constant_pad_nd input and output have different dim orders"
+    },
+    {
+      "executorch": "1.2.0",
+      "backend": "portable",
+      "skip_dim_order": true,
+      "rewrite": false,
+      "status": "failed",
+      "error": "constant_pad_nd input and output still have different dim orders"
+    }
+  ],
+  "microprobe_summary": {
+    "unmodified_stem": "failed: XNNPACK invalid_parameter",
+    "pre_padded_stem_conv": "passed: max_abs_error 7.152557373046875e-7",
+    "rewritten_stem": "passed: max_abs_error 5.960464477539062e-7",
+    "conv_transpose_upsamplers": "6 of 6 passed",
+    "rewritten_stages_1_through_6": "6 of 6 passed",
+    "rewritten_stage_0_standalone": "failed: singleton-time output resized as [1,1,2048] instead of [1,2048,1]",
+    "initial_stem_stage_0_upsample_1_composite": "passed: max_abs_error 1.1444091796875e-5"
+  },
+  "conclusion": "The ConvTranspose1d upsamplers are supported. The blocking failure is the rank-3 pad/layout path plus a singleton-time component-boundary ambiguity. Keeping the initial singleton pipeline inside the full graph and replacing causal constant_pad_nd with internal Conv1d padding produces a correct host XNNPACK PTE.",
+  "limitations": [
+    "This probe is non-streaming and does not expose the 34 decoder cache tensors.",
+    "The host result does not establish Android AAR compatibility or device performance.",
+    "The 1.375 GB FP32 PTE is a correctness artifact, not a practical deployment size."
+  ]
+}

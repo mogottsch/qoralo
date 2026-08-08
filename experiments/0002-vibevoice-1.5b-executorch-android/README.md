@@ -6,23 +6,70 @@ Export VibeVoice components to ExecuTorch, validate them against experiment 0001
 
 ## Status
 
-In progress. Experiment 0001 produced the locked PyTorch reference. Calls 0 and 1 have been captured from a deterministic rerun, and the first decoder-only export probe is implemented. `.pte` export, host comparison, and Android execution remain to be run and recorded.
+In progress. Calls 0 and 1 have been captured from a deterministic rerun. The fixed-shape FP32 non-streaming decoder probe now exports and passes the ExecuTorch 1.2 XNNPACK host runtime. Android execution and the explicit streaming-cache ABI remain.
 
 ## Current tooling
 
 - [`export/capture_fixtures.py`](export/capture_fixtures.py) wraps the real streaming decode call and captures calls 0 and 1 with stable cache names.
 - [`export/acoustic_decoder.py`](export/acoustic_decoder.py) constructs only `TokenizerDecoder` and reads only its tensors from the sharded checkpoint.
-- [`export/export_decoder.py`](export/export_decoder.py) exports a fixed `[1,64,1]` FP32 non-streaming operator-coverage probe to portable ExecuTorch or XNNPACK.
+- [`export/export_decoder.py`](export/export_decoder.py) exports a fixed `[1,64,1]` FP32 non-streaming operator-coverage probe to portable ExecuTorch or XNNPACK, with optional graph diagnostics and the verified causal-padding rewrite.
+- [`export/validate_pte.py`](export/validate_pte.py) executes a PTE with its saved input and writes a structured numerical comparison even when the runtime fails.
+- [`export/diagnose_decoder.py`](export/diagnose_decoder.py) exports fixed-shape stem, upsampler, stage, and composite micro-probes.
 - [`fixtures/README.md`](fixtures/README.md) documents the ignored fixture layout and capture command.
 - [`fixtures/acoustic-decoder-manifest.json`](fixtures/acoustic-decoder-manifest.json) records the captured shapes, dtypes, stable cache ordering, ranges, and hashes without committing tensors.
+- [`results/acoustic-decoder-host.json`](results/acoustic-decoder-host.json) records the host failure matrix, micro-probe evidence, rewrite, and passing result.
 
 The initial `.pte` is deliberately non-streaming. It isolates decoder operator coverage before the upstream Python dictionary cache is replaced by the final explicit tensor-cache ABI. It must not be treated as an audio-equivalent implementation of the captured streaming calls.
 
-Run the first probe after fixture capture in a Python environment containing the ExecuTorch version paired with the Android AAR:
+## FP32 host result
+
+ExecuTorch 1.0, 1.1, and 1.2 exported the unmodified graph but XNNPACK failed during shape propagation with `xnn_status_invalid_parameter`. Portable execution failed earlier because `constant_pad_nd` received input and output tensors with different dim orders. ExecuTorch 1.2's constant-layout fixes did not resolve this rank-3 pad path, and `_skip_dim_order=True` did not change the portable failure.
+
+Micro-probes isolated the problem:
+
+- the unmodified stem failed;
+- the same stem convolution with padding materialized before the graph passed;
+- all six `ConvTranspose1d` upsamplers passed individually;
+- stages 1–6 passed after rewriting their causal padding;
+- stage 0 alone exposed a singleton-time output layout ambiguity, but the complete initial stem → stage 0 → upsampler 1 graph passed.
+
+The verified rewrite expresses causal zero padding as symmetric padding inside `Conv1d` and slices away the right-padding-only outputs. All 28 decoder `SConv1d` modules are rewritten only in the non-streaming export wrapper. Eager output remains within `atol=1e-6, rtol=1e-5` of the pinned implementation.
+
+The full ExecuTorch 1.2 XNNPACK host result:
+
+| Metric | Result |
+|---|---:|
+| PTE size | 1,375,020,420 bytes |
+| Load time | 0.00144 s |
+| Inference time | 0.06768 s |
+| Peak host RSS | 1,881,128 KiB |
+| Output | `[1,1,3200]` FP32 |
+| Maximum absolute error | `8.08e-10` |
+| Mean absolute error | `1.01e-11` |
+| Comparison | passed (`atol=1e-5`, `rtol=1e-4`) |
+
+Reproduce the passing export and host comparison with ExecuTorch 1.2, its paired PyTorch 2.11 environment, and FlatBuffers compiler 25.12.19 on `PATH`:
 
 ```bash
-python experiments/0002-vibevoice-1.5b-executorch-android/export/export_decoder.py \
-  --backend xnnpack
+uv venv --python 3.11 artifacts/venv-executorch-1.2
+uv pip install --python artifacts/venv-executorch-1.2/bin/python torch==2.11.0 \
+  --index-url https://download.pytorch.org/whl/cpu
+uv pip install --python artifacts/venv-executorch-1.2/bin/python \
+  --prerelease=allow executorch==1.2.0
+uv pip install --python artifacts/venv-executorch-1.2/bin/python \
+  --no-deps -e artifacts/source/microsoft-vibevoice
+uv pip install --python artifacts/venv-executorch-1.2/bin/python \
+  transformers==4.51.3 accelerate==1.6.0 safetensors ml-collections absl-py
+
+artifacts/venv-executorch-1.2/bin/python \
+  experiments/0002-vibevoice-1.5b-executorch-android/export/export_decoder.py \
+  --backend xnnpack --rewrite-constant-pad \
+  --graph-output artifacts/0002/acoustic-decoder-xnnpack.graphs.txt \
+  --output artifacts/0002/acoustic-decoder-xnnpack.pte
+
+artifacts/venv-executorch-1.2/bin/python \
+  experiments/0002-vibevoice-1.5b-executorch-android/export/validate_pte.py \
+  artifacts/0002/acoustic-decoder-xnnpack.pte
 ```
 
 ## Deployment design

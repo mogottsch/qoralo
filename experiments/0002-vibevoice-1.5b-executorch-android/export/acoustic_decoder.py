@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import copy
 import json
+import math
 from collections import defaultdict
 from pathlib import Path
 
@@ -73,6 +74,54 @@ def load_acoustic_decoder(model_path: Path, dtype: torch.dtype = torch.float32) 
     if incompatible.missing_keys or incompatible.unexpected_keys:
         raise RuntimeError(f"Decoder state mismatch: {incompatible}")
     return decoder.to(dtype=dtype).eval()
+
+
+class CausalPaddedSConv1d(torch.nn.Module):
+    """Non-streaming SConv1d variant avoiding ExecuTorch constant_pad_nd.
+
+    A symmetric padding value on Conv1d produces the causal outputs first; the
+    right-padding-only outputs are then sliced away. This preserves the original
+    causal zero-padding numerics without materializing a rank-3 pad/cat tensor,
+    both of which fail ExecuTorch 1.0-1.2 dim-order checks for this decoder.
+    """
+
+    def __init__(self, original: torch.nn.Module):
+        super().__init__()
+        if not original.causal or original.pad_mode != "constant":
+            raise ValueError("Rewrite only supports causal constant-zero SConv1d")
+        self.conv = original.conv
+        self.stride = original.stride
+        self.padding_total = original.padding_total
+        inner_conv = getattr(self.conv, "conv", self.conv)
+        if tuple(inner_conv.padding) != (0,):
+            raise ValueError("Expected the upstream Conv1d to have zero internal padding")
+        inner_conv.padding = (self.padding_total,)
+
+    def forward(
+        self,
+        value: torch.Tensor,
+        cache: object | None = None,
+        sample_indices: torch.Tensor | None = None,
+        use_cache: bool = False,
+        debug: bool = False,
+    ) -> torch.Tensor:
+        if use_cache or cache is not None or sample_indices is not None or debug:
+            raise ValueError("CausalPaddedSConv1d is a non-streaming export wrapper")
+        output_length = math.ceil(value.shape[-1] / self.stride)
+        return self.conv(value)[..., :output_length].contiguous()
+
+
+def replace_constant_pad_modules(module: torch.nn.Module) -> list[str]:
+    """Replace decoder SConv1d modules with the export-safe equivalent."""
+    replaced: list[str] = []
+    for name, child in list(module.named_children()):
+        if child.__class__.__name__ == "SConv1d":
+            setattr(module, name, CausalPaddedSConv1d(child))
+            replaced.append(name)
+            continue
+        for nested in replace_constant_pad_modules(child):
+            replaced.append(f"{name}.{nested}")
+    return replaced
 
 
 class NonStreamingDecoderProbe(torch.nn.Module):
