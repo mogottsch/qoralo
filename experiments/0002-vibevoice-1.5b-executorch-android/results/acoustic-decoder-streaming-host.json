@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "scope": "FP32 fixed-shape segmented streaming acoustic-decoder host sequence",
+  "versions": {
+    "python": "3.11.13",
+    "torch": "2.11.0+cpu",
+    "executorch": "1.2.0",
+    "backend": "xnnpack"
+  },
+  "interface": {
+    "segment_count": 8,
+    "cache_tensor_count": 34,
+    "global_cache_order": [
+      "head",
+      "stages.0.0.mixer.conv",
+      "stages.0.1.mixer.conv",
+      "stages.0.2.mixer.conv",
+      "stages.0.3.mixer.conv",
+      "stages.0.4.mixer.conv",
+      "stages.0.5.mixer.conv",
+      "stages.0.6.mixer.conv",
+      "stages.0.7.mixer.conv",
+      "stages.1.0.mixer.conv",
+      "stages.1.1.mixer.conv",
+      "stages.1.2.mixer.conv",
+      "stages.2.0.mixer.conv",
+      "stages.2.1.mixer.conv",
+      "stages.2.2.mixer.conv",
+      "stages.3.0.mixer.conv",
+      "stages.3.1.mixer.conv",
+      "stages.3.2.mixer.conv",
+      "stages.4.0.mixer.conv",
+      "stages.4.1.mixer.conv",
+      "stages.4.2.mixer.conv",
+      "stages.5.0.mixer.conv",
+      "stages.5.1.mixer.conv",
+      "stages.5.2.mixer.conv",
+      "stages.6.0.mixer.conv",
+      "stages.6.1.mixer.conv",
+      "stages.6.2.mixer.conv",
+      "upsample_layers.0.0",
+      "upsample_layers.1.0",
+      "upsample_layers.2.0",
+      "upsample_layers.3.0",
+      "upsample_layers.4.0",
+      "upsample_layers.5.0",
+      "upsample_layers.6.0"
+    ],
+    "first_entry": "latent [1,64,1] -> PCM [1,1,3200] plus 34 cache tensors",
+    "cached_entry": "latent [1,64,1] plus 34 cache tensors -> PCM [1,1,3200] plus 34 updated cache tensors"
+  },
+  "design": {
+    "selected": "eight sequential XNNPACK PTE segments for each entry type",
+    "reason": "The monolithic streaming PTE exported but terminated the host runtime. Eight boundaries aligned with the seven decoder stages plus head execute correctly.",
+    "causal_conv_rewrite": "28 SConv1d modules use export-safe explicit-cache semantics.",
+    "first_total_pte_bytes": 1375063172,
+    "cached_total_pte_bytes": 1379159424,
+    "combined_pte_bytes": 2754222596
+  },
+  "calls": [
+    {
+      "call": 0,
+      "entry": "first",
+      "eager_pcm_max_abs_error": 3.6629899113904685e-10,
+      "eager_pcm_mean_abs_error": 9.056580138611103e-12,
+      "host_total_load_seconds": 0.002170025998566416,
+      "host_total_inference_seconds": 0.08936454400463845,
+      "host_pcm_max_abs_error": 8.078586688498035e-10,
+      "host_pcm_mean_abs_error": 1.0118589993668436e-11,
+      "host_max_cache_abs_error": 4.9591064453125e-05,
+      "pcm_shape": [
+        1,
+        1,
+        3200
+      ],
+      "allclose": true
+    },
+    {
+      "call": 1,
+      "entry": "cached",
+      "cache_source": "actual call-0 ExecuTorch outputs",
+      "eager_pcm_max_abs_error": 3.4361846701358445e-11,
+      "eager_pcm_mean_abs_error": 7.6197060813743e-12,
+      "host_total_load_seconds": 0.0016705230009392835,
+      "host_total_inference_seconds": 0.10631532999650517,
+      "host_pcm_max_abs_error": 3.865352482534945e-11,
+      "host_pcm_mean_abs_error": 7.331833057344639e-12,
+      "host_max_cache_abs_error": 4.9591064453125e-05,
+      "pcm_shape": [
+        1,
+        1,
+        3200
+      ],
+      "allclose": true
+    }
+  ],
+  "peak_rss_kib": 1648768,
+  "atol": 2e-05,
+  "rtol": 1e-05,
+  "allclose": true,
+  "validation": {
+    "cached_call_cache_source": "Actual call-0 ExecuTorch cache outputs, not fixture pre-cache tensors.",
+    "all_34_updated_caches_compared": true,
+    "all_8_segments_per_call_compared": true
+  },
+  "diagnostics": [
+    "Monolithic XNNPACK streaming entry exported but the host process terminated during execution without a Python exception.",
+    "Monolithic portable streaming entry failed because convolution received non-default rank-3 dim order.",
+    "Segmented first and cached XNNPACK entries both pass."
+  ],
+  "limitations": [
+    "First and cached entry sets duplicate decoder weights on disk (about 2.76 GB combined in FP32).",
+    "Android execution and device-side cache transport remain step 8.",
+    "The ABI is fixed to batch 1, latent width 64, and one latent step per call.",
+    "The selected tolerances permit small XNNPACK intermediate/cache deviations while final PCM error remains below 1e-9."
+  ]
+}

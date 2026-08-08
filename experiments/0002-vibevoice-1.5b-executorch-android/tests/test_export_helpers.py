@@ -24,6 +24,12 @@ from acoustic_decoder import (  # noqa: E402
 from android_io import read_float32_le, write_float32_le  # noqa: E402
 from diagnose_decoder import collect_probes  # noqa: E402
 from fixture_utils import snapshot_cache, tensor_metadata, tensor_sha256  # noqa: E402
+from streaming_decoder import (  # noqa: E402
+    StaticTensorCache,
+    cache_module_names,
+    segment_cache_names,
+)
+from validate_streaming_sequence import compare_outputs  # noqa: E402
 
 
 class SConv1d(torch.nn.Module):
@@ -165,6 +171,49 @@ class ExportHelperTests(unittest.TestCase):
         )
         torch.testing.assert_close(probes["stem"].output, torch.tensor([[[2.0]]]))
         torch.testing.assert_close(probes["head"].output, decoder(torch.ones(1, 1, 1)))
+
+    def test_streaming_cache_abi_uses_stable_sorted_module_names(self):
+        fixture = {
+            "post_cache": {
+                "upsample_layers.1.0/sample_0": torch.ones(1),
+                "stages.0.0.mixer.conv/sample_0": torch.ones(1),
+                "head/sample_0": torch.ones(1),
+            }
+        }
+        names = cache_module_names(fixture, "post_cache")
+        self.assertEqual(
+            names,
+            ["head", "stages.0.0.mixer.conv", "upsample_layers.1.0"],
+        )
+        self.assertEqual(segment_cache_names(names, 0), ["stages.0.0.mixer.conv"])
+        self.assertEqual(segment_cache_names(names, 1), ["upsample_layers.1.0"])
+        self.assertEqual(segment_cache_names(names, 7), ["head"])
+
+    def test_static_tensor_cache_preserves_declared_output_order(self):
+        inputs = (torch.tensor([[[1.0]]]), torch.tensor([[[2.0]]]))
+        cache = StaticTensorCache({"layer-a": 0, "layer-b": 1}, inputs)
+        sample = torch.zeros(1, dtype=torch.int64)
+        torch.testing.assert_close(cache.get("layer-b", sample), inputs[1])
+        first = torch.tensor([[[3.0]]])
+        second = torch.tensor([[[4.0]]])
+        cache.set("layer-b", sample, second)
+        cache.set("layer-a", sample, first)
+        outputs = cache.result()
+        torch.testing.assert_close(outputs[0], first)
+        torch.testing.assert_close(outputs[1], second)
+        first.add_(10)
+        self.assertEqual(outputs[0].item(), 3.0)
+
+    def test_streaming_sequence_comparison_checks_pcm_and_caches(self):
+        expected = (torch.tensor([1.0]), torch.tensor([2.0]))
+        actual = (torch.tensor([1.000001]), torch.tensor([2.000001]))
+        pcm_error, cache_error = compare_outputs(
+            actual, expected, atol=2e-5, rtol=1e-5, label="test"
+        )
+        self.assertLess(pcm_error, 2e-5)
+        self.assertLess(cache_error, 2e-5)
+        with self.assertRaisesRegex(SystemExit, "expected 2 outputs"):
+            compare_outputs(actual[:1], expected, 2e-5, 1e-5, "test")
 
 
 if __name__ == "__main__":

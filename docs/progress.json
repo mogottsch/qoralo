@@ -8,7 +8,7 @@
     "model": "microsoft/VibeVoice-1.5B",
     "device": "Samsung Galaxy S23 Ultra SM-S918B"
   },
-  "updated_at": "2026-08-08T18:21:03+01:00",
+  "updated_at": "2026-08-08T18:34:24+01:00",
   "updated_by": "parent-orchestrator",
   "autonomy": {
     "authorized_through_step": 39,
@@ -24,13 +24,13 @@
     "notify_when_device_input_required": true
   },
   "status": {
-    "completed_steps": 6,
+    "completed_steps": 7,
     "total_steps": 39,
-    "percent": 15.4,
-    "current_step": 7,
+    "percent": 17.9,
+    "current_step": 8,
     "current_lane": "A",
-    "current_activity": "Validate the explicit 34-tensor streaming decoder cache ABI",
-    "summary": "The FP32 non-streaming decoder passes on the host and Galaxy S23 Ultra. First-chunk segmented streaming execution passes on the host; cached-chunk validation remains in progress."
+    "current_activity": "Parallel lanes: Android streaming decoder, diffusion one-step export, and Qwen2 explicit-cache ABI",
+    "summary": "Lanes A, B, and C are active in parallel. Lane A is preparing Android execution after two chained host calls passed; Lane B owns the heavy-RAM slot for diffusion fixtures/export; Lane C is implementing Qwen2 explicit-cache ABI scaffolding without a full checkpoint load."
   },
   "resources": {
     "phone": {
@@ -40,7 +40,8 @@
     },
     "heavy_ram_slot": {
       "capacity": 1,
-      "status": "available",
+      "status": "occupied",
+      "owner": "B: diffusion fixture capture and one-step export",
       "rule": "Do not run concurrent full-model capture jobs on the 32 GiB laptop."
     },
     "integration_writer": {
@@ -53,28 +54,28 @@
       "name": "Acoustic decoder",
       "steps": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       "status": "in_progress",
-      "current_step": 7,
+      "current_step": 8,
       "worktree": null,
       "artifact_root": "artifacts/0002/lane-a",
-      "latest_result": "Eight first-chunk streaming segments pass on the host; cached-chunk export is incomplete after a timed-out worker slice."
+      "latest_result": "Step 7 passed: eight XNNPACK segments per entry, 34 explicit caches, and calls 0/1 chained correctly on the host."
     },
     "B": {
       "name": "Diffusion and audio feature path",
       "steps": [11, 12, 13, 14, 15, 16, 17, 18, 19],
-      "status": "ready",
+      "status": "in_progress",
       "current_step": 11,
-      "worktree": null,
+      "worktree": "managed isolated worktree",
       "artifact_root": "artifacts/0002/lane-b",
-      "latest_result": null
+      "latest_result": "Worker launched with exclusive access to the heavy-RAM slot; phone access is prohibited during this lane slice."
     },
     "C": {
       "name": "Qwen2 backbone and quantization",
       "steps": [20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
-      "status": "ready",
+      "status": "in_progress",
       "current_step": 20,
-      "worktree": null,
+      "worktree": "managed isolated worktree",
       "artifact_root": "artifacts/0002/lane-c",
-      "latest_result": null
+      "latest_result": "Worker launched for source analysis, explicit KV-cache ABI wrappers, and tiny-config tests without a full-model load."
     },
     "D": {
       "name": "End-to-end generation and optimization",
@@ -113,6 +114,19 @@
       "peak_observed_pss_kib": 1401425,
       "max_abs_error": 8.503775461576879e-10,
       "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/acoustic-decoder-android.json"
+    },
+    "decoder_streaming_host": {
+      "status": "passed",
+      "executorch": "1.2.0",
+      "backend": "xnnpack",
+      "segment_count": 8,
+      "cache_tensor_count": 34,
+      "first_inference_seconds": 0.08936454400463845,
+      "cached_inference_seconds": 0.10631532999650517,
+      "first_pcm_max_abs_error": 8.078586688498035e-10,
+      "cached_pcm_max_abs_error": 3.865352482534945e-11,
+      "peak_rss_kib": 1648768,
+      "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/acoustic-decoder-streaming-host.json"
     }
   },
   "commits": [
@@ -139,11 +153,11 @@
     {"id": 4, "lane": "A", "title": "Validate the PTE on the laptop", "status": "completed", "depends_on": [3], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/acoustic-decoder-host.json"},
     {"id": 5, "lane": "A", "title": "Create the minimal Android runner", "status": "completed", "depends_on": [4], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/android/README.md"},
     {"id": 6, "lane": "A", "title": "Run the simple decoder probe on the phone", "status": "completed", "depends_on": [5], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/acoustic-decoder-android.json"},
-    {"id": 7, "lane": "A", "title": "Implement the real streaming-cache decoder", "status": "in_progress", "depends_on": [4], "evidence": null, "note": "First chunk passes as eight host XNNPACK segments; cached chunk remains incomplete."},
-    {"id": 8, "lane": "A", "title": "Run the streaming decoder on the phone", "status": "blocked", "depends_on": [7], "evidence": null},
+    {"id": 7, "lane": "A", "title": "Implement the real streaming-cache decoder", "status": "completed", "depends_on": [4], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/acoustic-decoder-streaming-host.json", "note": "Eight stage-aligned XNNPACK segments pass calls 0 and 1 with 34 explicit cache tensors."},
+    {"id": 8, "lane": "A", "title": "Run the streaming decoder on the phone", "status": "ready", "depends_on": [7], "evidence": null},
     {"id": 9, "lane": "A", "title": "Test FP16 decoder", "status": "blocked", "depends_on": [8], "evidence": null},
     {"id": 10, "lane": "A", "title": "Document and publish decoder results", "status": "blocked", "depends_on": [9], "evidence": null},
-    {"id": 11, "lane": "B", "title": "Capture diffusion-head fixtures", "status": "ready", "depends_on": [], "evidence": null},
+    {"id": 11, "lane": "B", "title": "Capture diffusion-head fixtures", "status": "in_progress", "depends_on": [], "evidence": null},
     {"id": 12, "lane": "B", "title": "Export one diffusion step", "status": "blocked", "depends_on": [11], "evidence": null},
     {"id": 13, "lane": "B", "title": "Validate diffusion on the laptop", "status": "blocked", "depends_on": [12], "evidence": null},
     {"id": 14, "lane": "B", "title": "Run one diffusion step on Android", "status": "blocked", "depends_on": [13], "evidence": null},
@@ -152,7 +166,7 @@
     {"id": 17, "lane": "B", "title": "Capture and export connectors", "status": "ready", "depends_on": [], "evidence": null},
     {"id": 18, "lane": "B", "title": "Export the semantic audio encoder", "status": "ready", "depends_on": [], "evidence": null},
     {"id": 19, "lane": "B", "title": "Run the semantic path on Android", "status": "blocked", "depends_on": [17, 18], "evidence": null},
-    {"id": 20, "lane": "C", "title": "Capture Qwen2 prefill fixtures", "status": "ready", "depends_on": [], "evidence": null},
+    {"id": 20, "lane": "C", "title": "Capture Qwen2 prefill fixtures", "status": "in_progress", "depends_on": [], "evidence": null},
     {"id": 21, "lane": "C", "title": "Export Qwen2 prefill", "status": "blocked", "depends_on": [20], "evidence": null},
     {"id": 22, "lane": "C", "title": "Validate prefill on the laptop", "status": "blocked", "depends_on": [21], "evidence": null},
     {"id": 23, "lane": "C", "title": "Run Qwen2 prefill on Android", "status": "blocked", "depends_on": [22], "evidence": null},

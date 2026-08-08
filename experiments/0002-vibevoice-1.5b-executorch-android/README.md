@@ -6,7 +6,7 @@ Export VibeVoice components to ExecuTorch, validate them against experiment 0001
 
 ## Status
 
-In progress. Calls 0 and 1 have been captured from a deterministic rerun. The fixed-shape FP32 non-streaming decoder probe now passes ExecuTorch 1.2/XNNPACK on both the host and Galaxy S23 Ultra. The explicit streaming-cache ABI remains.
+In progress. The fixed-shape FP32 decoder passes ExecuTorch 1.2/XNNPACK on both the host and Galaxy S23 Ultra. The explicit 34-tensor streaming-cache ABI now passes calls 0 and 1 on the host as eight sequential XNNPACK segments. Android streaming execution remains.
 
 ## Current tooling
 
@@ -16,13 +16,17 @@ In progress. Calls 0 and 1 have been captured from a deterministic rerun. The fi
 - [`export/validate_pte.py`](export/validate_pte.py) executes a PTE with its saved input and writes a structured numerical comparison even when the runtime fails.
 - [`export/android_io.py`](export/android_io.py) serializes the fixed FP32 input and compares raw Android output with the PyTorch reference.
 - [`export/diagnose_decoder.py`](export/diagnose_decoder.py) exports fixed-shape stem, upsampler, stage, and composite micro-probes.
+- [`export/streaming_decoder.py`](export/streaming_decoder.py) replaces Python dictionary caches with a stable tensor-only ABI.
+- [`export/export_streaming_segments.py`](export/export_streaming_segments.py) exports first and cached entry points as eight stage-aligned XNNPACK PTEs.
+- [`export/validate_streaming_sequence.py`](export/validate_streaming_sequence.py) chains actual call-0 cache outputs into call 1 and validates PCM plus all updated caches.
 - [`android/`](android/) contains the minimal debug-only ExecuTorch 1.2 runner and its repeatable ADB harness.
 - [`fixtures/README.md`](fixtures/README.md) documents the ignored fixture layout and capture command.
 - [`fixtures/acoustic-decoder-manifest.json`](fixtures/acoustic-decoder-manifest.json) records the captured shapes, dtypes, stable cache ordering, ranges, and hashes without committing tensors.
 - [`results/acoustic-decoder-host.json`](results/acoustic-decoder-host.json) records the host failure matrix, micro-probe evidence, rewrite, and passing result.
-- [`results/acoustic-decoder-android.json`](results/acoustic-decoder-android.json) records three device runs, memory observations, and the numerical comparison.
+- [`results/acoustic-decoder-android.json`](results/acoustic-decoder-android.json) records device runs, memory observations, and the numerical comparison.
+- [`results/acoustic-decoder-streaming-host.json`](results/acoustic-decoder-streaming-host.json) records the two-call host streaming sequence and selected segmented ABI.
 
-The initial `.pte` is deliberately non-streaming. It isolates decoder operator coverage before the upstream Python dictionary cache is replaced by the final explicit tensor-cache ABI. It must not be treated as an audio-equivalent implementation of the captured streaming calls.
+The initial non-streaming `.pte` remains the Android operator-coverage baseline. Streaming uses separate first and cached entry sets with eight stage-aligned segments because the monolithic streaming graph terminates the host runtime.
 
 ## FP32 host result
 
@@ -98,7 +102,41 @@ Reproduce the Android build, install, app-private transfer, execution, retrieval
 experiments/0002-vibevoice-1.5b-executorch-android/android/run-decoder-probe.sh
 ```
 
-The 1.375 GB FP32 module is a correctness artifact. The passing result establishes Android operator coverage but does not make this a practical deployment or validate streaming-cache behavior.
+The 1.375 GB FP32 module is a correctness artifact. The passing result establishes Android operator coverage but does not make this a practical deployment.
+
+## FP32 streaming host result
+
+The tensor-only streaming ABI orders 34 cache tensors by stable decoder module name. A first entry consumes one `[1,64,1]` latent; a cached entry consumes the next latent plus those 34 tensors. Both return `[1,1,3200]` PCM and 34 updated tensors.
+
+A monolithic XNNPACK streaming PTE exported but terminated the host process during execution. The portable form also retained an invalid rank-3 convolution dim order. The validated design therefore follows natural decoder boundaries: seven upsample/stage PTEs plus one norm/head PTE for each entry type.
+
+| Metric | Call 0 / first | Call 1 / cached |
+|---|---:|---:|
+| XNNPACK segments | 8 | 8 |
+| Total host inference | 0.08936 s | 0.10632 s |
+| PCM shape | `[1,1,3200]` | `[1,1,3200]` |
+| PCM maximum absolute error | `8.08e-10` | `3.87e-11` |
+| Maximum cache absolute error | `4.96e-5` | `4.96e-5` |
+| Comparison | passed | passed |
+
+Call 1 consumed the **actual ExecuTorch cache outputs from call 0**, not the fixture pre-cache tensors. Every PCM output and all 34 updated caches were compared with the deterministic PyTorch fixtures using `atol=2e-5, rtol=1e-5`. Peak host RSS for the two-call sequence was 1,648,768 KiB.
+
+The first entry set occupies 1,375,063,172 bytes and the cached entry set 1,379,159,424 bytes, so the current FP32 diagnostic ABI duplicates weights on disk. This is acceptable for correctness but must be addressed through FP16, packaging, or entry unification before practical deployment.
+
+Reproduce both entry exports and the chained host comparison with:
+
+```bash
+export PATH="$PWD/artifacts/tools/flatbuffers-25.12.19:$PATH"
+PY=artifacts/venv-executorch-1.2/bin/python
+EXP=experiments/0002-vibevoice-1.5b-executorch-android/export
+
+$PY "$EXP/export_streaming_segments.py" --entry first
+$PY "$EXP/export_streaming_segments.py" --entry cached
+$PY "$EXP/validate_streaming_sequence.py" \
+  artifacts/0002/acoustic-decoder-streaming-first-segments-1.2 \
+  artifacts/0002/acoustic-decoder-streaming-cached-segments-1.2 \
+  --output artifacts/0002/acoustic-decoder-streaming-sequence-host.json
+```
 
 ## Deployment design
 
