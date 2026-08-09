@@ -8,7 +8,7 @@
     "model": "microsoft/VibeVoice-1.5B",
     "device": "Samsung Galaxy S23 Ultra SM-S918B"
   },
-  "updated_at": "2026-08-09T09:55:00+01:00",
+  "updated_at": "2026-08-09T10:35:27+01:00",
   "updated_by": "parent-orchestrator",
   "autonomy": {
     "authorized_through_step": 39,
@@ -24,13 +24,13 @@
     "notify_when_device_input_required": true
   },
   "status": {
-    "completed_steps": 29,
+    "completed_steps": 32,
     "total_steps": 39,
-    "percent": 74.4,
-    "current_step": 28,
-    "current_lane": "C",
-    "current_activity": "Crew is continuing with Qwen2 INT4 quantization",
-    "summary": "Qwen2 INT8 passes on host and Galaxy S23 Ultra with exact next-token decisions and actual 56-cache handoff. The package is 74.93% smaller than FP32; warm prefill/decode are 3.012/0.149 seconds. INT4 is next."
+    "percent": 82.1,
+    "current_step": 33,
+    "current_lane": "D",
+    "current_activity": "Crew is extending the real Android generation path to three to five seconds",
+    "summary": "INT4 was reproducibly rejected and integration uses accepted INT8. The native controller is validated and the Galaxy S23 Ultra generated one deterministic 3,200-sample PCM chunk through actual chained components. Multi-chunk generation is next."
 
   },
   "resources": {
@@ -71,21 +71,20 @@
     "C": {
       "name": "Qwen2 backbone and quantization",
       "steps": [20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
-      "status": "in_progress",
+      "status": "completed",
       "current_step": 28,
       "worktree": null,
       "artifact_root": "artifacts/0002/lane-c",
-      "latest_result": "Step 27 passed: PT2E INT8 covers all eligible Linear ops, reduces package size 74.93% to 3,096,269,152 bytes, preserves exact next-token decisions and 56-cache handoff, and lowers Android PSS to 373,064 KiB."
+      "latest_result": "Step 28 completed with rejection: packed INT4 is 49.85% smaller than INT8 and deterministic with exact first tokens, but host prefill/decode exceed aggregate and cache error limits. Integration uses accepted INT8."
     },
     "D": {
       "name": "End-to-end generation and optimization",
       "steps": [31, 32, 33, 34, 35, 36, 37, 38, 39],
-      "status": "blocked",
-      "current_step": 31,
-      "blocked_by": ["A", "B", "C"],
+      "status": "in_progress",
+      "current_step": 33,
       "worktree": null,
       "artifact_root": "artifacts/0002/lane-d",
-      "latest_result": null
+      "latest_result": "Steps 31-32 passed: the native Java controller owns all state and cache transitions; Android chained actual INT8/FP32 component outputs into a deterministic 3,200-sample 24 kHz mono PCM chunk in 20.56 seconds warm."
     }
   },
   "milestones": {
@@ -299,6 +298,42 @@
       "exact_next_token": true,
       "repeat_exact": true,
       "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/qwen2-int8-android.json"
+    },
+    "qwen2_int4_host": {
+      "status": "rejected",
+      "package_bytes": 1553000000,
+      "size_reduction_vs_int8_fraction": 0.4985,
+      "deterministic": true,
+      "exact_first_tokens": true,
+      "prefill_accepted": false,
+      "decode_accepted": false,
+      "fallback": "accepted INT8",
+      "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/qwen2-int4-host.json"
+    },
+    "generation_controller_host": {
+      "status": "passed",
+      "qwen2_precision": "int8",
+      "other_precision": "fp32",
+      "qwen2_cache_count": 56,
+      "streaming_decoder_cache_count": 34,
+      "semantic_encoder_cache_count": 34,
+      "pcm_chunk_samples": 3200,
+      "sample_rate_hz": 24000,
+      "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/generation-controller-host.json"
+    },
+    "generation_one_chunk_android": {
+      "status": "passed",
+      "actual_output_chaining": true,
+      "fixture_intermediate_substitution": false,
+      "pcm_samples": 3200,
+      "pcm_bytes": 6400,
+      "sample_rate_hz": 24000,
+      "warm_elapsed_seconds": 20.56425244,
+      "peak_observed_pss_kib": 478603,
+      "process_hwm_kib": 1623452,
+      "deterministic": true,
+      "pcm_sha256": "db15cf299d3ba8ff800dc1eb60dd6e41a69d006f348ca4ca139daf56c9894406",
+      "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/generation-one-chunk-android.json"
     }
   },
   "commits": [
@@ -346,12 +381,12 @@
     {"id": 25, "lane": "C", "title": "Export single-token Qwen2 decode", "status": "completed", "depends_on": [24], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/qwen2-backbone-host.json"},
     {"id": 26, "lane": "C", "title": "Run single-token decode on Android", "status": "completed", "depends_on": [25], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/qwen2-decode-android.json", "note": "Android decode consumes all 56 actual prefill caches in normative order; bounded metrics and exact repeat hashes pass."},
     {"id": 27, "lane": "C", "title": "Quantize the Qwen2 backbone to INT8", "status": "completed", "depends_on": [22, 26], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/qwen2-int8-android.json", "note": "INT8 passes host and Android tensor/token criteria, exact token selection, deterministic repeats, and actual 56-cache handoff with 74.93% package reduction."},
-    {"id": 28, "lane": "C", "title": "Quantize the Qwen2 backbone to INT4", "status": "ready", "depends_on": [27], "evidence": null},
+    {"id": 28, "lane": "C", "title": "Quantize the Qwen2 backbone to INT4", "status": "completed", "depends_on": [27], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/qwen2-int4-host.json", "note": "INT4 is reproducibly rejected on host numerical criteria; Android is correctly gated and integration falls back to accepted INT8."},
     {"id": 29, "lane": "C", "title": "Implement token selection", "status": "completed", "depends_on": [22, 26], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/token-selection-host.json", "note": "Native masked-greedy selection exactly matches the locked PyTorch decisions and deterministic reset behavior."},
     {"id": 30, "lane": "C", "title": "Implement speaker conditioning", "status": "completed", "depends_on": [], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/speaker-conditioning-host.json", "note": "Pinned Carter/Maya conditioning exactly reproduces selected-position replacement and documents native switch/reset ownership."},
-    {"id": 31, "lane": "D", "title": "Build the native generation controller", "status": "blocked", "depends_on": [8, 16, 19, 26, 29, 30], "evidence": null},
-    {"id": 32, "lane": "D", "title": "Generate one speech chunk from text", "status": "blocked", "depends_on": [31], "evidence": null},
-    {"id": 33, "lane": "D", "title": "Generate three to five seconds", "status": "blocked", "depends_on": [32], "evidence": null},
+    {"id": 31, "lane": "D", "title": "Build the native generation controller", "status": "completed", "depends_on": [8, 16, 19, 26, 29, 30], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/generation-controller-host.json", "note": "Native Java owns validated cache/state transitions, token control, diffusion scheduling, speaker selection, PCM, and WAV output without Python state."},
+    {"id": 32, "lane": "D", "title": "Generate one speech chunk from text", "status": "completed", "depends_on": [31], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/generation-one-chunk-android.json", "note": "Android chains actual component outputs without fixture substitution into deterministic finite 24 kHz PCM."},
+    {"id": 33, "lane": "D", "title": "Generate three to five seconds", "status": "ready", "depends_on": [32], "evidence": null},
     {"id": 34, "lane": "D", "title": "Add the second speaker", "status": "blocked", "depends_on": [33], "evidence": null},
     {"id": 35, "lane": "D", "title": "Run the locked reference transcript", "status": "blocked", "depends_on": [34], "evidence": null},
     {"id": 36, "lane": "D", "title": "Compare Android output with the reference", "status": "blocked", "depends_on": [35], "evidence": null},
