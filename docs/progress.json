@@ -8,7 +8,7 @@
     "model": "microsoft/VibeVoice-1.5B",
     "device": "Samsung Galaxy S23 Ultra SM-S918B"
   },
-  "updated_at": "2026-08-09T10:35:27+01:00",
+  "updated_at": "2026-08-09T10:55:00+01:00",
   "updated_by": "parent-orchestrator",
   "autonomy": {
     "authorized_through_step": 39,
@@ -24,13 +24,13 @@
     "notify_when_device_input_required": true
   },
   "status": {
-    "completed_steps": 32,
+    "completed_steps": 33,
     "total_steps": 39,
-    "percent": 82.1,
-    "current_step": 33,
+    "percent": 84.6,
+    "current_step": 34,
     "current_lane": "D",
-    "current_activity": "Crew is extending the real Android generation path to three to five seconds",
-    "summary": "INT4 was reproducibly rejected and integration uses accepted INT8. The native controller is validated and the Galaxy S23 Ultra generated one deterministic 3,200-sample PCM chunk through actual chained components. Multi-chunk generation is next."
+    "current_activity": "Crew is adding the second speaker to Android generation",
+    "summary": "Android recurrent generation produces two deterministic chunks with correct cache progression and exact boundaries, then safely terminates at the documented static-export capacity of 0.266667 seconds rather than corrupting state. Two-speaker generation is next."
 
   },
   "resources": {
@@ -81,10 +81,10 @@
       "name": "End-to-end generation and optimization",
       "steps": [31, 32, 33, 34, 35, 36, 37, 38, 39],
       "status": "in_progress",
-      "current_step": 33,
+      "current_step": 34,
       "worktree": null,
       "artifact_root": "artifacts/0002/lane-d",
-      "latest_result": "Steps 31-32 passed: the native Java controller owns all state and cache transitions; Android chained actual INT8/FP32 component outputs into a deterministic 3,200-sample 24 kHz mono PCM chunk in 20.56 seconds warm."
+      "latest_result": "Step 33 completed with valid capacity termination: two Android chunks produce 6,400 deterministic samples with exact boundaries and all caches advanced; fixed call-1 export shapes reject a third call at 0.266667 seconds without state corruption."
     }
   },
   "milestones": {
@@ -334,6 +334,22 @@
       "deterministic": true,
       "pcm_sha256": "db15cf299d3ba8ff800dc1eb60dd6e41a69d006f348ca4ca139daf56c9894406",
       "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/generation-one-chunk-android.json"
+    },
+    "generation_multi_chunk_android": {
+      "status": "passed_with_valid_capacity_termination",
+      "actual_output_chaining": true,
+      "audio_chunks": 2,
+      "pcm_samples": 6400,
+      "duration_seconds": 0.26666666666666666,
+      "target_duration_reached": false,
+      "stop_reason": "CAPACITY",
+      "boundary_integrity": true,
+      "warm_elapsed_seconds": 24.580036449,
+      "peak_observed_pss_kib": 472312,
+      "process_hwm_kib": 1632484,
+      "deterministic": true,
+      "pcm_sha256": "2c885ee3e0fcfb27e895301ce41352020cd71167b2218d272923eb7ed63f0447",
+      "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/generation-3-to-5s-android.json"
     }
   },
   "commits": [
@@ -386,8 +402,8 @@
     {"id": 30, "lane": "C", "title": "Implement speaker conditioning", "status": "completed", "depends_on": [], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/speaker-conditioning-host.json", "note": "Pinned Carter/Maya conditioning exactly reproduces selected-position replacement and documents native switch/reset ownership."},
     {"id": 31, "lane": "D", "title": "Build the native generation controller", "status": "completed", "depends_on": [8, 16, 19, 26, 29, 30], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/generation-controller-host.json", "note": "Native Java owns validated cache/state transitions, token control, diffusion scheduling, speaker selection, PCM, and WAV output without Python state."},
     {"id": 32, "lane": "D", "title": "Generate one speech chunk from text", "status": "completed", "depends_on": [31], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/generation-one-chunk-android.json", "note": "Android chains actual component outputs without fixture substitution into deterministic finite 24 kHz PCM."},
-    {"id": 33, "lane": "D", "title": "Generate three to five seconds", "status": "ready", "depends_on": [32], "evidence": null},
-    {"id": 34, "lane": "D", "title": "Add the second speaker", "status": "blocked", "depends_on": [33], "evidence": null},
+    {"id": 33, "lane": "D", "title": "Generate three to five seconds", "status": "completed", "depends_on": [32], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/generation-3-to-5s-android.json", "note": "Two deterministic chunks advance all caches with exact boundaries; generation safely stops CAPACITY at 0.266667 seconds because fixed export shapes reject a third call."},
+    {"id": 34, "lane": "D", "title": "Add the second speaker", "status": "ready", "depends_on": [33], "evidence": null},
     {"id": 35, "lane": "D", "title": "Run the locked reference transcript", "status": "blocked", "depends_on": [34], "evidence": null},
     {"id": 36, "lane": "D", "title": "Compare Android output with the reference", "status": "blocked", "depends_on": [35], "evidence": null},
     {"id": 37, "lane": "D", "title": "Measure the complete XNNPACK build", "status": "blocked", "depends_on": [35], "evidence": null},
