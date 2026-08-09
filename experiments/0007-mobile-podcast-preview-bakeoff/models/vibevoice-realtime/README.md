@@ -42,3 +42,18 @@ python3 verify_pins.py --source artifacts/source/microsoft-vibevoice \
 ```
 
 Any access, license, dependency, revision, hash, or reproducibility mismatch is fail-closed and must block task 2 and downstream tasks 5/6 rather than being recorded as successful setup.
+
+## Locked preview capture (task 6)
+
+Run only the gated entry point, then derive the normalized copy with the protocol Python environment:
+
+```bash
+./generate-preview.sh
+python3 finalize_preview.py
+```
+
+`generate-preview.sh` obtains one atomic `generation-realtime` grant before importing Torch or loading weights. Under policy v2 that grant is globally exclusive, so Realtime cannot overlap Pocket or Kokoro. It captures every native float32 streaming payload as an immutable `.npy` file and assembles the official-demo-style PCM16 WAV. Both commands refuse to overwrite evidence.
+
+The accepted measurement is [`../../results/realtime-preview.json`](../../results/realtime-preview.json). The ignored raw output is 18.933333 seconds (454,400 samples); generation took 8.104122 seconds (RTF 0.428035), first output and first audible output arrived at 0.456915 seconds, and peak process-tree RSS was 3,532,939,264 bytes. A second explicitly seeded generation matched the float waveform and WAV byte-for-byte. The derived comparison file is exactly 360,000 mono PCM16 samples at 24 kHz with SHA-256 `d249a4e9ed5c11fc9bf341e10cbe60a500816b20793cee8780f50b7546f26d33`.
+
+This is host-preview-only listening and reproducibility evidence. It is not evidence of Android feasibility; subjective anomaly review remains pending the user's listening review.
