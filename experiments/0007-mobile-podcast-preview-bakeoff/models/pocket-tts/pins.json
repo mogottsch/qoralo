@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "model_id": "pocket-tts-100m",
+  "source": {
+    "repository": "https://github.com/kyutai-labs/pocket-tts.git",
+    "revision": "d108410d23eef7e01db282f9442891162dbc3db6",
+    "package_version": "2.1.0",
+    "license": "MIT"
+  },
+  "weights": {
+    "preferred_repository": "kyutai/pocket-tts",
+    "preferred_revision": "39592ff23c9ef80098bb74895d104c26275fe2c9",
+    "preferred_file": "languages/english/model.safetensors",
+    "preferred_access": "gated; not required for the stock-voice smoke path",
+    "stock_voice_repository": "kyutai/pocket-tts-without-voice-cloning",
+    "stock_voice_revision": "e041936c75475d350b405bc870bcf7c22da4e9e6",
+    "stock_voice_model_revision": "d29db7978e464fb90cb3359ee0c69a273b9142cc",
+    "stock_voice_model_file": "languages/english/model.safetensors",
+    "stock_voice_embedding_file": "languages/english/embeddings/alba.safetensors",
+    "license": "CC-BY-4.0"
+  },
+  "voice": {
+    "name": "alba",
+    "kind": "official precomputed stock voice state",
+    "language": "english",
+    "source_audio_provenance": "kyutai/tts-voices/alba-mackenna/casual.wav",
+    "cloning_performed": false
+  },
+  "native_output": {
+    "sample_rate_hz": 24000,
+    "channels": 1,
+    "api_dtype": "torch.float32 PCM normalized to [-1, 1]",
+    "stream_api": "TTSModel.generate_audio_stream",
+    "nominal_frame_rate_hz": 12.5
+  },
+  "generation": {
+    "language": "english",
+    "temperature": 0.3,
+    "determinism": "Stochastic flow sampling uses PyTorch RNG. Call torch.manual_seed(0) immediately before each generation; identical output is only claimed for the fully pinned environment on the same supported platform.",
+    "streaming": "The official iterator yields decoded one-dimensional audio tensors as soon as Mimi frames are ready. Measure API start to first yielded tensor; do not substitute file-write latency.",
+    "persistent_voice_state": "Supported. get_state_for_audio_prompt('alba') returns a reusable precomputed state; generate with copy_state=true to retain it. Multiple independently named states may remain resident for later turn-by-turn composition.",
+    "thread_safety": "A TTSModel instance is not thread-safe. Use separate instances for concurrent generation."
+  },
+  "protocol": {
+    "protocol_id": "mobile-podcast-preview",
+    "protocol_version": 1,
+    "transcript_sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+    "protocol_fingerprint": "ef3dee72094c78514b4e590e944ffaa1ab61f57bd0cbd44da2f395d4cb93aa8e"
+  }
+}
