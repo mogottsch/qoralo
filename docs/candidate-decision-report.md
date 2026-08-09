@@ -1,6 +1,6 @@
 # Candidate decision report
 
-**Status: awaiting explicit user approval.** The listening ratings are `pending_user_review`. The playable samples are evidence, not an implied quality judgment. No conversion or follow-up work is authorized by this report.
+**Status: awaiting explicit next-step approval.** The user reviewed the published audio and clearly preferred Candidate C / Kokoro 82M. Candidate A / VibeVoice Realtime and Candidate B / Pocket TTS were hard to distinguish and are effectively tied. This is subjective listening evidence, not an objective metric or Android-feasibility claim. No conversion or follow-up work is authorized by this report.
 
 ## Evidence kept separate
 
@@ -8,11 +8,11 @@
 
 | Candidate | Protocol-v2 output | Host generation | First audible | Host RTF | Peak process-tree RSS | Listening rating |
 |---|---:|---:|---:|---:|---:|---|
-| VibeVoice Realtime 0.5B | 20.133 s raw; exact 15 s normalized | 8.889 s | 0.484 s | 0.441 | 3.532 GB | `pending_user_review` |
-| Pocket TTS 100M | 13.840 s raw only | 4.094 s | 0.184 s | 0.296 | 1.145 GB | `pending_user_review` |
-| Kokoro 82M | 17.475 s raw; exact 15 s normalized | 6.692 s | 7.042 s | 0.383 | 1.713 GB | `pending_user_review` |
+| VibeVoice Realtime 0.5B | 20.133 s raw; exact 15 s normalized | 8.889 s | 0.484 s | 0.441 | 3.532 GB | Effectively tied for second |
+| Pocket TTS 100M | 13.840 s raw only | 4.094 s | 0.184 s | 0.296 | 1.145 GB | Effectively tied for second |
+| Kokoro 82M | 17.475 s raw; exact 15 s normalized | 6.692 s | 7.042 s | 0.383 | 1.713 GB | **Clearly preferred** |
 
-These are host measurements, not Android measurements. Pocket remained short after the one permitted shared punctuation revision and has no documented speed control. Its raw sample is playable, but no silence, loop, time stretch, or normalized 15-second sample was fabricated.
+The preference above is the user's explicit review of these samples. These are host measurements, not Android measurements. Pocket remained short after the one permitted shared punctuation revision and has no documented speed control. Its raw sample is playable, but no silence, loop, time stretch, or normalized 15-second sample was fabricated.
 
 ### Android measurements
 
@@ -35,7 +35,7 @@ The newer four-call host artifact reaches a correctly voiced chunk 3 at about -2
 ## Choose one of the five permitted decisions
 
 1. **Proceed with Realtime 0.5B on Android.** First approve its listening quality; then capture component fixtures. Separately approve proprietary Qualcomm terms if that runtime is selected.
-2. **Proceed with Pocket TTS or Kokoro turn-by-turn mobile composition.** Select a listening-approved voice/model. Pocket remains raw-only under this exact-15-second protocol.
+2. **Proceed with Kokoro turn-by-turn mobile composition.** Kokoro is the listening-preferred candidate. Pocket remains available as a tied-second comparison but is raw-only under this exact-15-second protocol.
 3. **Continue VibeVoice 1.5B recovery.** Require a newly reviewed host-accepted artifact without silently widening frozen thresholds before another Android deployment.
 4. **Run a narrow QNN accelerator bake-off.** Approve listening quality and any proprietary terms, then probe components and the three named quantization schemes rather than converting a full model.
 5. **Reject a candidate based on listening quality.** Record the user's judgment; do not infer it from host speed or package estimates.
@@ -45,6 +45,7 @@ The newer four-call host artifact reaches a correctly voiced chunk 3 at about -2
 The machine-readable [decision report](candidate-decision-report.json) pins source-file hashes and the five decision gates. Primary sources:
 
 - [protocol-v2 listening manifest](../experiments/0007-mobile-podcast-preview-bakeoff/publication/bakeoff-manifest.json)
+- [explicit user listening review](../experiments/0007-mobile-podcast-preview-bakeoff/results/user-listening-review.json)
 - [Realtime feasibility inventory](../experiments/0006-vibevoice-realtime-0.5b-android/feasibility-inventory.json)
 - [four-call Android gate result](../experiments/0002-vibevoice-1.5b-executorch-android/results/four-call-android.json)
 - [historical fixed-rubric comparison](../experiments/0002-vibevoice-1.5b-executorch-android/results/locked-reference-comparison.json)

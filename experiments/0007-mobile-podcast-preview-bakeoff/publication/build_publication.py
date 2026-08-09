@@ -177,8 +177,13 @@ def decision_report() -> dict:
     except ImportError as error:
         raise SystemExit("install requirements-protocol.txt (jsonschema is required)") from error
     jsonschema.Draft202012Validator(load(REPORT_SCHEMA_PATH)).validate(report)
-    if report["subjective_listening"]["status"] != "pending_user_review":
-        raise ValueError("subjective listening status must remain pending_user_review")
+    listening_status = report["subjective_listening"]["status"]
+    if listening_status not in {"pending_user_review", "recorded_user_review"}:
+        raise ValueError("unsupported subjective listening status")
+    if listening_status == "recorded_user_review":
+        review_path = REPO / report["subjective_listening"]["evidence"]
+        if not review_path.is_file():
+            raise ValueError("recorded user listening evidence is missing")
     if len(report["candidate_decisions"]) != 5:
         raise ValueError("exactly five user decisions are permitted")
     evidence_records = list(report["host_quality_evidence"])

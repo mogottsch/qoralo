@@ -3,18 +3,19 @@
   "schema_version": 1,
   "status": "awaiting_explicit_user_approval",
   "subjective_listening": {
-    "status": "pending_user_review",
+    "status": "recorded_user_review",
     "ratings": {
-      "realtime": null,
-      "pocket": null,
-      "kokoro": null
+      "realtime": "tied_for_second",
+      "pocket": "tied_for_second",
+      "kokoro": "clearly_preferred"
     },
-    "note": "Playable evidence is published; no user judgment is inferred."
+    "note": "Explicit user review of published previews: Candidate C / Kokoro is clearly preferred; Candidate A / Realtime and Candidate B / Pocket are hard to distinguish and effectively tied. This is subjective evidence, not an objective metric or Android-feasibility claim.",
+    "evidence": "experiments/0007-mobile-podcast-preview-bakeoff/results/user-listening-review.json"
   },
   "host_quality_evidence": [
     {
       "candidate": "VibeVoice Realtime 0.5B",
-      "status": "playable_normalized_pending_user_review",
+      "status": "playable_normalized_user_tied_second",
       "raw_duration_seconds": 20.133333333333333,
       "generation_wall_seconds": 8.888567516999501,
       "first_audible_output_seconds": 0.4843882079994728,
@@ -27,7 +28,7 @@
     },
     {
       "candidate": "Pocket TTS 100M",
-      "status": "playable_raw_only_short_output",
+      "status": "playable_raw_only_user_tied_second",
       "raw_duration_seconds": 13.84,
       "generation_wall_seconds": 4.093614479999815,
       "first_audible_output_seconds": 0.18415928700051154,
@@ -41,7 +42,7 @@
     },
     {
       "candidate": "Kokoro 82M",
-      "status": "playable_normalized_pending_user_review",
+      "status": "playable_normalized_user_preferred",
       "raw_duration_seconds": 17.475,
       "generation_wall_seconds": 6.691854653000519,
       "first_audible_output_seconds": 7.0418316760002195,
@@ -83,7 +84,10 @@
       "active_parameters": 881492068,
       "fp16_bytes": 1762984136,
       "int8_ideal_bytes": 881492068,
-      "mixed_groupwise_int4_bytes_range": [453968416, 493635559],
+      "mixed_groupwise_int4_bytes_range": [
+        453968416,
+        493635559
+      ],
       "runtime_support_claimed": false,
       "android_feasible": "unknown",
       "evidence": "experiments/0006-vibevoice-realtime-0.5b-android/feasibility-inventory.json",

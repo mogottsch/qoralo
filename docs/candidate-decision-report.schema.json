@@ -14,14 +14,19 @@
       "type": "object",
       "required": ["status", "ratings", "note"],
       "properties": {
-        "status": {"const": "pending_user_review"},
+        "status": {"enum": ["pending_user_review", "recorded_user_review"]},
         "ratings": {
           "type": "object",
           "required": ["realtime", "pocket", "kokoro"],
-          "properties": {"realtime": {"type": "null"}, "pocket": {"type": "null"}, "kokoro": {"type": "null"}},
+          "properties": {
+            "realtime": {"type": ["string", "null"]},
+            "pocket": {"type": ["string", "null"]},
+            "kokoro": {"type": ["string", "null"]}
+          },
           "additionalProperties": false
         },
-        "note": {"type": "string"}
+        "note": {"type": "string"},
+        "evidence": {"type": "string"}
       },
       "additionalProperties": false
     },

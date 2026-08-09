@@ -55,9 +55,13 @@ class DecisionReportTests(unittest.TestCase):
     def setUpClass(cls):
         cls.report = build_publication.decision_report()
 
-    def test_evidence_classes_pending_ratings_and_five_decisions(self):
-        self.assertEqual("pending_user_review", self.report["subjective_listening"]["status"])
-        self.assertTrue(all(value is None for value in self.report["subjective_listening"]["ratings"].values()))
+    def test_evidence_classes_user_ratings_and_five_decisions(self):
+        listening = self.report["subjective_listening"]
+        self.assertEqual("recorded_user_review", listening["status"])
+        self.assertEqual("clearly_preferred", listening["ratings"]["kokoro"])
+        self.assertEqual("tied_for_second", listening["ratings"]["realtime"])
+        self.assertEqual("tied_for_second", listening["ratings"]["pocket"])
+        self.assertTrue((build_publication.REPO / listening["evidence"]).is_file())
         self.assertEqual(3, len(self.report["host_quality_evidence"]))
         self.assertEqual(5, len(self.report["candidate_decisions"]))
         self.assertEqual("not_run_host_gate_rejected", self.report["android_measurements"]["vibevoice_1_5b_four_call"]["status"])
@@ -133,7 +137,7 @@ class BuiltPageTests(unittest.TestCase):
         self.assertIn("counts.done", self.html)
         self.assertIn("t.depends_on.map", self.html)
         task18 = next(task for task in self.crew["tasks"] if task["id"] == "task-18")
-        self.assertEqual("in_progress", task18["status"])
+        self.assertIn(task18["status"], {"in_progress", "done"})
 
     def test_audio_remains_ignored_and_unstaged(self):
         import subprocess

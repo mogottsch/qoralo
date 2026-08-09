@@ -39,7 +39,7 @@ The target phone is a Samsung Galaxy S23 Ultra (`SM-S918B`, Snapdragon 8 Gen 2, 
 | [`0004`](experiments/0004-vibevoice-1.5b-onnx-android/) | ONNX Runtime Mobile | Deferred; no duplicate conversion started |
 | [`0005`](experiments/0005-vibevoice-1.5b-qnn-android/) | Qualcomm QNN | Requires an approved candidate and any proprietary terms |
 | [`0006`](experiments/0006-vibevoice-realtime-0.5b-android/) | Realtime 0.5B feasibility inventory | Recommendations and storage estimates only; Android feasibility unknown |
-| [`0007`](experiments/0007-mobile-podcast-preview-bakeoff/) | Protocol-v2 host listening bake-off | Realtime/Kokoro normalized samples and Pocket raw-only sample published; ratings pending user review |
+| [`0007`](experiments/0007-mobile-podcast-preview-bakeoff/) | Protocol-v2 host listening bake-off | User clearly preferred Kokoro; Realtime/Pocket effectively tied for second |
 
 ## Boundaries
 
@@ -51,4 +51,4 @@ Large model files, converted models, generated audio, APKs, tensors, traces, and
 
 The historical ExecuTorch campaign remains complete at **39/39** and rejected as deployed. Its prefix supplement clarifies the near-silent two-chunk waveform without revising that conclusion.
 
-The 18-task candidate campaign has published its playable host evidence and feasibility recommendations. Subjective ratings remain `pending_user_review`; no Realtime/Pocket/Kokoro Android measurements exist, and the new VibeVoice 1.5B four-call artifact was correctly stopped at its failed host gate. Choose one of the five actions in the [candidate decision report](docs/candidate-decision-report.md); no follow-up starts without explicit approval.
+The 18-task candidate campaign has published its playable host evidence and feasibility recommendations. The user clearly preferred Kokoro; Realtime and Pocket were effectively tied for second. No Realtime/Pocket/Kokoro Android measurements exist, and the new VibeVoice 1.5B four-call artifact was correctly stopped at its failed host gate. Choose one of the five actions in the [candidate decision report](docs/candidate-decision-report.md); no follow-up starts without explicit approval.
