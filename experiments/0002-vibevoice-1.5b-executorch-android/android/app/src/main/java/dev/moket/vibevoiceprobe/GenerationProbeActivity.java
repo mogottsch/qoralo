@@ -61,7 +61,7 @@ public final class GenerationProbeActivity extends Activity {
           .put("input",new JSONObject().put("text",readText(file("prompt.txt")).trim()).put("prefill_tokens",S).put("seed",42).put("cfg",1.3))
           .put("target",new JSONObject().put("samples",TARGET_SAMPLES).put("duration_seconds",TARGET_SAMPLES/24000.0).put("accepted_seconds","3.0 to 5.0 or documented EOS/capacity termination").put("exported_stream_capacity_chunks",2).put("capacity_reason","call-1 cached PTE outputs have wider static time axes than its inputs; a third call is rejected rather than truncating, padding, resetting, or reordering state"))
           .put("component_chain",new JSONArray().put("qwen2_int8_prefill_once").put("qwen2_int8_decode_recurrent").put("ten_step_diffusion_per_chunk").put("streaming_decoder_first_then_cached").put("semantic_encoder_first_then_cached").put("connectors_recurrent"))
-          .put("fixture_substitution",false).put("runs",new JSONArray().put(first.json).put(repeat.json))
+          .put("fixture_substitution",false).put("two_speaker_inputs",file("sequence-speaker-ids.i64le").isFile()?new JSONObject().put("conditioned_embeddings_sha256",sha256(file("prompt-embeddings.f32le"))).put("sequence_speaker_ids_sha256",sha256(file("sequence-speaker-ids.i64le"))):JSONObject.NULL).put("runs",new JSONArray().put(first.json).put(repeat.json))
           .put("deterministic",deterministic).put("boundary_samples_exact",first.boundariesExact&&repeat.boundariesExact)
           .put("pcm",new JSONObject().put("samples",first.samples).put("duration_seconds",first.samples/24000.0).put("sample_rate_hz",24000).put("channels",1).put("encoding","PCM_S16LE").put("sha256",first.pcmHash).put("repeat_sha256",repeat.pcmHash))
           .put("memory_kib",new JSONObject().put("rss_before",rss0).put("rss_after",status("VmRSS")).put("pss_before",pss0).put("pss_after",Debug.getPss()).put("vmhwm_before",hwm0).put("vmhwm_after",status("VmHWM")));
@@ -70,8 +70,10 @@ public final class GenerationProbeActivity extends Activity {
 
     private Run runOnce(int index)throws Exception{
         Components c=new Components(index); float[] prompt=readFloats(file("prompt-embeddings.f32le"),S*H);
+        File speakerLayout=file("sequence-speaker-ids.i64le");
+        int[] sequenceSpeakerIds=speakerLayout.isFile()?readInt64AsInt(speakerLayout,S):new int[S];
         GenerationController controller=new GenerationController(new GenerationController.Config(CAP,151652,151653,151654,24000,42,readFloats(file("sigmas.f32le"),11),readFloats(file("timesteps.f32le"),10)),c,new TokenSelector(151936,new int[]{151643,151652,151653,151654},151643,new int[]{151652,151653,151654},EXPORTED_STREAM_TOKEN_CAPACITY,42));
-        long started=SystemClock.elapsedRealtimeNanos(); controller.start(new GenerationController.Prompt(prompt,S,new int[S],0,true));
+        long started=SystemClock.elapsedRealtimeNanos(); controller.start(new GenerationController.Prompt(prompt,S,sequenceSpeakerIds,0,true));
         JSONArray tokens=new JSONArray();
         while(controller.state()!=GenerationController.State.TERMINATED&&controller.pcmSamples()<TARGET_SAMPLES){
             GenerationController.Step step=controller.step(); tokens.put(step.tokenId());
@@ -81,14 +83,27 @@ public final class GenerationProbeActivity extends Activity {
         byte[] wav=controller.wav(),pcm=Arrays.copyOfRange(wav,44,wav.length); File pcmFile=file("generation-run-"+index+".pcm"),wavFile=file("generation-run-"+index+".wav");writeBytes(pcmFile,pcm);writeBytes(wavFile,wav);
         boolean boundaries=Arrays.equals(pcm,c.concatenatedPcm())&&pcm.length==controller.audioChunkCount()*3200*2;
         boolean early=(controller.stopReason()==GenerationController.StopReason.EOS||controller.stopReason()==GenerationController.StopReason.CAPACITY)&&controller.pcmSamples()>0;
-        JSONObject j=new JSONObject().put("run",index).put("tokens",tokens).put("stop_reason",controller.stopReason().name()).put("valid_length",controller.validLength()).put("audio_chunks",controller.audioChunkCount()).put("elapsed_seconds",seconds(SystemClock.elapsedRealtimeNanos()-started)).put("chunks",c.chunks).put("prefill",c.prefill).put("pcm_sha256",sha256(pcmFile)).put("wav_sha256",sha256(wavFile)).put("pcm_samples",controller.pcmSamples()).put("boundary_samples_exact",boundaries).put("qwen_cache_progression",c.qwenDecodeCalls==controller.validLength()-S).put("decoder_cache_progression",c.decoderCachedCalls==Math.max(0,controller.audioChunkCount()-1)).put("semantic_cache_progression",c.semanticCachedCalls==Math.max(0,controller.audioChunkCount()-1)).put("rss_kib",status("VmRSS")).put("pss_kib",Debug.getPss()).put("vmhwm_kib",status("VmHWM"));
+        JSONObject j=new JSONObject().put("run",index).put("tokens",tokens).put("stop_reason",controller.stopReason().name()).put("valid_length",controller.validLength()).put("audio_chunks",controller.audioChunkCount()).put("elapsed_seconds",seconds(SystemClock.elapsedRealtimeNanos()-started)).put("chunks",c.chunks).put("prefill",c.prefill).put("pcm_sha256",sha256(pcmFile)).put("wav_sha256",sha256(wavFile)).put("pcm_samples",controller.pcmSamples()).put("boundary_samples_exact",boundaries).put("qwen_cache_progression",c.qwenDecodeCalls==controller.validLength()-S).put("decoder_cache_progression",c.decoderCachedCalls==Math.max(0,controller.audioChunkCount()-1)).put("semantic_cache_progression",c.semanticCachedCalls==Math.max(0,controller.audioChunkCount()-1)).put("speaker_conditioning",c.speakerConditioning).put("rss_kib",status("VmRSS")).put("pss_kib",Debug.getPss()).put("vmhwm_kib",status("VmHWM"));
         return new Run(j,tokens.toString(),sha256(pcmFile),controller.pcmSamples(),boundaries,early);
     }
 
     private final class Components implements GenerationController.Components{
         final int run; final JSONArray chunks=new JSONArray(); final java.io.ByteArrayOutputStream pcmAll=new java.io.ByteArrayOutputStream(); JSONObject prefill; int chunkIndex,qwenDecodeCalls,decoderCachedCalls,semanticCachedCalls; long diffusionStarted;
         Components(int run){this.run=run;}
-        public GenerationController.Conditioning condition(GenerationController.Prompt p,int speaker){try{return new GenerationController.Conditioning(p.tokenEmbeddings(),readFloats(file("negative-condition.f32le"),H));}catch(Exception e){throw wrap(e);}}
+        JSONObject speakerConditioning=new JSONObject();
+        public GenerationController.Conditioning condition(GenerationController.Prompt p,int speaker){try{
+            if(file("sequence-speaker-ids.i64le").isFile()){
+                int[] ids=p.sequenceSpeakerIds();int carter=0,maya=0,transitions=0,last=-1;
+                for(int i=0;i<ids.length;i++){
+                    int id=ids[i];if(id==0)carter++;else if(id==1)maya++;else if(id!=-1)throw new IllegalArgumentException("unknown speaker ID "+id);
+                    if(id>=0&&last>=0&&id!=last)transitions++;if(id>=0)last=id;
+                }
+                if(carter!=208||maya!=204||transitions!=1||ids[28]!=0||ids[235]!=0||ids[243]!=1||ids[446]!=1)
+                    throw new IllegalArgumentException("speaker position layout does not match pinned host fixture");
+                speakerConditioning=new JSONObject().put("checked",true).put("initial_speaker",speaker).put("carter_id",0).put("carter_positions","28..235").put("carter_count",carter).put("maya_id",1).put("maya_positions","243..446").put("maya_count",maya).put("transition_count",transitions).put("transition_position",243).put("cache_policy","conditioning is consumed by the single prefill; the Carter-to-Maya prompt transition does not reset recurrent Qwen, decoder, or semantic caches");
+            }
+            return new GenerationController.Conditioning(p.tokenEmbeddings(),readFloats(file("negative-condition.f32le"),H));
+        }catch(Exception e){throw wrap(e);}}
         public float[] speakerCondition(int id){throw new UnsupportedOperationException();}
         public GenerationController.QwenOutput prefill(float[] embeds,int count){try{return qwen(embeds,count,null,0);}catch(Exception e){throw wrap(e);}}
         public GenerationController.QwenOutput decode(float[] embed,int position,Object[] caches){try{qwenDecodeCalls++;return qwen(embed,1,caches,position);}catch(Exception e){throw wrap(e);}}
@@ -120,6 +135,7 @@ public final class GenerationProbeActivity extends Activity {
     private record Run(JSONObject json,String tokens,String pcmHash,int samples,boolean boundariesExact,boolean validEarlyTermination){}
     private File file(String n){return new File(getFilesDir(),n);}private static long[] shape(int c,int f){return new long[]{1,c,f};}private static EValue ev(float[]v,long[]s){return EValue.from(Tensor.fromBlob(v,s));}private static EValue ev(long[]v,long[]s){return EValue.from(Tensor.fromBlob(v,s));}
     private static float[] readFloats(File f,int n)throws Exception{byte[]b=Files.readAllBytes(f.toPath());if(b.length!=n*4)throw new IllegalArgumentException(f+" expected "+(n*4)+" bytes, got "+b.length);float[]v=new float[n];ByteBuffer.wrap(b).order(ByteOrder.LITTLE_ENDIAN).asFloatBuffer().get(v);return v;}
+    private static int[] readInt64AsInt(File f,int n)throws Exception{byte[]b=Files.readAllBytes(f.toPath());if(b.length!=n*8)throw new IllegalArgumentException(f+" expected "+(n*8)+" bytes, got "+b.length);java.nio.LongBuffer x=ByteBuffer.wrap(b).order(ByteOrder.LITTLE_ENDIAN).asLongBuffer();int[]v=new int[n];for(int i=0;i<n;i++){long q=x.get();if(q<Integer.MIN_VALUE||q>Integer.MAX_VALUE)throw new IllegalArgumentException("speaker ID overflow");v[i]=(int)q;}return v;}
     private static String readText(File f)throws Exception{return new String(Files.readAllBytes(f.toPath()),java.nio.charset.StandardCharsets.UTF_8);}private static void writeFloats(File f,float[]v)throws Exception{ByteBuffer b=ByteBuffer.allocate(v.length*4).order(ByteOrder.LITTLE_ENDIAN);b.asFloatBuffer().put(v);writeBytes(f,b.array());}private static void writeBytes(File f,byte[]b)throws Exception{try(FileOutputStream s=new FileOutputStream(f)){s.write(b);}}private static void writeText(File f,String s)throws Exception{writeBytes(f,s.getBytes(java.nio.charset.StandardCharsets.UTF_8));}
     private static byte[] pcm16(float[]v){ByteBuffer b=ByteBuffer.allocate(v.length*2).order(ByteOrder.LITTLE_ENDIAN);for(float x:v){float y=Math.max(-1,Math.min(1,x));b.putShort((short)Math.round(y*(y<0?32768:32767)));}return b.array();}
     private static String sha256(byte[] b)throws Exception{MessageDigest d=MessageDigest.getInstance("SHA-256");d.update(b);return hex(d.digest());}private static String sha256(File f)throws Exception{MessageDigest d=MessageDigest.getInstance("SHA-256");try(FileInputStream s=new FileInputStream(f)){byte[]b=new byte[1048576];int n;while((n=s.read(b))>=0)d.update(b,0,n);}return hex(d.digest());}private static String hex(byte[]v){StringBuilder h=new StringBuilder();for(byte x:v)h.append(String.format(Locale.ROOT,"%02x",x));return h.toString();}

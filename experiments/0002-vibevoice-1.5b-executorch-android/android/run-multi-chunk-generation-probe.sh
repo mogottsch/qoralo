@@ -2,6 +2,7 @@
 set -euo pipefail
 ROOT=$(git rev-parse --show-toplevel); BASE="$ROOT/experiments/0002-vibevoice-1.5b-executorch-android"; ANDROID="$BASE/android"; EXPORT="$BASE/export"
 INPUT=${INPUT:-$ROOT/artifacts/0002/generation-multi-chunk-input}; HOST=${HOST:-$ROOT/artifacts/0002/generation-multi-chunk-host}; OUT=${ARTIFACT_DIR:-$ROOT/artifacts/0002/generation-multi-chunk-android}
+RESULT=${RESULT:-$BASE/results/generation-3-to-5s-android.json}
 PY=${PYTHON:-$ROOT/.venv/bin/python}; ETPY=${EXECUTORCH_PYTHON:-$ROOT/artifacts/venv-executorch-1.2/bin/python}; GRADLE=${GRADLE:-$ROOT/artifacts/tools/gradle-8.10.2/bin/gradle}
 Q=$ROOT/artifacts/0002/lane-c/qwen2-int8-package; D=$ROOT/artifacts/0002/lane-b/diffusion-head/diffusion-step-xnnpack.pte; FIRST=$ROOT/artifacts/0002/acoustic-decoder-streaming-first-segments-1.2; CACHED=$ROOT/artifacts/0002/acoustic-decoder-streaming-cached-segments-1.2; SEM=$ROOT/artifacts/0002/lane-b/semantic-encoder; CON=$ROOT/artifacts/0002/lane-b/connectors/connectors-xnnpack.pte
 export ANDROID_HOME=${ANDROID_HOME:-/home/moritz/Android/Sdk};export ANDROID_SDK_ROOT=$ANDROID_HOME;PKG=dev.moket.vibevoiceprobe;mkdir -p "$OUT"
@@ -18,6 +19,7 @@ has models/diffusion.pte||push "$D" models/diffusion.pte diffusion.pte;has model
 for i in {0..7};do has "models/decoder/first/segment-$i.pte"||push "$FIRST/segment-$i.pte" "models/decoder/first/segment-$i.pte" "decoder-first-$i.pte";has "models/decoder/cached/segment-$i.pte"||push "$CACHED/segment-$i.pte" "models/decoder/cached/segment-$i.pte" "decoder-cached-$i.pte";done
 has models/semantic-first.pte||push "$SEM/semantic-encoder-first-xnnpack.pte" models/semantic-first.pte semantic-first.pte;has models/semantic-cached.pte||push "$SEM/semantic-encoder-cached-xnnpack.pte" models/semantic-cached.pte semantic-cached.pte
 for f in prompt.txt prompt-embeddings.f32le initial-noises.f32le negative-condition.f32le timesteps.f32le sigmas.f32le;do push "$INPUT/$f" "$f" "input-$f";done
+if [[ -f "$INPUT/sequence-speaker-ids.i64le" ]];then push "$INPUT/sequence-speaker-ids.i64le" sequence-speaker-ids.i64le input-sequence-speaker-ids.i64le;else adb shell run-as "$PKG" rm -f files/sequence-speaker-ids.i64le;fi
 "$PY" - <<'PY' >"$OUT/device-properties.json"
 import json,subprocess
 def p(x):return subprocess.check_output(['adb','shell','getprop',x],text=True).strip()
@@ -29,4 +31,4 @@ adb logcat -d -s VibeVoiceGeneration:V ExecuTorch:V '*:S'>"$OUT/logcat.txt"||tru
 adb exec-out run-as "$PKG" cat files/generation-result.json >"$OUT/device-result.json";cat "$OUT/device-result.json";[[ $("$PY" -c 'import json,sys;print(json.load(open(sys.argv[1]))["status"])' "$OUT/device-result.json") == passed ]]||exit 4
 chunks=$("$PY" -c 'import json,sys;print(json.load(open(sys.argv[1]))["runs"][0]["audio_chunks"])' "$OUT/device-result.json")
 for r in 0 1;do for ext in pcm wav;do adb exec-out run-as "$PKG" cat "files/generation-run-$r.$ext">"$OUT/generation-run-$r.$ext";done;for ci in $(seq 0 $((chunks-1)));do c=$(printf %02d "$ci");for n in diffusion decoder_pcm semantic_features connector_embedding qwen_hidden qwen_logits;do adb exec-out run-as "$PKG" cat "files/generation-run-$r-chunk-$c-$n.f32le">"$OUT/generation-run-$r-chunk-$c-$n.f32le";done;done;done
-"$PY" "$EXPORT/generation_multi_chunk_io.py" compare "$HOST" "$OUT" "$OUT/device-result.json" "$OUT/device-properties.json" "$BASE/results/generation-3-to-5s-android.json" --commit "$(git rev-parse HEAD)"|tee "$OUT/comparison.log"
+"$PY" "$EXPORT/generation_multi_chunk_io.py" compare "$HOST" "$OUT" "$OUT/device-result.json" "$OUT/device-properties.json" "$RESULT" --commit "$(git rev-parse HEAD)"|tee "$OUT/comparison.log"
