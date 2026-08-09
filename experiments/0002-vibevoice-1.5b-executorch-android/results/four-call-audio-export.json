@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "status": "exported_pending_host_validation",
+  "deployable": false,
+  "abi": "/home/moritz/dev/vibevoice-android-spike/experiments/0002-vibevoice-1.5b-executorch-android/fixtures/four-call-cache-abi.json",
+  "backend": "portable",
+  "invocation": [
+    "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/bin/python",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0002-vibevoice-1.5b-executorch-android/export/export_four_call_audio.py",
+    "--backend",
+    "portable"
+  ],
+  "methods": [
+    "acoustic_decode",
+    "semantic_encode"
+  ],
+  "calls": [
+    {
+      "call": 0,
+      "decoder_pcm": {
+        "max_abs_error": 2.2600943339057267e-10,
+        "mean_abs_error": 9.033262853008761e-12,
+        "atol": 2e-05,
+        "rtol": 1e-05,
+        "passed": true
+      },
+      "semantic_output": {
+        "max_abs_error": 4.76837158203125e-06,
+        "mean_abs_error": 8.671777322888374e-07,
+        "atol": 1e-05,
+        "rtol": 0.0001,
+        "passed": true
+      },
+      "pcm_sha256": "8acdcfa444b674a026593e8656c669ba61e72a10d4a2b2948d2133b7bb79e068",
+      "semantic_sha256": "90ca3a04a0223c4790197701f54ffd92c66ef9b7c0004227d310a8ab3391a4ec",
+      "cache_source": "actual prior eager adapter outputs"
+    },
+    {
+      "call": 1,
+      "decoder_pcm": {
+        "max_abs_error": 4.1453063204244245e-11,
+        "mean_abs_error": 7.787745275045221e-12,
+        "atol": 2e-05,
+        "rtol": 1e-05,
+        "passed": true
+      },
+      "semantic_output": {
+        "max_abs_error": 3.814697265625e-06,
+        "mean_abs_error": 9.883660823106766e-07,
+        "atol": 1e-05,
+        "rtol": 0.0001,
+        "passed": true
+      },
+      "pcm_sha256": "9327033a81e9e0f44a96c606309079bf6993853241a5bd907f89c75a44b9cdb5",
+      "semantic_sha256": "f76d07fb610ccf5c52b56ef75c48fb5a00e4799732bbcd7822638875de15363f",
+      "cache_source": "actual prior eager adapter outputs"
+    },
+    {
+      "call": 2,
+      "decoder_pcm": {
+        "max_abs_error": 2.0489096641540527e-08,
+        "mean_abs_error": 2.762919892873583e-10,
+        "atol": 2e-05,
+        "rtol": 1e-05,
+        "passed": true
+      },
+      "semantic_output": {
+        "max_abs_error": 3.814697265625e-06,
+        "mean_abs_error": 1.1115334928035736e-06,
+        "atol": 1e-05,
+        "rtol": 0.0001,
+        "passed": true
+      },
+      "pcm_sha256": "3e9546162b3903310e8b3fba16c369c82b093433a538af000105914b2a0dccb3",
+      "semantic_sha256": "dfd5fd79b6625e9e90139c308b2704bce2de9952419ebd9bd5a5a2be9c0c1404",
+      "cache_source": "actual prior eager adapter outputs"
+    },
+    {
+      "call": 3,
+      "decoder_pcm": {
+        "max_abs_error": 2.2351741790771484e-07,
+        "mean_abs_error": 2.7017422965514015e-08,
+        "atol": 2e-05,
+        "rtol": 1e-05,
+        "passed": true
+      },
+      "semantic_output": {
+        "max_abs_error": 5.7220458984375e-06,
+        "mean_abs_error": 1.5991972759366035e-06,
+        "atol": 1e-05,
+        "rtol": 0.0001,
+        "passed": true
+      },
+      "pcm_sha256": "4f9fae061c2e1e78b44992ebb5d9ad48cb60deaa87b48f76dd11a4cdc6b97681",
+      "semantic_sha256": "d531cbda40e19ee430eb4822c158b189517fe38c29a5290afcf2f8b960009029",
+      "cache_source": "actual prior eager adapter outputs"
+    }
+  ],
+  "deterministic_eager_repeat": true,
+  "rewrite": {
+    "sconv1d": 28,
+    "sconvtranspose1d": 6
+  },
+  "artifacts": {
+    "single_method_baselines": {
+      "acoustic_decode": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/0002/four-call-audio-export/acoustic_decode-portable.pte",
+        "bytes": 1378556516,
+        "sha256": "d28835dac84fb7a079f2102b232d09d431ef19e1a496a2527518f4585da6c66b"
+      },
+      "semantic_encode": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/0002/four-call-audio-export/semantic_encode-portable.pte",
+        "bytes": 1378688420,
+        "sha256": "e6db5c7e94b1fce2760b05b7d78298b45d4a030e8c182f4f872c81b11ea04f8b"
+      }
+    },
+    "multi_method": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/0002/four-call-audio-export/vibevoice-four-call-audio-portable.pte",
+      "bytes": 2757244560,
+      "sha256": "c5a7ba80bb465df19a0ee2df307d8ddef3ee0c13664cb6fc29a6cce8c4bf988c"
+    }
+  },
+  "duplication": {
+    "parameter_payload_bytes": {
+      "acoustic_decode": 1374783876,
+      "semantic_encode": 1378454400
+    },
+    "sum_single_pte_bytes": 2757244936,
+    "multi_pte_bytes": 2757244560,
+    "multi_minus_sum_single_bytes": -376,
+    "duplicate_full_parameter_copy": false,
+    "phase_specific_artifacts": 0,
+    "external_ptd_files": 0
+  },
+  "versions": {
+    "python": "3.11.13",
+    "torch": "2.11.0+cpu",
+    "executorch": "1.2.0"
+  },
+  "wall_seconds": 108.07768648699994,
+  "peak_rss_kib": 6315144
+}

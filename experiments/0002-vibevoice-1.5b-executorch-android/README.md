@@ -10,6 +10,8 @@ Complete with a negative feasibility conclusion. Individual fixed-shape componen
 
 The later signed-16-bit supplement does not change that quality rejection: it shows that the Android fragment agrees with the equally long locked-reference introductory-silence prefix within one PCM unit (mean absolute difference 0.4709375). Prefix agreement is therefore a numerical correctness clue, not evidence of acceptable speech quality.
 
+The frozen four-call recovery export is also **host-rejected and not deployable**. The 2,757,244,560-byte portable multi-method PTE runs calls 0–3 deterministically with actual prior outputs and produces the expected voiced chunk 3 (`-21.7126` dBFS, peak 10,228 S16 units, at most one PCM unit error). It nevertheless fails predeclared gates: calls 0–1 have `-116.07/-136.35` dBFS energy rather than the frozen `-93.66/-93.49` dBFS values, and decoder cache 4 has one out-of-tolerance element on call 3. The required human chunk-3 non-speech gate remains `pending_user_review`; it cannot override the numerical rejection. No artifact deployment or longer generation follows.
+
 ## Current tooling
 
 - [`export/capture_fixtures.py`](export/capture_fixtures.py) wraps the real streaming decode call and captures calls 0 and 1 with stable cache names.
@@ -27,6 +29,9 @@ The later signed-16-bit supplement does not change that quality rejection: it sh
 - [`export/summarize_streaming_fp16.py`](export/summarize_streaming_fp16.py) rebuilds the committed FP16 structured result from ignored benchmark artifacts.
 - [`export/probe_multimethod_external_constants.py`](export/probe_multimethod_external_constants.py) runs the synthetic ExecuTorch 1.2 multi-method/shared-weight and PTD capability probe without loading VibeVoice or using a phone.
 - [`fixtures/four-call-cache-abi.md`](fixtures/four-call-cache-abi.md) and [`fixtures/four-call-cache-abi.json`](fixtures/four-call-cache-abi.json) freeze the pre-export calls 0–3 decoder/semantic tensor order, fixed capacities, phase/length transitions, reset and no-mutation rules, inline-constant packaging, retained INT8-Qwen2/FP32-audio choices, and numerical/audibility gates.
+- [`export/four_call_abi.py`](export/four_call_abi.py) implements left-aligned fixed-capacity caches, tensor-selected transpose-convolution history, strict phase/length/padding checks, input-mutation guards, and atomic two-method state commit.
+- [`export/export_four_call_audio.py`](export/export_four_call_audio.py) validates eager calls 0–3, exports the two-method inline portable PTE, and measures it against both single-method baselines.
+- [`export/validate_four_call_host.py`](export/validate_four_call_host.py) chains actual runtime caches through calls 0–3 twice and applies every frozen PCM, cache, energy, deterministic-repeat, and protocol-defined audibility gate. Results are committed in [`results/four-call-audio-export.json`](results/four-call-audio-export.json) and [`results/four-call-host-validation.json`](results/four-call-host-validation.json); generated PTEs remain ignored.
 - [`export/capture_diffusion_fixture.py`](export/capture_diffusion_fixture.py) captures the first real CFG prediction-head invocation from the locked reference and stops before scheduler iteration.
 - [`export/diffusion_head.py`](export/diffusion_head.py) loads only prediction-head checkpoint tensors and defines the four-input FP32 ABI.
 - [`export/export_diffusion_step.py`](export/export_diffusion_step.py) exports the fixed CFG prediction to portable ExecuTorch or XNNPACK.
