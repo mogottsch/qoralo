@@ -143,7 +143,7 @@ def finalize(args: argparse.Namespace) -> None:
         "runtime": pre["runtime"], "device": props, "packages": pre["packages"],
         "reference_wav": pre["reference_wav"],
         "android_wav": {"path": "artifacts/0002/lane-d/locked-reference/generation-run-0.wav", "bytes": wav_path.stat().st_size, "sha256": sha256(wav_path), "repeat_sha256": sha256(repeat_wav), **wav_meta},
-        "generation": {"requested_duration_seconds": pre["reference_wav"]["duration_seconds"], "produced_duration_seconds": wav_meta["duration_seconds"], "runs": run_evidence, "deterministic": deterministic, "wav_byte_identical_across_runs": sha256(wav_path) == sha256(repeat_wav)},
+        "generation": {"locked_reference_required_duration_seconds": pre["reference_wav"]["duration_seconds"], "controller_stop-test_target_duration_seconds": device["target"]["duration_seconds"], "produced_duration_seconds": wav_meta["duration_seconds"], "runs": run_evidence, "deterministic": deterministic, "wav_byte_identical_across_runs": sha256(wav_path) == sha256(repeat_wav)},
         "feasibility_failure": {
             "reproducible": feasibility_failure,
             "reason": "The first and cached decoder/semantic PTE ABIs have capacity for only two 3,200-sample chunks. Cached call 1 returns wider static cache axes that cannot be passed to a third call. The controller correctly stops CAPACITY instead of truncating, padding, or resetting state.",
