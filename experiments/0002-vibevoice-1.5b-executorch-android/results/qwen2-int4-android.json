@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "status": "not_run_host_prefill_rejected",
+  "component": "qwen2_int4_android",
+  "source_revision": "6dd49cb7200c0367205a5f1e650244259e9e423d",
+  "model_revision": "c00898d257e6b46004e3e2866a47534085fb685a",
+  "device": {
+    "manufacturer": "samsung",
+    "model": "SM-S918B",
+    "device": "dm3q",
+    "soc": "SM8550",
+    "android_release": "16",
+    "api_level": 36,
+    "abi": "arm64-v8a",
+    "build_fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+    "kernel": "Linux localhost 5.15.189-android13-8-33413713-abS918BXXSAFZG1 #1 SMP PREEMPT Mon Jul 6 09:56:11 UTC 2026 aarch64 Toybox"
+  },
+  "host_gate": {
+    "result": "qwen2-int4-host.json",
+    "sha256": "ac7cbf15d348530289809504c0a6fb8a89c8cd853b2dbd00a5f7a541ebbcae16",
+    "prefill_accepted": false,
+    "decode_accepted": false,
+    "prefill_aggregate_nrmse": 0.07246775688213142,
+    "maximum_cache_nrmse": 0.6867196906914499
+  },
+  "package": {
+    "host_package_bytes": 1552699744,
+    "manifest_sha256": "186dd081c9283bf716ca067f359699a403ccee5f1d02f4c880933093bef6e919",
+    "pushed_to_device": false
+  },
+  "prefill": {
+    "attempted": false,
+    "reason": "host prefill failed the locked INT4 tensor criteria; host correctness is mandatory before Android"
+  },
+  "decode": {
+    "attempted": false,
+    "actual_int4_prefill_caches_consumed": false,
+    "required_cache_count": 56,
+    "reason": "decode is forbidden until Android prefill passes and produces all 56 actual INT4 caches"
+  },
+  "tensor_error": null,
+  "token_divergence": null,
+  "latency": null,
+  "memory": null,
+  "determinism": null,
+  "int8_android_baseline": {
+    "status": "passed",
+    "result_sha256": "18ef1ba475833de2295b22160b197459c511cf5d892fcfcb6adb4e285c04495f",
+    "warm_prefill_seconds": 3.012232344,
+    "warm_decode_seconds": 0.1493456800000006,
+    "vmhwm_after_kib": 893332
+  },
+  "quality_risk": "High: per-channel full-row INT4 exceeds the locked aggregate and per-cache error limits; matching the first greedy token does not establish autoregressive speech quality.",
+  "integration_fallback": "accepted Galaxy S23 Ultra INT8 XNNPACK package in qwen2-int8-android.json",
+  "commands": {
+    "android": "not run: host prefill rejection blocks phone deployment by policy",
+    "host": "PATH=$PWD/artifacts/venv-executorch-1.2/bin:$PATH artifacts/venv-executorch-1.2/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/export_qwen2_int4.py"
+  },
+  "conclusion": "Rejected before Android: host INT4 prefill exceeded aggregate and per-cache error limits. No artifact was pushed, and Android decode did not consume fake or fixture caches. Integration remains on validated INT8.",
+  "implementation_commits": []
+}

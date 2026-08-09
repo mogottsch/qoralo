@@ -13,7 +13,9 @@ sys.path.insert(0, str(EXPORT_DIR))
 
 from qwen2_quantization import (  # noqa: E402
     deployment_benefit,
+    int4_quantization_spec,
     quantization_spec,
+    quantize_dynamic_int4_candidate,
     quantize_dynamic_int8,
     quantized_comparison,
 )
@@ -27,6 +29,27 @@ class Qwen2QuantizationTests(unittest.TestCase):
         self.assertEqual(spec["weight"]["dtype"], "int8")
         self.assertIn("per-output-channel", spec["weight"]["granularity"])
         self.assertIn("pinned prefill/decode fixtures", spec["calibration"])
+
+    def test_int4_spec_requires_serialized_packing_evidence(self):
+        spec = int4_quantization_spec()
+        self.assertEqual(spec["weight"]["logical_dtype"], "signed int4")
+        self.assertEqual(spec["weight"]["pt2e_intermediate_storage_dtype"], "int8")
+        self.assertIn("input_features", spec["weight"]["group_size"])
+        self.assertIn("XNNPACK serialized qint4", spec["weight"]["packing"])
+        self.assertIn("packed nibbles", spec["acceptance_gate"])
+
+    def test_int4_candidate_exposes_package_audit_requirements(self):
+        torch.manual_seed(42)
+        module = torch.nn.Linear(16, 8).eval()
+        inputs = (torch.randn(1, 3, 16),)
+        converted, audit = quantize_dynamic_int4_candidate(module, inputs)
+        self.assertEqual(audit["eligible_linear_ops"], 1)
+        self.assertEqual(audit["four_bit_range_linear_ops"], 1)
+        self.assertEqual(audit["storage_bits_per_weight"], [8])
+        self.assertIn("package size", audit["serialized_packing"])
+        self.assertIn("input_features", audit["group_size"])
+        self.assertTrue(audit["candidate_ready_for_package_audit"])
+        self.assertEqual(tuple(converted(*inputs).shape), (1, 3, 8))
 
     def test_pt2e_quantizes_linear_without_fallback(self):
         torch.manual_seed(4)

@@ -1,0 +1,4728 @@
+{
+  "schema_version": 1,
+  "status": "rejected",
+  "component": "qwen2_prefill_decode_sequential_int4_xnnpack",
+  "source_revision": "6dd49cb7200c0367205a5f1e650244259e9e423d",
+  "model_revision": "c00898d257e6b46004e3e2866a47534085fb685a",
+  "quantization": {
+    "method": "PT2E dynamic activation/static weight reduced-range experiment",
+    "backend": "XNNPACK",
+    "activation": {
+      "dtype": "int8",
+      "granularity": "per-tensor asymmetric dynamic",
+      "qmin": -128,
+      "qmax": 127
+    },
+    "weight": {
+      "logical_dtype": "signed int4",
+      "pt2e_intermediate_storage_dtype": "int8",
+      "qmin": -8,
+      "qmax": 7,
+      "granularity": "per-output-channel symmetric (one group per output row)",
+      "group_size": "input_features of each Linear (full-row group)",
+      "packing": "XNNPACK serialized qint4; require package <=65% of matched INT8 as packing evidence"
+    },
+    "calibration": "The pinned prefill/decode fixtures would be executed after prepare_pt2e; dynamic activation qparams need no reusable calibration range. Full-model calibration is gated on a genuinely packed INT4 representation.",
+    "acceptance_gate": "Require packed nibbles, an explicit fixed group size, XNNPACK delegation, and at least 35% package reduction versus accepted INT8 before prefill."
+  },
+  "cache_handoff": {
+    "source": "actual_int4_prefill_outputs",
+    "tensor_count": 56,
+    "order": [
+      "layer_00_key",
+      "layer_00_value",
+      "layer_01_key",
+      "layer_01_value",
+      "layer_02_key",
+      "layer_02_value",
+      "layer_03_key",
+      "layer_03_value",
+      "layer_04_key",
+      "layer_04_value",
+      "layer_05_key",
+      "layer_05_value",
+      "layer_06_key",
+      "layer_06_value",
+      "layer_07_key",
+      "layer_07_value",
+      "layer_08_key",
+      "layer_08_value",
+      "layer_09_key",
+      "layer_09_value",
+      "layer_10_key",
+      "layer_10_value",
+      "layer_11_key",
+      "layer_11_value",
+      "layer_12_key",
+      "layer_12_value",
+      "layer_13_key",
+      "layer_13_value",
+      "layer_14_key",
+      "layer_14_value",
+      "layer_15_key",
+      "layer_15_value",
+      "layer_16_key",
+      "layer_16_value",
+      "layer_17_key",
+      "layer_17_value",
+      "layer_18_key",
+      "layer_18_value",
+      "layer_19_key",
+      "layer_19_value",
+      "layer_20_key",
+      "layer_20_value",
+      "layer_21_key",
+      "layer_21_value",
+      "layer_22_key",
+      "layer_22_value",
+      "layer_23_key",
+      "layer_23_value",
+      "layer_24_key",
+      "layer_24_value",
+      "layer_25_key",
+      "layer_25_value",
+      "layer_26_key",
+      "layer_26_value",
+      "layer_27_key",
+      "layer_27_value"
+    ]
+  },
+  "commands": {
+    "export_host": "PATH=$PWD/artifacts/venv-executorch-1.2/bin:$PATH artifacts/venv-executorch-1.2/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/export_qwen2_int4.py",
+    "android": "PACKAGE_DIR=artifacts/0002/lane-c/qwen2-int4-package RESULT_NAME=qwen2-int4-android.json experiments/0002-vibevoice-1.5b-executorch-android/android/run-qwen2-int8-probe.sh"
+  },
+  "calibration_fixture": {
+    "manifest_sha256": "7dd03824ab6401cbba3d717ad7929a7b8c1c2e58bda218007e3205d966109a87",
+    "prefill_sha256": "df90fdc4b66bb64e54e6097899e47e13f1c6094cc3ebc73814fa861f0dbf4eca",
+    "decode_sha256": "efc7ca49b8b70c78ec76cb749d5c68725ef58da6492af4f550cf9d2a0c6d1e0a",
+    "seed": 42
+  },
+  "stages": [
+    {
+      "file": "prepare.pte",
+      "bytes": 10928,
+      "sha256": "300800c337857aab70f330371d2eb8fc4f6712096561eccfd9575ccc4c2899ca",
+      "graph_nodes": 145,
+      "coverage": {
+        "eligible_linear_ops": 0,
+        "four_bit_range_linear_ops": 0,
+        "four_bit_range_sites": 0,
+        "storage_dtypes": [],
+        "storage_bits_per_weight": [],
+        "serialized_packing": "not applicable: stage has no Linear weights",
+        "group_size": "not applicable",
+        "granularity": "not applicable",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 4.540925233000962,
+      "kind": "prepare"
+    },
+    {
+      "file": "layer-00.pte",
+      "bytes": 23536896,
+      "sha256": "d4bd79c2fa73139a0dfdf3e3907b5db2e1be48a360f23fedaa7ddbd3fcc2fd85",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.508422430999417,
+      "kind": "layer-00"
+    },
+    {
+      "file": "layer-01.pte",
+      "bytes": 23536896,
+      "sha256": "953f1cbbc863ae06f7d66d2c2f0e1772517d2326700e0745ded2a67e8dae42d5",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.168699264000679,
+      "kind": "layer-01"
+    },
+    {
+      "file": "layer-02.pte",
+      "bytes": 23536896,
+      "sha256": "058dddf6da14baf618859b357ae39e956d8dc27776f0a1a6b7fc0b21ee383d9f",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.404071050999846,
+      "kind": "layer-02"
+    },
+    {
+      "file": "layer-03.pte",
+      "bytes": 23536896,
+      "sha256": "020951d5641a1b5869a8274d221d14097873736e836842577070bc073b048aa8",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.19443291800053,
+      "kind": "layer-03"
+    },
+    {
+      "file": "layer-04.pte",
+      "bytes": 23536896,
+      "sha256": "27ce310e439fd39060340cb385d5d4cfe010118fb1aa04bd4ef53d693649db06",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.212867077001647,
+      "kind": "layer-04"
+    },
+    {
+      "file": "layer-05.pte",
+      "bytes": 23536896,
+      "sha256": "35bb30f223a31ec0a77759aa3b26ad722c0c0cafecd98fd0741ae6638a50d387",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.484287065999524,
+      "kind": "layer-05"
+    },
+    {
+      "file": "layer-06.pte",
+      "bytes": 23536896,
+      "sha256": "98760d98df62ecf91a216964ffac475061989b6f9ec8a61c28a20241b764be7a",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.454138835999402,
+      "kind": "layer-06"
+    },
+    {
+      "file": "layer-07.pte",
+      "bytes": 23536896,
+      "sha256": "204e66a0bd54ea8ab1b3589cd884915674287b627295ff3fb10def81659e8e85",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.274265567999464,
+      "kind": "layer-07"
+    },
+    {
+      "file": "layer-08.pte",
+      "bytes": 23536896,
+      "sha256": "44894dca3f2bfe57afa77c8bfbcb35316716463db11b2859acd3dd84f24e0aef",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.26172153799962,
+      "kind": "layer-08"
+    },
+    {
+      "file": "layer-09.pte",
+      "bytes": 23536896,
+      "sha256": "0aa3d22ce1c6ed496d7801e917f02ebcfd9c1ff514ce51dc9d4c58f031c479a2",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.272399154999221,
+      "kind": "layer-09"
+    },
+    {
+      "file": "layer-10.pte",
+      "bytes": 23536896,
+      "sha256": "8622ed78f919011c4ab187173515badf1d174e1171ad0eaa170b1c15b2d6f7dd",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.300371145000099,
+      "kind": "layer-10"
+    },
+    {
+      "file": "layer-11.pte",
+      "bytes": 23536896,
+      "sha256": "690d47b38554e02bc1146d167def62e1969d8968cc4fb61e808c9a07bb474cf6",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.318925294999644,
+      "kind": "layer-11"
+    },
+    {
+      "file": "layer-12.pte",
+      "bytes": 23536896,
+      "sha256": "f6a6d065441de2d297f851bd01adfd0bb77b0bf4377029fe64711e7010195f21",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.304510015999767,
+      "kind": "layer-12"
+    },
+    {
+      "file": "layer-13.pte",
+      "bytes": 23536896,
+      "sha256": "61d25a2ae211d275ace130150e2a677aaa459818ad82ba927c0ea770265191c6",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.37724870600141,
+      "kind": "layer-13"
+    },
+    {
+      "file": "layer-14.pte",
+      "bytes": 23536896,
+      "sha256": "1992bce9bd5403ff328d2387c1fdc753c6a926538e770c078be9377920e950c9",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.349648295999941,
+      "kind": "layer-14"
+    },
+    {
+      "file": "layer-15.pte",
+      "bytes": 23536896,
+      "sha256": "60ae59a1063cacbabee5cfe5345bb9184fa491cbd795ffc432d61b4917b3c535",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.349165962999905,
+      "kind": "layer-15"
+    },
+    {
+      "file": "layer-16.pte",
+      "bytes": 23536896,
+      "sha256": "4aa11ee8f79fc6322930f5d5d49ee4f4d38780f7dc6069831aa6ffc42bd00893",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 4.942584300000817,
+      "kind": "layer-16"
+    },
+    {
+      "file": "layer-17.pte",
+      "bytes": 23536896,
+      "sha256": "fdee2e2a1dcf3676c1d5afac20d5d2dc63d8a2d009c7852023cc0b1c530cc258",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.542807367999558,
+      "kind": "layer-17"
+    },
+    {
+      "file": "layer-18.pte",
+      "bytes": 23536896,
+      "sha256": "7419504b03b342f8c23dce25ca7fab6b98b14df943004105eeb02d54c131f267",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.43111597799907,
+      "kind": "layer-18"
+    },
+    {
+      "file": "layer-19.pte",
+      "bytes": 23536896,
+      "sha256": "9964db43929c81a59f4b8e0271b42397c3f30bae9aee78f5c7990b841362220d",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.403195056998811,
+      "kind": "layer-19"
+    },
+    {
+      "file": "layer-20.pte",
+      "bytes": 23536896,
+      "sha256": "3a79153c6ed349ccf1eba1925c2d4a6f6abbbdb0f54085e3227d94d1c8e16341",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.4114330370011885,
+      "kind": "layer-20"
+    },
+    {
+      "file": "layer-21.pte",
+      "bytes": 23536896,
+      "sha256": "0787288b56b894e8245704ae01b1e0e272f7df0e670bd250d29656496f02b47a",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 4.9417698130000645,
+      "kind": "layer-21"
+    },
+    {
+      "file": "layer-22.pte",
+      "bytes": 23536896,
+      "sha256": "6214cd36ddec01543515f21427403ff753b65c62b828c109b2c4050756dcfce7",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.45040720399993,
+      "kind": "layer-22"
+    },
+    {
+      "file": "layer-23.pte",
+      "bytes": 23536896,
+      "sha256": "856aa3d01b3b6f792b7e022b25960d6b5c52bd9b3d1b77cc067c140e7b287eb7",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.459519276000719,
+      "kind": "layer-23"
+    },
+    {
+      "file": "layer-24.pte",
+      "bytes": 23536896,
+      "sha256": "66957c5ad23f268d3b1a07767fabea682cb62c649412e6d20df4907660ff5f5b",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.468673324001429,
+      "kind": "layer-24"
+    },
+    {
+      "file": "layer-25.pte",
+      "bytes": 23536896,
+      "sha256": "6076795abe5b59125f95ef8ca98af5b7950556161c9844c42d639b80b47438c3",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 4.956032440000854,
+      "kind": "layer-25"
+    },
+    {
+      "file": "layer-26.pte",
+      "bytes": 23536896,
+      "sha256": "0b680d900c8731c1fb69622694c99a037e41cf814df5e315aad3d6a99770175d",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.5179387949992815,
+      "kind": "layer-26"
+    },
+    {
+      "file": "layer-27.pte",
+      "bytes": 23536896,
+      "sha256": "107fd7682c551b698afe6bb02fff361a8a18e0bf982f33e8950114f392f493a4",
+      "graph_nodes": 144,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.5149712189995626,
+      "kind": "layer-27"
+    },
+    {
+      "file": "final.pte",
+      "bytes": 117305984,
+      "sha256": "9061d356f53e75a52667ce0182a26935e9d1aad513263fc0408044348b9641f0",
+      "graph_nodes": 28,
+      "coverage": {
+        "eligible_linear_ops": 1,
+        "four_bit_range_linear_ops": 1,
+        "four_bit_range_sites": 1,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 3.985086565999154,
+      "kind": "final"
+    },
+    {
+      "file": "decode-prepare.pte",
+      "bytes": 10928,
+      "sha256": "7bec2c698efc1eced1d500a397c7eb2f515d037d5ede3661c0b14c1702131247",
+      "graph_nodes": 145,
+      "coverage": {
+        "eligible_linear_ops": 0,
+        "four_bit_range_linear_ops": 0,
+        "four_bit_range_sites": 0,
+        "storage_dtypes": [],
+        "storage_bits_per_weight": [],
+        "serialized_packing": "not applicable: stage has no Linear weights",
+        "group_size": "not applicable",
+        "granularity": "not applicable",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 2.2245027950011718,
+      "kind": "decode-prepare"
+    },
+    {
+      "file": "decode-layer-00.pte",
+      "bytes": 23536896,
+      "sha256": "4f544a93554ef9992c4804fe222e3f7b0da4fa0d4ffa0b09053c1ac7d5c059df",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.549898162998943,
+      "kind": "decode-layer-00"
+    },
+    {
+      "file": "decode-layer-01.pte",
+      "bytes": 23536896,
+      "sha256": "ff273088462751da5cc4f4f8b8d0e7af065b4fa1c2809cb063ac9cf5eba15b1d",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.424566048999623,
+      "kind": "decode-layer-01"
+    },
+    {
+      "file": "decode-layer-02.pte",
+      "bytes": 23536896,
+      "sha256": "67bc7e090638725cacb7cca0c42a0e4b0be8d9410a5f5a9a4ec110cd7f0b7105",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 4.787204663000011,
+      "kind": "decode-layer-02"
+    },
+    {
+      "file": "decode-layer-03.pte",
+      "bytes": 23536896,
+      "sha256": "9bcc5d77ec0d4f0b002ad31f4625c3d2adc3160897e636fa82f92403ca038d74",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.446918083000128,
+      "kind": "decode-layer-03"
+    },
+    {
+      "file": "decode-layer-04.pte",
+      "bytes": 23536896,
+      "sha256": "4f31f49bcbb9cc6abc59c8703bc01d9a5eba26a695b0d7ab041272cf198f83c2",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 4.812235265000709,
+      "kind": "decode-layer-04"
+    },
+    {
+      "file": "decode-layer-05.pte",
+      "bytes": 23536896,
+      "sha256": "9ce62e17e061eb452cd74c7047edfaf39e861127c7276992b24a09f1006a55c7",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.4962523489994055,
+      "kind": "decode-layer-05"
+    },
+    {
+      "file": "decode-layer-06.pte",
+      "bytes": 23536896,
+      "sha256": "0a42c9e7ced98eeaf0db1e1fdd7f1f5eb301cbdfd0f513d51d52b57846589fe4",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.461560653000561,
+      "kind": "decode-layer-06"
+    },
+    {
+      "file": "decode-layer-07.pte",
+      "bytes": 23536896,
+      "sha256": "1708a0c2fa563eb7112b0a5de816cd2355ed67f948e98aa24d2de90caeff915c",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 4.857969238999431,
+      "kind": "decode-layer-07"
+    },
+    {
+      "file": "decode-layer-08.pte",
+      "bytes": 23536896,
+      "sha256": "242b8764c426483726e773f26ed3fbdf4324fd4bf34c2d538f13924e359a3ce4",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.539550251000037,
+      "kind": "decode-layer-08"
+    },
+    {
+      "file": "decode-layer-09.pte",
+      "bytes": 23536896,
+      "sha256": "167ec2b947117d469d7680c495a00e20fe01108cded03010105a62d82979e00f",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 4.7969527509994805,
+      "kind": "decode-layer-09"
+    },
+    {
+      "file": "decode-layer-10.pte",
+      "bytes": 23536896,
+      "sha256": "40af29ef6fbe16d96ee71630b7d3f8bbf48ca90f1440196e2caf0d3975572cd2",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.58110625199879,
+      "kind": "decode-layer-10"
+    },
+    {
+      "file": "decode-layer-11.pte",
+      "bytes": 23536896,
+      "sha256": "c28d6233bc0205f854c8a7a1942809c58f9e7e65a1bee282dae23db9fbb8db7d",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 4.9350907589996496,
+      "kind": "decode-layer-11"
+    },
+    {
+      "file": "decode-layer-12.pte",
+      "bytes": 23536896,
+      "sha256": "5baaad1326075ce1862e26ef295a02de57eefa308d15179ea5eddcc03e3f108e",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.618376443999296,
+      "kind": "decode-layer-12"
+    },
+    {
+      "file": "decode-layer-13.pte",
+      "bytes": 23536896,
+      "sha256": "c77734986a2b9e15d3110fc933fe63ef7d1e197aaa3a51d126fc1f5271d531a5",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 4.797032455999215,
+      "kind": "decode-layer-13"
+    },
+    {
+      "file": "decode-layer-14.pte",
+      "bytes": 23536896,
+      "sha256": "36093ffe8b8f646d04a73ba9b69c31530f29ef305d8e6857226a3dc2088e8fc8",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.636854954000228,
+      "kind": "decode-layer-14"
+    },
+    {
+      "file": "decode-layer-15.pte",
+      "bytes": 23536896,
+      "sha256": "d8c663b5828d258f4e0cfa2b847565060a2a6909568ce6e671255649f214b2c9",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 4.811645544999919,
+      "kind": "decode-layer-15"
+    },
+    {
+      "file": "decode-layer-16.pte",
+      "bytes": 23536896,
+      "sha256": "23fc8473793fc998bd5b64bcb40d4ea2784cb5841490bfaa505979a31af8344e",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.666305602999273,
+      "kind": "decode-layer-16"
+    },
+    {
+      "file": "decode-layer-17.pte",
+      "bytes": 23536896,
+      "sha256": "87ce3671626971bb9d7e9595070ca6d73c2455e0d677494dfb709262796e904b",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 4.833254860001034,
+      "kind": "decode-layer-17"
+    },
+    {
+      "file": "decode-layer-18.pte",
+      "bytes": 23536896,
+      "sha256": "7fe6fd96c799d81529ef094b33776417a65e297689557587d2efb8f5770a6404",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.648698756000158,
+      "kind": "decode-layer-18"
+    },
+    {
+      "file": "decode-layer-19.pte",
+      "bytes": 23536896,
+      "sha256": "f70ec9e96c84bd8f54181f9c2507558f95a677196adbd020ec9fa7dd02bd4664",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 4.853150495000591,
+      "kind": "decode-layer-19"
+    },
+    {
+      "file": "decode-layer-20.pte",
+      "bytes": 23536896,
+      "sha256": "254928f9eee469c31ea6a9a7026ed84ca7163f97106ab552f2946a78f0cfad24",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 4.778459755998483,
+      "kind": "decode-layer-20"
+    },
+    {
+      "file": "decode-layer-21.pte",
+      "bytes": 23536896,
+      "sha256": "81428189e2524b931db32d66773dcbdfab1cebaf3716a561266c9a2fe117a1e2",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.743767543001013,
+      "kind": "decode-layer-21"
+    },
+    {
+      "file": "decode-layer-22.pte",
+      "bytes": 23536896,
+      "sha256": "a402291ae555dc596add9893ec152863c447002d3e2f50a8326df048d23df87f",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 4.817403885999738,
+      "kind": "decode-layer-22"
+    },
+    {
+      "file": "decode-layer-23.pte",
+      "bytes": 23536896,
+      "sha256": "d3276f491a1e1d50fbb5dfe8eeb95fbfa6bdae9123edb0acb043ec2b957154a7",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.874580222000077,
+      "kind": "decode-layer-23"
+    },
+    {
+      "file": "decode-layer-24.pte",
+      "bytes": 23536896,
+      "sha256": "b03da186ff25352b583a949babdb0ebc2d6bac39422e1378acd3739c9645d8c9",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 4.8301448870006425,
+      "kind": "decode-layer-24"
+    },
+    {
+      "file": "decode-layer-25.pte",
+      "bytes": 23536896,
+      "sha256": "86cc2832f5e282a8e0bae46535c49003dab8b35fd47704a8e86a14272c92464a",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.756558422001035,
+      "kind": "decode-layer-25"
+    },
+    {
+      "file": "decode-layer-26.pte",
+      "bytes": 23536896,
+      "sha256": "8d8fdf96a92420aaec0b401d0fe198690e08d3511a618cddbcb5b683c6742908",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 4.844886347000283,
+      "kind": "decode-layer-26"
+    },
+    {
+      "file": "decode-layer-27.pte",
+      "bytes": 23536896,
+      "sha256": "b11b0769b28c04854771873723823a9436d5e9da38d623865b8850209833b49b",
+      "graph_nodes": 143,
+      "coverage": {
+        "eligible_linear_ops": 7,
+        "four_bit_range_linear_ops": 7,
+        "four_bit_range_sites": 7,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 4.783882634999827,
+      "kind": "decode-layer-27"
+    },
+    {
+      "file": "decode-final.pte",
+      "bytes": 117305728,
+      "sha256": "6671ca6f86222d1479f3e4e926e296073c76ca4404ed3bac95329621fec5af00",
+      "graph_nodes": 28,
+      "coverage": {
+        "eligible_linear_ops": 1,
+        "four_bit_range_linear_ops": 1,
+        "four_bit_range_sites": 1,
+        "storage_dtypes": [
+          "int8"
+        ],
+        "storage_bits_per_weight": [
+          8
+        ],
+        "serialized_packing": "must be audited after XNNPACK lowering from matched package size",
+        "group_size": "input_features of each Linear (full-row group)",
+        "granularity": "per-output-channel whole-row scale",
+        "delegation_target": "XNNPACK",
+        "candidate_ready_for_package_audit": true,
+        "fallback_if_rejected": "accepted dynamic-activation/per-channel-weight INT8 XNNPACK package"
+      },
+      "export_seconds": 5.150285850999353,
+      "kind": "decode-final"
+    }
+  ],
+  "stage_count": 60,
+  "prefill": {
+    "int4_vs_pinned_fp32": {
+      "all_finite": true,
+      "token": {
+        "actual_argmax": 151654,
+        "fp32_argmax": 151654,
+        "exact_match": true
+      },
+      "aggregate_nrmse": 0.07246775688213142,
+      "maximum_cache_nrmse": 0.6867196906914499,
+      "minimum_cache_cosine_similarity": 0.803857650705132,
+      "criteria": {
+        "hidden_cosine_min": 0.99,
+        "logits_cosine_min": 0.99,
+        "aggregate_nrmse_max": 0.05,
+        "each_cache_nrmse_max": 0.12,
+        "each_cache_cosine_min": 0.99,
+        "argmax_token_exact": true,
+        "all_outputs_finite": true,
+        "rationale": "INT8 is evaluated against pinned eager FP32, not the FP32 delegate tolerance. Cosine >=0.99 protects direction for hidden/logit/cache vectors, aggregate NRMSE <=5% bounds energy-weighted drift, per-cache NRMSE <=12% covers low-energy value caches without hiding it, and the externally consumed greedy token must match exactly."
+      },
+      "accepted": false,
+      "output_details": [
+        {
+          "name": "last_hidden_state",
+          "numel": 1536,
+          "finite": true,
+          "max_abs_error": 3.4750795364379883,
+          "mean_abs_error": 0.7862666249275208,
+          "cosine_similarity": 0.7937191556662267,
+          "nrmse": 0.6347397599042531
+        },
+        {
+          "name": "next_token_logits",
+          "numel": 151936,
+          "finite": true,
+          "max_abs_error": 2.996767997741699,
+          "mean_abs_error": 0.4070974886417389,
+          "cosine_similarity": 0.7911141111398312,
+          "nrmse": 0.654015291103536
+        },
+        {
+          "name": "layer_00_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.2181322574615479,
+          "mean_abs_error": 0.051922015845775604,
+          "cosine_similarity": 0.999986931064689,
+          "nrmse": 0.00511300381082009
+        },
+        {
+          "name": "layer_00_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.14301276206970215,
+          "mean_abs_error": 0.00798126496374607,
+          "cosine_similarity": 0.9773918651799189,
+          "nrmse": 0.21961853785215318
+        },
+        {
+          "name": "layer_01_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.7309528589248657,
+          "mean_abs_error": 0.02432866021990776,
+          "cosine_similarity": 0.9998739275238935,
+          "nrmse": 0.015911714355425727
+        },
+        {
+          "name": "layer_01_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.15762576460838318,
+          "mean_abs_error": 0.00933836493641138,
+          "cosine_similarity": 0.9851968187316443,
+          "nrmse": 0.1724540766877168
+        },
+        {
+          "name": "layer_02_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 2.7351555824279785,
+          "mean_abs_error": 0.04987213760614395,
+          "cosine_similarity": 0.9960925666191608,
+          "nrmse": 0.08850582005095288
+        },
+        {
+          "name": "layer_02_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.3604200482368469,
+          "mean_abs_error": 0.019777808338403702,
+          "cosine_similarity": 0.9640565966754244,
+          "nrmse": 0.27006772599025086
+        },
+        {
+          "name": "layer_03_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.7407350540161133,
+          "mean_abs_error": 0.07538460195064545,
+          "cosine_similarity": 0.9921773704485571,
+          "nrmse": 0.12778600072257318
+        },
+        {
+          "name": "layer_03_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.49802088737487793,
+          "mean_abs_error": 0.02677100896835327,
+          "cosine_similarity": 0.9472638722448324,
+          "nrmse": 0.32367425096951075
+        },
+        {
+          "name": "layer_04_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.8230129480361938,
+          "mean_abs_error": 0.09919723868370056,
+          "cosine_similarity": 0.9865449462979816,
+          "nrmse": 0.1701530113537189
+        },
+        {
+          "name": "layer_04_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.7546983361244202,
+          "mean_abs_error": 0.034255947917699814,
+          "cosine_similarity": 0.9280695418577591,
+          "nrmse": 0.38197057690820974
+        },
+        {
+          "name": "layer_05_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 2.252044439315796,
+          "mean_abs_error": 0.10883529484272003,
+          "cosine_similarity": 0.979896867234816,
+          "nrmse": 0.21083021669952517
+        },
+        {
+          "name": "layer_05_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.0325042009353638,
+          "mean_abs_error": 0.0422004833817482,
+          "cosine_similarity": 0.8843317004338715,
+          "nrmse": 0.48678761830351497
+        },
+        {
+          "name": "layer_06_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 2.214306592941284,
+          "mean_abs_error": 0.11116442829370499,
+          "cosine_similarity": 0.9816352781507641,
+          "nrmse": 0.1985279874169656
+        },
+        {
+          "name": "layer_06_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.9939122796058655,
+          "mean_abs_error": 0.03289240226149559,
+          "cosine_similarity": 0.8689109818163947,
+          "nrmse": 0.5161679532888345
+        },
+        {
+          "name": "layer_07_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.5732803344726562,
+          "mean_abs_error": 0.08390669524669647,
+          "cosine_similarity": 0.992357477735005,
+          "nrmse": 0.12415458021783776
+        },
+        {
+          "name": "layer_07_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.42386484146118164,
+          "mean_abs_error": 0.026849491521716118,
+          "cosine_similarity": 0.8900630778090302,
+          "nrmse": 0.47188881219617257
+        },
+        {
+          "name": "layer_08_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 3.1630825996398926,
+          "mean_abs_error": 0.12112226337194443,
+          "cosine_similarity": 0.975130348674364,
+          "nrmse": 0.22846272029634787
+        },
+        {
+          "name": "layer_08_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.5102773904800415,
+          "mean_abs_error": 0.0311928428709507,
+          "cosine_similarity": 0.9093165168687243,
+          "nrmse": 0.43310271996555755
+        },
+        {
+          "name": "layer_09_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 3.057142972946167,
+          "mean_abs_error": 0.11887535452842712,
+          "cosine_similarity": 0.9758528183826358,
+          "nrmse": 0.22075439299605898
+        },
+        {
+          "name": "layer_09_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.9384440779685974,
+          "mean_abs_error": 0.03507310897111893,
+          "cosine_similarity": 0.8976002345553589,
+          "nrmse": 0.45783985951759376
+        },
+        {
+          "name": "layer_10_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 3.14912486076355,
+          "mean_abs_error": 0.13431553542613983,
+          "cosine_similarity": 0.9673150124367192,
+          "nrmse": 0.2633618744037173
+        },
+        {
+          "name": "layer_10_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.6838807463645935,
+          "mean_abs_error": 0.04341498762369156,
+          "cosine_similarity": 0.8606349138267891,
+          "nrmse": 0.5294620441816525
+        },
+        {
+          "name": "layer_11_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 2.5710349082946777,
+          "mean_abs_error": 0.12325546890497208,
+          "cosine_similarity": 0.9754888297334092,
+          "nrmse": 0.22508091136319733
+        },
+        {
+          "name": "layer_11_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.7084655165672302,
+          "mean_abs_error": 0.03706686198711395,
+          "cosine_similarity": 0.8949224471550091,
+          "nrmse": 0.4633259603901209
+        },
+        {
+          "name": "layer_12_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 4.352008819580078,
+          "mean_abs_error": 0.14481398463249207,
+          "cosine_similarity": 0.9534960341072812,
+          "nrmse": 0.3169128103806582
+        },
+        {
+          "name": "layer_12_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.7452977895736694,
+          "mean_abs_error": 0.04912419244647026,
+          "cosine_similarity": 0.8914933440187958,
+          "nrmse": 0.4765542083038425
+        },
+        {
+          "name": "layer_13_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.690049648284912,
+          "mean_abs_error": 0.09303899109363556,
+          "cosine_similarity": 0.9875557706634833,
+          "nrmse": 0.1592531331943655
+        },
+        {
+          "name": "layer_13_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.8860237002372742,
+          "mean_abs_error": 0.0354735292494297,
+          "cosine_similarity": 0.9178515961734371,
+          "nrmse": 0.41121836813327284
+        },
+        {
+          "name": "layer_14_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 3.805774688720703,
+          "mean_abs_error": 0.13524848222732544,
+          "cosine_similarity": 0.9603800816627661,
+          "nrmse": 0.3094899634988854
+        },
+        {
+          "name": "layer_14_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.0013580322265625,
+          "mean_abs_error": 0.05601222813129425,
+          "cosine_similarity": 0.8815235645875587,
+          "nrmse": 0.49603247281460333
+        },
+        {
+          "name": "layer_15_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 2.2759053707122803,
+          "mean_abs_error": 0.09708540141582489,
+          "cosine_similarity": 0.9950518856772665,
+          "nrmse": 0.09982274529272589
+        },
+        {
+          "name": "layer_15_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.117976188659668,
+          "mean_abs_error": 0.052003540098667145,
+          "cosine_similarity": 0.8253332595551451,
+          "nrmse": 0.594548608548972
+        },
+        {
+          "name": "layer_16_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 5.7708587646484375,
+          "mean_abs_error": 0.13503305613994598,
+          "cosine_similarity": 0.9606211253230589,
+          "nrmse": 0.28074166391661753
+        },
+        {
+          "name": "layer_16_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.9329450130462646,
+          "mean_abs_error": 0.05581476166844368,
+          "cosine_similarity": 0.837875147497863,
+          "nrmse": 0.5786980841428473
+        },
+        {
+          "name": "layer_17_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 4.402017593383789,
+          "mean_abs_error": 0.1226833239197731,
+          "cosine_similarity": 0.9670548594973084,
+          "nrmse": 0.25734332102078206
+        },
+        {
+          "name": "layer_17_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.3208262920379639,
+          "mean_abs_error": 0.049705639481544495,
+          "cosine_similarity": 0.8579198502473291,
+          "nrmse": 0.5382334709505416
+        },
+        {
+          "name": "layer_18_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 3.5712764263153076,
+          "mean_abs_error": 0.12055724859237671,
+          "cosine_similarity": 0.9759098069236041,
+          "nrmse": 0.21996158074137778
+        },
+        {
+          "name": "layer_18_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.2750786542892456,
+          "mean_abs_error": 0.05250677466392517,
+          "cosine_similarity": 0.8830664351819176,
+          "nrmse": 0.4824735588391707
+        },
+        {
+          "name": "layer_19_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 10.109942436218262,
+          "mean_abs_error": 0.15751056373119354,
+          "cosine_similarity": 0.9583018874064516,
+          "nrmse": 0.2906648065998497
+        },
+        {
+          "name": "layer_19_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.1274805068969727,
+          "mean_abs_error": 0.05154959857463837,
+          "cosine_similarity": 0.8839330345115352,
+          "nrmse": 0.4795184461226053
+        },
+        {
+          "name": "layer_20_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 7.14439582824707,
+          "mean_abs_error": 0.1382308006286621,
+          "cosine_similarity": 0.9543957351888541,
+          "nrmse": 0.29973745204863733
+        },
+        {
+          "name": "layer_20_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 2.064894676208496,
+          "mean_abs_error": 0.07738440483808517,
+          "cosine_similarity": 0.8592249267544098,
+          "nrmse": 0.550708127036497
+        },
+        {
+          "name": "layer_21_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 6.03848934173584,
+          "mean_abs_error": 0.12575657665729523,
+          "cosine_similarity": 0.9591870488976759,
+          "nrmse": 0.28541915010112434
+        },
+        {
+          "name": "layer_21_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.565942406654358,
+          "mean_abs_error": 0.07215245068073273,
+          "cosine_similarity": 0.8214300780682806,
+          "nrmse": 0.6126381019131382
+        },
+        {
+          "name": "layer_22_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 11.38741683959961,
+          "mean_abs_error": 0.1339823305606842,
+          "cosine_similarity": 0.9704027698008476,
+          "nrmse": 0.24370971399927996
+        },
+        {
+          "name": "layer_22_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.2243378162384033,
+          "mean_abs_error": 0.055168166756629944,
+          "cosine_similarity": 0.8264966877400415,
+          "nrmse": 0.6039135119638477
+        },
+        {
+          "name": "layer_23_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 8.999732971191406,
+          "mean_abs_error": 0.1465034931898117,
+          "cosine_similarity": 0.9577941299055094,
+          "nrmse": 0.2944706152381322
+        },
+        {
+          "name": "layer_23_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.261817455291748,
+          "mean_abs_error": 0.06267217546701431,
+          "cosine_similarity": 0.8755818035002916,
+          "nrmse": 0.513300482560227
+        },
+        {
+          "name": "layer_24_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 6.705062389373779,
+          "mean_abs_error": 0.09047849476337433,
+          "cosine_similarity": 0.9832760875989212,
+          "nrmse": 0.18289356062410092
+        },
+        {
+          "name": "layer_24_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.483005404472351,
+          "mean_abs_error": 0.05652143806219101,
+          "cosine_similarity": 0.8823709803315802,
+          "nrmse": 0.5026380514180411
+        },
+        {
+          "name": "layer_25_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 5.546535015106201,
+          "mean_abs_error": 0.15266209840774536,
+          "cosine_similarity": 0.9512682233249327,
+          "nrmse": 0.3170627578963639
+        },
+        {
+          "name": "layer_25_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.9881980419158936,
+          "mean_abs_error": 0.08613746613264084,
+          "cosine_similarity": 0.8286210265357026,
+          "nrmse": 0.6193926661069116
+        },
+        {
+          "name": "layer_26_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 7.816368103027344,
+          "mean_abs_error": 0.12338648736476898,
+          "cosine_similarity": 0.9538235178216764,
+          "nrmse": 0.3057992251557584
+        },
+        {
+          "name": "layer_26_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 3.5921294689178467,
+          "mean_abs_error": 0.1530284285545349,
+          "cosine_similarity": 0.8107604520531068,
+          "nrmse": 0.6637425571985113
+        },
+        {
+          "name": "layer_27_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 6.123748779296875,
+          "mean_abs_error": 0.1454753875732422,
+          "cosine_similarity": 0.9448100357886243,
+          "nrmse": 0.3330638535720884
+        },
+        {
+          "name": "layer_27_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 4.100476264953613,
+          "mean_abs_error": 0.172055184841156,
+          "cosine_similarity": 0.803857650705132,
+          "nrmse": 0.6867196906914499
+        }
+      ]
+    },
+    "strict_fp32_threshold_metrics": {
+      "outputs": 58,
+      "max_abs_error": 11.38741683959961,
+      "mean_abs_error": 0.0864057393505953,
+      "mismatch_count": 7360780,
+      "all_finite": true,
+      "allclose": false,
+      "atol": 1e-05,
+      "rtol": 0.0001,
+      "output_details": [
+        {
+          "name": "last_hidden_state",
+          "max_abs_error": 3.4750795364379883,
+          "mean_abs_error": 0.7862666249275208,
+          "mismatch_count": 1536,
+          "numel": 1536,
+          "finite": true
+        },
+        {
+          "name": "next_token_logits",
+          "max_abs_error": 2.996767997741699,
+          "mean_abs_error": 0.4070974886417389,
+          "mismatch_count": 151925,
+          "numel": 151936,
+          "finite": true
+        },
+        {
+          "name": "layer_00_key",
+          "max_abs_error": 1.2181322574615479,
+          "mean_abs_error": 0.051922015845775604,
+          "mismatch_count": 127684,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_00_value",
+          "max_abs_error": 0.14301276206970215,
+          "mean_abs_error": 0.00798126496374607,
+          "mismatch_count": 128692,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_01_key",
+          "max_abs_error": 0.7309528589248657,
+          "mean_abs_error": 0.02432866021990776,
+          "mismatch_count": 128287,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_01_value",
+          "max_abs_error": 0.15762576460838318,
+          "mean_abs_error": 0.00933836493641138,
+          "mismatch_count": 128662,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_02_key",
+          "max_abs_error": 2.7351555824279785,
+          "mean_abs_error": 0.04987213760614395,
+          "mismatch_count": 128642,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_02_value",
+          "max_abs_error": 0.3604200482368469,
+          "mean_abs_error": 0.019777808338403702,
+          "mismatch_count": 128716,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_03_key",
+          "max_abs_error": 1.7407350540161133,
+          "mean_abs_error": 0.07538460195064545,
+          "mismatch_count": 128704,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_03_value",
+          "max_abs_error": 0.49802088737487793,
+          "mean_abs_error": 0.02677100896835327,
+          "mismatch_count": 128715,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_04_key",
+          "max_abs_error": 1.8230129480361938,
+          "mean_abs_error": 0.09919723868370056,
+          "mismatch_count": 128711,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_04_value",
+          "max_abs_error": 0.7546983361244202,
+          "mean_abs_error": 0.034255947917699814,
+          "mismatch_count": 128737,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_05_key",
+          "max_abs_error": 2.252044439315796,
+          "mean_abs_error": 0.10883529484272003,
+          "mismatch_count": 128725,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_05_value",
+          "max_abs_error": 1.0325042009353638,
+          "mean_abs_error": 0.0422004833817482,
+          "mismatch_count": 128745,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_06_key",
+          "max_abs_error": 2.214306592941284,
+          "mean_abs_error": 0.11116442829370499,
+          "mismatch_count": 128726,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_06_value",
+          "max_abs_error": 0.9939122796058655,
+          "mean_abs_error": 0.03289240226149559,
+          "mismatch_count": 128747,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_07_key",
+          "max_abs_error": 1.5732803344726562,
+          "mean_abs_error": 0.08390669524669647,
+          "mismatch_count": 128689,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_07_value",
+          "max_abs_error": 0.42386484146118164,
+          "mean_abs_error": 0.026849491521716118,
+          "mismatch_count": 128726,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_08_key",
+          "max_abs_error": 3.1630825996398926,
+          "mean_abs_error": 0.12112226337194443,
+          "mismatch_count": 128732,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_08_value",
+          "max_abs_error": 0.5102773904800415,
+          "mean_abs_error": 0.0311928428709507,
+          "mismatch_count": 128732,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_09_key",
+          "max_abs_error": 3.057142972946167,
+          "mean_abs_error": 0.11887535452842712,
+          "mismatch_count": 128700,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_09_value",
+          "max_abs_error": 0.9384440779685974,
+          "mean_abs_error": 0.03507310897111893,
+          "mismatch_count": 128740,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_10_key",
+          "max_abs_error": 3.14912486076355,
+          "mean_abs_error": 0.13431553542613983,
+          "mismatch_count": 128729,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_10_value",
+          "max_abs_error": 0.6838807463645935,
+          "mean_abs_error": 0.04341498762369156,
+          "mismatch_count": 128745,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_11_key",
+          "max_abs_error": 2.5710349082946777,
+          "mean_abs_error": 0.12325546890497208,
+          "mismatch_count": 128728,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_11_value",
+          "max_abs_error": 0.7084655165672302,
+          "mean_abs_error": 0.03706686198711395,
+          "mismatch_count": 128731,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_12_key",
+          "max_abs_error": 4.352008819580078,
+          "mean_abs_error": 0.14481398463249207,
+          "mismatch_count": 128742,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_12_value",
+          "max_abs_error": 0.7452977895736694,
+          "mean_abs_error": 0.04912419244647026,
+          "mismatch_count": 128750,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_13_key",
+          "max_abs_error": 1.690049648284912,
+          "mean_abs_error": 0.09303899109363556,
+          "mismatch_count": 128704,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_13_value",
+          "max_abs_error": 0.8860237002372742,
+          "mean_abs_error": 0.0354735292494297,
+          "mismatch_count": 128735,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_14_key",
+          "max_abs_error": 3.805774688720703,
+          "mean_abs_error": 0.13524848222732544,
+          "mismatch_count": 128734,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_14_value",
+          "max_abs_error": 1.0013580322265625,
+          "mean_abs_error": 0.05601222813129425,
+          "mismatch_count": 128751,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_15_key",
+          "max_abs_error": 2.2759053707122803,
+          "mean_abs_error": 0.09708540141582489,
+          "mismatch_count": 128703,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_15_value",
+          "max_abs_error": 1.117976188659668,
+          "mean_abs_error": 0.052003540098667145,
+          "mismatch_count": 128744,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_16_key",
+          "max_abs_error": 5.7708587646484375,
+          "mean_abs_error": 0.13503305613994598,
+          "mismatch_count": 128740,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_16_value",
+          "max_abs_error": 0.9329450130462646,
+          "mean_abs_error": 0.05581476166844368,
+          "mismatch_count": 128743,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_17_key",
+          "max_abs_error": 4.402017593383789,
+          "mean_abs_error": 0.1226833239197731,
+          "mismatch_count": 128734,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_17_value",
+          "max_abs_error": 1.3208262920379639,
+          "mean_abs_error": 0.049705639481544495,
+          "mismatch_count": 128748,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_18_key",
+          "max_abs_error": 3.5712764263153076,
+          "mean_abs_error": 0.12055724859237671,
+          "mismatch_count": 128726,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_18_value",
+          "max_abs_error": 1.2750786542892456,
+          "mean_abs_error": 0.05250677466392517,
+          "mismatch_count": 128736,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_19_key",
+          "max_abs_error": 10.109942436218262,
+          "mean_abs_error": 0.15751056373119354,
+          "mismatch_count": 128731,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_19_value",
+          "max_abs_error": 1.1274805068969727,
+          "mean_abs_error": 0.05154959857463837,
+          "mismatch_count": 128748,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_20_key",
+          "max_abs_error": 7.14439582824707,
+          "mean_abs_error": 0.1382308006286621,
+          "mismatch_count": 128735,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_20_value",
+          "max_abs_error": 2.064894676208496,
+          "mean_abs_error": 0.07738440483808517,
+          "mismatch_count": 128753,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_21_key",
+          "max_abs_error": 6.03848934173584,
+          "mean_abs_error": 0.12575657665729523,
+          "mismatch_count": 128739,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_21_value",
+          "max_abs_error": 1.565942406654358,
+          "mean_abs_error": 0.07215245068073273,
+          "mismatch_count": 128741,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_22_key",
+          "max_abs_error": 11.38741683959961,
+          "mean_abs_error": 0.1339823305606842,
+          "mismatch_count": 128720,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_22_value",
+          "max_abs_error": 1.2243378162384033,
+          "mean_abs_error": 0.055168166756629944,
+          "mismatch_count": 128746,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_23_key",
+          "max_abs_error": 8.999732971191406,
+          "mean_abs_error": 0.1465034931898117,
+          "mismatch_count": 128742,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_23_value",
+          "max_abs_error": 1.261817455291748,
+          "mean_abs_error": 0.06267217546701431,
+          "mismatch_count": 128742,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_24_key",
+          "max_abs_error": 6.705062389373779,
+          "mean_abs_error": 0.09047849476337433,
+          "mismatch_count": 128676,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_24_value",
+          "max_abs_error": 1.483005404472351,
+          "mean_abs_error": 0.05652143806219101,
+          "mismatch_count": 128748,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_25_key",
+          "max_abs_error": 5.546535015106201,
+          "mean_abs_error": 0.15266209840774536,
+          "mismatch_count": 128727,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_25_value",
+          "max_abs_error": 1.9881980419158936,
+          "mean_abs_error": 0.08613746613264084,
+          "mismatch_count": 128750,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_26_key",
+          "max_abs_error": 7.816368103027344,
+          "mean_abs_error": 0.12338648736476898,
+          "mismatch_count": 128739,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_26_value",
+          "max_abs_error": 3.5921294689178467,
+          "mean_abs_error": 0.1530284285545349,
+          "mismatch_count": 128750,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_27_key",
+          "max_abs_error": 6.123748779296875,
+          "mean_abs_error": 0.1454753875732422,
+          "mismatch_count": 128739,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_27_value",
+          "max_abs_error": 4.100476264953613,
+          "mean_abs_error": 0.172055184841156,
+          "mismatch_count": 128758,
+          "numel": 262144,
+          "finite": true
+        }
+      ]
+    },
+    "timing": 4.98735486500118,
+    "ordered_output_sha256": "ece343dbd545235d934d9bec64e8fcde714a59058c8809822e9bb0db791b215c"
+  },
+  "decode": {
+    "int4_vs_pinned_fp32": {
+      "all_finite": true,
+      "token": {
+        "actual_argmax": 151654,
+        "fp32_argmax": 151654,
+        "exact_match": true
+      },
+      "aggregate_nrmse": 0.07148614740598933,
+      "maximum_cache_nrmse": 0.6867780895598592,
+      "minimum_cache_cosine_similarity": 0.8038400557574166,
+      "criteria": {
+        "hidden_cosine_min": 0.99,
+        "logits_cosine_min": 0.99,
+        "aggregate_nrmse_max": 0.05,
+        "each_cache_nrmse_max": 0.12,
+        "each_cache_cosine_min": 0.99,
+        "argmax_token_exact": true,
+        "all_outputs_finite": true,
+        "rationale": "INT8 is evaluated against pinned eager FP32, not the FP32 delegate tolerance. Cosine >=0.99 protects direction for hidden/logit/cache vectors, aggregate NRMSE <=5% bounds energy-weighted drift, per-cache NRMSE <=12% covers low-energy value caches without hiding it, and the externally consumed greedy token must match exactly."
+      },
+      "accepted": false,
+      "output_details": [
+        {
+          "name": "last_hidden_state",
+          "numel": 1536,
+          "finite": true,
+          "max_abs_error": 3.341184139251709,
+          "mean_abs_error": 0.5764424204826355,
+          "cosine_similarity": 0.8681848341423157,
+          "nrmse": 0.5256593548431203
+        },
+        {
+          "name": "next_token_logits",
+          "numel": 151936,
+          "finite": true,
+          "max_abs_error": 2.0988917350769043,
+          "mean_abs_error": 0.3163553476333618,
+          "cosine_similarity": 0.8460264895796842,
+          "nrmse": 0.5616231317989003
+        },
+        {
+          "name": "layer_00_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.2181322574615479,
+          "mean_abs_error": 0.052096832543611526,
+          "cosine_similarity": 0.9999868895885501,
+          "nrmse": 0.005121117586277109
+        },
+        {
+          "name": "layer_00_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.14301276206970215,
+          "mean_abs_error": 0.008006722666323185,
+          "cosine_similarity": 0.9773167500856709,
+          "nrmse": 0.21998710865309523
+        },
+        {
+          "name": "layer_01_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.7309528589248657,
+          "mean_abs_error": 0.02436782792210579,
+          "cosine_similarity": 0.9998740198290293,
+          "nrmse": 0.01590582128523437
+        },
+        {
+          "name": "layer_01_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.15762576460838318,
+          "mean_abs_error": 0.009355258196592331,
+          "cosine_similarity": 0.9852085280074354,
+          "nrmse": 0.17238574640683396
+        },
+        {
+          "name": "layer_02_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 2.7351555824279785,
+          "mean_abs_error": 0.049988433718681335,
+          "cosine_similarity": 0.9960943996425152,
+          "nrmse": 0.08848511050519021
+        },
+        {
+          "name": "layer_02_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.3604200482368469,
+          "mean_abs_error": 0.019822347909212112,
+          "cosine_similarity": 0.9640618598695574,
+          "nrmse": 0.27005990052966794
+        },
+        {
+          "name": "layer_03_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.7407350540161133,
+          "mean_abs_error": 0.07556246221065521,
+          "cosine_similarity": 0.9921786119687226,
+          "nrmse": 0.12777322299620758
+        },
+        {
+          "name": "layer_03_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.49802088737487793,
+          "mean_abs_error": 0.02683854103088379,
+          "cosine_similarity": 0.9472619594011856,
+          "nrmse": 0.32367297152476193
+        },
+        {
+          "name": "layer_04_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.8230129480361938,
+          "mean_abs_error": 0.09947289526462555,
+          "cosine_similarity": 0.9865212047135042,
+          "nrmse": 0.17028187822626029
+        },
+        {
+          "name": "layer_04_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.7546983361244202,
+          "mean_abs_error": 0.034343890845775604,
+          "cosine_similarity": 0.9280275560408139,
+          "nrmse": 0.3820696852256925
+        },
+        {
+          "name": "layer_05_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 2.252044439315796,
+          "mean_abs_error": 0.10911210626363754,
+          "cosine_similarity": 0.9798725429029288,
+          "nrmse": 0.21094741551964336
+        },
+        {
+          "name": "layer_05_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.0325042009353638,
+          "mean_abs_error": 0.04230455681681633,
+          "cosine_similarity": 0.8842956969425468,
+          "nrmse": 0.48685767745260805
+        },
+        {
+          "name": "layer_06_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 2.214306592941284,
+          "mean_abs_error": 0.11143144220113754,
+          "cosine_similarity": 0.9816200245507157,
+          "nrmse": 0.19860880830462366
+        },
+        {
+          "name": "layer_06_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.9939122796058655,
+          "mean_abs_error": 0.03297789394855499,
+          "cosine_similarity": 0.8690267094556795,
+          "nrmse": 0.5159166467906663
+        },
+        {
+          "name": "layer_07_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.5732803344726562,
+          "mean_abs_error": 0.08414308726787567,
+          "cosine_similarity": 0.9923458011006527,
+          "nrmse": 0.12425329724144125
+        },
+        {
+          "name": "layer_07_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.42386484146118164,
+          "mean_abs_error": 0.026920510455965996,
+          "cosine_similarity": 0.8901992172470289,
+          "nrmse": 0.4715508738571033
+        },
+        {
+          "name": "layer_08_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 3.1630825996398926,
+          "mean_abs_error": 0.1214911937713623,
+          "cosine_similarity": 0.9750695948030211,
+          "nrmse": 0.22878397295182304
+        },
+        {
+          "name": "layer_08_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.5102773904800415,
+          "mean_abs_error": 0.03128388151526451,
+          "cosine_similarity": 0.9091991928831507,
+          "nrmse": 0.4334306945959063
+        },
+        {
+          "name": "layer_09_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 3.057142972946167,
+          "mean_abs_error": 0.11913327127695084,
+          "cosine_similarity": 0.9758597034760869,
+          "nrmse": 0.22072937723566516
+        },
+        {
+          "name": "layer_09_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.9384440779685974,
+          "mean_abs_error": 0.035163916647434235,
+          "cosine_similarity": 0.897633034124079,
+          "nrmse": 0.4577142693209457
+        },
+        {
+          "name": "layer_10_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 3.14912486076355,
+          "mean_abs_error": 0.13463440537452698,
+          "cosine_similarity": 0.9673110740999664,
+          "nrmse": 0.2634043094131432
+        },
+        {
+          "name": "layer_10_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.6838807463645935,
+          "mean_abs_error": 0.04352407157421112,
+          "cosine_similarity": 0.8605425281268101,
+          "nrmse": 0.5296832778538235
+        },
+        {
+          "name": "layer_11_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 2.5710349082946777,
+          "mean_abs_error": 0.12356403470039368,
+          "cosine_similarity": 0.9754713027324335,
+          "nrmse": 0.22518534879781246
+        },
+        {
+          "name": "layer_11_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.7084655165672302,
+          "mean_abs_error": 0.037165116518735886,
+          "cosine_similarity": 0.8947709221170876,
+          "nrmse": 0.4636803959031747
+        },
+        {
+          "name": "layer_12_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 4.352008819580078,
+          "mean_abs_error": 0.1452019065618515,
+          "cosine_similarity": 0.9534355855137214,
+          "nrmse": 0.31713472280194377
+        },
+        {
+          "name": "layer_12_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.7452977895736694,
+          "mean_abs_error": 0.04924321547150612,
+          "cosine_similarity": 0.8914019113390753,
+          "nrmse": 0.4768086464415548
+        },
+        {
+          "name": "layer_13_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.690049648284912,
+          "mean_abs_error": 0.09325636178255081,
+          "cosine_similarity": 0.9875498568046374,
+          "nrmse": 0.15928498177147737
+        },
+        {
+          "name": "layer_13_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.8860237002372742,
+          "mean_abs_error": 0.035563625395298004,
+          "cosine_similarity": 0.9177810160709367,
+          "nrmse": 0.4114575669689961
+        },
+        {
+          "name": "layer_14_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 3.805774688720703,
+          "mean_abs_error": 0.13560529053211212,
+          "cosine_similarity": 0.9603228394481576,
+          "nrmse": 0.3096863980157375
+        },
+        {
+          "name": "layer_14_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.0013580322265625,
+          "mean_abs_error": 0.056163717061281204,
+          "cosine_similarity": 0.8814499714215994,
+          "nrmse": 0.49625162136675
+        },
+        {
+          "name": "layer_15_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 2.2759053707122803,
+          "mean_abs_error": 0.0973358005285263,
+          "cosine_similarity": 0.9950481235479142,
+          "nrmse": 0.09986218061165511
+        },
+        {
+          "name": "layer_15_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.117976188659668,
+          "mean_abs_error": 0.05212829262018204,
+          "cosine_similarity": 0.8253400362957165,
+          "nrmse": 0.5946782327399057
+        },
+        {
+          "name": "layer_16_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 5.7708587646484375,
+          "mean_abs_error": 0.13539056479930878,
+          "cosine_similarity": 0.960575110562056,
+          "nrmse": 0.2809237048780711
+        },
+        {
+          "name": "layer_16_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 0.9329450130462646,
+          "mean_abs_error": 0.05594615638256073,
+          "cosine_similarity": 0.8377494701770335,
+          "nrmse": 0.5789948459365822
+        },
+        {
+          "name": "layer_17_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 4.402017593383789,
+          "mean_abs_error": 0.12303150445222855,
+          "cosine_similarity": 0.9670146639539713,
+          "nrmse": 0.2575097310742837
+        },
+        {
+          "name": "layer_17_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.3208262920379639,
+          "mean_abs_error": 0.04984338581562042,
+          "cosine_similarity": 0.8577106643979242,
+          "nrmse": 0.5387416180015049
+        },
+        {
+          "name": "layer_18_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 3.5712764263153076,
+          "mean_abs_error": 0.12090325355529785,
+          "cosine_similarity": 0.9758671170696843,
+          "nrmse": 0.22015940355958652
+        },
+        {
+          "name": "layer_18_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.2750786542892456,
+          "mean_abs_error": 0.052650243043899536,
+          "cosine_similarity": 0.8828978433081983,
+          "nrmse": 0.48287371695359904
+        },
+        {
+          "name": "layer_19_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 10.109942436218262,
+          "mean_abs_error": 0.15789629518985748,
+          "cosine_similarity": 0.9582461309263967,
+          "nrmse": 0.2908652919383799
+        },
+        {
+          "name": "layer_19_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.1274805068969727,
+          "mean_abs_error": 0.05168057978153229,
+          "cosine_similarity": 0.8837529456944457,
+          "nrmse": 0.4798687924991847
+        },
+        {
+          "name": "layer_20_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 7.14439582824707,
+          "mean_abs_error": 0.13854068517684937,
+          "cosine_similarity": 0.9543559907905059,
+          "nrmse": 0.2998655816083603
+        },
+        {
+          "name": "layer_20_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 2.064894676208496,
+          "mean_abs_error": 0.07753567397594452,
+          "cosine_similarity": 0.859112709042806,
+          "nrmse": 0.5509475297586692
+        },
+        {
+          "name": "layer_21_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 6.03848934173584,
+          "mean_abs_error": 0.12607474625110626,
+          "cosine_similarity": 0.9591477289437529,
+          "nrmse": 0.28554508599108086
+        },
+        {
+          "name": "layer_21_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.565942406654358,
+          "mean_abs_error": 0.0722987949848175,
+          "cosine_similarity": 0.8213098685456949,
+          "nrmse": 0.612836563658973
+        },
+        {
+          "name": "layer_22_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 11.38741683959961,
+          "mean_abs_error": 0.13434818387031555,
+          "cosine_similarity": 0.9703775124752397,
+          "nrmse": 0.24380430950069135
+        },
+        {
+          "name": "layer_22_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.2243378162384033,
+          "mean_abs_error": 0.055310942232608795,
+          "cosine_similarity": 0.8262888922500491,
+          "nrmse": 0.604321102640118
+        },
+        {
+          "name": "layer_23_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 8.999732971191406,
+          "mean_abs_error": 0.14684617519378662,
+          "cosine_similarity": 0.9577398543583547,
+          "nrmse": 0.2946568316300433
+        },
+        {
+          "name": "layer_23_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.261817455291748,
+          "mean_abs_error": 0.06281616538763046,
+          "cosine_similarity": 0.875503317234417,
+          "nrmse": 0.5135202721384236
+        },
+        {
+          "name": "layer_24_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 6.705062389373779,
+          "mean_abs_error": 0.09068536758422852,
+          "cosine_similarity": 0.9832721003438571,
+          "nrmse": 0.18290876737096223
+        },
+        {
+          "name": "layer_24_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.483005404472351,
+          "mean_abs_error": 0.05662916228175163,
+          "cosine_similarity": 0.8824191026582213,
+          "nrmse": 0.5024904014724685
+        },
+        {
+          "name": "layer_25_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 5.546535015106201,
+          "mean_abs_error": 0.15297438204288483,
+          "cosine_similarity": 0.9512752559034583,
+          "nrmse": 0.317007004288275
+        },
+        {
+          "name": "layer_25_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 1.9881980419158936,
+          "mean_abs_error": 0.08627401292324066,
+          "cosine_similarity": 0.8286298902895046,
+          "nrmse": 0.6193739647910296
+        },
+        {
+          "name": "layer_26_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 7.816368103027344,
+          "mean_abs_error": 0.1236688643693924,
+          "cosine_similarity": 0.9538047915416558,
+          "nrmse": 0.3058676611450558
+        },
+        {
+          "name": "layer_26_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 3.5921294689178467,
+          "mean_abs_error": 0.1532943844795227,
+          "cosine_similarity": 0.8106941255113735,
+          "nrmse": 0.6639274410909042
+        },
+        {
+          "name": "layer_27_key",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 6.123748779296875,
+          "mean_abs_error": 0.14578920602798462,
+          "cosine_similarity": 0.9448164772765927,
+          "nrmse": 0.33304905194959084
+        },
+        {
+          "name": "layer_27_value",
+          "numel": 262144,
+          "finite": true,
+          "max_abs_error": 4.100476264953613,
+          "mean_abs_error": 0.17232495546340942,
+          "cosine_similarity": 0.8038400557574166,
+          "nrmse": 0.6867780895598592
+        }
+      ]
+    },
+    "strict_fp32_threshold_metrics": {
+      "outputs": 58,
+      "max_abs_error": 11.38741683959961,
+      "mean_abs_error": 0.08565259443726791,
+      "mismatch_count": 7375102,
+      "all_finite": true,
+      "allclose": false,
+      "atol": 1e-05,
+      "rtol": 0.0001,
+      "output_details": [
+        {
+          "name": "last_hidden_state",
+          "max_abs_error": 3.341184139251709,
+          "mean_abs_error": 0.5764424204826355,
+          "mismatch_count": 1536,
+          "numel": 1536,
+          "finite": true
+        },
+        {
+          "name": "next_token_logits",
+          "max_abs_error": 2.0988917350769043,
+          "mean_abs_error": 0.3163553476333618,
+          "mismatch_count": 151916,
+          "numel": 151936,
+          "finite": true
+        },
+        {
+          "name": "layer_00_key",
+          "max_abs_error": 1.2181322574615479,
+          "mean_abs_error": 0.052096832543611526,
+          "mismatch_count": 127940,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_00_value",
+          "max_abs_error": 0.14301276206970215,
+          "mean_abs_error": 0.008006722666323185,
+          "mismatch_count": 128947,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_01_key",
+          "max_abs_error": 0.7309528589248657,
+          "mean_abs_error": 0.02436782792210579,
+          "mismatch_count": 128540,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_01_value",
+          "max_abs_error": 0.15762576460838318,
+          "mean_abs_error": 0.009355258196592331,
+          "mismatch_count": 128918,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_02_key",
+          "max_abs_error": 2.7351555824279785,
+          "mean_abs_error": 0.049988433718681335,
+          "mismatch_count": 128898,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_02_value",
+          "max_abs_error": 0.3604200482368469,
+          "mean_abs_error": 0.019822347909212112,
+          "mismatch_count": 128972,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_03_key",
+          "max_abs_error": 1.7407350540161133,
+          "mean_abs_error": 0.07556246221065521,
+          "mismatch_count": 128960,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_03_value",
+          "max_abs_error": 0.49802088737487793,
+          "mean_abs_error": 0.02683854103088379,
+          "mismatch_count": 128971,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_04_key",
+          "max_abs_error": 1.8230129480361938,
+          "mean_abs_error": 0.09947289526462555,
+          "mismatch_count": 128967,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_04_value",
+          "max_abs_error": 0.7546983361244202,
+          "mean_abs_error": 0.034343890845775604,
+          "mismatch_count": 128993,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_05_key",
+          "max_abs_error": 2.252044439315796,
+          "mean_abs_error": 0.10911210626363754,
+          "mismatch_count": 128981,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_05_value",
+          "max_abs_error": 1.0325042009353638,
+          "mean_abs_error": 0.04230455681681633,
+          "mismatch_count": 129001,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_06_key",
+          "max_abs_error": 2.214306592941284,
+          "mean_abs_error": 0.11143144220113754,
+          "mismatch_count": 128982,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_06_value",
+          "max_abs_error": 0.9939122796058655,
+          "mean_abs_error": 0.03297789394855499,
+          "mismatch_count": 129002,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_07_key",
+          "max_abs_error": 1.5732803344726562,
+          "mean_abs_error": 0.08414308726787567,
+          "mismatch_count": 128945,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_07_value",
+          "max_abs_error": 0.42386484146118164,
+          "mean_abs_error": 0.026920510455965996,
+          "mismatch_count": 128982,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_08_key",
+          "max_abs_error": 3.1630825996398926,
+          "mean_abs_error": 0.1214911937713623,
+          "mismatch_count": 128988,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_08_value",
+          "max_abs_error": 0.5102773904800415,
+          "mean_abs_error": 0.03128388151526451,
+          "mismatch_count": 128988,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_09_key",
+          "max_abs_error": 3.057142972946167,
+          "mean_abs_error": 0.11913327127695084,
+          "mismatch_count": 128956,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_09_value",
+          "max_abs_error": 0.9384440779685974,
+          "mean_abs_error": 0.035163916647434235,
+          "mismatch_count": 128996,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_10_key",
+          "max_abs_error": 3.14912486076355,
+          "mean_abs_error": 0.13463440537452698,
+          "mismatch_count": 128985,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_10_value",
+          "max_abs_error": 0.6838807463645935,
+          "mean_abs_error": 0.04352407157421112,
+          "mismatch_count": 129001,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_11_key",
+          "max_abs_error": 2.5710349082946777,
+          "mean_abs_error": 0.12356403470039368,
+          "mismatch_count": 128984,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_11_value",
+          "max_abs_error": 0.7084655165672302,
+          "mean_abs_error": 0.037165116518735886,
+          "mismatch_count": 128987,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_12_key",
+          "max_abs_error": 4.352008819580078,
+          "mean_abs_error": 0.1452019065618515,
+          "mismatch_count": 128998,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_12_value",
+          "max_abs_error": 0.7452977895736694,
+          "mean_abs_error": 0.04924321547150612,
+          "mismatch_count": 129006,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_13_key",
+          "max_abs_error": 1.690049648284912,
+          "mean_abs_error": 0.09325636178255081,
+          "mismatch_count": 128960,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_13_value",
+          "max_abs_error": 0.8860237002372742,
+          "mean_abs_error": 0.035563625395298004,
+          "mismatch_count": 128991,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_14_key",
+          "max_abs_error": 3.805774688720703,
+          "mean_abs_error": 0.13560529053211212,
+          "mismatch_count": 128990,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_14_value",
+          "max_abs_error": 1.0013580322265625,
+          "mean_abs_error": 0.056163717061281204,
+          "mismatch_count": 129007,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_15_key",
+          "max_abs_error": 2.2759053707122803,
+          "mean_abs_error": 0.0973358005285263,
+          "mismatch_count": 128959,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_15_value",
+          "max_abs_error": 1.117976188659668,
+          "mean_abs_error": 0.05212829262018204,
+          "mismatch_count": 129000,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_16_key",
+          "max_abs_error": 5.7708587646484375,
+          "mean_abs_error": 0.13539056479930878,
+          "mismatch_count": 128996,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_16_value",
+          "max_abs_error": 0.9329450130462646,
+          "mean_abs_error": 0.05594615638256073,
+          "mismatch_count": 128999,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_17_key",
+          "max_abs_error": 4.402017593383789,
+          "mean_abs_error": 0.12303150445222855,
+          "mismatch_count": 128990,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_17_value",
+          "max_abs_error": 1.3208262920379639,
+          "mean_abs_error": 0.04984338581562042,
+          "mismatch_count": 129004,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_18_key",
+          "max_abs_error": 3.5712764263153076,
+          "mean_abs_error": 0.12090325355529785,
+          "mismatch_count": 128982,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_18_value",
+          "max_abs_error": 1.2750786542892456,
+          "mean_abs_error": 0.052650243043899536,
+          "mismatch_count": 128992,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_19_key",
+          "max_abs_error": 10.109942436218262,
+          "mean_abs_error": 0.15789629518985748,
+          "mismatch_count": 128987,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_19_value",
+          "max_abs_error": 1.1274805068969727,
+          "mean_abs_error": 0.05168057978153229,
+          "mismatch_count": 129004,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_20_key",
+          "max_abs_error": 7.14439582824707,
+          "mean_abs_error": 0.13854068517684937,
+          "mismatch_count": 128991,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_20_value",
+          "max_abs_error": 2.064894676208496,
+          "mean_abs_error": 0.07753567397594452,
+          "mismatch_count": 129009,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_21_key",
+          "max_abs_error": 6.03848934173584,
+          "mean_abs_error": 0.12607474625110626,
+          "mismatch_count": 128995,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_21_value",
+          "max_abs_error": 1.565942406654358,
+          "mean_abs_error": 0.0722987949848175,
+          "mismatch_count": 128997,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_22_key",
+          "max_abs_error": 11.38741683959961,
+          "mean_abs_error": 0.13434818387031555,
+          "mismatch_count": 128976,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_22_value",
+          "max_abs_error": 1.2243378162384033,
+          "mean_abs_error": 0.055310942232608795,
+          "mismatch_count": 129002,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_23_key",
+          "max_abs_error": 8.999732971191406,
+          "mean_abs_error": 0.14684617519378662,
+          "mismatch_count": 128998,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_23_value",
+          "max_abs_error": 1.261817455291748,
+          "mean_abs_error": 0.06281616538763046,
+          "mismatch_count": 128998,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_24_key",
+          "max_abs_error": 6.705062389373779,
+          "mean_abs_error": 0.09068536758422852,
+          "mismatch_count": 128932,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_24_value",
+          "max_abs_error": 1.483005404472351,
+          "mean_abs_error": 0.05662916228175163,
+          "mismatch_count": 129004,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_25_key",
+          "max_abs_error": 5.546535015106201,
+          "mean_abs_error": 0.15297438204288483,
+          "mismatch_count": 128983,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_25_value",
+          "max_abs_error": 1.9881980419158936,
+          "mean_abs_error": 0.08627401292324066,
+          "mismatch_count": 129006,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_26_key",
+          "max_abs_error": 7.816368103027344,
+          "mean_abs_error": 0.1236688643693924,
+          "mismatch_count": 128995,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_26_value",
+          "max_abs_error": 3.5921294689178467,
+          "mean_abs_error": 0.1532943844795227,
+          "mismatch_count": 129006,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_27_key",
+          "max_abs_error": 6.123748779296875,
+          "mean_abs_error": 0.14578920602798462,
+          "mismatch_count": 128995,
+          "numel": 262144,
+          "finite": true
+        },
+        {
+          "name": "layer_27_value",
+          "max_abs_error": 4.100476264953613,
+          "mean_abs_error": 0.17232495546340942,
+          "mismatch_count": 129014,
+          "numel": 262144,
+          "finite": true
+        }
+      ]
+    },
+    "timing": 2.2309961929986457,
+    "ordered_output_sha256": "f680072cfbeae5a8da3c09cb975ec9989470fabc0422715427a5822ca88afeb6",
+    "cache_source": "actual INT4 prefill stage outputs"
+  },
+  "determinism": {
+    "repeat_exact": true,
+    "repeat_prefill_sha256": "ece343dbd545235d934d9bec64e8fcde714a59058c8809822e9bb0db791b215c",
+    "repeat_decode_sha256": "f680072cfbeae5a8da3c09cb975ec9989470fabc0422715427a5822ca88afeb6",
+    "repeat_timing": {
+      "prefill_seconds": 4.2102273410000635,
+      "decode_seconds": 1.8495738969995728
+    }
+  },
+  "size_and_fallback_acceptance": {
+    "int4_bytes": 1552699744,
+    "int8_baseline_bytes": 3096269152,
+    "fp32_baseline_bytes": 12351121760,
+    "int4_to_int8_ratio": 0.5014744092893382,
+    "int4_to_fp32_ratio": 0.12571325699569494,
+    "packing_inferred_from_package_size": true,
+    "all_linear_ops_four_bit_range_and_delegated": true,
+    "criterion": "all Linear ops use the four-bit range and package <=65% of INT8",
+    "accepted": true
+  },
+  "fp32_baseline": {
+    "package_bytes": 12351121760,
+    "largest_stage_bytes": 933505664,
+    "prefill": {
+      "strict": {
+        "outputs": 58,
+        "max_abs_error": 0.0004730224609375,
+        "mean_abs_error": 1.111106644063556e-06,
+        "mismatch_count": 12844,
+        "all_finite": true,
+        "allclose": false,
+        "atol": 1e-05,
+        "rtol": 0.0001,
+        "output_details": [
+          {
+            "name": "last_hidden_state",
+            "max_abs_error": 8.249282836914062e-05,
+            "mean_abs_error": 1.3386711543716956e-05,
+            "mismatch_count": 53,
+            "numel": 1536,
+            "finite": true
+          },
+          {
+            "name": "next_token_logits",
+            "max_abs_error": 6.29425048828125e-05,
+            "mean_abs_error": 6.755352387699531e-06,
+            "mismatch_count": 1584,
+            "numel": 151936,
+            "finite": true
+          },
+          {
+            "name": "layer_00_key",
+            "max_abs_error": 0.0004730224609375,
+            "mean_abs_error": 3.95570805267198e-06,
+            "mismatch_count": 0,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_00_value",
+            "max_abs_error": 4.649162292480469e-06,
+            "mean_abs_error": 2.7114092304714177e-08,
+            "mismatch_count": 0,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_01_key",
+            "max_abs_error": 0.00017905235290527344,
+            "mean_abs_error": 1.6156841411429923e-06,
+            "mismatch_count": 425,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_01_value",
+            "max_abs_error": 5.3882598876953125e-05,
+            "mean_abs_error": 2.9103364340699045e-07,
+            "mismatch_count": 146,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_02_key",
+            "max_abs_error": 0.00024235807359218597,
+            "mean_abs_error": 1.736414901643002e-06,
+            "mismatch_count": 591,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_02_value",
+            "max_abs_error": 5.841255187988281e-05,
+            "mean_abs_error": 5.111102723276417e-07,
+            "mismatch_count": 292,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_03_key",
+            "max_abs_error": 0.0001888275146484375,
+            "mean_abs_error": 1.6637438875477528e-06,
+            "mismatch_count": 528,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_03_value",
+            "max_abs_error": 6.689131259918213e-05,
+            "mean_abs_error": 5.264827223072643e-07,
+            "mismatch_count": 189,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_04_key",
+            "max_abs_error": 0.00022172927856445312,
+            "mean_abs_error": 1.8463608739693882e-06,
+            "mismatch_count": 576,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_04_value",
+            "max_abs_error": 6.964802742004395e-05,
+            "mean_abs_error": 6.195454034241266e-07,
+            "mismatch_count": 225,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_05_key",
+            "max_abs_error": 0.00018359720706939697,
+            "mean_abs_error": 1.7690185813989956e-06,
+            "mismatch_count": 455,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_05_value",
+            "max_abs_error": 0.00010596215724945068,
+            "mean_abs_error": 6.888447501296469e-07,
+            "mismatch_count": 294,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_06_key",
+            "max_abs_error": 0.0001939535140991211,
+            "mean_abs_error": 1.72504223883152e-06,
+            "mismatch_count": 434,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_06_value",
+            "max_abs_error": 4.172325134277344e-05,
+            "mean_abs_error": 4.755898430630623e-07,
+            "mismatch_count": 50,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_07_key",
+            "max_abs_error": 0.0001811385154724121,
+            "mean_abs_error": 1.4140354096525698e-06,
+            "mismatch_count": 160,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_07_value",
+            "max_abs_error": 2.7999281883239746e-05,
+            "mean_abs_error": 3.7322220691748953e-07,
+            "mismatch_count": 30,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_08_key",
+            "max_abs_error": 0.00019073486328125,
+            "mean_abs_error": 1.4910770005371887e-06,
+            "mismatch_count": 285,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_08_value",
+            "max_abs_error": 3.859400749206543e-05,
+            "mean_abs_error": 3.992772690253332e-07,
+            "mismatch_count": 62,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_09_key",
+            "max_abs_error": 0.00018480420112609863,
+            "mean_abs_error": 1.400846258547972e-06,
+            "mismatch_count": 226,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_09_value",
+            "max_abs_error": 4.5418739318847656e-05,
+            "mean_abs_error": 4.349789719526598e-07,
+            "mismatch_count": 67,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_10_key",
+            "max_abs_error": 0.0001745671033859253,
+            "mean_abs_error": 1.4321454955279478e-06,
+            "mismatch_count": 177,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_10_value",
+            "max_abs_error": 7.41034746170044e-05,
+            "mean_abs_error": 5.642688165607979e-07,
+            "mismatch_count": 95,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_11_key",
+            "max_abs_error": 0.00016999244689941406,
+            "mean_abs_error": 1.3254114037408726e-06,
+            "mismatch_count": 187,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_11_value",
+            "max_abs_error": 4.346668720245361e-05,
+            "mean_abs_error": 4.2189424220850924e-07,
+            "mismatch_count": 53,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_12_key",
+            "max_abs_error": 0.00023508071899414062,
+            "mean_abs_error": 1.4804168131377082e-06,
+            "mismatch_count": 246,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_12_value",
+            "max_abs_error": 5.27501106262207e-05,
+            "mean_abs_error": 5.51870300569135e-07,
+            "mismatch_count": 81,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_13_key",
+            "max_abs_error": 0.0002307891845703125,
+            "mean_abs_error": 1.1211759556317702e-06,
+            "mismatch_count": 148,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_13_value",
+            "max_abs_error": 5.8904290199279785e-05,
+            "mean_abs_error": 3.95817153275857e-07,
+            "mismatch_count": 72,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_14_key",
+            "max_abs_error": 0.00031685829162597656,
+            "mean_abs_error": 1.3747369393968256e-06,
+            "mismatch_count": 215,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_14_value",
+            "max_abs_error": 9.053945541381836e-05,
+            "mean_abs_error": 6.105977377046656e-07,
+            "mismatch_count": 115,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_15_key",
+            "max_abs_error": 0.00019556283950805664,
+            "mean_abs_error": 1.1408094451326178e-06,
+            "mismatch_count": 75,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_15_value",
+            "max_abs_error": 9.02414321899414e-05,
+            "mean_abs_error": 5.379741310207464e-07,
+            "mismatch_count": 92,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_16_key",
+            "max_abs_error": 0.0003650188446044922,
+            "mean_abs_error": 1.4157756140775746e-06,
+            "mismatch_count": 197,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_16_value",
+            "max_abs_error": 8.788704872131348e-05,
+            "mean_abs_error": 5.817489068249415e-07,
+            "mismatch_count": 107,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_17_key",
+            "max_abs_error": 0.0002779960632324219,
+            "mean_abs_error": 1.3031700518695288e-06,
+            "mismatch_count": 164,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_17_value",
+            "max_abs_error": 0.00011911988258361816,
+            "mean_abs_error": 5.127488975631422e-07,
+            "mismatch_count": 119,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_18_key",
+            "max_abs_error": 0.00026932358741760254,
+            "mean_abs_error": 1.300686221838987e-06,
+            "mismatch_count": 185,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_18_value",
+            "max_abs_error": 9.873462840914726e-05,
+            "mean_abs_error": 5.229336466072709e-07,
+            "mismatch_count": 101,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_19_key",
+            "max_abs_error": 0.0004329681396484375,
+            "mean_abs_error": 1.6021422197809443e-06,
+            "mismatch_count": 245,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_19_value",
+            "max_abs_error": 0.00011691451072692871,
+            "mean_abs_error": 4.844533805226092e-07,
+            "mismatch_count": 90,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_20_key",
+            "max_abs_error": 0.0004162788391113281,
+            "mean_abs_error": 1.345843429589877e-06,
+            "mismatch_count": 196,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_20_value",
+            "max_abs_error": 0.00011014938354492188,
+            "mean_abs_error": 7.414578249154147e-07,
+            "mismatch_count": 117,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_21_key",
+            "max_abs_error": 0.000335693359375,
+            "mean_abs_error": 1.234408387063013e-06,
+            "mismatch_count": 192,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_21_value",
+            "max_abs_error": 0.00014546513557434082,
+            "mean_abs_error": 6.94995321737224e-07,
+            "mismatch_count": 132,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_22_key",
+            "max_abs_error": 0.00026920437812805176,
+            "mean_abs_error": 1.3260447531138198e-06,
+            "mismatch_count": 157,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_22_value",
+            "max_abs_error": 0.00011336803436279297,
+            "mean_abs_error": 4.956605721417873e-07,
+            "mismatch_count": 114,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_23_key",
+            "max_abs_error": 0.00042724609375,
+            "mean_abs_error": 1.3424860298982821e-06,
+            "mismatch_count": 196,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_23_value",
+            "max_abs_error": 0.0001575946807861328,
+            "mean_abs_error": 5.719651881008758e-07,
+            "mismatch_count": 108,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_24_key",
+            "max_abs_error": 0.00023418664932250977,
+            "mean_abs_error": 9.316741511611326e-07,
+            "mismatch_count": 77,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_24_value",
+            "max_abs_error": 0.00011710822582244873,
+            "mean_abs_error": 4.988256705473759e-07,
+            "mismatch_count": 120,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_25_key",
+            "max_abs_error": 0.00045561790466308594,
+            "mean_abs_error": 1.3930123259342508e-06,
+            "mismatch_count": 198,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_25_value",
+            "max_abs_error": 0.00015324726700782776,
+            "mean_abs_error": 8.55621919981786e-07,
+            "mismatch_count": 257,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_26_key",
+            "max_abs_error": 0.00034928321838378906,
+            "mean_abs_error": 1.150495336332824e-06,
+            "mismatch_count": 176,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_26_value",
+            "max_abs_error": 0.00021371245384216309,
+            "mean_abs_error": 1.5956484276102856e-06,
+            "mismatch_count": 550,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_27_key",
+            "max_abs_error": 0.00038909912109375,
+            "mean_abs_error": 1.2934769983985461e-06,
+            "mismatch_count": 207,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_27_value",
+            "max_abs_error": 0.00030541419982910156,
+            "mean_abs_error": 1.7611728253541514e-06,
+            "mismatch_count": 611,
+            "numel": 262144,
+            "finite": true
+          }
+        ]
+      },
+      "acceptance": {
+        "strict_accepted": false,
+        "bounded_xnnpack_accepted": true,
+        "complete_58_output_abi": true,
+        "all_finite": true,
+        "component_limits": {
+          "last_hidden_state": 0.0001,
+          "next_token_logits": 0.0001,
+          "cache": 0.0005
+        },
+        "mean_abs_error_limit": 2e-06,
+        "components": {
+          "last_hidden_state": {
+            "outputs": 1,
+            "numel": 1536,
+            "mismatch_count": 53,
+            "max_abs_error": 8.249282836914062e-05,
+            "all_finite": true,
+            "mean_abs_error": 1.3386711543716956e-05
+          },
+          "next_token_logits": {
+            "outputs": 1,
+            "numel": 151936,
+            "mismatch_count": 1584,
+            "max_abs_error": 6.29425048828125e-05,
+            "all_finite": true,
+            "mean_abs_error": 6.755352387699531e-06
+          },
+          "cache": {
+            "outputs": 56,
+            "numel": 14680064,
+            "mismatch_count": 11207,
+            "max_abs_error": 0.0004730224609375,
+            "all_finite": true,
+            "mean_abs_error": 1.0514053045656318e-06
+          }
+        }
+      }
+    },
+    "decode": {
+      "strict": {
+        "outputs": 58,
+        "max_abs_error": 0.0004730224609375,
+        "mean_abs_error": 1.078361284594261e-06,
+        "mismatch_count": 11315,
+        "all_finite": true,
+        "allclose": false,
+        "atol": 1e-05,
+        "rtol": 0.0001,
+        "output_details": [
+          {
+            "name": "last_hidden_state",
+            "max_abs_error": 4.315376281738281e-05,
+            "mean_abs_error": 5.456660346681019e-06,
+            "mismatch_count": 5,
+            "numel": 1536,
+            "finite": true
+          },
+          {
+            "name": "next_token_logits",
+            "max_abs_error": 2.86102294921875e-05,
+            "mean_abs_error": 3.276889174230746e-06,
+            "mismatch_count": 68,
+            "numel": 151936,
+            "finite": true
+          },
+          {
+            "name": "layer_00_key",
+            "max_abs_error": 0.0004730224609375,
+            "mean_abs_error": 3.964361440011999e-06,
+            "mismatch_count": 0,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_00_value",
+            "max_abs_error": 4.649162292480469e-06,
+            "mean_abs_error": 2.7157785353892905e-08,
+            "mismatch_count": 0,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_01_key",
+            "max_abs_error": 0.00017905235290527344,
+            "mean_abs_error": 1.6186322682187892e-06,
+            "mismatch_count": 425,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_01_value",
+            "max_abs_error": 5.3882598876953125e-05,
+            "mean_abs_error": 2.9146440283511765e-07,
+            "mismatch_count": 146,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_02_key",
+            "max_abs_error": 0.00024235807359218597,
+            "mean_abs_error": 1.7408345911462675e-06,
+            "mismatch_count": 591,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_02_value",
+            "max_abs_error": 5.841255187988281e-05,
+            "mean_abs_error": 5.121945605424116e-07,
+            "mismatch_count": 292,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_03_key",
+            "max_abs_error": 0.0001888275146484375,
+            "mean_abs_error": 1.6682697605574504e-06,
+            "mismatch_count": 529,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_03_value",
+            "max_abs_error": 6.689131259918213e-05,
+            "mean_abs_error": 5.279978267935803e-07,
+            "mismatch_count": 189,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_04_key",
+            "max_abs_error": 0.00022172927856445312,
+            "mean_abs_error": 1.8524303868616698e-06,
+            "mismatch_count": 578,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_04_value",
+            "max_abs_error": 6.964802742004395e-05,
+            "mean_abs_error": 6.216380938894872e-07,
+            "mismatch_count": 225,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_05_key",
+            "max_abs_error": 0.00018359720706939697,
+            "mean_abs_error": 1.7743676608006353e-06,
+            "mismatch_count": 457,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_05_value",
+            "max_abs_error": 0.00010596215724945068,
+            "mean_abs_error": 6.909401690791128e-07,
+            "mismatch_count": 294,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_06_key",
+            "max_abs_error": 0.0001939535140991211,
+            "mean_abs_error": 1.731354586809175e-06,
+            "mismatch_count": 435,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_06_value",
+            "max_abs_error": 4.172325134277344e-05,
+            "mean_abs_error": 4.770709551848995e-07,
+            "mismatch_count": 50,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_07_key",
+            "max_abs_error": 0.0001811385154724121,
+            "mean_abs_error": 1.4186879297994892e-06,
+            "mismatch_count": 160,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_07_value",
+            "max_abs_error": 2.7999281883239746e-05,
+            "mean_abs_error": 3.746441166185832e-07,
+            "mismatch_count": 30,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_08_key",
+            "max_abs_error": 0.00019073486328125,
+            "mean_abs_error": 1.4958759493310936e-06,
+            "mismatch_count": 285,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_08_value",
+            "max_abs_error": 3.859400749206543e-05,
+            "mean_abs_error": 4.008258258636488e-07,
+            "mismatch_count": 62,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_09_key",
+            "max_abs_error": 0.00018480420112609863,
+            "mean_abs_error": 1.4050260688236449e-06,
+            "mismatch_count": 228,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_09_value",
+            "max_abs_error": 4.5418739318847656e-05,
+            "mean_abs_error": 4.3649333747453056e-07,
+            "mismatch_count": 67,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_10_key",
+            "max_abs_error": 0.0001745671033859253,
+            "mean_abs_error": 1.436516299690993e-06,
+            "mismatch_count": 177,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_10_value",
+            "max_abs_error": 7.41034746170044e-05,
+            "mean_abs_error": 5.661727300321218e-07,
+            "mismatch_count": 95,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_11_key",
+            "max_abs_error": 0.00016999244689941406,
+            "mean_abs_error": 1.3294269365360378e-06,
+            "mismatch_count": 187,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_11_value",
+            "max_abs_error": 4.346668720245361e-05,
+            "mean_abs_error": 4.233703521094867e-07,
+            "mismatch_count": 53,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_12_key",
+            "max_abs_error": 0.00023508071899414062,
+            "mean_abs_error": 1.4861579984426498e-06,
+            "mismatch_count": 248,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_12_value",
+            "max_abs_error": 5.27501106262207e-05,
+            "mean_abs_error": 5.537166316571529e-07,
+            "mismatch_count": 81,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_13_key",
+            "max_abs_error": 0.0002307891845703125,
+            "mean_abs_error": 1.1256572634010809e-06,
+            "mismatch_count": 149,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_13_value",
+            "max_abs_error": 5.8904290199279785e-05,
+            "mean_abs_error": 3.974095079684048e-07,
+            "mismatch_count": 72,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_14_key",
+            "max_abs_error": 0.00031685829162597656,
+            "mean_abs_error": 1.3824806046613958e-06,
+            "mismatch_count": 220,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_14_value",
+            "max_abs_error": 9.053945541381836e-05,
+            "mean_abs_error": 6.136170895842952e-07,
+            "mismatch_count": 115,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_15_key",
+            "max_abs_error": 0.00019556283950805664,
+            "mean_abs_error": 1.1456828588052304e-06,
+            "mismatch_count": 76,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_15_value",
+            "max_abs_error": 9.02414321899414e-05,
+            "mean_abs_error": 5.403074965215637e-07,
+            "mismatch_count": 92,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_16_key",
+            "max_abs_error": 0.0003650188446044922,
+            "mean_abs_error": 1.4236564993552747e-06,
+            "mismatch_count": 201,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_16_value",
+            "max_abs_error": 8.788704872131348e-05,
+            "mean_abs_error": 5.842152290824743e-07,
+            "mismatch_count": 107,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_17_key",
+            "max_abs_error": 0.0002779960632324219,
+            "mean_abs_error": 1.3098242561682127e-06,
+            "mismatch_count": 164,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_17_value",
+            "max_abs_error": 0.00011911988258361816,
+            "mean_abs_error": 5.1529730171751e-07,
+            "mismatch_count": 119,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_18_key",
+            "max_abs_error": 0.00026932358741760254,
+            "mean_abs_error": 1.3074909475108143e-06,
+            "mismatch_count": 186,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_18_value",
+            "max_abs_error": 9.873462840914726e-05,
+            "mean_abs_error": 5.255857900010596e-07,
+            "mismatch_count": 101,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_19_key",
+            "max_abs_error": 0.0004329681396484375,
+            "mean_abs_error": 1.61034017764905e-06,
+            "mismatch_count": 245,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_19_value",
+            "max_abs_error": 0.00011691451072692871,
+            "mean_abs_error": 4.869583563049673e-07,
+            "mismatch_count": 90,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_20_key",
+            "max_abs_error": 0.0004162788391113281,
+            "mean_abs_error": 1.3517160368792247e-06,
+            "mismatch_count": 196,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_20_value",
+            "max_abs_error": 0.00011014938354492188,
+            "mean_abs_error": 7.440876288455911e-07,
+            "mismatch_count": 117,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_21_key",
+            "max_abs_error": 0.000335693359375,
+            "mean_abs_error": 1.2400420246194699e-06,
+            "mismatch_count": 195,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_21_value",
+            "max_abs_error": 0.00014546513557434082,
+            "mean_abs_error": 6.972973096708301e-07,
+            "mismatch_count": 132,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_22_key",
+            "max_abs_error": 0.00026920437812805176,
+            "mean_abs_error": 1.3307499102666043e-06,
+            "mismatch_count": 158,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_22_value",
+            "max_abs_error": 0.00011336803436279297,
+            "mean_abs_error": 4.974290845893847e-07,
+            "mismatch_count": 114,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_23_key",
+            "max_abs_error": 0.00042724609375,
+            "mean_abs_error": 1.3487804153555771e-06,
+            "mismatch_count": 199,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_23_value",
+            "max_abs_error": 0.0001575946807861328,
+            "mean_abs_error": 5.740279220844968e-07,
+            "mismatch_count": 108,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_24_key",
+            "max_abs_error": 0.00023418664932250977,
+            "mean_abs_error": 9.350469554192387e-07,
+            "mismatch_count": 77,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_24_value",
+            "max_abs_error": 0.00011710822582244873,
+            "mean_abs_error": 5.002474381399225e-07,
+            "mismatch_count": 120,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_25_key",
+            "max_abs_error": 0.00045561790466308594,
+            "mean_abs_error": 1.3980861695017666e-06,
+            "mismatch_count": 198,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_25_value",
+            "max_abs_error": 0.00015324726700782776,
+            "mean_abs_error": 8.576538448323845e-07,
+            "mismatch_count": 257,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_26_key",
+            "max_abs_error": 0.00034928321838378906,
+            "mean_abs_error": 1.1561129440451623e-06,
+            "mismatch_count": 177,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_26_value",
+            "max_abs_error": 0.00021371245384216309,
+            "mean_abs_error": 1.5991008694982156e-06,
+            "mismatch_count": 552,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_27_key",
+            "max_abs_error": 0.00038909912109375,
+            "mean_abs_error": 1.298906454394455e-06,
+            "mismatch_count": 210,
+            "numel": 262144,
+            "finite": true
+          },
+          {
+            "name": "layer_27_value",
+            "max_abs_error": 0.00030541419982910156,
+            "mean_abs_error": 1.7648962966632098e-06,
+            "mismatch_count": 611,
+            "numel": 262144,
+            "finite": true
+          }
+        ]
+      },
+      "acceptance": {
+        "strict_accepted": false,
+        "bounded_xnnpack_accepted": true,
+        "complete_58_output_abi": true,
+        "all_finite": true,
+        "component_limits": {
+          "last_hidden_state": 0.0001,
+          "next_token_logits": 0.0001,
+          "cache": 0.0005
+        },
+        "mean_abs_error_limit": 2e-06,
+        "components": {
+          "last_hidden_state": {
+            "outputs": 1,
+            "numel": 1536,
+            "mismatch_count": 5,
+            "max_abs_error": 4.315376281738281e-05,
+            "all_finite": true,
+            "mean_abs_error": 5.456660346681019e-06
+          },
+          "next_token_logits": {
+            "outputs": 1,
+            "numel": 151936,
+            "mismatch_count": 68,
+            "max_abs_error": 2.86102294921875e-05,
+            "all_finite": true,
+            "mean_abs_error": 3.276889174230746e-06
+          },
+          "cache": {
+            "outputs": 56,
+            "numel": 14680064,
+            "mismatch_count": 11242,
+            "max_abs_error": 0.0004730224609375,
+            "all_finite": true,
+            "mean_abs_error": 1.0551488097857283e-06
+          }
+        }
+      },
+      "cache_source": "packaged_prefill_stage_outputs"
+    },
+    "manifest_sha256": "5bbf6a26481cbafa2a989dd33ee3d1ef92ccc96669bcc320207ecd1beedbc607"
+  },
+  "conclusion": "Rejected for deployment: at least one numerical, token, determinism, delegation, or packing criterion failed; integration falls back to accepted INT8.",
+  "wall_seconds": 339.09420268899885,
+  "memory": {
+    "rss_kib": 12661744,
+    "vmhwm_kib": 15958688,
+    "resource_peak_rss_kib": 15958688
+  },
+  "versions": {
+    "torch": "2.11.0+cpu",
+    "executorch": "1.2.0"
+  },
+  "int8_baseline": {
+    "status": "passed",
+    "result_sha256": "58160a6d6e7717e6e8d43c4984e071bc43b923d5bd00e59f7644ac23b586c796",
+    "package_bytes": 3096269152,
+    "prefill_seconds": 30.556066897001074,
+    "decode_seconds": 5.42412694199993,
+    "peak_rss_kib": 17116608
+  },
+  "quality_risk": "High: per-channel full-row INT4 exceeds the locked aggregate and per-cache error limits; matching the first greedy token does not establish autoregressive speech quality.",
+  "integration_fallback": "accepted INT8 XNNPACK package from qwen2-int8-host.json",
+  "implementation_commits": []
+}
