@@ -1,9 +1,13 @@
 {
   "$schema": "../schemas/generation-policy.schema.json",
-  "schema_version": 1,
-  "policy_version": 1,
-  "mode": "exclusive",
-  "compatible_concurrent_sets": [],
+  "combined_pocket_kokoro_peak_bytes": 2360705024,
+  "combined_with_safety_margin_bytes": 6655672320,
+  "compatible_concurrent_sets": [
+    [
+      "generation-pocket",
+      "generation-kokoro"
+    ]
+  ],
   "covered_operations": [
     "smoke-load",
     "preflight",
@@ -14,5 +18,35 @@
     "export",
     "protocol-revision"
   ],
-  "rule": "Exactly one covered operation may own the atomic model-resource gate. Task 5 alone may replace this file atomically with measured Pocket-plus-Kokoro sharing rules."
+  "headroom_bytes": 26839584768,
+  "host_limit_bytes": 33495257088,
+  "host_memory_bytes": 33495257088,
+  "measurements": [
+    {
+      "cold_inference_peak_process_tree_rss_bytes": 1897308160,
+      "cold_load_peak_process_tree_rss_bytes": 3496951808,
+      "model": "realtime",
+      "peak_process_tree_rss_bytes": 3496951808,
+      "warm_inference_peak_process_tree_rss_bytes": 1897312256
+    },
+    {
+      "cold_inference_peak_process_tree_rss_bytes": 1083813888,
+      "cold_load_peak_process_tree_rss_bytes": 1011171328,
+      "model": "pocket",
+      "peak_process_tree_rss_bytes": 1090023424,
+      "warm_inference_peak_process_tree_rss_bytes": 1090023424
+    },
+    {
+      "cold_inference_peak_process_tree_rss_bytes": 1192419328,
+      "cold_load_peak_process_tree_rss_bytes": 1270681600,
+      "model": "kokoro",
+      "peak_process_tree_rss_bytes": 1270681600,
+      "warm_inference_peak_process_tree_rss_bytes": 1257426944
+    }
+  ],
+  "mode": "measured-pocket-kokoro",
+  "policy_version": 2,
+  "rule": "Capacity is at most two. Exactly one Pocket and one Kokoro generation may overlap. Realtime, every smoke-load, every preflight, capture, export, and protocol revision remain globally exclusive.",
+  "safety_margin_bytes": 4294967296,
+  "schema_version": 1
 }

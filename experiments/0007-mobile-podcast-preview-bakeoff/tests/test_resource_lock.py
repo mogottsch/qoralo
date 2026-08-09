@@ -17,7 +17,9 @@ def measured_policy(path):
         "schema_version": 1, "policy_version": 2, "mode": "measured-pocket-kokoro",
         "compatible_concurrent_sets": [["generation-pocket", "generation-kokoro"]],
         "covered_operations": ["smoke-load", "preflight", "generation-realtime", "generation-pocket", "generation-kokoro", "capture", "export", "protocol-revision"],
-        "host_memory_bytes": 10_000, "safety_margin_bytes": 1_000,
+        "host_memory_bytes": 10_000, "host_limit_bytes": 10_000,
+        "safety_margin_bytes": 1_000, "combined_pocket_kokoro_peak_bytes": 2_000,
+        "combined_with_safety_margin_bytes": 3_000, "headroom_bytes": 7_000,
         "measurements": [
             {"model": "realtime", "peak_process_tree_rss_bytes": 3000},
             {"model": "pocket", "peak_process_tree_rss_bytes": 1000},
@@ -46,6 +48,25 @@ def test_measured_policy_only_allows_pocket_plus_kokoro(tmp_path):
         with pytest.raises(LockBusy):
             ResourceGrant(tmp_path / "gate", "blocked", kind, policy).acquire()
     kokoro.release(); pocket.release()
+
+
+def test_measured_policy_capacity_never_exceeds_two(tmp_path):
+    policy = measured_policy(tmp_path / "measured.json")
+    pocket = ResourceGrant(tmp_path / "gate", "task-7", "generation-pocket", policy).acquire()
+    kokoro = ResourceGrant(tmp_path / "gate", "task-8", "generation-kokoro", policy).acquire()
+    for kind in ("generation-pocket", "generation-kokoro", "preflight", "smoke-load"):
+        with pytest.raises(LockBusy):
+            ResourceGrant(tmp_path / "gate", "third", kind, policy).acquire()
+    kokoro.release(); pocket.release()
+
+
+def test_unsafe_or_unaccounted_measured_policy_is_rejected(tmp_path):
+    policy = measured_policy(tmp_path / "unsafe.json")
+    data = json.loads(policy.read_text())
+    data["safety_margin_bytes"] = 9_000
+    policy.write_text(json.dumps(data))
+    with pytest.raises(ValueError, match="policy may only"):
+        ResourceGrant(tmp_path / "gate", "task", "generation-pocket", policy).acquire()
 
 
 def test_cleanup_on_failure(tmp_path):

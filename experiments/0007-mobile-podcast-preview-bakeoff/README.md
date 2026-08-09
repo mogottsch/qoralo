@@ -45,7 +45,15 @@ python tools/resource_lock.py install-policy \
   artifacts/task-5/measured-policy.json artifacts/shared/model-resource-policy.json
 ```
 
-The only less-conservative policy accepted by the code permits one Pocket generation and one Kokoro generation to coexist. Realtime, capture, export, preflight, smoke loads, and protocol revisions remain exclusive and block both. Subsequent commands select the installed policy with `--policy artifacts/shared/model-resource-policy.json`.
+The only less-conservative policy accepted by the code permits one Pocket generation and one Kokoro generation to coexist. Realtime, capture, export, preflight, smoke loads, and protocol revisions remain exclusive and block both. Capacity can never exceed two. The loader independently recomputes Pocket-plus-Kokoro peak RSS plus a positive safety margin and rejects a policy unless it leaves explicit headroom below both physical RAM and 32 GiB.
+
+Task 5's repeatable measurement entry point is:
+
+```bash
+experiments/0007-mobile-podcast-preview-bakeoff/tools/run-preflights.sh
+```
+
+It acquires one `preflight` grant around all three workers, runs them strictly in Realtime/Pocket/Kokoro order, and records process-tree cold-load, cold-inference, and warm-inference RSS plus host baselines, lazy artifact growth, and post-exit cleanup under ignored `artifacts/task-5/`; the reviewed measurement summary is committed at `results/generation-capacity.json`. Each worker performs two deliberately short inference calls; their samples are discarded in memory and can never become preview evidence. After releasing the preflight grant, the script obtains the administrative policy-update transaction (which requires no active grant) and atomically replaces `protocol/model-resource-policy-v1.json`. Final generation wrappers consume that installed default policy without an extra slot or lock.
 
 A grant is never reclaimed because it is old. Inspection must match host name, boot ID, PID liveness, and process start ticks. Dead or reused PIDs with a complete matching host identity are reported `stale_proven` but still block acquisition. Remote, incomplete, unreadable, and partially created grants are `remote_or_unknown` or `stale_unverifiable` and fail closed. Only the parent, after setting `PREVIEW_PARENT_ORCHESTRATOR=1`, may explicitly run `resource_lock.py recover-stale`; even then the tool removes only `stale_proven` grants and requires manual investigation otherwise.
 

@@ -102,7 +102,18 @@ def load_policy(path: str | Path) -> dict[str, Any]:
     if mode == "measured-pocket-kokoro" and pairs == [["generation-pocket", "generation-kokoro"]]:
         measurements = data.get("measurements")
         if data.get("policy_version") == 2 and isinstance(measurements, list) and len(measurements) >= 3:
-            return data
+            peaks = {item.get("model"): item.get("peak_process_tree_rss_bytes") for item in measurements if isinstance(item, dict)}
+            combined = peaks.get("pocket", -1) + peaks.get("kokoro", -1)
+            margin = data.get("safety_margin_bytes")
+            limit = data.get("host_limit_bytes")
+            if ({"realtime", "pocket", "kokoro"}.issubset(peaks)
+                    and all(isinstance(value, int) and value >= 0 for value in peaks.values())
+                    and isinstance(margin, int) and margin > 0 and isinstance(limit, int)
+                    and limit <= 32 * 1024 ** 3 and combined + margin < limit
+                    and data.get("combined_pocket_kokoro_peak_bytes") == combined
+                    and data.get("combined_with_safety_margin_bytes") == combined + margin
+                    and data.get("headroom_bytes") == limit - combined - margin):
+                return data
     raise ValueError("policy may only be exclusive, or measured Pocket+Kokoro sharing")
 
 
@@ -207,6 +218,11 @@ def install_policy(root: str | Path, candidate: str | Path, destination: str | P
             with os.fdopen(fd, "wb") as out, candidate.open("rb") as src:
                 out.write(src.read()); out.flush(); os.fsync(out.fileno())
             os.replace(temporary, destination)
+            directory_fd = os.open(destination.parent, os.O_RDONLY)
+            try:
+                os.fsync(directory_fd)
+            finally:
+                os.close(directory_fd)
         finally:
             (admin_path / "owner.json").unlink(); admin_path.rmdir()
 

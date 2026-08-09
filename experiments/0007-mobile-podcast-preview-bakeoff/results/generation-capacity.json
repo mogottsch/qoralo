@@ -1,0 +1,196 @@
+{
+  "baseline_host_memory": {
+    "cached_bytes": 20153929728,
+    "memavailable_bytes": 28533968896,
+    "memfree_bytes": 5773344768,
+    "memtotal_bytes": 33495257088
+  },
+  "capacity_arithmetic": {
+    "ceiling_32_gib_bytes": 34359738368,
+    "combined_peak_bytes": 2360705024,
+    "effective_limit_bytes": 33495257088,
+    "explicit_headroom_bytes": 26839584768,
+    "host_physical_bytes": 33495257088,
+    "kokoro_peak_bytes": 1270681600,
+    "maximum_slots": 2,
+    "pocket_peak_bytes": 1090023424,
+    "required_bytes": 6655672320,
+    "safe_for_exactly_pocket_plus_kokoro": true,
+    "safety_margin_bytes": 4294967296
+  },
+  "created_at": "2026-08-09T16:46:42.176424+00:00",
+  "installed_policy": "../protocol/model-resource-policy-v1.json",
+  "measurement_order": [
+    "realtime",
+    "pocket",
+    "kokoro"
+  ],
+  "measurements": [
+    {
+      "audio_disposition": "discarded_in_memory_not_written_not_a_preview",
+      "cleanup": {
+        "available_memory_delta_bytes": 28680192,
+        "grant_retained_by_sequential_orchestrator": true,
+        "worker_exited": true
+      },
+      "discarded_audio_samples": [
+        35200,
+        38400
+      ],
+      "host_memory_after_cleanup": {
+        "cached_bytes": 20159741952,
+        "memavailable_bytes": 28547035136,
+        "memfree_bytes": 5785088000,
+        "memtotal_bytes": 33495257088
+      },
+      "host_memory_before": {
+        "cached_bytes": 20153933824,
+        "memavailable_bytes": 28518354944,
+        "memfree_bytes": 5757730816,
+        "memtotal_bytes": 33495257088
+      },
+      "inference_wall_seconds": [
+        1.033680538000226,
+        0.6167508720000114
+      ],
+      "lazy_artifacts_after": {
+        "file_count": 26446,
+        "root": "models/vibevoice-realtime/artifacts",
+        "total_bytes": 9606008705
+      },
+      "lazy_artifacts_before": {
+        "file_count": 26446,
+        "root": "models/vibevoice-realtime/artifacts",
+        "total_bytes": 9606008705
+      },
+      "lazy_download_bytes": 0,
+      "lazy_download_file_count": 0,
+      "model": "realtime",
+      "peak_process_tree_rss_bytes": 3496951808,
+      "phase_peak_process_tree_rss_bytes": {
+        "baseline": 21008384,
+        "cold_load": 3496951808,
+        "cold_short_inference": 1897308160,
+        "loaded": 967958528,
+        "warm_short_inference": 1897312256
+      },
+      "sample_count": 485,
+      "sampling_interval_seconds": 0.02,
+      "status": "passed",
+      "total_wall_seconds": 10.8593639110004
+    },
+    {
+      "audio_disposition": "discarded_in_memory_not_written_not_a_preview",
+      "cleanup": {
+        "available_memory_delta_bytes": -63528960,
+        "grant_retained_by_sequential_orchestrator": true,
+        "worker_exited": true
+      },
+      "discarded_audio_samples": [
+        26880,
+        26880
+      ],
+      "host_memory_after_cleanup": {
+        "cached_bytes": 20420780032,
+        "memavailable_bytes": 28472696832,
+        "memfree_bytes": 5449240576,
+        "memtotal_bytes": 33495257088
+      },
+      "host_memory_before": {
+        "cached_bytes": 20159741952,
+        "memavailable_bytes": 28536225792,
+        "memfree_bytes": 5774278656,
+        "memtotal_bytes": 33495257088
+      },
+      "inference_wall_seconds": [
+        0.4531170860000202,
+        0.3659909289999632
+      ],
+      "lazy_artifacts_after": {
+        "file_count": 21241,
+        "root": "artifacts/setup/pocket-tts",
+        "total_bytes": 1091308288
+      },
+      "lazy_artifacts_before": {
+        "file_count": 21241,
+        "root": "artifacts/setup/pocket-tts",
+        "total_bytes": 1091308288
+      },
+      "lazy_download_bytes": 0,
+      "lazy_download_file_count": 0,
+      "model": "pocket",
+      "peak_process_tree_rss_bytes": 1090023424,
+      "phase_peak_process_tree_rss_bytes": {
+        "baseline": 23117824,
+        "cold_load": 1011171328,
+        "cold_short_inference": 1083813888,
+        "loaded": 1017380864,
+        "warm_short_inference": 1090023424
+      },
+      "sample_count": 158,
+      "sampling_interval_seconds": 0.02,
+      "status": "passed",
+      "total_wall_seconds": 3.499821344999873
+    },
+    {
+      "audio_disposition": "discarded_in_memory_not_written_not_a_preview",
+      "cleanup": {
+        "available_memory_delta_bytes": -304181248,
+        "grant_retained_by_sequential_orchestrator": true,
+        "worker_exited": true
+      },
+      "discarded_audio_samples": [
+        45600,
+        45600
+      ],
+      "host_memory_after_cleanup": {
+        "cached_bytes": 20933324800,
+        "memavailable_bytes": 28174880768,
+        "memfree_bytes": 4638355456,
+        "memtotal_bytes": 33495257088
+      },
+      "host_memory_before": {
+        "cached_bytes": 20421001216,
+        "memavailable_bytes": 28479062016,
+        "memfree_bytes": 5455384576,
+        "memtotal_bytes": 33495257088
+      },
+      "inference_wall_seconds": [
+        0.8718485850004072,
+        0.4629777660002219
+      ],
+      "lazy_artifacts_after": {
+        "file_count": 26040,
+        "root": "artifacts/kokoro",
+        "total_bytes": 1605428027
+      },
+      "lazy_artifacts_before": {
+        "file_count": 26039,
+        "root": "artifacts/kokoro",
+        "total_bytes": 1605414421
+      },
+      "lazy_download_bytes": 13606,
+      "lazy_download_file_count": 1,
+      "model": "kokoro",
+      "peak_process_tree_rss_bytes": 1270681600,
+      "phase_peak_process_tree_rss_bytes": {
+        "baseline": 21086208,
+        "cold_load": 1270681600,
+        "cold_short_inference": 1192419328,
+        "loaded": 1095307264,
+        "warm_short_inference": 1257426944
+      },
+      "sample_count": 324,
+      "sampling_interval_seconds": 0.02,
+      "status": "passed",
+      "total_wall_seconds": 7.9205201250001664
+    }
+  ],
+  "preflight_audio": "discarded_in_memory; never written, normalized, published, or accepted as a preview",
+  "resource_gate": {
+    "kind": "preflight",
+    "scope": "one grant around all three sequential workers"
+  },
+  "schema_version": 1,
+  "status": "passed"
+}

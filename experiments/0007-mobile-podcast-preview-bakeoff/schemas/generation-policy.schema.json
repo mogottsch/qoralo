@@ -33,7 +33,11 @@
       "minItems": 8
     },
     "host_memory_bytes": {"type": "integer", "minimum": 1},
-    "safety_margin_bytes": {"type": "integer", "minimum": 0},
+    "host_limit_bytes": {"type": "integer", "minimum": 1, "maximum": 34359738368},
+    "safety_margin_bytes": {"type": "integer", "minimum": 1},
+    "combined_pocket_kokoro_peak_bytes": {"type": "integer", "minimum": 0},
+    "combined_with_safety_margin_bytes": {"type": "integer", "minimum": 1},
+    "headroom_bytes": {"type": "integer", "minimum": 1},
     "measurements": {"type": "array", "items": {"$ref": "#/$defs/measurement"}, "minItems": 3},
     "rule": {"type": "string", "minLength": 1}
   },
@@ -45,7 +49,7 @@
     {
       "if": {"properties": {"mode": {"const": "measured-pocket-kokoro"}}},
       "then": {
-        "required": ["host_memory_bytes", "safety_margin_bytes", "measurements"],
+        "required": ["host_memory_bytes", "host_limit_bytes", "safety_margin_bytes", "combined_pocket_kokoro_peak_bytes", "combined_with_safety_margin_bytes", "headroom_bytes", "measurements"],
         "properties": {"policy_version": {"const": 2}, "compatible_concurrent_sets": {"const": [["generation-pocket", "generation-kokoro"]]}}
       }
     }
