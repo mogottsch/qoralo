@@ -31,7 +31,8 @@ run_process() {
   local start end done=false
   start=$($PY -c 'import time; print(time.monotonic_ns())')
   adb shell am start -W -n "$PKG/.GenerationProbeActivity" >"$OUT/activity-$label.txt"
-  for _ in $(seq 1 900); do
+  # Cold multi-gigabyte mmap faults can exceed 15 minutes under Android memory pressure.
+  for _ in $(seq 1 1800); do
     if adb shell run-as "$PKG" test -f files/generation-result.json; then done=true; break; fi
     sleep 1
   done

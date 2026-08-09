@@ -260,8 +260,24 @@ public final class GenerationController {
         audioChunkCount++;
     }
 
-    private void terminate(StopReason reason) { state = State.TERMINATED; stopReason = reason; }
-    private void fail(RuntimeException error) { state = State.FAILED; stopReason = StopReason.FAILURE; failure = error; }
+    private void terminate(StopReason reason) {
+        state = State.TERMINATED;
+        stopReason = reason;
+        releaseRecurrentState();
+    }
+    private void fail(RuntimeException error) {
+        state = State.FAILED;
+        stopReason = StopReason.FAILURE;
+        failure = error;
+        releaseRecurrentState();
+    }
+    /** Drop large model-output/cache graphs as soon as no further step is legal; PCM remains available. */
+    private void releaseRecurrentState() {
+        qwen = null;
+        decoderCaches = null;
+        semanticCaches = null;
+        negativeCondition = null;
+    }
     private void requireState(State expected) { if (state != expected) throw new IllegalStateException("expected " + expected + ", was " + state); }
     private static Object[] cloneCaches(Object[] caches) { return caches == null ? null : caches.clone(); }
     private static float[] checkedEmbedding(float[] value, String name) { requireSize(value, 1536, name); return value; }
@@ -287,4 +303,8 @@ public final class GenerationController {
     public int pcmSamples() { return pcm.size() / 2; }
     public int audioChunkCount() { return audioChunkCount; }
     public RuntimeException failure() { return failure; }
+    /** Test/telemetry hook: terminated and failed controllers must not retain recurrent tensors. */
+    public boolean recurrentStateRetained() {
+        return qwen != null || decoderCaches != null || semanticCaches != null || negativeCondition != null;
+    }
 }

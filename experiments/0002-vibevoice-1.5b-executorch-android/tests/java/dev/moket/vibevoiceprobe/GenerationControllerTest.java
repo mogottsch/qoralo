@@ -105,6 +105,7 @@ public final class GenerationControllerTest {
         check(c.step().tokenId() == END && !c.inSpeech(), "speech end");
         GenerationController.Step eos = c.step();
         check(eos.state() == GenerationController.State.TERMINATED && eos.stopReason() == GenerationController.StopReason.EOS, "EOS termination");
+        check(!c.recurrentStateRetained(), "termination must release Qwen and streaming cache tensors");
         check(fake.diffusionCalls == 20 && fake.decoderCalls == 2 && fake.semanticCalls == 2 && fake.connectorCalls == 2, "component call counts");
         check(fake.decodeCalls == 4 && fake.lastDecodePosition == 5 && c.validLength() == 6, "decode positions");
         check(fake.lastQwenInput.length == 56 && String.valueOf(fake.lastQwenInput[0]).startsWith("decode4-"), "replacement Qwen cache transport");
@@ -147,6 +148,7 @@ public final class GenerationControllerTest {
         c.start(prompt()); c.step(); fake.failDiffusion = true;
         expect(IllegalStateException.class, c::step);
         check(c.state() == GenerationController.State.FAILED && c.failure() != null, "component failure propagation");
+        check(!c.recurrentStateRetained(), "failure must release recurrent tensors");
         c.reset();
         check(c.state() == GenerationController.State.IDLE && c.validLength() == 0 && c.pcmSamples() == 0 && c.failure() == null, "full reset");
         fake.failDiffusion = false;
@@ -162,6 +164,7 @@ public final class GenerationControllerTest {
         c.finishAtTarget();
         check(c.state() == GenerationController.State.TERMINATED
                 && c.stopReason() == GenerationController.StopReason.TARGET_DURATION, "target termination");
+        check(!c.recurrentStateRetained(), "target termination must release recurrent tensors");
         byte[] wav = c.wav();
         ByteBuffer h = ByteBuffer.wrap(wav).order(ByteOrder.LITTLE_ENDIAN);
         check(h.getInt(40) == 12800 && wav.length == 12844, "target WAV has every boundary sample exactly once");
