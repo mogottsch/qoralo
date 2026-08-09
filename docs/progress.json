@@ -8,7 +8,7 @@
     "model": "microsoft/VibeVoice-1.5B",
     "device": "Samsung Galaxy S23 Ultra SM-S918B"
   },
-  "updated_at": "2026-08-09T10:55:00+01:00",
+  "updated_at": "2026-08-09T11:14:42+01:00",
   "updated_by": "parent-orchestrator",
   "autonomy": {
     "authorized_through_step": 39,
@@ -24,13 +24,13 @@
     "notify_when_device_input_required": true
   },
   "status": {
-    "completed_steps": 33,
+    "completed_steps": 36,
     "total_steps": 39,
-    "percent": 84.6,
-    "current_step": 34,
+    "percent": 92.3,
+    "current_step": 37,
     "current_lane": "D",
-    "current_activity": "Crew is adding the second speaker to Android generation",
-    "summary": "Android recurrent generation produces two deterministic chunks with correct cache progression and exact boundaries, then safely terminates at the documented static-export capacity of 0.266667 seconds rather than corrupting state. Two-speaker generation is next."
+    "current_activity": "Crew is measuring the complete XNNPACK build",
+    "summary": "The locked Android run and comparison are complete with a substantive feasibility rejection: output is deterministic but only 0.266667 seconds, covers 2.04% of the reference, and is effectively silent. Two-speaker quality is not assessable. Complete-build measurement is active."
 
   },
   "resources": {
@@ -81,10 +81,10 @@
       "name": "End-to-end generation and optimization",
       "steps": [31, 32, 33, 34, 35, 36, 37, 38, 39],
       "status": "in_progress",
-      "current_step": 34,
+      "current_step": 37,
       "worktree": null,
       "artifact_root": "artifacts/0002/lane-d",
-      "latest_result": "Step 33 completed with valid capacity termination: two Android chunks produce 6,400 deterministic samples with exact boundaries and all caches advanced; fixed call-1 export shapes reject a third call at 0.266667 seconds without state corruption."
+      "latest_result": "Steps 34-36 completed with rejection: conditioning tensors and cache policy are correct, but the locked run yields a 0.266667-second effectively silent fragment at -118.83 dBFS. It covers 2.04% of the reference; speaker identity is not assessable."
     }
   },
   "milestones": {
@@ -350,6 +350,19 @@
       "deterministic": true,
       "pcm_sha256": "2c885ee3e0fcfb27e895301ce41352020cd71167b2218d272923eb7ed63f0447",
       "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/generation-3-to-5s-android.json"
+    },
+    "locked_reference_comparison": {
+      "status": "rejected",
+      "reference_duration_seconds": 13.066666666666666,
+      "android_duration_seconds": 0.26666666666666666,
+      "coverage_ratio": 0.02040816326530612,
+      "android_rms_dbfs": -118.82837334463999,
+      "deterministic": true,
+      "omissions": "fail",
+      "repetitions": "fail",
+      "corruption": "fail",
+      "speaker_consistency": "not_assessable",
+      "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/locked-reference-comparison.json"
     }
   },
   "commits": [
@@ -403,10 +416,10 @@
     {"id": 31, "lane": "D", "title": "Build the native generation controller", "status": "completed", "depends_on": [8, 16, 19, 26, 29, 30], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/generation-controller-host.json", "note": "Native Java owns validated cache/state transitions, token control, diffusion scheduling, speaker selection, PCM, and WAV output without Python state."},
     {"id": 32, "lane": "D", "title": "Generate one speech chunk from text", "status": "completed", "depends_on": [31], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/generation-one-chunk-android.json", "note": "Android chains actual component outputs without fixture substitution into deterministic finite 24 kHz PCM."},
     {"id": 33, "lane": "D", "title": "Generate three to five seconds", "status": "completed", "depends_on": [32], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/generation-3-to-5s-android.json", "note": "Two deterministic chunks advance all caches with exact boundaries; generation safely stops CAPACITY at 0.266667 seconds because fixed export shapes reject a third call."},
-    {"id": 34, "lane": "D", "title": "Add the second speaker", "status": "ready", "depends_on": [33], "evidence": null},
-    {"id": 35, "lane": "D", "title": "Run the locked reference transcript", "status": "blocked", "depends_on": [34], "evidence": null},
-    {"id": 36, "lane": "D", "title": "Compare Android output with the reference", "status": "blocked", "depends_on": [35], "evidence": null},
-    {"id": 37, "lane": "D", "title": "Measure the complete XNNPACK build", "status": "blocked", "depends_on": [35], "evidence": null},
+    {"id": 34, "lane": "D", "title": "Add the second speaker", "status": "completed", "depends_on": [33], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/generation-two-speaker-android.json", "note": "Conditioning positions and cache policy pass, but the effectively silent 0.266667-second output fails the fixed quality rubric and speaker identity is not assessable."},
+    {"id": 35, "lane": "D", "title": "Run the locked reference transcript", "status": "completed", "depends_on": [34], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/locked-reference-android.json", "note": "Completed as a documented feasibility failure: locked inputs pass, deterministic runs stop CAPACITY after two silent chunks."},
+    {"id": 36, "lane": "D", "title": "Compare Android output with the reference", "status": "completed", "depends_on": [35], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/locked-reference-comparison.json", "note": "Comparison implementation is complete; outcome rejects the Android build at 2.04% duration coverage and -118.83 dBFS."},
+    {"id": 37, "lane": "D", "title": "Measure the complete XNNPACK build", "status": "in_progress", "depends_on": [35], "evidence": null},
     {"id": 38, "lane": "D", "title": "Optimize memory", "status": "blocked", "depends_on": [37], "evidence": null},
     {"id": 39, "lane": "D", "title": "Optimize execution", "status": "blocked", "depends_on": [37, 38], "evidence": null}
   ]
