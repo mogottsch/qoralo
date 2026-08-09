@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "scope": "load_only_no_generation",
+  "gate": "task-1 atomic model-resource gate; task=task-2; kind=smoke-load",
+  "source_revision": "94da20d98b2fa7688e9cbfaf7692ddb4954f7600",
+  "model_revision": "6bce5f06044837fe6d2c5d7a71a84f0416bd57e4",
+  "tokenizer_revision": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+  "voice": "en-Grace_woman.pt",
+  "voice_sha256": "5f0ef02a3f3cace04cf721608b65273879466bb15fe4044e46ec6842190f6bb1",
+  "device": "NVIDIA GeForce RTX 3060 Laptop GPU",
+  "dtype": "torch.bfloat16",
+  "attention": "sdpa",
+  "processor_sample_rate_hz": 24000,
+  "prompt_sections": ["lm", "neg_lm", "neg_tts_lm", "tts_lm"],
+  "load_wall_seconds": 6.941904772999806,
+  "cuda_peak_allocated_bytes": 2725503488,
+  "offline_local_only": true,
+  "notes": "Transformers reported newly initialized acoustic encoder weights because the inference checkpoint omits encoder tensors; the official streaming generation path uses the acoustic decoder. No audio generation was attempted in this setup smoke test."
+}

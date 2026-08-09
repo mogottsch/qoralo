@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "candidate": "microsoft/VibeVoice-Realtime-0.5B",
+  "license_and_access": {
+    "source_license": "MIT",
+    "model_card_license": "MIT",
+    "gated_or_private": false,
+    "manual_or_proprietary_terms_required": false,
+    "intended_use_note": "Official documentation calls the model research/development only and does not recommend commercial or real-world use without further testing. Deepfake disclosure and lawful-use warnings apply."
+  },
+  "voice_conditioning": {
+    "selected": "en-Grace_woman.pt",
+    "selected_sha256": "5f0ef02a3f3cace04cf721608b65273879466bb15fe4044e46ec6842190f6bb1",
+    "provenance": "Opaque embedded cached prompt committed by Microsoft in the official VibeVoice repository at the pinned source revision; no personal sample is used and no underlying recording/source identity is published.",
+    "supported_english_presets": ["en-Carter_man.pt", "en-Davis_man.pt", "en-Emma_woman.pt", "en-Frank_man.pt", "en-Grace_woman.pt", "en-Mike_man.pt"],
+    "conditioning_api": "processor.process_input_with_cached_prompt(..., cached_prompt=...) plus all_prefilled_outputs passed to model.generate",
+    "custom_voice": "Not exposed. The official documentation says to contact the team for customization."
+  },
+  "generation": {
+    "language": "English (primary/intended)",
+    "speaker_count": 1,
+    "native_sample_rate_hz": 24000,
+    "native_save_format": "mono WAV via soundfile; floating model waveform, WAV subtype chosen by soundfile",
+    "diffusion_steps_in_official_file_demo": 5,
+    "cfg_scale_in_official_file_demo": 1.5,
+    "token_sampling_in_official_file_demo": false,
+    "determinism": "Token sampling is disabled, but diffusion initializes with torch.randn. The official file demo has no seed option. Task 6 must seed CPU and CUDA explicitly and report repeat hashes; bit-exact cross-device determinism is not claimed.",
+    "streaming": "generate accepts AudioStreamer/AsyncAudioStreamer and emits decoded audio chunks. The official file demo instead waits for the assembled speech output. The pinned docs still list feeding new text tokens during active audio generation as TODO, so only streaming audio from already-supplied text is established.",
+    "context": "Official docs state an 8k context window, approximately 10 minutes of audio."
+  },
+  "downloads": {
+    "model_behavior": "Transformers from_pretrained downloads lazily when given the repository ID. The model's preprocessor_config also points to floating Qwen/Qwen2.5-0.5B tokenizer files, an additional lazy download discovered by the offline smoke test.",
+    "pinned_setup_behavior": "setup.sh eagerly downloads both the immutable model snapshot and Qwen tokenizer revision 060db6499f32faf8b98477b0a26969ef7d8b9987 into this track's ignored artifact root. Smoke/load assembles the processor from that local tokenizer and uses HF_HUB_OFFLINE, TRANSFORMERS_OFFLINE, and local_files_only to forbid hidden downloads.",
+    "model_safetensors_bytes": 2035332888
+  }
+}
