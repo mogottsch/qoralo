@@ -21,7 +21,7 @@ def measurement(seconds, wav="wav"):
     }
     return {
         "runs": [run, dict(run)], "summary": {"cross_process_deterministic": True, "wav_sha256": wav},
-        "size": {"apk_plus_modules_bytes": 1}, "failure": {"requested_duration_seconds": 13.066667},
+        "size": {"module_bytes": 1, "apk_plus_modules_bytes": 2}, "failure": {"requested_duration_seconds": 13.066667},
         "device": {}, "runtime": {}, "thermal": {},
     }
 

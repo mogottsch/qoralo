@@ -6,7 +6,7 @@ Export VibeVoice components to ExecuTorch, validate them against experiment 0001
 
 ## Status
 
-In progress. The fixed-shape decoder and explicit 34-tensor streaming-cache ABI pass in FP32 and FP16 on both the host and Galaxy S23 Ultra. A real deterministic diffusion-head fixture passes one-step and native-orchestrated ten-step FP32 XNNPACK execution on Android. Real locked-checkpoint Qwen2 prefill and next-token fixtures are exactly deterministic and pass the 56-cache eager wrappers. Both FP32 Qwen2 entries export and execute with XNNPACK on the host, but remain unaccepted because their finite outputs exceed the initial `atol=1e-5, rtol=1e-4` tolerance. No phone was used for the backbone result.
+Complete with a negative feasibility conclusion. Individual fixed-shape components execute reproducibly through ExecuTorch 1.2/XNNPACK on the Galaxy S23 Ultra, using the accepted INT8 Qwen2 backbone and FP32 audio components. The integrated locked run is not usable speech: it stops at the exported two-chunk cache capacity, produces only 0.266667 seconds (2.04% coverage) at -118.83 dBFS, and has a final measured prefix RTF of 107.35. The 9.136 GB APK-plus-module footprint, static-cache limit, and effectively silent output make this export infeasible for local VibeVoice speech.
 
 ## Current tooling
 
@@ -498,3 +498,44 @@ Record the failure and move to the next component or runtime when:
 - backend partitioning transfers tensors so often that acceleration is ineffective.
 
 A failed full export does not invalidate useful results from individual components.
+
+## Final execution optimization and conclusion
+
+Step 39 tested the remaining controller-level execution overhead after memory stabilization. `GenerationProbeActivity` still destroys every memory-mapped PTE after each call, but requests explicit Java collection every eight module calls instead of after all 130 calls in a prefix run. The harness now profiles module load, forward, output copying, destruction, and explicit GC separately.
+
+| Metric | Memory-stabilized baseline | Periodic-GC run | Change |
+|---|---:|---:|---:|
+| Median generated-prefix wall time | 29.135 s | 28.626 s | -1.74% |
+| Median TTFA | 12.113 s | 11.865 s | -2.04% |
+| Median prefix RTF | 109.26 | 107.35 | -1.74% |
+| Two-run wall-time CV | 3.93% | 2.26% | descriptive only |
+| Maximum PSS | 479,784 KiB | 475,956 KiB | -0.80% |
+| Maximum VmHWM | 1,650,288 KiB | 1,660,452 KiB | +0.62% |
+| APK + accepted modules | 9,136,214,097 bytes | 9,136,215,197 bytes | +1,100 bytes telemetry bytecode |
+
+The 1.74% median wall-time change is smaller than the observed two-run variability and is **not** claimed as a material speedup. The optimized runs executed 130 PTE calls each. Module forward occupied 25.54–26.91 seconds, while load occupied 0.150–0.169 seconds and explicit GC 0.091–0.093 seconds. XNNPACK forward execution, not Java loading or collection, is the measured bottleneck. Diffusion median latency regressed 17.65% while Qwen prefill/decode and audio stages varied in both directions; thermal status rose from NONE to LIGHT during the run.
+
+Correctness did not change. Cold and warm processes produced the same WAV as the memory-stabilized build (`f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9`) and stopped at `CAPACITY`. The locked comparison remains rejected: 0.266667 of 13.066667 seconds, 2.0408% coverage, -118.83 dBFS, omissions/repetitions/corruption failed, and speaker consistency not assessable.
+
+**Final conclusion:** the component work proves reproducible ExecuTorch/XNNPACK execution, but this VibeVoice 1.5B export is not feasible for useful local speech on the Galaxy S23 Ultra. Periodic GC cannot fix the static two-chunk cache ABI, effectively silent audio, roughly 9.136 GB deployment, or approximately 107x measured prefix RTF. A retry would require re-exporting a longer or dynamic cache ABI and changing model packaging/precision; those are architectural changes, not further controller tuning.
+
+Reproduce the final build, phone measurement, and publication with:
+
+```bash
+experiments/0002-vibevoice-1.5b-executorch-android/android/optimize-complete-build-execution.sh
+python3 -m unittest discover \
+  -s experiments/0002-vibevoice-1.5b-executorch-android/tests \
+  -p 'test_complete_build*.py'
+experiments/0002-vibevoice-1.5b-executorch-android/android/run-generation-controller-tests.sh
+python3 -m json.tool \
+  experiments/0002-vibevoice-1.5b-executorch-android/results/complete-build-final.json >/dev/null
+```
+
+Committed evidence:
+
+- [`results/complete-build-final.json`](results/complete-build-final.json): before/after stages, TTFA, wall time, RTF, variability, memory, size, correctness, determinism, audio comparison, commands, and final conclusion.
+- [`results/complete-build-final-measurement.json`](results/complete-build-final-measurement.json): optimized cold/warm phone observations and execution profile.
+- [`results/complete-build-memory-optimized.json`](results/complete-build-memory-optimized.json): memory-stabilized baseline.
+- [`results/locked-reference-comparison.json`](results/locked-reference-comparison.json): fixed audio rubric.
+- Raw logs, telemetry, WAVs, APK, and model files: ignored under `artifacts/0002/lane-d/complete-build-final/`.
+- Implementation commit: `1629cab8831416a7dc71e082654bf059fd9ebd71`.

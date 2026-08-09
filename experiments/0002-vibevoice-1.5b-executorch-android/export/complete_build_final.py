@@ -77,7 +77,12 @@ def build(baseline_memory: dict, optimized: dict, audio: dict, commit: str) -> d
         "after": after,
         "optimized_execution_profiles": [run.get("execution_breakdown") for run in optimized["runs"]],
         "reduction": reductions,
-        "size": optimized["size"],
+        "size": {
+            "before": baseline["size"],
+            "after": optimized["size"],
+            "accepted_module_bytes_change": int(optimized["size"]["module_bytes"]) - int(baseline["size"]["module_bytes"]),
+            "apk_plus_modules_bytes_change": int(optimized["size"]["apk_plus_modules_bytes"]) - int(baseline["size"]["apk_plus_modules_bytes"]),
+        },
         "memory": {"before": before["memory_kib"], "after": after["memory_kib"],
                    "vmhwm_change_percent": -pct_reduction(before["memory_kib"]["vmhwm"]["max"], after["memory_kib"]["vmhwm"]["max"])},
         "correctness_and_determinism": {
