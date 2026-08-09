@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "status": "prefix_agreement_pass_quality_acceptance_fail",
+  "scope": "exact raw signed-16-bit comparison of the Android WAV against the equally long locked-reference prefix",
+  "historical_comparison": {
+    "path": "results/locked-reference-comparison.json",
+    "modification_policy": "immutable; this file supplements rather than revises its fixed-rubric rejection"
+  },
+  "inputs": {
+    "reference": {
+      "path": "artifacts/0001/output-cpu/reference_generated.wav",
+      "sample_count": 313600,
+      "pcm_sha256": "ff6e9bb8266658847a3952291eba60242969f7058af2737b561de9e3d5e7ceba"
+    },
+    "android": {
+      "path": "artifacts/0002/lane-d/locked-reference/generation-run-0.wav",
+      "sample_count": 6400,
+      "pcm_sha256": "2c885ee3e0fcfb27e895301ce41352020cd71167b2218d272923eb7ed63f0447"
+    }
+  },
+  "comparison": {
+    "sample_count": 6400,
+    "difference_definition": "android_s16 - reference_prefix_s16",
+    "differing_samples": 3014,
+    "equal_samples": 3386,
+    "minimum_difference_s16_units": 0,
+    "maximum_difference_s16_units": 1,
+    "maximum_absolute_difference_s16_units": 1,
+    "mean_absolute_difference_s16_units": 0.4709375,
+    "rms_difference_s16_units": 0.6862488615655402,
+    "all_differences_at_most_one_s16_unit": true,
+    "exact_byte_agreement": false,
+    "prefix_agreement_criterion": "maximum absolute difference <= 1 signed-16-bit PCM unit",
+    "prefix_agreement_status": "pass"
+  },
+  "dbfs_evidence": {
+    "reference_prefix": {
+      "sample_count": 6400,
+      "rms_s16_units": 0.686590307242973,
+      "rms_dbfs": -93.57504533728334,
+      "peak_s16_units": 2
+    },
+    "android_prefix": {
+      "sample_count": 6400,
+      "rms_s16_units": 0.0375,
+      "rms_dbfs": -118.82837334463999,
+      "peak_s16_units": 3
+    },
+    "reference_chunks_0_through_3": [
+      {
+        "index": 0,
+        "start_sample": 0,
+        "end_sample": 3200,
+        "sample_count": 3200,
+        "rms_s16_units": 0.6798437320443573,
+        "rms_dbfs": -93.6608167424245,
+        "peak_s16_units": 2
+      },
+      {
+        "index": 1,
+        "start_sample": 3200,
+        "end_sample": 6400,
+        "sample_count": 3200,
+        "rms_s16_units": 0.6932712311931024,
+        "rms_dbfs": -93.4909351277393,
+        "peak_s16_units": 1
+      },
+      {
+        "index": 2,
+        "start_sample": 6400,
+        "end_sample": 9600,
+        "sample_count": 3200,
+        "rms_s16_units": 78.78671961377755,
+        "rms_dbfs": -52.37993833024675,
+        "peak_s16_units": 971
+      },
+      {
+        "index": 3,
+        "start_sample": 9600,
+        "end_sample": 12800,
+        "sample_count": 3200,
+        "rms_s16_units": 2690.427171531038,
+        "rms_dbfs": -21.712573890892052,
+        "peak_s16_units": 10228
+      }
+    ],
+    "expected_progression": "Chunks 0 and 1 are introductory near-silence; chunk 2 is the fade-in; chunk 3 is clearly voiced."
+  },
+  "quality_acceptance": {
+    "status": "fail",
+    "reason": "One-unit agreement over an introductory-silence prefix does not satisfy duration, intelligibility, corruption, repetition, or speaker-consistency criteria. The Android result still stops after 6,400 samples.",
+    "prefix_agreement_is_quality_acceptance": false
+  },
+  "conclusion": "The Android two-chunk output agrees with the locked host S16 prefix to within one PCM unit. The prior description of this prefix as proof of waveform divergence is not supported. The historical quality rejection remains valid because a matching 0.2667-second silent prefix is neither complete nor audible speech."
+}

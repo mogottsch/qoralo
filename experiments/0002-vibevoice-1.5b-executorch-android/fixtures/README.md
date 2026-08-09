@@ -38,6 +38,36 @@ Copy only capture 2's `manifest.json` to the committed manifest path. The repeat
 matched every call's tensor metadata and hash; wall time and peak RSS are run
 observations and are intentionally outside the equality comparison.
 
+### Cache stabilization and audible onset
+
+[`../results/cache-stabilization.json`](../results/cache-stabilization.json)
+preserves the manifest order and all 20 pre/post lengths for every one of the 34
+acoustic and 34 semantic caches. The six acoustic `SConvTranspose1d` caches have
+configured `kernel_size - 1` targets `[15, 9, 9, 7, 3, 3]` and per-call input
+widths `[1, 8, 40, 200, 800, 1600]`. Their post-caches first reach full context
+on calls `[14, 1, 0, 0, 0, 0]`; calls `[15, 2, 1, 1, 1, 1]` are the first to
+enter with full pre-context. Thus call 15 is the first call with full pre-context
+at all six transpose layers. In particular, calls 0–3 are genuine warm-up calls,
+not a repeatable all-full-context ABI: the first transpose holds only 4 of its 15
+required input samples after call 3.
+
+The locked S16 waveform has the expected onset rather than immediate speech:
+chunks 0 and 1 are near-silence at -93.6608 and -93.4909 dBFS, chunk 2 fades in
+at -52.3799 dBFS, and chunk 3 is clearly voiced at -21.7126 dBFS. The
+[`../results/locked-reference-prefix-comparison.json`](../results/locked-reference-prefix-comparison.json)
+supplement recomputes the 6,400-sample Android comparison directly as signed
+16-bit integers: maximum absolute difference 1 unit, mean absolute difference
+0.4709375 units. This prefix agreement passes its numerical criterion but does
+not reverse the historical quality rejection; the matching prefix is short,
+introductory silence and cannot satisfy intelligibility, duration, or speaker
+criteria.
+
+Regenerate both derived results without loading model weights:
+
+```bash
+python3 experiments/0002-vibevoice-1.5b-executorch-android/export/analyze_cache_stabilization.py
+```
+
 ## Acoustic decoder
 
 Raw fixture tensors are generated under the ignored directory:

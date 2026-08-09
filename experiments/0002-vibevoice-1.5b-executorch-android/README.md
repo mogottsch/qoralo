@@ -8,10 +8,13 @@ Export VibeVoice components to ExecuTorch, validate them against experiment 0001
 
 Complete with a negative feasibility conclusion. Individual fixed-shape components execute reproducibly through ExecuTorch 1.2/XNNPACK on the Galaxy S23 Ultra, using the accepted INT8 Qwen2 backbone and FP32 audio components. The integrated locked run is not usable speech: it stops at the exported two-chunk cache capacity, produces only 0.266667 seconds (2.04% coverage) at -118.83 dBFS, and has a final measured prefix RTF of 107.35. The 9.136 GB APK-plus-module footprint, static-cache limit, and effectively silent output make this export infeasible for local VibeVoice speech.
 
+The later signed-16-bit supplement does not change that quality rejection: it shows that the Android fragment agrees with the equally long locked-reference introductory-silence prefix within one PCM unit (mean absolute difference 0.4709375). Prefix agreement is therefore a numerical correctness clue, not evidence of acceptable speech quality.
+
 ## Current tooling
 
 - [`export/capture_fixtures.py`](export/capture_fixtures.py) wraps the real streaming decode call and captures calls 0 and 1 with stable cache names.
 - [`export/capture_recurrent_trace.py`](export/capture_recurrent_trace.py) captures and validates the complete deterministic eager chain for recurrent calls 0–19; [`run-recurrent-capture.sh`](run-recurrent-capture.sh) is the required global resource-gated entry point and [`fixtures/recurrent-calls-0-19-manifest.json`](fixtures/recurrent-calls-0-19-manifest.json) preserves the hashes without committing 2.4 GiB of repeated raw evidence.
+- [`export/analyze_cache_stabilization.py`](export/analyze_cache_stabilization.py) derives complete ordered cache lengths and SConvTranspose1d stabilization in [`results/cache-stabilization.json`](results/cache-stabilization.json), and recomputes the exact raw-S16 evidence in [`results/locked-reference-prefix-comparison.json`](results/locked-reference-prefix-comparison.json) without rewriting the historical comparison.
 - [`export/acoustic_decoder.py`](export/acoustic_decoder.py) constructs only `TokenizerDecoder` and reads only its tensors from the sharded checkpoint.
 - [`export/export_decoder.py`](export/export_decoder.py) exports a fixed `[1,64,1]` FP32 non-streaming operator-coverage probe to portable ExecuTorch or XNNPACK, with optional graph diagnostics and the verified causal-padding rewrite.
 - [`export/validate_pte.py`](export/validate_pte.py) executes a PTE with its saved input and writes a structured numerical comparison even when the runtime fails.
