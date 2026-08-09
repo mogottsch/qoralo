@@ -1,0 +1,75 @@
+{
+  "blocker": "Raw output is shorter than 15 seconds and Pocket TTS exposes no documented speed control; padding, looping, and time stretching are forbidden. Parent protocol revision is required.",
+  "command": [
+    "models/pocket-tts/generate_preview.sh"
+  ],
+  "conclusion": "Blocked pending the parent-owned shared punctuation revision; no normalized preview was fabricated.",
+  "memory": {
+    "baseline_rss_bytes": 115343360,
+    "peak_process_tree_rss_bytes": 1131843584,
+    "sample_interval_ms": 20
+  },
+  "model": "pocket",
+  "protocol": {
+    "protocol_fingerprint": "ef3dee72094c78514b4e590e944ffaa1ab61f57bd0cbd44da2f395d4cb93aa8e",
+    "protocol_id": "mobile-podcast-preview",
+    "protocol_version": 1,
+    "transcript_sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67"
+  },
+  "provenance": {
+    "anomalies": [
+      "Locked seed-0 output is 13.52 seconds, below the exact 15-second derivation minimum."
+    ],
+    "determinism": {
+      "claim": "Pinned same-platform reproducibility only.",
+      "repeated_seed0_attempts": 2,
+      "repeated_sha256": "4b4a2596b97d856cc240ea4de705fa341b38ae6ac3a308ac10188a8a2896f729",
+      "repeated_sha256_identical": true,
+      "set_immediately_before_generation": true,
+      "torch_manual_seed": 0
+    },
+    "model_bytes": 219029196,
+    "model_revision": "d29db7978e464fb90cb3359ee0c69a273b9142cc",
+    "persistent_voice_states": {
+      "exercised_count": 1,
+      "note": "Multiple reusable states were documented but only alba was exercised.",
+      "supported": true
+    },
+    "source_revision": "d108410d23eef7e01db282f9442891162dbc3db6",
+    "source_url": "https://github.com/kyutai-labs/pocket-tts.git",
+    "stock_voice_state_bytes": 6194424
+  },
+  "raw": {
+    "artifact_path": "artifacts/previews/pocket/raw/pocket-native.f32le",
+    "byte_count": 1297920,
+    "channels": 1,
+    "chunk_count": 169,
+    "duration_seconds": 13.52,
+    "output_format": "headerless little-endian IEEE float32 PCM plus write-once native chunks",
+    "preserved_unchanged": true,
+    "sample_count": 324480,
+    "sample_rate_hz": 24000,
+    "sha256": "4b4a2596b97d856cc240ea4de705fa341b38ae6ac3a308ac10188a8a2896f729",
+    "statistics": {
+      "integrated_loudness_lufs": -18.78107346606364,
+      "peak": 0.6992021799087524,
+      "peak_dbfs": -3.107944527356751,
+      "rms": 0.1239109522476958,
+      "rms_dbfs": -18.137806109682344
+    }
+  },
+  "schema_version": 1,
+  "status": "blocked",
+  "timing": {
+    "api_first_output_seconds": 0.13588039299975208,
+    "first_audible_output_seconds": 0.13588039299975208,
+    "generation_wall_seconds": 3.7986631579997265,
+    "rtf": 0.2809662099112224
+  },
+  "voice": {
+    "cloning_performed": false,
+    "name": "alba",
+    "source": "kyutai/tts-voices/alba-mackenna/casual.wav",
+    "stock_voice": true
+  }
+}

@@ -28,3 +28,13 @@ Both model repositories declare CC-BY-4.0. Source is MIT. The gated repository a
 - **Persistent voice state:** supported. `get_state_for_audio_prompt("alba")` produces a reusable KV/state dictionary. Generation's default `copy_state=True` preserves it, and multiple named states can be kept resident for later alternating-turn composition. The model instance itself is not thread-safe.
 
 All normative pins are machine-readable in `pins.json`. Neither setup nor smoke copies the shared transcript, and no second transcript lives in this directory.
+
+## Frozen-preview generation
+
+```bash
+./generate_preview.sh
+```
+
+This is the only supported preview entry point. It obtains one atomic `generation-pocket` grant for model load and generation, so the measured policy can overlap it only with one Kokoro generation and excludes Realtime, preflights, capture, and export. It refuses protocol/source drift and write-once output replacement. Native yielded tensors are preserved as float32 chunks and an exact concatenated float32 stream under ignored `artifacts/previews/pocket/raw/`; accepted runs derive the exact protocol WAV with the shared utility.
+
+The protocol-v1 seed-0 `alba` run deterministically produced 324,480 samples (13.520 seconds), too short for the required 360,000-sample preview. Pocket's pinned Python API has no documented speed setting, and upstream lists adding silence in text as unsupported. The worker therefore did not pad, loop, time-stretch, or edit the parent-owned transcript. `results/pocket-preview.json` records the blocked measurement and `results/pocket-protocol-revision-request.json` requests the parent-owned punctuation transaction. No normalized WAV is claimed until the parent increments the protocol and resets all three preview tasks.
