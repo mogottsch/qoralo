@@ -1,0 +1,635 @@
+{
+  "schema_version": 1,
+  "status": "feasibility_failure",
+  "scope": "exact locked two-speaker reference transcript on the Galaxy S23 Ultra",
+  "locked_preflight": {
+    "status": "passed",
+    "path": "artifacts/0002/lane-d/locked-reference/preflight.json",
+    "checks": {
+      "source_revision": {
+        "verified": true,
+        "actual": "6dd49cb7200c0367205a5f1e650244259e9e423d",
+        "expected": "6dd49cb7200c0367205a5f1e650244259e9e423d"
+      },
+      "model_revision": {
+        "verified": true,
+        "actual": "c00898d257e6b46004e3e2866a47534085fb685a",
+        "expected": "c00898d257e6b46004e3e2866a47534085fb685a"
+      },
+      "transcript_sha256": {
+        "verified": true,
+        "actual": "e971969aff3d1f3e656180adf90e3f727299a842b83b2237a8e3b4c578fdf7d1",
+        "expected": "e971969aff3d1f3e656180adf90e3f727299a842b83b2237a8e3b4c578fdf7d1"
+      },
+      "android_prompt_sha256": {
+        "verified": true,
+        "actual": "e971969aff3d1f3e656180adf90e3f727299a842b83b2237a8e3b4c578fdf7d1",
+        "expected": "e971969aff3d1f3e656180adf90e3f727299a842b83b2237a8e3b4c578fdf7d1"
+      },
+      "reference_wav_sha256": {
+        "verified": true,
+        "actual": "fb0152dc686836fe23d9c39c3b24c1de82398f51b9747f5e36ad1db819ce0358",
+        "expected": "fb0152dc686836fe23d9c39c3b24c1de82398f51b9747f5e36ad1db819ce0358"
+      },
+      "reference_duration_seconds": {
+        "verified": true,
+        "actual": 13.066666666666666,
+        "expected": 13.066666666666666
+      },
+      "reference_sample_rate_hz": {
+        "verified": true,
+        "actual": 24000,
+        "expected": 24000
+      },
+      "reference_channels": {
+        "verified": true,
+        "actual": 1,
+        "expected": 1
+      },
+      "reference_bits_per_sample": {
+        "verified": true,
+        "actual": 16,
+        "expected": 16
+      },
+      "reference_encoding": {
+        "verified": true,
+        "actual": "PCM_S16LE",
+        "expected": "PCM_S16LE"
+      },
+      "seed": {
+        "verified": true,
+        "actual": 42,
+        "expected": 42
+      },
+      "cfg": {
+        "verified": true,
+        "actual": 1.3,
+        "expected": 1.3
+      },
+      "conditioning_sha256": {
+        "verified": true,
+        "actual": "9966a6cb06a3cf52b45c7c560abd7e992e827c30897a6a2c3c95b3dc382a1f81",
+        "expected": "9966a6cb06a3cf52b45c7c560abd7e992e827c30897a6a2c3c95b3dc382a1f81"
+      },
+      "speaker_layout_sha256": {
+        "verified": true,
+        "actual": "759e6563d63a152fe36f1a76b40433184500349bfca4e0e320ebb52cce420e9e",
+        "expected": "759e6563d63a152fe36f1a76b40433184500349bfca4e0e320ebb52cce420e9e"
+      },
+      "accepted_int8_host": {
+        "verified": true,
+        "actual": "passed",
+        "expected": "passed"
+      },
+      "accepted_int8_android": {
+        "verified": true,
+        "actual": "passed",
+        "expected": "passed"
+      },
+      "executorch_android_dependency": {
+        "verified": true,
+        "actual": true,
+        "expected": true
+      },
+      "backend": {
+        "verified": true,
+        "actual": "xnnpack",
+        "expected": "xnnpack"
+      },
+      "device_model": {
+        "verified": true,
+        "actual": "SM-S918B",
+        "expected": "SM-S918B"
+      }
+    }
+  },
+  "provenance": {
+    "source_revision": "6dd49cb7200c0367205a5f1e650244259e9e423d",
+    "model_revision": "c00898d257e6b46004e3e2866a47534085fb685a",
+    "seed": 42,
+    "cfg": 1.3,
+    "transcript_sha256": "e971969aff3d1f3e656180adf90e3f727299a842b83b2237a8e3b4c578fdf7d1",
+    "exact_transcript_consumed": true
+  },
+  "runtime": {
+    "executorch": "1.2.0",
+    "backend": "xnnpack",
+    "qwen_precision": "int8",
+    "other_precision": "fp32"
+  },
+  "device": {
+    "manufacturer": "samsung",
+    "model": "SM-S918B",
+    "device": "dm3q",
+    "soc": "SM8550",
+    "android_release": "16",
+    "api_level": 36,
+    "abi": "arm64-v8a",
+    "build_fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys"
+  },
+  "packages": {
+    "count": 80,
+    "aggregate_sha256": "d1831eafb11f1cbdec66d43a9e2e84d168b0b8f369e72661b8cac63ba525961d",
+    "files": [
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/prepare.pte",
+        "bytes": 10928,
+        "sha256": "300800c337857aab70f330371d2eb8fc4f6712096561eccfd9575ccc4c2899ca"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/final.pte",
+        "bytes": 233992832,
+        "sha256": "083b9dcc517cc4bc30cb8b62956b3673eef417bd8f7b71efe31a88aee0a71b7d"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-prepare.pte",
+        "bytes": 10928,
+        "sha256": "7bec2c698efc1eced1d500a397c7eb2f515d037d5ede3661c0b14c1702131247"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-final.pte",
+        "bytes": 233992576,
+        "sha256": "e1d9b0054005a7cc2635ba09351c2562669139d7f82c50432f61d2657bd6fa47"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-00.pte",
+        "bytes": 46933248,
+        "sha256": "97ea2e934508ff6b5711fc4422701472f00a280356ec960c2a139421a2f3fdc0"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-01.pte",
+        "bytes": 46933248,
+        "sha256": "78bda58a41896f61cc31a531edb38e8ad07041b66f7549ad074cdd3b50e5bad6"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-02.pte",
+        "bytes": 46933248,
+        "sha256": "3ef175e81cc9ac84612a22b989b3dbf64ded5692f09ca682282886906e070315"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-03.pte",
+        "bytes": 46933248,
+        "sha256": "f9e7c9449ac859b595df310399718a251a81ef7bc624006f745c474367dad85f"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-04.pte",
+        "bytes": 46933248,
+        "sha256": "9de4e9deacd0a9a45ea0c8ee1275f5c73031158420280a39d0e9e4007e9d9be1"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-05.pte",
+        "bytes": 46933248,
+        "sha256": "0bfaddaae18de228ea5726ef9a2e08e406fb30092fd2fc0029cd06a889fc81a5"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-06.pte",
+        "bytes": 46933248,
+        "sha256": "82805f2f05a2d579e3b973d673288d34d08d2117262e9c6efeb2b902835d6c9f"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-07.pte",
+        "bytes": 46933248,
+        "sha256": "6d1b91394dfcc14ac4a0102db99751602e7101de4f59fae68ea01968e13f3402"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-08.pte",
+        "bytes": 46933248,
+        "sha256": "d89f3b61e9a20fc8059cc75826827744882e44eaa7fe5f89604da9e261b2b2c5"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-09.pte",
+        "bytes": 46933248,
+        "sha256": "b4f79b9bb0b51746dc1c26b622b84a9e502c2ed3803486e41b47d507c19417b7"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-10.pte",
+        "bytes": 46933248,
+        "sha256": "8236cfcb63a5f30c99e77958764e15fc5e9b2dd5b3b6d240cfd5a936c41ae926"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-11.pte",
+        "bytes": 46933248,
+        "sha256": "18fac5b286be6f39423928ea63bd57b2874b10cdd675b4aac40df4c20fff17d4"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-12.pte",
+        "bytes": 46933248,
+        "sha256": "c0c69d8d8120bb220402962f68b5a057efd5bec51bb482fed47acff847dcc47c"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-13.pte",
+        "bytes": 46933248,
+        "sha256": "246286386c9f010f203acc8ca871b82dfcdf9dab830475114f1cfd82f5d39962"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-14.pte",
+        "bytes": 46933248,
+        "sha256": "05fa9a729bbb81bc23c8e98187229093844c5c3dfc23c615dd61f4977f13ef10"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-15.pte",
+        "bytes": 46933248,
+        "sha256": "3d910b40b23a29887087954d21f1274ab6147c0e00e4cd3e0a1205cee8af5540"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-16.pte",
+        "bytes": 46933248,
+        "sha256": "8d9b541c2d86b62106dca656761b169f91c5f3345301763d0c0239d95a725b78"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-17.pte",
+        "bytes": 46933248,
+        "sha256": "57f8e65001b364616fbcb8f852d583ac8eaf6e488cdceb2d6a8850c67eb636de"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-18.pte",
+        "bytes": 46933248,
+        "sha256": "660c67a9db79eb272a6b3dc9dc5a505e9fd3fdb6a97fe8103076f0ac502ded01"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-19.pte",
+        "bytes": 46933248,
+        "sha256": "c9c5b46fddc473054bdc8bb84aa7d88ff6742009b7222a84c8ffaa85d55e2dac"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-20.pte",
+        "bytes": 46933248,
+        "sha256": "b0ab1925bdf2288fd79f91b42bf42a5b2b0c36ac19acd5695d812336ae109440"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-21.pte",
+        "bytes": 46933248,
+        "sha256": "422fd658cdfe46223b10198962dcd533a51e78632638bd0c8f5130e39a28145c"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-22.pte",
+        "bytes": 46933248,
+        "sha256": "5b05c3c3f9f34329b0c0a5899172190b51042ce7f4eaa5a1a31f743bc5bae6af"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-23.pte",
+        "bytes": 46933248,
+        "sha256": "d45172b699a69da405a811c5a7b7bbcbc205f5c947a340d0052dce4878492f4e"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-24.pte",
+        "bytes": 46933248,
+        "sha256": "1c4863228ad3883a26d36f6fbeaa9efd38d874e1d69dc89daed823c31d57ef89"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-25.pte",
+        "bytes": 46933248,
+        "sha256": "3bcdee28961865b2e2eb63139302fc96d5b0d388321e67288cc103e4e78703b1"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-26.pte",
+        "bytes": 46933248,
+        "sha256": "51312b516a14c3b5adeb72ba190a8d4d5e5fdc4fbe62398395bb0c686e5a9b98"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/layer-27.pte",
+        "bytes": 46933248,
+        "sha256": "7f0318827ef420806b60322dce20e9568294a530735280988f187c0767732939"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-00.pte",
+        "bytes": 46933248,
+        "sha256": "230aefca7ca84eb57a64b629b05f917b91fa6d21a0a8de658b5e8edafb61c568"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-01.pte",
+        "bytes": 46933248,
+        "sha256": "07cd4c3ea9f6b90c2d61c86929ddc525eab23253002d10723504ecebf44cfd36"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-02.pte",
+        "bytes": 46933248,
+        "sha256": "8e35475c0b61aa1a8bda012733c6b527497aaca41e4f7958b4dab8e67d9c5461"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-03.pte",
+        "bytes": 46933248,
+        "sha256": "f973631a6a6cdda6563af523f9fc5e909f1fba05341846a3e2c5d21f3e8a598c"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-04.pte",
+        "bytes": 46933248,
+        "sha256": "494c58e512904bbb5e4eb12c32c1c3727c6e4d3704ad3119484bcdb8e9665a69"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-05.pte",
+        "bytes": 46933248,
+        "sha256": "a95b4b24641c55b979d04008d10912dd90c61524ac8a8655529d6d636ddd0daa"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-06.pte",
+        "bytes": 46933248,
+        "sha256": "f507a84d44088883545a5827211f054e686f8cfa299fd63bd93b804f5bb73f99"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-07.pte",
+        "bytes": 46933248,
+        "sha256": "901b0151c9624a49514ac7aa6fe3e479c508a0a6219eeea2cfd845bd9c9202e1"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-08.pte",
+        "bytes": 46933248,
+        "sha256": "daf385472d47d83648ceed1e7337c77f81c72c637dc6c62f1b268e1dad9fe201"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-09.pte",
+        "bytes": 46933248,
+        "sha256": "9023bee130f9364e4a0fe489fe1bc6182011dc76f8db906d6d21a5f13b73209b"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-10.pte",
+        "bytes": 46933248,
+        "sha256": "37c0c067b00e0555250a1588e568739abbb828e832b4e9dff362108a291e0aa9"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-11.pte",
+        "bytes": 46933248,
+        "sha256": "b93e32911acc0fbdbe42c331a532ca6d23cff68096dbe05ade9dc3633f2fa3e9"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-12.pte",
+        "bytes": 46933248,
+        "sha256": "5dfd88c518355b61cc813c5c3c0192ccda5b2a7962ba0e1a5501c6459b60b25e"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-13.pte",
+        "bytes": 46933248,
+        "sha256": "519b358749da0b153dd9a18b70b52b89098063234a423f0c53eaea933dda2878"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-14.pte",
+        "bytes": 46933248,
+        "sha256": "2721a339baeb5583321106aaa9390cc2b41a610c9c442c0ba23dcf446b1b7fec"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-15.pte",
+        "bytes": 46933248,
+        "sha256": "5b2991074c3cafeeca144d2f295ba5e617af16bc2c9f684506dfcee8c2517fb1"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-16.pte",
+        "bytes": 46933248,
+        "sha256": "629e25b6e65043775ba95c806e3e626a425c5eec11e371f6da9cf9b4c59bc5cc"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-17.pte",
+        "bytes": 46933248,
+        "sha256": "6c87913bd9977d4c2bbfcfb55cf0cb69c2b9472c5ddc7d86610f9640c4506662"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-18.pte",
+        "bytes": 46933248,
+        "sha256": "69ceedd21d647d7f5b19228d58d216737515d525d262d6eb559d0c0e9254113d"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-19.pte",
+        "bytes": 46933248,
+        "sha256": "edd7607df49e24d3ece039b3123cfa148396cb2105cd57e3a4751213e5328e5b"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-20.pte",
+        "bytes": 46933248,
+        "sha256": "13c2b8bf40b298aafc343b4e5873049ab1776f579acbee533c1f3b92d460919a"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-21.pte",
+        "bytes": 46933248,
+        "sha256": "70db16fae7b1c57501e57a832f00986f98c31a10651451b75e70ecfe45a8358f"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-22.pte",
+        "bytes": 46933248,
+        "sha256": "c5c1466b21af3030d56fcaa636a48fa61a638b257edb501728ee9880d71b7d6b"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-23.pte",
+        "bytes": 46933248,
+        "sha256": "3e13bdf8fe7448ca8bf98f6c3a1370d93d882effe3679c485ba981e4149fae38"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-24.pte",
+        "bytes": 46933248,
+        "sha256": "306ec6c08bf82338012a22ae9ca4f5f7b32cf1126d863bdf89e7faf124665daa"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-25.pte",
+        "bytes": 46933248,
+        "sha256": "c8bcbc27abce478e3e11b2e40592932565595d3ef034aca965a2563a56485a7f"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-26.pte",
+        "bytes": 46933248,
+        "sha256": "c70b9e5f4cdd63634df78f3eb26518233248fc0029a8315ed4356f418e4463f4"
+      },
+      {
+        "path": "artifacts/0002/lane-c/qwen2-int8-package/decode-layer-27.pte",
+        "bytes": 46933248,
+        "sha256": "59f841c5ddb4deecfc64e0cf53894b9653ee8de3a4d76dc7fea66dcd69f9244f"
+      },
+      {
+        "path": "artifacts/0002/lane-b/diffusion-head/diffusion-step-xnnpack.pte",
+        "bytes": 493152000,
+        "sha256": "084e38749c38f92669ba816fcb9f2a71a7bdc47793b7de30e7f4554b46ab5b6d"
+      },
+      {
+        "path": "artifacts/0002/lane-b/connectors/connectors-xnnpack.pte",
+        "bytes": 20098944,
+        "sha256": "557972f33f16d3519b2b29c8cc27f3f550c5daec3a58baa31946a76a0a58642b"
+      },
+      {
+        "path": "artifacts/0002/acoustic-decoder-streaming-first-segments-1.2/segment-0.pte",
+        "bytes": 1078625792,
+        "sha256": "bcc401345ef89db4090e2b0ea7458a13aa3458cebea625bce8950735f60435c1"
+      },
+      {
+        "path": "artifacts/0002/acoustic-decoder-streaming-first-segments-1.2/segment-1.pte",
+        "bytes": 235124736,
+        "sha256": "7c0be43ca1ad13d0e31baf6848c4fcab10fa8a8b5e615448c24f560bf3f4ad98"
+      },
+      {
+        "path": "artifacts/0002/acoustic-decoder-streaming-first-segments-1.2/segment-2.pte",
+        "bytes": 46274560,
+        "sha256": "78ec86b8f814454d339cbe73110e5e64e9e129769675fc196c20fa671a651f08"
+      },
+      {
+        "path": "artifacts/0002/acoustic-decoder-streaming-first-segments-1.2/segment-3.pte",
+        "bytes": 11618304,
+        "sha256": "d58f58517754c7387f56a0ac123b6b9cb7a1d8a3c7804c0cf673071748ed82b3"
+      },
+      {
+        "path": "artifacts/0002/acoustic-decoder-streaming-first-segments-1.2/segment-4.pte",
+        "bytes": 2678784,
+        "sha256": "e8eaa236ba3df691ba84f517c56ff175dadfecb82097eaeb10d2ca8d90b312ad"
+      },
+      {
+        "path": "artifacts/0002/acoustic-decoder-streaming-first-segments-1.2/segment-5.pte",
+        "bytes": 568320,
+        "sha256": "c716c19a739eb127575bb78cd9b1179bfdfe0573c36a589530315408cab6d59c"
+      },
+      {
+        "path": "artifacts/0002/acoustic-decoder-streaming-first-segments-1.2/segment-6.pte",
+        "bytes": 168448,
+        "sha256": "bfde64ba145dabb2d52dc32e7f1512fe7d6cd6bda8261fce7ae55ac0c1d63ff6"
+      },
+      {
+        "path": "artifacts/0002/acoustic-decoder-streaming-first-segments-1.2/segment-7.pte",
+        "bytes": 4228,
+        "sha256": "c6d2d18440d9759857f0a668724ecdddc781bdb8bb4a8a80573ba15e11e6e9dd"
+      },
+      {
+        "path": "artifacts/0002/acoustic-decoder-streaming-cached-segments-1.2/segment-0.pte",
+        "bytes": 1082266112,
+        "sha256": "e1c80aee7449eebf22a8ebe609451342ce5ee65e9efd24d095efbe09597eb4d9"
+      },
+      {
+        "path": "artifacts/0002/acoustic-decoder-streaming-cached-segments-1.2/segment-1.pte",
+        "bytes": 235255680,
+        "sha256": "260068d6c242087dda96ef64cd212c65c34857f6cbca2d76eabff2e3e1b71419"
+      },
+      {
+        "path": "artifacts/0002/acoustic-decoder-streaming-cached-segments-1.2/segment-2.pte",
+        "bytes": 46362496,
+        "sha256": "f83fab1c49830a7b8a2164ffd425e56a1c3527df5d3a51d76039b8e425c89380"
+      },
+      {
+        "path": "artifacts/0002/acoustic-decoder-streaming-cached-segments-1.2/segment-3.pte",
+        "bytes": 11684736,
+        "sha256": "dec99dc9fefe29269f20d55d51f2b543098612c7142ea1dffab96c28f55616e3"
+      },
+      {
+        "path": "artifacts/0002/acoustic-decoder-streaming-cached-segments-1.2/segment-4.pte",
+        "bytes": 2734464,
+        "sha256": "1078d4819fadb22656abc2a7ca35bbb970e75799ea7b1b2867da4ebcaffb55e6"
+      },
+      {
+        "path": "artifacts/0002/acoustic-decoder-streaming-cached-segments-1.2/segment-5.pte",
+        "bytes": 618624,
+        "sha256": "ff89856c21170a83c4cffb8ee47e954ce87a46624d12ac022f9116a777b68ef4"
+      },
+      {
+        "path": "artifacts/0002/acoustic-decoder-streaming-cached-segments-1.2/segment-6.pte",
+        "bytes": 216064,
+        "sha256": "c5b188133a3140e261a21f78636d71a36391dcd3be4b6670f924a6410a17c0a2"
+      },
+      {
+        "path": "artifacts/0002/acoustic-decoder-streaming-cached-segments-1.2/segment-7.pte",
+        "bytes": 21248,
+        "sha256": "76c3e94e3b30f0cc219af6466a2dbddc90ef522accb8b978e5504c28ea9e9f3a"
+      },
+      {
+        "path": "artifacts/0002/lane-b/semantic-encoder/semantic-encoder-first-xnnpack.pte",
+        "bytes": 1378719616,
+        "sha256": "d616a66ad2593751d44208c18848e84f5d47e2457b1f1edddcb92fe4faee0fef"
+      },
+      {
+        "path": "artifacts/0002/lane-b/semantic-encoder/semantic-encoder-cached-xnnpack.pte",
+        "bytes": 1378714368,
+        "sha256": "451c9928661eed0efe99ee5144f325f22cde4c73e8b45024ff185449226819b2"
+      }
+    ]
+  },
+  "reference_wav": {
+    "path": "artifacts/0001/output-cpu/reference_generated.wav",
+    "sha256": "fb0152dc686836fe23d9c39c3b24c1de82398f51b9747f5e36ad1db819ce0358",
+    "sample_rate_hz": 24000,
+    "channels": 1,
+    "bits_per_sample": 16,
+    "frames": 313600,
+    "duration_seconds": 13.066666666666666,
+    "encoding": "PCM_S16LE"
+  },
+  "android_wav": {
+    "path": "artifacts/0002/lane-d/locked-reference/generation-run-0.wav",
+    "bytes": 12844,
+    "sha256": "f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9",
+    "repeat_sha256": "f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9",
+    "sample_rate_hz": 24000,
+    "channels": 1,
+    "bits_per_sample": 16,
+    "frames": 6400,
+    "duration_seconds": 0.26666666666666666,
+    "encoding": "PCM_S16LE"
+  },
+  "generation": {
+    "requested_duration_seconds": 13.066666666666666,
+    "produced_duration_seconds": 0.26666666666666666,
+    "runs": [
+      {
+        "run": 0,
+        "tokens": [
+          151654,
+          151654,
+          151654
+        ],
+        "tokens_i64le_sha256": "3c005a1881bcec17b31b69baa3f74696c5500ef13b187832ab53d6155c6143eb",
+        "chunks": [
+          {
+            "chunk": 0,
+            "sample_start": 0,
+            "sample_end_exclusive": 3200,
+            "pcm_sha256": "db15cf299d3ba8ff800dc1eb60dd6e41a69d006f348ca4ca139daf56c9894406"
+          },
+          {
+            "chunk": 1,
+            "sample_start": 3200,
+            "sample_end_exclusive": 6400,
+            "pcm_sha256": "56a43ef88ddfcd0f56f7dd973312c0e73d62f59655c01d7b4e59aaa3be8b3fb6"
+          }
+        ],
+        "stop_reason": "CAPACITY",
+        "valid_length": 505,
+        "elapsed_seconds": 28.597748531
+      },
+      {
+        "run": 1,
+        "tokens": [
+          151654,
+          151654,
+          151654
+        ],
+        "tokens_i64le_sha256": "3c005a1881bcec17b31b69baa3f74696c5500ef13b187832ab53d6155c6143eb",
+        "chunks": [
+          {
+            "chunk": 0,
+            "sample_start": 0,
+            "sample_end_exclusive": 3200,
+            "pcm_sha256": "db15cf299d3ba8ff800dc1eb60dd6e41a69d006f348ca4ca139daf56c9894406"
+          },
+          {
+            "chunk": 1,
+            "sample_start": 3200,
+            "sample_end_exclusive": 6400,
+            "pcm_sha256": "56a43ef88ddfcd0f56f7dd973312c0e73d62f59655c01d7b4e59aaa3be8b3fb6"
+          }
+        ],
+        "stop_reason": "CAPACITY",
+        "valid_length": 505,
+        "elapsed_seconds": 28.780306292
+      }
+    ],
+    "deterministic": true,
+    "wav_byte_identical_across_runs": true
+  },
+  "feasibility_failure": {
+    "reproducible": true,
+    "reason": "The first and cached decoder/semantic PTE ABIs have capacity for only two 3,200-sample chunks. Cached call 1 returns wider static cache axes that cannot be passed to a third call. The controller correctly stops CAPACITY instead of truncating, padding, or resetting state.",
+    "requested_samples": 313600,
+    "produced_samples": 6400,
+    "capacity_chunks": 2,
+    "complete_locked_run": false
+  },
+  "implementation_commits": [
+    "a63242b055a9f4905372409fd50ad0f97917e967"
+  ],
+  "commands": [
+    "artifacts/venv-executorch-1.2/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/generation_two_speaker_io.py prepare artifacts/0002/lane-d/locked-reference-input",
+    "flock artifacts/locks/phone.lock experiments/0002-vibevoice-1.5b-executorch-android/android/run-locked-reference-generation.sh",
+    "python3 -m json.tool experiments/0002-vibevoice-1.5b-executorch-android/results/locked-reference-android.json >/dev/null"
+  ],
+  "conclusion": "Reproducible feasibility failure. Every locked input passed preflight and the phone consumed the exact transcript, but both deterministic runs stopped at the exported static-cache capacity after 0.266667 seconds (2/98 required chunks). Therefore no complete 13.066667-second locked-reference WAV was generated, and this build cannot yet run the locked reference transcript."
+}
