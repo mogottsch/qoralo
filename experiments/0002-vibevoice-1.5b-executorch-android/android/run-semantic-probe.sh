@@ -2,6 +2,9 @@
 set -euo pipefail
 
 ROOT=$(git rev-parse --show-toplevel)
+# Pin provenance before the long device run so concurrent commits cannot be
+# misreported as the implementation that was actually exercised.
+IMPLEMENTATION_COMMIT=${IMPLEMENTATION_COMMIT:-$(git rev-parse HEAD)}
 BASE="$ROOT/experiments/0002-vibevoice-1.5b-executorch-android"
 ANDROID_DIR="$BASE/android"
 MODEL_DIR=${MODEL_DIR:-"$ROOT/artifacts/0002/lane-b/semantic-encoder"}
@@ -91,5 +94,5 @@ done
 RESULT="$BASE/results/semantic-path-android.json"
 "$PYTHON" "$BASE/export/semantic_android_io.py" compare "$FIXTURE_DIR" "$ARTIFACT_DIR" \
   "$ARTIFACT_DIR/device-result.json" "$ARTIFACT_DIR/device-properties.json" "$RESULT" \
-  --implementation-commit "$(git rev-parse HEAD)"
+  --implementation-commit "$IMPLEMENTATION_COMMIT"
 cp "$RESULT" "$ARTIFACT_DIR/comparison.json"
