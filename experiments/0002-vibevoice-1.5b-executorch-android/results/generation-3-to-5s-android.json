@@ -550,12 +550,12 @@
     "other_precision": "fp32"
   },
   "implementation_commits": [
-    "2f74c09a7c172d72a5e590fee71eee786101b6d8"
+    "147c64ffdb36e2604b065a058a5cc2d0f6a56048"
   ],
   "commands": [
-    "generation_multi_chunk_io.py prepare",
-    "generation_multi_chunk_io.py host",
-    "android/run-multi-chunk-generation-probe.sh"
+    "experiments/0002-vibevoice-1.5b-executorch-android/export/generation_multi_chunk_io.py prepare artifacts/0002/generation-multi-chunk-input",
+    "PYTHONPATH=experiments/0002-vibevoice-1.5b-executorch-android/export artifacts/venv-executorch-1.2/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/generation_multi_chunk_io.py host artifacts/0002/generation-multi-chunk-input artifacts/0002/generation-multi-chunk-host",
+    "flock artifacts/locks/phone.lock experiments/0002-vibevoice-1.5b-executorch-android/android/run-multi-chunk-generation-probe.sh"
   ],
   "conclusion": "Accepted valid termination: the Galaxy S23 Ultra produced two deterministic, correctly chained chunks with exact boundaries, then stopped CAPACITY at 0.266667 seconds because the fixed call-1 decoder/semantic exports cannot accept their wider outputs for call 2. The requested 3\u20135 seconds was not reached; no cache was truncated, padded, reset, duplicated, or reordered."
 }
