@@ -63,10 +63,24 @@ Silence padding, looping, and time stretching are prohibited. A worker whose raw
 
 Only the parent orchestrator may make the single shared punctuation revision. It sets `PREVIEW_PARENT_ORCHESTRATOR=1`, acquires `--kind protocol-revision`, stops or waits for active preview workers, writes the incremented manifest/transcript atomically, and cascade-resets preview tasks 6–8 plus publication/report tasks 16–18. All three preview results fail `validate_result_protocol` until regenerated. The unrelated VibeVoice 1.5B capture is not invalidated. A candidate is blocked only if documented speed controls and that shared revision both fail to produce at least 15 seconds.
 
+## Private listening publication
+
+`publication/bakeoff-manifest.json` is the checked-in reproducibility index for all three protocol-v2 results. It records the common transcript and protocol fingerprint, seeds, stock-voice provenance, source/model revisions, generation and derivation commands, native and browser-carrier formats, raw/derived hashes and durations, and every normalization transformation. Pocket's deterministic 13.84-second raw capture remains playable, but its normalized player is explicitly unavailable because fabricating the missing duration is prohibited.
+
+Build and validate the anonymous Candidate A/B/C page plus the live 18-task Crew DAG with:
+
+```bash
+python experiments/0007-mobile-podcast-preview-bakeoff/publication/build_publication.py
+python -m unittest discover -s experiments/0007-mobile-podcast-preview-bakeoff/publication/tests -v
+```
+
+The build copies ignored WAVs directly to ignored `artifacts/publication-build/`, checks their hashes, validates the manifest and cross-file invariants, and fails if media or artifact paths are staged. `publication/publish.sh` uploads those files directly to the authenticated static-preview API; it never adds them to Git.
+
 ## Tests
 
 ```bash
 python -m pytest experiments/0007-mobile-podcast-preview-bakeoff/tests -q
+python -m unittest discover -s experiments/0007-mobile-podcast-preview-bakeoff/publication/tests -v
 ```
 
-Tests cover transcript/hash drift, schema validity, protocol invalidation, malformed and multichannel WAVs, resampling, exact trimming, fades, LUFS/peak gain, deterministic dither, raw preservation, statistics/RTF, lock contention and ownership, failure cleanup, safe stale reporting, and one-/two-slot capacity.
+Tests cover transcript/hash drift, schema validity, protocol invalidation, malformed and multichannel WAVs, resampling, exact trimming, fades, LUFS/peak gain, deterministic dither, raw preservation, statistics/RTF, lock contention and ownership, failure cleanup, safe stale reporting, one-/two-slot capacity, publication consistency, privacy, anonymous labels, responsive controls, and all 18 DAG tasks and dependency edges.

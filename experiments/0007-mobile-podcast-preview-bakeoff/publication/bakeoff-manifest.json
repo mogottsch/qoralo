@@ -1,0 +1,324 @@
+{
+  "anonymization": {
+    "identity_disclosure": "manifest_only",
+    "page_labels": [
+      "Candidate A",
+      "Candidate B",
+      "Candidate C"
+    ]
+  },
+  "candidates": [
+    {
+      "blocker": null,
+      "commands": {
+        "derivation": [
+          "python3",
+          "models/vibevoice-realtime/finalize_preview.py"
+        ],
+        "generation": [
+          "models/vibevoice-realtime/generate-preview.sh"
+        ]
+      },
+      "forbidden_transformations_used": [],
+      "label": "Candidate A",
+      "model": "realtime",
+      "native": {
+        "byte_count": 966444,
+        "channels": 1,
+        "duration_seconds": 20.133333333333333,
+        "format": "WAV PCM_S16LE",
+        "sample_count": 483200,
+        "sample_rate_hz": 24000,
+        "sha256": "0daa06752efbdd2944ac66e02aa8f86792cf523dbb4846bb4fab9ac8741e28c1"
+      },
+      "normalized": {
+        "channels": 1,
+        "duration_seconds": 15.0,
+        "format": "PCM_S16LE",
+        "published_url": "audio/candidate-a-normalized.wav",
+        "sample_rate_hz": 24000,
+        "sha256": "a010e2e685446cd5904a0b02ad806f04bb5b5c2bfa2bd7f1c002d1691e9d0d41",
+        "source_path": "artifacts/normalized/realtime/v2/realtime-15s.wav"
+      },
+      "raw": {
+        "channels": 1,
+        "duration_seconds": 20.133333333333333,
+        "format": "WAV PCM_S16LE",
+        "published_url": "audio/candidate-a-raw.wav",
+        "sample_rate_hz": 24000,
+        "sha256": "0daa06752efbdd2944ac66e02aa8f86792cf523dbb4846bb4fab9ac8741e28c1",
+        "source_path": "artifacts/raw/realtime/v2/assembled-native.wav"
+      },
+      "result_path": "experiments/0007-mobile-podcast-preview-bakeoff/results/realtime-preview.json",
+      "revisions": {
+        "model": "6bce5f06044837fe6d2c5d7a71a84f0416bd57e4",
+        "source": "94da20d98b2fa7688e9cbfaf7692ddb4954f7600"
+      },
+      "seed": {
+        "determinism": {
+          "primary_pcm_f32le_sha256": "827a666aab59d2bd3c691f4d96f195dbddc6d1b5c75aced1406f451191c28ce7",
+          "repeat_pcm_f32le_sha256": "827a666aab59d2bd3c691f4d96f195dbddc6d1b5c75aced1406f451191c28ce7",
+          "repeat_pcm_match": true,
+          "repeat_wall_seconds": 8.59635434700067,
+          "repeat_wav_match": true
+        },
+        "support": "The official demo has no seed option; task 6 explicitly seeds torch CPU and all CUDA generators. Token sampling is disabled; diffusion uses torch.randn.",
+        "value": 0
+      },
+      "status": "accepted",
+      "transformations": {
+        "applied": true,
+        "metadata": {
+          "gain_db": 4.900562851016115,
+          "output": {
+            "channels": 1,
+            "compression": "NONE",
+            "duration_seconds": 15.0,
+            "sample_count": 360000,
+            "sample_rate_hz": 24000,
+            "sample_width_bytes": 2,
+            "sha256": "a010e2e685446cd5904a0b02ad806f04bb5b5c2bfa2bd7f1c002d1691e9d0d41"
+          },
+          "pre_gain_loudness_lufs": -24.900562851016115,
+          "resampled_samples": 483200,
+          "source_rate_hz": 24000,
+          "source_sha256": "0daa06752efbdd2944ac66e02aa8f86792cf523dbb4846bb4fab9ac8741e28c1",
+          "statistics": {
+            "integrated_loudness_lufs": -20.000001428298408,
+            "peak": 0.7691650390625,
+            "peak_dbfs": -2.2796092803325747,
+            "rms": 0.09257765106058566,
+            "rms_dbfs": -20.669876852219396
+          },
+          "trim_end": 360027,
+          "trim_start": 27
+        },
+        "metadata_path": "artifacts/normalized/realtime/v2/derivation.json",
+        "steps": [
+          "decode native audio to float64",
+          "arithmetic-mean mono conversion when needed",
+          "deterministic polyphase resampling to 24000 Hz when needed",
+          "zero-crossing exact-window trim [27, 360027)",
+          "240-sample sine-squared boundary fades",
+          "gain 4.90056285102 dB toward -20 LUFS with -1 dBFS ceiling",
+          "deterministic TPDF dither using NumPy PCG64 seed 0",
+          "quantize to mono PCM_S16LE"
+        ]
+      },
+      "voice": {
+        "name": "en-Grace_woman.pt",
+        "sha256": "5f0ef02a3f3cace04cf721608b65273879466bb15fe4044e46ec6842190f6bb1",
+        "source": "Opaque embedded cached prompt committed by Microsoft in the official VibeVoice repository at the pinned source revision; no personal sample is used and no underlying recording/source identity is published.",
+        "stock_voice": true
+      }
+    },
+    {
+      "blocker": "Protocol v2 was the one permitted shared punctuation revision, but Pocket still emits less than 15 seconds and has no documented speed control. Exact normalization would require forbidden fabrication, looping, padding, or time stretching.",
+      "commands": {
+        "derivation": [],
+        "generation": [
+          "models/pocket-tts/generate_preview.sh"
+        ]
+      },
+      "forbidden_transformations_used": [],
+      "label": "Candidate B",
+      "model": "pocket",
+      "native": {
+        "byte_count": 1328640,
+        "channels": 1,
+        "duration_seconds": 13.84,
+        "format": "headerless little-endian IEEE float32 PCM plus write-once native chunks",
+        "sample_count": 332160,
+        "sample_rate_hz": 24000,
+        "sha256": "47edc30525bfdd70f7859391386a593c754def7c3e4f809a3cdd40eb58caffc1"
+      },
+      "normalized": null,
+      "raw": {
+        "channels": 1,
+        "duration_seconds": 13.84,
+        "format": "WAV PCM_F32LE",
+        "published_url": "audio/candidate-b-raw.wav",
+        "sample_rate_hz": 24000,
+        "sha256": "0eae2b096632077b5d07374fd1a2a0046da75aed4a540237094e6e2d3412310c",
+        "source_path": "artifacts/previews/pocket/protocol-v2-final/raw/pocket-native-pcm32.wav"
+      },
+      "result_path": "experiments/0007-mobile-podcast-preview-bakeoff/results/pocket-preview.json",
+      "revisions": {
+        "model": "d29db7978e464fb90cb3359ee0c69a273b9142cc",
+        "source": "d108410d23eef7e01db282f9442891162dbc3db6"
+      },
+      "seed": {
+        "determinism": {
+          "claim": "Two pinned same-platform protocol-v2 runs were byte-identical; no cross-platform bit-exact claim.",
+          "repeated_seed0_attempts": 2,
+          "repeated_sha256": "47edc30525bfdd70f7859391386a593c754def7c3e4f809a3cdd40eb58caffc1",
+          "repeated_sha256_identical": true,
+          "set_immediately_before_generation": true,
+          "torch_manual_seed": 0
+        },
+        "support": "Seeded immediately before generation; see determinism evidence.",
+        "value": 0
+      },
+      "status": "blocked",
+      "transformations": {
+        "applied": false,
+        "reason": "Protocol v2 was the one permitted shared punctuation revision, but Pocket still emits less than 15 seconds and has no documented speed control. Exact normalization would require forbidden fabrication, looping, padding, or time stretching."
+      },
+      "voice": {
+        "cloning_performed": false,
+        "name": "alba",
+        "source": "kyutai/tts-voices/alba-mackenna/casual.wav",
+        "stock_voice": true
+      }
+    },
+    {
+      "blocker": null,
+      "commands": {
+        "derivation": [
+          "models/kokoro/generate_preview.sh"
+        ],
+        "generation": [
+          "models/kokoro/generate_preview.sh"
+        ]
+      },
+      "forbidden_transformations_used": [],
+      "label": "Candidate C",
+      "model": "kokoro",
+      "native": {
+        "byte_count": 1677600,
+        "channels": 1,
+        "duration_seconds": 17.475,
+        "format": "headerless little-endian IEEE float32 PCM (native library tensor bytes)",
+        "sample_count": 419400,
+        "sample_rate_hz": 24000,
+        "sha256": "b6d8d126dae93f3d1f52bebf96d695c48d07c8ddf79a97d429c4687007e57494"
+      },
+      "normalized": {
+        "channels": 1,
+        "duration_seconds": 15.0,
+        "format": "PCM_S16LE",
+        "published_url": "audio/candidate-c-normalized.wav",
+        "sample_rate_hz": 24000,
+        "sha256": "24cdb3b81fff87a1ecc46ff4e6aa740512f3eab2e33f5ae4cbec541b12fed196",
+        "source_path": "artifacts/previews/kokoro/normalized/kokoro-15s.wav"
+      },
+      "raw": {
+        "channels": 1,
+        "duration_seconds": 17.475,
+        "format": "WAV PCM_F32LE",
+        "published_url": "audio/candidate-c-raw.wav",
+        "sample_rate_hz": 24000,
+        "sha256": "dd126a46080b6977ed1d9ee708988a0e2f67b5bd96aee8c038f5179316f8a5cd",
+        "source_path": "artifacts/previews/kokoro/raw/kokoro-native-pcm32.wav"
+      },
+      "result_path": "experiments/0007-mobile-podcast-preview-bakeoff/results/kokoro-preview.json",
+      "revisions": {
+        "model": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+        "source": "dfb907a02bba8152ca444717ca5d78747ccb4bec"
+      },
+      "seed": {
+        "determinism": {
+          "claim": "Bit-identical fresh-process repeats on this pinned CPU environment; no cross-platform bit-exact claim.",
+          "fresh_process_repeat_count": 2,
+          "global_torch_seed": 0,
+          "raw_hashes_match": true,
+          "seed_api_supported": false,
+          "set_immediately_before_each_generation": true,
+          "torch_deterministic_algorithms": true
+        },
+        "support": "Seeded immediately before generation; see determinism evidence.",
+        "value": 0
+      },
+      "status": "accepted",
+      "transformations": {
+        "applied": true,
+        "metadata": {
+          "gain_db": 5.233654996420853,
+          "output": {
+            "channels": 1,
+            "compression": "NONE",
+            "duration_seconds": 15.0,
+            "sample_count": 360000,
+            "sample_rate_hz": 24000,
+            "sample_width_bytes": 2,
+            "sha256": "24cdb3b81fff87a1ecc46ff4e6aa740512f3eab2e33f5ae4cbec541b12fed196"
+          },
+          "pre_gain_loudness_lufs": -25.233654996420853,
+          "resampled_samples": 419400,
+          "source_rate_hz": 24000,
+          "source_sha256": "dd126a46080b6977ed1d9ee708988a0e2f67b5bd96aee8c038f5179316f8a5cd",
+          "statistics": {
+            "integrated_loudness_lufs": -19.99999987656189,
+            "peak": 0.800018310546875,
+            "peak_dbfs": -1.9380014581995164,
+            "rms": 0.09677393687457625,
+            "rms_dbfs": -20.284831819873492
+          },
+          "trim_end": 360000,
+          "trim_start": 0
+        },
+        "metadata_path": "artifacts/previews/kokoro/normalized/kokoro-15s.derivation.json",
+        "steps": [
+          "decode native audio to float64",
+          "arithmetic-mean mono conversion when needed",
+          "deterministic polyphase resampling to 24000 Hz when needed",
+          "zero-crossing exact-window trim [0, 360000)",
+          "240-sample sine-squared boundary fades",
+          "gain 5.23365499642 dB toward -20 LUFS with -1 dBFS ceiling",
+          "deterministic TPDF dither using NumPy PCG64 seed 0",
+          "quantize to mono PCM_S16LE"
+        ]
+      },
+      "voice": {
+        "cloning_performed": false,
+        "language": "American English",
+        "name": "af_heart",
+        "overall_grade": "A",
+        "source": "https://huggingface.co/hexgrad/Kokoro-82M/blob/f3ff3571791e39611d31c381e3a41a3af07b4987/VOICES.md",
+        "stock_voice": true
+      }
+    }
+  ],
+  "protocol": {
+    "fingerprint": "ca0987feca4c9a2e8744d4846d1b3f5da86799862f6f7d8ba7e3563f84245814",
+    "id": "mobile-podcast-preview",
+    "manifest_path": "experiments/0007-mobile-podcast-preview-bakeoff/protocol/preview-protocol-v2.json",
+    "transformations": {
+      "channels": 1,
+      "dither": "deterministic TPDF at one PCM16 LSB using numpy PCG64 seed 0",
+      "duration_seconds": 15.0,
+      "fade_samples": 240,
+      "fade_shape": "sine-squared inclusive endpoints",
+      "forbidden": [
+        "time stretching",
+        "looping",
+        "fabricated speech",
+        "overwriting raw output"
+      ],
+      "gain_rule": "minimum of loudness-target gain and peak-ceiling gain",
+      "integrated_loudness_target_lufs": -20.0,
+      "mono_conversion": "arithmetic mean of channels in float64 before resampling",
+      "peak_ceiling_dbfs": -1.0,
+      "resampled_length_rule": "ceil(input_samples * 24000 / input_rate)",
+      "resampler": "scipy.signal.resample_poly",
+      "resampler_padtype": "constant",
+      "resampler_window": [
+        "kaiser",
+        5.0
+      ],
+      "sample_count": 360000,
+      "sample_format": "PCM_S16LE",
+      "sample_rate_hz": 24000,
+      "short_input": "reject; regenerate only with documented model speed controls, or increment protocol version for any transcript change",
+      "zero_crossing_rule": "minimize abs(linear crossing amplitude), then distance from target end, then earliest index; select an exact-length window ending there",
+      "zero_crossing_search_samples": 240
+    },
+    "version": 2
+  },
+  "schema_version": 1,
+  "transcript": {
+    "sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
+    "text": "Welcome to our small studio... where curious minds unpack one surprising idea at a time. Today, we explore why familiar voices build trust, how thoughtful pauses shape meaning... and what makes a conversation feel genuinely alive.",
+    "word_count": 36
+  }
+}

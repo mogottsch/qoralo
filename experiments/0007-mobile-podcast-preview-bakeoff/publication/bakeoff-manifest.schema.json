@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "bakeoff-manifest.schema.json",
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "artifact": {
+      "type": "object",
+      "required": ["source_path", "published_url", "sha256", "duration_seconds", "sample_rate_hz", "channels", "format"],
+      "properties": {
+        "source_path": {"type": "string", "minLength": 1},
+        "published_url": {"type": "string", "pattern": "^audio/candidate-[abc]-(raw|normalized)\\.wav$"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "duration_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "sample_rate_hz": {"type": "integer", "minimum": 1},
+        "channels": {"type": "integer", "minimum": 1},
+        "format": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    }
+  },
+  "type": "object",
+  "required": ["schema_version", "transcript", "protocol", "anonymization", "candidates"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "transcript": {
+      "type": "object",
+      "required": ["text", "sha256", "word_count"],
+      "properties": {
+        "text": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "word_count": {"const": 36}
+      },
+      "additionalProperties": false
+    },
+    "protocol": {
+      "type": "object",
+      "required": ["id", "version", "fingerprint", "manifest_path", "transformations"],
+      "properties": {
+        "id": {"const": "mobile-podcast-preview"},
+        "version": {"const": 2},
+        "fingerprint": {"$ref": "#/$defs/sha256"},
+        "manifest_path": {"type": "string"},
+        "transformations": {"type": "object"}
+      },
+      "additionalProperties": false
+    },
+    "anonymization": {
+      "type": "object",
+      "required": ["page_labels", "identity_disclosure"],
+      "properties": {
+        "page_labels": {"const": ["Candidate A", "Candidate B", "Candidate C"]},
+        "identity_disclosure": {"const": "manifest_only"}
+      },
+      "additionalProperties": false
+    },
+    "candidates": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["label", "model", "status", "seed", "voice", "revisions", "commands", "native", "raw", "normalized", "transformations", "forbidden_transformations_used", "result_path"],
+        "properties": {
+          "label": {"enum": ["Candidate A", "Candidate B", "Candidate C"]},
+          "model": {"enum": ["realtime", "pocket", "kokoro"]},
+          "status": {"enum": ["accepted", "blocked", "rejected"]},
+          "seed": {"type": "object"},
+          "voice": {"type": "object"},
+          "revisions": {"type": "object", "required": ["source", "model"]},
+          "commands": {"type": "object", "required": ["generation", "derivation"]},
+          "native": {
+            "type": "object",
+            "required": ["format", "sample_rate_hz", "channels", "sha256", "duration_seconds", "sample_count", "byte_count"],
+            "properties": {
+              "format": {"type": "string", "minLength": 1},
+              "sample_rate_hz": {"type": "integer", "minimum": 1},
+              "channels": {"type": "integer", "minimum": 1},
+              "sha256": {"$ref": "#/$defs/sha256"},
+              "duration_seconds": {"type": "number", "exclusiveMinimum": 0},
+              "sample_count": {"type": "integer", "minimum": 1},
+              "byte_count": {"type": "integer", "minimum": 1}
+            },
+            "additionalProperties": false
+          },
+          "raw": {"$ref": "#/$defs/artifact"},
+          "normalized": {"oneOf": [{"$ref": "#/$defs/artifact"}, {"type": "null"}]},
+          "transformations": {"type": "object"},
+          "forbidden_transformations_used": {"const": []},
+          "blocker": {"type": ["string", "null"]},
+          "result_path": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
