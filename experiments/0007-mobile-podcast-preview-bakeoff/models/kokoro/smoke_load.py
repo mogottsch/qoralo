@@ -16,7 +16,7 @@ HERE = Path(__file__).resolve().parent
 EXPERIMENT = HERE.parents[1]
 PINS = json.loads((HERE / "pins.json").read_text(encoding="utf-8"))
 TRANSCRIPT = EXPERIMENT / "protocol" / "transcript.txt"
-EXPECTED_TRANSCRIPT_SHA256 = "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67"
+EXPECTED_TRANSCRIPT_SHA256 = "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f"
 ARTIFACT_ROOT = Path(os.environ.get("KOKORO_ARTIFACT_ROOT", EXPERIMENT / "artifacts" / "kokoro"))
 
 

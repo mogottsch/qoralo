@@ -36,7 +36,7 @@ def test_native_output_and_frozen_transcript() -> None:
         "official_cli_encoding": "PCM signed 16-bit little-endian",
     }
     transcript = (EXPERIMENT / "protocol" / "transcript.txt").read_bytes()
-    assert hashlib.sha256(transcript).hexdigest() == "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67"
+    assert hashlib.sha256(transcript).hexdigest() == "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f"
     smoke = (HERE / "smoke_load.py").read_text(encoding="utf-8")
     assert "protocol/transcript" not in smoke  # path is constructed from the experiment root
     assert "TRANSCRIPT = EXPERIMENT / \"protocol\" / \"transcript.txt\"" in smoke

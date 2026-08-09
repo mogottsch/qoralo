@@ -5,8 +5,8 @@
   "conclusion": "Accepted host listening preview only; this result does not establish Android feasibility.",
   "forbidden_transformations_used": [],
   "memory": {
-    "baseline_rss_bytes": 107315200,
-    "peak_process_tree_rss_bytes": 1706225664,
+    "baseline_rss_bytes": 106782720,
+    "peak_process_tree_rss_bytes": 1713229824,
     "sample_interval_ms": 20
   },
   "model": "kokoro",
@@ -19,20 +19,20 @@
     "sample_count": 360000,
     "sample_format": "PCM_S16LE",
     "sample_rate_hz": 24000,
-    "sha256": "a798ace33db2befb84cd05ba4f1bb47fd803123470c0a2864b36b299c986f208",
+    "sha256": "24cdb3b81fff87a1ecc46ff4e6aa740512f3eab2e33f5ae4cbec541b12fed196",
     "statistics": {
-      "integrated_loudness_lufs": -20.00000174629756,
-      "peak": 0.791351318359375,
-      "peak_dbfs": -2.032613395733472,
-      "rms": 0.09756722410517006,
-      "rms_dbfs": -20.213921019798494
+      "integrated_loudness_lufs": -19.99999987656189,
+      "peak": 0.800018310546875,
+      "peak_dbfs": -1.9380014581995164,
+      "rms": 0.09677393687457625,
+      "rms_dbfs": -20.284831819873492
     }
   },
   "protocol": {
-    "protocol_fingerprint": "ef3dee72094c78514b4e590e944ffaa1ab61f57bd0cbd44da2f395d4cb93aa8e",
+    "protocol_fingerprint": "ca0987feca4c9a2e8744d4846d1b3f5da86799862f6f7d8ba7e3563f84245814",
     "protocol_id": "mobile-podcast-preview",
-    "protocol_version": 1,
-    "transcript_sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67"
+    "protocol_version": 2,
+    "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f"
   },
   "provenance": {
     "determinism": {
@@ -60,8 +60,8 @@
       "espeak_ng": "eSpeak NG text-to-speech: 1.52.0  Data at: /usr/share/espeak-ng-data",
       "implementation": "misaki English G2P with eSpeak NG out-of-dictionary fallback",
       "library": "libespeak-ng.so.1",
-      "phoneme_character_count": 233,
-      "phoneme_sha256": "7c7299c2d19943162b5bc85cebe116d16e534f336ac5bcb4fce40fe126a8b3a0",
+      "phoneme_character_count": 237,
+      "phoneme_sha256": "40ba71386252c5ac8dd0cac46e60cd4af7a488db707a330924785bd70308e7d1",
       "requirements": "espeak-ng executable, libespeak-ng, and espeak-ng-data; no privileged installation performed"
     },
     "resource_grant": {
@@ -83,34 +83,34 @@
       "The non-streaming API yielded the transcript as one audio result, so API-first-output latency equals full utterance inference latency."
     ],
     "artifact_path": "artifacts/previews/kokoro/raw/kokoro-native-run-1.f32le",
-    "byte_count": 1648800,
+    "byte_count": 1677600,
     "channels": 1,
     "chunk_count": 1,
     "chunk_samples": [
-      412200
+      419400
     ],
     "derivation_carrier_path": "artifacts/previews/kokoro/raw/kokoro-native-pcm32.wav",
-    "derivation_carrier_sha256": "6fd7a4ecda89c968e2d9882c6354b86385aebb4624c475001bcbdb293fc75f91",
-    "duration_seconds": 17.175,
+    "derivation_carrier_sha256": "dd126a46080b6977ed1d9ee708988a0e2f67b5bd96aee8c038f5179316f8a5cd",
+    "duration_seconds": 17.475,
     "output_format": "headerless little-endian IEEE float32 PCM (native library tensor bytes)",
     "preserved_unchanged": true,
     "repeat_artifact_path": "artifacts/previews/kokoro/raw/kokoro-native-run-2.f32le",
-    "repeat_sha256": "f017a389081ab7cce7f091e0e00f60400971fb06f370d8c1b7e068baf2fcd172",
+    "repeat_sha256": "b6d8d126dae93f3d1f52bebf96d695c48d07c8ddf79a97d429c4687007e57494",
     "repeat_timing": {
-      "api_first_output_seconds": 6.808841368000685,
-      "first_audible_output_seconds": 7.158841368000685,
-      "generation_wall_seconds": 6.808865254000011,
-      "rtf": 0.39644048058224224
+      "api_first_output_seconds": 7.008950168999945,
+      "first_audible_output_seconds": 7.358950168999945,
+      "generation_wall_seconds": 7.008970212999884,
+      "rtf": 0.4010855629756729
     },
-    "sample_count": 412200,
+    "sample_count": 419400,
     "sample_rate_hz": 24000,
-    "sha256": "f017a389081ab7cce7f091e0e00f60400971fb06f370d8c1b7e068baf2fcd172",
+    "sha256": "b6d8d126dae93f3d1f52bebf96d695c48d07c8ddf79a97d429c4687007e57494",
     "statistics": {
-      "integrated_loudness_lufs": -25.41240950169372,
-      "peak": 0.4300479590892792,
-      "peak_dbfs": -7.329662181134099,
-      "rms": 0.05180753640904961,
-      "rms_dbfs": -25.71214118239652
+      "integrated_loudness_lufs": -25.357510465292027,
+      "peak": 0.437954843044281,
+      "peak_dbfs": -7.171413334562184,
+      "rms": 0.051906911403998494,
+      "rms_dbfs": -25.69549624003299
     }
   },
   "schema_version": 1,
@@ -121,10 +121,10 @@
   },
   "status": "accepted",
   "timing": {
-    "api_first_output_seconds": 6.787701745000049,
-    "first_audible_output_seconds": 7.137701745000049,
-    "generation_wall_seconds": 6.787726468999608,
-    "rtf": 0.39520969251817223
+    "api_first_output_seconds": 6.69183167600022,
+    "first_audible_output_seconds": 7.0418316760002195,
+    "generation_wall_seconds": 6.691854653000519,
+    "rtf": 0.3829387498140497
   },
   "voice": {
     "cloning_performed": false,
