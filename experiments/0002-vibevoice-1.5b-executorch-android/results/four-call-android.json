@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "status": "not_run_host_gate_rejected",
+  "accepted": false,
+  "deployable": false,
+  "scope": "Galaxy S23 Ultra execution of exactly recurrent chunks 0-3 through the frozen four-call ABI",
+  "host_gate": {
+    "required_status": "accepted_and_deployable",
+    "observed_status": "rejected",
+    "observed_deployable": false,
+    "source": {
+      "path": "results/four-call-host-validation.json",
+      "sha256": "afc6afd779c9a418f4144aaa05e9538a21369750af60f08738158b2b4ba90781",
+      "producer_commit": "1ac5352"
+    },
+    "abi": {
+      "path": "fixtures/four-call-cache-abi.json",
+      "abi_id": "vibevoice-1.5b-four-call-cache-abi-v1",
+      "sha256": "e55161beffb3cd3fc16dc6b0357994adeaa0edb4043104b4aaaae6c42b1a1136"
+    },
+    "pte": {
+      "path": "artifacts/0002/four-call-audio-export/vibevoice-four-call-audio-portable.pte",
+      "bytes": 2757244560,
+      "sha256": "c5a7ba80bb465df19a0ee2df307d8ddef3ee0c13664cb6fc29a6cce8c4bf988c"
+    },
+    "actual_prior_runtime_outputs": true,
+    "deterministic_reset_four_call_repeat": true,
+    "reproducible_failures": [
+      {
+        "boundary": "call-0.energy",
+        "repeat_count": 2,
+        "observed_rms_dbfs": -116.07456433917085,
+        "reference_rms_dbfs": -93.6608167424245,
+        "difference_db": -22.413747596746347,
+        "tolerance_db": 3.0
+      },
+      {
+        "boundary": "call-1.energy",
+        "repeat_count": 2,
+        "observed_rms_dbfs": -136.3533509846921,
+        "reference_rms_dbfs": -93.4909351277393,
+        "difference_db": -42.86241585695279,
+        "tolerance_db": 3.0
+      },
+      {
+        "boundary": "call-3.decoder_cache_04",
+        "repeat_count": 2,
+        "mismatch_count": 1,
+        "max_abs_error": 0.0000457763671875,
+        "mean_abs_error": 2.780106740374322e-7,
+        "atol": 0.00002,
+        "rtol": 0.00001
+      }
+    ],
+    "decision": "reject_and_prohibit_android_deployment"
+  },
+  "android_execution": {
+    "status": "not_run",
+    "reason_code": "HOST_NUMERICAL_GATE_REJECTED",
+    "reason": "Task 13 reproducibly rejected the PTE and marked deployable=false; the protocol therefore prohibits deployment. No phone interaction or ADB command was permitted.",
+    "phone_lock": {
+      "path": "artifacts/locks/phone.lock",
+      "acquired": false,
+      "reason": "No ADB or device operation was started after the host gate failed, so acquiring the phone lock would serve no execution and is intentionally omitted. Any future ADB attempt must acquire it first."
+    },
+    "adb_invocation_count": 0,
+    "device_verification": {
+      "performed": false,
+      "expected_authorized_device_count": 1,
+      "expected_model": "SM-S918B",
+      "observed_authorized_device_count": null,
+      "observed_model": null
+    },
+    "prior_device_state_consumed": false,
+    "chunks_requested": [0, 1, 2, 3],
+    "chunks_executed": [],
+    "phase_transitions_observed": [],
+    "intermediates_compared": [],
+    "decoder_caches_compared": 0,
+    "semantic_caches_compared": 0,
+    "timing": {
+      "load_seconds": null,
+      "per_chunk_seconds": [],
+      "total_seconds": null,
+      "not_measured_reason": "Android execution prohibited by host gate"
+    },
+    "memory_kib": {
+      "pss_peak": null,
+      "vmhwm": null,
+      "not_measured_reason": "Android process was not launched"
+    },
+    "runtime_versions": {
+      "android_build": null,
+      "executorch": null,
+      "backend": null,
+      "not_observed_reason": "No device access was performed"
+    },
+    "output_hashes": [],
+    "two_run_determinism": {
+      "status": "not_measured",
+      "runs": 0,
+      "reason": "The rejected artifact cannot be run once or twice on Android"
+    }
+  },
+  "chunk_3_evaluation": {
+    "android_numerical_status": "not_measured",
+    "android_audibility_non_speech_status": "not_measured",
+    "host_context_only": {
+      "pcm_samples": 3200,
+      "maximum_absolute_difference_s16_units": 1,
+      "rms_dbfs": -21.712568915598492,
+      "reference_rms_dbfs": -21.712573890892052,
+      "peak_s16": 10228,
+      "pcm_and_energy_passed": true
+    },
+    "subjective_quality": "pending_user_review",
+    "note": "Passing host chunk-3 PCM and energy cannot override the failed full numerical gate and is not an Android result. No listener rating is invented."
+  },
+  "versions": {
+    "host_export_python": "3.11.13",
+    "host_export_torch": "2.11.0+cpu",
+    "host_export_executorch": "1.2.0",
+    "android_harness_commit": "27cc0f2"
+  },
+  "follow_up": {
+    "longer_generation_started": false,
+    "quantization_started": false,
+    "task_18_may_report_rejection": true,
+    "required_before_any_future_android_run": "Produce a newly reviewed host-accepted artifact; do not widen frozen thresholds silently."
+  },
+  "conclusion": "Correctly gated negative evidence: the four-call artifact was not deployed because its deterministic host validation failed frozen numerical thresholds. Android timing, memory, hashes, phases, cache comparisons, device versions, and two-run determinism are explicitly unavailable rather than fabricated."
+}
