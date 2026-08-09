@@ -180,9 +180,9 @@ def compare(args: argparse.Namespace) -> None:
         "device": json.loads(args.device_properties.read_text()),
         "artifacts": device.get("artifacts"),
         "commands": [
-            "python export/semantic_android_io.py prepare ...",
-            "android/run-semantic-probe.sh",
-            "python export/semantic_android_io.py compare ...",
+            "artifacts/venv-executorch-1.2/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/semantic_android_io.py prepare artifacts/0002/lane-b/semantic-android-fixture --semantic-fixture artifacts/0002/lane-b/semantic-encoder/capture-1/fixture.pt --connector-fixture artifacts/0002/lane-b/connectors/capture-1/fixture.pt --connector-pte artifacts/0002/lane-b/connectors/connectors-xnnpack.pte",
+            "experiments/0002-vibevoice-1.5b-executorch-android/android/run-semantic-probe.sh",
+            f"artifacts/venv-executorch-1.2/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/semantic_android_io.py compare artifacts/0002/lane-b/semantic-android-fixture artifacts/0002/lane-b/semantic-android artifacts/0002/lane-b/semantic-android/device-result.json artifacts/0002/lane-b/semantic-android/device-properties.json experiments/0002-vibevoice-1.5b-executorch-android/results/semantic-path-android.json --implementation-commit {args.implementation_commit}",
         ],
         "commit_shas": [args.implementation_commit],
         "conclusion": "accepted: two Android semantic calls use device-produced cache state and their features, caches, connector output, and logical [1,1536] final embedding match host" if accepted else "rejected: Android semantic path did not satisfy all correctness and determinism checks",
