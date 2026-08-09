@@ -14,8 +14,8 @@ import protocol
 
 
 def main() -> None:
-    raw_dir = ROOT / "artifacts/raw/realtime"
-    normalized_dir = ROOT / "artifacts/normalized/realtime"
+    raw_dir = ROOT / "artifacts/raw/realtime/v2"
+    normalized_dir = ROOT / "artifacts/normalized/realtime/v2"
     capture_path = raw_dir / "capture.json"
     raw_wav = raw_dir / "assembled-native.wav"
     normalized_wav = normalized_dir / "realtime-15s.wav"

@@ -65,13 +65,13 @@ def main() -> None:
     tokenizer_path = artifacts / "model/Qwen2.5-0.5B-tokenizer"
     voice_path = source / "demo/voices/streaming_model/en-Grace_woman.pt"
     transcript_path = ROOT / "protocol/transcript.txt"
-    capture_path = ROOT / "artifacts/raw/realtime/capture.json"
+    capture_path = ROOT / "artifacts/raw/realtime/v2/capture.json"
     raw_dir = capture_path.parent
     raw_dir.mkdir(parents=True, exist_ok=True)
     if any(raw_dir.iterdir()):
         raise SystemExit(f"raw capture directory must be empty (never overwrite raw files): {raw_dir}")
 
-    expected_transcript_hash = "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67"
+    expected_transcript_hash = "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f"
     transcript_bytes = transcript_path.read_bytes()
     if hashlib.sha256(transcript_bytes).hexdigest() != expected_transcript_hash:
         raise RuntimeError("locked transcript hash mismatch")
