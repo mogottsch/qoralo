@@ -1,0 +1,329 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "scope": "Step 38 memory optimization of the accepted complete XNNPACK build",
+  "baseline_result": "results/complete-build-xnnpack.json",
+  "optimized_protocol": {
+    "sequence": "force-stop; cold process run; force-stop; 15 second idle; warm-filesystem-cache process run",
+    "cold_definition": "new app process after force-stop; Linux page cache cannot be dropped without root",
+    "warm_definition": "new app process with deployed model files and filesystem cache retained",
+    "locked_reference_preflight": "passed",
+    "repetitions": 2
+  },
+  "changes": [
+    "Release Qwen2, decoder, and semantic recurrent tensor graphs immediately on termination/failure while retaining PCM.",
+    "Keep per-call PTE mmap/destroy lifetime; retaining multi-gigabyte modules increases RSS and cannot share shape-specialized PTE weights.",
+    "Remove only hash-verified legacy decoder/semantic deployment aliases; all 80 accepted manifest modules remain."
+  ],
+  "package_bytes": {
+    "accepted_module_bytes": {
+      "baseline": 9121176676,
+      "optimized": 9121176676,
+      "change": 0,
+      "reduction": 0,
+      "reduction_percent": 0.0
+    },
+    "deployed_module_bytes": {
+      "baseline": 11874976724,
+      "optimized": 9121193936,
+      "change": -2753782788,
+      "reduction": 2753782788,
+      "reduction_percent": 23.189795247635722
+    },
+    "deployed_excess_bytes": {
+      "baseline": 2753800048,
+      "optimized": 17260,
+      "change": -2753782788,
+      "reduction": 2753782788,
+      "reduction_percent": 99.99937322972985
+    }
+  },
+  "memory_and_latency": [
+    {
+      "protocol_run": "cold",
+      "rss_kib": {
+        "baseline": 433344,
+        "optimized": 491260,
+        "change": 57916,
+        "reduction": -57916,
+        "reduction_percent": -13.364901787032935
+      },
+      "pss_kib": {
+        "baseline": 429039,
+        "optimized": 479784,
+        "change": 50745,
+        "reduction": -50745,
+        "reduction_percent": -11.827596092662905
+      },
+      "vmhwm_kib": {
+        "baseline": 1654656,
+        "optimized": 1632272,
+        "change": -22384,
+        "reduction": 22384,
+        "reduction_percent": 1.3527887367525335
+      },
+      "generation_seconds": {
+        "baseline": 26.005334625,
+        "optimized": 30.281044832,
+        "change": 4.2757102069999995,
+        "reduction": -4.2757102069999995,
+        "reduction_percent": -16.441665791485658
+      },
+      "ttfa_seconds": {
+        "baseline": 11.018906140999999,
+        "optimized": 12.631128485000001,
+        "change": 1.6122223440000027,
+        "reduction": -1.6122223440000027,
+        "reduction_percent": -14.631419156944455
+      }
+    },
+    {
+      "protocol_run": "warm",
+      "rss_kib": {
+        "baseline": 494760,
+        "optimized": 456460,
+        "change": -38300,
+        "reduction": 38300,
+        "reduction_percent": 7.7411270110760775
+      },
+      "pss_kib": {
+        "baseline": 481858,
+        "optimized": 457737,
+        "change": -24121,
+        "reduction": 24121,
+        "reduction_percent": 5.005831593540005
+      },
+      "vmhwm_kib": {
+        "baseline": 1668384,
+        "optimized": 1650288,
+        "change": -18096,
+        "reduction": 18096,
+        "reduction_percent": 1.0846423844870245
+      },
+      "generation_seconds": {
+        "baseline": 28.339931187,
+        "optimized": 27.988589573,
+        "change": -0.3513416140000025,
+        "reduction": 0.3513416140000025,
+        "reduction_percent": 1.2397405331780367
+      },
+      "ttfa_seconds": {
+        "baseline": 11.915484006,
+        "optimized": 11.594172756,
+        "change": -0.32131124999999905,
+        "reduction": 0.32131124999999905,
+        "reduction_percent": 2.6965858024584137
+      }
+    }
+  ],
+  "correctness": {
+    "same_wav_sha256": true,
+    "baseline_wav_sha256": "f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9",
+    "optimized_wav_sha256": "f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9",
+    "same_capacity_failure": true,
+    "optimized_cross_process_deterministic": true,
+    "optimized_stop_reasons": [
+      "CAPACITY",
+      "CAPACITY"
+    ],
+    "quality_regression": false,
+    "complete_locked_reference": false
+  },
+  "latency_regression_check": {
+    "median_generation_baseline_seconds": 27.172632906,
+    "median_generation_optimized_seconds": 29.1348172025,
+    "relative_change": 0.07221178394040462,
+    "guardrail": "informational +/-20% for two thermally observed phone runs; byte-identical output is mandatory",
+    "within_guardrail": true
+  },
+  "architectural_limit": {
+    "observed": true,
+    "description": "VmHWM is dominated by transient execution of shape-specialized XNNPACK PTEs. Prefill/decode, first/cached semantic, and first/cached decoder packages embed separate copies of weights. ExecuTorch 1.2 Java mmap loads avoid persistent heap copies but do not provide a shared external-weight pool across these PTEs.",
+    "accepted_package_exact_duplicate_bytes": 0,
+    "why_not_combined_module_cache": "Caching modules would retain mapped weights and XNNPACK workspaces; sequential mmap/destroy is the bounded-lifetime design for the 12 GiB-class phone.",
+    "correctness_constraint": "Static input/cache shapes differ, so replacing a first/cached or prefill/decode artifact with its sibling is invalid; no weight-deduplication claim is made."
+  },
+  "optimized_measurement": {
+    "schema_version": 1,
+    "status": "precise_failure",
+    "scope": "complete accepted ExecuTorch 1.2 XNNPACK/INT8 build using the locked reference inputs",
+    "protocol": {
+      "sequence": "force-stop; cold process run; force-stop; 15 second idle; warm-filesystem-cache process run",
+      "cold_definition": "new app process after force-stop; Linux page cache cannot be dropped without root",
+      "warm_definition": "new app process with deployed model files and filesystem cache retained",
+      "locked_reference_preflight": "passed",
+      "repetitions": 2
+    },
+    "size": {
+      "apk_path": "experiments/0002-vibevoice-1.5b-executorch-android/android/app/build/outputs/apk/debug/app-debug.apk",
+      "apk_bytes": 15037421,
+      "apk_sha256": "f929d36db8860fcf4d5407e8bf879cf5fd700f86bd1ceceb419216c2145ec30d",
+      "module_count": 80,
+      "module_bytes": 9121176676,
+      "exact_duplicate_groups": 0,
+      "exact_duplicate_bytes": 0,
+      "duplication_method": "files grouped by full-file SHA-256; shared weights inside non-identical PTEs are not inferred",
+      "apk_plus_modules_bytes": 9136214097,
+      "deployed_module_bytes": 9121193936,
+      "deployed_excess_bytes": 17260,
+      "deployed_size_note": "files/models may contain packages from earlier component probes; accepted-build totals use only the locked 80-file manifest"
+    },
+    "runs": [
+      {
+        "protocol_run": "cold",
+        "status": "capacity_terminated",
+        "audio_samples": 6400,
+        "audio_duration_seconds": 0.26666666666666666,
+        "generation_seconds": 30.281044832,
+        "protocol_wall_seconds": 60.02235826,
+        "rtf": 113.55391811999999,
+        "ttfa_seconds": 12.631128485000001,
+        "ttfa_definition": "Qwen prefill + first diffusion + first acoustic decode; first PCM becomes available at decode return",
+        "component_seconds": {
+          "qwen_prefill": 7.59326057,
+          "qwen_decode": 6.079150206,
+          "diffusion": 4.679504738,
+          "acoustic_decoder": 5.674747342,
+          "semantic_encoder": 5.575261768,
+          "connectors": 0.035906302
+        },
+        "module_load_seconds": null,
+        "module_load_note": "The accepted controller mmaps and destroys each PTE inside component calls; its schema does not separate Module.load from forward time. Component values therefore include load overhead.",
+        "memory_kib": {
+          "rss": 491260,
+          "pss": 479784,
+          "vmhwm": 1632272
+        },
+        "stop_reason": "CAPACITY",
+        "wav_sha256": "f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9",
+        "pcm_sha256": "2c885ee3e0fcfb27e895301ce41352020cd71167b2218d272923eb7ed63f0447",
+        "tokens": [
+          151654,
+          151654,
+          151654
+        ],
+        "repeat_wav_sha256": "f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9",
+        "within_process_deterministic": true
+      },
+      {
+        "protocol_run": "warm",
+        "status": "capacity_terminated",
+        "audio_samples": 6400,
+        "audio_duration_seconds": 0.26666666666666666,
+        "generation_seconds": 27.988589573,
+        "protocol_wall_seconds": 60.892445112,
+        "rtf": 104.95721089874999,
+        "ttfa_seconds": 11.594172756,
+        "ttfa_definition": "Qwen prefill + first diffusion + first acoustic decode; first PCM becomes available at decode return",
+        "component_seconds": {
+          "qwen_prefill": 6.959428643,
+          "qwen_decode": 5.8287561960000005,
+          "diffusion": 4.332932082,
+          "acoustic_decoder": 5.2845160920000005,
+          "semantic_encoder": 4.861665310999999,
+          "connectors": 0.037582708
+        },
+        "module_load_seconds": null,
+        "module_load_note": "The accepted controller mmaps and destroys each PTE inside component calls; its schema does not separate Module.load from forward time. Component values therefore include load overhead.",
+        "memory_kib": {
+          "rss": 456460,
+          "pss": 457737,
+          "vmhwm": 1650288
+        },
+        "stop_reason": "CAPACITY",
+        "wav_sha256": "f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9",
+        "pcm_sha256": "2c885ee3e0fcfb27e895301ce41352020cd71167b2218d272923eb7ed63f0447",
+        "tokens": [
+          151654,
+          151654,
+          151654
+        ],
+        "repeat_wav_sha256": "f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9",
+        "within_process_deterministic": true
+      }
+    ],
+    "summary": {
+      "median_generation_seconds": 29.1348172025,
+      "median_ttfa_seconds": 12.112650620500002,
+      "median_rtf": 109.25556450937499,
+      "cross_process_deterministic": true,
+      "wav_sha256": "f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9"
+    },
+    "device": {
+      "manufacturer": "samsung",
+      "model": "SM-S918B",
+      "device": "dm3q",
+      "soc": "SM8550",
+      "android_release": "16",
+      "api_level": 36,
+      "abi": "arm64-v8a",
+      "build_fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+      "kernel": "5.15"
+    },
+    "runtime": {
+      "executorch": "1.2.0",
+      "backend": "xnnpack",
+      "qwen_precision": "int8",
+      "other_precision": "fp32"
+    },
+    "thermal": {
+      "before": {
+        "status": 0,
+        "status_scale": "Android THERMAL_STATUS_* (0=NONE)",
+        "ap_temperature_c": 47.1,
+        "skin_temperature_c": 38.7,
+        "battery_temperature_c": 34.8,
+        "thermalservice_sha256": "b85a1058d4a34eb8907ffb0f9666f97d28c65bd9f2c49d763d553c72d00ab42a",
+        "thermalservice_path": "artifacts/0002/lane-d/complete-build-memory/measurement/thermal-before.txt",
+        "battery_path": "artifacts/0002/lane-d/complete-build-memory/measurement/battery-before.txt"
+      },
+      "after": {
+        "status": 1,
+        "status_scale": "Android THERMAL_STATUS_* (0=NONE)",
+        "ap_temperature_c": 52.7,
+        "skin_temperature_c": 40.2,
+        "battery_temperature_c": 35.9,
+        "thermalservice_sha256": "e07ec16d6147e88bf4eab92ca70cf4788ddc954351b2280b3a0e337496d47dd7",
+        "thermalservice_path": "artifacts/0002/lane-d/complete-build-memory/measurement/thermal-after.txt",
+        "battery_path": "artifacts/0002/lane-d/complete-build-memory/measurement/battery-after.txt"
+      }
+    },
+    "failure": {
+      "stage": "locked reference generation",
+      "reason": "Both accepted static-cache ABIs stop at CAPACITY after two 3,200-sample chunks; a third cached call cannot accept the widened cache tensors.",
+      "requested_samples": 313600,
+      "produced_samples": 6400,
+      "requested_duration_seconds": 13.066666666666666,
+      "produced_duration_seconds": 0.26666666666666666,
+      "complete_locked_run": false,
+      "metrics_not_available": [
+        "complete-transcript duration",
+        "complete-transcript wall time",
+        "complete-transcript RTF",
+        "separately instrumented module load time"
+      ]
+    },
+    "hashes": {
+      "package_aggregate_sha256": "d1831eafb11f1cbdec66d43a9e2e84d168b0b8f369e72661b8cac63ba525961d",
+      "locked_reference_wav_sha256": "fb0152dc686836fe23d9c39c3b24c1de82398f51b9747f5e36ad1db819ce0358"
+    },
+    "implementation_commits": [
+      "67ea347008624aebe513a230049c1145a91f2151"
+    ],
+    "commands": [
+      "flock artifacts/locks/phone.lock experiments/0002-vibevoice-1.5b-executorch-android/android/measure-complete-build.sh",
+      "python3 -m unittest discover -s experiments/0002-vibevoice-1.5b-executorch-android/tests -p test_complete_build_measurement.py",
+      "python3 -m json.tool experiments/0002-vibevoice-1.5b-executorch-android/results/complete-build-xnnpack.json >/dev/null"
+    ],
+    "conclusion": "Precise reproducible failure: cold and warm accepted-build runs are byte-identical, but both terminate at the exported two-chunk static-cache capacity. The measured 0.266667 s prefix is therefore not a complete-build performance claim; complete-transcript TTFA, duration, wall time, and RTF cannot be accepted until the cache ABI is re-exported."
+  },
+  "implementation_commits": [
+    "c72c0ef"
+  ],
+  "commands": [
+    "experiments/0002-vibevoice-1.5b-executorch-android/android/optimize-complete-build-memory.sh",
+    "python3 -m unittest discover -s experiments/0002-vibevoice-1.5b-executorch-android/tests -p 'test_complete_build_memory.py'",
+    "experiments/0002-vibevoice-1.5b-executorch-android/android/run-generation-controller-tests.sh"
+  ],
+  "conclusion": "Hash-verified pruning removes deployment-only package duplication and termination now promptly releases recurrent tensors. Output and the known static-cache capacity failure remain byte-identical. Peak VmHWM is a reproducible shape-specialized XNNPACK execution limit rather than a retained-module leak; the locked transcript still cannot be completed without re-exporting the cache ABI."
+}
