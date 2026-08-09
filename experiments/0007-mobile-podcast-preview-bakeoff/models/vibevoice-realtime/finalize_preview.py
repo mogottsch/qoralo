@@ -98,7 +98,7 @@ def main() -> None:
             "sample_rate_hz": raw_rate,
             "channels": 1,
             "sample_count": int(raw_samples.size),
-            "output_format": "WAV IEEE_FLOAT32",
+            "output_format": "WAV PCM_S16LE",
             "statistics": raw_stats,
             "streaming_chunk_count": len(primary["chunks"]),
             "preserved_unchanged": True,

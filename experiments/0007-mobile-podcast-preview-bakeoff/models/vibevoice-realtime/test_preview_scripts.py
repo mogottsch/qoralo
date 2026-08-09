@@ -20,4 +20,5 @@ def test_finalizer_refuses_overwrite_and_checks_raw_hash_after_derivation():
     assert "refusing to overwrite existing evidence" in text
     assert "raw_hash_after != raw_hash_before" in text
     assert '"sample_count": 360_000' in text
+    assert '"output_format": "WAV PCM_S16LE"' in text
     assert "Host-preview-only" in text
