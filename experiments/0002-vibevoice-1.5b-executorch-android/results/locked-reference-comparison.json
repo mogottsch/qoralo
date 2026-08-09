@@ -168,10 +168,11 @@
   },
   "implementation_commits": [
     "cbf69615194f5f7f2507ea47e6872cd579e0f78f",
-    "a9d34cc2ca280f88f8c7bababc9eb81ad950ef80"
+    "a9d34cc2ca280f88f8c7bababc9eb81ad950ef80",
+    "6a5f034993e8587280618037b9ac212b54970dd9"
   ],
   "commands": [
-    "python3 experiments/0002-vibevoice-1.5b-executorch-android/export/compare_generation_audio.py --reference artifacts/0001/output-cpu/reference_generated.wav --android artifacts/0002/lane-d/locked-reference/generation-run-0.wav --step35 experiments/0002-vibevoice-1.5b-executorch-android/results/locked-reference-android.json --android-sha256 f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9 --android-samples 6400 --commit cbf69615194f5f7f2507ea47e6872cd579e0f78f --commit a9d34cc2ca280f88f8c7bababc9eb81ad950ef80 --output experiments/0002-vibevoice-1.5b-executorch-android/results/locked-reference-comparison.json",
+    "python3 experiments/0002-vibevoice-1.5b-executorch-android/export/compare_generation_audio.py --reference artifacts/0001/output-cpu/reference_generated.wav --android artifacts/0002/lane-d/locked-reference/generation-run-0.wav --step35 experiments/0002-vibevoice-1.5b-executorch-android/results/locked-reference-android.json --android-sha256 f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9 --android-samples 6400 --commit cbf69615194f5f7f2507ea47e6872cd579e0f78f --commit a9d34cc2ca280f88f8c7bababc9eb81ad950ef80 --commit 6a5f034993e8587280618037b9ac212b54970dd9 --output experiments/0002-vibevoice-1.5b-executorch-android/results/locked-reference-comparison.json",
     "artifacts/venv-executorch-1.2/bin/python -m pytest -q experiments/0002-vibevoice-1.5b-executorch-android/tests/test_compare_generation_audio.py",
     "python3 -m json.tool experiments/0002-vibevoice-1.5b-executorch-android/results/locked-reference-comparison.json >/dev/null"
   ],
