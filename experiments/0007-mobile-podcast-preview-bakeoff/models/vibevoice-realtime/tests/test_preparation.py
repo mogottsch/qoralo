@@ -39,6 +39,8 @@ class PreparationTests(unittest.TestCase):
         self.assertIn('refusing ungated model load', internal)
         self.assertIn('local_files_only=True', internal)
         self.assertIn('TRANSFORMERS_OFFLINE="1"', internal)
+        self.assertIn('"offline_local_only": True', internal)
+        self.assertIn('"attention": "sdpa"', internal)
         result = json.loads((HERE / "smoke-load-result.json").read_text())
         self.assertEqual(result["status"], "passed")
         self.assertTrue(result["offline_local_only"])

@@ -45,6 +45,7 @@ def main() -> None:
         "source_revision": os.popen(f"git -C '{SOURCE}' rev-parse HEAD").read().strip(),
         "voice": "en-Grace_woman.pt", "voice_sha256": hashlib.sha256(voice.read_bytes()).hexdigest(),
         "device": torch.cuda.get_device_name(), "dtype": str(next(model.parameters()).dtype),
+        "attention": "sdpa", "offline_local_only": True,
         "processor_sample_rate_hz": processor.audio_processor.sampling_rate,
         "prompt_sections": sorted(prompt), "load_wall_seconds": time.monotonic() - start,
         "cuda_peak_allocated_bytes": torch.cuda.max_memory_allocated(),
