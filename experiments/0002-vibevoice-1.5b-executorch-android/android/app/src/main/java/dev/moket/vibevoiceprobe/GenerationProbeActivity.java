@@ -83,7 +83,7 @@ public final class GenerationProbeActivity extends Activity {
         byte[] wav=controller.wav(),pcm=Arrays.copyOfRange(wav,44,wav.length); File pcmFile=file("generation-run-"+index+".pcm"),wavFile=file("generation-run-"+index+".wav");writeBytes(pcmFile,pcm);writeBytes(wavFile,wav);
         boolean boundaries=Arrays.equals(pcm,c.concatenatedPcm())&&pcm.length==controller.audioChunkCount()*3200*2;
         boolean early=(controller.stopReason()==GenerationController.StopReason.EOS||controller.stopReason()==GenerationController.StopReason.CAPACITY)&&controller.pcmSamples()>0;
-        JSONObject j=new JSONObject().put("run",index).put("tokens",tokens).put("stop_reason",controller.stopReason().name()).put("valid_length",controller.validLength()).put("audio_chunks",controller.audioChunkCount()).put("elapsed_seconds",seconds(SystemClock.elapsedRealtimeNanos()-started)).put("chunks",c.chunks).put("prefill",c.prefill).put("pcm_sha256",sha256(pcmFile)).put("wav_sha256",sha256(wavFile)).put("pcm_samples",controller.pcmSamples()).put("boundary_samples_exact",boundaries).put("qwen_cache_progression",c.qwenDecodeCalls==controller.validLength()-S).put("decoder_cache_progression",c.decoderCachedCalls==Math.max(0,controller.audioChunkCount()-1)).put("semantic_cache_progression",c.semanticCachedCalls==Math.max(0,controller.audioChunkCount()-1)).put("speaker_conditioning",c.speakerConditioning).put("rss_kib",status("VmRSS")).put("pss_kib",Debug.getPss()).put("vmhwm_kib",status("VmHWM"));
+        JSONObject j=new JSONObject().put("run",index).put("tokens",tokens).put("stop_reason",controller.stopReason().name()).put("valid_length",controller.validLength()).put("audio_chunks",controller.audioChunkCount()).put("elapsed_seconds",seconds(SystemClock.elapsedRealtimeNanos()-started)).put("chunks",c.chunks).put("prefill",c.prefill).put("pcm_sha256",sha256(pcmFile)).put("wav_sha256",sha256(wavFile)).put("pcm_samples",controller.pcmSamples()).put("boundary_samples_exact",boundaries).put("qwen_cache_progression",c.qwenDecodeCalls==controller.validLength()-S).put("decoder_cache_progression",c.decoderCachedCalls==Math.max(0,controller.audioChunkCount()-1)).put("semantic_cache_progression",c.semanticCachedCalls==Math.max(0,controller.audioChunkCount()-1)).put("speaker_conditioning",c.speakerConditioning).put("execution",c.executionTelemetry()).put("rss_kib",status("VmRSS")).put("pss_kib",Debug.getPss()).put("vmhwm_kib",status("VmHWM"));
         return new Run(j,tokens.toString(),sha256(pcmFile),controller.pcmSamples(),boundaries,early);
     }
 
@@ -91,6 +91,8 @@ public final class GenerationProbeActivity extends Activity {
         final int run; final JSONArray chunks=new JSONArray(); final java.io.ByteArrayOutputStream pcmAll=new java.io.ByteArrayOutputStream(); JSONObject prefill; int chunkIndex,qwenDecodeCalls,decoderCachedCalls,semanticCachedCalls; long diffusionStarted;
         Components(int run){this.run=run;}
         JSONObject speakerConditioning=new JSONObject();
+        int forwardCalls, explicitGcCalls;
+        long moduleLoadNanos, moduleForwardNanos, outputCopyNanos, moduleDestroyNanos, explicitGcNanos;
         public GenerationController.Conditioning condition(GenerationController.Prompt p,int speaker){try{
             if(file("sequence-speaker-ids.i64le").isFile()){
                 int[] ids=p.sequenceSpeakerIds();int carter=0,maya=0,transitions=0,last=-1;
@@ -118,6 +120,17 @@ public final class GenerationProbeActivity extends Activity {
         public GenerationController.SemanticOutput encodeSemantic(float[] audio,Object[] prior){try{long started=SystemClock.elapsedRealtimeNanos();List<EValue> in=new ArrayList<>();in.add(ev(audio,AUDIO));if(prior!=null)for(Object cache:prior)in.add(((Raw)cache).ev());EValue[] out=forward("models/semantic-"+(prior==null?"first":"cached")+".pte",in.toArray(new EValue[0]));if(out.length!=35)throw new IllegalStateException("semantic outputs");Object[] caches=new Object[34];for(int i=0;i<34;i++){Raw r=Raw.output(out[i+1]);caches[i]=r;}if(prior!=null)semanticCachedCalls++;float[] f=Raw.output(out[0]).v;JSONObject rec=chunks.getJSONObject(chunkIndex);rec.put("semantic_seconds",seconds(SystemClock.elapsedRealtimeNanos()-started)).put("semantic_cache_input_count",prior==null?0:prior.length).put("semantic_cache_output_count",34);putHash(name(chunkIndex,"semantic_features"),f);return new GenerationController.SemanticOutput(f,caches);}catch(Exception e){throw wrap(e);}}
         public float[] joinConnectors(float[] acoustic,float[] semantic){try{long started=SystemClock.elapsedRealtimeNanos();float[] v=forwardFloats("models/connectors.pte",new EValue[]{ev(acoustic,ACOUSTIC),ev(semantic,FEATURE)})[0];chunks.getJSONObject(chunkIndex).put("connector_seconds",seconds(SystemClock.elapsedRealtimeNanos()-started));putHash(name(chunkIndex,"connector_embedding"),v);chunkIndex++;return v;}catch(Exception e){throw wrap(e);}}
         byte[] concatenatedPcm(){return pcmAll.toByteArray();}
+        JSONObject executionTelemetry() throws Exception {
+            return new JSONObject()
+              .put("module_calls",forwardCalls)
+              .put("module_load_seconds",seconds(moduleLoadNanos))
+              .put("module_forward_seconds",seconds(moduleForwardNanos))
+              .put("output_copy_seconds",seconds(outputCopyNanos))
+              .put("module_destroy_seconds",seconds(moduleDestroyNanos))
+              .put("explicit_gc_calls",explicitGcCalls)
+              .put("explicit_gc_seconds",seconds(explicitGcNanos))
+              .put("gc_policy","after every 8 module calls; the process-level repeat boundary retains one full collection");
+        }
 
         private GenerationController.QwenOutput qwen(float[] embed,int length,Object[] prior,int position)throws Exception{
             boolean isPrefill=length==S;long start=SystemClock.elapsedRealtimeNanos();long[] mask=new long[CAP],pos=new long[length],cp=new long[length];for(int i=0;i<(isPrefill?S:position+1);i++)mask[i]=1;for(int i=0;i<length;i++)pos[i]=cp[i]=isPrefill?i:position;
@@ -127,7 +140,25 @@ public final class GenerationProbeActivity extends Activity {
         }
         private String name(int chunk,String suffix){return String.format(Locale.ROOT,"chunk-%02d-%s",chunk,suffix);}
         private float[][] forwardFloats(String path,EValue[] in)throws Exception{EValue[] out=forward(path,in);float[][] r=new float[out.length][];for(int i=0;i<out.length;i++)r[i]=Raw.output(out[i]).v;return r;}
-        private EValue[] forward(String path,EValue[] in)throws Exception{Module m=null;try{m=Module.load(file(path).getAbsolutePath(),Module.LOAD_MODE_MMAP);EValue[] raw=m.forward(in),copied=new EValue[raw.length];for(int i=0;i<raw.length;i++){if(!raw[i].isTensor())throw new IllegalStateException("non-tensor output");Tensor t=raw[i].toTensor();copied[i]=ev(t.getDataAsFloatArray(),t.shape());}return copied;}finally{if(m!=null)m.destroy();System.gc();}}
+        private EValue[] forward(String path,EValue[] in)throws Exception{
+            Module m=null;long mark=SystemClock.elapsedRealtimeNanos();
+            try{
+                m=Module.load(file(path).getAbsolutePath(),Module.LOAD_MODE_MMAP);
+                moduleLoadNanos+=SystemClock.elapsedRealtimeNanos()-mark;
+                mark=SystemClock.elapsedRealtimeNanos();EValue[] raw=m.forward(in);
+                moduleForwardNanos+=SystemClock.elapsedRealtimeNanos()-mark;
+                mark=SystemClock.elapsedRealtimeNanos();EValue[] copied=new EValue[raw.length];
+                for(int i=0;i<raw.length;i++){if(!raw[i].isTensor())throw new IllegalStateException("non-tensor output");Tensor t=raw[i].toTensor();copied[i]=ev(t.getDataAsFloatArray(),t.shape());}
+                outputCopyNanos+=SystemClock.elapsedRealtimeNanos()-mark;
+                return copied;
+            }finally{
+                mark=SystemClock.elapsedRealtimeNanos();if(m!=null)m.destroy();moduleDestroyNanos+=SystemClock.elapsedRealtimeNanos()-mark;
+                forwardCalls++;
+                // Per-PTE collection dominated the measured runtime. Module.destroy() releases the mmap;
+                // collect only periodically to bound Java tensor wrappers without stalling every segment.
+                if(forwardCalls%8==0){mark=SystemClock.elapsedRealtimeNanos();System.gc();explicitGcNanos+=SystemClock.elapsedRealtimeNanos()-mark;explicitGcCalls++;}
+            }
+        }
         private void putHash(String name,float[] v)throws Exception{File f=file("generation-run-"+run+"-"+name+".f32le");writeFloats(f,v);}
     }
 

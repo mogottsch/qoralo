@@ -61,6 +61,7 @@ def summarize_run(label: str, device: dict, wall_seconds: float) -> dict:
     components = component_seconds(run)
     ttfa = components["qwen_prefill"] + float(run["chunks"][0]["diffusion_seconds"]) + float(run["chunks"][0]["decoder_seconds"])
     deterministic = run["wav_sha256"] == repeat["wav_sha256"] and run["tokens"] == repeat["tokens"]
+    execution = run.get("execution")
     return {
         "protocol_run": label,
         "status": "capacity_terminated" if run["stop_reason"] == "CAPACITY" else device["status"],
@@ -72,8 +73,10 @@ def summarize_run(label: str, device: dict, wall_seconds: float) -> dict:
         "ttfa_seconds": ttfa,
         "ttfa_definition": "Qwen prefill + first diffusion + first acoustic decode; first PCM becomes available at decode return",
         "component_seconds": components,
-        "module_load_seconds": None,
-        "module_load_note": "The accepted controller mmaps and destroys each PTE inside component calls; its schema does not separate Module.load from forward time. Component values therefore include load overhead.",
+        "module_load_seconds": None if execution is None else float(execution["module_load_seconds"]),
+        "module_load_note": ("The legacy controller schema did not separate Module.load from forward time; component values include load overhead."
+                             if execution is None else "Instrumented across every per-call mmap Module.load; component values still include this load time."),
+        "execution_breakdown": execution,
         "memory_kib": {"rss": int(run["rss_kib"]), "pss": int(run["pss_kib"]), "vmhwm": int(run["vmhwm_kib"])},
         "stop_reason": run["stop_reason"],
         "wav_sha256": run["wav_sha256"],
@@ -134,7 +137,7 @@ def build_result(raw: dict, preflight: dict, apk: Path, commit: str) -> dict:
             "requested_duration_seconds": preflight["reference_wav"]["duration_seconds"],
             "produced_duration_seconds": runs[0]["audio_duration_seconds"],
             "complete_locked_run": False,
-            "metrics_not_available": ["complete-transcript duration", "complete-transcript wall time", "complete-transcript RTF", "separately instrumented module load time"],
+            "metrics_not_available": ["complete-transcript duration", "complete-transcript wall time", "complete-transcript RTF"],
         },
         "hashes": {"package_aggregate_sha256": preflight["packages"]["aggregate_sha256"], "locked_reference_wav_sha256": preflight["reference_wav"]["sha256"]},
         "implementation_commits": [commit],

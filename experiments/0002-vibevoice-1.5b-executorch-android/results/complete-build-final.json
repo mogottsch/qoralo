@@ -1,0 +1,533 @@
+{
+  "schema_version": 1,
+  "status": "rejected_not_feasible",
+  "scope": "final ExecuTorch 1.2/XNNPACK execution optimization and locked-reference conclusion",
+  "optimization": {
+    "change": "Retain per-call Module.destroy(), but replace explicit GC after every PTE with periodic collection after every eight PTE calls.",
+    "rationale": "The baseline collector attributed load, forward, output-copy, destruction, and GC to one component timer. Periodic GC tests whether avoidable stop-the-world work can be reduced while retaining bounded module lifetime.",
+    "telemetry": "Each device run records module call count and separate load, forward, output-copy, destroy, and explicit-GC time."
+  },
+  "before": {
+    "stage_latency": {
+      "qwen_prefill": {
+        "median_seconds": 7.2763446065,
+        "variability": {
+          "values": [
+            7.59326057,
+            6.959428643
+          ],
+          "min": 6.959428643,
+          "max": 7.59326057,
+          "range": 0.6338319270000001,
+          "mean": 7.2763446065,
+          "population_cv": 0.04355428180475361
+        }
+      },
+      "qwen_decode": {
+        "median_seconds": 5.953953201,
+        "variability": {
+          "values": [
+            6.079150206,
+            5.8287561960000005
+          ],
+          "min": 5.8287561960000005,
+          "max": 6.079150206,
+          "range": 0.25039400999999906,
+          "mean": 5.953953201,
+          "population_cv": 0.021027542671812064
+        }
+      },
+      "diffusion": {
+        "median_seconds": 4.506218410000001,
+        "variability": {
+          "values": [
+            4.679504738,
+            4.332932082
+          ],
+          "min": 4.332932082,
+          "max": 4.679504738,
+          "range": 0.3465726560000002,
+          "mean": 4.506218410000001,
+          "population_cv": 0.03845493321305748
+        }
+      },
+      "acoustic_decoder": {
+        "median_seconds": 5.479631717,
+        "variability": {
+          "values": [
+            5.674747342,
+            5.2845160920000005
+          ],
+          "min": 5.2845160920000005,
+          "max": 5.674747342,
+          "range": 0.39023124999999936,
+          "mean": 5.479631717,
+          "population_cv": 0.035607434053400576
+        }
+      },
+      "semantic_encoder": {
+        "median_seconds": 5.2184635395,
+        "variability": {
+          "values": [
+            5.575261768,
+            4.861665310999999
+          ],
+          "min": 4.861665310999999,
+          "max": 5.575261768,
+          "range": 0.7135964570000004,
+          "mean": 5.2184635395,
+          "population_cv": 0.0683722758239653
+        }
+      },
+      "connectors": {
+        "median_seconds": 0.036744505,
+        "variability": {
+          "values": [
+            0.035906302,
+            0.037582708
+          ],
+          "min": 0.035906302,
+          "max": 0.037582708,
+          "range": 0.0016764059999999983,
+          "mean": 0.036744505,
+          "population_cv": 0.022811655783633478
+        }
+      }
+    },
+    "ttfa": {
+      "median_seconds": 12.112650620500002,
+      "variability": {
+        "values": [
+          12.631128485000001,
+          11.594172756
+        ],
+        "min": 11.594172756,
+        "max": 12.631128485000001,
+        "range": 1.0369557290000007,
+        "mean": 12.112650620500002,
+        "population_cv": 0.04280465777015848
+      }
+    },
+    "generation_wall": {
+      "median_seconds": 29.1348172025,
+      "variability": {
+        "values": [
+          30.281044832,
+          27.988589573
+        ],
+        "min": 27.988589573,
+        "max": 30.281044832,
+        "range": 2.2924552590000005,
+        "mean": 29.1348172025,
+        "population_cv": 0.03934219396446547
+      }
+    },
+    "protocol_wall": {
+      "median_seconds": 60.457401686,
+      "variability": {
+        "values": [
+          60.02235826,
+          60.892445112
+        ],
+        "min": 60.02235826,
+        "max": 60.892445112,
+        "range": 0.870086852,
+        "mean": 60.457401686,
+        "population_cv": 0.007195867071157016
+      }
+    },
+    "rtf": {
+      "median": 109.25556450937499,
+      "variability": {
+        "values": [
+          113.55391811999999,
+          104.95721089874999
+        ],
+        "min": 104.95721089874999,
+        "max": 113.55391811999999,
+        "range": 8.59670722125,
+        "mean": 109.25556450937499,
+        "population_cv": 0.03934219396446546
+      }
+    },
+    "memory_kib": {
+      "rss": {
+        "max": 491260,
+        "values": [
+          491260,
+          456460
+        ]
+      },
+      "pss": {
+        "max": 479784,
+        "values": [
+          479784,
+          457737
+        ]
+      },
+      "vmhwm": {
+        "max": 1650288,
+        "values": [
+          1632272,
+          1650288
+        ]
+      }
+    }
+  },
+  "after": {
+    "stage_latency": {
+      "qwen_prefill": {
+        "median_seconds": 6.869097289000001,
+        "variability": {
+          "values": [
+            6.870507081,
+            6.867687497
+          ],
+          "min": 6.867687497,
+          "max": 6.870507081,
+          "range": 0.0028195840000000416,
+          "mean": 6.869097289000001,
+          "population_cv": 0.00020523686602279257
+        }
+      },
+      "qwen_decode": {
+        "median_seconds": 5.470565467,
+        "variability": {
+          "values": [
+            5.058021301,
+            5.883109633
+          ],
+          "min": 5.058021301,
+          "max": 5.883109633,
+          "range": 0.825088332,
+          "mean": 5.470565467,
+          "population_cv": 0.07541161302036932
+        }
+      },
+      "diffusion": {
+        "median_seconds": 5.3014790865000005,
+        "variability": {
+          "values": [
+            5.013809737,
+            5.589148436
+          ],
+          "min": 5.013809737,
+          "max": 5.589148436,
+          "range": 0.5753386990000005,
+          "mean": 5.3014790865000005,
+          "population_cv": 0.05426209267382351
+        }
+      },
+      "acoustic_decoder": {
+        "median_seconds": 5.1240123675,
+        "variability": {
+          "values": [
+            5.236077862,
+            5.011946872999999
+          ],
+          "min": 5.011946872999999,
+          "max": 5.236077862,
+          "range": 0.22413098900000072,
+          "mean": 5.1240123675,
+          "population_cv": 0.021870652618014075
+        }
+      },
+      "semantic_encoder": {
+        "median_seconds": 4.9481543210000005,
+        "variability": {
+          "values": [
+            4.794767029,
+            5.101541613
+          ],
+          "min": 4.794767029,
+          "max": 5.101541613,
+          "range": 0.30677458400000024,
+          "mean": 4.9481543210000005,
+          "population_cv": 0.030998890101107682
+        }
+      },
+      "connectors": {
+        "median_seconds": 0.0274412505,
+        "variability": {
+          "values": [
+            0.026249792,
+            0.028632709
+          ],
+          "min": 0.026249792,
+          "max": 0.028632709,
+          "range": 0.0023829169999999983,
+          "mean": 0.0274412505,
+          "population_cv": 0.04341852059548085
+        }
+      }
+    },
+    "ttfa": {
+      "median_seconds": 11.865246531499999,
+      "variability": {
+        "values": [
+          11.586843172,
+          12.143649890999999
+        ],
+        "min": 11.586843172,
+        "max": 12.143649890999999,
+        "range": 0.556806718999999,
+        "mean": 11.865246531499999,
+        "population_cv": 0.02346376527119693
+      }
+    },
+    "generation_wall": {
+      "median_seconds": 28.626439416,
+      "variability": {
+        "values": [
+          27.978166708,
+          29.274712124
+        ],
+        "min": 27.978166708,
+        "max": 29.274712124,
+        "range": 1.2965454160000007,
+        "mean": 28.626439416,
+        "population_cv": 0.022645942744722394
+      }
+    },
+    "protocol_wall": {
+      "median_seconds": 60.4742018825,
+      "variability": {
+        "values": [
+          58.889081703,
+          62.059322062
+        ],
+        "min": 58.889081703,
+        "max": 62.059322062,
+        "range": 3.1702403589999975,
+        "mean": 60.4742018825,
+        "population_cv": 0.026211510531050104
+      }
+    },
+    "rtf": {
+      "median": 107.34914781,
+      "variability": {
+        "values": [
+          104.918125155,
+          109.780170465
+        ],
+        "min": 104.918125155,
+        "max": 109.780170465,
+        "range": 4.862045309999999,
+        "mean": 107.34914781,
+        "population_cv": 0.022645942744722376
+      }
+    },
+    "memory_kib": {
+      "rss": {
+        "max": 480316,
+        "values": [
+          480316,
+          473284
+        ]
+      },
+      "pss": {
+        "max": 475956,
+        "values": [
+          468621,
+          475956
+        ]
+      },
+      "vmhwm": {
+        "max": 1660452,
+        "values": [
+          1660452,
+          1657552
+        ]
+      }
+    }
+  },
+  "optimized_execution_profiles": [
+    {
+      "module_calls": 130,
+      "module_load_seconds": 0.150211349,
+      "module_forward_seconds": 25.540781448,
+      "output_copy_seconds": 0.192423914,
+      "module_destroy_seconds": 0.790210684,
+      "explicit_gc_calls": 16,
+      "explicit_gc_seconds": 0.090869113,
+      "gc_policy": "after every 8 module calls; the process-level repeat boundary retains one full collection"
+    },
+    {
+      "module_calls": 130,
+      "module_load_seconds": 0.168771404,
+      "module_forward_seconds": 26.910440828,
+      "output_copy_seconds": 0.211931564,
+      "module_destroy_seconds": 0.844954842,
+      "explicit_gc_calls": 16,
+      "explicit_gc_seconds": 0.092627344,
+      "gc_policy": "after every 8 module calls; the process-level repeat boundary retains one full collection"
+    }
+  ],
+  "reduction": {
+    "stage_latency_percent": {
+      "qwen_prefill": 5.59686682700821,
+      "qwen_decode": 8.118769457556573,
+      "diffusion": -17.648072155916644,
+      "acoustic_decoder": 6.489840337202363,
+      "semantic_encoder": 5.179862165443028,
+      "connectors": 25.318763989336627
+    },
+    "ttfa_percent": 2.0425264192899726,
+    "generation_wall_percent": 1.7449149688036343,
+    "rtf_percent": 1.7449149688036263
+  },
+  "size": {
+    "apk_path": "experiments/0002-vibevoice-1.5b-executorch-android/android/app/build/outputs/apk/debug/app-debug.apk",
+    "apk_bytes": 15038521,
+    "apk_sha256": "02357c071a20f811b3e789a7390fccf114e197797d7a4dd949776413c9926c21",
+    "module_count": 80,
+    "module_bytes": 9121176676,
+    "exact_duplicate_groups": 0,
+    "exact_duplicate_bytes": 0,
+    "duplication_method": "files grouped by full-file SHA-256; shared weights inside non-identical PTEs are not inferred",
+    "apk_plus_modules_bytes": 9136215197,
+    "deployed_module_bytes": 9121193936,
+    "deployed_excess_bytes": 17260,
+    "deployed_size_note": "files/models may contain packages from earlier component probes; accepted-build totals use only the locked 80-file manifest"
+  },
+  "memory": {
+    "before": {
+      "rss": {
+        "max": 491260,
+        "values": [
+          491260,
+          456460
+        ]
+      },
+      "pss": {
+        "max": 479784,
+        "values": [
+          479784,
+          457737
+        ]
+      },
+      "vmhwm": {
+        "max": 1650288,
+        "values": [
+          1632272,
+          1650288
+        ]
+      }
+    },
+    "after": {
+      "rss": {
+        "max": 480316,
+        "values": [
+          480316,
+          473284
+        ]
+      },
+      "pss": {
+        "max": 475956,
+        "values": [
+          468621,
+          475956
+        ]
+      },
+      "vmhwm": {
+        "max": 1660452,
+        "values": [
+          1660452,
+          1657552
+        ]
+      }
+    },
+    "vmhwm_change_percent": 0.6158924987638521
+  },
+  "correctness_and_determinism": {
+    "same_wav_as_memory_baseline": true,
+    "cross_process_deterministic": true,
+    "wav_sha256": "f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9",
+    "same_capacity_failure": true
+  },
+  "audio_comparison": {
+    "status": "rejected",
+    "reference_duration_seconds": 13.066666666666666,
+    "android_duration_seconds": 0.26666666666666666,
+    "coverage_ratio": 0.02040816326530612,
+    "android_rms_dbfs": -118.82837334463999,
+    "omissions": "fail",
+    "repetitions": "fail",
+    "corruption": "fail",
+    "speaker_consistency": "not_assessable",
+    "evidence": "results/locked-reference-comparison.json"
+  },
+  "locked_reference": {
+    "complete": false,
+    "requested_duration_seconds": 13.066666666666666,
+    "produced_duration_seconds": 0.26666666666666666,
+    "failure": {
+      "stage": "locked reference generation",
+      "reason": "Both accepted static-cache ABIs stop at CAPACITY after two 3,200-sample chunks; a third cached call cannot accept the widened cache tensors.",
+      "requested_samples": 313600,
+      "produced_samples": 6400,
+      "requested_duration_seconds": 13.066666666666666,
+      "produced_duration_seconds": 0.26666666666666666,
+      "complete_locked_run": false,
+      "metrics_not_available": [
+        "complete-transcript duration",
+        "complete-transcript wall time",
+        "complete-transcript RTF"
+      ]
+    }
+  },
+  "device": {
+    "manufacturer": "samsung",
+    "model": "SM-S918B",
+    "device": "dm3q",
+    "soc": "SM8550",
+    "android_release": "16",
+    "api_level": 36,
+    "abi": "arm64-v8a",
+    "build_fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+    "kernel": "5.15"
+  },
+  "runtime": {
+    "executorch": "1.2.0",
+    "backend": "xnnpack",
+    "qwen_precision": "int8",
+    "other_precision": "fp32"
+  },
+  "thermal": {
+    "before": {
+      "status": 0,
+      "status_scale": "Android THERMAL_STATUS_* (0=NONE)",
+      "ap_temperature_c": 40.2,
+      "skin_temperature_c": 36.2,
+      "battery_temperature_c": 35.4,
+      "thermalservice_sha256": "7b06c8e5584bf8d69fd3e32699526566a28a490adbe02f17bb12a42c93e74a77",
+      "thermalservice_path": "artifacts/0002/lane-d/complete-build-final/measurement/thermal-before.txt",
+      "battery_path": "artifacts/0002/lane-d/complete-build-final/measurement/battery-before.txt"
+    },
+    "after": {
+      "status": 1,
+      "status_scale": "Android THERMAL_STATUS_* (0=NONE)",
+      "ap_temperature_c": 53.2,
+      "skin_temperature_c": 40.2,
+      "battery_temperature_c": 36.9,
+      "thermalservice_sha256": "6e5984dfc45a91c0b09a104b86f2bb214c2214465c544933a3dbff9c9400e276",
+      "thermalservice_path": "artifacts/0002/lane-d/complete-build-final/measurement/thermal-after.txt",
+      "battery_path": "artifacts/0002/lane-d/complete-build-final/measurement/battery-after.txt"
+    }
+  },
+  "evidence": {
+    "baseline": "results/complete-build-memory-optimized.json",
+    "optimized_raw": "artifacts/0002/lane-d/complete-build-final/",
+    "optimized_measurement": "results/complete-build-final-measurement.json",
+    "audio_comparison": "results/locked-reference-comparison.json"
+  },
+  "implementation_commits": [
+    "4daa916e61adf1d37721f427c454f36efeca9817"
+  ],
+  "commands": [
+    "flock artifacts/locks/phone.lock experiments/0002-vibevoice-1.5b-executorch-android/android/optimize-complete-build-execution.sh",
+    "python3 -m unittest discover -s experiments/0002-vibevoice-1.5b-executorch-android/tests -p 'test_complete_build*.py'",
+    "experiments/0002-vibevoice-1.5b-executorch-android/android/run-generation-controller-tests.sh"
+  ],
+  "conclusion": "Not feasible for local locked-reference speech on the Galaxy S23 Ultra with this ExecuTorch/XNNPACK export. Periodic GC yields only a 1.74% median prefix improvement, smaller than the two-run variability and therefore not a validated material speedup; profiling shows module forward time dominates. It cannot repair the two-chunk static-cache limit, 2.04% duration coverage, effectively silent audio, roughly 9.136 GB APK-plus-module footprint, or approximately 107x prefix RTF. Component execution is reproducible; usable end-to-end speech is rejected."
+}
