@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "status": "rejected",
+  "scope": "objective and fixed-rubric comparison of the Step 35 Android WAV with the locked host reference",
+  "inputs": {
+    "reference": {
+      "path": "artifacts/0001/output-cpu/reference_generated.wav",
+      "wav_sha256": "fb0152dc686836fe23d9c39c3b24c1de82398f51b9747f5e36ad1db819ce0358",
+      "expected_wav_sha256": "fb0152dc686836fe23d9c39c3b24c1de82398f51b9747f5e36ad1db819ce0358",
+      "pcm_sha256": "ff6e9bb8266658847a3952291eba60242969f7058af2737b561de9e3d5e7ceba",
+      "sample_rate_hz": 24000,
+      "channels": 1,
+      "bits_per_sample": 16,
+      "encoding": "PCM_S16LE",
+      "sample_count": 313600,
+      "duration_seconds": 13.066666666666666,
+      "checks": {
+        "wav_sha256": true,
+        "sample_rate_hz": true,
+        "channels": true,
+        "bits_per_sample": true,
+        "encoding": true,
+        "sample_count": true
+      },
+      "verified": true
+    },
+    "android": {
+      "path": "artifacts/0002/lane-d/locked-reference/generation-run-0.wav",
+      "wav_sha256": "f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9",
+      "expected_wav_sha256": "f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9",
+      "pcm_sha256": "2c885ee3e0fcfb27e895301ce41352020cd71167b2218d272923eb7ed63f0447",
+      "sample_rate_hz": 24000,
+      "channels": 1,
+      "bits_per_sample": 16,
+      "encoding": "PCM_S16LE",
+      "sample_count": 6400,
+      "duration_seconds": 0.26666666666666666,
+      "checks": {
+        "wav_sha256": true,
+        "sample_rate_hz": true,
+        "channels": true,
+        "bits_per_sample": true,
+        "encoding": true,
+        "sample_count": true
+      },
+      "verified": true
+    }
+  },
+  "duration": {
+    "reference_seconds": 13.066666666666666,
+    "android_seconds": 0.26666666666666666,
+    "difference_seconds": -12.799999999999999,
+    "coverage_ratio": 0.02040816326530612,
+    "missing_samples": 307200
+  },
+  "alignment": {
+    "status": "insufficient_energy",
+    "lag_samples": null,
+    "lag_seconds": null,
+    "normalized_cross_correlation": null,
+    "overlap_samples": 0
+  },
+  "waveform": {
+    "reference": {
+      "rms": 0.057450421526098285,
+      "rms_dbfs": -24.814135609039816,
+      "peak": 0.39764404296875,
+      "dc_offset": -4.9993261999013475e-05,
+      "clipped_samples": 0,
+      "zero_crossing_rate": 0.10804562514548835
+    },
+    "android": {
+      "rms": 1.1444091796875e-06,
+      "rms_dbfs": -118.82837334463999,
+      "peak": 9.1552734375e-05,
+      "dc_offset": 1.430511474609375e-08,
+      "clipped_samples": 0,
+      "zero_crossing_rate": 0.0
+    },
+    "comparison_status": "insufficient_energy"
+  },
+  "spectral": {
+    "reference": {
+      "status": "measured",
+      "centroid_hz": 567.3132191983115,
+      "rolloff_95_hz": 1337.5255102040817,
+      "flatness": 0.00042283271506976007,
+      "band_energy_fraction": {
+        "0-300_hz": 0.2933594881088188,
+        "300-1000_hz": 0.6263116451246941,
+        "1000-4000_hz": 0.07297262978081318,
+        "4000-8000_hz": 0.007356183116634059,
+        "8000-12000_hz": 5.381315769666806e-08
+      }
+    },
+    "android": {
+      "status": "measured",
+      "centroid_hz": 5999.999999999999,
+      "rolloff_95_hz": 11400.0,
+      "flatness": 0.9999999999999991,
+      "band_energy_fraction": {
+        "0-300_hz": 0.024992189940643544,
+        "300-1000_hz": 0.05841924398625429,
+        "1000-4000_hz": 0.24992189940643547,
+        "4000-8000_hz": 0.3333333333333333,
+        "8000-12000_hz": 0.3330209309590753
+      }
+    },
+    "comparison_status": "insufficient_android_energy"
+  },
+  "quality_rubric": {
+    "rubric_version": 1,
+    "acceptance": "All four categories must pass; not-assessable is not a pass.",
+    "omissions": {
+      "criterion": "At least 95% duration coverage and both transcript speakers/turns must be intelligible.",
+      "status": "fail",
+      "evidence": "Android covers 2.040816% of the reference (6400/313600 samples); the remainder is omitted."
+    },
+    "repetitions": {
+      "criterion": "No repeated words, phrases, chunks, or stuck generation tokens not present in the reference.",
+      "status": "fail",
+      "evidence": "All three recorded selected tokens are ID 151654 in each run; the two emitted PCM chunk hashes differ, but the incomplete silent fragment cannot clear perceptual repetition."
+    },
+    "corruption": {
+      "criterion": "Intelligible speech, RMS at least -50 dBFS, no sustained silence/noise/metallic artifacts, and no clipping.",
+      "status": "fail",
+      "evidence": "RMS is -118.82837334463999 dBFS; no intelligible speech is present in the effectively silent fragment."
+    },
+    "speaker_consistency": {
+      "criterion": "Carter and Maya must both be audible, perceptually distinct, and stable within their turns.",
+      "status": "not_assessable",
+      "evidence": "The output ends before audible Carter/Maya turns and is below the speech threshold, so identity consistency cannot be assessed."
+    },
+    "listening_notes": "The Android fragment is effectively silent. No intelligible words, speaker turn, metallic artifact, or speaker identity can be heard; silence itself is disqualifying corruption."
+  },
+  "intermediate_evidence": {
+    "step35_status": "feasibility_failure",
+    "locked_preflight_status": "passed",
+    "exact_transcript_consumed": true,
+    "deterministic_runs": true,
+    "wav_byte_identical_across_runs": true,
+    "stop_reasons": [
+      "CAPACITY",
+      "CAPACITY"
+    ],
+    "produced_chunks_per_run": [
+      2,
+      2
+    ],
+    "required_chunks": 98,
+    "selected_tokens_per_run": [
+      [
+        151654,
+        151654,
+        151654
+      ],
+      [
+        151654,
+        151654,
+        151654
+      ]
+    ],
+    "chunk_pcm_sha256": [
+      [
+        "db15cf299d3ba8ff800dc1eb60dd6e41a69d006f348ca4ca139daf56c9894406",
+        "56a43ef88ddfcd0f56f7dd973312c0e73d62f59655c01d7b4e59aaa3be8b3fb6"
+      ],
+      [
+        "db15cf299d3ba8ff800dc1eb60dd6e41a69d006f348ca4ca139daf56c9894406",
+        "56a43ef88ddfcd0f56f7dd973312c0e73d62f59655c01d7b4e59aaa3be8b3fb6"
+      ]
+    ],
+    "divergence_localization": "All locked inputs passed and both phone runs agreed byte-for-byte. Divergence is therefore localized to generation: token selection repeated ID 151654 and the fixed decoder/semantic cache ABI stopped at CAPACITY after two chunks, before a complete or voiced waveform existed."
+  },
+  "implementation_commits": [
+    "cbf69615194f5f7f2507ea47e6872cd579e0f78f"
+  ],
+  "commands": [
+    "python3 experiments/0002-vibevoice-1.5b-executorch-android/export/compare_generation_audio.py --reference artifacts/0001/output-cpu/reference_generated.wav --android artifacts/0002/lane-d/locked-reference/generation-run-0.wav --step35 experiments/0002-vibevoice-1.5b-executorch-android/results/locked-reference-android.json --android-sha256 f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9 --android-samples 6400 --commit <implementation-commit> --output experiments/0002-vibevoice-1.5b-executorch-android/results/locked-reference-comparison.json",
+    "artifacts/venv-executorch-1.2/bin/python -m pytest -q experiments/0002-vibevoice-1.5b-executorch-android/tests/test_compare_generation_audio.py",
+    "python3 -m json.tool experiments/0002-vibevoice-1.5b-executorch-android/results/locked-reference-comparison.json >/dev/null"
+  ],
+  "conclusion": "Rejected. The verified Android WAV is a deterministic 0.266667-second, effectively silent fragment covering only 2.0408% of the verified 13.066667-second reference. Alignment and comparative spectral similarity are invalid because Android energy is insufficient. The fixed rubric fails omissions, repetitions, and corruption; speaker consistency is not assessable. Step 35 evidence localizes the divergence to repeated token selection followed by the two-chunk static-cache capacity stop, not to input provenance or WAV assembly."
+}
