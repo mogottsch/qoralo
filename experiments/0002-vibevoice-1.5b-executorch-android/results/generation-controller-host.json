@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "component": "native_generation_controller",
+  "status": "accepted_host_control_plane",
+  "recorded_at_utc": "2026-08-09T09:01:01Z",
+  "implementation_commit": "31d5111da0827af9f0e3af9ffc380bbf2baeb71d",
+  "provenance": {
+    "source_revision": "6dd49cb7200c0367205a5f1e650244259e9e423d",
+    "model_revision": "c00898d257e6b46004e3e2866a47534085fb685a",
+    "seed": 42,
+    "cfg_scale": 1.3,
+    "runtime_target": "ExecuTorch 1.2 / XNNPACK",
+    "host_java": "OpenJDK 21.0.12"
+  },
+  "selected_configuration": {
+    "qwen2": "dynamic-activation/static per-channel INT8 linear weights",
+    "int4_selected": false,
+    "int4_rejection": "packed INT4 reduced package size but exceeded aggregate and cache error limits on host",
+    "controller_tensor_precision": "FP32",
+    "precision_rationale": "INT8 is the smallest Qwen2 package accepted on both host and Galaxy S23 Ultra. Keeping logits, hidden states, connectors, semantic features, diffusion scheduler state, decoder PCM, and cache boundary tensors FP32 preserves the validated component ABIs and confines quantization to Qwen2 linear weights."
+  },
+  "abi": {
+    "qwen2_cache_count": 56,
+    "streaming_decoder_cache_count": 34,
+    "semantic_encoder_cache_count": 34,
+    "qwen2_cache_capacity": 1024,
+    "hidden_width": 1536,
+    "acoustic_width": 64,
+    "semantic_width": 128,
+    "pcm_chunk_samples": 3200,
+    "sample_rate_hz": 24000,
+    "diffusion_steps_per_chunk": 10,
+    "wav": "mono PCM S16LE RIFF/WAVE"
+  },
+  "state_ownership_documented": true,
+  "host_tests": {
+    "status": "passed",
+    "test_class": "dev.moket.vibevoiceprobe.GenerationControllerTest",
+    "coverage": {
+      "captured_shape_fake_component_transport": true,
+      "qwen_prefill_decode_and_56_cache_replacement": true,
+      "decoder_and_semantic_34_cache_replacement": true,
+      "speech_start_end_ordering": true,
+      "eos_termination": true,
+      "selector_capacity_termination": true,
+      "qwen_cache_capacity_rejection": true,
+      "ten_step_diffusion": true,
+      "speaker_change_and_noop_semantics": true,
+      "reset_and_deterministic_selector_restart": true,
+      "component_failure_fail_closed": true,
+      "wrong_cache_count_rejection": true,
+      "wav_header_sizes_format_and_pcm_clipping": true
+    },
+    "captured_flow_counts": {
+      "selected_tokens": 5,
+      "audio_chunks": 2,
+      "diffusion_prediction_calls": 20,
+      "qwen_decode_calls": 4,
+      "audio_decoder_calls": 2,
+      "semantic_encoder_calls": 2,
+      "connector_calls": 2,
+      "pcm_samples": 6400,
+      "wav_bytes": 12844
+    }
+  },
+  "android_compile": {
+    "status": "passed",
+    "task": ":app:assembleDebug",
+    "phone_used": false
+  },
+  "commands": [
+    "ROOT=experiments/0002-vibevoice-1.5b-executorch-android; OUT=$(mktemp -d); javac -d \"$OUT\" \"$ROOT/android/app/src/main/java/dev/moket/vibevoiceprobe/TokenSelector.java\" \"$ROOT/android/app/src/main/java/dev/moket/vibevoiceprobe/DpmSolverMultistepScheduler.java\" \"$ROOT/android/app/src/main/java/dev/moket/vibevoiceprobe/GenerationController.java\" \"$ROOT/tests/java/dev/moket/vibevoiceprobe/GenerationControllerTest.java\"; java -cp \"$OUT\" dev.moket.vibevoiceprobe.GenerationControllerTest; rm -rf \"$OUT\"",
+    "ANDROID_HOME=/home/moritz/Android/Sdk artifacts/tools/gradle-8.10.2/bin/gradle -p experiments/0002-vibevoice-1.5b-executorch-android/android --offline assembleDebug"
+  ],
+  "evidence": {
+    "abi": "fixtures/generation-controller-abi.md",
+    "controller": "android/app/src/main/java/dev/moket/vibevoiceprobe/GenerationController.java",
+    "host_test": "tests/java/dev/moket/vibevoiceprobe/GenerationControllerTest.java"
+  },
+  "conclusion": "Accepted for Step 31. The native Java controller owns and validates utterance state, cache transport, token control flow, diffusion scheduling, speaker selection, streaming PCM, failure/reset behavior, and WAV finalization without Python runtime state. Captured/fake component tests pass and the Android app compiles. This is control-plane evidence only; real PTE-backed first-chunk generation remains Step 32."
+}

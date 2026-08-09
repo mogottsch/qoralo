@@ -97,6 +97,8 @@ public final class GenerationControllerTest {
         check(fake.lastDecoderInput == null && fake.lastSemanticInput == null, "first streaming calls have no caches");
         c.selectSpeaker(1);
         check(c.activeSpeakerId() == 1 && c.speakerTransitions() == 1, "speaker transition");
+        c.selectSpeaker(1);
+        check(c.speakerTransitions() == 1, "reselecting active speaker must be a no-op");
         check(c.step().audioProduced(), "second diffusion must produce audio");
         check(fake.lastDecoderInput != null && fake.lastDecoderInput.length == 34, "decoder cache handoff");
         check(fake.lastSemanticInput != null && fake.lastSemanticInput.length == 34, "semantic cache handoff");
