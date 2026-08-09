@@ -58,29 +58,39 @@ def main() -> None:
 
     allowed = [TOKENS[name] for name in ("speech_start", "speech_end", "speech_diffusion", "eos")]
     processor = VibeVoiceTokenConstraintProcessor(allowed, device=torch.device("cpu"))
-    rows = []
-    for step, selected in enumerate(LOCKED_SEQUENCE):
-        logits = torch.full((1, VOCABULARY_SIZE), -1000.0, dtype=torch.float32)
-        # A disallowed distractor proves masking. Ties at steps 1 and 2 prove the
-        # first/lowest vocabulary index rule of torch.argmax.
-        logits[0, 7] = 1_000_000.0
-        logits[0, selected] = 5.0
-        if step == 0:
-            logits[0, TOKENS["speech_end"]] = 5.0
-        if step == 2:
-            logits[0, TOKENS["speech_diffusion"]] = -103.0
-            logits[0, TOKENS["eos"]] = -104.0
-        scores = processor(torch.zeros((1, 1), dtype=torch.long), logits)
-        decision = int(torch.argmax(scores, dim=-1).item())
-        if decision != selected:
-            raise SystemExit(f"Step {step}: expected {selected}, got {decision}")
-        rows.append({
-            "step": step,
-            "selected_id": decision,
-            "logits_sha256": tensor_sha256(logits),
-            "masked_scores_sha256": tensor_sha256(scores),
-            "terminates": decision == TOKENS["eos"],
-        })
+
+    def capture_sequence() -> list[dict[str, object]]:
+        rows = []
+        for step, selected in enumerate(LOCKED_SEQUENCE):
+            logits = torch.full((1, VOCABULARY_SIZE), -1000.0, dtype=torch.float32)
+            # A disallowed distractor proves masking. The step-zero allowed-token
+            # tie proves torch.argmax's first/lowest vocabulary index rule.
+            logits[0, 7] = 1_000_000.0
+            logits[0, selected] = 5.0
+            if step == 0:
+                logits[0, TOKENS["speech_end"]] = 5.0
+            if step == 2:
+                logits[0, TOKENS["speech_diffusion"]] = -103.0
+                logits[0, TOKENS["eos"]] = -104.0
+            scores = processor(torch.zeros((1, 1), dtype=torch.long), logits)
+            decision = int(torch.argmax(scores, dim=-1).item())
+            if decision != selected:
+                raise SystemExit(f"Step {step}: expected {selected}, got {decision}")
+            rows.append({
+                "step": step,
+                "selected_id": decision,
+                "logits_sha256": tensor_sha256(logits),
+                "masked_scores_sha256": tensor_sha256(scores),
+                "terminates": decision == TOKENS["eos"],
+            })
+        return rows
+
+    torch.manual_seed(args.seed)
+    rows = capture_sequence()
+    torch.manual_seed(args.seed)
+    reset_rows = capture_sequence()
+    if reset_rows != rows:
+        raise SystemExit("Token decisions or hashes changed after resetting the pinned seed")
 
     args.output.mkdir(parents=True, exist_ok=True)
     capture = {
@@ -101,6 +111,7 @@ def main() -> None:
             "top_k": None,
             "top_p": None,
             "rng_consumed": False,
+            "seed_reset_verified": True,
             "tie_rule": "lowest vocabulary ID (first index)",
         },
         "vocabulary_size": VOCABULARY_SIZE,

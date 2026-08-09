@@ -28,6 +28,7 @@ def test_manifest_locks_pytorch_sequence_and_settings() -> None:
     assert manifest["provenance"]["seed"] == 42
     assert manifest["settings"]["do_sample"] is False
     assert manifest["settings"]["rng_consumed"] is False
+    assert manifest["settings"]["seed_reset_verified"] is True
     assert manifest["allowed_ids"] == [151643, 151652, 151653, 151654]
     assert [row["selected_id"] for row in manifest["steps"]] == manifest["locked_sequence"]
     assert manifest["locked_sequence"][-1] == manifest["tokens"]["eos"]
