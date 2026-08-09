@@ -1,0 +1,342 @@
+{
+  "android_packaging_inspection": {
+    "aar": {
+      "bytes": 6937798,
+      "name": "executorch-android-1.2.0.aar",
+      "sha256": "e5c0a274ac289e31538ff258bf5f13d58cc90bc94b449a40e210ce0e514c2459"
+    },
+    "command": [
+      "javap",
+      "-classpath",
+      "/home/moritz/.gradle/caches/8.10.2/transforms/708750786dfb5d1ead58492a3134c5d1/transformed/executorch-android-1.2.0-api.jar",
+      "org.pytorch.executorch.Module"
+    ],
+    "dependency": "org.pytorch:executorch-android:1.2.0",
+    "interpretation": "Module.load accepts one model path plus integer load-mode/thread arguments; no PTD/data path is exposed.",
+    "ptd_or_data_loader_parameter_present": false,
+    "relevant_public_api": [
+      "public static org.pytorch.executorch.Module load(java.lang.String, int);",
+      "public static org.pytorch.executorch.Module load(java.lang.String, int, int);",
+      "public static org.pytorch.executorch.Module load(java.lang.String);",
+      "public org.pytorch.executorch.EValue[] execute(java.lang.String, org.pytorch.executorch.EValue...);",
+      "public native java.lang.String[] getMethods();"
+    ],
+    "status": "inspected"
+  },
+  "apis": {
+    "external_tagging": "delegate_external_constants_pass_unlifted(module, gen_tag_fn)",
+    "external_write": "ExecutorchProgramManager.write_tensor_data_to_file(outdir)",
+    "multimethod_export": "executorch.exir.to_edge(dict[str, ExportedProgram]).to_executorch()",
+    "private_host_external_load": "portable_lib._load_for_executorch(pte_path, ptd_path)",
+    "public_host_load_signature": "(self, data: Union[bytes, bytearray, BinaryIO, pathlib.Path, str], *, verification: executorch.extension.pybindings._portable_lib.Verification = <Verification.InternalConsistency: 1>, enable_etdump: bool = False, debug_buffer_size: int = 0) -> executorch.runtime.Program"
+  },
+  "bounded_failures": [
+    "The public Python Runtime.load_program API has no PTD/data argument; execution was isolated because missing external data terminates this 1.2 build.",
+    "Loading the external PTE through public Runtime and executing without a PTD terminated with SIGSEGV; it was isolated and no workaround was added.",
+    "Android was inspected from the cached 1.2.0 AAR/API jar only; no device or phone lock was used."
+  ],
+  "conclusions": {
+    "external_constants_exported_to_ptd": true,
+    "external_constants_fit_current_android_java_path": false,
+    "external_constants_fit_public_host_runtime_path": false,
+    "external_constants_run_with_private_host_api": true,
+    "multi_method_external_constants_supported_by_private_host_api": true,
+    "recommendation": "Use one inline multi-method PTE to share warm-up weights. Do not adopt PTD/external constants in the current Runtime/Android Java path; revisit only with an explicit data-loader API and regression test.",
+    "warmup_methods_can_share_inline_constants": true
+  },
+  "invocation": [
+    "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/bin/python",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0002-vibevoice-1.5b-executorch-android/export/probe_multimethod_external_constants.py",
+    "--output-dir",
+    "/home/moritz/dev/vibevoice-android-spike/artifacts/0002/executorch-capability-probe",
+    "--result",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0002-vibevoice-1.5b-executorch-android/results/executorch-multimethod-external-constants.json"
+  ],
+  "probe": "executorch_1_2_multimethod_external_constants",
+  "schema_version": 1,
+  "scope": "synthetic_only_no_vibevoice_no_phone",
+  "stages": {
+    "external-export": {
+      "artifacts": {
+        "ptd": {
+          "bytes": 65792,
+          "name": "shared-weights.ptd",
+          "sha256": "7322e423c7aa8c57d5f5d355fa8abc642553f186ba6831c13e95a024b3ef2844"
+        },
+        "pte": {
+          "bytes": 2048,
+          "name": "external-single.pte",
+          "sha256": "94c74732bf894f03bfb592d5bbafc629fb59a0f329947b5dcc6cc2bd9a8f69a9"
+        }
+      },
+      "command": [
+        "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/bin/python",
+        "/home/moritz/dev/vibevoice-android-spike/experiments/0002-vibevoice-1.5b-executorch-android/export/probe_multimethod_external_constants.py",
+        "--stage",
+        "external-export",
+        "--output-dir",
+        "/home/moritz/dev/vibevoice-android-spike/artifacts/0002/executorch-capability-probe"
+      ],
+      "methods": [
+        "forward"
+      ],
+      "returncode": 0,
+      "signal": null,
+      "status": "passed",
+      "stderr_log": "artifacts/0002/executorch-capability-probe/external-export.stderr.log",
+      "stderr_tail": [
+        "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/copyreg.py:105: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.",
+        "  return cls.__new__(cls, *args)",
+        "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/copyreg.py:105: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.",
+        "  return cls.__new__(cls, *args)",
+        "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/copyreg.py:105: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.",
+        "  return cls.__new__(cls, *args)",
+        "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/copyreg.py:105: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.",
+        "  return cls.__new__(cls, *args)",
+        "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/copyreg.py:105: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.",
+        "  return cls.__new__(cls, *args)",
+        "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/copyreg.py:105: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.",
+        "  return cls.__new__(cls, *args)",
+        "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/copyreg.py:105: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.",
+        "  return cls.__new__(cls, *args)",
+        "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/copyreg.py:105: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.",
+        "  return cls.__new__(cls, *args)",
+        "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/copyreg.py:105: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.",
+        "  return cls.__new__(cls, *args)",
+        "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/exir/tensor.py:83: FutureWarning: guard_size_oblivious will be removed. Consider using explicit unbacked handling     potentially utilizing guard_or_false, guard_or_true, or statically_known_true",
+        "  return guard_size_oblivious(self.stride < other.stride)"
+      ],
+      "stdout_log": "artifacts/0002/executorch-capability-probe/external-export.stdout.log",
+      "tensor_data_keys": [
+        "shared-weights"
+      ]
+    },
+    "external-legacy-run": {
+      "actual_first": 0.49609375,
+      "api": "executorch.extension.pybindings.portable_lib._load_for_executorch(pte_path, ptd_path)",
+      "command": [
+        "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/bin/python",
+        "/home/moritz/dev/vibevoice-android-spike/experiments/0002-vibevoice-1.5b-executorch-android/export/probe_multimethod_external_constants.py",
+        "--stage",
+        "external-legacy-run",
+        "--output-dir",
+        "/home/moritz/dev/vibevoice-android-spike/artifacts/0002/executorch-capability-probe"
+      ],
+      "methods": [
+        "forward"
+      ],
+      "returncode": 0,
+      "signal": null,
+      "status": "passed",
+      "stderr_log": "artifacts/0002/executorch-capability-probe/external-legacy-run.stderr.log",
+      "stderr_tail": [
+        "Failed to load /home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torchao/_C_cutlass_90a.abi3.so",
+        "Failed to load /home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so",
+        "[cpuinfo_utils.cpp:71] Reading file /sys/devices/soc0/image_version",
+        "[cpuinfo_utils.cpp:87] Failed to open midr file /sys/devices/soc0/image_version",
+        "[cpuinfo_utils.cpp:100] Reading file /sys/devices/system/cpu/cpu0/regs/identification/midr_el1",
+        "[cpuinfo_utils.cpp:109] Failed to open midr file /sys/devices/system/cpu/cpu0/regs/identification/midr_el1",
+        "[cpuinfo_utils.cpp:125] CPU info and manual query on # of cpus dont match."
+      ],
+      "stdout_log": "artifacts/0002/executorch-capability-probe/external-legacy-run.stdout.log"
+    },
+    "external-multimethod": {
+      "artifacts": {
+        "ptd": {
+          "bytes": 65792,
+          "name": "shared-weights.ptd",
+          "sha256": "7322e423c7aa8c57d5f5d355fa8abc642553f186ba6831c13e95a024b3ef2844"
+        },
+        "pte": {
+          "bytes": 2816,
+          "name": "external-multimethod.pte",
+          "sha256": "73a96906e6f074bd20a02c3bf39bbe53bebc2613f7e9befd53ec7b13a53176c8"
+        }
+      },
+      "command": [
+        "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/bin/python",
+        "/home/moritz/dev/vibevoice-android-spike/experiments/0002-vibevoice-1.5b-executorch-android/export/probe_multimethod_external_constants.py",
+        "--stage",
+        "external-multimethod",
+        "--output-dir",
+        "/home/moritz/dev/vibevoice-android-spike/artifacts/0002/executorch-capability-probe"
+      ],
+      "methods": [
+        "steady",
+        "warmup"
+      ],
+      "returncode": 0,
+      "signal": null,
+      "status": "passed",
+      "stderr_log": "artifacts/0002/executorch-capability-probe/external-multimethod.stderr.log",
+      "stderr_tail": [
+        "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/copyreg.py:105: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.",
+        "  return cls.__new__(cls, *args)",
+        "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/copyreg.py:105: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.",
+        "  return cls.__new__(cls, *args)",
+        "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/copyreg.py:105: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.",
+        "  return cls.__new__(cls, *args)",
+        "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/copyreg.py:105: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.",
+        "  return cls.__new__(cls, *args)",
+        "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/copyreg.py:105: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.",
+        "  return cls.__new__(cls, *args)",
+        "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/copyreg.py:105: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.",
+        "  return cls.__new__(cls, *args)",
+        "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/copyreg.py:105: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.",
+        "  return cls.__new__(cls, *args)",
+        "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/copyreg.py:105: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.",
+        "  return cls.__new__(cls, *args)",
+        "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/exir/tensor.py:83: FutureWarning: guard_size_oblivious will be removed. Consider using explicit unbacked handling     potentially utilizing guard_or_false, guard_or_true, or statically_known_true",
+        "  return guard_size_oblivious(self.stride < other.stride)",
+        "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/exir/tensor.py:83: FutureWarning: guard_size_oblivious will be removed. Consider using explicit unbacked handling     potentially utilizing guard_or_false, guard_or_true, or statically_known_true",
+        "  return guard_size_oblivious(self.stride < other.stride)"
+      ],
+      "stdout_log": "artifacts/0002/executorch-capability-probe/external-multimethod.stdout.log",
+      "tensor_data_keys": [
+        "shared-weights"
+      ]
+    },
+    "external-multimethod-legacy-run": {
+      "api": "executorch.extension.pybindings.portable_lib._load_for_executorch(pte_path, ptd_path)",
+      "command": [
+        "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/bin/python",
+        "/home/moritz/dev/vibevoice-android-spike/experiments/0002-vibevoice-1.5b-executorch-android/export/probe_multimethod_external_constants.py",
+        "--stage",
+        "external-multimethod-legacy-run",
+        "--output-dir",
+        "/home/moritz/dev/vibevoice-android-spike/artifacts/0002/executorch-capability-probe"
+      ],
+      "executions": {
+        "steady": {
+          "actual_first": 1.49609375,
+          "expected_first": 1.49609375
+        },
+        "warmup": {
+          "actual_first": 0.49609375,
+          "expected_first": 0.49609375
+        }
+      },
+      "methods": [
+        "steady",
+        "warmup"
+      ],
+      "returncode": 0,
+      "signal": null,
+      "status": "passed",
+      "stderr_log": "artifacts/0002/executorch-capability-probe/external-multimethod-legacy-run.stderr.log",
+      "stderr_tail": [
+        "Failed to load /home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torchao/_C_cutlass_90a.abi3.so",
+        "Failed to load /home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so",
+        "[cpuinfo_utils.cpp:71] Reading file /sys/devices/soc0/image_version",
+        "[cpuinfo_utils.cpp:87] Failed to open midr file /sys/devices/soc0/image_version",
+        "[cpuinfo_utils.cpp:100] Reading file /sys/devices/system/cpu/cpu0/regs/identification/midr_el1",
+        "[cpuinfo_utils.cpp:109] Failed to open midr file /sys/devices/system/cpu/cpu0/regs/identification/midr_el1",
+        "[cpuinfo_utils.cpp:125] CPU info and manual query on # of cpus dont match."
+      ],
+      "stdout_log": "artifacts/0002/executorch-capability-probe/external-multimethod-legacy-run.stdout.log"
+    },
+    "external-public-run": {
+      "command": [
+        "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/bin/python",
+        "/home/moritz/dev/vibevoice-android-spike/experiments/0002-vibevoice-1.5b-executorch-android/export/probe_multimethod_external_constants.py",
+        "--stage",
+        "external-public-run",
+        "--output-dir",
+        "/home/moritz/dev/vibevoice-android-spike/artifacts/0002/executorch-capability-probe"
+      ],
+      "returncode": -11,
+      "signal": "SIGSEGV",
+      "status": "terminated",
+      "stderr_log": "artifacts/0002/executorch-capability-probe/external-public-run.stderr.log",
+      "stderr_tail": [
+        "Failed to load /home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torchao/_C_cutlass_90a.abi3.so",
+        "Failed to load /home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so",
+        "[program.cpp:162] InternalConsistency verification requested but not available"
+      ],
+      "stdout_log": "artifacts/0002/executorch-capability-probe/external-public-run.stdout.log"
+    },
+    "portable": {
+      "artifacts": {
+        "individual": [
+          {
+            "bytes": 67204,
+            "name": "portable-warmup.pte",
+            "sha256": "00fcff17bb289f34c8bd0a63fc256b675884596d3dfd2435512ec4c2cb244299"
+          },
+          {
+            "bytes": 67204,
+            "name": "portable-steady.pte",
+            "sha256": "5507ff02d359f606ee0b9eb328dfe61b01ed74850bdf8987afee1a4567a49983"
+          }
+        ],
+        "multimethod": {
+          "bytes": 68500,
+          "name": "portable-multimethod.pte",
+          "sha256": "df9b5ecf0529573ebfb324165be49e7e51d3bb42636e8d30e7a7b98951ad5864"
+        }
+      },
+      "command": [
+        "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/bin/python",
+        "/home/moritz/dev/vibevoice-android-spike/experiments/0002-vibevoice-1.5b-executorch-android/export/probe_multimethod_external_constants.py",
+        "--stage",
+        "portable",
+        "--output-dir",
+        "/home/moritz/dev/vibevoice-android-spike/artifacts/0002/executorch-capability-probe"
+      ],
+      "executions": {
+        "steady": {
+          "actual_first": 1.49609375,
+          "expected_first": 1.49609375,
+          "max_abs_error": 0.0
+        },
+        "warmup": {
+          "actual_first": 0.49609375,
+          "expected_first": 0.49609375,
+          "max_abs_error": 0.0
+        }
+      },
+      "methods": [
+        "steady",
+        "warmup"
+      ],
+      "returncode": 0,
+      "signal": null,
+      "size_analysis": {
+        "deduplicated": true,
+        "multimethod_bytes": 68500,
+        "multimethod_over_mean_single_bytes": 1296.0,
+        "sum_individual_bytes": 134408
+      },
+      "status": "passed",
+      "stderr_log": "artifacts/0002/executorch-capability-probe/portable.stderr.log",
+      "stderr_tail": [
+        "Failed to load /home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torchao/_C_cutlass_90a.abi3.so",
+        "Failed to load /home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so",
+        "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/copyreg.py:105: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.",
+        "  return cls.__new__(cls, *args)",
+        "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/exir/tensor.py:83: FutureWarning: guard_size_oblivious will be removed. Consider using explicit unbacked handling     potentially utilizing guard_or_false, guard_or_true, or statically_known_true",
+        "  return guard_size_oblivious(self.stride < other.stride)",
+        "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/copyreg.py:105: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.",
+        "  return cls.__new__(cls, *args)",
+        "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/exir/tensor.py:83: FutureWarning: guard_size_oblivious will be removed. Consider using explicit unbacked handling     potentially utilizing guard_or_false, guard_or_true, or statically_known_true",
+        "  return guard_size_oblivious(self.stride < other.stride)",
+        "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/copyreg.py:105: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.",
+        "  return cls.__new__(cls, *args)",
+        "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/copyreg.py:105: FutureWarning: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.",
+        "  return cls.__new__(cls, *args)",
+        "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/exir/tensor.py:83: FutureWarning: guard_size_oblivious will be removed. Consider using explicit unbacked handling     potentially utilizing guard_or_false, guard_or_true, or statically_known_true",
+        "  return guard_size_oblivious(self.stride < other.stride)",
+        "[program.cpp:162] InternalConsistency verification requested but not available"
+      ],
+      "stdout_log": "artifacts/0002/executorch-capability-probe/portable.stdout.log",
+      "weight_payload_bytes": 65536
+    }
+  },
+  "versions": {
+    "executorch": "1.2.0",
+    "flatc": "flatc version 24.3.25",
+    "platform": "Linux-6.12.101-1-MANJARO-x86_64-with-glibc2.44",
+    "python": "3.11.13",
+    "torch": "2.11.0+cpu"
+  }
+}
