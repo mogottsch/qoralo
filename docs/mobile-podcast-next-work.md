@@ -147,21 +147,27 @@ For single-speaker models, design a later evaluation where two persistent voice 
 
 ## Required Crew task graph
 
-The planner may refine titles, but the following objectives must remain traceable. Expose safe parallelism and preserve strict dependencies.
+Keep these 19 reviewable tasks traceable. Expose safe parallelism, preserve strict dependencies, and do not start work before approval.
 
-1. **Lock the shared 15-second preview protocol and create reproducible audio-analysis utilities.**
-2. **Prepare and pin VibeVoice Realtime 0.5B.** Depends on task 1.
-3. **Prepare and pin Pocket TTS 100M.** Depends on task 1.
-4. **Prepare and pin Kokoro 82M.** Depends on task 1.
-5. **Generate and measure the VibeVoice Realtime preview.** Depends on task 2.
-6. **Generate and measure the Pocket TTS preview.** Depends on task 3.
-7. **Generate and measure the Kokoro preview.** Depends on task 4.
-8. **Capture VibeVoice 1.5B recurrent calls 0–19 and document cache stabilization.** May run in parallel with the lightweight setup tasks but owns the heavy-RAM slot.
-9. **Design and host-validate the VibeVoice 1.5B warm-up/steady-state cache ABI through chunk 4.** Depends on task 8.
-10. **Run and compare VibeVoice 1.5B chunks 0–3 on Android.** Depends on task 9 and owns the phone.
-11. **Build the listening bake-off page and structured comparison.** Depends on tasks 5–7; publish ignored WAVs through the existing preview mechanism.
-12. **Prepare Realtime 0.5B Android component/runtime feasibility recommendations.** Depends on task 5 and may run in parallel with tasks 9–11.
-13. **Synthesize the candidate decision report and update the preview.** Depends on tasks 10–12. This is an integration-writer task and must not start further model conversions.
+1. **Lock the shared preview protocol, schemas, and resource controls.** Create the conservative initial policy: one model-loading/generation job at a time until task 6 replaces it with measured rules.
+2. **Scaffold and verify the private listening preview and plan DAG.** Depends on task 1. The existing preview must show all 19 tasks as a dependency DAG with current `todo`, `in_progress`, `blocked`, and `completed` states, plus overall progress. It must be generated from Crew task data rather than hand-maintained labels. This task owns preview HTML/publication until task 17.
+3. **Prepare and pin VibeVoice Realtime 0.5B.** Depends on task 1.
+4. **Prepare and pin Pocket TTS 100M.** Depends on task 1.
+5. **Prepare and pin Kokoro 82M.** Depends on task 1.
+6. **Measure preview-model RSS and freeze generation capacity.** Depends on tasks 3–5. Run Realtime, Pocket, and Kokoro preflights sequentially under the exclusive heavy-RAM/measurement lock and conservative generation slot. Publish a machine-readable policy. Realtime remains globally exclusive; only Pocket plus Kokoro may overlap, and only if their measured combined peak plus safety margin is below the host limit.
+7. **Generate and measure the VibeVoice Realtime preview.** Depends on tasks 3 and 6; acquires the globally exclusive heavy-RAM/model-generation lock.
+8. **Generate and measure the Pocket TTS preview.** Depends on tasks 4 and 6; follows the measured policy.
+9. **Generate and measure the Kokoro preview.** Depends on tasks 5 and 6; follows the measured policy.
+10. **Capture VibeVoice 1.5B recurrent calls 0–19.** Depends on task 1 and owns the heavy-RAM lock.
+11. **Analyze cache stabilization and publish the locked-prefix supplement.** Depends on task 10.
+12. **Probe ExecuTorch multi-method PTE and external constants support.** Independent synthetic probe; no heavy-RAM or phone ownership.
+13. **Freeze the VibeVoice 1.5B four-call cache ABI and thresholds.** Depends on tasks 11 and 12.
+14. **Implement and host-validate the VibeVoice 1.5B four-call export.** Depends on task 13. Owns `export/` streaming adapters/exporters, export manifests, and host runtime validation; owns the heavy-RAM lock.
+15. **Prepare the Android four-call harness for the frozen ABI.** Depends on task 13. Owns Android Java, Android metadata parsing, Android I/O serialization, and mocked harness tests; it must not edit task 14's exporter or host-runtime validation paths.
+16. **Run and compare VibeVoice 1.5B chunks 0–3 on Android.** Depends on tasks 14 and 15 and owns the phone.
+17. **Populate and publish the three-model listening bake-off and current plan DAG.** Depends on tasks 2 and 7–9. It becomes the sole preview integration writer, uploads ignored WAVs, and refreshes all task statuses.
+18. **Prepare Realtime 0.5B Android component/runtime feasibility recommendations.** Depends on task 7 and performs no conversion.
+19. **Synthesize the candidate decision report and update the preview/DAG.** Depends on tasks 16–18. It is the final integration writer and must not start further conversions. Subjective listening fields may remain explicitly `pending_user_review`; the task publishes evidence and stops for the user's decision rather than inventing ratings.
 
 The final task must leave the project ready for a user decision among:
 
@@ -173,13 +179,18 @@ The final task must leave the project ready for a user decision among:
 
 ## Parallelism and serialized resources
 
-- **Heavy-RAM capacity: one.** VibeVoice 1.5B capture/export and Realtime 0.5B heavyweight generation may not overlap. Pocket TTS and Kokoro can run concurrently only after observing that combined RSS remains safely below the 32 GiB host limit.
+- **Heavy-RAM/measurement capacity: one.** Every model load, short RSS preflight, VibeVoice 1.5B capture/export, and Realtime 0.5B generation acquires the same exclusive lock. This prevents contaminated RSS baselines and unmeasured model combinations.
+- **Generation policy:** Task 1 begins with a conservative single global slot. Task 6 measures all three candidates sequentially and may permit Pocket plus Kokoro concurrently only when their combined measured peaks plus safety margin are safe. Realtime always consumes the exclusive heavy/model-generation capacity and never overlaps Pocket or Kokoro.
 - **Phone capacity: one.** No concurrent ADB/device tasks. The fourth-chunk Android recovery owns the phone exclusively.
-- **Integration writer: one.** Shared transcript/manifest, common comparison result, experiment index, preview HTML, and publication are serialized.
+- **Integration writer: one.** Shared transcript/manifest, common comparison result, experiment index, preview HTML/DAG, and publication are serialized through tasks 1 → 2 → 17 → 19.
 - Use separate virtual environments and artifact roots per model.
 - Workers reserve committed files before editing and avoid staging unrelated concurrent changes.
 
 Use up to three workers for setup/research, but at most two simultaneous generation processes and never two heavy-RAM jobs.
+
+The dependency-only critical path is task 1 → task 10 → task 11 → task 13 → tasks 14/15 → task 16 → task 19. Actual wall time is also constrained by the model-resource gate. Prefer short user-facing preview work first: parallelize non-loading setup in tasks 3–5 and task 12, serialize their smoke loads and task 6 preflights, generate the three previews under the measured policy, then give the exclusive gate to task 10 and later task 14. Reorder only when a candidate is blocked or measured duration clearly favors another safe ordering.
+
+A setup task that cannot satisfy licensing, dependency, access, or smoke-load prerequisites enters Crew `blocked` state and prevents downstream preview work; a blocker artifact is not a completed preview. By contrast, an executed VibeVoice 1.5B fourth-chunk experiment may complete with a reproducible negative feasibility result so the final report can reject that path.
 
 ## Evidence and artifact policy
 
