@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/vibevoice-realtime-feasibility-inventory.schema.json",
+  "title": "VibeVoice Realtime Android feasibility inventory",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schema_version", "status", "candidate", "components", "duplicated_constants", "streaming_state", "package_estimates", "fixture_plan", "runtime_recommendations", "decision", "sources"],
+  "properties": {
+    "$schema": {"const": "./feasibility-inventory.schema.json"},
+    "schema_version": {"const": 1},
+    "status": {"const": "recommendations_only_no_conversion_started"},
+    "candidate": {
+      "type": "object",
+      "required": ["model_id", "model_revision", "source_revision", "checkpoint_bytes", "checkpoint_parameters", "active_parameters", "inactive_duplicated_parameters", "active_formula", "uncertainty"]
+    },
+    "components": {
+      "type": "array", "minItems": 4,
+      "items": {"type": "object", "required": ["id", "checkpoint_parameters", "inactive_duplicated_parameters", "active_parameters", "boundary", "operators", "notes"]}
+    },
+    "duplicated_constants": {"type": "array", "minItems": 3},
+    "streaming_state": {
+      "type": "object",
+      "required": ["official_state_is_fixed_size", "classification", "qwen_kv_formula", "qwen_behavior", "acoustic_behavior", "scheduler_behavior", "uncertainty"],
+      "properties": {"official_state_is_fixed_size": {"const": false}}
+    },
+    "package_estimates": {
+      "type": "object",
+      "required": ["scope", "formulas", "estimates", "uncertainty"],
+      "properties": {"estimates": {"type": "array", "minItems": 3, "items": {"type": "object", "required": ["scheme", "lower_bytes", "upper_bytes", "runtime_support_claimed"]}}}
+    },
+    "fixture_plan": {"type": "array", "minItems": 6, "items": {"type": "object", "required": ["order", "component", "inputs", "outputs", "cases"]}},
+    "runtime_recommendations": {"type": "array", "minItems": 3, "items": {"type": "object", "required": ["runtime", "priority", "recommendation", "approval_gate"]}},
+    "decision": {
+      "type": "object",
+      "required": ["android_feasible", "listening_quality", "next_action", "conditional_conclusion"],
+      "properties": {"android_feasible": {"const": "unknown"}, "listening_quality": {"const": "pending_user_review"}}
+    },
+    "sources": {"type": "array", "minItems": 8, "items": {"type": "object", "required": ["id", "supports"], "anyOf": [{"required": ["url"]}, {"required": ["path"]}]}}
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "$schema": "./feasibility-inventory.schema.json",
+  "schema_version": 1,
+  "status": "recommendations_only_no_conversion_started",
+  "candidate": {
+    "model_id": "microsoft/VibeVoice-Realtime-0.5B",
+    "model_revision": "6bce5f06044837fe6d2c5d7a71a84f0416bd57e4",
+    "source_revision": "94da20d98b2fa7688e9cbfaf7692ddb4954f7600",
+    "checkpoint_bytes": 2035332888,
+    "checkpoint_parameters": 1017626724,
+    "active_parameters": 881492068,
+    "inactive_duplicated_parameters": 136134656,
+    "active_formula": "1017626724 checkpoint parameters - (151936 vocab * 896 hidden) unused tts_language_model.embed_tokens = 881492068",
+    "uncertainty": "Counts are exact for the pinned safetensors names/shapes. 'Active' is a static inference-path classification, not an execution trace: the source explicitly says the second embedding is unused. Buffers and tokenizer files are not parameters."
+  },
+  "components": [
+    {
+      "id": "qwen_text_and_tts_backbone",
+      "checkpoint_parameters": 630167424,
+      "inactive_duplicated_parameters": 136134656,
+      "active_parameters": 494032768,
+      "boundary": "token IDs/type IDs -> 896-wide hidden state; four text-only Qwen2 layers prefill, then twenty TTS Qwen2 layers recurrently consume text/speech embeddings and KV state",
+      "operators": ["embedding_lookup", "linear", "RMSNorm", "RoPE", "grouped_query_attention", "matmul", "softmax", "SiLU", "elementwise_add_mul", "reshape_transpose", "slice_concat", "causal_mask"],
+      "notes": "Qwen2 dimensions are hidden=896, intermediate=4864, 14 query heads, 2 KV heads, 24 total layers, max positions=8192. The approximate '0.5B' backbone label is consistent with 494032768 active backbone parameters, not with the full checkpoint."
+    },
+    {
+      "id": "tts_glue_and_eos",
+      "checkpoint_parameters": 1669251,
+      "inactive_duplicated_parameters": 0,
+      "active_parameters": 1669251,
+      "boundary": "64-wide speech latent <-> 896-wide Qwen hidden, type embedding, two learned scaling scalars, and EOS classifier",
+      "operators": ["embedding_lookup", "linear", "RMSNorm", "ReLU", "elementwise_add_mul"],
+      "notes": "Sum is acoustic_connector 862848 + tts_input_types 1792 + scaling/bias 2 + EOS classifier 804609."
+    },
+    {
+      "id": "diffusion_head",
+      "checkpoint_parameters": 42094080,
+      "inactive_duplicated_parameters": 0,
+      "active_parameters": 42094080,
+      "boundary": "896-wide positive/negative TTS condition plus 64-wide Gaussian latent and timestep -> 64-wide predicted update; iterated by DPM solver",
+      "operators": ["linear", "RMSNorm", "SiLU", "sin_cos_timestep_embedding", "elementwise_add_mul", "concat", "random_normal", "scheduler_scalar_tensor_ops"],
+      "notes": "Four gated FFN blocks. Config default is 20 diffusion steps; the accepted preview explicitly used 5, so both constants must remain visible in fixtures and latency reports."
+    },
+    {
+      "id": "acoustic_decoder",
+      "checkpoint_parameters": 343695969,
+      "inactive_duplicated_parameters": 0,
+      "active_parameters": 343695969,
+      "boundary": "one 64-wide acoustic latent frame plus convolution state -> 3200 float audio samples at 24 kHz",
+      "operators": ["Conv1d", "depthwise_Conv1d", "ConvTranspose1d", "linear", "RMSNorm", "SiLU", "elementwise_add_mul", "slice_concat_pad"],
+      "notes": "The checkpoint contains decoder weights only. Upsampling ratios 8*5*5*4*2*2 = 3200, matching each accepted preview chunk. The approximately 340M description is supported by the exact 343695969 count."
+    }
+  ],
+  "duplicated_constants": [
+    {
+      "name": "qwen_token_embedding",
+      "parameters_each": 136134656,
+      "copies_in_checkpoint": 2,
+      "active_copies": 1,
+      "evidence": "modeling_vibevoice_streaming.py constructs both models and states tts_language_model.embed_tokens is unused; safetensors contains both [151936,896] tensors.",
+      "package_rule": "Do not package the inactive copy; if a converter requires it, record the duplication as overhead rather than calling it active."
+    },
+    {
+      "name": "diffusion_step_count",
+      "values": [20, 5],
+      "evidence": "config.json ddpm_num_inference_steps=20; realtime-preview.json provenance.diffusion_steps=5.",
+      "package_rule": "Not weight bytes, but fixture and performance manifests must name the selected value."
+    },
+    {
+      "name": "context_limit",
+      "values": [8192],
+      "evidence": "decoder_config.max_position_embeddings and model documentation both state 8k context.",
+      "package_rule": "The same value influences Qwen masks and any proposed static KV allocation; define it once in a future ABI manifest."
+    }
+  ],
+  "streaming_state": {
+    "official_state_is_fixed_size": false,
+    "classification": "bounded_but_dynamic_and_not_an_export_ready_fixed_shape_abi",
+    "qwen_kv_formula": "bytes = layers * 2(K,V) * batch * kv_heads(2) * sequence_length * head_dim(64) * bytes_per_element; for 24 layers, batch 1, BF16, length 8192: 100663296 bytes",
+    "qwen_behavior": "DynamicCache appends key/value tensors with torch.cat. Sequence length grows until the configured 8192-position bound; text and TTS phases have separately orchestrated caches.",
+    "acoustic_behavior": "VibeVoiceTokenizerStreamingCache is a Python dictionary keyed by layer/sample. Causal Conv1d retains context_size samples and transposed convolution retains input context after warm-up, but first-call versus steady-state slicing differs.",
+    "scheduler_behavior": "Diffusion has a fresh 64-wide random latent and scheduler/timestep state for every acoustic frame; reproducibility requires a named RNG input or captured noise fixture.",
+    "uncertainty": "No Android ABI was exported or traced. Exact cache tensor inventory, valid lengths, phase flags, and reset semantics must be captured from the pinned host implementation before conversion. A maximum allocation would be fixed-capacity, not proof that the official state is fixed-shape."
+  },
+  "package_estimates": {
+    "scope": "active learned parameters only; excludes runtime, alignment, tokenizer, metadata, KV/cache/activation memory, and quantization tables unless explicitly modeled",
+    "formulas": {
+      "fp16": "881492068 * 2",
+      "int8_ideal": "881492068 * 1",
+      "int4_ideal": "ceil(881492068 / 2)",
+      "mixed_groupwise_int4_range": "int4_ideal * [1.03, 1.12]; illustrative 3%-12% allowance for scales/zero-points, FP16 norms/biases/embeddings, padding and alignment"
+    },
+    "estimates": [
+      {"scheme": "fp16", "lower_bytes": 1762984136, "upper_bytes": 1762984136, "runtime_support_claimed": false},
+      {"scheme": "int8_ideal", "lower_bytes": 881492068, "upper_bytes": 881492068, "runtime_support_claimed": false},
+      {"scheme": "mixed_groupwise_int4", "lower_bytes": 453968416, "upper_bytes": 493635559, "runtime_support_claimed": false}
+    ],
+    "uncertainty": "INT8 and INT4 are storage arithmetic, not accuracy, latency, operator coverage, or deployability claims. The mixed range is deliberately an estimate until a runtime-specific packing format, quantized tensor allow-list, group size and measured artifact exist. The original checkpoint file is 2035332888 bytes because it includes the inactive duplicate and container metadata."
+  },
+  "fixture_plan": [
+    {"order": 1, "component": "text_lower_4_layers", "inputs": "token IDs, type IDs, position/cache position, attention mask, empty/prefilled KV", "outputs": "896-wide hidden and four-layer KV", "cases": ["prefill", "one-token append", "near-context-bound"]},
+    {"order": 2, "component": "tts_upper_20_layers_and_eos", "inputs": "text/speech embedding, positive and CFG-negative KV, mask, position", "outputs": "positive/negative 896-wide conditions, twenty-layer KV, EOS probability", "cases": ["first speech step", "steady state", "EOS"]},
+    {"order": 3, "component": "diffusion_head_one_step", "inputs": "captured 64-wide noise, timestep, positive/negative condition", "outputs": "predicted 64-wide update", "cases": ["each of the 5 preview timesteps", "default-20-step metadata only"]},
+    {"order": 4, "component": "diffusion_scheduler_5_steps", "inputs": "captured initial noise and all conditions", "outputs": "final scaled/bias-adjusted 64-wide latent", "cases": ["seed-0 accepted-preview frame", "repeat"]},
+    {"order": 5, "component": "acoustic_decoder", "inputs": "one 64-wide latent plus every convolution cache tensor/valid length/phase", "outputs": "3200 float samples plus next caches", "cases": ["first frame", "second frame", "steady state", "reset"]},
+    {"order": 6, "component": "streaming_composition", "inputs": "locked transcript tokens, cached prompt, captured RNG", "outputs": "first 4 native chunks and state hashes", "cases": ["host reference replay only before any Android conversion"]}
+  ],
+  "runtime_recommendations": [
+    {
+      "runtime": "Qualcomm QNN/HTP",
+      "priority": 1,
+      "recommendation": "After listening approval, run component microprobes on the SM8550, starting with Qwen linear/attention blocks and diffusion FFNs; probe the acoustic ConvTranspose1d boundary separately. Do not attempt a full model first.",
+      "approval_gate": "Obtain user approval before downloading, installing, or accepting any proprietary Qualcomm SDK, EULA, click-through, account, or redistributed library terms.",
+      "required_schemes": ["8a8w", "16a8w", "16a4w"],
+      "required_evidence_per_scheme": [
+        "partition: delegated node count/total and an operator-by-operator partition map per fixture component",
+        "fallback: every CPU/non-HTP node with reason; zero silent fallback",
+        "transfers: count, tensor shape/dtype/bytes and direction for every HTP boundary",
+        "error: versus pinned FP32/BF16 fixture at each boundary using max_abs, mean_abs, RMSE, cosine similarity, plus waveform SNR and PCM hash where applicable",
+        "latency: cold initialization, warm p50/p90/p99 over at least 30 runs, end-to-end per 3200-sample chunk, synchronization method and thermal state"
+      ],
+      "decision_rule": "Compare all three schemes using identical fixtures. Reject silent fallback or unreported transfers. Advance only a scheme that preserves listening-approved output within subsequently frozen numerical thresholds and has a credible path to RTF <= 1.0."
+    },
+    {
+      "runtime": "LiteRT / LiteRT-LM",
+      "priority": 2,
+      "recommendation": "Use as a Qwen-oriented comparison only after listening approval and after confirming the pinned 896-wide Qwen2 architecture and KV ABI fit a documented LiteRT-LM path. Treat diffusion and acoustic decoder as separate LiteRT component probes; do not infer ConvTranspose1d support.",
+      "approval_gate": "Use public/open tooling only unless new terms appear; any proprietary accelerator delegate or terms require user approval.",
+      "required_evidence": ["conversion operator report", "delegate partition/fallback map", "boundary transfers", "fixture error", "cold/warm latency"]
+    },
+    {
+      "runtime": "ONNX Runtime Mobile",
+      "priority": 3,
+      "recommendation": "Use explicit component ONNX graphs and required-operator configuration as a portable CPU baseline after listening approval. Evaluate QNN Execution Provider only under the same proprietary approval gate and the same three-scheme evidence matrix; do not duplicate full conversion work.",
+      "approval_gate": "Public ORT CPU work is not a proprietary acceptance. QNN SDK/provider dependencies and terms are a separate user approval gate.",
+      "required_evidence": ["ORT format/required-op inventory", "EP assignment and fallback", "I/O transfers", "fixture error", "cold/warm latency"]
+    }
+  ],
+  "decision": {
+    "android_feasible": "unknown",
+    "listening_quality": "pending_user_review",
+    "next_action": "Stop. Begin no conversion. If and only if the user approves listening quality, capture component fixtures and request approval for any proprietary QNN terms before the narrow three-scheme microprobe.",
+    "conditional_conclusion": "The active-weight arithmetic suggests FP16 is below the provisional 2 GB package ceiling and quantized storage could be smaller, but host quality, Android memory, runtime coverage, latency, thermals and numerical quality remain unproven."
+  },
+  "sources": [
+    {"id": "pinned-config", "url": "https://huggingface.co/microsoft/VibeVoice-Realtime-0.5B/blob/6bce5f06044837fe6d2c5d7a71a84f0416bd57e4/config.json", "supports": "architecture dimensions, layer split, decoder ratios, context and default diffusion steps"},
+    {"id": "pinned-streaming-model", "url": "https://github.com/microsoft/VibeVoice/blob/94da20d98b2fa7688e9cbfaf7692ddb4954f7600/vibevoice/modular/modeling_vibevoice_streaming.py", "supports": "component construction, unused duplicate embedding, split forward boundaries"},
+    {"id": "pinned-inference", "url": "https://github.com/microsoft/VibeVoice/blob/94da20d98b2fa7688e9cbfaf7692ddb4954f7600/vibevoice/modular/modeling_vibevoice_streaming_inference.py", "supports": "dynamic KV concatenation, interleaved generation, diffusion and acoustic decode flow"},
+    {"id": "pinned-tokenizer", "url": "https://github.com/microsoft/VibeVoice/blob/94da20d98b2fa7688e9cbfaf7692ddb4954f7600/vibevoice/modular/modular_vibevoice_tokenizer.py", "supports": "convolution operator set and streaming cache behavior"},
+    {"id": "accepted-host-preview", "path": "../0007-mobile-podcast-preview-bakeoff/results/realtime-preview.json", "supports": "5-step setting, 3200-sample chunks, host timings and pending listening status"},
+    {"id": "qualcomm-qnn", "url": "https://www.qualcomm.com/developer/software/qualcomm-ai-engine-direct-sdk", "supports": "QNN SDK identity; availability and terms must be checked only after approval"},
+    {"id": "litert", "url": "https://ai.google.dev/edge/litert", "supports": "LiteRT public runtime documentation entry point"},
+    {"id": "litert-lm", "url": "https://github.com/google-ai-edge/LiteRT-LM", "supports": "LiteRT-LM public project and supported-model documentation entry point"},
+    {"id": "ort-mobile", "url": "https://onnxruntime.ai/docs/tutorials/mobile/", "supports": "ONNX Runtime Mobile and reduced operator configuration guidance"},
+    {"id": "ort-qnn-ep", "url": "https://onnxruntime.ai/docs/execution-providers/QNN-ExecutionProvider.html", "supports": "QNN EP options and profiling/documentation entry point"}
+  ]
+}
