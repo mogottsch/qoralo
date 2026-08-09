@@ -17,7 +17,7 @@
   },
   "host_gate": {
     "result": "qwen2-int4-host.json",
-    "sha256": "ac7cbf15d348530289809504c0a6fb8a89c8cd853b2dbd00a5f7a541ebbcae16",
+    "sha256": "992c49fe023a757c8356f24c6833731baf16fabefe8a5eb88d63c495ac475137",
     "prefill_accepted": false,
     "decode_accepted": false,
     "prefill_aggregate_nrmse": 0.07246775688213142,
@@ -57,5 +57,7 @@
     "host": "PATH=$PWD/artifacts/venv-executorch-1.2/bin:$PATH artifacts/venv-executorch-1.2/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/export_qwen2_int4.py"
   },
   "conclusion": "Rejected before Android: host INT4 prefill exceeded aggregate and per-cache error limits. No artifact was pushed, and Android decode did not consume fake or fixture caches. Integration remains on validated INT8.",
-  "implementation_commits": []
+  "implementation_commits": [
+    "cec41db2a0ae288e1d085e5b4533b1c692c797a9"
+  ]
 }
