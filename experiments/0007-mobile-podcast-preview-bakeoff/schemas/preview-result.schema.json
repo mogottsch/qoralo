@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "preview-result.schema.json",
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "seconds": {"type": "number", "minimum": 0}
+  },
+  "type": "object",
+  "required": ["schema_version", "model", "status", "protocol", "provenance", "voice", "command", "conclusion"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "model": {"enum": ["realtime", "pocket", "kokoro"]},
+    "status": {"enum": ["accepted", "rejected", "blocked"]},
+    "protocol": {
+      "type": "object",
+      "required": ["protocol_id", "protocol_version", "transcript_sha256", "protocol_fingerprint"],
+      "properties": {
+        "protocol_id": {"const": "mobile-podcast-preview"},
+        "protocol_version": {"type": "integer", "minimum": 1},
+        "transcript_sha256": {"$ref": "#/$defs/sha256"},
+        "protocol_fingerprint": {"$ref": "#/$defs/sha256"}
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["source_revision", "model_revision", "source_url", "model_bytes"],
+      "properties": {"model_bytes": {"type": "integer", "minimum": 0}},
+      "additionalProperties": true
+    },
+    "voice": {
+      "type": "object",
+      "required": ["name", "source", "stock_voice"],
+      "properties": {"stock_voice": {"const": true}},
+      "additionalProperties": true
+    },
+    "command": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "speed_control": {
+      "type": "object",
+      "required": ["documented", "setting"],
+      "properties": {"documented": {"type": "boolean"}},
+      "additionalProperties": true
+    },
+    "raw": {
+      "type": "object",
+      "required": ["artifact_path", "sha256", "duration_seconds", "sample_rate_hz", "channels", "output_format", "preserved_unchanged"],
+      "properties": {
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "duration_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "sample_rate_hz": {"type": "integer", "minimum": 1},
+        "channels": {"type": "integer", "minimum": 1},
+        "preserved_unchanged": {"const": true}
+      },
+      "additionalProperties": true
+    },
+    "normalized": {
+      "type": "object",
+      "required": ["artifact_path", "sha256", "duration_seconds", "sample_rate_hz", "channels", "sample_count", "sample_format", "statistics", "derivation_metadata_path"],
+      "properties": {
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "duration_seconds": {"const": 15.0},
+        "sample_rate_hz": {"const": 24000},
+        "channels": {"const": 1},
+        "sample_count": {"const": 360000},
+        "sample_format": {"const": "PCM_S16LE"}
+      },
+      "additionalProperties": true
+    },
+    "timing": {
+      "type": "object",
+      "required": ["generation_wall_seconds", "api_first_output_seconds", "first_audible_output_seconds", "rtf"],
+      "properties": {
+        "generation_wall_seconds": {"$ref": "#/$defs/seconds"},
+        "api_first_output_seconds": {"type": ["number", "null"], "minimum": 0},
+        "first_audible_output_seconds": {"type": ["number", "null"], "minimum": 0},
+        "rtf": {"type": "number", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "memory": {
+      "type": "object",
+      "required": ["baseline_rss_bytes", "peak_process_tree_rss_bytes", "sample_interval_ms"],
+      "properties": {
+        "baseline_rss_bytes": {"type": "integer", "minimum": 0},
+        "peak_process_tree_rss_bytes": {"type": "integer", "minimum": 0},
+        "sample_interval_ms": {"type": "integer", "minimum": 1, "maximum": 100}
+      },
+      "additionalProperties": false
+    },
+    "forbidden_transformations_used": {"const": []},
+    "blocker": {"type": "string", "minLength": 1},
+    "conclusion": {"type": "string", "minLength": 1}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"enum": ["accepted", "rejected"]}}},
+      "then": {"required": ["speed_control", "raw", "normalized", "timing", "memory", "forbidden_transformations_used"]}
+    },
+    {
+      "if": {"properties": {"status": {"const": "blocked"}}},
+      "then": {"required": ["blocker"]}
+    }
+  ],
+  "additionalProperties": false
+}

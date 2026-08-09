@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "protocol-revision-request.schema.json",
+  "type": "object",
+  "required": ["schema_version", "model", "current_protocol", "documented_speed_controls_exhausted", "raw_duration_seconds", "forbidden_methods_not_used", "requested_punctuation_change", "worker_did_not_edit_protocol"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "model": {"enum": ["realtime", "pocket", "kokoro"]},
+    "current_protocol": {
+      "type": "object",
+      "required": ["protocol_id", "protocol_version", "transcript_sha256", "protocol_fingerprint"]
+    },
+    "documented_speed_controls_exhausted": {"const": true},
+    "raw_duration_seconds": {"type": "number", "exclusiveMinimum": 0, "maximum": 15},
+    "forbidden_methods_not_used": {
+      "type": "array",
+      "const": ["silence-padding", "looping", "time-stretching"]
+    },
+    "requested_punctuation_change": {"type": "string", "minLength": 1},
+    "worker_did_not_edit_protocol": {"const": true},
+    "notes": {"type": "string"}
+  },
+  "additionalProperties": false
+}

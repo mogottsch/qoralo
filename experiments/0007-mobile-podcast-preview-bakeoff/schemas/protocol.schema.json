@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "protocol.schema.json",
+  "type": "object",
+  "required": ["protocol_id", "protocol_version", "transcript_path", "transcript_encoding", "transcript_trailing_newline", "transcript_word_count", "transcript_sha256", "implementation", "audio", "measurement_definitions", "resource_policy", "raw_preservation", "revision_rule", "revision_authority"],
+  "properties": {
+    "$schema": {"type": "string"},
+    "protocol_id": {"const": "mobile-podcast-preview"},
+    "protocol_version": {"type": "integer", "minimum": 1},
+    "transcript_path": {"type": "string"},
+    "transcript_encoding": {"const": "UTF-8"},
+    "transcript_trailing_newline": {"type": "boolean"},
+    "transcript_word_count": {"type": "integer", "minimum": 35, "maximum": 45},
+    "transcript_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "implementation": {"type": "object", "required": ["python", "numpy", "scipy", "requirements"]},
+    "audio": {
+      "type": "object",
+      "required": ["sample_rate_hz", "channels", "sample_format", "sample_count", "duration_seconds", "resampler", "zero_crossing_search_samples", "fade_samples", "integrated_loudness_target_lufs", "peak_ceiling_dbfs", "dither", "forbidden"],
+      "properties": {"sample_rate_hz": {"const": 24000}, "channels": {"const": 1}, "sample_format": {"const": "PCM_S16LE"}, "sample_count": {"const": 360000}, "duration_seconds": {"const": 15.0}},
+      "additionalProperties": true
+    },
+    "measurement_definitions": {"type": "object"},
+    "resource_policy": {"type": "string", "pattern": "^model-resource-policy-v[0-9]+\\.json$"},
+    "raw_preservation": {"type": "object"},
+    "revision_rule": {"type": "string"},
+    "revision_authority": {
+      "type": "object",
+      "required": ["owner", "trigger", "transaction", "unrelated_capture"],
+      "properties": {"owner": {"const": "parent orchestrator only"}},
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

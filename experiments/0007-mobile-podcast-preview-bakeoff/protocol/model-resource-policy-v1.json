@@ -1,0 +1,18 @@
+{
+  "$schema": "../schemas/generation-policy.schema.json",
+  "schema_version": 1,
+  "policy_version": 1,
+  "mode": "exclusive",
+  "compatible_concurrent_sets": [],
+  "covered_operations": [
+    "smoke-load",
+    "preflight",
+    "generation-realtime",
+    "generation-pocket",
+    "generation-kokoro",
+    "capture",
+    "export",
+    "protocol-revision"
+  ],
+  "rule": "Exactly one covered operation may own the atomic model-resource gate. Task 5 alone may replace this file atomically with measured Pocket-plus-Kokoro sharing rules."
+}

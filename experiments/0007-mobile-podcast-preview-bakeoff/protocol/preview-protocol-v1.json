@@ -1,0 +1,64 @@
+{
+  "$schema": "../schemas/protocol.schema.json",
+  "protocol_id": "mobile-podcast-preview",
+  "protocol_version": 1,
+  "transcript_path": "transcript.txt",
+  "transcript_encoding": "UTF-8",
+  "transcript_trailing_newline": false,
+  "transcript_word_count": 36,
+  "transcript_sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+  "implementation": {
+    "python": ">=3.12",
+    "numpy": "2.5.1",
+    "scipy": "1.18.0",
+    "requirements": "../requirements-protocol.txt"
+  },
+  "audio": {
+    "sample_rate_hz": 24000,
+    "channels": 1,
+    "sample_format": "PCM_S16LE",
+    "sample_count": 360000,
+    "duration_seconds": 15.0,
+    "mono_conversion": "arithmetic mean of channels in float64 before resampling",
+    "resampler": "scipy.signal.resample_poly",
+    "resampler_window": ["kaiser", 5.0],
+    "resampler_padtype": "constant",
+    "resampled_length_rule": "ceil(input_samples * 24000 / input_rate)",
+    "zero_crossing_search_samples": 240,
+    "zero_crossing_rule": "minimize abs(linear crossing amplitude), then distance from target end, then earliest index; select an exact-length window ending there",
+    "fade_samples": 240,
+    "fade_shape": "sine-squared inclusive endpoints",
+    "integrated_loudness_target_lufs": -20.0,
+    "peak_ceiling_dbfs": -1.0,
+    "gain_rule": "minimum of loudness-target gain and peak-ceiling gain",
+    "dither": "deterministic TPDF at one PCM16 LSB using numpy PCG64 seed 0",
+    "short_input": "reject; regenerate only with documented model speed controls, or increment protocol version for any transcript change",
+    "forbidden": ["time stretching", "looping", "fabricated speech", "overwriting raw output"]
+  },
+  "measurement_definitions": {
+    "generation_wall_seconds": "CLOCK_MONOTONIC elapsed around the documented model generation API only; excludes environment setup and downloads",
+    "api_first_output_seconds": "CLOCK_MONOTONIC from the same API invocation start until its first returned or yielded audio payload, including silence",
+    "first_audible_output_seconds": "from API start to the first 10 ms analysis frame at or above -50 dBFS RMS; null when unavailable",
+    "peak_rss_bytes": "maximum process-tree resident set sampled from Linux /proc at 100 ms or faster, including the parent and all descendants; report baseline separately",
+    "rtf": "generation_wall_seconds divided by raw_native_audio_duration_seconds",
+    "audio_hash": "SHA-256 of the exact file bytes",
+    "rms_dbfs": "20*log10(sqrt(mean(float_sample^2))) with PCM full scale 1.0; negative infinity for digital silence",
+    "peak_dbfs": "20*log10(max(abs(float_sample))) with PCM full scale 1.0; negative infinity for digital silence",
+    "integrated_loudness": "ITU-R BS.1770 K-weighted gated mono loudness, reported in LUFS"
+  },
+  "resource_policy": "model-resource-policy-v1.json",
+  "raw_preservation": {
+    "required": true,
+    "location": "artifacts/raw/<model>/",
+    "write_mode": "exclusive; never modify or replace a captured native file",
+    "derived_location": "artifacts/normalized/<model>/",
+    "record_sha256_before_derivation": true
+  },
+  "revision_rule": "An accepted preview is valid only when protocol_version, transcript_sha256, and protocol_fingerprint match this manifest. Any transcript byte, including punctuation, requires a new version and invalidates every prior acceptance.",
+  "revision_authority": {
+    "owner": "parent orchestrator only",
+    "trigger": "A worker reports that documented speed controls cannot reach 15 seconds without padding, looping, or time stretching; the candidate is blocked only if speed controls and one shared punctuation revision both fail.",
+    "transaction": "Acquire the exclusive protocol-revision gate, stop or wait for preview workers, atomically publish one incremented protocol version, then reset preview tasks 6-8 and downstream tasks 16-18.",
+    "unrelated_capture": "VibeVoice 1.5B capture and its results are not invalidated."
+  }
+}
