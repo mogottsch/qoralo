@@ -8,7 +8,7 @@
     "model": "microsoft/VibeVoice-1.5B",
     "device": "Samsung Galaxy S23 Ultra SM-S918B"
   },
-  "updated_at": "2026-08-09T09:04:32+01:00",
+  "updated_at": "2026-08-09T09:20:00+01:00",
   "updated_by": "parent-orchestrator",
   "autonomy": {
     "authorized_through_step": 39,
@@ -24,13 +24,13 @@
     "notify_when_device_input_required": true
   },
   "status": {
-    "completed_steps": 26,
+    "completed_steps": 28,
     "total_steps": 39,
-    "percent": 66.7,
-    "current_step": 19,
-    "current_lane": "B",
-    "current_activity": "Crew is continuing with the Android semantic path and deterministic native token selection",
-    "summary": "Semantic encoder host chaining, Qwen2 prefill/decode on Android, and Carter/Maya speaker conditioning are validated. Android decode consumes the actual 56-cache prefill outputs; strict FP32 metrics remain visible beside the bounded component acceptance."
+    "percent": 71.8,
+    "current_step": 27,
+    "current_lane": "C",
+    "current_activity": "Crew is continuing with Qwen2 INT8 quantization",
+    "summary": "Lane B is complete through the Android semantic path. Native token selection exactly matches the locked PyTorch sequence. The next gate is component-by-component Qwen2 INT8 host and Android validation."
 
   },
   "resources": {
@@ -62,20 +62,20 @@
     "B": {
       "name": "Diffusion and audio feature path",
       "steps": [11, 12, 13, 14, 15, 16, 17, 18, 19],
-      "status": "in_progress",
+      "status": "completed",
       "current_step": 19,
       "worktree": null,
       "artifact_root": "artifacts/0002/lane-b",
-      "latest_result": "Step 18 passed: two semantic encoder calls chain 34 actual ExecuTorch caches; feature outputs pass, cache maximum error is 9.08e-4 under the explicit 0.001 cache threshold, and reset reproduces call 1 bit-exactly."
+      "latest_result": "Step 19 passed: two Android calls chain 34 actual device caches; semantic features, connector output, and final [1,1536] embeddings pass with exact repeat hashes. Warm calls take 0.589/0.669 s and peak PSS is 1,712,716 KiB."
     },
     "C": {
       "name": "Qwen2 backbone and quantization",
       "steps": [20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
       "status": "in_progress",
-      "current_step": 29,
+      "current_step": 27,
       "worktree": null,
       "artifact_root": "artifacts/0002/lane-c",
-      "latest_result": "Steps 23, 26, and 30 passed: sequential Android prefill/decode preserves the 56-cache ABI and repeat hashes; warm one-token decode is 0.279 s, peak observed PSS is 1,151,474 KiB, and two-speaker conditioning matches exactly."
+      "latest_result": "Step 29 passed: the native FP32 masked-greedy selector exactly matches the five-token locked PyTorch sequence, consumes no RNG, resolves ties to the lowest ID, and resets deterministically."
     },
     "D": {
       "name": "End-to-end generation and optimization",
@@ -259,6 +259,29 @@
       "max_abs_error": 0.0,
       "deterministic_capture": true,
       "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/speaker-conditioning-host.json"
+    },
+    "semantic_path_android": {
+      "status": "passed",
+      "executorch": "1.2.0",
+      "backend": "xnnpack",
+      "cache_tensor_count": 34,
+      "actual_device_cache_handoff": true,
+      "warm_call_1_seconds": 0.588796615,
+      "warm_call_2_seconds": 0.669005104,
+      "peak_observed_pss_kib": 1712716,
+      "process_hwm_kib": 1905028,
+      "max_cache_abs_error": 0.000676274299621582,
+      "deterministic_repeats": true,
+      "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/semantic-path-android.json"
+    },
+    "token_selection_host": {
+      "status": "passed",
+      "decision_count": 5,
+      "mismatch_count": 0,
+      "seed": 42,
+      "rng_consumed": false,
+      "repeat_after_seed_reset": true,
+      "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/token-selection-host.json"
     }
   },
   "commits": [
@@ -297,7 +320,7 @@
     {"id": 16, "lane": "B", "title": "Run the diffusion loop on Android", "status": "completed", "depends_on": [14, 15], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/diffusion-head-android.json", "note": "Two ten-step Android runs pass the host final-latent fixture."},
     {"id": 17, "lane": "B", "title": "Capture and export connectors", "status": "completed", "depends_on": [], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/connectors-host.json", "note": "Paired real capture is deterministic; eager, exported-program, and XNNPACK runtime outputs pass the locked FP32 threshold."},
     {"id": 18, "lane": "B", "title": "Export the semantic audio encoder", "status": "completed", "depends_on": [], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/semantic-encoder-host.json", "note": "Two real calls chain 34 actual ExecuTorch caches; reset is deterministic and the explicit cache-only threshold passes."},
-    {"id": 19, "lane": "B", "title": "Run the semantic path on Android", "status": "ready", "depends_on": [17, 18], "evidence": null},
+    {"id": 19, "lane": "B", "title": "Run the semantic path on Android", "status": "completed", "depends_on": [17, 18], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/semantic-path-android.json", "note": "Two Android calls chain actual device caches; semantic features, connector output, and final embeddings pass with deterministic repeat hashes."},
     {"id": 20, "lane": "C", "title": "Capture Qwen2 prefill fixtures", "status": "completed", "depends_on": [], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/qwen2-fixtures-host.json"},
     {"id": 21, "lane": "C", "title": "Export Qwen2 prefill", "status": "completed", "depends_on": [20], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/qwen2-backbone-host.json"},
     {"id": 22, "lane": "C", "title": "Validate prefill on the laptop", "status": "completed", "depends_on": [21], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/qwen2-backbone-diagnostics.json", "note": "Strict metrics remain failed; a narrowly scoped bounded FP32 XNNPACK criterion passes after localization to ordinary reduction-order accumulation."},
@@ -307,7 +330,7 @@
     {"id": 26, "lane": "C", "title": "Run single-token decode on Android", "status": "completed", "depends_on": [25], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/qwen2-decode-android.json", "note": "Android decode consumes all 56 actual prefill caches in normative order; bounded metrics and exact repeat hashes pass."},
     {"id": 27, "lane": "C", "title": "Quantize the Qwen2 backbone to INT8", "status": "blocked", "depends_on": [22, 26], "evidence": null},
     {"id": 28, "lane": "C", "title": "Quantize the Qwen2 backbone to INT4", "status": "blocked", "depends_on": [27], "evidence": null},
-    {"id": 29, "lane": "C", "title": "Implement token selection", "status": "blocked", "depends_on": [22, 26], "evidence": null},
+    {"id": 29, "lane": "C", "title": "Implement token selection", "status": "completed", "depends_on": [22, 26], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/token-selection-host.json", "note": "Native masked-greedy selection exactly matches the locked PyTorch decisions and deterministic reset behavior."},
     {"id": 30, "lane": "C", "title": "Implement speaker conditioning", "status": "completed", "depends_on": [], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/speaker-conditioning-host.json", "note": "Pinned Carter/Maya conditioning exactly reproduces selected-position replacement and documents native switch/reset ownership."},
     {"id": 31, "lane": "D", "title": "Build the native generation controller", "status": "blocked", "depends_on": [8, 16, 19, 26, 29, 30], "evidence": null},
     {"id": 32, "lane": "D", "title": "Generate one speech chunk from text", "status": "blocked", "depends_on": [31], "evidence": null},
