@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "component": "token_selection",
+  "status": "passed",
+  "conclusion": "The native FP32 selector exactly matches the pinned PyTorch masked-greedy sequence. Selection is RNG-free, ties choose the lowest vocabulary ID, disallowed IDs cannot win, reset is deterministic, and EOS/capacity termination is explicit.",
+  "source_revision": "6dd49cb7200c0367205a5f1e650244259e9e423d",
+  "model_revision": "c00898d257e6b46004e3e2866a47534085fb685a",
+  "fixture": {
+    "manifest": "fixtures/token-selection-manifest.json",
+    "capture_sha256": "5bd34ae5a6dfa216fb9ae4cca7bd2e58338d63eaffdda1b2d43b85c2b66fb993",
+    "locked_sequence": [
+      151652,
+      151654,
+      151654,
+      151653,
+      151643
+    ]
+  },
+  "comparison": {
+    "native_vs_pytorch_decisions": 5,
+    "mismatches": 0,
+    "exact": true,
+    "seed": 42,
+    "repeat_after_seed_reset": true
+  },
+  "settings": {
+    "do_sample": false,
+    "rng_consumed": false,
+    "allowed_ids": [
+      151643,
+      151652,
+      151653,
+      151654
+    ],
+    "eos_id": 151643,
+    "control_ids": [
+      151652,
+      151653,
+      151654
+    ],
+    "tie_rule": "lowest vocabulary ID"
+  },
+  "validation": {
+    "tests": "49 passed",
+    "covered": [
+      "ties",
+      "masked tokens",
+      "NaN",
+      "positive infinity",
+      "negative-infinity masks",
+      "all-masked rejection",
+      "FP32 subnormal scores",
+      "EOS",
+      "control-token classification",
+      "invalid and duplicate IDs",
+      "wrong logit count",
+      "capacity termination",
+      "seed reset",
+      "locked PyTorch sequence"
+    ]
+  },
+  "hashes": {
+    "capture_json_sha256": "0518ecc9e844052917483f3af6b3d5f859c52c59cf5d5ed82bc672b4b2892013",
+    "capture_script_sha256": "4c66f6e0a6fcc06c3678d67e22c329e49188681942d01284a06c818489d81a71",
+    "token_selector_java_sha256": "30b4d97808294294b40531e8ef100fa69d325850c3df7f1ec000d9bc4bb6f8f8",
+    "manifest_sha256": "7546b828c1db7826f207e838d140d8862d05c9e516a8a44c4c55f23202486133"
+  },
+  "commands": [
+    ".venv/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/capture_token_selection.py",
+    "artifacts/venv-executorch-1.2/bin/python -m pytest experiments/0002-vibevoice-1.5b-executorch-android/tests -q",
+    "ANDROID_HOME=/home/moritz/Android/Sdk artifacts/tools/gradle-8.10.2/bin/gradle -p experiments/0002-vibevoice-1.5b-executorch-android/android :app:compileDebugJavaWithJavac"
+  ],
+  "artifacts": {
+    "large_artifacts_ignored": true,
+    "capture": "artifacts/0002/lane-c/token-selection/capture.json"
+  },
+  "commits": []
+}

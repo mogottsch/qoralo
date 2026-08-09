@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "component": "token_selection",
+  "provenance": {
+    "source_revision": "6dd49cb7200c0367205a5f1e650244259e9e423d",
+    "model_revision": "c00898d257e6b46004e3e2866a47534085fb685a",
+    "tokenizer": "Qwen/Qwen2.5-1.5B",
+    "tokenizer_revision": "8faed761d45a263340a0528343f099c05c9a4323",
+    "seed": 42,
+    "dtype": "float32"
+  },
+  "settings": {
+    "do_sample": false,
+    "algorithm": "mask disallowed IDs with -Inf, then torch.argmax",
+    "temperature": null,
+    "top_k": null,
+    "top_p": null,
+    "rng_consumed": false,
+    "tie_rule": "lowest vocabulary ID (first index)"
+  },
+  "vocabulary_size": 151936,
+  "tokens": {
+    "eos": 151643,
+    "speech_start": 151652,
+    "speech_end": 151653,
+    "speech_diffusion": 151654
+  },
+  "allowed_ids": [
+    151643,
+    151652,
+    151653,
+    151654
+  ],
+  "locked_sequence": [
+    151652,
+    151654,
+    151654,
+    151653,
+    151643
+  ],
+  "steps": [
+    {
+      "step": 0,
+      "selected_id": 151652,
+      "logits_sha256": "618285ad862a2f0d97415068adfe8d6f0d59776c3e008b5eb14e7dfa76f545d6",
+      "masked_scores_sha256": "f65b736057f656a171a8da69210036d55f06a9549550fda3b426f2ac61d27196",
+      "terminates": false
+    },
+    {
+      "step": 1,
+      "selected_id": 151654,
+      "logits_sha256": "ae0a8f45052d10fc31321890572a29178c2b8203149d86e3029353ae8b8d8740",
+      "masked_scores_sha256": "b3bbacde5c9ba0e376eb9c7258697c6920ea1d2b4852bf233aa5e15699b109bf",
+      "terminates": false
+    },
+    {
+      "step": 2,
+      "selected_id": 151654,
+      "logits_sha256": "19400ef5cc31d3ed34bf21b5a4a4ae7ff11a277ed01335cfc42f13be69fa7e15",
+      "masked_scores_sha256": "a3e64df2d2e82589cc58a4b5aa953a295eb681d74c17d208def6dc397f1d3c7a",
+      "terminates": false
+    },
+    {
+      "step": 3,
+      "selected_id": 151653,
+      "logits_sha256": "f7da20bb231af96dc4aea14b0e7411e0fe5940d8c218adb71cc086daf2d71db3",
+      "masked_scores_sha256": "813bf9eee8a8c162cd953033d966b2410ed1e9f10336d8b4dd4c65f5123b4c1d",
+      "terminates": false
+    },
+    {
+      "step": 4,
+      "selected_id": 151643,
+      "logits_sha256": "45fed3ffa54013d5cea856c9cff6249981d0362044058cb4758e479dd87db74a",
+      "masked_scores_sha256": "9fdbdd96bc3524746ad68a554ce2fc5648cfcd58554e06568dec8c1bb7021acb",
+      "terminates": true
+    }
+  ],
+  "termination": {
+    "eos_id": 151643,
+    "capacity": "controller max-length budget"
+  },
+  "capture_sha256": "5bd34ae5a6dfa216fb9ae4cca7bd2e58338d63eaffdda1b2d43b85c2b66fb993",
+  "status": "captured_and_frozen",
+  "native_abi": {
+    "input": {
+      "name": "logits",
+      "shape": [
+        151936
+      ],
+      "dtype": "float32",
+      "ownership": "last-position Qwen2 prefill/decode output"
+    },
+    "output": {
+      "token_id": "int32",
+      "control_token": "bool",
+      "termination": "NONE | EOS | CAPACITY"
+    },
+    "control_ids": [
+      151652,
+      151653,
+      151654
+    ],
+    "validation": "reject wrong logit count, NaN, +Inf, invalid/duplicate IDs, empty allowed set, all allowed -Inf, non-positive capacity",
+    "state": "generated count and termination are utterance-local; reset(seed) clears both; greedy selection consumes no RNG"
+  },
+  "commands": [
+    ".venv/bin/python experiments/0002-vibevoice-1.5b-executorch-android/export/capture_token_selection.py",
+    "artifacts/venv-executorch-1.2/bin/python -m pytest experiments/0002-vibevoice-1.5b-executorch-android/tests/test_token_selection.py -q",
+    "ANDROID_HOME=/home/moritz/Android/Sdk artifacts/tools/gradle-8.10.2/bin/gradle -p experiments/0002-vibevoice-1.5b-executorch-android/android :app:compileDebugJavaWithJavac"
+  ]
+}
