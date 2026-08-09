@@ -8,7 +8,7 @@
     "model": "microsoft/VibeVoice-1.5B",
     "device": "Samsung Galaxy S23 Ultra SM-S918B"
   },
-  "updated_at": "2026-08-09T09:20:00+01:00",
+  "updated_at": "2026-08-09T09:55:00+01:00",
   "updated_by": "parent-orchestrator",
   "autonomy": {
     "authorized_through_step": 39,
@@ -24,13 +24,13 @@
     "notify_when_device_input_required": true
   },
   "status": {
-    "completed_steps": 28,
+    "completed_steps": 29,
     "total_steps": 39,
-    "percent": 71.8,
-    "current_step": 27,
+    "percent": 74.4,
+    "current_step": 28,
     "current_lane": "C",
-    "current_activity": "Crew is continuing with Qwen2 INT8 quantization",
-    "summary": "Lane B is complete through the Android semantic path. Native token selection exactly matches the locked PyTorch sequence. The next gate is component-by-component Qwen2 INT8 host and Android validation."
+    "current_activity": "Crew is continuing with Qwen2 INT4 quantization",
+    "summary": "Qwen2 INT8 passes on host and Galaxy S23 Ultra with exact next-token decisions and actual 56-cache handoff. The package is 74.93% smaller than FP32; warm prefill/decode are 3.012/0.149 seconds. INT4 is next."
 
   },
   "resources": {
@@ -72,10 +72,10 @@
       "name": "Qwen2 backbone and quantization",
       "steps": [20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
       "status": "in_progress",
-      "current_step": 27,
+      "current_step": 28,
       "worktree": null,
       "artifact_root": "artifacts/0002/lane-c",
-      "latest_result": "Step 29 passed: the native FP32 masked-greedy selector exactly matches the five-token locked PyTorch sequence, consumes no RNG, resolves ties to the lowest ID, and resets deterministically."
+      "latest_result": "Step 27 passed: PT2E INT8 covers all eligible Linear ops, reduces package size 74.93% to 3,096,269,152 bytes, preserves exact next-token decisions and 56-cache handoff, and lowers Android PSS to 373,064 KiB."
     },
     "D": {
       "name": "End-to-end generation and optimization",
@@ -282,6 +282,23 @@
       "rng_consumed": false,
       "repeat_after_seed_reset": true,
       "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/token-selection-host.json"
+    },
+    "qwen2_int8_android": {
+      "status": "passed",
+      "executorch": "1.2.0",
+      "backend": "xnnpack",
+      "package_bytes": 3096269152,
+      "largest_stage_bytes": 233992832,
+      "size_reduction_fraction": 0.7493127173251994,
+      "warm_prefill_seconds": 3.012232344,
+      "warm_decode_seconds": 0.1493456800000006,
+      "peak_observed_pss_kib": 373064,
+      "process_hwm_kib": 893332,
+      "cache_tensor_count": 56,
+      "actual_int8_prefill_cache_handoff": true,
+      "exact_next_token": true,
+      "repeat_exact": true,
+      "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/qwen2-int8-android.json"
     }
   },
   "commits": [
@@ -328,8 +345,8 @@
     {"id": 24, "lane": "C", "title": "Capture single-token decode fixtures", "status": "completed", "depends_on": [], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/qwen2-fixtures-host.json"},
     {"id": 25, "lane": "C", "title": "Export single-token Qwen2 decode", "status": "completed", "depends_on": [24], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/qwen2-backbone-host.json"},
     {"id": 26, "lane": "C", "title": "Run single-token decode on Android", "status": "completed", "depends_on": [25], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/qwen2-decode-android.json", "note": "Android decode consumes all 56 actual prefill caches in normative order; bounded metrics and exact repeat hashes pass."},
-    {"id": 27, "lane": "C", "title": "Quantize the Qwen2 backbone to INT8", "status": "blocked", "depends_on": [22, 26], "evidence": null},
-    {"id": 28, "lane": "C", "title": "Quantize the Qwen2 backbone to INT4", "status": "blocked", "depends_on": [27], "evidence": null},
+    {"id": 27, "lane": "C", "title": "Quantize the Qwen2 backbone to INT8", "status": "completed", "depends_on": [22, 26], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/qwen2-int8-android.json", "note": "INT8 passes host and Android tensor/token criteria, exact token selection, deterministic repeats, and actual 56-cache handoff with 74.93% package reduction."},
+    {"id": 28, "lane": "C", "title": "Quantize the Qwen2 backbone to INT4", "status": "ready", "depends_on": [27], "evidence": null},
     {"id": 29, "lane": "C", "title": "Implement token selection", "status": "completed", "depends_on": [22, 26], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/token-selection-host.json", "note": "Native masked-greedy selection exactly matches the locked PyTorch decisions and deterministic reset behavior."},
     {"id": 30, "lane": "C", "title": "Implement speaker conditioning", "status": "completed", "depends_on": [], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/speaker-conditioning-host.json", "note": "Pinned Carter/Maya conditioning exactly reproduces selected-position replacement and documents native switch/reset ownership."},
     {"id": 31, "lane": "D", "title": "Build the native generation controller", "status": "blocked", "depends_on": [8, 16, 19, 26, 29, 30], "evidence": null},
