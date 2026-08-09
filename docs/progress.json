@@ -8,7 +8,7 @@
     "model": "microsoft/VibeVoice-1.5B",
     "device": "Samsung Galaxy S23 Ultra SM-S918B"
   },
-  "updated_at": "2026-08-09T11:14:42+01:00",
+  "updated_at": "2026-08-09T12:11:34+01:00",
   "updated_by": "parent-orchestrator",
   "autonomy": {
     "authorized_through_step": 39,
@@ -24,13 +24,13 @@
     "notify_when_device_input_required": true
   },
   "status": {
-    "completed_steps": 36,
+    "completed_steps": 38,
     "total_steps": 39,
-    "percent": 92.3,
-    "current_step": 37,
+    "percent": 97.4,
+    "current_step": 39,
     "current_lane": "D",
-    "current_activity": "Crew is measuring the complete XNNPACK build",
-    "summary": "The locked Android run and comparison are complete with a substantive feasibility rejection: output is deterministic but only 0.266667 seconds, covers 2.04% of the reference, and is effectively silent. Two-speaker quality is not assessable. Complete-build measurement is active."
+    "current_activity": "Crew is performing final execution optimization and publication",
+    "summary": "Complete-build measurement records a reproducible two-chunk capacity failure at roughly 102 median RTF. Memory work removes 2.754 GB of stale deployment aliases and reduces warm PSS 5.01% without changing output; shape-specialized PTE weight duplication remains an architectural limit."
 
   },
   "resources": {
@@ -81,10 +81,10 @@
       "name": "End-to-end generation and optimization",
       "steps": [31, 32, 33, 34, 35, 36, 37, 38, 39],
       "status": "in_progress",
-      "current_step": 37,
+      "current_step": 39,
       "worktree": null,
       "artifact_root": "artifacts/0002/lane-d",
-      "latest_result": "Steps 34-36 completed with rejection: conditioning tensors and cache policy are correct, but the locked run yields a 0.266667-second effectively silent fragment at -118.83 dBFS. It covers 2.04% of the reference; speaker identity is not assessable."
+      "latest_result": "Steps 37-38 completed: accepted build modules total 9.121 GB, median measured prefix RTF is 101.90, and memory cleanup removes 2.754 GB of stale deployed aliases while reducing warm PSS 5.01% with byte-identical output."
     }
   },
   "milestones": {
@@ -363,6 +363,30 @@
       "corruption": "fail",
       "speaker_consistency": "not_assessable",
       "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/locked-reference-comparison.json"
+    },
+    "complete_build_xnnpack": {
+      "status": "precise_failure",
+      "apk_bytes": 15037213,
+      "module_bytes": 9121176676,
+      "apk_plus_modules_bytes": 9136213889,
+      "median_generation_seconds": 27.172632906,
+      "median_ttfa_seconds": 11.4671950735,
+      "median_rtf": 101.8973733975,
+      "produced_duration_seconds": 0.26666666666666666,
+      "complete_locked_run": false,
+      "cross_process_deterministic": true,
+      "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/complete-build-xnnpack.json"
+    },
+    "complete_build_memory_optimized": {
+      "status": "passed",
+      "deployed_bytes_reduction": 2753782788,
+      "deployed_bytes_reduction_percent": 23.189795247635722,
+      "warm_pss_reduction_percent": 5.005831593540005,
+      "warm_vmhwm_reduction_percent": 1.0846423844870245,
+      "same_wav_sha256": true,
+      "complete_locked_reference": false,
+      "architectural_limit": "shape-specialized PTEs embed separate weights and ExecuTorch Java has no shared external-weight pool",
+      "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/complete-build-memory-optimized.json"
     }
   },
   "commits": [
@@ -419,8 +443,8 @@
     {"id": 34, "lane": "D", "title": "Add the second speaker", "status": "completed", "depends_on": [33], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/generation-two-speaker-android.json", "note": "Conditioning positions and cache policy pass, but the effectively silent 0.266667-second output fails the fixed quality rubric and speaker identity is not assessable."},
     {"id": 35, "lane": "D", "title": "Run the locked reference transcript", "status": "completed", "depends_on": [34], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/locked-reference-android.json", "note": "Completed as a documented feasibility failure: locked inputs pass, deterministic runs stop CAPACITY after two silent chunks."},
     {"id": 36, "lane": "D", "title": "Compare Android output with the reference", "status": "completed", "depends_on": [35], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/locked-reference-comparison.json", "note": "Comparison implementation is complete; outcome rejects the Android build at 2.04% duration coverage and -118.83 dBFS."},
-    {"id": 37, "lane": "D", "title": "Measure the complete XNNPACK build", "status": "in_progress", "depends_on": [35], "evidence": null},
-    {"id": 38, "lane": "D", "title": "Optimize memory", "status": "blocked", "depends_on": [37], "evidence": null},
-    {"id": 39, "lane": "D", "title": "Optimize execution", "status": "blocked", "depends_on": [37, 38], "evidence": null}
+    {"id": 37, "lane": "D", "title": "Measure the complete XNNPACK build", "status": "completed", "depends_on": [35], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/complete-build-xnnpack.json", "note": "Measurement completes as a precise failure: deterministic two-chunk prefix, median RTF 101.90, 9.121 GB accepted modules, and no valid full-transcript performance claim."},
+    {"id": 38, "lane": "D", "title": "Optimize memory", "status": "completed", "depends_on": [37], "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/complete-build-memory-optimized.json", "note": "Removes 2.754 GB of stale deployed aliases and reduces warm PSS 5.01% with byte-identical output; embedded shape-specialized weight duplication remains."},
+    {"id": 39, "lane": "D", "title": "Optimize execution", "status": "ready", "depends_on": [37, 38], "evidence": null}
   ]
 }
