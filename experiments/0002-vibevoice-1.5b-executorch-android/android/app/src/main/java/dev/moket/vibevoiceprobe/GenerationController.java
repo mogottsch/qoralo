@@ -36,7 +36,10 @@ public final class GenerationController {
         @Override public float[] timesteps() { return timesteps.clone(); }
     }
 
-    public record Prompt(float[] tokenEmbeddings, int tokenCount, int[] sequenceSpeakerIds, int initialSpeakerId) {
+    public record Prompt(float[] tokenEmbeddings, int tokenCount, int[] sequenceSpeakerIds, int initialSpeakerId, boolean initiallyInSpeech) {
+        public Prompt(float[] tokenEmbeddings, int tokenCount, int[] sequenceSpeakerIds, int initialSpeakerId) {
+            this(tokenEmbeddings, tokenCount, sequenceSpeakerIds, initialSpeakerId, false);
+        }
         public Prompt {
             if (tokenEmbeddings == null || tokenCount <= 0 || tokenEmbeddings.length != tokenCount * 1536)
                 throw new IllegalArgumentException("prompt must be contiguous [1,S,1536]");
@@ -135,6 +138,7 @@ public final class GenerationController {
         if (prompt.tokenCount() >= config.cacheCapacity()) throw new IllegalArgumentException("prompt leaves no decode capacity");
         try {
             activeSpeakerId = prompt.initialSpeakerId();
+            inSpeech = prompt.initiallyInSpeech();
             Conditioning conditioning = Objects.requireNonNull(components.condition(prompt, activeSpeakerId));
             if (conditioning.promptEmbeddings().length != prompt.tokenCount() * 1536)
                 throw new IllegalArgumentException("conditioned prompt shape mismatch");

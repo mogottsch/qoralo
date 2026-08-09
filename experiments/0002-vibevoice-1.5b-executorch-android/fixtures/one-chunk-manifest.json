@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "input_kind": "smallest pinned real text fixture accepted by the fixed S=503 Qwen2 export",
+  "text": "Speaker 1: We are testing whether a podcast model can run completely on a modern Android phone.\nSpeaker 2: First, we will create this short reference clip locally. Then every mobile runtime must reproduce the same voices and words.",
+  "text_sha256": "96d5f17352fee896af8476610e7274d8b2e3acde5b3885d787ca903ad1677145",
+  "prefill_tokens": 503,
+  "seed": 42,
+  "cfg": 1.3,
+  "inputs": {
+    "prompt-embeddings.f32le": {
+      "bytes": 3090432,
+      "sha256": "9966a6cb06a3cf52b45c7c560abd7e992e827c30897a6a2c3c95b3dc382a1f81"
+    },
+    "speech-start-embedding.f32le": {
+      "bytes": 6144,
+      "sha256": "ade9d84f99ff254666de013eafbfc75c0462e27c50ac63c3dd5e0b921b863bdf"
+    },
+    "initial-noise.f32le": {
+      "bytes": 256,
+      "sha256": "13d84963d59893e058659b319d0c0e802040fb94ba5fdb214771ae1d97640a64"
+    },
+    "negative-condition.f32le": {
+      "bytes": 6144,
+      "sha256": "5dd2437a89d24ec762a0042a5d0ad41d714b81bfac288ac1ddbfc9cc13fc6783"
+    },
+    "timesteps.f32le": {
+      "bytes": 40,
+      "sha256": "5e57764b0727cf69de4f95d01355fb9cf9aa73102f24e850604ddc6c17a8e8f9"
+    },
+    "sigmas.f32le": {
+      "bytes": 44,
+      "sha256": "cec3297de3e5d3492e90e64c12c6f8ad49abbeacedfc84de2eefc7d186e52dc6"
+    }
+  },
+  "boundary": "Only text-derived embeddings, speaker negative condition, schedule, and seeded initial noise are initial inputs. No generated intermediate is serialized back into the chain."
+}
