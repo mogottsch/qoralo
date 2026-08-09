@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "candidate-decision-report.schema.json",
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "type": "object",
+  "required": ["schema_version", "status", "subjective_listening", "host_quality_evidence", "android_measurements", "estimates", "historical_evidence", "candidate_decisions", "next_action"],
+  "properties": {
+    "$schema": {"const": "candidate-decision-report.schema.json"},
+    "schema_version": {"const": 1},
+    "status": {"const": "awaiting_explicit_user_approval"},
+    "subjective_listening": {
+      "type": "object",
+      "required": ["status", "ratings", "note"],
+      "properties": {
+        "status": {"const": "pending_user_review"},
+        "ratings": {
+          "type": "object",
+          "required": ["realtime", "pocket", "kokoro"],
+          "properties": {"realtime": {"type": "null"}, "pocket": {"type": "null"}, "kokoro": {"type": "null"}},
+          "additionalProperties": false
+        },
+        "note": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "host_quality_evidence": {
+      "type": "array", "minItems": 3, "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["candidate", "status", "raw_duration_seconds", "generation_wall_seconds", "first_audible_output_seconds", "host_rtf", "peak_process_tree_rss_bytes", "raw_sha256", "normalized_sha256", "evidence", "evidence_sha256"],
+        "properties": {
+          "candidate": {"type": "string"}, "status": {"type": "string"},
+          "raw_duration_seconds": {"type": "number", "exclusiveMinimum": 0},
+          "generation_wall_seconds": {"type": "number", "minimum": 0},
+          "first_audible_output_seconds": {"type": "number", "minimum": 0},
+          "host_rtf": {"type": "number", "minimum": 0},
+          "peak_process_tree_rss_bytes": {"type": "integer", "minimum": 1},
+          "raw_sha256": {"$ref": "#/$defs/sha256"},
+          "normalized_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+          "evidence": {"type": "string"}, "evidence_sha256": {"$ref": "#/$defs/sha256"}, "note": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "android_measurements": {"type": "object"},
+    "estimates": {"type": "object"},
+    "historical_evidence": {"type": "object"},
+    "candidate_decisions": {
+      "type": "array", "minItems": 5, "maxItems": 5,
+      "items": {"type": "object", "required": ["id", "label", "gate"], "properties": {"id": {"type": "string"}, "label": {"type": "string"}, "gate": {"type": "string"}}, "additionalProperties": false}
+    },
+    "next_action": {"type": "string", "pattern": "Stop"}
+  },
+  "additionalProperties": false
+}

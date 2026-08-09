@@ -20,6 +20,7 @@ ETAG=$(curl -fsS -H "Authorization: Bearer $TOKEN" "http://127.0.0.1:$PORT/api/p
 FORM=(
   -F "files=@$BUILD/index.html;filename=index.html;type=text/html"
   -F "files=@$BUILD/bakeoff-manifest.json;filename=bakeoff-manifest.json;type=application/json"
+  -F "files=@$BUILD/candidate-decision-report.json;filename=candidate-decision-report.json;type=application/json"
   -F "files=@$BUILD/crew-tasks.json;filename=crew-tasks.json;type=application/json"
 )
 while IFS= read -r -d '' wav; do

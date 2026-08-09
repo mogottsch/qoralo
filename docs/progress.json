@@ -898,5 +898,19 @@
       "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/complete-build-final.json",
       "note": "Final profiling shows module forward dominates. Periodic GC changes median prefix time by only -1.74% within variability; the locked-reference build is rejected for capacity, speed, size, and silent audio."
     }
-  ]
+  ],
+  "candidate_campaign": {
+    "schema_version": 1,
+    "source": ".pi/messenger/crew/tasks/task-{1..18}.json",
+    "snapshot_policy": "Worker snapshot taken while task-18 is in_progress; after task.done the parent performs one publication-only rebuild so the dashboard reports authentic 18/18.",
+    "completed_tasks": 17,
+    "in_progress_tasks": 1,
+    "total_tasks": 18,
+    "current_task": "task-18",
+    "status": "awaiting_report_completion_then_explicit_user_approval",
+    "subjective_listening": "pending_user_review",
+    "decision_report": "docs/candidate-decision-report.json",
+    "follow_up_started": false,
+    "historical_39_of_39_preserved": true
+  }
 }

@@ -74,7 +74,9 @@ python experiments/0007-mobile-podcast-preview-bakeoff/publication/build_publica
 python -m unittest discover -s experiments/0007-mobile-podcast-preview-bakeoff/publication/tests -v
 ```
 
-The build copies ignored WAVs directly to ignored `artifacts/publication-build/`, checks their hashes, validates the manifest and cross-file invariants, and fails if media or artifact paths are staged. `publication/publish.sh` uploads those files directly to the authenticated static-preview API; it never adds them to Git.
+The build copies ignored WAVs directly to ignored `artifacts/publication-build/`, checks their hashes, validates the manifest and cross-file invariants, and fails if media or artifact paths are staged. It also validates and publishes `docs/candidate-decision-report.json`, keeping host quality, unavailable Android measurements, storage estimates, historical 39/39 evidence, and `pending_user_review` ratings separate. `publication/publish.sh` uploads those files directly to the authenticated static-preview API; it never adds them to Git.
+
+Task 18 intentionally builds the Crew snapshot while it is `in_progress` (17 completed, 1 in progress). After `task.done`, the parent orchestrator performs one final publication-only rebuild so the live page authentically becomes 18/18. That refresh must not start conversions or other follow-up work.
 
 ## Tests
 

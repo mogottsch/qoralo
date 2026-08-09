@@ -50,6 +50,32 @@ class ManifestTests(unittest.TestCase):
         self.assertFalse(pocket["transformations"]["applied"])
 
 
+class DecisionReportTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.report = build_publication.decision_report()
+
+    def test_evidence_classes_pending_ratings_and_five_decisions(self):
+        self.assertEqual("pending_user_review", self.report["subjective_listening"]["status"])
+        self.assertTrue(all(value is None for value in self.report["subjective_listening"]["ratings"].values()))
+        self.assertEqual(3, len(self.report["host_quality_evidence"]))
+        self.assertEqual(5, len(self.report["candidate_decisions"]))
+        self.assertEqual("not_run_host_gate_rejected", self.report["android_measurements"]["vibevoice_1_5b_four_call"]["status"])
+        self.assertFalse(self.report["estimates"]["realtime_0_5b"]["runtime_support_claimed"])
+
+    def test_historical_result_preserved_and_prefix_is_clarification(self):
+        historical = self.report["historical_evidence"]
+        self.assertEqual((39, 39), (historical["completed_steps"], historical["total_steps"]))
+        self.assertEqual("clarification_only", historical["prefix_supplement"]["role"])
+
+    def test_report_markdown_links_resolve(self):
+        import re
+        markdown = (build_publication.REPO / "docs/candidate-decision-report.md").read_text()
+        for target in re.findall(r"\[[^]]+\]\(([^)]+)\)", markdown):
+            if "://" not in target:
+                self.assertTrue((build_publication.REPO / "docs" / target).resolve().is_file(), target)
+
+
 class BuiltPageTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -59,6 +85,7 @@ class BuiltPageTests(unittest.TestCase):
         cls.html = (cls.output / "index.html").read_text()
         cls.crew = json.loads((cls.output / "crew-tasks.json").read_text())
         cls.manifest = json.loads((cls.output / "bakeoff-manifest.json").read_text())
+        cls.report = json.loads((cls.output / "candidate-decision-report.json").read_text())
 
     @classmethod
     def tearDownClass(cls):
@@ -88,6 +115,13 @@ class BuiltPageTests(unittest.TestCase):
         self.assertIn("@media(max-width:800px)", self.html)
         self.assertIn('name="viewport"', self.html)
 
+    def test_decision_report_rendering_and_stop_gate(self):
+        self.assertIn('id="report"', self.html)
+        self.assertIn("Choose one of five permitted decisions", self.html)
+        self.assertIn("candidate-decision-report.json", self.html)
+        self.assertEqual(5, len(self.report["candidate_decisions"]))
+        self.assertEqual("awaiting_explicit_user_approval", self.report["status"])
+
     def test_all_18_tasks_edges_status_and_progress_rendering(self):
         self.assertEqual(18, len(self.crew["tasks"]))
         ids = {task["id"] for task in self.crew["tasks"]}
@@ -98,6 +132,8 @@ class BuiltPageTests(unittest.TestCase):
         self.assertIn("Progress:", self.html)
         self.assertIn("counts.done", self.html)
         self.assertIn("t.depends_on.map", self.html)
+        task18 = next(task for task in self.crew["tasks"] if task["id"] == "task-18")
+        self.assertEqual("in_progress", task18["status"])
 
     def test_audio_remains_ignored_and_unstaged(self):
         import subprocess

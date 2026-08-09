@@ -26,3 +26,9 @@ Test VibeVoice TTS 1.5B first because it is the smallest released model with joi
 ## 2026-08-08 — No premature architecture
 
 Do not define a product or deployment architecture before measuring export compatibility, numerical correctness, memory use, and runtime.
+
+## 2026-08-09 — Candidate evidence published; user decision required
+
+Publish the protocol-v2 host listening samples, the correctly gated negative VibeVoice 1.5B Android result, and the Realtime 0.5B feasibility estimates as distinct evidence classes. Preserve the historical 39/39 rejection; the locked-prefix supplement only clarifies why the old two-chunk near-silence was not proof of waveform divergence.
+
+Subjective ratings remain `pending_user_review`. Start no conversion or follow-up until the user explicitly chooses one of the five actions in [`candidate-decision-report.md`](candidate-decision-report.md).

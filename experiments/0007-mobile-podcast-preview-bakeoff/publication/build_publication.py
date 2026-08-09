@@ -18,6 +18,8 @@ PROTOCOL_PATH = EXP / "protocol/preview-protocol-v2.json"
 TRANSCRIPT_PATH = EXP / "protocol/transcript.txt"
 SCHEMA_PATH = HERE / "bakeoff-manifest.schema.json"
 MANIFEST_PATH = HERE / "bakeoff-manifest.json"
+REPORT_PATH = REPO / "docs/candidate-decision-report.json"
+REPORT_SCHEMA_PATH = REPO / "docs/candidate-decision-report.schema.json"
 LABELS = {"realtime": "Candidate A", "pocket": "Candidate B", "kokoro": "Candidate C"}
 SLUGS = {"realtime": "a", "pocket": "b", "kokoro": "c"}
 
@@ -168,6 +170,33 @@ def validate_manifest(manifest: dict) -> None:
             raise ValueError(f"{candidate['model']}: blocked result is inconsistent")
 
 
+def decision_report() -> dict:
+    report = load(REPORT_PATH)
+    try:
+        import jsonschema
+    except ImportError as error:
+        raise SystemExit("install requirements-protocol.txt (jsonschema is required)") from error
+    jsonschema.Draft202012Validator(load(REPORT_SCHEMA_PATH)).validate(report)
+    if report["subjective_listening"]["status"] != "pending_user_review":
+        raise ValueError("subjective listening status must remain pending_user_review")
+    if len(report["candidate_decisions"]) != 5:
+        raise ValueError("exactly five user decisions are permitted")
+    evidence_records = list(report["host_quality_evidence"])
+    evidence_records.append(report["android_measurements"]["vibevoice_1_5b_four_call"])
+    evidence_records.append(report["estimates"]["realtime_0_5b"])
+    evidence_records.append(report["historical_evidence"])
+    evidence_records.append(report["historical_evidence"]["prefix_supplement"])
+    for record in evidence_records:
+        path = REPO / record["evidence"]
+        if not path.is_file():
+            raise ValueError(f"decision evidence missing: {record['evidence']}")
+        if sha256(path) != record["evidence_sha256"]:
+            raise ValueError(f"decision evidence hash mismatch: {record['evidence']}")
+    if report["historical_evidence"]["completed_steps"] != 39 or report["historical_evidence"]["total_steps"] != 39:
+        raise ValueError("historical 39/39 evidence must remain preserved")
+    return report
+
+
 def crew_snapshot() -> dict:
     task_dir = REPO / ".pi/messenger/crew/tasks"
     tasks = []
@@ -193,8 +222,10 @@ def build(output: Path) -> None:
             if record:
                 shutil.copyfile(repo_path(record["source_path"]), output / record["published_url"])
     snapshot = crew_snapshot()
+    report = decision_report()
     (output / "bakeoff-manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
     (output / "crew-tasks.json").write_text(json.dumps(snapshot, indent=2) + "\n")
+    (output / "candidate-decision-report.json").write_text(json.dumps(report, indent=2) + "\n")
     template = (HERE / "index.template.html").read_text()
     page_data = {
         "transcript": manifest["transcript"],
@@ -205,9 +236,19 @@ def build(output: Path) -> None:
             "normalized_url": candidate["normalized"]["published_url"] if candidate["normalized"] else None,
         } for candidate in manifest["candidates"]],
     }
+    report_data = {
+        "status": report["status"],
+        "subjective_status": report["subjective_listening"]["status"],
+        "historical": report["historical_evidence"],
+        "android": report["android_measurements"],
+        "estimates": report["estimates"],
+        "decisions": report["candidate_decisions"],
+        "next_action": report["next_action"],
+    }
     embedded_manifest = json.dumps(page_data, separators=(",", ":")).replace("</", "<\\/")
     embedded_crew = json.dumps(snapshot, separators=(",", ":")).replace("</", "<\\/")
-    (output / "index.html").write_text(template.replace("__BAKEOFF_JSON__", embedded_manifest).replace("__CREW_JSON__", embedded_crew))
+    embedded_report = json.dumps(report_data, separators=(",", ":")).replace("</", "<\\/")
+    (output / "index.html").write_text(template.replace("__BAKEOFF_JSON__", embedded_manifest).replace("__CREW_JSON__", embedded_crew).replace("__REPORT_JSON__", embedded_report))
     staged = subprocess.run(["git", "diff", "--cached", "--name-only"], cwd=REPO, text=True, capture_output=True, check=True).stdout.splitlines()
     forbidden = [path for path in staged if path.endswith((".wav", ".flac", ".mp3", ".m4a")) or "/artifacts/" in path]
     if forbidden:
