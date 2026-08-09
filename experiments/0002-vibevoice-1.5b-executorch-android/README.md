@@ -26,6 +26,7 @@ The later signed-16-bit supplement does not change that quality rejection: it sh
 - [`export/run_streaming_decoder_fp16_host.sh`](export/run_streaming_decoder_fp16_host.sh) reproduces decoder-only FP16 exports and host validation while sampling VmHWM/PSS.
 - [`export/summarize_streaming_fp16.py`](export/summarize_streaming_fp16.py) rebuilds the committed FP16 structured result from ignored benchmark artifacts.
 - [`export/probe_multimethod_external_constants.py`](export/probe_multimethod_external_constants.py) runs the synthetic ExecuTorch 1.2 multi-method/shared-weight and PTD capability probe without loading VibeVoice or using a phone.
+- [`fixtures/four-call-cache-abi.md`](fixtures/four-call-cache-abi.md) and [`fixtures/four-call-cache-abi.json`](fixtures/four-call-cache-abi.json) freeze the pre-export calls 0–3 decoder/semantic tensor order, fixed capacities, phase/length transitions, reset and no-mutation rules, inline-constant packaging, retained INT8-Qwen2/FP32-audio choices, and numerical/audibility gates.
 - [`export/capture_diffusion_fixture.py`](export/capture_diffusion_fixture.py) captures the first real CFG prediction-head invocation from the locked reference and stops before scheduler iteration.
 - [`export/diffusion_head.py`](export/diffusion_head.py) loads only prediction-head checkpoint tensors and defines the four-input FP32 ABI.
 - [`export/export_diffusion_step.py`](export/export_diffusion_step.py) exports the fixed CFG prediction to portable ExecuTorch or XNNPACK.

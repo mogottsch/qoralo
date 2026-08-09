@@ -24,6 +24,12 @@ boundaries, 64,000 samples total, and records per-chunk peak, RMS and dBFS. Raw
 `.pt` payloads total about 1.2 GiB per run and remain under ignored `artifacts/`.
 No deployment ABI is selected by this evidence capture.
 
+The subsequent reviewed decision is frozen separately in
+[`four-call-cache-abi.md`](four-call-cache-abi.md) and its normative
+[`four-call-cache-abi.json`](four-call-cache-abi.json). It uses fixed maximum
+FP32 audio caches plus explicit phase/valid lengths; it is a pre-export
+contract, not evidence that an export already works.
+
 Run twice through the one global model-resource gate:
 
 ```bash

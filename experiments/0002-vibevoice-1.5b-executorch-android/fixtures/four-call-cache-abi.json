@@ -1,0 +1,4264 @@
+{
+  "schema_version": 1,
+  "abi_id": "vibevoice-1.5b-four-call-cache-abi-v1",
+  "status": "frozen_pre_export",
+  "scope": "Calls 0-3 of locked recurrent trace; contract is export/runtime input, output, state, transition, threshold, and packaging policy only. No export is implemented by this file.",
+  "evidence": {
+    "trace": "fixtures/recurrent-calls-0-19-manifest.json",
+    "stabilization": "results/cache-stabilization.json",
+    "prefix": "results/locked-reference-prefix-comparison.json",
+    "capability_probe": "results/executorch-multimethod-external-constants.json"
+  },
+  "precision_policy": {
+    "qwen2_backbone": {
+      "weights": "int8",
+      "activations": "float32",
+      "cache_transport": "float32",
+      "decision": "retain accepted INT8 Qwen2; no new quantization"
+    },
+    "connectors_diffusion_decoder_semantic": {
+      "weights": "float32",
+      "activations": "float32",
+      "cache_transport": "float32",
+      "decision": "retain FP32 audio path; FP16 is not this ABI"
+    }
+  },
+  "representation": {
+    "choice": "one fixed-capacity method per audio component plus explicit phase and valid-length vectors",
+    "reason": "Avoids shape-specialized methods and phase-specific weight copies. Calls 0-3 are warm-up: decoder cache 28 is only 4/15 full after call 3 and all transpose caches first have full pre-context at call 15.",
+    "phase_dtype": "int32",
+    "phase_shape": [],
+    "phase_semantics": "zero-based recurrent call index; phase 0 is reset/cold; only phase+1 is a legal next transition",
+    "valid_lengths_dtype": "int32",
+    "valid_lengths_shape": [
+      34
+    ],
+    "padding": "All cache tensors have fixed capacity. Valid values are left-aligned; padding is canonical +0.0 and is neither read nor propagated as context.",
+    "fallback_policy": "If fixed-capacity slicing cannot be exported faithfully, host validation MUST reject. Do not substitute shape-specific warm-up methods or change this frozen ABI without a reviewed ABI revision."
+  },
+  "methods": {
+    "acoustic_decode": {
+      "method_order": 0,
+      "inputs": [
+        {
+          "order": 0,
+          "name": "decoder_latent",
+          "shape": [
+            1,
+            1,
+            64
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 1,
+          "name": "phase",
+          "shape": [],
+          "dtype": "int32"
+        },
+        {
+          "order": 2,
+          "name": "decoder_valid_lengths",
+          "shape": [
+            34
+          ],
+          "dtype": "int32"
+        },
+        {
+          "order": 3,
+          "name": "decoder_cache_00",
+          "shape": [
+            32,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 4,
+          "name": "decoder_cache_01",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 5,
+          "name": "decoder_cache_02",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 6,
+          "name": "decoder_cache_03",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 7,
+          "name": "decoder_cache_04",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 8,
+          "name": "decoder_cache_05",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 9,
+          "name": "decoder_cache_06",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 10,
+          "name": "decoder_cache_07",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 11,
+          "name": "decoder_cache_08",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 12,
+          "name": "decoder_cache_09",
+          "shape": [
+            1024,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 13,
+          "name": "decoder_cache_10",
+          "shape": [
+            1024,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 14,
+          "name": "decoder_cache_11",
+          "shape": [
+            1024,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 15,
+          "name": "decoder_cache_12",
+          "shape": [
+            512,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 16,
+          "name": "decoder_cache_13",
+          "shape": [
+            512,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 17,
+          "name": "decoder_cache_14",
+          "shape": [
+            512,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 18,
+          "name": "decoder_cache_15",
+          "shape": [
+            256,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 19,
+          "name": "decoder_cache_16",
+          "shape": [
+            256,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 20,
+          "name": "decoder_cache_17",
+          "shape": [
+            256,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 21,
+          "name": "decoder_cache_18",
+          "shape": [
+            128,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 22,
+          "name": "decoder_cache_19",
+          "shape": [
+            128,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 23,
+          "name": "decoder_cache_20",
+          "shape": [
+            128,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 24,
+          "name": "decoder_cache_21",
+          "shape": [
+            64,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 25,
+          "name": "decoder_cache_22",
+          "shape": [
+            64,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 26,
+          "name": "decoder_cache_23",
+          "shape": [
+            64,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 27,
+          "name": "decoder_cache_24",
+          "shape": [
+            32,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 28,
+          "name": "decoder_cache_25",
+          "shape": [
+            32,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 29,
+          "name": "decoder_cache_26",
+          "shape": [
+            32,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 30,
+          "name": "decoder_cache_27",
+          "shape": [
+            64,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 31,
+          "name": "decoder_cache_28",
+          "shape": [
+            2048,
+            15
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 32,
+          "name": "decoder_cache_29",
+          "shape": [
+            1024,
+            9
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 33,
+          "name": "decoder_cache_30",
+          "shape": [
+            512,
+            9
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 34,
+          "name": "decoder_cache_31",
+          "shape": [
+            256,
+            7
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 35,
+          "name": "decoder_cache_32",
+          "shape": [
+            128,
+            3
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 36,
+          "name": "decoder_cache_33",
+          "shape": [
+            64,
+            3
+          ],
+          "dtype": "float32"
+        }
+      ],
+      "outputs": [
+        {
+          "order": 0,
+          "name": "pcm",
+          "shape": [
+            1,
+            1,
+            3200
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 1,
+          "name": "decoder_next_valid_lengths",
+          "shape": [
+            34
+          ],
+          "dtype": "int32"
+        },
+        {
+          "order": 2,
+          "name": "next_decoder_cache_00",
+          "shape": [
+            32,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 3,
+          "name": "next_decoder_cache_01",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 4,
+          "name": "next_decoder_cache_02",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 5,
+          "name": "next_decoder_cache_03",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 6,
+          "name": "next_decoder_cache_04",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 7,
+          "name": "next_decoder_cache_05",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 8,
+          "name": "next_decoder_cache_06",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 9,
+          "name": "next_decoder_cache_07",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 10,
+          "name": "next_decoder_cache_08",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 11,
+          "name": "next_decoder_cache_09",
+          "shape": [
+            1024,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 12,
+          "name": "next_decoder_cache_10",
+          "shape": [
+            1024,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 13,
+          "name": "next_decoder_cache_11",
+          "shape": [
+            1024,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 14,
+          "name": "next_decoder_cache_12",
+          "shape": [
+            512,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 15,
+          "name": "next_decoder_cache_13",
+          "shape": [
+            512,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 16,
+          "name": "next_decoder_cache_14",
+          "shape": [
+            512,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 17,
+          "name": "next_decoder_cache_15",
+          "shape": [
+            256,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 18,
+          "name": "next_decoder_cache_16",
+          "shape": [
+            256,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 19,
+          "name": "next_decoder_cache_17",
+          "shape": [
+            256,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 20,
+          "name": "next_decoder_cache_18",
+          "shape": [
+            128,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 21,
+          "name": "next_decoder_cache_19",
+          "shape": [
+            128,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 22,
+          "name": "next_decoder_cache_20",
+          "shape": [
+            128,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 23,
+          "name": "next_decoder_cache_21",
+          "shape": [
+            64,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 24,
+          "name": "next_decoder_cache_22",
+          "shape": [
+            64,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 25,
+          "name": "next_decoder_cache_23",
+          "shape": [
+            64,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 26,
+          "name": "next_decoder_cache_24",
+          "shape": [
+            32,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 27,
+          "name": "next_decoder_cache_25",
+          "shape": [
+            32,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 28,
+          "name": "next_decoder_cache_26",
+          "shape": [
+            32,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 29,
+          "name": "next_decoder_cache_27",
+          "shape": [
+            64,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 30,
+          "name": "next_decoder_cache_28",
+          "shape": [
+            2048,
+            15
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 31,
+          "name": "next_decoder_cache_29",
+          "shape": [
+            1024,
+            9
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 32,
+          "name": "next_decoder_cache_30",
+          "shape": [
+            512,
+            9
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 33,
+          "name": "next_decoder_cache_31",
+          "shape": [
+            256,
+            7
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 34,
+          "name": "next_decoder_cache_32",
+          "shape": [
+            128,
+            3
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 35,
+          "name": "next_decoder_cache_33",
+          "shape": [
+            64,
+            3
+          ],
+          "dtype": "float32"
+        }
+      ],
+      "caches": [
+        {
+          "order": 0,
+          "tensor_name": "decoder_cache_00",
+          "source_name": "head/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            32,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 1,
+          "tensor_name": "decoder_cache_01",
+          "source_name": "stages.0.0.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            2048,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 2,
+          "tensor_name": "decoder_cache_02",
+          "source_name": "stages.0.1.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            2048,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 3,
+          "tensor_name": "decoder_cache_03",
+          "source_name": "stages.0.2.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            2048,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 4,
+          "tensor_name": "decoder_cache_04",
+          "source_name": "stages.0.3.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            2048,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 5,
+          "tensor_name": "decoder_cache_05",
+          "source_name": "stages.0.4.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            2048,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 6,
+          "tensor_name": "decoder_cache_06",
+          "source_name": "stages.0.5.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            2048,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 7,
+          "tensor_name": "decoder_cache_07",
+          "source_name": "stages.0.6.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            2048,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 8,
+          "tensor_name": "decoder_cache_08",
+          "source_name": "stages.0.7.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            2048,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 9,
+          "tensor_name": "decoder_cache_09",
+          "source_name": "stages.1.0.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            1024,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 10,
+          "tensor_name": "decoder_cache_10",
+          "source_name": "stages.1.1.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            1024,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 11,
+          "tensor_name": "decoder_cache_11",
+          "source_name": "stages.1.2.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            1024,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 12,
+          "tensor_name": "decoder_cache_12",
+          "source_name": "stages.2.0.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            512,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 13,
+          "tensor_name": "decoder_cache_13",
+          "source_name": "stages.2.1.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            512,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 14,
+          "tensor_name": "decoder_cache_14",
+          "source_name": "stages.2.2.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            512,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 15,
+          "tensor_name": "decoder_cache_15",
+          "source_name": "stages.3.0.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            256,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 16,
+          "tensor_name": "decoder_cache_16",
+          "source_name": "stages.3.1.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            256,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 17,
+          "tensor_name": "decoder_cache_17",
+          "source_name": "stages.3.2.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            256,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 18,
+          "tensor_name": "decoder_cache_18",
+          "source_name": "stages.4.0.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            128,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 19,
+          "tensor_name": "decoder_cache_19",
+          "source_name": "stages.4.1.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            128,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 20,
+          "tensor_name": "decoder_cache_20",
+          "source_name": "stages.4.2.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            128,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 21,
+          "tensor_name": "decoder_cache_21",
+          "source_name": "stages.5.0.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            64,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 22,
+          "tensor_name": "decoder_cache_22",
+          "source_name": "stages.5.1.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            64,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 23,
+          "tensor_name": "decoder_cache_23",
+          "source_name": "stages.5.2.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            64,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 24,
+          "tensor_name": "decoder_cache_24",
+          "source_name": "stages.6.0.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            32,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 25,
+          "tensor_name": "decoder_cache_25",
+          "source_name": "stages.6.1.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            32,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 26,
+          "tensor_name": "decoder_cache_26",
+          "source_name": "stages.6.2.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            32,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 27,
+          "tensor_name": "decoder_cache_27",
+          "source_name": "upsample_layers.0.0/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            64,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 28,
+          "tensor_name": "decoder_cache_28",
+          "source_name": "upsample_layers.1.0/sample_0",
+          "cache_type": "SConvTranspose1d",
+          "dtype": "float32",
+          "capacity_shape": [
+            2048,
+            15
+          ],
+          "capacity_axis": 1,
+          "capacity": 15,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "post_valid_lengths_calls_0_3": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "first_call_post_full": 14,
+          "first_call_with_full_pre_context": 15
+        },
+        {
+          "order": 29,
+          "tensor_name": "decoder_cache_29",
+          "source_name": "upsample_layers.2.0/sample_0",
+          "cache_type": "SConvTranspose1d",
+          "dtype": "float32",
+          "capacity_shape": [
+            1024,
+            9
+          ],
+          "capacity_axis": 1,
+          "capacity": 9,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            8,
+            9,
+            9
+          ],
+          "post_valid_lengths_calls_0_3": [
+            8,
+            9,
+            9,
+            9
+          ],
+          "first_call_post_full": 1,
+          "first_call_with_full_pre_context": 2
+        },
+        {
+          "order": 30,
+          "tensor_name": "decoder_cache_30",
+          "source_name": "upsample_layers.3.0/sample_0",
+          "cache_type": "SConvTranspose1d",
+          "dtype": "float32",
+          "capacity_shape": [
+            512,
+            9
+          ],
+          "capacity_axis": 1,
+          "capacity": 9,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            9,
+            9,
+            9
+          ],
+          "post_valid_lengths_calls_0_3": [
+            9,
+            9,
+            9,
+            9
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 31,
+          "tensor_name": "decoder_cache_31",
+          "source_name": "upsample_layers.4.0/sample_0",
+          "cache_type": "SConvTranspose1d",
+          "dtype": "float32",
+          "capacity_shape": [
+            256,
+            7
+          ],
+          "capacity_axis": 1,
+          "capacity": 7,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            7,
+            7,
+            7
+          ],
+          "post_valid_lengths_calls_0_3": [
+            7,
+            7,
+            7,
+            7
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 32,
+          "tensor_name": "decoder_cache_32",
+          "source_name": "upsample_layers.5.0/sample_0",
+          "cache_type": "SConvTranspose1d",
+          "dtype": "float32",
+          "capacity_shape": [
+            128,
+            3
+          ],
+          "capacity_axis": 1,
+          "capacity": 3,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            3,
+            3,
+            3
+          ],
+          "post_valid_lengths_calls_0_3": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 33,
+          "tensor_name": "decoder_cache_33",
+          "source_name": "upsample_layers.6.0/sample_0",
+          "cache_type": "SConvTranspose1d",
+          "dtype": "float32",
+          "capacity_shape": [
+            64,
+            3
+          ],
+          "capacity_axis": 1,
+          "capacity": 3,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            3,
+            3,
+            3
+          ],
+          "post_valid_lengths_calls_0_3": [
+            3,
+            3,
+            3,
+            3
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        }
+      ]
+    },
+    "semantic_encode": {
+      "method_order": 1,
+      "inputs": [
+        {
+          "order": 0,
+          "name": "pcm",
+          "shape": [
+            1,
+            1,
+            3200
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 1,
+          "name": "phase",
+          "shape": [],
+          "dtype": "int32"
+        },
+        {
+          "order": 2,
+          "name": "semantic_valid_lengths",
+          "shape": [
+            34
+          ],
+          "dtype": "int32"
+        },
+        {
+          "order": 3,
+          "name": "semantic_cache_00",
+          "shape": [
+            1,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 4,
+          "name": "semantic_cache_01",
+          "shape": [
+            32,
+            2
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 5,
+          "name": "semantic_cache_02",
+          "shape": [
+            64,
+            2
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 6,
+          "name": "semantic_cache_03",
+          "shape": [
+            128,
+            4
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 7,
+          "name": "semantic_cache_04",
+          "shape": [
+            256,
+            5
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 8,
+          "name": "semantic_cache_05",
+          "shape": [
+            512,
+            5
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 9,
+          "name": "semantic_cache_06",
+          "shape": [
+            1024,
+            8
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 10,
+          "name": "semantic_cache_07",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 11,
+          "name": "semantic_cache_08",
+          "shape": [
+            32,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 12,
+          "name": "semantic_cache_09",
+          "shape": [
+            32,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 13,
+          "name": "semantic_cache_10",
+          "shape": [
+            32,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 14,
+          "name": "semantic_cache_11",
+          "shape": [
+            64,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 15,
+          "name": "semantic_cache_12",
+          "shape": [
+            64,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 16,
+          "name": "semantic_cache_13",
+          "shape": [
+            64,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 17,
+          "name": "semantic_cache_14",
+          "shape": [
+            128,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 18,
+          "name": "semantic_cache_15",
+          "shape": [
+            128,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 19,
+          "name": "semantic_cache_16",
+          "shape": [
+            128,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 20,
+          "name": "semantic_cache_17",
+          "shape": [
+            256,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 21,
+          "name": "semantic_cache_18",
+          "shape": [
+            256,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 22,
+          "name": "semantic_cache_19",
+          "shape": [
+            256,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 23,
+          "name": "semantic_cache_20",
+          "shape": [
+            512,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 24,
+          "name": "semantic_cache_21",
+          "shape": [
+            512,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 25,
+          "name": "semantic_cache_22",
+          "shape": [
+            512,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 26,
+          "name": "semantic_cache_23",
+          "shape": [
+            1024,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 27,
+          "name": "semantic_cache_24",
+          "shape": [
+            1024,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 28,
+          "name": "semantic_cache_25",
+          "shape": [
+            1024,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 29,
+          "name": "semantic_cache_26",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 30,
+          "name": "semantic_cache_27",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 31,
+          "name": "semantic_cache_28",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 32,
+          "name": "semantic_cache_29",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 33,
+          "name": "semantic_cache_30",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 34,
+          "name": "semantic_cache_31",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 35,
+          "name": "semantic_cache_32",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 36,
+          "name": "semantic_cache_33",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        }
+      ],
+      "outputs": [
+        {
+          "order": 0,
+          "name": "semantic_output",
+          "shape": [
+            1,
+            1,
+            128
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 1,
+          "name": "semantic_next_valid_lengths",
+          "shape": [
+            34
+          ],
+          "dtype": "int32"
+        },
+        {
+          "order": 2,
+          "name": "next_semantic_cache_00",
+          "shape": [
+            1,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 3,
+          "name": "next_semantic_cache_01",
+          "shape": [
+            32,
+            2
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 4,
+          "name": "next_semantic_cache_02",
+          "shape": [
+            64,
+            2
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 5,
+          "name": "next_semantic_cache_03",
+          "shape": [
+            128,
+            4
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 6,
+          "name": "next_semantic_cache_04",
+          "shape": [
+            256,
+            5
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 7,
+          "name": "next_semantic_cache_05",
+          "shape": [
+            512,
+            5
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 8,
+          "name": "next_semantic_cache_06",
+          "shape": [
+            1024,
+            8
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 9,
+          "name": "next_semantic_cache_07",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 10,
+          "name": "next_semantic_cache_08",
+          "shape": [
+            32,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 11,
+          "name": "next_semantic_cache_09",
+          "shape": [
+            32,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 12,
+          "name": "next_semantic_cache_10",
+          "shape": [
+            32,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 13,
+          "name": "next_semantic_cache_11",
+          "shape": [
+            64,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 14,
+          "name": "next_semantic_cache_12",
+          "shape": [
+            64,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 15,
+          "name": "next_semantic_cache_13",
+          "shape": [
+            64,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 16,
+          "name": "next_semantic_cache_14",
+          "shape": [
+            128,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 17,
+          "name": "next_semantic_cache_15",
+          "shape": [
+            128,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 18,
+          "name": "next_semantic_cache_16",
+          "shape": [
+            128,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 19,
+          "name": "next_semantic_cache_17",
+          "shape": [
+            256,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 20,
+          "name": "next_semantic_cache_18",
+          "shape": [
+            256,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 21,
+          "name": "next_semantic_cache_19",
+          "shape": [
+            256,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 22,
+          "name": "next_semantic_cache_20",
+          "shape": [
+            512,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 23,
+          "name": "next_semantic_cache_21",
+          "shape": [
+            512,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 24,
+          "name": "next_semantic_cache_22",
+          "shape": [
+            512,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 25,
+          "name": "next_semantic_cache_23",
+          "shape": [
+            1024,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 26,
+          "name": "next_semantic_cache_24",
+          "shape": [
+            1024,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 27,
+          "name": "next_semantic_cache_25",
+          "shape": [
+            1024,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 28,
+          "name": "next_semantic_cache_26",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 29,
+          "name": "next_semantic_cache_27",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 30,
+          "name": "next_semantic_cache_28",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 31,
+          "name": "next_semantic_cache_29",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 32,
+          "name": "next_semantic_cache_30",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 33,
+          "name": "next_semantic_cache_31",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 34,
+          "name": "next_semantic_cache_32",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        },
+        {
+          "order": 35,
+          "name": "next_semantic_cache_33",
+          "shape": [
+            2048,
+            6
+          ],
+          "dtype": "float32"
+        }
+      ],
+      "caches": [
+        {
+          "order": 0,
+          "tensor_name": "semantic_cache_00",
+          "source_name": "downsample_layers.0.0/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            1,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 1,
+          "tensor_name": "semantic_cache_01",
+          "source_name": "downsample_layers.1.0/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            32,
+            2
+          ],
+          "capacity_axis": 1,
+          "capacity": 2,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            2,
+            2,
+            2
+          ],
+          "post_valid_lengths_calls_0_3": [
+            2,
+            2,
+            2,
+            2
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 2,
+          "tensor_name": "semantic_cache_02",
+          "source_name": "downsample_layers.2.0/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            64,
+            2
+          ],
+          "capacity_axis": 1,
+          "capacity": 2,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            2,
+            2,
+            2
+          ],
+          "post_valid_lengths_calls_0_3": [
+            2,
+            2,
+            2,
+            2
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 3,
+          "tensor_name": "semantic_cache_03",
+          "source_name": "downsample_layers.3.0/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            128,
+            4
+          ],
+          "capacity_axis": 1,
+          "capacity": 4,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            4,
+            4,
+            4
+          ],
+          "post_valid_lengths_calls_0_3": [
+            4,
+            4,
+            4,
+            4
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 4,
+          "tensor_name": "semantic_cache_04",
+          "source_name": "downsample_layers.4.0/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            256,
+            5
+          ],
+          "capacity_axis": 1,
+          "capacity": 5,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            5,
+            5,
+            5
+          ],
+          "post_valid_lengths_calls_0_3": [
+            5,
+            5,
+            5,
+            5
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 5,
+          "tensor_name": "semantic_cache_05",
+          "source_name": "downsample_layers.5.0/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            512,
+            5
+          ],
+          "capacity_axis": 1,
+          "capacity": 5,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            5,
+            5,
+            5
+          ],
+          "post_valid_lengths_calls_0_3": [
+            5,
+            5,
+            5,
+            5
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 6,
+          "tensor_name": "semantic_cache_06",
+          "source_name": "downsample_layers.6.0/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            1024,
+            8
+          ],
+          "capacity_axis": 1,
+          "capacity": 8,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            8,
+            8,
+            8
+          ],
+          "post_valid_lengths_calls_0_3": [
+            8,
+            8,
+            8,
+            8
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 7,
+          "tensor_name": "semantic_cache_07",
+          "source_name": "head/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            2048,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 8,
+          "tensor_name": "semantic_cache_08",
+          "source_name": "stages.0.0.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            32,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 9,
+          "tensor_name": "semantic_cache_09",
+          "source_name": "stages.0.1.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            32,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 10,
+          "tensor_name": "semantic_cache_10",
+          "source_name": "stages.0.2.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            32,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 11,
+          "tensor_name": "semantic_cache_11",
+          "source_name": "stages.1.0.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            64,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 12,
+          "tensor_name": "semantic_cache_12",
+          "source_name": "stages.1.1.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            64,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 13,
+          "tensor_name": "semantic_cache_13",
+          "source_name": "stages.1.2.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            64,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 14,
+          "tensor_name": "semantic_cache_14",
+          "source_name": "stages.2.0.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            128,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 15,
+          "tensor_name": "semantic_cache_15",
+          "source_name": "stages.2.1.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            128,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 16,
+          "tensor_name": "semantic_cache_16",
+          "source_name": "stages.2.2.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            128,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 17,
+          "tensor_name": "semantic_cache_17",
+          "source_name": "stages.3.0.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            256,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 18,
+          "tensor_name": "semantic_cache_18",
+          "source_name": "stages.3.1.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            256,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 19,
+          "tensor_name": "semantic_cache_19",
+          "source_name": "stages.3.2.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            256,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 20,
+          "tensor_name": "semantic_cache_20",
+          "source_name": "stages.4.0.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            512,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 21,
+          "tensor_name": "semantic_cache_21",
+          "source_name": "stages.4.1.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            512,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 22,
+          "tensor_name": "semantic_cache_22",
+          "source_name": "stages.4.2.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            512,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 23,
+          "tensor_name": "semantic_cache_23",
+          "source_name": "stages.5.0.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            1024,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 24,
+          "tensor_name": "semantic_cache_24",
+          "source_name": "stages.5.1.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            1024,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 25,
+          "tensor_name": "semantic_cache_25",
+          "source_name": "stages.5.2.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            1024,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 26,
+          "tensor_name": "semantic_cache_26",
+          "source_name": "stages.6.0.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            2048,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 27,
+          "tensor_name": "semantic_cache_27",
+          "source_name": "stages.6.1.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            2048,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 28,
+          "tensor_name": "semantic_cache_28",
+          "source_name": "stages.6.2.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            2048,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 29,
+          "tensor_name": "semantic_cache_29",
+          "source_name": "stages.6.3.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            2048,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 30,
+          "tensor_name": "semantic_cache_30",
+          "source_name": "stages.6.4.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            2048,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 31,
+          "tensor_name": "semantic_cache_31",
+          "source_name": "stages.6.5.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            2048,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 32,
+          "tensor_name": "semantic_cache_32",
+          "source_name": "stages.6.6.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            2048,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        },
+        {
+          "order": 33,
+          "tensor_name": "semantic_cache_33",
+          "source_name": "stages.6.7.mixer.conv/sample_0",
+          "cache_type": "other_streaming_cache",
+          "dtype": "float32",
+          "capacity_shape": [
+            2048,
+            6
+          ],
+          "capacity_axis": 1,
+          "capacity": 6,
+          "valid_region": "left-aligned [0, valid_length); remaining capacity MUST be zero",
+          "reset": {
+            "fill": 0.0,
+            "valid_length": 0
+          },
+          "pre_valid_lengths_calls_0_3": [
+            0,
+            6,
+            6,
+            6
+          ],
+          "post_valid_lengths_calls_0_3": [
+            6,
+            6,
+            6,
+            6
+          ],
+          "first_call_post_full": 0,
+          "first_call_with_full_pre_context": 1
+        }
+      ]
+    }
+  },
+  "call_transitions": [
+    {
+      "call": 0,
+      "required_phase": 0,
+      "next_phase": 1,
+      "decoder_pre_valid_lengths": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "decoder_post_valid_lengths": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        1,
+        8,
+        9,
+        7,
+        3,
+        3
+      ],
+      "semantic_pre_valid_lengths": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "semantic_post_valid_lengths": [
+        6,
+        2,
+        2,
+        4,
+        5,
+        5,
+        8,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "pcm_sample_range": [
+        0,
+        3200
+      ]
+    },
+    {
+      "call": 1,
+      "required_phase": 1,
+      "next_phase": 2,
+      "decoder_pre_valid_lengths": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        1,
+        8,
+        9,
+        7,
+        3,
+        3
+      ],
+      "decoder_post_valid_lengths": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        9,
+        9,
+        7,
+        3,
+        3
+      ],
+      "semantic_pre_valid_lengths": [
+        6,
+        2,
+        2,
+        4,
+        5,
+        5,
+        8,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "semantic_post_valid_lengths": [
+        6,
+        2,
+        2,
+        4,
+        5,
+        5,
+        8,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "pcm_sample_range": [
+        3200,
+        6400
+      ]
+    },
+    {
+      "call": 2,
+      "required_phase": 2,
+      "next_phase": 3,
+      "decoder_pre_valid_lengths": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2,
+        9,
+        9,
+        7,
+        3,
+        3
+      ],
+      "decoder_post_valid_lengths": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        3,
+        9,
+        9,
+        7,
+        3,
+        3
+      ],
+      "semantic_pre_valid_lengths": [
+        6,
+        2,
+        2,
+        4,
+        5,
+        5,
+        8,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "semantic_post_valid_lengths": [
+        6,
+        2,
+        2,
+        4,
+        5,
+        5,
+        8,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "pcm_sample_range": [
+        6400,
+        9600
+      ]
+    },
+    {
+      "call": 3,
+      "required_phase": 3,
+      "next_phase": 4,
+      "decoder_pre_valid_lengths": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        3,
+        9,
+        9,
+        7,
+        3,
+        3
+      ],
+      "decoder_post_valid_lengths": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        4,
+        9,
+        9,
+        7,
+        3,
+        3
+      ],
+      "semantic_pre_valid_lengths": [
+        6,
+        2,
+        2,
+        4,
+        5,
+        5,
+        8,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "semantic_post_valid_lengths": [
+        6,
+        2,
+        2,
+        4,
+        5,
+        5,
+        8,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "pcm_sample_range": [
+        9600,
+        12800
+      ]
+    }
+  ],
+  "reset_and_state_rules": {
+    "reset": "Set phase=0; allocate all 68 fixed-capacity cache tensors as FP32 canonical zeros; set both valid-length vectors to 34 zeros. Qwen state resets independently per its frozen INT8 ABI.",
+    "legal_commit": "Run acoustic_decode and then semantic_encode with the same phase. Validate every output before atomically replacing both state sets and incrementing phase.",
+    "transition_rejection": [
+      "phase is not the controller phase",
+      "any length is negative or exceeds its cache capacity",
+      "length vector differs from the predeclared phase 0-3 vector during this four-call validation",
+      "wrong tensor count/order/shape/dtype",
+      "non-finite state or output",
+      "non-zero padding",
+      "input cache content changes during execute"
+    ],
+    "silent_mutation_prohibited": true,
+    "mutation_guard": "Hash or byte-compare every input cache before/after execute. Methods are pure: cache state changes only through named next-cache outputs. On any failure discard every output and retain the complete prior state.",
+    "aliasing": "Input and output cache storage MUST NOT alias. No in-place writes, hidden module buffers, or runtime-owned persistent cache state are permitted.",
+    "post_call_3": "phase=4 is the four-call validation boundary, not steady state. The same fixed-capacity representation can continue, but extension beyond call 3 is outside task-13 acceptance. Full transpose pre-context begins only at call 15."
+  },
+  "packaging": {
+    "audio_artifact": "one inline-constant multi-method PTE containing acoustic_decode and semantic_encode; each audio parameter stored once",
+    "qwen_artifact": "retain the accepted INT8 Qwen2 artifact/ABI; do not merge or requantize it in this task",
+    "phase_specific_artifacts": 0,
+    "external_ptd_files": 0,
+    "constant_duplication_policy": "No phase-specific method or PTE may duplicate decoder/semantic weights. The exporter must report PTE bytes and compare parameter payload/duplicate storage against the two single-method baselines; any duplicate full parameter copy is a rejection.",
+    "external_constants": "Not used: ExecuTorch 1.2 can write PTD and a private host loader can run it, but public host Runtime.load_program and Android Module.load expose no PTD/data-loader path.",
+    "capability_basis": "The synthetic probe supports inline multi-method shared constants. It does not prove VibeVoice export; task 13 must measure actual duplication."
+  },
+  "thresholds": {
+    "global": {
+      "all_outputs_finite": true,
+      "exact_shape_dtype_order": true,
+      "deterministic_repeat": "exact selected tokens and exact output/cache SHA-256 on repeated reset-and-four-call host runs"
+    },
+    "qwen_int8": {
+      "selected_token": "exact equality on every call (primary INT8 correctness gate)",
+      "hidden_max_abs": 0.65,
+      "logits_max_abs": 0.5,
+      "kv_cache_max_abs": 1.25,
+      "comparison": "against the locked eager FP32 trace, with max absolute error reported separately for hidden, logits, and each of 56 caches; no allclose claim",
+      "rationale": "Predeclared bounds narrowly above existing accepted Android INT8 observations (hidden 0.5756, logits 0.4436, aggregate cache/output 1.208). Exceeding a bound rejects rather than widening it."
+    },
+    "fp32_boundaries": {
+      "connector_outputs": {
+        "atol": 1e-05,
+        "rtol": 0.0001
+      },
+      "diffusion_each_prediction_and_final_latent": {
+        "atol": 1e-05,
+        "rtol": 0.0001
+      },
+      "decoder_input_latent": {
+        "atol": 1e-05,
+        "rtol": 0.0001
+      },
+      "decoder_pcm_host": {
+        "atol": 2e-05,
+        "rtol": 1e-05
+      },
+      "decoder_cache_host": {
+        "atol": 2e-05,
+        "rtol": 1e-05
+      },
+      "decoder_cache_android": {
+        "atol": 6e-05,
+        "rtol": 1e-05
+      },
+      "semantic_output": {
+        "atol": 1e-05,
+        "rtol": 0.0001
+      },
+      "semantic_cache": {
+        "atol": 0.001,
+        "rtol": 0.0001
+      },
+      "rule": "Every element and every cache must pass its named threshold; thresholds are component-scoped and MUST NOT be silently widened."
+    },
+    "pcm_s16": {
+      "sample_alignment": 0,
+      "samples_per_chunk": 3200,
+      "maximum_absolute_difference_units": 1,
+      "comparison": "round/encode both host output and locked eager reference with the same signed-16-bit path, then compare every aligned sample"
+    },
+    "chunk_energy_dbfs": {
+      "comparison_tolerance_db": 3.0,
+      "reference_calls_0_3": [
+        -93.6608167424245,
+        -93.4909351277393,
+        -52.37993833024675,
+        -21.712573890892052
+      ],
+      "chunk_3_required_range_dbfs": [
+        -24.712573890892052,
+        -18.712573890892052
+      ],
+      "chunk_3_minimum_peak_s16": 1023,
+      "chunk_3_maximum_peak_s16": 32766,
+      "chunk_3_reference_peak_s16": 10228,
+      "rule": "Chunk 3 must be within 3 dB of the locked voiced reference, have at least 1023 S16 peak units, not clip, and also pass the per-sample PCM gate. Chunks 0-2 must each be within 3 dB of their locked reference; silence/fade-in is expected, not a failure."
+    },
+    "perceptual_protocol": {
+      "required_status": "pass",
+      "listener_count_minimum": 1,
+      "prompt": "Using only aligned chunk 3 (0.400-0.533 s), confirm audible speech-like voiced onset rather than silence, a steady tone, broadband noise, click-only output, or a dropout.",
+      "pass_definition": "Listener records speech_like_voiced_onset=true and all five excluded outcomes=false. This is an audibility/non-speech gate, not an intelligibility, naturalness, speaker-identity, or full-quality rating.",
+      "failure_policy": "A numerical pass cannot override this gate, and a perceptual pass cannot override any numerical gate. Record pending_user_review only after host/device evidence exists; never invent a rating."
+    }
+  },
+  "export_status": "not_started_by_design"
+}
