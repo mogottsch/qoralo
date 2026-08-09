@@ -2,7 +2,6 @@ package dev.moket.vibevoiceprobe;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.SystemClock;
 import android.util.Log;
 
@@ -20,369 +19,267 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.file.Files;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
-/** Runs two cold/warm repetitions of call 0 -> actual device caches -> call 1. */
+/** Runs the frozen acoustic_decode -> semantic_encode ABI for calls 0..3. */
 public final class StreamingProbeActivity extends Activity {
-    private static final String TAG = "VibeVoiceStreaming";
-    private static final long[] LATENT_SHAPE = {1, 64, 1};
-    private static final int RUN_COUNT = 2;
-    private static final long[][][] FIRST_CACHE_SHAPES = {
-            {shape(2048, 6), shape(2048, 6), shape(2048, 6), shape(2048, 6),
-                    shape(2048, 6), shape(2048, 6), shape(2048, 6), shape(2048, 6), shape(64, 6)},
-            {shape(1024, 6), shape(1024, 6), shape(1024, 6), shape(2048, 1)},
-            {shape(512, 6), shape(512, 6), shape(512, 6), shape(1024, 8)},
-            {shape(256, 6), shape(256, 6), shape(256, 6), shape(512, 9)},
-            {shape(128, 6), shape(128, 6), shape(128, 6), shape(256, 7)},
-            {shape(64, 6), shape(64, 6), shape(64, 6), shape(128, 3)},
-            {shape(32, 6), shape(32, 6), shape(32, 6), shape(64, 3)},
-            {shape(32, 6)}
-    };
-    private static final long[][][] CACHED_CACHE_SHAPES = {
-            FIRST_CACHE_SHAPES[0],
-            {shape(1024, 6), shape(1024, 6), shape(1024, 6), shape(2048, 2)},
-            {shape(512, 6), shape(512, 6), shape(512, 6), shape(1024, 9)},
-            FIRST_CACHE_SHAPES[3], FIRST_CACHE_SHAPES[4], FIRST_CACHE_SHAPES[5],
-            FIRST_CACHE_SHAPES[6], FIRST_CACHE_SHAPES[7]
-    };
+    private static final String TAG = "VibeVoiceFourCall";
+    private static final String MODEL = "/data/local/tmp/vibevoice-four-call/audio.pte";
 
-    private String precision;
-    private boolean fp16;
-    private File modelRoot;
-
-    @Override
-    protected void onCreate(Bundle state) {
+    @Override protected void onCreate(Bundle state) {
         super.onCreate(state);
-        precision = getIntent().getStringExtra("precision");
-        if (precision == null) precision = "fp32";
-        if (!precision.equals("fp32") && !precision.equals("fp16")) {
-            throw new IllegalArgumentException("Unsupported precision: " + precision);
-        }
-        fp16 = precision.equals("fp16");
-        modelRoot = new File("/data/local/tmp/vibevoice-streaming-decoder"
-                + (fp16 ? "-fp16" : ""));
-        new Thread(this::runProbe, "vibevoice-streaming-probe").start();
-    }
-
-    private String precisionSuffix() {
-        return fp16 ? "-fp16" : "";
+        new Thread(this::runProbe, "vibevoice-four-call-probe").start();
     }
 
     private void runProbe() {
-        File resultFile = new File(getFilesDir(), "streaming-result" + precisionSuffix() + ".json");
-        File outputRoot = new File(getFilesDir(), "streaming-output" + precisionSuffix());
+        File inputRoot = new File(getFilesDir(), "four-call-input");
+        File outputRoot = new File(getFilesDir(), "four-call-output");
+        File resultFile = new File(getFilesDir(), "four-call-result.json");
+        Module module = null;
         try {
-            Files.deleteIfExists(resultFile.toPath());
             deleteRecursively(outputRoot);
-            if (!outputRoot.mkdirs()) throw new IllegalStateException("Could not create " + outputRoot);
-            requireModels();
+            require(outputRoot.mkdirs(), "could not create output directory");
+            JSONObject manifest = readJson(new File(inputRoot, "manifest.json"));
+            validateManifest(manifest, inputRoot);
+            JSONObject abiJson = readJson(new File(inputRoot,
+                    manifest.getJSONObject("abi").getString("file")));
+            FourCallMetadata abi = new FourCallMetadata(abiJson);
+            File modelFile = new File(MODEL);
+            require(modelFile.isFile() && modelFile.length() > 0, "missing audio PTE: " + MODEL);
+            long loadStart = SystemClock.elapsedRealtimeNanos();
+            module = Module.load(modelFile.getAbsolutePath(), Module.LOAD_MODE_MMAP);
+            double loadSeconds = seconds(SystemClock.elapsedRealtimeNanos() - loadStart);
+            Set<String> methods = new HashSet<>(Arrays.asList(module.getMethods()));
+            require(methods.equals(Set.of(abi.decoder.name, abi.semantic.name)),
+                    "PTE method mismatch: " + methods);
 
-            File inputRoot = new File(getFilesDir(), "streaming-input" + precisionSuffix());
-            RawTensor call0Input = readTensor(new File(inputRoot,
-                    "call-0." + (fp16 ? "f16le" : "f32le")), LATENT_SHAPE);
-            RawTensor call1Input = readTensor(new File(inputRoot,
-                    "call-1." + (fp16 ? "f16le" : "f32le")), LATENT_SHAPE);
-            long rssBeforeKiB = readStatusKiB("VmRSS");
-            long hwmBeforeKiB = readStatusKiB("VmHWM");
-            long pssBeforeKiB = Debug.getPss();
-            JSONArray runs = new JSONArray();
-            for (int run = 0; run < RUN_COUNT; run++) {
-                File runRoot = new File(outputRoot, "run-" + run);
-                if (!runRoot.mkdirs()) throw new IllegalStateException("Could not create " + runRoot);
-                JSONObject runJson = new JSONObject();
-                runJson.put("run", run);
-                runJson.put("temperature", run == 0 ? "cold" : "warm_page_cache");
-                JSONObject first = executeCall("first", 0, call0Input, null, runRoot);
-                JSONObject cached = executeCall("cached", 1, call1Input, runRoot, runRoot);
-                runJson.put("call_0", first);
-                runJson.put("call_1", cached);
-                runJson.put("total_load_seconds", first.getDouble("total_load_seconds") + cached.getDouble("total_load_seconds"));
-                runJson.put("total_inference_seconds", first.getDouble("total_inference_seconds") + cached.getDouble("total_inference_seconds"));
-                runs.put(runJson);
+            CacheState decoderState = CacheState.reset(abi.decoder);
+            CacheState semanticState = CacheState.reset(abi.semantic);
+            int phase = 0;
+            JSONArray callResults = new JSONArray();
+            JSONArray calls = manifest.getJSONArray("calls");
+            for (int call = 0; call < FourCallMetadata.CALL_COUNT; call++) {
+                FourCallMetadata.Transition transition = abi.transitions[call];
+                require(phase == transition.phase, "controller phase mismatch at call " + call);
+                require(Arrays.equals(decoderState.lengths, transition.decoderPre),
+                        "decoder pre lengths mismatch at call " + call);
+                require(Arrays.equals(semanticState.lengths, transition.semanticPre),
+                        "semantic pre lengths mismatch at call " + call);
+                JSONObject latentRecord = calls.getJSONObject(call).getJSONObject("decoder_latent");
+                RawFloatTensor latent = readFloatTensor(new File(inputRoot, latentRecord.getString("file")),
+                        FourCallMetadata.longs(latentRecord.getJSONArray("shape")));
+                File callRoot = new File(outputRoot, "call-" + call);
+                require(callRoot.mkdirs(), "could not create " + callRoot);
+                long started = SystemClock.elapsedRealtimeNanos();
+                Invocation decoder = invoke(module, abi.decoder, latent, phase, decoderState,
+                        transition.decoderPost, "call " + call + " decoder");
+                Invocation semantic = invoke(module, abi.semantic, decoder.primary, phase, semanticState,
+                        transition.semanticPost, "call " + call + " semantic");
+                double inferenceSeconds = seconds(SystemClock.elapsedRealtimeNanos() - started);
+
+                // Commit is intentionally after both invocations and all validation have succeeded.
+                decoderState = decoder.nextState;
+                semanticState = semantic.nextState;
+                phase = transition.nextPhase;
+                JSONArray outputs = new JSONArray();
+                addOutput(outputs, callRoot, outputRoot, "pcm", decoder.primary, 0);
+                addOutput(outputs, callRoot, outputRoot, "semantic_output", semantic.primary, 1);
+                int order = 2;
+                for (int i = 0; i < FourCallMetadata.CACHE_COUNT; i++)
+                    addOutput(outputs, callRoot, outputRoot, "decoder_cache_" + FourCallMetadata.twoDigits(i),
+                            decoderState.caches[i], order++);
+                for (int i = 0; i < FourCallMetadata.CACHE_COUNT; i++)
+                    addOutput(outputs, callRoot, outputRoot, "semantic_cache_" + FourCallMetadata.twoDigits(i),
+                            semanticState.caches[i], order++);
+                JSONObject record = new JSONObject();
+                record.put("call", call); record.put("phase", transition.phase);
+                record.put("next_phase", phase); record.put("decoder_pre_valid_lengths", intsJson(transition.decoderPre));
+                record.put("decoder_post_valid_lengths", intsJson(decoderState.lengths));
+                record.put("semantic_pre_valid_lengths", intsJson(transition.semanticPre));
+                record.put("semantic_post_valid_lengths", intsJson(semanticState.lengths));
+                record.put("inference_seconds", inferenceSeconds); record.put("outputs", outputs);
+                callResults.put(record);
             }
-
-            JSONObject memory = new JSONObject();
-            memory.put("rss_before", rssBeforeKiB);
-            memory.put("rss_after", readStatusKiB("VmRSS"));
-            memory.put("process_hwm_before", hwmBeforeKiB);
-            memory.put("process_hwm_peak", readStatusKiB("VmHWM"));
-            memory.put("pss_before", pssBeforeKiB);
-            memory.put("pss_after", Debug.getPss());
-
             JSONObject result = new JSONObject();
-            result.put("schema_version", 1);
-            result.put("status", "passed");
-            result.put("segment_count", 8);
-            result.put("cache_tensor_count", 34);
-            result.put("run_count", RUN_COUNT);
-            result.put("precision", precision);
-            result.put("tensor_abi_dtype", fp16 ? "float16" : "float32");
-            result.put("load_mode", "mmap");
-            result.put("model_root", modelRoot.getAbsolutePath());
-            result.put("cache_transport", "device-produced call-0 tensors serialized in app-private storage and reloaded for call 1");
-            result.put("module_lifetime", "one segment resident at a time; destroy after output extraction");
-            result.put("runs", runs);
-            result.put("memory_kib", memory);
+            result.put("schema_version", 1); result.put("abi_id", FourCallMetadata.ABI_ID);
+            result.put("status", "passed"); result.put("artifact", MODEL);
+            result.put("method_dispatch", new JSONArray().put("acoustic_decode").put("semantic_encode"));
+            result.put("load_seconds", loadSeconds); result.put("calls", callResults);
             writeText(resultFile, result.toString(2) + "\n");
-            Log.i(TAG, "RESULT " + result.toString());
+            Log.i(TAG, "RESULT " + result);
         } catch (Throwable error) {
-            StringWriter trace = new StringWriter();
-            error.printStackTrace(new PrintWriter(trace));
-            try {
-                JSONObject result = new JSONObject();
-                result.put("schema_version", 1);
-                result.put("status", "failed");
-                result.put("error_type", error.getClass().getName());
-                result.put("error", String.valueOf(error.getMessage()));
-                result.put("trace", trace.toString());
-                writeText(resultFile, result.toString(2) + "\n");
-            } catch (Throwable writeError) {
-                Log.e(TAG, "Could not write failure result", writeError);
-            }
-            Log.e(TAG, "Streaming probe failed", error);
+            writeFailure(resultFile, error);
+            Log.e(TAG, "Four-call probe failed", error);
         } finally {
+            if (module != null) module.destroy();
             runOnUiThread(this::finish);
         }
     }
 
-    private JSONObject executeCall(
-            String entry, int call, RawTensor latent, File cacheInputRoot, File outputRoot
-    ) throws Exception {
-        RawTensor activation = latent;
-        JSONArray segments = new JSONArray();
-        double totalLoadSeconds = 0.0;
-        double totalInferenceSeconds = 0.0;
-        for (int segment = 0; segment < 8; segment++) {
-            File modelFile = new File(new File(modelRoot, entry), "segment-" + segment + ".pte");
-            List<EValue> inputValues = new ArrayList<>();
-            inputValues.add(activation.toEValue());
-            if (call == 1) {
-                for (int cache = 0; cache < FIRST_CACHE_SHAPES[segment].length; cache++) {
-                    File cacheFile = cacheFile(cacheInputRoot, 0, segment, cache);
-                    RawTensor value = readTensor(cacheFile, FIRST_CACHE_SHAPES[segment][cache]);
-                    inputValues.add(value.toEValue());
-                }
-            }
-
-            long rssBeforeKiB = readStatusKiB("VmRSS");
-            long pssBeforeKiB = Debug.getPss();
-            Module module = null;
-            long loadStarted = SystemClock.elapsedRealtimeNanos();
-            try {
-                module = Module.load(modelFile.getAbsolutePath(), Module.LOAD_MODE_MMAP);
-                long loadNanos = SystemClock.elapsedRealtimeNanos() - loadStarted;
-                long inferenceStarted = SystemClock.elapsedRealtimeNanos();
-                EValue[] outputs = module.forward(inputValues.toArray(new EValue[0]));
-                long inferenceNanos = SystemClock.elapsedRealtimeNanos() - inferenceStarted;
-                long[][] outputCacheShapes = call == 0
-                        ? FIRST_CACHE_SHAPES[segment] : CACHED_CACHE_SHAPES[segment];
-                int expectedOutputs = 1 + outputCacheShapes.length;
-                if (outputs.length != expectedOutputs) {
-                    throw new IllegalStateException(entry + " segment " + segment + ": expected "
-                            + expectedOutputs + " outputs, got " + outputs.length);
-                }
-                for (EValue output : outputs) {
-                    if (!output.isTensor()) throw new IllegalStateException("Non-tensor output");
-                }
-                Tensor activationTensor = outputs[0].toTensor();
-                activation = RawTensor.fromOutput(activationTensor, fp16);
-                for (int cache = 0; cache < outputCacheShapes.length; cache++) {
-                    Tensor cacheTensor = outputs[cache + 1].toTensor();
-                    assertShape(cacheTensor.shape(), outputCacheShapes[cache],
-                            entry + " segment " + segment + " cache " + cache);
-                    writeTensor(cacheFile(outputRoot, call, segment, cache),
-                            RawTensor.fromOutput(cacheTensor, fp16));
-                }
-                double loadSeconds = seconds(loadNanos);
-                double inferenceSeconds = seconds(inferenceNanos);
-                totalLoadSeconds += loadSeconds;
-                totalInferenceSeconds += inferenceSeconds;
-                JSONObject record = new JSONObject();
-                record.put("segment", segment);
-                record.put("model_bytes", modelFile.length());
-                record.put("input_count", inputValues.size());
-                record.put("output_count", outputs.length);
-                record.put("activation_shape", longArrayJson(activation.shape));
-                record.put("load_seconds", loadSeconds);
-                record.put("inference_seconds", inferenceSeconds);
-                record.put("rss_before_kib", rssBeforeKiB);
-                record.put("rss_after_inference_kib", readStatusKiB("VmRSS"));
-                record.put("pss_before_kib", pssBeforeKiB);
-                record.put("pss_after_inference_kib", Debug.getPss());
-                record.put("process_hwm_kib", readStatusKiB("VmHWM"));
-                segments.put(record);
-            } finally {
-                if (module != null) module.destroy();
-            }
-            System.gc();
+    private static Invocation invoke(Module module, FourCallMetadata.MethodSpec method,
+            RawFloatTensor primary, int phase, CacheState state, int[] expectedLengths, String label) {
+        assertTensor(primary, method.inputs.get(0), label + " primary input");
+        List<EValue> values = new ArrayList<>();
+        values.add(primary.toEValue());
+        values.add(EValue.from(Tensor.fromBlob(new int[]{phase}, new long[]{})));
+        values.add(EValue.from(Tensor.fromBlob(state.lengths, new long[]{FourCallMetadata.CACHE_COUNT})));
+        int[] inputHashes = new int[FourCallMetadata.CACHE_COUNT];
+        for (int index = 0; index < state.caches.length; index++) {
+            assertTensor(state.caches[index], method.inputs.get(index + 3), label + " cache " + index);
+            inputHashes[index] = Arrays.hashCode(state.caches[index].values);
+            values.add(state.caches[index].toEValue());
         }
-        File pcmFile = new File(outputRoot, "call-" + call + "-pcm."
-                + (fp16 ? "f16le" : "f32le"));
-        writeTensor(pcmFile, activation);
-        JSONObject result = new JSONObject();
-        result.put("entry", entry);
-        result.put("segments", segments);
-        result.put("total_load_seconds", totalLoadSeconds);
-        result.put("total_inference_seconds", totalInferenceSeconds);
-        result.put("pcm_shape", longArrayJson(activation.shape));
-        result.put("pcm_sha256", sha256(pcmFile));
-        return result;
+        int lengthHash = Arrays.hashCode(state.lengths);
+        EValue[] raw = module.execute(method.name, values.toArray(new EValue[0]));
+        require(raw.length == method.outputs.size(), label + ": output count mismatch");
+        require(Arrays.hashCode(state.lengths) == lengthHash, label + ": input lengths mutated");
+        for (int index = 0; index < state.caches.length; index++)
+            require(Arrays.hashCode(state.caches[index].values) == inputHashes[index],
+                    label + ": input cache mutated at " + index);
+        for (EValue value : raw) require(value.isTensor(), label + ": non-tensor output");
+        RawFloatTensor output = RawFloatTensor.from(raw[0].toTensor(), method.outputs.get(0), label);
+        Tensor lengthsTensor = raw[1].toTensor();
+        require(lengthsTensor.dtype() == DType.INT32, label + ": length dtype mismatch");
+        assertShape(lengthsTensor.shape(), new long[]{FourCallMetadata.CACHE_COUNT}, label + " lengths");
+        int[] nextLengths = lengthsTensor.getDataAsIntArray();
+        require(Arrays.equals(nextLengths, expectedLengths), label + ": next lengths mismatch");
+        RawFloatTensor[] caches = new RawFloatTensor[FourCallMetadata.CACHE_COUNT];
+        for (int index = 0; index < caches.length; index++) {
+            caches[index] = RawFloatTensor.from(raw[index + 2].toTensor(), method.outputs.get(index + 2), label);
+            validateCache(caches[index], nextLengths[index], method.capacityAxes[index], label + " cache " + index);
+            require(caches[index].values != state.caches[index].values, label + ": cache storage aliased");
+        }
+        return new Invocation(output, new CacheState(nextLengths.clone(), caches));
     }
 
-    private File cacheFile(File root, int call, int segment, int cache) {
-        return new File(root, "call-" + call + "-segment-" + segment + "-cache-" + cache
-                + "." + (fp16 ? "f16le" : "f32le"));
-    }
-
-    private void requireModels() {
-        for (String entry : new String[]{"first", "cached"}) {
-            for (int segment = 0; segment < 8; segment++) {
-                File file = new File(new File(modelRoot, entry), "segment-" + segment + ".pte");
-                if (!file.isFile() || file.length() == 0) {
-                    throw new IllegalStateException("Missing model " + file);
-                }
-            }
+    private static void validateManifest(JSONObject manifest, File root) throws Exception {
+        require(manifest.getInt("schema_version") == 1, "unsupported manifest version");
+        require(FourCallMetadata.ABI_ID.equals(manifest.getString("abi_id")), "manifest ABI mismatch");
+        JSONObject abi = manifest.getJSONObject("abi");
+        File abiFile = new File(root, abi.getString("file"));
+        require(abiFile.isFile() && sha256(abiFile).equals(abi.getString("sha256")), "ABI hash mismatch");
+        JSONArray methods = manifest.getJSONObject("artifact").getJSONArray("methods");
+        require(methods.length() == 2 && "acoustic_decode".equals(methods.getString(0))
+                && "semantic_encode".equals(methods.getString(1)), "manifest method ordering mismatch");
+        JSONArray calls = manifest.getJSONArray("calls");
+        require(calls.length() == FourCallMetadata.CALL_COUNT, "manifest call count mismatch");
+        for (int call = 0; call < calls.length(); call++) {
+            JSONObject value = calls.getJSONObject(call);
+            require(value.getInt("call") == call && value.getInt("required_phase") == call,
+                    "manifest call ordering mismatch");
+            JSONObject tensor = value.getJSONObject("decoder_latent");
+            require("float32".equals(tensor.getString("dtype"))
+                    && Arrays.equals(FourCallMetadata.longs(tensor.getJSONArray("shape")), new long[]{1, 1, 64}),
+                    "latent metadata mismatch at call " + call);
+            File file = new File(root, tensor.getString("file"));
+            require(file.isFile() && file.length() == 256 && tensor.getLong("byte_count") == 256,
+                    "latent bytes mismatch at call " + call);
+            require(sha256(file).equals(tensor.getString("sha256")), "latent hash mismatch at call " + call);
         }
     }
 
-    private static long[] shape(int channels, int frames) {
-        return new long[]{1, channels, frames};
+    private static void validateCache(RawFloatTensor tensor, int validLength, int axis, String label) {
+        require(axis == tensor.shape.length - 1, label + ": capacity axis mismatch");
+        int capacity = (int) tensor.shape[axis];
+        require(validLength >= 0 && validLength <= capacity, label + ": invalid valid length");
+        for (int index = 0; index < tensor.values.length; index++) {
+            float value = tensor.values[index];
+            require(Float.isFinite(value), label + ": non-finite value");
+            if (index % capacity >= validLength)
+                require(Float.floatToRawIntBits(value) == 0, label + ": non-zero padding");
+        }
     }
 
+    private static void addOutput(JSONArray outputs, File callRoot, File outputRoot, String name,
+            RawFloatTensor tensor, int order) throws Exception {
+        File file = new File(callRoot, name + ".f32le"); writeTensor(file, tensor);
+        JSONObject record = new JSONObject(); record.put("order", order); record.put("name", name);
+        record.put("file", outputRoot.toPath().relativize(file.toPath()).toString().replace(File.separatorChar, '/'));
+        record.put("shape", longsJson(tensor.shape)); record.put("dtype", "float32");
+        record.put("byte_count", file.length()); record.put("sha256", sha256(file)); outputs.put(record);
+    }
+
+    private static final class Invocation {
+        final RawFloatTensor primary; final CacheState nextState;
+        Invocation(RawFloatTensor primary, CacheState nextState) { this.primary = primary; this.nextState = nextState; }
+    }
+    private static final class CacheState {
+        final int[] lengths; final RawFloatTensor[] caches;
+        CacheState(int[] lengths, RawFloatTensor[] caches) { this.lengths = lengths; this.caches = caches; }
+        static CacheState reset(FourCallMetadata.MethodSpec method) {
+            RawFloatTensor[] caches = new RawFloatTensor[FourCallMetadata.CACHE_COUNT];
+            for (int index = 0; index < caches.length; index++) {
+                long[] shape = method.inputs.get(index + 3).shape;
+                caches[index] = new RawFloatTensor(new float[numel(shape)], shape.clone());
+            }
+            return new CacheState(new int[FourCallMetadata.CACHE_COUNT], caches);
+        }
+    }
+    private static final class RawFloatTensor {
+        final float[] values; final long[] shape;
+        RawFloatTensor(float[] values, long[] shape) { this.values = values; this.shape = shape; }
+        EValue toEValue() { return EValue.from(Tensor.fromBlob(values, shape)); }
+        static RawFloatTensor from(Tensor tensor, FourCallMetadata.TensorSpec spec, String label) {
+            require(tensor.dtype() == DType.FLOAT, label + ": expected FLOAT, got " + tensor.dtype());
+            assertShape(tensor.shape(), spec.shape, label + " " + spec.name);
+            float[] values = tensor.getDataAsFloatArray();
+            for (float value : values) require(Float.isFinite(value), label + ": non-finite output");
+            return new RawFloatTensor(values, tensor.shape().clone());
+        }
+    }
+
+    private static RawFloatTensor readFloatTensor(File file, long[] shape) throws Exception {
+        byte[] bytes; try (FileInputStream stream = new FileInputStream(file)) { bytes = stream.readAllBytes(); }
+        require(bytes.length == numel(shape) * Float.BYTES, "tensor byte count mismatch: " + file);
+        float[] values = new float[numel(shape)]; ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN).asFloatBuffer().get(values);
+        return new RawFloatTensor(values, shape.clone());
+    }
+    private static void writeTensor(File file, RawFloatTensor tensor) throws Exception {
+        ByteBuffer bytes = ByteBuffer.allocate(tensor.values.length * Float.BYTES).order(ByteOrder.LITTLE_ENDIAN);
+        bytes.asFloatBuffer().put(tensor.values); try (FileOutputStream stream = new FileOutputStream(file)) { stream.write(bytes.array()); }
+    }
     private static int numel(long[] shape) {
-        long result = 1;
-        for (long value : shape) result *= value;
-        if (result > Integer.MAX_VALUE) throw new IllegalArgumentException("Tensor too large");
-        return (int) result;
+        long count = 1; for (long value : shape) { require(value > 0, "invalid tensor dimension"); count *= value; }
+        require(count <= Integer.MAX_VALUE, "tensor too large"); return (int) count;
     }
-
-    private RawTensor readTensor(File file, long[] shape) throws Exception {
-        byte[] bytes;
-        try (FileInputStream stream = new FileInputStream(file)) {
-            bytes = stream.readAllBytes();
-        }
-        int count = numel(shape);
-        int elementBytes = fp16 ? Short.BYTES : Float.BYTES;
-        if (bytes.length != count * elementBytes) {
-            throw new IllegalArgumentException("Expected " + (count * elementBytes)
-                    + " bytes for " + file + ", got " + bytes.length);
-        }
-        ByteBuffer buffer = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN);
-        if (fp16) {
-            short[] values = new short[count];
-            buffer.asShortBuffer().get(values);
-            return new RawTensor(null, values, shape);
-        }
-        float[] values = new float[count];
-        buffer.asFloatBuffer().get(values);
-        return new RawTensor(values, null, shape);
+    private static void assertTensor(RawFloatTensor actual, FourCallMetadata.TensorSpec expected, String label) {
+        require("float32".equals(expected.dtype), label + ": spec dtype mismatch"); assertShape(actual.shape, expected.shape, label);
     }
-
-    private static void writeTensor(File file, RawTensor tensor) throws Exception {
-        ByteBuffer buffer;
-        if (tensor.halfValues != null) {
-            buffer = ByteBuffer.allocate(tensor.halfValues.length * Short.BYTES)
-                    .order(ByteOrder.LITTLE_ENDIAN);
-            buffer.asShortBuffer().put(tensor.halfValues);
-        } else {
-            buffer = ByteBuffer.allocate(tensor.floatValues.length * Float.BYTES)
-                    .order(ByteOrder.LITTLE_ENDIAN);
-            buffer.asFloatBuffer().put(tensor.floatValues);
-        }
-        try (FileOutputStream stream = new FileOutputStream(file)) {
-            stream.write(buffer.array());
-        }
-    }
-
     private static void assertShape(long[] actual, long[] expected, String label) {
-        if (actual.length != expected.length) throw new IllegalStateException(label + ": rank mismatch");
-        for (int index = 0; index < actual.length; index++) {
-            if (actual[index] != expected[index]) {
-                throw new IllegalStateException(label + ": shape mismatch");
-            }
+        require(Arrays.equals(actual, expected), label + ": shape mismatch " + Arrays.toString(actual));
+    }
+    private static JSONObject readJson(File file) throws Exception {
+        try (FileInputStream stream = new FileInputStream(file)) {
+            return new JSONObject(new String(stream.readAllBytes(), StandardCharsets.UTF_8));
         }
     }
-
-    private static void deleteRecursively(File file) throws Exception {
-        if (!file.exists()) return;
-        if (file.isDirectory()) {
-            File[] children = file.listFiles();
-            if (children != null) for (File child : children) deleteRecursively(child);
-        }
-        if (!file.delete()) throw new IllegalStateException("Could not delete " + file);
-    }
-
     private static void writeText(File file, String value) throws Exception {
-        try (FileOutputStream stream = new FileOutputStream(file)) {
-            stream.write(value.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-        }
+        try (FileOutputStream stream = new FileOutputStream(file)) { stream.write(value.getBytes(StandardCharsets.UTF_8)); }
     }
-
-    private static long readStatusKiB(String field) {
-        try {
-            for (String line : Files.readAllLines(new File("/proc/self/status").toPath())) {
-                if (line.startsWith(field + ":")) {
-                    return Long.parseLong(line.substring(line.indexOf(':') + 1).trim().split("\\s+")[0]);
-                }
-            }
-        } catch (Throwable ignored) {
-            // A missing diagnostic must not invalidate inference.
-        }
-        return -1;
-    }
-
     private static String sha256(File file) throws Exception {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        try (FileInputStream stream = new FileInputStream(file)) {
-            byte[] chunk = new byte[8192];
-            int read;
-            while ((read = stream.read(chunk)) >= 0) digest.update(chunk, 0, read);
-        }
-        StringBuilder hex = new StringBuilder();
-        for (byte value : digest.digest()) hex.append(String.format(Locale.ROOT, "%02x", value));
-        return hex.toString();
+        try (FileInputStream stream = new FileInputStream(file)) { byte[] block = new byte[8192]; int n; while ((n = stream.read(block)) >= 0) digest.update(block, 0, n); }
+        StringBuilder result = new StringBuilder(); for (byte value : digest.digest()) result.append(String.format(Locale.ROOT, "%02x", value)); return result.toString();
     }
-
-    private static JSONArray longArrayJson(long[] values) {
-        JSONArray result = new JSONArray();
-        for (long value : values) result.put(value);
-        return result;
+    private static JSONArray intsJson(int[] values) { JSONArray result = new JSONArray(); for (int value : values) result.put(value); return result; }
+    private static JSONArray longsJson(long[] values) { JSONArray result = new JSONArray(); for (long value : values) result.put(value); return result; }
+    private static double seconds(long nanos) { return nanos / 1_000_000_000.0; }
+    private static void require(boolean condition, String message) { if (!condition) throw new IllegalStateException(message); }
+    private static void deleteRecursively(File file) throws Exception {
+        if (!file.exists()) return; if (file.isDirectory()) { File[] children = file.listFiles(); if (children != null) for (File child : children) deleteRecursively(child); }
+        if (!file.delete()) throw new IllegalStateException("could not delete " + file);
     }
-
-    private static double seconds(long nanos) {
-        return nanos / 1_000_000_000.0;
-    }
-
-    private static final class RawTensor {
-        final float[] floatValues;
-        final short[] halfValues;
-        final long[] shape;
-
-        RawTensor(float[] floatValues, short[] halfValues, long[] shape) {
-            this.floatValues = floatValues;
-            this.halfValues = halfValues;
-            this.shape = shape;
-        }
-
-        static RawTensor fromOutput(Tensor tensor, boolean fp16) {
-            DType expected = fp16 ? DType.HALF : DType.FLOAT;
-            if (tensor.dtype() != expected) {
-                throw new IllegalStateException("Expected output dtype " + expected
-                        + ", got " + tensor.dtype());
-            }
-            return fp16
-                    ? new RawTensor(null, tensor.getDataAsShortArray(), tensor.shape())
-                    : new RawTensor(tensor.getDataAsFloatArray(), null, tensor.shape());
-        }
-
-        EValue toEValue() {
-            return EValue.from(halfValues != null
-                    ? Tensor.fromBlob(halfValues, shape)
-                    : Tensor.fromBlob(floatValues, shape));
-        }
+    private static void writeFailure(File resultFile, Throwable error) {
+        try { StringWriter trace = new StringWriter(); error.printStackTrace(new PrintWriter(trace)); JSONObject result = new JSONObject();
+            result.put("schema_version", 1); result.put("abi_id", FourCallMetadata.ABI_ID); result.put("status", "failed");
+            result.put("error_type", error.getClass().getName()); result.put("error", String.valueOf(error.getMessage())); result.put("trace", trace.toString());
+            writeText(resultFile, result.toString(2) + "\n"); } catch (Throwable ignored) { Log.e(TAG, "Could not write failure result", ignored); }
     }
 }
