@@ -1,70 +1,953 @@
 {
-  "blocker": "Raw output is shorter than 15 seconds and Pocket TTS exposes no documented speed control; padding, looping, and time stretching are forbidden. Parent protocol revision is required.",
+  "blocker": "Protocol v2 was the one permitted shared punctuation revision, but Pocket still emits less than 15 seconds and has no documented speed control. Exact normalization would require forbidden fabrication, looping, padding, or time stretching.",
   "command": [
     "models/pocket-tts/generate_preview.sh"
   ],
-  "conclusion": "Blocked pending the parent-owned shared punctuation revision; no normalized preview was fabricated.",
+  "conclusion": "Blocked after the permitted shared punctuation revision failed to reach 15 seconds; raw native output is preserved and no normalized preview was fabricated.",
+  "forbidden_transformations_used": [],
   "memory": {
-    "baseline_rss_bytes": 115343360,
-    "peak_process_tree_rss_bytes": 1131843584,
+    "baseline_rss_bytes": 115494912,
+    "peak_process_tree_rss_bytes": 1145065472,
     "sample_interval_ms": 20
   },
   "model": "pocket",
   "protocol": {
-    "protocol_fingerprint": "ef3dee72094c78514b4e590e944ffaa1ab61f57bd0cbd44da2f395d4cb93aa8e",
+    "protocol_fingerprint": "ca0987feca4c9a2e8744d4846d1b3f5da86799862f6f7d8ba7e3563f84245814",
     "protocol_id": "mobile-podcast-preview",
-    "protocol_version": 1,
-    "transcript_sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67"
+    "protocol_version": 2,
+    "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f"
   },
   "provenance": {
     "anomalies": [
-      "Locked seed-0 output is 13.52 seconds, below the exact 15-second derivation minimum."
+      "The one parent-owned punctuation revision produced 13.84 seconds, still below the exact 15-second derivation minimum."
     ],
     "determinism": {
-      "claim": "Pinned same-platform reproducibility only.",
+      "claim": "Two pinned same-platform protocol-v2 runs were byte-identical; no cross-platform bit-exact claim.",
       "repeated_seed0_attempts": 2,
-      "repeated_sha256": "4b4a2596b97d856cc240ea4de705fa341b38ae6ac3a308ac10188a8a2896f729",
+      "repeated_sha256": "47edc30525bfdd70f7859391386a593c754def7c3e4f809a3cdd40eb58caffc1",
       "repeated_sha256_identical": true,
       "set_immediately_before_generation": true,
       "torch_manual_seed": 0
+    },
+    "download_bytes_during_generation": 0,
+    "environment": {
+      "device": "cpu",
+      "numpy": "2.5.1",
+      "python": "3.14.4",
+      "torch": "2.10.0+cpu"
     },
     "model_bytes": 219029196,
     "model_revision": "d29db7978e464fb90cb3359ee0c69a273b9142cc",
     "persistent_voice_states": {
       "exercised_count": 1,
-      "note": "Multiple reusable states were documented but only alba was exercised.",
+      "note": "Multiple named reusable states are supported for later turn-by-turn composition; this fair preview exercised only alba.",
       "supported": true
     },
+    "source_package_version": "2.1.0",
     "source_revision": "d108410d23eef7e01db282f9442891162dbc3db6",
     "source_url": "https://github.com/kyutai-labs/pocket-tts.git",
     "stock_voice_state_bytes": 6194424
   },
   "raw": {
-    "artifact_path": "artifacts/previews/pocket/raw/pocket-native.f32le",
-    "byte_count": 1297920,
+    "artifact_path": "artifacts/previews/pocket/protocol-v2-final/raw/pocket-native.f32le",
+    "byte_count": 1328640,
     "channels": 1,
-    "chunk_count": 169,
-    "duration_seconds": 13.52,
+    "chunk_count": 173,
+    "chunk_manifest": [
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00000.f32le",
+        "sha256": "47008bfce51c8a2857ef6d5d270b3f1c0f36702181d5912f399fb6e7b1340aac"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00001.f32le",
+        "sha256": "e89244cb8df7127e9540d44ae75cd6924f7fc9092675889be3d33531252ef8f8"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00002.f32le",
+        "sha256": "9330a9c1f653df45227c6ea951ad95cd378304bc7c8c957cea4fb81e3579076f"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00003.f32le",
+        "sha256": "c9ec3a6b8f99ffc77890c7b1e2cd712d154296ad227133e67e8a9109edb522af"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00004.f32le",
+        "sha256": "09f4ec73887f5f6ff9e53936c162959e35c3599777ae1fa86a40f692a1cde1b5"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00005.f32le",
+        "sha256": "fde81be8a1adab322423b9497ce3a648d92cdf80b3ed69e5d8426c1443ac2609"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00006.f32le",
+        "sha256": "341d7a7a2c50f7ef506f5f2ef43b0ffcf8a2f47e85c9159455698e8f2c3209eb"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00007.f32le",
+        "sha256": "0c10018461df4cadbe8c8121827de9d5ac3cbb03e5fed0950344fbbfff13b682"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00008.f32le",
+        "sha256": "fee6fc4aecc0cec00a7df93603aa4ca0e059affcebd4a7ed24726fd8de7a72f2"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00009.f32le",
+        "sha256": "7674e208bb6e90fc2ddb8b247a4a753d02dc0f23fdd7f11e9a47510621288b52"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00010.f32le",
+        "sha256": "7b208553ce8a9d216e0d28009aeb43566645e209be58be15830b19d8a8fdf05a"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00011.f32le",
+        "sha256": "3f3ae23a4b0f2e0a750b88e56c7bad0a49a3cfb66fb64f3bf3d88e8a375de8c9"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00012.f32le",
+        "sha256": "9e80a29b6cbaac0fd7ccde43c78515d575ddb7a0cbbd59e503532059c2632f08"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00013.f32le",
+        "sha256": "a39fa42cc2ac15fa26266df3283113a4e03c2b672eac9d7c8d73a0d00e6f4a58"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00014.f32le",
+        "sha256": "2eec674ac22ccb8d0634d88a1d16d66312778a80d78bd70202d045e18ccd55a1"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00015.f32le",
+        "sha256": "48fdfa3a664cfb80ba67b91ba75c2b95c4b951159da4114b10554f8776c68165"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00016.f32le",
+        "sha256": "21689061ecffe5cb22a7097f25d03db6b469c28bdced5c4722bec0135fddab05"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00017.f32le",
+        "sha256": "398836f0ed7cb8a79d3336706c1f10b0db54b215cd37d4ea64f80f0f9b1b2b11"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00018.f32le",
+        "sha256": "f4ebd9758119cabcd4d2d8c177c80e7e6274af08815179d33834e0b60885e911"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00019.f32le",
+        "sha256": "c8f099f0f6dd9afdd2c093929e165483e410063883e5b373bae256e9b3d49713"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00020.f32le",
+        "sha256": "5ca3592eaf354d12731e55f0dc16ab7974d1d20cc8646d2709bf06b33e438329"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00021.f32le",
+        "sha256": "5b0234310209d8c6b0c6c23974d35eff8510c59782b9418601cc633718ff9082"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00022.f32le",
+        "sha256": "835599f7b580e087cb2a764af27d337578e0b80cd2f624dd1351e9a1a8219504"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00023.f32le",
+        "sha256": "7c3523bd6940526e86c42b4dfc09b607e2ec2bf9c16ef6a843dcd6f7c38be41f"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00024.f32le",
+        "sha256": "b95cc6b2d93aa6ce9aa9e8e408d73a2aab43d80cd3ca3bc92075ad6578c392b4"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00025.f32le",
+        "sha256": "c097af404eddce9947e1b8ca1cd4e7832e9def873b6ce7e88a1cfd7cf66570ee"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00026.f32le",
+        "sha256": "9a1319a0f2c62ef65599c26cb12ce083b6f4d8a02aa982324ed27da139883aa8"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00027.f32le",
+        "sha256": "a760f0f3452c9e166d2ed2e951ba2ed5e7d4a0eb59b5aa703c65bf1578c5b2e9"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00028.f32le",
+        "sha256": "e8d34be06e9d86bb23d00524d9294a92d8dee83600124c06b51010d4a0e64ee3"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00029.f32le",
+        "sha256": "732db2b5c1cc575471b98f4cabd6062c0c0b80dae2c8e11c0fca9dcbf23f6dba"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00030.f32le",
+        "sha256": "4264916ecaed90af8240249d880f516757aabdf8358595584914e3edf0ea40f5"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00031.f32le",
+        "sha256": "27f1956227502e4530322026fed113aad673c64b254a9294ca9738498524e58e"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00032.f32le",
+        "sha256": "748a980bea17367756f33e9a4cc516e1c254a7c88e2620b431745279d57fde76"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00033.f32le",
+        "sha256": "3dc48ea815a92e08446533b73ac989e641ccda1e8238ccd7cef359cdcd473233"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00034.f32le",
+        "sha256": "53e121b9a71eea2bcf9146f74f3da049b73aec1a61c5d302da5b4e4e2f2c70c3"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00035.f32le",
+        "sha256": "2ddfb91c850f1e690b58b2f32b517991b5d0a5fd77b5a8096f3a40c51f192461"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00036.f32le",
+        "sha256": "b6bccb1230f68735f4894aa0bd84c8b88ccc3fba88ead15874420f1f6108fb8f"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00037.f32le",
+        "sha256": "eadffd75d01550a8dcc5d21af3232db75cccfe20e553bb2d6e1ceed32bfeb314"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00038.f32le",
+        "sha256": "b1e511b52c60219a21138eac6396da22b0bcb0b80dc72bd514af67e7a8045100"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00039.f32le",
+        "sha256": "d0e552542e4ebf9e6be00b34e5229dbb13d12b2e9016b8e48c836867ee7e7499"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00040.f32le",
+        "sha256": "6cd156560ce66b62a3c9b8f83af79678f5a974e78dcdbdbc9c59ed1577cd37eb"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00041.f32le",
+        "sha256": "ceccc0ce08edc87e22668cac3f3451131284f223a7aff1ca585986df4f317693"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00042.f32le",
+        "sha256": "915db16a915f33c0a5e3f5be05480d43ace055e15a3bc66a19156dfe2c1e036a"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00043.f32le",
+        "sha256": "df64e6cf9f101b6ef9e4e0d8e3cce59b03c07735ffdec5ed0499b0bf32b47063"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00044.f32le",
+        "sha256": "506f67f4c38ff5d180915ff73f98043a066f6cabfb0d96eaf382595ab507ea87"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00045.f32le",
+        "sha256": "a8f375b555e1876d5a44060733e36f5c736f5f91bccf844fb4dd6e16714820b6"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00046.f32le",
+        "sha256": "5c418d3eb5fc5dc10ccf30bc168d29ebb45c8cd489af66f93b1e4170ab748a86"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00047.f32le",
+        "sha256": "e012130d6b7eed430937a4e0ef9c9c20fb00075611818041d70a56e11076b11c"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00048.f32le",
+        "sha256": "c2bd71d40f19f058748f83cb2b830b045ac99471ed63fbd734b89484dabc8c5f"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00049.f32le",
+        "sha256": "ff22bee812a4a9e550d17c5319b6c0f45c96e2707e76ff45fee93aeae49f5370"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00050.f32le",
+        "sha256": "afcd3d361f8b80c3f0b0dd58b02cb2e31eb9108558921866c85fda368aac211d"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00051.f32le",
+        "sha256": "3432c458204a6f06a2508b6b7a121df5b6f6f52820d07d57ca290361bdf598bb"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00052.f32le",
+        "sha256": "d899a940f649ce2b6e62ad7702fafddbf9911a6af6f590c9efb7cd48c2d8e22f"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00053.f32le",
+        "sha256": "d33d77b1900ce7f013aacec4012b85b599da3bc8208c5d075a7b12aed34e64cb"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00054.f32le",
+        "sha256": "7befc4ec1b45dd50a1d8e91be426ce7afce2d362677135d2ac6c08d011506161"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00055.f32le",
+        "sha256": "bbdc564a0de58181948377cb2299633cfefd581638ec343272f39fe39dbab7dd"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00056.f32le",
+        "sha256": "0a296dda27ca2948dc5519eb69ed23589d77b0f221139286a42622dd0a3cb199"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00057.f32le",
+        "sha256": "6160e6270d795ea03da43e905c773b6972acb06e9a14b281125eae8aee6820e8"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00058.f32le",
+        "sha256": "9abc378dfa4332edd542a75136495c0568cd5768fe2d3cb7b96087483ebef6c8"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00059.f32le",
+        "sha256": "97c7151600838efe637beee0fb7d07464402ee574d05a0d570475ef8fbf891ff"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00060.f32le",
+        "sha256": "505568fb2f734bcfe470d884395852022b35d6c9cbbcae34f96ecb972b528913"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00061.f32le",
+        "sha256": "036128c3fef6bcf2ccac8fa8ddc918185183c5ed560b25df8a753877a4d74c62"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00062.f32le",
+        "sha256": "009d3f1e4618e3caf39dc68fd528de43b3b035052af2b675ddf5eabe3f36c14e"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00063.f32le",
+        "sha256": "73a919600e23b151903bc447dec16626d4e678311985a9527b888faa7f394de1"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00064.f32le",
+        "sha256": "e7a4f03ee5afd88fa8b7a8e30077ab498631297e8eead186279a0a274fd15695"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00065.f32le",
+        "sha256": "fb294af677134ef45aa8baa3f6d5c0a253dd39095369cfcf38821d76d1327a4c"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00066.f32le",
+        "sha256": "41aa66bacc8c2a4bfda2dd937b002b43d5dc4ed651106f8a542f42172c5de9e5"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00067.f32le",
+        "sha256": "29a87a959add1586f6e0d79b9978b08494413fed9ec941b36b0e538a5a6358b6"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00068.f32le",
+        "sha256": "4145e0105a188894c444fb8b0f66c87b77e46aedf27027443156969b21a72a0a"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00069.f32le",
+        "sha256": "a72e3cd4da3a72a6a19208f0654bd4c57c3469642f4a12f7b69f2758b5aa894e"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00070.f32le",
+        "sha256": "5507a83a9e0076f9b52fc72b83eb700a2847b6539e549c74242f044d4a668702"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00071.f32le",
+        "sha256": "1c4a492bd7386786768f599f71f5cd109e8baef302e9445336a2e4a3642968a7"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00072.f32le",
+        "sha256": "39f5573c838713234f238e919a41dafaa2b50d60b275eda4498b4702f3888ccc"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00073.f32le",
+        "sha256": "485b6d3adccfcfa274d20d95cf5f1a054918a2c28c5af7f4d6510a4028e2e936"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00074.f32le",
+        "sha256": "68e19ef31e57f45bf5680652ab27ecc50b522f852d81eb85fc28e32383d16f90"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00075.f32le",
+        "sha256": "c50d36b3668198c34cd15bb04f66ab03b99161ee1606fa27be4b88991fb94016"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00076.f32le",
+        "sha256": "b251f082aa4fb3add5e0e375f878511357a3f728992e43891d826f89753b95be"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00077.f32le",
+        "sha256": "9f3ccf94bd9198291445b56f6950edd9d4e96041db0099406836ef22c462bd6f"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00078.f32le",
+        "sha256": "40308cbb3fb675f84518270c16c88602b2ded06e84d7464048bc8aa8b8164bb8"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00079.f32le",
+        "sha256": "b3852de6bbbd074632dfb3ebce4f0ff6c93ed5e2f4be1390b4c2bf9f074d876c"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00080.f32le",
+        "sha256": "d4347990e3cf45106b5db4b8e5035a86a7e8e729f1b7643d4eccb12254d5d710"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00081.f32le",
+        "sha256": "134122d88bf654aa77d826fda3c37730c2301f4f9ec4633181eac66f52d97b9d"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00082.f32le",
+        "sha256": "b4555fe7ec43b4b83ff7a9d1530ecdc5cc9edc5885e9c9e347b2154574f271e6"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00083.f32le",
+        "sha256": "6c271d96f3ddf079925de53ef0946c5588917f9d1f7c5dad38dc96c6ab6bf6ce"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00084.f32le",
+        "sha256": "86e87cf32a7cea7d51b3887a90251b2f5089b9d2bdf6591c8ff3c88de4d2ba09"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00085.f32le",
+        "sha256": "e92890bca7eeaea882c86a1a0a50bf6332e96cacd1d00e0529dfca90e3c0c19d"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00086.f32le",
+        "sha256": "b36c3d23f2342208fac7b07906ead3864b7765ba4594693a8a1660e3cd802666"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00087.f32le",
+        "sha256": "31b49f68313938aad4f4dd870fa0b37a8b0486b0764ad648cf8f6c0c43518357"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00088.f32le",
+        "sha256": "d18b9961e616ca2eee1a181860d1aff5bb5e63e7c575516c15cd4920cf35228f"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00089.f32le",
+        "sha256": "7184df9c3c02d689057c52d7e5d24cdcd64b57033288a7a1f5602033d1794ce1"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00090.f32le",
+        "sha256": "a364461eb4c69d59f5175999ebc3be46b90dd1ec1fa408b49fa0c0158f7eac98"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00091.f32le",
+        "sha256": "ffbd5757080d2a09e1d4c80ec1f598d218f21cd1354a089b4886142aadee1b50"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00092.f32le",
+        "sha256": "387ee86cea150bda3b35831e2de2358601de2e37020c8e7b33b90cbda0a56ea5"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00093.f32le",
+        "sha256": "cac7ee6559a5bfc667486da924d14dc009a2398bab1f2ea7b8d4d2b4f5cf45fd"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00094.f32le",
+        "sha256": "be0551d2e9ba9f0374110e82bf4751c37f2f0399bc8dd2d611917299088cb68f"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00095.f32le",
+        "sha256": "d3ef72644cc014e5214fe9291cf11e609b4d8ba4021462c0a6c81ac026f78922"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00096.f32le",
+        "sha256": "ce36c76be4fc689bb6bfebd61b021603ab33bdeaa41b8f31a04411602e57d1ca"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00097.f32le",
+        "sha256": "dfd5a53e9705cf953997fd5a1ba444c7c64850c77ca49575aac1a66cfa9e9113"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00098.f32le",
+        "sha256": "313ca308bab28a00b1418f25d0d71a1078fac87d10b0932d0ff158bbb6016b03"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00099.f32le",
+        "sha256": "18da511cdf773301a81562cd7a6b0b4d0172f839a1d8cf9ee1c2b233c6e9933b"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00100.f32le",
+        "sha256": "59f994212efa5ad214bd3eb00f6f0a202f74f8cbf30863a57728aeceb92f0d6c"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00101.f32le",
+        "sha256": "b4170251ed2102ca6e039c90a9abf01fbe596ed34e24709e1f8edffd643ec635"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00102.f32le",
+        "sha256": "3b969410932281a9264270981efc9134c1fbc765110fc5c77cef42cbc9fc83ae"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00103.f32le",
+        "sha256": "d5a480eb94e6e914924f2eb7a6f018b499d8d6b75a73c8cb518d75d01e158afa"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00104.f32le",
+        "sha256": "990508818040fe036f667370aadb2c7dc2a73bdc1602178d1b7acb8c1074a38f"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00105.f32le",
+        "sha256": "938703eb29baa45c4d5ae993362419eaf75053c7b0b453e04e107369d85e35ad"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00106.f32le",
+        "sha256": "962bc8cd56b49c70f23869591f26c099b50b6e32e2ba5039964cceff10631581"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00107.f32le",
+        "sha256": "2463e2da0adf0154e3a0802dc9a4adb27cfde206cfe90b56eca8d856dddb4329"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00108.f32le",
+        "sha256": "f42d6ab11a7309d1c7bbd4b8927d81b9e4c94eeef095d49c15fd43746e3049bd"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00109.f32le",
+        "sha256": "cb8624ec492087c18b5974aeaa6e146e5b506d02e8dd302505da7d959ca9ff47"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00110.f32le",
+        "sha256": "8eaca1928a45f5807383781b843b03d163404de3d752ada553ba7382965952bc"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00111.f32le",
+        "sha256": "d20b4c5e165736af06f20e42ee3a0a3fdd46513f09c6d1ae4fdce96f4ddac0b5"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00112.f32le",
+        "sha256": "6c6d4472f6f8b1775ec17880b93c35980a407c53a08eae598074911809f7041c"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00113.f32le",
+        "sha256": "ea62fc817997d540e4a075037ff0deca6e8fa6f69bd1a6bdc8975bba831797c7"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00114.f32le",
+        "sha256": "975e075c23b2cb359baa04a3d6133d0781c657f7504fd3e981660f4411c434cc"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00115.f32le",
+        "sha256": "089f18bdb751bd81c719d4fefadc08ddba203ff1f5b82dc6b703d53277e4afbe"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00116.f32le",
+        "sha256": "ce88e72f19389d3a2b1e7305243a82769090869fa059f331acbf24abf924c343"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00117.f32le",
+        "sha256": "9a360770876fada14097ccc19415dfa1fcb490eaefa12acc21cd76f954bc9811"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00118.f32le",
+        "sha256": "874943097f6d37435d6ac24c4131eb968a6268089073381753d9cfa1f255c8f3"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00119.f32le",
+        "sha256": "5807017712baa50312804565bd36dddc89ea169b1de4801214b6d510e5b2f58c"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00120.f32le",
+        "sha256": "37de9463f826f2686267043a916f6f5a213f4b455b23d5db18b0862db54045e1"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00121.f32le",
+        "sha256": "d1eb24732425160151cdce3b1dbb35a8a6687eb421aa4882b0e7e25e717f9168"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00122.f32le",
+        "sha256": "41ec7cf1df9ae57b1ae3761940d2a4cb6884a173b8f77fb0de5f3e4ce3814463"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00123.f32le",
+        "sha256": "91cd94583867b15901bfb9f961ba86cd12cc54295ace401aa67f5e8395ca719a"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00124.f32le",
+        "sha256": "bba472cad093d56b214cc1f5837c7f8e5f2ae6dcc2aef2df37e5c9d4ead164dd"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00125.f32le",
+        "sha256": "2465d92116126314d6638e92f621c4fa8673e0786bff3c2343bddffd02bdd3ca"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00126.f32le",
+        "sha256": "39d522569f3406fc7e04c6b4ebefe9dcb7c7cbe13d63828cac521fe3e0e50f1b"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00127.f32le",
+        "sha256": "dbb87720cf4c7a091d7db1b8c5133488895c82ab23fec841b3892f3591506b02"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00128.f32le",
+        "sha256": "ae6bc56fb7c37f8ba6323b4db21ce0f1708d74a0b9c6f1838417298c171af5f8"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00129.f32le",
+        "sha256": "b92e968cba974a4a807817c70a5e8173d10169527f35add2f5f6dfd81d51c245"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00130.f32le",
+        "sha256": "2a603ff24b1b169459e4375953e7f79ab28b3ec7c46b82c3b510722750fda317"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00131.f32le",
+        "sha256": "c423395fd57b1ca124200a155f1c7a2caa942af276bd7a972c690985bfbaeee7"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00132.f32le",
+        "sha256": "eda3de32c16cabcb6164ad37f33460c57a94211026409aa4005b04c7bf7d4f52"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00133.f32le",
+        "sha256": "89a75d769c915865a50ba0a27b9e7269b3ae681f307c2c23c67a88e8a085be60"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00134.f32le",
+        "sha256": "81181acf227545e627826129665f760e9c8ef94003c30b3522b6981d65fbf4fc"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00135.f32le",
+        "sha256": "d28beb639d64de30970830a23f549927c55572de9dda880580ac0097b0e4dfa8"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00136.f32le",
+        "sha256": "a58d54256b5795bea4111f395b95d9df5b24cba6068b336fddf111c3ad789cce"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00137.f32le",
+        "sha256": "bf8fa0cf07b0d75206895f3ddded877902c839bb91cc79d349ff68a159e98449"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00138.f32le",
+        "sha256": "85451262bb04d50f4534744a0cd5056fcdb3ccc014a6edb559d48869bb71a2ee"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00139.f32le",
+        "sha256": "03f99050b0537ec57f2d666a24cfde4f4ccf2b3c19c8df060117c5a677685332"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00140.f32le",
+        "sha256": "1bb52ee5d2a65dc49ae9f1caa1ba2b65919eeb19f9fa49ff65aac6e0307974ea"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00141.f32le",
+        "sha256": "18787fd4bd23dda0ff8ed1a85a0897b283a95fe24ed8bc6c49f1ad2494b1efdb"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00142.f32le",
+        "sha256": "eb4695ec48370b728f4a50923a4f2647a3c0a6e2d3d8fba02fdb058a9f4e5bfa"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00143.f32le",
+        "sha256": "6d43d787de19c041da628eabd763e40d25c3faa25c17c02815cbe40c2d572b1d"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00144.f32le",
+        "sha256": "9e47ab6e8786d9c35ca10efdfe3a2f161e2eafe69ac2e1fd97822945fc5d2e40"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00145.f32le",
+        "sha256": "0209e5736d4da7888fe76a9db4ed6435d72963cc4e8b250d08d3f8901570d132"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00146.f32le",
+        "sha256": "1fb3c8cfd25c1fa5741755bb0727e5177022b5f3d547a5f2759275ec41f890de"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00147.f32le",
+        "sha256": "861833bb6503351a3260fc32b049fa04842d75dbff554f763229133853fddbe0"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00148.f32le",
+        "sha256": "85fe2068145818f8962b8d0bc17891f906e095f15a60368b95ca9c6e7a7d4ae4"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00149.f32le",
+        "sha256": "4a3dd9680a73092c17e4f91f8a644daff56481a57d4a35b1796339469af6e306"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00150.f32le",
+        "sha256": "afec62eed52bbaba6e0f640f9c24a57cdb24973fcb4d515511181d691f9c8a28"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00151.f32le",
+        "sha256": "34e913630adec9219e2c00deddcd8edee2a8c1446f91c8789badb2b5da2594aa"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00152.f32le",
+        "sha256": "a9ca9c5c50382c9d6f2c21111b469cf5c70e9d758f491715b473e97fc425ef8c"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00153.f32le",
+        "sha256": "accd7af589e8a76de754aa0ac2c36038eeee59e1db0d8cbbb45ef6b3a4c4aa9a"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00154.f32le",
+        "sha256": "37b48ba9b6cfffa7a7af4503db1fbe88886118c68bb8a0175b7dcb42f7937b76"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00155.f32le",
+        "sha256": "c4525e7191752de5cc8c5a6afcc3ff1730ddfbe51844e85b35e9ba7744980478"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00156.f32le",
+        "sha256": "cdc17b400d445ddfa564c7c90d97e2ce8930b5c24abec6ae9c1c29a57a026576"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00157.f32le",
+        "sha256": "2e281773218ba1eae2accd13764f575d2ac9f765998a22dcabab7aaebd111bbb"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00158.f32le",
+        "sha256": "710aa37b459ea823093f84e64a5b894b1198fce58eec5d69c199853b1cf2abce"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00159.f32le",
+        "sha256": "413831dc54ac7423a0dbf2c64b0e2a46a7ed6b11c82aa4033db463a784427556"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00160.f32le",
+        "sha256": "382c9f71d842a93d5f95c2184ffed3717e6c2d3e8e13ec66293c5c93d3c007e8"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00161.f32le",
+        "sha256": "a5fb47a378ac714bf961fe8f8066feaea080d65e62d9038053b0b3521afa5136"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00162.f32le",
+        "sha256": "3d3f551bb1a1dab61c23423465eadf807f8d161175ed2e49d5c58b15b54509ef"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00163.f32le",
+        "sha256": "f0097c3b8c3a29beecd61336a4e1ce6b67fe772ab1e5ba2b1f1dd4b6b9353944"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00164.f32le",
+        "sha256": "0b55b920d909cbbd944b092d0136a7517b4fbb1c50105a315e93ffa3e027015c"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00165.f32le",
+        "sha256": "e262d7a99ddb2e8d1ea82d9f2f473b2c1829d0410e252218c08f8a292d211403"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00166.f32le",
+        "sha256": "a747ed0b04a4e24487855ecccb98be95dbd3e6e506f13a9a081b6fcb14f05d98"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00167.f32le",
+        "sha256": "28b1c7cd4c1da97a3e9c27b9eb608ffa24cbaf9e9f8002fca14a16ee964612c8"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00168.f32le",
+        "sha256": "5dff06d44082b1e6f9df14faca2e60439b0b08fc5d3f07b04f90666a1497b775"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00169.f32le",
+        "sha256": "8532731796da4fe112da58c9fc1edf9a556320008a9dc097b3e8e299633ac90d"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00170.f32le",
+        "sha256": "3dbb36948ed913b59f4f96ab174d5601478e5414cc5faa2e1da24ddbdeb5a4a4"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00171.f32le",
+        "sha256": "0308893ca26c540fc37882fc497b322f0232962b21a5e42c86fdc09ae6e8ccea"
+      },
+      {
+        "bytes": 7680,
+        "path": "artifacts/previews/pocket/protocol-v2-final/raw/chunks/chunk-00172.f32le",
+        "sha256": "db875579989fbc008fcdd299996db36591556c5a5665e45e30733c08c48930e0"
+      }
+    ],
+    "derivation_carrier_path": "artifacts/previews/pocket/protocol-v2-final/raw/pocket-native-pcm32.wav",
+    "derivation_carrier_sha256": "0eae2b096632077b5d07374fd1a2a0046da75aed4a540237094e6e2d3412310c",
+    "duration_seconds": 13.84,
     "output_format": "headerless little-endian IEEE float32 PCM plus write-once native chunks",
     "preserved_unchanged": true,
-    "sample_count": 324480,
+    "sample_count": 332160,
     "sample_rate_hz": 24000,
-    "sha256": "4b4a2596b97d856cc240ea4de705fa341b38ae6ac3a308ac10188a8a2896f729",
+    "sha256": "47edc30525bfdd70f7859391386a593c754def7c3e4f809a3cdd40eb58caffc1",
     "statistics": {
-      "integrated_loudness_lufs": -18.78107346606364,
-      "peak": 0.6992021799087524,
-      "peak_dbfs": -3.107944527356751,
-      "rms": 0.1239109522476958,
-      "rms_dbfs": -18.137806109682344
+      "integrated_loudness_lufs": -19.037644528119447,
+      "peak": 0.6324264407157898,
+      "peak_dbfs": -3.9797996243564127,
+      "rms": 0.11896380180633888,
+      "rms_dbfs": -18.491703304461243
     }
   },
   "schema_version": 1,
+  "speed_control": {
+    "documented": false,
+    "note": "No speed control exists in the pinned Python generation API; upstream says adding silence in text is unsupported.",
+    "setting": null
+  },
   "status": "blocked",
   "timing": {
-    "api_first_output_seconds": 0.13588039299975208,
-    "first_audible_output_seconds": 0.13588039299975208,
-    "generation_wall_seconds": 3.7986631579997265,
-    "rtf": 0.2809662099112224
+    "api_first_output_seconds": 0.18415928700051154,
+    "first_audible_output_seconds": 0.18415928700051154,
+    "generation_wall_seconds": 4.093614479999815,
+    "rtf": 0.29578139306357043
   },
   "voice": {
     "cloning_performed": false,

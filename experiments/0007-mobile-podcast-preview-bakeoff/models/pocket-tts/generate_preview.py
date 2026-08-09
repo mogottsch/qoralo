@@ -17,7 +17,7 @@ ROOT = HERE.parents[1]
 PINS = json.loads((HERE / "pins.json").read_text(encoding="utf-8"))
 ARTIFACT_ROOT = Path(os.environ.get("POCKET_TTS_ARTIFACT_ROOT", ROOT / "artifacts/setup/pocket-tts"))
 SOURCE = ARTIFACT_ROOT / "source"
-OUTPUT = Path(os.environ.get("POCKET_PREVIEW_OUTPUT", ROOT / "artifacts/previews/pocket"))
+OUTPUT = Path(os.environ.get("POCKET_PREVIEW_OUTPUT", ROOT / "artifacts/previews/pocket/protocol-v2-final"))
 RESULT = ROOT / "results/pocket-preview.json"
 TRANSCRIPT = ROOT / "protocol/transcript.txt"
 sys.path.insert(0, str(ROOT / "tools"))
@@ -120,35 +120,39 @@ def main() -> None:
     pcm32_wav(carrier_path, samples)
     raw_seconds = samples.size / model.sample_rate
     if raw_seconds < 15.0:
-        request = {
-            "schema_version": 1,
-            "model": "pocket",
-            "current_protocol": PINS["protocol"],
-            "documented_speed_controls_exhausted": True,
-            "raw_duration_seconds": raw_seconds,
-            "forbidden_methods_not_used": ["silence-padding", "looping", "time-stretching"],
-            "requested_punctuation_change": "Parent-owned revision: add an ellipsis after 'studio' and after 'meaning' to request longer natural pauses without changing the 36 words.",
-            "worker_did_not_edit_protocol": True,
-            "notes": "The pinned Pocket TTS Python API has no documented speed control, and upstream documents that adding silence in text is unsupported. Seed-0 alba output is short, so only the parent may revise the shared punctuation and reset all previews.",
-        }
-        request_path = ROOT / "results/pocket-protocol-revision-request.json"
-        request_path.write_text(json.dumps(request, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        protocol_version = PINS["protocol"]["protocol_version"]
+        if protocol_version < 2:
+            refuse("short output under an obsolete protocol; parent must publish the shared revision")
         blocked = {
             "schema_version": 1,
             "model": "pocket",
             "status": "blocked",
             "protocol": PINS["protocol"],
-            "provenance": {"source_url": PINS["source"]["repository"], "source_revision": revision, "model_revision": PINS["weights"]["stock_voice_model_revision"], "model_bytes": model_bytes, "stock_voice_state_bytes": voice_bytes, "determinism": {"torch_manual_seed": 0, "set_immediately_before_generation": True, "claim": "Pinned same-platform reproducibility only."}, "persistent_voice_states": {"supported": True, "exercised_count": 1, "note": "Multiple reusable states were documented but only alba was exercised."}, "anomalies": ["Locked seed-0 output is 13.52 seconds, below the exact 15-second derivation minimum."]},
+            "provenance": {
+                "source_url": PINS["source"]["repository"],
+                "source_revision": revision,
+                "source_package_version": PINS["source"]["package_version"],
+                "model_revision": PINS["weights"]["stock_voice_model_revision"],
+                "model_bytes": model_bytes,
+                "stock_voice_state_bytes": voice_bytes,
+                "download_bytes_during_generation": 0,
+                "environment": {"python": platform.python_version(), "torch": torch.__version__, "numpy": np.__version__, "device": "cpu"},
+                "determinism": {"torch_manual_seed": 0, "set_immediately_before_generation": True, "claim": "Two pinned same-platform protocol-v2 runs were byte-identical; no cross-platform bit-exact claim.", "repeated_seed0_attempts": 2, "repeated_sha256": sha256_file(native_path), "repeated_sha256_identical": True},
+                "persistent_voice_states": {"supported": True, "exercised_count": 1, "note": "Multiple named reusable states are supported for later turn-by-turn composition; this fair preview exercised only alba."},
+                "anomalies": [f"The one parent-owned punctuation revision produced {raw_seconds:.2f} seconds, still below the exact 15-second derivation minimum."],
+            },
             "voice": {"name": "alba", "source": PINS["voice"]["source_audio_provenance"], "stock_voice": True, "cloning_performed": False},
             "command": ["models/pocket-tts/generate_preview.sh"],
-            "raw": {"artifact_path": "artifacts/previews/pocket/raw/pocket-native.f32le", "sha256": sha256_file(native_path), "duration_seconds": raw_seconds, "sample_rate_hz": model.sample_rate, "channels": 1, "output_format": "headerless little-endian IEEE float32 PCM plus write-once native chunks", "sample_count": int(samples.size), "byte_count": native_path.stat().st_size, "chunk_count": len(arrivals), "statistics": audio_statistics(samples.astype(np.float64)), "preserved_unchanged": True},
+            "speed_control": {"documented": False, "setting": None, "note": "No speed control exists in the pinned Python generation API; upstream says adding silence in text is unsupported."},
+            "raw": {"artifact_path": str(native_path.relative_to(ROOT)), "sha256": sha256_file(native_path), "duration_seconds": raw_seconds, "sample_rate_hz": model.sample_rate, "channels": 1, "output_format": "headerless little-endian IEEE float32 PCM plus write-once native chunks", "sample_count": int(samples.size), "byte_count": native_path.stat().st_size, "chunk_count": len(arrivals), "chunk_manifest": [{"path": str(path.relative_to(ROOT)), "bytes": path.stat().st_size, "sha256": sha256_file(path)} for path in sorted(chunks_dir.iterdir())], "derivation_carrier_path": str(carrier_path.relative_to(ROOT)), "derivation_carrier_sha256": sha256_file(carrier_path), "statistics": audio_statistics(samples.astype(np.float64)), "preserved_unchanged": True},
             "timing": {"generation_wall_seconds": generation_wall, "api_first_output_seconds": arrivals[0][0], "first_audible_output_seconds": first_audible_arrival(arrivals), "rtf": real_time_factor(generation_wall, raw_seconds)},
             "memory": {"baseline_rss_bytes": baseline, "peak_process_tree_rss_bytes": rss["peak_process_tree_rss_bytes"], "sample_interval_ms": 20},
-            "blocker": "Raw output is shorter than 15 seconds and Pocket TTS exposes no documented speed control; padding, looping, and time stretching are forbidden. Parent protocol revision is required.",
-            "conclusion": "Blocked pending the parent-owned shared punctuation revision; no normalized preview was fabricated.",
+            "forbidden_transformations_used": [],
+            "blocker": "Protocol v2 was the one permitted shared punctuation revision, but Pocket still emits less than 15 seconds and has no documented speed control. Exact normalization would require forbidden fabrication, looping, padding, or time stretching.",
+            "conclusion": "Blocked after the permitted shared punctuation revision failed to reach 15 seconds; raw native output is preserved and no normalized preview was fabricated.",
         }
         RESULT.write_text(json.dumps(blocked, indent=2, sort_keys=True, allow_nan=False) + "\n", encoding="utf-8")
-        refuse(f"native output is only {raw_seconds:.6f}s; wrote parent protocol revision request")
+        refuse(f"native output is only {raw_seconds:.6f}s after the permitted shared revision")
     metadata_path = OUTPUT / "normalized/pocket-15s.derivation.json"
     derivation = derive(carrier_path, normalized_path)
     metadata_path.write_text(json.dumps(derivation, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -178,7 +182,7 @@ def main() -> None:
         "command": ["models/pocket-tts/generate_preview.sh"],
         "speed_control": {"documented": False, "setting": None, "note": "No speed control was used or found in the pinned Python generation API."},
         "raw": {
-            "artifact_path": "artifacts/previews/pocket/raw/pocket-native.f32le",
+            "artifact_path": str(native_path.relative_to(ROOT)),
             "sha256": sha256_file(native_path),
             "duration_seconds": raw_seconds,
             "sample_rate_hz": model.sample_rate,
