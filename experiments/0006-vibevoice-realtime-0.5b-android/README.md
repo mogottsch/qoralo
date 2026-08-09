@@ -6,6 +6,8 @@ Prepare a component-level Android feasibility recommendation for the pinned Real
 
 **Status: recommendations only; no conversion has begun.** Host generation is not mobile evidence. The candidate remains conditional on the user's listening review (`pending_user_review`). If its sound is not acceptable, none of the runtime work below is justified.
 
+This inventory is revalidated against the accepted **protocol-v2** host record (protocol fingerprint `ca0987…45814`, raw SHA-256 `0daa06…28c1`). The checker fails closed if that dependency's status, fingerprint, five diffusion steps, raw hash, or 3,200-sample native chunks drift. This linkage establishes which preview informed the recommendations; it does not turn host evidence into Android or subjective-quality evidence.
+
 ## What the checkpoint actually contains
 
 The pinned safetensors header contains 1,017,626,724 learned parameters. The source creates a four-layer text Qwen2 model and a twenty-layer TTS Qwen2 model, but explicitly says the latter's token embedding is unused. The checkpoint nevertheless stores both `[151936, 896]` embeddings.
@@ -65,7 +67,7 @@ FP16 active-weight arithmetic is under the provisional 2 GB package ceiling, and
 
 ## Validation
 
-The checker uses only Python's standard library and verifies top-level schema constraints, component sums, duplicate arithmetic, storage formulas, chunk/KV formulas, QNN evidence fields, approval gates, and the no-conversion/listening conditions:
+The checker uses only Python's standard library and verifies top-level schema constraints, the pinned protocol-v2 preview dependency, component sums, duplicate arithmetic, storage formulas, chunk/KV formulas, QNN evidence fields, approval gates, and the no-conversion/listening conditions:
 
 ```bash
 python3 check_inventory.py

@@ -4,11 +4,26 @@
   "title": "VibeVoice Realtime Android feasibility inventory",
   "type": "object",
   "additionalProperties": false,
-  "required": ["$schema", "schema_version", "status", "candidate", "components", "duplicated_constants", "streaming_state", "package_estimates", "fixture_plan", "runtime_recommendations", "decision", "sources"],
+  "required": ["$schema", "schema_version", "status", "preview_evidence", "candidate", "components", "duplicated_constants", "streaming_state", "package_estimates", "fixture_plan", "runtime_recommendations", "decision", "sources"],
   "properties": {
     "$schema": {"const": "./feasibility-inventory.schema.json"},
     "schema_version": {"const": 1},
     "status": {"const": "recommendations_only_no_conversion_started"},
+    "preview_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "protocol_version", "protocol_fingerprint", "result_status", "diffusion_steps", "native_chunk_samples", "raw_sha256", "scope"],
+      "properties": {
+        "path": {"const": "../0007-mobile-podcast-preview-bakeoff/results/realtime-preview.json"},
+        "protocol_version": {"const": 2},
+        "protocol_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "result_status": {"const": "accepted"},
+        "diffusion_steps": {"const": 5},
+        "native_chunk_samples": {"const": 3200},
+        "raw_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "scope": {"type": "string"}
+      }
+    },
     "candidate": {
       "type": "object",
       "required": ["model_id", "model_revision", "source_revision", "checkpoint_bytes", "checkpoint_parameters", "active_parameters", "inactive_duplicated_parameters", "active_formula", "uncertainty"]

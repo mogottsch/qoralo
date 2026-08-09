@@ -2,6 +2,16 @@
   "$schema": "./feasibility-inventory.schema.json",
   "schema_version": 1,
   "status": "recommendations_only_no_conversion_started",
+  "preview_evidence": {
+    "path": "../0007-mobile-podcast-preview-bakeoff/results/realtime-preview.json",
+    "protocol_version": 2,
+    "protocol_fingerprint": "ca0987feca4c9a2e8744d4846d1b3f5da86799862f6f7d8ba7e3563f84245814",
+    "result_status": "accepted",
+    "diffusion_steps": 5,
+    "native_chunk_samples": 3200,
+    "raw_sha256": "0daa06752efbdd2944ac66e02aa8f86792cf523dbb4846bb4fab9ac8741e28c1",
+    "scope": "Protocol-v2 host listening/reproducibility evidence only; it is not Android feasibility, runtime support, or listening approval."
+  },
   "candidate": {
     "model_id": "microsoft/VibeVoice-Realtime-0.5B",
     "model_revision": "6bce5f06044837fe6d2c5d7a71a84f0416bd57e4",
@@ -147,7 +157,7 @@
     {"id": "pinned-streaming-model", "url": "https://github.com/microsoft/VibeVoice/blob/94da20d98b2fa7688e9cbfaf7692ddb4954f7600/vibevoice/modular/modeling_vibevoice_streaming.py", "supports": "component construction, unused duplicate embedding, split forward boundaries"},
     {"id": "pinned-inference", "url": "https://github.com/microsoft/VibeVoice/blob/94da20d98b2fa7688e9cbfaf7692ddb4954f7600/vibevoice/modular/modeling_vibevoice_streaming_inference.py", "supports": "dynamic KV concatenation, interleaved generation, diffusion and acoustic decode flow"},
     {"id": "pinned-tokenizer", "url": "https://github.com/microsoft/VibeVoice/blob/94da20d98b2fa7688e9cbfaf7692ddb4954f7600/vibevoice/modular/modular_vibevoice_tokenizer.py", "supports": "convolution operator set and streaming cache behavior"},
-    {"id": "accepted-host-preview", "path": "../0007-mobile-podcast-preview-bakeoff/results/realtime-preview.json", "supports": "5-step setting, 3200-sample chunks, host timings and pending listening status"},
+    {"id": "accepted-host-preview-v2", "path": "../0007-mobile-podcast-preview-bakeoff/results/realtime-preview.json", "supports": "protocol-v2 accepted result with fingerprint ca0987feca4c9a2e8744d4846d1b3f5da86799862f6f7d8ba7e3563f84245814; provenance.diffusion_steps=5; native streaming chunks contain 3200 samples; subjective review remains pending"},
     {"id": "qualcomm-qnn", "url": "https://www.qualcomm.com/developer/software/qualcomm-ai-engine-direct-sdk", "supports": "QNN SDK identity; availability and terms must be checked only after approval"},
     {"id": "litert", "url": "https://ai.google.dev/edge/litert", "supports": "LiteRT public runtime documentation entry point"},
     {"id": "litert-lm", "url": "https://github.com/google-ai-edge/LiteRT-LM", "supports": "LiteRT-LM public project and supported-model documentation entry point"},

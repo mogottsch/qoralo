@@ -29,6 +29,21 @@ def check_structure(d: dict, schema: dict) -> None:
     assert len(d["sources"]) >= 8 and all("supports" in x and ("url" in x or "path" in x) for x in d["sources"])
 
 
+def check_preview_dependency(d: dict) -> None:
+    """Fail if task 6 is reset again or this inventory cites stale preview evidence."""
+    evidence = d["preview_evidence"]
+    preview_path = (ROOT / evidence["path"]).resolve()
+    preview = json.loads(preview_path.read_text())
+    assert preview["status"] == evidence["result_status"] == "accepted"
+    assert preview["protocol"]["protocol_version"] == evidence["protocol_version"] == 2
+    assert preview["protocol"]["protocol_fingerprint"] == evidence["protocol_fingerprint"]
+    assert preview["provenance"]["diffusion_steps"] == evidence["diffusion_steps"] == 5
+    assert preview["raw"]["sha256"] == evidence["raw_sha256"]
+    chunks = preview["provenance"]["streaming_chunks"]
+    assert chunks and all(x["sample_count"] == evidence["native_chunk_samples"] for x in chunks)
+    assert "not Android feasibility" in evidence["scope"]
+
+
 def check_arithmetic(d: dict) -> None:
     c = d["candidate"]
     assert c["checkpoint_parameters"] == 1_017_626_724
@@ -65,6 +80,7 @@ def check_recommendations(d: dict) -> None:
 def main() -> None:
     d, schema = load()
     check_structure(d, schema)
+    check_preview_dependency(d)
     check_arithmetic(d)
     check_recommendations(d)
     print("inventory schema/structure and arithmetic checks: PASS")
