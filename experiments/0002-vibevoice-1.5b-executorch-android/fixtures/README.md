@@ -7,6 +7,36 @@ shape contract in [`qwen2-backbone-abi.json`](qwen2-backbone-abi.json). Raw
 fixtures and PTEs remain ignored; committed summaries preserve hashes and the
 unwidened host numerical failure.
 
+## Recurrent eager trace (calls 0–19)
+
+[`recurrent-calls-0-19-manifest.json`](recurrent-calls-0-19-manifest.json)
+records two byte-identical CPU/FP32 captures of the first 20 actual acoustic
+calls. Each call includes positive Qwen input, hidden state, logits and all 56
+pre/post KV tensors; the selected token; positive/negative diffusion conditions,
+initial noise, all ten prediction-head inputs/outputs and the final latent;
+acoustic and semantic connector outputs; decoder input, PCM and all 34 pre/post
+cache tensors; and semantic input/output with all 34 pre/post cache tensors.
+Every tensor has stable shape/dtype/range metadata and an exact-byte SHA-256.
+
+The capture asserts Qwen, decoder, and semantic pre-state equals the preceding
+actual eager post-state. It also verifies contiguous indices, 3,200-sample
+boundaries, 64,000 samples total, and records per-chunk peak, RMS and dBFS. Raw
+`.pt` payloads total about 1.2 GiB per run and remain under ignored `artifacts/`.
+No deployment ABI is selected by this evidence capture.
+
+Run twice through the one global model-resource gate:
+
+```bash
+experiments/0002-vibevoice-1.5b-executorch-android/run-recurrent-capture.sh \
+  artifacts/0002/recurrent-calls-0-19/capture-1
+experiments/0002-vibevoice-1.5b-executorch-android/run-recurrent-capture.sh \
+  artifacts/0002/recurrent-calls-0-19/capture-2 \
+  artifacts/0002/recurrent-calls-0-19/capture-1
+```
+
+Copy only capture 2's `manifest.json` to the committed manifest path. The repeat
+matched every call's tensor metadata and hash; wall time and peak RSS are run
+observations and are intentionally outside the equality comparison.
 
 ## Acoustic decoder
 

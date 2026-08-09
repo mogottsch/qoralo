@@ -11,6 +11,7 @@ Complete with a negative feasibility conclusion. Individual fixed-shape componen
 ## Current tooling
 
 - [`export/capture_fixtures.py`](export/capture_fixtures.py) wraps the real streaming decode call and captures calls 0 and 1 with stable cache names.
+- [`export/capture_recurrent_trace.py`](export/capture_recurrent_trace.py) captures and validates the complete deterministic eager chain for recurrent calls 0–19; [`run-recurrent-capture.sh`](run-recurrent-capture.sh) is the required global resource-gated entry point and [`fixtures/recurrent-calls-0-19-manifest.json`](fixtures/recurrent-calls-0-19-manifest.json) preserves the hashes without committing 2.4 GiB of repeated raw evidence.
 - [`export/acoustic_decoder.py`](export/acoustic_decoder.py) constructs only `TokenizerDecoder` and reads only its tensors from the sharded checkpoint.
 - [`export/export_decoder.py`](export/export_decoder.py) exports a fixed `[1,64,1]` FP32 non-streaming operator-coverage probe to portable ExecuTorch or XNNPACK, with optional graph diagnostics and the verified causal-padding rewrite.
 - [`export/validate_pte.py`](export/validate_pte.py) executes a PTE with its saved input and writes a structured numerical comparison even when the runtime fails.
