@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "status": "precise_failure",
+  "scope": "complete accepted ExecuTorch 1.2 XNNPACK/INT8 build using the locked reference inputs",
+  "protocol": {
+    "sequence": "force-stop; cold process run; force-stop; 15 second idle; warm-filesystem-cache process run",
+    "cold_definition": "new app process after force-stop; Linux page cache cannot be dropped without root",
+    "warm_definition": "new app process with deployed model files and filesystem cache retained",
+    "locked_reference_preflight": "passed",
+    "repetitions": 2
+  },
+  "size": {
+    "apk_path": "experiments/0002-vibevoice-1.5b-executorch-android/android/app/build/outputs/apk/debug/app-debug.apk",
+    "apk_bytes": 15037213,
+    "apk_sha256": "8a468f34600d6aa65efcde3e29b5998eff82332211fd05c48641b0c827bea9b5",
+    "module_count": 80,
+    "module_bytes": 9121176676,
+    "exact_duplicate_groups": 0,
+    "exact_duplicate_bytes": 0,
+    "duplication_method": "files grouped by full-file SHA-256; shared weights inside non-identical PTEs are not inferred",
+    "apk_plus_modules_bytes": 9136213889,
+    "deployed_module_bytes": 11874976724,
+    "deployed_excess_bytes": 2753800048,
+    "deployed_size_note": "files/models may contain packages from earlier component probes; accepted-build totals use only the locked 80-file manifest"
+  },
+  "runs": [
+    {
+      "protocol_run": "cold",
+      "status": "capacity_terminated",
+      "audio_samples": 6400,
+      "audio_duration_seconds": 0.26666666666666666,
+      "generation_seconds": 26.005334625,
+      "protocol_wall_seconds": 55.575919871,
+      "rtf": 97.52000484375,
+      "ttfa_seconds": 11.018906140999999,
+      "ttfa_definition": "Qwen prefill + first diffusion + first acoustic decode; first PCM becomes available at decode return",
+      "component_seconds": {
+        "qwen_prefill": 6.654842862,
+        "qwen_decode": 5.348606561,
+        "diffusion": 4.18125979,
+        "acoustic_decoder": 4.725192915,
+        "semantic_encoder": 4.406321093000001,
+        "connectors": 0.035454792
+      },
+      "module_load_seconds": null,
+      "module_load_note": "The accepted controller mmaps and destroys each PTE inside component calls; its schema does not separate Module.load from forward time. Component values therefore include load overhead.",
+      "memory_kib": {
+        "rss": 433344,
+        "pss": 429039,
+        "vmhwm": 1654656
+      },
+      "stop_reason": "CAPACITY",
+      "wav_sha256": "f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9",
+      "pcm_sha256": "2c885ee3e0fcfb27e895301ce41352020cd71167b2218d272923eb7ed63f0447",
+      "tokens": [
+        151654,
+        151654,
+        151654
+      ],
+      "repeat_wav_sha256": "f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9",
+      "within_process_deterministic": true
+    },
+    {
+      "protocol_run": "warm",
+      "status": "capacity_terminated",
+      "audio_samples": 6400,
+      "audio_duration_seconds": 0.26666666666666666,
+      "generation_seconds": 28.339931187,
+      "protocol_wall_seconds": 59.899974203,
+      "rtf": 106.27474195125001,
+      "ttfa_seconds": 11.915484006,
+      "ttfa_definition": "Qwen prefill + first diffusion + first acoustic decode; first PCM becomes available at decode return",
+      "component_seconds": {
+        "qwen_prefill": 7.191921612,
+        "qwen_decode": 6.008730153,
+        "diffusion": 4.541938696,
+        "acoustic_decoder": 5.0369441120000005,
+        "semantic_encoder": 4.8061256750000005,
+        "connectors": 0.044205729
+      },
+      "module_load_seconds": null,
+      "module_load_note": "The accepted controller mmaps and destroys each PTE inside component calls; its schema does not separate Module.load from forward time. Component values therefore include load overhead.",
+      "memory_kib": {
+        "rss": 494760,
+        "pss": 481858,
+        "vmhwm": 1668384
+      },
+      "stop_reason": "CAPACITY",
+      "wav_sha256": "f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9",
+      "pcm_sha256": "2c885ee3e0fcfb27e895301ce41352020cd71167b2218d272923eb7ed63f0447",
+      "tokens": [
+        151654,
+        151654,
+        151654
+      ],
+      "repeat_wav_sha256": "f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9",
+      "within_process_deterministic": true
+    }
+  ],
+  "summary": {
+    "median_generation_seconds": 27.172632906,
+    "median_ttfa_seconds": 11.4671950735,
+    "median_rtf": 101.8973733975,
+    "cross_process_deterministic": true,
+    "wav_sha256": "f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9"
+  },
+  "device": {
+    "manufacturer": "samsung",
+    "model": "SM-S918B",
+    "device": "dm3q",
+    "soc": "SM8550",
+    "android_release": "16",
+    "api_level": 36,
+    "abi": "arm64-v8a",
+    "build_fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+    "kernel": "5.15"
+  },
+  "runtime": {
+    "executorch": "1.2.0",
+    "backend": "xnnpack",
+    "qwen_precision": "int8",
+    "other_precision": "fp32"
+  },
+  "thermal": {
+    "before": {
+      "battery_temperature_c": 35.0,
+      "thermalservice_sha256": "42d3df2960593e499f874e7a0141f473de90e3fc594479d6ba8ba493330e0c89",
+      "thermalservice_path": "artifacts/0002/lane-d/complete-build-measurement/thermal-before.txt",
+      "battery_path": "artifacts/0002/lane-d/complete-build-measurement/battery-before.txt"
+    },
+    "after": {
+      "battery_temperature_c": 36.5,
+      "thermalservice_sha256": "eb949920277695841bf1275dc192ed27e6275a030a9f12e3c9c18e27777e24a9",
+      "thermalservice_path": "artifacts/0002/lane-d/complete-build-measurement/thermal-after.txt",
+      "battery_path": "artifacts/0002/lane-d/complete-build-measurement/battery-after.txt"
+    }
+  },
+  "failure": {
+    "stage": "locked reference generation",
+    "reason": "Both accepted static-cache ABIs stop at CAPACITY after two 3,200-sample chunks; a third cached call cannot accept the widened cache tensors.",
+    "requested_samples": 313600,
+    "produced_samples": 6400,
+    "requested_duration_seconds": 13.066666666666666,
+    "produced_duration_seconds": 0.26666666666666666,
+    "complete_locked_run": false,
+    "metrics_not_available": [
+      "complete-transcript duration",
+      "complete-transcript wall time",
+      "complete-transcript RTF",
+      "separately instrumented module load time"
+    ]
+  },
+  "hashes": {
+    "package_aggregate_sha256": "d1831eafb11f1cbdec66d43a9e2e84d168b0b8f369e72661b8cac63ba525961d",
+    "locked_reference_wav_sha256": "fb0152dc686836fe23d9c39c3b24c1de82398f51b9747f5e36ad1db819ce0358"
+  },
+  "implementation_commits": [
+    "78cb1f664788b6390e0de6c3db4c1067c197122f"
+  ],
+  "commands": [
+    "flock artifacts/locks/phone.lock experiments/0002-vibevoice-1.5b-executorch-android/android/measure-complete-build.sh",
+    "python3 -m unittest discover -s experiments/0002-vibevoice-1.5b-executorch-android/tests -p test_complete_build_measurement.py",
+    "python3 -m json.tool experiments/0002-vibevoice-1.5b-executorch-android/results/complete-build-xnnpack.json >/dev/null"
+  ],
+  "conclusion": "Precise reproducible failure: cold and warm accepted-build runs are byte-identical, but both terminate at the exported two-chunk static-cache capacity. The measured 0.266667 s prefix is therefore not a complete-build performance claim; complete-transcript TTFA, duration, wall time, and RTF cannot be accepted until the cache ABI is re-exported."
+}
