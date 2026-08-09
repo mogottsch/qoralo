@@ -21,7 +21,6 @@ Complete with a negative feasibility conclusion. Individual fixed-shape componen
 - [`export/validate_streaming_sequence.py`](export/validate_streaming_sequence.py) chains actual call-0 cache outputs into call 1, validates PCM plus all updated caches, and checks deterministic host repeats.
 - [`export/run_streaming_decoder_fp16_host.sh`](export/run_streaming_decoder_fp16_host.sh) reproduces decoder-only FP16 exports and host validation while sampling VmHWM/PSS.
 - [`export/summarize_streaming_fp16.py`](export/summarize_streaming_fp16.py) rebuilds the committed FP16 structured result from ignored benchmark artifacts.
-- [`export/probe_multimethod_external_constants.py`](export/probe_multimethod_external_constants.py) runs the synthetic ExecuTorch 1.2 multi-method/shared-weight and PTD capability probe without loading VibeVoice or using a phone.
 - [`export/capture_diffusion_fixture.py`](export/capture_diffusion_fixture.py) captures the first real CFG prediction-head invocation from the locked reference and stops before scheduler iteration.
 - [`export/diffusion_head.py`](export/diffusion_head.py) loads only prediction-head checkpoint tensors and defines the four-input FP32 ABI.
 - [`export/export_diffusion_step.py`](export/export_diffusion_step.py) exports the fixed CFG prediction to portable ExecuTorch or XNNPACK.
@@ -52,22 +51,6 @@ Complete with a negative feasibility conclusion. Individual fixed-shape componen
 - [`results/qwen2-backbone-host.json`](results/qwen2-backbone-host.json) records the passing real exports and the preserved host numerical failure.
 
 The initial non-streaming `.pte` remains the Android operator-coverage baseline. Streaming uses separate first and cached entry sets with eight stage-aligned segments because the monolithic streaming graph terminates the host runtime.
-
-## Multi-method and external-constant capability probe
-
-[`results/executorch-multimethod-external-constants.json`](results/executorch-multimethod-external-constants.json) records the bounded synthetic diagnostic. It used ExecuTorch 1.2.0, PyTorch 2.11.0+cpu, Python 3.11.13, and FlatBuffers compiler 24.3.25. The two methods share one deterministic 65,536-byte FP32 weight payload and return distinct values, so both method selection and constant reuse are observable.
-
-```bash
-ulimit -c 0
-artifacts/venv-executorch-1.2/bin/python \
-  experiments/0002-vibevoice-1.5b-executorch-android/export/probe_multimethod_external_constants.py
-```
-
-The inline portable result passed both host methods exactly. Two independent PTEs total 134,408 bytes; one two-method PTE is 68,500 bytes, only 1,296 bytes larger than the mean single-method PTE. Thus phase-specific warm-up methods can share serialized constants rather than multiplying full weights.
-
-XNNPACK externalization also produced a working two-method 2,816-byte PTE plus one 65,792-byte `shared-weights.ptd`; both methods ran through the private `_load_for_executorch(pte_path, ptd_path)` binding. It is **not compatible with the current application runtime path**: public Python `Runtime.load_program` has no data-path argument and executing the PTE without PTD terminates this build with `SIGSEGV`; inspection of the cached `org.pytorch:executorch-android:1.2.0` API shows only one-path `Module.load(...)` overloads and no PTD/data-loader parameter. No device run was warranted. Use the inline multi-method PTE for the warm-up ABI and defer PTD until the public host and Android APIs explicitly accept external data.
-
-All generated PTEs, PTDs, and logs remain under ignored `artifacts/0002/executorch-capability-probe/`.
 
 ## FP32 host result
 
