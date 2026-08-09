@@ -78,6 +78,14 @@ def test_silence_makes_alignment_and_spectrum_unavailable() -> None:
     assert spectrum["centroid_hz"] is None
 
 
+def test_quantization_residue_makes_spectrum_unavailable() -> None:
+    residue = np.full(6400, 1.0 / 32768.0)
+    spectrum = comparison.spectral_stats(residue, 24_000)
+
+    assert spectrum["status"] == "insufficient_energy"
+    assert spectrum["band_energy_fraction"] is None
+
+
 def test_spectral_stats_locate_tone() -> None:
     samples = np.sin(2 * np.pi * 1000 * np.arange(24_000) / 24_000)
     result = comparison.spectral_stats(samples, 24_000)

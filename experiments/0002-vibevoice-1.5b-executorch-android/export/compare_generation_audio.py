@@ -19,6 +19,7 @@ REFERENCE_SHA256 = "fb0152dc686836fe23d9c39c3b24c1de82398f51b9747f5e36ad1db819ce
 REFERENCE_SAMPLES = 313_600
 SAMPLE_RATE = 24_000
 SPEECH_RMS_DBFS = -50.0
+MIN_ANALYSIS_RMS = 1e-4  # -80 dBFS; lower signals are quantization residue.
 
 
 @dataclass(frozen=True)
@@ -122,7 +123,8 @@ def waveform_stats(samples: np.ndarray) -> dict[str, Any]:
 
 
 def spectral_stats(samples: np.ndarray, sample_rate: int) -> dict[str, Any]:
-    if samples.size < 2 or not np.any(samples):
+    rms = float(np.sqrt(np.mean(np.square(samples)))) if samples.size else 0.0
+    if samples.size < 2 or rms < MIN_ANALYSIS_RMS:
         return {"status": "insufficient_energy", "centroid_hz": None, "rolloff_95_hz": None, "flatness": None, "band_energy_fraction": None}
     windowed = samples * np.hanning(samples.size)
     power = np.square(np.abs(np.fft.rfft(windowed)))
@@ -154,7 +156,7 @@ def alignment(reference: np.ndarray, candidate: np.ndarray, sample_rate: int) ->
     candidate_rms = math.sqrt(candidate_energy / candidate.size) if candidate.size else 0.0
     # Below -80 dBFS, cross-correlation is dominated by quantization residue and
     # must not be presented as meaningful waveform alignment.
-    if not reference.size or not candidate.size or ref_rms < 1e-4 or candidate_rms < 1e-4:
+    if not reference.size or not candidate.size or ref_rms < MIN_ANALYSIS_RMS or candidate_rms < MIN_ANALYSIS_RMS:
         return {"status": "insufficient_energy", "lag_samples": None, "lag_seconds": None, "normalized_cross_correlation": None, "overlap_samples": 0}
 
     # FFT convolution computes cross-correlation at every possible overlap. Per-lag
@@ -247,6 +249,13 @@ def build_result(args: argparse.Namespace) -> dict[str, Any]:
         "listening_notes": args.listening_notes,
     }
     accepted = all(quality[name]["status"] == "pass" for name in ("omissions", "repetitions", "corruption", "speaker_consistency"))
+    commit_flags = " ".join(f"--commit {commit}" for commit in args.commit)
+    comparison_command = (
+        f"python3 {Path(__file__).relative_to(ROOT)} --reference {args.reference} "
+        f"--android {args.android} --step35 {args.step35} "
+        f"--android-sha256 {args.android_sha256} --android-samples {args.android_samples} "
+        f"{commit_flags} --output {args.output}"
+    )
     return {
         "schema_version": 1,
         "status": "passed" if accepted else "rejected",
@@ -266,7 +275,7 @@ def build_result(args: argparse.Namespace) -> dict[str, Any]:
         "intermediate_evidence": evidence,
         "implementation_commits": args.commit,
         "commands": [
-            "python3 experiments/0002-vibevoice-1.5b-executorch-android/export/compare_generation_audio.py --reference artifacts/0001/output-cpu/reference_generated.wav --android artifacts/0002/lane-d/locked-reference/generation-run-0.wav --step35 experiments/0002-vibevoice-1.5b-executorch-android/results/locked-reference-android.json --android-sha256 f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9 --android-samples 6400 --commit <implementation-commit> --output experiments/0002-vibevoice-1.5b-executorch-android/results/locked-reference-comparison.json",
+            comparison_command,
             "artifacts/venv-executorch-1.2/bin/python -m pytest -q experiments/0002-vibevoice-1.5b-executorch-android/tests/test_compare_generation_audio.py",
             "python3 -m json.tool experiments/0002-vibevoice-1.5b-executorch-android/results/locked-reference-comparison.json >/dev/null",
         ],
