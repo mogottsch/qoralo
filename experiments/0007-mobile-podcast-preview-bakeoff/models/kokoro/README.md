@@ -55,3 +55,15 @@ The library yields mono `torch.float32` waveform tensors at 24,000 Hz. Its offic
 Kokoro inference samples excitation noise (`torch.rand`, `torch.randn_like`) and exposes no generator/seed argument. Reproducibility therefore requires setting `torch.manual_seed(0)` immediately before every generation and enabling deterministic PyTorch algorithms. CPU execution, the locked environment, exact local artifacts, text, voice, language `a`, speed, and chunking must remain fixed. Task 8 must render twice in fresh processes and compare raw hashes; a mismatch is a reproducibility blocker, not permission to publish one run. The setup smoke records the controls but intentionally defers this full generation repeat check.
 
 The documented `speed` control defaults to 1.0. It changes predicted durations without time-stretching. Task 8 may use it only according to the shared short-output procedure and must record the value. No transcript other than `protocol/transcript.txt` is accepted.
+
+## Accepted preview (task 8)
+
+Run from the experiment directory:
+
+```bash
+models/kokoro/generate_preview.sh
+```
+
+The wrapper obtains one atomic `generation-kokoro` grant and holds it across two fresh-process CPU renders. It refuses direct loading, transcript or pinned-file drift, an absent isolated environment, missing eSpeak resources, and an existing write-once output directory. Generation is network-offline and uses the documented `speed=0.85` duration control; it does not time-stretch audio.
+
+The accepted capture produced 17.175 seconds of native 24 kHz mono float32 audio. Both fresh processes produced SHA-256 `f017a389081ab7cce7f091e0e00f60400971fb06f370d8c1b7e068baf2fcd172`. The ignored native files and exact 15-second normalized WAV are under `artifacts/previews/kokoro/`; the committed measurements and hashes are in `results/kokoro-preview.json`. Re-running intentionally requires moving the existing ignored output aside rather than overwriting raw evidence.

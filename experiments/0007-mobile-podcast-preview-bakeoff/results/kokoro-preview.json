@@ -1,0 +1,137 @@
+{
+  "command": [
+    "models/kokoro/generate_preview.sh"
+  ],
+  "conclusion": "Accepted host listening preview only; this result does not establish Android feasibility.",
+  "forbidden_transformations_used": [],
+  "memory": {
+    "baseline_rss_bytes": 107315200,
+    "peak_process_tree_rss_bytes": 1706225664,
+    "sample_interval_ms": 20
+  },
+  "model": "kokoro",
+  "normalized": {
+    "artifact_path": "artifacts/previews/kokoro/normalized/kokoro-15s.wav",
+    "byte_count": 720044,
+    "channels": 1,
+    "derivation_metadata_path": "artifacts/previews/kokoro/normalized/kokoro-15s.derivation.json",
+    "duration_seconds": 15.0,
+    "sample_count": 360000,
+    "sample_format": "PCM_S16LE",
+    "sample_rate_hz": 24000,
+    "sha256": "a798ace33db2befb84cd05ba4f1bb47fd803123470c0a2864b36b299c986f208",
+    "statistics": {
+      "integrated_loudness_lufs": -20.00000174629756,
+      "peak": 0.791351318359375,
+      "peak_dbfs": -2.032613395733472,
+      "rms": 0.09756722410517006,
+      "rms_dbfs": -20.213921019798494
+    }
+  },
+  "protocol": {
+    "protocol_fingerprint": "ef3dee72094c78514b4e590e944ffaa1ab61f57bd0cbd44da2f395d4cb93aa8e",
+    "protocol_id": "mobile-podcast-preview",
+    "protocol_version": 1,
+    "transcript_sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67"
+  },
+  "provenance": {
+    "determinism": {
+      "claim": "Bit-identical fresh-process repeats on this pinned CPU environment; no cross-platform bit-exact claim.",
+      "fresh_process_repeat_count": 2,
+      "global_torch_seed": 0,
+      "raw_hashes_match": true,
+      "seed_api_supported": false,
+      "set_immediately_before_each_generation": true,
+      "torch_deterministic_algorithms": true
+    },
+    "download_bytes_during_generation": 0,
+    "environment": {
+      "device": "cpu",
+      "kokoro": "0.9.4",
+      "numpy": "2.4.6",
+      "python": "3.11.13",
+      "torch": "2.6.0+cpu"
+    },
+    "model_bytes": 327212226,
+    "model_repository": "hexgrad/Kokoro-82M",
+    "model_revision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+    "phonemizer": {
+      "data": "/usr/share/espeak-ng-data",
+      "espeak_ng": "eSpeak NG text-to-speech: 1.52.0  Data at: /usr/share/espeak-ng-data",
+      "implementation": "misaki English G2P with eSpeak NG out-of-dictionary fallback",
+      "library": "libespeak-ng.so.1",
+      "phoneme_character_count": 233,
+      "phoneme_sha256": "7c7299c2d19943162b5bc85cebe116d16e534f336ac5bcb4fce40fe126a8b3a0",
+      "requirements": "espeak-ng executable, libespeak-ng, and espeak-ng-data; no privileged installation performed"
+    },
+    "resource_grant": {
+      "atomic": true,
+      "kind": "generation-kokoro",
+      "policy_version": 2,
+      "task": "task-8"
+    },
+    "source_package": "kokoro",
+    "source_package_version": "0.9.4",
+    "source_revision": "dfb907a02bba8152ca444717ca5d78747ccb4bec",
+    "source_url": "https://github.com/hexgrad/kokoro.git",
+    "source_wheel_sha256": "a129dc6364a286bd6a92c396e9862459d3d3e45f2c15596ed5a94dcee5789efd",
+    "stock_voice_bytes": 523425,
+    "total_pinned_resource_bytes": 327738002
+  },
+  "raw": {
+    "anomalies": [
+      "The non-streaming API yielded the transcript as one audio result, so API-first-output latency equals full utterance inference latency."
+    ],
+    "artifact_path": "artifacts/previews/kokoro/raw/kokoro-native-run-1.f32le",
+    "byte_count": 1648800,
+    "channels": 1,
+    "chunk_count": 1,
+    "chunk_samples": [
+      412200
+    ],
+    "derivation_carrier_path": "artifacts/previews/kokoro/raw/kokoro-native-pcm32.wav",
+    "derivation_carrier_sha256": "6fd7a4ecda89c968e2d9882c6354b86385aebb4624c475001bcbdb293fc75f91",
+    "duration_seconds": 17.175,
+    "output_format": "headerless little-endian IEEE float32 PCM (native library tensor bytes)",
+    "preserved_unchanged": true,
+    "repeat_artifact_path": "artifacts/previews/kokoro/raw/kokoro-native-run-2.f32le",
+    "repeat_sha256": "f017a389081ab7cce7f091e0e00f60400971fb06f370d8c1b7e068baf2fcd172",
+    "repeat_timing": {
+      "api_first_output_seconds": 6.808841368000685,
+      "first_audible_output_seconds": 7.158841368000685,
+      "generation_wall_seconds": 6.808865254000011,
+      "rtf": 0.39644048058224224
+    },
+    "sample_count": 412200,
+    "sample_rate_hz": 24000,
+    "sha256": "f017a389081ab7cce7f091e0e00f60400971fb06f370d8c1b7e068baf2fcd172",
+    "statistics": {
+      "integrated_loudness_lufs": -25.41240950169372,
+      "peak": 0.4300479590892792,
+      "peak_dbfs": -7.329662181134099,
+      "rms": 0.05180753640904961,
+      "rms_dbfs": -25.71214118239652
+    }
+  },
+  "schema_version": 1,
+  "speed_control": {
+    "documented": true,
+    "note": "KPipeline speed duration control; not time stretching. Chosen before accepted capture so the frozen 36-word input exceeds 15 seconds.",
+    "setting": 0.85
+  },
+  "status": "accepted",
+  "timing": {
+    "api_first_output_seconds": 6.787701745000049,
+    "first_audible_output_seconds": 7.137701745000049,
+    "generation_wall_seconds": 6.787726468999608,
+    "rtf": 0.39520969251817223
+  },
+  "voice": {
+    "cloning_performed": false,
+    "language": "American English",
+    "name": "af_heart",
+    "overall_grade": "A",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M/blob/f3ff3571791e39611d31c381e3a41a3af07b4987/VOICES.md",
+    "stock_voice": true
+  }
+}
