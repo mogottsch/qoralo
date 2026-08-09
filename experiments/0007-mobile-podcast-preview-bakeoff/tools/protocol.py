@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_MANIFEST = ROOT / "protocol" / "preview-protocol-v1.json"
+DEFAULT_MANIFEST = ROOT / "protocol" / "preview-protocol-v2.json"
 PREVIEW_REVISION_RESET_TASKS = ("task-6", "task-7", "task-8", "task-16", "task-17", "task-18")
 
 

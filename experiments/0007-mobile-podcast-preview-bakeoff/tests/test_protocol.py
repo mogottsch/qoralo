@@ -14,7 +14,8 @@ import protocol
 def test_transcript_is_frozen_and_in_range():
     manifest = protocol.load_protocol()
     assert manifest["transcript_word_count"] == 36
-    assert manifest["transcript_sha256"] == "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67"
+    assert manifest["protocol_version"] == 2
+    assert manifest["transcript_sha256"] == "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f"
 
 
 def test_manifest_and_result_schemas_are_valid():
