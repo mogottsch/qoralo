@@ -1,0 +1,561 @@
+{
+  "schema_version": 2,
+  "status": "passed",
+  "scope": "recurrent Android generation toward a three-to-five-second target",
+  "provenance": {
+    "source_revision": "6dd49cb7200c0367205a5f1e650244259e9e423d",
+    "model_revision": "c00898d257e6b46004e3e2866a47534085fb685a",
+    "seed": 42,
+    "cfg": 1.3
+  },
+  "actual_output_chaining": true,
+  "fixture_intermediate_substitution": false,
+  "state_progression": {
+    "qwen_cache_count": 56,
+    "decoder_cache_count": 34,
+    "semantic_cache_count": 34,
+    "diffusion_steps_per_chunk": 10,
+    "first_then_cached": true,
+    "exported_stream_capacity_chunks": 2,
+    "capacity_termination_reason": "call-1 cached outputs have wider static time axes than the call-1 PTE inputs; third-call execution is rejected rather than mutating cache state",
+    "device_runs": [
+      {
+        "valid_length": 505,
+        "chunks": 2,
+        "qwen_cache_progression": true,
+        "decoder_cache_progression": true,
+        "semantic_cache_progression": true
+      },
+      {
+        "valid_length": 505,
+        "chunks": 2,
+        "qwen_cache_progression": true,
+        "decoder_cache_progression": true,
+        "semantic_cache_progression": true
+      }
+    ]
+  },
+  "host_checkpoints": [
+    [
+      {
+        "chunk": 0,
+        "diffusion": {
+          "host_sha256": "32e55fa5f1da9dd7987eb5f8ed8fbf631841ea25455a5aa684d7a2c107396600",
+          "android_sha256": "521ea542492eb9ca0f567eae3e474b253c6003f01266a84aa1dc13dfb2c26401",
+          "finite": true,
+          "max_abs_error": 0.39147353172302246,
+          "mean_abs_error": 0.12715153396129608,
+          "mismatch_count": 64,
+          "strict_allclose": false,
+          "cosine_similarity": 0.9070356410633376,
+          "criterion": true
+        },
+        "decoder_pcm": {
+          "host_sha256": "cf2fbd32d0f1f8b0904e65bf0d26f55166125a7cc93bde7bdb7b740daefc72e6",
+          "android_sha256": "23d5f7c1008053c97bde2e14f63ee41190f32552f7fc88fc46d6fdbf61fcbfed",
+          "finite": true,
+          "max_abs_error": 1.4503311831504107e-06,
+          "mean_abs_error": 2.9792690980912084e-08,
+          "mismatch_count": 0,
+          "strict_allclose": true,
+          "cosine_similarity": 0.9989953395147898,
+          "criterion": true
+        },
+        "semantic_features": {
+          "host_sha256": "e588d86f35f4b54adf8b875a3fcf0f7967a568c0c9ef612962669f8005ea23e5",
+          "android_sha256": "4b9bf83dbeb601869a7bfb6c4a9d97f77e979e6dd6419ba554ed261b6014cae2",
+          "finite": true,
+          "max_abs_error": 0.001397848129272461,
+          "mean_abs_error": 0.00034218362998217344,
+          "mismatch_count": 60,
+          "strict_allclose": false,
+          "cosine_similarity": 0.9999999893506167,
+          "criterion": true
+        },
+        "connector_embedding": {
+          "host_sha256": "a186de27f417fce499132066d3eaa2531f1ecd22ea7c3603e43f0ddf1f24ec79",
+          "android_sha256": "cd52da555339958cfc03d67fc0c0f312bd6ae0fd7d898c5bedd75c5c731e4c51",
+          "finite": true,
+          "max_abs_error": 1.0696768760681152,
+          "mean_abs_error": 0.08619210869073868,
+          "mismatch_count": 1535,
+          "strict_allclose": false,
+          "cosine_similarity": 0.9759335213010655,
+          "criterion": true
+        },
+        "qwen_hidden": {
+          "host_sha256": "c06054f7359ae39f3ed9e43419e881976b60ca38f53819b70ef0e9727d78a816",
+          "android_sha256": "8e60ffb6f884e33e3239cc431ec9f613c1033975b5859bcaef97cfb9ef8b7823",
+          "finite": true,
+          "max_abs_error": 0.8883881568908691,
+          "mean_abs_error": 0.20187883079051971,
+          "mismatch_count": 1534,
+          "strict_allclose": false,
+          "cosine_similarity": 0.9833016924292729,
+          "criterion": true
+        },
+        "qwen_logits": {
+          "host_sha256": "eb79b1b959762ed8a0b633152b70671361418e83892f85f46f13a5a8d66c8402",
+          "android_sha256": "51496393f181603be13ea96121441fa60ed14de48fcdc22fb36ddf1e428c29ee",
+          "finite": true,
+          "max_abs_error": 0.8146466016769409,
+          "mean_abs_error": 0.10614756494760513,
+          "mismatch_count": 150912,
+          "strict_allclose": false,
+          "cosine_similarity": 0.9819930883385509,
+          "criterion": true
+        }
+      },
+      {
+        "chunk": 1,
+        "diffusion": {
+          "host_sha256": "82e864218635371ffbe4428f72049518c1f8f0efe0816d3e58d08eca5877aec7",
+          "android_sha256": "746c90eb36d584bb62dfbc9a42c2c246235125fbe4e6fe0e5fea9890d27e33fd",
+          "finite": true,
+          "max_abs_error": 0.0471469908952713,
+          "mean_abs_error": 0.01469341292977333,
+          "mismatch_count": 64,
+          "strict_allclose": false,
+          "cosine_similarity": 0.9773423780139523,
+          "criterion": true
+        },
+        "decoder_pcm": {
+          "host_sha256": "b485ec681ac644e60bc5540c492b42cc8532054cbbf6f741d0e596869f1ebced",
+          "android_sha256": "70a316ec6a831fa2740c17a7a52c270470fe10efe03ec993370c6f1e835277e2",
+          "finite": true,
+          "max_abs_error": 1.4827179484200315e-08,
+          "mean_abs_error": 1.3790456554474417e-09,
+          "mismatch_count": 0,
+          "strict_allclose": true,
+          "cosine_similarity": 0.9999068811199001,
+          "criterion": true
+        },
+        "semantic_features": {
+          "host_sha256": "c082a349351bf768213dfa6c97c797bbd8264a8f3cc9410883bcbe6516ca639f",
+          "android_sha256": "fd0ad33d94ac9989d422f5b9589bd62405af4c1b12b66bca5e01c33fde6baaa0",
+          "finite": true,
+          "max_abs_error": 0.0010704994201660156,
+          "mean_abs_error": 0.000367662898497656,
+          "mismatch_count": 53,
+          "strict_allclose": false,
+          "cosine_similarity": 0.9999999930874848,
+          "criterion": true
+        },
+        "connector_embedding": {
+          "host_sha256": "0352fc7156b5a85f7c52e30821cc583f92533d3a6847326816dcb88bb50180d9",
+          "android_sha256": "04be28d46436d26929d9ac54b70a12dee1dab0cf0cd6c706b1851555a900235f",
+          "finite": true,
+          "max_abs_error": 0.13919755816459656,
+          "mean_abs_error": 0.01658782921731472,
+          "mismatch_count": 1526,
+          "strict_allclose": false,
+          "cosine_similarity": 0.9995612970071382,
+          "criterion": true
+        },
+        "qwen_hidden": {
+          "host_sha256": "da6981a108b180d9de0df9a3f55980dc8ee9460dc9ae972b48072e7053d985f8",
+          "android_sha256": "571c2403ff2538429d9b7ce9de6c63075440200c0fac4a0dea1b005297470a00",
+          "finite": true,
+          "max_abs_error": 0.5858583450317383,
+          "mean_abs_error": 0.13417528569698334,
+          "mismatch_count": 1526,
+          "strict_allclose": false,
+          "cosine_similarity": 0.9924489134385776,
+          "criterion": true
+        },
+        "qwen_logits": {
+          "host_sha256": "4839a7a02c1578832f9c25c2724281091dedf12ae072e4167b7e9cacf02c5f28",
+          "android_sha256": "b30697846b5256b7c22e63a3af3b7d3899a51a0763413b3328e8cf5794f108a2",
+          "finite": true,
+          "max_abs_error": 0.5281922817230225,
+          "mean_abs_error": 0.0752841904759407,
+          "mismatch_count": 150609,
+          "strict_allclose": false,
+          "cosine_similarity": 0.9908852948712458,
+          "criterion": true
+        }
+      }
+    ],
+    [
+      {
+        "chunk": 0,
+        "diffusion": {
+          "host_sha256": "32e55fa5f1da9dd7987eb5f8ed8fbf631841ea25455a5aa684d7a2c107396600",
+          "android_sha256": "521ea542492eb9ca0f567eae3e474b253c6003f01266a84aa1dc13dfb2c26401",
+          "finite": true,
+          "max_abs_error": 0.39147353172302246,
+          "mean_abs_error": 0.12715153396129608,
+          "mismatch_count": 64,
+          "strict_allclose": false,
+          "cosine_similarity": 0.9070356410633376,
+          "criterion": true
+        },
+        "decoder_pcm": {
+          "host_sha256": "cf2fbd32d0f1f8b0904e65bf0d26f55166125a7cc93bde7bdb7b740daefc72e6",
+          "android_sha256": "23d5f7c1008053c97bde2e14f63ee41190f32552f7fc88fc46d6fdbf61fcbfed",
+          "finite": true,
+          "max_abs_error": 1.4503311831504107e-06,
+          "mean_abs_error": 2.9792690980912084e-08,
+          "mismatch_count": 0,
+          "strict_allclose": true,
+          "cosine_similarity": 0.9989953395147898,
+          "criterion": true
+        },
+        "semantic_features": {
+          "host_sha256": "e588d86f35f4b54adf8b875a3fcf0f7967a568c0c9ef612962669f8005ea23e5",
+          "android_sha256": "4b9bf83dbeb601869a7bfb6c4a9d97f77e979e6dd6419ba554ed261b6014cae2",
+          "finite": true,
+          "max_abs_error": 0.001397848129272461,
+          "mean_abs_error": 0.00034218362998217344,
+          "mismatch_count": 60,
+          "strict_allclose": false,
+          "cosine_similarity": 0.9999999893506167,
+          "criterion": true
+        },
+        "connector_embedding": {
+          "host_sha256": "a186de27f417fce499132066d3eaa2531f1ecd22ea7c3603e43f0ddf1f24ec79",
+          "android_sha256": "cd52da555339958cfc03d67fc0c0f312bd6ae0fd7d898c5bedd75c5c731e4c51",
+          "finite": true,
+          "max_abs_error": 1.0696768760681152,
+          "mean_abs_error": 0.08619210869073868,
+          "mismatch_count": 1535,
+          "strict_allclose": false,
+          "cosine_similarity": 0.9759335213010655,
+          "criterion": true
+        },
+        "qwen_hidden": {
+          "host_sha256": "c06054f7359ae39f3ed9e43419e881976b60ca38f53819b70ef0e9727d78a816",
+          "android_sha256": "8e60ffb6f884e33e3239cc431ec9f613c1033975b5859bcaef97cfb9ef8b7823",
+          "finite": true,
+          "max_abs_error": 0.8883881568908691,
+          "mean_abs_error": 0.20187883079051971,
+          "mismatch_count": 1534,
+          "strict_allclose": false,
+          "cosine_similarity": 0.9833016924292729,
+          "criterion": true
+        },
+        "qwen_logits": {
+          "host_sha256": "eb79b1b959762ed8a0b633152b70671361418e83892f85f46f13a5a8d66c8402",
+          "android_sha256": "51496393f181603be13ea96121441fa60ed14de48fcdc22fb36ddf1e428c29ee",
+          "finite": true,
+          "max_abs_error": 0.8146466016769409,
+          "mean_abs_error": 0.10614756494760513,
+          "mismatch_count": 150912,
+          "strict_allclose": false,
+          "cosine_similarity": 0.9819930883385509,
+          "criterion": true
+        }
+      },
+      {
+        "chunk": 1,
+        "diffusion": {
+          "host_sha256": "82e864218635371ffbe4428f72049518c1f8f0efe0816d3e58d08eca5877aec7",
+          "android_sha256": "746c90eb36d584bb62dfbc9a42c2c246235125fbe4e6fe0e5fea9890d27e33fd",
+          "finite": true,
+          "max_abs_error": 0.0471469908952713,
+          "mean_abs_error": 0.01469341292977333,
+          "mismatch_count": 64,
+          "strict_allclose": false,
+          "cosine_similarity": 0.9773423780139523,
+          "criterion": true
+        },
+        "decoder_pcm": {
+          "host_sha256": "b485ec681ac644e60bc5540c492b42cc8532054cbbf6f741d0e596869f1ebced",
+          "android_sha256": "70a316ec6a831fa2740c17a7a52c270470fe10efe03ec993370c6f1e835277e2",
+          "finite": true,
+          "max_abs_error": 1.4827179484200315e-08,
+          "mean_abs_error": 1.3790456554474417e-09,
+          "mismatch_count": 0,
+          "strict_allclose": true,
+          "cosine_similarity": 0.9999068811199001,
+          "criterion": true
+        },
+        "semantic_features": {
+          "host_sha256": "c082a349351bf768213dfa6c97c797bbd8264a8f3cc9410883bcbe6516ca639f",
+          "android_sha256": "fd0ad33d94ac9989d422f5b9589bd62405af4c1b12b66bca5e01c33fde6baaa0",
+          "finite": true,
+          "max_abs_error": 0.0010704994201660156,
+          "mean_abs_error": 0.000367662898497656,
+          "mismatch_count": 53,
+          "strict_allclose": false,
+          "cosine_similarity": 0.9999999930874848,
+          "criterion": true
+        },
+        "connector_embedding": {
+          "host_sha256": "0352fc7156b5a85f7c52e30821cc583f92533d3a6847326816dcb88bb50180d9",
+          "android_sha256": "04be28d46436d26929d9ac54b70a12dee1dab0cf0cd6c706b1851555a900235f",
+          "finite": true,
+          "max_abs_error": 0.13919755816459656,
+          "mean_abs_error": 0.01658782921731472,
+          "mismatch_count": 1526,
+          "strict_allclose": false,
+          "cosine_similarity": 0.9995612970071382,
+          "criterion": true
+        },
+        "qwen_hidden": {
+          "host_sha256": "da6981a108b180d9de0df9a3f55980dc8ee9460dc9ae972b48072e7053d985f8",
+          "android_sha256": "571c2403ff2538429d9b7ce9de6c63075440200c0fac4a0dea1b005297470a00",
+          "finite": true,
+          "max_abs_error": 0.5858583450317383,
+          "mean_abs_error": 0.13417528569698334,
+          "mismatch_count": 1526,
+          "strict_allclose": false,
+          "cosine_similarity": 0.9924489134385776,
+          "criterion": true
+        },
+        "qwen_logits": {
+          "host_sha256": "4839a7a02c1578832f9c25c2724281091dedf12ae072e4167b7e9cacf02c5f28",
+          "android_sha256": "b30697846b5256b7c22e63a3af3b7d3899a51a0763413b3328e8cf5794f108a2",
+          "finite": true,
+          "max_abs_error": 0.5281922817230225,
+          "mean_abs_error": 0.0752841904759407,
+          "mismatch_count": 150609,
+          "strict_allclose": false,
+          "cosine_similarity": 0.9908852948712458,
+          "criterion": true
+        }
+      }
+    ]
+  ],
+  "boundary_integrity": {
+    "method": "controller WAV PCM bytes equal byte-for-byte concatenation of each produced chunk; length equals chunks * 3,200 * 2",
+    "passed": true,
+    "missing_samples": 0,
+    "duplicated_samples": 0,
+    "reordered_samples": 0
+  },
+  "pcm": {
+    "samples": 6400,
+    "duration_seconds": 0.26666666666666666,
+    "sample_rate_hz": 24000,
+    "channels": 1,
+    "encoding": "PCM_S16LE",
+    "bytes": 12800,
+    "sha256": "2c885ee3e0fcfb27e895301ce41352020cd71167b2218d272923eb7ed63f0447",
+    "repeat_sha256": "2c885ee3e0fcfb27e895301ce41352020cd71167b2218d272923eb7ed63f0447",
+    "deterministic": true
+  },
+  "wav": {
+    "bytes": 12844,
+    "sha256": "f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9",
+    "riff_data_bytes": 12800,
+    "sample_rate_hz": 24000,
+    "channels": 1,
+    "bits_per_sample": 16
+  },
+  "per_chunk_and_total_timing": [
+    {
+      "run": 0,
+      "tokens": [
+        151654,
+        151654,
+        151654
+      ],
+      "stop_reason": "CAPACITY",
+      "valid_length": 505,
+      "audio_chunks": 2,
+      "elapsed_seconds": 26.837502073,
+      "chunks": [
+        {
+          "chunk": 0,
+          "sample_start": 0,
+          "sample_end_exclusive": 3200,
+          "diffusion_index": 0,
+          "diffusion_seconds": 2.328298437,
+          "decoder_seconds": 2.105995104,
+          "decoder_cache_input_count": 0,
+          "decoder_cache_output_count": 34,
+          "pcm_sha256": "db15cf299d3ba8ff800dc1eb60dd6e41a69d006f348ca4ca139daf56c9894406",
+          "semantic_seconds": 2.570945468,
+          "semantic_cache_input_count": 0,
+          "semantic_cache_output_count": 34,
+          "connector_seconds": 0.037904844,
+          "qwen_decode_position": 503,
+          "qwen_decode_seconds": 3.614100884,
+          "qwen_cache_input_count": 56,
+          "qwen_cache_output_count": 56
+        },
+        {
+          "chunk": 1,
+          "sample_start": 3200,
+          "sample_end_exclusive": 6400,
+          "diffusion_index": 1,
+          "diffusion_seconds": 2.061079375,
+          "decoder_seconds": 2.34612302,
+          "decoder_cache_input_count": 34,
+          "decoder_cache_output_count": 34,
+          "pcm_sha256": "56a43ef88ddfcd0f56f7dd973312c0e73d62f59655c01d7b4e59aaa3be8b3fb6",
+          "semantic_seconds": 2.325585728,
+          "semantic_cache_input_count": 34,
+          "semantic_cache_output_count": 34,
+          "connector_seconds": 0.096965208,
+          "qwen_decode_position": 504,
+          "qwen_decode_seconds": 2.212756301,
+          "qwen_cache_input_count": 56,
+          "qwen_cache_output_count": 56
+        }
+      ],
+      "prefill": {
+        "seconds": 6.542615466,
+        "cache_output_count": 56
+      },
+      "pcm_sha256": "2c885ee3e0fcfb27e895301ce41352020cd71167b2218d272923eb7ed63f0447",
+      "wav_sha256": "f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9",
+      "pcm_samples": 6400,
+      "boundary_samples_exact": true,
+      "qwen_cache_progression": true,
+      "decoder_cache_progression": true,
+      "semantic_cache_progression": true,
+      "rss_kib": 214784,
+      "pss_kib": 200239,
+      "vmhwm_kib": 1629944
+    },
+    {
+      "run": 1,
+      "tokens": [
+        151654,
+        151654,
+        151654
+      ],
+      "stop_reason": "CAPACITY",
+      "valid_length": 505,
+      "audio_chunks": 2,
+      "elapsed_seconds": 24.580036449,
+      "chunks": [
+        {
+          "chunk": 0,
+          "sample_start": 0,
+          "sample_end_exclusive": 3200,
+          "diffusion_index": 0,
+          "diffusion_seconds": 2.138815207,
+          "decoder_seconds": 2.176476457,
+          "decoder_cache_input_count": 0,
+          "decoder_cache_output_count": 34,
+          "pcm_sha256": "db15cf299d3ba8ff800dc1eb60dd6e41a69d006f348ca4ca139daf56c9894406",
+          "semantic_seconds": 2.016500937,
+          "semantic_cache_input_count": 0,
+          "semantic_cache_output_count": 34,
+          "connector_seconds": 0.024156615,
+          "qwen_decode_position": 503,
+          "qwen_decode_seconds": 2.857483124,
+          "qwen_cache_input_count": 56,
+          "qwen_cache_output_count": 56
+        },
+        {
+          "chunk": 1,
+          "sample_start": 3200,
+          "sample_end_exclusive": 6400,
+          "diffusion_index": 1,
+          "diffusion_seconds": 1.803355156,
+          "decoder_seconds": 2.373977708,
+          "decoder_cache_input_count": 34,
+          "decoder_cache_output_count": 34,
+          "pcm_sha256": "56a43ef88ddfcd0f56f7dd973312c0e73d62f59655c01d7b4e59aaa3be8b3fb6",
+          "semantic_seconds": 2.21548526,
+          "semantic_cache_input_count": 34,
+          "semantic_cache_output_count": 34,
+          "connector_seconds": 0.009746198,
+          "qwen_decode_position": 504,
+          "qwen_decode_seconds": 1.866207395,
+          "qwen_cache_input_count": 56,
+          "qwen_cache_output_count": 56
+        }
+      ],
+      "prefill": {
+        "seconds": 6.98041781,
+        "cache_output_count": 56
+      },
+      "pcm_sha256": "2c885ee3e0fcfb27e895301ce41352020cd71167b2218d272923eb7ed63f0447",
+      "wav_sha256": "f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9",
+      "pcm_samples": 6400,
+      "boundary_samples_exact": true,
+      "qwen_cache_progression": true,
+      "decoder_cache_progression": true,
+      "semantic_cache_progression": true,
+      "rss_kib": 476540,
+      "pss_kib": 472312,
+      "vmhwm_kib": 1632484
+    }
+  ],
+  "memory_kib": {
+    "rss_before": 93696,
+    "rss_after": 477004,
+    "pss_before": 30241,
+    "pss_after": 472546,
+    "vmhwm_before": 93696,
+    "vmhwm_after": 1632484
+  },
+  "host": {
+    "schema_version": 2,
+    "status": "passed",
+    "tokens": [
+      151654,
+      151654,
+      151654
+    ],
+    "stop_reason": "CAPACITY",
+    "prefill_seconds": 4.680711606999466,
+    "chunks": [
+      {
+        "chunk": 0,
+        "sample_start": 0,
+        "sample_end_exclusive": 3200,
+        "qwen_decode_position": 503,
+        "diffusion_seconds": 0.19161817799977143,
+        "decoder_seconds": 0.5177567770006135,
+        "semantic_seconds": 0.7071961459987506,
+        "connector_seconds": 0.006707063001158531,
+        "qwen_decode_seconds": 1.5217872410012205
+      },
+      {
+        "chunk": 1,
+        "sample_start": 3200,
+        "sample_end_exclusive": 6400,
+        "qwen_decode_position": 504,
+        "diffusion_seconds": 0.19800537700029963,
+        "decoder_seconds": 0.6761809719992016,
+        "semantic_seconds": 0.6521785429995361,
+        "connector_seconds": 0.006313022999165696,
+        "qwen_decode_seconds": 1.4535849599997164
+      }
+    ],
+    "total_seconds": 10.6120398869989,
+    "peak_rss_kib": 2550320,
+    "pcm": {
+      "samples": 6400,
+      "sha256": "2c885ee3e0fcfb27e895301ce41352020cd71167b2218d272923eb7ed63f0447"
+    },
+    "wav": {
+      "bytes": 12844,
+      "sha256": "f5c90fdf64f563d0aa97f0acfe04abc26943f35c1cb7d78730449283682f64c9",
+      "sample_rate_hz": 24000,
+      "channels": 1,
+      "sample_width_bytes": 2
+    }
+  },
+  "device": {
+    "manufacturer": "samsung",
+    "model": "SM-S918B",
+    "device": "dm3q",
+    "soc": "SM8550",
+    "android_release": "16",
+    "api_level": 36,
+    "abi": "arm64-v8a",
+    "build_fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys"
+  },
+  "runtime": {
+    "executorch": "1.2.0",
+    "backend": "xnnpack",
+    "qwen_precision": "int8",
+    "other_precision": "fp32"
+  },
+  "implementation_commits": [
+    "2f74c09a7c172d72a5e590fee71eee786101b6d8"
+  ],
+  "commands": [
+    "generation_multi_chunk_io.py prepare",
+    "generation_multi_chunk_io.py host",
+    "android/run-multi-chunk-generation-probe.sh"
+  ],
+  "conclusion": "Accepted valid termination: the Galaxy S23 Ultra produced two deterministic, correctly chained chunks with exact boundaries, then stopped CAPACITY at 0.266667 seconds because the fixed call-1 decoder/semantic exports cannot accept their wider outputs for call 2. The requested 3\u20135 seconds was not reached; no cache was truncated, padded, reset, duplicated, or reordered."
+}

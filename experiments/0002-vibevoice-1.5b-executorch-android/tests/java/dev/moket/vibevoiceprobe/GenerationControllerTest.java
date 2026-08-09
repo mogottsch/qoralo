@@ -108,7 +108,7 @@ public final class GenerationControllerTest {
         check(fake.diffusionCalls == 20 && fake.decoderCalls == 2 && fake.semanticCalls == 2 && fake.connectorCalls == 2, "component call counts");
         check(fake.decodeCalls == 4 && fake.lastDecodePosition == 5 && c.validLength() == 6, "decode positions");
         check(fake.lastQwenInput.length == 56 && String.valueOf(fake.lastQwenInput[0]).startsWith("decode4-"), "replacement Qwen cache transport");
-        check(c.pcmSamples() == 6400, "streamed sample count");
+        check(c.pcmSamples() == 6400 && c.audioChunkCount() == 2, "streamed sample and chunk count");
 
         byte[] wav = c.wav();
         check(new String(wav, 0, 4).equals("RIFF") && new String(wav, 8, 4).equals("WAVE"), "WAV magic");
@@ -154,6 +154,22 @@ public final class GenerationControllerTest {
         check(c.step().tokenId() == START, "selector and generation reset deterministically");
     }
 
+    private static void targetDurationTerminationPreservesBoundaries() {
+        FakeComponents fake = new FakeComponents(START, DIFFUSION, DIFFUSION);
+        GenerationController c = new GenerationController(config(12), fake, selector(8));
+        c.start(prompt()); c.step(); c.step(); c.step();
+        check(c.pcmSamples() == 6400 && c.audioChunkCount() == 2, "two contiguous chunks");
+        c.finishAtTarget();
+        check(c.state() == GenerationController.State.TERMINATED
+                && c.stopReason() == GenerationController.StopReason.TARGET_DURATION, "target termination");
+        byte[] wav = c.wav();
+        ByteBuffer h = ByteBuffer.wrap(wav).order(ByteOrder.LITTLE_ENDIAN);
+        check(h.getInt(40) == 12800 && wav.length == 12844, "target WAV has every boundary sample exactly once");
+        check(h.getShort(44 + 3200 * 2) == Short.MIN_VALUE,
+                "second chunk begins exactly at sample 3200");
+        expect(IllegalStateException.class, c::finishAtTarget);
+    }
+
     private static void selectorCapacityTermination() {
         FakeComponents fake = new FakeComponents(START);
         GenerationController c = new GenerationController(config(8), fake, selector(1));
@@ -166,6 +182,7 @@ public final class GenerationControllerTest {
         fullControlFlowTransportAndWav();
         invalidOrderCountsAndCapacity();
         failuresAndResetAreDeterministic();
+        targetDurationTerminationPreservesBoundaries();
         selectorCapacityTermination();
         System.out.println("GenerationControllerTest: passed");
     }

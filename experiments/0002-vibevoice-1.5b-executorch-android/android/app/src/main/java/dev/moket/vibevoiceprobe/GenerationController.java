@@ -14,7 +14,7 @@ import java.util.Objects;
  */
 public final class GenerationController {
     public enum State { IDLE, READY, GENERATING, TERMINATED, FAILED }
-    public enum StopReason { NONE, EOS, CAPACITY, FAILURE }
+    public enum StopReason { NONE, EOS, CAPACITY, TARGET_DURATION, FAILURE }
 
     public record Config(
             int cacheCapacity,
@@ -120,6 +120,7 @@ public final class GenerationController {
     private Object[] semanticCaches;
     private int validLength;
     private int diffusionIndex;
+    private int audioChunkCount;
     private int activeSpeakerId;
     private int speakerTransitions;
     private boolean inSpeech;
@@ -210,6 +211,13 @@ public final class GenerationController {
         }
     }
 
+    /** Terminates an active run after the harness has reached its requested audio duration. */
+    public void finishAtTarget() {
+        if (state != State.GENERATING || pcm.size() == 0)
+            throw new IllegalStateException("target termination requires generated audio");
+        terminate(StopReason.TARGET_DURATION);
+    }
+
     public byte[] wav() {
         if (state != State.TERMINATED) throw new IllegalStateException("WAV is available only after termination");
         byte[] data = pcm.toByteArray();
@@ -226,7 +234,7 @@ public final class GenerationController {
         pcm.reset();
         state = State.IDLE; stopReason = StopReason.NONE; qwen = null;
         decoderCaches = null; semanticCaches = null; negativeCondition = null;
-        validLength = 0; diffusionIndex = 0; activeSpeakerId = 0; speakerTransitions = 0;
+        validLength = 0; diffusionIndex = 0; audioChunkCount = 0; activeSpeakerId = 0; speakerTransitions = 0;
         inSpeech = false; failure = null;
     }
 
@@ -249,6 +257,7 @@ public final class GenerationController {
             short sample = (short) Math.round(bounded * (bounded < 0 ? 32768f : 32767f));
             pcm.write(sample & 0xff); pcm.write((sample >>> 8) & 0xff);
         }
+        audioChunkCount++;
     }
 
     private void terminate(StopReason reason) { state = State.TERMINATED; stopReason = reason; }
@@ -276,5 +285,6 @@ public final class GenerationController {
     public int speakerTransitions() { return speakerTransitions; }
     public boolean inSpeech() { return inSpeech; }
     public int pcmSamples() { return pcm.size() / 2; }
+    public int audioChunkCount() { return audioChunkCount; }
     public RuntimeException failure() { return failure; }
 }
