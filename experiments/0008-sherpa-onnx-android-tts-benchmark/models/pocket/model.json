@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "model_id": "pocket",
+  "display_name": "Pocket TTS 100M INT8 (packaged Bria reference)",
+  "archive": {
+    "id": "pocket",
+    "filename": "sherpa-onnx-pocket-tts-int8-2026-01-26.tar.bz2",
+    "root": "sherpa-onnx-pocket-tts-int8-2026-01-26",
+    "bytes": 98336520,
+    "sha256": "2f3b88823cbbb9bf0b2477ec8ae7b3fec417b3a87b6bb5f256dba66f2ad967cb"
+  },
+  "runtime": {
+    "sherpa_onnx_version": "1.13.5",
+    "sherpa_onnx_commit": "3dc7c569f31ca2cd4a20ed6f7db780327e6714c5",
+    "model_root_kind": "app_specific_external_files",
+    "provider": "cpu",
+    "num_threads": 1,
+    "sample_rate_hz": 24000,
+    "generation": {
+      "num_steps": 5
+    }
+  },
+  "pocket": {
+    "lm_flow": "lm_flow.int8.onnx",
+    "lm_main": "lm_main.int8.onnx",
+    "encoder": "encoder.onnx",
+    "decoder": "decoder.int8.onnx",
+    "text_conditioner": "text_conditioner.onnx",
+    "vocab_json": "vocab.json",
+    "token_scores_json": "token_scores.json"
+  },
+  "voice": {
+    "requested_voice": "Alba",
+    "actual_reference": "test_wavs/bria.wav",
+    "actual_reference_sha256": "85f46d6f0642f657a6bd689ddaa52d5a5f53e4314715e1032704c80917392181",
+    "actual_reference_sample_rate_hz": 24000,
+    "voice_match": false,
+    "selection_reason": "The complete pinned archive inventory contains no provenance-verifiable Alba reference. The packaged bria.wav is used and is not represented as Alba."
+  },
+  "deployed_files": [
+    {"path": "decoder.int8.onnx", "bytes": 22693618, "sha256": "12b0857402d31aead94df19d6783b4350d1f740e811f3a3202c70ad89ae11eea"},
+    {"path": "encoder.onnx", "bytes": 72713165, "sha256": "e8f2f6d301ffb96e398b138a7dc6d3038622d236044636b73d920bab85890260"},
+    {"path": "lm_flow.int8.onnx", "bytes": 9962530, "sha256": "8d627d235c44a597da908e1085ebe241cbbe358964c502c5a5063d18851a5529"},
+    {"path": "lm_main.int8.onnx", "bytes": 76341079, "sha256": "bfc0c7e7e3d72864fa3bb2ee499f62f21ddc1474b885f5f3ca570f8be73e787e"},
+    {"path": "test_wavs/bria.wav", "bytes": 2152986, "sha256": "85f46d6f0642f657a6bd689ddaa52d5a5f53e4314715e1032704c80917392181"},
+    {"path": "text_conditioner.onnx", "bytes": 16388343, "sha256": "0b84e837d7bfaf2c896627b03e3f080320309f37f4fc7df7698c644f7ba5e6b1"},
+    {"path": "token_scores.json", "bytes": 123616, "sha256": "5be2f278caf9b9800741f0fd82bff677f4943ec764c356f907213434b622d958"},
+    {"path": "vocab.json", "bytes": 69478, "sha256": "6fb646346cf931016f70c4921aab0900ce7a304b893cb02135c74e294abfea01"}
+  ],
+  "license_evidence": {
+    "disposition": "research_only_unresolved",
+    "non_commercial_statement": {
+      "path": "evidence/archive-README.md",
+      "sha256": "2d05e627fe4fa3c625e822efcd20ad2ca62eb3b4fc1d67ae2625cb106b4f689c",
+      "verbatim_archive_path": "README.md"
+    },
+    "bundled_license": {
+      "path": "evidence/LICENSE",
+      "spdx": "CC-BY-4.0",
+      "sha256": "fe7b4ce83b8381cc5b216bbb4af73c570688d1b819c73bbaed8ca401f4677cd6",
+      "verbatim_archive_path": "LICENSE"
+    },
+    "note": "Both conflicting upstream artifacts are retained verbatim; this experiment does not interpret or resolve them."
+  },
+  "conversion_provenance": {
+    "repository": "https://github.com/k2-fsa/sherpa-onnx.git",
+    "revision": "3dc7c569f31ca2cd4a20ed6f7db780327e6714c5",
+    "archive_readme_export_repository": "https://github.com/KevinAHM/pocket-tts-onnx-export",
+    "sources": [
+      {"path": ".github/workflows/export-pocket-tts.yaml", "git_blob_sha1": "9c41026e9e0fbe83b300e314c58db111c6b1058f", "bytes": 9184},
+      {"path": "scripts/pocket-tts/README.md", "git_blob_sha1": "f3f8bf5a3c0a325e99ab75ee2bb21b088cf67c38", "bytes": 465},
+      {"path": "scripts/pocket-tts/convert_tokenizer.py", "git_blob_sha1": "e694397ba277ec640bdf0182e6a86d8ef120cf0a", "bytes": 563},
+      {"path": "scripts/pocket-tts/test_tokenizer.py", "git_blob_sha1": "73c00bc0d7fa8a70af17ebff0d49e8a1f19f83ba", "bytes": 2779}
+    ]
+  },
+  "transcript": {
+    "path": "../../protocol/transcript.txt",
+    "sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f"
+  }
+}
