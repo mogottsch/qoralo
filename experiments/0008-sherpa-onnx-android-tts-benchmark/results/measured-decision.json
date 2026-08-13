@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "experiment": "0008",
+  "status": "complete",
+  "measured_on": {
+    "device": "Samsung Galaxy S23 Ultra SM-S918B",
+    "android_release": "16",
+    "provider": "cpu",
+    "canonical_threads": 1,
+    "sherpa_onnx": "v1.13.5",
+    "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
+    "preflight_manifest": "preflight/galaxy-s23-ultra.json",
+    "preflight_manifest_sha256": "50ed2130f25b2fc46b43877aad20c71004c247ba13ee221064505f56fb4dcfd6"
+  },
+  "canonical_one_thread": [
+    {
+      "candidate_id": "pocket",
+      "deployment_variant": "sherpa-onnx-pocket-tts-int8-2026-01-26",
+      "decision": "works_with_limitations",
+      "limitations": [
+        "Requested Alba is absent from the pinned package; the actual reference is packaged Bria and voice_match is false.",
+        "The package workflow describes non-commercial use while the bundled license says CC BY 4.0; production licensing is unresolved and this result is research-only.",
+        "No manual listening check was performed."
+      ],
+      "voice": {"requested": "Alba", "actual": "models/pocket/test_wavs/bria.wav", "voice_match": false},
+      "load_wall_seconds": 0.658703801,
+      "cold": {"wall_seconds": 5.873572602, "audio_seconds": 13.477583333333333, "rtf": 0.4358031003580019, "callback_seconds": 0.840355989},
+      "warm": [
+        {"wall_seconds": 5.208128905, "audio_seconds": 13.582375, "rtf": 0.3834475859339769, "callback_seconds": 0.567584479},
+        {"wall_seconds": 5.361987081, "audio_seconds": 13.796541666666666, "rtf": 0.38864718496483114, "callback_seconds": 0.602150364},
+        {"wall_seconds": 5.319549998, "audio_seconds": 13.668208333333334, "rtf": 0.3891914630117944, "callback_seconds": 0.565473698}
+      ],
+      "warm_median_rtf": 0.38864718496483114,
+      "audio": {"sample_rate_hz": 24000, "wav_count": 4, "all_valid_non_silent": true, "hash_behavior": "all four measured WAV hashes differ; nondeterministic within this campaign"},
+      "memory_bytes": {"boundary_pss": 683073536, "boundary_rss": 750899200, "sampled_peak_pss": 683577344, "sampled_peak_rss": 751423488, "vm_hwm_cumulative_process_lifetime": 751427584},
+      "thermal": {"status": "NONE", "pre_run_battery_temperature_c": 34.8, "campaign_baseline_c": 34.3, "eligible": true, "wait_seconds": 0},
+      "validation": "four WAVs fully decoded; frame/rate/duration and hashes agree; non-silent and unclipped; manual listening not performed",
+      "manifest": "results/pocket/one-thread-result.json",
+      "manifest_sha256": "9f3314e564eaa048f0da286843304bb33b054ca05f81eb41117f70c10f80778d"
+    },
+    {
+      "candidate_id": "kokoro",
+      "deployment_variant": "kokoro-multi-lang-v1_0",
+      "decision": "works_with_limitations",
+      "limitations": ["Canonical one-thread warm median RTF is above real time (1.195).", "No manual listening check was performed."],
+      "voice": {"requested": "af_heart", "actual": "SID 3 / af_heart", "voice_match": true},
+      "load_wall_seconds": 1.303446875,
+      "cold": {"wall_seconds": 15.780352494, "audio_seconds": 13.283166666666666, "rtf": 1.187996273027265, "callback_seconds": 6.197662133},
+      "warm": [
+        {"wall_seconds": 15.874169161, "audio_seconds": 13.287125, "rtf": 1.1947030799364047, "callback_seconds": 6.317446404},
+        {"wall_seconds": 15.88152265, "audio_seconds": 13.287625, "rtf": 1.1952115332875515, "callback_seconds": 6.351505153},
+        {"wall_seconds": 16.00240989, "audio_seconds": 13.282375, "rtf": 1.2047852804938874, "callback_seconds": 6.396253123}
+      ],
+      "warm_median_rtf": 1.1952115332875515,
+      "audio": {"sample_rate_hz": 24000, "wav_count": 4, "all_valid_non_silent": true, "hash_behavior": "all four measured WAV hashes differ; nondeterministic within this campaign"},
+      "memory_bytes": {"boundary_pss": 930004992, "boundary_rss": 994795520, "sampled_peak_pss": 929677312, "sampled_peak_rss": 994721792, "vm_hwm_cumulative_process_lifetime": 995078144},
+      "thermal": {"status": "NONE", "pre_run_battery_temperature_c": 34.5, "campaign_baseline_c": 34.3, "eligible": true, "wait_seconds": 0},
+      "validation": "four WAVs fully decoded; frame/rate/duration and hashes agree; non-silent and unclipped; manual listening not performed",
+      "manifest": "results/kokoro/one-thread-result.json",
+      "manifest_sha256": "12c7577cf923a747d285bdf7e1dab1a9c425cf55a76133ed262c864b1007192e"
+    },
+    {
+      "candidate_id": "supertonic_3",
+      "deployment_variant": "sherpa-onnx-supertonic-3-tts-int8-2026-05-11",
+      "decision": "works",
+      "limitations": ["No manual listening check was performed."],
+      "voice": {"requested": "M1", "actual": "SID 5 / M1, English", "voice_match": true},
+      "load_wall_seconds": 0.765107603,
+      "cold": {"wall_seconds": 6.378538487, "audio_seconds": 16.547528344671203, "rtf": 0.3854677480612432, "callback_seconds": 6.375935622},
+      "warm": [
+        {"wall_seconds": 6.118483331, "audio_seconds": 16.547528344671203, "rtf": 0.36975209853442154, "callback_seconds": 6.116845935},
+        {"wall_seconds": 6.127596872, "audio_seconds": 16.547528344671203, "rtf": 0.3703028479158501, "callback_seconds": 6.125928747},
+        {"wall_seconds": 6.169175154, "audio_seconds": 16.547528344671203, "rtf": 0.37281550606841285, "callback_seconds": 6.166955258}
+      ],
+      "warm_median_rtf": 0.3703028479158501,
+      "audio": {"sample_rate_hz": 44100, "wav_count": 4, "all_valid_non_silent": true, "hash_behavior": "all four measured WAV hashes differ despite equal frame counts; nondeterministic within this campaign"},
+      "memory_bytes": {"boundary_pss": 462550016, "boundary_rss": 530722816, "sampled_peak_pss": 463003648, "sampled_peak_rss": 531173376, "vm_hwm_cumulative_process_lifetime": 531345408},
+      "thermal": {"status": "NONE", "pre_run_battery_temperature_c": 34.3, "campaign_baseline_c": 34.3, "eligible": true, "wait_seconds": 0},
+      "validation": "four WAVs fully decoded; frame/rate/duration and hashes agree; non-silent and unclipped; manual listening not performed",
+      "manifest": "results/supertonic-3/one-thread-result.json",
+      "manifest_sha256": "6e621388e605fab250f86c01bf82fea713931f10c102f9ad77d9613e10287886"
+    }
+  ],
+  "optional_two_thread": [
+    {
+      "candidate_id": "kokoro",
+      "trigger": "canonical one-thread warm median RTF 1.1952115332875515 > 1.0",
+      "load_wall_seconds": 1.223663593,
+      "cold": {"wall_seconds": 12.192982131, "audio_seconds": 13.295625, "rtf": 0.917067240614864, "callback_seconds": 4.703377654},
+      "warm": [
+        {"wall_seconds": 12.790468068, "audio_seconds": 13.281208333333334, "rtf": 0.9630500288063648, "callback_seconds": 5.053592446},
+        {"wall_seconds": 12.963826298, "audio_seconds": 13.282916666666667, "rtf": 0.9759773868440039, "callback_seconds": 5.136576092},
+        {"wall_seconds": 12.554358277, "audio_seconds": 13.28375, "rtf": 0.9450914295285594, "callback_seconds": 4.97685255}
+      ],
+      "warm_median_rtf": 0.9630500288063648,
+      "sampled_peak_pss_bytes": 924597248,
+      "thermal": {"status": "NONE", "eligible_poll_temperature_c": 35.0, "campaign_baseline_c": 34.3, "cooldown_poll_temperatures_c": [35.6, 35.4, 35.0], "wait_seconds": 120},
+      "validation": "four WAVs valid and non-silent",
+      "manifest": "results/kokoro/two-thread-result.json",
+      "manifest_sha256": "bf0477901c8706dbc0051d301549b32719eca541d593da62a3c2fdbb313cb156"
+    }
+  ],
+  "campaign_disclosures": {
+    "fixed_order": ["pocket", "kokoro", "supertonic_3"],
+    "thermal": "Every canonical successful run began eligible at Android thermal status NONE. Battery temperatures were 34.8 C, 34.5 C, and 34.3 C against the 34.3 C baseline. No canonical cooldown wait occurred. Kokoro two-thread waited two 60-second intervals before eligibility at 35.0 C.",
+    "order_bias": "Order was fixed rather than randomized. Eligibility bounds reduce but do not eliminate order, charging, or residual thermal bias; cross-model differences must not be read as a randomized hardware study.",
+    "failures": "Before the successful campaigns, Pocket and Kokoro each reached cold synthesis and aborted with SIGABRT because the Kotlin callback bridge had the wrong JNI signature. Those retained native-crash manifests remain historical failure evidence; successful campaigns used the corrected concrete Java callback bridge.",
+    "listening": "Manual listening was not performed for any Android output.",
+    "variant_boundary": "These are Galaxy S23 Ultra sherpa-onnx Android CPU measurements of pinned INT8/ONNX deployment archives. Experiment 0007 measured different host PyTorch/model workflows and remains historical listening evidence; its timings are not comparable Android metrics."
+  },
+  "historical_only": ["vibevoice_realtime_0_5b", "inflect_nano_v1", "kitten_tts_mini_80m_v0_8"]
+}

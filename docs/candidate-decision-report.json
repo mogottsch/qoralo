@@ -1,7 +1,7 @@
 {
   "$schema": "candidate-decision-report.schema.json",
   "schema_version": 1,
-  "status": "experiment_0008_pending_device_measurement",
+  "status": "experiment_0008_complete",
   "subjective_listening": {
     "status": "partial_user_review",
     "ratings": {
@@ -114,19 +114,23 @@
       "reason": "Retired from active Android follow-up; experiment 0007 host listening evidence remains immutable."
     },
     "pocket_tts": {
-      "status": "selected_pending_experiment_0008_device_measurement",
-      "reason": "Pinned sherpa-onnx Android CPU deployment selected; no real-device metric exists yet.",
-      "evidence": "experiments/0008-sherpa-onnx-android-tts-benchmark/protocol/candidates.json"
+      "status": "works_with_limitations",
+      "reason": "Pinned Android INT8 deployment has one-thread warm median RTF 0.38864718496483114 and four valid WAVs, but packaged Bria replaced requested Alba (voice_match=false), licensing messaging is unresolved, and manual listening was not performed.",
+      "evidence": "experiments/0008-sherpa-onnx-android-tts-benchmark/results/pocket/one-thread-result.json",
+      "evidence_sha256": "9f3314e564eaa048f0da286843304bb33b054ca05f81eb41117f70c10f80778d"
     },
     "kokoro": {
-      "status": "selected_pending_experiment_0008_device_measurement",
-      "reason": "Pinned sherpa-onnx Android CPU deployment selected; no real-device metric exists yet.",
-      "evidence": "experiments/0008-sherpa-onnx-android-tts-benchmark/protocol/candidates.json"
+      "status": "works_with_limitations",
+      "reason": "Exact v1.0 SID 3/af_heart generated four valid WAVs, but canonical one-thread warm median RTF is 1.1952115332875515; the separate triggered two-thread median is 0.9630500288063648. Manual listening was not performed.",
+      "evidence": "experiments/0008-sherpa-onnx-android-tts-benchmark/results/kokoro/one-thread-result.json",
+      "evidence_sha256": "12c7577cf923a747d285bdf7e1dab1a9c425cf55a76133ed262c864b1007192e",
+      "optional_two_thread_evidence": "experiments/0008-sherpa-onnx-android-tts-benchmark/results/kokoro/two-thread-result.json"
     },
     "supertonic_3": {
-      "status": "selected_pending_experiment_0008_device_measurement",
-      "reason": "Pinned sherpa-onnx Android CPU deployment selected; no real-device metric exists yet.",
-      "evidence": "experiments/0008-sherpa-onnx-android-tts-benchmark/protocol/candidates.json"
+      "status": "works",
+      "reason": "Pinned INT8 SID 5/M1 English deployment has one-thread warm median RTF 0.3703028479158501, four valid WAVs, and sampled peak PSS 463003648 bytes. Manual listening was not performed.",
+      "evidence": "experiments/0008-sherpa-onnx-android-tts-benchmark/results/supertonic-3/one-thread-result.json",
+      "evidence_sha256": "6e621388e605fab250f86c01bf82fea713931f10c102f9ad77d9613e10287886"
     },
     "inflect_nano_v1": {
       "status": "historical_only",
@@ -169,38 +173,38 @@
   },
   "candidate_decisions": [
     {
-      "id": "measure_pocket_0008",
-      "label": "Measure Pocket pinned INT8 variant",
-      "gate": "Proceed only after host validation and current device readiness; canonical CPU/one-thread protocol applies."
+      "id": "use_supertonic_default",
+      "label": "Use pinned Supertonic 3 as the measured technical default",
+      "gate": "Product listening and license review remain required before production."
     },
     {
-      "id": "measure_kokoro_0008",
-      "label": "Measure exact Kokoro v1.0",
-      "gate": "Run second in fixed order only with pinned SID 3 to af_heart proof."
+      "id": "pocket_voice_license_review",
+      "label": "Resolve Pocket voice and license limitations",
+      "gate": "Do not call Bria Alba and do not infer production rights from the conflicting package statements."
     },
     {
-      "id": "measure_supertonic_0008",
-      "label": "Measure pinned Supertonic 3 INT8",
-      "gate": "Run third only with proven M1-equivalent speaker index; otherwise record blocked."
+      "id": "kokoro_thread_requirement",
+      "label": "Treat Kokoro real-time operation as a two-thread requirement",
+      "gate": "Canonical one-thread RTF remains authoritative; optional two-thread data stays separate."
     },
     {
-      "id": "optional_two_thread",
-      "label": "Run bounded two-thread comparison",
-      "gate": "Only for a successful model whose valid canonical warm median RTF is greater than 1.0."
+      "id": "manual_listening",
+      "label": "Perform product listening before shipping",
+      "gate": "Android WAV integrity passed, but no manual listening was performed."
     },
     {
-      "id": "publish_android_decision",
-      "label": "Publish measured Android decision",
-      "gate": "Only measured values and explicit unavailable reasons; never estimates."
+      "id": "retain_historical_boundary",
+      "label": "Keep retired candidates and experiment 0007 historical-only",
+      "gate": "Do not compare host PyTorch timing with Android deployment timing."
     }
   ],
-  "next_action": "Prepare and validate experiment 0008, then measure Pocket, Kokoro, and Supertonic in fixed order only after device readiness and thermal eligibility. VibeVoice Realtime, Inflect Nano v1, and Kitten TTS remain historical-only.",
+  "next_action": "Use Supertonic 3 as the measured technical default; perform product listening and licensing review before production. Pocket requires a voice/license decision, Kokoro requires two threads for measured real-time generation, and retired candidates remain historical-only.",
   "candidate_status": {
-    "selected_pending_experiment_0008_device_measurement": [
-      "pocket_tts_100m",
-      "kokoro_82m",
-      "supertonic_3"
-    ],
+    "experiment_0008_outcomes": {
+      "pocket_tts_100m": "works_with_limitations",
+      "kokoro_82m": "works_with_limitations",
+      "supertonic_3": "works"
+    },
     "historical_only": [
       "vibevoice_realtime_0_5b",
       "inflect_nano_v1",

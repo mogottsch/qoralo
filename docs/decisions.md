@@ -54,3 +54,11 @@ Retire the 15-second gate and normalization from the active listening bake-off. 
 Retire VibeVoice Realtime 0.5B, Inflect Nano v1, and Kitten TTS Mini 80M v0.8 from active follow-up; they remain historical-only under immutable experiment 0007 evidence. Select Pocket TTS 100M, exact Kokoro v1.0, and Supertonic 3 for real-device measurement in that fixed order under experiment 0008.
 
 Use pinned sherpa-onnx v1.13.5 Android CPU deployments with one canonical inference thread and app-specific external model storage. Preserve the experiment 0007 transcript byte-for-byte. Record requested and actual Pocket voices separately, prove Kokoro SID 3/`af_heart` and Supertonic M1 mapping, and block rather than guess. No Android result exists until the device campaign records it; host timing is not a substitute.
+
+## 2026-08-13 — Publish the measured Android decision
+
+Select the pinned Supertonic 3 INT8 SID 5/M1 English deployment as the measured technical default on the Galaxy S23 Ultra: one-thread warm median RTF is 0.370 with four valid WAVs and sampled peak PSS of 463,003,648 bytes. Classify it as `works`.
+
+Classify Pocket as `works_with_limitations`: warm median RTF is 0.389 and four WAVs are valid, but the public package provides Bria rather than requested Alba (`voice_match=false`), its non-commercial workflow wording conflicts with its bundled CC BY 4.0 license, and no manual listening was performed. Classify exact Kokoro v1.0 SID 3/`af_heart` as `works_with_limitations`: canonical one-thread warm median RTF is 1.195; its separately triggered two-thread median is 0.963.
+
+All canonical campaigns began thermally eligible in the fixed Pocket–Kokoro–Supertonic order. Preserve the earlier Pocket and Kokoro callback-bridge native crashes as disclosed harness failures. Keep experiment 0007 and VibeVoice Realtime, Inflect Nano, and Kitten TTS historical-only; do not present their host PyTorch evidence as Android deployment measurements.

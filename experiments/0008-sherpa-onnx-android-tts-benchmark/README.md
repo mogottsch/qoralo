@@ -1,6 +1,6 @@
 # Experiment 0008 — sherpa-onnx Android TTS benchmark
 
-**Status: selected variants; real-device measurement pending.** No Android timing or memory result exists yet. The target is the Samsung Galaxy S23 Ultra (`SM-S918B`); it was enumerated previously, but current connection, authorization, unlock, and readiness are unverified.
+**Status: complete.** The three pinned variants were measured on the Samsung Galaxy S23 Ultra (`SM-S918B`). See the canonical [measured Android decision](results/measured-decision.md) and its [machine-readable form](results/measured-decision.json). Supertonic 3 works; Pocket and Kokoro work with documented limitations.
 
 This experiment compares three pinned local Android CPU deployments in a fixed order:
 
@@ -42,6 +42,8 @@ Outcomes include success, partial success, blocked, timeout, native crash, OOM, 
 - [`integration/aggregate-inventory.json`](integration/aggregate-inventory.json) — verified per-model and aggregate deployed-byte/free-space requirements.
 - [`integration/host-readiness.json`](integration/host-readiness.json) — host-only voice/provenance readiness; it makes no Android performance claim.
 - [`tools/host_wav.py`](tools/host_wav.py) and [`tools/inspect_apk.py`](tools/inspect_apk.py) — independent PCM decode/audio checks and the arm64/no-bundled-model APK gate.
+- [`results/measured-decision.md`](results/measured-decision.md) — canonical measured comparison, outcomes, thermal/order disclosures, failures, and variant boundaries.
+- [`tools/validate_decision.py`](tools/validate_decision.py) — checks the publication against normalized manifests and every locally retained artifact hash.
 
 ## Pinned asset workflow
 

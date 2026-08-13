@@ -8,8 +8,8 @@
     "model": "microsoft/VibeVoice-1.5B",
     "device": "Samsung Galaxy S23 Ultra SM-S918B"
   },
-  "updated_at": "2026-08-13T11:25:00+01:00",
-  "updated_by": "experiment 0008 contract",
+  "updated_at": "2026-08-13T14:20:00+01:00",
+  "updated_by": "experiment 0008 measured decision",
   "autonomy": {
     "authorized_through_step": 39,
     "stop_conditions": [
@@ -29,8 +29,8 @@
     "percent": 100.0,
     "current_step": 39,
     "current_lane": "D",
-    "current_activity": "ExecuTorch/XNNPACK spike complete; final feasibility conclusion published",
-    "summary": "All 39 steps are validated. Final profiling shows XNNPACK forward dominates; periodic GC changes median prefix wall time by only -1.74%, within variability. The build remains infeasible: 107.35 prefix RTF, 9.136 GB footprint, two-chunk capacity, and effectively silent 2.04%-coverage audio."
+    "current_activity": "Experiment 0008 Galaxy S23 Ultra sherpa-onnx decision published",
+    "summary": "Experiment 0008 is complete: Supertonic 3 works at one-thread warm median RTF 0.370; Pocket works with voice/license limitations at 0.389; Kokoro works with a one-thread speed limitation at 1.195 and reaches 0.963 in the separate two-thread comparison. Retired candidates and experiment 0007 remain historical-only."
   },
   "resources": {
     "phone": {
@@ -130,6 +130,23 @@
     }
   },
   "milestones": {
+    "experiment_0008_android_decision": {
+      "status": "complete",
+      "device": "Samsung Galaxy S23 Ultra SM-S918B",
+      "provider": "cpu",
+      "canonical_threads": 1,
+      "outcomes": {
+        "pocket_tts_100m": "works_with_limitations",
+        "kokoro_82m": "works_with_limitations",
+        "supertonic_3": "works"
+      },
+      "warm_median_rtf": {
+        "pocket_tts_100m": 0.38864718496483114,
+        "kokoro_82m": 1.1952115332875515,
+        "supertonic_3": 0.3703028479158501
+      },
+      "evidence": "experiments/0008-sherpa-onnx-android-tts-benchmark/results/measured-decision.json"
+    },
     "reference": {
       "audio_seconds": 13.066667,
       "generation_seconds": 113.43,

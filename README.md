@@ -40,7 +40,7 @@ The target phone is a Samsung Galaxy S23 Ultra (`SM-S918B`, Snapdragon 8 Gen 2, 
 | [`0005`](experiments/0005-vibevoice-1.5b-qnn-android/) | Qualcomm QNN | Requires an approved candidate and any proprietary terms |
 | [`0006`](experiments/0006-vibevoice-realtime-0.5b-android/) | Realtime 0.5B feasibility inventory | Recommendations and storage estimates only; Android feasibility unknown |
 | [`0007`](experiments/0007-mobile-podcast-preview-bakeoff/) | Six-model host listening bake-off | Immutable historical evidence; historical ranking is Kokoro, Pocket, then Realtime |
-| [`0008`](experiments/0008-sherpa-onnx-android-tts-benchmark/) | Pinned sherpa-onnx Android CPU benchmark | Pocket, Kokoro, and Supertonic selected; real-device measurement pending |
+| [`0008`](experiments/0008-sherpa-onnx-android-tts-benchmark/) | Pinned sherpa-onnx Android CPU benchmark | Complete: Supertonic works; Pocket and Kokoro work with limitations |
 
 ## Boundaries
 
@@ -52,4 +52,4 @@ Large model files, converted models, generated audio, APKs, tensors, traces, and
 
 The historical ExecuTorch campaign remains complete at **39/39** and rejected as deployed. Its prefix supplement clarifies the near-silent two-chunk waveform without revising that conclusion.
 
-Experiment 0007's six natural-duration host samples remain immutable historical evidence. Pocket TTS 100M, exact Kokoro 82M v1.0, and Supertonic 3 are now selected for the pinned experiment 0008 sherpa-onnx Android CPU benchmark, with real-device measurements still pending. VibeVoice Realtime 0.5B, Inflect Nano v1, and Kitten TTS Mini 80M v0.8 are historical-only and are not pending Android follow-up. See the [candidate decision report](docs/candidate-decision-report.md).
+Experiment 0007's six natural-duration host samples remain immutable historical evidence. Experiment 0008 measured the three selected sherpa-onnx Android CPU deployments on the Galaxy S23 Ultra: Supertonic 3 **works** (one-thread warm median RTF 0.370), while Pocket **works with limitations** (RTF 0.389, packaged Bria rather than requested Alba, unresolved license messaging) and Kokoro **works with limitations** (one-thread RTF 1.195; optional two-thread RTF 0.963). VibeVoice Realtime 0.5B, Inflect Nano v1, and Kitten TTS Mini 80M v0.8 remain historical-only. See the [measured decision](experiments/0008-sherpa-onnx-android-tts-benchmark/results/measured-decision.md) and [candidate decision report](docs/candidate-decision-report.md).
