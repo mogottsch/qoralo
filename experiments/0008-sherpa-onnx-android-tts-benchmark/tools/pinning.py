@@ -14,7 +14,9 @@ import tarfile
 import tempfile
 import urllib.request
 import zipfile
+from datetime import datetime
 from pathlib import Path, PurePosixPath
+from urllib.parse import urlsplit
 from typing import Any, Iterable
 
 CHUNK = 1024 * 1024
@@ -51,14 +53,40 @@ def _valid_hash(value: Any) -> bool:
     return isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdef" for c in value)
 
 
+def _valid_https_url(value: Any) -> bool:
+    if not isinstance(value, str):
+        return False
+    parsed = urlsplit(value)
+    return (
+        parsed.scheme == "https"
+        and bool(parsed.hostname)
+        and parsed.username is None
+        and parsed.password is None
+        and not parsed.query
+        and not parsed.fragment
+    )
+
+
+def _valid_timestamp(value: Any) -> bool:
+    if not isinstance(value, str) or not value.endswith("Z"):
+        return False
+    try:
+        parsed = datetime.fromisoformat(value[:-1] + "+00:00")
+    except ValueError:
+        return False
+    return parsed.tzinfo is not None
+
+
 def validate_manifest(data: dict[str, Any]) -> None:
-    if data.get("schema_version") != 1:
+    if not isinstance(data, dict) or data.get("schema_version") != 1:
         raise PinError("unsupported pin schema")
     sherpa = data.get("sherpa", {})
-    if sherpa.get("tag") != "v1.13.5" or sherpa.get("commit") != "3dc7c569f31ca2cd4a20ed6f7db780327e6714c5":
+    if not isinstance(sherpa, dict) or sherpa.get("tag") != "v1.13.5" or sherpa.get("commit") != "3dc7c569f31ca2cd4a20ed6f7db780327e6714c5":
         raise PinError("sherpa tag/commit is not the experiment pin")
     assets = data.get("assets")
-    if not isinstance(assets, list) or {a.get("id") for a in assets if isinstance(a, dict)} != {"android-aar", "pocket", "kokoro", "supertonic-3"}:
+    if (not isinstance(assets, list) or len(assets) != 4
+            or any(not isinstance(a, dict) for a in assets)
+            or {a.get("id") for a in assets} != {"android-aar", "pocket", "kokoro", "supertonic-3"}):
         raise PinError("manifest must contain exactly the four required assets")
     filenames: set[str] = set()
     for asset in assets:
@@ -68,9 +96,12 @@ def validate_manifest(data: dict[str, Any]) -> None:
         if asset["filename"] in filenames or Path(asset["filename"]).name != asset["filename"]:
             raise PinError("asset filenames must be unique basenames")
         filenames.add(asset["filename"])
-        if not str(asset["url"]).startswith("https://") or not isinstance(asset["bytes"], int) or asset["bytes"] <= 0 or not _valid_hash(asset["sha256"]):
+        if (not _valid_https_url(asset["url"]) or isinstance(asset["bytes"], bool)
+                or not isinstance(asset["bytes"], int) or asset["bytes"] <= 0
+                or not _valid_hash(asset["sha256"])):
             raise PinError(f"invalid immutable pin for {asset['id']}")
-        if not all(isinstance(asset[x], str) and asset[x] for x in ("release_tag", "release_published_at", "asset_created_at", "asset_updated_at")):
+        if (not isinstance(asset["release_tag"], str) or not asset["release_tag"]
+                or not all(_valid_timestamp(asset[x]) for x in ("release_published_at", "asset_created_at", "asset_updated_at"))):
             raise PinError(f"missing release metadata for {asset['id']}")
         if (not isinstance(asset["allowed_top_level"], list) or not asset["allowed_top_level"]
                 or any(not isinstance(x, str) or not x or PurePosixPath(x).name != x for x in asset["allowed_top_level"])):
@@ -82,18 +113,35 @@ def validate_manifest(data: dict[str, Any]) -> None:
         if not isinstance(provenance, dict) or any(not provenance.get(x) for x in ("type", "repository", "revision", "document")):
             raise PinError(f"missing conversion/build provenance for {asset['id']}")
     runtime = data.get("host_runtime", {})
-    if runtime.get("purpose") != "configuration smoke tests only; timings are not Android evidence":
+    if not isinstance(runtime, dict) or runtime.get("purpose") != "configuration smoke tests only; timings are not Android evidence":
         raise PinError("host/runtime evidence boundary is missing")
-    if runtime.get("source", {}).get("commit") != sherpa["commit"]:
-        raise PinError("host source commit drift")
+    source = runtime.get("source", {})
+    if (not isinstance(source, dict) or source.get("commit") != sherpa["commit"]
+            or source.get("tag") != sherpa["tag"] or source.get("repository") != sherpa.get("source_url")):
+        raise PinError("host source provenance drift")
+    if runtime.get("platform") != {"system": "Linux", "distribution": "Ubuntu 22.04", "machine": "x86_64", "libc": "glibc 2.35", "python": "CPython 3.11.9", "abi": "cp311"}:
+        raise PinError("host platform/toolchain is not exact")
+    installer = runtime.get("installer", {})
+    if (not isinstance(installer, dict) or installer.get("name") != "pip"
+            or installer.get("version") != "24.0" or not installer.get("command")):
+        raise PinError("host installer provenance is incomplete")
     if runtime.get("runtime_versions") != {"sherpa-onnx": "1.13.5", "sherpa-onnx-core": "1.13.5"}:
         raise PinError("host package versions are not exact")
     wheels = runtime.get("wheels")
-    if not isinstance(wheels, list) or {w.get("distribution") for w in wheels if isinstance(w, dict)} != {"sherpa-onnx", "sherpa-onnx-core"}:
-        raise PinError("both host wheels must be pinned")
+    if (not isinstance(wheels, list) or len(wheels) != 2
+            or any(not isinstance(w, dict) for w in wheels)
+            or {w.get("distribution") for w in wheels} != {"sherpa-onnx", "sherpa-onnx-core"}):
+        raise PinError("both host wheels must be pinned exactly once")
+    wheel_filenames: set[str] = set()
     for wheel in wheels:
-        if set(("filename", "url", "uploaded_at", "bytes", "sha256")) - wheel.keys() or not wheel["url"].startswith("https://") or not _valid_hash(wheel["sha256"]):
+        if (set(("filename", "url", "uploaded_at", "bytes", "sha256")) - wheel.keys()
+                or Path(wheel["filename"]).name != wheel["filename"]
+                or wheel["filename"] in wheel_filenames or not wheel["filename"].endswith(".whl")
+                or not _valid_https_url(wheel["url"]) or not _valid_timestamp(wheel["uploaded_at"])
+                or isinstance(wheel["bytes"], bool) or not isinstance(wheel["bytes"], int) or wheel["bytes"] <= 0
+                or not _valid_hash(wheel["sha256"])):
             raise PinError("incomplete host wheel provenance")
+        wheel_filenames.add(wheel["filename"])
 
 
 def find_asset(manifest: dict[str, Any], asset_id: str) -> dict[str, Any]:
@@ -125,7 +173,11 @@ def download(pin: dict[str, Any], destination: Path) -> Path:
             if not response.geturl().startswith("https://"):
                 raise PinError("download redirected away from HTTPS")
             declared = response.headers.get("Content-Length")
-            if declared is not None and int(declared) != pin["bytes"]:
+            try:
+                declared_bytes = int(declared) if declared is not None else None
+            except ValueError as exc:
+                raise PinError("server returned malformed Content-Length") from exc
+            if declared_bytes is not None and declared_bytes != pin["bytes"]:
                 raise PinError("server Content-Length differs from pin")
             count = 0
             while block := response.read(CHUNK):
@@ -148,7 +200,10 @@ def verify_release_metadata(pin: dict[str, Any], release: dict[str, Any]) -> Non
     """Verify a GitHub release API response without trusting mutable asset names alone."""
     if release.get("tag_name") != pin["release_tag"] or release.get("published_at") != pin["release_published_at"]:
         raise PinError("release tag/timestamp drift")
-    matches = [a for a in release.get("assets", []) if a.get("name") == pin["filename"]]
+    release_assets = release.get("assets")
+    if not isinstance(release_assets, list) or any(not isinstance(a, dict) for a in release_assets):
+        raise PinError("release assets metadata is malformed")
+    matches = [a for a in release_assets if a.get("name") == pin["filename"]]
     if len(matches) != 1:
         raise PinError("release asset missing or duplicated")
     asset = matches[0]
@@ -198,6 +253,9 @@ def safe_extract(archive: Path, destination: Path, pin: dict[str, Any]) -> None:
     if destination.exists() and any(destination.iterdir()):
         raise PinError("extraction destination must be absent or empty")
     allowed = set(pin["allowed_top_level"])
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    if destination.parent.is_symlink() or not destination.parent.is_dir():
+        raise PinError("extraction parent must be a real directory")
     staging = Path(tempfile.mkdtemp(prefix=f".{destination.name}.", dir=destination.parent))
     try:
         if zipfile.is_zipfile(archive):
@@ -205,8 +263,11 @@ def safe_extract(archive: Path, destination: Path, pin: dict[str, Any]) -> None:
                 raw_entries = []
                 for item in source.infolist():
                     mode = item.external_attr >> 16
-                    if stat.S_ISLNK(mode):
+                    file_type = stat.S_IFMT(mode) if item.create_system == 3 else 0
+                    if file_type == stat.S_IFLNK:
                         kind = "link"
+                    elif file_type not in (0, stat.S_IFREG, stat.S_IFDIR):
+                        kind = "special"
                     else:
                         kind = "dir" if item.is_dir() else "file"
                     raw_entries.append((item.filename, kind, item.file_size))
@@ -249,14 +310,20 @@ def inventory(root: Path) -> dict[str, Any]:
 
 
 def verify_host_runtime(wheel_directory: Path, manifest: dict[str, Any], *, system: str | None = None, machine: str | None = None, python_version: tuple[int, int, int] | None = None) -> None:
+    validate_manifest(manifest)
     runtime = manifest["host_runtime"]
     system = system or platform.system()
     machine = machine or platform.machine()
     python_version = python_version or sys.version_info[:3]
     if (system, machine, python_version) != ("Linux", "x86_64", (3, 11, 9)):
         raise PinError("host platform is outside the pinned runtime")
+    if not wheel_directory.is_dir() or wheel_directory.is_symlink():
+        raise PinError("host wheel directory must be a real directory")
     expected = {w["filename"] for w in runtime["wheels"]}
-    actual = {p.name for p in wheel_directory.iterdir() if p.suffix == ".whl"}
+    entries = list(wheel_directory.iterdir())
+    if any(not p.is_file() or p.is_symlink() for p in entries):
+        raise PinError("host wheel directory contains non-regular entries")
+    actual = {p.name for p in entries}
     if actual != expected:
         raise PinError("host wheel set is missing, extra, or unpinned")
     for wheel in runtime["wheels"]: verify_file(wheel_directory / wheel["filename"], wheel)

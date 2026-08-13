@@ -37,6 +37,15 @@ class ManifestTests(unittest.TestCase):
             del changed["assets"][1][field]
             with self.assertRaises(PinError): pinning.validate_manifest(changed)
 
+    def test_malformed_or_duplicate_manifest_entries_fail_closed(self):
+        with self.assertRaises(PinError): pinning.validate_manifest([])
+        changed = json.loads(json.dumps(self.data))
+        changed["assets"].append(json.loads(json.dumps(changed["assets"][0])))
+        with self.assertRaises(PinError): pinning.validate_manifest(changed)
+        changed = json.loads(json.dumps(self.data))
+        changed["assets"][0]["asset_created_at"] = "not-a-timestamp"
+        with self.assertRaises(PinError): pinning.validate_manifest(changed)
+
     def test_unpinned_host_runtime_fails(self):
         changed = json.loads(json.dumps(self.data))
         changed["host_runtime"]["runtime_versions"]["sherpa-onnx"] = "1.13.6"
@@ -97,12 +106,20 @@ class ExtractionTests(unittest.TestCase):
         bad = pin_for(archive); bad["sha256"] = "0" * 64
         with self.assertRaises(PinError): pinning.safe_extract(archive, self.root / "out", bad)
 
-    def test_rejects_zip_symlink(self):
-        archive = self.root / "input.zip"
-        with zipfile.ZipFile(archive, "w") as output:
-            item = zipfile.ZipInfo("model/link"); item.create_system = 3; item.external_attr = (stat.S_IFLNK | 0o777) << 16
-            output.writestr(item, "../../escape")
-        with self.assertRaises(PinError): pinning.safe_extract(archive, self.root / "out", pin_for(archive))
+    def test_rejects_zip_symlink_and_special_file(self):
+        for file_type in (stat.S_IFLNK, stat.S_IFCHR):
+            archive = self.root / f"input-{file_type}.zip"
+            with zipfile.ZipFile(archive, "w") as output:
+                item = zipfile.ZipInfo("model/unsafe"); item.create_system = 3; item.external_attr = (file_type | 0o777) << 16
+                output.writestr(item, "../../escape")
+            with self.assertRaises(PinError):
+                pinning.safe_extract(archive, self.root / "out", pin_for(archive))
+
+    def test_extract_creates_missing_parent_without_weakening_layout(self):
+        archive = self.make_tar([("model/file.bin", "file", b"abc")])
+        destination = self.root / "new-parent" / "out"
+        pinning.safe_extract(archive, destination, pin_for(archive))
+        self.assertEqual((destination / "model/file.bin").read_bytes(), b"abc")
 
 
 class InventoryAndRuntimeTests(unittest.TestCase):
@@ -127,10 +144,10 @@ class InventoryAndRuntimeTests(unittest.TestCase):
     def test_host_runtime_requires_exact_set_hashes_and_platform(self):
         wheels = self.root / "wheels"; wheels.mkdir()
         names = ("api.whl", "core.whl")
-        manifest = {"host_runtime": {"wheels": []}}
-        for index, name in enumerate(names):
+        manifest = json.loads((ROOT / "pins" / "assets.json").read_text())
+        for index, (name, wheel) in enumerate(zip(names, manifest["host_runtime"]["wheels"])):
             path = wheels / name; path.write_bytes(bytes([index]))
-            manifest["host_runtime"]["wheels"].append({"filename": name, "bytes": 1, "sha256": hashlib.sha256(bytes([index])).hexdigest()})
+            wheel.update({"filename": name, "bytes": 1, "sha256": hashlib.sha256(bytes([index])).hexdigest()})
         pinning.verify_host_runtime(wheels, manifest, system="Linux", machine="x86_64", python_version=(3, 11, 9))
         (wheels / "local-build.whl").write_bytes(b"")
         with self.assertRaises(PinError): pinning.verify_host_runtime(wheels, manifest, system="Linux", machine="x86_64", python_version=(3, 11, 9))
