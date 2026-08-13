@@ -96,15 +96,15 @@ def main() -> None:
         "cold_inference_peak_process_tree_rss_bytes": item["phase_peak_process_tree_rss_bytes"].get("cold_short_inference", 0),
         "warm_inference_peak_process_tree_rss_bytes": item["phase_peak_process_tree_rss_bytes"].get("warm_short_inference", 0),
     } for item in measurements]
-    covered = ["smoke-load", "preflight", "generation-realtime", "generation-pocket", "generation-kokoro", "capture", "export", "protocol-revision"]
+    covered = ["model-load", "full-generation", "smoke-load", "preflight", "generation-realtime", "generation-pocket", "generation-kokoro", "capture", "export", "protocol-revision"]
     policy = {
-        "$schema": "../schemas/generation-policy.schema.json", "schema_version": 1, "policy_version": 2,
-        "mode": "measured-pocket-kokoro", "compatible_concurrent_sets": [["generation-pocket", "generation-kokoro"]],
+        "$schema": "../schemas/generation-policy.schema.json", "schema_version": 1, "policy_version": 3,
+        "mode": "exclusive", "compatible_concurrent_sets": [],
         "covered_operations": covered, "host_memory_bytes": host_total, "host_limit_bytes": effective_limit,
         "safety_margin_bytes": SAFETY_MARGIN, "combined_pocket_kokoro_peak_bytes": combined,
         "combined_with_safety_margin_bytes": required, "headroom_bytes": headroom,
         "measurements": policy_measurements,
-        "rule": "Capacity is at most two. Exactly one Pocket and one Kokoro generation may overlap. Realtime, every smoke-load, every preflight, capture, export, and protocol revision remain globally exclusive.",
+        "rule": "One global exclusive gate serializes every model load and full generation, including defaults, failed attempts, retries, and fresh-process repeats.",
     }
     candidate = ARTIFACTS / "measured-policy.json"
     candidate.write_text(json.dumps(policy, indent=2, sort_keys=True) + "\n")
@@ -116,7 +116,7 @@ def main() -> None:
             "pocket_peak_bytes": pocket_peak, "kokoro_peak_bytes": kokoro_peak, "combined_peak_bytes": combined,
             "safety_margin_bytes": SAFETY_MARGIN, "required_bytes": required, "host_physical_bytes": host_total,
             "ceiling_32_gib_bytes": LIMIT_32_GIB, "effective_limit_bytes": effective_limit,
-            "explicit_headroom_bytes": headroom, "safe_for_exactly_pocket_plus_kokoro": safe, "maximum_slots": 2},
+            "explicit_headroom_bytes": headroom, "historical_pocket_plus_kokoro_fit": safe, "maximum_generation_slots": 1},
         "preflight_audio": "discarded_in_memory; never written, normalized, published, or accepted as a preview",
         "candidate_policy_sha256": hashlib.sha256(candidate.read_bytes()).hexdigest(),
     }

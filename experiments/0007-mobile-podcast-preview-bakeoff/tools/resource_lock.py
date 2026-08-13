@@ -21,12 +21,10 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_ROOT = Path(os.environ.get("PREVIEW_LOCK_ROOT", "/tmp/mobile-podcast-preview-gate"))
 DEFAULT_POLICY = ROOT / "protocol" / "model-resource-policy-v1.json"
 KINDS = {
+    "model-load", "full-generation",
     "smoke-load", "preflight", "generation-realtime", "generation-pocket",
     "generation-kokoro", "capture", "export", "protocol-revision",
 }
-SHAREABLE_PAIR = frozenset({"generation-pocket", "generation-kokoro"})
-
-
 class LockBusy(RuntimeError):
     pass
 
@@ -93,37 +91,19 @@ def inspect_lock(path: str | Path) -> dict[str, Any]:
 
 def load_policy(path: str | Path) -> dict[str, Any]:
     data = json.loads(Path(path).read_text(encoding="utf-8"))
-    if data.get("schema_version") != 1 or data.get("policy_version") not in (1, 2):
+    if data.get("schema_version") != 1 or data.get("policy_version") not in (1, 2, 3):
         raise ValueError("unsupported model-resource policy")
     mode = data.get("mode")
     pairs = data.get("compatible_concurrent_sets")
-    if mode == "exclusive" and pairs == []:
+    if mode == "exclusive" and pairs == [] and data.get("policy_version") in (1, 3):
         return data
-    if mode == "measured-pocket-kokoro" and pairs == [["generation-pocket", "generation-kokoro"]]:
-        measurements = data.get("measurements")
-        if data.get("policy_version") == 2 and isinstance(measurements, list) and len(measurements) >= 3:
-            peaks = {item.get("model"): item.get("peak_process_tree_rss_bytes") for item in measurements if isinstance(item, dict)}
-            combined = peaks.get("pocket", -1) + peaks.get("kokoro", -1)
-            margin = data.get("safety_margin_bytes")
-            limit = data.get("host_limit_bytes")
-            if ({"realtime", "pocket", "kokoro"}.issubset(peaks)
-                    and all(isinstance(value, int) and value >= 0 for value in peaks.values())
-                    and isinstance(margin, int) and margin > 0 and isinstance(limit, int)
-                    and limit <= 32 * 1024 ** 3 and combined + margin < limit
-                    and data.get("combined_pocket_kokoro_peak_bytes") == combined
-                    and data.get("combined_with_safety_margin_bytes") == combined + margin
-                    and data.get("headroom_bytes") == limit - combined - margin):
-                return data
-    raise ValueError("policy may only be exclusive, or measured Pocket+Kokoro sharing")
+    raise ValueError("resource gate requires a globally exclusive policy")
 
 
 def _compatible(candidate: str, active: list[str], policy: dict[str, Any]) -> bool:
-    if not active:
-        return True
-    if policy["mode"] != "measured-pocket-kokoro" or candidate not in SHAREABLE_PAIR:
-        return False
-    # Exactly Pocket plus Kokoro may overlap; duplicate instances may not.
-    return len(active) == 1 and active[0] in SHAREABLE_PAIR and active[0] != candidate
+    # All model loads and full generations (including attempts/retries/repeats)
+    # share this one interlocking namespace. Legacy kinds remain exclusive too.
+    return not active
 
 
 @contextlib.contextmanager
@@ -199,17 +179,17 @@ class ResourceGrant:
 
 
 def install_policy(root: str | Path, candidate: str | Path, destination: str | Path) -> None:
-    """Task 5's one administrative transaction; refuses any active reader/grant."""
+    """Atomic policy transaction; refuses any active reader or grant."""
     root, candidate, destination = Path(root), Path(candidate), Path(destination)
     policy = load_policy(candidate)
-    if policy["mode"] != "measured-pocket-kokoro":
-        raise ValueError("replacement must contain measured Pocket+Kokoro-only rules")
+    if policy["mode"] != "exclusive":
+        raise ValueError("replacement must contain a globally exclusive policy")
     with _mutex(root):
         grant_root = root / "grants"; grant_root.mkdir(exist_ok=True)
         active = [inspect_lock(path) for path in grant_root.iterdir() if path.is_dir()]
         if active:
             raise LockBusy(json.dumps({"reason": "policy update requires no active grants", "grants": active}, sort_keys=True))
-        admin = owner_metadata("task-5", "policy-update")
+        admin = owner_metadata("policy-installer", "policy-update")
         admin_path = grant_root / admin["token"]
         _write_owner(admin_path, admin)
         try:
@@ -257,7 +237,13 @@ def acquired_resource(root: str | Path, task: str, kind: str, policy_path: str |
 
 def run_command(args: argparse.Namespace) -> int:
     with acquired_resource(args.lock_root, args.task, args.kind, args.policy):
-        child = subprocess.Popen(args.command)
+        child = subprocess.Popen(
+            args.command,
+            env=os.environ | {
+                "PREVIEW_RESOURCE_GRANT_KIND": args.kind,
+                "PREVIEW_RESOURCE_GRANT_TASK": args.task,
+            },
+        )
         old_handlers: dict[int, Any] = {}
         def forward(sig: int, _frame: object) -> None:
             if child.poll() is None:

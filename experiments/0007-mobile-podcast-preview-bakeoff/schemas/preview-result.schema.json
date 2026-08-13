@@ -3,13 +3,27 @@
   "$id": "preview-result.schema.json",
   "$defs": {
     "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-    "seconds": {"type": "number", "minimum": 0}
+    "seconds": {"type": "number", "minimum": 0},
+    "new_model": {"enum": ["supertonic-3", "inflect-nano-v1", "kitten-tts-mini-0.8"]},
+    "attempt": {
+      "type": "object",
+      "required": ["attempt_id", "kind", "resource_kind", "artifact_path", "status"],
+      "properties": {
+        "attempt_id": {"type": "string", "minLength": 1},
+        "kind": {"enum": ["default", "speed-retry", "fresh-process-repeat"]},
+        "resource_kind": {"const": "full-generation"},
+        "artifact_path": {"type": "string", "minLength": 1},
+        "status": {"enum": ["accepted", "rejected", "blocked"]},
+        "control": {}
+      },
+      "additionalProperties": false
+    }
   },
   "type": "object",
   "required": ["schema_version", "model", "status", "protocol", "provenance", "voice", "command", "conclusion"],
   "properties": {
     "schema_version": {"const": 1},
-    "model": {"enum": ["realtime", "pocket", "kokoro"]},
+    "model": {"enum": ["realtime", "pocket", "kokoro", "supertonic-3", "inflect-nano-v1", "kitten-tts-mini-0.8"]},
     "status": {"enum": ["accepted", "rejected", "blocked"]},
     "protocol": {
       "type": "object",
@@ -70,11 +84,21 @@
       "type": "object",
       "required": ["generation_wall_seconds", "api_first_output_seconds", "first_audible_output_seconds", "rtf"],
       "properties": {
+        "clock": {"const": "CLOCK_MONOTONIC"},
         "generation_wall_seconds": {"$ref": "#/$defs/seconds"},
         "api_first_output_seconds": {"type": ["number", "null"], "minimum": 0},
+        "api_first_output_unavailable_reason": {"type": ["string", "null"], "minLength": 1},
         "first_audible_output_seconds": {"type": ["number", "null"], "minimum": 0},
-        "rtf": {"type": "number", "minimum": 0}
+        "first_audible_output_unavailable_reason": {"type": ["string", "null"], "minLength": 1},
+        "rtf": {"type": "number", "minimum": 0},
+        "rtf_denominator": {"const": "raw_native_audio_duration_seconds"}
       },
+      "allOf": [
+        {"if": {"properties": {"api_first_output_seconds": {"type": "null"}}}, "then": {"required": ["api_first_output_unavailable_reason"], "properties": {"api_first_output_unavailable_reason": {"type": "string", "minLength": 1}}}},
+        {"if": {"properties": {"api_first_output_seconds": {"type": "number"}}}, "then": {"properties": {"api_first_output_unavailable_reason": {"type": "null"}}}},
+        {"if": {"properties": {"first_audible_output_seconds": {"type": "null"}}}, "then": {"required": ["first_audible_output_unavailable_reason"], "properties": {"first_audible_output_unavailable_reason": {"type": "string", "minLength": 1}}}},
+        {"if": {"properties": {"first_audible_output_seconds": {"type": "number"}}}, "then": {"properties": {"first_audible_output_unavailable_reason": {"type": "null"}}}}
+      ],
       "additionalProperties": false
     },
     "memory": {
@@ -83,22 +107,42 @@
       "properties": {
         "baseline_rss_bytes": {"type": "integer", "minimum": 0},
         "peak_process_tree_rss_bytes": {"type": "integer", "minimum": 0},
-        "sample_interval_ms": {"type": "integer", "minimum": 1, "maximum": 100}
+        "sample_interval_ms": {"type": "integer", "minimum": 1, "maximum": 100},
+        "sample_count": {"type": "integer", "minimum": 1},
+        "process_race_count": {"type": "integer", "minimum": 0},
+        "sampling_limitations": {"type": "array", "items": {"type": "string", "minLength": 1}}
       },
       "additionalProperties": false
     },
+    "measurement_contract_version": {"const": 1},
+    "attempts": {"type": "array", "items": {"$ref": "#/$defs/attempt"}, "minItems": 2},
+    "licenses": {"type": "array", "items": {"type": "object", "required": ["component", "license", "source"], "additionalProperties": true}, "minItems": 1},
+    "publication_eligible": {"type": "boolean"},
     "forbidden_transformations_used": {"const": []},
     "blocker": {"type": "string", "minLength": 1},
     "conclusion": {"type": "string", "minLength": 1}
   },
   "allOf": [
+    {"if": {"required": ["status"], "properties": {"status": {"enum": ["accepted", "rejected"]}}}, "then": {"required": ["speed_control", "raw", "normalized", "timing", "memory", "forbidden_transformations_used"]}},
+    {"if": {"required": ["status"], "properties": {"status": {"const": "blocked"}}}, "then": {"required": ["blocker"], "properties": {"publication_eligible": {"const": false}}, "not": {"required": ["normalized"]}}},
     {
-      "if": {"properties": {"status": {"enum": ["accepted", "rejected"]}}},
-      "then": {"required": ["speed_control", "raw", "normalized", "timing", "memory", "forbidden_transformations_used"]}
+      "if": {"required": ["model", "status"], "properties": {"model": {"$ref": "#/$defs/new_model"}, "status": {"const": "accepted"}}},
+      "then": {
+        "required": ["measurement_contract_version", "attempts", "licenses", "publication_eligible"],
+        "properties": {
+          "provenance": {"required": ["source_revision", "model_revision", "source_url", "model_bytes", "resource_grant", "dependency_lock_sha256", "determinism"]},
+          "voice": {"required": ["name", "source", "stock_voice", "license", "asset_sha256"]},
+          "timing": {"required": ["clock", "generation_wall_seconds", "api_first_output_seconds", "first_audible_output_seconds", "rtf", "rtf_denominator"]},
+          "memory": {"required": ["baseline_rss_bytes", "peak_process_tree_rss_bytes", "sample_interval_ms", "sample_count", "process_race_count"]}
+        }
+      }
     },
     {
-      "if": {"properties": {"status": {"const": "blocked"}}},
-      "then": {"required": ["blocker"]}
+      "if": {"required": ["model", "status"], "properties": {"model": {"$ref": "#/$defs/new_model"}, "status": {"const": "accepted"}}},
+      "then": {
+        "properties": {"publication_eligible": {"const": true}, "raw": {"properties": {"duration_seconds": {"minimum": 15.0}}}},
+        "not": {"required": ["blocker"]}
+      }
     }
   ],
   "additionalProperties": false

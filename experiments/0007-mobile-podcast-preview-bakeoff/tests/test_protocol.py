@@ -30,6 +30,56 @@ def test_manifest_and_result_schemas_are_valid():
     jsonschema.validate(policy, policy_schema)
 
 
+def test_protocol_v2_and_historical_audio_evidence_are_unchanged():
+    manifest = protocol.load_protocol()
+    assert protocol.protocol_reference()["protocol_fingerprint"] == "ca0987feca4c9a2e8744d4846d1b3f5da86799862f6f7d8ba7e3563f84245814"
+    assert manifest["audio"] == {
+        "sample_rate_hz": 24000,
+        "channels": 1,
+        "sample_format": "PCM_S16LE",
+        "sample_count": 360000,
+        "duration_seconds": 15.0,
+        "mono_conversion": "arithmetic mean of channels in float64 before resampling",
+        "resampler": "scipy.signal.resample_poly",
+        "resampler_window": ["kaiser", 5.0],
+        "resampler_padtype": "constant",
+        "resampled_length_rule": "ceil(input_samples * 24000 / input_rate)",
+        "zero_crossing_search_samples": 240,
+        "zero_crossing_rule": "minimize abs(linear crossing amplitude), then distance from target end, then earliest index; select an exact-length window ending there",
+        "fade_samples": 240,
+        "fade_shape": "sine-squared inclusive endpoints",
+        "integrated_loudness_target_lufs": -20.0,
+        "peak_ceiling_dbfs": -1.0,
+        "gain_rule": "minimum of loudness-target gain and peak-ceiling gain",
+        "dither": "deterministic TPDF at one PCM16 LSB using numpy PCG64 seed 0",
+        "short_input": "reject; regenerate only with documented model speed controls, or increment protocol version for any transcript change",
+        "forbidden": ["time stretching", "looping", "fabricated speech", "overwriting raw output"],
+    }
+    expected = {
+        "realtime": ("0daa06752efbdd2944ac66e02aa8f86792cf523dbb4846bb4fab9ac8741e28c1", "a010e2e685446cd5904a0b02ad806f04bb5b5c2bfa2bd7f1c002d1691e9d0d41"),
+        "pocket": ("47edc30525bfdd70f7859391386a593c754def7c3e4f809a3cdd40eb58caffc1", None),
+        "kokoro": ("b6d8d126dae93f3d1f52bebf96d695c48d07c8ddf79a97d429c4687007e57494", "24cdb3b81fff87a1ecc46ff4e6aa740512f3eab2e33f5ae4cbec541b12fed196"),
+    }
+    for model, hashes in expected.items():
+        result = json.loads((ROOT / "results" / f"{model}-preview.json").read_text())
+        assert (result["raw"]["sha256"], result.get("normalized", {}).get("sha256")) == hashes
+
+
+def test_historical_review_is_strictly_ranked_without_reviewing_new_candidates():
+    review = json.loads((ROOT / "results" / "user-listening-review.json").read_text())
+    assert review["assessment"]["strict_order"] == ["C", "B", "A"]
+    assert review["review_scope"]["reviewed_candidates"] == ["A", "B", "C"]
+    assert review["review_scope"]["unreviewed_candidates"] == ["D", "E", "F"]
+    assert review["candidate_mapping"] == {
+        "A": "microsoft/VibeVoice-Realtime-0.5B",
+        "B": "kyutai-labs/pocket-tts",
+        "C": "hexgrad/Kokoro-82M",
+        "D": "Supertone/supertonic-3",
+        "E": "owensong/Inflect-Nano-v1",
+        "F": "KittenML/kitten-tts-mini-0.8",
+    }
+
+
 def test_transcript_byte_drift_fails_closed(tmp_path):
     manifest = copy.deepcopy(protocol.load_protocol())
     (tmp_path / "transcript.txt").write_text((ROOT / "protocol" / "transcript.txt").read_text() + "!", encoding="utf-8")

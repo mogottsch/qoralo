@@ -26,34 +26,28 @@ artifacts/protocol-venv/bin/python experiments/0007-mobile-podcast-preview-bakeo
   artifacts/normalized/MODEL/preview.wav
 ```
 
-Timing, process-tree RSS, first-output, audible-output, RTF, hashes, and audio statistic definitions are frozen in the manifest. `schemas/preview-result.schema.json` is the candidate result contract. Artifact paths in committed JSON are references only; media remains ignored.
+Timing, process-tree RSS, first-output, audible-output, RTF, hashes, and audio statistic definitions are frozen in the manifest. `tools/generation_metrics.py` implements the shared monotonic 20 ms recursive process-tree measurement method, including pre-load baseline/peak semantics, raw-duration RTF, 10 ms/-50 dBFS audible detection, process-race reporting, and null-plus-reason unavailable timings. `schemas/preview-result.schema.json` is the candidate result contract. Artifact paths in committed JSON are references only; media remains ignored.
 
 ## Resource controls
 
 `protocol/model-resource-policy-v1.json` starts fail-safe: every smoke load, RSS preflight, preview generation, VibeVoice capture, export, and protocol revision is mutually exclusive. There are no independently acquired locks or slots. `ResourceGrant` takes one administrative `flock`, examines every active grant, and creates one logical grant as a single transaction under `${PREVIEW_LOCK_ROOT:-/tmp/mobile-podcast-preview-gate}`. Its `owner.json` records owner/task/kind, hostname plus boot ID, PID plus Linux process-start ticks, UTC creation time, and an unguessable token. The wrapper forwards termination signals and releases its grant in `finally`.
 
 ```bash
-# kind is smoke-load, preflight, generation-realtime, generation-pocket,
-# generation-kokoro, capture, export, or protocol-revision
-tools/with-resources.sh --task task-7 --kind generation-pocket -- python generate.py
+# New tracks use model-load for any load/smoke operation and full-generation
+# for every default, failed attempt, speed retry, and fresh-process repeat.
+# Historical kinds remain accepted but are exclusive in the same global gate.
+tools/with-resources.sh --task task-6-attempt-0 --kind full-generation -- python generate.py
 ```
 
-Task 5 may install a schema-valid measured policy in one administrative transaction, and only with no active grants:
+A schema-valid replacement policy may be installed in one administrative transaction only when no grant is active. The loader accepts exclusive policies only; the historical Pocket-plus-Kokoro sharing exception is retired, so all attempts, retries, and repeats are mutually exclusive.
 
-```bash
-python tools/resource_lock.py install-policy \
-  artifacts/task-5/measured-policy.json artifacts/shared/model-resource-policy.json
-```
-
-The only less-conservative policy accepted by the code permits one Pocket generation and one Kokoro generation to coexist. Realtime, capture, export, preflight, smoke loads, and protocol revisions remain exclusive and block both. Capacity can never exceed two. The loader independently recomputes Pocket-plus-Kokoro peak RSS plus a positive safety margin and rejects a policy unless it leaves explicit headroom below both physical RAM and 32 GiB.
-
-Task 5's repeatable measurement entry point is:
+The repeatable capacity-measurement entry point is:
 
 ```bash
 experiments/0007-mobile-podcast-preview-bakeoff/tools/run-preflights.sh
 ```
 
-It acquires one `preflight` grant around all three workers, runs them strictly in Realtime/Pocket/Kokoro order, and records process-tree cold-load, cold-inference, and warm-inference RSS plus host baselines, lazy artifact growth, and post-exit cleanup under ignored `artifacts/task-5/`; the reviewed measurement summary is committed at `results/generation-capacity.json`. Each worker performs two deliberately short inference calls; their samples are discarded in memory and can never become preview evidence. After releasing the preflight grant, the script obtains the administrative policy-update transaction (which requires no active grant) and atomically replaces `protocol/model-resource-policy-v1.json`. Final generation wrappers consume that installed default policy without an extra slot or lock.
+It acquires one `preflight` grant around all three workers, runs them strictly in Realtime/Pocket/Kokoro order, and records process-tree cold-load, cold-inference, and warm-inference RSS plus host baselines, lazy artifact growth, and post-exit cleanup under ignored `artifacts/task-5/`; the reviewed measurement summary is committed at `results/generation-capacity.json`. Each worker performs two deliberately short inference calls; their samples are discarded in memory and can never become preview evidence. After releasing the preflight grant, the script obtains the administrative policy-update transaction (which requires no active grant) and atomically replaces `protocol/model-resource-policy-v1.json` with the exclusive policy. Final generation wrappers consume that installed default policy without an extra slot or lock.
 
 A grant is never reclaimed because it is old. Inspection must match host name, boot ID, PID liveness, and process start ticks. Dead or reused PIDs with a complete matching host identity are reported `stale_proven` but still block acquisition. Remote, incomplete, unreadable, and partially created grants are `remote_or_unknown` or `stale_unverifiable` and fail closed. Only the parent, after setting `PREVIEW_PARENT_ORCHESTRATOR=1`, may explicitly run `resource_lock.py recover-stale`; even then the tool removes only `stale_proven` grants and requires manual investigation otherwise.
 
