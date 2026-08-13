@@ -26,7 +26,7 @@ CANDIDATES = {
     "kokoro": ("Candidate C", "c", "Kokoro 82M", "kokoro-preview.json"),
     "supertonic-3": ("Candidate D", "d", "Supertone/supertonic-3", "supertonic-3-preview.json"),
     "inflect-nano-v1": ("Candidate E", "e", "owensong/Inflect-Nano-v1", "inflect-nano-v1-preview.json"),
-    "kitten-tts-mini-0.8": ("Candidate F", "f", "KittenML/kitten-tts-mini-0.8", "kitten-tts-mini-0.8-preview.json"),
+    "kitten-tts-mini-0.8": ("Candidate F", "f", "KittenML/kitten-tts-mini-0.8", "kitten-mini-0.8-preview.json"),
 }
 LABELS = {model: values[0] for model, values in CANDIDATES.items()}
 SLUGS = {model: values[1] for model, values in CANDIDATES.items()}
@@ -123,13 +123,18 @@ def build_manifest(result_files: dict[str, Path] | None = None) -> dict:
         result_path = paths[model]
         result = load(result_path)
         fingerprints.add(result["protocol"]["protocol_fingerprint"])
-        transforms, derivation_command = derivation(result)
+        # Active listening compares each model's natural native-duration output.
+        # Historical protocol-v2 normalization metadata remains in result files,
+        # but no normalized artifact or duration gate drives this publication.
+        transforms = {"applied": False, "reason": "Active bake-off uses natural-duration native output; normalization is retired."}
+        derivation_command: list[str] = []
         raw = result["raw"]
         candidates.append({
             "label": LABELS[model],
             "model": model,
             "display_name": DISPLAY_NAMES[model],
-            "status": result["status"],
+            "status": "ready",
+            "historical_protocol_status": result["status"],
             "seed": seed_record(result),
             "voice": result["voice"],
             "revisions": {"source": result["provenance"]["source_revision"], "model": result["provenance"]["model_revision"]},
@@ -140,7 +145,7 @@ def build_manifest(result_files: dict[str, Path] | None = None) -> dict:
                 "sample_count": raw.get("sample_count"), "byte_count": raw.get("byte_count", raw.get("bytes")),
             },
             "raw": artifact(result, "raw", model),
-            "normalized": artifact(result, "normalized", model),
+            "normalized": None,
             "transformations": transforms,
             "forbidden_transformations_used": result["forbidden_transformations_used"],
             "blocker": result.get("blocker"),
@@ -149,7 +154,13 @@ def build_manifest(result_files: dict[str, Path] | None = None) -> dict:
     if len(fingerprints) != 1:
         raise ValueError("preview protocol fingerprints disagree")
     return {
-        "schema_version": 1,
+        "schema_version": 2,
+        "comparison_policy": {
+            "mode": "natural_duration_native_output",
+            "duration_gate_seconds": None,
+            "normalization_active": False,
+            "note": "All six candidates are evaluated at their truthful native output durations; historical normalized artifacts are noncanonical.",
+        },
         "transcript": {"text": transcript, "sha256": transcript_hash, "word_count": len(transcript.split())},
         "protocol": {
             "id": protocol["protocol_id"], "version": protocol["protocol_version"],
@@ -179,10 +190,8 @@ def validate_manifest(manifest: dict) -> None:
             raise ValueError(f"{candidate['model']}: protocol fingerprint mismatch")
         if result["raw"]["sha256"] != candidate["native"]["sha256"]:
             raise ValueError(f"{candidate['model']}: native hash mismatch")
-        if candidate["status"] == "accepted" and candidate["normalized"] is None:
-            raise ValueError(f"{candidate['model']}: accepted result lacks normalized audio")
-        if candidate["status"] == "blocked" and (candidate["normalized"] is not None or not candidate["blocker"]):
-            raise ValueError(f"{candidate['model']}: blocked result is inconsistent")
+        if candidate["status"] != "ready" or candidate["normalized"] is not None:
+            raise ValueError(f"{candidate['model']}: active listening must expose one natural-duration raw artifact only")
 
 
 def decision_report() -> dict:
@@ -193,7 +202,7 @@ def decision_report() -> dict:
         raise SystemExit("install requirements-protocol.txt (jsonschema is required)") from error
     jsonschema.Draft202012Validator(load(REPORT_SCHEMA_PATH)).validate(report)
     listening_status = report["subjective_listening"]["status"]
-    if listening_status not in {"pending_user_review", "recorded_user_review"}:
+    if listening_status not in {"pending_user_review", "partial_user_review", "recorded_user_review"}:
         raise ValueError("unsupported subjective listening status")
     if listening_status == "recorded_user_review":
         review_path = REPO / report["subjective_listening"]["evidence"]
@@ -258,7 +267,8 @@ def build(output: Path, manifest: dict | None = None) -> None:
         "candidates": [{
             "label": candidate["label"], "slug": SLUGS[candidate["model"]], "status": candidate["status"],
             "raw_url": candidate["raw"]["published_url"],
-            "normalized_url": candidate["normalized"]["published_url"] if candidate["normalized"] else None,
+            "duration_seconds": candidate["native"]["duration_seconds"],
+            "sample_rate_hz": candidate["native"]["sample_rate_hz"],
         } for candidate in manifest["candidates"]],
     }
     embedded_page_data = json.dumps(page_data, separators=(",", ":")).replace("</", "<\\/")

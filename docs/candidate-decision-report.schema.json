@@ -14,14 +14,17 @@
       "type": "object",
       "required": ["status", "ratings", "note"],
       "properties": {
-        "status": {"enum": ["pending_user_review", "recorded_user_review"]},
+        "status": {"enum": ["pending_user_review", "partial_user_review", "recorded_user_review"]},
         "ratings": {
           "type": "object",
-          "required": ["realtime", "pocket", "kokoro"],
+          "required": ["realtime", "pocket", "kokoro", "supertonic_3", "inflect_nano_v1", "kitten_tts_mini_0_8"],
           "properties": {
             "realtime": {"type": ["string", "null"]},
             "pocket": {"type": ["string", "null"]},
-            "kokoro": {"type": ["string", "null"]}
+            "kokoro": {"type": ["string", "null"]},
+            "supertonic_3": {"type": ["string", "null"]},
+            "inflect_nano_v1": {"type": ["string", "null"]},
+            "kitten_tts_mini_0_8": {"type": ["string", "null"]}
           },
           "additionalProperties": false
         },
@@ -31,7 +34,7 @@
       "additionalProperties": false
     },
     "host_quality_evidence": {
-      "type": "array", "minItems": 3, "maxItems": 3,
+      "type": "array", "minItems": 6, "maxItems": 6,
       "items": {
         "type": "object",
         "required": ["candidate", "status", "raw_duration_seconds", "generation_wall_seconds", "first_audible_output_seconds", "host_rtf", "peak_process_tree_rss_bytes", "raw_sha256", "normalized_sha256", "evidence", "evidence_sha256"],

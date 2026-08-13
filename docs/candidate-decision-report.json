@@ -3,32 +3,35 @@
   "schema_version": 1,
   "status": "awaiting_explicit_user_approval",
   "subjective_listening": {
-    "status": "recorded_user_review",
+    "status": "partial_user_review",
     "ratings": {
-      "realtime": "tied_for_second",
-      "pocket": "tied_for_second",
-      "kokoro": "clearly_preferred"
+      "realtime": "third_of_historical_three",
+      "pocket": "second_of_historical_three",
+      "kokoro": "first_of_historical_three",
+      "supertonic_3": null,
+      "inflect_nano_v1": null,
+      "kitten_tts_mini_0_8": null
     },
-    "note": "Explicit user review of published previews: Candidate C / Kokoro is clearly preferred; Candidate A / Realtime and Candidate B / Pocket are hard to distinguish and effectively tied. This is subjective evidence, not an objective metric or Android-feasibility claim.",
+    "note": "Historical A-C review: Kokoro first, Pocket second, VibeVoice Realtime third. D-F remain pending blind review. The active bake-off now compares all six natural-duration outputs with no 15-second requirement or normalization.",
     "evidence": "experiments/0007-mobile-podcast-preview-bakeoff/results/user-listening-review.json"
   },
   "host_quality_evidence": [
     {
       "candidate": "VibeVoice Realtime 0.5B",
-      "status": "playable_normalized_user_tied_second",
+      "status": "playable_natural_duration_historically_ranked",
       "raw_duration_seconds": 20.133333333333333,
       "generation_wall_seconds": 8.888567516999501,
       "first_audible_output_seconds": 0.4843882079994728,
       "host_rtf": 0.4414851415728229,
       "peak_process_tree_rss_bytes": 3531898880,
       "raw_sha256": "0daa06752efbdd2944ac66e02aa8f86792cf523dbb4846bb4fab9ac8741e28c1",
-      "normalized_sha256": "a010e2e685446cd5904a0b02ad806f04bb5b5c2bfa2bd7f1c002d1691e9d0d41",
+      "normalized_sha256": null,
       "evidence": "experiments/0007-mobile-podcast-preview-bakeoff/results/realtime-preview.json",
       "evidence_sha256": "66da6566b04172f0a1a133e264de4618a39d9b6de8f2667000e4feadba3e29a7"
     },
     {
       "candidate": "Pocket TTS 100M",
-      "status": "playable_raw_only_user_tied_second",
+      "status": "playable_natural_duration_historically_ranked",
       "raw_duration_seconds": 13.84,
       "generation_wall_seconds": 4.093614479999815,
       "first_audible_output_seconds": 0.18415928700051154,
@@ -38,20 +41,60 @@
       "normalized_sha256": null,
       "evidence": "experiments/0007-mobile-podcast-preview-bakeoff/results/pocket-preview.json",
       "evidence_sha256": "5934b8c03688cb945dbbeeceae601276bf3cf4cb47b90d91a1fe7c08b532bc2d",
-      "note": "The single permitted punctuation revision still produced less than 15 seconds. No silence, loop, or time stretching was used."
+      "note": "Natural measured duration is canonical for the active bake-off; no duration exception or normalized copy is required."
     },
     {
       "candidate": "Kokoro 82M",
-      "status": "playable_normalized_user_preferred",
+      "status": "playable_natural_duration_historically_ranked",
       "raw_duration_seconds": 17.475,
       "generation_wall_seconds": 6.691854653000519,
       "first_audible_output_seconds": 7.0418316760002195,
       "host_rtf": 0.3829387498140497,
       "peak_process_tree_rss_bytes": 1713229824,
       "raw_sha256": "b6d8d126dae93f3d1f52bebf96d695c48d07c8ddf79a97d429c4687007e57494",
-      "normalized_sha256": "24cdb3b81fff87a1ecc46ff4e6aa740512f3eab2e33f5ae4cbec541b12fed196",
+      "normalized_sha256": null,
       "evidence": "experiments/0007-mobile-podcast-preview-bakeoff/results/kokoro-preview.json",
       "evidence_sha256": "dbe26e655fb22fa72904d14610ff9ff4dc2b58ba652eaa71a3807fc05f8675b7"
+    },
+    {
+      "candidate": "Supertonic 3",
+      "status": "playable_natural_duration_pending_user_review",
+      "raw_duration_seconds": 16.16108843537415,
+      "generation_wall_seconds": 5.506324572001176,
+      "first_audible_output_seconds": 5.956319404001261,
+      "host_rtf": 0.3407149582789656,
+      "peak_process_tree_rss_bytes": 609148928,
+      "raw_sha256": "4c964e0a47a5736f2385db320daf2597691ab4637667bd65adb83b1da91774f8",
+      "normalized_sha256": null,
+      "evidence": "experiments/0007-mobile-podcast-preview-bakeoff/results/supertonic-3-preview.json",
+      "evidence_sha256": "919fd6f2a868578e56e23db9fcf02b9ba2a463f02f4c75f08fd1715fc2eb74b3"
+    },
+    {
+      "candidate": "Inflect Nano v1",
+      "status": "playable_natural_duration_pending_user_review",
+      "raw_duration_seconds": 14.933333333333334,
+      "generation_wall_seconds": 3.457863227999951,
+      "first_audible_output_seconds": 3.9165623730004517,
+      "host_rtf": 0.231553341160711,
+      "peak_process_tree_rss_bytes": 1093529600,
+      "raw_sha256": "f35d97ca06df19b648d2e09e52dd2ab27a2dc6423cb5a4914973907b9c85bed1",
+      "normalized_sha256": null,
+      "evidence": "experiments/0007-mobile-podcast-preview-bakeoff/results/inflect-nano-v1-preview.json",
+      "evidence_sha256": "5e1b46559feacad39b615a5a1163e65207689657cfd143eca6bcd5e9d67403de",
+      "note": "Natural measured duration is canonical for the active bake-off; no duration exception or normalized copy is required."
+    },
+    {
+      "candidate": "Kitten TTS Mini 80M v0.8",
+      "status": "playable_natural_duration_pending_user_review",
+      "raw_duration_seconds": 15.416666666666666,
+      "generation_wall_seconds": 11.00722818200029,
+      "first_audible_output_seconds": 11.445285487000037,
+      "host_rtf": 0.713982368562181,
+      "peak_process_tree_rss_bytes": 791814144,
+      "raw_sha256": "e5d1d2ae5135ed9feeb6c48314727da4568b657f082554f0e0828d628841e87d",
+      "normalized_sha256": null,
+      "evidence": "experiments/0007-mobile-podcast-preview-bakeoff/results/kitten-mini-0.8-preview.json",
+      "evidence_sha256": "8eb9ff47bfdf9ce3255f54e830ec0c59ad31904f801eedb62b00562f13c9c0af"
     }
   ],
   "android_measurements": {
@@ -77,6 +120,18 @@
     "kokoro": {
       "status": "not_measured",
       "reason": "Host listening evidence only."
+    },
+    "supertonic_3": {
+      "status": "not_measured",
+      "reason": "Supertonic 3 has host listening evidence only; Android work is deferred until expanded listening review."
+    },
+    "inflect_nano_v1": {
+      "status": "not_measured",
+      "reason": "Inflect Nano v1 has host listening evidence only; Android work is deferred until expanded listening review."
+    },
+    "kitten_tts_mini_0_8": {
+      "status": "not_measured",
+      "reason": "Kitten TTS Mini 80M v0.8 has host listening evidence only; Android work is deferred until expanded listening review."
     }
   },
   "estimates": {
@@ -117,8 +172,8 @@
     },
     {
       "id": "proceed_turn_by_turn",
-      "label": "Proceed with Pocket TTS or Kokoro turn-by-turn mobile composition",
-      "gate": "Select a listening-approved candidate; Pocket remains raw-only under the exact-15-second protocol."
+      "label": "Proceed with a listening-approved turn-by-turn mobile candidate",
+      "gate": "Complete the expanded blind review of all six natural-duration outputs, then select a listening-approved candidate. No Android work starts from this report."
     },
     {
       "id": "continue_vibevoice_1_5b_recovery",
@@ -136,5 +191,5 @@
       "gate": "Record the user's judgment; do not infer it from host speed or storage estimates."
     }
   ],
-  "next_action": "Stop at this report and wait for explicit user approval. No conversion or follow-up work is authorized."
+  "next_action": "Stop at the expanded six-candidate natural-duration listening review. Reveal identities only when desired, record the D-F judgment, and do not start Android conversion or follow-up work yet."
 }

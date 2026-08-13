@@ -1,8 +1,12 @@
 # Mobile podcast preview bake-off
 
-This experiment locks the common input, audio derivation, evidence schemas, and machine-enforced resource controls for the VibeVoice Realtime 0.5B, Pocket TTS, and Kokoro host previews. It does **not** download or run a model.
+This experiment contains host listening evidence for VibeVoice Realtime 0.5B, Pocket TTS, Kokoro 82M, Supertonic 3, Inflect Nano v1, and Kitten TTS Mini 80M v0.8. It does not establish Android feasibility.
 
-## Frozen protocol v1
+## Active listening policy
+
+The active six-candidate bake-off uses each model's natural-duration output. There is no 15-second gate and no normalization. The page reports actual duration and native sample rate, starts with neutral Candidate A–F labels, and fetches model identities only after a per-card or reveal-all action. Historical normalized artifacts remain evidence but are noncanonical and are not loaded by the active page.
+
+## Historical frozen protocol v1/v2
 
 The exact 226 UTF-8 bytes in `protocol/transcript.txt` (no trailing newline) are the only accepted input:
 
@@ -51,7 +55,7 @@ It acquires one `preflight` grant around all three workers, runs them strictly i
 
 A grant is never reclaimed because it is old. Inspection must match host name, boot ID, PID liveness, and process start ticks. Dead or reused PIDs with a complete matching host identity are reported `stale_proven` but still block acquisition. Remote, incomplete, unreadable, and partially created grants are `remote_or_unknown` or `stale_unverifiable` and fail closed. Only the parent, after setting `PREVIEW_PARENT_ORCHESTRATOR=1`, may explicitly run `resource_lock.py recover-stale`; even then the tool removes only `stale_proven` grants and requires manual investigation otherwise.
 
-## Short-output and protocol-revision procedure
+## Historical short-output and protocol-revision procedure
 
 Silence padding, looping, and time stretching are prohibited. A worker whose raw output is short must first exhaust documented model speed controls. It then writes a request conforming to `schemas/protocol-revision-request.schema.json`; it does **not** edit the transcript or manifest and does not mark the candidate blocked yet.
 
@@ -59,18 +63,16 @@ Only the parent orchestrator may make the single shared punctuation revision. It
 
 ## Private listening publication
 
-`publication/bakeoff-manifest.json` is the checked-in reproducibility index for all three protocol-v2 results. It records the common transcript and protocol fingerprint, seeds, stock-voice provenance, source/model revisions, generation and derivation commands, native and browser-carrier formats, raw/derived hashes and durations, and every normalization transformation. Pocket's deterministic 13.84-second raw capture remains playable, but its normalized player is explicitly unavailable because fabricating the missing duration is prohibited.
+`publication/bakeoff-manifest.json` is the checked-in reproducibility index for all six results. It records the common transcript, stock-voice provenance, source/model revisions, commands, native formats, actual durations, hashes, browser carriers, and historical protocol status. The active page publishes one natural-duration player per candidate and no normalized players.
 
-Build and validate the private listening page with the now-disclosed model names plus the completed 18-task Crew DAG with:
+Build and validate the private blind listening page with interactive identity reveal:
 
 ```bash
 python experiments/0007-mobile-podcast-preview-bakeoff/publication/build_publication.py
 python -m unittest discover -s experiments/0007-mobile-podcast-preview-bakeoff/publication/tests -v
 ```
 
-The build copies ignored WAVs directly to ignored `artifacts/publication-build/`, checks their hashes, validates the manifest and cross-file invariants, and fails if media or artifact paths are staged. It also validates and publishes `docs/candidate-decision-report.json`, keeping host quality, unavailable Android measurements, storage estimates, historical 39/39 evidence, and subjective listening evidence separate. The recorded review clearly prefers Candidate C / Kokoro, with Realtime and Pocket effectively tied for second. `publication/publish.sh` uploads those files directly to the authenticated static-preview API; it never adds them to Git.
-
-All 18 Crew tasks are complete. The final repository snapshot includes the explicit listening review and remains stopped at the next-step approval gate; no conversion or candidate follow-up has started.
+The build copies ignored browser-playable WAV carriers directly to ignored `artifacts/publication-build/`, checks hashes, validates cross-file invariants, and fails if media or artifact paths are staged. Model identities are absent from initial HTML and embedded page JSON; `bakeoff-manifest.json` is fetched only after an explicit reveal action. The recorded historical order is Kokoro, Pocket, then Realtime. Supertonic, Inflect, and Kitten remain pending blind review. No conversion or Android follow-up has started.
 
 ## Tests
 
@@ -79,4 +81,4 @@ python -m pytest experiments/0007-mobile-podcast-preview-bakeoff/tests -q
 python -m unittest discover -s experiments/0007-mobile-podcast-preview-bakeoff/publication/tests -v
 ```
 
-Tests cover transcript/hash drift, schema validity, protocol invalidation, malformed and multichannel WAVs, resampling, exact trimming, fades, LUFS/peak gain, deterministic dither, raw preservation, statistics/RTF, lock contention and ownership, failure cleanup, safe stale reporting, one-/two-slot capacity, publication consistency, privacy, disclosed model labels, responsive controls, and all 18 DAG tasks and dependency edges.
+Tests cover transcript/hash drift, schema validity, protocol invalidation, malformed and multichannel WAVs, resampling, exact trimming, fades, LUFS/peak gain, deterministic dither, raw preservation, statistics/RTF, lock contention and ownership, failure cleanup, safe stale reporting, one-/two-slot capacity, publication consistency, privacy, blind labels, interactive per-card/reveal-all identity disclosure, responsive controls, and task dependency edges.

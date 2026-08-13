@@ -1,25 +1,27 @@
 {
   "anonymization": {
-    "identity_disclosure": "manifest_only",
+    "identity_disclosure": "explicit_reveal_only",
     "page_labels": [
       "Candidate A",
       "Candidate B",
-      "Candidate C"
+      "Candidate C",
+      "Candidate D",
+      "Candidate E",
+      "Candidate F"
     ]
   },
   "candidates": [
     {
       "blocker": null,
       "commands": {
-        "derivation": [
-          "python3",
-          "models/vibevoice-realtime/finalize_preview.py"
-        ],
+        "derivation": [],
         "generation": [
           "models/vibevoice-realtime/generate-preview.sh"
         ]
       },
+      "display_name": "VibeVoice Realtime 0.5B",
       "forbidden_transformations_used": [],
+      "historical_protocol_status": "accepted",
       "label": "Candidate A",
       "model": "realtime",
       "native": {
@@ -31,15 +33,7 @@
         "sample_rate_hz": 24000,
         "sha256": "0daa06752efbdd2944ac66e02aa8f86792cf523dbb4846bb4fab9ac8741e28c1"
       },
-      "normalized": {
-        "channels": 1,
-        "duration_seconds": 15.0,
-        "format": "PCM_S16LE",
-        "published_url": "audio/candidate-a-normalized.wav",
-        "sample_rate_hz": 24000,
-        "sha256": "a010e2e685446cd5904a0b02ad806f04bb5b5c2bfa2bd7f1c002d1691e9d0d41",
-        "source_path": "artifacts/normalized/realtime/v2/realtime-15s.wav"
-      },
+      "normalized": null,
       "raw": {
         "channels": 1,
         "duration_seconds": 20.133333333333333,
@@ -65,45 +59,10 @@
         "support": "The official demo has no seed option; task 6 explicitly seeds torch CPU and all CUDA generators. Token sampling is disabled; diffusion uses torch.randn.",
         "value": 0
       },
-      "status": "accepted",
+      "status": "ready",
       "transformations": {
-        "applied": true,
-        "metadata": {
-          "gain_db": 4.900562851016115,
-          "output": {
-            "channels": 1,
-            "compression": "NONE",
-            "duration_seconds": 15.0,
-            "sample_count": 360000,
-            "sample_rate_hz": 24000,
-            "sample_width_bytes": 2,
-            "sha256": "a010e2e685446cd5904a0b02ad806f04bb5b5c2bfa2bd7f1c002d1691e9d0d41"
-          },
-          "pre_gain_loudness_lufs": -24.900562851016115,
-          "resampled_samples": 483200,
-          "source_rate_hz": 24000,
-          "source_sha256": "0daa06752efbdd2944ac66e02aa8f86792cf523dbb4846bb4fab9ac8741e28c1",
-          "statistics": {
-            "integrated_loudness_lufs": -20.000001428298408,
-            "peak": 0.7691650390625,
-            "peak_dbfs": -2.2796092803325747,
-            "rms": 0.09257765106058566,
-            "rms_dbfs": -20.669876852219396
-          },
-          "trim_end": 360027,
-          "trim_start": 27
-        },
-        "metadata_path": "artifacts/normalized/realtime/v2/derivation.json",
-        "steps": [
-          "decode native audio to float64",
-          "arithmetic-mean mono conversion when needed",
-          "deterministic polyphase resampling to 24000 Hz when needed",
-          "zero-crossing exact-window trim [27, 360027)",
-          "240-sample sine-squared boundary fades",
-          "gain 4.90056285102 dB toward -20 LUFS with -1 dBFS ceiling",
-          "deterministic TPDF dither using NumPy PCG64 seed 0",
-          "quantize to mono PCM_S16LE"
-        ]
+        "applied": false,
+        "reason": "Active bake-off uses natural-duration native output; normalization is retired."
       },
       "voice": {
         "name": "en-Grace_woman.pt",
@@ -120,7 +79,9 @@
           "models/pocket-tts/generate_preview.sh"
         ]
       },
+      "display_name": "Pocket TTS 100M",
       "forbidden_transformations_used": [],
+      "historical_protocol_status": "blocked",
       "label": "Candidate B",
       "model": "pocket",
       "native": {
@@ -159,10 +120,10 @@
         "support": "Seeded immediately before generation; see determinism evidence.",
         "value": 0
       },
-      "status": "blocked",
+      "status": "ready",
       "transformations": {
         "applied": false,
-        "reason": "Protocol v2 was the one permitted shared punctuation revision, but Pocket still emits less than 15 seconds and has no documented speed control. Exact normalization would require forbidden fabrication, looping, padding, or time stretching."
+        "reason": "Active bake-off uses natural-duration native output; normalization is retired."
       },
       "voice": {
         "cloning_performed": false,
@@ -174,14 +135,14 @@
     {
       "blocker": null,
       "commands": {
-        "derivation": [
-          "models/kokoro/generate_preview.sh"
-        ],
+        "derivation": [],
         "generation": [
           "models/kokoro/generate_preview.sh"
         ]
       },
+      "display_name": "Kokoro 82M",
       "forbidden_transformations_used": [],
+      "historical_protocol_status": "accepted",
       "label": "Candidate C",
       "model": "kokoro",
       "native": {
@@ -193,15 +154,7 @@
         "sample_rate_hz": 24000,
         "sha256": "b6d8d126dae93f3d1f52bebf96d695c48d07c8ddf79a97d429c4687007e57494"
       },
-      "normalized": {
-        "channels": 1,
-        "duration_seconds": 15.0,
-        "format": "PCM_S16LE",
-        "published_url": "audio/candidate-c-normalized.wav",
-        "sample_rate_hz": 24000,
-        "sha256": "24cdb3b81fff87a1ecc46ff4e6aa740512f3eab2e33f5ae4cbec541b12fed196",
-        "source_path": "artifacts/previews/kokoro/normalized/kokoro-15s.wav"
-      },
+      "normalized": null,
       "raw": {
         "channels": 1,
         "duration_seconds": 17.475,
@@ -229,45 +182,10 @@
         "support": "Seeded immediately before generation; see determinism evidence.",
         "value": 0
       },
-      "status": "accepted",
+      "status": "ready",
       "transformations": {
-        "applied": true,
-        "metadata": {
-          "gain_db": 5.233654996420853,
-          "output": {
-            "channels": 1,
-            "compression": "NONE",
-            "duration_seconds": 15.0,
-            "sample_count": 360000,
-            "sample_rate_hz": 24000,
-            "sample_width_bytes": 2,
-            "sha256": "24cdb3b81fff87a1ecc46ff4e6aa740512f3eab2e33f5ae4cbec541b12fed196"
-          },
-          "pre_gain_loudness_lufs": -25.233654996420853,
-          "resampled_samples": 419400,
-          "source_rate_hz": 24000,
-          "source_sha256": "dd126a46080b6977ed1d9ee708988a0e2f67b5bd96aee8c038f5179316f8a5cd",
-          "statistics": {
-            "integrated_loudness_lufs": -19.99999987656189,
-            "peak": 0.800018310546875,
-            "peak_dbfs": -1.9380014581995164,
-            "rms": 0.09677393687457625,
-            "rms_dbfs": -20.284831819873492
-          },
-          "trim_end": 360000,
-          "trim_start": 0
-        },
-        "metadata_path": "artifacts/previews/kokoro/normalized/kokoro-15s.derivation.json",
-        "steps": [
-          "decode native audio to float64",
-          "arithmetic-mean mono conversion when needed",
-          "deterministic polyphase resampling to 24000 Hz when needed",
-          "zero-crossing exact-window trim [0, 360000)",
-          "240-sample sine-squared boundary fades",
-          "gain 5.23365499642 dB toward -20 LUFS with -1 dBFS ceiling",
-          "deterministic TPDF dither using NumPy PCG64 seed 0",
-          "quantize to mono PCM_S16LE"
-        ]
+        "applied": false,
+        "reason": "Active bake-off uses natural-duration native output; normalization is retired."
       },
       "voice": {
         "cloning_performed": false,
@@ -277,8 +195,225 @@
         "source": "https://huggingface.co/hexgrad/Kokoro-82M/blob/f3ff3571791e39611d31c381e3a41a3af07b4987/VOICES.md",
         "stock_voice": true
       }
+    },
+    {
+      "blocker": null,
+      "commands": {
+        "derivation": [],
+        "generation": [
+          "models/supertonic-3/setup.sh",
+          "models/supertonic-3/smoke-load.sh",
+          "models/supertonic-3/generate_preview.sh 0",
+          "models/supertonic-3/generate_preview.sh 0 --repeat",
+          "artifacts/protocol-venv/bin/python models/supertonic-3/finalize_preview.py"
+        ]
+      },
+      "display_name": "Supertone/supertonic-3",
+      "forbidden_transformations_used": [],
+      "historical_protocol_status": "accepted",
+      "label": "Candidate D",
+      "model": "supertonic-3",
+      "native": {
+        "byte_count": 2850816,
+        "channels": 1,
+        "duration_seconds": 16.16108843537415,
+        "format": "headerless little-endian IEEE float32 PCM (native SDK array bytes)",
+        "sample_count": 712704,
+        "sample_rate_hz": 44100,
+        "sha256": "4c964e0a47a5736f2385db320daf2597691ab4637667bd65adb83b1da91774f8"
+      },
+      "normalized": null,
+      "raw": {
+        "channels": 1,
+        "duration_seconds": 16.16108843537415,
+        "format": "WAV PCM_F32LE",
+        "published_url": "audio/candidate-d-raw.wav",
+        "sample_rate_hz": 44100,
+        "sha256": "6383dbda4d285301cea831cc361c6a1cdfb463c1c97044bf2c8b35054d796f18",
+        "source_path": "artifacts/supertonic-3/captures/generation-api-boundary-v2/attempts/attempt-00/native-pcm32.wav"
+      },
+      "result_path": "experiments/0007-mobile-podcast-preview-bakeoff/results/supertonic-3-preview.json",
+      "revisions": {
+        "model": "724fb5abbf5502583fb520898d45929e62f02c0b",
+        "source": "908a56486e821e833a80530ff0cae3ad0b046fce"
+      },
+      "seed": {
+        "determinism": {
+          "claim": "Bit-identical fresh-process repeat on this pinned CPU environment; no cross-platform bit-exact claim.",
+          "differing_samples": 0,
+          "duration_and_sample_count_match": true,
+          "fresh_process_repeat_count": 1,
+          "max_absolute_sample_difference": 0.0,
+          "primary_sha256": "4c964e0a47a5736f2385db320daf2597691ab4637667bd65adb83b1da91774f8",
+          "raw_hashes_match": true,
+          "repeat_sha256": "4c964e0a47a5736f2385db320daf2597691ab4637667bd65adb83b1da91774f8",
+          "rms_sample_difference": 0.0
+        },
+        "support": "Seeded immediately before generation; see determinism evidence.",
+        "value": 0
+      },
+      "status": "ready",
+      "transformations": {
+        "applied": false,
+        "reason": "Active bake-off uses natural-duration native output; normalization is retired."
+      },
+      "voice": {
+        "artifact": "voice_styles/M1.json",
+        "asset_sha256": "e35604687f5d23694b8e91593a93eec0e4eca6c0b02bb8ed69139ab2ea6b0a5b",
+        "cloning_performed": false,
+        "custom_voice_allowed": false,
+        "id": "M1",
+        "kind": "repository bundled stock voice",
+        "license": "OpenRAIL-M with bundled third-party notices",
+        "name": "M1",
+        "personal_or_cloned_input_used": false,
+        "provenance_document": "https://huggingface.co/Supertone/supertonic-3/blob/724fb5abbf5502583fb520898d45929e62f02c0b/README.md",
+        "source": "https://huggingface.co/Supertone/supertonic-3/blob/724fb5abbf5502583fb520898d45929e62f02c0b/README.md",
+        "stock_voice": true
+      }
+    },
+    {
+      "blocker": "All 11 precommitted default-first length-scale attempts were shorter than 15.0 seconds. The maximum allowed length_scale 1.50 produced 14.933333333333334 seconds; no accepted primary exists, so the required fresh-process repeat and unchanged protocol-v2 normalization are inapplicable. Extending the frozen grid or padding, looping, fabricating, time-stretching, or changing the transcript is forbidden.",
+      "commands": {
+        "derivation": [],
+        "generation": [
+          "models/inflect-nano-v1/generate-attempt.sh",
+          "ATTEMPT_INDEX"
+        ]
+      },
+      "display_name": "owensong/Inflect-Nano-v1",
+      "forbidden_transformations_used": [],
+      "historical_protocol_status": "blocked",
+      "label": "Candidate E",
+      "model": "inflect-nano-v1",
+      "native": {
+        "byte_count": 716844,
+        "channels": 1,
+        "duration_seconds": 14.933333333333334,
+        "format": "WAV PCM_S16LE",
+        "sample_count": 358400,
+        "sample_rate_hz": 24000,
+        "sha256": "f35d97ca06df19b648d2e09e52dd2ab27a2dc6423cb5a4914973907b9c85bed1"
+      },
+      "normalized": null,
+      "raw": {
+        "channels": 1,
+        "duration_seconds": 14.933333333333334,
+        "format": "WAV PCM_S16LE",
+        "published_url": "audio/candidate-e-raw.wav",
+        "sample_rate_hz": 24000,
+        "sha256": "f35d97ca06df19b648d2e09e52dd2ab27a2dc6423cb5a4914973907b9c85bed1",
+        "source_path": "artifacts/raw/inflect-nano-v1/v2/attempt-10-length-scale-1.50/native.wav"
+      },
+      "result_path": "experiments/0007-mobile-podcast-preview-bakeoff/results/inflect-nano-v1-preview.json",
+      "revisions": {
+        "model": "ab0302781cb0cb9969a9a28ce8e1b259539275dd",
+        "source": "ab0302781cb0cb9969a9a28ce8e1b259539275dd"
+      },
+      "seed": {
+        "determinism": {
+          "claim": "No fresh-process repeat was permitted because no primary attempt met the 15-second selection threshold.",
+          "fresh_process_repeat_count": 0,
+          "raw_hashes_match": null,
+          "torch_deterministic_algorithms": true,
+          "torch_manual_seed": 0
+        },
+        "support": "Seeded immediately before generation; see determinism evidence.",
+        "value": 0
+      },
+      "status": "ready",
+      "transformations": {
+        "applied": false,
+        "reason": "Active bake-off uses natural-duration native output; normalization is retired."
+      },
+      "voice": {
+        "asset_sha256": "0129f730a25a1e44d1799a1d47166c9a3a5644e58fb84a3b554d5c036827ec89",
+        "cloning_performed": false,
+        "license": "Apache-2.0",
+        "name": "mark",
+        "source": "Built into pinned Inflect-Nano-v1 acoustic checkpoint",
+        "stock_voice": true
+      }
+    },
+    {
+      "blocker": null,
+      "commands": {
+        "derivation": [],
+        "generation": [
+          "models/kitten-tts-mini-0.8/generate-preview.sh speed-0.95 primary",
+          "models/kitten-tts-mini-0.8/generate-preview.sh speed-0.90 primary",
+          "models/kitten-tts-mini-0.8/generate-preview.sh speed-0.90 repeat-1",
+          "python models/kitten-tts-mini-0.8/finalize_preview.py"
+        ]
+      },
+      "display_name": "KittenML/kitten-tts-mini-0.8",
+      "forbidden_transformations_used": [],
+      "historical_protocol_status": "accepted",
+      "label": "Candidate F",
+      "model": "kitten-tts-mini-0.8",
+      "native": {
+        "byte_count": 1480000,
+        "channels": 1,
+        "duration_seconds": 15.416666666666666,
+        "format": "headerless little-endian IEEE float32 PCM (native library array bytes)",
+        "sample_count": 370000,
+        "sample_rate_hz": 24000,
+        "sha256": "e5d1d2ae5135ed9feeb6c48314727da4568b657f082554f0e0828d628841e87d"
+      },
+      "normalized": null,
+      "raw": {
+        "channels": 1,
+        "duration_seconds": 15.416666666666666,
+        "format": "WAV PCM_F32LE",
+        "published_url": "audio/candidate-f-raw.wav",
+        "sample_rate_hz": 24000,
+        "sha256": "3981887b87845e5891818ca636f0fcf4c039ca82c8078a85e6e67e188f86f136",
+        "source_path": "artifacts/kitten-tts-mini-0.8/generation/attempt-03-speed-0.90/primary/native-pcm32.wav"
+      },
+      "result_path": "experiments/0007-mobile-podcast-preview-bakeoff/results/kitten-mini-0.8-preview.json",
+      "revisions": {
+        "model": "c02725660cea441db4c383af69f1f26f5cd00947",
+        "source": "0c61f684b54fe962e4b7c2fa0285ed75f64ad402"
+      },
+      "seed": {
+        "determinism": {
+          "claim": "Fresh-process repeat matched duration and sample count but not waveform bytes; no bit-exact determinism claim is made.",
+          "differing_samples": 370000,
+          "duration_and_sample_count_match": true,
+          "fresh_process_repeat_count": 1,
+          "max_absolute_sample_difference": 0.2732411399483681,
+          "primary_sha256": "e5d1d2ae5135ed9feeb6c48314727da4568b657f082554f0e0828d628841e87d",
+          "raw_hashes_match": false,
+          "repeat_sha256": "f9d7f8e0523cb0717ce3e02747dccfd8b76b23157b4738fc5d363e4cdf04f9a7",
+          "rms_sample_difference": 0.0180240348259538
+        },
+        "support": "Seeded immediately before generation; see determinism evidence.",
+        "value": 0
+      },
+      "status": "ready",
+      "transformations": {
+        "applied": false,
+        "reason": "Active bake-off uses natural-duration native output; normalization is retired."
+      },
+      "voice": {
+        "asset_hash_scope": "float32 [400, 256] array C-order bytes selected from voices.npz",
+        "asset_key": "expr-voice-2-m",
+        "asset_sha256": "4fc6fdcbaac820aad0d2f3040709bc0e23e3674d9c7f2eaa67ddc9573f128de4",
+        "cloning_performed": false,
+        "license": "Apache-2.0 (model repository card)",
+        "name": "Jasper",
+        "reference_audio_used": false,
+        "source": "voices.npz at KittenML/kitten-tts-mini-0.8 revision c02725660cea441db4c383af69f1f26f5cd00947",
+        "stock_voice": true
+      }
     }
   ],
+  "comparison_policy": {
+    "duration_gate_seconds": null,
+    "mode": "natural_duration_native_output",
+    "normalization_active": false,
+    "note": "All six candidates are evaluated at their truthful native output durations; historical normalized artifacts are noncanonical."
+  },
   "protocol": {
     "fingerprint": "ca0987feca4c9a2e8744d4846d1b3f5da86799862f6f7d8ba7e3563f84245814",
     "id": "mobile-podcast-preview",
@@ -315,7 +450,7 @@
     },
     "version": 2
   },
-  "schema_version": 1,
+  "schema_version": 2,
   "transcript": {
     "sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
     "text": "Welcome to our small studio... where curious minds unpack one surprising idea at a time. Today, we explore why familiar voices build trust, how thoughtful pauses shape meaning... and what makes a conversation feel genuinely alive.",

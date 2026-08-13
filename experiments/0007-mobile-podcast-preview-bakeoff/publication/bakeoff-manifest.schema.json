@@ -19,9 +19,20 @@
     }
   },
   "type": "object",
-  "required": ["schema_version", "transcript", "protocol", "anonymization", "candidates"],
+  "required": ["schema_version", "comparison_policy", "transcript", "protocol", "anonymization", "candidates"],
   "properties": {
-    "schema_version": {"const": 1},
+    "schema_version": {"const": 2},
+    "comparison_policy": {
+      "type": "object",
+      "required": ["mode", "duration_gate_seconds", "normalization_active", "note"],
+      "properties": {
+        "mode": {"const": "natural_duration_native_output"},
+        "duration_gate_seconds": {"type": "null"},
+        "normalization_active": {"const": false},
+        "note": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
     "transcript": {
       "type": "object",
       "required": ["text", "sha256", "word_count"],
@@ -59,12 +70,13 @@
       "maxItems": 6,
       "items": {
         "type": "object",
-        "required": ["label", "model", "display_name", "status", "seed", "voice", "revisions", "commands", "native", "raw", "normalized", "transformations", "forbidden_transformations_used", "result_path"],
+        "required": ["label", "model", "display_name", "status", "historical_protocol_status", "seed", "voice", "revisions", "commands", "native", "raw", "normalized", "transformations", "forbidden_transformations_used", "result_path"],
         "properties": {
           "label": {"enum": ["Candidate A", "Candidate B", "Candidate C", "Candidate D", "Candidate E", "Candidate F"]},
           "model": {"enum": ["realtime", "pocket", "kokoro", "supertonic-3", "inflect-nano-v1", "kitten-tts-mini-0.8"]},
           "display_name": {"type": "string", "minLength": 1},
-          "status": {"enum": ["accepted", "blocked", "rejected"]},
+          "status": {"const": "ready"},
+          "historical_protocol_status": {"enum": ["accepted", "blocked", "rejected"]},
           "seed": {"type": "object"},
           "voice": {"type": "object"},
           "revisions": {"type": "object", "required": ["source", "model"]},
@@ -84,7 +96,7 @@
             "additionalProperties": false
           },
           "raw": {"$ref": "#/$defs/artifact"},
-          "normalized": {"oneOf": [{"$ref": "#/$defs/artifact"}, {"type": "null"}]},
+          "normalized": {"type": "null"},
           "transformations": {"type": "object"},
           "forbidden_transformations_used": {"const": []},
           "blocker": {"type": ["string", "null"]},

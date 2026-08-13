@@ -40,3 +40,11 @@ The user clearly preferred Candidate C / Kokoro 82M. Candidate A / VibeVoice Rea
 ## 2026-08-13 — Conversation state reconciled
 
 The latest conversation adds no implementation authorization beyond the recorded listening preference. The 18-task candidate campaign is complete, no candidate follow-up has started, and the repository remains stopped at the explicit next-step gate in [`candidate-decision-report.md`](candidate-decision-report.md). The listening-preferred path is Kokoro turn-by-turn mobile composition, but it has not yet been explicitly selected for implementation.
+
+## 2026-08-13 — Expand the listening bake-off before Android
+
+Record the updated historical order as Kokoro first, Pocket TTS second, and VibeVoice Realtime third. Add official Supertonic 3, Inflect Nano v1, and Kitten TTS Mini 80M v0.8 host samples before selecting an Android candidate. Use stock voices only and do not start Android work.
+
+## 2026-08-13 — Compare natural-duration outputs
+
+Retire the 15-second gate and normalization from the active listening bake-off. Publish all six natural-duration outputs at their measured durations and native rates. Historical protocol-v2 derivations remain provenance only. Hide model identities initially; reveal one card or all cards only after explicit interaction.

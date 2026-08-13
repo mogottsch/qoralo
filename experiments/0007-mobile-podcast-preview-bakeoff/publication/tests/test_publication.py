@@ -32,6 +32,9 @@ class ManifestTests(unittest.TestCase):
         build_publication.validate_manifest(self.manifest)
         self.assertEqual(36, self.manifest["transcript"]["word_count"])
         self.assertEqual(2, self.manifest["protocol"]["version"])
+        self.assertEqual("natural_duration_native_output", self.manifest["comparison_policy"]["mode"])
+        self.assertIsNone(self.manifest["comparison_policy"]["duration_gate_seconds"])
+        self.assertFalse(self.manifest["comparison_policy"]["normalization_active"])
         self.assertEqual(
             [f"Candidate {letter}" for letter in "ABCDEF"],
             [candidate["label"] for candidate in self.manifest["candidates"]],
@@ -86,14 +89,14 @@ class BuiltPageTests(unittest.TestCase):
         candidates = self.page_data["candidates"]
         self.assertEqual([f"Candidate {letter}" for letter in "ABCDEF"], [item["label"] for item in candidates])
         self.assertEqual(6, len({item["slug"] for item in candidates}))
-        self.assertEqual(11, sum(1 + (item["normalized_url"] is not None) for item in candidates))
-        self.assertEqual({"label", "slug", "status", "raw_url", "normalized_url"}, set(candidates[0]))
+        self.assertEqual(6, len(candidates))
+        self.assertEqual({"label", "slug", "status", "raw_url", "duration_seconds", "sample_rate_hz"}, set(candidates[0]))
         for candidate in self.manifest["candidates"]:
-            for kind in ("raw", "normalized"):
-                artifact = candidate[kind]
-                if artifact:
-                    self.assertTrue((self.output / artifact["published_url"]).is_file())
-                    self.assertRegex(artifact["published_url"], r"^audio/candidate-[a-f]-(raw|normalized)\.wav$")
+            self.assertEqual("ready", candidate["status"])
+            self.assertIsNone(candidate["normalized"])
+            artifact = candidate["raw"]
+            self.assertTrue((self.output / artifact["published_url"]).is_file())
+            self.assertRegex(artifact["published_url"], r"^audio/candidate-[a-f]-raw\.wav$")
 
     def test_initial_document_and_embedded_json_have_no_identity(self):
         identities = [candidate["display_name"] for candidate in self.manifest["candidates"]]
@@ -105,7 +108,9 @@ class BuiltPageTests(unittest.TestCase):
         self.assertNotIn("display_name", json.dumps(self.page_data))
         self.assertNotRegex(json.dumps(self.page_data), r"audio/(?!candidate-[a-f]-)[^\"]+\.wav")
         self.assertIn('class="identity" id="candidate-', self.html)
-        self.assertIn("Comparison unavailable.", self.html)
+        self.assertNotIn("Normalized comparison", self.html)
+        self.assertNotIn("Comparison unavailable.", self.html)
+        self.assertIn("natural-duration output", self.html)
         self.assertIn("Audio unavailable.", self.html)
 
     def test_identity_manifest_is_requested_only_from_explicit_reveal_handlers(self):
