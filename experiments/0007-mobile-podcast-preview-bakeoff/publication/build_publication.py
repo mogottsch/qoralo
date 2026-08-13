@@ -20,13 +20,18 @@ SCHEMA_PATH = HERE / "bakeoff-manifest.schema.json"
 MANIFEST_PATH = HERE / "bakeoff-manifest.json"
 REPORT_PATH = REPO / "docs/candidate-decision-report.json"
 REPORT_SCHEMA_PATH = REPO / "docs/candidate-decision-report.schema.json"
-LABELS = {"realtime": "Candidate A", "pocket": "Candidate B", "kokoro": "Candidate C"}
-DISPLAY_NAMES = {
-    "realtime": "VibeVoice Realtime 0.5B",
-    "pocket": "Pocket TTS 100M",
-    "kokoro": "Kokoro 82M",
+CANDIDATES = {
+    "realtime": ("Candidate A", "a", "VibeVoice Realtime 0.5B", "realtime-preview.json"),
+    "pocket": ("Candidate B", "b", "Pocket TTS 100M", "pocket-preview.json"),
+    "kokoro": ("Candidate C", "c", "Kokoro 82M", "kokoro-preview.json"),
+    "supertonic-3": ("Candidate D", "d", "Supertone/supertonic-3", "supertonic-3-preview.json"),
+    "inflect-nano-v1": ("Candidate E", "e", "owensong/Inflect-Nano-v1", "inflect-nano-v1-preview.json"),
+    "kitten-tts-mini-0.8": ("Candidate F", "f", "KittenML/kitten-tts-mini-0.8", "kitten-tts-mini-0.8-preview.json"),
 }
-SLUGS = {"realtime": "a", "pocket": "b", "kokoro": "c"}
+LABELS = {model: values[0] for model, values in CANDIDATES.items()}
+SLUGS = {model: values[1] for model, values in CANDIDATES.items()}
+DISPLAY_NAMES = {model: values[2] for model, values in CANDIDATES.items()}
+RESULT_FILES = {model: RESULTS / values[3] for model, values in CANDIDATES.items()}
 
 
 def load(path: Path):
@@ -102,7 +107,7 @@ def derivation(result: dict) -> tuple[dict, list[str]]:
     return {"applied": True, "metadata_path": normalized["derivation_metadata_path"], "metadata": metadata, "steps": steps}, result["provenance"].get("derivation_command", result["command"])
 
 
-def build_manifest() -> dict:
+def build_manifest(result_files: dict[str, Path] | None = None) -> dict:
     protocol = load(PROTOCOL_PATH)
     transcript = TRANSCRIPT_PATH.read_text(encoding="utf-8")
     transcript_hash = hashlib.sha256(transcript.encode()).hexdigest()
@@ -110,8 +115,12 @@ def build_manifest() -> dict:
         raise ValueError("transcript does not match protocol")
     candidates = []
     fingerprints = set()
-    for model in ("realtime", "pocket", "kokoro"):
-        result_path = RESULTS / f"{model}-preview.json"
+    paths = result_files or RESULT_FILES
+    missing = [str(paths[model]) for model in CANDIDATES if not paths[model].is_file()]
+    if missing:
+        raise ValueError(f"six-candidate publication evidence is incomplete: {missing}")
+    for model in CANDIDATES:
+        result_path = paths[model]
         result = load(result_path)
         fingerprints.add(result["protocol"]["protocol_fingerprint"])
         transforms, derivation_command = derivation(result)
@@ -119,6 +128,7 @@ def build_manifest() -> dict:
         candidates.append({
             "label": LABELS[model],
             "model": model,
+            "display_name": DISPLAY_NAMES[model],
             "status": result["status"],
             "seed": seed_record(result),
             "voice": result["voice"],
@@ -146,7 +156,7 @@ def build_manifest() -> dict:
             "fingerprint": fingerprints.pop(), "manifest_path": str(PROTOCOL_PATH.relative_to(REPO)),
             "transformations": protocol["audio"],
         },
-        "anonymization": {"page_labels": list(LABELS.values()), "identity_disclosure": "manifest_only"},
+        "anonymization": {"page_labels": list(LABELS.values()), "identity_disclosure": "explicit_reveal_only"},
         "candidates": candidates,
     }
 
@@ -209,20 +219,23 @@ def decision_report() -> dict:
 
 def crew_snapshot() -> dict:
     task_dir = REPO / ".pi/messenger/crew/tasks"
+    task_paths = sorted(task_dir.glob("task-*.json"), key=lambda path: int(path.stem.split("-")[1]))
     tasks = []
-    for number in range(1, 19):
-        task = load(task_dir / f"task-{number}.json")
+    for path in task_paths:
+        task = load(path)
         tasks.append({key: task.get(key) for key in ("id", "title", "status", "depends_on", "attempt_count", "started_at", "completed_at", "blocked_reason", "summary")})
     ids = {task["id"] for task in tasks}
-    if len(tasks) != 18 or any(set(task["depends_on"] or []) - ids for task in tasks):
+    if not tasks or any(set(task["depends_on"] or []) - ids for task in tasks):
         raise ValueError("Crew DAG is incomplete or has dangling dependencies")
     return {"schema_version": 1, "updated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "tasks": tasks}
 
 
-def build(output: Path) -> None:
-    manifest = build_manifest()
+def build(output: Path, manifest: dict | None = None) -> None:
+    write_canonical_manifest = manifest is None
+    manifest = manifest or build_manifest()
     validate_manifest(manifest)
-    MANIFEST_PATH.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    if write_canonical_manifest:
+        MANIFEST_PATH.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     output.mkdir(parents=True, exist_ok=True)
     audio = output / "audio"
     audio.mkdir(exist_ok=True)
@@ -237,28 +250,19 @@ def build(output: Path) -> None:
     (output / "crew-tasks.json").write_text(json.dumps(snapshot, indent=2) + "\n")
     (output / "candidate-decision-report.json").write_text(json.dumps(report, indent=2) + "\n")
     template = (HERE / "index.template.html").read_text()
+    # This is the complete initial-page data contract. In particular, do not add
+    # model keys, names, provenance, report summaries, or Crew task titles here.
     page_data = {
         "transcript": manifest["transcript"],
         "protocol": {"version": manifest["protocol"]["version"]},
         "candidates": [{
-            "name": DISPLAY_NAMES[candidate["model"]], "slug": SLUGS[candidate["model"]], "status": candidate["status"],
+            "label": candidate["label"], "slug": SLUGS[candidate["model"]], "status": candidate["status"],
             "raw_url": candidate["raw"]["published_url"],
             "normalized_url": candidate["normalized"]["published_url"] if candidate["normalized"] else None,
         } for candidate in manifest["candidates"]],
     }
-    report_data = {
-        "status": report["status"],
-        "subjective_status": report["subjective_listening"]["status"],
-        "historical": report["historical_evidence"],
-        "android": report["android_measurements"],
-        "estimates": report["estimates"],
-        "decisions": report["candidate_decisions"],
-        "next_action": report["next_action"],
-    }
-    embedded_manifest = json.dumps(page_data, separators=(",", ":")).replace("</", "<\\/")
-    embedded_crew = json.dumps(snapshot, separators=(",", ":")).replace("</", "<\\/")
-    embedded_report = json.dumps(report_data, separators=(",", ":")).replace("</", "<\\/")
-    (output / "index.html").write_text(template.replace("__BAKEOFF_JSON__", embedded_manifest).replace("__CREW_JSON__", embedded_crew).replace("__REPORT_JSON__", embedded_report))
+    embedded_page_data = json.dumps(page_data, separators=(",", ":")).replace("</", "<\\/")
+    (output / "index.html").write_text(template.replace("__BAKEOFF_JSON__", embedded_page_data))
     staged = subprocess.run(["git", "diff", "--cached", "--name-only"], cwd=REPO, text=True, capture_output=True, check=True).stdout.splitlines()
     forbidden = [path for path in staged if path.endswith((".wav", ".flac", ".mp3", ".m4a")) or "/artifacts/" in path]
     if forbidden:

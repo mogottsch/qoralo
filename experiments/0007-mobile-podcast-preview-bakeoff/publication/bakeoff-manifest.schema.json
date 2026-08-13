@@ -8,7 +8,7 @@
       "required": ["source_path", "published_url", "sha256", "duration_seconds", "sample_rate_hz", "channels", "format"],
       "properties": {
         "source_path": {"type": "string", "minLength": 1},
-        "published_url": {"type": "string", "pattern": "^audio/candidate-[abc]-(raw|normalized)\\.wav$"},
+        "published_url": {"type": "string", "pattern": "^audio/candidate-[a-f]-(raw|normalized)\\.wav$"},
         "sha256": {"$ref": "#/$defs/sha256"},
         "duration_seconds": {"type": "number", "exclusiveMinimum": 0},
         "sample_rate_hz": {"type": "integer", "minimum": 1},
@@ -48,21 +48,22 @@
       "type": "object",
       "required": ["page_labels", "identity_disclosure"],
       "properties": {
-        "page_labels": {"const": ["Candidate A", "Candidate B", "Candidate C"]},
-        "identity_disclosure": {"const": "manifest_only"}
+        "page_labels": {"const": ["Candidate A", "Candidate B", "Candidate C", "Candidate D", "Candidate E", "Candidate F"]},
+        "identity_disclosure": {"const": "explicit_reveal_only"}
       },
       "additionalProperties": false
     },
     "candidates": {
       "type": "array",
-      "minItems": 3,
-      "maxItems": 3,
+      "minItems": 6,
+      "maxItems": 6,
       "items": {
         "type": "object",
-        "required": ["label", "model", "status", "seed", "voice", "revisions", "commands", "native", "raw", "normalized", "transformations", "forbidden_transformations_used", "result_path"],
+        "required": ["label", "model", "display_name", "status", "seed", "voice", "revisions", "commands", "native", "raw", "normalized", "transformations", "forbidden_transformations_used", "result_path"],
         "properties": {
-          "label": {"enum": ["Candidate A", "Candidate B", "Candidate C"]},
-          "model": {"enum": ["realtime", "pocket", "kokoro"]},
+          "label": {"enum": ["Candidate A", "Candidate B", "Candidate C", "Candidate D", "Candidate E", "Candidate F"]},
+          "model": {"enum": ["realtime", "pocket", "kokoro", "supertonic-3", "inflect-nano-v1", "kitten-tts-mini-0.8"]},
+          "display_name": {"type": "string", "minLength": 1},
           "status": {"enum": ["accepted", "blocked", "rejected"]},
           "seed": {"type": "object"},
           "voice": {"type": "object"},
