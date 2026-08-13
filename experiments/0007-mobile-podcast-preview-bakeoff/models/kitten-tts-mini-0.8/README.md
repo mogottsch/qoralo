@@ -59,6 +59,8 @@ Each invocation independently acquires the same global `full-generation` gate fo
 
 No credentials, gated assets, privileged installation, Android work, reference recordings, or voice cloning are used.
 
-## Task 8 generation outcome
+## Task 8 generation outcome: accepted at speed 0.90
 
-The committed result and this section are updated after the ordered slower attempts, accepted-output repeat, and protocol-v2 derivation complete. The preserved `speed=1.0` attempts are historical raw evidence and are never replaced.
+The preserved default produced 347,800 samples (14.491666667 seconds). The next globally gated attempt, `speed=0.95`, produced 359,800 samples (14.991666667 seconds) and was preserved as short. The first passing attempt, `speed=0.90`, produced 370,000 samples (**15.416666667 seconds**). No later primary attempt was eligible. A fresh-process `speed=0.90` repeat matched duration and sample count but not waveform bytes, so the result makes no bit-exact determinism claim.
+
+`finalize_preview.py` verified the accepted raw hash before and after derivation, applied only the frozen protocol-v2 resampling/window/fades/loudness/dither/output steps, and created the exact 360,000-sample comparison WAV. `results/kitten-mini-0.8-preview.json` records all default, retry, and repeat attempts plus provenance, licenses, timings, process-tree RSS, RTF, hashes, statistics, and determinism evidence. No padding, looping, time stretching, fabrication, transcript change, raw replacement, or voice cloning was used.

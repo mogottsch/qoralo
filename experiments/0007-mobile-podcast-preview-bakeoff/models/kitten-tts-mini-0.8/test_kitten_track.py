@@ -205,19 +205,34 @@ def test_generation_run_order_and_write_once_claims(tmp_path: Path) -> None:
         generator.claim_run_directory(retry, "repeat-1", root)
 
 
-def test_blocked_generation_evidence_is_schema_valid_and_cannot_publish() -> None:
+def test_accepted_generation_evidence_is_schema_valid_and_publishable() -> None:
     result = json.loads((EXPERIMENT / "results/kitten-mini-0.8-preview.json").read_text(encoding="utf-8"))
     schema = json.loads((EXPERIMENT / "schemas/preview-result.schema.json").read_text(encoding="utf-8"))
     jsonschema.validate(result, schema)
     assert result["model"] == "kitten-tts-mini-0.8"
-    assert result["status"] == "blocked" and result["publication_eligible"] is False
-    assert "normalized" not in result
-    assert result["raw"]["duration_seconds"] == 347800 / 24000 < 15.0
-    assert result["speed_control"]["setting"] == 1.0
-    assert [attempt["kind"] for attempt in result["attempts"]] == ["default", "fresh-process-repeat"]
+    assert result["status"] == "accepted" and result["publication_eligible"] is True
+    assert result["raw"]["duration_seconds"] == 370000 / 24000 >= 15.0
+    assert result["raw"]["sha256"] == result["raw"]["sha256_after_derivation"]
+    assert result["speed_control"]["setting"] == 0.9
+    assert result["speed_control"]["precommitted_grid"] == [1.0, 0.95, 0.9]
+    assert [attempt["status"] for attempt in result["attempts"]] == [
+        "rejected", "rejected", "rejected", "accepted", "accepted"
+    ]
     assert all(attempt["resource_kind"] == "full-generation" for attempt in result["attempts"])
+    assert result["normalized"]["sample_count"] == 360000
+    assert result["normalized"]["duration_seconds"] == 15.0
     assert result["forbidden_transformations_used"] == []
     assert result["provenance"]["determinism"]["raw_hashes_match"] is False
+
+
+def test_finalizer_preserves_raw_and_uses_frozen_protocol_operations() -> None:
+    source = (HERE / "finalize_preview.py").read_text(encoding="utf-8")
+    assert "audio_protocol.exact_window" in source
+    assert "audio_protocol.apply_fades" in source
+    assert "audio_protocol.normalize_gain" in source
+    assert "audio_protocol.quantize_s16" in source
+    assert "audio_protocol.sha256_file(raw_path) != raw_hash_before" in source
+    assert "resample_poly" not in source and "np.pad" not in source and "np.tile" not in source
 
 
 def test_frozen_transcript_unchanged() -> None:

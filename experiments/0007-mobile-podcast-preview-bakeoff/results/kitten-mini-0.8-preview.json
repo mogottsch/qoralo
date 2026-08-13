@@ -1,154 +1,64 @@
 {
-  "schema_version": 1,
-  "model": "kitten-tts-mini-0.8",
-  "status": "blocked",
-  "protocol": {
-    "protocol_id": "mobile-podcast-preview",
-    "protocol_version": 2,
-    "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
-    "protocol_fingerprint": "ca0987feca4c9a2e8744d4846d1b3f5da86799862f6f7d8ba7e3563f84245814"
-  },
-  "provenance": {
-    "source_revision": "0c61f684b54fe962e4b7c2fa0285ed75f64ad402",
-    "model_revision": "c02725660cea441db4c383af69f1f26f5cd00947",
-    "source_url": "https://github.com/KittenML/KittenTTS/releases/download/0.8/kittentts-0.8.0-py3-none-any.whl",
-    "model_repository": "KittenML/kitten-tts-mini-0.8",
-    "model_bytes": 81548122,
-    "model_parameter_class": "80M",
-    "model_files": {
-      "README.md": "cab0af19aa75f409684d165407c32a0d845cc8fc660606c379f4b0663f87abae",
-      "config.json": "6b160bc9b19e24ecb21e84bc14f8a7da21fdf47ec72d42450bc5cf514b61804a",
-      "kitten_tts_mini_v0_8.onnx": "0f5bbae4fc4800c98dbc544a87ecfa79510de2fb8222db30d12e5bfe9177df91",
-      "voices.npz": "40ad2638952b77b7b2f30127e2608e169fc69dd256b53bd8aaa3409a33193c42"
-    },
-    "package_release": "kittentts-0.8.0-py3-none-any.whl",
-    "package_release_sha256": "cba97464da2ec56384b9fc03004449dadbe6d9abd16aa89e98953027854fd7d9",
-    "package_embedded_version_caveat": "The official 0.8.0 release asset contains stale 0.1.0 distribution metadata; identity was verified from its pinned official release URL, bytes, source revision, and model config.",
-    "dependency_lock_sha256": "f947aab6b91f6f675230a4235369a2e6323baa79ed00dd1e076f7dbbb7717e2c",
-    "pins_sha256": "f00cc63709070a2a7b6154f1c18aef94f379fa8bddd7fc05e1a681f128655270",
-    "environment": {
-      "host": "moritz-82jq",
-      "architecture": "x86_64",
-      "operating_system": "Manjaro Linux",
-      "kernel": "6.12.101-1-MANJARO",
-      "cpu": "AMD Ryzen 7 5800H with Radeon Graphics",
-      "logical_cpus": 16,
-      "python": "3.11.13",
-      "kittentts_embedded_version": "0.1.0",
-      "onnxruntime": "1.28.0",
-      "numpy": "2.4.6",
-      "torch": "2.6.0+cpu",
-      "huggingface_hub": "1.27.0",
-      "soundfile": "0.14.0",
-      "espeakng_loader": "0.2.4",
-      "execution_provider": "CPUExecutionProvider",
-      "network_during_generation": false
-    },
-    "resource_grant": {
-      "kind": "full-generation",
-      "task": "task-8",
-      "global_exclusive": true,
-      "used_for_primary_and_repeat": true
-    },
-    "determinism": {
-      "fresh_process_repeat_count": 1,
-      "duration_and_sample_count_match": true,
-      "raw_hashes_match": false,
-      "primary_sha256": "11e536fc84007a2b0b5f2ed067a50471ce79a2a5a1b2b391d7e6d28d7f3f135b",
-      "repeat_sha256": "3dd7af6fc62f90682e796f5a993690d0bbc7a2d6e8956585eab6ea82efaf7749",
-      "differing_samples": 347800,
-      "max_absolute_sample_difference": 0.27330082654953003,
-      "rms_sample_difference": 0.017789867554220806,
-      "claim": "The pinned CPU environment reproduced duration and sample count, but not waveform bytes; no bit-exact determinism claim is made."
-    }
-  },
-  "voice": {
-    "name": "Jasper",
-    "source": "voices.npz at KittenML/kitten-tts-mini-0.8 revision c02725660cea441db4c383af69f1f26f5cd00947",
-    "stock_voice": true,
-    "asset_key": "expr-voice-2-m",
-    "asset_sha256": "4fc6fdcbaac820aad0d2f3040709bc0e23e3674d9c7f2eaa67ddc9573f128de4",
-    "asset_hash_scope": "float32 [400, 256] array C-order bytes selected from voices.npz",
-    "license": "Apache-2.0 (model repository card)",
-    "reference_audio_used": false,
-    "cloning_performed": false
-  },
-  "command": [
-    "models/kitten-tts-mini-0.8/generate-preview.sh primary",
-    "models/kitten-tts-mini-0.8/generate-preview.sh repeat-1"
-  ],
-  "speed_control": {
-    "documented": true,
-    "setting": 1.0,
-    "note": "Only the documented normal default was eligible. Upstream documents neither numeric bounds nor a direction for lengthening, so no retry value was invented."
-  },
-  "raw": {
-    "artifact_path": "artifacts/kitten-tts-mini-0.8/generation/attempt-01-default-primary.f32le",
-    "sha256": "11e536fc84007a2b0b5f2ed067a50471ce79a2a5a1b2b391d7e6d28d7f3f135b",
-    "byte_count": 1391200,
-    "duration_seconds": 14.491666666666667,
-    "sample_count": 347800,
-    "sample_rate_hz": 24000,
-    "channels": 1,
-    "output_format": "headerless little-endian IEEE float32 PCM (native library array bytes)",
-    "preserved_unchanged": true,
-    "statistics": {
-      "integrated_loudness_lufs": -20.839992773422487,
-      "peak": 0.77629554271698,
-      "peak_dbfs": -2.1994581486620297,
-      "rms": 0.10851088357922435,
-      "rms_dbfs": -19.29053400288028
-    },
-    "repeat_artifact_path": "artifacts/kitten-tts-mini-0.8/generation/attempt-01-default-repeat-1.f32le",
-    "repeat_sha256": "3dd7af6fc62f90682e796f5a993690d0bbc7a2d6e8956585eab6ea82efaf7749",
-    "repeat_byte_count": 1391200,
-    "repeat_duration_seconds": 14.491666666666667,
-    "repeat_sample_count": 347800,
-    "repeat_statistics": {
-      "integrated_loudness_lufs": -20.815922288105906,
-      "peak": 0.7465013861656189,
-      "peak_dbfs": -2.539387630084665,
-      "rms": 0.10870587813043604,
-      "rms_dbfs": -19.274939427273136
-    }
-  },
-  "timing": {
-    "clock": "CLOCK_MONOTONIC",
-    "generation_wall_seconds": 11.43943987900002,
-    "api_first_output_seconds": 11.438358045999848,
-    "api_first_output_unavailable_reason": null,
-    "first_audible_output_seconds": 11.688358045999848,
-    "first_audible_output_unavailable_reason": null,
-    "rtf": 0.7893805551926407,
-    "rtf_denominator": "raw_native_audio_duration_seconds"
-  },
-  "memory": {
-    "baseline_rss_bytes": 315465728,
-    "peak_process_tree_rss_bytes": 788463616,
-    "sample_interval_ms": 20,
-    "sample_count": 551,
-    "process_race_count": 0,
-    "sampling_limitations": []
-  },
-  "measurement_contract_version": 1,
   "attempts": [
     {
+      "artifact_path": "artifacts/kitten-tts-mini-0.8/generation/attempt-01-default-primary.f32le",
       "attempt_id": "attempt-01-default-primary",
+      "control": {
+        "speed": 1.0
+      },
       "kind": "default",
       "resource_kind": "full-generation",
-      "artifact_path": "artifacts/kitten-tts-mini-0.8/generation/attempt-01-default-primary.f32le",
-      "status": "rejected",
-      "control": {"speed": 1.0}
+      "status": "rejected"
     },
     {
+      "artifact_path": "artifacts/kitten-tts-mini-0.8/generation/attempt-01-default-repeat-1.f32le",
       "attempt_id": "attempt-01-default-repeat-1",
+      "control": {
+        "speed": 1.0
+      },
       "kind": "fresh-process-repeat",
       "resource_kind": "full-generation",
-      "artifact_path": "artifacts/kitten-tts-mini-0.8/generation/attempt-01-default-repeat-1.f32le",
-      "status": "rejected",
-      "control": {"speed": 1.0}
+      "status": "rejected"
+    },
+    {
+      "artifact_path": "artifacts/kitten-tts-mini-0.8/generation/attempt-02-speed-0.95/primary/native.f32le",
+      "attempt_id": "attempt-02-speed-0.95-primary",
+      "control": {
+        "speed": 0.95
+      },
+      "kind": "speed-retry",
+      "resource_kind": "full-generation",
+      "status": "rejected"
+    },
+    {
+      "artifact_path": "artifacts/kitten-tts-mini-0.8/generation/attempt-03-speed-0.90/primary/native.f32le",
+      "attempt_id": "attempt-03-speed-0.90-primary",
+      "control": {
+        "speed": 0.9
+      },
+      "kind": "speed-retry",
+      "resource_kind": "full-generation",
+      "status": "accepted"
+    },
+    {
+      "artifact_path": "artifacts/kitten-tts-mini-0.8/generation/attempt-03-speed-0.90/repeat-1/native.f32le",
+      "attempt_id": "attempt-03-speed-0.90-repeat-1",
+      "control": {
+        "speed": 0.9
+      },
+      "kind": "fresh-process-repeat",
+      "resource_kind": "full-generation",
+      "status": "accepted"
     }
   ],
+  "command": [
+    "models/kitten-tts-mini-0.8/generate-preview.sh speed-0.95 primary",
+    "models/kitten-tts-mini-0.8/generate-preview.sh speed-0.90 primary",
+    "models/kitten-tts-mini-0.8/generate-preview.sh speed-0.90 repeat-1",
+    "python models/kitten-tts-mini-0.8/finalize_preview.py"
+  ],
+  "conclusion": "Candidate F passed protocol-v2 at the first eligible duration, speed=0.90; normalized audio is an exact 15-second derivation while every raw attempt remains unchanged.",
+  "forbidden_transformations_used": [],
   "licenses": [
     {
       "component": "KittenML/kitten-tts-mini-0.8 model and bundled voice",
@@ -158,8 +68,8 @@
     {
       "component": "KittenTTS official source and 0.8.0 release wheel",
       "license": "Apache-2.0",
-      "source": "LICENSE at source revision 0c61f684b54fe962e4b7c2fa0285ed75f64ad402",
-      "license_sha256": "787aa312b93eee80b636f35652469df29efdb7582239d6a9c088467555a3c7fd"
+      "license_sha256": "787aa312b93eee80b636f35652469df29efdb7582239d6a9c088467555a3c7fd",
+      "source": "LICENSE at source revision 0c61f684b54fe962e4b7c2fa0285ed75f64ad402"
     },
     {
       "component": "locked Python dependency graph",
@@ -167,8 +77,275 @@
       "source": "models/kitten-tts-mini-0.8/uv.lock"
     }
   ],
-  "publication_eligible": false,
-  "forbidden_transformations_used": [],
-  "blocker": "The sole precommitted eligible attempt, documented default speed=1.0, produced 347800 native samples (14.491666666666667 seconds), below the required 15.0 seconds. Upstream documents no bounded duration-control range or lengthening direction. Protocol-v2 forbids inventing a speed value, padding, looping, time stretching, transcript changes, or raw replacement; therefore no normalized Candidate F can be derived and dependent success-path tasks must halt.",
-  "conclusion": "Terminal protocol blocker on this pinned host and software stack. Both write-once full-generation jobs preserved the short native output; Candidate F is not publication eligible."
+  "measurement_contract_version": 1,
+  "memory": {
+    "baseline_rss_bytes": 315678720,
+    "peak_process_tree_rss_bytes": 791814144,
+    "process_race_count": 0,
+    "sample_count": 531,
+    "sample_interval_ms": 20,
+    "sampling_limitations": []
+  },
+  "model": "kitten-tts-mini-0.8",
+  "normalized": {
+    "artifact_path": "artifacts/normalized/kitten-mini-0.8/v2/kitten-mini-0.8-15s.wav",
+    "bytes": 720044,
+    "channels": 1,
+    "derivation_metadata_path": "artifacts/normalized/kitten-mini-0.8/v2/derivation.json",
+    "duration_seconds": 15.0,
+    "sample_count": 360000,
+    "sample_format": "PCM_S16LE",
+    "sample_rate_hz": 24000,
+    "sha256": "db5918f19a6b692d90d09fb7105fb11f33eda45a817158ff00d14ba89e2b8f56",
+    "statistics": {
+      "integrated_loudness_lufs": -19.999997307744795,
+      "peak": 0.806640625,
+      "peak_dbfs": -1.8663981863885948,
+      "rms": 0.12008242042712397,
+      "rms_dbfs": -18.41041133742268
+    }
+  },
+  "protocol": {
+    "protocol_fingerprint": "ca0987feca4c9a2e8744d4846d1b3f5da86799862f6f7d8ba7e3563f84245814",
+    "protocol_id": "mobile-podcast-preview",
+    "protocol_version": 2,
+    "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f"
+  },
+  "provenance": {
+    "attempt_measurements": {
+      "attempt-01-default-primary": {
+        "accepted_by_duration": false,
+        "duration_seconds": 14.491666666666667,
+        "memory": {
+          "baseline_rss_bytes": 315465728,
+          "peak_process_tree_rss_bytes": 788463616,
+          "process_race_count": 0,
+          "sample_count": 551,
+          "sample_interval_ms": 20,
+          "sampling_limitations": []
+        },
+        "raw_sha256": "11e536fc84007a2b0b5f2ed067a50471ce79a2a5a1b2b391d7e6d28d7f3f135b",
+        "sample_count": 347800,
+        "speed": 1.0,
+        "timing": {
+          "api_first_output_seconds": 11.438358045999848,
+          "clock": "CLOCK_MONOTONIC",
+          "first_audible_output_seconds": 11.688358045999848,
+          "generation_wall_seconds": 11.43943987900002,
+          "rtf": 0.7893805551926407,
+          "rtf_denominator": "raw_native_audio_duration_seconds"
+        }
+      },
+      "attempt-01-default-repeat-1": {
+        "accepted_by_duration": false,
+        "duration_seconds": 14.491666666666667,
+        "memory": {
+          "baseline_rss_bytes": 315408384,
+          "peak_process_tree_rss_bytes": 783491072,
+          "process_race_count": 0,
+          "sample_count": 520,
+          "sample_interval_ms": 20,
+          "sampling_limitations": []
+        },
+        "raw_sha256": "3dd7af6fc62f90682e796f5a993690d0bbc7a2d6e8956585eab6ea82efaf7749",
+        "sample_count": 347800,
+        "speed": 1.0,
+        "timing": {
+          "api_first_output_seconds": 10.784649121999792,
+          "clock": "CLOCK_MONOTONIC",
+          "first_audible_output_seconds": 11.034649121999792,
+          "generation_wall_seconds": 10.789072767999642,
+          "rtf": 0.7445018586313726,
+          "rtf_denominator": "raw_native_audio_duration_seconds"
+        }
+      },
+      "attempt-02-speed-0.95-primary": {
+        "accepted_by_duration": false,
+        "duration_seconds": 14.991666666666667,
+        "memory": {
+          "baseline_rss_bytes": 315854848,
+          "peak_process_tree_rss_bytes": 793505792,
+          "process_race_count": 0,
+          "sample_count": 506,
+          "sample_interval_ms": 20,
+          "sampling_limitations": []
+        },
+        "raw_sha256": "b99eb7a96f7a13de50df7a1d9f94bf967261b8fe1aef99d8ded80e97dbf0264e",
+        "sample_count": 359800,
+        "speed": 0.95,
+        "timing": {
+          "api_first_output_seconds": 10.459193043000596,
+          "clock": "CLOCK_MONOTONIC",
+          "first_audible_output_seconds": 10.899193043000595,
+          "generation_wall_seconds": 10.461013517000538,
+          "rtf": 0.6977885614452832,
+          "rtf_denominator": "raw_native_audio_duration_seconds"
+        }
+      },
+      "attempt-03-speed-0.90-primary": {
+        "accepted_by_duration": true,
+        "duration_seconds": 15.416666666666666,
+        "memory": {
+          "baseline_rss_bytes": 315678720,
+          "peak_process_tree_rss_bytes": 791814144,
+          "process_race_count": 0,
+          "sample_count": 531,
+          "sample_interval_ms": 20,
+          "sampling_limitations": []
+        },
+        "raw_sha256": "e5d1d2ae5135ed9feeb6c48314727da4568b657f082554f0e0828d628841e87d",
+        "sample_count": 370000,
+        "speed": 0.9,
+        "timing": {
+          "api_first_output_seconds": 11.005285487000037,
+          "clock": "CLOCK_MONOTONIC",
+          "first_audible_output_seconds": 11.445285487000037,
+          "generation_wall_seconds": 11.00722818200029,
+          "rtf": 0.713982368562181,
+          "rtf_denominator": "raw_native_audio_duration_seconds"
+        }
+      },
+      "attempt-03-speed-0.90-repeat-1": {
+        "accepted_by_duration": true,
+        "duration_seconds": 15.416666666666666,
+        "memory": {
+          "baseline_rss_bytes": 315580416,
+          "peak_process_tree_rss_bytes": 789020672,
+          "process_race_count": 0,
+          "sample_count": 536,
+          "sample_interval_ms": 20,
+          "sampling_limitations": []
+        },
+        "raw_sha256": "f9d7f8e0523cb0717ce3e02747dccfd8b76b23157b4738fc5d363e4cdf04f9a7",
+        "sample_count": 370000,
+        "speed": 0.9,
+        "timing": {
+          "api_first_output_seconds": 11.048692401000153,
+          "clock": "CLOCK_MONOTONIC",
+          "first_audible_output_seconds": 11.488692401000153,
+          "generation_wall_seconds": 11.050495204000072,
+          "rtf": 0.716788878097302,
+          "rtf_denominator": "raw_native_audio_duration_seconds"
+        }
+      }
+    },
+    "dependency_lock_sha256": "f947aab6b91f6f675230a4235369a2e6323baa79ed00dd1e076f7dbbb7717e2c",
+    "determinism": {
+      "claim": "Fresh-process repeat matched duration and sample count but not waveform bytes; no bit-exact determinism claim is made.",
+      "differing_samples": 370000,
+      "duration_and_sample_count_match": true,
+      "fresh_process_repeat_count": 1,
+      "max_absolute_sample_difference": 0.2732411399483681,
+      "primary_sha256": "e5d1d2ae5135ed9feeb6c48314727da4568b657f082554f0e0828d628841e87d",
+      "raw_hashes_match": false,
+      "repeat_sha256": "f9d7f8e0523cb0717ce3e02747dccfd8b76b23157b4738fc5d363e4cdf04f9a7",
+      "rms_sample_difference": 0.0180240348259538
+    },
+    "environment": {
+      "architecture": "x86_64",
+      "cpu": "AMD Ryzen 7 5800H with Radeon Graphics",
+      "espeakng_loader": "0.2.4",
+      "execution_provider": "CPUExecutionProvider",
+      "host": "moritz-82jq",
+      "huggingface_hub": "1.27.0",
+      "kernel": "6.12.101-1-MANJARO",
+      "kittentts_embedded_version": "0.1.0",
+      "logical_cpus": 16,
+      "network_during_generation": false,
+      "numpy": "2.4.6",
+      "onnxruntime": "1.28.0",
+      "operating_system": "Manjaro Linux",
+      "python": "3.11.13",
+      "soundfile": "0.14.0",
+      "torch": "2.6.0+cpu"
+    },
+    "generation_attempt_plan": "models/kitten-tts-mini-0.8/attempt-plan.json",
+    "model_bytes": 81548122,
+    "model_files": {
+      "README.md": "cab0af19aa75f409684d165407c32a0d845cc8fc660606c379f4b0663f87abae",
+      "config.json": "6b160bc9b19e24ecb21e84bc14f8a7da21fdf47ec72d42450bc5cf514b61804a",
+      "kitten_tts_mini_v0_8.onnx": "0f5bbae4fc4800c98dbc544a87ecfa79510de2fb8222db30d12e5bfe9177df91",
+      "voices.npz": "40ad2638952b77b7b2f30127e2608e169fc69dd256b53bd8aaa3409a33193c42"
+    },
+    "model_parameter_class": "80M",
+    "model_repository": "KittenML/kitten-tts-mini-0.8",
+    "model_revision": "c02725660cea441db4c383af69f1f26f5cd00947",
+    "network_during_generation": false,
+    "package_embedded_version_caveat": "The official 0.8.0 release asset contains stale 0.1.0 distribution metadata; identity was verified from its pinned official release URL, bytes, source revision, and model config.",
+    "package_release": "kittentts-0.8.0-py3-none-any.whl",
+    "package_release_sha256": "cba97464da2ec56384b9fc03004449dadbe6d9abd16aa89e98953027854fd7d9",
+    "pins_sha256": "f00cc63709070a2a7b6154f1c18aef94f379fa8bddd7fc05e1a681f128655270",
+    "resource_grant": {
+      "global_exclusive": true,
+      "kind": "full-generation",
+      "task": "task-8",
+      "used_for_every_attempt_and_repeat": true
+    },
+    "source_revision": "0c61f684b54fe962e4b7c2fa0285ed75f64ad402",
+    "source_url": "https://github.com/KittenML/KittenTTS/releases/download/0.8/kittentts-0.8.0-py3-none-any.whl"
+  },
+  "publication_eligible": true,
+  "raw": {
+    "artifact_path": "artifacts/kitten-tts-mini-0.8/generation/attempt-03-speed-0.90/primary/native.f32le",
+    "byte_count": 1480000,
+    "channels": 1,
+    "duration_seconds": 15.416666666666666,
+    "output_format": "headerless little-endian IEEE float32 PCM (native library array bytes)",
+    "preserved_unchanged": true,
+    "repeat_artifact_path": "artifacts/kitten-tts-mini-0.8/generation/attempt-03-speed-0.90/repeat-1/native.f32le",
+    "repeat_sha256": "f9d7f8e0523cb0717ce3e02747dccfd8b76b23157b4738fc5d363e4cdf04f9a7",
+    "repeat_statistics": {
+      "integrated_loudness_lufs": -21.066858692919467,
+      "peak": 0.7356152534484863,
+      "peak_dbfs": -2.666985479385411,
+      "rms": 0.10544219296988915,
+      "rms_dbfs": -19.539711405377275
+    },
+    "sample_count": 370000,
+    "sample_rate_hz": 24000,
+    "sha256": "e5d1d2ae5135ed9feeb6c48314727da4568b657f082554f0e0828d628841e87d",
+    "sha256_after_derivation": "e5d1d2ae5135ed9feeb6c48314727da4568b657f082554f0e0828d628841e87d",
+    "statistics": {
+      "integrated_loudness_lufs": -21.060548413778836,
+      "peak": 0.7182230949401855,
+      "peak_dbfs": -2.8748126791635475,
+      "rms": 0.10549351922767909,
+      "rms_dbfs": -19.535484390284836
+    }
+  },
+  "schema_version": 1,
+  "speed_control": {
+    "default": 1.0,
+    "documented": true,
+    "note": "Lower speed is slower synthesis through the official inference API, not post-hoc time stretching.",
+    "precommitted_grid": [
+      1.0,
+      0.95,
+      0.9
+    ],
+    "selection_rule": "Run attempts in ordinal order and accept the first write-once native output whose duration is at least 15.0 seconds; do not run later attempts.",
+    "setting": 0.9
+  },
+  "status": "accepted",
+  "timing": {
+    "api_first_output_seconds": 11.005285487000037,
+    "api_first_output_unavailable_reason": null,
+    "clock": "CLOCK_MONOTONIC",
+    "first_audible_output_seconds": 11.445285487000037,
+    "first_audible_output_unavailable_reason": null,
+    "generation_wall_seconds": 11.00722818200029,
+    "rtf": 0.713982368562181,
+    "rtf_denominator": "raw_native_audio_duration_seconds"
+  },
+  "voice": {
+    "asset_hash_scope": "float32 [400, 256] array C-order bytes selected from voices.npz",
+    "asset_key": "expr-voice-2-m",
+    "asset_sha256": "4fc6fdcbaac820aad0d2f3040709bc0e23e3674d9c7f2eaa67ddc9573f128de4",
+    "cloning_performed": false,
+    "license": "Apache-2.0 (model repository card)",
+    "name": "Jasper",
+    "reference_audio_used": false,
+    "source": "voices.npz at KittenML/kitten-tts-mini-0.8 revision c02725660cea441db4c383af69f1f26f5cd00947",
+    "stock_voice": true
+  }
 }
