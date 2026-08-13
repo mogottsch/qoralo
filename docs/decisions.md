@@ -49,6 +49,10 @@ Record the updated historical order as Kokoro first, Pocket TTS second, and Vibe
 
 Retire the 15-second gate and normalization from the active listening bake-off. Publish all six natural-duration outputs at their measured durations and native rates. Historical protocol-v2 derivations remain provenance only. Hide model identities initially; reveal one card or all cards only after explicit interaction.
 
+## 2026-08-13 — Android optimization priorities
+
+Continue with three measured follow-ups: exact Kokoro v1.0 INT8 export and quality validation; a bounded 1/2/4 CPU-thread sweep for Pocket, Kokoro, and Supertonic; and a narrow Qualcomm QNN/HTP component probe before any full accelerator conversion. Do not pursue naive sentence or clause splitting: the user rejects context-blind chunking because it degrades prosody and naturalness. Preserve full-context generation unless a future model-native contextual streaming mechanism is evaluated separately. QNN SDK or license acceptance remains a separate approval gate.
+
 ## 2026-08-13 — Select experiment 0008 Android candidates
 
 Retire VibeVoice Realtime 0.5B, Inflect Nano v1, and Kitten TTS Mini 80M v0.8 from active follow-up; they remain historical-only under immutable experiment 0007 evidence. Select Pocket TTS 100M, exact Kokoro v1.0, and Supertonic 3 for real-device measurement in that fixed order under experiment 0008.
