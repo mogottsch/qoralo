@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build and validate the private, anonymous listening page without staging audio."""
+"""Build and validate the private listening page without staging audio."""
 from __future__ import annotations
 
 import argparse
@@ -21,6 +21,11 @@ MANIFEST_PATH = HERE / "bakeoff-manifest.json"
 REPORT_PATH = REPO / "docs/candidate-decision-report.json"
 REPORT_SCHEMA_PATH = REPO / "docs/candidate-decision-report.schema.json"
 LABELS = {"realtime": "Candidate A", "pocket": "Candidate B", "kokoro": "Candidate C"}
+DISPLAY_NAMES = {
+    "realtime": "VibeVoice Realtime 0.5B",
+    "pocket": "Pocket TTS 100M",
+    "kokoro": "Kokoro 82M",
+}
 SLUGS = {"realtime": "a", "pocket": "b", "kokoro": "c"}
 
 
@@ -236,7 +241,7 @@ def build(output: Path) -> None:
         "transcript": manifest["transcript"],
         "protocol": {"version": manifest["protocol"]["version"]},
         "candidates": [{
-            "label": candidate["label"], "slug": SLUGS[candidate["model"]], "status": candidate["status"],
+            "name": DISPLAY_NAMES[candidate["model"]], "slug": SLUGS[candidate["model"]], "status": candidate["status"],
             "raw_url": candidate["raw"]["published_url"],
             "normalized_url": candidate["normalized"]["published_url"] if candidate["normalized"] else None,
         } for candidate in manifest["candidates"]],

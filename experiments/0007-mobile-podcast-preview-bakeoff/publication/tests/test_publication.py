@@ -95,16 +95,17 @@ class BuiltPageTests(unittest.TestCase):
     def tearDownClass(cls):
         cls.temp.cleanup()
 
-    def test_controls_urls_labels_and_anonymous_player_mapping(self):
+    def test_controls_urls_and_disclosed_model_names(self):
         embedded = self.html.split('<script id="bakeoff" type="application/json">', 1)[1].split("</script>", 1)[0]
         page_data = json.loads(embedded)
         self.assertEqual(3, len(page_data["candidates"]))
         self.assertEqual(5, sum(1 + (c["normalized_url"] is not None) for c in page_data["candidates"]))
         self.assertIn(" controls ", self.html)
-        for label in ("Candidate A", "Candidate B", "Candidate C"):
-            self.assertIn(label, self.html)
-        for name in ("realtime", "pocket", "kokoro"):
-            self.assertNotIn(f'"model":"{name}"', self.html)
+        self.assertEqual(
+            {"VibeVoice Realtime 0.5B", "Pocket TTS 100M", "Kokoro 82M"},
+            {candidate["name"] for candidate in page_data["candidates"]},
+        )
+        self.assertNotIn("label", page_data["candidates"][0])
         for candidate in self.manifest["candidates"]:
             for kind in ("raw", "normalized"):
                 artifact = candidate[kind]

@@ -67,7 +67,7 @@ Only the parent orchestrator may make the single shared punctuation revision. It
 
 `publication/bakeoff-manifest.json` is the checked-in reproducibility index for all three protocol-v2 results. It records the common transcript and protocol fingerprint, seeds, stock-voice provenance, source/model revisions, generation and derivation commands, native and browser-carrier formats, raw/derived hashes and durations, and every normalization transformation. Pocket's deterministic 13.84-second raw capture remains playable, but its normalized player is explicitly unavailable because fabricating the missing duration is prohibited.
 
-Build and validate the anonymous Candidate A/B/C page plus the live 18-task Crew DAG with:
+Build and validate the private listening page with the now-disclosed model names plus the completed 18-task Crew DAG with:
 
 ```bash
 python experiments/0007-mobile-podcast-preview-bakeoff/publication/build_publication.py
@@ -85,4 +85,4 @@ python -m pytest experiments/0007-mobile-podcast-preview-bakeoff/tests -q
 python -m unittest discover -s experiments/0007-mobile-podcast-preview-bakeoff/publication/tests -v
 ```
 
-Tests cover transcript/hash drift, schema validity, protocol invalidation, malformed and multichannel WAVs, resampling, exact trimming, fades, LUFS/peak gain, deterministic dither, raw preservation, statistics/RTF, lock contention and ownership, failure cleanup, safe stale reporting, one-/two-slot capacity, publication consistency, privacy, anonymous labels, responsive controls, and all 18 DAG tasks and dependency edges.
+Tests cover transcript/hash drift, schema validity, protocol invalidation, malformed and multichannel WAVs, resampling, exact trimming, fades, LUFS/peak gain, deterministic dither, raw preservation, statistics/RTF, lock contention and ownership, failure cleanup, safe stale reporting, one-/two-slot capacity, publication consistency, privacy, disclosed model labels, responsive controls, and all 18 DAG tasks and dependency edges.
