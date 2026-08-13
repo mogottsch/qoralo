@@ -1,0 +1,329 @@
+{
+  "android_performance_used": false,
+  "attempts": {
+    "dynamic_default_qint8": {
+      "disposition": "rejected_cpu_incompatible",
+      "method": {
+        "api": "onnxruntime.quantization.quantize_dynamic",
+        "op_types_to_quantize": "onnxruntime_1.22.1_default_eligible_operators",
+        "per_channel": true,
+        "weight_type": "QInt8"
+      },
+      "model": {
+        "bytes": 114705762,
+        "path": "generated/model.dynamic-default.qint8.onnx",
+        "sha256": "ec89280370011895c86e53de20d79eb149661132174ecae5aa5bf4aa41067093"
+      },
+      "rationale": "[ONNXRuntimeError] : 9 : NOT_IMPLEMENTED : Could not find an implementation for ConvInteger(10) node with name '/text_encoder/cnn.0/cnn.0.0/Conv_quant'"
+    },
+    "static_s8s8_all_eligible": {
+      "acoustic_screen": {
+        "failed_check_counts": {
+          "duration_ratio_between_0_80_and_1_25": 0,
+          "normalized_32_band_power_cosine_at_least_0_90": 0,
+          "pitch_median_relative_difference_at_most_0_20": 0,
+          "spectral_centroid_relative_difference_at_most_0_20": 6,
+          "voiced_fraction_absolute_difference_at_most_0_20": 0
+        },
+        "failed_pair_count": 6,
+        "metric_ranges": {
+          "duration_ratio_int8_over_fp32": {
+            "maximum": 1.0715130947330818,
+            "minimum": 1.002729081480785
+          },
+          "normalized_32_band_power_cosine": {
+            "maximum": 0.9959201121273908,
+            "minimum": 0.9770541277096859
+          },
+          "pitch_median_relative_difference": {
+            "maximum": 0.05261605035405194,
+            "minimum": 0.008000000000000066
+          },
+          "spectral_centroid_relative_difference": {
+            "maximum": 0.6342246908077221,
+            "minimum": 0.40761337168278633
+          },
+          "voiced_fraction_absolute_difference": {
+            "maximum": 0.07156702156702155,
+            "minimum": 0.013590556572738555
+          }
+        },
+        "pair_count": 6,
+        "passed_pair_count": 0
+      },
+      "cpu_runtime_probe_passed": true,
+      "disposition": "rejected_before_listening_on_supporting_acoustic_screen",
+      "method": {
+        "activation_type": "QInt8",
+        "calibration_language": "en-us",
+        "calibration_method": "MinMax",
+        "calibration_partition": "calibration",
+        "calibration_speaker": "af_heart",
+        "calibration_speaker_id": 3,
+        "calibration_speed": 1.0,
+        "candidate_name": "kokoro-multi-lang-v1_0-static-qdq-s8s8-all-eligible",
+        "extra_options": {
+          "ActivationSymmetric": true,
+          "WeightSymmetric": true
+        },
+        "method": "onnxruntime_static_post_training_quantization",
+        "notes": [
+          "Rejected screening recipe retained for reproducibility: all eligible Conv, MatMul, and Gemm nodes use S8S8 QDQ.",
+          "It loads on CPU but is not the listening candidate because every evaluation pair showed a consistent spectral-centroid shift beyond the documented supporting range.",
+          "ConvTranspose and LSTM remain FP32. No subjective verdict is inferred from this automated rejection."
+        ],
+        "op_types_to_quantize": [
+          "Conv",
+          "MatMul",
+          "Gemm"
+        ],
+        "per_channel": true,
+        "quant_format": "QDQ",
+        "reduce_range": false,
+        "schema_version": 1,
+        "weight_type": "QInt8"
+      },
+      "model": {
+        "bytes": 126457536,
+        "path": "generated/screening/full-eligible-s8s8.onnx",
+        "sha256": "c79343db30b856662700ac014ab054da0557ecfe08a1015d23de5c3e6ac76605",
+        "size_reduction_bytes": 199173293,
+        "size_reduction_fraction": 0.6116536742287383
+      },
+      "name": "kokoro-multi-lang-v1_0-static-qdq-s8s8-all-eligible",
+      "rationale": "All six pairs exceeded the documented 0.20 spectral-centroid relative-difference limit; automated rejection does not assert subjective quality."
+    },
+    "static_s8s8_generator_excluded": {
+      "acoustic_screen": {
+        "failed_check_counts": {
+          "duration_ratio_between_0_80_and_1_25": 0,
+          "normalized_32_band_power_cosine_at_least_0_90": 0,
+          "pitch_median_relative_difference_at_most_0_20": 0,
+          "spectral_centroid_relative_difference_at_most_0_20": 0,
+          "voiced_fraction_absolute_difference_at_most_0_20": 0
+        },
+        "failed_pair_count": 0,
+        "metric_ranges": {
+          "duration_ratio_int8_over_fp32": {
+            "maximum": 1.0639331085757664,
+            "minimum": 1.000238128808886
+          },
+          "normalized_32_band_power_cosine": {
+            "maximum": 0.9990078329777389,
+            "minimum": 0.9834971021161194
+          },
+          "pitch_median_relative_difference": {
+            "maximum": 0.048780487804878085,
+            "minimum": 0.0
+          },
+          "spectral_centroid_relative_difference": {
+            "maximum": 0.04788431937343822,
+            "minimum": 0.0013205670566615996
+          },
+          "voiced_fraction_absolute_difference": {
+            "maximum": 0.03194797851286402,
+            "minimum": 0.0006036916803300318
+          }
+        },
+        "pair_count": 6,
+        "passed_pair_count": 6
+      },
+      "cpu_runtime_probe_passed": true,
+      "disposition": "selected_for_blind_listening_pending_user_verdict",
+      "method": {
+        "activation_type": "QInt8",
+        "calibration_language": "en-us",
+        "calibration_method": "MinMax",
+        "calibration_partition": "calibration",
+        "calibration_speaker": "af_heart",
+        "calibration_speaker_id": 3,
+        "calibration_speed": 1.0,
+        "candidate_name": "kokoro-multi-lang-v1_0-static-qdq-s8s8-generator-fp32",
+        "exclude_node_name_prefixes": [
+          "/decoder/generator/"
+        ],
+        "extra_options": {
+          "ActivationSymmetric": true,
+          "WeightSymmetric": true
+        },
+        "method": "onnxruntime_static_post_training_quantization",
+        "notes": [
+          "This is an explicitly mixed-precision INT8 candidate: eligible Conv, MatMul, and Gemm nodes outside /decoder/generator/ receive S8S8 weight QDQ; every eligible node inside that prefix retains its original FP32 weight input after the all-eligible-op candidate showed a consistent spectral shift in the supporting screen.",
+          "Excluded generator nodes can consume activations dequantized after upstream quantized nodes; exclusion preserves their operators and weights, not an entirely quantization-isolated subgraph. ConvTranspose and LSTM also remain FP32 because they are outside this conservative QDQ recipe.",
+          "Calibration token IDs are produced with pinned eSpeak NG and the exact archive data. Quality-gate synthesis itself always uses sherpa-onnx's frontend.",
+          "The candidate must load and synthesize through sherpa-onnx CPU before it is eligible for listening. The ONNX Runtime quantizer's retained outer-graph ordering diagnostic is documented separately; the exact source passes the checker. Android deployment and any structural normalization are later gates."
+        ],
+        "op_types_to_quantize": [
+          "Conv",
+          "MatMul",
+          "Gemm"
+        ],
+        "per_channel": true,
+        "quant_format": "QDQ",
+        "reduce_range": false,
+        "schema_version": 1,
+        "weight_type": "QInt8"
+      },
+      "model": {
+        "bytes": 175678702,
+        "path": "generated/model.static-qdq-s8s8-generator-fp32.onnx",
+        "sha256": "c37d76d0ada7414d18841ed454e8c7f00c8b1f631e97e1fd019c3ba01a0fbd92",
+        "size_reduction_bytes": 149952127,
+        "size_reduction_fraction": 0.46049732901671914
+      },
+      "name": "kokoro-multi-lang-v1_0-static-qdq-s8s8-generator-fp32",
+      "rationale": "All six supporting screens passed with about 46% size reduction; subjective acceptability remains for Moritz to decide blindly."
+    },
+    "static_s8s8_linear_only": {
+      "acoustic_screen": {
+        "failed_check_counts": {
+          "duration_ratio_between_0_80_and_1_25": 0,
+          "normalized_32_band_power_cosine_at_least_0_90": 0,
+          "pitch_median_relative_difference_at_most_0_20": 0,
+          "spectral_centroid_relative_difference_at_most_0_20": 0,
+          "voiced_fraction_absolute_difference_at_most_0_20": 0
+        },
+        "failed_pair_count": 0,
+        "metric_ranges": {
+          "duration_ratio_int8_over_fp32": {
+            "maximum": 1.0645359351626515,
+            "minimum": 0.9998684025003524
+          },
+          "normalized_32_band_power_cosine": {
+            "maximum": 0.9993107178038616,
+            "minimum": 0.9911299002265005
+          },
+          "pitch_median_relative_difference": {
+            "maximum": 0.041322314049586785,
+            "minimum": 0.0
+          },
+          "spectral_centroid_relative_difference": {
+            "maximum": 0.04062426808887525,
+            "minimum": 0.0009688242697607894
+          },
+          "voiced_fraction_absolute_difference": {
+            "maximum": 0.02176986146451798,
+            "minimum": 0.0019297669839185572
+          }
+        },
+        "pair_count": 6,
+        "passed_pair_count": 6
+      },
+      "cpu_runtime_probe_passed": true,
+      "disposition": "not_selected_lower_size_reduction",
+      "method": {
+        "activation_type": "QInt8",
+        "calibration_language": "en-us",
+        "calibration_method": "MinMax",
+        "calibration_partition": "calibration",
+        "calibration_speaker": "af_heart",
+        "calibration_speaker_id": 3,
+        "calibration_speed": 1.0,
+        "candidate_name": "kokoro-multi-lang-v1_0-static-qdq-s8s8-linear-only",
+        "extra_options": {
+          "ActivationSymmetric": true,
+          "WeightSymmetric": true
+        },
+        "method": "onnxruntime_static_post_training_quantization",
+        "notes": [
+          "Retained non-selected screening recipe: eligible MatMul and Gemm nodes use S8S8 QDQ while Conv, ConvTranspose, and LSTM remain FP32.",
+          "It passed the supporting acoustic screen but reduced model size by only about 11%, so the generator-excluded Conv/MatMul/Gemm recipe was selected instead at about 46% reduction.",
+          "No subjective verdict is inferred from this automated screen."
+        ],
+        "op_types_to_quantize": [
+          "MatMul",
+          "Gemm"
+        ],
+        "per_channel": true,
+        "quant_format": "QDQ",
+        "reduce_range": false,
+        "schema_version": 1,
+        "weight_type": "QInt8"
+      },
+      "model": {
+        "bytes": 289972379,
+        "path": "generated/screening/linear-only-s8s8.onnx",
+        "sha256": "5201f3695631846a16cce2673178c5ea61c711c98c922f840490933fb6a1eef4",
+        "size_reduction_bytes": 35658450,
+        "size_reduction_fraction": 0.10950575567278367
+      },
+      "name": "kokoro-multi-lang-v1_0-static-qdq-s8s8-linear-only",
+      "rationale": "All six supporting screens passed, but the model was only about 11% smaller than FP32."
+    }
+  },
+  "decision_scope": "host candidate selection before subjective listening; not an Android benchmark or a subjective equivalence verdict",
+  "evidence": [
+    {
+      "bytes": 18783,
+      "path": "reports/quantization-report.json",
+      "sha256": "99286382149daa3e45030f6f3c47247604cf3f0f7a50667324c737293b794a7b"
+    },
+    {
+      "bytes": 42455,
+      "path": "reports/audio-analysis.json",
+      "sha256": "1b8914168661805701b97e7cb084c9494880f80a04b021690e0a79d068b8561f"
+    },
+    {
+      "bytes": 12312,
+      "path": "reports/screening-full-eligible-quantization.json",
+      "sha256": "9df029b5a95b3965c825a1826996e4ef9aabc384f7e311f1178875e52e697837"
+    },
+    {
+      "bytes": 20602,
+      "path": "reports/screening-full-eligible-synthesis.json",
+      "sha256": "61723cf8bc02a2e6e8c8f0d054e665b423ec2c0cbdafb05af990d2e9b79d3fbf"
+    },
+    {
+      "bytes": 42507,
+      "path": "reports/screening-full-eligible-analysis.json",
+      "sha256": "54b2477cb774fb2b8a387a0c8a2930e3e0bcae18c8c7635582bcd54eb06ef519"
+    },
+    {
+      "bytes": 12248,
+      "path": "reports/screening-linear-only-quantization.json",
+      "sha256": "4dbfc550c479418111689d6464535b34cd3ae0412ce046f824889716262294c9"
+    },
+    {
+      "bytes": 20608,
+      "path": "reports/screening-linear-only-synthesis.json",
+      "sha256": "c92924dad9928676f32f1616f982c3016672ba2687bc838bd075320861907d0f"
+    },
+    {
+      "bytes": 42521,
+      "path": "reports/screening-linear-only-analysis.json",
+      "sha256": "ad030eaf8633a82c80c92b8d58ae3b89aec20313f3944a31cea370af9a655771"
+    },
+    {
+      "bytes": 3551,
+      "path": "reports/dynamic-qint8-failure.json",
+      "sha256": "a30f016d1ee7aebd8860116a21f8daf5cc94c25ebba9d84c0ae1da6272b47722"
+    },
+    {
+      "bytes": 1825,
+      "path": "quantization-config.json",
+      "sha256": "bcd034ab71f478f468342f1ebca716def8163724aae624f27744ea3673609c85"
+    },
+    {
+      "bytes": 1071,
+      "path": "screening/full-eligible-s8s8.json",
+      "sha256": "df851d8a1f0c5024eea58885690a350e8248991dac739a4ad1f8adc0540e7da6"
+    },
+    {
+      "bytes": 1053,
+      "path": "screening/linear-only-s8s8.json",
+      "sha256": "2727bc197b332320249ea18689f0bda3419158e29281a3cfeb948f5417edd047"
+    }
+  ],
+  "raw_sample_error_used": false,
+  "schema_version": 1,
+  "selected_candidate_sha256": "c37d76d0ada7414d18841ed454e8c7f00c8b1f631e97e1fd019c3ba01a0fbd92",
+  "selected_candidate_subjective_status": "awaiting_user_listening",
+  "source_model": {
+    "bytes": 325630829,
+    "deployment_variant": "kokoro-multi-lang-v1_0",
+    "sha256": "c436dc6a842b62aba06af67e40bafcfb9c60ac3af895358f1974ad9a7f7c026b",
+    "speaker": "af_heart",
+    "speaker_id": 3
+  },
+  "status": "selected_candidate_ready_for_blind_listening"
+}

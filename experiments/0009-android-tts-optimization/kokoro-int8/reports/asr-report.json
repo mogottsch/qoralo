@@ -1,0 +1,141 @@
+{
+  "checks": {
+    "fp32_to_int8_hypothesis_wer_at_most_0_20": true,
+    "int8_corpus_wer_no_more_than_fp32_plus_0_10": true
+  },
+  "corpus": {
+    "fp32_hypothesis_words": 96,
+    "fp32_reference_errors": 3,
+    "fp32_reference_wer": 0.030612244897959183,
+    "fp32_to_int8_hypothesis_errors": 0,
+    "fp32_to_int8_hypothesis_wer": 0.0,
+    "int8_reference_errors": 3,
+    "int8_reference_wer": 0.030612244897959183,
+    "reference_words": 98
+  },
+  "decode_settings": {
+    "beam_size": 5,
+    "condition_on_previous_text": false,
+    "fp16": false,
+    "language": "en",
+    "model": "small",
+    "task": "transcribe",
+    "temperature": 0.0,
+    "torch_threads": 4,
+    "word_timestamps": false
+  },
+  "not_a_subjective_quality_verdict": true,
+  "pairs": [
+    {
+      "fp32_hypothesis_word_count": 36,
+      "fp32_reference_word_errors": 0,
+      "fp32_to_int8_hypothesis_word_errors": 0,
+      "fp32_transcript": "Welcome to our small studio where curious minds unpack one surprising idea at a time. Today, we explore why familiar voices build trust, how thoughtful pauses, shape meaning and what makes a conversation feel genuinely alive.",
+      "host_asr_timing_context_only": {
+        "fp32_seconds": 9.844851709000068,
+        "int8_seconds": 9.602122521000638
+      },
+      "id": "eval-canonical-0008",
+      "int8_reference_word_errors": 0,
+      "int8_transcript": "Welcome to our small studio where curious minds unpack one surprising idea at a time. Today, we explore why familiar voices build trust, how thoughtful pauses shape meaning and what makes a conversation feel genuinely alive.",
+      "reference": "Welcome to our small studio... where curious minds unpack one surprising idea at a time. Today, we explore why familiar voices build trust, how thoughtful pauses shape meaning... and what makes a conversation feel genuinely alive.",
+      "reference_word_count": 36
+    },
+    {
+      "fp32_hypothesis_word_count": 8,
+      "fp32_reference_word_errors": 0,
+      "fp32_to_int8_hypothesis_word_errors": 0,
+      "fp32_transcript": "A blue bicycle waited beside the quiet station.",
+      "host_asr_timing_context_only": {
+        "fp32_seconds": 3.698046193000664,
+        "int8_seconds": 3.8085574739998265
+      },
+      "id": "eval-short-declarative",
+      "int8_reference_word_errors": 0,
+      "int8_transcript": "A blue bicycle waited beside the quiet station.",
+      "reference": "A blue bicycle waited beside the quiet station.",
+      "reference_word_count": 8
+    },
+    {
+      "fp32_hypothesis_word_count": 11,
+      "fp32_reference_word_errors": 3,
+      "fp32_to_int8_hypothesis_word_errors": 0,
+      "fp32_transcript": "Flight 204 leaves at 6.18 p.m. and costs $49.",
+      "host_asr_timing_context_only": {
+        "fp32_seconds": 4.909621814000275,
+        "int8_seconds": 4.896403522000583
+      },
+      "id": "eval-time-number",
+      "int8_reference_word_errors": 3,
+      "int8_transcript": "Flight 204 leaves at 6.18 p.m. and costs $49.",
+      "reference": "Flight 204 leaves at 6:18 p.m. and costs forty-nine dollars.",
+      "reference_word_count": 13
+    },
+    {
+      "fp32_hypothesis_word_count": 12,
+      "fp32_reference_word_errors": 0,
+      "fp32_to_int8_hypothesis_word_errors": 0,
+      "fp32_transcript": "Did the tiny sensor really catch every whisper? Pause and sudden laugh.",
+      "host_asr_timing_context_only": {
+        "fp32_seconds": 4.534434500999851,
+        "int8_seconds": 4.85489805799989
+      },
+      "id": "eval-question-list",
+      "int8_reference_word_errors": 0,
+      "int8_transcript": "Did the tiny sensor really catch every whisper, pause, and sudden laugh?",
+      "reference": "Did the tiny sensor really catch every whisper, pause, and sudden laugh?",
+      "reference_word_count": 12
+    },
+    {
+      "fp32_hypothesis_word_count": 11,
+      "fp32_reference_word_errors": 0,
+      "fp32_to_int8_hypothesis_word_errors": 0,
+      "fp32_transcript": "Maya gently placed six yellow roses on the polished wooden table.",
+      "host_asr_timing_context_only": {
+        "fp32_seconds": 4.229285909999817,
+        "int8_seconds": 4.026430396999785
+      },
+      "id": "eval-phonetic-variety",
+      "int8_reference_word_errors": 0,
+      "int8_transcript": "Maya gently placed six yellow roses on the polished wooden table.",
+      "reference": "Maya gently placed six yellow roses on the polished wooden table.",
+      "reference_word_count": 11
+    },
+    {
+      "fp32_hypothesis_word_count": 18,
+      "fp32_reference_word_errors": 0,
+      "fp32_to_int8_hypothesis_word_errors": 0,
+      "fp32_transcript": "When the rain finally cleared, neighbors opened their windows, traded recipes, and planned a picnic for Sunday afternoon.",
+      "host_asr_timing_context_only": {
+        "fp32_seconds": 5.73788054599936,
+        "int8_seconds": 5.636356350999449
+      },
+      "id": "eval-long-declarative",
+      "int8_reference_word_errors": 0,
+      "int8_transcript": "When the rain finally cleared, neighbors opened their windows, traded recipes, and planned a picnic for Sunday afternoon.",
+      "reference": "When the rain finally cleared, neighbors opened their windows, traded recipes, and planned a picnic for Sunday afternoon.",
+      "reference_word_count": 18
+    }
+  ],
+  "role": "supporting transcript/intelligibility agreement only",
+  "runtime": {
+    "checkpoint": {
+      "bytes": 483617219,
+      "name": "small.pt",
+      "path": "/home/moritz/.cache/whisper/small.pt",
+      "sha256": "9ecf779972d90ba49c06d968637d720dd632c55bbf19d441fb42bf17a411e794"
+    },
+    "ffmpeg": "n9.0",
+    "ffmpeg_executable_sha256": "46dea8dda22fcc6572a524ba805428a18f0caadf61fe75b443676a485b10ea5d",
+    "numpy": "2.5.2",
+    "numpy_record_sha256": "6a36ded10b84b2a5342535de16dd40a50af6eaec97b49d97650b57ee069d1389",
+    "openai_whisper": "20250625",
+    "openai_whisper_record_sha256": "922aee54fec133abc6e6b99c8fb18e9075aaf1ae2c899c6f3720456931a798d7",
+    "python": "CPython 3.14.6",
+    "python_executable_sha256": "2700be1aabe3687bd597f21b0eac3b9bbdf7417e93035255a9286c67935b59bd",
+    "torch": "2.13.0",
+    "torch_record_sha256": "cf3c6adb7179d2c943c98ccc20b78c5aedcfa3b7a14444ec9336f1bdfe40607c"
+  },
+  "schema_version": 1,
+  "status": "passed"
+}

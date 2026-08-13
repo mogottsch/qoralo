@@ -1,0 +1,164 @@
+{
+  "apk_inspection": {
+    "abi": "arm64-v8a",
+    "apk": "/home/moritz/dev/vibevoice-android-spike/artifacts/0009/thread-sweep/android-build/app/build/outputs/apk/debug/app-debug.apk",
+    "apk_bytes": 34104037,
+    "apk_sha256": "a26ad5a38e1913481a81c78dcceecb34969923847d2a27fb40e6395b557fefeb",
+    "bundled_models_archives_or_audio": false,
+    "native_libraries": [
+      "libonnxruntime.so",
+      "libsherpa-onnx-c-api.so",
+      "libsherpa-onnx-cxx-api.so",
+      "libsherpa-onnx-jni.so"
+    ],
+    "pinned_aar_sha256": "6419cd8bc983e0c4fab06067f0fe0313fdc0f7103818ac1e7a08d50787b7a82b"
+  },
+  "build": {
+    "build_result": "passed",
+    "command": "gradle --no-daemon testDebugUnitTest assembleDebug",
+    "gradle_binary": "artifacts/tools/gradle-8.10.2/bin/gradle",
+    "gradle_version_summary": "Gradle 8.10.2",
+    "ignored_apk_path": "artifacts/0009/thread-sweep/android-build/app/build/outputs/apk/debug/app-debug.apk",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_sha256": "ae1d0956c61990eced39345d7bba22d22b9d15c23896f2f0f7e87038d70c980e",
+    "unit_tests": "passed"
+  },
+  "experiment": "0009-android-tts-optimization/thread-sweep",
+  "limitations": [
+    "The debug APK is an experiment harness, not a production application.",
+    "The APK is ignored; this report and later device receipts retain its digest."
+  ],
+  "observed_at_utc": "2026-08-13T14:38:44.327020+00:00",
+  "runtime": {
+    "aar_bytes": 49095090,
+    "aar_sha256": "6419cd8bc983e0c4fab06067f0fe0313fdc0f7103818ac1e7a08d50787b7a82b",
+    "provider": "cpu",
+    "sherpa_onnx_tag_commit": "3dc7c569f31ca2cd4a20ed6f7db780327e6714c5",
+    "sherpa_onnx_version": "1.13.5"
+  },
+  "schema_version": 1,
+  "source_experiment": "experiments/0008-sherpa-onnx-android-tts-benchmark/android",
+  "source_files": [
+    {
+      "bytes": 74,
+      "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/android/build.gradle.kts",
+      "sha256": "966fb16c81800d8b941dcaea2339c97fc548cc589303521f1f5ecb92401e6ab0"
+    },
+    {
+      "bytes": 274,
+      "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/android/settings.gradle.kts",
+      "sha256": "0b544d09a97e63ccabc8da3f020abcd1edc4d7553311e990c8aa18104d8c9fd1"
+    },
+    {
+      "bytes": 74,
+      "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/android/gradle.properties",
+      "sha256": "ce2baad862b1d7af30ceeff7ffdb609d590d341e4bd2f4c91c07e54b6fa2b56d"
+    },
+    {
+      "bytes": 1081,
+      "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/android/app/build.gradle.kts",
+      "sha256": "e4d8114a3bb54e879679f3239e8c9fdb0ed02e53d21a08c519df8eaefd5492ec"
+    },
+    {
+      "bytes": 572,
+      "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/android/app/src/main/AndroidManifest.xml",
+      "sha256": "83ff84ccb9c7a6cdd02ec1742cb058698f7fa6c0cf742aa33a6f4e7e543f0421"
+    },
+    {
+      "bytes": 635,
+      "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/android/app/src/main/java/dev/moket/ttsbench/AndroidMemoryReader.java",
+      "sha256": "4c7e861eb8de50f3b95b70616c31a51bf4eee6242b1796471ca68b202ab73277"
+    },
+    {
+      "bytes": 323,
+      "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/android/app/src/main/java/dev/moket/ttsbench/AudioData.java",
+      "sha256": "2fdd5005c38f83d4c9609137f0afe7affeac2e5fbf282547fea6012375501fe5"
+    },
+    {
+      "bytes": 755,
+      "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/android/app/src/main/java/dev/moket/ttsbench/AudioValidation.java",
+      "sha256": "60a9ef75c0b7bc11fecbab6f200a0cf6ba662bba2e33cb6c7d99988b3a598a39"
+    },
+    {
+      "bytes": 2270,
+      "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/android/app/src/main/java/dev/moket/ttsbench/BenchmarkActivity.java",
+      "sha256": "c087a1c212cbef0b12805458a1f2f8ba8b685697a2272cf87a11df16e6572148"
+    },
+    {
+      "bytes": 3848,
+      "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/android/app/src/main/java/dev/moket/ttsbench/BenchmarkDescriptor.java",
+      "sha256": "0bdb09a71819856fc8c48dbf7d4dbfe3dd7f42a5cfb797561b068d91db851b01"
+    },
+    {
+      "bytes": 3723,
+      "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/android/app/src/main/java/dev/moket/ttsbench/BenchmarkResult.java",
+      "sha256": "8f284f9c361ba936480c911bc580fce36d26329bfdc954ae122d40e9849577f4"
+    },
+    {
+      "bytes": 4594,
+      "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/android/app/src/main/java/dev/moket/ttsbench/BenchmarkRunner.java",
+      "sha256": "7136f1b4447f027b9fba8a02d46ae5b84b27bfed556851ce9fbdf8ae190b5aa8"
+    },
+    {
+      "bytes": 2404,
+      "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/android/app/src/main/java/dev/moket/ttsbench/MemoryMetrics.java",
+      "sha256": "90f1c67000e8f3f56744ec8c90dc1492bd105d74e6ea5e770cbe5840fbdf887f"
+    },
+    {
+      "bytes": 1730,
+      "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/android/app/src/main/java/dev/moket/ttsbench/Pcm16WavReader.java",
+      "sha256": "a7f74bf1d751f486074f9734355a29e69683d5d30cec8a7ce0bf691ddfac8ebd"
+    },
+    {
+      "bytes": 2640,
+      "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/android/app/src/main/java/dev/moket/ttsbench/SecureFiles.java",
+      "sha256": "1bd252b6e12d0c90c2253b03c91e4926f05ce714c9df25aef642ec9c768c126d"
+    },
+    {
+      "bytes": 4186,
+      "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/android/app/src/main/java/dev/moket/ttsbench/SherpaConfig.java",
+      "sha256": "23b8f8a21afa80580d124d7f7b20322a69f3dc8b40cd2b15946c2d9f3d51298e"
+    },
+    {
+      "bytes": 5946,
+      "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/android/app/src/main/java/dev/moket/ttsbench/SherpaOfflineTtsEngine.java",
+      "sha256": "8bf70b12c29858f7c027ea837c1002d526e83ecfe5eac4ae777614689753fa81"
+    },
+    {
+      "bytes": 1536,
+      "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/android/app/src/main/java/dev/moket/ttsbench/WavWriter.java",
+      "sha256": "6cfe8cc90b3538bf662ace473a02898a76a6e2126e4db41656e59f469abe61cf"
+    },
+    {
+      "bytes": 105,
+      "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/android/app/src/main/res/values/styles.xml",
+      "sha256": "aa2bb215aa509c058420b16ef6b854b58a456b377d212ceaa2ff2d859eeadd7a"
+    },
+    {
+      "bytes": 3725,
+      "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/android/app/src/test/java/dev/moket/ttsbench/BenchmarkRunnerTest.java",
+      "sha256": "3f58dd7b064d5e59073abe8aae604f0872716c5c9926c5e24e8444876a255dbb"
+    },
+    {
+      "bytes": 6626,
+      "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/android/app/src/test/java/dev/moket/ttsbench/CoreTest.java",
+      "sha256": "130162f2063fa4617323788dfa15a792b9b7a9f08d74fb34b3a949572d290523"
+    }
+  ],
+  "source_git_commit": "5e4d9e47827a789ed6312ecafd04fe0358def167",
+  "source_tree_manifest_sha256": "e9e00c594083ca623d985981d84c07e79d154e38eedc89442b5da9bfb5731d38",
+  "sweep_only_changes": [
+    {
+      "patch": "android/allow-four-threads.patch",
+      "patch_sha256": "bbc0b1afa63fb165cf03ce9374e814dbd2375ca5017f289e67ca5e69e41aab44",
+      "path": "app/src/main/java/dev/moket/ttsbench/BenchmarkDescriptor.java",
+      "purpose": "accept num_threads=4 in addition to the existing 1 and 2"
+    },
+    {
+      "path": "app/src/test/java/dev/moket/ttsbench/FourThreadDescriptorTest.java",
+      "purpose": "prove that only 1, 2, and 4 are accepted",
+      "source": "android/FourThreadDescriptorTest.java",
+      "source_sha256": "ba088818e8eb9048737aeb2108df1dd981d4595dc35c679c4e77b8b52416b954"
+    }
+  ]
+}

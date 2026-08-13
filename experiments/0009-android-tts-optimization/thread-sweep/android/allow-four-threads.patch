@@ -1,0 +1,10 @@
+--- a/app/src/main/java/dev/moket/ttsbench/BenchmarkDescriptor.java
++++ b/app/src/main/java/dev/moket/ttsbench/BenchmarkDescriptor.java
+@@ -12,6 +12,6 @@ public record BenchmarkDescriptor(String candidate, String transcript, String transcriptSha256,
+         Objects.requireNonNull(sherpaConfigPath); files = Map.copyOf(files); Objects.requireNonNull(provider);
+         if (!provider.equals("cpu")) throw new IllegalArgumentException("provider must be cpu");
+-        if (numThreads != 1 && numThreads != 2) throw new IllegalArgumentException("threads must be 1 or 2");
++        if (numThreads != 1 && numThreads != 2 && numThreads != 4) throw new IllegalArgumentException("threads must be 1, 2, or 4");
+         if (warmRuns < 3) throw new IllegalArgumentException("at least three warm runs required");
+         if (!transcriptSha256.matches("[0-9a-f]{64}")) throw new IllegalArgumentException("bad transcript hash");
+         if (candidate.isBlank() || language==null || language.isBlank()) throw new IllegalArgumentException("candidate/language must be non-empty");

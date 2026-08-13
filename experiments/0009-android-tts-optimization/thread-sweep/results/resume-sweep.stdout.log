@@ -1,0 +1,38 @@
+Traceback (most recent call last):
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0009-android-tts-optimization/thread-sweep/tools/run_sweep.py", line 1052, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0009-android-tts-optimization/thread-sweep/tools/run_sweep.py", line 844, in main
+    return resume_campaign(
+        campaign_name=args.resume_campaign,
+    ...<5 lines>...
+        order=order,
+    )
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0009-android-tts-optimization/thread-sweep/tools/run_sweep.py", line 652, in resume_campaign
+    verification = verify_resume_ledger(receipt, raw_dir, plan, manifest, order)
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0009-android-tts-optimization/thread-sweep/tools/run_sweep.py", line 522, in verify_resume_ledger
+    raise RuntimeError("interrupted sequence-7 pre-state is absent from the ledger")
+RuntimeError: interrupted sequence-7 pre-state is absent from the ledger
+
+--- retry after preserved failed resume attempt ---
+verified staged inventory batch 1
+verified staged inventory batch 2
+verified staged inventory batch 3
+verified staged inventory batch 4
+verified staged inventory batch 5
+verified staged inventory batch 6
+verified staged inventory batch 7
+verified staged inventory batch 8
+verified staged inventory batch 9
+verified staged inventory batch 10
+verified staged inventory batch 11
+verified staged inventory batch 12
+verified staged inventory batch 13
+verified staged inventory batch 14
+verified staged inventory batch 15
+verified staged inventory batch 16
+verified staged inventory batch 17
+[7/9] resuming supertonic_3_t2
+[8/9] resuming pocket_t4
+[9/9] resuming kokoro_t1
+/home/moritz/dev/vibevoice-android-spike/experiments/0009-android-tts-optimization/thread-sweep/results/campaign-receipt.json

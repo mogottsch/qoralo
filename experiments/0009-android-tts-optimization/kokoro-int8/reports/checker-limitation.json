@@ -1,0 +1,25 @@
+{
+  "candidate": {
+    "bytes": 175678702,
+    "error": {
+      "message": "Nodes in a graph must be topologically sorted, however input '/SplitToSequence_output_0' of node: \nname: /SequenceAt OpType: SequenceAt\n is not output of any previous nodes.\n\n==> Context: Bad node spec for node. Name: /Loop OpType: Loop",
+      "type": "ValidationError"
+    },
+    "path": "generated/model.static-qdq-s8s8-generator-fp32.onnx",
+    "sha256": "c37d76d0ada7414d18841ed454e8c7f00c8b1f631e97e1fd019c3ba01a0fbd92"
+  },
+  "executable_integrity_gate": "Pinned ONNX Runtime CPU session construction/inference plus sherpa-onnx synthesis and full WAV decode all pass for the candidate.",
+  "interpretation": "The exact source passes. ONNX Runtime quantization reorders the outer graph so a SplitToSequence producer follows the Loop that captures it; the checker diagnostic is introduced by quantization and is retained as a structural limitation.",
+  "schema_version": 1,
+  "source": {
+    "bytes": 325630829,
+    "checker_passed": true,
+    "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/artifacts/extracted/kokoro/kokoro-multi-lang-v1_0/model.onnx",
+    "sha256": "c436dc6a842b62aba06af67e40bafcfb9c60ac3af895358f1974ad9a7f7c026b"
+  },
+  "status": "reproduced_quantizer_introduced_topological_order_limitation",
+  "tool": {
+    "full_check": true,
+    "onnx": "1.18.0"
+  }
+}

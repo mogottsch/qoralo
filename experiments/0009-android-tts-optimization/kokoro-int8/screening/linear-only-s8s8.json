@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "candidate_name": "kokoro-multi-lang-v1_0-static-qdq-s8s8-linear-only",
+  "method": "onnxruntime_static_post_training_quantization",
+  "quant_format": "QDQ",
+  "activation_type": "QInt8",
+  "weight_type": "QInt8",
+  "per_channel": true,
+  "reduce_range": false,
+  "calibration_method": "MinMax",
+  "op_types_to_quantize": [
+    "MatMul",
+    "Gemm"
+  ],
+  "extra_options": {
+    "ActivationSymmetric": true,
+    "WeightSymmetric": true
+  },
+  "calibration_partition": "calibration",
+  "calibration_speaker_id": 3,
+  "calibration_speaker": "af_heart",
+  "calibration_speed": 1.0,
+  "calibration_language": "en-us",
+  "notes": [
+    "Retained non-selected screening recipe: eligible MatMul and Gemm nodes use S8S8 QDQ while Conv, ConvTranspose, and LSTM remain FP32.",
+    "It passed the supporting acoustic screen but reduced model size by only about 11%, so the generator-excluded Conv/MatMul/Gemm recipe was selected instead at about 46% reduction.",
+    "No subjective verdict is inferred from this automated screen."
+  ]
+}

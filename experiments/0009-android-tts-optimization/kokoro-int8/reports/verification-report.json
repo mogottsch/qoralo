@@ -1,0 +1,72 @@
+{
+  "android": {
+    "accessed": false,
+    "pss_measured": false,
+    "rtf_measured": false
+  },
+  "blind": {
+    "crc_passed": true,
+    "pair_count": 6,
+    "wav_count": 12
+  },
+  "candidate": {
+    "bytes": 175678702,
+    "effective_weight_qdq_node_count": 163,
+    "excluded_node_count": 102,
+    "rebuild_path": "generated/model.static-qdq-s8s8.onnx",
+    "rebuild_sha256": "c37d76d0ada7414d18841ed454e8c7f00c8b1f631e97e1fd019c3ba01a0fbd92",
+    "sha256": "c37d76d0ada7414d18841ed454e8c7f00c8b1f631e97e1fd019c3ba01a0fbd92"
+  },
+  "checks": {
+    "asr_supporting_report": true,
+    "bit_exact_independent_candidate_rebuild": true,
+    "blind_zip_crc_metadata_payload_assignments_and_empty_ballot": true,
+    "candidate_selection_and_failure_retention": true,
+    "explicit_awaiting_user_listening_status": true,
+    "full_exact_source_inventory": true,
+    "locked_wheelhouse_and_installed_versions": true,
+    "selected_candidate_effective_weight_qdq_boundary": true,
+    "selected_candidate_hash_and_size": true,
+    "six_matched_pair_wav_hashes_integrity_and_acoustic_reanalysis": true,
+    "source_checker_pass_and_candidate_quantizer_ordering_limitation": true
+  },
+  "overall_quality_status": "awaiting_user_listening",
+  "retained_audio": {
+    "maximums": {
+      "duration_ratio_int8_over_fp32": 1.0639331085757664,
+      "pitch_median_relative_difference": 0.048780487804878085,
+      "spectral_centroid_relative_difference": 0.04788431937343822,
+      "voiced_fraction_absolute_difference": 0.03194797851286402
+    },
+    "minimum_band_power_cosine": 0.9834971021161194,
+    "pair_count": 6
+  },
+  "runtime_smoke": {
+    "embedded_onnxruntime": "1.27.1",
+    "ephemeral_audio_not_retained": true,
+    "frontend_and_runtime": "sherpa-onnx 1.13.5 OfflineTts Kokoro",
+    "num_threads": 1,
+    "provider": "cpu",
+    "speaker_id": 3,
+    "speed": 1.0,
+    "status": "passed_nonempty_finite_nonsilent_24khz_audio",
+    "utterance_id": "eval-short-declarative"
+  },
+  "schema_version": 1,
+  "scope": "strict host package verification; no phone access or Android performance measurement",
+  "source": {
+    "every_file_size_and_sha256_verified": true,
+    "file_count": 377,
+    "inventory_sha256": "5a44089cba9ae69f0e466cc71eb9d0833ecb2a8769130a85b9703ae5ae73d149",
+    "symlinks_rejected": true,
+    "total_bytes": 400786089,
+    "unexpected_files_rejected": true
+  },
+  "status": "passed",
+  "toolchain": {
+    "espeak_executable_sha256": "07ef6310d76436cf92034c9953335352e4e303ebb75e2131020d68f0c1e781b8",
+    "espeak_library_sha256": "400f24c3890aa78e0c11a6b72f9b1948c776a926ead4c475bb68ae706bac1c12",
+    "python": "CPython 3.11.13",
+    "wheel_count": 13
+  }
+}

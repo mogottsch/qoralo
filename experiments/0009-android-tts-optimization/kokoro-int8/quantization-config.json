@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "candidate_name": "kokoro-multi-lang-v1_0-static-qdq-s8s8-generator-fp32",
+  "method": "onnxruntime_static_post_training_quantization",
+  "quant_format": "QDQ",
+  "activation_type": "QInt8",
+  "weight_type": "QInt8",
+  "per_channel": true,
+  "reduce_range": false,
+  "calibration_method": "MinMax",
+  "op_types_to_quantize": [
+    "Conv",
+    "MatMul",
+    "Gemm"
+  ],
+  "exclude_node_name_prefixes": [
+    "/decoder/generator/"
+  ],
+  "extra_options": {
+    "ActivationSymmetric": true,
+    "WeightSymmetric": true
+  },
+  "calibration_partition": "calibration",
+  "calibration_speaker_id": 3,
+  "calibration_speaker": "af_heart",
+  "calibration_speed": 1.0,
+  "calibration_language": "en-us",
+  "notes": [
+    "This is an explicitly mixed-precision INT8 candidate: eligible Conv, MatMul, and Gemm nodes outside /decoder/generator/ receive S8S8 weight QDQ; every eligible node inside that prefix retains its original FP32 weight input after the all-eligible-op candidate showed a consistent spectral shift in the supporting screen.",
+    "Excluded generator nodes can consume activations dequantized after upstream quantized nodes; exclusion preserves their operators and weights, not an entirely quantization-isolated subgraph. ConvTranspose and LSTM also remain FP32 because they are outside this conservative QDQ recipe.",
+    "Calibration token IDs are produced with pinned eSpeak NG and the exact archive data. Quality-gate synthesis itself always uses sherpa-onnx's frontend.",
+    "The candidate must load and synthesize through sherpa-onnx CPU before it is eligible for listening. The ONNX Runtime quantizer's retained outer-graph ordering diagnostic is documented separately; the exact source passes the checker. Android deployment and any structural normalization are later gates."
+  ]
+}

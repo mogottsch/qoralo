@@ -1,0 +1,549 @@
+{
+  "android_rtf_pss": {
+    "evidence_in_this_report": false,
+    "status": "deferred_until_candidate_passes_user_listening_and_is_deployed"
+  },
+  "exact_shared_inputs": {
+    "corpus_order": [
+      "eval-canonical-0008",
+      "eval-short-declarative",
+      "eval-time-number",
+      "eval-question-list",
+      "eval-phonetic-variety",
+      "eval-long-declarative"
+    ],
+    "corpus_path": "corpus.json",
+    "corpus_sha256": "9fa99b53f401290883d782fdf19163256c767d5efd9e1719e916254bda083da4",
+    "deployment_variant": "kokoro-multi-lang-v1_0",
+    "frontend_and_runtime": "sherpa-onnx 1.13.5 OfflineTts Kokoro",
+    "language": "en-us",
+    "num_threads": 1,
+    "partition": "evaluation",
+    "provider": "cpu",
+    "session_policy": "fresh OfflineTts session per variant; identical corpus order",
+    "speaker": "af_heart",
+    "speaker_id": 3,
+    "speed": 1.0,
+    "utterance_handling": "each corpus entry passed whole; no text splitting"
+  },
+  "host_timing_context_only": {
+    "median_warmth_not_controlled": true,
+    "model_load_seconds": 1.001175430999865,
+    "not_android_evidence": true
+  },
+  "model": {
+    "bytes": 325630829,
+    "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/artifacts/extracted/kokoro/kokoro-multi-lang-v1_0/model.onnx",
+    "sha256": "c436dc6a842b62aba06af67e40bafcfb9c60ac3af895358f1974ad9a7f7c026b"
+  },
+  "outputs": [
+    {
+      "host_timing_context_only": {
+        "audio_seconds": 13.298125,
+        "generation_seconds": 9.411870123999506,
+        "rtf": 0.7077591859002307
+      },
+      "id": "eval-canonical-0008",
+      "source_float": {
+        "source_clip_count": 0,
+        "source_peak": 0.44374966621398926,
+        "source_sample_count": 319155
+      },
+      "text": "Welcome to our small studio... where curious minds unpack one surprising idea at a time. Today, we explore why familiar voices build trust, how thoughtful pauses shape meaning... and what makes a conversation feel genuinely alive.",
+      "text_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
+      "wav": {
+        "acoustic_behavior": {
+          "active_frame_count": 1209,
+          "method": "aggregate voiced-frame autocorrelation pitch and FFT power distribution; not speaker verification",
+          "normalized_32_band_power": [
+            0.03039133246550867,
+            0.18791973993067929,
+            0.26727236151617373,
+            0.10693675598008882,
+            0.09105287598053634,
+            0.0912446127877454,
+            0.045883153143099514,
+            0.030182770003009573,
+            0.04221966840137384,
+            0.03290357423854075,
+            0.019665236431011614,
+            0.01268680272924712,
+            0.006705909427867448,
+            0.0055856613428944425,
+            0.00406831446413289,
+            0.002360026384410637,
+            0.0017198242665154952,
+            0.0021895150092567026,
+            0.0023988773273423535,
+            0.0013091226084123349,
+            0.0009768525679295908,
+            0.0008485651364061935,
+            0.0011380421121114151,
+            0.0019418633916126586,
+            0.001246132427613314,
+            0.0006483589042758078,
+            0.0009590454244633557,
+            0.001610664699934241,
+            0.002393438471522181,
+            0.0010954495243021872,
+            0.001060370884353438,
+            0.0013850820176286585
+          ],
+          "pitch_hz_iqr": 55.909558067831455,
+          "pitch_hz_median": 193.5483870967742,
+          "spectral_centroid_hz_iqr": 399.34843799623997,
+          "spectral_centroid_hz_median": 293.39811085969257,
+          "spectral_rolloff_85_hz_median": 492.1875,
+          "voiced_frame_fraction": 0.7036199095022625
+        },
+        "bytes": 638354,
+        "format": {
+          "channels": 1,
+          "decoder": "python_stdlib_wave_full_decode",
+          "duration_seconds": 13.298125,
+          "frames": 319155,
+          "sample_rate_hz": 24000,
+          "sample_width_bytes": 2
+        },
+        "integrity": {
+          "finite": true,
+          "leading_silence_seconds": 0.05,
+          "non_silent": true,
+          "pcm_clip_count": 0,
+          "pcm_clip_fraction": 0.0,
+          "pcm_peak": 0.4437255859375,
+          "pcm_rms": 0.061557209738745,
+          "silent_frame_fraction_below_minus_50_dbfs": 0.08960843373493976,
+          "trailing_silence_seconds": 0.09
+        },
+        "path": "generated/audio/fp32/eval-canonical-0008--sha256-b37f42ded8b1783358f5ef7997e02959074a4c50175f9135b68e32f969fcca5e.wav",
+        "sha256": "b37f42ded8b1783358f5ef7997e02959074a4c50175f9135b68e32f969fcca5e"
+      }
+    },
+    {
+      "host_timing_context_only": {
+        "audio_seconds": 2.785458333333333,
+        "generation_seconds": 2.0578159319993574,
+        "rtf": 0.738771033611832
+      },
+      "id": "eval-short-declarative",
+      "source_float": {
+        "source_clip_count": 0,
+        "source_peak": 0.3975193202495575,
+        "source_sample_count": 66851
+      },
+      "text": "A blue bicycle waited beside the quiet station.",
+      "text_sha256": "32c289a05d6f2ce4f2226c5a7a67f73ab105d58040eff1f81082b5e17bfe6980",
+      "wav": {
+        "acoustic_behavior": {
+          "active_frame_count": 254,
+          "method": "aggregate voiced-frame autocorrelation pitch and FFT power distribution; not speaker verification",
+          "normalized_32_band_power": [
+            0.020756563553379036,
+            0.14757439350958343,
+            0.2276099842410126,
+            0.24978617969922112,
+            0.07161831760673995,
+            0.05104981802336066,
+            0.0482407252521515,
+            0.024208393698063595,
+            0.021599131145272912,
+            0.042544357424114214,
+            0.02881208776986908,
+            0.016815495832603278,
+            0.008591626975791453,
+            0.006441104499551788,
+            0.007055514376332258,
+            0.0032752568803748193,
+            0.0027087503462909003,
+            0.0024586720190203303,
+            0.0022574331517425756,
+            0.001505530550064054,
+            0.00104632022740982,
+            0.0006833613579095748,
+            0.001723041338448305,
+            0.002833970751075026,
+            0.0012753647582884515,
+            0.0006025245537115466,
+            0.0010614461517628202,
+            0.0007026277436612689,
+            0.0014844728431157666,
+            0.0010544198415212988,
+            0.0010943466003746332,
+            0.001528767278181877
+          ],
+          "pitch_hz_iqr": 45.48286604361371,
+          "pitch_hz_median": 195.1219512195122,
+          "spectral_centroid_hz_iqr": 330.62799390492705,
+          "spectral_centroid_hz_median": 277.3861632504249,
+          "spectral_rolloff_85_hz_median": 515.625,
+          "voiced_frame_fraction": 0.7672727272727272
+        },
+        "bytes": 133746,
+        "format": {
+          "channels": 1,
+          "decoder": "python_stdlib_wave_full_decode",
+          "duration_seconds": 2.785458333333333,
+          "frames": 66851,
+          "sample_rate_hz": 24000,
+          "sample_width_bytes": 2
+        },
+        "integrity": {
+          "finite": true,
+          "leading_silence_seconds": 0.04,
+          "non_silent": true,
+          "pcm_clip_count": 0,
+          "pcm_clip_fraction": 0.0,
+          "pcm_peak": 0.39752197265625,
+          "pcm_rms": 0.05912018207818315,
+          "silent_frame_fraction_below_minus_50_dbfs": 0.08303249097472924,
+          "trailing_silence_seconds": 0.08
+        },
+        "path": "generated/audio/fp32/eval-short-declarative--sha256-c94720d7254151213304317aac924e85aaa6a44808cb4d7fc4d07a5695997e0e.wav",
+        "sha256": "c94720d7254151213304317aac924e85aaa6a44808cb4d7fc4d07a5695997e0e"
+      }
+    },
+    {
+      "host_timing_context_only": {
+        "audio_seconds": 4.447875,
+        "generation_seconds": 3.226388968999345,
+        "rtf": 0.7253776171765944
+      },
+      "id": "eval-time-number",
+      "source_float": {
+        "source_clip_count": 0,
+        "source_peak": 0.39782968163490295,
+        "source_sample_count": 106749
+      },
+      "text": "Flight 204 leaves at 6:18 p.m. and costs forty-nine dollars.",
+      "text_sha256": "e6c6d104a4003bc7df386df6d3988e1aff3530de30382785f9474edcb041f54a",
+      "wav": {
+        "acoustic_behavior": {
+          "active_frame_count": 410,
+          "method": "aggregate voiced-frame autocorrelation pitch and FFT power distribution; not speaker verification",
+          "normalized_32_band_power": [
+            0.02260296998186273,
+            0.1669310945776946,
+            0.32640903573581065,
+            0.08925410671941528,
+            0.09003551103353404,
+            0.07432403158662039,
+            0.032621713150914604,
+            0.04015682503350167,
+            0.026248287062784478,
+            0.03805306695439144,
+            0.01900181571955585,
+            0.029003387392114405,
+            0.00787464552299837,
+            0.0072015729441896915,
+            0.004133346767806475,
+            0.0030078659400934317,
+            0.0026023140466836336,
+            0.0028386018461140534,
+            0.0025139995375551677,
+            0.0012775606625409254,
+            0.0009996651403585597,
+            0.000861903142310568,
+            0.0004315917551636765,
+            0.0005058472736588252,
+            0.0011544421725090388,
+            0.000859810281835776,
+            0.0013351497116723377,
+            0.002302622778010204,
+            0.002153988441933627,
+            0.001028688620499028,
+            0.0009523795409817714,
+            0.0013221589248849698
+          ],
+          "pitch_hz_iqr": 52.10084033613447,
+          "pitch_hz_median": 205.12820512820514,
+          "spectral_centroid_hz_iqr": 577.1680594269689,
+          "spectral_centroid_hz_median": 313.16484124380867,
+          "spectral_rolloff_85_hz_median": 539.0625,
+          "voiced_frame_fraction": 0.7006802721088435
+        },
+        "bytes": 213542,
+        "format": {
+          "channels": 1,
+          "decoder": "python_stdlib_wave_full_decode",
+          "duration_seconds": 4.447875,
+          "frames": 106749,
+          "sample_rate_hz": 24000,
+          "sample_width_bytes": 2
+        },
+        "integrity": {
+          "finite": true,
+          "leading_silence_seconds": 0.06,
+          "non_silent": true,
+          "pcm_clip_count": 0,
+          "pcm_clip_fraction": 0.0,
+          "pcm_peak": 0.3978271484375,
+          "pcm_rms": 0.06200655553089019,
+          "silent_frame_fraction_below_minus_50_dbfs": 0.0744920993227991,
+          "trailing_silence_seconds": 0.09
+        },
+        "path": "generated/audio/fp32/eval-time-number--sha256-beb30bea5b2d375e98a5cdb43e2252f67e8d0a71b3232229ddeb9744baf6b096.wav",
+        "sha256": "beb30bea5b2d375e98a5cdb43e2252f67e8d0a71b3232229ddeb9744baf6b096"
+      }
+    },
+    {
+      "host_timing_context_only": {
+        "audio_seconds": 3.7324166666666665,
+        "generation_seconds": 2.7627175549996537,
+        "rtf": 0.7401953752036403
+      },
+      "id": "eval-question-list",
+      "source_float": {
+        "source_clip_count": 0,
+        "source_peak": 0.3780815005302429,
+        "source_sample_count": 89578
+      },
+      "text": "Did the tiny sensor really catch every whisper, pause, and sudden laugh?",
+      "text_sha256": "cb03e55d8c1d9adf634948fc81bdf50fb60180fa72f44c9b81fb15ac622a0c71",
+      "wav": {
+        "acoustic_behavior": {
+          "active_frame_count": 342,
+          "method": "aggregate voiced-frame autocorrelation pitch and FFT power distribution; not speaker verification",
+          "normalized_32_band_power": [
+            0.02860202431296807,
+            0.17011618054366479,
+            0.2605079792640083,
+            0.16946198212157046,
+            0.0640356620456237,
+            0.07891558903944895,
+            0.036653667217114605,
+            0.0318502536024458,
+            0.034381841108298936,
+            0.0601660936325853,
+            0.016058839778227724,
+            0.009394317015223993,
+            0.005315469474990809,
+            0.0025605973897678044,
+            0.0028348162418566324,
+            0.0027426488234695507,
+            0.0020195349181959944,
+            0.003837765096529284,
+            0.0023537455703555492,
+            0.0022462889955289465,
+            0.0018577523702610012,
+            0.001043855945199802,
+            0.00104272949845473,
+            0.0012539059015296218,
+            0.0012997097129995561,
+            0.0005728749689513196,
+            0.0008852459520477455,
+            0.0018105757715790398,
+            0.0027001874513693618,
+            0.0010641848575837372,
+            0.0010192757171425277,
+            0.001394405661006284
+          ],
+          "pitch_hz_iqr": 57.82722698603928,
+          "pitch_hz_median": 190.47619047619048,
+          "spectral_centroid_hz_iqr": 516.1234386983157,
+          "spectral_centroid_hz_median": 325.18089081450137,
+          "spectral_rolloff_85_hz_median": 539.0625,
+          "voiced_frame_fraction": 0.7054054054054054
+        },
+        "bytes": 179200,
+        "format": {
+          "channels": 1,
+          "decoder": "python_stdlib_wave_full_decode",
+          "duration_seconds": 3.7324166666666665,
+          "frames": 89578,
+          "sample_rate_hz": 24000,
+          "sample_width_bytes": 2
+        },
+        "integrity": {
+          "finite": true,
+          "leading_silence_seconds": 0.04,
+          "non_silent": true,
+          "pcm_clip_count": 0,
+          "pcm_clip_fraction": 0.0,
+          "pcm_peak": 0.378082275390625,
+          "pcm_rms": 0.059985255981775884,
+          "silent_frame_fraction_below_minus_50_dbfs": 0.07816711590296496,
+          "trailing_silence_seconds": 0.09
+        },
+        "path": "generated/audio/fp32/eval-question-list--sha256-0db7bdf9138e8004ddb29814b16ff4044ef9e05b98c92702eae064aaf1f0aeb3.wav",
+        "sha256": "0db7bdf9138e8004ddb29814b16ff4044ef9e05b98c92702eae064aaf1f0aeb3"
+      }
+    },
+    {
+      "host_timing_context_only": {
+        "audio_seconds": 3.8175833333333333,
+        "generation_seconds": 2.7944400879996465,
+        "rtf": 0.7319919027306926
+      },
+      "id": "eval-phonetic-variety",
+      "source_float": {
+        "source_clip_count": 0,
+        "source_peak": 0.3338908851146698,
+        "source_sample_count": 91622
+      },
+      "text": "Maya gently placed six yellow roses on the polished wooden table.",
+      "text_sha256": "cda600ba7c3fd2aa42b3a94aa79829176e086047b4f8b0b27e54df2ddb8cf304",
+      "wav": {
+        "acoustic_behavior": {
+          "active_frame_count": 348,
+          "method": "aggregate voiced-frame autocorrelation pitch and FFT power distribution; not speaker verification",
+          "normalized_32_band_power": [
+            0.029783303012124014,
+            0.1927258723701335,
+            0.254646603064822,
+            0.12219532763466139,
+            0.09562406690198542,
+            0.06753233079680285,
+            0.06319719013860269,
+            0.030752430601868566,
+            0.034877858776142696,
+            0.025980590909277127,
+            0.020645804034555112,
+            0.012720511226487694,
+            0.006422100931369459,
+            0.005937671836327421,
+            0.004227790679395875,
+            0.003854414902728786,
+            0.003864387037684438,
+            0.003970950987741142,
+            0.004281690741467999,
+            0.0016799067606227843,
+            0.0012789804198017124,
+            0.0009927742056090368,
+            0.0014127501364552793,
+            0.002360985603720578,
+            0.0013462094395946041,
+            0.0006416829776195952,
+            0.0009263537158660133,
+            0.00169832494955333,
+            0.0011698411558761059,
+            0.0009131432975392003,
+            0.0009139762483376159,
+            0.0014241745052259657
+          ],
+          "pitch_hz_iqr": 49.54945157432422,
+          "pitch_hz_median": 200.0,
+          "spectral_centroid_hz_iqr": 447.5127920078227,
+          "spectral_centroid_hz_median": 313.3341550245966,
+          "spectral_rolloff_85_hz_median": 515.625,
+          "voiced_frame_fraction": 0.7037037037037037
+        },
+        "bytes": 183288,
+        "format": {
+          "channels": 1,
+          "decoder": "python_stdlib_wave_full_decode",
+          "duration_seconds": 3.8175833333333333,
+          "frames": 91622,
+          "sample_rate_hz": 24000,
+          "sample_width_bytes": 2
+        },
+        "integrity": {
+          "finite": true,
+          "leading_silence_seconds": 0.05,
+          "non_silent": true,
+          "pcm_clip_count": 0,
+          "pcm_clip_fraction": 0.0,
+          "pcm_peak": 0.333892822265625,
+          "pcm_rms": 0.05998841546482751,
+          "silent_frame_fraction_below_minus_50_dbfs": 0.08421052631578947,
+          "trailing_silence_seconds": 0.08
+        },
+        "path": "generated/audio/fp32/eval-phonetic-variety--sha256-55ac2ff5eff386306a8b424a3fb26047f982dde358eb57bbb9cfc7c7859ef0e5.wav",
+        "sha256": "55ac2ff5eff386306a8b424a3fb26047f982dde358eb57bbb9cfc7c7859ef0e5"
+      }
+    },
+    {
+      "host_timing_context_only": {
+        "audio_seconds": 6.498375,
+        "generation_seconds": 4.838901936999719,
+        "rtf": 0.7446326099986101
+      },
+      "id": "eval-long-declarative",
+      "source_float": {
+        "source_clip_count": 0,
+        "source_peak": 0.44858062267303467,
+        "source_sample_count": 155961
+      },
+      "text": "When the rain finally cleared, neighbors opened their windows, traded recipes, and planned a picnic for Sunday afternoon.",
+      "text_sha256": "b3c7d6bbb3a8efcc9e22bc131f5d21a4a27495c61fa799e4636e0ad0e48e5cd1",
+      "wav": {
+        "acoustic_behavior": {
+          "active_frame_count": 591,
+          "method": "aggregate voiced-frame autocorrelation pitch and FFT power distribution; not speaker verification",
+          "normalized_32_band_power": [
+            0.017998126594648958,
+            0.16781047196033266,
+            0.351165997146798,
+            0.10040704881024258,
+            0.1000339541287336,
+            0.0750528334943091,
+            0.04509109473391166,
+            0.023595678370323045,
+            0.027971260344399455,
+            0.02089130812752141,
+            0.019176439983909454,
+            0.0124025979762484,
+            0.005813896052195034,
+            0.003925173493167877,
+            0.004543994021252703,
+            0.003245473080327423,
+            0.002103946905761754,
+            0.0035879780738324514,
+            0.0020381248997534914,
+            0.0014989079259075215,
+            0.00121265744853472,
+            0.0008733900827275382,
+            0.0006411230302760251,
+            0.0005141509597985604,
+            0.0007301501704755536,
+            0.0004081377910202367,
+            0.0007532823785601965,
+            0.0010219552248195045,
+            0.0019132948104469856,
+            0.0011633572840271268,
+            0.000995960111263827,
+            0.0014182345844731316
+          ],
+          "pitch_hz_iqr": 49.46695095948829,
+          "pitch_hz_median": 201.68067226890756,
+          "spectral_centroid_hz_iqr": 391.5911860875809,
+          "spectral_centroid_hz_median": 286.8039686895514,
+          "spectral_rolloff_85_hz_median": 468.75,
+          "voiced_frame_fraction": 0.7229102167182663
+        },
+        "bytes": 311966,
+        "format": {
+          "channels": 1,
+          "decoder": "python_stdlib_wave_full_decode",
+          "duration_seconds": 6.498375,
+          "frames": 155961,
+          "sample_rate_hz": 24000,
+          "sample_width_bytes": 2
+        },
+        "integrity": {
+          "finite": true,
+          "leading_silence_seconds": 0.04,
+          "non_silent": true,
+          "pcm_clip_count": 0,
+          "pcm_clip_fraction": 0.0,
+          "pcm_peak": 0.448577880859375,
+          "pcm_rms": 0.06460197582644753,
+          "silent_frame_fraction_below_minus_50_dbfs": 0.08796296296296297,
+          "trailing_silence_seconds": 0.08
+        },
+        "path": "generated/audio/fp32/eval-long-declarative--sha256-59d92f90f607c95ade214e18dc508d50b4222fdb94dadf7a46b958d43f4e0198.wav",
+        "sha256": "59d92f90f607c95ade214e18dc508d50b4222fdb94dadf7a46b958d43f4e0198"
+      }
+    }
+  ],
+  "runtime": {
+    "machine": "x86_64",
+    "platform": "Linux-6.12.103-1-MANJARO-x86_64-with-glibc2.44",
+    "python": "CPython 3.11.13",
+    "sherpa_embedded_onnxruntime": "1.27.1",
+    "sherpa_onnx": "1.13.5"
+  },
+  "schema_version": 1,
+  "status": "matched_host_synthesis_passed",
+  "variant": "fp32"
+}

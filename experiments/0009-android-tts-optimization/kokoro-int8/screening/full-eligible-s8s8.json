@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "candidate_name": "kokoro-multi-lang-v1_0-static-qdq-s8s8-all-eligible",
+  "method": "onnxruntime_static_post_training_quantization",
+  "quant_format": "QDQ",
+  "activation_type": "QInt8",
+  "weight_type": "QInt8",
+  "per_channel": true,
+  "reduce_range": false,
+  "calibration_method": "MinMax",
+  "op_types_to_quantize": [
+    "Conv",
+    "MatMul",
+    "Gemm"
+  ],
+  "extra_options": {
+    "ActivationSymmetric": true,
+    "WeightSymmetric": true
+  },
+  "calibration_partition": "calibration",
+  "calibration_speaker_id": 3,
+  "calibration_speaker": "af_heart",
+  "calibration_speed": 1.0,
+  "calibration_language": "en-us",
+  "notes": [
+    "Rejected screening recipe retained for reproducibility: all eligible Conv, MatMul, and Gemm nodes use S8S8 QDQ.",
+    "It loads on CPU but is not the listening candidate because every evaluation pair showed a consistent spectral-centroid shift beyond the documented supporting range.",
+    "ConvTranspose and LSTM remain FP32. No subjective verdict is inferred from this automated rejection."
+  ]
+}

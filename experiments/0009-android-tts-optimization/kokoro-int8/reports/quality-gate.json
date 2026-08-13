@@ -1,0 +1,173 @@
+{
+  "android": {
+    "android_performance_conclusion": "none",
+    "deployment_status": "not_deployed_by_this_track",
+    "pss_status": "deferred_until_user_quality_verdict_and_later_device_deployment",
+    "rtf_status": "deferred_until_user_quality_verdict_and_later_device_deployment"
+  },
+  "candidate": {
+    "deployment_variant": "kokoro-multi-lang-v1_0",
+    "model_bytes": 175678702,
+    "model_sha256": "c37d76d0ada7414d18841ed454e8c7f00c8b1f631e97e1fd019c3ba01a0fbd92",
+    "name": "kokoro-multi-lang-v1_0-static-qdq-s8s8-generator-fp32",
+    "quantization": {
+      "activation_type": "QInt8",
+      "effective_weight_qdq_node_count": 163,
+      "excluded_node_count": 102,
+      "excluded_node_prefixes": [
+        "/decoder/generator/"
+      ],
+      "format": "QDQ",
+      "onnx_checker": {
+        "candidate": {
+          "error": "Nodes in a graph must be topologically sorted, however input '/SplitToSequence_output_0' of node: \nname: /SequenceAt OpType: SequenceAt\n is not output of any previous nodes.\n\n==> Context: Bad node spec for node. Name: /Loop OpType: Loop",
+          "error_type": "ValidationError",
+          "passed": false
+        },
+        "full_check": true,
+        "handling": "The exact source passes the checker. ONNX Runtime quantization moves an outer-scope SplitToSequence producer after its consuming Loop, which the checker rejects even though pinned ONNX Runtime CPU and sherpa-onnx sessions construct and infer. The diagnostic is retained as a structural limitation; executable runtime probes are the host compatibility gate.",
+        "source_passed": true,
+        "status": "known_quantizer_outer_scope_topological_order_limitation",
+        "tool": "onnx 1.18.0"
+      },
+      "op_types": [
+        "Conv",
+        "MatMul",
+        "Gemm"
+      ],
+      "precision_boundary_note": "Excluded nodes retain their original FLOAT weight inputs and are not selected for weight QDQ. Some can consume activations dequantized after upstream quantized nodes, so exclusion does not erase quantization effects produced before the boundary.",
+      "weight_type": "QInt8"
+    },
+    "size_reduction_fraction": 0.46049732901671914,
+    "source_model_bytes": 325630829,
+    "source_model_sha256": "c436dc6a842b62aba06af67e40bafcfb9c60ac3af895358f1974ad9a7f7c026b",
+    "speaker": "af_heart",
+    "speaker_id": 3
+  },
+  "host_context_only": {
+    "fp32_timing": {
+      "label": "host context only; not an Android RTF result",
+      "median_generation_seconds": 3.0104145284994956,
+      "median_host_rtf": 0.7353814681712623,
+      "model_load_seconds": 1.001175430999865,
+      "utterance_count": 6
+    },
+    "int8_timing": {
+      "label": "host context only; not an Android RTF result",
+      "median_generation_seconds": 3.1179838399998516,
+      "median_host_rtf": 0.7237143875386258,
+      "model_load_seconds": 1.234461402999841,
+      "utterance_count": 6
+    },
+    "model_size": {
+      "fp32_bytes": 325630829,
+      "int8_bytes": 175678702,
+      "reduction_fraction": 0.46049732901671914
+    },
+    "performance_conclusion": "none; these laptop timings are context only"
+  },
+  "quality_gate": {
+    "automated_status": "passed_supporting_checks",
+    "blind_package": {
+      "answer_key_included": false,
+      "bytes": 3356161,
+      "crc_validation_passed": true,
+      "fixed_zip_timestamp": "1980-01-01T00:00:00",
+      "member_count": 15,
+      "pair_count": 6,
+      "path": "generated/blind/kokoro-int8-listening.zip",
+      "sha256": "d41d97ed0acf38320a4daacbc1a00c2ef5a805bff35c27340eb165b7b35b6c04",
+      "stored_without_lossy_or_audio_recompression": true,
+      "wav_count": 12
+    },
+    "checks": {
+      "asr_transcript_supporting_checks": true,
+      "bit_exact_independent_candidate_rebuild": true,
+      "blind_package_ready_and_answer_separate": true,
+      "candidate_runs_in_pinned_host_cpu_runtime": true,
+      "candidate_selection_failures_and_alternatives_retained": true,
+      "effective_mixed_precision_boundary_audited": true,
+      "exact_source_and_sid_proven": true,
+      "known_failures_recorded": true,
+      "matched_fp32_and_int8_sherpa_synthesis": true,
+      "six_pair_file_audio_integrity_and_acoustic_supporting_checks": true
+    },
+    "instruction": "Unzip generated/blind/kokoro-int8-listening.zip, listen to all six A/B pairs, complete ballot.csv, and return it before opening the separately retained answer key.",
+    "listener": "Moritz",
+    "overall_status": "awaiting_user_listening",
+    "subjective_equivalence_claimed": false,
+    "subjective_verdict": "awaiting_user_listening"
+  },
+  "reproducibility": {
+    "complete_inventory": "package-manifest.json",
+    "full_rebuild_entrypoint": "scripts/reproduce_host_gate.sh",
+    "reports": [
+      {
+        "bytes": 18783,
+        "path": "quantization-report.json",
+        "sha256": "99286382149daa3e45030f6f3c47247604cf3f0f7a50667324c737293b794a7b"
+      },
+      {
+        "bytes": 18769,
+        "path": "reproduction-rebuild.json",
+        "sha256": "8fec110001a31dadca5068e0391a1d837b34a62bc2da35de7a2ba8078d868f4b"
+      },
+      {
+        "bytes": 20592,
+        "path": "synthesis-fp32.json",
+        "sha256": "87220771ffb223d112cc783315b30fba36caa40a8a24ffaae166391ee4ea2485"
+      },
+      {
+        "bytes": 20586,
+        "path": "synthesis-int8.json",
+        "sha256": "44b03e5757f023ab5c881565375a08c2fe6eba36452051e533de889ae32db9f9"
+      },
+      {
+        "bytes": 42455,
+        "path": "audio-analysis.json",
+        "sha256": "1b8914168661805701b97e7cb084c9494880f80a04b021690e0a79d068b8561f"
+      },
+      {
+        "bytes": 6255,
+        "path": "asr-report.json",
+        "sha256": "a217e012193c829e7381a8e8ed185ffc52a4fd43442dc865f87a22f03a8d2fab"
+      },
+      {
+        "bytes": 1680,
+        "path": "blind-package.json",
+        "sha256": "063d7320561a5913767d6bdc66e760060a7018144cbff0bb0ff5c8d27c63f17f"
+      },
+      {
+        "bytes": 13779,
+        "path": "candidate-selection.json",
+        "sha256": "0fb0cc2f82c1edef8d063dc72e0e58e2076722d99041e5455ec1eece86c086a5"
+      },
+      {
+        "bytes": 16794,
+        "path": "failures.json",
+        "sha256": "c3104872e8c2c88cc22b1ebfc1582824bf59ab17042df95ae6f1cea90cea8300"
+      }
+    ],
+    "stochastic_audio_note": "The model contains unseeded random operators; the selected ONNX rebuild is bit-exact, while regenerated WAVs form a new hash-addressed evidence set.",
+    "strict_verifier": "scripts/verify_package.py"
+  },
+  "schema_version": 1,
+  "status": "awaiting_user_listening",
+  "supporting_signals": {
+    "asr_report": "asr-report.json",
+    "audio_analysis_report": "audio-analysis.json",
+    "fp32_reference_wer": 0.030612244897959183,
+    "fp32_to_int8_hypothesis_wer": 0.0,
+    "int8_reference_wer": 0.030612244897959183,
+    "limitations": [
+      "Automated integrity, ASR, pitch, and spectral behavior are supporting signals, not a substitute for listening.",
+      "No calibrated speaker-verification score was available; none was invented.",
+      "Raw sample error is not computed or used as a quality decision.",
+      "The exact source passes ONNX checker 1.18.0, but ONNX Runtime quantization introduces an outer-graph topological-order diagnostic; pinned CPU runtimes still load and infer. This must be reassessed before later deployment."
+    ],
+    "speaker_similarity": {
+      "reason": "No voice-specific, calibrated, hash-pinned speaker verifier was available. An uncalibrated embedding score would overstate evidence; SID 3 provenance and blind listening are retained instead.",
+      "status": "not_run"
+    }
+  }
+}

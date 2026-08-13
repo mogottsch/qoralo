@@ -1,0 +1,307 @@
+{
+  "android_rtf_pss": {
+    "evidence_in_this_report": false,
+    "status": "deferred_until_quality_gate_passes_and_candidate_is_deployed"
+  },
+  "candidate": {
+    "bytes": 289972379,
+    "effective_quantization_audit": {
+      "all_excluded_nodes_retain_unquantized_weights": true,
+      "all_requested_nodes_have_weight_qdq": true,
+      "audit_method": "eligible node-name preservation plus weight-input DequantizeLinear tracing",
+      "effective_weight_qdq_count_by_type": {
+        "Gemm": 73,
+        "MatMul": 102
+      },
+      "effective_weight_qdq_node_count": 175,
+      "effective_weight_qdq_node_names_sha256": "1f2de2f4cd2004a0b9c859f79a2183bdb7121ce2817e30f8889b280620717e11",
+      "eligible_node_name_set_preserved": true,
+      "excluded_node_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "excluded_nodes_retaining_source_float_weight_input": 0,
+      "excluded_nodes_with_upstream_activation_qdq": 0,
+      "excluded_nodes_with_weight_qdq": 0,
+      "expected_quantized_node_count": 175,
+      "precision_boundary_note": "Excluded nodes retain their original FLOAT weight inputs and are not selected for weight QDQ. Some can consume activations dequantized after upstream quantized nodes, so exclusion does not erase quantization effects produced before the boundary.",
+      "requested_excluded_count_by_type": {},
+      "requested_excluded_node_count": 0,
+      "source_eligible_count_by_type": {
+        "Gemm": 73,
+        "MatMul": 102
+      },
+      "source_eligible_node_count": 175
+    },
+    "graph": {
+      "initializer_bytes_by_type": {
+        "FLOAT": 275296544,
+        "INT32": 397472,
+        "INT8": 12438954
+      },
+      "initializer_count_by_type": {
+        "FLOAT": 789,
+        "INT32": 146,
+        "INT8": 512
+      },
+      "initializers": 1447,
+      "metadata_proves_sid_3_af_heart": true,
+      "model_type": "kokoro",
+      "nodes": 5887,
+      "version": "2"
+    },
+    "operation_counts": {
+      "Add": 525,
+      "And": 1,
+      "Atan": 1,
+      "Cast": 78,
+      "Clip": 1,
+      "Concat": 91,
+      "ConcatFromSequence": 1,
+      "Constant": 1452,
+      "ConstantOfShape": 45,
+      "Conv": 90,
+      "ConvTranspose": 7,
+      "Cos": 1,
+      "CumSum": 1,
+      "DequantizeLinear": 502,
+      "Div": 123,
+      "Equal": 28,
+      "Exp": 1,
+      "Expand": 31,
+      "Floor": 1,
+      "Gather": 237,
+      "Gemm": 73,
+      "Greater": 3,
+      "Identity": 194,
+      "If": 2,
+      "InstanceNormalization": 70,
+      "LSTM": 6,
+      "LeakyRelu": 28,
+      "Less": 2,
+      "Loop": 1,
+      "MatMul": 102,
+      "Mul": 462,
+      "Not": 1,
+      "Pad": 2,
+      "Pow": 93,
+      "QuantizeLinear": 346,
+      "RandomNormalLike": 1,
+      "RandomUniformLike": 1,
+      "Range": 22,
+      "Reciprocal": 48,
+      "ReduceMax": 1,
+      "ReduceMean": 62,
+      "ReduceProd": 4,
+      "ReduceSum": 1,
+      "Reshape": 153,
+      "Resize": 6,
+      "Round": 1,
+      "ScatterElements": 4,
+      "ScatterND": 7,
+      "SequenceEmpty": 1,
+      "Shape": 288,
+      "Sigmoid": 1,
+      "Sin": 51,
+      "Slice": 182,
+      "Softmax": 12,
+      "SplitToSequence": 2,
+      "Sqrt": 68,
+      "Squeeze": 3,
+      "Sub": 36,
+      "Tanh": 13,
+      "TopK": 4,
+      "Transpose": 107,
+      "Unsqueeze": 168,
+      "Where": 38
+    },
+    "path": "generated/screening/linear-only-s8s8.onnx",
+    "sha256": "5201f3695631846a16cce2673178c5ea61c711c98c922f840490933fb6a1eef4",
+    "size_reduction_bytes": 35658450,
+    "size_reduction_fraction": 0.10950575567278367,
+    "source_model_bytes": 325630829,
+    "source_model_sha256": "c436dc6a842b62aba06af67e40bafcfb9c60ac3af895358f1974ad9a7f7c026b"
+  },
+  "candidate_name": "kokoro-multi-lang-v1_0-static-qdq-s8s8-linear-only",
+  "deployment_variant": "kokoro-multi-lang-v1_0",
+  "inputs": {
+    "calibration": [
+      {
+        "id": "cal-quick-fox",
+        "phonemes": "\u00f0\u0259 kw\u02c8\u026ak b\u0279\u02c8a\u028an f\u02c8\u0251\u02d0ks d\u0292\u02c8\u028cmps \u02cco\u028av\u025a \u00f0\u0259 l\u02c8e\u026azi d\u02c8\u0251\u02d0\u0261",
+        "phonemes_sha256": "84d3885317146950d0bba485b4407ad859fc80c550d1979741664c0c23fad8a9",
+        "style_row": 54,
+        "text_sha256": "ef537f25c895bfa782526529a9b63d97aa631564d5d789c2b765448c8635fb6c",
+        "token_count_with_boundaries": 54,
+        "token_ids_sha256": "a548677b0eb49df2dedb0ba1cec02c5ae1ae223fe64f7d7bbe52e4d60ba48d1c"
+      },
+      {
+        "id": "cal-numbers-currency",
+        "phonemes": "\u00e6t s\u02c8\u025bv\u0259n f\u02c8o\u02d0\u0279\u027ei f\u02c8a\u026av \u02cce\u026a\u02c8\u025bm d\u02c8\u0251\u02d0kt\u025a \u0279\u026av\u02c8\u025b\u0279\u0259 b\u02c8\u0254\u02d0t \u03b8\u0279\u02c8i\u02d0 w\u02c8\u0254\u02d0\u0279m kw\u02c8\u0251\u02d0s\u0251\u0303s f\u0254\u02d0\u0279 d\u02c8\u0251\u02d0l\u025a tw\u02c8\u025blv p\u0254\u026ant f\u02c8a\u026av z\u02c8i\u0259\u0279o\u028a",
+        "phonemes_sha256": "90cc3de9bf961eed2749083ec9fec44312334a0117fb381da328bf2dc783459b",
+        "style_row": 116,
+        "text_sha256": "de41140f885e891b73283c5d5349a526f65ba3cad4bda0ffacf7e13069768d97",
+        "token_count_with_boundaries": 116,
+        "token_ids_sha256": "7b13cf2f846f29abbf4f17ec0c7b235caa9bc90965f047d57aff8b50b0d05c58"
+      },
+      {
+        "id": "cal-punctuation",
+        "phonemes": "k\u00e6n \u0250 k\u0259mp\u02c8\u00e6kt v\u02c8\u0254\u026as st\u02c8e\u026a kl\u02c8\u026a\u0279 \u03b8\u0279u\u02d0 kw\u02c8\u025bst\u0283\u0259nz k\u02c8\u0251\u02d0m\u0259z \u00e6nd l\u02c8\u0254\u014b s\u02c8\u025bnt\u0259ns\u1d7bz",
+        "phonemes_sha256": "48af096ea214d2667da1848f893899972bc4f13b00cc7aa1110990e97ad7b174",
+        "style_row": 78,
+        "text_sha256": "fa07baf01c4d0bf22dc6d04bbb5649ad74180c16704ccc669f928dc0e02e0f68",
+        "token_count_with_boundaries": 78,
+        "token_ids_sha256": "1ab0ff50c3043b1e08ae1e8cafee6a2c2c574a3d6fc7e831c85b0fbee6808f7f"
+      },
+      {
+        "id": "cal-calm-ending",
+        "phonemes": "pl\u02c8i\u02d0z \u0279\u02c8i\u02d0d \u00f0\u026as f\u02c8a\u026an\u0259l l\u02c8a\u026an k\u02c8\u0251\u02d0mli w\u026a\u00f0 n\u02c8\u00e6t\u0283\u025a\u0279\u0259l p\u02c8e\u026as\u026a\u014b \u00e6nd \u0250 kl\u02c8i\u02d0n \u02c8\u025bnd\u026a\u014b",
+        "phonemes_sha256": "ac3cfa792105cf33eb4bdeea91f2ed94dcfca475aa6bb6e4819dce3550224b88",
+        "style_row": 82,
+        "text_sha256": "7ffe931820db34875f4861e04d062ce6f018b0bf96420f0814e7bda249de089d",
+        "token_count_with_boundaries": 82,
+        "token_ids_sha256": "6a05ab690fa9ab06e90b53615eb7751ade9547ff423c4f5aa1260c9f428e434d"
+      }
+    ],
+    "corpus_path": "corpus.json",
+    "corpus_sha256": "9fa99b53f401290883d782fdf19163256c767d5efd9e1719e916254bda083da4",
+    "quantization_config_path": "linear-only-s8s8.json",
+    "quantization_config_sha256": "2727bc197b332320249ea18689f0bda3419158e29281a3cfeb948f5417edd047"
+  },
+  "method": {
+    "activation_type": "QInt8",
+    "calibration_language": "en-us",
+    "calibration_method": "MinMax",
+    "calibration_partition": "calibration",
+    "calibration_speaker": "af_heart",
+    "calibration_speaker_id": 3,
+    "calibration_speed": 1.0,
+    "candidate_name": "kokoro-multi-lang-v1_0-static-qdq-s8s8-linear-only",
+    "extra_options": {
+      "ActivationSymmetric": true,
+      "WeightSymmetric": true
+    },
+    "method": "onnxruntime_static_post_training_quantization",
+    "notes": [
+      "Retained non-selected screening recipe: eligible MatMul and Gemm nodes use S8S8 QDQ while Conv, ConvTranspose, and LSTM remain FP32.",
+      "It passed the supporting acoustic screen but reduced model size by only about 11%, so the generator-excluded Conv/MatMul/Gemm recipe was selected instead at about 46% reduction.",
+      "No subjective verdict is inferred from this automated screen."
+    ],
+    "op_types_to_quantize": [
+      "MatMul",
+      "Gemm"
+    ],
+    "per_channel": true,
+    "quant_format": "QDQ",
+    "reduce_range": false,
+    "schema_version": 1,
+    "weight_type": "QInt8"
+  },
+  "resolved_node_exclusions": {
+    "node_count": 0,
+    "node_names": [],
+    "node_names_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "prefixes": []
+  },
+  "schema_version": 1,
+  "source": {
+    "archive": {
+      "bytes": 349418188,
+      "sha256": "c133d26353d776da730870dac7da07dbfc9a5e3bc80cc5e8e83ab6e823be7046"
+    },
+    "deployment_variant": "kokoro-multi-lang-v1_0",
+    "experiment_0008_evidence": {
+      "deployed_inventory": {
+        "bytes": 60607,
+        "sha256": "5a44089cba9ae69f0e466cc71eb9d0833ecb2a8769130a85b9703ae5ae73d149"
+      },
+      "model_track": {
+        "bytes": 1311,
+        "sha256": "c882ba25dd3626590e4547dd334a62b6d5dcf7a2cf0dfa0fb2600f9ac239ec9f"
+      },
+      "voice_proof": {
+        "bytes": 884,
+        "sha256": "78edd9df288fe080fd567c1f4b6b0e6cabd08d461e0ad9ceb03cf100406de558"
+      }
+    },
+    "full_source_inventory": {
+      "every_file_size_and_sha256_verified": true,
+      "file_count": 377,
+      "inventory_sha256": "5a44089cba9ae69f0e466cc71eb9d0833ecb2a8769130a85b9703ae5ae73d149",
+      "symlinks_rejected": true,
+      "total_bytes": 400786089,
+      "unexpected_files_rejected": true
+    },
+    "required_files": {
+      "lexicon-us-en.txt": {
+        "bytes": 5956885,
+        "sha256": "7daaab53a181be9885b853a8582bf1838186317e5dadacbcef9c426d6fa0da14"
+      },
+      "model.onnx": {
+        "bytes": 325630829,
+        "sha256": "c436dc6a842b62aba06af67e40bafcfb9c60ac3af895358f1974ad9a7f7c026b"
+      },
+      "tokens.txt": {
+        "bytes": 687,
+        "sha256": "6ebb6bb288f20f3ae8d004d3c2ca27697da27c037d75e81a60e2a6a663f95425"
+      },
+      "voices.bin": {
+        "bytes": 27678720,
+        "sha256": "8a77c0d397026208d22211f37670b5b3b11e03f190756b25a1d24041fced82a9"
+      }
+    }
+  },
+  "status": "candidate_built_host_cpu_probe_passed",
+  "timing_context_only": {
+    "not_android_evidence": true,
+    "quantization_seconds": 14.237134728000456
+  },
+  "tools": {
+    "espeak_executable_sha256": "07ef6310d76436cf92034c9953335352e4e303ebb75e2131020d68f0c1e781b8",
+    "espeak_library_sha256": "400f24c3890aa78e0c11a6b72f9b1948c776a926ead4c475bb68ae706bac1c12",
+    "espeak_ng": "eSpeak NG text-to-speech: 1.52.0  Data at: /usr/share/espeak-ng-data",
+    "installed_distributions": {
+      "coloredlogs": "15.0.1",
+      "flatbuffers": "25.12.19",
+      "humanfriendly": "10.0",
+      "mpmath": "1.3.0",
+      "numpy": "2.2.6",
+      "onnx": "1.18.0",
+      "onnxruntime": "1.22.1",
+      "packaging": "26.3",
+      "protobuf": "7.35.1",
+      "sherpa-onnx": "1.13.5",
+      "sherpa-onnx-core": "1.13.5",
+      "sympy": "1.14.0",
+      "typing-extensions": "4.16.0"
+    },
+    "python": "CPython 3.11.13",
+    "wheel_count": 13
+  },
+  "validation": {
+    "onnx_checker": {
+      "candidate": {
+        "error": "Nodes in a graph must be topologically sorted, however input '/SplitToSequence_output_0' of node: \nname: /SequenceAt OpType: SequenceAt\n is not output of any previous nodes.\n\n==> Context: Bad node spec for node. Name: /Loop OpType: Loop",
+        "error_type": "ValidationError",
+        "passed": false
+      },
+      "full_check": true,
+      "handling": "The exact source passes the checker. ONNX Runtime quantization moves an outer-scope SplitToSequence producer after its consuming Loop, which the checker rejects even though pinned ONNX Runtime CPU and sherpa-onnx sessions construct and infer. The diagnostic is retained as a structural limitation; executable runtime probes are the host compatibility gate.",
+      "source_passed": true,
+      "status": "known_quantizer_outer_scope_topological_order_limitation",
+      "tool": "onnx 1.18.0"
+    },
+    "sherpa_cpu_synthesis": "run scripts/synthesize.py for both variants before the quality report",
+    "standalone_cpu_runtime_probe": {
+      "inference_seconds_context_only": 2.3453161940005884,
+      "load_seconds_context_only": 0.9252451149995977,
+      "num_threads": 1,
+      "output_finite": true,
+      "output_samples": 82200,
+      "provider": "CPUExecutionProvider",
+      "runtime": "onnxruntime 1.22.1"
+    }
+  },
+  "voice": {
+    "proven_from_exact_model_metadata": true,
+    "speaker": "af_heart",
+    "speaker_id": 3
+  }
+}

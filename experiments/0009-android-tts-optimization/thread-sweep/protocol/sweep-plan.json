@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "experiment": "0009-android-tts-optimization/thread-sweep",
+  "purpose": "Measured CPU thread-count sweep of the exact experiment 0008 Android TTS deployments",
+  "target": {
+    "manufacturer": "samsung",
+    "model": "SM-S918B",
+    "device": "dm3q",
+    "abi": "arm64-v8a",
+    "expected_serial": "R5CW81PR8SY"
+  },
+  "runtime": {
+    "name": "sherpa-onnx",
+    "version": "1.13.5",
+    "tag_commit": "3dc7c569f31ca2cd4a20ed6f7db780327e6714c5",
+    "aar_sha256": "6419cd8bc983e0c4fab06067f0fe0313fdc0f7103818ac1e7a08d50787b7a82b",
+    "provider": "cpu",
+    "num_threads": [1, 2, 4],
+    "forbidden": [
+      "root",
+      "system tuning",
+      "QNN",
+      "QAIRT",
+      "proprietary SDKs",
+      "text splitting"
+    ]
+  },
+  "transcript": {
+    "source": "../../../0008-sherpa-onnx-android-tts-benchmark/protocol/transcript.txt",
+    "byte_count": 230,
+    "trailing_newline": false,
+    "sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f"
+  },
+  "candidates": {
+    "pocket": {
+      "deployment_variant": "sherpa-onnx-pocket-tts-int8-2026-01-26",
+      "source_descriptor": "../../../0008-sherpa-onnx-android-tts-benchmark/models/pocket/android-descriptor.json",
+      "source_descriptor_sha256": "d1438147b2251715911f2de6a4bdf6989e0c4da19761411246ab745085066d09",
+      "requested_voice": "Alba",
+      "actual_voice": "packaged Bria reference",
+      "actual_reference": "models/pocket/test_wavs/bria.wav",
+      "actual_reference_sha256": "85f46d6f0642f657a6bd689ddaa52d5a5f53e4314715e1032704c80917392181",
+      "voice_match": false,
+      "speaker_id": 0
+    },
+    "kokoro": {
+      "deployment_variant": "kokoro-multi-lang-v1_0",
+      "source_descriptor": "../../../0008-sherpa-onnx-android-tts-benchmark/models/kokoro/benchmark-descriptor.json",
+      "source_descriptor_sha256": "a0215e44b6493c5154b314d04c61f06deb805bc9d4a64cb4dc19805f2ca30102",
+      "requested_voice": "af_heart",
+      "actual_voice": "SID 3 / af_heart",
+      "voice_match": true,
+      "speaker_id": 3
+    },
+    "supertonic_3": {
+      "deployment_variant": "sherpa-onnx-supertonic-3-tts-int8-2026-05-11",
+      "source_descriptor": "../../../0008-sherpa-onnx-android-tts-benchmark/models/supertonic-3/android-descriptor.json",
+      "source_descriptor_sha256": "a04a97b2f32efff9471657366c975a38adb4e1f6d6b4f80b258902a43a8be88a",
+      "requested_voice": "M1",
+      "actual_voice": "SID 5 / M1, English",
+      "voice_match": true,
+      "speaker_id": 5
+    }
+  },
+  "measurement": {
+    "runs_per_configuration": {
+      "cold": 1,
+      "warm": 3
+    },
+    "fresh_process_per_configuration": true,
+    "new_offline_tts_per_configuration": true,
+    "page_cache_clearing": false,
+    "timing_boundary": "System.nanoTime around only the sherpa synthesis call",
+    "callback_boundary": "synthesis start to first non-empty callback; no playback",
+    "memory": "10 ms in-process sampled phase peak PSS/RSS plus phase-boundary PSS/RSS and cumulative process VmHWM",
+    "audio": "Pull and independently decode every complete mono PCM16 WAV; verify hash, frame count, rate, duration, non-silence, and no clipping",
+    "listening": "not_performed"
+  },
+  "thermal_and_order": {
+    "eligible_android_thermal_statuses": ["NONE", "LIGHT"],
+    "ineligible_android_thermal_statuses": ["MODERATE", "SEVERE", "CRITICAL", "EMERGENCY", "SHUTDOWN"],
+    "battery_temperature_policy": "Observe and retain battery temperature before and after every configuration and during host telemetry; do not use it as an eligibility gate.",
+    "android_thermal_status_policy": "NONE and LIGHT are eligible. Wait only at MODERATE or higher (or when status is unavailable), record every observed status, and never change device settings.",
+    "poll_interval_seconds": 10,
+    "maximum_wait_seconds": 1200,
+    "minimum_stabilization_seconds_between_runs": 0,
+    "minimum_stabilization_seconds_between_blocks": 0,
+    "stabilization_policy": "No fixed passive sleeps after the sequence-7 policy amendment; only condition-driven thermal polling and the benchmark process lifecycle remain.",
+    "order_design": "Three-block balanced rotation: every block contains each candidate and thread count once; candidate order and thread order are independently rotated.",
+    "blocks": [
+      [
+        {"candidate": "pocket", "threads": 1},
+        {"candidate": "kokoro", "threads": 2},
+        {"candidate": "supertonic_3", "threads": 4}
+      ],
+      [
+        {"candidate": "kokoro", "threads": 4},
+        {"candidate": "supertonic_3", "threads": 1},
+        {"candidate": "pocket", "threads": 2}
+      ],
+      [
+        {"candidate": "supertonic_3", "threads": 2},
+        {"candidate": "pocket", "threads": 4},
+        {"candidate": "kokoro", "threads": 1}
+      ]
+    ]
+  },
+  "protocol_amendments": [
+    {
+      "id": "2026-08-13-light-eligible-resume",
+      "authorized_at_utc": "2026-08-13T15:32:18Z",
+      "authorized_by": "Moritz",
+      "reason": "User explicitly rejected waiting at Android thermal status LIGHT and authorized a halfway policy change.",
+      "effective_sequence": 7,
+      "supersedes_plan_sha256": "ddbf787ad8e82cbb89a3295f4376b76ce3942333add7378053c4950f240ca7dc",
+      "prior_eligibility": ["NONE"],
+      "new_eligibility": ["NONE", "LIGHT"],
+      "wait_only_at_or_above": "MODERATE",
+      "fixed_passive_sleep_seconds": 0,
+      "interpretation_disclosure": "Differences below 5-10% are inconclusive; the mid-campaign gate change and interruption are explicit limitations."
+    }
+  ],
+  "source_experiment": {
+    "path": "../../../0008-sherpa-onnx-android-tts-benchmark",
+    "deployment_inventory": "../../../0008-sherpa-onnx-android-tts-benchmark/artifacts/device-stage/deployment-inventory.json",
+    "deployment_inventory_sha256": "f4cf131170606b1c7120dda4835b506793b007d1174b7143a83d9b57991f518e",
+    "immutability": "Experiment 0008 inputs and results are read-only historical evidence; this sweep uses fresh campaigns."
+  }
+}

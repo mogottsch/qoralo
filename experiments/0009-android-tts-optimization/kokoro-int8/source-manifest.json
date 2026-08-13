@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "deployment_variant": "kokoro-multi-lang-v1_0",
+  "source_policy": "Only the exact experiment 0008 archive and files below are accepted; no alternate checkpoint or Kokoro version is permitted.",
+  "archive": {
+    "project_path": "experiments/0008-sherpa-onnx-android-tts-benchmark/artifacts/downloads/kokoro-multi-lang-v1_0.tar.bz2",
+    "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/kokoro-multi-lang-v1_0.tar.bz2",
+    "bytes": 349418188,
+    "sha256": "c133d26353d776da730870dac7da07dbfc9a5e3bc80cc5e8e83ab6e823be7046",
+    "expected_root": "kokoro-multi-lang-v1_0"
+  },
+  "extracted_root_default": "experiments/0008-sherpa-onnx-android-tts-benchmark/artifacts/extracted/kokoro/kokoro-multi-lang-v1_0",
+  "required_files": {
+    "model.onnx": {
+      "bytes": 325630829,
+      "sha256": "c436dc6a842b62aba06af67e40bafcfb9c60ac3af895358f1974ad9a7f7c026b"
+    },
+    "voices.bin": {
+      "bytes": 27678720,
+      "sha256": "8a77c0d397026208d22211f37670b5b3b11e03f190756b25a1d24041fced82a9"
+    },
+    "tokens.txt": {
+      "bytes": 687,
+      "sha256": "6ebb6bb288f20f3ae8d004d3c2ca27697da27c037d75e81a60e2a6a663f95425"
+    },
+    "lexicon-us-en.txt": {
+      "bytes": 5956885,
+      "sha256": "7daaab53a181be9885b853a8582bf1838186317e5dadacbcef9c426d6fa0da14"
+    }
+  },
+  "experiment_0008_evidence": {
+    "model_track": {
+      "project_path": "experiments/0008-sherpa-onnx-android-tts-benchmark/models/kokoro/model-track.json",
+      "bytes": 1311,
+      "sha256": "c882ba25dd3626590e4547dd334a62b6d5dcf7a2cf0dfa0fb2600f9ac239ec9f"
+    },
+    "deployed_inventory": {
+      "project_path": "experiments/0008-sherpa-onnx-android-tts-benchmark/models/kokoro/deployed-inventory.json",
+      "bytes": 60607,
+      "sha256": "5a44089cba9ae69f0e466cc71eb9d0833ecb2a8769130a85b9703ae5ae73d149"
+    },
+    "voice_proof": {
+      "project_path": "experiments/0008-sherpa-onnx-android-tts-benchmark/models/kokoro/voice-proof.json",
+      "bytes": 884,
+      "sha256": "78edd9df288fe080fd567c1f4b6b0e6cabd08d461e0ad9ceb03cf100406de558",
+      "assertion": "id2speaker[3] == af_heart"
+    }
+  }
+}

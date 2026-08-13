@@ -1,0 +1,30 @@
+verified staged inventory batch 1
+verified staged inventory batch 2
+verified staged inventory batch 3
+verified staged inventory batch 4
+verified staged inventory batch 5
+verified staged inventory batch 6
+verified staged inventory batch 7
+verified staged inventory batch 8
+verified staged inventory batch 9
+verified staged inventory batch 10
+verified staged inventory batch 11
+verified staged inventory batch 12
+verified staged inventory batch 13
+verified staged inventory batch 14
+verified staged inventory batch 15
+verified staged inventory batch 16
+verified staged inventory batch 17
+Traceback (most recent call last):
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0009-android-tts-optimization/thread-sweep/tools/run_sweep.py", line 487, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0009-android-tts-optimization/thread-sweep/tools/run_sweep.py", line 373, in main
+    polls = runner.thermal_wait(
+        baseline_c=None,
+        maximum_wait_seconds=plan["thermal_and_order"]["maximum_wait_seconds"],
+        poll_seconds=plan["thermal_and_order"]["poll_interval_seconds"],
+    )
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0008-sherpa-onnx-android-tts-benchmark/host_runner/runner.py", line 354, in thermal_wait
+    raise ThermalEligibilityError(f"thermal eligibility not restored: {reason}", polls)
+host_runner.runner.ThermalEligibilityError: thermal eligibility not restored: battery temperature is unavailable or above 35.0 C
