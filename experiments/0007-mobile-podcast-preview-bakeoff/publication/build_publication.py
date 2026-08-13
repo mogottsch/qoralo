@@ -248,6 +248,11 @@ def build(output: Path, manifest: dict | None = None) -> None:
     output.mkdir(parents=True, exist_ok=True)
     audio = output / "audio"
     audio.mkdir(exist_ok=True)
+    # Builds are repeatable across policy changes. Remove only files managed by
+    # this builder so retired normalized carriers cannot linger in the active
+    # natural-duration publication.
+    for stale in audio.glob("candidate-*-*.wav"):
+        stale.unlink()
     for candidate in manifest["candidates"]:
         for kind in ("raw", "normalized"):
             record = candidate[kind]

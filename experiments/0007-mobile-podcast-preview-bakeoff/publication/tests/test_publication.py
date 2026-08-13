@@ -97,6 +97,16 @@ class BuiltPageTests(unittest.TestCase):
             artifact = candidate["raw"]
             self.assertTrue((self.output / artifact["published_url"]).is_file())
             self.assertRegex(artifact["published_url"], r"^audio/candidate-[a-f]-raw\.wav$")
+        self.assertEqual(
+            {f"candidate-{letter}-raw.wav" for letter in "abcdef"},
+            {path.name for path in (self.output / "audio").iterdir()},
+        )
+
+    def test_rebuild_removes_retired_managed_audio(self):
+        retired = self.output / "audio/candidate-a-normalized.wav"
+        retired.write_bytes(b"retired")
+        build_publication.build(self.output, self.source_manifest)
+        self.assertFalse(retired.exists())
 
     def test_initial_document_and_embedded_json_have_no_identity(self):
         identities = [candidate["display_name"] for candidate in self.manifest["candidates"]]
