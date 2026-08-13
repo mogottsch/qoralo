@@ -9,7 +9,7 @@ import java.util.regex.*;
 /** JVM-testable adapter from the pinned, flat deployment JSON to sherpa's Java builders. */
 public record SherpaConfig(String modelType, Map<String,String> modelValues,
         String ruleFsts, String ruleFars, String referenceAudio, String referenceText,
-        int numSteps) {
+        String language, int numSteps) {
     private static final Map<String,List<String>> PATH_KEYS=Map.of(
         "pocket",List.of("lm_flow","lm_main","encoder","decoder","text_conditioner","vocab_json","token_scores_json"),
         "kokoro",List.of("model","voices","tokens","lexicon","data_dir","dict_dir"),
@@ -23,11 +23,11 @@ public record SherpaConfig(String modelType, Map<String,String> modelValues,
         List<String> keys=PATH_KEYS.get(type);if(keys==null)throw new IOException("unsupported model_type: "+type);
         Map<String,String> values=new LinkedHashMap<>();
         for(String key:keys){String relative=optional(json,key,null);if(relative==null&&OPTIONAL.get(type).contains(key))continue;if(relative==null)throw new IOException("missing "+key);values.put(key,verifiedPath(verified,relative,key));}
-        String lang=optional(json,"lang",null);if(lang!=null)values.put("lang",lang);
+        String lang=optional(json,"lang",null);
         String fsts=pathList(verified,optional(json,"rule_fsts",null),"rule_fsts");
         String fars=pathList(verified,optional(json,"rule_fars",null),"rule_fars");
         String ref=optional(json,"reference_audio",null);if(ref!=null)ref=verifiedPath(verified,ref,"reference_audio");
-        return new SherpaConfig(type,Map.copyOf(values),fsts,fars,ref,optional(json,"reference_text",null),optionalInt(json,"num_steps",5));
+        return new SherpaConfig(type,Map.copyOf(values),fsts,fars,ref,optional(json,"reference_text",null),lang,optionalInt(json,"num_steps",5));
     }
     private static String pathList(Map<String,File> verified,String value,String key)throws IOException{
         if(value==null||value.isBlank())return "";StringJoiner out=new StringJoiner(",");for(String p:value.split(","))out.add(verifiedPath(verified,p.trim(),key));return out.toString();

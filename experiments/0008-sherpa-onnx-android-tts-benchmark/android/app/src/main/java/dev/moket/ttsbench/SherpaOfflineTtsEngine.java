@@ -50,8 +50,12 @@ public final class SherpaOfflineTtsEngine implements BenchmarkRunner.Engine {
         Class<?> callbackType=Class.forName("kotlin.jvm.functions.Function1");
 
         Object generation=null;Method generate;
-        if(spec.referenceAudio()!=null){AudioData reference=Pcm16WavReader.read(new File(spec.referenceAudio()));Class<?> generationType=Class.forName(PKG+"GenerationConfig");generation=generationType.getConstructor().newInstance();
-            generationType.getMethod("setSid",int.class).invoke(generation,d.speakerId());generationType.getMethod("setReferenceAudio",float[].class).invoke(generation,(Object)reference.samples());generationType.getMethod("setReferenceSampleRate",int.class).invoke(generation,reference.sampleRate());generationType.getMethod("setNumSteps",int.class).invoke(generation,spec.numSteps());if(spec.referenceText()!=null)generationType.getMethod("setReferenceText",String.class).invoke(generation,spec.referenceText());
+        if(spec.referenceAudio()!=null||"supertonic".equals(spec.modelType())){
+            Class<?> generationType=Class.forName(PKG+"GenerationConfig");generation=generationType.getConstructor().newInstance();
+            generationType.getMethod("setSid",int.class).invoke(generation,d.speakerId());
+            generationType.getMethod("setNumSteps",int.class).invoke(generation,spec.numSteps());
+            if(spec.referenceAudio()!=null){AudioData reference=Pcm16WavReader.read(new File(spec.referenceAudio()));generationType.getMethod("setReferenceAudio",float[].class).invoke(generation,(Object)reference.samples());generationType.getMethod("setReferenceSampleRate",int.class).invoke(generation,reference.sampleRate());if(spec.referenceText()!=null)generationType.getMethod("setReferenceText",String.class).invoke(generation,spec.referenceText());}
+            if("supertonic".equals(spec.modelType())){String language=spec.language()==null?d.language():spec.language();generationType.getMethod("setExtra",Map.class).invoke(generation,Map.of("lang",language));}
             generate=ttsType.getMethod("generateWithConfigAndCallback",String.class,generationType,callbackType);
         }else generate=ttsType.getMethod("generateWithCallback",String.class,int.class,float.class,callbackType);
         return new SherpaOfflineTtsEngine(tts,generate,d.speakerId(),generation);
