@@ -1,0 +1,115 @@
+{
+  "android_release": "16",
+  "apk": {
+    "bytes": 34104037,
+    "sha256": "29fdc4185c7f2f5269a9f65061c8bc98eff47e7f9afe85e44375222c0017d817",
+    "verification": "pulled installed base APK after campaign and hashed on host"
+  },
+  "audio_validation": {
+    "reason": "Native crash occurred before the cold WAV or app result was written.",
+    "status": "not_performed",
+    "wav_count": 0
+  },
+  "battery": {
+    "charging_status_code": 5,
+    "evidence_source": "telemetry.jsonl dumpsys battery observations",
+    "level_percent": 100,
+    "usb_powered": true
+  },
+  "callback": {
+    "reason": "Callback bridge caused the native abort before a measured latency could be serialized.",
+    "status": "unavailable"
+  },
+  "candidate_id": "kokoro",
+  "canonical_campaign_id": "kokoro-cde1f2ca314f41e2bfe8cebda685bad3",
+  "descriptor": {
+    "deployed_hash_verified": true,
+    "relative_path": "models/kokoro/benchmark-descriptor.json",
+    "sha256": "a0215e44b6493c5154b314d04c61f06deb805bc9d4a64cb4dc19805f2ca30102"
+  },
+  "device": "SM-S918B",
+  "experiment": "0008",
+  "failure_analysis": {
+    "abort_message": "JNI NewFloatArray called with pending exception java.lang.NoSuchMethodError: no non-static method L$Proxy2;.invoke([F)Ljava/lang/Integer;",
+    "host_runner_classification": "native_crash",
+    "normalized_classification": "native_crash",
+    "sampled_peak_pss_bytes": 754951168,
+    "sampled_peak_rss_bytes": 845709312,
+    "signal": "SIGABRT",
+    "stage": "cold_synthesis_callback",
+    "telemetry_samples": 17,
+    "telemetry_samples_with_process": 15
+  },
+  "hash_behavior": {
+    "reason": "No successful repeated generations or WAV hashes exist; determinism is not inferred.",
+    "status": "not_applicable"
+  },
+  "memory": {
+    "boundary_pss_bytes": null,
+    "boundary_rss_bytes": null,
+    "missing_reason": "Process died before app result serialization; only independently sampled host PSS/RSS peaks are available.",
+    "vm_hwm_bytes": null,
+    "vm_hwm_semantics": "cumulative_process_lifetime"
+  },
+  "outcome": "native_crash",
+  "raw_evidence": [
+    {
+      "artifact_id": "failure",
+      "byte_count": 941,
+      "relative_path": "artifacts/0008/device-runs/20260813T113509Z-kokoro-813a34696690/failure.json",
+      "retained": true,
+      "sha256": "08eb5f687d3102dfc947317f29764247c95fa8a0fa8174c2f129441bf01f0771"
+    },
+    {
+      "artifact_id": "thermal-polls",
+      "byte_count": 158,
+      "relative_path": "artifacts/0008/device-runs/20260813T113509Z-kokoro-813a34696690/thermal-polls.json",
+      "retained": true,
+      "sha256": "dae462eedb0216eb888434c8c577f607b95de956e35cf54e8b49710e3e91522e"
+    },
+    {
+      "artifact_id": "telemetry",
+      "byte_count": 340608,
+      "relative_path": "artifacts/0008/device-runs/20260813T113509Z-kokoro-813a34696690/telemetry.jsonl",
+      "retained": true,
+      "sha256": "ada4864661f092c4675ad52082a3bb187899f5e203685f970444c48163adad88"
+    },
+    {
+      "artifact_id": "logcat",
+      "byte_count": 40886156,
+      "relative_path": "artifacts/0008/device-runs/20260813T113509Z-kokoro-813a34696690/logcat.txt",
+      "retained": true,
+      "sha256": "3b70cd18fc341ec54c5310f907b4a1124be3d959b9539dded6134b3fb7b90300"
+    }
+  ],
+  "runtime_identity": {
+    "all_descriptor_file_hashes_verified_at_app_boot": true,
+    "archive_sha256": "c133d26353d776da730870dac7da07dbfc9a5e3bc80cc5e8e83ab6e823be7046",
+    "deployed_file_count": 377,
+    "deployed_inventory": "models/kokoro/deployed-inventory.json",
+    "deployment_variant": "kokoro-multi-lang-v1_0",
+    "model_sha256": "c436dc6a842b62aba06af67e40bafcfb9c60ac3af895358f1974ad9a7f7c026b",
+    "provider": "cpu",
+    "speaker": "af_heart",
+    "speaker_id": 3,
+    "speaker_proof": "models/kokoro/voice-proof.json",
+    "threads": 1,
+    "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
+    "voices_sha256": "8a77c0d397026208d22211f37670b5b3b11e03f190756b25a1d24041fced82a9"
+  },
+  "schema_version": 1,
+  "thermal": {
+    "android_status": "NONE",
+    "android_status_code": 0,
+    "campaign_baseline_c": 34.3,
+    "eligible": true,
+    "poll_count": 1,
+    "pre_run_battery_temperature_c": 34.5,
+    "telemetry_battery_temperature_max_c": 34.5,
+    "telemetry_battery_temperature_min_c": 34.5
+  },
+  "two_thread_campaign": {
+    "performed": false,
+    "reason": "The trigger requires a valid one-thread warm median RTF above 1.0; none exists."
+  }
+}

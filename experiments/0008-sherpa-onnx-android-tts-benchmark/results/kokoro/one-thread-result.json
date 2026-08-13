@@ -1,0 +1,94 @@
+{
+  "candidate_id": "kokoro",
+  "evidence": [
+    {
+      "artifact_id": "failure",
+      "byte_count": 941,
+      "relative_path": "artifacts/0008/device-runs/20260813T113509Z-kokoro-813a34696690/failure.json",
+      "retained": true,
+      "sha256": "08eb5f687d3102dfc947317f29764247c95fa8a0fa8174c2f129441bf01f0771"
+    },
+    {
+      "artifact_id": "thermal-polls",
+      "byte_count": 158,
+      "relative_path": "artifacts/0008/device-runs/20260813T113509Z-kokoro-813a34696690/thermal-polls.json",
+      "retained": true,
+      "sha256": "dae462eedb0216eb888434c8c577f607b95de956e35cf54e8b49710e3e91522e"
+    },
+    {
+      "artifact_id": "telemetry",
+      "byte_count": 340608,
+      "relative_path": "artifacts/0008/device-runs/20260813T113509Z-kokoro-813a34696690/telemetry.jsonl",
+      "retained": true,
+      "sha256": "ada4864661f092c4675ad52082a3bb187899f5e203685f970444c48163adad88"
+    },
+    {
+      "artifact_id": "logcat",
+      "byte_count": 40886156,
+      "relative_path": "artifacts/0008/device-runs/20260813T113509Z-kokoro-813a34696690/logcat.txt",
+      "retained": true,
+      "sha256": "3b70cd18fc341ec54c5310f907b4a1124be3d959b9539dded6134b3fb7b90300"
+    }
+  ],
+  "experiment": "0008",
+  "listening": "not_performed",
+  "metrics": {
+    "boundary_pss_bytes": {
+      "availability": "unavailable",
+      "reason": "Process died before serializing app boundary memory.",
+      "source": "observed",
+      "value": null
+    },
+    "boundary_rss_bytes": {
+      "availability": "unavailable",
+      "reason": "Process died before serializing app boundary memory.",
+      "source": "observed",
+      "value": null
+    },
+    "load_wall_seconds": {
+      "availability": "unavailable",
+      "reason": "Process died before serializing the completed load boundary.",
+      "source": "observed",
+      "value": null
+    },
+    "sampled_peak_pss_bytes": {
+      "availability": "measured",
+      "reason": null,
+      "source": "observed",
+      "value": 754951168
+    },
+    "sampled_peak_rss_bytes": {
+      "availability": "measured",
+      "reason": null,
+      "source": "observed",
+      "value": 845709312
+    },
+    "vm_hwm_bytes": {
+      "availability": "unavailable",
+      "reason": "Process died before app result serialization and /proc VmHWM was not retained.",
+      "source": "observed",
+      "value": null
+    },
+    "warm_median_rtf": {
+      "availability": "unavailable",
+      "reason": "Cold synthesis crashed; no warm generation ran.",
+      "source": "observed",
+      "value": null
+    }
+  },
+  "outcome": "native_crash",
+  "outcome_reason": "Process aborted during the cold synthesis callback before writing an app result; logcat records SIGABRT and a pending NoSuchMethodError for callback invoke([F)Ljava/lang/Integer;.",
+  "provider": "cpu",
+  "runs": [],
+  "schema_version": 1,
+  "threads": 1,
+  "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
+  "voice": {
+    "actual_reference": null,
+    "actual_reference_sha256": null,
+    "proof": "models/kokoro/voice-proof.json",
+    "requested_voice": "af_heart",
+    "speaker_id": 3,
+    "voice_match": true
+  }
+}
