@@ -36,7 +36,24 @@ Outcomes include success, partial success, blocked, timeout, native crash, OOM, 
 - [`protocol/evidence-retention.json`](protocol/evidence-retention.json) — committed versus ignored evidence.
 - [`schemas/result.schema.json`](schemas/result.schema.json) — normalized success/partial/failure outcomes.
 - [`schemas/failure-manifest.schema.json`](schemas/failure-manifest.schema.json) — host-generated negative outcomes when native serialization is impossible.
+- [`pins/assets.json`](pins/assets.json) — immutable release metadata, checksums, licenses, conversion/build provenance, and the exact Ubuntu 22.04 CPython 3.11.9 host wheels.
+- [`tools/pinning.py`](tools/pinning.py) — fail-closed download, verification, extraction, host-runtime verification, and deterministic inventory utility.
 
-Large archives, extracted models, APKs, WAVs, full logcat, and raw high-frequency telemetry remain ignored. Git retains normalized manifests, inventories, independent validation reports, failure manifests, and hash-addressed relative references to raw evidence.
+## Pinned asset workflow
+
+The utility uses only the Python standard library. Downloads are written atomically only after their byte size and SHA-256 match. Extraction first verifies the archive and rejects absolute or ambiguous paths, traversal, links, special files, duplicate members, decompression limits, and top-level layout drift. Existing non-empty destinations are never merged. Inventories contain sorted relative paths, byte sizes, and SHA-256 values and reject symlinks.
+
+```sh
+PIN=experiments/0008-sherpa-onnx-android-tts-benchmark/pins/assets.json
+TOOL=experiments/0008-sherpa-onnx-android-tts-benchmark/tools/pinning.py
+python "$TOOL" --manifest "$PIN" download pocket experiments/0008-sherpa-onnx-android-tts-benchmark/downloads
+python "$TOOL" --manifest "$PIN" extract pocket experiments/0008-sherpa-onnx-android-tts-benchmark/downloads/sherpa-onnx-pocket-tts-int8-2026-01-26.tar.bz2 experiments/0008-sherpa-onnx-android-tts-benchmark/extracted/pocket
+python "$TOOL" --manifest "$PIN" inventory experiments/0008-sherpa-onnx-android-tts-benchmark/extracted/pocket --output pocket-inventory.json
+python "$TOOL" --manifest "$PIN" verify-host-runtime experiments/0008-sherpa-onnx-android-tts-benchmark/host-wheels
+```
+
+Host smoke testing is permitted only with the two exact wheels in the manifest, on its pinned platform. An extra, missing, locally built, differently hashed, or wrong-platform wheel fails validation. Host smoke output validates configuration only: its timing must never be copied into Android results.
+
+Large archives, extracted models, host wheels, APKs, WAVs, full logcat, and raw high-frequency telemetry remain ignored. Git retains normalized manifests, inventories, independent validation reports, failure manifests, and hash-addressed relative references to raw evidence.
 
 Experiment 0007 remains immutable historical listening evidence. VibeVoice Realtime, Inflect Nano v1, and Kitten TTS are historical-only and are not pending Android follow-up.
