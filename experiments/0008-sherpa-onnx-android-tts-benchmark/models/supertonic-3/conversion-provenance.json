@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "source_model": {
+    "repository": "https://huggingface.co/Supertone/supertonic-3",
+    "revision": "724fb5abbf5502583fb520898d45929e62f02c0b",
+    "inputs": [
+      {
+        "path": "onnx/duration_predictor.onnx",
+        "bytes": 3700147,
+        "sha256": "c3eb91414d5ff8a7a239b7fe9e34e7e2bf8a8140d8375ffb14718b1c639325db"
+      },
+      {
+        "path": "onnx/text_encoder.onnx",
+        "bytes": 36416150,
+        "sha256": "c7befd5ea8c3119769e8a6c1486c4edc6a3bc8365c67621c881bbb774b9902ff"
+      },
+      {
+        "path": "onnx/vector_estimator.onnx",
+        "bytes": 256534781,
+        "sha256": "883ac868ea0275ef0e991524dc64f16b3c0376efd7c320af6b53f5b780d7c61c"
+      },
+      {
+        "path": "onnx/vocoder.onnx",
+        "bytes": 101424195,
+        "sha256": "085de76dd8e8d5836d6ca66826601f615939218f90e519f70ee8a36ed2a4c4ba"
+      },
+      {
+        "path": "onnx/tts.json",
+        "bytes": 8253,
+        "sha256": "42078d3aef1cd43ab43021f3c54f47d2d75ceb4e75f627f118890128b06a0d09"
+      },
+      {
+        "path": "onnx/unicode_indexer.json",
+        "bytes": 277676,
+        "sha256": "9bf7346e43883a81f8645c81224f786d43c5b57f3641f6e7671a7d6c493cb24f"
+      }
+    ]
+  },
+  "conversion_tooling": {
+    "repository": "https://github.com/k2-fsa/sherpa-onnx.git",
+    "revision": "3dc7c569f31ca2cd4a20ed6f7db780327e6714c5",
+    "files": [
+      {
+        "path": "scripts/supertonic/README.md",
+        "bytes": 1749,
+        "sha256": "ba2cf4871eda3f3a89f217d29a290ce875ad198d60c6eb356913ff2de09f63ea"
+      },
+      {
+        "path": "scripts/supertonic/convert.py",
+        "bytes": 25258,
+        "sha256": "b6ceffd711ceffe1b34ad80b0dc46c7a9789207ff30718a884804e1898f262b7"
+      },
+      {
+        "path": "scripts/supertonic/generate_voices_bin.py",
+        "bytes": 4267,
+        "sha256": "9479238b1866d37288159efcc2f929f3c6bc09d87f511bbd70b474b5739e93df"
+      },
+      {
+        "path": "scripts/supertonic/run.sh",
+        "bytes": 3921,
+        "sha256": "e18165884bca7c30ae63b07b2768f581960b80d7fb8c6b0ceb752a1326897748"
+      }
+    ]
+  },
+  "quantization": "ONNX INT8 files are release outputs; output hashes are authoritative. Matching FP32 hashes for already-quantized duration/text components do not turn the dated archive into an FP32 deployment."
+}
