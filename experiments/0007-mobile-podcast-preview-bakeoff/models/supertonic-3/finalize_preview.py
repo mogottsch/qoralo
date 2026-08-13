@@ -5,7 +5,9 @@ from __future__ import annotations
 import hashlib
 import importlib.metadata
 import json
+import math
 import platform
+import re
 import sys
 from pathlib import Path
 
@@ -29,11 +31,56 @@ def relative(path: Path) -> str:
     return str(path.relative_to(ROOT))
 
 
-def statistics(samples: np.ndarray) -> dict:
-    return audio_protocol.audio_statistics(samples.astype(np.float64))
+def require_protocol_environment() -> dict[str, str]:
+    """Fail closed unless the running interpreter matches the frozen protocol."""
+    manifest = protocol.load_protocol()
+    implementation = manifest["implementation"]
+    python_requirement = implementation["python"]
+    match = re.fullmatch(r">=(\d+)\.(\d+)", python_requirement)
+    if match is None:
+        raise SystemExit(f"unsupported frozen Python requirement: {python_requirement}")
+    minimum = tuple(map(int, match.groups()))
+    if sys.version_info[:2] < minimum:
+        raise SystemExit(f"protocol requires Python {python_requirement}; got {platform.python_version()}")
+    versions = {
+        "python": platform.python_version(),
+        "numpy": importlib.metadata.version("numpy"),
+        "scipy": importlib.metadata.version("scipy"),
+    }
+    for dependency in ("numpy", "scipy"):
+        expected = implementation[dependency]
+        if versions[dependency] != expected:
+            raise SystemExit(
+                f"protocol requires {dependency}=={expected}; got {versions[dependency]}"
+            )
+    return versions
+
+
+def statistics(samples: np.ndarray, sample_rate_hz: int = audio_protocol.RATE) -> dict:
+    """Analyze loudness at the filter's frozen 24 kHz rate.
+
+    RMS and peak describe the native samples; only the rate-dependent K-weighted
+    loudness calculation uses a protocol resample.
+    """
+    native = samples.astype(np.float64)
+    basic = audio_protocol.audio_statistics(
+        native if sample_rate_hz == audio_protocol.RATE
+        else audio_protocol.resample_mono(native, sample_rate_hz)
+    )
+    if sample_rate_hz != audio_protocol.RATE:
+        rms = float(np.sqrt(np.mean(native ** 2)))
+        peak = float(np.max(np.abs(native)))
+        basic.update({
+            "rms": rms,
+            "rms_dbfs": None if rms == 0 else 20 * math.log10(rms),
+            "peak": peak,
+            "peak_dbfs": None if peak == 0 else 20 * math.log10(peak),
+        })
+    return basic
 
 
 def main() -> None:
+    protocol_environment = require_protocol_environment()
     pins = read_json(HERE / "pins.json")
     plan = read_json(HERE / "speed-attempts.json")
     primary_dir = ARTIFACTS / "attempts/attempt-00"
@@ -42,6 +89,8 @@ def main() -> None:
     repeat_meta = read_json(repeat_dir / "metadata.json")
     raw_path, repeat_path = primary_dir / "native.f32le", repeat_dir / "native.f32le"
 
+    if primary_meta.get("measurement_contract") != "generation-api-boundary-v2" or repeat_meta.get("measurement_contract") != "generation-api-boundary-v2":
+        raise SystemExit("capture predates corrected generation API timing boundaries; preserve it and request a governed recapture")
     if primary_meta["attempt"] != plan["attempts"][0] or repeat_meta["attempt"] != plan["attempts"][0]:
         raise SystemExit("primary and repeat must identify the first precommitted attempt")
     if primary_meta["duration_seconds"] < 15.0 or repeat_meta["duration_seconds"] < 15.0:
@@ -123,9 +172,9 @@ def main() -> None:
                 "supertonic": pins["implementation"]["version"],
                 "onnxruntime": smoke["runtime"]["onnxruntime"],
                 "dependency_lock": relative(HERE / "uv.lock"),
-                "normalization_python": platform.python_version(),
-                "normalization_numpy": importlib.metadata.version("numpy"),
-                "normalization_scipy": importlib.metadata.version("scipy"),
+                "normalization_python": protocol_environment["python"],
+                "normalization_numpy": protocol_environment["numpy"],
+                "normalization_scipy": protocol_environment["scipy"],
             },
             "resource_grant": {"kind": "full-generation", "task": "task-6", "global_exclusive": True, "used_for_every_attempt_and_repeat": True},
             "network_during_generation": False,
@@ -174,10 +223,10 @@ def main() -> None:
             "output_format": "headerless little-endian IEEE float32 PCM (native SDK array bytes)",
             "preserved_unchanged": True,
             "sha256_after_derivation": audio_protocol.sha256_file(raw_path),
-            "statistics": statistics(samples),
+            "statistics": statistics(samples, primary_meta["sample_rate_hz"]),
             "repeat_artifact_path": relative(repeat_path),
             "repeat_sha256": repeat_hash,
-            "repeat_statistics": statistics(repeated),
+            "repeat_statistics": statistics(repeated, repeat_meta["sample_rate_hz"]),
         },
         "normalized": {
             "artifact_path": relative(output_path),

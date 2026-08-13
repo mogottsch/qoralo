@@ -35,12 +35,16 @@ Task 6 invokes one full job at a time so each has its own exclusive grant:
 ./generate_preview.sh 1
 ```
 
-Task 6 completed the sequence at the default-first attempt: argument omitted (documented effective speed `1.05`) produced 712,704 native samples, or 16.1610884354 seconds. No later speed attempts were eligible or run. A separately gated fresh-process repeat was bit-identical. Both write-once raw waveforms remain under the ignored artifact tree; their hashes, complete timing/RSS measurements, dependency and license provenance, and determinism comparison are committed in `results/supertonic-3-preview.json`.
+The first run completed the sequence at the default-first attempt: argument omitted (documented effective speed `1.05`) produced 712,704 native samples, or 16.1610884354 seconds. No later speed attempts were eligible or run. A separately gated fresh-process repeat was bit-identical. Both write-once raw waveforms remain under the ignored artifact tree.
+
+That capture is **blocked from publication**: its timing included post-API array conversion/analysis, and its first normalization ran with NumPy 2.5.2 rather than protocol-v2's pinned 2.5.1. Raw evidence must not be overwritten, so `results/supertonic-3-preview.json` preserves the evidence and records the blocker. Only the experiment owner may authorize a new write-once capture location.
+
+For a governed recapture, create the shared locked environment as documented in the experiment README, then use its interpreter explicitly:
 
 ```bash
 ./generate_preview.sh 0
 ./generate_preview.sh 0 --repeat
-python ./finalize_preview.py
+../../artifacts/protocol-venv/bin/python ./finalize_preview.py
 ```
 
-The unchanged protocol-v2 operations resampled the accepted 44.1 kHz native waveform, selected the exact 15-second window, applied the fixed fades, loudness normalization, and deterministic S16 dither, and wrote a validated 360,000-sample mono 24 kHz PCM_S16LE artifact. `finalize_preview.py` is write-once for normalized evidence and verifies the raw hashes both before and after derivation. The non-streaming SDK exposes its first API waveform only when the complete synthesis call returns, so API-first-output equals completion time and is recorded with that explanation.
+`finalize_preview.py` now fails closed unless Python satisfies the manifest and the exact pinned NumPy/SciPy versions are installed. It also rejects legacy capture metadata without the corrected API-boundary marker. Protocol-v2 operations resample native 44.1 kHz audio before rate-dependent loudness analysis, and generation freezes API completion timing before array conversion, reshaping, or audible-frame analysis.

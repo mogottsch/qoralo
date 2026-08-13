@@ -50,6 +50,71 @@ def test_frozen_transcript_and_local_pin_validation():
     load("verify_supertonic_pins", "verify_pins.py").validate()
 
 
+def test_generation_timer_stops_before_post_api_analysis(monkeypatch, tmp_path):
+    generator = load("supertonic_timing_generator", "generate_preview.py")
+    generator.ARTIFACT_ROOT = tmp_path
+    monkeypatch.setenv("SUPERTONIC_ATTEMPT_GRANT", "1"); monkeypatch.setenv("PREVIEW_RESOURCE_GRANT_KIND", "full-generation")
+    monkeypatch.delenv("HF_TOKEN", raising=False); monkeypatch.delenv("HUGGING_FACE_HUB_TOKEN", raising=False)
+    fake_smoke = types.ModuleType("smoke_load"); fake_smoke.verify_snapshot = lambda _path: {}
+    fake_ort = types.ModuleType("onnxruntime"); fake_ort.get_available_providers = lambda: ["CPUExecutionProvider"]
+    events = []
+    class FakeTimer:
+        api_first_output_seconds = 1.0
+        first_audible_output_seconds = None
+        def start(self): events.append("start"); return self
+        def mark_api_output(self): events.append("api")
+        def stop(self): events.append("stop"); return 1.0
+        def finish(self, duration, **_kwargs):
+            return {"clock": "CLOCK_MONOTONIC", "generation_wall_seconds": 1.0,
+                    "api_first_output_seconds": 1.0, "first_audible_output_seconds": self.first_audible_output_seconds,
+                    "rtf": 1.0 / duration, "rtf_denominator": "raw_native_audio_duration_seconds"}
+    class FakeSession:
+        def get_providers(self): return ["CPUExecutionProvider"]
+    class FakeTTS:
+        def __init__(self, **_kwargs): self.model = types.SimpleNamespace(**{name: FakeSession() for name in ("dp_ort", "text_enc_ort", "vector_est_ort", "vocoder_ort")})
+        def get_voice_style(self, _name): return object()
+        def synthesize(self, _text, **_kwargs):
+            import numpy as np
+            return np.zeros((1, 44100 * 15), dtype=np.float32), [15.0]
+    fake_sdk = types.ModuleType("supertonic"); fake_sdk.TTS = FakeTTS
+    monkeypatch.setitem(sys.modules, "smoke_load", fake_smoke); monkeypatch.setitem(sys.modules, "onnxruntime", fake_ort); monkeypatch.setitem(sys.modules, "supertonic", fake_sdk)
+    monkeypatch.setattr(generator, "GenerationTimer", FakeTimer)
+    monkeypatch.setattr(generator, "first_audible_offset_seconds", lambda *_args: events.append("audible"))
+    metadata = generator.render(0)
+    assert events[:4] == ["start", "api", "stop", "audible"]
+    assert metadata["measurement_contract"] == "generation-api-boundary-v2"
+
+
+def test_finalizer_fails_closed_and_analyzes_native_rate(monkeypatch):
+    finalizer = load("supertonic_finalizer", "finalize_preview.py")
+    manifest = finalizer.protocol.load_protocol()
+    monkeypatch.setattr(finalizer.importlib.metadata, "version", lambda name: manifest["implementation"][name])
+    versions = finalizer.require_protocol_environment()
+    assert versions["numpy"] == "2.5.1" and versions["scipy"] == "1.18.0"
+    monkeypatch.setattr(finalizer.importlib.metadata, "version", lambda name: "0.0.0" if name == "numpy" else manifest["implementation"][name])
+    with pytest.raises(SystemExit, match="numpy==2.5.1"):
+        finalizer.require_protocol_environment()
+    import numpy as np
+    tone = np.sin(2 * np.pi * 1000 * np.arange(44100) / 44100) * .1
+    got = finalizer.statistics(tone, 44100)
+    expected_lufs = finalizer.audio_protocol.audio_statistics(finalizer.audio_protocol.resample_mono(tone, 44100))["integrated_loudness_lufs"]
+    assert got["integrated_loudness_lufs"] == pytest.approx(expected_lufs)
+    assert got["rms"] == pytest.approx(np.sqrt(np.mean(tone ** 2)))
+
+
+def test_blocked_result_is_schema_valid_protocol_current_and_not_publishable():
+    jsonschema = pytest.importorskip("jsonschema")
+    result = json.loads((EXPERIMENT / "results/supertonic-3-preview.json").read_text())
+    schema = json.loads((EXPERIMENT / "schemas/preview-result.schema.json").read_text())
+    jsonschema.Draft202012Validator(schema).validate(result)
+    sys.path.insert(0, str(EXPERIMENT / "tools"))
+    import generation_metrics, protocol
+    protocol.validate_result_protocol(result)
+    assert result["status"] == "blocked" and result["publication_eligible"] is False
+    assert "normalized" not in result
+    assert not generation_metrics.result_is_publishable(result)
+
+
 def test_generator_mock_preserves_default_raw_write_once(monkeypatch, tmp_path):
     generator = load("supertonic_generator", "generate_preview.py")
     generator.ARTIFACT_ROOT = tmp_path

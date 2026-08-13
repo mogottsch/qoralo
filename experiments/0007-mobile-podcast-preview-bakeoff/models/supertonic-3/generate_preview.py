@@ -62,8 +62,11 @@ def render(index: int, repeat: bool = False) -> dict:
     if attempt["argument"] != "omitted": kwargs["speed"] = attempt["argument"]
     timer = GenerationTimer().start()
     wav, _duration = tts.synthesize(TRANSCRIPT.read_text(encoding="utf-8"), **kwargs)
-    samples = np.asarray(wav, dtype="<f4").reshape(-1)
+    # The non-streaming API returned its first (complete) payload. Freeze both
+    # API timestamps before conversion, reshaping, or audible-frame analysis.
     timer.mark_api_output()
+    timer.stop()
+    samples = np.asarray(wav, dtype="<f4").reshape(-1)
     audible_offset = first_audible_offset_seconds(samples, 44100)
     if audible_offset is not None:
         timer.first_audible_output_seconds = timer.api_first_output_seconds + audible_offset
@@ -73,7 +76,7 @@ def render(index: int, repeat: bool = False) -> dict:
     raw_bytes = samples.tobytes()
     raw = output / "native.f32le"
     with raw.open("xb") as stream: stream.write(raw_bytes)
-    metadata = {"schema_version": 1, "candidate": "D", "kind": "fresh-process-repeat" if repeat else ("default" if index == 0 else "speed-retry"), "attempt": attempt, "model_revision": PINS["model"]["revision"], "voice": "M1", "sample_rate_hz": 44100, "channels": 1, "sample_count": int(samples.size), "duration_seconds": duration, "timing": timing, "memory": memory, "api_first_output_note": "The official Python SDK is non-streaming; its first API output is the completed waveform.", "raw_sha256": hashlib.sha256(raw_bytes).hexdigest(), "raw_preserved_unchanged": True, "normalization_performed": False}
+    metadata = {"schema_version": 2, "measurement_contract": "generation-api-boundary-v2", "candidate": "D", "kind": "fresh-process-repeat" if repeat else ("default" if index == 0 else "speed-retry"), "attempt": attempt, "model_revision": PINS["model"]["revision"], "voice": "M1", "sample_rate_hz": 44100, "channels": 1, "sample_count": int(samples.size), "duration_seconds": duration, "timing": timing, "memory": memory, "api_first_output_note": "The official Python SDK is non-streaming; its first API output is the completed waveform.", "raw_sha256": hashlib.sha256(raw_bytes).hexdigest(), "raw_preserved_unchanged": True, "normalization_performed": False}
     (output / "metadata.json").write_text(json.dumps(metadata, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return metadata
 
