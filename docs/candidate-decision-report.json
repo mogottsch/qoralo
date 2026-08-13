@@ -1,7 +1,7 @@
 {
   "$schema": "candidate-decision-report.schema.json",
   "schema_version": 1,
-  "status": "awaiting_explicit_user_approval",
+  "status": "experiment_0008_pending_device_measurement",
   "subjective_listening": {
     "status": "partial_user_review",
     "ratings": {
@@ -12,13 +12,13 @@
       "inflect_nano_v1": null,
       "kitten_tts_mini_0_8": null
     },
-    "note": "Historical A-C review: Kokoro first, Pocket second, VibeVoice Realtime third. D-F remain pending blind review. The active bake-off now compares all six natural-duration outputs with no 15-second requirement or normalization.",
+    "note": "Historical A-C review: Kokoro first, Pocket second, VibeVoice Realtime third. D-F were unreviewed when experiment 0007 stopped. This is preserved historical context, not an active review or follow-up queue.",
     "evidence": "experiments/0007-mobile-podcast-preview-bakeoff/results/user-listening-review.json"
   },
   "host_quality_evidence": [
     {
       "candidate": "VibeVoice Realtime 0.5B",
-      "status": "playable_natural_duration_historically_ranked",
+      "status": "historical_host_listening_evidence",
       "raw_duration_seconds": 20.133333333333333,
       "generation_wall_seconds": 8.888567516999501,
       "first_audible_output_seconds": 0.4843882079994728,
@@ -31,7 +31,7 @@
     },
     {
       "candidate": "Pocket TTS 100M",
-      "status": "playable_natural_duration_historically_ranked",
+      "status": "historical_host_listening_evidence",
       "raw_duration_seconds": 13.84,
       "generation_wall_seconds": 4.093614479999815,
       "first_audible_output_seconds": 0.18415928700051154,
@@ -45,7 +45,7 @@
     },
     {
       "candidate": "Kokoro 82M",
-      "status": "playable_natural_duration_historically_ranked",
+      "status": "historical_host_listening_evidence",
       "raw_duration_seconds": 17.475,
       "generation_wall_seconds": 6.691854653000519,
       "first_audible_output_seconds": 7.0418316760002195,
@@ -58,7 +58,7 @@
     },
     {
       "candidate": "Supertonic 3",
-      "status": "playable_natural_duration_pending_user_review",
+      "status": "historical_host_listening_evidence",
       "raw_duration_seconds": 16.16108843537415,
       "generation_wall_seconds": 5.506324572001176,
       "first_audible_output_seconds": 5.956319404001261,
@@ -71,7 +71,7 @@
     },
     {
       "candidate": "Inflect Nano v1",
-      "status": "playable_natural_duration_pending_user_review",
+      "status": "historical_host_listening_evidence",
       "raw_duration_seconds": 14.933333333333334,
       "generation_wall_seconds": 3.457863227999951,
       "first_audible_output_seconds": 3.9165623730004517,
@@ -85,7 +85,7 @@
     },
     {
       "candidate": "Kitten TTS Mini 80M v0.8",
-      "status": "playable_natural_duration_pending_user_review",
+      "status": "historical_host_listening_evidence",
       "raw_duration_seconds": 15.416666666666666,
       "generation_wall_seconds": 11.00722818200029,
       "first_audible_output_seconds": 11.445285487000037,
@@ -110,28 +110,31 @@
       "evidence_sha256": "618adbe31641fad573b756fb6045fdb593abd0812235669be6502fbef373de8b"
     },
     "realtime_0_5b": {
-      "status": "not_measured",
-      "reason": "No conversion or Android run has begun."
+      "status": "historical_only",
+      "reason": "Retired from active Android follow-up; experiment 0007 host listening evidence remains immutable."
     },
     "pocket_tts": {
-      "status": "not_measured",
-      "reason": "Host listening evidence only."
+      "status": "selected_pending_experiment_0008_device_measurement",
+      "reason": "Pinned sherpa-onnx Android CPU deployment selected; no real-device metric exists yet.",
+      "evidence": "experiments/0008-sherpa-onnx-android-tts-benchmark/protocol/candidates.json"
     },
     "kokoro": {
-      "status": "not_measured",
-      "reason": "Host listening evidence only."
+      "status": "selected_pending_experiment_0008_device_measurement",
+      "reason": "Pinned sherpa-onnx Android CPU deployment selected; no real-device metric exists yet.",
+      "evidence": "experiments/0008-sherpa-onnx-android-tts-benchmark/protocol/candidates.json"
     },
     "supertonic_3": {
-      "status": "not_measured",
-      "reason": "Supertonic 3 has host listening evidence only; Android work is deferred until expanded listening review."
+      "status": "selected_pending_experiment_0008_device_measurement",
+      "reason": "Pinned sherpa-onnx Android CPU deployment selected; no real-device metric exists yet.",
+      "evidence": "experiments/0008-sherpa-onnx-android-tts-benchmark/protocol/candidates.json"
     },
     "inflect_nano_v1": {
-      "status": "not_measured",
-      "reason": "Inflect Nano v1 has host listening evidence only; Android work is deferred until expanded listening review."
+      "status": "historical_only",
+      "reason": "Retired from active Android follow-up; experiment 0007 host listening evidence remains immutable."
     },
     "kitten_tts_mini_0_8": {
-      "status": "not_measured",
-      "reason": "Kitten TTS Mini 80M v0.8 has host listening evidence only; Android work is deferred until expanded listening review."
+      "status": "historical_only",
+      "reason": "Retired from active Android follow-up; experiment 0007 host listening evidence remains immutable."
     }
   },
   "estimates": {
@@ -166,30 +169,43 @@
   },
   "candidate_decisions": [
     {
-      "id": "proceed_realtime_android",
-      "label": "Proceed with Realtime 0.5B on Android",
-      "gate": "Approve Realtime listening quality first; capture fixtures before conversion and separately approve proprietary Qualcomm terms if needed."
+      "id": "measure_pocket_0008",
+      "label": "Measure Pocket pinned INT8 variant",
+      "gate": "Proceed only after host validation and current device readiness; canonical CPU/one-thread protocol applies."
     },
     {
-      "id": "proceed_turn_by_turn",
-      "label": "Proceed with a listening-approved turn-by-turn mobile candidate",
-      "gate": "Complete the expanded blind review of all six natural-duration outputs, then select a listening-approved candidate. No Android work starts from this report."
+      "id": "measure_kokoro_0008",
+      "label": "Measure exact Kokoro v1.0",
+      "gate": "Run second in fixed order only with pinned SID 3 to af_heart proof."
     },
     {
-      "id": "continue_vibevoice_1_5b_recovery",
-      "label": "Continue VibeVoice 1.5B recovery",
-      "gate": "Produce a newly reviewed host-accepted artifact without silently widening frozen thresholds before any Android deployment."
+      "id": "measure_supertonic_0008",
+      "label": "Measure pinned Supertonic 3 INT8",
+      "gate": "Run third only with proven M1-equivalent speaker index; otherwise record blocked."
     },
     {
-      "id": "run_narrow_qnn_bakeoff",
-      "label": "Run a narrow QNN accelerator bake-off",
-      "gate": "Approve listening quality and any proprietary SDK or license terms; probe components and 8a8w, 16a8w, and 16a4w rather than converting a full model."
+      "id": "optional_two_thread",
+      "label": "Run bounded two-thread comparison",
+      "gate": "Only for a successful model whose valid canonical warm median RTF is greater than 1.0."
     },
     {
-      "id": "reject_on_listening_quality",
-      "label": "Reject a candidate based on listening quality",
-      "gate": "Record the user's judgment; do not infer it from host speed or storage estimates."
+      "id": "publish_android_decision",
+      "label": "Publish measured Android decision",
+      "gate": "Only measured values and explicit unavailable reasons; never estimates."
     }
   ],
-  "next_action": "Stop at the expanded six-candidate natural-duration listening review. Reveal identities only when desired, record the D-F judgment, and do not start Android conversion or follow-up work yet."
+  "next_action": "Prepare and validate experiment 0008, then measure Pocket, Kokoro, and Supertonic in fixed order only after device readiness and thermal eligibility. VibeVoice Realtime, Inflect Nano v1, and Kitten TTS remain historical-only.",
+  "candidate_status": {
+    "selected_pending_experiment_0008_device_measurement": [
+      "pocket_tts_100m",
+      "kokoro_82m",
+      "supertonic_3"
+    ],
+    "historical_only": [
+      "vibevoice_realtime_0_5b",
+      "inflect_nano_v1",
+      "kitten_tts_mini_80m_v0_8"
+    ],
+    "experiment": "experiments/0008-sherpa-onnx-android-tts-benchmark/"
+  }
 }

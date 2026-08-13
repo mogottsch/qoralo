@@ -1,0 +1,36 @@
+{
+  "$schema": "../schemas/protocol.schema.json",
+  "protocol_id": "sherpa-onnx-android-tts-benchmark",
+  "protocol_version": 1,
+  "state": "pending_device_measurement",
+  "target": {"model": "SM-S918B", "abi": "arm64-v8a", "connection_readiness": "enumerated_previously_current_connection_unlock_unverified"},
+  "runtime": {"name": "sherpa-onnx", "version": "1.13.5", "tag_commit": "3dc7c569f31ca2cd4a20ed6f7db780327e6714c5", "provider": "cpu", "canonical_num_threads": 1, "model_storage": "app_specific_external_files"},
+  "transcript": {"path": "transcript.txt", "encoding": "UTF-8", "trailing_newline": false, "byte_count": 230, "sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f", "source": "../../0007-mobile-podcast-preview-bakeoff/protocol/transcript.txt", "revision_rule": "Any byte or punctuation change requires a new protocol version; prior results cannot be relabeled."},
+  "candidate_order": ["pocket", "kokoro", "supertonic_3"],
+  "runs": {
+    "process_rule": "Start every model campaign in a fresh app process and construct a new OfflineTts.",
+    "cold_definition": "The first synthesis after the fresh app process starts and its OfflineTts is newly constructed; filesystem page caches are not cleared.",
+    "warm_definition": "Every subsequent synthesis in that same process using the same OfflineTts.",
+    "canonical": {"cold_count": 1, "minimum_warm_count": 3, "threads": 1},
+    "timing_boundary": "CLOCK_MONOTONIC around only the synthesis API call. Stop timing before WAV writing, hashing, host validation, playback, or listening.",
+    "rtf_definition": "For each run, measured synthesis_wall_seconds / measured native_audio_duration_seconds.",
+    "warm_median_rtf": "Median of all valid measured canonical warm-run RTF values; unavailable if fewer than three valid warm runs.",
+    "callback": "Record elapsed time to the first non-empty audio callback from synthesis start. Do not play callback audio. If no non-empty callback is observed, record null plus an explicit unavailable reason.",
+    "two_thread_follow_up": {"trigger": "Only a successful canonical model with a valid one-thread warm_median_rtf > 1.0.", "runs": {"cold_count": 1, "minimum_warm_count": 3, "threads": 2}, "reporting": "Bounded to one campaign and reported separately; never replace canonical one-thread results."}
+  },
+  "memory": {
+    "boundaries": ["pss_bytes", "rss_bytes", "vm_hwm_bytes"],
+    "sampled_phase_peaks": ["pss_bytes", "rss_bytes"],
+    "limitation": "VmHWM is the cumulative process-lifetime resident high-water mark, not an independent per-phase peak. Missing access or samples must be unavailable with a reason and must not be estimated."
+  },
+  "thermal": {
+    "poll_interval_seconds": 60, "maximum_wait_seconds": 1200, "required_android_status": "NONE", "maximum_battery_temperature_c": 35.0, "maximum_above_campaign_baseline_c": 1.0,
+    "baseline": "Establish an eligible campaign baseline before the first model; apply the absolute threshold before baseline and both thresholds afterward.",
+    "before_each_model": true, "settings_changes_forbidden": true,
+    "timeout_outcome": "Record thermally_blocked and do not synthesize under materially different conditions.",
+    "bias_reporting": "Retain every poll and wait and disclose possible fixed-order thermal bias."
+  },
+  "audio_validation": "After timing, independently decode the entire native PCM WAV on the host; verify frame count, rate, duration, non-silence, clipping, truncation, and non-finite samples. Record listening separately as performed, failed, or not_performed.",
+  "failure_continuation": "Serialize each outcome, including host-generated crash/OOM/timeout manifests when the app cannot write one, then continue to the next candidate in fixed order. Never estimate a missing metric.",
+  "evidence_policy": "evidence-retention.json"
+}

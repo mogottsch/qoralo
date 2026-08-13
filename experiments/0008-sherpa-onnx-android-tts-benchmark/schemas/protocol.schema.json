@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "protocol.schema.json", "type": "object", "additionalProperties": false,
+  "required": ["protocol_id", "protocol_version", "state", "target", "runtime", "transcript", "candidate_order", "runs", "memory", "thermal", "audio_validation", "failure_continuation", "evidence_policy"],
+  "properties": {
+    "$schema": {"type": "string"}, "protocol_id": {"const": "sherpa-onnx-android-tts-benchmark"}, "protocol_version": {"const": 1}, "state": {"const": "pending_device_measurement"},
+    "target": {"type": "object"}, "runtime": {"type": "object"}, "transcript": {"type": "object"},
+    "candidate_order": {"const": ["pocket", "kokoro", "supertonic_3"]}, "runs": {"type": "object"}, "memory": {"type": "object"}, "thermal": {"type": "object"},
+    "audio_validation": {"type": "string", "minLength": 1}, "failure_continuation": {"type": "string", "minLength": 1}, "evidence_policy": {"const": "evidence-retention.json"}
+  }
+}

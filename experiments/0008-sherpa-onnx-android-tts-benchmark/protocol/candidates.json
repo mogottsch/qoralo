@@ -1,0 +1,12 @@
+{
+  "$schema": "../schemas/candidates.schema.json",
+  "experiment": "0008",
+  "status": "pending_device_measurement",
+  "fixed_order": ["pocket", "kokoro", "supertonic_3"],
+  "candidates": [
+    {"id": "pocket", "display_name": "Pocket TTS 100M", "deployment_variant": "sherpa-onnx-pocket-tts-int8-2026-01-26", "requested_voice": "Alba", "actual_reference": null, "actual_reference_sha256": null, "voice_match": null, "voice_rule": "Use provenance-verifiable packaged Alba only; otherwise use official test_wavs/bria.wav, set voice_match false, and never label Bria as Alba."},
+    {"id": "kokoro", "display_name": "Kokoro 82M", "deployment_variant": "kokoro-multi-lang-v1_0", "speaker_id": 3, "requested_voice": "af_heart", "voice_proof_required": "Pinned v1.0 metadata must prove id2speaker[3] == af_heart."},
+    {"id": "supertonic_3", "display_name": "Supertonic 3", "deployment_variant": "sherpa-onnx-supertonic-3-tts-int8-2026-05-11", "requested_voice": "M1", "speaker_id": null, "voice_proof_required": "Prove M1-equivalent index from archive metadata or pinned deterministic conversion ordering; block rather than guess."}
+  ],
+  "historical_only": ["vibevoice_realtime_0_5b", "inflect_nano_v1", "kitten_tts_mini_80m_v0_8"]
+}

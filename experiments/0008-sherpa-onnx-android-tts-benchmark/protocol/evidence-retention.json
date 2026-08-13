@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "commit": ["immutable normalized per-run result manifests", "deployed-file inventories with sizes and SHA-256", "host validation reports", "relative artifact identifiers and hashes for retained WAV/log/telemetry", "failure manifests including native crash, OOM, timeout, and unavailable metrics", "final comparison and conclusions"],
+  "ignore": ["downloaded archives", "extracted models", "APKs and build trees", "WAV files", "full logcat", "high-frequency raw telemetry"],
+  "artifact_root": "artifacts/0008/",
+  "rules": ["Raw files are write-once and collision-free.", "Committed references use repository-relative artifact identifiers, byte sizes, and SHA-256.", "A missing artifact or metric is explicit; values are never reconstructed or estimated.", "Retain exit state, logcat, and telemetry even when JNI/native termination prevents app serialization."]
+}

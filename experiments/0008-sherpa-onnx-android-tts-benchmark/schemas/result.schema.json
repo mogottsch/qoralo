@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "result.schema.json", "title": "Experiment 0008 normalized model outcome", "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "experiment", "candidate_id", "outcome", "outcome_reason", "provider", "threads", "transcript_sha256", "voice", "metrics", "runs", "evidence", "listening"],
+  "properties": {
+    "schema_version": {"const": 1}, "experiment": {"const": "0008"}, "candidate_id": {"enum": ["pocket", "kokoro", "supertonic_3"]},
+    "outcome": {"enum": ["success", "partial_success", "blocked", "timeout", "native_crash", "oom", "invalid_audio", "failure"]},
+    "outcome_reason": {"type": "string", "minLength": 1}, "provider": {"const": "cpu"}, "threads": {"enum": [1, 2]},
+    "transcript_sha256": {"const": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f"},
+    "voice": {"$ref": "#/$defs/voice"}, "metrics": {"$ref": "#/$defs/metrics"}, "runs": {"type": "array", "items": {"$ref": "#/$defs/run"}},
+    "evidence": {"type": "array", "items": {"$ref": "#/$defs/evidence"}}, "listening": {"enum": ["performed", "failed", "not_performed"]}
+  },
+  "allOf": [
+    {"if": {"properties": {"outcome": {"const": "success"}}}, "then": {"properties": {"runs": {"minItems": 4}, "metrics": {"properties": {"warm_median_rtf": {"properties": {"availability": {"const": "measured"}}}}}}}},
+    {"if": {"properties": {"candidate_id": {"const": "pocket"}}}, "then": {"properties": {"voice": {"required": ["requested_voice", "actual_reference", "actual_reference_sha256", "voice_match"]}}}}
+  ],
+  "$defs": {
+    "observation": {"oneOf": [
+      {"type": "object", "additionalProperties": false, "required": ["availability", "value", "reason", "source"], "properties": {"availability": {"const": "measured"}, "value": {"type": "number"}, "reason": {"type": "null"}, "source": {"const": "observed"}}},
+      {"type": "object", "additionalProperties": false, "required": ["availability", "value", "reason", "source"], "properties": {"availability": {"enum": ["unavailable", "not_applicable"]}, "value": {"type": "null"}, "reason": {"type": "string", "minLength": 1}, "source": {"const": "observed"}}}
+    ]},
+    "voice": {"type": "object", "additionalProperties": false, "required": ["requested_voice"], "properties": {"requested_voice": {"type": "string", "minLength": 1}, "actual_reference": {"type": ["string", "null"]}, "actual_reference_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"}, "voice_match": {"type": ["boolean", "null"]}, "speaker_id": {"type": ["integer", "null"]}, "proof": {"type": ["string", "null"]}}},
+    "metrics": {"type": "object", "additionalProperties": false, "required": ["load_wall_seconds", "warm_median_rtf", "boundary_pss_bytes", "boundary_rss_bytes", "vm_hwm_bytes", "sampled_peak_pss_bytes", "sampled_peak_rss_bytes"], "properties": {"load_wall_seconds": {"$ref": "#/$defs/observation"}, "warm_median_rtf": {"$ref": "#/$defs/observation"}, "boundary_pss_bytes": {"$ref": "#/$defs/observation"}, "boundary_rss_bytes": {"$ref": "#/$defs/observation"}, "vm_hwm_bytes": {"$ref": "#/$defs/observation"}, "sampled_peak_pss_bytes": {"$ref": "#/$defs/observation"}, "sampled_peak_rss_bytes": {"$ref": "#/$defs/observation"}}},
+    "run": {"type": "object", "additionalProperties": false, "required": ["kind", "synthesis_wall_seconds", "sample_count", "sample_rate_hz", "audio_duration_seconds", "rtf", "first_non_empty_callback_seconds", "wav_sha256", "audio_validation"], "properties": {"kind": {"enum": ["cold", "warm"]}, "synthesis_wall_seconds": {"$ref": "#/$defs/observation"}, "sample_count": {"$ref": "#/$defs/observation"}, "sample_rate_hz": {"$ref": "#/$defs/observation"}, "audio_duration_seconds": {"$ref": "#/$defs/observation"}, "rtf": {"$ref": "#/$defs/observation"}, "first_non_empty_callback_seconds": {"$ref": "#/$defs/observation"}, "wav_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"}, "audio_validation": {"enum": ["valid", "invalid", "not_performed"]}}},
+    "evidence": {"type": "object", "additionalProperties": false, "required": ["artifact_id", "relative_path", "sha256", "byte_count", "retained"], "properties": {"artifact_id": {"type": "string", "minLength": 1}, "relative_path": {"type": "string", "minLength": 1}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "byte_count": {"type": "integer", "minimum": 0}, "retained": {"type": "boolean"}}}
+  }
+}

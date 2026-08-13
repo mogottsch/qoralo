@@ -5,11 +5,11 @@
     "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
   },
   "type": "object",
-  "required": ["schema_version", "status", "subjective_listening", "host_quality_evidence", "android_measurements", "estimates", "historical_evidence", "candidate_decisions", "next_action"],
+  "required": ["schema_version", "status", "subjective_listening", "host_quality_evidence", "android_measurements", "estimates", "historical_evidence", "candidate_status", "candidate_decisions", "next_action"],
   "properties": {
     "$schema": {"const": "candidate-decision-report.schema.json"},
     "schema_version": {"const": 1},
-    "status": {"const": "awaiting_explicit_user_approval"},
+    "status": {"const": "experiment_0008_pending_device_measurement"},
     "subjective_listening": {
       "type": "object",
       "required": ["status", "ratings", "note"],
@@ -55,11 +55,12 @@
     "android_measurements": {"type": "object"},
     "estimates": {"type": "object"},
     "historical_evidence": {"type": "object"},
+    "candidate_status": {"type": "object", "required": ["selected_pending_experiment_0008_device_measurement", "historical_only", "experiment"]},
     "candidate_decisions": {
       "type": "array", "minItems": 5, "maxItems": 5,
       "items": {"type": "object", "required": ["id", "label", "gate"], "properties": {"id": {"type": "string"}, "label": {"type": "string"}, "gate": {"type": "string"}}, "additionalProperties": false}
     },
-    "next_action": {"type": "string", "pattern": "Stop"}
+    "next_action": {"type": "string", "minLength": 1}
   },
   "additionalProperties": false
 }

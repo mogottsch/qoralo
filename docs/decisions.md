@@ -48,3 +48,9 @@ Record the updated historical order as Kokoro first, Pocket TTS second, and Vibe
 ## 2026-08-13 — Compare natural-duration outputs
 
 Retire the 15-second gate and normalization from the active listening bake-off. Publish all six natural-duration outputs at their measured durations and native rates. Historical protocol-v2 derivations remain provenance only. Hide model identities initially; reveal one card or all cards only after explicit interaction.
+
+## 2026-08-13 — Select experiment 0008 Android candidates
+
+Retire VibeVoice Realtime 0.5B, Inflect Nano v1, and Kitten TTS Mini 80M v0.8 from active follow-up; they remain historical-only under immutable experiment 0007 evidence. Select Pocket TTS 100M, exact Kokoro v1.0, and Supertonic 3 for real-device measurement in that fixed order under experiment 0008.
+
+Use pinned sherpa-onnx v1.13.5 Android CPU deployments with one canonical inference thread and app-specific external model storage. Preserve the experiment 0007 transcript byte-for-byte. Record requested and actual Pocket voices separately, prove Kokoro SID 3/`af_heart` and Supertonic M1 mapping, and block rather than guess. No Android result exists until the device campaign records it; host timing is not a substitute.

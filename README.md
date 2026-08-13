@@ -39,7 +39,8 @@ The target phone is a Samsung Galaxy S23 Ultra (`SM-S918B`, Snapdragon 8 Gen 2, 
 | [`0004`](experiments/0004-vibevoice-1.5b-onnx-android/) | ONNX Runtime Mobile | Deferred; no duplicate conversion started |
 | [`0005`](experiments/0005-vibevoice-1.5b-qnn-android/) | Qualcomm QNN | Requires an approved candidate and any proprietary terms |
 | [`0006`](experiments/0006-vibevoice-realtime-0.5b-android/) | Realtime 0.5B feasibility inventory | Recommendations and storage estimates only; Android feasibility unknown |
-| [`0007`](experiments/0007-mobile-podcast-preview-bakeoff/) | Six-model host listening bake-off | Natural-duration samples ready for blind review; historical ranking is Kokoro, Pocket, then Realtime |
+| [`0007`](experiments/0007-mobile-podcast-preview-bakeoff/) | Six-model host listening bake-off | Immutable historical evidence; historical ranking is Kokoro, Pocket, then Realtime |
+| [`0008`](experiments/0008-sherpa-onnx-android-tts-benchmark/) | Pinned sherpa-onnx Android CPU benchmark | Pocket, Kokoro, and Supertonic selected; real-device measurement pending |
 
 ## Boundaries
 
@@ -51,4 +52,4 @@ Large model files, converted models, generated audio, APKs, tensors, traces, and
 
 The historical ExecuTorch campaign remains complete at **39/39** and rejected as deployed. Its prefix supplement clarifies the near-silent two-chunk waveform without revising that conclusion.
 
-The listening bake-off now contains six natural-duration host samples: VibeVoice Realtime, Pocket TTS, Kokoro, Supertonic 3, Inflect Nano v1, and Kitten TTS Mini 80M v0.8. The historical ordering is Kokoro first, Pocket second, and Realtime third; the three additions remain pending blind review. Identities are hidden initially and revealed interactively. No candidate has entered Android follow-up work; see the [candidate decision report](docs/candidate-decision-report.md).
+Experiment 0007's six natural-duration host samples remain immutable historical evidence. Pocket TTS 100M, exact Kokoro 82M v1.0, and Supertonic 3 are now selected for the pinned experiment 0008 sherpa-onnx Android CPU benchmark, with real-device measurements still pending. VibeVoice Realtime 0.5B, Inflect Nano v1, and Kitten TTS Mini 80M v0.8 are historical-only and are not pending Android follow-up. See the [candidate decision report](docs/candidate-decision-report.md).

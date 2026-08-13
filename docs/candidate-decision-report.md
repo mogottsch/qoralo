@@ -1,48 +1,42 @@
 # Candidate decision report
 
-**Status: awaiting expanded blind listening review.** The user ranked the historical three samples **Kokoro 82M first, Pocket TTS 100M second, and VibeVoice Realtime 0.5B third**. Supertonic 3, Inflect Nano v1, and Kitten TTS Mini 80M v0.8 were added afterward and have not been rated. No Android conversion or follow-up is authorized yet.
+**Status: experiment 0008 selected; real-device measurement pending.** Pocket TTS 100M, exact Kokoro 82M v1.0, and Supertonic 3 are the only active Android follow-up candidates. They will be measured in that fixed order under the [experiment 0008 contract](../experiments/0008-sherpa-onnx-android-tts-benchmark/README.md).
 
-## Active listening policy
+VibeVoice Realtime 0.5B, Inflect Nano v1, and Kitten TTS Mini 80M v0.8 are **historical-only**. They are not pending review or Android follow-up. Their natural-duration host samples and all experiment 0007 evidence remain immutable historical context.
 
-The active bake-off compares each model's **natural-duration output**. There is no 15-second requirement and no normalization step. Actual duration and native sample rate are shown for every candidate. Historical protocol-v2 normalized files may remain in local evidence, but they are noncanonical and are not published in the active listening UI.
+## Selected deployment variants
 
-| Candidate | Natural duration | Host generation | First audible | Host RTF | Peak process-tree RSS | Listening state |
-|---|---:|---:|---:|---:|---:|---|
-| VibeVoice Realtime 0.5B | 20.133 s | 8.889 s | 0.484 s | 0.441 | 3.532 GB | Historical rank 3 |
-| Pocket TTS 100M | 13.840 s | 4.094 s | 0.184 s | 0.296 | 1.145 GB | Historical rank 2 |
-| Kokoro 82M | 17.475 s | 6.692 s | 7.042 s | 0.383 | 1.713 GB | **Historical rank 1** |
-| Supertonic 3 | 16.161 s | 5.506 s | 5.956 s | 0.341 | 0.609 GB | Pending blind review |
-| Inflect Nano v1 | 14.933 s | 3.458 s | 3.917 s | 0.232 | 1.094 GB | Pending blind review |
-| Kitten TTS Mini 80M v0.8 | 15.417 s | 11.007 s | 11.445 s | 0.714 | 0.792 GB | Pending blind review |
+| Order | Candidate | Pinned deployment | Voice condition | Android status |
+|---:|---|---|---|---|
+| 1 | Pocket TTS 100M | `sherpa-onnx-pocket-tts-int8-2026-01-26` | Request Alba; record actual reference/hash/match; packaged Bria is the declared honest fallback | Pending real-device measurement |
+| 2 | Kokoro 82M | exact `kokoro-multi-lang-v1_0` | SID 3 must be proven as `af_heart` | Pending real-device measurement |
+| 3 | Supertonic 3 | `sherpa-onnx-supertonic-3-tts-int8-2026-05-11` | M1-equivalent SID must be proven; otherwise blocked | Pending real-device measurement |
 
-The listening page starts with neutral Candidate A–F labels. Each card has its own identity-reveal button, and a separate control reveals all identities. Identity data is requested only after an explicit reveal action.
+The baseline is sherpa-onnx `v1.13.5`, CPU, one canonical inference thread, arm64, and filesystem-backed models in app-specific external storage. No Android timing or memory value has been measured for these variants. Host listening timing from experiment 0007 and future host configuration smoke tests are not Android performance evidence.
 
-The browser players use WAV carriers where a model's native library output is headerless float PCM. The exact native bytes, formats, rates, durations, and hashes remain preserved in the evidence manifest.
+## Historical listening evidence
 
-## Android measurements
+Experiment 0007 compared six natural-duration host outputs. The recorded historical three-way order was Kokoro first, Pocket second, and VibeVoice Realtime third. Supertonic, Inflect, and Kitten were added later. Selection for experiment 0008 supersedes the old listening gate without rewriting those results.
 
-The VibeVoice 1.5B four-call PTE was **not run on Android** because its deterministic host validation failed the frozen numerical gate. Realtime, Pocket, Kokoro, Supertonic, Inflect, and Kitten have no Android measurements in this campaign. Android work remains deferred until the expanded listening review is complete.
+| Candidate | Natural duration | Host RTF | Current role |
+|---|---:|---:|---|
+| VibeVoice Realtime 0.5B | 20.133 s | 0.441 | Historical-only |
+| Pocket TTS 100M | 13.840 s | 0.296 | Selected; Android measurement pending |
+| Kokoro 82M | 17.475 s | 0.383 | Selected; Android measurement pending |
+| Supertonic 3 | 16.161 s | 0.341 | Selected; Android measurement pending |
+| Inflect Nano v1 | 14.933 s | 0.232 | Historical-only |
+| Kitten TTS Mini 80M v0.8 | 15.417 s | 0.714 | Historical-only |
 
-## Historical 39/39 result
+## Next action and boundaries
 
-The prior 39/39 ExecuTorch/XNNPACK result remains immutable: the tested VibeVoice 1.5B deployment is rejected for capacity, speed, size, and its historical fixed-rubric audio result. The locked-prefix supplement is clarification only and does not revise that conclusion.
+Complete experiment 0008's pinned host validation and Android harness before touching the phone. The `SM-S918B` was enumerated previously, but current connection, unlock, authorization, and readiness are unverified. Device work must wait for explicit readiness and the experiment's thermal rules.
 
-## Next decision
-
-1. Listen to all six candidates without revealing identities first.
-2. Reveal individual identities only when ready.
-3. Record the updated subjective ordering.
-4. Select a candidate for Android feasibility work only after that review.
+The normalized schemas represent successes, partial successes, blocks, timeouts, native crashes, OOM, invalid audio, and other failures. Missing metrics require an observed reason and are never estimated. The optional two-thread campaign is allowed only after a successful candidate has a valid one-thread warm median RTF greater than `1.0` and is reported separately.
 
 ## Evidence index
 
-The machine-readable [decision report](candidate-decision-report.json) pins all six result files and keeps host listening, unavailable Android measurements, estimates, and historical evidence separate. Primary sources:
-
-- [six-candidate listening manifest](../experiments/0007-mobile-podcast-preview-bakeoff/publication/bakeoff-manifest.json)
+- [experiment 0008 candidate manifest](../experiments/0008-sherpa-onnx-android-tts-benchmark/protocol/candidates.json)
+- [experiment 0008 benchmark protocol](../experiments/0008-sherpa-onnx-android-tts-benchmark/protocol/benchmark-protocol.json)
+- [machine-readable decision report](candidate-decision-report.json)
+- [historical experiment 0007 listening manifest](../experiments/0007-mobile-podcast-preview-bakeoff/publication/bakeoff-manifest.json)
 - [historical A–C listening review](../experiments/0007-mobile-podcast-preview-bakeoff/results/user-listening-review.json)
-- [Supertonic 3 result](../experiments/0007-mobile-podcast-preview-bakeoff/results/supertonic-3-preview.json)
-- [Inflect Nano v1 result](../experiments/0007-mobile-podcast-preview-bakeoff/results/inflect-nano-v1-preview.json)
-- [Kitten TTS Mini 0.8 result](../experiments/0007-mobile-podcast-preview-bakeoff/results/kitten-mini-0.8-preview.json)
-- [four-call Android gate result](../experiments/0002-vibevoice-1.5b-executorch-android/results/four-call-android.json)
-
-**Stop here for the expanded listening review.**

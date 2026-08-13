@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "candidates.schema.json", "type": "object", "additionalProperties": false,
+  "required": ["experiment", "status", "fixed_order", "candidates", "historical_only"],
+  "properties": {
+    "$schema": {"type": "string"}, "experiment": {"const": "0008"}, "status": {"const": "pending_device_measurement"}, "fixed_order": {"const": ["pocket", "kokoro", "supertonic_3"]},
+    "candidates": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "object", "required": ["id", "display_name", "deployment_variant", "requested_voice"], "additionalProperties": true}},
+    "historical_only": {"const": ["vibevoice_realtime_0_5b", "inflect_nano_v1", "kitten_tts_mini_80m_v0_8"]}
+  }
+}
