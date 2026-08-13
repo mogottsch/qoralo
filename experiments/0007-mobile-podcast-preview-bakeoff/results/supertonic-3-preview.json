@@ -1,0 +1,308 @@
+{
+  "attempts": [
+    {
+      "artifact_path": "artifacts/supertonic-3/attempts/attempt-00/native.f32le",
+      "attempt_id": "attempt-00-default",
+      "control": {
+        "argument": "omitted",
+        "speed": 1.05
+      },
+      "kind": "default",
+      "resource_kind": "full-generation",
+      "status": "accepted"
+    },
+    {
+      "artifact_path": "artifacts/supertonic-3/repeats/attempt-00/native.f32le",
+      "attempt_id": "attempt-00-fresh-process-repeat",
+      "control": {
+        "argument": "omitted",
+        "speed": 1.05
+      },
+      "kind": "fresh-process-repeat",
+      "resource_kind": "full-generation",
+      "status": "accepted"
+    }
+  ],
+  "command": [
+    "models/supertonic-3/setup.sh",
+    "models/supertonic-3/smoke-load.sh",
+    "models/supertonic-3/generate_preview.sh 0",
+    "models/supertonic-3/generate_preview.sh 0 --repeat",
+    "python models/supertonic-3/finalize_preview.py"
+  ],
+  "conclusion": "Candidate D passed protocol-v2 at the default-first attempt; normalized audio is an exact 15-second derivation while primary and repeat raw evidence remain unchanged. The SDK is non-streaming, and first-audible timing adds the first qualifying native-frame offset to API completion rather than claiming streaming playback latency. This CPU listening result does not establish Android feasibility.",
+  "forbidden_transformations_used": [],
+  "licenses": [
+    {
+      "acceptance": "none",
+      "component": "Supertone/supertonic-3 model and notices",
+      "license": "OpenRAIL-M with bundled third-party notices",
+      "sha256": "0d944a9110fed9a9602d60e0423a272903e7bd21ab060490774efc77c2275e9f",
+      "source": "snapshot/LICENSE"
+    },
+    {
+      "component": "supertonic Python SDK",
+      "license": "MIT",
+      "sha256": "f41cb0ff617e2ed634215f3e62f7b33b3dc02b079c6379a2f1a9c7ce7bd84c03",
+      "source": "https://github.com/supertone-inc/supertonic-py.git"
+    }
+  ],
+  "measurement_contract_version": 1,
+  "memory": {
+    "baseline_rss_bytes": 24666112,
+    "peak_process_tree_rss_bytes": 606908416,
+    "process_race_count": 0,
+    "sample_count": 246,
+    "sample_interval_ms": 20,
+    "sampling_limitations": []
+  },
+  "model": "supertonic-3",
+  "normalized": {
+    "artifact_path": "artifacts/normalized/supertonic-3/v2/supertonic-3-15s.wav",
+    "byte_count": 720044,
+    "channels": 1,
+    "derivation_metadata_path": "artifacts/normalized/supertonic-3/v2/derivation.json",
+    "duration_seconds": 15.0,
+    "sample_count": 360000,
+    "sample_format": "PCM_S16LE",
+    "sample_rate_hz": 24000,
+    "sha256": "e97eb1062fb47d9c9dd43b669b72981701b5c9719c71d6e9996b9ba10b856899",
+    "statistics": {
+      "integrated_loudness_lufs": -20.000001189874087,
+      "peak": 0.782928466796875,
+      "peak_dbfs": -2.125558319366287,
+      "rms": 0.0967321742815082,
+      "rms_dbfs": -20.28858100668577
+    }
+  },
+  "protocol": {
+    "protocol_fingerprint": "ca0987feca4c9a2e8744d4846d1b3f5da86799862f6f7d8ba7e3563f84245814",
+    "protocol_id": "mobile-podcast-preview",
+    "protocol_version": 2,
+    "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f"
+  },
+  "provenance": {
+    "attempt_measurements": {
+      "attempt-00-default": {
+        "api_first_output_note": "The official Python SDK is non-streaming; its first API output is the completed waveform.",
+        "attempt": {
+          "argument": "omitted",
+          "effective_speed": 1.05,
+          "index": 0
+        },
+        "candidate": "D",
+        "channels": 1,
+        "duration_seconds": 16.16108843537415,
+        "kind": "default",
+        "memory": {
+          "baseline_rss_bytes": 24666112,
+          "peak_process_tree_rss_bytes": 606908416,
+          "process_race_count": 0,
+          "sample_count": 246,
+          "sample_interval_ms": 20,
+          "sampling_limitations": []
+        },
+        "model_revision": "724fb5abbf5502583fb520898d45929e62f02c0b",
+        "normalization_performed": false,
+        "raw_preserved_unchanged": true,
+        "raw_sha256": "4c964e0a47a5736f2385db320daf2597691ab4637667bd65adb83b1da91774f8",
+        "sample_count": 712704,
+        "sample_rate_hz": 44100,
+        "schema_version": 1,
+        "timing": {
+          "api_first_output_seconds": 4.954159818000335,
+          "clock": "CLOCK_MONOTONIC",
+          "first_audible_output_seconds": 5.404159818000335,
+          "generation_wall_seconds": 4.9576578019996305,
+          "rtf": 0.30676509331810076,
+          "rtf_denominator": "raw_native_audio_duration_seconds"
+        },
+        "voice": "M1"
+      },
+      "attempt-00-fresh-process-repeat": {
+        "api_first_output_note": "The official Python SDK is non-streaming; its first API output is the completed waveform.",
+        "attempt": {
+          "argument": "omitted",
+          "effective_speed": 1.05,
+          "index": 0
+        },
+        "candidate": "D",
+        "channels": 1,
+        "duration_seconds": 16.16108843537415,
+        "kind": "fresh-process-repeat",
+        "memory": {
+          "baseline_rss_bytes": 24465408,
+          "peak_process_tree_rss_bytes": 605708288,
+          "process_race_count": 0,
+          "sample_count": 244,
+          "sample_interval_ms": 20,
+          "sampling_limitations": []
+        },
+        "model_revision": "724fb5abbf5502583fb520898d45929e62f02c0b",
+        "normalization_performed": false,
+        "raw_preserved_unchanged": true,
+        "raw_sha256": "4c964e0a47a5736f2385db320daf2597691ab4637667bd65adb83b1da91774f8",
+        "sample_count": 712704,
+        "sample_rate_hz": 44100,
+        "schema_version": 1,
+        "timing": {
+          "api_first_output_seconds": 4.873270057999434,
+          "clock": "CLOCK_MONOTONIC",
+          "first_audible_output_seconds": 5.3232700579994345,
+          "generation_wall_seconds": 4.876464652999857,
+          "rtf": 0.30174110317508207,
+          "rtf_denominator": "raw_native_audio_duration_seconds"
+        },
+        "voice": "M1"
+      }
+    },
+    "dependency_lock_sha256": "a4a4f4bb0495e4a1ebb1db2c0ba6554045b3fcfdd296e248169458a79a8e29ac",
+    "determinism": {
+      "claim": "Bit-identical fresh-process repeat on this pinned CPU environment; no cross-platform bit-exact claim.",
+      "differing_samples": 0,
+      "duration_and_sample_count_match": true,
+      "fresh_process_repeat_count": 1,
+      "max_absolute_sample_difference": 0.0,
+      "primary_sha256": "4c964e0a47a5736f2385db320daf2597691ab4637667bd65adb83b1da91774f8",
+      "raw_hashes_match": true,
+      "repeat_sha256": "4c964e0a47a5736f2385db320daf2597691ab4637667bd65adb83b1da91774f8",
+      "rms_sample_difference": 0.0
+    },
+    "environment": {
+      "dependency_lock": "models/supertonic-3/uv.lock",
+      "device": "cpu",
+      "execution_provider": "CPUExecutionProvider",
+      "generation_python": "3.11",
+      "normalization_numpy": "2.5.2",
+      "normalization_python": "3.14.6",
+      "normalization_scipy": "1.18.0",
+      "onnxruntime": "1.23.2",
+      "supertonic": "1.3.1"
+    },
+    "generation_attempt_plan": "models/supertonic-3/speed-attempts.json",
+    "implementation_repository": "https://github.com/supertone-inc/supertonic-py.git",
+    "implementation_revision": "908a56486e821e833a80530ff0cae3ad0b046fce",
+    "implementation_tag": "v1.3.1",
+    "model_bytes": 398668131,
+    "model_files": {
+      "LICENSE": {
+        "bytes": 15007,
+        "sha256": "0d944a9110fed9a9602d60e0423a272903e7bd21ab060490774efc77c2275e9f"
+      },
+      "config.json": {
+        "bytes": 174,
+        "sha256": "4099082b107a9d4029849ac76b89eca65e03732660969c2babe5bf308c7357f2"
+      },
+      "onnx/duration_predictor.onnx": {
+        "bytes": 3700147,
+        "sha256": "c3eb91414d5ff8a7a239b7fe9e34e7e2bf8a8140d8375ffb14718b1c639325db"
+      },
+      "onnx/text_encoder.onnx": {
+        "bytes": 36416150,
+        "sha256": "c7befd5ea8c3119769e8a6c1486c4edc6a3bc8365c67621c881bbb774b9902ff"
+      },
+      "onnx/tts.json": {
+        "bytes": 8253,
+        "sha256": "42078d3aef1cd43ab43021f3c54f47d2d75ceb4e75f627f118890128b06a0d09"
+      },
+      "onnx/unicode_indexer.json": {
+        "bytes": 277676,
+        "sha256": "9bf7346e43883a81f8645c81224f786d43c5b57f3641f6e7671a7d6c493cb24f"
+      },
+      "onnx/vector_estimator.onnx": {
+        "bytes": 256534781,
+        "sha256": "883ac868ea0275ef0e991524dc64f16b3c0376efd7c320af6b53f5b780d7c61c"
+      },
+      "onnx/vocoder.onnx": {
+        "bytes": 101424195,
+        "sha256": "085de76dd8e8d5836d6ca66826601f615939218f90e519f70ee8a36ed2a4c4ba"
+      },
+      "voice_styles/M1.json": {
+        "bytes": 291748,
+        "sha256": "e35604687f5d23694b8e91593a93eec0e4eca6c0b02bb8ed69139ab2ea6b0a5b"
+      }
+    },
+    "model_repository": "Supertone/supertonic-3",
+    "model_revision": "724fb5abbf5502583fb520898d45929e62f02c0b",
+    "network_during_generation": false,
+    "resource_grant": {
+      "global_exclusive": true,
+      "kind": "full-generation",
+      "task": "task-6",
+      "used_for_every_attempt_and_repeat": true
+    },
+    "source_revision": "908a56486e821e833a80530ff0cae3ad0b046fce",
+    "source_url": "https://github.com/supertone-inc/supertonic-py.git",
+    "source_wheel_sha256": "0079c9d4166008b8a6eeae95f20c092148786b7232192dd3dd9f358960c6c077"
+  },
+  "publication_eligible": true,
+  "raw": {
+    "artifact_path": "artifacts/supertonic-3/attempts/attempt-00/native.f32le",
+    "byte_count": 2850816,
+    "channels": 1,
+    "duration_seconds": 16.16108843537415,
+    "output_format": "headerless little-endian IEEE float32 PCM (native SDK array bytes)",
+    "preserved_unchanged": true,
+    "repeat_artifact_path": "artifacts/supertonic-3/repeats/attempt-00/native.f32le",
+    "repeat_sha256": "4c964e0a47a5736f2385db320daf2597691ab4637667bd65adb83b1da91774f8",
+    "repeat_statistics": {
+      "integrated_loudness_lufs": -25.882686974678798,
+      "peak": 0.4149530827999115,
+      "peak_dbfs": -7.640020091443635,
+      "rms": 0.050108768169696866,
+      "rms_dbfs": -26.00172546886986
+    },
+    "sample_count": 712704,
+    "sample_rate_hz": 44100,
+    "sha256": "4c964e0a47a5736f2385db320daf2597691ab4637667bd65adb83b1da91774f8",
+    "sha256_after_derivation": "4c964e0a47a5736f2385db320daf2597691ab4637667bd65adb83b1da91774f8",
+    "statistics": {
+      "integrated_loudness_lufs": -25.882686974678798,
+      "peak": 0.4149530827999115,
+      "peak_dbfs": -7.640020091443635,
+      "rms": 0.050108768169696866,
+      "rms_dbfs": -26.00172546886986
+    }
+  },
+  "schema_version": 1,
+  "speed_control": {
+    "argument": "omitted",
+    "documented": true,
+    "note": "The documented SDK default passed; no speed retry or post-hoc time stretching was used.",
+    "precommitted_grid": [
+      1.05,
+      1.0,
+      0.95,
+      0.9,
+      0.85,
+      0.8,
+      0.75,
+      0.7
+    ],
+    "selection_rule": "Run indices in order and stop at the first write-once raw output whose sample_count / 44100 is at least 15.0 seconds. Do not run later attempts after a pass.",
+    "setting": 1.05
+  },
+  "status": "accepted",
+  "timing": {
+    "api_first_output_seconds": 4.954159818000335,
+    "clock": "CLOCK_MONOTONIC",
+    "first_audible_output_seconds": 5.404159818000335,
+    "generation_wall_seconds": 4.9576578019996305,
+    "rtf": 0.30676509331810076,
+    "rtf_denominator": "raw_native_audio_duration_seconds"
+  },
+  "voice": {
+    "artifact": "voice_styles/M1.json",
+    "asset_sha256": "e35604687f5d23694b8e91593a93eec0e4eca6c0b02bb8ed69139ab2ea6b0a5b",
+    "cloning_performed": false,
+    "custom_voice_allowed": false,
+    "id": "M1",
+    "kind": "repository bundled stock voice",
+    "license": "OpenRAIL-M with bundled third-party notices",
+    "name": "M1",
+    "personal_or_cloned_input_used": false,
+    "provenance_document": "https://huggingface.co/Supertone/supertonic-3/blob/724fb5abbf5502583fb520898d45929e62f02c0b/README.md",
+    "source": "https://huggingface.co/Supertone/supertonic-3/blob/724fb5abbf5502583fb520898d45929e62f02c0b/README.md",
+    "stock_voice": true
+  }
+}
