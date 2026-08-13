@@ -153,6 +153,7 @@
   },
   "provenance": {
     "acoustic_sha256": "0129f730a25a1e44d1799a1d47166c9a3a5644e58fb84a3b554d5c036827ec89",
+    "api_output_semantics": "The pinned API returns only a complete waveform, so API-first-output is completion-equivalent; first-audible timing adds the detected audible offset within that returned waveform.",
     "attempt_order": [
       1.0,
       1.05,
@@ -167,6 +168,11 @@
       1.5
     ],
     "attempt_plan_path": "models/inflect-nano-v1/attempt-plan.json",
+    "caveats": [
+      "Durations plateaued at 14.933333333333334 seconds for length_scale 1.40, 1.45, and 1.50; the evidence does not infer an undocumented cause.",
+      "The non-streaming API exposes no intermediate audio payload.",
+      "Determinism cannot be compared because the precommitted procedure permits a fresh-process repeat only after a primary attempt passes."
+    ],
     "dependency_lock_sha256": "3a50994302a33b0db6f4437a3140e5be6ae04ee0ae3dfb2dea06d4cae78fe71f",
     "determinism": {
       "claim": "No fresh-process repeat was permitted because no primary attempt met the 15-second selection threshold.",
