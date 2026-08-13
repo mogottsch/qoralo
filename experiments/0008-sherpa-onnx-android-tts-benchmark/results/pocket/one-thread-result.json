@@ -1,94 +1,294 @@
 {
-  "candidate_id": "pocket",
-  "evidence": [
-    {
-      "artifact_id": "failure",
-      "byte_count": 964,
-      "relative_path": "artifacts/0008/device-runs/20260813T113012Z-pocket-e1772bc95aaf/failure.json",
-      "retained": true,
-      "sha256": "f28e0619a2f9b1483d054ed3b04b790fa98bca85978e19ec86cbbe7694e7391a"
-    },
-    {
-      "artifact_id": "thermal-polls",
-      "byte_count": 158,
-      "relative_path": "artifacts/0008/device-runs/20260813T113012Z-pocket-e1772bc95aaf/thermal-polls.json",
-      "retained": true,
-      "sha256": "602755aa94104c447fdde3a9cd5544df9fc11006a13fae0b78311182489bb175"
-    },
-    {
-      "artifact_id": "telemetry",
-      "byte_count": 57962,
-      "relative_path": "artifacts/0008/device-runs/20260813T113012Z-pocket-e1772bc95aaf/telemetry.jsonl",
-      "retained": true,
-      "sha256": "853f5b27884838fc5e27d99223fe808c75461af46a68fba06cc6fdcad43661e1"
-    },
-    {
-      "artifact_id": "logcat",
-      "byte_count": 38542693,
-      "relative_path": "artifacts/0008/device-runs/20260813T113012Z-pocket-e1772bc95aaf/logcat.txt",
-      "retained": true,
-      "sha256": "7a5be3de58b7b4ad9a09ce0c50a60e781ca24b3b538c382af68fe0381bb0ac45"
-    }
-  ],
-  "experiment": "0008",
-  "listening": "not_performed",
-  "metrics": {
-    "boundary_pss_bytes": {
-      "availability": "unavailable",
-      "reason": "Process died before serializing app boundary memory.",
-      "source": "observed",
-      "value": null
-    },
-    "boundary_rss_bytes": {
-      "availability": "unavailable",
-      "reason": "Process died before serializing app boundary memory.",
-      "source": "observed",
-      "value": null
-    },
-    "load_wall_seconds": {
-      "availability": "unavailable",
-      "reason": "Process died before serializing the completed load boundary.",
-      "source": "observed",
-      "value": null
-    },
-    "sampled_peak_pss_bytes": {
-      "availability": "measured",
-      "reason": null,
-      "source": "observed",
-      "value": 574208000
-    },
-    "sampled_peak_rss_bytes": {
-      "availability": "measured",
-      "reason": null,
-      "source": "observed",
-      "value": 664522752
-    },
-    "vm_hwm_bytes": {
-      "availability": "unavailable",
-      "reason": "Process died before app result serialization and /proc VmHWM was not retained.",
-      "source": "observed",
-      "value": null
-    },
-    "warm_median_rtf": {
-      "availability": "unavailable",
-      "reason": "Cold synthesis crashed; no warm generation ran.",
-      "source": "observed",
-      "value": null
-    }
-  },
-  "outcome": "native_crash",
-  "outcome_reason": "Process aborted during the cold synthesis callback before writing an app result; logcat records SIGABRT and a pending NoSuchMethodError for callback invoke([F)Ljava/lang/Integer;.",
-  "provider": "cpu",
-  "runs": [],
   "schema_version": 1,
+  "experiment": "0008",
+  "candidate_id": "pocket",
+  "outcome": "success",
+  "outcome_reason": "Pinned Pocket INT8 sherpa-onnx deployment generated one cold and three warm valid WAVs on the Galaxy S23 Ultra after correcting the Java/Kotlin callback bridge.",
+  "provider": "cpu",
   "threads": 1,
   "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
   "voice": {
+    "requested_voice": "Alba",
     "actual_reference": "models/pocket/test_wavs/bria.wav",
     "actual_reference_sha256": "85f46d6f0642f657a6bd689ddaa52d5a5f53e4314715e1032704c80917392181",
-    "proof": "models/pocket/model.json",
-    "requested_voice": "Alba",
+    "voice_match": false,
     "speaker_id": 0,
-    "voice_match": false
-  }
+    "proof": "models/pocket/model.json"
+  },
+  "metrics": {
+    "load_wall_seconds": {
+      "availability": "measured",
+      "value": 0.658703801,
+      "reason": null,
+      "source": "observed"
+    },
+    "warm_median_rtf": {
+      "availability": "measured",
+      "value": 0.38864718496483114,
+      "reason": null,
+      "source": "observed"
+    },
+    "boundary_pss_bytes": {
+      "availability": "measured",
+      "value": 683073536,
+      "reason": null,
+      "source": "observed"
+    },
+    "boundary_rss_bytes": {
+      "availability": "measured",
+      "value": 750899200,
+      "reason": null,
+      "source": "observed"
+    },
+    "vm_hwm_bytes": {
+      "availability": "measured",
+      "value": 751427584,
+      "reason": null,
+      "source": "observed"
+    },
+    "sampled_peak_pss_bytes": {
+      "availability": "measured",
+      "value": 683577344,
+      "reason": null,
+      "source": "observed"
+    },
+    "sampled_peak_rss_bytes": {
+      "availability": "measured",
+      "value": 751423488,
+      "reason": null,
+      "source": "observed"
+    }
+  },
+  "runs": [
+    {
+      "kind": "cold",
+      "synthesis_wall_seconds": {
+        "availability": "measured",
+        "value": 5.873572602,
+        "reason": null,
+        "source": "observed"
+      },
+      "sample_count": {
+        "availability": "measured",
+        "value": 323462,
+        "reason": null,
+        "source": "observed"
+      },
+      "sample_rate_hz": {
+        "availability": "measured",
+        "value": 24000,
+        "reason": null,
+        "source": "observed"
+      },
+      "audio_duration_seconds": {
+        "availability": "measured",
+        "value": 13.477583333333333,
+        "reason": null,
+        "source": "observed"
+      },
+      "rtf": {
+        "availability": "measured",
+        "value": 0.4358031003580019,
+        "reason": null,
+        "source": "observed"
+      },
+      "first_non_empty_callback_seconds": {
+        "availability": "measured",
+        "value": 0.840355989,
+        "reason": null,
+        "source": "observed"
+      },
+      "wav_sha256": "106ed29c315972b5108a12175f0cd72eed9f74d167b3967b690b99829dc65cca",
+      "audio_validation": "valid"
+    },
+    {
+      "kind": "warm",
+      "synthesis_wall_seconds": {
+        "availability": "measured",
+        "value": 5.208128905,
+        "reason": null,
+        "source": "observed"
+      },
+      "sample_count": {
+        "availability": "measured",
+        "value": 325977,
+        "reason": null,
+        "source": "observed"
+      },
+      "sample_rate_hz": {
+        "availability": "measured",
+        "value": 24000,
+        "reason": null,
+        "source": "observed"
+      },
+      "audio_duration_seconds": {
+        "availability": "measured",
+        "value": 13.582375,
+        "reason": null,
+        "source": "observed"
+      },
+      "rtf": {
+        "availability": "measured",
+        "value": 0.3834475859339769,
+        "reason": null,
+        "source": "observed"
+      },
+      "first_non_empty_callback_seconds": {
+        "availability": "measured",
+        "value": 0.567584479,
+        "reason": null,
+        "source": "observed"
+      },
+      "wav_sha256": "be3c78b200b738b87f19debaddbad88902c53cd6bf011f528b6d4f929268f624",
+      "audio_validation": "valid"
+    },
+    {
+      "kind": "warm",
+      "synthesis_wall_seconds": {
+        "availability": "measured",
+        "value": 5.361987081,
+        "reason": null,
+        "source": "observed"
+      },
+      "sample_count": {
+        "availability": "measured",
+        "value": 331117,
+        "reason": null,
+        "source": "observed"
+      },
+      "sample_rate_hz": {
+        "availability": "measured",
+        "value": 24000,
+        "reason": null,
+        "source": "observed"
+      },
+      "audio_duration_seconds": {
+        "availability": "measured",
+        "value": 13.796541666666666,
+        "reason": null,
+        "source": "observed"
+      },
+      "rtf": {
+        "availability": "measured",
+        "value": 0.38864718496483114,
+        "reason": null,
+        "source": "observed"
+      },
+      "first_non_empty_callback_seconds": {
+        "availability": "measured",
+        "value": 0.602150364,
+        "reason": null,
+        "source": "observed"
+      },
+      "wav_sha256": "522f0095fe574d665c44ffaa840a48dbc8956e4d4164c43ce7d356f3919b7563",
+      "audio_validation": "valid"
+    },
+    {
+      "kind": "warm",
+      "synthesis_wall_seconds": {
+        "availability": "measured",
+        "value": 5.319549998,
+        "reason": null,
+        "source": "observed"
+      },
+      "sample_count": {
+        "availability": "measured",
+        "value": 328037,
+        "reason": null,
+        "source": "observed"
+      },
+      "sample_rate_hz": {
+        "availability": "measured",
+        "value": 24000,
+        "reason": null,
+        "source": "observed"
+      },
+      "audio_duration_seconds": {
+        "availability": "measured",
+        "value": 13.668208333333334,
+        "reason": null,
+        "source": "observed"
+      },
+      "rtf": {
+        "availability": "measured",
+        "value": 0.3891914630117944,
+        "reason": null,
+        "source": "observed"
+      },
+      "first_non_empty_callback_seconds": {
+        "availability": "measured",
+        "value": 0.565473698,
+        "reason": null,
+        "source": "observed"
+      },
+      "wav_sha256": "a133ba3dc354020d81dd6a246aa942f9309e480445bc8d11315186ec0d7da54f",
+      "audio_validation": "valid"
+    }
+  ],
+  "evidence": [
+    {
+      "artifact_id": "pocket-dacef1c8163847e396b32430804f47ba-cold-0.wav",
+      "relative_path": "artifacts/0008/device-runs/20260813T113613Z-pocket-dab4b0f16535/device/pocket-dacef1c8163847e396b32430804f47ba/pocket-dacef1c8163847e396b32430804f47ba-cold-0.wav",
+      "sha256": "106ed29c315972b5108a12175f0cd72eed9f74d167b3967b690b99829dc65cca",
+      "byte_count": 646968,
+      "retained": true
+    },
+    {
+      "artifact_id": "pocket-dacef1c8163847e396b32430804f47ba-warm-1.wav",
+      "relative_path": "artifacts/0008/device-runs/20260813T113613Z-pocket-dab4b0f16535/device/pocket-dacef1c8163847e396b32430804f47ba/pocket-dacef1c8163847e396b32430804f47ba-warm-1.wav",
+      "sha256": "be3c78b200b738b87f19debaddbad88902c53cd6bf011f528b6d4f929268f624",
+      "byte_count": 651998,
+      "retained": true
+    },
+    {
+      "artifact_id": "pocket-dacef1c8163847e396b32430804f47ba-warm-2.wav",
+      "relative_path": "artifacts/0008/device-runs/20260813T113613Z-pocket-dab4b0f16535/device/pocket-dacef1c8163847e396b32430804f47ba/pocket-dacef1c8163847e396b32430804f47ba-warm-2.wav",
+      "sha256": "522f0095fe574d665c44ffaa840a48dbc8956e4d4164c43ce7d356f3919b7563",
+      "byte_count": 662278,
+      "retained": true
+    },
+    {
+      "artifact_id": "pocket-dacef1c8163847e396b32430804f47ba-warm-3.wav",
+      "relative_path": "artifacts/0008/device-runs/20260813T113613Z-pocket-dab4b0f16535/device/pocket-dacef1c8163847e396b32430804f47ba/pocket-dacef1c8163847e396b32430804f47ba-warm-3.wav",
+      "sha256": "a133ba3dc354020d81dd6a246aa942f9309e480445bc8d11315186ec0d7da54f",
+      "byte_count": 656118,
+      "retained": true
+    },
+    {
+      "artifact_id": "device-result.json",
+      "relative_path": "artifacts/0008/device-runs/20260813T113613Z-pocket-dab4b0f16535/device-result.json",
+      "sha256": "518601a6635530e7f12c37028626f13f4ed773fc2f816ab166e6f3063373ad1a",
+      "byte_count": 3945,
+      "retained": true
+    },
+    {
+      "artifact_id": "host-run.json",
+      "relative_path": "artifacts/0008/device-runs/20260813T113613Z-pocket-dab4b0f16535/host-run.json",
+      "sha256": "9805c592c1cf732b0745b977896c5828f34cc830d4dabba7857bd89eab710656",
+      "byte_count": 21536,
+      "retained": true
+    },
+    {
+      "artifact_id": "logcat.txt",
+      "relative_path": "artifacts/0008/device-runs/20260813T113613Z-pocket-dab4b0f16535/logcat.txt",
+      "sha256": "1fdb9979e821f3788c82cc9c613ef3bf922b3c58d416a9db374e1877899e21bc",
+      "byte_count": 40626258,
+      "retained": true
+    },
+    {
+      "artifact_id": "telemetry.jsonl",
+      "relative_path": "artifacts/0008/device-runs/20260813T113613Z-pocket-dab4b0f16535/telemetry.jsonl",
+      "sha256": "652ba61d562bfb88ef156a399429130e4c8cd077a29f206fe5564da817ad7b5c",
+      "byte_count": 387890,
+      "retained": true
+    },
+    {
+      "artifact_id": "thermal-polls.json",
+      "relative_path": "artifacts/0008/device-runs/20260813T113613Z-pocket-dab4b0f16535/thermal-polls.json",
+      "sha256": "26af9e56941bed6929cfeee6a0fd6caa985eb6cb4ed91ac5b8f83282b566c8ae",
+      "byte_count": 158,
+      "retained": true
+    }
+  ],
+  "listening": "not_performed"
 }
