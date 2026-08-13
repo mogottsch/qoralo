@@ -38,7 +38,7 @@ models/kitten-tts-mini-0.8/setup.sh
 models/kitten-tts-mini-0.8/smoke-load.sh
 ```
 
-Setup uses an already installed Python 3.11 and `uv`; it never calls `sudo`, an OS package manager, or system pip. It downloads the exact official wheel to the ignored artifact directory and checks its hash before `uv sync --locked`. The lock selects `onnxruntime` and pins the indirect PyTorch dependency to `torch==2.6.0+cpu` from PyTorch's CPU-only index; no CUDA/NVIDIA distributions are present in the graph. Setup and smoke reject CUDA/TensorRT providers. English phonemization requires an already-provided `espeak-ng`, library, and data directory. The locked loader wheel embeds a nonportable build-host data prefix, so the scripts validate and select `/usr/lib/libespeak-ng.so` plus `/usr/share/espeak-ng-data`, or permitted project-local replacements via `KITTEN_ESPEAK_LIBRARY` and `KITTEN_ESPEAK_DATA`; they never install these with privileges.
+Setup uses an already installed Python 3.11 and `uv`; it never calls `sudo`, an OS package manager, or system pip. Before creating any directory, environment, or download, it runs the committed offline provenance validator. It then reads the wheel URL and digest from `pins.json` (the sole authority), downloads that exact official wheel to the ignored artifact directory, and checks its hash before `uv sync --locked`. The lock selects `onnxruntime` and pins the indirect PyTorch dependency to `torch==2.6.0+cpu` from PyTorch's CPU-only index; no CUDA/NVIDIA distributions are present in the graph. Setup and smoke reject CUDA/TensorRT providers. English phonemization requires an already-provided `espeak-ng`, library, and data directory. The locked loader wheel embeds a nonportable build-host data prefix, so the scripts validate and select `/usr/lib/libespeak-ng.so` plus `/usr/share/espeak-ng-data`, or permitted project-local replacements via `KITTEN_ESPEAK_LIBRARY` and `KITTEN_ESPEAK_DATA`; they never install these with privileges.
 
 `smoke-load.sh` is the only supported load entry point. It obtains task 1's global exclusive `model-load` grant, downloads only the pinned model revision, checks every byte count/hash and the selected voice digest, constructs the official ONNX class from local files, and writes an ignored report without synthesizing the protocol transcript. Direct `smoke_load.py` execution fails closed.
 
@@ -46,10 +46,13 @@ Setup uses an already installed Python 3.11 and `uv`; it never calls `sudo`, an 
 
 ```bash
 models/kitten-tts-mini-0.8/generate-preview.sh primary
+# Only when primary/report.json says the primary was accepted:
 models/kitten-tts-mini-0.8/generate-preview.sh repeat-1
 ```
 
-Each invocation independently acquires the same global `full-generation` gate. The scaffold accepts only the committed `default` attempt, exact protocol-v2 transcript hash, local hash-verified assets, Jasper, CPU providers, and a unique output below the ignored generation directory. Native mono float waveform bytes are written with exclusive creation and measured at 24 kHz. The official API is non-streaming, so first API output is explicitly completion-equivalent. Shared monotonic/RSS/audibility/RTF metrics are recorded. A short default is preserved with metadata and exits as the declared terminal blocker.
+The only run labels are `primary` and `repeat-1`. The primary must run first. `repeat-1` is admitted only when the primary report and native bytes are intact and the primary met the duration threshold; a short primary is the terminal blocker and makes a repeat ineligible. Each label can be claimed once through an exclusively created run directory, and both native bytes and `report.json` use exclusive file creation, so neither evidence file can be overwritten.
+
+Each invocation independently acquires the same global `full-generation` gate for task 8. The scaffold validates both grant kind and grant task, and accepts only the committed `default` attempt, exact protocol-v2 transcript hash, local hash-verified assets, Jasper, and CPU providers. Native mono float waveform bytes are measured at 24 kHz. The official API is non-streaming, so first API output is explicitly completion-equivalent. Shared monotonic/RSS/audibility/RTF metrics are recorded. A short default is preserved with metadata and exits as the declared terminal blocker.
 
 No credentials, gated assets, privileged installation, Android work, reference recordings, or voice cloning are used.
 

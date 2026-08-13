@@ -53,6 +53,12 @@ def validate(pins: dict | None = None, plan: dict | None = None, *, check_lock: 
     assert plan["committed_before_full_generation"] is True
     assert plan["model_repo_id"] == model["repo_id"] and plan["model_revision"] == model["revision"]
     assert plan["attempts"] == [{"ordinal": 1, "id": "default", "speed": 1.0, "uses_documented_default": True}]
+    assert plan["run_workflow"] == {
+        "runs": ["primary", "repeat-1"],
+        "order": "primary_then_optional_repeat",
+        "repeat_eligibility": "repeat-1 is eligible only after an intact primary report accepted_by_duration=true",
+        "terminal_short_output": "A short primary forbids repeat-1 and ends the campaign.",
+    }
     assert plan["documentation"]["documented_numeric_bounds"] is None
     assert plan["documentation"]["documented_direction_for_longer_output"] is None
     assert plan["short_default_outcome"] == "terminal_protocol_blocker"

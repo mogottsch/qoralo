@@ -33,27 +33,62 @@ def fail(message: str) -> None:
     raise SystemExit(f"BLOCKED: {message}")
 
 
-def verify(attempt_id: str, output: Path) -> dict:
-    if os.environ.get("KITTEN_GATED_GENERATION") != "1" or os.environ.get("PREVIEW_RESOURCE_GRANT_KIND") != "full-generation":
-        fail("every default/repeat must run through generate-preview.sh and the global full-generation gate")
+RUNS = tuple(PLAN["run_workflow"]["runs"])
+
+
+def claim_run_directory(run: str, generation_root: Path) -> tuple[Path, Path]:
+    """Enforce the two-job workflow and atomically claim its write-once directory."""
+    if run not in RUNS:
+        fail(f"run must be one of: {', '.join(RUNS)}")
+    primary_dir = generation_root / "primary"
+    if run == "repeat-1":
+        report_path = primary_dir / "report.json"
+        try:
+            report = json.loads(report_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError) as error:
+            fail(f"repeat-1 requires a readable accepted primary report: {error}")
+        raw_path = primary_dir / "native.f32le"
+        raw = report.get("raw", {})
+        if not (
+            report.get("run") == "primary"
+            and report.get("attempt", {}).get("id") == "default"
+            and report.get("accepted_by_duration") is True
+            and report.get("short_output_outcome") is None
+            and raw.get("path") == str(raw_path)
+            and raw_path.is_file()
+            and raw.get("sha256") == sha256(raw_path)
+        ):
+            fail("repeat-1 requires an intact accepted primary; short/terminal primary output forbids repeats")
+    generation_root.mkdir(parents=True, exist_ok=True)
+    run_dir = generation_root / run
+    try:
+        run_dir.mkdir()
+    except FileExistsError:
+        fail(f"write-once run directory already exists: {run_dir}")
+    return run_dir / "native.f32le", run_dir / "report.json"
+
+
+def verify(run: str) -> tuple[dict, Path, Path]:
+    if (
+        os.environ.get("KITTEN_GATED_GENERATION") != "1"
+        or os.environ.get("PREVIEW_RESOURCE_GRANT_KIND") != "full-generation"
+        or os.environ.get("PREVIEW_RESOURCE_GRANT_TASK") != "task-8"
+    ):
+        fail("every default/repeat must run through generate-preview.sh and the task-8 full-generation gate")
     if hashlib.sha256(TRANSCRIPT.read_bytes()).hexdigest() != TRANSCRIPT_SHA256:
         fail("frozen protocol-v2 transcript byte drift")
-    matches = [attempt for attempt in PLAN["attempts"] if attempt["id"] == attempt_id]
+    matches = [attempt for attempt in PLAN["attempts"] if attempt["id"] == "default"]
     if len(matches) != 1:
-        fail("attempt is absent from the precommitted plan")
-    if output.exists():
-        fail(f"write-once output already exists: {output}")
-    allowed_root = (ARTIFACT_ROOT / "generation").resolve()
-    if allowed_root not in output.resolve().parents:
-        fail(f"output must be a unique path below {allowed_root}")
+        fail("default attempt is absent from the precommitted plan")
     for relative, expected in PINS["model"]["files"].items():
         path = SNAPSHOT / relative
         if not path.is_file() or {"bytes": path.stat().st_size, "sha256": sha256(path)} != expected:
             fail(f"missing or mismatched pinned artifact: {relative}")
-    return matches[0]
+    output, metadata = claim_run_directory(run, ARTIFACT_ROOT / "generation")
+    return matches[0], output, metadata
 
 
-def render(attempt: dict, output: Path) -> dict:
+def render(run: str, attempt: dict, output: Path, metadata_path: Path) -> dict:
     import numpy as np
     import espeakng_loader
     espeak_library = Path(os.environ.get("KITTEN_ESPEAK_LIBRARY", "/usr/lib/libespeak-ng.so"))
@@ -92,7 +127,7 @@ def render(attempt: dict, output: Path) -> dict:
     timing = timer.result(duration)
     metadata = {
         "schema_version": 1, "model": PINS["model"]["repo_id"], "revision": PINS["model"]["revision"],
-        "attempt": attempt, "voice": PINS["voice"]["display_id"], "cpu_providers": providers,
+        "run": run, "attempt": attempt, "voice": PINS["voice"]["display_id"], "cpu_providers": providers,
         "raw": {"path": str(output), "sha256": sha256(output), "sample_count": int(audio.size),
                 "sample_rate_hz": 24000, "channels": 1, "duration_seconds": duration, "format": "float32le"},
         "timing": timing, "memory": memory,
@@ -100,8 +135,8 @@ def render(attempt: dict, output: Path) -> dict:
         "accepted_by_duration": duration >= 15.0,
         "short_output_outcome": None if duration >= 15.0 else PLAN["short_default_outcome"],
     }
-    metadata_path = output.with_suffix(output.suffix + ".json")
-    metadata_path.write_text(json.dumps(metadata, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    with metadata_path.open("x", encoding="utf-8") as stream:
+        stream.write(json.dumps(metadata, indent=2, sort_keys=True) + "\n")
     if duration < 15.0:
         fail(f"default produced {duration:.6f}s; no documented retry is eligible, terminal protocol blocker")
     print(json.dumps({"status": "accepted", "output": str(output), "duration_seconds": duration, "wall_seconds": wall}, sort_keys=True))
@@ -110,10 +145,10 @@ def render(attempt: dict, output: Path) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--attempt", required=True, choices=[item["id"] for item in PLAN["attempts"]])
-    parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--run", required=True, choices=RUNS)
     args = parser.parse_args()
-    render(verify(args.attempt, args.output), args.output)
+    attempt, output, metadata = verify(args.run)
+    render(args.run, attempt, output, metadata)
 
 
 if __name__ == "__main__":

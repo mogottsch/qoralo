@@ -27,8 +27,12 @@ def fail(message: str) -> None:
 
 
 def main() -> None:
-    if os.environ.get("KITTEN_GATED_SMOKE") != "1" or os.environ.get("PREVIEW_RESOURCE_GRANT_KIND") != "model-load":
-        fail("direct model loading is forbidden; use smoke-load.sh to acquire the global model-load gate")
+    if (
+        os.environ.get("KITTEN_GATED_SMOKE") != "1"
+        or os.environ.get("PREVIEW_RESOURCE_GRANT_KIND") != "model-load"
+        or os.environ.get("PREVIEW_RESOURCE_GRANT_TASK") != "task-4"
+    ):
+        fail("direct model loading is forbidden; use smoke-load.sh to acquire the task-4 model-load gate")
     from huggingface_hub import snapshot_download
     import numpy as np
     import onnxruntime as ort

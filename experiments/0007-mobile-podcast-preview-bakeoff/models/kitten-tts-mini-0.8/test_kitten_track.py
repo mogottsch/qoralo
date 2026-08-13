@@ -111,6 +111,9 @@ def test_plan_is_default_first_and_invents_no_undocumented_value() -> None:
     plan = data("attempt-plan.json")
     assert plan["committed_before_full_generation"] is True
     assert plan["attempts"] == [{"ordinal": 1, "id": "default", "speed": 1.0, "uses_documented_default": True}]
+    assert plan["run_workflow"]["runs"] == ["primary", "repeat-1"]
+    assert plan["run_workflow"]["order"] == "primary_then_optional_repeat"
+    assert "short primary forbids repeat-1" in plan["run_workflow"]["terminal_short_output"]
     assert plan["documentation"]["documented_numeric_bounds"] is None
     assert plan["documentation"]["documented_direction_for_longer_output"] is None
     assert plan["short_default_outcome"] == "terminal_protocol_blocker"
@@ -134,6 +137,9 @@ def test_setup_and_smoke_are_isolated_cpu_only_and_gated() -> None:
     commands = [line.strip() for line in setup.splitlines() if line.strip() and not line.lstrip().startswith("#")]
     assert not any(line.startswith(("sudo ", "apt ", "apt-get ", "pip ")) for line in commands)
     assert "uv sync" in setup and "--locked" in setup and "--no-python-downloads" in setup
+    assert setup.index('python3 "$HERE/verify_pins.py"') < setup.index("mkdir -p") < setup.index("curl --fail")
+    assert 'implementation["release_asset_url"]' in setup and 'implementation["release_asset_sha256"]' in setup
+    assert "https://github.com/KittenML/KittenTTS/releases/download" not in setup
     assert "UV_SKIP_WHEEL_FILENAME_CHECK=1" in setup
     assert "CUDAExecutionProvider" in setup and "CPUExecutionProvider" in setup
     assert "command -v espeak-ng" in setup and "KITTEN_ESPEAK_LIBRARY" in setup
@@ -142,6 +148,7 @@ def test_setup_and_smoke_are_isolated_cpu_only_and_gated() -> None:
     assert "tools/with-resources.sh" in wrapper and "--kind model-load" in wrapper
     assert "KITTEN_GATED_SMOKE=1" in wrapper
     assert 'PREVIEW_RESOURCE_GRANT_KIND") != "model-load"' in smoke
+    assert 'PREVIEW_RESOURCE_GRANT_TASK") != "task-4"' in smoke
     assert "revision=model[\"revision\"]" in smoke
     assert "generation_performed\": False" in smoke
 
@@ -151,19 +158,63 @@ def test_generator_allows_no_reference_or_cloning_inputs_and_is_write_once() -> 
     wrapper = (HERE / "generate-preview.sh").read_text(encoding="utf-8")
     assert "--kind full-generation" in wrapper and "KITTEN_GATED_GENERATION=1" in wrapper
     assert 'open("xb")' in source
-    assert "output.exists()" in source
-    assert 'parser.add_argument("--attempt"' in source
-    assert 'parser.add_argument("--output"' in source
+    assert 'metadata_path.open("x"' in source
+    assert "run_dir.mkdir()" in source
+    assert 'parser.add_argument("--run"' in source
+    assert 'PREVIEW_RESOURCE_GRANT_TASK") != "task-8"' in source
     assert "reference_audio" not in source and "clone" not in source.lower()
     assert "TRANSCRIPT_SHA256" in source
     env = os.environ.copy()
     env.pop("KITTEN_GATED_GENERATION", None)
     result = subprocess.run(
-        [sys.executable, str(HERE / "generate_preview.py"), "--attempt", "default", "--output", str(HERE / "should-not-exist.f32le")],
+        [sys.executable, str(HERE / "generate_preview.py"), "--run", "primary"],
         text=True, capture_output=True, env=env,
     )
-    assert result.returncode != 0 and "global full-generation gate" in (result.stdout + result.stderr)
-    assert not (HERE / "should-not-exist.f32le").exists()
+    assert result.returncode != 0 and "task-8 full-generation gate" in (result.stdout + result.stderr)
+
+
+def test_generation_run_order_and_write_once_claims(tmp_path: Path) -> None:
+    generator = load("kitten_generator_order", "generate_preview.py")
+    root = tmp_path / "generation"
+
+    with pytest.raises(SystemExit, match="accepted primary report"):
+        generator.claim_run_directory("repeat-1", root)
+    with pytest.raises(SystemExit, match="one of"):
+        generator.claim_run_directory("repeat-2", root)
+
+    output, report_path = generator.claim_run_directory("primary", root)
+    output.write_bytes(b"primary audio")
+    terminal = {
+        "run": "primary", "attempt": {"id": "default"}, "accepted_by_duration": False,
+        "short_output_outcome": "terminal_protocol_blocker",
+        "raw": {"path": str(output), "sha256": hashlib.sha256(output.read_bytes()).hexdigest()},
+    }
+    report_path.write_text(json.dumps(terminal), encoding="utf-8")
+    with pytest.raises(SystemExit, match="short/terminal primary output forbids repeats"):
+        generator.claim_run_directory("repeat-1", root)
+    with pytest.raises(SystemExit, match="write-once run directory"):
+        generator.claim_run_directory("primary", root)
+
+
+def test_accepted_primary_is_required_for_single_repeat(tmp_path: Path) -> None:
+    generator = load("kitten_generator_repeat", "generate_preview.py")
+    root = tmp_path / "generation"
+    output, report_path = generator.claim_run_directory("primary", root)
+    output.write_bytes(b"accepted audio")
+    report = {
+        "run": "primary", "attempt": {"id": "default"}, "accepted_by_duration": True,
+        "short_output_outcome": None,
+        "raw": {"path": str(output), "sha256": hashlib.sha256(output.read_bytes()).hexdigest()},
+    }
+    with report_path.open("x", encoding="utf-8") as stream:
+        json.dump(report, stream)
+    repeat_output, repeat_report = generator.claim_run_directory("repeat-1", root)
+    assert repeat_output.parent.name == "repeat-1" and repeat_report.name == "report.json"
+    with pytest.raises(SystemExit, match="write-once run directory"):
+        generator.claim_run_directory("repeat-1", root)
+    with pytest.raises(FileExistsError):
+        with report_path.open("x", encoding="utf-8"):
+            pass
 
 
 def test_blocked_generation_evidence_is_schema_valid_and_cannot_publish() -> None:

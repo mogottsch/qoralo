@@ -16,6 +16,12 @@
   "attempts": [
     {"ordinal": 1, "id": "default", "speed": 1.0, "uses_documented_default": true}
   ],
+  "run_workflow": {
+    "runs": ["primary", "repeat-1"],
+    "order": "primary_then_optional_repeat",
+    "repeat_eligibility": "repeat-1 is eligible only after an intact primary report accepted_by_duration=true",
+    "terminal_short_output": "A short primary forbids repeat-1 and ends the campaign."
+  },
   "selection_rule": "Accept the first write-once native output whose duration is at least 15.0 seconds.",
   "short_default_outcome": "terminal_protocol_blocker",
   "reason_no_retries": "The pinned official material names speed and its normal default but supplies neither supported bounds nor a documented direction for lengthening. The protocol forbids inventing a range or values, so only the default is eligible.",

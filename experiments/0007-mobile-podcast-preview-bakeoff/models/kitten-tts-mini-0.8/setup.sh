@@ -6,8 +6,21 @@ ROOT="$(cd -- "$HERE/../.." && pwd)"
 ARTIFACT_ROOT="${KITTEN_ARTIFACT_ROOT:-$ROOT/artifacts/kitten-tts-mini-0.8}"
 VENV="${KITTEN_VENV:-$ARTIFACT_ROOT/venv}"
 WHEEL="$ARTIFACT_ROOT/downloads/kittentts-0.8.0-py3-none-any.whl"
-WHEEL_URL="https://github.com/KittenML/KittenTTS/releases/download/0.8/kittentts-0.8.0-py3-none-any.whl"
-WHEEL_SHA256="cba97464da2ec56384b9fc03004449dadbe6d9abd16aa89e98953027854fd7d9"
+
+command -v python3 >/dev/null || { echo "BLOCKED: python3 is required to validate committed provenance" >&2; exit 69; }
+# Fail closed on model/package/voice/plan/lock drift before creating an
+# environment or downloading anything. The pins file is the sole wheel authority.
+python3 "$HERE/verify_pins.py"
+mapfile -t RELEASE_PIN < <(python3 - "$HERE/pins.json" <<'PY'
+import json, sys
+implementation = json.load(open(sys.argv[1], encoding="utf-8"))["implementation"]
+print(implementation["release_asset_url"])
+print(implementation["release_asset_sha256"])
+PY
+)
+[[ ${#RELEASE_PIN[@]} -eq 2 ]] || { echo "BLOCKED: invalid committed wheel authority" >&2; exit 65; }
+WHEEL_URL="${RELEASE_PIN[0]}"
+WHEEL_SHA256="${RELEASE_PIN[1]}"
 
 command -v uv >/dev/null || { echo "BLOCKED: uv is required in user/project scope" >&2; exit 69; }
 command -v curl >/dev/null || { echo "BLOCKED: curl is required to retrieve the exact official release asset" >&2; exit 69; }
