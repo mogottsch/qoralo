@@ -19,8 +19,13 @@ public final class BenchmarkRunner {
         long load=0; List<BenchmarkResult.Run> runs=new ArrayList<>(); String stage="load";
         try {
             long a=clock.nanoTime(); Engine engine=engines.create(d,files); load=clock.nanoTime()-a;
-            try(engine){int count=1+d.warmRuns();for(int i=0;i<count;i++){stage="synthesis_"+i;String state=i==0?"cold":"warm";AtomicLong callback=new AtomicLong(-1);long start=clock.nanoTime();AudioData audio;long elapsed;long pp,pr;
-                    try(MemoryMetrics.PhaseSampler sampler=new MemoryMetrics.PhaseSampler(memory.samplerSource(),10)){audio=engine.synthesize(d.transcript(),chunk->{if(chunk!=null&&chunk.length>0)callback.compareAndSet(-1,clock.nanoTime()-start);});elapsed=clock.nanoTime()-start;pp=sampler.peakPss();pr=sampler.peakRss();}
+            try(engine){int count=1+d.warmRuns();for(int i=0;i<count;i++){stage="synthesis_"+i;String state=i==0?"cold":"warm";AtomicLong callback=new AtomicLong(-1);AudioData audio;long elapsed;long pp,pr;
+                    try(MemoryMetrics.PhaseSampler sampler=new MemoryMetrics.PhaseSampler(memory.samplerSource(),10)){
+                        // The monotonic boundary contains only the sherpa synthesis call.
+                        final long start=clock.nanoTime();
+                        audio=engine.synthesize(d.transcript(),chunk->{if(chunk!=null&&chunk.length>0)callback.compareAndSet(-1,clock.nanoTime()-start);});
+                        elapsed=clock.nanoTime()-start;pp=sampler.peakPss();pr=sampler.peakRss();
+                    }
                     // All validation, allocation of evidence paths, WAV I/O, and hashing are outside elapsed.
                     AudioValidation validation=AudioValidation.inspect(audio);if(!validation.valid())throw new InvalidAudioException(validation.reason());
                     String name=campaignId+"-"+state+"-"+i+".wav";File wav=new File(output,name);WavWriter.writeNew(wav,audio);String hash=SecureFiles.sha256(wav);

@@ -21,5 +21,7 @@ android {
 dependencies {
     // Runtime is staged as libs/sherpa-onnx-1.13.5.aar by fetch-sherpa-aar.py.
     if (file("../libs/sherpa-onnx-1.13.5.aar").exists()) implementation(files("../libs/sherpa-onnx-1.13.5.aar"))
+    // A flat local AAR has no POM, so declare the Kotlin callback runtime explicitly.
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:2.1.20")
     testImplementation("junit:junit:4.13.2")
 }
