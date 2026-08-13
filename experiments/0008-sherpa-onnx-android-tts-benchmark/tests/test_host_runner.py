@@ -174,6 +174,16 @@ class HostRunnerTests(unittest.TestCase):
                                     "pocket", inventory, model)
         self.assertEqual(fake.calls, [])
 
+    def test_shell_metacharacters_are_rejected_before_adb(self):
+        apk, model, inventory, _ = self.make_inventory()
+        digest = hashlib.sha256(apk.read_bytes()).hexdigest()
+        for model_id in ("pocket;reboot", "-pocket", "pocket model", "pocket/$HOME"):
+            with self.subTest(model_id=model_id):
+                fake = FakeCommands()
+                with self.assertRaises(RunnerError):
+                    self.runner(fake).stage(apk, digest, model_id, inventory, model)
+                self.assertEqual(fake.calls, [])
+
     def test_low_storage_is_read_only(self):
         apk, model, inventory, _ = self.make_inventory()
         fake = FakeCommands()
@@ -260,7 +270,7 @@ class HostRunnerTests(unittest.TestCase):
         fake = FakeCommands()
         fake.test_results = [0]
         fake.result_text = json.dumps({"artifacts": [{"path": "pocket/out.wav", "sha256": digest}]})
-        remote = "/sdcard/Android/data/dev.moket.sherpattsbenchmark/files/results/pocket/out.wav"
+        remote = "/sdcard/Android/data/dev.moket.ttsbench/files/results/pocket/out.wav"
         fake.pulled[remote] = data
         runner = self.runner(fake)
         first = runner.run_candidate("pocket", "d.json", "0" * 64, baseline_c=32.0)
@@ -274,7 +284,7 @@ class HostRunnerTests(unittest.TestCase):
         fake = FakeCommands()
         fake.test_results = [0]
         fake.result_text = json.dumps({"artifacts": [{"path": "out.wav", "sha256": "1" * 64}]})
-        remote = "/sdcard/Android/data/dev.moket.sherpattsbenchmark/files/results/out.wav"
+        remote = "/sdcard/Android/data/dev.moket.ttsbench/files/results/out.wav"
         fake.pulled[remote] = b"wrong"
         path = self.runner(fake).run_candidate("supertonic_3", "d.json", "0" * 64, baseline_c=32.0)
         failure = json.loads((path / "failure.json").read_text())

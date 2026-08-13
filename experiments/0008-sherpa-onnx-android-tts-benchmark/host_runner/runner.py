@@ -24,7 +24,8 @@ TARGET_MODEL = "SM-S918B"
 TARGET_ABI = "arm64-v8a"
 DEFAULT_PACKAGE = "dev.moket.ttsbench"
 DEFAULT_COMPONENT = f"{DEFAULT_PACKAGE}/.BenchmarkActivity"
-REMOTE_FILES = f"/sdcard/Android/data/{DEFAULT_PACKAGE}/files"
+REMOTE_STORAGE = "/sdcard"
+REMOTE_FILES = f"{REMOTE_STORAGE}/Android/data/{DEFAULT_PACKAGE}/files"
 
 
 class RunnerError(RuntimeError):
@@ -103,7 +104,12 @@ def sha256_file(path: Path) -> str:
 
 def _safe_relative(value: str) -> str:
     path = PurePosixPath(value)
-    if not value or path.is_absolute() or ".." in path.parts or "." in path.parts:
+    # Paths become operands to `adb shell`, whose argv is interpreted by a remote
+    # shell.  A conservative component allowlist prevents metacharacters, spaces,
+    # and option-like names from changing the intended command.
+    safe_component = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*")
+    if (not value or path.is_absolute() or ".." in path.parts or "." in path.parts
+            or any(safe_component.fullmatch(part) is None for part in path.parts)):
         raise RunnerError(f"unsafe relative path: {value!r}")
     return path.as_posix()
 
@@ -265,7 +271,9 @@ class DeviceRunner:
             yield metadata
 
     def _free_bytes(self) -> int:
-        result = self._adb("shell", "df", "-k", REMOTE_FILES)
+        # The package-specific directory need not exist before the first install.
+        # Query its backing external-storage filesystem without creating anything.
+        result = self._adb("shell", "df", "-k", REMOTE_STORAGE)
         lines = [line.split() for line in result.stdout.splitlines() if line.strip()]
         if len(lines) < 2 or len(lines[-1]) < 4 or not lines[-1][3].isdigit():
             raise DeviceNotReady("could not determine app external-storage capacity")
