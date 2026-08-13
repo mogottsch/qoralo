@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "candidate": "kokoro",
+  "deployment_variant": "kokoro-multi-lang-v1_0",
+  "archive": {
+    "asset_id": "kokoro",
+    "filename": "kokoro-multi-lang-v1_0.tar.bz2",
+    "bytes": 349418188,
+    "sha256": "c133d26353d776da730870dac7da07dbfc9a5e3bc80cc5e8e83ab6e823be7046",
+    "expected_root": "kokoro-multi-lang-v1_0"
+  },
+  "inventory": {
+    "path": "deployed-inventory.json",
+    "file_count": 377,
+    "total_bytes": 400786089
+  },
+  "voice_proof": "voice-proof.json",
+  "descriptor": "benchmark-descriptor.json",
+  "sherpa_config": "sherpa-config.json",
+  "license_evidence": [
+    {
+      "path": "LICENSE",
+      "spdx": "Apache-2.0",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    }
+  ],
+  "conversion_provenance": {
+    "repository": "https://github.com/k2-fsa/sherpa-onnx.git",
+    "revision": "3dc7c569f31ca2cd4a20ed6f7db780327e6714c5",
+    "directory": "scripts/kokoro/v1.0",
+    "voice_ordering_source": "conversion/generate_voices_bin.py",
+    "voice_ordering_source_sha256": "c4dff7e15d776bbf8c369f4f056b3bed2f30299d12a3613123598d59a8dce59f"
+  },
+  "host_smoke": {
+    "report": "host-smoke-report.json",
+    "purpose": "configuration_and_audio_validity_only",
+    "android_performance_evidence": false
+  }
+}
