@@ -1,0 +1,656 @@
+{
+  "attempts": [
+    {
+      "artifact_path": "artifacts/raw/inflect-nano-v1/v2/attempt-00-length-scale-1.00/attempt.json",
+      "attempt_id": "length-scale-1.00",
+      "control": {
+        "length_scale": 1.0
+      },
+      "kind": "default",
+      "resource_kind": "full-generation",
+      "status": "rejected"
+    },
+    {
+      "artifact_path": "artifacts/raw/inflect-nano-v1/v2/attempt-01-length-scale-1.05/attempt.json",
+      "attempt_id": "length-scale-1.05",
+      "control": {
+        "length_scale": 1.05
+      },
+      "kind": "speed-retry",
+      "resource_kind": "full-generation",
+      "status": "rejected"
+    },
+    {
+      "artifact_path": "artifacts/raw/inflect-nano-v1/v2/attempt-02-length-scale-1.10/attempt.json",
+      "attempt_id": "length-scale-1.10",
+      "control": {
+        "length_scale": 1.1
+      },
+      "kind": "speed-retry",
+      "resource_kind": "full-generation",
+      "status": "rejected"
+    },
+    {
+      "artifact_path": "artifacts/raw/inflect-nano-v1/v2/attempt-03-length-scale-1.15/attempt.json",
+      "attempt_id": "length-scale-1.15",
+      "control": {
+        "length_scale": 1.15
+      },
+      "kind": "speed-retry",
+      "resource_kind": "full-generation",
+      "status": "rejected"
+    },
+    {
+      "artifact_path": "artifacts/raw/inflect-nano-v1/v2/attempt-04-length-scale-1.20/attempt.json",
+      "attempt_id": "length-scale-1.20",
+      "control": {
+        "length_scale": 1.2
+      },
+      "kind": "speed-retry",
+      "resource_kind": "full-generation",
+      "status": "rejected"
+    },
+    {
+      "artifact_path": "artifacts/raw/inflect-nano-v1/v2/attempt-05-length-scale-1.25/attempt.json",
+      "attempt_id": "length-scale-1.25",
+      "control": {
+        "length_scale": 1.25
+      },
+      "kind": "speed-retry",
+      "resource_kind": "full-generation",
+      "status": "rejected"
+    },
+    {
+      "artifact_path": "artifacts/raw/inflect-nano-v1/v2/attempt-06-length-scale-1.30/attempt.json",
+      "attempt_id": "length-scale-1.30",
+      "control": {
+        "length_scale": 1.3
+      },
+      "kind": "speed-retry",
+      "resource_kind": "full-generation",
+      "status": "rejected"
+    },
+    {
+      "artifact_path": "artifacts/raw/inflect-nano-v1/v2/attempt-07-length-scale-1.35/attempt.json",
+      "attempt_id": "length-scale-1.35",
+      "control": {
+        "length_scale": 1.35
+      },
+      "kind": "speed-retry",
+      "resource_kind": "full-generation",
+      "status": "rejected"
+    },
+    {
+      "artifact_path": "artifacts/raw/inflect-nano-v1/v2/attempt-08-length-scale-1.40/attempt.json",
+      "attempt_id": "length-scale-1.40",
+      "control": {
+        "length_scale": 1.4
+      },
+      "kind": "speed-retry",
+      "resource_kind": "full-generation",
+      "status": "rejected"
+    },
+    {
+      "artifact_path": "artifacts/raw/inflect-nano-v1/v2/attempt-09-length-scale-1.45/attempt.json",
+      "attempt_id": "length-scale-1.45",
+      "control": {
+        "length_scale": 1.45
+      },
+      "kind": "speed-retry",
+      "resource_kind": "full-generation",
+      "status": "rejected"
+    },
+    {
+      "artifact_path": "artifacts/raw/inflect-nano-v1/v2/attempt-10-length-scale-1.50/attempt.json",
+      "attempt_id": "length-scale-1.50",
+      "control": {
+        "length_scale": 1.5
+      },
+      "kind": "speed-retry",
+      "resource_kind": "full-generation",
+      "status": "rejected"
+    }
+  ],
+  "blocker": "All 11 precommitted default-first length-scale attempts were shorter than 15.0 seconds. The maximum allowed length_scale 1.50 produced 14.933333333333334 seconds; no accepted primary exists, so the required fresh-process repeat and unchanged protocol-v2 normalization are inapplicable. Extending the frozen grid or padding, looping, fabricating, time-stretching, or changing the transcript is forbidden.",
+  "command": [
+    "models/inflect-nano-v1/generate-attempt.sh",
+    "ATTEMPT_INDEX"
+  ],
+  "conclusion": "Candidate E is blocked: the exact finite committed grid exhausted without a raw output of at least 15 seconds. No normalized sample was created, and dependent publication/listening work must halt for this candidate.",
+  "forbidden_transformations_used": [],
+  "licenses": [
+    {
+      "component": "Inflect-Nano-v1 model and source",
+      "license": "Apache-2.0",
+      "source": "models/inflect-nano-v1/pins.json#licenses/model_and_source"
+    },
+    {
+      "component": "tiny_tts_frontend",
+      "license": "Apache-2.0",
+      "source": "models/inflect-nano-v1/pins.json#licenses/vendored_tiny_tts_frontend"
+    },
+    {
+      "component": "bert-base-uncased tokenizer",
+      "license": "Apache-2.0",
+      "source": "models/inflect-nano-v1/pins.json#frontend_assets/bert_tokenizer"
+    }
+  ],
+  "measurement_contract_version": 1,
+  "memory": {
+    "baseline_rss_bytes": 629616640,
+    "peak_process_tree_rss_bytes": 1093529600,
+    "process_race_count": 0,
+    "sample_count": 170,
+    "sample_interval_ms": 20,
+    "sampling_limitations": []
+  },
+  "model": "inflect-nano-v1",
+  "protocol": {
+    "protocol_fingerprint": "ca0987feca4c9a2e8744d4846d1b3f5da86799862f6f7d8ba7e3563f84245814",
+    "protocol_id": "mobile-podcast-preview",
+    "protocol_version": 2,
+    "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f"
+  },
+  "provenance": {
+    "acoustic_sha256": "0129f730a25a1e44d1799a1d47166c9a3a5644e58fb84a3b554d5c036827ec89",
+    "attempt_order": [
+      1.0,
+      1.05,
+      1.1,
+      1.15,
+      1.2,
+      1.25,
+      1.3,
+      1.35,
+      1.4,
+      1.45,
+      1.5
+    ],
+    "attempt_plan_path": "models/inflect-nano-v1/attempt-plan.json",
+    "dependency_lock_sha256": "3a50994302a33b0db6f4437a3140e5be6ae04ee0ae3dfb2dea06d4cae78fe71f",
+    "determinism": {
+      "claim": "No fresh-process repeat was permitted because no primary attempt met the 15-second selection threshold.",
+      "fresh_process_repeat_count": 0,
+      "raw_hashes_match": null,
+      "torch_deterministic_algorithms": true,
+      "torch_manual_seed": 0
+    },
+    "download_bytes_during_generation": 0,
+    "environment": {
+      "device": "cpu",
+      "g2p-en": "2.1.0",
+      "nltk": "3.10.3",
+      "numpy": "2.1.3",
+      "python": "3.11.13",
+      "soundfile": "0.13.1",
+      "torch": "2.6.0+cpu",
+      "transformers": "4.48.3"
+    },
+    "identity": "Exact owensong/Inflect-Nano-v1 v1 repository and immutable revision; v2 and substitutes forbidden by pins.json.",
+    "model_bytes": 18698026,
+    "model_revision": "ab0302781cb0cb9969a9a28ce8e1b259539275dd",
+    "pins_path": "models/inflect-nano-v1/pins.json",
+    "resource_grant": {
+      "global_exclusive": true,
+      "kind": "full-generation",
+      "task": "task-7-inflect-generation"
+    },
+    "source_revision": "ab0302781cb0cb9969a9a28ce8e1b259539275dd",
+    "source_url": "https://huggingface.co/owensong/Inflect-Nano-v1",
+    "speed_attempt_evidence": [
+      {
+        "artifact_path": "artifacts/raw/inflect-nano-v1/v2/attempt-00-length-scale-1.00/attempt.json",
+        "attempt_index": 0,
+        "duration_seconds": 10.912,
+        "length_scale": 1.0,
+        "memory": {
+          "baseline_rss_bytes": 629678080,
+          "peak_process_tree_rss_bytes": 976982016,
+          "process_race_count": 0,
+          "sample_count": 126,
+          "sample_interval_ms": 20,
+          "sampling_limitations": []
+        },
+        "native_wav": {
+          "bytes": 523820,
+          "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0007-mobile-podcast-preview-bakeoff/artifacts/raw/inflect-nano-v1/v2/attempt-00-length-scale-1.00/native.wav",
+          "sha256": "22feb92ef9c59dd11a7d887f0f7644430818088754c878a0888ae236422d7341"
+        },
+        "passes_minimum_duration": false,
+        "sample_count": 261888,
+        "statistics": {
+          "integrated_loudness_lufs": -20.473650147729476,
+          "peak": 0.8912353515625,
+          "peak_dbfs": -1.0001519038193567,
+          "rms": 0.0967852080852328,
+          "rms_dbfs": -20.283820237682622
+        },
+        "timing": {
+          "api_first_output_seconds": 2.5281643000007534,
+          "clock": "CLOCK_MONOTONIC",
+          "first_audible_output_seconds": 2.8381643000007535,
+          "generation_wall_seconds": 2.529050370000732,
+          "rtf": 0.23176781250006706,
+          "rtf_denominator": "raw_native_audio_duration_seconds"
+        }
+      },
+      {
+        "artifact_path": "artifacts/raw/inflect-nano-v1/v2/attempt-01-length-scale-1.05/attempt.json",
+        "attempt_index": 1,
+        "duration_seconds": 11.605333333333334,
+        "length_scale": 1.05,
+        "memory": {
+          "baseline_rss_bytes": 629882880,
+          "peak_process_tree_rss_bytes": 1009590272,
+          "process_race_count": 0,
+          "sample_count": 144,
+          "sample_interval_ms": 20,
+          "sampling_limitations": []
+        },
+        "native_wav": {
+          "bytes": 557100,
+          "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0007-mobile-podcast-preview-bakeoff/artifacts/raw/inflect-nano-v1/v2/attempt-01-length-scale-1.05/native.wav",
+          "sha256": "d70b7ad6bd0d8a5fff834921c67fabeb08f61e51bfe9f4c869c1f184aed8e63a"
+        },
+        "passes_minimum_duration": false,
+        "sample_count": 278528,
+        "statistics": {
+          "integrated_loudness_lufs": -20.214699953969454,
+          "peak": 0.873626708984375,
+          "peak_dbfs": -1.1734819390501423,
+          "rms": 0.10000002301021799,
+          "rms_dbfs": -19.99999800135809
+        },
+        "timing": {
+          "api_first_output_seconds": 2.885877165000238,
+          "clock": "CLOCK_MONOTONIC",
+          "first_audible_output_seconds": 3.205877165000238,
+          "generation_wall_seconds": 2.8867791590000706,
+          "rtf": 0.2487459063936182,
+          "rtf_denominator": "raw_native_audio_duration_seconds"
+        }
+      },
+      {
+        "artifact_path": "artifacts/raw/inflect-nano-v1/v2/attempt-02-length-scale-1.10/attempt.json",
+        "attempt_index": 2,
+        "duration_seconds": 12.106666666666667,
+        "length_scale": 1.1,
+        "memory": {
+          "baseline_rss_bytes": 629878784,
+          "peak_process_tree_rss_bytes": 1027588096,
+          "process_race_count": 0,
+          "sample_count": 142,
+          "sample_interval_ms": 20,
+          "sampling_limitations": []
+        },
+        "native_wav": {
+          "bytes": 581164,
+          "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0007-mobile-podcast-preview-bakeoff/artifacts/raw/inflect-nano-v1/v2/attempt-02-length-scale-1.10/native.wav",
+          "sha256": "c4e6cb72f0e9d0f961ecaa9f905126f4281bba2c1312da4082b87e21f179d58e"
+        },
+        "passes_minimum_duration": false,
+        "sample_count": 290560,
+        "statistics": {
+          "integrated_loudness_lufs": -20.754819137383574,
+          "peak": 0.8912353515625,
+          "peak_dbfs": -1.0001519038193567,
+          "rms": 0.09429925583836697,
+          "rms_dbfs": -20.509834689594065
+        },
+        "timing": {
+          "api_first_output_seconds": 2.844554939999398,
+          "clock": "CLOCK_MONOTONIC",
+          "first_audible_output_seconds": 3.174554939999398,
+          "generation_wall_seconds": 2.845755014000133,
+          "rtf": 0.23505685688327088,
+          "rtf_denominator": "raw_native_audio_duration_seconds"
+        }
+      },
+      {
+        "artifact_path": "artifacts/raw/inflect-nano-v1/v2/attempt-03-length-scale-1.15/attempt.json",
+        "attempt_index": 3,
+        "duration_seconds": 12.597333333333333,
+        "length_scale": 1.15,
+        "memory": {
+          "baseline_rss_bytes": 629997568,
+          "peak_process_tree_rss_bytes": 1083539456,
+          "process_race_count": 0,
+          "sample_count": 154,
+          "sample_interval_ms": 20,
+          "sampling_limitations": []
+        },
+        "native_wav": {
+          "bytes": 604716,
+          "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0007-mobile-podcast-preview-bakeoff/artifacts/raw/inflect-nano-v1/v2/attempt-03-length-scale-1.15/native.wav",
+          "sha256": "f6bdd6bb750299e719a75077428337891183bfffb709129ff4dc893b221cd8ee"
+        },
+        "passes_minimum_duration": false,
+        "sample_count": 302336,
+        "statistics": {
+          "integrated_loudness_lufs": -20.696262234006088,
+          "peak": 0.8912353515625,
+          "peak_dbfs": -1.0001519038193567,
+          "rms": 0.09423389198165397,
+          "rms_dbfs": -20.515857431748845
+        },
+        "timing": {
+          "api_first_output_seconds": 3.120514677999381,
+          "clock": "CLOCK_MONOTONIC",
+          "first_audible_output_seconds": 3.470514677999381,
+          "generation_wall_seconds": 3.1214995029995407,
+          "rtf": 0.24779049822710156,
+          "rtf_denominator": "raw_native_audio_duration_seconds"
+        }
+      },
+      {
+        "artifact_path": "artifacts/raw/inflect-nano-v1/v2/attempt-04-length-scale-1.20/attempt.json",
+        "attempt_index": 4,
+        "duration_seconds": 13.077333333333334,
+        "length_scale": 1.2,
+        "memory": {
+          "baseline_rss_bytes": 629989376,
+          "peak_process_tree_rss_bytes": 1046450176,
+          "process_race_count": 0,
+          "sample_count": 164,
+          "sample_interval_ms": 20,
+          "sampling_limitations": []
+        },
+        "native_wav": {
+          "bytes": 627756,
+          "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0007-mobile-podcast-preview-bakeoff/artifacts/raw/inflect-nano-v1/v2/attempt-04-length-scale-1.20/native.wav",
+          "sha256": "31e70798dd50bca8f53dc9d13f9a3676f7cb37bfbb445a71b302163c74da4935"
+        },
+        "passes_minimum_duration": false,
+        "sample_count": 313856,
+        "statistics": {
+          "integrated_loudness_lufs": -20.49514573581402,
+          "peak": 0.8912353515625,
+          "peak_dbfs": -1.0001519038193567,
+          "rms": 0.09595105377460297,
+          "rms_dbfs": -20.35900502597359
+        },
+        "timing": {
+          "api_first_output_seconds": 3.3088387510006214,
+          "clock": "CLOCK_MONOTONIC",
+          "first_audible_output_seconds": 3.6788387510006215,
+          "generation_wall_seconds": 3.31017068500023,
+          "rtf": 0.2531227583350502,
+          "rtf_denominator": "raw_native_audio_duration_seconds"
+        }
+      },
+      {
+        "artifact_path": "artifacts/raw/inflect-nano-v1/v2/attempt-05-length-scale-1.25/attempt.json",
+        "attempt_index": 5,
+        "duration_seconds": 13.717333333333332,
+        "length_scale": 1.25,
+        "memory": {
+          "baseline_rss_bytes": 630145024,
+          "peak_process_tree_rss_bytes": 1053220864,
+          "process_race_count": 0,
+          "sample_count": 165,
+          "sample_interval_ms": 20,
+          "sampling_limitations": []
+        },
+        "native_wav": {
+          "bytes": 658476,
+          "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0007-mobile-podcast-preview-bakeoff/artifacts/raw/inflect-nano-v1/v2/attempt-05-length-scale-1.25/native.wav",
+          "sha256": "bcf5d29600ed59749fe246d46489a1ed631e97c507175e6774440dcfb78555a4"
+        },
+        "passes_minimum_duration": false,
+        "sample_count": 329216,
+        "statistics": {
+          "integrated_loudness_lufs": -20.830469106206916,
+          "peak": 0.8912353515625,
+          "peak_dbfs": -1.0001519038193567,
+          "rms": 0.09247550289243263,
+          "rms_dbfs": -20.679465965254963
+        },
+        "timing": {
+          "api_first_output_seconds": 3.327140272000179,
+          "clock": "CLOCK_MONOTONIC",
+          "first_audible_output_seconds": 3.7071402720001787,
+          "generation_wall_seconds": 3.3285101989995383,
+          "rtf": 0.24264994646672375,
+          "rtf_denominator": "raw_native_audio_duration_seconds"
+        }
+      },
+      {
+        "artifact_path": "artifacts/raw/inflect-nano-v1/v2/attempt-06-length-scale-1.30/attempt.json",
+        "attempt_index": 6,
+        "duration_seconds": 14.261333333333333,
+        "length_scale": 1.3,
+        "memory": {
+          "baseline_rss_bytes": 629690368,
+          "peak_process_tree_rss_bytes": 1089683456,
+          "process_race_count": 0,
+          "sample_count": 162,
+          "sample_interval_ms": 20,
+          "sampling_limitations": []
+        },
+        "native_wav": {
+          "bytes": 684588,
+          "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0007-mobile-podcast-preview-bakeoff/artifacts/raw/inflect-nano-v1/v2/attempt-06-length-scale-1.30/native.wav",
+          "sha256": "dc235ef48cc9ba4d0aefccdef08a0128ed649f273e6c8ab1b5b1deb5fcaf8607"
+        },
+        "passes_minimum_duration": false,
+        "sample_count": 342272,
+        "statistics": {
+          "integrated_loudness_lufs": -20.146437528806075,
+          "peak": 0.862457275390625,
+          "peak_dbfs": -1.2852481980602102,
+          "rms": 0.09999999897469566,
+          "rms_dbfs": -20.0000000890568
+        },
+        "timing": {
+          "api_first_output_seconds": 3.270212270999764,
+          "clock": "CLOCK_MONOTONIC",
+          "first_audible_output_seconds": 3.6702122709997638,
+          "generation_wall_seconds": 3.2716632840001694,
+          "rtf": 0.22940795278610013,
+          "rtf_denominator": "raw_native_audio_duration_seconds"
+        }
+      },
+      {
+        "artifact_path": "artifacts/raw/inflect-nano-v1/v2/attempt-07-length-scale-1.35/attempt.json",
+        "attempt_index": 7,
+        "duration_seconds": 14.88,
+        "length_scale": 1.35,
+        "memory": {
+          "baseline_rss_bytes": 629981184,
+          "peak_process_tree_rss_bytes": 1117716480,
+          "process_race_count": 0,
+          "sample_count": 176,
+          "sample_interval_ms": 20,
+          "sampling_limitations": []
+        },
+        "native_wav": {
+          "bytes": 714284,
+          "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0007-mobile-podcast-preview-bakeoff/artifacts/raw/inflect-nano-v1/v2/attempt-07-length-scale-1.35/native.wav",
+          "sha256": "2bc6897e43fa40b177b9801cdb561b01fdf7128cc6225602290a7934263e47bc"
+        },
+        "passes_minimum_duration": false,
+        "sample_count": 357120,
+        "statistics": {
+          "integrated_loudness_lufs": -20.13867807636205,
+          "peak": 0.888519287109375,
+          "peak_dbfs": -1.0266628103134772,
+          "rms": 0.10000000762906554,
+          "rms_dbfs": -19.999999337347813
+        },
+        "timing": {
+          "api_first_output_seconds": 3.5741089650000504,
+          "clock": "CLOCK_MONOTONIC",
+          "first_audible_output_seconds": 3.9841089650000505,
+          "generation_wall_seconds": 3.5753476620002402,
+          "rtf": 0.2402787407258226,
+          "rtf_denominator": "raw_native_audio_duration_seconds"
+        }
+      },
+      {
+        "artifact_path": "artifacts/raw/inflect-nano-v1/v2/attempt-08-length-scale-1.40/attempt.json",
+        "attempt_index": 8,
+        "duration_seconds": 14.933333333333334,
+        "length_scale": 1.4,
+        "memory": {
+          "baseline_rss_bytes": 630255616,
+          "peak_process_tree_rss_bytes": 1090969600,
+          "process_race_count": 0,
+          "sample_count": 188,
+          "sample_interval_ms": 20,
+          "sampling_limitations": []
+        },
+        "native_wav": {
+          "bytes": 716844,
+          "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0007-mobile-podcast-preview-bakeoff/artifacts/raw/inflect-nano-v1/v2/attempt-08-length-scale-1.40/native.wav",
+          "sha256": "c753258f9e4ca10c2402dba80ef3b38b712a71153551aa2e03fc4cf59ad3ebeb"
+        },
+        "passes_minimum_duration": false,
+        "sample_count": 358400,
+        "statistics": {
+          "integrated_loudness_lufs": -20.18045202927779,
+          "peak": 0.7947998046875,
+          "peak_dbfs": -1.9948449656971774,
+          "rms": 0.09999999375937198,
+          "rms_dbfs": -20.00000054205408
+        },
+        "timing": {
+          "api_first_output_seconds": 3.802808843999628,
+          "clock": "CLOCK_MONOTONIC",
+          "first_audible_output_seconds": 4.232808843999628,
+          "generation_wall_seconds": 3.804336820999197,
+          "rtf": 0.2547546978347676,
+          "rtf_denominator": "raw_native_audio_duration_seconds"
+        }
+      },
+      {
+        "artifact_path": "artifacts/raw/inflect-nano-v1/v2/attempt-09-length-scale-1.45/attempt.json",
+        "attempt_index": 9,
+        "duration_seconds": 14.933333333333334,
+        "length_scale": 1.45,
+        "memory": {
+          "baseline_rss_bytes": 629841920,
+          "peak_process_tree_rss_bytes": 1098522624,
+          "process_race_count": 0,
+          "sample_count": 177,
+          "sample_interval_ms": 20,
+          "sampling_limitations": []
+        },
+        "native_wav": {
+          "bytes": 716844,
+          "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0007-mobile-podcast-preview-bakeoff/artifacts/raw/inflect-nano-v1/v2/attempt-09-length-scale-1.45/native.wav",
+          "sha256": "5f3fd1b89cf10057511391fc59aa72c23962f6e0402340b8d09780ae9d99aaa6"
+        },
+        "passes_minimum_duration": false,
+        "sample_count": 358400,
+        "statistics": {
+          "integrated_loudness_lufs": -20.163983020072692,
+          "peak": 0.80010986328125,
+          "peak_dbfs": -1.9370075166381855,
+          "rms": 0.10000001703117035,
+          "rms_dbfs": -19.999998520691463
+        },
+        "timing": {
+          "api_first_output_seconds": 3.6015263580002284,
+          "clock": "CLOCK_MONOTONIC",
+          "first_audible_output_seconds": 4.041526358000229,
+          "generation_wall_seconds": 3.6027592579994234,
+          "rtf": 0.2412562003124614,
+          "rtf_denominator": "raw_native_audio_duration_seconds"
+        }
+      },
+      {
+        "artifact_path": "artifacts/raw/inflect-nano-v1/v2/attempt-10-length-scale-1.50/attempt.json",
+        "attempt_index": 10,
+        "duration_seconds": 14.933333333333334,
+        "length_scale": 1.5,
+        "memory": {
+          "baseline_rss_bytes": 629616640,
+          "peak_process_tree_rss_bytes": 1093529600,
+          "process_race_count": 0,
+          "sample_count": 170,
+          "sample_interval_ms": 20,
+          "sampling_limitations": []
+        },
+        "native_wav": {
+          "bytes": 716844,
+          "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0007-mobile-podcast-preview-bakeoff/artifacts/raw/inflect-nano-v1/v2/attempt-10-length-scale-1.50/native.wav",
+          "sha256": "f35d97ca06df19b648d2e09e52dd2ab27a2dc6423cb5a4914973907b9c85bed1"
+        },
+        "passes_minimum_duration": false,
+        "sample_count": 358400,
+        "statistics": {
+          "integrated_loudness_lufs": -20.11582867307563,
+          "peak": 0.885101318359375,
+          "peak_dbfs": -1.0601402473808685,
+          "rms": 0.09999998029440513,
+          "rms_dbfs": -20.00000171160639
+        },
+        "timing": {
+          "api_first_output_seconds": 3.4565623730004518,
+          "clock": "CLOCK_MONOTONIC",
+          "first_audible_output_seconds": 3.9165623730004517,
+          "generation_wall_seconds": 3.457863227999951,
+          "rtf": 0.231553341160711,
+          "rtf_denominator": "raw_native_audio_duration_seconds"
+        }
+      }
+    ],
+    "vocoder_sha256": "57482bee18ef72c2df0153f44dafd14f1666ce11cd1558e3437272b13fa18d08"
+  },
+  "publication_eligible": false,
+  "raw": {
+    "artifact_path": "artifacts/raw/inflect-nano-v1/v2/attempt-10-length-scale-1.50/native.wav",
+    "byte_count": 716844,
+    "channels": 1,
+    "duration_seconds": 14.933333333333334,
+    "output_format": "WAV PCM_S16LE",
+    "preserved_unchanged": true,
+    "sample_count": 358400,
+    "sample_rate_hz": 24000,
+    "sha256": "f35d97ca06df19b648d2e09e52dd2ab27a2dc6423cb5a4914973907b9c85bed1",
+    "statistics": {
+      "integrated_loudness_lufs": -20.11582867307563,
+      "peak": 0.885101318359375,
+      "peak_dbfs": -1.0601402473808685,
+      "rms": 0.09999998029440513,
+      "rms_dbfs": -20.00000171160639
+    }
+  },
+  "schema_version": 1,
+  "speed_control": {
+    "documented": true,
+    "name": "length_scale",
+    "ordered_values": [
+      1.0,
+      1.05,
+      1.1,
+      1.15,
+      1.2,
+      1.25,
+      1.3,
+      1.35,
+      1.4,
+      1.45,
+      1.5
+    ],
+    "selection_rule": "First raw native output at least 15.0 seconds; none passed.",
+    "setting": 1.5
+  },
+  "status": "blocked",
+  "timing": {
+    "api_first_output_seconds": 3.4565623730004518,
+    "clock": "CLOCK_MONOTONIC",
+    "first_audible_output_seconds": 3.9165623730004517,
+    "generation_wall_seconds": 3.457863227999951,
+    "rtf": 0.231553341160711,
+    "rtf_denominator": "raw_native_audio_duration_seconds"
+  },
+  "voice": {
+    "asset_sha256": "0129f730a25a1e44d1799a1d47166c9a3a5644e58fb84a3b554d5c036827ec89",
+    "cloning_performed": false,
+    "license": "Apache-2.0",
+    "name": "mark",
+    "source": "Built into pinned Inflect-Nano-v1 acoustic checkpoint",
+    "stock_voice": true
+  }
+}
