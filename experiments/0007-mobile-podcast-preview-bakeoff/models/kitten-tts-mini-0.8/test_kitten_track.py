@@ -107,23 +107,27 @@ def test_dependency_graph_and_official_wheel_are_hash_locked() -> None:
             assert artifacts and all(item.get("hash", "").startswith("sha256:") for item in artifacts)
 
 
-def test_plan_is_default_first_and_invents_no_undocumented_value() -> None:
+def test_plan_is_default_first_and_has_finite_ordered_grid() -> None:
     plan = data("attempt-plan.json")
     assert plan["committed_before_full_generation"] is True
-    assert plan["attempts"] == [{"ordinal": 1, "id": "default", "speed": 1.0, "uses_documented_default": True}]
+    assert [(item["id"], item["speed"]) for item in plan["attempts"]] == [
+        ("default", 1.0), ("speed-0.95", 0.95), ("speed-0.90", 0.9)
+    ]
+    assert plan["grid"] == {
+        "direction": "decreasing", "step": 0.05, "endpoints": [1.0, 0.9],
+        "bounded_values": [1.0, 0.95, 0.9],
+    }
     assert plan["run_workflow"]["runs"] == ["primary", "repeat-1"]
-    assert plan["run_workflow"]["order"] == "primary_then_optional_repeat"
-    assert "short primary forbids repeat-1" in plan["run_workflow"]["terminal_short_output"]
-    assert plan["documentation"]["documented_numeric_bounds"] is None
-    assert plan["documentation"]["documented_direction_for_longer_output"] is None
-    assert plan["short_default_outcome"] == "terminal_protocol_blocker"
-    assert "undocumented_speed_values" in plan["forbidden"]
+    assert plan["documentation"]["documented_direction_for_longer_output"] == "decrease speed"
+    assert plan["short_default_outcome"] == "continue_to_next_precommitted_attempt"
+    assert plan["short_final_outcome"] == "terminal_protocol_blocker"
+    assert "speeds_outside_precommitted_grid" in plan["forbidden"]
 
 
 def test_plan_mutation_and_cloning_flags_fail_closed() -> None:
     verifier = load("kitten_verify_plan", "verify_pins.py")
     pins, plan = data("pins.json"), data("attempt-plan.json")
-    plan["attempts"].append({"ordinal": 2, "id": "slow", "speed": 0.9, "uses_documented_default": False})
+    plan["attempts"][1]["speed"] = 0.94
     with pytest.raises(AssertionError):
         verifier.validate(pins, plan, check_lock=False)
     plan = data("attempt-plan.json")
@@ -160,6 +164,7 @@ def test_generator_allows_no_reference_or_cloning_inputs_and_is_write_once() -> 
     assert 'open("xb")' in source
     assert 'metadata_path.open("x"' in source
     assert "run_dir.mkdir()" in source
+    assert 'parser.add_argument("--attempt"' in source
     assert 'parser.add_argument("--run"' in source
     assert 'PREVIEW_RESOURCE_GRANT_TASK") != "task-8"' in source
     assert "reference_audio" not in source and "clone" not in source.lower()
@@ -167,7 +172,7 @@ def test_generator_allows_no_reference_or_cloning_inputs_and_is_write_once() -> 
     env = os.environ.copy()
     env.pop("KITTEN_GATED_GENERATION", None)
     result = subprocess.run(
-        [sys.executable, str(HERE / "generate_preview.py"), "--run", "primary"],
+        [sys.executable, str(HERE / "generate_preview.py"), "--attempt", "default", "--run", "primary"],
         text=True, capture_output=True, env=env,
     )
     assert result.returncode != 0 and "task-8 full-generation gate" in (result.stdout + result.stderr)
@@ -176,45 +181,28 @@ def test_generator_allows_no_reference_or_cloning_inputs_and_is_write_once() -> 
 def test_generation_run_order_and_write_once_claims(tmp_path: Path) -> None:
     generator = load("kitten_generator_order", "generate_preview.py")
     root = tmp_path / "generation"
+    default, retry = generator.PLAN["attempts"][:2]
 
     with pytest.raises(SystemExit, match="accepted primary report"):
-        generator.claim_run_directory("repeat-1", root)
-    with pytest.raises(SystemExit, match="one of"):
-        generator.claim_run_directory("repeat-2", root)
+        generator.claim_run_directory(default, "repeat-1", root)
+    with pytest.raises(SystemExit, match="primary or repeat"):
+        generator.claim_run_directory(default, "repeat-2", root)
+    with pytest.raises(SystemExit, match="must complete"):
+        generator.claim_run_directory(retry, "primary", root)
 
-    output, report_path = generator.claim_run_directory("primary", root)
+    output, report_path = generator.claim_run_directory(default, "primary", root)
     output.write_bytes(b"primary audio")
-    terminal = {
-        "run": "primary", "attempt": {"id": "default"}, "accepted_by_duration": False,
-        "short_output_outcome": "terminal_protocol_blocker",
-        "raw": {"path": str(output), "sha256": hashlib.sha256(output.read_bytes()).hexdigest()},
-    }
-    report_path.write_text(json.dumps(terminal), encoding="utf-8")
-    with pytest.raises(SystemExit, match="short/terminal primary output forbids repeats"):
-        generator.claim_run_directory("repeat-1", root)
-    with pytest.raises(SystemExit, match="write-once run directory"):
-        generator.claim_run_directory("primary", root)
+    report_path.write_text(json.dumps({"accepted_by_duration": False}), encoding="utf-8")
+    retry_output, retry_report = generator.claim_run_directory(retry, "primary", root)
+    retry_output.write_bytes(b"accepted audio")
+    retry_report.write_text(json.dumps({"accepted_by_duration": True}), encoding="utf-8")
+    with pytest.raises(SystemExit, match="already exists"):
+        generator.claim_run_directory(retry, "primary", root)
 
-
-def test_accepted_primary_is_required_for_single_repeat(tmp_path: Path) -> None:
-    generator = load("kitten_generator_repeat", "generate_preview.py")
-    root = tmp_path / "generation"
-    output, report_path = generator.claim_run_directory("primary", root)
-    output.write_bytes(b"accepted audio")
-    report = {
-        "run": "primary", "attempt": {"id": "default"}, "accepted_by_duration": True,
-        "short_output_outcome": None,
-        "raw": {"path": str(output), "sha256": hashlib.sha256(output.read_bytes()).hexdigest()},
-    }
-    with report_path.open("x", encoding="utf-8") as stream:
-        json.dump(report, stream)
-    repeat_output, repeat_report = generator.claim_run_directory("repeat-1", root)
+    repeat_output, repeat_report = generator.claim_run_directory(retry, "repeat-1", root)
     assert repeat_output.parent.name == "repeat-1" and repeat_report.name == "report.json"
     with pytest.raises(SystemExit, match="write-once run directory"):
-        generator.claim_run_directory("repeat-1", root)
-    with pytest.raises(FileExistsError):
-        with report_path.open("x", encoding="utf-8"):
-            pass
+        generator.claim_run_directory(retry, "repeat-1", root)
 
 
 def test_blocked_generation_evidence_is_schema_valid_and_cannot_publish() -> None:

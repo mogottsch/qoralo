@@ -52,16 +52,21 @@ def validate(pins: dict | None = None, plan: dict | None = None, *, check_lock: 
     }
     assert plan["committed_before_full_generation"] is True
     assert plan["model_repo_id"] == model["repo_id"] and plan["model_revision"] == model["revision"]
-    assert plan["attempts"] == [{"ordinal": 1, "id": "default", "speed": 1.0, "uses_documented_default": True}]
-    assert plan["run_workflow"] == {
-        "runs": ["primary", "repeat-1"],
-        "order": "primary_then_optional_repeat",
-        "repeat_eligibility": "repeat-1 is eligible only after an intact primary report accepted_by_duration=true",
-        "terminal_short_output": "A short primary forbids repeat-1 and ends the campaign.",
+    assert plan["attempts"] == [
+        {"ordinal": 1, "id": "default", "speed": 1.0, "uses_documented_default": True},
+        {"ordinal": 2, "id": "speed-0.95", "speed": 0.95, "uses_documented_default": False},
+        {"ordinal": 3, "id": "speed-0.90", "speed": 0.9, "uses_documented_default": False},
+    ]
+    assert plan["grid"] == {
+        "direction": "decreasing", "step": 0.05, "endpoints": [1.0, 0.9],
+        "bounded_values": [1.0, 0.95, 0.9],
     }
+    assert plan["run_workflow"]["runs"] == ["primary", "repeat-1"]
+    assert plan["run_workflow"]["order"] == "ordered_primary_attempts_then_one_accepted_attempt_repeat"
     assert plan["documentation"]["documented_numeric_bounds"] is None
-    assert plan["documentation"]["documented_direction_for_longer_output"] is None
-    assert plan["short_default_outcome"] == "terminal_protocol_blocker"
+    assert plan["documentation"]["documented_direction_for_longer_output"] == "decrease speed"
+    assert plan["short_default_outcome"] == "continue_to_next_precommitted_attempt"
+    assert plan["short_final_outcome"] == "terminal_protocol_blocker"
 
 
 def online_checks() -> None:

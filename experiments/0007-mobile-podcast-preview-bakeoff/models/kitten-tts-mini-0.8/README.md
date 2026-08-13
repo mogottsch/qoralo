@@ -23,11 +23,11 @@ python models/kitten-tts-mini-0.8/verify_pins.py --online
 
 The chosen voice is the documented bundled alias **`Jasper`**, mapped by pinned `config.json` to `expr-voice-2-m` in pinned `voices.npz`. The exact float32 `[400, 256]` array has 409,600 C-order bytes and SHA-256 `4fc6fdcbaac820aad0d2f3040709bc0e23e3674d9c7f2eaa67ddc9573f128de4`. The smoke load recomputes it. There is no reference-audio argument, speaker upload, custom conditioning, or cloning path in this track.
 
-## Default-only duration plan
+## Precommitted duration plan
 
-`attempt-plan.json` was committed before full generation. The pinned README and wheel document `speed`, and say only that `1.0` is normal. They do not document supported numeric bounds or which direction lengthens this model's output. Therefore the only eligible attempt is the official default `speed=1.0`. This is deliberately not an invented grid.
+`attempt-plan.json` freezes the official default first, followed by the bounded slower sequence `speed=0.95` and `speed=0.90`. The official API defines this as speech speed, with `1.0` normal and lower values slower. Every value is a separate, write-once, globally gated full generation; the first native output at least 15 seconds is accepted and later attempts are forbidden. This inference control does not modify an emitted waveform.
 
-The first native output at least 15 seconds would be accepted. If the default is shorter, Candidate F has a terminal protocol blocker: do not add an ad hoc speed, pad, loop, time-stretch, alter the transcript, or replace raw evidence.
+The exact order is `1.0`, `0.95`, `0.90`. No values outside that finite grid may be added after seeing output. Padding, looping, post-hoc time stretching, transcript changes, and raw replacement remain forbidden.
 
 ## Isolated CPU setup and gated load
 
@@ -45,19 +45,20 @@ Setup uses an already installed Python 3.11 and `uv`; it never calls `sudo`, an 
 ## Generation scaffold (task 8 only)
 
 ```bash
-models/kitten-tts-mini-0.8/generate-preview.sh primary
-# Only when primary/report.json says the primary was accepted:
-models/kitten-tts-mini-0.8/generate-preview.sh repeat-1
+models/kitten-tts-mini-0.8/generate-preview.sh default primary
+# Continue only after a preserved short attempt:
+models/kitten-tts-mini-0.8/generate-preview.sh speed-0.95 primary
+models/kitten-tts-mini-0.8/generate-preview.sh speed-0.90 primary
+# Repeat only the first accepted attempt in a fresh process:
+models/kitten-tts-mini-0.8/generate-preview.sh <accepted-attempt> repeat-1
 ```
 
-The only run labels are `primary` and `repeat-1`. The primary must run first. `repeat-1` is admitted only when the primary report and native bytes are intact and the primary met the duration threshold; a short primary is the terminal blocker and makes a repeat ineligible. Each label can be claimed once through an exclusively created run directory, and both native bytes and `report.json` use exclusive file creation, so neither evidence file can be overwritten.
+The only run labels are `primary` and `repeat-1`. Primary attempts must follow the committed order, stop at the first accepted duration, and cannot be reclaimed. `repeat-1` is admitted only for that accepted attempt. Each run directory, native byte stream, and `report.json` is created exclusively, so evidence cannot be overwritten. The earlier default evidence remains preserved under its original write-once names.
 
-Each invocation independently acquires the same global `full-generation` gate for task 8. The scaffold validates both grant kind and grant task, and accepts only the committed `default` attempt, exact protocol-v2 transcript hash, local hash-verified assets, Jasper, and CPU providers. Native mono float waveform bytes are measured at 24 kHz. The official API is non-streaming, so first API output is explicitly completion-equivalent. Shared monotonic/RSS/audibility/RTF metrics are recorded. A short default is preserved with metadata and exits as the declared terminal blocker.
+Each invocation independently acquires the same global `full-generation` gate for task 8. The scaffold validates both grant kind and grant task, the exact protocol-v2 transcript hash, local hash-verified assets, Jasper, and CPU providers. Native mono float waveform bytes are measured at 24 kHz. The official API is non-streaming, so first API output is explicitly completion-equivalent. Shared monotonic/RSS/audibility/RTF metrics are recorded.
 
 No credentials, gated assets, privileged installation, Android work, reference recordings, or voice cloning are used.
 
-## Task 8 generation outcome: terminal blocker
+## Task 8 generation outcome
 
-On the recorded Ryzen 7 5800H CPU host, both globally gated fresh-process jobs ran the sole precommitted attempt (`speed=1.0`). Each produced 347,800 native 24 kHz samples, or **14.491666666666667 seconds**, below protocol-v2's 15-second minimum. The outputs remain write-once under the ignored artifact directory. Their waveform hashes differ, so the evidence claims repeatable duration and sample count only, not bit-exact waveform determinism.
-
-No retry or normalized artifact was produced. The pinned material supplies neither eligible speed bounds nor a documented direction for lengthening, so choosing another speed would be an undocumented control. Padding, looping, time stretching, transcript changes, and raw replacement are also forbidden. `results/kitten-mini-0.8-preview.json` records the commands, hashes, timings, RSS, RTF, statistics, provenance, licenses, repeat comparison, and terminal campaign blocker. Candidate F is not publication eligible, and success-path integration must not proceed.
+The committed result and this section are updated after the ordered slower attempts, accepted-output repeat, and protocol-v2 derivation complete. The preserved `speed=1.0` attempts are historical raw evidence and are never replaced.

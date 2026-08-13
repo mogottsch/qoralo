@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "committed_before_full_generation": true,
   "model_repo_id": "KittenML/kitten-tts-mini-0.8",
   "model_revision": "c02725660cea441db4c383af69f1f26f5cd00947",
@@ -7,23 +7,31 @@
   "voice": "Jasper",
   "control": "speed",
   "documentation": {
-    "source": "the pinned model README and release wheel KittenTTS.generate docstring",
+    "source": "the pinned model README and release wheel KittenTTS.generate API",
     "documented_default": 1.0,
-    "documented_semantics": "speech speed; 1.0 is normal",
+    "documented_semantics": "speech speed; 1.0 is normal and lower values are slower",
     "documented_numeric_bounds": null,
-    "documented_direction_for_longer_output": null
+    "documented_direction_for_longer_output": "decrease speed"
   },
   "attempts": [
-    {"ordinal": 1, "id": "default", "speed": 1.0, "uses_documented_default": true}
+    {"ordinal": 1, "id": "default", "speed": 1.0, "uses_documented_default": true},
+    {"ordinal": 2, "id": "speed-0.95", "speed": 0.95, "uses_documented_default": false},
+    {"ordinal": 3, "id": "speed-0.90", "speed": 0.9, "uses_documented_default": false}
   ],
+  "grid": {
+    "direction": "decreasing",
+    "step": 0.05,
+    "endpoints": [1.0, 0.9],
+    "bounded_values": [1.0, 0.95, 0.9]
+  },
   "run_workflow": {
     "runs": ["primary", "repeat-1"],
-    "order": "primary_then_optional_repeat",
-    "repeat_eligibility": "repeat-1 is eligible only after an intact primary report accepted_by_duration=true",
-    "terminal_short_output": "A short primary forbids repeat-1 and ends the campaign."
+    "order": "ordered_primary_attempts_then_one_accepted_attempt_repeat",
+    "repeat_eligibility": "repeat-1 is eligible only for the first intact primary report accepted_by_duration=true",
+    "terminal_short_output": "A short attempt advances to the next precommitted speed; a short final attempt ends the campaign."
   },
-  "selection_rule": "Accept the first write-once native output whose duration is at least 15.0 seconds.",
-  "short_default_outcome": "terminal_protocol_blocker",
-  "reason_no_retries": "The pinned official material names speed and its normal default but supplies neither supported bounds nor a documented direction for lengthening. The protocol forbids inventing a range or values, so only the default is eligible.",
-  "forbidden": ["reference_audio", "voice_cloning", "time_stretching", "padding", "looping", "undocumented_speed_values"]
+  "selection_rule": "Run attempts in ordinal order and accept the first write-once native output whose duration is at least 15.0 seconds; do not run later attempts.",
+  "short_default_outcome": "continue_to_next_precommitted_attempt",
+  "short_final_outcome": "terminal_protocol_blocker",
+  "forbidden": ["reference_audio", "voice_cloning", "time_stretching", "padding", "looping", "speeds_outside_precommitted_grid"]
 }
