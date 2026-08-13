@@ -74,8 +74,14 @@ def test_schema_covers_success_and_all_negative_outcomes_without_estimates():
 def test_retired_candidates_are_not_pending_follow_up():
     report = load(ROOT / "docs/candidate-decision-report.json")
     retired = {"vibevoice_realtime_0_5b", "inflect_nano_v1", "kitten_tts_mini_80m_v0_8"}
-    assert set(report["candidate_status"]["historical_only"]) == retired
-    assert not retired.intersection(report["candidate_status"]["selected_pending_experiment_0008_device_measurement"])
+    status = report["candidate_status"]
+    assert set(status["historical_only"]) == retired
+    assert "selected_pending_experiment_0008_device_measurement" not in status
+    assert status["experiment_0008_outcomes"] == {
+        "pocket_tts_100m": "works_with_limitations",
+        "kokoro_82m": "works_with_limitations",
+        "supertonic_3": "works",
+    }
     for key in ("realtime_0_5b", "inflect_nano_v1", "kitten_tts_mini_0_8"):
         assert report["android_measurements"][key]["status"] == "historical_only"
 
