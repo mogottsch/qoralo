@@ -1,0 +1,20 @@
+[project]
+name = "preview-kitten-tts-mini-0-8"
+version = "0.0.0"
+requires-python = "==3.11.*"
+dependencies = [
+  "kittentts @ https://github.com/KittenML/KittenTTS/releases/download/0.8/kittentts-0.8.0-py3-none-any.whl",
+  "torch==2.6.0+cpu",
+]
+
+[tool.uv]
+package = false
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+kittentts = { url = "https://github.com/KittenML/KittenTTS/releases/download/0.8/kittentts-0.8.0-py3-none-any.whl" }
+torch = { index = "pytorch-cpu" }

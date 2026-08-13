@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "committed_before_full_generation": true,
+  "model_repo_id": "KittenML/kitten-tts-mini-0.8",
+  "model_revision": "c02725660cea441db4c383af69f1f26f5cd00947",
+  "package_release_asset": "kittentts-0.8.0-py3-none-any.whl",
+  "voice": "Jasper",
+  "control": "speed",
+  "documentation": {
+    "source": "the pinned model README and release wheel KittenTTS.generate docstring",
+    "documented_default": 1.0,
+    "documented_semantics": "speech speed; 1.0 is normal",
+    "documented_numeric_bounds": null,
+    "documented_direction_for_longer_output": null
+  },
+  "attempts": [
+    {"ordinal": 1, "id": "default", "speed": 1.0, "uses_documented_default": true}
+  ],
+  "selection_rule": "Accept the first write-once native output whose duration is at least 15.0 seconds.",
+  "short_default_outcome": "terminal_protocol_blocker",
+  "reason_no_retries": "The pinned official material names speed and its normal default but supplies neither supported bounds nor a documented direction for lengthening. The protocol forbids inventing a range or values, so only the default is eligible.",
+  "forbidden": ["reference_audio", "voice_cloning", "time_stretching", "padding", "looping", "undocumented_speed_values"]
+}

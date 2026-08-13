@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "candidate": "F",
+  "model": {
+    "repo_id": "KittenML/kitten-tts-mini-0.8",
+    "revision": "c02725660cea441db4c383af69f1f26f5cd00947",
+    "name": "Kitten TTS Mini",
+    "version": "0.8",
+    "parameter_class": "80M",
+    "license": "Apache-2.0",
+    "gated": false,
+    "files": {
+      "README.md": {"bytes": 734, "sha256": "cab0af19aa75f409684d165407c32a0d845cc8fc660606c379f4b0663f87abae"},
+      "config.json": {"bytes": 470, "sha256": "6b160bc9b19e24ecb21e84bc14f8a7da21fdf47ec72d42450bc5cf514b61804a"},
+      "kitten_tts_mini_v0_8.onnx": {"bytes": 78268016, "sha256": "0f5bbae4fc4800c98dbc544a87ecfa79510de2fb8222db30d12e5bfe9177df91"},
+      "voices.npz": {"bytes": 3278902, "sha256": "40ad2638952b77b7b2f30127e2608e169fc69dd256b53bd8aaa3409a33193c42"}
+    }
+  },
+  "implementation": {
+    "repository": "https://github.com/KittenML/KittenTTS.git",
+    "release_tag": "0.8",
+    "revision": "0c61f684b54fe962e4b7c2fa0285ed75f64ad402",
+    "release_asset": "kittentts-0.8.0-py3-none-any.whl",
+    "release_asset_url": "https://github.com/KittenML/KittenTTS/releases/download/0.8/kittentts-0.8.0-py3-none-any.whl",
+    "release_asset_bytes": 21601,
+    "release_asset_sha256": "cba97464da2ec56384b9fc03004449dadbe6d9abd16aa89e98953027854fd7d9",
+    "declared_release_version": "0.8.0",
+    "embedded_distribution_version": "0.1.0",
+    "license": "Apache-2.0",
+    "license_sha256": "787aa312b93eee80b636f35652469df29efdb7582239d6a9c088467555a3c7fd",
+    "requirements_source_sha256": "6bd0d89d9dc88eae6cc01df2209cdd6a7b476bfb8c5f982b0a79103fe7b8884d",
+    "dependency_lock": "uv.lock",
+    "dependency_lock_sha256": "f947aab6b91f6f675230a4235369a2e6323baa79ed00dd1e076f7dbbb7717e2c"
+  },
+  "voice": {
+    "display_id": "Jasper",
+    "asset_key": "expr-voice-2-m",
+    "kind": "bundled stock voice alias",
+    "provenance": "config.json at the pinned model revision maps Jasper to expr-voice-2-m in voices.npz",
+    "asset_file": "voices.npz",
+    "array_shape": [400, 256],
+    "array_dtype": "float32",
+    "array_c_order_bytes": 409600,
+    "array_c_order_sha256": "4fc6fdcbaac820aad0d2f3040709bc0e23e3674d9c7f2eaa67ddc9573f128de4",
+    "license": "Apache-2.0 (model repository card)",
+    "reference_audio_used": false,
+    "cloning_performed": false
+  },
+  "native_output": {
+    "sample_rate_hz": 24000,
+    "channels": 1,
+    "library_array": "numpy float32 waveform",
+    "library_dtype": "float32",
+    "official_example_container": "WAV",
+    "official_soundfile_default_encoding": "PCM signed 16-bit"
+  },
+  "execution": {
+    "device": "cpu",
+    "runtime": "onnxruntime CPUExecutionProvider",
+    "network_during_generation": false
+  }
+}
