@@ -2,7 +2,7 @@
 
 ## Status
 
-**Paused after host preflight and reusable Android runtime build; no QNN model has run on the phone.** See [`HANDOFF.md`](HANDOFF.md) and [`results/host-checkpoint.json`](results/host-checkpoint.json) for the exact resume point. Host experiments have not proven HTP execution or a speedup.
+**Paused after a successful physical-HTP control and a fail-closed vocoder investigation.** See [`HANDOFF.md`](HANDOFF.md) and [`results/phone-probe-checkpoint.json`](results/phone-probe-checkpoint.json) for the exact resume point. A tiny QDQ graph has proven real SM8550 HTP execution with CPU fallback disabled; the vocoder has not run, produced output, or established a speedup. [`results/host-checkpoint.json`](results/host-checkpoint.json) is the earlier pre-phone snapshot.
 
 This experiment proceeds component-first with the exact Supertonic 3 deployment measured in experiment 0008 on the Galaxy S23 Ultra's Qualcomm HTP/NPU. Its final gated goal, if the component probes succeed, is to integrate the accepted acceleration into the complete Android TTS path and run the model end to end from the frozen text and voice inputs to final audio. It is not a production integration.
 
@@ -38,7 +38,17 @@ The initial target is **QNN's HTP backend**, which addresses the Hexagon tensor 
 
 The desired application bridge is ONNX Runtime's QNN Execution Provider because the measured assets are already ONNX and the EP exposes explicit fallback controls and QNN profiling. A direct QNN converter plus `qnn-net-run` pass is permitted before that bridge as an isolated toolchain/backend preflight. It can expose conversion and HTP graph-composition failures quickly, but neither HTP emulation nor `qnn-net-run` alone completes the application or end-to-end gates. SNPE, GENIE, and the TFLite delegate remain out of scope. Direct QNN/QAIRT C++ integration may be reconsidered only after a component proves useful on HTP.
 
-The existing experiment 0008 AAR is not a QNN artifact. Its arm64 ONNX Runtime library exports CPU and NNAPI provider entry points, and the pinned sherpa-onnx generic TTS provider path does not recognize `qnn`. It contains ONNX Runtime `1.27.1`; that upstream release's QNN CI pins QAIRT `2.42.0.251225`, while QAIRT `2.22.6.240515` predates it. The checkpoint now includes a successful local Android arm64 ONNX Runtime `1.27.1` build with QAIRT `2.49.0.260730` QNN static integration. This is still not a descriptor-only change to experiment 0008, and the built library has not yet been exercised on the phone.
+The existing experiment 0008 AAR is not a QNN artifact. Its arm64 ONNX Runtime library exports CPU and NNAPI provider entry points, and the pinned sherpa-onnx generic TTS provider path does not recognize `qnn`. It contains ONNX Runtime `1.27.1`; that upstream release's QNN CI pins QAIRT `2.42.0.251225`, while QAIRT `2.22.6.240515` predates it. Experiment 0010 built Android arm64 ONNX Runtime `1.27.1` with QAIRT `2.49.0.260730` QNN static integration and exercised that runtime on the phone. This remains a separate runtime path, not a descriptor-only change to experiment 0008.
+
+## Recorded phone and crash-localization result
+
+A staged six-node QDQ-add control passed on the physical `SM-S918B` with `session.disable_cpu_ep_fallback=1`. Its detailed profile contains RPC and QNN-accelerator finalize/execute timings, accelerator cycles, and four HVX threads. QAIRT 2.49's dynamically loaded `libQnnHtpPrepare.so` is a required deployment file; omitting it caused the first control attempt to fail closed.
+
+The fixed-I/O-shape released-vocoder derivative then crashed during session creation, before inference, with `SIGSEGV`/exit 139. The same fault occurred in x86 HTP emulation. Host GDB localized it to `onnxruntime::QDQ::PadNodeGroupSelector::Check`, where ORT 1.27.1 dereferences an empty `dq_nodes` vector during QNN capability analysis. Microsoft fixed that exact defect upstream in commit `a08e17aab393a922d619736a4150cfe43bc7f8ec` (PR #28733); the minimal backport is tracked at [`patches/onnxruntime-a08e17-pad-empty-dq.patch`](patches/onnxruntime-a08e17-pad-empty-dq.patch).
+
+With that backport, the host runtime no longer crashes. It reports 338 of 354 nodes supported across nine QNN partitions for the fixed released derivative. The sixteen unsupported nodes are eight decomposed-GELU `Erf` nodes and eight weight-only `DequantizeLinear` constants. Folding only those eight constant DQ tails and reconcretizing the measured shapes leaves 338 of 346 nodes supported; only the eight `Erf` nodes remain. Optimization levels 0, 1, 2, and 99 do not produce a complete no-fallback session.
+
+No vocoder inference or audio was produced. The next graph change is consequential and remains pending review: either replace the eight proven standard GELU decompositions with explicit `com.microsoft.Gelu` nodes as a fully provenance-recorded derivative, or create an explicit CPU/HTP split. Enabling implicit ORT CPU fallback is not an accepted route.
 
 ## Gated execution order
 

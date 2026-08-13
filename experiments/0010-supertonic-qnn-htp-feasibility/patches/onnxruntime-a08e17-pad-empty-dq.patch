@@ -1,0 +1,26 @@
+From a08e17aab393a922d619736a4150cfe43bc7f8ec Mon Sep 17 00:00:00 2001
+From: Nicolas Gry <grybouilli@outlook.fr>
+Date: Tue, 23 Jun 2026 18:18:08 +0200
+Subject: [PATCH] [QNN EP] Fix segfault on PadNodeGroupSelector::Check when
+ dq_nodes is empty
+
+Upstream-commit: a08e17aab393a922d619736a4150cfe43bc7f8ec
+Upstream-PR: https://github.com/microsoft/onnxruntime/pull/28733
+Applied-to: ONNX Runtime v1.27.1, df2ba1cf8108aa63627cf4cdf8f807880b938616
+Scope: production source fix only; the upstream regression test is not included
+in this minimal backport patch.
+---
+ .../qdq_transformer/selectors_actions/qdq_selectors.cc          | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/onnxruntime/core/optimizer/qdq_transformer/selectors_actions/qdq_selectors.cc b/onnxruntime/core/optimizer/qdq_transformer/selectors_actions/qdq_selectors.cc
+--- a/onnxruntime/core/optimizer/qdq_transformer/selectors_actions/qdq_selectors.cc
++++ b/onnxruntime/core/optimizer/qdq_transformer/selectors_actions/qdq_selectors.cc
+@@ -1043,6 +1043,6 @@ bool PadNodeGroupSelector::Check(const GraphViewer& graph_viewer, const Node& no
+   // Pad can have 1 or 2 dq input, the optional input constant_value can be quantized or non-quantized.
+   // QNN supports data input quantized with constant_value input non-quantized.
+   int num_dq_inputs = static_cast<int>(dq_nodes.size());
+-  if (num_dq_inputs > 2) {
++  if (num_dq_inputs < 1 || num_dq_inputs > 2) {
+     return false;
+   }

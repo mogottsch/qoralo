@@ -1,0 +1,274 @@
+{
+  "schema_version": 1,
+  "status": "paused_after_physical_htp_smoke_and_vocoder_no_fallback_rejection",
+  "recorded_at_utc": "2026-08-13T17:31:14Z",
+  "scope": "Supertonic 3 vocoder-first QNN/HTP feasibility; tiny physical HTP execution is proven, but no vocoder inference or speedup is claimed",
+  "source": {
+    "experiment": "0008-sherpa-onnx-android-tts-benchmark",
+    "variant": "sherpa-onnx-supertonic-3-tts-int8-2026-05-11",
+    "released_vocoder_sha256": "e923d60f53f95eb1ce235f1dc33ec56d9c057823c96fa6f8acf98f32b0da6152",
+    "fixed_shape_vocoder_sha256": "989fe86e7bda8f223cb50b0ea2f0ee293371e6ff84ddbe082d8ed8c122088364",
+    "fixed_shape_contract": {
+      "input": {
+        "name": "latent",
+        "shape": [1, 144, 238],
+        "dtype": "float32"
+      },
+      "output": {
+        "name": "wav_tts",
+        "shape": [1, 731136],
+        "dtype": "float32"
+      }
+    }
+  },
+  "device": {
+    "manufacturer": "samsung",
+    "model": "SM-S918B",
+    "device": "dm3q",
+    "board": "kalama",
+    "soc": "SM8550",
+    "htp_arch": "v73",
+    "abi": "arm64-v8a",
+    "android": "16",
+    "api": 36,
+    "security_patch": "2026-07-05",
+    "serial": "R5CW81PR8SY"
+  },
+  "runtime": {
+    "onnxruntime_version": "1.27.1",
+    "onnxruntime_commit": "df2ba1cf8108aa63627cf4cdf8f807880b938616",
+    "qairt_version": "2.49.0.260730",
+    "qnn_backend_interface": "2.38.0",
+    "ndk": "26.2.11394342",
+    "android_abi": "arm64-v8a",
+    "android_min_api": 27,
+    "provider": "QNN",
+    "backend": "HTP",
+    "soc_model": 43,
+    "cpu_fallback_disabled": true,
+    "profiling_level": "detailed",
+    "unpatched_android_libonnxruntime": {
+      "bytes": 22399512,
+      "sha256": "643c6f6fd3d2b375ca8f2407a1695acaf55320b8e947adc4284665640fdc3ae9"
+    }
+  },
+  "android_runtime_files": {
+    "distribution": "local-only; all files and raw profiles remain ignored",
+    "libQnnHtp.so": {
+      "bytes": 3786064,
+      "sha256": "a09b3af28342331b3ec9e57ecbe42bfe54a5fff37c4323ce5685c395ae3ee604"
+    },
+    "libQnnHtpPrepare.so": {
+      "bytes": 79343040,
+      "sha256": "db0a4c4811fe0947f6f237978190cbaf4cea8fa8bd607ea14fda67d375403c9e",
+      "required": true,
+      "note": "QAIRT 2.49 loads this library dynamically; omitting it caused the first tiny session to fail closed before HTP execution."
+    },
+    "libQnnHtpV73Stub.so": {
+      "bytes": 771928,
+      "sha256": "2912cc4f29cc5163c36c6c58f931bd08b798ccf8545a670a9498549f95b9036f"
+    },
+    "libQnnHtpV73Skel.so": {
+      "bytes": 11859192,
+      "sha256": "bd54463547f0234d06045699b1f747b7d9d3e3b581874840af50c295b3124f25"
+    },
+    "libQnnSystem.so": {
+      "bytes": 4072160,
+      "sha256": "536201ed918f4066f9ef35671198c072faf9ef04af24545f5fae0fc79aa05baa"
+    }
+  },
+  "physical_htp_control": {
+    "model": {
+      "description": "six-node QDQ add control",
+      "bytes": 420,
+      "sha256": "b253f33d15a57621a014d7f522dfb4b25bb30f79b00395c282218865ffab3fb3"
+    },
+    "first_attempt": {
+      "status": "failed_closed_missing_runtime_dependency",
+      "exit_code": 255,
+      "detail": "The initial stage omitted libQnnHtpPrepare.so. ORT refused the session because nodes remained on the default CPU EP while fallback was disabled. This is deployment evidence, not a model-support result."
+    },
+    "accepted_attempt": {
+      "status": "passed",
+      "exit_code": 0,
+      "session_creation_seconds": 0.413961,
+      "measured_inference_seconds": 0.00196151,
+      "peak_working_set_bytes": 129986560,
+      "profile_evidence": [
+        "RPC (finalize) time",
+        "QNN accelerator (finalize) time",
+        "RPC (execute) time",
+        "QNN accelerator (execute) time",
+        "Accelerator (execute) time (cycles)",
+        "Number of HVX threads used = 4"
+      ],
+      "profile": {
+        "path": "experiments/0010-supertonic-qnn-htp-feasibility/work/device/qnn-smoke/smoke-qnn-with-prepare.csv",
+        "bytes": 2646,
+        "sha256": "e4cca7e966c99696d6ee836448587fdec7241b3e5a883c933f10500ec09a0e90"
+      },
+      "conclusion": "Actual SM8550 HTP execution is proven for the tiny control with CPU fallback disabled."
+    }
+  },
+  "vocoder_phone_gate": {
+    "model_sha256": "989fe86e7bda8f223cb50b0ea2f0ee293371e6ff84ddbe082d8ed8c122088364",
+    "operation": "session creation only; no inference",
+    "status": "native_crash",
+    "exit_code": 139,
+    "signal": "SIGSEGV",
+    "fault": {
+      "address": "0xb0",
+      "cause": "null pointer dereference"
+    },
+    "timestamp_device": "2026-08-13T17:45:03.412885075+01:00",
+    "tombstone_top_frames": [
+      "libonnxruntime.so+0x90da68",
+      "libonnxruntime.so+0x90af08",
+      "libonnxruntime.so+0x915764",
+      "libonnxruntime.so+0x915b1c"
+    ],
+    "output_produced": false,
+    "profile_produced": false,
+    "audio_produced": false,
+    "evidence": [
+      {
+        "path": "experiments/0010-supertonic-qnn-htp-feasibility/work/device/qnn-smoke/logcat-crash.txt",
+        "bytes": 69401,
+        "sha256": "852508f62bad87e9a613931bc2ef4ef7e47c8cc8b69ac3c4663c5843b7081a7c"
+      },
+      {
+        "path": "experiments/0010-supertonic-qnn-htp-feasibility/work/device/qnn-smoke/logcat-main-system.txt",
+        "bytes": 44433223,
+        "sha256": "0129409494f7668a37a0664edffeeac8d56aa1dd5c6f07348f9d7890e7493c72"
+      }
+    ]
+  },
+  "crash_root_cause": {
+    "status": "localized",
+    "reproduced_on": [
+      "QAIRT x86 HTP emulator",
+      "SM8550 physical HTP session path"
+    ],
+    "host_gdb_top_frame": "onnxruntime::QDQ::PadNodeGroupSelector::Check",
+    "host_gdb_call_path": [
+      "onnxruntime::QDQ::PadNodeGroupSelector::Check",
+      "onnxruntime::QDQ::NodeGroupSelector::GetQDQSelection",
+      "onnxruntime::QDQ::SelectorManager::GetQDQSelections",
+      "onnxruntime::QDQ::GetAllNodeUnits",
+      "onnxruntime::QNNExecutionProvider::GetCapability"
+    ],
+    "bug": "ORT 1.27.1 allowed an empty dq_nodes vector and then unconditionally dereferenced dq_nodes[0].",
+    "upstream_fix": {
+      "commit": "a08e17aab393a922d619736a4150cfe43bc7f8ec",
+      "pull_request": 28733,
+      "subject": "[QNN EP] Fix segfault on PadNodeGroupSelector::Check when dq_nodes is empty"
+    },
+    "backport_patch": {
+      "path": "experiments/0010-supertonic-qnn-htp-feasibility/patches/onnxruntime-a08e17-pad-empty-dq.patch",
+      "bytes": 1467,
+      "sha256": "549be0692c1414ea35e97f401aaeb87ba55801480c7bd84dba0471cf25773bde"
+    },
+    "gdb_evidence": {
+      "path": "experiments/0010-supertonic-qnn-htp-feasibility/work/device/qnn-smoke/host-gdb-vocoder.txt",
+      "bytes": 30876,
+      "sha256": "5ab665918a370879735cffa05144611b52498279053eec53d0f8f3fd0a3d60ac"
+    },
+    "conclusion": "The original status-139 failure is not emulator-only and occurs in ORT capability analysis before QNN graph composition or vocoder inference."
+  },
+  "patched_host_results": {
+    "runtime": {
+      "label": "ONNX Runtime 1.27.1 plus upstream a08e17 minimal backport",
+      "architecture": "x86_64",
+      "libonnxruntime_bytes": 30384960,
+      "libonnxruntime_sha256": "bc9df5a7df1b5d9de4d87adcaa4cc864bbde0f790e80d48e00ce0e4253a2ae11",
+      "android_runtime_built": false
+    },
+    "fixed_released_derivative": {
+      "model_sha256": "989fe86e7bda8f223cb50b0ea2f0ee293371e6ff84ddbe082d8ed8c122088364",
+      "status": "rejected_with_cpu_fallback_disabled",
+      "process_exit_code": 2,
+      "qnn_partitions": 9,
+      "graph_nodes": 354,
+      "qnn_supported_nodes": 338,
+      "unsupported_nodes": {
+        "Erf": 8,
+        "weight_only_DequantizeLinear": 8
+      },
+      "note": "The upstream patch removes the crash; ORT then fails closed because sixteen nodes remain outside QNN."
+    },
+    "folded_weight_only_fixed_derivative": {
+      "derivation": "fold exactly eight weight-only per-channel DequantizeLinear constant tails, then concretize the recorded I/O shapes",
+      "model_bytes": 51146913,
+      "model_sha256": "ee6760340a128e6f1f397ccee84c1fdd50165524d4ac7de76d522dec679fff14",
+      "status": "rejected_with_cpu_fallback_disabled",
+      "process_exit_code": 2,
+      "qnn_partitions": 9,
+      "graph_nodes": 346,
+      "qnn_supported_nodes": 338,
+      "unsupported_nodes": {
+        "Erf": 8
+      },
+      "same_runtime_cpu_equivalence": {
+        "bit_identical_to_fixed_released_derivative": true,
+        "report_path": "experiments/0010-supertonic-qnn-htp-feasibility/work/derived/vocoder-fold-weight-only-qdq-fixed-l238/same-runtime-cpu-equivalence.json",
+        "report_bytes": 1595,
+        "report_sha256": "311602473e2e84ead50e9ac6f3656263a8ff39b443dcfac543d392141d58023f",
+        "claim_limit": "This proves only same-runtime derivative equivalence; it is not an HTP numerical pass."
+      }
+    },
+    "optimization_level_sweep": {
+      "levels": [0, 1, 2, 99],
+      "result": "No level creates a complete no-fallback QNN session. Levels 1, 2, and 99 retain the same eight unsupported Erf nodes; level 0 has substantially worse delegation."
+    }
+  },
+  "interpretation": {
+    "physical_backend": "working for the tiny control",
+    "emulator_only_hypothesis": "rejected",
+    "unpatched_ort_vocoder_path": "blocked by a confirmed upstream ORT bug",
+    "patched_exact_fixed_vocoder_path": "blocked by eight Erf nodes plus eight weight-only DQ nodes",
+    "patched_folded_fixed_vocoder_path": "blocked only by eight Erf nodes in decomposed GELU patterns",
+    "likely_next_technical_route": "replace the eight standard decomposed GELU subgraphs with explicit com.microsoft.Gelu nodes as a separately labeled derivative, or construct an explicit CPU/HTP split; never count implicit ORT CPU fallback as an HTP pass"
+  },
+  "cleanup": {
+    "remote_path": "/data/local/tmp/vibevoice-qnn-0010",
+    "removed": true,
+    "evidence_path": "experiments/0010-supertonic-qnn-htp-feasibility/work/device/qnn-smoke/device-cleanup.txt",
+    "evidence_sha256": "dd65b2c3b3912477d191ae4753274650ecfa2e73a2ff0af19d9375b3f4397d86",
+    "phone_lock_held": false
+  },
+  "retained_local_state": {
+    "source": {
+      "path": "experiments/0010-supertonic-qnn-htp-feasibility/.local/onnxruntime-v1.27.1-source",
+      "state": "exact v1.27.1 source with the tracked a08e17 backport applied as an ignored working-tree diff"
+    },
+    "unpatched_android_build": {
+      "path": "experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-android-arm64",
+      "state": "successful reusable arm64 build; it predates the a08e17 backport and must be incrementally relinked before another vocoder phone attempt"
+    },
+    "patched_host_build": {
+      "path": "experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17",
+      "state": "successful x86_64 QNN build with the a08e17 backport; reusable for host capability probes"
+    },
+    "raw_work": {
+      "path": "experiments/0010-supertonic-qnn-htp-feasibility/work",
+      "state": "ignored models, tensors, profiles, logs, and generated runtime staging retained locally"
+    }
+  },
+  "next_steps": [
+    "On resume, review the consequential choice between an explicit-Gelu graph derivative and an explicitly split CPU/HTP hybrid. The explicit-Gelu derivative is the current recommendation.",
+    "If choosing the derivative, create a narrow tool that replaces only the eight proven standard GELU decompositions, records every node and hash, and compares CPU outputs before any HTP output is inspected.",
+    "Freeze the numerical and audio thresholds before a formal device vocoder inference gate.",
+    "Require a patched host session with CPU fallback disabled before incrementally rebuilding the Android runtime.",
+    "Before any new phone command, reacquire artifacts/locks/phone.lock and reconfirm Moritz's availability.",
+    "Only after a vocoder output passes delegation and numerical gates should the vector estimator or end-to-end path resume."
+  ],
+  "claims_not_made": [
+    "The released or fixed-shape vocoder has not executed on HTP.",
+    "No vocoder output or audio was produced by QNN.",
+    "No vocoder latency or speedup was measured.",
+    "No vector-estimator QNN probe has begun.",
+    "No end-to-end Supertonic QNN synthesis has run.",
+    "No numerical threshold has been frozen for a formal device gate.",
+    "No proprietary SDK artifact is committed or redistributable from this repository."
+  ]
+}
