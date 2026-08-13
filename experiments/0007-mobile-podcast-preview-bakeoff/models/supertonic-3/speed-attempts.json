@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "control": "speed",
+  "official_documentation": "https://github.com/supertone-inc/supertonic-py/blob/908a56486e821e833a80530ff0cae3ad0b046fce/examples/test5_speed_control.py",
+  "documented_range": {"minimum": 0.7, "maximum": 2.0},
+  "default": 1.05,
+  "direction": "descending",
+  "step": 0.05,
+  "endpoint": 0.7,
+  "attempts": [
+    {"index": 0, "argument": "omitted", "effective_speed": 1.05},
+    {"index": 1, "argument": 1.0, "effective_speed": 1.0},
+    {"index": 2, "argument": 0.95, "effective_speed": 0.95},
+    {"index": 3, "argument": 0.9, "effective_speed": 0.9},
+    {"index": 4, "argument": 0.85, "effective_speed": 0.85},
+    {"index": 5, "argument": 0.8, "effective_speed": 0.8},
+    {"index": 6, "argument": 0.75, "effective_speed": 0.75},
+    {"index": 7, "argument": 0.7, "effective_speed": 0.7}
+  ],
+  "selection_rule": "Run indices in order and stop at the first write-once raw output whose sample_count / 44100 is at least 15.0 seconds. Do not run later attempts after a pass.",
+  "attempt_isolation": "Each attempt is one complete generation process acquired separately through the global full-generation resource gate.",
+  "forbidden": ["time stretching", "padding", "looping", "concatenating fabricated speech", "replacing a raw attempt"]
+}
