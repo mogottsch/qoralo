@@ -65,7 +65,8 @@ class Commands(Protocol):
 class SubprocessCommands:
     def run(self, argv: Sequence[str], *, timeout: float | None = None) -> Completed:
         try:
-            p = subprocess.run(list(argv), text=True, capture_output=True, timeout=timeout, check=False)
+            p = subprocess.run(list(argv), text=True, encoding="utf-8", errors="replace",
+                               capture_output=True, timeout=timeout, check=False)
         except (OSError, subprocess.TimeoutExpired) as exc:
             raise CommandFailed(f"command could not complete: {argv[0]}") from exc
         return Completed(p.returncode, p.stdout, p.stderr)
@@ -488,10 +489,13 @@ class DeviceRunner:
                     log = (run_dir / "logcat.txt").read_text(encoding="utf-8", errors="replace")
                     if self.clock() - started >= timeout_seconds:
                         outcome, reason = "timeout", "benchmark exceeded the host timeout"
-                    elif re.search(r"OutOfMemoryError|out of memory|lowmemorykiller", log, re.IGNORECASE):
-                        outcome, reason = "oom", "process died with out-of-memory evidence"
+                    # Full retained logcat can contain historical lowmemorykiller
+                    # lines unrelated to this process. An observed fatal signal or
+                    # exception for the just-died benchmark takes precedence.
                     elif re.search(r"Fatal signal|FATAL EXCEPTION|tombstone", log, re.IGNORECASE):
                         outcome, reason = "native_crash", "process died with crash evidence"
+                    elif re.search(r"OutOfMemoryError|out of memory|lowmemorykiller", log, re.IGNORECASE):
+                        outcome, reason = "oom", "process died with out-of-memory evidence"
                     else:
                         outcome, reason = "failure", "process died before writing a result"
                     failure = self._failure(candidate_id, outcome, reason, exit_state, evidence)

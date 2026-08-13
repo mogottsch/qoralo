@@ -1,0 +1,94 @@
+{
+  "candidate_id": "pocket",
+  "evidence": [
+    {
+      "artifact_id": "failure",
+      "byte_count": 964,
+      "relative_path": "artifacts/0008/device-runs/20260813T113012Z-pocket-e1772bc95aaf/failure.json",
+      "retained": true,
+      "sha256": "f28e0619a2f9b1483d054ed3b04b790fa98bca85978e19ec86cbbe7694e7391a"
+    },
+    {
+      "artifact_id": "thermal-polls",
+      "byte_count": 158,
+      "relative_path": "artifacts/0008/device-runs/20260813T113012Z-pocket-e1772bc95aaf/thermal-polls.json",
+      "retained": true,
+      "sha256": "602755aa94104c447fdde3a9cd5544df9fc11006a13fae0b78311182489bb175"
+    },
+    {
+      "artifact_id": "telemetry",
+      "byte_count": 57962,
+      "relative_path": "artifacts/0008/device-runs/20260813T113012Z-pocket-e1772bc95aaf/telemetry.jsonl",
+      "retained": true,
+      "sha256": "853f5b27884838fc5e27d99223fe808c75461af46a68fba06cc6fdcad43661e1"
+    },
+    {
+      "artifact_id": "logcat",
+      "byte_count": 38542693,
+      "relative_path": "artifacts/0008/device-runs/20260813T113012Z-pocket-e1772bc95aaf/logcat.txt",
+      "retained": true,
+      "sha256": "7a5be3de58b7b4ad9a09ce0c50a60e781ca24b3b538c382af68fe0381bb0ac45"
+    }
+  ],
+  "experiment": "0008",
+  "listening": "not_performed",
+  "metrics": {
+    "boundary_pss_bytes": {
+      "availability": "unavailable",
+      "reason": "Process died before serializing app boundary memory.",
+      "source": "observed",
+      "value": null
+    },
+    "boundary_rss_bytes": {
+      "availability": "unavailable",
+      "reason": "Process died before serializing app boundary memory.",
+      "source": "observed",
+      "value": null
+    },
+    "load_wall_seconds": {
+      "availability": "unavailable",
+      "reason": "Process died before serializing the completed load boundary.",
+      "source": "observed",
+      "value": null
+    },
+    "sampled_peak_pss_bytes": {
+      "availability": "measured",
+      "reason": null,
+      "source": "observed",
+      "value": 574208000
+    },
+    "sampled_peak_rss_bytes": {
+      "availability": "measured",
+      "reason": null,
+      "source": "observed",
+      "value": 664522752
+    },
+    "vm_hwm_bytes": {
+      "availability": "unavailable",
+      "reason": "Process died before app result serialization and /proc VmHWM was not retained.",
+      "source": "observed",
+      "value": null
+    },
+    "warm_median_rtf": {
+      "availability": "unavailable",
+      "reason": "Cold synthesis crashed; no warm generation ran.",
+      "source": "observed",
+      "value": null
+    }
+  },
+  "outcome": "native_crash",
+  "outcome_reason": "Process aborted during the cold synthesis callback before writing an app result; logcat records SIGABRT and a pending NoSuchMethodError for callback invoke([F)Ljava/lang/Integer;.",
+  "provider": "cpu",
+  "runs": [],
+  "schema_version": 1,
+  "threads": 1,
+  "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
+  "voice": {
+    "actual_reference": "models/pocket/test_wavs/bria.wav",
+    "actual_reference_sha256": "85f46d6f0642f657a6bd689ddaa52d5a5f53e4314715e1032704c80917392181",
+    "proof": "models/pocket/model.json",
+    "requested_voice": "Alba",
+    "speaker_id": 0,
+    "voice_match": false
+  }
+}
