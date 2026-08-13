@@ -8,8 +8,8 @@
     "model": "microsoft/VibeVoice-1.5B",
     "device": "Samsung Galaxy S23 Ultra SM-S918B"
   },
-  "updated_at": "2026-08-13T14:20:00+01:00",
-  "updated_by": "experiment 0008 measured decision",
+  "updated_at": "2026-08-13T17:32:00+01:00",
+  "updated_by": "experiments 0009 completion and 0010 pause checkpoint",
   "autonomy": {
     "authorized_through_step": 39,
     "stop_conditions": [
@@ -29,8 +29,8 @@
     "percent": 100.0,
     "current_step": 39,
     "current_lane": "D",
-    "current_activity": "Experiment 0008 Galaxy S23 Ultra sherpa-onnx decision published",
-    "summary": "Experiment 0008 is complete: Supertonic 3 works at one-thread warm median RTF 0.370; Pocket works with voice/license limitations at 0.389; Kokoro works with a one-thread speed limitation at 1.195 and reaches 0.963 in the separate two-thread comparison. Retired candidates and experiment 0007 remain historical-only."
+    "current_activity": "Paused after experiment 0010 host preflight; repository checkpointed for tomorrow",
+    "summary": "Experiment 0009 is complete: the exact Kokoro mixed-INT8 candidate is 46.0% smaller and passed Moritz’s blind listening gate; the phone thread sweep observed Pocket 0.367 at two threads, Kokoro 0.753 at four threads, and Supertonic 0.362 at two threads, with sub-10% changes treated as inconclusive. Experiment 0010 is paused before its first phone QNN model execution. A reusable Android arm64 ONNX Runtime 1.27.1 + QAIRT 2.49 build is retained locally; no HTP execution or speedup is claimed."
   },
   "resources": {
     "phone": {
@@ -468,6 +468,47 @@
       "cross_process_deterministic": true,
       "complete_locked_reference": false,
       "evidence": "experiments/0002-vibevoice-1.5b-executorch-android/results/complete-build-final.json"
+    },
+    "experiment_0009_android_optimization": {
+      "status": "complete",
+      "device": "Samsung Galaxy S23 Ultra SM-S918B",
+      "thread_sweep": {
+        "configurations_succeeded": 9,
+        "wavs_validated": 36,
+        "best_observed_warm_median_rtf": {
+          "pocket_tts_100m": 0.3674131144286632,
+          "kokoro_82m": 0.7525562116011203,
+          "supertonic_3": 0.3624899421101892
+        },
+        "best_observed_threads": {
+          "pocket_tts_100m": 2,
+          "kokoro_82m": 4,
+          "supertonic_3": 2
+        },
+        "interpretation": "Differences below 5-10% are inconclusive; larger changes are directional in one rotated campaign."
+      },
+      "kokoro_int8": {
+        "status": "passed_user_listening",
+        "size_reduction_fraction": 0.46049732901671914,
+        "ballot": {
+          "ties": 4,
+          "int8_preferred": 1,
+          "fp32_preferred": 1,
+          "directional_vote_confidence": 2
+        },
+        "android_performance": "not_yet_measured_for_this_candidate"
+      },
+      "evidence": "experiments/0009-android-tts-optimization/"
+    },
+    "experiment_0010_qnn_htp": {
+      "status": "paused_after_host_preflight_before_phone_qnn_execution",
+      "target": "Supertonic 3 vocoder then vector estimator on SM8550 HTP",
+      "android_ort_qnn_build": "complete_and_preserved_in_ignored_local_cache",
+      "host_q8_vocoder_derivative": "rejected_numerical_gate",
+      "phone_qnn_execution_proven": false,
+      "speedup_claimed": false,
+      "next_action": "Run a tiny QDQ control with CPU fallback disabled and detailed HTP profiling before the fixed released vocoder.",
+      "evidence": "experiments/0010-supertonic-qnn-htp-feasibility/results/host-checkpoint.json"
     }
   },
   "commits": [
@@ -924,10 +965,10 @@
     "in_progress_tasks": 0,
     "total_tasks": 18,
     "current_task": null,
-    "status": "complete_awaiting_explicit_next_step_approval",
+    "status": "complete_follow_up_executed",
     "subjective_listening": "recorded_user_review_kokoro_clearly_preferred_realtime_and_pocket_tied_for_second",
     "decision_report": "docs/candidate-decision-report.json",
-    "follow_up_started": false,
+    "follow_up_started": true,
     "historical_39_of_39_preserved": true
   },
   "expanded_listening_campaign": {
@@ -950,25 +991,33 @@
       "Inflect Nano v1",
       "Kitten TTS Mini 80M v0.8"
     ],
-    "android_follow_up_started": false,
+    "android_follow_up_started": true,
     "decision_report": "docs/candidate-decision-report.json",
     "publication_manifest": "experiments/0007-mobile-podcast-preview-bakeoff/publication/bakeoff-manifest.json"
   },
   "active_follow_up": {
-    "experiment": "0008-sherpa-onnx-android-tts-benchmark",
-    "status": "pending_device_measurement",
+    "experiment": "0010-supertonic-qnn-htp-feasibility",
+    "status": "paused_before_first_phone_qnn_model_execution",
     "selected_order": [
-      "pocket_tts_100m",
-      "kokoro_82m",
-      "supertonic_3"
+      "supertonic_3_vocoder_control",
+      "supertonic_3_vector_estimator",
+      "supertonic_3_end_to_end_if_gated"
     ],
     "historical_only": [
       "vibevoice_realtime_0_5b",
       "inflect_nano_v1",
       "kitten_tts_mini_80m_v0_8"
     ],
-    "device_readiness": "enumerated_previously_current_connection_unlock_unverified",
-    "android_metrics_available": false,
-    "next_action": "Complete host-only validation before any device action."
+    "device_readiness": "SM-S918B_identity_verified_phone_lock_released",
+    "android_cpu_metrics_available": true,
+    "android_qnn_metrics_available": false,
+    "next_action": "Reconfirm phone use, acquire the lock, and run the tiny QDQ HTP proof control with CPU fallback disabled."
+  },
+  "optimization_follow_up": {
+    "schema_version": 1,
+    "experiment_0009": "complete",
+    "experiment_0010": "paused_host_checkpoint_complete",
+    "human_report": "https://preview.moket-home.de/vibevoice-android/",
+    "resume_handoff": "experiments/0010-supertonic-qnn-htp-feasibility/HANDOFF.md"
   }
 }
