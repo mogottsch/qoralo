@@ -1,0 +1,35 @@
+{
+  "aggregate_deployed_bytes": 746547260,
+  "aggregate_required_free_bytes": 1493094520,
+  "models": [
+    {
+      "candidate": "pocket",
+      "deployed_bytes": 200444815,
+      "deployment_variant": "sherpa-onnx-pocket-tts-int8-2026-01-26",
+      "descriptor": "models/pocket/android-descriptor.json",
+      "descriptor_sha256": "d1438147b2251715911f2de6a4bdf6989e0c4da19761411246ab745085066d09",
+      "inventory_file_count": 8,
+      "required_free_bytes": 400889630
+    },
+    {
+      "candidate": "kokoro",
+      "deployed_bytes": 400786089,
+      "deployment_variant": "kokoro-multi-lang-v1_0",
+      "descriptor": "models/kokoro/benchmark-descriptor.json",
+      "descriptor_sha256": "a0215e44b6493c5154b314d04c61f06deb805bc9d4a64cb4dc19805f2ca30102",
+      "inventory_file_count": 377,
+      "required_free_bytes": 801572178
+    },
+    {
+      "candidate": "supertonic_3",
+      "deployed_bytes": 145316356,
+      "deployment_variant": "sherpa-onnx-supertonic-3-tts-int8-2026-05-11",
+      "descriptor": "models/supertonic-3/android-descriptor.json",
+      "descriptor_sha256": "a04a97b2f32efff9471657366c975a38adb4e1f6d6b4f80b258902a43a8be88a",
+      "inventory_file_count": 9,
+      "required_free_bytes": 290632712
+    }
+  ],
+  "schema_version": 1,
+  "storage_formula": "required_free_bytes = 2 * verified_deployed_bytes; APK bytes are added by the runner before applying the same 2x safety allowance"
+}

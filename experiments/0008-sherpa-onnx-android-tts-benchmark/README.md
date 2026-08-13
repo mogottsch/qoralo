@@ -38,6 +38,10 @@ Outcomes include success, partial success, blocked, timeout, native crash, OOM, 
 - [`schemas/failure-manifest.schema.json`](schemas/failure-manifest.schema.json) — host-generated negative outcomes when native serialization is impossible.
 - [`pins/assets.json`](pins/assets.json) — immutable release metadata, checksums, licenses, conversion/build provenance, and the exact Ubuntu 22.04 CPython 3.11.9 host wheels.
 - [`tools/pinning.py`](tools/pinning.py) — fail-closed download, verification, extraction, host-runtime verification, and deterministic inventory utility.
+- [`schemas/benchmark-descriptor.schema.json`](schemas/benchmark-descriptor.schema.json) — the shared Android launch-descriptor contract used by all three tracks.
+- [`integration/aggregate-inventory.json`](integration/aggregate-inventory.json) — verified per-model and aggregate deployed-byte/free-space requirements.
+- [`integration/host-readiness.json`](integration/host-readiness.json) — host-only voice/provenance readiness; it makes no Android performance claim.
+- [`tools/host_wav.py`](tools/host_wav.py) and [`tools/inspect_apk.py`](tools/inspect_apk.py) — independent PCM decode/audio checks and the arm64/no-bundled-model APK gate.
 
 ## Pinned asset workflow
 
@@ -53,6 +57,10 @@ python "$TOOL" --manifest "$PIN" verify-host-runtime experiments/0008-sherpa-onn
 ```
 
 Host smoke testing is permitted only with the two exact wheels in the manifest, on its pinned platform. An extra, missing, locally built, differently hashed, or wrong-platform wheel fails validation. Host smoke output validates configuration only: its timing must never be copied into Android results.
+
+## Host-only integration gate
+
+`python3 tools/integration_gate.py --check` validates the three common launch descriptors and proves the committed aggregate inventory is current. Its free-space formula is the runner's fail-closed allowance: twice the verified deployed bytes; at staging time the runner adds the actual APK bytes before applying the same factor. After the Gradle build, run `python3 tools/inspect_apk.py android/app/build/outputs/apk/debug/app-debug.apk --aar android/libs/sherpa-onnx-1.13.5.aar`. The inspector verifies the pinned AAR byte identity, exact arm64 native payload, and absence of model weights, archives, and audio. The APK itself remains ignored.
 
 Large archives, extracted models, host wheels, APKs, WAVs, full logcat, and raw high-frequency telemetry remain ignored. Git retains normalized manifests, inventories, independent validation reports, failure manifests, and hash-addressed relative references to raw evidence.
 

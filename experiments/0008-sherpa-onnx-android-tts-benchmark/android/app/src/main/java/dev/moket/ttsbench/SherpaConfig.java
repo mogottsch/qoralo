@@ -38,9 +38,9 @@ public record SherpaConfig(String modelType, Map<String,String> modelValues,
         // their individual regular files. Resolve a directory only through a verified child.
         String prefix=relative.endsWith("/")?relative:relative+"/";
         for(var e:verified.entrySet())if(e.getKey().startsWith(prefix)){
-            Path candidate=e.getValue().toPath();int childParts=Path.of(e.getKey().substring(prefix.length())).getNameCount();
+            Path candidate=e.getValue().toPath();int childParts=Paths.get(e.getKey().substring(prefix.length())).getNameCount();
             for(int i=0;i<childParts;i++)candidate=candidate.getParent();
-            if(candidate!=null&&Files.isDirectory(candidate)&&candidate.getFileName().toString().equals(Path.of(relative).getFileName().toString()))return candidate.toFile().getAbsolutePath();
+            if(candidate!=null&&Files.isDirectory(candidate)&&candidate.getFileName().toString().equals(Paths.get(relative).getFileName().toString()))return candidate.toFile().getAbsolutePath();
         }
         throw new IOException(key+" is not in verified inventory: "+relative);
     }

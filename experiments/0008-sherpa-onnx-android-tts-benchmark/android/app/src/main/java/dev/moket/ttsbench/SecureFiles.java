@@ -12,7 +12,7 @@ public final class SecureFiles {
         Map<String,File> result = new LinkedHashMap<>();
         for (var e : inventory.entrySet()) {
             Path relative;
-            try { relative = Path.of(e.getKey()); } catch (InvalidPathException x) { throw new IOException("invalid path", x); }
+            try { relative = Paths.get(e.getKey()); } catch (InvalidPathException x) { throw new IOException("invalid path", x); }
             if (relative.isAbsolute() || relative.normalize().startsWith("..")) throw new IOException("path escapes external files root: "+e.getKey());
             Path cursor=root;
             for(Path part:relative) { cursor=cursor.resolve(part); if(Files.isSymbolicLink(cursor)) throw new IOException("symlink forbidden: "+e.getKey()); }
@@ -27,7 +27,7 @@ public final class SecureFiles {
         return Collections.unmodifiableMap(result);
     }
     public static String sha256(File file) throws IOException {
-        try { MessageDigest d=MessageDigest.getInstance("SHA-256"); try(InputStream in=new BufferedInputStream(new FileInputStream(file))){byte[] b=new byte[65536];for(int n;(n=in.read(b))>=0;)if(n>0)d.update(b,0,n);} return HexFormat.of().formatHex(d.digest()); }
+        try { MessageDigest d=MessageDigest.getInstance("SHA-256"); try(InputStream in=new BufferedInputStream(new FileInputStream(file))){byte[] b=new byte[65536];for(int n;(n=in.read(b))>=0;)if(n>0)d.update(b,0,n);} StringBuilder hex=new StringBuilder(64);for(byte value:d.digest())hex.append(String.format(Locale.ROOT,"%02x",value&0xff));return hex.toString(); }
         catch(NoSuchAlgorithmException impossible){throw new AssertionError(impossible);}
     }
 }

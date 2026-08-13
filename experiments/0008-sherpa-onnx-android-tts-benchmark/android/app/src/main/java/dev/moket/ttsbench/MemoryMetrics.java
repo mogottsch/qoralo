@@ -9,7 +9,7 @@ public record MemoryMetrics(long pssBytes, long rssBytes, long vmHwmBytes,
     public MemoryMetrics { if(!"cumulative_process_lifetime".equals(vmHwmSemantics))throw new IllegalArgumentException("VmHWM must be labeled cumulative"); }
     public static long procKb(String status,String key) throws IOException { for(String line:status.split("\\R")){String[] p=line.trim().split("\\s+");if(p.length>=2&&p[0].equals(key+":"))return Math.multiplyExact(Long.parseLong(p[1]),1024);}throw new IOException("missing "+key); }
     public static MemoryMetrics fromProc(String status,long pssBytes,String phase,long peakPss,long peakRss)throws IOException{return new MemoryMetrics(pssBytes,procKb(status,"VmRSS"),procKb(status,"VmHWM"),"cumulative_process_lifetime",phase,peakPss,peakRss);}
-    public static String readProcStatus() throws IOException{return new String(Files.readAllBytes(Path.of("/proc/self/status")), java.nio.charset.StandardCharsets.UTF_8);}
+    public static String readProcStatus() throws IOException{return new String(Files.readAllBytes(Paths.get("/proc/self/status")), java.nio.charset.StandardCharsets.UTF_8);}
 
     public interface Source { Sample sample() throws Exception; }
     public record Sample(long pssBytes,long rssBytes) {}
