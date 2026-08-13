@@ -10,6 +10,7 @@ import sys
 import tomllib
 from pathlib import Path
 
+import jsonschema
 import pytest
 
 HERE = Path(__file__).resolve().parent
@@ -163,6 +164,21 @@ def test_generator_allows_no_reference_or_cloning_inputs_and_is_write_once() -> 
     )
     assert result.returncode != 0 and "global full-generation gate" in (result.stdout + result.stderr)
     assert not (HERE / "should-not-exist.f32le").exists()
+
+
+def test_blocked_generation_evidence_is_schema_valid_and_cannot_publish() -> None:
+    result = json.loads((EXPERIMENT / "results/kitten-mini-0.8-preview.json").read_text(encoding="utf-8"))
+    schema = json.loads((EXPERIMENT / "schemas/preview-result.schema.json").read_text(encoding="utf-8"))
+    jsonschema.validate(result, schema)
+    assert result["model"] == "kitten-tts-mini-0.8"
+    assert result["status"] == "blocked" and result["publication_eligible"] is False
+    assert "normalized" not in result
+    assert result["raw"]["duration_seconds"] == 347800 / 24000 < 15.0
+    assert result["speed_control"]["setting"] == 1.0
+    assert [attempt["kind"] for attempt in result["attempts"]] == ["default", "fresh-process-repeat"]
+    assert all(attempt["resource_kind"] == "full-generation" for attempt in result["attempts"])
+    assert result["forbidden_transformations_used"] == []
+    assert result["provenance"]["determinism"]["raw_hashes_match"] is False
 
 
 def test_frozen_transcript_unchanged() -> None:

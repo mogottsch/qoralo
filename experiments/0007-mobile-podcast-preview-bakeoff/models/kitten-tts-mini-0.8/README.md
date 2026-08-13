@@ -51,4 +51,10 @@ models/kitten-tts-mini-0.8/generate-preview.sh repeat-1
 
 Each invocation independently acquires the same global `full-generation` gate. The scaffold accepts only the committed `default` attempt, exact protocol-v2 transcript hash, local hash-verified assets, Jasper, CPU providers, and a unique output below the ignored generation directory. Native mono float waveform bytes are written with exclusive creation and measured at 24 kHz. The official API is non-streaming, so first API output is explicitly completion-equivalent. Shared monotonic/RSS/audibility/RTF metrics are recorded. A short default is preserved with metadata and exits as the declared terminal blocker.
 
-Do not run full generation as part of this preparation task. No credentials, gated assets, privileged installation, Android work, reference recordings, or voice cloning are used.
+No credentials, gated assets, privileged installation, Android work, reference recordings, or voice cloning are used.
+
+## Task 8 generation outcome: terminal blocker
+
+On the recorded Ryzen 7 5800H CPU host, both globally gated fresh-process jobs ran the sole precommitted attempt (`speed=1.0`). Each produced 347,800 native 24 kHz samples, or **14.491666666666667 seconds**, below protocol-v2's 15-second minimum. The outputs remain write-once under the ignored artifact directory. Their waveform hashes differ, so the evidence claims repeatable duration and sample count only, not bit-exact waveform determinism.
+
+No retry or normalized artifact was produced. The pinned material supplies neither eligible speed bounds nor a documented direction for lengthening, so choosing another speed would be an undocumented control. Padding, looping, time stretching, transcript changes, and raw replacement are also forbidden. `results/kitten-mini-0.8-preview.json` records the commands, hashes, timings, RSS, RTF, statistics, provenance, licenses, repeat comparison, and terminal campaign blocker. Candidate F is not publication eligible, and success-path integration must not proceed.
