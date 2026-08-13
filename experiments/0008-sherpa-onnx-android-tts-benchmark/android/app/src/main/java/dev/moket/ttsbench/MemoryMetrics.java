@@ -15,8 +15,12 @@ public record MemoryMetrics(long pssBytes, long rssBytes, long vmHwmBytes,
     public record Sample(long pssBytes,long rssBytes) {}
     public static final class PhaseSampler implements AutoCloseable {
         private final Source source; private final Thread worker; private volatile boolean running=true; private volatile long peakPss=-1,peakRss=-1;
-        public PhaseSampler(Source source,long intervalMs){this.source=source;worker=new Thread(()->{while(running){try{Sample s=source.sample();peakPss=Math.max(peakPss,s.pssBytes);peakRss=Math.max(peakRss,s.rssBytes);Thread.sleep(intervalMs);}catch(InterruptedException e){return;}catch(Exception ignored){}}},"memory-sampler");worker.setDaemon(true);worker.start();}
+        public PhaseSampler(Source source,long intervalMs){
+            if(intervalMs<=0)throw new IllegalArgumentException("intervalMs");this.source=Objects.requireNonNull(source);sampleNow();
+            worker=new Thread(()->{while(running){try{Thread.sleep(intervalMs);sampleNow();}catch(InterruptedException e){return;}}},"memory-sampler");worker.setDaemon(true);worker.start();
+        }
+        private void sampleNow(){try{Sample s=source.sample();if(s.pssBytes()>=0)peakPss=Math.max(peakPss,s.pssBytes());if(s.rssBytes()>=0)peakRss=Math.max(peakRss,s.rssBytes());}catch(Exception ignored){/* unavailable samples remain -1 rather than fabricated */}}
         public long peakPss(){return peakPss;} public long peakRss(){return peakRss;}
-        public void close(){running=false;worker.interrupt();try{worker.join(1000);}catch(InterruptedException e){Thread.currentThread().interrupt();}}
+        public void close(){sampleNow();running=false;worker.interrupt();try{worker.join(1000);}catch(InterruptedException e){Thread.currentThread().interrupt();}}
     }
 }

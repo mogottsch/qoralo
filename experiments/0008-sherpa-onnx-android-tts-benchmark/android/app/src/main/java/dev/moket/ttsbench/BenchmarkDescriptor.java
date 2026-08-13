@@ -14,8 +14,11 @@ public record BenchmarkDescriptor(String candidate, String transcript, String tr
         if (numThreads != 1 && numThreads != 2) throw new IllegalArgumentException("threads must be 1 or 2");
         if (warmRuns < 3) throw new IllegalArgumentException("at least three warm runs required");
         if (!transcriptSha256.matches("[0-9a-f]{64}")) throw new IllegalArgumentException("bad transcript hash");
+        if (candidate.isBlank() || language==null || language.isBlank()) throw new IllegalArgumentException("candidate/language must be non-empty");
         if (files.isEmpty()) throw new IllegalArgumentException("empty deployed file inventory");
-        for (var e : files.entrySet()) if (!e.getValue().matches("[0-9a-f]{64}")) throw new IllegalArgumentException("bad hash: " + e.getKey());
+        for (var e : files.entrySet()) if (e.getKey()==null || e.getKey().isBlank() || e.getValue()==null || !e.getValue().matches("[0-9a-f]{64}")) throw new IllegalArgumentException("bad inventory entry: " + e.getKey());
+        if (!transcriptSha256.equals(files.get(transcript))) throw new IllegalArgumentException("transcript must be pinned by transcript_sha256");
+        if (!files.containsKey(sherpaConfigPath)) throw new IllegalArgumentException("sherpa config must be pinned");
     }
 
     /** Parses the controlled runner format, not arbitrary JSON. Unknown fields are harmless. */

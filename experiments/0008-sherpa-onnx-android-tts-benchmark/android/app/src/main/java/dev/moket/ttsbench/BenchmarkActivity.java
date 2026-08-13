@@ -17,10 +17,11 @@ public final class BenchmarkActivity extends Activity {
             File descriptor=SecureFiles.verify(external,Map.of(descriptorName,getIntent().getStringExtra("descriptor_sha256"))).get(descriptorName);
             BenchmarkDescriptor d=BenchmarkDescriptor.parse(new String(Files.readAllBytes(descriptor.toPath()),StandardCharsets.UTF_8));Map<String,File> verified=SecureFiles.verify(external,d.files());
             File transcript=verified.get(d.transcript());if(transcript==null||!SecureFiles.sha256(transcript).equals(d.transcriptSha256()))throw new IOException("transcript pin mismatch");
+            String transcriptText=new String(Files.readAllBytes(transcript.toPath()),StandardCharsets.UTF_8);if(transcriptText.isEmpty())throw new IOException("empty transcript");
             BenchmarkRunner runner=new BenchmarkRunner(System::nanoTime,SherpaOfflineTtsEngine::create,new AndroidMemoryReader());
-            File output=new File(external,"results/"+campaign);BenchmarkResult result=runner.run(d,verified,output,campaign);
+            File output=new File(external,"results/"+campaign);BenchmarkResult result=runner.run(d,verified,transcriptText,output,campaign);
             BenchmarkRunner.writeResultNew(new File(output,campaign+".json"),result);
-        }catch(Exception e){try{BenchmarkResult failure=new BenchmarkResult(0,List.of(),null,new BenchmarkResult.Failure("bootstrap","failure",String.valueOf(e.getMessage()),e.getClass().getName()));BenchmarkRunner.writeResultNew(new File(external,"results/"+campaign+"/"+campaign+".json"),failure);}catch(Exception ignored){}}
+        }catch(Exception e){try{BenchmarkResult failure=new BenchmarkResult(0,null,List.of(),null,new BenchmarkResult.Failure("bootstrap","failure",String.valueOf(e.getMessage()),e.getClass().getName()));BenchmarkRunner.writeResultNew(new File(external,"results/"+campaign+"/"+campaign+".json"),failure);}catch(Exception ignored){}}
         finally{runOnUiThread(this::finishAndRemoveTask);}
     }
 }
