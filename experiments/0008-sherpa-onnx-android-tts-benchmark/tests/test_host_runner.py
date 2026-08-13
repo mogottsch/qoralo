@@ -131,8 +131,13 @@ class HostRunnerTests(unittest.TestCase):
                         pass
                 self.assertEqual(fake.mutating(), [])
 
+    def test_samsung_keyguard_delegate_unlock_format_is_accepted(self):
+        fake = FakeCommands(policy="KeyguardServiceDelegate\n  showing=false\n  secure=true")
+        with self.runner(fake).safe_session() as device:
+            self.assertEqual(device["model"], "SM-S918B")
+
     def test_wrong_model_locked_booting_and_wrong_abi_are_read_only(self):
-        cases = ({"model": "SM-S911B"}, {"policy": "mShowingLockscreen=true"},
+        cases = ({"model": "SM-S911B"}, {"policy": "KeyguardServiceDelegate\n  showing=true\n  secure=true"},
                  {"boot": "0"}, {"abi": "x86_64"})
         for kwargs in cases:
             with self.subTest(kwargs=kwargs):
@@ -193,6 +198,22 @@ class HostRunnerTests(unittest.TestCase):
                                     "pocket", inventory, model)
         self.assertEqual(fake.mutating(), [])
 
+    def test_inventory_accepts_canonical_bytes_field(self):
+        apk, model, inventory, digest = self.make_inventory()
+        inventory.write_text(json.dumps({"files": [{"path": "a.bin", "bytes": 8, "sha256": digest}]}))
+        rows = load_inventory(inventory, model)
+        self.assertEqual(rows[0].size, 8)
+
+    def test_inventory_accepts_real_espeak_bang_directory(self):
+        model = self.dir / "model"
+        source = model / "voices/!v/Mr serious"
+        source.parent.mkdir(parents=True)
+        source.write_bytes(b"voice")
+        digest = hashlib.sha256(source.read_bytes()).hexdigest()
+        inventory = self.dir / "inventory.json"
+        inventory.write_text(json.dumps({"files": [{"path": "voices/!v/Mr serious", "bytes": 5, "sha256": digest}]}))
+        self.assertEqual(load_inventory(inventory, model)[0].relative_path, "voices/!v/Mr serious")
+
     def test_stage_installs_then_pushes_and_verifies(self):
         apk, model, inventory, digest = self.make_inventory()
         fake = FakeCommands()
@@ -211,6 +232,22 @@ class HostRunnerTests(unittest.TestCase):
         self.assertTrue(any("install" in call for call in mutations))
         self.assertTrue(any("push" in call for call in mutations))
         self.assertTrue(any("mv" in call for call in mutations))
+
+    def test_complete_deployment_stages_at_app_files_root(self):
+        apk, model, inventory, digest = self.make_inventory()
+        fake = FakeCommands()
+        original = fake.run
+        def run(argv, **kwargs):
+            if "sha256sum" in argv:
+                fake.calls.append(tuple(argv))
+                return Completed(0, digest + "  remote\n")
+            return original(argv, **kwargs)
+        fake.run = run
+        result = self.runner(fake).stage(apk, hashlib.sha256(apk.read_bytes()).hexdigest(),
+                                         "complete", inventory, model, app_files_root=True)
+        self.assertEqual(result["remote_root"], "app_external_files")
+        pushes = [call for call in fake.calls if "push" in call]
+        self.assertIn("/sdcard/Android/data/dev.moket.ttsbench/files/a.bin.incoming-", " ".join(pushes[0]))
 
     def test_thermal_parser_and_baseline_policy(self):
         self.assertEqual(parse_thermal_status("Thermal Status: NONE"), "NONE")

@@ -13,6 +13,7 @@ import hashlib
 import json
 import os
 import re
+import shlex
 import subprocess
 import time
 import uuid
@@ -104,10 +105,11 @@ def sha256_file(path: Path) -> str:
 
 def _safe_relative(value: str) -> str:
     path = PurePosixPath(value)
-    # Paths become operands to `adb shell`, whose argv is interpreted by a remote
-    # shell.  A conservative component allowlist prevents metacharacters, spaces,
-    # and option-like names from changing the intended command.
-    safe_component = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*")
+    # The pinned espeak-ng tree contains both ``!v`` and names with spaces.
+    # Permit ordinary printable archive names, then quote every operand passed
+    # through the remote shell. Option-leading and control-character components
+    # stay forbidden.
+    safe_component = re.compile(r"[A-Za-z0-9_!][A-Za-z0-9._! -]*")
     if (not value or path.is_absolute() or ".." in path.parts or "." in path.parts
             or any(safe_component.fullmatch(part) is None for part in path.parts)):
         raise RunnerError(f"unsafe relative path: {value!r}")
@@ -128,7 +130,12 @@ def load_inventory(path: Path, source_dir: Path) -> list[LocalFile]:
     for row in rows:
         try:
             rel = _safe_relative(row["path"])
-            expected_size = int(row["size"])
+            # Committed experiment inventories use ``bytes``; accept the older
+            # runner spelling only when the row does not ambiguously contain both.
+            size_keys = {key for key in ("bytes", "size") if key in row}
+            if len(size_keys) != 1:
+                raise ValueError("inventory row requires exactly one size field")
+            expected_size = int(row[size_keys.pop()])
             expected_hash = str(row["sha256"]).lower()
         except (KeyError, TypeError, ValueError) as exc:
             raise RunnerError("malformed inventory entry") from exc
@@ -249,7 +256,11 @@ class DeviceRunner:
         abi = self._adb("shell", "getprop", "ro.product.cpu.abi").stdout.strip()
         boot = self._adb("shell", "getprop", "sys.boot_completed").stdout.strip()
         policy = self._adb("shell", "dumpsys", "window", "policy").stdout
-        unlocked = bool(re.search(r"(?:mShowingLockscreen|isKeyguardShowing)=false\b", policy))
+        unlocked = bool(
+            re.search(r"(?:mShowingLockscreen|isKeyguardShowing)=false\b", policy)
+            or re.search(r"\bshowing=false\b", policy)
+            or re.search(r"\bmIsShowing=false\b", policy)
+        )
         if boot != "1" or abi != TARGET_ABI or not unlocked:
             raise DeviceNotReady("device is booting, locked, or has the wrong ABI")
         def prop(name: str) -> str:
@@ -279,13 +290,16 @@ class DeviceRunner:
             raise DeviceNotReady("could not determine app external-storage capacity")
         return int(lines[-1][3]) * 1024
 
-    def stage(self, apk: Path, apk_sha256: str, model_id: str, inventory: Path, model_dir: Path) -> dict:
+    def stage(self, apk: Path, apk_sha256: str, model_id: str, inventory: Path, model_dir: Path,
+              *, app_files_root: bool = False) -> dict:
         if not apk.is_file() or apk.is_symlink():
             raise RunnerError("APK is absent or linked")
         apk_sha256 = apk_sha256.lower()
         if not re.fullmatch(r"[0-9a-f]{64}", apk_sha256) or sha256_file(apk) != apk_sha256:
             raise RunnerError("APK does not match its expected SHA-256")
         model_id = _safe_relative(model_id)
+        if re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", model_id) is None:
+            raise RunnerError(f"unsafe model id: {model_id!r}")
         files = load_inventory(inventory, model_dir)  # host verification cannot touch the phone
         required = apk.stat().st_size + sum(item.size for item in files)
         with self.safe_session() as device:
@@ -293,22 +307,27 @@ class DeviceRunner:
             if free < required * 2:
                 raise DeviceNotReady(f"insufficient storage: need safety allowance {required * 2}, have {free}")
             self._adb("install", "-r", str(apk), timeout=300)
-            remote_dir = f"{REMOTE_FILES}/models/{model_id}"
+            # A complete deployment inventory includes protocol/, descriptors,
+            # configs, and all models, whose descriptor paths are relative to the
+            # app external-files root. Per-model staging retains the legacy path.
+            remote_dir = REMOTE_FILES if app_files_root else f"{REMOTE_FILES}/models/{model_id}"
             self._adb("shell", "mkdir", "-p", remote_dir)
             deployed = []
             for item in files:
                 remote = f"{remote_dir}/{item.relative_path}"
                 remote_parent = str(PurePosixPath(remote).parent)
                 temporary = f"{remote}.incoming-{uuid.uuid4().hex}"
-                self._adb("shell", "mkdir", "-p", remote_parent)
+                self._adb("shell", "mkdir", "-p", shlex.quote(remote_parent))
                 self._adb("push", str(item.source), temporary, timeout=600)
-                observed = self._adb("shell", "sha256sum", temporary).stdout.split()
+                observed = self._adb("shell", "sha256sum", shlex.quote(temporary)).stdout.split()
                 if not observed or observed[0].lower() != item.sha256:
-                    self._adb("shell", "rm", "-f", temporary, check=False)
+                    self._adb("shell", "rm", "-f", shlex.quote(temporary), check=False)
                     raise CommandFailed(f"device hash mismatch: {item.relative_path}")
-                self._adb("shell", "mv", temporary, remote)
+                self._adb("shell", "mv", shlex.quote(temporary), shlex.quote(remote))
                 deployed.append({"path": item.relative_path, "size": item.size, "sha256": item.sha256})
-            return {"device": device, "model_id": model_id, "required_bytes": required, "free_bytes": free, "files": deployed}
+            return {"device": device, "model_id": model_id,
+                    "remote_root": "app_external_files" if app_files_root else f"models/{model_id}",
+                    "required_bytes": required, "free_bytes": free, "files": deployed}
 
     def thermal_wait(self, *, baseline_c: float | None, maximum_wait_seconds: float = 1200, poll_seconds: float = 60) -> list[ThermalPoll]:
         started = self.clock()

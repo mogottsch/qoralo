@@ -21,6 +21,8 @@ def parser() -> argparse.ArgumentParser:
     stage.add_argument("--model-id", required=True)
     stage.add_argument("--inventory", type=Path, required=True)
     stage.add_argument("--model-dir", type=Path, required=True)
+    stage.add_argument("--app-files-root", action="store_true",
+                       help="stage a complete descriptor-addressed inventory at the app files root")
     stage.set_defaults(action="stage")
     run = commands.add_parser("run", help="run one staged candidate in a fresh process")
     run.add_argument("--candidate", choices=("pocket", "kokoro", "supertonic_3"), required=True)
@@ -39,7 +41,8 @@ def main(argv: list[str] | None = None) -> int:
         with runner.safe_session() as result:
             print(json.dumps(result, indent=2, sort_keys=True))
     elif args.action == "stage":
-        result = runner.stage(args.apk, args.apk_sha256, args.model_id, args.inventory, args.model_dir)
+        result = runner.stage(args.apk, args.apk_sha256, args.model_id, args.inventory, args.model_dir,
+                              app_files_root=args.app_files_root)
         print(json.dumps(result, indent=2, sort_keys=True))
     else:
         path = runner.run_candidate(args.candidate, args.descriptor, args.descriptor_sha256,
