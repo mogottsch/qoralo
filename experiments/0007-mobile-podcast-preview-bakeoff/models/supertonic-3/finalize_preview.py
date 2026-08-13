@@ -16,7 +16,8 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 ARTIFACTS = ROOT / "artifacts/supertonic-3"
-NORMALIZED = ROOT / "artifacts/normalized/supertonic-3/v2"
+CAPTURE = ARTIFACTS / "captures/generation-api-boundary-v2"
+NORMALIZED = ROOT / "artifacts/normalized/supertonic-3/protocol-v2-corrected"
 RESULT = ROOT / "results/supertonic-3-preview.json"
 sys.path.insert(0, str(ROOT / "tools"))
 import audio_protocol  # noqa: E402
@@ -83,8 +84,8 @@ def main() -> None:
     protocol_environment = require_protocol_environment()
     pins = read_json(HERE / "pins.json")
     plan = read_json(HERE / "speed-attempts.json")
-    primary_dir = ARTIFACTS / "attempts/attempt-00"
-    repeat_dir = ARTIFACTS / "repeats/attempt-00"
+    primary_dir = CAPTURE / "attempts/attempt-00"
+    repeat_dir = CAPTURE / "repeats/attempt-00"
     primary_meta = read_json(primary_dir / "metadata.json")
     repeat_meta = read_json(repeat_dir / "metadata.json")
     raw_path, repeat_path = primary_dir / "native.f32le", repeat_dir / "native.f32le"
@@ -95,7 +96,7 @@ def main() -> None:
         raise SystemExit("primary and repeat must identify the first precommitted attempt")
     if primary_meta["duration_seconds"] < 15.0 or repeat_meta["duration_seconds"] < 15.0:
         raise SystemExit("default attempt did not satisfy the duration rule")
-    if any((ARTIFACTS / "attempts" / f"attempt-{index:02d}").exists() for index in range(1, len(plan["attempts"]))):
+    if any((CAPTURE / "attempts" / f"attempt-{index:02d}").exists() for index in range(1, len(plan["attempts"]))):
         raise SystemExit("later attempts are forbidden after the first passing output")
 
     samples = np.fromfile(raw_path, dtype="<f4").astype(np.float64)
@@ -151,7 +152,7 @@ def main() -> None:
             "models/supertonic-3/smoke-load.sh",
             "models/supertonic-3/generate_preview.sh 0",
             "models/supertonic-3/generate_preview.sh 0 --repeat",
-            "python models/supertonic-3/finalize_preview.py",
+            "artifacts/protocol-venv/bin/python models/supertonic-3/finalize_preview.py",
         ],
         "provenance": {
             "source_url": pins["implementation"]["repository"],

@@ -9,6 +9,10 @@ EXPERIMENT = HERE.parents[1]
 PINS = json.loads((HERE / "pins.json").read_text(encoding="utf-8"))
 PLAN = json.loads((HERE / "speed-attempts.json").read_text(encoding="utf-8"))
 ARTIFACT_ROOT = Path(os.environ.get("SUPERTONIC_ARTIFACT_ROOT", EXPERIMENT / "artifacts/supertonic-3"))
+# The first capture is preserved under attempts/ and repeats/. It was rejected
+# because its timer crossed the API boundary. The owner-authorized corrected
+# recapture uses a new write-once namespace rather than replacing those bytes.
+CAPTURE_ROOT = ARTIFACT_ROOT / "captures/generation-api-boundary-v2"
 TRANSCRIPT = EXPERIMENT / "protocol/transcript.txt"
 TRANSCRIPT_SHA256 = "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f"
 sys.path.insert(0, str(EXPERIMENT / "tools"))
@@ -25,7 +29,7 @@ def choose_attempt(index: int) -> dict:
 
 
 def _check_sequence(index: int, repeat: bool) -> None:
-    attempts = ARTIFACT_ROOT / "attempts"
+    attempts = CAPTURE_ROOT / "attempts"
     if repeat:
         primary = attempts / f"attempt-{index:02d}" / "metadata.json"
         if not primary.is_file() or json.loads(primary.read_text())["duration_seconds"] < 15.0:
@@ -45,7 +49,7 @@ def render(index: int, repeat: bool = False) -> dict:
     attempt = choose_attempt(index); _check_sequence(index, repeat); snapshot = ARTIFACT_ROOT / "snapshot"
     from smoke_load import verify_snapshot
     verify_snapshot(snapshot)
-    output = ARTIFACT_ROOT / ("repeats" if repeat else "attempts") / f"attempt-{index:02d}"
+    output = CAPTURE_ROOT / ("repeats" if repeat else "attempts") / f"attempt-{index:02d}"
     if output.exists(): refuse(f"write-once attempt already exists: {output}")
     output.mkdir(parents=True)
     sampler = ProcessTreeRssSampler().start_before_model_load()

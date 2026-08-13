@@ -37,9 +37,9 @@ Task 6 invokes one full job at a time so each has its own exclusive grant:
 
 The first run completed the sequence at the default-first attempt: argument omitted (documented effective speed `1.05`) produced 712,704 native samples, or 16.1610884354 seconds. No later speed attempts were eligible or run. A separately gated fresh-process repeat was bit-identical. Both write-once raw waveforms remain under the ignored artifact tree.
 
-That capture is **blocked from publication**: its timing included post-API array conversion/analysis, and its first normalization ran with NumPy 2.5.2 rather than protocol-v2's pinned 2.5.1. Raw evidence must not be overwritten, so `results/supertonic-3-preview.json` preserves the evidence and records the blocker. Only the experiment owner may authorize a new write-once capture location.
+That first capture was **blocked from publication**: its timing included post-API array conversion/analysis, and its first normalization ran with NumPy 2.5.2 rather than protocol-v2's pinned 2.5.1. Its raw evidence remains untouched under the original `attempts/` and `repeats/` directories.
 
-For a governed recapture, create the shared locked environment as documented in the experiment README, then use its interpreter explicitly:
+On 2026-08-13 the experiment owner authorized one corrected write-once recapture namespace, `captures/generation-api-boundary-v2/`. The corrected generator stops timing immediately when `synthesize()` returns. Finalization must use the shared locked protocol environment explicitly:
 
 ```bash
 ./generate_preview.sh 0

@@ -53,6 +53,7 @@ def test_frozen_transcript_and_local_pin_validation():
 def test_generation_timer_stops_before_post_api_analysis(monkeypatch, tmp_path):
     generator = load("supertonic_timing_generator", "generate_preview.py")
     generator.ARTIFACT_ROOT = tmp_path
+    generator.CAPTURE_ROOT = tmp_path / "captures/generation-api-boundary-v2"
     monkeypatch.setenv("SUPERTONIC_ATTEMPT_GRANT", "1"); monkeypatch.setenv("PREVIEW_RESOURCE_GRANT_KIND", "full-generation")
     monkeypatch.delenv("HF_TOKEN", raising=False); monkeypatch.delenv("HUGGING_FACE_HUB_TOKEN", raising=False)
     fake_smoke = types.ModuleType("smoke_load"); fake_smoke.verify_snapshot = lambda _path: {}
@@ -102,7 +103,7 @@ def test_finalizer_fails_closed_and_analyzes_native_rate(monkeypatch):
     assert got["rms"] == pytest.approx(np.sqrt(np.mean(tone ** 2)))
 
 
-def test_blocked_result_is_schema_valid_protocol_current_and_not_publishable():
+def test_corrected_result_is_schema_valid_protocol_current_and_publishable():
     jsonschema = pytest.importorskip("jsonschema")
     result = json.loads((EXPERIMENT / "results/supertonic-3-preview.json").read_text())
     schema = json.loads((EXPERIMENT / "schemas/preview-result.schema.json").read_text())
@@ -110,14 +111,16 @@ def test_blocked_result_is_schema_valid_protocol_current_and_not_publishable():
     sys.path.insert(0, str(EXPERIMENT / "tools"))
     import generation_metrics, protocol
     protocol.validate_result_protocol(result)
-    assert result["status"] == "blocked" and result["publication_eligible"] is False
-    assert "normalized" not in result
-    assert not generation_metrics.result_is_publishable(result)
+    assert result["status"] == "accepted" and result["publication_eligible"] is True
+    assert result["normalized"]["sample_count"] == 360000
+    assert result["provenance"]["environment"]["normalization_numpy"] == "2.5.1"
+    assert generation_metrics.result_is_publishable(result)
 
 
 def test_generator_mock_preserves_default_raw_write_once(monkeypatch, tmp_path):
     generator = load("supertonic_generator", "generate_preview.py")
     generator.ARTIFACT_ROOT = tmp_path
+    generator.CAPTURE_ROOT = tmp_path / "captures/generation-api-boundary-v2"
     generator.PINS = generator.PINS | {"model": generator.PINS["model"] | {"files": {}}}
     monkeypatch.setenv("SUPERTONIC_ATTEMPT_GRANT", "1"); monkeypatch.setenv("PREVIEW_RESOURCE_GRANT_KIND", "full-generation")
     monkeypatch.delenv("HF_TOKEN", raising=False); monkeypatch.delenv("HUGGING_FACE_HUB_TOKEN", raising=False)
@@ -140,5 +143,5 @@ def test_generator_mock_preserves_default_raw_write_once(monkeypatch, tmp_path):
     metadata = generator.render(0)
     assert calls["init"] == {"model": "supertonic-3", "model_dir": tmp_path / "snapshot", "auto_download": False}
     assert calls["voice"] == "M1" and "speed" not in calls["kwargs"]
-    assert metadata["sample_count"] == 3 and (tmp_path / "attempts/attempt-00/native.f32le").stat().st_size == 12
+    assert metadata["sample_count"] == 3 and (tmp_path / "captures/generation-api-boundary-v2/attempts/attempt-00/native.f32le").stat().st_size == 12
     with pytest.raises(SystemExit, match="write-once"): generator.render(0)
