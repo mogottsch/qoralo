@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import html
 import json
+import shutil
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -24,8 +25,28 @@ def mb(value: int) -> str:
     return f"{value / 1_000_000:.1f} MB"
 
 
+def representative_samples(report: dict) -> dict[str, tuple[Path, str]]:
+    """Resolve the first canonical warm WAV for each candidate by pinned hash."""
+    samples: dict[str, tuple[Path, str]] = {}
+    for candidate in report["canonical_one_thread"]:
+        result_path = EXP / candidate["manifest"]
+        result = json.loads(result_path.read_text(encoding="utf-8"))
+        warm = next(run for run in result["runs"] if run["kind"] == "warm")
+        evidence = next(
+            row for row in result["evidence"]
+            if row["sha256"] == warm["wav_sha256"] and row["relative_path"].endswith(".wav")
+        )
+        source = REPO / evidence["relative_path"]
+        if not source.is_file():
+            raise SystemExit(f"representative Android WAV is missing: {source}")
+        filename = f"android-{candidate['candidate_id'].replace('_', '-')}-warm.wav"
+        samples[candidate["candidate_id"]] = (source, filename)
+    return samples
+
+
 def render() -> str:
     report = json.loads(REPORT.read_text(encoding="utf-8"))
+    samples = representative_samples(report)
     rows = []
     details = []
     names = {"pocket": "Pocket TTS", "kokoro": "Kokoro 82M", "supertonic_3": "Supertonic 3"}
@@ -43,6 +64,7 @@ def render() -> str:
         )
         warm = candidate["warm"]
         warm_rtfs = ", ".join(f"{item['rtf']:.3f}" for item in warm)
+        sample_url = f"audio/{samples[candidate['candidate_id']][1]}"
         details.append(
             f"<article class='card'><header><div><h3>{e(name)}</h3><p>{e(candidate['deployment_variant'])}</p></div>"
             f"<span class='badge {e(candidate['decision'])}'>{e(decision)}</span></header>"
@@ -50,6 +72,7 @@ def render() -> str:
             f"<div><b>{cold['rtf']:.3f}</b><span>cold RTF</span></div>"
             f"<div><b>{candidate['warm_median_rtf']:.3f}</b><span>warm median RTF</span></div>"
             f"<div><b>{mb(candidate['memory_bytes']['sampled_peak_pss'])}</b><span>peak PSS</span></div></div>"
+            f"<label class='audio-label'>Representative Android warm output</label><audio controls preload='metadata' src='{e(sample_url)}'></audio>"
             f"<p class='run'>Cold: {cold['wall_seconds']:.3f}s wall / {cold['audio_seconds']:.3f}s audio · callback {cold['callback_seconds']:.3f}s</p>"
             f"<p class='run'>Warm RTFs: {warm_rtfs}</p>"
             f"<ul>{''.join(f'<li>{e(item)}</li>' for item in candidate['limitations'])}</ul></article>"
@@ -60,7 +83,7 @@ def render() -> str:
 <html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>
 <meta name='robots' content='noindex,nofollow,noarchive'><title>Android TTS Benchmark — Galaxy S23 Ultra</title>
 <style>
-:root{{--bg:#0b0e13;--panel:#131923;--line:#293446;--text:#edf2f8;--muted:#9ca8b9;--blue:#73adff;--green:#55d4a0;--amber:#ffc96b}}*{{box-sizing:border-box}}body{{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,sans-serif}}main{{max-width:1120px;margin:auto;padding:34px 22px 70px}}h1{{font-size:clamp(30px,5vw,44px);line-height:1.05;margin:0 0 10px}}h2{{margin:38px 0 14px}}h3{{margin:0}}p{{margin-top:0}}.lead,.muted,.card header p,.run,small{{color:var(--muted)}}.lead{{max-width:780px}}.summary{{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:24px 0}}.hero,.card,.notice,.table-wrap{{background:var(--panel);border:1px solid var(--line);border-radius:12px}}.hero{{padding:18px}}.hero b{{display:block;font-size:28px}}.hero span{{color:var(--muted)}}table{{width:100%;border-collapse:collapse}}th,td{{padding:12px 10px;text-align:left;border-bottom:1px solid var(--line)}}th{{color:var(--muted);font-size:11px;text-transform:uppercase}}td small{{display:block;font-size:10px}}.table-wrap{{overflow:auto}}.badge{{display:inline-block;border-radius:99px;padding:4px 8px;background:#19382d;color:var(--green);font:bold 10px ui-monospace,monospace;text-transform:uppercase;white-space:nowrap}}.badge.works_with_limitations{{background:#3b301b;color:var(--amber)}}.cards{{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}}.card{{padding:17px}}.card header{{display:flex;justify-content:space-between;gap:12px}}.card header p{{font-size:10px;margin:3px 0 0}}.metrics{{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}}.metrics div{{border-top:1px solid var(--line);padding-top:7px}}.metrics b,.metrics span{{display:block}}.metrics span{{font-size:10px;color:var(--muted);text-transform:uppercase}}.run{{font-size:12px;margin:7px 0}}ul{{padding-left:19px}}li+li{{margin-top:6px}}.notice{{padding:17px;border-left:3px solid var(--blue);margin:12px 0}}a{{color:var(--blue)}}footer{{border-top:1px solid var(--line);margin-top:38px;padding-top:16px;color:var(--muted);font-size:12px}}@media(max-width:820px){{.summary,.cards{{grid-template-columns:1fr}}}}
+:root{{--bg:#0b0e13;--panel:#131923;--line:#293446;--text:#edf2f8;--muted:#9ca8b9;--blue:#73adff;--green:#55d4a0;--amber:#ffc96b}}*{{box-sizing:border-box}}body{{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,sans-serif}}main{{max-width:1120px;margin:auto;padding:34px 22px 70px}}h1{{font-size:clamp(30px,5vw,44px);line-height:1.05;margin:0 0 10px}}h2{{margin:38px 0 14px}}h3{{margin:0}}p{{margin-top:0}}.lead,.muted,.card header p,.run,small{{color:var(--muted)}}.lead{{max-width:780px}}.summary{{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:24px 0}}.hero,.card,.notice,.table-wrap{{background:var(--panel);border:1px solid var(--line);border-radius:12px}}.hero{{padding:18px}}.hero b{{display:block;font-size:28px}}.hero span{{color:var(--muted)}}table{{width:100%;border-collapse:collapse}}th,td{{padding:12px 10px;text-align:left;border-bottom:1px solid var(--line)}}th{{color:var(--muted);font-size:11px;text-transform:uppercase}}td small{{display:block;font-size:10px}}.table-wrap{{overflow:auto}}.badge{{display:inline-block;border-radius:99px;padding:4px 8px;background:#19382d;color:var(--green);font:bold 10px ui-monospace,monospace;text-transform:uppercase;white-space:nowrap}}.badge.works_with_limitations{{background:#3b301b;color:var(--amber)}}.cards{{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}}.card{{padding:17px}}.card header{{display:flex;justify-content:space-between;gap:12px}}.card header p{{font-size:10px;margin:3px 0 0}}.metrics{{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}}.metrics div{{border-top:1px solid var(--line);padding-top:7px}}.metrics b,.metrics span{{display:block}}.metrics span{{font-size:10px;color:var(--muted);text-transform:uppercase}}audio{{display:block;width:100%;margin:7px 0 12px}}.audio-label{{display:block;color:var(--muted);font:700 10px ui-monospace,monospace;text-transform:uppercase}}.run{{font-size:12px;margin:7px 0}}ul{{padding-left:19px}}li+li{{margin-top:6px}}.notice{{padding:17px;border-left:3px solid var(--blue);margin:12px 0}}a{{color:var(--blue)}}footer{{border-top:1px solid var(--line);margin-top:38px;padding-top:16px;color:var(--muted);font-size:12px}}@media(max-width:820px){{.summary,.cards{{grid-template-columns:1fr}}}}
 </style></head><body><main>
 <header><h1>Android TTS benchmark</h1><p class='lead'>Measured locally on a Samsung Galaxy S23 Ultra, Android 16, using pinned sherpa-onnx v1.13.5 CPU deployments. RTF below 1.0 is faster than real time.</p></header>
 <section class='summary'><div class='hero'><b>0.370</b><span>Best warm RTF · Supertonic 3</span></div><div class='hero'><b>3 / 3</b><span>Models produced valid audio</span></div><div class='hero'><b>16 / 16</b><span>Measured WAVs validated</span></div></section>
@@ -73,9 +96,15 @@ def render() -> str:
 
 
 def main() -> None:
+    report = json.loads(REPORT.read_text(encoding="utf-8"))
+    samples = representative_samples(report)
     page = render()
     for output in OUTPUTS:
         output.parent.mkdir(parents=True, exist_ok=True)
+        audio_dir = output.parent / "audio"
+        audio_dir.mkdir(exist_ok=True)
+        for source, filename in samples.values():
+            shutil.copyfile(source, audio_dir / filename)
         output.write_text(page, encoding="utf-8")
         print(output)
 
