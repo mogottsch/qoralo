@@ -17,6 +17,7 @@ THREAD_REPORT = EXP9 / "thread-sweep/results/measured-thread-sweep.json"
 QUALITY_REPORT = EXP9 / "kokoro-int8/reports/quality-gate.json"
 BLIND_REPORT = EXP9 / "kokoro-int8/reports/blind-package.json"
 CORPUS = EXP9 / "kokoro-int8/corpus.json"
+QNN_CHECKPOINT = REPO / "experiments/0010-supertonic-qnn-htp-feasibility/results/host-checkpoint.json"
 BLIND_ZIP = EXP9 / "kokoro-int8/generated/blind/kokoro-int8-listening.zip"
 OUTPUTS = [
     REPO / "artifacts/progress-preview/index.html",
@@ -157,6 +158,7 @@ def render() -> str:
     quality = load(QUALITY_REPORT)
     blind = load(BLIND_REPORT)
     corpus = load(CORPUS)
+    qnn = load(QNN_CHECKPOINT)
     samples = representative_samples(baseline)
     baseline_rows, baseline_cards = baseline_sections(baseline, samples)
     thread_rows = thread_section(threads)
@@ -181,6 +183,7 @@ def render() -> str:
 <section><h2>Original one-thread baseline</h2><div class='table-wrap'><table><thead><tr><th>Candidate</th><th>Decision</th><th>Load</th><th>Cold RTF</th><th>Warm median</th><th>Peak PSS</th><th>Audio</th></tr></thead><tbody>{baseline_rows}</tbody></table></div></section>
 <section><h2>Baseline audio and details</h2><div class='cards'>{baseline_cards}</div></section>
 <section><h2>Earlier optional Kokoro two-thread run</h2><div class='notice'><strong>Warm median RTF {optional['warm_median_rtf']:.3f}</strong> (cold {optional['cold']['rtf']:.3f}) · load {optional['load_wall_seconds']:.3f}s · peak PSS {mb(optional['sampled_peak_pss_bytes'])}. The newer complete sweep supersedes this as the thread comparison.</div></section>
+<section><h2>Qualcomm QNN / HTP checkpoint</h2><div class='notice warn'><span class='badge awaiting'>paused for tomorrow</span><p style='margin-top:10px'>The Supertonic component-first track completed host fixture work and a reusable Android arm64 ONNX Runtime 1.27.1 + QAIRT 2.49 QNN build. The resulting local-only <code>libonnxruntime.so</code> is {mb(qnn['android_ort_qnn_build']['libonnxruntime']['bytes'])}, SHA-256 <code>{e(qnn['android_ort_qnn_build']['libonnxruntime']['sha256'][:12])}…</code>.</p><ul><li>A Q8 re-quantized vocoder derivative failed the host numerical gate and will not go to the phone.</li><li>Host HTP attempts did not produce valid output or profiles; they are not HTP proof.</li><li>Only phone identity was captured. No QNN model has run on the S23 Ultra, and no speedup is claimed.</li><li>Next: run a tiny QDQ control with CPU fallback disabled and detailed profiling, then consider the exact fixed released vocoder.</li></ul><a href='qnn-host-checkpoint.json'>Raw checkpoint JSON</a></div></section>
 <section><h2>Important limits</h2><div class='notice warn'><ul><li>Pocket used packaged Bria, not requested Alba. Its production licensing remains unresolved.</li><li>These are sherpa-onnx Android deployment variants, not the host PyTorch workflows.</li><li>{e(disclosures['order_bias'])}</li><li>No listening verdict is claimed until you return the blind Kokoro ballot.</li><li>Differences below 5–10% in the thread sweep are inconclusive.</li></ul></div></section>
 <footer><a href='measured-decision.json'>Baseline JSON evidence</a> · <a href='measured-thread-sweep.json'>Thread-sweep JSON evidence</a> · <a href='quality-gate.json'>INT8 gate JSON evidence</a> · <a href='https://github.com/mogottsch/vibevoice-android-spike'>Repository</a></footer>
 </main><script>

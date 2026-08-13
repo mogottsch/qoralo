@@ -1,0 +1,49 @@
+# Host-only container for the user-supplied QAIRT 2.49.0 converter tools.
+# The proprietary SDK is mounted read-only at /opt/qairt; it is never copied
+# into this image or repository.
+FROM ubuntu@sha256:3b06811b2afd352be909dd088a004166d665dc76d38b13eada33522a9d915c6f
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+      build-essential \
+      ca-certificates \
+      clang-14 \
+      cmake \
+      git \
+      libc++1-14 \
+      libc++abi1-14 \
+      libpython3.10 \
+      libunwind-14 \
+      ninja-build \
+      python3-pip \
+      python3.10 \
+      python3.10-dev \
+      python3.10-venv \
+ && rm -rf /var/lib/apt/lists/*
+
+# Framework versions follow sdk.yaml. Remaining versions are the minimal
+# converter imports pinned by bin/check-python-dependency.
+RUN python3.10 -m pip install --no-cache-dir \
+      Mako==1.2.0 \
+      PyYAML==6.0.3 \
+      cmake==3.29.6 \
+      numpy==1.26.4 \
+      onnx==1.16.1 \
+      onnxruntime==1.17.1 \
+      onnxsim==0.4.36 \
+      packaging==24.0 \
+      pandas==2.3.3 \
+      protobuf==4.25.8 \
+      rich==13.9.4 \
+      safetensors==0.4.3 \
+      tabulate==0.9.0 \
+      xlsxwriter==1.2.2
+
+ENV QAIRT_SDK_ROOT=/opt/qairt
+ENV QNN_SDK_ROOT=/opt/qairt
+ENV PYTHONPATH=/opt/qairt/lib/python:/opt/qairt/benchmarks/QNN
+ENV PATH=/opt/qairt/bin/x86_64-linux-clang:${PATH}
+ENV LD_LIBRARY_PATH=/opt/qairt/lib/x86_64-linux-clang:/usr/lib/llvm-14/lib
+
+WORKDIR /work

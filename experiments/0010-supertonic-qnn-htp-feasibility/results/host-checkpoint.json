@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "status": "paused_after_host_preflight_before_phone_qnn_execution",
+  "recorded_at_utc": "2026-08-13T16:29:00Z",
+  "scope": "Supertonic 3 component-first QNN/HTP feasibility checkpoint; no speedup claim",
+  "target": {
+    "device": "Samsung Galaxy S23 Ultra",
+    "model": "SM-S918B",
+    "soc": "SM8550",
+    "htp_arch": "v73",
+    "serial": "R5CW81PR8SY",
+    "android": "16",
+    "api": 36
+  },
+  "source": {
+    "experiment": "0008-sherpa-onnx-android-tts-benchmark",
+    "variant": "sherpa-onnx-supertonic-3-tts-int8-2026-05-11",
+    "vocoder_sha256": "e923d60f53f95eb1ce235f1dc33ec56d9c057823c96fa6f8acf98f32b0da6152"
+  },
+  "host_findings": [
+    {
+      "id": "fixtures",
+      "status": "complete",
+      "detail": "Captured deterministic frozen-transcript Supertonic component fixtures on CPU with seed 20260813; exact observed vocoder latent length is 238."
+    },
+    {
+      "id": "fixed_vocoder",
+      "status": "complete",
+      "detail": "Created an ignored fixed-I/O-shape derivative [1,144,238] -> [1,731136], SHA-256 989fe86e7bda8f223cb50b0ea2f0ee293371e6ff84ddbe082d8ed8c122088364."
+    },
+    {
+      "id": "q8_requantized_vocoder_host_emulation",
+      "status": "failed_numerical_gate",
+      "detail": "A Q8 per-tensor derivative executed in host HTP emulation but badly diverged from FP32 and released INT8 references (cosine 0.031/0.028; SNR -8.01/-7.62 dB). It is not eligible for phone or audio claims."
+    },
+    {
+      "id": "ort_qnn_cpu_no_fallback",
+      "status": "negative_control_passed",
+      "detail": "With CPU fallback disabled, the fixed released vocoder did not fully assign to QNN CPU; session initialization failed as intended, proving fallback enforcement."
+    },
+    {
+      "id": "host_htp_ort_attempts",
+      "status": "inconclusive_failed",
+      "detail": "QAIRT 2.49 host HTP attempts loaded the backend/system interfaces but produced no output and zero-byte ORT profiles; they are not proof of HTP execution."
+    },
+    {
+      "id": "phone",
+      "status": "identity_only",
+      "detail": "Only non-destructive adb identity/platform properties were captured. No QNN graph or vocoder executed on the phone before this pause."
+    }
+  ],
+  "android_ort_qnn_build": {
+    "status": "success",
+    "onnxruntime_version": "1.27.1",
+    "onnxruntime_commit": "df2ba1cf8108aa63627cf4cdf8f807880b938616",
+    "qairt_version": "2.49.0.260730",
+    "ndk": "26.2.11394342",
+    "abi": "arm64-v8a",
+    "api": 27,
+    "configuration": "Release",
+    "qnn_linkage": "static_lib",
+    "parallel_jobs": 8,
+    "warning": "The completed broad build compiled unit-test targets despite --skip_tests because onnxruntime_BUILD_UNIT_TESTS remained ON. Reuse the cache; do not repeat a clean all-target build.",
+    "libonnxruntime": {
+      "path": "experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-android-arm64/Release/libonnxruntime.so",
+      "bytes": 22399512,
+      "sha256": "643c6f6fd3d2b375ca8f2407a1695acaf55320b8e947adc4284665640fdc3ae9"
+    },
+    "build_stdout": {
+      "path": "experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-android-arm64/build.stdout.log",
+      "bytes": 383741,
+      "sha256": "21d882045ff8b0513059fbda7ac4ad823fa32d9ea93250cee8575bceb8ef1665"
+    },
+    "build_stderr": {
+      "path": "experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-android-arm64/build.stderr.log",
+      "bytes": 5449,
+      "sha256": "992748bee8378101812d7f3c5e61332a083c69678e5ba292bfe1b94c08042de1"
+    },
+    "local_ignored_cache": {
+      "source_path": "experiments/0010-supertonic-qnn-htp-feasibility/.local/onnxruntime-v1.27.1-source",
+      "source_bytes": 963593123,
+      "build_path": "experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-android-arm64",
+      "build_bytes": 1256801313,
+      "preserved_for_incremental_rebuilds": true
+    }
+  },
+  "qairt_android_runtime_pins": {
+    "license_sha256": "ec1dccfdcba5c6e64126e84199b8362bf4999107bfa567ebe831dbb4c461692b",
+    "libQnnHtp.so": {
+      "bytes": 3786064,
+      "sha256": "a09b3af28342331b3ec9e57ecbe42bfe54a5fff37c4323ce5685c395ae3ee604"
+    },
+    "libQnnHtpV73Stub.so": {
+      "bytes": 771928,
+      "sha256": "2912cc4f29cc5163c36c6c58f931bd08b798ccf8545a670a9498549f95b9036f"
+    },
+    "libQnnSystem.so": {
+      "bytes": 4072160,
+      "sha256": "536201ed918f4066f9ef35671198c072faf9ef04af24545f5fae0fc79aa05baa"
+    },
+    "libQnnHtpV73Skel.so": {
+      "bytes": 11859192,
+      "sha256": "bd54463547f0234d06045699b1f747b7d9d3e3b581874840af50c295b3124f25"
+    },
+    "distribution": "local-only; no proprietary binaries committed or published"
+  },
+  "retained_ignored_evidence": [
+    {
+      "path": "experiments/0010-supertonic-qnn-htp-feasibility/work/fixtures/fixture-manifest.json",
+      "bytes": 27598,
+      "sha256": "3ba6768634aac7a50632895145454896cfc0df32f90a9917194ba7b979a8f796"
+    },
+    {
+      "path": "experiments/0010-supertonic-qnn-htp-feasibility/work/derived/vocoder-fixed-l238/provenance.json",
+      "bytes": 1013,
+      "sha256": "a280580f1dc3a7e383a21d3a750e39118e558434364e69f8fe940d68c419ac3c"
+    },
+    {
+      "path": "experiments/0010-supertonic-qnn-htp-feasibility/work/qnn/vocoder-fp32-source-q8-pertensor/host-numerical-comparison.json",
+      "bytes": 2162,
+      "sha256": "9eaab739e67ffcca48bdc3fad2b9a1b433a6f8d638c5b8d2cb9d5511df9751d5"
+    },
+    {
+      "path": "experiments/0010-supertonic-qnn-htp-feasibility/work/ort-qnn-2.49/vocoder-l238-host-qnn-cpu-cpp/run.stderr.log",
+      "bytes": 67207,
+      "sha256": "85a6fb50b38a6cacd5e1a312448006c9b64e54a8c866f9e88b50d851736d9d4e"
+    },
+    {
+      "path": "experiments/0010-supertonic-qnn-htp-feasibility/work/ort-qnn-2.49/vocoder-l238-host-htp-cpp/run.stderr.log",
+      "bytes": 13031,
+      "sha256": "ae8182b60745a5aafac6cd593b979f7f978b52d43f042543392beabb29239ebf"
+    },
+    {
+      "path": "experiments/0010-supertonic-qnn-htp-feasibility/work/ort-qnn-2.49/vocoder-l238-host-htp-soc43/run.stderr.log",
+      "bytes": 13074,
+      "sha256": "03c03418078724b56afaa2e30fc4c898acafb209877092ac9bbe33a456b05ef3"
+    },
+    {
+      "path": "experiments/0010-supertonic-qnn-htp-feasibility/work/device/device-properties.txt",
+      "bytes": 354,
+      "sha256": "b73317578a7e334f65408bf8a1951dc7c6564acc2bf6edd1ceb802f7faf23ff6"
+    }
+  ],
+  "next_steps": [
+    "Reconfirm phone use after resuming tomorrow and acquire the repository phone lock.",
+    "Package the pinned Android libonnxruntime.so and only required QAIRT 2.49 arm64/HTP-v73 runtime files into an ignored staging directory.",
+    "Run a tiny QDQ add model first with CPU fallback disabled and retain QNN detailed profiling to prove actual SM8550 HTP execution.",
+    "Only if the tiny control passes, run the exact fixed-shape released vocoder; do not use the numerically failed Q8 re-quantized derivative.",
+    "Freeze numerical thresholds before inspecting phone vocoder output, then decide whether vector-estimator or end-to-end work is justified."
+  ],
+  "claims_not_made": [
+    "No phone HTP execution has been proven.",
+    "No component latency or speedup has been measured.",
+    "No end-to-end Supertonic QNN audio has been generated.",
+    "No proprietary SDK artifact is redistributable from this repository."
+  ]
+}

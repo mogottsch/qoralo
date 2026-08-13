@@ -57,6 +57,10 @@ Continue with three measured follow-ups: exact Kokoro v1.0 INT8 export and quali
 
 The exact Kokoro v1.0 mixed S8S8 QDQ candidate is 46.0% smaller and passed the automated host checks. Moritz's finalized six-pair blind ballot contained four ties, one INT8 preference, and one FP32 preference; both directional votes had confidence 2/5. Record the gate as `passed_user_listening` with no systematic INT8 degradation detected, while explicitly avoiding a strict equivalence or INT8-superiority claim. The candidate is eligible for a later Android benchmark but has no Android RTF/PSS result yet. For the measured phone thread sweep, retain observed best warm-median RTFs of Pocket two-thread `0.367`, Kokoro four-thread `0.753`, and Supertonic two-thread `0.362`. Treat changes below 5–10% as inconclusive and larger changes as directional because this is one rotated campaign and the user authorized a mid-campaign thermal-policy amendment. Future practical sweeps may run at Android thermal status NONE or LIGHT and should pause only at MODERATE or higher; record status without treating battery temperature as a throttling proxy.
 
+## 2026-08-13 — Pause QNN/HTP after host preflight
+
+Pause experiment 0010 before the first phone QNN model execution. Preserve the successful Android arm64 ONNX Runtime 1.27.1 + QAIRT 2.49 QNN build in ignored local storage for incremental reuse. Reject the Q8 re-quantized vocoder derivative from further work because its host numerical comparison failed badly; host HTP attempts without output or profiles do not prove HTP execution. Resume with a tiny QDQ control on the S23 Ultra, CPU fallback disabled, and detailed profiling before considering the fixed released vocoder. No HTP speedup or end-to-end QNN claim exists yet.
+
 ## 2026-08-13 — Select experiment 0008 Android candidates
 
 Retire VibeVoice Realtime 0.5B, Inflect Nano v1, and Kitten TTS Mini 80M v0.8 from active follow-up; they remain historical-only under immutable experiment 0007 evidence. Select Pocket TTS 100M, exact Kokoro v1.0, and Supertonic 3 for real-device measurement in that fixed order under experiment 0008.
