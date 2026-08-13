@@ -15,6 +15,18 @@ public final class SherpaOfflineTtsEngine implements BenchmarkRunner.Engine {
     private final Object generationConfig;
     private SherpaOfflineTtsEngine(Object tts,Method generate,int sid,Object generationConfig){this.offlineTts=tts;this.generate=generate;this.sid=sid;this.generationConfig=generationConfig;}
 
+    /**
+     * JNI resolves Function1.invoke with the concrete primitive-array signature.
+     * A java.lang.reflect.Proxy only exposes erased invoke(Object), which caused
+     * a reproducible NoSuchMethodError and SIGABRT on Android. This concrete
+     * implementation gives JNI invoke(float[]): Integer plus javac's bridge.
+     */
+    private static final class SherpaCallback implements kotlin.jvm.functions.Function1<float[],Integer>{
+        private final BenchmarkRunner.AudioCallback sink;
+        SherpaCallback(BenchmarkRunner.AudioCallback sink){this.sink=sink;}
+        @Override public Integer invoke(float[] samples){sink.onAudio(samples);return Integer.valueOf(1);}
+    }
+
     public static BenchmarkRunner.Engine create(BenchmarkDescriptor d,Map<String,File> verified)throws Exception{
         if(!"cpu".equals(d.provider()))throw new IllegalArgumentException("only CPU is permitted");
         File configFile=verified.get(d.sherpaConfigPath());if(configFile==null)throw new IOException("sherpa config is not in verified inventory");
@@ -45,7 +57,7 @@ public final class SherpaOfflineTtsEngine implements BenchmarkRunner.Engine {
         return new SherpaOfflineTtsEngine(tts,generate,d.speakerId(),generation);
     }
     @Override public AudioData synthesize(String text,BenchmarkRunner.AudioCallback sink)throws Exception{
-        Class<?> callbackType=generate.getParameterTypes()[generate.getParameterCount()-1];Object callback=Proxy.newProxyInstance(callbackType.getClassLoader(),new Class<?>[]{callbackType},(p,m,args)->{if(args!=null&&args.length>0&&args[0] instanceof float[] samples)sink.onAudio(samples);return Integer.valueOf(1);});
+        Object callback=new SherpaCallback(sink);
         Object out=generationConfig==null?generate.invoke(offlineTts,text,sid,1.0f,callback):generate.invoke(offlineTts,text,generationConfig,callback);
         float[] samples=(float[])out.getClass().getMethod("getSamples").invoke(out);int rate=((Number)out.getClass().getMethod("getSampleRate").invoke(out)).intValue();return new AudioData(samples,rate);
     }
