@@ -1,94 +1,294 @@
 {
-  "candidate_id": "kokoro",
-  "evidence": [
-    {
-      "artifact_id": "failure",
-      "byte_count": 941,
-      "relative_path": "artifacts/0008/device-runs/20260813T113509Z-kokoro-813a34696690/failure.json",
-      "retained": true,
-      "sha256": "08eb5f687d3102dfc947317f29764247c95fa8a0fa8174c2f129441bf01f0771"
-    },
-    {
-      "artifact_id": "thermal-polls",
-      "byte_count": 158,
-      "relative_path": "artifacts/0008/device-runs/20260813T113509Z-kokoro-813a34696690/thermal-polls.json",
-      "retained": true,
-      "sha256": "dae462eedb0216eb888434c8c577f607b95de956e35cf54e8b49710e3e91522e"
-    },
-    {
-      "artifact_id": "telemetry",
-      "byte_count": 340608,
-      "relative_path": "artifacts/0008/device-runs/20260813T113509Z-kokoro-813a34696690/telemetry.jsonl",
-      "retained": true,
-      "sha256": "ada4864661f092c4675ad52082a3bb187899f5e203685f970444c48163adad88"
-    },
-    {
-      "artifact_id": "logcat",
-      "byte_count": 40886156,
-      "relative_path": "artifacts/0008/device-runs/20260813T113509Z-kokoro-813a34696690/logcat.txt",
-      "retained": true,
-      "sha256": "3b70cd18fc341ec54c5310f907b4a1124be3d959b9539dded6134b3fb7b90300"
-    }
-  ],
-  "experiment": "0008",
-  "listening": "not_performed",
-  "metrics": {
-    "boundary_pss_bytes": {
-      "availability": "unavailable",
-      "reason": "Process died before serializing app boundary memory.",
-      "source": "observed",
-      "value": null
-    },
-    "boundary_rss_bytes": {
-      "availability": "unavailable",
-      "reason": "Process died before serializing app boundary memory.",
-      "source": "observed",
-      "value": null
-    },
-    "load_wall_seconds": {
-      "availability": "unavailable",
-      "reason": "Process died before serializing the completed load boundary.",
-      "source": "observed",
-      "value": null
-    },
-    "sampled_peak_pss_bytes": {
-      "availability": "measured",
-      "reason": null,
-      "source": "observed",
-      "value": 754951168
-    },
-    "sampled_peak_rss_bytes": {
-      "availability": "measured",
-      "reason": null,
-      "source": "observed",
-      "value": 845709312
-    },
-    "vm_hwm_bytes": {
-      "availability": "unavailable",
-      "reason": "Process died before app result serialization and /proc VmHWM was not retained.",
-      "source": "observed",
-      "value": null
-    },
-    "warm_median_rtf": {
-      "availability": "unavailable",
-      "reason": "Cold synthesis crashed; no warm generation ran.",
-      "source": "observed",
-      "value": null
-    }
-  },
-  "outcome": "native_crash",
-  "outcome_reason": "Process aborted during the cold synthesis callback before writing an app result; logcat records SIGABRT and a pending NoSuchMethodError for callback invoke([F)Ljava/lang/Integer;.",
-  "provider": "cpu",
-  "runs": [],
   "schema_version": 1,
+  "experiment": "0008",
+  "candidate_id": "kokoro",
+  "outcome": "success",
+  "outcome_reason": "Exact Kokoro v1.0 SID 3/af_heart produced one cold and three warm valid WAVs on the Galaxy S23 Ultra with 1 CPU thread(s).",
+  "provider": "cpu",
   "threads": 1,
   "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
   "voice": {
+    "requested_voice": "af_heart",
     "actual_reference": null,
     "actual_reference_sha256": null,
-    "proof": "models/kokoro/voice-proof.json",
-    "requested_voice": "af_heart",
+    "voice_match": true,
     "speaker_id": 3,
-    "voice_match": true
-  }
+    "proof": "models/kokoro/voice-proof.json"
+  },
+  "metrics": {
+    "load_wall_seconds": {
+      "availability": "measured",
+      "value": 1.303446875,
+      "reason": null,
+      "source": "observed"
+    },
+    "warm_median_rtf": {
+      "availability": "measured",
+      "value": 1.1952115332875515,
+      "reason": null,
+      "source": "observed"
+    },
+    "boundary_pss_bytes": {
+      "availability": "measured",
+      "value": 930004992,
+      "reason": null,
+      "source": "observed"
+    },
+    "boundary_rss_bytes": {
+      "availability": "measured",
+      "value": 994795520,
+      "reason": null,
+      "source": "observed"
+    },
+    "vm_hwm_bytes": {
+      "availability": "measured",
+      "value": 995078144,
+      "reason": null,
+      "source": "observed"
+    },
+    "sampled_peak_pss_bytes": {
+      "availability": "measured",
+      "value": 929677312,
+      "reason": null,
+      "source": "observed"
+    },
+    "sampled_peak_rss_bytes": {
+      "availability": "measured",
+      "value": 994721792,
+      "reason": null,
+      "source": "observed"
+    }
+  },
+  "runs": [
+    {
+      "kind": "cold",
+      "synthesis_wall_seconds": {
+        "availability": "measured",
+        "value": 15.780352494,
+        "reason": null,
+        "source": "observed"
+      },
+      "sample_count": {
+        "availability": "measured",
+        "value": 318796,
+        "reason": null,
+        "source": "observed"
+      },
+      "sample_rate_hz": {
+        "availability": "measured",
+        "value": 24000,
+        "reason": null,
+        "source": "observed"
+      },
+      "audio_duration_seconds": {
+        "availability": "measured",
+        "value": 13.283166666666666,
+        "reason": null,
+        "source": "observed"
+      },
+      "rtf": {
+        "availability": "measured",
+        "value": 1.187996273027265,
+        "reason": null,
+        "source": "observed"
+      },
+      "first_non_empty_callback_seconds": {
+        "availability": "measured",
+        "value": 6.197662133,
+        "reason": null,
+        "source": "observed"
+      },
+      "wav_sha256": "5758a0139ccddcbb3fa7e6b6bcd9da92598b92434ace53ec2e94bdfd1b1926ca",
+      "audio_validation": "valid"
+    },
+    {
+      "kind": "warm",
+      "synthesis_wall_seconds": {
+        "availability": "measured",
+        "value": 15.874169161,
+        "reason": null,
+        "source": "observed"
+      },
+      "sample_count": {
+        "availability": "measured",
+        "value": 318891,
+        "reason": null,
+        "source": "observed"
+      },
+      "sample_rate_hz": {
+        "availability": "measured",
+        "value": 24000,
+        "reason": null,
+        "source": "observed"
+      },
+      "audio_duration_seconds": {
+        "availability": "measured",
+        "value": 13.287125,
+        "reason": null,
+        "source": "observed"
+      },
+      "rtf": {
+        "availability": "measured",
+        "value": 1.1947030799364047,
+        "reason": null,
+        "source": "observed"
+      },
+      "first_non_empty_callback_seconds": {
+        "availability": "measured",
+        "value": 6.317446404,
+        "reason": null,
+        "source": "observed"
+      },
+      "wav_sha256": "71611f8801bf5d42ef3e680aad2424eb8cc15cd346330ed55dc1e66df53e3375",
+      "audio_validation": "valid"
+    },
+    {
+      "kind": "warm",
+      "synthesis_wall_seconds": {
+        "availability": "measured",
+        "value": 15.88152265,
+        "reason": null,
+        "source": "observed"
+      },
+      "sample_count": {
+        "availability": "measured",
+        "value": 318903,
+        "reason": null,
+        "source": "observed"
+      },
+      "sample_rate_hz": {
+        "availability": "measured",
+        "value": 24000,
+        "reason": null,
+        "source": "observed"
+      },
+      "audio_duration_seconds": {
+        "availability": "measured",
+        "value": 13.287625,
+        "reason": null,
+        "source": "observed"
+      },
+      "rtf": {
+        "availability": "measured",
+        "value": 1.1952115332875515,
+        "reason": null,
+        "source": "observed"
+      },
+      "first_non_empty_callback_seconds": {
+        "availability": "measured",
+        "value": 6.351505153,
+        "reason": null,
+        "source": "observed"
+      },
+      "wav_sha256": "1ed4c96155c11bde6010db8d048955bcae04421ceecf50ef189028c5d0637710",
+      "audio_validation": "valid"
+    },
+    {
+      "kind": "warm",
+      "synthesis_wall_seconds": {
+        "availability": "measured",
+        "value": 16.00240989,
+        "reason": null,
+        "source": "observed"
+      },
+      "sample_count": {
+        "availability": "measured",
+        "value": 318777,
+        "reason": null,
+        "source": "observed"
+      },
+      "sample_rate_hz": {
+        "availability": "measured",
+        "value": 24000,
+        "reason": null,
+        "source": "observed"
+      },
+      "audio_duration_seconds": {
+        "availability": "measured",
+        "value": 13.282375,
+        "reason": null,
+        "source": "observed"
+      },
+      "rtf": {
+        "availability": "measured",
+        "value": 1.2047852804938874,
+        "reason": null,
+        "source": "observed"
+      },
+      "first_non_empty_callback_seconds": {
+        "availability": "measured",
+        "value": 6.396253123,
+        "reason": null,
+        "source": "observed"
+      },
+      "wav_sha256": "ddbb6cf8b1853aeaa05a2e1e8cb4d878c7170aebc9abbe95aea817886786821f",
+      "audio_validation": "valid"
+    }
+  ],
+  "evidence": [
+    {
+      "artifact_id": "kokoro-902f6d5879514ce387326d33e7aea211-cold-0.wav",
+      "relative_path": "artifacts/0008/device-runs/20260813T125259Z-kokoro-990982474fed/device/kokoro-902f6d5879514ce387326d33e7aea211/kokoro-902f6d5879514ce387326d33e7aea211-cold-0.wav",
+      "sha256": "5758a0139ccddcbb3fa7e6b6bcd9da92598b92434ace53ec2e94bdfd1b1926ca",
+      "byte_count": 637636,
+      "retained": true
+    },
+    {
+      "artifact_id": "kokoro-902f6d5879514ce387326d33e7aea211-warm-1.wav",
+      "relative_path": "artifacts/0008/device-runs/20260813T125259Z-kokoro-990982474fed/device/kokoro-902f6d5879514ce387326d33e7aea211/kokoro-902f6d5879514ce387326d33e7aea211-warm-1.wav",
+      "sha256": "71611f8801bf5d42ef3e680aad2424eb8cc15cd346330ed55dc1e66df53e3375",
+      "byte_count": 637826,
+      "retained": true
+    },
+    {
+      "artifact_id": "kokoro-902f6d5879514ce387326d33e7aea211-warm-2.wav",
+      "relative_path": "artifacts/0008/device-runs/20260813T125259Z-kokoro-990982474fed/device/kokoro-902f6d5879514ce387326d33e7aea211/kokoro-902f6d5879514ce387326d33e7aea211-warm-2.wav",
+      "sha256": "1ed4c96155c11bde6010db8d048955bcae04421ceecf50ef189028c5d0637710",
+      "byte_count": 637850,
+      "retained": true
+    },
+    {
+      "artifact_id": "kokoro-902f6d5879514ce387326d33e7aea211-warm-3.wav",
+      "relative_path": "artifacts/0008/device-runs/20260813T125259Z-kokoro-990982474fed/device/kokoro-902f6d5879514ce387326d33e7aea211/kokoro-902f6d5879514ce387326d33e7aea211-warm-3.wav",
+      "sha256": "ddbb6cf8b1853aeaa05a2e1e8cb4d878c7170aebc9abbe95aea817886786821f",
+      "byte_count": 637598,
+      "retained": true
+    },
+    {
+      "artifact_id": "device-result.json",
+      "relative_path": "artifacts/0008/device-runs/20260813T125259Z-kokoro-990982474fed/device-result.json",
+      "sha256": "b8e021425894d81e0998b7c539d1c909d7aa6434f232963f5b58612b2e53ef18",
+      "byte_count": 3936,
+      "retained": true
+    },
+    {
+      "artifact_id": "host-run.json",
+      "relative_path": "artifacts/0008/device-runs/20260813T125259Z-kokoro-990982474fed/host-run.json",
+      "sha256": "44c91f37a2122ca9c65919a354f86e40a7ef0a295268542341021f7b0fcd12d6",
+      "byte_count": 24212,
+      "retained": true
+    },
+    {
+      "artifact_id": "logcat.txt",
+      "relative_path": "artifacts/0008/device-runs/20260813T125259Z-kokoro-990982474fed/logcat.txt",
+      "sha256": "f1f2d846f2c1afad20a0d0e477d81a07b58f89bf6a7c3910b205bc5b8f99518f",
+      "byte_count": 50189558,
+      "retained": true
+    },
+    {
+      "artifact_id": "telemetry.jsonl",
+      "relative_path": "artifacts/0008/device-runs/20260813T125259Z-kokoro-990982474fed/telemetry.jsonl",
+      "sha256": "dc3f3a9d29eb045b285543c21f88d26aa8114f9b07dbd29068d46bf5b4a6c69e",
+      "byte_count": 1101470,
+      "retained": true
+    },
+    {
+      "artifact_id": "thermal-polls.json",
+      "relative_path": "artifacts/0008/device-runs/20260813T125259Z-kokoro-990982474fed/thermal-polls.json",
+      "sha256": "71a9a36459c760638b75776f9500c83d63de9484b15903357fd9b05b421b033b",
+      "byte_count": 156,
+      "retained": true
+    }
+  ],
+  "listening": "not_performed"
 }
