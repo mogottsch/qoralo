@@ -1,6 +1,6 @@
 # Exact Kokoro v1.0 mixed-INT8 host quality package
 
-**Gate status: `awaiting_user_listening`.** Automated host checks passed for the selected candidate, but they do not establish subjective equivalence. Moritz's blind ballot is still required.
+**Gate status: `passed_user_listening`.** Automated host checks passed, and Moritz finalized all six blind votes: four ties, one INT8 preference, and one FP32 preference. Both directional votes had confidence 2/5. The ballot detected no systematic INT8 degradation, so the candidate may proceed to a later Android benchmark; this is not a claim of perceptual equivalence or INT8 superiority.
 
 This subtree is deliberately host-only. It contains no phone benchmark, Android RTF/PSS result, proprietary accelerator flow, or change to experiment 0008's measured decision.
 
@@ -58,7 +58,7 @@ SOURCE=experiments/0008-sherpa-onnx-android-tts-benchmark/artifacts/extracted/ko
 "$ROOT/.venv/bin/python" -m pytest -q "$ROOT/tests"
 ```
 
-The strict verifier checks the experiment 0008 archive and all 377 deployed source files, the exact wheelhouse and installed versions, candidate and rebuild hashes, effective QDQ boundary, all final WAV pins and recomputed metrics, blind ZIP CRC/metadata/payload assignments, failure retention (including the candidate-only checker diagnostic), and explicit pending-listening status. Its runtime smoke uses only the host CPU.
+The strict verifier checks the experiment 0008 archive and all 377 deployed source files, the exact wheelhouse and installed versions, candidate and rebuild hashes, effective QDQ boundary, all final WAV pins and recomputed metrics, blind ZIP CRC/metadata/payload assignments, failure retention (including the candidate-only checker diagnostic), and the finalized user-ballot status. Its runtime smoke uses only the host CPU.
 
 ## Rebuild from exact inputs
 
@@ -80,12 +80,12 @@ The first command downloads only the hash-locked Python wheels, not another Koko
 
 The supporting ASR rerun uses the separately pinned local `/usr/bin/python3.14` environment and Whisper checkpoint recorded in `toolchain.lock.json`; it fails closed if executable, package RECORD, ffmpeg, or checkpoint hashes drift. This environment is retained as a limitation rather than silently re-created from an unpinned dependency solve.
 
-## Exact next step for Moritz
+## Final blind-listening result
 
-1. Copy or unzip `generated/blind/kokoro-int8-listening.zip` (3,356,161 bytes in the current evidence set; see `reports/blind-package.json` for its authoritative SHA-256).
-2. Do **not** open `generated/blind/answer-key.json` or `generated/blind/seed.hex` first.
-3. Open `listening-guide.html`; with headphones and fixed volume, alternate order and listen to A and B for all six pairs.
-4. Fill in `ballot.csv` with `A`, `B`, or `tie`, confidence 1–5, and artifact/prosody/voice notes.
-5. Return the completed `ballot.csv`. Only then reveal the answer key and record a pass/fail listening verdict.
+The exact downloaded ballot is retained at `reports/user-listening-ballot.csv`; its validated reveal and interpretation are in `reports/user-listening-verdict.json`.
 
-Until that happens, the only valid overall status is `awaiting_user_listening`. Android deployment and device RTF/PSS evaluation are deferred to a later task if the listening gate passes.
+- Ties: 4/6
+- INT8 preferred: 1/6, confidence 2/5
+- FP32 preferred: 1/6, confidence 2/5
+
+The host quality gate passes because the finalized ballot found no systematic INT8 degradation. Android deployment and device RTF/PSS remain unmeasured and are the next candidate-specific step.

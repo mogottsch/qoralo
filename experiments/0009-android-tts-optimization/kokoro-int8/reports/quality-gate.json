@@ -1,9 +1,9 @@
 {
   "android": {
     "android_performance_conclusion": "none",
-    "deployment_status": "not_deployed_by_this_track",
-    "pss_status": "deferred_until_user_quality_verdict_and_later_device_deployment",
-    "rtf_status": "deferred_until_user_quality_verdict_and_later_device_deployment"
+    "deployment_status": "eligible_for_later_android_benchmark",
+    "pss_status": "not_yet_measured_for_this_candidate",
+    "rtf_status": "not_yet_measured_for_this_candidate"
   },
   "candidate": {
     "deployment_variant": "kokoro-multi-lang-v1_0",
@@ -92,11 +92,116 @@
       "matched_fp32_and_int8_sherpa_synthesis": true,
       "six_pair_file_audio_integrity_and_acoustic_supporting_checks": true
     },
-    "instruction": "Unzip generated/blind/kokoro-int8-listening.zip, listen to all six A/B pairs, complete ballot.csv, and return it before opening the separately retained answer key.",
+    "instruction": "User ballot is finalized, validated, and revealed against the retained answer key.",
     "listener": "Moritz",
-    "overall_status": "awaiting_user_listening",
+    "overall_status": "passed_user_listening",
     "subjective_equivalence_claimed": false,
-    "subjective_verdict": "awaiting_user_listening"
+    "subjective_verdict": "no_systematic_preference_or_int8_degradation_detected",
+    "user_listening": {
+      "answer_key": {
+        "revealed_only_after_ballot_was_final": true,
+        "sha256": "a076c234786a57121081374df9f69eabacd16155e050bf16fd50965dcb7538a9"
+      },
+      "ballot": {
+        "all_pairs_answered": true,
+        "bytes": 171,
+        "committed_copy": "reports/user-listening-ballot.csv",
+        "pair_count": 6,
+        "sha256": "7020a3bce68f8b5e21098e25095d035d7f313ea11a7394d6be6c6889e56b76eb",
+        "source_filename": "kokoro-int8-ballot.csv"
+      },
+      "counts": {
+        "fp32_preferred": 1,
+        "int8_preferred": 1,
+        "ties": 4
+      },
+      "interpretation": "Four of six pairs were ties. The only two directional votes split one for INT8 and one for FP32, both at confidence 2/5. This single-listener ballot detected no systematic INT8 degradation and supports passing the host listening gate; it does not prove perceptual equivalence or INT8 superiority.",
+      "limitations": [
+        "One listener and six utterances are not an equivalence study.",
+        "Both directional preferences had low confidence (2/5); tie confidence was left blank.",
+        "Kokoro contains stochastic operators, so this verdict applies to the retained hash-addressed pairs and selected model candidate."
+      ],
+      "listener": "Moritz",
+      "observations": [
+        {
+          "confidence": null,
+          "notes": "",
+          "pair": "pair-01",
+          "preference": "tie",
+          "preferred_variant": "tie",
+          "revealed_assignment": {
+            "A": "fp32",
+            "B": "int8"
+          },
+          "utterance_id": "eval-canonical-0008"
+        },
+        {
+          "confidence": null,
+          "notes": "",
+          "pair": "pair-02",
+          "preference": "tie",
+          "preferred_variant": "tie",
+          "revealed_assignment": {
+            "A": "int8",
+            "B": "fp32"
+          },
+          "utterance_id": "eval-short-declarative"
+        },
+        {
+          "confidence": null,
+          "notes": "",
+          "pair": "pair-03",
+          "preference": "tie",
+          "preferred_variant": "tie",
+          "revealed_assignment": {
+            "A": "int8",
+            "B": "fp32"
+          },
+          "utterance_id": "eval-time-number"
+        },
+        {
+          "confidence": 2,
+          "notes": "",
+          "pair": "pair-04",
+          "preference": "B",
+          "preferred_variant": "int8",
+          "revealed_assignment": {
+            "A": "fp32",
+            "B": "int8"
+          },
+          "utterance_id": "eval-question-list"
+        },
+        {
+          "confidence": null,
+          "notes": "",
+          "pair": "pair-05",
+          "preference": "tie",
+          "preferred_variant": "tie",
+          "revealed_assignment": {
+            "A": "fp32",
+            "B": "int8"
+          },
+          "utterance_id": "eval-phonetic-variety"
+        },
+        {
+          "confidence": 2,
+          "notes": "",
+          "pair": "pair-06",
+          "preference": "B",
+          "preferred_variant": "fp32",
+          "revealed_assignment": {
+            "A": "int8",
+            "B": "fp32"
+          },
+          "utterance_id": "eval-long-declarative"
+        }
+      ],
+      "processed_at_utc": "2026-08-13T16:09:12+00:00",
+      "quality_gate_recommendation": "pass",
+      "schema_version": 1,
+      "status": "validated_final_ballot",
+      "verdict": "no_systematic_preference_or_int8_degradation_detected"
+    }
   },
   "reproducibility": {
     "complete_inventory": "package-manifest.json",
@@ -146,13 +251,18 @@
         "bytes": 16794,
         "path": "failures.json",
         "sha256": "c3104872e8c2c88cc22b1ebfc1582824bf59ab17042df95ae6f1cea90cea8300"
+      },
+      {
+        "bytes": 3040,
+        "path": "user-listening-verdict.json",
+        "sha256": "063fb483ad9416733d68d8a5941badafdae9fd621b025f8b42de6ead5cc401bd"
       }
     ],
     "stochastic_audio_note": "The model contains unseeded random operators; the selected ONNX rebuild is bit-exact, while regenerated WAVs form a new hash-addressed evidence set.",
     "strict_verifier": "scripts/verify_package.py"
   },
   "schema_version": 1,
-  "status": "awaiting_user_listening",
+  "status": "passed_user_listening",
   "supporting_signals": {
     "asr_report": "asr-report.json",
     "audio_analysis_report": "audio-analysis.json",

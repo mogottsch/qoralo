@@ -93,16 +93,29 @@ def test_silence_and_clipping_are_detected() -> None:
         assert analyze_wav(clipped)["integrity"]["pcm_clip_count"] == 2400
 
 
-def test_committed_gate_remains_pending_and_defers_android() -> None:
+def test_committed_gate_records_final_user_ballot_and_defers_android_measurement() -> None:
     gate = load_json(ROOT / "reports" / "quality-gate.json")
-    assert gate["status"] == "awaiting_user_listening"
-    assert gate["quality_gate"]["overall_status"] == "awaiting_user_listening"
-    assert gate["quality_gate"]["subjective_verdict"] == "awaiting_user_listening"
+    assert gate["status"] == "passed_user_listening"
+    assert gate["quality_gate"]["overall_status"] == "passed_user_listening"
+    assert gate["quality_gate"]["subjective_verdict"] == "no_systematic_preference_or_int8_degradation_detected"
     assert gate["quality_gate"]["subjective_equivalence_claimed"] is False
-    assert gate["android"]["deployment_status"] == "not_deployed_by_this_track"
-    assert "deferred" in gate["android"]["rtf_status"]
-    assert "deferred" in gate["android"]["pss_status"]
+    assert gate["quality_gate"]["user_listening"]["counts"] == {
+        "ties": 4, "int8_preferred": 1, "fp32_preferred": 1,
+    }
+    assert gate["android"]["deployment_status"] == "eligible_for_later_android_benchmark"
+    assert gate["android"]["rtf_status"] == "not_yet_measured_for_this_candidate"
+    assert gate["android"]["pss_status"] == "not_yet_measured_for_this_candidate"
     assert not contains_forbidden_mse_key(gate)
+
+
+def test_user_ballot_reveal_is_balanced_and_low_confidence() -> None:
+    verdict = load_json(ROOT / "reports" / "user-listening-verdict.json")
+    assert verdict["status"] == "validated_final_ballot"
+    assert verdict["quality_gate_recommendation"] == "pass"
+    assert verdict["counts"] == {"ties": 4, "int8_preferred": 1, "fp32_preferred": 1}
+    directional = [row for row in verdict["observations"] if row["preferred_variant"] != "tie"]
+    assert {row["preferred_variant"] for row in directional} == {"fp32", "int8"}
+    assert {row["confidence"] for row in directional} == {2}
 
 
 def test_blind_manifest_keeps_answer_key_outside_package() -> None:
@@ -200,7 +213,7 @@ def test_final_reports_are_six_matched_hash_addressed_pairs() -> None:
 
 def test_package_manifest_pins_ignored_models_audio_and_blind_zip() -> None:
     manifest = load_json(ROOT / "package-manifest.json")
-    assert manifest["status"] == "awaiting_user_listening"
+    assert manifest["status"] == "passed_user_listening"
     generated = {item["path"]: item for item in manifest["generated_evidence"]}
     required = {
         "generated/model.static-qdq-s8s8-generator-fp32.onnx",
@@ -219,12 +232,12 @@ def test_package_manifest_pins_ignored_models_audio_and_blind_zip() -> None:
     assert len([path for path in generated if path.startswith("generated/audio/") and path.endswith(".wav")]) == 12
 
 
-def test_documentation_exposes_exact_listening_step_and_limitations() -> None:
+def test_documentation_exposes_final_listening_result_and_limitations() -> None:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     handoff = (ROOT / "WORKER_HANDOFF.md").read_text(encoding="utf-8")
     for text in (readme, handoff):
-        assert "awaiting_user_listening" in text
-        assert "generated/blind/kokoro-int8-listening.zip" in text
-        assert "ballot.csv" in text
+        assert "passed_user_listening" in text
+        assert "four ties" in text
+        assert "user-listening-ballot.csv" in text
     assert "No calibrated" in readme
-    assert "Android" in readme and "deferred" in readme
+    assert "Android" in readme and "unmeasured" in readme

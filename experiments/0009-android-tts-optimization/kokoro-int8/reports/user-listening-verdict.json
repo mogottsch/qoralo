@@ -1,0 +1,105 @@
+{
+  "answer_key": {
+    "revealed_only_after_ballot_was_final": true,
+    "sha256": "a076c234786a57121081374df9f69eabacd16155e050bf16fd50965dcb7538a9"
+  },
+  "ballot": {
+    "all_pairs_answered": true,
+    "bytes": 171,
+    "committed_copy": "reports/user-listening-ballot.csv",
+    "pair_count": 6,
+    "sha256": "7020a3bce68f8b5e21098e25095d035d7f313ea11a7394d6be6c6889e56b76eb",
+    "source_filename": "kokoro-int8-ballot.csv"
+  },
+  "counts": {
+    "fp32_preferred": 1,
+    "int8_preferred": 1,
+    "ties": 4
+  },
+  "interpretation": "Four of six pairs were ties. The only two directional votes split one for INT8 and one for FP32, both at confidence 2/5. This single-listener ballot detected no systematic INT8 degradation and supports passing the host listening gate; it does not prove perceptual equivalence or INT8 superiority.",
+  "limitations": [
+    "One listener and six utterances are not an equivalence study.",
+    "Both directional preferences had low confidence (2/5); tie confidence was left blank.",
+    "Kokoro contains stochastic operators, so this verdict applies to the retained hash-addressed pairs and selected model candidate."
+  ],
+  "listener": "Moritz",
+  "observations": [
+    {
+      "confidence": null,
+      "notes": "",
+      "pair": "pair-01",
+      "preference": "tie",
+      "preferred_variant": "tie",
+      "revealed_assignment": {
+        "A": "fp32",
+        "B": "int8"
+      },
+      "utterance_id": "eval-canonical-0008"
+    },
+    {
+      "confidence": null,
+      "notes": "",
+      "pair": "pair-02",
+      "preference": "tie",
+      "preferred_variant": "tie",
+      "revealed_assignment": {
+        "A": "int8",
+        "B": "fp32"
+      },
+      "utterance_id": "eval-short-declarative"
+    },
+    {
+      "confidence": null,
+      "notes": "",
+      "pair": "pair-03",
+      "preference": "tie",
+      "preferred_variant": "tie",
+      "revealed_assignment": {
+        "A": "int8",
+        "B": "fp32"
+      },
+      "utterance_id": "eval-time-number"
+    },
+    {
+      "confidence": 2,
+      "notes": "",
+      "pair": "pair-04",
+      "preference": "B",
+      "preferred_variant": "int8",
+      "revealed_assignment": {
+        "A": "fp32",
+        "B": "int8"
+      },
+      "utterance_id": "eval-question-list"
+    },
+    {
+      "confidence": null,
+      "notes": "",
+      "pair": "pair-05",
+      "preference": "tie",
+      "preferred_variant": "tie",
+      "revealed_assignment": {
+        "A": "fp32",
+        "B": "int8"
+      },
+      "utterance_id": "eval-phonetic-variety"
+    },
+    {
+      "confidence": 2,
+      "notes": "",
+      "pair": "pair-06",
+      "preference": "B",
+      "preferred_variant": "fp32",
+      "revealed_assignment": {
+        "A": "int8",
+        "B": "fp32"
+      },
+      "utterance_id": "eval-long-declarative"
+    }
+  ],
+  "processed_at_utc": "2026-08-13T16:09:12+00:00",
+  "quality_gate_recommendation": "pass",
+  "schema_version": 1,
+  "status": "validated_final_ballot",
+  "verdict": "no_systematic_preference_or_int8_degradation_detected"
+}

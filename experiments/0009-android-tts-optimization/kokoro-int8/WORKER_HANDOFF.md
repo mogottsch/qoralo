@@ -2,7 +2,7 @@
 
 ## Status
 
-**Package complete; quality gate: `awaiting_user_listening`.** Automated host checks passed. No subjective equivalence is claimed, and no Android performance conclusion was made.
+**Package complete; quality gate: `passed_user_listening`.** Automated host checks passed. Moritz's finalized ballot contained four ties, one low-confidence INT8 preference, and one low-confidence FP32 preference, detecting no systematic INT8 degradation. No strict subjective-equivalence or Android-performance conclusion is claimed.
 
 ## Completed
 
@@ -43,10 +43,6 @@
 - Historical `generated/trial-*` files from interrupted workers are retained and hash-pinned, but canonical screening reports supersede stale historical references.
 - No phone was accessed; Android deployment, RTF, and PSS are explicitly deferred. No shared docs or thread-sweep files were touched.
 
-## Exact user listening next step
+## Final user listening result
 
-1. Copy or unzip `generated/blind/kokoro-int8-listening.zip`.
-2. **Do not open** `generated/blind/answer-key.json` or `generated/blind/seed.hex` first.
-3. Open `listening-guide.html`, use headphones at fixed volume, and listen to A and B for all six pairs.
-4. Fill in `ballot.csv` with `A`, `B`, or `tie`, confidence 1–5, and notes on intelligibility, voice identity, artifacts, prosody, and pacing.
-5. Return the completed `ballot.csv`; only then reveal the answer key and record the listening verdict.
+The exact ballot is retained at `reports/user-listening-ballot.csv`, and the validated post-reveal interpretation is at `reports/user-listening-verdict.json`. Counts were four ties, one INT8 preference, and one FP32 preference; both directional votes had confidence 2/5. The selected candidate is eligible for a later Android performance benchmark.

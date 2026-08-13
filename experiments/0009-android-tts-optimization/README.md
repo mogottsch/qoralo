@@ -6,7 +6,7 @@ This experiment contains the two optimization tracks authorized after the measur
 
 ### Exact Kokoro v1.0 INT8 host quality gate
 
-[`kokoro-int8/`](kokoro-int8/) quantizes only the exact pinned `kokoro-multi-lang-v1_0` source used by experiment 0008. The selected mixed S8S8 QDQ candidate is 46.0% smaller and passed the automated host checks, but its status remains **`awaiting_user_listening`**. It has not been deployed to Android and has no measured Android speed or memory claim.
+[`kokoro-int8/`](kokoro-int8/) quantizes only the exact pinned `kokoro-multi-lang-v1_0` source used by experiment 0008. The selected mixed S8S8 QDQ candidate is 46.0% smaller, passed the automated host checks, and passed Moritz's finalized blind listening gate with four ties and one low-confidence preference for each variant. It has not been deployed to Android and has no measured Android speed or memory claim.
 
 Start with:
 

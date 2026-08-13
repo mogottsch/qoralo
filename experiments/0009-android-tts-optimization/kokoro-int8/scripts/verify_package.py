@@ -251,6 +251,16 @@ def main() -> None:
     failures = load_json(EXPERIMENT_ROOT / "reports/failures.json")
     checker_report = load_json(EXPERIMENT_ROOT / "reports/checker-limitation.json")
     gate = load_json(EXPERIMENT_ROOT / "reports/quality-gate.json")
+    verdict = load_json(EXPERIMENT_ROOT / "reports/user-listening-verdict.json")
+    ballot_path = EXPERIMENT_ROOT / verdict["ballot"]["committed_copy"]
+    if (
+        not ballot_path.is_file()
+        or ballot_path.stat().st_size != verdict["ballot"]["bytes"]
+        or sha256_file(ballot_path) != verdict["ballot"]["sha256"]
+        or verdict["counts"] != {"ties": 4, "int8_preferred": 1, "fp32_preferred": 1}
+        or verdict["quality_gate_recommendation"] != "pass"
+    ):
+        raise RuntimeError("final user ballot or revealed verdict drifted")
     required_failures = {
         "dynamic-qint8-convinteger-not-implemented",
         "static-s8s8-all-eligible-spectral-screen",
@@ -269,11 +279,12 @@ def main() -> None:
     if selection["selected_candidate_sha256"] != quantization["candidate"]["sha256"]:
         raise RuntimeError("candidate selection pin drifted")
     if (
-        gate.get("status") != "awaiting_user_listening"
-        or gate["quality_gate"]["overall_status"] != "awaiting_user_listening"
+        gate.get("status") != "passed_user_listening"
+        or gate["quality_gate"]["overall_status"] != "passed_user_listening"
         or gate["quality_gate"]["subjective_equivalence_claimed"] is not False
+        or gate["quality_gate"]["user_listening"] != verdict
     ):
-        raise RuntimeError("quality gate no longer explicitly awaits user listening")
+        raise RuntimeError("quality gate does not match the finalized user ballot")
     if contains_forbidden_mse_key(gate) or contains_forbidden_mse_key(analysis):
         raise RuntimeError("a decision report introduced a raw-sample MSE key")
 
@@ -296,7 +307,7 @@ def main() -> None:
             "asr_supporting_report": True,
             "blind_zip_crc_metadata_payload_assignments_and_empty_ballot": True,
             "candidate_selection_and_failure_retention": True,
-            "explicit_awaiting_user_listening_status": True,
+            "final_user_ballot_hash_reveal_and_pass_status": True,
         },
         "source": source["full_source_inventory"],
         "toolchain": {
@@ -317,7 +328,7 @@ def main() -> None:
         "blind": blind_summary,
         "runtime_smoke": runtime_smoke,
         "android": {"accessed": False, "rtf_measured": False, "pss_measured": False},
-        "overall_quality_status": "awaiting_user_listening",
+        "overall_quality_status": "passed_user_listening",
     }
     write_json(args.output, report)
     print(f"strict package verification passed: {args.output}")
