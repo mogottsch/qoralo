@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Project history | visual mirror</title>
+<style>
+:root { --bg:#f4f2ed; --paper:#fffefa; --ink:#20231f; --muted:#686d65; --line:#d9d5cb; --accent:#225e52; --accent-soft:#e3efeb; --warn:#8b5a16; --warn-soft:#fff2d5; --code:#f0eee8; }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.62 system-ui,-apple-system,"Segoe UI",sans-serif; }
+a { color:var(--accent); }
+.shell { max-width:1280px; margin:0 auto; display:grid; grid-template-columns:250px minmax(0,1fr); gap:24px; padding:24px; }
+nav { position:sticky; top:18px; align-self:start; max-height:calc(100vh - 36px); overflow:auto; padding:18px; background:var(--paper); border:1px solid var(--line); border-radius:10px; }
+nav strong { display:block; margin-bottom:10px; font-size:12px; text-transform:uppercase; letter-spacing:.08em; }
+nav a { display:block; padding:5px 7px; border-radius:5px; color:var(--muted); text-decoration:none; font-size:13px; line-height:1.3; }
+nav a:hover { color:var(--accent); background:var(--accent-soft); }
+nav .toc-level-1 { display:none; }
+nav .toc-level-3 { padding-left:19px; font-size:12px; }
+main { min-width:0; background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:clamp(24px,5vw,62px); box-shadow:0 12px 36px rgba(38,39,34,.06); }
+.mirror-note { margin:0 0 34px; padding:14px 16px; border-left:4px solid var(--warn); background:var(--warn-soft); color:#5e451e; }
+.mirror-note strong { display:block; }
+.meta { display:flex; flex-wrap:wrap; gap:8px 18px; margin-top:6px; font:12px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace; color:#79623e; }
+h1 { margin:0 0 8px; font-size:clamp(34px,6vw,58px); line-height:1.03; letter-spacing:-.035em; }
+h2 { margin:54px 0 14px; padding-top:18px; border-top:1px solid var(--line); font-size:26px; line-height:1.2; }
+h3 { margin:32px 0 10px; font-size:18px; color:var(--accent); }
+.anchor { margin-left:8px; opacity:0; font-weight:400; text-decoration:none; }
+h1:hover .anchor,h2:hover .anchor,h3:hover .anchor { opacity:.45; }
+p { max-width:78ch; }
+ul,ol { max-width:82ch; padding-left:24px; }
+li { margin:6px 0; padding-left:3px; }
+strong { font-weight:720; }
+code { padding:2px 5px; border-radius:4px; background:var(--code); font:13px ui-monospace,SFMono-Regular,Consolas,monospace; }
+.table-wrap { overflow:auto; margin:18px 0; border:1px solid var(--line); border-radius:8px; }
+table { width:100%; border-collapse:collapse; min-width:650px; }
+th,td { padding:11px 13px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+th { background:var(--accent-soft); color:#17463d; font-size:12px; text-transform:uppercase; letter-spacing:.035em; }
+tr:last-child td { border-bottom:0; }
+.source-footer { margin-top:58px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:12px; }
+@media (max-width:850px) { .shell { display:block; padding:10px; } nav { position:relative; top:0; max-height:none; margin-bottom:10px; } main { padding:24px 20px; } }
+@media print { body { background:white; } .shell { display:block; padding:0; } nav { display:none; } main { border:0; box-shadow:none; padding:0; } .mirror-note { border:1px solid #bbb; } }
+</style>
+</head>
+<body>
+<div class="shell">
+<nav aria-label="Document sections"><strong>Sections</strong><a class="toc-level-1" href="#project-history">Project history</a>
+<a class="toc-level-2" href="#goal-and-direction">Goal and direction</a>
+<a class="toc-level-2" href="#experiment-record">Experiment record</a>
+<a class="toc-level-2" href="#decisions-carried-forward">Decisions carried forward</a></nav>
+<main>
+<div class="mirror-note"><strong>Visual mirror of <code>docs/history.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: uncommitted</span><span>source sha256: 7482f74e04dfd38d…</span></div></div>
+<article><h1 id="project-history">Project history<a class="anchor" href="#project-history" aria-label="Link to this section">#</a></h1>
+<h2 id="goal-and-direction">Goal and direction<a class="anchor" href="#goal-and-direction" aria-label="Link to this section">#</a></h2>
+<p>The project started by asking whether Microsoft&#x27;s VibeVoice could generate a local two-speaker podcast on a modern Android phone. The goal later widened to finding any practical local TTS model that sounds pleasant and natural enough for a future NotebookLM-like listening experience.</p>
+<p>Two-speaker generation remains desirable, but it is no longer mandatory. A strong narrator or persistent voices generated turn by turn can also meet the goal. Model quality, sustained listening, and practical Android deployment matter more than preserving the original VibeVoice architecture.</p>
+<h2 id="experiment-record">Experiment record<a class="anchor" href="#experiment-record" aria-label="Link to this section">#</a></h2>
+<p>Each summary links to the experiment that holds the detailed commands, measurements, artifacts, and limitations.</p>
+<div class="table-wrap"><table><thead><tr>
+<th>Experiment</th>
+<th>Question at the time</th>
+<th>Result and consequence</th>
+</tr></thead><tbody>
+<tr>
+<td><a href="../experiments/0001-vibevoice-1.5b-local-reference/"><code>0001: VibeVoice 1.5B host reference</code></a></td>
+<td>Can we create a fixed reference before attempting Android conversion?</td>
+<td>Produced the reproducible host reference and the evidence protocol used by the first Android campaign. This established the rule that conversion results must be compared with locked inputs and outputs.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0002-vibevoice-1.5b-executorch-android/"><code>0002: VibeVoice 1.5B ExecuTorch</code></a></td>
+<td>Can the model run component by component and then end to end through ExecuTorch on Android?</td>
+<td>Individual components ran, but the complete fixed-shape path stopped after two near-silent chunks, covered only 2.04% of the reference, ran very slowly, and required about 9.1 GB. Later analysis showed that the quiet prefix closely matched the expected reference prefix, but it did not fix the capacity limit. The deployment was rejected.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0003-vibevoice-1.5b-litert-android/"><code>0003: VibeVoice LiteRT</code></a></td>
+<td>Should the failed VibeVoice deployment be repeated with LiteRT?</td>
+<td>Deferred. A second full conversion was not justified while the model itself had not passed the practical deployment gate.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0004-vibevoice-1.5b-onnx-android/"><code>0004: VibeVoice ONNX Runtime</code></a></td>
+<td>Should the same VibeVoice path be attempted with ONNX Runtime Mobile?</td>
+<td>Deferred for the same reason.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0005-vibevoice-1.5b-qnn-android/"><code>0005: VibeVoice direct QNN</code></a></td>
+<td>Should direct Qualcomm acceleration be attempted for VibeVoice 1.5B?</td>
+<td>Deferred. Hardware-specific optimization was not justified before selecting a model that already produced acceptable output through a general runtime.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0006-vibevoice-realtime-0.5b-android/"><code>0006: VibeVoice Realtime 0.5B</code></a></td>
+<td>Is the smaller VibeVoice model a more practical comparison?</td>
+<td>Recorded feasibility notes and storage estimates, but produced no Android deployment result. This helped motivate a wider candidate search instead of remaining VibeVoice-only.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0007-mobile-podcast-preview-bakeoff/"><code>0007: Host listening bake-off</code></a></td>
+<td>Which smaller models sound promising enough to justify phone work?</td>
+<td>Created a six-model, natural-duration host listening comparison. The campaign moved model choice ahead of more conversion work and narrowed the candidates for physical Android measurement. Host listening remained separate from Android feasibility.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0008-sherpa-onnx-android-tts-benchmark/"><code>0008: Android TTS benchmark</code></a></td>
+<td>How do Pocket, Kokoro, and Supertonic perform as pinned Android CPU deployments?</td>
+<td>All three generated valid audio on the Galaxy S23 Ultra. Supertonic 3 became the measured technical default with a one-thread warm median RTF of <code>0.370</code>. Pocket and Kokoro worked with documented limitations. This replaced VibeVoice as the active deployment direction.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0009-android-tts-optimization/"><code>0009: Android TTS optimization</code></a></td>
+<td>Can model size or CPU threading materially improve the selected candidates?</td>
+<td>The exact Kokoro mixed-INT8 candidate was 46.0% smaller and passed the user listening gate. All nine thread configurations ran successfully. Kokoro&#x27;s four-thread improvement was materially directional; Pocket and Supertonic changes below 10% remained inconclusive. Supertonic stayed the technical default.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0010-supertonic-qnn-htp-feasibility/"><code>0010: Supertonic QNN/HTP feasibility</code></a></td>
+<td>Can the dominant Supertonic components run on the SM8550 HTP without hidden CPU fallback, and is acceleration worth its cost?</td>
+<td>Work completed so far proved the physical HTP toolchain with a six-node QDQ add control and CPU fallback disabled. It also localized an ONNX Runtime 1.27.1 QNN crash and retained the upstream fix as a narrow patch. The Supertonic vocoder itself has not executed on HTP: after the crash fix, eight <code>Erf</code> nodes in decomposed GELU patterns still prevent a no-fallback session. The experiment remains active.</td>
+</tr>
+</tbody></table></div>
+<h2 id="decisions-carried-forward">Decisions carried forward<a class="anchor" href="#decisions-carried-forward" aria-label="Link to this section">#</a></h2>
+<ul>
+<li>The repository covers the TTS layer only. Source ingestion, retrieval, script generation, application UI, and episode management belong to the later product.</li>
+<li>Pleasant, natural long-form speech is the primary goal. Joint multi-speaker generation is useful but optional.</li>
+<li>Full-context generation is preferred. Naive sentence or clause splitting was rejected because it can damage prosody and naturalness.</li>
+<li>Supertonic 3 is the current measured Android CPU default. This is a technical selection, not a claim that every listening or product-quality question is closed.</li>
+<li>Accelerator work must fail closed. A graph counts as HTP execution only when CPU fallback is disabled and physical-device profiling proves delegation.</li>
+<li>A control graph, component result, or emulator result is not an end-to-end Supertonic acceleration claim.</li>
+<li>Qualcomm software and generated restricted artifacts stay local. New terms, logins, consent, or export gates require explicit human approval.</li>
+</ul>
+<p>The next work is defined in <a href="plan.md"><code>plan.md</code></a> and its <a href="plan.html">HTML mirror</a>.</p></article>
+<footer class="source-footer">Generated as <code>history.html</code> by <code>scripts/build_docs_html.py</code>. Edit <code>docs/history.md</code>, then regenerate both human-readable mirrors.</footer>
+</main>
+</div>
+</body>
+</html>

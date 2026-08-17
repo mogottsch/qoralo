@@ -18,8 +18,8 @@ PROTOCOL_PATH = EXP / "protocol/preview-protocol-v2.json"
 TRANSCRIPT_PATH = EXP / "protocol/transcript.txt"
 SCHEMA_PATH = HERE / "bakeoff-manifest.schema.json"
 MANIFEST_PATH = HERE / "bakeoff-manifest.json"
-REPORT_PATH = REPO / "docs/candidate-decision-report.json"
-REPORT_SCHEMA_PATH = REPO / "docs/candidate-decision-report.schema.json"
+REPORT_PATH = REPO / "experiments/0008-sherpa-onnx-android-tts-benchmark/results/candidate-decision-report.json"
+REPORT_SCHEMA_PATH = REPO / "experiments/0008-sherpa-onnx-android-tts-benchmark/results/candidate-decision-report.schema.json"
 CANDIDATES = {
     "realtime": ("Candidate A", "a", "VibeVoice Realtime 0.5B", "realtime-preview.json"),
     "pocket": ("Candidate B", "b", "Pocket TTS 100M", "pocket-preview.json"),

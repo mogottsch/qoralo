@@ -1,6 +1,6 @@
 # Experiment 0008 — sherpa-onnx Android TTS benchmark
 
-**Status: complete.** The three pinned variants were measured on the Samsung Galaxy S23 Ultra (`SM-S918B`). See the canonical [measured Android decision](results/measured-decision.md) and its [machine-readable form](results/measured-decision.json). Supertonic 3 works; Pocket and Kokoro work with documented limitations.
+**Status: complete.** The three pinned variants were measured on the Samsung Galaxy S23 Ultra (`SM-S918B`). See the canonical [measured Android decision](results/measured-decision.md), its [machine-readable form](results/measured-decision.json), and the relocated historical [candidate decision report](results/candidate-decision-report.md). Supertonic 3 works; Pocket and Kokoro work with documented limitations.
 
 This experiment compares three pinned local Android CPU deployments in a fixed order:
 

@@ -2,7 +2,7 @@
 
 ## Status
 
-**Paused after a successful physical-HTP control and a fail-closed vocoder investigation.** See [`HANDOFF.md`](HANDOFF.md) and [`results/phone-probe-checkpoint.json`](results/phone-probe-checkpoint.json) for the exact resume point. A tiny QDQ graph has proven real SM8550 HTP execution with CPU fallback disabled; the vocoder has not run, produced output, or established a speedup. [`results/host-checkpoint.json`](results/host-checkpoint.json) is the earlier pre-phone snapshot.
+**Paused after a successful physical-HTP control and a fail-closed vocoder investigation.** See the detailed [`PLAN.md`](PLAN.md), [`HANDOFF.md`](HANDOFF.md), and [`results/phone-probe-checkpoint.json`](results/phone-probe-checkpoint.json) for the execution sequence and exact resume point. A tiny QDQ graph has proven real SM8550 HTP execution with CPU fallback disabled; the vocoder has not run, produced output, or established a speedup. [`results/host-checkpoint.json`](results/host-checkpoint.json) is the earlier pre-phone snapshot.
 
 This experiment proceeds component-first with the exact Supertonic 3 deployment measured in experiment 0008 on the Galaxy S23 Ultra's Qualcomm HTP/NPU. Its final gated goal, if the component probes succeed, is to integrate the accepted acceleration into the complete Android TTS path and run the model end to end from the frozen text and voice inputs to final audio. It is not a production integration.
 

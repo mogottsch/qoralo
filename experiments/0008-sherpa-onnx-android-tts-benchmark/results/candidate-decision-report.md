@@ -1,6 +1,6 @@
 # Candidate decision report
 
-**Status: experiment 0008 complete.** The Galaxy S23 Ultra measurements select the pinned Supertonic 3 INT8 deployment as the strongest default. Pocket and exact Kokoro v1.0 work with limitations. The canonical tables, exact values, retained hashes, failure disclosure, and validation are in the [measured Android decision](../experiments/0008-sherpa-onnx-android-tts-benchmark/results/measured-decision.md).
+**Status: experiment 0008 complete.** The Galaxy S23 Ultra measurements select the pinned Supertonic 3 INT8 deployment as the strongest default. Pocket and exact Kokoro v1.0 work with limitations. The canonical tables, exact values, retained hashes, failure disclosure, and validation are in the [measured Android decision](measured-decision.md).
 
 ## Android decision
 
@@ -43,8 +43,8 @@ VibeVoice Realtime 0.5B, Inflect Nano v1, and Kitten TTS Mini 80M v0.8 are **his
 
 ## Evidence index
 
-- [canonical measured comparison](../experiments/0008-sherpa-onnx-android-tts-benchmark/results/measured-decision.md)
-- [machine-readable measured comparison](../experiments/0008-sherpa-onnx-android-tts-benchmark/results/measured-decision.json)
+- [canonical measured comparison](measured-decision.md)
+- [machine-readable measured comparison](measured-decision.json)
 - [machine-readable project report](candidate-decision-report.json)
-- [experiment 0008 protocol](../experiments/0008-sherpa-onnx-android-tts-benchmark/protocol/benchmark-protocol.json)
-- [historical experiment 0007 listening manifest](../experiments/0007-mobile-podcast-preview-bakeoff/publication/bakeoff-manifest.json)
+- [experiment 0008 protocol](../protocol/benchmark-protocol.json)
+- [historical experiment 0007 listening manifest](../../0007-mobile-podcast-preview-bakeoff/publication/bakeoff-manifest.json)

@@ -4,6 +4,8 @@
 
 Export VibeVoice components to ExecuTorch, validate them against experiment 0001 fixtures, and progress toward the same approximately 15-second output on the Galaxy S23 Ultra.
 
+The original cross-runtime strategy and completed Crew work plan are retained under [`planning/`](planning/) as historical context.
+
 ## Status
 
 Complete with a negative feasibility conclusion. Individual fixed-shape components execute reproducibly through ExecuTorch 1.2/XNNPACK on the Galaxy S23 Ultra, using the accepted INT8 Qwen2 backbone and FP32 audio components. The integrated locked run is not usable speech: it stops at the exported two-chunk cache capacity, produces only 0.266667 seconds (2.04% coverage) at -118.83 dBFS, and has a final measured prefix RTF of 107.35. The 9.136 GB APK-plus-module footprint, static-cache limit, and effectively silent output make this export infeasible for local VibeVoice speech.

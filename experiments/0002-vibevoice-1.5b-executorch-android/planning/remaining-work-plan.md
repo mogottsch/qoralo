@@ -4,7 +4,7 @@
 
 Convert the unfinished portion of the existing 39-step ExecuTorch feasibility spike into a durable Pi Messenger Crew task graph. This document covers only unfinished steps. It must not recreate completed work or broaden the repository into product development.
 
-The canonical current state is [`docs/progress.json`](progress.json). The detailed experiment record is [`experiments/0002-vibevoice-1.5b-executorch-android/README.md`](../experiments/0002-vibevoice-1.5b-executorch-android/README.md).
+This is a historical work plan. The detailed experiment record is the experiment [`README`](../README.md).
 
 ## Fixed scope
 

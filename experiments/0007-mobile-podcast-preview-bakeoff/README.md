@@ -2,6 +2,8 @@
 
 This experiment contains host listening evidence for VibeVoice Realtime 0.5B, Pocket TTS, Kokoro 82M, Supertonic 3, Inflect Nano v1, and Kitten TTS Mini 80M v0.8. It does not establish Android feasibility.
 
+The completed campaign plan is retained at [`planning/campaign-plan.md`](planning/campaign-plan.md).
+
 ## Active listening policy
 
 The active six-candidate bake-off uses each model's natural-duration output. There is no 15-second gate and no normalization. The page reports actual duration and native sample rate, starts with neutral Candidate A–F labels, and fetches model identities only after a per-card or reveal-all action. Historical normalized artifacts remain evidence but are noncanonical and are not loaded by the active page.
