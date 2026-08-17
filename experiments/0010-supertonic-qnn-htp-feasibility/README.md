@@ -32,6 +32,33 @@ Canonical evidence:
 - [`../0008-sherpa-onnx-android-tts-benchmark/models/supertonic-3/conversion-provenance.json`](../0008-sherpa-onnx-android-tts-benchmark/models/supertonic-3/conversion-provenance.json)
 - [`../0008-sherpa-onnx-android-tts-benchmark/models/supertonic-3/sherpa-config.json`](../0008-sherpa-onnx-android-tts-benchmark/models/supertonic-3/sherpa-config.json)
 
+## Inference architecture
+
+Supertonic processes one text chunk through four ONNX components. The surrounding runtime performs text preparation, selects the requested voice, sizes the latent sequence, and writes the resulting audio.
+
+```text
+text
+  → normalize + add language tags + Unicode indexing
+  → text IDs and text mask
+      ├─ + duration style → duration predictor → predicted audio duration
+      └─ + text-to-latent style → text encoder → text embedding
+  → duration-based latent length and mask + seeded noise
+  → vector estimator × 5 (each output becomes the next step's latent)
+  → vocoder → float waveform
+  → trim to predicted sample count → mono PCM16 WAV
+```
+
+The packaged `voice.bin` contains two style tensors for each speaker. The selected speaker supplies `style_dp` to duration prediction and `style_ttl` to text encoding and every vector-estimator step. These are model conditioning inputs, not recorded reference audio.
+
+The four ONNX components run in this order:
+
+1. **Duration predictor (`duration_predictor.int8.onnx`)** — consumes the indexed text, text mask, and `style_dp`; returns the chunk's predicted duration. The configured speed scales this value, which then determines the target waveform length and latent length.
+2. **Text encoder (`text_encoder.int8.onnx`)** — consumes the same text IDs and mask with `style_ttl`; returns the text embedding that conditions latent generation.
+3. **Vector estimator (`vector_estimator.int8.onnx`)** — consumes the current noisy latent, text embedding, `style_ttl`, text and latent masks, and current/total step values. The default inference loop calls it five times, feeding each output latent into the next call.
+4. **Vocoder (`vocoder.int8.onnx`)** — converts the final latent tensor into waveform samples. The runtime trims that waveform to the duration-derived sample count and encodes it as a mono PCM16 WAV.
+
+Before the ONNX calls, the runtime normalizes punctuation and spacing, adds language tags, applies Unicode NFKD decomposition, and maps supported BMP code points through the packaged `unicode_indexer.bin`. Latent initialization is Gaussian noise masked to the duration-derived sequence length; a fixed seed is used only when deterministic reproduction is required.
+
 ## Runtime choice
 
 The initial target is **QNN's HTP backend**, which addresses the Hexagon tensor accelerator commonly described as the Snapdragon NPU.
