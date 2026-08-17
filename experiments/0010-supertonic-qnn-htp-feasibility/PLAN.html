@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Experiment 0010 execution plan | visual mirror</title>
+<style>
+:root { --bg:#f4f2ed; --paper:#fffefa; --ink:#20231f; --muted:#686d65; --line:#d9d5cb; --accent:#225e52; --accent-soft:#e3efeb; --warn:#8b5a16; --warn-soft:#fff2d5; --code:#f0eee8; }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.62 system-ui,-apple-system,"Segoe UI",sans-serif; }
+a { color:var(--accent); }
+.shell { max-width:1280px; margin:0 auto; display:grid; grid-template-columns:250px minmax(0,1fr); gap:24px; padding:24px; }
+nav { position:sticky; top:18px; align-self:start; max-height:calc(100vh - 36px); overflow:auto; padding:18px; background:var(--paper); border:1px solid var(--line); border-radius:10px; }
+nav strong { display:block; margin-bottom:10px; font-size:12px; text-transform:uppercase; letter-spacing:.08em; }
+nav a { display:block; padding:5px 7px; border-radius:5px; color:var(--muted); text-decoration:none; font-size:13px; line-height:1.3; }
+nav a:hover { color:var(--accent); background:var(--accent-soft); }
+nav .toc-level-1 { display:none; }
+nav .toc-level-3 { padding-left:19px; font-size:12px; }
+main { min-width:0; background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:clamp(24px,5vw,62px); box-shadow:0 12px 36px rgba(38,39,34,.06); }
+.mirror-note { margin:0 0 34px; padding:14px 16px; border-left:4px solid var(--warn); background:var(--warn-soft); color:#5e451e; }
+.mirror-note strong { display:block; }
+.meta { display:flex; flex-wrap:wrap; gap:8px 18px; margin-top:6px; font:12px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace; color:#79623e; }
+h1 { margin:0 0 8px; font-size:clamp(34px,6vw,58px); line-height:1.03; letter-spacing:-.035em; }
+h2 { margin:54px 0 14px; padding-top:18px; border-top:1px solid var(--line); font-size:26px; line-height:1.2; }
+h3 { margin:32px 0 10px; font-size:18px; color:var(--accent); }
+.anchor { margin-left:8px; opacity:0; font-weight:400; text-decoration:none; }
+h1:hover .anchor,h2:hover .anchor,h3:hover .anchor { opacity:.45; }
+p { max-width:78ch; }
+ul,ol { max-width:82ch; padding-left:24px; }
+li { margin:6px 0; padding-left:3px; }
+strong { font-weight:720; }
+code { padding:2px 5px; border-radius:4px; background:var(--code); font:13px ui-monospace,SFMono-Regular,Consolas,monospace; }
+.table-wrap { overflow:auto; margin:18px 0; border:1px solid var(--line); border-radius:8px; }
+table { width:100%; border-collapse:collapse; min-width:650px; }
+th,td { padding:11px 13px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+th { background:var(--accent-soft); color:#17463d; font-size:12px; text-transform:uppercase; letter-spacing:.035em; }
+tr:last-child td { border-bottom:0; }
+.source-footer { margin-top:58px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:12px; }
+@media (max-width:850px) { .shell { display:block; padding:10px; } nav { position:relative; top:0; max-height:none; margin-bottom:10px; } main { padding:24px 20px; } }
+@media print { body { background:white; } .shell { display:block; padding:0; } nav { display:none; } main { border:0; box-shadow:none; padding:0; } .mirror-note { border:1px solid #bbb; } }
+</style>
+</head>
+<body>
+<div class="shell">
+<nav aria-label="Document sections"><strong>Sections</strong><a class="toc-level-1" href="#experiment-0010-execution-plan">Experiment 0010 execution plan</a>
+<a class="toc-level-2" href="#goal">Goal</a>
+<a class="toc-level-2" href="#phase-map">Phase map</a>
+<a class="toc-level-2" href="#phase-1-establish-vocoder-htp-feasibility">Phase 1: establish vocoder HTP feasibility</a>
+<a class="toc-level-2" href="#phase-2-test-vector-estimator-value">Phase 2: test vector-estimator value</a>
+<a class="toc-level-2" href="#phase-3-run-complete-accelerated-android-synthesis">Phase 3: run complete accelerated Android synthesis</a>
+<a class="toc-level-2" href="#phase-4-make-the-deployment-decision">Phase 4: make the deployment decision</a></nav>
+<main>
+<div class="mirror-note"><strong>Visual mirror of <code>experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-17</span><span>source sha256: 48f7fb759bae03fe…</span></div></div>
+<article><h1 id="experiment-0010-execution-plan">Experiment 0010 execution plan<a class="anchor" href="#experiment-0010-execution-plan" aria-label="Link to this section">#</a></h1>
+<h2 id="goal">Goal<a class="anchor" href="#goal" aria-label="Link to this section">#</a></h2>
+<p>Select and validate a text-to-speech model that can become the local voice of a future NotebookLM-like Android experience. It should sound pleasant and natural over sustained listening, with podcast-like delivery rather than merely intelligible speech.</p>
+<p>A convincing two-speaker conversation is desirable but not required. A strong narrator or persistent voices generated turn by turn can also meet the goal if the deployment remains practical on a modern phone.</p>
+<p>The current model is Supertonic 3, selected from the completed listening and Android experiments. The current runtime question is whether Qualcomm HTP acceleration improves the working CPU deployment enough to justify its extra complexity.</p>
+<h2 id="phase-map">Phase map<a class="anchor" href="#phase-map" aria-label="Link to this section">#</a></h2>
+<p>These phases belong to experiment <a href="README.md"><code>0010: Supertonic QNN/HTP feasibility</code></a>. Detailed evidence and resume instructions live in the experiment <a href="README.md"><code>README</code></a>, <a href="HANDOFF.md"><code>HANDOFF</code></a>, and <a href="results/phone-probe-checkpoint.json"><code>phone checkpoint</code></a>.</p>
+<div class="table-wrap"><table><thead><tr>
+<th>Phase</th>
+<th>Experiment</th>
+<th>Status</th>
+<th>Purpose</th>
+</tr></thead><tbody>
+<tr>
+<td>Phase 1: vocoder HTP feasibility</td>
+<td><a href="README.md"><code>0010</code></a></td>
+<td>Active</td>
+<td>Make the vocoder run wholly on physical HTP and determine whether its output is correct.</td>
+</tr>
+<tr>
+<td>Phase 2: vector-estimator value</td>
+<td><a href="README.md"><code>0010</code></a></td>
+<td>Gated by Phase 1</td>
+<td>Test the repeatedly invoked component most likely to produce a useful acceleration benefit.</td>
+</tr>
+<tr>
+<td>Phase 3: complete accelerated synthesis</td>
+<td><a href="README.md"><code>0010</code></a></td>
+<td>Gated by Phases 1 and 2</td>
+<td>Integrate only the justified HTP components and generate a complete Android WAV.</td>
+</tr>
+<tr>
+<td>Phase 4: deployment decision</td>
+<td><a href="README.md"><code>0010</code></a></td>
+<td>Gated by Phase 3 or a conclusive negative result</td>
+<td>Decide whether CPU or a CPU/HTP hybrid should remain the technical default.</td>
+</tr>
+</tbody></table></div>
+<p>When a phase finishes, its detailed result stays in experiment <code>0010</code>, its condensed outcome moves to <a href="../../docs/history.md"><code>docs/history.md</code></a> and the <a href="../../docs/history.html">history HTML</a>, and it is removed from this plan.</p>
+<h2 id="phase-1-establish-vocoder-htp-feasibility">Phase 1: establish vocoder HTP feasibility<a class="anchor" href="#phase-1-establish-vocoder-htp-feasibility" aria-label="Link to this section">#</a></h2>
+<p>The active blocker is eight <code>Erf</code> nodes inside standard decomposed GELU patterns. The patched ONNX Runtime 1.27.1 host build avoids the earlier Pad selector crash but still rejects the vocoder when CPU fallback is disabled.</p>
+<p>Next steps:</p>
+<ol>
+<li>Create a separately labeled derivative that replaces only the eight verified <code>Div → Erf → Add → Mul → Mul</code> patterns with explicit <code>com.microsoft.Gelu</code> nodes.</li>
+<li>Record every replacement, transformation command, model hash, and fixed tensor shape.</li>
+<li>Compare the derivative with the fixed released-vocoder derivative on the same CPU runtime.</li>
+<li>Freeze the numerical and audio acceptance thresholds before inspecting HTP output.</li>
+<li>Require the patched host QNN session to initialize with CPU fallback disabled.</li>
+<li>Incrementally relink the preserved Android runtime with the accepted ONNX Runtime patch.</li>
+<li>Run the vocoder on the Galaxy S23 Ultra with detailed HTP profiling.</li>
+<li>Record session creation, first and warm execution, memory, output validity, numerical comparison, and relevant artifact hashes.</li>
+</ol>
+<p><strong>Complete when:</strong> the vocoder executes on physical HTP with fallback disabled, profiling proves accelerator execution, output passes the frozen numerical gate, and cold and warm measurements are complete.</p>
+<h2 id="phase-2-test-vector-estimator-value">Phase 2: test vector-estimator value<a class="anchor" href="#phase-2-test-vector-estimator-value" aria-label="Link to this section">#</a></h2>
+<p>Start only after Phase 1 passes. Test the exact released vector-estimator graph first and preserve any unsupported-operator result before considering a derived graph.</p>
+<p>Measure graph finalization, first and warm execution, tensor transfers, memory, partition coverage, and numerical error. CPU fallback remains disabled for the HTP session.</p>
+<p><strong>Complete when:</strong> physical HTP execution and numerical correctness are proven, and the measured warm benefit is large enough to justify startup, transfer, package, and integration costs. If it runs but offers no practical benefit, stop the accelerator path.</p>
+<h2 id="phase-3-run-complete-accelerated-android-synthesis">Phase 3: run complete accelerated Android synthesis<a class="anchor" href="#phase-3-run-complete-accelerated-android-synthesis" aria-label="Link to this section">#</a></h2>
+<p>Start only when the component results justify integration. Build the smallest explicit hybrid path that preserves complete Supertonic behavior.</p>
+<ul>
+<li>Use the frozen experiment <code>0008</code> transcript and SID 5 / M1 English voice.</li>
+<li>Run text preparation, duration prediction, text encoding, five-step denoising, vocoding, and audio assembly without fixture substitution.</li>
+<li>Keep orchestration and non-targeted graphs explicitly on CPU.</li>
+<li>Keep fallback disabled inside every component claimed to run on HTP.</li>
+<li>Retain profiles proving HTP execution during the complete run.</li>
+<li>Compare final audio, cold and warm timing, callback behavior, memory, and package cost with the experiment <a href="../0008-sherpa-onnx-android-tts-benchmark/"><code>0008</code> CPU baseline</a>.</li>
+</ul>
+<p><strong>Complete when:</strong> Android produces a complete valid WAV, HTP use is proven in context, audio and numerical gates pass, and the equivalent CPU comparison shows whether acceleration helps.</p>
+<h2 id="phase-4-make-the-deployment-decision">Phase 4: make the deployment decision<a class="anchor" href="#phase-4-make-the-deployment-decision" aria-label="Link to this section">#</a></h2>
+<p>Choose the result supported by the completed experiment:</p>
+<ul>
+<li>keep the simpler Supertonic CPU deployment;</li>
+<li>use the measured CPU/HTP hybrid because its benefit justifies its cost; or</li>
+<li>stop HTP work with a reproducible negative result.</li>
+</ul>
+<p>Judge the result against the listening goal, not accelerator novelty. Pleasant speech, sustained generation, latency, memory, storage, thermals, and integration cost all matter. If CPU already meets the practical target, reject an HTP path that adds complexity without a useful listener-facing improvement.</p>
+<p><strong>Complete when:</strong> the experiment, history, README, and dashboard state one current deployment conclusion and link back to the canonical evidence.</p></article>
+<footer class="source-footer">Generated as <code>PLAN.html</code> by <code>scripts/build_docs_html.py</code>. Edit <code>experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md</code>, then regenerate the human-readable mirrors.</footer>
+</main>
+</div>
+</body>
+</html>

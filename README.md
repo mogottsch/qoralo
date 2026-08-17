@@ -45,9 +45,9 @@ Proprietary terms, account logins, export attestations, paid services, privilege
 
 ### Two records, two views
 
-[`docs/history.md`](docs/history.md) is the source for completed work. [`docs/plan.md`](docs/plan.md) is the source for unfinished work. Their HTML files are the human-readable views.
+[`docs/history.md`](docs/history.md) is the source for completed work. [`docs/plan.md`](docs/plan.md) is the source for unfinished work. Detailed experiment plans remain with their experiments. Adjacent HTML files provide human-readable views.
 
-Regenerate both mirrors with:
+Regenerate the mirrors with:
 
 ```bash
 python3 scripts/build_docs_html.py

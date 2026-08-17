@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build readable HTML mirrors of the project history and current plan.
+"""Build readable HTML mirrors of project and experiment planning documents.
 
 The Markdown files remain the sources of truth. This script uses only Python's
 standard library, so the mirrors need no project environment to regenerate.
@@ -16,6 +16,7 @@ REPO = Path(__file__).resolve().parents[1]
 SOURCES = (
     REPO / "docs" / "history.md",
     REPO / "docs" / "plan.md",
+    REPO / "experiments" / "0010-supertonic-qnn-htp-feasibility" / "PLAN.md",
 )
 
 
@@ -202,7 +203,7 @@ tr:last-child td {{ border-bottom:0; }}
 <main>
 <div class="mirror-note"><strong>Visual mirror of <code>{relative_source}</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: {source_date(source)}</span><span>source sha256: {digest[:16]}…</span></div></div>
 <article>{body}</article>
-<footer class="source-footer">Generated as <code>{output_name}</code> by <code>scripts/build_docs_html.py</code>. Edit <code>{relative_source}</code>, then regenerate both human-readable mirrors.</footer>
+<footer class="source-footer">Generated as <code>{output_name}</code> by <code>scripts/build_docs_html.py</code>. Edit <code>{relative_source}</code>, then regenerate the human-readable mirrors.</footer>
 </main>
 </div>
 </body>
