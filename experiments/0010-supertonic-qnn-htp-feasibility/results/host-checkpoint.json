@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "status": "paused_after_host_preflight_before_phone_qnn_execution",
-  "recorded_at_utc": "2026-08-13T16:29:00Z",
+  "status": "superseded_by_bounded_negative_physical_result",
+  "recorded_at_utc": "2026-08-17T12:30:36Z",
   "scope": "Supertonic 3 component-first QNN/HTP feasibility checkpoint; no speedup claim",
   "target": {
     "device": "Samsung Galaxy S23 Ultra",
@@ -47,6 +47,18 @@
       "id": "phone",
       "status": "identity_only",
       "detail": "Only non-destructive adb identity/platform properties were captured. No QNN graph or vocoder executed on the phone before this pause."
+    },
+    {
+      "id": "explicit_gelu_derivative_host_gate",
+      "status": "passed_host_capability_only",
+      "detail": "The source-hash-locked derivative replaced exactly eight verified ConvNeXt 0-7 GELU decompositions. Its full 731136-element output is bit-identical to the folded/fixed CPU reference. With CPU fallback disabled, patched host ORT assigned the final 304/304 optimized nodes to one QNN partition and initialized successfully; this is not physical-device proof.",
+      "source_model_sha256": "ee6760340a128e6f1f397ccee84c1fdd50165524d4ac7de76d522dec679fff14",
+      "derived_model_sha256": "7fe80ba8bc96cd467dc154c5a1979a5e55706dd19a0fc1f60e762abd7d1933f2",
+      "cpu_output_sha256": "f8f8b0694dfe8a56b2710e37a0e16b4cd40ee4568ed70431ff88d7a5a9d954a2",
+      "qnn_partitions": 1,
+      "optimized_graph_nodes": 304,
+      "qnn_supported_nodes": 304,
+      "unsupported_operators": []
     }
   ],
   "android_ort_qnn_build": {
@@ -142,16 +154,14 @@
     }
   ],
   "next_steps": [
-    "Reconfirm phone use after resuming tomorrow and acquire the repository phone lock.",
-    "Package the pinned Android libonnxruntime.so and only required QAIRT 2.49 arm64/HTP-v73 runtime files into an ignored staging directory.",
-    "Run a tiny QDQ add model first with CPU fallback disabled and retain QNN detailed profiling to prove actual SM8550 HTP execution.",
-    "Only if the tiny control passes, run the exact fixed-shape released vocoder; do not use the numerically failed Q8 re-quantized derivative.",
-    "Freeze numerical thresholds before inspecting phone vocoder output, then decide whether vector-estimator or end-to-end work is justified."
+    "Use results/phone-probe-checkpoint.json as the canonical final evidence for this route. Do not rerun, loosen the frozen numerical policy, start vector-estimator work, or claim speedup from the rejected output."
   ],
   "claims_not_made": [
-    "No phone HTP execution has been proven.",
-    "No component latency or speedup has been measured.",
-    "No end-to-end Supertonic QNN audio has been generated.",
-    "No proprietary SDK artifact is redistributable from this repository."
-  ]
+    "The physical explicit-GELU output is not accepted as numerically correct audio.",
+    "No HTP speedup is claimed because correctness failed and no comparable same-device CPU baseline was collected.",
+    "No vector-estimator or end-to-end QNN work began.",
+    "No proprietary SDK artifact is committed or redistributable from this repository."
+  ],
+  "superseded_by": "experiments/0010-supertonic-qnn-htp-feasibility/results/phone-probe-checkpoint.json",
+  "subsequent_result": "The explicit-GELU derivative physically executed three times on SM8550 HTP with CPU fallback disabled, but failed the frozen full-tensor numerical gate. Output/audio is rejected; no vector-estimator, end-to-end, or speedup claim follows."
 }

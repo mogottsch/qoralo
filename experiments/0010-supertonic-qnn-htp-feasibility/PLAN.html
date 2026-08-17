@@ -53,7 +53,7 @@ tr:last-child td { border-bottom:0; }
 <a class="toc-level-2" href="#phase-3-run-complete-accelerated-android-synthesis">Phase 3: run complete accelerated Android synthesis</a>
 <a class="toc-level-2" href="#phase-4-make-the-deployment-decision">Phase 4: make the deployment decision</a></nav>
 <main>
-<div class="mirror-note"><strong>Visual mirror of <code>experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-17</span><span>source sha256: d70110473f4a3825…</span></div></div>
+<div class="mirror-note"><strong>Visual mirror of <code>experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-17</span><span>source sha256: 2ccdf15c874eafdc…</span></div></div>
 <article><h1 id="experiment-0010-execution-plan">Experiment 0010 execution plan<a class="anchor" href="#experiment-0010-execution-plan" aria-label="Link to this section">#</a></h1>
 <h2 id="goal">Goal<a class="anchor" href="#goal" aria-label="Link to this section">#</a></h2>
 <p>Select and validate a text-to-speech model that can become the local voice of a future NotebookLM-like Android experience. It should sound pleasant and natural over sustained listening, with podcast-like delivery rather than merely intelligible speech.</p>
@@ -68,23 +68,23 @@ tr:last-child td { border-bottom:0; }
 </tr></thead><tbody>
 <tr>
 <td>Phase 1: vocoder HTP feasibility</td>
-<td><strong>Active — explicit GELU derivative is next</strong></td>
-<td>Make the vocoder run wholly on physical HTP and determine whether its output is correct.</td>
+<td><strong>Complete — bounded negative result</strong></td>
+<td>Physical HTP execution succeeded, but the frozen full-tensor numerical gate failed.</td>
 </tr>
 <tr>
 <td>Phase 2: vector-estimator value</td>
-<td><strong>Not started — gated by Phase 1</strong></td>
-<td>Test the repeatedly invoked component most likely to produce a useful acceleration benefit.</td>
+<td><strong>Not started — closed by Phase 1 failure</strong></td>
+<td>Do not test the vector estimator from this rejected vocoder path.</td>
 </tr>
 <tr>
 <td>Phase 3: complete accelerated synthesis</td>
-<td><strong>Not started — gated by Phases 1 and 2</strong></td>
-<td>Integrate only the justified HTP components and generate a complete Android WAV.</td>
+<td><strong>Not started — not justified</strong></td>
+<td>The incorrect vocoder output blocks accelerated end-to-end synthesis.</td>
 </tr>
 <tr>
 <td>Phase 4: deployment decision</td>
-<td><strong>Not started — gated by Phase 3 or a conclusive negative result</strong></td>
-<td>Decide whether CPU or a CPU/HTP hybrid should remain the technical default.</td>
+<td><strong>Complete for this route — retain CPU</strong></td>
+<td>Keep the working CPU deployment; this experiment supports no HTP speedup claim.</td>
 </tr>
 </tbody></table></div>
 <h2 id="current-position">Current position<a class="anchor" href="#current-position" aria-label="Link to this section">#</a></h2>
@@ -110,34 +110,44 @@ tr:last-child td { border-bottom:0; }
 </tr>
 <tr>
 <td><strong>Done</strong></td>
-<td>Fail-closed host gate</td>
+<td>Folded-vocoder negative gate</td>
 <td>The folded vocoder exposes 338 supported nodes and eight unsupported <code>Erf</code> nodes. Session creation is rejected with fallback disabled; no inference runs.</td>
 </tr>
 <tr>
 <td><strong>Done</strong></td>
-<td>Android runtime build</td>
-<td>Patched arm64-v8a/API 27 ONNX Runtime + QNN and its runner were rebuilt and validated as Android AArch64 artifacts. They have not been executed on the phone.</td>
-</tr>
-<tr>
-<td><strong>Ready</strong></td>
-<td>Phone transport</td>
-<td>The S23 Ultra is authorized through user-local Windows ADB with <code>ADB_LIBUSB=1</code>. No experiment payload has been staged in this resumed campaign.</td>
-</tr>
-<tr>
-<td><strong>Next</strong></td>
 <td>Explicit GELU derivative</td>
-<td>Replace only the eight verified decomposed GELU patterns, prove CPU equivalence, then repeat the fail-closed host QNN gate.</td>
+<td>Eight verified standard GELU decompositions were replaced by explicit <code>com.microsoft.Gelu</code>; the full 731,136-element CPU output is bit-identical to the folded/fixed reference.</td>
 </tr>
 <tr>
-<td><strong>Pending</strong></td>
-<td>Physical vocoder run</td>
-<td>Starts only if the rewritten graph passes the host gate. It must prove HTP execution, correctness, and timing without hidden CPU fallback.</td>
+<td><strong>Done</strong></td>
+<td>Explicit GELU host gate</td>
+<td>With CPU fallback disabled, patched host ORT assigns the complete optimized graph to one QNN partition (304/304 nodes) and initializes successfully. This is host capability evidence only.</td>
+</tr>
+<tr>
+<td><strong>Done</strong></td>
+<td>Android runtime build</td>
+<td>Patched arm64-v8a/API 27 ONNX Runtime + QNN was rebuilt, validated, and reused for the scoped physical explicit-GELU vocoder probe.</td>
+</tr>
+<tr>
+<td><strong>Done</strong></td>
+<td>Scoped physical HTP execution</td>
+<td>The exact authorized S23 Ultra executed three vocoder iterations with fallback disabled. Detailed profiles contain RPC, QNN accelerator, accelerator-cycle, and four-HVX-thread evidence.</td>
+</tr>
+<tr>
+<td><strong>Failed</strong></td>
+<td>Frozen physical numerical gate</td>
+<td>All 731,136 finite samples were compared, but cosine <code>0.865454</code>, SNR <code>5.716 dB</code>, max error <code>0.595960</code>, mean error <code>0.012167</code>, and RMSE <code>0.029311</code> fail the predeclared limits. Output and audio are rejected.</td>
+</tr>
+<tr>
+<td><strong>Done</strong></td>
+<td>Cleanup and stop gate</td>
+<td>The unique scoped device directory was removed, the phone lock was released, and no vector-estimator or further phone work began.</td>
 </tr>
 </tbody></table></div>
-<p>The current boundary is therefore clear: <strong>the HTP control works, the Android runtime is ready, but the Supertonic vocoder has never executed on HTP.</strong></p>
+<p>The current boundary is therefore clear: <strong>the explicit-GELU vocoder physically executed on the SM8550 HTP with CPU fallback disabled, but its output failed the frozen numerical policy and is not accepted audio. No same-device CPU baseline was collected, so no speedup claim is supported.</strong></p>
 <p>When a phase finishes, its detailed result stays in experiment <code>0010</code>, its condensed outcome moves to <a href="../../docs/history.md"><code>docs/history.md</code></a> and the <a href="../../docs/history.html">history HTML</a>, and it is removed from this plan.</p>
 <h2 id="phase-1-establish-vocoder-htp-feasibility">Phase 1: establish vocoder HTP feasibility<a class="anchor" href="#phase-1-establish-vocoder-htp-feasibility" aria-label="Link to this section">#</a></h2>
-<p>The active blocker is eight <code>Erf</code> nodes inside standard decomposed GELU patterns. The patched ONNX Runtime 1.27.1 host build avoids the earlier Pad selector crash but still rejects the vocoder when CPU fallback is disabled.</p>
+<p>The former blocker was eight <code>Erf</code> nodes inside standard decomposed GELU patterns. A narrow, source-hash-locked rewrite replaced only those verified patterns with explicit <code>com.microsoft.Gelu</code>; it passed bit-identical CPU equivalence and complete fail-closed host QNN assignment. The subsequent physical run proved accelerator execution but failed numerical correctness, producing the bounded negative result for this route.</p>
 <p>Completed preparation:</p>
 <ul>
 <li>rebuilt and validated the patched host runtime;</li>
@@ -146,24 +156,31 @@ tr:last-child td { border-bottom:0; }
 <li>rebuilt the patched Android arm64 runtime and runner;</li>
 <li>re-established authorized ADB transport without accessing phone data.</li>
 </ul>
-<p>Remaining steps:</p>
-<ol>
-<li>Create a separately labeled derivative that replaces only the eight verified <code>Div → Erf → Add → Mul → Mul</code> patterns with explicit <code>com.microsoft.Gelu</code> nodes.</li>
-<li>Record every replacement, transformation command, model hash, and fixed tensor shape.</li>
-<li>Compare the derivative with the fixed released-vocoder derivative on the same CPU runtime.</li>
-<li>Freeze the numerical and audio acceptance thresholds before inspecting HTP output.</li>
-<li>Require the patched host QNN session to initialize with CPU fallback disabled.</li>
-<li>Add the required QAIRT HTP runtime libraries and accepted derivative to an ignored phone staging package.</li>
-<li>Reconfirm phone use with Moritz, acquire the phone lock, and run with detailed HTP profiling.</li>
-<li>Record session creation, first and warm execution, memory, output validity, numerical comparison, and relevant artifact hashes.</li>
-</ol>
-<p><strong>Complete when:</strong> the vocoder executes on physical HTP with fallback disabled, profiling proves accelerator execution, output passes the frozen numerical gate, and cold and warm measurements are complete.</p>
+<p>Completed derivative and host gates:</p>
+<ul>
+<li>created a separately labeled derivative that replaces only the eight verified <code>Div → Erf → Add → Mul → Mul</code> patterns with explicit <code>com.microsoft.Gelu</code> nodes;</li>
+<li>recorded all replacements, exact float32 constants, source/output hashes, fixed shapes, and consumer-safety checks;</li>
+<li>produced a bit-identical full-tensor result against the folded/fixed vocoder using the same patched ORT 1.27.1 CPU runtime;</li>
+<li>initialized the host QNN session with CPU fallback disabled, one complete QNN partition, and no unsupported operators.</li>
+</ul>
+<p>Physical result:</p>
+<ul>
+<li>exact authorized device identity passed and all staging remained inside one unique <code>/data/local/tmp</code> directory;</li>
+<li>patched ORT/QNN created the session in <code>4.82669 s</code> and completed three runs with CPU fallback disabled;</li>
+<li>first inference was <code>0.313119 s</code>; the two-run warm mean was <code>0.198222 s</code>;</li>
+<li>detailed profiles recorded QNN accelerator execution of <code>297517</code>, <code>186278</code>, and <code>185925</code> µs, corresponding RPC execution, accelerator cycles, and four HVX threads on every run;</li>
+<li>the physical tensor was finite and had the expected <code>[1,731136]</code> shape, but failed every non-finite-independent frozen metric: cosine <code>0.865454 &lt; 0.995</code>, SNR <code>5.716 &lt; 20 dB</code>, max absolute error <code>0.595960 &gt; 0.05</code>, mean absolute error <code>0.012167 &gt; 0.002</code>, and RMSE <code>0.029311 &gt; 0.005</code>;</li>
+<li>the scoped device directory was removed and the repository phone lock was released.</li>
+</ul>
+<p><strong>Completed as a bounded negative result:</strong> physical HTP execution is proven, but numerical correctness is rejected. Do not loosen the policy, accept the output as audio, rerun this derivative, start the vector estimator, or claim speedup/end-to-end success.</p>
 <h2 id="phase-2-test-vector-estimator-value">Phase 2: test vector-estimator value<a class="anchor" href="#phase-2-test-vector-estimator-value" aria-label="Link to this section">#</a></h2>
-<p>Start only after Phase 1 passes. Test the exact released vector-estimator graph first and preserve any unsupported-operator result before considering a derived graph.</p>
+<p>This phase is closed because Phase 1 did not pass numerical correctness. Do not start the vector estimator from this derivative result. If a future separately authorized experiment revisits acceleration, it must define a new rationale and gates rather than treating physical execution alone as success.</p>
+<p>The previously planned work was to test the exact released vector-estimator graph first and preserve any unsupported-operator result before considering a derived graph.</p>
 <p>Measure graph finalization, first and warm execution, tensor transfers, memory, partition coverage, and numerical error. CPU fallback remains disabled for the HTP session.</p>
 <p><strong>Complete when:</strong> physical HTP execution and numerical correctness are proven, and the measured warm benefit is large enough to justify startup, transfer, package, and integration costs. If it runs but offers no practical benefit, stop the accelerator path.</p>
 <h2 id="phase-3-run-complete-accelerated-android-synthesis">Phase 3: run complete accelerated Android synthesis<a class="anchor" href="#phase-3-run-complete-accelerated-android-synthesis" aria-label="Link to this section">#</a></h2>
-<p>Start only when the component results justify integration. Build the smallest explicit hybrid path that preserves complete Supertonic behavior.</p>
+<p>The component result does not justify integration, so this phase remains unstarted. Build no accelerated hybrid from the rejected physical output.</p>
+<p>The previously planned integration contract was to build the smallest explicit hybrid path that preserves complete Supertonic behavior.</p>
 <ul>
 <li>Use the frozen experiment <code>0008</code> transcript and SID 5 / M1 English voice.</li>
 <li>Run text preparation, duration prediction, text encoding, five-step denoising, vocoding, and audio assembly without fixture substitution.</li>
@@ -174,12 +191,7 @@ tr:last-child td { border-bottom:0; }
 </ul>
 <p><strong>Complete when:</strong> Android produces a complete valid WAV, HTP use is proven in context, audio and numerical gates pass, and the equivalent CPU comparison shows whether acceleration helps.</p>
 <h2 id="phase-4-make-the-deployment-decision">Phase 4: make the deployment decision<a class="anchor" href="#phase-4-make-the-deployment-decision" aria-label="Link to this section">#</a></h2>
-<p>Choose the result supported by the completed experiment:</p>
-<ul>
-<li>keep the simpler Supertonic CPU deployment;</li>
-<li>use the measured CPU/HTP hybrid because its benefit justifies its cost; or</li>
-<li>stop HTP work with a reproducible negative result.</li>
-</ul>
+<p>The completed experiment selects the reproducible negative result for this HTP route: retain the simpler Supertonic CPU deployment. The explicit-GELU vocoder reaches physical HTP, but its numerical error is unacceptable and no same-device CPU baseline exists from which to claim speedup.</p>
 <p>Judge the result against the listening goal, not accelerator novelty. Pleasant speech, sustained generation, latency, memory, storage, thermals, and integration cost all matter. If CPU already meets the practical target, reject an HTP path that adds complexity without a useful listener-facing improvement.</p>
 <p><strong>Complete when:</strong> the experiment, history, README, and dashboard state one current deployment conclusion and link back to the canonical evidence.</p></article>
 <footer class="source-footer">Generated as <code>PLAN.html</code> by <code>scripts/build_docs_html.py</code>. Edit <code>experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md</code>, then regenerate the human-readable mirrors.</footer>

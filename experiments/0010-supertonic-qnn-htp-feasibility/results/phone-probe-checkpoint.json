@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "status": "paused_after_physical_htp_smoke_and_vocoder_no_fallback_rejection",
-  "recorded_at_utc": "2026-08-13T17:31:14Z",
-  "scope": "Supertonic 3 vocoder-first QNN/HTP feasibility; tiny physical HTP execution is proven, but no vocoder inference or speedup is claimed",
+  "status": "complete_bounded_negative_explicit_gelu_vocoder_physical_htp_numerical_failure",
+  "recorded_at_utc": "2026-08-17T12:52:00Z",
+  "scope": "Supertonic 3 explicit-GELU vocoder physical QNN/HTP feasibility: HTP execution proven with fallback disabled, numerical correctness rejected; no speedup or end-to-end claim",
   "source": {
     "experiment": "0008-sherpa-onnx-android-tts-benchmark",
     "variant": "sherpa-onnx-supertonic-3-tts-int8-2026-05-11",
@@ -11,15 +11,25 @@
     "fixed_shape_contract": {
       "input": {
         "name": "latent",
-        "shape": [1, 144, 238],
+        "shape": [
+          1,
+          144,
+          238
+        ],
         "dtype": "float32"
       },
       "output": {
         "name": "wav_tts",
-        "shape": [1, 731136],
+        "shape": [
+          1,
+          731136
+        ],
         "dtype": "float32"
       }
-    }
+    },
+    "folded_fixed_vocoder_sha256": "ee6760340a128e6f1f397ccee84c1fdd50165524d4ac7de76d522dec679fff14",
+    "explicit_gelu8_vocoder_sha256": "7fe80ba8bc96cd467dc154c5a1979a5e55706dd19a0fc1f60e762abd7d1933f2",
+    "explicit_gelu8_derivation": "Exactly eight verified ConvNeXt 0-7 Div\u2192Erf\u2192Add\u2192Mul\u2192Mul chains replaced with com.microsoft.Gelu; ConvNeXt 8-9 left unchanged."
   },
   "device": {
     "manufacturer": "samsung",
@@ -49,7 +59,14 @@
     "profiling_level": "detailed",
     "unpatched_android_libonnxruntime": {
       "bytes": 22399512,
-      "sha256": "643c6f6fd3d2b375ca8f2407a1695acaf55320b8e947adc4284665640fdc3ae9"
+      "sha256": "643c6f6fd3d2b375ca8f2407a1695acaf55320b8e947adc4284665640fdc3ae9",
+      "label": "historical unpatched runtime from first phone attempt"
+    },
+    "patched_android_libonnxruntime": {
+      "bytes": 22399512,
+      "sha256": "40bc591798287525f365e8ded4bbc40e0c4e9440737e876026ec09ba359ac041",
+      "ort_commit": "df2ba1cf8108aa63627cf4cdf8f807880b938616",
+      "patch_sha256": "549be0692c1414ea35e97f401aaeb87ba55801480c7bd84dba0471cf25773bde"
     }
   },
   "android_runtime_files": {
@@ -217,7 +234,12 @@
       }
     },
     "optimization_level_sweep": {
-      "levels": [0, 1, 2, 99],
+      "levels": [
+        0,
+        1,
+        2,
+        99
+      ],
       "result": "No level creates a complete no-fallback QNN session. Levels 1, 2, and 99 retain the same eight unsupported Erf nodes; level 0 has substantially worse delegation."
     }
   },
@@ -227,14 +249,18 @@
     "unpatched_ort_vocoder_path": "blocked by a confirmed upstream ORT bug",
     "patched_exact_fixed_vocoder_path": "blocked by eight Erf nodes plus eight weight-only DQ nodes",
     "patched_folded_fixed_vocoder_path": "blocked only by eight Erf nodes in decomposed GELU patterns",
-    "likely_next_technical_route": "replace the eight standard decomposed GELU subgraphs with explicit com.microsoft.Gelu nodes as a separately labeled derivative, or construct an explicit CPU/HTP split; never count implicit ORT CPU fallback as an HTP pass"
+    "likely_next_technical_route": "replace the eight standard decomposed GELU subgraphs with explicit com.microsoft.Gelu nodes as a separately labeled derivative, or construct an explicit CPU/HTP split; never count implicit ORT CPU fallback as an HTP pass",
+    "explicit_gelu_host_path": "complete QNN assignment and session initialization passed on host",
+    "explicit_gelu_physical_path": "three physical SM8550 HTP executions proven with CPU fallback disabled",
+    "explicit_gelu_numerical_path": "failed frozen full-tensor gate; output and audio rejected",
+    "deployment_decision": "Do not advance this HTP vocoder derivative to vector-estimator or end-to-end work. The working CPU deployment remains the supported path unless a separately authorized future experiment establishes a correct accelerator route."
   },
   "cleanup": {
-    "remote_path": "/data/local/tmp/vibevoice-qnn-0010",
+    "remote_path": "/data/local/tmp/vibevoice-qnn-0010-explicit-gelu8-20260817T125145Z-232282",
     "removed": true,
-    "evidence_path": "experiments/0010-supertonic-qnn-htp-feasibility/work/device/qnn-smoke/device-cleanup.txt",
-    "evidence_sha256": "dd65b2c3b3912477d191ae4753274650ecfa2e73a2ff0af19d9375b3f4397d86",
-    "phone_lock_held": false
+    "cleanup_exit_code": 0,
+    "phone_lock_held": false,
+    "phone_lock_available_after_run": true
   },
   "retained_local_state": {
     "source": {
@@ -255,20 +281,155 @@
     }
   },
   "next_steps": [
-    "On resume, review the consequential choice between an explicit-Gelu graph derivative and an explicitly split CPU/HTP hybrid. The explicit-Gelu derivative is the current recommendation.",
-    "If choosing the derivative, create a narrow tool that replaces only the eight proven standard GELU decompositions, records every node and hash, and compares CPU outputs before any HTP output is inspected.",
-    "Freeze the numerical and audio thresholds before a formal device vocoder inference gate.",
-    "Require a patched host session with CPU fallback disabled before incrementally rebuilding the Android runtime.",
-    "Before any new phone command, reacquire artifacts/locks/phone.lock and reconfirm Moritz's availability.",
-    "Only after a vocoder output passes delegation and numerical gates should the vector estimator or end-to-end path resume."
+    "Do not rerun or loosen the frozen physical-output policy for this derivative.",
+    "Do not start vector-estimator or end-to-end QNN work from this failed Phase 1 gate.",
+    "Retain the CPU Supertonic deployment as the supported implementation; no HTP speedup conclusion is available because numerical correctness failed and no same-device CPU baseline was collected."
   ],
   "claims_not_made": [
-    "The released or fixed-shape vocoder has not executed on HTP.",
-    "No vocoder output or audio was produced by QNN.",
-    "No vocoder latency or speedup was measured.",
-    "No vector-estimator QNN probe has begun.",
-    "No end-to-end Supertonic QNN synthesis has run.",
-    "No numerical threshold has been frozen for a formal device gate.",
-    "No proprietary SDK artifact is committed or redistributable from this repository."
-  ]
+    "The physical HTP output is not numerically correct or accepted audio.",
+    "No HTP speedup is claimed; no comparable same-device CPU baseline was collected.",
+    "No vector-estimator QNN probe began.",
+    "No end-to-end Supertonic QNN synthesis ran.",
+    "Host capability success alone was not treated as physical proof; the physical proof comes from the retained RPC/QNN accelerator/HVX profiles.",
+    "No proprietary SDK artifact, raw tensor, raw profile, model, staging package, or serial-bearing log is committed or redistributable from this repository."
+  ],
+  "explicit_gelu_physical_vocoder_result": {
+    "status": "physical_htp_execution_proven_but_frozen_numerical_gate_failed",
+    "authorization": "Moritz explicitly authorized only the scoped experiment-0010 Samsung S23 Ultra staging/execution/profiling run.",
+    "identity_gate": {
+      "passed": true,
+      "serial": "R5CW81PR8SY",
+      "model": "SM-S918B",
+      "soc": "SM8550",
+      "abi": "arm64-v8a",
+      "online": true,
+      "boot_completed": true
+    },
+    "remote_scope": {
+      "path": "/data/local/tmp/vibevoice-qnn-0010-explicit-gelu8-20260817T125145Z-232282",
+      "unrelated_paths_accessed": false,
+      "removed_on_exit": true
+    },
+    "artifacts": {
+      "model": {
+        "shape": {
+          "input": [
+            1,
+            144,
+            238
+          ],
+          "output": [
+            1,
+            731136
+          ]
+        },
+        "bytes": 51141991,
+        "sha256": "7fe80ba8bc96cd467dc154c5a1979a5e55706dd19a0fc1f60e762abd7d1933f2"
+      },
+      "latent_input": {
+        "elements": 34272,
+        "bytes": 137088,
+        "sha256": "50866adab63f6b43953196a4dce0a705038c823c08b5dc068eb9ca51db5ae41a"
+      },
+      "cpu_reference": {
+        "elements": 731136,
+        "bytes": 2924544,
+        "sha256": "f8f8b0694dfe8a56b2710e37a0e16b4cd40ee4568ed70431ff88d7a5a9d954a2"
+      },
+      "android_runner": {
+        "bytes": 124680,
+        "sha256": "76ff08a49640ae5e9fa36fe99fd4df150cb3ee0af0ef67b2afc3551cd485533d",
+        "source_sha256": "6b2733c6e9ea5052252ab79b8d4624609f0e2d87d575bfc9e654640db48c677e"
+      },
+      "stage_manifest": {
+        "bytes": 2696,
+        "sha256": "761cd2258299000728754c7cad8d42bc10a2adfd0973188fd7a02db05dbef292"
+      },
+      "physical_output": {
+        "elements": 731136,
+        "bytes": 2924544,
+        "sha256": "3c807487b7ba08822bf526317f0060d8a23ec295fe2a79bd92965cb55f6681be"
+      }
+    },
+    "execution": {
+      "process_exit_code": 0,
+      "cpu_fallback_disabled": true,
+      "provider": "QNN",
+      "backend": "libQnnHtp.so",
+      "soc_model": 43,
+      "runs": 3,
+      "session_creation_seconds": 4.82669,
+      "first_run_seconds": 0.313119,
+      "warm_mean_seconds": 0.198222,
+      "qnn_accelerator_execute_microseconds": [
+        297517,
+        186278,
+        185925
+      ],
+      "rpc_execute_microseconds": [
+        299038,
+        187562,
+        186701
+      ],
+      "accelerator_cycles_present": true,
+      "hvx_threads_each_run": 4,
+      "profile_conclusion": "Detailed QNN profiling proves three physical SM8550 HTP executions. Successful fail-closed session/run plus the runner source prove no implicit CPU fallback was accepted."
+    },
+    "frozen_numerical_policy": {
+      "frozen_before_physical_output": true,
+      "sha256": "7116c5228c72802de3fac66a65e5fbbfdcb40005a8440ce5573867b4309ac0a4",
+      "thresholds": {
+        "finite": true,
+        "max_abs": 0.05,
+        "max_mean_abs": 0.002,
+        "max_rmse": 0.005,
+        "min_cosine_similarity": 0.995,
+        "min_snr_db": 20.0
+      }
+    },
+    "numerical_result": {
+      "passed": false,
+      "elements_compared": 731136,
+      "finite": true,
+      "max_abs": 0.5959603637456894,
+      "mean_abs": 0.012167152902305143,
+      "rmse": 0.029310668018150524,
+      "cosine_similarity": 0.8654542523736856,
+      "snr_db": 5.716000200342819,
+      "comparison_sha256": "cca5ff7eaf97d45aa6def88bd8494710a024c767cc1ec3b9793670d193dca19f",
+      "conclusion": "Audio/output is rejected. The frozen gate must not be loosened or overridden by listening."
+    },
+    "evidence": {
+      "ignored_root": "experiments/0010-supertonic-qnn-htp-feasibility/work/phone-explicit-gelu/explicit-gelu8-20260817T125145Z-232282",
+      "run_stdout": {
+        "bytes": 474,
+        "sha256": "3db43ffa7d2fe9c43b272fc62fb733ccab352327616b9f4928eaa23d46addcae"
+      },
+      "qnn_profile_csv": {
+        "bytes": 67433,
+        "sha256": "efa95e61660788a4ca08903ec41eb00cd2f082069f826abbec77ccf8ccaf5536"
+      },
+      "qnn_log": {
+        "bytes": 67640,
+        "sha256": "f73f5f046d5b5a2f5217681a7a9d205fb82920629a3d6bf0e6c3ae5989045e30"
+      },
+      "ort_profile": {
+        "bytes": 17521,
+        "sha256": "65ba74bddae72e16664fb57c801e9a69959fbd7fb9a6a1d2779ba9211686c995"
+      },
+      "remote_stage_hashes": {
+        "bytes": 1044,
+        "sha256": "a7132a0d99fd54f89e732521e99b44f063882da9a26f6328360e113d8d7b6196"
+      },
+      "remote_output_hashes": {
+        "bytes": 370,
+        "sha256": "046d857f5a2222b4386d3fbcc6531e75f17465f2761650d12dec0d107a004aed"
+      }
+    },
+    "cleanup": {
+      "exit_code": 0,
+      "scoped_remote_removed": true,
+      "phone_lock_released_and_available": true
+    }
+  }
 }
