@@ -47,12 +47,13 @@ tr:last-child td { border-bottom:0; }
 <nav aria-label="Document sections"><strong>Sections</strong><a class="toc-level-1" href="#experiment-0010-execution-plan">Experiment 0010 execution plan</a>
 <a class="toc-level-2" href="#goal">Goal</a>
 <a class="toc-level-2" href="#phase-map">Phase map</a>
+<a class="toc-level-2" href="#current-position">Current position</a>
 <a class="toc-level-2" href="#phase-1-establish-vocoder-htp-feasibility">Phase 1: establish vocoder HTP feasibility</a>
 <a class="toc-level-2" href="#phase-2-test-vector-estimator-value">Phase 2: test vector-estimator value</a>
 <a class="toc-level-2" href="#phase-3-run-complete-accelerated-android-synthesis">Phase 3: run complete accelerated Android synthesis</a>
 <a class="toc-level-2" href="#phase-4-make-the-deployment-decision">Phase 4: make the deployment decision</a></nav>
 <main>
-<div class="mirror-note"><strong>Visual mirror of <code>experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-17</span><span>source sha256: 48f7fb759bae03fe…</span></div></div>
+<div class="mirror-note"><strong>Visual mirror of <code>experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-17</span><span>source sha256: d70110473f4a3825…</span></div></div>
 <article><h1 id="experiment-0010-execution-plan">Experiment 0010 execution plan<a class="anchor" href="#experiment-0010-execution-plan" aria-label="Link to this section">#</a></h1>
 <h2 id="goal">Goal<a class="anchor" href="#goal" aria-label="Link to this section">#</a></h2>
 <p>Select and validate a text-to-speech model that can become the local voice of a future NotebookLM-like Android experience. It should sound pleasant and natural over sustained listening, with podcast-like delivery rather than merely intelligible speech.</p>
@@ -62,47 +63,98 @@ tr:last-child td { border-bottom:0; }
 <p>These phases belong to experiment <a href="README.md"><code>0010: Supertonic QNN/HTP feasibility</code></a>. Detailed evidence and resume instructions live in the experiment <a href="README.md"><code>README</code></a>, <a href="HANDOFF.md"><code>HANDOFF</code></a>, and <a href="results/phone-probe-checkpoint.json"><code>phone checkpoint</code></a>.</p>
 <div class="table-wrap"><table><thead><tr>
 <th>Phase</th>
-<th>Experiment</th>
 <th>Status</th>
 <th>Purpose</th>
 </tr></thead><tbody>
 <tr>
 <td>Phase 1: vocoder HTP feasibility</td>
-<td><a href="README.md"><code>0010</code></a></td>
-<td>Active</td>
+<td><strong>Active — explicit GELU derivative is next</strong></td>
 <td>Make the vocoder run wholly on physical HTP and determine whether its output is correct.</td>
 </tr>
 <tr>
 <td>Phase 2: vector-estimator value</td>
-<td><a href="README.md"><code>0010</code></a></td>
-<td>Gated by Phase 1</td>
+<td><strong>Not started — gated by Phase 1</strong></td>
 <td>Test the repeatedly invoked component most likely to produce a useful acceleration benefit.</td>
 </tr>
 <tr>
 <td>Phase 3: complete accelerated synthesis</td>
-<td><a href="README.md"><code>0010</code></a></td>
-<td>Gated by Phases 1 and 2</td>
+<td><strong>Not started — gated by Phases 1 and 2</strong></td>
 <td>Integrate only the justified HTP components and generate a complete Android WAV.</td>
 </tr>
 <tr>
 <td>Phase 4: deployment decision</td>
-<td><a href="README.md"><code>0010</code></a></td>
-<td>Gated by Phase 3 or a conclusive negative result</td>
+<td><strong>Not started — gated by Phase 3 or a conclusive negative result</strong></td>
 <td>Decide whether CPU or a CPU/HTP hybrid should remain the technical default.</td>
 </tr>
 </tbody></table></div>
+<h2 id="current-position">Current position<a class="anchor" href="#current-position" aria-label="Link to this section">#</a></h2>
+<div class="table-wrap"><table><thead><tr>
+<th>State</th>
+<th>Work item</th>
+<th>Result or gate</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Done</strong></td>
+<td>Tiny physical-HTP control</td>
+<td>A six-node QDQ graph executed on the S23 Ultra&#x27;s HTP v73 with CPU fallback disabled. This proves the device path only.</td>
+</tr>
+<tr>
+<td><strong>Done</strong></td>
+<td>Patched host runtime</td>
+<td>ONNX Runtime 1.27.1 with the Pad-selector backport was rebuilt against QAIRT 2.49 and reproduced the retained library hash.</td>
+</tr>
+<tr>
+<td><strong>Done</strong></td>
+<td>Models and fixtures</td>
+<td>Official Supertonic INT8 models, deterministic fixtures, and the fixed and folded vocoder derivatives were restored and hash-verified.</td>
+</tr>
+<tr>
+<td><strong>Done</strong></td>
+<td>Fail-closed host gate</td>
+<td>The folded vocoder exposes 338 supported nodes and eight unsupported <code>Erf</code> nodes. Session creation is rejected with fallback disabled; no inference runs.</td>
+</tr>
+<tr>
+<td><strong>Done</strong></td>
+<td>Android runtime build</td>
+<td>Patched arm64-v8a/API 27 ONNX Runtime + QNN and its runner were rebuilt and validated as Android AArch64 artifacts. They have not been executed on the phone.</td>
+</tr>
+<tr>
+<td><strong>Ready</strong></td>
+<td>Phone transport</td>
+<td>The S23 Ultra is authorized through user-local Windows ADB with <code>ADB_LIBUSB=1</code>. No experiment payload has been staged in this resumed campaign.</td>
+</tr>
+<tr>
+<td><strong>Next</strong></td>
+<td>Explicit GELU derivative</td>
+<td>Replace only the eight verified decomposed GELU patterns, prove CPU equivalence, then repeat the fail-closed host QNN gate.</td>
+</tr>
+<tr>
+<td><strong>Pending</strong></td>
+<td>Physical vocoder run</td>
+<td>Starts only if the rewritten graph passes the host gate. It must prove HTP execution, correctness, and timing without hidden CPU fallback.</td>
+</tr>
+</tbody></table></div>
+<p>The current boundary is therefore clear: <strong>the HTP control works, the Android runtime is ready, but the Supertonic vocoder has never executed on HTP.</strong></p>
 <p>When a phase finishes, its detailed result stays in experiment <code>0010</code>, its condensed outcome moves to <a href="../../docs/history.md"><code>docs/history.md</code></a> and the <a href="../../docs/history.html">history HTML</a>, and it is removed from this plan.</p>
 <h2 id="phase-1-establish-vocoder-htp-feasibility">Phase 1: establish vocoder HTP feasibility<a class="anchor" href="#phase-1-establish-vocoder-htp-feasibility" aria-label="Link to this section">#</a></h2>
 <p>The active blocker is eight <code>Erf</code> nodes inside standard decomposed GELU patterns. The patched ONNX Runtime 1.27.1 host build avoids the earlier Pad selector crash but still rejects the vocoder when CPU fallback is disabled.</p>
-<p>Next steps:</p>
+<p>Completed preparation:</p>
+<ul>
+<li>rebuilt and validated the patched host runtime;</li>
+<li>restored the official models, fixtures, and fixed-shape derivatives;</li>
+<li>reproduced the fail-closed support report;</li>
+<li>rebuilt the patched Android arm64 runtime and runner;</li>
+<li>re-established authorized ADB transport without accessing phone data.</li>
+</ul>
+<p>Remaining steps:</p>
 <ol>
 <li>Create a separately labeled derivative that replaces only the eight verified <code>Div → Erf → Add → Mul → Mul</code> patterns with explicit <code>com.microsoft.Gelu</code> nodes.</li>
 <li>Record every replacement, transformation command, model hash, and fixed tensor shape.</li>
 <li>Compare the derivative with the fixed released-vocoder derivative on the same CPU runtime.</li>
 <li>Freeze the numerical and audio acceptance thresholds before inspecting HTP output.</li>
 <li>Require the patched host QNN session to initialize with CPU fallback disabled.</li>
-<li>Incrementally relink the preserved Android runtime with the accepted ONNX Runtime patch.</li>
-<li>Run the vocoder on the Galaxy S23 Ultra with detailed HTP profiling.</li>
+<li>Add the required QAIRT HTP runtime libraries and accepted derivative to an ignored phone staging package.</li>
+<li>Reconfirm phone use with Moritz, acquire the phone lock, and run with detailed HTP profiling.</li>
 <li>Record session creation, first and warm execution, memory, output validity, numerical comparison, and relevant artifact hashes.</li>
 </ol>
 <p><strong>Complete when:</strong> the vocoder executes on physical HTP with fallback disabled, profiling proves accelerator execution, output passes the frozen numerical gate, and cold and warm measurements are complete.</p>

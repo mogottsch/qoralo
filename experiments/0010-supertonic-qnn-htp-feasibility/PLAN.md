@@ -12,12 +12,27 @@ The current model is Supertonic 3, selected from the completed listening and And
 
 These phases belong to experiment [`0010: Supertonic QNN/HTP feasibility`](README.md). Detailed evidence and resume instructions live in the experiment [`README`](README.md), [`HANDOFF`](HANDOFF.md), and [`phone checkpoint`](results/phone-probe-checkpoint.json).
 
-| Phase | Experiment | Status | Purpose |
-|---|---|---|---|
-| Phase 1: vocoder HTP feasibility | [`0010`](README.md) | Active | Make the vocoder run wholly on physical HTP and determine whether its output is correct. |
-| Phase 2: vector-estimator value | [`0010`](README.md) | Gated by Phase 1 | Test the repeatedly invoked component most likely to produce a useful acceleration benefit. |
-| Phase 3: complete accelerated synthesis | [`0010`](README.md) | Gated by Phases 1 and 2 | Integrate only the justified HTP components and generate a complete Android WAV. |
-| Phase 4: deployment decision | [`0010`](README.md) | Gated by Phase 3 or a conclusive negative result | Decide whether CPU or a CPU/HTP hybrid should remain the technical default. |
+| Phase | Status | Purpose |
+|---|---|---|
+| Phase 1: vocoder HTP feasibility | **Active — explicit GELU derivative is next** | Make the vocoder run wholly on physical HTP and determine whether its output is correct. |
+| Phase 2: vector-estimator value | **Not started — gated by Phase 1** | Test the repeatedly invoked component most likely to produce a useful acceleration benefit. |
+| Phase 3: complete accelerated synthesis | **Not started — gated by Phases 1 and 2** | Integrate only the justified HTP components and generate a complete Android WAV. |
+| Phase 4: deployment decision | **Not started — gated by Phase 3 or a conclusive negative result** | Decide whether CPU or a CPU/HTP hybrid should remain the technical default. |
+
+## Current position
+
+| State | Work item | Result or gate |
+|---|---|---|
+| **Done** | Tiny physical-HTP control | A six-node QDQ graph executed on the S23 Ultra's HTP v73 with CPU fallback disabled. This proves the device path only. |
+| **Done** | Patched host runtime | ONNX Runtime 1.27.1 with the Pad-selector backport was rebuilt against QAIRT 2.49 and reproduced the retained library hash. |
+| **Done** | Models and fixtures | Official Supertonic INT8 models, deterministic fixtures, and the fixed and folded vocoder derivatives were restored and hash-verified. |
+| **Done** | Fail-closed host gate | The folded vocoder exposes 338 supported nodes and eight unsupported `Erf` nodes. Session creation is rejected with fallback disabled; no inference runs. |
+| **Done** | Android runtime build | Patched arm64-v8a/API 27 ONNX Runtime + QNN and its runner were rebuilt and validated as Android AArch64 artifacts. They have not been executed on the phone. |
+| **Ready** | Phone transport | The S23 Ultra is authorized through user-local Windows ADB with `ADB_LIBUSB=1`. No experiment payload has been staged in this resumed campaign. |
+| **Next** | Explicit GELU derivative | Replace only the eight verified decomposed GELU patterns, prove CPU equivalence, then repeat the fail-closed host QNN gate. |
+| **Pending** | Physical vocoder run | Starts only if the rewritten graph passes the host gate. It must prove HTP execution, correctness, and timing without hidden CPU fallback. |
+
+The current boundary is therefore clear: **the HTP control works, the Android runtime is ready, but the Supertonic vocoder has never executed on HTP.**
 
 When a phase finishes, its detailed result stays in experiment `0010`, its condensed outcome moves to [`docs/history.md`](../../docs/history.md) and the [history HTML](../../docs/history.html), and it is removed from this plan.
 
@@ -25,15 +40,23 @@ When a phase finishes, its detailed result stays in experiment `0010`, its conde
 
 The active blocker is eight `Erf` nodes inside standard decomposed GELU patterns. The patched ONNX Runtime 1.27.1 host build avoids the earlier Pad selector crash but still rejects the vocoder when CPU fallback is disabled.
 
-Next steps:
+Completed preparation:
+
+- rebuilt and validated the patched host runtime;
+- restored the official models, fixtures, and fixed-shape derivatives;
+- reproduced the fail-closed support report;
+- rebuilt the patched Android arm64 runtime and runner;
+- re-established authorized ADB transport without accessing phone data.
+
+Remaining steps:
 
 1. Create a separately labeled derivative that replaces only the eight verified `Div → Erf → Add → Mul → Mul` patterns with explicit `com.microsoft.Gelu` nodes.
 2. Record every replacement, transformation command, model hash, and fixed tensor shape.
 3. Compare the derivative with the fixed released-vocoder derivative on the same CPU runtime.
 4. Freeze the numerical and audio acceptance thresholds before inspecting HTP output.
 5. Require the patched host QNN session to initialize with CPU fallback disabled.
-6. Incrementally relink the preserved Android runtime with the accepted ONNX Runtime patch.
-7. Run the vocoder on the Galaxy S23 Ultra with detailed HTP profiling.
+6. Add the required QAIRT HTP runtime libraries and accepted derivative to an ignored phone staging package.
+7. Reconfirm phone use with Moritz, acquire the phone lock, and run with detailed HTP profiling.
 8. Record session creation, first and warm execution, memory, output validity, numerical comparison, and relevant artifact hashes.
 
 **Complete when:** the vocoder executes on physical HTP with fallback disabled, profiling proves accelerator execution, output passes the frozen numerical gate, and cold and warm measurements are complete.
