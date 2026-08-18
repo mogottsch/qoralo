@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "device": {"serial": "R5CW81PR8SY", "model": "SM-S918B", "soc": "SM8550", "abi": "arm64-v8a"},
+  "route_order": ["onnx", "executorch"],
+  "onnx": {
+    "status": "android_cpu_success",
+    "representation": "controlled, derived, unquantized FP five-component ONNX; not called original weights",
+    "runtime": {"sherpa_onnx": "1.13.5", "sherpa_commit": "3dc7c569", "onnxruntime": "1.27.1", "provider": "cpu", "threads": 1, "qnn_events": 0},
+    "sizes": {"five_onnx_graphs_bytes": 439484422, "model_plus_tokenizer_reference_bytes": 441831502, "runtime_shared_libraries_bytes": 26138048, "runner_bytes": 11656, "deployed_total_bytes": 467981206},
+    "load": {"seconds": 1.079322708, "vm_hwm_kb": 563384},
+    "cold": {"seconds": 5.696744373, "audio_seconds": 6.24, "rtf": 0.912939803, "vm_hwm_kb": 1585056},
+    "warm": {"runs": 5, "seconds_median": 3.933480415, "seconds_min": 3.916739530, "seconds_max": 4.094655936, "rtf_median": 0.630365451, "rtf_min": 0.627682617, "rtf_max": 0.656194862, "max_vm_hwm_kb": 1586080},
+    "calls": {"generated_ar_frames_per_run": 78, "flow_steps_per_frame": 1, "inferred_flow_calls_per_run": 78, "note": "Frame and flow counts derive from 149760 samples / 1920 samples per latent frame and num_steps=1. The C API does not expose separate internal text/encoder/decoder call timers."},
+    "output": {"representative_path": "work/pocket-fp-onnx-android-cpu.wav", "bytes": 299564, "sha256": "40634981606f37c59a91c14d99cecb3ef4cc21b1391882e870940b0716857d22", "sample_rate_hz": 24000, "channels": 1, "samples": 149760, "duration_seconds": 6.24, "peak_abs_pcm16": 10997, "rms_pcm16": 757.4762517124789, "finite": true, "non_silent": true, "unclipped": true, "six_runs_byte_identical": true},
+    "memory_limit": "VmHWM is cumulative process-lifetime high-water and includes mapped runtime/models, caches, working buffers and audio; it is not isolated model memory.",
+    "thermal_limit": "ONNX ran first. No laboratory thermal stabilization or fixed-frequency control was used; sequential runs inherit DVFS/thermal state."
+  },
+  "executorch": {
+    "status": "blocked_before_android",
+    "successful_components": ["text_conditioner", "flow_step"],
+    "blocked_components": ["flow_lm_main", "mimi_decoder"],
+    "blocker": "Strict torch.export cannot guard the data-dependent Eq(u9,0) expression in scaled_dot_product_attention with explicit recurrent/streaming state. Both blocked components are essential to complete TTS. Export-safe cache/attention replacement would be broad model surgery requiring a separate equivalence campaign.",
+    "android_package": null,
+    "android_wav": null
+  },
+  "phone_safety": {"repository_lock_held": true, "adb_lock_fd_closed_in_children": true, "transport": "Windows adb.exe with ADB_LIBUSB=1", "remote_root": "/data/local/tmp/experiment-0012-pocket-onnx-fp", "remote_cleanup": "verified absent", "personal_data_accessed": false},
+  "scope": {"quantization": false, "qnn": false, "htp": false}
+}

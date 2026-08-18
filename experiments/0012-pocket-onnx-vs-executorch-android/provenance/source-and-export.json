@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "official_source": {
+    "code_repository": "https://github.com/kyutai-labs/pocket-tts.git",
+    "code_revision": "d108410d23eef7e01db282f9442891162dbc3db6",
+    "code_license": "MIT",
+    "weight_repository": "kyutai/pocket-tts-without-voice-cloning",
+    "weight_revision": "d29db7978e464fb90cb3359ee0c69a273b9142cc",
+    "gated": false,
+    "authenticated": false,
+    "accepted_terms": false,
+    "files": [
+      {"path": "languages/english/model.safetensors", "bytes": 219029196, "sha256": "be9c6b4876d3f30740a8225dfcaa2e43dc4aeb753c15272735bee16bbb4abb0a"},
+      {"path": "languages/english/tokenizer.model", "bytes": 59339, "sha256": "d461765ae179566678c93091c5fa6f2984c31bbe990bf1aa62d92c64d91bc3f6"},
+      {"path": "languages/english/embeddings/alba.safetensors", "bytes": 6194424, "sha256": "e4a323e8e771f14fd669428d83e7af6d83b4d6d0f0e282c30122f04824f17b1c"}
+    ],
+    "model_license": "CC-BY-4.0"
+  },
+  "mobile_voice": {
+    "name": "Bria reference; never labeled Alba",
+    "source": "sherpa-onnx Pocket archive, attributed upstream to kyutai-labs/delayed-streams-modeling audio",
+    "bytes": 2152986,
+    "sha256": "85f46d6f0642f657a6bd689ddaa52d5a5f53e4314715e1032704c80917392181"
+  },
+  "controlled_onnx_export": {
+    "exporter_repository": "https://github.com/KevinAHM/pocket-tts-onnx-export.git",
+    "exporter_revision": "b25d4a7da07c5a96d1429102fcd9116f25d7ab5d",
+    "transformation": "Unquantized FP ONNX component export; exporter loads the exact local official safetensors and tokenizer. Stateful caches are explicit graph I/O; autoregressive and one-step flow loops remain in the runtime.",
+    "files": [
+      {"path": "flow_lm_main.onnx", "bytes": 302742149, "sha256": "021288bdcfb2e70cad3c2c3f96701b644d84aa98627898f255ec7bed69d9a95e", "initializer_types": {"FLOAT": 54}},
+      {"path": "flow_lm_flow.onnx", "bytes": 39097095, "sha256": "57cd2fab19472c16c3e42bb488b83259c7675159edb324b750948a709e2ca76d", "initializer_types": {"FLOAT": 67}},
+      {"path": "mimi_encoder.onnx", "bytes": 39785908, "sha256": "a01b6a65c24fe407e8900841446de914b6208482615aff0f23c2e434e9fa3284"},
+      {"path": "mimi_decoder.onnx", "bytes": 41471926, "sha256": "0e11b378440a728af3e148e8cd2773aa2e8b8aa717e500652eddeb9821bf3ee8", "initializer_types": {"FLOAT": 49}},
+      {"path": "text_conditioner.onnx", "bytes": 16388344, "sha256": "4c203b3f50bef73843768dd0838a0eba8f429f988603591e943b79143bfe8b42", "initializer_types": {"FLOAT": 1}}
+    ],
+    "total_graph_bytes": 439484422,
+    "quantization_ops": 0,
+    "flow_state": {"entries": 18, "layers": 6, "per_layer": {"cache": [2,1,1000,16,64], "current_end": [0], "step": [1]}},
+    "mimi_state_entries": 56,
+    "component_equivalence": "All component outputs/states passed exporter tolerance. Strict Mimi comparison differed only by max_abs=4.936009645462036e-08, mean_abs=1.2726231564859821e-08.",
+    "source_refactor_equivalence": "Exact d108 source vs exporter-vendored source, same checkpoint/seed/text/voice state: 134400 samples each, correlation 0.9999999999798465, SNR 103.946 dB.",
+    "end_to_end_deterministic_equivalence": "At temperature 0 solely for fidelity isolation: exact d108 source vs ONNX produced 111360 samples each, correlation 0.9999999228952958, SNR 68.119 dB, MAE 1.22614e-05, max_abs 0.000824 PCM-normalized. Production benchmark retains temperature 0.3 and seed 0."
+  }
+}

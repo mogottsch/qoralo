@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "status": "blocked_before_android",
+  "runtime": {"executorch": "1.4.1", "torch": "2.13.0+cu130", "host_execution": "CPU"},
+  "exact_weight_sha256": "be9c6b4876d3f30740a8225dfcaa2e43dc4aeb753c15272735bee16bbb4abb0a",
+  "boundary": "Callable components with explicit recurrent state and host autoregressive/flow orchestration",
+  "components": {
+    "text_conditioner": {"torch_export": true, "edge_lowering": true, "executorch_lowering": true, "pte_bytes": 16389248, "principal_op": "aten.embedding.default"},
+    "flow_step": {"torch_export": true, "edge_lowering": true, "executorch_lowering": true, "pte_bytes": 39078088},
+    "flow_lm_main": {"torch_export": false, "required_for_complete_tts": true, "error_type": "torch._dynamo.exc.UserError", "error": "Could not guard on data-dependent expression Eq(u9, 0) in scaled_dot_product_attention at pocket_tts/modules/transformer.py:151 while handling explicit recurrent cache state."},
+    "mimi_decoder": {"torch_export": false, "required_for_complete_tts": true, "error_type": "torch._dynamo.exc.UserError", "error": "Same data-dependent Eq(u9, 0) guard in scaled_dot_product_attention in the decoder transformer with explicit streaming state."}
+  },
+  "decision": "Stop this route after the bounded screen. Two essential components fail strict current torch.export before Edge/ExecuTorch lowering. Resolving it requires replacing stateful attention/cache semantics with export-safe attention and then proving source equivalence across conditioning, AR steps, cache updates, and decode. That is broad model surgery rather than a narrow decomposition, so no Android package or WAV was produced.",
+  "deprecated_routes_used": false,
+  "quantization_used": false,
+  "qnn_used": false
+}
