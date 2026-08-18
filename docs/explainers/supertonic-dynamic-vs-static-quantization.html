@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dynamic vs static quantization — Supertonic and QNN</title>
+<style>
+:root{color-scheme:dark;--bg:#101418;--panel:#182027;--panel2:#202a32;--line:#354550;--text:#e8eef2;--muted:#aebbc5;--blue:#76b9f0;--green:#79d5a3;--amber:#f2c86e;--red:#ff9898;--mono:ui-monospace,SFMono-Regular,Consolas,monospace}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,sans-serif}main{width:min(1050px,calc(100% - 32px));margin:28px auto 64px}h1{font-size:1.8rem;margin:0 0 6px}h2{font-size:1.18rem;margin:0 0 12px}h3{font-size:1rem;margin:0 0 7px}.muted{color:var(--muted)}code,pre,.mono{font-family:var(--mono)}section{margin-top:22px}.card{background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:16px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.flow{display:flex;align-items:stretch;gap:7px;overflow-x:auto;padding:4px 0}.node{min-width:120px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:12px;text-align:center}.node strong{display:block;color:var(--blue);margin-bottom:4px}.arrow{display:grid;place-items:center;color:var(--muted);font-size:1.3rem}.formula{font:14px/1.7 var(--mono);background:#11171b;border:1px solid var(--line);border-radius:5px;padding:12px;overflow:auto}.notice{border-left:4px solid var(--amber);background:#211e17;padding:11px 14px;margin-top:12px}.good{color:var(--green)}.warn{color:var(--amber)}.bad{color:var(--red)}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:8px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--muted)}.count{font-size:1.7rem;font-weight:750;color:var(--red)}.mini{font-size:.86rem;color:var(--muted)}ul{padding-left:20px;margin-bottom:0}.steps{counter-reset:item;display:grid;gap:9px}.step{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start}.step:before{counter-increment:item;content:counter(item);display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#263a47;color:var(--blue);font-weight:700}.tag{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 7px;font:11px var(--mono);margin:2px}.footer{margin-top:24px;border-top:1px solid var(--line);padding-top:12px;color:var(--muted)}@media(max-width:760px){.grid{grid-template-columns:1fr}.flow{flex-direction:column}.arrow{transform:rotate(90deg);height:20px}.node{min-width:0}}
+</style>
+</head>
+<body><main>
+<header><h1>Dynamic vs static quantization</h1><p class="muted">Two ways to map floating-point neural-network values to INT8—and why the choice matters for Supertonic on Qualcomm HTP</p></header>
+
+<section class="card">
+<h2>The short version</h2>
+<div class="flow">
+<div class="node"><strong>Float activation</strong>Values produced by the previous layer</div><div class="arrow">→</div>
+<div class="node"><strong>Measure range</strong>Find min/max while inference is running</div><div class="arrow">→</div>
+<div class="node"><strong>Quantize</strong>Calculate scale and convert to 8-bit integers</div><div class="arrow">→</div>
+<div class="node"><strong>Integer matmul</strong>Multiply with pre-quantized weights</div><div class="arrow">→</div>
+<div class="node"><strong>Dequantize</strong>Convert the result back to approximate floats</div>
+</div>
+<div class="notice"><strong>Dynamic</strong> means the activation scale is calculated from the current input every time the layer runs. It does <em>not</em> mean the same thing as a dynamically sized tensor.</div>
+</section>
+
+<section class="grid">
+<div class="card"><h2>Quantization formula</h2><p>A floating-point value is represented by an integer code, a scale, and a zero point:</p><div class="formula">q = round(x / scale) + zero_point<br>x_approx = (q - zero_point) × scale</div><p class="muted">Quantization loses some precision because many float values map to the same integer code.</p></div>
+<div class="card"><h2>Runtime example</h2><div class="formula">activation range: −1.20 … 0.95<br>scale = (0.95 − (−1.20)) / 255<br>scale ≈ 0.00843<br><br>x = 0.527 → q ≈ 191<br>q = 191 → x_approx ≈ 0.531</div><p class="muted">With dynamic quantization, a different input can produce a different range and scale.</p></div>
+</section>
+
+<section class="grid">
+<div class="card"><h2>Why it is attractive on CPU</h2><ul><li>No representative calibration dataset is required.</li><li>Ranges adapt to each input and flow step.</li><li>Weights are smaller than FP32 weights.</li><li>Integer matrix multiplication can be efficient on CPU.</li><li>It is a convenient general-purpose ONNX deployment transformation.</li></ul></div>
+<div class="card"><h2>Why it is awkward for HTP</h2><ul><li>Quantization parameters are not known when QNN compiles the graph.</li><li>Range measurement and scale calculation become runtime graph operations.</li><li>QNN cannot fuse the complete sequence into one static accelerator graph.</li><li>Unsupported operations remain on CPU and split the graph into many partitions.</li><li>Every CPU↔HTP boundary adds orchestration, buffers, and possible data transfers.</li></ul></div>
+</section>
+
+<section class="card">
+<h2>Why dynamic quantization became popular for mobile CPU inference</h2>
+<div class="grid">
+<div><h3>1. It is almost drop-in</h3><p>Developers can take a trained FP32 model, quantize its constant weights after training, and deploy it without recreating training data or building a calibration corpus. That makes it inexpensive to ship and easy for model repositories to distribute.</p></div>
+<div><h3>2. Model size and memory traffic improve</h3><p>Large matrix weights shrink from 32 bits to 8 bits—roughly one quarter of the raw storage. Mobile CPUs are often limited by reading weights from memory, so smaller weights can matter even when activation quantization adds runtime work.</p></div>
+<div><h3>3. CPUs already handle irregular work</h3><p>ARM and x86 CPUs have efficient integer dot-product instructions, but they also remain good at the small reductions, min/max scans, scalar scale calculations, and shape-dependent control needed around those kernels.</p></div>
+<div><h3>4. There is no accelerator boundary</h3><p>On CPU, the range calculation and integer matrix multiplication run in the same process, address space, and memory hierarchy. A graph split is mostly another CPU kernel call—not an RPC and tensor transfer between CPU and a separate HTP device.</p></div>
+<div><h3>5. It adapts to variable inputs</h3><p>Text lengths, acoustic values, and flow-estimator steps can have different activation ranges. Choosing a fresh scale for each tensor often preserves accuracy better than a poorly calibrated fixed range.</p></div>
+<div><h3>6. Runtime support is mature</h3><p>Frameworks such as ONNX Runtime can recognize dynamic-quantized matrix multiplication and dispatch optimized CPU kernels. That gives publishers a broadly usable model without targeting one phone accelerator generation.</p></div>
+</div>
+<div class="notice"><strong>Important qualification:</strong> “popular” does not mean “always faster.” For small matrices, unsupported CPUs, or graphs with many quantize/dequantize operations, runtime range measurement can erase the gain. It is popular because it offers a practical size/accuracy/deployment compromise with very little model-preparation work.</div>
+</section>
+
+<section class="card">
+<h2>What happened in our vector estimator</h2>
+<div class="grid">
+<div><span class="count">136</span><br><span class="muted">optimized nodes could not be assigned to QNN</span></div>
+<div><span class="count">21</span><br><span class="muted">separate QNN partitions were created around the CPU operations</span></div>
+</div>
+<table><thead><tr><th>Unsupported operation</th><th>Count</th><th>Role</th></tr></thead><tbody>
+<tr><td><code>DequantizeLinear</code></td><td>80</td><td>Convert per-channel quantized weight data back to float.</td></tr>
+<tr><td><code>MatMulInteger</code></td><td>34</td><td>Integer matrix multiplication associated with dynamic quantization.</td></tr>
+<tr><td><code>DynamicQuantizeLinear</code></td><td>21</td><td>Measure the current activation and calculate its runtime scale.</td></tr>
+<tr><td><code>Softplus</code></td><td>1</td><td>Separate unsupported activation in this graph.</td></tr>
+</tbody></table>
+<p>The mixed fallback run was valid, but it was not full HTP:</p><p><span class="tag">21 QNN partitions per vector call</span><span class="tag">136 CPU nodes per vector call</span><span class="tag">5 recursive calls per utterance</span></p>
+</section>
+
+<section class="grid">
+<div class="card"><h2>Dynamic quantization</h2><div class="flow"><div class="node"><strong>Input</strong>Unknown range</div><div class="arrow">→</div><div class="node"><strong>Runtime</strong>Measure and choose scale</div><div class="arrow">→</div><div class="node"><strong>Execute</strong>Data-dependent integer graph</div></div><p class="bad"><strong>Used by the sherpa vector estimator</strong></p><p class="muted">The scale adapts to every activation, but scale calculation becomes part of inference.</p></div>
+<div class="card"><h2>Static quantization</h2><div class="flow"><div class="node"><strong>Calibration</strong>Representative data</div><div class="arrow">→</div><div class="node"><strong>Export</strong>Fixed scales and zero points</div><div class="arrow">→</div><div class="node"><strong>Execute</strong>Precompiled integer graph</div></div><p class="good"><strong>Potentially better fit for QNN HTP</strong></p><p class="muted">The scale cannot adapt at runtime, but QNN can know the complete integer contract while compiling.</p></div>
+</section>
+
+<section class="card">
+<h2>Direct comparison</h2>
+<table><thead><tr><th>Question</th><th>Dynamic quantization</th><th>Static quantization</th></tr></thead><tbody>
+<tr><td><strong>When is the activation scale chosen?</strong></td><td>During every inference, from the current tensor.</td><td>Before deployment, from calibration data.</td></tr>
+<tr><td><strong>Does it need calibration data?</strong></td><td class="good">No</td><td class="warn">Yes—representative data is critical.</td></tr>
+<tr><td><strong>Can it adapt to an unusual input?</strong></td><td class="good">Yes, it measures that input.</td><td>Only within the ranges represented during calibration.</td></tr>
+<tr><td><strong>Runtime work</strong></td><td>Min/max or range analysis, scale calculation, activation quantization.</td><td>Apply already-known scale and zero point.</td></tr>
+<tr><td><strong>Compiler visibility</strong></td><td class="bad">Scale and sometimes execution behavior are data-dependent.</td><td class="good">Types, scales, and zero points are constants.</td></tr>
+<tr><td><strong>QNN/HTP fit</strong></td><td class="bad">Poor for this ONNX representation; caused CPU partitions.</td><td class="good">Better chance of complete fusion and HTP delegation.</td></tr>
+<tr><td><strong>Main accuracy risk</strong></td><td>Runtime rounding still loses precision, but ranges adapt.</td><td>Bad calibration can clip or under-resolve real activations.</td></tr>
+<tr><td><strong>Typical attraction</strong></td><td>Easy CPU deployment without a calibration corpus.</td><td>Predictable accelerator deployment and offline compilation.</td></tr>
+</tbody></table>
+</section>
+
+<section class="grid">
+<div class="card"><h2>Same layer: dynamic</h2><div class="formula">input A range: −1.20 … 0.95<br>runtime scale A: 0.00843<br><br>input B range: −0.25 … 0.31<br>runtime scale B: 0.00220<br><br>scale changes for each input</div><p>The layer uses more of INT8's range for each input, but QNN does not know those scales in advance.</p></div>
+<div class="card"><h2>Same layer: static</h2><div class="formula">calibration range: −1.28 … 1.27<br>fixed scale: 0.01000<br><br>input A scale: 0.01000<br>input B scale: 0.01000<br><br>scale is embedded in the graph</div><p>Input B uses fewer distinct integer levels, but QNN can compile the complete operation ahead of time.</p></div>
+</section>
+
+<section class="card">
+<h2>What changes in the deployment lifecycle?</h2>
+<div class="grid">
+<div><h3>Dynamic route</h3><div class="formula">FP model<br>  ↓ quantize weights<br>dynamic-INT8 ONNX<br>  ↓ deploy immediately<br>CPU measures activations on every run</div></div>
+<div><h3>Static route</h3><div class="formula">FP model<br>  ↓ collect representative activations<br>calibrate fixed ranges<br>  ↓ export static QDQ<br>QNN compiles known integer graph</div></div>
+</div>
+<div class="notice"><strong>The tradeoff:</strong> dynamic quantization moves range selection into inference; static quantization moves that work and risk into an offline calibration phase.</div>
+</section>
+
+<section class="card">
+<h2>Static quantization requires calibration</h2>
+<div class="steps">
+<div class="step"><div><strong>Collect representative model inputs.</strong><br><span class="muted">Different texts, voices, lengths, styles, and all five flow-matching steps.</span></div></div>
+<div class="step"><div><strong>Run the floating-point model and observe tensor ranges.</strong><br><span class="muted">Capture distributions rather than relying on one frozen utterance.</span></div></div>
+<div class="step"><div><strong>Choose fixed scales and zero points.</strong><br><span class="muted">Avoid excessive clipping while retaining useful precision.</span></div></div>
+<div class="step"><div><strong>Export a static QDQ or QNN-oriented graph.</strong><br><span class="muted">QNN can see the quantization contract while compiling.</span></div></div>
+<div class="step"><div><strong>Validate recursive and final audio quality.</strong><br><span class="muted">Errors can accumulate across five vector steps and the vocoder.</span></div></div>
+</div>
+</section>
+
+<section class="grid">
+<div class="card"><h2>Dynamic shapes</h2><div class="formula">noisy_latent [B, 144, L]<br>text_emb&nbsp;&nbsp;&nbsp; [B, 256, T]</div><p><code>B</code>, <code>L</code>, and <code>T</code> are unspecified when the graph loads.</p><p class="muted">We addressed this separately with B=1, L=238, T=239.</p></div>
+<div class="card"><h2>Dynamic quantization</h2><div class="formula">scale = function(current_activation)<br>q = quantize(x, runtime_scale)</div><p>The tensor dimensions can be fixed while the quantization scale remains data-dependent.</p><p class="muted">Fixing shapes did not remove the 136 unsupported quantization-related nodes.</p></div>
+</section>
+
+<section class="card">
+<h2>Why starting from the original model may help</h2>
+<div class="flow">
+<div class="node"><strong>Original FP model</strong>Architecture + floating-point weights</div><div class="arrow">→</div>
+<div class="node"><strong>Controlled export</strong>Keep HTP-supported operator forms</div><div class="arrow">→</div>
+<div class="node"><strong>Choose route</strong>FP16 or calibrated static INT8</div><div class="arrow">→</div>
+<div class="node"><strong>QNN compile</strong>One fully delegated HTP graph if supported</div>
+</div>
+<p>The problem is not necessarily the ONNX container. A clean ONNX file may still be a useful intermediate. The problem is inheriting an already transformed, CPU-oriented, dynamically quantized deployment graph.</p>
+<div class="notice"><strong>Available source boundary:</strong> Supertone publishes the exact v3 inference model as official FP32 ONNX assets, but not the original PyTorch training checkpoint or training/export pipeline. Those FP32 inference graphs are the cleanest public starting point for controlled FP16 or static-quantization experiments.</div>
+</section>
+
+<p class="footer">Experiment 0010 evidence boundary: dynamic shapes were fixed, but dynamic quantization still prevented complete fail-closed QNN assignment. Mixed execution worked; it did not become full HTP.</p>
+</main></body></html>

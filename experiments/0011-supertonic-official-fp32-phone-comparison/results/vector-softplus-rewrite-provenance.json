@@ -1,0 +1,142 @@
+{
+  "onnx": "1.17.0",
+  "opset": 19,
+  "output": {
+    "bytes": 256530693,
+    "path": "/home/moritz/vibevoice-android-spike/experiments/0011-supertonic-official-fp32-phone-comparison/.local/softplus-rewrite/vector_estimator-stable-softplus.onnx",
+    "sha256": "f2318c54726a034dcc89aa9818a91f1c3db0e3067b9932c7c2dae65957897c7b"
+  },
+  "proof": {
+    "all_non_target_original_nodes_byte_identical_and_ordered": true,
+    "all_original_initializers_byte_identical_and_ordered": true,
+    "deterministic_serialization": true,
+    "exactly_one_initializer_appended": true,
+    "node_count_delta_is_plus_six": true
+  },
+  "report": {
+    "identity": "Relu(x) + Log(1 + Exp(-Abs(x)))",
+    "input_contract": {
+      "dtype": "float32",
+      "name": "/vector_estimator/vector_field/time_encoder/mlp/mlp.0/linear/Gemm_output_0",
+      "shape": [
+        2,
+        256
+      ]
+    },
+    "inserted_initializers": [
+      {
+        "dtype": "float32",
+        "name": "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus/stable/one",
+        "sha256": "d91fbb6c8126dfe9c6da1d5217e81cae48c6e825b20b0e143a4464ca0303f04e",
+        "shape": [],
+        "value": 1.0
+      }
+    ],
+    "inserted_nodes": [
+      {
+        "input": [
+          "/vector_estimator/vector_field/time_encoder/mlp/mlp.0/linear/Gemm_output_0"
+        ],
+        "name": "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus/stable/Relu",
+        "op_type": "Relu",
+        "output": [
+          "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus/stable/relu"
+        ],
+        "sha256": "fdb0d7127d7f4d6480e930c386dc8a33e4aa881cbd5b1c88dcae249709a04ed7"
+      },
+      {
+        "input": [
+          "/vector_estimator/vector_field/time_encoder/mlp/mlp.0/linear/Gemm_output_0"
+        ],
+        "name": "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus/stable/Abs",
+        "op_type": "Abs",
+        "output": [
+          "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus/stable/abs"
+        ],
+        "sha256": "94465d7147eb7f7be7f80c744e9c92209c969529cefdc1411a980a2ce5ccb8fb"
+      },
+      {
+        "input": [
+          "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus/stable/abs"
+        ],
+        "name": "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus/stable/Neg",
+        "op_type": "Neg",
+        "output": [
+          "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus/stable/neg_abs"
+        ],
+        "sha256": "c3e668e5ae3fb397707b5e86438eab917ac67ea93e8ed13e0b804c5943ec3ce7"
+      },
+      {
+        "input": [
+          "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus/stable/neg_abs"
+        ],
+        "name": "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus/stable/Exp",
+        "op_type": "Exp",
+        "output": [
+          "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus/stable/exp"
+        ],
+        "sha256": "ebd17a3f5f6d8e09683b846921b83873e5a16569d62e9fadfdb555d0994ff6d4"
+      },
+      {
+        "input": [
+          "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus/stable/exp",
+          "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus/stable/one"
+        ],
+        "name": "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus/stable/AddOne",
+        "op_type": "Add",
+        "output": [
+          "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus/stable/one_plus_exp"
+        ],
+        "sha256": "9e816ed48f4bb3574dfeb6328366e5a6a63024c8cc87d3266930241f64715952"
+      },
+      {
+        "input": [
+          "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus/stable/one_plus_exp"
+        ],
+        "name": "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus/stable/Log",
+        "op_type": "Log",
+        "output": [
+          "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus/stable/log"
+        ],
+        "sha256": "d6d1fa80742615c82e5c7eae6c61b58eac98bd7c0ea71d7839e1956c26f17a10"
+      },
+      {
+        "input": [
+          "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus/stable/relu",
+          "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus/stable/log"
+        ],
+        "name": "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus/stable/AddFinal",
+        "op_type": "Add",
+        "output": [
+          "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus_output_0"
+        ],
+        "sha256": "3acfb8eae923c8875cd0750e025f2636af5e766649756e7aa9a8b0e8e29b621b"
+      }
+    ],
+    "numerical_stability": "Exp receives -Abs(x), so its argument is never positive and cannot overflow.",
+    "output_contract": {
+      "consumer": "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Tanh",
+      "name": "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus_output_0"
+    },
+    "removed": {
+      "input": [
+        "/vector_estimator/vector_field/time_encoder/mlp/mlp.0/linear/Gemm_output_0"
+      ],
+      "name": "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus",
+      "op_type": "Softplus",
+      "output": [
+        "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus_output_0"
+      ],
+      "sha256": "117bb76f0986053df2aa4f251831251740b514100078808477d3cd1c4ec226f1"
+    },
+    "target_index": 96
+  },
+  "schema_version": 1,
+  "source": {
+    "bytes": 256529015,
+    "path": "/home/moritz/vibevoice-android-spike/experiments/0011-supertonic-official-fp32-phone-comparison/.local/specialized/vector_estimator.onnx",
+    "sha256": "723316adfcff378c8ac72ee9db34cadf3b890e4167fa9a76f07398e0d4ff5b92"
+  },
+  "tool_sha256": "df59b0596f23db1728e5de979207a2554fa9107f61c273ee838a8defaa110ab1",
+  "transformation": "single stable Softplus primitive expansion"
+}

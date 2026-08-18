@@ -59,22 +59,52 @@ The vector estimator leaves one unsupported node:
 /vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus (Softplus)
 ```
 
-Therefore a complete all-four-component HTP transcript-to-WAV run was **not attempted**. No hybrid route or CPU fallback was enabled. The three eligible physical probes used real inputs produced by a complete official FP32 host chain. See [`results/step2-fail-closed-htp-checkpoint.json`](results/step2-fail-closed-htp-checkpoint.json).
+Therefore a complete all-four-component HTP transcript-to-WAV run was **not attempted** in step 2. No hybrid route or CPU fallback was enabled. The three eligible physical probes used real inputs produced by a complete official FP32 host chain. See [`results/step2-fail-closed-htp-checkpoint.json`](results/step2-fail-closed-htp-checkpoint.json).
+
+### Stable Softplus phase — complete all-HTP route achieved
+
+The exact rejected `Softplus` was replaced by:
+
+```text
+Relu(x) + Log(1 + Exp(-Abs(x)))
+```
+
+The expansion is stable because `Exp` never receives a positive value. The rewrite is source-hash locked, deterministic, and changes only that node: seven standard-domain nodes replace it and one scalar float32 constant is appended. Five focused safety tests passed. Same-runtime CPU comparisons passed the frozen policy for every real step input and the recursive five-step chain; final recursive max error was `0.00004796`, RMSE `0.000001404`, and cosine `0.99999999998`.
+
+The rewritten vector then fully delegated as one QNN partition (`874/874` optimized nodes), passed a physical fallback-disabled HTP probe, and enabled matched complete phone routes:
+
+| Metric | CPU reference | All HTP |
+|---|---:|---:|
+| Session creation | 0.792 s | 22.815 s |
+| First generation | 7.368 s | 3.091 s |
+| Warm generation median | 8.068 s | 2.818 s |
+| Warm generation range | 7.587–9.073 s | 2.807–2.841 s |
+| Warm RTF | 0.488 | 0.170 |
+| Setup-inclusive first result | 8.160 s | 25.906 s |
+| Process RSS high-water | 689456 KiB | 1374408 KiB |
+
+Warm generation was `2.86×` faster on the all-HTP route. All 48 neural executions—six duration, six text, thirty recursive vector, and six vocoder—have ORT QNN-provider events plus physical RPC, accelerator-time, cycle, and 4-HVX evidence, with zero CPU-provider node events.
+
+Both 729746-sample outputs are finite, bounded, and valid mono 44.1 kHz PCM16 WAVs. The prospective numerical policy nevertheless **failed**: MAE `0.00704`, RMSE `0.02000`, and cosine `0.92668` versus the frozen `0.95` cosine minimum. This is not a listening judgment. See [`results/softplus-matched-e2e-checkpoint.json`](results/softplus-matched-e2e-checkpoint.json).
 
 ## Claim boundaries
 
 - “FP32” describes the public source ONNX assets. Physical HTP profiles prove accelerator execution but do not establish FP32 arithmetic or identify the internal QNN lowering precision.
 - The minimal C++ runner hard-codes the pinned contract values from `tts.json` and consumes lossless binary serializations of the official JSON Unicode indexer and M1 float tensors; these adapters do not replace neural intermediates.
 - CPU `ru_maxrss` is cumulative process high-water RSS, not component-isolated PSS; it includes runtime, loaded models, and allocator memory.
-- Physical component numerical comparisons are descriptive because only output shape, finiteness, and accelerator-profile criteria were frozen before those outputs.
-- No quantization, calibration, operator rewrite, QNN context optimization, ORT patch/rebuild, or experiment 0010 modification was performed here.
+- The matched run used the original I/O-specialized vector for CPU and the audited stable-Softplus derivative for HTP; both model hashes are retained.
+- The HTP-first route order, 120-second cooldowns, and thermal snapshots reduce but do not remove ordering and thermal bias. CPU latency increased across its warm runs.
+- Apart from the single audited `Softplus` expansion, no operator rewrite was performed. No quantization, calibration, QNN context optimization, ORT patch/rebuild, or experiment 0010 modification occurred.
 - Models, tensors, audio, profiles, Qualcomm binaries, serial logs, and local run directories remain ignored.
 
 ## Files
 
-- [`PLAN.md`](PLAN.md) — bounded two-step procedure and gates
+- [`PLAN.md`](PLAN.md) — bounded procedures and gates
 - [`results/source-inventory.json`](results/source-inventory.json) — pinned first-party inventory
 - [`results/specialization-policy.json`](results/specialization-policy.json) — predeclared CPU-equivalence criteria
-- [`device/htp-probe-policy.json`](device/htp-probe-policy.json) — frozen physical-probe criteria
+- [`device/htp-probe-policy.json`](device/htp-probe-policy.json) — original frozen physical-probe criteria
+- [`results/softplus-phase-policy.json`](results/softplus-phase-policy.json) — frozen rewrite and prospective E2E numerical criteria
+- [`results/matched-e2e-protocol.json`](results/matched-e2e-protocol.json) — predeclared matched benchmark protocol
+- [`results/vector-softplus-rewrite-provenance.json`](results/vector-softplus-rewrite-provenance.json) — exact rewrite proof
 - [`host/official_fp32_e2e_runner.cc`](host/official_fp32_e2e_runner.cc) — deterministic Android/host end-to-end runner
 - [`host/official_fp32_component_probe.cc`](host/official_fp32_component_probe.cc) — fail-closed component probe

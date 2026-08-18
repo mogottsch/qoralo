@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "frozen_before_any_rewritten_vector_htp_output": true,
+  "source_vector_sha256": "723316adfcff378c8ac72ee9db34cadf3b890e4167fa9a76f07398e0d4ff5b92",
+  "rewritten_vector_sha256": "f2318c54726a034dcc89aa9818a91f1c3db0e3067b9932c7c2dae65957897c7b",
+  "cpu_rewrite_equivalence": {
+    "each_real_step": {
+      "elements": 34272,
+      "all_finite": true,
+      "max_abs_error_lte": 0.00005,
+      "rmse_lte": 0.00001,
+      "cosine_gte": 0.999999
+    },
+    "five_step_recursive_final": {
+      "elements": 34272,
+      "all_finite": true,
+      "max_abs_error_lte": 0.0002,
+      "rmse_lte": 0.00002,
+      "cosine_gte": 0.999999
+    }
+  },
+  "physical_vector_probe": {
+    "output_elements": 34272,
+    "all_finite": true,
+    "required_profile_evidence": [
+      "RPC (execute) time",
+      "QNN accelerator (execute) time",
+      "Accelerator (execute) time (cycles)",
+      "Number of HVX threads used"
+    ],
+    "required_hvx_threads": 4,
+    "zero_cpu_provider_node_events": true
+  },
+  "prospective_complete_e2e_numerical": {
+    "comparison": "phone CPU official-specialized-vector raw waveform versus phone all-HTP rewritten-vector raw waveform",
+    "elements": 729746,
+    "both_all_finite": true,
+    "both_peak_abs_lte": 1.0,
+    "mae_lte": 0.02,
+    "rmse_lte": 0.03,
+    "cosine_gte": 0.95
+  },
+  "claim_boundary": "Numerical acceptance is separate from later listening. Passing does not establish perceptual equivalence or FP32 HTP arithmetic."
+}

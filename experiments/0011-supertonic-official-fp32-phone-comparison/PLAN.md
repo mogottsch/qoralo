@@ -2,7 +2,7 @@
 
 ## Scope
 
-Execute only these two steps against pinned, ungated, first-party **official FP32 ONNX inference/export assets**. Do not authenticate, accept click-through terms, use a PyTorch/training checkpoint, quantize, calibrate, rewrite operators, optimize a QNN context, rebuild ORT, edit experiment 0010, or create a hybrid route.
+Execute the bounded phases below against pinned, ungated, first-party **official FP32 ONNX inference/export assets**. Do not authenticate, accept click-through terms, use a PyTorch/training checkpoint, quantize, calibrate, optimize a QNN context, rebuild ORT, edit experiment 0010, or create a hybrid route. The later authorization permits only the exact stable `Softplus` expansion in phase 3; no other operator rewrite is in scope.
 
 ## Step 1 — official FP32 phone CPU
 
@@ -24,6 +24,16 @@ Execute only these two steps against pinned, ungated, first-party **official FP3
 
 **Gate:** physical execution requires RPC execute time, QNN accelerator execute time, accelerator cycles, and HVX-thread evidence. “Official FP32 source” must not be restated as “FP32 HTP arithmetic” unless lowering precision is independently established.
 
+## Phase 3 — stable Softplus and matched complete routes
+
+1. Hash-lock the rejected specialized vector. Replace exactly its one `Softplus` with `Relu(x) + Log(1 + Exp(-Abs(x)))`; prove wiring, opset, dtype, shape, consumer safety, deterministic serialization, and preservation of all other ordered nodes and original initializers.
+2. Freeze numerical thresholds. Compare original and rewritten vectors on CPU under the same runtime for every real step input and both recursive five-step chains.
+3. Require one complete fallback-disabled host QNN partition. Validate the existing Android package and hashes offline, then physically probe the rewritten vector with real inputs and unambiguous QNN/RPC/accelerator/cycle/4-HVX evidence.
+4. Freeze the matched benchmark protocol. Run fresh all-HTP and CPU route processes in the predeclared order with cooldowns and thermal snapshots. Preserve six executions per route, component/session/setup/end-to-end latency, RTF, cumulative RSS high-water, output hashes, full profiles, and a prospective full-tensor comparison.
+5. Keep listening separate. Do not generate the final HTML comparison in this phase.
+
+**Gate:** call the route all-HTP only if duration, text, each of the five recursive vector calls, and vocoder have QNN-only ORT provider events, zero CPU-provider events, and physical QNN profiling evidence.
+
 ## Outcome
 
-Step 1 passed. In step 2, duration prediction, text encoding, and vocoding fully delegated and passed their physical execution/profile criteria. The vector estimator failed closed on one unsupported `Softplus`, so complete HTP synthesis and matched CPU/HTP listening artifacts were not eligible.
+Steps 1 and 2 produced the official CPU baseline and isolated one unsupported vector `Softplus`. Phase 3 replaced only that node, passed CPU and host/physical vector gates, and achieved a complete all-HTP route. Its warm generation median was 2.818 seconds versus 8.068 seconds on CPU, but the prospective E2E numerical policy failed because cosine `0.92668` was below `0.95`; this is recorded separately from listening.

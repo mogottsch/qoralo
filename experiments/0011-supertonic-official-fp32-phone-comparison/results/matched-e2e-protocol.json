@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "frozen_before_physical_rewritten_vector_and_complete_e2e_outputs": true,
+  "device": {
+    "serial": "R5CW81PR8SY",
+    "model": "SM-S918B",
+    "soc": "SM8550",
+    "abi": "arm64-v8a"
+  },
+  "contract": {
+    "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
+    "voice": "official public M1 style (semantic SID5; standalone JSON serialized at index 0)",
+    "seed": 20260813,
+    "text_length": 239,
+    "latent_length": 238,
+    "trimmed_samples": 729746,
+    "sample_rate_hz": 44100,
+    "output_duration_seconds": 16.5475283446712,
+    "vector_steps": 5,
+    "duration_prediction_runs": true,
+    "fixed_shape_limitation": "The deployment graph remains predeclared T239/L238/729746 rather than being rebuilt from the duration prediction."
+  },
+  "routes": {
+    "cpu": "all four official FP32 components on CPUExecutionProvider; original specialized official FP32 vector",
+    "all_htp": "shape-specialized duration/text/vocoder plus stable-Softplus vector, every neural session on QNNExecutionProvider with CPU fallback disabled; preprocessing, orchestration, trimming, and WAV encoding on CPU"
+  },
+  "benchmark": {
+    "fresh_process_per_route": true,
+    "actual_predeclared_order": ["all_htp", "cpu"],
+    "cooldown_before_each_route_seconds": 120,
+    "thermal_capture": "adb dumpsys thermalservice immediately before and after each route; non-invasive and observational only",
+    "runs_per_process": 6,
+    "first_execution": "run index 0",
+    "warm_executions": "run indices 1 through 5",
+    "warm_summary": ["median", "minimum", "maximum"],
+    "setup_inclusive_to_first_definition": "sum of all four session-creation times plus first complete generation latency",
+    "complete_process_definition": "wall time around the fresh route process, recorded by the phone shell",
+    "rtf_definition": "complete generation latency divided by 16.5475283446712 seconds of output audio",
+    "memory": "getrusage ru_maxrss cumulative process high-water; includes runtime, models, provider, and allocator and is not component-isolated PSS"
+  },
+  "htp_provider_options": {
+    "backend_path": "libQnnHtp.so",
+    "session.disable_cpu_ep_fallback": "1",
+    "profiling_level": "detailed",
+    "offload_graph_io_quantization": "0",
+    "htp_performance_mode": "burst",
+    "soc_model": "43"
+  },
+  "all_htp_acceptance": {
+    "every_neural_component_ort_profile_provider": "QNNExecutionProvider",
+    "zero_cpu_provider_node_events": true,
+    "every_neural_component_qnn_profile_requires": ["RPC (execute) time", "QNN accelerator (execute) time", "Accelerator (execute) time (cycles)", "Number of HVX threads used = 4"],
+    "no_partial_assignment_or_profile_ambiguity": true
+  },
+  "numerical_policy": "softplus-phase-policy.json",
+  "precision_claim_boundary": "The source models are official FP32 ONNX inference/export assets. Actual QNN HTP internal float lowering precision is not established; no FP32-arithmetic claim is permitted."
+}

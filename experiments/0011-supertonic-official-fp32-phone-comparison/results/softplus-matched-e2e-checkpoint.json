@@ -1,0 +1,800 @@
+{
+  "claim": "The single unsupported Softplus was replaced by a locked stable primitive expansion. The rewritten vector and all four complete neural components physically executed on HTP with fallback disabled. The matched all-HTP waveform is valid, but it is not numerically accepted against CPU because cosine 0.92668 is below the frozen 0.95 threshold.",
+  "claim_boundaries": [
+    "Official FP32 describes source ONNX assets; internal QNN HTP float lowering precision remains unestablished and no FP32 arithmetic claim is made.",
+    "The CPU reference uses the original I/O-specialized official FP32 vector; the HTP route uses only the stable-Softplus derivative. Both hashes are retained.",
+    "Preprocessing, orchestration, waveform trimming, and WAV encoding remain CPU work in the all-HTP route.",
+    "Numerical policy failure is not a perceptual judgment; listening remains separate.",
+    "ru_maxrss is cumulative process high-water, not component-isolated PSS.",
+    "The HTP-first order, 120-second cooldowns, and thermal snapshots mitigate but do not eliminate ordering/thermal bias; CPU latency rose across warm runs."
+  ],
+  "host_gate": {
+    "artifact_root": "work/softplus-rewrite/host-qnn",
+    "capability_passes": [
+      {
+        "nodes": 923,
+        "partitions": 1,
+        "qnn_nodes": 923
+      },
+      {
+        "nodes": 874,
+        "partitions": 1,
+        "qnn_nodes": 874
+      }
+    ],
+    "cpu_fallback_disabled": true,
+    "result": "passed_one_complete_partition",
+    "unsupported_nodes": []
+  },
+  "matched_e2e": {
+    "actual_order": [
+      "all_htp",
+      "cpu"
+    ],
+    "all_htp": {
+      "complete_generation": {
+        "first_rtf": 0.18678620369279172,
+        "first_seconds": 3.09085,
+        "values_seconds": [
+          3.09085,
+          2.81831,
+          2.83116,
+          2.81695,
+          2.80653,
+          2.84059
+        ],
+        "warm_max_rtf": 0.17166249489548419,
+        "warm_max_seconds": 2.84059,
+        "warm_median_rtf": 0.17031607024910034,
+        "warm_median_seconds": 2.81831,
+        "warm_min_rtf": 0.16960418145491718,
+        "warm_min_seconds": 2.80653,
+        "warm_seconds": [
+          2.81831,
+          2.83116,
+          2.81695,
+          2.80653,
+          2.84059
+        ]
+      },
+      "components": {
+        "duration": {
+          "first_seconds": 0.0139945,
+          "values_seconds": [
+            0.0139945,
+            0.00910932,
+            0.00939427,
+            0.00806526,
+            0.0085251,
+            0.00935333
+          ],
+          "warm_max_seconds": 0.00939427,
+          "warm_median_seconds": 0.00910932,
+          "warm_min_seconds": 0.00806526,
+          "warm_seconds": [
+            0.00910932,
+            0.00939427,
+            0.00806526,
+            0.0085251,
+            0.00935333
+          ]
+        },
+        "text_encoder": {
+          "first_seconds": 0.0306099,
+          "values_seconds": [
+            0.0306099,
+            0.0237316,
+            0.0275245,
+            0.0243585,
+            0.0271387,
+            0.0279652
+          ],
+          "warm_max_seconds": 0.0279652,
+          "warm_median_seconds": 0.0271387,
+          "warm_min_seconds": 0.0237316,
+          "warm_seconds": [
+            0.0237316,
+            0.0275245,
+            0.0243585,
+            0.0271387,
+            0.0279652
+          ]
+        },
+        "vector_estimator_five_steps": {
+          "first_seconds": 2.80413,
+          "values_seconds": [
+            2.80413,
+            2.63598,
+            2.64806,
+            2.63572,
+            2.6216,
+            2.65062
+          ],
+          "warm_max_seconds": 2.65062,
+          "warm_median_seconds": 2.63598,
+          "warm_min_seconds": 2.6216,
+          "warm_seconds": [
+            2.63598,
+            2.64806,
+            2.63572,
+            2.6216,
+            2.65062
+          ]
+        },
+        "vocoder": {
+          "first_seconds": 0.239916,
+          "values_seconds": [
+            0.239916,
+            0.147777,
+            0.144009,
+            0.147916,
+            0.146424,
+            0.150197
+          ],
+          "warm_max_seconds": 0.150197,
+          "warm_median_seconds": 0.147777,
+          "warm_min_seconds": 0.144009,
+          "warm_seconds": [
+            0.147777,
+            0.144009,
+            0.147916,
+            0.146424,
+            0.150197
+          ]
+        }
+      },
+      "fresh_process_wall_seconds": 40.802016735076904,
+      "max_rss_after_runs_kb": 1374408,
+      "max_rss_after_sessions_kb": 1368232,
+      "predicted_duration_seconds": 16.9219,
+      "session_create_seconds": {
+        "duration": 0.508549,
+        "text": 0.837026,
+        "total": 22.8147,
+        "vector": 17.0188,
+        "vocoder": 4.45035
+      },
+      "setup_inclusive_to_first_seconds": 25.905549999999998
+    },
+    "artifact_root": "work/phone-matched-cpu-all-htp-20260818T151157Z-841739",
+    "cleanup_exit_code": 0,
+    "contract": {
+      "latent_length": 238,
+      "output_duration_seconds": 16.547528344671203,
+      "seed": 20260813,
+      "text_length": 239,
+      "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
+      "trimmed_samples": 729746,
+      "voice": "official M1 / semantic SID5"
+    },
+    "cooldown_before_each_seconds": 120,
+    "cpu": {
+      "complete_generation": {
+        "first_rtf": 0.4452501815700257,
+        "first_seconds": 7.36779,
+        "values_seconds": [
+          7.36779,
+          7.5873,
+          7.80123,
+          8.06773,
+          8.6997,
+          9.07316
+        ],
+        "warm_max_rtf": 0.5483090774050148,
+        "warm_max_seconds": 9.07316,
+        "warm_median_rtf": 0.4875489457975788,
+        "warm_median_seconds": 8.06773,
+        "warm_min_rtf": 0.4585156068001743,
+        "warm_min_seconds": 7.5873,
+        "warm_seconds": [
+          7.5873,
+          7.80123,
+          8.06773,
+          8.6997,
+          9.07316
+        ]
+      },
+      "components": {
+        "duration": {
+          "first_seconds": 0.012948,
+          "values_seconds": [
+            0.012948,
+            0.00887833,
+            0.00805318,
+            0.0089212,
+            0.00910688,
+            0.0120293
+          ],
+          "warm_max_seconds": 0.0120293,
+          "warm_median_seconds": 0.0089212,
+          "warm_min_seconds": 0.00805318,
+          "warm_seconds": [
+            0.00887833,
+            0.00805318,
+            0.0089212,
+            0.00910688,
+            0.0120293
+          ]
+        },
+        "text_encoder": {
+          "first_seconds": 0.0782239,
+          "values_seconds": [
+            0.0782239,
+            0.0835968,
+            0.0827292,
+            0.087423,
+            0.0881533,
+            0.101644
+          ],
+          "warm_max_seconds": 0.101644,
+          "warm_median_seconds": 0.087423,
+          "warm_min_seconds": 0.0827292,
+          "warm_seconds": [
+            0.0835968,
+            0.0827292,
+            0.087423,
+            0.0881533,
+            0.101644
+          ]
+        },
+        "vector_estimator_five_steps": {
+          "first_seconds": 5.92675,
+          "values_seconds": [
+            5.92675,
+            6.11886,
+            6.26642,
+            6.51394,
+            7.00417,
+            7.34591
+          ],
+          "warm_max_seconds": 7.34591,
+          "warm_median_seconds": 6.51394,
+          "warm_min_seconds": 6.11886,
+          "warm_seconds": [
+            6.11886,
+            6.26642,
+            6.51394,
+            7.00417,
+            7.34591
+          ]
+        },
+        "vocoder": {
+          "first_seconds": 1.3488,
+          "values_seconds": [
+            1.3488,
+            1.3754,
+            1.44341,
+            1.45681,
+            1.59765,
+            1.61284
+          ],
+          "warm_max_seconds": 1.61284,
+          "warm_median_seconds": 1.45681,
+          "warm_min_seconds": 1.3754,
+          "warm_seconds": [
+            1.3754,
+            1.44341,
+            1.45681,
+            1.59765,
+            1.61284
+          ]
+        }
+      },
+      "fresh_process_wall_seconds": 49.83275508880615,
+      "max_rss_after_runs_kb": 689456,
+      "max_rss_after_sessions_kb": 438208,
+      "predicted_duration_seconds": 16.9202,
+      "session_create_seconds": {
+        "duration": 0.0948384,
+        "text": 0.177469,
+        "total": 0.792217,
+        "vector": 0.400011,
+        "vocoder": 0.119899
+      },
+      "setup_inclusive_to_first_seconds": 8.160007
+    },
+    "device": {
+      "abi": "arm64-v8a",
+      "model": "SM-S918B",
+      "serial": "R5CW81PR8SY",
+      "soc": "SM8550"
+    },
+    "numerical_policy_result": {
+      "all-htp_wav": {
+        "channels": 1,
+        "frames": 729746,
+        "rate": 44100,
+        "sample_width": 2
+      },
+      "cosine": 0.9266795819085011,
+      "cpu_all_finite": true,
+      "cpu_peak_abs": 0.44582444429397583,
+      "cpu_wav": {
+        "channels": 1,
+        "frames": 729746,
+        "rate": 44100,
+        "sample_width": 2
+      },
+      "elements": 729746,
+      "htp_all_finite": true,
+      "htp_peak_abs": 0.4511719048023224,
+      "mae": 0.007038356023529318,
+      "max_abs_error": 0.4308647224679589,
+      "passed": false,
+      "rmse": 0.020002432354544575
+    },
+    "outputs": {
+      "all_htp": {
+        "raw_absolute_path": "/home/moritz/vibevoice-android-spike/experiments/0011-supertonic-official-fp32-phone-comparison/work/phone-matched-cpu-all-htp-20260818T151157Z-841739/all-htp/official-fp32-all-htp.raw",
+        "raw_sha256": "7899aefa2bc7d899bdf82dfcd5716579461ee5f109a66fefcfd5c464872a3831",
+        "wav": {
+          "channels": 1,
+          "frames": 729746,
+          "sample_rate_hz": 44100,
+          "sample_width_bytes": 2
+        },
+        "wav_absolute_path": "/home/moritz/vibevoice-android-spike/experiments/0011-supertonic-official-fp32-phone-comparison/work/phone-matched-cpu-all-htp-20260818T151157Z-841739/all-htp/official-fp32-all-htp.wav",
+        "wav_sha256": "47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c"
+      },
+      "cpu": {
+        "raw_absolute_path": "/home/moritz/vibevoice-android-spike/experiments/0011-supertonic-official-fp32-phone-comparison/work/phone-matched-cpu-all-htp-20260818T151157Z-841739/cpu/official-fp32-phone-cpu.raw",
+        "raw_sha256": "c994d0c0b3aeae9a0ad966e5a8db76c13cb581d9cdcb8011cee498ace2f8ee2e",
+        "wav": {
+          "channels": 1,
+          "frames": 729746,
+          "sample_rate_hz": 44100,
+          "sample_width_bytes": 2
+        },
+        "wav_absolute_path": "/home/moritz/vibevoice-android-spike/experiments/0011-supertonic-official-fp32-phone-comparison/work/phone-matched-cpu-all-htp-20260818T151157Z-841739/cpu/official-fp32-phone-cpu.wav",
+        "wav_sha256": "0476c4aa2ce40d52fe156e330fb729c7cf1fd18c59b2c45ce85a5907a58aeeb3"
+      }
+    },
+    "provider_and_physical_evidence": {
+      "all_htp": {
+        "duration": {
+          "ort": {
+            "cpu_provider_event_count": 0,
+            "provider_event_count": 6,
+            "providers": [
+              "QNNExecutionProvider"
+            ],
+            "qnn_provider_event_count": 6,
+            "sha256": "fdced3885447912270571a926dc0b37778c2836209ffc8d1f69f4c65e447b1d4"
+          },
+          "qnn": {
+            "accelerator_execute_cycles": {
+              "count": 6,
+              "max": 6864706,
+              "median": 6803907.0,
+              "min": 6685705
+            },
+            "hvx_threads": {
+              "count": 6,
+              "unique": [
+                4
+              ]
+            },
+            "qnn_accelerator_execute_us": {
+              "count": 6,
+              "max": 6598,
+              "median": 5334.5,
+              "min": 5275
+            },
+            "rpc_execute_us": {
+              "count": 6,
+              "max": 6747,
+              "median": 5382.5,
+              "min": 5330
+            },
+            "sha256": "0fa516f54aeaeefd80dad54c4b0401e487a9fd5dbc0c8d02f20222d65cba521c"
+          }
+        },
+        "text": {
+          "ort": {
+            "cpu_provider_event_count": 0,
+            "provider_event_count": 6,
+            "providers": [
+              "QNNExecutionProvider"
+            ],
+            "qnn_provider_event_count": 6,
+            "sha256": "ab8e950624566ab8d6959f3f498817884dc671de63af82776f640aedbcad45e8"
+          },
+          "qnn": {
+            "accelerator_execute_cycles": {
+              "count": 6,
+              "max": 27370032,
+              "median": 27155744.5,
+              "min": 26580323
+            },
+            "hvx_threads": {
+              "count": 6,
+              "unique": [
+                4
+              ]
+            },
+            "qnn_accelerator_execute_us": {
+              "count": 6,
+              "max": 25510,
+              "median": 18409.5,
+              "min": 18041
+            },
+            "rpc_execute_us": {
+              "count": 6,
+              "max": 26129,
+              "median": 18657.0,
+              "min": 18254
+            },
+            "sha256": "63d86d1af0a7d62d9253cd1b6f7669afeb9bc8aa71253be954f23062ebb648de"
+          }
+        },
+        "vector": {
+          "ort": {
+            "cpu_provider_event_count": 0,
+            "provider_event_count": 30,
+            "providers": [
+              "QNNExecutionProvider"
+            ],
+            "qnn_provider_event_count": 30,
+            "sha256": "6f09508e1932f4fe80280f8eb7eb412616fbe3a368f2f4ed8cff223e1b8eafa2"
+          },
+          "qnn": {
+            "accelerator_execute_cycles": {
+              "count": 30,
+              "max": 769388978,
+              "median": 768168294.0,
+              "min": 767580151
+            },
+            "hvx_threads": {
+              "count": 30,
+              "unique": [
+                4
+              ]
+            },
+            "qnn_accelerator_execute_us": {
+              "count": 30,
+              "max": 695012,
+              "median": 515099.5,
+              "min": 506939
+            },
+            "rpc_execute_us": {
+              "count": 30,
+              "max": 695985,
+              "median": 515785.0,
+              "min": 507332
+            },
+            "sha256": "fb557601fb50d93982c7d7095215385366c35ce0852cbce8d57fdeec9c5f9714"
+          }
+        },
+        "vocoder": {
+          "ort": {
+            "cpu_provider_event_count": 0,
+            "provider_event_count": 6,
+            "providers": [
+              "QNNExecutionProvider"
+            ],
+            "qnn_provider_event_count": 6,
+            "sha256": "89065d21e5b756f45bc8486eb6e0fa4f4d65b85bb5f35066bd3cdb06c6ab4f44"
+          },
+          "qnn": {
+            "accelerator_execute_cycles": {
+              "count": 6,
+              "max": 225154285,
+              "median": 224317683.5,
+              "min": 222357731
+            },
+            "hvx_threads": {
+              "count": 6,
+              "unique": [
+                4
+              ]
+            },
+            "qnn_accelerator_execute_us": {
+              "count": 6,
+              "max": 232537,
+              "median": 139661.5,
+              "min": 138974
+            },
+            "rpc_execute_us": {
+              "count": 6,
+              "max": 233552,
+              "median": 140842.5,
+              "min": 139499
+            },
+            "sha256": "41b0f018b454248f8ecf6b380cfe963d75e434c7f5f94df9ec2fd8df86fb1b5b"
+          }
+        }
+      },
+      "cpu": {
+        "duration": {
+          "ort": {
+            "cpu_provider_event_count": 1116,
+            "provider_event_count": 1116,
+            "providers": [
+              "CPUExecutionProvider"
+            ],
+            "qnn_provider_event_count": 0,
+            "sha256": "10f5511083ba0d6d3640de58c7bfa3ea75806f2680c7758bc461a9e227509342"
+          }
+        },
+        "text": {
+          "ort": {
+            "cpu_provider_event_count": 1866,
+            "provider_event_count": 1866,
+            "providers": [
+              "CPUExecutionProvider"
+            ],
+            "qnn_provider_event_count": 0,
+            "sha256": "77d50a06555dc208187626f6cf06590144a2786e9e75c29a8edccbd0c031b1d7"
+          }
+        },
+        "vector": {
+          "ort": {
+            "cpu_provider_event_count": 23640,
+            "provider_event_count": 23640,
+            "providers": [
+              "CPUExecutionProvider"
+            ],
+            "qnn_provider_event_count": 0,
+            "sha256": "097605f311898b30928f570a454e81b81eca7ab4928d532623b7a592c7a7546b"
+          }
+        },
+        "vocoder": {
+          "ort": {
+            "cpu_provider_event_count": 690,
+            "provider_event_count": 690,
+            "providers": [
+              "CPUExecutionProvider"
+            ],
+            "qnn_provider_event_count": 0,
+            "sha256": "4c76d8dc7cb559be2c8fcf3949dd3947274e1f536d878836833f0e7283f1319a"
+          }
+        }
+      }
+    },
+    "thermal_c": {
+      "all_htp_after": {
+        "AP": 52.3,
+        "PA": 54.2,
+        "SKIN": 40.1
+      },
+      "all_htp_before": {
+        "AP": 43.5,
+        "PA": 42.8,
+        "SKIN": 38.6
+      },
+      "cpu_after": {
+        "AP": 54.8,
+        "PA": 56.7,
+        "SKIN": 41.7
+      },
+      "cpu_before": {
+        "AP": 45.3,
+        "PA": 48.9,
+        "SKIN": 39.5
+      }
+    },
+    "warm_generation_speedup_cpu_over_htp": 2.8626127005191053
+  },
+  "offline_android_gate": {
+    "model_hashes": {
+      "duration_predictor.onnx": "8a1875ef0f6960ca16fc06814509b1c3258e8f50b04a5d590d3ab6db8c775016",
+      "text_encoder.onnx": "769fd1d257674e8624bdea941f7a903d9460051f9845b604cd2c2980f281a8c3",
+      "vector_estimator-original.onnx": "723316adfcff378c8ac72ee9db34cadf3b890e4167fa9a76f07398e0d4ff5b92",
+      "vector_estimator-stable-softplus.onnx": "f2318c54726a034dcc89aa9818a91f1c3db0e3067b9932c7c2dae65957897c7b",
+      "vocoder.onnx": "35b90eeae4a01d06f82dccc903a63d23c95eb2d9095ffa0d62f2cf151817c7c7"
+    },
+    "result": "passed",
+    "runner_abi": "Android ARM64 API 28; dependencies libonnxruntime.so and libc++_shared.so plus Android system libs",
+    "runtime_hashes": {
+      "component-runner": "1a00d4139925f6da7e1145a6d1954b5c9741a29e72502126478f41ad2139d876",
+      "e2e-runner": "f7d7063a373c9d9d9295b0e13fdb65a3fa5c2a59335191393df81cf09da2c291",
+      "libQnnHtp.so": "a09b3af28342331b3ec9e57ecbe42bfe54a5fff37c4323ce5685c395ae3ee604",
+      "libQnnHtpV73Skel.so": "bd54463547f0234d06045699b1f747b7d9d3e3b581874840af50c295b3124f25",
+      "libQnnHtpV73Stub.so": "2912cc4f29cc5163c36c6c58f931bd08b798ccf8545a670a9498549f95b9036f",
+      "libQnnSystem.so": "536201ed918f4066f9ef35671198c072faf9ef04af24545f5fae0fc79aa05baa",
+      "libc++_shared.so": "8dfbd800f0d4b8ff2b664b0e5012a4a5f08794668dccfaa29b8b1c2cdcdc18b3",
+      "libonnxruntime.so": "40bc591798287525f365e8ded4bbc40e0c4e9440737e876026ec09ba359ac041"
+    },
+    "stage_manifest_sha256": "4ea320352b874514980f98f7dd2b9359934a41d99086a2bd130f9cb61b40d6ac"
+  },
+  "phase": "stable Softplus rewrite and matched complete CPU/all-HTP phone comparison",
+  "phone_cleanup": {
+    "lock_released_after_each_script": true,
+    "no_vibevoice_0011_remote_stage_remained": true
+  },
+  "physical_vector_probe": {
+    "artifact_root": "work/phone-stable-softplus-vector-20260818T150936Z-815858",
+    "cleanup_exit_code": 0,
+    "descriptive_cpu_comparison": {
+      "cosine": 0.9999982505431224,
+      "elements": 34272,
+      "finite": true,
+      "mae": 0.0014752834104001522,
+      "max_abs": 0.014009103178977966,
+      "rmse": 0.001891661318950355
+    },
+    "device": {
+      "model": "SM-S918B",
+      "serial": "R5CW81PR8SY",
+      "soc": "SM8550"
+    },
+    "max_rss_kb": 923372,
+    "ort_provider": {
+      "cpu_provider_event_count": 0,
+      "provider_event_count": 3,
+      "providers": [
+        "QNNExecutionProvider"
+      ],
+      "qnn_provider_event_count": 3,
+      "sha256": "14906dcbe758fa8757864359e601accf46c3ab27265270385d5361ee43befa88"
+    },
+    "output_sha256": "5e7f00f98ddb4ef2142295bfed483caeb9b19451bf532ee253c4dfe37ec39d95",
+    "qnn_physical": {
+      "accelerator_execute_cycles": {
+        "count": 3,
+        "max": 769550235,
+        "median": 768753105,
+        "min": 767848237
+      },
+      "hvx_threads": {
+        "count": 3,
+        "unique": [
+          4
+        ]
+      },
+      "qnn_accelerator_execute_us": {
+        "count": 3,
+        "max": 705024,
+        "median": 519167,
+        "min": 518768
+      },
+      "rpc_execute_us": {
+        "count": 3,
+        "max": 705630,
+        "median": 519810,
+        "min": 519506
+      },
+      "sha256": "b31659c82ca8568f5ccb6e578bc3d4803e295acf4fcb91a4e0f4cf01838c5799"
+    },
+    "result": "passed",
+    "run_seconds": [
+      0.713733,
+      0.534902,
+      0.5353
+    ],
+    "session_create_seconds": 22.1903
+  },
+  "policies": {
+    "matched_protocol_sha256": "0e590f8810fed18612ddef9c07088528ce5c4537f4ea6d0e9fa1bb50986482ff",
+    "softplus_phase_sha256": "27407569ea42e108ad27368ee7383ce2a33ab3c3fd307aefe1e30c564f4a8e2e"
+  },
+  "result": "all_htp_route_passed_provider_and_output_validity_gates_but_failed_prospective_e2e_numerical_policy",
+  "rewrite": {
+    "cpu_equivalence": {
+      "models": {
+        "original_sha256": "723316adfcff378c8ac72ee9db34cadf3b890e4167fa9a76f07398e0d4ff5b92",
+        "rewritten_sha256": "f2318c54726a034dcc89aa9818a91f1c3db0e3067b9932c7c2dae65957897c7b"
+      },
+      "passed": true,
+      "policy_sha256": "27407569ea42e108ad27368ee7383ce2a33ab3c3fd307aefe1e30c564f4a8e2e",
+      "real_step_same_input": [
+        {
+          "all_finite": true,
+          "cosine": 0.9999999999999553,
+          "elements": 34272,
+          "mae": 1.8786736898255524e-07,
+          "max_abs_error": 1.6689300537109375e-06,
+          "passed": true,
+          "rmse": 2.4202234328185013e-07,
+          "step": 0
+        },
+        {
+          "all_finite": true,
+          "cosine": 0.9999999999998912,
+          "elements": 34272,
+          "mae": 2.188671434739036e-07,
+          "max_abs_error": 2.7418136596679688e-06,
+          "passed": true,
+          "rmse": 2.8649913863554875e-07,
+          "step": 1
+        },
+        {
+          "all_finite": true,
+          "cosine": 0.9999999999997891,
+          "elements": 34272,
+          "mae": 2.2173862120653585e-07,
+          "max_abs_error": 1.7881393432617188e-06,
+          "passed": true,
+          "rmse": 2.8558162312397196e-07,
+          "step": 2
+        },
+        {
+          "all_finite": true,
+          "cosine": 0.9999999999994527,
+          "elements": 34272,
+          "mae": 2.2897435066419387e-07,
+          "max_abs_error": 1.430511474609375e-06,
+          "passed": true,
+          "rmse": 2.9149864264500376e-07,
+          "step": 3
+        },
+        {
+          "all_finite": true,
+          "cosine": 0.9999999999988557,
+          "elements": 34272,
+          "mae": 2.7367539682541214e-07,
+          "max_abs_error": 1.6093254089355469e-06,
+          "passed": true,
+          "rmse": 3.493493093512939e-07,
+          "step": 4
+        }
+      ],
+      "recursive_chain": [
+        {
+          "all_finite": true,
+          "cosine": 0.9999999999999553,
+          "elements": 34272,
+          "mae": 1.8786736898255524e-07,
+          "max_abs_error": 1.6689300537109375e-06,
+          "passed": true,
+          "rmse": 2.4202234328185013e-07,
+          "step": 0
+        },
+        {
+          "all_finite": true,
+          "cosine": 0.9999999999997639,
+          "elements": 34272,
+          "mae": 2.9528148543614856e-07,
+          "max_abs_error": 1.2516975402832031e-05,
+          "passed": true,
+          "rmse": 4.228216674926472e-07,
+          "step": 1
+        },
+        {
+          "all_finite": true,
+          "cosine": 0.999999999999178,
+          "elements": 34272,
+          "mae": 4.001238650776468e-07,
+          "max_abs_error": 8.344650268554688e-06,
+          "passed": true,
+          "rmse": 5.635487878371031e-07,
+          "step": 2
+        },
+        {
+          "all_finite": true,
+          "cosine": 0.9999999999955707,
+          "elements": 34272,
+          "mae": 5.084171491279364e-07,
+          "max_abs_error": 1.1593103408813477e-05,
+          "passed": true,
+          "rmse": 8.29433168963149e-07,
+          "step": 3
+        },
+        {
+          "all_finite": true,
+          "cosine": 0.9999999999815202,
+          "elements": 34272,
+          "mae": 6.645435389806538e-07,
+          "max_abs_error": 4.795938730239868e-05,
+          "passed": true,
+          "rmse": 1.4036629230303027e-06,
+          "step": 4
+        }
+      ],
+      "runtime": {
+        "graph_optimization": "ORT_ENABLE_ALL",
+        "onnxruntime": "1.23.2",
+        "provider": "CPUExecutionProvider",
+        "threads": 1
+      },
+      "schema_version": 1
+    },
+    "deterministic_serialization": true,
+    "focused_tests": "5 passed",
+    "identity": "Relu(x) + Log(1 + Exp(-Abs(x)))",
+    "output_sha256": "f2318c54726a034dcc89aa9818a91f1c3db0e3067b9932c7c2dae65957897c7b",
+    "provenance": "results/vector-softplus-rewrite-provenance.json",
+    "source_sha256": "723316adfcff378c8ac72ee9db34cadf3b890e4167fa9a76f07398e0d4ff5b92"
+  },
+  "schema_version": 1
+}
