@@ -14,10 +14,10 @@ These phases belong to experiment [`0010: Supertonic QNN/HTP feasibility`](READM
 
 | Phase | Status | Purpose |
 |---|---|---|
-| Phase 1: vocoder HTP feasibility | **Complete — bounded negative result** | Physical HTP execution succeeded, but the frozen full-tensor numerical gate failed. |
-| Phase 2: vector-estimator value | **Not started — closed by Phase 1 failure** | Do not test the vector estimator from this rejected vocoder path. |
-| Phase 3: complete accelerated synthesis | **Not started — not justified** | The incorrect vocoder output blocks accelerated end-to-end synthesis. |
-| Phase 4: deployment decision | **Complete for this route — retain CPU** | Keep the working CPU deployment; this experiment supports no HTP speedup claim. |
+| Phase 1: vocoder HTP feasibility | **Complete — numerically rejected, perceptually promising** | Physical HTP execution succeeded and failed the frozen full-tensor gate; a later informal blind A/B found no audible difference for the single frozen utterance. |
+| Phase 2: vector-estimator value | **Next — newly authorized** | Test the exact released vector estimator fail-closed on HTP, then use the smallest proven derivative only if required. |
+| Phase 3: complete accelerated synthesis | **Pending Phase 2** | Move all four ONNX components to fail-closed HTP sessions where supported, while keeping ordinary text/orchestration code on CPU. |
+| Phase 4: deployment decision | **Reopened** | Require prospective audio-quality evidence and a same-device CPU baseline before deciding whether HTP is useful. |
 
 ## Current position
 
@@ -31,11 +31,12 @@ These phases belong to experiment [`0010: Supertonic QNN/HTP feasibility`](READM
 | **Done** | Explicit GELU host gate | With CPU fallback disabled, patched host ORT assigns the complete optimized graph to one QNN partition (304/304 nodes) and initializes successfully. This is host capability evidence only. |
 | **Done** | Android runtime build | Patched arm64-v8a/API 27 ONNX Runtime + QNN was rebuilt, validated, and reused for the scoped physical explicit-GELU vocoder probe. |
 | **Done** | Scoped physical HTP execution | The exact authorized S23 Ultra executed three vocoder iterations with fallback disabled. Detailed profiles contain RPC, QNN accelerator, accelerator-cycle, and four-HVX-thread evidence. |
-| **Failed** | Frozen physical numerical gate | All 731,136 finite samples were compared, but cosine `0.865454`, SNR `5.716 dB`, max error `0.595960`, mean error `0.012167`, and RMSE `0.029311` fail the predeclared limits. Output and audio are rejected. |
-| **Done** | Cleanup and stop gate | The unique scoped device directory was removed, the phone lock was released, and no vector-estimator work began. |
+| **Failed** | Frozen physical numerical gate | All 731,136 finite samples were compared, but cosine `0.865454`, SNR `5.716 dB`, max error `0.595960`, mean error `0.012167`, and RMSE `0.029311` fail the predeclared limits. The result remains numerically rejected. |
+| **Observed** | Post-hoc blind A/B | Moritz reported that the CPU reference and physical-HTP WAV sounded exactly the same for this one frozen utterance. This single-listener observation is encouraging product evidence, but it does not retroactively pass the numerical policy or establish broad perceptual equivalence. |
+| **Done** | Cleanup and stop gate | The unique scoped device directory was removed and the phone lock was released. No vector-estimator work began during the completed vocoder campaign. |
 | **Done** | Layer-level numerical bisection | The first material observable boundary is the composite embed `Pad → QDQ` transition. An exact-real-input QDQ microprobe is non-material, while exposing raw embed `Conv` breaks full delegation; the evidence is fusion/context dependent and does not establish an operator defect. |
 
-The current boundary is therefore clear: **the explicit-GELU vocoder physically executed on the SM8550 HTP with CPU fallback disabled, but its output failed the frozen numerical policy and is not accepted audio. No same-device CPU baseline was collected, so no speedup claim is supported.**
+The current boundary is therefore clear: **the explicit-GELU vocoder physically executed on the SM8550 HTP with CPU fallback disabled and failed the frozen numerical policy. A later informal blind A/B found no audible difference for the single frozen utterance, so perceptual feasibility remains open under a new prospective gate. No same-device CPU baseline was collected, so no speedup claim is supported.**
 
 When a phase finishes, its detailed result stays in experiment `0010`, its condensed outcome moves to [`docs/history.md`](../../docs/history.md) and the [history HTML](../../docs/history.html), and it is removed from this plan.
 
@@ -67,7 +68,7 @@ Physical result:
 - the physical tensor was finite and had the expected `[1,731136]` shape, but failed every non-finite-independent frozen metric: cosine `0.865454 < 0.995`, SNR `5.716 < 20 dB`, max absolute error `0.595960 > 0.05`, mean absolute error `0.012167 > 0.002`, and RMSE `0.029311 > 0.005`;
 - the scoped device directory was removed and the repository phone lock was released.
 
-**Completed as a bounded negative result:** physical HTP execution is proven, but numerical correctness is rejected. Do not loosen the policy, accept the output as audio, rerun this derivative, start the vector estimator, or claim speedup/end-to-end success.
+**Completed with split evidence:** physical HTP execution is proven and numerical equivalence remains rejected under the unchanged policy. After completion, Moritz listened through a randomized CPU/HTP A/B page and reported that both versions sounded exactly the same. That observation is recorded rather than used to rewrite the frozen gate: it covers one utterance, one listener, and PCM16 renderings, and it does not prove broad perceptual equivalence or speedup. It does justify a separately prospective audio-quality gate while the newly authorized vector-estimator phase proceeds.
 
 ### Layer-level localization
 
@@ -88,19 +89,17 @@ All diagnostic phone stages were unique experiment-0010 paths, all cleanup attem
 
 ## Phase 2: test vector-estimator value
 
-This phase is closed because Phase 1 did not pass numerical correctness. Do not start the vector estimator from this derivative result. If a future separately authorized experiment revisits acceleration, it must define a new rationale and gates rather than treating physical execution alone as success.
+This phase is newly authorized following the post-hoc perceptual observation. Move quickly but retain the evidence discipline: test the exact released vector-estimator graph first, preserve any unsupported-operator result, and consider a separately labeled derivative only when a narrow incompatibility is proven. Do not inherit the vocoder's post-hoc listening result as evidence for this different component.
 
-The previously planned work was to test the exact released vector-estimator graph first and preserve any unsupported-operator result before considering a derived graph.
+Use the frozen real inputs for all five estimator steps. Freeze component-output criteria before physical outputs, require complete QNN assignment with CPU fallback disabled, and capture graph finalization, first and warm execution, tensor transfers, memory, partition coverage, and full-tensor numerical error. Start with host capability, then run a scoped physical probe only after the Android package is hash-validated offline.
 
-Measure graph finalization, first and warm execution, tensor transfers, memory, partition coverage, and numerical error. CPU fallback remains disabled for the HTP session.
-
-**Complete when:** physical HTP execution and numerical correctness are proven, and the measured warm benefit is large enough to justify startup, transfer, package, and integration costs. If it runs but offers no practical benefit, stop the accelerator path.
+**Complete when:** every required estimator step has physical HTP evidence and passes its frozen correctness gate, with timing sufficient to decide whether it is worth integrating. Unsupported assignment, incorrect output, or negligible value remains a valid bounded result.
 
 ## Phase 3: run complete accelerated Android synthesis
 
-The component result does not justify integration, so this phase remains unstarted. Build no accelerated hybrid from the rejected physical output.
+This phase is pending the vector-estimator gate. The target is now aggressive but explicit: attempt fail-closed HTP sessions for the duration predictor, text encoder, all five vector-estimator calls, and vocoder. Ordinary text normalization, Unicode indexing, orchestration, trimming, and WAV encoding remain CPU application code rather than neural graphs.
 
-The previously planned integration contract was to build the smallest explicit hybrid path that preserves complete Supertonic behavior.
+The integration contract is to build the smallest complete path that preserves Supertonic behavior.
 
 - Use the frozen experiment `0008` transcript and SID 5 / M1 English voice.
 - Run text preparation, duration prediction, text encoding, five-step denoising, vocoding, and audio assembly without fixture substitution.
@@ -109,12 +108,14 @@ The previously planned integration contract was to build the smallest explicit h
 - Retain profiles proving HTP execution during the complete run.
 - Compare final audio, cold and warm timing, callback behavior, memory, and package cost with the experiment [`0008` CPU baseline](../0008-sherpa-onnx-android-tts-benchmark/).
 
-**Complete when:** Android produces a complete valid WAV, HTP use is proven in context, audio and numerical gates pass, and the equivalent CPU comparison shows whether acceleration helps.
+Before the end-to-end run, define a new prospective audio-quality protocol that includes randomized listening across multiple utterances and voices plus appropriate signal/speech diagnostics. The original vocoder numerical policy remains failed historical evidence; it is not silently loosened.
+
+**Complete when:** Android produces a complete valid WAV without fixture substitution, every claimed neural component has physical fail-closed HTP proof, the prospective audio gate passes, and an equivalent same-device CPU comparison shows whether acceleration helps.
 
 ## Phase 4: make the deployment decision
 
-The completed experiment selects the reproducible negative result for this HTP route: retain the simpler Supertonic CPU deployment. The explicit-GELU vocoder reaches physical HTP, but its numerical error is unacceptable and no same-device CPU baseline exists from which to claim speedup.
+The deployment decision is reopened. The explicit-GELU vocoder reaches physical HTP and fails strict numerical equivalence, while the first informal blind comparison found no audible difference. Neither fact alone decides deployment, and no same-device CPU baseline yet supports a speedup claim.
 
-Judge the result against the listening goal, not accelerator novelty. Pleasant speech, sustained generation, latency, memory, storage, thermals, and integration cost all matter. If CPU already meets the practical target, reject an HTP path that adds complexity without a useful listener-facing improvement.
+Judge the result against the listening goal, not accelerator novelty. Pleasant speech across a broader corpus, sustained generation, same-device latency, memory, storage, thermals, and integration cost all matter. If CPU already meets the practical target, reject an HTP path that adds complexity without a useful listener-facing improvement.
 
 **Complete when:** the experiment, history, README, and dashboard state one current deployment conclusion and link back to the canonical evidence.

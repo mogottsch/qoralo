@@ -252,8 +252,9 @@
     "likely_next_technical_route": "replace the eight standard decomposed GELU subgraphs with explicit com.microsoft.Gelu nodes as a separately labeled derivative, or construct an explicit CPU/HTP split; never count implicit ORT CPU fallback as an HTP pass",
     "explicit_gelu_host_path": "complete QNN assignment and session initialization passed on host",
     "explicit_gelu_physical_path": "three physical SM8550 HTP executions proven with CPU fallback disabled",
-    "explicit_gelu_numerical_path": "failed frozen full-tensor gate; output and audio rejected",
-    "deployment_decision": "Do not advance this HTP vocoder derivative to vector-estimator or end-to-end work. The working CPU deployment remains the supported path unless a separately authorized future experiment establishes a correct accelerator route."
+    "explicit_gelu_numerical_path": "failed frozen full-tensor gate; numerical equivalence remains rejected",
+    "post_hoc_perceptual_path": "one informal randomized blind A/B on the frozen PCM16 utterance; Moritz reported no audible difference; this does not override the numerical failure or prove broad perceptual equivalence",
+    "deployment_decision": "Reopened after the post-hoc perceptual observation. Vector-estimator work is separately authorized, but deployment still requires prospective multi-sample audio criteria and a same-device CPU comparison."
   },
   "cleanup": {
     "remote_path": "/data/local/tmp/vibevoice-qnn-0010-explicit-gelu8-20260817T125145Z-232282",
@@ -281,12 +282,12 @@
     }
   },
   "next_steps": [
-    "Do not reinterpret or loosen final waveform policy SHA 7116c522; the vocoder remains rejected.",
+    "Do not reinterpret or loosen final waveform policy SHA 7116c522; the vocoder remains numerically rejected.",
     "Do not claim an embed QDQ implementation defect: the exact-input QDQ microprobe is non-material and the result is fusion/context dependent.",
-    "Do not rebuild ORT, relax fallback, rerun the non-delegable raw Conv tap, start vector-estimator work, or perform end-to-end QNN work under this experiment."
+    "Do not rebuild ORT, relax fallback, or rerun the non-delegable raw Conv tap. Vector-estimator work was separately authorized after this completed checkpoint and must use new frozen component gates."
   ],
   "claims_not_made": [
-    "The physical HTP output is not numerically correct or accepted audio.",
+    "The physical HTP output failed the frozen numerical policy. A later informal blind A/B found no audible difference for the one frozen PCM16 utterance, but it is not a numerical pass or broad audio-quality proof.",
     "No HTP speedup is claimed; no comparable same-device CPU baseline was collected.",
     "No vector-estimator QNN probe began.",
     "No end-to-end Supertonic QNN synthesis ran.",
@@ -643,5 +644,17 @@
       "microprobe_test_sha256": "4299e91f9b762fb0d5f1f9a79a992abfec545a0702e973ba1a6543a581f6265f",
       "runner_source_sha256": "babc11eecac2561d2e4de1200b085af6c8730101062e7fffae5feff7454b148d"
     }
+  },
+  "post_hoc_perceptual_observation": {
+    "recorded_at_utc": "2026-08-18T10:22:23Z",
+    "observer": "Moritz",
+    "method": "informal randomized blind A/B in a local HTML page using matched mono 44.1 kHz PCM16 WAV renderings",
+    "utterances": 1,
+    "listeners": 1,
+    "reported_result": "both sounded exactly the same",
+    "cpu_wav_sha256": "1f3eeb0fb8b8965adc50e90732ca3d5ecb7bac69fff1fb51de63749d3f406bf2",
+    "htp_wav_sha256": "7bfcff1707e8624d2f994f7d93dcde91ab773ddc68fbf381690eae23191297f5",
+    "claim_boundary": "Encouraging single-sample product evidence only. It does not retroactively pass frozen numerical policy SHA 7116c522, establish broad perceptual equivalence, or support a speedup claim.",
+    "decision_effect": "Reopen acceleration investigation under separately prospective component and audio-quality gates; proceed next to the vector estimator."
   }
 }
