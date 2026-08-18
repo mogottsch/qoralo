@@ -1,107 +1,98 @@
-# Experiment 0010 handoff — paused after physical HTP control
+# Experiment 0010 final handoff — bounded hybrid result
 
-## Current status
+## Status and decision
 
-Work is paused after a successful tiny-graph HTP proof and a fail-closed vocoder investigation. The canonical checkpoint is [`results/phone-probe-checkpoint.json`](results/phone-probe-checkpoint.json). [`results/host-checkpoint.json`](results/host-checkpoint.json) is the earlier pre-phone snapshot and is retained as history.
+Experiment 0010 is complete. The canonical result is [`results/e2e-hybrid-cpu-checkpoint.json`](results/e2e-hybrid-cpu-checkpoint.json); the detailed narrative is [`PLAN.md`](PLAN.md) and its [HTML mirror](PLAN.html). Earlier host, phone-vocoder, and vector checkpoints remain immutable stage evidence.
 
-**What is proven:** a six-node QDQ add graph executed on the Galaxy S23 Ultra's SM8550 HTP with CPU fallback disabled. Its detailed QNN profile contains RPC finalize/execute events, QNN accelerator timings and cycles, and four HVX threads.
+The fixed-transcript Supertonic path ran end to end on the authorized Galaxy S23 Ultra (`SM-S918B`, `SM8550`): text preparation, duration prediction, text encoding, five recursive vector-estimator calls, vocoding, trimming, and WAV writing. The matched CPU and hybrid routes used M1/SID5, English, seed `20260813`, T239/L238, and `729746` output samples at 44.1 kHz. Duration prediction executed and reported `16.9202 s`; QNN's concrete-shape deployment retained the predeclared L238 contract rather than dynamically rebuilding graphs.
 
-**What is not proven:** the Supertonic vocoder has not executed on HTP. No vocoder output, audio, component latency, speedup, vector-estimator result, or end-to-end accelerated synthesis exists.
+**Retained decision:** keep CPU as the supported reference deployment. Preserve the hybrid as a bounded research baseline only. It is perceptually promising for the one reviewed utterance, but it is not full HTP, arbitrary-shape, numerically accepted, or production-ready.
 
-The phone stage `/data/local/tmp/vibevoice-qnn-0010` was removed after evidence capture. The phone lock is not held. Do not run a new phone command without reacquiring `artifacts/locks/phone.lock` and reconfirming Moritz's availability.
+No follow-up experiment, source export, conversion route, or full-HTP plan is approved here.
 
-## Physical-phone result
+## Provider routes and physical proof
 
-Device identity was reconfirmed as Samsung `SM-S918B`, Qualcomm `SM8550`, arm64, Android 16/API 36.
+CPU route:
 
-The first tiny session failed closed because the staged QAIRT 2.49 set omitted `libQnnHtpPrepare.so`. QAIRT loads that library dynamically, so it does not appear as an ELF `NEEDED` dependency of `libQnnHtp.so`. After staging the exact library (SHA-256 `db0a4c4811fe0947f6f237978190cbaf4cea8fa8bd607ea14fda67d375403c9e`), the no-fallback tiny control passed:
+- duration predictor: CPU;
+- text encoder: CPU;
+- vector estimator ×5: CPU;
+- vocoder: CPU.
 
-- session creation: `0.413961` s;
-- measured inference: `0.00196151` s;
-- profile SHA-256: `e4cca7e966c99696d6ee836448587fdec7241b3e5a883c933f10500ec09a0e90`;
-- profile evidence: RPC finalize/execute, QNN accelerator finalize/execute, accelerator cycles, four HVX threads.
+Hybrid route:
 
-The fixed-shape released-vocoder derivative then crashed during **session creation only** with exit `139`/`SIGSEGV`. No inference ran. The Android tombstone reports a null-pointer read at address `0xb0` in `libonnxruntime.so`.
+- duration predictor and text encoder: CPU;
+- each vector-estimator call: explicitly mixed, 21 QNN/HTP partitions plus 136 CPU nodes;
+- explicit-GELU vocoder: one QNN/HTP partition with CPU fallback disabled.
 
-## Crash root cause
+Across four complete hybrid generations, the ORT profiles record:
 
-The phone failure reproduced the x86 HTP-emulator failure, so the emulator-only hypothesis is rejected. Host GDB localized the top frame and call path to:
+- vector estimator: `420` QNN partition events and `2720` CPU events across 20 calls;
+- vocoder: four QNN events and zero CPU events;
+- all `424` QNN events: RPC, accelerator execution time/cycles, and four-HVX-thread evidence.
 
-```text
-onnxruntime::QDQ::PadNodeGroupSelector::Check
-onnxruntime::QDQ::NodeGroupSelector::GetQDQSelection
-onnxruntime::QDQ::SelectorManager::GetQDQSelections
-onnxruntime::QDQ::GetAllNodeUnits
-onnxruntime::QNNExecutionProvider::GetCapability
-```
+This proves physical hybrid execution. It must never be described as full HTP.
 
-ORT 1.27.1 permits `dq_nodes.size() == 0` in `PadNodeGroupSelector::Check` and then dereferences `dq_nodes[0]`. Microsoft fixed this exact bug upstream in commit `a08e17aab393a922d619736a4150cfe43bc7f8ec`, PR #28733.
+## Latency and startup
 
-The minimal source backport is tracked at [`patches/onnxruntime-a08e17-pad-empty-dq.patch`](patches/onnxruntime-a08e17-pad-empty-dq.patch). It changes only the production guard from `num_dq_inputs > 2` to `num_dq_inputs < 1 || num_dq_inputs > 2`. The experiment's ignored local ORT source already has this patch applied.
+| Measurement | CPU | Hybrid | Interpretation |
+|---|---:|---:|---|
+| Session creation | `0.611356 s` | `26.965 s` | hybrid `44.107×` longer |
+| First generation after sessions | `5.84446 s` | `4.33056 s` | hybrid `25.903%` lower |
+| Warm median | `6.06733 s` | `3.80935 s` | hybrid `2.25798 s` / `37.215%` lower, `1.593×` |
+| Setup + first generation | `6.456 s` | `31.296 s` | CPU wins a fresh-process single generation |
+| Setup + all four generations | `24.649 s` | `42.590 s` | CPU still wins this measured fresh-process batch |
 
-## Patched host result
+Hybrid session creation is dominated by vector QNN (`21.9854 s`) and vocoder QNN (`4.74756 s`) setup. QNN partitions, optimizes, compiles, and finalizes graphs; prepares weights and layouts; and establishes RPC/shared buffers. The cost is generally paid once only while sessions remain resident. Dividing additional setup by the observed warm saving gives an illustrative break-even near 12 retained-process generations, not a controlled amortization result.
 
-The patched host runtime no longer crashes. It instead reaches a useful fail-closed capability result:
+Campaign caveats: one fresh process per route, CPU first then hybrid, four generations each, non-randomized order, and no explicit thermal telemetry.
 
-| Model | QNN-supported nodes | Partitions | Remaining unsupported nodes | Result |
-|---|---:|---:|---|---|
-| fixed released-vocoder derivative | 338 / 354 | 9 | 8 `Erf` + 8 weight-only `DequantizeLinear` | rejected, fallback disabled |
-| fixed + eight weight-only DQ tails folded | 338 / 346 | 9 | 8 `Erf` | rejected, fallback disabled |
+## Memory
 
-The combined folded-and-fixed derivative is SHA-256 `ee6760340a128e6f1f397ccee84c1fdd50165524d4ac7de76d522dec679fff14`. Under the same patched ORT 1.27.1 CPU build and session options, its output is bit-identical to the fixed released-vocoder derivative. That is derivative-equivalence evidence only, not an HTP numerical pass.
+`ru_maxrss` high-water marks:
 
-Graph optimization levels `0`, `1`, `2`, and `99` were tested. Levels 1/2/99 retain exactly the same eight unsupported `Erf` nodes; level 0 delegates substantially less. Implicit ORT CPU fallback remains disallowed and was not used to manufacture a passing result.
+| Point | CPU | Hybrid |
+|---|---:|---:|
+| After sessions | `217420 KiB` | `1028044 KiB` |
+| After runs | `459432 KiB` | `1154172 KiB` |
 
-The eight remaining `Erf` nodes are inside standard decomposed GELU patterns. QNN has a native GELU operation, but ORT's QNN fusion does not recognize these QDQ-wrapped forms after DQ duplication.
+The final hybrid/CPU ratio is `2.512×`. These are process-lifetime peaks, not steady live PSS or complete DSP-private memory. Hybrid retains the ORT CPU graph and fallback route while adding QNN prepared/compiled graph and weight representations, metadata, RPC/shared buffers, detailed profiling state, and possible transient setup allocations.
 
-## Consequential decision for the next session
+## Audio evidence
 
-Review this choice with Moritz before changing the graph:
+Both outputs are valid, finite, non-silent, unclipped mono PCM16 WAVs with `729746` frames at 44.1 kHz.
 
-1. **Recommended:** create a separately labeled derivative that replaces only the eight proven standard `Div → Erf → Add → Mul → Mul` GELU decompositions with explicit `com.microsoft.Gelu` nodes. Record every matched/replaced node, source/output hashes, and CPU comparison. Freeze the formal numerical gate before inspecting any HTP output.
-2. **Alternative:** construct an explicit CPU/HTP split around the eight GELUs. This is more integration work but can preserve the original operators. Merely enabling ORT CPU fallback is not an acceptable substitute because it would invalidate the fail-closed delegation proof.
+The frozen end-to-end numerical gate remains **failed and immutable**:
 
-Do not start the vector estimator until a vocoder session runs with fallback disabled, produces finite output, has detailed physical-HTP evidence, and passes frozen numerical criteria.
+- cosine: `0.405431`;
+- SNR: `-0.592623 dB`;
+- normalized RMSE: `1.07061`;
+- RMSE: `0.0593432`;
+- mean absolute error: `0.0302192`;
+- maximum absolute error: `0.641157`.
 
-## Retained ignored state — do not delete
+After the run, Moritz used the randomized E2E A/B report and reported that the CPU and hybrid samples sounded exactly the same. Record this as encouraging, informal evidence from one listener and one utterance. It does not turn the waveform comparison into a numerical pass or identify an operator defect.
 
-All large, proprietary, generated, or raw artifacts remain under ignored experiment paths:
+Ignored local convenience artifacts:
 
-- `.local/onnxruntime-v1.27.1-source/`
-  - exact ORT `df2ba1cf8108aa63627cf4cdf8f807880b938616` source;
-  - the tracked `a08e17` backport is currently applied as an ignored working-tree diff.
-- `.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/`
-  - reusable patched x86_64 QNN build;
-  - patched `libonnxruntime.so.1.27.1` SHA-256: `bc9df5a7df1b5d9de4d87adcaa4cc864bbde0f790e80d48e00ce0e4253a2ae11`.
-- `.local/ort-v1.27.1-qnn-2.49.0-android-arm64/`
-  - reusable successful Android build from before the backport;
-  - its `libonnxruntime.so` is **unpatched** and must not be used for another vocoder attempt;
-  - after the host/model gate passes, incrementally rebuild/relink it against the already-patched local source rather than deleting it.
-- `work/`
-  - fixtures, derivatives, staged-file manifests, phone profiles/logs, Android runner, host runs, GDB evidence, and optimization sweep.
+- `work/e2e/samples/supertonic-m1-cpu.wav` — SHA-256 `7e83537630b3e354f7586b9887f7a8359d62e438c9addeea61d87d878b2a84ff`;
+- `work/e2e/samples/supertonic-m1-hybrid-htp.wav` — SHA-256 `9b0d488776b144c972e8be4e9434fac14ce3ceddfcfa5a10d137fca41b772668`;
+- `work/e2e/latencies/e2e-latencies.json`;
+- `work/e2e/e2e-analysis.json`;
+- `work/e2e/e2e-report.html` — SHA-256 `ab7d97a78c818522da83b68d9b026efe75b0402101676d3e4327901be96f2a59`.
 
-The retained host build was moved out of `/tmp`; no critical build now depends on a temporary path. SDKs remain outside the repository at their side-by-side installed locations. `/home/moritz/opt/qairt/current` was not changed.
+The HTML report, WAVs, raw tensors, profiles, models, binaries, and QNN libraries are ignored convenience or restricted evidence, not committed durable dependencies.
 
-A typical incremental Android relink, only after the next host gate passes, should mount the retained source at `/src`, the retained Android tree at `/build`, QAIRT 2.49 read-only at `/opt/qairt`, and the Android SDK read-only at `/opt/android-sdk`, then build the narrow targets rather than cleaning the tree. The Android QNN integration is static, so rebuild `onnxruntime` and any runner/perf-test executable being staged.
+## Technical history retained
 
-## Key ignored evidence
+- A six-node QDQ graph first proved physical HTP execution with fallback disabled.
+- ONNX Runtime 1.27.1 crashed in `PadNodeGroupSelector::Check`; the exact upstream fix was retained as [`patches/onnxruntime-a08e17-pad-empty-dq.patch`](patches/onnxruntime-a08e17-pad-empty-dq.patch).
+- The explicit-GELU vocoder became fully delegable and physically ran on HTP, but failed its immutable numerical policy. Moritz later heard no difference in its isolated A/B.
+- The shape-only vector derivative preserved all source nodes and initializers. Full delegation remained blocked by 136 optimized nodes, so the authorized final vector route was explicitly mixed.
+- Vocoder localization narrowed the first observable material boundary to composite embed `Pad → QDQ`; isolated exact-input QDQ was non-material. No defective operator was established.
 
-Hashes and bounded conclusions are in the canonical JSON. Important raw files include:
+## Retained local state and safety
 
-- `work/device/qnn-smoke/smoke-qnn-with-prepare.csv` — accepted physical HTP profile;
-- `work/device/qnn-smoke/logcat-crash.txt` — Android native tombstone excerpt;
-- `work/device/qnn-smoke/logcat-main-system.txt` — full relevant Android/QNN initialization trail;
-- `work/device/qnn-smoke/host-gdb-vocoder.txt` — symbolized host crash stack;
-- `work/ort-qnn-2.49-patched-a08e17/vocoder-l238-host-htp/run.stderr.log` — patched exact fixed graph support report;
-- `work/ort-qnn-2.49-patched-a08e17/vocoder-folded-weight-only-fixed-l238-host-htp/run.stderr.log` — patched folded/fixed support report;
-- `work/derived/vocoder-fold-weight-only-qdq-fixed-l238/same-runtime-cpu-equivalence.json` — bit-identical derivative comparison;
-- `work/device/qnn-smoke/device-cleanup.txt` — scoped phone cleanup proof.
+Large generated and proprietary state remains ignored beneath `.local/` and `work/`, including the exact patched ORT source/builds, QAIRT libraries, models, fixtures, profiles, raw tensors, and phone logs. Do not commit or publish those files.
 
-## Safety and publication
-
-- Experiment 0008 remains the immutable CPU baseline.
-- No experiment 0009 source or result was modified.
-- No root, system tuning, firmware change, or system-library mutation occurred.
-- No Qualcomm binary, header, license text, profile, model, tensor, APK, or audio is tracked.
-- Any future Qualcomm login, terms, consent, or export gate still requires Moritz.
-- The raw phone evidence may contain platform/runtime details and remains ignored locally.
+All scoped phone directories were removed, cleanup succeeded, and `artifacts/locks/phone.lock` is not held. No root, device tuning, firmware change, or system-library mutation occurred. Any future phone use, Qualcomm login, new terms, consent, or export gate requires fresh explicit authorization.

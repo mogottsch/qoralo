@@ -6,17 +6,16 @@ Find a text-to-speech model that can become the local voice of a future Notebook
 
 A convincing two-speaker conversation would be useful, but it is not required. A strong narrator or persistent voices generated turn by turn can also meet the goal if the deployment runs well on a modern phone.
 
-## Current phase: test QNN acceleration
+## Current phase: choose the next bounded question
 
-Supertonic 3 is the current Android CPU default. Experiment [`0010`](../experiments/0010-supertonic-qnn-htp-feasibility/) tests whether selected Supertonic components can run correctly on the Galaxy S23 Ultra's Qualcomm HTP and improve complete synthesis enough to justify the extra complexity.
+Experiment [`0010`](../experiments/0010-supertonic-qnn-htp-feasibility/) is complete. It demonstrated a working fixed-transcript Supertonic hybrid with physical HTP evidence and `37.2%` lower warm generation latency. The same route required `26.965` seconds of session creation, reached `2.512×` CPU peak `ru_maxrss`, remained explicitly mixed rather than full HTP, and failed its prospective waveform gate. Moritz nevertheless reported that the randomized CPU and hybrid samples sounded exactly the same.
 
-This phase must answer four questions:
+The current deployment decision is therefore conservative:
 
-1. Can the selected components run on physical HTP without hidden CPU fallback?
-2. Do their outputs remain numerically and audibly correct?
-3. Does acceleration improve complete Android synthesis rather than only an isolated control graph?
-4. Is the benefit worth the startup, memory, packaging, transfer, and integration costs?
+- keep Supertonic CPU as the supported Android reference;
+- retain the experiment-0010 hybrid as a bounded research baseline;
+- do not claim arbitrary-shape support, numerical acceptance, full-HTP success, or production adoption.
 
-The phase can finish with either a useful CPU/HTP deployment or a reproducible decision to keep the simpler CPU path.
+No new experiment or export route is approved yet. A possible source-model-first or full-HTP follow-up is only under discussion with Moritz. The next plan should be written only after that direction is explicitly chosen, with its own correctness, listening, latency, memory, and device gates.
 
-Detailed steps and gates are in the experiment [`PLAN`](../experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md). The current technical resume point is in its [`HANDOFF`](../experiments/0010-supertonic-qnn-htp-feasibility/HANDOFF.md), and the canonical physical-phone evidence is in the [`phone checkpoint`](../experiments/0010-supertonic-qnn-htp-feasibility/results/phone-probe-checkpoint.json).
+Completed experiment details are in the experiment [`PLAN`](../experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md), final [`HANDOFF`](../experiments/0010-supertonic-qnn-htp-feasibility/HANDOFF.md), and canonical [`E2E checkpoint`](../experiments/0010-supertonic-qnn-htp-feasibility/results/e2e-hybrid-cpu-checkpoint.json). The condensed outcome is in [`history.md`](history.md).

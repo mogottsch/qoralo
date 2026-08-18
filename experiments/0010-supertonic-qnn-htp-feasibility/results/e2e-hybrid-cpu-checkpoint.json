@@ -1,4 +1,5 @@
 {
+  "claim_boundary": "Experiment 0010 demonstrated a working, perceptually promising fixed-transcript hybrid with 37.215% lower warm generation latency. It is explicitly mixed rather than full HTP, fixed-shape rather than arbitrary-text deployment, and numerically rejected despite Moritz's post-run report that the randomized CPU and hybrid samples sounded exactly the same. CPU remains the supported reference; hybrid is retained only as a bounded research baseline.",
   "contract": {
     "important_limit": "Duration prediction executes and is reported (16.9202 s), but the transcript-specific QNN deployment uses the previously frozen L238/729746 shape contract rather than dynamically rebuilding graphs.",
     "language": "en",
@@ -123,9 +124,12 @@
     "vocoder_derivative_sha256": "7fe80ba8bc96cd467dc154c5a1979a5e55706dd19a0fc1f60e762abd7d1933f2"
   },
   "interpretation": {
-    "claim_limit": "The hybrid route is faster in this four-run fixed-utterance diagnostic and demonstrably uses HTP, but it is not full HTP, not arbitrary-shape, and not numerically accepted.",
-    "correctness": "Both files are valid, finite, non-silent PCM16 WAVs, but the prospective end-to-end numerical comparison failed badly (cosine 0.405, SNR -0.593 dB, NRMSE 1.071). This is likely accumulated recursive vector plus vocoder divergence; no operator defect is claimed. Listening remains separate.",
-    "performance": "Hybrid warm median was 3.80935 s versus CPU 6.06733 s: 37.22% lower measured latency (1.593x throughput) for this utterance. Hybrid session creation was 44.1x slower and peak RSS 2.51x higher."
+    "amortization": "Hybrid adds 26.353644 seconds of session creation and saves 2.25798 seconds per measured warm generation, giving an illustrative break-even near 12 retained-process generations. This is arithmetic over the observed runs, not a controlled amortization claim.",
+    "claim_limit": "The hybrid route is faster in this four-run fixed-utterance diagnostic and demonstrably uses HTP, but it is not full HTP, not arbitrary-shape, and not numerically accepted. The post-run listening observation is encouraging but covers one listener and one utterance only.",
+    "correctness": "Both files are valid, finite, non-silent PCM16 WAVs, but the prospective end-to-end numerical comparison remains failed and immutable (cosine 0.405431, SNR -0.592623 dB, NRMSE 1.07061). Moritz subsequently reported that the randomized CPU and hybrid samples sounded exactly the same. Perceptual similarity does not convert the waveform gate into a numerical pass. Recursive vector plus vocoder divergence may contribute, but no operator defect is claimed.",
+    "memory": "ru_maxrss is a process-lifetime high-water mark, not steady live PSS or complete DSP-private memory. Hybrid retains ORT CPU graph/fallback state while adding QNN prepared/compiled graph and weight representations, metadata, RPC/shared buffers, detailed profiling state, and possible transient setup peaks.",
+    "performance": "Hybrid warm median was 3.80935 s versus CPU 6.06733 s: 37.215% lower measured latency (1.593x throughput) for this utterance. Hybrid session creation was 44.107x slower and peak ru_maxrss 2.512x higher. QNN session creation is dominated by vector partition/optimization/compile/finalize and vocoder compile/finalize plus weight/layout preparation and RPC/shared-buffer setup; it is generally paid once only while sessions remain resident.",
+    "retained_decision": "Keep CPU as the supported reference deployment. Retain the hybrid only as a bounded research baseline; do not claim production adoption or full-HTP success."
   },
   "latency": {
     "artifact_path": "work/e2e/latencies/e2e-latencies.json",
@@ -257,14 +261,29 @@
       "path": "work/e2e/samples/supertonic-m1-hybrid-htp.wav",
       "sha256": "9b0d488776b144c972e8be4e9434fac14ce3ceddfcfa5a10d137fca41b772668"
     },
-    "listening_status": "not yet reviewed"
+    "listening": {
+      "comparison": "randomized A/B E2E report",
+      "listener_count": 1,
+      "observation": "CPU and hybrid samples sound exactly the same",
+      "reported_by": "Moritz",
+      "status": "post-run informal perceptual match",
+      "utterance_count": 1,
+      "use_limit": "Encouraging perceptual evidence only; does not override the failed prospective numerical waveform gate."
+    },
+    "listening_report": {
+      "durability": "ignored local convenience evidence; not a committed dependency",
+      "path": "work/e2e/e2e-report.html",
+      "sha256": "ab7d97a78c818522da83b68d9b026efe75b0402101676d3e4327901be96f2a59"
+    }
   },
-  "pi_report_request": {
+  "local_report": {
     "analysis_json": "experiments/0010-supertonic-qnn-htp-feasibility/work/e2e/e2e-analysis.json",
     "cpu_sample": "experiments/0010-supertonic-qnn-htp-feasibility/work/e2e/samples/supertonic-m1-cpu.wav",
     "hybrid_sample": "experiments/0010-supertonic-qnn-htp-feasibility/work/e2e/samples/supertonic-m1-hybrid-htp.wav",
+    "html": "experiments/0010-supertonic-qnn-htp-feasibility/work/e2e/e2e-report.html",
+    "html_sha256": "ab7d97a78c818522da83b68d9b026efe75b0402101676d3e4327901be96f2a59",
     "latency_json": "experiments/0010-supertonic-qnn-htp-feasibility/work/e2e/latencies/e2e-latencies.json",
-    "requested_action": "Render these results into an HTML report and open it for Moritz."
+    "status": "rendered and opened for Moritz; ignored convenience evidence"
   },
   "policy": {
     "end_to_end_audio_gate_passed": false,
@@ -290,5 +309,5 @@
   "recorded_at_utc": "2026-08-18T13:00:00Z",
   "schema_version": 1,
   "scope": "Matched fixed-transcript, fixed-shape Supertonic transcript-to-WAV CPU and maximum-currently-feasible-HTP diagnostic on the authorized SM8550 phone.",
-  "status": "complete_e2e_hybrid_faster_but_audio_numerical_gate_failed"
+  "status": "complete_e2e_hybrid_faster_numerically_rejected_postrun_perceptual_match"
 }

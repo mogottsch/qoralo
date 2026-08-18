@@ -2,9 +2,9 @@
 
 ## Status
 
-**Paused after a successful physical-HTP control and a fail-closed vocoder investigation.** See the detailed [`PLAN.md`](PLAN.md) ([HTML mirror](PLAN.html)), [`HANDOFF.md`](HANDOFF.md), and [`results/phone-probe-checkpoint.json`](results/phone-probe-checkpoint.json) for the execution sequence and exact resume point. A tiny QDQ graph has proven real SM8550 HTP execution with CPU fallback disabled; the vocoder has not run, produced output, or established a speedup. [`results/host-checkpoint.json`](results/host-checkpoint.json) is the earlier pre-phone snapshot.
+**Complete with a bounded hybrid result.** See the detailed [`PLAN.md`](PLAN.md) ([HTML mirror](PLAN.html)), final [`HANDOFF.md`](HANDOFF.md), and canonical [`results/e2e-hybrid-cpu-checkpoint.json`](results/e2e-hybrid-cpu-checkpoint.json). The fixed-transcript Android path ran all four Supertonic components and produced complete CPU and hybrid WAVs. Hybrid warm generation was 37.215% lower latency, and Moritz later reported that the randomized CPU/hybrid samples sounded exactly the same. The prospective waveform gate nevertheless remains failed and immutable.
 
-This experiment proceeds component-first with the exact Supertonic 3 deployment measured in experiment 0008 on the Galaxy S23 Ultra's Qualcomm HTP/NPU. Its final gated goal, if the component probes succeed, is to integrate the accepted acceleration into the complete Android TTS path and run the model end to end from the frozen text and voice inputs to final audio. It is not a production integration.
+The result is explicitly limited: duration and text encoding remained on CPU; each vector-estimator call used 21 QNN/HTP partitions plus 136 CPU nodes; only the explicit-GELU vocoder was fully delegated with fallback disabled. The route is fixed to T239/L238, has very high startup and memory costs, and is neither full HTP nor numerically accepted. CPU remains the supported reference; hybrid is retained as a bounded research baseline rather than a production integration. Earlier checkpoints remain historical evidence.
 
 Moritz supplied an already-installed QAIRT/QNN `2.22.6.240515` SDK and explicitly authorized its use for this experiment on 2026-08-13. A local QAIRT `2.49.0.260730` installation was subsequently used for the recorded host probes and Android runtime build because it matches current ONNX Runtime QNN interfaces more closely. No Qualcomm SDK content is committed, and the checkpoint pins the observed local license/runtime hashes without reproducing their contents. Any acquisition that presents new or changed terms, login, export attestation, or other consent must stop for Moritz rather than accepting automatically. Qualcomm materials and generated artifacts remain local-only.
 
@@ -67,51 +67,49 @@ The desired application bridge is ONNX Runtime's QNN Execution Provider because 
 
 The existing experiment 0008 AAR is not a QNN artifact. Its arm64 ONNX Runtime library exports CPU and NNAPI provider entry points, and the pinned sherpa-onnx generic TTS provider path does not recognize `qnn`. It contains ONNX Runtime `1.27.1`; that upstream release's QNN CI pins QAIRT `2.42.0.251225`, while QAIRT `2.22.6.240515` predates it. Experiment 0010 built Android arm64 ONNX Runtime `1.27.1` with QAIRT `2.49.0.260730` QNN static integration and exercised that runtime on the phone. This remains a separate runtime path, not a descriptor-only change to experiment 0008.
 
-## Recorded phone and crash-localization result
+## Recorded execution and outcome
 
-A staged six-node QDQ-add control passed on the physical `SM-S918B` with `session.disable_cpu_ep_fallback=1`. Its detailed profile contains RPC and QNN-accelerator finalize/execute timings, accelerator cycles, and four HVX threads. QAIRT 2.49's dynamically loaded `libQnnHtpPrepare.so` is a required deployment file; omitting it caused the first control attempt to fail closed.
+### Toolchain and crash fix
 
-The fixed-I/O-shape released-vocoder derivative then crashed during session creation, before inference, with `SIGSEGV`/exit 139. The same fault occurred in x86 HTP emulation. Host GDB localized it to `onnxruntime::QDQ::PadNodeGroupSelector::Check`, where ORT 1.27.1 dereferences an empty `dq_nodes` vector during QNN capability analysis. Microsoft fixed that exact defect upstream in commit `a08e17aab393a922d619736a4150cfe43bc7f8ec` (PR #28733); the minimal backport is tracked at [`patches/onnxruntime-a08e17-pad-empty-dq.patch`](patches/onnxruntime-a08e17-pad-empty-dq.patch).
+A six-node QDQ-add control first proved physical SM8550 HTP execution with fallback disabled. The fixed released vocoder then exposed an ONNX Runtime 1.27.1 null dereference in `PadNodeGroupSelector::Check`; Microsoft fixed the same defect upstream in commit `a08e17aab393a922d619736a4150cfe43bc7f8ec`. The experiment retains the minimal backport at [`patches/onnxruntime-a08e17-pad-empty-dq.patch`](patches/onnxruntime-a08e17-pad-empty-dq.patch).
 
-With that backport, the host runtime no longer crashes. It reports 338 of 354 nodes supported across nine QNN partitions for the fixed released derivative. The sixteen unsupported nodes are eight decomposed-GELU `Erf` nodes and eight weight-only `DequantizeLinear` constants. Folding only those eight constant DQ tails and reconcretizing the measured shapes leaves 338 of 346 nodes supported; only the eight `Erf` nodes remain. Optimization levels 0, 1, 2, and 99 do not produce a complete no-fallback session.
+The exact fixed vocoder still had eight `Erf` and eight weight-only `DequantizeLinear` blockers. Folding only the constant DQ tails and replacing eight verified standard GELU decompositions with explicit `com.microsoft.Gelu` produced a provenance-locked derivative that was bit-identical on CPU and fully assigned to one QNN partition. Physical HTP execution then succeeded, but the frozen vocoder numerical policy failed. A later informal A/B for that isolated vocoder sounded identical to Moritz; the numerical rejection was not changed.
 
-No vocoder inference or audio was produced. The next graph change is consequential and remains pending review: either replace the eight proven standard GELU decompositions with explicit `com.microsoft.Gelu` nodes as a fully provenance-recorded derivative, or create an explicit CPU/HTP split. Enabling implicit ORT CPU fallback is not an accepted route.
+### Vector estimator
 
-## Gated execution order
+The official vector estimator is SHA-256 `20cd86fa5c6effedfda0e7cffe5b0569ca401c440a0c3a1d72bf39286c0db3fd`. A deterministic shape-only T239/L238 derivative preserves every node and initializer, but full QNN assignment remains blocked: 921 of 1,057 optimized nodes are supported across 21 partitions, leaving 80 `DequantizeLinear`, 34 `MatMulInteger`, 21 `DynamicQuantizeLinear`, and one `Softplus` on CPU.
 
-### 1. Vocoder — toolchain and delegation control
+A separately authorized fallback diagnostic proved mixed physical execution. In a matched single step, mixed execution was 9.23% faster than CPU. This did not establish full HTP, so the final hybrid continued to label the estimator explicitly as QNN+CPU.
 
-`vocoder.int8.onnx` is the smallest credible HTP entry point:
+### Complete fixed-transcript synthesis
 
-- bytes: `25991073`;
-- SHA-256: `e923d60f53f95eb1ce235f1dc33ec56d9c057823c96fa6f8acf98f32b0da6152`;
-- input contract: float tensor `[batch_size, 144, latent_length]`;
-- graph contains explicit `QuantizeLinear`/`DequantizeLinear` structure and convolution-heavy work;
-- invoked once per Supertonic text chunk.
+The final Android runner started from the frozen experiment-0008 transcript, Unicode indexer, M1/SID5 styles, and seed `20260813`; executed duration prediction, text encoding, five recursive estimator calls, vocoding, trimming, and WAV writing; and substituted no intermediate fixture tensors. QNN's concrete-shape requirement kept the predeclared T239/L238 and `729746`-sample deployment contract. Duration prediction still ran and reported `16.9202` seconds, but did not dynamically rebuild the graph.
 
-Its role is to prove the approved toolchain, fixed-shape preparation, actual HTP execution, profiling, and numerical comparison. Passing this control alone does not establish a useful end-to-end speedup.
+Provider evidence across four complete generations:
 
-### 2. Vector estimator — primary value probe
+- CPU route: all four sessions report CPU events only;
+- hybrid duration and text encoder: CPU;
+- hybrid vector estimator: `420` QNN partition events plus `2720` CPU node events across 20 calls;
+- hybrid vocoder: four QNN events and zero CPU events;
+- all `424` QNN events include physical RPC, accelerator-time/cycle, and four-HVX-thread evidence.
 
-`vector_estimator.int8.onnx` is the priority compute candidate:
+Never interpret this as full HTP.
 
-- bytes: `78400833`;
-- SHA-256: `20cd86fa5c6effedfda0e7cffe5b0569ca401c440a0c3a1d72bf39286c0db3fd`;
-- dynamic text and latent dimensions;
-- invoked five times by the measured default Supertonic generation loop;
-- graph contains convolution/matrix work, but also `DynamicQuantizeLinear` and `MatMulInteger`, which are preliminary compatibility risks for QNN HTP.
+| Measurement | CPU | Hybrid | Difference |
+|---|---:|---:|---:|
+| Session creation | `0.611356 s` | `26.965 s` | hybrid `44.107×` longer |
+| First generation after sessions | `5.84446 s` | `4.33056 s` | hybrid `25.903%` lower |
+| Warm generation median | `6.06733 s` | `3.80935 s` | hybrid `2.25798 s` / `37.215%` lower (`1.593×`) |
+| `ru_maxrss` after sessions | `217420 KiB` | `1028044 KiB` | high-water only |
+| `ru_maxrss` after runs | `459432 KiB` | `1154172 KiB` | hybrid `2.512×` higher |
 
-The exact graph is tested first. If QNN rejects it, that negative result is retained before any rewrite or re-quantization is considered.
+Hybrid startup is dominated by vector QNN session creation (`21.9854 s`) and vocoder creation (`4.74756 s`): QNN partitions, optimizes, compiles, and finalizes graphs; prepares weights/layouts; and establishes RPC/shared buffers. It is generally a one-time cost only if sessions remain resident. Setup plus first generation was `6.456 s` CPU versus `31.296 s` hybrid; setup plus four was `24.649 s` versus `42.590 s`. The observed setup delta divided by warm savings suggests roughly 12 retained-process generations to amortize, but this is illustrative arithmetic, not a controlled claim.
 
-### 3. End-to-end accelerated Android synthesis — final goal
+`ru_maxrss` is a process-lifetime high-water mark, not steady live PSS or complete DSP-private memory. The hybrid retains CPU graph/fallback state while adding QNN prepared/compiled representations, metadata, shared buffers, profiling state, and transient setup allocations.
 
-Only after the vocoder and vector-estimator gates succeed will the experiment proceed to its final step: integrating the accepted QNN/HTP component sessions into the complete pinned Supertonic Android generation path. The run must start with the frozen transcript, proven SID 5/M1 voice, and English configuration; execute every required preprocessing, duration, text-encoding, five-step denoising, and vocoder stage without fixture substitution; and produce the complete final audio through the Android harness.
+Both WAVs are valid, finite, non-silent, unclipped mono PCM16. The prospectively frozen waveform gate nevertheless failed: cosine `0.405431`, SNR `-0.592623 dB`, normalized RMSE `1.07061`, RMSE `0.0593432`, mean absolute error `0.0302192`, and max error `0.641157`. Moritz subsequently reported that the randomized CPU and hybrid samples sounded exactly the same. That one-listener/one-utterance observation is encouraging but does not override numerical rejection.
 
-The final path may be explicitly hybrid: text preparation, orchestration, and non-targeted graphs may remain on CPU, while each HTP-targeted component must still run with implicit CPU fallback disabled. Detailed profiles must prove that the accepted components execute on HTP during the end-to-end run. The result must compare cold and warm latency, callback timing, memory, output validity, and numerical/audio behavior with the experiment 0008 CPU baseline.
-
-A component-only success is not the final outcome. Experiment 0010 may claim that Supertonic works with QNN acceleration only after this end-to-end Android step passes. A full rewrite of every sherpa-onnx component is not required if the measured hybrid pipeline is correct and useful.
-
-The duration predictor and text encoder are not initial HTP targets: they run once per chunk, while the repeated vector estimator is more likely to dominate. They are still part of the final end-to-end model execution and may remain explicitly on CPU unless profiling justifies additional HTP work.
+The canonical machine-readable result is [`results/e2e-hybrid-cpu-checkpoint.json`](results/e2e-hybrid-cpu-checkpoint.json). WAVs, profiles, latency arrays, and the convenience listening report remain ignored local evidence under `work/e2e/`.
 
 ## Probe requirements
 
@@ -188,14 +186,11 @@ The experiment-level positive outcome requires a complete Android synthesis with
 - No publication or bundling of Qualcomm proprietary libraries, headers, tools, generated binaries, agreement text, or restricted documentation.
 - Proprietary SDKs, shared libraries, generated QNN contexts, profiles, APKs, tensors, and audio remain ignored local artifacts. Git may retain only permitted scripts, manifests, hashes, measurements, public-source citations, and conclusions.
 
-## Approval gates
+## Final decision
 
-1. **Technical direction — agreed:** Supertonic first; QNN HTP; vocoder control followed by vector estimator.
-2. **Existing Qualcomm SDK use — authorized:** Moritz supplied and authorized QAIRT `2.22.6.240515`; any new or changed terms still require a stop and human review.
-3. **Fixture/protocol review:** freeze shapes, inputs, equivalence thresholds, and measurement contract.
-4. **Vocoder result review:** decide whether the HTP toolchain is credible.
-5. **Vector-estimator result review:** decide whether end-to-end integration is justified.
-6. **End-to-end accelerated Android result:** run the complete pinned model path, prove HTP use in context, validate final audio, and compare it with the experiment 0008 CPU baseline.
+Experiment 0010 is complete. It demonstrated a working and perceptually promising fixed-transcript hybrid with 37.215% lower warm generation latency, but not full HTP, not arbitrary-shape support, not numerical acceptance, and not a production-ready startup/memory profile.
+
+**Retained deployment decision:** keep Supertonic CPU as the supported reference. Preserve this hybrid only as a bounded research baseline; do not claim production adoption or full-HTP success. A source-model-first or full-HTP follow-up is only under discussion with Moritz. No export route or subsequent experiment is approved by this document.
 
 ## Public documentation consulted during planning
 

@@ -56,14 +56,14 @@ tr:last-child td { border-bottom:0; }
 <a class="toc-level-2" href="#phase-3-run-complete-accelerated-android-synthesis">Phase 3: run complete accelerated Android synthesis</a>
 <a class="toc-level-2" href="#phase-4-make-the-deployment-decision">Phase 4: make the deployment decision</a></nav>
 <main>
-<div class="mirror-note"><strong>Visual mirror of <code>experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-18</span><span>source sha256: 74fa49f1af41de81…</span></div></div>
+<div class="mirror-note"><strong>Visual mirror of <code>experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-18</span><span>source sha256: e1d96a6347ace24c…</span></div></div>
 <article><h1 id="experiment-0010-execution-plan">Experiment 0010 execution plan<a class="anchor" href="#experiment-0010-execution-plan" aria-label="Link to this section">#</a></h1>
 <h2 id="goal">Goal<a class="anchor" href="#goal" aria-label="Link to this section">#</a></h2>
 <p>Select and validate a text-to-speech model that can become the local voice of a future NotebookLM-like Android experience. It should sound pleasant and natural over sustained listening, with podcast-like delivery rather than merely intelligible speech.</p>
 <p>A convincing two-speaker conversation is desirable but not required. A strong narrator or persistent voices generated turn by turn can also meet the goal if the deployment remains practical on a modern phone.</p>
 <p>The current model is Supertonic 3, selected from the completed listening and Android experiments. The current runtime question is whether Qualcomm HTP acceleration improves the working CPU deployment enough to justify its extra complexity.</p>
 <h2 id="phase-map">Phase map<a class="anchor" href="#phase-map" aria-label="Link to this section">#</a></h2>
-<p>These phases belong to experiment <a href="README.md"><code>0010: Supertonic QNN/HTP feasibility</code></a>. Detailed evidence and resume instructions live in the experiment <a href="README.md"><code>README</code></a>, <a href="HANDOFF.md"><code>HANDOFF</code></a>, and <a href="results/phone-probe-checkpoint.json"><code>phone checkpoint</code></a>.</p>
+<p>These phases belong to experiment <a href="README.md"><code>0010: Supertonic QNN/HTP feasibility</code></a>. The completed result is summarized in the experiment <a href="README.md"><code>README</code></a>, final <a href="HANDOFF.md"><code>HANDOFF</code></a>, and canonical <a href="results/e2e-hybrid-cpu-checkpoint.json"><code>E2E checkpoint</code></a>.</p>
 <div class="table-wrap"><table><thead><tr>
 <th>Phase</th>
 <th>Status</th>
@@ -81,13 +81,13 @@ tr:last-child td { border-bottom:0; }
 </tr>
 <tr>
 <td>Phase 3: complete accelerated synthesis</td>
-<td><strong>Complete — faster hybrid, numerical audio rejection</strong></td>
-<td>A fixed-transcript transcript-to-WAV run exercised all four components. Hybrid warm latency was 37.22% lower, but its prospective CPU-audio comparison failed badly.</td>
+<td><strong>Complete — faster hybrid, numerical rejection, perceptual match</strong></td>
+<td>Hybrid warm latency was 37.22% lower. The prospective waveform gate failed, while Moritz later reported the randomized CPU/hybrid samples sounded exactly the same.</td>
 </tr>
 <tr>
 <td>Phase 4: deployment decision</td>
-<td><strong>Reopened</strong></td>
-<td>The hybrid route has material speed but very high setup/memory costs and rejected numerical audio; listening evidence is still required.</td>
+<td><strong>Complete — retain CPU; bound hybrid as research</strong></td>
+<td>CPU remains the supported reference. The fixed-shape mixed route is perceptually promising but carries very high setup/memory costs and is not numerically accepted or production-ready.</td>
 </tr>
 </tbody></table></div>
 <h2 id="current-position">Current position<a class="anchor" href="#current-position" aria-label="Link to this section">#</a></h2>
@@ -184,10 +184,20 @@ tr:last-child td { border-bottom:0; }
 <tr>
 <td><strong>Failed</strong></td>
 <td>Prospective end-to-end numerical audio gate</td>
-<td>Both WAVs are structurally valid and non-silent, but hybrid-vs-CPU cosine <code>0.405</code>, SNR <code>-0.593 dB</code>, and normalized RMSE <code>1.071</code> fail the frozen gate. Listening is not yet recorded.</td>
+<td>Both WAVs are structurally valid and non-silent, but hybrid-vs-CPU cosine <code>0.405</code>, SNR <code>-0.593 dB</code>, and normalized RMSE <code>1.071</code> fail the frozen gate.</td>
+</tr>
+<tr>
+<td><strong>Observed</strong></td>
+<td>Post-run randomized A/B</td>
+<td>Moritz reported that the CPU and hybrid E2E samples sounded exactly the same. This is one-listener/one-utterance informal evidence and does not override the failed waveform gate.</td>
+</tr>
+<tr>
+<td><strong>Decided</strong></td>
+<td>Bounded deployment conclusion</td>
+<td>Preserve CPU as the supported reference and the fixed-shape hybrid as a research baseline only. No production adoption or full-HTP success is claimed.</td>
 </tr>
 </tbody></table></div>
-<p>The current boundary is therefore clear: <strong>the fixed-transcript hybrid pipeline works end to end and is materially faster once initialized, with physical HTP proof for 20 vector-estimator calls and four vocoder calls. It is not full HTP, requires 44.1× longer session creation and 2.51× peak RSS, and its generated audio fails the prospective numerical comparison. Deployment remains undecided pending listening and broader validation.</strong></p>
+<p>The current boundary is therefore clear: <strong>the fixed-transcript hybrid pipeline works end to end and is materially faster once initialized, with physical HTP proof for 20 mixed vector-estimator calls and four fully delegated vocoder calls. It is not full HTP, requires 44.1× longer session creation and 2.51× peak <code>ru_maxrss</code>, and fails the prospective numerical comparison even though Moritz heard no difference in the randomized A/B. CPU remains the supported reference; hybrid remains a bounded research baseline.</strong></p>
 <p>When a phase finishes, its detailed result stays in experiment <code>0010</code>, its condensed outcome moves to <a href="../../docs/history.md"><code>docs/history.md</code></a> and the <a href="../../docs/history.html">history HTML</a>, and it is removed from this plan.</p>
 <h2 id="phase-1-establish-vocoder-htp-feasibility">Phase 1: establish vocoder HTP feasibility<a class="anchor" href="#phase-1-establish-vocoder-htp-feasibility" aria-label="Link to this section">#</a></h2>
 <p>The former blocker was eight <code>Erf</code> nodes inside standard decomposed GELU patterns. A narrow, source-hash-locked rewrite replaced only those verified patterns with explicit <code>com.microsoft.Gelu</code>; it passed bit-identical CPU equivalence and complete fail-closed host QNN assignment. The subsequent physical run proved accelerator execution but failed numerical correctness, producing the bounded negative result for this route.</p>
@@ -215,7 +225,7 @@ tr:last-child td { border-bottom:0; }
 <li>the physical tensor was finite and had the expected <code>[1,731136]</code> shape, but failed every non-finite-independent frozen metric: cosine <code>0.865454 &lt; 0.995</code>, SNR <code>5.716 &lt; 20 dB</code>, max absolute error <code>0.595960 &gt; 0.05</code>, mean absolute error <code>0.012167 &gt; 0.002</code>, and RMSE <code>0.029311 &gt; 0.005</code>;</li>
 <li>the scoped device directory was removed and the repository phone lock was released.</li>
 </ul>
-<p><strong>Completed with split evidence:</strong> physical HTP execution is proven and numerical equivalence remains rejected under the unchanged policy. After completion, Moritz listened through a randomized CPU/HTP A/B page and reported that both versions sounded exactly the same. That observation is recorded rather than used to rewrite the frozen gate: it covers one utterance, one listener, and PCM16 renderings, and it does not prove broad perceptual equivalence or speedup. It does justify a separately prospective audio-quality gate while the newly authorized vector-estimator phase proceeds.</p>
+<p><strong>Completed with split evidence:</strong> physical HTP execution is proven and numerical equivalence remains rejected under the unchanged policy. After completion, Moritz listened through a randomized CPU/HTP A/B page and reported that both versions sounded exactly the same. That observation is recorded rather than used to rewrite the frozen gate: it covers one utterance, one listener, and PCM16 renderings, and it does not prove broad perceptual equivalence or speedup. It justified the separately frozen end-to-end audio-quality gate recorded later in this plan.</p>
 <h3 id="layer-level-localization">Layer-level localization<a class="anchor" href="#layer-level-localization" aria-label="Link to this section">#</a></h3>
 <p>A scoped coarse-to-fine diagnostic campaign used the unchanged latent fixture, patched runtime, fail-closed QNN sessions, and predeclared intermediate rules. These rules classify localization evidence only; they do not replace final-waveform policy SHA <code>7116c522…</code>, which remains failed.</p>
 <p>Facts:</p>
@@ -239,7 +249,7 @@ tr:last-child td { border-bottom:0; }
 <li>136 unsupported nodes: 80 standalone per-channel <code>DequantizeLinear</code>, 34 <code>MatMulInteger</code>, 21 <code>DynamicQuantizeLinear</code>, and one <code>Softplus</code>;</li>
 <li>session creation rejected because CPU fallback is explicitly disabled.</li>
 </ul>
-<p>The canonical exact node enumeration is in <a href="results/vector-estimator-checkpoint.json"><code>results/vector-estimator-checkpoint.json</code></a>. This is not a narrow operator mismatch like the vocoder GELU case: reaching complete HTP assignment would require a broad static-quantization/export conversion. No such conversion or re-quantization was attempted. No Android runner was built, no phone command ran, no correctness policy or HTP output exists, and no recursive estimator chain or other model component was tested.</p>
+<p>The canonical exact node enumeration is in <a href="results/vector-estimator-checkpoint.json"><code>results/vector-estimator-checkpoint.json</code></a>. This is not a narrow operator mismatch like the vocoder GELU case: reaching complete HTP assignment would require a broad static-quantization/export conversion. No such conversion or re-quantization was attempted. During this bounded host-gate phase, no Android runner, phone command, correctness policy, HTP output, recursive estimator chain, or other component test occurred; the later authorized mixed and end-to-end diagnostics are recorded below.</p>
 <p><strong>Completed as a bounded negative host result:</strong> the released vector-estimator route is not eligible for physical HTP testing under the fail-closed policy. Resume full-HTP work only under a separately authorized broad export/static-quantization plan.</p>
 <h3 id="one-mixed-qnn-cpu-fallback-diagnostic">One mixed QNN+CPU fallback diagnostic<a class="anchor" href="#one-mixed-qnn-cpu-fallback-diagnostic" aria-label="Link to this section">#</a></h3>
 <p>Moritz subsequently authorized exactly one real step-00 fallback run to measure the fragmented path rather than treat it as full-HTP evidence. Policy SHA-256 <code>20c0c8a…</code> was frozen before output. The same shape-only model and all seven frozen step-00 inputs were staged under a unique experiment-0010 phone directory; all 19 staged hashes matched, and cleanup succeeded.</p>
@@ -341,13 +351,16 @@ tr:last-child td { border-bottom:0; }
 <td>substantial measured gain</td>
 </tr>
 </tbody></table></div>
-<p>Both generated files are valid mono 44.1-kHz PCM16 WAVs with <code>729,746</code> frames, finite raw samples, no PCM clipping, and non-silent RMS. However, the prospectively frozen hybrid-vs-CPU audio gate failed: cosine <code>0.405431</code>, SNR <code>-0.5926 dB</code>, normalized RMSE <code>1.07061</code>, RMSE <code>0.05934</code>, and max error <code>0.64116</code>. The prior vocoder rejection remains immutable; the larger end-to-end divergence likely includes recursive estimator error accumulation, but no operator defect is claimed. Listening status is pending.</p>
+<p>Both generated files are valid mono 44.1-kHz PCM16 WAVs with <code>729,746</code> frames, finite raw samples, no PCM clipping, and non-silent RMS. However, the prospectively frozen hybrid-vs-CPU audio gate failed: cosine <code>0.405431</code>, SNR <code>-0.5926 dB</code>, normalized RMSE <code>1.07061</code>, RMSE <code>0.05934</code>, mean absolute error <code>0.03022</code>, and max error <code>0.64116</code>. The prior vocoder rejection remains immutable; the larger end-to-end divergence may include recursive estimator error accumulation, but no operator defect is claimed.</p>
+<p>Afterward, Moritz used the randomized E2E A/B report and reported that the CPU and hybrid samples sounded exactly the same. This is encouraging perceptual evidence for one listener and one utterance. It remains distinct from, and does not override, the failed prospective numerical gate. The ignored convenience report <code>work/e2e/e2e-report.html</code> is SHA-256 <code>ab7d97a7…</code>; it is not a durable committed dependency.</p>
+<p>The startup boundary is session creation rather than phone boot. CPU created all sessions in <code>0.611 s</code>; hybrid required <code>26.965 s</code>, dominated by vector QNN preparation (<code>21.985 s</code>) and vocoder QNN preparation (<code>4.748 s</code>). QNN must partition/optimize/compile/finalize graphs, prepare weights and layouts, and establish RPC/shared buffers. This cost is generally one-time only while sessions remain resident. Setup plus first generation was <code>6.456 s</code> CPU versus <code>31.296 s</code> hybrid; setup plus all four measured generations was <code>24.649 s</code> versus <code>42.590 s</code>. Dividing the additional setup by the observed warm saving gives an illustrative break-even near 12 retained-process generations, not a controlled claim.</p>
+<p>The memory values are process <code>ru_maxrss</code> high-water marks: CPU <code>217,420 KiB</code> after sessions and <code>459,432 KiB</code> after runs; hybrid <code>1,028,044 KiB</code> and <code>1,154,172 KiB</code>. They are not steady live PSS or complete DSP-private memory. Hybrid retains the ORT CPU graph/fallback route while adding prepared/compiled QNN graph and weight representations, metadata, RPC/shared buffers, profiling state, and transient setup peaks.</p>
 <p>Artifacts are retained locally under <code>work/e2e/</code>: CPU and hybrid WAVs in <code>samples/</code>, component and aggregate latency arrays in <code>latencies/e2e-latencies.json</code>, full metrics/provider summaries in <code>e2e-analysis.json</code>, and the canonical tracked record in <a href="results/e2e-hybrid-cpu-checkpoint.json"><code>results/e2e-hybrid-cpu-checkpoint.json</code></a>.</p>
-<p><strong>Completed with split evidence:</strong> the transcript-specific hybrid pipeline is physically accelerated and materially faster warm, but it is not numerically accepted, full-HTP, arbitrary-shape, or deployment-ready.</p>
+<p><strong>Completed with split evidence:</strong> the transcript-specific hybrid pipeline is physically accelerated, materially faster warm, and perceptually promising for the observed sample. It is not numerically accepted, full-HTP, arbitrary-shape, or deployment-ready.</p>
 <h2 id="phase-4-make-the-deployment-decision">Phase 4: make the deployment decision<a class="anchor" href="#phase-4-make-the-deployment-decision" aria-label="Link to this section">#</a></h2>
-<p>The deployment decision is reopened. End-to-end hybrid execution now shows a meaningful warm latency reduction, but it also shows rejected numerical audio, much larger memory, and expensive session creation. Listening may establish whether the numerical divergence is perceptually benign for this sample, but one utterance cannot establish production quality.</p>
-<p>Judge the result against the listening goal, not accelerator novelty. Pleasant speech across a broader corpus, sustained generation, same-device latency, memory, storage, thermals, and integration cost all matter. If CPU already meets the practical target, reject an HTP path that adds complexity without a useful listener-facing improvement.</p>
-<p><strong>Complete when:</strong> the experiment, history, README, and dashboard state one current deployment conclusion and link back to the canonical evidence.</p></article>
+<p>The bounded decision is complete. The hybrid route demonstrated a meaningful warm latency reduction and sounded identical to Moritz in the one-utterance randomized comparison, but it also failed the prospective waveform gate, consumed much more memory, required expensive session creation, used mixed CPU/HTP vector execution, and supported only the frozen shape.</p>
+<p><strong>Current decision:</strong> preserve Supertonic CPU as the supported reference deployment. Retain the experiment-0010 hybrid as a bounded research baseline because its performance and perceptual evidence are promising, but do not claim production adoption, arbitrary-text readiness, numerical acceptance, or full-HTP success.</p>
+<p>Pleasant speech across a broader corpus, sustained generation, same-device latency, memory, storage, thermals, and integration cost still matter before any deployment change. A source-model-first or full-HTP follow-up is only under discussion; no export route or new experiment is approved here.</p></article>
 <footer class="source-footer">Generated as <code>PLAN.html</code> by <code>scripts/build_docs_html.py</code>. Edit <code>experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md</code>, then regenerate the human-readable mirrors.</footer>
 </main>
 </div>

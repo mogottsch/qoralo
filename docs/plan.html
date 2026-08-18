@@ -46,24 +46,23 @@ tr:last-child td { border-bottom:0; }
 <div class="shell">
 <nav aria-label="Document sections"><strong>Sections</strong><a class="toc-level-1" href="#current-plan">Current plan</a>
 <a class="toc-level-2" href="#goal">Goal</a>
-<a class="toc-level-2" href="#current-phase-test-qnn-acceleration">Current phase: test QNN acceleration</a></nav>
+<a class="toc-level-2" href="#current-phase-choose-the-next-bounded-question">Current phase: choose the next bounded question</a></nav>
 <main>
-<div class="mirror-note"><strong>Visual mirror of <code>docs/plan.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-17</span><span>source sha256: b171579513e2f378…</span></div></div>
+<div class="mirror-note"><strong>Visual mirror of <code>docs/plan.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-17</span><span>source sha256: fa84ed3845d68e1c…</span></div></div>
 <article><h1 id="current-plan">Current plan<a class="anchor" href="#current-plan" aria-label="Link to this section">#</a></h1>
 <h2 id="goal">Goal<a class="anchor" href="#goal" aria-label="Link to this section">#</a></h2>
 <p>Find a text-to-speech model that can become the local voice of a future NotebookLM-like Android experience. It should sound pleasant and natural over sustained listening, with podcast-like delivery rather than merely intelligible speech.</p>
 <p>A convincing two-speaker conversation would be useful, but it is not required. A strong narrator or persistent voices generated turn by turn can also meet the goal if the deployment runs well on a modern phone.</p>
-<h2 id="current-phase-test-qnn-acceleration">Current phase: test QNN acceleration<a class="anchor" href="#current-phase-test-qnn-acceleration" aria-label="Link to this section">#</a></h2>
-<p>Supertonic 3 is the current Android CPU default. Experiment <a href="../experiments/0010-supertonic-qnn-htp-feasibility/"><code>0010</code></a> tests whether selected Supertonic components can run correctly on the Galaxy S23 Ultra&#x27;s Qualcomm HTP and improve complete synthesis enough to justify the extra complexity.</p>
-<p>This phase must answer four questions:</p>
-<ol>
-<li>Can the selected components run on physical HTP without hidden CPU fallback?</li>
-<li>Do their outputs remain numerically and audibly correct?</li>
-<li>Does acceleration improve complete Android synthesis rather than only an isolated control graph?</li>
-<li>Is the benefit worth the startup, memory, packaging, transfer, and integration costs?</li>
-</ol>
-<p>The phase can finish with either a useful CPU/HTP deployment or a reproducible decision to keep the simpler CPU path.</p>
-<p>Detailed steps and gates are in the experiment <a href="../experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md"><code>PLAN</code></a>. The current technical resume point is in its <a href="../experiments/0010-supertonic-qnn-htp-feasibility/HANDOFF.md"><code>HANDOFF</code></a>, and the canonical physical-phone evidence is in the <a href="../experiments/0010-supertonic-qnn-htp-feasibility/results/phone-probe-checkpoint.json"><code>phone checkpoint</code></a>.</p></article>
+<h2 id="current-phase-choose-the-next-bounded-question">Current phase: choose the next bounded question<a class="anchor" href="#current-phase-choose-the-next-bounded-question" aria-label="Link to this section">#</a></h2>
+<p>Experiment <a href="../experiments/0010-supertonic-qnn-htp-feasibility/"><code>0010</code></a> is complete. It demonstrated a working fixed-transcript Supertonic hybrid with physical HTP evidence and <code>37.2%</code> lower warm generation latency. The same route required <code>26.965</code> seconds of session creation, reached <code>2.512×</code> CPU peak <code>ru_maxrss</code>, remained explicitly mixed rather than full HTP, and failed its prospective waveform gate. Moritz nevertheless reported that the randomized CPU and hybrid samples sounded exactly the same.</p>
+<p>The current deployment decision is therefore conservative:</p>
+<ul>
+<li>keep Supertonic CPU as the supported Android reference;</li>
+<li>retain the experiment-0010 hybrid as a bounded research baseline;</li>
+<li>do not claim arbitrary-shape support, numerical acceptance, full-HTP success, or production adoption.</li>
+</ul>
+<p>No new experiment or export route is approved yet. A possible source-model-first or full-HTP follow-up is only under discussion with Moritz. The next plan should be written only after that direction is explicitly chosen, with its own correctness, listening, latency, memory, and device gates.</p>
+<p>Completed experiment details are in the experiment <a href="../experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md"><code>PLAN</code></a>, final <a href="../experiments/0010-supertonic-qnn-htp-feasibility/HANDOFF.md"><code>HANDOFF</code></a>, and canonical <a href="../experiments/0010-supertonic-qnn-htp-feasibility/results/e2e-hybrid-cpu-checkpoint.json"><code>E2E checkpoint</code></a>. The condensed outcome is in <a href="history.md"><code>history.md</code></a>.</p></article>
 <footer class="source-footer">Generated as <code>plan.html</code> by <code>scripts/build_docs_html.py</code>. Edit <code>docs/plan.md</code>, then regenerate the human-readable mirrors.</footer>
 </main>
 </div>

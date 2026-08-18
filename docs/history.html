@@ -49,7 +49,7 @@ tr:last-child td { border-bottom:0; }
 <a class="toc-level-2" href="#experiment-record">Experiment record</a>
 <a class="toc-level-2" href="#decisions-carried-forward">Decisions carried forward</a></nav>
 <main>
-<div class="mirror-note"><strong>Visual mirror of <code>docs/history.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-17</span><span>source sha256: 7482f74e04dfd38d…</span></div></div>
+<div class="mirror-note"><strong>Visual mirror of <code>docs/history.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-17</span><span>source sha256: b1660c40e52343ee…</span></div></div>
 <article><h1 id="project-history">Project history<a class="anchor" href="#project-history" aria-label="Link to this section">#</a></h1>
 <h2 id="goal-and-direction">Goal and direction<a class="anchor" href="#goal-and-direction" aria-label="Link to this section">#</a></h2>
 <p>The project started by asking whether Microsoft&#x27;s VibeVoice could generate a local two-speaker podcast on a modern Android phone. The goal later widened to finding any practical local TTS model that sounds pleasant and natural enough for a future NotebookLM-like listening experience.</p>
@@ -109,7 +109,7 @@ tr:last-child td { border-bottom:0; }
 <tr>
 <td><a href="../experiments/0010-supertonic-qnn-htp-feasibility/"><code>0010: Supertonic QNN/HTP feasibility</code></a></td>
 <td>Can the dominant Supertonic components run on the SM8550 HTP without hidden CPU fallback, and is acceleration worth its cost?</td>
-<td>Work completed so far proved the physical HTP toolchain with a six-node QDQ add control and CPU fallback disabled. It also localized an ONNX Runtime 1.27.1 QNN crash and retained the upstream fix as a narrow patch. The Supertonic vocoder itself has not executed on HTP: after the crash fix, eight <code>Erf</code> nodes in decomposed GELU patterns still prevent a no-fallback session. The experiment remains active.</td>
+<td>Completed a fixed-transcript CPU/hybrid Android comparison. Hybrid used mixed QNN+CPU vector execution and a fully delegated vocoder, reducing warm generation from <code>6.067</code> to <code>3.809</code> s (<code>37.2%</code>) with physical accelerator proof. Session creation rose from <code>0.611</code> to <code>26.965</code> s and peak <code>ru_maxrss</code> from <code>459432</code> to <code>1154172</code> KiB. The prospective waveform gate failed, although Moritz reported the randomized samples sounded exactly the same. CPU remains the supported reference; hybrid is a bounded research baseline, not full HTP or production adoption.</td>
 </tr>
 </tbody></table></div>
 <h2 id="decisions-carried-forward">Decisions carried forward<a class="anchor" href="#decisions-carried-forward" aria-label="Link to this section">#</a></h2>
@@ -117,9 +117,9 @@ tr:last-child td { border-bottom:0; }
 <li>The repository covers the TTS layer only. Source ingestion, retrieval, script generation, application UI, and episode management belong to the later product.</li>
 <li>Pleasant, natural long-form speech is the primary goal. Joint multi-speaker generation is useful but optional.</li>
 <li>Full-context generation is preferred. Naive sentence or clause splitting was rejected because it can damage prosody and naturalness.</li>
-<li>Supertonic 3 is the current measured Android CPU default. This is a technical selection, not a claim that every listening or product-quality question is closed.</li>
-<li>Accelerator work must fail closed. A graph counts as HTP execution only when CPU fallback is disabled and physical-device profiling proves delegation.</li>
-<li>A control graph, component result, or emulator result is not an end-to-end Supertonic acceleration claim.</li>
+<li>Supertonic 3 CPU remains the supported Android reference. This is a technical selection, not a claim that every listening or product-quality question is closed.</li>
+<li>Full-HTP claims must fail closed. Explicit mixed execution must be labeled as mixed and supported by provider-level plus physical-device profiling evidence; partial delegation is never full HTP.</li>
+<li>Experiment 0010&#x27;s fixed-shape hybrid is a bounded research baseline: materially faster warm and perceptually promising for one reviewed utterance, but numerically rejected with costly startup and memory. It is not an adopted deployment.</li>
 <li>Qualcomm software and generated restricted artifacts stay local. New terms, logins, consent, or export gates require explicit human approval.</li>
 </ul>
 <p>The next work is defined in <a href="plan.md"><code>plan.md</code></a> and its <a href="plan.html">HTML mirror</a>.</p></article>
