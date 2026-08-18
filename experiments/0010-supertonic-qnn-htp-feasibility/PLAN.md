@@ -15,7 +15,7 @@ These phases belong to experiment [`0010: Supertonic QNN/HTP feasibility`](READM
 | Phase | Status | Purpose |
 |---|---|---|
 | Phase 1: vocoder HTP feasibility | **Complete — numerically rejected, perceptually promising** | Physical HTP execution succeeded and failed the frozen full-tensor gate; a later informal blind A/B found no audible difference for the single frozen utterance. |
-| Phase 2: vector-estimator value | **Complete — full HTP blocked; one mixed diagnostic passed** | Fail-closed assignment remains blocked. A separately authorized step-00 fallback run proved 21 physical QNN partitions plus 136 CPU nodes and passed its frozen tensor gate, but has no same-device CPU baseline or recursive-chain evidence. |
+| Phase 2: vector-estimator value | **Complete — full HTP blocked; paired one-run diagnostic complete** | Fail-closed assignment remains blocked. In one matched cold step-00 pair, mixed QNN+CPU was 9.23% faster than CPU-only inference, but session creation was 118.4× longer and peak RSS 4.68× higher; no recursive-chain evidence exists. |
 | Phase 3: complete accelerated synthesis | **Blocked** | Full estimator HTP would require a broad static-quantization/export route, not a narrow compatibility rewrite. |
 | Phase 4: deployment decision | **Reopened** | Require prospective audio-quality evidence and a same-device CPU baseline before deciding whether HTP is useful. |
 
@@ -36,7 +36,8 @@ These phases belong to experiment [`0010: Supertonic QNN/HTP feasibility`](READM
 | **Done** | Cleanup and stop gate | The unique scoped device directory was removed and the phone lock was released. No vector-estimator work began during the completed vocoder campaign. |
 | **Done** | Layer-level numerical bisection | The first material observable boundary is the composite embed `Pad → QDQ` transition. An exact-real-input QDQ microprobe is non-material, while exposing raw embed `Conv` breaks full delegation; the evidence is fusion/context dependent and does not establish an operator defect. |
 | **Blocked** | Released vector estimator host gate | Concrete shapes remove the released graph's dynamic-I/O rejection, but patched ORT/QNN supports only 921 of 1,057 optimized nodes across 21 partitions. The remaining 136 nodes prevent fail-closed session creation. |
-| **Observed** | One step-00 CPU-fallback diagnostic | Mixed execution is physically proven: 21 QNN partition events and 136 CPU node events. The full tensor passed its prospective gate, but the 1.054-second single run has no comparable same-device CPU baseline and is not full HTP. |
+| **Observed** | One step-00 CPU-fallback diagnostic | Mixed execution is physically proven: 21 QNN partition events and 136 CPU node events. The full tensor passed its prospective gate in `1.054 s`; this is not full HTP. |
+| **Observed** | Matched step-00 CPU-only diagnostic | All 823 profile node events ran on CPU. Its `1.161 s` inference makes the single mixed observation 9.23% faster, while CPU session creation and peak RSS were dramatically lower. |
 
 The current boundary is therefore clear: **the explicit-GELU vocoder physically executed on the SM8550 HTP with CPU fallback disabled and failed the frozen numerical policy. A later informal blind A/B found no audible difference for the single frozen utterance, so perceptual feasibility remains open under a new prospective gate. No same-device CPU baseline was collected, so no speedup claim is supported.**
 
@@ -120,7 +121,21 @@ The physical profile proves mixed execution rather than an ambiguous session suc
 
 The full 34,272-element output passed the predeclared step-00 gate against the frozen CPU reference: cosine `0.999942`, SNR `39.327 dB`, normalized RMSE `0.010806`, RMSE `0.008685`, mean absolute error `0.005406`, and max absolute error `0.077937`. This is accepted only for that fixture-fed diagnostic. No output was fed to step 1.
 
-**Bounded interpretation:** 21 accelerator dispatches interleaved with 136 CPU nodes are real, but the retained profile does not separately measure every transfer or synchronization cost. Without a same-device CPU-only run under the same runner, the `1.05424 s` mixed timing proves neither acceleration nor slowdown. This does not change the fail-closed blocker, validate the recursive five-step estimator, or authorize other components.
+**Bounded interpretation:** 21 accelerator dispatches interleaved with 136 CPU nodes are real, but the retained profile does not separately measure every transfer or synchronization cost. This does not change the fail-closed blocker, validate the recursive five-step estimator, or authorize other components.
+
+### One matched CPU-only comparison
+
+Moritz then authorized exactly one CPU-only step-00 run. It used the same device, shape-only model, seven inputs, runner, patched runtime, one-thread settings, graph optimization, and one-run count. Policy SHA-256 `5e7d6de4…` was frozen before output and timing. All 823 ORT node events report `CPUExecutionProvider`; none report QNN. The full tensor passed with cosine `0.99999985`, SNR `65.357 dB`, normalized RMSE `0.000540`, and max error `0.002547`.
+
+The matched single observations are:
+
+| Measurement | CPU only | Mixed QNN+CPU | Mixed / CPU implication |
+|---|---:|---:|---|
+| Session creation | `0.1839 s` | `21.7742 s` | mixed `118.4×` longer |
+| First and only inference | `1.1615 s` | `1.0542 s` | mixed `9.23%` faster |
+| Peak process RSS | `162,848 KiB` | `762,464 KiB` | mixed `4.68×` higher |
+
+This answers the narrow question: fallback did not catastrophically lose this single inference; it was modestly faster despite fragmentation. The cost was very large session setup and memory. The pair was cold, single-sample, sequential rather than randomized, and the mixed run occurred first. It therefore remains descriptive rather than a stable speedup claim, and it must not be multiplied into a five-step or end-to-end estimate.
 
 ## Phase 3: run complete accelerated Android synthesis
 

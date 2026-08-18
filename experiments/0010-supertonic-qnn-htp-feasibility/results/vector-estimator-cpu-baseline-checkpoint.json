@@ -1,0 +1,158 @@
+{
+  "claim_boundary": "This closes the requested one-run CPU comparison. It is a matched but single, non-randomized cold pair; it does not establish warm distributions, thermal behavior, five-step latency, or end-to-end value.",
+  "controls": {
+    "adb_lock_fd_closed": true,
+    "cleanup_exit_code": 0,
+    "identity_gate_passed": true,
+    "lock_released_and_available": true,
+    "phone_lock_acquired": true,
+    "unique_remote_path": true
+  },
+  "evidence": {
+    "comparison_sha256": "901c9ebf170b1b5c28a6f684cfae8969d205c99725909d22fb5a6552b800bc20",
+    "output": {
+      "bytes": 137088,
+      "sha256": "7ec07414698036ad6b30f5fda586f5225fe517351be1063c3da79efc8c57769a"
+    },
+    "paired_comparison_sha256": "41b76ce6aaf15170a54df3ad8f6c19978c5c77f07aa0b313df9e2ccfb6029671",
+    "profile": {
+      "bytes": 391228,
+      "sha256": "b2f5e3d5e8b70df4b92a0213cdf94a6bb9557dba62cdacb8cbbb011b0d47d170"
+    },
+    "profile_summary_sha256": "e922c6dc4928ea17e7f012d59b9046da4da48f30c45e06eb230a44b92ad30041",
+    "remote_stage_all_14_files_hash_matched": true,
+    "stage_manifest_sha256": "7de733c294fefd5f4e127cba9fbb3bc4f10e086e0832f1e14aa228ec898d8938"
+  },
+  "execution": {
+    "classification": "Complete CPU assignment: all 823 Node events report CPUExecutionProvider and zero report QNNExecutionProvider.",
+    "first_and_only_run_seconds": 1.16147,
+    "max_rss_after_run_kb": 162848,
+    "max_rss_after_run_mib": 159.03125,
+    "max_rss_after_session_kb": 112976,
+    "ort_profile": {
+      "node_events": 823,
+      "operator_events": {
+        "Add": 49,
+        "Concat": 23,
+        "Conv": 86,
+        "Cos": 3,
+        "DequantizeLinear": 80,
+        "Div": 3,
+        "DynamicQuantizeLinear": 3,
+        "DynamicQuantizeMatMul": 18,
+        "Equal": 2,
+        "FusedMatMul": 8,
+        "Gelu": 28,
+        "LayerNormalization": 36,
+        "MatMul": 8,
+        "MatMulIntegerToFloat": 16,
+        "Mul": 183,
+        "Pad": 28,
+        "Reciprocal": 1,
+        "ReduceSum": 2,
+        "Reshape": 21,
+        "Sin": 3,
+        "Softmax": 8,
+        "Softplus": 1,
+        "Split": 21,
+        "Squeeze": 4,
+        "Sub": 9,
+        "Tanh": 1,
+        "Tile": 4,
+        "Transpose": 127,
+        "Unsqueeze": 35,
+        "Where": 12
+      },
+      "provider_durations_us": {
+        "CPUExecutionProvider": {
+          "events": 823,
+          "max": 18679,
+          "min": 2,
+          "sum": 1156359
+        }
+      },
+      "provider_node_events": {
+        "CPUExecutionProvider": 823
+      },
+      "total_trace_events": 827
+    },
+    "output_elements": 34272,
+    "provider_mode": "cpu",
+    "session_create_seconds": 0.183851
+  },
+  "frozen_policy": {
+    "frozen_before_output_and_timing": true,
+    "sha256": "5e7d6de4abb372abc7af18c6dabdb930ff7068918ba57f15d2a2b4b5cb7aa73b"
+  },
+  "identity": {
+    "device": {
+      "abi": "arm64-v8a",
+      "model": "SM-S918B",
+      "serial": "R5CW81PR8SY",
+      "soc": "SM8550"
+    },
+    "fixture_manifest_sha256": "59acefd43c7334e8b16119d7aabc3f0fe23cbac4d5529ebda2fbd21f142b98f2",
+    "model_sha256": "e154e60fdb0560c63d4620e6907443313547266c01e03fc2bd0342847a7223d4",
+    "optimization": "ORT_ENABLE_ALL",
+    "reference_sha256": "90bccdc87aeda133e57472a684180e57a8de6fef0b016722ab752f7781b11b61",
+    "runner_sha256": "6374c085b57db087df5f5c07764493458b57504113e43286753cb265118ee22a",
+    "runs": 1,
+    "runtime_sha256": "40bc591798287525f365e8ded4bbc40e0c4e9440737e876026ec09ba359ac041",
+    "threads": {
+      "inter": 1,
+      "intra": 1
+    }
+  },
+  "interpretation": {
+    "claim": "In this single ordered cold pair, mixed execution was 9.23% faster for inference but required 118.4x session creation time and 4.68x peak RSS. One observation is insufficient for a stable performance claim.",
+    "cpu_numerical_policy_passed": true,
+    "mixed_peak_rss_multiplier": 4.682059343682452,
+    "mixed_session_creation_multiplier": 118.433949230627,
+    "mixed_single_run_was_faster_percent": 9.232266007731576,
+    "other_components_not_run": true,
+    "recursive_chain_not_run": true
+  },
+  "numerical_comparison": {
+    "metrics": {
+      "cosine_similarity": 0.9999998544461359,
+      "elements": 34272,
+      "finite": true,
+      "max_abs": 0.0025469064712524414,
+      "mean_abs": 0.00033131359000083206,
+      "normalized_rmse": 0.0005396916235391025,
+      "passed": true,
+      "reference_rms": 0.8036897836335074,
+      "rmse": 0.00043374464415095763,
+      "snr_db": 65.3570864498492
+    },
+    "output_sha256": "7ec07414698036ad6b30f5fda586f5225fe517351be1063c3da79efc8c57769a",
+    "policy_sha256": "5e7d6de4abb372abc7af18c6dabdb930ff7068918ba57f15d2a2b4b5cb7aa73b",
+    "reference_sha256": "90bccdc87aeda133e57472a684180e57a8de6fef0b016722ab752f7781b11b61",
+    "schema_version": 1
+  },
+  "paired_mixed_comparison": {
+    "caveat": "One cold execution per mode, sequential order with mixed run first; no warm distribution, randomized order, or thermal control. Descriptive only.",
+    "cpu_first_run_seconds": 1.16147,
+    "cpu_max_rss_kb": 162848,
+    "cpu_over_mixed_run_ratio": 1.1017130824100774,
+    "cpu_session_create_seconds": 0.183851,
+    "mixed_first_run_seconds": 1.05424,
+    "mixed_max_rss_kb": 762464,
+    "mixed_over_cpu_rss_ratio": 4.682059343682452,
+    "mixed_over_cpu_session_create_ratio": 118.433949230627,
+    "mixed_run_reduction_vs_cpu_percent": 9.232266007731576,
+    "mixed_session_create_seconds": 21.7742,
+    "mixed_vs_cpu_output": {
+      "cosine_similarity": 0.9999413116620788,
+      "max_abs": 0.076873779296875,
+      "mean_abs": 0.005428910841885522,
+      "normalized_rmse_using_cpu": 0.010834255618388864,
+      "rmse": 0.008707269372733912,
+      "snr_db_using_cpu": 39.304018441717794
+    }
+  },
+  "recorded_at_utc": "2026-08-18T12:43:00Z",
+  "schema_version": 1,
+  "scope": "One same-device CPU-only vector-estimator step-00 measurement paired descriptively with the prior one-run mixed QNN+CPU measurement.",
+  "status": "complete_single_cpu_step00_paired_comparison"
+}

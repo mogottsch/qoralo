@@ -52,10 +52,11 @@ tr:last-child td { border-bottom:0; }
 <a class="toc-level-3" href="#layer-level-localization">Layer-level localization</a>
 <a class="toc-level-2" href="#phase-2-test-vector-estimator-value">Phase 2: test vector-estimator value</a>
 <a class="toc-level-3" href="#one-mixed-qnn-cpu-fallback-diagnostic">One mixed QNN+CPU fallback diagnostic</a>
+<a class="toc-level-3" href="#one-matched-cpu-only-comparison">One matched CPU-only comparison</a>
 <a class="toc-level-2" href="#phase-3-run-complete-accelerated-android-synthesis">Phase 3: run complete accelerated Android synthesis</a>
 <a class="toc-level-2" href="#phase-4-make-the-deployment-decision">Phase 4: make the deployment decision</a></nav>
 <main>
-<div class="mirror-note"><strong>Visual mirror of <code>experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-18</span><span>source sha256: 811534f3557e8977…</span></div></div>
+<div class="mirror-note"><strong>Visual mirror of <code>experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-18</span><span>source sha256: 8f9f33dbc7f980ba…</span></div></div>
 <article><h1 id="experiment-0010-execution-plan">Experiment 0010 execution plan<a class="anchor" href="#experiment-0010-execution-plan" aria-label="Link to this section">#</a></h1>
 <h2 id="goal">Goal<a class="anchor" href="#goal" aria-label="Link to this section">#</a></h2>
 <p>Select and validate a text-to-speech model that can become the local voice of a future NotebookLM-like Android experience. It should sound pleasant and natural over sustained listening, with podcast-like delivery rather than merely intelligible speech.</p>
@@ -75,8 +76,8 @@ tr:last-child td { border-bottom:0; }
 </tr>
 <tr>
 <td>Phase 2: vector-estimator value</td>
-<td><strong>Complete — full HTP blocked; one mixed diagnostic passed</strong></td>
-<td>Fail-closed assignment remains blocked. A separately authorized step-00 fallback run proved 21 physical QNN partitions plus 136 CPU nodes and passed its frozen tensor gate, but has no same-device CPU baseline or recursive-chain evidence.</td>
+<td><strong>Complete — full HTP blocked; paired one-run diagnostic complete</strong></td>
+<td>Fail-closed assignment remains blocked. In one matched cold step-00 pair, mixed QNN+CPU was 9.23% faster than CPU-only inference, but session creation was 118.4× longer and peak RSS 4.68× higher; no recursive-chain evidence exists.</td>
 </tr>
 <tr>
 <td>Phase 3: complete accelerated synthesis</td>
@@ -163,7 +164,12 @@ tr:last-child td { border-bottom:0; }
 <tr>
 <td><strong>Observed</strong></td>
 <td>One step-00 CPU-fallback diagnostic</td>
-<td>Mixed execution is physically proven: 21 QNN partition events and 136 CPU node events. The full tensor passed its prospective gate, but the 1.054-second single run has no comparable same-device CPU baseline and is not full HTP.</td>
+<td>Mixed execution is physically proven: 21 QNN partition events and 136 CPU node events. The full tensor passed its prospective gate in <code>1.054 s</code>; this is not full HTP.</td>
+</tr>
+<tr>
+<td><strong>Observed</strong></td>
+<td>Matched step-00 CPU-only diagnostic</td>
+<td>All 823 profile node events ran on CPU. Its <code>1.161 s</code> inference makes the single mixed observation 9.23% faster, while CPU session creation and peak RSS were dramatically lower.</td>
 </tr>
 </tbody></table></div>
 <p>The current boundary is therefore clear: <strong>the explicit-GELU vocoder physically executed on the SM8550 HTP with CPU fallback disabled and failed the frozen numerical policy. A later informal blind A/B found no audible difference for the single frozen utterance, so perceptual feasibility remains open under a new prospective gate. No same-device CPU baseline was collected, so no speedup claim is supported.</strong></p>
@@ -231,7 +237,36 @@ tr:last-child td { border-bottom:0; }
 <li>session creation took <code>21.7742 s</code>, the single inference took <code>1.05424 s</code>, and process peak RSS was <code>762,464 KiB</code> (<code>744.6 MiB</code>).</li>
 </ul>
 <p>The full 34,272-element output passed the predeclared step-00 gate against the frozen CPU reference: cosine <code>0.999942</code>, SNR <code>39.327 dB</code>, normalized RMSE <code>0.010806</code>, RMSE <code>0.008685</code>, mean absolute error <code>0.005406</code>, and max absolute error <code>0.077937</code>. This is accepted only for that fixture-fed diagnostic. No output was fed to step 1.</p>
-<p><strong>Bounded interpretation:</strong> 21 accelerator dispatches interleaved with 136 CPU nodes are real, but the retained profile does not separately measure every transfer or synchronization cost. Without a same-device CPU-only run under the same runner, the <code>1.05424 s</code> mixed timing proves neither acceleration nor slowdown. This does not change the fail-closed blocker, validate the recursive five-step estimator, or authorize other components.</p>
+<p><strong>Bounded interpretation:</strong> 21 accelerator dispatches interleaved with 136 CPU nodes are real, but the retained profile does not separately measure every transfer or synchronization cost. This does not change the fail-closed blocker, validate the recursive five-step estimator, or authorize other components.</p>
+<h3 id="one-matched-cpu-only-comparison">One matched CPU-only comparison<a class="anchor" href="#one-matched-cpu-only-comparison" aria-label="Link to this section">#</a></h3>
+<p>Moritz then authorized exactly one CPU-only step-00 run. It used the same device, shape-only model, seven inputs, runner, patched runtime, one-thread settings, graph optimization, and one-run count. Policy SHA-256 <code>5e7d6de4…</code> was frozen before output and timing. All 823 ORT node events report <code>CPUExecutionProvider</code>; none report QNN. The full tensor passed with cosine <code>0.99999985</code>, SNR <code>65.357 dB</code>, normalized RMSE <code>0.000540</code>, and max error <code>0.002547</code>.</p>
+<p>The matched single observations are:</p>
+<div class="table-wrap"><table><thead><tr>
+<th>Measurement</th>
+<th>CPU only</th>
+<th>Mixed QNN+CPU</th>
+<th>Mixed / CPU implication</th>
+</tr></thead><tbody>
+<tr>
+<td>Session creation</td>
+<td><code>0.1839 s</code></td>
+<td><code>21.7742 s</code></td>
+<td>mixed <code>118.4×</code> longer</td>
+</tr>
+<tr>
+<td>First and only inference</td>
+<td><code>1.1615 s</code></td>
+<td><code>1.0542 s</code></td>
+<td>mixed <code>9.23%</code> faster</td>
+</tr>
+<tr>
+<td>Peak process RSS</td>
+<td><code>162,848 KiB</code></td>
+<td><code>762,464 KiB</code></td>
+<td>mixed <code>4.68×</code> higher</td>
+</tr>
+</tbody></table></div>
+<p>This answers the narrow question: fallback did not catastrophically lose this single inference; it was modestly faster despite fragmentation. The cost was very large session setup and memory. The pair was cold, single-sample, sequential rather than randomized, and the mixed run occurred first. It therefore remains descriptive rather than a stable speedup claim, and it must not be multiplied into a five-step or end-to-end estimate.</p>
 <h2 id="phase-3-run-complete-accelerated-android-synthesis">Phase 3: run complete accelerated Android synthesis<a class="anchor" href="#phase-3-run-complete-accelerated-android-synthesis" aria-label="Link to this section">#</a></h2>
 <p>This phase is pending the vector-estimator gate. The target is now aggressive but explicit: attempt fail-closed HTP sessions for the duration predictor, text encoder, all five vector-estimator calls, and vocoder. Ordinary text normalization, Unicode indexing, orchestration, trimming, and WAV encoding remain CPU application code rather than neural graphs.</p>
 <p>The integration contract is to build the smallest complete path that preserves Supertonic behavior.</p>
