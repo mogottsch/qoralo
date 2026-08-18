@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "status": "host_eligible_under_separate_deployment_fidelity_policy",
+  "route": "exact_source_derived_fp32_onnx_fixed_contract",
+  "official_reference": {
+    "model_sha256": "496dba118d1a58f5f3db2efc88dbdc216e0483fc89fe6e47ee1f2c53f18ad1e4",
+    "voice_sha256": "0ab5709b8ffab19bfd849cd11d98f75b60af7733253ad0d67b12382a102cb4ff",
+    "code": "kokoro==0.9.4",
+    "input_shape": [
+      1,
+      125
+    ],
+    "style_shape": [
+      1,
+      256
+    ],
+    "style_index": 123,
+    "speed": 1.0,
+    "seed": 20260818,
+    "predicted_duration_shape": [
+      125
+    ],
+    "predicted_duration_sum": 304,
+    "audio_shape": [
+      182400
+    ],
+    "sample_rate_hz": 24000
+  },
+  "rejected_sherpa_fp32_graph": {
+    "model_sha256": "c436dc6a842b62aba06af67e40bafcfb9c60ac3af895358f1974ad9a7f7c026b",
+    "reason": "The pinned conversion instantiates official KModel with disable_complex=True, replacing source torch.stft/torch.istft with the package's approximate CustomSTFT. It is not the exact-source comparison representation.",
+    "same_seed_exact_input_metrics_against_official_default_eager": {
+      "same_shape": true,
+      "cosine_similarity": 0.8833361061580425,
+      "nrmse": 0.5361359564655954,
+      "rmse": 0.026786543628717994,
+      "snr_db": 5.4145013085457405,
+      "max_abs_error": 0.12048065662384033
+    },
+    "status": "rejected"
+  },
+  "controlled_representation": {
+    "onnx_bytes": 332038651,
+    "onnx_sha256": "d11a0dd7c4eb768e1f0ef03090c69b6761f55e37b9f196749349591c40be232b",
+    "onnx_checker": "passed",
+    "opset": 17,
+    "node_count": 4352,
+    "initializer_count": 445,
+    "initializer_dtype_set": [
+      "FLOAT"
+    ],
+    "quantized_operator_count": 0,
+    "random_operator_count": 0,
+    "transforms": [
+      "standard ONNX STFT symbolic for the official analysis transform",
+      "source-equivalent real-valued iSTFT overlap-add with Hann-envelope normalization",
+      "official phase/noise random inputs materialized with PyTorch CPU seed 20260818 and original memory-format RNG ordering"
+    ],
+    "fixed_contract_only": true,
+    "learned_weights_changed": false
+  },
+  "controlled_eager_wrapper_equivalence": {
+    "policy": {
+      "cosine_similarity_min": 0.999,
+      "nrmse_max": 0.01,
+      "same_shape": true,
+      "same_predicted_durations": true
+    },
+    "observed": {
+      "cosine_similarity": 0.9999999999986571,
+      "nrmse": 0.0000016393359038637515,
+      "rmse": 8.190486420730883e-8,
+      "snr_db": 115.7066409865796,
+      "max_abs_error": 0.0000010728836059570312,
+      "same_shape": true,
+      "same_predicted_durations": true
+    },
+    "status": "passed"
+  },
+  "preliminary_host_onnxruntime_waveform_screen": {
+    "immutable_policy": {
+      "cosine_similarity_min": 0.999,
+      "nrmse_max": 0.01
+    },
+    "observed": {
+      "cosine_similarity": 0.9970098725370491,
+      "nrmse": 0.08470790963144033,
+      "rmse": 0.004232195262121692,
+      "snr_db": 21.441520707457613,
+      "max_abs_error": 0.06597258895635605,
+      "same_shape": true,
+      "same_predicted_durations": true
+    },
+    "status": "failed",
+    "interpretation": "Preserved numerical failure from cross-runtime/STFT arithmetic in a phase-sensitive generator. It is not relabeled by the separate deployment-validity policy and later listening, if any, must remain separate."
+  },
+  "host_onnxruntime": {
+    "version": "1.23.2",
+    "providers_configured": [
+      "CPUExecutionProvider"
+    ],
+    "profile_node_provider_counts": {
+      "CPUExecutionProvider": 3102
+    },
+    "qnn_event_count": 0,
+    "session_creation_seconds_context_only": 0.813057695995667,
+    "inference_seconds_context_only": 4.319021762988996,
+    "audio_validation": {
+      "valid": true,
+      "all_finite": true,
+      "sample_count": 182400,
+      "sample_rate_hz": 24000,
+      "duration_seconds": 7.6,
+      "absolute_peak": 0.3358711004257202,
+      "rms": 0.048079119436467116,
+      "clipped_float_samples": 0
+    }
+  },
+  "separate_phase_tolerant_host_screen": {
+    "policy_path": "../protocol/deployment-fidelity-policy.json",
+    "policy_sha256": "22c7f2dd5c3596acf66107c3712c886b827f4a332d13dca981d183f6efc40ad7",
+    "observed": {
+      "magnitude_spectral_convergence": 0.059445007325531624,
+      "flattened_log_magnitude_pearson": 0.9971289799831807,
+      "log_mel_cosine": 0.9994526196379998,
+      "mean_absolute_log_mel_db": 0.7847028760608072,
+      "rms_envelope_pearson": 0.9993865089636926
+    },
+    "status": "passed"
+  },
+  "claim_boundary": "The route is an exact-source-derived unquantized FP32 fixed-contract ONNX representation. It is not waveform-identical official eager, not the sherpa disable_complex graph, not arbitrary text, and not accelerator evidence."
+}

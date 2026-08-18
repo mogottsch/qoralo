@@ -1,0 +1,83 @@
+{
+  "checkpoint": {
+    "all_checkpoint_tensors_exact": true,
+    "code_default_affine_instance_norm_tensors": 140,
+    "exact_loaded_checkpoint_tensors": 548,
+    "groups": {
+      "bert": {
+        "checkpoint_tensors": 25,
+        "code_default_affine_instance_norm_state": 0,
+        "exact_matches": 25
+      },
+      "bert_encoder": {
+        "checkpoint_tensors": 2,
+        "code_default_affine_instance_norm_state": 0,
+        "exact_matches": 2
+      },
+      "decoder": {
+        "checkpoint_tensors": 375,
+        "code_default_affine_instance_norm_state": 116,
+        "exact_matches": 375
+      },
+      "predictor": {
+        "checkpoint_tensors": 122,
+        "code_default_affine_instance_norm_state": 24,
+        "exact_matches": 122
+      },
+      "text_encoder": {
+        "checkpoint_tensors": 24,
+        "code_default_affine_instance_norm_state": 0,
+        "exact_matches": 24
+      }
+    }
+  },
+  "config": {
+    "bytes": 2351,
+    "sha256": "5abb01e2403b072bf03d04fde160443e209d7a0dad49a423be15196b9b43c17f"
+  },
+  "kokoro_0_9_4_source_files": {
+    "custom_stft.py": {
+      "bytes": 7746,
+      "sha256": "94fed3f9ac22bba31135bf8c4ea795762c7ab3ff44f1984d11e7babf27462d69"
+    },
+    "istftnet.py": {
+      "bytes": 19488,
+      "sha256": "eb45e18d73d09e5a42801dedf16b6e3fb07d9741a142cd48fb8ebc1f68c11f26"
+    },
+    "model.py": {
+      "bytes": 6605,
+      "sha256": "301c55350a068c4ed3b4cbd1209d2afb848bebca72db5657405e47e9dfb604db"
+    },
+    "modules.py": {
+      "bytes": 7784,
+      "sha256": "569e3caed16147fa4f66f7fff33ff632954d0a598094c947a5b0fd095c17d5d0"
+    },
+    "pipeline.py": {
+      "bytes": 17578,
+      "sha256": "09da32aab781f7a163cbf9f6e379d53db40957cbbab50bc26a21c8440c0eabd6"
+    }
+  },
+  "model": {
+    "bytes": 327212226,
+    "sha256": "496dba118d1a58f5f3db2efc88dbdc216e0483fc89fe6e47ee1f2c53f18ad1e4"
+  },
+  "official_revision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+  "schema_version": 1,
+  "status": "passed",
+  "voice": {
+    "bytes": 523425,
+    "dtype": "torch.float32",
+    "sha256": "0ab5709b8ffab19bfd849cd11d98f75b60af7733253ad0d67b12382a102cb4ff",
+    "shape": [
+      510,
+      1,
+      256
+    ]
+  },
+  "voice_transform": {
+    "official_pt_lossless_match": true,
+    "raw_bytes": 522240,
+    "raw_sha256": "d583ccff3cdca2f7fae535cb998ac07e9fcb90f09737b9a41fa2734ec44a8f0b",
+    "sherpa_sid_3_block_lossless_match": true
+  }
+}

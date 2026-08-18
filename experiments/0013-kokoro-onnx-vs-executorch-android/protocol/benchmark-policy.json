@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "frozen_before_phone_outputs": true,
+  "source": {
+    "repository": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "revision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+    "model_path": "kokoro-v1_0.pth",
+    "model_sha256": "496dba118d1a58f5f3db2efc88dbdc216e0483fc89fe6e47ee1f2c53f18ad1e4",
+    "voice_path": "voices/af_heart.pt",
+    "precision": "FP32",
+    "license": "Apache-2.0"
+  },
+  "input": {
+    "transcript_path": "protocol/transcript.txt",
+    "transcript_utf8_bytes": 116,
+    "transcript_sha256": "bec8bf482f4d816f0c95471c289a2607a7a169e33389b8b13e525214ec639461",
+    "language": "en-US",
+    "voice": "af_heart",
+    "speed": 1.0,
+    "sample_rate_hz": 24000,
+    "reference_seed": 20260818,
+    "determinism_note": "The official generator creates phase/noise tensors with torch.rand/torch.randn_like. Seed eager and export screens where the runtime exposes control. The pinned ONNX contains unseeded RandomUniformLike and RandomNormalLike nodes, so Android ONNX repetitions are not expected to be bit-identical; retain every hash and report this limitation rather than treating output variance as representation error."
+  },
+  "matched_android_contract": {
+    "device_serial": "R5CW81PR8SY",
+    "device_model": "SM-S918B",
+    "soc": "SM8550",
+    "abi": "arm64-v8a",
+    "provider_class": "CPU only",
+    "num_threads": 1,
+    "routes": [
+      "onnxruntime_unquantized_fp",
+      "executorch_unquantized_fp_xnnpack_or_portable"
+    ],
+    "first_generations": 1,
+    "warm_generations": 5,
+    "fresh_process_per_route": true,
+    "route_order": [
+      "onnxruntime_unquantized_fp",
+      "executorch_unquantized_fp_xnnpack_or_portable"
+    ],
+    "route_order_caveat": "Fixed rather than randomized. Record battery temperature before and after each route and allow at least 120 seconds idle between successful route campaigns when both are eligible.",
+    "timed_scope": "UTF-8 text through lexicon/G2P tokenization, official voice-row selection, speed input, complete neural inference, and in-memory float audio assembly. Model/session construction and WAV encoding are reported separately.",
+    "wav_selection": "first successful generation from each eligible route"
+  },
+  "frontend": {
+    "policy": "Both routes must execute the same deterministic production-derived frontend from text, not consume a neural intermediate fixture.",
+    "english_lexicon": "pinned sherpa Kokoro v1.0 US-English lexicon generated from pinned Misaki dictionaries",
+    "fallback": "eSpeak fallback is allowed only if packaged and executed on device; the selected transcript must instead be proven fully covered by the pinned lexicon.",
+    "token_ids": "resolved at runtime from pinned tokens.txt",
+    "voice_style": "select af_heart[len(unpadded_token_ids)] from a lossless float32 serialization of the exact official af_heart.pt tensor",
+    "padding": "prepend and append token ID 0"
+  },
+  "host_fidelity_gate": {
+    "reference": "official PyTorch KModel from the pinned FP32 checkpoint, evaluated with exact runtime tokens, style row, speed, and reference seed where controllable",
+    "requirements": {
+      "same_output_shape": true,
+      "all_finite": true,
+      "cosine_similarity_min_when_random_inputs_are_matched": 0.999,
+      "nrmse_max_when_random_inputs_are_matched": 0.01,
+      "max_abs_error_reported": true
+    },
+    "unmatched_rng_policy": "When a runtime does not expose reproducible random inputs, waveform metrics are descriptive only and cannot pass the numerical fidelity gate. Weight identity, architecture/export provenance, duration/output shape, validity, repeated-run variation, and listening evidence remain separate.",
+    "note": "Thresholds are prospective acceptance gates, not proof that operator-wise arithmetic is identical."
+  },
+  "android_output_gate": {
+    "all_finite": true,
+    "minimum_samples": 2400,
+    "sample_rate_hz": 24000,
+    "channels": 1,
+    "pcm_bits": 16,
+    "absolute_peak_min": 0.0001,
+    "absolute_peak_max_exclusive": 1.0,
+    "rms_min": 0.00001,
+    "zero_pcm_clipped_samples_required": true,
+    "wav_full_decode_required": true,
+    "sha256_required": true
+  },
+  "provider_gate": {
+    "onnxruntime": "CPUExecutionProvider only; no QNN provider library, option, profile event, or provider event",
+    "executorch": "XNNPACK or portable CPU kernels only; no Qualcomm/QNN backend or delegate",
+    "qnn_events_max": 0
+  },
+  "memory": {
+    "primary": "VmHWM from /proc/self/status after each phase in a fresh route process",
+    "limitations": "Process-lifetime RSS high-water includes runtime, model mapping, transient allocations, Java/JNI state, and prior phases in that process. It is neither steady live PSS nor component-isolated memory."
+  },
+  "stop_conditions": [
+    "Do not repair torch.export failures with broad model surgery or custom kernels.",
+    "Do not run an ExecuTorch phone route unless exact-source host export and fidelity gates pass.",
+    "Do not enable HTP, QNN, NNAPI, GPU, Vulkan, or quantization.",
+    "Do not reinterpret a failed route as a successful runtime comparison. Preserve its exact bounded blocker."
+  ]
+}

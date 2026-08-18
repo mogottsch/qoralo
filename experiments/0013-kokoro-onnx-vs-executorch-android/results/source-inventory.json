@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "status": "verified",
+  "official_model_repository": {
+    "url": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "revision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+    "gated": false,
+    "files": {
+      "kokoro-v1_0.pth": {
+        "bytes": 327212226,
+        "git_blob_oid": "15769c415594dcb424579ba3dfae3085578aac4e",
+        "lfs_oid_sha256": "496dba118d1a58f5f3db2efc88dbdc216e0483fc89fe6e47ee1f2c53f18ad1e4",
+        "download_sha256": "496dba118d1a58f5f3db2efc88dbdc216e0483fc89fe6e47ee1f2c53f18ad1e4"
+      },
+      "voices/af_heart.pt": {
+        "bytes": 523425,
+        "git_blob_oid": "23a296174457c31b22b694f6e07e4e1b558122bf",
+        "lfs_oid_sha256": "0ab5709b8ffab19bfd849cd11d98f75b60af7733253ad0d67b12382a102cb4ff",
+        "download_sha256": "0ab5709b8ffab19bfd849cd11d98f75b60af7733253ad0d67b12382a102cb4ff"
+      },
+      "config.json": {
+        "bytes": 2351,
+        "git_blob_oid": "14a726edd3718279eac426630879ff743955b16a",
+        "download_sha256": "5abb01e2403b072bf03d04fde160443e209d7a0dad49a423be15196b9b43c17f"
+      },
+      "README.md": {
+        "bytes": 6348,
+        "git_blob_oid": "d6dc124205ad567631d14cd8700f1af77a861c3f",
+        "download_sha256": "91dcabced89db6f109b8786642f50402d3ee87450e8189589b6f85520e7f4d78",
+        "license_frontmatter": "apache-2.0"
+      }
+    }
+  },
+  "official_implementation": {
+    "distribution": "kokoro",
+    "version": "0.9.4",
+    "wheel": {
+      "filename": "kokoro-0.9.4-py3-none-any.whl",
+      "bytes": 32592,
+      "sha256": "a129dc6364a286bd6a92c396e9862459d3d3e45f2c15596ed5a94dcee5789efd"
+    },
+    "license": {
+      "spdx": "Apache-2.0",
+      "wheel_license_bytes": 11357,
+      "wheel_license_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    "source_verification": "source-weight-verification.json"
+  },
+  "frontend_source": {
+    "sherpa_onnx_repository": "https://github.com/k2-fsa/sherpa-onnx.git",
+    "revision": "3dc7c569f31ca2cd4a20ed6f7db780327e6714c5",
+    "tag": "v1.13.5",
+    "implementation": "sherpa-onnx/csrc/kokoro-multi-lang-lexicon.cc lexicon branch",
+    "archive": {
+      "filename": "kokoro-multi-lang-v1_0.tar.bz2",
+      "bytes": 349418188,
+      "sha256": "c133d26353d776da730870dac7da07dbfc9a5e3bc80cc5e8e83ab6e823be7046"
+    },
+    "tokens": {
+      "bytes": 687,
+      "sha256": "6ebb6bb288f20f3ae8d004d3c2ca27697da27c037d75e81a60e2a6a663f95425"
+    },
+    "us_english_lexicon": {
+      "bytes": 5956885,
+      "sha256": "7daaab53a181be9885b853a8582bf1838186317e5dadacbcef9c426d6fa0da14"
+    },
+    "boundary": "Only tokenizer/lexicon assets and the pinned conversion source are reused. The archive's disable_complex=True model.onnx is rejected for this exact-source comparison and is not deployed."
+  },
+  "controlled_onnx_representation": {
+    "filename": "kokoro-official-v1.0-fp32-controlled-t125.onnx",
+    "bytes": 332038651,
+    "sha256": "d11a0dd7c4eb768e1f0ef03090c69b6761f55e37b9f196749349591c40be232b",
+    "opset": 17,
+    "initializer_dtype_set": [
+      "FLOAT"
+    ],
+    "quantized_operator_count": 0,
+    "random_operator_count": 0,
+    "fixed_contract": {
+      "tokens": [
+        1,
+        125
+      ],
+      "style": [
+        1,
+        256
+      ],
+      "speed": [
+        1
+      ],
+      "phase_noise_seed": 20260818,
+      "predicted_duration_sum": 304,
+      "audio_samples": 182400
+    },
+    "transforms": [
+      "standard ONNX STFT symbolic for the exact source analysis transform",
+      "source-equivalent real-valued iSTFT overlap-add and Hann-envelope normalization",
+      "exact source phase/noise random inputs materialized for the fixed seed and F0 shape"
+    ],
+    "learned_weight_changes": false,
+    "provenance": "onnx-export-provenance.json"
+  },
+  "host_export_toolchain": {
+    "python": "3.12.12",
+    "torch": "2.13.0+cpu",
+    "kokoro": "0.9.4",
+    "onnx": "1.17.0",
+    "onnxruntime": "1.23.2",
+    "executorch": "1.4.0",
+    "executorch_wheel_sha256": "fb13ebf8fab5b5c7ef586fa7b347ecd38be8fd42684545193a495ecb21287b55",
+    "pip_freeze_sha256": "2cdc1948c2338914c779ba49eadfab8b0c82d424644949f03020fb42da504500"
+  },
+  "android_onnxruntime": {
+    "maven_coordinate": "com.microsoft.onnxruntime:onnxruntime-android:1.23.2",
+    "aar_bytes": 30241654,
+    "aar_sha256": "82048d1f462218adae4ba76477089ab0ba76093d84f733540066db1a8ba6b827",
+    "arm64_native_libraries": [
+      "libonnxruntime.so",
+      "libonnxruntime4j_jni.so"
+    ],
+    "qnn_library_count": 0,
+    "license": "MIT"
+  },
+  "android_build": {
+    "gradle": "8.10.2",
+    "gradle_distribution_sha256": "31c55713e40233a8303827ceb42ca48a47267a0ad4bab9177123121e71524c26",
+    "android_gradle_plugin": "8.7.3",
+    "compile_sdk": 35,
+    "build_tools": "34.0.0",
+    "java": "Temurin 17.0.20+8",
+    "abi": "arm64-v8a",
+    "debug_apk_bytes": 7802337,
+    "debug_apk_sha256": "e84254da065b4547927aef759458848c194a9d3929b852358efcfc126f86efae",
+    "packaged_native_libraries": [
+      "lib/arm64-v8a/libonnxruntime.so",
+      "lib/arm64-v8a/libonnxruntime4j_jni.so"
+    ],
+    "qnn_library_count": 0
+  },
+  "excluded_assets": [
+    "experiment-0009 QDQ derivative",
+    "community q8/q4 artifacts",
+    "pinned sherpa disable_complex=True model.onnx",
+    "all QNN/HTP libraries"
+  ]
+}

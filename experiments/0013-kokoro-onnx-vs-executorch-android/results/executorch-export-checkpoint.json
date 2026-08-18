@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "status": "blocked_before_full_model_pte",
+  "route": "official_fp32_kokoro_torch_export_to_executorch_cpu",
+  "toolchain": {
+    "python": "3.12.12",
+    "torch": "2.13.0+cpu",
+    "executorch": "1.4.0",
+    "executorch_wheel_sha256": "fb13ebf8fab5b5c7ef586fa7b347ecd38be8fd42684545193a495ecb21287b55",
+    "kokoro": "0.9.4",
+    "torchao": "0.18.0"
+  },
+  "exact_source_attempt": {
+    "wrapper": "kokoro.model.KModelForONNX around official KModel with default source STFT",
+    "strict_true": {
+      "status": "failed",
+      "exception": "torch._dynamo.exc.UserError",
+      "message": "Could not guard on data-dependent expression Eq(u0, 125)",
+      "site": "transformers/integrations/sdpa_attention.py scaled_dot_product_attention"
+    },
+    "strict_false": {
+      "status": "failed",
+      "exception": "torch.fx.experimental.symbolic_shapes.GuardOnDataDependentSymNode",
+      "message": "Could not guard on data-dependent expression Eq(u0, 125)",
+      "site": "transformers/integrations/sdpa_attention.py scaled_dot_product_attention"
+    },
+    "raw_log_local_path": ".local/executorch-screen/exact-export.log",
+    "raw_log_sha256": "b94770e697b3b17626f52f840f2b43c224ceb84da2152a00669bb7caf8edec1a"
+  },
+  "bounded_narrow_wrapper_attempts": [
+    {
+      "change": "Select eager Albert attention only to expose the next exporter boundary.",
+      "strict_true": {
+        "status": "failed",
+        "exception": "torch._dynamo.exc.Unsupported",
+        "message": "pack_padded_sequence is intentionally marked as skipped by Dynamo",
+        "site": "kokoro.modules.DurationEncoder.forward"
+      },
+      "strict_false": {
+        "status": "failed",
+        "exception": "TypeError",
+        "message": "zeros(): argument size contains FakeTensor"
+      },
+      "raw_log_sha256": "9f40bbbd5d22ed290e609aa5ccacc698d13117d45462f8c8060308594d4ffb44"
+    },
+    {
+      "change": "For fixed batch 1 with no padding, remove only no-op pack/pad RNN round trips; construct the known all-ones attention mask directly; add nonzero/bounded dynamic-size assertions.",
+      "source_equivalence": {
+        "same_duration": true,
+        "cosine_similarity": 0.9999487070424654,
+        "nrmse": 0.010128456601676791,
+        "max_abs_error": 0.023713670670986176,
+        "comparison_to_0_999_0_01_policy": "failed narrowly on NRMSE"
+      },
+      "strict_true": {
+        "status": "failed",
+        "exception": "torch._dynamo.exc.UserError",
+        "message": "Could not extract specialized integer from data-dependent expression u0",
+        "site": "predictor.F0Ntrain -> shared LSTM; u0 is the repeat_interleave-derived acoustic sequence length"
+      },
+      "strict_false": {
+        "status": "failed",
+        "exception": "torch.fx.experimental.symbolic_shapes.GuardOnDataDependentSymNode",
+        "message": "Could not extract specialized integer from data-dependent expression u0",
+        "site": "predictor.F0Ntrain -> shared LSTM"
+      },
+      "raw_log_local_path": ".local/executorch-screen/fixed-wrapper-check-export.log",
+      "raw_log_sha256": "d7184a75acbd8c143f69aece9b770abe4e0c6c138266e7e73d62accad942dfb5"
+    }
+  ],
+  "stft_capability_screen": {
+    "official_complex_source": {
+      "torch_export": "passed in isolation",
+      "executorch_edge_lowering": "failed",
+      "exception": "AttributeError: 'complex' object has no attribute 'data'",
+      "site": "magnitude * torch.exp(phase * 1j) in official TorchSTFT.inverse"
+    },
+    "onnx_symbolic_plus_real_inverse_wrapper": {
+      "torch_export": "passed in isolation",
+      "portable_pte_lowering": "passed in isolation",
+      "isolated_pte_bytes": 9992,
+      "not_full_model_evidence": true
+    },
+    "all_real_conv_decomposition": {
+      "torch_export": "passed in isolation",
+      "portable_pte_lowering": "passed in isolation",
+      "isolated_pte_bytes": 11288,
+      "full_eager_wrapper_metrics_against_official_source": {
+        "cosine_similarity": 0.998417533854535,
+        "nrmse": 0.06079826511498819,
+        "max_abs_error": 0.05497397464932874,
+        "comparison_to_0_999_0_01_policy": "failed"
+      },
+      "not_full_model_evidence": true
+    },
+    "raw_log_local_path": ".local/executorch-screen/stft-export.log",
+    "raw_log_sha256": "ed90be8eb16e9b0cd3fa45a0f2a4ea55e983299d58e317036c19b41f38a6e75a"
+  },
+  "primary_blocker": "The predicted durations drive repeat_interleave, creating a data-dependent acoustic sequence length consumed by subsequent LSTMs. Current torch.export cannot specialize or retain that symbolic integer for the LSTM decomposition. Resolving it would require fixed captured alignment/padding semantics, a manual/control-flow LSTM rewrite, or custom runtime work rather than a narrow export wrapper.",
+  "additional_blockers": [
+    "The exact source complex inverse STFT cannot lower directly to ExecuTorch edge.",
+    "The straightforward all-real STFT decomposition fails the prospective source-equivalence waveform threshold in the phase-sensitive full generator.",
+    "The narrow fixed no-padding/attention wrapper itself misses the NRMSE threshold by 0.0001284566."
+  ],
+  "stop_boundary": {
+    "broad_model_surgery_attempted": false,
+    "custom_kernel_development_attempted": false,
+    "captured_neural_alignment_fixture_used": false,
+    "full_model_pte_created": false,
+    "android_executorch_runtime_built": false,
+    "phone_executorch_run_attempted": false,
+    "sample_audio_available": false
+  },
+  "conclusion": "ExecuTorch is a bounded exact-source export blocker in this experiment, not a measured Android latency route. Isolated submodule PTE success must not be presented as full-model compatibility."
+}

@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "frozen_before_any_phone_output": true,
+  "purpose": "Prospective fixed-contract deployment-fidelity and valid-audio gate for a phase-sensitive source-derived representation. This does not replace or pass the separate preliminary .999/.01 waveform screen.",
+  "claim_boundary": {
+    "allowed": "exact-source-derived unquantized FP32 mobile representation of official Kokoro v1.0 for one frozen text/voice/speed/phase-noise contract",
+    "forbidden": [
+      "waveform-identical official eager execution",
+      "the previously pinned sherpa disable_complex=True graph",
+      "arbitrary-text or arbitrary-shape deployment",
+      "quantized execution",
+      "HTP, QNN, NNAPI, GPU, or Vulkan execution"
+    ]
+  },
+  "official_source_requirements": {
+    "repository": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "revision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+    "model": {
+      "path": "kokoro-v1_0.pth",
+      "bytes": 327212226,
+      "sha256": "496dba118d1a58f5f3db2efc88dbdc216e0483fc89fe6e47ee1f2c53f18ad1e4"
+    },
+    "voice": {
+      "path": "voices/af_heart.pt",
+      "bytes": 523425,
+      "sha256": "0ab5709b8ffab19bfd849cd11d98f75b60af7733253ad0d67b12382a102cb4ff"
+    },
+    "config": {
+      "bytes": 2351,
+      "sha256": "5abb01e2403b072bf03d04fde160443e209d7a0dad49a423be15196b9b43c17f"
+    },
+    "code_distribution": {
+      "name": "kokoro",
+      "version": "0.9.4",
+      "wheel_bytes": 32592,
+      "wheel_sha256": "a129dc6364a286bd6a92c396e9862459d3d3e45f2c15596ed5a94dcee5789efd"
+    },
+    "license": "Apache-2.0",
+    "all_548_checkpoint_tensors_must_equal_loaded_module_tensors": true,
+    "learned_weight_changes_allowed": false,
+    "quantization_allowed": false
+  },
+  "fixed_input_requirements": {
+    "transcript_sha256": "bec8bf482f4d816f0c95471c289a2607a7a169e33389b8b13e525214ec639461",
+    "tokens_path_sha256": "6ebb6bb288f20f3ae8d004d3c2ca27697da27c037d75e81a60e2a6a663f95425",
+    "lexicon_path_sha256": "7daaab53a181be9885b853a8582bf1838186317e5dadacbcef9c426d6fa0da14",
+    "frontend_must_execute_from_text": true,
+    "lexicon_oov_count": 0,
+    "tokens_shape": [1, 125],
+    "tokens_little_endian_int64_sha256": "35ebb50fb1ba0cca3862c880cf0571c9a51623c5243a9f2307b4bb4a6dcd2078",
+    "voice": "af_heart",
+    "style_index": 123,
+    "style_shape": [1, 256],
+    "style_little_endian_float32_sha256": "b5c2627313e7e45bbb50470307ef66730b5510ebc7e92671cf7aad0449cdf899",
+    "speed_shape": [1],
+    "speed": 1.0,
+    "reference_seed": 20260818,
+    "f0_shape": [1, 182400, 1],
+    "phase_and_noise": "Materialize the official torch.rand/torch.randn_like model inputs from PyTorch CPU seed 20260818 with the exact source memory-format ordering; no ONNX Random* nodes are allowed."
+  },
+  "controlled_wrapper_equivalence_gate": {
+    "reference": "official KModel eager with default complex torch.stft/torch.istft and seed 20260818",
+    "candidate": "same loaded model with standard ONNX STFT symbolic, source-equivalent real iSTFT overlap-add, and exact materialized model random inputs",
+    "same_output_shape": true,
+    "same_predicted_durations": true,
+    "cosine_similarity_min": 0.999,
+    "nrmse_max": 0.01,
+    "observed_before_freeze": {
+      "cosine_similarity": 0.9999999999986571,
+      "nrmse": 0.0000016393359038637515,
+      "max_abs_error": 0.0000010728836059570312,
+      "status": "passed"
+    }
+  },
+  "preliminary_waveform_screen_retained_separately": {
+    "thresholds": {
+      "cosine_similarity_min": 0.999,
+      "nrmse_max": 0.01
+    },
+    "host_onnxruntime_vs_controlled_eager_observed": {
+      "cosine_similarity": 0.9970098725370491,
+      "nrmse": 0.08470790963144033,
+      "status": "failed"
+    },
+    "policy": "The failure is immutable and must never be relabeled as passed. It is not the deployment-validity gate because final cross-runtime waveforms are explicitly descriptive for this phase-sensitive generator."
+  },
+  "representation_requirements": {
+    "onnx_sha256": "d11a0dd7c4eb768e1f0ef03090c69b6761f55e37b9f196749349591c40be232b",
+    "onnx_bytes": 332038651,
+    "onnx_checker": "pass",
+    "initializer_dtype_set": ["FLOAT"],
+    "quantized_operator_count": 0,
+    "random_operator_count": 0,
+    "host_provider": "CPUExecutionProvider only",
+    "host_duration_shape": [125],
+    "host_duration_sum": 304,
+    "host_duration_little_endian_int64_sha256": "7977e82d5304abba333a0b1caa0f0ef39b265b11205ff217c5979255cc44b80e",
+    "host_audio_shape": [182400],
+    "host_audio_sample_rate_hz": 24000
+  },
+  "phone_hard_gate": {
+    "frontend_token_and_style_hashes_exact": true,
+    "duration_shape": [125],
+    "duration_sum": 304,
+    "duration_little_endian_int64_sha256": "7977e82d5304abba333a0b1caa0f0ef39b265b11205ff217c5979255cc44b80e",
+    "audio_shape": [182400],
+    "sample_rate_hz": 24000,
+    "all_finite": true,
+    "absolute_peak_min": 0.0001,
+    "absolute_peak_max_exclusive": 1.0,
+    "rms_min": 0.00001,
+    "clipped_float_samples_max": 0,
+    "wav_channels": 1,
+    "wav_pcm_bits": 16,
+    "wav_full_decode": true,
+    "cpu_only_proof_required": true,
+    "qnn_events_max": 0
+  },
+  "phone_phase_tolerant_acoustic_gate": {
+    "reference_outputs": [
+      "controlled eager source wrapper",
+      "host ONNX Runtime CPU"
+    ],
+    "alignment": "exact sample count; no post-hoc time shift, resampling, or dynamic time warping",
+    "stft": {
+      "fft_length": 1024,
+      "hop_length": 256,
+      "window": "periodic Hann",
+      "magnitude_spectral_convergence_max": 0.35,
+      "flattened_log_magnitude_pearson_min": 0.9
+    },
+    "mel": {
+      "sample_rate_hz": 24000,
+      "mel_bins": 80,
+      "minimum_hz": 20,
+      "maximum_hz": 12000,
+      "log_mel_cosine_min": 0.95,
+      "mean_absolute_log_mel_db_max": 4.0
+    },
+    "amplitude_envelope": {
+      "frame_length": 1024,
+      "hop_length": 256,
+      "rms_envelope_pearson_min": 0.9
+    },
+    "waveform_metrics": "Report cosine, NRMSE, RMSE, maximum error, and SNR descriptively only; they cannot erase the preliminary numerical failure or independently fail this phase-tolerant gate.",
+    "intelligibility": "If the already pinned Whisper-small environment/checkpoint is locally practical, report WER against the exact transcript and host/phone hypothesis agreement as supporting evidence only. Do not download or substitute an unpinned ASR model merely to force this optional signal."
+  },
+  "benchmark": {
+    "num_threads": 1,
+    "fresh_process_per_route": true,
+    "first_generations": 1,
+    "warm_generations": 5,
+    "warm_statistic": "median and full range",
+    "timed_scope": "text frontend, token/style/speed construction, full neural inference, and in-memory float audio assembly",
+    "separate_timings": [
+      "frontend asset load",
+      "model/runtime load or session creation",
+      "WAV encoding"
+    ],
+    "memory": "VmHWM process-lifetime RSS high-water; not steady live PSS or component-isolated memory"
+  }
+}
