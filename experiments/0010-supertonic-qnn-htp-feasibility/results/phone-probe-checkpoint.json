@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "status": "complete_bounded_negative_explicit_gelu_vocoder_physical_htp_numerical_failure",
-  "recorded_at_utc": "2026-08-17T12:52:00Z",
+  "recorded_at_utc": "2026-08-18T09:35:00Z",
   "scope": "Supertonic 3 explicit-GELU vocoder physical QNN/HTP feasibility: HTP execution proven with fallback disabled, numerical correctness rejected; no speedup or end-to-end claim",
   "source": {
     "experiment": "0008-sherpa-onnx-android-tts-benchmark",
@@ -281,9 +281,9 @@
     }
   },
   "next_steps": [
-    "Do not rerun or loosen the frozen physical-output policy for this derivative.",
-    "Do not start vector-estimator or end-to-end QNN work from this failed Phase 1 gate.",
-    "Retain the CPU Supertonic deployment as the supported implementation; no HTP speedup conclusion is available because numerical correctness failed and no same-device CPU baseline was collected."
+    "Do not reinterpret or loosen final waveform policy SHA 7116c522; the vocoder remains rejected.",
+    "Do not claim an embed QDQ implementation defect: the exact-input QDQ microprobe is non-material and the result is fusion/context dependent.",
+    "Do not rebuild ORT, relax fallback, rerun the non-delegable raw Conv tap, start vector-estimator work, or perform end-to-end QNN work under this experiment."
   ],
   "claims_not_made": [
     "The physical HTP output is not numerically correct or accepted audio.",
@@ -430,6 +430,218 @@
       "exit_code": 0,
       "scoped_remote_removed": true,
       "phone_lock_released_and_available": true
+    }
+  },
+  "layer_level_numerical_bisection": {
+    "status": "complete_localized_composite_fusion_context_interval_no_root_cause_claim",
+    "scope": "Actual frozen latent and actual CPU intermediate tensors only; vector estimator excluded; original rejected waveform policy unchanged.",
+    "immutable_final_policy_sha256": "7116c5228c72802de3fac66a65e5fbbfdcb40005a8440ce5573867b4309ac0a4",
+    "offline_full_output_facts": {
+      "best_lag_samples_within_plus_minus_4096": 0,
+      "alignment_explanation_rejected": true,
+      "error_temporally_concentrated": true,
+      "peak_error_sample": 666401,
+      "peak_absolute_error": 0.5959603637456894,
+      "frame_3072_max_rmse_index": 217,
+      "frame_3072_max_rmse": 0.1705856252264033,
+      "frame_3072_median_rmse": 0.009864380349684947,
+      "error_increases_with_reference_amplitude": true,
+      "report": {
+        "path": "experiments/0010-supertonic-qnn-htp-feasibility/work/numerical-bisection/offline/full-output-delta-analysis.json",
+        "bytes": 12719,
+        "sha256": "d88c7b06a869ac1be780c7e3573fa87e15b345bb783894406df7789ee218eeed"
+      },
+      "runtime_log_fact": "ORT profile exposes one fused QNNExecutionProvider node with float graph I/O plus uint8 quantization metadata and int8 weights. Retained physical QNN profiles do not expose a definitive per-intermediate internal HTP precision, so FP16 or other precision lowering is not confirmed."
+    },
+    "diagnostic_rule": {
+      "metrics": [
+        "finite",
+        "max_abs",
+        "mean_abs",
+        "rmse",
+        "reference_rms",
+        "normalized_rmse",
+        "cosine_similarity",
+        "snr_db"
+      ],
+      "material_if_any": {
+        "non_finite": true,
+        "cosine_below": 0.999,
+        "normalized_rmse_above": 0.01,
+        "max_abs_above": "max(0.0001, 0.05 * reference_peak_abs)"
+      },
+      "diagnostic_only": true
+    },
+    "coarse_wave": {
+      "policy_sha256": "31bf5bf356f0f5d0aa41a4180931677fdcee6321f5a611d8948f448d1a00af92",
+      "ordered_boundaries": [
+        "/Add_output_0",
+        "/decoder/embed/net/Conv_output_0_DequantizeLinear_Output",
+        "/decoder/convnext.3/Add_output_0",
+        "/decoder/convnext.7/Add_output_0",
+        "/decoder/convnext.9/Add_output_0"
+      ],
+      "all_five_fully_delegated_and_physically_profiled": true,
+      "first_nonmaterial": {
+        "id": "predecoder_affine",
+        "normalized_rmse": 0.00029415980625279673,
+        "cosine": 0.9999999603859586
+      },
+      "first_material": {
+        "id": "embed_qdq",
+        "normalized_rmse": 0.06619356997112252,
+        "cosine": 0.9978097771198647,
+        "rmse": 0.008109157832976032
+      },
+      "localized_interval": [
+        "predecoder_affine",
+        "embed_qdq"
+      ],
+      "report": {
+        "bytes": 2863,
+        "sha256": "c4c0574f51aa11ce32aae29ce540f218ac4ac304f8bcead51ea11a746ed4f114"
+      }
+    },
+    "fine_wave": {
+      "policy_sha256": "1d819df574c86b94d27716fa95d9ecfa7d5a3143bab3b6c0b4c0713fea48dbbd",
+      "policy_preserved_despite_omitted_tap": true,
+      "fully_delegated_observed_boundaries": [
+        {
+          "id": "predecoder_affine",
+          "tensor": "/Add_output_0",
+          "material": false,
+          "normalized_rmse": 0.00029415980625279673,
+          "cosine": 0.9999999603859586
+        },
+        {
+          "id": "embed_pad",
+          "tensor": "/decoder/embed/Pad_output_0",
+          "material": false,
+          "normalized_rmse": 0.00029386044870110503,
+          "cosine": 0.9999999604487991
+        },
+        {
+          "id": "embed_pad_qdq",
+          "tensor": "/decoder/embed/Pad_output_0_DequantizeLinear_Output",
+          "material": true,
+          "normalized_rmse": 0.010375610624130657,
+          "cosine": 0.9999461996153036,
+          "rmse": 0.00366247698442031,
+          "max_abs": 0.014716267585754395
+        },
+        {
+          "id": "embed_qdq",
+          "tensor": "/decoder/embed/net/Conv_output_0_DequantizeLinear_Output",
+          "material": true,
+          "normalized_rmse": 0.06619356997112252,
+          "cosine": 0.9978097771198647
+        }
+      ],
+      "first_material_observable_boundary": "embed_pad_qdq",
+      "narrowest_observable_composite_interval": [
+        "embed_pad",
+        "embed_pad_qdq"
+      ],
+      "raw_embed_conv_tap": {
+        "status": "not_delegable",
+        "numerical_evidence": false,
+        "reason": "Exposing /decoder/embed/net/Conv_output_0 leaves nodes on default CPU EP; fail-closed session rejected before inference.",
+        "stderr_sha256": "e6853eb0bb607082e37bef2e16961a6d382304ed2c65a038f06e69f1bc49ea63"
+      },
+      "report": {
+        "bytes": 4797,
+        "sha256": "325200e41cd9d8b0bfe71983183145b43d29f90e730df67ffbf87671b7a49b23"
+      }
+    },
+    "exact_input_qdq_microprobe": {
+      "input": {
+        "tensor": "/decoder/embed/Pad_output_0",
+        "shape": [
+          1,
+          24,
+          1434
+        ],
+        "sha256": "52d5fb09a78bb31ab5e200346e8284af58d4d55035dc05892702cad975373b8b",
+        "source": "actual patched-ORT CPU prefix output"
+      },
+      "nodes": [
+        "/decoder/embed/Pad_output_0_QuantizeLinear",
+        "/decoder/embed/Pad_output_0_DequantizeLinear"
+      ],
+      "quantization": {
+        "scale_float32": 0.007331503089517355,
+        "zero_point_uint8": 102
+      },
+      "model_sha256": "c90e3cbdee2a4d3897c59f2c5860040d13ad0227c10ad5e0c867da98b98662e8",
+      "policy_sha256": "b2c031ee008487fcbedf8ade5f1eeb57d631d499e7a808f032ce46043df40565",
+      "cpu_microprobe_bit_identical_to_prefix_cpu": true,
+      "fully_delegated_and_physically_profiled": true,
+      "result": {
+        "material": false,
+        "normalized_rmse": 0.005996431658772936,
+        "cosine": 0.9999820218778808,
+        "snr_db": 44.44214223203389,
+        "rmse": 0.0021166747418054055,
+        "max_abs": 0.004007697105407715
+      },
+      "classification": "The exact-input isolated QDQ pair does not reproduce the prefix material threshold. Evidence is fusion/context dependent, not an isolated QDQ implementation-defect confirmation.",
+      "comparison": {
+        "bytes": 1126,
+        "sha256": "00267b45bba86e9d0cc59af4498f9cda1130e1dac2af432f0c8a90fa745288e7"
+      },
+      "profile_sha256": "e5e0ed47a2481dc27649a3535b896942bc119948cbfc53309ec54dc077dce0cf"
+    },
+    "candidate_cause_ranking": [
+      {
+        "rank": 1,
+        "candidate": "fusion/context-dependent quantization behavior around the embed Pad\u2192input-QDQ boundary",
+        "evidence": "First material fully delegated boundary is post-QDQ, exact QDQ microprobe with actual CPU input is non-material, and prefix-vs-micro HTP outputs differ.",
+        "classification": "supported diagnostic hypothesis, not root cause"
+      },
+      {
+        "rank": 2,
+        "candidate": "quantization-threshold amplification of the small upstream HTP perturbation",
+        "evidence": "Pad output is non-material but nonzero; post-QDQ NRMSE crosses 1%, with scale 0.0073315.",
+        "classification": "plausible mechanism, not isolated"
+      },
+      {
+        "rank": 3,
+        "candidate": "accumulated or backend-lowered precision within the fused prefix",
+        "evidence": "Error grows at later taps, but physical logs do not reveal definitive intermediate precision.",
+        "classification": "possible, unconfirmed"
+      },
+      {
+        "rank": 4,
+        "candidate": "embed Conv before output QDQ",
+        "evidence": "Cannot observe fail-closed because exposing its raw output changes assignment; no numerical tensor exists.",
+        "classification": "not isolated; no causal claim"
+      },
+      {
+        "rank": 5,
+        "candidate": "explicit Gelu or later folded float-weight Conv",
+        "evidence": "Material divergence is already present before these operators.",
+        "classification": "not the first divergent boundary"
+      }
+    ],
+    "confirmed_implementation_defect": false,
+    "claim_boundary": "The first material observable prefix boundary is the composite embed Pad\u2192QDQ transition. Exact-input QDQ alone is non-material, and raw Conv exposure is non-delegable. This localizes fusion/context-dependent behavior but does not identify a defective operator.",
+    "phone_controls": {
+      "exact_identity_each_wave": true,
+      "cpu_fallback_disabled": true,
+      "detailed_physical_profiles_required": true,
+      "scoped_cleanup_exit_codes": [
+        0,
+        0,
+        0
+      ],
+      "phone_lock_released": true
+    },
+    "tracked_diagnostic_sources": {
+      "tap_tool_sha256": "b507ab0b06c5daf7ca3dcfe7490f101b0a56a15fe80d7709771a0cbb1f3cd90f",
+      "tap_test_sha256": "641a7d49ca81e300229ac4eecb99e74599b48413c382f855eeb796b860f29360",
+      "microprobe_tool_sha256": "7f5ade18c1ce9ee95a4c6f0ab9f3a99a52d7cdee558b83bac28ae438582c10d1",
+      "microprobe_test_sha256": "4299e91f9b762fb0d5f1f9a79a992abfec545a0702e973ba1a6543a581f6265f",
+      "runner_source_sha256": "babc11eecac2561d2e4de1200b085af6c8730101062e7fffae5feff7454b148d"
     }
   }
 }

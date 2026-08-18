@@ -32,7 +32,8 @@ These phases belong to experiment [`0010: Supertonic QNN/HTP feasibility`](READM
 | **Done** | Android runtime build | Patched arm64-v8a/API 27 ONNX Runtime + QNN was rebuilt, validated, and reused for the scoped physical explicit-GELU vocoder probe. |
 | **Done** | Scoped physical HTP execution | The exact authorized S23 Ultra executed three vocoder iterations with fallback disabled. Detailed profiles contain RPC, QNN accelerator, accelerator-cycle, and four-HVX-thread evidence. |
 | **Failed** | Frozen physical numerical gate | All 731,136 finite samples were compared, but cosine `0.865454`, SNR `5.716 dB`, max error `0.595960`, mean error `0.012167`, and RMSE `0.029311` fail the predeclared limits. Output and audio are rejected. |
-| **Done** | Cleanup and stop gate | The unique scoped device directory was removed, the phone lock was released, and no vector-estimator or further phone work began. |
+| **Done** | Cleanup and stop gate | The unique scoped device directory was removed, the phone lock was released, and no vector-estimator work began. |
+| **Done** | Layer-level numerical bisection | The first material observable boundary is the composite embed `Pad → QDQ` transition. An exact-real-input QDQ microprobe is non-material, while exposing raw embed `Conv` breaks full delegation; the evidence is fusion/context dependent and does not establish an operator defect. |
 
 The current boundary is therefore clear: **the explicit-GELU vocoder physically executed on the SM8550 HTP with CPU fallback disabled, but its output failed the frozen numerical policy and is not accepted audio. No same-device CPU baseline was collected, so no speedup claim is supported.**
 
@@ -67,6 +68,23 @@ Physical result:
 - the scoped device directory was removed and the repository phone lock was released.
 
 **Completed as a bounded negative result:** physical HTP execution is proven, but numerical correctness is rejected. Do not loosen the policy, accept the output as audio, rerun this derivative, start the vector estimator, or claim speedup/end-to-end success.
+
+### Layer-level localization
+
+A scoped coarse-to-fine diagnostic campaign used the unchanged latent fixture, patched runtime, fail-closed QNN sessions, and predeclared intermediate rules. These rules classify localization evidence only; they do not replace final-waveform policy SHA `7116c522…`, which remains failed.
+
+Facts:
+
+- Full-output cross-correlation finds a best lag of exactly zero within ±4,096 samples, so a simple alignment shift does not explain the rejected waveform.
+- Error is temporally concentrated and grows with reference amplitude, but neither fact identifies an operator.
+- The fully delegated coarse wave first crosses the material rule between the predecoder affine output and the embed Conv output after QDQ.
+- The fully delegated fine boundaries are non-material through embed `Pad`, then first become material after embed input QDQ: normalized RMSE rises from `0.000294` at `Pad` to `0.010376` after QDQ; post-QDQ cosine remains `0.999946`.
+- Exposing the raw embed Conv output changes QNN fusion/assignment. The fail-closed session rejects that tap before inference, so it supplies no numerical evidence and cannot isolate Conv-before-QDQ.
+- An exact-input two-node `QuantizeLinear → DequantizeLinear` microprobe uses the actual CPU embed-Pad tensor, scale `0.007331503`, and zero point `102`. It fully executes on physical HTP but is non-material: normalized RMSE `0.005996`, cosine `0.999982`, SNR `44.442 dB`, and max error `0.004008`.
+
+Bounded conclusion: **the narrowest observable composite interval is embed `Pad → QDQ`, but isolated QDQ does not reproduce the material prefix result. The leading evidence is fusion/context-dependent quantization behavior or amplification of a small upstream perturbation, not a confirmed QDQ, Conv, GELU, or general QNN implementation defect.** Physical profiles do not expose definitive intermediate HTP precision, so reduced-precision accumulation remains possible but unconfirmed.
+
+All diagnostic phone stages were unique experiment-0010 paths, all cleanup attempts succeeded, and the phone lock was released. No vector-estimator work began.
 
 ## Phase 2: test vector-estimator value
 

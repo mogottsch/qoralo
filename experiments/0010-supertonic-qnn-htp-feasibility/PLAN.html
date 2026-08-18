@@ -49,11 +49,12 @@ tr:last-child td { border-bottom:0; }
 <a class="toc-level-2" href="#phase-map">Phase map</a>
 <a class="toc-level-2" href="#current-position">Current position</a>
 <a class="toc-level-2" href="#phase-1-establish-vocoder-htp-feasibility">Phase 1: establish vocoder HTP feasibility</a>
+<a class="toc-level-3" href="#layer-level-localization">Layer-level localization</a>
 <a class="toc-level-2" href="#phase-2-test-vector-estimator-value">Phase 2: test vector-estimator value</a>
 <a class="toc-level-2" href="#phase-3-run-complete-accelerated-android-synthesis">Phase 3: run complete accelerated Android synthesis</a>
 <a class="toc-level-2" href="#phase-4-make-the-deployment-decision">Phase 4: make the deployment decision</a></nav>
 <main>
-<div class="mirror-note"><strong>Visual mirror of <code>experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-17</span><span>source sha256: 2ccdf15c874eafdc…</span></div></div>
+<div class="mirror-note"><strong>Visual mirror of <code>experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-17</span><span>source sha256: 7d621fb2b2083c87…</span></div></div>
 <article><h1 id="experiment-0010-execution-plan">Experiment 0010 execution plan<a class="anchor" href="#experiment-0010-execution-plan" aria-label="Link to this section">#</a></h1>
 <h2 id="goal">Goal<a class="anchor" href="#goal" aria-label="Link to this section">#</a></h2>
 <p>Select and validate a text-to-speech model that can become the local voice of a future NotebookLM-like Android experience. It should sound pleasant and natural over sustained listening, with podcast-like delivery rather than merely intelligible speech.</p>
@@ -141,7 +142,12 @@ tr:last-child td { border-bottom:0; }
 <tr>
 <td><strong>Done</strong></td>
 <td>Cleanup and stop gate</td>
-<td>The unique scoped device directory was removed, the phone lock was released, and no vector-estimator or further phone work began.</td>
+<td>The unique scoped device directory was removed, the phone lock was released, and no vector-estimator work began.</td>
+</tr>
+<tr>
+<td><strong>Done</strong></td>
+<td>Layer-level numerical bisection</td>
+<td>The first material observable boundary is the composite embed <code>Pad → QDQ</code> transition. An exact-real-input QDQ microprobe is non-material, while exposing raw embed <code>Conv</code> breaks full delegation; the evidence is fusion/context dependent and does not establish an operator defect.</td>
 </tr>
 </tbody></table></div>
 <p>The current boundary is therefore clear: <strong>the explicit-GELU vocoder physically executed on the SM8550 HTP with CPU fallback disabled, but its output failed the frozen numerical policy and is not accepted audio. No same-device CPU baseline was collected, so no speedup claim is supported.</strong></p>
@@ -173,6 +179,19 @@ tr:last-child td { border-bottom:0; }
 <li>the scoped device directory was removed and the repository phone lock was released.</li>
 </ul>
 <p><strong>Completed as a bounded negative result:</strong> physical HTP execution is proven, but numerical correctness is rejected. Do not loosen the policy, accept the output as audio, rerun this derivative, start the vector estimator, or claim speedup/end-to-end success.</p>
+<h3 id="layer-level-localization">Layer-level localization<a class="anchor" href="#layer-level-localization" aria-label="Link to this section">#</a></h3>
+<p>A scoped coarse-to-fine diagnostic campaign used the unchanged latent fixture, patched runtime, fail-closed QNN sessions, and predeclared intermediate rules. These rules classify localization evidence only; they do not replace final-waveform policy SHA <code>7116c522…</code>, which remains failed.</p>
+<p>Facts:</p>
+<ul>
+<li>Full-output cross-correlation finds a best lag of exactly zero within ±4,096 samples, so a simple alignment shift does not explain the rejected waveform.</li>
+<li>Error is temporally concentrated and grows with reference amplitude, but neither fact identifies an operator.</li>
+<li>The fully delegated coarse wave first crosses the material rule between the predecoder affine output and the embed Conv output after QDQ.</li>
+<li>The fully delegated fine boundaries are non-material through embed <code>Pad</code>, then first become material after embed input QDQ: normalized RMSE rises from <code>0.000294</code> at <code>Pad</code> to <code>0.010376</code> after QDQ; post-QDQ cosine remains <code>0.999946</code>.</li>
+<li>Exposing the raw embed Conv output changes QNN fusion/assignment. The fail-closed session rejects that tap before inference, so it supplies no numerical evidence and cannot isolate Conv-before-QDQ.</li>
+<li>An exact-input two-node <code>QuantizeLinear → DequantizeLinear</code> microprobe uses the actual CPU embed-Pad tensor, scale <code>0.007331503</code>, and zero point <code>102</code>. It fully executes on physical HTP but is non-material: normalized RMSE <code>0.005996</code>, cosine <code>0.999982</code>, SNR <code>44.442 dB</code>, and max error <code>0.004008</code>.</li>
+</ul>
+<p>Bounded conclusion: <strong>the narrowest observable composite interval is embed <code>Pad → QDQ</code>, but isolated QDQ does not reproduce the material prefix result. The leading evidence is fusion/context-dependent quantization behavior or amplification of a small upstream perturbation, not a confirmed QDQ, Conv, GELU, or general QNN implementation defect.</strong> Physical profiles do not expose definitive intermediate HTP precision, so reduced-precision accumulation remains possible but unconfirmed.</p>
+<p>All diagnostic phone stages were unique experiment-0010 paths, all cleanup attempts succeeded, and the phone lock was released. No vector-estimator work began.</p>
 <h2 id="phase-2-test-vector-estimator-value">Phase 2: test vector-estimator value<a class="anchor" href="#phase-2-test-vector-estimator-value" aria-label="Link to this section">#</a></h2>
 <p>This phase is closed because Phase 1 did not pass numerical correctness. Do not start the vector estimator from this derivative result. If a future separately authorized experiment revisits acceleration, it must define a new rationale and gates rather than treating physical execution alone as success.</p>
 <p>The previously planned work was to test the exact released vector-estimator graph first and preserve any unsupported-operator result before considering a derived graph.</p>
