@@ -1,0 +1,1032 @@
+{
+  "claim_boundary": "This result proves only that the released dynamic graph is rejected for dynamic I/O and that a deterministic shape-only derivative remains partially assignable on the host QNN capability path. It does not prove physical HTP execution, component correctness, latency, memory, or end-to-end acceleration.",
+  "contract": {
+    "inputs": [
+      {
+        "dtype": "float32",
+        "fixture_shape": [
+          1,
+          144,
+          238
+        ],
+        "name": "noisy_latent",
+        "released_shape": [
+          "batch_size",
+          144,
+          "latent_length"
+        ]
+      },
+      {
+        "dtype": "float32",
+        "fixture_shape": [
+          1,
+          256,
+          239
+        ],
+        "name": "text_emb",
+        "released_shape": [
+          "batch_size",
+          256,
+          "text_length"
+        ]
+      },
+      {
+        "dtype": "float32",
+        "fixture_shape": [
+          1,
+          50,
+          256
+        ],
+        "name": "style_ttl",
+        "released_shape": [
+          "batch_size",
+          50,
+          256
+        ]
+      },
+      {
+        "dtype": "float32",
+        "fixture_shape": [
+          1,
+          1,
+          238
+        ],
+        "name": "latent_mask",
+        "released_shape": [
+          "batch_size",
+          1,
+          "latent_length"
+        ]
+      },
+      {
+        "dtype": "float32",
+        "fixture_shape": [
+          1,
+          1,
+          239
+        ],
+        "name": "text_mask",
+        "released_shape": [
+          "batch_size",
+          1,
+          "text_length"
+        ]
+      },
+      {
+        "dtype": "float32",
+        "fixture_shape": [
+          1
+        ],
+        "name": "current_step",
+        "released_shape": [
+          "batch_size"
+        ]
+      },
+      {
+        "dtype": "float32",
+        "fixture_shape": [
+          1
+        ],
+        "name": "total_step",
+        "released_shape": [
+          "batch_size"
+        ]
+      }
+    ],
+    "output": {
+      "dtype": "float32",
+      "fixture_shape": [
+        1,
+        144,
+        238
+      ],
+      "name": "denoised_latent",
+      "released_shape": [
+        "batch_size",
+        144,
+        "latent_length"
+      ]
+    }
+  },
+  "decision": {
+    "android_runner_built": false,
+    "correctness_policy_frozen": false,
+    "phone_work_ran": false,
+    "physical_outputs_exist": false,
+    "reason": "The concrete-shape graph remains only partially assigned: final QNN capability pass exposes 21 partitions and supports 921 of 1057 optimized nodes, leaving exactly 136 unsupported. Fail-closed session creation rejects all CPU fallback.",
+    "recursive_chain_ran": false,
+    "required_route_for_full_htp": "A broad static-quantization/export conversion would be required to replace dynamic activation quantization/MatMulInteger patterns, standalone per-channel weight dequantization, and Softplus with a QNN-compatible graph. This is not a narrow compatibility rewrite and was not authorized or attempted.",
+    "result": "blocked"
+  },
+  "frozen_real_five_step_fixtures": {
+    "all_40_referenced_input_output_records_hash_and_size_valid": true,
+    "cpu_recursive_links_exact": true,
+    "language": "en",
+    "latent_length": 238,
+    "manifest_bytes": 27475,
+    "manifest_sha256": "59acefd43c7334e8b16119d7aabc3f0fe23cbac4d5529ebda2fbd21f142b98f2",
+    "runs": [
+      {
+        "current_step": {
+          "bytes": 4,
+          "dtype": "float32",
+          "elements": 1,
+          "path": "vector_estimator/step-00/input-current_step.raw",
+          "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+          "shape": [
+            1
+          ]
+        },
+        "noisy_latent": {
+          "bytes": 137088,
+          "dtype": "float32",
+          "elements": 34272,
+          "path": "vector_estimator/step-00/input-noisy_latent.raw",
+          "sha256": "9b4f7220c868a20e29856726f827b7efd7c57cea524d06471ca4756f2782f7c7",
+          "shape": [
+            1,
+            144,
+            238
+          ]
+        },
+        "reference_output": {
+          "bytes": 137088,
+          "dtype": "float32",
+          "elements": 34272,
+          "path": "vector_estimator/step-00/reference-output.raw",
+          "sha256": "90bccdc87aeda133e57472a684180e57a8de6fef0b016722ab752f7781b11b61",
+          "shape": [
+            1,
+            144,
+            238
+          ]
+        },
+        "step": 0
+      },
+      {
+        "current_step": {
+          "bytes": 4,
+          "dtype": "float32",
+          "elements": 1,
+          "path": "vector_estimator/step-01/input-current_step.raw",
+          "sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c",
+          "shape": [
+            1
+          ]
+        },
+        "noisy_latent": {
+          "bytes": 137088,
+          "dtype": "float32",
+          "elements": 34272,
+          "path": "vector_estimator/step-01/input-noisy_latent.raw",
+          "sha256": "90bccdc87aeda133e57472a684180e57a8de6fef0b016722ab752f7781b11b61",
+          "shape": [
+            1,
+            144,
+            238
+          ]
+        },
+        "reference_output": {
+          "bytes": 137088,
+          "dtype": "float32",
+          "elements": 34272,
+          "path": "vector_estimator/step-01/reference-output.raw",
+          "sha256": "7c89dd499115457ef15245f8928dd9787d1dc516dd6f6a2138062f7d942fc8df",
+          "shape": [
+            1,
+            144,
+            238
+          ]
+        },
+        "step": 1
+      },
+      {
+        "current_step": {
+          "bytes": 4,
+          "dtype": "float32",
+          "elements": 1,
+          "path": "vector_estimator/step-02/input-current_step.raw",
+          "sha256": "d88c86f15bbea365d658ad95a81d45367c465f7af6f7264fb077f01747ddc77d",
+          "shape": [
+            1
+          ]
+        },
+        "noisy_latent": {
+          "bytes": 137088,
+          "dtype": "float32",
+          "elements": 34272,
+          "path": "vector_estimator/step-02/input-noisy_latent.raw",
+          "sha256": "7c89dd499115457ef15245f8928dd9787d1dc516dd6f6a2138062f7d942fc8df",
+          "shape": [
+            1,
+            144,
+            238
+          ]
+        },
+        "reference_output": {
+          "bytes": 137088,
+          "dtype": "float32",
+          "elements": 34272,
+          "path": "vector_estimator/step-02/reference-output.raw",
+          "sha256": "28380704fc602e6af677c22752dd08609895b38569757e0b070d5accb1fd4ada",
+          "shape": [
+            1,
+            144,
+            238
+          ]
+        },
+        "step": 2
+      },
+      {
+        "current_step": {
+          "bytes": 4,
+          "dtype": "float32",
+          "elements": 1,
+          "path": "vector_estimator/step-03/input-current_step.raw",
+          "sha256": "ea2845900b5856c9bf354b1aa9761b5aa6888e5ed61738fe9579ca42bc0f6054",
+          "shape": [
+            1
+          ]
+        },
+        "noisy_latent": {
+          "bytes": 137088,
+          "dtype": "float32",
+          "elements": 34272,
+          "path": "vector_estimator/step-03/input-noisy_latent.raw",
+          "sha256": "28380704fc602e6af677c22752dd08609895b38569757e0b070d5accb1fd4ada",
+          "shape": [
+            1,
+            144,
+            238
+          ]
+        },
+        "reference_output": {
+          "bytes": 137088,
+          "dtype": "float32",
+          "elements": 34272,
+          "path": "vector_estimator/step-03/reference-output.raw",
+          "sha256": "2e4259c9303aa2dba976dcbac533746df220276529b811ad107bf5dc4d1c9cae",
+          "shape": [
+            1,
+            144,
+            238
+          ]
+        },
+        "step": 3
+      },
+      {
+        "current_step": {
+          "bytes": 4,
+          "dtype": "float32",
+          "elements": 1,
+          "path": "vector_estimator/step-04/input-current_step.raw",
+          "sha256": "4f4b9b7d8b86633e2824e2f439819357b0cd010ab410ea1a691b12c5f94e91e0",
+          "shape": [
+            1
+          ]
+        },
+        "noisy_latent": {
+          "bytes": 137088,
+          "dtype": "float32",
+          "elements": 34272,
+          "path": "vector_estimator/step-04/input-noisy_latent.raw",
+          "sha256": "2e4259c9303aa2dba976dcbac533746df220276529b811ad107bf5dc4d1c9cae",
+          "shape": [
+            1,
+            144,
+            238
+          ]
+        },
+        "reference_output": {
+          "bytes": 137088,
+          "dtype": "float32",
+          "elements": 34272,
+          "path": "vector_estimator/step-04/reference-output.raw",
+          "sha256": "50866adab63f6b43953196a4dce0a705038c823c08b5dc068eb9ca51db5ae41a",
+          "shape": [
+            1,
+            144,
+            238
+          ]
+        },
+        "step": 4
+      }
+    ],
+    "seed": 20260813,
+    "shared_inputs": {
+      "latent_mask": {
+        "bytes": 952,
+        "dtype": "float32",
+        "elements": 238,
+        "finite": true,
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0,
+        "path": "shared/latent_mask.raw",
+        "rms": 1.0,
+        "sha256": "ba15b573453b0c26f6d5b505e4b49481826a8c176092cfd6251f9fbcc10eaea7",
+        "shape": [
+          1,
+          1,
+          238
+        ]
+      },
+      "style_ttl": {
+        "bytes": 51200,
+        "dtype": "float32",
+        "elements": 12800,
+        "finite": true,
+        "max": 0.8074272274971008,
+        "mean": 0.0015251915392488868,
+        "min": -0.7260856032371521,
+        "path": "shared/style_ttl.raw",
+        "rms": 0.06250000016699657,
+        "sha256": "83d2429acffbc2456a42bcee08a56ff04e775d6ea5c5bbef1529a988628367e7",
+        "shape": [
+          1,
+          50,
+          256
+        ]
+      },
+      "text_emb": {
+        "bytes": 244736,
+        "dtype": "float32",
+        "elements": 61184,
+        "finite": true,
+        "max": 8.698089599609375,
+        "mean": 0.009249369587366258,
+        "min": -2.2612099647521973,
+        "path": "shared/text_emb.raw",
+        "rms": 0.401999233334973,
+        "sha256": "66969805517d740d7f87fe0cb20fba94c49498cd15eec11c1897efd12e326c41",
+        "shape": [
+          1,
+          256,
+          239
+        ]
+      },
+      "text_mask": {
+        "bytes": 956,
+        "dtype": "float32",
+        "elements": 239,
+        "finite": true,
+        "max": 1.0,
+        "mean": 1.0,
+        "min": 1.0,
+        "path": "shared/text_mask.raw",
+        "rms": 1.0,
+        "sha256": "21c44c51bc85efb67ac0c677666d0d3af05bdc1f22ea9431cd80d6052de86908",
+        "shape": [
+          1,
+          1,
+          239
+        ]
+      },
+      "total_step": {
+        "bytes": 4,
+        "dtype": "float32",
+        "elements": 1,
+        "finite": true,
+        "max": 5.0,
+        "mean": 5.0,
+        "min": 5.0,
+        "path": "shared/total_step.raw",
+        "rms": 5.0,
+        "sha256": "fca31f1667a6aa1bba12fca4e4ea1becd503379d80da3213af07f6cc5702828d",
+        "shape": [
+          1
+        ]
+      }
+    },
+    "speaker_id": 5,
+    "text_length": 239,
+    "voice": "M1"
+  },
+  "prohibited_follow_on_not_performed": [
+    "No conversion or re-quantization",
+    "No ORT rebuild or source modification",
+    "No Android runner work",
+    "No phone access",
+    "No other Supertonic component probe"
+  ],
+  "recorded_at_utc": "2026-08-18T10:30:38Z",
+  "released_graph_host_gate": {
+    "error": "qnn_model.cc:73 ParseGraphInputOrOutput Dynamic shape is not supported yet, for output: total_step",
+    "fallback_disabled": true,
+    "model_sha256": "20cd86fa5c6effedfda0e7cffe5b0569ca401c440a0c3a1d72bf39286c0db3fd",
+    "result": "rejected_before_capability_due_to_dynamic graph I/O shapes",
+    "runtime": "patched ONNX Runtime 1.27.1 + QNN 2.49 HTP emulator",
+    "runtime_sha256": "bc9df5a7df1b5d9de4d87adcaa4cc864bbde0f790e80d48e00ce0e4253a2ae11",
+    "session_created": false,
+    "stderr": {
+      "bytes": 2668645,
+      "sha256": "738fc935f16d1404051e1bcf749506ad887083d0c6ee09db44b8227bf21fefd6"
+    }
+  },
+  "schema_version": 1,
+  "scope": "Released Supertonic 3 vector-estimator fail-closed QNN/HTP feasibility through host capability only.",
+  "shape_only_derivative": {
+    "all_682_initializer_names_and_bytes_identical": true,
+    "deterministic_rerun_byte_identical": true,
+    "model_bytes": 78417427,
+    "model_sha256": "e154e60fdb0560c63d4620e6907443313547266c01e03fc2bd0342847a7223d4",
+    "onnx_full_check": true,
+    "opsets_identical": true,
+    "ordered_nodes_byte_identical": true,
+    "provenance_sha256": "8ba2fb2c8b0dc95b091f5856cd5ef72b3b1b9ce44fe121f3e1c3b92dcb0532d4",
+    "purpose": "Concretize only the seven graph input shapes and one graph output shape to B=1, latent_length=238, text_length=239.",
+    "structural_validation_sha256": "da4dfcae4c3db7d585cc68ae78f5e27c1c13f7da3318aa774350df2d8172ea8e",
+    "tool": "tools/fix_onnx_io_shapes.py",
+    "tool_sha256": "565df9c2d8be86d04ec30f969a65bc133ead972b5d3826fb915e080cb2832030"
+  },
+  "shape_only_derivative_host_gate": {
+    "capability_passes": [
+      {
+        "graph_nodes": 1106,
+        "partitions": 21,
+        "supported_nodes": 970,
+        "unsupported_nodes": 136
+      },
+      {
+        "graph_nodes": 1057,
+        "partitions": 21,
+        "supported_nodes": 921,
+        "unsupported_nodes": 136
+      }
+    ],
+    "exit_code": 255,
+    "fallback_disabled": true,
+    "final_unsupported_count": 136,
+    "final_unsupported_nodes": [
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.proj_in.net.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.0.convnext.0.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.0.convnext.0.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.0.convnext.0.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.0.convnext.1.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.0.convnext.1.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.0.convnext.1.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.0.convnext.2.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.0.convnext.2.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.0.convnext.2.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.0.convnext.3.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.0.convnext.3.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.0.convnext.3.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/time_encoder/sinusoidal/Concat_output_0_QuantizeLinear",
+        "type": "DynamicQuantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/time_encoder/mlp/mlp.0/linear/Gemm_MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus",
+        "type": "Softplus"
+      },
+      {
+        "name": "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Mul_output_0_QuantizeLinear",
+        "type": "DynamicQuantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/time_encoder/mlp/mlp.2/linear/Gemm_MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.1/Transpose_output_0_QuantizeLinear",
+        "type": "DynamicQuantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.1/linear/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.2.convnext.0.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.2.convnext.0.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.2.convnext.0.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.3/Transpose_output_0_QuantizeLinear",
+        "type": "DynamicQuantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.3/attn/W_query/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.3/Transpose_1_output_0_QuantizeLinear",
+        "type": "DynamicQuantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.3/attn/W_key/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.3/attn/W_value/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.3/attn/Squeeze_output_0_QuantizeLinear",
+        "type": "DynamicQuantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.3/attn/out_fc/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.4.convnext.0.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.4.convnext.0.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.4.convnext.0.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.5/Transpose_output_0_QuantizeLinear",
+        "type": "DynamicQuantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.5/attention/W_query/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "/vector_estimator/Concat_7_output_0_QuantizeLinear",
+        "type": "DynamicQuantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.5/attention/W_value/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.5/attention/Squeeze_output_0_QuantizeLinear",
+        "type": "DynamicQuantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.5/attention/out_fc/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.6.convnext.0.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.6.convnext.0.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.6.convnext.0.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.6.convnext.1.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.6.convnext.1.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.6.convnext.1.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.6.convnext.2.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.6.convnext.2.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.6.convnext.2.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.6.convnext.3.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.6.convnext.3.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.6.convnext.3.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.7/linear/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.8.convnext.0.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.8.convnext.0.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.8.convnext.0.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.9/Transpose_output_0_QuantizeLinear",
+        "type": "DynamicQuantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.9/attn/W_query/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.9/attn/W_key/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.9/attn/W_value/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.9/attn/Squeeze_output_0_QuantizeLinear",
+        "type": "DynamicQuantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.9/attn/out_fc/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.10.convnext.0.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.10.convnext.0.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.10.convnext.0.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.11/Transpose_output_0_QuantizeLinear",
+        "type": "DynamicQuantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.11/attention/W_query/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.11/attention/W_value/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.11/attention/Squeeze_output_0_QuantizeLinear",
+        "type": "DynamicQuantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.11/attention/out_fc/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.12.convnext.0.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.12.convnext.0.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.12.convnext.0.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.12.convnext.1.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.12.convnext.1.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.12.convnext.1.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.12.convnext.2.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.12.convnext.2.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.12.convnext.2.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.12.convnext.3.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.12.convnext.3.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.12.convnext.3.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.13/linear/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.14.convnext.0.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.14.convnext.0.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.14.convnext.0.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.15/Transpose_output_0_QuantizeLinear",
+        "type": "DynamicQuantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.15/attn/W_query/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.15/attn/W_key/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.15/attn/W_value/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.15/attn/Squeeze_output_0_QuantizeLinear",
+        "type": "DynamicQuantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.15/attn/out_fc/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.16.convnext.0.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.16.convnext.0.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.16.convnext.0.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.17/Transpose_output_0_QuantizeLinear",
+        "type": "DynamicQuantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.17/attention/W_query/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.17/attention/W_value/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.17/attention/Squeeze_output_0_QuantizeLinear",
+        "type": "DynamicQuantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.17/attention/out_fc/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.18.convnext.0.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.18.convnext.0.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.18.convnext.0.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.18.convnext.1.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.18.convnext.1.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.18.convnext.1.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.18.convnext.2.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.18.convnext.2.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.18.convnext.2.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.18.convnext.3.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.18.convnext.3.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.18.convnext.3.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.19/linear/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.20.convnext.0.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.20.convnext.0.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.20.convnext.0.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.21/Transpose_output_0_QuantizeLinear",
+        "type": "DynamicQuantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.21/attn/W_query/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.21/attn/W_key/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.21/attn/W_value/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.21/attn/Squeeze_output_0_QuantizeLinear",
+        "type": "DynamicQuantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.21/attn/out_fc/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.22.convnext.0.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.22.convnext.0.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.main_blocks.22.convnext.0.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.23/Transpose_output_0_QuantizeLinear",
+        "type": "DynamicQuantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.23/attention/W_query/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.23/attention/W_value/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.23/attention/Squeeze_output_0_QuantizeLinear",
+        "type": "DynamicQuantizeLinear"
+      },
+      {
+        "name": "/vector_estimator/vector_field/main_blocks.23/attention/out_fc/linear/MatMul_quant",
+        "type": "MatMulInteger"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.last_convnext.convnext.0.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.last_convnext.convnext.0.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.last_convnext.convnext.0.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.last_convnext.convnext.1.dwconv.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.last_convnext.convnext.1.pwconv1.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.last_convnext.convnext.1.pwconv2.weight",
+        "type": "DequantizeLinear"
+      },
+      {
+        "name": "DQ_vector_estimator.tts.ttl.vector_field.last_convnext.convnext.2.dwconv.weight",
+        "type": "DequantizeLinear"
+      }
+    ],
+    "final_unsupported_types": {
+      "DequantizeLinear": 80,
+      "DynamicQuantizeLinear": 21,
+      "MatMulInteger": 34,
+      "Softplus": 1
+    },
+    "model_sha256": "e154e60fdb0560c63d4620e6907443313547266c01e03fc2bd0342847a7223d4",
+    "runtime_sha256": "bc9df5a7df1b5d9de4d87adcaa4cc864bbde0f790e80d48e00ce0e4253a2ae11",
+    "schema_version": 1,
+    "session_created": false,
+    "stderr": {
+      "bytes": 28021002,
+      "sha256": "f53f68a14caecf3fbbb37e6adc9083ff1137c18c0f67b3f68a64d4efb7beffeb"
+    },
+    "stop_reason": "Partial assignment with CPU fallback explicitly disabled."
+  },
+  "source_model": {
+    "bytes": 78400833,
+    "identity": "official vector_estimator.int8.onnx from sherpa-onnx-supertonic-3-tts-int8-2026-05-11",
+    "initializers": 682,
+    "nodes": 1222,
+    "onnx_ir_version": 9,
+    "opset": 19,
+    "sha256": "20cd86fa5c6effedfda0e7cffe5b0569ca401c440a0c3a1d72bf39286c0db3fd"
+  },
+  "status": "blocked_host_partial_assignment_no_physical_run"
+}

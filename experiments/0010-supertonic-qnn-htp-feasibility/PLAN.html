@@ -54,7 +54,7 @@ tr:last-child td { border-bottom:0; }
 <a class="toc-level-2" href="#phase-3-run-complete-accelerated-android-synthesis">Phase 3: run complete accelerated Android synthesis</a>
 <a class="toc-level-2" href="#phase-4-make-the-deployment-decision">Phase 4: make the deployment decision</a></nav>
 <main>
-<div class="mirror-note"><strong>Visual mirror of <code>experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-18</span><span>source sha256: f8f886e6f26f7c93…</span></div></div>
+<div class="mirror-note"><strong>Visual mirror of <code>experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-18</span><span>source sha256: b6285d54370a905d…</span></div></div>
 <article><h1 id="experiment-0010-execution-plan">Experiment 0010 execution plan<a class="anchor" href="#experiment-0010-execution-plan" aria-label="Link to this section">#</a></h1>
 <h2 id="goal">Goal<a class="anchor" href="#goal" aria-label="Link to this section">#</a></h2>
 <p>Select and validate a text-to-speech model that can become the local voice of a future NotebookLM-like Android experience. It should sound pleasant and natural over sustained listening, with podcast-like delivery rather than merely intelligible speech.</p>
@@ -74,13 +74,13 @@ tr:last-child td { border-bottom:0; }
 </tr>
 <tr>
 <td>Phase 2: vector-estimator value</td>
-<td><strong>Next — newly authorized</strong></td>
-<td>Test the exact released vector estimator fail-closed on HTP, then use the smallest proven derivative only if required.</td>
+<td><strong>Complete — blocked at host assignment</strong></td>
+<td>The released graph is dynamic-shape-incompatible; its shape-only derivative still leaves 136 optimized nodes outside QNN, so fail-closed session creation rejects it.</td>
 </tr>
 <tr>
 <td>Phase 3: complete accelerated synthesis</td>
-<td><strong>Pending Phase 2</strong></td>
-<td>Move all four ONNX components to fail-closed HTP sessions where supported, while keeping ordinary text/orchestration code on CPU.</td>
+<td><strong>Blocked</strong></td>
+<td>Full estimator HTP would require a broad static-quantization/export route, not a narrow compatibility rewrite.</td>
 </tr>
 <tr>
 <td>Phase 4: deployment decision</td>
@@ -154,6 +154,11 @@ tr:last-child td { border-bottom:0; }
 <td>Layer-level numerical bisection</td>
 <td>The first material observable boundary is the composite embed <code>Pad → QDQ</code> transition. An exact-real-input QDQ microprobe is non-material, while exposing raw embed <code>Conv</code> breaks full delegation; the evidence is fusion/context dependent and does not establish an operator defect.</td>
 </tr>
+<tr>
+<td><strong>Blocked</strong></td>
+<td>Released vector estimator host gate</td>
+<td>Concrete shapes remove the released graph&#x27;s dynamic-I/O rejection, but patched ORT/QNN supports only 921 of 1,057 optimized nodes across 21 partitions. The remaining 136 nodes prevent fail-closed session creation.</td>
+</tr>
 </tbody></table></div>
 <p>The current boundary is therefore clear: <strong>the explicit-GELU vocoder physically executed on the SM8550 HTP with CPU fallback disabled and failed the frozen numerical policy. A later informal blind A/B found no audible difference for the single frozen utterance, so perceptual feasibility remains open under a new prospective gate. No same-device CPU baseline was collected, so no speedup claim is supported.</strong></p>
 <p>When a phase finishes, its detailed result stays in experiment <code>0010</code>, its condensed outcome moves to <a href="../../docs/history.md"><code>docs/history.md</code></a> and the <a href="../../docs/history.html">history HTML</a>, and it is removed from this plan.</p>
@@ -198,9 +203,17 @@ tr:last-child td { border-bottom:0; }
 <p>Bounded conclusion: <strong>the narrowest observable composite interval is embed <code>Pad → QDQ</code>, but isolated QDQ does not reproduce the material prefix result. The leading evidence is fusion/context-dependent quantization behavior or amplification of a small upstream perturbation, not a confirmed QDQ, Conv, GELU, or general QNN implementation defect.</strong> Physical profiles do not expose definitive intermediate HTP precision, so reduced-precision accumulation remains possible but unconfirmed.</p>
 <p>All diagnostic phone stages were unique experiment-0010 paths, all cleanup attempts succeeded, and the phone lock was released. No vector-estimator work began.</p>
 <h2 id="phase-2-test-vector-estimator-value">Phase 2: test vector-estimator value<a class="anchor" href="#phase-2-test-vector-estimator-value" aria-label="Link to this section">#</a></h2>
-<p>This phase is newly authorized following the post-hoc perceptual observation. Move quickly but retain the evidence discipline: test the exact released vector-estimator graph first, preserve any unsupported-operator result, and consider a separately labeled derivative only when a narrow incompatibility is proven. Do not inherit the vocoder&#x27;s post-hoc listening result as evidence for this different component.</p>
-<p>Use the frozen real inputs for all five estimator steps. Freeze component-output criteria before physical outputs, require complete QNN assignment with CPU fallback disabled, and capture graph finalization, first and warm execution, tensor transfers, memory, partition coverage, and full-tensor numerical error. Start with host capability, then run a scoped physical probe only after the Android package is hash-validated offline.</p>
-<p><strong>Complete when:</strong> every required estimator step has physical HTP evidence and passes its frozen correctness gate, with timing sufficient to decide whether it is worth integrating. Unsupported assignment, incorrect output, or negligible value remains a valid bounded result.</p>
+<p>This phase completed as a bounded host blocker. The exact official <code>vector_estimator.int8.onnx</code> is SHA-256 <code>20cd86fa…</code>. Its seven float32 inputs and one float32 output retain symbolic batch, latent-length, and text-length dimensions. All frozen files for the five real estimator steps were revalidated against fixture-manifest SHA-256 <code>59acefd…</code>; every output of CPU step 0–3 is the exact noisy-latent input of the following step.</p>
+<p>The released graph first fails before capability analysis because QNN does not support its dynamic graph-I/O shapes. A deterministic derivative then fixed only batch <code>1</code>, latent length <code>238</code>, and text length <code>239</code>. The derivative is SHA-256 <code>e154e60f…</code>; all 1,222 ordered nodes and all 682 initializer names and bytes remain identical to the official source, ONNX full-check passes, and a deterministic rerun is byte-identical.</p>
+<p>That shape-only derivative still fails the mandatory no-fallback host gate. The final optimized capability pass reports:</p>
+<ul>
+<li>21 QNN partitions;</li>
+<li>921 of 1,057 nodes supported;</li>
+<li>136 unsupported nodes: 80 standalone per-channel <code>DequantizeLinear</code>, 34 <code>MatMulInteger</code>, 21 <code>DynamicQuantizeLinear</code>, and one <code>Softplus</code>;</li>
+<li>session creation rejected because CPU fallback is explicitly disabled.</li>
+</ul>
+<p>The canonical exact node enumeration is in <a href="results/vector-estimator-checkpoint.json"><code>results/vector-estimator-checkpoint.json</code></a>. This is not a narrow operator mismatch like the vocoder GELU case: reaching complete HTP assignment would require a broad static-quantization/export conversion. No such conversion or re-quantization was attempted. No Android runner was built, no phone command ran, no correctness policy or HTP output exists, and no recursive estimator chain or other model component was tested.</p>
+<p><strong>Completed as a bounded negative host result:</strong> the released vector-estimator route is not eligible for physical HTP testing under the fail-closed policy. Resume only under a separately authorized broad export/static-quantization plan.</p>
 <h2 id="phase-3-run-complete-accelerated-android-synthesis">Phase 3: run complete accelerated Android synthesis<a class="anchor" href="#phase-3-run-complete-accelerated-android-synthesis" aria-label="Link to this section">#</a></h2>
 <p>This phase is pending the vector-estimator gate. The target is now aggressive but explicit: attempt fail-closed HTP sessions for the duration predictor, text encoder, all five vector-estimator calls, and vocoder. Ordinary text normalization, Unicode indexing, orchestration, trimming, and WAV encoding remain CPU application code rather than neural graphs.</p>
 <p>The integration contract is to build the smallest complete path that preserves Supertonic behavior.</p>

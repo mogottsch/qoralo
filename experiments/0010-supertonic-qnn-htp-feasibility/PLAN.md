@@ -15,8 +15,8 @@ These phases belong to experiment [`0010: Supertonic QNN/HTP feasibility`](READM
 | Phase | Status | Purpose |
 |---|---|---|
 | Phase 1: vocoder HTP feasibility | **Complete — numerically rejected, perceptually promising** | Physical HTP execution succeeded and failed the frozen full-tensor gate; a later informal blind A/B found no audible difference for the single frozen utterance. |
-| Phase 2: vector-estimator value | **Next — newly authorized** | Test the exact released vector estimator fail-closed on HTP, then use the smallest proven derivative only if required. |
-| Phase 3: complete accelerated synthesis | **Pending Phase 2** | Move all four ONNX components to fail-closed HTP sessions where supported, while keeping ordinary text/orchestration code on CPU. |
+| Phase 2: vector-estimator value | **Complete — blocked at host assignment** | The released graph is dynamic-shape-incompatible; its shape-only derivative still leaves 136 optimized nodes outside QNN, so fail-closed session creation rejects it. |
+| Phase 3: complete accelerated synthesis | **Blocked** | Full estimator HTP would require a broad static-quantization/export route, not a narrow compatibility rewrite. |
 | Phase 4: deployment decision | **Reopened** | Require prospective audio-quality evidence and a same-device CPU baseline before deciding whether HTP is useful. |
 
 ## Current position
@@ -35,6 +35,7 @@ These phases belong to experiment [`0010: Supertonic QNN/HTP feasibility`](READM
 | **Observed** | Post-hoc blind A/B | Moritz reported that the CPU reference and physical-HTP WAV sounded exactly the same for this one frozen utterance. This single-listener observation is encouraging product evidence, but it does not retroactively pass the numerical policy or establish broad perceptual equivalence. |
 | **Done** | Cleanup and stop gate | The unique scoped device directory was removed and the phone lock was released. No vector-estimator work began during the completed vocoder campaign. |
 | **Done** | Layer-level numerical bisection | The first material observable boundary is the composite embed `Pad → QDQ` transition. An exact-real-input QDQ microprobe is non-material, while exposing raw embed `Conv` breaks full delegation; the evidence is fusion/context dependent and does not establish an operator defect. |
+| **Blocked** | Released vector estimator host gate | Concrete shapes remove the released graph's dynamic-I/O rejection, but patched ORT/QNN supports only 921 of 1,057 optimized nodes across 21 partitions. The remaining 136 nodes prevent fail-closed session creation. |
 
 The current boundary is therefore clear: **the explicit-GELU vocoder physically executed on the SM8550 HTP with CPU fallback disabled and failed the frozen numerical policy. A later informal blind A/B found no audible difference for the single frozen utterance, so perceptual feasibility remains open under a new prospective gate. No same-device CPU baseline was collected, so no speedup claim is supported.**
 
@@ -89,11 +90,20 @@ All diagnostic phone stages were unique experiment-0010 paths, all cleanup attem
 
 ## Phase 2: test vector-estimator value
 
-This phase is newly authorized following the post-hoc perceptual observation. Move quickly but retain the evidence discipline: test the exact released vector-estimator graph first, preserve any unsupported-operator result, and consider a separately labeled derivative only when a narrow incompatibility is proven. Do not inherit the vocoder's post-hoc listening result as evidence for this different component.
+This phase completed as a bounded host blocker. The exact official `vector_estimator.int8.onnx` is SHA-256 `20cd86fa…`. Its seven float32 inputs and one float32 output retain symbolic batch, latent-length, and text-length dimensions. All frozen files for the five real estimator steps were revalidated against fixture-manifest SHA-256 `59acefd…`; every output of CPU step 0–3 is the exact noisy-latent input of the following step.
 
-Use the frozen real inputs for all five estimator steps. Freeze component-output criteria before physical outputs, require complete QNN assignment with CPU fallback disabled, and capture graph finalization, first and warm execution, tensor transfers, memory, partition coverage, and full-tensor numerical error. Start with host capability, then run a scoped physical probe only after the Android package is hash-validated offline.
+The released graph first fails before capability analysis because QNN does not support its dynamic graph-I/O shapes. A deterministic derivative then fixed only batch `1`, latent length `238`, and text length `239`. The derivative is SHA-256 `e154e60f…`; all 1,222 ordered nodes and all 682 initializer names and bytes remain identical to the official source, ONNX full-check passes, and a deterministic rerun is byte-identical.
 
-**Complete when:** every required estimator step has physical HTP evidence and passes its frozen correctness gate, with timing sufficient to decide whether it is worth integrating. Unsupported assignment, incorrect output, or negligible value remains a valid bounded result.
+That shape-only derivative still fails the mandatory no-fallback host gate. The final optimized capability pass reports:
+
+- 21 QNN partitions;
+- 921 of 1,057 nodes supported;
+- 136 unsupported nodes: 80 standalone per-channel `DequantizeLinear`, 34 `MatMulInteger`, 21 `DynamicQuantizeLinear`, and one `Softplus`;
+- session creation rejected because CPU fallback is explicitly disabled.
+
+The canonical exact node enumeration is in [`results/vector-estimator-checkpoint.json`](results/vector-estimator-checkpoint.json). This is not a narrow operator mismatch like the vocoder GELU case: reaching complete HTP assignment would require a broad static-quantization/export conversion. No such conversion or re-quantization was attempted. No Android runner was built, no phone command ran, no correctness policy or HTP output exists, and no recursive estimator chain or other model component was tested.
+
+**Completed as a bounded negative host result:** the released vector-estimator route is not eligible for physical HTP testing under the fail-closed policy. Resume only under a separately authorized broad export/static-quantization plan.
 
 ## Phase 3: run complete accelerated Android synthesis
 
