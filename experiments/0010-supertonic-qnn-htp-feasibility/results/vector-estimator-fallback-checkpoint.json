@@ -1,0 +1,260 @@
+{
+  "artifacts": {
+    "android_libonnxruntime_sha256": "40bc591798287525f365e8ded4bbc40e0c4e9440737e876026ec09ba359ac041",
+    "android_runner_sha256": "6374c085b57db087df5f5c07764493458b57504113e43286753cb265118ee22a",
+    "fixture_manifest_sha256": "59acefd43c7334e8b16119d7aabc3f0fe23cbac4d5529ebda2fbd21f142b98f2",
+    "reference_sha256": "90bccdc87aeda133e57472a684180e57a8de6fef0b016722ab752f7781b11b61",
+    "remote_stage_all_19_files_hash_matched": true,
+    "runner_source": {
+      "path": "host/ort_qnn_vector_runner.cc",
+      "sha256": "19ef3e8110d69f36cf54dddebf7e5a0211df72628f8897757b29cb33f2e3a391"
+    },
+    "shape_only_model_sha256": "e154e60fdb0560c63d4620e6907443313547266c01e03fc2bd0342847a7223d4",
+    "source_model_sha256": "20cd86fa5c6effedfda0e7cffe5b0569ca401c440a0c3a1d72bf39286c0db3fd",
+    "stage_manifest_sha256": "bc917e5ad41855fe8d680298e9114fa6e3b4746add5ee7e6789463aad51994e7"
+  },
+  "claim_boundary": "The single real step-00 fixture passes its frozen tensor policy and proves mixed physical CPU+HTP execution. It does not make the vector estimator fully HTP, validate recursive five-step behavior, or establish performance value.",
+  "controls": {
+    "adb_lock_fd_closed": true,
+    "phone_lock_acquired": true,
+    "phone_lock_released_and_available": true,
+    "scoped_cleanup_exit_code": 0,
+    "unique_remote_experiment_path": true
+  },
+  "device": {
+    "abi": "arm64-v8a",
+    "identity_gate_passed": true,
+    "model": "SM-S918B",
+    "serial": "R5CW81PR8SY",
+    "soc": "SM8550"
+  },
+  "evidence": {
+    "comparison_sha256": "dd8d29e7bdfe2d6dc8ef2886cbaca255a437292b869b443db52cdab31d1de708",
+    "execution_profile_summary_sha256": "a688da9cf7fd4924969acb5c40fc9af4dc2d58c875aedbf18a3ee085bc8d4842",
+    "ort_profile": {
+      "bytes": 90924,
+      "sha256": "6e40e7865dab178ee977583cb1b847d09e904dbecfa4760c977834f9b04dd80a"
+    },
+    "output": {
+      "bytes": 137088,
+      "sha256": "a0bf3b6c17d3d25573744eb298de70b318ef094ec926afae95bd96518a14468c"
+    },
+    "qnn_csv": {
+      "bytes": 192890,
+      "sha256": "e92e0c7000ce2f32f312c6cd31873d9a3f1d5eefa72ad4933e90047b30fc0641"
+    },
+    "qnn_log": {
+      "bytes": 211904,
+      "sha256": "d5f4f6baa4b24c9aece1d3df74d754a0bf93c07056226fa4711759ddaabf9e57"
+    }
+  },
+  "execution": {
+    "classification": "proven mixed physical execution: ORT records 21 QNN and 136 CPU node events; all 21 QNN partitions have RPC, accelerator time, cycle, and four-HVX-thread evidence.",
+    "cpu_operator_events": {
+      "DequantizeLinear": {
+        "events": 80,
+        "sum": 32071
+      },
+      "DynamicQuantizeLinear": {
+        "events": 21,
+        "sum": 5567
+      },
+      "MatMulInteger": {
+        "events": 34,
+        "sum": 25114
+      },
+      "Softplus": {
+        "events": 1,
+        "sum": 104
+      }
+    },
+    "first_and_only_run_seconds": 1.05424,
+    "max_rss_after_run_kb": 762464,
+    "max_rss_after_run_mib": 744.59375,
+    "max_rss_after_session_kb": 762464,
+    "mode": "mixed QNNExecutionProvider plus CPUExecutionProvider",
+    "ort_profile": {
+      "CPUExecutionProvider": {
+        "events": 136,
+        "max": 3032,
+        "min": 8,
+        "sum": 62856
+      },
+      "QNNExecutionProvider": {
+        "events": 21,
+        "max": 193990,
+        "min": 1617,
+        "sum": 985883
+      }
+    },
+    "output_elements": 34272,
+    "qnn_detailed_execution": {
+      "Accelerator (execute) time (cycles)": {
+        "count": 21,
+        "max": 145496796,
+        "min": 33944,
+        "sum": 878594487,
+        "values": [
+          99037155,
+          11204282,
+          33944,
+          35387,
+          24883311,
+          6684625,
+          45574038,
+          1054573,
+          145342316,
+          6722518,
+          45673824,
+          1084814,
+          145496796,
+          6769016,
+          45684981,
+          1119830,
+          145000677,
+          6809008,
+          45772011,
+          1146402,
+          93464979
+        ]
+      },
+      "Number of HVX threads used": {
+        "count": 21,
+        "max": 4,
+        "min": 4,
+        "sum": 84,
+        "values": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ]
+      },
+      "QNN accelerator (execute) time": {
+        "count": 21,
+        "max": 182782,
+        "min": 730,
+        "sum": 893050,
+        "values": [
+          92319,
+          14038,
+          834,
+          730,
+          18851,
+          7534,
+          32770,
+          1542,
+          166669,
+          7656,
+          33071,
+          1597,
+          182782,
+          7887,
+          33027,
+          1703,
+          173259,
+          7872,
+          32900,
+          1605,
+          74404
+        ]
+      },
+      "RPC (execute) time": {
+        "count": 21,
+        "max": 183974,
+        "min": 806,
+        "sum": 904541,
+        "values": [
+          93088,
+          14965,
+          920,
+          806,
+          19451,
+          7760,
+          33404,
+          1618,
+          167274,
+          7879,
+          33676,
+          1681,
+          183974,
+          8120,
+          34308,
+          1793,
+          174602,
+          8086,
+          34249,
+          1681,
+          75206
+        ]
+      }
+    },
+    "qnn_rpc_minus_accelerator_sum_us": 11491,
+    "runs": 1,
+    "session.disable_cpu_ep_fallback": "0",
+    "session_create_seconds": 21.7742,
+    "warm_timing_exists": false
+  },
+  "frozen_policy": {
+    "frozen_before_physical_output": true,
+    "path": "work/vector-fallback/step-00-comparison-policy.json",
+    "sha256": "20c0c8a32fae2cc459b48428e71552a7a396c356a5f0ad0cb34361e0a8ff93c3",
+    "thresholds": {
+      "all_finite": true,
+      "cosine_similarity_min": 0.995,
+      "max_abs_max": 0.1,
+      "mean_abs_max": 0.01,
+      "normalized_rmse_max": 0.05,
+      "rmse_max": 0.02,
+      "snr_db_min": 20.0
+    }
+  },
+  "interpretation": {
+    "fragmentation": "The run crossed 21 QNN partitions and 136 CPU nodes. ORT attributed 985883 us to QNN provider nodes and 62856 us to CPU nodes; QNN accelerator execution summed 893050 us. These are profile aggregates, not isolated transfer measurements.",
+    "full_htp_execution_proven": false,
+    "mixed_execution_proven": true,
+    "next_step_input_accepted": false,
+    "numerical_policy_passed": true,
+    "performance_claim": "No same-device CPU-only baseline was run, so the 1.05424 s first/only mixed execution cannot establish acceleration or slowdown. Session creation was 21.7742 s and peak process RSS was 762464 KiB.",
+    "recursive_chain_not_run": true
+  },
+  "numerical_comparison": {
+    "metrics": {
+      "cosine_similarity": 0.9999416187815832,
+      "elements": 34272,
+      "finite": true,
+      "max_abs": 0.07793688774108887,
+      "mean_abs": 0.005405739989281434,
+      "normalized_rmse": 0.010805988216006262,
+      "passed": true,
+      "reference_rms": 0.8036897836335074,
+      "rmse": 0.008684662331268304,
+      "snr_db": 39.326710207945055
+    },
+    "output_sha256": "a0bf3b6c17d3d25573744eb298de70b318ef094ec926afae95bd96518a14468c",
+    "policy_sha256": "20c0c8a32fae2cc459b48428e71552a7a396c356a5f0ad0cb34361e0a8ff93c3",
+    "reference_sha256": "90bccdc87aeda133e57472a684180e57a8de6fef0b016722ab752f7781b11b61",
+    "schema_version": 1
+  },
+  "recorded_at_utc": "2026-08-18T10:56:00Z",
+  "schema_version": 1,
+  "scope": "One user-authorized fixture-fed vector-estimator step-00 run with explicit CPU fallback enabled. Not fail-closed HTP and not recursive.",
+  "status": "complete_mixed_qnn_cpu_step00_pass_no_speed_claim"
+}
