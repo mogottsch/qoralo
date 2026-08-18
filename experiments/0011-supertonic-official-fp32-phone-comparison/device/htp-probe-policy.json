@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "frozen_before_phone_output": true,
+  "route": "QNN HTP with session.disable_cpu_ep_fallback=1",
+  "provider_options": {
+    "backend_path": "libQnnHtp.so",
+    "profiling_level": "detailed",
+    "offload_graph_io_quantization": "0",
+    "htp_performance_mode": "burst",
+    "soc_model": "43"
+  },
+  "eligible_components": {
+    "duration_predictor": {"output_elements": 1},
+    "text_encoder": {"output_elements": 61184},
+    "vocoder": {"output_elements": 731136}
+  },
+  "required_output_properties": ["runner exit 0", "expected element count", "all values finite"],
+  "required_profile_evidence": [
+    "RPC (execute) time",
+    "QNN accelerator (execute) time",
+    "Accelerator (execute) time (cycles)",
+    "Number of HVX threads used"
+  ],
+  "arithmetic_claim_boundary": "The source graphs are official FP32 ONNX inference/export assets. Successful HTP execution does not establish FP32 arithmetic; the QNN lowering precision must not be inferred from source tensor types."
+}

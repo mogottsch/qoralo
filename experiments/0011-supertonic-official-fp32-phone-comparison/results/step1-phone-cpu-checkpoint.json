@@ -1,0 +1,153 @@
+{
+  "artifacts": {
+    "cleanup_exit_code": 0,
+    "phone_run": "work/phone-fp32-cpu-20260818T142455Z-765888"
+  },
+  "asset_adapter": {
+    "config": "Pinned sample rate/latent/channel constants from official tts.json are compiled into the fixed-contract runner.",
+    "m1_style": "Lossless float32 little-endian serialization of official style_ttl [1,50,256] and style_dp [1,8,16]; not a neural intermediate fixture.",
+    "style_dp_binary_sha256": "2eb6d16f4ede0ea14c9e84ba1f8b8d62bdfd28cce4bfd18fef963a9f4097ea62",
+    "style_ttl_binary_sha256": "83d2429acffbc2456a42bcee08a56ff04e775d6ea5c5bbef1529a988628367e7",
+    "unicode_indexer": "Lossless int32 little-endian serialization of all 65536 official JSON entries.",
+    "unicode_indexer_binary_sha256": "8402ca48e5189a8950138580b0fff64db6f072f24ac07cd54ba8b2fbb9883b30"
+  },
+  "claim": "Complete official FP32 ONNX inference/export asset chain executed CPU-only from frozen text and official M1 style to WAV on the authorized phone; no neural intermediate was substituted.",
+  "claim_boundaries": [
+    "T239/L238/729746 deployment graph shapes were predeclared for comparison rather than rebuilt from the measured 16.9202-second duration prediction.",
+    "ORT ru_maxrss is cumulative process high-water RSS; it is not component-isolated PSS and includes loaded model/runtime/allocator memory.",
+    "One route order was measured without a cooling-controlled randomized benchmark."
+  ],
+  "contract": {
+    "latent_length": 238,
+    "phone_rng": "xorshift64* plus Box-Muller",
+    "seed": 20260813,
+    "text_length": 239,
+    "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
+    "trimmed_samples": 729746,
+    "voice": "official M1"
+  },
+  "device": {
+    "abi": "arm64-v8a",
+    "model": "SM-S918B",
+    "serial": "R5CW81PR8SY",
+    "soc": "SM8550"
+  },
+  "duration_ran": true,
+  "host_sanity": {
+    "end_to_end_seconds": 5.60125,
+    "predicted_duration_seconds": 16.9202,
+    "raw_sha256": "506d58cdc96719fd16251e82aa698db023d00ee7e7f9a067bce8cc885c30da3b",
+    "result": "passed"
+  },
+  "metrics": {
+    "component_run_seconds": {
+      "duration": [
+        0.0168334,
+        0.00879443,
+        0.00796063,
+        0.00832411
+      ],
+      "text_encoder": [
+        0.0706936,
+        0.0812558,
+        0.082037,
+        0.0806873
+      ],
+      "vector_estimator_five_steps": [
+        5.24533,
+        5.46386,
+        5.53227,
+        5.56171
+      ],
+      "vocoder": [
+        1.19537,
+        1.21182,
+        1.27446,
+        1.21918
+      ]
+    },
+    "end_to_end_seconds": [
+      6.52928,
+      6.76626,
+      6.89724,
+      6.87038
+    ],
+    "first_end_to_end_seconds": 6.52928,
+    "max_rss_after_runs_kb": 569196,
+    "max_rss_after_sessions_kb": 437748,
+    "session_create_seconds": {
+      "duration": 0.0684034,
+      "text": 0.138979,
+      "total": 0.721546,
+      "vector": 0.412672,
+      "vocoder": 0.101491
+    },
+    "warm_end_to_end_median_seconds": 6.87038,
+    "warm_end_to_end_seconds": [
+      6.76626,
+      6.89724,
+      6.87038
+    ]
+  },
+  "output": {
+    "all_finite": true,
+    "elements": 729746,
+    "max": 0.44366133213043213,
+    "mean": -0.0005346860853023827,
+    "min": -0.44582435488700867,
+    "raw_sha256": "d944e85db7f9746376a4396d2f058cdc6e1da092eadc63ddf47bc70aef24117a",
+    "rms": 0.05227221921086311,
+    "wav": {
+      "channels": 1,
+      "frames": 729746,
+      "sample_rate_hz": 44100,
+      "sample_width_bytes": 2
+    },
+    "wav_sha256": "8db92db13567b86be503d204fe367f2052b54dbfc99c0f7bfc5b23d9fd431da7"
+  },
+  "predicted_duration_seconds": 16.9202,
+  "provider_evidence": {
+    "conclusion": "All recorded kernel provider labels are CPUExecutionProvider; zero QNN events were found.",
+    "profiles": {
+      "duration": {
+        "artifact": "work/phone-fp32-cpu-20260818T142455Z-765888/profiles-cpu/duration_2026-08-18_15-25-07_391.json",
+        "events": 1502,
+        "providers": [
+          "CPUExecutionProvider"
+        ],
+        "qnn_events": 0,
+        "sha256": "9b3a894c8ba432e48890cccdc41f3a38d83d7cc10189072b387e754778b248ea"
+      },
+      "text": {
+        "artifact": "work/phone-fp32-cpu-20260818T142455Z-765888/profiles-cpu/text_2026-08-18_15-25-07_459.json",
+        "events": 2642,
+        "providers": [
+          "CPUExecutionProvider"
+        ],
+        "qnn_events": 0,
+        "sha256": "8b159cae4890c08c0ffa3a46e9e66315892d97e29b023936747f11b5c320e456"
+      },
+      "vector": {
+        "artifact": "work/phone-fp32-cpu-20260818T142455Z-765888/profiles-cpu/vector_2026-08-18_15-25-07_598.json",
+        "events": 18002,
+        "providers": [
+          "CPUExecutionProvider"
+        ],
+        "qnn_events": 0,
+        "sha256": "df947e4a78eabda32f90467fb316aa4505d17f717d7733a06d60d9ec2ec13a37"
+      },
+      "vocoder": {
+        "artifact": "work/phone-fp32-cpu-20260818T142455Z-765888/profiles-cpu/vocoder_2026-08-18_15-25-08_011.json",
+        "events": 498,
+        "providers": [
+          "CPUExecutionProvider"
+        ],
+        "qnn_events": 0,
+        "sha256": "8bddc4e472727206a84b142d238c1d2c132c594756ba68ac05f8826f317ca5f3"
+      }
+    }
+  },
+  "result": "passed",
+  "schema_version": 1,
+  "step": 1
+}

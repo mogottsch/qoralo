@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "purpose": "predeclare acceptance before the recorded specialization CPU-equivalence rerun",
+  "structural_requirements": [
+    "ordered node protobufs byte-identical",
+    "ordered initializer protobufs byte-identical",
+    "ordered operator sequence identical",
+    "graph input and output names identical"
+  ],
+  "end_to_end_float_waveform_requirements": {
+    "elements": 729746,
+    "all_finite": true,
+    "max_abs_error_lte": 0.0005,
+    "rmse_lte": 0.00001,
+    "cosine_gte": 0.999999
+  },
+  "claim_boundary": "Passing proves CPU equivalence for the frozen T239/L238/729746-sample transcript contract, not equivalence for arbitrary dynamic shapes."
+}

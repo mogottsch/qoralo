@@ -1,0 +1,328 @@
+{
+  "artifacts": {
+    "cpu_equivalence_root": "work/cpu-equivalence-recorded",
+    "host_gate_root": "work/host-qnn-gates",
+    "structural_validation_root": ".local/specialized"
+  },
+  "claim": "Three shape-specialized components fully delegated and physically executed fail-closed on HTP; the vector estimator did not fully delegate, so complete all-four-component HTP transcript-to-WAV was correctly not attempted.",
+  "claim_boundaries": [
+    "Inputs are official FP32 ONNX inference/export assets, not a PyTorch or original-training checkpoint.",
+    "Only graph I/O shapes were specialized. No operators, ordered nodes, initializers, or weights changed.",
+    "FP32 source tensor types do not prove FP32 HTP arithmetic. Provider/profile evidence proves physical HTP execution but does not identify internal lowering precision; no FP32-arithmetic claim is made.",
+    "Physical component numerical comparisons are descriptive because only shape, finiteness, and accelerator-profile criteria were frozen before phone output.",
+    "No hybrid path, CPU fallback, quantization, calibration, context optimization, operator rewrite, or ORT rebuild occurred in experiment 0011."
+  ],
+  "complete_htp_e2e": {
+    "attempted": false,
+    "reason": "vector_estimator host gate rejected one Softplus node with fallback disabled"
+  },
+  "host_gates": {
+    "duration_predictor": {
+      "exit_code": 0,
+      "observed_capability_passes": [
+        {
+          "nodes": 218,
+          "partitions": 1,
+          "qnn_nodes": 218
+        },
+        {
+          "nodes": 205,
+          "partitions": 1,
+          "qnn_nodes": 205
+        }
+      ],
+      "qnn_profile_sha256": "5b689c5c6bcfeba209022b4008cfd5718451547bf2d1084ee299ab950db73d46",
+      "result": "fully_delegated",
+      "stderr_sha256": "f7e4cbdcbf69510c8ef2c805a48b379600a346dcb7aa7f2ece7f4c639777df33",
+      "stdout_sha256": "d31df77d2e3d5bb04e0ef54d2aadd49cd149cc7e63e64406a90e748ee6098a4b"
+    },
+    "text_encoder": {
+      "exit_code": 0,
+      "observed_capability_passes": [
+        {
+          "nodes": 354,
+          "partitions": 1,
+          "qnn_nodes": 354
+        },
+        {
+          "nodes": 343,
+          "partitions": 1,
+          "qnn_nodes": 343
+        }
+      ],
+      "qnn_profile_sha256": "8c6f7a2c6cf5fc6fb6420b48d7f748337be0011d33a5d00392b6946ab836fd73",
+      "result": "fully_delegated",
+      "stderr_sha256": "f5b6643923e0efac29bf909429d0fc3efa0ac6c2dd6cfbf6d061bc2c61f2da32",
+      "stdout_sha256": "fee6eeff98c1f4b967961f99f0ca4f177dac52a80a3a72483a8bcc0e11f5d934"
+    },
+    "vector_estimator": {
+      "exit_code": 255,
+      "failure": "CPU nodes remained while session.disable_cpu_ep_fallback=1",
+      "observed_capability_passes": [
+        {
+          "nodes": 917,
+          "partitions": 2,
+          "qnn_nodes": 916
+        },
+        {
+          "nodes": 868,
+          "partitions": 2,
+          "qnn_nodes": 867
+        }
+      ],
+      "qnn_profile_sha256": "5e71fc3bc48ce0da3c6a37ce243d9f100b1f94ad1f492a0fc7bb7d9f2f1c7895",
+      "result": "rejected_fail_closed",
+      "stderr_sha256": "260129d0e63a1f0ad524f4bc816198defcf64016b1f64767f1a17a5fe3c85ad0",
+      "stdout_sha256": "467df61183cac34197f739e276faee7af2bc1067e6f5e06a51fd3c45a1a56d4b",
+      "unsupported_nodes": [
+        {
+          "name": "/vector_estimator/vector_field/time_encoder/mlp/mlp.1/Softplus",
+          "op_type": "Softplus"
+        }
+      ]
+    },
+    "vocoder": {
+      "exit_code": 0,
+      "observed_capability_passes": [
+        {
+          "nodes": 155,
+          "partitions": 1,
+          "qnn_nodes": 155
+        },
+        {
+          "nodes": 135,
+          "partitions": 1,
+          "qnn_nodes": 135
+        }
+      ],
+      "qnn_profile_sha256": "f9e00f1c8873a666e37a44f5caecfa9803c6493a82ad774b85514805fc0c1955",
+      "result": "fully_delegated",
+      "stderr_sha256": "11cd4a703e7d99efd960815c4246f06c4c80a1b7885c36a6df6d0c47ce08f7f0",
+      "stdout_sha256": "ee5d46860e33e7d2826e78d529bde40f5021e3eb8ff63d1b5c98d135d5188bbc"
+    }
+  },
+  "physical_phone_probes": {
+    "artifact_root": "work/phone-fp32-htp-components-20260818T144107Z-790491",
+    "cleanup_exit_code": 0,
+    "components": {
+      "duration_predictor": {
+        "descriptive_cpu_comparison_not_a_preregistered_correctness_threshold": {
+          "candidate_max": 16.921876907348633,
+          "candidate_min": 16.921876907348633,
+          "cosine": null,
+          "elements": 1,
+          "finite": true,
+          "mae": 0.001682281494140625,
+          "max_abs": 0.001682281494140625,
+          "reference_max": 16.920194625854492,
+          "reference_min": 16.920194625854492,
+          "rmse": 0.001682281494140625
+        },
+        "max_rss_kb": 111208,
+        "ort_profile_sha256": "b4f336e347b4696c8fcde1bc12a3ff1232fa531ea9696ff2ac306163900a323f",
+        "output_elements": 1,
+        "output_sha256": "df3fdc46df830e5c358dd6613827f2d29051235b567ac95a4405e8687590df63",
+        "profile_evidence": {
+          "accelerator_execute_cycles": [
+            6866685,
+            6543337
+          ],
+          "hvx_threads": [
+            4,
+            4
+          ],
+          "qnn_accelerator_execute_us": [
+            7734,
+            5616
+          ],
+          "rpc_execute_us": [
+            7948,
+            5736
+          ]
+        },
+        "qnn_profile_sha256": "0e50afc9b593bc16a9f691bb9abbf28cf52b81b8f8a927401206fb449d089328",
+        "result": "passed_frozen_execution_and_profile_criteria",
+        "run_seconds": [
+          0.00945589,
+          0.00706604
+        ],
+        "session_create_seconds": 0.569304
+      },
+      "text_encoder": {
+        "descriptive_cpu_comparison_not_a_preregistered_correctness_threshold": {
+          "candidate_max": 8.726563453674316,
+          "candidate_min": -2.261718988418579,
+          "cosine": 0.999990807670589,
+          "elements": 61184,
+          "finite": true,
+          "mae": 0.0011174299288541079,
+          "max_abs": 0.05074119567871094,
+          "reference_max": 8.698089599609375,
+          "reference_min": -2.2612099647521973,
+          "rmse": 0.0017452655592933297
+        },
+        "max_rss_kb": 191452,
+        "ort_profile_sha256": "ef82e40b9a4d8ef8ca60ba2c14f397e0f585ceb6fd68c8dabfa681cddd844ba7",
+        "output_elements": 61184,
+        "output_sha256": "501487a11a17b4b808b377739e985637adf256f73fc7a7e834da7b2cff0b91a0",
+        "profile_evidence": {
+          "accelerator_execute_cycles": [
+            26949898,
+            25934598
+          ],
+          "hvx_threads": [
+            4,
+            4
+          ],
+          "qnn_accelerator_execute_us": [
+            26150,
+            18246
+          ],
+          "rpc_execute_us": [
+            26906,
+            19168
+          ]
+        },
+        "qnn_profile_sha256": "72edaafc013732ba7767ceb79df7798df1e5f973850d3a6bc5852dd09075323c",
+        "result": "passed_frozen_execution_and_profile_criteria",
+        "run_seconds": [
+          0.0369646,
+          0.0271699
+        ],
+        "session_create_seconds": 1.45483
+      },
+      "vocoder": {
+        "descriptive_cpu_comparison_not_a_preregistered_correctness_threshold": {
+          "candidate_max": 0.6699219346046448,
+          "candidate_min": -0.6440430283546448,
+          "cosine": 0.999253874029165,
+          "elements": 731136,
+          "finite": true,
+          "mae": 0.0010179957607761025,
+          "max_abs": 0.03878827020525932,
+          "reference_max": 0.6738302707672119,
+          "reference_min": -0.6424510478973389,
+          "rmse": 0.002097631338983774
+        },
+        "max_rss_kb": 438000,
+        "ort_profile_sha256": "f8f74acced39e858474ce2e6a17bf7f3fd2661facce0cc7dc0fa8ceea2f6d325",
+        "output_elements": 731136,
+        "output_sha256": "ed0190c7ed137428a77228075e96a0a01db6eaa812924dbae91116071de0bcfc",
+        "profile_evidence": {
+          "accelerator_execute_cycles": [
+            222943135,
+            226063301
+          ],
+          "hvx_threads": [
+            4,
+            4
+          ],
+          "qnn_accelerator_execute_us": [
+            228075,
+            139883
+          ],
+          "rpc_execute_us": [
+            228903,
+            140312
+          ]
+        },
+        "qnn_profile_sha256": "bf7f848bc1a8e8947c0c1c8e0015baa9768e711fd69b931802ed103b2e42c705",
+        "result": "passed_frozen_execution_and_profile_criteria",
+        "run_seconds": [
+          0.232839,
+          0.143868
+        ],
+        "session_create_seconds": 4.49036
+      }
+    },
+    "device": {
+      "model": "SM-S918B",
+      "serial": "R5CW81PR8SY",
+      "soc": "SM8550"
+    },
+    "input_manifest_evidence_type": "real_inputs_from_complete_official_fp32_host_cpu_chain",
+    "policy_sha256": "b83084da30c81f3af6d6a7f3a91191953ee1feb17095f9507c526117e796d281"
+  },
+  "provider_options": {
+    "backend_path": "libQnnHtp.so",
+    "execution_provider": "QNNExecutionProvider",
+    "htp_performance_mode": "burst",
+    "offload_graph_io_quantization": "0",
+    "profiling_level": "detailed",
+    "session.disable_cpu_ep_fallback": "1",
+    "soc_model": "43"
+  },
+  "result": "bounded_incompatibility_map_preserved",
+  "schema_version": 1,
+  "shape_specialization": {
+    "components": {
+      "duration_predictor": {
+        "checks": {
+          "graph_input_names_identical": true,
+          "graph_output_names_identical": true,
+          "ordered_initializers_byte_identical": true,
+          "ordered_nodes_byte_identical": true,
+          "ordered_operator_sequence_identical": true
+        },
+        "initializers": 98,
+        "nodes": 1086,
+        "source_sha256": "c3eb91414d5ff8a7a239b7fe9e34e7e2bf8a8140d8375ffb14718b1c639325db",
+        "specialized_sha256": "8a1875ef0f6960ca16fc06814509b1c3258e8f50b04a5d590d3ab6db8c775016"
+      },
+      "text_encoder": {
+        "checks": {
+          "graph_input_names_identical": true,
+          "graph_output_names_identical": true,
+          "ordered_initializers_byte_identical": true,
+          "ordered_nodes_byte_identical": true,
+          "ordered_operator_sequence_identical": true
+        },
+        "initializers": 146,
+        "nodes": 1934,
+        "source_sha256": "c7befd5ea8c3119769e8a6c1486c4edc6a3bc8365c67621c881bbb774b9902ff",
+        "specialized_sha256": "769fd1d257674e8624bdea941f7a903d9460051f9845b604cd2c2980f281a8c3"
+      },
+      "vector_estimator": {
+        "checks": {
+          "graph_input_names_identical": true,
+          "graph_output_names_identical": true,
+          "ordered_initializers_byte_identical": true,
+          "ordered_nodes_byte_identical": true,
+          "ordered_operator_sequence_identical": true
+        },
+        "initializers": 446,
+        "nodes": 1004,
+        "source_sha256": "883ac868ea0275ef0e991524dc64f16b3c0376efd7c320af6b53f5b780d7c61c",
+        "specialized_sha256": "723316adfcff378c8ac72ee9db34cadf3b890e4167fa9a76f07398e0d4ff5b92"
+      },
+      "vocoder": {
+        "checks": {
+          "graph_input_names_identical": true,
+          "graph_output_names_identical": true,
+          "ordered_initializers_byte_identical": true,
+          "ordered_nodes_byte_identical": true,
+          "ordered_operator_sequence_identical": true
+        },
+        "initializers": 103,
+        "nodes": 401,
+        "source_sha256": "085de76dd8e8d5836d6ca66826601f615939218f90e519f70ee8a36ed2a4c4ba",
+        "specialized_sha256": "35b90eeae4a01d06f82dccc903a63d23c95eb2d9095ffa0d62f2cf151817c7c7"
+      }
+    },
+    "contract": {
+      "latent_length": 238,
+      "text_length": 239,
+      "vocoder_output_samples": 731136
+    },
+    "cpu_equivalence_policy_sha256": "55b0a0958936fe1f3c72fb9fccb726d678f5254ad305ab025cedfb3bec6e3f5c",
+    "cpu_equivalence_recorded": {
+      "all_finite": true,
+      "cosine": 0.9999999910351945,
+      "elements": 729746,
+      "max_abs_error": 0.00036559998989105225,
+      "passed": true,
+      "rmse": 6.999404831731226e-06
+    }
+  },
+  "step": 2
+}
