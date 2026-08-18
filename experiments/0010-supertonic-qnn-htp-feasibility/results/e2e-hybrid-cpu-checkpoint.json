@@ -1,0 +1,294 @@
+{
+  "contract": {
+    "important_limit": "Duration prediction executes and is reported (16.9202 s), but the transcript-specific QNN deployment uses the previously frozen L238/729746 shape contract rather than dynamically rebuilding graphs.",
+    "language": "en",
+    "latent_length": 238,
+    "runs_per_fresh_process": 4,
+    "sample_rate": 44100,
+    "seed": 20260813,
+    "speaker": "M1",
+    "speaker_id": 5,
+    "text_length": 239,
+    "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
+    "trimmed_samples": 729746
+  },
+  "controls": {
+    "adb_fd_closed": true,
+    "cleanup_exit_code": 0,
+    "lock_released_available": true,
+    "phone_lock": true,
+    "unique_remote_path": true
+  },
+  "execution_evidence": {
+    "classification": "All four model components executed. Hybrid physically used HTP for 20 vector calls across 420 QNN partition events while 2,720 vector nodes ran on CPU, and four fully delegated vocoder calls. Duration and text remained CPU.",
+    "cpu_provider_events": {
+      "duration": {
+        "CPUExecutionProvider": 1492
+      },
+      "text": {
+        "CPUExecutionProvider": 2632
+      },
+      "vector": {
+        "CPUExecutionProvider": 16460
+      },
+      "vocoder": {
+        "CPUExecutionProvider": 676
+      }
+    },
+    "hybrid_provider_events": {
+      "duration": {
+        "CPUExecutionProvider": 1492
+      },
+      "text": {
+        "CPUExecutionProvider": 2632
+      },
+      "vector": {
+        "CPUExecutionProvider": 2720,
+        "QNNExecutionProvider": 420
+      },
+      "vocoder": {
+        "QNNExecutionProvider": 4
+      }
+    },
+    "qnn_physical": {
+      "vector": {
+        "Accelerator (execute) time (cycles)": {
+          "count": 420,
+          "max": 146720194,
+          "min": 25391,
+          "sum": 17615054581
+        },
+        "Number of HVX threads used": {
+          "count": 420,
+          "max": 4,
+          "min": 4,
+          "sum": 1680
+        },
+        "QNN accelerator (execute) time": {
+          "count": 420,
+          "max": 172055,
+          "min": 150,
+          "sum": 11704375
+        },
+        "RPC (execute) time": {
+          "count": 420,
+          "max": 173337,
+          "min": 162,
+          "sum": 11835856
+        }
+      },
+      "vocoder": {
+        "Accelerator (execute) time (cycles)": {
+          "count": 4,
+          "max": 401711388,
+          "min": 398196161,
+          "sum": 1599807193
+        },
+        "Number of HVX threads used": {
+          "count": 4,
+          "max": 4,
+          "min": 4,
+          "sum": 16
+        },
+        "QNN accelerator (execute) time": {
+          "count": 4,
+          "max": 293545,
+          "min": 189181,
+          "sum": 862252
+        },
+        "RPC (execute) time": {
+          "count": 4,
+          "max": 293843,
+          "min": 189435,
+          "sum": 863842
+        }
+      }
+    }
+  },
+  "identity": {
+    "all_18_remote_stage_hashes_matched": true,
+    "device": {
+      "abi": "arm64-v8a",
+      "model": "SM-S918B",
+      "serial": "R5CW81PR8SY",
+      "soc": "SM8550"
+    },
+    "duration_sha256": "c3eb91414d5ff8a7a239b7fe9e34e7e2bf8a8140d8375ffb14718b1c639325db",
+    "runner_android_sha256": "045e2b69b1a771aee7e439d439321dbe1db1f61e9e7a92e860d96248041dbbae",
+    "runner_source_sha256": "bd67ac32f3756a75c6989ed68512cc3fbfeff6b580251de9409df5e46f7bfd6d",
+    "runtime_sha256": "40bc591798287525f365e8ded4bbc40e0c4e9440737e876026ec09ba359ac041",
+    "stage_manifest_sha256": "40b82fbb4760a6411b004f0351fd0e9f3f4c851cf21d105a3b1e8c97e4f8b73d",
+    "text_sha256": "c7befd5ea8c3119769e8a6c1486c4edc6a3bc8365c67621c881bbb774b9902ff",
+    "vector_derivative_sha256": "e154e60fdb0560c63d4620e6907443313547266c01e03fc2bd0342847a7223d4",
+    "vocoder_derivative_sha256": "7fe80ba8bc96cd467dc154c5a1979a5e55706dd19a0fc1f60e762abd7d1933f2"
+  },
+  "interpretation": {
+    "claim_limit": "The hybrid route is faster in this four-run fixed-utterance diagnostic and demonstrably uses HTP, but it is not full HTP, not arbitrary-shape, and not numerically accepted.",
+    "correctness": "Both files are valid, finite, non-silent PCM16 WAVs, but the prospective end-to-end numerical comparison failed badly (cosine 0.405, SNR -0.593 dB, NRMSE 1.071). This is likely accumulated recursive vector plus vocoder divergence; no operator defect is claimed. Listening remains separate.",
+    "performance": "Hybrid warm median was 3.80935 s versus CPU 6.06733 s: 37.22% lower measured latency (1.593x throughput) for this utterance. Hybrid session creation was 44.1x slower and peak RSS 2.51x higher."
+  },
+  "latency": {
+    "artifact_path": "work/e2e/latencies/e2e-latencies.json",
+    "artifact_sha256": "c7652af59a05c5c8d01e3d4ef41989a2f739a10fee999575d21fdb7231eed744",
+    "comparison": {
+      "first_speedup_percent": 25.903162995383656,
+      "peak_rss_hybrid_over_cpu_ratio": 2.512171550958575,
+      "session_create_hybrid_over_cpu_ratio": 44.10687062856993,
+      "warm_absolute_savings_seconds": 2.2579800000000003,
+      "warm_cpu_over_hybrid_ratio": 1.5927467940724798,
+      "warm_median_speedup_percent": 37.2153813951112
+    },
+    "cpu": {
+      "component_seconds": {
+        "duration_seconds": [
+          0.0116333,
+          0.00862839,
+          0.00838828,
+          0.00832734
+        ],
+        "text_seconds": [
+          0.0709391,
+          0.0806334,
+          0.0802972,
+          0.0817295
+        ],
+        "vector_five_steps_seconds": [
+          5.08094,
+          5.2627,
+          5.3088,
+          5.33679
+        ],
+        "vocoder_seconds": [
+          0.67944,
+          0.666401,
+          0.669356,
+          0.67911
+        ]
+      },
+      "max_rss_kb": 459432,
+      "run_total_seconds": [
+        5.84446,
+        6.01891,
+        6.06733,
+        6.10647
+      ],
+      "session_create_seconds": {
+        "duration": 0.0738384,
+        "text": 0.141325,
+        "total": 0.611356,
+        "vector": 0.270334,
+        "vocoder": 0.125858
+      },
+      "warm_median_seconds": 6.06733
+    },
+    "hybrid": {
+      "component_seconds": {
+        "duration_seconds": [
+          0.0095688,
+          0.0166102,
+          0.0172481,
+          0.0184188
+        ],
+        "text_seconds": [
+          0.0853474,
+          0.07599,
+          0.0758495,
+          0.0754004
+        ],
+        "vector_five_steps_seconds": [
+          3.93449,
+          3.38413,
+          3.51926,
+          3.51287
+        ],
+        "vocoder_seconds": [
+          0.299433,
+          0.194962,
+          0.199945,
+          0.201793
+        ]
+      },
+      "max_rss_kb": 1154172,
+      "run_total_seconds": [
+        4.33056,
+        3.67224,
+        3.81322,
+        3.80935
+      ],
+      "session_create_seconds": {
+        "duration": 0.0717926,
+        "text": 0.16022,
+        "total": 26.965,
+        "vector": 21.9854,
+        "vocoder": 4.74756
+      },
+      "warm_median_seconds": 3.80935
+    }
+  },
+  "outputs": {
+    "cpu_signal": {
+      "absolute_peak": 0.4329177141189575,
+      "finite": true,
+      "pcm_clipped_fraction": 0.0,
+      "rms": 0.05542936323715194
+    },
+    "cpu_wav": {
+      "bytes": 1459536,
+      "path": "work/e2e/samples/supertonic-m1-cpu.wav",
+      "sha256": "7e83537630b3e354f7586b9887f7a8359d62e438c9addeea61d87d878b2a84ff"
+    },
+    "hybrid_signal": {
+      "absolute_peak": 0.4702148735523224,
+      "finite": true,
+      "pcm_clipped_fraction": 0.0,
+      "rms": 0.053363379340891845
+    },
+    "hybrid_vs_cpu": {
+      "cosine_similarity": 0.40543110612468747,
+      "elements": 729746,
+      "max_abs": 0.6411571800708771,
+      "mean_abs": 0.030219194562039146,
+      "normalized_rmse": 1.070609653644214,
+      "rmse": 0.05934321137704657,
+      "snr_db": -0.592623101619109
+    },
+    "hybrid_wav": {
+      "bytes": 1459536,
+      "path": "work/e2e/samples/supertonic-m1-hybrid-htp.wav",
+      "sha256": "9b0d488776b144c972e8be4e9434fac14ce3ceddfcfa5a10d137fca41b772668"
+    },
+    "listening_status": "not yet reviewed"
+  },
+  "pi_report_request": {
+    "analysis_json": "experiments/0010-supertonic-qnn-htp-feasibility/work/e2e/e2e-analysis.json",
+    "cpu_sample": "experiments/0010-supertonic-qnn-htp-feasibility/work/e2e/samples/supertonic-m1-cpu.wav",
+    "hybrid_sample": "experiments/0010-supertonic-qnn-htp-feasibility/work/e2e/samples/supertonic-m1-hybrid-htp.wav",
+    "latency_json": "experiments/0010-supertonic-qnn-htp-feasibility/work/e2e/latencies/e2e-latencies.json",
+    "requested_action": "Render these results into an HTML report and open it for Moritz."
+  },
+  "policy": {
+    "end_to_end_audio_gate_passed": false,
+    "frozen_before_physical_outputs_and_timings": true,
+    "immutable_prior_vocoder_policy_unchanged": true,
+    "path": "work/e2e/e2e-policy.json",
+    "sha256": "5eb0c00993f531bacb10e9a58ef0bc27188bfddba1e372c217a62df6e5b9e1ac"
+  },
+  "providers": {
+    "cpu": {
+      "duration": "CPU",
+      "text_encoder": "CPU",
+      "vector_estimator_x5": "CPU",
+      "vocoder": "CPU"
+    },
+    "hybrid": {
+      "duration": "CPU",
+      "text_encoder": "CPU",
+      "vector_estimator_x5": "QNN HTP plus CPU fallback",
+      "vocoder": "QNN HTP fail-closed"
+    }
+  },
+  "recorded_at_utc": "2026-08-18T13:00:00Z",
+  "schema_version": 1,
+  "scope": "Matched fixed-transcript, fixed-shape Supertonic transcript-to-WAV CPU and maximum-currently-feasible-HTP diagnostic on the authorized SM8550 phone.",
+  "status": "complete_e2e_hybrid_faster_but_audio_numerical_gate_failed"
+}

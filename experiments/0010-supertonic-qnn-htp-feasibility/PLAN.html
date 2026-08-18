@@ -56,7 +56,7 @@ tr:last-child td { border-bottom:0; }
 <a class="toc-level-2" href="#phase-3-run-complete-accelerated-android-synthesis">Phase 3: run complete accelerated Android synthesis</a>
 <a class="toc-level-2" href="#phase-4-make-the-deployment-decision">Phase 4: make the deployment decision</a></nav>
 <main>
-<div class="mirror-note"><strong>Visual mirror of <code>experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-18</span><span>source sha256: 8f9f33dbc7f980ba…</span></div></div>
+<div class="mirror-note"><strong>Visual mirror of <code>experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-18</span><span>source sha256: 74fa49f1af41de81…</span></div></div>
 <article><h1 id="experiment-0010-execution-plan">Experiment 0010 execution plan<a class="anchor" href="#experiment-0010-execution-plan" aria-label="Link to this section">#</a></h1>
 <h2 id="goal">Goal<a class="anchor" href="#goal" aria-label="Link to this section">#</a></h2>
 <p>Select and validate a text-to-speech model that can become the local voice of a future NotebookLM-like Android experience. It should sound pleasant and natural over sustained listening, with podcast-like delivery rather than merely intelligible speech.</p>
@@ -81,13 +81,13 @@ tr:last-child td { border-bottom:0; }
 </tr>
 <tr>
 <td>Phase 3: complete accelerated synthesis</td>
-<td><strong>Blocked</strong></td>
-<td>Full estimator HTP would require a broad static-quantization/export route, not a narrow compatibility rewrite.</td>
+<td><strong>Complete — faster hybrid, numerical audio rejection</strong></td>
+<td>A fixed-transcript transcript-to-WAV run exercised all four components. Hybrid warm latency was 37.22% lower, but its prospective CPU-audio comparison failed badly.</td>
 </tr>
 <tr>
 <td>Phase 4: deployment decision</td>
 <td><strong>Reopened</strong></td>
-<td>Require prospective audio-quality evidence and a same-device CPU baseline before deciding whether HTP is useful.</td>
+<td>The hybrid route has material speed but very high setup/memory costs and rejected numerical audio; listening evidence is still required.</td>
 </tr>
 </tbody></table></div>
 <h2 id="current-position">Current position<a class="anchor" href="#current-position" aria-label="Link to this section">#</a></h2>
@@ -171,8 +171,23 @@ tr:last-child td { border-bottom:0; }
 <td>Matched step-00 CPU-only diagnostic</td>
 <td>All 823 profile node events ran on CPU. Its <code>1.161 s</code> inference makes the single mixed observation 9.23% faster, while CPU session creation and peak RSS were dramatically lower.</td>
 </tr>
+<tr>
+<td><strong>Done</strong></td>
+<td>Fixed-transcript end-to-end CPU and hybrid generation</td>
+<td>Both routes executed duration, text encoding, five recursive estimator calls, vocoding, trimming, and WAV output. Hybrid physically used HTP for estimator partitions and the fully delegated vocoder.</td>
+</tr>
+<tr>
+<td><strong>Observed</strong></td>
+<td>End-to-end latency</td>
+<td>Hybrid warm median was <code>3.809 s</code> versus CPU <code>6.067 s</code>, a 37.22% reduction. Hybrid session creation was <code>26.965 s</code> versus <code>0.611 s</code>, and peak RSS was <code>1,154,172 KiB</code> versus <code>459,432 KiB</code>.</td>
+</tr>
+<tr>
+<td><strong>Failed</strong></td>
+<td>Prospective end-to-end numerical audio gate</td>
+<td>Both WAVs are structurally valid and non-silent, but hybrid-vs-CPU cosine <code>0.405</code>, SNR <code>-0.593 dB</code>, and normalized RMSE <code>1.071</code> fail the frozen gate. Listening is not yet recorded.</td>
+</tr>
 </tbody></table></div>
-<p>The current boundary is therefore clear: <strong>the explicit-GELU vocoder physically executed on the SM8550 HTP with CPU fallback disabled and failed the frozen numerical policy. A later informal blind A/B found no audible difference for the single frozen utterance, so perceptual feasibility remains open under a new prospective gate. No same-device CPU baseline was collected, so no speedup claim is supported.</strong></p>
+<p>The current boundary is therefore clear: <strong>the fixed-transcript hybrid pipeline works end to end and is materially faster once initialized, with physical HTP proof for 20 vector-estimator calls and four vocoder calls. It is not full HTP, requires 44.1× longer session creation and 2.51× peak RSS, and its generated audio fails the prospective numerical comparison. Deployment remains undecided pending listening and broader validation.</strong></p>
 <p>When a phase finishes, its detailed result stays in experiment <code>0010</code>, its condensed outcome moves to <a href="../../docs/history.md"><code>docs/history.md</code></a> and the <a href="../../docs/history.html">history HTML</a>, and it is removed from this plan.</p>
 <h2 id="phase-1-establish-vocoder-htp-feasibility">Phase 1: establish vocoder HTP feasibility<a class="anchor" href="#phase-1-establish-vocoder-htp-feasibility" aria-label="Link to this section">#</a></h2>
 <p>The former blocker was eight <code>Erf</code> nodes inside standard decomposed GELU patterns. A narrow, source-hash-locked rewrite replaced only those verified patterns with explicit <code>com.microsoft.Gelu</code>; it passed bit-identical CPU equivalence and complete fail-closed host QNN assignment. The subsequent physical run proved accelerator execution but failed numerical correctness, producing the bounded negative result for this route.</p>
@@ -268,20 +283,69 @@ tr:last-child td { border-bottom:0; }
 </tbody></table></div>
 <p>This answers the narrow question: fallback did not catastrophically lose this single inference; it was modestly faster despite fragmentation. The cost was very large session setup and memory. The pair was cold, single-sample, sequential rather than randomized, and the mixed run occurred first. It therefore remains descriptive rather than a stable speedup claim, and it must not be multiplied into a five-step or end-to-end estimate.</p>
 <h2 id="phase-3-run-complete-accelerated-android-synthesis">Phase 3: run complete accelerated Android synthesis<a class="anchor" href="#phase-3-run-complete-accelerated-android-synthesis" aria-label="Link to this section">#</a></h2>
-<p>This phase is pending the vector-estimator gate. The target is now aggressive but explicit: attempt fail-closed HTP sessions for the duration predictor, text encoder, all five vector-estimator calls, and vocoder. Ordinary text normalization, Unicode indexing, orchestration, trimming, and WAV encoding remain CPU application code rather than neural graphs.</p>
-<p>The integration contract is to build the smallest complete path that preserves Supertonic behavior.</p>
+<p>Moritz authorized a matched fixed-transcript end-to-end probe. A new Android runner starts from the exact experiment <code>0008</code> transcript and packaged Unicode indexer/voice assets, selects SID 5 / M1, executes duration prediction and text encoding, creates deterministic seeded noise, recursively executes all five estimator steps, vocodes, trims, and writes PCM16 WAV. No intermediate fixture tensor is substituted.</p>
+<p>The deployment remains transcript-specific: QNN requires concrete shapes, so both routes use the previously proven text length <code>239</code>, latent length <code>238</code>, and trimmed length <code>729,746</code>. Duration prediction still executes and reports <code>16.9202 s</code>, but it does not dynamically rebuild the fixed QNN graphs. This is not arbitrary-text support.</p>
+<p>Provider routes:</p>
 <ul>
-<li>Use the frozen experiment <code>0008</code> transcript and SID 5 / M1 English voice.</li>
-<li>Run text preparation, duration prediction, text encoding, five-step denoising, vocoding, and audio assembly without fixture substitution.</li>
-<li>Keep orchestration and non-targeted graphs explicitly on CPU.</li>
-<li>Keep fallback disabled inside every component claimed to run on HTP.</li>
-<li>Retain profiles proving HTP execution during the complete run.</li>
-<li>Compare final audio, cold and warm timing, callback behavior, memory, and package cost with the experiment <a href="../0008-sherpa-onnx-android-tts-benchmark/"><code>0008</code> CPU baseline</a>.</li>
+<li>CPU: all four ONNX components on <code>CPUExecutionProvider</code>;</li>
+<li>hybrid: duration and text encoder on CPU; each vector call split into 21 QNN partitions plus 136 CPU nodes; explicit-GELU vocoder fully on QNN with fallback disabled.</li>
 </ul>
-<p>Before the end-to-end run, define a new prospective audio-quality protocol that includes randomized listening across multiple utterances and voices plus appropriate signal/speech diagnostics. The original vocoder numerical policy remains failed historical evidence; it is not silently loosened.</p>
-<p><strong>Complete when:</strong> Android produces a complete valid WAV without fixture substitution, every claimed neural component has physical fail-closed HTP proof, the prospective audio gate passes, and an equivalent same-device CPU comparison shows whether acceleration helps.</p>
+<p>Physical evidence across four complete generations is unambiguous:</p>
+<ul>
+<li>CPU profiles contain only CPU events: duration <code>1,492</code>, text <code>2,632</code>, vector <code>16,460</code>, vocoder <code>676</code>;</li>
+<li>hybrid vector profiles contain <code>420</code> QNN partition events and <code>2,720</code> CPU events across 20 calls;</li>
+<li>hybrid vocoder profiles contain four QNN events and zero CPU events;</li>
+<li>all <code>420 + 4</code> QNN executions have detailed RPC, accelerator-time, cycle, and four-HVX-thread evidence.</li>
+</ul>
+<p>Matched results:</p>
+<div class="table-wrap"><table><thead><tr>
+<th>Measurement</th>
+<th>CPU</th>
+<th>Hybrid</th>
+<th>Hybrid implication</th>
+</tr></thead><tbody>
+<tr>
+<td>Session creation</td>
+<td><code>0.611 s</code></td>
+<td><code>26.965 s</code></td>
+<td><code>44.1×</code> longer</td>
+</tr>
+<tr>
+<td>First generation</td>
+<td><code>5.844 s</code></td>
+<td><code>4.331 s</code></td>
+<td><code>25.90%</code> faster</td>
+</tr>
+<tr>
+<td>Warm generation median</td>
+<td><code>6.067 s</code></td>
+<td><code>3.809 s</code></td>
+<td><code>37.22%</code> faster, <code>2.258 s</code> saved</td>
+</tr>
+<tr>
+<td>Peak process RSS</td>
+<td><code>459,432 KiB</code></td>
+<td><code>1,154,172 KiB</code></td>
+<td><code>2.51×</code> higher</td>
+</tr>
+<tr>
+<td>Warm five-step estimator</td>
+<td>about <code>5.309 s</code></td>
+<td>about <code>3.513 s</code></td>
+<td>primary measured gain</td>
+</tr>
+<tr>
+<td>Warm vocoder</td>
+<td>about <code>0.669 s</code></td>
+<td>about <code>0.200 s</code></td>
+<td>substantial measured gain</td>
+</tr>
+</tbody></table></div>
+<p>Both generated files are valid mono 44.1-kHz PCM16 WAVs with <code>729,746</code> frames, finite raw samples, no PCM clipping, and non-silent RMS. However, the prospectively frozen hybrid-vs-CPU audio gate failed: cosine <code>0.405431</code>, SNR <code>-0.5926 dB</code>, normalized RMSE <code>1.07061</code>, RMSE <code>0.05934</code>, and max error <code>0.64116</code>. The prior vocoder rejection remains immutable; the larger end-to-end divergence likely includes recursive estimator error accumulation, but no operator defect is claimed. Listening status is pending.</p>
+<p>Artifacts are retained locally under <code>work/e2e/</code>: CPU and hybrid WAVs in <code>samples/</code>, component and aggregate latency arrays in <code>latencies/e2e-latencies.json</code>, full metrics/provider summaries in <code>e2e-analysis.json</code>, and the canonical tracked record in <a href="results/e2e-hybrid-cpu-checkpoint.json"><code>results/e2e-hybrid-cpu-checkpoint.json</code></a>.</p>
+<p><strong>Completed with split evidence:</strong> the transcript-specific hybrid pipeline is physically accelerated and materially faster warm, but it is not numerically accepted, full-HTP, arbitrary-shape, or deployment-ready.</p>
 <h2 id="phase-4-make-the-deployment-decision">Phase 4: make the deployment decision<a class="anchor" href="#phase-4-make-the-deployment-decision" aria-label="Link to this section">#</a></h2>
-<p>The deployment decision is reopened. The explicit-GELU vocoder reaches physical HTP and fails strict numerical equivalence, while the first informal blind comparison found no audible difference. Neither fact alone decides deployment, and no same-device CPU baseline yet supports a speedup claim.</p>
+<p>The deployment decision is reopened. End-to-end hybrid execution now shows a meaningful warm latency reduction, but it also shows rejected numerical audio, much larger memory, and expensive session creation. Listening may establish whether the numerical divergence is perceptually benign for this sample, but one utterance cannot establish production quality.</p>
 <p>Judge the result against the listening goal, not accelerator novelty. Pleasant speech across a broader corpus, sustained generation, same-device latency, memory, storage, thermals, and integration cost all matter. If CPU already meets the practical target, reject an HTP path that adds complexity without a useful listener-facing improvement.</p>
 <p><strong>Complete when:</strong> the experiment, history, README, and dashboard state one current deployment conclusion and link back to the canonical evidence.</p></article>
 <footer class="source-footer">Generated as <code>PLAN.html</code> by <code>scripts/build_docs_html.py</code>. Edit <code>experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md</code>, then regenerate the human-readable mirrors.</footer>
