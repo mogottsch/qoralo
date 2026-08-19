@@ -94,6 +94,21 @@ def main():
     report = HERE / "missing-fields.md"
     if not report.is_file() or "null" not in report.read_text():
         fail("missing-fields.md is absent or does not explain null semantics")
+    for page_name in ("index.html", "dashboard.html"):
+        page = HERE / page_name
+        if not page.is_file():
+            fail(f"missing generated page: {page_name}")
+        page_text = page.read_text()
+        for e in entries:
+            if e["wav"] is None:
+                continue
+            anchor = f"audio-{e['id']}"
+            if f'href="#{anchor}"' not in page_text:
+                fail(f"{page_name}: {e['id']} table link does not target its player")
+            if f'id="{anchor}"' not in page_text:
+                fail(f"{page_name}: {e['id']} player anchor is missing")
+            if f'src="{e["wav"]["path"]}"' not in page_text:
+                fail(f"{page_name}: {e['id']} embedded audio source is missing")
     print(f"PASS: {len(entries)} routes across {len(seen_experiments)} experiments; {verified_media} verified Android WAVs")
 
 
