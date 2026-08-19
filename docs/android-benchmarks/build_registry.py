@@ -208,12 +208,37 @@ OBJECTIVE_EVIDENCE_OVERRIDES = {
     },
 }
 LISTENING_REVIEWS = {
+    "0010-supertonic-cpu": {
+        "status": "accepted", "reviewer": "Moritz", "date": "2026-08-19",
+        "notes": "Good.", "sample_sha256": "7e83537630b3e354f7586b9887f7a8359d62e438c9addeea61d87d878b2a84ff",
+    },
+    "0010-supertonic-hybrid-htp": {
+        "status": "accepted", "reviewer": "Moritz", "date": "2026-08-19",
+        "notes": "Good.", "sample_sha256": "9b0d488776b144c972e8be4e9434fac14ce3ceddfcfa5a10d137fca41b772668",
+    },
+    "0011-supertonic-official-cpu": {
+        "status": "accepted", "reviewer": "Moritz", "date": "2026-08-19",
+        "notes": "Good—even a bit more crisp than samples 1 and 2.", "sample_sha256": "8db92db13567b86be503d204fe367f2052b54dbfc99c0f7bfc5b23d9fd431da7",
+    },
+    "0011-supertonic-all-htp": {
+        "status": "accepted", "reviewer": "Moritz", "date": "2026-08-19",
+        "notes": "Same as sample 3. Perceptual comparison only; not numerical equivalence.", "sample_sha256": "47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c",
+    },
     "0012-pocket-onnx-cpu": {
-        "status": "rejected",
-        "reviewer": "Moritz",
-        "date": "2026-08-19",
-        "notes": "Unusable repetitive “takakakakakakakaka”. Route-level verdict only; do not generalize to the Pocket family.",
-        "sample_sha256": "40634981606f37c59a91c14d99cecb3ef4cc21b1391882e870940b0716857d22",
+        "status": "rejected", "reviewer": "Moritz", "date": "2026-08-19",
+        "notes": "Unusable repetitive “takakakakakakakaka”. Route-level verdict only; do not generalize to the Pocket family.", "sample_sha256": "40634981606f37c59a91c14d99cecb3ef4cc21b1391882e870940b0716857d22",
+    },
+    "0016-pocket-qnn-hybrid-cpu": {
+        "status": "rejected", "reviewer": "Moritz", "date": "2026-08-19",
+        "notes": "takataktaka. Exact route/sample verdict only; do not generalize to the Pocket family.", "sample_sha256": "6cd3a98fb821ad76b0c0ad55a20f910da7be9d3058e511ff807b4a4f694aa45f",
+    },
+    "0013-kokoro-onnx-cpu": {
+        "status": "accepted", "reviewer": "Moritz", "date": "2026-08-19",
+        "notes": "Good.", "sample_sha256": "c046e8337b86ccf221ecd91db7dba90845f7c20b0ab1d8c248a36146c4eaecd3",
+    },
+    "0018-moss-tts-nano-cpu": {
+        "status": "accepted", "reviewer": "Moritz", "date": "2026-08-19",
+        "notes": "Okay to good, but with a bit of a Chinese accent.", "sample_sha256": "173850781b055e70a606fb561d93b70e6d8c6318db1b29b2324f83506c21ad6b",
     },
 }
 
