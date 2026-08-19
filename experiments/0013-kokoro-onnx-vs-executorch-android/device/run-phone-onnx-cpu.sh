@@ -26,11 +26,11 @@ export ADB_LIBUSB=1
 adb(){ "$ADB" -s "$SERIAL" "$@" </dev/null 9>&-; }
 cleanup(){
   local rc=$?;set +e
-  adb shell "am force-stop '$PACKAGE' >/dev/null 2>&1 || true; rm -rf '$REMOTE' '$EXTERNAL'" >"$OUT/cleanup.stdout.log" 2>"$OUT/cleanup.stderr.log"
+  adb shell "am force-stop '$PACKAGE' >/dev/null 2>&1 || true; run-as '$PACKAGE' rm -rf files/input >/dev/null 2>&1 || true; rm -rf '$REMOTE' '$EXTERNAL'" >"$OUT/cleanup.stdout.log" 2>"$OUT/cleanup.stderr.log"
   local cleanup_rc=$?
   adb uninstall "$PACKAGE" >>"$OUT/cleanup.stdout.log" 2>>"$OUT/cleanup.stderr.log"
   local uninstall_rc=$?
-  adb shell "test ! -e '$REMOTE' && test ! -e '$EXTERNAL'" >>"$OUT/cleanup.stdout.log" 2>>"$OUT/cleanup.stderr.log"
+  adb shell "test ! -e '$REMOTE' && test ! -e '$EXTERNAL' && ! pm path '$PACKAGE' 2>/dev/null | grep -q '^package:'" >>"$OUT/cleanup.stdout.log" 2>>"$OUT/cleanup.stderr.log"
   local verify_rc=$?
   printf 'command_rc=%s\ncleanup_rc=%s\nuninstall_rc=%s\nverify_absent_rc=%s\n' "$rc" "$cleanup_rc" "$uninstall_rc" "$verify_rc" >"$OUT/cleanup-status.txt"
   echo "$(date -u +%FT%TZ) released" >>"$OUT/lock-state.txt"
@@ -65,8 +65,26 @@ adb push "$EXP/protocol/transcript.txt" "$REMOTE/transcript.txt" >"$OUT/push-tra
 adb push "$EXP/protocol/deployment-fidelity-policy.json" "$REMOTE/deployment-fidelity-policy.json" >"$OUT/push-policy.log"
 adb shell "cd '$REMOTE' && sha256sum app-debug.apk model.onnx af_heart.f32 tokens.txt lexicon-us-en.txt transcript.txt deployment-fidelity-policy.json" >"$OUT/remote-stage-sha256.txt"
 adb install -r -t "$APK" >"$OUT/install.log"
-adb shell "mkdir -p '$EXTERNAL/input' && cp '$REMOTE/model.onnx' '$EXTERNAL/input/model.onnx' && cp '$REMOTE/af_heart.f32' '$EXTERNAL/input/af_heart.f32' && cp '$REMOTE/tokens.txt' '$EXTERNAL/input/tokens.txt' && cp '$REMOTE/lexicon-us-en.txt' '$EXTERNAL/input/lexicon-us-en.txt' && cp '$REMOTE/transcript.txt' '$EXTERNAL/input/transcript.txt' && cp '$REMOTE/deployment-fidelity-policy.json' '$EXTERNAL/input/deployment-fidelity-policy.json'"
-adb shell "cd '$EXTERNAL/input' && sha256sum model.onnx af_heart.f32 tokens.txt lexicon-us-en.txt transcript.txt deployment-fidelity-policy.json" >"$OUT/app-input-sha256.txt"
+APP_DATA="$(adb shell "run-as '$PACKAGE' pwd" | tr -d '\r')"
+case "$APP_DATA" in
+  "/data/user/0/$PACKAGE"|"/data/data/$PACKAGE") ;;
+  *) echo "unexpected run-as data directory: $APP_DATA" >&2; exit 7;;
+esac
+printf 'app_data=%s\nstaging=adb-shell-read-to-run-as-app-owned-internal-write\n' "$APP_DATA" >"$OUT/app-owned-staging.txt"
+adb shell "run-as '$PACKAGE' mkdir -p '$APP_DATA/files/input'"
+stage_app_owned(){
+  local remote_file=$1 name=$2
+  # The shell reads only this experiment's already hash-verified staging file;
+  # run-as performs the write as the debug app UID into its internal directory.
+  adb shell "cat '$remote_file' | run-as '$PACKAGE' sh -c 'umask 077; cat > \"$APP_DATA/files/input/$name\"'"
+}
+stage_app_owned "$REMOTE/model.onnx" model.onnx
+stage_app_owned "$REMOTE/af_heart.f32" af_heart.f32
+stage_app_owned "$REMOTE/tokens.txt" tokens.txt
+stage_app_owned "$REMOTE/lexicon-us-en.txt" lexicon-us-en.txt
+stage_app_owned "$REMOTE/transcript.txt" transcript.txt
+stage_app_owned "$REMOTE/deployment-fidelity-policy.json" deployment-fidelity-policy.json
+adb shell "run-as '$PACKAGE' sh -c 'cd \"$APP_DATA/files/input\" && sha256sum model.onnx af_heart.f32 tokens.txt lexicon-us-en.txt transcript.txt deployment-fidelity-policy.json'" >"$OUT/app-input-sha256.txt"
 
 adb shell "am force-stop '$PACKAGE'; am start -W -n '$ACTIVITY' --es campaign_id '$RUN_ID' --es route onnx" >"$OUT/am-start.txt"
 complete=0

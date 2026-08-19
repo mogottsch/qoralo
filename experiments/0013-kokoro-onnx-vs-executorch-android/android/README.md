@@ -20,4 +20,6 @@ The APK contains only `libonnxruntime.so` and `libonnxruntime4j_jni.so` for arm6
 
 ## Physical-run outcome
 
-The app never reached ORT. Android 15 scoped storage did not expose shell-copied files in the app-specific external directory as regular files to the target-SDK-35 app. The single authorized corrected rerun preserved canonical containment but still reported `regular=false`. An app-owned internal copy or `run-as` staging mechanism was not attempted after the stop instruction. See `../results/phone-onnx-bootstrap-checkpoint.json`.
+Android 15 scoped storage did not expose shell-owned files in the app-specific external directory as regular files to the target-SDK-35 app. After Moritz authorized further retries, the runner switched inputs to app-owned internal storage: `adb shell` reads only the unique, already hash-verified experiment stage, while debug `run-as` writes each file as the app UID. The app then independently verifies canonical containment, byte length, and SHA-256 before ORT initialization. Outputs remain app-created under its scoped external result directory for pulling.
+
+The canonical fixed-phone run passed: ORT 1.23.2, explicit sequential one-thread CPU, first total `7.4639 s`, warm median `7.4478 s`, valid 7.6-second WAV, and all 18,612 profiled node events on `CPUExecutionProvider`. See `../results/phone-onnx-cpu-checkpoint.json`; historical pre-runtime failures remain in `../results/phone-onnx-bootstrap-checkpoint.json`.

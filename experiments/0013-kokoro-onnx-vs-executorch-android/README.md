@@ -21,11 +21,11 @@ PyTorch `.pth`/`.pt` files are source containers, not Android graphs. No communi
 
 ## Result
 
-Neither route reached a valid Android latency comparison in this bounded experiment.
+The exact-source-derived FP32 ONNX route now runs successfully on the fixed phone. ExecuTorch remains blocked before a full-model PTE, so this establishes one viable bounded route rather than a two-route performance comparison.
 
 | Route | Host result | Android result | WAV / latency |
 |---|---|---|---|
-| Exact-source-derived FP32 ONNX Runtime | Controlled export and host CPU passed the separate deployment-validity policy | **Blocked before ORT environment/session creation** by app visibility of shell-copied scoped-storage assets | None |
+| Exact-source-derived FP32 ONNX Runtime | Controlled export and host CPU passed the separate deployment-validity policy | **Passed** on `SM-S918B` with ORT 1.23.2, explicit one-thread CPU EP, exact frontend/duration/output gates, and 18,612/18,612 profiled node events on CPU | First `7.4639 s` (`RTF 0.9821`); warm median `7.4478 s` (`RTF 0.9800`); WAV available under ignored `work/samples/` |
 | ExecuTorch 1.4 / `torch.export` | **Blocked before a full-model PTE** on the data-dependent duration-expanded sequence consumed by LSTMs | Ineligible; not attempted | None |
 
 ### Route A — deliberate fixed-contract FP32 ONNX
@@ -52,12 +52,29 @@ The 332038651-byte ONNX, SHA-256 `d11a0dd7c4eb768e1f0ef03090c69b6761f55e37b9f196
 
 The original preliminary `.999/.01` waveform screen nevertheless remains an explicit **failure**: host ORT versus the controlled eager wrapper produced cosine `0.9970098725` and NRMSE `0.0847079096`. It is not relabeled. Before any phone output, Pi approved and [`protocol/deployment-fidelity-policy.json`](protocol/deployment-fidelity-policy.json), SHA-256 `22c7f2dd5c3596acf66107c3712c886b827f4a332d13dca981d183f6efc40ad7`, froze a separate valid-audio and phase-tolerant acoustic policy. The host cross-runtime output passed that separate screen (log-mel cosine `0.999453`, log-mel MAE `0.785 dB`, spectral convergence `0.0594`, RMS-envelope correlation `0.999387`). This supports deployment eligibility; it does not erase waveform divergence or constitute listening evidence.
 
-Two authorized phone launches then stopped at asset bootstrap:
+Two earlier authorized launches stopped at asset bootstrap:
 
 1. the original FUSE path was rejected by an over-strict symbolic-path test;
 2. after a narrowly corrected canonical containment check and offline tests, the app still saw the correctly hash-staged shell-owned asset as `regular=false` under Android 15 scoped storage.
 
-The second run was the one authorized correction. Per the stop condition, no internal-storage/`run-as` staging redesign or third launch was attempted. Neither launch initialized ORT, created a session, ran a model, or produced audio. Both used the exact identity gate and physical lock; both force-stopped/uninstalled the app, removed the unique `/data/local/tmp` and app-external directories, verified absence, and released the lock. See [`results/phone-onnx-bootstrap-checkpoint.json`](results/phone-onnx-bootstrap-checkpoint.json).
+Those attempts remain pre-runtime evidence only in [`results/phone-onnx-bootstrap-checkpoint.json`](results/phone-onnx-bootstrap-checkpoint.json). Moritz subsequently authorized retries. The runner now installs the debuggable harness, verifies the unique shell stage, and streams each experiment asset into app-owned internal storage using `run-as`; the app independently rechecks canonical containment, exact byte sizes, and exact hashes before initializing ORT.
+
+The canonical run `onnx-cpu-20260819T130213Z-39278` passed on the required `R5CW81PR8SY` / `SM-S918B` / `SM8550`:
+
+| Evidence | Result |
+|---|---:|
+| ORT environment / session | ORT `1.23.2`; explicit CPU; sequential; one inter/intra-op thread; session `0.7977 s` |
+| First complete generation | `7.4639 s`, RTF `0.9821` |
+| Five warm generations | `7.3652–7.5354 s`; median `7.4478 s`, median RTF `0.9800` |
+| Output | `[182400]` FP32 samples, 7.6 s at 24 kHz; duration `[125]`, sum `304`; finite, peak `0.33614`, RMS `0.04808`, zero clipped samples |
+| Repeatability | all six float outputs bit-identical, SHA-256 `5a680f97fee0ef8817484e384442ee904931bb4554e5e58850ac8648b44d9e9d` |
+| Provider profile | 18,612 `CPUExecutionProvider` node events (3,102 per generation); zero non-CPU and zero QNN events |
+| Memory | maximum observed process-lifetime `VmHWM` `897974272` bytes (`856.4 MiB`); not steady PSS or component-isolated memory |
+| Thermal | battery `30.6 °C` → `30.8 °C` |
+
+The phone output passed the separately frozen phase-tolerant gate against both controlled eager and host ORT. Against controlled eager: spectral convergence `0.05955`, log-mel cosine `0.999451`, log-mel MAE `0.784 dB`, and envelope correlation `0.999392`. Its descriptive waveform cosine was `0.996911` and NRMSE `0.08584`; these do not erase the retained preliminary waveform failure.
+
+The fully decoded mono PCM16 WAV has 182400 frames, no full-scale samples, and SHA-256 `c046e8337b86ccf221ecd91db7dba90845f7c20b0ab1d8c248a36146c4eaecd3`. Local sample: [`work/samples/kokoro-af-heart-onnxruntime-cpu-s23.wav`](work/samples/kokoro-af-heart-onnxruntime-cpu-s23.wav) (ignored). The raw result/profile and exact cleanup evidence remain under `work/phone/onnx-cpu-20260819T130213Z-39278/`; the canonical summary is [`results/phone-onnx-cpu-checkpoint.json`](results/phone-onnx-cpu-checkpoint.json). The app was force-stopped and uninstalled, internal input and both scoped staging directories were removed, absence was verified, and both locks were released.
 
 ### Route B — bounded current ExecuTorch screen
 
@@ -71,12 +88,12 @@ The official complex inverse STFT exports in isolation but fails ExecuTorch edge
 
 ## Conclusion and claim boundaries
 
-- **No Android CPU latency or memory comparison can be claimed.** Both route values are unavailable, not zero.
-- The ONNX route is host-eligible as an **exact-source-derived, unquantized FP32, fixed-contract representation**, not waveform-identical official eager execution and not the sherpa `disable_complex=True` graph.
+- **No ONNX-versus-ExecuTorch Android performance comparison can be claimed**, because only ONNX produced a complete mobile program and phone run.
+- The ONNX route is phone-validated as an **exact-source-derived, unquantized FP32, fixed-contract representation**, not waveform-identical official eager execution and not the sherpa `disable_complex=True` graph.
+- On this fixed contract and phone, total ONNX generation was just faster than real time, with warm median RTF `0.9800`.
 - ExecuTorch is a bounded current export blocker, not a slower or faster measured route.
-- The Android ONNX blocker is staging/bootstrap, not an ONNX Runtime compatibility result.
-- No sample WAV was produced for Moritz because no authorized phone inference completed.
-- No HTP/QNN or quantization work began.
+- The previous Android ONNX blocker was staging/bootstrap and is resolved by app-owned internal staging.
+- No HTP/QNN or quantization work began; phone profiling proves CPU-only execution.
 - Models, source weights, wheels, APKs, raw profiles, phone logs, serial evidence, tensors, and audio remain ignored.
 
 ## Files
@@ -89,7 +106,8 @@ The official complex inverse STFT exports in isolation but fails ExecuTorch edge
 - [`results/onnx-export-provenance.json`](results/onnx-export-provenance.json) — exact graph/operator/tool provenance
 - [`results/host-onnx-fidelity-checkpoint.json`](results/host-onnx-fidelity-checkpoint.json) — controlled export, immutable numerical failure, and separate acoustic screen
 - [`results/executorch-export-checkpoint.json`](results/executorch-export-checkpoint.json) — bounded full-model blockers
-- [`results/phone-onnx-bootstrap-checkpoint.json`](results/phone-onnx-bootstrap-checkpoint.json) — exact phone bootstrap failures and cleanup
+- [`results/phone-onnx-bootstrap-checkpoint.json`](results/phone-onnx-bootstrap-checkpoint.json) — historical phone bootstrap failures and cleanup
+- [`results/phone-onnx-cpu-checkpoint.json`](results/phone-onnx-cpu-checkpoint.json) — successful phone timing, memory, output, acoustic, provider, and cleanup evidence
 - [`tools/export_onnx_fp.py`](tools/export_onnx_fp.py) — controlled fixed-contract FP32 export
 - [`tools/verify_source_weights.py`](tools/verify_source_weights.py) — source tensor and voice proof
 - [`tools/analyze_outputs.py`](tools/analyze_outputs.py) — frozen waveform/acoustic diagnostics

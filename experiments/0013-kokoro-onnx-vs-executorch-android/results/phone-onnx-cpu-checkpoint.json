@@ -1,0 +1,321 @@
+{
+  "canonical_run": {
+    "apk": {
+      "bytes": 7802769,
+      "sha256": "78819c6b71243a83d8b1b629d385e863c48dea3c36326c4865932c8a54011100"
+    },
+    "raw_local_directory": "work/phone/onnx-cpu-20260819T130213Z-39278",
+    "raw_result_sha256": "33972beb18006fe7d604c11f9b0ee0649212b54a265a486b3db84f778fafb3c5",
+    "run_id": "onnx-cpu-20260819T130213Z-39278"
+  },
+  "claim_boundary": "Exact-source-derived unquantized FP32 fixed-contract ONNX representation of the official Kokoro v1.0 model; not waveform-identical official eager, not the rejected sherpa disable_complex graph, not arbitrary text/shape, and not accelerator evidence.",
+  "cleanup": {
+    "absence_verified": true,
+    "app_external_directory_removed": true,
+    "app_internal_input_removed_before_uninstall": true,
+    "app_uninstalled": true,
+    "cleanup_rc": 0,
+    "command_rc": 0,
+    "force_stopped": true,
+    "messenger_phone_reservation_released": true,
+    "physical_flock_released": true,
+    "uninstall_rc": 0,
+    "unique_data_local_tmp_removed": true,
+    "verify_absent_rc": 0
+  },
+  "device": {
+    "abi": "arm64-v8a",
+    "model": "SM-S918B",
+    "serial": "R5CW81PR8SY",
+    "soc": "SM8550",
+    "sole_connected_device_gate_passed": true
+  },
+  "fixed_source_and_representation": {
+    "controlled_onnx_bytes": 332038651,
+    "controlled_onnx_sha256": "d11a0dd7c4eb768e1f0ef03090c69b6761f55e37b9f196749349591c40be232b",
+    "host_shell_stage_and_app_internal_hashes_exact": true,
+    "official_model_sha256": "496dba118d1a58f5f3db2efc88dbdc216e0483fc89fe6e47ee1f2c53f18ad1e4",
+    "official_voice_sha256": "0ab5709b8ffab19bfd849cd11d98f75b60af7733253ad0d67b12382a102cb4ff",
+    "policy_path": "../protocol/deployment-fidelity-policy.json",
+    "policy_sha256": "22c7f2dd5c3596acf66107c3712c886b827f4a332d13dca981d183f6efc40ad7",
+    "repository": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "revision": "f3ff3571791e39611d31c381e3a41a3af07b4987"
+  },
+  "historical_bootstrap_attempts": "See phone-onnx-bootstrap-checkpoint.json. Those failures remain classified as pre-runtime staging evidence only.",
+  "memory": {
+    "after_assets": {
+      "phase": "after_verified_assets_and_frontend_load",
+      "smaps_rollup_pss_bytes": 177246208,
+      "smaps_rollup_rss_bytes": 272711680,
+      "vm_hwm_bytes": 476925952,
+      "vm_hwm_semantics": "process-lifetime resident-set high-water; includes runtime, mappings, Java/JNI, prior phases, and transient allocations; not steady live PSS or component-isolated memory",
+      "vm_rss_bytes": 270053376
+    },
+    "after_first_generation": {
+      "phase": "after_first_generation",
+      "smaps_rollup_pss_bytes": 703777792,
+      "smaps_rollup_rss_bytes": 799875072,
+      "vm_hwm_bytes": 797171712,
+      "vm_hwm_semantics": "process-lifetime resident-set high-water; includes runtime, mappings, Java/JNI, prior phases, and transient allocations; not steady live PSS or component-isolated memory",
+      "vm_rss_bytes": 797171712
+    },
+    "after_session": {
+      "phase": "after_onnxruntime_session_creation",
+      "smaps_rollup_pss_bytes": 597582848,
+      "smaps_rollup_rss_bytes": 693133312,
+      "vm_hwm_bytes": 690429952,
+      "vm_hwm_semantics": "process-lifetime resident-set high-water; includes runtime, mappings, Java/JNI, prior phases, and transient allocations; not steady live PSS or component-isolated memory",
+      "vm_rss_bytes": 690421760
+    },
+    "maximum_observed_smaps_rollup_pss_bytes": 803942400,
+    "maximum_observed_vm_hwm_bytes": 897974272
+  },
+  "output": {
+    "all_six_float_outputs_bit_identical": true,
+    "audio_float32_sha256": "5a680f97fee0ef8817484e384442ee904931bb4554e5e58850ac8648b44d9e9d",
+    "audio_shape": [
+      182400
+    ],
+    "duration_int64_sha256": "7977e82d5304abba333a0b1caa0f0ef39b265b11205ff217c5979255cc44b80e",
+    "duration_shape": [
+      125
+    ],
+    "duration_sum": 304,
+    "float32": {
+      "bytes": 729600,
+      "local_path": "work/samples/kokoro-af-heart-onnxruntime-cpu-s23.f32",
+      "sha256": "5a680f97fee0ef8817484e384442ee904931bb4554e5e58850ac8648b44d9e9d"
+    },
+    "sample_rate_hz": 24000,
+    "speed": 1.0,
+    "style_sha256": "b5c2627313e7e45bbb50470307ef66730b5510ebc7e92671cf7aad0449cdf899",
+    "style_shape": [
+      1,
+      256
+    ],
+    "token_sha256": "35ebb50fb1ba0cca3862c880cf0571c9a51623c5243a9f2307b4bb4a6dcd2078",
+    "token_shape": [
+      1,
+      125
+    ],
+    "validation": {
+      "absolute_peak": 0.3361394703388214,
+      "all_finite": true,
+      "clipped_float_samples": 0,
+      "duration_seconds": 7.6,
+      "pred_duration_sum": 304,
+      "rms": 0.04807674688026508,
+      "sample_count": 182400,
+      "sample_rate_hz": 24000
+    },
+    "wav": {
+      "bytes": 364844,
+      "channels": 1,
+      "compression_type": "NONE",
+      "frame_count": 182400,
+      "full_decode": true,
+      "local_path": "work/samples/kokoro-af-heart-onnxruntime-cpu-s23.wav",
+      "pcm_clipped_sample_count": 0,
+      "pcm_max": 11014,
+      "pcm_min": -10304,
+      "sample_rate_hz": 24000,
+      "sample_width_bytes": 2,
+      "sha256": "c046e8337b86ccf221ecd91db7dba90845f7c20b0ab1d8c248a36146c4eaecd3"
+    }
+  },
+  "phone_phase_tolerant_acoustic_gate": {
+    "against_controlled_eager": {
+      "candidate": "experiments/0013-kokoro-onnx-vs-executorch-android/work/phone/onnx-cpu-20260819T130213Z-39278/pulled/kokoro-af-heart-onnxruntime-cpu.f32",
+      "checks": {
+        "log_magnitude_pearson": true,
+        "log_mel_cosine": true,
+        "log_mel_mae_db": true,
+        "rms_envelope_pearson": true,
+        "same_shape": true,
+        "spectral_convergence": true
+      },
+      "metrics": {
+        "flattened_log_magnitude_pearson": 0.9971327930685949,
+        "log_mel_cosine": 0.9994506933537083,
+        "magnitude_spectral_convergence": 0.05955407858139102,
+        "mean_absolute_log_mel_db": 0.7841977478658289,
+        "rms_envelope_pearson": 0.9993921313147789,
+        "same_shape": true,
+        "waveform_cosine_descriptive": 0.9969111561592449,
+        "waveform_max_abs_descriptive": 0.06061764061450958,
+        "waveform_nrmse_descriptive": 0.08584118989997482,
+        "waveform_rmse_descriptive": 0.0042888164608269365,
+        "waveform_snr_db_descriptive": 21.326085419301695
+      },
+      "status": "passed"
+    },
+    "against_host_onnxruntime_cpu": {
+      "candidate": "experiments/0013-kokoro-onnx-vs-executorch-android/work/phone/onnx-cpu-20260819T130213Z-39278/pulled/kokoro-af-heart-onnxruntime-cpu.f32",
+      "checks": {
+        "log_magnitude_pearson": true,
+        "log_mel_cosine": true,
+        "log_mel_mae_db": true,
+        "rms_envelope_pearson": true,
+        "same_shape": true,
+        "spectral_convergence": true
+      },
+      "metrics": {
+        "flattened_log_magnitude_pearson": 0.9995400958378718,
+        "log_mel_cosine": 0.999981339495919,
+        "magnitude_spectral_convergence": 0.014279422641934984,
+        "mean_absolute_log_mel_db": 0.1250373280617003,
+        "rms_envelope_pearson": 0.9999923248304291,
+        "same_shape": true,
+        "waveform_cosine_descriptive": 0.9995677165668622,
+        "waveform_max_abs_descriptive": 0.02973096165806055,
+        "waveform_nrmse_descriptive": 0.029402833837693425,
+        "waveform_rmse_descriptive": 0.001413662359853059,
+        "waveform_snr_db_descriptive": 30.63221620756453
+      },
+      "status": "passed"
+    },
+    "policy_sha256": "22c7f2dd5c3596acf66107c3712c886b827f4a332d13dca981d183f6efc40ad7",
+    "status": "passed",
+    "waveform_note": "Waveform metrics remain descriptive and do not erase or relabel the separately preserved preliminary .999/.01 host waveform-screen failure."
+  },
+  "provider_proof": {
+    "interpretation": "All 3,102 profiled node events per generation, 18,612 across six generations, were CPUExecutionProvider. No QNN library was packaged or configured.",
+    "node_provider_event_count": 18612,
+    "non_cpu_provider_event_count": 0,
+    "profile_event_count": 19388,
+    "profile_local_path": "work/phone/onnx-cpu-20260819T130213Z-39278/pulled/ort-profile_2026-08-19_14-02-32.json",
+    "profile_sha256": "e04f89a4166fbb9461fde48a9f72c9aeed64f8b2ef353b361540219477fecebe",
+    "provider_counts": {
+      "CPUExecutionProvider": 18612
+    },
+    "qnn_substring_event_count": 0
+  },
+  "retained_preliminary_waveform_screen": {
+    "cosine_similarity": 0.9970098725370491,
+    "not_relabelled": true,
+    "nrmse": 0.08470790963144033,
+    "status": "failed"
+  },
+  "route": "exact_source_derived_fp32_onnxruntime_android_cpu_fixed_contract",
+  "runtime": {
+    "apk_native_libraries": [
+      "lib/arm64-v8a/libonnxruntime.so",
+      "lib/arm64-v8a/libonnxruntime4j_jni.so"
+    ],
+    "available_providers": "[CPU, NNAPI, XNNPACK]",
+    "configured_provider": "explicit CPU via SessionOptions.addCPU(true)",
+    "execution_mode": "SEQUENTIAL",
+    "graph_optimization": "ALL_OPT",
+    "onnxruntime_version": "1.23.2",
+    "qnn_configured": false,
+    "qnn_library_count": 0,
+    "threads": 1
+  },
+  "schema_version": 1,
+  "staging_resolution": {
+    "app_input_storage": "app-owned internal files directory, populated through debug run-as after exact remote hash verification",
+    "problem": "Android 15 scoped-storage/FUSE did not expose shell-owned files in the app-specific external directory as regular files to the target-SDK-35 app.",
+    "security_scope": "Only this experiment package and its unique /data/local/tmp staging directory were accessed.",
+    "solution": "After installing the debuggable harness, adb shell read each already hash-verified experiment staging file and run-as wrote it as the app UID into the app internal files/input directory. The app then independently enforced canonical containment, exact byte counts, and exact SHA-256 values before ORT initialization."
+  },
+  "status": "passed",
+  "thermal": {
+    "battery_temperature_c_end": 30.8,
+    "battery_temperature_c_start": 30.6
+  },
+  "timing": {
+    "asset_verification_nanos": 310101197,
+    "audio_duration_seconds": 7.6,
+    "first_rtf": 0.9820912825000001,
+    "first_total_generation_nanos": 7463893747,
+    "frontend_asset_load_nanos": 2446959374,
+    "ort_environment_init_nanos": 81324896,
+    "runs": [
+      {
+        "audio_float32_sha256": "5a680f97fee0ef8817484e384442ee904931bb4554e5e58850ac8648b44d9e9d",
+        "duration_int64_sha256": "7977e82d5304abba333a0b1caa0f0ef39b265b11205ff217c5979255cc44b80e",
+        "frontend_nanos": 1339584,
+        "index": 0,
+        "inference_nanos": 7384666768,
+        "output_extraction_and_validation_nanos": 75194791,
+        "rtf": 0.9820912825000001,
+        "state": "first",
+        "tensor_creation_nanos": 2638698,
+        "total_generation_nanos": 7463893747
+      },
+      {
+        "audio_float32_sha256": "5a680f97fee0ef8817484e384442ee904931bb4554e5e58850ac8648b44d9e9d",
+        "duration_int64_sha256": "7977e82d5304abba333a0b1caa0f0ef39b265b11205ff217c5979255cc44b80e",
+        "frontend_nanos": 892239,
+        "index": 1,
+        "inference_nanos": 7341969268,
+        "output_extraction_and_validation_nanos": 22176823,
+        "rtf": 0.9691043993421053,
+        "state": "warm",
+        "tensor_creation_nanos": 145156,
+        "total_generation_nanos": 7365193435
+      },
+      {
+        "audio_float32_sha256": "5a680f97fee0ef8817484e384442ee904931bb4554e5e58850ac8648b44d9e9d",
+        "duration_int64_sha256": "7977e82d5304abba333a0b1caa0f0ef39b265b11205ff217c5979255cc44b80e",
+        "frontend_nanos": 1008906,
+        "index": 2,
+        "inference_nanos": 7347585726,
+        "output_extraction_and_validation_nanos": 22311198,
+        "rtf": 0.9698761989473685,
+        "state": "warm",
+        "tensor_creation_nanos": 142761,
+        "total_generation_nanos": 7371059112
+      },
+      {
+        "audio_float32_sha256": "5a680f97fee0ef8817484e384442ee904931bb4554e5e58850ac8648b44d9e9d",
+        "duration_int64_sha256": "7977e82d5304abba333a0b1caa0f0ef39b265b11205ff217c5979255cc44b80e",
+        "frontend_nanos": 886614,
+        "index": 3,
+        "inference_nanos": 7424634268,
+        "output_extraction_and_validation_nanos": 22120625,
+        "rtf": 0.9799726832894737,
+        "state": "warm",
+        "tensor_creation_nanos": 140365,
+        "total_generation_nanos": 7447792393
+      },
+      {
+        "audio_float32_sha256": "5a680f97fee0ef8817484e384442ee904931bb4554e5e58850ac8648b44d9e9d",
+        "duration_int64_sha256": "7977e82d5304abba333a0b1caa0f0ef39b265b11205ff217c5979255cc44b80e",
+        "frontend_nanos": 998281,
+        "index": 4,
+        "inference_nanos": 7497637810,
+        "output_extraction_and_validation_nanos": 21277083,
+        "rtf": 0.9894846006578948,
+        "state": "warm",
+        "tensor_creation_nanos": 158385,
+        "total_generation_nanos": 7520082965
+      },
+      {
+        "audio_float32_sha256": "5a680f97fee0ef8817484e384442ee904931bb4554e5e58850ac8648b44d9e9d",
+        "duration_int64_sha256": "7977e82d5304abba333a0b1caa0f0ef39b265b11205ff217c5979255cc44b80e",
+        "frontend_nanos": 1054948,
+        "index": 5,
+        "inference_nanos": 7513615571,
+        "output_extraction_and_validation_nanos": 20541406,
+        "rtf": 0.9914969911842105,
+        "state": "warm",
+        "tensor_creation_nanos": 154062,
+        "total_generation_nanos": 7535377133
+      }
+    ],
+    "session_creation_nanos": 797718541,
+    "warm_max_total_generation_nanos": 7535377133,
+    "warm_median_rtf": 0.9799726832894737,
+    "warm_median_total_generation_nanos": 7447792393,
+    "warm_min_total_generation_nanos": 7365193435,
+    "warm_total_generation_nanos": [
+      7365193435,
+      7371059112,
+      7447792393,
+      7520082965,
+      7535377133
+    ],
+    "wav_and_float_encoding_nanos": 56325938
+  }
+}
