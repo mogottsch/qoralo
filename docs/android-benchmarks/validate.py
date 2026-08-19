@@ -57,7 +57,7 @@ def main():
     seen_experiments = set()
     verified_media = 0
     for e in entries:
-        required = ("id", "experiment", "model", "model_identity", "route", "deployment_variant", "quantization", "scope", "attempt_status", "android_attempted", "provider", "precision", "threads", "device", "metrics", "wav", "summary", "limitations", "sources", "missing_reasons")
+        required = ("id", "experiment", "model", "model_identity", "route", "deployment_variant", "quantization", "scope", "attempt_status", "technical_execution", "structural_audio", "objective_evidence", "listening_review", "android_attempted", "provider", "precision", "threads", "device", "metrics", "wav", "summary", "limitations", "sources", "missing_reasons")
         missing = [k for k in required if k not in e]
         if missing:
             fail(f"{e.get('id')}: missing keys {missing}")
@@ -86,6 +86,32 @@ def main():
             fail(f"{e['id']}: invalid route scope")
         if e["attempt_status"] not in STATUSES:
             fail(f"{e['id']}: invalid status")
+        technical = e["technical_execution"]
+        if technical.get("status") != e["attempt_status"] or technical.get("android_attempted") != e["android_attempted"] or technical.get("provider") != e["provider"] or technical.get("threads") != e["threads"]:
+            fail(f"{e['id']}: technical execution does not match normalized route fields")
+        structural = e["structural_audio"]
+        if structural["status"] not in {"valid", "invalid", "unavailable"}:
+            fail(f"{e['id']}: invalid structural audio status")
+        if e["wav"] is not None and structural["status"] != "valid":
+            fail(f"{e['id']}: copied WAV must have structural_audio.status=valid")
+        if e["wav"] is None and structural["status"] != "unavailable":
+            fail(f"{e['id']}: missing WAV must have structural_audio.status=unavailable")
+        if e["wav"] is not None and structural["sample_sha256"] != e["wav"]["sha256"]:
+            fail(f"{e['id']}: structural audio hash does not match WAV")
+        objective = e["objective_evidence"]
+        if objective["status"] not in {"not_recorded", "descriptive", "pass", "fail"} or not objective["summary"].strip() or any(not isinstance(n, str) or not n.strip() for n in objective["comparison_notes"]):
+            fail(f"{e['id']}: invalid objective evidence")
+        review = e["listening_review"]
+        if review["status"] not in {"not_reviewed", "accepted", "rejected"}:
+            fail(f"{e['id']}: invalid listening status")
+        if review["status"] == "not_reviewed":
+            if review["reviewer"] is not None or review["date"] is not None or review["notes"] is not None:
+                fail(f"{e['id']}: not_reviewed cannot carry reviewer/date/notes")
+        else:
+            if review["reviewer"] != "Moritz" or not review["date"] or not review["notes"] or not review["notes"].strip():
+                fail(f"{e['id']}: only an explicit Moritz verdict may set listening status")
+        if e["wav"] is not None and review["sample_sha256"] != e["wav"]["sha256"]:
+            fail(f"{e['id']}: listening sample hash does not match WAV")
         if e["android_attempted"] and e["device"] != EXPECTED_DEVICE:
             fail(f"{e['id']}: attempted route must identify the authorized device")
         if not e["android_attempted"] and e["device"] is not None:
@@ -148,6 +174,12 @@ def main():
                 fail(f"{page_name}: {e['id']} table link does not target its player")
             if f'id="{anchor}"' not in page_text:
                 fail(f"{page_name}: {e['id']} player anchor is missing")
+            review_anchor = f"needs-{e['id']}"
+            if e["scope"] == "full_e2e" and e["listening_review"]["status"] == "not_reviewed":
+                if f'id="{review_anchor}"' not in page_text:
+                    fail(f"{page_name}: unreviewed sample {e['id']} missing from Needs review")
+            elif f'id="{review_anchor}"' in page_text:
+                fail(f"{page_name}: reviewed/non-E2E sample {e['id']} leaked into Needs review")
             if f'src="{e["wav"]["path"]}"' not in page_text:
                 fail(f"{page_name}: {e['id']} embedded audio source is missing")
     print(f"PASS: {len(entries)} routes across {len(seen_experiments)} experiments; {verified_media} verified Android WAVs")

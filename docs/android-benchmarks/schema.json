@@ -23,6 +23,41 @@
       }, "additionalProperties": false
     },
     "metric": {"type": ["number", "null"], "minimum": 0},
+    "technical_execution": {
+      "type": "object", "required": ["status", "android_attempted", "provider", "threads"],
+      "properties": {
+        "status": {"enum": ["ran", "partial", "blocked", "deferred", "not_run"]},
+        "android_attempted": {"type": "boolean"},
+        "provider": {"type": ["string", "null"]},
+        "threads": {"type": ["integer", "null"], "minimum": 1}
+      }, "additionalProperties": false
+    },
+    "structural_audio": {
+      "type": "object", "required": ["status", "basis", "sample_sha256"],
+      "properties": {
+        "status": {"enum": ["valid", "invalid", "unavailable"]},
+        "basis": {"type": ["string", "null"]},
+        "sample_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"}
+      }, "additionalProperties": false
+    },
+    "objective_evidence": {
+      "type": "object", "required": ["status", "summary", "comparison_notes"],
+      "properties": {
+        "status": {"enum": ["not_recorded", "descriptive", "pass", "fail"]},
+        "summary": {"type": "string", "minLength": 1},
+        "comparison_notes": {"type": "array", "items": {"type": "string"}}
+      }, "additionalProperties": false
+    },
+    "listening_review": {
+      "type": "object", "required": ["status", "reviewer", "date", "notes", "sample_sha256"],
+      "properties": {
+        "status": {"enum": ["not_reviewed", "accepted", "rejected"]},
+        "reviewer": {"type": ["string", "null"]},
+        "date": {"type": ["string", "null"], "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+        "notes": {"type": ["string", "null"]},
+        "sample_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"}
+      }, "additionalProperties": false
+    },
     "timeline_entry": {
       "type": "object", "required": ["model", "first_release_date", "date_basis", "source_url"],
       "properties": {
@@ -42,7 +77,7 @@
     },
     "entry": {
       "type": "object",
-      "required": ["id", "experiment", "model", "model_identity", "route", "deployment_variant", "quantization", "scope", "attempt_status", "android_attempted", "provider", "precision", "threads", "device", "metrics", "wav", "summary", "limitations", "sources", "missing_reasons"],
+      "required": ["id", "experiment", "model", "model_identity", "route", "deployment_variant", "quantization", "scope", "attempt_status", "technical_execution", "structural_audio", "objective_evidence", "listening_review", "android_attempted", "provider", "precision", "threads", "device", "metrics", "wav", "summary", "limitations", "sources", "missing_reasons"],
       "properties": {
         "id": {"type": "string", "pattern": "^[0-9]{4}-[a-z0-9-]+$"},
         "experiment": {"type": "string", "pattern": "^[0-9]{4}$"},
@@ -53,6 +88,10 @@
         "quantization": {"type": ["string", "null"]},
         "scope": {"enum": ["full_e2e", "excluded_non_e2e"]},
         "attempt_status": {"enum": ["ran", "partial", "blocked", "deferred", "not_run"]},
+        "technical_execution": {"$ref": "#/$defs/technical_execution"},
+        "structural_audio": {"$ref": "#/$defs/structural_audio"},
+        "objective_evidence": {"$ref": "#/$defs/objective_evidence"},
+        "listening_review": {"$ref": "#/$defs/listening_review"},
         "android_attempted": {"type": "boolean"},
         "provider": {"type": ["string", "null"]}, "precision": {"type": ["string", "null"]},
         "threads": {"type": ["integer", "null"], "minimum": 1},

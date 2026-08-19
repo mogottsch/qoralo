@@ -48,6 +48,29 @@
       "route": "ExecuTorch/XNNPACK full generation",
       "deployment_variant": "ExecuTorch 1.2 / XNNPACK",
       "attempt_status": "partial",
+      "technical_execution": {
+        "status": "partial",
+        "android_attempted": true,
+        "provider": "XNNPACK",
+        "threads": null
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Component Android execution worked, but the complete fixed-shape generation was rejected: only 2.04% of the locked reference was covered, audio was effectively silent, and the package was about 9.1 GB.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
       "android_attempted": true,
       "provider": "XNNPACK",
       "precision": "FP32",
@@ -96,6 +119,29 @@
       "route": "ExecuTorch acoustic decoder component",
       "deployment_variant": "ExecuTorch 1.2 / XNNPACK",
       "attempt_status": "partial",
+      "technical_execution": {
+        "status": "partial",
+        "android_attempted": true,
+        "provider": "XNNPACK",
+        "threads": null
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "The fixed-shape acoustic-decoder probe loaded and executed on Android with numerical agreement, but it is a component probe, not complete speech generation.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
       "android_attempted": true,
       "provider": "XNNPACK",
       "precision": "FP32",
@@ -141,6 +187,29 @@
       "route": "LiteRT Android conversion",
       "deployment_variant": "LiteRT",
       "attempt_status": "deferred",
+      "technical_execution": {
+        "status": "deferred",
+        "android_attempted": false,
+        "provider": null,
+        "threads": null
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "A LiteRT conversion was documented as deferred; no Android deployment was run.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
       "android_attempted": false,
       "provider": null,
       "precision": null,
@@ -180,6 +249,29 @@
       "route": "ONNX Runtime Mobile",
       "deployment_variant": "ONNX Runtime Mobile",
       "attempt_status": "deferred",
+      "technical_execution": {
+        "status": "deferred",
+        "android_attempted": false,
+        "provider": null,
+        "threads": null
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "The ONNX Runtime Mobile route was deferred before conversion and phone execution.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
       "android_attempted": false,
       "provider": null,
       "precision": null,
@@ -219,6 +311,29 @@
       "route": "Direct Qualcomm QNN",
       "deployment_variant": "QNN",
       "attempt_status": "deferred",
+      "technical_execution": {
+        "status": "deferred",
+        "android_attempted": false,
+        "provider": null,
+        "threads": null
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "The direct QNN route remained planned and blocked on a correct portable implementation.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
       "android_attempted": false,
       "provider": null,
       "precision": null,
@@ -258,6 +373,29 @@
       "route": "Android feasibility inventory",
       "deployment_variant": "Feasibility only",
       "attempt_status": "not_run",
+      "technical_execution": {
+        "status": "not_run",
+        "android_attempted": false,
+        "provider": null,
+        "threads": null
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "The smaller VibeVoice model has feasibility and package estimates only; conversion and Android execution did not begin.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
       "android_attempted": false,
       "provider": null,
       "precision": null,
@@ -298,6 +436,29 @@
       "route": "sherpa-onnx CPU",
       "deployment_variant": "sherpa-onnx v1.13.5",
       "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "CPU",
+        "threads": 1
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Pinned Pocket INT8 generated valid audio on the Galaxy S23 Ultra.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
       "android_attempted": true,
       "provider": "CPU",
       "precision": "INT8",
@@ -343,6 +504,29 @@
       "route": "sherpa-onnx CPU",
       "deployment_variant": "sherpa-onnx v1.13.5",
       "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "CPU",
+        "threads": 1
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Exact Kokoro v1.0 SID 3/af_heart generated valid Android audio.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
       "android_attempted": true,
       "provider": "CPU",
       "precision": "FP32",
@@ -389,6 +573,29 @@
       "route": "sherpa-onnx CPU",
       "deployment_variant": "sherpa-onnx v1.13.5",
       "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "CPU",
+        "threads": 1
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Pinned Supertonic 3 INT8 with proven M1/SID5 generated valid Android audio and became the technical reference.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
       "android_attempted": true,
       "provider": "CPU",
       "precision": "INT8",
@@ -433,6 +640,29 @@
       "route": "thread sweep CPU",
       "deployment_variant": "sherpa-onnx Pocket / 1 thread",
       "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "CPU",
+        "threads": 1
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Thread-sweep configuration succeeded with valid audio.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
       "android_attempted": true,
       "provider": "CPU",
       "precision": "INT8",
@@ -477,6 +707,29 @@
       "route": "thread sweep CPU",
       "deployment_variant": "sherpa-onnx Pocket / 2 threads",
       "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "CPU",
+        "threads": 2
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Thread-sweep configuration succeeded with valid audio.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
       "android_attempted": true,
       "provider": "CPU",
       "precision": "INT8",
@@ -521,6 +774,29 @@
       "route": "thread sweep CPU",
       "deployment_variant": "sherpa-onnx Pocket / 4 threads",
       "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "CPU",
+        "threads": 4
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Thread-sweep configuration succeeded with valid audio.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
       "android_attempted": true,
       "provider": "CPU",
       "precision": "INT8",
@@ -565,6 +841,29 @@
       "route": "thread sweep CPU",
       "deployment_variant": "sherpa-onnx Kokoro / 1 thread",
       "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "CPU",
+        "threads": 1
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Thread-sweep configuration succeeded with valid audio.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
       "android_attempted": true,
       "provider": "CPU",
       "precision": "FP32",
@@ -610,6 +909,29 @@
       "route": "thread sweep CPU",
       "deployment_variant": "sherpa-onnx Kokoro / 2 threads",
       "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "CPU",
+        "threads": 2
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Thread-sweep configuration succeeded with valid audio.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
       "android_attempted": true,
       "provider": "CPU",
       "precision": "FP32",
@@ -655,6 +977,29 @@
       "route": "thread sweep CPU",
       "deployment_variant": "sherpa-onnx Kokoro / 4 threads",
       "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "CPU",
+        "threads": 4
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Thread-sweep configuration succeeded with valid audio.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
       "android_attempted": true,
       "provider": "CPU",
       "precision": "FP32",
@@ -700,6 +1045,29 @@
       "route": "thread sweep CPU",
       "deployment_variant": "sherpa-onnx Supertonic 3 / 1 thread",
       "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "CPU",
+        "threads": 1
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Thread-sweep configuration succeeded with valid audio.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
       "android_attempted": true,
       "provider": "CPU",
       "precision": "INT8",
@@ -744,6 +1112,29 @@
       "route": "thread sweep CPU",
       "deployment_variant": "sherpa-onnx Supertonic 3 / 2 threads",
       "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "CPU",
+        "threads": 2
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Thread-sweep configuration succeeded with valid audio.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
       "android_attempted": true,
       "provider": "CPU",
       "precision": "INT8",
@@ -788,6 +1179,29 @@
       "route": "thread sweep CPU",
       "deployment_variant": "sherpa-onnx Supertonic 3 / 4 threads",
       "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "CPU",
+        "threads": 4
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Thread-sweep configuration succeeded with valid audio.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
       "android_attempted": true,
       "provider": "CPU",
       "precision": "INT8",
@@ -832,6 +1246,29 @@
       "route": "mixed INT8 host candidate",
       "deployment_variant": "Kokoro v1.0 mixed INT8",
       "attempt_status": "not_run",
+      "technical_execution": {
+        "status": "not_run",
+        "android_attempted": false,
+        "provider": "CPU",
+        "threads": null
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "The selected mixed INT8 Kokoro candidate passed host and listening gates but was not deployed to Android in this experiment.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
       "android_attempted": false,
       "provider": "CPU",
       "precision": "INT8",
@@ -871,6 +1308,29 @@
       "route": "official sherpa CPU control",
       "deployment_variant": "Supertonic 3 fixed-shape CPU",
       "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "CPU",
+        "threads": 1
+      },
+      "structural_audio": {
+        "status": "valid",
+        "basis": "verified committed Android WAV container and source result",
+        "sample_sha256": "7e83537630b3e354f7586b9887f7a8359d62e438c9addeea61d87d878b2a84ff"
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "CPU control for the fixed transcript-to-WAV HTP feasibility comparison.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": "7e83537630b3e354f7586b9887f7a8359d62e438c9addeea61d87d878b2a84ff"
+      },
       "android_attempted": true,
       "provider": "CPU",
       "precision": "INT8",
@@ -923,6 +1383,31 @@
       "route": "mixed QNN HTP + CPU fallback",
       "deployment_variant": "Supertonic 3 QNN/HTP hybrid",
       "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "QNN HTP + CPU fallback",
+        "threads": null
+      },
+      "structural_audio": {
+        "status": "valid",
+        "basis": "verified committed Android WAV container and source result",
+        "sample_sha256": "9b0d488776b144c972e8be4e9434fac14ce3ceddfcfa5a10d137fca41b772668"
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Physical HTP and numerical comparison evidence; no listening acceptance.",
+        "comparison_notes": [
+          "Post-run single-listener observation that CPU and hybrid samples sounded exactly the same; comparative evidence only, not an acceptance decision."
+        ]
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": "9b0d488776b144c972e8be4e9434fac14ce3ceddfcfa5a10d137fca41b772668"
+      },
       "android_attempted": true,
       "provider": "QNN HTP + CPU fallback",
       "precision": "INT8",
@@ -975,6 +1460,29 @@
       "route": "official FP32 ONNX CPU",
       "deployment_variant": "Official Supertonic 3 FP32",
       "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "CPUExecutionProvider",
+        "threads": null
+      },
+      "structural_audio": {
+        "status": "valid",
+        "basis": "verified committed Android WAV container and source result",
+        "sample_sha256": "8db92db13567b86be503d204fe367f2052b54dbfc99c0f7bfc5b23d9fd431da7"
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Complete official FP32 ONNX chain ran on the authorized phone CPU and produced valid mono PCM16 WAV audio.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": "8db92db13567b86be503d204fe367f2052b54dbfc99c0f7bfc5b23d9fd431da7"
+      },
       "android_attempted": true,
       "provider": "CPUExecutionProvider",
       "precision": "FP32",
@@ -1024,6 +1532,29 @@
       "route": "all-HTP rewritten vector + CPU orchestration",
       "deployment_variant": "Official Supertonic 3 FP32 + stable Softplus rewrite",
       "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "QNNExecutionProvider (fallback disabled)",
+        "threads": null
+      },
+      "structural_audio": {
+        "status": "valid",
+        "basis": "verified committed Android WAV container and source result",
+        "sample_sha256": "47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c"
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "All four neural components physically ran on HTP with fallback disabled, but the frozen numerical policy failed (cosine 0.92668 < 0.95).",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": "47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c"
+      },
       "android_attempted": true,
       "provider": "QNNExecutionProvider (fallback disabled)",
       "precision": "FP32",
@@ -1074,6 +1605,29 @@
       "route": "original full HTP route",
       "deployment_variant": "Official Supertonic 3 original FP32 HTP",
       "attempt_status": "blocked",
+      "technical_execution": {
+        "status": "blocked",
+        "android_attempted": true,
+        "provider": "QNN (not executed)",
+        "threads": null
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "The original full HTP route was stopped fail-closed after host/provider compatibility checks; no complete phone HTP synthesis was attempted.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
       "android_attempted": true,
       "provider": "QNN (not executed)",
       "precision": "FP32",
@@ -1116,6 +1670,29 @@
       "route": "derived FP ONNX Runtime CPU",
       "deployment_variant": "Pocket five-component FP ONNX",
       "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "CPU",
+        "threads": 1
+      },
+      "structural_audio": {
+        "status": "valid",
+        "basis": "verified committed Android WAV container and source result",
+        "sample_sha256": "40634981606f37c59a91c14d99cecb3ef4cc21b1391882e870940b0716857d22"
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Source-vs-ONNX fidelity and valid-audio diagnostics are retained separately from listening.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "rejected",
+        "reviewer": "Moritz",
+        "date": "2026-08-19",
+        "notes": "Unusable repetitive \u201ctakakakakakakakaka\u201d. Route-level verdict only; do not generalize to the Pocket family.",
+        "sample_sha256": "40634981606f37c59a91c14d99cecb3ef4cc21b1391882e870940b0716857d22"
+      },
       "android_attempted": true,
       "provider": "CPU",
       "precision": "FP32",
@@ -1167,6 +1744,29 @@
       "route": "ExecuTorch route",
       "deployment_variant": "ExecuTorch",
       "attempt_status": "blocked",
+      "technical_execution": {
+        "status": "blocked",
+        "android_attempted": false,
+        "provider": null,
+        "threads": null
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Text conditioner and flow step exported, but essential recurrent FlowLM and Mimi decoder exports failed before any Android package or phone run.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
       "android_attempted": false,
       "provider": null,
       "precision": null,
@@ -1207,6 +1807,29 @@
       "route": "mixed QNN HTP + CPU fallback",
       "deployment_variant": "Pocket exact FP ONNX + QNN HTP/CPU hybrid",
       "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "QNN HTP + CPU fallback",
+        "threads": 1
+      },
+      "structural_audio": {
+        "status": "valid",
+        "basis": "verified committed Android WAV container and source result",
+        "sample_sha256": "6cd3a98fb821ad76b0c0ad55a20f910da7be9d3058e511ff807b4a4f694aa45f"
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Complete Pocket text-to-WAV execution used 45,117 CPU and 1,515 QNN events (3.249% QNN event fraction) with physical HTP execution proven. Normalized warm RTF was 59.1% worse than the 0012 CPU route; EOS ended at 48 versus 78 latent frames and output was not equivalent.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": "6cd3a98fb821ad76b0c0ad55a20f910da7be9d3058e511ff807b4a4f694aa45f"
+      },
       "android_attempted": true,
       "provider": "QNN HTP + CPU fallback",
       "precision": "FP32 source graphs",
@@ -1260,6 +1883,29 @@
       "route": "derived FP32 ONNX Runtime CPU bootstrap",
       "deployment_variant": "Kokoro exact-source-derived FP32 ONNX",
       "attempt_status": "blocked",
+      "technical_execution": {
+        "status": "blocked",
+        "android_attempted": true,
+        "provider": "CPU (session not created)",
+        "threads": null
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Two authorized phone launches stopped at app asset bootstrap/scoped-storage visibility; no ONNX Runtime session or inference was created.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
       "android_attempted": true,
       "provider": "CPU (session not created)",
       "precision": "FP32",
@@ -1308,6 +1954,29 @@
       "route": "exact-source-derived FP32 ONNX Runtime CPU",
       "deployment_variant": "Kokoro exact-source-derived FP32 ONNX",
       "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "CPUExecutionProvider",
+        "threads": 1
+      },
+      "structural_audio": {
+        "status": "valid",
+        "basis": "verified committed Android WAV container and source result",
+        "sample_sha256": "c046e8337b86ccf221ecd91db7dba90845f7c20b0ab1d8c248a36146c4eaecd3"
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "The exact-source-derived FP32 ONNX route completed six Android CPU generations; all node events were CPU-only and the phase-tolerant acoustic gate passed. The preserved strict waveform screen remains a descriptive failure, not a listening verdict.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": "c046e8337b86ccf221ecd91db7dba90845f7c20b0ab1d8c248a36146c4eaecd3"
+      },
       "android_attempted": true,
       "provider": "CPUExecutionProvider",
       "precision": "FP32",
@@ -1360,6 +2029,29 @@
       "route": "ExecuTorch full model",
       "deployment_variant": "ExecuTorch",
       "attempt_status": "blocked",
+      "technical_execution": {
+        "status": "blocked",
+        "android_attempted": false,
+        "provider": null,
+        "threads": null
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "The complete ExecuTorch route was blocked at host export/lowering and never reached Android.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
       "android_attempted": false,
       "provider": null,
       "precision": null,
@@ -1400,6 +2092,29 @@
       "route": "official ONNX Runtime CPU",
       "deployment_variant": "MOSS-TTS-Nano official ONNX",
       "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "CPUExecutionProvider",
+        "threads": 4
+      },
+      "structural_audio": {
+        "status": "valid",
+        "basis": "verified committed Android WAV container and source result",
+        "sample_sha256": "173850781b055e70a606fb561d93b70e6d8c6318db1b29b2324f83506c21ad6b"
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Official MOSS-TTS-Nano completed text-to-WAV on CPUExecutionProvider only with 543,972/543,972 CPU node events. The full decoded output is 16.72 s, with non-streaming first decoded PCM semantics; setup was 1.71284 s and the process VmHWM reached 5,828,526,080 bytes.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": "173850781b055e70a606fb561d93b70e6d8c6318db1b29b2324f83506c21ad6b"
+      },
       "android_attempted": true,
       "provider": "CPUExecutionProvider",
       "precision": "FP32",
