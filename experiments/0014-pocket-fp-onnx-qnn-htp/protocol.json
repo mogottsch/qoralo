@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "experiment": "0014-pocket-fp-onnx-qnn-htp",
+  "objective": "Attempt complete Pocket TTS text-to-WAV through ONNX Runtime QNN HTP and benchmark only if every neural component is fail-closed QNN assigned and physically proven.",
+  "source_experiment": "0012-pocket-onnx-vs-executorch-android",
+  "source_model": {
+    "repository": "kyutai/pocket-tts-without-voice-cloning",
+    "revision": "d29db7978e464fb90cb3359ee0c69a273b9142cc",
+    "weight_sha256": "be9c6b4876d3f30740a8225dfcaa2e43dc4aeb753c15272735bee16bbb4abb0a"
+  },
+  "matched_contract": {
+    "text": "Pocket TTS runs entirely on this Android phone using the original floating point model.",
+    "text_sha256": "66e1ba2772ca3d534b792e9d9dacb26e37fda422afe40e8cced5aa878404ffb1",
+    "voice": "Bria reference WAV",
+    "voice_sha256": "85f46d6f0642f657a6bd689ddaa52d5a5f53e4314715e1032704c80917392181",
+    "seed": 0,
+    "temperature": 0.3,
+    "flow_steps": 1,
+    "sample_rate_hz": 24000,
+    "device": "R5CW81PR8SY / SM-S918B / SM8550"
+  },
+  "gates": [
+    "Verify every reused asset by the frozen 0012 hashes.",
+    "Host-gate every graph with QNN and session.disable_cpu_ep_fallback=1 before phone use.",
+    "Never call partial assignment, CPU fallback, or a mixed route full HTP.",
+    "Complete phone synthesis is permitted only if all required shape variants fully delegate.",
+    "Physical proof requires QNNExecutionProvider-only ORT events, zero CPU provider node events, and QNN RPC/accelerator/cycle/HVX profile evidence for every neural execution.",
+    "Source FP graph types do not establish HTP arithmetic precision."
+  ],
+  "benchmark": {"processes": "fresh", "cold_runs": 1, "warm_runs": 5, "primary_metric": "warm median RTF", "memory": "cumulative process VmHWM with explicit limitation"},
+  "phone_safety": {"lock": "artifacts/locks/phone.lock", "adb": "Windows adb.exe with ADB_LIBUSB=1 and lock FD closed", "remote_prefix": "/data/local/tmp/experiment-0014-pocket-htp-", "cleanup_required": true}
+}

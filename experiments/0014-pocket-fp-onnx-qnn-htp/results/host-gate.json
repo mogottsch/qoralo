@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "result": "blocked_before_phone",
+  "claim": "The exact 0012 Pocket FP ONNX export cannot execute as a complete fail-closed QNN HTP route. Concrete I/O specialization and ORT constant folding made the text conditioner and flow step fully assignable, but every FlowLM-main variant and both required Mimi components retained CPU nodes.",
+  "runtime": {"onnxruntime": "1.27.1", "qairt_qnn": "2.49.0.260730", "backend": "x86_64 QNN HTP preparation/emulation", "cpu_fallback_disabled": true, "graph_optimization": "ORT_ENABLE_ALL"},
+  "source": {"experiment": "0012-pocket-onnx-vs-executorch-android", "weight_sha256": "be9c6b4876d3f30740a8225dfcaa2e43dc4aeb753c15272735bee16bbb4abb0a", "assets_verified": true},
+  "original_dynamic_graphs": [
+    {"component":"text_conditioner","partitions":0,"supported_nodes":0,"graph_nodes":1,"passed":false},
+    {"component":"flow_lm_flow","partitions":3,"supported_nodes":40,"graph_nodes":240,"passed":false},
+    {"component":"flow_lm_main","partitions":26,"supported_nodes":316,"graph_nodes":1117,"passed":false},
+    {"component":"mimi_encoder","partitions":5,"supported_nodes":32,"graph_nodes":228,"passed":false},
+    {"component":"mimi_decoder","partitions":10,"supported_nodes":162,"graph_nodes":456,"passed":false}
+  ],
+  "static_optimized_variants": [
+    {"variant":"text_conditioner-text26","partitions":1,"supported_nodes":1,"graph_nodes":1,"passed":true,"bytes":16388496,"sha256":"c5ea5feebe6f3197e89839b53469cb191ae16cc83821f82451710eca9f56862a"},
+    {"variant":"flow_lm_flow-flow1","partitions":1,"supported_nodes":167,"graph_nodes":167,"passed":true,"bytes":39093205,"sha256":"fa74e3777dc661135807d964d47f177bc93159392a0a484718ba0343130f7a60"},
+    {"variant":"flow_lm_main-voice126","partitions":15,"supported_nodes":400,"graph_nodes":685,"passed":false,"bytes":302681869,"sha256":"888fe3f4a1b1d7fcd4defdf5a64fb9c4cf94d4ee3a63630df8744be3b8cfa513"},
+    {"variant":"flow_lm_main-text26","partitions":15,"supported_nodes":400,"graph_nodes":685,"passed":false,"bytes":302674663,"sha256":"e8474af4d61cd1477d99e1a84ab59ba647ff6e29402f2bce8cf9f946fb571980"},
+    {"variant":"flow_lm_main-ar1","partitions":15,"supported_nodes":396,"graph_nodes":680,"passed":false,"bytes":302671917,"sha256":"db9cfedf4a0fd1267496f00137e5d318b44412c6c2b9d277bdfe0a33263f56b4"},
+    {"variant":"mimi_encoder-encoder240000","partitions":5,"supported_nodes":179,"graph_nodes":184,"passed":false,"bytes":55684411,"sha256":"1cfec92031dd110be9392c6a2228e0794e6f3daff97c3d3fe99db4934b33f6a0"},
+    {"variant":"mimi_decoder-decoder12","partitions":3,"supported_nodes":294,"graph_nodes":335,"passed":false,"bytes":41432237,"sha256":"8100e145bcff619be03146a051433c6ef293b99ecaf79490e34a360a051ff018"},
+    {"variant":"mimi_decoder-decoder6","partitions":3,"supported_nodes":294,"graph_nodes":335,"passed":false,"bytes":41428199,"sha256":"ec676bd5302f35623923044107c3a89b6f4a8d94464be481d115b05062286d60"}
+  ],
+  "observed_runtime_shapes": {"text_tokens":26,"reference_audio_samples":240000,"reference_embedding_frames_plus_bos":126,"ar_sequence_frames":1,"flow_batch":1,"decoder_regular_frames":12,"decoder_tail_frames":6,"flow_state_entries":18,"mimi_state_entries":56},
+  "blockers": {
+    "flow_lm_main": "Static variants still leave 280+ nodes outside QNN across 15 partitions. Repeated blockers include runtime Shape/ConstantOfShape over zero-length recurrent state tensors, IsNaN sentinel logic, SkipLayerNormalization, and unresolved tensor shapes. This requires a QNN-oriented state/attention re-export, not a narrow I/O specialization.",
+    "mimi_encoder": "179/184 nodes assign; remaining blockers include IsNaN, Erf/GELU, and invalid zero-only padding preparation.",
+    "mimi_decoder": "294/335 nodes assign across three partitions; remaining blockers include IsNaN and 39 state-output Identity nodes. Both decoder shape variants fail closed."
+  },
+  "phone": {"attempted":false,"reason":"Mandatory host all-component gate failed; no phone staging was allowed.","lock_acquired":false,"remote_stage":null,"cleanup_required":false},
+  "performance": {"htp_rtf":null,"reason":"No complete HTP route exists, so reporting HTP latency or RTF would be misleading."},
+  "sample_audio": {"htp_wav":null,"reason":"No HTP WAV was generated because essential graphs did not fully delegate."},
+  "boundaries": {"mixed_fallback_run":false,"quantization":false,"operator_rewrite":false,"htp_arithmetic_precision_established":false}
+}
