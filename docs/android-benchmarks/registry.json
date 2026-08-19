@@ -1195,6 +1195,59 @@
       "scope": "excluded_non_e2e"
     },
     {
+      "id": "0016-pocket-qnn-hybrid-cpu",
+      "experiment": "0016",
+      "model": "Pocket TTS",
+      "route": "mixed QNN HTP + CPU fallback",
+      "deployment_variant": "Pocket exact FP ONNX + QNN HTP/CPU hybrid",
+      "attempt_status": "ran",
+      "android_attempted": true,
+      "provider": "QNN HTP + CPU fallback",
+      "precision": "FP32 source graphs",
+      "threads": 1,
+      "device": {
+        "model": "SM-S918B",
+        "soc": "SM8550",
+        "serial": "R5CW81PR8SY",
+        "abi": "arm64-v8a"
+      },
+      "metrics": {
+        "load_seconds": 2.829669739,
+        "cold_rtf": 1.202828138,
+        "warm_median_rtf": 1.002830145,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": 1216598016
+      },
+      "wav": {
+        "path": "media/0016-pocket-qnn-hybrid-cpu.wav",
+        "sha256": "6cd3a98fb821ad76b0c0ad55a20f910da7be9d3058e511ff807b4a4f694aa45f",
+        "bytes": 184364,
+        "sample_rate_hz": 24000,
+        "channels": 1,
+        "duration_seconds": 3.84,
+        "verified": true
+      },
+      "summary": "Complete Pocket text-to-WAV execution used 45,117 CPU and 1,515 QNN events (3.249% QNN event fraction) with physical HTP execution proven. Normalized warm RTF was 59.1% worse than the 0012 CPU route; EOS ended at 48 versus 78 latent frames and output was not equivalent.",
+      "limitations": [
+        "Mixed route, not full HTP; QNN internal HTP precision was not established.",
+        "The shorter 3.84 s output is not equivalent to the 0012 6.24 s output.",
+        "VmHWM is cumulative process high-water memory; profiling run was excluded from timing."
+      ],
+      "sources": [
+        "experiments/0016-pocket-onnx-qnn-hybrid-android/results/hybrid-phone.json",
+        "experiments/0016-pocket-onnx-qnn-hybrid-android/protocol.json",
+        "experiments/0016-pocket-onnx-qnn-hybrid-android/RESULTS.md"
+      ],
+      "missing_reasons": {},
+      "model_identity": {
+        "name": "kyutai/pocket-tts-without-voice-cloning",
+        "url": "https://huggingface.co/kyutai/pocket-tts-without-voice-cloning/tree/d29db7978e464fb90cb3359ee0c69a273b9142cc",
+        "revision": "d29db7978e464fb90cb3359ee0c69a273b9142cc"
+      },
+      "quantization": "Unquantized FP32 ONNX source graphs; QNN provider mixed offload, internal HTP precision not established",
+      "scope": "full_e2e"
+    },
+    {
       "id": "0013-kokoro-onnx-bootstrap",
       "experiment": "0013",
       "model": "Kokoro",
