@@ -14,7 +14,7 @@ ROOT = HERE.parents[1]
 REGISTRY_PATH = HERE / "registry.json"
 EXPECTED_DEVICE = {"model": "SM-S918B", "soc": "SM8550", "serial": "R5CW81PR8SY", "abi": "arm64-v8a"}
 METRIC_FIELDS = ("load_seconds", "cold_rtf", "warm_median_rtf", "peak_pss_bytes", "peak_vm_hwm_bytes")
-STATUSES = {"success", "partial", "rejected", "blocked", "deferred", "not_run"}
+STATUSES = {"ran", "partial", "blocked", "deferred", "not_run"}
 
 
 def fail(message):

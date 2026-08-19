@@ -30,7 +30,7 @@
         "experiment": {"type": "string", "pattern": "^[0-9]{4}$"},
         "model": {"type": "string"}, "route": {"type": "string"},
         "deployment_variant": {"type": "string"},
-        "attempt_status": {"enum": ["success", "partial", "rejected", "blocked", "deferred", "not_run"]},
+        "attempt_status": {"enum": ["ran", "partial", "blocked", "deferred", "not_run"]},
         "android_attempted": {"type": "boolean"},
         "provider": {"type": ["string", "null"]}, "precision": {"type": ["string", "null"]},
         "threads": {"type": ["integer", "null"], "minimum": 1},
