@@ -1,0 +1,165 @@
+#!/usr/bin/env python3
+"""Build the cross-experiment Android benchmark registry and dashboard.
+
+The normalized registry is intentionally hand-curated from committed result files.
+No estimate is introduced: unavailable values stay JSON null and are explained in
+missing-fields.md. Run from the repository root:
+
+    python3 docs/android-benchmarks/build_registry.py
+"""
+from __future__ import annotations
+
+import hashlib
+import html
+import json
+import shutil
+import wave
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+OUT = ROOT / "docs" / "android-benchmarks"
+MEDIA = OUT / "media"
+
+DEVICE = {"model": "SM-S918B", "soc": "SM8550", "serial": "R5CW81PR8SY", "abi": "arm64-v8a"}
+NULL_METRICS = {
+    "load_seconds": None,
+    "cold_rtf": None,
+    "warm_median_rtf": None,
+    "peak_pss_bytes": None,
+    "peak_vm_hwm_bytes": None,
+}
+
+
+def row(id, experiment, model, route, status, *, attempted, provider=None,
+        precision=None, threads=None, metrics=None, wav=None, summary="",
+        limitations=(), sources=(), missing=None, variant=None):
+    m = dict(NULL_METRICS)
+    if metrics:
+        m.update(metrics)
+    return {
+        "id": id,
+        "experiment": experiment,
+        "model": model,
+        "route": route,
+        "deployment_variant": variant,
+        "attempt_status": status,
+        "android_attempted": attempted,
+        "provider": provider,
+        "precision": precision,
+        "threads": threads,
+        "device": DEVICE if attempted else None,
+        "metrics": m,
+        "wav": wav,
+        "summary": summary,
+        "limitations": list(limitations),
+        "sources": list(sources),
+        "missing_reasons": {
+            **({"wav": "No locally verified Android WAV was retained for this route."} if wav is None else {}),
+            **(missing or {}),
+        },
+    }
+
+
+# Every route is represented, including deferred routes and routes stopped before
+# session creation. Do not remove null rows: they document the evidence boundary.
+ROWS = [
+    row("0002-executorch-full", "0002", "VibeVoice 1.5B", "ExecuTorch/XNNPACK full generation", "rejected", attempted=True, provider="XNNPACK", precision="FP32", metrics={"warm_median_rtf": None, "peak_vm_hwm_bytes": 1650288 * 1024}, summary="Component Android execution worked, but the complete fixed-shape generation was rejected: only 2.04% of the locked reference was covered, audio was effectively silent, and the package was about 9.1 GB.", limitations=("Not a practical end-to-end deployment.", "Final RTF is protocol-wall RTF; VibeVoice is not numerically accepted as useful speech."), sources=("experiments/0002-vibevoice-1.5b-executorch-android/README.md", "experiments/0002-vibevoice-1.5b-executorch-android/results/complete-build-final.json"), missing={"load_seconds": "Result has stage timings but no single normalized session-load value.", "cold_rtf": "The final report does not expose one cold-generation RTF.", "warm_median_rtf": "The published 109.26 value is protocol/prefix RTF without a retained normalized audio-duration denominator."}, variant="ExecuTorch 1.2 / XNNPACK"),
+    row("0002-executorch-acoustic-decoder", "0002", "VibeVoice 1.5B", "ExecuTorch acoustic decoder component", "partial", attempted=True, provider="XNNPACK", precision="FP32", metrics={"load_seconds": 0.024192292, "cold_rtf": None, "warm_median_rtf": None, "peak_pss_bytes": 1401425 * 1024, "peak_vm_hwm_bytes": 1602328 * 1024}, summary="The fixed-shape acoustic-decoder probe loaded and executed on Android with numerical agreement, but it is a component probe, not complete speech generation.", limitations=("1.375 GB PTE; non-streaming; no end-to-end claim."), sources=("experiments/0002-vibevoice-1.5b-executorch-android/results/acoustic-decoder-android.json",), missing={"cold_rtf": "Component result reports inference seconds, not audio duration or RTF.", "warm_median_rtf": "Component result reports inference seconds, not audio duration or RTF.", "wav": "The output is a PCM tensor probe, not a retained WAV."}, variant="ExecuTorch 1.2 / XNNPACK"),
+    row("0003-litert-deferred", "0003", "VibeVoice 1.5B", "LiteRT Android conversion", "deferred", attempted=False, summary="A LiteRT conversion was documented as deferred; no Android deployment was run.", sources=("experiments/0003-vibevoice-1.5b-litert-android/README.md",), missing={"android_attempted": "README status is deferred; no phone run exists.", "all": "No Android measurements or audio can be inferred from the plan."}, variant="LiteRT"),
+    row("0004-onnx-deferred", "0004", "VibeVoice 1.5B", "ONNX Runtime Mobile", "deferred", attempted=False, summary="The ONNX Runtime Mobile route was deferred before conversion and phone execution.", sources=("experiments/0004-vibevoice-1.5b-onnx-android/README.md",), missing={"android_attempted": "README status is deferred; no phone run exists.", "all": "No Android measurements or audio can be inferred from the plan."}, variant="ONNX Runtime Mobile"),
+    row("0005-qnn-deferred", "0005", "VibeVoice 1.5B", "Direct Qualcomm QNN", "deferred", attempted=False, summary="The direct QNN route remained planned and blocked on a correct portable implementation.", sources=("experiments/0005-vibevoice-1.5b-qnn-android/README.md",), missing={"android_attempted": "README says planned and blocked; no phone run exists.", "all": "No Android measurements or audio can be inferred from the plan."}, variant="QNN"),
+    row("0006-realtime-feasibility", "0006", "VibeVoice Realtime 0.5B", "Android feasibility inventory", "not_run", attempted=False, summary="The smaller VibeVoice model has feasibility and package estimates only; conversion and Android execution did not begin.", sources=("experiments/0006-vibevoice-realtime-0.5b-android/README.md", "experiments/0006-vibevoice-realtime-0.5b-android/feasibility-inventory.json"), missing={"android_attempted": "Inventory explicitly says no conversion has begun.", "all": "Host evidence is not Android evidence."}, variant="Feasibility only"),
+    row("0008-pocket-cpu-t1", "0008", "Pocket TTS", "sherpa-onnx CPU", "success", attempted=True, provider="CPU", precision="INT8", threads=1, metrics={"load_seconds": 0.658703801, "cold_rtf": 0.4358031003580019, "warm_median_rtf": 0.38864718496483114, "peak_pss_bytes": 683577344, "peak_vm_hwm_bytes": 751427584}, summary="Pinned Pocket INT8 generated valid audio on the Galaxy S23 Ultra.", limitations=("Requested Alba was unavailable; packaged Bria was used and voice_match=false.", "Listening was not performed."), sources=("experiments/0008-sherpa-onnx-android-tts-benchmark/results/pocket/one-thread-result.json", "experiments/0008-sherpa-onnx-android-tts-benchmark/README.md"), missing={"wav": "The retained WAV is ignored and is not present in this checkout; its committed hash remains in the source result."}, variant="sherpa-onnx v1.13.5"),
+    row("0008-kokoro-cpu-t1", "0008", "Kokoro", "sherpa-onnx CPU", "success", attempted=True, provider="CPU", precision="FP32", threads=1, metrics={"load_seconds": 1.303446875, "cold_rtf": 1.187996273027265, "warm_median_rtf": 1.1952115332875515, "peak_pss_bytes": 929677312, "peak_vm_hwm_bytes": 995078144}, summary="Exact Kokoro v1.0 SID 3/af_heart generated valid Android audio.", limitations=("Warm RTF is slower than real time.", "Listening was not performed."), sources=("experiments/0008-sherpa-onnx-android-tts-benchmark/results/kokoro/one-thread-result.json", "experiments/0008-sherpa-onnx-android-tts-benchmark/README.md"), missing={"wav": "The retained WAV is ignored and is not present in this checkout; its committed hash remains in the source result."}, variant="sherpa-onnx v1.13.5"),
+    row("0008-supertonic-cpu-t1", "0008", "Supertonic 3", "sherpa-onnx CPU", "success", attempted=True, provider="CPU", precision="INT8", threads=1, metrics={"load_seconds": 0.765107603, "cold_rtf": 0.3854677480612432, "warm_median_rtf": 0.3703028479158501, "peak_pss_bytes": 463003648, "peak_vm_hwm_bytes": 531345408}, summary="Pinned Supertonic 3 INT8 with proven M1/SID5 generated valid Android audio and became the technical reference.", limitations=("Listening was not performed in the benchmark."), sources=("experiments/0008-sherpa-onnx-android-tts-benchmark/results/supertonic-3/one-thread-result.json", "experiments/0008-sherpa-onnx-android-tts-benchmark/README.md"), missing={"wav": "The retained WAV is ignored and is not present in this checkout; its committed hash remains in the source result."}, variant="sherpa-onnx v1.13.5"),
+    row("0009-pocket-cpu-t1", "0009", "Pocket TTS", "thread sweep CPU", "success", attempted=True, provider="CPU", precision="INT8", threads=1, metrics={"cold_rtf": 0.42988398361088564, "warm_median_rtf": 0.4080034914012739, "peak_pss_bytes": 682866688, "peak_vm_hwm_bytes": 748761088}, summary="Thread-sweep configuration succeeded with valid audio.", limitations=("This is an optimization sweep, not a new model baseline.",), sources=("experiments/0009-android-tts-optimization/thread-sweep/results/measured-thread-sweep.json",), missing={"load_seconds": "The normalized configuration records load memory but not a load-wall scalar.", "wav": "Raw sweep WAV is ignored and is not present in this checkout."}, variant="sherpa-onnx Pocket / 1 thread"),
+    row("0009-pocket-cpu-t2", "0009", "Pocket TTS", "thread sweep CPU", "success", attempted=True, provider="CPU", precision="INT8", threads=2, metrics={"cold_rtf": 0.37352320781966003, "warm_median_rtf": 0.3674131144286632, "peak_pss_bytes": 683354112, "peak_vm_hwm_bytes": 756277248}, summary="Thread-sweep configuration succeeded with valid audio.", limitations=("This is an optimization sweep, not a new model baseline.",), sources=("experiments/0009-android-tts-optimization/thread-sweep/results/measured-thread-sweep.json",), missing={"load_seconds": "No normalized load-wall scalar.", "wav": "Raw sweep WAV is ignored and is not present in this checkout."}, variant="sherpa-onnx Pocket / 2 threads"),
+    row("0009-pocket-cpu-t4", "0009", "Pocket TTS", "thread sweep CPU", "success", attempted=True, provider="CPU", precision="INT8", threads=4, metrics={"cold_rtf": 0.46249131178160924, "warm_median_rtf": 0.5114196852678572, "peak_pss_bytes": 683707392, "peak_vm_hwm_bytes": 757727232}, summary="Thread-sweep configuration succeeded with valid audio.", limitations=("This is an optimization sweep, not a new model baseline.",), sources=("experiments/0009-android-tts-optimization/thread-sweep/results/measured-thread-sweep.json",), missing={"load_seconds": "No normalized load-wall scalar.", "wav": "Raw sweep WAV is ignored and is not present in this checkout."}, variant="sherpa-onnx Pocket / 4 threads"),
+    row("0009-kokoro-cpu-t1", "0009", "Kokoro", "thread sweep CPU", "success", attempted=True, provider="CPU", precision="FP32", threads=1, metrics={"cold_rtf": 1.4208191257721876, "warm_median_rtf": 1.4237948396671942, "peak_pss_bytes": 918390784, "peak_vm_hwm_bytes": 992514048}, summary="Thread-sweep configuration succeeded with valid audio.", limitations=("This is an optimization sweep, not a new model baseline.",), sources=("experiments/0009-android-tts-optimization/thread-sweep/results/measured-thread-sweep.json",), missing={"load_seconds": "No normalized load-wall scalar.", "wav": "Raw sweep WAV is ignored and is not present in this checkout."}, variant="sherpa-onnx Kokoro / 1 thread"),
+    row("0009-kokoro-cpu-t2", "0009", "Kokoro", "thread sweep CPU", "success", attempted=True, provider="CPU", precision="FP32", threads=2, metrics={"cold_rtf": 1.0029200771472806, "warm_median_rtf": 1.038915274000276, "peak_pss_bytes": 930012160, "peak_vm_hwm_bytes": 995672064}, summary="Thread-sweep configuration succeeded with valid audio.", limitations=("This is an optimization sweep, not a new model baseline.",), sources=("experiments/0009-android-tts-optimization/thread-sweep/results/measured-thread-sweep.json",), missing={"load_seconds": "No normalized load-wall scalar.", "wav": "Raw sweep WAV is ignored and is not present in this checkout."}, variant="sherpa-onnx Kokoro / 2 threads"),
+    row("0009-kokoro-cpu-t4", "0009", "Kokoro", "thread sweep CPU", "success", attempted=True, provider="CPU", precision="FP32", threads=4, metrics={"cold_rtf": 0.8998508937883544, "warm_median_rtf": 0.7525562116011203, "peak_pss_bytes": 922871808, "peak_vm_hwm_bytes": 993865728}, summary="Thread-sweep configuration succeeded with valid audio.", limitations=("This is an optimization sweep, not a new model baseline.",), sources=("experiments/0009-android-tts-optimization/thread-sweep/results/measured-thread-sweep.json",), missing={"load_seconds": "No normalized load-wall scalar.", "wav": "Raw sweep WAV is ignored and is not present in this checkout."}, variant="sherpa-onnx Kokoro / 4 threads"),
+    row("0009-supertonic-cpu-t1", "0009", "Supertonic 3", "thread sweep CPU", "success", attempted=True, provider="CPU", precision="INT8", threads=1, metrics={"cold_rtf": 0.3888269229689508, "warm_median_rtf": 0.4009924891977482, "peak_pss_bytes": 459816960, "peak_vm_hwm_bytes": 532070400}, summary="Thread-sweep configuration succeeded with valid audio.", limitations=("This is an optimization sweep, not a new model baseline.",), sources=("experiments/0009-android-tts-optimization/thread-sweep/results/measured-thread-sweep.json",), missing={"load_seconds": "No normalized load-wall scalar.", "wav": "Raw sweep WAV is ignored and is not present in this checkout."}, variant="sherpa-onnx Supertonic 3 / 1 thread"),
+    row("0009-supertonic-cpu-t2", "0009", "Supertonic 3", "thread sweep CPU", "success", attempted=True, provider="CPU", precision="INT8", threads=2, metrics={"cold_rtf": 0.3550179197115431, "warm_median_rtf": 0.3624899421101892, "peak_pss_bytes": 460242944, "peak_vm_hwm_bytes": 534097920}, summary="Thread-sweep configuration succeeded with valid audio.", limitations=("This is an optimization sweep, not a new model baseline.",), sources=("experiments/0009-android-tts-optimization/thread-sweep/results/measured-thread-sweep.json",), missing={"load_seconds": "No normalized load-wall scalar.", "wav": "Raw sweep WAV is ignored and is not present in this checkout."}, variant="sherpa-onnx Supertonic 3 / 2 threads"),
+    row("0009-supertonic-cpu-t4", "0009", "Supertonic 3", "thread sweep CPU", "success", attempted=True, provider="CPU", precision="INT8", threads=4, metrics={"cold_rtf": 0.37137720493651893, "warm_median_rtf": 0.3985584226377708, "peak_pss_bytes": 461868032, "peak_vm_hwm_bytes": 532111360}, summary="Thread-sweep configuration succeeded with valid audio.", limitations=("This is an optimization sweep, not a new model baseline.",), sources=("experiments/0009-android-tts-optimization/thread-sweep/results/measured-thread-sweep.json",), missing={"load_seconds": "No normalized load-wall scalar.", "wav": "Raw sweep WAV is ignored and is not present in this checkout."}, variant="sherpa-onnx Supertonic 3 / 4 threads"),
+    row("0009-kokoro-int8-not-deployed", "0009", "Kokoro", "mixed INT8 host candidate", "not_run", attempted=False, provider="CPU", precision="INT8", summary="The selected mixed INT8 Kokoro candidate passed host and listening gates but was not deployed to Android in this experiment.", sources=("experiments/0009-android-tts-optimization/kokoro-int8/README.md", "experiments/0009-android-tts-optimization/kokoro-int8/reports/quality-gate.json"), missing={"android_attempted": "README explicitly says it has not been deployed to Android.", "all": "No Android timing, memory, or WAV exists."}, variant="Kokoro v1.0 mixed INT8"),
+    row("0010-supertonic-cpu", "0010", "Supertonic 3", "official sherpa CPU control", "success", attempted=True, provider="CPU", precision="INT8", threads=1, metrics={"warm_median_rtf": 6.06733 / (729746 / 44100), "peak_vm_hwm_bytes": 459432 * 1024}, wav={"path":"media/0010-supertonic-cpu.wav","sha256":"7e83537630b3e354f7586b9887f7a8359d62e438c9addeea61d87d878b2a84ff","bytes":1459536,"sample_rate_hz":44100,"channels":1,"duration_seconds":729746/44100}, summary="CPU control for the fixed transcript-to-WAV HTP feasibility comparison.", limitations=("Fixed transcript/shape; CPU control for a diagnostic, not the 0008 benchmark replacement."), sources=("experiments/0010-supertonic-qnn-htp-feasibility/results/e2e-hybrid-cpu-checkpoint.json",), missing={"load_seconds": "The checkpoint records component session creation but no single normalized load scalar for this row.", "cold_rtf": "The checkpoint records four run totals but does not label one as cold RTF."}, variant="Supertonic 3 fixed-shape CPU"),
+    row("0010-supertonic-hybrid-htp", "0010", "Supertonic 3", "mixed QNN HTP + CPU fallback", "rejected", attempted=True, provider="QNN HTP + CPU fallback", precision="INT8", threads=None, metrics={"load_seconds": 26.965, "warm_median_rtf": 3.80935 / (729746 / 44100), "peak_vm_hwm_bytes": 1154172 * 1024}, wav={"path":"media/0010-supertonic-hybrid-htp.wav","sha256":"9b0d488776b144c972e8be4e9434fac14ce3ceddfcfa5a10d137fca41b772668","bytes":1459536,"sample_rate_hz":44100,"channels":1,"duration_seconds":729746/44100}, summary="Physical HTP execution worked and reduced warm latency 37.215%, but vector execution retained CPU fallback and the frozen waveform gate failed.", limitations=("Not full HTP; fixed shape; numerical gate failed (cosine 0.405431).", "ru_maxrss is cumulative process high-water memory."), sources=("experiments/0010-supertonic-qnn-htp-feasibility/results/e2e-hybrid-cpu-checkpoint.json",), missing={"cold_rtf": "The checkpoint reports run totals but does not label one as cold RTF."}, variant="Supertonic 3 QNN/HTP hybrid"),
+    row("0011-supertonic-official-cpu", "0011", "Supertonic 3", "official FP32 ONNX CPU", "success", attempted=True, provider="CPUExecutionProvider", precision="FP32", threads=None, metrics={"load_seconds": 0.721546, "cold_rtf": 6.52928 / (729746 / 44100), "warm_median_rtf": 6.87038 / (729746 / 44100), "peak_vm_hwm_bytes": 569196 * 1024}, wav={"path":"media/0011-supertonic-official-fp32-cpu.wav","sha256":"8db92db13567b86be503d204fe367f2052b54dbfc99c0f7bfc5b23d9fd431da7","bytes":1459536,"sample_rate_hz":44100,"channels":1,"duration_seconds":729746/44100}, summary="Complete official FP32 ONNX chain ran on the authorized phone CPU and produced valid mono PCM16 WAV audio.", limitations=("Fixed T239/L238 contract; ru_maxrss is cumulative; no QNN events."), sources=("experiments/0011-supertonic-official-fp32-phone-comparison/results/step1-phone-cpu-checkpoint.json",), missing={}, variant="Official Supertonic 3 FP32"),
+    row("0011-supertonic-all-htp", "0011", "Supertonic 3", "all-HTP rewritten vector + CPU orchestration", "rejected", attempted=True, provider="QNNExecutionProvider (fallback disabled)", precision="FP32", threads=None, metrics={"load_seconds": 22.8147, "cold_rtf": 3.09085 / 16.547528344671203, "warm_median_rtf": 2.81831 / 16.547528344671203, "peak_vm_hwm_bytes": 1374408 * 1024}, wav={"path":"media/0011-supertonic-all-htp.wav","sha256":"47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c","bytes":1459536,"sample_rate_hz":44100,"channels":1,"duration_seconds":729746/44100}, summary="All four neural components physically ran on HTP with fallback disabled, but the frozen numerical policy failed (cosine 0.92668 < 0.95).", limitations=("Preprocessing/orchestration/WAV encoding remain CPU; rewritten vector is not the official graph; not numerically accepted."), sources=("experiments/0011-supertonic-official-fp32-phone-comparison/results/softplus-matched-e2e-checkpoint.json", "experiments/0011-supertonic-official-fp32-phone-comparison/README.md"), missing={}, variant="Official Supertonic 3 FP32 + stable Softplus rewrite"),
+    row("0011-supertonic-htp-fail-closed", "0011", "Supertonic 3", "original full HTP route", "blocked", attempted=True, provider="QNN (not executed)", precision="FP32", summary="The original full HTP route was stopped fail-closed after host/provider compatibility checks; no complete phone HTP synthesis was attempted.", sources=("experiments/0011-supertonic-official-fp32-phone-comparison/results/step2-fail-closed-htp-checkpoint.json",), missing={"metrics": "Fail-closed stop occurred before complete Android timing or WAV output.", "wav": "No complete route output exists."}, variant="Official Supertonic 3 original FP32 HTP"),
+    row("0012-pocket-onnx-cpu", "0012", "Pocket TTS", "derived FP ONNX Runtime CPU", "success", attempted=True, provider="CPU", precision="FP32", threads=1, metrics={"load_seconds": 1.079322708, "cold_rtf": 0.912939803, "warm_median_rtf": 0.630365451, "peak_vm_hwm_bytes": 1586080 * 1024}, wav={"path":"media/0012-pocket-onnx-onnx-cpu.wav","sha256":"40634981606f37c59a91c14d99cecb3ef4cc21b1391882e870940b0716857d22","bytes":299564,"sample_rate_hz":24000,"channels":1,"duration_seconds":6.24}, summary="Five exact-source-derived FP ONNX components completed text-to-WAV on Android CPU; six outputs were byte-identical and warm median RTF was 0.630.", limitations=("Derived ONNX representation; no QNN/HTP claim; VmHWM is cumulative."), sources=("experiments/0012-pocket-onnx-vs-executorch-android/results/comparison.json", "experiments/0012-pocket-onnx-vs-executorch-android/work/android-result.json", "experiments/0012-pocket-onnx-vs-executorch-android/RESULTS.md"), missing={}, variant="Pocket five-component FP ONNX"),
+    row("0012-pocket-executorch", "0012", "Pocket TTS", "ExecuTorch route", "blocked", attempted=False, summary="Text conditioner and flow step exported, but essential recurrent FlowLM and Mimi decoder exports failed before any Android package or phone run.", sources=("experiments/0012-pocket-onnx-vs-executorch-android/results/comparison.json", "experiments/0012-pocket-onnx-vs-executorch-android/provenance/executorch-screen.json"), missing={"android_attempted": "Route was blocked before Android; no phone run was authorized.", "all": "No Android timing, memory, or WAV exists."}, variant="ExecuTorch"),
+    row("0013-kokoro-onnx-bootstrap", "0013", "Kokoro", "derived FP32 ONNX Runtime CPU", "blocked", attempted=True, provider="CPU (session not created)", precision="FP32", metrics={"load_seconds": None}, summary="Two authorized phone launches stopped at app asset bootstrap/scoped-storage visibility; no ONNX Runtime session or inference was created.", limitations=("Bootstrap/path failure only; not evidence of ONNX Runtime incompatibility.",), sources=("experiments/0013-kokoro-onnx-vs-executorch-android/results/phone-onnx-bootstrap-checkpoint.json",), missing={"load_seconds": "No session was created.", "cold_rtf": "No inference was attempted.", "warm_median_rtf": "No inference was attempted.", "peak_pss_bytes": "No inference process measurement exists.", "peak_vm_hwm_bytes": "No inference process measurement exists.", "wav": "No audio was produced."}, variant="Kokoro exact-source-derived FP32 ONNX"),
+    row("0013-kokoro-executorch", "0013", "Kokoro", "ExecuTorch full model", "blocked", attempted=False, summary="The complete ExecuTorch route was blocked at host export/lowering and never reached Android.", sources=("experiments/0013-kokoro-onnx-vs-executorch-android/results/executorch-export-checkpoint.json", "experiments/0013-kokoro-onnx-vs-executorch-android/README.md"), missing={"android_attempted": "Required complex STFT/full wrapper lowering failed before Android.", "all": "No Android timing, memory, or WAV exists."}, variant="ExecuTorch"),
+]
+
+
+def verify_media():
+    for r in ROWS:
+        wav = r["wav"]
+        if not wav:
+            continue
+        p = OUT / wav["path"]
+        if not p.is_file():
+            raise SystemExit(f"missing registry media: {p}")
+        digest = hashlib.sha256(p.read_bytes()).hexdigest()
+        if digest != wav["sha256"]:
+            raise SystemExit(f"WAV hash mismatch for {r['id']}: {digest} != {wav['sha256']}")
+        with wave.open(str(p), "rb") as f:
+            observed = {"bytes": p.stat().st_size, "sample_rate_hz": f.getframerate(), "channels": f.getnchannels(), "duration_seconds": f.getnframes() / f.getframerate()}
+        for key in ("bytes", "sample_rate_hz", "channels"):
+            if observed[key] != wav[key]:
+                raise SystemExit(f"WAV metadata mismatch for {r['id']}: {key}")
+        if abs(observed["duration_seconds"] - wav["duration_seconds"]) > 1e-9:
+            raise SystemExit(f"WAV duration mismatch for {r['id']}")
+        wav["verified"] = True
+
+
+def build_missing():
+    lines = ["# Missing Android benchmark fields", "", "This report is generated by `build_registry.py`. `null` means the source evidence did not provide a measurement; it is not zero or an estimate.", ""]
+    for r in ROWS:
+        missing = r["missing_reasons"]
+        if not missing:
+            continue
+        lines += [f"## `{r['id']}` — {r['model']} / {r['route']}", "", f"- Status: **{r['attempt_status']}**; Android attempted: **{str(r['android_attempted']).lower()}**"]
+        for field, reason in missing.items():
+            lines.append(f"- `{field}`: {reason}")
+        lines.append("")
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def build_html(registry):
+    entries = registry["entries"]
+    attempted = sum(1 for e in entries if e["android_attempted"])
+    successful = sum(1 for e in entries if e["attempt_status"] == "success")
+    cards = f'<div class="cards"><div><b>{len(entries)}</b><span>routes recorded</span></div><div><b>{attempted}</b><span>Android attempted</span></div><div><b>{successful}</b><span>successful routes</span></div><div><b>{sum(1 for e in entries if e["wav"] and e["wav"].get("verified"))}</b><span>verified WAVs copied</span></div></div>'
+    trs = []
+    for e in entries:
+        m = e["metrics"]
+        rtf = "—" if m["warm_median_rtf"] is None else f'{m["warm_median_rtf"]:.3f}'
+        wav = f'<a href="{html.escape(e["wav"]["path"])}">WAV</a>' if e["wav"] else "—"
+        cls = e["attempt_status"].replace("_", "-")
+        trs.append(f'<tr><td>{html.escape(e["experiment"])}</td><td><b>{html.escape(e["model"])}</b><br><small>{html.escape(e["route"])}</small></td><td><span class="status {cls}">{html.escape(e["attempt_status"])}</span></td><td>{html.escape(e["provider"] or "—")}</td><td>{rtf}</td><td>{wav}</td><td>{html.escape(e["summary"])}</td></tr>')
+    return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Android benchmark registry</title><style>
+:root{{--bg:#0f172a;--panel:#172033;--line:#334155;--ink:#e5e7eb;--muted:#94a3b8;--accent:#67e8f9}}*{{box-sizing:border-box}}body{{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,sans-serif}}main{{max-width:1500px;margin:auto;padding:42px 24px}}h1{{font-size:clamp(30px,5vw,54px);line-height:1.05;margin:0 0 14px}}h2{{margin-top:42px}}p,small{{color:var(--muted)}}a{{color:var(--accent)}}.lede{{max-width:900px;font-size:18px}}.cards{{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:28px 0}}.cards div{{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}}.cards b{{display:block;color:var(--accent);font-size:30px}}.cards span{{color:var(--muted)}}.table-wrap{{overflow:auto;border:1px solid var(--line);border-radius:12px}}table{{border-collapse:collapse;width:100%;min-width:1180px;background:var(--panel)}}th,td{{padding:12px 13px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}}th{{position:sticky;top:0;background:#1e293b;color:#bae6fd}}td:nth-child(7){{min-width:350px;color:#cbd5e1}}.status{{border-radius:99px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap}}.success{{background:#064e3b;color:#a7f3d0}}.rejected{{background:#7f1d1d;color:#fecaca}}.blocked,.deferred,.not-run{{background:#713f12;color:#fde68a}}.partial{{background:#164e63;color:#a5f3fc}}.notes{{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:15px}}.note{{border-left:3px solid var(--accent);padding:8px 16px;background:#111c31}}code{{color:#bae6fd}}footer{{margin-top:42px;color:var(--muted)}}</style></head><body><main><p>VIBEVOICE ANDROID SPIKE · DURABLE EVIDENCE INDEX</p><h1>Android benchmark registry</h1><p class="lede">A cross-experiment view of every model and deployment route considered or attempted on the authorized Galaxy S23 Ultra. Missing measurements remain unavailable rather than being estimated.</p>{cards}<div class="notes"><div class="note"><b>Device</b><br>Samsung SM-S918B · Snapdragon SM8550 · arm64-v8a · <code>R5CW81PR8SY</code></div><div class="note"><b>Interpretation</b><br>RTF is synthesis wall time divided by generated audio duration. Component probes are not end-to-end speech.</div><div class="note"><b>Evidence policy</b><br>Only locally present, hash- and WAV-header-verified Android outputs are copied here. See <a href="missing-fields.md">missing-fields.md</a>.</div></div><h2>Routes</h2><div class="table-wrap"><table><thead><tr><th>Experiment</th><th>Model / route</th><th>Status</th><th>Provider</th><th>Warm median RTF</th><th>Audio</th><th>Evidence summary</th></tr></thead><tbody>{''.join(trs)}</tbody></table></div><footer>Generated from <code>registry.json</code> by <code>build_registry.py</code>. Source paths in each row point to the owning experiment.</footer></main></body></html>'''
+
+
+def main():
+    verify_media()
+    registry = {
+        "schema_version": 1,
+        "registry_id": "android-benchmarks-v1",
+        "device": DEVICE,
+        "source_policy": "Normalize committed experiment evidence only; preserve null for unavailable fields; do not infer Android results from host evidence.",
+        "entries": ROWS,
+    }
+    (OUT / "registry.json").write_text(json.dumps(registry, indent=2, sort_keys=False) + "\n")
+    (OUT / "missing-fields.md").write_text(build_missing())
+    dashboard = build_html(registry)
+    (OUT / "index.html").write_text(dashboard)
+    (OUT / "dashboard.html").write_text(dashboard)
+    print(f"wrote {len(ROWS)} routes and {sum(bool(r['wav']) for r in ROWS)} verified WAV references")
+
+
+if __name__ == "__main__":
+    main()
