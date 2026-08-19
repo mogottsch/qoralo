@@ -1,0 +1,643 @@
+{
+  "authorized_phone": {
+    "android_release": "15",
+    "model": "SM-S918B",
+    "sdk": 35,
+    "serial": "R5CW81PR8SY",
+    "soc_model": "SM8550"
+  },
+  "benchmark": {
+    "first_audio_first_ms": 18953.084368,
+    "first_rtf": 1.1383426748803827,
+    "run_metrics": [
+      {
+        "audio_duration_ms": 16720,
+        "audio_tokenizer_ms": 7243.540778,
+        "autoregressive_decode_ms": 5246.439999,
+        "end_to_end_ms": 19033.089524,
+        "first_audio_ms": 18953.084368,
+        "first_audio_semantics": "Run start through full audio-tokenizer decode; first decoded PCM exists in memory. The official Android example is non-streaming.",
+        "generated_frames": 209,
+        "index": 0,
+        "local_decoder_ms": 5801.930732000001,
+        "prefill_ms": 529.14302,
+        "rtf": 1.1383426748803827,
+        "sample_count": 802560,
+        "sample_rate_hz": 48000,
+        "wav_write_ms": 79.845938
+      },
+      {
+        "audio_duration_ms": 16720,
+        "audio_tokenizer_ms": 6819.890987,
+        "autoregressive_decode_ms": 5043.183751999997,
+        "end_to_end_ms": 18806.742961,
+        "first_audio_ms": 18779.815722,
+        "first_audio_semantics": "Run start through full audio-tokenizer decode; first decoded PCM exists in memory. The official Android example is non-streaming.",
+        "generated_frames": 209,
+        "index": 1,
+        "local_decoder_ms": 6192.186981000001,
+        "prefill_ms": 644.434896,
+        "rtf": 1.1248052010167464,
+        "sample_count": 802560,
+        "sample_rate_hz": 48000,
+        "wav_write_ms": 26.910729
+      },
+      {
+        "audio_duration_ms": 16720,
+        "audio_tokenizer_ms": 5306.633748,
+        "autoregressive_decode_ms": 5691.129214,
+        "end_to_end_ms": 18816.440878,
+        "first_audio_ms": 18790.969628,
+        "first_audio_semantics": "Run start through full audio-tokenizer decode; first decoded PCM exists in memory. The official Android example is non-streaming.",
+        "generated_frames": 209,
+        "index": 2,
+        "local_decoder_ms": 6721.244744999996,
+        "prefill_ms": 993.970625,
+        "rtf": 1.1253852199760765,
+        "sample_count": 802560,
+        "sample_rate_hz": 48000,
+        "wav_write_ms": 25.459166
+      },
+      {
+        "audio_duration_ms": 16720,
+        "audio_tokenizer_ms": 5974.788227,
+        "autoregressive_decode_ms": 5488.4456779999955,
+        "end_to_end_ms": 18323.866504,
+        "first_audio_ms": 18296.017337,
+        "first_audio_semantics": "Run start through full audio-tokenizer decode; first decoded PCM exists in memory. The official Android example is non-streaming.",
+        "generated_frames": 209,
+        "index": 3,
+        "local_decoder_ms": 6090.116980999999,
+        "prefill_ms": 555.417916,
+        "rtf": 1.0959250301435408,
+        "sample_count": 802560,
+        "sample_rate_hz": 48000,
+        "wav_write_ms": 27.834218
+      }
+    ],
+    "runs": 4,
+    "setup": {
+      "component_ms": {
+        "audio_tokenizer": 339.611094,
+        "autoregressive_decode": 367.665885,
+        "local_decoder": 649.235938,
+        "prefill": 355.587135
+      },
+      "inter_op_threads": 1,
+      "intra_op_threads": 4,
+      "total_ms": 1712.838853
+    },
+    "warm_first_audio_median_ms": 18779.815722,
+    "warm_rtf_median": 1.1248052010167464
+  },
+  "claim": "The official Android ONNX Runtime path completed on CPUExecutionProvider only. ORT profiling confirms CPU provider assignment and is not HTP evidence.",
+  "evidence": {
+    "cleanup": [
+      "cleanup=passed",
+      "verified_utc=2026-08-19T14:48:08Z",
+      "remote_upload_stage=absent",
+      "package=absent",
+      "app_internal_stage=removed_by_uninstall"
+    ],
+    "ignored_run_root": "/home/moritz/vibevoice-android-spike/experiments/0018-moss-tts-nano-onnx-android/work/vibevoice-0018-20260819T144325Z-172685",
+    "raw_profiles_bytes": 574015130,
+    "staged_hashes": [
+      "097d80e993dc29f0bae427590b4f77084a161cb578b50d82c29f455d5faa9eee  503354  files/vibevoice-0018-20260819T144325Z-172685/moss_tts_onnx/MOSS-TTS-Nano-100M-ONNX/browser_poc_manifest.json",
+      "3edf25232dcd0af3d061c837e9a968a39e2f8592e06777d740503c4f2244f95c  4487  files/vibevoice-0018-20260819T144325Z-172685/moss_tts_onnx/MOSS-TTS-Nano-100M-ONNX/tts_browser_onnx_meta.json",
+      "c353ee1479b536bf414c1b247f5542b6607fb8ae91320e5af1781fee200fddff  470897  files/vibevoice-0018-20260819T144325Z-172685/moss_tts_onnx/MOSS-TTS-Nano-100M-ONNX/tokenizer.model",
+      "d56126dcd0574c2f15d98fc6b35eda68d0386b5bd9c5e38e28548d6f2ea8f3db  283305  files/vibevoice-0018-20260819T144325Z-172685/moss_tts_onnx/MOSS-TTS-Nano-100M-ONNX/moss_tts_prefill.onnx",
+      "698cbc2fc1c2feca16e5895614ed52bbb32ded10f236c076f477b2e69abf32d8  291483  files/vibevoice-0018-20260819T144325Z-172685/moss_tts_onnx/MOSS-TTS-Nano-100M-ONNX/moss_tts_decode_step.onnx",
+      "40cdb00efc171c450cf91468e01429caa41b0252222cd308e978f58fe354afa8  471262  files/vibevoice-0018-20260819T144325Z-172685/moss_tts_onnx/MOSS-TTS-Nano-100M-ONNX/moss_tts_local_fixed_sampled_frame.onnx",
+      "bce8312c3df6a44545302cae229b61054fe0672e0b252ba59cba47adeed831dc  440813568  files/vibevoice-0018-20260819T144325Z-172685/moss_tts_onnx/MOSS-TTS-Nano-100M-ONNX/moss_tts_global_shared.data",
+      "bae7782032c0fb12490ab42afe009f87ae6c75a0f0596fc7b5c08e4d5ee93916  229678080  files/vibevoice-0018-20260819T144325Z-172685/moss_tts_onnx/MOSS-TTS-Nano-100M-ONNX/moss_tts_local_shared.data",
+      "3e291c883bb7d11ff2fe8e964e3e495519760358859f35c951254c7741592731  17036  files/vibevoice-0018-20260819T144325Z-172685/moss_tts_onnx/MOSS-Audio-Tokenizer-Nano-ONNX/codec_browser_onnx_meta.json",
+      "0fbbafe3fd4afa2a019af5c5ced204af6e2d1db044fa40f021525d2aee95b4ac  681902  files/vibevoice-0018-20260819T144325Z-172685/moss_tts_onnx/MOSS-Audio-Tokenizer-Nano-ONNX/moss_audio_tokenizer_decode_full.onnx",
+      "e69d52e0f4e84ca27850557ee54face46632d3a5a16c89bd246c7c408466dcad  44198912  files/vibevoice-0018-20260819T144325Z-172685/moss_tts_onnx/MOSS-Audio-Tokenizer-Nano-ONNX/moss_audio_tokenizer_decode_shared.data"
+    ]
+  },
+  "execution_notes": [
+    "An initial exec-out stdin staging attempt hung and was aborted; no inference result came from it.",
+    "The successful evidence run used fast adb push to a unique hash-verified /data/local/tmp upload, app-internal mode-0600 copies, evidence pullback, and a separately verified cleanup after a wrapper cleanup-verification quoting error."
+  ],
+  "instrumented_run": {
+    "all_providers": [
+      "CPUExecutionProvider"
+    ],
+    "component_wall_ms": {
+      "audio_tokenizer_ms": 7059.981768,
+      "autoregressive_decode_ms": 10208.937849,
+      "local_decoder_ms": 15775.381972999994,
+      "prefill_ms": 611.586197
+    },
+    "components": {
+      "audio_tokenizer": {
+        "graph": "moss_audio_tokenizer_decode_full.onnx",
+        "node_kernel_duration_us": 6833469.0,
+        "node_kernel_events": 1601,
+        "profile_sha256": "fba6a61908e8ebf9e32f02712b512bd894820a024d1aa8c8ff301edcf5d232bb",
+        "providers": {
+          "CPUExecutionProvider": {
+            "duration_us": 6833469.0,
+            "events": 1601
+          }
+        },
+        "top_operators_by_kernel_duration": [
+          {
+            "duration_us": 4196174.0,
+            "events": 76,
+            "operator": "MatMul",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 911497.0,
+            "events": 12,
+            "operator": "Softmax",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 831162.0,
+            "events": 88,
+            "operator": "Add",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 217598.0,
+            "events": 25,
+            "operator": "Where",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 129865.0,
+            "events": 12,
+            "operator": "Gelu",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 117562.0,
+            "events": 37,
+            "operator": "Sub",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 80186.0,
+            "events": 183,
+            "operator": "Gather",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 59166.0,
+            "events": 37,
+            "operator": "Less",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 58626.0,
+            "events": 37,
+            "operator": "And",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 55246.0,
+            "events": 12,
+            "operator": "GreaterOrEqual",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          }
+        ]
+      },
+      "autoregressive_decode": {
+        "graph": "moss_tts_decode_step.onnx",
+        "node_kernel_duration_us": 7639931.0,
+        "node_kernel_events": 207955,
+        "profile_sha256": "5808cc142bea43b9b70a4084cfd67d16acad84150888225f40d42014e0b19ac3",
+        "providers": {
+          "CPUExecutionProvider": {
+            "duration_us": 7639931.0,
+            "events": 207955
+          }
+        },
+        "top_operators_by_kernel_duration": [
+          {
+            "duration_us": 3160671.0,
+            "events": 12540,
+            "operator": "MatMul",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 880704.0,
+            "events": 10032,
+            "operator": "Transpose",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 518427.0,
+            "events": 9196,
+            "operator": "Cast",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 499974.0,
+            "events": 12958,
+            "operator": "Concat",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 321453.0,
+            "events": 23408,
+            "operator": "Add",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 301277.0,
+            "events": 23199,
+            "operator": "Reshape",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 260230.0,
+            "events": 2508,
+            "operator": "FusedMatMul",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 212649.0,
+            "events": 16929,
+            "operator": "Unsqueeze",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 206020.0,
+            "events": 10450,
+            "operator": "Slice",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 185217.0,
+            "events": 13376,
+            "operator": "Mul",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          }
+        ]
+      },
+      "local_decoder": {
+        "graph": "moss_tts_local_fixed_sampled_frame.onnx",
+        "node_kernel_duration_us": 7887911.0,
+        "node_kernel_events": 333227,
+        "profile_sha256": "0318a01ed960fad87f8a20c577c05778ba2c6160b9fbb923cd1c17b55370a48c",
+        "providers": {
+          "CPUExecutionProvider": {
+            "duration_us": 7887911.0,
+            "events": 333227
+          }
+        },
+        "top_operators_by_kernel_duration": [
+          {
+            "duration_us": 3605586.0,
+            "events": 16195,
+            "operator": "MatMul",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 401928.0,
+            "events": 35235,
+            "operator": "Unsqueeze",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 386477.0,
+            "events": 32707,
+            "operator": "Reshape",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 354266.0,
+            "events": 26673,
+            "operator": "Add",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 314800.0,
+            "events": 18734,
+            "operator": "Slice",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 287910.0,
+            "events": 19528,
+            "operator": "Concat",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 220319.0,
+            "events": 10478,
+            "operator": "Where",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 195410.0,
+            "events": 18893,
+            "operator": "Shape",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 183758.0,
+            "events": 13814,
+            "operator": "Gather",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 172588.0,
+            "events": 13336,
+            "operator": "Mul",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          }
+        ]
+      },
+      "prefill": {
+        "graph": "moss_tts_prefill.onnx",
+        "node_kernel_duration_us": 586910.0,
+        "node_kernel_events": 1189,
+        "profile_sha256": "8e0521df0785cb02875607b37b62b00877945d0c7d23f55cacfa8c421cb96fb0",
+        "providers": {
+          "CPUExecutionProvider": {
+            "duration_us": 586910.0,
+            "events": 1189
+          }
+        },
+        "top_operators_by_kernel_duration": [
+          {
+            "duration_us": 439454.0,
+            "events": 60,
+            "operator": "MatMul",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 53823.0,
+            "events": 85,
+            "operator": "Slice",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 16576.0,
+            "events": 29,
+            "operator": "Where",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 12332.0,
+            "events": 12,
+            "operator": "FusedMatMul",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 10919.0,
+            "events": 12,
+            "operator": "FastGelu",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 8052.0,
+            "events": 78,
+            "operator": "Mul",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 7971.0,
+            "events": 112,
+            "operator": "Add",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 7489.0,
+            "events": 12,
+            "operator": "Softmax",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 4808.0,
+            "events": 25,
+            "operator": "LayerNormalization",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          },
+          {
+            "duration_us": 4271.0,
+            "events": 48,
+            "operator": "Concat",
+            "providers": [
+              "CPUExecutionProvider"
+            ]
+          }
+        ]
+      }
+    },
+    "cpu_only": true,
+    "end_to_end_ms": 33871.860821,
+    "excluded_from_benchmark_latency": true,
+    "provider_summary": "results/ort-profile-summary.json"
+  },
+  "listening_sample": {
+    "channels": 1,
+    "container": "WAVE",
+    "data_bytes": 1605120,
+    "duration_seconds": 16.72,
+    "encoding": "PCM signed 16-bit little-endian",
+    "finite": true,
+    "frames": 802560,
+    "host_file_sha256": "173850781b055e70a606fb561d93b70e6d8c6318db1b29b2324f83506c21ad6b",
+    "host_validation": "file and ffprobe confirmed PCM signed 16-bit little-endian, mono, 48000 Hz, 802560 frames, 16.72 seconds.",
+    "path": "/data/user/0/com.openmoss.ttsnano.onnxruntime/files/vibevoice-0018-20260819T144325Z-172685/evidence/benchmark/listening-sample.wav",
+    "peak": 0.999969482421875,
+    "retained_absolute_path": "/home/moritz/vibevoice-android-spike/experiments/0018-moss-tts-nano-onnx-android/work/vibevoice-0018-20260819T144325Z-172685/benchmark/listening-sample.wav",
+    "rms": 0.13384885037091093,
+    "sample_rate_hz": 48000,
+    "sha256": "173850781b055e70a606fb561d93b70e6d8c6318db1b29b2324f83506c21ad6b"
+  },
+  "measurement_boundaries": [
+    "Session setup is monotonic elapsed time for creation of four ORT sessions and excludes staging and app launch.",
+    "End-to-end begins before request-row construction and ends after PCM16 WAV write.",
+    "First-audio latency ends when the full codec decode returns decoded PCM; the official Android example is non-streaming, so it is not streaming time-to-first-chunk.",
+    "VmHWM and sampled VmRSS/PSS are process-wide and not component-isolated allocations.",
+    "Total sampled process threads include Android, Java, ORT, and the measurement sampler; four is the configured ORT intra-op count, not total process threads.",
+    "The official Android example averages its native two codec channels to a mono retained WAV.",
+    "Instrumented timing includes substantial ORT profiling overhead and is not compared with unprofiled benchmark latency."
+  ],
+  "memory": {
+    "peak_sampled_pss_kib": 5853862,
+    "peak_sampled_vm_rss_kib": 5691552,
+    "peak_vm_hwm_kib": 5691920,
+    "pss_sampling_interval_ms": 500,
+    "rss_thread_sampling_interval_ms": 50,
+    "samples": 1191,
+    "semantics": "VmHWM is cumulative process RSS high-water from /proc/self/status. VmRSS and Debug.getPss are sampled process-wide values, not isolated model allocations."
+  },
+  "prompt": {
+    "effective_text": "Welcome to our small studio... where curious minds unpack one surprising idea at a time. Today, we explore why familiar voices build trust, how thoughtful pauses shape meaning... and what makes a conversation feel genuinely alive.",
+    "max_frames": 375,
+    "seed": 20260818,
+    "sentencepiece_version": "0.2.1",
+    "token_count": 51,
+    "token_ids": [
+      5322,
+      300,
+      642,
+      2160,
+      9813,
+      1583,
+      676,
+      6704,
+      1680,
+      10363,
+      661,
+      10376,
+      530,
+      524,
+      3598,
+      4991,
+      1727,
+      420,
+      273,
+      628,
+      10380,
+      6271,
+      10364,
+      332,
+      10211,
+      1079,
+      7824,
+      2276,
+      2103,
+      1734,
+      3628,
+      10364,
+      606,
+      1217,
+      1107,
+      298,
+      3572,
+      302,
+      8741,
+      5368,
+      1583,
+      311,
+      425,
+      1957,
+      273,
+      2868,
+      831,
+      10104,
+      372,
+      9153,
+      10380
+    ],
+    "tokenization": "protocol/tokenization.json",
+    "tokenizer_model_sha256": "c353ee1479b536bf414c1b247f5542b6607fb8ae91320e5af1781fee200fddff",
+    "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
+    "voice": "Junhao"
+  },
+  "result": "completed_cpu_onnx_evaluation",
+  "runtime": {
+    "apk_sha256": "24f3ab018161c14406b6ae0a775683dc5c5a95d5da6a28cabd5e7ce3dc3d1b0b",
+    "graph_optimization": "ALL_OPT",
+    "inter_op_threads": 1,
+    "intra_op_threads": 4,
+    "onnxruntime_android": "1.20.0",
+    "path": "adapted official examples/android_onnx_runtime",
+    "provider": "CPUExecutionProvider"
+  },
+  "schema_version": 1,
+  "source": {
+    "access": "anonymous, ungated, no login/click-through/consent/export attestation/additional terms",
+    "audio_tokenizer_onnx_revision": "ceff0d0749bfb3fa2d61149794ec6feef0d1e1ae",
+    "github_revision": "cc7bdf19c7639c0870dab22045a33b442760f6be",
+    "inventory": "results/source-inventory.json",
+    "model_and_weights_license": "Apache-2.0",
+    "source_license": "Apache-2.0",
+    "tts_onnx_revision": "f52645cb467506d8e18e746ddd59482685b74e58"
+  },
+  "thread_measurement": {
+    "configured_ort_inter_op_threads": 1,
+    "configured_ort_intra_op_threads": 4,
+    "process_threads_max": 38,
+    "process_threads_min": 17,
+    "samples": 1191,
+    "sampling_interval_ms": 50,
+    "semantics": "Configured ORT pools plus sampled total Linux process thread count; process count includes Android/runtime/sampler threads."
+  }
+}

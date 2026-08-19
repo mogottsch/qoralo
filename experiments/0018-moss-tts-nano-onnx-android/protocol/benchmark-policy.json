@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "scope": "Official Android ONNX Runtime path on CPUExecutionProvider only.",
+  "phone": {
+    "serial": "R5CW81PR8SY",
+    "model": "SM-S918B",
+    "soc_model": "SM8550"
+  },
+  "prompt": {
+    "transcript_path": "protocol/transcript.txt",
+    "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
+    "tokenization_path": "protocol/tokenization.json",
+    "tokenizer_model_sha256": "c353ee1479b536bf414c1b247f5542b6607fb8ae91320e5af1781fee200fddff",
+    "token_count": 51,
+    "normalization": "If present, remove exactly one final LF; otherwise direct SentencePiece encoding with no text normalization. The frozen file has no final LF."
+  },
+  "generation": {
+    "voice": "Junhao",
+    "seed": 20260818,
+    "sampling": "official fixed sampled-frame graph and its embedded constants",
+    "max_frames": 375,
+    "output": "official example mono average of the native two codec channels, PCM16 WAV at 48000 Hz"
+  },
+  "runtime": {
+    "onnxruntime_android_maven": "1.20.0",
+    "provider_claim": "CPUExecutionProvider only",
+    "intra_op_threads": 4,
+    "inter_op_threads": 1,
+    "graph_optimization": "ALL_OPT"
+  },
+  "benchmark": {
+    "process": "One fresh app process creates four sessions and runs one first plus three warm end-to-end generations.",
+    "session_setup": "Elapsed monotonic time to create all four ORT sessions, including graph load and optimization; file staging and app startup are excluded.",
+    "end_to_end": "Elapsed monotonic time from request-row construction through prefill, autoregressive generation, full codec decode, and WAV write.",
+    "rtf": "end_to_end_ms divided by decoded audio duration_ms.",
+    "first_audio": "Elapsed from generation start until full codec decode returns the first PCM buffer. The official Android example is non-streaming, so this is not streaming time-to-first-chunk.",
+    "threads": "Configured ORT pools plus total process Threads sampled from /proc/self/status every 50 ms.",
+    "memory": "Process VmHWM plus sampled VmRSS every 50 ms and Debug.getPss every 500 ms. These are process-wide, not component-isolated allocations."
+  },
+  "profiling": {
+    "separate_run": true,
+    "runs": 1,
+    "same_prompt_generation_and_threads": true,
+    "claim_boundary": "ORT JSON profiles establish provider assignment and instrumented operator timing. They are not HTP evidence and their overhead is excluded from benchmark latency."
+  },
+  "device_safety": {
+    "lock": "artifacts/locks/phone.lock",
+    "adb": "Windows adb.exe with ADB_LIBUSB=1 and the lock file descriptor closed in every child",
+    "staging": "Unique app-internal files directory populated through run-as/exec-out, compatible with Android 15 scoped storage",
+    "cleanup": "Pull evidence, delete unique internal stage, verify absence, uninstall test APK, and release lock"
+  }
+}
