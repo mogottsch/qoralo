@@ -3,11 +3,12 @@
   "$id": "https://preview.moket-home.de/vibevoice/android-benchmarks/registry.schema.json",
   "title": "Global Android benchmark registry",
   "type": "object",
-  "required": ["schema_version", "registry_id", "device", "source_policy", "entries"],
+  "required": ["schema_version", "registry_id", "device", "source_policy", "model_timeline", "entries"],
   "properties": {
     "schema_version": {"const": 1},
     "registry_id": {"const": "android-benchmarks-v1"},
     "source_policy": {"type": "string", "minLength": 1},
+    "model_timeline": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/timeline_entry"}},
     "device": {"$ref": "#/$defs/device"},
     "entries": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/entry"}}
   },
@@ -22,6 +23,15 @@
       }, "additionalProperties": false
     },
     "metric": {"type": ["number", "null"], "minimum": 0},
+    "timeline_entry": {
+      "type": "object", "required": ["model", "first_release_date", "date_basis", "source_url"],
+      "properties": {
+        "model": {"type": "string", "minLength": 1},
+        "first_release_date": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+        "date_basis": {"type": "string", "minLength": 1},
+        "source_url": {"type": "string", "format": "uri-reference", "minLength": 1}
+      }, "additionalProperties": false
+    },
     "model_identity": {
       "type": "object", "required": ["name", "url", "revision"],
       "properties": {

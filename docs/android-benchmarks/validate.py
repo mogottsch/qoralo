@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from datetime import date
 import re
 import sys
 import wave
@@ -31,6 +32,22 @@ def main():
         fail("unexpected registry identity")
     if registry.get("device") != EXPECTED_DEVICE:
         fail("canonical device identity changed")
+    timeline = registry.get("model_timeline")
+    if not isinstance(timeline, list) or not timeline:
+        fail("model_timeline must be a non-empty list")
+    timeline_models = set()
+    for item in timeline:
+        if set(item) != {"model", "first_release_date", "date_basis", "source_url"}:
+            fail("timeline entry field mismatch")
+        if not item["model"].strip() or not item["date_basis"].strip() or not item["source_url"].startswith("https://"):
+            fail(f"invalid timeline entry: {item.get('model')}")
+        try:
+            date.fromisoformat(item["first_release_date"])
+        except ValueError:
+            fail(f"invalid timeline date: {item.get('first_release_date')}")
+        if item["model"] in timeline_models:
+            fail(f"duplicate timeline model: {item['model']}")
+        timeline_models.add(item["model"])
     entries = registry.get("entries")
     if not isinstance(entries, list) or not entries:
         fail("entries must be a non-empty list")
@@ -112,6 +129,9 @@ def main():
         if not page.is_file():
             fail(f"missing generated page: {page_name}")
         page_text = page.read_text()
+        for item in timeline:
+            if item["model"] not in page_text or item["first_release_date"] not in page_text or item["source_url"] not in page_text:
+                fail(f"{page_name}: timeline entry missing for {item['model']}")
         for e in entries:
             marker = f'data-route-id="{e["id"]}"'
             if e["scope"] == "full_e2e" and page_text.count(marker) != 1:
