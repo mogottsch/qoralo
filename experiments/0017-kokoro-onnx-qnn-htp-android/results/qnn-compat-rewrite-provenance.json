@@ -1,0 +1,448 @@
+{
+  "changes": {
+    "added_initializers": [
+      "/decoder/generator/ConstantOfShape_1_output_0",
+      "/decoder/generator/m_source/l_sin_gen/Concat_1_output_0",
+      "/decoder/generator/m_source/l_sin_gen/Expand_1_output_0",
+      "/decoder/generator/m_source/l_sin_gen/Expand_2_output_0",
+      "/decoder/generator/m_source/l_sin_gen/Expand_3_output_0",
+      "/qnn_static_alignment/axis0",
+      "/qnn_static_alignment/duration_shape",
+      "/qnn_static_alignment/lower_triangle",
+      "/qnn_static_alignment/positions",
+      "/qnn_static_squeeze/shape",
+      "/shared/ConstantOfShape_output_0"
+    ],
+    "added_nodes": [
+      "/qnn_static_alignment/And",
+      "/qnn_static_alignment/Cast",
+      "/qnn_static_alignment/CastMask",
+      "/qnn_static_alignment/GreaterOrEqual",
+      "/qnn_static_alignment/Less",
+      "/qnn_static_alignment/MatMul",
+      "/qnn_static_alignment/Reshape",
+      "/qnn_static_alignment/Sub",
+      "/qnn_static_alignment/Unsqueeze",
+      "/qnn_static_squeeze/F0",
+      "/qnn_static_squeeze/N"
+    ],
+    "alignment_lowering": "runtime pred_dur -> float32 lower-triangular prefix sums -> static [125,304] comparison mask",
+    "attention_nan_sanitizers_bypassed": [
+      {
+        "isnan": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention/IsNaN",
+        "replacement": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention/Softmax_output_0",
+        "where": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention/Where_1"
+      },
+      {
+        "isnan": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_1/IsNaN",
+        "replacement": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_1/Softmax_output_0",
+        "where": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_1/Where_1"
+      },
+      {
+        "isnan": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_2/IsNaN",
+        "replacement": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_2/Softmax_output_0",
+        "where": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_2/Where_1"
+      },
+      {
+        "isnan": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_3/IsNaN",
+        "replacement": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_3/Softmax_output_0",
+        "where": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_3/Where_1"
+      },
+      {
+        "isnan": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_4/IsNaN",
+        "replacement": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_4/Softmax_output_0",
+        "where": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_4/Where_1"
+      },
+      {
+        "isnan": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_5/IsNaN",
+        "replacement": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_5/Softmax_output_0",
+        "where": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_5/Where_1"
+      },
+      {
+        "isnan": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_6/IsNaN",
+        "replacement": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_6/Softmax_output_0",
+        "where": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_6/Where_1"
+      },
+      {
+        "isnan": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_7/IsNaN",
+        "replacement": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_7/Softmax_output_0",
+        "where": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_7/Where_1"
+      },
+      {
+        "isnan": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_8/IsNaN",
+        "replacement": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_8/Softmax_output_0",
+        "where": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_8/Where_1"
+      },
+      {
+        "isnan": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_9/IsNaN",
+        "replacement": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_9/Softmax_output_0",
+        "where": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_9/Where_1"
+      },
+      {
+        "isnan": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_10/IsNaN",
+        "replacement": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_10/Softmax_output_0",
+        "where": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_10/Where_1"
+      },
+      {
+        "isnan": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_11/IsNaN",
+        "replacement": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_11/Softmax_output_0",
+        "where": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_11/Where_1"
+      }
+    ],
+    "removed_initializers": [
+      {
+        "bytes": 8,
+        "name": "onnx::Gather_4601",
+        "sha256": "d86e8112f3c4c4442126f8e9f44f16867da487f29052bf91b810457db34209a4"
+      },
+      {
+        "bytes": 8,
+        "name": "/text_encoder/lstm/Constant_1_output_0",
+        "sha256": "2e22fd435060cd5d3cf5e3ef39f79e198b35bd2c4af31974db36601b3a2f4c91"
+      },
+      {
+        "bytes": 4,
+        "name": "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_2/Constant_10_output_0",
+        "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+      },
+      {
+        "bytes": 24,
+        "name": "onnx::Reshape_4607",
+        "sha256": "24272d1eaecd523aa195b1ffad3973a740646a889ac0aae27974340dacf919d7"
+      },
+      {
+        "bytes": 8,
+        "name": "/decoder/generator/m_source/l_sin_gen/Constant_9_output_0",
+        "sha256": "12a3ae445661ce5dee78d0650d33362dec29c4f82af05e7e57fb595bbbacf0ca"
+      },
+      {
+        "bytes": 1000,
+        "name": "/Constant_16_output_0",
+        "sha256": "58a9478ec9a879a6eeb0f1cabb94b28acd4064aec8872e5138f141cd0031e431"
+      },
+      {
+        "bytes": 8,
+        "name": "onnx::Expand_4609",
+        "sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"
+      },
+      {
+        "bytes": 8,
+        "name": "/text_encoder_1/Constant_5_output_0",
+        "sha256": "0c816e64be4b46e9e3d71062a3a7b6f970436d61cf7b377a65b89fa8caf34c6b"
+      },
+      {
+        "bytes": 8,
+        "name": "/text_encoder/Constant_33_output_0",
+        "sha256": "35be322d094f9d154a8aba4733b8497f180353bd7ae7b0a15f90b586b549f28b"
+      },
+      {
+        "bytes": 1,
+        "name": "/Constant_20_output_0",
+        "sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a"
+      },
+      {
+        "bytes": 1,
+        "name": "/Equal_1_output_0",
+        "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      },
+      {
+        "bytes": 1000,
+        "name": "/ConstantOfShape_1_output_0",
+        "sha256": "26c7cbf2ee964379b6a9e64a18685d67d2d49e91771529e8ba530e2596dc13a1"
+      },
+      {
+        "bytes": 24,
+        "name": "const_transpose_optimizer",
+        "sha256": "0f004f117335020e1d19c25b8767278bf1edb2fa6ff3fac943d843b6003d0eb5"
+      },
+      {
+        "bytes": 24,
+        "name": "/decoder/generator/m_source/l_sin_gen/Mul_4_output_0",
+        "sha256": "44a5f7891570e5631e8c91c85186e6633f4ab5364f644040b2a00126a07985b6"
+      },
+      {
+        "bytes": 24,
+        "name": "/decoder/generator/m_source/l_sin_gen/ConstantOfShape_2_output_0",
+        "sha256": "605390e5a369ee568b19ead1733af824c7c1d286d7d24b86283238fc44a99334"
+      }
+    ],
+    "removed_nodes": [
+      "/Add_1",
+      "/ConcatFromSequence",
+      "/Concat_1",
+      "/Concat_2",
+      "/Concat_3",
+      "/ConstantOfShape_3",
+      "/ConstantOfShape_5",
+      "/ConstantOfShape_6",
+      "/Equal_4",
+      "/Equal_5",
+      "/Equal_6",
+      "/Equal_7",
+      "/Expand_3",
+      "/Expand_4",
+      "/Expand_5",
+      "/Gather_1",
+      "/Gather_2",
+      "/Gather_3",
+      "/If",
+      "/If_1",
+      "/Loop",
+      "/Mul_3",
+      "/Mul_4",
+      "/Range_1",
+      "/Reshape_1",
+      "/ScatterND",
+      "/SequenceEmpty",
+      "/Shape_10",
+      "/Shape_3",
+      "/Shape_4",
+      "/Shape_6",
+      "/Shape_7",
+      "/Shape_8",
+      "/Shape_9",
+      "/Slice_1",
+      "/SplitToSequence",
+      "/SplitToSequence_1",
+      "/Unsqueeze_2",
+      "/Unsqueeze_3",
+      "/Unsqueeze_4",
+      "/Unsqueeze_5",
+      "/Where_1",
+      "/Where_4",
+      "/Where_5",
+      "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention/IsNaN",
+      "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention/Where_1",
+      "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_1/IsNaN",
+      "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_1/Where_1",
+      "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_10/IsNaN",
+      "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_10/Where_1",
+      "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_11/IsNaN",
+      "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_11/Where_1",
+      "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_2/IsNaN",
+      "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_2/Where_1",
+      "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_3/IsNaN",
+      "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_3/Where_1",
+      "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_4/IsNaN",
+      "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_4/Where_1",
+      "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_5/IsNaN",
+      "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_5/Where_1",
+      "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_6/IsNaN",
+      "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_6/Where_1",
+      "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_7/IsNaN",
+      "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_7/Where_1",
+      "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_8/IsNaN",
+      "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_8/Where_1",
+      "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_9/IsNaN",
+      "/bert/encoder/albert_layer_groups.0/albert_layers.0/attention_9/Where_1",
+      "/decoder/generator/ConstantOfShape_1",
+      "/decoder/generator/Shape",
+      "/decoder/generator/Slice_3",
+      "/decoder/generator/m_source/l_sin_gen/Add_2",
+      "/decoder/generator/m_source/l_sin_gen/Concat_1",
+      "/decoder/generator/m_source/l_sin_gen/Equal_2",
+      "/decoder/generator/m_source/l_sin_gen/Expand",
+      "/decoder/generator/m_source/l_sin_gen/Expand_1",
+      "/decoder/generator/m_source/l_sin_gen/Expand_2",
+      "/decoder/generator/m_source/l_sin_gen/Expand_3",
+      "/decoder/generator/m_source/l_sin_gen/Shape",
+      "/decoder/generator/m_source/l_sin_gen/Shape_1",
+      "/decoder/generator/m_source/l_sin_gen/Shape_5",
+      "/decoder/generator/m_source/l_sin_gen/Slice",
+      "/decoder/generator/m_source/l_sin_gen/Where_2",
+      "/shared/Concat",
+      "/shared/ConstantOfShape",
+      "/shared/Gather",
+      "/shared/Shape",
+      "/shared/Unsqueeze",
+      "Gather",
+      "Gather_4023",
+      "Gather_4030",
+      "Range_4027",
+      "Range_4034",
+      "Reshape_4036"
+    ],
+    "retained_initializer_payload_changes": [],
+    "shape_conditional_squeezes_lowered": [
+      "/If",
+      "/If_1"
+    ],
+    "shape_derived_constants": {
+      "/decoder/generator/ConstantOfShape_1_output_0": {
+        "dtype": "float32",
+        "sha256": "9b6e386aaf5cb1126b1e34e9bd976d34fa2363ccc868756123aa486777853778",
+        "shape": [
+          1,
+          1,
+          36481
+        ]
+      },
+      "/decoder/generator/m_source/l_sin_gen/Concat_1_output_0": {
+        "dtype": "int64",
+        "sha256": "13d633fa424deb91775b1b8091e9758ba959e60657752600da7e76ee3ea94bfb",
+        "shape": [
+          3
+        ]
+      },
+      "/decoder/generator/m_source/l_sin_gen/Expand_1_output_0": {
+        "dtype": "int64",
+        "sha256": "834a709ba2534ebe3ee1397fd4f7bd288b2acc1d20a08d6c862dcd99b6f04400",
+        "shape": [
+          1,
+          1,
+          9
+        ]
+      },
+      "/decoder/generator/m_source/l_sin_gen/Expand_2_output_0": {
+        "dtype": "int64",
+        "sha256": "834a709ba2534ebe3ee1397fd4f7bd288b2acc1d20a08d6c862dcd99b6f04400",
+        "shape": [
+          1,
+          1,
+          9
+        ]
+      },
+      "/decoder/generator/m_source/l_sin_gen/Expand_3_output_0": {
+        "dtype": "int64",
+        "sha256": "419ce84f0e9d892643ed1279ee8cdaa70ddc452e676dfe448cbeaaa830c06567",
+        "shape": [
+          1,
+          1,
+          9
+        ]
+      },
+      "/shared/ConstantOfShape_output_0": {
+        "dtype": "float32",
+        "sha256": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "shape": [
+          2,
+          1,
+          256
+        ]
+      }
+    }
+  },
+  "claim_boundary": "Fixed-contract standard-operator compatibility lowering; no learned tensor change, quantization, or neural intermediate fixture.",
+  "fixed_contract": {
+    "duration_sum_and_alignment_width": 304,
+    "tokens": 125
+  },
+  "output": {
+    "bytes": 339127640,
+    "path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/rewrite/kokoro-qnn-compat.onnx",
+    "sha256": "7278ed2f0dbe8307a42904434b81116f252dd996bb6a2c064f81ad44269f21cb"
+  },
+  "schema_version": 1,
+  "source": {
+    "bytes": 338940103,
+    "path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/static-basic/optimized-basic-shaped.onnx",
+    "sha256": "8f13f170a5b67459e0fb325682cd1ab1f2fa4ff0d62e988222dd38a4d95fe00f"
+  },
+  "structure": {
+    "output_initializers": 809,
+    "output_nodes": 1685,
+    "output_operators": {
+      "ai.onnx::Add": 348,
+      "ai.onnx::And": 1,
+      "ai.onnx::Atan": 1,
+      "ai.onnx::Cast": 4,
+      "ai.onnx::Clip": 2,
+      "ai.onnx::Concat": 11,
+      "ai.onnx::Conv": 88,
+      "ai.onnx::ConvTranspose": 8,
+      "ai.onnx::Cos": 1,
+      "ai.onnx::CumSum": 1,
+      "ai.onnx::Div": 8,
+      "ai.onnx::Exp": 1,
+      "ai.onnx::Expand": 1,
+      "ai.onnx::Floor": 1,
+      "ai.onnx::Gather": 13,
+      "ai.onnx::Gemm": 104,
+      "ai.onnx::Greater": 2,
+      "ai.onnx::GreaterOrEqual": 1,
+      "ai.onnx::InstanceNormalization": 65,
+      "ai.onnx::LSTM": 6,
+      "ai.onnx::LayerNormalization": 31,
+      "ai.onnx::LeakyRelu": 28,
+      "ai.onnx::Less": 2,
+      "ai.onnx::MatMul": 72,
+      "ai.onnx::Mul": 266,
+      "ai.onnx::Pad": 2,
+      "ai.onnx::Pow": 60,
+      "ai.onnx::ReduceSum": 1,
+      "ai.onnx::Reshape": 193,
+      "ai.onnx::Resize": 6,
+      "ai.onnx::Round": 1,
+      "ai.onnx::STFT": 1,
+      "ai.onnx::ScatterND": 5,
+      "ai.onnx::Sigmoid": 1,
+      "ai.onnx::Sin": 51,
+      "ai.onnx::Slice": 151,
+      "ai.onnx::Softmax": 12,
+      "ai.onnx::Sqrt": 1,
+      "ai.onnx::Squeeze": 3,
+      "ai.onnx::Sub": 4,
+      "ai.onnx::Tanh": 13,
+      "ai.onnx::Transpose": 96,
+      "ai.onnx::Unsqueeze": 7,
+      "ai.onnx::Where": 11
+    },
+    "quantized_operator_count": 0,
+    "source_initializers": 813,
+    "source_nodes": 1768,
+    "source_operators": {
+      "ai.onnx::Add": 350,
+      "ai.onnx::Atan": 1,
+      "ai.onnx::Cast": 2,
+      "ai.onnx::Clip": 2,
+      "ai.onnx::Concat": 16,
+      "ai.onnx::ConcatFromSequence": 1,
+      "ai.onnx::ConstantOfShape": 5,
+      "ai.onnx::Conv": 88,
+      "ai.onnx::ConvTranspose": 8,
+      "ai.onnx::Cos": 1,
+      "ai.onnx::CumSum": 1,
+      "ai.onnx::Div": 8,
+      "ai.onnx::Equal": 5,
+      "ai.onnx::Exp": 1,
+      "ai.onnx::Expand": 8,
+      "ai.onnx::Floor": 1,
+      "ai.onnx::Gather": 20,
+      "ai.onnx::Gemm": 104,
+      "ai.onnx::Greater": 2,
+      "ai.onnx::If": 2,
+      "ai.onnx::InstanceNormalization": 65,
+      "ai.onnx::IsNaN": 12,
+      "ai.onnx::LSTM": 6,
+      "ai.onnx::LayerNormalization": 31,
+      "ai.onnx::LeakyRelu": 28,
+      "ai.onnx::Less": 1,
+      "ai.onnx::Loop": 1,
+      "ai.onnx::MatMul": 71,
+      "ai.onnx::Mul": 268,
+      "ai.onnx::Pad": 2,
+      "ai.onnx::Pow": 60,
+      "ai.onnx::Range": 3,
+      "ai.onnx::ReduceSum": 1,
+      "ai.onnx::Reshape": 192,
+      "ai.onnx::Resize": 6,
+      "ai.onnx::Round": 1,
+      "ai.onnx::STFT": 1,
+      "ai.onnx::ScatterND": 6,
+      "ai.onnx::SequenceEmpty": 1,
+      "ai.onnx::Shape": 12,
+      "ai.onnx::Sigmoid": 1,
+      "ai.onnx::Sin": 51,
+      "ai.onnx::Slice": 154,
+      "ai.onnx::Softmax": 12,
+      "ai.onnx::SplitToSequence": 2,
+      "ai.onnx::Sqrt": 1,
+      "ai.onnx::Squeeze": 3,
+      "ai.onnx::Sub": 3,
+      "ai.onnx::Tanh": 13,
+      "ai.onnx::Transpose": 96,
+      "ai.onnx::Unsqueeze": 11,
+      "ai.onnx::Where": 27
+    }
+  }
+}

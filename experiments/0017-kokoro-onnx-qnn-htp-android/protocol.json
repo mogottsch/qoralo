@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "experiment": "0017-kokoro-onnx-qnn-htp-android",
+  "frozen_before_qnn_host_or_phone_outputs": true,
+  "objective": "Test whether experiment 0013's exact-source-derived, unquantized FP32, fixed-contract Kokoro v1.0 ONNX representation can execute completely through ONNX Runtime QNN on the SM8550 HTP without CPU fallback.",
+  "claim_boundary": {
+    "allowed": "A fixed-text, fixed-shape QNN/HTP deployment test derived from the exact experiment-0013 controlled ONNX representation.",
+    "forbidden": [
+      "waveform-identical official eager execution",
+      "arbitrary-text or arbitrary-shape deployment",
+      "the rejected sherpa disable_complex=True graph",
+      "quantized execution",
+      "FP32 arithmetic on HTP",
+      "calling mixed QNN/CPU fallback full HTP",
+      "erasing experiment 0013's immutable preliminary waveform-screen failure"
+    ]
+  },
+  "source": {
+    "experiment_0013_commit": "b6fd6e8c123cbf5170f1b1ee1367bb08eef6f5c0",
+    "official_repository": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "official_revision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+    "official_model_sha256": "496dba118d1a58f5f3db2efc88dbdc216e0483fc89fe6e47ee1f2c53f18ad1e4",
+    "official_voice_sha256": "0ab5709b8ffab19bfd849cd11d98f75b60af7733253ad0d67b12382a102cb4ff",
+    "kokoro_code": "kokoro==0.9.4",
+    "kokoro_wheel_sha256": "a129dc6364a286bd6a92c396e9862459d3d3e45f2c15596ed5a94dcee5789efd",
+    "controlled_onnx": {
+      "path": "../0013-kokoro-onnx-vs-executorch-android/.local/derived/kokoro-official-v1.0-fp32-controlled-t125.onnx",
+      "bytes": 332038651,
+      "sha256": "d11a0dd7c4eb768e1f0ef03090c69b6761f55e37b9f196749349591c40be232b",
+      "opset": 17,
+      "learned_weight_changes": false,
+      "quantized_operator_count": 0,
+      "random_operator_count": 0
+    },
+    "cpu_oracles": {
+      "controlled_eager_f32_sha256": "cd74d877147c0faa149c685e3edb55a7a66cf22c1ecde9feda825ad8155877a2",
+      "host_onnxruntime_f32_sha256": "a5a72a1a4c68f7374e4f61dda3b30888fd7f3d2437889456528a2ff695d70eaa",
+      "phone_onnxruntime_cpu_f32_sha256": "5a680f97fee0ef8817484e384442ee904931bb4554e5e58850ac8648b44d9e9d"
+    }
+  },
+  "fixed_contract": {
+    "transcript_sha256": "bec8bf482f4d816f0c95471c289a2607a7a169e33389b8b13e525214ec639461",
+    "language": "en-US",
+    "voice": "af_heart",
+    "token_shape": [1, 125],
+    "token_little_endian_int64_sha256": "35ebb50fb1ba0cca3862c880cf0571c9a51623c5243a9f2307b4bb4a6dcd2078",
+    "style_index": 123,
+    "style_shape": [1, 256],
+    "style_little_endian_float32_sha256": "b5c2627313e7e45bbb50470307ef66730b5510ebc7e92671cf7aad0449cdf899",
+    "speed": 1.0,
+    "seed": 20260818,
+    "duration_shape": [125],
+    "duration_sum": 304,
+    "duration_little_endian_int64_sha256": "7977e82d5304abba333a0b1caa0f0ef39b265b11205ff217c5979255cc44b80e",
+    "audio_shape": [182400],
+    "sample_rate_hz": 24000,
+    "channels": 1
+  },
+  "host_gate": {
+    "runtime_source_revision": "df2ba1cf8108aa63627cf4cdf8f807880b938616",
+    "runtime_version": "ONNX Runtime 1.27.1 with the experiment-0010 a08e17 Pad-selector backport",
+    "host_runtime_sha256": "bc9df5a7df1b5d9de4d87adcaa4cc864bbde0f790e80d48e00ce0e4253a2ae11",
+    "android_runtime_sha256": "40bc591798287525f365e8ded4bbc40e0c4e9440737e876026ec09ba359ac041",
+    "qairt_qnn_version": "2.49.0.260730",
+    "backend": "QNN HTP",
+    "soc_model": "43",
+    "provider_options": {
+      "backend_path": "libQnnHtp.so",
+      "offload_graph_io_quantization": "0",
+      "htp_performance_mode": "burst",
+      "profiling_level": "detailed"
+    },
+    "session_config": {
+      "session.disable_cpu_ep_fallback": "1",
+      "execution_mode": "sequential",
+      "intra_op_threads": 1,
+      "inter_op_threads": 1
+    },
+    "pass_rule": "Session creation and fixed-input inference must succeed with all optimized nodes assigned to QNN and no CPU-provider node events. Session creation failure or one retained CPU node fails the gate.",
+    "phone_forbidden_until_pass": true
+  },
+  "rewrite_policy": {
+    "allowed": "Only a bounded standard-operator rewrite directly tied to named unsupported nodes or fixed-contract control-flow lowering, with complete structural provenance and same-runtime CPU equivalence evidence.",
+    "forbidden_without_new_authorization": [
+      "quantization or calibration",
+      "checkpoint or learned-weight changes",
+      "broad model architecture changes",
+      "custom QNN operators",
+      "neural intermediate fixtures",
+      "switching to the rejected sherpa graph"
+    ],
+    "cpu_equivalence_gate": {
+      "duration_tensor": "bit exact",
+      "audio_shape": "exact",
+      "all_finite": true,
+      "minimum_waveform_cosine": 0.999,
+      "maximum_waveform_nrmse": 0.01,
+      "maximum_absolute_error_reported": true,
+      "reference": "the source controlled ONNX executed by the same host ONNX Runtime CPU build on identical fixed inputs"
+    }
+  },
+  "phone_gate": {
+    "device": {
+      "serial": "R5CW81PR8SY",
+      "model": "SM-S918B",
+      "soc": "SM8550",
+      "abi": "arm64-v8a"
+    },
+    "safety": [
+      "Acquire artifacts/locks/phone.lock and the Messenger phone reservation before ADB use.",
+      "Use /mnt/c/Users/mgottschling/AppData/Local/Android/platform-tools-pi/platform-tools/adb.exe with ADB_LIBUSB=1 and close physical lock FD 9 on every ADB invocation.",
+      "Require the authorized phone to be the sole connected device and verify exact serial/model/SoC/ABI.",
+      "Use a unique /data/local/tmp experiment-0017 staging path, pull only this experiment's outputs, inspect no personal data, remove all staged/app state, verify absence, and release both locks."
+    ],
+    "provider_proof": [
+      "QNNExecutionProvider for every neural node event and zero CPUExecutionProvider node events.",
+      "Detailed QNN profile evidence for physical RPC execution, accelerator execution time, accelerator cycles, and HVX thread count.",
+      "Provider presence, successful audio, and latency alone are insufficient."
+    ],
+    "benchmark": {
+      "fresh_process": true,
+      "session_creation_separate": true,
+      "first_generations": 1,
+      "warm_generations": 5,
+      "warm_statistic": "median and full range",
+      "threads": 1,
+      "memory": "process-lifetime VmHWM plus available process snapshots; never label it steady PSS or component-isolated memory"
+    }
+  },
+  "htp_output_gate": {
+    "structural": {
+      "token_and_style_hashes_exact": true,
+      "duration_tensor_bit_exact": true,
+      "audio_shape": [182400],
+      "all_finite": true,
+      "absolute_peak_min": 0.0001,
+      "absolute_peak_max_exclusive": 1.0,
+      "rms_min": 0.00001,
+      "clipped_float_samples_max": 0,
+      "wav_channels": 1,
+      "wav_pcm_bits": 16,
+      "wav_full_decode": true
+    },
+    "phase_tolerant_acoustic_gate": {
+      "references": ["experiment-0013 controlled eager", "experiment-0013 host ONNX Runtime CPU"],
+      "alignment": "exact sample count with no time shift, resampling, or dynamic time warping",
+      "magnitude_spectral_convergence_max": 0.35,
+      "flattened_log_magnitude_pearson_min": 0.9,
+      "log_mel_cosine_min": 0.95,
+      "mean_absolute_log_mel_db_max": 4.0,
+      "rms_envelope_pearson_min": 0.9,
+      "waveform_metrics": "descriptive only; report cosine, NRMSE, RMSE, max error, and SNR"
+    },
+    "separation": "Physical accelerator execution, provider assignment, numerical/acoustic fidelity, latency, memory, and listening observations are independent claims."
+  },
+  "stop_conditions": [
+    "Stop before phone access if fallback-disabled host execution does not pass.",
+    "Do not enable mixed fallback merely to obtain audio under a full-HTP claim.",
+    "Ask Moritz before quantization or broad architecture surgery.",
+    "Preserve experiments 0010, 0011, 0013, and 0016 unchanged; experiment 0015 must remain nonexistent."
+  ]
+}

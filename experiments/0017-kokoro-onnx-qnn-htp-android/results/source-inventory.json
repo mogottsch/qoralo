@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "status": "verified_before_phone_access",
+  "experiment_0013_source": {
+    "commit": "b6fd6e8c123cbf5170f1b1ee1367bb08eef6f5c0",
+    "repository": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "revision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+    "license": "Apache-2.0",
+    "official_model": {
+      "bytes": 327212226,
+      "sha256": "496dba118d1a58f5f3db2efc88dbdc216e0483fc89fe6e47ee1f2c53f18ad1e4"
+    },
+    "official_config": {
+      "bytes": 2351,
+      "sha256": "5abb01e2403b072bf03d04fde160443e209d7a0dad49a423be15196b9b43c17f"
+    },
+    "official_voice": {
+      "name": "af_heart",
+      "bytes": 523425,
+      "sha256": "0ab5709b8ffab19bfd849cd11d98f75b60af7733253ad0d67b12382a102cb4ff"
+    },
+    "implementation": {
+      "distribution": "kokoro",
+      "version": "0.9.4",
+      "wheel_bytes": 32592,
+      "wheel_sha256": "a129dc6364a286bd6a92c396e9862459d3d3e45f2c15596ed5a94dcee5789efd"
+    },
+    "controlled_onnx": {
+      "bytes": 332038651,
+      "sha256": "d11a0dd7c4eb768e1f0ef03090c69b6761f55e37b9f196749349591c40be232b",
+      "nodes": 4352,
+      "initializers": 445,
+      "initializer_dtype_set": [
+        "FLOAT"
+      ],
+      "quantized_operator_count": 0,
+      "random_operator_count": 0
+    },
+    "lossless_voice_f32": {
+      "bytes": 522240,
+      "sha256": "d583ccff3cdca2f7fae535cb998ac07e9fcb90f09737b9a41fa2734ec44a8f0b"
+    },
+    "frontend_record": {
+      "bytes": 2109,
+      "sha256": "680f5f1795a6427aaec31b1f20969c655fc5309dc2917fb22f9afb494bac3a4b"
+    }
+  },
+  "fixed_contract": {
+    "protocol_bytes": 7923,
+    "protocol_sha256": "faa90ac5f3cce2ae254ac4e08a8e9e6afa1d8cbee737517713e470eacc36ebf8",
+    "transcript_bytes": 116,
+    "transcript_sha256": "bec8bf482f4d816f0c95471c289a2607a7a169e33389b8b13e525214ec639461",
+    "tokens_little_endian_int64_sha256": "35ebb50fb1ba0cca3862c880cf0571c9a51623c5243a9f2307b4bb4a6dcd2078",
+    "style_little_endian_float32_sha256": "b5c2627313e7e45bbb50470307ef66730b5510ebc7e92671cf7aad0449cdf899",
+    "speed_little_endian_float32_sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c",
+    "duration_little_endian_int64_sha256": "7977e82d5304abba333a0b1caa0f0ef39b265b11205ff217c5979255cc44b80e",
+    "duration_sum": 304,
+    "audio_samples": 182400,
+    "sample_rate_hz": 24000
+  },
+  "qnn_toolchain": {
+    "qairt_qnn_version": "2.49.0.260730",
+    "docker_image": "vibevoice-experiment-0010-qairt:2.49.0.260730-ubuntu22.04",
+    "docker_image_id": "2803b0712b5b",
+    "onnxruntime_source_revision": "df2ba1cf8108aa63627cf4cdf8f807880b938616",
+    "onnxruntime_patch_sha256": "549be0692c1414ea35e97f401aaeb87ba55801480c7bd84dba0471cf25773bde",
+    "host_onnxruntime": {
+      "bytes": 30384960,
+      "sha256": "bc9df5a7df1b5d9de4d87adcaa4cc864bbde0f790e80d48e00ce0e4253a2ae11"
+    },
+    "android_onnxruntime": {
+      "bytes": 22399512,
+      "sha256": "40bc591798287525f365e8ded4bbc40e0c4e9440737e876026ec09ba359ac041"
+    },
+    "host_qnn_htp_backend": {
+      "bytes": 97556152,
+      "sha256": "e557ca522713ea7ee7efd252083b927009cd54c158899c086b23d92b63bf1f33"
+    },
+    "host_htp_prepare": {
+      "bytes": 97556152,
+      "sha256": "65850413121185944b5d6d800215c15efabfbd84d976c137859d3700cfc8e534"
+    },
+    "qualcomm_material_policy": "SDK libraries, binaries, logs, generated contexts, and profiles remain ignored local artifacts; only sizes, hashes, measurements, scripts, and conclusions are retained."
+  },
+  "fixed_derivatives": {
+    "ort_1_23_basic_optimized": {
+      "bytes": 338801698,
+      "sha256": "b4d2ebbf4118526b259692b1885bde35a6c0719fe27f514fd2f20eca2515ec89"
+    },
+    "metadata_only_profile_shaped": {
+      "bytes": 338940103,
+      "sha256": "8f13f170a5b67459e0fb325682cd1ab1f2fa4ff0d62e988222dd38a4d95fe00f",
+      "nodes": 1768,
+      "initializers": 813,
+      "cpu_metadata_equivalence": "bit-identical audio and duration"
+    },
+    "qnn_compatibility_rewrite": {
+      "bytes": 339127640,
+      "sha256": "7278ed2f0dbe8307a42904434b81116f252dd996bb6a2c064f81ad44269f21cb",
+      "nodes": 1685,
+      "initializers": 809,
+      "quantized_operator_count": 0,
+      "retained_initializer_payload_changes": 0,
+      "same_runtime_cpu_equivalence": "bit-identical audio and duration under patched ONNX Runtime 1.27.1"
+    }
+  },
+  "tools": {
+    "prepare_fixed_inputs.py": "173e6f6339fff637202581fa6ca1df99575b2d923989e0e1e3fee06b5689cf66",
+    "annotate_profile_shapes.py": "4cffa47dc0aad4e915a53c0a60caef9e1ea732e683c39c76ddf99dc1299c8a07",
+    "rewrite_qnn_compat.py": "61015649fea7b39785d0fc583e23b9cd47e3339bcc4ab081751a9b85a354eee9",
+    "summarize_host_gate.py": "93673d1be1206da597cc4af6b467b26e3bc0422d8e371e62b95ac9fb208c74e1",
+    "kokoro_ort_runner.cc": "f00713bf88f56c78787491cfd4f7d9f95352199300b01ca054682adfcb68ffef",
+    "host_runner_native_sha256": "4e43e3927d4c2024bff8d0ea007e67cb336c0affbb495396b64be648482a90f1",
+    "host_runner_ubuntu22_sha256": "06538d14e1cef405ef5447e26af4b40e582d750db14f39de32b5bc2b9a6b83e3"
+  },
+  "excluded": [
+    "the rejected sherpa disable_complex=True graph",
+    "experiment-0009 or community quantized models",
+    "quantization/calibration",
+    "custom QNN operators",
+    "neural intermediate fixtures"
+  ]
+}
