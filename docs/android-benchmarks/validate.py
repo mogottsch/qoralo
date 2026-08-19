@@ -44,6 +44,11 @@ def main():
         missing = [k for k in required if k not in e]
         if missing:
             fail(f"{e.get('id')}: missing keys {missing}")
+        limitations = e["limitations"]
+        if not isinstance(limitations, list) or any(not isinstance(item, str) or not item.strip() for item in limitations):
+            fail(f"{e['id']}: limitations must be a list of non-empty strings")
+        if len(limitations) > 1 and all(len(item) == 1 for item in limitations):
+            fail(f"{e['id']}: limitations appears to be an exploded character array")
         if not re.fullmatch(r"[0-9]{4}-[a-z0-9-]+", e["id"]):
             fail(f"{e['id']}: invalid id")
         if not re.fullmatch(r"[0-9]{4}", e["experiment"]):
