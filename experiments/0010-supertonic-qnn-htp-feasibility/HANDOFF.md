@@ -6,7 +6,7 @@ Experiment 0010 is complete. The canonical result is [`results/e2e-hybrid-cpu-ch
 
 The fixed-transcript Supertonic path ran end to end on the authorized Galaxy S23 Ultra (`SM-S918B`, `SM8550`): text preparation, duration prediction, text encoding, five recursive vector-estimator calls, vocoding, trimming, and WAV writing. The matched CPU and hybrid routes used M1/SID5, English, seed `20260813`, T239/L238, and `729746` output samples at 44.1 kHz. Duration prediction executed and reported `16.9202 s`; QNN's concrete-shape deployment retained the predeclared L238 contract rather than dynamically rebuilding graphs.
 
-**Retained decision:** keep CPU as the supported reference deployment. Preserve the hybrid as a bounded research baseline only. It is perceptually promising for the one reviewed utterance, but it is not full HTP, arbitrary-shape, numerically accepted, or production-ready.
+**Retained decision:** keep CPU as the supported technical reference deployment. Preserve the hybrid as a bounded research baseline only. Moritz reported no audible CPU/hybrid difference for one reviewed utterance, but no separate listening-quality acceptance was recorded for either sample. The hybrid is not full HTP, arbitrary-shape, numerically accepted, listening-quality accepted, or production-ready.
 
 No follow-up experiment, source export, conversion route, or full-HTP plan is approved here.
 
@@ -60,7 +60,7 @@ The final hybrid/CPU ratio is `2.512×`. These are process-lifetime peaks, not s
 
 ## Audio evidence
 
-Both outputs are valid, finite, non-silent, unclipped mono PCM16 WAVs with `729746` frames at 44.1 kHz.
+Both outputs are structurally valid, finite, non-silent, unclipped mono PCM16 WAVs with `729746` frames at 44.1 kHz. This does not establish perceptual usability.
 
 The frozen end-to-end numerical gate remains **failed and immutable**:
 
@@ -71,7 +71,7 @@ The frozen end-to-end numerical gate remains **failed and immutable**:
 - mean absolute error: `0.0302192`;
 - maximum absolute error: `0.641157`.
 
-After the run, Moritz used the randomized E2E A/B report and reported that the CPU and hybrid samples sounded exactly the same. Record this as encouraging, informal evidence from one listener and one utterance. It does not turn the waveform comparison into a numerical pass or identify an operator defect.
+After the run, Moritz used the randomized E2E A/B report and reported no audible difference between the CPU and hybrid samples. Record this as a comparison observation from one listener and one utterance, not acceptance of either sample's quality. It does not turn the waveform comparison into a numerical pass or identify an operator defect.
 
 Ignored local convenience artifacts:
 

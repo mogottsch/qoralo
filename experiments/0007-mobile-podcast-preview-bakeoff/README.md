@@ -1,6 +1,6 @@
 # Mobile podcast preview bake-off
 
-This experiment contains host listening evidence for VibeVoice Realtime 0.5B, Pocket TTS, Kokoro 82M, Supertonic 3, Inflect Nano v1, and Kitten TTS Mini 80M v0.8. It does not establish Android feasibility.
+This experiment contains host listening evidence for VibeVoice Realtime 0.5B, Pocket TTS, Kokoro 82M, Supertonic 3, Inflect Nano v1, and Kitten TTS Mini 80M v0.8. It does not establish Android feasibility. Moritz's recorded review ranked only the historical Kokoro, Pocket, and VibeVoice Realtime samples; a relative ranking is not an acceptance of any sample's usability or product quality.
 
 The completed campaign plan is retained at [`planning/campaign-plan.md`](planning/campaign-plan.md).
 
@@ -74,7 +74,7 @@ python experiments/0007-mobile-podcast-preview-bakeoff/publication/build_publica
 python -m unittest discover -s experiments/0007-mobile-podcast-preview-bakeoff/publication/tests -v
 ```
 
-The build copies ignored browser-playable WAV carriers directly to ignored `artifacts/publication-build/`, checks hashes, validates cross-file invariants, and fails if media or artifact paths are staged. Model identities are absent from initial HTML and embedded page JSON; `bakeoff-manifest.json` is fetched only after an explicit reveal action. The recorded historical order is Kokoro, Pocket, then Realtime. Supertonic, Inflect, and Kitten remain pending blind review. No conversion or Android follow-up has started.
+The build copies ignored browser-playable WAV carriers directly to ignored `artifacts/publication-build/`, checks hashes, validates cross-file invariants, and fails if media or artifact paths are staged. Model identities are absent from initial HTML and embedded page JSON; `bakeoff-manifest.json` is fetched only after an explicit reveal action. The recorded historical order is Kokoro, Pocket, then Realtime. This order states preference among those three exact host previews only; no explicit quality-acceptance verdict was recorded. Supertonic, Inflect, and Kitten were not reviewed, so their listening quality is unknown. No conversion or Android follow-up has started from this campaign.
 
 ## Tests
 

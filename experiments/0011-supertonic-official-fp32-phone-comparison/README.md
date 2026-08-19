@@ -22,7 +22,7 @@ The duration predictor still runs. Its `16.9202`-second prediction is reported, 
 
 ## Result
 
-### Step 1 — complete phone CPU: passed
+### Step 1 — complete phone CPU: technical pass
 
 All four official components ran CPU-only from text and M1 conditioning through WAV generation, with no neural intermediate substitution:
 
@@ -38,7 +38,7 @@ All four official components ran CPU-only from text and M1 conditioning through 
 | Vocoder, warm range | 1.212–1.274 s |
 | Process RSS high-water after runs | 569196 KiB |
 
-The 729746-sample output is finite and a valid mono 44.1 kHz PCM16 WAV. All four ORT profiles contain only `CPUExecutionProvider` kernel labels and zero QNN events. See [`results/step1-phone-cpu-checkpoint.json`](results/step1-phone-cpu-checkpoint.json).
+The 729746-sample output is finite and a structurally valid mono 44.1 kHz PCM16 WAV. “Structurally valid” means the format and numeric checks passed; it is not a listening-quality judgment. All four ORT profiles contain only `CPUExecutionProvider` kernel labels and zero QNN events. See [`results/step1-phone-cpu-checkpoint.json`](results/step1-phone-cpu-checkpoint.json).
 
 ### Step 2 — fail-closed full HTP: bounded incompatibility
 
@@ -61,7 +61,7 @@ The vector estimator leaves one unsupported node:
 
 Therefore a complete all-four-component HTP transcript-to-WAV run was **not attempted** in step 2. No hybrid route or CPU fallback was enabled. The three eligible physical probes used real inputs produced by a complete official FP32 host chain. See [`results/step2-fail-closed-htp-checkpoint.json`](results/step2-fail-closed-htp-checkpoint.json).
 
-### Stable Softplus phase — complete all-HTP route achieved
+### Stable Softplus phase — complete all-HTP technical route achieved
 
 The exact rejected `Softplus` was replaced by:
 
@@ -85,7 +85,7 @@ The rewritten vector then fully delegated as one QNN partition (`874/874` optimi
 
 Warm generation was `2.86×` faster on the all-HTP route. All 48 neural executions—six duration, six text, thirty recursive vector, and six vocoder—have ORT QNN-provider events plus physical RPC, accelerator-time, cycle, and 4-HVX evidence, with zero CPU-provider node events.
 
-Both 729746-sample outputs are finite, bounded, and valid mono 44.1 kHz PCM16 WAVs. The prospective numerical policy nevertheless **failed**: MAE `0.00704`, RMSE `0.02000`, and cosine `0.92668` versus the frozen `0.95` cosine minimum. This is not a listening judgment. See [`results/softplus-matched-e2e-checkpoint.json`](results/softplus-matched-e2e-checkpoint.json).
+Both 729746-sample outputs are finite, bounded, and structurally valid mono 44.1 kHz PCM16 WAVs. The prospective numerical policy nevertheless **failed**: MAE `0.00704`, RMSE `0.02000`, and cosine `0.92668` versus the frozen `0.95` cosine minimum. Moritz did not review these experiment-0011 WAVs, so listening quality is unknown; the technical execution and structural checks are not quality acceptance. See [`results/softplus-matched-e2e-checkpoint.json`](results/softplus-matched-e2e-checkpoint.json).
 
 ## Claim boundaries
 
@@ -96,6 +96,7 @@ Both 729746-sample outputs are finite, bounded, and valid mono 44.1 kHz PCM16 WA
 - The HTP-first route order, 120-second cooldowns, and thermal snapshots reduce but do not remove ordering and thermal bias. CPU latency increased across its warm runs.
 - Apart from the single audited `Softplus` expansion, no operator rewrite was performed. No quantization, calibration, QNN context optimization, ORT patch/rebuild, or experiment 0010 modification occurred.
 - Models, tensors, audio, profiles, Qualcomm binaries, serial logs, and local run directories remain ignored.
+- No Moritz listening verdict exists for the experiment-0011 CPU or HTP samples. The route is technically executed but numerically rejected, with subjective usability unknown.
 
 ## Files
 

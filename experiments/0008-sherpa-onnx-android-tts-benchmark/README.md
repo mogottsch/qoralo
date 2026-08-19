@@ -1,6 +1,6 @@
 # Experiment 0008 — sherpa-onnx Android TTS benchmark
 
-**Status: complete.** The three pinned variants were measured on the Samsung Galaxy S23 Ultra (`SM-S918B`). See the canonical [measured Android decision](results/measured-decision.md), its [machine-readable form](results/measured-decision.json), and the relocated historical [candidate decision report](results/candidate-decision-report.md). Supertonic 3 works; Pocket and Kokoro work with documented limitations.
+**Status: complete.** The three pinned variants were measured on the Samsung Galaxy S23 Ultra (`SM-S918B`). See the canonical [measured Android decision](results/measured-decision.md), its [machine-readable form](results/measured-decision.json), and the relocated historical [candidate decision report](results/candidate-decision-report.md). The machine status tokens `works` and `works_with_limitations` mean technical benchmark completion only. No Android WAV in this experiment was manually reviewed, so listening quality is unknown for all three routes.
 
 This experiment compares three pinned local Android CPU deployments in a fixed order:
 
@@ -22,13 +22,13 @@ The complete machine-readable contract is [`protocol/benchmark-protocol.json`](p
 
 The callback metric is time from synthesis start to the first non-empty audio callback, without playback. A missing callback is an observed unavailability with a reason, not a zero or estimate. Memory records boundary PSS/RSS/`VmHWM` and sampled phase peak PSS/RSS; `VmHWM` is explicitly cumulative for the process lifetime, not a per-phase peak.
 
-A successful one-thread candidate receives one separate two-thread cold-plus-three-warm campaign only when its valid one-thread warm median RTF is greater than `1.0`. Two-thread data never replaces the canonical table.
+A technically successful one-thread candidate receives one separate two-thread cold-plus-three-warm campaign only when its structurally valid one-thread warm median RTF is greater than `1.0`. Two-thread data never replaces the canonical table; neither status is a listening-quality judgment.
 
 ## Thermal and failure rules
 
 Before the campaign baseline and before every model, poll battery temperature and Android thermal status every 60 seconds. Eligibility requires status `NONE`, battery temperature at most `35.0°C`, and, after baseline establishment, no more than `1.0°C` above baseline. Wait at most 20 minutes and do not change device settings. A timeout is a recorded thermal block. Retain waits and disclose fixed-order thermal bias.
 
-Outcomes include success, partial success, blocked, timeout, native crash, OOM, invalid audio, and general failure. A failed model is finalized as evidence before continuing in fixed order. Result schemas require measured observations or explicit unavailable reasons; estimated metrics have no representation.
+Technical outcomes include success, partial success, blocked, timeout, native crash, OOM, invalid audio, and general failure. A failed model is finalized as evidence before continuing in fixed order. Result schemas require measured observations or explicit unavailable reasons; estimated metrics have no representation.
 
 ## Files
 

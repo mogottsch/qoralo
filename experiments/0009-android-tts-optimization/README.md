@@ -6,7 +6,7 @@ This experiment contains the two optimization tracks authorized after the measur
 
 ### Exact Kokoro v1.0 INT8 host quality gate
 
-[`kokoro-int8/`](kokoro-int8/) quantizes only the exact pinned `kokoro-multi-lang-v1_0` source used by experiment 0008. The selected mixed S8S8 QDQ candidate is 46.0% smaller, passed the automated host checks, and passed Moritz's finalized blind listening gate with four ties and one low-confidence preference for each variant. It has not been deployed to Android and has no measured Android speed or memory claim.
+[`kokoro-int8/`](kokoro-int8/) quantizes only the exact pinned `kokoro-multi-lang-v1_0` source used by experiment 0008. The selected mixed S8S8 QDQ candidate is 46.0% smaller, passed the automated host checks, and passed Moritz's finalized **relative INT8-vs-FP32 degradation** listening gate with four ties and one low-confidence preference for each variant. That ballot found no systematic preference between the paired variants; it did not establish that either route/sample was pleasant, usable, or product-quality accepted. The candidate has not been deployed to Android and has no measured Android speed or memory claim.
 
 Start with:
 
@@ -15,7 +15,7 @@ Start with:
 
 ### Physical Android CPU thread sweep
 
-[`thread-sweep/`](thread-sweep/) measures the exact experiment 0008 Pocket, Kokoro, and Supertonic 3 deployments at one, two, and four CPU threads on the pinned Galaxy S23 Ultra. All nine configurations succeeded; all 36 retained WAVs and nine telemetry streams passed validation.
+[`thread-sweep/`](thread-sweep/) measures the exact experiment 0008 Pocket, Kokoro, and Supertonic 3 deployments at one, two, and four CPU threads on the pinned Galaxy S23 Ultra. All nine configurations completed their technical runs; all 36 retained WAVs passed structural validation and all nine telemetry streams passed schema/integrity validation. No listening review was performed in the thread sweep, so route quality is unknown.
 
 Observed best warm-median RTFs were:
 

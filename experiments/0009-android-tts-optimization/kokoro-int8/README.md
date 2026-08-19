@@ -1,6 +1,6 @@
 # Exact Kokoro v1.0 mixed-INT8 host quality package
 
-**Gate status: `passed_user_listening`.** Automated host checks passed, and Moritz finalized all six blind votes: four ties, one INT8 preference, and one FP32 preference. Both directional votes had confidence 2/5. The ballot detected no systematic INT8 degradation, so the candidate may proceed to a later Android benchmark; this is not a claim of perceptual equivalence or INT8 superiority.
+**Gate status: `passed_user_listening` for relative INT8-vs-FP32 degradation.** Automated host checks passed, and Moritz finalized all six blind votes: four ties, one INT8 preference, and one FP32 preference. Both directional votes had confidence 2/5. The ballot detected no systematic INT8 degradation, so the candidate may proceed to a later Android benchmark. The retained machine status does not claim perceptual equivalence, INT8 superiority, or absolute usability/quality acceptance for either variant.
 
 This subtree is deliberately host-only. It contains no phone benchmark, Android RTF/PSS result, proprietary accelerator flow, or change to experiment 0008's measured decision.
 
@@ -21,7 +21,7 @@ This subtree is deliberately host-only. It contains no phone benchmark, Android 
 
 This is mixed precision, not a claim that every model weight or operator is INT8. Excluded generator operators and weights remain FP32, but they can consume activations affected by upstream quantization. `reports/quantization-report.json` contains the effective graph audit. `reports/reproduction-rebuild.json` and the retained rebuild model independently match the selected candidate bit-for-bit.
 
-The checker diagnostic is not hidden or attributed to the source: `reports/checker-limitation.json` proves the source passes and the candidate fails structural checking. Both pinned host runtimes nevertheless construct sessions and synthesize valid audio. This package therefore treats executable CPU inference as the host compatibility gate and carries the checker result as a deployment limitation. Any later deployment must reassess deterministic structural normalization rather than assuming the diagnostic is harmless on a new runtime.
+The checker diagnostic is not hidden or attributed to the source: `reports/checker-limitation.json` proves the source passes and the candidate fails structural checking. Both pinned host runtimes nevertheless construct sessions and synthesize structurally valid audio. This package therefore treats executable CPU inference as the host compatibility gate and carries the checker result as a deployment limitation. Any later deployment must reassess deterministic structural normalization rather than assuming the diagnostic is harmless on a new runtime.
 
 ## Why this recipe
 
@@ -37,7 +37,7 @@ The model contains unseeded random operators. The ONNX candidate is deterministi
 ## Current evidence
 
 - Six FP32/INT8 pairs used the same sherpa-onnx frontend, exact source assets, corpus order, SID 3, speed 1.0, CPU provider, and one host thread. Each corpus entry was passed whole; no text splitting was used.
-- All 12 WAVs fully decode as 24 kHz mono PCM16, are finite and non-silent, and have no PCM clipping.
+- All 12 WAVs are structurally valid: they fully decode as 24 kHz mono PCM16, are finite and non-silent, and have no PCM clipping. This does not by itself establish usable speech.
 - All six pairs passed the documented duration, voiced-fraction, pitch, spectral-centroid, and normalized band-power supporting screens.
 - Pinned Whisper small produced corpus WER 0.031 for FP32 and 0.031 for INT8; normalized hypothesis-to-hypothesis WER was 0.000. ASR is only an intelligibility signal.
 - No calibrated, voice-specific speaker verifier was available. No uncalibrated speaker-similarity number was invented.
@@ -88,4 +88,4 @@ The exact downloaded ballot is retained at `reports/user-listening-ballot.csv`; 
 - INT8 preferred: 1/6, confidence 2/5
 - FP32 preferred: 1/6, confidence 2/5
 
-The host quality gate passes because the finalized ballot found no systematic INT8 degradation. Android deployment and device RTF/PSS remain unmeasured and are the next candidate-specific step.
+The relative degradation gate passes because the finalized ballot found no systematic INT8 degradation. It did not ask whether either exact variant was usable in absolute terms. Android deployment and device RTF/PSS remain unmeasured and are the next candidate-specific step.

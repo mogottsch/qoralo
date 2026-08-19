@@ -4,7 +4,7 @@
 
 Prepare a component-level Android feasibility recommendation for the pinned Realtime model **without converting anything**. The machine-readable result is [`feasibility-inventory.json`](feasibility-inventory.json), governed by [`feasibility-inventory.schema.json`](feasibility-inventory.schema.json).
 
-**Status: recommendations only; no conversion has begun.** Host generation is not mobile evidence. The candidate remains conditional on the user's listening review (`pending_user_review`). If its sound is not acceptable, none of the runtime work below is justified.
+**Status: recommendations only; no conversion began.** Host generation is not mobile evidence. The committed inventory retains its historical `pending_user_review` field. Moritz later ranked the exact VibeVoice Realtime host preview third behind Kokoro and Pocket in experiment 0007, but did not explicitly accept or reject its usability. Therefore the route is not listening-approved, and no conversion is justified from this record.
 
 This inventory is revalidated against the accepted **protocol-v2** host record (protocol fingerprint `ca0987…45814`, raw SHA-256 `0daa06…28c1`). The checker fails closed if that dependency's status, fingerprint, five diffusion steps, raw hash, or 3,200-sample native chunks drift. This linkage establishes which preview informed the recommendations; it does not turn host evidence into Android or subjective-quality evidence.
 
@@ -63,7 +63,7 @@ Any Qualcomm SDK/EULA, account, click-through, redistributed binary, proprietary
 
 ## Conditional conclusion
 
-FP16 active-weight arithmetic is under the provisional 2 GB package ceiling, and quantized storage could be materially smaller. That is encouraging but insufficient: Android peak PSS, coverage, transfers, numerical error, first audio, steady latency, thermal behavior, and subjective quality are all unknown. The next action is to stop for listening review. Only an approved candidate proceeds to fixture capture, and only then to an approved narrow accelerator probe.
+FP16 active-weight arithmetic is under the provisional 2 GB package ceiling, and quantized storage could be materially smaller. That technical estimate is insufficient: Android peak PSS, coverage, transfers, numerical error, first audio, steady latency, thermal behavior, and route usability are all unknown. The later three-way ranking did not supply explicit quality acceptance. Only an explicitly approved candidate would proceed to fixture capture and then to an approved narrow accelerator probe.
 
 ## Validation
 
@@ -82,7 +82,7 @@ All model claims refer to immutable revisions:
 - [Pinned streaming component construction](https://github.com/microsoft/VibeVoice/blob/94da20d98b2fa7688e9cbfaf7692ddb4954f7600/vibevoice/modular/modeling_vibevoice_streaming.py)
 - [Pinned inference/cache orchestration](https://github.com/microsoft/VibeVoice/blob/94da20d98b2fa7688e9cbfaf7692ddb4954f7600/vibevoice/modular/modeling_vibevoice_streaming_inference.py)
 - [Pinned acoustic tokenizer/cache implementation](https://github.com/microsoft/VibeVoice/blob/94da20d98b2fa7688e9cbfaf7692ddb4954f7600/vibevoice/modular/modular_vibevoice_tokenizer.py)
-- [Accepted host-preview record](../0007-mobile-podcast-preview-bakeoff/results/realtime-preview.json) (5 steps, 3,200-sample chunks, host-only metrics, pending listening)
+- [Protocol-v2 host-preview record](../0007-mobile-podcast-preview-bakeoff/results/realtime-preview.json) (5 steps, 3,200-sample chunks, host-only metrics; later ranked third among three, with no explicit usability acceptance)
 - [Qualcomm AI Engine Direct / QNN](https://www.qualcomm.com/developer/software/qualcomm-ai-engine-direct-sdk)
 - [LiteRT](https://ai.google.dev/edge/litert) and [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM)
 - [ONNX Runtime Mobile](https://onnxruntime.ai/docs/tutorials/mobile/) and [QNN Execution Provider](https://onnxruntime.ai/docs/execution-providers/QNN-ExecutionProvider.html)

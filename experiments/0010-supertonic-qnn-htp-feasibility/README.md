@@ -2,9 +2,9 @@
 
 ## Status
 
-**Complete with a bounded hybrid result.** See the detailed [`PLAN.md`](PLAN.md) ([HTML mirror](PLAN.html)), final [`HANDOFF.md`](HANDOFF.md), and canonical [`results/e2e-hybrid-cpu-checkpoint.json`](results/e2e-hybrid-cpu-checkpoint.json). The fixed-transcript Android path ran all four Supertonic components and produced complete CPU and hybrid WAVs. Hybrid warm generation was 37.215% lower latency, and Moritz later reported that the randomized CPU/hybrid samples sounded exactly the same. The prospective waveform gate nevertheless remains failed and immutable.
+**Complete with a bounded hybrid result.** See the detailed [`PLAN.md`](PLAN.md) ([HTML mirror](PLAN.html)), final [`HANDOFF.md`](HANDOFF.md), and canonical [`results/e2e-hybrid-cpu-checkpoint.json`](results/e2e-hybrid-cpu-checkpoint.json). The fixed-transcript Android path ran all four Supertonic components and produced complete CPU and hybrid WAVs. Hybrid warm generation was 37.215% lower latency, and Moritz later reported no audible difference between the randomized CPU/hybrid samples. That is a comparison observation only: it does not say either sample was acceptable, pleasant, or usable. The prospective waveform gate remains failed and immutable.
 
-The result is explicitly limited: duration and text encoding remained on CPU; each vector-estimator call used 21 QNN/HTP partitions plus 136 CPU nodes; only the explicit-GELU vocoder was fully delegated with fallback disabled. The route is fixed to T239/L238, has very high startup and memory costs, and is neither full HTP nor numerically accepted. CPU remains the supported reference; hybrid is retained as a bounded research baseline rather than a production integration. Earlier checkpoints remain historical evidence.
+The result is explicitly limited: duration and text encoding remained on CPU; each vector-estimator call used 21 QNN/HTP partitions plus 136 CPU nodes; only the explicit-GELU vocoder was fully delegated with fallback disabled. The route is fixed to T239/L238, has very high startup and memory costs, and is neither full HTP nor numerically accepted. CPU remains the supported technical reference; hybrid is retained as a bounded research baseline rather than a production integration. Earlier checkpoints remain historical evidence.
 
 Moritz supplied an already-installed QAIRT/QNN `2.22.6.240515` SDK and explicitly authorized its use for this experiment on 2026-08-13. A local QAIRT `2.49.0.260730` installation was subsequently used for the recorded host probes and Android runtime build because it matches current ONNX Runtime QNN interfaces more closely. No Qualcomm SDK content is committed, and the checkpoint pins the observed local license/runtime hashes without reproducing their contents. Any acquisition that presents new or changed terms, login, export attestation, or other consent must stop for Moritz rather than accepting automatically. Qualcomm materials and generated artifacts remain local-only.
 
@@ -23,7 +23,7 @@ The source of truth remains experiment 0008:
 - voice/language: proven SID 5 / M1, English;
 - frozen transcript SHA-256: `350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f`;
 - CPU baseline: load `0.765107603` s, cold RTF `0.3854677480612432`, one-thread warm median RTF `0.3703028479158501`, sampled peak PSS `463003648` bytes;
-- baseline limitation: all four WAVs were valid, but manual listening was not performed and generation was nondeterministic across runs.
+- baseline limitation: all four WAVs were structurally valid, but manual listening was not performed and generation was nondeterministic across runs; subjective quality was unknown.
 
 Canonical evidence:
 
@@ -73,7 +73,7 @@ The existing experiment 0008 AAR is not a QNN artifact. Its arm64 ONNX Runtime l
 
 A six-node QDQ-add control first proved physical SM8550 HTP execution with fallback disabled. The fixed released vocoder then exposed an ONNX Runtime 1.27.1 null dereference in `PadNodeGroupSelector::Check`; Microsoft fixed the same defect upstream in commit `a08e17aab393a922d619736a4150cfe43bc7f8ec`. The experiment retains the minimal backport at [`patches/onnxruntime-a08e17-pad-empty-dq.patch`](patches/onnxruntime-a08e17-pad-empty-dq.patch).
 
-The exact fixed vocoder still had eight `Erf` and eight weight-only `DequantizeLinear` blockers. Folding only the constant DQ tails and replacing eight verified standard GELU decompositions with explicit `com.microsoft.Gelu` produced a provenance-locked derivative that was bit-identical on CPU and fully assigned to one QNN partition. Physical HTP execution then succeeded, but the frozen vocoder numerical policy failed. A later informal A/B for that isolated vocoder sounded identical to Moritz; the numerical rejection was not changed.
+The exact fixed vocoder still had eight `Erf` and eight weight-only `DequantizeLinear` blockers. Folding only the constant DQ tails and replacing eight verified standard GELU decompositions with explicit `com.microsoft.Gelu` produced a provenance-locked derivative that was bit-identical on CPU and fully assigned to one QNN partition. Physical HTP execution then succeeded, but the frozen vocoder numerical policy failed. In a later informal A/B, Moritz reported no audible difference between the isolated CPU and HTP vocoder samples; no separate standalone-quality acceptance was recorded, and the numerical rejection was not changed.
 
 ### Vector estimator
 
@@ -107,7 +107,7 @@ Hybrid startup is dominated by vector QNN session creation (`21.9854 s`) and voc
 
 `ru_maxrss` is a process-lifetime high-water mark, not steady live PSS or complete DSP-private memory. The hybrid retains CPU graph/fallback state while adding QNN prepared/compiled representations, metadata, shared buffers, profiling state, and transient setup allocations.
 
-Both WAVs are valid, finite, non-silent, unclipped mono PCM16. The prospectively frozen waveform gate nevertheless failed: cosine `0.405431`, SNR `-0.592623 dB`, normalized RMSE `1.07061`, RMSE `0.0593432`, mean absolute error `0.0302192`, and max error `0.641157`. Moritz subsequently reported that the randomized CPU and hybrid samples sounded exactly the same. That one-listener/one-utterance observation is encouraging but does not override numerical rejection.
+Both WAVs are structurally valid, finite, non-silent, unclipped mono PCM16. The prospectively frozen waveform gate nevertheless failed: cosine `0.405431`, SNR `-0.592623 dB`, normalized RMSE `1.07061`, RMSE `0.0593432`, mean absolute error `0.0302192`, and max error `0.641157`. Moritz subsequently reported no audible difference between the randomized CPU and hybrid samples. That one-listener/one-utterance comparison does not override numerical rejection and is not acceptance of either sample's listening quality.
 
 The canonical machine-readable result is [`results/e2e-hybrid-cpu-checkpoint.json`](results/e2e-hybrid-cpu-checkpoint.json). WAVs, profiles, latency arrays, and the convenience listening report remain ignored local evidence under `work/e2e/`.
 
@@ -188,9 +188,9 @@ The experiment-level positive outcome requires a complete Android synthesis with
 
 ## Final decision
 
-Experiment 0010 is complete. It demonstrated a working and perceptually promising fixed-transcript hybrid with 37.215% lower warm generation latency, but not full HTP, not arbitrary-shape support, not numerical acceptance, and not a production-ready startup/memory profile.
+Experiment 0010 is complete. It demonstrated a technically complete fixed-transcript hybrid with 37.215% lower warm generation latency and a one-utterance report of no audible CPU/hybrid difference, but not full HTP, arbitrary-shape support, numerical acceptance, listening-quality acceptance, or a production-ready startup/memory profile.
 
-**Retained deployment decision:** keep Supertonic CPU as the supported reference. Preserve this hybrid only as a bounded research baseline; do not claim production adoption or full-HTP success. A source-model-first or full-HTP follow-up is only under discussion with Moritz. No export route or subsequent experiment is approved by this document.
+**Retained deployment decision:** keep Supertonic CPU as the supported technical reference. Preserve this hybrid only as a bounded research baseline; do not claim production adoption, listening-quality acceptance, or full-HTP success. A source-model-first or full-HTP follow-up is only under discussion with Moritz. No export route or subsequent experiment is approved by this document.
 
 ## Public documentation consulted during planning
 

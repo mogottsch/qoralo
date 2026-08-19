@@ -2,7 +2,7 @@
 
 ## Clear outcome
 
-**The hybrid route completed text-to-WAV and physically used HTP, but it was not good.**
+**The hybrid route completed text-to-WAV and physically used HTP, but it failed the acceleration and equivalence objectives. No positive or negative listening verdict was recorded for the hybrid sample.**
 
 The primary warm result was:
 
@@ -10,7 +10,7 @@ The primary warm result was:
 
 The CPU-only baseline was `0.630`. Therefore, normalized by generated audio duration, the hybrid route was **59.1% slower** than CPU-only and ran approximately at real-time speed.
 
-More importantly, hybrid execution changed the model's EOS decision. It generated only `3.84 s` of audio instead of the CPU baseline's `6.24 s`. The hybrid output is valid audio, but it is **not numerically or behaviorally equivalent** to the CPU output.
+More importantly, hybrid execution changed the model's EOS decision. It generated only `3.84 s` of audio instead of the CPU baseline's `6.24 s`. The hybrid output is structurally valid audio (decodable, finite, non-silent, and unclipped), but it is **not numerically or behaviorally equivalent** to the CPU output. Structural validity is not a claim of usable speech.
 
 This is a mixed route, not full HTP.
 
@@ -94,7 +94,7 @@ Comparing the shared 92,160-sample prefix:
 - mean absolute error: `0.00604` in normalized PCM units
 - maximum absolute error: `0.16129`
 
-This output does **not** pass as equivalent to CPU-only. It can be listened to as an experimental hybrid sample, not as a faithful acceleration result.
+This output does **not** pass as equivalent to CPU-only. It is retained as an experimental hybrid sample, not as a faithful acceleration result. Moritz did not review this hybrid sample, so its listening quality remains unknown. Experiment 0012's “takakakakakakakaka” rejection is specific to the different CPU sample SHA `406349…7d22` and is not inferred for this hybrid WAV.
 
 ## Implementation boundary
 
@@ -111,6 +111,6 @@ Enabling CPU fallback made the current graphs runnable with QNN, but it did not 
 3. Warm RTF regressed from `0.630` to `1.003`.
 4. Numerical differences changed EOS and materially changed the waveform.
 
-The current hybrid route should not replace the CPU deployment. A QNN-oriented, equivalence-gated export such as experiment 0015 is the technically appropriate path toward useful HTP execution.
+The current hybrid route should not replace the CPU technical baseline. A separately authorized QNN-oriented, equivalence-gated export would be the appropriate technical direction; this result does not create or approve such a follow-up. Experiment 0015 does not exist and must not be cited as a route.
 
 Machine-readable result: [`results/hybrid-phone.json`](results/hybrid-phone.json).

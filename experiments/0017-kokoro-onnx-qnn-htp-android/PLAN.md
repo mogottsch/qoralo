@@ -17,7 +17,7 @@ The frozen machine-readable contract is [`protocol.json`](protocol.json). Experi
 3. **Bounded compatibility work, only if needed** — identify exact unsupported nodes. A standard-operator rewrite may target only those nodes or fixed-contract control flow, must retain learned tensors, and must first pass the prospective same-runtime CPU equivalence gate. Quantization, calibration, custom QNN operators, and broad architecture surgery require a new decision from Moritz.
 4. **Full host gate** — session creation and fixed-input inference must succeed with all optimized nodes on QNN and no CPU-provider node events. Otherwise stop before phone access.
 5. **Phone run, only if host-eligible** — acquire both phone locks; verify serial/model/SoC/ABI; stage to a unique experiment directory; run one first and five warm generations; retain ORT provider and detailed QNN physical RPC/accelerator/cycle/HVX evidence; collect timing, process high-water memory, output tensors, and WAV.
-6. **Fidelity and cleanup** — check exact duration/shape, valid audio, the predeclared phase-tolerant acoustic policy against both 0013 references, and descriptive waveform metrics. Remove every staged/app artifact, verify absence, and release both locks.
+6. **Fidelity and cleanup** — check exact duration/shape, structurally valid audio, the predeclared phase-tolerant acoustic policy against both 0013 references, and descriptive waveform metrics. Remove every staged/app artifact, verify absence, and release both locks.
 
 ## Claim discipline
 

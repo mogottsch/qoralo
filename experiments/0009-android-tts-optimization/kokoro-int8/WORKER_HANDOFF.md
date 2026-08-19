@@ -2,7 +2,7 @@
 
 ## Status
 
-**Package complete; quality gate: `passed_user_listening`.** Automated host checks passed. Moritz's finalized ballot contained four ties, one low-confidence INT8 preference, and one low-confidence FP32 preference, detecting no systematic INT8 degradation. No strict subjective-equivalence or Android-performance conclusion is claimed.
+**Package complete; relative degradation gate: `passed_user_listening`.** Automated host checks passed. Moritz's finalized ballot contained four ties, one low-confidence INT8 preference, and one low-confidence FP32 preference, detecting no systematic INT8 degradation. The machine status name is retained, but it does not mean either variant received absolute usability or product-quality acceptance. No strict subjective-equivalence or Android-performance conclusion is claimed.
 
 ## Completed
 
@@ -45,4 +45,4 @@
 
 ## Final user listening result
 
-The exact ballot is retained at `reports/user-listening-ballot.csv`, and the validated post-reveal interpretation is at `reports/user-listening-verdict.json`. Counts were four ties, one INT8 preference, and one FP32 preference; both directional votes had confidence 2/5. The selected candidate is eligible for a later Android performance benchmark.
+The exact ballot is retained at `reports/user-listening-ballot.csv`, and the validated post-reveal interpretation is at `reports/user-listening-verdict.json`. Counts were four ties, one INT8 preference, and one FP32 preference; both directional votes had confidence 2/5. The selected candidate is eligible for a later Android performance benchmark because no systematic relative degradation was detected. The ballot did not ask or establish whether either exact route/sample was usable in absolute terms.

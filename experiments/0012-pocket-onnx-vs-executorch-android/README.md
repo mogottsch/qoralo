@@ -1,6 +1,6 @@
 # 0012 — Pocket TTS: FP ONNX Runtime vs ExecuTorch on Android CPU
 
-> **Working result:** FP ONNX succeeded on Android CPU with a warm median **RTF of 0.630**. See [`RESULTS.md`](RESULTS.md) for the concise result and latency table.
+> **Technical execution result:** FP ONNX completed the fixed Android CPU contract with a warm median **RTF of 0.630**. This says nothing by itself about listening quality. See [`RESULTS.md`](RESULTS.md) for the route-level listening rejection and latency table.
 
 ## Purpose
 
@@ -37,15 +37,19 @@ Phone work must hold `artifacts/locks/phone.lock`, close the lock FD in ADB chil
 
 ## Claim boundary
 
-Success requires complete text → tokenizer/conditioning → recurrent autoregressive and flow loop → Mimi decode → WAV on Android CPU. Neural intermediate fixtures do not count. A derived ONNX or `.pte` file is not called “the original model.” No result from this experiment proves HTP/QNN compatibility or performance.
+Technical success requires complete text → tokenizer/conditioning → recurrent autoregressive and flow loop → Mimi decode → WAV on Android CPU. Neural intermediate fixtures do not count. A derived ONNX or `.pte` file is not called “the original model.” No result from this experiment proves HTP/QNN compatibility or performance.
 
 ## Outcome
 
-- **FP ONNX Runtime: succeeded on Android CPU.** Five unquantized FP component graphs were exported from the exact checkpoint. Component tests passed; a deterministic temperature-zero fidelity isolation against the exact source produced equal-length audio with correlation `0.9999999229` and SNR `68.119 dB`. The production phone run retained temperature `0.3`, seed `0`, and one flow step.
+- **FP ONNX Runtime: completed the Android CPU technical contract.** Five unquantized FP component graphs were exported from the exact checkpoint. Component tests passed; a deterministic temperature-zero fidelity isolation against the exact source produced equal-length audio with correlation `0.9999999229` and SNR `68.119 dB`. The production phone run retained temperature `0.3`, seed `0`, and one flow step. These are execution and numerical-comparison results, not a positive listening verdict.
 - **ExecuTorch: blocked before Android.** The text conditioner and stateless flow step reached `.pte`, but strict current `torch.export` failed for both the recurrent FlowLM main graph and Mimi decoder on a data-dependent `Eq(u9, 0)` guard inside stateful scaled-dot-product attention. Both are essential. Replacing their attention/cache implementation would exceed a narrow decomposition and requires a separate equivalence campaign.
 
-On the S23 Ultra, FP ONNX loaded in `1.079 s`; the first complete generation took `5.697 s` for `6.24 s` audio (`RTF 0.913`). Five warm generations had median `3.933 s` (range `3.917–4.095`) and median RTF `0.630` (range `0.628–0.656`). Cumulative process `VmHWM` reached `1,586,080 kB`. All six outputs were byte-identical, valid 24 kHz mono PCM16, finite, non-silent, and unclipped.
+On the S23 Ultra, FP ONNX loaded in `1.079 s`; the first complete generation took `5.697 s` for `6.24 s` audio (`RTF 0.913`). Five warm generations had median `3.933 s` (range `3.917–4.095`) and median RTF `0.630` (range `0.628–0.656`). Cumulative process `VmHWM` reached `1,586,080 kB`. All six outputs were byte-identical and structurally valid 24 kHz mono PCM16: finite, non-silent, and unclipped. Structural validity does not imply usable speech.
 
 Representative WAV (ignored): `work/pocket-fp-onnx-android-cpu.wav`, SHA-256 `40634981606f37c59a91c14d99cecb3ef4cc21b1391882e870940b0716857d22`.
+
+## Listening verdict for this exact route
+
+Moritz blind-listened to that exact retained FP ONNX CPU sample and **rejected it as unusable**, describing repetitive “takakakakakakakaka.” This is a route-and-sample-specific rejection of SHA-256 `40634981606f37c59a91c14d99cecb3ef4cc21b1391882e870940b0716857d22`. It does not reject Pocket TTS as a model family, other Pocket checkpoints or voices, or a future corrected export. It does mean this exact experiment-0012 deployment must not be described as quality-accepted merely because it completed, ran faster than real time, passed component comparisons, or produced a structurally valid WAV.
 
 See `provenance/source-and-export.json`, `provenance/executorch-screen.json`, and `results/comparison.json` for provenance and limitations.

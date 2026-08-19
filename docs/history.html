@@ -46,16 +46,26 @@ tr:last-child td { border-bottom:0; }
 <div class="shell">
 <nav aria-label="Document sections"><strong>Sections</strong><a class="toc-level-1" href="#project-history">Project history</a>
 <a class="toc-level-2" href="#goal-and-direction">Goal and direction</a>
+<a class="toc-level-2" href="#how-result-language-is-interpreted">How result language is interpreted</a>
 <a class="toc-level-2" href="#experiment-record">Experiment record</a>
 <a class="toc-level-2" href="#decisions-carried-forward">Decisions carried forward</a></nav>
 <main>
-<div class="mirror-note"><strong>Visual mirror of <code>docs/history.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-17</span><span>source sha256: b1660c40e52343ee…</span></div></div>
+<div class="mirror-note"><strong>Visual mirror of <code>docs/history.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-18</span><span>source sha256: c36c9ccf4e29f931…</span></div></div>
 <article><h1 id="project-history">Project history<a class="anchor" href="#project-history" aria-label="Link to this section">#</a></h1>
 <h2 id="goal-and-direction">Goal and direction<a class="anchor" href="#goal-and-direction" aria-label="Link to this section">#</a></h2>
 <p>The project started by asking whether Microsoft&#x27;s VibeVoice could generate a local two-speaker podcast on a modern Android phone. The goal later widened to finding any practical local TTS model that sounds pleasant and natural enough for a future NotebookLM-like listening experience.</p>
 <p>Two-speaker generation remains desirable, but it is no longer mandatory. A strong narrator or persistent voices generated turn by turn can also meet the goal. Model quality, sustained listening, and practical Android deployment matter more than preserving the original VibeVoice architecture.</p>
+<h2 id="how-result-language-is-interpreted">How result language is interpreted<a class="anchor" href="#how-result-language-is-interpreted" aria-label="Link to this section">#</a></h2>
+<p>Completed experiments preserve distinct evidence classes:</p>
+<ul>
+<li><strong>technical execution</strong> means the declared path ran under its runtime/provider contract;</li>
+<li><strong>structurally valid audio</strong> means the WAV/container and numeric format/silence/clipping checks passed;</li>
+<li><strong>objective/descriptive comparison</strong> refers only to its named numerical or acoustic policy;</li>
+<li><strong>listening acceptance or rejection</strong> exists only when Moritz explicitly reviewed the exact route/sample.</li>
+</ul>
+<p>These classes do not imply one another. In particular, “no audible difference” is a comparison between two samples, not acceptance of either sample&#x27;s quality. An unreviewed route is <strong>not reviewed / unknown</strong>, and a route-specific rejection is not generalized to a model family. Frozen machine records keep their original status tokens and metrics; the narrative below explains their scope.</p>
 <h2 id="experiment-record">Experiment record<a class="anchor" href="#experiment-record" aria-label="Link to this section">#</a></h2>
-<p>Each summary links to the experiment that holds the detailed commands, measurements, artifacts, and limitations.</p>
+<p>Each summary links to the experiment that holds the detailed commands, measurements, artifacts, and limitations. Active experiments are intentionally not represented as completed outcomes.</p>
 <div class="table-wrap"><table><thead><tr>
 <th>Experiment</th>
 <th>Question at the time</th>
@@ -64,52 +74,82 @@ tr:last-child td { border-bottom:0; }
 <tr>
 <td><a href="../experiments/0001-vibevoice-1.5b-local-reference/"><code>0001: VibeVoice 1.5B host reference</code></a></td>
 <td>Can we create a fixed reference before attempting Android conversion?</td>
-<td>Produced the reproducible host reference and the evidence protocol used by the first Android campaign. This established the rule that conversion results must be compared with locked inputs and outputs.</td>
+<td>Produced the reproducible host CPU reference and evidence protocol. Human listening remained pending, so this was a technical reference rather than quality acceptance.</td>
 </tr>
 <tr>
 <td><a href="../experiments/0002-vibevoice-1.5b-executorch-android/"><code>0002: VibeVoice 1.5B ExecuTorch</code></a></td>
 <td>Can the model run component by component and then end to end through ExecuTorch on Android?</td>
-<td>Individual components ran, but the complete fixed-shape path stopped after two near-silent chunks, covered only 2.04% of the reference, ran very slowly, and required about 9.1 GB. Later analysis showed that the quiet prefix closely matched the expected reference prefix, but it did not fix the capacity limit. The deployment was rejected.</td>
+<td>Individual components ran, but the complete fixed-shape path stopped after two near-silent chunks, covered only 2.04% of the reference, ran very slowly, and required about 9.1 GB. Later analysis showed that the quiet prefix closely matched the expected reference prefix, but it did not fix the capacity limit. The deployment was rejected by its technical/audio rubric; no positive listening acceptance was recorded.</td>
 </tr>
 <tr>
 <td><a href="../experiments/0003-vibevoice-1.5b-litert-android/"><code>0003: VibeVoice LiteRT</code></a></td>
 <td>Should the failed VibeVoice deployment be repeated with LiteRT?</td>
-<td>Deferred. A second full conversion was not justified while the model itself had not passed the practical deployment gate.</td>
+<td>Deferred. A second full conversion was not justified while the model itself had not passed the practical deployment gate. No route or listening result exists.</td>
 </tr>
 <tr>
 <td><a href="../experiments/0004-vibevoice-1.5b-onnx-android/"><code>0004: VibeVoice ONNX Runtime</code></a></td>
 <td>Should the same VibeVoice path be attempted with ONNX Runtime Mobile?</td>
-<td>Deferred for the same reason.</td>
+<td>Deferred for the same reason. No route or listening result exists.</td>
 </tr>
 <tr>
 <td><a href="../experiments/0005-vibevoice-1.5b-qnn-android/"><code>0005: VibeVoice direct QNN</code></a></td>
 <td>Should direct Qualcomm acceleration be attempted for VibeVoice 1.5B?</td>
-<td>Deferred. Hardware-specific optimization was not justified before selecting a model that already produced acceptable output through a general runtime.</td>
+<td>Deferred. Hardware-specific optimization was not justified before a correct portable route. No HTP audio or listening result exists.</td>
 </tr>
 <tr>
 <td><a href="../experiments/0006-vibevoice-realtime-0.5b-android/"><code>0006: VibeVoice Realtime 0.5B</code></a></td>
 <td>Is the smaller VibeVoice model a more practical comparison?</td>
-<td>Recorded feasibility notes and storage estimates, but produced no Android deployment result. This helped motivate a wider candidate search instead of remaining VibeVoice-only.</td>
+<td>Recorded feasibility notes and storage estimates but produced no Android deployment. Moritz later ranked its exact host preview third behind Kokoro and Pocket in experiment 0007; that ranking did not explicitly accept or reject usability.</td>
 </tr>
 <tr>
 <td><a href="../experiments/0007-mobile-podcast-preview-bakeoff/"><code>0007: Host listening bake-off</code></a></td>
 <td>Which smaller models sound promising enough to justify phone work?</td>
-<td>Created a six-model, natural-duration host listening comparison. The campaign moved model choice ahead of more conversion work and narrowed the candidates for physical Android measurement. Host listening remained separate from Android feasibility.</td>
+<td>Moritz ranked the exact historical host previews Kokoro first, Pocket second, and VibeVoice Realtime third. This was a relative order among those three, not acceptance of any sample. Supertonic, Inflect, and Kitten were not reviewed; their listening quality is unknown.</td>
 </tr>
 <tr>
 <td><a href="../experiments/0008-sherpa-onnx-android-tts-benchmark/"><code>0008: Android TTS benchmark</code></a></td>
 <td>How do Pocket, Kokoro, and Supertonic perform as pinned Android CPU deployments?</td>
-<td>All three generated valid audio on the Galaxy S23 Ultra. Supertonic 3 became the measured technical default with a one-thread warm median RTF of <code>0.370</code>. Pocket and Kokoro worked with documented limitations. This replaced VibeVoice as the active deployment direction.</td>
+<td>All three completed their technical generation contracts and produced structurally valid WAVs. Supertonic 3 became the measured technical default with one-thread warm median RTF <code>0.370</code>. No Android WAV was manually reviewed, so the experiment established no listening-quality winner.</td>
 </tr>
 <tr>
 <td><a href="../experiments/0009-android-tts-optimization/"><code>0009: Android TTS optimization</code></a></td>
 <td>Can model size or CPU threading materially improve the selected candidates?</td>
-<td>The exact Kokoro mixed-INT8 candidate was 46.0% smaller and passed the user listening gate. All nine thread configurations ran successfully. Kokoro&#x27;s four-thread improvement was materially directional; Pocket and Supertonic changes below 10% remained inconclusive. Supertonic stayed the technical default.</td>
+<td>The exact Kokoro mixed-INT8 candidate was 46.0% smaller. Its blind <strong>relative degradation</strong> gate yielded four ties, one low-confidence INT8 preference, and one low-confidence FP32 preference: no systematic degradation, but no absolute usability acceptance. All nine thread configurations completed; the sweep performed no listening review.</td>
 </tr>
 <tr>
 <td><a href="../experiments/0010-supertonic-qnn-htp-feasibility/"><code>0010: Supertonic QNN/HTP feasibility</code></a></td>
 <td>Can the dominant Supertonic components run on the SM8550 HTP without hidden CPU fallback, and is acceleration worth its cost?</td>
-<td>Completed a fixed-transcript CPU/hybrid Android comparison. Hybrid used mixed QNN+CPU vector execution and a fully delegated vocoder, reducing warm generation from <code>6.067</code> to <code>3.809</code> s (<code>37.2%</code>) with physical accelerator proof. Session creation rose from <code>0.611</code> to <code>26.965</code> s and peak <code>ru_maxrss</code> from <code>459432</code> to <code>1154172</code> KiB. The prospective waveform gate failed, although Moritz reported the randomized samples sounded exactly the same. CPU remains the supported reference; hybrid is a bounded research baseline, not full HTP or production adoption.</td>
+<td>Completed a fixed-transcript CPU/hybrid Android comparison. Hybrid used mixed QNN+CPU vector execution and a fully delegated vocoder, reducing warm generation from <code>6.067</code> to <code>3.809</code> s (<code>37.2%</code>) with physical accelerator proof. Session creation rose from <code>0.611</code> to <code>26.965</code> s and peak <code>ru_maxrss</code> from <code>459432</code> to <code>1154172</code> KiB. The prospective waveform gate failed. Moritz reported no audible CPU/hybrid difference for one randomized comparison, but no separate quality acceptance was recorded for either sample. CPU remains the technical reference; hybrid is a bounded research baseline.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0011-supertonic-official-fp32-phone-comparison/"><code>0011: Supertonic official FP32 comparison</code></a></td>
+<td>Can official FP32 ONNX assets run on phone CPU and fully delegate to HTP?</td>
+<td>CPU and the stable-Softplus all-HTP route completed technically; all-HTP warm generation was <code>2.86×</code> faster. The prospective end-to-end numerical policy failed. Moritz did not review the retained samples, so listening quality is unknown.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0012-pocket-onnx-vs-executorch-android/"><code>0012: Pocket FP ONNX versus ExecuTorch</code></a></td>
+<td>Can exact-source Pocket run through unquantized ONNX Runtime or ExecuTorch on Android CPU?</td>
+<td>FP ONNX completed the technical route at warm median RTF <code>0.630</code>; ExecuTorch blocked before a complete model. Moritz blind-listened to retained CPU sample SHA <code>40634981606f37c59a91c14d99cecb3ef4cc21b1391882e870940b0716857d22</code> and rejected it as unusable repetitive “takakakakakakakaka.” This rejects that exact route/sample, not Pocket TTS as a family.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0013-kokoro-onnx-vs-executorch-android/"><code>0013: Kokoro FP ONNX versus ExecuTorch</code></a></td>
+<td>Which exact-source unquantized CPU route is viable for official Kokoro v1.0?</td>
+<td>The fixed-contract ONNX route completed on Android at warm median RTF <code>0.9800</code>; ExecuTorch blocked before a full-model PTE. A separate phase-tolerant acoustic policy passed, while the original strict waveform screen remained failed. Moritz did not review the retained WAV, so subjective quality is unknown.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0016-pocket-onnx-qnn-hybrid-android/"><code>0016: Pocket mixed QNN/CPU</code></a></td>
+<td>Does allowing CPU fallback make the existing Pocket graphs a useful HTP acceleration route?</td>
+<td>The route physically used HTP but regressed warm RTF from <code>0.630</code> to <code>1.003</code> and changed EOS from 78 to 48 latent frames. It failed acceleration/equivalence objectives. The hybrid sample was not reviewed; the separate 0012 CPU-sample rejection is not inferred for it.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0017-kokoro-onnx-qnn-htp-android/"><code>0017: Kokoro QNN/HTP feasibility</code></a></td>
+<td>Can the exact-source-derived Kokoro ONNX graph execute fail-closed through QNN HTP?</td>
+<td>A narrow derivative became CPU-bit-identical and fully QNN-assignable, but host graph sequencing was kernel-OOM-killed at 64% before session finalization or inference. No QNN audio exists, so no listening verdict is applicable.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0018-moss-tts-nano-onnx-android/"><code>0018: MOSS-TTS-Nano ONNX CPU</code></a></td>
+<td>Can the official MOSS-TTS-Nano ONNX path run end to end on Android CPU?</td>
+<td>The route completed technically and produced a structurally valid 16.72-second WAV, but warm median RTF was <code>1.125</code> and process memory was large. Moritz did not review the sample; subjective quality is unknown.</td>
 </tr>
 </tbody></table></div>
 <h2 id="decisions-carried-forward">Decisions carried forward<a class="anchor" href="#decisions-carried-forward" aria-label="Link to this section">#</a></h2>
@@ -117,9 +157,12 @@ tr:last-child td { border-bottom:0; }
 <li>The repository covers the TTS layer only. Source ingestion, retrieval, script generation, application UI, and episode management belong to the later product.</li>
 <li>Pleasant, natural long-form speech is the primary goal. Joint multi-speaker generation is useful but optional.</li>
 <li>Full-context generation is preferred. Naive sentence or clause splitting was rejected because it can damage prosody and naturalness.</li>
-<li>Supertonic 3 CPU remains the supported Android reference. This is a technical selection, not a claim that every listening or product-quality question is closed.</li>
+<li>Supertonic 3 CPU remains the supported Android <strong>technical</strong> reference. This is not listening-quality acceptance.</li>
 <li>Full-HTP claims must fail closed. Explicit mixed execution must be labeled as mixed and supported by provider-level plus physical-device profiling evidence; partial delegation is never full HTP.</li>
-<li>Experiment 0010&#x27;s fixed-shape hybrid is a bounded research baseline: materially faster warm and perceptually promising for one reviewed utterance, but numerically rejected with costly startup and memory. It is not an adopted deployment.</li>
+<li>Experiment 0010&#x27;s “no audible difference” result is comparison-only evidence. The hybrid remains numerically rejected and is not an adopted deployment.</li>
+<li>Experiment 0012 rejects the exact retained Pocket FP ONNX CPU route/sample for listening use. It does not reject Pocket TTS as a family.</li>
+<li>Kokoro 0013 and MOSS 0018 have technical and structural evidence but no Moritz listening verdict; quality remains unknown.</li>
+<li>A numerical/acoustic gate pass, structurally valid WAV, relative degradation ballot, or provider success must never be rewritten as absolute listening acceptance.</li>
 <li>Qualcomm software and generated restricted artifacts stay local. New terms, logins, consent, or export gates require explicit human approval.</li>
 </ul>
 <p>The next work is defined in <a href="plan.md"><code>plan.md</code></a> and its <a href="plan.html">HTML mirror</a>.</p></article>

@@ -21,11 +21,11 @@ PyTorch `.pth`/`.pt` files are source containers, not Android graphs. No communi
 
 ## Result
 
-The exact-source-derived FP32 ONNX route now runs successfully on the fixed phone. ExecuTorch remains blocked before a full-model PTE, so this establishes one viable bounded route rather than a two-route performance comparison.
+The exact-source-derived FP32 ONNX route completed the fixed phone's technical execution contract. ExecuTorch remains blocked before a full-model PTE, so this establishes one bounded executable route rather than a two-route performance comparison. Moritz did not review the retained ONNX WAV; listening quality is unknown.
 
 | Route | Host result | Android result | WAV / latency |
 |---|---|---|---|
-| Exact-source-derived FP32 ONNX Runtime | Controlled export and host CPU passed the separate deployment-validity policy | **Passed** on `SM-S918B` with ORT 1.23.2, explicit one-thread CPU EP, exact frontend/duration/output gates, and 18,612/18,612 profiled node events on CPU | First `7.4639 s` (`RTF 0.9821`); warm median `7.4478 s` (`RTF 0.9800`); WAV available under ignored `work/samples/` |
+| Exact-source-derived FP32 ONNX Runtime | Controlled export and host CPU passed the separate deployment-validity policy | **Technical pass** on `SM-S918B` with ORT 1.23.2, explicit one-thread CPU EP, exact frontend/duration/output gates, and 18,612/18,612 profiled node events on CPU; listening not reviewed | First `7.4639 s` (`RTF 0.9821`); warm median `7.4478 s` (`RTF 0.9800`); WAV available under ignored `work/samples/` |
 | ExecuTorch 1.4 / `torch.export` | **Blocked before a full-model PTE** on the data-dependent duration-expanded sequence consumed by LSTMs | Ineligible; not attempted | None |
 
 ### Route A — deliberate fixed-contract FP32 ONNX
@@ -48,7 +48,7 @@ The controlled eager wrapper passed its frozen source-equivalence gate:
 | NRMSE | `0.00000163934` |
 | Maximum absolute error | `0.00000107288` |
 
-The 332038651-byte ONNX, SHA-256 `d11a0dd7c4eb768e1f0ef03090c69b6761f55e37b9f196749349591c40be232b`, passed ONNX checker and host ORT 1.23.2 CPU. Host output was finite, non-silent, unclipped, exactly 182400 samples / 7.6 seconds at 24 kHz, and its profile contained 3102 `CPUExecutionProvider` node events and no QNN event.
+The 332038651-byte ONNX, SHA-256 `d11a0dd7c4eb768e1f0ef03090c69b6761f55e37b9f196749349591c40be232b`, passed ONNX checker and host ORT 1.23.2 CPU. Host output was structurally valid—finite, non-silent, unclipped, and exactly 182400 samples / 7.6 seconds at 24 kHz—and its profile contained 3102 `CPUExecutionProvider` node events and no QNN event. These checks do not establish perceptual usability.
 
 The original preliminary `.999/.01` waveform screen nevertheless remains an explicit **failure**: host ORT versus the controlled eager wrapper produced cosine `0.9970098725` and NRMSE `0.0847079096`. It is not relabeled. Before any phone output, Pi approved and [`protocol/deployment-fidelity-policy.json`](protocol/deployment-fidelity-policy.json), SHA-256 `22c7f2dd5c3596acf66107c3712c886b827f4a332d13dca981d183f6efc40ad7`, froze a separate valid-audio and phase-tolerant acoustic policy. The host cross-runtime output passed that separate screen (log-mel cosine `0.999453`, log-mel MAE `0.785 dB`, spectral convergence `0.0594`, RMS-envelope correlation `0.999387`). This supports deployment eligibility; it does not erase waveform divergence or constitute listening evidence.
 
@@ -59,7 +59,7 @@ Two earlier authorized launches stopped at asset bootstrap:
 
 Those attempts remain pre-runtime evidence only in [`results/phone-onnx-bootstrap-checkpoint.json`](results/phone-onnx-bootstrap-checkpoint.json). Moritz subsequently authorized retries. The runner now installs the debuggable harness, verifies the unique shell stage, and streams each experiment asset into app-owned internal storage using `run-as`; the app independently rechecks canonical containment, exact byte sizes, and exact hashes before initializing ORT.
 
-The canonical run `onnx-cpu-20260819T130213Z-39278` passed on the required `R5CW81PR8SY` / `SM-S918B` / `SM8550`:
+The canonical run `onnx-cpu-20260819T130213Z-39278` passed its technical contract on the required `R5CW81PR8SY` / `SM-S918B` / `SM8550`:
 
 | Evidence | Result |
 |---|---:|
@@ -74,7 +74,7 @@ The canonical run `onnx-cpu-20260819T130213Z-39278` passed on the required `R5CW
 
 The phone output passed the separately frozen phase-tolerant gate against both controlled eager and host ORT. Against controlled eager: spectral convergence `0.05955`, log-mel cosine `0.999451`, log-mel MAE `0.784 dB`, and envelope correlation `0.999392`. Its descriptive waveform cosine was `0.996911` and NRMSE `0.08584`; these do not erase the retained preliminary waveform failure.
 
-The fully decoded mono PCM16 WAV has 182400 frames, no full-scale samples, and SHA-256 `c046e8337b86ccf221ecd91db7dba90845f7c20b0ab1d8c248a36146c4eaecd3`. Local sample: [`work/samples/kokoro-af-heart-onnxruntime-cpu-s23.wav`](work/samples/kokoro-af-heart-onnxruntime-cpu-s23.wav) (ignored). The raw result/profile and exact cleanup evidence remain under `work/phone/onnx-cpu-20260819T130213Z-39278/`; the canonical summary is [`results/phone-onnx-cpu-checkpoint.json`](results/phone-onnx-cpu-checkpoint.json). The app was force-stopped and uninstalled, internal input and both scoped staging directories were removed, absence was verified, and both locks were released.
+The fully decoded mono PCM16 WAV has 182400 frames, no full-scale samples, and SHA-256 `c046e8337b86ccf221ecd91db7dba90845f7c20b0ab1d8c248a36146c4eaecd3`. Moritz did not listen to or accept this sample; its subjective quality remains unknown. Local sample: [`work/samples/kokoro-af-heart-onnxruntime-cpu-s23.wav`](work/samples/kokoro-af-heart-onnxruntime-cpu-s23.wav) (ignored). The raw result/profile and exact cleanup evidence remain under `work/phone/onnx-cpu-20260819T130213Z-39278/`; the canonical summary is [`results/phone-onnx-cpu-checkpoint.json`](results/phone-onnx-cpu-checkpoint.json). The app was force-stopped and uninstalled, internal input and both scoped staging directories were removed, absence was verified, and both locks were released.
 
 ### Route B — bounded current ExecuTorch screen
 
@@ -95,6 +95,7 @@ The official complex inverse STFT exports in isolation but fails ExecuTorch edge
 - The previous Android ONNX blocker was staging/bootstrap and is resolved by app-owned internal staging.
 - No HTP/QNN or quantization work began; phone profiling proves CPU-only execution.
 - Models, source weights, wheels, APKs, raw profiles, phone logs, serial evidence, tensors, and audio remain ignored.
+- The ONNX route has execution, provider, structural-audio, and objective acoustic evidence, but no Moritz listening verdict. It must not be called quality-accepted.
 
 ## Files
 
@@ -107,7 +108,7 @@ The official complex inverse STFT exports in isolation but fails ExecuTorch edge
 - [`results/host-onnx-fidelity-checkpoint.json`](results/host-onnx-fidelity-checkpoint.json) — controlled export, immutable numerical failure, and separate acoustic screen
 - [`results/executorch-export-checkpoint.json`](results/executorch-export-checkpoint.json) — bounded full-model blockers
 - [`results/phone-onnx-bootstrap-checkpoint.json`](results/phone-onnx-bootstrap-checkpoint.json) — historical phone bootstrap failures and cleanup
-- [`results/phone-onnx-cpu-checkpoint.json`](results/phone-onnx-cpu-checkpoint.json) — successful phone timing, memory, output, acoustic, provider, and cleanup evidence
+- [`results/phone-onnx-cpu-checkpoint.json`](results/phone-onnx-cpu-checkpoint.json) — technically completed phone timing, memory, output, acoustic, provider, and cleanup evidence
 - [`tools/export_onnx_fp.py`](tools/export_onnx_fp.py) — controlled fixed-contract FP32 export
 - [`tools/verify_source_weights.py`](tools/verify_source_weights.py) — source tensor and voice proof
 - [`tools/analyze_outputs.py`](tools/analyze_outputs.py) — frozen waveform/acoustic diagnostics

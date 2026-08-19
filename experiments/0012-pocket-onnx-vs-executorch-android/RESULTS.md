@@ -2,9 +2,9 @@
 
 ## Clear outcome
 
-**Yes, the unquantized floating-point ONNX version worked end to end on the Android phone CPU.**
+**Technical execution: yes. The unquantized floating-point ONNX version completed the end-to-end Android CPU contract. Listening quality: rejected for the exact retained route/sample.**
 
-The successful path performed the complete synthesis pipeline on the authorized Samsung Galaxy S23 Ultra:
+The technically complete path performed the complete synthesis pipeline on the authorized Samsung Galaxy S23 Ultra:
 
 ```text
 text
@@ -17,7 +17,7 @@ text
 
 It did not substitute neural intermediate fixtures. It used ONNX Runtime's CPU execution provider with one thread. There were no QNN provider events, no HTP execution, and no quantization.
 
-## Most important result: real-time factor
+## Technical performance result: real-time factor
 
 **Warm median RTF: `0.630`**
 
@@ -68,7 +68,7 @@ SHA-256:
 40634981606f37c59a91c14d99cecb3ef4cc21b1391882e870940b0716857d22
 ```
 
-Validation:
+Structural validation (not a listening-quality judgment):
 
 - 24 kHz mono PCM16
 - 149,760 samples
@@ -81,6 +81,12 @@ Validation:
 
 The WAV is intentionally stored under ignored `work/` rather than committed to Git.
 
+## Moritz listening verdict
+
+Moritz blind-listened to the exact retained sample above and **rejected it as unusable**, describing repetitive “takakakakakakakaka.” The verdict is bound to the experiment-0012 FP ONNX CPU route and sample SHA-256 `40634981606f37c59a91c14d99cecb3ef4cc21b1391882e870940b0716857d22`.
+
+This does **not** reject Pocket TTS as a family or make a claim about other checkpoints, reference voices, generation settings, or future corrected exports. It does reject this exact route/sample for listening use. Faster-than-real-time execution, numerical source comparison, and a finite/non-silent/unclipped WAV cannot override that route-level listening rejection.
+
 ## Model and ONNX provenance
 
 The source was the exact public, ungated Pocket TTS snapshot already pinned by this repository:
@@ -91,7 +97,7 @@ The source was the exact public, ungated Pocket TTS snapshot already pinned by t
 
 The Android files were controlled, derived ONNX exports of those exact weights—not third-party graphs merely assumed to match. The five components were the text conditioner, recurrent FlowLM main graph, stateless flow step, Mimi encoder, and Mimi decoder. Stateful caches were explicit graph inputs and outputs, while the actual autoregressive and flow loops remained in the runtime orchestration.
 
-Component equivalence tests passed. A deterministic source-versus-ONNX end-to-end fidelity check produced equal-length audio with correlation `0.9999999229` and SNR `68.119 dB`. Therefore, this is a faithful derived ONNX deployment, though the ONNX files themselves should not be called the original model weights.
+Component equivalence tests passed. A deterministic source-versus-ONNX end-to-end fidelity check produced equal-length audio with correlation `0.9999999229` and SNR `68.119 dB`. Therefore, this is a numerically faithful derived ONNX deployment under that controlled comparison, though the ONNX files themselves should not be called the original model weights. That numerical result is separate from the failed route-level listening verdict.
 
 ## Memory caveat
 
@@ -101,7 +107,7 @@ The measurements were sequential and did not use laboratory thermal stabilizatio
 
 ## ExecuTorch status
 
-ExecuTorch did **not** produce a runnable complete model. Two small boundaries exported, but the required recurrent FlowLM and Mimi decoder failed strict `torch.export` because of data-dependent guards in their stateful attention/cache path. That does not affect the successful ONNX result described above.
+ExecuTorch did **not** produce a runnable complete model. Two small boundaries exported, but the required recurrent FlowLM and Mimi decoder failed strict `torch.export` because of data-dependent guards in their stateful attention/cache path. That does not affect the ONNX route's technical execution result described above; it also does not change the ONNX sample's listening rejection.
 
 ## Evidence
 

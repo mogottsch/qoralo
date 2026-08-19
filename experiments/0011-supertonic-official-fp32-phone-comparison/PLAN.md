@@ -36,4 +36,4 @@ Execute the bounded phases below against pinned, ungated, first-party **official
 
 ## Outcome
 
-Steps 1 and 2 produced the official CPU baseline and isolated one unsupported vector `Softplus`. Phase 3 replaced only that node, passed CPU and host/physical vector gates, and achieved a complete all-HTP route. Its warm generation median was 2.818 seconds versus 8.068 seconds on CPU, but the prospective E2E numerical policy failed because cosine `0.92668` was below `0.95`; this is recorded separately from listening.
+Steps 1 and 2 produced the official CPU baseline and isolated one unsupported vector `Softplus`. Phase 3 replaced only that node, passed CPU and host/physical vector gates, and achieved a complete all-HTP route. Its warm generation median was 2.818 seconds versus 8.068 seconds on CPU, but the prospective E2E numerical policy failed because cosine `0.92668` was below `0.95`. Moritz did not review either sample, so listening quality remains unknown; technical execution and structural validity are not acceptance.

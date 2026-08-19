@@ -14,10 +14,10 @@
 - fixed output: duration sum `304`, audio `[182400]` at 24 kHz;
 - runtime: patched ORT `1.27.1`, QAIRT/QNN `2.49.0.260730`, HTP SoC model 43, one thread, CPU fallback disabled.
 
-The source model, frontend, controlled export, host CPU fidelity, and successful CPU phone route are documented in [`../0013-kokoro-onnx-vs-executorch-android/`](../0013-kokoro-onnx-vs-executorch-android/). This follow-up neither changes nor relabels experiment 0013.
+The source model, frontend, controlled export, host CPU fidelity, and technically completed CPU phone route are documented in [`../0013-kokoro-onnx-vs-executorch-android/`](../0013-kokoro-onnx-vs-executorch-android/). This follow-up neither changes nor relabels experiment 0013.
 
 See [`protocol.json`](protocol.json) for frozen acceptance criteria, [`PLAN.md`](PLAN.md) for the gated procedure, and [`results/source-inventory.json`](results/source-inventory.json) for verified hashes.
 
 ## Conclusion
 
-Experiment 0013's CPU route remains the proven Android reference. Experiment 0017 demonstrates compatibility/assignment potential but not a finalized session, host inference, physical HTP execution, numerical HTP fidelity, or acceleration. A larger host preparation environment or graph segmentation would require a new decision; neither was attempted here.
+Experiment 0013's CPU route remains the proven **technical** Android reference; its retained WAV was not reviewed by Moritz, so its listening quality is unknown. Experiment 0017 demonstrates compatibility/assignment potential but not a finalized session, host inference, physical HTP execution, numerical HTP fidelity, or acceleration. It produced no QNN audio, so a QNN-route listening verdict is not applicable. A larger host preparation environment or graph segmentation would require a new decision; neither was attempted here.

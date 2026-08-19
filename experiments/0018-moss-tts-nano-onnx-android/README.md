@@ -2,9 +2,9 @@
 
 ## Result
 
-Official MOSS-TTS-Nano completed end to end on the authorized Galaxy S23 Ultra through Android ONNX Runtime **CPUExecutionProvider only**. It generated a valid retained sample for the frozen benchmark text, but this implementation was slower than real time and had a large process memory footprint.
+Official MOSS-TTS-Nano completed end to end on the authorized Galaxy S23 Ultra through Android ONNX Runtime **CPUExecutionProvider only**. It generated a structurally valid retained WAV for the frozen benchmark text, but this implementation was slower than real time and had a large process memory footprint. “Structurally valid” means the file and numeric audio checks passed; it does not mean the speech was listening-approved.
 
-This is an initial CPU candidate result. It is not HTP evidence, and the separate ORT profile run must not be compared directly with uninstrumented latency.
+This is an initial CPU technical candidate result. It is not HTP evidence, and the separate ORT profile run must not be compared directly with uninstrumented latency. Moritz has not reviewed the retained sample, so listening quality is unknown.
 
 ## Reproducibility contract
 
@@ -46,7 +46,7 @@ The app created the four sessions once, then generated the same deterministic 16
 
 RTF is end-to-end latency divided by decoded audio duration, so values above 1 are slower than real time. “First decoded PCM” runs from request start until full audio-tokenizer decode returns PCM. The official Android example uses full decoding, not streaming; this is therefore not time-to-first-streaming-chunk. Memory values are process-wide, not component-isolated allocations.
 
-## Retained listening sample
+## Retained sample — listening not reviewed
 
 Ignored artifact:
 
@@ -61,7 +61,7 @@ work/vibevoice-0018-20260819T144325Z-172685/benchmark/listening-sample.wav
 - 1,605,164 total bytes
 - RMS `0.133849`; peak `0.999969`; finite
 
-The native codec output is stereo; the official Android example averages the two channels to mono before writing the WAV.
+The native codec output is stereo; the official Android example averages the two channels to mono before writing the WAV. No Moritz listening verdict is recorded for SHA-256 `173850781b055e70a606fb561d93b70e6d8c6318db1b29b2324f83506c21ad6b`; its usability, naturalness, and artifact level remain unknown.
 
 ## Separate ORT profile run
 

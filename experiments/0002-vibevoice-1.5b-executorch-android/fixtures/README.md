@@ -64,9 +64,10 @@ at -52.3799 dBFS, and chunk 3 is clearly voiced at -21.7126 dBFS. The
 supplement recomputes the 6,400-sample Android comparison directly as signed
 16-bit integers: maximum absolute difference 1 unit, mean absolute difference
 0.4709375 units. This prefix agreement passes its numerical criterion but does
-not reverse the historical quality rejection; the matching prefix is short,
-introductory silence and cannot satisfy intelligibility, duration, or speaker
-criteria.
+not reverse the historical deployment/audio-rubric rejection; the matching
+prefix is short introductory silence and cannot satisfy intelligibility,
+duration, or speaker criteria. The required human review remained pending, so
+this is not a Moritz listening verdict.
 
 Regenerate both derived results without loading model weights:
 

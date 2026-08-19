@@ -40,7 +40,7 @@ Only host-eligible routes proceed.
 1. Build a deterministic arm64 Android harness that shares one text frontend, token/style/speed construction, WAV writer, and metrics implementation between routes.
 2. Use a fresh process per route. Measure frontend/model asset loading, runtime initialization/session construction, first complete generation, five warm complete generations, component timing where exposed, WAV encoding, RTF, actual token/style/audio shapes, output validity, and `/proc/self/status` `VmHWM` with its high-water limitation.
 3. Prove CPU-only execution from runtime configuration/package inventory and route evidence. Zero QNN is mandatory.
-4. For each successful route, retain the first-generation mono 24-kHz PCM16 WAV under ignored `work/` and record its absolute path and full SHA-256.
+4. For each technically successful route, retain the first-generation mono 24-kHz PCM16 WAV under ignored `work/` and record its absolute path and full SHA-256.
 5. Use only the authorized `R5CW81PR8SY` / `SM-S918B` / `SM8550`. Acquire `artifacts/locks/phone.lock`; use Windows `adb.exe` with `ADB_LIBUSB=1`; close lock FD 9 on every ADB call; verify identity; use a unique experiment-0013 remote stage; never inspect personal data; pull scoped evidence; remove all scoped remote state; release the lock.
 
 ## Step 4 — checkpoint and stop
@@ -53,5 +53,6 @@ Commit deterministic tools, policies, documentation, source manifests, and bound
 - A deliberate exact-source-derived FP32 fixed-contract ONNX passed controlled-eager equivalence, ONNX checker, host ORT CPU validity/provider checks, and the separately frozen phase-tolerant acoustic policy. The earlier `.999/.01` host ORT waveform screen remains failed.
 - ExecuTorch stopped before a full-model PTE because the duration-driven `repeat_interleave` length is data-dependent and then consumed by LSTMs; the official complex inverse STFT is an additional edge-lowering blocker. No broad rewrite or custom kernel was attempted.
 - The first two eligible phone launches stopped before ORT because Android scoped-storage ownership made the shell-copied app asset invisible as a regular file. After Moritz authorized further retries, app-owned internal staging through debug `run-as` resolved that bootstrap issue without changing the model or frozen policy.
-- The exact ONNX route passed on `R5CW81PR8SY`: first total `7.4639 s` (`RTF 0.9821`), warm median `7.4478 s` (`RTF 0.9800`), maximum process-lifetime `VmHWM` `897974272` bytes, exact duration/output gates, valid WAV, phase-tolerant acoustic gates, and 18,612/18,612 node events on CPU EP with zero QNN.
+- The exact ONNX route passed its technical contract on `R5CW81PR8SY`: first total `7.4639 s` (`RTF 0.9821`), warm median `7.4478 s` (`RTF 0.9800`), maximum process-lifetime `VmHWM` `897974272` bytes, exact duration/output gates, a structurally valid WAV, phase-tolerant acoustic gates, and 18,612/18,612 node events on CPU EP with zero QNN.
+- Moritz did not review the retained ONNX WAV. Listening quality is unknown; neither the structural checks nor the objective acoustic-policy pass is a subjective acceptance.
 - A two-route comparison remains impossible because ExecuTorch has no eligible full-model PTE or phone run. Raw phone evidence and audio remain ignored under `work/`; scoped phone state was removed and both locks released.

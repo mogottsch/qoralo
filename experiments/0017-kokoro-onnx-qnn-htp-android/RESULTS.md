@@ -113,10 +113,11 @@ Consequences:
 - host execution proof: absent;
 - physical RPC/accelerator/cycle/HVX proof: absent;
 - phone eligibility: **failed**;
-- phone lock/ADB/staging: never used.
+- phone lock/ADB/staging: never used;
+- QNN listening verdict: not applicable because no QNN audio exists.
 
 ## Decision
 
-Keep experiment 0013's ONNX Runtime CPU route as the proven Kokoro Android reference. Experiment 0017 establishes a fully assigned and CPU-equivalent fixed-contract graph, but cannot advance beyond that assignment claim because host QNN graph finalization exhausted the tested environment before execution.
+Keep experiment 0013's ONNX Runtime CPU route as the proven Kokoro Android **technical** reference; no Moritz listening verdict exists for its retained WAV. Experiment 0017 establishes a fully assigned and CPU-equivalent fixed-contract graph, but cannot advance beyond that assignment claim because host QNN graph finalization exhausted the tested environment before execution.
 
 A follow-up would require a new decision—for example, a materially larger host preparation environment or semantics-preserving graph segmentation. This experiment does not extend its resource cap, split the model, introduce quantization, or broaden the rewrite.

@@ -2,7 +2,7 @@
 
 ## Status: `passed_user_listening`
 
-Moritz finalized all six blind votes: four ties, one INT8 preference, and one FP32 preference. Both directional preferences had confidence 2/5. The retained ballot detected no systematic INT8 degradation, so the user listening gate passed. This does not prove perceptual equivalence or INT8 superiority.
+Moritz finalized all six blind votes: four ties, one INT8 preference, and one FP32 preference. Both directional preferences had confidence 2/5. The retained ballot detected no systematic INT8 degradation, so the **relative INT8-vs-FP32 degradation gate** passed. This does not prove perceptual equivalence, INT8 superiority, or that either source/candidate sample is usable or quality-accepted in absolute terms.
 
 - Exact source: `kokoro-multi-lang-v1_0`, SID 3 (`af_heart`), source SHA-256 `c436dc6a842b62aba06af67e40bafcfb9c60ac3af895358f1974ad9a7f7c026b`.
 - Candidate SHA-256: `c37d76d0ada7414d18841ed454e8c7f00c8b1f631e97e1fd019c3ba01a0fbd92`; an independent rebuild matched it bit-for-bit.
@@ -15,4 +15,4 @@ The exact source passes ONNX checker 1.18.0, while the quantized graph retains a
 
 ## Android scope
 
-The exact candidate is now eligible for a later Android benchmark, but it has not been deployed. No Android RTF or PSS value is claimed here.
+The exact candidate is technically eligible for a later Android benchmark, but it has not been deployed. No Android RTF or PSS value is claimed here, and no absolute route-level listening acceptance is inferred from the paired comparison.
