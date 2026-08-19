@@ -1801,6 +1801,164 @@
       "scope": "excluded_non_e2e"
     },
     {
+      "id": "0014-pocket-qnn-fp-source",
+      "experiment": "0014",
+      "model": "Pocket TTS",
+      "route": "full QNN FP-source observed path",
+      "deployment_variant": "Pocket FP source full-QNN observed path",
+      "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "QNNExecutionProvider (observed path; CPU orchestration only)",
+        "threads": 1
+      },
+      "structural_audio": {
+        "status": "valid",
+        "basis": "verified committed Android WAV container and source result",
+        "sample_sha256": "467e777879691237472b51f5ccf9a8d43dae337cf63c2344ed3cfb645948c7f3"
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "QNN-only observed-path provider and physical execution evidence; bounded decoder6 and comparator-drift limitations apply.",
+        "comparison_notes": [
+          "Decoder6 passed a host gate but was unused and physically unproven; 0012 temperature drift/effective-0.7 divergence is descriptive context only."
+        ]
+      },
+      "listening_review": {
+        "status": "rejected",
+        "reviewer": "Moritz",
+        "date": "2026-08-19",
+        "notes": "Unintelligible mumbling, perhaps only \u201cAndroid\u201d. Exact route/sample verdict only; do not generalize to the Pocket family.",
+        "sample_sha256": "467e777879691237472b51f5ccf9a8d43dae337cf63c2344ed3cfb645948c7f3"
+      },
+      "android_attempted": true,
+      "provider": "QNNExecutionProvider (observed path; CPU orchestration only)",
+      "precision": "FP source / QNN FP16 observed",
+      "threads": 1,
+      "device": {
+        "model": "SM-S918B",
+        "soc": "SM8550",
+        "serial": "R5CW81PR8SY",
+        "abi": "arm64-v8a"
+      },
+      "metrics": {
+        "load_seconds": 236.175,
+        "cold_rtf": null,
+        "warm_median_rtf": 0.781049,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": 4136636416
+      },
+      "wav": {
+        "path": "media/0014-pocket-full-qnn-fp-source.wav",
+        "sha256": "467e777879691237472b51f5ccf9a8d43dae337cf63c2344ed3cfb645948c7f3",
+        "bytes": 384044,
+        "sample_rate_hz": 24000,
+        "channels": 1,
+        "duration_seconds": 8.0,
+        "verified": true
+      },
+      "summary": "Observed full-QNN FP-source text-to-WAV path used 216 QNN and 0 CPU provider events with matching physical RPC/accelerator/cycle/HVX proof; setup was 236.175 s and normalized RTF 0.781. CPU remained orchestration/state/WAV work, not neural provider execution.",
+      "limitations": [
+        "Decoder6 passed a host gate but was unused and has no physical execution proof in this observed path.",
+        "The 0012 comparator had effective temperature 0.7 rather than the prose-declared 0.3 due protocol drift; this is descriptive context, not a rewrite of 0012.",
+        "One profiled generation only; VmHWM is cumulative process high-water memory."
+      ],
+      "sources": [
+        "experiments/0014-pocket-fp-onnx-qnn-htp/results/full-qnn-continuation.json",
+        "experiments/0014-pocket-fp-onnx-qnn-htp/RESULTS.md"
+      ],
+      "missing_reasons": {
+        "cold_rtf": "One profiled generation was recorded; no separate cold campaign exists."
+      },
+      "model_identity": {
+        "name": "kyutai/pocket-tts-without-voice-cloning",
+        "url": "https://huggingface.co/kyutai/pocket-tts-without-voice-cloning/tree/d29db7978e464fb90cb3359ee0c69a273b9142cc",
+        "revision": "d29db7978e464fb90cb3359ee0c69a273b9142cc"
+      },
+      "quantization": "Unquantized FP32 source graphs; QNN observed-path lowering uses FP16 kernels",
+      "scope": "full_e2e"
+    },
+    {
+      "id": "0014-pocket-qnn-int16-flow",
+      "experiment": "0014",
+      "model": "Pocket TTS",
+      "route": "full QNN INT16-FlowLM observed path",
+      "deployment_variant": "Pocket calibrated INT16-FlowLM full-QNN observed path",
+      "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "QNNExecutionProvider (observed path; CPU orchestration only)",
+        "threads": 1
+      },
+      "structural_audio": {
+        "status": "valid",
+        "basis": "verified committed Android WAV container and source result",
+        "sample_sha256": "dcdb36df3d8cb8fc8754257fe060d5a4b2deb7c49983d579b8f90c3aa5035820"
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "QNN-only observed-path provider and physical execution evidence; bounded decoder6 and comparator-drift limitations apply.",
+        "comparison_notes": [
+          "Decoder6 passed a host gate but was unused and physically unproven; 0012 temperature drift/effective-0.7 divergence is descriptive context only."
+        ]
+      },
+      "listening_review": {
+        "status": "rejected",
+        "reviewer": "Moritz",
+        "date": "2026-08-19",
+        "notes": "Same: unintelligible mumbling, perhaps only \u201cAndroid\u201d. Exact route/sample verdict only; do not generalize to the Pocket family.",
+        "sample_sha256": "dcdb36df3d8cb8fc8754257fe060d5a4b2deb7c49983d579b8f90c3aa5035820"
+      },
+      "android_attempted": true,
+      "provider": "QNNExecutionProvider (observed path; CPU orchestration only)",
+      "precision": "INT16 FlowLM / QNN full observed",
+      "threads": 1,
+      "device": {
+        "model": "SM-S918B",
+        "soc": "SM8550",
+        "serial": "R5CW81PR8SY",
+        "abi": "arm64-v8a"
+      },
+      "metrics": {
+        "load_seconds": 220.405,
+        "cold_rtf": null,
+        "warm_median_rtf": 1.00046,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": 4147552256
+      },
+      "wav": {
+        "path": "media/0014-pocket-full-qnn-int16-flow.wav",
+        "sha256": "dcdb36df3d8cb8fc8754257fe060d5a4b2deb7c49983d579b8f90c3aa5035820",
+        "bytes": 349484,
+        "sample_rate_hz": 24000,
+        "channels": 1,
+        "duration_seconds": 7.28,
+        "verified": true
+      },
+      "summary": "Observed full-QNN INT16-FlowLM text-to-WAV path used 201 QNN and 0 CPU provider events with matching physical RPC/accelerator/cycle/HVX proof; setup was 220.405 s and normalized RTF 1.00046. CPU remained orchestration/state/WAV work, not neural provider execution.",
+      "limitations": [
+        "Decoder6 passed a host gate but was unused and has no physical execution proof in this observed path.",
+        "The 0012 comparator had effective temperature 0.7 rather than the prose-declared 0.3 due protocol drift; this is descriptive context, not a rewrite of 0012.",
+        "One profiled generation only; VmHWM is cumulative process high-water memory."
+      ],
+      "sources": [
+        "experiments/0014-pocket-fp-onnx-qnn-htp/results/full-qnn-continuation.json",
+        "experiments/0014-pocket-fp-onnx-qnn-htp/RESULTS.md"
+      ],
+      "missing_reasons": {
+        "cold_rtf": "One profiled generation was recorded; no separate cold campaign exists."
+      },
+      "model_identity": {
+        "name": "kyutai/pocket-tts-without-voice-cloning",
+        "url": "https://huggingface.co/kyutai/pocket-tts-without-voice-cloning/tree/d29db7978e464fb90cb3359ee0c69a273b9142cc",
+        "revision": "d29db7978e464fb90cb3359ee0c69a273b9142cc"
+      },
+      "quantization": "Calibrated INT16-FlowLM QDQ derivative; full observed path QNN-only",
+      "scope": "full_e2e"
+    },
+    {
       "id": "0016-pocket-qnn-hybrid-cpu",
       "experiment": "0016",
       "model": "Pocket TTS",
