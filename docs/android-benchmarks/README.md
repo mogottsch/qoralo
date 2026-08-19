@@ -4,7 +4,7 @@ This directory is the durable cross-experiment index for Android model and deplo
 
 - [`index.html`](index.html) (also [`dashboard.html`](dashboard.html)) — static dashboard for browsing routes and verified audio.
 - [`registry.json`](registry.json) — normalized machine-readable registry.
-- [`schema.json`](schema.json) — JSON Schema for the registry contract.
+- [`schema.json`](schema.json) — JSON Schema for the registry contract, including explicit `model_identity` source links/revisions and `quantization` fields.
 - [`missing-fields.md`](missing-fields.md) — generated unavailable-evidence report.
 - [`media/`](media/) — only WAVs present in this checkout whose SHA-256 and WAV headers match their owning committed Android result.
 - [`build_registry.py`](build_registry.py) — deterministic generator and media verifier.
@@ -19,7 +19,7 @@ python3 docs/android-benchmarks/build_registry.py
 python3 docs/android-benchmarks/validate.py
 ```
 
-The registry includes deferred and blocked routes as well as completed phone runs. Status describes execution only: `ran` means that the declared route completed and produced its recorded output. It is not an audio-quality verdict or user acceptance. Only Moritz's recorded listening decision can accept or reject perceived quality; numerical diagnostics stay in the evidence summary. A route with `android_attempted: false` has `device: null`; a route stopped before session creation has null measurements. Null never means zero and never licenses a host-only inference. The detailed reason for each intentionally unavailable field is in `missing-fields.md`.
+The registry includes deferred and blocked routes as well as completed phone runs. Status describes execution only: `ran` means that the declared route completed and produced its recorded output. It is not an audio-quality verdict or user acceptance. Only Moritz's recorded listening decision can accept or reject perceived quality; numerical diagnostics stay in the evidence summary. Every row separates the display `model` label from `model_identity` (`name`, canonical source URL, and exact revision when committed) and `quantization`. The dashboard links the model label to that source URL; archive-backed routes link their exact upstream archive, while HF-backed routes link the pinned revision. A route with `android_attempted: false` has `device: null`; a route stopped before session creation has null measurements. Null never means zero and never licenses a host-only inference. The detailed reason for each intentionally unavailable field is in `missing-fields.md`.
 
 ## Metric boundaries
 

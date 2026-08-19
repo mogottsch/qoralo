@@ -22,14 +22,25 @@
       }, "additionalProperties": false
     },
     "metric": {"type": ["number", "null"], "minimum": 0},
+    "model_identity": {
+      "type": "object", "required": ["name", "url", "revision"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "url": {"type": "string", "format": "uri-reference", "minLength": 1},
+        "revision": {"type": ["string", "null"]}
+      }, "additionalProperties": false
+    },
     "entry": {
       "type": "object",
-      "required": ["id", "experiment", "model", "route", "deployment_variant", "attempt_status", "android_attempted", "provider", "precision", "threads", "device", "metrics", "wav", "summary", "limitations", "sources", "missing_reasons"],
+      "required": ["id", "experiment", "model", "model_identity", "route", "deployment_variant", "quantization", "attempt_status", "android_attempted", "provider", "precision", "threads", "device", "metrics", "wav", "summary", "limitations", "sources", "missing_reasons"],
       "properties": {
         "id": {"type": "string", "pattern": "^[0-9]{4}-[a-z0-9-]+$"},
         "experiment": {"type": "string", "pattern": "^[0-9]{4}$"},
-        "model": {"type": "string"}, "route": {"type": "string"},
+        "model": {"type": "string"},
+        "model_identity": {"anyOf": [{"$ref": "#/$defs/model_identity"}, {"type": "null"}]},
+        "route": {"type": "string"},
         "deployment_variant": {"type": "string"},
+        "quantization": {"type": ["string", "null"]},
         "attempt_status": {"enum": ["ran", "partial", "blocked", "deferred", "not_run"]},
         "android_attempted": {"type": "boolean"},
         "provider": {"type": ["string", "null"]}, "precision": {"type": ["string", "null"]},

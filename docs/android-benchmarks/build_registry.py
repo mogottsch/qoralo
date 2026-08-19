@@ -97,6 +97,81 @@ ROWS = [
 ]
 
 
+def source_identity(name, url, revision=None):
+    return {"name": name, "url": url, "revision": revision}
+
+
+VIBEVOICE_SOURCE = source_identity(
+    "microsoft/VibeVoice-1.5B",
+    "https://huggingface.co/microsoft/VibeVoice-1.5B/tree/c00898d257e6b46004e3e2866a47534085fb685a",
+    "c00898d257e6b46004e3e2866a47534085fb685a",
+)
+REALTIME_SOURCE = source_identity(
+    "microsoft/VibeVoice-Realtime-0.5B",
+    "https://huggingface.co/microsoft/VibeVoice-Realtime-0.5B/tree/6bce5f06044837fe6d2c5d7a71a84f0416bd57e4",
+    "6bce5f06044837fe6d2c5d7a71a84f0416bd57e4",
+)
+POCKET_ARCHIVE_SOURCE = source_identity(
+    "sherpa-onnx-pocket-tts-int8-2026-01-26",
+    "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/sherpa-onnx-pocket-tts-int8-2026-01-26.tar.bz2",
+)
+KOKORO_ARCHIVE_SOURCE = source_identity(
+    "kokoro-multi-lang-v1_0 (sherpa-onnx archive)",
+    "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/kokoro-multi-lang-v1_0.tar.bz2",
+)
+SUPERTONIC_SOURCE = source_identity(
+    "Supertone/supertonic-3",
+    "https://huggingface.co/Supertone/supertonic-3/tree/724fb5abbf5502583fb520898d45929e62f02c0b",
+    "724fb5abbf5502583fb520898d45929e62f02c0b",
+)
+POCKET_HF_SOURCE = source_identity(
+    "kyutai/pocket-tts-without-voice-cloning",
+    "https://huggingface.co/kyutai/pocket-tts-without-voice-cloning/tree/d29db7978e464fb90cb3359ee0c69a273b9142cc",
+    "d29db7978e464fb90cb3359ee0c69a273b9142cc",
+)
+KOKORO_HF_SOURCE = source_identity(
+    "hexgrad/Kokoro-82M",
+    "https://huggingface.co/hexgrad/Kokoro-82M/tree/f3ff3571791e39611d31c381e3a41a3af07b4987",
+    "f3ff3571791e39611d31c381e3a41a3af07b4987",
+)
+
+# This is deliberately separate from display names: each source and precision
+# claim below is backed by the owning committed provenance. Unknown values remain
+# null and are listed in missing-fields.md.
+MODEL_METADATA = {}
+for _id in ("0002-executorch-full", "0003-litert-deferred", "0004-onnx-deferred", "0005-qnn-deferred"):
+    MODEL_METADATA[_id] = {"model_identity": VIBEVOICE_SOURCE, "quantization": None, "missing": {"quantization": "The committed route evidence does not establish a deployment quantization for this route."}}
+MODEL_METADATA["0002-executorch-full"].update({"quantization": "Mixed: Qwen2 backbone dynamic-activation/per-channel-weight INT8; audio components FP32"})
+MODEL_METADATA["0002-executorch-full"]["missing"].pop("quantization", None)
+MODEL_METADATA["0002-executorch-acoustic-decoder"] = {"model_identity": VIBEVOICE_SOURCE, "quantization": "FP32 acoustic decoder component"}
+MODEL_METADATA["0006-realtime-feasibility"] = {"model_identity": REALTIME_SOURCE, "quantization": None, "missing": {"quantization": "Feasibility inventory records package estimates, not an Android quantized deployment."}}
+for _id in ("0008-pocket-cpu-t1", "0009-pocket-cpu-t1", "0009-pocket-cpu-t2", "0009-pocket-cpu-t4"):
+    MODEL_METADATA[_id] = {"model_identity": POCKET_ARCHIVE_SOURCE, "quantization": "INT8 ONNX components: lm_flow, lm_main, and decoder; encoder and text_conditioner are unquantized ONNX"}
+for _id in ("0008-kokoro-cpu-t1", "0009-kokoro-cpu-t1", "0009-kokoro-cpu-t2", "0009-kokoro-cpu-t4"):
+    MODEL_METADATA[_id] = {"model_identity": KOKORO_ARCHIVE_SOURCE, "quantization": None, "missing": {"quantization": "Committed Android archive inventory identifies model.onnx but does not establish its quantization scheme."}}
+MODEL_METADATA["0009-kokoro-int8-not-deployed"] = {"model_identity": KOKORO_ARCHIVE_SOURCE, "quantization": "Mixed INT8 QDQ: symmetric S8 activations and weights, per-channel weights, MinMax calibration; generator weights remain FP32"}
+for _id in ("0008-supertonic-cpu-t1", "0009-supertonic-cpu-t1", "0009-supertonic-cpu-t2", "0009-supertonic-cpu-t4", "0010-supertonic-cpu"):
+    MODEL_METADATA[_id] = {"model_identity": SUPERTONIC_SOURCE, "quantization": "INT8 ONNX release outputs"}
+MODEL_METADATA["0010-supertonic-hybrid-htp"] = {"model_identity": SUPERTONIC_SOURCE, "quantization": "INT8 ONNX release outputs; shape-specialized graph derivatives used for the QNN route"}
+for _id in ("0011-supertonic-official-cpu", "0011-supertonic-all-htp", "0011-supertonic-htp-fail-closed"):
+    MODEL_METADATA[_id] = {"model_identity": SUPERTONIC_SOURCE, "quantization": "FP32 ONNX source graph"}
+MODEL_METADATA["0012-pocket-onnx-cpu"] = {"model_identity": POCKET_HF_SOURCE, "quantization": "Unquantized FP32 ONNX component export (zero quantization operators)"}
+MODEL_METADATA["0012-pocket-executorch"] = {"model_identity": POCKET_HF_SOURCE, "quantization": None, "missing": {"quantization": "The route was blocked before an Android representation was produced."}}
+for _id in ("0013-kokoro-onnx-bootstrap", "0013-kokoro-onnx-cpu"):
+    MODEL_METADATA[_id] = {"model_identity": KOKORO_HF_SOURCE, "quantization": "Unquantized FP32 controlled ONNX export (FLOAT initializers; zero quantized operators)"}
+MODEL_METADATA["0013-kokoro-executorch"] = {"model_identity": KOKORO_HF_SOURCE, "quantization": None, "missing": {"quantization": "The route was blocked before an Android representation was produced."}}
+
+for _row in ROWS:
+    _metadata = MODEL_METADATA.get(_row["id"], {})
+    _row["model_identity"] = _metadata.get("model_identity")
+    _row["quantization"] = _metadata.get("quantization")
+    _row["missing_reasons"].update(_metadata.get("missing", {}))
+    if _row["model_identity"] is None:
+        _row["missing_reasons"].setdefault("model_identity", "No committed source/model identity is established for this route.")
+    if _row["quantization"] is None:
+        _row["missing_reasons"].setdefault("quantization", "No committed quantization description is established for this route.")
+
+
 def verify_media():
     for r in ROWS:
         wav = r["wav"]
@@ -172,9 +247,18 @@ def build_html(registry):
         if e["threads"] is not None:
             suffix = "thread" if e["threads"] == 1 else "threads"
             provider += f'<br><small>{e["threads"]} {suffix}</small>'
-        trs.append(f'<tr><td data-sort="{html.escape(e["experiment"])}">{html.escape(e["experiment"])}</td><td data-sort="{html.escape(e["model"] + " " + e["route"])}"><b>{html.escape(e["model"])}</b><br><small>{html.escape(e["route"])}</small></td><td data-sort="{html.escape(e["attempt_status"])}"><span class="status {cls}">{html.escape(e["attempt_status"])}</span></td><td data-sort="{html.escape(e["provider"] or "")} {e["threads"] or ""}">{provider}</td><td data-sort="{sort_rtf}">{rtf}</td><td data-sort="{sort_memory}">{memory}</td><td data-sort="{audio_sort}">{wav}</td><td data-sort="{html.escape(e["summary"])}">{html.escape(e["summary"])}</td></tr>')
+        identity = e["model_identity"]
+        if identity is not None:
+            model_cell = f'<a href="{html.escape(identity["url"])}" target="_blank" rel="noopener">{html.escape(e["model"])}</a><br><small>{html.escape(identity["name"])}'
+            if identity["revision"]:
+                model_cell += f' @ {html.escape(identity["revision"][:12])}'
+            model_cell += '</small><br><small>' + html.escape(e["route"]) + '</small>'
+        else:
+            model_cell = f'<b>{html.escape(e["model"])}</b><br><small>{html.escape(e["route"])}</small>'
+        quantization = html.escape(e["quantization"] or "—")
+        trs.append(f'<tr><td data-sort="{html.escape(e["experiment"])}">{html.escape(e["experiment"])}</td><td data-sort="{html.escape(e["model"] + " " + e["route"])}">{model_cell}</td><td data-sort="{quantization}">{quantization}</td><td data-sort="{html.escape(e["attempt_status"])}"><span class="status {cls}">{html.escape(e["attempt_status"])}</span></td><td data-sort="{html.escape(e["provider"] or "")} {e["threads"] or ""}">{provider}</td><td data-sort="{sort_rtf}">{rtf}</td><td data-sort="{sort_memory}">{memory}</td><td data-sort="{audio_sort}">{wav}</td><td data-sort="{html.escape(e["summary"])}">{html.escape(e["summary"])}</td></tr>')
     return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Android benchmark registry</title><style>
-:root{{--bg:#0f172a;--panel:#172033;--line:#334155;--ink:#e5e7eb;--muted:#94a3b8;--accent:#67e8f9}}*{{box-sizing:border-box}}body{{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,sans-serif}}main{{max-width:1500px;margin:auto;padding:22px 24px}}h1{{font-size:24px;line-height:1.2;margin:0 0 16px}}small{{color:var(--muted)}}a{{color:var(--accent)}}.table-wrap{{overflow:auto;border:1px solid var(--line);border-radius:12px}}table{{border-collapse:collapse;width:100%;min-width:1320px;background:var(--panel)}}th,td{{padding:12px 13px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}}th{{position:sticky;top:0;background:#1e293b;color:#bae6fd;white-space:nowrap;user-select:none;cursor:pointer}}th:hover{{background:#26364d}}th::after{{content:' ↕';color:#64748b}}th[aria-sort="ascending"]::after{{content:' ↑';color:var(--accent)}}th[aria-sort="descending"]::after{{content:' ↓';color:var(--accent)}}td:nth-child(8){{min-width:350px;color:#cbd5e1}}.status{{border-radius:99px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap}}.ran{{background:#064e3b;color:#a7f3d0}}.blocked,.deferred,.not-run{{background:#713f12;color:#fde68a}}.partial{{background:#164e63;color:#a5f3fc}}code{{color:#bae6fd}}h2{{font-size:20px;margin:30px 0 12px}}.players{{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}}.player{{scroll-margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}}.player:target{{outline:2px solid var(--accent)}}.player audio{{display:block;width:100%;margin:11px 0 8px}}.back{{font-size:12px}}footer{{margin-top:16px;color:var(--muted);font-size:12px}}</style></head><body><main><h1>Android benchmark registry</h1><div class="table-wrap"><table id="routes"><thead><tr><th data-type="text">Experiment</th><th data-type="text">Model / route</th><th data-type="text">Status</th><th data-type="text">Provider</th><th data-type="number" aria-sort="ascending">Warm median RTF</th><th data-type="number">Peak memory</th><th data-type="number">Audio</th><th data-type="text">Evidence summary</th></tr></thead><tbody>{''.join(trs)}</tbody></table></div><h2 id="audio-samples">Audio samples</h2><div class="players">{''.join(players)}</div><footer>Click a column heading to sort. Missing values sort last. Details: <a href="README.md">README</a> · <a href="missing-fields.md">missing fields</a>.</footer></main><script>
+:root{{--bg:#0f172a;--panel:#172033;--line:#334155;--ink:#e5e7eb;--muted:#94a3b8;--accent:#67e8f9}}*{{box-sizing:border-box}}body{{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,sans-serif}}main{{max-width:1500px;margin:auto;padding:22px 24px}}h1{{font-size:24px;line-height:1.2;margin:0 0 16px}}small{{color:var(--muted)}}a{{color:var(--accent)}}.table-wrap{{overflow:auto;border:1px solid var(--line);border-radius:12px}}table{{border-collapse:collapse;width:100%;min-width:1320px;background:var(--panel)}}th,td{{padding:12px 13px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}}th{{position:sticky;top:0;background:#1e293b;color:#bae6fd;white-space:nowrap;user-select:none;cursor:pointer}}th:hover{{background:#26364d}}th::after{{content:' ↕';color:#64748b}}th[aria-sort="ascending"]::after{{content:' ↑';color:var(--accent)}}th[aria-sort="descending"]::after{{content:' ↓';color:var(--accent)}}td:nth-child(9){{min-width:350px;color:#cbd5e1}}.status{{border-radius:99px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap}}.ran{{background:#064e3b;color:#a7f3d0}}.blocked,.deferred,.not-run{{background:#713f12;color:#fde68a}}.partial{{background:#164e63;color:#a5f3fc}}code{{color:#bae6fd}}h2{{font-size:20px;margin:30px 0 12px}}.players{{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}}.player{{scroll-margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}}.player:target{{outline:2px solid var(--accent)}}.player audio{{display:block;width:100%;margin:11px 0 8px}}.back{{font-size:12px}}footer{{margin-top:16px;color:var(--muted);font-size:12px}}</style></head><body><main><h1>Android benchmark registry</h1><div class="table-wrap"><table id="routes"><thead><tr><th data-type="text">Experiment</th><th data-type="text">Model / route</th><th data-type="text">Quantization</th><th data-type="text">Status</th><th data-type="text">Provider</th><th data-type="number" aria-sort="ascending">Warm median RTF</th><th data-type="number">Peak memory</th><th data-type="number">Audio</th><th data-type="text">Evidence summary</th></tr></thead><tbody>{''.join(trs)}</tbody></table></div><h2 id="audio-samples">Audio samples</h2><div class="players">{''.join(players)}</div><footer>Click a column heading to sort. Missing values sort last. Details: <a href="README.md">README</a> · <a href="missing-fields.md">missing fields</a>.</footer></main><script>
 const table=document.getElementById('routes'), body=table.tBodies[0], headers=[...table.tHead.rows[0].cells];
 function sortTable(index,direction){{
  const type=headers[index].dataset.type, rows=[...body.rows];
@@ -187,7 +271,7 @@ function sortTable(index,direction){{
  body.append(...rows);headers.forEach(h=>h.removeAttribute('aria-sort'));headers[index].setAttribute('aria-sort',direction);
 }}
 headers.forEach((header,index)=>header.addEventListener('click',()=>{{const next=header.getAttribute('aria-sort')==='ascending'?'descending':'ascending';sortTable(index,next)}}));
-sortTable(4,'ascending');
+sortTable(5,'ascending');
 </script></body></html>'''
 
 

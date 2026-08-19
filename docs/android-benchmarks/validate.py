@@ -40,7 +40,7 @@ def main():
     seen_experiments = set()
     verified_media = 0
     for e in entries:
-        required = ("id", "experiment", "model", "route", "deployment_variant", "attempt_status", "android_attempted", "provider", "precision", "threads", "device", "metrics", "wav", "summary", "limitations", "sources", "missing_reasons")
+        required = ("id", "experiment", "model", "model_identity", "route", "deployment_variant", "quantization", "attempt_status", "android_attempted", "provider", "precision", "threads", "device", "metrics", "wav", "summary", "limitations", "sources", "missing_reasons")
         missing = [k for k in required if k not in e]
         if missing:
             fail(f"{e.get('id')}: missing keys {missing}")
@@ -54,6 +54,17 @@ def main():
         if not re.fullmatch(r"[0-9]{4}", e["experiment"]):
             fail(f"{e['id']}: invalid experiment")
         seen_experiments.add(e["experiment"])
+        identity = e["model_identity"]
+        if identity is None:
+            if "model_identity" not in e["missing_reasons"] and "all" not in e["missing_reasons"]:
+                fail(f"{e['id']}: null model identity lacks a missing-evidence reason")
+        else:
+            if set(identity) != {"name", "url", "revision"} or not identity["name"].strip() or not identity["url"].startswith("https://"):
+                fail(f"{e['id']}: invalid model identity")
+            if identity["revision"] is not None and not identity["revision"].strip():
+                fail(f"{e['id']}: empty model identity revision")
+        if e["quantization"] is None and "quantization" not in e["missing_reasons"] and "all" not in e["missing_reasons"]:
+            fail(f"{e['id']}: null quantization lacks a missing-evidence reason")
         if e["attempt_status"] not in STATUSES:
             fail(f"{e['id']}: invalid status")
         if e["android_attempted"] and e["device"] != EXPECTED_DEVICE:
@@ -100,6 +111,9 @@ def main():
             fail(f"missing generated page: {page_name}")
         page_text = page.read_text()
         for e in entries:
+            identity = e["model_identity"]
+            if identity is not None and identity["url"] not in page_text:
+                fail(f"{page_name}: {e['id']} model source link is missing")
             if e["wav"] is None:
                 continue
             anchor = f"audio-{e['id']}"
