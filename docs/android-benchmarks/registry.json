@@ -32,6 +32,12 @@
       "first_release_date": "2026-01-13",
       "date_basis": "Kyutai public release announcement",
       "source_url": "https://kyutai.org/blog/2026-01-13-pocket-tts"
+    },
+    {
+      "model": "MOSS-TTS-Nano",
+      "first_release_date": "2026-04-17",
+      "date_basis": "Hugging Face model API createdAt for the public OpenMOSS-Team ONNX model repository",
+      "source_url": "https://huggingface.co/OpenMOSS-Team/MOSS-TTS-Nano-100M-ONNX"
     }
   ],
   "entries": [
@@ -1386,6 +1392,59 @@
       },
       "quantization": null,
       "scope": "excluded_non_e2e"
+    },
+    {
+      "id": "0018-moss-tts-nano-cpu",
+      "experiment": "0018",
+      "model": "MOSS-TTS-Nano",
+      "route": "official ONNX Runtime CPU",
+      "deployment_variant": "MOSS-TTS-Nano official ONNX",
+      "attempt_status": "ran",
+      "android_attempted": true,
+      "provider": "CPUExecutionProvider",
+      "precision": "FP32",
+      "threads": 4,
+      "device": {
+        "model": "SM-S918B",
+        "soc": "SM8550",
+        "serial": "R5CW81PR8SY",
+        "abi": "arm64-v8a"
+      },
+      "metrics": {
+        "load_seconds": 1.712838853,
+        "cold_rtf": 1.1383426748803827,
+        "warm_median_rtf": 1.1248052010167464,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": 5828526080
+      },
+      "wav": {
+        "path": "media/0018-moss-tts-nano-onnx-cpu.wav",
+        "sha256": "173850781b055e70a606fb561d93b70e6d8c6318db1b29b2324f83506c21ad6b",
+        "bytes": 1605164,
+        "sample_rate_hz": 48000,
+        "channels": 1,
+        "duration_seconds": 16.72,
+        "verified": true
+      },
+      "summary": "Official MOSS-TTS-Nano completed text-to-WAV on CPUExecutionProvider only with 543,972/543,972 CPU node events. The full decoded output is 16.72 s, with non-streaming first decoded PCM semantics; setup was 1.71284 s and the process VmHWM reached 5,828,526,080 bytes.",
+      "limitations": [
+        "4 intra-op / 1 inter-op threads; the route is non-streaming and first decoded PCM means full audio-tokenizer decode returned PCM, not a streaming chunk.",
+        "VmHWM is cumulative process high-water memory, not component-isolated memory.",
+        "An initial exec-out stdin staging attempt hung and was aborted; the successful fast-push staging caveat is not included in benchmark latency."
+      ],
+      "sources": [
+        "experiments/0018-moss-tts-nano-onnx-android/results/phone-cpu-checkpoint.json",
+        "experiments/0018-moss-tts-nano-onnx-android/results/source-inventory.json",
+        "experiments/0018-moss-tts-nano-onnx-android/README.md"
+      ],
+      "missing_reasons": {},
+      "model_identity": {
+        "name": "OpenMOSS-Team/MOSS-TTS-Nano-100M-ONNX",
+        "url": "https://huggingface.co/OpenMOSS-Team/MOSS-TTS-Nano-100M-ONNX/tree/f52645cb467506d8e18e746ddd59482685b74e58",
+        "revision": "f52645cb467506d8e18e746ddd59482685b74e58"
+      },
+      "quantization": "Unquantized official ONNX graphs; CPUExecutionProvider only",
+      "scope": "full_e2e"
     }
   ]
 }

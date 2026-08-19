@@ -95,6 +95,7 @@ ROWS = [
     row("0013-kokoro-onnx-bootstrap", "0013", "Kokoro", "derived FP32 ONNX Runtime CPU bootstrap", "blocked", attempted=True, provider="CPU (session not created)", precision="FP32", metrics={"load_seconds": None}, summary="Two authorized phone launches stopped at app asset bootstrap/scoped-storage visibility; no ONNX Runtime session or inference was created.", limitations=("Bootstrap/path failure only; not evidence of ONNX Runtime incompatibility.",), sources=("experiments/0013-kokoro-onnx-vs-executorch-android/results/phone-onnx-bootstrap-checkpoint.json",), missing={"load_seconds": "No session was created.", "cold_rtf": "No inference was attempted.", "warm_median_rtf": "No inference was attempted.", "peak_pss_bytes": "No inference process measurement exists.", "peak_vm_hwm_bytes": "No inference process measurement exists.", "wav": "No audio was produced."}, variant="Kokoro exact-source-derived FP32 ONNX"),
     row("0013-kokoro-onnx-cpu", "0013", "Kokoro", "exact-source-derived FP32 ONNX Runtime CPU", "success", attempted=True, provider="CPUExecutionProvider", precision="FP32", threads=1, metrics={"load_seconds": 0.797719, "cold_rtf": 0.982091, "warm_median_rtf": 0.979973, "peak_vm_hwm_bytes": 897974272}, wav={"path":"media/0013-kokoro-onnx-cpu.wav","sha256":"c046e8337b86ccf221ecd91db7dba90845f7c20b0ab1d8c248a36146c4eaecd3","bytes":364844,"sample_rate_hz":24000,"channels":1,"duration_seconds":7.6}, summary="The exact-source-derived FP32 ONNX route completed six Android CPU generations; all node events were CPU-only and the phase-tolerant acoustic gate passed. The preserved strict waveform screen remains a descriptive failure, not a listening verdict.", limitations=("Fixed T125/style123/duration-sum304 contract.", "VmHWM is cumulative process high-water memory.", "No ExecuTorch comparison output exists."), sources=("experiments/0013-kokoro-onnx-vs-executorch-android/results/phone-onnx-cpu-checkpoint.json", "experiments/0013-kokoro-onnx-vs-executorch-android/README.md"), missing={}, variant="Kokoro exact-source-derived FP32 ONNX"),
     row("0013-kokoro-executorch", "0013", "Kokoro", "ExecuTorch full model", "blocked", attempted=False, summary="The complete ExecuTorch route was blocked at host export/lowering and never reached Android.", sources=("experiments/0013-kokoro-onnx-vs-executorch-android/results/executorch-export-checkpoint.json", "experiments/0013-kokoro-onnx-vs-executorch-android/README.md"), missing={"android_attempted": "Required complex STFT/full wrapper lowering failed before Android.", "all": "No Android timing, memory, or WAV exists."}, variant="ExecuTorch"),
+    row("0018-moss-tts-nano-cpu", "0018", "MOSS-TTS-Nano", "official ONNX Runtime CPU", "ran", attempted=True, provider="CPUExecutionProvider", precision="FP32", threads=4, metrics={"load_seconds": 1.712838853, "cold_rtf": 1.1383426748803827, "warm_median_rtf": 1.1248052010167464, "peak_vm_hwm_bytes": 5828526080}, wav={"path":"media/0018-moss-tts-nano-onnx-cpu.wav","sha256":"173850781b055e70a606fb561d93b70e6d8c6318db1b29b2324f83506c21ad6b","bytes":1605164,"sample_rate_hz":48000,"channels":1,"duration_seconds":16.72}, summary="Official MOSS-TTS-Nano completed text-to-WAV on CPUExecutionProvider only with 543,972/543,972 CPU node events. The full decoded output is 16.72 s, with non-streaming first decoded PCM semantics; setup was 1.71284 s and the process VmHWM reached 5,828,526,080 bytes.", limitations=("4 intra-op / 1 inter-op threads; the route is non-streaming and first decoded PCM means full audio-tokenizer decode returned PCM, not a streaming chunk.", "VmHWM is cumulative process high-water memory, not component-isolated memory.", "An initial exec-out stdin staging attempt hung and was aborted; the successful fast-push staging caveat is not included in benchmark latency."), sources=("experiments/0018-moss-tts-nano-onnx-android/results/phone-cpu-checkpoint.json", "experiments/0018-moss-tts-nano-onnx-android/results/source-inventory.json", "experiments/0018-moss-tts-nano-onnx-android/README.md"), missing={}, variant="MOSS-TTS-Nano official ONNX"),
 ]
 
 
@@ -135,6 +136,11 @@ KOKORO_HF_SOURCE = source_identity(
     "https://huggingface.co/hexgrad/Kokoro-82M/tree/f3ff3571791e39611d31c381e3a41a3af07b4987",
     "f3ff3571791e39611d31c381e3a41a3af07b4987",
 )
+MOSS_HF_SOURCE = source_identity(
+    "OpenMOSS-Team/MOSS-TTS-Nano-100M-ONNX",
+    "https://huggingface.co/OpenMOSS-Team/MOSS-TTS-Nano-100M-ONNX/tree/f52645cb467506d8e18e746ddd59482685b74e58",
+    "f52645cb467506d8e18e746ddd59482685b74e58",
+)
 
 # This is deliberately separate from display names: each source and precision
 # claim below is backed by the owning committed provenance. Unknown values remain
@@ -162,6 +168,7 @@ MODEL_METADATA["0012-pocket-executorch"] = {"model_identity": POCKET_HF_SOURCE, 
 for _id in ("0013-kokoro-onnx-bootstrap", "0013-kokoro-onnx-cpu"):
     MODEL_METADATA[_id] = {"model_identity": KOKORO_HF_SOURCE, "quantization": "Unquantized FP32 controlled ONNX export (FLOAT initializers; zero quantized operators)"}
 MODEL_METADATA["0013-kokoro-executorch"] = {"model_identity": KOKORO_HF_SOURCE, "quantization": None, "missing": {"quantization": "The route was blocked before an Android representation was produced."}}
+MODEL_METADATA["0018-moss-tts-nano-cpu"] = {"model_identity": MOSS_HF_SOURCE, "quantization": "Unquantized official ONNX graphs; CPUExecutionProvider only"}
 
 # Family/model release dates are kept separate from benchmark evidence. Dates use
 # authoritative upstream repository/model-page creation or release announcements,
@@ -171,6 +178,7 @@ MODEL_TIMELINE = [
     {"model": "VibeVoice 1.5B", "first_release_date": "2025-08-25", "date_basis": "Hugging Face model API createdAt for microsoft/VibeVoice-1.5B", "source_url": "https://huggingface.co/microsoft/VibeVoice-1.5B"},
     {"model": "Supertonic (family, before Supertonic 3)", "first_release_date": "2025-11-18", "date_basis": "Public upstream GitHub repository created_at; the first Supertonic family repository", "source_url": "https://github.com/supertone-inc/supertonic"},
     {"model": "Pocket TTS", "first_release_date": "2026-01-13", "date_basis": "Kyutai public release announcement", "source_url": "https://kyutai.org/blog/2026-01-13-pocket-tts"},
+    {"model": "MOSS-TTS-Nano", "first_release_date": "2026-04-17", "date_basis": "Hugging Face model API createdAt for the public OpenMOSS-Team ONNX model repository", "source_url": "https://huggingface.co/OpenMOSS-Team/MOSS-TTS-Nano-100M-ONNX"},
 ]
 
 FULL_E2E_IDS = {
@@ -181,7 +189,7 @@ FULL_E2E_IDS = {
     "0009-supertonic-cpu-t1", "0009-supertonic-cpu-t2", "0009-supertonic-cpu-t4",
     "0010-supertonic-cpu", "0010-supertonic-hybrid-htp",
     "0011-supertonic-official-cpu", "0011-supertonic-all-htp",
-    "0012-pocket-onnx-cpu", "0016-pocket-qnn-hybrid-cpu", "0013-kokoro-onnx-cpu",
+    "0012-pocket-onnx-cpu", "0016-pocket-qnn-hybrid-cpu", "0013-kokoro-onnx-cpu", "0018-moss-tts-nano-cpu",
 }
 for _row in ROWS:
     _metadata = MODEL_METADATA.get(_row["id"], {})
