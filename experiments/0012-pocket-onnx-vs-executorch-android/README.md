@@ -1,5 +1,7 @@
 # 0012 — Pocket TTS: FP ONNX Runtime vs ExecuTorch on Android CPU
 
+> **Working result:** FP ONNX succeeded on Android CPU with a warm median **RTF of 0.630**. See [`RESULTS.md`](RESULTS.md) for the concise result and latency table.
+
 ## Purpose
 
 Compare two non-quantized CPU deployment routes for the same repository-pinned Pocket TTS checkpoint on the authorized Samsung S23 Ultra. This experiment stops before HTP, QNN, quantization, or accelerator probing.
