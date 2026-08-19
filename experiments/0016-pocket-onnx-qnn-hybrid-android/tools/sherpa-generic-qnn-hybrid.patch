@@ -1,0 +1,49 @@
+diff --git a/sherpa-onnx/csrc/provider.cc b/sherpa-onnx/csrc/provider.cc
+index 8f7fe317..e89141e2 100644
+--- a/sherpa-onnx/csrc/provider.cc
++++ b/sherpa-onnx/csrc/provider.cc
+@@ -31,6 +31,8 @@ Provider StringToProvider(std::string s) {
+     return Provider::kDirectML;
+   } else if (s == "spacemit") {
+     return Provider::kSpacemiT;
++  } else if (s == "qnn") {
++    return Provider::kQNN;
+   } else {
+     SHERPA_ONNX_LOGE("Unsupported string: %s. Fallback to cpu", s.c_str());
+     return Provider::kCPU;
+diff --git a/sherpa-onnx/csrc/provider.h b/sherpa-onnx/csrc/provider.h
+index 8842c797..e8258930 100644
+--- a/sherpa-onnx/csrc/provider.h
++++ b/sherpa-onnx/csrc/provider.h
+@@ -22,6 +22,7 @@ enum class Provider {
+   kTRT = 5,       // TensorRTExecutionProvider
+   kDirectML = 6,  // DmlExecutionProvider
+   kSpacemiT = 7,  // SpacemiTExecutionProvider
++  kQNN = 8,       // QNNExecutionProvider (generic ONNX mixed assignment)
+ };
+-
++
+ /**
+diff --git a/sherpa-onnx/csrc/session.cc b/sherpa-onnx/csrc/session.cc
+index ee81d752..c5c239cb 100755
+--- a/sherpa-onnx/csrc/session.cc
++++ b/sherpa-onnx/csrc/session.cc
+@@ -234,6 +234,18 @@ Ort::SessionOptions GetSessionOptionsImpl(
+   switch (p) {
+     case Provider::kCPU:
+       break;  // nothing to do for the CPU provider
++    case Provider::kQNN: {
++      if (std::find(available_providers.begin(), available_providers.end(),
++                    "QNNExecutionProvider") == available_providers.end()) {
++        SHERPA_ONNX_LOGE("QNNExecutionProvider unavailable. Fallback to cpu!");
++        break;
++      }
++      // This generic path intentionally retains CPU fallback for mixed
++      // assignment. The experiment verifies the actual provider of every node
++      // from ORT profiles rather than inferring it from this configuration.
++      sess_opts.AppendExecutionProvider("QNN", config);
++      break;
++    }
+     case Provider::kXnnpack: {
+ #if ORT_API_VERSION >= 12
+       if (std::find(available_providers.begin(), available_providers.end(),

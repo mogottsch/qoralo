@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "result": "mixed_qnn_htp_cpu_executed_but_slower_per_audio_second_and_not_output_equivalent",
+  "claim": "The exact 0012 FP ONNX graphs completed text-to-WAV with QNN HTP plus CPU fallback. Physical HTP execution is proven, but only a small fraction of ORT kernel events used QNN; normalized RTF regressed and QNN numerical differences changed EOS timing and waveform.",
+  "device": {"serial":"R5CW81PR8SY","model":"SM-S918B","soc":"SM8550","abi":"arm64-v8a"},
+  "runtime": {"onnxruntime":"1.27.1","qairt_qnn":"2.49.0.260730","sherpa_version":"1.13.5","sherpa_source_commit":"3dc7c569f31ca2cd4a20ed6f7db780327e6714c5","runtime_baked_git_string":"17ab05b7","runtime_baked_git_string_note":"The checked-in source version.cc contains this stale short string; the source checkout and patch base are independently pinned to 3dc7c569.","threads":1,"cpu_fallback":true,"route":"mixed; not full HTP"},
+  "source": {"weight_sha256":"be9c6b4876d3f30740a8225dfcaa2e43dc4aeb753c15272735bee16bbb4abb0a","graphs":"unchanged and hash-verified from experiment 0012","voice_sha256":"85f46d6f0642f657a6bd689ddaa52d5a5f53e4314715e1032704c80917392181"},
+  "performance_without_profiling": {"load_seconds":2.829669739,"load_vm_hwm_kb":675364,"cold":{"seconds":4.618860050,"audio_seconds":3.84,"rtf":1.202828138,"vm_hwm_kb":1187004},"warm":{"runs":5,"seconds_median":3.850867758,"seconds_min":3.764128437,"seconds_max":4.030268227,"rtf_median":1.002830145,"rtf_min":0.980241780,"rtf_max":1.049549017,"max_vm_hwm_kb":1188084}},
+  "cpu_baseline_0012": {"load_seconds":1.079322708,"cold_seconds":5.696744373,"cold_audio_seconds":6.24,"cold_rtf":0.912939803,"warm_seconds_median":3.933480415,"warm_rtf_median":0.630365451,"max_vm_hwm_kb":1586080},
+  "comparison": {"hybrid_warm_rtf_regression_percent":59.0871,"hybrid_cold_rtf_regression_percent":31.7533,"hybrid_load_regression_percent":162.1709,"hybrid_warm_wall_seconds_change_percent":-2.1002,"warning":"The small wall-time reduction is not a speedup: hybrid emitted 38.46% less audio. RTF is the valid normalized comparison.","hybrid_audio_duration_change_percent":-38.4615,"hybrid_vm_hwm_change_percent":-25.0931},
+  "provider_assignment_instrumented_one_run": {
+    "component_order_basis":"OfflineTtsPocketModel constructs flow, main, encoder, decoder, text conditioner in this order; ORT profile timestamps follow that order.",
+    "components":[
+      {"component":"flow_lm_flow","calls":48,"cpu_events":9168,"qnn_events":144,"unique_cpu_kernel_events":191,"unique_qnn_partition_events":3,"cpu_event_duration_us":109191,"qnn_event_duration_us":446938},
+      {"component":"flow_lm_main","calls":51,"cpu_events":34629,"qnn_events":1326,"unique_cpu_kernel_events":679,"unique_qnn_partition_events":26,"cpu_event_duration_us":1458340,"qnn_event_duration_us":5933169},
+      {"component":"mimi_encoder","calls":1,"cpu_events":191,"qnn_events":5,"unique_cpu_kernel_events":191,"unique_qnn_partition_events":5,"cpu_event_duration_us":785022,"qnn_event_duration_us":17486},
+      {"component":"mimi_decoder","calls":4,"cpu_events":1128,"qnn_events":40,"unique_cpu_kernel_events":282,"unique_qnn_partition_events":10,"cpu_event_duration_us":664046,"qnn_event_duration_us":179612},
+      {"component":"text_conditioner","calls":1,"cpu_events":1,"qnn_events":0,"unique_cpu_kernel_events":1,"unique_qnn_partition_events":0,"cpu_event_duration_us":77,"qnn_event_duration_us":0}
+    ],
+    "aggregate":{"cpu_events":45117,"qnn_events":1515,"qnn_event_fraction_percent":3.248842}
+  },
+  "physical_htp_evidence": {"qnn_partition_executions":1515,"rpc_execute_events":1515,"rpc_execute_sum_us":4882217,"qnn_accelerator_execute_events":1515,"qnn_accelerator_execute_sum_us":4618650,"accelerator_cycle_events":1515,"accelerator_cycles_sum":2635657640,"hvx_thread_events":1515,"hvx_threads_each":4,"note":"Exact equality between ORT QNN provider events and QNN physical execute/profile events supports physical execution of every reported QNN partition event in the instrumented run."},
+  "output": {"path":"work/pocket-hybrid-qnn-cpu-android.wav","bytes":184364,"sha256":"6cd3a98fb821ad76b0c0ad55a20f910da7be9d3058e511ff807b4a4f694aa45f","sample_rate_hz":24000,"channels":1,"samples":92160,"seconds":3.84,"peak_abs_pcm16":8518,"rms_pcm16":575.7005384218744,"finite":true,"non_silent":true,"unclipped":true,"seven_outputs_byte_identical":true},
+  "output_comparison_to_cpu": {"cpu_samples":149760,"hybrid_samples":92160,"same_length":false,"overlap_samples":92160,"overlap_correlation":0.8937299897540465,"overlap_mae":0.006039812167485555,"overlap_max_abs":0.161285400390625,"overlap_snr_db":6.513475721477566,"accepted_equivalent":false,"reason":"EOS changed from 78 to 48 latent frames and overlap fidelity is materially below the 0012 source-vs-ONNX evidence."},
+  "measurement_boundaries": {"instrumented_run_excluded_from_timing":true,"profiling_overhead_cold_seconds":9.764328382,"vm_hwm":"cumulative process high-water including runtime, model mappings, provider, caches, buffers and output; not isolated model memory","thermal":"sequential uncontrolled DVFS/thermal state","internal_htp_precision":"not established from FP source graph types"},
+  "phone_safety": {"lock_held":true,"adb_lock_fd_closed":true,"transport":"Windows adb.exe with ADB_LIBUSB=1","remote_root":"/data/local/tmp/experiment-0016-pocket-hybrid-20260819T133037Z-80428","cleanup":"verified absent","personal_data_accessed":false}
+}

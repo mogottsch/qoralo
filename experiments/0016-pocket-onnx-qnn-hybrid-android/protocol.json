@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "experiment": "0016-pocket-onnx-qnn-hybrid-android",
+  "route": "mixed QNN HTP plus CPU fallback; never full HTP",
+  "source": {"experiment":"0012-pocket-onnx-vs-executorch-android","weight_sha256":"be9c6b4876d3f30740a8225dfcaa2e43dc4aeb753c15272735bee16bbb4abb0a","onnx_graphs_unchanged":true},
+  "matched_contract": {"text":"Pocket TTS runs entirely on this Android phone using the original floating point model.","text_sha256":"66e1ba2772ca3d534b792e9d9dacb26e37fda422afe40e8cced5aa878404ffb1","voice":"Bria reference WAV","voice_sha256":"85f46d6f0642f657a6bd689ddaa52d5a5f53e4314715e1032704c80917392181","seed":0,"temperature":0.3,"flow_steps":1,"threads":1,"sample_rate_hz":24000,"device":"R5CW81PR8SY / SM-S918B / SM8550"},
+  "runtime": {"onnxruntime":"1.27.1 QNN build from experiment 0010","qairt_qnn":"2.49.0.260730","sherpa_source_commit":"3dc7c569f31ca2cd4a20ed6f7db780327e6714c5","sherpa_change":"generic QNN provider selection with CPU fallback retained and provider configuration forwarded"},
+  "provider_options": {"backend_path":"libQnnHtp.so","profiling_level":"detailed","offload_graph_io_quantization":"0","htp_performance_mode":"burst","soc_model":"43","session.disable_cpu_ep_fallback":"0"},
+  "benchmark": {"cold_runs":1,"warm_runs":5,"primary":"warm median end-to-end RTF","comparison":"0012 CPU: cold 5.696744373 s / RTF 0.912939803; warm median 3.933480415 s / RTF 0.630365451","memory":"process VmHWM cumulative high-water; not component-isolated","thermal":"sequential uncontrolled DVFS/thermal state"},
+  "evidence_gates": ["ORT profiles must contain both QNNExecutionProvider and CPUExecutionProvider events to establish mixed assignment.","Report per-component QNN/CPU node events and aggregate events.","QNN detailed profile must contain physical RPC/accelerator/cycle/HVX evidence.","Valid finite non-silent unclipped 24 kHz mono WAV is required."],
+  "phone_safety": {"lock":"artifacts/locks/phone.lock","adb":"Windows adb.exe with ADB_LIBUSB=1; close lock FD in every child","remote_prefix":"/data/local/tmp/experiment-0016-pocket-hybrid-","cleanup_required":true}
+}
