@@ -40,7 +40,7 @@ def main():
     seen_experiments = set()
     verified_media = 0
     for e in entries:
-        required = ("id", "experiment", "model", "model_identity", "route", "deployment_variant", "quantization", "attempt_status", "android_attempted", "provider", "precision", "threads", "device", "metrics", "wav", "summary", "limitations", "sources", "missing_reasons")
+        required = ("id", "experiment", "model", "model_identity", "route", "deployment_variant", "quantization", "scope", "attempt_status", "android_attempted", "provider", "precision", "threads", "device", "metrics", "wav", "summary", "limitations", "sources", "missing_reasons")
         missing = [k for k in required if k not in e]
         if missing:
             fail(f"{e.get('id')}: missing keys {missing}")
@@ -65,6 +65,8 @@ def main():
                 fail(f"{e['id']}: empty model identity revision")
         if e["quantization"] is None and "quantization" not in e["missing_reasons"] and "all" not in e["missing_reasons"]:
             fail(f"{e['id']}: null quantization lacks a missing-evidence reason")
+        if e["scope"] not in {"full_e2e", "excluded_non_e2e"}:
+            fail(f"{e['id']}: invalid route scope")
         if e["attempt_status"] not in STATUSES:
             fail(f"{e['id']}: invalid status")
         if e["android_attempted"] and e["device"] != EXPECTED_DEVICE:
@@ -111,8 +113,13 @@ def main():
             fail(f"missing generated page: {page_name}")
         page_text = page.read_text()
         for e in entries:
+            marker = f'data-route-id="{e["id"]}"'
+            if e["scope"] == "full_e2e" and page_text.count(marker) != 1:
+                fail(f"{page_name}: full E2E route {e['id']} is missing or duplicated")
+            if e["scope"] == "excluded_non_e2e" and marker in page_text:
+                fail(f"{page_name}: non-E2E route {e['id']} leaked into presentation")
             identity = e["model_identity"]
-            if identity is not None and identity["url"] not in page_text:
+            if e["scope"] == "full_e2e" and identity is not None and identity["url"] not in page_text:
                 fail(f"{page_name}: {e['id']} model source link is missing")
             if e["wav"] is None:
                 continue

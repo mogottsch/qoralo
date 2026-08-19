@@ -32,7 +32,7 @@
     },
     "entry": {
       "type": "object",
-      "required": ["id", "experiment", "model", "model_identity", "route", "deployment_variant", "quantization", "attempt_status", "android_attempted", "provider", "precision", "threads", "device", "metrics", "wav", "summary", "limitations", "sources", "missing_reasons"],
+      "required": ["id", "experiment", "model", "model_identity", "route", "deployment_variant", "quantization", "scope", "attempt_status", "android_attempted", "provider", "precision", "threads", "device", "metrics", "wav", "summary", "limitations", "sources", "missing_reasons"],
       "properties": {
         "id": {"type": "string", "pattern": "^[0-9]{4}-[a-z0-9-]+$"},
         "experiment": {"type": "string", "pattern": "^[0-9]{4}$"},
@@ -41,6 +41,7 @@
         "route": {"type": "string"},
         "deployment_variant": {"type": "string"},
         "quantization": {"type": ["string", "null"]},
+        "scope": {"enum": ["full_e2e", "excluded_non_e2e"]},
         "attempt_status": {"enum": ["ran", "partial", "blocked", "deferred", "not_run"]},
         "android_attempted": {"type": "boolean"},
         "provider": {"type": ["string", "null"]}, "precision": {"type": ["string", "null"]},

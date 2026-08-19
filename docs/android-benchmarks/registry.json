@@ -7,7 +7,7 @@
     "serial": "R5CW81PR8SY",
     "abi": "arm64-v8a"
   },
-  "source_policy": "Normalize committed experiment evidence only; preserve null for unavailable fields; do not infer Android results from host evidence.",
+  "source_policy": "Normalize committed full end-to-end Android evidence only; preserve null for unavailable fields; do not infer Android results from host evidence. Component probes, feasibility-only routes, and pre-runtime blockers remain in their owning experiments rather than this table.",
   "entries": [
     {
       "id": "0002-executorch-full",
@@ -54,7 +54,8 @@
         "url": "https://huggingface.co/microsoft/VibeVoice-1.5B/tree/c00898d257e6b46004e3e2866a47534085fb685a",
         "revision": "c00898d257e6b46004e3e2866a47534085fb685a"
       },
-      "quantization": "Mixed: Qwen2 backbone dynamic-activation/per-channel-weight INT8; audio components FP32"
+      "quantization": "Mixed: Qwen2 backbone dynamic-activation/per-channel-weight INT8; audio components FP32",
+      "scope": "full_e2e"
     },
     {
       "id": "0002-executorch-acoustic-decoder",
@@ -98,7 +99,8 @@
         "url": "https://huggingface.co/microsoft/VibeVoice-1.5B/tree/c00898d257e6b46004e3e2866a47534085fb685a",
         "revision": "c00898d257e6b46004e3e2866a47534085fb685a"
       },
-      "quantization": "FP32 acoustic decoder component"
+      "quantization": "FP32 acoustic decoder component",
+      "scope": "excluded_non_e2e"
     },
     {
       "id": "0003-litert-deferred",
@@ -136,7 +138,8 @@
         "url": "https://huggingface.co/microsoft/VibeVoice-1.5B/tree/c00898d257e6b46004e3e2866a47534085fb685a",
         "revision": "c00898d257e6b46004e3e2866a47534085fb685a"
       },
-      "quantization": null
+      "quantization": null,
+      "scope": "excluded_non_e2e"
     },
     {
       "id": "0004-onnx-deferred",
@@ -174,7 +177,8 @@
         "url": "https://huggingface.co/microsoft/VibeVoice-1.5B/tree/c00898d257e6b46004e3e2866a47534085fb685a",
         "revision": "c00898d257e6b46004e3e2866a47534085fb685a"
       },
-      "quantization": null
+      "quantization": null,
+      "scope": "excluded_non_e2e"
     },
     {
       "id": "0005-qnn-deferred",
@@ -212,7 +216,8 @@
         "url": "https://huggingface.co/microsoft/VibeVoice-1.5B/tree/c00898d257e6b46004e3e2866a47534085fb685a",
         "revision": "c00898d257e6b46004e3e2866a47534085fb685a"
       },
-      "quantization": null
+      "quantization": null,
+      "scope": "excluded_non_e2e"
     },
     {
       "id": "0006-realtime-feasibility",
@@ -251,7 +256,8 @@
         "url": "https://huggingface.co/microsoft/VibeVoice-Realtime-0.5B/tree/6bce5f06044837fe6d2c5d7a71a84f0416bd57e4",
         "revision": "6bce5f06044837fe6d2c5d7a71a84f0416bd57e4"
       },
-      "quantization": null
+      "quantization": null,
+      "scope": "excluded_non_e2e"
     },
     {
       "id": "0008-pocket-cpu-t1",
@@ -295,7 +301,8 @@
         "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/sherpa-onnx-pocket-tts-int8-2026-01-26.tar.bz2",
         "revision": null
       },
-      "quantization": "INT8 ONNX components: lm_flow, lm_main, and decoder; encoder and text_conditioner are unquantized ONNX"
+      "quantization": "INT8 ONNX components: lm_flow, lm_main, and decoder; encoder and text_conditioner are unquantized ONNX",
+      "scope": "full_e2e"
     },
     {
       "id": "0008-kokoro-cpu-t1",
@@ -340,7 +347,8 @@
         "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/kokoro-multi-lang-v1_0.tar.bz2",
         "revision": null
       },
-      "quantization": null
+      "quantization": null,
+      "scope": "full_e2e"
     },
     {
       "id": "0008-supertonic-cpu-t1",
@@ -383,7 +391,8 @@
         "url": "https://huggingface.co/Supertone/supertonic-3/tree/724fb5abbf5502583fb520898d45929e62f02c0b",
         "revision": "724fb5abbf5502583fb520898d45929e62f02c0b"
       },
-      "quantization": "INT8 ONNX release outputs"
+      "quantization": "INT8 ONNX release outputs",
+      "scope": "full_e2e"
     },
     {
       "id": "0009-pocket-cpu-t1",
@@ -426,7 +435,8 @@
         "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/sherpa-onnx-pocket-tts-int8-2026-01-26.tar.bz2",
         "revision": null
       },
-      "quantization": "INT8 ONNX components: lm_flow, lm_main, and decoder; encoder and text_conditioner are unquantized ONNX"
+      "quantization": "INT8 ONNX components: lm_flow, lm_main, and decoder; encoder and text_conditioner are unquantized ONNX",
+      "scope": "full_e2e"
     },
     {
       "id": "0009-pocket-cpu-t2",
@@ -469,7 +479,8 @@
         "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/sherpa-onnx-pocket-tts-int8-2026-01-26.tar.bz2",
         "revision": null
       },
-      "quantization": "INT8 ONNX components: lm_flow, lm_main, and decoder; encoder and text_conditioner are unquantized ONNX"
+      "quantization": "INT8 ONNX components: lm_flow, lm_main, and decoder; encoder and text_conditioner are unquantized ONNX",
+      "scope": "full_e2e"
     },
     {
       "id": "0009-pocket-cpu-t4",
@@ -512,7 +523,8 @@
         "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/sherpa-onnx-pocket-tts-int8-2026-01-26.tar.bz2",
         "revision": null
       },
-      "quantization": "INT8 ONNX components: lm_flow, lm_main, and decoder; encoder and text_conditioner are unquantized ONNX"
+      "quantization": "INT8 ONNX components: lm_flow, lm_main, and decoder; encoder and text_conditioner are unquantized ONNX",
+      "scope": "full_e2e"
     },
     {
       "id": "0009-kokoro-cpu-t1",
@@ -556,7 +568,8 @@
         "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/kokoro-multi-lang-v1_0.tar.bz2",
         "revision": null
       },
-      "quantization": null
+      "quantization": null,
+      "scope": "full_e2e"
     },
     {
       "id": "0009-kokoro-cpu-t2",
@@ -600,7 +613,8 @@
         "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/kokoro-multi-lang-v1_0.tar.bz2",
         "revision": null
       },
-      "quantization": null
+      "quantization": null,
+      "scope": "full_e2e"
     },
     {
       "id": "0009-kokoro-cpu-t4",
@@ -644,7 +658,8 @@
         "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/kokoro-multi-lang-v1_0.tar.bz2",
         "revision": null
       },
-      "quantization": null
+      "quantization": null,
+      "scope": "full_e2e"
     },
     {
       "id": "0009-supertonic-cpu-t1",
@@ -687,7 +702,8 @@
         "url": "https://huggingface.co/Supertone/supertonic-3/tree/724fb5abbf5502583fb520898d45929e62f02c0b",
         "revision": "724fb5abbf5502583fb520898d45929e62f02c0b"
       },
-      "quantization": "INT8 ONNX release outputs"
+      "quantization": "INT8 ONNX release outputs",
+      "scope": "full_e2e"
     },
     {
       "id": "0009-supertonic-cpu-t2",
@@ -730,7 +746,8 @@
         "url": "https://huggingface.co/Supertone/supertonic-3/tree/724fb5abbf5502583fb520898d45929e62f02c0b",
         "revision": "724fb5abbf5502583fb520898d45929e62f02c0b"
       },
-      "quantization": "INT8 ONNX release outputs"
+      "quantization": "INT8 ONNX release outputs",
+      "scope": "full_e2e"
     },
     {
       "id": "0009-supertonic-cpu-t4",
@@ -773,7 +790,8 @@
         "url": "https://huggingface.co/Supertone/supertonic-3/tree/724fb5abbf5502583fb520898d45929e62f02c0b",
         "revision": "724fb5abbf5502583fb520898d45929e62f02c0b"
       },
-      "quantization": "INT8 ONNX release outputs"
+      "quantization": "INT8 ONNX release outputs",
+      "scope": "full_e2e"
     },
     {
       "id": "0009-kokoro-int8-not-deployed",
@@ -811,7 +829,8 @@
         "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/kokoro-multi-lang-v1_0.tar.bz2",
         "revision": null
       },
-      "quantization": "Mixed INT8 QDQ: symmetric S8 activations and weights, per-channel weights, MinMax calibration; generator weights remain FP32"
+      "quantization": "Mixed INT8 QDQ: symmetric S8 activations and weights, per-channel weights, MinMax calibration; generator weights remain FP32",
+      "scope": "excluded_non_e2e"
     },
     {
       "id": "0010-supertonic-cpu",
@@ -862,7 +881,8 @@
         "url": "https://huggingface.co/Supertone/supertonic-3/tree/724fb5abbf5502583fb520898d45929e62f02c0b",
         "revision": "724fb5abbf5502583fb520898d45929e62f02c0b"
       },
-      "quantization": "INT8 ONNX release outputs"
+      "quantization": "INT8 ONNX release outputs",
+      "scope": "full_e2e"
     },
     {
       "id": "0010-supertonic-hybrid-htp",
@@ -913,7 +933,8 @@
         "url": "https://huggingface.co/Supertone/supertonic-3/tree/724fb5abbf5502583fb520898d45929e62f02c0b",
         "revision": "724fb5abbf5502583fb520898d45929e62f02c0b"
       },
-      "quantization": "INT8 ONNX release outputs; shape-specialized graph derivatives used for the QNN route"
+      "quantization": "INT8 ONNX release outputs; shape-specialized graph derivatives used for the QNN route",
+      "scope": "full_e2e"
     },
     {
       "id": "0011-supertonic-official-cpu",
@@ -961,7 +982,8 @@
         "url": "https://huggingface.co/Supertone/supertonic-3/tree/724fb5abbf5502583fb520898d45929e62f02c0b",
         "revision": "724fb5abbf5502583fb520898d45929e62f02c0b"
       },
-      "quantization": "FP32 ONNX source graph"
+      "quantization": "FP32 ONNX source graph",
+      "scope": "full_e2e"
     },
     {
       "id": "0011-supertonic-all-htp",
@@ -1010,7 +1032,8 @@
         "url": "https://huggingface.co/Supertone/supertonic-3/tree/724fb5abbf5502583fb520898d45929e62f02c0b",
         "revision": "724fb5abbf5502583fb520898d45929e62f02c0b"
       },
-      "quantization": "FP32 ONNX source graph"
+      "quantization": "FP32 ONNX source graph",
+      "scope": "full_e2e"
     },
     {
       "id": "0011-supertonic-htp-fail-closed",
@@ -1051,7 +1074,8 @@
         "url": "https://huggingface.co/Supertone/supertonic-3/tree/724fb5abbf5502583fb520898d45929e62f02c0b",
         "revision": "724fb5abbf5502583fb520898d45929e62f02c0b"
       },
-      "quantization": "FP32 ONNX source graph"
+      "quantization": "FP32 ONNX source graph",
+      "scope": "excluded_non_e2e"
     },
     {
       "id": "0012-pocket-onnx-cpu",
@@ -1101,7 +1125,8 @@
         "url": "https://huggingface.co/kyutai/pocket-tts-without-voice-cloning/tree/d29db7978e464fb90cb3359ee0c69a273b9142cc",
         "revision": "d29db7978e464fb90cb3359ee0c69a273b9142cc"
       },
-      "quantization": "Unquantized FP32 ONNX component export (zero quantization operators)"
+      "quantization": "Unquantized FP32 ONNX component export (zero quantization operators)",
+      "scope": "full_e2e"
     },
     {
       "id": "0012-pocket-executorch",
@@ -1140,7 +1165,8 @@
         "url": "https://huggingface.co/kyutai/pocket-tts-without-voice-cloning/tree/d29db7978e464fb90cb3359ee0c69a273b9142cc",
         "revision": "d29db7978e464fb90cb3359ee0c69a273b9142cc"
       },
-      "quantization": null
+      "quantization": null,
+      "scope": "excluded_non_e2e"
     },
     {
       "id": "0013-kokoro-onnx-bootstrap",
@@ -1187,7 +1213,8 @@
         "url": "https://huggingface.co/hexgrad/Kokoro-82M/tree/f3ff3571791e39611d31c381e3a41a3af07b4987",
         "revision": "f3ff3571791e39611d31c381e3a41a3af07b4987"
       },
-      "quantization": "Unquantized FP32 controlled ONNX export (FLOAT initializers; zero quantized operators)"
+      "quantization": "Unquantized FP32 controlled ONNX export (FLOAT initializers; zero quantized operators)",
+      "scope": "excluded_non_e2e"
     },
     {
       "id": "0013-kokoro-onnx-cpu",
@@ -1238,7 +1265,8 @@
         "url": "https://huggingface.co/hexgrad/Kokoro-82M/tree/f3ff3571791e39611d31c381e3a41a3af07b4987",
         "revision": "f3ff3571791e39611d31c381e3a41a3af07b4987"
       },
-      "quantization": "Unquantized FP32 controlled ONNX export (FLOAT initializers; zero quantized operators)"
+      "quantization": "Unquantized FP32 controlled ONNX export (FLOAT initializers; zero quantized operators)",
+      "scope": "full_e2e"
     },
     {
       "id": "0013-kokoro-executorch",
@@ -1277,7 +1305,8 @@
         "url": "https://huggingface.co/hexgrad/Kokoro-82M/tree/f3ff3571791e39611d31c381e3a41a3af07b4987",
         "revision": "f3ff3571791e39611d31c381e3a41a3af07b4987"
       },
-      "quantization": null
+      "quantization": null,
+      "scope": "excluded_non_e2e"
     }
   ]
 }

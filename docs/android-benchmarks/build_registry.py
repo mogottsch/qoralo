@@ -161,15 +161,29 @@ for _id in ("0013-kokoro-onnx-bootstrap", "0013-kokoro-onnx-cpu"):
     MODEL_METADATA[_id] = {"model_identity": KOKORO_HF_SOURCE, "quantization": "Unquantized FP32 controlled ONNX export (FLOAT initializers; zero quantized operators)"}
 MODEL_METADATA["0013-kokoro-executorch"] = {"model_identity": KOKORO_HF_SOURCE, "quantization": None, "missing": {"quantization": "The route was blocked before an Android representation was produced."}}
 
+FULL_E2E_IDS = {
+    "0002-executorch-full",
+    "0008-pocket-cpu-t1", "0008-kokoro-cpu-t1", "0008-supertonic-cpu-t1",
+    "0009-pocket-cpu-t1", "0009-pocket-cpu-t2", "0009-pocket-cpu-t4",
+    "0009-kokoro-cpu-t1", "0009-kokoro-cpu-t2", "0009-kokoro-cpu-t4",
+    "0009-supertonic-cpu-t1", "0009-supertonic-cpu-t2", "0009-supertonic-cpu-t4",
+    "0010-supertonic-cpu", "0010-supertonic-hybrid-htp",
+    "0011-supertonic-official-cpu", "0011-supertonic-all-htp",
+    "0012-pocket-onnx-cpu", "0013-kokoro-onnx-cpu",
+}
 for _row in ROWS:
     _metadata = MODEL_METADATA.get(_row["id"], {})
     _row["model_identity"] = _metadata.get("model_identity")
     _row["quantization"] = _metadata.get("quantization")
+    _row["scope"] = "full_e2e" if _row["id"] in FULL_E2E_IDS else "excluded_non_e2e"
     _row["missing_reasons"].update(_metadata.get("missing", {}))
     if _row["model_identity"] is None:
         _row["missing_reasons"].setdefault("model_identity", "No committed source/model identity is established for this route.")
     if _row["quantization"] is None:
         _row["missing_reasons"].setdefault("quantization", "No committed quantization description is established for this route.")
+# Keep ROWS exhaustive for machine evidence. The presentation layer filters to
+# FULL_E2E_IDS so component/probe attempts remain queryable but never appear in
+# the comparison table or audio presentation.
 
 
 def verify_media():
@@ -221,7 +235,7 @@ def format_memory(metrics):
 
 
 def build_html(registry):
-    entries = registry["entries"]
+    entries = [e for e in registry["entries"] if e["scope"] == "full_e2e"]
     trs = []
     players = []
     for e in entries:
@@ -250,13 +264,11 @@ def build_html(registry):
         identity = e["model_identity"]
         if identity is not None:
             model_cell = f'<a href="{html.escape(identity["url"])}" target="_blank" rel="noopener">{html.escape(e["model"])}</a><br><small>{html.escape(identity["name"])}'
-            if identity["revision"]:
-                model_cell += f' @ {html.escape(identity["revision"][:12])}'
             model_cell += '</small><br><small>' + html.escape(e["route"]) + '</small>'
         else:
             model_cell = f'<b>{html.escape(e["model"])}</b><br><small>{html.escape(e["route"])}</small>'
         quantization = html.escape(e["quantization"] or "—")
-        trs.append(f'<tr><td data-sort="{html.escape(e["experiment"])}">{html.escape(e["experiment"])}</td><td data-sort="{html.escape(e["model"] + " " + e["route"])}">{model_cell}</td><td data-sort="{quantization}">{quantization}</td><td data-sort="{html.escape(e["attempt_status"])}"><span class="status {cls}">{html.escape(e["attempt_status"])}</span></td><td data-sort="{html.escape(e["provider"] or "")} {e["threads"] or ""}">{provider}</td><td data-sort="{sort_rtf}">{rtf}</td><td data-sort="{sort_memory}">{memory}</td><td data-sort="{audio_sort}">{wav}</td><td data-sort="{html.escape(e["summary"])}">{html.escape(e["summary"])}</td></tr>')
+        trs.append(f'<tr data-route-id="{html.escape(e["id"])}"><td data-sort="{html.escape(e["experiment"])}">{html.escape(e["experiment"])}</td><td data-sort="{html.escape(e["model"] + " " + e["route"])}">{model_cell}</td><td data-sort="{quantization}">{quantization}</td><td data-sort="{html.escape(e["attempt_status"])}"><span class="status {cls}">{html.escape(e["attempt_status"])}</span></td><td data-sort="{html.escape(e["provider"] or "")} {e["threads"] or ""}">{provider}</td><td data-sort="{sort_rtf}">{rtf}</td><td data-sort="{sort_memory}">{memory}</td><td data-sort="{audio_sort}">{wav}</td><td data-sort="{html.escape(e["summary"])}">{html.escape(e["summary"])}</td></tr>')
     return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Android benchmark registry</title><style>
 :root{{--bg:#0f172a;--panel:#172033;--line:#334155;--ink:#e5e7eb;--muted:#94a3b8;--accent:#67e8f9}}*{{box-sizing:border-box}}body{{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,sans-serif}}main{{max-width:1500px;margin:auto;padding:22px 24px}}h1{{font-size:24px;line-height:1.2;margin:0 0 16px}}small{{color:var(--muted)}}a{{color:var(--accent)}}.table-wrap{{overflow:auto;border:1px solid var(--line);border-radius:12px}}table{{border-collapse:collapse;width:100%;min-width:1320px;background:var(--panel)}}th,td{{padding:12px 13px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}}th{{position:sticky;top:0;background:#1e293b;color:#bae6fd;white-space:nowrap;user-select:none;cursor:pointer}}th:hover{{background:#26364d}}th::after{{content:' ↕';color:#64748b}}th[aria-sort="ascending"]::after{{content:' ↑';color:var(--accent)}}th[aria-sort="descending"]::after{{content:' ↓';color:var(--accent)}}td:nth-child(9){{min-width:350px;color:#cbd5e1}}.status{{border-radius:99px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap}}.ran{{background:#064e3b;color:#a7f3d0}}.blocked,.deferred,.not-run{{background:#713f12;color:#fde68a}}.partial{{background:#164e63;color:#a5f3fc}}code{{color:#bae6fd}}h2{{font-size:20px;margin:30px 0 12px}}.players{{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}}.player{{scroll-margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}}.player:target{{outline:2px solid var(--accent)}}.player audio{{display:block;width:100%;margin:11px 0 8px}}.back{{font-size:12px}}footer{{margin-top:16px;color:var(--muted);font-size:12px}}</style></head><body><main><h1>Android benchmark registry</h1><div class="table-wrap"><table id="routes"><thead><tr><th data-type="text">Experiment</th><th data-type="text">Model / route</th><th data-type="text">Quantization</th><th data-type="text">Status</th><th data-type="text">Provider</th><th data-type="number" aria-sort="ascending">Warm median RTF</th><th data-type="number">Peak memory</th><th data-type="number">Audio</th><th data-type="text">Evidence summary</th></tr></thead><tbody>{''.join(trs)}</tbody></table></div><h2 id="audio-samples">Audio samples</h2><div class="players">{''.join(players)}</div><footer>Click a column heading to sort. Missing values sort last. Details: <a href="README.md">README</a> · <a href="missing-fields.md">missing fields</a>.</footer></main><script>
 const table=document.getElementById('routes'), body=table.tBodies[0], headers=[...table.tHead.rows[0].cells];
@@ -281,7 +293,7 @@ def main():
         "schema_version": 1,
         "registry_id": "android-benchmarks-v1",
         "device": DEVICE,
-        "source_policy": "Normalize committed experiment evidence only; preserve null for unavailable fields; do not infer Android results from host evidence.",
+        "source_policy": "Normalize committed full end-to-end Android evidence only; preserve null for unavailable fields; do not infer Android results from host evidence. Component probes, feasibility-only routes, and pre-runtime blockers remain in their owning experiments rather than this table.",
         "entries": ROWS,
     }
     (OUT / "registry.json").write_text(json.dumps(registry, indent=2, sort_keys=False) + "\n")
