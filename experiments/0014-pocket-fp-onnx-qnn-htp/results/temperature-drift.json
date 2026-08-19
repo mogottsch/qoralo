@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "date": "2026-08-19",
+  "finding": "The physical experiment-0012 Android CPU oracle used Pocket's default temperature 0.7, although protocol prose says 0.3.",
+  "do_not_rewrite_history": true,
+  "evidence": {
+    "committed_0012_runner": {
+      "path": "experiments/0012-pocket-onnx-vs-executorch-android/tools/pocket_cpu_bench.c",
+      "sha256": "6f4b1376c4eb90098c6b08a710bcae01192936a01a56067c18903441e3ff45ee",
+      "lines": [35, 36],
+      "facts": [
+        "SherpaOnnxGenerationConfig is zero-initialized with memset.",
+        "g.extra contains max_reference_audio_len and seed, but no temperature."
+      ]
+    },
+    "sherpa_c_api_conversion": {
+      "source_commit": "3dc7c569f31ca2cd4a20ed6f7db780327e6714c5",
+      "path_in_source": "sherpa-onnx/c-api/c-api.cc",
+      "sha256": "17dd22af87996983b8647db0b51909c9ee63f6b016248636060b6c124a59d917",
+      "lines": [1691, 1713],
+      "fact": "The C config conversion copies reference audio, sample rate, text, steps, and parses config->extra; it does not copy the C struct temperature field into GenerationConfig."
+    },
+    "pocket_default": {
+      "source_commit": "3dc7c569f31ca2cd4a20ed6f7db780327e6714c5",
+      "path_in_source": "sherpa-onnx/csrc/offline-tts-pocket-impl.h",
+      "sha256": "25996a027c7590b7aaf9a92bd52ab6bc9c92e20cf2088b8449560c1a34c00659",
+      "line": 339,
+      "expression": "gen_config.GetExtraFloat(\"temperature\", 0.7f)"
+    }
+  },
+  "consequence": "The 78-frame / 149760-sample 0012 device WAV is an effective-temperature-0.7 result. Continued 0014 runs tested explicit 0.7 as the physical implementation comparator and preserved earlier explicit-0.3 attempts separately.",
+  "scope": "This correction is recorded only in 0014. Experiment 0012 was not modified."
+}

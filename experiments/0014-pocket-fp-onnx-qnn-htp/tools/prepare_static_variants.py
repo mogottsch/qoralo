@@ -20,8 +20,10 @@ variants={
  'flow_lm_main':[('voice126',observed['flow_lm_main'][0]),('text26',observed['flow_lm_main'][1]),('ar1',observed['flow_lm_main'][2])],
  'mimi_decoder':[('decoder12',observed['mimi_decoder'][0])]
 }
-# Android's 78-frame result calls six 12-frame chunks plus one 6-frame tail.
-d6=json.loads(json.dumps(observed['mimi_decoder'][0]));d6['inputs']['latent']['shape']=[1,6,32];d6['outputs'][0]['shape']=[1,1,11520];d6['calls']=1;variants['mimi_decoder'].append(('decoder6',d6))
+# Android's 78-frame oracle calls six 12-frame chunks plus one 6-frame tail.
+# A one-frame variant also provides a bounded fallback for any honest EOS tail.
+for frames in (6,1):
+ d=json.loads(json.dumps(observed['mimi_decoder'][0]));d['inputs']['latent']['shape']=[1,frames,32];d['outputs'][0]['shape']=[1,1,1920*frames];d['calls']=1;variants['mimi_decoder'].append((f'decoder{frames}',d))
 a.output.mkdir(parents=True,exist_ok=True);report={'schema_version':1,'source_shapes':str(a.shapes),'variants':[]}
 for component,items in variants.items():
  src=a.source/f'{component}.onnx'

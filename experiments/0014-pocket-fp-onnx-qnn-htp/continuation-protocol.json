@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "date": "2026-08-19",
+  "relationship": "Moritz-authorized continuation of the original fail-closed 0014 screen; original protocol.json and host-gate.json remain historical evidence.",
+  "scope": [
+    "QNN-oriented re-export",
+    "fixed-state/cache ABI redesign",
+    "static shape specialization",
+    "audited operator rewrites",
+    "calibrated quantization",
+    "complete phone execution if host gates pass"
+  ],
+  "frozen_source": {
+    "code_revision": "d108410d23eef7e01db282f9442891162dbc3db6",
+    "weight_revision": "d29db7978e464fb90cb3359ee0c69a273b9142cc",
+    "weight_sha256": "be9c6b4876d3f30740a8225dfcaa2e43dc4aeb753c15272735bee16bbb4abb0a"
+  },
+  "shared_inputs": {
+    "text_sha256": "66e1ba2772ca3d534b792e9d9dacb26e37fda422afe40e8cced5aa878404ffb1",
+    "voice_sha256": "85f46d6f0642f657a6bd689ddaa52d5a5f53e4314715e1032704c80917392181",
+    "seed": 0,
+    "flow_steps": 1,
+    "threads": 1,
+    "sample_rate_hz": 24000
+  },
+  "temperature": {
+    "initial_declared": 0.3,
+    "corrected_physical_0012_comparator": 0.7,
+    "reason": "The committed 0012 C runner omits temperature from extra; sherpa C conversion omits the zeroed struct field; Pocket defaults to 0.7. See results/temperature-drift.json.",
+    "preservation": "Both explicit-0.3 and corrected explicit-0.7 phone runs are retained."
+  },
+  "technical_gate": {
+    "host": "Every graph required by a candidate path must form QNN partitions with session.disable_cpu_ep_fallback=1 before phone use.",
+    "phone": "Every neural call contributing to a WAV must record QNNExecutionProvider only, zero CPU provider events, and physical RPC/accelerator/cycle/HVX activity.",
+    "cpu_boundary": "Token/input preparation, RNG, state ownership, EOS scanning, orchestration, concatenation, and WAV encoding are disclosed separately.",
+    "claim": "Claims are bounded to physically observed calls and shapes; host-only or unused variants are not described as physically proven."
+  },
+  "quality_gate": {
+    "authority": "Moritz blind listening",
+    "mechanical_checks": ["valid PCM16", "finite", "non-silent", "unclipped"],
+    "numerical_and_eos_metrics": "descriptive, not a substitute for listening",
+    "result": "All three blind samples were rejected; see results/blind-listening.json."
+  },
+  "phone_controls": {
+    "serial": "R5CW81PR8SY",
+    "model": "SM-S918B",
+    "soc": "SM8550",
+    "abi": "arm64-v8a",
+    "transport": "Windows adb.exe with ADB_LIBUSB=1",
+    "lock": "actual nonblocking flock on artifacts/locks/phone.lock with child FD closure",
+    "stage": "unique /data/local/tmp root per run",
+    "cleanup": "pull evidence, remove exact remote root, verify absent, release lock"
+  }
+}

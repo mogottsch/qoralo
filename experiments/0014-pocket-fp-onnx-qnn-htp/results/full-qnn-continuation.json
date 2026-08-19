@@ -1,0 +1,108 @@
+{
+  "schema_version": 2,
+  "date": "2026-08-19",
+  "result": "technically_qnn_only_observed_paths_but_perceptually_rejected",
+  "claim": "QNN-oriented derivatives completed observed text-to-WAV neural paths with CPU fallback disabled, zero CPU provider events, and matching physical HTP executions. This is technical execution evidence, not a quality success or deployment recommendation.",
+  "source": {
+    "code_revision": "d108410d23eef7e01db282f9442891162dbc3db6",
+    "weight_revision": "d29db7978e464fb90cb3359ee0c69a273b9142cc",
+    "weight_sha256": "be9c6b4876d3f30740a8225dfcaa2e43dc4aeb753c15272735bee16bbb4abb0a",
+    "unchanged_text_sha256": "66e1ba2772ca3d534b792e9d9dacb26e37fda422afe40e8cced5aa878404ffb1",
+    "unchanged_voice_sha256": "85f46d6f0642f657a6bd689ddaa52d5a5f53e4314715e1032704c80917392181"
+  },
+  "runtime": {
+    "device": {"serial":"R5CW81PR8SY","model":"SM-S918B","soc":"SM8550","abi":"arm64-v8a"},
+    "onnxruntime": "1.27.1",
+    "qairt_qnn": "2.49.0.260730",
+    "threads": 1,
+    "graph_optimization": "ORT_ENABLE_BASIC",
+    "cpu_fallback_disabled": true,
+    "htp_source_fp_behavior": "QNN logs identify FP16 kernels for unquantized source-FP graphs; source tensor types do not establish internal FP32 arithmetic."
+  },
+  "derivatives": {
+    "fixed_cache_flowlm": {
+      "design": "Six per-layer right-aligned K/V pairs [1,16,256,64], one additive validity mask, absolute RoPE position input, separate 126-frame voice prefill, 26-token text prefill, BOS AR, and latent AR graphs.",
+      "graphs": [
+        {"variant":"voice126","sha256":"7182db8c36d2329909d32ea02fd6e7b8bb3b1d764fc333b5a2c91298d6a1996d","host_qnn_nodes":"306/306","partitions":1},
+        {"variant":"text26","sha256":"667bf587b33d38b30cd6038e1ce01a701b01b95c6606983924051070d25db3c2","host_qnn_nodes":"306/306","partitions":1},
+        {"variant":"ar_bos1","sha256":"591c8c7c0a37f04c14435d5311a4e8e66756429ffdec49a185dfa33928255532","host_qnn_nodes":"327/327","partitions":1},
+        {"variant":"ar_latent1","sha256":"5ab28bd590f0396285bb87169a1027fea6760d0bfa4f4df2ccc6449fb7fe9b99","host_qnn_nodes":"341/341","partitions":1}
+      ],
+      "cpu_component_check": {"prefill_cache_max_abs":3.635883331298828e-05,"conditioning_max_abs_over_100_steps":0.00032520294189453125,"latent_max_abs_over_100_steps":0.0001958608627319336},
+      "limitation": "The small recurrent differences accumulated and changed long-run behavior. A separate Android CPU diagnostic of this derivative also reached the 100-frame cap, localizing the drift to derivative arithmetic ordering rather than HTP alone."
+    },
+    "mimi_rewrites": {
+      "design": "Remove a proven all-zero encoder Pad, replace two exact erf-GELU chains with com.microsoft.Gelu, bypass NaN cleanup around finite Softmax fixtures, and expose unchanged decoder states directly instead of output Identity nodes.",
+      "encoder": {"sha256":"aeb436a522db0db16b7bcca45fbb56ab9cab5aa2a255d9924dc56149498fa488","host_qnn_nodes":"152/152 source; 171/171 after basic optimization","partitions":1,"cpu_max_abs":0.0},
+      "decoder12": {"sha256":"6c3e398ef7a12a6798a67de4abeb606390b1710f45007640d789171ae814da56","host_qnn_nodes":"264/264 source; 292/292 after basic optimization","partitions":1},
+      "decoder6": {"sha256":"9cb6d327f67344b0f1ac7ed7109b34502822bbd25271f16612021c42520ecd90","host_qnn_nodes":"264/264 source; 292/292 after basic optimization","partitions":1},
+      "decoder1": {"sha256":"c9361ac87eedf60ada38638039c55a093d9cbb7ae7959703ff1837636f98a46c","host_qnn_nodes":"264/264 source; 292/292 after basic optimization","partitions":1},
+      "cpu_78_frame_audio_max_abs": 0.0,
+      "cpu_decoder1_vs_decoder6_max_abs": 1.3560056686401367e-06
+    },
+    "existing_full_assignment": {
+      "text_conditioner_sha256": "c5ea5feebe6f3197e89839b53469cb191ae16cc83821f82451710eca9f56862a",
+      "text_qnn_nodes": "1/1",
+      "flow_step_sha256": "fa74e3777dc661135807d964d47f177bc93159392a0a484718ba0343130f7a60",
+      "flow_qnn_nodes": "167/167"
+    },
+    "calibrated_int16_flow": {
+      "design": "Real-prompt QDQ calibration with asymmetric UINT16 activations and symmetric INT16 weights for eligible MatMul, Gemm, and LayerNormalization nodes.",
+      "host_gate": {"voice_prefill":"598/598","text_prefill":"598/598","ar_bos":"692/692","ar_latent":"693/693","flow":"323/323","partitions_each":1},
+      "cpu_accuracy_warning": {"conditioning_max_abs_over_100_steps":0.23648905754089355,"latent_max_abs_over_100_steps":0.22079789638519287}
+    }
+  },
+  "explicit_temperature_0_7_phone_candidates": {
+    "fp_source_htp_fp16": {
+      "run": "work/phone-full-qnn-20260819T152454Z-412733",
+      "setup_seconds": 236.175,
+      "generation_seconds": 6.24839,
+      "audio_seconds": 8.0,
+      "normalized_rtf": 0.781049,
+      "latent_frames": 100,
+      "eos_step": null,
+      "vm_hwm_kb": 4039684,
+      "provider_events": {"QNNExecutionProvider":216,"CPUExecutionProvider":0},
+      "physical": {"rpc_execute_events":216,"rpc_execute_us":5061149,"accelerator_execute_events":216,"accelerator_execute_us":5020487,"cycle_events":216,"accelerator_cycles":4204175420,"hvx_events":216,"hvx_thread_sum":864},
+      "calls": {"text":1,"encoder":1,"voice_prefill":1,"text_prefill":1,"ar_bos":1,"ar_latent":99,"flow":100,"decoder12":8,"decoder1":4,"decoder6":0},
+      "wav": {"sha256":"467e777879691237472b51f5ccf9a8d43dae337cf63c2344ed3cfb645948c7f3","bytes":384044,"samples":192000,"sample_rate_hz":24000,"channels":1,"peak_abs_pcm16":19599,"rms_pcm16":1326.8383365204731,"finite":true,"non_silent":true,"unclipped":true},
+      "cleanup_verified": true
+    },
+    "calibrated_int16_flow": {
+      "run": "work/phone-full-qnn-20260819T152003Z-382116",
+      "setup_seconds": 220.405,
+      "generation_seconds": 7.28332,
+      "audio_seconds": 7.28,
+      "normalized_rtf": 1.00046,
+      "latent_frames": 91,
+      "eos_step": 88,
+      "vm_hwm_kb": 4050344,
+      "provider_events": {"QNNExecutionProvider":201,"CPUExecutionProvider":0},
+      "physical": {"rpc_execute_events":201,"rpc_execute_us":5489103,"accelerator_execute_events":201,"accelerator_execute_us":5450016,"cycle_events":201,"accelerator_cycles":4264781696,"hvx_events":201,"hvx_thread_sum":804},
+      "calls": {"text":1,"encoder":1,"voice_prefill":1,"text_prefill":1,"ar_bos":1,"ar_latent":91,"flow":91,"decoder12":7,"decoder1":7,"decoder6":0},
+      "wav": {"sha256":"dcdb36df3d8cb8fc8754257fe060d5a4b2deb7c49983d579b8f90c3aa5035820","bytes":349484,"samples":174720,"sample_rate_hz":24000,"channels":1,"peak_abs_pcm16":18367,"rms_pcm16":1989.8986740337423,"finite":true,"non_silent":true,"unclipped":true},
+      "cleanup_verified": true
+    }
+  },
+  "technical_boundary": {
+    "observed_path": "Every neural call actually used in each observed path to produce the listed WAV was QNNExecutionProvider-only and has a one-for-one QNN RPC/accelerator/cycle/HVX record. CPU work was limited to token constants, WAV input/output, RNG, tensor/state ownership, EOS scanning, and orchestration.",
+    "decoder6": "The six-frame decoder derivative passed the fallback-disabled host gate but neither explicit-0.7 candidate required or physically invoked it. The technical claim is bounded to each observed 91- or 100-frame path, not every possible tail shape.",
+    "timing": "Each candidate has one profiled complete generation. No cold-plus-five-warm distribution or first-audio latency was collected before Moritz stopped further effort; setup includes per-session QNN compilation and profiling overhead.",
+    "memory": "VmHWM is cumulative process high-water including ten loaded ORT sessions, model mappings, QNN contexts, caches, buffers, profiles, and output; it is not isolated model memory.",
+    "thermal_battery": "Not captured in the completed runs; no laboratory thermal/DVFS control claim is made."
+  },
+  "quality": {
+    "blind_listening_result": "results/blind-listening.json",
+    "verdict": "Moritz rejected the FP-QNN, INT16-QNN, and 0012 CPU samples as unusable.",
+    "deployment_recommendation": false
+  },
+  "phone_safety": {
+    "actual_nonblocking_flock": true,
+    "adb_children_lock_fd_closed": true,
+    "transport": "Windows adb.exe with ADB_LIBUSB=1",
+    "identity_rechecked_each_run": true,
+    "unique_remote_stages": true,
+    "remote_cleanup_verified": true,
+    "personal_data_accessed": false
+  }
+}

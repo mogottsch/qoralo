@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "date": "2026-08-19",
+  "listener": "Moritz",
+  "method": {
+    "blind": true,
+    "route_labels_hidden_until_after_judgment": true,
+    "page": "work/listening/index.html",
+    "reveal": "work/listening/mapping.json",
+    "shared_text": "Pocket TTS runs entirely on this Android phone using the original floating point model.",
+    "shared_voice_sha256": "85f46d6f0642f657a6bd689ddaa52d5a5f53e4314715e1032704c80917392181",
+    "shared_seed": 0,
+    "effective_temperature": 0.7
+  },
+  "verdict": "all_rejected_as_unusable",
+  "observations": {
+    "sample_B": "repetitive 'takakakakakakakaka'",
+    "samples_A_and_C": "unintelligible mumbling, with perhaps only the word 'Android' recognizable"
+  },
+  "samples": {
+    "A": {
+      "revealed_route": "fallback-disabled QNN-only observed neural path; FP source graphs mapped by HTP to FP16",
+      "sha256": "467e777879691237472b51f5ccf9a8d43dae337cf63c2344ed3cfb645948c7f3",
+      "samples": 192000,
+      "duration_seconds": 8.0,
+      "valid_non_silent_unclipped": true
+    },
+    "B": {
+      "revealed_route": "experiment-0012 ONNX Runtime CPU oracle",
+      "sha256": "40634981606f37c59a91c14d99cecb3ef4cc21b1391882e870940b0716857d22",
+      "samples": 149760,
+      "duration_seconds": 6.24,
+      "valid_non_silent_unclipped": true
+    },
+    "C": {
+      "revealed_route": "fallback-disabled QNN-only observed neural path; calibrated INT16 FlowLM plus FP-source encoder/decoder mapped to FP16",
+      "sha256": "dcdb36df3d8cb8fc8754257fe060d5a4b2deb7c49983d579b8f90c3aa5035820",
+      "samples": 174720,
+      "duration_seconds": 7.28,
+      "valid_non_silent_unclipped": true
+    }
+  },
+  "interpretation": [
+    "Technical QNN-only execution and valid WAV structure do not imply acceptable speech quality.",
+    "The 0012 derived CPU ONNX artifact is itself perceptually unusable, so matching its numerical tensors, EOS, or frame count is not a useful product-quality target.",
+    "No candidate from this blind set is recommended for deployment."
+  ]
+}
