@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "experiment": "0020",
+  "route_id": "0008-supertonic-cpu-t1",
+  "priority": 1,
+  "status": "blocked_before_phone_rerun",
+  "old": {
+    "warm_median_rtf": 0.3703028479158501,
+    "setup_seconds": 0.765107603,
+    "peak_pss_bytes": 463003648,
+    "peak_vm_hwm_bytes": 531345408,
+    "wav_sha256": null,
+    "wav_source_hashes": ["da6fe30b7945ab9718a2c7bcf0db220ba8d1f1b44be0f15f248ed9100a7272d6", "b028098b0a20217219e883ef94ce6ba61c5ab79de681186738c7ba7a0c5f1deb", "203dc2788869bfa25c528400008cc6f87dda80217cce53217122bed838eb6e81", "0ff194ebf60c2df72d0e8564a647717086c7e41bc0738feea0730895e9836438"]
+  },
+  "new": {
+    "warm_median_rtf": null,
+    "setup_seconds": null,
+    "peak_pss_bytes": null,
+    "peak_vm_hwm_bytes": null,
+    "wav_sha256": null
+  },
+  "relative_rtf_change_percent": null,
+  "drift_flag": null,
+  "blocked_reason": "The exact-device readiness gate observed zero devices; no phone launch or historical rerun was performed.",
+  "exact_contract": {
+    "archive": "sherpa-onnx-supertonic-3-tts-int8-2026-05-11",
+    "archive_sha256": "82fa96f91c4ef8abaae3a14a3f4153facf88bed821d1f7331cec2700f432c427",
+    "runtime": "sherpa-onnx 1.13.5 Android AAR, commit 3dc7c569f31ca2cd4a20ed6f7db780327e6714c5",
+    "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
+    "voice": "M1/SID5, proven by committed m1-proof.json",
+    "threads": 1,
+    "provider": "CPU",
+    "timing_boundary": "synthesis-only monotonic wall time; WAV write/hash excluded"
+  }
+}

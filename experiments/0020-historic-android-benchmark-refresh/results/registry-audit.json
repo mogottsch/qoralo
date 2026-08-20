@@ -1,0 +1,968 @@
+{
+  "schema_version": 1,
+  "experiment": "0020",
+  "registry_commit": "40e2cf0b7772ee7afd9feb07c8af14c86665a798",
+  "scope": "all visible full-E2E registry rows",
+  "generated_by": "experiments/0020-historic-android-benchmark-refresh/tools/audit_registry.py",
+  "rerun_blocker": "device readiness observed zero Android devices before any phone launch",
+  "comparison_policy": {
+    "rtf_denominator": "actual decoded audio duration",
+    "relative_change_flag_percent": 10,
+    "material_difference_requires_flag": true
+  },
+  "rows": [
+    {
+      "route_id": "0002-executorch-full",
+      "experiment": "0002",
+      "model": "VibeVoice 1.5B",
+      "route": "ExecuTorch/XNNPACK full generation",
+      "historical_status": "partial",
+      "provider": "XNNPACK",
+      "threads": null,
+      "model_identity": {
+        "name": "microsoft/VibeVoice-1.5B",
+        "url": "https://huggingface.co/microsoft/VibeVoice-1.5B/tree/c00898d257e6b46004e3e2866a47534085fb685a",
+        "revision": "c00898d257e6b46004e3e2866a47534085fb685a"
+      },
+      "quantization": "Mixed: Qwen2 backbone dynamic-activation/per-channel-weight INT8; audio components FP32",
+      "old_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": 1689894912
+      },
+      "old_wav": null,
+      "missing_fields": [
+        "wav",
+        "load_seconds",
+        "cold_rtf",
+        "warm_median_rtf",
+        "peak_pss_bytes",
+        "threads"
+      ],
+      "rerun_status": "not_attempted; device readiness blocked before phone execution",
+      "new_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "new_wav": null,
+      "relative_rtf_change_percent": null,
+      "drift_flag": null
+    },
+    {
+      "route_id": "0008-pocket-cpu-t1",
+      "experiment": "0008",
+      "model": "Pocket TTS",
+      "route": "sherpa-onnx CPU",
+      "historical_status": "ran",
+      "provider": "CPU",
+      "threads": 1,
+      "model_identity": {
+        "name": "sherpa-onnx-pocket-tts-int8-2026-01-26",
+        "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/sherpa-onnx-pocket-tts-int8-2026-01-26.tar.bz2",
+        "revision": null
+      },
+      "quantization": "INT8 ONNX components: lm_flow, lm_main, and decoder; encoder and text_conditioner are unquantized ONNX",
+      "old_metrics": {
+        "load_seconds": 0.658703801,
+        "cold_rtf": 0.4358031003580019,
+        "warm_median_rtf": 0.38864718496483114,
+        "peak_pss_bytes": 683577344,
+        "peak_vm_hwm_bytes": 751427584
+      },
+      "old_wav": null,
+      "missing_fields": [
+        "wav"
+      ],
+      "rerun_status": "not_attempted; device readiness blocked before phone execution",
+      "new_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "new_wav": null,
+      "relative_rtf_change_percent": null,
+      "drift_flag": null
+    },
+    {
+      "route_id": "0008-kokoro-cpu-t1",
+      "experiment": "0008",
+      "model": "Kokoro",
+      "route": "sherpa-onnx CPU",
+      "historical_status": "ran",
+      "provider": "CPU",
+      "threads": 1,
+      "model_identity": {
+        "name": "kokoro-multi-lang-v1_0 (sherpa-onnx archive)",
+        "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/kokoro-multi-lang-v1_0.tar.bz2",
+        "revision": null
+      },
+      "quantization": null,
+      "old_metrics": {
+        "load_seconds": 1.303446875,
+        "cold_rtf": 1.187996273027265,
+        "warm_median_rtf": 1.1952115332875515,
+        "peak_pss_bytes": 929677312,
+        "peak_vm_hwm_bytes": 995078144
+      },
+      "old_wav": null,
+      "missing_fields": [
+        "wav"
+      ],
+      "rerun_status": "not_attempted; device readiness blocked before phone execution",
+      "new_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "new_wav": null,
+      "relative_rtf_change_percent": null,
+      "drift_flag": null
+    },
+    {
+      "route_id": "0008-supertonic-cpu-t1",
+      "experiment": "0008",
+      "model": "Supertonic 3",
+      "route": "sherpa-onnx CPU",
+      "historical_status": "ran",
+      "provider": "CPU",
+      "threads": 1,
+      "model_identity": {
+        "name": "Supertone/supertonic-3",
+        "url": "https://huggingface.co/Supertone/supertonic-3/tree/724fb5abbf5502583fb520898d45929e62f02c0b",
+        "revision": "724fb5abbf5502583fb520898d45929e62f02c0b"
+      },
+      "quantization": "INT8 ONNX release outputs",
+      "old_metrics": {
+        "load_seconds": 0.765107603,
+        "cold_rtf": 0.3854677480612432,
+        "warm_median_rtf": 0.3703028479158501,
+        "peak_pss_bytes": 463003648,
+        "peak_vm_hwm_bytes": 531345408
+      },
+      "old_wav": null,
+      "missing_fields": [
+        "wav"
+      ],
+      "rerun_status": "not_attempted; device readiness blocked before phone execution",
+      "new_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "new_wav": null,
+      "relative_rtf_change_percent": null,
+      "drift_flag": null
+    },
+    {
+      "route_id": "0009-pocket-cpu-t1",
+      "experiment": "0009",
+      "model": "Pocket TTS",
+      "route": "thread sweep CPU",
+      "historical_status": "ran",
+      "provider": "CPU",
+      "threads": 1,
+      "model_identity": {
+        "name": "sherpa-onnx-pocket-tts-int8-2026-01-26",
+        "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/sherpa-onnx-pocket-tts-int8-2026-01-26.tar.bz2",
+        "revision": null
+      },
+      "quantization": "INT8 ONNX components: lm_flow, lm_main, and decoder; encoder and text_conditioner are unquantized ONNX",
+      "old_metrics": {
+        "load_seconds": null,
+        "cold_rtf": 0.42988398361088564,
+        "warm_median_rtf": 0.4080034914012739,
+        "peak_pss_bytes": 682866688,
+        "peak_vm_hwm_bytes": 748761088
+      },
+      "old_wav": null,
+      "missing_fields": [
+        "wav",
+        "load_seconds"
+      ],
+      "rerun_status": "not_attempted; device readiness blocked before phone execution",
+      "new_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "new_wav": null,
+      "relative_rtf_change_percent": null,
+      "drift_flag": null
+    },
+    {
+      "route_id": "0009-pocket-cpu-t2",
+      "experiment": "0009",
+      "model": "Pocket TTS",
+      "route": "thread sweep CPU",
+      "historical_status": "ran",
+      "provider": "CPU",
+      "threads": 2,
+      "model_identity": {
+        "name": "sherpa-onnx-pocket-tts-int8-2026-01-26",
+        "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/sherpa-onnx-pocket-tts-int8-2026-01-26.tar.bz2",
+        "revision": null
+      },
+      "quantization": "INT8 ONNX components: lm_flow, lm_main, and decoder; encoder and text_conditioner are unquantized ONNX",
+      "old_metrics": {
+        "load_seconds": null,
+        "cold_rtf": 0.37352320781966003,
+        "warm_median_rtf": 0.3674131144286632,
+        "peak_pss_bytes": 683354112,
+        "peak_vm_hwm_bytes": 756277248
+      },
+      "old_wav": null,
+      "missing_fields": [
+        "wav",
+        "load_seconds"
+      ],
+      "rerun_status": "not_attempted; device readiness blocked before phone execution",
+      "new_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "new_wav": null,
+      "relative_rtf_change_percent": null,
+      "drift_flag": null
+    },
+    {
+      "route_id": "0009-pocket-cpu-t4",
+      "experiment": "0009",
+      "model": "Pocket TTS",
+      "route": "thread sweep CPU",
+      "historical_status": "ran",
+      "provider": "CPU",
+      "threads": 4,
+      "model_identity": {
+        "name": "sherpa-onnx-pocket-tts-int8-2026-01-26",
+        "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/sherpa-onnx-pocket-tts-int8-2026-01-26.tar.bz2",
+        "revision": null
+      },
+      "quantization": "INT8 ONNX components: lm_flow, lm_main, and decoder; encoder and text_conditioner are unquantized ONNX",
+      "old_metrics": {
+        "load_seconds": null,
+        "cold_rtf": 0.46249131178160924,
+        "warm_median_rtf": 0.5114196852678572,
+        "peak_pss_bytes": 683707392,
+        "peak_vm_hwm_bytes": 757727232
+      },
+      "old_wav": null,
+      "missing_fields": [
+        "wav",
+        "load_seconds"
+      ],
+      "rerun_status": "not_attempted; device readiness blocked before phone execution",
+      "new_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "new_wav": null,
+      "relative_rtf_change_percent": null,
+      "drift_flag": null
+    },
+    {
+      "route_id": "0009-kokoro-cpu-t1",
+      "experiment": "0009",
+      "model": "Kokoro",
+      "route": "thread sweep CPU",
+      "historical_status": "ran",
+      "provider": "CPU",
+      "threads": 1,
+      "model_identity": {
+        "name": "kokoro-multi-lang-v1_0 (sherpa-onnx archive)",
+        "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/kokoro-multi-lang-v1_0.tar.bz2",
+        "revision": null
+      },
+      "quantization": null,
+      "old_metrics": {
+        "load_seconds": null,
+        "cold_rtf": 1.4208191257721876,
+        "warm_median_rtf": 1.4237948396671942,
+        "peak_pss_bytes": 918390784,
+        "peak_vm_hwm_bytes": 992514048
+      },
+      "old_wav": null,
+      "missing_fields": [
+        "wav",
+        "load_seconds"
+      ],
+      "rerun_status": "not_attempted; device readiness blocked before phone execution",
+      "new_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "new_wav": null,
+      "relative_rtf_change_percent": null,
+      "drift_flag": null
+    },
+    {
+      "route_id": "0009-kokoro-cpu-t2",
+      "experiment": "0009",
+      "model": "Kokoro",
+      "route": "thread sweep CPU",
+      "historical_status": "ran",
+      "provider": "CPU",
+      "threads": 2,
+      "model_identity": {
+        "name": "kokoro-multi-lang-v1_0 (sherpa-onnx archive)",
+        "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/kokoro-multi-lang-v1_0.tar.bz2",
+        "revision": null
+      },
+      "quantization": null,
+      "old_metrics": {
+        "load_seconds": null,
+        "cold_rtf": 1.0029200771472806,
+        "warm_median_rtf": 1.038915274000276,
+        "peak_pss_bytes": 930012160,
+        "peak_vm_hwm_bytes": 995672064
+      },
+      "old_wav": null,
+      "missing_fields": [
+        "wav",
+        "load_seconds"
+      ],
+      "rerun_status": "not_attempted; device readiness blocked before phone execution",
+      "new_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "new_wav": null,
+      "relative_rtf_change_percent": null,
+      "drift_flag": null
+    },
+    {
+      "route_id": "0009-kokoro-cpu-t4",
+      "experiment": "0009",
+      "model": "Kokoro",
+      "route": "thread sweep CPU",
+      "historical_status": "ran",
+      "provider": "CPU",
+      "threads": 4,
+      "model_identity": {
+        "name": "kokoro-multi-lang-v1_0 (sherpa-onnx archive)",
+        "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/kokoro-multi-lang-v1_0.tar.bz2",
+        "revision": null
+      },
+      "quantization": null,
+      "old_metrics": {
+        "load_seconds": null,
+        "cold_rtf": 0.8998508937883544,
+        "warm_median_rtf": 0.7525562116011203,
+        "peak_pss_bytes": 922871808,
+        "peak_vm_hwm_bytes": 993865728
+      },
+      "old_wav": null,
+      "missing_fields": [
+        "wav",
+        "load_seconds"
+      ],
+      "rerun_status": "not_attempted; device readiness blocked before phone execution",
+      "new_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "new_wav": null,
+      "relative_rtf_change_percent": null,
+      "drift_flag": null
+    },
+    {
+      "route_id": "0009-supertonic-cpu-t1",
+      "experiment": "0009",
+      "model": "Supertonic 3",
+      "route": "thread sweep CPU",
+      "historical_status": "ran",
+      "provider": "CPU",
+      "threads": 1,
+      "model_identity": {
+        "name": "Supertone/supertonic-3",
+        "url": "https://huggingface.co/Supertone/supertonic-3/tree/724fb5abbf5502583fb520898d45929e62f02c0b",
+        "revision": "724fb5abbf5502583fb520898d45929e62f02c0b"
+      },
+      "quantization": "INT8 ONNX release outputs",
+      "old_metrics": {
+        "load_seconds": null,
+        "cold_rtf": 0.3888269229689508,
+        "warm_median_rtf": 0.4009924891977482,
+        "peak_pss_bytes": 459816960,
+        "peak_vm_hwm_bytes": 532070400
+      },
+      "old_wav": null,
+      "missing_fields": [
+        "wav",
+        "load_seconds"
+      ],
+      "rerun_status": "not_attempted; device readiness blocked before phone execution",
+      "new_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "new_wav": null,
+      "relative_rtf_change_percent": null,
+      "drift_flag": null
+    },
+    {
+      "route_id": "0009-supertonic-cpu-t2",
+      "experiment": "0009",
+      "model": "Supertonic 3",
+      "route": "thread sweep CPU",
+      "historical_status": "ran",
+      "provider": "CPU",
+      "threads": 2,
+      "model_identity": {
+        "name": "Supertone/supertonic-3",
+        "url": "https://huggingface.co/Supertone/supertonic-3/tree/724fb5abbf5502583fb520898d45929e62f02c0b",
+        "revision": "724fb5abbf5502583fb520898d45929e62f02c0b"
+      },
+      "quantization": "INT8 ONNX release outputs",
+      "old_metrics": {
+        "load_seconds": null,
+        "cold_rtf": 0.3550179197115431,
+        "warm_median_rtf": 0.3624899421101892,
+        "peak_pss_bytes": 460242944,
+        "peak_vm_hwm_bytes": 534097920
+      },
+      "old_wav": null,
+      "missing_fields": [
+        "wav",
+        "load_seconds"
+      ],
+      "rerun_status": "not_attempted; device readiness blocked before phone execution",
+      "new_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "new_wav": null,
+      "relative_rtf_change_percent": null,
+      "drift_flag": null
+    },
+    {
+      "route_id": "0009-supertonic-cpu-t4",
+      "experiment": "0009",
+      "model": "Supertonic 3",
+      "route": "thread sweep CPU",
+      "historical_status": "ran",
+      "provider": "CPU",
+      "threads": 4,
+      "model_identity": {
+        "name": "Supertone/supertonic-3",
+        "url": "https://huggingface.co/Supertone/supertonic-3/tree/724fb5abbf5502583fb520898d45929e62f02c0b",
+        "revision": "724fb5abbf5502583fb520898d45929e62f02c0b"
+      },
+      "quantization": "INT8 ONNX release outputs",
+      "old_metrics": {
+        "load_seconds": null,
+        "cold_rtf": 0.37137720493651893,
+        "warm_median_rtf": 0.3985584226377708,
+        "peak_pss_bytes": 461868032,
+        "peak_vm_hwm_bytes": 532111360
+      },
+      "old_wav": null,
+      "missing_fields": [
+        "wav",
+        "load_seconds"
+      ],
+      "rerun_status": "not_attempted; device readiness blocked before phone execution",
+      "new_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "new_wav": null,
+      "relative_rtf_change_percent": null,
+      "drift_flag": null
+    },
+    {
+      "route_id": "0010-supertonic-cpu",
+      "experiment": "0010",
+      "model": "Supertonic 3",
+      "route": "official sherpa CPU control",
+      "historical_status": "ran",
+      "provider": "CPU",
+      "threads": 1,
+      "model_identity": {
+        "name": "Supertone/supertonic-3",
+        "url": "https://huggingface.co/Supertone/supertonic-3/tree/724fb5abbf5502583fb520898d45929e62f02c0b",
+        "revision": "724fb5abbf5502583fb520898d45929e62f02c0b"
+      },
+      "quantization": "INT8 ONNX release outputs",
+      "old_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": 0.3666608011554705,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": 470458368
+      },
+      "old_wav": {
+        "path": "media/0010-supertonic-cpu.wav",
+        "sha256": "7e83537630b3e354f7586b9887f7a8359d62e438c9addeea61d87d878b2a84ff",
+        "bytes": 1459536,
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "duration_seconds": 16.547528344671203,
+        "verified": true
+      },
+      "missing_fields": [
+        "load_seconds",
+        "cold_rtf",
+        "peak_pss_bytes"
+      ],
+      "rerun_status": "not_attempted; device readiness blocked before phone execution",
+      "new_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "new_wav": null,
+      "relative_rtf_change_percent": null,
+      "drift_flag": null
+    },
+    {
+      "route_id": "0010-supertonic-hybrid-htp",
+      "experiment": "0010",
+      "model": "Supertonic 3",
+      "route": "mixed QNN HTP + CPU fallback",
+      "historical_status": "ran",
+      "provider": "QNN HTP + CPU fallback",
+      "threads": null,
+      "model_identity": {
+        "name": "Supertone/supertonic-3",
+        "url": "https://huggingface.co/Supertone/supertonic-3/tree/724fb5abbf5502583fb520898d45929e62f02c0b",
+        "revision": "724fb5abbf5502583fb520898d45929e62f02c0b"
+      },
+      "quantization": "INT8 ONNX release outputs; shape-specialized graph derivatives used for the QNN route",
+      "old_metrics": {
+        "load_seconds": 26.965,
+        "cold_rtf": null,
+        "warm_median_rtf": 0.23020658557909188,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": 1181872128
+      },
+      "old_wav": {
+        "path": "media/0010-supertonic-hybrid-htp.wav",
+        "sha256": "9b0d488776b144c972e8be4e9434fac14ce3ceddfcfa5a10d137fca41b772668",
+        "bytes": 1459536,
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "duration_seconds": 16.547528344671203,
+        "verified": true
+      },
+      "missing_fields": [
+        "cold_rtf",
+        "peak_pss_bytes",
+        "threads"
+      ],
+      "rerun_status": "not_attempted; device readiness blocked before phone execution",
+      "new_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "new_wav": null,
+      "relative_rtf_change_percent": null,
+      "drift_flag": null
+    },
+    {
+      "route_id": "0011-supertonic-official-cpu",
+      "experiment": "0011",
+      "model": "Supertonic 3",
+      "route": "official FP32 ONNX CPU",
+      "historical_status": "ran",
+      "provider": "CPUExecutionProvider",
+      "threads": null,
+      "model_identity": {
+        "name": "Supertone/supertonic-3",
+        "url": "https://huggingface.co/Supertone/supertonic-3/tree/724fb5abbf5502583fb520898d45929e62f02c0b",
+        "revision": "724fb5abbf5502583fb520898d45929e62f02c0b"
+      },
+      "quantization": "FP32 ONNX source graph",
+      "old_metrics": {
+        "load_seconds": 0.721546,
+        "cold_rtf": 0.39457735705300195,
+        "warm_median_rtf": 0.41519070745163383,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": 582856704
+      },
+      "old_wav": {
+        "path": "media/0011-supertonic-official-fp32-cpu.wav",
+        "sha256": "8db92db13567b86be503d204fe367f2052b54dbfc99c0f7bfc5b23d9fd431da7",
+        "bytes": 1459536,
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "duration_seconds": 16.547528344671203,
+        "verified": true
+      },
+      "missing_fields": [
+        "peak_pss_bytes",
+        "threads"
+      ],
+      "rerun_status": "not_attempted; device readiness blocked before phone execution",
+      "new_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "new_wav": null,
+      "relative_rtf_change_percent": null,
+      "drift_flag": null
+    },
+    {
+      "route_id": "0011-supertonic-all-htp",
+      "experiment": "0011",
+      "model": "Supertonic 3",
+      "route": "all-HTP rewritten vector + CPU orchestration",
+      "historical_status": "ran",
+      "provider": "QNNExecutionProvider (fallback disabled)",
+      "threads": null,
+      "model_identity": {
+        "name": "Supertone/supertonic-3",
+        "url": "https://huggingface.co/Supertone/supertonic-3/tree/724fb5abbf5502583fb520898d45929e62f02c0b",
+        "revision": "724fb5abbf5502583fb520898d45929e62f02c0b"
+      },
+      "quantization": "FP32 ONNX source graph",
+      "old_metrics": {
+        "load_seconds": 22.8147,
+        "cold_rtf": 0.18678620369279172,
+        "warm_median_rtf": 0.17031607024910034,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": 1407393792
+      },
+      "old_wav": {
+        "path": "media/0011-supertonic-all-htp.wav",
+        "sha256": "47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c",
+        "bytes": 1459536,
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "duration_seconds": 16.547528344671203,
+        "verified": true
+      },
+      "missing_fields": [
+        "peak_pss_bytes",
+        "threads"
+      ],
+      "rerun_status": "not_attempted; device readiness blocked before phone execution",
+      "new_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "new_wav": null,
+      "relative_rtf_change_percent": null,
+      "drift_flag": null
+    },
+    {
+      "route_id": "0012-pocket-onnx-cpu",
+      "experiment": "0012",
+      "model": "Pocket TTS",
+      "route": "derived FP ONNX Runtime CPU",
+      "historical_status": "ran",
+      "provider": "CPU",
+      "threads": 1,
+      "model_identity": {
+        "name": "kyutai/pocket-tts-without-voice-cloning",
+        "url": "https://huggingface.co/kyutai/pocket-tts-without-voice-cloning/tree/d29db7978e464fb90cb3359ee0c69a273b9142cc",
+        "revision": "d29db7978e464fb90cb3359ee0c69a273b9142cc"
+      },
+      "quantization": "Unquantized FP32 ONNX component export (zero quantization operators)",
+      "old_metrics": {
+        "load_seconds": 1.079322708,
+        "cold_rtf": 0.912939803,
+        "warm_median_rtf": 0.630365451,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": 1624145920
+      },
+      "old_wav": {
+        "path": "media/0012-pocket-onnx-onnx-cpu.wav",
+        "sha256": "40634981606f37c59a91c14d99cecb3ef4cc21b1391882e870940b0716857d22",
+        "bytes": 299564,
+        "sample_rate_hz": 24000,
+        "channels": 1,
+        "duration_seconds": 6.24,
+        "verified": true
+      },
+      "missing_fields": [
+        "peak_pss_bytes"
+      ],
+      "rerun_status": "not_attempted; device readiness blocked before phone execution",
+      "new_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "new_wav": null,
+      "relative_rtf_change_percent": null,
+      "drift_flag": null
+    },
+    {
+      "route_id": "0014-pocket-qnn-fp-source",
+      "experiment": "0014",
+      "model": "Pocket TTS",
+      "route": "full QNN FP-source observed path",
+      "historical_status": "ran",
+      "provider": "QNNExecutionProvider (observed path; CPU orchestration only)",
+      "threads": 1,
+      "model_identity": {
+        "name": "kyutai/pocket-tts-without-voice-cloning",
+        "url": "https://huggingface.co/kyutai/pocket-tts-without-voice-cloning/tree/d29db7978e464fb90cb3359ee0c69a273b9142cc",
+        "revision": "d29db7978e464fb90cb3359ee0c69a273b9142cc"
+      },
+      "quantization": "Unquantized FP32 source graphs; QNN observed-path lowering uses FP16 kernels",
+      "old_metrics": {
+        "load_seconds": 236.175,
+        "cold_rtf": null,
+        "warm_median_rtf": 0.781049,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": 4136636416
+      },
+      "old_wav": {
+        "path": "media/0014-pocket-full-qnn-fp-source.wav",
+        "sha256": "467e777879691237472b51f5ccf9a8d43dae337cf63c2344ed3cfb645948c7f3",
+        "bytes": 384044,
+        "sample_rate_hz": 24000,
+        "channels": 1,
+        "duration_seconds": 8.0,
+        "verified": true
+      },
+      "missing_fields": [
+        "cold_rtf",
+        "peak_pss_bytes"
+      ],
+      "rerun_status": "not_attempted; device readiness blocked before phone execution",
+      "new_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "new_wav": null,
+      "relative_rtf_change_percent": null,
+      "drift_flag": null
+    },
+    {
+      "route_id": "0014-pocket-qnn-int16-flow",
+      "experiment": "0014",
+      "model": "Pocket TTS",
+      "route": "full QNN INT16-FlowLM observed path",
+      "historical_status": "ran",
+      "provider": "QNNExecutionProvider (observed path; CPU orchestration only)",
+      "threads": 1,
+      "model_identity": {
+        "name": "kyutai/pocket-tts-without-voice-cloning",
+        "url": "https://huggingface.co/kyutai/pocket-tts-without-voice-cloning/tree/d29db7978e464fb90cb3359ee0c69a273b9142cc",
+        "revision": "d29db7978e464fb90cb3359ee0c69a273b9142cc"
+      },
+      "quantization": "Calibrated INT16-FlowLM QDQ derivative; full observed path QNN-only",
+      "old_metrics": {
+        "load_seconds": 220.405,
+        "cold_rtf": null,
+        "warm_median_rtf": 1.00046,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": 4147552256
+      },
+      "old_wav": {
+        "path": "media/0014-pocket-full-qnn-int16-flow.wav",
+        "sha256": "dcdb36df3d8cb8fc8754257fe060d5a4b2deb7c49983d579b8f90c3aa5035820",
+        "bytes": 349484,
+        "sample_rate_hz": 24000,
+        "channels": 1,
+        "duration_seconds": 7.28,
+        "verified": true
+      },
+      "missing_fields": [
+        "cold_rtf",
+        "peak_pss_bytes"
+      ],
+      "rerun_status": "not_attempted; device readiness blocked before phone execution",
+      "new_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "new_wav": null,
+      "relative_rtf_change_percent": null,
+      "drift_flag": null
+    },
+    {
+      "route_id": "0016-pocket-qnn-hybrid-cpu",
+      "experiment": "0016",
+      "model": "Pocket TTS",
+      "route": "mixed QNN HTP + CPU fallback",
+      "historical_status": "ran",
+      "provider": "QNN HTP + CPU fallback",
+      "threads": 1,
+      "model_identity": {
+        "name": "kyutai/pocket-tts-without-voice-cloning",
+        "url": "https://huggingface.co/kyutai/pocket-tts-without-voice-cloning/tree/d29db7978e464fb90cb3359ee0c69a273b9142cc",
+        "revision": "d29db7978e464fb90cb3359ee0c69a273b9142cc"
+      },
+      "quantization": "Unquantized FP32 ONNX source graphs; QNN provider mixed offload, internal HTP precision not established",
+      "old_metrics": {
+        "load_seconds": 2.829669739,
+        "cold_rtf": 1.202828138,
+        "warm_median_rtf": 1.002830145,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": 1216598016
+      },
+      "old_wav": {
+        "path": "media/0016-pocket-qnn-hybrid-cpu.wav",
+        "sha256": "6cd3a98fb821ad76b0c0ad55a20f910da7be9d3058e511ff807b4a4f694aa45f",
+        "bytes": 184364,
+        "sample_rate_hz": 24000,
+        "channels": 1,
+        "duration_seconds": 3.84,
+        "verified": true
+      },
+      "missing_fields": [
+        "peak_pss_bytes"
+      ],
+      "rerun_status": "not_attempted; device readiness blocked before phone execution",
+      "new_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "new_wav": null,
+      "relative_rtf_change_percent": null,
+      "drift_flag": null
+    },
+    {
+      "route_id": "0013-kokoro-onnx-cpu",
+      "experiment": "0013",
+      "model": "Kokoro",
+      "route": "exact-source-derived FP32 ONNX Runtime CPU",
+      "historical_status": "ran",
+      "provider": "CPUExecutionProvider",
+      "threads": 1,
+      "model_identity": {
+        "name": "hexgrad/Kokoro-82M",
+        "url": "https://huggingface.co/hexgrad/Kokoro-82M/tree/f3ff3571791e39611d31c381e3a41a3af07b4987",
+        "revision": "f3ff3571791e39611d31c381e3a41a3af07b4987"
+      },
+      "quantization": "Unquantized FP32 controlled ONNX export (FLOAT initializers; zero quantized operators)",
+      "old_metrics": {
+        "load_seconds": 0.797719,
+        "cold_rtf": 0.982091,
+        "warm_median_rtf": 0.979973,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": 897974272
+      },
+      "old_wav": {
+        "path": "media/0013-kokoro-onnx-cpu.wav",
+        "sha256": "c046e8337b86ccf221ecd91db7dba90845f7c20b0ab1d8c248a36146c4eaecd3",
+        "bytes": 364844,
+        "sample_rate_hz": 24000,
+        "channels": 1,
+        "duration_seconds": 7.6,
+        "verified": true
+      },
+      "missing_fields": [
+        "peak_pss_bytes"
+      ],
+      "rerun_status": "not_attempted; device readiness blocked before phone execution",
+      "new_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "new_wav": null,
+      "relative_rtf_change_percent": null,
+      "drift_flag": null
+    },
+    {
+      "route_id": "0018-moss-tts-nano-cpu",
+      "experiment": "0018",
+      "model": "MOSS-TTS-Nano",
+      "route": "official ONNX Runtime CPU",
+      "historical_status": "ran",
+      "provider": "CPUExecutionProvider",
+      "threads": 4,
+      "model_identity": {
+        "name": "OpenMOSS-Team/MOSS-TTS-Nano-100M-ONNX",
+        "url": "https://huggingface.co/OpenMOSS-Team/MOSS-TTS-Nano-100M-ONNX/tree/f52645cb467506d8e18e746ddd59482685b74e58",
+        "revision": "f52645cb467506d8e18e746ddd59482685b74e58"
+      },
+      "quantization": "Unquantized official ONNX graphs; CPUExecutionProvider only",
+      "old_metrics": {
+        "load_seconds": 1.712838853,
+        "cold_rtf": 1.1383426748803827,
+        "warm_median_rtf": 1.1248052010167464,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": 5828526080
+      },
+      "old_wav": {
+        "path": "media/0018-moss-tts-nano-onnx-cpu.wav",
+        "sha256": "173850781b055e70a606fb561d93b70e6d8c6318db1b29b2324f83506c21ad6b",
+        "bytes": 1605164,
+        "sample_rate_hz": 48000,
+        "channels": 1,
+        "duration_seconds": 16.72,
+        "verified": true
+      },
+      "missing_fields": [
+        "peak_pss_bytes"
+      ],
+      "rerun_status": "not_attempted; device readiness blocked before phone execution",
+      "new_metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "new_wav": null,
+      "relative_rtf_change_percent": null,
+      "drift_flag": null
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "experiment": "0020",
+  "scope": "historical registry audit and exact Android reruns",
+  "frozen_records": "Read-only inputs; never rewrite prior experiment results.",
+  "device": {"serial": "R5CW81PR8SY", "model": "SM-S918B", "soc": "SM8550", "abi": "arm64-v8a"},
+  "route_priority": ["0008-supertonic-cpu-t1", "0008-pocket-cpu-t1", "0008-kokoro-cpu-t1", "other full-E2E rows with missing playable samples"],
+  "measurement": {
+    "setup": "session/model setup reported separately",
+    "cold": "first generation in a fresh process",
+    "warm": "at least three valid warm generations where the exact historical contract permits",
+    "rtf": "synthesis wall time divided by actual decoded audio duration",
+    "memory": "retain peak PSS when sampled and cumulative VmHWM/ru_maxrss semantics separately",
+    "threads": "exact historical thread count; no substitution",
+    "provider": "record provider assignment/profile where practical"
+  },
+  "comparison": {
+    "relative_rtf_flag_percent": 10,
+    "material_difference_rule": "Any output-duration, text, voice, seed/settings, provider, or protocol difference is flagged and does not silently replace the historical cell.",
+    "new_audio_review": "not_reviewed until explicit Moritz route/sample verdict"
+  },
+  "safety": {
+    "phone_lock": "artifacts/locks/phone.lock",
+    "adb": "Windows adb.exe with ADB_LIBUSB=1",
+    "lock_fd_closed_in_children": true,
+    "unique_staging_required": true,
+    "cleanup_verification_required": true,
+    "stop_for_new_terms_or_gates": true
+  }
+}
