@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+"""Validate canonical persistent-session benchmark evidence and compute warm medians."""
+from __future__ import annotations
+import argparse,hashlib,json,re,statistics,wave
+from pathlib import Path
+import numpy as np
+EXPECTED_TEXT_SHA="424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67"
+def load(path):
+ s=path.read_text();return json.loads(s[s.index('{'):])
+def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
+def wav_info(path):
+ with wave.open(str(path),'rb') as w:
+  assert (w.getnchannels(),w.getsampwidth(),w.getframerate(),w.getcomptype())==(1,2,24000,'NONE');frames=w.getnframes();raw=w.readframes(frames);assert not w.readframes(1)
+ x=np.frombuffer(raw,dtype='<i2').astype(np.float64);assert len(raw)==frames*2 and frames>0
+ return {'path':path.name,'sha256':sha(path),'bytes':path.stat().st_size,'channels':1,'sample_width_bytes':2,'sample_rate_hz':24000,'samples':frames,'seconds':frames/24000,'peak_abs_pcm16':int(np.max(np.abs(x))),'rms_pcm16':float(np.sqrt(np.mean(x*x))),'finite':bool(np.isfinite(x).all()),'non_silent':bool(np.any(x)),'unclipped':bool(np.max(np.abs(x))<32767),'complete_decode':True}
+def thermal(path):
+ text=path.read_text();status=re.search(r'Thermal Status: (\d+)',text);values={m.group(2):float(m.group(1)) for m in re.finditer(r'mValue=([0-9.]+).*mName=(AP|SKIN|BAT)',text)};return {'status':int(status.group(1)) if status else None,'temperatures_c':values,'sha256':sha(path)}
+def battery(path):
+ text=path.read_text();value=lambda key:(re.search(rf'^  {key}: (.+)$',text,re.M).group(1) if re.search(rf'^  {key}: (.+)$',text,re.M) else None);return {'level_percent':int(value('level')) if value('level') else None,'temperature_c':int(value('temperature'))/10 if value('temperature') else None,'usb_powered':value('USB powered')=='true','ac_powered':value('AC powered')=='true','sha256':sha(path)}
+def main():
+ p=argparse.ArgumentParser();p.add_argument('--run',type=Path,required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args();result=load(a.run/'result.json');assert not result['profiled'];assert result['canonical_transcript']['sha256']==EXPECTED_TEXT_SHA and result['canonical_transcript']['bytes']==226;iterations=result['iterations'];assert len(iterations)>=6 and iterations[0]['kind']=='first' and all(x['kind']=='warm' for x in iterations[1:]);wavs=[]
+ for item in iterations:
+  info=wav_info(a.run/'outputs'/item['wav']);assert info['samples']==item['samples'] and abs(info['seconds']-item['audio_seconds'])<1e-9;assert item['eos_step']==result['expected_eos_step'] and item['latent_frames']==result['expected_frames'];wavs.append(info)
+ assert all(x['sha256']==wavs[0]['sha256'] for x in wavs),'deterministic full reset failed';warm=iterations[1:];warm_latencies=[x['generation_seconds'] for x in warm];warm_rtfs=[x['rtf'] for x in warm];warm_durations=[x['audio_seconds'] for x in warm];stage_local=(a.run/'local-stage-sha256.txt').read_text();stage_remote=(a.run/'remote-stage-sha256.txt').read_text();assert stage_local==stage_remote
+ out={'schema_version':1,'run':a.run.name,'route':result['route'],'variant':result['variant'],'canonical_transcript':result['canonical_transcript'],'frontend':result['frontend'],'static_abi':result['static_abi'],'provider':result['provider'],'cpu_fallback':result['cpu_fallback'],'threads':1,'setup':{'seconds':result['setup_seconds'],'vm_hwm_kb_after_setup':result['setup_vm_hwm_kb']},'first':dict(iterations[0],wav=wavs[0]),'warm':{'count':len(warm),'runs':[dict(item,wav=wav) for item,wav in zip(warm,wavs[1:])],'latency_seconds':warm_latencies,'rtf':warm_rtfs,'audio_seconds':warm_durations,'median_latency_seconds':statistics.median(warm_latencies),'median_rtf':statistics.median(warm_rtfs),'min_rtf':min(warm_rtfs),'max_rtf':max(warm_rtfs)},'determinism':{'all_wav_sha256_identical':True,'sha256':wavs[0]['sha256'],'state_reset':result['state_reset']},'memory':{'method':'getrusage(RUSAGE_SELF).ru_maxrss / process VmHWM on Android','lifecycle':'cumulative process high-water including setup, all persistent sessions, mappings, caches, buffers, and all completed generations; QNN contexts included for HTP','max_vm_hwm_kb':max(x['vm_hwm_kb'] for x in iterations)},'thermal':{'before':thermal(a.run/'thermal-before.txt'),'after':thermal(a.run/'thermal-after.txt')},'battery':{'before':battery(a.run/'battery-before.txt'),'after':battery(a.run/'battery-after.txt')},'safety':{'identity':(a.run/'identity.txt').read_text().splitlines(),'local_remote_stage_hashes_equal':True,'runner_exit':int((a.run/'runner.exit').read_text()),'cleanup_exit':int((a.run/'cleanup.exit').read_text()),'cleanup_verified':(a.run/'cleanup-proof.txt').read_text().strip()=='cleanup_ok'},'listening':{'status':'not_reviewed','sha256':wavs[0]['sha256'],'reason':'Canonical-v2 output requires fresh Moritz verdict.'}};assert out['safety']['runner_exit']==0 and out['safety']['cleanup_exit']==0 and out['safety']['cleanup_verified'];a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(out,indent=2)+'\n');print(json.dumps({'setup':out['setup'],'first_rtf':out['first']['rtf'],'warm_median_rtf':out['warm']['median_rtf'],'wav_sha256':out['determinism']['sha256']},indent=2))
+if __name__=='__main__':main()

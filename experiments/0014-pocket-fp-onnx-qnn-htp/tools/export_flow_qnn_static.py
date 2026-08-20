@@ -2,9 +2,10 @@
 """QNN-oriented static FlowLM export with a fixed rolling cache ABI.
 
 This keeps the exact learned modules/weights but replaces dynamic scatter/slice state
-with right-aligned K/V caches plus a finite additive validity mask. Four target-bound
-graphs cover the matched 0012 call sequence: voice prefill (126), text prefill (26),
-first/BOS AR step, and subsequent latent AR steps.
+with right-aligned K/V caches plus a finite additive validity mask. Target-bound
+graphs cover configured voice/text prefill lengths, the first/BOS AR step, and
+subsequent latent AR steps. Defaults reproduce the historical 126/26/256 route;
+canonical benchmark variants use separate outputs and explicit arguments.
 """
 from __future__ import annotations
 import argparse,hashlib,json,math,subprocess
@@ -50,17 +51,20 @@ def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def export_one(module,args,path,input_names,output_names):
  module.eval();torch.onnx.export(module,args,str(path),input_names=input_names,output_names=output_names,opset_version=17,dynamo=False,do_constant_folding=True)
 def main():
- p=argparse.ArgumentParser();p.add_argument('--config',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--capacity',type=int,default=256);p.add_argument('--exporter-root',type=Path,required=True);a=p.parse_args();a.output.mkdir(parents=True,exist_ok=True)
+ p=argparse.ArgumentParser();p.add_argument('--config',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--capacity',type=int,default=256);p.add_argument('--voice-steps',type=int,default=126);p.add_argument('--text-steps',type=int,default=26);p.add_argument('--skip-voice',action='store_true');p.add_argument('--exporter-root',type=Path,required=True);a=p.parse_args();a.output.mkdir(parents=True,exist_ok=True)
  from pocket_tts.models.tts_model import TTSModel
  torch.manual_seed(0);model=TTSModel.load_model(config=str(a.config)).cpu().eval();flow=model.flow_lm;c=a.capacity
  cache=tuple(torch.zeros((1,16,c,64),dtype=torch.float32) for _ in range(12));mask=torch.full((1,1,1,c),-10000.0);names_cache=[z for i in range(6) for z in (f'k_cache_{i}',f'v_cache_{i}')];out_cache=[z for i in range(6) for z in (f'new_k_cache_{i}',f'new_v_cache_{i}')]
- specs=[]
- for label,t in [('voice126',126),('text26',26)]:
+ specs=[];prefills=[]
+ if not a.skip_voice:prefills.append((f'voice{a.voice_steps}',a.voice_steps))
+ prefills.append((f'text{a.text_steps}',a.text_steps))
+ for label,t in prefills:
   mod=Prefill(flow,t,c);args=(torch.randn(1,t,1024),torch.arange(t,dtype=torch.int64),mask,*cache);path=a.output/f'flow_lm_prefill_{label}.onnx';export_one(mod,args,path,['embeddings','positions','valid_mask',*names_cache],[*out_cache,'new_valid_mask']);specs.append((label,path,t,'prefill'))
- mod=ArBos(flow,1,c);args=(torch.tensor([152],dtype=torch.int64),mask,*cache);path=a.output/'flow_lm_ar_bos1.onnx';export_one(mod,args,path,['positions','valid_mask',*names_cache],['conditioning','eos_logit',*out_cache,'new_valid_mask']);specs.append(('ar_bos1',path,1,'ar_bos'))
- mod=ArLatent(flow,1,c);args=(torch.randn(1,1,32),torch.tensor([153],dtype=torch.int64),mask,*cache);path=a.output/'flow_lm_ar_latent1.onnx';export_one(mod,args,path,['sequence','positions','valid_mask',*names_cache],['conditioning','eos_logit',*out_cache,'new_valid_mask']);specs.append(('ar_latent1',path,1,'ar_latent'))
+ bos_position=a.voice_steps+a.text_steps
+ mod=ArBos(flow,1,c);args=(torch.tensor([bos_position],dtype=torch.int64),mask,*cache);path=a.output/'flow_lm_ar_bos1.onnx';export_one(mod,args,path,['positions','valid_mask',*names_cache],['conditioning','eos_logit',*out_cache,'new_valid_mask']);specs.append(('ar_bos1',path,1,'ar_bos'))
+ mod=ArLatent(flow,1,c);args=(torch.randn(1,1,32),torch.tensor([bos_position+1],dtype=torch.int64),mask,*cache);path=a.output/'flow_lm_ar_latent1.onnx';export_one(mod,args,path,['sequence','positions','valid_mask',*names_cache],['conditioning','eos_logit',*out_cache,'new_valid_mask']);specs.append(('ar_latent1',path,1,'ar_latent'))
  import onnx
- report={'schema_version':1,'derivative':'fixed-right-aligned-kv-cache-flowlm','source':{'config':str(a.config.resolve()),'weights':str(Path(model.config.weights_path).resolve()) if hasattr(model,'config') else None,'weights_sha256':sha(Path(a.config.parent/'source-assets/languages/english/model.safetensors')) if (a.config.parent/'source-assets/languages/english/model.safetensors').exists() else None,'exporter_root':str(a.exporter_root.resolve()),'exporter_commit':subprocess.check_output(['git','-C',str(a.exporter_root),'rev-parse','HEAD'],text=True).strip()},'cache_abi':{'capacity':c,'layout':'12 tensors [1,16,capacity,64], right-aligned; one additive valid mask [1,1,1,capacity]','invalid_mask_value':-10000.0,'position_input':'absolute int64 positions; RoPE Cos/Sin remain inside QNN graph'},'graphs':[]}
+ report={'schema_version':1,'derivative':'fixed-right-aligned-kv-cache-flowlm','source':{'config':str(a.config.resolve()),'weights':str(Path(model.config.weights_path).resolve()) if hasattr(model,'config') else None,'weights_sha256':sha(Path(a.config.parent/'source-assets/languages/english/model.safetensors')) if (a.config.parent/'source-assets/languages/english/model.safetensors').exists() else None,'exporter_root':str(a.exporter_root.resolve()),'exporter_commit':subprocess.check_output(['git','-C',str(a.exporter_root),'rev-parse','HEAD'],text=True).strip()},'cache_abi':{'capacity':c,'voice_steps':a.voice_steps,'text_steps':a.text_steps,'bos_absolute_position':a.voice_steps+a.text_steps,'layout':'12 tensors [1,16,capacity,64], right-aligned; one additive valid mask [1,1,1,capacity]','invalid_mask_value':-10000.0,'position_input':'absolute int64 positions; RoPE Cos/Sin remain inside QNN graph'},'graphs':[]}
  for label,path,t,kind in specs:
   m=onnx.load(str(path));onnx.checker.check_model(m,full_check=True);report['graphs'].append({'variant':label,'kind':kind,'steps':t,'path':str(path),'bytes':path.stat().st_size,'sha256':sha(path),'nodes':len(m.graph.node),'operators':sorted(set(x.op_type for x in m.graph.node))})
  (a.output/'export-report.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))

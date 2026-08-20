@@ -101,5 +101,16 @@
     "unprofiled_run_byte_identical": true,
     "claim_boundary": "Acceptance is limited to this fixed-Alba, fixed-text, seed-0, temperature-0.3 observed QNN/HTP sample. It does not establish voice cloning or other voices/texts/shapes."
   },
+  "canonical_v2_226_byte_benchmark": {
+    "transcript_sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+    "date": "2026-08-20",
+    "samples": {
+      "host_original_dynamic_one_shot": {"sha256":"916b3cf69dcacb423954526fa342e75770eca8644cdc01a210fca812065e4436","verdict":"accepted","verbatim":"good"},
+      "host_text64_cache512": {"sha256":"29a5c94ada79fd04674544881c38f80188162cf89f3686e0caecd3817df4a295","verdict":"accepted","verbatim":"good"},
+      "android_cpu_text64_cache512": {"sha256":"2e9021b972d69e05e5cd301973e2dc17cb8143f2a029bc027ef619a3460c34bd","verdict":"accepted","verbatim":"good"},
+      "fallback_disabled_qnn_htp_text64_cache512": {"sha256":"601cd622dd0598c23dd7275074763aa37ae79b18a9d777ad946b1eaebd2c58e5","verdict":"accepted","verbatim":"good"}
+    },
+    "scope": "Each verdict is exact canonical-v2 route and WAV-hash scoped; no verdict was inherited across host, CPU, or HTP."
+  },
   "quality_policy": "Only Moritz's sample-bound listening verdict establishes quality. Numerical fidelity and structural WAV validation are supporting evidence, not substitutes."
 }

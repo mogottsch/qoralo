@@ -35,6 +35,26 @@ The accepted physical QNN sample:
 
 The unprofiled number is one first complete generation after session setup—not a warm median or distribution. The profiled number remains the instrumentation-bearing physical proof.
 
+## Canonical-v2 dashboard benchmark
+
+A dated, distinct canonical route now uses the repository-wide 226-byte transcript (SHA-256 `424b3807…b67`). It tokenizes to 64 IDs, so the accepted text26/cache256 route could not be relabeled or reused. New text64/cache512 graphs preserve all `126 voice + 64 text + 292 maximum generated = 482` positions within 512 slots.
+
+Host original-dynamic and cache512 outputs both emitted 163 frames with EOS at step 160, lasted 13.04 seconds, and were independently accepted by Moritz as “good.” Every new cache512 graph also passed fallback-disabled host QNN assignment as one partition.
+
+| Canonical-v2 measurement | Android CPU | QNN/HTP |
+|---|---:|---:|
+| Setup | 2.597 s | 62.233 s |
+| First generation | 5.377 s / RTF 0.412 | 2.491 s / RTF 0.191 |
+| Five-warm median | **5.402 s / RTF 0.414** | **2.369 s / RTF 0.182** |
+| Warm RTF range | 0.407–0.419 | 0.179–0.182 |
+| Process VmHWM | 1,412,276 kB | 2,405,820 kB |
+| Representative WAV | `2e9021b9…34bd` | `601cd622…58e5` |
+| Moritz verdict | **Accepted: “good”** | **Accepted: “good”** |
+
+All six outputs within each route were byte-identical and had the same 163-frame/13.04-second stop behavior. The QNN result has a separate instrumentation-bearing proof: fallback disabled, 344 QNN / 0 CPU provider events, with exactly 344 matching RPC, accelerator, cycle, and HVX records. Profiled generation was 7.481 seconds (RTF 0.574) and is not used as the warm performance number.
+
+Machine-readable canonical evidence: [`results/canonical-v2-benchmark.json`](results/canonical-v2-benchmark.json) and [`canonical-benchmark-protocol.json`](canonical-benchmark-protocol.json).
+
 ## Why the static derivative matters
 
 The quality-valid original ONNX route was accepted on x86 host CPU but its original dynamic FlowLM graph diverged on Android CPU before the first sampled latent, reached the 134-frame cap without EOS, and was separately rejected by Moritz. Direct Alba initialization of the fixed-cache derivative removed that platform-sensitive dynamic path:
@@ -69,9 +89,13 @@ CPU supplies fixed token IDs, the prepacked official Alba state, deterministic n
 - [`device/run_alba_static_phone.sh`](device/run_alba_static_phone.sh) — locked Android CPU/QNN proof protocol
 - [`tools/analyze_alba_phone.py`](tools/analyze_alba_phone.py) — provider, physical, WAV, and system evidence aggregation
 - [`tools/fetch_0008_pocket_archive.sh`](tools/fetch_0008_pocket_archive.sh) and [`tools/audit_0008_pocket_archive.py`](tools/audit_0008_pocket_archive.py) — pinned distinct-archive reconciliation
+- [`tools/prepare_canonical_benchmark_assets.py`](tools/prepare_canonical_benchmark_assets.py), [`tools/build_canonical_graphs.sh`](tools/build_canonical_graphs.sh), and [`tools/generate_canonical_host_gate.py`](tools/generate_canonical_host_gate.py) — canonical-v2 fixtures, text64/cache512 graphs, and host gate
+- [`tools/run_canonical_host_qnn_gate.sh`](tools/run_canonical_host_qnn_gate.sh), [`tools/prepare_canonical_benchmark_stage.sh`](tools/prepare_canonical_benchmark_stage.sh), and [`device/run_canonical_benchmark.sh`](device/run_canonical_benchmark.sh) — fail-closed host assignment plus persistent phone benchmark/proof
+- [`tools/analyze_canonical_benchmark.py`](tools/analyze_canonical_benchmark.py) and [`tools/analyze_canonical_physical_proof.py`](tools/analyze_canonical_physical_proof.py) — first/warm and provider/physical aggregation
 
 ## Evidence
 
+- [`results/canonical-v2-benchmark.json`](results/canonical-v2-benchmark.json)
 - [`results/zero-voice-encoder-root-cause.json`](results/zero-voice-encoder-root-cause.json)
 - [`results/alba-quality-recovery.json`](results/alba-quality-recovery.json)
 - [`results/quality-recovery-listening.json`](results/quality-recovery-listening.json)

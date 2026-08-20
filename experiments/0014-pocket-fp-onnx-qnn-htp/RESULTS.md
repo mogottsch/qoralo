@@ -10,6 +10,65 @@ The accepted physical sample is SHA-256 `2c3901ec39a53596759c1d95381a1d67e4f9ca8
 
 This is a **quality-accepted observed fixed-Alba route**, not a general voice-cloning or production claim.
 
+## Canonical-v2 first and warm benchmark
+
+The repository-wide canonical-v2 transcript is 226 bytes with no newline, SHA-256 `424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67`. Pocket produces 64 tokenizer IDs. This required a new derivative rather than relabeling the accepted text26/cache256 route:
+
+- fixed Alba positions: 126;
+- text positions: 64;
+- official frame cap: 292;
+- required context: 482 positions;
+- new capacity: 512, with 30 spare positions;
+- BOS absolute position: 190.
+
+The new text64 conditioner, text-prefill64/cache512, BOS/cache512, and latent-AR/cache512 graph hashes are recorded in [`results/canonical-v2-benchmark.json`](results/canonical-v2-benchmark.json). The original text26/cache256 files and verdicts remain unchanged.
+
+### Host gates
+
+Original-dynamic one-shot and cache512 host outputs both had EOS step 160, 163 frames, 312,960 samples, and 13.04 seconds audio. They had correlation `0.999997685`, SNR `53.344 dB`, and were both explicitly accepted by Moritz as “good”:
+
+- original dynamic SHA-256 `916b3cf69dcacb423954526fa342e75770eca8644cdc01a210fca812065e4436`;
+- text64/cache512 SHA-256 `29a5c94ada79fd04674544881c38f80188162cf89f3686e0caecd3817df4a295`.
+
+Fallback-disabled host QNN assignment and one host execution passed for every required session as one QNN partition: text 1/1, prefill 306/306, BOS 327/327, latent AR 341/341, flow 167/167, and decoder-12/6/1 264/264 source nodes each.
+
+### Persistent Android performance
+
+Sessions were created once. Each route then ran one unprofiled first complete generation and five additional warm generations. Before every iteration, the runner rebuilt the FlowLM cache from the immutable Alba fixture, recreated all decoder state, replayed the deterministic noise fixture from row zero, reran the text conditioner from the same 64 IDs, and cleared EOS/current-latent/audio buffers.
+
+| Measurement | Android CPU | Fallback-disabled QNN/HTP |
+|---|---:|---:|
+| Setup | 2.597 s | 62.233 s |
+| First generation | 5.37667 s | 2.49081 s |
+| First RTF | 0.412321 | 0.191013 |
+| Warm latencies | 5.38086, 5.30347, 5.40161, 5.43163, 5.46986 s | 2.37007, 2.32942, 2.33791, 2.37913, 2.36863 s |
+| Warm RTFs | 0.412642, 0.406708, 0.414234, 0.416536, 0.419467 | 0.181754, 0.178637, 0.179288, 0.182449, 0.181643 |
+| **Warm median latency** | **5.40161 s** | **2.36863 s** |
+| **Warm median RTF** | **0.414234** | **0.181643** |
+| VmHWM | 1,412,276 kB | 2,405,820 kB |
+
+Every one of the twelve benchmark WAVs had EOS step 160, 163 frames, and 13.04 seconds audio. All six outputs within each route were byte-identical, finite, non-silent, unclipped 24 kHz mono PCM16:
+
+- CPU SHA-256 `2e9021b972d69e05e5cd301973e2dc17cb8143f2a029bc027ef619a3460c34bd` — Moritz: **“good”**;
+- QNN/HTP SHA-256 `601cd622dd0598c23dd7275074763aa37ae79b18a9d777ad946b1eaebd2c58e5` — independently accepted: **“good”**.
+
+RTF uses each iteration's actual 13.04-second output. VmHWM is cumulative process-lifecycle high-water, not isolated model memory.
+
+### Separate physical proof
+
+The profiled canonical QNN run produced the byte-identical accepted HTP WAV but is kept separate from unprofiled performance:
+
+- setup `60.1781 s`;
+- profiled generation `7.48091 s`, RTF `0.57369`;
+- VmHWM `2,520,060 kB`;
+- 344 QNN provider events and **0 CPU provider events**;
+- 344 RPC events, `4,607,489 µs`;
+- 344 accelerator events, `4,543,215 µs`;
+- 344 cycle records, `4,652,893,276` cycles;
+- 344 HVX records, thread sum 1,376.
+
+Observed calls were text 1, prefill 1, BOS AR 1, latent AR 163, flow 163, decoder-12 13, decoder-6 1, and decoder-1 1. Every QNN event had one matching physical record. Thermal status remained 0. For the unprofiled benchmark AP temperature was 41.2→53.6 °C and skin 37.1→39.3 °C; for the proof AP was 42.1→48.4 °C and skin 38.1→39.1 °C.
+
 ## Root cause: the invalid voice contract
 
 Frozen checkpoint:

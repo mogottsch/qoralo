@@ -1,4 +1,4 @@
-import hashlib,json,unittest
+import hashlib,json,statistics,unittest
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 class ResultContract(unittest.TestCase):
@@ -39,4 +39,15 @@ class ResultContract(unittest.TestCase):
   r=json.loads((ROOT/'results/quality-recovery-listening.json').read_text());self.assertEqual(r['android_cpu_original_graph_alba_gate']['verdict'],'rejected');self.assertEqual(r['android_cpu_fixed_cache_alba_gate']['verdict'],'accepted');self.assertEqual(r['physical_fallback_disabled_qnn_alba_gate']['verdict'],'accepted');self.assertTrue(r['physical_fallback_disabled_qnn_alba_gate']['independent_from_cpu']);self.assertEqual(r['controlled_fp_onnx_alba_host_gate']['verdict'],'accepted_both')
  def test_quality_recovery_protocol_preserves_full_cache_context(self):
   r=json.loads((ROOT/'quality-recovery-protocol.json').read_text());b=r['qnn_static_boundary'];self.assertEqual(b['initial_voice_positions']+b['text_positions']+b['maximum_generated_positions'],252);self.assertLessEqual(252,b['cache_capacity']);self.assertFalse(r['preservation']['edit_0012']);self.assertIn('fixed-voice',r['contract']['voice'])
+ def test_canonical_v2_benchmark_contract(self):
+  p=json.loads((ROOT/'canonical-benchmark-protocol.json').read_text());t=p['canonical_transcript'];self.assertEqual((t['bytes'],t['sha256']),(226,'424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67'));self.assertEqual(len(p['frontend']['token_ids']),64);a=p['static_abi'];self.assertEqual(a['voice_positions']+a['text_positions']+a['maximum_generated_positions'],482);self.assertLessEqual(482,a['capacity']);self.assertEqual(p['status'],'canonical_v2_benchmark_complete_cpu_and_htp_accepted')
+ def test_canonical_v2_warm_distributions_and_verdicts(self):
+  r=json.loads((ROOT/'results/canonical-v2-benchmark.json').read_text());self.assertEqual(r['result'],'canonical_v2_fixed_alba_cpu_and_fallback_disabled_qnn_benchmarks_complete_and_accepted')
+  for key,wav in (('android_cpu','2e9021b972d69e05e5cd301973e2dc17cb8143f2a029bc027ef619a3460c34bd'),('physical_qnn_htp','601cd622dd0598c23dd7275074763aa37ae79b18a9d777ad946b1eaebd2c58e5')):
+   b=r[key] if key=='android_cpu' else r[key]['benchmark'];self.assertEqual(b['warm']['count'],5);self.assertEqual(b['warm']['median_rtf'],statistics.median(b['warm']['rtf']));self.assertEqual(b['determinism']['sha256'],wav);self.assertTrue(b['determinism']['all_wav_sha256_identical']);self.assertTrue(b['safety']['cleanup_verified']);self.assertTrue(all(x['eos_step']==160 and x['latent_frames']==163 for x in b['warm']['runs']))
+  self.assertEqual(r['listening']['android_cpu']['verdict'],'accepted');self.assertEqual(r['listening']['physical_qnn_htp']['verdict'],'accepted')
+ def test_canonical_v2_physical_proof(self):
+  r=json.loads((ROOT/'results/canonical-v2-benchmark.json').read_text())['physical_qnn_htp']['profiled_proof'];a=r['aggregate'];self.assertEqual(a['provider_events'],{'QNNExecutionProvider':344});self.assertEqual(a['rpc_execute_events'],344)
+  for key in ('accelerator_execute_events','cycle_events','hvx_events'):self.assertEqual(a[key],344)
+  self.assertEqual(a['hvx_thread_sum'],1376);self.assertTrue(a['all_invoked_calls_qnn_only'] and a['all_physical_event_counts_match_qnn']);self.assertEqual(r['wav']['sha256'],'601cd622dd0598c23dd7275074763aa37ae79b18a9d777ad946b1eaebd2c58e5');self.assertTrue(r['safety']['cleanup_verified'])
 if __name__=='__main__':unittest.main()
