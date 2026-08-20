@@ -8,5 +8,19 @@ fi
 export ADB_LIBUSB=1
 if [ -n "${ADB_SHIM_LOG:-}" ]; then
   printf 'resolved=%s ADB_LIBUSB=%s argv=%s\n' "$ADB_REAL" "$ADB_LIBUSB" "$*" >> "$ADB_SHIM_LOG"
+  out=$(mktemp)
+  err=$(mktemp)
+  trap 'rm -f "$out" "$err"' EXIT HUP INT TERM
+  set +e
+  "$ADB_REAL" "$@" >"$out" 2>"$err"
+  rc=$?
+  set -e
+  cat "$out"
+  cat "$err" >&2
+  printf 'exit=%s stdout_sha256=%s stderr_sha256=%s\n' "$rc" "$(sha256sum "$out" | awk '{print $1}')" "$(sha256sum "$err" | awk '{print $1}')" >> "$ADB_SHIM_LOG"
+  if [ -s "$err" ]; then
+    sed 's/^/stderr: /' "$err" >> "$ADB_SHIM_LOG"
+  fi
+  exit "$rc"
 fi
 exec "$ADB_REAL" "$@"

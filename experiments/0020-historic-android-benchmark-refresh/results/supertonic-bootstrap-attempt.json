@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "experiment": "0020",
+  "route_id": "0008-supertonic-cpu-t1",
+  "run_id": "20260820T093520Z-supertonic_3-1f694d5dcb0d",
+  "status": "blocked_before_inference_app_scoped_storage_owner",
+  "failure": {
+    "stage": "bootstrap",
+    "exception_type": "java.io.FileNotFoundException",
+    "message": "/storage/emulated/0/Android/data/dev.moket.ttsbench/files/models/supertonic-3/descriptor.json: open failed: EACCES (Permission denied)"
+  },
+  "interpretation": "The pinned app and exact files were installed/staged after Windows-ADB identity gates, but Android 16 denied app access to shell-owned scoped-storage files. This is staging ownership evidence only, not model/runtime compatibility or benchmark evidence.",
+  "inference_attempted": false,
+  "new_metrics": {"setup_seconds": null, "cold_rtf": null, "warm_median_rtf": null, "peak_pss_bytes": null, "peak_vm_hwm_bytes": null},
+  "wav": null,
+  "raw_evidence": {
+    "device_result_sha256": "297b110e8630f9e35ae27d4d8450322dcae9783a7bf0ce4928d58af2b87a5738",
+    "host_run_sha256": "62bc5fc38dd8cf6b2c0b992efc6c176e51cbbb58b90624489ae468b76d246191",
+    "thermal_polls_sha256": "c2946a35409232df801a3cf78bdd656e63bbb400cdea78b692b27d0f79969f9e"
+  },
+  "follow_up": "Use the scoped 0020 app-owned restage adapter under phone.lock, rerun all identity gates, verify every app-visible hash, and only then relaunch. Frozen 0008 remains unchanged."
+}
