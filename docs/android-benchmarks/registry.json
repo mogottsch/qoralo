@@ -3962,6 +3962,164 @@
         "audit_source": "experiments/0014-pocket-fp-onnx-qnn-htp/results/canonical-v2-benchmark.json",
         "missing_reasons": {}
       }
+    },
+    {
+      "id": "0019-moss-canonical-v2-qnn-phone-blocked",
+      "experiment": "0019",
+      "model": "MOSS-TTS-Nano",
+      "route": "canonical-v2 fixed-capacity QNN/HTP phone route",
+      "deployment_variant": "Canonical v2 / fixed-capacity derivative / app-UID QNN phone blocker",
+      "attempt_status": "blocked",
+      "technical_execution": {
+        "status": "blocked",
+        "android_attempted": true,
+        "provider": "QNNExecutionProvider (fallback disabled; session not created)",
+        "threads": null
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Canonical-v2 fixed-capacity MOSS derivatives passed CPU equivalence, fail-closed host QNN assignment, context generation, and context reload gates. On the authorized phone, the final app-UID carrier loaded QNN backend interface 2.38 but CreateDevice returned QNN_DEVICE_ERROR_INVALID_CONFIG before GetCapability, neural session assignment, or inference. No phone benchmark or physical HTP claim exists.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
+      "android_attempted": true,
+      "provider": "QNNExecutionProvider (fallback disabled; session not created)",
+      "precision": "FP32 official ONNX derivatives",
+      "threads": null,
+      "device": {
+        "model": "SM-S918B",
+        "soc": "SM8550",
+        "serial": "R5CW81PR8SY",
+        "abi": "arm64-v8a"
+      },
+      "metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "wav": null,
+      "summary": "Canonical-v2 fixed-capacity MOSS derivatives passed CPU equivalence, fail-closed host QNN assignment, context generation, and context reload gates. On the authorized phone, the final app-UID carrier loaded QNN backend interface 2.38 but CreateDevice returned QNN_DEVICE_ERROR_INVALID_CONFIG before GetCapability, neural session assignment, or inference. No phone benchmark or physical HTP claim exists.",
+      "limitations": [
+        "The blocker is bounded to the recorded carrier/app UID, Android build, ORT/QNN versions, and phone; it does not prove all Android apps or QNN deployments incompatible.",
+        "Host CPU equivalence, QNN eligibility, and four generated/reloaded context binaries are feasibility evidence only\u2014not Android timing, memory, provider-event, or physical execution evidence.",
+        "Public libcdsprpc declaration, exact native hashes, unique verified V73 skel/RFSA staging, fallback disabled, graph-I/O quantization off, runtime SoC auto-detect, and minimal device options did not move the failure beyond CreateDevice.",
+        "No mixed fallback route, phone inference, audio decode, WAV, or listening verdict exists. Cleanup and lock reacquisition were verified."
+      ],
+      "sources": [
+        "experiments/0019-moss-tts-nano-qnn-htp-android/results/fixed-capacity-phone-blocker.json",
+        "experiments/0019-moss-tts-nano-qnn-htp-android/results/fixed-capacity-cpu-equivalence.json",
+        "experiments/0019-moss-tts-nano-qnn-htp-android/results/fixed-capacity-context-provenance.json",
+        "experiments/0019-moss-tts-nano-qnn-htp-android/results/fixed-capacity-derivative-provenance.json",
+        "experiments/0019-moss-tts-nano-qnn-htp-android/protocol/canonical-v2-tokenization.json",
+        "experiments/0019-moss-tts-nano-qnn-htp-android/README.md"
+      ],
+      "missing_reasons": {
+        "wav": "No inference or audio decode occurred.",
+        "load_seconds": "First fail-closed QNN session never created; backend setup is not a completed route setup measurement.",
+        "cold_rtf": "No inference occurred.",
+        "warm_median_rtf": "No first or warm inference occurred.",
+        "proof_run_rtf": "No physical execution proof run occurred; CreateDevice failed before assignment.",
+        "first_post_setup_rtf": "No session or post-setup generation existed.",
+        "peak_pss_bytes": "No benchmark process progressed beyond backend setup.",
+        "peak_vm_hwm_bytes": "No benchmark process progressed beyond backend setup.",
+        "provider_events": "No session assignment or inference occurred.",
+        "physical_rpc_accelerator_cycle_hvx": "CreateDevice failed before execution.",
+        "listening": "No phone WAV exists; listening is not applicable."
+      },
+      "model_identity": {
+        "name": "OpenMOSS-Team/MOSS-TTS-Nano-100M-ONNX",
+        "url": "https://huggingface.co/OpenMOSS-Team/MOSS-TTS-Nano-100M-ONNX/tree/f52645cb467506d8e18e746ddd59482685b74e58",
+        "revision": "f52645cb467506d8e18e746ddd59482685b74e58"
+      },
+      "quantization": "Unquantized official ONNX-derived fixed-capacity graphs; no quantization or calibration; no phone neural session",
+      "scope": "excluded_non_e2e",
+      "transcript": {
+        "classification": "canonical_v2",
+        "sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+        "bytes": 226,
+        "trailing_newline": false,
+        "source": "experiments/0019-moss-tts-nano-qnn-htp-android/protocol/canonical-v2-transcript.txt",
+        "basis": "Experiment 0019 exact canonical-v2 MOSS SentencePiece tokenization.",
+        "effective_frontend": {
+          "kind": "MOSS SentencePiece tokenizer",
+          "token_count": 51,
+          "tokenizer_model_sha256": "c353ee1479b536bf414c1b247f5542b6607fb8ae91320e5af1781fee200fddff",
+          "token_ids": [
+            5322,
+            300,
+            642,
+            2160,
+            9813,
+            10364,
+            676,
+            6704,
+            1680,
+            10363,
+            661,
+            10376,
+            530,
+            524,
+            3598,
+            4991,
+            1727,
+            420,
+            273,
+            628,
+            10380,
+            6271,
+            10364,
+            332,
+            10211,
+            1079,
+            7824,
+            2276,
+            2103,
+            1734,
+            3628,
+            10364,
+            606,
+            1217,
+            1107,
+            298,
+            3572,
+            302,
+            8741,
+            5368,
+            10364,
+            311,
+            425,
+            1957,
+            273,
+            2868,
+            831,
+            10104,
+            372,
+            9153,
+            10380
+          ],
+          "source": "experiments/0019-moss-tts-nano-qnn-htp-android/protocol/canonical-v2-tokenization.json"
+        },
+        "canonical_v2_sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+        "canonical_v2_match": true,
+        "comparison_boundary": "Exact canonical-v2 transcript match.",
+        "audit_source": "experiments/0019-moss-tts-nano-qnn-htp-android/results/fixed-capacity-phone-blocker.json",
+        "missing_reasons": {}
+      }
     }
   ]
 }

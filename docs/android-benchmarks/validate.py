@@ -121,8 +121,16 @@ def main():
                 fail(f"{e['id']}: transcript classification source is missing")
             if classification != "canonical_v2" and audit_source != TRANSCRIPT_AUDIT_SOURCE:
                 fail(f"{e['id']}: historical transcript audit provenance mismatch")
-        elif transcript is not None or "transcript" not in e["missing_reasons"]:
-            fail(f"{e['id']}: excluded route transcript must be null with a reason")
+        elif transcript is None:
+            if "transcript" not in e["missing_reasons"]:
+                fail(f"{e['id']}: excluded route null transcript lacks a reason")
+        else:
+            if transcript.get("classification") != "canonical_v2" or transcript.get("sha256") != CANONICAL_V2_SHA256 or transcript.get("bytes") != 226 or transcript.get("trailing_newline") is not False:
+                fail(f"{e['id']}: excluded route transcript evidence is invalid")
+            frontend = transcript.get("effective_frontend")
+            frontend_has_exact_output = isinstance(frontend, dict) and ((frontend.get("token_count") == len(frontend.get("token_ids", [])) and frontend.get("token_count", 0) > 0) or re.fullmatch(r"[a-f0-9]{64}", frontend.get("token_ids_sha256", "") or frontend.get("mapped_ids_int32le_sha256", "")))
+            if not frontend_has_exact_output or not (ROOT / frontend.get("source", "")).is_file() or not (ROOT / transcript.get("audit_source", "")).is_file():
+                fail(f"{e['id']}: excluded canonical-v2 route lacks exact frontend/classification provenance")
         if e["attempt_status"] not in STATUSES:
             fail(f"{e['id']}: invalid status")
         technical = e["technical_execution"]
@@ -164,6 +172,19 @@ def main():
                 fail(f"{e['id']}: null metric {field} lacks a missing-evidence reason")
         if e["metrics"]["warm_median_rtf"] is not None and "One profiled generation only" in " ".join(e["limitations"]):
             fail(f"{e['id']}: a single profiled generation cannot populate warm_median_rtf")
+        if e["id"] == "0019-moss-canonical-v2-qnn-phone-blocked":
+            source_blocker = json.loads((ROOT / "experiments/0019-moss-tts-nano-qnn-htp-android/results/fixed-capacity-phone-blocker.json").read_text())
+            if e["scope"] != "excluded_non_e2e" or e["attempt_status"] != "blocked" or not e["android_attempted"]:
+                fail(f"{e['id']}: phone blocker must remain attempted but excluded/non-E2E")
+            if any(value is not None for value in e["metrics"].values()) or e["wav"] is not None or e["listening_review"]["status"] != "not_reviewed":
+                fail(f"{e['id']}: pre-session blocker cannot carry benchmark metrics/WAV/listening verdict")
+            if source_blocker["exact_blocker"]["phase"] != "QNN backend SetupBackend/CreateDevice before GetCapability assignment" or source_blocker["phone_metrics"]["provider_events"] is not None or source_blocker["phone_metrics"]["physical_rpc_accelerator_cycle_hvx"] is not None:
+                fail(f"{e['id']}: exact CreateDevice/provider/physical boundary mismatch")
+            if not source_blocker["host"]["cpu_equivalence_passed"] or source_blocker["host"]["contexts_result"] != "four_contexts_generated_and_fail_closed_reloaded":
+                fail(f"{e['id']}: bounded host feasibility provenance mismatch")
+            frontend = e["transcript"]["effective_frontend"]
+            if frontend["token_count"] != source_blocker["canonical_v2"]["token_count"] or frontend["token_ids"] != json.loads((ROOT / frontend["source"]).read_text())["token_ids"]:
+                fail(f"{e['id']}: canonical-v2 MOSS frontend provenance mismatch")
         if e["id"] in {"0014-pocket-alba-cpu-v2", "0014-pocket-alba-qnn-htp-v2"}:
             source_result = json.loads((ROOT / "experiments/0014-pocket-fp-onnx-qnn-htp/results/canonical-v2-benchmark.json").read_text())
             is_htp = e["id"] == "0014-pocket-alba-qnn-htp-v2"
