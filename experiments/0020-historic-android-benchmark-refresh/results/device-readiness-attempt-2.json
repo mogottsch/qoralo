@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "experiment": "0020",
+  "observed_at_utc": "2026-08-20T09:23:45Z",
+  "commands": [
+    "python3 experiments/0008-sherpa-onnx-android-tts-benchmark/run-device.py ready",
+    "ADB_LIBUSB=1 adb devices -l"
+  ],
+  "result": "blocked_before_phone_rerun",
+  "runner_error": "expected exactly one device, observed 0",
+  "adb_devices_output": "List of devices attached",
+  "observed_devices": 0,
+  "expected_identity": {"serial": "R5CW81PR8SY", "model": "SM-S918B", "soc": "SM8550", "abi": "arm64-v8a"},
+  "staging": "not_started",
+  "cleanup": "not_applicable",
+  "interpretation": "This is a fresh readiness observation in Sean's session. It does not reinterpret or invalidate the earlier timestamped readiness record, and no phone retry or historical route rerun followed."
+}
