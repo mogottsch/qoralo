@@ -1,0 +1,61 @@
+{
+  "base_contract": {
+    "path": "protocol-stage-decomposition.json",
+    "sha256": "0adbdf11677c22f5b47d0d8661e7a109172ef5eabc462aec6477a473de2d7801",
+    "stage_models_and_io_unchanged": true
+  },
+  "diagnostic_attempt_v1": {
+    "classification": "Stage 1 finalized and executed successfully; the orchestration process then failed only because retained QAIRT progress preceded the runner JSON on stdout.",
+    "ignored_root": "experiments/0017-kokoro-onnx-qnn-htp-android/work/stages-v1/qnn-host-v1",
+    "not_a_stage_failure": true,
+    "output": {
+      "bytes": 256000,
+      "sha256": "db91f384bb4d0af91f851cff13e89dd8e913a015a7e895cee557efe34b8851f3"
+    },
+    "profiles": [
+      {
+        "bytes": 2631,
+        "kind": "ort",
+        "sha256": "c71614c811579794b3eddad6d163c1d8e0f7390329bc0ee3a371500e41c11c43"
+      },
+      {
+        "bytes": 66148,
+        "kind": "qnn_csv",
+        "sha256": "447c8e8b099ff3569e6154e839cdf2f7d52d3b54a45fddf6149b767e553c8a3d"
+      },
+      {
+        "bytes": 65656,
+        "kind": "qnn_log",
+        "sha256": "07d704be93152424e3131ac728d6e4aeec9811469fbe7aefb9444bf94565f0ed"
+      }
+    ],
+    "ru_maxrss_kib": 326328,
+    "run_seconds": [
+      27.6986
+    ],
+    "runner_exit_code": 0,
+    "session_creation_seconds": 2.79061,
+    "stage": "bert",
+    "stderr": {
+      "bytes": 267,
+      "sha256": "cbd140738314bd5db6c1133f653484225ba1abf8b4d2727d0aec880a3a93dd4c"
+    },
+    "stdout": {
+      "bytes": 2207,
+      "runner_json_offset_bytes": 1595,
+      "sha256": "4852b89c096d0d928992a72ca8828c0be6e9e449854bbe89f66e62a47a0a3759"
+    }
+  },
+  "experiment": "0017-kokoro-onnx-qnn-htp-android",
+  "final_batch_rule": "Restart from stage 1 and require all 18 stages in one strictly serial orchestration record; preserve this diagnostic attempt separately.",
+  "frozen_at_utc": "2026-08-20T09:23:48Z",
+  "frozen_before_final_18_stage_host_batch": true,
+  "normalization_revision": {
+    "only_change": "retain/hash complete stdout and parse the final runner-owned JSON object after the QAIRT/libnative progress prefix",
+    "path": "tools/run_staged_pipeline_qnn.py",
+    "runner_binary_unchanged_sha256": "b3a378585e02c39c6e4b84397b0ac7a148cfc79a4909c9334c44bd39a84b072b",
+    "sha256": "26f05f872ecd45a24f21a9411e7eb6622e5b3b71d1968d14a222af75305792d2",
+    "stage_models_unchanged_manifest_sha256": "8e56efd5cffd1d765b800cf97bc45b9af89017f43c879f34bd68fd463b856042"
+  },
+  "schema_version": 1
+}
