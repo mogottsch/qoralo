@@ -4,13 +4,13 @@ This directory is the canonical input and minimum evidence contract for comparab
 
 ## Canonical transcript
 
-Use `transcript.txt` as exact bytes. It is 230 bytes, has no trailing newline, and has SHA-256:
+Use `transcript.txt` as exact bytes. Canonical transcript v2 is 226 bytes, has no trailing newline, and has SHA-256:
 
 ```text
-350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f
+424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67
 ```
 
-Do not normalize the three-period pauses to a Unicode ellipsis or comma. Record the effective text and tokenizer output because a frontend may transform the input. If a model cannot accept this contract, preserve that route as noncanonical and state the exact reason; never silently substitute another sentence.
+It uses commas after “studio” and “meaning”; it contains no three-period or Unicode ellipsis pauses. Record the effective text and tokenizer output because a frontend may transform the input. Transcript v1 (`350c8d3d…13471f`) is retained only as legacy provenance and is not canonical v2. If a model cannot accept this contract, preserve that route as noncanonical and state the exact reason; never silently substitute another sentence.
 
 ## Comparable timing
 
