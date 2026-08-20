@@ -97,8 +97,8 @@
         "threads": {"type": ["integer", "null"], "minimum": 1},
         "device": {"anyOf": [{"$ref": "#/$defs/device"}, {"type": "null"}]},
         "metrics": {
-          "type": "object", "required": ["load_seconds", "cold_rtf", "warm_median_rtf", "peak_pss_bytes", "peak_vm_hwm_bytes"],
-          "properties": {"load_seconds": {"$ref": "#/$defs/metric"}, "cold_rtf": {"$ref": "#/$defs/metric"}, "warm_median_rtf": {"$ref": "#/$defs/metric"}, "peak_pss_bytes": {"$ref": "#/$defs/metric"}, "peak_vm_hwm_bytes": {"$ref": "#/$defs/metric"}},
+          "type": "object", "required": ["load_seconds", "cold_rtf", "warm_median_rtf", "proof_run_rtf", "first_post_setup_rtf", "peak_pss_bytes", "peak_vm_hwm_bytes"],
+          "properties": {"load_seconds": {"$ref": "#/$defs/metric"}, "cold_rtf": {"$ref": "#/$defs/metric"}, "warm_median_rtf": {"$ref": "#/$defs/metric"}, "proof_run_rtf": {"$ref": "#/$defs/metric"}, "first_post_setup_rtf": {"$ref": "#/$defs/metric"}, "peak_pss_bytes": {"$ref": "#/$defs/metric"}, "peak_vm_hwm_bytes": {"$ref": "#/$defs/metric"}},
           "additionalProperties": false
         },
         "wav": {"anyOf": [{"$ref": "#/$defs/wav"}, {"type": "null"}]},

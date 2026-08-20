@@ -7,7 +7,7 @@
     "serial": "R5CW81PR8SY",
     "abi": "arm64-v8a"
   },
-  "source_policy": "Normalize committed full end-to-end Android evidence only; preserve null for unavailable fields; do not infer Android results from host evidence. Component probes, feasibility-only routes, and pre-runtime blockers remain in their owning experiments rather than this table.",
+  "source_policy": "Keep an exhaustive registry of committed route evidence while presenting only full end-to-end Android routes; preserve null plus a reason for unavailable fields; never infer Android results from host evidence. Component probes, feasibility-only routes, and pre-runtime blockers are retained as excluded_non_e2e entries.",
   "model_timeline": [
     {
       "model": "Kokoro-82M",
@@ -85,6 +85,8 @@
         "load_seconds": null,
         "cold_rtf": null,
         "warm_median_rtf": null,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": null,
         "peak_vm_hwm_bytes": 1689894912
       },
@@ -102,7 +104,10 @@
         "wav": "No locally verified Android WAV was retained for this route.",
         "load_seconds": "Result has stage timings but no single normalized session-load value.",
         "cold_rtf": "The final report does not expose one cold-generation RTF.",
-        "warm_median_rtf": "The published 109.26 value is protocol/prefix RTF without a retained normalized audio-duration denominator."
+        "warm_median_rtf": "The published 109.26 value is protocol/prefix RTF without a retained normalized audio-duration denominator.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route.",
+        "peak_pss_bytes": "No committed normalized peak_pss_bytes measurement is established for this route."
       },
       "model_identity": {
         "name": "microsoft/VibeVoice-1.5B",
@@ -156,6 +161,8 @@
         "load_seconds": 0.024192292,
         "cold_rtf": null,
         "warm_median_rtf": null,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": 1435059200,
         "peak_vm_hwm_bytes": 1640783872
       },
@@ -170,7 +177,9 @@
       "missing_reasons": {
         "wav": "The output is a PCM tensor probe, not a retained WAV.",
         "cold_rtf": "Component result reports inference seconds, not audio duration or RTF.",
-        "warm_median_rtf": "Component result reports inference seconds, not audio duration or RTF."
+        "warm_median_rtf": "Component result reports inference seconds, not audio duration or RTF.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route."
       },
       "model_identity": {
         "name": "microsoft/VibeVoice-1.5B",
@@ -219,6 +228,8 @@
         "load_seconds": null,
         "cold_rtf": null,
         "warm_median_rtf": null,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": null,
         "peak_vm_hwm_bytes": null
       },
@@ -232,7 +243,14 @@
         "wav": "No locally verified Android WAV was retained for this route.",
         "android_attempted": "README status is deferred; no phone run exists.",
         "all": "No Android measurements or audio can be inferred from the plan.",
-        "quantization": "The committed route evidence does not establish a deployment quantization for this route."
+        "quantization": "The committed route evidence does not establish a deployment quantization for this route.",
+        "load_seconds": "No committed normalized load_seconds measurement is established for this route.",
+        "cold_rtf": "No committed normalized cold_rtf measurement is established for this route.",
+        "warm_median_rtf": "No committed normalized warm_median_rtf measurement is established for this route.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route.",
+        "peak_pss_bytes": "No committed normalized peak_pss_bytes measurement is established for this route.",
+        "peak_vm_hwm_bytes": "No committed normalized peak_vm_hwm_bytes measurement is established for this route."
       },
       "model_identity": {
         "name": "microsoft/VibeVoice-1.5B",
@@ -281,6 +299,8 @@
         "load_seconds": null,
         "cold_rtf": null,
         "warm_median_rtf": null,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": null,
         "peak_vm_hwm_bytes": null
       },
@@ -294,7 +314,14 @@
         "wav": "No locally verified Android WAV was retained for this route.",
         "android_attempted": "README status is deferred; no phone run exists.",
         "all": "No Android measurements or audio can be inferred from the plan.",
-        "quantization": "The committed route evidence does not establish a deployment quantization for this route."
+        "quantization": "The committed route evidence does not establish a deployment quantization for this route.",
+        "load_seconds": "No committed normalized load_seconds measurement is established for this route.",
+        "cold_rtf": "No committed normalized cold_rtf measurement is established for this route.",
+        "warm_median_rtf": "No committed normalized warm_median_rtf measurement is established for this route.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route.",
+        "peak_pss_bytes": "No committed normalized peak_pss_bytes measurement is established for this route.",
+        "peak_vm_hwm_bytes": "No committed normalized peak_vm_hwm_bytes measurement is established for this route."
       },
       "model_identity": {
         "name": "microsoft/VibeVoice-1.5B",
@@ -343,6 +370,8 @@
         "load_seconds": null,
         "cold_rtf": null,
         "warm_median_rtf": null,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": null,
         "peak_vm_hwm_bytes": null
       },
@@ -356,7 +385,14 @@
         "wav": "No locally verified Android WAV was retained for this route.",
         "android_attempted": "README says planned and blocked; no phone run exists.",
         "all": "No Android measurements or audio can be inferred from the plan.",
-        "quantization": "The committed route evidence does not establish a deployment quantization for this route."
+        "quantization": "The committed route evidence does not establish a deployment quantization for this route.",
+        "load_seconds": "No committed normalized load_seconds measurement is established for this route.",
+        "cold_rtf": "No committed normalized cold_rtf measurement is established for this route.",
+        "warm_median_rtf": "No committed normalized warm_median_rtf measurement is established for this route.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route.",
+        "peak_pss_bytes": "No committed normalized peak_pss_bytes measurement is established for this route.",
+        "peak_vm_hwm_bytes": "No committed normalized peak_vm_hwm_bytes measurement is established for this route."
       },
       "model_identity": {
         "name": "microsoft/VibeVoice-1.5B",
@@ -405,6 +441,8 @@
         "load_seconds": null,
         "cold_rtf": null,
         "warm_median_rtf": null,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": null,
         "peak_vm_hwm_bytes": null
       },
@@ -419,7 +457,14 @@
         "wav": "No locally verified Android WAV was retained for this route.",
         "android_attempted": "Inventory explicitly says no conversion has begun.",
         "all": "Host evidence is not Android evidence.",
-        "quantization": "Feasibility inventory records package estimates, not an Android quantized deployment."
+        "quantization": "Feasibility inventory records package estimates, not an Android quantized deployment.",
+        "load_seconds": "No committed normalized load_seconds measurement is established for this route.",
+        "cold_rtf": "No committed normalized cold_rtf measurement is established for this route.",
+        "warm_median_rtf": "No committed normalized warm_median_rtf measurement is established for this route.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route.",
+        "peak_pss_bytes": "No committed normalized peak_pss_bytes measurement is established for this route.",
+        "peak_vm_hwm_bytes": "No committed normalized peak_vm_hwm_bytes measurement is established for this route."
       },
       "model_identity": {
         "name": "microsoft/VibeVoice-Realtime-0.5B",
@@ -449,8 +494,10 @@
       },
       "objective_evidence": {
         "status": "descriptive",
-        "summary": "Pinned Pocket INT8 generated valid audio on the Galaxy S23 Ultra.",
-        "comparison_notes": []
+        "summary": "Historical Android execution remains structurally validated but unreviewed; later exact-archive host samples were explicitly accepted and are distinct from the missing historical WAVs.",
+        "comparison_notes": [
+          "The later archive audit proved an input-sensitive nonzero encoder distinct from 0012's invalid zero-encoder checkpoint; it does not retroactively attach the reviewed host samples to the historical Android run."
+        ]
       },
       "listening_review": {
         "status": "not_reviewed",
@@ -473,21 +520,28 @@
         "load_seconds": 0.658703801,
         "cold_rtf": 0.4358031003580019,
         "warm_median_rtf": 0.38864718496483114,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": 683577344,
         "peak_vm_hwm_bytes": 751427584
       },
       "wav": null,
-      "summary": "Pinned Pocket INT8 generated valid audio on the Galaxy S23 Ultra.",
+      "summary": "Pinned Pocket INT8 generated valid audio on the Galaxy S23 Ultra. A later exact-archive host audit found its distinct encoder input-sensitive and Moritz accepted newly reproduced temperature-0.3 and 0.7 Bria samples; that does not retroactively review the missing historical Android WAVs.",
       "limitations": [
         "Requested Alba was unavailable; packaged Bria was used and voice_match=false.",
-        "Listening was not performed."
+        "The historical Android WAVs were not listened to and remain unavailable; later accepted samples were exact-archive host reproductions, not those historical files.",
+        "The archive encoder is distinct from the invalid zero-encoder 0012 checkpoint, but its tested traced output was fixed at 13 frames and the route remains research-only."
       ],
       "sources": [
         "experiments/0008-sherpa-onnx-android-tts-benchmark/results/pocket/one-thread-result.json",
-        "experiments/0008-sherpa-onnx-android-tts-benchmark/README.md"
+        "experiments/0008-sherpa-onnx-android-tts-benchmark/README.md",
+        "experiments/0014-pocket-fp-onnx-qnn-htp/results/alba-quality-recovery.json",
+        "experiments/0014-pocket-fp-onnx-qnn-htp/results/quality-recovery-listening.json"
       ],
       "missing_reasons": {
-        "wav": "The retained WAV is ignored and is not present in this checkout; its committed hash remains in the source result."
+        "wav": "The retained historical Android WAV is ignored and is not present in this checkout; its committed hash remains in the source result. Newly reviewed exact-archive host samples are distinct files.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route."
       },
       "model_identity": {
         "name": "sherpa-onnx-pocket-tts-int8-2026-01-26",
@@ -541,6 +595,8 @@
         "load_seconds": 1.303446875,
         "cold_rtf": 1.187996273027265,
         "warm_median_rtf": 1.1952115332875515,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": 929677312,
         "peak_vm_hwm_bytes": 995078144
       },
@@ -556,7 +612,9 @@
       ],
       "missing_reasons": {
         "wav": "The retained WAV is ignored and is not present in this checkout; its committed hash remains in the source result.",
-        "quantization": "Committed Android archive inventory identifies model.onnx but does not establish its quantization scheme."
+        "quantization": "Committed Android archive inventory identifies model.onnx but does not establish its quantization scheme.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route."
       },
       "model_identity": {
         "name": "kokoro-multi-lang-v1_0 (sherpa-onnx archive)",
@@ -610,6 +668,8 @@
         "load_seconds": 0.765107603,
         "cold_rtf": 0.3854677480612432,
         "warm_median_rtf": 0.3703028479158501,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": 463003648,
         "peak_vm_hwm_bytes": 531345408
       },
@@ -623,7 +683,9 @@
         "experiments/0008-sherpa-onnx-android-tts-benchmark/README.md"
       ],
       "missing_reasons": {
-        "wav": "The retained WAV is ignored and is not present in this checkout; its committed hash remains in the source result."
+        "wav": "The retained WAV is ignored and is not present in this checkout; its committed hash remains in the source result.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route."
       },
       "model_identity": {
         "name": "Supertone/supertonic-3",
@@ -677,6 +739,8 @@
         "load_seconds": null,
         "cold_rtf": 0.42988398361088564,
         "warm_median_rtf": 0.4080034914012739,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": 682866688,
         "peak_vm_hwm_bytes": 748761088
       },
@@ -690,7 +754,9 @@
       ],
       "missing_reasons": {
         "wav": "Raw sweep WAV is ignored and is not present in this checkout.",
-        "load_seconds": "The normalized configuration records load memory but not a load-wall scalar."
+        "load_seconds": "The normalized configuration records load memory but not a load-wall scalar.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route."
       },
       "model_identity": {
         "name": "sherpa-onnx-pocket-tts-int8-2026-01-26",
@@ -744,6 +810,8 @@
         "load_seconds": null,
         "cold_rtf": 0.37352320781966003,
         "warm_median_rtf": 0.3674131144286632,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": 683354112,
         "peak_vm_hwm_bytes": 756277248
       },
@@ -757,7 +825,9 @@
       ],
       "missing_reasons": {
         "wav": "Raw sweep WAV is ignored and is not present in this checkout.",
-        "load_seconds": "No normalized load-wall scalar."
+        "load_seconds": "No normalized load-wall scalar.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route."
       },
       "model_identity": {
         "name": "sherpa-onnx-pocket-tts-int8-2026-01-26",
@@ -811,6 +881,8 @@
         "load_seconds": null,
         "cold_rtf": 0.46249131178160924,
         "warm_median_rtf": 0.5114196852678572,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": 683707392,
         "peak_vm_hwm_bytes": 757727232
       },
@@ -824,7 +896,9 @@
       ],
       "missing_reasons": {
         "wav": "Raw sweep WAV is ignored and is not present in this checkout.",
-        "load_seconds": "No normalized load-wall scalar."
+        "load_seconds": "No normalized load-wall scalar.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route."
       },
       "model_identity": {
         "name": "sherpa-onnx-pocket-tts-int8-2026-01-26",
@@ -878,6 +952,8 @@
         "load_seconds": null,
         "cold_rtf": 1.4208191257721876,
         "warm_median_rtf": 1.4237948396671942,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": 918390784,
         "peak_vm_hwm_bytes": 992514048
       },
@@ -892,7 +968,9 @@
       "missing_reasons": {
         "wav": "Raw sweep WAV is ignored and is not present in this checkout.",
         "load_seconds": "No normalized load-wall scalar.",
-        "quantization": "Committed Android archive inventory identifies model.onnx but does not establish its quantization scheme."
+        "quantization": "Committed Android archive inventory identifies model.onnx but does not establish its quantization scheme.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route."
       },
       "model_identity": {
         "name": "kokoro-multi-lang-v1_0 (sherpa-onnx archive)",
@@ -946,6 +1024,8 @@
         "load_seconds": null,
         "cold_rtf": 1.0029200771472806,
         "warm_median_rtf": 1.038915274000276,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": 930012160,
         "peak_vm_hwm_bytes": 995672064
       },
@@ -960,7 +1040,9 @@
       "missing_reasons": {
         "wav": "Raw sweep WAV is ignored and is not present in this checkout.",
         "load_seconds": "No normalized load-wall scalar.",
-        "quantization": "Committed Android archive inventory identifies model.onnx but does not establish its quantization scheme."
+        "quantization": "Committed Android archive inventory identifies model.onnx but does not establish its quantization scheme.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route."
       },
       "model_identity": {
         "name": "kokoro-multi-lang-v1_0 (sherpa-onnx archive)",
@@ -1014,6 +1096,8 @@
         "load_seconds": null,
         "cold_rtf": 0.8998508937883544,
         "warm_median_rtf": 0.7525562116011203,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": 922871808,
         "peak_vm_hwm_bytes": 993865728
       },
@@ -1028,7 +1112,9 @@
       "missing_reasons": {
         "wav": "Raw sweep WAV is ignored and is not present in this checkout.",
         "load_seconds": "No normalized load-wall scalar.",
-        "quantization": "Committed Android archive inventory identifies model.onnx but does not establish its quantization scheme."
+        "quantization": "Committed Android archive inventory identifies model.onnx but does not establish its quantization scheme.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route."
       },
       "model_identity": {
         "name": "kokoro-multi-lang-v1_0 (sherpa-onnx archive)",
@@ -1082,6 +1168,8 @@
         "load_seconds": null,
         "cold_rtf": 0.3888269229689508,
         "warm_median_rtf": 0.4009924891977482,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": 459816960,
         "peak_vm_hwm_bytes": 532070400
       },
@@ -1095,7 +1183,9 @@
       ],
       "missing_reasons": {
         "wav": "Raw sweep WAV is ignored and is not present in this checkout.",
-        "load_seconds": "No normalized load-wall scalar."
+        "load_seconds": "No normalized load-wall scalar.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route."
       },
       "model_identity": {
         "name": "Supertone/supertonic-3",
@@ -1149,6 +1239,8 @@
         "load_seconds": null,
         "cold_rtf": 0.3550179197115431,
         "warm_median_rtf": 0.3624899421101892,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": 460242944,
         "peak_vm_hwm_bytes": 534097920
       },
@@ -1162,7 +1254,9 @@
       ],
       "missing_reasons": {
         "wav": "Raw sweep WAV is ignored and is not present in this checkout.",
-        "load_seconds": "No normalized load-wall scalar."
+        "load_seconds": "No normalized load-wall scalar.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route."
       },
       "model_identity": {
         "name": "Supertone/supertonic-3",
@@ -1216,6 +1310,8 @@
         "load_seconds": null,
         "cold_rtf": 0.37137720493651893,
         "warm_median_rtf": 0.3985584226377708,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": 461868032,
         "peak_vm_hwm_bytes": 532111360
       },
@@ -1229,7 +1325,9 @@
       ],
       "missing_reasons": {
         "wav": "Raw sweep WAV is ignored and is not present in this checkout.",
-        "load_seconds": "No normalized load-wall scalar."
+        "load_seconds": "No normalized load-wall scalar.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route."
       },
       "model_identity": {
         "name": "Supertone/supertonic-3",
@@ -1278,6 +1376,8 @@
         "load_seconds": null,
         "cold_rtf": null,
         "warm_median_rtf": null,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": null,
         "peak_vm_hwm_bytes": null
       },
@@ -1291,7 +1391,14 @@
       "missing_reasons": {
         "wav": "No locally verified Android WAV was retained for this route.",
         "android_attempted": "README explicitly says it has not been deployed to Android.",
-        "all": "No Android timing, memory, or WAV exists."
+        "all": "No Android timing, memory, or WAV exists.",
+        "load_seconds": "No committed normalized load_seconds measurement is established for this route.",
+        "cold_rtf": "No committed normalized cold_rtf measurement is established for this route.",
+        "warm_median_rtf": "No committed normalized warm_median_rtf measurement is established for this route.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route.",
+        "peak_pss_bytes": "No committed normalized peak_pss_bytes measurement is established for this route.",
+        "peak_vm_hwm_bytes": "No committed normalized peak_vm_hwm_bytes measurement is established for this route."
       },
       "model_identity": {
         "name": "kokoro-multi-lang-v1_0 (sherpa-onnx archive)",
@@ -1345,6 +1452,8 @@
         "load_seconds": null,
         "cold_rtf": null,
         "warm_median_rtf": 0.3666608011554705,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": null,
         "peak_vm_hwm_bytes": 470458368
       },
@@ -1366,7 +1475,10 @@
       ],
       "missing_reasons": {
         "load_seconds": "The checkpoint records component session creation but no single normalized load scalar for this row.",
-        "cold_rtf": "The checkpoint records four run totals but does not label one as cold RTF."
+        "cold_rtf": "The checkpoint records four run totals but does not label one as cold RTF.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route.",
+        "peak_pss_bytes": "No committed normalized peak_pss_bytes measurement is established for this route."
       },
       "model_identity": {
         "name": "Supertone/supertonic-3",
@@ -1422,6 +1534,8 @@
         "load_seconds": 26.965,
         "cold_rtf": null,
         "warm_median_rtf": 0.23020658557909188,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": null,
         "peak_vm_hwm_bytes": 1181872128
       },
@@ -1443,7 +1557,10 @@
         "experiments/0010-supertonic-qnn-htp-feasibility/results/e2e-hybrid-cpu-checkpoint.json"
       ],
       "missing_reasons": {
-        "cold_rtf": "The checkpoint reports run totals but does not label one as cold RTF."
+        "cold_rtf": "The checkpoint reports run totals but does not label one as cold RTF.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route.",
+        "peak_pss_bytes": "No committed normalized peak_pss_bytes measurement is established for this route."
       },
       "model_identity": {
         "name": "Supertone/supertonic-3",
@@ -1497,6 +1614,8 @@
         "load_seconds": 0.721546,
         "cold_rtf": 0.39457735705300195,
         "warm_median_rtf": 0.41519070745163383,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": null,
         "peak_vm_hwm_bytes": 582856704
       },
@@ -1516,7 +1635,11 @@
       "sources": [
         "experiments/0011-supertonic-official-fp32-phone-comparison/results/step1-phone-cpu-checkpoint.json"
       ],
-      "missing_reasons": {},
+      "missing_reasons": {
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route.",
+        "peak_pss_bytes": "No committed normalized peak_pss_bytes measurement is established for this route."
+      },
       "model_identity": {
         "name": "Supertone/supertonic-3",
         "url": "https://huggingface.co/Supertone/supertonic-3/tree/724fb5abbf5502583fb520898d45929e62f02c0b",
@@ -1569,6 +1692,8 @@
         "load_seconds": 22.8147,
         "cold_rtf": 0.18678620369279172,
         "warm_median_rtf": 0.17031607024910034,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": null,
         "peak_vm_hwm_bytes": 1407393792
       },
@@ -1589,7 +1714,11 @@
         "experiments/0011-supertonic-official-fp32-phone-comparison/results/softplus-matched-e2e-checkpoint.json",
         "experiments/0011-supertonic-official-fp32-phone-comparison/README.md"
       ],
-      "missing_reasons": {},
+      "missing_reasons": {
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route.",
+        "peak_pss_bytes": "No committed normalized peak_pss_bytes measurement is established for this route."
+      },
       "model_identity": {
         "name": "Supertone/supertonic-3",
         "url": "https://huggingface.co/Supertone/supertonic-3/tree/724fb5abbf5502583fb520898d45929e62f02c0b",
@@ -1642,6 +1771,8 @@
         "load_seconds": null,
         "cold_rtf": null,
         "warm_median_rtf": null,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": null,
         "peak_vm_hwm_bytes": null
       },
@@ -1653,7 +1784,14 @@
       ],
       "missing_reasons": {
         "wav": "No complete route output exists.",
-        "metrics": "Fail-closed stop occurred before complete Android timing or WAV output."
+        "metrics": "Fail-closed stop occurred before complete Android timing or WAV output.",
+        "load_seconds": "No committed normalized load_seconds measurement is established for this route.",
+        "cold_rtf": "No committed normalized cold_rtf measurement is established for this route.",
+        "warm_median_rtf": "No committed normalized warm_median_rtf measurement is established for this route.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route.",
+        "peak_pss_bytes": "No committed normalized peak_pss_bytes measurement is established for this route.",
+        "peak_vm_hwm_bytes": "No committed normalized peak_vm_hwm_bytes measurement is established for this route."
       },
       "model_identity": {
         "name": "Supertone/supertonic-3",
@@ -1668,7 +1806,7 @@
       "experiment": "0012",
       "model": "Pocket TTS",
       "route": "derived FP ONNX Runtime CPU",
-      "deployment_variant": "Pocket five-component FP ONNX",
+      "deployment_variant": "Pocket five-component FP ONNX / invalid cloning contract",
       "attempt_status": "ran",
       "technical_execution": {
         "status": "ran",
@@ -1683,8 +1821,10 @@
       },
       "objective_evidence": {
         "status": "descriptive",
-        "summary": "Source-vs-ONNX fidelity and valid-audio diagnostics are retained separately from listening.",
-        "comparison_notes": []
+        "summary": "Later root-cause evidence proved the numerically equivalent route reproduced an invalid zero-voice audio-cloning contract; technical measurements and the exact route/sample rejection remain historical evidence.",
+        "comparison_notes": [
+          "All 42 Mimi encoder/encoder-transformer tensors (9,224,736 elements) were zero; numerical equivalence was not evidence of valid speech quality."
+        ]
       },
       "listening_review": {
         "status": "rejected",
@@ -1707,6 +1847,8 @@
         "load_seconds": 1.079322708,
         "cold_rtf": 0.912939803,
         "warm_median_rtf": 0.630365451,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": null,
         "peak_vm_hwm_bytes": 1624145920
       },
@@ -1719,16 +1861,24 @@
         "duration_seconds": 6.24,
         "verified": true
       },
-      "summary": "Five exact-source-derived FP ONNX components completed text-to-WAV on Android CPU; six outputs were byte-identical and warm median RTF was 0.630.",
+      "summary": "Five exact-source-derived FP ONNX components completed text-to-WAV on Android CPU; six outputs were byte-identical and warm median RTF was 0.630. Later root-cause evidence proved this route used an invalid audio-cloning contract whose no-voice-cloning checkpoint returned an all-zero voice embedding.",
       "limitations": [
-        "Derived ONNX representation; no QNN/HTP claim; VmHWM is cumulative."
+        "Derived ONNX representation; no QNN/HTP claim; VmHWM is cumulative.",
+        "All 42 Mimi encoder/encoder-transformer tensors (9,224,736 elements) in the pinned checkpoint were zero; source/ONNX numerical equivalence validated the broken contract, not speech quality.",
+        "Experiment 0012 and its route/sample rejection remain historical evidence; the recovered fixed-Alba route is separate."
       ],
       "sources": [
         "experiments/0012-pocket-onnx-vs-executorch-android/results/comparison.json",
         "experiments/0012-pocket-onnx-vs-executorch-android/work/android-result.json",
-        "experiments/0012-pocket-onnx-vs-executorch-android/RESULTS.md"
+        "experiments/0012-pocket-onnx-vs-executorch-android/RESULTS.md",
+        "experiments/0014-pocket-fp-onnx-qnn-htp/results/zero-voice-encoder-root-cause.json",
+        "experiments/0014-pocket-fp-onnx-qnn-htp/results/alba-quality-recovery.json"
       ],
-      "missing_reasons": {},
+      "missing_reasons": {
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route.",
+        "peak_pss_bytes": "No committed normalized peak_pss_bytes measurement is established for this route."
+      },
       "model_identity": {
         "name": "kyutai/pocket-tts-without-voice-cloning",
         "url": "https://huggingface.co/kyutai/pocket-tts-without-voice-cloning/tree/d29db7978e464fb90cb3359ee0c69a273b9142cc",
@@ -1776,6 +1926,8 @@
         "load_seconds": null,
         "cold_rtf": null,
         "warm_median_rtf": null,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": null,
         "peak_vm_hwm_bytes": null
       },
@@ -1790,7 +1942,14 @@
         "wav": "No locally verified Android WAV was retained for this route.",
         "android_attempted": "Route was blocked before Android; no phone run was authorized.",
         "all": "No Android timing, memory, or WAV exists.",
-        "quantization": "The route was blocked before an Android representation was produced."
+        "quantization": "The route was blocked before an Android representation was produced.",
+        "load_seconds": "No committed normalized load_seconds measurement is established for this route.",
+        "cold_rtf": "No committed normalized cold_rtf measurement is established for this route.",
+        "warm_median_rtf": "No committed normalized warm_median_rtf measurement is established for this route.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route.",
+        "peak_pss_bytes": "No committed normalized peak_pss_bytes measurement is established for this route.",
+        "peak_vm_hwm_bytes": "No committed normalized peak_vm_hwm_bytes measurement is established for this route."
       },
       "model_identity": {
         "name": "kyutai/pocket-tts-without-voice-cloning",
@@ -1845,7 +2004,9 @@
       "metrics": {
         "load_seconds": 236.175,
         "cold_rtf": null,
-        "warm_median_rtf": 0.781049,
+        "warm_median_rtf": null,
+        "proof_run_rtf": 0.781049,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": null,
         "peak_vm_hwm_bytes": 4136636416
       },
@@ -1869,7 +2030,10 @@
         "experiments/0014-pocket-fp-onnx-qnn-htp/RESULTS.md"
       ],
       "missing_reasons": {
-        "cold_rtf": "One profiled generation was recorded; no separate cold campaign exists."
+        "cold_rtf": "One profiled generation was recorded; no separate cold campaign exists.",
+        "warm_median_rtf": "No committed normalized warm_median_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route.",
+        "peak_pss_bytes": "No committed normalized peak_pss_bytes measurement is established for this route."
       },
       "model_identity": {
         "name": "kyutai/pocket-tts-without-voice-cloning",
@@ -1924,7 +2088,9 @@
       "metrics": {
         "load_seconds": 220.405,
         "cold_rtf": null,
-        "warm_median_rtf": 1.00046,
+        "warm_median_rtf": null,
+        "proof_run_rtf": 1.00046,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": null,
         "peak_vm_hwm_bytes": 4147552256
       },
@@ -1948,7 +2114,10 @@
         "experiments/0014-pocket-fp-onnx-qnn-htp/RESULTS.md"
       ],
       "missing_reasons": {
-        "cold_rtf": "One profiled generation was recorded; no separate cold campaign exists."
+        "cold_rtf": "One profiled generation was recorded; no separate cold campaign exists.",
+        "warm_median_rtf": "No committed normalized warm_median_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route.",
+        "peak_pss_bytes": "No committed normalized peak_pss_bytes measurement is established for this route."
       },
       "model_identity": {
         "name": "kyutai/pocket-tts-without-voice-cloning",
@@ -1956,6 +2125,255 @@
         "revision": "d29db7978e464fb90cb3359ee0c69a273b9142cc"
       },
       "quantization": "Calibrated INT16-FlowLM QDQ derivative; full observed path QNN-only",
+      "scope": "full_e2e"
+    },
+    {
+      "id": "0014-pocket-alba-original-dynamic-cpu",
+      "experiment": "0014",
+      "model": "Pocket TTS",
+      "route": "original dynamic Android CPU with fixed Alba state",
+      "deployment_variant": "Original dynamic FP ONNX / official fixed Alba",
+      "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "CPUExecutionProvider",
+        "threads": null
+      },
+      "structural_audio": {
+        "status": "valid",
+        "basis": "verified committed Android WAV container and source result",
+        "sample_sha256": "cdf77f6ecaecdbb1a95992326675972366b57da864864f7359890b7e2df5c4b6"
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "The controlled original dynamic FP ONNX route completed on Android CPU from the official fixed Alba state, but recurrent divergence appeared before the first sampled latent, EOS never fired, the run hit the 134-frame cap, and Moritz rejected this exact sample. Its measured RTF 0.52625 is execution evidence, not a quality verdict.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "rejected",
+        "reviewer": "Moritz",
+        "date": "2026-08-20",
+        "notes": "he says it but he says it like he is going fucking insane. it sounds nuts. i am scared hahahaha. Exact route/sample verdict only; RTF does not establish quality.",
+        "sample_sha256": "cdf77f6ecaecdbb1a95992326675972366b57da864864f7359890b7e2df5c4b6"
+      },
+      "android_attempted": true,
+      "provider": "CPUExecutionProvider",
+      "precision": "FP32",
+      "threads": null,
+      "device": {
+        "model": "SM-S918B",
+        "soc": "SM8550",
+        "serial": "R5CW81PR8SY",
+        "abi": "arm64-v8a"
+      },
+      "metrics": {
+        "load_seconds": 1.01087,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "proof_run_rtf": 0.52625,
+        "first_post_setup_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": 729407488
+      },
+      "wav": {
+        "path": "media/0014-pocket-alba-original-dynamic-cpu.wav",
+        "sha256": "cdf77f6ecaecdbb1a95992326675972366b57da864864f7359890b7e2df5c4b6",
+        "bytes": 514604,
+        "sample_rate_hz": 24000,
+        "channels": 1,
+        "duration_seconds": 10.72,
+        "verified": true
+      },
+      "summary": "The controlled original dynamic FP ONNX route completed on Android CPU from the official fixed Alba state, but recurrent divergence appeared before the first sampled latent, EOS never fired, the run hit the 134-frame cap, and Moritz rejected this exact sample. Its measured RTF 0.52625 is execution evidence, not a quality verdict.",
+      "limitations": [
+        "Exact fixed text, official fixed Alba state, seed 0, temperature 0.3, and one capped run only; no voice-cloning claim.",
+        "The dynamic recurrent Android route is a separate platform/runtime fidelity failure; it does not invalidate the recovered fixed-cache derivative.",
+        "VmHWM is cumulative process high-water memory, not isolated model memory."
+      ],
+      "sources": [
+        "experiments/0014-pocket-fp-onnx-qnn-htp/results/android-alba-original-cpu.json",
+        "experiments/0014-pocket-fp-onnx-qnn-htp/results/alba-quality-recovery.json",
+        "experiments/0014-pocket-fp-onnx-qnn-htp/results/quality-recovery-listening.json"
+      ],
+      "missing_reasons": {
+        "cold_rtf": "The record contains one controlled run and does not label it a cold campaign.",
+        "warm_median_rtf": "No warm distribution or median was recorded.",
+        "first_post_setup_rtf": "The record does not give the dedicated unprofiled first-post-setup measurement used by the recovered HTP route.",
+        "peak_pss_bytes": "Only cumulative process VmHWM was recorded."
+      },
+      "model_identity": {
+        "name": "kyutai/pocket-tts-without-voice-cloning",
+        "url": "https://huggingface.co/kyutai/pocket-tts-without-voice-cloning/tree/d29db7978e464fb90cb3359ee0c69a273b9142cc",
+        "revision": "d29db7978e464fb90cb3359ee0c69a273b9142cc"
+      },
+      "quantization": "Unquantized FP32 original dynamic ONNX component export; official pinned fixed Alba state",
+      "scope": "full_e2e"
+    },
+    {
+      "id": "0014-pocket-alba-fixed-cpu",
+      "experiment": "0014",
+      "model": "Pocket TTS",
+      "route": "fixed-cache Android CPU with fixed Alba state",
+      "deployment_variant": "Fixed-cache FP derivative / official fixed Alba",
+      "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "CPUExecutionProvider",
+        "threads": null
+      },
+      "structural_audio": {
+        "status": "valid",
+        "basis": "verified committed Android WAV container and source result",
+        "sample_sha256": "e0638f35870b24fbe675649a0cd49fa69ca6d74060557bfec5336d2d03a21c9a"
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "The QNN-compatible fixed-cache FP derivative completed the canonical fixed-Alba text-to-WAV contract on Android CPU at RTF 0.411953, reached EOS at step 53 with 56 frames, and Moritz accepted this exact sample as sounding good.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "accepted",
+        "reviewer": "Moritz",
+        "date": "2026-08-20",
+        "notes": "sounds good. Exact fixed-cache Android CPU route/sample verdict only.",
+        "sample_sha256": "e0638f35870b24fbe675649a0cd49fa69ca6d74060557bfec5336d2d03a21c9a"
+      },
+      "android_attempted": true,
+      "provider": "CPUExecutionProvider",
+      "precision": "FP32",
+      "threads": null,
+      "device": {
+        "model": "SM-S918B",
+        "soc": "SM8550",
+        "serial": "R5CW81PR8SY",
+        "abi": "arm64-v8a"
+      },
+      "metrics": {
+        "load_seconds": 2.60302,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "proof_run_rtf": 0.411953,
+        "first_post_setup_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": 1325486080
+      },
+      "wav": {
+        "path": "media/0014-pocket-alba-fixed-cpu.wav",
+        "sha256": "e0638f35870b24fbe675649a0cd49fa69ca6d74060557bfec5336d2d03a21c9a",
+        "bytes": 215084,
+        "sample_rate_hz": 24000,
+        "channels": 1,
+        "duration_seconds": 4.48,
+        "verified": true
+      },
+      "summary": "The QNN-compatible fixed-cache FP derivative completed the canonical fixed-Alba text-to-WAV contract on Android CPU at RTF 0.411953, reached EOS at step 53 with 56 frames, and Moritz accepted this exact sample as sounding good.",
+      "limitations": [
+        "Exact fixed text, official fixed Alba state SHA e4a323e8e771f14fd669428d83e7af6d83b4d6d0f0e282c30122f04824f17b1c, seed 0, temperature 0.3, and one fixed shape only; fixed voice, not voice cloning.",
+        "One run only; no warm median/min/max distribution and no streaming first-audio latency.",
+        "VmHWM is cumulative process high-water memory, not isolated model memory."
+      ],
+      "sources": [
+        "experiments/0014-pocket-fp-onnx-qnn-htp/results/alba-quality-recovery.json",
+        "experiments/0014-pocket-fp-onnx-qnn-htp/results/quality-recovery-listening.json",
+        "experiments/0014-pocket-fp-onnx-qnn-htp/results/zero-voice-encoder-root-cause.json"
+      ],
+      "missing_reasons": {
+        "cold_rtf": "The record contains one controlled generation and does not label it a cold campaign.",
+        "warm_median_rtf": "No warm distribution or median was recorded.",
+        "first_post_setup_rtf": "No distinct first-post-setup timing was recorded for the CPU route.",
+        "peak_pss_bytes": "Only cumulative process VmHWM was recorded."
+      },
+      "model_identity": {
+        "name": "kyutai/pocket-tts-without-voice-cloning",
+        "url": "https://huggingface.co/kyutai/pocket-tts-without-voice-cloning/tree/d29db7978e464fb90cb3359ee0c69a273b9142cc",
+        "revision": "d29db7978e464fb90cb3359ee0c69a273b9142cc"
+      },
+      "quantization": "Unquantized FP32 QNN-compatible fixed-cache derivative; official pinned fixed Alba state",
+      "scope": "full_e2e"
+    },
+    {
+      "id": "0014-pocket-alba-fixed-qnn-htp",
+      "experiment": "0014",
+      "model": "Pocket TTS",
+      "route": "fallback-disabled full QNN/HTP with fixed Alba state",
+      "deployment_variant": "Fixed-cache FP derivative / full fallback-disabled QNN HTP",
+      "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "QNNExecutionProvider (fallback disabled; CPU orchestration only)",
+        "threads": null
+      },
+      "structural_audio": {
+        "status": "valid",
+        "basis": "verified committed Android WAV container and source result",
+        "sample_sha256": "2c3901ec39a53596759c1d95381a1d67e4f9ca8886cdf39ac03721863c63eb56"
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Fallback-disabled full QNN/HTP completed the canonical fixed-Alba route with 122 QNN and 0 CPU neural provider events plus matching 122 RPC, accelerator, cycle, and HVX records. The profiled proof run had setup 58.1983 s, RTF 0.525063, and VmHWM 2,506,731,520 bytes; a separate byte-identical unprofiled first complete post-setup generation had setup 66.6948 s, RTF 0.165244, and VmHWM 2,294,972,416 bytes. Moritz independently accepted the exact sample as sounding good.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "accepted",
+        "reviewer": "Moritz",
+        "date": "2026-08-20",
+        "notes": "sounds good. Independently reviewed exact fixed-Alba fallback-disabled HTP route/sample only.",
+        "sample_sha256": "2c3901ec39a53596759c1d95381a1d67e4f9ca8886cdf39ac03721863c63eb56"
+      },
+      "android_attempted": true,
+      "provider": "QNNExecutionProvider (fallback disabled; CPU orchestration only)",
+      "precision": "FP source / QNN HTP FP16",
+      "threads": null,
+      "device": {
+        "model": "SM-S918B",
+        "soc": "SM8550",
+        "serial": "R5CW81PR8SY",
+        "abi": "arm64-v8a"
+      },
+      "metrics": {
+        "load_seconds": 58.1983,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "proof_run_rtf": 0.525063,
+        "first_post_setup_rtf": 0.165244,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": 2506731520
+      },
+      "wav": {
+        "path": "media/0014-pocket-alba-fixed-qnn-htp.wav",
+        "sha256": "2c3901ec39a53596759c1d95381a1d67e4f9ca8886cdf39ac03721863c63eb56",
+        "bytes": 215084,
+        "sample_rate_hz": 24000,
+        "channels": 1,
+        "duration_seconds": 4.48,
+        "verified": true
+      },
+      "summary": "Fallback-disabled full QNN/HTP completed the canonical fixed-Alba route with 122 QNN and 0 CPU neural provider events plus matching 122 RPC, accelerator, cycle, and HVX records. The profiled proof run had setup 58.1983 s, RTF 0.525063, and VmHWM 2,506,731,520 bytes; a separate byte-identical unprofiled first complete post-setup generation had setup 66.6948 s, RTF 0.165244, and VmHWM 2,294,972,416 bytes. Moritz independently accepted the exact sample as sounding good.",
+      "limitations": [
+        "The 0.165244 value is one unprofiled first complete generation after setup, not a warm median or distribution.",
+        "CPU supplied fixed tokens, the prepacked official Alba state, deterministic noise, recurrent tensor ownership, EOS scanning/orchestration, concatenation, and WAV encoding; all invoked neural sessions were physically proven on HTP.",
+        "Exact fixed text, official fixed Alba state SHA e4a323e8e771f14fd669428d83e7af6d83b4d6d0f0e282c30122f04824f17b1c, seed 0, temperature 0.3, 56-frame observed path only; fixed voice, not voice cloning.",
+        "No warm median/min/max distribution or streaming first-audio latency; VmHWM is cumulative process high-water including sessions, QNN contexts, caches, buffers, profiles where enabled, and output."
+      ],
+      "sources": [
+        "experiments/0014-pocket-fp-onnx-qnn-htp/results/alba-quality-recovery.json",
+        "experiments/0014-pocket-fp-onnx-qnn-htp/results/quality-recovery-listening.json",
+        "experiments/0014-pocket-fp-onnx-qnn-htp/results/zero-voice-encoder-root-cause.json"
+      ],
+      "missing_reasons": {
+        "cold_rtf": "Neither run is labeled a cold campaign.",
+        "warm_median_rtf": "No warm distribution or median exists; the 0.165244 measurement is one first complete post-setup generation.",
+        "peak_pss_bytes": "Only cumulative process VmHWM was recorded; the primary field retains the profiled proof-run VmHWM."
+      },
+      "model_identity": {
+        "name": "kyutai/pocket-tts-without-voice-cloning",
+        "url": "https://huggingface.co/kyutai/pocket-tts-without-voice-cloning/tree/d29db7978e464fb90cb3359ee0c69a273b9142cc",
+        "revision": "d29db7978e464fb90cb3359ee0c69a273b9142cc"
+      },
+      "quantization": "Unquantized FP32 source tensors; QNN HTP execution uses FP16; official pinned fixed Alba state",
       "scope": "full_e2e"
     },
     {
@@ -2002,6 +2420,8 @@
         "load_seconds": 2.829669739,
         "cold_rtf": 1.202828138,
         "warm_median_rtf": 1.002830145,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": null,
         "peak_vm_hwm_bytes": 1216598016
       },
@@ -2025,7 +2445,11 @@
         "experiments/0016-pocket-onnx-qnn-hybrid-android/protocol.json",
         "experiments/0016-pocket-onnx-qnn-hybrid-android/RESULTS.md"
       ],
-      "missing_reasons": {},
+      "missing_reasons": {
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route.",
+        "peak_pss_bytes": "No committed normalized peak_pss_bytes measurement is established for this route."
+      },
       "model_identity": {
         "name": "kyutai/pocket-tts-without-voice-cloning",
         "url": "https://huggingface.co/kyutai/pocket-tts-without-voice-cloning/tree/d29db7978e464fb90cb3359ee0c69a273b9142cc",
@@ -2078,6 +2502,8 @@
         "load_seconds": null,
         "cold_rtf": null,
         "warm_median_rtf": null,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": null,
         "peak_vm_hwm_bytes": null
       },
@@ -2095,7 +2521,9 @@
         "cold_rtf": "No inference was attempted.",
         "warm_median_rtf": "No inference was attempted.",
         "peak_pss_bytes": "No inference process measurement exists.",
-        "peak_vm_hwm_bytes": "No inference process measurement exists."
+        "peak_vm_hwm_bytes": "No inference process measurement exists.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route."
       },
       "model_identity": {
         "name": "hexgrad/Kokoro-82M",
@@ -2149,6 +2577,8 @@
         "load_seconds": 0.797719,
         "cold_rtf": 0.982091,
         "warm_median_rtf": 0.979973,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": null,
         "peak_vm_hwm_bytes": 897974272
       },
@@ -2171,7 +2601,11 @@
         "experiments/0013-kokoro-onnx-vs-executorch-android/results/phone-onnx-cpu-checkpoint.json",
         "experiments/0013-kokoro-onnx-vs-executorch-android/README.md"
       ],
-      "missing_reasons": {},
+      "missing_reasons": {
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route.",
+        "peak_pss_bytes": "No committed normalized peak_pss_bytes measurement is established for this route."
+      },
       "model_identity": {
         "name": "hexgrad/Kokoro-82M",
         "url": "https://huggingface.co/hexgrad/Kokoro-82M/tree/f3ff3571791e39611d31c381e3a41a3af07b4987",
@@ -2219,6 +2653,8 @@
         "load_seconds": null,
         "cold_rtf": null,
         "warm_median_rtf": null,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": null,
         "peak_vm_hwm_bytes": null
       },
@@ -2233,7 +2669,14 @@
         "wav": "No locally verified Android WAV was retained for this route.",
         "android_attempted": "Required complex STFT/full wrapper lowering failed before Android.",
         "all": "No Android timing, memory, or WAV exists.",
-        "quantization": "The route was blocked before an Android representation was produced."
+        "quantization": "The route was blocked before an Android representation was produced.",
+        "load_seconds": "No committed normalized load_seconds measurement is established for this route.",
+        "cold_rtf": "No committed normalized cold_rtf measurement is established for this route.",
+        "warm_median_rtf": "No committed normalized warm_median_rtf measurement is established for this route.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route.",
+        "peak_pss_bytes": "No committed normalized peak_pss_bytes measurement is established for this route.",
+        "peak_vm_hwm_bytes": "No committed normalized peak_vm_hwm_bytes measurement is established for this route."
       },
       "model_identity": {
         "name": "hexgrad/Kokoro-82M",
@@ -2282,6 +2725,8 @@
         "load_seconds": null,
         "cold_rtf": null,
         "warm_median_rtf": null,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": null,
         "peak_vm_hwm_bytes": null
       },
@@ -2302,7 +2747,14 @@
       "missing_reasons": {
         "wav": "No locally verified Android WAV was retained for this route.",
         "android_attempted": "The host session did not finalize and the phone was not accessed.",
-        "all": "Host assignment and CPU equivalence do not provide Android timing, memory, physical HTP, or WAV evidence."
+        "all": "Host assignment and CPU equivalence do not provide Android timing, memory, physical HTP, or WAV evidence.",
+        "load_seconds": "No committed normalized load_seconds measurement is established for this route.",
+        "cold_rtf": "No committed normalized cold_rtf measurement is established for this route.",
+        "warm_median_rtf": "No committed normalized warm_median_rtf measurement is established for this route.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route.",
+        "peak_pss_bytes": "No committed normalized peak_pss_bytes measurement is established for this route.",
+        "peak_vm_hwm_bytes": "No committed normalized peak_vm_hwm_bytes measurement is established for this route."
       },
       "model_identity": {
         "name": "hexgrad/Kokoro-82M",
@@ -2356,6 +2808,8 @@
         "load_seconds": 1.712838853,
         "cold_rtf": 1.1383426748803827,
         "warm_median_rtf": 1.1248052010167464,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": null,
         "peak_vm_hwm_bytes": 5828526080
       },
@@ -2379,7 +2833,11 @@
         "experiments/0018-moss-tts-nano-onnx-android/results/source-inventory.json",
         "experiments/0018-moss-tts-nano-onnx-android/README.md"
       ],
-      "missing_reasons": {},
+      "missing_reasons": {
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route.",
+        "peak_pss_bytes": "No committed normalized peak_pss_bytes measurement is established for this route."
+      },
       "model_identity": {
         "name": "OpenMOSS-Team/MOSS-TTS-Nano-100M-ONNX",
         "url": "https://huggingface.co/OpenMOSS-Team/MOSS-TTS-Nano-100M-ONNX/tree/f52645cb467506d8e18e746ddd59482685b74e58",
@@ -2427,6 +2885,8 @@
         "load_seconds": null,
         "cold_rtf": null,
         "warm_median_rtf": null,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": null,
         "peak_vm_hwm_bytes": null
       },
@@ -2446,7 +2906,14 @@
       "missing_reasons": {
         "wav": "No locally verified Android WAV was retained for this route.",
         "android_attempted": "Host gate failed closed before Android and no phone staging occurred.",
-        "all": "No Android timing, memory, physical HTP, or audio evidence exists."
+        "all": "No Android timing, memory, physical HTP, or audio evidence exists.",
+        "load_seconds": "No committed normalized load_seconds measurement is established for this route.",
+        "cold_rtf": "No committed normalized cold_rtf measurement is established for this route.",
+        "warm_median_rtf": "No committed normalized warm_median_rtf measurement is established for this route.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route.",
+        "peak_pss_bytes": "No committed normalized peak_pss_bytes measurement is established for this route.",
+        "peak_vm_hwm_bytes": "No committed normalized peak_vm_hwm_bytes measurement is established for this route."
       },
       "model_identity": {
         "name": "OpenMOSS-Team/MOSS-TTS-Nano-100M-ONNX",
@@ -2500,6 +2967,8 @@
         "load_seconds": null,
         "cold_rtf": null,
         "warm_median_rtf": null,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
         "peak_pss_bytes": null,
         "peak_vm_hwm_bytes": null
       },
@@ -2524,7 +2993,9 @@
         "cold_rtf": "Inference did not start.",
         "warm_median_rtf": "Inference did not start; no refreshed warm campaign exists.",
         "peak_pss_bytes": "No inference process measurement exists.",
-        "peak_vm_hwm_bytes": "No inference process measurement exists."
+        "peak_vm_hwm_bytes": "No inference process measurement exists.",
+        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
+        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route."
       },
       "model_identity": {
         "name": "Supertone/supertonic-3",

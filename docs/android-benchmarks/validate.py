@@ -14,7 +14,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 REGISTRY_PATH = HERE / "registry.json"
 EXPECTED_DEVICE = {"model": "SM-S918B", "soc": "SM8550", "serial": "R5CW81PR8SY", "abi": "arm64-v8a"}
-METRIC_FIELDS = ("load_seconds", "cold_rtf", "warm_median_rtf", "peak_pss_bytes", "peak_vm_hwm_bytes")
+METRIC_FIELDS = ("load_seconds", "cold_rtf", "warm_median_rtf", "proof_run_rtf", "first_post_setup_rtf", "peak_pss_bytes", "peak_vm_hwm_bytes")
 STATUSES = {"ran", "partial", "blocked", "deferred", "not_run"}
 
 
@@ -121,6 +121,12 @@ def main():
         for field, value in e["metrics"].items():
             if value is not None and (not isinstance(value, (int, float)) or value < 0):
                 fail(f"{e['id']}: invalid metric {field}")
+            if value is None and field not in e["missing_reasons"] and "all" not in e["missing_reasons"]:
+                fail(f"{e['id']}: null metric {field} lacks a missing-evidence reason")
+        if e["metrics"]["warm_median_rtf"] is not None and "One profiled generation only" in " ".join(e["limitations"]):
+            fail(f"{e['id']}: a single profiled generation cannot populate warm_median_rtf")
+        if e["metrics"]["first_post_setup_rtf"] is not None and e["metrics"]["warm_median_rtf"] is not None:
+            fail(f"{e['id']}: first_post_setup_rtf must remain distinct from warm_median_rtf")
         wav = e["wav"]
         if wav is None:
             if "wav" not in e["missing_reasons"] and "all" not in e["missing_reasons"]:
@@ -139,8 +145,8 @@ def main():
             with wave.open(str(path), "rb") as f:
                 if path.stat().st_size != wav["bytes"]:
                     fail(f"{e['id']}: WAV byte count mismatch")
-                if f.getframerate() != wav["sample_rate_hz"] or f.getnchannels() != wav["channels"]:
-                    fail(f"{e['id']}: WAV format mismatch")
+                if f.getframerate() != wav["sample_rate_hz"] or f.getnchannels() != wav["channels"] or f.getsampwidth() != 2:
+                    fail(f"{e['id']}: WAV format mismatch (expected declared rate/channels and PCM16 sample width)")
                 if abs(f.getnframes() / f.getframerate() - wav["duration_seconds"]) > 1e-9:
                     fail(f"{e['id']}: WAV duration mismatch")
             verified_media += 1
