@@ -1,0 +1,231 @@
+{
+  "audited_rewrites": {
+    "codec": "Boolean Xor expanded canonically to Not/And/Or.",
+    "cpu_equivalence_exact": true,
+    "decode": "12 Einsum(bs,d->bsd) expanded to Unsqueeze(axis=2)+Mul for each fixed call shape.",
+    "local": "No operator rewrite; I/O shape metadata only.",
+    "prefill": "12 Einsum(bs,d->bsd) expanded to Unsqueeze(axis=2)+Mul; exact fixed-shape full-range Slice replaced by Identity."
+  },
+  "claim": "Localized fixed-shape derivatives for every call shape observed in the experiment-0018 CPU output can individually fully delegate, but the one reusable dynamic autoregressive decode session required by the official Android architecture cannot delegate. No complete all-HTP route exists and no phone run was attempted.",
+  "claim_boundaries": [
+    "All host gates use the QNN HTP backend for capability/graph finalization but do not prove physical phone execution.",
+    "No phone lock was acquired and no phone files were staged.",
+    "No quantization, calibration, QNN context optimization, mixed fallback, or changes to experiment 0018 occurred.",
+    "Host session creation totals demonstrate variant compilation cost only; they are not phone latency estimates."
+  ],
+  "complete_all_htp": {
+    "eligible": false,
+    "latency_memory_audio_comparison_available": false,
+    "phone_attempted": false,
+    "physical_htp_evidence": false,
+    "reason": "The official app creates one decode session and reuses it while past_seq grows. QNN HTP rejects that dynamic graph (52/1091 optimized nodes, 13 partitions, 1039 unsupported). Individually static variants would require hundreds of distinct sessions/compilations, do not cover a numerically divergent HTP stopping length up to max_frames=375, and are not a matched complete route."
+  },
+  "cpu_equivalence": "results/rewrite-cpu-equivalence.json",
+  "decode_static_matrix": "results/decode-static-gate-matrix.json",
+  "derivative_provenance": "results/derivative-provenance.json",
+  "host_gate_details": "results/host-gate-details.json",
+  "next_scope_if_reopened": "A fixed-capacity KV-cache decode redesign with fixed outputs and dynamic valid-length masking would be required, followed by new CPU equivalence, complete host gates, and physical validation. This is a substantial state/topology rewrite, not another localized unsupported-operator substitution.",
+  "original_fixed_shape_gates": {
+    "codec_full_f209": {
+      "last_capability": {
+        "graph_nodes": 864,
+        "partitions": 2,
+        "qnn_nodes": 863
+      },
+      "result": "rejected",
+      "unsupported": [
+        {
+          "name": "/Xor",
+          "op_type": "Xor"
+        }
+      ]
+    },
+    "decode_representatives": {
+      "decode-step-000-past-226": {
+        "last_capability": {
+          "graph_nodes": 966,
+          "partitions": 2,
+          "qnn_nodes": 965
+        },
+        "result": "rejected",
+        "unsupported": [
+          {
+            "name": "/rotary_emb/Einsum",
+            "op_type": "Einsum"
+          }
+        ]
+      },
+      "decode-step-104-past-330": {
+        "last_capability": {
+          "graph_nodes": 966,
+          "partitions": 2,
+          "qnn_nodes": 965
+        },
+        "result": "rejected",
+        "unsupported": [
+          {
+            "name": "/rotary_emb/Einsum",
+            "op_type": "Einsum"
+          }
+        ]
+      },
+      "decode-step-208-past-434": {
+        "last_capability": {
+          "graph_nodes": 966,
+          "partitions": 2,
+          "qnn_nodes": 965
+        },
+        "result": "rejected",
+        "unsupported": [
+          {
+            "name": "/rotary_emb/Einsum",
+            "op_type": "Einsum"
+          }
+        ]
+      }
+    },
+    "local_fixed_b1": {
+      "last_capability": {
+        "graph_nodes": 1565,
+        "partitions": 1,
+        "qnn_nodes": 1565
+      },
+      "result": "fully_delegated"
+    },
+    "prefill_s226": {
+      "last_capability": {
+        "graph_nodes": 1027,
+        "partitions": 2,
+        "qnn_nodes": 1014
+      },
+      "result": "rejected",
+      "unsupported": [
+        {
+          "name": "/Slice",
+          "op_type": "Slice"
+        },
+        {
+          "name": "/rotary_emb_10/Einsum",
+          "op_type": "Einsum"
+        },
+        {
+          "name": "/rotary_emb_9/Einsum",
+          "op_type": "Einsum"
+        },
+        {
+          "name": "/rotary_emb_8/Einsum",
+          "op_type": "Einsum"
+        },
+        {
+          "name": "/rotary_emb_7/Einsum",
+          "op_type": "Einsum"
+        },
+        {
+          "name": "/rotary_emb_6/Einsum",
+          "op_type": "Einsum"
+        },
+        {
+          "name": "/rotary_emb_5/Einsum",
+          "op_type": "Einsum"
+        },
+        {
+          "name": "/rotary_emb_4/Einsum",
+          "op_type": "Einsum"
+        },
+        {
+          "name": "/rotary_emb_3/Einsum",
+          "op_type": "Einsum"
+        },
+        {
+          "name": "/rotary_emb_2/Einsum",
+          "op_type": "Einsum"
+        },
+        {
+          "name": "/rotary_emb_1/Einsum",
+          "op_type": "Einsum"
+        },
+        {
+          "name": "/rotary_emb/Einsum",
+          "op_type": "Einsum"
+        },
+        {
+          "name": "/rotary_emb_11/Einsum",
+          "op_type": "Einsum"
+        }
+      ]
+    }
+  },
+  "provider": {
+    "backend": "QNN HTP 2.49.0.260730",
+    "backend_sha256": "e557ca522713ea7ee7efd252083b927009cd54c158899c086b23d92b63bf1f33",
+    "execution_provider": "QNNExecutionProvider",
+    "htp_performance_mode": "burst",
+    "offload_graph_io_quantization": "0",
+    "quantization_performed": false,
+    "session.disable_cpu_ep_fallback": "1",
+    "soc_model": "43"
+  },
+  "result": "stopped_before_phone_reusable_dynamic_decode_fail_closed",
+  "reusable_dynamic_decode_gate": {
+    "exit_code": 2,
+    "last_capability": {
+      "graph_nodes": 1091,
+      "partitions": 13,
+      "qnn_nodes": 52
+    },
+    "result": "rejected_fail_closed",
+    "unsupported_count": 1039,
+    "unsupported_nodes_retained_in": "results/host-gate-details.json"
+  },
+  "rewritten_fixed_shape_gates": {
+    "codec_full_f209": {
+      "host_session_create_seconds": 162.22,
+      "last_capability": {
+        "graph_nodes": 867,
+        "partitions": 1,
+        "qnn_nodes": 867
+      },
+      "result": "fully_delegated"
+    },
+    "decode_observed_shapes": {
+      "gate_exit_zero_count": 209,
+      "host_session_create_seconds": {
+        "max": 13.653,
+        "median": 5.39149,
+        "min": 3.53745,
+        "sum": 1052.76772
+      },
+      "past_seq_range": [
+        226,
+        434
+      ],
+      "result": "all_209_individually_fully_delegated"
+    },
+    "local_fixed_b1": {
+      "host_session_create_seconds": 6.82339,
+      "last_capability": {
+        "graph_nodes": 1565,
+        "partitions": 1,
+        "qnn_nodes": 1565
+      },
+      "result": "fully_delegated"
+    },
+    "prefill_s226": {
+      "host_session_create_seconds": 29.1595,
+      "last_capability": {
+        "graph_nodes": 1038,
+        "partitions": 1,
+        "qnn_nodes": 1038
+      },
+      "result": "fully_delegated"
+    }
+  },
+  "runtime": {
+    "docker_image": "sha256:2803b0712b5bdc238909a6e312050b45b57607acd22c289835bd27b664d1c6f6",
+    "gate_runner_sha256": "c803eebed8da1debb7cbc4f4b6b265f1c965715485539c3c8308a1325f56a85a",
+    "libonnxruntime_sha256": "bc9df5a7df1b5d9de4d87adcaa4cc864bbde0f790e80d48e00ce0e4253a2ae11",
+    "onnxruntime": "patched 1.27.1"
+  },
+  "schema_version": 1,
+  "source_lock": "results/source-lock.json"
+}

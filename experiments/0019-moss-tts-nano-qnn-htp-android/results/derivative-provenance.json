@@ -1,0 +1,1825 @@
+{
+  "components": {
+    "codec-full-f209": {
+      "rewrite": {
+        "checks": {
+          "actual_rewrite_count": 1,
+          "all_original_initializers_ordered_byte_identical": true,
+          "appended_initializers": 0,
+          "expected_rewrite_count": 1,
+          "untargeted_original_nodes_ordered_byte_identical": true
+        },
+        "kind": "codec",
+        "output": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/codec-full-f209-qnn.onnx",
+        "output_sha256": "722a90c59fc75833b00b68f0c55ba93e7f804eed4e1270b0ef4ce978b26d177b",
+        "rewrites": [
+          {
+            "name": "/Xor",
+            "op_type": "Xor",
+            "original_index": 3345,
+            "proof": "Canonical Boolean exclusive-or expansion.",
+            "replacement": [
+              "Not(a)",
+              "Not(b)",
+              "And(a,Not(b))",
+              "And(Not(a),b)",
+              "Or"
+            ]
+          }
+        ],
+        "schema_version": 1,
+        "source": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/codec-full-f209.onnx",
+        "source_sha256": "dd9cd32a449027ae17ba3bb5b588c4187a2d7435f358445811fd01a303c785ab"
+      },
+      "specialization": {
+        "checks": {
+          "initializer_count": 178,
+          "input_names_identical": true,
+          "node_count": 3357,
+          "ordered_initializers_byte_identical": true,
+          "ordered_nodes_byte_identical": true,
+          "output_names_identical": true
+        },
+        "external_data_references": [
+          "moss_audio_tokenizer_decode_shared.data"
+        ],
+        "output": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/codec-full-f209.onnx",
+        "output_sha256": "dd9cd32a449027ae17ba3bb5b588c4187a2d7435f358445811fd01a303c785ab",
+        "schema_version": 1,
+        "shapes": {
+          "audio": [
+            1,
+            2,
+            802560
+          ],
+          "audio_code_lengths": [
+            1
+          ],
+          "audio_codes": [
+            1,
+            209,
+            16
+          ],
+          "audio_lengths": [
+            1
+          ]
+        },
+        "source": "experiments/0018-moss-tts-nano-onnx-android/.local/codec/moss_audio_tokenizer_decode_full.onnx",
+        "source_sha256": "0fbbafe3fd4afa2a019af5c5ced204af6e2d1db044fa40f021525d2aee95b4ac"
+      }
+    },
+    "decode-step-000-past-226": {
+      "rewrite": {
+        "checks": {
+          "actual_rewrite_count": 12,
+          "all_original_initializers_ordered_byte_identical": true,
+          "appended_initializers": 1,
+          "expected_rewrite_count": 12,
+          "untargeted_original_nodes_ordered_byte_identical": true
+        },
+        "kind": "decode",
+        "output": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/decode-step-000-past-226-qnn.onnx",
+        "output_sha256": "5013346b3bbdef791930826cb2efff805008159a98cb5ae4388a57566de7d548",
+        "rewrites": [
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb/Einsum",
+            "op_type": "Einsum",
+            "original_index": 333,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_1/Einsum",
+            "op_type": "Einsum",
+            "original_index": 546,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_2/Einsum",
+            "op_type": "Einsum",
+            "original_index": 759,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_3/Einsum",
+            "op_type": "Einsum",
+            "original_index": 972,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_4/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1185,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_5/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1398,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_6/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1611,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_7/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1824,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_8/Einsum",
+            "op_type": "Einsum",
+            "original_index": 2037,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_9/Einsum",
+            "op_type": "Einsum",
+            "original_index": 2250,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_10/Einsum",
+            "op_type": "Einsum",
+            "original_index": 2463,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_11/Einsum",
+            "op_type": "Einsum",
+            "original_index": 2676,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          }
+        ],
+        "schema_version": 1,
+        "source": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/decode-step-000-past-226.onnx",
+        "source_sha256": "3dc1e0a4f07369d528e8b1fb4669219635ca661c31d46dab47f9e2167a188e2c"
+      },
+      "specialization": {
+        "checks": {
+          "initializer_count": 139,
+          "input_names_identical": true,
+          "node_count": 2866,
+          "ordered_initializers_byte_identical": true,
+          "ordered_nodes_byte_identical": true,
+          "output_names_identical": true
+        },
+        "external_data_references": [
+          "moss_tts_global_shared.data"
+        ],
+        "output": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/decode-step-000-past-226.onnx",
+        "output_sha256": "3dc1e0a4f07369d528e8b1fb4669219635ca661c31d46dab47f9e2167a188e2c",
+        "schema_version": 1,
+        "shapes": {
+          "global_hidden": [
+            1,
+            1,
+            768
+          ],
+          "input_ids": [
+            1,
+            1,
+            17
+          ],
+          "past_key_0": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "past_key_1": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "past_key_10": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "past_key_11": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "past_key_2": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "past_key_3": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "past_key_4": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "past_key_5": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "past_key_6": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "past_key_7": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "past_key_8": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "past_key_9": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "past_valid_lengths": [
+            1
+          ],
+          "past_value_0": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "past_value_1": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "past_value_10": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "past_value_11": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "past_value_2": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "past_value_3": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "past_value_4": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "past_value_5": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "past_value_6": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "past_value_7": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "past_value_8": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "past_value_9": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_key_0": [
+            1,
+            227,
+            12,
+            64
+          ],
+          "present_key_1": [
+            1,
+            227,
+            12,
+            64
+          ],
+          "present_key_10": [
+            1,
+            227,
+            12,
+            64
+          ],
+          "present_key_11": [
+            1,
+            227,
+            12,
+            64
+          ],
+          "present_key_2": [
+            1,
+            227,
+            12,
+            64
+          ],
+          "present_key_3": [
+            1,
+            227,
+            12,
+            64
+          ],
+          "present_key_4": [
+            1,
+            227,
+            12,
+            64
+          ],
+          "present_key_5": [
+            1,
+            227,
+            12,
+            64
+          ],
+          "present_key_6": [
+            1,
+            227,
+            12,
+            64
+          ],
+          "present_key_7": [
+            1,
+            227,
+            12,
+            64
+          ],
+          "present_key_8": [
+            1,
+            227,
+            12,
+            64
+          ],
+          "present_key_9": [
+            1,
+            227,
+            12,
+            64
+          ],
+          "present_value_0": [
+            1,
+            227,
+            12,
+            64
+          ],
+          "present_value_1": [
+            1,
+            227,
+            12,
+            64
+          ],
+          "present_value_10": [
+            1,
+            227,
+            12,
+            64
+          ],
+          "present_value_11": [
+            1,
+            227,
+            12,
+            64
+          ],
+          "present_value_2": [
+            1,
+            227,
+            12,
+            64
+          ],
+          "present_value_3": [
+            1,
+            227,
+            12,
+            64
+          ],
+          "present_value_4": [
+            1,
+            227,
+            12,
+            64
+          ],
+          "present_value_5": [
+            1,
+            227,
+            12,
+            64
+          ],
+          "present_value_6": [
+            1,
+            227,
+            12,
+            64
+          ],
+          "present_value_7": [
+            1,
+            227,
+            12,
+            64
+          ],
+          "present_value_8": [
+            1,
+            227,
+            12,
+            64
+          ],
+          "present_value_9": [
+            1,
+            227,
+            12,
+            64
+          ]
+        },
+        "source": "experiments/0018-moss-tts-nano-onnx-android/.local/tts/moss_tts_decode_step.onnx",
+        "source_sha256": "698cbc2fc1c2feca16e5895614ed52bbb32ded10f236c076f477b2e69abf32d8"
+      }
+    },
+    "decode-step-104-past-330": {
+      "rewrite": {
+        "checks": {
+          "actual_rewrite_count": 12,
+          "all_original_initializers_ordered_byte_identical": true,
+          "appended_initializers": 1,
+          "expected_rewrite_count": 12,
+          "untargeted_original_nodes_ordered_byte_identical": true
+        },
+        "kind": "decode",
+        "output": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/decode-step-104-past-330-qnn.onnx",
+        "output_sha256": "2e4b48e6244bbc9dc6f33369c892ccef9c2b6272a74ec8025403488cc0c10a32",
+        "rewrites": [
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb/Einsum",
+            "op_type": "Einsum",
+            "original_index": 333,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_1/Einsum",
+            "op_type": "Einsum",
+            "original_index": 546,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_2/Einsum",
+            "op_type": "Einsum",
+            "original_index": 759,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_3/Einsum",
+            "op_type": "Einsum",
+            "original_index": 972,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_4/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1185,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_5/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1398,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_6/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1611,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_7/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1824,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_8/Einsum",
+            "op_type": "Einsum",
+            "original_index": 2037,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_9/Einsum",
+            "op_type": "Einsum",
+            "original_index": 2250,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_10/Einsum",
+            "op_type": "Einsum",
+            "original_index": 2463,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_11/Einsum",
+            "op_type": "Einsum",
+            "original_index": 2676,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          }
+        ],
+        "schema_version": 1,
+        "source": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/decode-step-104-past-330.onnx",
+        "source_sha256": "6782ee34db4d500879946219346ceb8613594dab8bf93b5f0dbfec92df0b58a7"
+      },
+      "specialization": {
+        "checks": {
+          "initializer_count": 139,
+          "input_names_identical": true,
+          "node_count": 2866,
+          "ordered_initializers_byte_identical": true,
+          "ordered_nodes_byte_identical": true,
+          "output_names_identical": true
+        },
+        "external_data_references": [
+          "moss_tts_global_shared.data"
+        ],
+        "output": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/decode-step-104-past-330.onnx",
+        "output_sha256": "6782ee34db4d500879946219346ceb8613594dab8bf93b5f0dbfec92df0b58a7",
+        "schema_version": 1,
+        "shapes": {
+          "global_hidden": [
+            1,
+            1,
+            768
+          ],
+          "input_ids": [
+            1,
+            1,
+            17
+          ],
+          "past_key_0": [
+            1,
+            330,
+            12,
+            64
+          ],
+          "past_key_1": [
+            1,
+            330,
+            12,
+            64
+          ],
+          "past_key_10": [
+            1,
+            330,
+            12,
+            64
+          ],
+          "past_key_11": [
+            1,
+            330,
+            12,
+            64
+          ],
+          "past_key_2": [
+            1,
+            330,
+            12,
+            64
+          ],
+          "past_key_3": [
+            1,
+            330,
+            12,
+            64
+          ],
+          "past_key_4": [
+            1,
+            330,
+            12,
+            64
+          ],
+          "past_key_5": [
+            1,
+            330,
+            12,
+            64
+          ],
+          "past_key_6": [
+            1,
+            330,
+            12,
+            64
+          ],
+          "past_key_7": [
+            1,
+            330,
+            12,
+            64
+          ],
+          "past_key_8": [
+            1,
+            330,
+            12,
+            64
+          ],
+          "past_key_9": [
+            1,
+            330,
+            12,
+            64
+          ],
+          "past_valid_lengths": [
+            1
+          ],
+          "past_value_0": [
+            1,
+            330,
+            12,
+            64
+          ],
+          "past_value_1": [
+            1,
+            330,
+            12,
+            64
+          ],
+          "past_value_10": [
+            1,
+            330,
+            12,
+            64
+          ],
+          "past_value_11": [
+            1,
+            330,
+            12,
+            64
+          ],
+          "past_value_2": [
+            1,
+            330,
+            12,
+            64
+          ],
+          "past_value_3": [
+            1,
+            330,
+            12,
+            64
+          ],
+          "past_value_4": [
+            1,
+            330,
+            12,
+            64
+          ],
+          "past_value_5": [
+            1,
+            330,
+            12,
+            64
+          ],
+          "past_value_6": [
+            1,
+            330,
+            12,
+            64
+          ],
+          "past_value_7": [
+            1,
+            330,
+            12,
+            64
+          ],
+          "past_value_8": [
+            1,
+            330,
+            12,
+            64
+          ],
+          "past_value_9": [
+            1,
+            330,
+            12,
+            64
+          ],
+          "present_key_0": [
+            1,
+            331,
+            12,
+            64
+          ],
+          "present_key_1": [
+            1,
+            331,
+            12,
+            64
+          ],
+          "present_key_10": [
+            1,
+            331,
+            12,
+            64
+          ],
+          "present_key_11": [
+            1,
+            331,
+            12,
+            64
+          ],
+          "present_key_2": [
+            1,
+            331,
+            12,
+            64
+          ],
+          "present_key_3": [
+            1,
+            331,
+            12,
+            64
+          ],
+          "present_key_4": [
+            1,
+            331,
+            12,
+            64
+          ],
+          "present_key_5": [
+            1,
+            331,
+            12,
+            64
+          ],
+          "present_key_6": [
+            1,
+            331,
+            12,
+            64
+          ],
+          "present_key_7": [
+            1,
+            331,
+            12,
+            64
+          ],
+          "present_key_8": [
+            1,
+            331,
+            12,
+            64
+          ],
+          "present_key_9": [
+            1,
+            331,
+            12,
+            64
+          ],
+          "present_value_0": [
+            1,
+            331,
+            12,
+            64
+          ],
+          "present_value_1": [
+            1,
+            331,
+            12,
+            64
+          ],
+          "present_value_10": [
+            1,
+            331,
+            12,
+            64
+          ],
+          "present_value_11": [
+            1,
+            331,
+            12,
+            64
+          ],
+          "present_value_2": [
+            1,
+            331,
+            12,
+            64
+          ],
+          "present_value_3": [
+            1,
+            331,
+            12,
+            64
+          ],
+          "present_value_4": [
+            1,
+            331,
+            12,
+            64
+          ],
+          "present_value_5": [
+            1,
+            331,
+            12,
+            64
+          ],
+          "present_value_6": [
+            1,
+            331,
+            12,
+            64
+          ],
+          "present_value_7": [
+            1,
+            331,
+            12,
+            64
+          ],
+          "present_value_8": [
+            1,
+            331,
+            12,
+            64
+          ],
+          "present_value_9": [
+            1,
+            331,
+            12,
+            64
+          ]
+        },
+        "source": "experiments/0018-moss-tts-nano-onnx-android/.local/tts/moss_tts_decode_step.onnx",
+        "source_sha256": "698cbc2fc1c2feca16e5895614ed52bbb32ded10f236c076f477b2e69abf32d8"
+      }
+    },
+    "decode-step-208-past-434": {
+      "rewrite": {
+        "checks": {
+          "actual_rewrite_count": 12,
+          "all_original_initializers_ordered_byte_identical": true,
+          "appended_initializers": 1,
+          "expected_rewrite_count": 12,
+          "untargeted_original_nodes_ordered_byte_identical": true
+        },
+        "kind": "decode",
+        "output": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/decode-step-208-past-434-qnn.onnx",
+        "output_sha256": "2cc7ae16c42279e18e4f70eebda4db6b40d9dad2186475ce0afaeb66f75d1fc7",
+        "rewrites": [
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb/Einsum",
+            "op_type": "Einsum",
+            "original_index": 333,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_1/Einsum",
+            "op_type": "Einsum",
+            "original_index": 546,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_2/Einsum",
+            "op_type": "Einsum",
+            "original_index": 759,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_3/Einsum",
+            "op_type": "Einsum",
+            "original_index": 972,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_4/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1185,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_5/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1398,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_6/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1611,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_7/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1824,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_8/Einsum",
+            "op_type": "Einsum",
+            "original_index": 2037,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_9/Einsum",
+            "op_type": "Einsum",
+            "original_index": 2250,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_10/Einsum",
+            "op_type": "Einsum",
+            "original_index": 2463,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_11/Einsum",
+            "op_type": "Einsum",
+            "original_index": 2676,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          }
+        ],
+        "schema_version": 1,
+        "source": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/decode-step-208-past-434.onnx",
+        "source_sha256": "750ce11f9a17316d23c64182987db449793f230cc1dc3d368f92ed22923a8deb"
+      },
+      "specialization": {
+        "checks": {
+          "initializer_count": 139,
+          "input_names_identical": true,
+          "node_count": 2866,
+          "ordered_initializers_byte_identical": true,
+          "ordered_nodes_byte_identical": true,
+          "output_names_identical": true
+        },
+        "external_data_references": [
+          "moss_tts_global_shared.data"
+        ],
+        "output": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/decode-step-208-past-434.onnx",
+        "output_sha256": "750ce11f9a17316d23c64182987db449793f230cc1dc3d368f92ed22923a8deb",
+        "schema_version": 1,
+        "shapes": {
+          "global_hidden": [
+            1,
+            1,
+            768
+          ],
+          "input_ids": [
+            1,
+            1,
+            17
+          ],
+          "past_key_0": [
+            1,
+            434,
+            12,
+            64
+          ],
+          "past_key_1": [
+            1,
+            434,
+            12,
+            64
+          ],
+          "past_key_10": [
+            1,
+            434,
+            12,
+            64
+          ],
+          "past_key_11": [
+            1,
+            434,
+            12,
+            64
+          ],
+          "past_key_2": [
+            1,
+            434,
+            12,
+            64
+          ],
+          "past_key_3": [
+            1,
+            434,
+            12,
+            64
+          ],
+          "past_key_4": [
+            1,
+            434,
+            12,
+            64
+          ],
+          "past_key_5": [
+            1,
+            434,
+            12,
+            64
+          ],
+          "past_key_6": [
+            1,
+            434,
+            12,
+            64
+          ],
+          "past_key_7": [
+            1,
+            434,
+            12,
+            64
+          ],
+          "past_key_8": [
+            1,
+            434,
+            12,
+            64
+          ],
+          "past_key_9": [
+            1,
+            434,
+            12,
+            64
+          ],
+          "past_valid_lengths": [
+            1
+          ],
+          "past_value_0": [
+            1,
+            434,
+            12,
+            64
+          ],
+          "past_value_1": [
+            1,
+            434,
+            12,
+            64
+          ],
+          "past_value_10": [
+            1,
+            434,
+            12,
+            64
+          ],
+          "past_value_11": [
+            1,
+            434,
+            12,
+            64
+          ],
+          "past_value_2": [
+            1,
+            434,
+            12,
+            64
+          ],
+          "past_value_3": [
+            1,
+            434,
+            12,
+            64
+          ],
+          "past_value_4": [
+            1,
+            434,
+            12,
+            64
+          ],
+          "past_value_5": [
+            1,
+            434,
+            12,
+            64
+          ],
+          "past_value_6": [
+            1,
+            434,
+            12,
+            64
+          ],
+          "past_value_7": [
+            1,
+            434,
+            12,
+            64
+          ],
+          "past_value_8": [
+            1,
+            434,
+            12,
+            64
+          ],
+          "past_value_9": [
+            1,
+            434,
+            12,
+            64
+          ],
+          "present_key_0": [
+            1,
+            435,
+            12,
+            64
+          ],
+          "present_key_1": [
+            1,
+            435,
+            12,
+            64
+          ],
+          "present_key_10": [
+            1,
+            435,
+            12,
+            64
+          ],
+          "present_key_11": [
+            1,
+            435,
+            12,
+            64
+          ],
+          "present_key_2": [
+            1,
+            435,
+            12,
+            64
+          ],
+          "present_key_3": [
+            1,
+            435,
+            12,
+            64
+          ],
+          "present_key_4": [
+            1,
+            435,
+            12,
+            64
+          ],
+          "present_key_5": [
+            1,
+            435,
+            12,
+            64
+          ],
+          "present_key_6": [
+            1,
+            435,
+            12,
+            64
+          ],
+          "present_key_7": [
+            1,
+            435,
+            12,
+            64
+          ],
+          "present_key_8": [
+            1,
+            435,
+            12,
+            64
+          ],
+          "present_key_9": [
+            1,
+            435,
+            12,
+            64
+          ],
+          "present_value_0": [
+            1,
+            435,
+            12,
+            64
+          ],
+          "present_value_1": [
+            1,
+            435,
+            12,
+            64
+          ],
+          "present_value_10": [
+            1,
+            435,
+            12,
+            64
+          ],
+          "present_value_11": [
+            1,
+            435,
+            12,
+            64
+          ],
+          "present_value_2": [
+            1,
+            435,
+            12,
+            64
+          ],
+          "present_value_3": [
+            1,
+            435,
+            12,
+            64
+          ],
+          "present_value_4": [
+            1,
+            435,
+            12,
+            64
+          ],
+          "present_value_5": [
+            1,
+            435,
+            12,
+            64
+          ],
+          "present_value_6": [
+            1,
+            435,
+            12,
+            64
+          ],
+          "present_value_7": [
+            1,
+            435,
+            12,
+            64
+          ],
+          "present_value_8": [
+            1,
+            435,
+            12,
+            64
+          ],
+          "present_value_9": [
+            1,
+            435,
+            12,
+            64
+          ]
+        },
+        "source": "experiments/0018-moss-tts-nano-onnx-android/.local/tts/moss_tts_decode_step.onnx",
+        "source_sha256": "698cbc2fc1c2feca16e5895614ed52bbb32ded10f236c076f477b2e69abf32d8"
+      }
+    },
+    "local-fixed-b1": {
+      "specialization": {
+        "checks": {
+          "initializer_count": 45,
+          "input_names_identical": true,
+          "node_count": 4949,
+          "ordered_initializers_byte_identical": true,
+          "ordered_nodes_byte_identical": true,
+          "output_names_identical": true
+        },
+        "external_data_references": [
+          "moss_tts_local_shared.data"
+        ],
+        "output": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/local-fixed-b1.onnx",
+        "output_sha256": "f475a116f028f832606d4ca5f0bee5697bca2d0923a3a0a6cb28bd81585eaf02",
+        "schema_version": 1,
+        "shapes": {
+          "assistant_random_u": [
+            1
+          ],
+          "audio_random_u": [
+            1,
+            16
+          ],
+          "frame_token_ids": [
+            1,
+            16
+          ],
+          "global_hidden": [
+            1,
+            768
+          ],
+          "repetition_seen_mask": [
+            1,
+            16,
+            1024
+          ],
+          "should_continue": [
+            1,
+            1
+          ]
+        },
+        "source": "experiments/0018-moss-tts-nano-onnx-android/.local/tts/moss_tts_local_fixed_sampled_frame.onnx",
+        "source_sha256": "40cdb00efc171c450cf91468e01429caa41b0252222cd308e978f58fe354afa8"
+      }
+    },
+    "prefill-s226": {
+      "rewrite": {
+        "checks": {
+          "actual_rewrite_count": 13,
+          "all_original_initializers_ordered_byte_identical": true,
+          "appended_initializers": 1,
+          "expected_rewrite_count": 13,
+          "untargeted_original_nodes_ordered_byte_identical": true
+        },
+        "kind": "prefill",
+        "output": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/prefill-s226-qnn.onnx",
+        "output_sha256": "a974e163f7d17ab5b880992e4b1bbeb36e31d087110adfd24f660266b4597bbc",
+        "rewrites": [
+          {
+            "name": "/Slice",
+            "op_type": "Slice",
+            "original_index": 263,
+            "proof_contract": "For fixed attention_mask [1,226], original axis-1 slice is [-226:INT64_MAX:1], exactly the full tensor.",
+            "replacement": [
+              "Identity"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb/Einsum",
+            "op_type": "Einsum",
+            "original_index": 337,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_1/Einsum",
+            "op_type": "Einsum",
+            "original_index": 551,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_2/Einsum",
+            "op_type": "Einsum",
+            "original_index": 756,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_3/Einsum",
+            "op_type": "Einsum",
+            "original_index": 961,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_4/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1166,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_5/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1371,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_6/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1576,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_7/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1781,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_8/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1986,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_9/Einsum",
+            "op_type": "Einsum",
+            "original_index": 2191,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_10/Einsum",
+            "op_type": "Einsum",
+            "original_index": 2396,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_11/Einsum",
+            "op_type": "Einsum",
+            "original_index": 2601,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          }
+        ],
+        "schema_version": 1,
+        "source": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/prefill-s226.onnx",
+        "source_sha256": "9e66258130b509befe60e355facc00d757408d6c55de8fa66fda2934168930fd"
+      },
+      "specialization": {
+        "checks": {
+          "initializer_count": 139,
+          "input_names_identical": true,
+          "node_count": 2776,
+          "ordered_initializers_byte_identical": true,
+          "ordered_nodes_byte_identical": true,
+          "output_names_identical": true
+        },
+        "external_data_references": [
+          "moss_tts_global_shared.data"
+        ],
+        "output": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/prefill-s226.onnx",
+        "output_sha256": "9e66258130b509befe60e355facc00d757408d6c55de8fa66fda2934168930fd",
+        "schema_version": 1,
+        "shapes": {
+          "attention_mask": [
+            1,
+            226
+          ],
+          "global_hidden": [
+            1,
+            226,
+            768
+          ],
+          "input_ids": [
+            1,
+            226,
+            17
+          ],
+          "present_key_0": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_key_1": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_key_10": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_key_11": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_key_2": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_key_3": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_key_4": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_key_5": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_key_6": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_key_7": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_key_8": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_key_9": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_value_0": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_value_1": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_value_10": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_value_11": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_value_2": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_value_3": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_value_4": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_value_5": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_value_6": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_value_7": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_value_8": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_value_9": [
+            1,
+            226,
+            12,
+            64
+          ]
+        },
+        "source": "experiments/0018-moss-tts-nano-onnx-android/.local/tts/moss_tts_prefill.onnx",
+        "source_sha256": "d56126dcd0574c2f15d98fc6b35eda68d0386b5bd9c5e38e28548d6f2ea8f3db"
+      }
+    }
+  },
+  "schema_version": 1
+}

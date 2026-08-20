@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "frozen_before_outputs": true,
+  "runtime": "onnxruntime 1.20.0 CPUExecutionProvider, four intra-op threads, one inter-op thread, ORT_ENABLE_ALL",
+  "fixtures": {
+    "prefill": "Exact experiment-0018 Junhao request rows for the 51 frozen text tokens, shape [1,226,17].",
+    "decode": "Deterministic seed-20260818 valid audio-row IDs plus bounded synthetic float KV caches at the first, middle, and last observed past lengths 226, 330, and 434.",
+    "local_fixed_frame": "Deterministic bounded global hidden, empty repetition mask, and fixed random uniforms.",
+    "audio_tokenizer": "Deterministic seed-20260818 valid 209x16 codebook IDs and length 209."
+  },
+  "criteria": {
+    "same_output_names_order_and_shapes": true,
+    "integer_and_boolean_outputs_exact": true,
+    "all_float_outputs_finite": true,
+    "float_max_abs_error_lte": 0.00001,
+    "float_rmse_lte": 0.000001,
+    "float_cosine_gte": 0.99999999
+  },
+  "claim_boundary": "Passing applies only to the exact fixed call shapes and fixtures. It proves CPU numerical equivalence of the audited graph rewrites under the declared runtime, not HTP equivalence or arbitrary shapes."
+}
