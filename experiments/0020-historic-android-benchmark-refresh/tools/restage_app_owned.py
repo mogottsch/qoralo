@@ -44,7 +44,7 @@ def main():
                 observed = must(commands.run(["adb", "-s", serial, "shell", "sha256sum", temp]), f"shell hash {item.relative_path}").stdout.split()
                 if not observed or observed[0].lower() != item.sha256:
                     raise SystemExit(f"shell hash mismatch: {item.relative_path}")
-                destination = f"/sdcard/Android/data/{package}/files/{item.relative_path}"
+                destination = f"files/{item.relative_path}"
                 parent = str(PurePosixPath(destination).parent)
                 incoming = f"{destination}.incoming-{uuid.uuid4().hex}"
                 app_command = f"umask 077; mkdir -p {shlex.quote(parent)}; cat > {shlex.quote(incoming)}; mv {shlex.quote(incoming)} {shlex.quote(destination)}; sha256sum {shlex.quote(destination)}"
