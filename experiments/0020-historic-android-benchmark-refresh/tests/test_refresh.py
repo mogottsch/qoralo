@@ -1,15 +1,19 @@
 from __future__ import annotations
 import json
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 
 
 def test_audit_covers_every_visible_full_e2e_row():
-    registry = json.loads((ROOT / "docs/android-benchmarks/registry.json").read_text())
+    commit = "df11008fa808f9ba4ac5dad1f912863af13cbee9"
+    registry = json.loads(subprocess.check_output(["git", "show", f"{commit}:docs/android-benchmarks/registry.json"], cwd=ROOT, text=True))
     audit = json.loads((Path(__file__).resolve().parents[1] / "results/registry-audit.json").read_text())
     expected = {e["id"] for e in registry["entries"] if e["scope"] == "full_e2e"}
     actual = {e["route_id"] for e in audit["rows"]}
+    assert len(expected) == 26
+    assert "0020-supertonic-cpu-refresh" not in expected
     assert actual == expected
 
 

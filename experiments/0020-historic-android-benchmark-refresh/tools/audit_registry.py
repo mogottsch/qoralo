@@ -6,18 +6,20 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
-REGISTRY = ROOT / "docs/android-benchmarks/registry.json"
+REGISTRY_COMMIT = "df11008fa808f9ba4ac5dad1f912863af13cbee9"
+REGISTRY_PATH = "docs/android-benchmarks/registry.json"
 OUT = Path(__file__).resolve().parents[1] / "results/registry-audit.json"
 
 
 def main() -> None:
-    registry = json.loads(REGISTRY.read_text())
+    registry = json.loads(subprocess.check_output(["git", "show", f"{REGISTRY_COMMIT}:{REGISTRY_PATH}"], cwd=ROOT, text=True))
     rows = []
     refresh_path = Path(__file__).resolve().parents[1] / "results/supertonic-3-int8-cpu-refresh.json"
     refresh = json.loads(refresh_path.read_text()) if refresh_path.exists() else None
     fields = ("load_seconds", "cold_rtf", "warm_median_rtf", "peak_pss_bytes", "peak_vm_hwm_bytes")
     for e in registry["entries"]:
-        if e["scope"] != "full_e2e":
+        if e["scope"] != "full_e2e" or e["id"] == "0020-supertonic-cpu-refresh":
+            # 0020 is nested provenance on 0008, never a separate visible route.
             continue
         missing = []
         if e["wav"] is None:
@@ -61,7 +63,8 @@ def main() -> None:
     payload = {
         "schema_version": 1,
         "experiment": "0020",
-        "registry_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
+        "registry_commit": REGISTRY_COMMIT,
+        "registry_path": REGISTRY_PATH,
         "scope": "all visible full-E2E registry rows",
         "generated_by": "experiments/0020-historic-android-benchmark-refresh/tools/audit_registry.py",
         "rerun_blocker": None,

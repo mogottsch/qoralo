@@ -1,17 +1,36 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "experiment": "0020",
   "audited_at": "2026-08-20",
-  "scope": "visible full-E2E Android benchmark registry rows",
-  "canonical": {
-    "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/protocol/transcript.txt",
+  "registry_source": {
+    "commit": "df11008fa808f9ba4ac5dad1f912863af13cbee9",
+    "path": "docs/android-benchmarks/registry.json",
+    "method": "git show df11008fa808f9ba4ac5dad1f912863af13cbee9:docs/android-benchmarks/registry.json",
+    "visible_full_e2e_route_ids": 26
+  },
+  "canonical_v2": {
+    "path": "protocols/android-tts-benchmark/transcript.txt",
+    "sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+    "bytes": 226,
+    "trailing_newline": false,
+    "punctuation": "commas after studio and meaning; no ellipses",
+    "visible_route_ids": []
+  },
+  "legacy_v1": {
     "sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
     "bytes": 230,
     "trailing_newline": false,
-    "text": "Welcome to our small studio... where curious minds unpack one surprising idea at a time. Today, we explore why familiar voices build trust, how thoughtful pauses shape meaning... and what makes a conversation feel genuinely alive."
+    "punctuation": "three-period pauses after studio and meaning",
+    "status": "legacy matched provenance only; not canonical v2"
   },
-  "summary": {"visible_rows": 27, "canonical_rows": 18, "noncanonical_rows": 9, "unknown_rows": 0},
-  "canonical_groups": [
+  "summary": {
+    "visible_rows": 26,
+    "canonical_v2_rows": 0,
+    "legacy_v1_rows": 17,
+    "other_noncanonical_rows": 9,
+    "unknown_rows": 0
+  },
+  "legacy_v1_groups": [
     {
       "route_ids": ["0008-pocket-cpu-t1", "0008-kokoro-cpu-t1", "0008-supertonic-cpu-t1"],
       "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
@@ -36,35 +55,42 @@
       "route_ids": ["0018-moss-tts-nano-cpu"],
       "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
       "basis": "experiment 0018 phone checkpoint and committed protocol transcript"
-    },
-    {
-      "route_ids": ["0020-supertonic-cpu-refresh"],
-      "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
-      "basis": "experiment 0020 exact stage copied canonical experiment-0008 transcript bytes; exact hash embedded in refresh provenance"
     }
   ],
-  "noncanonical_groups": [
+  "nested_refreshes": [
+    {
+      "parent_route_id": "0008-supertonic-cpu-t1",
+      "visible_route_id": null,
+      "refresh_provenance": "experiments/0020-historic-android-benchmark-refresh/results/supertonic-3-int8-cpu-refresh.json",
+      "remeasured_at": "2026-08-20",
+      "transcript_version": "legacy_v1",
+      "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
+      "canonical_v2": false,
+      "classification": "exact legacy-v1 historical remeasurement nested on 0008; not a duplicate visible route"
+    }
+  ],
+  "other_noncanonical_groups": [
     {
       "route_ids": ["0002-executorch-full"],
       "transcript_sha256": "e971969aff3d1f3e656180adf90e3f727299a842b83b2237a8e3b4c578fdf7d1",
       "source": "experiments/0001-vibevoice-1.5b-local-reference/transcript.txt",
-      "discrepancy": "VibeVoice locked-reference text predates and differs from the canonical benchmark bytes.",
-      "bounded_refresh": "Do not compare its RTF directly with canonical rows. A new canonical VibeVoice rerun would require an explicit new fixed reference/export campaign; do not relabel the frozen route."
+      "discrepancy": "VibeVoice locked-reference text differs from canonical v2 and legacy v1.",
+      "bounded_refresh": "Do not compare its RTF directly with v2 rows. A canonical-v2 VibeVoice rerun requires an explicit new fixed reference/export campaign; do not relabel frozen 0002."
     },
     {
       "route_ids": ["0012-pocket-onnx-cpu", "0014-pocket-qnn-fp-source", "0014-pocket-qnn-int16-flow", "0014-pocket-alba-original-dynamic-cpu", "0014-pocket-alba-fixed-cpu", "0014-pocket-alba-fixed-qnn-htp", "0016-pocket-qnn-hybrid-cpu"],
       "transcript_sha256": "66e1ba2772ca3d534b792e9d9dacb26e37fda422afe40e8cced5aa878404ffb1",
       "source": "experiment 0012 matched-contract text inherited by 0014 and 0016",
-      "discrepancy": "Pocket routes use the sentence beginning 'Pocket TTS runs entirely...' rather than the canonical 230-byte transcript.",
-      "bounded_refresh": "Treat these RTFs as within-Pocket route evidence only. Rerun each exact route with canonical bytes, exact route-specific voice/reference, seed, temperature, flow steps, thread/provider, and actual-duration RTF; publish old/new side by side and never substitute across routes."
+      "discrepancy": "Pocket routes use the sentence beginning 'Pocket TTS runs entirely...' rather than canonical v2.",
+      "bounded_refresh": "Treat these RTFs as within-Pocket route evidence only. Rerun each exact route with canonical-v2 bytes, route-specific voice/reference, seed, temperature, flow steps, thread/provider, one first plus at least five same-session warm resets, and actual-duration RTF; never substitute across routes."
     },
     {
       "route_ids": ["0013-kokoro-onnx-cpu"],
       "transcript_sha256": "bec8bf482f4d816f0c95471c289a2607a7a169e33389b8b13e525214ec639461",
       "source": "experiments/0013-kokoro-onnx-vs-executorch-android/protocol/transcript.txt",
-      "discrepancy": "The fixed-contract Kokoro export text differs from the canonical benchmark bytes.",
-      "bounded_refresh": "Do not treat its RTF as canonical-comparable. A refresh requires a new exact-source controlled ONNX export/fixed contract for canonical tokenization and duration shapes, followed by the same fidelity and phone gates."
+      "discrepancy": "The fixed-contract Kokoro export text differs from canonical v2.",
+      "bounded_refresh": "A v2 refresh requires a new exact-source controlled ONNX export/fixed contract for v2 tokenization and duration shapes, followed by the same fidelity and phone gates."
     }
   ],
-  "comparison_boundary": "Only rows whose transcript SHA-256 equals the canonical SHA are transcript-comparable. Matching model family, runtime, or apparent wording is insufficient. This audit does not edit dashboard or frozen experiment evidence."
+  "comparison_boundary": "No currently visible route is canonical v2. Seventeen routes are mutually legacy-v1 by transcript only; nine use other noncanonical text. Legacy-v1 matching does not satisfy the current v2 timing contract. This audit does not edit dashboard or frozen experiment evidence."
 }
