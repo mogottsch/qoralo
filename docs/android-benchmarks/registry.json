@@ -3749,6 +3749,219 @@
         "audit_source": "experiments/0021-supertonic-canonical-v2-android-cpu/results/phone-cpu-result.json",
         "missing_reasons": {}
       }
+    },
+    {
+      "id": "0014-pocket-alba-cpu-v2",
+      "experiment": "0014",
+      "model": "Pocket TTS",
+      "route": "canonical-v2 fixed-Alba text64/cache512 Android CPU",
+      "deployment_variant": "Canonical v2 / fixed Alba / text64-cache512 / CPU",
+      "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "CPUExecutionProvider",
+        "threads": 1
+      },
+      "structural_audio": {
+        "status": "valid",
+        "basis": "verified committed Android WAV container and source result",
+        "sample_sha256": "2e9021b972d69e05e5cd301973e2dc17cb8143f2a029bc027ef619a3460c34bd"
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Distinct canonical-v2 Pocket fixed-Alba text64/cache512 Android CPU route. Exact v2 text produced 64 token IDs; one persistent session set ran one first plus five warm generations with full state reset. All six reached EOS step 160, emitted 163 frames/312,960 samples (13.04 s), and were byte-identical. Warm median RTF was 0.414234 from [0.412642, 0.406708, 0.414234, 0.416536, 0.419467]. Moritz accepted the exact representative WAV as good.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "accepted",
+        "reviewer": "Moritz",
+        "date": "2026-08-20",
+        "notes": "good. Exact canonical-v2 text64/cache512 Android CPU WAV only; HTP requires fresh verdict.",
+        "sample_sha256": "2e9021b972d69e05e5cd301973e2dc17cb8143f2a029bc027ef619a3460c34bd"
+      },
+      "android_attempted": true,
+      "provider": "CPUExecutionProvider",
+      "precision": "FP32",
+      "threads": 1,
+      "device": {
+        "model": "SM-S918B",
+        "soc": "SM8550",
+        "serial": "R5CW81PR8SY",
+        "abi": "arm64-v8a"
+      },
+      "metrics": {
+        "load_seconds": 2.597,
+        "cold_rtf": 0.412321,
+        "warm_median_rtf": 0.414234,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": 0.412321,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": 1446170624
+      },
+      "wav": {
+        "path": "media/0014-pocket-alba-cpu-v2.wav",
+        "sha256": "2e9021b972d69e05e5cd301973e2dc17cb8143f2a029bc027ef619a3460c34bd",
+        "bytes": 625964,
+        "sample_rate_hz": 24000,
+        "channels": 1,
+        "duration_seconds": 13.04,
+        "verified": true
+      },
+      "summary": "Distinct canonical-v2 Pocket fixed-Alba text64/cache512 Android CPU route. Exact v2 text produced 64 token IDs; one persistent session set ran one first plus five warm generations with full state reset. All six reached EOS step 160, emitted 163 frames/312,960 samples (13.04 s), and were byte-identical. Warm median RTF was 0.414234 from [0.412642, 0.406708, 0.414234, 0.416536, 0.419467]. Moritz accepted the exact representative WAV as good.",
+      "limitations": [
+        "This text64/cache512 derivative is distinct from every text26/cache256 route and does not relabel or inherit their metrics or verdicts.",
+        "Exact official fixed Alba state SHA e4a323e8e771f14fd669428d83e7af6d83b4d6d0f0e282c30122f04824f17b1c, temperature 0.3, seed 0, fixed voice\u2014not voice cloning.",
+        "First-post-setup and cold RTF refer to the same first complete generation, not two observations.",
+        "VmHWM is cumulative process lifecycle high-water; no peak PSS was recorded. Android OS and CPU affinity were not captured/pinned; normal scheduler/DVFS applies.",
+        "Batch runner exposes no honest streaming first-audio latency. Thermal status stayed 0; AP 35.8\u219250.4\u00b0C and skin 33.8\u219235.7\u00b0C."
+      ],
+      "sources": [
+        "experiments/0014-pocket-fp-onnx-qnn-htp/results/canonical-v2-benchmark.json",
+        "experiments/0014-pocket-fp-onnx-qnn-htp/canonical-benchmark-protocol.json",
+        "experiments/0014-pocket-fp-onnx-qnn-htp/RESULTS.md"
+      ],
+      "missing_reasons": {
+        "proof_run_rtf": "No separate instrumented proof run applies to the CPU route.",
+        "peak_pss_bytes": "Only cumulative process VmHWM was recorded.",
+        "android_os": "Not captured in the completed campaign; no further phone use was authorized for metadata-only collection.",
+        "cpu_affinity": "Not pinned; normal Android scheduler/DVFS applies.",
+        "first_audio_latency": "Batch runner produces complete output after latent generation/decoding and exposes no honest streaming first-audio boundary."
+      },
+      "model_identity": {
+        "name": "kyutai/pocket-tts-without-voice-cloning",
+        "url": "https://huggingface.co/kyutai/pocket-tts-without-voice-cloning/tree/d29db7978e464fb90cb3359ee0c69a273b9142cc",
+        "revision": "d29db7978e464fb90cb3359ee0c69a273b9142cc"
+      },
+      "quantization": "Unquantized FP32 text64/cache512 ONNX derivative; zero quantization claimed",
+      "scope": "full_e2e",
+      "transcript": {
+        "classification": "canonical_v2",
+        "sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+        "bytes": 226,
+        "trailing_newline": false,
+        "source": "protocols/android-tts-benchmark/transcript.txt",
+        "basis": "Experiment 0014 canonical-v2 text64/cache512 contract and exact Pocket tokenizer output.",
+        "effective_frontend": {
+          "kind": "Pocket tokenizer",
+          "token_count": 64,
+          "token_ids_encoding": "little-endian int64",
+          "token_ids_sha256": "56d50c958627be19a7f2c86dde68a537a80f3f6d9087c16f55fde58c4d117c82",
+          "tokenizer_sha256": "d461765ae179566678c93091c5fa6f2984c31bbe990bf1aa62d92c64d91bc3f6",
+          "source": "experiments/0014-pocket-fp-onnx-qnn-htp/results/canonical-v2-benchmark.json"
+        },
+        "canonical_v2_sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+        "canonical_v2_match": true,
+        "comparison_boundary": "Exact canonical-v2 transcript match.",
+        "audit_source": "experiments/0014-pocket-fp-onnx-qnn-htp/results/canonical-v2-benchmark.json",
+        "missing_reasons": {}
+      }
+    },
+    {
+      "id": "0014-pocket-alba-qnn-htp-v2",
+      "experiment": "0014",
+      "model": "Pocket TTS",
+      "route": "canonical-v2 fixed-Alba text64/cache512 full QNN/HTP",
+      "deployment_variant": "Canonical v2 / fixed Alba / text64-cache512 / fallback-disabled QNN HTP",
+      "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "QNNExecutionProvider (fallback disabled; CPU orchestration only)",
+        "threads": 1
+      },
+      "structural_audio": {
+        "status": "valid",
+        "basis": "verified committed Android WAV container and source result",
+        "sample_sha256": "601cd622dd0598c23dd7275074763aa37ae79b18a9d777ad946b1eaebd2c58e5"
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Distinct canonical-v2 Pocket fixed-Alba text64/cache512 fallback-disabled QNN/HTP route. Persistent sessions ran one first plus five warm generations with full state reset; all six reached EOS step 160, emitted 163 frames/13.04 s, and were byte-identical. Warm median RTF was 0.181643 from [0.181754, 0.178637, 0.179288, 0.182449, 0.181643]. Separate profiled proof RTF was 0.57369: 344 QNN and 0 CPU neural events exactly matched 344 RPC, accelerator, cycle, and HVX records. Moritz independently accepted the exact representative WAV as good.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "accepted",
+        "reviewer": "Moritz",
+        "date": "2026-08-20",
+        "notes": "good. Exact canonical-v2 fixed-Alba text64/cache512 fallback-disabled physical QNN/HTP WAV only.",
+        "sample_sha256": "601cd622dd0598c23dd7275074763aa37ae79b18a9d777ad946b1eaebd2c58e5"
+      },
+      "android_attempted": true,
+      "provider": "QNNExecutionProvider (fallback disabled; CPU orchestration only)",
+      "precision": "FP32 source graphs / QNN HTP",
+      "threads": 1,
+      "device": {
+        "model": "SM-S918B",
+        "soc": "SM8550",
+        "serial": "R5CW81PR8SY",
+        "abi": "arm64-v8a"
+      },
+      "metrics": {
+        "load_seconds": 62.2327,
+        "cold_rtf": 0.191013,
+        "warm_median_rtf": 0.181643,
+        "proof_run_rtf": 0.57369,
+        "first_post_setup_rtf": 0.191013,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": 2463559680
+      },
+      "wav": {
+        "path": "media/0014-pocket-alba-qnn-htp-v2.wav",
+        "sha256": "601cd622dd0598c23dd7275074763aa37ae79b18a9d777ad946b1eaebd2c58e5",
+        "bytes": 625964,
+        "sample_rate_hz": 24000,
+        "channels": 1,
+        "duration_seconds": 13.04,
+        "verified": true
+      },
+      "summary": "Distinct canonical-v2 Pocket fixed-Alba text64/cache512 fallback-disabled QNN/HTP route. Persistent sessions ran one first plus five warm generations with full state reset; all six reached EOS step 160, emitted 163 frames/13.04 s, and were byte-identical. Warm median RTF was 0.181643 from [0.181754, 0.178637, 0.179288, 0.182449, 0.181643]. Separate profiled proof RTF was 0.57369: 344 QNN and 0 CPU neural events exactly matched 344 RPC, accelerator, cycle, and HVX records. Moritz independently accepted the exact representative WAV as good.",
+      "limitations": [
+        "The profiled 0.57369 RTF is instrumentation-bearing physical proof, not the performance headline or a warm observation.",
+        "All invoked neural sessions were proven on HTP with CPU fallback disabled; CPU only handled fixed fixtures, recurrent tensor ownership, EOS/orchestration, concatenation, and WAV output.",
+        "Exact official fixed Alba state SHA e4a323e8e771f14fd669428d83e7af6d83b4d6d0f0e282c30122f04824f17b1c, temperature 0.3, seed 0, fixed voice\u2014not voice cloning.",
+        "First-post-setup and cold RTF refer to the same first complete generation. VmHWM is cumulative lifecycle high-water; the primary field is the unprofiled benchmark maximum 2,463,559,680 bytes, while the separate profiled proof reached 2,580,541,440 bytes.",
+        "Android OS and CPU affinity were not captured/pinned. Batch runner exposes no streaming first-audio latency. Unprofiled thermal status stayed 0; AP 41.2\u219253.6\u00b0C and skin 37.1\u219239.3\u00b0C."
+      ],
+      "sources": [
+        "experiments/0014-pocket-fp-onnx-qnn-htp/results/canonical-v2-benchmark.json",
+        "experiments/0014-pocket-fp-onnx-qnn-htp/canonical-benchmark-protocol.json",
+        "experiments/0014-pocket-fp-onnx-qnn-htp/RESULTS.md"
+      ],
+      "missing_reasons": {
+        "peak_pss_bytes": "Only cumulative process VmHWM was recorded.",
+        "android_os": "Not captured in the completed campaign; no further phone use was authorized for metadata-only collection.",
+        "cpu_affinity": "Not pinned; normal Android scheduler/DVFS applies.",
+        "first_audio_latency": "Batch runner produces complete output after latent generation/decoding and exposes no honest streaming first-audio boundary."
+      },
+      "model_identity": {
+        "name": "kyutai/pocket-tts-without-voice-cloning",
+        "url": "https://huggingface.co/kyutai/pocket-tts-without-voice-cloning/tree/d29db7978e464fb90cb3359ee0c69a273b9142cc",
+        "revision": "d29db7978e464fb90cb3359ee0c69a273b9142cc"
+      },
+      "quantization": "Unquantized FP32 source-graph text64/cache512 derivative; no quantized-operator claim",
+      "scope": "full_e2e",
+      "transcript": {
+        "classification": "canonical_v2",
+        "sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+        "bytes": 226,
+        "trailing_newline": false,
+        "source": "protocols/android-tts-benchmark/transcript.txt",
+        "basis": "Experiment 0014 canonical-v2 text64/cache512 contract and exact Pocket tokenizer output.",
+        "effective_frontend": {
+          "kind": "Pocket tokenizer",
+          "token_count": 64,
+          "token_ids_encoding": "little-endian int64",
+          "token_ids_sha256": "56d50c958627be19a7f2c86dde68a537a80f3f6d9087c16f55fde58c4d117c82",
+          "tokenizer_sha256": "d461765ae179566678c93091c5fa6f2984c31bbe990bf1aa62d92c64d91bc3f6",
+          "source": "experiments/0014-pocket-fp-onnx-qnn-htp/results/canonical-v2-benchmark.json"
+        },
+        "canonical_v2_sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+        "canonical_v2_match": true,
+        "comparison_boundary": "Exact canonical-v2 transcript match.",
+        "audit_source": "experiments/0014-pocket-fp-onnx-qnn-htp/results/canonical-v2-benchmark.json",
+        "missing_reasons": {}
+      }
     }
   ]
 }

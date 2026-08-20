@@ -104,7 +104,8 @@ def main():
                 if transcript.get("sha256") != CANONICAL_V2_SHA256 or transcript.get("bytes") != 226 or transcript.get("trailing_newline") is not False:
                     fail(f"{e['id']}: canonical-v2 classification/hash/byte contract mismatch")
                 frontend = transcript.get("effective_frontend")
-                if not isinstance(frontend, dict) or not re.fullmatch(r"[a-f0-9]{64}", frontend.get("mapped_ids_int32le_sha256", "")) or not (ROOT / frontend.get("source", "")).is_file():
+                frontend_hash = frontend.get("mapped_ids_int32le_sha256") or frontend.get("token_ids_sha256") if isinstance(frontend, dict) else None
+                if not isinstance(frontend, dict) or not re.fullmatch(r"[a-f0-9]{64}", frontend_hash or "") or not (ROOT / frontend.get("source", "")).is_file():
                     fail(f"{e['id']}: canonical-v2 route lacks exact effective frontend provenance")
             if classification == "legacy_v1" and (transcript.get("sha256") != LEGACY_V1_SHA256 or transcript.get("bytes") != 230 or transcript.get("trailing_newline") is not False):
                 fail(f"{e['id']}: legacy-v1 transcript provenance mismatch")
@@ -163,6 +164,40 @@ def main():
                 fail(f"{e['id']}: null metric {field} lacks a missing-evidence reason")
         if e["metrics"]["warm_median_rtf"] is not None and "One profiled generation only" in " ".join(e["limitations"]):
             fail(f"{e['id']}: a single profiled generation cannot populate warm_median_rtf")
+        if e["id"] in {"0014-pocket-alba-cpu-v2", "0014-pocket-alba-qnn-htp-v2"}:
+            source_result = json.loads((ROOT / "experiments/0014-pocket-fp-onnx-qnn-htp/results/canonical-v2-benchmark.json").read_text())
+            is_htp = e["id"] == "0014-pocket-alba-qnn-htp-v2"
+            route_result = source_result["physical_qnn_htp"]["benchmark"] if is_htp else source_result["android_cpu"]
+            warm_values = route_result["warm"]["rtf"]
+            expected_metrics = {
+                "load_seconds": route_result["setup"]["seconds"],
+                "cold_rtf": route_result["first"]["rtf"],
+                "warm_median_rtf": route_result["warm"]["median_rtf"],
+                "proof_run_rtf": source_result["physical_qnn_htp"]["profiled_proof"]["result"]["iterations"][0]["rtf"] if is_htp else None,
+                "first_post_setup_rtf": route_result["first"]["rtf"],
+                "peak_pss_bytes": None,
+                "peak_vm_hwm_bytes": route_result["memory"]["max_vm_hwm_kb"] * 1024,
+            }
+            if e["metrics"] != expected_metrics or len(warm_values) != 5 or median(warm_values) != e["metrics"]["warm_median_rtf"]:
+                fail(f"{e['id']}: canonical-v2 first/five-warm campaign mismatch")
+            output = route_result["first"]["wav"]
+            if output["sha256"] != e["wav"]["sha256"] or output["seconds"] != e["wav"]["duration_seconds"]:
+                fail(f"{e['id']}: canonical-v2 Pocket WAV provenance mismatch")
+            frontend = e["transcript"]["effective_frontend"]
+            if frontend["token_ids_sha256"] != source_result["frontend"]["token_ids_sha256"] or frontend["token_count"] != source_result["frontend"]["token_count"]:
+                fail(f"{e['id']}: canonical-v2 Pocket frontend provenance mismatch")
+            source_review = source_result["listening"]["physical_qnn_htp" if is_htp else "android_cpu"]
+            source_scope = "Exact canonical-v2 fixed-Alba text64/cache512 fallback-disabled physical QNN/HTP WAV only." if is_htp else "Exact canonical-v2 text64/cache512 Android CPU WAV only; HTP requires fresh verdict."
+            expected_review = {"status": source_review["verdict"], "reviewer": "Moritz", "date": source_result["date"], "notes": source_review["verbatim"] + ". " + source_scope, "sample_sha256": source_review["sha256"]}
+            if e["listening_review"] != expected_review or e["listening_review"]["sample_sha256"] != e["wav"]["sha256"]:
+                fail(f"{e['id']}: canonical-v2 Pocket exact-hash listening verdict mismatch")
+            if is_htp:
+                proof = source_result["physical_qnn_htp"]["profiled_proof"]
+                aggregate = proof["aggregate"]
+                if aggregate["provider_events"] != {"QNNExecutionProvider": 344} or not aggregate["all_invoked_calls_qnn_only"] or not aggregate["all_physical_event_counts_match_qnn"]:
+                    fail(f"{e['id']}: canonical-v2 Pocket physical provider proof mismatch")
+                if len({aggregate["rpc_execute_events"], aggregate["accelerator_execute_events"], aggregate["cycle_events"], aggregate["hvx_events"]}) != 1 or aggregate["rpc_execute_events"] != 344:
+                    fail(f"{e['id']}: canonical-v2 Pocket physical event counts mismatch")
         if e["id"] == "0021-supertonic-int8-cpu-v2":
             source_result = json.loads((ROOT / "experiments/0021-supertonic-canonical-v2-android-cpu/results/phone-cpu-result.json").read_text())
             source_frontend = json.loads((ROOT / "experiments/0021-supertonic-canonical-v2-android-cpu/results/frontend-provenance.json").read_text())
