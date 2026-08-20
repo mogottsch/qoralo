@@ -352,6 +352,48 @@ REMEASUREMENTS = {
 }
 
 
+TRANSCRIPT_AUDIT_SOURCE = "experiments/0020-historic-android-benchmark-refresh/results/transcript-provenance-audit.json"
+CANONICAL_V2_SHA256 = "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67"
+LEGACY_V1_SHA256 = "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f"
+
+
+def transcript_metadata(classification, sha256, source, basis, *, byte_count=None, trailing_newline=None, reason=None):
+    missing = {}
+    if byte_count is None:
+        missing["bytes"] = "The committed transcript audit establishes the exact hash but does not record a byte count for this noncanonical text."
+    if trailing_newline is None:
+        missing["trailing_newline"] = "The committed transcript audit does not establish trailing-newline status for this noncanonical text."
+    return {
+        "classification": classification,
+        "sha256": sha256,
+        "bytes": byte_count,
+        "trailing_newline": trailing_newline,
+        "source": source,
+        "basis": basis,
+        "canonical_v2_sha256": CANONICAL_V2_SHA256,
+        "canonical_v2_match": classification == "canonical_v2",
+        "comparison_boundary": reason or ("Exact canonical-v2 transcript match." if classification == "canonical_v2" else "Transcript v1 is legacy matched provenance only; it is not canonical v2."),
+        "audit_source": TRANSCRIPT_AUDIT_SOURCE,
+        "missing_reasons": missing,
+    }
+
+
+TRANSCRIPT_METADATA = {}
+for _id in ("0008-pocket-cpu-t1", "0008-kokoro-cpu-t1", "0008-supertonic-cpu-t1"):
+    TRANSCRIPT_METADATA[_id] = transcript_metadata("legacy_v1", LEGACY_V1_SHA256, "experiments/0008-sherpa-onnx-android-tts-benchmark/protocol/transcript.txt", "Experiment 0008 protocol and normalized route result.", byte_count=230, trailing_newline=False)
+for _id in ("0009-pocket-cpu-t1", "0009-pocket-cpu-t2", "0009-pocket-cpu-t4", "0009-kokoro-cpu-t1", "0009-kokoro-cpu-t2", "0009-kokoro-cpu-t4", "0009-supertonic-cpu-t1", "0009-supertonic-cpu-t2", "0009-supertonic-cpu-t4"):
+    TRANSCRIPT_METADATA[_id] = transcript_metadata("legacy_v1", LEGACY_V1_SHA256, "experiments/0009-android-tts-optimization/thread-sweep/results/measured-thread-sweep.json", "Experiment 0009 measured thread-sweep provenance.", byte_count=230, trailing_newline=False)
+for _id in ("0010-supertonic-cpu", "0010-supertonic-hybrid-htp"):
+    TRANSCRIPT_METADATA[_id] = transcript_metadata("legacy_v1", LEGACY_V1_SHA256, "experiments/0010-supertonic-qnn-htp-feasibility/results/e2e-hybrid-cpu-checkpoint.json", "Experiment 0010 end-to-end contract.", byte_count=230, trailing_newline=False)
+for _id in ("0011-supertonic-official-cpu", "0011-supertonic-all-htp"):
+    TRANSCRIPT_METADATA[_id] = transcript_metadata("legacy_v1", LEGACY_V1_SHA256, "experiments/0011-supertonic-official-fp32-phone-comparison/results/matched-e2e-protocol.json", "Experiment 0011 matched end-to-end protocol.", byte_count=230, trailing_newline=False)
+TRANSCRIPT_METADATA["0018-moss-tts-nano-cpu"] = transcript_metadata("legacy_v1", LEGACY_V1_SHA256, "experiments/0018-moss-tts-nano-onnx-android/protocol/transcript.txt", "Experiment 0018 phone checkpoint and committed protocol transcript.", byte_count=230, trailing_newline=False)
+TRANSCRIPT_METADATA["0002-executorch-full"] = transcript_metadata("noncanonical", "e971969aff3d1f3e656180adf90e3f727299a842b83b2237a8e3b4c578fdf7d1", "experiments/0001-vibevoice-1.5b-local-reference/transcript.txt", "VibeVoice locked-reference transcript.", reason="Locked-reference text predates and differs from canonical v2; a matched comparison requires a new canonical-v2 reference/export campaign.")
+for _id in ("0012-pocket-onnx-cpu", "0014-pocket-qnn-fp-source", "0014-pocket-qnn-int16-flow", "0014-pocket-alba-original-dynamic-cpu", "0014-pocket-alba-fixed-cpu", "0014-pocket-alba-fixed-qnn-htp", "0016-pocket-qnn-hybrid-cpu"):
+    TRANSCRIPT_METADATA[_id] = transcript_metadata("noncanonical", "66e1ba2772ca3d534b792e9d9dacb26e37fda422afe40e8cced5aa878404ffb1", "experiment 0012 matched-contract text inherited by 0014 and 0016", "Pocket demo-text route contract.", reason="Pocket demo text differs from canonical v2; compare only within the explicitly matched Pocket route evidence until each route receives a canonical-v2 rerun.")
+TRANSCRIPT_METADATA["0013-kokoro-onnx-cpu"] = transcript_metadata("noncanonical", "bec8bf482f4d816f0c95471c289a2607a7a169e33389b8b13e525214ec639461", "experiments/0013-kokoro-onnx-vs-executorch-android/protocol/transcript.txt", "Kokoro fixed-contract transcript.", reason="The fixed-contract Kokoro text differs from canonical v2; a v2 refresh requires a new controlled export/tokenization/duration contract before phone execution.")
+
+
 FULL_E2E_IDS = {
     "0002-executorch-full",
     "0008-pocket-cpu-t1", "0008-kokoro-cpu-t1", "0008-supertonic-cpu-t1",
@@ -369,6 +411,9 @@ for _row in ROWS:
     _row["model_identity"] = _metadata.get("model_identity")
     _row["quantization"] = _metadata.get("quantization")
     _row["scope"] = "full_e2e" if _row["id"] in FULL_E2E_IDS else "excluded_non_e2e"
+    _row["transcript"] = TRANSCRIPT_METADATA.get(_row["id"])
+    if _row["transcript"] is None:
+        _row["missing_reasons"].setdefault("transcript", "This excluded/non-E2E route was not classified by the committed visible-route transcript audit.")
     if _row["id"] in REMEASUREMENTS:
         _row["remeasurements"] = REMEASUREMENTS[_row["id"]]
     if _row["id"] in OBJECTIVE_EVIDENCE_OVERRIDES:
@@ -424,6 +469,9 @@ def build_missing():
         lines += [f"## `{r['id']}` — {r['model']} / {r['route']}", "", f"- Status: **{r['attempt_status']}**; Android attempted: **{str(r['android_attempted']).lower()}**"]
         for field, reason in missing.items():
             lines.append(f"- `{field}`: {reason}")
+        if r.get("transcript"):
+            for field, reason in r["transcript"]["missing_reasons"].items():
+                lines.append(f"- `transcript.{field}`: {reason}")
         for refresh in r.get("remeasurements", []):
             for field, reason in refresh["missing_reasons"].items():
                 lines.append(f"- `remeasurements.{refresh['id']}.{field}`: {reason}")
@@ -488,6 +536,9 @@ def format_rtf(entry):
                 missing.append(f"{label}: {reason}")
     if missing:
         detail_parts.append("Unavailable: " + " | ".join(missing))
+    transcript = entry["transcript"]
+    if transcript:
+        detail_parts.append(f"Transcript: {transcript['classification']} ({transcript['sha256']}); {transcript['comparison_boundary']}")
     return display, sort_value, " ".join(detail_parts)
 
 
@@ -522,12 +573,15 @@ def build_html(registry):
         if e["threads"] is not None:
             suffix = "thread" if e["threads"] == 1 else "threads"
             provider += f'<br><small>{e["threads"]} {suffix}</small>'
+        transcript = e["transcript"]
+        transcript_label = {"canonical_v2": "canonical v2", "legacy_v1": "legacy v1", "noncanonical": "noncanonical"}[transcript["classification"]]
+        transcript_badge = f'<br><small class="transcript transcript-{html.escape(transcript["classification"])}" title="{html.escape(transcript["comparison_boundary"] + " SHA-256 " + transcript["sha256"], quote=True)}">Transcript: {html.escape(transcript_label)}</small>'
         identity = e["model_identity"]
         if identity is not None:
             model_cell = f'<a href="{html.escape(identity["url"])}" target="_blank" rel="noopener">{html.escape(e["model"])}</a><br><small>{html.escape(identity["name"])}'
-            model_cell += '</small><br><small>' + html.escape(e["route"]) + '</small>'
+            model_cell += '</small><br><small>' + html.escape(e["route"]) + '</small>' + transcript_badge
         else:
-            model_cell = f'<b>{html.escape(e["model"])}</b><br><small>{html.escape(e["route"])}</small>'
+            model_cell = f'<b>{html.escape(e["model"])}</b><br><small>{html.escape(e["route"])}</small>' + transcript_badge
         quantization = html.escape(e["quantization"] or "—")
         review_status = display_review["status"]
         review_cls = "listening-" + review_status.replace("_", "-")
@@ -545,7 +599,7 @@ def build_html(registry):
     for item in MODEL_TIMELINE:
         timeline_rows.append(f'<tr><td>{html.escape(item["model"])}</td><td><time datetime="{html.escape(item["first_release_date"])}">{html.escape(item["first_release_date"])}</time></td><td>{html.escape(item["date_basis"])}</td><td><a href="{html.escape(item["source_url"])}" target="_blank" rel="noopener">Source</a></td></tr>')
     return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Android benchmark registry</title><style>
-:root{{--bg:#0f172a;--panel:#172033;--line:#334155;--ink:#e5e7eb;--muted:#94a3b8;--accent:#67e8f9}}*{{box-sizing:border-box}}body{{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,sans-serif}}main{{max-width:1500px;margin:auto;padding:22px 24px}}h1{{font-size:24px;line-height:1.2;margin:0 0 16px}}small{{color:var(--muted)}}a{{color:var(--accent)}}.table-wrap{{overflow:auto;border:1px solid var(--line);border-radius:12px}}table{{border-collapse:collapse;width:100%;min-width:1320px;background:var(--panel)}}th,td{{padding:12px 13px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}}th{{position:sticky;top:0;background:#1e293b;color:#bae6fd;white-space:nowrap;user-select:none;cursor:pointer}}th:hover{{background:#26364d}}th::after{{content:' ↕';color:#64748b}}th[aria-sort="ascending"]::after{{content:' ↑';color:var(--accent)}}th[aria-sort="descending"]::after{{content:' ↓';color:var(--accent)}}td:nth-child(10){{min-width:350px;color:#cbd5e1}}.status{{border-radius:99px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap}}.ran{{background:#064e3b;color:#a7f3d0}}.listening-not-reviewed{{background:#713f12;color:#fde68a}}.listening-accepted{{background:#064e3b;color:#a7f3d0}}.listening-rejected{{background:#7f1d1d;color:#fecaca}}.blocked,.deferred,.not-run{{background:#713f12;color:#fde68a}}.partial{{background:#164e63;color:#a5f3fc}}code{{color:#bae6fd}}h2{{font-size:20px;margin:30px 0 12px}}.timeline-note{{color:var(--muted);margin-top:-4px}}.players{{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}}.player{{scroll-margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}}.player:target{{outline:2px solid var(--accent)}}.player audio{{display:block;width:100%;margin:11px 0 8px}}.back{{font-size:12px}}footer{{margin-top:16px;color:var(--muted);font-size:12px}}</style></head><body><main><h1>Android benchmark registry</h1><div class="table-wrap"><table id="routes"><thead><tr><th data-type="text">Experiment</th><th data-type="text">Model / route</th><th data-type="text">Quantization</th><th data-type="text">Status</th><th data-type="text">Listening</th><th data-type="text">Provider</th><th data-type="number" aria-sort="ascending" title="Warm median by default; otherwise the designated non-warm headline type is shown in brackets. Hover a value for all RTF evidence and missing reasons.">RTF</th><th data-type="number">Peak memory</th><th data-type="number">Audio</th><th data-type="text">Evidence summary</th></tr></thead><tbody>{''.join(trs)}</tbody></table></div><h2 id="audio-samples">Audio samples</h2><div class="players">{''.join(players)}</div><h2 id="needs-review">Needs review</h2><p class="timeline-note">Playable full-E2E samples with no explicit Moritz listening verdict yet.</p><div class="players">{''.join(needs_review_players)}</div><h2 id="model-timeline">Model release timeline</h2><p class="timeline-note">First public family/model release dates, not later quantized archives or Android package dates. The date basis and source are recorded in <code>registry.json</code>.</p><div class="table-wrap"><table id="timeline"><thead><tr><th>Model</th><th>First public release</th><th>Date basis</th><th>Source</th></tr></thead><tbody>{''.join(timeline_rows)}</tbody></table></div><footer>Click a column heading to sort. Missing values sort last. Details: <a href="README.md">README</a> · <a href="missing-fields.md">missing fields</a>.</footer></main><script>
+:root{{--bg:#0f172a;--panel:#172033;--line:#334155;--ink:#e5e7eb;--muted:#94a3b8;--accent:#67e8f9}}*{{box-sizing:border-box}}body{{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,sans-serif}}main{{max-width:1500px;margin:auto;padding:22px 24px}}h1{{font-size:24px;line-height:1.2;margin:0 0 16px}}small{{color:var(--muted)}}a{{color:var(--accent)}}.table-wrap{{overflow:auto;border:1px solid var(--line);border-radius:12px}}table{{border-collapse:collapse;width:100%;min-width:1320px;background:var(--panel)}}th,td{{padding:12px 13px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}}th{{position:sticky;top:0;background:#1e293b;color:#bae6fd;white-space:nowrap;user-select:none;cursor:pointer}}th:hover{{background:#26364d}}th::after{{content:' ↕';color:#64748b}}th[aria-sort="ascending"]::after{{content:' ↑';color:var(--accent)}}th[aria-sort="descending"]::after{{content:' ↓';color:var(--accent)}}td:nth-child(10){{min-width:350px;color:#cbd5e1}}.status{{border-radius:99px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap}}.transcript{{font-weight:700}}.transcript-canonical_v2{{color:#a7f3d0}}.transcript-legacy_v1{{color:#fde68a}}.transcript-noncanonical{{color:#fecaca}}.ran{{background:#064e3b;color:#a7f3d0}}.listening-not-reviewed{{background:#713f12;color:#fde68a}}.listening-accepted{{background:#064e3b;color:#a7f3d0}}.listening-rejected{{background:#7f1d1d;color:#fecaca}}.blocked,.deferred,.not-run{{background:#713f12;color:#fde68a}}.partial{{background:#164e63;color:#a5f3fc}}code{{color:#bae6fd}}h2{{font-size:20px;margin:30px 0 12px}}.timeline-note{{color:var(--muted);margin-top:-4px}}.players{{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}}.player{{scroll-margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}}.player:target{{outline:2px solid var(--accent)}}.player audio{{display:block;width:100%;margin:11px 0 8px}}.back{{font-size:12px}}footer{{margin-top:16px;color:var(--muted);font-size:12px}}</style></head><body><main><h1>Android benchmark registry</h1><div class="table-wrap"><table id="routes"><thead><tr><th data-type="text">Experiment</th><th data-type="text">Model / route</th><th data-type="text">Quantization</th><th data-type="text">Status</th><th data-type="text">Listening</th><th data-type="text">Provider</th><th data-type="number" aria-sort="ascending" title="Warm median by default; otherwise the designated non-warm headline type is shown in brackets. Hover a value for all RTF evidence and missing reasons.">RTF</th><th data-type="number">Peak memory</th><th data-type="number">Audio</th><th data-type="text">Evidence summary</th></tr></thead><tbody>{''.join(trs)}</tbody></table></div><h2 id="audio-samples">Audio samples</h2><div class="players">{''.join(players)}</div><h2 id="needs-review">Needs review</h2><p class="timeline-note">Playable full-E2E samples with no explicit Moritz listening verdict yet.</p><div class="players">{''.join(needs_review_players)}</div><h2 id="model-timeline">Model release timeline</h2><p class="timeline-note">First public family/model release dates, not later quantized archives or Android package dates. The date basis and source are recorded in <code>registry.json</code>.</p><div class="table-wrap"><table id="timeline"><thead><tr><th>Model</th><th>First public release</th><th>Date basis</th><th>Source</th></tr></thead><tbody>{''.join(timeline_rows)}</tbody></table></div><footer>Click a column heading to sort. Missing values sort last. Details: <a href="README.md">README</a> · <a href="missing-fields.md">missing fields</a>.</footer></main><script>
 const table=document.getElementById('routes'), body=table.tBodies[0], headers=[...table.tHead.rows[0].cells];
 function sortTable(index,direction){{
  const type=headers[index].dataset.type, rows=[...body.rows];

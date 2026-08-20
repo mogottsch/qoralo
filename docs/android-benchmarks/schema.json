@@ -75,6 +75,24 @@
         "revision": {"type": ["string", "null"]}
       }, "additionalProperties": false
     },
+    "transcript": {
+      "type": "object",
+      "required": ["classification", "sha256", "bytes", "trailing_newline", "source", "basis", "canonical_v2_sha256", "canonical_v2_match", "comparison_boundary", "audit_source", "missing_reasons"],
+      "properties": {
+        "classification": {"enum": ["canonical_v2", "legacy_v1", "noncanonical"]},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "bytes": {"type": ["integer", "null"], "minimum": 1},
+        "trailing_newline": {"type": ["boolean", "null"]},
+        "source": {"type": "string", "minLength": 1},
+        "basis": {"type": "string", "minLength": 1},
+        "canonical_v2_sha256": {"const": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67"},
+        "canonical_v2_match": {"type": "boolean"},
+        "comparison_boundary": {"type": "string", "minLength": 1},
+        "audit_source": {"type": "string", "minLength": 1},
+        "missing_reasons": {"type": "object", "additionalProperties": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
     "remeasurement": {
       "type": "object",
       "required": ["id", "experiment", "source_commit", "remeasured_at", "status", "original_snapshot", "contract", "metrics", "warm_rtf_values", "runs", "comparison_to_original", "thermal", "representative_wav", "listening_review", "sources", "missing_reasons"],
@@ -106,7 +124,7 @@
     },
     "entry": {
       "type": "object",
-      "required": ["id", "experiment", "model", "model_identity", "route", "deployment_variant", "quantization", "scope", "attempt_status", "technical_execution", "structural_audio", "objective_evidence", "listening_review", "android_attempted", "provider", "precision", "threads", "device", "metrics", "wav", "summary", "limitations", "sources", "missing_reasons"],
+      "required": ["id", "experiment", "model", "model_identity", "route", "deployment_variant", "quantization", "transcript", "scope", "attempt_status", "technical_execution", "structural_audio", "objective_evidence", "listening_review", "android_attempted", "provider", "precision", "threads", "device", "metrics", "wav", "summary", "limitations", "sources", "missing_reasons"],
       "properties": {
         "id": {"type": "string", "pattern": "^[0-9]{4}-[a-z0-9-]+$"},
         "experiment": {"type": "string", "pattern": "^[0-9]{4}$"},
@@ -115,6 +133,7 @@
         "route": {"type": "string"},
         "deployment_variant": {"type": "string"},
         "quantization": {"type": ["string", "null"]},
+        "transcript": {"anyOf": [{"$ref": "#/$defs/transcript"}, {"type": "null"}]},
         "scope": {"enum": ["full_e2e", "excluded_non_e2e"]},
         "attempt_status": {"enum": ["ran", "partial", "blocked", "deferred", "not_run"]},
         "technical_execution": {"$ref": "#/$defs/technical_execution"},

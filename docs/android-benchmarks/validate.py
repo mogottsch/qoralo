@@ -17,6 +17,9 @@ REGISTRY_PATH = HERE / "registry.json"
 EXPECTED_DEVICE = {"model": "SM-S918B", "soc": "SM8550", "serial": "R5CW81PR8SY", "abi": "arm64-v8a"}
 METRIC_FIELDS = ("load_seconds", "cold_rtf", "warm_median_rtf", "proof_run_rtf", "first_post_setup_rtf", "peak_pss_bytes", "peak_vm_hwm_bytes")
 STATUSES = {"ran", "partial", "blocked", "deferred", "not_run"}
+CANONICAL_V2_SHA256 = "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67"
+LEGACY_V1_SHA256 = "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f"
+TRANSCRIPT_AUDIT_SOURCE = "experiments/0020-historic-android-benchmark-refresh/results/transcript-provenance-audit.json"
 FROZEN_0008_SUPERTONIC_METRICS = {"load_seconds": 0.765107603, "cold_rtf": 0.3854677480612432, "warm_median_rtf": 0.3703028479158501, "proof_run_rtf": None, "first_post_setup_rtf": None, "peak_pss_bytes": 463003648, "peak_vm_hwm_bytes": 531345408}
 
 
@@ -58,8 +61,9 @@ def main():
         fail("duplicate route id")
     seen_experiments = set()
     verified_media = 0
+    transcript_counts = {"canonical_v2": 0, "legacy_v1": 0, "noncanonical": 0}
     for e in entries:
-        required = ("id", "experiment", "model", "model_identity", "route", "deployment_variant", "quantization", "scope", "attempt_status", "technical_execution", "structural_audio", "objective_evidence", "listening_review", "android_attempted", "provider", "precision", "threads", "device", "metrics", "wav", "summary", "limitations", "sources", "missing_reasons")
+        required = ("id", "experiment", "model", "model_identity", "route", "deployment_variant", "quantization", "transcript", "scope", "attempt_status", "technical_execution", "structural_audio", "objective_evidence", "listening_review", "android_attempted", "provider", "precision", "threads", "device", "metrics", "wav", "summary", "limitations", "sources", "missing_reasons")
         missing = [k for k in required if k not in e]
         if missing:
             fail(f"{e.get('id')}: missing keys {missing}")
@@ -86,6 +90,29 @@ def main():
             fail(f"{e['id']}: null quantization lacks a missing-evidence reason")
         if e["scope"] not in {"full_e2e", "excluded_non_e2e"}:
             fail(f"{e['id']}: invalid route scope")
+        transcript = e["transcript"]
+        if e["scope"] == "full_e2e":
+            if not isinstance(transcript, dict):
+                fail(f"{e['id']}: full-E2E route lacks transcript classification")
+            classification = transcript.get("classification")
+            if classification not in transcript_counts:
+                fail(f"{e['id']}: invalid transcript classification")
+            transcript_counts[classification] += 1
+            if transcript.get("canonical_v2_sha256") != CANONICAL_V2_SHA256 or transcript.get("canonical_v2_match") != (classification == "canonical_v2"):
+                fail(f"{e['id']}: canonical-v2 transcript boundary mismatch")
+            if classification == "canonical_v2" and transcript.get("sha256") != CANONICAL_V2_SHA256:
+                fail(f"{e['id']}: canonical-v2 classification/hash mismatch")
+            if classification == "legacy_v1" and (transcript.get("sha256") != LEGACY_V1_SHA256 or transcript.get("bytes") != 230 or transcript.get("trailing_newline") is not False):
+                fail(f"{e['id']}: legacy-v1 transcript provenance mismatch")
+            if classification == "noncanonical" and transcript.get("sha256") in {CANONICAL_V2_SHA256, LEGACY_V1_SHA256}:
+                fail(f"{e['id']}: noncanonical transcript uses a matched hash")
+            for nullable in ("bytes", "trailing_newline"):
+                if transcript.get(nullable) is None and nullable not in transcript.get("missing_reasons", {}):
+                    fail(f"{e['id']}: null transcript {nullable} lacks a reason")
+            if transcript.get("audit_source") != TRANSCRIPT_AUDIT_SOURCE or not (ROOT / TRANSCRIPT_AUDIT_SOURCE).is_file():
+                fail(f"{e['id']}: transcript audit provenance mismatch")
+        elif transcript is not None or "transcript" not in e["missing_reasons"]:
+            fail(f"{e['id']}: excluded route transcript must be null with a reason")
         if e["attempt_status"] not in STATUSES:
             fail(f"{e['id']}: invalid status")
         technical = e["technical_execution"]
@@ -197,6 +224,8 @@ def main():
         for source in e["sources"]:
             if not (ROOT / source).exists():
                 fail(f"{e['id']}: source path missing: {source}")
+    if transcript_counts != {"canonical_v2": 0, "legacy_v1": 17, "noncanonical": 9}:
+        fail(f"visible transcript classification counts drifted: {transcript_counts}")
     report = HERE / "missing-fields.md"
     if not report.is_file() or "null" not in report.read_text():
         fail("missing-fields.md is absent or does not explain null semantics")
