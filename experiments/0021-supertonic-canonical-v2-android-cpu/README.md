@@ -1,6 +1,6 @@
 # Experiment 0021 — Supertonic canonical-v2 Android CPU benchmark
 
-New matched Android route for the exact canonical-v2 benchmark transcript. This does not rewrite legacy-v1 experiment 0008 or its exact 0020 refresh.
+**Status: complete; listening not reviewed.** New matched Android route for the exact canonical-v2 benchmark transcript. This does not rewrite legacy-v1 experiment 0008 or its exact 0020 refresh.
 
 ## Frozen route
 
@@ -13,6 +13,20 @@ New matched Android route for the exact canonical-v2 benchmark transcript. This 
 - Listening: every new WAV starts `not_reviewed`.
 
 The copied 0021 Android project changes only verified input storage from app-external storage to app-internal `getFilesDir()`, using the bounded 0020 adapter required by Android 16 scoped storage. Model/runtime/frontend/timing/memory/output logic remains the frozen 0008 implementation. Inputs are shell-stage hash checked, copied by app UID, and app-UID hash checked. Frozen 0008 remains unchanged.
+
+## Result
+
+The exact route completed setup once, one first generation, and five additional same-session warm generations. All six outputs were valid mono PCM16 44.1 kHz, finite, non-silent, unclipped, and exactly 696,523 frames (`15.794172335600907` s).
+
+- Setup: `0.853867031` s.
+- First: `6.246926665` s, RTF `0.39552098915111206`.
+- Five warm RTFs: `0.39063055789844703`, `0.3913861966078651`, `0.3956153837777073`, `0.39570824828297124`, `0.39715652771882626`.
+- Warm median RTF: **`0.3956153837777073`**.
+- Peak sampled PSS: `480,366,592` bytes; peak boundary PSS: `479,744,000` bytes; cumulative process VmHWM: `548,986,880` bytes.
+- Thermal gate: Android status `NONE`, battery `33.8 °C` before launch; no device tuning.
+- Representative warm-median WAV: SHA-256 `201f8e79…87df`, `not_reviewed`.
+
+The six calls reuse one created `OfflineTts` session, while each call independently invokes `generateWithConfigAndCallback`; no cache/state/output object crosses calls. The historical harness does not emit an ORT profile, so provider evidence is the pinned `provider=cpu` descriptor and engine fail-closed check, with the missing profile recorded explicitly.
 
 ## Evidence
 
