@@ -4,7 +4,7 @@ This experiment measures Moritz's explicitly authorized CPU-fallback route for t
 
 ## Result
 
-**The route completed text-to-WAV and physically used HTP, but it was slower per generated audio second and changed the output. This is a technical result, not a listening-quality verdict.**
+**The route completed text-to-WAV and physically used HTP, but it was slower per generated audio second, changed the output, and was rejected in listening for the exact retained sample.** Moritz described SHA `6cd3a98fb821ad76b0c0ad55a20f910da7be9d3058e511ff807b4a4f694aa45f` as “takataktaka.” This is a route/sample-only verdict, not a rejection of Pocket TTS as a family.
 
 - Hybrid warm median RTF: **`1.003`**
 - CPU-only warm median RTF: **`0.630`**
@@ -23,4 +23,4 @@ See [`RESULTS.md`](RESULTS.md) for the full provider table, physical HTP evidenc
 - No quantization, calibration, or operator rewrite was performed.
 - Instrumented physical-proof timing is kept separate from the unprofiled benchmark.
 - FP source tensors do not prove internal FP HTP arithmetic.
-- The hybrid sample was not reviewed by Moritz; its listening quality is unknown. The separate experiment-0012 rejection applies only to that exact CPU route/sample and is not transferred to this different hybrid waveform.
+- Moritz rejected the exact hybrid sample as “takataktaka.” The verdict remains bound to this route and SHA; the separate 0012 CPU rejection is also sample-specific, and neither is generalized to Pocket TTS as a family.

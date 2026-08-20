@@ -50,7 +50,7 @@ tr:last-child td { border-bottom:0; }
 <a class="toc-level-2" href="#experiment-record">Experiment record</a>
 <a class="toc-level-2" href="#decisions-carried-forward">Decisions carried forward</a></nav>
 <main>
-<div class="mirror-note"><strong>Visual mirror of <code>docs/history.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-18</span><span>source sha256: c36c9ccf4e29f931…</span></div></div>
+<div class="mirror-note"><strong>Visual mirror of <code>docs/history.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-19</span><span>source sha256: e44345d99525dd63…</span></div></div>
 <article><h1 id="project-history">Project history<a class="anchor" href="#project-history" aria-label="Link to this section">#</a></h1>
 <h2 id="goal-and-direction">Goal and direction<a class="anchor" href="#goal-and-direction" aria-label="Link to this section">#</a></h2>
 <p>The project started by asking whether Microsoft&#x27;s VibeVoice could generate a local two-speaker podcast on a modern Android phone. The goal later widened to finding any practical local TTS model that sounds pleasant and natural enough for a future NotebookLM-like listening experience.</p>
@@ -119,12 +119,12 @@ tr:last-child td { border-bottom:0; }
 <tr>
 <td><a href="../experiments/0010-supertonic-qnn-htp-feasibility/"><code>0010: Supertonic QNN/HTP feasibility</code></a></td>
 <td>Can the dominant Supertonic components run on the SM8550 HTP without hidden CPU fallback, and is acceleration worth its cost?</td>
-<td>Completed a fixed-transcript CPU/hybrid Android comparison. Hybrid used mixed QNN+CPU vector execution and a fully delegated vocoder, reducing warm generation from <code>6.067</code> to <code>3.809</code> s (<code>37.2%</code>) with physical accelerator proof. Session creation rose from <code>0.611</code> to <code>26.965</code> s and peak <code>ru_maxrss</code> from <code>459432</code> to <code>1154172</code> KiB. The prospective waveform gate failed. Moritz reported no audible CPU/hybrid difference for one randomized comparison, but no separate quality acceptance was recorded for either sample. CPU remains the technical reference; hybrid is a bounded research baseline.</td>
+<td>Completed a fixed-transcript CPU/hybrid Android comparison. Hybrid used mixed QNN+CPU vector execution and a fully delegated vocoder, reducing warm generation from <code>6.067</code> to <code>3.809</code> s (<code>37.2%</code>) with physical accelerator proof. Session creation rose from <code>0.611</code> to <code>26.965</code> s and peak <code>ru_maxrss</code> from <code>459432</code> to <code>1154172</code> KiB. The prospective waveform gate failed. Moritz&#x27;s no-audible-difference report remains comparison-only, but he later separately accepted both exact E2E samples as “Good.” CPU remains the technical reference; hybrid is a bounded research baseline.</td>
 </tr>
 <tr>
 <td><a href="../experiments/0011-supertonic-official-fp32-phone-comparison/"><code>0011: Supertonic official FP32 comparison</code></a></td>
 <td>Can official FP32 ONNX assets run on phone CPU and fully delegate to HTP?</td>
-<td>CPU and the stable-Softplus all-HTP route completed technically; all-HTP warm generation was <code>2.86×</code> faster. The prospective end-to-end numerical policy failed. Moritz did not review the retained samples, so listening quality is unknown.</td>
+<td>CPU and the stable-Softplus all-HTP route completed technically; all-HTP warm generation was <code>2.86×</code> faster, but its prospective numerical policy failed. Moritz accepted the CPU sample as “Good—even a bit more crisp than samples 1 and 2” and accepted all-HTP as “Same as sample 3.” The latter is a perceptual comparison only, not numerical equivalence.</td>
 </tr>
 <tr>
 <td><a href="../experiments/0012-pocket-onnx-vs-executorch-android/"><code>0012: Pocket FP ONNX versus ExecuTorch</code></a></td>
@@ -134,12 +134,12 @@ tr:last-child td { border-bottom:0; }
 <tr>
 <td><a href="../experiments/0013-kokoro-onnx-vs-executorch-android/"><code>0013: Kokoro FP ONNX versus ExecuTorch</code></a></td>
 <td>Which exact-source unquantized CPU route is viable for official Kokoro v1.0?</td>
-<td>The fixed-contract ONNX route completed on Android at warm median RTF <code>0.9800</code>; ExecuTorch blocked before a full-model PTE. A separate phase-tolerant acoustic policy passed, while the original strict waveform screen remained failed. Moritz did not review the retained WAV, so subjective quality is unknown.</td>
+<td>The fixed-contract ONNX route completed on Android at warm median RTF <code>0.9800</code>; ExecuTorch blocked before a full-model PTE. A separate phase-tolerant acoustic policy passed, while the original strict waveform screen remained failed. Moritz accepted the exact retained CPU sample as “Good”; the verdict is sample-level.</td>
 </tr>
 <tr>
 <td><a href="../experiments/0016-pocket-onnx-qnn-hybrid-android/"><code>0016: Pocket mixed QNN/CPU</code></a></td>
 <td>Does allowing CPU fallback make the existing Pocket graphs a useful HTP acceleration route?</td>
-<td>The route physically used HTP but regressed warm RTF from <code>0.630</code> to <code>1.003</code> and changed EOS from 78 to 48 latent frames. It failed acceleration/equivalence objectives. The hybrid sample was not reviewed; the separate 0012 CPU-sample rejection is not inferred for it.</td>
+<td>The route physically used HTP but regressed warm RTF from <code>0.630</code> to <code>1.003</code> and changed EOS from 78 to 48 latent frames. It failed acceleration/equivalence objectives. Moritz rejected the exact hybrid sample as “takataktaka.” This is route/sample-only and is not a Pocket-family rejection.</td>
 </tr>
 <tr>
 <td><a href="../experiments/0017-kokoro-onnx-qnn-htp-android/"><code>0017: Kokoro QNN/HTP feasibility</code></a></td>
@@ -149,7 +149,7 @@ tr:last-child td { border-bottom:0; }
 <tr>
 <td><a href="../experiments/0018-moss-tts-nano-onnx-android/"><code>0018: MOSS-TTS-Nano ONNX CPU</code></a></td>
 <td>Can the official MOSS-TTS-Nano ONNX path run end to end on Android CPU?</td>
-<td>The route completed technically and produced a structurally valid 16.72-second WAV, but warm median RTF was <code>1.125</code> and process memory was large. Moritz did not review the sample; subjective quality is unknown.</td>
+<td>The route completed technically and produced a structurally valid 16.72-second WAV, but warm median RTF was <code>1.125</code> and process memory was large. Moritz accepted the exact sample as “Okay to good, but with a bit of a Chinese accent.”</td>
 </tr>
 </tbody></table></div>
 <h2 id="decisions-carried-forward">Decisions carried forward<a class="anchor" href="#decisions-carried-forward" aria-label="Link to this section">#</a></h2>
@@ -157,11 +157,11 @@ tr:last-child td { border-bottom:0; }
 <li>The repository covers the TTS layer only. Source ingestion, retrieval, script generation, application UI, and episode management belong to the later product.</li>
 <li>Pleasant, natural long-form speech is the primary goal. Joint multi-speaker generation is useful but optional.</li>
 <li>Full-context generation is preferred. Naive sentence or clause splitting was rejected because it can damage prosody and naturalness.</li>
-<li>Supertonic 3 CPU remains the supported Android <strong>technical</strong> reference. This is not listening-quality acceptance.</li>
+<li>Supertonic 3 CPU remains the supported Android <strong>technical</strong> reference. That designation is technical; separately, Moritz accepted the exact experiment-0010 CPU sample as “Good,” without establishing broad-corpus quality.</li>
 <li>Full-HTP claims must fail closed. Explicit mixed execution must be labeled as mixed and supported by provider-level plus physical-device profiling evidence; partial delegation is never full HTP.</li>
-<li>Experiment 0010&#x27;s “no audible difference” result is comparison-only evidence. The hybrid remains numerically rejected and is not an adopted deployment.</li>
-<li>Experiment 0012 rejects the exact retained Pocket FP ONNX CPU route/sample for listening use. It does not reject Pocket TTS as a family.</li>
-<li>Kokoro 0013 and MOSS 0018 have technical and structural evidence but no Moritz listening verdict; quality remains unknown.</li>
+<li>Experiment 0010&#x27;s “no audible difference” result remains comparison-only evidence; separate later verdicts accept both exact E2E samples as “Good.” The hybrid remains numerically rejected and is not an adopted deployment.</li>
+<li>Experiments 0012 and 0016 reject their exact retained Pocket route/samples for listening use. Neither verdict rejects Pocket TTS as a family.</li>
+<li>Kokoro 0013 has an exact-sample “Good” verdict. MOSS 0018 has an “Okay to good” verdict with a Chinese-accent caveat. Neither sample-level verdict establishes broad-corpus quality.</li>
 <li>A numerical/acoustic gate pass, structurally valid WAV, relative degradation ballot, or provider success must never be rewritten as absolute listening acceptance.</li>
 <li>Qualcomm software and generated restricted artifacts stay local. New terms, logins, consent, or export gates require explicit human approval.</li>
 </ul>

@@ -85,7 +85,14 @@ The rewritten vector then fully delegated as one QNN partition (`874/874` optimi
 
 Warm generation was `2.86×` faster on the all-HTP route. All 48 neural executions—six duration, six text, thirty recursive vector, and six vocoder—have ORT QNN-provider events plus physical RPC, accelerator-time, cycle, and 4-HVX evidence, with zero CPU-provider node events.
 
-Both 729746-sample outputs are finite, bounded, and structurally valid mono 44.1 kHz PCM16 WAVs. The prospective numerical policy nevertheless **failed**: MAE `0.00704`, RMSE `0.02000`, and cosine `0.92668` versus the frozen `0.95` cosine minimum. Moritz did not review these experiment-0011 WAVs, so listening quality is unknown; the technical execution and structural checks are not quality acceptance. See [`results/softplus-matched-e2e-checkpoint.json`](results/softplus-matched-e2e-checkpoint.json).
+Both 729746-sample outputs are finite, bounded, and structurally valid mono 44.1 kHz PCM16 WAVs. The prospective numerical policy nevertheless **failed**: MAE `0.00704`, RMSE `0.02000`, and cosine `0.92668` versus the frozen `0.95` cosine minimum. See [`results/softplus-matched-e2e-checkpoint.json`](results/softplus-matched-e2e-checkpoint.json).
+
+## Moritz listening verdicts
+
+- Official FP32 CPU sample SHA-256 `8db92db13567b86be503d204fe367f2052b54dbfc99c0f7bfc5b23d9fd431da7`: **accepted**, “Good—even a bit more crisp than samples 1 and 2.”
+- All-HTP sample SHA-256 `47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c`: **accepted**, “Same as sample 3.” This is a perceptual comparison to the accepted CPU sample, not numerical equivalence.
+
+These are exact-sample listening verdicts. The HTP comparison does not erase or pass the failed prospective numerical policy, and neither verdict proves broad-corpus quality.
 
 ## Claim boundaries
 
@@ -96,7 +103,7 @@ Both 729746-sample outputs are finite, bounded, and structurally valid mono 44.1
 - The HTP-first route order, 120-second cooldowns, and thermal snapshots reduce but do not remove ordering and thermal bias. CPU latency increased across its warm runs.
 - Apart from the single audited `Softplus` expansion, no operator rewrite was performed. No quantization, calibration, QNN context optimization, ORT patch/rebuild, or experiment 0010 modification occurred.
 - Models, tensors, audio, profiles, Qualcomm binaries, serial logs, and local run directories remain ignored.
-- No Moritz listening verdict exists for the experiment-0011 CPU or HTP samples. The route is technically executed but numerically rejected, with subjective usability unknown.
+- Both exact experiment-0011 samples have positive Moritz listening verdicts. Those sample-level verdicts remain separate from the failed HTP numerical gate and do not establish broad-corpus equivalence.
 
 ## Files
 

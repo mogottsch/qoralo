@@ -2,7 +2,7 @@
 
 ## Status
 
-**Complete with a bounded hybrid result.** See the detailed [`PLAN.md`](PLAN.md) ([HTML mirror](PLAN.html)), final [`HANDOFF.md`](HANDOFF.md), and canonical [`results/e2e-hybrid-cpu-checkpoint.json`](results/e2e-hybrid-cpu-checkpoint.json). The fixed-transcript Android path ran all four Supertonic components and produced complete CPU and hybrid WAVs. Hybrid warm generation was 37.215% lower latency, and Moritz later reported no audible difference between the randomized CPU/hybrid samples. That is a comparison observation only: it does not say either sample was acceptable, pleasant, or usable. The prospective waveform gate remains failed and immutable.
+**Complete with a bounded hybrid result.** See the detailed [`PLAN.md`](PLAN.md) ([HTML mirror](PLAN.html)), final [`HANDOFF.md`](HANDOFF.md), and canonical [`results/e2e-hybrid-cpu-checkpoint.json`](results/e2e-hybrid-cpu-checkpoint.json). The fixed-transcript Android path ran all four Supertonic components and produced complete CPU and hybrid WAVs. Hybrid warm generation was 37.215% lower latency. Moritz first reported no audible CPU/hybrid difference, which remains comparison-only evidence; he later explicitly accepted each exact end-to-end sample as “Good.” The sample-level acceptance is bound to CPU SHA `7e83537630b3e354f7586b9887f7a8359d62e438c9addeea61d87d878b2a84ff` and hybrid SHA `9b0d488776b144c972e8be4e9434fac14ce3ceddfcfa5a10d137fca41b772668`. It does not erase the failed prospective waveform gate or establish broad-corpus quality.
 
 The result is explicitly limited: duration and text encoding remained on CPU; each vector-estimator call used 21 QNN/HTP partitions plus 136 CPU nodes; only the explicit-GELU vocoder was fully delegated with fallback disabled. The route is fixed to T239/L238, has very high startup and memory costs, and is neither full HTP nor numerically accepted. CPU remains the supported technical reference; hybrid is retained as a bounded research baseline rather than a production integration. Earlier checkpoints remain historical evidence.
 
@@ -107,7 +107,7 @@ Hybrid startup is dominated by vector QNN session creation (`21.9854 s`) and voc
 
 `ru_maxrss` is a process-lifetime high-water mark, not steady live PSS or complete DSP-private memory. The hybrid retains CPU graph/fallback state while adding QNN prepared/compiled representations, metadata, shared buffers, profiling state, and transient setup allocations.
 
-Both WAVs are structurally valid, finite, non-silent, unclipped mono PCM16. The prospectively frozen waveform gate nevertheless failed: cosine `0.405431`, SNR `-0.592623 dB`, normalized RMSE `1.07061`, RMSE `0.0593432`, mean absolute error `0.0302192`, and max error `0.641157`. Moritz subsequently reported no audible difference between the randomized CPU and hybrid samples. That one-listener/one-utterance comparison does not override numerical rejection and is not acceptance of either sample's listening quality.
+Both WAVs are structurally valid, finite, non-silent, unclipped mono PCM16. The prospectively frozen waveform gate nevertheless failed: cosine `0.405431`, SNR `-0.592623 dB`, normalized RMSE `1.07061`, RMSE `0.0593432`, mean absolute error `0.0302192`, and max error `0.641157`. Moritz's initial report of no audible CPU/hybrid difference remains comparison-only evidence. His later explicit “Good” verdict separately accepts both exact samples for listening; it does not override numerical rejection, identify an operator defect, or generalize beyond this utterance and configuration.
 
 The canonical machine-readable result is [`results/e2e-hybrid-cpu-checkpoint.json`](results/e2e-hybrid-cpu-checkpoint.json). WAVs, profiles, latency arrays, and the convenience listening report remain ignored local evidence under `work/e2e/`.
 
@@ -188,9 +188,9 @@ The experiment-level positive outcome requires a complete Android synthesis with
 
 ## Final decision
 
-Experiment 0010 is complete. It demonstrated a technically complete fixed-transcript hybrid with 37.215% lower warm generation latency and a one-utterance report of no audible CPU/hybrid difference, but not full HTP, arbitrary-shape support, numerical acceptance, listening-quality acceptance, or a production-ready startup/memory profile.
+Experiment 0010 is complete. It demonstrated a technically complete fixed-transcript hybrid with 37.215% lower warm generation latency. Moritz accepted both exact end-to-end samples as “Good,” but the route is still not full HTP, arbitrary-shape, numerically accepted, broad-corpus quality-proven, or production-ready in startup/memory.
 
-**Retained deployment decision:** keep Supertonic CPU as the supported technical reference. Preserve this hybrid only as a bounded research baseline; do not claim production adoption, listening-quality acceptance, or full-HTP success. A source-model-first or full-HTP follow-up is only under discussion with Moritz. No export route or subsequent experiment is approved by this document.
+**Retained deployment decision:** keep Supertonic CPU as the supported technical reference, now with a positive sample-level listening verdict for the exact reviewed artifact. Preserve the hybrid only as a bounded research baseline despite its positive exact-sample verdict; do not claim production adoption, broad quality generalization, numerical acceptance, or full-HTP success. A source-model-first or full-HTP follow-up is only under discussion with Moritz. No export route or subsequent experiment is approved by this document.
 
 ## Public documentation consulted during planning
 

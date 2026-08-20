@@ -21,11 +21,11 @@ PyTorch `.pth`/`.pt` files are source containers, not Android graphs. No communi
 
 ## Result
 
-The exact-source-derived FP32 ONNX route completed the fixed phone's technical execution contract. ExecuTorch remains blocked before a full-model PTE, so this establishes one bounded executable route rather than a two-route performance comparison. Moritz did not review the retained ONNX WAV; listening quality is unknown.
+The exact-source-derived FP32 ONNX route completed the fixed phone's technical execution contract. ExecuTorch remains blocked before a full-model PTE, so this establishes one bounded executable route rather than a two-route performance comparison. Moritz later accepted the exact retained ONNX CPU sample as “Good.”
 
 | Route | Host result | Android result | WAV / latency |
 |---|---|---|---|
-| Exact-source-derived FP32 ONNX Runtime | Controlled export and host CPU passed the separate deployment-validity policy | **Technical pass** on `SM-S918B` with ORT 1.23.2, explicit one-thread CPU EP, exact frontend/duration/output gates, and 18,612/18,612 profiled node events on CPU; listening not reviewed | First `7.4639 s` (`RTF 0.9821`); warm median `7.4478 s` (`RTF 0.9800`); WAV available under ignored `work/samples/` |
+| Exact-source-derived FP32 ONNX Runtime | Controlled export and host CPU passed the separate deployment-validity policy | **Technical pass** on `SM-S918B` with ORT 1.23.2, explicit one-thread CPU EP, exact frontend/duration/output gates, and 18,612/18,612 profiled node events on CPU; exact retained sample accepted “Good” | First `7.4639 s` (`RTF 0.9821`); warm median `7.4478 s` (`RTF 0.9800`); WAV available under ignored `work/samples/` |
 | ExecuTorch 1.4 / `torch.export` | **Blocked before a full-model PTE** on the data-dependent duration-expanded sequence consumed by LSTMs | Ineligible; not attempted | None |
 
 ### Route A — deliberate fixed-contract FP32 ONNX
@@ -74,7 +74,7 @@ The canonical run `onnx-cpu-20260819T130213Z-39278` passed its technical contrac
 
 The phone output passed the separately frozen phase-tolerant gate against both controlled eager and host ORT. Against controlled eager: spectral convergence `0.05955`, log-mel cosine `0.999451`, log-mel MAE `0.784 dB`, and envelope correlation `0.999392`. Its descriptive waveform cosine was `0.996911` and NRMSE `0.08584`; these do not erase the retained preliminary waveform failure.
 
-The fully decoded mono PCM16 WAV has 182400 frames, no full-scale samples, and SHA-256 `c046e8337b86ccf221ecd91db7dba90845f7c20b0ab1d8c248a36146c4eaecd3`. Moritz did not listen to or accept this sample; its subjective quality remains unknown. Local sample: [`work/samples/kokoro-af-heart-onnxruntime-cpu-s23.wav`](work/samples/kokoro-af-heart-onnxruntime-cpu-s23.wav) (ignored). The raw result/profile and exact cleanup evidence remain under `work/phone/onnx-cpu-20260819T130213Z-39278/`; the canonical summary is [`results/phone-onnx-cpu-checkpoint.json`](results/phone-onnx-cpu-checkpoint.json). The app was force-stopped and uninstalled, internal input and both scoped staging directories were removed, absence was verified, and both locks were released.
+The fully decoded mono PCM16 WAV has 182400 frames, no full-scale samples, and SHA-256 `c046e8337b86ccf221ecd91db7dba90845f7c20b0ab1d8c248a36146c4eaecd3`. Moritz accepted this exact sample as “Good.” The verdict is sample-level and does not establish arbitrary-text or broad-corpus quality. Local sample: [`work/samples/kokoro-af-heart-onnxruntime-cpu-s23.wav`](work/samples/kokoro-af-heart-onnxruntime-cpu-s23.wav) (ignored). The raw result/profile and exact cleanup evidence remain under `work/phone/onnx-cpu-20260819T130213Z-39278/`; the canonical summary is [`results/phone-onnx-cpu-checkpoint.json`](results/phone-onnx-cpu-checkpoint.json). The app was force-stopped and uninstalled, internal input and both scoped staging directories were removed, absence was verified, and both locks were released.
 
 ### Route B — bounded current ExecuTorch screen
 
@@ -95,7 +95,7 @@ The official complex inverse STFT exports in isolation but fails ExecuTorch edge
 - The previous Android ONNX blocker was staging/bootstrap and is resolved by app-owned internal staging.
 - No HTP/QNN or quantization work began; phone profiling proves CPU-only execution.
 - Models, source weights, wheels, APKs, raw profiles, phone logs, serial evidence, tensors, and audio remain ignored.
-- The ONNX route has execution, provider, structural-audio, and objective acoustic evidence, but no Moritz listening verdict. It must not be called quality-accepted.
+- The exact retained ONNX CPU sample has a positive Moritz listening verdict (“Good”). That sample-level acceptance remains separate from the strict waveform-screen failure and does not generalize beyond the fixed contract.
 
 ## Files
 

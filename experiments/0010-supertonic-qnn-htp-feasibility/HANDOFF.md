@@ -6,7 +6,7 @@ Experiment 0010 is complete. The canonical result is [`results/e2e-hybrid-cpu-ch
 
 The fixed-transcript Supertonic path ran end to end on the authorized Galaxy S23 Ultra (`SM-S918B`, `SM8550`): text preparation, duration prediction, text encoding, five recursive vector-estimator calls, vocoding, trimming, and WAV writing. The matched CPU and hybrid routes used M1/SID5, English, seed `20260813`, T239/L238, and `729746` output samples at 44.1 kHz. Duration prediction executed and reported `16.9202 s`; QNN's concrete-shape deployment retained the predeclared L238 contract rather than dynamically rebuilding graphs.
 
-**Retained decision:** keep CPU as the supported technical reference deployment. Preserve the hybrid as a bounded research baseline only. Moritz reported no audible CPU/hybrid difference for one reviewed utterance, but no separate listening-quality acceptance was recorded for either sample. The hybrid is not full HTP, arbitrary-shape, numerically accepted, listening-quality accepted, or production-ready.
+**Retained decision:** keep CPU as the supported technical reference deployment. Preserve the hybrid as a bounded research baseline only. Moritz first reported no audible CPU/hybrid difference, then explicitly accepted each exact end-to-end sample as “Good”: CPU SHA `7e83537630b3e354f7586b9887f7a8359d62e438c9addeea61d87d878b2a84ff` and hybrid SHA `9b0d488776b144c972e8be4e9434fac14ce3ceddfcfa5a10d137fca41b772668`. The hybrid remains not full HTP, arbitrary-shape, numerically accepted, broad-corpus quality-proven, or production-ready.
 
 No follow-up experiment, source export, conversion route, or full-HTP plan is approved here.
 
@@ -71,7 +71,7 @@ The frozen end-to-end numerical gate remains **failed and immutable**:
 - mean absolute error: `0.0302192`;
 - maximum absolute error: `0.641157`.
 
-After the run, Moritz used the randomized E2E A/B report and reported no audible difference between the CPU and hybrid samples. Record this as a comparison observation from one listener and one utterance, not acceptance of either sample's quality. It does not turn the waveform comparison into a numerical pass or identify an operator defect.
+After the run, Moritz used the randomized E2E A/B report and reported no audible difference between the CPU and hybrid samples. That remains a comparison observation. In the later listening queue he separately accepted both exact samples as “Good,” which supplies sample-level quality acceptance. Neither subjective result turns the waveform comparison into a numerical pass, identifies an operator defect, or establishes broad-corpus quality.
 
 Ignored local convenience artifacts:
 

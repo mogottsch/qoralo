@@ -56,7 +56,7 @@ tr:last-child td { border-bottom:0; }
 <a class="toc-level-2" href="#phase-3-run-complete-accelerated-android-synthesis">Phase 3: run complete accelerated Android synthesis</a>
 <a class="toc-level-2" href="#phase-4-make-the-deployment-decision">Phase 4: make the deployment decision</a></nav>
 <main>
-<div class="mirror-note"><strong>Visual mirror of <code>experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-18</span><span>source sha256: b8f9c0e4ef64ed0f…</span></div></div>
+<div class="mirror-note"><strong>Visual mirror of <code>experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-19</span><span>source sha256: 6ff30a13066b0987…</span></div></div>
 <article><h1 id="experiment-0010-execution-plan">Experiment 0010 execution plan<a class="anchor" href="#experiment-0010-execution-plan" aria-label="Link to this section">#</a></h1>
 <h2 id="goal">Goal<a class="anchor" href="#goal" aria-label="Link to this section">#</a></h2>
 <p>Select and validate a text-to-speech model that can become the local voice of a future NotebookLM-like Android experience. It should sound pleasant and natural over sustained listening, with podcast-like delivery rather than merely intelligible speech.</p>
@@ -81,13 +81,13 @@ tr:last-child td { border-bottom:0; }
 </tr>
 <tr>
 <td>Phase 3: complete accelerated synthesis</td>
-<td><strong>Complete — faster hybrid, numerical rejection, comparison-only listening match</strong></td>
-<td>Hybrid warm latency was 37.22% lower. The prospective waveform gate failed, while Moritz later reported no audible CPU/hybrid difference; no route-level usability acceptance was recorded.</td>
+<td><strong>Complete — faster hybrid, numerical rejection, exact samples accepted</strong></td>
+<td>Hybrid warm latency was 37.22% lower. The prospective waveform gate failed. Moritz reported no audible CPU/hybrid difference and later separately accepted each exact end-to-end sample as “Good.”</td>
 </tr>
 <tr>
 <td>Phase 4: deployment decision</td>
 <td><strong>Complete — retain CPU; bound hybrid as research</strong></td>
-<td>CPU remains the supported technical reference. The fixed-shape mixed route carries very high setup/memory costs and is not numerically accepted, listening-quality accepted, or production-ready.</td>
+<td>CPU remains the supported technical reference. Both exact samples have positive listening verdicts, but the fixed-shape mixed route carries very high setup/memory costs and is not numerically accepted, broad-corpus quality-proven, or production-ready.</td>
 </tr>
 </tbody></table></div>
 <h2 id="current-position">Current position<a class="anchor" href="#current-position" aria-label="Link to this section">#</a></h2>
@@ -188,16 +188,16 @@ tr:last-child td { border-bottom:0; }
 </tr>
 <tr>
 <td><strong>Observed</strong></td>
-<td>Post-run randomized A/B</td>
-<td>Moritz reported no audible difference between the CPU and hybrid E2E samples. This one-listener/one-utterance comparison does not accept either sample&#x27;s quality or override the failed waveform gate.</td>
+<td>Post-run randomized A/B and later verdicts</td>
+<td>Moritz reported no audible CPU/hybrid difference, then separately accepted both exact E2E samples as “Good.” The comparison remains distinct from the sample-level acceptance, and neither overrides the failed waveform gate.</td>
 </tr>
 <tr>
 <td><strong>Decided</strong></td>
 <td>Bounded deployment conclusion</td>
-<td>Preserve CPU as the supported technical reference and the fixed-shape hybrid as a research baseline only. No listening-quality acceptance, production adoption, or full-HTP success is claimed.</td>
+<td>Preserve CPU as the supported technical reference and the fixed-shape hybrid as a research baseline only. Exact-sample listening acceptance is recorded; no broad quality generalization, production adoption, or full-HTP success is claimed.</td>
 </tr>
 </tbody></table></div>
-<p>The current boundary is therefore clear: <strong>the fixed-transcript hybrid pipeline completes end to end and is materially faster once initialized, with physical HTP proof for 20 mixed vector-estimator calls and four fully delegated vocoder calls. It is not full HTP, requires 44.1× longer session creation and 2.51× peak <code>ru_maxrss</code>, and fails the prospective numerical comparison. Moritz reported no audible CPU/hybrid difference in the randomized A/B, but no separate listening-quality acceptance was recorded for either sample. CPU remains the supported technical reference; hybrid remains a bounded research baseline.</strong></p>
+<p>The current boundary is therefore clear: <strong>the fixed-transcript hybrid pipeline completes end to end and is materially faster once initialized, with physical HTP proof for 20 mixed vector-estimator calls and four fully delegated vocoder calls. It is not full HTP, requires 44.1× longer session creation and 2.51× peak <code>ru_maxrss</code>, and fails the prospective numerical comparison. Moritz reported no audible CPU/hybrid difference and later accepted both exact samples as “Good.” CPU remains the supported technical reference; hybrid remains a bounded research baseline despite its positive sample-level verdict.</strong></p>
 <p>When a phase finishes, its detailed result stays in experiment <code>0010</code>, its condensed outcome moves to <a href="../../docs/history.md"><code>docs/history.md</code></a> and the <a href="../../docs/history.html">history HTML</a>, and it is removed from this plan.</p>
 <h2 id="phase-1-establish-vocoder-htp-feasibility">Phase 1: establish vocoder HTP feasibility<a class="anchor" href="#phase-1-establish-vocoder-htp-feasibility" aria-label="Link to this section">#</a></h2>
 <p>The former blocker was eight <code>Erf</code> nodes inside standard decomposed GELU patterns. A narrow, source-hash-locked rewrite replaced only those verified patterns with explicit <code>com.microsoft.Gelu</code>; it passed bit-identical CPU equivalence and complete fail-closed host QNN assignment. The subsequent physical run proved accelerator execution but failed numerical correctness, producing the bounded negative result for this route.</p>
@@ -352,14 +352,14 @@ tr:last-child td { border-bottom:0; }
 </tr>
 </tbody></table></div>
 <p>Both generated files are structurally valid mono 44.1-kHz PCM16 WAVs with <code>729,746</code> frames, finite raw samples, no PCM clipping, and non-silent RMS. However, the prospectively frozen hybrid-vs-CPU audio gate failed: cosine <code>0.405431</code>, SNR <code>-0.5926 dB</code>, normalized RMSE <code>1.07061</code>, RMSE <code>0.05934</code>, mean absolute error <code>0.03022</code>, and max error <code>0.64116</code>. The prior vocoder rejection remains immutable; the larger end-to-end divergence may include recursive estimator error accumulation, but no operator defect is claimed.</p>
-<p>Afterward, Moritz used the randomized E2E A/B report and reported no audible difference between the CPU and hybrid samples. This is a one-listener/one-utterance comparison observation, not acceptance of either sample&#x27;s usability. It remains distinct from, and does not override, the failed prospective numerical gate. The ignored convenience report <code>work/e2e/e2e-report.html</code> is SHA-256 <code>ab7d97a7…</code>; it is not a durable committed dependency.</p>
+<p>Afterward, Moritz used the randomized E2E A/B report and reported no audible difference between the CPU and hybrid samples. This remains a one-listener/one-utterance comparison observation. In the later listening queue he separately accepted both exact samples as “Good.” The sample-level acceptance remains distinct from, and does not override, the failed prospective numerical gate. The ignored convenience report <code>work/e2e/e2e-report.html</code> is SHA-256 <code>ab7d97a7…</code>; it is not a durable committed dependency.</p>
 <p>The startup boundary is session creation rather than phone boot. CPU created all sessions in <code>0.611 s</code>; hybrid required <code>26.965 s</code>, dominated by vector QNN preparation (<code>21.985 s</code>) and vocoder QNN preparation (<code>4.748 s</code>). QNN must partition/optimize/compile/finalize graphs, prepare weights and layouts, and establish RPC/shared buffers. This cost is generally one-time only while sessions remain resident. Setup plus first generation was <code>6.456 s</code> CPU versus <code>31.296 s</code> hybrid; setup plus all four measured generations was <code>24.649 s</code> versus <code>42.590 s</code>. Dividing the additional setup by the observed warm saving gives an illustrative break-even near 12 retained-process generations, not a controlled claim.</p>
 <p>The memory values are process <code>ru_maxrss</code> high-water marks: CPU <code>217,420 KiB</code> after sessions and <code>459,432 KiB</code> after runs; hybrid <code>1,028,044 KiB</code> and <code>1,154,172 KiB</code>. They are not steady live PSS or complete DSP-private memory. Hybrid retains the ORT CPU graph/fallback route while adding prepared/compiled QNN graph and weight representations, metadata, RPC/shared buffers, profiling state, and transient setup peaks.</p>
 <p>Artifacts are retained locally under <code>work/e2e/</code>: CPU and hybrid WAVs in <code>samples/</code>, component and aggregate latency arrays in <code>latencies/e2e-latencies.json</code>, full metrics/provider summaries in <code>e2e-analysis.json</code>, and the canonical tracked record in <a href="results/e2e-hybrid-cpu-checkpoint.json"><code>results/e2e-hybrid-cpu-checkpoint.json</code></a>.</p>
-<p><strong>Completed with split evidence:</strong> the transcript-specific hybrid pipeline is physically accelerated and materially faster warm; Moritz reported no audible CPU/hybrid difference for the observed sample. It is not numerically accepted, listening-quality accepted, full-HTP, arbitrary-shape, or deployment-ready.</p>
+<p><strong>Completed with split evidence:</strong> the transcript-specific hybrid pipeline is physically accelerated and materially faster warm; Moritz reported no audible CPU/hybrid difference and explicitly accepted both exact E2E samples as “Good.” It is still not numerically accepted, broad-corpus quality-proven, full-HTP, arbitrary-shape, or deployment-ready.</p>
 <h2 id="phase-4-make-the-deployment-decision">Phase 4: make the deployment decision<a class="anchor" href="#phase-4-make-the-deployment-decision" aria-label="Link to this section">#</a></h2>
-<p>The bounded decision is complete. The hybrid route demonstrated a meaningful warm latency reduction, and Moritz reported no audible CPU/hybrid difference in the one-utterance randomized comparison. No separate quality acceptance was recorded for either sample. The route also failed the prospective waveform gate, consumed much more memory, required expensive session creation, used mixed CPU/HTP vector execution, and supported only the frozen shape.</p>
-<p><strong>Current decision:</strong> preserve Supertonic CPU as the supported technical reference deployment. Retain the experiment-0010 hybrid as a bounded research baseline because its warm performance improved and its one A/B comparison found no audible CPU/hybrid difference, but do not claim listening-quality acceptance, production adoption, arbitrary-text readiness, numerical acceptance, or full-HTP success.</p>
+<p>The bounded decision is complete. The hybrid route demonstrated a meaningful warm latency reduction. Moritz reported no audible CPU/hybrid difference in the randomized comparison and later separately accepted both exact samples as “Good.” The route also failed the prospective waveform gate, consumed much more memory, required expensive session creation, used mixed CPU/HTP vector execution, and supported only the frozen shape.</p>
+<p><strong>Current decision:</strong> preserve Supertonic CPU as the supported technical reference deployment, with a positive verdict for its exact reviewed sample. Retain the experiment-0010 hybrid as a bounded research baseline because its warm performance improved and its exact sample was also accepted, but do not claim broad-corpus quality, production adoption, arbitrary-text readiness, numerical acceptance, or full-HTP success.</p>
 <p>Pleasant speech across a broader corpus, sustained generation, same-device latency, memory, storage, thermals, and integration cost still matter before any deployment change. A source-model-first or full-HTP follow-up is only under discussion; no export route or new experiment is approved here.</p></article>
 <footer class="source-footer">Generated as <code>PLAN.html</code> by <code>scripts/build_docs_html.py</code>. Edit <code>experiments/0010-supertonic-qnn-htp-feasibility/PLAN.md</code>, then regenerate the human-readable mirrors.</footer>
 </main>

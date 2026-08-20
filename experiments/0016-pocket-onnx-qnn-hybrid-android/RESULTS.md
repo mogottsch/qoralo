@@ -2,7 +2,7 @@
 
 ## Clear outcome
 
-**The hybrid route completed text-to-WAV and physically used HTP, but it failed the acceleration and equivalence objectives. No positive or negative listening verdict was recorded for the hybrid sample.**
+**The hybrid route completed text-to-WAV and physically used HTP, but it failed the acceleration/equivalence objectives and Moritz rejected the exact retained sample in listening.**
 
 The primary warm result was:
 
@@ -94,7 +94,11 @@ Comparing the shared 92,160-sample prefix:
 - mean absolute error: `0.00604` in normalized PCM units
 - maximum absolute error: `0.16129`
 
-This output does **not** pass as equivalent to CPU-only. It is retained as an experimental hybrid sample, not as a faithful acceleration result. Moritz did not review this hybrid sample, so its listening quality remains unknown. Experiment 0012's “takakakakakakakaka” rejection is specific to the different CPU sample SHA `406349…7d22` and is not inferred for this hybrid WAV.
+This output does **not** pass as equivalent to CPU-only. It is retained as an experimental hybrid sample, not as a faithful acceleration result.
+
+## Moritz listening verdict
+
+Moritz rejected this exact hybrid sample, SHA-256 `6cd3a98fb821ad76b0c0ad55a20f910da7be9d3058e511ff807b4a4f694aa45f`, describing “takataktaka.” This is an exact route/sample verdict only. It does not reject Pocket TTS as a family. Experiment 0012's separate “takakakakakakakaka” rejection remains specific to its different CPU route/sample SHA `406349…7d22`.
 
 ## Implementation boundary
 
@@ -110,6 +114,7 @@ Enabling CPU fallback made the current graphs runnable with QNN, but it did not 
 2. Frequent fragmented QNN partitions incurred transfer and RPC overhead.
 3. Warm RTF regressed from `0.630` to `1.003`.
 4. Numerical differences changed EOS and materially changed the waveform.
+5. Moritz rejected the exact retained hybrid sample as “takataktaka.”
 
 The current hybrid route should not replace the CPU technical baseline. A separately authorized QNN-oriented, equivalence-gated export would be the appropriate technical direction; this result does not create or approve such a follow-up. Experiment 0015 does not exist and must not be cited as a route.
 

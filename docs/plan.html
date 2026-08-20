@@ -50,7 +50,7 @@ tr:last-child td { border-bottom:0; }
 <a class="toc-level-2" href="#current-phase-preserve-technical-baselines-require-exact-route-listening-evidence">Current phase: preserve technical baselines, require exact-route listening evidence</a>
 <a class="toc-level-2" href="#current-decision">Current decision</a></nav>
 <main>
-<div class="mirror-note"><strong>Visual mirror of <code>docs/plan.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-18</span><span>source sha256: 850fa68674eec96e…</span></div></div>
+<div class="mirror-note"><strong>Visual mirror of <code>docs/plan.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-19</span><span>source sha256: 724d56f0f6d2575f…</span></div></div>
 <article><h1 id="current-plan">Current plan<a class="anchor" href="#current-plan" aria-label="Link to this section">#</a></h1>
 <h2 id="goal">Goal<a class="anchor" href="#goal" aria-label="Link to this section">#</a></h2>
 <p>Find a text-to-speech model that can become the local voice of a future NotebookLM-like Android experience. It should sound pleasant and natural over sustained listening, with podcast-like delivery rather than merely intelligible speech.</p>
@@ -72,14 +72,14 @@ tr:last-child td { border-bottom:0; }
 <th>Moritz listening status</th>
 </tr></thead><tbody>
 <tr>
-<td>Supertonic 3 CPU reference from experiments <a href="../experiments/0008-sherpa-onnx-android-tts-benchmark/"><code>0008</code></a> / <a href="../experiments/0010-supertonic-qnn-htp-feasibility/"><code>0010</code></a></td>
-<td>Supported Android <strong>technical</strong> reference; faster than real time</td>
-<td>No explicit usability acceptance for the exact CPU route. In experiment 0010 Moritz reported no audible CPU/hybrid difference for one utterance; that is comparison-only evidence.</td>
+<td>Supertonic 3 CPU reference and mixed hybrid in experiments <a href="../experiments/0008-sherpa-onnx-android-tts-benchmark/"><code>0008</code></a> / <a href="../experiments/0010-supertonic-qnn-htp-feasibility/"><code>0010</code></a></td>
+<td>CPU is the supported Android technical reference; hybrid was faster warm but failed its prospective numerical policy</td>
+<td>Moritz accepted exact CPU SHA <code>7e83537630b3e354f7586b9887f7a8359d62e438c9addeea61d87d878b2a84ff</code> and hybrid SHA <code>9b0d488776b144c972e8be4e9434fac14ce3ceddfcfa5a10d137fca41b772668</code> as “Good.” His earlier no-audible-difference report remains comparison-only; the separate verdicts supply sample-level acceptance.</td>
 </tr>
 <tr>
 <td>Supertonic official FP32 CPU/all-HTP in <a href="../experiments/0011-supertonic-official-fp32-phone-comparison/"><code>0011</code></a></td>
 <td>CPU and all-HTP routes executed; all-HTP was faster warm but failed its prospective numerical policy</td>
-<td>Not reviewed; subjective quality unknown.</td>
+<td>CPU SHA <code>8db92db13567b86be503d204fe367f2052b54dbfc99c0f7bfc5b23d9fd431da7</code> accepted: “Good—even a bit more crisp than samples 1 and 2.” All-HTP SHA <code>47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c</code> accepted: “Same as sample 3”; this is perceptual comparison only, not numerical equivalence.</td>
 </tr>
 <tr>
 <td>Pocket FP ONNX CPU in <a href="../experiments/0012-pocket-onnx-vs-executorch-android/"><code>0012</code></a></td>
@@ -89,12 +89,12 @@ tr:last-child td { border-bottom:0; }
 <tr>
 <td>Kokoro exact-source-derived FP32 ONNX CPU in <a href="../experiments/0013-kokoro-onnx-vs-executorch-android/"><code>0013</code></a></td>
 <td>Complete fixed-contract CPU route, warm median RTF <code>0.9800</code>; separate acoustic policy passed while the retained strict waveform screen failed</td>
-<td>Not reviewed; subjective quality unknown.</td>
+<td>Exact retained sample SHA <code>c046e8337b86ccf221ecd91db7dba90845f7c20b0ab1d8c248a36146c4eaecd3</code> accepted: “Good.” Sample-level only.</td>
 </tr>
 <tr>
 <td>Pocket mixed QNN/CPU in <a href="../experiments/0016-pocket-onnx-qnn-hybrid-android/"><code>0016</code></a></td>
 <td>Physical HTP execution, but slower normalized RTF and changed EOS/output length</td>
-<td>Hybrid sample not reviewed; subjective quality unknown. The separate 0012 CPU-sample rejection is not transferred to this waveform.</td>
+<td>Exact hybrid SHA <code>6cd3a98fb821ad76b0c0ad55a20f910da7be9d3058e511ff807b4a4f694aa45f</code> rejected: “takataktaka.” This is route/sample-only and is not a Pocket-family rejection.</td>
 </tr>
 <tr>
 <td>Kokoro QNN preparation in <a href="../experiments/0017-kokoro-onnx-qnn-htp-android/"><code>0017</code></a></td>
@@ -104,7 +104,7 @@ tr:last-child td { border-bottom:0; }
 <tr>
 <td>MOSS-TTS-Nano ONNX CPU in <a href="../experiments/0018-moss-tts-nano-onnx-android/"><code>0018</code></a></td>
 <td>Complete CPU route, warm median RTF <code>1.125</code>, large process-memory footprint, structurally valid retained WAV</td>
-<td>Not reviewed; subjective quality unknown.</td>
+<td>Exact SHA <code>173850781b055e70a606fb561d93b70e6d8c6318db1b29b2324f83506c21ad6b</code> accepted: “Okay to good, but with a bit of a Chinese accent.” Sample-level acceptance with an accent caveat.</td>
 </tr>
 </tbody></table></div>
 <p>Two older listening records remain deliberately narrow:</p>
@@ -114,10 +114,10 @@ tr:last-child td { border-bottom:0; }
 </ul>
 <h2 id="current-decision">Current decision<a class="anchor" href="#current-decision" aria-label="Link to this section">#</a></h2>
 <ul>
-<li>Keep Supertonic CPU as the supported <strong>technical</strong> Android reference, not as a quality-accepted product voice.</li>
-<li>Keep experiment 0010&#x27;s hybrid and experiment 0011&#x27;s all-HTP route as bounded technical research evidence; neither has listening-quality acceptance, and both failed their prospective numerical policies.</li>
-<li>Reject the exact experiment-0012 Pocket FP ONNX CPU route/sample for listening use. Do not generalize that rejection to Pocket TTS as a family.</li>
-<li>Treat Kokoro 0013 and MOSS 0018 listening quality as unknown until Moritz reviews their exact retained artifacts.</li>
+<li>Keep Supertonic CPU as the supported <strong>technical</strong> Android reference. Its exact experiment-0010 sample is also listening-accepted as “Good,” but broader long-form/product quality still needs corpus evidence.</li>
+<li>Keep experiment 0010&#x27;s hybrid and experiment 0011&#x27;s all-HTP route as bounded technical research evidence. Their exact samples have positive listening verdicts, but both HTP routes failed their prospective numerical policies.</li>
+<li>Reject the exact experiment-0012 Pocket FP ONNX CPU and experiment-0016 Pocket hybrid route/samples for listening use. Do not generalize either rejection to Pocket TTS as a family.</li>
+<li>Record Kokoro 0013 as sample-level accepted “Good.” Record MOSS 0018 as sample-level accepted “Okay to good,” with Moritz&#x27;s Chinese-accent caveat.</li>
 <li>Never promote a structurally valid WAV, an acoustic-policy pass, or a provider/latency result into a quality claim.</li>
 </ul>
 <p>Active implementation work remains governed by its experiment-specific plan and is not summarized here as completed evidence. Before any technically viable route becomes the product choice, retain its exact artifact hash and obtain an explicit Moritz listening verdict on that route/sample. A comparative “no audible difference” answer is insufficient unless it also includes an explicit usability decision.</p>
