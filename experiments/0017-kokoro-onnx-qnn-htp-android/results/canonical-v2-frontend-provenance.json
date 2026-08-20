@@ -1,0 +1,162 @@
+{
+  "claim_boundary": "Canonical-v2 official frontend and fixed input proof only; not a model export, inference, QNN assignment, physical HTP result, benchmark, or listening verdict.",
+  "fixed_inputs": {
+    "tensors": {
+      "speed": {
+        "bytes": 4,
+        "dtype": "float32",
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/frontend-official-v1/speed.raw",
+        "sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c",
+        "shape": [
+          1
+        ]
+      },
+      "style": {
+        "bytes": 1024,
+        "dtype": "float32",
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/frontend-official-v1/style.raw",
+        "sha256": "8acaca07623d98a1085f6b182fb997d715dd1d67862e350567e6d9b1bc8ec71b",
+        "shape": [
+          1,
+          256
+        ]
+      },
+      "tokens": {
+        "bytes": 1880,
+        "dtype": "int64",
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/frontend-official-v1/tokens.raw",
+        "sha256": "9c565b2a6ee1a811f188f3e3425a3188af58866988ce5a2197eeaacc81dde280",
+        "shape": [
+          1,
+          235
+        ]
+      }
+    },
+    "voice_source": {
+      "bytes": 522240,
+      "path": "experiments/0013-kokoro-onnx-vs-executorch-android/.local/derived/af_heart.f32",
+      "sha256": "d583ccff3cdca2f7fae535cb998ac07e9fcb90f09737b9a41fa2734ec44a8f0b"
+    }
+  },
+  "historical_sherpa_frontend": {
+    "classification": "The old 0013/0017 sherpa lexicon route cannot be canonical v2 and is not silently extended or relabeled.",
+    "exact_error": "selected text is not fully covered by lexicon: 'makes'",
+    "status": "failed_closed",
+    "tool": {
+      "bytes": 7828,
+      "path": "experiments/0013-kokoro-onnx-vs-executorch-android/tools/kokoro_contract.py",
+      "sha256": "ea249effe79cdfd4ce98d9ff864cb14806395c7c692e5deaf3116cd944f46b85"
+    }
+  },
+  "ignored_full_record": {
+    "bytes": 21442,
+    "path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/frontend-official-v1/frontend-full.json",
+    "sha256": "28d41b04b452ba79ce94deb26eb872c387cc6ba3e7591cfa48f751c4bcad31d1"
+  },
+  "official_frontend": {
+    "chunks": 1,
+    "configuration": {
+      "british": false,
+      "fallback": "misaki.espeak.EspeakFallback(british=False, version=None)",
+      "fallback_backend_language": "en-us",
+      "fallback_preserve_punctuation": true,
+      "fallback_tie": "^",
+      "fallback_with_stress": true,
+      "g2p_unk": "",
+      "lang_code_requested": "a",
+      "language": "American English",
+      "model": false,
+      "repo_id": "hexgrad/Kokoro-82M",
+      "split_pattern": "\\n+",
+      "trf": false
+    },
+    "determinism_runs": 2,
+    "espeak_data_tree": {
+      "bytes": 18373365,
+      "files": 364,
+      "manifest_definition": "sha256 over sorted (relative-path length/path, byte count, content sha256)",
+      "manifest_sha256": "c084c3e565b461dbb27c254b92a25057c0f9df514adbf9d4e25ed5e0d7784c5d",
+      "path": "/home/moritz/vibevoice-android-spike/experiments/0013-kokoro-onnx-vs-executorch-android/.local/venv/lib/python3.12/site-packages/espeakng_loader/espeak-ng-data"
+    },
+    "implementation": "Kokoro 0.9.4 KPipeline American-English path",
+    "misaki_rating_counts": {
+      "3": 3,
+      "4": 33,
+      "null": 6
+    },
+    "misaki_token_count": 42,
+    "misaki_token_trace_sha256": "dc1c01bf0d9025281c6e29582cc5a871e907658fd1bf48ff0eccd8514103f20f",
+    "official_config": {
+      "bytes": 2351,
+      "path": "experiments/0013-kokoro-onnx-vs-executorch-android/.local/source/official/config.json",
+      "sha256": "5abb01e2403b072bf03d04fde160443e209d7a0dad49a423be15196b9b43c17f"
+    },
+    "phoneme_codepoints": 233,
+    "phoneme_utf8_bytes": 323,
+    "phoneme_utf8_sha256": "7c7299c2d19943162b5bc85cebe116d16e534f336ac5bcb4fce40fe126a8b3a0",
+    "phonemes": "wˈɛlkəm tʊ ˌWəɹ smˈɔl stˈudiO, wˌɛɹ kjˈʊɹiəs mˈIndz ˌʌnpˈæk wˈʌn səɹpɹˈIzɪŋ Idˈiə æt ɐ tˈIm. tədˈA, wi ɪksplˈɔɹ wˌI fəmˈɪljəɹ vˈYsᵻz bˈɪld tɹˈʌst, hˌW θˈɔtfᵊl pˈɔzᵻz ʃˈAp mˈinɪŋ, ænd wˌʌt mˌAks ɐ kˌɑnvəɹsˈAʃən fˈil ʤˈɛnjəwənli əlˈIv.",
+    "python": "3.12.12",
+    "repository": "hexgrad/Kokoro-82M",
+    "revision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+    "source_files": {
+      "espeak_library": {
+        "bytes": 661568,
+        "path": "/home/moritz/vibevoice-android-spike/experiments/0013-kokoro-onnx-vs-executorch-android/.local/venv/lib/python3.12/site-packages/espeakng_loader/libespeak-ng.so",
+        "sha256": "b15ce0803b26254e8a0d088c6b9281a2637b2b02613147cc320cfdefaf2c3ccf"
+      },
+      "kokoro_pipeline.py": {
+        "bytes": 17578,
+        "path": "/home/moritz/vibevoice-android-spike/experiments/0013-kokoro-onnx-vs-executorch-android/.local/venv/lib/python3.12/site-packages/kokoro/pipeline.py",
+        "sha256": "09da32aab781f7a163cbf9f6e379d53db40957cbbab50bc26a21c8440c0eabd6"
+      },
+      "misaki_en.py": {
+        "bytes": 31278,
+        "path": "/home/moritz/vibevoice-android-spike/experiments/0013-kokoro-onnx-vs-executorch-android/.local/venv/lib/python3.12/site-packages/misaki/en.py",
+        "sha256": "ddf67ad3bc4dd98143dcc9b6fbcde259b9d879d8b91684201cf0deeb07aa9910"
+      },
+      "misaki_espeak.py": {
+        "bytes": 3799,
+        "path": "/home/moritz/vibevoice-android-spike/experiments/0013-kokoro-onnx-vs-executorch-android/.local/venv/lib/python3.12/site-packages/misaki/espeak.py",
+        "sha256": "ebc39e807eeae7b99322109d8477aa16b605427f9cc852a4b1f6f72c45806a09"
+      },
+      "misaki_us_gold.json": {
+        "bytes": 3000469,
+        "path": "/home/moritz/vibevoice-android-spike/experiments/0013-kokoro-onnx-vs-executorch-android/.local/venv/lib/python3.12/site-packages/misaki/data/us_gold.json",
+        "sha256": "dc414872a49a28ae6c141463d502fd945f3b2fde040484fdc47d00cc4612686f"
+      },
+      "misaki_us_silver.json": {
+        "bytes": 3099517,
+        "path": "/home/moritz/vibevoice-android-spike/experiments/0013-kokoro-onnx-vs-executorch-android/.local/venv/lib/python3.12/site-packages/misaki/data/us_silver.json",
+        "sha256": "de8f67be911bb6c659187b4a65fd966b6a30e56350e0f790d763210b053ac475"
+      }
+    },
+    "status": "passed",
+    "style_index": 232,
+    "token_little_endian_int64_sha256": "9c565b2a6ee1a811f188f3e3425a3188af58866988ce5a2197eeaacc81dde280",
+    "token_shape": [
+      1,
+      235
+    ],
+    "versions": {
+      "espeakng-loader": "0.2.4",
+      "kokoro": "0.9.4",
+      "misaki": "0.9.4",
+      "num2words": "0.5.14",
+      "phonemizer-fork": "3.3.2",
+      "spacy": "3.8.15"
+    }
+  },
+  "pending_fixed_shape": {
+    "audio_samples": null,
+    "duration_sum": null,
+    "reason": "Requires the separately scheduled official-model CPU oracle; no model was loaded by this frontend tool."
+  },
+  "schema_version": 1,
+  "transcript": {
+    "bytes": 226,
+    "effective_graphemes_utf8_sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+    "path": "protocols/android-tts-benchmark/transcript.txt",
+    "sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+    "trailing_newline": false
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "claim_boundary": "Fixed-contract canonical-v2 FP32 ONNX export derived from official weights/frontend inputs; not arbitrary text/shape, QNN assignment, physical HTP execution, benchmark performance, or listening acceptance.",
+  "fixed_outputs": {
+    "audio_duration_seconds": 15.05,
+    "audio_shape": [
+      361200
+    ],
+    "duration_shape": [
+      235
+    ],
+    "duration_sum": 602,
+    "sample_rate_hz": 24000
+  },
+  "inputs": {
+    "seed": 20260818,
+    "speed": {
+      "sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c",
+      "value": 1.0
+    },
+    "style": {
+      "sha256": "8acaca07623d98a1085f6b182fb997d715dd1d67862e350567e6d9b1bc8ec71b",
+      "shape": [
+        1,
+        256
+      ]
+    },
+    "tokens": {
+      "sha256": "9c565b2a6ee1a811f188f3e3425a3188af58866988ce5a2197eeaacc81dde280",
+      "shape": [
+        1,
+        235
+      ]
+    }
+  },
+  "output": {
+    "bytes": 338478095,
+    "export_seconds": 18.58414083599996,
+    "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/export-v2/kokoro-canonical-v2-fp32-controlled-t235.onnx",
+    "initializer_count": 445,
+    "initializer_types": {
+      "FLOAT": 445
+    },
+    "inputs": [
+      "tokens",
+      "style",
+      "speed"
+    ],
+    "ir_version": 8,
+    "node_count": 4352,
+    "operators": {
+      "Add": 465,
+      "And": 2,
+      "Atan": 1,
+      "Cast": 44,
+      "Clip": 2,
+      "Concat": 82,
+      "ConcatFromSequence": 1,
+      "Constant": 1317,
+      "ConstantOfShape": 39,
+      "Conv": 88,
+      "ConvTranspose": 8,
+      "Cos": 1,
+      "CumSum": 1,
+      "Div": 81,
+      "Equal": 26,
+      "Exp": 1,
+      "Expand": 29,
+      "Flatten": 1,
+      "Floor": 1,
+      "Gather": 154,
+      "GatherElements": 1,
+      "Gemm": 73,
+      "Greater": 3,
+      "GreaterOrEqual": 1,
+      "Identity": 194,
+      "If": 2,
+      "InstanceNormalization": 70,
+      "IsNaN": 12,
+      "LSTM": 6,
+      "LayerNormalization": 31,
+      "LeakyRelu": 28,
+      "Less": 1,
+      "Loop": 1,
+      "MatMul": 102,
+      "Mul": 436,
+      "Not": 1,
+      "Pad": 2,
+      "Pow": 60,
+      "Range": 17,
+      "Reciprocal": 48,
+      "ReduceMax": 1,
+      "ReduceSum": 1,
+      "Reshape": 150,
+      "Resize": 6,
+      "Round": 1,
+      "STFT": 1,
+      "ScatterElements": 4,
+      "ScatterND": 6,
+      "SequenceEmpty": 1,
+      "Shape": 177,
+      "Sigmoid": 1,
+      "Sin": 51,
+      "Slice": 168,
+      "Softmax": 12,
+      "SplitToSequence": 2,
+      "Sqrt": 1,
+      "Squeeze": 3,
+      "Sub": 3,
+      "Tanh": 13,
+      "TopK": 4,
+      "Transpose": 108,
+      "Unsqueeze": 146,
+      "Where": 59
+    },
+    "opset_imports": {
+      "ai.onnx": 17
+    },
+    "output_shapes": {
+      "audio": [
+        null
+      ],
+      "pred_dur": [
+        null
+      ]
+    },
+    "outputs": [
+      "audio",
+      "pred_dur"
+    ],
+    "quantized_operator_count": 0,
+    "random_operator_count": 0,
+    "sha256": "26120b192f2ad7567c6c1215ccbcf374d1946460c4589c1098941ab15e43aa73"
+  },
+  "route": "canonical_v2_official_frontend_exact_source_controlled_fp32_onnx",
+  "schema_version": 1,
+  "source": {
+    "config": {
+      "bytes": 2351,
+      "sha256": "5abb01e2403b072bf03d04fde160443e209d7a0dad49a423be15196b9b43c17f"
+    },
+    "controlled_eager_oracle": {
+      "bytes": 3507,
+      "sha256": "f696b3054a193cea0a650212ea2fc5a620da8e9375ad8b521943ac4cfb43ecd5"
+    },
+    "model": {
+      "bytes": 327212226,
+      "sha256": "496dba118d1a58f5f3db2efc88dbdc216e0483fc89fe6e47ee1f2c53f18ad1e4"
+    },
+    "repository": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "revision": "f3ff3571791e39611d31c381e3a41a3af07b4987"
+  },
+  "status": "exported_and_onnx_checker_passed",
+  "toolchain": {
+    "kokoro": "0.9.4",
+    "onnx": "1.17.0",
+    "python": "3.12.12",
+    "torch": "2.13.0+cpu"
+  },
+  "transformations": {
+    "fixed_contract_only": true,
+    "learned_weights_changed": false,
+    "quantized": false,
+    "random_inputs": "SeededSineGen materialized at seed 20260818 for fixed F0 shape [1,361200,1]",
+    "stft": "standard ONNX STFT plus experiment-0013 source-equivalent real inverse-STFT decomposition",
+    "tool_sha256": {
+      "deterministic_sine.py": "a330e3f6457b5f88296aee2e57af1cc622840f70801863924cf6f0c4c1875399",
+      "exact_stft.py": "f278fa19e46aa85aee6f735d602d401d7017c75b438565a9e790287516ace31a",
+      "onnx_exact_stft.py": "261c49858134cd1fef7cc61b06724331b80b21f61557001bbef346e0a9c7212e"
+    }
+  }
+}

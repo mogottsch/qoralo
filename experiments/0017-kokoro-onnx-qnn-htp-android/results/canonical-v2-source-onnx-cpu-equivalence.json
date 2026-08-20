@@ -1,0 +1,223 @@
+{
+  "claim_boundary": "CPU source-export execution and named numerical/acoustic checks only. The strict waveform screen and phase-tolerant policy are separate; neither is physical HTP proof, benchmark performance, or a listening verdict.",
+  "comparison_to_controlled_eager": {
+    "checks": {
+      "log_magnitude_pearson": true,
+      "log_mel_cosine": true,
+      "log_mel_mae_db": true,
+      "rms_envelope_pearson": true,
+      "same_shape": true,
+      "spectral_convergence": true
+    },
+    "metrics": {
+      "flattened_log_magnitude_pearson": 0.9953327992183449,
+      "log_mel_cosine": 0.9992312087906806,
+      "magnitude_spectral_convergence": 0.06260385611526295,
+      "mean_absolute_log_mel_db": 0.826672426589441,
+      "rms_envelope_pearson": 0.9991259085234913,
+      "same_shape": true,
+      "waveform_cosine_descriptive": 0.9951498338615157,
+      "waveform_max_abs_descriptive": 0.1754191480576992,
+      "waveform_nrmse_descriptive": 0.1037191125962542,
+      "waveform_rmse_descriptive": 0.005364209274597166,
+      "waveform_snr_db_descriptive": 19.682824152785447
+    },
+    "phase_tolerant_status": "passed",
+    "policy_sha256": "22c7f2dd5c3596acf66107c3712c886b827f4a332d13dca981d183f6efc40ad7",
+    "policy_source": "experiments/0013-kokoro-onnx-vs-executorch-android/protocol/deployment-fidelity-policy.json",
+    "strict_waveform_999_001_status": "failed"
+  },
+  "execution": {
+    "profile": {
+      "bytes": 2481960,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/ort127-source-cpu-v2/profile_2026-08-20_13-18-06_378.json",
+      "sha256": "b7445125d54adb43ddf6913de614aa200193359e0ed94fcee8b8ee8af85c132b"
+    },
+    "runner": {
+      "max_rss_kib": 721944,
+      "optimization": "disabled",
+      "outputs": [
+        {
+          "absolute_peak": 0.429141,
+          "dtype": "float32",
+          "elements": 361200,
+          "name": "audio",
+          "non_finite": 0,
+          "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/ort127-source-cpu-v2/audio.f32",
+          "rms": 0.0497675,
+          "shape": [
+            361200
+          ]
+        },
+        {
+          "dtype": "int64",
+          "elements": 235,
+          "name": "pred_dur",
+          "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/ort127-source-cpu-v2/duration.i64",
+          "shape": [
+            235
+          ],
+          "sum": 602
+        }
+      ],
+      "profile_path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/ort127-source-cpu-v2/profile_2026-08-20_13-18-06_378.json",
+      "provider": "cpu",
+      "run_seconds": [
+        8.68425
+      ],
+      "session_creation_seconds": 0.896701,
+      "stage": "canonical_v2_full_source",
+      "status": "passed"
+    },
+    "stderr": {
+      "bytes": 2149,
+      "sha256": "d63252d2fe7d91ade4cc4cff73571f73aff965229a9fcd9bcbbca843363741c0"
+    },
+    "stdout": {
+      "bytes": 794,
+      "sha256": "e7a92a68f86317348417e0d0900237b41f3fc61fc61a18c53735f387c4e8a6f2"
+    }
+  },
+  "memory": {
+    "ru_maxrss_kib": 721944,
+    "semantics": "process-lifetime resident-set high-water inside the isolated stage runner; not steady PSS or component-isolated"
+  },
+  "outputs": {
+    "audio": {
+      "absolute_peak": 0.42914068698883057,
+      "all_finite": true,
+      "clipped_float_samples": 0,
+      "duration_seconds": 15.05,
+      "rms": 0.049767462231462445,
+      "sample_rate_hz": 24000,
+      "sha256": "1f7eb49ca903a3eed8cdb36049041a48540bd08027b38b4a6cee52e27cb9f624",
+      "shape": [
+        361200
+      ],
+      "structurally_valid": true
+    },
+    "duration": {
+      "bit_exact_to_eager": true,
+      "mismatch_count": 0,
+      "sha256": "99494f78e82ad3d8b506d5b0a5c4edde6292c6a52ca54a47b50f109fa534480c",
+      "shape": [
+        235
+      ],
+      "sum": 602
+    }
+  },
+  "route": "canonical_v2_exact_source_controlled_onnx_patched_ort127_cpu",
+  "runtime": {
+    "optimization": "disabled",
+    "provider": "CPUExecutionProvider",
+    "runner_binary_sha256": "938480879497262461dcc4632a0ebeebb92f721c9192441c17b406af8ac0e023",
+    "runner_source_sha256": "ea9682e61e0fd684705ccfb74601989bad44651fc7d0442f4ba86ae0c4a2ffdd",
+    "threads": 1,
+    "version": "patched ONNX Runtime 1.27.1"
+  },
+  "schema_version": 1,
+  "source": {
+    "controlled_eager_record_sha256": "f696b3054a193cea0a650212ea2fc5a620da8e9375ad8b521943ac4cfb43ecd5",
+    "export_record_sha256": "4701433840b1c2713167e998cc83c25097c3cd5432f0718c7071e7a0ebdc72f0",
+    "model": {
+      "bytes": 338478095,
+      "export_seconds": 18.58414083599996,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/export-v2/kokoro-canonical-v2-fp32-controlled-t235.onnx",
+      "initializer_count": 445,
+      "initializer_types": {
+        "FLOAT": 445
+      },
+      "inputs": [
+        "tokens",
+        "style",
+        "speed"
+      ],
+      "ir_version": 8,
+      "node_count": 4352,
+      "operators": {
+        "Add": 465,
+        "And": 2,
+        "Atan": 1,
+        "Cast": 44,
+        "Clip": 2,
+        "Concat": 82,
+        "ConcatFromSequence": 1,
+        "Constant": 1317,
+        "ConstantOfShape": 39,
+        "Conv": 88,
+        "ConvTranspose": 8,
+        "Cos": 1,
+        "CumSum": 1,
+        "Div": 81,
+        "Equal": 26,
+        "Exp": 1,
+        "Expand": 29,
+        "Flatten": 1,
+        "Floor": 1,
+        "Gather": 154,
+        "GatherElements": 1,
+        "Gemm": 73,
+        "Greater": 3,
+        "GreaterOrEqual": 1,
+        "Identity": 194,
+        "If": 2,
+        "InstanceNormalization": 70,
+        "IsNaN": 12,
+        "LSTM": 6,
+        "LayerNormalization": 31,
+        "LeakyRelu": 28,
+        "Less": 1,
+        "Loop": 1,
+        "MatMul": 102,
+        "Mul": 436,
+        "Not": 1,
+        "Pad": 2,
+        "Pow": 60,
+        "Range": 17,
+        "Reciprocal": 48,
+        "ReduceMax": 1,
+        "ReduceSum": 1,
+        "Reshape": 150,
+        "Resize": 6,
+        "Round": 1,
+        "STFT": 1,
+        "ScatterElements": 4,
+        "ScatterND": 6,
+        "SequenceEmpty": 1,
+        "Shape": 177,
+        "Sigmoid": 1,
+        "Sin": 51,
+        "Slice": 168,
+        "Softmax": 12,
+        "SplitToSequence": 2,
+        "Sqrt": 1,
+        "Squeeze": 3,
+        "Sub": 3,
+        "Tanh": 13,
+        "TopK": 4,
+        "Transpose": 108,
+        "Unsqueeze": 146,
+        "Where": 59
+      },
+      "opset_imports": {
+        "ai.onnx": 17
+      },
+      "output_shapes": {
+        "audio": [
+          null
+        ],
+        "pred_dur": [
+          null
+        ]
+      },
+      "outputs": [
+        "audio",
+        "pred_dur"
+      ],
+      "quantized_operator_count": 0,
+      "random_operator_count": 0,
+      "sha256": "26120b192f2ad7567c6c1215ccbcf374d1946460c4589c1098941ab15e43aa73"
+    }
+  },
+  "status": "passed"
+}

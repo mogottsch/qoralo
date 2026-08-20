@@ -1,0 +1,118 @@
+{
+  "claim_boundary": "Metadata/optimization preparation and CPU execution only; not QNN assignment, physical HTP proof, benchmark performance, or listening acceptance.",
+  "inputs": {
+    "speed_sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c",
+    "style_sha256": "8acaca07623d98a1085f6b182fb997d715dd1d67862e350567e6d9b1bc8ec71b",
+    "tokens_sha256": "9c565b2a6ee1a811f188f3e3425a3188af58866988ce5a2197eeaacc81dde280"
+  },
+  "memory": {
+    "ru_maxrss_kib": 2620208,
+    "semantics": "process-lifetime resident-set high-water; includes Python, ORT session/optimization/serialization, inference, profile and ONNX validation; not steady PSS or component-isolated"
+  },
+  "optimized": {
+    "bytes": 351819610,
+    "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/ort123-basic-v1/optimized-basic.onnx",
+    "initializers": 813,
+    "nodes": 1768,
+    "operators": {
+      "Add": 350,
+      "Atan": 1,
+      "Cast": 2,
+      "Clip": 2,
+      "Concat": 16,
+      "ConcatFromSequence": 1,
+      "ConstantOfShape": 5,
+      "Conv": 88,
+      "ConvTranspose": 8,
+      "Cos": 1,
+      "CumSum": 1,
+      "Div": 8,
+      "Equal": 5,
+      "Exp": 1,
+      "Expand": 8,
+      "Floor": 1,
+      "Gather": 20,
+      "Gemm": 104,
+      "Greater": 2,
+      "If": 2,
+      "InstanceNormalization": 65,
+      "IsNaN": 12,
+      "LSTM": 6,
+      "LayerNormalization": 31,
+      "LeakyRelu": 28,
+      "Less": 1,
+      "Loop": 1,
+      "MatMul": 71,
+      "Mul": 268,
+      "Pad": 2,
+      "Pow": 60,
+      "Range": 3,
+      "ReduceSum": 1,
+      "Reshape": 192,
+      "Resize": 6,
+      "Round": 1,
+      "STFT": 1,
+      "ScatterND": 6,
+      "SequenceEmpty": 1,
+      "Shape": 12,
+      "Sigmoid": 1,
+      "Sin": 51,
+      "Slice": 154,
+      "Softmax": 12,
+      "SplitToSequence": 2,
+      "Sqrt": 1,
+      "Squeeze": 3,
+      "Sub": 3,
+      "Tanh": 13,
+      "Transpose": 96,
+      "Unsqueeze": 11,
+      "Where": 27
+    },
+    "quantized_operator_count": 0,
+    "sha256": "1d529ba37f41ce2269992812c34d043d4c69603f681da61762ac8812815dfd20"
+  },
+  "outputs": {
+    "audio": {
+      "absolute_peak": 0.4298228919506073,
+      "bytes": 1444800,
+      "clipped_float_samples": 0,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/ort123-basic-v1/audio.f32",
+      "rms": 0.049759937831786984,
+      "sha256": "69db4afeb192077ca8c9b6120fabbb7cbe0cd612ea6a7f52f0e3275afdf5f80b",
+      "shape": [
+        361200
+      ]
+    },
+    "duration": {
+      "bytes": 1880,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/ort123-basic-v1/duration.i64",
+      "sha256": "99494f78e82ad3d8b506d5b0a5c4edde6292c6a52ca54a47b50f109fa534480c",
+      "shape": [
+        235
+      ],
+      "sum": 602
+    }
+  },
+  "profile": {
+    "bytes": 1912673,
+    "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/ort123-basic-v1/profile_2026-08-20_14-19-48.json",
+    "sha256": "a8f11ac319effb01168b5b19c10f59683c7be82a0af19592b99faec54ad91aea"
+  },
+  "runtime": {
+    "onnxruntime": "1.23.2",
+    "optimization": "basic",
+    "provider": "CPUExecutionProvider",
+    "threads": 1
+  },
+  "schema_version": 1,
+  "source": {
+    "bytes": 338478095,
+    "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/export-v2/kokoro-canonical-v2-fp32-controlled-t235.onnx",
+    "sha256": "26120b192f2ad7567c6c1215ccbcf374d1946460c4589c1098941ab15e43aa73"
+  },
+  "status": "passed",
+  "timing": {
+    "run_seconds": 8.449398802000019,
+    "session_creation_seconds": 1.5806439450000198
+  }
+}

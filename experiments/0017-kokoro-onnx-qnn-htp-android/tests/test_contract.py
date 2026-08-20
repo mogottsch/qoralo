@@ -115,6 +115,98 @@ class ContractTests(unittest.TestCase):
         self.assertIn("audio", available)
         self.assertIn("pred_dur", available)
 
+    def test_canonical_v2_contract_and_cpu_recomposition(self) -> None:
+        transcript = REPO / "protocols/android-tts-benchmark/transcript.txt"
+        raw = transcript.read_bytes()
+        self.assertEqual(len(raw), 226)
+        self.assertFalse(raw.endswith(b"\n"))
+        self.assertEqual(
+            hashlib.sha256(raw).hexdigest(),
+            "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+        )
+
+        protocol_path = ROOT / "protocol-canonical-v2-stage-decomposition.json"
+        protocol = json.loads(protocol_path.read_text())
+        frontend = json.loads(
+            (ROOT / "results/canonical-v2-frontend-provenance.json").read_text()
+        )
+        stages = json.loads(
+            (ROOT / "results/canonical-v2-stage-decomposition-provenance.json").read_text()
+        )
+        cpu = json.loads(
+            (ROOT / "results/canonical-v2-stage-cpu-equivalence.json").read_text()
+        )
+        self.assertTrue(protocol["frozen_before_canonical_v2_qnn_host_outputs"])
+        self.assertEqual(
+            protocol["frontend"]["historical_sherpa_exact_error"],
+            "selected text is not fully covered by lexicon: 'makes'",
+        )
+        self.assertEqual(frontend["historical_sherpa_frontend"]["status"], "failed_closed")
+        self.assertEqual(protocol["frontend"]["token_shape"], [1, 235])
+        self.assertEqual(protocol["frontend"]["style_index"], 232)
+        self.assertEqual(protocol["fixed_contract"]["duration_sum"], 602)
+        self.assertEqual(protocol["fixed_contract"]["audio_shape"], [361200])
+        self.assertEqual(protocol["fixed_contract"]["audio_duration_seconds"], 15.05)
+        self.assertEqual(protocol["stage_decomposition"]["stage_count"], 18)
+        self.assertEqual(protocol["stage_decomposition"]["source_nodes"], 1685)
+        self.assertEqual(protocol["stage_decomposition"]["covered_unique_nodes"], 1685)
+        self.assertEqual(
+            protocol["representations"]["qnn_compatibility"]["sha256"],
+            "0c7ce33eac4c6664819a61e48469a9cf43ad403d852b01af5517a13c7ed2a066",
+        )
+        self.assertEqual(
+            stages["protocol"]["sha256"],
+            hashlib.sha256(protocol_path.read_bytes()).hexdigest(),
+        )
+        self.assertEqual(stages["stage_count"], 18)
+        self.assertEqual(stages["coverage"]["source_nodes"], 1685)
+        self.assertTrue(cpu["recomposition"]["audio_bit_exact"])
+        self.assertTrue(cpu["recomposition"]["duration_bit_exact"])
+        self.assertAlmostEqual(cpu["recomposition"]["cosine"], 1.0, places=12)
+        self.assertEqual(cpu["recomposition"]["nrmse"], 0.0)
+        self.assertEqual(
+            cpu["recomposition"]["audio"]["sha256"],
+            "fb8895f6bb9c2ee94dd18f8b9bfdc6f1b36f99e01c40f5806bdd71076acd6d36",
+        )
+        self.assertEqual(
+            cpu["recomposition"]["duration"]["sha256"],
+            "99494f78e82ad3d8b506d5b0a5c4edde6292c6a52ca54a47b50f109fa534480c",
+        )
+        tool_paths = {
+            "prepare_canonical_v2_frontend.py": ROOT / "tools/prepare_canonical_v2_frontend.py",
+            "run_canonical_v2_eager_oracle.py": ROOT / "tools/run_canonical_v2_eager_oracle.py",
+            "export_canonical_v2_onnx_fp.py": ROOT / "tools/export_canonical_v2_onnx_fp.py",
+            "prepare_canonical_v2_optimized_graph.py": ROOT / "tools/prepare_canonical_v2_optimized_graph.py",
+            "annotate_canonical_v2_profile_shapes.py": ROOT / "tools/annotate_canonical_v2_profile_shapes.py",
+            "rewrite_canonical_v2_qnn_compat.py": ROOT / "tools/rewrite_canonical_v2_qnn_compat.py",
+            "extract_canonical_v2_staged_graphs.py": ROOT / "tools/extract_canonical_v2_staged_graphs.py",
+            "kokoro_canonical_stage_runner.cc": ROOT / "host/kokoro_canonical_stage_runner.cc",
+        }
+        for name, path in tool_paths.items():
+            self.assertEqual(
+                protocol["tools"][name], hashlib.sha256(path.read_bytes()).hexdigest()
+            )
+
+    def test_canonical_v2_stage_interfaces_form_pipeline(self) -> None:
+        protocol = json.loads(
+            (ROOT / "protocol-canonical-v2-stage-decomposition.json").read_text()
+        )
+        available = {"tokens", "style", "speed"}
+        for expected_index, stage in enumerate(
+            protocol["stage_decomposition"]["stages"], start=1
+        ):
+            self.assertEqual(stage["index"], expected_index)
+            self.assertGreater(stage["nodes"], 0)
+            self.assertEqual(stage["quantized_operator_count"], 0)
+            for value in stage["inputs"]:
+                self.assertIn(value["name"], available)
+                self.assertTrue(all(dim > 0 for dim in value["shape"]))
+            for value in stage["outputs"]:
+                self.assertTrue(all(dim > 0 for dim in value["shape"]))
+                available.add(value["name"])
+        self.assertIn("audio", available)
+        self.assertIn("pred_dur", available)
+
     def test_erased_experiment_0015_remains_absent(self) -> None:
         self.assertFalse((REPO / "experiments/0015-pocket-tts-qnn-htp-android").exists())
 

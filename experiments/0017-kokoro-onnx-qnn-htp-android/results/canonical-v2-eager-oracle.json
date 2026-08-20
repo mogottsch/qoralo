@@ -1,0 +1,97 @@
+{
+  "claim_boundary": "Controlled-eager CPU oracle for the new canonical-v2 official-frontend derivative; not ONNX export, QNN assignment, physical HTP proof, benchmark performance, or listening acceptance.",
+  "inputs": {
+    "seed": 20260818,
+    "speed": {
+      "sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c",
+      "value": 1.0
+    },
+    "style": {
+      "sha256": "8acaca07623d98a1085f6b182fb997d715dd1d67862e350567e6d9b1bc8ec71b",
+      "shape": [
+        1,
+        256
+      ]
+    },
+    "tokens": {
+      "sha256": "9c565b2a6ee1a811f188f3e3425a3188af58866988ce5a2197eeaacc81dde280",
+      "shape": [
+        1,
+        235
+      ]
+    }
+  },
+  "memory": {
+    "ru_maxrss_kib": 1524412,
+    "semantics": "process-lifetime resident-set high-water; includes Python, PyTorch, model load, duration probe, full inference, and outputs; not steady PSS or component-isolated"
+  },
+  "outputs": {
+    "audio": {
+      "absolute_peak": 0.4579676389694214,
+      "all_finite": true,
+      "bytes": 1444800,
+      "clipped_float_samples": 0,
+      "duration_seconds": 15.05,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/eager-oracle-v1/audio.f32",
+      "rms": 0.051718619069547396,
+      "sample_rate_hz": 24000,
+      "sha256": "b7cc6d6c719bd0151c35aa6ae4ef8bcec0b3b99acb7a6423e4c6e42e2edee536",
+      "shape": [
+        361200
+      ]
+    },
+    "duration": {
+      "bytes": 1880,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/eager-oracle-v1/duration.i64",
+      "sha256": "99494f78e82ad3d8b506d5b0a5c4edde6292c6a52ca54a47b50f109fa534480c",
+      "shape": [
+        235
+      ],
+      "sum": 602
+    }
+  },
+  "route": "canonical_v2_official_frontend_controlled_eager_cpu_oracle",
+  "schema_version": 1,
+  "source": {
+    "config": {
+      "bytes": 2351,
+      "path": "experiments/0013-kokoro-onnx-vs-executorch-android/.local/source/official/config.json",
+      "sha256": "5abb01e2403b072bf03d04fde160443e209d7a0dad49a423be15196b9b43c17f"
+    },
+    "kokoro": "0.9.4",
+    "model": {
+      "bytes": 327212226,
+      "path": "experiments/0013-kokoro-onnx-vs-executorch-android/.local/source/official/kokoro-v1_0.pth",
+      "sha256": "496dba118d1a58f5f3db2efc88dbdc216e0483fc89fe6e47ee1f2c53f18ad1e4"
+    },
+    "tools": {
+      "deterministic_sine.py": {
+        "bytes": 3890,
+        "path": "experiments/0013-kokoro-onnx-vs-executorch-android/tools/deterministic_sine.py",
+        "sha256": "a330e3f6457b5f88296aee2e57af1cc622840f70801863924cf6f0c4c1875399"
+      },
+      "exact_stft.py": {
+        "bytes": 4007,
+        "path": "experiments/0013-kokoro-onnx-vs-executorch-android/tools/exact_stft.py",
+        "sha256": "f278fa19e46aa85aee6f735d602d401d7017c75b438565a9e790287516ace31a"
+      },
+      "onnx_exact_stft.py": {
+        "bytes": 3033,
+        "path": "experiments/0013-kokoro-onnx-vs-executorch-android/tools/onnx_exact_stft.py",
+        "sha256": "261c49858134cd1fef7cc61b06724331b80b21f61557001bbef346e0a9c7212e"
+      }
+    }
+  },
+  "status": "passed",
+  "timing": {
+    "duration_probe_seconds": 0.4280136799999923,
+    "full_inference_seconds": 13.698942566,
+    "model_load_seconds": 1.2070875389999856
+  },
+  "transformation": {
+    "learned_weights_changed": false,
+    "quantized": false,
+    "random_inputs": "SeededSineGen fixed at seed 20260818 and runtime-derived fixed F0/audio shape",
+    "stft": "experiment-0013 controlled exact-STFT representation"
+  }
+}

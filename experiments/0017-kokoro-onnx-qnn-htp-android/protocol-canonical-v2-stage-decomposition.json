@@ -1,0 +1,1100 @@
+{
+  "benchmark_phone_gate": {
+    "cpu_orchestration_disclosure": [
+      "official frontend/token preparation",
+      "stage scheduling and explicit tensor transport",
+      "WAV encoding and structural checks"
+    ],
+    "identity_and_lock_protocol": "Use original protocol.json phone identity/lock/internal-staging/cleanup rules only after all canonical host gates pass.",
+    "required_evidence": [
+      "per-stage QNN assignment and zero CPU provider events",
+      "physical RPC",
+      "accelerator execution time",
+      "accelerator cycles",
+      "HVX thread count",
+      "thermal context",
+      "process-lifetime memory high-water with semantics",
+      "valid canonical-v2 WAV/hash",
+      "exact effective text/token hashes"
+    ],
+    "runs": {
+      "first_generations": 1,
+      "full_state_reset_before_each_generation": true,
+      "rtf_denominator": "actual emitted audio duration",
+      "sessions_created_once": true,
+      "setup_time": true,
+      "warm_generations_minimum": 5
+    }
+  },
+  "canonical_transcript": {
+    "bytes": 226,
+    "path": "protocols/android-tts-benchmark/transcript.txt",
+    "punctuation": "exact committed comma version; no ellipsis substitution",
+    "sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+    "trailing_newline": false
+  },
+  "cpu_gates": {
+    "metadata_only": "bit-exact to unshaped ORT-basic source under patched ORT 1.27.1",
+    "qnn_compatibility": "bit-exact to metadata-shaped source under patched ORT 1.27.1",
+    "source_onnx": {
+      "duration_bit_exact_to_eager": true,
+      "interpretation": "The separate strict waveform failure is retained and is not a listening verdict.",
+      "phase_tolerant_status": "passed",
+      "strict_waveform_999_001_status": "failed",
+      "structurally_valid_audio": true
+    },
+    "stage_recomposition": "must be bit-exact to complete qnn-compatibility graph before QNN"
+  },
+  "experiment": "0017-kokoro-onnx-qnn-htp-android",
+  "fidelity_policy": {
+    "listening": "Only Moritz can accept or reject the exact canonical QNN WAV; status remains not_reviewed until then.",
+    "phase_tolerant_policy_sha256": "22c7f2dd5c3596acf66107c3712c886b827f4a332d13dca981d183f6efc40ad7",
+    "structural": {
+      "absolute_peak_max_exclusive": 1.0,
+      "absolute_peak_min": 0.0001,
+      "all_finite": true,
+      "audio_shape": [
+        361200
+      ],
+      "clipped_float_samples_max": 0,
+      "duration_shape": [
+        235
+      ],
+      "rms_min": 1e-05
+    },
+    "waveform_and_eos_divergence": "descriptive evidence rather than a perceptual rejection"
+  },
+  "fixed_contract": {
+    "audio_duration_seconds": 15.05,
+    "audio_shape": [
+      361200
+    ],
+    "controlled_eager_audio_sha256": "b7cc6d6c719bd0151c35aa6ae4ef8bcec0b3b99acb7a6423e4c6e42e2edee536",
+    "duration_little_endian_int64_sha256": "99494f78e82ad3d8b506d5b0a5c4edde6292c6a52ca54a47b50f109fa534480c",
+    "duration_shape": [
+      235
+    ],
+    "duration_sum": 602,
+    "optimized_compat_cpu_audio_sha256": "fb8895f6bb9c2ee94dd18f8b9bfdc6f1b36f99e01c40f5806bdd71076acd6d36",
+    "sample_rate_hz": 24000,
+    "source_onnx_patched_ort127_audio_sha256": "1f7eb49ca903a3eed8cdb36049041a48540bd08027b38b4a6cee52e27cb9f624"
+  },
+  "frontend": {
+    "chunks": 1,
+    "espeakng_loader_version": "0.2.4",
+    "historical_sherpa_exact_error": "selected text is not fully covered by lexicon: 'makes'",
+    "historical_sherpa_status": "failed_closed",
+    "implementation": "pinned Kokoro 0.9.4 KPipeline American English official path",
+    "language": "American English",
+    "language_code": "a",
+    "misaki_version": "0.9.4",
+    "phoneme_codepoints": 233,
+    "phoneme_utf8_bytes": 323,
+    "phoneme_utf8_sha256": "7c7299c2d19943162b5bc85cebe116d16e534f336ac5bcb4fce40fe126a8b3a0",
+    "phonemizer_fork_version": "3.3.2",
+    "provenance": {
+      "bytes": 7256,
+      "path": "experiments/0017-kokoro-onnx-qnn-htp-android/results/canonical-v2-frontend-provenance.json",
+      "sha256": "c7a1be67a13128ec3d333c183f699bd27a5cb0ecaf469a10424d5ac5acb9825a"
+    },
+    "speed": 1.0,
+    "speed_little_endian_float32_sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c",
+    "style_index": 232,
+    "style_little_endian_float32_sha256": "8acaca07623d98a1085f6b182fb997d715dd1d67862e350567e6d9b1bc8ec71b",
+    "style_shape": [
+      1,
+      256
+    ],
+    "token_little_endian_int64_sha256": "9c565b2a6ee1a811f188f3e3425a3188af58866988ce5a2197eeaacc81dde280",
+    "token_shape": [
+      1,
+      235
+    ]
+  },
+  "frozen_at_utc": "2026-08-20T13:25:19Z",
+  "frozen_before_canonical_v2_qnn_host_outputs": true,
+  "host_qnn_gate": {
+    "backend": "QNN HTP",
+    "pass_rule": "All 18 stages must finalize and execute; every ORT node event must be QNNExecutionProvider and CPUExecutionProvider node events must be zero.",
+    "phone_forbidden_until_pass": true,
+    "process_isolation": "Each stage finalizes and executes its complete real upstream input in a separate process; compiler memory is released before the next stage.",
+    "provider_options": {
+      "backend_path": "libQnnHtp.so",
+      "htp_performance_mode": "burst",
+      "offload_graph_io_quantization": "0",
+      "profiling_level": "detailed"
+    },
+    "qairt_qnn_version": "2.49.0.260730",
+    "runtime": "patched ONNX Runtime 1.27.1",
+    "session_config": {
+      "execution_mode": "sequential",
+      "graph_optimization": "disabled",
+      "inter_op_threads": 1,
+      "intra_op_threads": 1,
+      "session.disable_cpu_ep_fallback": "1"
+    },
+    "soc_model": "43",
+    "threads": 1
+  },
+  "official_source": {
+    "config_sha256": "5abb01e2403b072bf03d04fde160443e209d7a0dad49a423be15196b9b43c17f",
+    "model_sha256": "496dba118d1a58f5f3db2efc88dbdc216e0483fc89fe6e47ee1f2c53f18ad1e4",
+    "repository": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "revision": "f3ff3571791e39611d31c381e3a41a3af07b4987",
+    "seed": 20260818,
+    "voice": "af_heart",
+    "voice_sha256": "0ab5709b8ffab19bfd849cd11d98f75b60af7733253ad0d67b12382a102cb4ff"
+  },
+  "representations": {
+    "controlled_eager": {
+      "bytes": 3507,
+      "path": "experiments/0017-kokoro-onnx-qnn-htp-android/results/canonical-v2-eager-oracle.json",
+      "sha256": "f696b3054a193cea0a650212ea2fc5a620da8e9375ad8b521943ac4cfb43ecd5"
+    },
+    "controlled_onnx": {
+      "bytes": 338478095,
+      "initializers": 445,
+      "nodes": 4352,
+      "provenance": {
+        "bytes": 4464,
+        "path": "experiments/0017-kokoro-onnx-qnn-htp-android/results/canonical-v2-onnx-export-provenance.json",
+        "sha256": "4701433840b1c2713167e998cc83c25097c3cd5432f0718c7071e7a0ebdc72f0"
+      },
+      "quantized_operator_count": 0,
+      "sha256": "26120b192f2ad7567c6c1215ccbcf374d1946460c4589c1098941ab15e43aa73"
+    },
+    "metadata_shaped": {
+      "bytes": 351958695,
+      "initializers": 813,
+      "nodes": 1768,
+      "provenance": {
+        "bytes": 1257,
+        "path": "experiments/0017-kokoro-onnx-qnn-htp-android/results/canonical-v2-profile-shape-provenance.json",
+        "sha256": "7cc27f4443c964ba5a14105022608f9cb1f94fdf03f3b969485b6f25adc3c4b5"
+      },
+      "sha256": "d81053acc21a9fa42a7ff09bae17abad1ef7499aa2252f70bda27f9ac89194a3"
+    },
+    "qnn_compatibility": {
+      "bytes": 352447061,
+      "initializers": 809,
+      "nodes": 1685,
+      "provenance": {
+        "bytes": 16842,
+        "path": "experiments/0017-kokoro-onnx-qnn-htp-android/results/canonical-v2-qnn-compat-rewrite-provenance.json",
+        "sha256": "706f7b921f0edd023903d0dfd0d4be2e4023e6a57878da0c1793e9c9eb47cadc"
+      },
+      "quantized_operator_count": 0,
+      "retained_initializer_payload_changes": 0,
+      "same_runtime_cpu_equivalence": "bit-exact to metadata-shaped source",
+      "sha256": "0c7ce33eac4c6664819a61e48469a9cf43ad403d852b01af5517a13c7ed2a066"
+    },
+    "source_onnx_cpu": {
+      "bytes": 6869,
+      "path": "experiments/0017-kokoro-onnx-qnn-htp-android/results/canonical-v2-source-onnx-cpu-equivalence.json",
+      "sha256": "79322ce7bfda033cde87410af0a59e0abf5f28e9ed6772ef0030b485a1afc8a5"
+    }
+  },
+  "route": "canonical_v2_official_frontend_fixed_fp32_staged_qnn_htp",
+  "schema_version": 1,
+  "separation_from_historical_routes": {
+    "metrics_and_listening_verdicts_must_not_be_merged": true,
+    "monolithic_retry_forbidden": true,
+    "old_0013_0017_transcript_sha256": "bec8bf482f4d816f0c95471c289a2607a7a169e33389b8b13e525214ec639461",
+    "old_18_stage_host_batch": "preserved as noncanonical fixed-fixture host feasibility evidence only",
+    "old_route_is_not_canonical_v2": true
+  },
+  "stage_decomposition": {
+    "covered_unique_nodes": 1685,
+    "duplicated_boundary_support_nodes": {
+      "/Slice": [
+        "duration_encoder",
+        "prosody"
+      ],
+      "/Slice_2": [
+        "decoder",
+        "generator_0_base",
+        "generator_0_resblock_0",
+        "generator_0_resblock_1",
+        "generator_0_resblock_2",
+        "generator_1_base",
+        "generator_1_resblock_3",
+        "generator_1_resblock_4",
+        "generator_1_resblock_5"
+      ],
+      "/decoder/Unsqueeze": [
+        "decoder",
+        "harmonic_source"
+      ],
+      "/decoder/generator/resblocks.2/adain1.0/norm/InstanceNormalization": [
+        "generator_0_resblock_0",
+        "generator_0_resblock_1",
+        "generator_0_resblock_2"
+      ],
+      "/decoder/generator/resblocks.5/adain1.0/norm/InstanceNormalization": [
+        "generator_1_resblock_3",
+        "generator_1_resblock_4",
+        "generator_1_resblock_5"
+      ]
+    },
+    "learned_initializer_payload_changes": 0,
+    "manifest": {
+      "bytes": 30391,
+      "path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/manifest.json",
+      "sha256": "3f21c996ec3d5a63b80cbceb9ff83a21cc86321cabfea3e2dedd1af4676fbad1"
+    },
+    "model_hashes_and_interfaces_deterministic_on_second_extraction": true,
+    "quantized": false,
+    "source_nodes": 1685,
+    "stage_count": 18,
+    "stages": [
+      {
+        "index": 1,
+        "initializers": 114,
+        "inputs": [
+          {
+            "dtype": "int64",
+            "elements": 235,
+            "name": "tokens",
+            "shape": [
+              1,
+              235
+            ]
+          }
+        ],
+        "model_bytes": 24792421,
+        "model_sha256": "f39142128623987c10fcbb01fa0ba26449d1a8d8449bac35b45b174cd0f64ad7",
+        "name": "bert",
+        "nodes": 490,
+        "outputs": [
+          {
+            "dtype": "float32",
+            "elements": 120320,
+            "name": "/bert_encoder/Add_output_0",
+            "shape": [
+              1,
+              235,
+              512
+            ]
+          }
+        ],
+        "quantized_operator_count": 0,
+        "role": "ALBERT text representation and learned projection"
+      },
+      {
+        "index": 2,
+        "initializers": 53,
+        "inputs": [
+          {
+            "dtype": "float32",
+            "elements": 120320,
+            "name": "/bert_encoder/Add_output_0",
+            "shape": [
+              1,
+              235,
+              512
+            ]
+          },
+          {
+            "dtype": "float32",
+            "elements": 256,
+            "name": "style",
+            "shape": [
+              1,
+              256
+            ]
+          }
+        ],
+        "model_bytes": 33802264,
+        "model_sha256": "fe2a9e055f44e615e3f6033e38fc21d82718c2ee26b3e34696503f35c7584dab",
+        "name": "duration_encoder",
+        "nodes": 76,
+        "outputs": [
+          {
+            "dtype": "float32",
+            "elements": 150400,
+            "name": "/text_encoder/Where_13",
+            "shape": [
+              1,
+              235,
+              640
+            ]
+          }
+        ],
+        "quantized_operator_count": 0,
+        "role": "style-conditioned duration encoder"
+      },
+      {
+        "index": 3,
+        "initializers": 27,
+        "inputs": [
+          {
+            "dtype": "int64",
+            "elements": 235,
+            "name": "tokens",
+            "shape": [
+              1,
+              235
+            ]
+          }
+        ],
+        "model_bytes": 25800828,
+        "model_sha256": "e93888513296abb6ad2ae24e3922cfe8a830554cdaf35dcb2ab6ebe6d8edb0bb",
+        "name": "text_encoder",
+        "nodes": 31,
+        "outputs": [
+          {
+            "dtype": "float32",
+            "elements": 120320,
+            "name": "/text_encoder_1/Where_7_output_0",
+            "shape": [
+              1,
+              512,
+              235
+            ]
+          }
+        ],
+        "quantized_operator_count": 0,
+        "role": "convolutional/recurrent acoustic text encoder"
+      },
+      {
+        "index": 4,
+        "initializers": 15,
+        "inputs": [
+          {
+            "dtype": "float32",
+            "elements": 150400,
+            "name": "/text_encoder/Where_13",
+            "shape": [
+              1,
+              235,
+              640
+            ]
+          },
+          {
+            "dtype": "float32",
+            "elements": 120320,
+            "name": "/text_encoder_1/Where_7_output_0",
+            "shape": [
+              1,
+              512,
+              235
+            ]
+          },
+          {
+            "dtype": "float32",
+            "elements": 1,
+            "name": "speed",
+            "shape": [
+              1
+            ]
+          }
+        ],
+        "model_bytes": 7690474,
+        "model_sha256": "82d94abfac8a3169bda2e50914c0caac6dd14acb203b1e42be15b23e9535e7cc",
+        "name": "duration_alignment",
+        "nodes": 27,
+        "outputs": [
+          {
+            "dtype": "float32",
+            "elements": 385280,
+            "name": "/MatMul_output_0",
+            "shape": [
+              1,
+              640,
+              602
+            ]
+          },
+          {
+            "dtype": "float32",
+            "elements": 308224,
+            "name": "/MatMul_1_output_0",
+            "shape": [
+              1,
+              512,
+              602
+            ]
+          },
+          {
+            "dtype": "int64",
+            "elements": 235,
+            "name": "pred_dur",
+            "shape": [
+              235
+            ]
+          }
+        ],
+        "quantized_operator_count": 0,
+        "role": "duration LSTM/head plus fixed-contract runtime alignment"
+      },
+      {
+        "index": 5,
+        "initializers": 101,
+        "inputs": [
+          {
+            "dtype": "float32",
+            "elements": 385280,
+            "name": "/MatMul_output_0",
+            "shape": [
+              1,
+              640,
+              602
+            ]
+          },
+          {
+            "dtype": "float32",
+            "elements": 256,
+            "name": "style",
+            "shape": [
+              1,
+              256
+            ]
+          }
+        ],
+        "model_bytes": 33688577,
+        "model_sha256": "1c9d1c44ee8e00af9c0bee4aca369316db8b8219d37124559ce005c47b69dba7",
+        "name": "prosody",
+        "nodes": 147,
+        "outputs": [
+          {
+            "dtype": "float32",
+            "elements": 1204,
+            "name": "/If_output_0",
+            "shape": [
+              1,
+              1204
+            ]
+          },
+          {
+            "dtype": "float32",
+            "elements": 1204,
+            "name": "/If_1_output_0",
+            "shape": [
+              1,
+              1204
+            ]
+          }
+        ],
+        "quantized_operator_count": 0,
+        "role": "shared recurrent prosody network and F0/noise heads"
+      },
+      {
+        "index": 6,
+        "initializers": 91,
+        "inputs": [
+          {
+            "dtype": "float32",
+            "elements": 308224,
+            "name": "/MatMul_1_output_0",
+            "shape": [
+              1,
+              512,
+              602
+            ]
+          },
+          {
+            "dtype": "float32",
+            "elements": 1204,
+            "name": "/If_output_0",
+            "shape": [
+              1,
+              1204
+            ]
+          },
+          {
+            "dtype": "float32",
+            "elements": 1204,
+            "name": "/If_1_output_0",
+            "shape": [
+              1,
+              1204
+            ]
+          },
+          {
+            "dtype": "float32",
+            "elements": 256,
+            "name": "style",
+            "shape": [
+              1,
+              256
+            ]
+          }
+        ],
+        "model_bytes": 134440075,
+        "model_sha256": "f85c2b845397295435a28616afa5bfd6462dd1b788cb5d4cfbeb59c6dac91a16",
+        "name": "decoder",
+        "nodes": 128,
+        "outputs": [
+          {
+            "dtype": "float32",
+            "elements": 616448,
+            "name": "/decoder/decode.3/Mul_output_0",
+            "shape": [
+              1,
+              512,
+              1204
+            ]
+          }
+        ],
+        "quantized_operator_count": 0,
+        "role": "style-conditioned acoustic decoder before waveform generator"
+      },
+      {
+        "index": 7,
+        "initializers": 31,
+        "inputs": [
+          {
+            "dtype": "float32",
+            "elements": 1204,
+            "name": "/If_output_0",
+            "shape": [
+              1,
+              1204
+            ]
+          }
+        ],
+        "model_bytes": 13023338,
+        "model_sha256": "ac6f4c4f5c7260ff3a30885f0c64ddf0dae54e6fc6087203e36a526591bfb2ce",
+        "name": "harmonic_source",
+        "nodes": 63,
+        "outputs": [
+          {
+            "dtype": "float32",
+            "elements": 1589302,
+            "name": "/decoder/generator/Concat_1_output_0",
+            "shape": [
+              1,
+              22,
+              72241
+            ]
+          }
+        ],
+        "quantized_operator_count": 0,
+        "role": "fixed-phase harmonic source, learned merge, and source STFT"
+      },
+      {
+        "index": 8,
+        "initializers": 60,
+        "inputs": [
+          {
+            "dtype": "float32",
+            "elements": 616448,
+            "name": "/decoder/decode.3/Mul_output_0",
+            "shape": [
+              1,
+              512,
+              1204
+            ]
+          },
+          {
+            "dtype": "float32",
+            "elements": 1589302,
+            "name": "/decoder/generator/Concat_1_output_0",
+            "shape": [
+              1,
+              22,
+              72241
+            ]
+          },
+          {
+            "dtype": "float32",
+            "elements": 256,
+            "name": "style",
+            "shape": [
+              1,
+              256
+            ]
+          }
+        ],
+        "model_bytes": 23407828,
+        "model_sha256": "c51f64046c29babb37689d4f45500a5ece76e6963a6d8d8e40ac9e851b384741",
+        "name": "generator_0_base",
+        "nodes": 92,
+        "outputs": [
+          {
+            "dtype": "float32",
+            "elements": 3082240,
+            "name": "/decoder/generator/Add_2_output_0",
+            "shape": [
+              1,
+              256,
+              12040
+            ]
+          }
+        ],
+        "quantized_operator_count": 0,
+        "role": "first upsample and style-conditioned source residual branch"
+      },
+      {
+        "index": 9,
+        "initializers": 56,
+        "inputs": [
+          {
+            "dtype": "float32",
+            "elements": 3082240,
+            "name": "/decoder/generator/Add_2_output_0",
+            "shape": [
+              1,
+              256,
+              12040
+            ]
+          },
+          {
+            "dtype": "float32",
+            "elements": 256,
+            "name": "style",
+            "shape": [
+              1,
+              256
+            ]
+          }
+        ],
+        "model_bytes": 6356695,
+        "model_sha256": "9f201670c0d9f1fcdf41db64fd7e4629755846092731671fe6cab12d23429373",
+        "name": "generator_0_resblock_0",
+        "nodes": 88,
+        "outputs": [
+          {
+            "dtype": "float32",
+            "elements": 3082240,
+            "name": "/decoder/generator/resblocks.0/Add_8_output_0",
+            "shape": [
+              1,
+              256,
+              12040
+            ]
+          }
+        ],
+        "quantized_operator_count": 0,
+        "role": "first-resolution residual block 0"
+      },
+      {
+        "index": 10,
+        "initializers": 56,
+        "inputs": [
+          {
+            "dtype": "float32",
+            "elements": 3082240,
+            "name": "/decoder/generator/Add_2_output_0",
+            "shape": [
+              1,
+              256,
+              12040
+            ]
+          },
+          {
+            "dtype": "float32",
+            "elements": 256,
+            "name": "style",
+            "shape": [
+              1,
+              256
+            ]
+          }
+        ],
+        "model_bytes": 12648151,
+        "model_sha256": "4dd6a560a6bdb630485685303debb73db9a5a7e7a355efb7f914832aac11a09a",
+        "name": "generator_0_resblock_1",
+        "nodes": 88,
+        "outputs": [
+          {
+            "dtype": "float32",
+            "elements": 3082240,
+            "name": "/decoder/generator/resblocks.1/Add_8_output_0",
+            "shape": [
+              1,
+              256,
+              12040
+            ]
+          }
+        ],
+        "quantized_operator_count": 0,
+        "role": "first-resolution residual block 1"
+      },
+      {
+        "index": 11,
+        "initializers": 56,
+        "inputs": [
+          {
+            "dtype": "float32",
+            "elements": 3082240,
+            "name": "/decoder/generator/Add_2_output_0",
+            "shape": [
+              1,
+              256,
+              12040
+            ]
+          },
+          {
+            "dtype": "float32",
+            "elements": 256,
+            "name": "style",
+            "shape": [
+              1,
+              256
+            ]
+          }
+        ],
+        "model_bytes": 18939619,
+        "model_sha256": "47db54f230fbe2468a61e92a9b059af45f98589a1183963b85b9d432fbc61945",
+        "name": "generator_0_resblock_2",
+        "nodes": 88,
+        "outputs": [
+          {
+            "dtype": "float32",
+            "elements": 3082240,
+            "name": "/decoder/generator/resblocks.2/Add_8_output_0",
+            "shape": [
+              1,
+              256,
+              12040
+            ]
+          }
+        ],
+        "quantized_operator_count": 0,
+        "role": "first-resolution residual block 2"
+      },
+      {
+        "index": 12,
+        "initializers": 1,
+        "inputs": [
+          {
+            "dtype": "float32",
+            "elements": 3082240,
+            "name": "/decoder/generator/resblocks.0/Add_8_output_0",
+            "shape": [
+              1,
+              256,
+              12040
+            ]
+          },
+          {
+            "dtype": "float32",
+            "elements": 3082240,
+            "name": "/decoder/generator/resblocks.1/Add_8_output_0",
+            "shape": [
+              1,
+              256,
+              12040
+            ]
+          },
+          {
+            "dtype": "float32",
+            "elements": 3082240,
+            "name": "/decoder/generator/resblocks.2/Add_8_output_0",
+            "shape": [
+              1,
+              256,
+              12040
+            ]
+          }
+        ],
+        "model_bytes": 1263,
+        "model_sha256": "c6390c52b95fa06ea0fcd4728fb9a8d0061e31e001ead2c86f6480df1b1d8ef1",
+        "name": "generator_0_merge",
+        "nodes": 3,
+        "outputs": [
+          {
+            "dtype": "float32",
+            "elements": 3082240,
+            "name": "/decoder/generator/Div_1_output_0",
+            "shape": [
+              1,
+              256,
+              12040
+            ]
+          }
+        ],
+        "quantized_operator_count": 0,
+        "role": "ordered residual sum and divide by three"
+      },
+      {
+        "index": 13,
+        "initializers": 61,
+        "inputs": [
+          {
+            "dtype": "float32",
+            "elements": 3082240,
+            "name": "/decoder/generator/Div_1_output_0",
+            "shape": [
+              1,
+              256,
+              12040
+            ]
+          },
+          {
+            "dtype": "float32",
+            "elements": 1589302,
+            "name": "/decoder/generator/Concat_1_output_0",
+            "shape": [
+              1,
+              22,
+              72241
+            ]
+          },
+          {
+            "dtype": "float32",
+            "elements": 256,
+            "name": "style",
+            "shape": [
+              1,
+              256
+            ]
+          }
+        ],
+        "model_bytes": 6748071,
+        "model_sha256": "63b00a9e11fd98ded45fb5cf20840c4cc728be97979271a757ad1453f9aab37d",
+        "name": "generator_1_base",
+        "nodes": 93,
+        "outputs": [
+          {
+            "dtype": "float32",
+            "elements": 9246848,
+            "name": "/decoder/generator/Add_5_output_0",
+            "shape": [
+              1,
+              128,
+              72241
+            ]
+          }
+        ],
+        "quantized_operator_count": 0,
+        "role": "second upsample and style-conditioned source residual branch"
+      },
+      {
+        "index": 14,
+        "initializers": 56,
+        "inputs": [
+          {
+            "dtype": "float32",
+            "elements": 9246848,
+            "name": "/decoder/generator/Add_5_output_0",
+            "shape": [
+              1,
+              128,
+              72241
+            ]
+          },
+          {
+            "dtype": "float32",
+            "elements": 256,
+            "name": "style",
+            "shape": [
+              1,
+              256
+            ]
+          }
+        ],
+        "model_bytes": 2015245,
+        "model_sha256": "34059979c954c3ab6bbbb0478d6dae1a8e2c8a782c19c7f57d648a92b0a5ea7f",
+        "name": "generator_1_resblock_3",
+        "nodes": 88,
+        "outputs": [
+          {
+            "dtype": "float32",
+            "elements": 9246848,
+            "name": "/decoder/generator/resblocks.3/Add_8_output_0",
+            "shape": [
+              1,
+              128,
+              72241
+            ]
+          }
+        ],
+        "quantized_operator_count": 0,
+        "role": "second-resolution residual block 3"
+      },
+      {
+        "index": 15,
+        "initializers": 56,
+        "inputs": [
+          {
+            "dtype": "float32",
+            "elements": 9246848,
+            "name": "/decoder/generator/Add_5_output_0",
+            "shape": [
+              1,
+              128,
+              72241
+            ]
+          },
+          {
+            "dtype": "float32",
+            "elements": 256,
+            "name": "style",
+            "shape": [
+              1,
+              256
+            ]
+          }
+        ],
+        "model_bytes": 3588110,
+        "model_sha256": "f2fd84804de1253fa84e10464f323282e0593c2abf14aa2d07c5d91ae92ef49c",
+        "name": "generator_1_resblock_4",
+        "nodes": 88,
+        "outputs": [
+          {
+            "dtype": "float32",
+            "elements": 9246848,
+            "name": "/decoder/generator/resblocks.4/Add_8_output_0",
+            "shape": [
+              1,
+              128,
+              72241
+            ]
+          }
+        ],
+        "quantized_operator_count": 0,
+        "role": "second-resolution residual block 4"
+      },
+      {
+        "index": 16,
+        "initializers": 56,
+        "inputs": [
+          {
+            "dtype": "float32",
+            "elements": 9246848,
+            "name": "/decoder/generator/Add_5_output_0",
+            "shape": [
+              1,
+              128,
+              72241
+            ]
+          },
+          {
+            "dtype": "float32",
+            "elements": 256,
+            "name": "style",
+            "shape": [
+              1,
+              256
+            ]
+          }
+        ],
+        "model_bytes": 5160974,
+        "model_sha256": "a27a9e1eb944c245961fe8fd44a73b42e7468dcc445b3406ba336735c16da60b",
+        "name": "generator_1_resblock_5",
+        "nodes": 88,
+        "outputs": [
+          {
+            "dtype": "float32",
+            "elements": 9246848,
+            "name": "/decoder/generator/resblocks.5/Add_8_output_0",
+            "shape": [
+              1,
+              128,
+              72241
+            ]
+          }
+        ],
+        "quantized_operator_count": 0,
+        "role": "second-resolution residual block 5"
+      },
+      {
+        "index": 17,
+        "initializers": 1,
+        "inputs": [
+          {
+            "dtype": "float32",
+            "elements": 9246848,
+            "name": "/decoder/generator/resblocks.3/Add_8_output_0",
+            "shape": [
+              1,
+              128,
+              72241
+            ]
+          },
+          {
+            "dtype": "float32",
+            "elements": 9246848,
+            "name": "/decoder/generator/resblocks.4/Add_8_output_0",
+            "shape": [
+              1,
+              128,
+              72241
+            ]
+          },
+          {
+            "dtype": "float32",
+            "elements": 9246848,
+            "name": "/decoder/generator/resblocks.5/Add_8_output_0",
+            "shape": [
+              1,
+              128,
+              72241
+            ]
+          }
+        ],
+        "model_bytes": 1269,
+        "model_sha256": "04b2fcd94a757dd8e0869f9de4ab647c93dd6b2e7c7aff0a9c0b0b548cc08d96",
+        "name": "generator_1_merge",
+        "nodes": 3,
+        "outputs": [
+          {
+            "dtype": "float32",
+            "elements": 9246848,
+            "name": "/decoder/generator/Div_2_output_0",
+            "shape": [
+              1,
+              128,
+              72241
+            ]
+          }
+        ],
+        "quantized_operator_count": 0,
+        "role": "ordered residual sum and divide by three"
+      },
+      {
+        "index": 18,
+        "initializers": 14,
+        "inputs": [
+          {
+            "dtype": "float32",
+            "elements": 9246848,
+            "name": "/decoder/generator/Div_2_output_0",
+            "shape": [
+              1,
+              128,
+              72241
+            ]
+          }
+        ],
+        "model_bytes": 375454,
+        "model_sha256": "8aefe8fe805644806e86cc344b659fe482ba038ae338786555829b82ec9c1df1",
+        "name": "waveform_istft",
+        "nodes": 18,
+        "outputs": [
+          {
+            "dtype": "float32",
+            "elements": 361200,
+            "name": "audio",
+            "shape": [
+              361200
+            ]
+          }
+        ],
+        "quantized_operator_count": 0,
+        "role": "spectral head and exact exported inverse STFT"
+      }
+    ]
+  },
+  "stop_conditions": [
+    "Do not touch phone until every canonical host stage passes.",
+    "Do not retry the monolithic graph.",
+    "Do not enable CPU fallback.",
+    "Do not introduce quantization without Moritz authorization.",
+    "Do not merge canonical-v2 evidence with historical 0013/0017 metrics or verdicts.",
+    "Do not touch dashboard, experiment 0019, or docs/architectures/."
+  ],
+  "tools": {
+    "annotate_canonical_v2_profile_shapes.py": "d089a90e403aef1cc45c13cbdb35a90d205f214a07d6b2c7eb72d3505193f715",
+    "export_canonical_v2_onnx_fp.py": "a0d23252dcff9445256a78112f130fd8bcaf5de372899f55aeacd87fdb5057c8",
+    "extract_canonical_v2_staged_graphs.py": "b38a1199570dd89bf2c67e9b027d348631fea97195f06faf7ccbeb8f22a0d2c9",
+    "kokoro_canonical_stage_runner.cc": "ea9682e61e0fd684705ccfb74601989bad44651fc7d0442f4ba86ae0c4a2ffdd",
+    "prepare_canonical_v2_frontend.py": "10307b405ff439c4c4f7475ebedfc413cb4cf12ca1e78aa0563f7cb8548d3d61",
+    "prepare_canonical_v2_optimized_graph.py": "b3156b6bb12e130676687335491644bc2d2f72ec704fdb57765d1eed068f4c35",
+    "rewrite_canonical_v2_qnn_compat.py": "2799e96efbdcb5984d6547d1d71067d1c75a13ba48407bf0121aea5cccc396aa",
+    "run_canonical_v2_eager_oracle.py": "a5ce6f636527001d8ca82fd6b079d9a6d4844f8e51b33beb0e998246219bb53b",
+    "run_staged_pipeline.py": "e85381a8423e6cb627e419b0a2967024f7b61b6b677698b41f973489d853843d",
+    "run_staged_pipeline_qnn.py": "26f05f872ecd45a24f21a9411e7eb6622e5b3b71d1968d14a222af75305792d2"
+  }
+}
