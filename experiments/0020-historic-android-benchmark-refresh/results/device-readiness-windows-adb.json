@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "experiment": "0020",
+  "observed_at_utc": "2026-08-20T09:26:00Z",
+  "result": "passed_exact_windows_adb_readiness",
+  "adapter": "tools/adb-shim/adb",
+  "resolved_executable": "/mnt/c/Users/mgottschling/AppData/Local/Android/platform-tools-pi/platform-tools/adb.exe",
+  "resolved_executable_sha256": "b4a6b455702684652cccf7b46258b29e653538904359a58fd4931cf3ef286b3f",
+  "environment": {"ADB_LIBUSB": "1"},
+  "runner": "unmodified experiment 0008 DeviceRunner reached through a scoped PATH shim",
+  "phone_lock": "artifacts/locks/phone.lock acquired and released by safe_session for readiness",
+  "subprocess_lock_fd": "PhoneLock file descriptor is non-inheritable under Python PEP 446; ADB subprocesses do not inherit the phone lock FD",
+  "device": {
+    "serial": "R5CW81PR8SY",
+    "manufacturer": "samsung",
+    "model": "SM-S918B",
+    "device": "dm3q",
+    "abi": "arm64-v8a",
+    "android_release": "16",
+    "api_level": "36",
+    "boot_completed": "1",
+    "build_fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+    "kernel": "5.15.189-android13-8-33413713-abS918BXXSAFZG1"
+  },
+  "trace": [
+    "resolved Windows adb / ADB_LIBUSB=1 / devices -l",
+    "serial-scoped model, ABI, boot, unlock-policy, manufacturer, device, release, API, fingerprint, kernel gates"
+  ],
+  "interpretation": "This is the current Windows-ADB readiness record. Earlier zero-device records remain valid evidence that native Linux adb was the wrong transport for those timestamps."
+}

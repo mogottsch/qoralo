@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+ADB_REAL='/mnt/c/Users/mgottschling/AppData/Local/Android/platform-tools-pi/platform-tools/adb.exe'
+if [ ! -x "$ADB_REAL" ]; then
+  echo "missing required Windows adb: $ADB_REAL" >&2
+  exit 127
+fi
+export ADB_LIBUSB=1
+if [ -n "${ADB_SHIM_LOG:-}" ]; then
+  printf 'resolved=%s ADB_LIBUSB=%s argv=%s\n' "$ADB_REAL" "$ADB_LIBUSB" "$*" >> "$ADB_SHIM_LOG"
+fi
+exec "$ADB_REAL" "$@"
