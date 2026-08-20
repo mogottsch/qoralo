@@ -295,6 +295,10 @@ LISTENING_REVIEWS = {
         "status": "accepted", "reviewer": "Moritz", "date": "2026-08-19",
         "notes": "Okay to good, but with a bit of a Chinese accent.", "sample_sha256": "173850781b055e70a606fb561d93b70e6d8c6318db1b29b2324f83506c21ad6b",
     },
+    "0021-supertonic-int8-cpu-v2": {
+        "status": "accepted", "reviewer": "Moritz", "date": "2026-08-20",
+        "notes": "good. Exact 0021 canonical-v2 released-INT8 CPU representative only; do not generalize to any other Supertonic route or WAV.", "sample_sha256": "201f8e79d39e2fbb9db8a64a9f139641db9e27fabb828bcc039286a49c8987df",
+    },
 }
 
 # Family/model release dates are kept separate from benchmark evidence. Dates use
@@ -347,7 +351,7 @@ REMEASUREMENTS = {
         "comparison_to_original": {"setup_relative_change_percent": 31.126933135442904, "cold_rtf_relative_change_percent": 7.888260453793183, "warm_median_rtf_relative_change_percent": 6.152495209381348, "peak_pss_relative_change_percent": 0.19617296838232434, "peak_vm_hwm_relative_change_percent": 0.5149433793544711, "rtf_change_over_10_percent": False, "setup_change_over_10_percent": True, "material_protocol_or_duration_difference": False},
         "thermal": {"initial_status": "STATUS_1", "initial_battery_c": 36.0, "eligible_final_status": "NONE", "eligible_final_battery_c": 34.9, "waited_without_device_tuning": True},
         "representative_wav": {"path":"media/0020-supertonic-3-int8-cpu-refresh.wav","sha256":"1cf003d55c81e49983cbe385fdb98868ccdf4b1a6b1482e21bab020c7567ee6e","bytes":1459536,"sample_rate_hz":44100,"channels":1,"duration_seconds":729746/44100},
-        "listening_review": {"status": "not_reviewed", "reviewer": None, "date": None, "notes": None, "sample_sha256": "1cf003d55c81e49983cbe385fdb98868ccdf4b1a6b1482e21bab020c7567ee6e"},
+        "listening_review": {"status": "accepted", "reviewer": "Moritz", "date": "2026-08-20", "notes": "good. Exact 0020 legacy-v1 refresh representative only; do not generalize to any other Supertonic route or WAV.", "sample_sha256": "1cf003d55c81e49983cbe385fdb98868ccdf4b1a6b1482e21bab020c7567ee6e"},
         "sources": ["experiments/0020-historic-android-benchmark-refresh/results/supertonic-3-int8-cpu-refresh.json", "experiments/0020-historic-android-benchmark-refresh/results/supertonic-adapted-build-provenance.json", "experiments/0020-historic-android-benchmark-refresh/results/supertonic-internal-stage-and-cleanup.json", "experiments/0020-historic-android-benchmark-refresh/README.md"],
         "missing_reasons": {"provider_profile": "The exact historical harness does not emit an ONNX Runtime provider profile; provider=CPU is established by the pinned descriptor/runtime contract only.", "effective_frontend_output": "The historical harness preserves the exact input bytes/hash but does not emit effective tokenizer/frontend IDs.", "proof_run_rtf": "The historical CPU harness did not collect a separate instrumented proof run.", "first_post_setup_rtf": "The historical contract labels the first post-setup run as cold_rtf; it is preserved there rather than duplicated."},
     }],

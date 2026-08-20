@@ -184,8 +184,14 @@ def main():
             frontend = e["transcript"]["effective_frontend"]
             if frontend["mapped_ids_int32le_sha256"] != source_frontend["frontend"]["mapped_ids_int32le_sha256"] or frontend["mapped_id_count"] != source_frontend["frontend"]["mapped_id_count"]:
                 fail(f"{e['id']}: canonical-v2 frontend mapping mismatch")
-            if e["listening_review"]["status"] != "not_reviewed":
-                fail(f"{e['id']}: canonical-v2 sample must remain not_reviewed until Moritz reviews its exact hash")
+            source_review = source_result["representative_wav"]["listening_review"]
+            expected_review = {
+                "status": source_review["status"], "reviewer": source_review["reviewer"], "date": source_review["date"],
+                "notes": source_review["notes"] + ". " + source_review["scope"][0].upper() + source_review["scope"][1:] + ".",
+                "sample_sha256": source_review["sample_sha256"],
+            }
+            if e["listening_review"] != expected_review or e["listening_review"]["sample_sha256"] != e["wav"]["sha256"]:
+                fail(f"{e['id']}: canonical-v2 listening review does not match committed exact-hash verdict evidence")
         remeasurements = e.get("remeasurements", [])
         if e["id"] == "0008-supertonic-cpu-t1":
             if e["metrics"] != FROZEN_0008_SUPERTONIC_METRICS or e["wav"] is not None:
@@ -213,7 +219,14 @@ def main():
             if run_warm != warm_values or len(refresh["runs"]) != 4:
                 fail(f"{e['id']}: nested cold/warm run evidence mismatch")
             review = refresh["listening_review"]
-            if review != {"status": "not_reviewed", "reviewer": None, "date": None, "notes": None, "sample_sha256": refresh["representative_wav"]["sha256"]}:
+            source_refresh = json.loads((ROOT / refresh["sources"][0]).read_text())
+            source_review = source_refresh["representative_wav"]["listening_review"]
+            expected_review = {
+                "status": source_review["status"], "reviewer": source_review["reviewer"], "date": source_review["date"],
+                "notes": source_review["notes"] + ". " + source_review["scope"][0].upper() + source_review["scope"][1:] + ".",
+                "sample_sha256": source_review["sample_sha256"],
+            }
+            if review != expected_review or review["sample_sha256"] != refresh["representative_wav"]["sha256"]:
                 fail(f"{e['id']}: refresh listening status/hash mismatch")
             for source in refresh["sources"]:
                 if not (ROOT / source).exists():
