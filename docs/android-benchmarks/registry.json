@@ -2318,6 +2318,74 @@
       },
       "quantization": "Unquantized official ONNX graphs; CPUExecutionProvider only",
       "scope": "full_e2e"
+    },
+    {
+      "id": "0019-moss-tts-nano-qnn-blocked",
+      "experiment": "0019",
+      "model": "MOSS-TTS-Nano",
+      "route": "reusable dynamic decode QNN HTP host gate",
+      "deployment_variant": "MOSS-TTS-Nano QNN HTP host feasibility",
+      "attempt_status": "blocked",
+      "technical_execution": {
+        "status": "blocked",
+        "android_attempted": false,
+        "provider": "QNNExecutionProvider (host gate)",
+        "threads": null
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Blocked before Android: reusable dynamic decode failed closed at 52/1,091 optimized nodes across 13 partitions with 1,039 unsupported nodes. No phone, physical HTP, timing, memory, or audio evidence exists.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
+      "android_attempted": false,
+      "provider": "QNNExecutionProvider (host gate)",
+      "precision": "FP32 official ONNX",
+      "threads": null,
+      "device": null,
+      "metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "wav": null,
+      "summary": "Blocked before Android: reusable dynamic decode failed closed at 52/1,091 optimized nodes across 13 partitions with 1,039 unsupported nodes. No phone, physical HTP, timing, memory, or audio evidence exists.",
+      "limitations": [
+        "Fixed-shape rewrites made prefill/local/codec and all 209 observed decode shapes fully QNN-assignable on host, but 209 sessions required 1,052.77 s total host session creation and do not form a reusable deployable route.",
+        "Decoder redesign requires fixed-capacity KV-cache/state topology with fixed outputs and dynamic valid-length masking; this is not a narrow operator rewrite.",
+        "No QNN physical phone claim, CPU fallback, quantization, timing, memory, or WAV claim is made."
+      ],
+      "sources": [
+        "experiments/0019-moss-tts-nano-qnn-htp-android/results/host-checkpoint.json",
+        "experiments/0019-moss-tts-nano-qnn-htp-android/results/decode-static-gate-matrix.json",
+        "experiments/0019-moss-tts-nano-qnn-htp-android/results/source-lock.json",
+        "experiments/0019-moss-tts-nano-qnn-htp-android/README.md"
+      ],
+      "missing_reasons": {
+        "wav": "No locally verified Android WAV was retained for this route.",
+        "android_attempted": "Host gate failed closed before Android and no phone staging occurred.",
+        "all": "No Android timing, memory, physical HTP, or audio evidence exists."
+      },
+      "model_identity": {
+        "name": "OpenMOSS-Team/MOSS-TTS-Nano-100M-ONNX",
+        "url": "https://huggingface.co/OpenMOSS-Team/MOSS-TTS-Nano-100M-ONNX/tree/f52645cb467506d8e18e746ddd59482685b74e58",
+        "revision": "f52645cb467506d8e18e746ddd59482685b74e58"
+      },
+      "quantization": "Unquantized official ONNX graphs; no quantization or physical Android route was attempted",
+      "scope": "excluded_non_e2e"
     }
   ]
 }
