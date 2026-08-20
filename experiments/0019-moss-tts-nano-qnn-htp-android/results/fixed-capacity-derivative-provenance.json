@@ -1,0 +1,1394 @@
+{
+  "canonical_v2": {
+    "shape_impact": "none; 51 IDs and prefill 226 retained",
+    "tokenization": "protocol/canonical-v2-tokenization.json",
+    "transcript_sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67"
+  },
+  "components": {
+    "codec": {
+      "operator_rewrite": {
+        "checks": {
+          "actual_rewrite_count": 1,
+          "all_original_initializers_ordered_byte_identical": true,
+          "appended_initializers": 0,
+          "expected_rewrite_count": 1,
+          "untargeted_original_nodes_ordered_byte_identical": true
+        },
+        "kind": "codec",
+        "output": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/codec-full-cap375-qnn.onnx",
+        "output_sha256": "a7a5e97d5949bf6dff839745ba7a01c241b030c7b39d8987b5c9d529c467b7b9",
+        "rewrites": [
+          {
+            "name": "/Xor",
+            "op_type": "Xor",
+            "original_index": 3345,
+            "proof": "Canonical Boolean exclusive-or expansion.",
+            "replacement": [
+              "Not(a)",
+              "Not(b)",
+              "And(a,Not(b))",
+              "And(Not(a),b)",
+              "Or"
+            ]
+          }
+        ],
+        "schema_version": 1,
+        "source": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/codec-full-cap375.onnx",
+        "source_sha256": "319e9d7db2fe6e2158b3d73cbed340b22b76137ba37c74468ffc7a41ceae3de4"
+      },
+      "shape_specialization": {
+        "checks": {
+          "initializer_count": 178,
+          "input_names_identical": true,
+          "node_count": 3357,
+          "ordered_initializers_byte_identical": true,
+          "ordered_nodes_byte_identical": true,
+          "output_names_identical": true
+        },
+        "external_data_references": [
+          "moss_audio_tokenizer_decode_shared.data"
+        ],
+        "output": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/codec-full-cap375.onnx",
+        "output_sha256": "319e9d7db2fe6e2158b3d73cbed340b22b76137ba37c74468ffc7a41ceae3de4",
+        "schema_version": 1,
+        "shapes": {
+          "audio": [
+            1,
+            2,
+            1440000
+          ],
+          "audio_code_lengths": [
+            1
+          ],
+          "audio_codes": [
+            1,
+            375,
+            16
+          ],
+          "audio_lengths": [
+            1
+          ]
+        },
+        "source": "experiments/0018-moss-tts-nano-onnx-android/.local/codec/moss_audio_tokenizer_decode_full.onnx",
+        "source_sha256": "0fbbafe3fd4afa2a019af5c5ced204af6e2d1db044fa40f021525d2aee95b4ac"
+      }
+    },
+    "decode": {
+      "attention_insertion_rewrite": {
+        "abi": {
+          "attention_logical_insert_index": "past_valid_lengths",
+          "final_state_slot": 600,
+          "input_past_capacity": 600,
+          "physical_appended_new_index": 600,
+          "physical_output_capacity": 601
+        },
+        "checks": {
+          "all_original_initializers_ordered_byte_identical": true,
+          "appended_initializers": 3,
+          "consumer_rewrite_count": 36,
+          "graph_input_names_unchanged": true,
+          "graph_output_names_unchanged": true,
+          "rewrite_count": 24
+        },
+        "output": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/decode-fixed-cap600-attention-qnn.onnx",
+        "output_sha256": "e9f87f69d1ead5d32746872d7ae462a337ddbb5f6a80eedaa08f1c14789567b9",
+        "rewritten_attention_consumers": [
+          {
+            "from": "/Concat_5_output_0",
+            "input_index": 0,
+            "node": "/Transpose_1",
+            "to": "/Concat_5_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_6_output_0",
+            "input_index": 0,
+            "node": "/Transpose_2",
+            "to": "/Concat_6_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_5_output_0",
+            "input_index": 0,
+            "node": "/Shape_25",
+            "to": "/Concat_5_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_16_output_0",
+            "input_index": 0,
+            "node": "/Transpose_5",
+            "to": "/Concat_16_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_17_output_0",
+            "input_index": 0,
+            "node": "/Transpose_6",
+            "to": "/Concat_17_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_16_output_0",
+            "input_index": 0,
+            "node": "/Shape_37",
+            "to": "/Concat_16_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_27_output_0",
+            "input_index": 0,
+            "node": "/Transpose_9",
+            "to": "/Concat_27_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_28_output_0",
+            "input_index": 0,
+            "node": "/Transpose_10",
+            "to": "/Concat_28_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_27_output_0",
+            "input_index": 0,
+            "node": "/Shape_49",
+            "to": "/Concat_27_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_38_output_0",
+            "input_index": 0,
+            "node": "/Transpose_13",
+            "to": "/Concat_38_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_39_output_0",
+            "input_index": 0,
+            "node": "/Transpose_14",
+            "to": "/Concat_39_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_38_output_0",
+            "input_index": 0,
+            "node": "/Shape_61",
+            "to": "/Concat_38_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_49_output_0",
+            "input_index": 0,
+            "node": "/Transpose_17",
+            "to": "/Concat_49_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_50_output_0",
+            "input_index": 0,
+            "node": "/Transpose_18",
+            "to": "/Concat_50_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_49_output_0",
+            "input_index": 0,
+            "node": "/Shape_73",
+            "to": "/Concat_49_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_60_output_0",
+            "input_index": 0,
+            "node": "/Transpose_21",
+            "to": "/Concat_60_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_61_output_0",
+            "input_index": 0,
+            "node": "/Transpose_22",
+            "to": "/Concat_61_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_60_output_0",
+            "input_index": 0,
+            "node": "/Shape_85",
+            "to": "/Concat_60_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_71_output_0",
+            "input_index": 0,
+            "node": "/Transpose_25",
+            "to": "/Concat_71_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_72_output_0",
+            "input_index": 0,
+            "node": "/Transpose_26",
+            "to": "/Concat_72_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_71_output_0",
+            "input_index": 0,
+            "node": "/Shape_97",
+            "to": "/Concat_71_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_82_output_0",
+            "input_index": 0,
+            "node": "/Transpose_29",
+            "to": "/Concat_82_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_83_output_0",
+            "input_index": 0,
+            "node": "/Transpose_30",
+            "to": "/Concat_83_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_82_output_0",
+            "input_index": 0,
+            "node": "/Shape_109",
+            "to": "/Concat_82_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_93_output_0",
+            "input_index": 0,
+            "node": "/Transpose_33",
+            "to": "/Concat_93_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_94_output_0",
+            "input_index": 0,
+            "node": "/Transpose_34",
+            "to": "/Concat_94_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_93_output_0",
+            "input_index": 0,
+            "node": "/Shape_121",
+            "to": "/Concat_93_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_104_output_0",
+            "input_index": 0,
+            "node": "/Transpose_37",
+            "to": "/Concat_104_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_105_output_0",
+            "input_index": 0,
+            "node": "/Transpose_38",
+            "to": "/Concat_105_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_104_output_0",
+            "input_index": 0,
+            "node": "/Shape_133",
+            "to": "/Concat_104_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_115_output_0",
+            "input_index": 0,
+            "node": "/Transpose_41",
+            "to": "/Concat_115_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_116_output_0",
+            "input_index": 0,
+            "node": "/Transpose_42",
+            "to": "/Concat_116_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_115_output_0",
+            "input_index": 0,
+            "node": "/Shape_145",
+            "to": "/Concat_115_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_126_output_0",
+            "input_index": 0,
+            "node": "/Transpose_45",
+            "to": "/Concat_126_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_127_output_0",
+            "input_index": 0,
+            "node": "/Transpose_46",
+            "to": "/Concat_127_output_0__logical_attention"
+          },
+          {
+            "from": "/Concat_126_output_0",
+            "input_index": 0,
+            "node": "/Shape_157",
+            "to": "/Concat_126_output_0__logical_attention"
+          }
+        ],
+        "rewritten_cache_concats": [
+          {
+            "attention_output": "/Concat_5_output_0__logical_attention",
+            "concat_name": "/Concat_5",
+            "logical_new_index_input": "past_valid_lengths",
+            "new_token_input": "/Add_17_output_0",
+            "original_index": 410,
+            "past_input": "/Cast_45_output_0",
+            "physical_new_index": 600,
+            "physical_output": "/Concat_5_output_0"
+          },
+          {
+            "attention_output": "/Concat_6_output_0__logical_attention",
+            "concat_name": "/Concat_6",
+            "logical_new_index_input": "past_valid_lengths",
+            "new_token_input": "/Reshape_3_output_0",
+            "original_index": 412,
+            "past_input": "/Cast_46_output_0",
+            "physical_new_index": 600,
+            "physical_output": "/Concat_6_output_0"
+          },
+          {
+            "attention_output": "/Concat_16_output_0__logical_attention",
+            "concat_name": "/Concat_16",
+            "logical_new_index_input": "past_valid_lengths",
+            "new_token_input": "/Add_22_output_0",
+            "original_index": 624,
+            "past_input": "/Cast_51_output_0",
+            "physical_new_index": 600,
+            "physical_output": "/Concat_16_output_0"
+          },
+          {
+            "attention_output": "/Concat_17_output_0__logical_attention",
+            "concat_name": "/Concat_17",
+            "logical_new_index_input": "past_valid_lengths",
+            "new_token_input": "/Reshape_12_output_0",
+            "original_index": 626,
+            "past_input": "/Cast_52_output_0",
+            "physical_new_index": 600,
+            "physical_output": "/Concat_17_output_0"
+          },
+          {
+            "attention_output": "/Concat_27_output_0__logical_attention",
+            "concat_name": "/Concat_27",
+            "logical_new_index_input": "past_valid_lengths",
+            "new_token_input": "/Add_27_output_0",
+            "original_index": 838,
+            "past_input": "/Cast_57_output_0",
+            "physical_new_index": 600,
+            "physical_output": "/Concat_27_output_0"
+          },
+          {
+            "attention_output": "/Concat_28_output_0__logical_attention",
+            "concat_name": "/Concat_28",
+            "logical_new_index_input": "past_valid_lengths",
+            "new_token_input": "/Reshape_21_output_0",
+            "original_index": 840,
+            "past_input": "/Cast_58_output_0",
+            "physical_new_index": 600,
+            "physical_output": "/Concat_28_output_0"
+          },
+          {
+            "attention_output": "/Concat_38_output_0__logical_attention",
+            "concat_name": "/Concat_38",
+            "logical_new_index_input": "past_valid_lengths",
+            "new_token_input": "/Add_32_output_0",
+            "original_index": 1052,
+            "past_input": "/Cast_63_output_0",
+            "physical_new_index": 600,
+            "physical_output": "/Concat_38_output_0"
+          },
+          {
+            "attention_output": "/Concat_39_output_0__logical_attention",
+            "concat_name": "/Concat_39",
+            "logical_new_index_input": "past_valid_lengths",
+            "new_token_input": "/Reshape_30_output_0",
+            "original_index": 1054,
+            "past_input": "/Cast_64_output_0",
+            "physical_new_index": 600,
+            "physical_output": "/Concat_39_output_0"
+          },
+          {
+            "attention_output": "/Concat_49_output_0__logical_attention",
+            "concat_name": "/Concat_49",
+            "logical_new_index_input": "past_valid_lengths",
+            "new_token_input": "/Add_37_output_0",
+            "original_index": 1266,
+            "past_input": "/Cast_69_output_0",
+            "physical_new_index": 600,
+            "physical_output": "/Concat_49_output_0"
+          },
+          {
+            "attention_output": "/Concat_50_output_0__logical_attention",
+            "concat_name": "/Concat_50",
+            "logical_new_index_input": "past_valid_lengths",
+            "new_token_input": "/Reshape_39_output_0",
+            "original_index": 1268,
+            "past_input": "/Cast_70_output_0",
+            "physical_new_index": 600,
+            "physical_output": "/Concat_50_output_0"
+          },
+          {
+            "attention_output": "/Concat_60_output_0__logical_attention",
+            "concat_name": "/Concat_60",
+            "logical_new_index_input": "past_valid_lengths",
+            "new_token_input": "/Add_42_output_0",
+            "original_index": 1480,
+            "past_input": "/Cast_75_output_0",
+            "physical_new_index": 600,
+            "physical_output": "/Concat_60_output_0"
+          },
+          {
+            "attention_output": "/Concat_61_output_0__logical_attention",
+            "concat_name": "/Concat_61",
+            "logical_new_index_input": "past_valid_lengths",
+            "new_token_input": "/Reshape_48_output_0",
+            "original_index": 1482,
+            "past_input": "/Cast_76_output_0",
+            "physical_new_index": 600,
+            "physical_output": "/Concat_61_output_0"
+          },
+          {
+            "attention_output": "/Concat_71_output_0__logical_attention",
+            "concat_name": "/Concat_71",
+            "logical_new_index_input": "past_valid_lengths",
+            "new_token_input": "/Add_47_output_0",
+            "original_index": 1694,
+            "past_input": "/Cast_81_output_0",
+            "physical_new_index": 600,
+            "physical_output": "/Concat_71_output_0"
+          },
+          {
+            "attention_output": "/Concat_72_output_0__logical_attention",
+            "concat_name": "/Concat_72",
+            "logical_new_index_input": "past_valid_lengths",
+            "new_token_input": "/Reshape_57_output_0",
+            "original_index": 1696,
+            "past_input": "/Cast_82_output_0",
+            "physical_new_index": 600,
+            "physical_output": "/Concat_72_output_0"
+          },
+          {
+            "attention_output": "/Concat_82_output_0__logical_attention",
+            "concat_name": "/Concat_82",
+            "logical_new_index_input": "past_valid_lengths",
+            "new_token_input": "/Add_52_output_0",
+            "original_index": 1908,
+            "past_input": "/Cast_87_output_0",
+            "physical_new_index": 600,
+            "physical_output": "/Concat_82_output_0"
+          },
+          {
+            "attention_output": "/Concat_83_output_0__logical_attention",
+            "concat_name": "/Concat_83",
+            "logical_new_index_input": "past_valid_lengths",
+            "new_token_input": "/Reshape_66_output_0",
+            "original_index": 1910,
+            "past_input": "/Cast_88_output_0",
+            "physical_new_index": 600,
+            "physical_output": "/Concat_83_output_0"
+          },
+          {
+            "attention_output": "/Concat_93_output_0__logical_attention",
+            "concat_name": "/Concat_93",
+            "logical_new_index_input": "past_valid_lengths",
+            "new_token_input": "/Add_57_output_0",
+            "original_index": 2122,
+            "past_input": "/Cast_93_output_0",
+            "physical_new_index": 600,
+            "physical_output": "/Concat_93_output_0"
+          },
+          {
+            "attention_output": "/Concat_94_output_0__logical_attention",
+            "concat_name": "/Concat_94",
+            "logical_new_index_input": "past_valid_lengths",
+            "new_token_input": "/Reshape_75_output_0",
+            "original_index": 2124,
+            "past_input": "/Cast_94_output_0",
+            "physical_new_index": 600,
+            "physical_output": "/Concat_94_output_0"
+          },
+          {
+            "attention_output": "/Concat_104_output_0__logical_attention",
+            "concat_name": "/Concat_104",
+            "logical_new_index_input": "past_valid_lengths",
+            "new_token_input": "/Add_62_output_0",
+            "original_index": 2336,
+            "past_input": "/Cast_99_output_0",
+            "physical_new_index": 600,
+            "physical_output": "/Concat_104_output_0"
+          },
+          {
+            "attention_output": "/Concat_105_output_0__logical_attention",
+            "concat_name": "/Concat_105",
+            "logical_new_index_input": "past_valid_lengths",
+            "new_token_input": "/Reshape_84_output_0",
+            "original_index": 2338,
+            "past_input": "/Cast_100_output_0",
+            "physical_new_index": 600,
+            "physical_output": "/Concat_105_output_0"
+          },
+          {
+            "attention_output": "/Concat_115_output_0__logical_attention",
+            "concat_name": "/Concat_115",
+            "logical_new_index_input": "past_valid_lengths",
+            "new_token_input": "/Add_67_output_0",
+            "original_index": 2550,
+            "past_input": "/Cast_105_output_0",
+            "physical_new_index": 600,
+            "physical_output": "/Concat_115_output_0"
+          },
+          {
+            "attention_output": "/Concat_116_output_0__logical_attention",
+            "concat_name": "/Concat_116",
+            "logical_new_index_input": "past_valid_lengths",
+            "new_token_input": "/Reshape_93_output_0",
+            "original_index": 2552,
+            "past_input": "/Cast_106_output_0",
+            "physical_new_index": 600,
+            "physical_output": "/Concat_116_output_0"
+          },
+          {
+            "attention_output": "/Concat_126_output_0__logical_attention",
+            "concat_name": "/Concat_126",
+            "logical_new_index_input": "past_valid_lengths",
+            "new_token_input": "/Add_72_output_0",
+            "original_index": 2764,
+            "past_input": "/Cast_111_output_0",
+            "physical_new_index": 600,
+            "physical_output": "/Concat_126_output_0"
+          },
+          {
+            "attention_output": "/Concat_127_output_0__logical_attention",
+            "concat_name": "/Concat_127",
+            "logical_new_index_input": "past_valid_lengths",
+            "new_token_input": "/Reshape_102_output_0",
+            "original_index": 2766,
+            "past_input": "/Cast_112_output_0",
+            "physical_new_index": 600,
+            "physical_output": "/Concat_127_output_0"
+          }
+        ],
+        "schema_version": 1,
+        "semantic_boundary": "Only attention/shape consumers use logical insertion. Graph present_key/value outputs retain the original physical [past600,new] concat, so CPU state orchestration still copies output index600 into slot past_valid_lengths.",
+        "source": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/decode-fixed-cap600-qnn.onnx",
+        "source_sha256": "15241baafb4f5798d0a0bfe64bc03eb0dc9b0b5ac951fe357cee57d77a80a2d4"
+      },
+      "einsum_rewrite": {
+        "checks": {
+          "actual_rewrite_count": 12,
+          "all_original_initializers_ordered_byte_identical": true,
+          "appended_initializers": 1,
+          "expected_rewrite_count": 12,
+          "untargeted_original_nodes_ordered_byte_identical": true
+        },
+        "kind": "decode",
+        "output": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/decode-fixed-cap600-qnn.onnx",
+        "output_sha256": "15241baafb4f5798d0a0bfe64bc03eb0dc9b0b5ac951fe357cee57d77a80a2d4",
+        "rewrites": [
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb/Einsum",
+            "op_type": "Einsum",
+            "original_index": 333,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_1/Einsum",
+            "op_type": "Einsum",
+            "original_index": 546,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_2/Einsum",
+            "op_type": "Einsum",
+            "original_index": 759,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_3/Einsum",
+            "op_type": "Einsum",
+            "original_index": 972,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_4/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1185,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_5/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1398,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_6/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1611,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_7/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1824,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_8/Einsum",
+            "op_type": "Einsum",
+            "original_index": 2037,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_9/Einsum",
+            "op_type": "Einsum",
+            "original_index": 2250,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_10/Einsum",
+            "op_type": "Einsum",
+            "original_index": 2463,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_11/Einsum",
+            "op_type": "Einsum",
+            "original_index": 2676,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          }
+        ],
+        "schema_version": 1,
+        "source": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/decode-fixed-cap600.onnx",
+        "source_sha256": "02b8e47c074f0d17d85e0eab54c843324007df13ddf6533df5b48e8aa97b1da2"
+      },
+      "shape_specialization": {
+        "checks": {
+          "initializer_count": 139,
+          "input_names_identical": true,
+          "node_count": 2866,
+          "ordered_initializers_byte_identical": true,
+          "ordered_nodes_byte_identical": true,
+          "output_names_identical": true
+        },
+        "external_data_references": [
+          "moss_tts_global_shared.data"
+        ],
+        "output": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/decode-fixed-cap600.onnx",
+        "output_sha256": "02b8e47c074f0d17d85e0eab54c843324007df13ddf6533df5b48e8aa97b1da2",
+        "schema_version": 1,
+        "shapes": {
+          "global_hidden": [
+            1,
+            1,
+            768
+          ],
+          "input_ids": [
+            1,
+            1,
+            17
+          ],
+          "past_key_0": [
+            1,
+            600,
+            12,
+            64
+          ],
+          "past_key_1": [
+            1,
+            600,
+            12,
+            64
+          ],
+          "past_key_10": [
+            1,
+            600,
+            12,
+            64
+          ],
+          "past_key_11": [
+            1,
+            600,
+            12,
+            64
+          ],
+          "past_key_2": [
+            1,
+            600,
+            12,
+            64
+          ],
+          "past_key_3": [
+            1,
+            600,
+            12,
+            64
+          ],
+          "past_key_4": [
+            1,
+            600,
+            12,
+            64
+          ],
+          "past_key_5": [
+            1,
+            600,
+            12,
+            64
+          ],
+          "past_key_6": [
+            1,
+            600,
+            12,
+            64
+          ],
+          "past_key_7": [
+            1,
+            600,
+            12,
+            64
+          ],
+          "past_key_8": [
+            1,
+            600,
+            12,
+            64
+          ],
+          "past_key_9": [
+            1,
+            600,
+            12,
+            64
+          ],
+          "past_valid_lengths": [
+            1
+          ],
+          "past_value_0": [
+            1,
+            600,
+            12,
+            64
+          ],
+          "past_value_1": [
+            1,
+            600,
+            12,
+            64
+          ],
+          "past_value_10": [
+            1,
+            600,
+            12,
+            64
+          ],
+          "past_value_11": [
+            1,
+            600,
+            12,
+            64
+          ],
+          "past_value_2": [
+            1,
+            600,
+            12,
+            64
+          ],
+          "past_value_3": [
+            1,
+            600,
+            12,
+            64
+          ],
+          "past_value_4": [
+            1,
+            600,
+            12,
+            64
+          ],
+          "past_value_5": [
+            1,
+            600,
+            12,
+            64
+          ],
+          "past_value_6": [
+            1,
+            600,
+            12,
+            64
+          ],
+          "past_value_7": [
+            1,
+            600,
+            12,
+            64
+          ],
+          "past_value_8": [
+            1,
+            600,
+            12,
+            64
+          ],
+          "past_value_9": [
+            1,
+            600,
+            12,
+            64
+          ],
+          "present_key_0": [
+            1,
+            601,
+            12,
+            64
+          ],
+          "present_key_1": [
+            1,
+            601,
+            12,
+            64
+          ],
+          "present_key_10": [
+            1,
+            601,
+            12,
+            64
+          ],
+          "present_key_11": [
+            1,
+            601,
+            12,
+            64
+          ],
+          "present_key_2": [
+            1,
+            601,
+            12,
+            64
+          ],
+          "present_key_3": [
+            1,
+            601,
+            12,
+            64
+          ],
+          "present_key_4": [
+            1,
+            601,
+            12,
+            64
+          ],
+          "present_key_5": [
+            1,
+            601,
+            12,
+            64
+          ],
+          "present_key_6": [
+            1,
+            601,
+            12,
+            64
+          ],
+          "present_key_7": [
+            1,
+            601,
+            12,
+            64
+          ],
+          "present_key_8": [
+            1,
+            601,
+            12,
+            64
+          ],
+          "present_key_9": [
+            1,
+            601,
+            12,
+            64
+          ],
+          "present_value_0": [
+            1,
+            601,
+            12,
+            64
+          ],
+          "present_value_1": [
+            1,
+            601,
+            12,
+            64
+          ],
+          "present_value_10": [
+            1,
+            601,
+            12,
+            64
+          ],
+          "present_value_11": [
+            1,
+            601,
+            12,
+            64
+          ],
+          "present_value_2": [
+            1,
+            601,
+            12,
+            64
+          ],
+          "present_value_3": [
+            1,
+            601,
+            12,
+            64
+          ],
+          "present_value_4": [
+            1,
+            601,
+            12,
+            64
+          ],
+          "present_value_5": [
+            1,
+            601,
+            12,
+            64
+          ],
+          "present_value_6": [
+            1,
+            601,
+            12,
+            64
+          ],
+          "present_value_7": [
+            1,
+            601,
+            12,
+            64
+          ],
+          "present_value_8": [
+            1,
+            601,
+            12,
+            64
+          ],
+          "present_value_9": [
+            1,
+            601,
+            12,
+            64
+          ]
+        },
+        "source": "experiments/0018-moss-tts-nano-onnx-android/.local/tts/moss_tts_decode_step.onnx",
+        "source_sha256": "698cbc2fc1c2feca16e5895614ed52bbb32ded10f236c076f477b2e69abf32d8"
+      }
+    },
+    "local": {
+      "operator_rewrite": null,
+      "shape_specialization": {
+        "checks": {
+          "initializer_count": 45,
+          "input_names_identical": true,
+          "node_count": 4949,
+          "ordered_initializers_byte_identical": true,
+          "ordered_nodes_byte_identical": true,
+          "output_names_identical": true
+        },
+        "external_data_references": [
+          "moss_tts_local_shared.data"
+        ],
+        "output": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/local-fixed-b1.onnx",
+        "output_sha256": "f475a116f028f832606d4ca5f0bee5697bca2d0923a3a0a6cb28bd81585eaf02",
+        "schema_version": 1,
+        "shapes": {
+          "assistant_random_u": [
+            1
+          ],
+          "audio_random_u": [
+            1,
+            16
+          ],
+          "frame_token_ids": [
+            1,
+            16
+          ],
+          "global_hidden": [
+            1,
+            768
+          ],
+          "repetition_seen_mask": [
+            1,
+            16,
+            1024
+          ],
+          "should_continue": [
+            1,
+            1
+          ]
+        },
+        "source": "experiments/0018-moss-tts-nano-onnx-android/.local/tts/moss_tts_local_fixed_sampled_frame.onnx",
+        "source_sha256": "40cdb00efc171c450cf91468e01429caa41b0252222cd308e978f58fe354afa8"
+      }
+    },
+    "prefill": {
+      "operator_rewrite": {
+        "checks": {
+          "actual_rewrite_count": 13,
+          "all_original_initializers_ordered_byte_identical": true,
+          "appended_initializers": 1,
+          "expected_rewrite_count": 13,
+          "untargeted_original_nodes_ordered_byte_identical": true
+        },
+        "kind": "prefill",
+        "output": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/prefill-s226-qnn.onnx",
+        "output_sha256": "a974e163f7d17ab5b880992e4b1bbeb36e31d087110adfd24f660266b4597bbc",
+        "rewrites": [
+          {
+            "name": "/Slice",
+            "op_type": "Slice",
+            "original_index": 263,
+            "proof_contract": "For fixed attention_mask [1,226], original axis-1 slice is [-226:INT64_MAX:1], exactly the full tensor.",
+            "replacement": [
+              "Identity"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb/Einsum",
+            "op_type": "Einsum",
+            "original_index": 337,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_1/Einsum",
+            "op_type": "Einsum",
+            "original_index": 551,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_2/Einsum",
+            "op_type": "Einsum",
+            "original_index": 756,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_3/Einsum",
+            "op_type": "Einsum",
+            "original_index": 961,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_4/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1166,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_5/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1371,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_6/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1576,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_7/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1781,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_8/Einsum",
+            "op_type": "Einsum",
+            "original_index": 1986,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_9/Einsum",
+            "op_type": "Einsum",
+            "original_index": 2191,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_10/Einsum",
+            "op_type": "Einsum",
+            "original_index": 2396,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          },
+          {
+            "equation": "bs,d->bsd",
+            "name": "/rotary_emb_11/Einsum",
+            "op_type": "Einsum",
+            "original_index": 2601,
+            "replacement": [
+              "Unsqueeze(axis=2)",
+              "Mul with [d] broadcast"
+            ]
+          }
+        ],
+        "schema_version": 1,
+        "source": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/prefill-s226.onnx",
+        "source_sha256": "9e66258130b509befe60e355facc00d757408d6c55de8fa66fda2934168930fd"
+      },
+      "shape_specialization": {
+        "checks": {
+          "initializer_count": 139,
+          "input_names_identical": true,
+          "node_count": 2776,
+          "ordered_initializers_byte_identical": true,
+          "ordered_nodes_byte_identical": true,
+          "output_names_identical": true
+        },
+        "external_data_references": [
+          "moss_tts_global_shared.data"
+        ],
+        "output": "experiments/0019-moss-tts-nano-qnn-htp-android/.local/specialized/prefill-s226.onnx",
+        "output_sha256": "9e66258130b509befe60e355facc00d757408d6c55de8fa66fda2934168930fd",
+        "schema_version": 1,
+        "shapes": {
+          "attention_mask": [
+            1,
+            226
+          ],
+          "global_hidden": [
+            1,
+            226,
+            768
+          ],
+          "input_ids": [
+            1,
+            226,
+            17
+          ],
+          "present_key_0": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_key_1": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_key_10": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_key_11": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_key_2": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_key_3": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_key_4": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_key_5": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_key_6": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_key_7": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_key_8": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_key_9": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_value_0": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_value_1": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_value_10": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_value_11": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_value_2": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_value_3": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_value_4": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_value_5": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_value_6": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_value_7": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_value_8": [
+            1,
+            226,
+            12,
+            64
+          ],
+          "present_value_9": [
+            1,
+            226,
+            12,
+            64
+          ]
+        },
+        "source": "experiments/0018-moss-tts-nano-onnx-android/.local/tts/moss_tts_prefill.onnx",
+        "source_sha256": "d56126dcd0574c2f15d98fc6b35eda68d0386b5bd9c5e38e28548d6f2ea8f3db"
+      }
+    }
+  },
+  "schema_version": 1
+}

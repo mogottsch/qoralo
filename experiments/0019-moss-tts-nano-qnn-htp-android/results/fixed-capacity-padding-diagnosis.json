@@ -1,0 +1,85 @@
+{
+  "canonical_transcript": {
+    "prefill_rows": 226,
+    "sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+    "tokens": 51,
+    "version": 2
+  },
+  "claim_boundary": "Replacement has only structural validation so far. It is not QNN-eligible or phone-eligible until the frozen recursive CPU policy passes at step0, all six markers, all375 calls, final601 state, and codec.",
+  "codec_boundary": {
+    "full_375": {
+      "fixed_reported_samples": 1440000,
+      "fixed_tensor_samples": 1440000,
+      "frames": 375,
+      "length_exact": true,
+      "metrics": {
+        "cosine": 0.9999999999983317,
+        "elements": 2880000,
+        "finite": true,
+        "max_abs": 6.258487701416016e-06,
+        "rmse": 1.5519507504509322e-07
+      },
+      "source_reported_samples": 1440000
+    },
+    "observed": {
+      "fixed_reported_samples": 618240,
+      "fixed_tensor_samples": 1440000,
+      "frames": 161,
+      "length_exact": true,
+      "metrics": {
+        "cosine": 0.9999999999989692,
+        "elements": 1236480,
+        "finite": true,
+        "max_abs": 5.543231964111328e-06,
+        "rmse": 1.773291026443979e-07
+      },
+      "source_reported_samples": 618240
+    },
+    "status": "passed"
+  },
+  "failed_evidence": "results/fixed-capacity-padding-invalid.json",
+  "first_boundary": {
+    "error": "The physical new K/V at index 600 is masked out while zero padding at logical index 226 is admitted as the current position. This is immediate semantic mismatch, not cumulative drift.",
+    "hidden": {
+      "cosine": 0.761561494209834,
+      "elements": 768,
+      "finite": true,
+      "max_abs": 2.54323673248291,
+      "rmse": 0.6925260587769299
+    },
+    "mask_allowed_positions": "0..226 from Range < valid+1 and Range <= valid",
+    "new_kv": {
+      "cosine": 0.8882298503180922,
+      "elements": 18432,
+      "finite": true,
+      "max_abs": 2.2354117035865784,
+      "rmse": 0.41623620773118974
+    },
+    "original_concat_new_position": 600,
+    "physical_past_input_positions": 600,
+    "step": 0,
+    "valid_length": 226
+  },
+  "replacement": {
+    "attention_consumer_count": 36,
+    "cache_concat_count": 24,
+    "design": "Preserve original physical concat and present outputs [past600,new@600]. For attention/shape consumers only, construct [past600,zero], insert new K/V at past_valid_lengths with a shared Equal mask and Where, and preserve CPU copy of physical output index600 to logical state slot valid_length.",
+    "model_sha256": "e9f87f69d1ead5d32746872d7ae462a337ddbb5f6a80eedaa08f1c14789567b9",
+    "provenance_checks": {
+      "all_original_initializers_ordered_byte_identical": true,
+      "appended_initializers": 3,
+      "consumer_rewrite_count": 36,
+      "graph_input_names_unchanged": true,
+      "graph_output_names_unchanged": true,
+      "rewrite_count": 24
+    },
+    "rewrite_report_ignored_path": ".local/specialized/decode-fixed-cap600-attention-qnn.rewrite.json"
+  },
+  "resource": {
+    "elapsed_seconds_time_v": 104.17,
+    "interrupted_pre_restart_attempts": "no result; WSL was restarted to increase memory",
+    "maximum_resident_set_kib": 22751332
+  },
+  "result": "simple_zero_padded_cache_rejected_at_step0",
+  "schema_version": 1
+}

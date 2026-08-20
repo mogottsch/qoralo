@@ -2,18 +2,31 @@
 
 ## Scope
 
-Determine whether the complete experiment-0018 neural path can execute through QNN/HTP without CPU fallback and whether a matched phone route is eligible. Preserve experiment 0018, active experiments, and dashboards. Do not quantize without new authorization and never call a mixed route full HTP.
+Determine whether the complete official MOSS-TTS-Nano neural pipeline can execute through QNN/HTP without CPU fallback on the authorized S23 Ultra. Preserve exact official model assets and derivative provenance. Use canonical-v2 benchmark text for final comparable work. Never call mixed fallback full HTP.
 
 ## Procedure
 
-1. Hash-lock the exact experiment-0018 source revisions, models, external weights, text tokens, generation settings, and observed call shapes.
-2. Host-gate prefill, every required autoregressive decode shape, local fixed-frame decode, and full audio-tokenizer decode through patched ORT + QNN HTP with CPU fallback disabled.
-3. Record complete partition/node assignment and every unsupported node.
-4. Where a blocker has a small exact algebraic replacement, freeze CPU criteria, make a provenance-locked derivative, prove preservation of all untargeted graph content, and compare under the declared CPU runtime. Do not quantize.
-5. Repeat fail-closed host gates. Treat a collection of independently static graphs separately from the one reusable session required by the Android architecture.
-6. Proceed to phone only if the full reusable neural route clears host gates. A full-HTP phone claim additionally requires QNN-only ORT events for every neural call and physical RPC, accelerator-time, cycle, and HVX evidence.
-7. If eligible, run matched CPU and all-HTP benchmarks with the experiment-0018 measurement semantics and phone safety protocol. Otherwise stop before phone with the exact boundary.
+1. Hash-lock the official source, ONNX files, external weights, voice, sampling settings, and canonical-v2 direct SentencePiece output.
+2. Host-gate prefill, autoregressive decode, local fixed-frame sampling, and full codec decode with CPU fallback disabled.
+3. Apply only provenance-locked rewrites, with frozen CPU equivalence before QNN or phone use.
+4. Replace the dynamic KV ABI with a single reusable 600-position decode input and 601-position output/state contract. Prove the first, middle, penultimate, final, all-375-call, and final-state boundaries.
+5. Generate/reload QNN contexts serially after CPU equivalence and preserve resource evidence.
+6. On phone, require exact identity/lock/hash/thermal/cleanup gates and fail closed during all four session creations. Only after complete assignment may inference begin.
+7. For a successful route, run one unprofiled first generation plus at least five same-session warm generations with full state reset, then a separate profile process. Require QNN-only provider events and physical RPC/accelerator/cycle/HVX proof before claiming full HTP.
+8. If the platform blocks before assignment, retain null benchmark/listening fields with exact reasons rather than fabricating or substituting a mixed route.
 
 ## Outcome
 
-The localized rewrites were exact on CPU and allowed all 209 CPU-observed fixed decode shapes plus fixed prefill, local, and codec graphs to delegate independently. The reusable dynamic decode graph still failed closed with only 52 of 1091 optimized nodes assigned across 13 QNN partitions. A complete deployable route was therefore ineligible, and the experiment stopped before phone.
+The final attention-insertion fixed-capacity graph passed canonical-v2 recursive CPU equivalence for all 375 calls and the final 601-position state. Fixed-capacity codec equivalence passed at both the observed 161-frame stop and full 375-frame capacity. All four graphs compiled into host QNN contexts, and every context reloaded as one fail-closed QNN partition.
+
+Physical execution remained blocked. Under the exact carrier/app UID on the authorized Samsung, QNN loads its HTP backend interface but fails `CreateDevice` with `QNN_DEVICE_ERROR_INVALID_CONFIG` before the first session assignment. The result persists with:
+
+- public `libcdsprpc.so` declared and exposed;
+- exact Package-Manager-labeled runner/ORT/QNN native hashes;
+- a unique hash-verified V73 DSP skel and standard vendor RFSA paths;
+- source ONNX and EPContext modes;
+- runtime SoC auto-detection;
+- no burst or other optional device configuration;
+- CPU fallback disabled.
+
+Experiment 0019 therefore stops without inference, WAV, RTF, physical HTP proof, or listening verdict. The conclusion is bounded to this recorded app-UID carrier/device/runtime path.

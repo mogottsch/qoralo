@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "frozen_before_phone_output": true,
+  "route": {
+    "neural_sessions": [
+      "prefill-s226-qnn",
+      "decode-fixed-cap600-qnn",
+      "local-fixed-b1",
+      "codec-full-cap375-qnn"
+    ],
+    "provider": "QNNExecutionProvider",
+    "backend": "QNN HTP 2.49.0.260730",
+    "cpu_fallback_disabled": true,
+    "graph_io_quantization": false,
+    "performance_mode": "runtime default for the fail-closed baseline; optional burst must be a separate measured route",
+    "soc_model": "runtime auto-detect on the physical phone; host context generation used pinned model 43",
+    "context_binaries_allowed": true
+  },
+  "contract": {
+    "source": "Exact experiment-0018 model assets/Junhao voice/seed 20260818 with canonical-v2 transcript SHA 424b3807…db67 and its direct 51-ID SentencePiece output; legacy-v1 text evidence is preserved separately",
+    "max_frames": 375,
+    "decode_input_cache_capacity": 600,
+    "decode_output_state_capacity": 601,
+    "codec_input_capacity_frames": 375,
+    "sample_rate_hz": 48000
+  },
+  "disclosed_cpu_work": [
+    "Precomputed SentencePiece token IDs and prompt-row assembly",
+    "Token/repetition/random orchestration",
+    "Extraction of appended K/V at output index 600 and copy to logical valid-length state slot",
+    "Stereo-to-mono averaging",
+    "PCM16 WAV encoding and evidence hashing"
+  ],
+  "phone": {
+    "serial": "R5CW81PR8SY",
+    "model": "SM-S918B",
+    "soc": "SM8550",
+    "lock": "artifacts/locks/phone.lock",
+    "runs": {
+      "benchmark": "Matched CPU and all-HTP routes each use a fresh profiling-off process, four session creations, one first generation and five warm generations; all four sessions are reused and full generation state is reset before every run",
+      "provider_physical_evidence": "Separate fresh detailed-profile process per route, one generation each; HTP requires ORT provider plus QNN physical evidence"
+    },
+    "cooldown_before_benchmark_seconds": 120
+  },
+  "measurements": {
+    "rtf": "End-to-end run time divided by actual emitted WAV duration",
+    "setup": "Four-session creation time, both aggregate and per component",
+    "first_audio": "Run start through complete fixed-capacity audio-tokenizer decode; first PCM then exists in memory. This is non-streaming.",
+    "memory": "Whole-process VmHWM plus sampled VmRSS and PSS; not isolated model allocations",
+    "thermal": "dumpsys thermalservice immediately before and after each process",
+    "power": "dumpsys battery immediately before and after each process",
+    "profiling_boundary": "Profile run is excluded from benchmark latency"
+  },
+  "full_htp_criteria": [
+    "Every learned prefill, decode, local, and codec call is assigned only to QNNExecutionProvider with CPU fallback disabled",
+    "Every component has physical RPC execute, accelerator execute time, accelerator cycles, and four-HVX evidence",
+    "Expected provider/physical call counts match actual frame counts",
+    "WAV is finite mono PCM16 at 48 kHz with nonzero RMS and a retained SHA-256",
+    "Unique app-internal stage, exact identity gates, cleanup verification, uninstall, and lock release all pass"
+  ],
+  "quality": {
+    "numerical_comparison": "Descriptive only; no numerical rejection threshold",
+    "ultimate_gate": "Moritz blind listening against accepted experiment-0018 CPU sample"
+  },
+  "forbidden_claim": "A mixed fallback route or host-only context compile must never be called full HTP."
+}

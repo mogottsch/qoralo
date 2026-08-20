@@ -1,91 +1,115 @@
 # Experiment 0019 — MOSS-TTS-Nano QNN/HTP feasibility
 
-## Result
+## Final result
 
-**Stopped before phone.** The official Android architecture needs one autoregressive decode session whose KV-cache dimension grows on every frame. QNN HTP cannot fully delegate that reusable dynamic-shape graph with CPU fallback disabled.
+**Blocked before physical inference.** The complete fixed-capacity pipeline clears CPU equivalence and host QNN gates, and four host-generated context binaries reload as fail-closed one-partition QNN models. On the authorized Galaxy S23 Ultra, however, this exact carrier/app-UID direct-QNN path fails while creating the HTP device:
 
-Localized, audited rewrites make every fixed call shape observed in experiment 0018 individually delegable, but they do not create a complete deployable all-HTP route. No mixed fallback was run, no physical HTP claim is made, and latency, memory, first-audio, or audio comparisons were not eligible.
+```text
+QNN SetupBackend failed Failed to create device.
+Error: QNN_DEVICE_ERROR_INVALID_CONFIG: Invalid config values
+```
 
-## Locked source contract
+The failure occurs before the first neural session is created or assigned. Therefore experiment 0019 has **no phone inference, HTP WAV, RTF, memory benchmark, provider-event proof, RPC/accelerator/cycle/HVX execution proof, or listening verdict**. It must not appear as a completed full-HTP route.
 
-Experiment 0019 reuses experiment 0018 commit `f38c8aa` and its exact assets:
+This conclusion is intentionally narrow. It applies to the recorded carrier, app UID, Android build, ORT/QNN versions, and authorized phone. It does not establish that all Android apps, host contexts, or QNN deployments are incompatible.
 
-- OpenMOSS source revision `cc7bdf19c7639c0870dab22045a33b442760f6be`
-- TTS ONNX revision `f52645cb467506d8e18e746ddd59482685b74e58`
-- audio-tokenizer ONNX revision `ceff0d0749bfb3fa2d61149794ec6feef0d1e1ae`
-- transcript SHA-256 `350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f`
-- 51 exact text tokens, Junhao voice, seed `20260818`, prefill sequence 226
-- CPU-observed generation: 209 frames, decode `past_seq` 226 through 434, codec output 802560 samples
+[`results/fixed-capacity-phone-blocker.json`](results/fixed-capacity-phone-blocker.json) is the canonical final checkpoint.
 
-[`results/source-lock.json`](results/source-lock.json) records and re-verifies the exact model and external-weight hashes. Experiment 0018 was not modified.
+## Canonical-v2 benchmark input
 
-## Original fail-closed capability map
+Final work uses repository protocol commit `2de8b80`:
 
-The host gate used patched ONNX Runtime 1.27.1, QNN 2.49.0 HTP backend, `session.disable_cpu_ep_fallback=1`, `offload_graph_io_quantization=0`, burst mode, and `soc_model=43`.
+- `protocols/android-tts-benchmark/transcript.txt`
+- 226 bytes, no trailing newline
+- SHA-256 `424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67`
+- official SentencePiece model SHA-256 `c353ee1479b536bf414c1b247f5542b6607fb8ae91320e5af1781fee200fddff`
+- 51 exact IDs in [`protocol/canonical-v2-tokenization.json`](protocol/canonical-v2-tokenization.json)
 
-| Fixed call | Result | Final optimized assignment | Unsupported nodes |
-|---|---|---:|---|
-| Prefill `[1,226,17]` | rejected | 1014 / 1027, 2 partitions | root `Slice`; 12 rotary `Einsum` nodes with `bs,d->bsd` |
-| Decode, past 226 | rejected | 965 / 966, 2 partitions | rotary `Einsum` |
-| Decode, past 330 | rejected | 965 / 966, 2 partitions | rotary `Einsum` |
-| Decode, past 434 | rejected | 965 / 966, 2 partitions | rotary `Einsum` |
-| Local fixed-frame decoder | passed | 1565 / 1565, 1 partition | none |
-| Full codec decode, 209 frames | rejected | 863 / 864, 2 partitions | root boolean `Xor` |
+Canonical v2 changes exactly token positions 5 and 40 from legacy-v1 ID `1583` to comma ID `10364`. Token count and the `[1,226,17]` prefill shape do not change. [`results/canonical-v2-tokenization-impact.json`](results/canonical-v2-tokenization-impact.json) preserves the comparison.
 
-Complete node names and both capability passes are retained in [`results/host-gate-details.json`](results/host-gate-details.json).
+The original 230-byte `350c8d3d…` transcript and tokenization files remain as immutable legacy-v1 evidence for the earlier host phase. They are not labeled canonical v2.
 
-## Audited fixed-shape derivatives
+## Fixed-capacity decode ABI
 
-Only the observed blockers were changed:
+The official loop starts with 226 prefill positions and permits 375 generated frames:
 
-- `Einsum("bs,d->bsd")` → `Unsqueeze(axis=2)` + broadcast `Mul`;
-- the prefill `Slice` → `Identity`, after proving that fixed `[1,226]` attention makes `[-226:INT64_MAX:1]` the whole tensor;
-- boolean `Xor(a,b)` → the canonical `Or(And(a,Not(b)), And(Not(a),b))` expansion.
+- decode input view: positions `0..599`, capacity 600;
+- decode output/logical retained state: positions `0..600`, capacity 601;
+- step 0 reads valid length 226 and writes state slot 226;
+- step 373 reads 599 and writes 599;
+- final step 374 reads 600 and writes retained slot 600;
+- final slot 600 is not consumed by another decode call.
 
-All other original nodes and original initializers remain ordered and byte-identical. Shape specialization changes graph I/O metadata only. Deterministic ONNX Runtime 1.20.0 CPU comparisons passed the frozen policy with **zero error and cosine 1.0** for:
+A first zero-padded design failed immediately. The original graph concatenates the new K/V at physical position 600, while its valid-length attention mask admits positions `0..valid_length`. At step 0 that masked out the actual current K/V and admitted zero padding at logical position 226. This was a step-0 topology error, not cumulative drift. The failed metrics and diagnosis remain in:
 
-- the exact 226-row prefill request;
-- decode past lengths 226, 330, and 434;
-- the local fixed-frame graph;
-- 209-frame full codec decode.
+- [`results/fixed-capacity-padding-invalid.json`](results/fixed-capacity-padding-invalid.json)
+- [`results/fixed-capacity-padding-diagnosis.json`](results/fixed-capacity-padding-diagnosis.json)
 
-See [`results/derivative-provenance.json`](results/derivative-provenance.json), [`protocol/rewrite-equivalence-policy.json`](protocol/rewrite-equivalence-policy.json), and [`results/rewrite-cpu-equivalence.json`](results/rewrite-cpu-equivalence.json).
+The accepted derivative preserves the physical `[past600,new@600]` graph outputs for the state ABI. For attention only, it constructs `[past600,zero]` and inserts new K/V at `past_valid_lengths`. It changes 24 K/V concat boundaries and redirects 36 attention/shape consumers. Original graph outputs remain unchanged, so application CPU orchestration still copies physical output index 600 to logical state slot `valid_length`.
 
-After the rewrites:
+## Canonical-v2 CPU equivalence
 
-| Fixed call | Final optimized assignment |
+The replacement passed the frozen ORT 1.20 CPU policy:
+
+| Boundary | Result |
 |---|---:|
-| Prefill | 1038 / 1038, 1 partition |
-| Decode representatives | 967 / 967, 1 partition |
-| Local fixed-frame decoder | 1565 / 1565, 1 partition |
-| Full codec decode | 867 / 867, 1 partition |
+| Dynamic canonical-v2 stop | 161 frames |
+| Fixed-route calls exercised | 375 |
+| Hidden aggregate max / RMSE / cosine | `5.662e-6` / `8.321e-7` / `0.999999999999657` |
+| New-K/V aggregate max / RMSE / cosine | `1.0967e-5` / `6.611e-7` / `0.999999999999763` |
+| Final 601-state max / RMSE / cosine | `1.0967e-5` / `5.222e-7` / `0.999999999999861` |
+| Observed codec length | exact 618,240 samples |
+| Observed codec max / cosine | `5.543e-6` / `0.999999999998969` |
+| Full-375 codec length | exact 1,440,000 samples |
+| Full-375 codec max / cosine | `6.258e-6` / `0.999999999998332` |
 
-All **209** decode shapes observed in the CPU reference, past lengths 226–434, independently created fail-closed QNN sessions. [`results/decode-static-gate-matrix.json`](results/decode-static-gate-matrix.json) retains every shape, model hash, structural check, rewrite check, log hash, and exit code.
+Steps `0`, `104`, `208`, `209`, `373`, and `374` all pass. Final slot 600 is written and retained. The run used up to `22,739,692` KiB RSS; this is host validation resource evidence, not an Android memory result.
 
-## Decisive deployment blocker
+See [`results/fixed-capacity-cpu-equivalence.json`](results/fixed-capacity-cpu-equivalence.json), [`protocol/fixed-capacity-equivalence-policy.json`](protocol/fixed-capacity-equivalence-policy.json), and [`results/fixed-capacity-derivative-provenance.json`](results/fixed-capacity-derivative-provenance.json).
 
-The official Android code creates `moss_tts_decode_step.onnx` once and reuses it while `past_seq` grows. Even after the exact `Einsum` rewrite, that dynamic graph produced:
+## Host QNN eligibility and contexts
 
-- 13 QNN partitions;
-- 52 / 1091 optimized nodes assigned to QNN;
-- 1039 unsupported nodes;
-- fail-closed session rejection.
+The static derivatives all cleared fail-closed host QNN HTP gates:
 
-The exact 1039-node list is retained in `results/host-gate-details.json`.
+- prefill: one complete partition;
+- reusable fixed-capacity decode: one complete partition;
+- local fixed-frame decoder: one complete partition;
+- fixed-capacity full codec: one complete partition.
 
-Using one static model per observed CPU step is not equivalent to a reusable route:
+Four external QNN contexts were generated with QNN `2.49.0.260730134355`. Their binaries total 704,607,776 bytes. Minimum host `MemAvailable` during serialized generation was 9,546,780 KiB; swap remained effectively unused. Each context then reloaded fail-closed as exactly one QNN partition containing its single EPContext node.
 
-1. it requires 209 distinct decode sessions or session compilations for this one output;
-2. those host session creations totaled 1052.77 seconds, with a 5.39-second median, before any inference;
-3. HTP numerical differences can alter the stop frame, while the contract permits up to 375 frames;
-4. full codec decode would also need the actual HTP-produced final length.
+Exact sources, context hashes/sizes, I/O shapes, SDK attributes, generation logs, reload gates, and resource minima are in [`results/fixed-capacity-context-provenance.json`](results/fixed-capacity-context-provenance.json). Host eligibility is not physical HTP execution.
 
-A single fixed-capacity KV-cache graph would require a substantial state/topology redesign—fixed cache update, fixed outputs, and valid-length masking—not another localized unsupported-operator substitution. That work was not justified inside this bounded attempt.
+## Android boundary
+
+Nine isolated attempts progressively established the transport/backend boundary:
+
+1. driver-shell initialization error before runner invocation;
+2. SELinux denied executing a tmp-staged app-UID runner;
+3. Samsung native-library-directory discovery mismatch;
+4. first fail-closed EPContext session rejection;
+5. INFO diagnostic of the same pre-inference rejection;
+6. source-ONNX mode reached the same QNN backend device-creation failure;
+7. required public `libcdsprpc.so` manifest exposure and exact app-native hashes passed;
+8. a unique world-readable, hash-verified V73 DSP skel plus standard RFSA paths passed;
+9. minimal runtime auto-detect removed `soc_model`, burst, and all optional device configs, but `CreateDevice` still returned `QNN_DEVICE_ERROR_INVALID_CONFIG`.
+
+The final carrier used:
+
+- Package-Manager-labeled native runner and exact ORT/QNN/V73 libraries;
+- required public `libcdsprpc.so` declaration, confirmed present in `/vendor/lib64` and Samsung's `public.libraries.txt`;
+- unique app-internal model/context staging with local/upload/internal SHA checks;
+- unique tmp DSP-skel staging only, mode 0644 under a 0755 directory;
+- CPU fallback disabled and graph-I/O quantization off;
+- runtime SoC auto-detection and no performance-mode option.
+
+The QNN backend interface loads, but `CreateDevice` fails before graph assignment. All attempts cleaned their unique stages and uninstalled the carrier. A final independent locked check confirmed the authorized identity, all `moss-0019-*` tmp paths absent, package absent, and the phone lock reclaimable.
 
 ## Claim boundaries
 
-- Host QNN HTP capability and graph finalization are not physical phone execution.
-- No phone lock was acquired and nothing was staged to the phone.
-- No quantization, calibration, context optimization, hybrid fallback, or CPU fallback was used.
-- No complete all-HTP route, retained HTP WAV, or matched performance/memory comparison exists.
-- [`results/host-checkpoint.json`](results/host-checkpoint.json) is the canonical conclusion.
+- CPU tokenization, prompt/state orchestration, fixed KV copies, stereo-to-mono conversion, and WAV encoding were designed as disclosed application work—not neural fallback.
+- No mixed fallback phone route was run.
+- No quantization or calibration was performed.
+- No numerical result is treated as a listening verdict.
+- Listening status is `not_reviewed` because no phone WAV exists.
+- Phone benchmark fields are null with explicit reasons in the final checkpoint.

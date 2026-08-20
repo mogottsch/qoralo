@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "frozen_before_outputs": true,
+  "abi": {
+    "prefill_positions": 226,
+    "max_generated_frames": 375,
+    "decode_input_cache_capacity": 600,
+    "decode_output_and_logical_state_capacity": 601,
+    "final_step_index": 374,
+    "final_pre_step_valid_length": 600,
+    "new_kv_always_read_from_fixed_output_index": 600,
+    "state_update": "For steps with valid length 226..600, copy each appended K/V from output index 600 into logical state slot valid_length. Feed only slots 0..599 on subsequent calls. Slot 600 is populated on the final allowed decode and is retained for evidence but never silently truncated or fed to another call."
+  },
+  "runtime": "onnxruntime 1.20.0 CPUExecutionProvider, four intra-op threads, one inter-op thread, ORT_ENABLE_ALL",
+  "fixtures": {
+    "prefill": "Exact canonical-v2 226-byte transcript (SHA 424b3807…db67), direct 51-ID SentencePiece output, and experiment-0018 Junhao prompt rows; total shape remains [1,226,17].",
+    "observed_generation": "Official local fixed-frame sampler with java.util.Random seed 20260818; compare dynamic and fixed-cache decode recursively through its stop.",
+    "max_frames": "Continue with deterministic valid codebook rows through all 375 allowed decode calls to exercise first, middle, penultimate, and final state indices.",
+    "codec": "Compare canonical-v2 dynamic decode at its actual observed stop length with zero-padded fixed-capacity 375-frame input using that actual length; also compare full length 375."
+  },
+  "criteria": {
+    "same_compared_shapes": true,
+    "integer_outputs_exact": true,
+    "all_float_outputs_finite": true,
+    "float_max_abs_error_lte": 0.0001,
+    "float_rmse_lte": 0.00001,
+    "float_cosine_gte": 0.9999999,
+    "reported_audio_lengths_exact": true,
+    "final_state_slot_600_written": true,
+    "decode_calls_at_max_frames": 375
+  },
+  "claim_boundary": "Legacy-v1 completed evidence remains unchanged. Passing establishes CPU equivalence for the canonical-v2 text and exact frozen fixed-capacity ABI and fixtures. It does not establish HTP numerical equivalence, audio quality, or physical accelerator execution."
+}
