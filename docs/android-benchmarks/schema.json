@@ -77,7 +77,7 @@
     },
     "transcript": {
       "type": "object",
-      "required": ["classification", "sha256", "bytes", "trailing_newline", "source", "basis", "canonical_v2_sha256", "canonical_v2_match", "comparison_boundary", "audit_source", "missing_reasons"],
+      "required": ["classification", "sha256", "bytes", "trailing_newline", "source", "basis", "effective_frontend", "canonical_v2_sha256", "canonical_v2_match", "comparison_boundary", "audit_source", "missing_reasons"],
       "properties": {
         "classification": {"enum": ["canonical_v2", "legacy_v1", "noncanonical"]},
         "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
@@ -85,6 +85,7 @@
         "trailing_newline": {"type": ["boolean", "null"]},
         "source": {"type": "string", "minLength": 1},
         "basis": {"type": "string", "minLength": 1},
+        "effective_frontend": {"type": ["object", "null"]},
         "canonical_v2_sha256": {"const": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67"},
         "canonical_v2_match": {"type": "boolean"},
         "comparison_boundary": {"type": "string", "minLength": 1},

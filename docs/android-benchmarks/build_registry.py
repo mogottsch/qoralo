@@ -131,6 +131,7 @@ ROWS = [
     row("0018-moss-tts-nano-cpu", "0018", "MOSS-TTS-Nano", "official ONNX Runtime CPU", "ran", attempted=True, provider="CPUExecutionProvider", precision="FP32", threads=4, metrics={"load_seconds": 1.712838853, "cold_rtf": 1.1383426748803827, "warm_median_rtf": 1.1248052010167464, "peak_vm_hwm_bytes": 5828526080}, wav={"path":"media/0018-moss-tts-nano-onnx-cpu.wav","sha256":"173850781b055e70a606fb561d93b70e6d8c6318db1b29b2324f83506c21ad6b","bytes":1605164,"sample_rate_hz":48000,"channels":1,"duration_seconds":16.72}, summary="Official MOSS-TTS-Nano completed text-to-WAV on CPUExecutionProvider only with 543,972/543,972 CPU node events. The full decoded output is 16.72 s, with non-streaming first decoded PCM semantics; setup was 1.71284 s and the process VmHWM reached 5,828,526,080 bytes.", limitations=("4 intra-op / 1 inter-op threads; the route is non-streaming and first decoded PCM means full audio-tokenizer decode returned PCM, not a streaming chunk.", "VmHWM is cumulative process high-water memory, not component-isolated memory.", "An initial exec-out stdin staging attempt hung and was aborted; the successful fast-push staging caveat is not included in benchmark latency."), sources=("experiments/0018-moss-tts-nano-onnx-android/results/phone-cpu-checkpoint.json", "experiments/0018-moss-tts-nano-onnx-android/results/source-inventory.json", "experiments/0018-moss-tts-nano-onnx-android/README.md"), missing={}, variant="MOSS-TTS-Nano official ONNX"),
     row("0019-moss-tts-nano-qnn-blocked", "0019", "MOSS-TTS-Nano", "reusable dynamic decode QNN HTP host gate", "blocked", attempted=False, provider="QNNExecutionProvider (host gate)", precision="FP32 official ONNX", metrics={}, summary="Blocked before Android: reusable dynamic decode failed closed at 52/1,091 optimized nodes across 13 partitions with 1,039 unsupported nodes. No phone, physical HTP, timing, memory, or audio evidence exists.", limitations=("Fixed-shape rewrites made prefill/local/codec and all 209 observed decode shapes fully QNN-assignable on host, but 209 sessions required 1,052.77 s total host session creation and do not form a reusable deployable route.", "Decoder redesign requires fixed-capacity KV-cache/state topology with fixed outputs and dynamic valid-length masking; this is not a narrow operator rewrite.", "No QNN physical phone claim, CPU fallback, quantization, timing, memory, or WAV claim is made."), sources=("experiments/0019-moss-tts-nano-qnn-htp-android/results/host-checkpoint.json", "experiments/0019-moss-tts-nano-qnn-htp-android/results/decode-static-gate-matrix.json", "experiments/0019-moss-tts-nano-qnn-htp-android/results/source-lock.json", "experiments/0019-moss-tts-nano-qnn-htp-android/README.md"), missing={"android_attempted": "Host gate failed closed before Android and no phone staging occurred.", "all": "No Android timing, memory, physical HTP, or audio evidence exists."}, variant="MOSS-TTS-Nano QNN HTP host feasibility"),
     row("0020-supertonic-refresh-bootstrap", "0020", "Supertonic 3", "historical CPU refresh bootstrap", "blocked", attempted=True, provider="CPU (inference not started)", precision="INT8", threads=1, summary="A refreshed attempt preserved the exact historical 0008 contract and passed the Windows-ADB device gate, but Android 16 denied the app access to shell-owned scoped-storage inputs; inference never started and every refreshed metric remains unavailable. The original 0008 measurements remain separate historical evidence.", limitations=("This is staging-ownership evidence only, not model/runtime compatibility or refreshed performance evidence.", "Earlier zero-device readiness observations remain valid for their timestamps; a later Windows-ADB readiness check reached the exact canonical phone.", "Prepared build and archive hashes do not establish execution."), sources=("experiments/0020-historic-android-benchmark-refresh/results/registry-audit.json", "experiments/0020-historic-android-benchmark-refresh/results/device-readiness.json", "experiments/0020-historic-android-benchmark-refresh/results/device-readiness-attempt-2.json", "experiments/0020-historic-android-benchmark-refresh/results/device-readiness-windows-adb.json", "experiments/0020-historic-android-benchmark-refresh/results/supertonic-build-provenance.json", "experiments/0020-historic-android-benchmark-refresh/results/supertonic-bootstrap-attempt.json"), missing={"load_seconds": "The refreshed route stopped at app bootstrap before model/session setup.", "cold_rtf": "Inference did not start.", "warm_median_rtf": "Inference did not start; no refreshed warm campaign exists.", "peak_pss_bytes": "No inference process measurement exists.", "peak_vm_hwm_bytes": "No inference process measurement exists.", "wav": "No refreshed audio was produced."}, variant="Exact 0008 Supertonic CPU refresh attempt"),
+    row("0021-supertonic-int8-cpu-v2", "0021", "Supertonic 3", "canonical-v2 released-INT8 CPU", "ran", attempted=True, provider="CPU", precision="INT8", threads=1, metrics={"load_seconds": 0.853867031, "cold_rtf": 0.39552098915111206, "warm_median_rtf": 0.3956153837777073, "first_post_setup_rtf": 0.39552098915111206, "peak_pss_bytes": 480366592, "peak_vm_hwm_bytes": 548986880}, wav={"path":"media/0021-supertonic-int8-cpu-v2.wav","sha256":"201f8e79d39e2fbb9db8a64a9f139641db9e27fabb828bcc039286a49c8987df","bytes":1393090,"sample_rate_hz":44100,"channels":1,"duration_seconds":696523/44100}, summary="New canonical-v2 Supertonic 3 INT8 Android CPU route: exact 226-byte transcript SHA 424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67, official unicode-indexer frontend mapping, one created OfflineTts, one first generation, and five warm same-session independent generate calls. Every output had 696,523 samples (15.794172 s). Warm median RTF was 0.395615 from [0.390631, 0.391386, 0.395615, 0.395708, 0.397157].", limitations=("This is a new canonical-v2 route, not a rewrite of or matched performance delta against legacy-v1 Supertonic rows; the transcript and output duration differ.", "The first-post-setup and cold RTF fields refer to the same first complete generation, not two observations.", "Pinned archive SHA 82fa96f91c4ef8abaae3a14a3f4153facf88bed821d1f7331cec2700f432c427, AAR SHA 6419cd8bc983e0c4fab06067f0fe0313fdc0f7103818ac1e7a08d50787b7a82b, sherpa revision 3dc7c569f31ca2cd4a20ed6f7db780327e6714c5, M1/SID5, English, one CPU thread.", "Peak PSS is sampled process PSS; peak boundary PSS was 479,744,000 bytes; VmHWM is cumulative process-lifetime high-water memory.", "The historical harness does not emit an ORT provider profile; provider=CPU is established by the pinned descriptor and engine. Thermal gate was NONE at 33.8°C, USB powered, with no device tuning.", "The representative PCM16 WAV is structurally valid but not reviewed; no legacy Supertonic listening verdict transfers."), sources=("experiments/0021-supertonic-canonical-v2-android-cpu/results/phone-cpu-result.json", "experiments/0021-supertonic-canonical-v2-android-cpu/results/frontend-provenance.json", "experiments/0021-supertonic-canonical-v2-android-cpu/results/build-and-stage-provenance.json", "experiments/0021-supertonic-canonical-v2-android-cpu/results/transport-and-cleanup.json", "experiments/0021-supertonic-canonical-v2-android-cpu/README.md"), missing={"proof_run_rtf": "No separate instrumented proof run was collected; this CPU route uses the unprofiled first and five warm timing campaign.", "provider_profile": "The historical harness does not enable ORT provider profiling; CPU provider provenance is established by the pinned descriptor/engine contract."}, variant="Canonical v2 / Supertonic released INT8 ONNX / CPU"),
 ]
 
 
@@ -212,6 +213,7 @@ MODEL_METADATA["0017-kokoro-qnn-host-blocked"] = {"model_identity": KOKORO_HF_SO
 MODEL_METADATA["0018-moss-tts-nano-cpu"] = {"model_identity": MOSS_HF_SOURCE, "quantization": "Unquantized official ONNX graphs; CPUExecutionProvider only"}
 MODEL_METADATA["0019-moss-tts-nano-qnn-blocked"] = {"model_identity": MOSS_HF_SOURCE, "quantization": "Unquantized official ONNX graphs; no quantization or physical Android route was attempted"}
 MODEL_METADATA["0020-supertonic-refresh-bootstrap"] = {"model_identity": SUPERTONIC_SOURCE, "quantization": "INT8 ONNX release outputs; exact historical archive contract prepared"}
+MODEL_METADATA["0021-supertonic-int8-cpu-v2"] = {"model_identity": SUPERTONIC_SOURCE, "quantization": "Released INT8 ONNX archive SHA 82fa96f91c4ef8abaae3a14a3f4153facf88bed821d1f7331cec2700f432c427"}
 
 OBJECTIVE_EVIDENCE_OVERRIDES = {
     "0008-pocket-cpu-t1": {
@@ -357,12 +359,14 @@ CANONICAL_V2_SHA256 = "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037f
 LEGACY_V1_SHA256 = "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f"
 
 
-def transcript_metadata(classification, sha256, source, basis, *, byte_count=None, trailing_newline=None, reason=None):
+def transcript_metadata(classification, sha256, source, basis, *, byte_count=None, trailing_newline=None, effective_frontend=None, audit_source=TRANSCRIPT_AUDIT_SOURCE, reason=None):
     missing = {}
     if byte_count is None:
         missing["bytes"] = "The committed transcript audit establishes the exact hash but does not record a byte count for this noncanonical text."
     if trailing_newline is None:
         missing["trailing_newline"] = "The committed transcript audit does not establish trailing-newline status for this noncanonical text."
+    if effective_frontend is None:
+        missing["effective_frontend"] = "The committed historical transcript audit does not establish exact effective tokenizer/frontend output for this route."
     return {
         "classification": classification,
         "sha256": sha256,
@@ -370,10 +374,11 @@ def transcript_metadata(classification, sha256, source, basis, *, byte_count=Non
         "trailing_newline": trailing_newline,
         "source": source,
         "basis": basis,
+        "effective_frontend": effective_frontend,
         "canonical_v2_sha256": CANONICAL_V2_SHA256,
         "canonical_v2_match": classification == "canonical_v2",
         "comparison_boundary": reason or ("Exact canonical-v2 transcript match." if classification == "canonical_v2" else "Transcript v1 is legacy matched provenance only; it is not canonical v2."),
-        "audit_source": TRANSCRIPT_AUDIT_SOURCE,
+        "audit_source": audit_source,
         "missing_reasons": missing,
     }
 
@@ -392,6 +397,7 @@ TRANSCRIPT_METADATA["0002-executorch-full"] = transcript_metadata("noncanonical"
 for _id in ("0012-pocket-onnx-cpu", "0014-pocket-qnn-fp-source", "0014-pocket-qnn-int16-flow", "0014-pocket-alba-original-dynamic-cpu", "0014-pocket-alba-fixed-cpu", "0014-pocket-alba-fixed-qnn-htp", "0016-pocket-qnn-hybrid-cpu"):
     TRANSCRIPT_METADATA[_id] = transcript_metadata("noncanonical", "66e1ba2772ca3d534b792e9d9dacb26e37fda422afe40e8cced5aa878404ffb1", "experiment 0012 matched-contract text inherited by 0014 and 0016", "Pocket demo-text route contract.", reason="Pocket demo text differs from canonical v2; compare only within the explicitly matched Pocket route evidence until each route receives a canonical-v2 rerun.")
 TRANSCRIPT_METADATA["0013-kokoro-onnx-cpu"] = transcript_metadata("noncanonical", "bec8bf482f4d816f0c95471c289a2607a7a169e33389b8b13e525214ec639461", "experiments/0013-kokoro-onnx-vs-executorch-android/protocol/transcript.txt", "Kokoro fixed-contract transcript.", reason="The fixed-contract Kokoro text differs from canonical v2; a v2 refresh requires a new controlled export/tokenization/duration contract before phone execution.")
+TRANSCRIPT_METADATA["0021-supertonic-int8-cpu-v2"] = transcript_metadata("canonical_v2", CANONICAL_V2_SHA256, "experiments/0021-supertonic-canonical-v2-android-cpu/protocol/transcript.txt", "Experiment 0021 exact canonical-v2 input and official unicode-indexer mapping.", byte_count=226, trailing_newline=False, effective_frontend={"kind": "official Supertonic unicode_indexer.bin direct codepoint mapping", "mapped_id_count": 226, "mapped_ids_int32le_sha256": "32fc26951a3f521bcf0745117235804bc628e112a48789b355d44eeef62fc5f1", "unicode_indexer_sha256": "8402ca48e5189a8950138580b0fff64db6f072f24ac07cd54ba8b2fbb9883b30", "source": "experiments/0021-supertonic-canonical-v2-android-cpu/results/frontend-provenance.json"}, audit_source="experiments/0021-supertonic-canonical-v2-android-cpu/results/phone-cpu-result.json")
 
 
 FULL_E2E_IDS = {
@@ -405,6 +411,7 @@ FULL_E2E_IDS = {
     "0012-pocket-onnx-cpu", "0014-pocket-qnn-fp-source", "0014-pocket-qnn-int16-flow",
     "0014-pocket-alba-original-dynamic-cpu", "0014-pocket-alba-fixed-cpu", "0014-pocket-alba-fixed-qnn-htp",
     "0016-pocket-qnn-hybrid-cpu", "0013-kokoro-onnx-cpu", "0018-moss-tts-nano-cpu",
+    "0021-supertonic-int8-cpu-v2",
 }
 for _row in ROWS:
     _metadata = MODEL_METADATA.get(_row["id"], {})
@@ -524,7 +531,14 @@ def format_rtf(entry):
             ]
         else:
             detail_parts = [f"Displayed: {selected_label} RTF {value:.6g}."]
-        secondary = [f"{label} {metrics[field]:.6g}" for field, label, _ in candidates if field != selected_field and metrics[field] is not None]
+        secondary = []
+        combined_first_cold = metrics["first_post_setup_rtf"] is not None and metrics["first_post_setup_rtf"] == metrics["cold_rtf"] and selected_field not in {"first_post_setup_rtf", "cold_rtf"}
+        if combined_first_cold:
+            secondary.append(f"first post-setup / cold {metrics['cold_rtf']:.6g} (same run)")
+        for field, label, _ in candidates:
+            if field == selected_field or metrics[field] is None or (combined_first_cold and field in {"first_post_setup_rtf", "cold_rtf"}):
+                continue
+            secondary.append(f"{label} {metrics[field]:.6g}")
         if secondary:
             detail_parts.append("Other recorded RTFs for the displayed measurement: " + "; ".join(secondary) + ".")
     missing_reasons = latest.get("missing_reasons", {}) if latest else entry["missing_reasons"]

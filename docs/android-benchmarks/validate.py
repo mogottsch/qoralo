@@ -100,17 +100,26 @@ def main():
             transcript_counts[classification] += 1
             if transcript.get("canonical_v2_sha256") != CANONICAL_V2_SHA256 or transcript.get("canonical_v2_match") != (classification == "canonical_v2"):
                 fail(f"{e['id']}: canonical-v2 transcript boundary mismatch")
-            if classification == "canonical_v2" and transcript.get("sha256") != CANONICAL_V2_SHA256:
-                fail(f"{e['id']}: canonical-v2 classification/hash mismatch")
+            if classification == "canonical_v2":
+                if transcript.get("sha256") != CANONICAL_V2_SHA256 or transcript.get("bytes") != 226 or transcript.get("trailing_newline") is not False:
+                    fail(f"{e['id']}: canonical-v2 classification/hash/byte contract mismatch")
+                frontend = transcript.get("effective_frontend")
+                if not isinstance(frontend, dict) or not re.fullmatch(r"[a-f0-9]{64}", frontend.get("mapped_ids_int32le_sha256", "")) or not (ROOT / frontend.get("source", "")).is_file():
+                    fail(f"{e['id']}: canonical-v2 route lacks exact effective frontend provenance")
             if classification == "legacy_v1" and (transcript.get("sha256") != LEGACY_V1_SHA256 or transcript.get("bytes") != 230 or transcript.get("trailing_newline") is not False):
                 fail(f"{e['id']}: legacy-v1 transcript provenance mismatch")
             if classification == "noncanonical" and transcript.get("sha256") in {CANONICAL_V2_SHA256, LEGACY_V1_SHA256}:
                 fail(f"{e['id']}: noncanonical transcript uses a matched hash")
+            if classification != "canonical_v2" and transcript.get("effective_frontend") is None and "effective_frontend" not in transcript.get("missing_reasons", {}):
+                fail(f"{e['id']}: missing effective frontend provenance lacks a reason")
             for nullable in ("bytes", "trailing_newline"):
                 if transcript.get(nullable) is None and nullable not in transcript.get("missing_reasons", {}):
                     fail(f"{e['id']}: null transcript {nullable} lacks a reason")
-            if transcript.get("audit_source") != TRANSCRIPT_AUDIT_SOURCE or not (ROOT / TRANSCRIPT_AUDIT_SOURCE).is_file():
-                fail(f"{e['id']}: transcript audit provenance mismatch")
+            audit_source = transcript.get("audit_source", "")
+            if not (ROOT / audit_source).is_file():
+                fail(f"{e['id']}: transcript classification source is missing")
+            if classification != "canonical_v2" and audit_source != TRANSCRIPT_AUDIT_SOURCE:
+                fail(f"{e['id']}: historical transcript audit provenance mismatch")
         elif transcript is not None or "transcript" not in e["missing_reasons"]:
             fail(f"{e['id']}: excluded route transcript must be null with a reason")
         if e["attempt_status"] not in STATUSES:
@@ -154,8 +163,29 @@ def main():
                 fail(f"{e['id']}: null metric {field} lacks a missing-evidence reason")
         if e["metrics"]["warm_median_rtf"] is not None and "One profiled generation only" in " ".join(e["limitations"]):
             fail(f"{e['id']}: a single profiled generation cannot populate warm_median_rtf")
-        if e["metrics"]["first_post_setup_rtf"] is not None and e["metrics"]["warm_median_rtf"] is not None:
-            fail(f"{e['id']}: first_post_setup_rtf must remain distinct from warm_median_rtf")
+        if e["id"] == "0021-supertonic-int8-cpu-v2":
+            source_result = json.loads((ROOT / "experiments/0021-supertonic-canonical-v2-android-cpu/results/phone-cpu-result.json").read_text())
+            source_frontend = json.loads((ROOT / "experiments/0021-supertonic-canonical-v2-android-cpu/results/frontend-provenance.json").read_text())
+            warm_values = source_result["measurement"]["warm_rtf_values"]
+            expected_metrics = {
+                "load_seconds": source_result["route"]["setup_seconds"],
+                "cold_rtf": source_result["measurement"]["first"]["rtf"],
+                "warm_median_rtf": source_result["measurement"]["warm_median_rtf"],
+                "proof_run_rtf": None,
+                "first_post_setup_rtf": source_result["measurement"]["first"]["rtf"],
+                "peak_pss_bytes": source_result["measurement"]["peak_sampled_pss_bytes"],
+                "peak_vm_hwm_bytes": source_result["measurement"]["peak_vm_hwm_bytes"],
+            }
+            if e["metrics"] != expected_metrics or len(warm_values) != 5 or median(warm_values) != e["metrics"]["warm_median_rtf"]:
+                fail(f"{e['id']}: canonical-v2 timing campaign mismatch")
+            durations = [source_result["measurement"]["first"]["actual_audio_duration_seconds"]] + [run["actual_audio_duration_seconds"] for run in source_result["measurement"]["warm"]]
+            if len(set(durations)) != 1 or source_result["representative_wav"]["sha256"] != e["wav"]["sha256"]:
+                fail(f"{e['id']}: canonical-v2 duration/WAV provenance mismatch")
+            frontend = e["transcript"]["effective_frontend"]
+            if frontend["mapped_ids_int32le_sha256"] != source_frontend["frontend"]["mapped_ids_int32le_sha256"] or frontend["mapped_id_count"] != source_frontend["frontend"]["mapped_id_count"]:
+                fail(f"{e['id']}: canonical-v2 frontend mapping mismatch")
+            if e["listening_review"]["status"] != "not_reviewed":
+                fail(f"{e['id']}: canonical-v2 sample must remain not_reviewed until Moritz reviews its exact hash")
         remeasurements = e.get("remeasurements", [])
         if e["id"] == "0008-supertonic-cpu-t1":
             if e["metrics"] != FROZEN_0008_SUPERTONIC_METRICS or e["wav"] is not None:
@@ -224,8 +254,8 @@ def main():
         for source in e["sources"]:
             if not (ROOT / source).exists():
                 fail(f"{e['id']}: source path missing: {source}")
-    if transcript_counts != {"canonical_v2": 0, "legacy_v1": 17, "noncanonical": 9}:
-        fail(f"visible transcript classification counts drifted: {transcript_counts}")
+    if transcript_counts["legacy_v1"] != 17 or transcript_counts["noncanonical"] != 9 or transcript_counts["canonical_v2"] < 1:
+        fail(f"visible transcript classification baseline drifted: {transcript_counts}")
     report = HERE / "missing-fields.md"
     if not report.is_file() or "null" not in report.read_text():
         fail("missing-fields.md is absent or does not explain null semantics")
