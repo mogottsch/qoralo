@@ -1,0 +1,1241 @@
+{
+  "claim_boundary": "Exact fixed-contract graph slicing only; five named source support nodes are recomputed across stage boundaries, but no source node is omitted, no new ONNX node is introduced, no learned initializer payload changes, and no quantization is present.",
+  "coverage": {
+    "covered_unique_nodes": 1685,
+    "duplicated_boundary_support_nodes": {
+      "/Slice": [
+        "duration_encoder",
+        "prosody"
+      ],
+      "/Slice_2": [
+        "decoder",
+        "generator_0_base",
+        "generator_0_resblock_0",
+        "generator_0_resblock_1",
+        "generator_0_resblock_2",
+        "generator_1_base",
+        "generator_1_resblock_3",
+        "generator_1_resblock_4",
+        "generator_1_resblock_5"
+      ],
+      "/decoder/Unsqueeze": [
+        "decoder",
+        "harmonic_source"
+      ],
+      "/decoder/generator/resblocks.2/adain1.0/norm/InstanceNormalization": [
+        "generator_0_resblock_0",
+        "generator_0_resblock_1",
+        "generator_0_resblock_2"
+      ],
+      "/decoder/generator/resblocks.5/adain1.0/norm/InstanceNormalization": [
+        "generator_1_resblock_3",
+        "generator_1_resblock_4",
+        "generator_1_resblock_5"
+      ]
+    },
+    "source_nodes": 1685
+  },
+  "determinism_check": {
+    "second_extraction_model_bytes_hashes_interfaces_and_structure_identical": true
+  },
+  "manifest": {
+    "bytes": 30093,
+    "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/stages-v1/manifest.json",
+    "sha256": "8e56efd5cffd1d765b800cf97bc45b9af89017f43c879f34bd68fd463b856042"
+  },
+  "policy": {
+    "fixed_contract_only": true,
+    "learned_initializer_payload_changes": 0,
+    "quantization": false,
+    "stage_execution_order": "sequential host processes for eligibility; explicit CPU tensor orchestration",
+    "stage_models_are_exact_backward_slices": true
+  },
+  "protocol": {
+    "bytes": 27365,
+    "path": "experiments/0017-kokoro-onnx-qnn-htp-android/protocol-stage-decomposition.json",
+    "sha256": "0adbdf11677c22f5b47d0d8661e7a109172ef5eabc462aec6477a473de2d7801"
+  },
+  "schema_version": 1,
+  "source": {
+    "bytes": 339127640,
+    "initializers": 809,
+    "nodes": 1685,
+    "path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/rewrite/kokoro-qnn-compat.onnx",
+    "sha256": "7278ed2f0dbe8307a42904434b81116f252dd996bb6a2c064f81ad44269f21cb"
+  },
+  "stage_count": 18,
+  "stages": [
+    {
+      "index": 1,
+      "inputs": [
+        {
+          "dtype": "int64",
+          "elements": 125,
+          "name": "tokens",
+          "shape": [
+            1,
+            125
+          ]
+        }
+      ],
+      "model": {
+        "bytes": 24520848,
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/stages-v1/models/01-bert.onnx",
+        "sha256": "2736465b305f1ad956cd8d893ea0986e17d72a6edd6d0b0486feff891dca547c"
+      },
+      "name": "bert",
+      "outputs": [
+        {
+          "dtype": "float32",
+          "elements": 64000,
+          "name": "/bert_encoder/Add_output_0",
+          "shape": [
+            1,
+            125,
+            512
+          ]
+        }
+      ],
+      "role": "ALBERT text representation and learned projection",
+      "structure": {
+        "initializer_payload_bytes": 24311660,
+        "initializers": 114,
+        "nodes": 490,
+        "operators": {
+          "Add": 106,
+          "Gather": 1,
+          "Gemm": 30,
+          "LayerNormalization": 25,
+          "MatMul": 68,
+          "Mul": 72,
+          "Pow": 12,
+          "Reshape": 104,
+          "Softmax": 12,
+          "Tanh": 12,
+          "Transpose": 48
+        },
+        "quantized_operator_count": 0
+      }
+    },
+    {
+      "index": 2,
+      "inputs": [
+        {
+          "dtype": "float32",
+          "elements": 64000,
+          "name": "/bert_encoder/Add_output_0",
+          "shape": [
+            1,
+            125,
+            512
+          ]
+        },
+        {
+          "dtype": "float32",
+          "elements": 256,
+          "name": "style",
+          "shape": [
+            1,
+            256
+          ]
+        }
+      ],
+      "model": {
+        "bytes": 29071093,
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/stages-v1/models/02-duration_encoder.onnx",
+        "sha256": "9e1577d2d4b2c4cb6d78dbf0f2a810aabccca1b033adc4a43eabfa3bf2416b01"
+      },
+      "name": "duration_encoder",
+      "outputs": [
+        {
+          "dtype": "float32",
+          "elements": 80000,
+          "name": "/text_encoder/Where_13",
+          "shape": [
+            1,
+            125,
+            640
+          ]
+        }
+      ],
+      "role": "style-conditioned duration encoder",
+      "structure": {
+        "initializer_payload_bytes": 29049334,
+        "initializers": 53,
+        "nodes": 76,
+        "operators": {
+          "Add": 6,
+          "Concat": 4,
+          "Expand": 1,
+          "Gather": 6,
+          "Gemm": 3,
+          "LSTM": 3,
+          "LayerNormalization": 3,
+          "Mul": 3,
+          "Reshape": 9,
+          "ScatterND": 3,
+          "Slice": 7,
+          "Transpose": 24,
+          "Where": 4
+        },
+        "quantized_operator_count": 0
+      }
+    },
+    {
+      "index": 3,
+      "inputs": [
+        {
+          "dtype": "int64",
+          "elements": 125,
+          "name": "tokens",
+          "shape": [
+            1,
+            125
+          ]
+        }
+      ],
+      "model": {
+        "bytes": 24223608,
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/stages-v1/models/03-text_encoder.onnx",
+        "sha256": "52418a81783a27f6947a64c6d64fadc761cf4cea799b6e1c95740bdf4f447056"
+      },
+      "name": "text_encoder",
+      "outputs": [
+        {
+          "dtype": "float32",
+          "elements": 64000,
+          "name": "/text_encoder_1/Where_7_output_0",
+          "shape": [
+            1,
+            512,
+            125
+          ]
+        }
+      ],
+      "role": "convolutional/recurrent acoustic text encoder",
+      "structure": {
+        "initializer_payload_bytes": 24213826,
+        "initializers": 27,
+        "nodes": 31,
+        "operators": {
+          "Conv": 3,
+          "Gather": 3,
+          "LSTM": 1,
+          "LayerNormalization": 3,
+          "LeakyRelu": 3,
+          "Reshape": 2,
+          "ScatterND": 1,
+          "Transpose": 10,
+          "Where": 5
+        },
+        "quantized_operator_count": 0
+      }
+    },
+    {
+      "index": 4,
+      "inputs": [
+        {
+          "dtype": "float32",
+          "elements": 80000,
+          "name": "/text_encoder/Where_13",
+          "shape": [
+            1,
+            125,
+            640
+          ]
+        },
+        {
+          "dtype": "float32",
+          "elements": 64000,
+          "name": "/text_encoder_1/Where_7_output_0",
+          "shape": [
+            1,
+            512,
+            125
+          ]
+        },
+        {
+          "dtype": "float32",
+          "elements": 1,
+          "name": "speed",
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "model": {
+        "bytes": 7530853,
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/stages-v1/models/04-duration_alignment.onnx",
+        "sha256": "9b709a2eaf8d11cde028dfbaf13a4df82511cfb6c6dabed8ce8d754bba0f331d"
+      },
+      "name": "duration_alignment",
+      "outputs": [
+        {
+          "dtype": "float32",
+          "elements": 194560,
+          "name": "/MatMul_output_0",
+          "shape": [
+            1,
+            640,
+            304
+          ]
+        },
+        {
+          "dtype": "float32",
+          "elements": 155648,
+          "name": "/MatMul_1_output_0",
+          "shape": [
+            1,
+            512,
+            304
+          ]
+        },
+        {
+          "dtype": "int64",
+          "elements": 125,
+          "name": "pred_dur",
+          "shape": [
+            125
+          ]
+        }
+      ],
+      "role": "duration LSTM/head plus fixed-contract runtime alignment",
+      "structure": {
+        "initializer_payload_bytes": 7524880,
+        "initializers": 15,
+        "nodes": 27,
+        "operators": {
+          "And": 1,
+          "Cast": 3,
+          "Clip": 1,
+          "Div": 1,
+          "Gemm": 1,
+          "GreaterOrEqual": 1,
+          "LSTM": 1,
+          "Less": 1,
+          "MatMul": 3,
+          "ReduceSum": 1,
+          "Reshape": 4,
+          "Round": 1,
+          "Sigmoid": 1,
+          "Squeeze": 1,
+          "Sub": 1,
+          "Transpose": 4,
+          "Unsqueeze": 1
+        },
+        "quantized_operator_count": 0
+      }
+    },
+    {
+      "index": 5,
+      "inputs": [
+        {
+          "dtype": "float32",
+          "elements": 194560,
+          "name": "/MatMul_output_0",
+          "shape": [
+            1,
+            640,
+            304
+          ]
+        },
+        {
+          "dtype": "float32",
+          "elements": 256,
+          "name": "style",
+          "shape": [
+            1,
+            256
+          ]
+        }
+      ],
+      "model": {
+        "bytes": 33688577,
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/stages-v1/models/05-prosody.onnx",
+        "sha256": "2d984919bb5077622515cdae3e9a6b9963fbe15ca036723ced4a1bfbcefd443e"
+      },
+      "name": "prosody",
+      "outputs": [
+        {
+          "dtype": "float32",
+          "elements": 608,
+          "name": "/If_output_0",
+          "shape": [
+            1,
+            608
+          ]
+        },
+        {
+          "dtype": "float32",
+          "elements": 608,
+          "name": "/If_1_output_0",
+          "shape": [
+            1,
+            608
+          ]
+        }
+      ],
+      "role": "shared recurrent prosody network and F0/noise heads",
+      "structure": {
+        "initializer_payload_bytes": 33651028,
+        "initializers": 101,
+        "nodes": 147,
+        "operators": {
+          "Add": 30,
+          "Conv": 16,
+          "ConvTranspose": 2,
+          "Gemm": 12,
+          "InstanceNormalization": 11,
+          "LSTM": 1,
+          "LeakyRelu": 12,
+          "Mul": 18,
+          "Reshape": 15,
+          "Resize": 2,
+          "Slice": 25,
+          "Transpose": 3
+        },
+        "quantized_operator_count": 0
+      }
+    },
+    {
+      "index": 6,
+      "inputs": [
+        {
+          "dtype": "float32",
+          "elements": 155648,
+          "name": "/MatMul_1_output_0",
+          "shape": [
+            1,
+            512,
+            304
+          ]
+        },
+        {
+          "dtype": "float32",
+          "elements": 608,
+          "name": "/If_output_0",
+          "shape": [
+            1,
+            608
+          ]
+        },
+        {
+          "dtype": "float32",
+          "elements": 608,
+          "name": "/If_1_output_0",
+          "shape": [
+            1,
+            608
+          ]
+        },
+        {
+          "dtype": "float32",
+          "elements": 256,
+          "name": "style",
+          "shape": [
+            1,
+            256
+          ]
+        }
+      ],
+      "model": {
+        "bytes": 134440075,
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/stages-v1/models/06-decoder.onnx",
+        "sha256": "c1eabac59891a331f972cd994b9ed7baffad71657beeb14567d3426377006530"
+      },
+      "name": "decoder",
+      "outputs": [
+        {
+          "dtype": "float32",
+          "elements": 311296,
+          "name": "/decoder/decode.3/Mul_output_0",
+          "shape": [
+            1,
+            512,
+            608
+          ]
+        }
+      ],
+      "role": "style-conditioned acoustic decoder before waveform generator",
+      "structure": {
+        "initializer_payload_bytes": 134400220,
+        "initializers": 91,
+        "nodes": 128,
+        "operators": {
+          "Add": 25,
+          "Concat": 5,
+          "Conv": 18,
+          "ConvTranspose": 1,
+          "Gemm": 10,
+          "InstanceNormalization": 10,
+          "LeakyRelu": 10,
+          "Mul": 15,
+          "Reshape": 10,
+          "Resize": 1,
+          "Slice": 21,
+          "Unsqueeze": 2
+        },
+        "quantized_operator_count": 0
+      }
+    },
+    {
+      "index": 7,
+      "inputs": [
+        {
+          "dtype": "float32",
+          "elements": 608,
+          "name": "/If_output_0",
+          "shape": [
+            1,
+            608
+          ]
+        }
+      ],
+      "model": {
+        "bytes": 6586538,
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/stages-v1/models/07-harmonic_source.onnx",
+        "sha256": "72b0953bf65ccd69c6df8eb457c5cbc2e285968879c57ffe79db446d886ff38f"
+      },
+      "name": "harmonic_source",
+      "outputs": [
+        {
+          "dtype": "float32",
+          "elements": 802582,
+          "name": "/decoder/generator/Concat_1_output_0",
+          "shape": [
+            1,
+            22,
+            36481
+          ]
+        }
+      ],
+      "role": "fixed-phase harmonic source, learned merge, and source STFT",
+      "structure": {
+        "initializer_payload_bytes": 6566988,
+        "initializers": 31,
+        "nodes": 63,
+        "operators": {
+          "Add": 6,
+          "Atan": 1,
+          "Cast": 1,
+          "Concat": 2,
+          "CumSum": 1,
+          "Div": 4,
+          "Floor": 1,
+          "Gather": 3,
+          "Greater": 2,
+          "Less": 1,
+          "MatMul": 1,
+          "Mul": 12,
+          "Pad": 1,
+          "Reshape": 1,
+          "Resize": 3,
+          "STFT": 1,
+          "ScatterND": 1,
+          "Sin": 1,
+          "Sqrt": 1,
+          "Squeeze": 1,
+          "Sub": 3,
+          "Tanh": 1,
+          "Transpose": 7,
+          "Unsqueeze": 5,
+          "Where": 2
+        },
+        "quantized_operator_count": 0
+      }
+    },
+    {
+      "index": 8,
+      "inputs": [
+        {
+          "dtype": "float32",
+          "elements": 311296,
+          "name": "/decoder/decode.3/Mul_output_0",
+          "shape": [
+            1,
+            512,
+            608
+          ]
+        },
+        {
+          "dtype": "float32",
+          "elements": 802582,
+          "name": "/decoder/generator/Concat_1_output_0",
+          "shape": [
+            1,
+            22,
+            36481
+          ]
+        },
+        {
+          "dtype": "float32",
+          "elements": 256,
+          "name": "style",
+          "shape": [
+            1,
+            256
+          ]
+        }
+      ],
+      "model": {
+        "bytes": 23407828,
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/stages-v1/models/08-generator_0_base.onnx",
+        "sha256": "49a823841dcf2a99c9bee10cbfc99dff1d4a3d8662ac3cf3a0c7a03a05132ed4"
+      },
+      "name": "generator_0_base",
+      "outputs": [
+        {
+          "dtype": "float32",
+          "elements": 1556480,
+          "name": "/decoder/generator/Add_2_output_0",
+          "shape": [
+            1,
+            256,
+            6080
+          ]
+        }
+      ],
+      "role": "first upsample and style-conditioned source residual branch",
+      "structure": {
+        "initializer_payload_bytes": 23373976,
+        "initializers": 60,
+        "nodes": 92,
+        "operators": {
+          "Add": 22,
+          "Conv": 7,
+          "ConvTranspose": 1,
+          "Gemm": 6,
+          "InstanceNormalization": 6,
+          "LeakyRelu": 1,
+          "Mul": 18,
+          "Pow": 6,
+          "Reshape": 6,
+          "Sin": 6,
+          "Slice": 13
+        },
+        "quantized_operator_count": 0
+      }
+    },
+    {
+      "index": 9,
+      "inputs": [
+        {
+          "dtype": "float32",
+          "elements": 1556480,
+          "name": "/decoder/generator/Add_2_output_0",
+          "shape": [
+            1,
+            256,
+            6080
+          ]
+        },
+        {
+          "dtype": "float32",
+          "elements": 256,
+          "name": "style",
+          "shape": [
+            1,
+            256
+          ]
+        }
+      ],
+      "model": {
+        "bytes": 6356695,
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/stages-v1/models/09-generator_0_resblock_0.onnx",
+        "sha256": "7cea845d802d2cbae42da27a5b8cf9ee0c16e8ece56983e1b045c3e04eeeadfb"
+      },
+      "name": "generator_0_resblock_0",
+      "outputs": [
+        {
+          "dtype": "float32",
+          "elements": 1556480,
+          "name": "/decoder/generator/resblocks.0/Add_8_output_0",
+          "shape": [
+            1,
+            256,
+            6080
+          ]
+        }
+      ],
+      "role": "first-resolution residual block 0",
+      "structure": {
+        "initializer_payload_bytes": 6324376,
+        "initializers": 56,
+        "nodes": 88,
+        "operators": {
+          "Add": 21,
+          "Conv": 6,
+          "Gemm": 6,
+          "InstanceNormalization": 6,
+          "Mul": 18,
+          "Pow": 6,
+          "Reshape": 6,
+          "Sin": 6,
+          "Slice": 13
+        },
+        "quantized_operator_count": 0
+      }
+    },
+    {
+      "index": 10,
+      "inputs": [
+        {
+          "dtype": "float32",
+          "elements": 1556480,
+          "name": "/decoder/generator/Add_2_output_0",
+          "shape": [
+            1,
+            256,
+            6080
+          ]
+        },
+        {
+          "dtype": "float32",
+          "elements": 256,
+          "name": "style",
+          "shape": [
+            1,
+            256
+          ]
+        }
+      ],
+      "model": {
+        "bytes": 12648151,
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/stages-v1/models/10-generator_0_resblock_1.onnx",
+        "sha256": "fce5d4b1ae3580e8ee63887399e0f796c05b445b63256a53f6e64533990bc0c7"
+      },
+      "name": "generator_0_resblock_1",
+      "outputs": [
+        {
+          "dtype": "float32",
+          "elements": 1556480,
+          "name": "/decoder/generator/resblocks.1/Add_8_output_0",
+          "shape": [
+            1,
+            256,
+            6080
+          ]
+        }
+      ],
+      "role": "first-resolution residual block 1",
+      "structure": {
+        "initializer_payload_bytes": 12615832,
+        "initializers": 56,
+        "nodes": 88,
+        "operators": {
+          "Add": 21,
+          "Conv": 6,
+          "Gemm": 6,
+          "InstanceNormalization": 6,
+          "Mul": 18,
+          "Pow": 6,
+          "Reshape": 6,
+          "Sin": 6,
+          "Slice": 13
+        },
+        "quantized_operator_count": 0
+      }
+    },
+    {
+      "index": 11,
+      "inputs": [
+        {
+          "dtype": "float32",
+          "elements": 1556480,
+          "name": "/decoder/generator/Add_2_output_0",
+          "shape": [
+            1,
+            256,
+            6080
+          ]
+        },
+        {
+          "dtype": "float32",
+          "elements": 256,
+          "name": "style",
+          "shape": [
+            1,
+            256
+          ]
+        }
+      ],
+      "model": {
+        "bytes": 18939619,
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/stages-v1/models/11-generator_0_resblock_2.onnx",
+        "sha256": "86f9aa3a54ebd0d8fdfd2e51951c079ee089e490374af2fedc6dd2a0c4198a00"
+      },
+      "name": "generator_0_resblock_2",
+      "outputs": [
+        {
+          "dtype": "float32",
+          "elements": 1556480,
+          "name": "/decoder/generator/resblocks.2/Add_8_output_0",
+          "shape": [
+            1,
+            256,
+            6080
+          ]
+        }
+      ],
+      "role": "first-resolution residual block 2",
+      "structure": {
+        "initializer_payload_bytes": 18907288,
+        "initializers": 56,
+        "nodes": 88,
+        "operators": {
+          "Add": 21,
+          "Conv": 6,
+          "Gemm": 6,
+          "InstanceNormalization": 6,
+          "Mul": 18,
+          "Pow": 6,
+          "Reshape": 6,
+          "Sin": 6,
+          "Slice": 13
+        },
+        "quantized_operator_count": 0
+      }
+    },
+    {
+      "index": 12,
+      "inputs": [
+        {
+          "dtype": "float32",
+          "elements": 1556480,
+          "name": "/decoder/generator/resblocks.0/Add_8_output_0",
+          "shape": [
+            1,
+            256,
+            6080
+          ]
+        },
+        {
+          "dtype": "float32",
+          "elements": 1556480,
+          "name": "/decoder/generator/resblocks.1/Add_8_output_0",
+          "shape": [
+            1,
+            256,
+            6080
+          ]
+        },
+        {
+          "dtype": "float32",
+          "elements": 1556480,
+          "name": "/decoder/generator/resblocks.2/Add_8_output_0",
+          "shape": [
+            1,
+            256,
+            6080
+          ]
+        }
+      ],
+      "model": {
+        "bytes": 1263,
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/stages-v1/models/12-generator_0_merge.onnx",
+        "sha256": "7eef73967cc06203477591172822e4e445257dedf128d78fafbbb04e4dc35346"
+      },
+      "name": "generator_0_merge",
+      "outputs": [
+        {
+          "dtype": "float32",
+          "elements": 1556480,
+          "name": "/decoder/generator/Div_1_output_0",
+          "shape": [
+            1,
+            256,
+            6080
+          ]
+        }
+      ],
+      "role": "ordered residual sum and divide by three",
+      "structure": {
+        "initializer_payload_bytes": 4,
+        "initializers": 1,
+        "nodes": 3,
+        "operators": {
+          "Add": 2,
+          "Div": 1
+        },
+        "quantized_operator_count": 0
+      }
+    },
+    {
+      "index": 13,
+      "inputs": [
+        {
+          "dtype": "float32",
+          "elements": 1556480,
+          "name": "/decoder/generator/Div_1_output_0",
+          "shape": [
+            1,
+            256,
+            6080
+          ]
+        },
+        {
+          "dtype": "float32",
+          "elements": 802582,
+          "name": "/decoder/generator/Concat_1_output_0",
+          "shape": [
+            1,
+            22,
+            36481
+          ]
+        },
+        {
+          "dtype": "float32",
+          "elements": 256,
+          "name": "style",
+          "shape": [
+            1,
+            256
+          ]
+        }
+      ],
+      "model": {
+        "bytes": 6748071,
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/stages-v1/models/13-generator_1_base.onnx",
+        "sha256": "d51cbd3a9137905437162b1770f4b636f96719603b1cd83dc23c35234d2d17b0"
+      },
+      "name": "generator_1_base",
+      "outputs": [
+        {
+          "dtype": "float32",
+          "elements": 4669568,
+          "name": "/decoder/generator/Add_5_output_0",
+          "shape": [
+            1,
+            128,
+            36481
+          ]
+        }
+      ],
+      "role": "second upsample and style-conditioned source residual branch",
+      "structure": {
+        "initializer_payload_bytes": 6713544,
+        "initializers": 61,
+        "nodes": 93,
+        "operators": {
+          "Add": 22,
+          "Conv": 7,
+          "ConvTranspose": 1,
+          "Gemm": 6,
+          "InstanceNormalization": 6,
+          "LeakyRelu": 1,
+          "Mul": 18,
+          "Pad": 1,
+          "Pow": 6,
+          "Reshape": 6,
+          "Sin": 6,
+          "Slice": 13
+        },
+        "quantized_operator_count": 0
+      }
+    },
+    {
+      "index": 14,
+      "inputs": [
+        {
+          "dtype": "float32",
+          "elements": 4669568,
+          "name": "/decoder/generator/Add_5_output_0",
+          "shape": [
+            1,
+            128,
+            36481
+          ]
+        },
+        {
+          "dtype": "float32",
+          "elements": 256,
+          "name": "style",
+          "shape": [
+            1,
+            256
+          ]
+        }
+      ],
+      "model": {
+        "bytes": 2015245,
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/stages-v1/models/14-generator_1_resblock_3.onnx",
+        "sha256": "a5c9031dc14806027f6cd09842106ba796bfd6bb6f1fcb99b639b03dab2581ee"
+      },
+      "name": "generator_1_resblock_3",
+      "outputs": [
+        {
+          "dtype": "float32",
+          "elements": 4669568,
+          "name": "/decoder/generator/resblocks.3/Add_8_output_0",
+          "shape": [
+            1,
+            128,
+            36481
+          ]
+        }
+      ],
+      "role": "second-resolution residual block 3",
+      "structure": {
+        "initializer_payload_bytes": 1982616,
+        "initializers": 56,
+        "nodes": 88,
+        "operators": {
+          "Add": 21,
+          "Conv": 6,
+          "Gemm": 6,
+          "InstanceNormalization": 6,
+          "Mul": 18,
+          "Pow": 6,
+          "Reshape": 6,
+          "Sin": 6,
+          "Slice": 13
+        },
+        "quantized_operator_count": 0
+      }
+    },
+    {
+      "index": 15,
+      "inputs": [
+        {
+          "dtype": "float32",
+          "elements": 4669568,
+          "name": "/decoder/generator/Add_5_output_0",
+          "shape": [
+            1,
+            128,
+            36481
+          ]
+        },
+        {
+          "dtype": "float32",
+          "elements": 256,
+          "name": "style",
+          "shape": [
+            1,
+            256
+          ]
+        }
+      ],
+      "model": {
+        "bytes": 3588110,
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/stages-v1/models/15-generator_1_resblock_4.onnx",
+        "sha256": "9d50d0933af173256283235dbd75dfc1312a8fd76888be9f3cc4886360e0158d"
+      },
+      "name": "generator_1_resblock_4",
+      "outputs": [
+        {
+          "dtype": "float32",
+          "elements": 4669568,
+          "name": "/decoder/generator/resblocks.4/Add_8_output_0",
+          "shape": [
+            1,
+            128,
+            36481
+          ]
+        }
+      ],
+      "role": "second-resolution residual block 4",
+      "structure": {
+        "initializer_payload_bytes": 3555480,
+        "initializers": 56,
+        "nodes": 88,
+        "operators": {
+          "Add": 21,
+          "Conv": 6,
+          "Gemm": 6,
+          "InstanceNormalization": 6,
+          "Mul": 18,
+          "Pow": 6,
+          "Reshape": 6,
+          "Sin": 6,
+          "Slice": 13
+        },
+        "quantized_operator_count": 0
+      }
+    },
+    {
+      "index": 16,
+      "inputs": [
+        {
+          "dtype": "float32",
+          "elements": 4669568,
+          "name": "/decoder/generator/Add_5_output_0",
+          "shape": [
+            1,
+            128,
+            36481
+          ]
+        },
+        {
+          "dtype": "float32",
+          "elements": 256,
+          "name": "style",
+          "shape": [
+            1,
+            256
+          ]
+        }
+      ],
+      "model": {
+        "bytes": 5160974,
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/stages-v1/models/16-generator_1_resblock_5.onnx",
+        "sha256": "f15239b58c3107093279e68a77897168ab5073fee90c713903649f3c8bacc180"
+      },
+      "name": "generator_1_resblock_5",
+      "outputs": [
+        {
+          "dtype": "float32",
+          "elements": 4669568,
+          "name": "/decoder/generator/resblocks.5/Add_8_output_0",
+          "shape": [
+            1,
+            128,
+            36481
+          ]
+        }
+      ],
+      "role": "second-resolution residual block 5",
+      "structure": {
+        "initializer_payload_bytes": 5128344,
+        "initializers": 56,
+        "nodes": 88,
+        "operators": {
+          "Add": 21,
+          "Conv": 6,
+          "Gemm": 6,
+          "InstanceNormalization": 6,
+          "Mul": 18,
+          "Pow": 6,
+          "Reshape": 6,
+          "Sin": 6,
+          "Slice": 13
+        },
+        "quantized_operator_count": 0
+      }
+    },
+    {
+      "index": 17,
+      "inputs": [
+        {
+          "dtype": "float32",
+          "elements": 4669568,
+          "name": "/decoder/generator/resblocks.3/Add_8_output_0",
+          "shape": [
+            1,
+            128,
+            36481
+          ]
+        },
+        {
+          "dtype": "float32",
+          "elements": 4669568,
+          "name": "/decoder/generator/resblocks.4/Add_8_output_0",
+          "shape": [
+            1,
+            128,
+            36481
+          ]
+        },
+        {
+          "dtype": "float32",
+          "elements": 4669568,
+          "name": "/decoder/generator/resblocks.5/Add_8_output_0",
+          "shape": [
+            1,
+            128,
+            36481
+          ]
+        }
+      ],
+      "model": {
+        "bytes": 1269,
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/stages-v1/models/17-generator_1_merge.onnx",
+        "sha256": "415adfc2fca990f773cdfa1da8b3f04d0b30189e2a46c3fe0245d68a73471227"
+      },
+      "name": "generator_1_merge",
+      "outputs": [
+        {
+          "dtype": "float32",
+          "elements": 4669568,
+          "name": "/decoder/generator/Div_2_output_0",
+          "shape": [
+            1,
+            128,
+            36481
+          ]
+        }
+      ],
+      "role": "ordered residual sum and divide by three",
+      "structure": {
+        "initializer_payload_bytes": 4,
+        "initializers": 1,
+        "nodes": 3,
+        "operators": {
+          "Add": 2,
+          "Div": 1
+        },
+        "quantized_operator_count": 0
+      }
+    },
+    {
+      "index": 18,
+      "inputs": [
+        {
+          "dtype": "float32",
+          "elements": 4669568,
+          "name": "/decoder/generator/Div_2_output_0",
+          "shape": [
+            1,
+            128,
+            36481
+          ]
+        }
+      ],
+      "model": {
+        "bytes": 232414,
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/stages-v1/models/18-waveform_istft.onnx",
+        "sha256": "695193cc28f092b0fa459a09ddf9a385e4b4ddaa16873c8f45618ab7fc69b379"
+      },
+      "name": "waveform_istft",
+      "outputs": [
+        {
+          "dtype": "float32",
+          "elements": 182400,
+          "name": "audio",
+          "shape": [
+            182400
+          ]
+        }
+      ],
+      "role": "spectral head and exact exported inverse STFT",
+      "structure": {
+        "initializer_payload_bytes": 226760,
+        "initializers": 14,
+        "nodes": 18,
+        "operators": {
+          "Add": 1,
+          "Clip": 1,
+          "Conv": 1,
+          "ConvTranspose": 3,
+          "Cos": 1,
+          "Div": 1,
+          "Exp": 1,
+          "LeakyRelu": 1,
+          "Mul": 2,
+          "Sin": 2,
+          "Slice": 3,
+          "Squeeze": 1
+        },
+        "quantized_operator_count": 0
+      }
+    }
+  ],
+  "status": "frozen_before_staged_qnn_host_outputs",
+  "tools": {
+    "extract_staged_graphs.py": "540557f280198130fd76033de1d58a341c951438c4298d6fff154caa5a428a09",
+    "host_runner_ubuntu22_bytes": 90136,
+    "host_runner_ubuntu22_sha256": "b3a378585e02c39c6e4b84397b0ac7a148cfc79a4909c9334c44bd39a84b072b",
+    "kokoro_stage_runner.cc": "1bf8e3f77cfeb35b78348e8f0b144627d01bbcabe5f80756073b3ba3178cc549",
+    "run_staged_pipeline.py": "e85381a8423e6cb627e419b0a2967024f7b61b6b677698b41f973489d853843d"
+  }
+}

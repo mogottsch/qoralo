@@ -41,6 +41,80 @@ class ContractTests(unittest.TestCase):
             path = ROOT / ("host" if name.endswith(".cc") else "tools") / name
             self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), expected)
 
+    def test_stage_decomposition_is_frozen_before_qnn_outputs(self) -> None:
+        policy_path = ROOT / "protocol-stage-decomposition.json"
+        policy = json.loads(policy_path.read_text())
+        provenance = json.loads(
+            (ROOT / "results/stage-decomposition-provenance.json").read_text()
+        )
+        cpu = json.loads((ROOT / "results/stage-cpu-equivalence.json").read_text())
+
+        self.assertTrue(policy["frozen_before_staged_qnn_host_outputs"])
+        self.assertTrue(policy["preserved_prior_evidence"]["monolithic_retry_forbidden"])
+        self.assertEqual(
+            policy["source_and_decomposition"]["source_graph"]["sha256"],
+            "7278ed2f0dbe8307a42904434b81116f252dd996bb6a2c064f81ad44269f21cb",
+        )
+        self.assertEqual(policy["source_and_decomposition"]["stage_count"], 18)
+        self.assertEqual(provenance["stage_count"], 18)
+        self.assertEqual(provenance["coverage"]["source_nodes"], 1685)
+        self.assertEqual(provenance["coverage"]["covered_unique_nodes"], 1685)
+        self.assertEqual(
+            len(provenance["coverage"]["duplicated_boundary_support_nodes"]), 5
+        )
+        self.assertTrue(
+            all(
+                stage["structure"]["quantized_operator_count"] == 0
+                for stage in provenance["stages"]
+            )
+        )
+        self.assertEqual(
+            provenance["protocol"]["sha256"],
+            hashlib.sha256(policy_path.read_bytes()).hexdigest(),
+        )
+        for name in (
+            "extract_staged_graphs.py",
+            "run_staged_pipeline.py",
+            "kokoro_stage_runner.cc",
+        ):
+            directory = "host" if name.endswith(".cc") else "tools"
+            self.assertEqual(
+                provenance["tools"][name],
+                hashlib.sha256((ROOT / directory / name).read_bytes()).hexdigest(),
+            )
+
+        self.assertEqual(cpu["status"], "passed")
+        self.assertEqual(cpu["stage_count"], 18)
+        self.assertTrue(cpu["recomposition"]["audio_bit_exact"])
+        self.assertTrue(cpu["recomposition"]["duration_bit_exact"])
+        self.assertAlmostEqual(cpu["recomposition"]["cosine"], 1.0, places=12)
+        self.assertEqual(cpu["recomposition"]["nrmse"], 0.0)
+        self.assertEqual(
+            cpu["recomposition"]["audio"]["sha256"],
+            "56464612c786a6fcc9034e51a24d7e26d17910147a72e5e5672220c45f15045f",
+        )
+        self.assertEqual(
+            cpu["recomposition"]["duration"]["sha256"],
+            "7977e82d5304abba333a0b1caa0f0ef39b265b11205ff217c5979255cc44b80e",
+        )
+
+    def test_stage_interfaces_form_a_fixed_pipeline(self) -> None:
+        policy = json.loads((ROOT / "protocol-stage-decomposition.json").read_text())
+        stages = policy["source_and_decomposition"]["stages"]
+        available = {"tokens", "style", "speed"}
+        for expected_index, stage in enumerate(stages, start=1):
+            self.assertEqual(stage["index"], expected_index)
+            self.assertGreater(stage["nodes"], 0)
+            self.assertEqual(stage["quantized_operator_count"], 0)
+            for value in stage["inputs"]:
+                self.assertIn(value["name"], available)
+                self.assertTrue(all(dim > 0 for dim in value["shape"]))
+            for value in stage["outputs"]:
+                self.assertTrue(all(dim > 0 for dim in value["shape"]))
+                available.add(value["name"])
+        self.assertIn("audio", available)
+        self.assertIn("pred_dur", available)
+
     def test_erased_experiment_0015_remains_absent(self) -> None:
         self.assertFalse((REPO / "experiments/0015-pocket-tts-qnn-htp-android").exists())
 

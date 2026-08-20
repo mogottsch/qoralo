@@ -1,0 +1,391 @@
+{
+  "aggregate_descriptive_timing": {
+    "maximum_per_process_ru_maxrss_kib": 176848,
+    "memory_semantics": "maximum of separate process-lifetime ru_maxrss high-water marks; not additive, not steady PSS, and not component-isolated",
+    "sum_session_creation_seconds": 1.1259853499999999,
+    "sum_single_run_seconds": 5.31887513
+  },
+  "claim_boundary": "This proves same-runtime CPU recomposition of the exact stage boundaries. It is not QNN assignment, host QNN execution, physical HTP execution, phone performance, acoustic acceptance, or a listening verdict.",
+  "inputs": {
+    "speed": {
+      "bytes": 4,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/fixtures/speed.raw",
+      "sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c"
+    },
+    "style": {
+      "bytes": 1024,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/fixtures/style.raw",
+      "sha256": "b5c2627313e7e45bbb50470307ef66730b5510ebc7e92671cf7aad0449cdf899"
+    },
+    "tokens": {
+      "bytes": 1000,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/fixtures/tokens.raw",
+      "sha256": "35ebb50fb1ba0cca3862c880cf0571c9a51623c5243a9f2307b4bb4a6dcd2078"
+    }
+  },
+  "manifest_sha256": "8e56efd5cffd1d765b800cf97bc45b9af89017f43c879f34bd68fd463b856042",
+  "protocol_stage_decomposition_sha256": "0adbdf11677c22f5b47d0d8661e7a109172ef5eabc462aec6477a473de2d7801",
+  "recomposition": {
+    "all_finite": true,
+    "audio": {
+      "elements": 182400,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/stages-v1/cpu127-final/tensors/18-01-6ed8919ce204.f32",
+      "sha256": "56464612c786a6fcc9034e51a24d7e26d17910147a72e5e5672220c45f15045f"
+    },
+    "audio_bit_exact": true,
+    "cosine": 1.0000000000000002,
+    "duration": {
+      "elements": 125,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/stages-v1/cpu127-final/tensors/04-03-a93e7df81f11.i64",
+      "sha256": "7977e82d5304abba333a0b1caa0f0ef39b265b11205ff217c5979255cc44b80e",
+      "sum": 304
+    },
+    "duration_bit_exact": true,
+    "maximum_absolute_error": 0.0,
+    "nrmse": 0.0
+  },
+  "reference": {
+    "audio": {
+      "elements": 182400,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/cpu127-equivalence/candidate.f32",
+      "sha256": "56464612c786a6fcc9034e51a24d7e26d17910147a72e5e5672220c45f15045f"
+    },
+    "duration": {
+      "elements": 125,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/cpu127-equivalence/candidate.i64",
+      "sha256": "7977e82d5304abba333a0b1caa0f0ef39b265b11205ff217c5979255cc44b80e",
+      "sum": 304
+    },
+    "route": "complete qnn-compatible source graph under the same patched runtime"
+  },
+  "runtime": {
+    "graph_optimization": "disabled",
+    "provider": "CPUExecutionProvider",
+    "separate_process_per_stage": true,
+    "threads": 1,
+    "version": "patched ONNX Runtime 1.27.1"
+  },
+  "schema_version": 1,
+  "stage_count": 18,
+  "stages": [
+    {
+      "exit_code": 0,
+      "index": 1,
+      "model_sha256": "2736465b305f1ad956cd8d893ea0986e17d72a6edd6d0b0486feff891dca547c",
+      "name": "bert",
+      "outputs": {
+        "/bert_encoder/Add_output_0": {
+          "bytes": 256000,
+          "sha256": "407f8ecbb3337fc013e8134799ae0ff98c03f52e124c92b5884a8a5429ba82c7"
+        }
+      },
+      "ru_maxrss_kib": 89004,
+      "run_seconds": [
+        0.176629
+      ],
+      "session_creation_seconds": 0.197549
+    },
+    {
+      "exit_code": 0,
+      "index": 2,
+      "model_sha256": "9e1577d2d4b2c4cb6d78dbf0f2a810aabccca1b033adc4a43eabfa3bf2416b01",
+      "name": "duration_encoder",
+      "outputs": {
+        "/text_encoder/Where_13": {
+          "bytes": 320000,
+          "sha256": "0b60515be596afdda117654ecdd36aabd36b243569cb2991254dbb8601cdb6c9"
+        }
+      },
+      "ru_maxrss_kib": 70100,
+      "run_seconds": [
+        0.027957
+      ],
+      "session_creation_seconds": 0.040149
+    },
+    {
+      "exit_code": 0,
+      "index": 3,
+      "model_sha256": "52418a81783a27f6947a64c6d64fadc761cf4cea799b6e1c95740bdf4f447056",
+      "name": "text_encoder",
+      "outputs": {
+        "/text_encoder_1/Where_7_output_0": {
+          "bytes": 256000,
+          "sha256": "dda9a413188ea2be95e0135ab3f7ee7f1a5fd2c8fe4c789bee35c80fb94cc883"
+        }
+      },
+      "ru_maxrss_kib": 53664,
+      "run_seconds": [
+        0.0165448
+      ],
+      "session_creation_seconds": 0.0273044
+    },
+    {
+      "exit_code": 0,
+      "index": 4,
+      "model_sha256": "9b709a2eaf8d11cde028dfbaf13a4df82511cfb6c6dabed8ce8d754bba0f331d",
+      "name": "duration_alignment",
+      "outputs": {
+        "/MatMul_1_output_0": {
+          "bytes": 622592,
+          "sha256": "2d2cc195befc095f92b023835ba26311dd6b1aaa01bc7c494a12f45c66243d99"
+        },
+        "/MatMul_output_0": {
+          "bytes": 778240,
+          "sha256": "5e30d0f2c933f2605ef0a69c7f4c61be376dc17f3ea41160eb8243930c325951"
+        },
+        "pred_dur": {
+          "bytes": 1000,
+          "sha256": "7977e82d5304abba333a0b1caa0f0ef39b265b11205ff217c5979255cc44b80e"
+        }
+      },
+      "ru_maxrss_kib": 38620,
+      "run_seconds": [
+        0.00998433
+      ],
+      "session_creation_seconds": 0.0149995
+    },
+    {
+      "exit_code": 0,
+      "index": 5,
+      "model_sha256": "2d984919bb5077622515cdae3e9a6b9963fbe15ca036723ced4a1bfbcefd443e",
+      "name": "prosody",
+      "outputs": {
+        "/If_1_output_0": {
+          "bytes": 2432,
+          "sha256": "020780d1a39b4f4a7e6eb2686d41a62e65d5956b6f08161b7f9a5c85218dc70b"
+        },
+        "/If_output_0": {
+          "bytes": 2432,
+          "sha256": "8fade9c03b3eb15cfdc4fb9d299a5836da6a0d9742ec22a3c3da9f0abf96f4ad"
+        }
+      },
+      "ru_maxrss_kib": 72136,
+      "run_seconds": [
+        0.0646737
+      ],
+      "session_creation_seconds": 0.0654582
+    },
+    {
+      "exit_code": 0,
+      "index": 6,
+      "model_sha256": "c1eabac59891a331f972cd994b9ed7baffad71657beeb14567d3426377006530",
+      "name": "decoder",
+      "outputs": {
+        "/decoder/decode.3/Mul_output_0": {
+          "bytes": 1245184,
+          "sha256": "0ff919e8b13df16335b2c4e220c19623678fc6583faf69e07fd4dd1d5beaf739"
+        }
+      },
+      "ru_maxrss_kib": 176848,
+      "run_seconds": [
+        0.214628
+      ],
+      "session_creation_seconds": 0.56834
+    },
+    {
+      "exit_code": 0,
+      "index": 7,
+      "model_sha256": "72b0953bf65ccd69c6df8eb457c5cbc2e285968879c57ffe79db446d886ff38f",
+      "name": "harmonic_source",
+      "outputs": {
+        "/decoder/generator/Concat_1_output_0": {
+          "bytes": 3210328,
+          "sha256": "9d62502077e606068a90c8b0376e59e5b2fd680f1ab66524fdc47fa0920067ed"
+        }
+      },
+      "ru_maxrss_kib": 69784,
+      "run_seconds": [
+        0.163907
+      ],
+      "session_creation_seconds": 0.01272
+    },
+    {
+      "exit_code": 0,
+      "index": 8,
+      "model_sha256": "49a823841dcf2a99c9bee10cbfc99dff1d4a3d8662ac3cf3a0c7a03a05132ed4",
+      "name": "generator_0_base",
+      "outputs": {
+        "/decoder/generator/Add_2_output_0": {
+          "bytes": 6225920,
+          "sha256": "d6e8ef960fe514386a10909adf14fa58a1c1532c83862a4b7fc3fd6a2d82953a"
+        }
+      },
+      "ru_maxrss_kib": 86956,
+      "run_seconds": [
+        0.383691
+      ],
+      "session_creation_seconds": 0.0300247
+    },
+    {
+      "exit_code": 0,
+      "index": 9,
+      "model_sha256": "7cea845d802d2cbae42da27a5b8cf9ee0c16e8ece56983e1b045c3e04eeeadfb",
+      "name": "generator_0_resblock_0",
+      "outputs": {
+        "/decoder/generator/resblocks.0/Add_8_output_0": {
+          "bytes": 6225920,
+          "sha256": "a4b0a4e9155b0b6936fae7b5b24a500463f0e19bd9edac746a6d9172442b4782"
+        }
+      },
+      "ru_maxrss_kib": 65980,
+      "run_seconds": [
+        0.17548
+      ],
+      "session_creation_seconds": 0.0106707
+    },
+    {
+      "exit_code": 0,
+      "index": 10,
+      "model_sha256": "fce5d4b1ae3580e8ee63887399e0f796c05b445b63256a53f6e64533990bc0c7",
+      "name": "generator_0_resblock_1",
+      "outputs": {
+        "/decoder/generator/resblocks.1/Add_8_output_0": {
+          "bytes": 6225920,
+          "sha256": "2ba0735ea18f5c6d5bb3643a2c967736e9bb66622273c87775c404e99c588a35"
+        }
+      },
+      "ru_maxrss_kib": 71612,
+      "run_seconds": [
+        0.358796
+      ],
+      "session_creation_seconds": 0.0288558
+    },
+    {
+      "exit_code": 0,
+      "index": 11,
+      "model_sha256": "86f9aa3a54ebd0d8fdfd2e51951c079ee089e490374af2fedc6dd2a0c4198a00",
+      "name": "generator_0_resblock_2",
+      "outputs": {
+        "/decoder/generator/resblocks.2/Add_8_output_0": {
+          "bytes": 6225920,
+          "sha256": "4847d01e2d43621d309a67a0217432d2bef1b7a43d8fe000835bb7b6ae03e379"
+        }
+      },
+      "ru_maxrss_kib": 77756,
+      "run_seconds": [
+        0.6375
+      ],
+      "session_creation_seconds": 0.0377675
+    },
+    {
+      "exit_code": 0,
+      "index": 12,
+      "model_sha256": "7eef73967cc06203477591172822e4e445257dedf128d78fafbbb04e4dc35346",
+      "name": "generator_0_merge",
+      "outputs": {
+        "/decoder/generator/Div_1_output_0": {
+          "bytes": 6225920,
+          "sha256": "54b927110ad503fa862aa8c7ac646fba90ff82be855f79d2f99e4ad1dd99f288"
+        }
+      },
+      "ru_maxrss_kib": 56576,
+      "run_seconds": [
+        0.0317853
+      ],
+      "session_creation_seconds": 0.00550621
+    },
+    {
+      "exit_code": 0,
+      "index": 13,
+      "model_sha256": "d51cbd3a9137905437162b1770f4b636f96719603b1cd83dc23c35234d2d17b0",
+      "name": "generator_1_base",
+      "outputs": {
+        "/decoder/generator/Add_5_output_0": {
+          "bytes": 18678272,
+          "sha256": "6aaa53c6da8ea324d7d613e77a7c2f4522618027004ef051c02e5b73a9f44c37"
+        }
+      },
+      "ru_maxrss_kib": 145960,
+      "run_seconds": [
+        1.11357
+      ],
+      "session_creation_seconds": 0.0528716
+    },
+    {
+      "exit_code": 0,
+      "index": 14,
+      "model_sha256": "a5c9031dc14806027f6cd09842106ba796bfd6bb6f1fcb99b639b03dab2581ee",
+      "name": "generator_1_resblock_3",
+      "outputs": {
+        "/decoder/generator/resblocks.3/Add_8_output_0": {
+          "bytes": 18678272,
+          "sha256": "6701a1b93d580470a9ef3775d87bbd6b9c95e6b83196c982c12043d730d5261a"
+        }
+      },
+      "ru_maxrss_kib": 142228,
+      "run_seconds": [
+        0.466656
+      ],
+      "session_creation_seconds": 0.00840623
+    },
+    {
+      "exit_code": 0,
+      "index": 15,
+      "model_sha256": "9d50d0933af173256283235dbd75dfc1312a8fd76888be9f3cc4886360e0158d",
+      "name": "generator_1_resblock_4",
+      "outputs": {
+        "/decoder/generator/resblocks.4/Add_8_output_0": {
+          "bytes": 18678272,
+          "sha256": "cdb8c6d72dc499df69cf6c7b3321509ed9e76391c915d70b0cec516381205eeb"
+        }
+      },
+      "ru_maxrss_kib": 143908,
+      "run_seconds": [
+        0.571218
+      ],
+      "session_creation_seconds": 0.00972493
+    },
+    {
+      "exit_code": 0,
+      "index": 16,
+      "model_sha256": "f15239b58c3107093279e68a77897168ab5073fee90c713903649f3c8bacc180",
+      "name": "generator_1_resblock_5",
+      "outputs": {
+        "/decoder/generator/resblocks.5/Add_8_output_0": {
+          "bytes": 18678272,
+          "sha256": "00f9faddc685a5430f922d060140f9f7ea29544453954e704c4d05faee38a134"
+        }
+      },
+      "ru_maxrss_kib": 145716,
+      "run_seconds": [
+        0.853628
+      ],
+      "session_creation_seconds": 0.0101041
+    },
+    {
+      "exit_code": 0,
+      "index": 17,
+      "model_sha256": "415adfc2fca990f773cdfa1da8b3f04d0b30189e2a46c3fe0245d68a73471227",
+      "name": "generator_1_merge",
+      "outputs": {
+        "/decoder/generator/Div_2_output_0": {
+          "bytes": 18678272,
+          "sha256": "7037c6fc4867f7241078b7519149d054956b4c4246fd895cc0a30c6910e7e3f6"
+        }
+      },
+      "ru_maxrss_kib": 118784,
+      "run_seconds": [
+        0.0155007
+      ],
+      "session_creation_seconds": 0.00245298
+    },
+    {
+      "exit_code": 0,
+      "index": 18,
+      "model_sha256": "695193cc28f092b0fa459a09ddf9a385e4b4ddaa16873c8f45618ab7fc69b379",
+      "name": "waveform_istft",
+      "outputs": {
+        "audio": {
+          "bytes": 729600,
+          "sha256": "56464612c786a6fcc9034e51a24d7e26d17910147a72e5e5672220c45f15045f"
+        }
+      },
+      "ru_maxrss_kib": 76716,
+      "run_seconds": [
+        0.0367263
+      ],
+      "session_creation_seconds": 0.0030805
+    }
+  ],
+  "status": "passed"
+}
