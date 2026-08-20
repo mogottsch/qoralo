@@ -130,7 +130,7 @@ ROWS = [
     row("0017-kokoro-qnn-host-blocked", "0017", "Kokoro", "fixed-contract QNN HTP host gate", "blocked", attempted=False, provider="QNNExecutionProvider (host assignment gate)", precision="FP32 source graph", threads=1, summary="The bit-exact fixed-contract derivative reached complete host QNN assignment in one partition, but the fallback-disabled host session was OOM-killed during graph sequencing before session finalization or inference; the phone was not accessed.", limitations=("QNN assignment is not execution or physical HTP proof.", "No finalized host session, inference, Android attempt, timing, memory, or audio evidence exists.", "The 18-stage CPU recomposition is host-only equivalence evidence and is not a complete Android route."), sources=("experiments/0017-kokoro-onnx-qnn-htp-android/results/host-gate-checkpoint.json", "experiments/0017-kokoro-onnx-qnn-htp-android/results/qnn-compat-cpu-equivalence.json", "experiments/0017-kokoro-onnx-qnn-htp-android/results/stage-decomposition-provenance.json", "experiments/0017-kokoro-onnx-qnn-htp-android/results/stage-cpu-equivalence.json", "experiments/0017-kokoro-onnx-qnn-htp-android/README.md"), missing={"android_attempted": "The host session did not finalize and the phone was not accessed.", "all": "Host assignment and CPU equivalence do not provide Android timing, memory, physical HTP, or WAV evidence."}, variant="Kokoro exact-source fixed-contract QNN feasibility"),
     row("0018-moss-tts-nano-cpu", "0018", "MOSS-TTS-Nano", "official ONNX Runtime CPU", "ran", attempted=True, provider="CPUExecutionProvider", precision="FP32", threads=4, metrics={"load_seconds": 1.712838853, "cold_rtf": 1.1383426748803827, "warm_median_rtf": 1.1248052010167464, "peak_vm_hwm_bytes": 5828526080}, wav={"path":"media/0018-moss-tts-nano-onnx-cpu.wav","sha256":"173850781b055e70a606fb561d93b70e6d8c6318db1b29b2324f83506c21ad6b","bytes":1605164,"sample_rate_hz":48000,"channels":1,"duration_seconds":16.72}, summary="Official MOSS-TTS-Nano completed text-to-WAV on CPUExecutionProvider only with 543,972/543,972 CPU node events. The full decoded output is 16.72 s, with non-streaming first decoded PCM semantics; setup was 1.71284 s and the process VmHWM reached 5,828,526,080 bytes.", limitations=("4 intra-op / 1 inter-op threads; the route is non-streaming and first decoded PCM means full audio-tokenizer decode returned PCM, not a streaming chunk.", "VmHWM is cumulative process high-water memory, not component-isolated memory.", "An initial exec-out stdin staging attempt hung and was aborted; the successful fast-push staging caveat is not included in benchmark latency."), sources=("experiments/0018-moss-tts-nano-onnx-android/results/phone-cpu-checkpoint.json", "experiments/0018-moss-tts-nano-onnx-android/results/source-inventory.json", "experiments/0018-moss-tts-nano-onnx-android/README.md"), missing={}, variant="MOSS-TTS-Nano official ONNX"),
     row("0019-moss-tts-nano-qnn-blocked", "0019", "MOSS-TTS-Nano", "reusable dynamic decode QNN HTP host gate", "blocked", attempted=False, provider="QNNExecutionProvider (host gate)", precision="FP32 official ONNX", metrics={}, summary="Blocked before Android: reusable dynamic decode failed closed at 52/1,091 optimized nodes across 13 partitions with 1,039 unsupported nodes. No phone, physical HTP, timing, memory, or audio evidence exists.", limitations=("Fixed-shape rewrites made prefill/local/codec and all 209 observed decode shapes fully QNN-assignable on host, but 209 sessions required 1,052.77 s total host session creation and do not form a reusable deployable route.", "Decoder redesign requires fixed-capacity KV-cache/state topology with fixed outputs and dynamic valid-length masking; this is not a narrow operator rewrite.", "No QNN physical phone claim, CPU fallback, quantization, timing, memory, or WAV claim is made."), sources=("experiments/0019-moss-tts-nano-qnn-htp-android/results/host-checkpoint.json", "experiments/0019-moss-tts-nano-qnn-htp-android/results/decode-static-gate-matrix.json", "experiments/0019-moss-tts-nano-qnn-htp-android/results/source-lock.json", "experiments/0019-moss-tts-nano-qnn-htp-android/README.md"), missing={"android_attempted": "Host gate failed closed before Android and no phone staging occurred.", "all": "No Android timing, memory, physical HTP, or audio evidence exists."}, variant="MOSS-TTS-Nano QNN HTP host feasibility"),
-    row("0020-supertonic-refresh-bootstrap", "0020", "Supertonic 3", "historical CPU refresh bootstrap", "blocked", attempted=True, provider="CPU (inference not started)", precision="INT8", threads=1, summary="A refreshed attempt preserved the exact historical 0008 contract and passed the Windows-ADB device gate, but Android 16 denied the app access to shell-owned scoped-storage inputs; inference never started and every refreshed metric remains unavailable. The original 0008 measurements remain separate historical evidence.", limitations=("This is staging-ownership evidence only, not model/runtime compatibility or refreshed performance evidence.", "Earlier zero-device readiness observations remain valid for their timestamps; a later Windows-ADB readiness check reached the exact canonical phone.", "Prepared build and archive hashes do not establish execution."), sources=("experiments/0020-historic-android-benchmark-refresh/results/registry-audit.json", "experiments/0020-historic-android-benchmark-refresh/results/device-readiness.json", "experiments/0020-historic-android-benchmark-refresh/results/device-readiness-attempt-2.json", "experiments/0020-historic-android-benchmark-refresh/results/device-readiness-windows-adb.json", "experiments/0020-historic-android-benchmark-refresh/results/supertonic-build-provenance.json", "experiments/0020-historic-android-benchmark-refresh/results/supertonic-bootstrap-attempt.json"), missing={"load_seconds": "The refreshed route stopped at app bootstrap before model/session setup.", "cold_rtf": "Inference did not start.", "warm_median_rtf": "Inference did not start; no refreshed warm campaign exists.", "peak_pss_bytes": "No inference process measurement exists.", "peak_vm_hwm_bytes": "No inference process measurement exists.", "wav": "No refreshed audio was produced."}, variant="Exact 0008 Supertonic CPU refresh attempt")
+    row("0020-supertonic-refresh-bootstrap", "0020", "Supertonic 3", "historical CPU refresh bootstrap", "blocked", attempted=True, provider="CPU (inference not started)", precision="INT8", threads=1, summary="A refreshed attempt preserved the exact historical 0008 contract and passed the Windows-ADB device gate, but Android 16 denied the app access to shell-owned scoped-storage inputs; inference never started and every refreshed metric remains unavailable. The original 0008 measurements remain separate historical evidence.", limitations=("This is staging-ownership evidence only, not model/runtime compatibility or refreshed performance evidence.", "Earlier zero-device readiness observations remain valid for their timestamps; a later Windows-ADB readiness check reached the exact canonical phone.", "Prepared build and archive hashes do not establish execution."), sources=("experiments/0020-historic-android-benchmark-refresh/results/registry-audit.json", "experiments/0020-historic-android-benchmark-refresh/results/device-readiness.json", "experiments/0020-historic-android-benchmark-refresh/results/device-readiness-attempt-2.json", "experiments/0020-historic-android-benchmark-refresh/results/device-readiness-windows-adb.json", "experiments/0020-historic-android-benchmark-refresh/results/supertonic-build-provenance.json", "experiments/0020-historic-android-benchmark-refresh/results/supertonic-bootstrap-attempt.json"), missing={"load_seconds": "The refreshed route stopped at app bootstrap before model/session setup.", "cold_rtf": "Inference did not start.", "warm_median_rtf": "Inference did not start; no refreshed warm campaign exists.", "peak_pss_bytes": "No inference process measurement exists.", "peak_vm_hwm_bytes": "No inference process measurement exists.", "wav": "No refreshed audio was produced."}, variant="Exact 0008 Supertonic CPU refresh attempt"),
 ]
 
 
@@ -306,6 +306,52 @@ MODEL_TIMELINE = [
     {"model": "MOSS-TTS-Nano", "first_release_date": "2026-04-17", "date_basis": "Hugging Face model API createdAt for the public OpenMOSS-Team ONNX model repository", "source_url": "https://huggingface.co/OpenMOSS-Team/MOSS-TTS-Nano-100M-ONNX"},
 ]
 
+REMEASUREMENTS = {
+    "0008-supertonic-cpu-t1": [{
+        "id": "0020-supertonic-2026-08-20",
+        "experiment": "0020",
+        "source_commit": "b717b74b1866b578f02f96e6962563c7567b6e00",
+        "remeasured_at": "2026-08-20",
+        "status": "ran",
+        "original_snapshot": {
+            "registry_commit": "40e2cf0b7772ee7afd9feb07c8af14c86665a798",
+            "metrics": {"load_seconds": 0.765107603, "cold_rtf": 0.3854677480612432, "warm_median_rtf": 0.3703028479158501, "proof_run_rtf": None, "first_post_setup_rtf": None, "peak_pss_bytes": 463003648, "peak_vm_hwm_bytes": 531345408},
+            "wav": None,
+        },
+        "contract": {
+            "match": "exact historical 0008 route contract",
+            "transcript": {"classification": "legacy_v1", "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/protocol/transcript.txt", "sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f", "bytes": 230, "trailing_newline": False, "canonical_v2_sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67", "comparison_boundary": "Exact historical transcript v1 rerun; not canonical v2 and not directly matched to canonical-v2 routes."},
+            "effective_frontend_output": None,
+            "archive_sha256": "82fa96f91c4ef8abaae3a14a3f4153facf88bed821d1f7331cec2700f432c427",
+            "aar_sha256": "6419cd8bc983e0c4fab06067f0fe0313fdc0f7103818ac1e7a08d50787b7a82b",
+            "sherpa_revision": "3dc7c569f31ca2cd4a20ed6f7db780327e6714c5",
+            "voice": "M1",
+            "speaker_id": 5,
+            "provider": "CPU",
+            "threads": 1,
+            "timing_boundary": "System.nanoTime around OfflineTts.generate only; WAV write/hash/listening excluded",
+            "state_protocol": "one first generation plus three warm generations in the same historical harness",
+            "current_global_contract_status": "historical exact rerun; does not satisfy the newer minimum of five warm same-session reset generations",
+            "bounded_adapter": "input root only: getExternalFilesDir(null) to getFilesDir(); benchmark engine, configuration, timing, memory, and app-external result output unchanged",
+        },
+        "metrics": {"load_seconds": 1.003262135, "cold_rtf": 0.4158744479936854, "warm_median_rtf": 0.39308571289407546, "proof_run_rtf": None, "first_post_setup_rtf": None, "peak_pss_bytes": 463911936, "peak_vm_hwm_bytes": 534081536},
+        "warm_rtf_values": [0.39110301817879095, 0.39308571289407546, 0.4001901129320338],
+        "runs": [
+            {"state": "cold", "synthesis_seconds": 6.881694216, "rtf": 0.4158744479936854, "wav_evidence": {"sha256": "6ceb73890f4e78ca5b36379f1d57df877a711be27dbbdfa8daf628341ae11f69", "bytes": 1459536, "channels": 1, "sample_rate_hz": 44100, "sample_width_bytes": 2, "frames": 729746, "duration_seconds": 729746/44100, "finite": True, "non_silent": True, "unclipped": True, "curated_path": None}},
+            {"state": "warm", "synthesis_seconds": 6.471788279, "rtf": 0.39110301817879095, "wav_evidence": {"sha256": "2fd9fa27e72a476431b4e20078b4594f696a7655a53959f861b80269e3c5d936", "bytes": 1459536, "channels": 1, "sample_rate_hz": 44100, "sample_width_bytes": 2, "frames": 729746, "duration_seconds": 729746/44100, "finite": True, "non_silent": True, "unclipped": True, "curated_path": None}},
+            {"state": "warm", "synthesis_seconds": 6.504596976, "rtf": 0.39308571289407546, "wav_evidence": {"sha256": "1cf003d55c81e49983cbe385fdb98868ccdf4b1a6b1482e21bab020c7567ee6e", "bytes": 1459536, "channels": 1, "sample_rate_hz": 44100, "sample_width_bytes": 2, "frames": 729746, "duration_seconds": 729746/44100, "finite": True, "non_silent": True, "unclipped": True, "curated_path": "media/0020-supertonic-3-int8-cpu-refresh.wav"}},
+            {"state": "warm", "synthesis_seconds": 6.622157237, "rtf": 0.4001901129320338, "wav_evidence": {"sha256": "e2cc5b88e4e6fdf35b0e2438eabad4bf4d8532d246e8b9ed2928a66e53a30eca", "bytes": 1459536, "channels": 1, "sample_rate_hz": 44100, "sample_width_bytes": 2, "frames": 729746, "duration_seconds": 729746/44100, "finite": True, "non_silent": True, "unclipped": True, "curated_path": None}},
+        ],
+        "comparison_to_original": {"setup_relative_change_percent": 31.126933135442904, "cold_rtf_relative_change_percent": 7.888260453793183, "warm_median_rtf_relative_change_percent": 6.152495209381348, "peak_pss_relative_change_percent": 0.19617296838232434, "peak_vm_hwm_relative_change_percent": 0.5149433793544711, "rtf_change_over_10_percent": False, "setup_change_over_10_percent": True, "material_protocol_or_duration_difference": False},
+        "thermal": {"initial_status": "STATUS_1", "initial_battery_c": 36.0, "eligible_final_status": "NONE", "eligible_final_battery_c": 34.9, "waited_without_device_tuning": True},
+        "representative_wav": {"path":"media/0020-supertonic-3-int8-cpu-refresh.wav","sha256":"1cf003d55c81e49983cbe385fdb98868ccdf4b1a6b1482e21bab020c7567ee6e","bytes":1459536,"sample_rate_hz":44100,"channels":1,"duration_seconds":729746/44100},
+        "listening_review": {"status": "not_reviewed", "reviewer": None, "date": None, "notes": None, "sample_sha256": "1cf003d55c81e49983cbe385fdb98868ccdf4b1a6b1482e21bab020c7567ee6e"},
+        "sources": ["experiments/0020-historic-android-benchmark-refresh/results/supertonic-3-int8-cpu-refresh.json", "experiments/0020-historic-android-benchmark-refresh/results/supertonic-adapted-build-provenance.json", "experiments/0020-historic-android-benchmark-refresh/results/supertonic-internal-stage-and-cleanup.json", "experiments/0020-historic-android-benchmark-refresh/README.md"],
+        "missing_reasons": {"provider_profile": "The exact historical harness does not emit an ONNX Runtime provider profile; provider=CPU is established by the pinned descriptor/runtime contract only.", "effective_frontend_output": "The historical harness preserves the exact input bytes/hash but does not emit effective tokenizer/frontend IDs.", "proof_run_rtf": "The historical CPU harness did not collect a separate instrumented proof run.", "first_post_setup_rtf": "The historical contract labels the first post-setup run as cold_rtf; it is preserved there rather than duplicated."},
+    }],
+}
+
+
 FULL_E2E_IDS = {
     "0002-executorch-full",
     "0008-pocket-cpu-t1", "0008-kokoro-cpu-t1", "0008-supertonic-cpu-t1",
@@ -323,6 +369,8 @@ for _row in ROWS:
     _row["model_identity"] = _metadata.get("model_identity")
     _row["quantization"] = _metadata.get("quantization")
     _row["scope"] = "full_e2e" if _row["id"] in FULL_E2E_IDS else "excluded_non_e2e"
+    if _row["id"] in REMEASUREMENTS:
+        _row["remeasurements"] = REMEASUREMENTS[_row["id"]]
     if _row["id"] in OBJECTIVE_EVIDENCE_OVERRIDES:
         _row["objective_evidence"] = OBJECTIVE_EVIDENCE_OVERRIDES[_row["id"]]
     if _row["id"] in LISTENING_REVIEWS:
@@ -340,38 +388,45 @@ for _row in ROWS:
 # the comparison table or audio presentation.
 
 
+def verify_wav(owner_id, wav):
+    p = OUT / wav["path"]
+    if not p.is_file():
+        raise SystemExit(f"missing registry media: {p}")
+    digest = hashlib.sha256(p.read_bytes()).hexdigest()
+    if digest != wav["sha256"]:
+        raise SystemExit(f"WAV hash mismatch for {owner_id}: {digest} != {wav['sha256']}")
+    with wave.open(str(p), "rb") as f:
+        observed = {"bytes": p.stat().st_size, "sample_rate_hz": f.getframerate(), "channels": f.getnchannels(), "sample_width_bytes": f.getsampwidth(), "duration_seconds": f.getnframes() / f.getframerate()}
+    if observed["sample_width_bytes"] != 2:
+        raise SystemExit(f"WAV metadata mismatch for {owner_id}: expected PCM16 sample width")
+    for key in ("bytes", "sample_rate_hz", "channels"):
+        if observed[key] != wav[key]:
+            raise SystemExit(f"WAV metadata mismatch for {owner_id}: {key}")
+    if abs(observed["duration_seconds"] - wav["duration_seconds"]) > 1e-9:
+        raise SystemExit(f"WAV duration mismatch for {owner_id}")
+    wav["verified"] = True
+
+
 def verify_media():
     for r in ROWS:
-        wav = r["wav"]
-        if not wav:
-            continue
-        p = OUT / wav["path"]
-        if not p.is_file():
-            raise SystemExit(f"missing registry media: {p}")
-        digest = hashlib.sha256(p.read_bytes()).hexdigest()
-        if digest != wav["sha256"]:
-            raise SystemExit(f"WAV hash mismatch for {r['id']}: {digest} != {wav['sha256']}")
-        with wave.open(str(p), "rb") as f:
-            observed = {"bytes": p.stat().st_size, "sample_rate_hz": f.getframerate(), "channels": f.getnchannels(), "sample_width_bytes": f.getsampwidth(), "duration_seconds": f.getnframes() / f.getframerate()}
-        if observed["sample_width_bytes"] != 2:
-            raise SystemExit(f"WAV metadata mismatch for {r['id']}: expected PCM16 sample width")
-        for key in ("bytes", "sample_rate_hz", "channels"):
-            if observed[key] != wav[key]:
-                raise SystemExit(f"WAV metadata mismatch for {r['id']}: {key}")
-        if abs(observed["duration_seconds"] - wav["duration_seconds"]) > 1e-9:
-            raise SystemExit(f"WAV duration mismatch for {r['id']}")
-        wav["verified"] = True
+        if r["wav"]:
+            verify_wav(r["id"], r["wav"])
+        for remeasurement in r.get("remeasurements", []):
+            verify_wav(f"{r['id']} / {remeasurement['id']}", remeasurement["representative_wav"])
 
 
 def build_missing():
     lines = ["# Missing Android benchmark fields", "", "This report is generated by `build_registry.py`. `null` means the source evidence did not provide a measurement; it is not zero or an estimate.", ""]
     for r in ROWS:
         missing = r["missing_reasons"]
-        if not missing:
+        if not missing and not r.get("remeasurements"):
             continue
         lines += [f"## `{r['id']}` — {r['model']} / {r['route']}", "", f"- Status: **{r['attempt_status']}**; Android attempted: **{str(r['android_attempted']).lower()}**"]
         for field, reason in missing.items():
             lines.append(f"- `{field}`: {reason}")
+        for refresh in r.get("remeasurements", []):
+            for field, reason in refresh["missing_reasons"].items():
+                lines.append(f"- `remeasurements.{refresh['id']}.{field}`: {reason}")
         lines.append("")
     return "\n".join(lines).rstrip() + "\n"
 
@@ -391,13 +446,15 @@ def format_memory(metrics):
 
 
 def format_rtf(entry):
-    metrics = entry["metrics"]
     candidates = (
         ("warm_median_rtf", "warm median", ""),
         ("first_post_setup_rtf", "first post-setup", " (first post-setup)"),
         ("proof_run_rtf", "proof run", " (proof run)"),
         ("cold_rtf", "cold", " (cold)"),
     )
+    remeasurements = entry.get("remeasurements", [])
+    latest = remeasurements[-1] if remeasurements else None
+    metrics = latest["metrics"] if latest else entry["metrics"]
     selected = next(((field, label, suffix, metrics[field]) for field, label, suffix in candidates if metrics[field] is not None), None)
     if selected is None:
         display = "—"
@@ -405,16 +462,28 @@ def format_rtf(entry):
         detail_parts = ["No headline RTF is available."]
     else:
         selected_field, selected_label, suffix, value = selected
-        display = f"{value:.3f}{suffix}"
+        refresh_suffix = " (refresh)" if latest else ""
+        display = f"{value:.3f}{refresh_suffix or suffix}"
         sort_value = str(value)
-        detail_parts = [f"Displayed: {selected_label} RTF {value:.6g}."]
+        if latest:
+            original = entry["metrics"]
+            comparison = latest["comparison_to_original"]
+            detail_parts = [
+                f"Displayed: {selected_label} RTF {value:.6g}, remeasured {latest['remeasured_at']} ({latest['id']}).",
+                f"Frozen original warm median RTF {original['warm_median_rtf']:.6g}; refresh delta {comparison['warm_median_rtf_relative_change_percent']:+.4f}%.",
+                f"Original setup {original['load_seconds']:.6g} s; refreshed setup {metrics['load_seconds']:.6g} s; delta {comparison['setup_relative_change_percent']:+.4f}% (over-10% flag: {str(comparison['setup_change_over_10_percent']).lower()}).",
+                f"Refresh used {len(latest['warm_rtf_values'])} warm runs under the exact historical contract and does not satisfy the newer five-warm global minimum.",
+            ]
+        else:
+            detail_parts = [f"Displayed: {selected_label} RTF {value:.6g}."]
         secondary = [f"{label} {metrics[field]:.6g}" for field, label, _ in candidates if field != selected_field and metrics[field] is not None]
         if secondary:
-            detail_parts.append("Other recorded RTFs: " + "; ".join(secondary) + ".")
+            detail_parts.append("Other recorded RTFs for the displayed measurement: " + "; ".join(secondary) + ".")
+    missing_reasons = latest.get("missing_reasons", {}) if latest else entry["missing_reasons"]
     missing = []
     for field, label, _ in candidates:
         if metrics[field] is None:
-            reason = entry["missing_reasons"].get(field)
+            reason = missing_reasons.get(field)
             if reason:
                 missing.append(f"{label}: {reason}")
     if missing:
@@ -429,21 +498,25 @@ def build_html(registry):
     needs_review_players = []
     for e in entries:
         m = e["metrics"]
+        latest = e.get("remeasurements", [])[-1] if e.get("remeasurements") else None
+        display_wav = latest["representative_wav"] if latest else e["wav"]
+        display_review = latest["listening_review"] if latest else e["listening_review"]
         rtf, sort_rtf, rtf_details = format_rtf(e)
-        if e["wav"]:
+        if display_wav:
             anchor = f'audio-{e["id"]}'
             wav = f'<a href="#{html.escape(anchor)}">Listen</a>'
+            player_detail = f"{e['route']} · refresh {latest['remeasured_at']}" if latest else e["route"]
             players.append(
                 f'<article class="player" id="{html.escape(anchor)}">'
-                f'<div><b>{html.escape(e["model"])}</b><br><small>{html.escape(e["route"])}</small></div>'
-                f'<audio controls preload="metadata" src="{html.escape(e["wav"]["path"])}"></audio>'
+                f'<div><b>{html.escape(e["model"])}</b><br><small>{html.escape(player_detail)}</small></div>'
+                f'<audio controls preload="metadata" src="{html.escape(display_wav["path"])}"></audio>'
                 f'<a class="back" href="#routes">Back to table</a>'
                 f'</article>'
             )
         else:
             wav = "—"
         cls = e["attempt_status"].replace("_", "-")
-        audio_sort = "1" if e["wav"] else "0"
+        audio_sort = "1" if display_wav else "0"
         memory, sort_memory = format_memory(m)
         provider = html.escape(e["provider"] or "—")
         if e["threads"] is not None:
@@ -456,13 +529,18 @@ def build_html(registry):
         else:
             model_cell = f'<b>{html.escape(e["model"])}</b><br><small>{html.escape(e["route"])}</small>'
         quantization = html.escape(e["quantization"] or "—")
-        review_status = e["listening_review"]["status"]
+        review_status = display_review["status"]
         review_cls = "listening-" + review_status.replace("_", "-")
         listening = f'<span class="status {review_cls}">{html.escape(review_status)}</span>'
-        if e["wav"] and review_status == "not_reviewed":
+        if display_wav and review_status == "not_reviewed":
             review_anchor = f"needs-{e['id']}"
-            needs_review_players.append(f'<article class="player" id="{html.escape(review_anchor)}"><div><b>{html.escape(e["model"])}</b><br><small>{html.escape(e["route"])} · listening review needed</small></div><audio controls preload="metadata" src="{html.escape(e["wav"]["path"])}"></audio><a class="back" href="#routes">Back to table</a></article>')
-        trs.append(f'<tr data-route-id="{html.escape(e["id"])}"><td data-sort="{html.escape(e["experiment"])}">{html.escape(e["experiment"])}</td><td data-sort="{html.escape(e["model"] + " " + e["route"])}">{model_cell}</td><td data-sort="{quantization}">{quantization}</td><td data-sort="{html.escape(e["attempt_status"])}"><span class="status {cls}">{html.escape(e["attempt_status"])}</span></td><td data-sort="{review_status}">{listening}</td><td data-sort="{html.escape(e["provider"] or "")} {e["threads"] or ""}">{provider}</td><td data-sort="{sort_rtf}" title="{html.escape(rtf_details, quote=True)}">{html.escape(rtf)}</td><td data-sort="{sort_memory}">{memory}</td><td data-sort="{audio_sort}">{wav}</td><td data-sort="{html.escape(e["summary"])}">{html.escape(e["summary"])}</td></tr>')
+            review_detail = f"{e['route']} · refresh {latest['remeasured_at']} · listening review needed" if latest else f"{e['route']} · listening review needed"
+            needs_review_players.append(f'<article class="player" id="{html.escape(review_anchor)}"><div><b>{html.escape(e["model"])}</b><br><small>{html.escape(review_detail)}</small></div><audio controls preload="metadata" src="{html.escape(display_wav["path"])}"></audio><a class="back" href="#routes">Back to table</a></article>')
+        summary = html.escape(e["summary"])
+        if latest:
+            delta = latest["comparison_to_original"]
+            summary += f'<br><small>Refresh {html.escape(latest["remeasured_at"])} ({html.escape(latest["id"])}): exact historical transcript v1/route rerun; warm median {latest["metrics"]["warm_median_rtf"]:.6f} vs original {e["metrics"]["warm_median_rtf"]:.6f} ({delta["warm_median_rtf_relative_change_percent"]:+.4f}%). Setup drift {delta["setup_relative_change_percent"]:+.4f}% is flagged. Three historical warm runs; not canonical v2 and not the current five-warm protocol.</small>'
+        trs.append(f'<tr data-route-id="{html.escape(e["id"])}"><td data-sort="{html.escape(e["experiment"])}">{html.escape(e["experiment"])}</td><td data-sort="{html.escape(e["model"] + " " + e["route"])}">{model_cell}</td><td data-sort="{quantization}">{quantization}</td><td data-sort="{html.escape(e["attempt_status"])}"><span class="status {cls}">{html.escape(e["attempt_status"])}</span></td><td data-sort="{review_status}">{listening}</td><td data-sort="{html.escape(e["provider"] or "")} {e["threads"] or ""}">{provider}</td><td data-sort="{sort_rtf}" title="{html.escape(rtf_details, quote=True)}">{html.escape(rtf)}</td><td data-sort="{sort_memory}">{memory}</td><td data-sort="{audio_sort}">{wav}</td><td data-sort="{html.escape(e["summary"])}">{summary}</td></tr>')
     timeline_rows = []
     for item in MODEL_TIMELINE:
         timeline_rows.append(f'<tr><td>{html.escape(item["model"])}</td><td><time datetime="{html.escape(item["first_release_date"])}">{html.escape(item["first_release_date"])}</time></td><td>{html.escape(item["date_basis"])}</td><td><a href="{html.escape(item["source_url"])}" target="_blank" rel="noopener">Source</a></td></tr>')
@@ -499,7 +577,8 @@ def main():
     dashboard = build_html(registry)
     (OUT / "index.html").write_text(dashboard)
     (OUT / "dashboard.html").write_text(dashboard)
-    print(f"wrote {len(ROWS)} routes and {sum(bool(r['wav']) for r in ROWS)} verified WAV references")
+    wav_count = sum(bool(r["wav"]) + len(r.get("remeasurements", [])) for r in ROWS)
+    print(f"wrote {len(ROWS)} routes and {wav_count} verified WAV references")
 
 
 if __name__ == "__main__":

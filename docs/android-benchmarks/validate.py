@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 from datetime import date
+from statistics import median
 import re
 import sys
 import wave
@@ -16,6 +17,7 @@ REGISTRY_PATH = HERE / "registry.json"
 EXPECTED_DEVICE = {"model": "SM-S918B", "soc": "SM8550", "serial": "R5CW81PR8SY", "abi": "arm64-v8a"}
 METRIC_FIELDS = ("load_seconds", "cold_rtf", "warm_median_rtf", "proof_run_rtf", "first_post_setup_rtf", "peak_pss_bytes", "peak_vm_hwm_bytes")
 STATUSES = {"ran", "partial", "blocked", "deferred", "not_run"}
+FROZEN_0008_SUPERTONIC_METRICS = {"load_seconds": 0.765107603, "cold_rtf": 0.3854677480612432, "warm_median_rtf": 0.3703028479158501, "proof_run_rtf": None, "first_post_setup_rtf": None, "peak_pss_bytes": 463003648, "peak_vm_hwm_bytes": 531345408}
 
 
 def fail(message):
@@ -127,6 +129,48 @@ def main():
             fail(f"{e['id']}: a single profiled generation cannot populate warm_median_rtf")
         if e["metrics"]["first_post_setup_rtf"] is not None and e["metrics"]["warm_median_rtf"] is not None:
             fail(f"{e['id']}: first_post_setup_rtf must remain distinct from warm_median_rtf")
+        remeasurements = e.get("remeasurements", [])
+        if e["id"] == "0008-supertonic-cpu-t1":
+            if e["metrics"] != FROZEN_0008_SUPERTONIC_METRICS or e["wav"] is not None:
+                fail("0008-supertonic-cpu-t1: frozen original metrics/WAV provenance was overwritten")
+            if len(remeasurements) != 1:
+                fail("0008-supertonic-cpu-t1: expected exactly one provenance-tracked remeasurement")
+        elif remeasurements:
+            fail(f"{e['id']}: unexpected remeasurement without a validated frozen baseline")
+        for refresh in remeasurements:
+            if refresh["original_snapshot"]["metrics"] != e["metrics"] or refresh["original_snapshot"]["wav"] != e["wav"]:
+                fail(f"{e['id']}: nested remeasurement does not preserve the frozen original snapshot")
+            if refresh["source_commit"] != "b717b74b1866b578f02f96e6962563c7567b6e00" or refresh["experiment"] != "0020":
+                fail(f"{e['id']}: unexpected remeasurement provenance")
+            transcript = refresh["contract"].get("transcript", {})
+            if transcript.get("classification") != "legacy_v1" or transcript.get("sha256") != "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f":
+                fail(f"{e['id']}: historical refresh transcript must remain exact legacy v1")
+            if transcript.get("canonical_v2_sha256") != "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67":
+                fail(f"{e['id']}: canonical-v2 comparison boundary is missing")
+            warm_values = refresh["warm_rtf_values"]
+            if len(warm_values) != 3 or abs(median(warm_values) - refresh["metrics"]["warm_median_rtf"]) > 1e-15:
+                fail(f"{e['id']}: exact historical three-warm median mismatch")
+            if "does not satisfy" not in refresh["contract"].get("current_global_contract_status", ""):
+                fail(f"{e['id']}: newer five-warm protocol boundary is missing")
+            run_warm = [run["rtf"] for run in refresh["runs"] if run["state"] == "warm"]
+            if run_warm != warm_values or len(refresh["runs"]) != 4:
+                fail(f"{e['id']}: nested cold/warm run evidence mismatch")
+            review = refresh["listening_review"]
+            if review != {"status": "not_reviewed", "reviewer": None, "date": None, "notes": None, "sample_sha256": refresh["representative_wav"]["sha256"]}:
+                fail(f"{e['id']}: refresh listening status/hash mismatch")
+            for source in refresh["sources"]:
+                if not (ROOT / source).exists():
+                    fail(f"{e['id']}: refresh source path missing: {source}")
+            rwav = refresh["representative_wav"]
+            rpath = HERE / rwav["path"]
+            if not rpath.is_file() or hashlib.sha256(rpath.read_bytes()).hexdigest() != rwav["sha256"]:
+                fail(f"{e['id']}: refresh representative WAV missing/hash mismatch")
+            with wave.open(str(rpath), "rb") as f:
+                if rpath.stat().st_size != rwav["bytes"] or f.getframerate() != rwav["sample_rate_hz"] or f.getnchannels() != rwav["channels"] or f.getsampwidth() != 2 or abs(f.getnframes() / f.getframerate() - rwav["duration_seconds"]) > 1e-9:
+                    fail(f"{e['id']}: refresh representative WAV header mismatch")
+            if rwav.get("verified") is not True:
+                fail(f"{e['id']}: refresh representative WAV is not marked verified")
+            verified_media += 1
         wav = e["wav"]
         if wav is None:
             if "wav" not in e["missing_reasons"] and "all" not in e["missing_reasons"]:
@@ -173,7 +217,10 @@ def main():
             identity = e["model_identity"]
             if e["scope"] == "full_e2e" and identity is not None and identity["url"] not in page_text:
                 fail(f"{page_name}: {e['id']} model source link is missing")
-            if e["wav"] is None:
+            refresh = e.get("remeasurements", [])[-1] if e.get("remeasurements") else None
+            display_wav = refresh["representative_wav"] if refresh else e["wav"]
+            display_review = refresh["listening_review"] if refresh else e["listening_review"]
+            if display_wav is None:
                 continue
             anchor = f"audio-{e['id']}"
             if f'href="#{anchor}"' not in page_text:
@@ -181,12 +228,12 @@ def main():
             if f'id="{anchor}"' not in page_text:
                 fail(f"{page_name}: {e['id']} player anchor is missing")
             review_anchor = f"needs-{e['id']}"
-            if e["scope"] == "full_e2e" and e["listening_review"]["status"] == "not_reviewed":
+            if e["scope"] == "full_e2e" and display_review["status"] == "not_reviewed":
                 if f'id="{review_anchor}"' not in page_text:
                     fail(f"{page_name}: unreviewed sample {e['id']} missing from Needs review")
             elif f'id="{review_anchor}"' in page_text:
                 fail(f"{page_name}: reviewed/non-E2E sample {e['id']} leaked into Needs review")
-            if f'src="{e["wav"]["path"]}"' not in page_text:
+            if f'src="{display_wav["path"]}"' not in page_text:
                 fail(f"{page_name}: {e['id']} embedded audio source is missing")
     print(f"PASS: {len(entries)} routes across {len(seen_experiments)} experiments; {verified_media} verified Android WAVs")
 

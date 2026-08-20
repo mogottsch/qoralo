@@ -693,7 +693,186 @@
         "revision": "724fb5abbf5502583fb520898d45929e62f02c0b"
       },
       "quantization": "INT8 ONNX release outputs",
-      "scope": "full_e2e"
+      "scope": "full_e2e",
+      "remeasurements": [
+        {
+          "id": "0020-supertonic-2026-08-20",
+          "experiment": "0020",
+          "source_commit": "b717b74b1866b578f02f96e6962563c7567b6e00",
+          "remeasured_at": "2026-08-20",
+          "status": "ran",
+          "original_snapshot": {
+            "registry_commit": "40e2cf0b7772ee7afd9feb07c8af14c86665a798",
+            "metrics": {
+              "load_seconds": 0.765107603,
+              "cold_rtf": 0.3854677480612432,
+              "warm_median_rtf": 0.3703028479158501,
+              "proof_run_rtf": null,
+              "first_post_setup_rtf": null,
+              "peak_pss_bytes": 463003648,
+              "peak_vm_hwm_bytes": 531345408
+            },
+            "wav": null
+          },
+          "contract": {
+            "match": "exact historical 0008 route contract",
+            "transcript": {
+              "classification": "legacy_v1",
+              "path": "experiments/0008-sherpa-onnx-android-tts-benchmark/protocol/transcript.txt",
+              "sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
+              "bytes": 230,
+              "trailing_newline": false,
+              "canonical_v2_sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+              "comparison_boundary": "Exact historical transcript v1 rerun; not canonical v2 and not directly matched to canonical-v2 routes."
+            },
+            "effective_frontend_output": null,
+            "archive_sha256": "82fa96f91c4ef8abaae3a14a3f4153facf88bed821d1f7331cec2700f432c427",
+            "aar_sha256": "6419cd8bc983e0c4fab06067f0fe0313fdc0f7103818ac1e7a08d50787b7a82b",
+            "sherpa_revision": "3dc7c569f31ca2cd4a20ed6f7db780327e6714c5",
+            "voice": "M1",
+            "speaker_id": 5,
+            "provider": "CPU",
+            "threads": 1,
+            "timing_boundary": "System.nanoTime around OfflineTts.generate only; WAV write/hash/listening excluded",
+            "state_protocol": "one first generation plus three warm generations in the same historical harness",
+            "current_global_contract_status": "historical exact rerun; does not satisfy the newer minimum of five warm same-session reset generations",
+            "bounded_adapter": "input root only: getExternalFilesDir(null) to getFilesDir(); benchmark engine, configuration, timing, memory, and app-external result output unchanged"
+          },
+          "metrics": {
+            "load_seconds": 1.003262135,
+            "cold_rtf": 0.4158744479936854,
+            "warm_median_rtf": 0.39308571289407546,
+            "proof_run_rtf": null,
+            "first_post_setup_rtf": null,
+            "peak_pss_bytes": 463911936,
+            "peak_vm_hwm_bytes": 534081536
+          },
+          "warm_rtf_values": [
+            0.39110301817879095,
+            0.39308571289407546,
+            0.4001901129320338
+          ],
+          "runs": [
+            {
+              "state": "cold",
+              "synthesis_seconds": 6.881694216,
+              "rtf": 0.4158744479936854,
+              "wav_evidence": {
+                "sha256": "6ceb73890f4e78ca5b36379f1d57df877a711be27dbbdfa8daf628341ae11f69",
+                "bytes": 1459536,
+                "channels": 1,
+                "sample_rate_hz": 44100,
+                "sample_width_bytes": 2,
+                "frames": 729746,
+                "duration_seconds": 16.547528344671203,
+                "finite": true,
+                "non_silent": true,
+                "unclipped": true,
+                "curated_path": null
+              }
+            },
+            {
+              "state": "warm",
+              "synthesis_seconds": 6.471788279,
+              "rtf": 0.39110301817879095,
+              "wav_evidence": {
+                "sha256": "2fd9fa27e72a476431b4e20078b4594f696a7655a53959f861b80269e3c5d936",
+                "bytes": 1459536,
+                "channels": 1,
+                "sample_rate_hz": 44100,
+                "sample_width_bytes": 2,
+                "frames": 729746,
+                "duration_seconds": 16.547528344671203,
+                "finite": true,
+                "non_silent": true,
+                "unclipped": true,
+                "curated_path": null
+              }
+            },
+            {
+              "state": "warm",
+              "synthesis_seconds": 6.504596976,
+              "rtf": 0.39308571289407546,
+              "wav_evidence": {
+                "sha256": "1cf003d55c81e49983cbe385fdb98868ccdf4b1a6b1482e21bab020c7567ee6e",
+                "bytes": 1459536,
+                "channels": 1,
+                "sample_rate_hz": 44100,
+                "sample_width_bytes": 2,
+                "frames": 729746,
+                "duration_seconds": 16.547528344671203,
+                "finite": true,
+                "non_silent": true,
+                "unclipped": true,
+                "curated_path": "media/0020-supertonic-3-int8-cpu-refresh.wav"
+              }
+            },
+            {
+              "state": "warm",
+              "synthesis_seconds": 6.622157237,
+              "rtf": 0.4001901129320338,
+              "wav_evidence": {
+                "sha256": "e2cc5b88e4e6fdf35b0e2438eabad4bf4d8532d246e8b9ed2928a66e53a30eca",
+                "bytes": 1459536,
+                "channels": 1,
+                "sample_rate_hz": 44100,
+                "sample_width_bytes": 2,
+                "frames": 729746,
+                "duration_seconds": 16.547528344671203,
+                "finite": true,
+                "non_silent": true,
+                "unclipped": true,
+                "curated_path": null
+              }
+            }
+          ],
+          "comparison_to_original": {
+            "setup_relative_change_percent": 31.126933135442904,
+            "cold_rtf_relative_change_percent": 7.888260453793183,
+            "warm_median_rtf_relative_change_percent": 6.152495209381348,
+            "peak_pss_relative_change_percent": 0.19617296838232434,
+            "peak_vm_hwm_relative_change_percent": 0.5149433793544711,
+            "rtf_change_over_10_percent": false,
+            "setup_change_over_10_percent": true,
+            "material_protocol_or_duration_difference": false
+          },
+          "thermal": {
+            "initial_status": "STATUS_1",
+            "initial_battery_c": 36.0,
+            "eligible_final_status": "NONE",
+            "eligible_final_battery_c": 34.9,
+            "waited_without_device_tuning": true
+          },
+          "representative_wav": {
+            "path": "media/0020-supertonic-3-int8-cpu-refresh.wav",
+            "sha256": "1cf003d55c81e49983cbe385fdb98868ccdf4b1a6b1482e21bab020c7567ee6e",
+            "bytes": 1459536,
+            "sample_rate_hz": 44100,
+            "channels": 1,
+            "duration_seconds": 16.547528344671203,
+            "verified": true
+          },
+          "listening_review": {
+            "status": "not_reviewed",
+            "reviewer": null,
+            "date": null,
+            "notes": null,
+            "sample_sha256": "1cf003d55c81e49983cbe385fdb98868ccdf4b1a6b1482e21bab020c7567ee6e"
+          },
+          "sources": [
+            "experiments/0020-historic-android-benchmark-refresh/results/supertonic-3-int8-cpu-refresh.json",
+            "experiments/0020-historic-android-benchmark-refresh/results/supertonic-adapted-build-provenance.json",
+            "experiments/0020-historic-android-benchmark-refresh/results/supertonic-internal-stage-and-cleanup.json",
+            "experiments/0020-historic-android-benchmark-refresh/README.md"
+          ],
+          "missing_reasons": {
+            "provider_profile": "The exact historical harness does not emit an ONNX Runtime provider profile; provider=CPU is established by the pinned descriptor/runtime contract only.",
+            "effective_frontend_output": "The historical harness preserves the exact input bytes/hash but does not emit effective tokenizer/frontend IDs.",
+            "proof_run_rtf": "The historical CPU harness did not collect a separate instrumented proof run.",
+            "first_post_setup_rtf": "The historical contract labels the first post-setup run as cold_rtf; it is preserved there rather than duplicated."
+          }
+        }
+      ]
     },
     {
       "id": "0009-pocket-cpu-t1",

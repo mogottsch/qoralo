@@ -75,6 +75,35 @@
         "revision": {"type": ["string", "null"]}
       }, "additionalProperties": false
     },
+    "remeasurement": {
+      "type": "object",
+      "required": ["id", "experiment", "source_commit", "remeasured_at", "status", "original_snapshot", "contract", "metrics", "warm_rtf_values", "runs", "comparison_to_original", "thermal", "representative_wav", "listening_review", "sources", "missing_reasons"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "experiment": {"type": "string", "pattern": "^[0-9]{4}$"},
+        "source_commit": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+        "remeasured_at": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+        "status": {"const": "ran"},
+        "original_snapshot": {"type": "object", "required": ["registry_commit", "metrics", "wav"], "properties": {"registry_commit": {"type": "string", "pattern": "^[a-f0-9]{40}$"}, "metrics": {"$ref": "#/$defs/metrics"}, "wav": {"anyOf": [{"$ref": "#/$defs/wav"}, {"type": "null"}]}}, "additionalProperties": false},
+        "contract": {"type": "object"},
+        "metrics": {"$ref": "#/$defs/metrics"},
+        "warm_rtf_values": {"type": "array", "minItems": 1, "items": {"type": "number", "minimum": 0}},
+        "runs": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+        "comparison_to_original": {"type": "object"},
+        "thermal": {"type": "object"},
+        "representative_wav": {"$ref": "#/$defs/wav"},
+        "listening_review": {"$ref": "#/$defs/listening_review"},
+        "sources": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "missing_reasons": {"type": "object", "additionalProperties": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "metrics": {
+      "type": "object",
+      "required": ["load_seconds", "cold_rtf", "warm_median_rtf", "proof_run_rtf", "first_post_setup_rtf", "peak_pss_bytes", "peak_vm_hwm_bytes"],
+      "properties": {"load_seconds": {"$ref": "#/$defs/metric"}, "cold_rtf": {"$ref": "#/$defs/metric"}, "warm_median_rtf": {"$ref": "#/$defs/metric"}, "proof_run_rtf": {"$ref": "#/$defs/metric"}, "first_post_setup_rtf": {"$ref": "#/$defs/metric"}, "peak_pss_bytes": {"$ref": "#/$defs/metric"}, "peak_vm_hwm_bytes": {"$ref": "#/$defs/metric"}},
+      "additionalProperties": false
+    },
     "entry": {
       "type": "object",
       "required": ["id", "experiment", "model", "model_identity", "route", "deployment_variant", "quantization", "scope", "attempt_status", "technical_execution", "structural_audio", "objective_evidence", "listening_review", "android_attempted", "provider", "precision", "threads", "device", "metrics", "wav", "summary", "limitations", "sources", "missing_reasons"],
@@ -96,11 +125,8 @@
         "provider": {"type": ["string", "null"]}, "precision": {"type": ["string", "null"]},
         "threads": {"type": ["integer", "null"], "minimum": 1},
         "device": {"anyOf": [{"$ref": "#/$defs/device"}, {"type": "null"}]},
-        "metrics": {
-          "type": "object", "required": ["load_seconds", "cold_rtf", "warm_median_rtf", "proof_run_rtf", "first_post_setup_rtf", "peak_pss_bytes", "peak_vm_hwm_bytes"],
-          "properties": {"load_seconds": {"$ref": "#/$defs/metric"}, "cold_rtf": {"$ref": "#/$defs/metric"}, "warm_median_rtf": {"$ref": "#/$defs/metric"}, "proof_run_rtf": {"$ref": "#/$defs/metric"}, "first_post_setup_rtf": {"$ref": "#/$defs/metric"}, "peak_pss_bytes": {"$ref": "#/$defs/metric"}, "peak_vm_hwm_bytes": {"$ref": "#/$defs/metric"}},
-          "additionalProperties": false
-        },
+        "metrics": {"$ref": "#/$defs/metrics"},
+        "remeasurements": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/remeasurement"}},
         "wav": {"anyOf": [{"$ref": "#/$defs/wav"}, {"type": "null"}]},
         "summary": {"type": "string", "minLength": 1}, "limitations": {"type": "array", "items": {"type": "string"}},
         "sources": {"type": "array", "minItems": 1, "items": {"type": "string"}},
