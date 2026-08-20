@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "experiment": "0020",
+  "canonical_v2": {"bytes":226,"sha256":"424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67","minimum_warm_runs":5},
+  "source_audit": "results/transcript-provenance-audit.json",
+  "groups": [
+    {
+      "model_family": "Supertonic 3",
+      "owner": "Sean",
+      "status": "cpu_normalization_complete",
+      "canonical_v2_route": {"experiment":"0021-supertonic-canonical-v2-android-cpu","commit":"b406692","provider":"CPU","threads":1,"warm_median_rtf":0.3956153837777073,"listening":"not_reviewed"},
+      "legacy_rows": ["0008-supertonic-cpu-t1","0009-supertonic-cpu-t1","0009-supertonic-cpu-t2","0009-supertonic-cpu-t4","0010-supertonic-cpu","0010-supertonic-hybrid-htp","0011-supertonic-official-cpu","0011-supertonic-all-htp"],
+      "next_bounded_scope": "No implicit HTP/FP32 normalization. Add separate v2 routes only when their exact route contract, one first plus five warm, physical proof, and fresh sample review are rerun."
+    },
+    {
+      "model_family": "Pocket TTS",
+      "owner": "Jere",
+      "status": "active_v2_normalization",
+      "noncanonical_rows": ["0012-pocket-onnx-cpu","0014-pocket-qnn-fp-source","0014-pocket-qnn-int16-flow","0014-pocket-alba-original-dynamic-cpu","0014-pocket-alba-fixed-cpu","0014-pocket-alba-fixed-qnn-htp","0016-pocket-qnn-hybrid-cpu"],
+      "next_bounded_scope": "Exact route-specific canonical-v2 reruns; preserve voice/reference, temperature, flow, cache, provider and physical-proof boundaries separately."
+    },
+    {
+      "model_family": "Kokoro",
+      "owner": "Jens",
+      "status": "assigned_v2_normalization",
+      "legacy_rows": ["0008-kokoro-cpu-t1","0009-kokoro-cpu-t1","0009-kokoro-cpu-t2","0009-kokoro-cpu-t4"],
+      "noncanonical_rows": ["0013-kokoro-onnx-cpu"],
+      "next_bounded_scope": "Canonical-v2 exact-source controlled export/tokenization/duration shape plus CPU and separately gated HTP routes."
+    },
+    {
+      "model_family": "MOSS-TTS-Nano",
+      "owner": "Ben",
+      "status": "assigned_v2_normalization",
+      "legacy_rows": ["0018-moss-tts-nano-cpu"],
+      "next_bounded_scope": "Canonical-v2 official ONNX CPU and any separately proven fixed-capacity HTP route under current five-warm contract."
+    },
+    {
+      "model_family": "VibeVoice 1.5B",
+      "owner": null,
+      "status": "blocked_requires_new_reference_and_export_campaign",
+      "noncanonical_rows": ["0002-executorch-full"],
+      "next_bounded_scope": "Create canonical-v2 host reference and new export/controller route; frozen infeasible 0002 cannot be relabeled or treated as a viable narrow rerun."
+    }
+  ],
+  "rules": ["Never overwrite historical metrics.","A model-family verdict never transfers to another route/sample.","Each route requires canonical-v2 bytes, one first plus at least five warm same-session resets, actual-duration RTF, memory/thermal provenance and a fresh not_reviewed WAV.","Only committed evidence is eligible for dashboard ingestion."]
+}
