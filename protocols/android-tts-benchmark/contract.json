@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "canonical_transcript": {
+    "path": "protocols/android-tts-benchmark/transcript.txt",
+    "bytes": 230,
+    "trailing_newline": false,
+    "sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f"
+  },
+  "timing": {
+    "setup_reported_separately": true,
+    "first_complete_generation_count": 1,
+    "minimum_warm_generation_count": 5,
+    "warm_sessions_reused": true,
+    "full_generation_state_reset_each_iteration": true,
+    "rtf_denominator": "actual emitted audio duration per iteration",
+    "warm_headline": "median of warm per-iteration RTF values"
+  },
+  "required_evidence": [
+    "exact model and artifact provenance",
+    "exact effective transcript and tokenizer output provenance",
+    "device, runtime, provider, thread, and orchestration configuration",
+    "setup, first-generation, and per-warm-run timing",
+    "actual emitted duration and RTF for every timed generation",
+    "memory measurement with method and lifecycle scope",
+    "thermal and power context for physical Android runs",
+    "structural WAV validation and SHA-256",
+    "route/sample-scoped human listening status",
+    "missing values represented as null with an explicit reason"
+  ]
+}
