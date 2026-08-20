@@ -2244,6 +2244,75 @@
       "scope": "excluded_non_e2e"
     },
     {
+      "id": "0017-kokoro-qnn-host-blocked",
+      "experiment": "0017",
+      "model": "Kokoro",
+      "route": "fixed-contract QNN HTP host gate",
+      "deployment_variant": "Kokoro exact-source fixed-contract QNN feasibility",
+      "attempt_status": "blocked",
+      "technical_execution": {
+        "status": "blocked",
+        "android_attempted": false,
+        "provider": "QNNExecutionProvider (host assignment gate)",
+        "threads": 1
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "The bit-exact fixed-contract derivative reached complete host QNN assignment in one partition, but the fallback-disabled host session was OOM-killed during graph sequencing before session finalization or inference; the phone was not accessed.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
+      "android_attempted": false,
+      "provider": "QNNExecutionProvider (host assignment gate)",
+      "precision": "FP32 source graph",
+      "threads": 1,
+      "device": null,
+      "metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "wav": null,
+      "summary": "The bit-exact fixed-contract derivative reached complete host QNN assignment in one partition, but the fallback-disabled host session was OOM-killed during graph sequencing before session finalization or inference; the phone was not accessed.",
+      "limitations": [
+        "QNN assignment is not execution or physical HTP proof.",
+        "No finalized host session, inference, Android attempt, timing, memory, or audio evidence exists.",
+        "The 18-stage CPU recomposition is host-only equivalence evidence and is not a complete Android route."
+      ],
+      "sources": [
+        "experiments/0017-kokoro-onnx-qnn-htp-android/results/host-gate-checkpoint.json",
+        "experiments/0017-kokoro-onnx-qnn-htp-android/results/qnn-compat-cpu-equivalence.json",
+        "experiments/0017-kokoro-onnx-qnn-htp-android/results/stage-decomposition-provenance.json",
+        "experiments/0017-kokoro-onnx-qnn-htp-android/results/stage-cpu-equivalence.json",
+        "experiments/0017-kokoro-onnx-qnn-htp-android/README.md"
+      ],
+      "missing_reasons": {
+        "wav": "No locally verified Android WAV was retained for this route.",
+        "android_attempted": "The host session did not finalize and the phone was not accessed.",
+        "all": "Host assignment and CPU equivalence do not provide Android timing, memory, physical HTP, or WAV evidence."
+      },
+      "model_identity": {
+        "name": "hexgrad/Kokoro-82M",
+        "url": "https://huggingface.co/hexgrad/Kokoro-82M/tree/f3ff3571791e39611d31c381e3a41a3af07b4987",
+        "revision": "f3ff3571791e39611d31c381e3a41a3af07b4987"
+      },
+      "quantization": "Unquantized FP32 fixed-contract derivative; zero quantized operators",
+      "scope": "excluded_non_e2e"
+    },
+    {
       "id": "0018-moss-tts-nano-cpu",
       "experiment": "0018",
       "model": "MOSS-TTS-Nano",
@@ -2385,6 +2454,84 @@
         "revision": "f52645cb467506d8e18e746ddd59482685b74e58"
       },
       "quantization": "Unquantized official ONNX graphs; no quantization or physical Android route was attempted",
+      "scope": "excluded_non_e2e"
+    },
+    {
+      "id": "0020-supertonic-refresh-bootstrap",
+      "experiment": "0020",
+      "model": "Supertonic 3",
+      "route": "historical CPU refresh bootstrap",
+      "deployment_variant": "Exact 0008 Supertonic CPU refresh attempt",
+      "attempt_status": "blocked",
+      "technical_execution": {
+        "status": "blocked",
+        "android_attempted": true,
+        "provider": "CPU (inference not started)",
+        "threads": 1
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "A refreshed attempt preserved the exact historical 0008 contract and passed the Windows-ADB device gate, but Android 16 denied the app access to shell-owned scoped-storage inputs; inference never started and every refreshed metric remains unavailable. The original 0008 measurements remain separate historical evidence.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
+      "android_attempted": true,
+      "provider": "CPU (inference not started)",
+      "precision": "INT8",
+      "threads": 1,
+      "device": {
+        "model": "SM-S918B",
+        "soc": "SM8550",
+        "serial": "R5CW81PR8SY",
+        "abi": "arm64-v8a"
+      },
+      "metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "wav": null,
+      "summary": "A refreshed attempt preserved the exact historical 0008 contract and passed the Windows-ADB device gate, but Android 16 denied the app access to shell-owned scoped-storage inputs; inference never started and every refreshed metric remains unavailable. The original 0008 measurements remain separate historical evidence.",
+      "limitations": [
+        "This is staging-ownership evidence only, not model/runtime compatibility or refreshed performance evidence.",
+        "Earlier zero-device readiness observations remain valid for their timestamps; a later Windows-ADB readiness check reached the exact canonical phone.",
+        "Prepared build and archive hashes do not establish execution."
+      ],
+      "sources": [
+        "experiments/0020-historic-android-benchmark-refresh/results/registry-audit.json",
+        "experiments/0020-historic-android-benchmark-refresh/results/device-readiness.json",
+        "experiments/0020-historic-android-benchmark-refresh/results/device-readiness-attempt-2.json",
+        "experiments/0020-historic-android-benchmark-refresh/results/device-readiness-windows-adb.json",
+        "experiments/0020-historic-android-benchmark-refresh/results/supertonic-build-provenance.json",
+        "experiments/0020-historic-android-benchmark-refresh/results/supertonic-bootstrap-attempt.json"
+      ],
+      "missing_reasons": {
+        "wav": "No refreshed audio was produced.",
+        "load_seconds": "The refreshed route stopped at app bootstrap before model/session setup.",
+        "cold_rtf": "Inference did not start.",
+        "warm_median_rtf": "Inference did not start; no refreshed warm campaign exists.",
+        "peak_pss_bytes": "No inference process measurement exists.",
+        "peak_vm_hwm_bytes": "No inference process measurement exists."
+      },
+      "model_identity": {
+        "name": "Supertone/supertonic-3",
+        "url": "https://huggingface.co/Supertone/supertonic-3/tree/724fb5abbf5502583fb520898d45929e62f02c0b",
+        "revision": "724fb5abbf5502583fb520898d45929e62f02c0b"
+      },
+      "quantization": "INT8 ONNX release outputs; exact historical archive contract prepared",
       "scope": "excluded_non_e2e"
     }
   ]
