@@ -47,8 +47,9 @@ def main():
                 destination = f"/sdcard/Android/data/{package}/files/{item.relative_path}"
                 parent = str(PurePosixPath(destination).parent)
                 incoming = f"{destination}.incoming-{uuid.uuid4().hex}"
-                command = f"mkdir -p {shlex.quote(parent)} && cat {shlex.quote(temp)} > {shlex.quote(incoming)} && mv {shlex.quote(incoming)} {shlex.quote(destination)} && sha256sum {shlex.quote(destination)}"
-                app = must(commands.run(["adb", "-s", serial, "shell", "run-as", package, "sh", "-c", command], timeout=600), f"app-owned copy {item.relative_path}")
+                app_command = f"umask 077; mkdir -p {shlex.quote(parent)}; cat > {shlex.quote(incoming)}; mv {shlex.quote(incoming)} {shlex.quote(destination)}; sha256sum {shlex.quote(destination)}"
+                shell_command = f"cat {shlex.quote(temp)} | run-as {shlex.quote(package)} sh -c {shlex.quote(app_command)}"
+                app = must(commands.run(["adb", "-s", serial, "shell", shell_command], timeout=600), f"app-owned copy {item.relative_path}")
                 app_hash = app.stdout.split()
                 if not app_hash or app_hash[0].lower() != item.sha256:
                     raise SystemExit(f"app-owned hash mismatch: {item.relative_path}")
