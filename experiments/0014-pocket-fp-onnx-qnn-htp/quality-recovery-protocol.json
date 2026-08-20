@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "date": "2026-08-20",
+  "relationship": "Moritz-authorized root-cause and quality-recovery phase. protocol.json, continuation-protocol.json, the original fail-closed screen, and the rejected 2026-08-19 samples remain immutable historical evidence.",
+  "question": "Why were the 0012 CPU and first 0014 QNN samples unusable, and can a source-valid Pocket contract be recovered before further acceleration?",
+  "frozen_source": {
+    "code_repository": "https://github.com/kyutai-labs/pocket-tts.git",
+    "code_revision": "d108410d23eef7e01db282f9442891162dbc3db6",
+    "weight_repository": "kyutai/pocket-tts-without-voice-cloning",
+    "weight_revision": "d29db7978e464fb90cb3359ee0c69a273b9142cc",
+    "weight_sha256": "be9c6b4876d3f30740a8225dfcaa2e43dc4aeb753c15272735bee16bbb4abb0a",
+    "tokenizer_sha256": "d461765ae179566678c93091c5fa6f2984c31bbe990bf1aa62d92c64d91bc3f6",
+    "fixed_alba_state_sha256": "e4a323e8e771f14fd669428d83e7af6d83b4d6d0f0e282c30122f04824f17b1c"
+  },
+  "contract": {
+    "text": "Pocket TTS runs entirely on this Android phone using the original floating point model.",
+    "text_sha256": "66e1ba2772ca3d534b792e9d9dacb26e37fda422afe40e8cced5aa878404ffb1",
+    "voice": "official pinned precomputed Alba state; fixed-voice synthesis, not audio voice cloning",
+    "canonical_temperature": 0.3,
+    "preserved_comparison_temperature": 0.7,
+    "seed": 0,
+    "lsd_decode_steps": 1,
+    "eos_threshold": -4.0,
+    "frames_after_eos": 3,
+    "sample_rate_hz": 24000,
+    "channels": 1
+  },
+  "gates_in_order": [
+    "Generate exact official-source Bria and Alba controls and obtain Moritz's sample-bound verdict.",
+    "Localize source-versus-ONNX divergence step-by-step; numerical evidence cannot substitute for listening.",
+    "Generate controlled FP ONNX plus fixed Alba on host CPU and obtain an independent listening verdict.",
+    "Run Android CPU before HTP and obtain a separate listening verdict; host acceptance does not transfer across runtime/platform.",
+    "For a QNN-compatible derivative, obtain host CPU acceptance and then Android CPU acceptance before physical HTP.",
+    "Physical HTP requires fallback disabled, zero CPU provider events, all invoked neural calls assigned to QNN, and matching RPC/accelerator/cycle/HVX evidence.",
+    "Every new phone sample requires an independent Moritz listening verdict before any quality or deployment claim."
+  ],
+  "root_cause_fail_closed_rule": "The no-voice-cloning checkpoint must reject audio-reference cloning. Bria is retained only as historical invalid-contract evidence and for the distinct 0008 archive audit; it is not a valid voice input for the controlled checkpoint.",
+  "qnn_static_boundary": {
+    "cache_capacity": 256,
+    "initial_voice_positions": 126,
+    "text_positions": 26,
+    "maximum_generated_positions": 100,
+    "reason": "126 + 26 + 100 = 252, so every observed position remains in the fixed cache. Larger caps would roll away voice context and require a separate contract.",
+    "cpu_work": "fixed token IDs, prepacked official state, deterministic noise fixture, state ownership, EOS scan, call orchestration, concatenation, and WAV encoding",
+    "neural_work": "text conditioner, text prefill, every BOS/latent AR call, every flow call, and every Mimi decoder call"
+  },
+  "phone_controls": {
+    "serial": "R5CW81PR8SY",
+    "model": "SM-S918B",
+    "soc": "SM8550",
+    "abi": "arm64-v8a",
+    "transport": "Windows adb.exe with ADB_LIBUSB=1",
+    "lock": "actual nonblocking flock on artifacts/locks/phone.lock; lock FD closed in ADB children",
+    "remote_stage": "unique /data/local/tmp root",
+    "cleanup": "pull evidence, delete the exact remote stage, verify it is absent, then release the lock",
+    "personal_data": "not accessed"
+  },
+  "preservation": {
+    "edit_0012": false,
+    "rewrite_old_0014_results": false,
+    "new_evidence_location": "experiment 0014 quality-recovery result files and ignored work/quality-recovery artifacts"
+  }
+}

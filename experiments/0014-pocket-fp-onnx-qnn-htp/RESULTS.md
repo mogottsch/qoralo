@@ -2,16 +2,174 @@
 
 ## Bottom line
 
-The continuation achieved **technically QNN-only neural execution for complete observed text-to-WAV paths** on the S23:
+The poor output was not primarily an HTP problem. **Experiment 0012 accidentally tried to clone Bria with a no-voice-cloning checkpoint whose entire Mimi encoder was zero.** Its source/ONNX comparisons faithfully validated that broken contract.
 
-- CPU fallback was disabled.
-- Every neural call used to produce the listed WAVs was assigned to `QNNExecutionProvider`.
-- There were zero CPU provider events.
-- Every QNN provider event had matching RPC, accelerator, cycle, and HVX evidence.
+The 2026-08-20 recovery replaced invalid audio cloning with the official pinned fixed Alba state. Moritz then independently accepted the source, controlled ONNX, QNN-compatible host, Android CPU, and physical fallback-disabled QNN/HTP samples as good for the exact frozen prompt.
 
-However, **Moritz rejected every sample as unusable in a blind listen**, including the experiment-0012 CPU comparator. The QNN samples were unintelligible mumbling; the CPU sample was repetitive “takakakakakakakaka.” This is therefore a technical execution result, not a speech-quality success or deployment recommendation.
+The accepted physical sample is SHA-256 `2c3901ec39a53596759c1d95381a1d67e4f9ca8886cdf39ac03721863c63eb56`. It emitted 56 frames with EOS at step 53 and had 122 QNN / 0 CPU provider events with exactly 122 matching physical RPC, accelerator, cycle, and HVX records.
 
-## Blind listening verdict
+This is a **quality-accepted observed fixed-Alba route**, not a general voice-cloning or production claim.
+
+## Root cause: the invalid voice contract
+
+Frozen checkpoint:
+
+```text
+repository: kyutai/pocket-tts-without-voice-cloning
+revision:   d29db7978e464fb90cb3359ee0c69a273b9142cc
+SHA-256:   be9c6b4876d3f30740a8225dfcaa2e43dc4aeb753c15272735bee16bbb4abb0a
+```
+
+The fail-closed audit found:
+
+- all 42 `mimi.encoder.*` and `mimi.encoder_transformer.*` tensors are exactly zero;
+- 9,224,736/9,224,736 encoder elements are zero;
+- every tensor name, shape, dtype, byte count, and raw-tensor SHA-256 is recorded;
+- exact official source and controlled ONNX both return the same all-zero `[1,125,1024]` voice embedding for Bria, zero audio, one-valued audio, and seeded random audio;
+- controlled encoder graph SHA-256 `a01b6a65…2f3e` is therefore input-invariant.
+
+The official runtime normally sets `has_voice_cloning=false` when its gated `weights_path` fails and it falls back to `weights_path_without_voice_cloning` (`tts_model.py:200-209`). It then rejects an audio path at `tts_model.py:874-875`.
+
+Experiment 0012's local YAML assigned the same ungated no-voice-cloning file to both fields. `weights_path` succeeded, the fallback branch never ran, `has_voice_cloning` incorrectly stayed true for that local harness, and Bria reached the zero encoder.
+
+**Correct interpretation:** 0012 exercised an invalid audio-cloning route. Numerical equivalence validated the broken route, not speech quality. Experiment 0012 is preserved unchanged; full evidence is in [`results/zero-voice-encoder-root-cause.json`](results/zero-voice-encoder-root-cause.json).
+
+## Quality-recovery listening ladder
+
+All verdicts below are Moritz's explicit sample-bound judgments from 2026-08-20.
+
+| Stage | Route | Temperature | SHA-256 | Verdict |
+|---|---|---:|---|---|
+| Official source control | invalid Bria + zero encoder | 0.3 | `89630617…db01` | **Rejected:** “complete bullshit” |
+| Official source control | invalid Bria + zero encoder | 0.7 | `6ee4015c…b459` | **Rejected:** “complete bullshit” |
+| Official source baseline | pinned fixed Alba state | 0.3 | `cbea7c3d…04c1` | **Accepted:** “good” |
+| Official source baseline | pinned fixed Alba state | 0.7 | `3a802d9b…bb6f` | **Accepted:** “good” |
+| Controlled FP ONNX host | fixed Alba | 0.3 | `e77dd7d6…ad5d` | **Accepted:** “sounded very good and the same” |
+| Controlled FP ONNX host | fixed Alba | 0.7 | `9398db86…30ba` | **Accepted:** same observation |
+| QNN-compatible derivative, host CPU | fixed Alba | 0.3 | `1a7f85e4…3eab` | **Accepted:** “good” |
+| QNN-compatible derivative, host CPU | fixed Alba | 0.7 | `090c5932…bc9c` | **Accepted:** “good” |
+| Original dynamic ONNX, Android CPU | fixed Alba | 0.3 | `cdf77f6e…c4b6` | **Rejected:** perceptually deranged; exact quote retained in JSON |
+| Fixed-cache derivative, Android CPU | fixed Alba | 0.3 | `e0638f35…1c9a` | **Accepted:** “sounds good” |
+| Fixed-cache derivative, fallback-disabled QNN/HTP | fixed Alba | 0.3 | `2c3901ec…eb56` | **Accepted:** “sounds good” |
+
+The physical QNN result was accepted independently despite only `0.299` waveform correlation with the CPU derivative. This directly demonstrates why correlation is descriptive rather than a quality gate.
+
+Full listening record: [`results/quality-recovery-listening.json`](results/quality-recovery-listening.json).
+
+## Valid fixed-Alba host equivalence
+
+The pinned Alba state bypasses the unavailable audio encoder and directly supplies six official FlowLM cache tensors at offset 126.
+
+Source versus controlled ONNX checks showed:
+
+- exact 26 tokenizer IDs;
+- exact text-conditioner output;
+- exact initial Alba caches and offsets;
+- text-prefill cache maximum absolute difference `3.5644e-5`;
+- shared-noise free-running source and ONNX trajectories crossed EOS at the same step 53;
+- at temperature zero, both emitted 111,360 samples with correlation `0.999999928`, SNR `68.417 dB`, and maximum absolute float difference `0.000809`.
+
+At positive temperature, free-running numerical differences grew autoregressively, as expected, but human listening accepted both 0.3 and 0.7. Temperature 0.3 is canonical because the official English configuration recommends it and no perceptual advantage was heard at 0.7.
+
+## Secondary Android failure and static recovery
+
+The original dynamic ONNX graph was still not platform-faithful on Android, even with the valid Alba state and the exact precomputed NumPy noise fixture:
+
+- host: EOS 53, 56 frames, 4.48 s;
+- Android: no EOS by the 134-frame cap, 10.72 s;
+- host first AR EOS logit: `-9.8847`;
+- Android first AR EOS logit: `-10.2709`.
+
+That first-logit difference occurs before the first sampled latent, after identical token IDs and Alba cache inputs. It localizes the secondary failure to the original Android dynamic FlowLM prefill/AR execution, not tokenizer, RNG, flow integration, or Mimi decode. Moritz separately rejected the resulting Android sample even though its RTF was `0.526`.
+
+Directly initializing the QNN-compatible fixed cache from Alba removed the dynamic recurrent path. The 256-slot contract retains all `126 voice + 26 text + 100 generated = 252` positions without rolling away voice context.
+
+The recovered Android CPU derivative:
+
+- setup `2.603 s`;
+- generation `1.846 s` for 4.48 s audio;
+- RTF `0.412`;
+- EOS 53 / 56 frames;
+- VmHWM `1,294,420 kB`;
+- correlation `0.9999904` and SNR `47.15 dB` versus the accepted host derivative;
+- WAV SHA-256 `e0638f35…1c9a`;
+- independently accepted as “sounds good.”
+
+## Accepted physical QNN/HTP path
+
+The observed fixed-Alba path invoked:
+
+| Neural session | QNN calls |
+|---|---:|
+| Text conditioner | 1 |
+| Text prefill | 1 |
+| BOS AR | 1 |
+| Latent AR, including the final stop check | 56 |
+| Flow step | 56 |
+| Decoder-12 | 4 |
+| Decoder-6 | 1 |
+| Decoder-1 | 2 |
+| **Total** | **122** |
+
+CPU fallback was disabled. The ORT and physical profiles recorded:
+
+| Evidence | Events | Aggregate |
+|---|---:|---:|
+| `QNNExecutionProvider` | 122 | — |
+| `CPUExecutionProvider` | **0** | — |
+| RPC execute | 122 | 1,481,483 µs |
+| QNN accelerator execute | 122 | 1,458,206 µs |
+| Accelerator cycles | 122 | 1,230,903,724 cycles |
+| HVX | 122 | 488 threads summed, four per call |
+
+Every invoked neural session—including decoder-12, decoder-6, and decoder-1—has physical proof. The old decoder-6 limitation does not apply to this recovered 56-frame path.
+
+### Timing and memory
+
+| Measurement | Profiled physical proof | Separate unprofiled run |
+|---|---:|---:|
+| Setup/session creation | 58.198 s | 66.695 s |
+| Complete generation | 2.352 s | 0.740 s |
+| Audio | 4.48 s | 4.48 s |
+| RTF | **0.525** | **0.165** |
+| VmHWM | 2,447,980 kB | 2,241,184 kB |
+| WAV SHA-256 | `2c3901ec…eb56` | same, byte-identical |
+
+The unprofiled value is **one first complete generation after session setup**, not a warm median or warm distribution. The profiled result includes detailed ORT/QNN instrumentation and remains the physical-proof timing. Batch decoding exposes no honest streaming first-audio boundary.
+
+VmHWM is cumulative process high-water including eight sessions, model mappings, QNN contexts, caches, buffers, profiles where enabled, and output. It is not isolated tensor or weight memory.
+
+Thermal status remained `0` before and after the profiled run. AP temperature was 39.7→48.3 °C, skin 37.2→38.9 °C, and battery 35.0→35.4 °C. The USB-powered battery remained at 47%. These are observed system readings, not laboratory thermal control.
+
+### CPU versus neural boundary
+
+CPU handled:
+
+- fixed token IDs;
+- loading and packing the official fixed Alba state;
+- deterministic NumPy seed-0 noise fixtures;
+- recurrent tensor ownership and call orchestration;
+- EOS scanning;
+- concatenation and PCM16 WAV encoding.
+
+QNN HTP handled every invoked neural call: text conditioning, text prefill, BOS and latent autoregression, flow, and all decoder variants. “FP source” describes graph tensor types; this QNN toolchain executes the unquantized neural graphs as FP16, not FP32.
+
+## Distinct 0008 archive reconciliation
+
+The exact pinned 0008 sherpa INT8 archive is not the broken controlled 0012 encoder route:
+
+- archive SHA-256 `2f3b8882…67cb`;
+- encoder SHA-256 `e8f2f6d3…0260`, distinct from controlled zero encoder `a01b6a65…2f3e`;
+- all 13,312 tested output values were nonzero;
+- outputs differed for Bria, zero, one-valued, and seeded random inputs.
+
+Its encoder is therefore genuinely input-sensitive. It also has an important limitation: the traced output remained `[1,13,1024]` for tested lengths, and the Bria result was byte-identical for 2 seconds versus 10 seconds, so later reference audio is ignored.
+
+Historical 0008 performed structural validation only. New exact-asset host samples at temperatures 0.3 and 0.7 were both explicitly accepted as “good” on 2026-08-20. This establishes those new route/sample results, not a retroactive verdict for missing historical WAVs. The archive's conflicting license statements remain research-only.
+
+## Historical 2026-08-19 blind listening verdict
+
+> The following sections preserve the earlier invalid-Bria continuation exactly as technical history. They do not override the 2026-08-20 root cause or recovered fixed-Alba result above.
 
 On 2026-08-19, Moritz listened before route labels were revealed:
 
@@ -156,6 +314,11 @@ A final host-only design began to integrate voice/text prefill and 100 exact-len
 
 Every phone run used the actual nonblocking shared lock, exact serial/model/SoC/ABI checks, Windows ADB with `ADB_LIBUSB=1`, lock-FD closure in ADB children, a unique remote root, evidence pull, and verified cleanup. No personal data was accessed.
 
-**Recommendation: do not deploy any Pocket artifact tested here.** The continuation proves an observed neural path can run entirely through QNN HTP, but neither the QNN derivatives nor the 0012 CPU-derived comparator passed human listening.
+The historical Bria-conditioned routes remain rejected and must not be deployed. The recovered fixed-Alba route is a credible bounded prototype with independent host, Android CPU, and QNN/HTP acceptance. It is still not a general production recommendation: broader text evaluation, fixed-voice product fit, licensing review, and a real performance distribution remain necessary.
 
-Machine-readable continuation evidence: [`results/full-qnn-continuation.json`](results/full-qnn-continuation.json).
+Machine-readable evidence:
+
+- recovered result: [`results/alba-quality-recovery.json`](results/alba-quality-recovery.json)
+- root cause: [`results/zero-voice-encoder-root-cause.json`](results/zero-voice-encoder-root-cause.json)
+- full listening ladder: [`results/quality-recovery-listening.json`](results/quality-recovery-listening.json)
+- historical continuation: [`results/full-qnn-continuation.json`](results/full-qnn-continuation.json)

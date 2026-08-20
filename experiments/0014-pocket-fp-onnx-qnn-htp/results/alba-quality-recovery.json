@@ -1,0 +1,730 @@
+{
+  "schema_version": 1,
+  "date": "2026-08-20",
+  "result": "root_cause_fixed_and_observed_fixed_alba_qnn_path_perceptually_accepted",
+  "claim": "0012 used an invalid Bria audio-cloning contract with a no-voice-cloning checkpoint whose entire Mimi encoder was zero. The recovered route uses the official pinned fixed Alba state. The QNN-compatible derivative was accepted on host CPU, Android CPU, and independently on fallback-disabled physical QNN/HTP for the exact observed sample.",
+  "root_cause": {
+    "evidence": "results/zero-voice-encoder-root-cause.json",
+    "checkpoint": {
+      "repository": "kyutai/pocket-tts-without-voice-cloning",
+      "revision": "d29db7978e464fb90cb3359ee0c69a273b9142cc",
+      "sha256": "be9c6b4876d3f30740a8225dfcaa2e43dc4aeb753c15272735bee16bbb4abb0a"
+    },
+    "finding": "All 42 Mimi encoder and encoder-transformer tensors (9,224,736 elements) are zero. Exact source and controlled ONNX return the same all-zero [1,125,1024] embedding for Bria, zeros, ones, and random audio.",
+    "guard_bypass": "The 0012 local config assigned the ungated no-voice-cloning file to weights_path, so official fallback detection never set has_voice_cloning=false and the official audio-path guard did not fire.",
+    "correction": "0012 accidentally exercised an invalid audio-cloning route. Numerical equivalence validated the broken contract, not speech quality. Experiment 0012 remains unchanged."
+  },
+  "recovered_contract": {
+    "code_revision": "d108410d23eef7e01db282f9442891162dbc3db6",
+    "weights_sha256": "be9c6b4876d3f30740a8225dfcaa2e43dc4aeb753c15272735bee16bbb4abb0a",
+    "tokenizer_sha256": "d461765ae179566678c93091c5fa6f2984c31bbe990bf1aa62d92c64d91bc3f6",
+    "voice": "official pinned precomputed Alba state; fixed voice, not voice cloning",
+    "alba_state_sha256": "e4a323e8e771f14fd669428d83e7af6d83b4d6d0f0e282c30122f04824f17b1c",
+    "alba_cache_pack_sha256": "eb6e2d714fe75cb9a726c7742f32e7c6b500cc6de4dae8b533f2bfa7b41bc6d2",
+    "text_sha256": "66e1ba2772ca3d534b792e9d9dacb26e37fda422afe40e8cced5aa878404ffb1",
+    "temperature": 0.3,
+    "seed": 0,
+    "noise_fixture_sha256": "c130a822ce776253ccbab68a642697698862bfe4d000d6bdd03f0836d62d8c94",
+    "lsd_steps": 1,
+    "eos_threshold": -4.0,
+    "frames_after_eos": 3,
+    "sample_rate_hz": 24000
+  },
+  "host_recovery": {
+    "source_listening": {
+      "bria_temp_0_3": {
+        "sha256": "89630617d3f1dbab9cc7db216500c5813ac9d1660c1695bbdf1fb7bf2a1fdb01",
+        "verdict": "rejected",
+        "verbatim": "complete bullshit"
+      },
+      "bria_temp_0_7": {
+        "sha256": "6ee4015c75e391167ee77dadc86bc3f20a0b592d7b624421b4a60f4f7e39b459",
+        "verdict": "rejected",
+        "verbatim": "complete bullshit"
+      },
+      "alba_temp_0_3": {
+        "sha256": "cbea7c3d4d02f52b6e9419564d96ff2a5429b820105eb446be942574785804c1",
+        "verdict": "accepted",
+        "verbatim": "good"
+      },
+      "alba_temp_0_7": {
+        "sha256": "3a802d9b18fd549f6ff44df6442b67570e59cc52824a3abba42a9f94d5babb6f",
+        "verdict": "accepted",
+        "verbatim": "good"
+      }
+    },
+    "source_vs_controlled_onnx": {
+      "tokenizer_exact": true,
+      "text_conditioner": {
+        "shape": [
+          1,
+          26,
+          1024
+        ],
+        "max_abs": 0.0,
+        "mean_abs": 0.0,
+        "rmse": 0.0,
+        "source_finite": true,
+        "onnx_finite": true
+      },
+      "initial_alba_cache_max_abs": 0.0,
+      "text_prefill_cache_max_abs": 3.5643577575683594e-05,
+      "shared_noise_70_steps": {
+        "source_eos_step_within_window": 53,
+        "onnx_eos_step_within_window": 53,
+        "conditioning_max_abs": 0.015551447868347168,
+        "flow_direction_max_abs": 0.03018254041671753,
+        "latent_max_abs": 0.030182600021362305,
+        "eos_logit_max_abs": 0.006282031536102295,
+        "first_latent_step_over_1e_3": 28
+      },
+      "temperature_zero_end_to_end": {
+        "source_samples": 111360,
+        "onnx_samples": 111360,
+        "equal_length": true,
+        "metrics": {
+          "shape": [
+            111360
+          ],
+          "max_abs": 0.0008092410862445831,
+          "mean_abs": 1.2228734558934958e-05,
+          "rmse": 3.426958131088332e-05,
+          "source_finite": true,
+          "onnx_finite": true
+        },
+        "correlation": 0.9999999280075871,
+        "snr_db": 68.41679459873926
+      }
+    },
+    "controlled_fp_onnx_alba": {
+      "outputs": [
+        {
+          "path": "controlled-fp-onnx-alba-temp0p3-seed0.wav",
+          "sha256": "e77dd7d6d727ed10109e030372d0e9d4aa1cab75347ccf41a3b1ab7c67efad5d",
+          "samples": 107520,
+          "seconds": 4.48,
+          "peak_float": 0.493676096200943,
+          "rms_float": 0.11700431257486343,
+          "clipped_before_conversion": 0,
+          "temperature": 0.3,
+          "seed": 0,
+          "load_seconds": 0.8561962879998646,
+          "generation_seconds": 2.087953935999849,
+          "provider": [
+            "CPUExecutionProvider"
+          ]
+        },
+        {
+          "path": "controlled-fp-onnx-alba-temp0p7-seed0.wav",
+          "sha256": "9398db86a89f0288b27fb966ce1bbfca6a4517c616503cd91f78b0c4603130ba",
+          "samples": 107520,
+          "seconds": 4.48,
+          "peak_float": 0.5572421550750732,
+          "rms_float": 0.13459983468055725,
+          "clipped_before_conversion": 0,
+          "temperature": 0.7,
+          "seed": 0,
+          "load_seconds": 0.8128845289998026,
+          "generation_seconds": 1.8648033839999698,
+          "provider": [
+            "CPUExecutionProvider"
+          ]
+        }
+      ],
+      "listening": {
+        "verdict": "accepted_both",
+        "verbatim": "sounded very good and the same"
+      }
+    },
+    "qnn_compatible_fixed_cache_alba": {
+      "graphs": {
+        "text_conditioner-text26.onnx": "c5ea5feebe6f3197e89839b53469cb191ae16cc83821f82451710eca9f56862a",
+        "flow_lm_prefill_text26.onnx": "667bf587b33d38b30cd6038e1ce01a701b01b95c6606983924051070d25db3c2",
+        "flow_lm_ar_bos1.onnx": "591c8c7c0a37f04c14435d5311a4e8e66756429ffdec49a185dfa33928255532",
+        "flow_lm_ar_latent1.onnx": "5ab28bd590f0396285bb87169a1027fea6760d0bfa4f4df2ccc6449fb7fe9b99",
+        "flow_lm_flow-flow1.onnx": "fa74e3777dc661135807d964d47f177bc93159392a0a484718ba0343130f7a60",
+        "mimi_decoder-decoder12.onnx": "6c3e398ef7a12a6798a67de4abeb606390b1710f45007640d789171ae814da56",
+        "mimi_decoder-decoder6.onnx": "9cb6d327f67344b0f1ac7ed7109b34502822bbd25271f16612021c42520ecd90",
+        "mimi_decoder-decoder1.onnx": "c9361ac87eedf60ada38638039c55a093d9cbb7ae7959703ff1837636f98a46c"
+      },
+      "outputs": [
+        {
+          "path": "fixed-cache-fp-alba-temp0p3-seed0.wav",
+          "sha256": "1a7f85e4b96c17d10e596616b43a9a1999ffe56ca04615dab1aab4cbd72b3eab",
+          "samples": 107520,
+          "seconds": 4.48,
+          "peak_float": 0.4936753809452057,
+          "rms_float": 0.1170014888048172,
+          "finite": true,
+          "clipped_before_conversion": 0,
+          "temperature": 0.3,
+          "seed": 0,
+          "eos_step": 53,
+          "latent_frames": 56
+        },
+        {
+          "path": "fixed-cache-fp-alba-temp0p7-seed0.wav",
+          "sha256": "090c593263850530b4e62deda96923efb5dbb07c2060b9a7f624c9b1f5ebbc9c",
+          "samples": 107520,
+          "seconds": 4.48,
+          "peak_float": 0.5572416186332703,
+          "rms_float": 0.13459967076778412,
+          "finite": true,
+          "clipped_before_conversion": 0,
+          "temperature": 0.7,
+          "seed": 0,
+          "eos_step": 53,
+          "latent_frames": 56
+        }
+      ],
+      "host_temp_0_3_vs_controlled_onnx": {
+        "correlation": 0.9999780442332326,
+        "snr_db": 43.57426802720582,
+        "max_abs_pcm16": 750.0
+      },
+      "listening": {
+        "verdict": "accepted_both",
+        "verbatim": "good"
+      }
+    }
+  },
+  "android_original_dynamic_graph_control": {
+    "evidence": "results/android-alba-original-cpu.json",
+    "status": "perceptually_rejected",
+    "sha256": "cdf77f6ecaecdbb1a95992326675972366b57da864864f7359890b7e2df5c4b6",
+    "eos_step": null,
+    "latent_frames": 134,
+    "rtf": 0.52625,
+    "verdict": "rejected",
+    "verbatim": "he says it but he says it like he is going fucking insane. it sounds nuts. i am scared hahahaha.",
+    "localization": "The first AR EOS logit diverged before any sampled latent; the dynamic Android recurrent route is a separate platform/runtime fidelity failure."
+  },
+  "android_fixed_cache_cpu": {
+    "run": "work/quality-recovery/phone-alba-static-cpu-20260820T095303Z-52793",
+    "result": {
+      "route": "fixed_alba_android_cpu",
+      "variant": "fp-source-fixed-alba",
+      "provider": "CPUExecutionProvider",
+      "cpu_fallback": null,
+      "graph_optimization": "all",
+      "temperature": 0.3,
+      "seed": 0,
+      "noise_fixture": "NumPy RandomState MT19937 normal",
+      "max_frames": 100,
+      "load_seconds": 2.60302,
+      "generation_seconds": 1.84555,
+      "component_seconds": {
+        "text": 0.000168229,
+        "prefill": 0.0735001,
+        "ar": 0.827009,
+        "flow": 0.0923956,
+        "decoder": 0.839564
+      },
+      "eos_step": 53,
+      "latent_frames": 56,
+      "samples": 107520,
+      "audio_seconds": 4.48,
+      "rtf": 0.411953,
+      "vm_hwm_kb": 1294420,
+      "ort_profiles": [],
+      "eos_logits": [
+        -9.8847,
+        -10.037,
+        -9.47704,
+        -10.097,
+        -11.9999,
+        -12.1013,
+        -11.4772,
+        -11.4378,
+        -12.2661,
+        -12.0972,
+        -13.4739,
+        -13.4866,
+        -12.7464,
+        -13.3974,
+        -12.6604,
+        -11.6092,
+        -11.4598,
+        -11.3337,
+        -10.3753,
+        -11.6384,
+        -11.4669,
+        -12.369,
+        -11.7852,
+        -12.5236,
+        -11.4401,
+        -11.1807,
+        -11.6605,
+        -12.0305,
+        -11.8355,
+        -11.8213,
+        -11.9306,
+        -12.0871,
+        -12.6243,
+        -14.236,
+        -11.3961,
+        -10.4759,
+        -10.8079,
+        -11.1657,
+        -11.2715,
+        -10.7456,
+        -10.1542,
+        -10.3601,
+        -10.6097,
+        -11.9294,
+        -11.1663,
+        -10.8259,
+        -10.8438,
+        -9.67421,
+        -9.81867,
+        -10.3748,
+        -7.91694,
+        -7.39234,
+        -5.39404,
+        0.401485,
+        8.25964,
+        7.53853,
+        6.50786
+      ]
+    },
+    "wav": {
+      "channels": 1,
+      "sample_width_bytes": 2,
+      "sample_rate_hz": 24000,
+      "samples": 107520,
+      "seconds": 4.48,
+      "bytes": 215084,
+      "sha256": "e0638f35870b24fbe675649a0cd49fa69ca6d74060557bfec5336d2d03a21c9a",
+      "peak_abs_pcm16": 16176,
+      "rms_pcm16": 3833.8486251641916,
+      "finite": true,
+      "non_silent": true,
+      "unclipped": true
+    },
+    "host_comparison": {
+      "host_reference_sha256": "1a7f85e4b96c17d10e596616b43a9a1999ffe56ca04615dab1aab4cbd72b3eab",
+      "equal_length": true,
+      "byte_identical": false,
+      "max_abs_pcm16": 505.0,
+      "mae_pcm16": 4.235900297619048,
+      "correlation": 0.9999903565428049,
+      "snr_db": 47.147256381489754
+    },
+    "thermal": {
+      "status_before": 0,
+      "status_after": 0,
+      "ap_c_before": 39.3,
+      "ap_c_after": 48.6,
+      "skin_c_before": 36.7,
+      "skin_c_after": 37.2,
+      "battery_c_before": 34.8,
+      "battery_c_after": 34.8,
+      "battery_level_percent_before": 46,
+      "battery_level_percent_after": 46,
+      "usb_powered": true
+    },
+    "listening": {
+      "verdict": "accepted",
+      "verbatim": "sounds good"
+    }
+  },
+  "physical_qnn_htp": {
+    "provenance": {
+      "runner_source_sha256": "c382dc3da380d4ae452b6a561caa3c65ab858a929b93428503122b37fc77a6d9",
+      "android_runner_sha256": "c92e423796ea331eec4f84b5ede81766cb3e6aaf91cc445fbe2649829beae4fb",
+      "stage_manifest_sha256": "ed56eafcdfe358d0b69f367b6e46c1d366d5d319708382f35202db0740ee46ea",
+      "onnxruntime": "1.27.1",
+      "qairt_qnn": "2.49.0.260730",
+      "device": {"serial":"R5CW81PR8SY","model":"SM-S918B","soc":"SM8550","abi":"arm64-v8a"}
+    },
+    "profiled_proof": {
+      "run": "work/quality-recovery/phone-alba-static-qnn-20260820T095518Z-90577",
+      "result": {
+        "route": "fixed_alba_fallback_disabled_qnn",
+        "variant": "fp-source-fixed-alba",
+        "provider": "QNNExecutionProvider",
+        "cpu_fallback": false,
+        "graph_optimization": "basic",
+        "temperature": 0.3,
+        "seed": 0,
+        "noise_fixture": "NumPy RandomState MT19937 normal",
+        "max_frames": 100,
+        "load_seconds": 58.1983,
+        "generation_seconds": 2.35228,
+        "component_seconds": {
+          "text": 0.00698896,
+          "prefill": 0.0554281,
+          "ar": 1.32627,
+          "flow": 0.328931,
+          "decoder": 0.607475
+        },
+        "eos_step": 53,
+        "latent_frames": 56,
+        "samples": 107520,
+        "audio_seconds": 4.48,
+        "rtf": 0.525063,
+        "vm_hwm_kb": 2447980,
+        "ort_profiles": [
+          "/data/local/tmp/experiment-0014-pocket-alba-static-qnn-20260820T095518Z-90577/profiles/text_2026-08-20_10-55-51_316.json",
+          "/data/local/tmp/experiment-0014-pocket-alba-static-qnn-20260820T095518Z-90577/profiles/prefill_text_2026-08-20_10-55-51_736.json",
+          "/data/local/tmp/experiment-0014-pocket-alba-static-qnn-20260820T095518Z-90577/profiles/ar_bos_2026-08-20_10-55-55_816.json",
+          "/data/local/tmp/experiment-0014-pocket-alba-static-qnn-20260820T095518Z-90577/profiles/ar_latent_2026-08-20_10-55-59_714.json",
+          "/data/local/tmp/experiment-0014-pocket-alba-static-qnn-20260820T095518Z-90577/profiles/flow_2026-08-20_10-56-03_590.json",
+          "/data/local/tmp/experiment-0014-pocket-alba-static-qnn-20260820T095518Z-90577/profiles/decoder12_2026-08-20_10-56-04_089.json",
+          "/data/local/tmp/experiment-0014-pocket-alba-static-qnn-20260820T095518Z-90577/profiles/decoder6_2026-08-20_10-56-45_392.json",
+          "/data/local/tmp/experiment-0014-pocket-alba-static-qnn-20260820T095518Z-90577/profiles/decoder1_2026-08-20_10-56-47_868.json"
+        ],
+        "eos_logits": [
+          -9.96094,
+          -9.98438,
+          -9.51563,
+          -10.0547,
+          -12.1094,
+          -12.2891,
+          -11.7266,
+          -11.6563,
+          -12.1016,
+          -12.1016,
+          -13.4375,
+          -14.2188,
+          -12.2969,
+          -13.9609,
+          -13.5625,
+          -12.0703,
+          -11.3203,
+          -11.6641,
+          -10.6484,
+          -11.9297,
+          -12.625,
+          -12.4453,
+          -11.9141,
+          -12.4297,
+          -11.5625,
+          -11.2344,
+          -11.7578,
+          -12.0859,
+          -11.7656,
+          -12.2891,
+          -12.0391,
+          -12.0313,
+          -12.5391,
+          -14.2813,
+          -11.2734,
+          -10.5469,
+          -11.4609,
+          -11.3828,
+          -11.1875,
+          -10.6172,
+          -10.25,
+          -10.3281,
+          -10.9688,
+          -11.0469,
+          -11.5625,
+          -10.7813,
+          -10.3359,
+          -9.66406,
+          -9.83594,
+          -11.0234,
+          -7.47266,
+          -7.30078,
+          -5.04688,
+          2.85547,
+          8.69531,
+          6.76172,
+          5.64844
+        ]
+      },
+      "provider_events": {
+        "QNNExecutionProvider": 122
+      },
+      "physical": {
+        "rpc_execute_events": 122,
+        "rpc_execute_us": 1481483,
+        "accelerator_execute_events": 122,
+        "accelerator_execute_us": 1458206,
+        "cycle_events": 122,
+        "accelerator_cycles": 1230903724,
+        "hvx_events": 122,
+        "hvx_thread_sum": 488
+      },
+      "calls": {
+        "ar_bos": 1,
+        "ar_latent": 56,
+        "decoder12": 4,
+        "decoder1": 2,
+        "decoder6": 1,
+        "flow": 56,
+        "prefill_text": 1,
+        "text": 1
+      },
+      "wav": {
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "sample_rate_hz": 24000,
+        "samples": 107520,
+        "seconds": 4.48,
+        "bytes": 215084,
+        "sha256": "2c3901ec39a53596759c1d95381a1d67e4f9ca8886cdf39ac03721863c63eb56",
+        "peak_abs_pcm16": 16160,
+        "rms_pcm16": 4033.5517927846504,
+        "finite": true,
+        "non_silent": true,
+        "unclipped": true
+      },
+      "host_comparison": {
+        "host_reference_sha256": "1a7f85e4b96c17d10e596616b43a9a1999ffe56ca04615dab1aab4cbd72b3eab",
+        "equal_length": true,
+        "byte_identical": false,
+        "max_abs_pcm16": 21853.0,
+        "mae_pcm16": 2913.285574776786,
+        "correlation": 0.29880629203751824,
+        "snr_db": -1.6972540267801692
+      },
+      "thermal": {
+        "status_before": 0,
+        "status_after": 0,
+        "ap_c_before": 39.7,
+        "ap_c_after": 48.3,
+        "skin_c_before": 37.2,
+        "skin_c_after": 38.9,
+        "battery_c_before": 35.0,
+        "battery_c_after": 35.4,
+        "battery_level_percent_before": 47,
+        "battery_level_percent_after": 47,
+        "usb_powered": true
+      },
+      "cleanup_verified": true
+    },
+    "unprofiled_single_generation": {
+      "run": "work/quality-recovery/phone-alba-static-qnn-unprofiled-20260820T095952Z-134604",
+      "result": {
+        "route": "fixed_alba_fallback_disabled_qnn",
+        "variant": "fp-source-fixed-alba",
+        "provider": "QNNExecutionProvider",
+        "cpu_fallback": false,
+        "graph_optimization": "basic",
+        "temperature": 0.3,
+        "seed": 0,
+        "noise_fixture": "NumPy RandomState MT19937 normal",
+        "max_frames": 100,
+        "load_seconds": 66.6948,
+        "generation_seconds": 0.740293,
+        "component_seconds": {
+          "text": 0.0056874,
+          "prefill": 0.0176222,
+          "ar": 0.411111,
+          "flow": 0.0352725,
+          "decoder": 0.244463
+        },
+        "eos_step": 53,
+        "latent_frames": 56,
+        "samples": 107520,
+        "audio_seconds": 4.48,
+        "rtf": 0.165244,
+        "vm_hwm_kb": 2241184,
+        "ort_profiles": [],
+        "eos_logits": [
+          -9.96094,
+          -9.98438,
+          -9.51563,
+          -10.0547,
+          -12.1094,
+          -12.2891,
+          -11.7266,
+          -11.6563,
+          -12.1016,
+          -12.1016,
+          -13.4375,
+          -14.2188,
+          -12.2969,
+          -13.9609,
+          -13.5625,
+          -12.0703,
+          -11.3203,
+          -11.6641,
+          -10.6484,
+          -11.9297,
+          -12.625,
+          -12.4453,
+          -11.9141,
+          -12.4297,
+          -11.5625,
+          -11.2344,
+          -11.7578,
+          -12.0859,
+          -11.7656,
+          -12.2891,
+          -12.0391,
+          -12.0313,
+          -12.5391,
+          -14.2813,
+          -11.2734,
+          -10.5469,
+          -11.4609,
+          -11.3828,
+          -11.1875,
+          -10.6172,
+          -10.25,
+          -10.3281,
+          -10.9688,
+          -11.0469,
+          -11.5625,
+          -10.7813,
+          -10.3359,
+          -9.66406,
+          -9.83594,
+          -11.0234,
+          -7.47266,
+          -7.30078,
+          -5.04688,
+          2.85547,
+          8.69531,
+          6.76172,
+          5.64844
+        ]
+      },
+      "wav_sha256": "2c3901ec39a53596759c1d95381a1d67e4f9ca8886cdf39ac03721863c63eb56",
+      "byte_identical_to_profiled_and_accepted": true,
+      "timing_boundary": "One unprofiled first complete generation after session setup; not a warm median or distribution."
+    },
+    "assignment": "CPU fallback disabled; every invoked neural call in the observed fixed-Alba path used QNNExecutionProvider; zero CPU provider events; QNN provider count exactly matched RPC, accelerator, cycle, and HVX counts.",
+    "arithmetic": "FP source tensors; established QNN HTP behavior for this toolchain is FP16, not FP32.",
+    "cpu_boundary": "CPU supplies fixed token IDs, prepacked official Alba state, deterministic noise, recurrent tensor ownership, EOS scanning, orchestration, concatenation, and WAV encoding.",
+    "listening": {
+      "verdict": "accepted",
+      "verbatim": "sounds good",
+      "independent_from_host_and_cpu": true
+    }
+  },
+  "distinct_0008_archive": {
+    "archive_sha256": "2f3b88823cbbb9bf0b2477ec8ae7b3fec417b3a87b6bb5f256dba66f2ad967cb",
+    "encoder": {
+      "graph_sha256": "e8f2f6d301ffb96e398b138a7dc6d3038622d236044636b73d920bab85890260",
+      "controlled_zero_encoder_sha256": "a01b6a65c24fe407e8900841446de914b6208482615aff0f23c2e434e9fa3284",
+      "distinct_from_controlled_0012": true,
+      "fixture_results": [
+        {
+          "fixture": "bria_10s",
+          "shape": [
+            1,
+            13,
+            1024
+          ],
+          "nonzero_elements": 13312,
+          "elements": 13312,
+          "min": -0.5067102909088135,
+          "max": 0.7538231611251831,
+          "std": 0.11501582711935043,
+          "float32_sha256": "424d098fc30207d7b9e93a414cac1497685b4e7995dffdc6ff2d2e8538589b48"
+        },
+        {
+          "fixture": "zeros",
+          "shape": [
+            1,
+            13,
+            1024
+          ],
+          "nonzero_elements": 13312,
+          "elements": 13312,
+          "min": -1.4178979396820068,
+          "max": 0.7403066158294678,
+          "std": 0.10455583781003952,
+          "float32_sha256": "02a1f5862e87951d16a8afff9ca2724a985ab6a08b6666c301f86fbcfba63eb1"
+        },
+        {
+          "fixture": "ones",
+          "shape": [
+            1,
+            13,
+            1024
+          ],
+          "nonzero_elements": 13312,
+          "elements": 13312,
+          "min": -0.6820390224456787,
+          "max": 0.9654011726379395,
+          "std": 0.23143114149570465,
+          "float32_sha256": "550590efed71568bbb0157dd084ba9c9e7db6d388e7b56361927c4f4043b7f15"
+        },
+        {
+          "fixture": "random_seed0",
+          "shape": [
+            1,
+            13,
+            1024
+          ],
+          "nonzero_elements": 13312,
+          "elements": 13312,
+          "min": -0.6247272491455078,
+          "max": 0.6991977691650391,
+          "std": 0.1571420431137085,
+          "float32_sha256": "1081be4c8b6441c2e86d22ad2edc6bef25c082e88cbfce0173151adebb684a21"
+        }
+      ],
+      "input_sensitive": true,
+      "two_seconds_vs_ten_seconds_exact": true,
+      "output_shape_is_fixed_13_frames_for_tested_lengths": true
+    },
+    "outputs": [
+      {
+        "path": "archive-0008-int8-bria-temp0p3-seed0.wav",
+        "sha256": "5424b67745d1ac62bf16c72cbb3e5c6102666d40deba236749ee5178b73c6147",
+        "samples": 122880,
+        "seconds": 5.12,
+        "peak_float": 0.4673902988433838,
+        "rms_float": 0.08877898752689362,
+        "finite": true,
+        "clipped_before_conversion": 0,
+        "temperature": 0.3,
+        "seed": 0,
+        "num_steps": 5
+      },
+      {
+        "path": "archive-0008-int8-bria-temp0p7-seed0.wav",
+        "sha256": "4d13da2615d9618b55fd792fc7b1ee085785e7ee59c1e67b2d7253dddc9379ce",
+        "samples": 122880,
+        "seconds": 5.12,
+        "peak_float": 0.47479739785194397,
+        "rms_float": 0.11220355331897736,
+        "finite": true,
+        "clipped_before_conversion": 0,
+        "temperature": 0.7,
+        "seed": 0,
+        "num_steps": 5
+      }
+    ],
+    "historical_listening": "not performed",
+    "new_exact_asset_host_listening": {
+      "verdict": "accepted_both",
+      "verbatim": "good"
+    },
+    "boundary": "The 0008 archive has a distinct input-sensitive nonzero encoder, but its traced output is fixed at 13 frames and tested Bria output is identical for 2 s versus 10 s. Its license discrepancy remains research-only."
+  },
+  "quality": {
+    "listening_evidence": "results/quality-recovery-listening.json",
+    "canonical_observed_qnn_sample_sha256": "2c3901ec39a53596759c1d95381a1d67e4f9ca8886cdf39ac03721863c63eb56",
+    "accepted": true,
+    "scope": "Exact fixed Alba state, frozen text, seed 0, temperature 0.3, 56-frame observed path only. No claim for audio voice cloning, other voices, arbitrary texts, shapes, temperatures, or checkpoints."
+  },
+  "performance_boundary": {
+    "profiled_qnn_rtf": 0.525063,
+    "profiled_qnn_generation_seconds": 2.35228,
+    "profiled_qnn_setup_seconds": 58.1983,
+    "unprofiled_qnn_rtf": 0.165244,
+    "unprofiled_qnn_generation_seconds": 0.740293,
+    "unprofiled_qnn_setup_seconds": 66.6948,
+    "unprofiled_label": "single first complete post-setup generation, not warm median",
+    "first_audio_latency": null,
+    "first_audio_reason": "Batch runner decodes after latent generation and does not expose a streaming first-audio boundary.",
+    "memory": "VmHWM is cumulative process high-water including sessions, QNN contexts, caches, buffers, profiles where enabled, and output; not isolated model memory."
+  },
+  "phone_safety": {
+    "actual_nonblocking_flock": true,
+    "adb_children_lock_fd_closed": true,
+    "transport": "Windows adb.exe with ADB_LIBUSB=1",
+    "identity_rechecked_each_run": true,
+    "unique_remote_stages": true,
+    "remote_cleanup_verified": true,
+    "personal_files_accessed": false
+  },
+  "recommendation": "The observed fixed-Alba route is recovered and suitable for further bounded evaluation. Do not generalize to voice cloning or production deployment without broader text testing, fixed-voice product fit, licensing review, and a real performance distribution."
+}

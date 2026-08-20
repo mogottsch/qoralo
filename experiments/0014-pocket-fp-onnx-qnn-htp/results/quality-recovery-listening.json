@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "experiment": "0014-pocket-fp-onnx-qnn-htp",
+  "date": "2026-08-20",
+  "official_source_gate": {
+    "contract": "exact d108 official source, frozen weights/tokenizer/text/seed/LSD/EOS settings",
+    "samples": [
+      {
+        "voice": "invalid Bria audio-cloning attempt through the no-voice-cloning checkpoint",
+        "temperature": 0.3,
+        "sha256": "89630617d3f1dbab9cc7db216500c5813ac9d1660c1695bbdf1fb7bf2a1fdb01",
+        "seconds": 10.72,
+        "verdict": "rejected",
+        "verbatim": "complete bullshit",
+        "diagnostic": "reached the 134-frame maximum without EOS"
+      },
+      {
+        "voice": "invalid Bria audio-cloning attempt through the no-voice-cloning checkpoint",
+        "temperature": 0.7,
+        "sha256": "6ee4015c75e391167ee77dadc86bc3f20a0b592d7b624421b4a60f4f7e39b459",
+        "seconds": 7.84,
+        "verdict": "rejected",
+        "verbatim": "complete bullshit"
+      },
+      {
+        "voice": "official pinned fixed Alba state",
+        "temperature": 0.3,
+        "sha256": "cbea7c3d4d02f52b6e9419564d96ff2a5429b820105eb446be942574785804c1",
+        "seconds": 5.6,
+        "verdict": "accepted",
+        "verbatim": "good"
+      },
+      {
+        "voice": "official pinned fixed Alba state",
+        "temperature": 0.7,
+        "sha256": "3a802d9b18fd549f6ff44df6442b67570e59cc52824a3abba42a9f94d5babb6f",
+        "seconds": 5.68,
+        "verdict": "accepted",
+        "verbatim": "good"
+      }
+    ],
+    "conclusion": "The pinned Alba fixed state is the quality-valid official-source baseline. Bria must not be used with this no-voice-cloning checkpoint."
+  },
+  "controlled_fp_onnx_alba_host_gate": {
+    "blind_mapping": {
+      "A": {"temperature": 0.3, "sha256": "e77dd7d6d727ed10109e030372d0e9d4aa1cab75347ccf41a3b1ab7c67efad5d"},
+      "B": {"temperature": 0.7, "sha256": "9398db86a89f0288b27fb966ce1bbfca6a4517c616503cd91f78b0c4603130ba"}
+    },
+    "verdict": "accepted_both",
+    "verbatim": "sounded very good and the same",
+    "canonical_temperature": 0.3,
+    "canonical_reason": "official English configuration recommendation; no quality advantage was heard at 0.7"
+  },
+  "qnn_compatible_fixed_cache_alba_host_gate": {
+    "blind_mapping": {
+      "A": {"temperature": 0.3, "sha256": "1a7f85e4b96c17d10e596616b43a9a1999ffe56ca04615dab1aab4cbd72b3eab"},
+      "B": {"temperature": 0.7, "sha256": "090c593263850530b4e62deda96923efb5dbb07c2060b9a7f624c9b1f5ebbc9c"}
+    },
+    "verdict": "accepted_both",
+    "verbatim": "good",
+    "claim_boundary": "Host CPU perceptual acceptance of the QNN-compatible derivative; not physical HTP evidence"
+  },
+  "distinct_0008_int8_archive_host_gate": {
+    "blind_mapping": {
+      "A": {"temperature": 0.3, "sha256": "5424b67745d1ac62bf16c72cbb3e5c6102666d40deba236749ee5178b73c6147"},
+      "B": {"temperature": 0.7, "sha256": "4d13da2615d9618b55fd792fc7b1ee085785e7ee59c1e67b2d7253dddc9379ce"}
+    },
+    "verdict": "accepted_both",
+    "verbatim": "good",
+    "historical_correction": "The original 0008 campaign performed structural validation only. This new exact-asset host audit establishes perceptual validity for these two reproducible samples, not retroactively for the missing historical WAVs."
+  },
+  "android_cpu_original_graph_alba_gate": {
+    "temperature": 0.3,
+    "sha256": "cdf77f6ecaecdbb1a95992326675972366b57da864864f7359890b7e2df5c4b6",
+    "seconds": 10.72,
+    "eos_step": null,
+    "frame_cap": 134,
+    "verdict": "rejected",
+    "verbatim": "he says it but he says it like he is going fucking insane. it sounds nuts. i am scared hahahaha.",
+    "claim_boundary": "Route/sample-only rejection. The Android recurrent divergence was perceptually material; RTF 0.526 does not establish quality."
+  },
+  "android_cpu_fixed_cache_alba_gate": {
+    "temperature": 0.3,
+    "sha256": "e0638f35870b24fbe675649a0cd49fa69ca6d74060557bfec5336d2d03a21c9a",
+    "seconds": 4.48,
+    "eos_step": 53,
+    "frames": 56,
+    "verdict": "accepted",
+    "verbatim": "sounds good",
+    "claim_boundary": "This verdict applies only to the fixed-cache Android CPU sample; it does not transfer to HTP."
+  },
+  "physical_fallback_disabled_qnn_alba_gate": {
+    "temperature": 0.3,
+    "sha256": "2c3901ec39a53596759c1d95381a1d67e4f9ca8886cdf39ac03721863c63eb56",
+    "seconds": 4.48,
+    "eos_step": 53,
+    "frames": 56,
+    "verdict": "accepted",
+    "verbatim": "sounds good",
+    "independent_from_cpu": true,
+    "unprofiled_run_byte_identical": true,
+    "claim_boundary": "Acceptance is limited to this fixed-Alba, fixed-text, seed-0, temperature-0.3 observed QNN/HTP sample. It does not establish voice cloning or other voices/texts/shapes."
+  },
+  "quality_policy": "Only Moritz's sample-bound listening verdict establishes quality. Numerical fidelity and structural WAV validation are supporting evidence, not substitutes."
+}
