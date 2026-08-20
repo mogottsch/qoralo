@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "experiment": "0021-supertonic-canonical-v2-android-cpu",
+  "scope": "new canonical-v2 Supertonic 3 INT8 ONNX/sherpa CPU Android benchmark",
+  "canonical_transcript": {
+    "path": "protocol/transcript.txt",
+    "bytes": 226,
+    "trailing_newline": false,
+    "sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67"
+  },
+  "source": {
+    "archive": "sherpa-onnx-supertonic-3-tts-int8-2026-05-11.tar.bz2",
+    "archive_bytes": 128774318,
+    "archive_sha256": "82fa96f91c4ef8abaae3a14a3f4153facf88bed821d1f7331cec2700f432c427",
+    "runtime_aar": "sherpa-onnx-1.13.5.aar",
+    "runtime_aar_bytes": 49095090,
+    "runtime_aar_sha256": "6419cd8bc983e0c4fab06067f0fe0313fdc0f7103818ac1e7a08d50787b7a82b",
+    "sherpa_revision": "3dc7c569f31ca2cd4a20ed6f7db780327e6714c5",
+    "conversion_source_revision": "3dc7c569f31ca2cd4a20ed6f7db780327e6714c5"
+  },
+  "route": {
+    "provider": "cpu",
+    "threads": 1,
+    "voice": "M1",
+    "speaker_id": 5,
+    "language": "en",
+    "sample_rate_hz": 44100,
+    "precision": "released INT8 ONNX archive",
+    "application_cpu_orchestration": "sherpa frontend, generation control, callbacks and WAV encoding",
+    "state_reset": "Each timed iteration is a separate OfflineTts.generateWithConfigAndCallback invocation; no cache/state tensors pass between calls and each returned Audio object is independent. Sessions remain created once."
+  },
+  "measurement": {
+    "setup_reported_separately": true,
+    "first_generations": 1,
+    "warm_generations": 5,
+    "same_sessions": true,
+    "timing_boundary": "System.nanoTime around OfflineTts.generate only; WAV write/hash/listening excluded",
+    "rtf": "generation seconds divided by each run's actual emitted audio duration",
+    "warm_headline": "median of five warm per-run RTF values",
+    "memory": ["sampled phase peak PSS/RSS", "boundary PSS/RSS", "cumulative process VmHWM"],
+    "structural_audio": "every run must be valid finite non-silent unclipped PCM; retain all hashes and curate the warm-median run",
+    "listening": "not_reviewed until explicit Moritz verdict for exact WAV hash"
+  },
+  "device": {"serial":"R5CW81PR8SY","model":"SM-S918B","soc":"SM8550","abi":"arm64-v8a"},
+  "safety": {
+    "phone_lock": "artifacts/locks/phone.lock",
+    "adb": "/mnt/c/Users/mgottschling/AppData/Local/Android/platform-tools-pi/platform-tools/adb.exe",
+    "ADB_LIBUSB": "1",
+    "closed_lock_fd_in_children": true,
+    "exact_identity_boot_unlock_gates": true,
+    "app_internal_hash_verified_input_stage": true,
+    "unique_shell_stage_and_cleanup_verification": true,
+    "stop_for_new_terms_or_gates": true
+  },
+  "historical_boundary": "This is a new canonical-v2 route. It does not overwrite or relabel legacy-v1 experiments 0008 or 0020."
+}
