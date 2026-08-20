@@ -38,3 +38,8 @@ def test_supertonic_refresh_keeps_old_and_new_and_flags_setup():
     assert result["new"]["warm_median_rtf"] == 0.39308571289407546
     assert result["comparison"]["rtf_change_over_10_percent"] is False
     assert result["comparison"]["setup_change_over_10_percent"] is True
+    review = result["representative_wav"]["listening_review"]
+    assert review["status"] == "accepted"
+    assert review["reviewer"] == "Moritz"
+    assert review["date"] == "2026-08-20"
+    assert review["sample_sha256"] == result["representative_wav"]["sha256"]
