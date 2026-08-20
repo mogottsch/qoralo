@@ -12,7 +12,7 @@ def test_all_wavs_structurally_valid():
  for run in runs:
   w=run['structural_wav'];assert (w['channels'],w['sample_rate_hz'],w['sample_width_bytes'],w['frames'])==(1,44100,2,696523);assert w['finite'] and w['non_silent'] and w['unclipped'];assert abs(w['duration_seconds']-run['actual_audio_duration_seconds'])<1e-12
 def test_representative_wav_hash_and_review():
- r=load('results/phone-cpu-result.json');w=EXP/r['representative_wav']['path'];assert hashlib.sha256(w.read_bytes()).hexdigest()==r['representative_wav']['sha256'];assert r['representative_wav']['listening_review']['status']=='not_reviewed'
+ r=load('results/phone-cpu-result.json');w=EXP/r['representative_wav']['path'];assert hashlib.sha256(w.read_bytes()).hexdigest()==r['representative_wav']['sha256'];review=r['representative_wav']['listening_review'];assert review['status']=='accepted' and review['reviewer']=='Moritz' and review['date']=='2026-08-20' and review['sample_sha256']==r['representative_wav']['sha256']
  with wave.open(str(w),'rb') as f:assert (f.getnchannels(),f.getframerate(),f.getsampwidth(),f.getnframes())==(1,44100,2,696523)
 def test_cleanup_and_frontend():
  r=load('results/phone-cpu-result.json');assert all(r['cleanup'].values());f=load('results/frontend-provenance.json');assert f['input']['sha256']==r['canonical_transcript']['sha256'];assert f['frontend']['mapped_id_count']==f['frontend']['unicode_codepoint_count']

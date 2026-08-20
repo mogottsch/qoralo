@@ -1,6 +1,6 @@
 # Experiment 0021 — Supertonic canonical-v2 Android CPU benchmark
 
-**Status: complete; listening not reviewed.** New matched Android route for the exact canonical-v2 benchmark transcript. This does not rewrite legacy-v1 experiment 0008 or its exact 0020 refresh.
+**Status: complete; exact representative accepted by Moritz.** New matched Android route for the exact canonical-v2 benchmark transcript. This does not rewrite legacy-v1 experiment 0008 or its exact 0020 refresh.
 
 ## Frozen route
 
@@ -24,7 +24,7 @@ The exact route completed setup once, one first generation, and five additional 
 - Warm median RTF: **`0.3956153837777073`**.
 - Peak sampled PSS: `480,366,592` bytes; peak boundary PSS: `479,744,000` bytes; cumulative process VmHWM: `548,986,880` bytes.
 - Thermal gate: Android status `NONE`, battery `33.8 °C` before launch; no device tuning.
-- Representative warm-median WAV: SHA-256 `201f8e79…87df`, `not_reviewed`.
+- Representative warm-median WAV: SHA-256 `201f8e79…87df`; Moritz explicitly accepted this exact sample on 2026-08-20 with verdict “good.” This does not generalize to any other Supertonic route or WAV.
 
 The six calls reuse one created `OfflineTts` session, while each call independently invokes `generateWithConfigAndCallback`; no cache/state/output object crosses calls. The historical harness does not emit an ORT profile, so provider evidence is the pinned `provider=cpu` descriptor and engine fail-closed check, with the missing profile recorded explicitly.
 
