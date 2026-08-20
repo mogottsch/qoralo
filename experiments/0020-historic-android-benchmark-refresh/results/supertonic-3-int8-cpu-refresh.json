@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "experiment": "0020",
+  "route_id": "0008-supertonic-cpu-t1",
+  "status": "exact_historical_contract_rerun_complete",
+  "remeasured_at": "2026-08-20",
+  "device": {
+    "serial": "R5CW81PR8SY",
+    "manufacturer": "samsung",
+    "model": "SM-S918B",
+    "device": "dm3q",
+    "soc": "SM8550",
+    "abi": "arm64-v8a",
+    "android_release": "16",
+    "api_level": 36,
+    "build_fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys"
+  },
+  "exact_contract": {
+    "archive": "sherpa-onnx-supertonic-3-tts-int8-2026-05-11",
+    "archive_bytes": 128774318,
+    "archive_sha256": "82fa96f91c4ef8abaae3a14a3f4153facf88bed821d1f7331cec2700f432c427",
+    "runtime": "sherpa-onnx 1.13.5 Android AAR / ONNX Runtime CPU provider",
+    "aar_bytes": 49095090,
+    "aar_sha256": "6419cd8bc983e0c4fab06067f0fe0313fdc0f7103818ac1e7a08d50787b7a82b",
+    "sherpa_revision": "3dc7c569f31ca2cd4a20ed6f7db780327e6714c5",
+    "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
+    "voice": "M1",
+    "speaker_id": 5,
+    "provider": "cpu",
+    "threads": 1,
+    "warm_runs": 3,
+    "timing_boundary": "System.nanoTime around OfflineTts.generate only; WAV write/hash/listening excluded",
+    "audio_duration_denominator": "actual 729746 decoded samples / 44100 Hz = 16.547528344671203 s"
+  },
+  "bounded_staging_adapter": {
+    "reason": "Android 16 denied app access to shell-owned app-external input files. Inputs were copied as app UID into getFilesDir after exact shell-stage and app-UID hash verification.",
+    "frozen_experiment_0008_modified": false,
+    "original_activity_sha256": "c087a1c212cbef0b12805458a1f2f8ba8b685697a2272cf87a11df16e6572148",
+    "adapter_activity_sha256": "396a24b95d960ea4c5a17f2afc0308c2be4410877f188d0fb4b39653331601fc",
+    "semantic_change": "input root only: getExternalFilesDir(null) to getFilesDir(); benchmark engine, configuration, timing, memory, and app-external result output unchanged",
+    "apk_sha256": "357eefc2298e2d34a1734b3afde6b374f55f33223ca55c45a06ca5f2455e6199",
+    "apk_bytes": 34160241
+  },
+  "old": {
+    "source": "experiments/0008-sherpa-onnx-android-tts-benchmark/results/supertonic-3/one-thread-result.json",
+    "setup_seconds": 0.765107603,
+    "cold_rtf": 0.3854677480612432,
+    "warm_median_rtf": 0.3703028479158501,
+    "peak_pss_bytes": 463003648,
+    "peak_vm_hwm_bytes": 531345408,
+    "audio_duration_seconds": 16.547528344671203,
+    "threads": 1,
+    "representative_wav": null
+  },
+  "new": {
+    "setup_seconds": 1.003262135,
+    "cold_rtf": 0.4158744479936854,
+    "warm_median_rtf": 0.39308571289407546,
+    "warm_rtf_values": [0.39110301817879095, 0.39308571289407546, 0.4001901129320338],
+    "peak_sampled_pss_bytes": 463911936,
+    "peak_vm_hwm_bytes": 534081536,
+    "audio_duration_seconds": 16.547528344671203,
+    "threads": 1,
+    "provider_profile": null,
+    "provider_evidence": "Pinned descriptor provider=cpu and the exact sherpa-onnx CPU route; this historical harness does not emit an ORT provider profile.",
+    "runs": [
+      {"state":"cold","synthesis_seconds":6.881694216,"rtf":0.4158744479936854,"wav_sha256":"6ceb73890f4e78ca5b36379f1d57df877a711be27dbbdfa8daf628341ae11f69","wav":{"bytes":1459536,"channels":1,"sample_rate_hz":44100,"sample_width_bytes":2,"frames":729746,"duration_seconds":16.547528344671203,"pcm_peak_abs":14388,"pcm_rms":1825.095727631021,"finite":true,"non_silent":true,"unclipped":true}},
+      {"state":"warm","synthesis_seconds":6.471788279,"rtf":0.39110301817879095,"wav_sha256":"2fd9fa27e72a476431b4e20078b4594f696a7655a53959f861b80269e3c5d936","wav":{"bytes":1459536,"channels":1,"sample_rate_hz":44100,"sample_width_bytes":2,"frames":729746,"duration_seconds":16.547528344671203,"pcm_peak_abs":15531,"pcm_rms":1832.889823792362,"finite":true,"non_silent":true,"unclipped":true}},
+      {"state":"warm","synthesis_seconds":6.504596976,"rtf":0.39308571289407546,"wav_sha256":"1cf003d55c81e49983cbe385fdb98868ccdf4b1a6b1482e21bab020c7567ee6e","wav":{"bytes":1459536,"channels":1,"sample_rate_hz":44100,"sample_width_bytes":2,"frames":729746,"duration_seconds":16.547528344671203,"pcm_peak_abs":14064,"pcm_rms":1789.1474879345872,"finite":true,"non_silent":true,"unclipped":true}},
+      {"state":"warm","synthesis_seconds":6.622157237,"rtf":0.4001901129320338,"wav_sha256":"e2cc5b88e4e6fdf35b0e2438eabad4bf4d8532d246e8b9ed2928a66e53a30eca","wav":{"bytes":1459536,"channels":1,"sample_rate_hz":44100,"sample_width_bytes":2,"frames":729746,"duration_seconds":16.547528344671203,"pcm_peak_abs":15997,"pcm_rms":1780.4389399681231,"finite":true,"non_silent":true,"unclipped":true}}
+    ]
+  },
+  "thermal": {
+    "poll_count": 10,
+    "initial": {"status": "STATUS_1", "battery_temperature_c": 36.0},
+    "eligible_final": {"status": "NONE", "battery_temperature_c": 34.9},
+    "waited_without_device_tuning": true,
+    "historical_eligibility_gate_passed_before_launch": true
+  },
+  "comparison": {
+    "setup_relative_change_percent": 31.126933135442904,
+    "cold_rtf_relative_change_percent": 7.888260453793183,
+    "warm_median_rtf_relative_change_percent": 6.152495209381348,
+    "peak_sampled_pss_relative_change_percent": 0.19617296838232434,
+    "peak_vm_hwm_relative_change_percent": 0.5149433793544711,
+    "rtf_change_over_10_percent": false,
+    "setup_change_over_10_percent": true,
+    "material_protocol_or_duration_difference": false,
+    "interpretation": "Cold and warm normalized RTF remain within the predeclared 10% sensible margin. Setup is 31.13% slower and is explicitly flagged rather than hidden; it does not replace the synthesis RTF comparison."
+  },
+  "representative_wav": {
+    "path": "samples/supertonic-3-int8-cpu-refresh-warm-median.wav",
+    "source_run": "warm-2 (the measured warm median RTF run)",
+    "sha256": "1cf003d55c81e49983cbe385fdb98868ccdf4b1a6b1482e21bab020c7567ee6e",
+    "bytes": 1459536,
+    "channels": 1,
+    "sample_rate_hz": 44100,
+    "sample_width_bytes": 2,
+    "frames": 729746,
+    "duration_seconds": 16.547528344671203,
+    "pcm_peak_abs": 14064,
+    "pcm_rms": 1789.1474879345872,
+    "finite": true,
+    "non_silent": true,
+    "unclipped": true,
+    "listening_review": "not_reviewed"
+  },
+  "raw_evidence": {
+    "device_result_sha256": "bc948dc4cc8b73ae434c84408a43c9bb90893cd7ad37d6576f3572e4e49a5a0a",
+    "thermal_polls_sha256": "e6cddf45774c082de107e304a692ee67668c901abdf2ad84bd7ad464b6eb0c0a",
+    "telemetry_sha256": "73bd7e8f3a40c1b08db93379aa37b4cb2a83b8da28463dbf5a7573113d840dd1",
+    "windows_adb_trace_sha256": "3c1626e4fdb6491153acd5ff632e54497218a062e307e5d1d4bb2fc7bae65b36",
+    "app_internal_stage_trace_sha256": "39c44789eeeb55d634a710b1bd4a9b5f4ea6205c93ae201cf78f81b748331d50",
+    "cleanup_trace_sha256": "803cc6e57a27179b81f6221f63ec2a35156845068d37e38b91ccbbf3339c2cf3"
+  },
+  "cleanup": {
+    "force_stopped": true,
+    "app_internal_files_removed": true,
+    "app_external_root_removed": true,
+    "package_uninstalled": true,
+    "package_absence_verified": true,
+    "external_absence_verified": true,
+    "phone_lock_released": true
+  }
+}

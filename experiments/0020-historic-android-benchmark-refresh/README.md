@@ -4,9 +4,9 @@ This experiment audits the visible full end-to-end registry without editing froz
 
 ## Current status
 
-The first authorized refresh attempt is **blocked before rerun**: the repository-safe readiness gate observed zero Android devices (`expected exactly one device, observed 0`). No model archive was downloaded, no APK was staged, no lock-protected phone execution occurred, and no historical result was replaced.
+The exact Supertonic 3 INT8 ONNX/sherpa CPU route has now been rerun on the authorized S23 Ultra. Earlier zero-device observations are preserved as timestamped evidence of the wrong native-Linux ADB transport; the successful run used the exact Windows `adb.exe` through the scoped audited shim. Android 16 rejected two shell/app-external staging approaches, so the final 0020-only APK changed only the verified input root to app-internal `getFilesDir()` while leaving benchmark/runtime/timing/output behavior unchanged. Frozen experiment 0008 remains untouched.
 
-The complete audit is [`results/registry-audit.json`](results/registry-audit.json). It covers every `scope: full_e2e` registry row, records missing WAV/metrics/provenance fields, and keeps old values separate from any future refresh values. The Supertonic 3 INT8 ONNX/sherpa route is the first rerun priority but has no new value yet.
+The complete audit is [`results/registry-audit.json`](results/registry-audit.json). It covers every `scope: full_e2e` registry row, records missing fields, and keeps old values beside exact refresh values. The canonical result is [`results/supertonic-3-int8-cpu-refresh.json`](results/supertonic-3-int8-cpu-refresh.json): old warm median RTF `0.370303`, new `0.393086` (`+6.15%`, inside the 10% RTF margin); old cold RTF `0.385468`, new `0.415874` (`+7.89%`). Setup changed from `0.7651` to `1.0033` seconds (`+31.13%`) and is explicitly flagged beyond the margin. Audio duration/protocol/provider/thread count matched.
 
 ## Evidence rules
 
@@ -21,7 +21,9 @@ The complete audit is [`results/registry-audit.json`](results/registry-audit.jso
 
 - [`protocol/refresh-policy.json`](protocol/refresh-policy.json) — frozen refresh contract and comparison rules.
 - [`results/device-readiness.json`](results/device-readiness.json) — exact blocked readiness evidence.
-- [`results/rerun-supertonic-3-int8.json`](results/rerun-supertonic-3-int8.json) — priority route attempt, blocked before phone execution.
+- [`results/rerun-supertonic-3-int8.json`](results/rerun-supertonic-3-int8.json) — preserved initial blocked attempt.
+- [`results/supertonic-bootstrap-attempt.json`](results/supertonic-bootstrap-attempt.json) — preserved app-external staging blocker.
+- [`results/supertonic-3-int8-cpu-refresh.json`](results/supertonic-3-int8-cpu-refresh.json) — canonical completed old/new comparison, provenance, structural audio, and cleanup.
 - [`results/registry-audit.json`](results/registry-audit.json) — all visible full-E2E rows and missing-field audit.
 - [`tools/audit_registry.py`](tools/audit_registry.py) — deterministic audit generator.
 

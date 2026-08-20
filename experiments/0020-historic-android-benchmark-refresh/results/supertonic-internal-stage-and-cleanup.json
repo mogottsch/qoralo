@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "experiment": "0020",
+  "route_id": "0008-supertonic-cpu-t1",
+  "internal_stage": {
+    "status": "passed",
+    "file_count": 13,
+    "method": "exact Windows adb shell-stage hash verification followed by cat pipe into run-as app UID, mode-0600 getFilesDir copy, and app-UID SHA-256 verification",
+    "trace_sha256": "39c44789eeeb55d634a710b1bd4a9b5f4ea6205c93ae201cf78f81b748331d50",
+    "remote_temp_cleanup_requested": true
+  },
+  "result_pull": {
+    "status": "passed",
+    "method": "binary-safe exact Windows adb exec-out under fresh lock-gated identity readiness",
+    "wav_count": 4,
+    "all_device_declared_hashes_matched": true
+  },
+  "cleanup": {
+    "status": "passed",
+    "method": "exact Windows adb under phone.lock after fresh readiness",
+    "force_stopped": true,
+    "app_internal_files_removed": true,
+    "app_external_root_removed": true,
+    "package_uninstalled": true,
+    "package_absence_verified": true,
+    "external_root_absence_verified": true,
+    "trace_sha256": "803cc6e57a27179b81f6221f63ec2a35156845068d37e38b91ccbbf3339c2cf3",
+    "phone_lock_released": true
+  }
+}

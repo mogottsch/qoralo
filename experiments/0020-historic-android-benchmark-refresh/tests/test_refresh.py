@@ -13,17 +13,24 @@ def test_audit_covers_every_visible_full_e2e_row():
     assert actual == expected
 
 
-def test_no_new_values_when_readiness_blocked():
+def test_only_exact_completed_route_has_new_values():
     audit = json.loads((Path(__file__).resolve().parents[1] / "results/registry-audit.json").read_text())
-    assert audit["rerun_blocker"]
-    assert all(row["rerun_status"].startswith("not_attempted") for row in audit["rows"])
-    assert all(all(value is None for value in row["new_metrics"].values()) for row in audit["rows"])
-    assert all(row["new_wav"] is None for row in audit["rows"])
+    completed = [row for row in audit["rows"] if row["rerun_status"] == "complete"]
+    assert [row["route_id"] for row in completed] == ["0008-supertonic-cpu-t1"]
+    assert completed[0]["new_metrics"]["warm_median_rtf"] == 0.39308571289407546
+    assert completed[0]["new_wav"]["sha256"] == "1cf003d55c81e49983cbe385fdb98868ccdf4b1a6b1482e21bab020c7567ee6e"
+    for row in audit["rows"]:
+        if row["route_id"] == "0008-supertonic-cpu-t1":
+            continue
+        assert all(value is None for value in row["new_metrics"].values())
+        assert row["new_wav"] is None
 
 
-def test_supertonic_priority_is_fail_closed():
-    result = json.loads((Path(__file__).resolve().parents[1] / "results/rerun-supertonic-3-int8.json").read_text())
+def test_supertonic_refresh_keeps_old_and_new_and_flags_setup():
+    result = json.loads((Path(__file__).resolve().parents[1] / "results/supertonic-3-int8-cpu-refresh.json").read_text())
     assert result["route_id"] == "0008-supertonic-cpu-t1"
-    assert result["status"] == "blocked_before_phone_rerun"
-    assert result["new"]["warm_median_rtf"] is None
-    assert result["relative_rtf_change_percent"] is None
+    assert result["status"] == "exact_historical_contract_rerun_complete"
+    assert result["old"]["warm_median_rtf"] == 0.3703028479158501
+    assert result["new"]["warm_median_rtf"] == 0.39308571289407546
+    assert result["comparison"]["rtf_change_over_10_percent"] is False
+    assert result["comparison"]["setup_change_over_10_percent"] is True
