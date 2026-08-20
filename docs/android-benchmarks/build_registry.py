@@ -390,6 +390,38 @@ def format_memory(metrics):
     return f'{display}<br><small>{measurement}</small>', str(value)
 
 
+def format_rtf(entry):
+    metrics = entry["metrics"]
+    candidates = (
+        ("warm_median_rtf", "warm median", ""),
+        ("first_post_setup_rtf", "first post-setup", " (first post-setup)"),
+        ("proof_run_rtf", "proof run", " (proof run)"),
+        ("cold_rtf", "cold", " (cold)"),
+    )
+    selected = next(((field, label, suffix, metrics[field]) for field, label, suffix in candidates if metrics[field] is not None), None)
+    if selected is None:
+        display = "—"
+        sort_value = ""
+        detail_parts = ["No headline RTF is available."]
+    else:
+        selected_field, selected_label, suffix, value = selected
+        display = f"{value:.3f}{suffix}"
+        sort_value = str(value)
+        detail_parts = [f"Displayed: {selected_label} RTF {value:.6g}."]
+        secondary = [f"{label} {metrics[field]:.6g}" for field, label, _ in candidates if field != selected_field and metrics[field] is not None]
+        if secondary:
+            detail_parts.append("Other recorded RTFs: " + "; ".join(secondary) + ".")
+    missing = []
+    for field, label, _ in candidates:
+        if metrics[field] is None:
+            reason = entry["missing_reasons"].get(field)
+            if reason:
+                missing.append(f"{label}: {reason}")
+    if missing:
+        detail_parts.append("Unavailable: " + " | ".join(missing))
+    return display, sort_value, " ".join(detail_parts)
+
+
 def build_html(registry):
     entries = [e for e in registry["entries"] if e["scope"] == "full_e2e"]
     trs = []
@@ -397,9 +429,7 @@ def build_html(registry):
     needs_review_players = []
     for e in entries:
         m = e["metrics"]
-        rtf = "—" if m["warm_median_rtf"] is None else f'{m["warm_median_rtf"]:.3f}'
-        proof_rtf = "—" if m["proof_run_rtf"] is None else f'{m["proof_run_rtf"]:.3f}'
-        post_setup_rtf = "—" if m["first_post_setup_rtf"] is None else f'{m["first_post_setup_rtf"]:.3f}'
+        rtf, sort_rtf, rtf_details = format_rtf(e)
         if e["wav"]:
             anchor = f'audio-{e["id"]}'
             wav = f'<a href="#{html.escape(anchor)}">Listen</a>'
@@ -413,9 +443,6 @@ def build_html(registry):
         else:
             wav = "—"
         cls = e["attempt_status"].replace("_", "-")
-        sort_rtf = "" if m["warm_median_rtf"] is None else str(m["warm_median_rtf"])
-        sort_proof_rtf = "" if m["proof_run_rtf"] is None else str(m["proof_run_rtf"])
-        sort_post_setup_rtf = "" if m["first_post_setup_rtf"] is None else str(m["first_post_setup_rtf"])
         audio_sort = "1" if e["wav"] else "0"
         memory, sort_memory = format_memory(m)
         provider = html.escape(e["provider"] or "—")
@@ -435,12 +462,12 @@ def build_html(registry):
         if e["wav"] and review_status == "not_reviewed":
             review_anchor = f"needs-{e['id']}"
             needs_review_players.append(f'<article class="player" id="{html.escape(review_anchor)}"><div><b>{html.escape(e["model"])}</b><br><small>{html.escape(e["route"])} · listening review needed</small></div><audio controls preload="metadata" src="{html.escape(e["wav"]["path"])}"></audio><a class="back" href="#routes">Back to table</a></article>')
-        trs.append(f'<tr data-route-id="{html.escape(e["id"])}"><td data-sort="{html.escape(e["experiment"])}">{html.escape(e["experiment"])}</td><td data-sort="{html.escape(e["model"] + " " + e["route"])}">{model_cell}</td><td data-sort="{quantization}">{quantization}</td><td data-sort="{html.escape(e["attempt_status"])}"><span class="status {cls}">{html.escape(e["attempt_status"])}</span></td><td data-sort="{review_status}">{listening}</td><td data-sort="{html.escape(e["provider"] or "")} {e["threads"] or ""}">{provider}</td><td data-sort="{sort_rtf}">{rtf}</td><td data-sort="{sort_proof_rtf}">{proof_rtf}</td><td data-sort="{sort_post_setup_rtf}">{post_setup_rtf}</td><td data-sort="{sort_memory}">{memory}</td><td data-sort="{audio_sort}">{wav}</td><td data-sort="{html.escape(e["summary"])}">{html.escape(e["summary"])}</td></tr>')
+        trs.append(f'<tr data-route-id="{html.escape(e["id"])}"><td data-sort="{html.escape(e["experiment"])}">{html.escape(e["experiment"])}</td><td data-sort="{html.escape(e["model"] + " " + e["route"])}">{model_cell}</td><td data-sort="{quantization}">{quantization}</td><td data-sort="{html.escape(e["attempt_status"])}"><span class="status {cls}">{html.escape(e["attempt_status"])}</span></td><td data-sort="{review_status}">{listening}</td><td data-sort="{html.escape(e["provider"] or "")} {e["threads"] or ""}">{provider}</td><td data-sort="{sort_rtf}" title="{html.escape(rtf_details, quote=True)}">{html.escape(rtf)}</td><td data-sort="{sort_memory}">{memory}</td><td data-sort="{audio_sort}">{wav}</td><td data-sort="{html.escape(e["summary"])}">{html.escape(e["summary"])}</td></tr>')
     timeline_rows = []
     for item in MODEL_TIMELINE:
         timeline_rows.append(f'<tr><td>{html.escape(item["model"])}</td><td><time datetime="{html.escape(item["first_release_date"])}">{html.escape(item["first_release_date"])}</time></td><td>{html.escape(item["date_basis"])}</td><td><a href="{html.escape(item["source_url"])}" target="_blank" rel="noopener">Source</a></td></tr>')
     return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Android benchmark registry</title><style>
-:root{{--bg:#0f172a;--panel:#172033;--line:#334155;--ink:#e5e7eb;--muted:#94a3b8;--accent:#67e8f9}}*{{box-sizing:border-box}}body{{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,sans-serif}}main{{max-width:1500px;margin:auto;padding:22px 24px}}h1{{font-size:24px;line-height:1.2;margin:0 0 16px}}small{{color:var(--muted)}}a{{color:var(--accent)}}.table-wrap{{overflow:auto;border:1px solid var(--line);border-radius:12px}}table{{border-collapse:collapse;width:100%;min-width:1580px;background:var(--panel)}}th,td{{padding:12px 13px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}}th{{position:sticky;top:0;background:#1e293b;color:#bae6fd;white-space:nowrap;user-select:none;cursor:pointer}}th:hover{{background:#26364d}}th::after{{content:' ↕';color:#64748b}}th[aria-sort="ascending"]::after{{content:' ↑';color:var(--accent)}}th[aria-sort="descending"]::after{{content:' ↓';color:var(--accent)}}td:nth-child(12){{min-width:350px;color:#cbd5e1}}.status{{border-radius:99px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap}}.ran{{background:#064e3b;color:#a7f3d0}}.listening-not-reviewed{{background:#713f12;color:#fde68a}}.listening-accepted{{background:#064e3b;color:#a7f3d0}}.listening-rejected{{background:#7f1d1d;color:#fecaca}}.blocked,.deferred,.not-run{{background:#713f12;color:#fde68a}}.partial{{background:#164e63;color:#a5f3fc}}code{{color:#bae6fd}}h2{{font-size:20px;margin:30px 0 12px}}.timeline-note{{color:var(--muted);margin-top:-4px}}.players{{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}}.player{{scroll-margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}}.player:target{{outline:2px solid var(--accent)}}.player audio{{display:block;width:100%;margin:11px 0 8px}}.back{{font-size:12px}}footer{{margin-top:16px;color:var(--muted);font-size:12px}}</style></head><body><main><h1>Android benchmark registry</h1><div class="table-wrap"><table id="routes"><thead><tr><th data-type="text">Experiment</th><th data-type="text">Model / route</th><th data-type="text">Quantization</th><th data-type="text">Status</th><th data-type="text">Listening</th><th data-type="text">Provider</th><th data-type="number" aria-sort="ascending">Warm median RTF</th><th data-type="number">Proof / single-run RTF</th><th data-type="number">First post-setup RTF</th><th data-type="number">Peak memory</th><th data-type="number">Audio</th><th data-type="text">Evidence summary</th></tr></thead><tbody>{''.join(trs)}</tbody></table></div><h2 id="audio-samples">Audio samples</h2><div class="players">{''.join(players)}</div><h2 id="needs-review">Needs review</h2><p class="timeline-note">Playable full-E2E samples with no explicit Moritz listening verdict yet.</p><div class="players">{''.join(needs_review_players)}</div><h2 id="model-timeline">Model release timeline</h2><p class="timeline-note">First public family/model release dates, not later quantized archives or Android package dates. The date basis and source are recorded in <code>registry.json</code>.</p><div class="table-wrap"><table id="timeline"><thead><tr><th>Model</th><th>First public release</th><th>Date basis</th><th>Source</th></tr></thead><tbody>{''.join(timeline_rows)}</tbody></table></div><footer>Click a column heading to sort. Missing values sort last. Details: <a href="README.md">README</a> · <a href="missing-fields.md">missing fields</a>.</footer></main><script>
+:root{{--bg:#0f172a;--panel:#172033;--line:#334155;--ink:#e5e7eb;--muted:#94a3b8;--accent:#67e8f9}}*{{box-sizing:border-box}}body{{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,sans-serif}}main{{max-width:1500px;margin:auto;padding:22px 24px}}h1{{font-size:24px;line-height:1.2;margin:0 0 16px}}small{{color:var(--muted)}}a{{color:var(--accent)}}.table-wrap{{overflow:auto;border:1px solid var(--line);border-radius:12px}}table{{border-collapse:collapse;width:100%;min-width:1320px;background:var(--panel)}}th,td{{padding:12px 13px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}}th{{position:sticky;top:0;background:#1e293b;color:#bae6fd;white-space:nowrap;user-select:none;cursor:pointer}}th:hover{{background:#26364d}}th::after{{content:' ↕';color:#64748b}}th[aria-sort="ascending"]::after{{content:' ↑';color:var(--accent)}}th[aria-sort="descending"]::after{{content:' ↓';color:var(--accent)}}td:nth-child(10){{min-width:350px;color:#cbd5e1}}.status{{border-radius:99px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap}}.ran{{background:#064e3b;color:#a7f3d0}}.listening-not-reviewed{{background:#713f12;color:#fde68a}}.listening-accepted{{background:#064e3b;color:#a7f3d0}}.listening-rejected{{background:#7f1d1d;color:#fecaca}}.blocked,.deferred,.not-run{{background:#713f12;color:#fde68a}}.partial{{background:#164e63;color:#a5f3fc}}code{{color:#bae6fd}}h2{{font-size:20px;margin:30px 0 12px}}.timeline-note{{color:var(--muted);margin-top:-4px}}.players{{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}}.player{{scroll-margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}}.player:target{{outline:2px solid var(--accent)}}.player audio{{display:block;width:100%;margin:11px 0 8px}}.back{{font-size:12px}}footer{{margin-top:16px;color:var(--muted);font-size:12px}}</style></head><body><main><h1>Android benchmark registry</h1><div class="table-wrap"><table id="routes"><thead><tr><th data-type="text">Experiment</th><th data-type="text">Model / route</th><th data-type="text">Quantization</th><th data-type="text">Status</th><th data-type="text">Listening</th><th data-type="text">Provider</th><th data-type="number" aria-sort="ascending" title="Warm median by default; otherwise the designated non-warm headline type is shown in brackets. Hover a value for all RTF evidence and missing reasons.">RTF</th><th data-type="number">Peak memory</th><th data-type="number">Audio</th><th data-type="text">Evidence summary</th></tr></thead><tbody>{''.join(trs)}</tbody></table></div><h2 id="audio-samples">Audio samples</h2><div class="players">{''.join(players)}</div><h2 id="needs-review">Needs review</h2><p class="timeline-note">Playable full-E2E samples with no explicit Moritz listening verdict yet.</p><div class="players">{''.join(needs_review_players)}</div><h2 id="model-timeline">Model release timeline</h2><p class="timeline-note">First public family/model release dates, not later quantized archives or Android package dates. The date basis and source are recorded in <code>registry.json</code>.</p><div class="table-wrap"><table id="timeline"><thead><tr><th>Model</th><th>First public release</th><th>Date basis</th><th>Source</th></tr></thead><tbody>{''.join(timeline_rows)}</tbody></table></div><footer>Click a column heading to sort. Missing values sort last. Details: <a href="README.md">README</a> · <a href="missing-fields.md">missing fields</a>.</footer></main><script>
 const table=document.getElementById('routes'), body=table.tBodies[0], headers=[...table.tHead.rows[0].cells];
 function sortTable(index,direction){{
  const type=headers[index].dataset.type, rows=[...body.rows];
