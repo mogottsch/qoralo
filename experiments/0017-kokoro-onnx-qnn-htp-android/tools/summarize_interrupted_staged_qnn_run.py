@@ -239,7 +239,7 @@ def main() -> int:
         "transcript_sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
         "interruption": {
             "classification": "external infrastructure interruption, not a technical QNN stage failure",
-            "operator_context": "Moritz stopped/restarted WSL while increasing memory before moving work to another device.",
+            "operator_context": "Moritz stopped/restarted WSL while increasing memory; the process was externally interrupted.",
             "evidence": [
                 "The durable pipeline checkpoint remains status=running and contains 15 completed stage records.",
                 "Stage 16 has only compiler progress through Graph Sequencing for Target at 12%; it has no runner JSON, non-empty provider profile, output, or exit code.",
@@ -293,7 +293,7 @@ def main() -> int:
         "phone_eligibility": False,
         "final_audio_produced": False,
         "next_action": {
-            "rule": "On the destination device, reconstruct all hash-pinned ignored inputs/models, verify every committed hash and test, then restart the complete canonical 18-stage serial host run from stage 1. Do not treat the partial stage-16 artifacts as resumable proof.",
+            "rule": "Reconstruct all hash-pinned ignored inputs/models, verify every committed hash and test, then restart the complete canonical 18-stage serial host run from stage 1. Do not treat the partial stage-16 artifacts as resumable proof.",
             "reason": "All 18 stages must pass in a complete durable pipeline record using real upstream tensors before phone access.",
         },
         "claim_boundary": "The first 15 canonical stages have fallback-disabled host QNN finalization, complete-input execution, one QNNExecutionProvider event each, zero CPU provider events, and detailed host QNN profile metrics. Stage 16 did not finalize or execute, stages 17-18 were not attempted, no final audio exists, and there is no physical phone HTP or listening evidence.",

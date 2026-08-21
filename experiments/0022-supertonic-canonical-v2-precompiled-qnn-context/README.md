@@ -33,4 +33,4 @@ Both arms must preserve the same graph identity, source precision claim, provide
 8. Collect physical provider/RPC/accelerator/cycle/HVX evidence. Host QNN evidence is not phone HTP proof.
 9. Compare arm-A and arm-B output hashes and prospective numerical metrics. Any different WAV bytes start `not_reviewed` and require Moritz’s exact route/hash verdict.
 
-See `protocol/experiment-contract.json` for the machine-readable frozen scope and `CONTINUATION.md` for the exact resume state, commands, known incompatibility, and next command.
+See `protocol/experiment-contract.json` for the machine-readable frozen scope and [`PLAN.md`](PLAN.md) for the gates, commands, known compatibility question, and next action.

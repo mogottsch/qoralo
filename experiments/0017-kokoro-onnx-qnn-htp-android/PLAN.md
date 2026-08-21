@@ -2,9 +2,9 @@
 
 ## Current checkpoint
 
-The canonical-v2 route is paused for transfer to another device. CPU preparation and stage recomposition are complete. The first canonical host QNN attempt was externally interrupted after stages 1–15 passed; stage 16 reached graph sequencing at 12% without finalizing, and stages 17–18 were not attempted. No phone access occurred.
+The canonical-v2 route is ready for a fresh complete host gate. CPU preparation and stage recomposition are complete. The first canonical host QNN attempt was externally interrupted after stages 1–15 passed; stage 16 reached graph sequencing at 12% without finalizing, and stages 17–18 were not attempted. No phone access occurred.
 
-Exact current state and restart instructions are in [`HANDOFF.md`](HANDOFF.md). The canonical machine contract is [`protocol-canonical-v2-stage-decomposition.json`](protocol-canonical-v2-stage-decomposition.json); the interrupted run is [`results/canonical-v2-host-qnn-interrupted-checkpoint.json`](results/canonical-v2-host-qnn-interrupted-checkpoint.json).
+Clean-machine reconstruction and restart instructions are in [`REPRODUCING.md`](REPRODUCING.md). The canonical machine contract is [`protocol-canonical-v2-stage-decomposition.json`](protocol-canonical-v2-stage-decomposition.json); the interrupted run is [`results/canonical-v2-host-qnn-interrupted-checkpoint.json`](results/canonical-v2-host-qnn-interrupted-checkpoint.json).
 
 ## Objective
 
@@ -25,7 +25,7 @@ The comparable route must use the exact committed canonical transcript and the p
 ## Remaining gates
 
 1. **Fresh complete host QNN gate**
-   - regenerate/verify every ignored asset using [`HANDOFF.md`](HANDOFF.md);
+   - regenerate/verify every ignored asset using [`REPRODUCING.md`](REPRODUCING.md);
    - restart from stage 1 with [`host/run_canonical_v2_staged_host_qnn.sh`](host/run_canonical_v2_staged_host_qnn.sh);
    - run one stage process at a time so compiler memory is released;
    - require all 18 sessions to finalize and execute their real upstream tensors;

@@ -25,7 +25,7 @@
   ],
   "portable_sources_of_truth": [
     "README.md",
-    "CONTINUATION.md",
+    "PLAN.md",
     "protocol/experiment-contract.json",
     "protocol/transcript.txt",
     "tests/test_contract.py",
@@ -34,14 +34,14 @@
     "experiments/0011-supertonic-official-fp32-phone-comparison/results/source-inventory.json",
     "experiments/0011-supertonic-official-fp32-phone-comparison/results/vector-softplus-rewrite-provenance.json"
   ],
-  "nonportable_local_hints": {
-    "qairt_root_on_old_device": "/home/moritz/opt/qairt/2.49.0.260730",
-    "ort_source_on_old_device": "experiments/0010-supertonic-qnn-htp-feasibility/.local/onnxruntime-v1.27.1-source",
+  "local_artifact_hints": {
+    "qairt_root": "/home/moritz/opt/qairt/2.49.0.260730",
+    "ort_source": "experiments/0010-supertonic-qnn-htp-feasibility/.local/onnxruntime-v1.27.1-source",
     "historical_0011_local_artifacts": "experiments/0011-supertonic-official-fp32-phone-comparison/.local/",
-    "warning": "These ignored paths may not exist on the next device. Reconstruct and verify every artifact against protocol hashes; never treat path presence as provenance."
+    "warning": "Ignored paths may not exist in another checkout. Reconstruct and verify every artifact against protocol hashes; never treat path presence as provenance."
   },
   "coordination": {
-    "qairt_memory_coordination_with_ben_and_jens": "not yet performed; stopped for device handoff before compilation",
+    "qairt_memory_coordination": "not yet performed; check measured host headroom before compilation",
     "phone_lock": "not acquired; no phone work occurred",
     "dashboard_owner": "Marius; no dashboard files may be edited by Sean",
     "orchestrator": "Pi",

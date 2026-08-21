@@ -264,7 +264,7 @@ class ContractTests(unittest.TestCase):
             "host/run_canonical_v2_staged_host_qnn.sh",
             "tools/summarize_staged_qnn_run.py",
             "tools/summarize_interrupted_staged_qnn_run.py",
-            "HANDOFF.md",
+            "REPRODUCING.md",
         ):
             self.assertTrue((ROOT / relative).is_file(), relative)
 

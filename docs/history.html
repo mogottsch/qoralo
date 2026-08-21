@@ -50,7 +50,7 @@ tr:last-child td { border-bottom:0; }
 <a class="toc-level-2" href="#experiment-record">Experiment record</a>
 <a class="toc-level-2" href="#decisions-carried-forward">Decisions carried forward</a></nav>
 <main>
-<div class="mirror-note"><strong>Visual mirror of <code>docs/history.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-20</span><span>source sha256: e44345d99525dd63…</span></div></div>
+<div class="mirror-note"><strong>Visual mirror of <code>docs/history.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-20</span><span>source sha256: 354bd2816d471e1f…</span></div></div>
 <article><h1 id="project-history">Project history<a class="anchor" href="#project-history" aria-label="Link to this section">#</a></h1>
 <h2 id="goal-and-direction">Goal and direction<a class="anchor" href="#goal-and-direction" aria-label="Link to this section">#</a></h2>
 <p>The project started by asking whether Microsoft&#x27;s VibeVoice could generate a local two-speaker podcast on a modern Android phone. The goal later widened to finding any practical local TTS model that sounds pleasant and natural enough for a future NotebookLM-like listening experience.</p>
@@ -151,6 +151,26 @@ tr:last-child td { border-bottom:0; }
 <td>Can the official MOSS-TTS-Nano ONNX path run end to end on Android CPU?</td>
 <td>The route completed technically and produced a structurally valid 16.72-second WAV, but warm median RTF was <code>1.125</code> and process memory was large. Moritz accepted the exact sample as “Okay to good, but with a bit of a Chinese accent.”</td>
 </tr>
+<tr>
+<td><a href="../experiments/0019-moss-tts-nano-qnn-htp-android/"><code>0019: MOSS fixed-capacity QNN/HTP</code></a></td>
+<td>Can a reusable fixed-capacity MOSS decode/cache topology fully delegate to QNN and execute physically?</td>
+<td>The corrected attention-insertion topology passed all 375 CPU-equivalence calls, final 601-position state checks, codec equivalence, full host QNN assignment, context generation, and independent context reload. On the authorized phone the exact carrier/app-UID path failed QNN <code>CreateDevice</code> with <code>QNN_DEVICE_ERROR_INVALID_CONFIG</code> before capability, session assignment, or inference. No HTP WAV, RTF, phone-memory result, physical proof, or listening verdict exists; the dashboard record is exhaustive-only.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0020-historic-android-benchmark-refresh/"><code>0020: historical Android benchmark refresh</code></a></td>
+<td>Can the original Supertonic CPU benchmark be reproduced without rewriting its frozen contract?</td>
+<td>The exact legacy-v1 route reran through a bounded Android-16 app-internal input adapter. Warm median RTF moved from <code>0.370303</code> to <code>0.393086</code> (+6.15%); setup moved from <code>0.7651</code> to <code>1.0033 s</code> (+31.13%). Moritz accepted the exact refreshed WAV as “good.” The refresh is nested under the original route and remains legacy-v1 with its historical three-warm protocol.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0021-supertonic-canonical-v2-android-cpu/"><code>0021: Supertonic canonical-v2 Android CPU</code></a></td>
+<td>What is the released Supertonic INT8 CPU baseline under the current canonical benchmark contract?</td>
+<td>One first plus five same-session warm generations completed on the authorized phone. Setup was <code>0.853867 s</code>, warm median RTF <code>0.395615</code>, output duration <code>15.794172 s</code>, peak sampled PSS <code>480,366,592 B</code>, and VmHWM <code>548,986,880 B</code>. Moritz accepted exact WAV SHA <code>201f8e79…87df</code> as “good.”</td>
+</tr>
+<tr>
+<td><a href="../experiments/0014-pocket-fp-onnx-qnn-htp/"><code>0014 continuation: Pocket fixed-Alba recovery and canonical v2</code></a></td>
+<td>Why were prior Pocket samples unusable, and can a valid fixed-voice route run on CPU and HTP?</td>
+<td>The no-voice-cloning checkpoint&#x27;s Mimi encoder was proven all-zero, invalidating the old Bria cloning contract. A fixed official Alba-state route recovered quality. Canonical-v2 CPU warm median RTF was <code>0.414234</code>; physical fallback-disabled HTP warm median RTF was <code>0.181643</code> with 344 QNN / 0 CPU events and matching physical records. Moritz accepted both exact canonical CPU and HTP WAVs as “good.” The result is fixed voice, not voice cloning.</td>
+</tr>
 </tbody></table></div>
 <h2 id="decisions-carried-forward">Decisions carried forward<a class="anchor" href="#decisions-carried-forward" aria-label="Link to this section">#</a></h2>
 <ul>
@@ -164,6 +184,9 @@ tr:last-child td { border-bottom:0; }
 <li>Kokoro 0013 has an exact-sample “Good” verdict. MOSS 0018 has an “Okay to good” verdict with a Chinese-accent caveat. Neither sample-level verdict establishes broad-corpus quality.</li>
 <li>A numerical/acoustic gate pass, structurally valid WAV, relative degradation ballot, or provider success must never be rewritten as absolute listening acceptance.</li>
 <li>Qualcomm software and generated restricted artifacts stay local. New terms, logins, consent, or export gates require explicit human approval.</li>
+<li>Canonical benchmark v2 is the exact 226-byte comma transcript SHA <code>424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67</code>. Legacy-v1 and model-specific texts remain labeled and are not silently compared as matched inputs.</li>
+<li>Pocket&#x27;s original Bria path is not a valid voice-cloning baseline because the selected no-voice-cloning checkpoint has an all-zero Mimi encoder. The accepted fixed-Alba route is a bounded fixed-voice prototype.</li>
+<li>Supertonic official-source all-HTP is Moritz&#x27;s current listening favorite and the leading product candidate, subject to canonical-v2 HTP and production-startup validation.</li>
 </ul>
 <p>The next work is defined in <a href="plan.md"><code>plan.md</code></a> and its <a href="plan.html">HTML mirror</a>.</p></article>
 <footer class="source-footer">Generated as <code>history.html</code> by <code>scripts/build_docs_html.py</code>. Edit <code>docs/history.md</code>, then regenerate the human-readable mirrors.</footer>

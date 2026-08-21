@@ -1,8 +1,8 @@
-# Experiment 0019 continuation handoff — move to another Android device
+# Reproducing experiment 0019
 
 ## Read this first
 
-This file is the clean-machine continuation entry point. No ignored `.local/` or `work/` file is required as evidence or as the sole copy of a decision. The tracked sources of truth are:
+This file is the durable clean-machine reconstruction and rerun guide. No ignored `.local/` or `work/` file is required as evidence or as the sole copy of a decision. The tracked sources of truth are:
 
 1. [`results/fixed-capacity-phone-blocker.json`](results/fixed-capacity-phone-blocker.json) — final old-device boundary and all nine attempt classifications;
 2. [`results/fixed-capacity-cpu-equivalence.json`](results/fixed-capacity-cpu-equivalence.json) — passing canonical-v2 CPU equivalence;
@@ -173,7 +173,7 @@ docker build -t vibevoice-experiment-0010-qairt:2.49.0.260730-ubuntu22.04 \
   -f experiments/0010-supertonic-qnn-htp-feasibility/host/Dockerfile.qairt-2.49.0 .
 ```
 
-The exact recorded host and Android ORT build commands are retained in `experiments/0010-supertonic-qnn-htp-feasibility/HANDOFF.md`; the essential flags are `--use_qnn shared_lib` for host and `--use_qnn static_lib --android --android_abi arm64-v8a --android_api 27` for Android.
+The experiment-0010 build scripts and records define the shared patched ORT toolchain. The essential flags are `--use_qnn shared_lib` for host and `--use_qnn static_lib --android --android_abi arm64-v8a --android_api 27` for Android.
 
 After those builds:
 
@@ -205,9 +205,9 @@ The compiler is memory-heavy and must run without another near-machine-size QNN 
 
 For another SoC, do **not** reuse SM8550 contexts blindly. Determine the QAIRT `Qnn_SocModel_t` value and HTP architecture for that exact device, then set `SOC_MODEL` and `HTP_ARCH`. If unsure, begin with source ONNX (`USE_CONTEXTS=0`) and runtime SoC auto-detection.
 
-## Continue on the new phone
+## Run on another phone
 
-### Required new authorization
+### Required authorization
 
 The old serial/model/SoC are not authorization for another device. Get Moritz's explicit new device identity first. Never weaken identity gates to “any connected device.” Use Windows ADB with `ADB_LIBUSB=1` where applicable, hold `artifacts/locks/phone.lock`, and ensure the lock FD is closed for every ADB child.
 
@@ -262,7 +262,7 @@ Before model work, verify on the new phone:
 
 The phone script uses unique staging, app-internal models, exact upload/internal/native/skel hashes, required `libcdsprpc.so`, unique DSP staging, thermal/battery capture, cleanup, uninstall, and lock release. Audit it again for the new OEM/Android build before execution.
 
-## Success requirements on another device
+## Success requirements for a new physical run
 
 A full-HTP result requires all of the following; partial success is not enough:
 
@@ -280,7 +280,7 @@ A full-HTP result requires all of the following; partial success is not enough:
 
 A numerical difference is descriptive, not a listening rejection. A mixed diagnostic must never be called full HTP.
 
-## What to update after a successful new-device run
+## What to update after a successful later run
 
 Do not rewrite the old blocked record. Add a dated/device-specific continuation checkpoint and route. Retain:
 

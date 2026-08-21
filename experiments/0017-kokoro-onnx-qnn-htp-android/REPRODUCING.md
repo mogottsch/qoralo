@@ -1,10 +1,10 @@
-# Experiment 0017 device-transfer handoff
+# Reproducing experiment 0017
 
-This file is the durable handoff for continuing experiment 0017 on another machine. Messenger history and ignored `work/` / `.local/` artifacts are **not** required as sources of truth; committed protocols, tools, hashes, and result summaries are authoritative. Large generated models, tensors, compiler logs, profiles, Qualcomm libraries, binaries, and WAVs remain intentionally ignored and must be regenerated or restored only after their hashes are verified.
+This is the durable clean-machine reconstruction and execution guide for experiment 0017. Committed protocols, tools, hashes, and result summaries are authoritative; ignored `work/` and `.local/` artifacts are not evidence or unique sources of decisions. Large generated models, tensors, compiler logs, profiles, Qualcomm libraries, binaries, and WAVs remain intentionally ignored and must be regenerated or restored only after their hashes are verified.
 
-## Stop state
+## Current execution boundary
 
-No experiment-0017 process or phone lock was active when this handoff was written. No phone access has occurred for the canonical-v2 Kokoro route.
+No phone access has occurred for the canonical-v2 Kokoro route.
 
 The current canonical host attempt was externally interrupted by a WSL shutdown/restart:
 
@@ -155,7 +155,7 @@ python3 -m unittest experiments/0017-kokoro-onnx-qnn-htp-android/tests/test_cont
 Do **not** resume from stage 16. Restart the complete canonical host record from stage 1:
 
 ```bash
-RUN_ID=device-transfer-rerun \
+RUN_ID=canonical-v2-rerun \
   experiments/0017-kokoro-onnx-qnn-htp-android/host/run_canonical_v2_staged_host_qnn.sh
 ```
 
@@ -165,7 +165,7 @@ After an 18/18 pass, create the durable host execution summary (replace `$RUN`):
 
 ```bash
 EXP=experiments/0017-kokoro-onnx-qnn-htp-android
-RUN="$EXP/work/canonical-v2/stages-v1/qnn-host-device-transfer-rerun"
+RUN="$EXP/work/canonical-v2/stages-v1/qnn-host-canonical-v2-rerun"
 python3 "$EXP/tools/summarize_staged_qnn_run.py" \
   --manifest "$EXP/work/canonical-v2/stages-v1/manifest.json" \
   --checkpoint "$RUN/pipeline-checkpoint.json" \

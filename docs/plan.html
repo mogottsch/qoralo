@@ -46,82 +46,83 @@ tr:last-child td { border-bottom:0; }
 <div class="shell">
 <nav aria-label="Document sections"><strong>Sections</strong><a class="toc-level-1" href="#current-plan">Current plan</a>
 <a class="toc-level-2" href="#goal">Goal</a>
-<a class="toc-level-2" href="#evidence-language-convention">Evidence-language convention</a>
-<a class="toc-level-2" href="#current-phase-preserve-technical-baselines-require-exact-route-listening-evidence">Current phase: preserve technical baselines, require exact-route listening evidence</a>
-<a class="toc-level-2" href="#current-decision">Current decision</a></nav>
+<a class="toc-level-2" href="#evidence-language">Evidence language</a>
+<a class="toc-level-2" href="#comparable-benchmark-contract">Comparable benchmark contract</a>
+<a class="toc-level-2" href="#current-product-direction">Current product direction</a>
+<a class="toc-level-2" href="#active-work">Active work</a>
+<a class="toc-level-3" href="#0017-kokoro-canonical-v2-qnn-htp">0017 — Kokoro canonical-v2 QNN/HTP</a>
+<a class="toc-level-3" href="#0022-supertonic-precompiled-context-startup">0022 — Supertonic precompiled-context startup</a>
+<a class="toc-level-2" href="#completed-routes-carried-forward">Completed routes carried forward</a>
+<a class="toc-level-2" href="#after-active-accelerator-work">After active accelerator work</a></nav>
 <main>
-<div class="mirror-note"><strong>Visual mirror of <code>docs/plan.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-20</span><span>source sha256: 724d56f0f6d2575f…</span></div></div>
+<div class="mirror-note"><strong>Visual mirror of <code>docs/plan.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-20</span><span>source sha256: 39a37a7ee77fbbe2…</span></div></div>
 <article><h1 id="current-plan">Current plan<a class="anchor" href="#current-plan" aria-label="Link to this section">#</a></h1>
 <h2 id="goal">Goal<a class="anchor" href="#goal" aria-label="Link to this section">#</a></h2>
-<p>Find a text-to-speech model that can become the local voice of a future NotebookLM-like Android experience. It should sound pleasant and natural over sustained listening, with podcast-like delivery rather than merely intelligible speech.</p>
-<p>A convincing two-speaker conversation would be useful, but it is not required. A strong narrator or persistent voices generated turn by turn can also meet the goal if the deployment runs well on a modern phone.</p>
-<h2 id="evidence-language-convention">Evidence-language convention<a class="anchor" href="#evidence-language-convention" aria-label="Link to this section">#</a></h2>
-<p>Keep four claims separate in every decision:</p>
+<p>Select and productize a local Android text-to-speech route for a NotebookLM-like listening experience. Pleasant, natural long-form speech is the primary goal. A convincing two-speaker conversation is useful but optional; a strong narrator or persistent voices generated turn by turn can meet the goal.</p>
+<h2 id="evidence-language">Evidence language<a class="anchor" href="#evidence-language" aria-label="Link to this section">#</a></h2>
+<p>Keep these claims separate:</p>
 <ol>
-<li><strong>Technical execution</strong> — the declared model path completed on the stated runtime/device with the required provider proof.</li>
-<li><strong>Structurally valid WAV</strong> — the file decoded and met format, length, finiteness, silence, and clipping checks. This does not establish intelligibility, naturalness, or usability.</li>
-<li><strong>Objective or descriptive comparison</strong> — numerical/acoustic metrics passed or failed their named policy. This is not a listening verdict.</li>
-<li><strong>Moritz listening verdict</strong> — only explicit listening feedback can accept or reject the reviewed route/sample. “No audible difference” between A and B is a comparison observation, not acceptance of either sample, unless Moritz separately says it is usable.</li>
+<li><strong>Technical execution</strong> — the declared route completed on the stated runtime/device with the required provider evidence.</li>
+<li><strong>Structurally valid WAV</strong> — the file met format, length, finiteness, silence, and clipping checks.</li>
+<li><strong>Objective/descriptive comparison</strong> — numerical or acoustic metrics passed or failed a named policy.</li>
+<li><strong>Moritz listening verdict</strong> — only explicit feedback can accept or reject the exact reviewed route and WAV hash.</li>
 </ol>
-<p>A route-level verdict stays bound to its exact artifact and configuration. It must not be generalized to a model family without an explicit family-level decision. Unsupported or unreviewed subjective claims are recorded as <strong>not reviewed / unknown</strong>, never inferred from technical success.</p>
-<h2 id="current-phase-preserve-technical-baselines-require-exact-route-listening-evidence">Current phase: preserve technical baselines, require exact-route listening evidence<a class="anchor" href="#current-phase-preserve-technical-baselines-require-exact-route-listening-evidence" aria-label="Link to this section">#</a></h2>
-<p>The completed record now contains several technically executable Android routes, but technical completion has not closed the product-quality question:</p>
-<div class="table-wrap"><table><thead><tr>
-<th>Route</th>
-<th>Technical record</th>
-<th>Moritz listening status</th>
-</tr></thead><tbody>
-<tr>
-<td>Supertonic 3 CPU reference and mixed hybrid in experiments <a href="../experiments/0008-sherpa-onnx-android-tts-benchmark/"><code>0008</code></a> / <a href="../experiments/0010-supertonic-qnn-htp-feasibility/"><code>0010</code></a></td>
-<td>CPU is the supported Android technical reference; hybrid was faster warm but failed its prospective numerical policy</td>
-<td>Moritz accepted exact CPU SHA <code>7e83537630b3e354f7586b9887f7a8359d62e438c9addeea61d87d878b2a84ff</code> and hybrid SHA <code>9b0d488776b144c972e8be4e9434fac14ce3ceddfcfa5a10d137fca41b772668</code> as “Good.” His earlier no-audible-difference report remains comparison-only; the separate verdicts supply sample-level acceptance.</td>
-</tr>
-<tr>
-<td>Supertonic official FP32 CPU/all-HTP in <a href="../experiments/0011-supertonic-official-fp32-phone-comparison/"><code>0011</code></a></td>
-<td>CPU and all-HTP routes executed; all-HTP was faster warm but failed its prospective numerical policy</td>
-<td>CPU SHA <code>8db92db13567b86be503d204fe367f2052b54dbfc99c0f7bfc5b23d9fd431da7</code> accepted: “Good—even a bit more crisp than samples 1 and 2.” All-HTP SHA <code>47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c</code> accepted: “Same as sample 3”; this is perceptual comparison only, not numerical equivalence.</td>
-</tr>
-<tr>
-<td>Pocket FP ONNX CPU in <a href="../experiments/0012-pocket-onnx-vs-executorch-android/"><code>0012</code></a></td>
-<td>Complete CPU route, warm median RTF <code>0.630</code>, structurally valid deterministic WAV</td>
-<td><strong>Rejected for this exact route/sample.</strong> Moritz blind-listened to SHA <code>40634981606f37c59a91c14d99cecb3ef4cc21b1391882e870940b0716857d22</code> and called the repetitive “takakakakakakakaka” output unusable. This does not reject Pocket as a family.</td>
-</tr>
-<tr>
-<td>Kokoro exact-source-derived FP32 ONNX CPU in <a href="../experiments/0013-kokoro-onnx-vs-executorch-android/"><code>0013</code></a></td>
-<td>Complete fixed-contract CPU route, warm median RTF <code>0.9800</code>; separate acoustic policy passed while the retained strict waveform screen failed</td>
-<td>Exact retained sample SHA <code>c046e8337b86ccf221ecd91db7dba90845f7c20b0ab1d8c248a36146c4eaecd3</code> accepted: “Good.” Sample-level only.</td>
-</tr>
-<tr>
-<td>Pocket mixed QNN/CPU in <a href="../experiments/0016-pocket-onnx-qnn-hybrid-android/"><code>0016</code></a></td>
-<td>Physical HTP execution, but slower normalized RTF and changed EOS/output length</td>
-<td>Exact hybrid SHA <code>6cd3a98fb821ad76b0c0ad55a20f910da7be9d3058e511ff807b4a4f694aa45f</code> rejected: “takataktaka.” This is route/sample-only and is not a Pocket-family rejection.</td>
-</tr>
-<tr>
-<td>Kokoro QNN preparation in <a href="../experiments/0017-kokoro-onnx-qnn-htp-android/"><code>0017</code></a></td>
-<td>Full capability assignment only; host graph sequencing was kernel-OOM-killed before session finalization or inference</td>
-<td>Not applicable: no QNN audio exists.</td>
-</tr>
-<tr>
-<td>MOSS-TTS-Nano ONNX CPU in <a href="../experiments/0018-moss-tts-nano-onnx-android/"><code>0018</code></a></td>
-<td>Complete CPU route, warm median RTF <code>1.125</code>, large process-memory footprint, structurally valid retained WAV</td>
-<td>Exact SHA <code>173850781b055e70a606fb561d93b70e6d8c6318db1b29b2324f83506c21ad6b</code> accepted: “Okay to good, but with a bit of a Chinese accent.” Sample-level acceptance with an accent caveat.</td>
-</tr>
-</tbody></table></div>
-<p>Two older listening records remain deliberately narrow:</p>
+<p>None implies another. A route-specific verdict never becomes a model-family verdict. Missing evidence remains null with a reason.</p>
+<h2 id="comparable-benchmark-contract">Comparable benchmark contract<a class="anchor" href="#comparable-benchmark-contract" aria-label="Link to this section">#</a></h2>
+<p>New comparable routes use <a href="../protocols/android-tts-benchmark/transcript.txt"><code>protocols/android-tts-benchmark/transcript.txt</code></a>: canonical v2, 226 bytes, no trailing newline, SHA-256 <code>424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67</code>.</p>
+<p>Follow <a href="../.agents/skills/android-tts-benchmark/SKILL.md">the Android TTS benchmark skill</a>: report setup separately, one first complete generation, at least five additional same-session warm generations with complete state reset, actual emitted-duration RTF, memory semantics, thermal/runtime/provider provenance, a validated hashed WAV, and exact listening status.</p>
+<p>Historical legacy-v1 and model-specific-text routes remain valid evidence but are not text-matched to canonical v2.</p>
+<h2 id="current-product-direction">Current product direction<a class="anchor" href="#current-product-direction" aria-label="Link to this section">#</a></h2>
+<p>Moritz&#x27;s current favorite is the Supertonic 3 official-source, stable-Softplus, all-HTP route from experiment <a href="../experiments/0011-supertonic-official-fp32-phone-comparison/"><code>0011</code></a>. Its exact legacy-v1 HTP WAV was accepted, and Moritz finds it somewhat more natural than Pocket.</p>
+<p>Measured experiment-0011 properties:</p>
 <ul>
-<li>experiment <a href="../experiments/0007-mobile-podcast-preview-bakeoff/"><code>0007</code></a> ranked the exact historical Kokoro, Pocket, and VibeVoice Realtime host previews in that order. No usability acceptance was recorded for any of them; Supertonic, Inflect, and Kitten were not reviewed.</li>
-<li>experiment <a href="../experiments/0009-android-tts-optimization/"><code>0009</code></a> passed a blind <strong>relative INT8-vs-FP32 degradation gate</strong> for Kokoro: four ties and one low-confidence preference per variant. That result found no systematic degradation; it did not establish absolute usability for either sample.</li>
+<li>setup: <code>22.8147 s</code>;</li>
+<li>warm median RTF: <code>0.170316</code>;</li>
+<li>process VmHWM: <code>1,407,393,792 B</code>;</li>
+<li>all four neural components ran fallback-disabled on physical HTP;</li>
+<li>the route failed its prospective numerical policy, despite its accepted listening result.</li>
 </ul>
-<h2 id="current-decision">Current decision<a class="anchor" href="#current-decision" aria-label="Link to this section">#</a></h2>
+<p>Supertonic is therefore the leading production candidate, but the product decision remains open until its canonical-v2 HTP route and production startup behavior are measured. CPU remains useful as a low-setup fallback for short requests; HTP is favored for longer generation when session reuse amortizes setup.</p>
+<h2 id="active-work">Active work<a class="anchor" href="#active-work" aria-label="Link to this section">#</a></h2>
+<h3 id="0017-kokoro-canonical-v2-qnn-htp">0017 — Kokoro canonical-v2 QNN/HTP<a class="anchor" href="#0017-kokoro-canonical-v2-qnn-htp" aria-label="Link to this section">#</a></h3>
+<p>Experiment <a href="../experiments/0017-kokoro-onnx-qnn-htp-android/"><code>0017</code></a> has a complete official-frontend canonical-v2 CPU/export/decomposition proof:</p>
 <ul>
-<li>Keep Supertonic CPU as the supported <strong>technical</strong> Android reference. Its exact experiment-0010 sample is also listening-accepted as “Good,” but broader long-form/product quality still needs corpus evidence.</li>
-<li>Keep experiment 0010&#x27;s hybrid and experiment 0011&#x27;s all-HTP route as bounded technical research evidence. Their exact samples have positive listening verdicts, but both HTP routes failed their prospective numerical policies.</li>
-<li>Reject the exact experiment-0012 Pocket FP ONNX CPU and experiment-0016 Pocket hybrid route/samples for listening use. Do not generalize either rejection to Pocket TTS as a family.</li>
-<li>Record Kokoro 0013 as sample-level accepted “Good.” Record MOSS 0018 as sample-level accepted “Okay to good,” with Moritz&#x27;s Chinese-accent caveat.</li>
-<li>Never promote a structurally valid WAV, an acoustic-policy pass, or a provider/latency result into a quality claim.</li>
+<li>tokens <code>[1,235]</code>, style row 232;</li>
+<li>15.05-second CPU oracle;</li>
+<li>fixed FP32 compatibility graph;</li>
+<li>18 stages covering all 1,685 nodes;</li>
+<li>bit-exact staged CPU recomposition.</li>
 </ul>
-<p>Active implementation work remains governed by its experiment-specific plan and is not summarized here as completed evidence. Before any technically viable route becomes the product choice, retain its exact artifact hash and obtain an explicit Moritz listening verdict on that route/sample. A comparative “no audible difference” answer is insufficient unless it also includes an explicit usability decision.</p>
-<p>Completed experiment details and chronology are in <a href="history.md"><code>history.md</code></a> and its <a href="history.html">HTML mirror</a>.</p></article>
+<p>The first canonical fallback-disabled host QNN batch completed stages 1–15. A requested WSL restart externally interrupted stage 16 during graph sequencing at 12%; stage 16 did not finalize or execute, stages 17–18 were not attempted, and no canonical QNN audio exists. This is not an OOM or stage failure.</p>
+<p>Next gate:</p>
+<p>``<code>bash RUN_ID=canonical-v2-rerun \ experiments/0017-kokoro-onnx-qnn-htp-android/host/run_canonical_v2_staged_host_qnn.sh </code>``</p>
+<p>Reconstruct and hash-check ignored assets using the experiment&#x27;s <a href="../experiments/0017-kokoro-onnx-qnn-htp-android/REPRODUCING.md"><code>REPRODUCING.md</code></a>. Restart from stage 1; never resume the partial stage-16 attempt. Phone work is forbidden until all 18 host stages execute fallback-disabled with zero CPU events and structurally valid final audio.</p>
+<h3 id="0022-supertonic-precompiled-context-startup">0022 — Supertonic precompiled-context startup<a class="anchor" href="#0022-supertonic-precompiled-context-startup" aria-label="Link to this section">#</a></h3>
+<p>Experiment <a href="../experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/"><code>0022</code></a> compares two matched all-HTP startup routes:</p>
+<ol>
+<li>source ONNX compiled/finalized by QNN at runtime;</li>
+<li>precompiled external QNN contexts loaded through ORT EPContext.</li>
+</ol>
+<p>The purpose is to determine whether production-style contexts materially reduce the experiment-0011 <code>22.8147 s</code> setup. Both arms require at least three cold processes, per-session/total readiness, first plus five warm generations, memory/thermal/package-size evidence, fail-closed provider proof, physical RPC/accelerator/cycle/HVX evidence, and exact output/listening handling.</p>
+<p>The first design gate is unresolved: frozen experiment-0011 graphs require wrapped <code>T239/L238</code>, while canonical-v2 wraps naturally to <code>T235</code>. Prove that four masked padding positions preserve canonical semantics and the exact graph identities, or report the constraints incompatible. Never substitute the legacy transcript or silently regenerate differently shaped graphs. Continue from the experiment&#x27;s <a href="../experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/PLAN.md"><code>PLAN.md</code></a>.</p>
+<h2 id="completed-routes-carried-forward">Completed routes carried forward<a class="anchor" href="#completed-routes-carried-forward" aria-label="Link to this section">#</a></h2>
+<ul>
+<li><strong>Pocket canonical v2:</strong> experiment <a href="../experiments/0014-pocket-fp-onnx-qnn-htp/"><code>0014</code></a> completed accepted Android CPU and physical fallback-disabled HTP routes. Warm median RTF is <code>0.414234</code> CPU and <code>0.181643</code> HTP; physical proof is 344 QNN / 0 CPU events with matching RPC/accelerator/cycle/HVX records. This is a fixed-Alba route, not voice cloning.</li>
+<li><strong>Supertonic canonical-v2 CPU:</strong> experiment <a href="../experiments/0021-supertonic-canonical-v2-android-cpu/"><code>0021</code></a> completed at warm median RTF <code>0.395615</code>; its exact WAV was accepted “good.”</li>
+<li><strong>Supertonic historical refresh:</strong> experiment <a href="../experiments/0020-historic-android-benchmark-refresh/"><code>0020</code></a> reproduced the legacy-v1 CPU route at warm median RTF <code>0.393086</code>; it remains a nested historical remeasurement, not canonical v2.</li>
+<li><strong>MOSS canonical-v2 HTP feasibility:</strong> experiment <a href="../experiments/0019-moss-tts-nano-qnn-htp-android/"><code>0019</code></a> passed CPU equivalence and host QNN/context gates but failed at physical QNN <code>CreateDevice</code> before session assignment or inference. It has no HTP WAV, RTF, memory result, or listening verdict.</li>
+</ul>
+<p>The complete normalized Android evidence is in the <a href="android-benchmarks/index.html">benchmark dashboard</a> and its <a href="android-benchmarks/registry.json">registry</a>.</p>
+<h2 id="after-active-accelerator-work">After active accelerator work<a class="anchor" href="#after-active-accelerator-work" aria-label="Link to this section">#</a></h2>
+<p>Run a matched longer-form listening bake-off among accepted Supertonic, Pocket, Kokoro if it becomes viable, and any other technically complete route. Evaluate:</p>
+<ul>
+<li>sustained naturalness and listener fatigue;</li>
+<li>paragraph/chapter seams and prosody;</li>
+<li>multiple voices if dialogue is required;</li>
+<li>cold startup, session lifetime, storage, memory, thermal behavior, and battery;</li>
+<li>a practical app policy such as CPU for short previews and persistent HTP sessions for long documents.</li>
+</ul>
+<p>Do not choose a production route from RTF alone. Moritz&#x27;s listening preference and deployment practicality are both required.</p></article>
 <footer class="source-footer">Generated as <code>plan.html</code> by <code>scripts/build_docs_html.py</code>. Edit <code>docs/plan.md</code>, then regenerate the human-readable mirrors.</footer>
 </main>
 </div>

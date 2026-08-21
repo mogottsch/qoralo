@@ -7,7 +7,7 @@ The original 116-byte experiment-0013-derived route and the newer canonical-v2 r
 - The historical monolithic compatibility graph was blocked before execution by kernel OOM. An authorized later decomposition did execute all 18 historical stages on host QNN, but duration changed from 304 to 305 and its final float audio was structurally invalid. It remains noncanonical feasibility/debug evidence only.
 - The canonical-v2 route has complete frontend/export/CPU/stage-recomposition proof. Its first fallback-disabled host QNN attempt completed stages 1–15, then a WSL shutdown/restart externally interrupted stage 16 during graph sequencing at 12%. Stage 16 did not finalize or execute, stages 17–18 were not attempted, no final canonical QNN audio exists, and the phone remains forbidden.
 
-Neither track proves physical phone HTP execution. The canonical interrupted attempt is not a technical stage-16 failure or OOM; it must be restarted from stage 1 on the destination device. See [`HANDOFF.md`](HANDOFF.md).
+Neither track proves physical phone HTP execution. The canonical interrupted attempt is not a technical stage-16 failure or OOM; the next attempt must restart from stage 1. See [`REPRODUCING.md`](REPRODUCING.md).
 
 Historical machine-readable evidence is [`results/host-gate-checkpoint.json`](results/host-gate-checkpoint.json) and [`results/staged-host-qnn-feasibility.json`](results/staged-host-qnn-feasibility.json). Canonical-v2 machine evidence begins with [`protocol-canonical-v2-stage-decomposition.json`](protocol-canonical-v2-stage-decomposition.json) and [`results/canonical-v2-host-qnn-interrupted-checkpoint.json`](results/canonical-v2-host-qnn-interrupted-checkpoint.json). Large models, fixtures, profiles, compiler logs, tensors, local binaries, and audio remain ignored under `work/` and `.local/`; their hashes and regeneration commands are committed.
 
@@ -184,6 +184,6 @@ Exact per-stage timing, outputs, numerical comparisons, QNN metrics, log/profile
 
 No canonical QNN audio exists, so canonical QNN listening is `not_reviewed`/not yet applicable. Phone eligibility is false.
 
-On the destination device, regenerate and hash-verify ignored artifacts, then restart the complete 18-stage host gate from stage 1 with [`host/run_canonical_v2_staged_host_qnn.sh`](host/run_canonical_v2_staged_host_qnn.sh). Do not resume the partial stage-16 attempt. [`HANDOFF.md`](HANDOFF.md) contains the exact commands.
+Regenerate and hash-verify ignored artifacts, then restart the complete 18-stage host gate from stage 1 with [`host/run_canonical_v2_staged_host_qnn.sh`](host/run_canonical_v2_staged_host_qnn.sh). Do not resume the partial stage-16 attempt. [`REPRODUCING.md`](REPRODUCING.md) contains the exact commands.
 
 Only a fresh 18/18 fallback-disabled host pass with zero CPU provider events **and structurally valid final audio** can advance to phone work. Physical phone RPC/accelerator/cycle/HVX proof, setup/first/five-warm RTFs using actual emitted duration, thermal context, memory semantics, a fresh WAV/hash, and Moritz's exact-sample verdict remain outstanding. No quantization is authorized.

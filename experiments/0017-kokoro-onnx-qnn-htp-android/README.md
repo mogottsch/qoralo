@@ -22,7 +22,7 @@ See:
 
 - [`protocol-canonical-v2-stage-decomposition.json`](protocol-canonical-v2-stage-decomposition.json) — frozen canonical contract and all stage hashes/I/O;
 - [`results/canonical-v2-host-qnn-interrupted-checkpoint.json`](results/canonical-v2-host-qnn-interrupted-checkpoint.json) — exact interrupted attempt;
-- [`HANDOFF.md`](HANDOFF.md) — complete cross-device reconstruction and restart instructions;
+- [`REPRODUCING.md`](REPRODUCING.md) — clean-machine reconstruction and restart instructions;
 - [`RESULTS.md`](RESULTS.md) — historical and canonical evidence with claim boundaries.
 
 ## Historical fixed-fixture route

@@ -1,8 +1,8 @@
-# 0022 continuation handoff
+# Experiment 0022 plan
 
-This file is the resume point after the 2026-08-20 device/session move. The repository, not prior chat or ignored `.local` state, is authoritative.
+This is the durable implementation plan for comparing source-ONNX QNN startup with precompiled-context startup. The repository, not chat or ignored `.local` state, is authoritative.
 
-## Exact current state
+## Current state
 
 No implementation, context generation, phone staging, or benchmark output exists. Only the approved scope, immutable lineage, protocol, copied canonical transcript, preflight state, and contract tests have been created. The experiment path alone is owned by Sean. Other sessions own their own experiments and dashboard paths.
 
@@ -23,10 +23,10 @@ Before implementing or producing output, prove whether four masked padding posit
 
 ## Resume checklist
 
-1. Join Messenger as Sean and reserve only `experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/`.
+1. Reserve only `experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/` during coordinated work.
 2. Run the contract tests and verify the working tree does not contain uncommitted 0022 changes.
-3. Reconstruct each ignored dependency on the new device and verify its SHA-256 against `protocol/experiment-contract.json`.
-4. Ask Ben and Jens for current measured RAM use/compile windows before any QAIRT/ORT compilation. Do not compile concurrently without agreement.
+3. Reconstruct each ignored dependency and verify its SHA-256 against `protocol/experiment-contract.json`.
+4. Check current measured RAM use before any QAIRT/ORT compilation. Do not overlap near-machine-size compiler jobs without adequate measured headroom.
 5. Resolve the T235-to-T239 padding/mask gate and commit the proof before generating any QNN context or WAV.
 6. Inspect pinned ORT 1.27.1 QNN EPContext behavior, especially non-embedded external context generation and loading. Freeze exact provider/session options.
 7. Build one deterministic runner supporting both arms and emitting per-session readiness, total ready time, process time, six generation records, PSS/VmHWM, provider/profile paths, hashes, and cleanup status.
