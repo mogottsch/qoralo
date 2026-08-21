@@ -207,6 +207,67 @@ class ContractTests(unittest.TestCase):
         self.assertIn("audio", available)
         self.assertIn("pred_dur", available)
 
+    def test_migration_checkpoint_preserves_exact_interruption_boundary(self) -> None:
+        checkpoint = json.loads(
+            (ROOT / "results/canonical-v2-host-qnn-interrupted-checkpoint.json").read_text()
+        )
+        self.assertEqual(checkpoint["status"], "externally_interrupted")
+        self.assertEqual(checkpoint["completed_prefix"]["count"], 15)
+        self.assertEqual(
+            checkpoint["completed_prefix"]["provider_counts"],
+            {"QNNExecutionProvider": 15},
+        )
+        self.assertEqual(checkpoint["completed_prefix"]["cpu_provider_node_events"], 0)
+        self.assertEqual(
+            checkpoint["completed_prefix"]["indices"], list(range(1, 16))
+        )
+        active = checkpoint["interrupted_active_stage"]
+        self.assertEqual((active["index"], active["name"]), (16, "generator_1_resblock_5"))
+        self.assertEqual(
+            active["observed_compiler_state"][
+                "graph_sequencing_for_target_maximum_progress_percent"
+            ],
+            12,
+        )
+        self.assertFalse(active["observed_compiler_state"]["session_finalized"])
+        self.assertFalse(active["observed_compiler_state"]["inference_executed"])
+        self.assertEqual(
+            [(item["index"], item["name"]) for item in checkpoint["unattempted_stages"]],
+            [(17, "generator_1_merge"), (18, "waveform_istft")],
+        )
+        self.assertFalse(checkpoint["phone_eligibility"])
+        self.assertFalse(checkpoint["final_audio_produced"])
+        self.assertFalse(checkpoint["source"]["end_file_exists"])
+        self.assertFalse(checkpoint["source"]["exit_code_file_exists"])
+        self.assertEqual(
+            checkpoint["resource_monitor"]["minimum_mem_available_kib"], 9539000
+        )
+        self.assertEqual(
+            checkpoint["resource_monitor"]["maximum_swap_consumption_delta_kib"], 0
+        )
+        self.assertFalse(
+            checkpoint["resource_monitor"]["pause_event_file_exists"]
+        )
+        self.assertIn(
+            "restart the complete canonical 18-stage serial host run from stage 1",
+            checkpoint["next_action"]["rule"],
+        )
+
+        old = json.loads((ROOT / "results/staged-host-qnn-feasibility.json").read_text())
+        self.assertEqual(old["execution"]["completed_stages"], 18)
+        self.assertEqual(old["execution"]["cpu_provider_node_events"], 0)
+        self.assertFalse(old["outputs"]["audio"]["structural"]["valid"])
+        self.assertEqual(old["outputs"]["duration"]["sum"], 305)
+        self.assertEqual(old["outputs"]["duration"]["expected_sum"], 304)
+
+        for relative in (
+            "host/run_canonical_v2_staged_host_qnn.sh",
+            "tools/summarize_staged_qnn_run.py",
+            "tools/summarize_interrupted_staged_qnn_run.py",
+            "HANDOFF.md",
+        ):
+            self.assertTrue((ROOT / relative).is_file(), relative)
+
     def test_erased_experiment_0015_remains_absent(self) -> None:
         self.assertFalse((REPO / "experiments/0015-pocket-tts-qnn-htp-android").exists())
 

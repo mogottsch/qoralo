@@ -1,14 +1,17 @@
 # Experiment 0017 results — exact-source Kokoro ONNX on QNN HTP
 
-## Bounded conclusion
+## Current bounded conclusion
 
-**Blocked before host execution.** A narrow, fixed-contract compatibility derivative became fully assignable to one QNN partition and was bit-identical to its source under the same patched ONNX Runtime 1.27.1 CPU runtime. However, the required fallback-disabled host session never finalized: Linux killed the QNN HTP preparation process for out-of-memory while `Graph Sequencing for Target` was at 64%. No inference began, no QNN output was produced, and the phone was correctly not accessed.
+The original 116-byte experiment-0013-derived route and the newer canonical-v2 route are separate evidence tracks.
 
-This is not evidence that Kokoro can never run on QNN HTP. It is also not a full-HTP success. The result is an exact bounded host-finalization/resource blocker in the tested QAIRT/QNN 2.49 setup.
+- The historical monolithic compatibility graph was blocked before execution by kernel OOM. An authorized later decomposition did execute all 18 historical stages on host QNN, but duration changed from 304 to 305 and its final float audio was structurally invalid. It remains noncanonical feasibility/debug evidence only.
+- The canonical-v2 route has complete frontend/export/CPU/stage-recomposition proof. Its first fallback-disabled host QNN attempt completed stages 1–15, then a WSL shutdown/restart externally interrupted stage 16 during graph sequencing at 12%. Stage 16 did not finalize or execute, stages 17–18 were not attempted, no final canonical QNN audio exists, and the phone remains forbidden.
 
-Canonical machine-readable evidence is [`results/host-gate-checkpoint.json`](results/host-gate-checkpoint.json). The metadata pass, rewrite, and same-runtime CPU proof are preserved in [`results/profile-shape-provenance.json`](results/profile-shape-provenance.json), [`results/profile-shape-cpu-equivalence.json`](results/profile-shape-cpu-equivalence.json), [`results/qnn-compat-rewrite-provenance.json`](results/qnn-compat-rewrite-provenance.json), and [`results/qnn-compat-cpu-equivalence.json`](results/qnn-compat-cpu-equivalence.json). Large models, fixtures, profiles, compiler logs, tensors, and local binaries remain ignored under `work/` and `.local/`.
+Neither track proves physical phone HTP execution. The canonical interrupted attempt is not a technical stage-16 failure or OOM; it must be restarted from stage 1 on the destination device. See [`HANDOFF.md`](HANDOFF.md).
 
-## Verified source and contract
+Historical machine-readable evidence is [`results/host-gate-checkpoint.json`](results/host-gate-checkpoint.json) and [`results/staged-host-qnn-feasibility.json`](results/staged-host-qnn-feasibility.json). Canonical-v2 machine evidence begins with [`protocol-canonical-v2-stage-decomposition.json`](protocol-canonical-v2-stage-decomposition.json) and [`results/canonical-v2-host-qnn-interrupted-checkpoint.json`](results/canonical-v2-host-qnn-interrupted-checkpoint.json). Large models, fixtures, profiles, compiler logs, tensors, local binaries, and audio remain ignored under `work/` and `.local/`; their hashes and regeneration commands are committed.
+
+## Historical verified source and contract
 
 The route starts from experiment 0013 commit `b6fd6e8c123cbf5170f1b1ee1367bb08eef6f5c0` and preserves its claim boundary:
 
@@ -116,8 +119,71 @@ Consequences:
 - phone lock/ADB/staging: never used;
 - QNN listening verdict: not applicable because no QNN audio exists.
 
-## Decision
+## Historical decision
 
-Keep experiment 0013's ONNX Runtime CPU route as the proven Kokoro Android **technical** reference; Moritz accepted its exact retained WAV as “Good.” That verdict remains bound to the CPU sample and does not imply anything about an unexecuted QNN route. Experiment 0017 establishes a fully assigned and CPU-equivalent fixed-contract graph, but cannot advance beyond that assignment claim because host QNN graph finalization exhausted the tested environment before execution.
+Keep experiment 0013's ONNX Runtime CPU route as the proven Kokoro Android **technical** reference; Moritz accepted its exact retained WAV as “Good.” That verdict remains bound to the CPU sample and does not imply anything about another route.
 
-A follow-up would require a new decision—for example, a materially larger host preparation environment or semantics-preserving graph segmentation. This experiment does not extend its resource cap, split the model, introduce quantization, or broaden the rewrite.
+The later authorized stage decomposition did not erase the monolithic OOM. It separately executed all 18 historical host stages with QNN assignment and zero CPU provider events. The final output nevertheless failed basic structure: duration sum changed from `304` to `305`, float peak was `94848`, and `182236/182400` samples had `abs >= 1`. See [`results/staged-host-qnn-feasibility.json`](results/staged-host-qnn-feasibility.json). No phone attempt or listening sample was justified.
+
+## Canonical-v2 route
+
+### Frontend and fixed contract
+
+The exact canonical transcript is 226 bytes with no newline, SHA `424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67`. The historical sherpa lexicon failed closed on `makes`, so the comparable route uses the pinned official Kokoro 0.9.4 American-English KPipeline:
+
+- one chunk;
+- 233 phoneme code points / 323 UTF-8 bytes, SHA `7c7299c2d19943162b5bc85cebe116d16e534f336ac5bcb4fce40fe126a8b3a0`;
+- tokens `[1,235]`, SHA `9c565b2a6ee1a811f188f3e3425a3188af58866988ce5a2197eeaacc81dde280`;
+- `af_heart` style row 232, SHA `8acaca07623d98a1085f6b182fb997d715dd1d67862e350567e6d9b1bc8ec71b`;
+- duration `[235]`, sum `602`, SHA `99494f78e82ad3d8b506d5b0a5c4edde6292c6a52ca54a47b50f109fa534480c`;
+- audio `[361200]` at 24 kHz (`15.05 s`).
+
+The controlled-eager CPU oracle was structurally valid: audio SHA `b7cc6d6c719bd0151c35aa6ae4ef8bcec0b3b99acb7a6423e4c6e42e2edee536`, peak `0.457968`, RMS `0.051719`, zero clipped float samples. Its process-lifetime `ru_maxrss` was `1,524,412 KiB`.
+
+### Export and CPU gates
+
+The canonical FP32 ONNX export is SHA `26120b192f2ad7567c6c1215ccbcf374d1946460c4589c1098941ab15e43aa73` with 4,352 nodes, 445 FP32 initializers, and zero quantized/random operators.
+
+On patched ORT 1.27.1 CPU:
+
+- duration was bit-exact to controlled eager;
+- audio SHA was `1f7eb49ca903a3eed8cdb36049041a48540bd08027b38b4a6cee52e27cb9f624` and structurally valid;
+- the phase-tolerant policy passed: spectral convergence `0.06260`, log-magnitude Pearson `0.99533`, log-mel cosine `0.99923`, mean absolute log-mel error `0.827 dB`, RMS-envelope Pearson `0.99913`;
+- the separate strict waveform `.999/.01` screen failed: waveform cosine `0.99515`, NRMSE `0.10372`. It remains explicit and is not a listening verdict.
+
+The metadata-shaped graph is SHA `d81053acc21a9fa42a7ff09bae17abad1ef7499aa2252f70bda27f9ac89194a3`. The bounded QNN compatibility graph is SHA `0c7ce33eac4c6664819a61e48469a9cf43ad403d852b01af5517a13c7ed2a066`, with 1,685 nodes, 809 initializers, no quantization, no retained initializer changes, and bit-exact CPU output versus the shaped graph.
+
+Eighteen fixed stage models cover all 1,685 source nodes. Five named support nodes are recomputed at boundaries, as declared in the stage provenance. Separate-process CPU recomposition is bit-exact to the complete compatibility graph: audio SHA `fb8895f6bb9c2ee94dd18f8b9bfdc6f1b36f99e01c40f5806bdd71076acd6d36`, duration SHA `99494f78e82ad3d8b506d5b0a5c4edde6292c6a52ca54a47b50f109fa534480c`.
+
+### Interrupted canonical host QNN attempt
+
+The run started `2026-08-20T13:34:52Z` using patched ORT 1.27.1, QAIRT/QNN `2.49.0.260730`, HTP SoC model 43, one thread, graph optimization disabled, and `session.disable_cpu_ep_fallback=1`. Each stage used a separate process.
+
+Stages 1–15 all finalized and executed their complete real inputs:
+
+- provider counts: 15 QNN events, zero CPU events;
+- sum of per-process session creation: `3587.162919 s`;
+- sum of single inference times: `5385.56082 s`;
+- maximum separate process-lifetime `ru_maxrss`: `4,170,140 KiB`;
+- detailed host QNN CSVs contain finalize time, HVX-thread count, accelerator cycles, accelerator execution time, and QNN execution time for every completed stage.
+
+These metrics are sums across separate processes, not an end-to-end phone benchmark. The memory value is a process-lifetime high-water maximum, not additive, steady PSS, or component-isolated memory.
+
+A WSL shutdown/restart externally interrupted stage 16 (`generator_1_resblock_5`) after:
+
+- graph preparation: `288 us`;
+- graph optimization: `43,520,959 us`;
+- post graph optimization: `5,485,532 us`;
+- graph sequencing: 12% maximum observed progress.
+
+Stage 16 had no finalized session, inference, output, non-empty provider profile, or exit code. Stages 17–18 were not attempted. The top-level run has no end/exit file. There was no ORT error or kernel OOM. The host-wide monitor captured 1,804 samples; minimum `MemAvailable` was `9,539,000 KiB`, swap consumption did not grow, and no automatic pause occurred. These facts make the boundary an external interruption, not a technical stage failure.
+
+Exact per-stage timing, outputs, numerical comparisons, QNN metrics, log/profile hashes, and resource facts are committed in [`results/canonical-v2-host-qnn-interrupted-checkpoint.json`](results/canonical-v2-host-qnn-interrupted-checkpoint.json).
+
+## Current decision and next gate
+
+No canonical QNN audio exists, so canonical QNN listening is `not_reviewed`/not yet applicable. Phone eligibility is false.
+
+On the destination device, regenerate and hash-verify ignored artifacts, then restart the complete 18-stage host gate from stage 1 with [`host/run_canonical_v2_staged_host_qnn.sh`](host/run_canonical_v2_staged_host_qnn.sh). Do not resume the partial stage-16 attempt. [`HANDOFF.md`](HANDOFF.md) contains the exact commands.
+
+Only a fresh 18/18 fallback-disabled host pass with zero CPU provider events **and structurally valid final audio** can advance to phone work. Physical phone RPC/accelerator/cycle/HVX proof, setup/first/five-warm RTFs using actual emitted duration, thermal context, memory semantics, a fresh WAV/hash, and Moritz's exact-sample verdict remain outstanding. No quantization is authorized.

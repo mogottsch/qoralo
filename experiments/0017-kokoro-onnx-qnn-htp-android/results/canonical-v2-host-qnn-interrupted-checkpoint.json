@@ -1,0 +1,1548 @@
+{
+  "claim_boundary": "The first 15 canonical stages have fallback-disabled host QNN finalization, complete-input execution, one QNNExecutionProvider event each, zero CPU provider events, and detailed host QNN profile metrics. Stage 16 did not finalize or execute, stages 17-18 were not attempted, no final audio exists, and there is no physical phone HTP or listening evidence.",
+  "comparability": "canonical_v2",
+  "completed_prefix": {
+    "count": 15,
+    "cpu_provider_node_events": 0,
+    "indices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "maximum_per_process_ru_maxrss_kib": 4170140,
+    "memory_semantics": "maximum of separate process-lifetime ru_maxrss high-water marks; not additive, not steady PSS, and not component-isolated",
+    "provider_counts": {
+      "QNNExecutionProvider": 15
+    },
+    "stages": [
+      {
+        "comparison_to_same_stage_cpu": {
+          "/bert_encoder/Add_output_0": {
+            "all_finite": true,
+            "bit_exact": false,
+            "candidate_absolute_peak": 6.843750476837158,
+            "candidate_rms": 1.2157448269767974,
+            "cosine": 0.9998708540453253,
+            "maximum_absolute_error": 0.3953203856945038,
+            "nrmse": 0.018309878601535955,
+            "reference_absolute_peak": 6.7790961265563965,
+            "reference_rms": 1.2053254215669587,
+            "rmse": 0.022069362144236156
+          }
+        },
+        "evidence": {
+          "ort_profile": {
+            "bytes": 2639,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/01-bert_2026-08-20_13-34-52_245.json",
+            "sha256": "299eba77fe3d403b25144b9fa39e2566112b11772138efa27cb850aa6e81720a"
+          },
+          "qnn_csv": {
+            "bytes": 66225,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/01-bert.qnn.csv",
+            "sha256": "39e67a25724c417f634b4d45dd4f7ffdbd2bf441730230e815d055c32fd034af"
+          },
+          "qnn_log": {
+            "bytes": 65656,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/01-bert.qnn_qnn.log",
+            "sha256": "a32e270fa14efd5b4279aca8c3833b26469d007d26de54b324377eb269111537"
+          },
+          "stderr": {
+            "bytes": 267,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/01-bert.stderr.log",
+            "sha256": "5b08f5e27590cc1ec390581a287ab4551b9fc2a9b556d4dff317bc86bf31414d"
+          },
+          "stdout": {
+            "bytes": 2359,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/01-bert.stdout.json",
+            "sha256": "585d50942f114521caea9b7094f4bcc2df244e5c7ffb1911f82f53eaebc7672d"
+          }
+        },
+        "execution": {
+          "exit_code": 0,
+          "provider_counts": {
+            "QNNExecutionProvider": 1
+          },
+          "qnn_profile_metrics": {
+            "Accelerator (execute) time": {
+              "US": 52198606
+            },
+            "Accelerator (execute) time (cycles)": {
+              "CYCLES": 8984773804
+            },
+            "Number of HVX threads used": {
+              "COUNT": 0
+            },
+            "QNN (execute) time": {
+              "US": 52208375
+            },
+            "QNN (finalize) time": {
+              "US": 4417251
+            }
+          },
+          "ru_maxrss_kib": 329008,
+          "run_seconds": [
+            52.2132
+          ],
+          "session_creation_seconds": 6.21317,
+          "wall_seconds": 58.560201632000144
+        },
+        "index": 1,
+        "model": {
+          "bytes": 24792421,
+          "sha256": "f39142128623987c10fcbb01fa0ba26449d1a8d8449bac35b45b174cd0f64ad7",
+          "source_nodes": 490
+        },
+        "name": "bert",
+        "outputs": {
+          "/bert_encoder/Add_output_0": {
+            "bytes": 481280,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/tensors/01-01-0453bd98532a.f32",
+            "sha256": "cb3db74afca212831c375fa7b6a597d4f2f35f21775305497198fcba9ae2c153"
+          }
+        },
+        "role": "ALBERT text representation and learned projection"
+      },
+      {
+        "comparison_to_same_stage_cpu": {
+          "/text_encoder/Where_13": {
+            "all_finite": true,
+            "bit_exact": false,
+            "candidate_absolute_peak": 2.962890863418579,
+            "candidate_rms": 0.33461567279968785,
+            "cosine": 0.9999032584754998,
+            "maximum_absolute_error": 0.09403377771377563,
+            "nrmse": 0.013909536590927765,
+            "reference_absolute_peak": 2.959989547729492,
+            "reference_rms": 0.33463500760658776,
+            "rmse": 0.004654617882909223
+          }
+        },
+        "evidence": {
+          "ort_profile": {
+            "bytes": 1868,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/02-duration_encoder_2026-08-20_13-35-47_957.json",
+            "sha256": "ef4bc42f18b8e01a1231572d26ad58b4a4553efe36548db0563c469387000312"
+          },
+          "qnn_csv": {
+            "bytes": 308725,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/02-duration_encoder.qnn.csv",
+            "sha256": "82ec74054a7685f67564bb0b5db4241f7f1648b8c0c325eafd78bd1c73dce2f8"
+          },
+          "qnn_log": {
+            "bytes": 300128,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/02-duration_encoder.qnn_qnn.log",
+            "sha256": "4951f6ec9b9f3b566a95ae341a0605e91cde57047d156f09ca0b7389c197e5e4"
+          },
+          "stderr": {
+            "bytes": 267,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/02-duration_encoder.stderr.log",
+            "sha256": "fa961326afa11eab300ae6c889c6e4bacc6b3e6869f5880c0ca4131503a41f03"
+          },
+          "stdout": {
+            "bytes": 2097,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/02-duration_encoder.stdout.json",
+            "sha256": "94ff59efa4522115ddda97ebd2d459e13b45264798254c2b340c048f46c43a5d"
+          }
+        },
+        "execution": {
+          "exit_code": 0,
+          "provider_counts": {
+            "QNNExecutionProvider": 1
+          },
+          "qnn_profile_metrics": {
+            "Accelerator (execute) time": {
+              "US": 104191853
+            },
+            "Accelerator (execute) time (cycles)": {
+              "CYCLES": 13858232505
+            },
+            "Number of HVX threads used": {
+              "COUNT": 0
+            },
+            "QNN (execute) time": {
+              "US": 104265562
+            },
+            "QNN (finalize) time": {
+              "US": 833884934
+            }
+          },
+          "ru_maxrss_kib": 2008988,
+          "run_seconds": [
+            104.282
+          ],
+          "session_creation_seconds": 834.471,
+          "wall_seconds": 939.9177991069998
+        },
+        "index": 2,
+        "model": {
+          "bytes": 33802264,
+          "sha256": "fe2a9e055f44e615e3f6033e38fc21d82718c2ee26b3e34696503f35c7584dab",
+          "source_nodes": 76
+        },
+        "name": "duration_encoder",
+        "outputs": {
+          "/text_encoder/Where_13": {
+            "bytes": 601600,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/tensors/02-01-47e702793e8a.f32",
+            "sha256": "8d970aee686b26912364dbdfb725c94241ba910a02432b960da0057ab3983211"
+          }
+        },
+        "role": "style-conditioned duration encoder"
+      },
+      {
+        "comparison_to_same_stage_cpu": {
+          "/text_encoder_1/Where_7_output_0": {
+            "all_finite": true,
+            "bit_exact": false,
+            "candidate_absolute_peak": 1.0000001192092896,
+            "candidate_rms": 0.33299270003549525,
+            "cosine": 0.9999758391492464,
+            "maximum_absolute_error": 0.051092565059661865,
+            "nrmse": 0.006951515422143202,
+            "reference_absolute_peak": 0.9996529817581177,
+            "reference_rms": 0.3329842670290519,
+            "rmse": 0.002314745267583504
+          }
+        },
+        "evidence": {
+          "ort_profile": {
+            "bytes": 1417,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/03-text_encoder_2026-08-20_13-50-56_176.json",
+            "sha256": "ebacf13a21e8208a2f484bbf48482c3abb753e11571604bcf4baaf0665137d7d"
+          },
+          "qnn_csv": {
+            "bytes": 100762,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/03-text_encoder.qnn.csv",
+            "sha256": "548b12bd2e2611dedd05ca914958672d16480c08e351f3c22728063e343d1542"
+          },
+          "qnn_log": {
+            "bytes": 99928,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/03-text_encoder.qnn_qnn.log",
+            "sha256": "c0250431711215f3e35d5b99124459967f8098bc57ea67414fab954ec629a40a"
+          },
+          "stderr": {
+            "bytes": 267,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/03-text_encoder.stderr.log",
+            "sha256": "15612e40e703a70ef6b340510f8a2ee07f5edf003271c071e5e11ef09aa6d21c"
+          },
+          "stdout": {
+            "bytes": 1658,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/03-text_encoder.stdout.json",
+            "sha256": "20f9b0ebd4ad8019fa1e53cd5297565bc706224116836b0084ef0a2f87a0994d"
+          }
+        },
+        "execution": {
+          "exit_code": 0,
+          "provider_counts": {
+            "QNNExecutionProvider": 1
+          },
+          "qnn_profile_metrics": {
+            "Accelerator (execute) time": {
+              "US": 45069333
+            },
+            "Accelerator (execute) time (cycles)": {
+              "CYCLES": 6032674407
+            },
+            "Number of HVX threads used": {
+              "COUNT": 0
+            },
+            "QNN (execute) time": {
+              "US": 45092279
+            },
+            "QNN (finalize) time": {
+              "US": 38697111
+            }
+          },
+          "ru_maxrss_kib": 543788,
+          "run_seconds": [
+            45.0966
+          ],
+          "session_creation_seconds": 39.0102,
+          "wall_seconds": 84.45710449699982
+        },
+        "index": 3,
+        "model": {
+          "bytes": 25800828,
+          "sha256": "e93888513296abb6ad2ae24e3922cfe8a830554cdaf35dcb2ab6ebe6d8edb0bb",
+          "source_nodes": 31
+        },
+        "name": "text_encoder",
+        "outputs": {
+          "/text_encoder_1/Where_7_output_0": {
+            "bytes": 481280,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/tensors/03-01-772b7804b0f9.f32",
+            "sha256": "dcedc3f4dbfe5cba5a40f2a49bd6abeb7d29adfa89ae83c8dc51bf13ef11d500"
+          }
+        },
+        "role": "convolutional/recurrent acoustic text encoder"
+      },
+      {
+        "comparison_to_same_stage_cpu": {
+          "/MatMul_1_output_0": {
+            "all_finite": true,
+            "bit_exact": false,
+            "candidate_absolute_peak": 1.0000001192092896,
+            "candidate_rms": 0.3256875157654451,
+            "cosine": 0.8545335956419078,
+            "maximum_absolute_error": 1.773895502090454,
+            "nrmse": 0.5395550382330375,
+            "reference_absolute_peak": 0.9996529817581177,
+            "reference_rms": 0.32547895976584773,
+            "rmse": 0.1756138125805112
+          },
+          "/MatMul_output_0": {
+            "all_finite": true,
+            "bit_exact": false,
+            "candidate_absolute_peak": 2.962890863418579,
+            "candidate_rms": 0.3218777565606707,
+            "cosine": 0.8288548697526482,
+            "maximum_absolute_error": 3.1526410579681396,
+            "nrmse": 0.5853783984933705,
+            "reference_absolute_peak": 2.959989547729492,
+            "reference_rms": 0.32152419228393714,
+            "rmse": 0.1882133167560456
+          },
+          "pred_dur": {
+            "bit_exact": false,
+            "candidate_sum": 605,
+            "maximum_absolute_difference": 1,
+            "mismatch_count": 5,
+            "mismatch_indices": [
+              81,
+              91,
+              145,
+              169,
+              197
+            ],
+            "reference_sum": 602
+          }
+        },
+        "evidence": {
+          "ort_profile": {
+            "bytes": 1286,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/04-duration_alignment_2026-08-20_13-52-18_383.json",
+            "sha256": "7f7f4b1b4e8b3d03c5e2c96adf97e307c8dc182319dbb077769ee09fec0d1807"
+          },
+          "qnn_csv": {
+            "bytes": 87198,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/04-duration_alignment.qnn.csv",
+            "sha256": "5f3fb958104c17e6f38460c8a558ddbf63e6cb7f686d0c3929ecf169b8871681"
+          },
+          "qnn_log": {
+            "bytes": 85360,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/04-duration_alignment.qnn_qnn.log",
+            "sha256": "fee5454bc655b89755749c15f9f8deec3f5ca25cf16de46b7fbb3bff52beb1c4"
+          },
+          "stderr": {
+            "bytes": 267,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/04-duration_alignment.stderr.log",
+            "sha256": "305c5ca758758d9cb00d782b0bfa6997c8906733fcbf59f5e3fd29742bd6a86a"
+          },
+          "stdout": {
+            "bytes": 2319,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/04-duration_alignment.stdout.json",
+            "sha256": "909291f220dc848b4c1482b7394c84690507eee95793148f3f97c48103a4d45e"
+          }
+        },
+        "execution": {
+          "exit_code": 0,
+          "provider_counts": {
+            "QNNExecutionProvider": 1
+          },
+          "qnn_profile_metrics": {
+            "Accelerator (execute) time": {
+              "US": 31185997
+            },
+            "Accelerator (execute) time (cycles)": {
+              "CYCLES": 4157581761
+            },
+            "Number of HVX threads used": {
+              "COUNT": 0
+            },
+            "QNN (execute) time": {
+              "US": 31207818
+            },
+            "QNN (finalize) time": {
+              "US": 111748056
+            }
+          },
+          "ru_maxrss_kib": 587056,
+          "run_seconds": [
+            31.2113
+          ],
+          "session_creation_seconds": 111.89,
+          "wall_seconds": 143.41504780700006
+        },
+        "index": 4,
+        "model": {
+          "bytes": 7690474,
+          "sha256": "82d94abfac8a3169bda2e50914c0caac6dd14acb203b1e42be15b23e9535e7cc",
+          "source_nodes": 27
+        },
+        "name": "duration_alignment",
+        "outputs": {
+          "/MatMul_1_output_0": {
+            "bytes": 1232896,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/tensors/04-02-34fedf9595d1.f32",
+            "sha256": "7d0322901be65f153897a632dccc9077587109e020ebe606e1be98eb0f1b3fad"
+          },
+          "/MatMul_output_0": {
+            "bytes": 1541120,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/tensors/04-01-6da329115eb9.f32",
+            "sha256": "03fa8da04044e4932eaf9da25a0672de1450158b2a32c433bb07a0a004e26e4f"
+          },
+          "pred_dur": {
+            "bytes": 1880,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/tensors/04-03-a93e7df81f11.i64",
+            "sha256": "e4d557abb6cb47889d9eb1ca5aa80d0a0c5c4b06c65da10d373d137de641f635"
+          }
+        },
+        "role": "duration LSTM/head plus fixed-contract runtime alignment"
+      },
+      {
+        "comparison_to_same_stage_cpu": {
+          "/If_1_output_0": {
+            "all_finite": true,
+            "bit_exact": false,
+            "candidate_absolute_peak": 9.695313453674316,
+            "candidate_rms": 5.9462435902546344,
+            "cosine": 0.9592923543151126,
+            "maximum_absolute_error": 11.407868146896362,
+            "nrmse": 0.2843598880056693,
+            "reference_absolute_peak": 9.504935264587402,
+            "reference_rms": 5.991212032802468,
+            "rmse": 1.703660382665928
+          },
+          "/If_output_0": {
+            "all_finite": true,
+            "bit_exact": false,
+            "candidate_absolute_peak": 300.5000305175781,
+            "candidate_rms": 176.09217026130196,
+            "cosine": 0.976940064672231,
+            "maximum_absolute_error": 263.92565912008286,
+            "nrmse": 0.21466792975323937,
+            "reference_absolute_peak": 302.4491882324219,
+            "reference_rms": 176.23828947881805,
+            "rmse": 37.832708745669976
+          }
+        },
+        "evidence": {
+          "ort_profile": {
+            "bytes": 2715,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/05-prosody_2026-08-20_13-54-36_124.json",
+            "sha256": "0fa76b8a2abca22902b35ea9fdd62821870c98bd97420717852fed49c8715699"
+          },
+          "qnn_csv": {
+            "bytes": 233204,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/05-prosody.qnn.csv",
+            "sha256": "847ff4bb34a8399f1eee32e2087b6f7fb7c7a5c562a6c517c8c7b7f05aaa85e7"
+          },
+          "qnn_log": {
+            "bytes": 226024,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/05-prosody.qnn_qnn.log",
+            "sha256": "d980224630fce9fc6a395f99e13ada184c1a85bc2cb01ea0f2a4614fa188efd4"
+          },
+          "stderr": {
+            "bytes": 267,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/05-prosody.stderr.log",
+            "sha256": "6b565054a2c462a1d11e99047cc103d6339c6800358b3cdf03c3a14340337344"
+          },
+          "stdout": {
+            "bytes": 2444,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/05-prosody.stdout.json",
+            "sha256": "2f984602aae00fb443a1d4d63a071a3b140190960c2b7700abd24d9c7d74400c"
+          }
+        },
+        "execution": {
+          "exit_code": 0,
+          "provider_counts": {
+            "QNNExecutionProvider": 1
+          },
+          "qnn_profile_metrics": {
+            "Accelerator (execute) time": {
+              "US": 154499665
+            },
+            "Accelerator (execute) time (cycles)": {
+              "CYCLES": 21499956103
+            },
+            "Number of HVX threads used": {
+              "COUNT": 0
+            },
+            "QNN (execute) time": {
+              "US": 154565281
+            },
+            "QNN (finalize) time": {
+              "US": 803728262
+            }
+          },
+          "ru_maxrss_kib": 2578592,
+          "run_seconds": [
+            154.575
+          ],
+          "session_creation_seconds": 804.037,
+          "wall_seconds": 959.6717667440003
+        },
+        "index": 5,
+        "model": {
+          "bytes": 33688577,
+          "sha256": "1c9d1c44ee8e00af9c0bee4aca369316db8b8219d37124559ce005c47b69dba7",
+          "source_nodes": 147
+        },
+        "name": "prosody",
+        "outputs": {
+          "/If_1_output_0": {
+            "bytes": 4816,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/tensors/05-02-0d8c15c4783f.f32",
+            "sha256": "5b459a011127a9c01901204f282136e596a1e1f5c087d8e353db1634ac4f025b"
+          },
+          "/If_output_0": {
+            "bytes": 4816,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/tensors/05-01-bb41f12ae5a3.f32",
+            "sha256": "06982bedcd1012d7f835d502c915a287f2a4741914b0b55e6b58960f9a41f64f"
+          }
+        },
+        "role": "shared recurrent prosody network and F0/noise heads"
+      },
+      {
+        "comparison_to_same_stage_cpu": {
+          "/decoder/decode.3/Mul_output_0": {
+            "all_finite": true,
+            "bit_exact": false,
+            "candidate_absolute_peak": 47.156253814697266,
+            "candidate_rms": 3.048150777014732,
+            "cosine": 0.6839607551098215,
+            "maximum_absolute_error": 49.524502754211426,
+            "nrmse": 0.7932904942204388,
+            "reference_absolute_peak": 55.693382263183594,
+            "reference_rms": 3.061655939145608,
+            "rmse": 2.428782553097759
+          }
+        },
+        "evidence": {
+          "ort_profile": {
+            "bytes": 2605,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/06-decoder_2026-08-20_14-09-54_844.json",
+            "sha256": "0b7ea6aaf08c54634aa5dc78d6caa41d919c53904ec64a09031bfae7129d1ad9"
+          },
+          "qnn_csv": {
+            "bytes": 18572,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/06-decoder.qnn.csv",
+            "sha256": "6c10e86f4e07e662c9551da7ec406b04a02025954f82bb46abaf04a8e141dae1"
+          },
+          "qnn_log": {
+            "bytes": 18688,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/06-decoder.qnn_qnn.log",
+            "sha256": "b4ae4bdf9a3cc0f12c9ee78cb31c8277940034c425711986364844d67bf5a2e3"
+          },
+          "stderr": {
+            "bytes": 267,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/06-decoder.stderr.log",
+            "sha256": "44ee7fdc4e35629cf198a555a621397d04f808aa0c9e6be4bcd8fb908197228d"
+          },
+          "stdout": {
+            "bytes": 4677,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/06-decoder.stdout.json",
+            "sha256": "7c62bf2f5c0cad1771c887c71bcd57cb3a380c0cbe46373a112d38173d9ea404"
+          }
+        },
+        "execution": {
+          "exit_code": 0,
+          "provider_counts": {
+            "QNNExecutionProvider": 1
+          },
+          "qnn_profile_metrics": {
+            "Accelerator (execute) time": {
+              "US": 359523636
+            },
+            "Accelerator (execute) time (cycles)": {
+              "CYCLES": 46333472506
+            },
+            "Number of HVX threads used": {
+              "COUNT": 0
+            },
+            "QNN (execute) time": {
+              "US": 359537008
+            },
+            "QNN (finalize) time": {
+              "US": 3366047
+            }
+          },
+          "ru_maxrss_kib": 701368,
+          "run_seconds": [
+            359.538
+          ],
+          "session_creation_seconds": 4.16951,
+          "wall_seconds": 363.87437226400016
+        },
+        "index": 6,
+        "model": {
+          "bytes": 134440075,
+          "sha256": "f85c2b845397295435a28616afa5bfd6462dd1b788cb5d4cfbeb59c6dac91a16",
+          "source_nodes": 128
+        },
+        "name": "decoder",
+        "outputs": {
+          "/decoder/decode.3/Mul_output_0": {
+            "bytes": 2465792,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/tensors/06-01-cd0859c0189a.f32",
+            "sha256": "d20c1322e73ba2eb0ea8063994e46104a38d7f8aa96720529cc334d292fe24b6"
+          }
+        },
+        "role": "style-conditioned acoustic decoder before waveform generator"
+      },
+      {
+        "comparison_to_same_stage_cpu": {
+          "/decoder/generator/Concat_1_output_0": {
+            "all_finite": true,
+            "bit_exact": false,
+            "candidate_absolute_peak": 3.140625238418579,
+            "candidate_rms": 1.3701271824500638,
+            "cosine": 0.2713861966456187,
+            "maximum_absolute_error": 6.282217979431152,
+            "nrmse": 1.2039036407646586,
+            "reference_absolute_peak": 3.1415927410125732,
+            "reference_rms": 1.3775696408403568,
+            "rmse": 1.6584611060145715
+          }
+        },
+        "evidence": {
+          "ort_profile": {
+            "bytes": 1423,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/07-harmonic_source_2026-08-20_14-15-40_897.json",
+            "sha256": "289445398edc89b312d8d0dff149e1c08856610fb2e1af5e5e0f5ced01256efe"
+          },
+          "qnn_csv": {
+            "bytes": 7198,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/07-harmonic_source.qnn.csv",
+            "sha256": "8519f3e7b4c105ba7b3d61cb5b297c439a8756af954db119313179f884369a62"
+          },
+          "qnn_log": {
+            "bytes": 7544,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/07-harmonic_source.qnn_qnn.log",
+            "sha256": "0257dcf89289d0bdb9804f6fcd24a109708becf49a45cf56e08dc9e5d0b0cc40"
+          },
+          "stderr": {
+            "bytes": 267,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/07-harmonic_source.stderr.log",
+            "sha256": "2b02a79f58877f67a2c197249dc7d1f195f8ab4581c89fb454ad99bb45aac110"
+          },
+          "stdout": {
+            "bytes": 4711,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/07-harmonic_source.stdout.json",
+            "sha256": "ae93b28e5fd50c1e426e76859d5d3fb8e1a6b1fb9b4de52e727b73e5ca78fa78"
+          }
+        },
+        "execution": {
+          "exit_code": 0,
+          "provider_counts": {
+            "QNNExecutionProvider": 1
+          },
+          "qnn_profile_metrics": {
+            "Accelerator (execute) time": {
+              "US": 108993486
+            },
+            "Accelerator (execute) time (cycles)": {
+              "CYCLES": 16557308712
+            },
+            "Number of HVX threads used": {
+              "COUNT": 0
+            },
+            "QNN (execute) time": {
+              "US": 109067228
+            },
+            "QNN (finalize) time": {
+              "US": 1072943062
+            }
+          },
+          "ru_maxrss_kib": 2173260,
+          "run_seconds": [
+            109.068
+          ],
+          "session_creation_seconds": 1073.06,
+          "wall_seconds": 1183.0740313809997
+        },
+        "index": 7,
+        "model": {
+          "bytes": 13023338,
+          "sha256": "ac6f4c4f5c7260ff3a30885f0c64ddf0dae54e6fc6087203e36a526591bfb2ce",
+          "source_nodes": 63
+        },
+        "name": "harmonic_source",
+        "outputs": {
+          "/decoder/generator/Concat_1_output_0": {
+            "bytes": 6357208,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/tensors/07-01-577aa540cc37.f32",
+            "sha256": "661c2e267e19897233b101da6da710775f60d98eca8f4f911e1e38e2c91ee15e"
+          }
+        },
+        "role": "fixed-phase harmonic source, learned merge, and source STFT"
+      },
+      {
+        "comparison_to_same_stage_cpu": {
+          "/decoder/generator/Add_2_output_0": {
+            "all_finite": true,
+            "bit_exact": false,
+            "candidate_absolute_peak": 17.984376907348633,
+            "candidate_rms": 1.101150810527442,
+            "cosine": 0.7157638481465386,
+            "maximum_absolute_error": 25.26918315887451,
+            "nrmse": 0.7164007831850563,
+            "reference_absolute_peak": 36.559600830078125,
+            "reference_rms": 1.2575940418673166,
+            "rmse": 0.9009413565226053
+          }
+        },
+        "evidence": {
+          "ort_profile": {
+            "bytes": 2057,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/08-generator_0_base_2026-08-20_14-34-21_968.json",
+            "sha256": "e10afd32921d453116c9de8b2b516eef7f2a3d8ae6e12860f82da54da88ae891"
+          },
+          "qnn_csv": {
+            "bytes": 13591,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/08-generator_0_base.qnn.csv",
+            "sha256": "f4034813f40791b56c4d50d1b67fb19bd562f6da3a0216536951d1fa6036a562"
+          },
+          "qnn_log": {
+            "bytes": 14008,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/08-generator_0_base.qnn_qnn.log",
+            "sha256": "c1ac31f3412e98499aae8032bb344f5d3a0a82fb5548c18fe92221efb22c25b2"
+          },
+          "stderr": {
+            "bytes": 267,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/08-generator_0_base.stderr.log",
+            "sha256": "d9dca50a991725fd1d632fb746d4d6e604a3e65a516759bba1c28275a856aa39"
+          },
+          "stdout": {
+            "bytes": 4704,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/08-generator_0_base.stdout.json",
+            "sha256": "de16d2c0c882ad0a1cf655f6989afc5355f4a97771ff409ed103b3bb123ae905"
+          }
+        },
+        "execution": {
+          "exit_code": 0,
+          "provider_counts": {
+            "QNNExecutionProvider": 1
+          },
+          "qnn_profile_metrics": {
+            "Accelerator (execute) time": {
+              "US": 263731555
+            },
+            "Accelerator (execute) time (cycles)": {
+              "CYCLES": 39885993385
+            },
+            "Number of HVX threads used": {
+              "COUNT": 0
+            },
+            "QNN (execute) time": {
+              "US": 263775881
+            },
+            "QNN (finalize) time": {
+              "US": 30930568
+            }
+          },
+          "ru_maxrss_kib": 953704,
+          "run_seconds": [
+            263.777
+          ],
+          "session_creation_seconds": 31.1116,
+          "wall_seconds": 295.44030041600035
+        },
+        "index": 8,
+        "model": {
+          "bytes": 23407828,
+          "sha256": "c51f64046c29babb37689d4f45500a5ece76e6963a6d8d8e40ac9e851b384741",
+          "source_nodes": 92
+        },
+        "name": "generator_0_base",
+        "outputs": {
+          "/decoder/generator/Add_2_output_0": {
+            "bytes": 12328960,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/tensors/08-01-788d00f90871.f32",
+            "sha256": "83efedff6af54ea5fb32bb6837aa69cd1a2f01aa6d7fac5e80efa04463ee9e83"
+          }
+        },
+        "role": "first upsample and style-conditioned source residual branch"
+      },
+      {
+        "comparison_to_same_stage_cpu": {
+          "/decoder/generator/resblocks.0/Add_8_output_0": {
+            "all_finite": true,
+            "bit_exact": false,
+            "candidate_absolute_peak": 46.125003814697266,
+            "candidate_rms": 2.8905392674497534,
+            "cosine": 0.7589588857022611,
+            "maximum_absolute_error": 64.78752708435059,
+            "nrmse": 0.6789218222465451,
+            "reference_absolute_peak": 90.91252899169922,
+            "reference_rms": 3.038861101312058,
+            "rmse": 2.0631491164569202
+          }
+        },
+        "evidence": {
+          "ort_profile": {
+            "bytes": 1956,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/09-generator_0_resblock_0_2026-08-20_14-39-02_187.json",
+            "sha256": "dfa6662b8bf0344e4230d5b5165be7b4638cd1008ac647da59d1120803f220fd"
+          },
+          "qnn_csv": {
+            "bytes": 12735,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/09-generator_0_resblock_0.qnn.csv",
+            "sha256": "c33094592d6dafe55c0771a85e8cca41d262bde403e7e49ea604b3e83024d9a9"
+          },
+          "qnn_log": {
+            "bytes": 13192,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/09-generator_0_resblock_0.qnn_qnn.log",
+            "sha256": "c9eae946a2b29321a1c8ddfc5815672db596615c6f3ed2452be5ef56b9580929"
+          },
+          "stderr": {
+            "bytes": 267,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/09-generator_0_resblock_0.stderr.log",
+            "sha256": "6a71f149889da1d81ab3f8cb85f5437d3a2bc980f911cffa1335c509d1b3e451"
+          },
+          "stdout": {
+            "bytes": 4727,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/09-generator_0_resblock_0.stdout.json",
+            "sha256": "32bf321631d0ea3ef8cb2f28aa49157044cf8972063949eafebe27690ab4ff00"
+          }
+        },
+        "execution": {
+          "exit_code": 0,
+          "provider_counts": {
+            "QNNExecutionProvider": 1
+          },
+          "qnn_profile_metrics": {
+            "Accelerator (execute) time": {
+              "US": 140985460
+            },
+            "Accelerator (execute) time (cycles)": {
+              "CYCLES": 25593798894
+            },
+            "Number of HVX threads used": {
+              "COUNT": 0
+            },
+            "QNN (execute) time": {
+              "US": 141031730
+            },
+            "QNN (finalize) time": {
+              "US": 28532182
+            }
+          },
+          "ru_maxrss_kib": 1003252,
+          "run_seconds": [
+            141.033
+          ],
+          "session_creation_seconds": 28.6319,
+          "wall_seconds": 170.2174628390003
+        },
+        "index": 9,
+        "model": {
+          "bytes": 6356695,
+          "sha256": "9f201670c0d9f1fcdf41db64fd7e4629755846092731671fe6cab12d23429373",
+          "source_nodes": 88
+        },
+        "name": "generator_0_resblock_0",
+        "outputs": {
+          "/decoder/generator/resblocks.0/Add_8_output_0": {
+            "bytes": 12328960,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/tensors/09-01-107cbdd4046c.f32",
+            "sha256": "26fe28d4ad06513a4da71a9d9e43c883026085cdc8845ed0d3965793fdd7326e"
+          }
+        },
+        "role": "first-resolution residual block 0"
+      },
+      {
+        "comparison_to_same_stage_cpu": {
+          "/decoder/generator/resblocks.1/Add_8_output_0": {
+            "all_finite": true,
+            "bit_exact": false,
+            "candidate_absolute_peak": 226.12501525878906,
+            "candidate_rms": 4.516654721167969,
+            "cosine": 0.4251641939751241,
+            "maximum_absolute_error": 259.2689666748047,
+            "nrmse": 1.0491027127075345,
+            "reference_absolute_peak": 431.8050537109375,
+            "reference_rms": 4.726423502515827,
+            "rmse": 4.958503717894001
+          }
+        },
+        "evidence": {
+          "ort_profile": {
+            "bytes": 1961,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/10-generator_0_resblock_1_2026-08-20_14-41-48_884.json",
+            "sha256": "e93d6c1c72d85f59e1f12198b3e119a51a39b12a218305ec5c6493620aabc855"
+          },
+          "qnn_csv": {
+            "bytes": 12739,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/10-generator_0_resblock_1.qnn.csv",
+            "sha256": "a4c574ab6fb78be5ee2e4d5f4c5ce5a6e1b50eb6f1d9f4fe30a61618936d3a93"
+          },
+          "qnn_log": {
+            "bytes": 13192,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/10-generator_0_resblock_1.qnn_qnn.log",
+            "sha256": "9d3c59ae78d75a78fc3b4e8189e90045f3e48c736a4592bcb6e0e7aa07dfb5b9"
+          },
+          "stderr": {
+            "bytes": 267,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/10-generator_0_resblock_1.stderr.log",
+            "sha256": "56115b9ecd9a4712dba4b96b19aa1231d826d043d203102eee12e1d25ba8d7aa"
+          },
+          "stdout": {
+            "bytes": 4728,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/10-generator_0_resblock_1.stdout.json",
+            "sha256": "374ac03e08d75b2a81170befef61dcb8af7a9dab2d6e34f12b6f227a5505237b"
+          }
+        },
+        "execution": {
+          "exit_code": 0,
+          "provider_counts": {
+            "QNNExecutionProvider": 1
+          },
+          "qnn_profile_metrics": {
+            "Accelerator (execute) time": {
+              "US": 183610029
+            },
+            "Accelerator (execute) time (cycles)": {
+              "CYCLES": 30140086577
+            },
+            "Number of HVX threads used": {
+              "COUNT": 0
+            },
+            "QNN (execute) time": {
+              "US": 183657806
+            },
+            "QNN (finalize) time": {
+              "US": 28177251
+            }
+          },
+          "ru_maxrss_kib": 1022196,
+          "run_seconds": [
+            183.659
+          ],
+          "session_creation_seconds": 28.3131,
+          "wall_seconds": 212.5153483289996
+        },
+        "index": 10,
+        "model": {
+          "bytes": 12648151,
+          "sha256": "4dd6a560a6bdb630485685303debb73db9a5a7e7a355efb7f914832aac11a09a",
+          "source_nodes": 88
+        },
+        "name": "generator_0_resblock_1",
+        "outputs": {
+          "/decoder/generator/resblocks.1/Add_8_output_0": {
+            "bytes": 12328960,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/tensors/10-01-fe67de5b8e85.f32",
+            "sha256": "05f139f75b527f7514c35b2f3a065abb0673b0da977a130ddf97136fbdff2cb1"
+          }
+        },
+        "role": "first-resolution residual block 1"
+      },
+      {
+        "comparison_to_same_stage_cpu": {
+          "/decoder/generator/resblocks.2/Add_8_output_0": {
+            "all_finite": true,
+            "bit_exact": false,
+            "candidate_absolute_peak": 45.843753814697266,
+            "candidate_rms": 4.508427316189472,
+            "cosine": 0.5279286175176621,
+            "maximum_absolute_error": 57.212806224823,
+            "nrmse": 0.9560320372108251,
+            "reference_absolute_peak": 70.64191436767578,
+            "reference_rms": 4.662709868284479,
+            "rmse": 4.457700014299029
+          }
+        },
+        "evidence": {
+          "ort_profile": {
+            "bytes": 1965,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/11-generator_0_resblock_2_2026-08-20_14-45-12_047.json",
+            "sha256": "9b42f312911ea56e2c80f08930a8626e4475cc37c3268c7128915ac6fe16de7d"
+          },
+          "qnn_csv": {
+            "bytes": 12738,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/11-generator_0_resblock_2.qnn.csv",
+            "sha256": "7f1dfad67c4e77c56ddd816e7b7df893801c1defd769119f4ba302ded4da2002"
+          },
+          "qnn_log": {
+            "bytes": 13192,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/11-generator_0_resblock_2.qnn_qnn.log",
+            "sha256": "0b471685fe6a7f7a5d10bbea643a130b1e822278740f6a6486a42493fe882237"
+          },
+          "stderr": {
+            "bytes": 267,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/11-generator_0_resblock_2.stderr.log",
+            "sha256": "5f519221cde23a8aa3ed1f4443a9097e776f595349b61006c981f5245b00ee43"
+          },
+          "stdout": {
+            "bytes": 4728,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/11-generator_0_resblock_2.stdout.json",
+            "sha256": "052b2dccecaec2c5b788b4339b77bd69328e627692d3e6ec38f3d3d60a655326"
+          }
+        },
+        "execution": {
+          "exit_code": 0,
+          "provider_counts": {
+            "QNNExecutionProvider": 1
+          },
+          "qnn_profile_metrics": {
+            "Accelerator (execute) time": {
+              "US": 225058304
+            },
+            "Accelerator (execute) time (cycles)": {
+              "CYCLES": 35070289641
+            },
+            "Number of HVX threads used": {
+              "COUNT": 0
+            },
+            "QNN (execute) time": {
+              "US": 225101889
+            },
+            "QNN (finalize) time": {
+              "US": 27524443
+            }
+          },
+          "ru_maxrss_kib": 1022940,
+          "run_seconds": [
+            225.103
+          ],
+          "session_creation_seconds": 27.6978,
+          "wall_seconds": 253.31011072799993
+        },
+        "index": 11,
+        "model": {
+          "bytes": 18939619,
+          "sha256": "47db54f230fbe2468a61e92a9b059af45f98589a1183963b85b9d432fbc61945",
+          "source_nodes": 88
+        },
+        "name": "generator_0_resblock_2",
+        "outputs": {
+          "/decoder/generator/resblocks.2/Add_8_output_0": {
+            "bytes": 12328960,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/tensors/11-01-9c33132297de.f32",
+            "sha256": "76bb656f87951fbfd1468ae2ad751addafd8e8feba410dfddc495f6dc752cd7e"
+          }
+        },
+        "role": "first-resolution residual block 2"
+      },
+      {
+        "comparison_to_same_stage_cpu": {
+          "/decoder/generator/Div_1_output_0": {
+            "all_finite": true,
+            "bit_exact": false,
+            "candidate_absolute_peak": 80.68750762939453,
+            "candidate_rms": 2.9602689781341023,
+            "cosine": 0.6429983630429789,
+            "maximum_absolute_error": 90.7902946472168,
+            "nrmse": 0.8213865890413291,
+            "reference_absolute_peak": 153.2270050048828,
+            "reference_rms": 3.1497140432680304,
+            "rmse": 2.587132874455496
+          }
+        },
+        "evidence": {
+          "ort_profile": {
+            "bytes": 1009,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/12-generator_0_merge_2026-08-20_14-49-14_062.json",
+            "sha256": "15f7c3a212ec70c7f2af9ec726b1aa93a6ec8a1ea74cab8aae315add36203d9e"
+          },
+          "qnn_csv": {
+            "bytes": 1439,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/12-generator_0_merge.qnn.csv",
+            "sha256": "3170eea73085002dca19577b25c5120d0773dcc6fc9d14b8e858af8330b03be3"
+          },
+          "qnn_log": {
+            "bytes": 1976,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/12-generator_0_merge.qnn_qnn.log",
+            "sha256": "afa8be7bbf4ace1bdde87383cd5cf36752c0072256a9bb793625310a6441d473"
+          },
+          "stderr": {
+            "bytes": 267,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/12-generator_0_merge.stderr.log",
+            "sha256": "d2466f77ef56b3403242c791b91e61df14a09396d3a0ad9ccc359fcd629eac31"
+          },
+          "stdout": {
+            "bytes": 3987,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/12-generator_0_merge.stdout.json",
+            "sha256": "0ff585309484904310fe2193be1591a459de92f852c39d91caf834b9e96c37fd"
+          }
+        },
+        "execution": {
+          "exit_code": 0,
+          "provider_counts": {
+            "QNNExecutionProvider": 1
+          },
+          "qnn_profile_metrics": {
+            "Accelerator (execute) time": {
+              "US": 1493393
+            },
+            "Accelerator (execute) time (cycles)": {
+              "CYCLES": 216420362
+            },
+            "Number of HVX threads used": {
+              "COUNT": 0
+            },
+            "QNN (execute) time": {
+              "US": 1497892
+            },
+            "QNN (finalize) time": {
+              "US": 804670
+            }
+          },
+          "ru_maxrss_kib": 326776,
+          "run_seconds": [
+            1.49872
+          ],
+          "session_creation_seconds": 0.872639,
+          "wall_seconds": 2.478726908000681
+        },
+        "index": 12,
+        "model": {
+          "bytes": 1263,
+          "sha256": "c6390c52b95fa06ea0fcd4728fb9a8d0061e31e001ead2c86f6480df1b1d8ef1",
+          "source_nodes": 3
+        },
+        "name": "generator_0_merge",
+        "outputs": {
+          "/decoder/generator/Div_1_output_0": {
+            "bytes": 12328960,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/tensors/12-01-7f6eec8230d9.f32",
+            "sha256": "0bc228453b0743e3e860a72c8ef5e11b0add7971e6f91d6d43fad6c4b8af868a"
+          }
+        },
+        "role": "ordered residual sum and divide by three"
+      },
+      {
+        "comparison_to_same_stage_cpu": {
+          "/decoder/generator/Add_5_output_0": {
+            "all_finite": true,
+            "bit_exact": false,
+            "candidate_absolute_peak": 3704.000244140625,
+            "candidate_rms": 262.34864376600586,
+            "cosine": 0.1769813968988352,
+            "maximum_absolute_error": 3705.9868710041046,
+            "nrmse": 215.08491675557585,
+            "reference_absolute_peak": 18.579143524169922,
+            "reference_rms": 1.2187544125698484,
+            "rmse": 262.1356913730791
+          }
+        },
+        "evidence": {
+          "ort_profile": {
+            "bytes": 2082,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/13-generator_1_base_2026-08-20_14-49-16_589.json",
+            "sha256": "a55d473609f9201883347c442e6ac0a9ec91bf232272755741f6b832123d01dd"
+          },
+          "qnn_csv": {
+            "bytes": 13786,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/13-generator_1_base.qnn.csv",
+            "sha256": "234e702f655f9b58758f7265bb2cc921e5b83eb9404dd7fbf812a39f450458a4"
+          },
+          "qnn_log": {
+            "bytes": 14256,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/13-generator_1_base.qnn_qnn.log",
+            "sha256": "975da1edf1876d58f9ddac6031ed8a9bdf079b9528cfa70decbb2d8476c79735"
+          },
+          "stderr": {
+            "bytes": 267,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/13-generator_1_base.stderr.log",
+            "sha256": "57c14f60d3eac48ea4117ef5053be3133f41463c9ff4d6119f01679b258fc8a7"
+          },
+          "stdout": {
+            "bytes": 4711,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/13-generator_1_base.stdout.json",
+            "sha256": "935d2b5820bae76b8ec667f25b20ff12f2404e05b3e1b4494d6a9a07bf9d5c10"
+          }
+        },
+        "execution": {
+          "exit_code": 0,
+          "provider_counts": {
+            "QNNExecutionProvider": 1
+          },
+          "qnn_profile_metrics": {
+            "Accelerator (execute) time": {
+              "US": 1787846865
+            },
+            "Accelerator (execute) time (cycles)": {
+              "CYCLES": 237709893726
+            },
+            "Number of HVX threads used": {
+              "COUNT": 0
+            },
+            "QNN (execute) time": {
+              "US": 1788266971
+            },
+            "QNN (finalize) time": {
+              "US": 200785793
+            }
+          },
+          "ru_maxrss_kib": 4170140,
+          "run_seconds": [
+            1788.27
+          ],
+          "session_creation_seconds": 200.921,
+          "wall_seconds": 1993.0548732039997
+        },
+        "index": 13,
+        "model": {
+          "bytes": 6748071,
+          "sha256": "63b00a9e11fd98ded45fb5cf20840c4cc728be97979271a757ad1453f9aab37d",
+          "source_nodes": 93
+        },
+        "name": "generator_1_base",
+        "outputs": {
+          "/decoder/generator/Add_5_output_0": {
+            "bytes": 36987392,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/tensors/13-01-2ff85e5ad407.f32",
+            "sha256": "a0f842c819cd53dbee484941b07d0c18b2550680e5bc0835f7a4f9264425eb91"
+          }
+        },
+        "role": "second upsample and style-conditioned source residual branch"
+      },
+      {
+        "comparison_to_same_stage_cpu": {
+          "/decoder/generator/resblocks.3/Add_8_output_0": {
+            "all_finite": true,
+            "bit_exact": false,
+            "candidate_absolute_peak": 3704.000244140625,
+            "candidate_rms": 262.7926629935413,
+            "cosine": 0.13566312537521552,
+            "maximum_absolute_error": 3707.732046842575,
+            "nrmse": 50.752354626118475,
+            "reference_absolute_peak": 254.58641052246094,
+            "reference_rms": 5.165118005117214,
+            "rmse": 262.1419006814603
+          }
+        },
+        "evidence": {
+          "ort_profile": {
+            "bytes": 1963,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/14-generator_1_resblock_3_2026-08-20_15-21-03_237.json",
+            "sha256": "bb6f3bd340fc573945c4d3700e99b7f394cf6c5a35348ae094ff9211c9ac7166"
+          },
+          "qnn_csv": {
+            "bytes": 12821,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/14-generator_1_resblock_3.qnn.csv",
+            "sha256": "4e570a4bd304f0eaa7eed8b1a62d43f743cc3b6ea85855063096f1fc3d39bb63"
+          },
+          "qnn_log": {
+            "bytes": 13336,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/14-generator_1_resblock_3.qnn_qnn.log",
+            "sha256": "9786daefb216464782bc56af236fbd2c72f6deee2e76c35c79a90943a215594e"
+          },
+          "stderr": {
+            "bytes": 267,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/14-generator_1_resblock_3.stderr.log",
+            "sha256": "cfd5895ba0206ffd24be5af1552ed7ded37fd72aa97152c032a94c30dcf0463e"
+          },
+          "stdout": {
+            "bytes": 4736,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/14-generator_1_resblock_3.stdout.json",
+            "sha256": "3e2953a276cf2dda2743d85de940508eeff3855775fc32f5046680cf33e2d0e6"
+          }
+        },
+        "execution": {
+          "exit_code": 0,
+          "provider_counts": {
+            "QNNExecutionProvider": 1
+          },
+          "qnn_profile_metrics": {
+            "Accelerator (execute) time": {
+              "US": 723801842
+            },
+            "Accelerator (execute) time (cycles)": {
+              "CYCLES": 109008332391
+            },
+            "Number of HVX threads used": {
+              "COUNT": 0
+            },
+            "QNN (execute) time": {
+              "US": 724144695
+            },
+            "QNN (finalize) time": {
+              "US": 200264239
+            }
+          },
+          "ru_maxrss_kib": 4143276,
+          "run_seconds": [
+            724.146
+          ],
+          "session_creation_seconds": 200.514,
+          "wall_seconds": 927.3639764759992
+        },
+        "index": 14,
+        "model": {
+          "bytes": 2015245,
+          "sha256": "34059979c954c3ab6bbbb0478d6dae1a8e2c8a782c19c7f57d648a92b0a5ea7f",
+          "source_nodes": 88
+        },
+        "name": "generator_1_resblock_3",
+        "outputs": {
+          "/decoder/generator/resblocks.3/Add_8_output_0": {
+            "bytes": 36987392,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/tensors/14-01-5507ae43921c.f32",
+            "sha256": "432bf8c1da6705aab3fb415b27ef96c24cbdf8aae4c4700542bb873b26ddd129"
+          }
+        },
+        "role": "second-resolution residual block 3"
+      },
+      {
+        "comparison_to_same_stage_cpu": {
+          "/decoder/generator/resblocks.4/Add_8_output_0": {
+            "all_finite": true,
+            "bit_exact": false,
+            "candidate_absolute_peak": 3706.000244140625,
+            "candidate_rms": 263.0619674041463,
+            "cosine": 0.16618799180468055,
+            "maximum_absolute_error": 3707.6775926351547,
+            "nrmse": 43.74250400803344,
+            "reference_absolute_peak": 159.95501708984375,
+            "reference_rms": 5.9926308663731325,
+            "rmse": 262.13267969099314
+          }
+        },
+        "evidence": {
+          "ort_profile": {
+            "bytes": 1963,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/15-generator_1_resblock_4_2026-08-20_15-35-40_684.json",
+            "sha256": "2c657b9fb10f818ba6a64a48952212c9a5a5870151e4e64f20b73d9188c8b4a7"
+          },
+          "qnn_csv": {
+            "bytes": 12833,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/15-generator_1_resblock_4.qnn.csv",
+            "sha256": "7aa3c26e431c3a61873210fed51f644115b0169bba9b3cd83da564563f420433"
+          },
+          "qnn_log": {
+            "bytes": 13336,
+            "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/15-generator_1_resblock_4.qnn_qnn.log",
+            "sha256": "aa91cbee400401c49c61fcc0d1dc64f5f33ba5e19c5aadd5ce81ed8497fac11e"
+          },
+          "stderr": {
+            "bytes": 267,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/15-generator_1_resblock_4.stderr.log",
+            "sha256": "dd6d5d19c7f6b170c6093ef42625b768654f2696007103f46c76cf065de53aac"
+          },
+          "stdout": {
+            "bytes": 4734,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/15-generator_1_resblock_4.stdout.json",
+            "sha256": "9d5e26ca26f22628c05f882d5e0ee16026601fbdfff84114b26fced58c22a1cc"
+          }
+        },
+        "execution": {
+          "exit_code": 0,
+          "provider_counts": {
+            "QNNExecutionProvider": 1
+          },
+          "qnn_profile_metrics": {
+            "Accelerator (execute) time": {
+              "US": 1201733353
+            },
+            "Accelerator (execute) time (cycles)": {
+              "CYCLES": 165092568668
+            },
+            "Number of HVX threads used": {
+              "COUNT": 0
+            },
+            "QNN (execute) time": {
+              "US": 1202086122
+            },
+            "QNN (finalize) time": {
+              "US": 196134269
+            }
+          },
+          "ru_maxrss_kib": 4091812,
+          "run_seconds": [
+            1202.09
+          ],
+          "session_creation_seconds": 196.25,
+          "wall_seconds": 1401.0163308970004
+        },
+        "index": 15,
+        "model": {
+          "bytes": 3588110,
+          "sha256": "f2fd84804de1253fa84e10464f323282e0593c2abf14aa2d07c5d91ae92ef49c",
+          "source_nodes": 88
+        },
+        "name": "generator_1_resblock_4",
+        "outputs": {
+          "/decoder/generator/resblocks.4/Add_8_output_0": {
+            "bytes": 36987392,
+            "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/tensors/15-01-af0286c410f9.f32",
+            "sha256": "6bfb85d5f6f39408065be693f2b29845e3884c70fb6d952b79c38089bf4b6cec"
+          }
+        },
+        "role": "second-resolution residual block 4"
+      }
+    ],
+    "sum_session_creation_seconds": 3587.162919,
+    "sum_single_run_seconds": 5385.56082,
+    "sum_stage_wall_seconds": 8988.367453229
+  },
+  "durable_reproduction": {
+    "complete_summary_tool": {
+      "bytes": 13399,
+      "path": "experiments/0017-kokoro-onnx-qnn-htp-android/tools/summarize_staged_qnn_run.py",
+      "sha256": "391366b88029af50484b46f2fd17893ef3ae7344365765fc4930410f829361ea"
+    },
+    "fresh_host_gate_script": {
+      "bytes": 6578,
+      "path": "experiments/0017-kokoro-onnx-qnn-htp-android/host/run_canonical_v2_staged_host_qnn.sh",
+      "sha256": "c0327fb6db5112542e20187c47536db0f4ca97b0115e3dc60b4cb1ca3d561bed"
+    },
+    "handoff": {
+      "bytes": 13200,
+      "path": "experiments/0017-kokoro-onnx-qnn-htp-android/HANDOFF.md",
+      "sha256": "f2f08cd12777fe82c3ecfdbeb5b827dca1cfc8788aa85b2bc58247ffd0093993"
+    },
+    "interrupted_summary_tool": {
+      "bytes": 14737,
+      "path": "experiments/0017-kokoro-onnx-qnn-htp-android/tools/summarize_interrupted_staged_qnn_run.py",
+      "sha256": "1eb09f646e09eb596222087900f8c17b2b5d56bebca770ecd551807ef38d2b3a"
+    }
+  },
+  "final_audio_produced": false,
+  "interrupted_active_stage": {
+    "evidence": {
+      "partial_profile_files": [
+        {
+          "bytes": 0,
+          "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/profiles/16-generator_1_resblock_5_2026-08-20_15-57-41_194.json",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "stderr": {
+        "bytes": 267,
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/16-generator_1_resblock_5.stderr.log",
+        "sha256": "fccd4d96a8afab98ff4fec493d47a441c4b40fd31459cafa3197d3d2c986a2fd"
+      },
+      "stdout": {
+        "bytes": 898,
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/logs/16-generator_1_resblock_5.stdout.json",
+        "sha256": "08c2cd558bca563b723f525e31a6763918972d8c207d6e9a43c7dd7db104abcc"
+      }
+    },
+    "index": 16,
+    "model": {
+      "bytes": 5160974,
+      "sha256": "a27a9e1eb944c245961fe8fd44a73b42e7468dcc445b3406ba336735c16da60b",
+      "source_nodes": 88
+    },
+    "name": "generator_1_resblock_5",
+    "observed_compiler_state": {
+      "graph_optimizations_completed_us": 43520959,
+      "graph_preparation_initializing_completed_us": 288,
+      "graph_sequencing_for_target_maximum_progress_percent": 12,
+      "inference_executed": false,
+      "output_produced": false,
+      "post_graph_optimization_completed_us": 5485532,
+      "provider_profile_produced": false,
+      "runner_exit_code": null,
+      "session_finalized": false
+    },
+    "role": "second-resolution residual block 5"
+  },
+  "interruption": {
+    "classification": "external infrastructure interruption, not a technical QNN stage failure",
+    "evidence": [
+      "The durable pipeline checkpoint remains status=running and contains 15 completed stage records.",
+      "Stage 16 has only compiler progress through Graph Sequencing for Target at 12%; it has no runner JSON, non-empty provider profile, output, or exit code.",
+      "The top-level run directory has no end.txt or exit-code.txt.",
+      "No ORT/QNN error or kernel OOM is present in the partial stage-16 logs."
+    ],
+    "must_not_be_called": [
+      "stage-16 QNN failure",
+      "OOM",
+      "complete 18-stage host gate",
+      "phone eligible"
+    ],
+    "operator_context": "Moritz stopped/restarted WSL while increasing memory before moving work to another device."
+  },
+  "next_action": {
+    "exact_command": "RUN_ID=device-transfer-rerun experiments/0017-kokoro-onnx-qnn-htp-android/host/run_canonical_v2_staged_host_qnn.sh",
+    "reason": "All 18 stages must pass in a complete durable pipeline record using real upstream tensors before phone access.",
+    "resource_assumptions": [
+      "Pinned QAIRT/QNN 2.49.0.260730 is present or QAIRT_ROOT points to it.",
+      "The patched experiment-0010 ORT 1.27.1 host build and Docker image are reconstructed.",
+      "At least 8 GiB MemAvailable at launch; the script pauses below 4 GiB or after more than 1 GiB SwapFree loss.",
+      "Compiler serialization is the default; ALLOW_CONCURRENT_QNN=yes requires explicit operator coordination and headroom review."
+    ],
+    "rule": "On the destination device, reconstruct all hash-pinned ignored inputs/models, verify every committed hash and test, then restart the complete canonical 18-stage serial host run from stage 1. Do not treat the partial stage-16 artifacts as resumable proof."
+  },
+  "phone_eligibility": false,
+  "resource_monitor": {
+    "bytes": 186124,
+    "first_timestamp": "2026-08-20T13:34:52Z",
+    "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/memory-monitor.log",
+    "initial_swap_free_kib": 8351868,
+    "interpretation": "Host-wide sampled memory. MemAvailable and SwapFree are not process-isolated memory measurements.",
+    "last_timestamp": "2026-08-20T15:59:19Z",
+    "maximum_concurrent_ben_pid_47353_rss_kib": 16576412,
+    "maximum_swap_consumption_delta_kib": 0,
+    "minimum_mem_available_kib": 9539000,
+    "minimum_swap_free_kib": 8351868,
+    "pause_event_file": null,
+    "pause_event_file_exists": false,
+    "samples": 1804,
+    "sha256": "c04aed92438353edd1f1ff16d5a1cdadfcd4465cc22e3c3fb94337161f4e1f18"
+  },
+  "route": "canonical_v2_official_frontend_fixed_fp32_staged_qnn_host",
+  "schema_version": 1,
+  "source": {
+    "cpu_checkpoint": {
+      "bytes": 69490,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/cpu127/pipeline-checkpoint.json",
+      "sha256": "44e93b30a1780fd93053164ae43d119d0102eecf8ad2f5001ed0146c2555c7d8"
+    },
+    "end_file_exists": false,
+    "exit_code_file_exists": false,
+    "manifest": {
+      "bytes": 30391,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/manifest.json",
+      "sha256": "3f21c996ec3d5a63b80cbceb9ff83a21cc86321cabfea3e2dedd1af4676fbad1"
+    },
+    "pipeline_checkpoint": {
+      "bytes": 72346,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/pipeline-checkpoint.json",
+      "sha256": "7f311070f267d97103c38b36af695c046d39e462276e341926fd7c1d52436289"
+    },
+    "runner": {
+      "bytes": 90240,
+      "path": "/repo/experiments/0017-kokoro-onnx-qnn-htp-android/.local/bin/kokoro-canonical-stage-host-docker",
+      "sha256": "938480879497262461dcc4632a0ebeebb92f721c9192441c17b406af8ac0e023"
+    },
+    "start": {
+      "bytes": 21,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-v1/start.txt",
+      "sha256": "7f3e54f163a24052ace111ccd004648056a09a651c25aaed4aef09ecc249bb68",
+      "timestamp": "2026-08-20T13:34:51Z"
+    }
+  },
+  "status": "externally_interrupted",
+  "transcript_sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+  "unattempted_stages": [
+    {
+      "index": 17,
+      "model_sha256": "04b2fcd94a757dd8e0869f9de4ab647c93dd6b2e7c7aff0a9c0b0b548cc08d96",
+      "name": "generator_1_merge",
+      "role": "ordered residual sum and divide by three"
+    },
+    {
+      "index": 18,
+      "model_sha256": "8aefe8fe805644806e86cc344b659fe482ba038ae338786555829b82ec9c1df1",
+      "name": "waveform_istft",
+      "role": "spectral head and exact exported inverse STFT"
+    }
+  ]
+}
