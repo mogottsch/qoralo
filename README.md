@@ -8,9 +8,11 @@ The repository covers selection, deployment, and measurement of the TTS layer. I
 
 ## Repository structure
 
+- [`HANDOFF.md`](HANDOFF.md): current cross-device resume state, active experiment boundaries, and exact next steps.
 - [`docs/history.md`](docs/history.md) and its [HTML mirror](docs/history.html): completed experiments, results, and decisions carried forward.
 - [`docs/plan.md`](docs/plan.md) and its [HTML mirror](docs/plan.html): the current goal and unfinished phases.
 - [`docs/devices/`](docs/devices/): target-device baselines and constraints.
+- [`docs/architectures/index.html`](docs/architectures/index.html): preserved interactive architecture reference for the compared TTS families.
 - [`experiments/`](experiments/): numbered, reproducible investigations and their canonical evidence.
 - [`scripts/`](scripts/): shared inventory, validation, reporting, and benchmark helpers.
 - `artifacts/` and experiment-local `.local/` or `work/` directories: ignored storage for models, generated audio, builds, profiles, logs, and other large or restricted material.
