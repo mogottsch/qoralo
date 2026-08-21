@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "experiment": "0022-supertonic-canonical-v2-precompiled-qnn-context",
+  "recorded_date": "2026-08-20",
+  "base_commit_observed": "fa7e96b",
+  "state": "safe_boundary_before_implementation",
+  "completed": [
+    "verified experiment ID/path was unused",
+    "read android-tts-benchmark skill",
+    "reserved only the 0022 path in Pi Messenger",
+    "identified 0011 stable-Softplus all-HTP lineage",
+    "verified canonical-v2 transcript bytes and hash",
+    "verified frozen graph and runtime hashes from local 0011 artifacts against committed 0011 evidence where available",
+    "identified fixed-shape compatibility gate: historical processed T239 versus canonical-v2 processed T235",
+    "froze matched-arm measurement and proof requirements"
+  ],
+  "not_started": [
+    "runner implementation",
+    "canonical padding/mask proof",
+    "host QNN assignment",
+    "EPContext generation",
+    "independent EPContext reload",
+    "phone staging or execution",
+    "output generation or listening request"
+  ],
+  "portable_sources_of_truth": [
+    "README.md",
+    "CONTINUATION.md",
+    "protocol/experiment-contract.json",
+    "protocol/transcript.txt",
+    "tests/test_contract.py",
+    "experiments/0011-supertonic-official-fp32-phone-comparison/results/softplus-matched-e2e-checkpoint.json",
+    "experiments/0011-supertonic-official-fp32-phone-comparison/results/matched-e2e-protocol.json",
+    "experiments/0011-supertonic-official-fp32-phone-comparison/results/source-inventory.json",
+    "experiments/0011-supertonic-official-fp32-phone-comparison/results/vector-softplus-rewrite-provenance.json"
+  ],
+  "nonportable_local_hints": {
+    "qairt_root_on_old_device": "/home/moritz/opt/qairt/2.49.0.260730",
+    "ort_source_on_old_device": "experiments/0010-supertonic-qnn-htp-feasibility/.local/onnxruntime-v1.27.1-source",
+    "historical_0011_local_artifacts": "experiments/0011-supertonic-official-fp32-phone-comparison/.local/",
+    "warning": "These ignored paths may not exist on the next device. Reconstruct and verify every artifact against protocol hashes; never treat path presence as provenance."
+  },
+  "coordination": {
+    "qairt_memory_coordination_with_ben_and_jens": "not yet performed; stopped for device handoff before compilation",
+    "phone_lock": "not acquired; no phone work occurred",
+    "dashboard_owner": "Marius; no dashboard files may be edited by Sean",
+    "orchestrator": "Pi",
+    "agents_spawned": false
+  },
+  "transient_artifacts": {
+    "created": false,
+    "cleanup_required": false
+  }
+}
