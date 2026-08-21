@@ -6,6 +6,7 @@ This directory is the durable cross-experiment index for Android model and deplo
 - [`registry.json`](registry.json) — normalized machine-readable registry, including the separate model release timeline.
 - [`schema.json`](schema.json) — JSON Schema for the registry contract, including explicit `model_identity` source links/revisions, `quantization`, execution/audio evidence, and listening-review fields.
 - [`missing-fields.md`](missing-fields.md) — generated unavailable-evidence report.
+- [`HANDOFF.md`](HANDOFF.md) — committed cross-device ownership, current-state, pending-input, and exact resume procedure.
 - [`media/`](media/) — only WAVs present in this checkout whose SHA-256 and WAV headers match their owning committed Android result.
 - [`build_registry.py`](build_registry.py) — deterministic generator and media verifier.
 - [`validate.py`](validate.py) — fail-closed structural, provenance, and media validation.
