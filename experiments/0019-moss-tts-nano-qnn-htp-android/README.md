@@ -13,7 +13,7 @@ The failure occurs before the first neural session is created or assigned. There
 
 This conclusion is intentionally narrow. It applies to the recorded carrier, app UID, Android build, ORT/QNN versions, and authorized phone. It does not establish that all Android apps, host contexts, or QNN deployments are incompatible.
 
-[`results/fixed-capacity-phone-blocker.json`](results/fixed-capacity-phone-blocker.json) is the canonical final checkpoint.
+[`results/fixed-capacity-phone-blocker.json`](results/fixed-capacity-phone-blocker.json) is the canonical final checkpoint. For clean-machine reproduction and continuation on another explicitly authorized device, start with [`HANDOFF.md`](HANDOFF.md) and [`results/continuation-manifest.json`](results/continuation-manifest.json).
 
 ## Canonical-v2 benchmark input
 

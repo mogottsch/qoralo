@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-ROOT="$(git rev-parse --show-toplevel)";EXP="$ROOT/experiments/0019-moss-tts-nano-qnn-htp-android";SRC="$ROOT/experiments/0018-moss-tts-nano-onnx-android/android";OUT="$EXP/.local/carrier-android";JNI="$OUT/app/src/main/jniLibs/arm64-v8a"
+ROOT="$(git rev-parse --show-toplevel)";EXP="$ROOT/experiments/0019-moss-tts-nano-qnn-htp-android";SRC="$ROOT/experiments/0018-moss-tts-nano-onnx-android/android";OUT="$EXP/.local/carrier-android";JNI="$OUT/app/src/main/jniLibs/arm64-v8a";HTP_ARCH="${HTP_ARCH:-73}"
 rm -rf "$OUT";mkdir -p "$OUT";cp -a "$SRC/gradle" "$SRC/gradlew" "$SRC/settings.gradle.kts" "$SRC/build.gradle.kts" "$SRC/app" "$OUT/";rm -rf "$OUT/.gradle" "$OUT/app/build";mkdir -p "$JNI"
 python3 - "$OUT" <<'PY'
 from pathlib import Path
@@ -18,7 +18,7 @@ PY
 cp "$EXP/.local/moss-fixed-e2e-android" "$JNI/libmossrunner.so"
 ORT="$ROOT/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-android-arm64/package";QAIRT=/home/moritz/opt/qairt/2.49.0.260730
 cp "$ORT/libonnxruntime.so" "$ORT/libc++_shared.so" "$JNI/"
-cp "$QAIRT/lib/aarch64-android/libQnnHtp.so" "$QAIRT/lib/aarch64-android/libQnnHtpPrepare.so" "$QAIRT/lib/aarch64-android/libQnnHtpV73Stub.so" "$QAIRT/lib/aarch64-android/libQnnSystem.so" "$JNI/"
-cp "$QAIRT/lib/hexagon-v73/unsigned/libQnnHtpV73Skel.so" "$JNI/"
+cp "$QAIRT/lib/aarch64-android/libQnnHtp.so" "$QAIRT/lib/aarch64-android/libQnnHtpPrepare.so" "$QAIRT/lib/aarch64-android/libQnnHtpV${HTP_ARCH}Stub.so" "$QAIRT/lib/aarch64-android/libQnnSystem.so" "$JNI/"
+cp "$QAIRT/lib/hexagon-v${HTP_ARCH}/unsigned/libQnnHtpV${HTP_ARCH}Skel.so" "$JNI/"
 (cd "$OUT";ANDROID_HOME=/home/moritz/opt/android-sdk ANDROID_SDK_ROOT=/home/moritz/opt/android-sdk JAVA_HOME=/home/moritz/opt/jdk-17 ./gradlew --no-daemon :app:assembleDebug)
 APK="$OUT/app/build/outputs/apk/debug/app-debug.apk";[[ -f "$APK" ]];sha256sum "$APK";echo "$APK"

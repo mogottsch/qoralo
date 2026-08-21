@@ -2,7 +2,7 @@
 set -euo pipefail
 [[ ${PHONE_USE_CONFIRMED:-} == yes ]] || { echo 'set PHONE_USE_CONFIRMED=yes' >&2; exit 2; }
 ROOT="$(git rev-parse --show-toplevel)";EXP="$ROOT/experiments/0019-moss-tts-nano-qnn-htp-android";STAGE="$EXP/.local/phone-stage"
-ADB="${ADB:-/mnt/c/Users/mgottschling/AppData/Local/Android/platform-tools-pi/platform-tools/adb.exe}";SERIAL=R5CW81PR8SY;PKG=com.openmoss.ttsnano.onnxruntime
+ADB="${ADB:-/mnt/c/Users/mgottschling/AppData/Local/Android/platform-tools-pi/platform-tools/adb.exe}";SERIAL="${SERIAL:-R5CW81PR8SY}";EXPECTED_MODEL="${EXPECTED_MODEL:-SM-S918B}";EXPECTED_SOC="${EXPECTED_SOC:-SM8550}";EXPECTED_ABI="${EXPECTED_ABI:-arm64-v8a}";HTP_ARCH="${HTP_ARCH:-73}";PKG=com.openmoss.ttsnano.onnxruntime
 RUN_ID="moss-0019-$(date -u +%Y%m%dT%H%M%SZ)-$$";TMP="/data/local/tmp/$RUN_ID";INTERNAL="files/$RUN_ID";OUT="$EXP/work/$RUN_ID"
 [[ -f "$EXP/results/fixed-capacity-cpu-equivalence.json" ]] && python3 -c "import json;assert json.load(open('$EXP/results/fixed-capacity-cpu-equivalence.json'))['passed']"
 [[ -f "$STAGE/stage-manifest.sha256" && -f "$STAGE/carrier.apk" ]] || { echo 'prepare phone stage first' >&2; exit 2; }
@@ -12,14 +12,14 @@ cleanup(){ set +e;adb shell "run-as '$PKG' rm -rf '$INTERNAL'" >"$OUT/cleanup-in
 trap cleanup EXIT
 mapfile -t devs < <("$ADB" devices 9>&- | tr -d '\r' | awk 'NR>1&&$2=="device"{print $1}');[[ ${#devs[@]} == 1 && ${devs[0]} == "$SERIAL" ]] || exit 4
 { echo "serial=$(adb get-serialno|tr -d '\r')";echo "model=$(adb shell getprop ro.product.model|tr -d '\r')";echo "soc=$(adb shell getprop ro.soc.model|tr -d '\r')";echo "abi=$(adb shell getprop ro.product.cpu.abi|tr -d '\r')";echo "release=$(adb shell getprop ro.build.version.release|tr -d '\r')";echo "sdk=$(adb shell getprop ro.build.version.sdk|tr -d '\r')";echo "boot=$(adb shell getprop sys.boot_completed|tr -d '\r')";} >"$OUT/identity.txt"
-grep -Fxq serial=$SERIAL "$OUT/identity.txt";grep -Fxq model=SM-S918B "$OUT/identity.txt";grep -Fxq soc=SM8550 "$OUT/identity.txt";grep -Fxq abi=arm64-v8a "$OUT/identity.txt";grep -Fxq boot=1 "$OUT/identity.txt"
+grep -Fxq serial=$SERIAL "$OUT/identity.txt";grep -Fxq model=$EXPECTED_MODEL "$OUT/identity.txt";grep -Fxq soc=$EXPECTED_SOC "$OUT/identity.txt";grep -Fxq abi=$EXPECTED_ABI "$OUT/identity.txt";grep -Fxq boot=1 "$OUT/identity.txt"
 cp "$STAGE/stage-manifest.sha256" "$STAGE/carrier.apk.sha256" "$STAGE/carrier-native-manifest.sha256" "$STAGE/stage-mode.txt" "$OUT/";adb install -r "$STAGE/carrier.apk" >"$OUT/install.log";LIB_ROOT=$(adb shell dumpsys package "$PKG" | tr -d '\r' | sed -n 's/^[[:space:]]*legacyNativeLibraryDir=//p' | head -1);[[ -n $LIB_ROOT ]];NATIVE_DIR="$LIB_ROOT/arm64";printf '%s\n' "$NATIVE_DIR" >"$OUT/native-library-dir.txt";adb shell "test -x '$NATIVE_DIR/libmossrunner.so'";adb shell dumpsys package "$PKG" >"$OUT/package-dumpsys.txt";grep -Fq 'libcdsprpc.so' "$OUT/package-dumpsys.txt";adb shell "cd '$NATIVE_DIR' && sha256sum *.so" | tr -d '\r' >"$OUT/remote-native-manifest.sha256";python3 - "$OUT/carrier-native-manifest.sha256" "$OUT/remote-native-manifest.sha256" <<'PY'
 import sys
 parse=lambda p:{line.split()[1].split('/')[-1]:line.split()[0] for line in open(p) if line.strip()}
 a,b=parse(sys.argv[1]),parse(sys.argv[2]);assert a==b,(a,b)
 PY
-adb shell "rm -rf '$TMP'; mkdir -p '$TMP/upload' '$TMP/pull' '$TMP/dsp'; cp '$NATIVE_DIR/libQnnHtpV73Skel.so' '$TMP/dsp/'; chmod 755 '$TMP' '$TMP/upload' '$TMP/pull' '$TMP/dsp'; chmod 644 '$TMP/dsp/libQnnHtpV73Skel.so'"
-adb shell "sha256sum '$TMP/dsp/libQnnHtpV73Skel.so'; stat -c '%a %n' '$TMP/dsp' '$TMP/dsp/libQnnHtpV73Skel.so'" | tr -d '\r' >"$OUT/remote-dsp-stage.txt";grep -Fq "$(grep 'libQnnHtpV73Skel.so' "$OUT/carrier-native-manifest.sha256" | awk '{print $1}')" "$OUT/remote-dsp-stage.txt";grep -Fq "755 $TMP/dsp" "$OUT/remote-dsp-stage.txt";grep -Fq "644 $TMP/dsp/libQnnHtpV73Skel.so" "$OUT/remote-dsp-stage.txt"
+SKEL="libQnnHtpV${HTP_ARCH}Skel.so";adb shell "rm -rf '$TMP'; mkdir -p '$TMP/upload' '$TMP/pull' '$TMP/dsp'; cp '$NATIVE_DIR/$SKEL' '$TMP/dsp/'; chmod 755 '$TMP' '$TMP/upload' '$TMP/pull' '$TMP/dsp'; chmod 644 '$TMP/dsp/$SKEL'"
+adb shell "sha256sum '$TMP/dsp/$SKEL'; stat -c '%a %n' '$TMP/dsp' '$TMP/dsp/$SKEL'" | tr -d '\r' >"$OUT/remote-dsp-stage.txt";grep -Fq "$(grep "$SKEL" "$OUT/carrier-native-manifest.sha256" | awk '{print $1}')" "$OUT/remote-dsp-stage.txt";grep -Fq "755 $TMP/dsp" "$OUT/remote-dsp-stage.txt";grep -Fq "644 $TMP/dsp/$SKEL" "$OUT/remote-dsp-stage.txt"
 adb push "$STAGE/models" "$STAGE/models-cpu" "$STAGE/stage-manifest.sha256" "$TMP/upload/" >"$OUT/push.log" 2>&1
 adb shell "cd '$TMP/upload' && sha256sum -c stage-manifest.sha256" >"$OUT/upload-sha256-check.txt"
 adb shell "run-as '$PKG' sh -c \"mkdir -p '$INTERNAL/models' '$INTERNAL/models-cpu' '$INTERNAL/evidence/benchmark-profiles' '$INTERNAL/evidence/profile-profiles'; cp -r '$TMP/upload/models/.' '$INTERNAL/models/'; cp -r '$TMP/upload/models-cpu/.' '$INTERNAL/models-cpu/'; chmod -R u=rwX,go= '$INTERNAL'\""

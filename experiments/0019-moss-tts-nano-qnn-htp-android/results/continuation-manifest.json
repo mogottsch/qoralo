@@ -1,0 +1,309 @@
+{
+  "canonical_input": {
+    "bytes": 226,
+    "experiment_copy": "protocol/canonical-v2-transcript.txt",
+    "path": "protocols/android-tts-benchmark/transcript.txt",
+    "sentencepiece_model_sha256": "c353ee1479b536bf414c1b247f5542b6607fb8ae91320e5af1781fee200fddff",
+    "sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+    "token_count": 51,
+    "tokenization": "protocol/canonical-v2-tokenization.json",
+    "trailing_newline": false,
+    "version": 2
+  },
+  "cpu_equivalence": {
+    "calls": 375,
+    "codec": {
+      "full_375": {
+        "fixed_reported_samples": 1440000,
+        "fixed_tensor_samples": 1440000,
+        "frames": 375,
+        "length_exact": true,
+        "metrics": {
+          "cosine": 0.9999999999983317,
+          "elements": 2880000,
+          "finite": true,
+          "max_abs": 6.258487701416016e-06,
+          "rmse": 1.5519507504509322e-07
+        },
+        "source_reported_samples": 1440000
+      },
+      "observed": {
+        "fixed_reported_samples": 618240,
+        "fixed_tensor_samples": 1440000,
+        "frames": 161,
+        "length_exact": true,
+        "metrics": {
+          "cosine": 0.9999999999989692,
+          "elements": 1236480,
+          "finite": true,
+          "max_abs": 5.543231964111328e-06,
+          "rmse": 1.773291026443979e-07
+        },
+        "source_reported_samples": 618240
+      }
+    },
+    "final_state": {
+      "cosine": 0.9999999999998607,
+      "elements": 11077632,
+      "finite": true,
+      "max_abs": 1.0967254638671875e-05,
+      "rmse": 5.222211056957236e-07
+    },
+    "final_state_slot_600_written": true,
+    "hidden": {
+      "cosine": 0.9999999999996568,
+      "elements": 288000,
+      "finite": true,
+      "max_abs": 5.662441253662109e-06,
+      "rmse": 8.321117751047763e-07
+    },
+    "new_kv": {
+      "cosine": 0.999999999999763,
+      "elements": 6912000,
+      "finite": true,
+      "max_abs": 1.0967254638671875e-05,
+      "rmse": 6.611134946914385e-07
+    },
+    "recorded_elapsed_seconds": 156.44,
+    "recorded_peak_rss_kib": 22739692,
+    "reference_stop_frames": 161,
+    "result": true
+  },
+  "derivatives": {
+    "codec-full-cap375-qnn.onnx": "a7a5e97d5949bf6dff839745ba7a01c241b030c7b39d8987b5c9d529c467b7b9",
+    "decode-fixed-cap600-attention-qnn.onnx": "e9f87f69d1ead5d32746872d7ae462a337ddbb5f6a80eedaa08f1c14789567b9",
+    "local-fixed-b1.onnx": "f475a116f028f832606d4ca5f0bee5697bca2d0923a3a0a6cb28bd81585eaf02",
+    "prefill-s226-qnn.onnx": "a974e163f7d17ab5b880992e4b1bbeb36e31d087110adfd24f660266b4597bbc"
+  },
+  "evidence_commits": {
+    "canonical_v2": "2de8b80be3a85341bee89ff6a5363e415e4f4d02",
+    "dashboard_blocked_route": "fa7e96b477a26096871a77a5d90978d8fd152621",
+    "experiment_0018_cpu": "f38c8aa76120e7540fffd09dccf47902bb463fbb",
+    "experiment_0019_fixed_capacity": "de8d22cdcc1f4953219b5c23842ad3087ed5a26f"
+  },
+  "fixed_abi": {
+    "cpu_state_work": "copy each physical new K/V at index 600 into logical state slot past_valid_lengths",
+    "decode_input_capacity": 600,
+    "decode_output_state_capacity": 601,
+    "final_step": 374,
+    "final_valid_length_and_written_slot": 600,
+    "logical_insert_index": "past_valid_lengths",
+    "maximum_generated_frames": 375,
+    "physical_new_kv_output_index": 600,
+    "prefill_positions": 226
+  },
+  "historical_dashboard_route": "0019-moss-canonical-v2-qnn-phone-blocked remains exhaustive-only and must not be overwritten if a new device succeeds.",
+  "host_contexts": {
+    "components": {
+      "codec": {
+        "context_binary_bytes": 165073944,
+        "context_binary_sha256": "f535f447eb6a99c74ea3c7710391a5c77abaf36324c681e90e24c9123dbde80e",
+        "context_onnx_bytes": 830,
+        "context_onnx_sha256": "220c832f4e1b128abe1c584af1ace081cbb78b8947f2d0c7a0f3f8abbf7f4bf5",
+        "generation_wall_seconds": 770.2307209968567,
+        "reload_capability_passes": [
+          {
+            "graph_nodes": 1,
+            "partitions": 1,
+            "qnn_nodes": 1
+          },
+          {
+            "graph_nodes": 1,
+            "partitions": 1,
+            "qnn_nodes": 1
+          }
+        ],
+        "source_model_sha256": "a7a5e97d5949bf6dff839745ba7a01c241b030c7b39d8987b5c9d529c467b7b9"
+      },
+      "decode": {
+        "context_binary_bytes": 223600272,
+        "context_binary_sha256": "cc3874e898116fd733f362758a0c7d4efec733a46d2e9c417276f6588fdf03f6",
+        "context_onnx_bytes": 3504,
+        "context_onnx_sha256": "601a2842914a14b5e7298b89590d775e68128f272c9a54755e5e5af975bbb244",
+        "generation_wall_seconds": 7.016719102859497,
+        "reload_capability_passes": [
+          {
+            "graph_nodes": 1,
+            "partitions": 1,
+            "qnn_nodes": 1
+          },
+          {
+            "graph_nodes": 1,
+            "partitions": 1,
+            "qnn_nodes": 1
+          }
+        ],
+        "source_model_sha256": "e9f87f69d1ead5d32746872d7ae462a337ddbb5f6a80eedaa08f1c14789567b9"
+      },
+      "local": {
+        "context_binary_bytes": 89131968,
+        "context_binary_sha256": "5a890d5cb49742add0e878a5fa8b34204485070b388ecd5c78023316abd0699f",
+        "context_onnx_bytes": 972,
+        "context_onnx_sha256": "6895add17c29274bdd7c234ae2359f9bee59e777df5509eccedc27234363fed4",
+        "generation_wall_seconds": 8.009548902511597,
+        "reload_capability_passes": [
+          {
+            "graph_nodes": 1,
+            "partitions": 1,
+            "qnn_nodes": 1
+          },
+          {
+            "graph_nodes": 1,
+            "partitions": 1,
+            "qnn_nodes": 1
+          }
+        ],
+        "source_model_sha256": "f475a116f028f832606d4ca5f0bee5697bca2d0923a3a0a6cb28bd81585eaf02"
+      },
+      "prefill": {
+        "context_binary_bytes": 226801592,
+        "context_binary_sha256": "6900a629191dc41fc300babdf2234849868c5071ace86b951b7f10d354eab3fb",
+        "context_onnx_bytes": 2221,
+        "context_onnx_sha256": "9dcee1ebaa0a2614b6be128b3317a12d8bfb636dec610d182e4e294a04912d73",
+        "generation_wall_seconds": 31.77441167831421,
+        "reload_capability_passes": [
+          {
+            "graph_nodes": 1,
+            "partitions": 1,
+            "qnn_nodes": 1
+          },
+          {
+            "graph_nodes": 1,
+            "partitions": 1,
+            "qnn_nodes": 1
+          }
+        ],
+        "source_model_sha256": "a974e163f7d17ab5b880992e4b1bbeb36e31d087110adfd24f660266b4597bbc"
+      }
+    },
+    "host_libonnxruntime_sha256": "bc9df5a7df1b5d9de4d87adcaa4cc864bbde0f790e80d48e00ce0e4253a2ae11",
+    "host_onnxruntime": "patched 1.27.1",
+    "qnn_sdk": "2.49.0.260730134355",
+    "resource": {
+      "minimum_mem_available_kib": 9546780,
+      "minimum_swap_free_kib": 8351704,
+      "samples": 847
+    },
+    "result": "four_contexts_generated_and_fail_closed_reloaded",
+    "target_hardware_recorded": "SM8550 / HTP V73",
+    "target_soc_model_recorded": 43
+  },
+  "ignored_artifacts_to_recreate": [
+    "official ONNX/external-data/tokenizer assets",
+    "QAIRT SDK installation",
+    "patched ORT host/Android builds",
+    "specialized ONNX derivatives",
+    "QNN contexts",
+    "runner binaries/carrier APK",
+    "raw profiles/phone logs/WAVs"
+  ],
+  "license_gate": "Do not accept authentication, new terms, click-through, consent, or export attestation; stop and ask Moritz.",
+  "new_device_rules": {
+    "do_not_inherit_old_serial_authorization": true,
+    "environment_parameters": [
+      "SERIAL",
+      "EXPECTED_MODEL",
+      "EXPECTED_SOC",
+      "EXPECTED_ABI",
+      "HTP_ARCH",
+      "ADB",
+      "SOC_MODEL",
+      "USE_CONTEXTS"
+    ],
+    "full_htp_requirement": "all neural calls QNN-only with fallback disabled plus physical RPC/accelerator/cycle/HVX proof",
+    "recommended_first_gate": "tiny app-UID QNN HTP CreateDevice/execute smoke before large model staging",
+    "regenerate_contexts_if_soc_or_htp_arch_changes": true,
+    "requires_new_explicit_identity_authorization": true
+  },
+  "official_assets": {
+    "contract": {
+      "codec_output_samples": 802560,
+      "cpu_observed_generated_frames": 209,
+      "prefill_seq": 226,
+      "text_tokens": 51,
+      "tokenization_sha256": "f6cc98d2b0e40a08adbd2f952a9d4f8abff3216f987585463b893267cc3154be",
+      "transcript_sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f"
+    },
+    "experiment_0018_commit": "f38c8aa",
+    "files": {
+      "moss_audio_tokenizer_decode_full.onnx": {
+        "bytes": 681902,
+        "sha256": "0fbbafe3fd4afa2a019af5c5ced204af6e2d1db044fa40f021525d2aee95b4ac"
+      },
+      "moss_audio_tokenizer_decode_shared.data": {
+        "bytes": 44198912,
+        "sha256": "e69d52e0f4e84ca27850557ee54face46632d3a5a16c89bd246c7c408466dcad"
+      },
+      "moss_tts_decode_step.onnx": {
+        "bytes": 291483,
+        "sha256": "698cbc2fc1c2feca16e5895614ed52bbb32ded10f236c076f477b2e69abf32d8"
+      },
+      "moss_tts_global_shared.data": {
+        "bytes": 440813568,
+        "sha256": "bce8312c3df6a44545302cae229b61054fe0672e0b252ba59cba47adeed831dc"
+      },
+      "moss_tts_local_fixed_sampled_frame.onnx": {
+        "bytes": 471262,
+        "sha256": "40cdb00efc171c450cf91468e01429caa41b0252222cd308e978f58fe354afa8"
+      },
+      "moss_tts_local_shared.data": {
+        "bytes": 229678080,
+        "sha256": "bae7782032c0fb12490ab42afe009f87ae6c75a0f0596fc7b5c08e4d5ee93916"
+      },
+      "moss_tts_prefill.onnx": {
+        "bytes": 283305,
+        "sha256": "d56126dcd0574c2f15d98fc6b35eda68d0386b5bd9c5e38e28548d6f2ea8f3db"
+      }
+    },
+    "reused_revisions": {
+      "audio_tokenizer_onnx": "ceff0d0749bfb3fa2d61149794ec6feef0d1e1ae",
+      "source": "cc7bdf19c7639c0870dab22045a33b442760f6be",
+      "tts_onnx": "f52645cb467506d8e18e746ddd59482685b74e58"
+    },
+    "schema_version": 1
+  },
+  "old_device": {
+    "android": 15,
+    "api": 35,
+    "exact_error": "QNN_DEVICE_ERROR_INVALID_CONFIG: Invalid config values",
+    "htp_arch": 73,
+    "listening_status": "not_reviewed",
+    "model": "SM-S918B",
+    "phase": "QNN SetupBackend/CreateDevice before GetCapability/session assignment/inference",
+    "phone_metrics": null,
+    "result": "blocked_app_uid_qnn_create_device_invalid_config",
+    "serial": "R5CW81PR8SY",
+    "soc": "SM8550",
+    "wav": null
+  },
+  "purpose": "machine-readable clean-device continuation contract for experiment 0019",
+  "reconstruction": {
+    "android_runner_build": "device/build_android_runner.sh",
+    "context_generation": "host/generate_qnn_contexts.sh",
+    "cpu_equivalence": "tools/compare_fixed_capacity_cpu.py",
+    "derivatives": "tools/prepare_fixed_capacity_derivatives.py",
+    "handoff": "HANDOFF.md",
+    "host_build": "host/build_host_tools.sh",
+    "phone": "device/run_phone_all_htp.sh",
+    "phone_summary": "tools/summarize_phone_all_htp.py",
+    "stage": "device/prepare_phone_stage.sh"
+  },
+  "runtime": {
+    "android_ndk": "26.2.11394342",
+    "android_runner_api": 34,
+    "android_target_compile_sdk": 35,
+    "onnxruntime_revision": "v1.27.1",
+    "ort_patch": "experiments/0010-supertonic-qnn-htp-feasibility/patches/onnxruntime-a08e17-pad-empty-dq.patch",
+    "ort_patch_sha256": "549be0692c1414ea35e97f401aaeb87ba55801480c7bd84dba0471cf25773bde",
+    "qairt_version": "2.49.0.260730",
+    "recorded_hashes": {
+      "android_libQnnHtp.so": "a09b3af28342331b3ec9e57ecbe42bfe54a5fff37c4323ce5685c395ae3ee604",
+      "android_libonnxruntime.so": "40bc591798287525f365e8ded4bbc40e0c4e9440737e876026ec09ba359ac041",
+      "host_libQnnHtp.so": "e557ca522713ea7ee7efd252083b927009cd54c158899c086b23d92b63bf1f33",
+      "v73_skel": "bd54463547f0234d06045699b1f747b7d9d3e3b581874840af50c295b3124f25",
+      "v73_stub": "2912cc4f29cc5163c36c6c58f931bd08b798ccf8545a670a9498549f95b9036f"
+    }
+  },
+  "schema_version": 1,
+  "status": "old_device_blocked_before_qnn_session_assignment; fixed-capacity host route ready for a separately authorized new device"
+}

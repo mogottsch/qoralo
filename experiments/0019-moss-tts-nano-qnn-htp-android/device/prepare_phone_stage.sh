@@ -29,6 +29,7 @@ fi
  cd "$STAGE"
  find models models-cpu -type f -print0 | sort -z | xargs -0 sha256sum > stage-manifest.sha256
 )
+"$EXP/device/build_android_runner.sh" >/dev/null
 APK=$("$EXP/device/build_carrier_apk.sh" | tail -1)
 cp "$APK" "$STAGE/carrier.apk"
 sha256sum "$STAGE/carrier.apk" > "$STAGE/carrier.apk.sha256"
