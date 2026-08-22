@@ -24,6 +24,9 @@ FROZEN_0008_SUPERTONIC_METRICS = {"load_seconds": 0.765107603, "cold_rtf": 0.385
 EXP_0022 = ROOT / "experiments/0022-supertonic-canonical-v2-precompiled-qnn-context"
 EXP_0022_RESULT = EXP_0022 / "results/t235-t239-masked-padding-compatibility.json"
 EXP_0022_RESULT_SHA256 = "3de896971a64ca5d2833b5421d02e991a75f59922cf6a89c1ac3aa5da21dfc95"
+EXP_0017 = ROOT / "experiments/0017-kokoro-onnx-qnn-htp-android"
+EXP_0017_RESULT = EXP_0017 / "results/canonical-v2-host-qnn-gate.json"
+EXP_0017_RESULT_SHA256 = "3926b2509f426744b14537d4e06898d6e3c9527694a94e0a0c646c9ce1815689"
 PRESENTATION_SUPERSESSIONS = {
     "0008-pocket-cpu-t1": "0009-pocket-cpu-t1",
     "0008-kokoro-cpu-t1": "0009-kokoro-cpu-t1",
@@ -170,10 +173,14 @@ def main():
             fail(f"{e['id']}: invalid structural audio status")
         if e["wav"] is not None and structural["status"] != "valid":
             fail(f"{e['id']}: copied WAV must have structural_audio.status=valid")
-        if e["wav"] is None and structural["status"] != "unavailable":
-            fail(f"{e['id']}: missing WAV must have structural_audio.status=unavailable")
+        if e["wav"] is None and structural["status"] == "valid":
+            fail(f"{e['id']}: structural_audio.status=valid requires a retained WAV")
         if e["wav"] is not None and structural["sample_sha256"] != e["wav"]["sha256"]:
             fail(f"{e['id']}: structural audio hash does not match WAV")
+        if structural["status"] == "unavailable" and (structural["basis"] is not None or structural["sample_sha256"] is not None):
+            fail(f"{e['id']}: unavailable structural audio cannot carry basis/hash evidence")
+        if structural["status"] == "invalid" and (e["wav"] is not None or not isinstance(structural["basis"], str) or not structural["basis"].strip() or not re.fullmatch(r"[a-f0-9]{64}", structural["sample_sha256"] or "")):
+            fail(f"{e['id']}: invalid non-WAV structural audio requires an evidence basis and hash")
         objective = e["objective_evidence"]
         if objective["status"] not in {"not_recorded", "descriptive", "pass", "fail"} or not objective["summary"].strip() or any(not isinstance(n, str) or not n.strip() for n in objective["comparison_notes"]):
             fail(f"{e['id']}: invalid objective evidence")
@@ -203,6 +210,57 @@ def main():
             fail(f"{e['id']}: a single profiled generation cannot populate warm_median_rtf")
         if e["id"] in FROZEN_PRESENTATION_SUPPRESSED_METRICS and e["metrics"] != FROZEN_PRESENTATION_SUPPRESSED_METRICS[e["id"]]:
             fail(f"{e['id']}: presentation suppression must not alter historical metrics")
+        if e["id"] == "0017-kokoro-qnn-host-blocked":
+            result_bytes = EXP_0017_RESULT.read_bytes()
+            if hashlib.sha256(result_bytes).hexdigest() != EXP_0017_RESULT_SHA256:
+                fail(f"{e['id']}: committed terminal evidence hash mismatch")
+            source_result = json.loads(result_bytes)
+            execution = source_result["execution"]
+            eligibility = source_result["eligibility"]
+            duration = source_result["outputs"]["duration"]
+            audio = source_result["outputs"]["audio"]
+            divergence = source_result["divergence"]
+            if source_result["status"] != "failed_host_structural_gate_after_18_stage_qnn_pass" or execution["completed_stages"] != 18 or execution["provider_counts"] != {"QNNExecutionProvider": 18} or execution["cpu_provider_node_events"] != 0 or execution["fallback_disabled"] is not True:
+                fail(f"{e['id']}: terminal host provider gate mismatch")
+            if len(source_result["stages"]) != 18 or any(stage["execution"]["provider_counts"] != {"QNNExecutionProvider": 1} or stage["execution"]["exit_code"] != 0 for stage in source_result["stages"]):
+                fail(f"{e['id']}: per-stage QNN execution evidence mismatch")
+            if (duration["elements"], duration["sum"], duration["expected_sum"], duration["matches_expected_sum"]) != (235, 605, 602, False):
+                fail(f"{e['id']}: duration structural failure mismatch")
+            expected_audio = {"elements": 361200, "sha256": "2992f71911b8af233841af4058e8218e8705c987a51643d1d709d96545b60a08", "absolute_peak": 87296.0078125, "rms": 61982.49650008212, "samples_abs_ge_1": 360921}
+            if audio["elements"] != expected_audio["elements"] or audio["sha256"] != expected_audio["sha256"] or audio["structural"]["absolute_peak"] != expected_audio["absolute_peak"] or audio["structural"]["rms"] != expected_audio["rms"] or audio["structural"]["samples_abs_ge_1"] != expected_audio["samples_abs_ge_1"] or audio["structural"]["all_finite"] is not True or audio["structural"]["valid"] is not False:
+                fail(f"{e['id']}: invalid host float-output boundary mismatch")
+            first = divergence["earliest_non_bit_exact_output"]
+            material = divergence["earliest_material_contract_divergence"]
+            if (first["index"], first["name"]) != (1, "bert") or (material["index"], material["name"], material["output"]) != (4, "duration_alignment", "pred_dur") or divergence["root_cause"] is not None or not divergence["root_cause_reason"]:
+                fail(f"{e['id']}: divergence/root-cause boundary mismatch")
+            if eligibility["phone_eligible"] is not False or eligibility["provider_gate"] is not True or eligibility["structural_audio_gate"] is not False:
+                fail(f"{e['id']}: phone eligibility boundary mismatch")
+            if e["scope"] != "excluded_non_e2e" or e["attempt_status"] != "blocked" or e["android_attempted"] or e["device"] is not None or e["provider"] != "QNNExecutionProvider (host staged gate only)":
+                fail(f"{e['id']}: host-only excluded-route boundary mismatch")
+            if any(value is not None for value in e["metrics"].values()) or e["wav"] is not None or e["objective_evidence"]["status"] != "fail":
+                fail(f"{e['id']}: phone-ineligible route cannot carry Android metrics/WAV evidence")
+            expected_review = {"status": "not_reviewed", "reviewer": None, "date": None, "notes": None, "sample_sha256": None}
+            expected_structural = {"status": "invalid", "basis": "Committed canonical-v2 host float32 output failed the structural audio gate; this ignored tensor is not a retained WAV or listening sample.", "sample_sha256": expected_audio["sha256"]}
+            if e["listening_review"] != expected_review or e["structural_audio"] != expected_structural:
+                fail(f"{e['id']}: invalid host audio / absent WAV-listening boundary mismatch")
+            frontend_source = json.loads((EXP_0017 / "results/canonical-v2-frontend-provenance.json").read_text())
+            frontend = e["transcript"]["effective_frontend"]
+            tokens = frontend_source["fixed_inputs"]["tensors"]["tokens"]
+            if source_result["transcript_sha256"] != CANONICAL_V2_SHA256 or tokens["shape"] != [1, 235] or frontend["token_count"] != 235 or frontend["token_ids_sha256"] != tokens["sha256"]:
+                fail(f"{e['id']}: canonical-v2 frontend provenance mismatch")
+            required_missing = {"android_attempted", *METRIC_FIELDS, "wav", "physical_rpc_accelerator_cycle_hvx", "listening"}
+            if not required_missing.issubset(e["missing_reasons"]):
+                fail(f"{e['id']}: terminal host result lacks explicit Android/WAV/listening null reasons")
+            preserved_sources = {
+                "experiments/0017-kokoro-onnx-qnn-htp-android/results/host-gate-checkpoint.json",
+                "experiments/0017-kokoro-onnx-qnn-htp-android/results/staged-host-qnn-feasibility.json",
+                "experiments/0017-kokoro-onnx-qnn-htp-android/results/canonical-v2-cpu-reconstruction-baseline.json",
+                "experiments/0017-kokoro-onnx-qnn-htp-android/results/canonical-v2-host-qnn-interrupted-checkpoint.json",
+                "experiments/0017-kokoro-onnx-qnn-htp-android/results/canonical-v2-native-rerun-1-operator-stopped.json",
+                "experiments/0017-kokoro-onnx-qnn-htp-android/results/canonical-v2-host-qnn-gate.json",
+            }
+            if not preserved_sources.issubset(e["sources"]):
+                fail(f"{e['id']}: historical or terminal 0017 source evidence was dropped")
         if e["id"] == "0014-pocket-alba-fixed-qnn-htp":
             frozen_sha = "2c3901ec39a53596759c1d95381a1d67e4f9ca8886cdf39ac03721863c63eb56"
             frozen_sources = [

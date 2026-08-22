@@ -3326,24 +3326,26 @@
       "id": "0017-kokoro-qnn-host-blocked",
       "experiment": "0017",
       "model": "Kokoro",
-      "route": "fixed-contract QNN HTP host gate",
-      "deployment_variant": "Kokoro exact-source fixed-contract QNN feasibility",
+      "route": "canonical-v2 staged QNN host structural gate",
+      "deployment_variant": "Canonical v2 / fixed FP32 18-stage host QNN structural gate",
       "attempt_status": "blocked",
       "technical_execution": {
         "status": "blocked",
         "android_attempted": false,
-        "provider": "QNNExecutionProvider (host assignment gate)",
+        "provider": "QNNExecutionProvider (host staged gate only)",
         "threads": 1
       },
       "structural_audio": {
-        "status": "unavailable",
-        "basis": null,
-        "sample_sha256": null
+        "status": "invalid",
+        "basis": "Committed canonical-v2 host float32 output failed the structural audio gate; this ignored tensor is not a retained WAV or listening sample.",
+        "sample_sha256": "2992f71911b8af233841af4058e8218e8705c987a51643d1d709d96545b60a08"
       },
       "objective_evidence": {
-        "status": "descriptive",
-        "summary": "The bit-exact fixed-contract derivative reached complete host QNN assignment in one partition, but the fallback-disabled host session was OOM-killed during graph sequencing before session finalization or inference; the phone was not accessed.",
-        "comparison_notes": []
+        "status": "fail",
+        "summary": "All 18 fallback-disabled canonical-v2 host QNN stages executed QNN-only, but the duration contract and structural audio gate failed; phone eligibility is false.",
+        "comparison_notes": [
+          "Stage 1 is the earliest non-bit-exact output; stage 4 is the earliest material/discrete divergence; root cause is unavailable and no Android, physical HTP, WAV, listening, or benchmark-performance claim follows."
+        ]
       },
       "listening_review": {
         "status": "not_reviewed",
@@ -3353,8 +3355,8 @@
         "sample_sha256": null
       },
       "android_attempted": false,
-      "provider": "QNNExecutionProvider (host assignment gate)",
-      "precision": "FP32 source graph",
+      "provider": "QNNExecutionProvider (host staged gate only)",
+      "precision": "FP32 source graphs; QNN lowering precision not established",
       "threads": 1,
       "device": null,
       "metrics": {
@@ -3367,40 +3369,71 @@
         "peak_vm_hwm_bytes": null
       },
       "wav": null,
-      "summary": "The bit-exact fixed-contract derivative reached complete host QNN assignment in one partition, but the fallback-disabled host session was OOM-killed during graph sequencing before session finalization or inference; the phone was not accessed.",
+      "summary": "Terminal canonical-v2 host gate: all 18 fallback-disabled stages finalized and executed with 18 QNN and 0 CPU provider events, but duration changed from the frozen CPU sum 602 to 605 and the final 361,200-sample finite float output was structurally invalid (SHA-256 2992f71911b8af233841af4058e8218e8705c987a51643d1d709d96545b60a08; peak 87296.0078125; RMS 61982.49650008212; 360,921 samples with abs >= 1). Phone eligibility is false, so no Android run, WAV, listening review, RTF, or physical HTP claim exists.",
       "limitations": [
-        "QNN assignment is not execution or physical HTP proof.",
-        "No finalized host session, inference, Android attempt, timing, memory, or audio evidence exists.",
-        "The 18-stage CPU recomposition is host-only equivalence evidence and is not a complete Android route."
+        "Complete fallback-disabled host QNN stage execution is provider/host feasibility evidence, not Android execution or physical phone HTP RPC/HVX proof.",
+        "Summed stage session/run times and maximum separate-process ru_maxrss are host observations, not end-to-end Android setup, RTF, PSS, or VmHWM metrics; normalized benchmark fields remain null.",
+        "The invalid ignored float tensor is not a WAV or listening sample. No listening verdict exists, and the accepted experiment-0013 CPU verdict does not transfer.",
+        "Stage 1 bert is the earliest non-bit-exact output; stage 4 duration_alignment is the earliest material/discrete boundary. The evidence localizes divergence but root cause remains unknown.",
+        "Historical noncanonical monolithic/staged evidence, canonical CPU baselines, interrupted/operator-stopped attempts, and their claim boundaries remain preserved as distinct sources."
       ],
       "sources": [
         "experiments/0017-kokoro-onnx-qnn-htp-android/results/host-gate-checkpoint.json",
         "experiments/0017-kokoro-onnx-qnn-htp-android/results/qnn-compat-cpu-equivalence.json",
         "experiments/0017-kokoro-onnx-qnn-htp-android/results/stage-decomposition-provenance.json",
         "experiments/0017-kokoro-onnx-qnn-htp-android/results/stage-cpu-equivalence.json",
-        "experiments/0017-kokoro-onnx-qnn-htp-android/README.md"
+        "experiments/0017-kokoro-onnx-qnn-htp-android/results/staged-host-qnn-feasibility.json",
+        "experiments/0017-kokoro-onnx-qnn-htp-android/protocol-canonical-v2-stage-decomposition.json",
+        "experiments/0017-kokoro-onnx-qnn-htp-android/protocol-canonical-v2-reconstruction-baseline.json",
+        "experiments/0017-kokoro-onnx-qnn-htp-android/results/canonical-v2-frontend-provenance.json",
+        "experiments/0017-kokoro-onnx-qnn-htp-android/results/canonical-v2-cpu-reconstruction-baseline.json",
+        "experiments/0017-kokoro-onnx-qnn-htp-android/results/canonical-v2-host-qnn-interrupted-checkpoint.json",
+        "experiments/0017-kokoro-onnx-qnn-htp-android/results/canonical-v2-rerun-operator-cancelled-pre-gate.json",
+        "experiments/0017-kokoro-onnx-qnn-htp-android/results/canonical-v2-native-rerun-1-operator-stopped.json",
+        "experiments/0017-kokoro-onnx-qnn-htp-android/results/canonical-v2-host-qnn-gate.json",
+        "experiments/0017-kokoro-onnx-qnn-htp-android/README.md",
+        "experiments/0017-kokoro-onnx-qnn-htp-android/RESULTS.md"
       ],
       "missing_reasons": {
-        "wav": "No locally verified Android WAV was retained for this route.",
-        "android_attempted": "The host session did not finalize and the phone was not accessed.",
-        "all": "Host assignment and CPU equivalence do not provide Android timing, memory, physical HTP, or WAV evidence.",
-        "transcript": "This excluded/non-E2E route was not classified by the committed visible-route transcript audit.",
-        "load_seconds": "No committed normalized load_seconds measurement is established for this route.",
-        "cold_rtf": "No committed normalized cold_rtf measurement is established for this route.",
-        "warm_median_rtf": "No committed normalized warm_median_rtf measurement is established for this route.",
-        "proof_run_rtf": "No committed normalized proof_run_rtf measurement is established for this route.",
-        "first_post_setup_rtf": "No committed normalized first_post_setup_rtf measurement is established for this route.",
-        "peak_pss_bytes": "No committed normalized peak_pss_bytes measurement is established for this route.",
-        "peak_vm_hwm_bytes": "No committed normalized peak_vm_hwm_bytes measurement is established for this route."
+        "wav": "The host output is an ignored structurally invalid float tensor, not a retained WAV.",
+        "android_attempted": "The failed host structural audio gate made the route phone-ineligible; no phone staging or execution occurred.",
+        "load_seconds": "Only sums of 18 separate host-stage session creations exist; they are not an Android route setup measurement.",
+        "cold_rtf": "No Android generation or valid audio duration exists.",
+        "warm_median_rtf": "No Android first/warm generation campaign occurred.",
+        "proof_run_rtf": "Host provider execution is not a physical phone accelerator proof run and the output failed structure.",
+        "first_post_setup_rtf": "No Android route setup or post-setup generation existed.",
+        "peak_pss_bytes": "No Android process PSS campaign occurred; host resource evidence has different semantics.",
+        "peak_vm_hwm_bytes": "No Android process VmHWM campaign occurred; host maximum separate-process ru_maxrss is not this field.",
+        "physical_rpc_accelerator_cycle_hvx": "No phone access or physical HTP execution occurred; host QNN profiling does not establish phone proof.",
+        "listening": "No valid WAV exists and no listening review or verdict was requested."
       },
       "model_identity": {
         "name": "hexgrad/Kokoro-82M",
         "url": "https://huggingface.co/hexgrad/Kokoro-82M/tree/f3ff3571791e39611d31c381e3a41a3af07b4987",
         "revision": "f3ff3571791e39611d31c381e3a41a3af07b4987"
       },
-      "quantization": "Unquantized FP32 fixed-contract derivative; zero quantized operators",
+      "quantization": "Unquantized FP32 canonical-v2 fixed-contract staged derivative; zero quantized operators; historical noncanonical derivative evidence remains in sources",
       "scope": "excluded_non_e2e",
-      "transcript": null
+      "transcript": {
+        "classification": "canonical_v2",
+        "sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+        "bytes": 226,
+        "trailing_newline": false,
+        "source": "protocols/android-tts-benchmark/transcript.txt",
+        "basis": "Experiment 0017 exact canonical-v2 bytes and pinned official Kokoro 0.9.4 American-English frontend output.",
+        "effective_frontend": {
+          "kind": "official Kokoro 0.9.4 KPipeline American-English frontend",
+          "token_count": 235,
+          "token_ids_encoding": "little-endian int64",
+          "token_ids_sha256": "9c565b2a6ee1a811f188f3e3425a3188af58866988ce5a2197eeaacc81dde280",
+          "source": "experiments/0017-kokoro-onnx-qnn-htp-android/results/canonical-v2-frontend-provenance.json"
+        },
+        "canonical_v2_sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+        "canonical_v2_match": true,
+        "comparison_boundary": "Exact canonical-v2 host feasibility route; excluded from the compact Android table because the structural gate failed before phone access.",
+        "audit_source": "experiments/0017-kokoro-onnx-qnn-htp-android/results/canonical-v2-host-qnn-gate.json",
+        "missing_reasons": {}
+      }
     },
     {
       "id": "0018-moss-tts-nano-cpu",
