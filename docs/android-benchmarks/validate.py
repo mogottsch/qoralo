@@ -338,7 +338,9 @@ def main():
                 fail(f"{page_name}: timeline entry missing for {item['model']}")
         for e in entries:
             marker = f'data-route-id="{e["id"]}"'
-            if e["scope"] == "full_e2e" and page_text.count(marker) != 1:
+            row_match = re.search(rf'<tr {re.escape(marker)}>.*?</tr>', page_text)
+            row_html = row_match.group(0) if row_match else None
+            if e["scope"] == "full_e2e" and (page_text.count(marker) != 1 or row_html is None):
                 fail(f"{page_name}: full E2E route {e['id']} is missing or duplicated")
             if e["scope"] == "excluded_non_e2e" and marker in page_text:
                 fail(f"{page_name}: non-E2E route {e['id']} leaked into presentation")
@@ -349,10 +351,13 @@ def main():
             display_wav = refresh["representative_wav"] if refresh else e["wav"]
             display_review = refresh["listening_review"] if refresh else e["listening_review"]
             if display_wav is None:
+                if row_html is not None and 'class="listening-link"' in row_html:
+                    fail(f"{page_name}: {e['id']} listening status links without retained audio")
                 continue
             anchor = f"audio-{e['id']}"
-            if f'href="#{anchor}"' not in page_text:
-                fail(f"{page_name}: {e['id']} table link does not target its player")
+            expected_listening_link = f'class="listening-link" href="#{anchor}" aria-label="'
+            if row_html is None or expected_listening_link not in row_html:
+                fail(f"{page_name}: {e['id']} listening-status badge does not accessibly target its player")
             if f'id="{anchor}"' not in page_text:
                 fail(f"{page_name}: {e['id']} player anchor is missing")
             review_anchor = f"needs-{e['id']}"
