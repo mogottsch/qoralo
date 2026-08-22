@@ -8,6 +8,9 @@ EXP="$REPO/experiments/0017-kokoro-onnx-qnn-htp-android"
 BUILD="$REPO/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/Release"
 QAIRT="${QAIRT_ROOT:-/home/moritz/opt/qairt/2.49.0.260730}"
 MANIFEST="$EXP/work/canonical-v2/stages-v1/manifest.json"
+POLICY="$EXP/protocol-canonical-v2-reconstruction-baseline.json"
+BASELINE="$EXP/results/canonical-v2-cpu-reconstruction-baseline.json"
+CPU_CHECKPOINT="${CPU_CHECKPOINT:-$EXP/work/canonical-v2/stages-v1/cpu127-reconstruction-rerun-2/pipeline-checkpoint.json}"
 MODELS="$EXP/work/canonical-v2/stages-v1/models"
 INPUTS="$EXP/work/canonical-v2/frontend-official-v1"
 RUNNER="$EXP/.local/bin/kokoro-canonical-stage-host-docker"
@@ -27,30 +30,97 @@ require_sha() {
   }
 }
 
+require_sha 886bd22eb278b884ccf50e41bb1792d1d36a9612667d8080e90ccd8e3f71231e "$POLICY"
+require_sha 0aff238d1cc45b7729c59a24a5938230491333c42290e9a1fef8d87da4a2ccd9 "$BASELINE"
 require_sha 3f21c996ec3d5a63b80cbceb9ff83a21cc86321cabfea3e2dedd1af4676fbad1 "$MANIFEST"
 require_sha 938480879497262461dcc4632a0ebeebb92f721c9192441c17b406af8ac0e023 "$RUNNER"
 require_sha 9c565b2a6ee1a811f188f3e3425a3188af58866988ce5a2197eeaacc81dde280 "$INPUTS/tokens.raw"
 require_sha 8acaca07623d98a1085f6b182fb997d715dd1d67862e350567e6d9b1bc8ec71b "$INPUTS/style.raw"
 require_sha e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c "$INPUTS/speed.raw"
-[[ -f "$BUILD/libonnxruntime.so" ]] || { echo "missing patched ORT build: $BUILD" >&2; exit 2; }
-[[ -f "$QAIRT/lib/x86_64-linux-clang/libQnnHtp.so" ]] || { echo "missing pinned QAIRT/QNN backend: $QAIRT" >&2; exit 2; }
+require_sha bc9df5a7df1b5d9de4d87adcaa4cc864bbde0f790e80d48e00ce0e4253a2ae11 "$BUILD/libonnxruntime.so.1.27.1"
+require_sha e557ca522713ea7ee7efd252083b927009cd54c158899c086b23d92b63bf1f33 "$QAIRT/lib/x86_64-linux-clang/libQnnHtp.so"
 command -v docker >/dev/null
 command -v timeout >/dev/null
 command -v flock >/dev/null
 
-python3 - "$REPO" "$MANIFEST" <<'PY'
+[[ $(uname -r) == "6.12.103-1-MANJARO" ]] || {
+  echo "current-environment host kernel drift: $(uname -r)" >&2
+  exit 2
+}
+grep -qx 'ID=manjaro' /etc/os-release || {
+  echo "current-environment host OS drift" >&2
+  exit 2
+}
+cpu_model=$(awk -F ': ' '/^model name/ { print $2; exit }' /proc/cpuinfo)
+microcode=$(awk -F ': ' '/^microcode/ { print $2; exit }' /proc/cpuinfo)
+[[ $cpu_model == "AMD Ryzen 7 5800H with Radeon Graphics" && $microcode == "0xa500012" ]] || {
+  echo "current-environment CPU identity drift: model=$cpu_model microcode=$microcode" >&2
+  exit 2
+}
+image_id=$(docker image inspect "$IMAGE" --format '{{.Id}}')
+[[ $image_id == "sha256:b170f55a61548cc3a78eb667837934e0f2f8659bf7cd0db7a71ec40e90d2f321" ]] || {
+  echo "current-environment Docker image identity drift: $image_id" >&2
+  exit 2
+}
+
+python3 - "$REPO" "$MANIFEST" "$POLICY" "$BASELINE" "$CPU_CHECKPOINT" <<'PY'
 import hashlib, json, sys
 from pathlib import Path
-repo, manifest_path = map(Path, sys.argv[1:])
+repo, manifest_path, policy_path, baseline_path, cpu_path = map(Path, sys.argv[1:])
+
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+def local(path: str) -> Path:
+    return repo / path.removeprefix("/repo/")
+
 manifest = json.loads(manifest_path.read_text())
+policy = json.loads(policy_path.read_text())
+baseline = json.loads(baseline_path.read_text())
+cpu = json.loads(cpu_path.read_text())
+assert policy["frozen_before_new_qnn_outputs"]
+assert policy["current_environment_baseline"]["record"]["sha256"] == sha256(baseline_path)
+assert policy["historical_evidence"]["wsl_audio_sha256"] == "fb8895f6bb9c2ee94dd18f8b9bfdc6f1b36f99e01c40f5806bdd71076acd6d36"
+assert policy["historical_evidence"]["cross_environment_bit_reproducibility"] == "unproven"
 assert manifest["source"]["sha256"] == "0c7ce33eac4c6664819a61e48469a9cf43ad403d852b01af5517a13c7ed2a066"
 assert len(manifest["stages"]) == 18
 for stage in manifest["stages"]:
     path = repo / stage["model"]["path"]
-    actual = hashlib.sha256(path.read_bytes()).hexdigest()
+    actual = sha256(path)
     if actual != stage["model"]["sha256"]:
         raise SystemExit(f"stage model hash mismatch: {stage['name']} {actual}")
-print("verified 18 canonical-v2 stage model hashes")
+
+if not (
+    cpu.get("status") == "passed"
+    and cpu.get("completed_stages") == 18
+    and cpu.get("provider") == "cpu"
+    and cpu.get("optimization") == "disabled"
+    and cpu.get("separate_process_per_stage") is True
+    and cpu.get("runs_per_stage") == 1
+    and cpu["manifest"]["sha256"] == sha256(manifest_path)
+    and cpu["runner"]["sha256"] == policy["current_environment_baseline"]["runner_sha256"]
+):
+    raise SystemExit("current-environment CPU checkpoint contract failed")
+expected = policy["current_environment_baseline"]["stage_output_sha256"]
+if len(cpu.get("stages", [])) != len(expected):
+    raise SystemExit("current-environment CPU stage count drift")
+for stage, frozen in zip(cpu["stages"], expected):
+    if (stage["index"], stage["name"]) != (frozen["index"], frozen["name"]):
+        raise SystemExit("current-environment CPU stage identity drift")
+    if stage["exit_code"] != 0 or stage["runtime"]["provider"] != "cpu":
+        raise SystemExit(f"current-environment CPU stage failed: {stage['name']}")
+    observed = {name: item["sha256"] for name, item in stage["outputs"].items()}
+    if observed != frozen["outputs"]:
+        raise SystemExit(f"current-environment CPU stage output drift: {stage['name']}")
+    for item in stage["outputs"].values():
+        path = local(item["path"])
+        if sha256(path) != item["sha256"]:
+            raise SystemExit(f"current-environment CPU tensor hash mismatch: {path}")
+if cpu["pipeline_outputs"]["audio"]["sha256"] != policy["current_environment_baseline"]["audio"]["sha256"]:
+    raise SystemExit("current-environment CPU final audio drift")
+if cpu["pipeline_outputs"]["pred_dur"]["sha256"] != policy["current_environment_baseline"]["duration"]["sha256"]:
+    raise SystemExit("current-environment CPU final duration drift")
+print("verified reconstruction policy, baseline, 18 models, and current-environment CPU checkpoint")
 PY
 
 # Default to compiler serialization. An operator may explicitly opt into
@@ -73,6 +143,11 @@ mem_available=$(awk '/MemAvailable/ {print $2}' /proc/meminfo)
   echo "less than 8 GiB MemAvailable before launch: $mem_available KiB" >&2
   exit 3
 }
+
+if [[ ${PREFLIGHT_ONLY:-no} == yes ]]; then
+  echo "canonical-v2 QNN preflight passed; PREFLIGHT_ONLY=yes, no Docker/QNN launch"
+  exit 0
+fi
 
 mkdir -p "$OUT"
 date -u +%FT%TZ >"$OUT/start.txt"
@@ -109,8 +184,16 @@ monitor() {
   done
 }
 
+TIME_PREFIX=()
+if [[ -x /usr/bin/time ]]; then
+  TIME_PREFIX=(/usr/bin/time -v)
+else
+  printf '%s\n' '/usr/bin/time unavailable; memory-monitor.log remains the host resource record' \
+    >"$OUT/time-unavailable.txt"
+fi
+
 set +e
-/usr/bin/time -v timeout --signal=TERM --kill-after=60 28800 \
+"${TIME_PREFIX[@]}" timeout --signal=TERM --kill-after=60 28800 \
   docker run --rm --name "$NAME" --user "$(id -u):$(id -g)" -e HOME=/tmp \
   -v "$REPO:/repo" -v "$BUILD:/build:ro" -v "$QAIRT:/opt/qairt:ro" -w /repo \
   "$IMAGE" env LD_LIBRARY_PATH=/build:/opt/qairt/lib/x86_64-linux-clang \

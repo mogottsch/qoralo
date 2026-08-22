@@ -6,10 +6,11 @@ The original 116-byte experiment-0013-derived route and the newer canonical-v2 r
 
 - The historical monolithic compatibility graph was blocked before execution by kernel OOM. An authorized later decomposition did execute all 18 historical stages on host QNN, but duration changed from 304 to 305 and its final float audio was structurally invalid. It remains noncanonical feasibility/debug evidence only.
 - The canonical-v2 route has complete frontend/export/CPU/stage-recomposition proof. Its first fallback-disabled host QNN attempt completed stages 1–15, then a WSL shutdown/restart externally interrupted stage 16 during graph sequencing at 12%. Stage 16 did not finalize or execute, stages 17–18 were not attempted, no final canonical QNN audio exists, and the phone remains forbidden.
+- Native-host reconstruction reproduced every source/model/input/runner hash but not the historical WSL CPU audio hash. Two clean current-environment staged CPU runs and a complete-graph run are mutually bit-exact at audio SHA `56ce6a24498d8db270c0a34eb1fe0a87b762a0fb8121616790f03391c132aa3c`. The historical WSL `fb8895…` record is preserved, and cross-environment bit reproducibility is explicitly unproven.
 
 Neither track proves physical phone HTP execution. The canonical interrupted attempt is not a technical stage-16 failure or OOM; the next attempt must restart from stage 1. See [`REPRODUCING.md`](REPRODUCING.md).
 
-Historical machine-readable evidence is [`results/host-gate-checkpoint.json`](results/host-gate-checkpoint.json) and [`results/staged-host-qnn-feasibility.json`](results/staged-host-qnn-feasibility.json). Canonical-v2 machine evidence begins with [`protocol-canonical-v2-stage-decomposition.json`](protocol-canonical-v2-stage-decomposition.json) and [`results/canonical-v2-host-qnn-interrupted-checkpoint.json`](results/canonical-v2-host-qnn-interrupted-checkpoint.json). Large models, fixtures, profiles, compiler logs, tensors, local binaries, and audio remain ignored under `work/` and `.local/`; their hashes and regeneration commands are committed.
+Historical machine-readable evidence is [`results/host-gate-checkpoint.json`](results/host-gate-checkpoint.json) and [`results/staged-host-qnn-feasibility.json`](results/staged-host-qnn-feasibility.json). Canonical-v2 machine evidence begins with [`protocol-canonical-v2-stage-decomposition.json`](protocol-canonical-v2-stage-decomposition.json) and [`results/canonical-v2-host-qnn-interrupted-checkpoint.json`](results/canonical-v2-host-qnn-interrupted-checkpoint.json). The prospective current-environment comparison contract is [`protocol-canonical-v2-reconstruction-baseline.json`](protocol-canonical-v2-reconstruction-baseline.json), with evidence in [`results/canonical-v2-cpu-reconstruction-baseline.json`](results/canonical-v2-cpu-reconstruction-baseline.json). Large models, fixtures, profiles, compiler logs, tensors, local binaries, and audio remain ignored under `work/` and `.local/`; their hashes and regeneration commands are committed.
 
 ## Historical verified source and contract
 
@@ -153,7 +154,24 @@ On patched ORT 1.27.1 CPU:
 
 The metadata-shaped graph is SHA `d81053acc21a9fa42a7ff09bae17abad1ef7499aa2252f70bda27f9ac89194a3`. The bounded QNN compatibility graph is SHA `0c7ce33eac4c6664819a61e48469a9cf43ad403d852b01af5517a13c7ed2a066`, with 1,685 nodes, 809 initializers, no quantization, no retained initializer changes, and bit-exact CPU output versus the shaped graph.
 
-Eighteen fixed stage models cover all 1,685 source nodes. Five named support nodes are recomputed at boundaries, as declared in the stage provenance. Separate-process CPU recomposition is bit-exact to the complete compatibility graph: audio SHA `fb8895f6bb9c2ee94dd18f8b9bfdc6f1b36f99e01c40f5806bdd71076acd6d36`, duration SHA `99494f78e82ad3d8b506d5b0a5c4edde6292c6a52ca54a47b50f109fa534480c`.
+Eighteen fixed stage models cover all 1,685 source nodes. Five named support nodes are recomputed at boundaries, as declared in the stage provenance. The historical WSL separate-process CPU recomposition was bit-exact to its complete compatibility-graph run: audio SHA `fb8895f6bb9c2ee94dd18f8b9bfdc6f1b36f99e01c40f5806bdd71076acd6d36`, duration SHA `99494f78e82ad3d8b506d5b0a5c4edde6292c6a52ca54a47b50f109fa534480c`.
+
+### Current-environment CPU reconstruction baseline
+
+After migration to the native Manjaro host, all source assets, the patched ORT shared library (`bc9df5…`), runner (`938480…`), manifest, 18 models, and fixed inputs matched their committed hashes. The available tracked-shape Ubuntu 22 image has full ID `b170f55a…`; it was locally aliased to the expected tag only after inspect/history/package verification. Tag equality is not identity proof, and the prior QNN toolchain record retained only historical short image ID `2803b0712b5b`.
+
+Two clean containerized staged CPU runs produced identical output hashes at every stage. A fresh complete QNN-compat graph CPU run was bit-exact to both staged runs:
+
+- current audio SHA: `56ce6a24498d8db270c0a34eb1fe0a87b762a0fb8121616790f03391c132aa3c`;
+- duration SHA/sum: `99494f78e82ad3d8b506d5b0a5c4edde6292c6a52ca54a47b50f109fa534480c` / 602;
+- complete graph versus staged: max absolute error `0`, RMSE `0`, cosine `1`;
+- final audio: 361,200 finite samples, peak `0.4363551`, RMS `0.0497710`, zero samples with `abs >= 1`; structurally valid.
+
+The first known cross-environment divergence is stage 1 (`bert`): historical output SHA `cb5d2d…`, current output SHA `01e4e8…`. The historical stage/final float payloads were intentionally ignored and no surviving copy was found, so the first differing element and historical-to-current max-absolute-error/RMSE/cosine are `null` with an explicit unavailable reason. A hash mismatch proves bit/value divergence but cannot supply numerical distance.
+
+This does not rewrite the historical `fb8895…` result. [`protocol-canonical-v2-reconstruction-baseline.json`](protocol-canonical-v2-reconstruction-baseline.json) prospectively selects the deterministic current `56ce6a…` stage outputs for the next same-environment QNN comparison. Cross-environment bit reproducibility remains unproven.
+
+A crossed-message rerun launch was stopped before Docker creation. Host `/usr/bin/time` was absent, no QNN session/compiler/stage began, and no phone access occurred. [`results/canonical-v2-rerun-operator-cancelled-pre-gate.json`](results/canonical-v2-rerun-operator-cancelled-pre-gate.json) classifies this as operator-cancelled pre-gate, not a QNN failure.
 
 ### Interrupted canonical host QNN attempt
 
@@ -184,6 +202,6 @@ Exact per-stage timing, outputs, numerical comparisons, QNN metrics, log/profile
 
 No canonical QNN audio exists, so canonical QNN listening is `not_reviewed`/not yet applicable. Phone eligibility is false.
 
-Regenerate and hash-verify ignored artifacts, then restart the complete 18-stage host gate from stage 1 with [`host/run_canonical_v2_staged_host_qnn.sh`](host/run_canonical_v2_staged_host_qnn.sh). Do not resume the partial stage-16 attempt. [`REPRODUCING.md`](REPRODUCING.md) contains the exact commands.
+Regenerate and hash-verify ignored artifacts plus the current-environment CPU checkpoint. The host script now fail-closes on the exact committed reconstruction policy/baseline hashes and all 18 frozen current CPU stage-output hashes before any Docker/QNN launch. When reviewed, restart the complete host gate from stage 1; do not resume the partial stage-16 attempt. [`REPRODUCING.md`](REPRODUCING.md) contains the exact commands.
 
-Only a fresh 18/18 fallback-disabled host pass with zero CPU provider events **and structurally valid final audio** can advance to phone work. Physical phone RPC/accelerator/cycle/HVX proof, setup/first/five-warm RTFs using actual emitted duration, thermal context, memory semantics, a fresh WAV/hash, and Moritz's exact-sample verdict remain outstanding. No quantization is authorized.
+Only a fresh 18/18 fallback-disabled host pass with zero CPU provider events, comparison to the current `56ce6a…` baseline, and **structurally valid final audio** can advance to phone work. Historical `fb8895…` remains separate WSL evidence. Physical phone RPC/accelerator/cycle/HVX proof, setup/first/five-warm RTFs using actual emitted duration, thermal context, memory semantics, a fresh WAV/hash, and Moritz's exact-sample verdict remain outstanding. No quantization is authorized.

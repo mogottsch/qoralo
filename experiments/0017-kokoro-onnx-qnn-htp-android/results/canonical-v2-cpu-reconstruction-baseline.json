@@ -1,0 +1,628 @@
+{
+  "bounded_conclusion": {
+    "current_environment_comparison_validity": "valid internally: two staged reruns are bit-exact, and staged output is bit-exact to a fresh complete compatibility-graph CPU run under the same exact runtime/environment",
+    "historical_cross_environment_comparison_validity": "not numerically reproducible from retained evidence: exact historical hashes differ starting at stage 1, and historical payload/environment identity is insufficient for element-wise comparison",
+    "qnn_gate": "blocked_pending_review",
+    "required_policy_action": "Before QNN, either recover/reproduce the historical WSL payload/environment or commit an explicit reconstruction-baseline amendment authorizing the deterministic current-environment CPU checkpoint as the QNN comparison reference while preserving the historical fb8895 record."
+  },
+  "claim_boundary": "CPU-only reconstruction evidence. No QNN session or inference was started by this investigation; no phone access occurred. Structural and numerical checks do not decide listening quality.",
+  "created_at_utc": "2026-08-22T09:58:22.260917Z",
+  "current_environment": {
+    "container": {
+      "alias_source": "vibevoice-qairt-2.49.0-host:latest",
+      "aliasing_fact": "The expected tag was absent and was locally aliased only after inspect/history/package verification. The alias is not identity proof.",
+      "clean_execution_environment": {
+        "HOME": "/tmp",
+        "LD_LIBRARY_PATH": "/build",
+        "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      },
+      "full_image_id": "sha256:b170f55a61548cc3a78eb667837934e0f2f8659bf7cd0db7a71ec40e90d2f321",
+      "glibc": "2.35-0ubuntu3.14",
+      "image_alias_used": "vibevoice-experiment-0010-qairt:2.49.0.260730-ubuntu22.04",
+      "pinned_packages": {
+        "Mako": "1.2.0",
+        "PyYAML": "6.0.3",
+        "cmake": "3.29.6",
+        "numpy": "1.26.4",
+        "onnx": "1.16.1",
+        "onnxruntime_python": "1.17.1",
+        "onnxsim": "0.4.36",
+        "packaging": "24.0",
+        "pandas": "2.3.3",
+        "protobuf": "4.25.8",
+        "rich": "13.9.4",
+        "safetensors": "0.4.3",
+        "tabulate": "0.9.0",
+        "xlsxwriter": "1.2.2"
+      },
+      "runtime_library_sha256": {
+        "libc.so.6": "e01b1ce7be2987f3b8560e26d0df2623f9dd5cec17be923ae28a785bc0d32d50",
+        "libm.so.6": "df621c68dbfed7e843434ef2faedb9f4d4b0543ad161e9a55eaf4d4ce2443176",
+        "libstdc++.so.6": "ff0825e113603c3866680d5d52216bc6d8eedf3a59f52a0aef67ff01994db128"
+      },
+      "tracked_dockerfile_sha256": "144e5e7d449c1c0b226a6b227a89ec19d62309cddb723721fd7680b772b6e2c7",
+      "ubuntu": "22.04"
+    },
+    "host": {
+      "architecture": "x86_64",
+      "cpu": "AMD Ryzen 7 5800H with Radeon Graphics",
+      "cpu_count": 16,
+      "kernel": "6.12.103-1-MANJARO",
+      "microcode": "0xa500012",
+      "os": "Manjaro Linux"
+    }
+  },
+  "current_final_audio_structural": {
+    "absolute_peak": 0.4363550841808319,
+    "all_finite": true,
+    "clipped_float_samples": 0,
+    "duration_seconds": 15.05,
+    "elements": 361200,
+    "rms": 0.049770986326861756,
+    "sample_rate_hz": 24000,
+    "valid_under_committed_structural_policy": true
+  },
+  "current_full_graph_reference": {
+    "bytes": 1444800,
+    "duration": {
+      "bytes": 1880,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/rewrite-cpu127-reconstruction/duration.i64",
+      "sha256": "99494f78e82ad3d8b506d5b0a5c4edde6292c6a52ca54a47b50f109fa534480c"
+    },
+    "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/rewrite-cpu127-reconstruction/audio.f32",
+    "optimization": "disabled",
+    "provider": "CPUExecutionProvider",
+    "sha256": "56ce6a24498d8db270c0a34eb1fe0a87b762a0fb8121616790f03391c132aa3c"
+  },
+  "fresh_reconstruction_runs": [
+    {
+      "bytes": 69528,
+      "completed_stages": 18,
+      "duration_sha256": "99494f78e82ad3d8b506d5b0a5c4edde6292c6a52ca54a47b50f109fa534480c",
+      "final_audio_sha256": "56ce6a24498d8db270c0a34eb1fe0a87b762a0fb8121616790f03391c132aa3c",
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/cpu127-reconstruction-rerun-1/pipeline-checkpoint.json",
+      "sha256": "21674a91b9d62cd4c4eb90785385d2c97d152ea8076d33151013198b5b559d17",
+      "status": "passed"
+    },
+    {
+      "bytes": 73666,
+      "completed_stages": 18,
+      "duration_sha256": "99494f78e82ad3d8b506d5b0a5c4edde6292c6a52ca54a47b50f109fa534480c",
+      "final_audio_sha256": "56ce6a24498d8db270c0a34eb1fe0a87b762a0fb8121616790f03391c132aa3c",
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/cpu127-reconstruction-rerun-2/pipeline-checkpoint.json",
+      "sha256": "8462b17abdba7f8f190ea0a1ae2b072efcdd9c0b328f499401fe3effa63846b0",
+      "status": "passed"
+    }
+  ],
+  "historical_baseline": {
+    "duration_sha256": "99494f78e82ad3d8b506d5b0a5c4edde6292c6a52ca54a47b50f109fa534480c",
+    "final_audio_sha256": "fb8895f6bb9c2ee94dd18f8b9bfdc6f1b36f99e01c40f5806bdd71076acd6d36",
+    "ignored_checkpoint_from_interrupted_qnn_record": {
+      "bytes": 69490,
+      "sha256": "44e93b30a1780fd93053164ae43d119d0102eecf8ad2f5001ed0146c2555c7d8"
+    },
+    "known_execution_context": {
+      "cpu_checkpoint_container_or_native_identity": null,
+      "cpu_checkpoint_container_or_native_identity_reason": "The historical CPU equivalence record did not retain host kernel, CPU feature exposure, container image ID, environment variables, or full command; its ignored checkpoint payload is no longer present.",
+      "historical_repo_root_evidence": "/home/moritz/vibevoice-android-spike appears in committed canonical-v2 provenance",
+      "host_class": "WSL, based on committed interruption/reproduction records",
+      "qnn_toolchain_docker_image": "vibevoice-experiment-0010-qairt:2.49.0.260730-ubuntu22.04",
+      "qnn_toolchain_docker_image_id_recorded_short": "2803b0712b5b"
+    },
+    "preservation": "The committed historical record is unchanged and remains scoped to its original execution environment.",
+    "record": {
+      "bytes": 12569,
+      "path": "experiments/0017-kokoro-onnx-qnn-htp-android/results/canonical-v2-stage-cpu-equivalence.json",
+      "sha256": "b79910fcc63f38d3e3bc7fde5a502598b9b918f775a43e929b7ff2a208d008d8"
+    },
+    "stage_1_output_sha256": "cb5d2d2caebec9a211c0591192f7ebf22ca044230f97069f20066cc3dd83e721"
+  },
+  "numerical_comparisons": {
+    "final_audio_reconstruction_rerun_1_vs_2": {
+      "bit_exact": true,
+      "cosine": 1.0,
+      "differing_elements": 0,
+      "first_differing_flat_element": null,
+      "maximum_absolute_error": 0.0,
+      "rmse": 0.0
+    },
+    "final_staged_vs_current_full_qnn_compat_cpu": {
+      "bit_exact": true,
+      "cosine": 1.0,
+      "differing_elements": 0,
+      "first_differing_flat_element": null,
+      "maximum_absolute_error": 0.0,
+      "rmse": 0.0
+    },
+    "historical_vs_current": {
+      "cosine": null,
+      "first_differing_flat_element": null,
+      "first_known_differing_stage": {
+        "current_sha256": "01e4e86f9103f51430c4a46e96a1575ebae01d175e6f2d4e31a789dcb93db29a",
+        "elements": 120320,
+        "historical_sha256": "cb5d2d2caebec9a211c0591192f7ebf22ca044230f97069f20066cc3dd83e721",
+        "index": 1,
+        "name": "bert",
+        "output": "/bert_encoder/Add_output_0",
+        "shape": [
+          1,
+          235,
+          512
+        ]
+      },
+      "hash_equal": false,
+      "maximum_absolute_error": null,
+      "rmse": null,
+      "unavailable_reason": "The historical stage-1 and final float payloads were intentionally ignored and are no longer present locally; committed evidence retained their hashes but not values. Filesystem/cache searches found no surviving fb8895 payload. A hash mismatch proves value/bit divergence but cannot identify an element or numerical distance."
+    },
+    "stage_1_reconstruction_rerun_1_vs_2": {
+      "bit_exact": true,
+      "cosine": 1.0,
+      "differing_elements": 0,
+      "first_differing_flat_element": null,
+      "maximum_absolute_error": 0.0,
+      "rmse": 0.0
+    }
+  },
+  "route": "canonical_v2_official_frontend_fixed_fp32_staged_cpu_reconstruction",
+  "runtime_and_assets": {
+    "inputs": {
+      "speed": {
+        "bytes": 4,
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/frontend-official-v1/speed.raw",
+        "sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c"
+      },
+      "style": {
+        "bytes": 1024,
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/frontend-official-v1/style.raw",
+        "sha256": "8acaca07623d98a1085f6b182fb997d715dd1d67862e350567e6d9b1bc8ec71b"
+      },
+      "tokens": {
+        "bytes": 1880,
+        "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/frontend-official-v1/tokens.raw",
+        "sha256": "9c565b2a6ee1a811f188f3e3425a3188af58866988ce5a2197eeaacc81dde280"
+      }
+    },
+    "manifest": {
+      "bytes": 30391,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/manifest.json",
+      "sha256": "3f21c996ec3d5a63b80cbceb9ff83a21cc86321cabfea3e2dedd1af4676fbad1"
+    },
+    "onnxruntime": {
+      "patch_sha256": "549be0692c1414ea35e97f401aaeb87ba55801480c7bd84dba0471cf25773bde",
+      "shared_library_bytes": 30384960,
+      "shared_library_sha256": "bc9df5a7df1b5d9de4d87adcaa4cc864bbde0f790e80d48e00ce0e4253a2ae11",
+      "source_revision": "df2ba1cf8108aa63627cf4cdf8f807880b938616",
+      "version": "patched 1.27.1"
+    },
+    "runner": {
+      "bytes": 90240,
+      "sha256": "938480879497262461dcc4632a0ebeebb92f721c9192441c17b406af8ac0e023",
+      "source_sha256": "ea9682e61e0fd684705ccfb74601989bad44651fc7d0442f4ba86ae0c4a2ffdd"
+    },
+    "session": {
+      "execution_mode": "sequential",
+      "graph_optimization": "disabled",
+      "inter_op_threads": 1,
+      "intra_op_threads": 1,
+      "provider": "CPUExecutionProvider",
+      "runs_per_stage": 1,
+      "separate_process_per_stage": true
+    },
+    "source_graph": {
+      "bytes": 352447061,
+      "sha256": "0c7ce33eac4c6664819a61e48469a9cf43ad403d852b01af5517a13c7ed2a066"
+    },
+    "stage_models": [
+      {
+        "bytes": 24792421,
+        "index": 1,
+        "name": "bert",
+        "sha256": "f39142128623987c10fcbb01fa0ba26449d1a8d8449bac35b45b174cd0f64ad7"
+      },
+      {
+        "bytes": 33802264,
+        "index": 2,
+        "name": "duration_encoder",
+        "sha256": "fe2a9e055f44e615e3f6033e38fc21d82718c2ee26b3e34696503f35c7584dab"
+      },
+      {
+        "bytes": 25800828,
+        "index": 3,
+        "name": "text_encoder",
+        "sha256": "e93888513296abb6ad2ae24e3922cfe8a830554cdaf35dcb2ab6ebe6d8edb0bb"
+      },
+      {
+        "bytes": 7690474,
+        "index": 4,
+        "name": "duration_alignment",
+        "sha256": "82d94abfac8a3169bda2e50914c0caac6dd14acb203b1e42be15b23e9535e7cc"
+      },
+      {
+        "bytes": 33688577,
+        "index": 5,
+        "name": "prosody",
+        "sha256": "1c9d1c44ee8e00af9c0bee4aca369316db8b8219d37124559ce005c47b69dba7"
+      },
+      {
+        "bytes": 134440075,
+        "index": 6,
+        "name": "decoder",
+        "sha256": "f85c2b845397295435a28616afa5bfd6462dd1b788cb5d4cfbeb59c6dac91a16"
+      },
+      {
+        "bytes": 13023338,
+        "index": 7,
+        "name": "harmonic_source",
+        "sha256": "ac6f4c4f5c7260ff3a30885f0c64ddf0dae54e6fc6087203e36a526591bfb2ce"
+      },
+      {
+        "bytes": 23407828,
+        "index": 8,
+        "name": "generator_0_base",
+        "sha256": "c51f64046c29babb37689d4f45500a5ece76e6963a6d8d8e40ac9e851b384741"
+      },
+      {
+        "bytes": 6356695,
+        "index": 9,
+        "name": "generator_0_resblock_0",
+        "sha256": "9f201670c0d9f1fcdf41db64fd7e4629755846092731671fe6cab12d23429373"
+      },
+      {
+        "bytes": 12648151,
+        "index": 10,
+        "name": "generator_0_resblock_1",
+        "sha256": "4dd6a560a6bdb630485685303debb73db9a5a7e7a355efb7f914832aac11a09a"
+      },
+      {
+        "bytes": 18939619,
+        "index": 11,
+        "name": "generator_0_resblock_2",
+        "sha256": "47db54f230fbe2468a61e92a9b059af45f98589a1183963b85b9d432fbc61945"
+      },
+      {
+        "bytes": 1263,
+        "index": 12,
+        "name": "generator_0_merge",
+        "sha256": "c6390c52b95fa06ea0fcd4728fb9a8d0061e31e001ead2c86f6480df1b1d8ef1"
+      },
+      {
+        "bytes": 6748071,
+        "index": 13,
+        "name": "generator_1_base",
+        "sha256": "63b00a9e11fd98ded45fb5cf20840c4cc728be97979271a757ad1453f9aab37d"
+      },
+      {
+        "bytes": 2015245,
+        "index": 14,
+        "name": "generator_1_resblock_3",
+        "sha256": "34059979c954c3ab6bbbb0478d6dae1a8e2c8a782c19c7f57d648a92b0a5ea7f"
+      },
+      {
+        "bytes": 3588110,
+        "index": 15,
+        "name": "generator_1_resblock_4",
+        "sha256": "f2fd84804de1253fa84e10464f323282e0593c2abf14aa2d07c5d91ae92ef49c"
+      },
+      {
+        "bytes": 5160974,
+        "index": 16,
+        "name": "generator_1_resblock_5",
+        "sha256": "a27a9e1eb944c245961fe8fd44a73b42e7468dcc445b3406ba336735c16da60b"
+      },
+      {
+        "bytes": 1269,
+        "index": 17,
+        "name": "generator_1_merge",
+        "sha256": "04b2fcd94a757dd8e0869f9de4ab647c93dd6b2e7c7aff0a9c0b0b548cc08d96"
+      },
+      {
+        "bytes": 375454,
+        "index": 18,
+        "name": "waveform_istft",
+        "sha256": "8aefe8fe805644806e86cc344b659fe482ba038ae338786555829b82ec9c1df1"
+      }
+    ]
+  },
+  "schema_version": 1,
+  "stage_hash_comparison": [
+    {
+      "historical_output_sha256": {
+        "/bert_encoder/Add_output_0": "cb5d2d2caebec9a211c0591192f7ebf22ca044230f97069f20066cc3dd83e721"
+      },
+      "index": 1,
+      "matches_historical_hashes": false,
+      "model_sha256": "f39142128623987c10fcbb01fa0ba26449d1a8d8449bac35b45b174cd0f64ad7",
+      "name": "bert",
+      "reconstruction_rerun_1_output_sha256": {
+        "/bert_encoder/Add_output_0": "01e4e86f9103f51430c4a46e96a1575ebae01d175e6f2d4e31a789dcb93db29a"
+      },
+      "reconstruction_rerun_2_output_sha256": {
+        "/bert_encoder/Add_output_0": "01e4e86f9103f51430c4a46e96a1575ebae01d175e6f2d4e31a789dcb93db29a"
+      },
+      "reconstruction_reruns_bit_exact": true
+    },
+    {
+      "historical_output_sha256": {
+        "/text_encoder/Where_13": "6008d9df1b3c21c418fa76b71e1242d3403a978f18423f675a581376aaa6ad6a"
+      },
+      "index": 2,
+      "matches_historical_hashes": false,
+      "model_sha256": "fe2a9e055f44e615e3f6033e38fc21d82718c2ee26b3e34696503f35c7584dab",
+      "name": "duration_encoder",
+      "reconstruction_rerun_1_output_sha256": {
+        "/text_encoder/Where_13": "20ad45826cab458741ab469ce45d4d16b929c6ee5a3f7b4691801f92002098ea"
+      },
+      "reconstruction_rerun_2_output_sha256": {
+        "/text_encoder/Where_13": "20ad45826cab458741ab469ce45d4d16b929c6ee5a3f7b4691801f92002098ea"
+      },
+      "reconstruction_reruns_bit_exact": true
+    },
+    {
+      "historical_output_sha256": {
+        "/text_encoder_1/Where_7_output_0": "bce9d294c34bf6e5103bca354890ba29c24b0ca7a9b1cadddc19d23dbf0a0205"
+      },
+      "index": 3,
+      "matches_historical_hashes": true,
+      "model_sha256": "e93888513296abb6ad2ae24e3922cfe8a830554cdaf35dcb2ab6ebe6d8edb0bb",
+      "name": "text_encoder",
+      "reconstruction_rerun_1_output_sha256": {
+        "/text_encoder_1/Where_7_output_0": "bce9d294c34bf6e5103bca354890ba29c24b0ca7a9b1cadddc19d23dbf0a0205"
+      },
+      "reconstruction_rerun_2_output_sha256": {
+        "/text_encoder_1/Where_7_output_0": "bce9d294c34bf6e5103bca354890ba29c24b0ca7a9b1cadddc19d23dbf0a0205"
+      },
+      "reconstruction_reruns_bit_exact": true
+    },
+    {
+      "historical_output_sha256": {
+        "/MatMul_1_output_0": "39f2da87a139b30a82d71f21837723a3484724d86faef1a6ba5d72a83f9a441d",
+        "/MatMul_output_0": "8a081265a508902ca18876e4444d8fae5c66dcfe8a102fce9e875abae2bf98d7",
+        "pred_dur": "99494f78e82ad3d8b506d5b0a5c4edde6292c6a52ca54a47b50f109fa534480c"
+      },
+      "index": 4,
+      "matches_historical_hashes": false,
+      "model_sha256": "82d94abfac8a3169bda2e50914c0caac6dd14acb203b1e42be15b23e9535e7cc",
+      "name": "duration_alignment",
+      "reconstruction_rerun_1_output_sha256": {
+        "/MatMul_1_output_0": "39f2da87a139b30a82d71f21837723a3484724d86faef1a6ba5d72a83f9a441d",
+        "/MatMul_output_0": "6de97ed682bb6b2049a9e54110c1e74f0844aaf3d08fee28c8229b7a0af7d0c4",
+        "pred_dur": "99494f78e82ad3d8b506d5b0a5c4edde6292c6a52ca54a47b50f109fa534480c"
+      },
+      "reconstruction_rerun_2_output_sha256": {
+        "/MatMul_1_output_0": "39f2da87a139b30a82d71f21837723a3484724d86faef1a6ba5d72a83f9a441d",
+        "/MatMul_output_0": "6de97ed682bb6b2049a9e54110c1e74f0844aaf3d08fee28c8229b7a0af7d0c4",
+        "pred_dur": "99494f78e82ad3d8b506d5b0a5c4edde6292c6a52ca54a47b50f109fa534480c"
+      },
+      "reconstruction_reruns_bit_exact": true
+    },
+    {
+      "historical_output_sha256": {
+        "/If_1_output_0": "52081f010555dfa11c6ca21d239e9a00205b0cc83c8a1452dbfe818fce96efb1",
+        "/If_output_0": "dd865be95e74be1723bda5edb3286fc12d187f0e8db3eae3997fefcc101e2192"
+      },
+      "index": 5,
+      "matches_historical_hashes": false,
+      "model_sha256": "1c9d1c44ee8e00af9c0bee4aca369316db8b8219d37124559ce005c47b69dba7",
+      "name": "prosody",
+      "reconstruction_rerun_1_output_sha256": {
+        "/If_1_output_0": "ddda1324e326886de5fe9bc8b913963e3fa058ce27049201a6798686c181969d",
+        "/If_output_0": "bd5ed2253ed61c7bbc84069b5310d135679bfa2f1a6e0ca2b690129796c1e584"
+      },
+      "reconstruction_rerun_2_output_sha256": {
+        "/If_1_output_0": "ddda1324e326886de5fe9bc8b913963e3fa058ce27049201a6798686c181969d",
+        "/If_output_0": "bd5ed2253ed61c7bbc84069b5310d135679bfa2f1a6e0ca2b690129796c1e584"
+      },
+      "reconstruction_reruns_bit_exact": true
+    },
+    {
+      "historical_output_sha256": {
+        "/decoder/decode.3/Mul_output_0": "ccca0477b14c9246bf33d5f8ac535cdd578deb669891361ad6e2fd08fb292855"
+      },
+      "index": 6,
+      "matches_historical_hashes": false,
+      "model_sha256": "f85c2b845397295435a28616afa5bfd6462dd1b788cb5d4cfbeb59c6dac91a16",
+      "name": "decoder",
+      "reconstruction_rerun_1_output_sha256": {
+        "/decoder/decode.3/Mul_output_0": "49cabe352e770f4254d8546fb35d631fa5bfafe7f530bcd3ed681bc00d109fe0"
+      },
+      "reconstruction_rerun_2_output_sha256": {
+        "/decoder/decode.3/Mul_output_0": "49cabe352e770f4254d8546fb35d631fa5bfafe7f530bcd3ed681bc00d109fe0"
+      },
+      "reconstruction_reruns_bit_exact": true
+    },
+    {
+      "historical_output_sha256": {
+        "/decoder/generator/Concat_1_output_0": "8c49dd2cb26cdea99a21ebcfeab330c1216dfd2152fe089314f897cab59b4fca"
+      },
+      "index": 7,
+      "matches_historical_hashes": false,
+      "model_sha256": "ac6f4c4f5c7260ff3a30885f0c64ddf0dae54e6fc6087203e36a526591bfb2ce",
+      "name": "harmonic_source",
+      "reconstruction_rerun_1_output_sha256": {
+        "/decoder/generator/Concat_1_output_0": "25948d0319e79eda7c1be8e0866a97027d9fbccba5665af422ecfe415dd2bff6"
+      },
+      "reconstruction_rerun_2_output_sha256": {
+        "/decoder/generator/Concat_1_output_0": "25948d0319e79eda7c1be8e0866a97027d9fbccba5665af422ecfe415dd2bff6"
+      },
+      "reconstruction_reruns_bit_exact": true
+    },
+    {
+      "historical_output_sha256": {
+        "/decoder/generator/Add_2_output_0": "ae4ae101274dc57489eab6ef0e92598bbba9a226cbe75926d5f5773e1f1a05b0"
+      },
+      "index": 8,
+      "matches_historical_hashes": false,
+      "model_sha256": "c51f64046c29babb37689d4f45500a5ece76e6963a6d8d8e40ac9e851b384741",
+      "name": "generator_0_base",
+      "reconstruction_rerun_1_output_sha256": {
+        "/decoder/generator/Add_2_output_0": "9ad447ea26b4ba1a4463b8a52b8a121a4bc3469ad91106a006e5459dee524212"
+      },
+      "reconstruction_rerun_2_output_sha256": {
+        "/decoder/generator/Add_2_output_0": "9ad447ea26b4ba1a4463b8a52b8a121a4bc3469ad91106a006e5459dee524212"
+      },
+      "reconstruction_reruns_bit_exact": true
+    },
+    {
+      "historical_output_sha256": {
+        "/decoder/generator/resblocks.0/Add_8_output_0": "01d3c63dfe541458f9a2d25e7aac001862a34c6416488a9b4c5c33f8bc47eb09"
+      },
+      "index": 9,
+      "matches_historical_hashes": false,
+      "model_sha256": "9f201670c0d9f1fcdf41db64fd7e4629755846092731671fe6cab12d23429373",
+      "name": "generator_0_resblock_0",
+      "reconstruction_rerun_1_output_sha256": {
+        "/decoder/generator/resblocks.0/Add_8_output_0": "9d6e5f04550b64cd61a92cd70d7bc1aa1575d3e6df0f2e9b28b074713a5d6cb0"
+      },
+      "reconstruction_rerun_2_output_sha256": {
+        "/decoder/generator/resblocks.0/Add_8_output_0": "9d6e5f04550b64cd61a92cd70d7bc1aa1575d3e6df0f2e9b28b074713a5d6cb0"
+      },
+      "reconstruction_reruns_bit_exact": true
+    },
+    {
+      "historical_output_sha256": {
+        "/decoder/generator/resblocks.1/Add_8_output_0": "6f45d61a21b9495a7a9953906105fafe5077fd6401e3a4cf556e14fc0c8f86d5"
+      },
+      "index": 10,
+      "matches_historical_hashes": false,
+      "model_sha256": "4dd6a560a6bdb630485685303debb73db9a5a7e7a355efb7f914832aac11a09a",
+      "name": "generator_0_resblock_1",
+      "reconstruction_rerun_1_output_sha256": {
+        "/decoder/generator/resblocks.1/Add_8_output_0": "065156609477f047fc7eee83d94f1165786aeadca89bf60e75061c242a93af70"
+      },
+      "reconstruction_rerun_2_output_sha256": {
+        "/decoder/generator/resblocks.1/Add_8_output_0": "065156609477f047fc7eee83d94f1165786aeadca89bf60e75061c242a93af70"
+      },
+      "reconstruction_reruns_bit_exact": true
+    },
+    {
+      "historical_output_sha256": {
+        "/decoder/generator/resblocks.2/Add_8_output_0": "886aa7c088811e7d5b1f20cdc78e17010da0f48f4fce870f949536b06bc329ff"
+      },
+      "index": 11,
+      "matches_historical_hashes": false,
+      "model_sha256": "47db54f230fbe2468a61e92a9b059af45f98589a1183963b85b9d432fbc61945",
+      "name": "generator_0_resblock_2",
+      "reconstruction_rerun_1_output_sha256": {
+        "/decoder/generator/resblocks.2/Add_8_output_0": "d748b919173049437a21d59b8c278df326ea0b121661dd5282795bceeefa1953"
+      },
+      "reconstruction_rerun_2_output_sha256": {
+        "/decoder/generator/resblocks.2/Add_8_output_0": "d748b919173049437a21d59b8c278df326ea0b121661dd5282795bceeefa1953"
+      },
+      "reconstruction_reruns_bit_exact": true
+    },
+    {
+      "historical_output_sha256": {
+        "/decoder/generator/Div_1_output_0": "124fddf4fec95012aed787b210e3f54067b442cc925dec3004eb514c57529c60"
+      },
+      "index": 12,
+      "matches_historical_hashes": false,
+      "model_sha256": "c6390c52b95fa06ea0fcd4728fb9a8d0061e31e001ead2c86f6480df1b1d8ef1",
+      "name": "generator_0_merge",
+      "reconstruction_rerun_1_output_sha256": {
+        "/decoder/generator/Div_1_output_0": "da479b6a1233a174847e8293c8522a5770f6f03b15b20a5a19e3260038162dd1"
+      },
+      "reconstruction_rerun_2_output_sha256": {
+        "/decoder/generator/Div_1_output_0": "da479b6a1233a174847e8293c8522a5770f6f03b15b20a5a19e3260038162dd1"
+      },
+      "reconstruction_reruns_bit_exact": true
+    },
+    {
+      "historical_output_sha256": {
+        "/decoder/generator/Add_5_output_0": "1339ed7eb91e3a51995f9f42069f801bd190448e0df578ab4dcb3f8f70a40529"
+      },
+      "index": 13,
+      "matches_historical_hashes": false,
+      "model_sha256": "63b00a9e11fd98ded45fb5cf20840c4cc728be97979271a757ad1453f9aab37d",
+      "name": "generator_1_base",
+      "reconstruction_rerun_1_output_sha256": {
+        "/decoder/generator/Add_5_output_0": "c7bfd60541bee0c9d5598d396abcc98668e3d63ec9aa6526dd7e29e170248d64"
+      },
+      "reconstruction_rerun_2_output_sha256": {
+        "/decoder/generator/Add_5_output_0": "c7bfd60541bee0c9d5598d396abcc98668e3d63ec9aa6526dd7e29e170248d64"
+      },
+      "reconstruction_reruns_bit_exact": true
+    },
+    {
+      "historical_output_sha256": {
+        "/decoder/generator/resblocks.3/Add_8_output_0": "f1397307a43d6f5c47cb7cec209383a581e0a824d7c40e10ebae61708e9e74c7"
+      },
+      "index": 14,
+      "matches_historical_hashes": false,
+      "model_sha256": "34059979c954c3ab6bbbb0478d6dae1a8e2c8a782c19c7f57d648a92b0a5ea7f",
+      "name": "generator_1_resblock_3",
+      "reconstruction_rerun_1_output_sha256": {
+        "/decoder/generator/resblocks.3/Add_8_output_0": "0beb2de9ecd8a7a1aa0d97b8d5f821f9808781bb3d512b0c4910396fbf0360e0"
+      },
+      "reconstruction_rerun_2_output_sha256": {
+        "/decoder/generator/resblocks.3/Add_8_output_0": "0beb2de9ecd8a7a1aa0d97b8d5f821f9808781bb3d512b0c4910396fbf0360e0"
+      },
+      "reconstruction_reruns_bit_exact": true
+    },
+    {
+      "historical_output_sha256": {
+        "/decoder/generator/resblocks.4/Add_8_output_0": "e70813c107a433d0e39635c120606ac2bb5284e6641bcdba6220c24fa8a726d3"
+      },
+      "index": 15,
+      "matches_historical_hashes": false,
+      "model_sha256": "f2fd84804de1253fa84e10464f323282e0593c2abf14aa2d07c5d91ae92ef49c",
+      "name": "generator_1_resblock_4",
+      "reconstruction_rerun_1_output_sha256": {
+        "/decoder/generator/resblocks.4/Add_8_output_0": "4b3a93ac22f2fe2c64ad6d8fe5babab53da2aaa035d5bbae0fec3ca6c5174f0e"
+      },
+      "reconstruction_rerun_2_output_sha256": {
+        "/decoder/generator/resblocks.4/Add_8_output_0": "4b3a93ac22f2fe2c64ad6d8fe5babab53da2aaa035d5bbae0fec3ca6c5174f0e"
+      },
+      "reconstruction_reruns_bit_exact": true
+    },
+    {
+      "historical_output_sha256": {
+        "/decoder/generator/resblocks.5/Add_8_output_0": "cfe9d4d69f086bd8ce9be9951251e1bf60bd6f830a7971ff5ab43789be9f590d"
+      },
+      "index": 16,
+      "matches_historical_hashes": false,
+      "model_sha256": "a27a9e1eb944c245961fe8fd44a73b42e7468dcc445b3406ba336735c16da60b",
+      "name": "generator_1_resblock_5",
+      "reconstruction_rerun_1_output_sha256": {
+        "/decoder/generator/resblocks.5/Add_8_output_0": "ee85c3eea5e1ac67828a80b864adb5c5f28b2d1ba0f47cd7ed1c38d481348c73"
+      },
+      "reconstruction_rerun_2_output_sha256": {
+        "/decoder/generator/resblocks.5/Add_8_output_0": "ee85c3eea5e1ac67828a80b864adb5c5f28b2d1ba0f47cd7ed1c38d481348c73"
+      },
+      "reconstruction_reruns_bit_exact": true
+    },
+    {
+      "historical_output_sha256": {
+        "/decoder/generator/Div_2_output_0": "19728e35d3a84b128023d285f58268545380a2332348e971e6b52c39ddfa02ae"
+      },
+      "index": 17,
+      "matches_historical_hashes": false,
+      "model_sha256": "04b2fcd94a757dd8e0869f9de4ab647c93dd6b2e7c7aff0a9c0b0b548cc08d96",
+      "name": "generator_1_merge",
+      "reconstruction_rerun_1_output_sha256": {
+        "/decoder/generator/Div_2_output_0": "7a873b6387177f8a57fe3523b4a1e1d3d7f83248f1978086c5184b1baabb9662"
+      },
+      "reconstruction_rerun_2_output_sha256": {
+        "/decoder/generator/Div_2_output_0": "7a873b6387177f8a57fe3523b4a1e1d3d7f83248f1978086c5184b1baabb9662"
+      },
+      "reconstruction_reruns_bit_exact": true
+    },
+    {
+      "historical_output_sha256": {
+        "audio": "fb8895f6bb9c2ee94dd18f8b9bfdc6f1b36f99e01c40f5806bdd71076acd6d36"
+      },
+      "index": 18,
+      "matches_historical_hashes": false,
+      "model_sha256": "8aefe8fe805644806e86cc344b659fe482ba038ae338786555829b82ec9c1df1",
+      "name": "waveform_istft",
+      "reconstruction_rerun_1_output_sha256": {
+        "audio": "56ce6a24498d8db270c0a34eb1fe0a87b762a0fb8121616790f03391c132aa3c"
+      },
+      "reconstruction_rerun_2_output_sha256": {
+        "audio": "56ce6a24498d8db270c0a34eb1fe0a87b762a0fb8121616790f03391c132aa3c"
+      },
+      "reconstruction_reruns_bit_exact": true
+    }
+  ],
+  "status": "current_environment_reconstruction_deterministic_policy_review_required_before_qnn"
+}

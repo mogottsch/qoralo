@@ -1,0 +1,68 @@
+{
+  "boundary": {
+    "docker_container_created": false,
+    "docker_event_records": 0,
+    "end_file_exists": false,
+    "exit_code_file_exists": false,
+    "host_script_reached_launcher_line": true,
+    "launcher_error": "/usr/bin/time: No such file or directory",
+    "phone_access": false,
+    "pipeline_checkpoint_exists": false,
+    "profiles_exist": false,
+    "qnn_compiler_process_observed": false,
+    "qnn_session_creation_began": false,
+    "stage_logs_exist": false,
+    "stage_processes_started": 0,
+    "tensors_exist": false
+  },
+  "classification": "operator-cancelled pre-gate; not a QNN failure, compiler failure, or stage failure",
+  "interpretation": "The missing host /usr/bin/time command prevented docker run from being invoked. The operator then terminated the supervisor during its container-inspect wait loop, so the normal end/exit files were not written.",
+  "next_action": "Do not relaunch. Resolve and review canonical-v2 CPU reconstruction evidence first.",
+  "partial_artifacts": {
+    "container-name.txt": {
+      "bytes": 41,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-canonical-v2-rerun/container-name.txt",
+      "sha256": "5c7ff7cc2bf3a3feb3fcfe9dcf75f26ba2d92f638b887b8fbcdcae2f0ccbe069"
+    },
+    "launcher.stderr.log": {
+      "bytes": 138,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-canonical-v2-rerun/launcher.stderr.log",
+      "sha256": "58c20dabde44962d9f4ff98e9326eedd4a080ba83540431fdf1c88906db96579"
+    },
+    "launcher.stdout.log": {
+      "bytes": 0,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-canonical-v2-rerun/launcher.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "monitor-policy.txt": {
+      "bytes": 101,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-canonical-v2-rerun/monitor-policy.txt",
+      "sha256": "d182a5918d013e32a96bf5f0da205b98689276717a6d5f223d90860362751bab"
+    },
+    "run-id.txt": {
+      "bytes": 19,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-canonical-v2-rerun/run-id.txt",
+      "sha256": "b4eec29ace4140eee0028a7fe3c328b2e300b2cc1fe8b1016d9b4df25a659fc4"
+    },
+    "start.txt": {
+      "bytes": 21,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-canonical-v2-rerun/start.txt",
+      "sha256": "c42a20f2976c95b116979e124b6e04a766ec520673226494df0c9911d33d2fd4"
+    }
+  },
+  "preflight": {
+    "manifest_and_18_model_hashes_verified": true,
+    "supervisor_log": {
+      "bytes": 44,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/.local/canonical-v2-rerun-supervisor.log",
+      "sha256": "7d6224d3fe7141670bb32493f24495a3f7dfe7f47a1c5639a42a7645957ea187"
+    }
+  },
+  "reason": "The launch command crossed a coordination pause message. It was stopped immediately to investigate a fresh CPU reconstruction hash discrepancy.",
+  "run_id": "canonical-v2-rerun",
+  "schema_version": 1,
+  "start_timestamp_utc": "2026-08-22T09:51:48Z",
+  "status": "operator_cancelled_pre_gate",
+  "stop_requested_timestamp_utc": "2026-08-22T09:52:08.307Z",
+  "stopped_state_verified_timestamp_utc": "2026-08-22T09:52:25.847Z"
+}

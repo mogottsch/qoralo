@@ -2,7 +2,7 @@
 
 ## Current status
 
-**Canonical-v2 host gate externally interrupted after 15 of 18 completed stages; phone forbidden.**
+**Canonical-v2 host gate externally interrupted after 15 of 18 completed stages; a new current-environment CPU baseline is frozen for the prospective rerun; QNN relaunch and phone access remain blocked pending review/gates.**
 
 The current comparable route uses the exact 226-byte canonical-v2 transcript, the pinned official Kokoro 0.9.4 American-English frontend, and a new fixed FP32 ONNX derivative. Its CPU gates are complete:
 
@@ -14,14 +14,21 @@ The current comparable route uses the exact 226-byte canonical-v2 transcript, th
 - controlled FP32 ONNX SHA `26120b192f2ad7567c6c1215ccbcf374d1946460c4589c1098941ab15e43aa73`;
 - QNN compatibility graph SHA `0c7ce33eac4c6664819a61e48469a9cf43ad403d852b01af5517a13c7ed2a066`;
 - 18 deterministic stage models cover all 1,685 source nodes;
-- separate-process CPU stage recomposition is bit-exact to the complete compatibility graph.
+- historical WSL separate-process CPU recomposition is bit-exact to the complete compatibility graph at audio SHA `fb8895f6bb9c2ee94dd18f8b9bfdc6f1b36f99e01c40f5806bdd71076acd6d36`;
+- two clean native-host/Ubuntu 22 reconstruction runs are stage-for-stage bit-exact to each other and to a fresh complete-graph run at audio SHA `56ce6a24498d8db270c0a34eb1fe0a87b762a0fb8121616790f03391c132aa3c`; duration stays exact and the audio is structurally valid;
+- cross-environment bit reproducibility is unproven: divergence is established at stage 1 by hashes, while historical value-based deltas are unavailable because the ignored WSL payload no longer exists.
 
 In the interrupted fallback-disabled host QNN attempt, stages 1–15 finalized and ran their real upstream tensors. Every completed ORT profile had one `QNNExecutionProvider` event and zero CPU-provider events. A WSL shutdown/restart interrupted stage 16 during `Graph Sequencing for Target` at 12%; stage 16 did not finalize or run, stages 17–18 were not attempted, and no final canonical QNN audio exists. This is an external interruption, not a technical stage-16 failure or OOM.
 
+A later crossed-message launch was operator-cancelled before Docker creation: missing host `/usr/bin/time` prevented the Docker command, and no QNN session/compiler/stage began. The host script now treats GNU `time` as optional while retaining the memory monitor. This event is not a QNN failure.
+
 See:
 
-- [`protocol-canonical-v2-stage-decomposition.json`](protocol-canonical-v2-stage-decomposition.json) — frozen canonical contract and all stage hashes/I/O;
-- [`results/canonical-v2-host-qnn-interrupted-checkpoint.json`](results/canonical-v2-host-qnn-interrupted-checkpoint.json) — exact interrupted attempt;
+- [`protocol-canonical-v2-stage-decomposition.json`](protocol-canonical-v2-stage-decomposition.json) — original frozen canonical contract and all stage hashes/I/O;
+- [`protocol-canonical-v2-reconstruction-baseline.json`](protocol-canonical-v2-reconstruction-baseline.json) — prospective same-current-environment comparison policy frozen before new QNN output;
+- [`results/canonical-v2-cpu-reconstruction-baseline.json`](results/canonical-v2-cpu-reconstruction-baseline.json) — two-run determinism, complete-graph equality, identities, structural metrics, and historical null-reason boundary;
+- [`results/canonical-v2-host-qnn-interrupted-checkpoint.json`](results/canonical-v2-host-qnn-interrupted-checkpoint.json) — exact interrupted WSL attempt;
+- [`results/canonical-v2-rerun-operator-cancelled-pre-gate.json`](results/canonical-v2-rerun-operator-cancelled-pre-gate.json) — exact no-Docker/no-QNN operator-cancelled boundary;
 - [`REPRODUCING.md`](REPRODUCING.md) — clean-machine reconstruction and restart instructions;
 - [`RESULTS.md`](RESULTS.md) — historical and canonical evidence with claim boundaries.
 
@@ -51,4 +58,6 @@ Large models, fixtures, tensors, profiles, compiler logs, binaries, and audio re
 - The canonical source ONNX passes the named phase-tolerant acoustic policy but fails the separate strict `.999/.01` waveform screen; neither is a listening verdict.
 - Moritz's accepted experiment-0013 CPU sample is scoped to that old route and does not transfer to canonical v2.
 - No canonical QNN sample exists; its listening status is `not_reviewed`/not yet applicable.
-- No phone access is allowed until a fresh complete 18/18 canonical host record passes, including structurally valid final audio.
+- The next QNN summary must compare against the frozen current-environment `56ce6a…` CPU stage checkpoint; historical `fb8895…` remains separate WSL evidence.
+- No QNN relaunch is allowed until the committed reconstruction policy/baseline and current CPU checkpoint gates pass.
+- No phone access is allowed until a fresh complete 18/18 canonical host record passes with zero CPU provider events and structurally valid final audio.

@@ -12,6 +12,10 @@ from pathlib import Path
 import numpy as np
 
 
+POLICY_SHA256 = "886bd22eb278b884ccf50e41bb1792d1d36a9612667d8080e90ccd8e3f71231e"
+BASELINE_SHA256 = "0aff238d1cc45b7729c59a24a5938230491333c42290e9a1fef8d87da4a2ccd9"
+
+
 def sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as stream:
@@ -102,6 +106,8 @@ def main() -> int:
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--cpu-checkpoint", type=Path, required=True)
+    parser.add_argument("--reconstruction-policy", type=Path, required=True)
+    parser.add_argument("--reconstruction-baseline", type=Path, required=True)
     parser.add_argument("--route", required=True)
     parser.add_argument("--transcript-sha256", required=True)
     parser.add_argument("--comparability", choices=("canonical_v2", "noncanonical"), required=True)
@@ -115,25 +121,102 @@ def main() -> int:
     manifest = json.loads(args.manifest.read_text())
     run = json.loads(args.checkpoint.read_text())
     cpu = json.loads(args.cpu_checkpoint.read_text())
+    policy = json.loads(args.reconstruction_policy.read_text())
+    baseline = json.loads(args.reconstruction_baseline.read_text())
+    if sha256(args.reconstruction_policy) != POLICY_SHA256:
+        raise RuntimeError("canonical-v2 reconstruction policy hash drift")
+    if sha256(args.reconstruction_baseline) != BASELINE_SHA256:
+        raise RuntimeError("canonical-v2 reconstruction baseline hash drift")
+    if not policy.get("frozen_before_new_qnn_outputs"):
+        raise RuntimeError("canonical-v2 reconstruction policy was not frozen")
+    if policy["current_environment_baseline"]["record"]["sha256"] != BASELINE_SHA256:
+        raise RuntimeError("canonical-v2 reconstruction baseline reference drift")
+    if not (
+        baseline["fresh_reconstruction_runs"][0]["final_audio_sha256"]
+        == baseline["fresh_reconstruction_runs"][1]["final_audio_sha256"]
+        == policy["current_environment_baseline"]["audio"]["sha256"]
+        and baseline["numerical_comparisons"][
+            "final_staged_vs_current_full_qnn_compat_cpu"
+        ]["bit_exact"]
+        and baseline["current_final_audio_structural"][
+            "valid_under_committed_structural_policy"
+        ]
+    ):
+        raise RuntimeError("canonical-v2 reconstruction baseline content drift")
+    if (
+        policy["historical_evidence"]["wsl_audio_sha256"]
+        != "fb8895f6bb9c2ee94dd18f8b9bfdc6f1b36f99e01c40f5806bdd71076acd6d36"
+    ):
+        raise RuntimeError("historical WSL baseline preservation drift")
+    if (
+        policy["historical_evidence"]["cross_environment_bit_reproducibility"]
+        != "unproven"
+    ):
+        raise RuntimeError("cross-environment claim boundary drift")
     if run.get("status") != "passed" or run.get("completed_stages") != 18:
         raise RuntimeError("QNN checkpoint is not a complete 18-stage pass")
-    if cpu.get("status") != "passed" or len(cpu.get("stages", [])) != 18:
-        raise RuntimeError("CPU checkpoint is not a complete 18-stage pass")
-    if run["manifest"]["sha256"] != sha256(args.manifest):
-        raise RuntimeError("QNN manifest hash drift")
+    if not (
+        cpu.get("status") == "passed"
+        and cpu.get("completed_stages") == 18
+        and cpu.get("provider") == "cpu"
+        and cpu.get("optimization") == "disabled"
+        and cpu.get("separate_process_per_stage") is True
+        and cpu.get("runs_per_stage") == 1
+        and len(cpu.get("stages", [])) == 18
+    ):
+        raise RuntimeError("CPU checkpoint is not the complete current-environment contract")
+    manifest_sha = sha256(args.manifest)
+    if (
+        run["manifest"]["sha256"] != manifest_sha
+        or cpu["manifest"]["sha256"] != manifest_sha
+    ):
+        raise RuntimeError("QNN/CPU manifest hash drift")
+    expected_runner = policy["current_environment_baseline"]["runner_sha256"]
+    if (
+        run["runner"]["sha256"] != expected_runner
+        or cpu["runner"]["sha256"] != expected_runner
+    ):
+        raise RuntimeError("QNN/CPU runner hash drift")
     if run["provider"] != "qnn" or not run["separate_process_per_stage"]:
         raise RuntimeError("QNN execution contract drift")
+    if (
+        cpu["pipeline_outputs"]["audio"]["sha256"]
+        != policy["current_environment_baseline"]["audio"]["sha256"]
+    ):
+        raise RuntimeError("current-environment CPU audio baseline drift")
+    if (
+        cpu["pipeline_outputs"]["pred_dur"]["sha256"]
+        != policy["current_environment_baseline"]["duration"]["sha256"]
+    ):
+        raise RuntimeError("current-environment CPU duration baseline drift")
 
     stages = []
     total_provider_counts: Counter[str] = Counter()
-    for spec, cpu_stage, qnn_stage in zip(
-        manifest["stages"], cpu["stages"], run["stages"]
+    expected_cpu_stages = policy["current_environment_baseline"]["stage_output_sha256"]
+    for spec, frozen_cpu, cpu_stage, qnn_stage in zip(
+        manifest["stages"], expected_cpu_stages, cpu["stages"], run["stages"]
     ):
         if not (
-            spec["name"] == cpu_stage["name"] == qnn_stage["name"]
-            and spec["model"]["sha256"] == qnn_stage["model_sha256"]
+            spec["name"]
+            == frozen_cpu["name"]
+            == cpu_stage["name"]
+            == qnn_stage["name"]
+            and spec["index"]
+            == frozen_cpu["index"]
+            == cpu_stage["index"]
+            == qnn_stage["index"]
+            and spec["model"]["sha256"]
+            == cpu_stage["model_sha256"]
+            == qnn_stage["model_sha256"]
         ):
             raise RuntimeError("stage identity/model hash drift")
+        if cpu_stage["exit_code"] != 0 or cpu_stage["runtime"]["provider"] != "cpu":
+            raise RuntimeError(f"current-environment CPU stage did not pass: {spec['name']}")
+        cpu_hashes = {
+            name: item["sha256"] for name, item in cpu_stage["outputs"].items()
+        }
+        if cpu_hashes != frozen_cpu["outputs"]:
+            raise RuntimeError(f"current-environment CPU stage output drift: {spec['name']}")
         if qnn_stage["exit_code"] != 0 or qnn_stage["runtime"]["provider"] != "qnn":
             raise RuntimeError(f"stage did not pass: {spec['name']}")
         profile_paths = [local(item["path"]) for item in qnn_stage["profile_files"]]
@@ -253,6 +336,25 @@ def main() -> int:
                 "ignored_path": str(args.cpu_checkpoint),
                 "bytes": args.cpu_checkpoint.stat().st_size,
                 "sha256": sha256(args.cpu_checkpoint),
+                "baseline_audio_sha256": policy["current_environment_baseline"][
+                    "audio"
+                ]["sha256"],
+                "historical_wsl_audio_sha256": policy["historical_evidence"][
+                    "wsl_audio_sha256"
+                ],
+                "cross_environment_bit_reproducibility": policy[
+                    "historical_evidence"
+                ]["cross_environment_bit_reproducibility"],
+            },
+            "reconstruction_policy": {
+                "path": str(args.reconstruction_policy),
+                "bytes": args.reconstruction_policy.stat().st_size,
+                "sha256": sha256(args.reconstruction_policy),
+            },
+            "reconstruction_baseline": {
+                "path": str(args.reconstruction_baseline),
+                "bytes": args.reconstruction_baseline.stat().st_size,
+                "sha256": sha256(args.reconstruction_baseline),
             },
             "runner": run["runner"],
         },
@@ -298,7 +400,7 @@ def main() -> int:
             },
         },
         "acoustic_records": acoustic_records,
-        "claim_boundary": "Fallback-disabled host QNN session finalization and complete-input execution for all stages. It is assignment/host execution evidence, not physical phone HTP RPC/HVX proof, benchmark performance, or a listening verdict. Numerical/EOS differences are descriptive, while the structural WAV gate remains separate.",
+        "claim_boundary": "Fallback-disabled host QNN session finalization and complete-input execution for all stages, compared to the frozen current-environment 56ce6a CPU baseline. The historical fb8895 WSL record remains separate and cross-environment bit reproducibility is unproven. This is assignment/host execution evidence, not physical phone HTP RPC/HVX proof, benchmark performance, or a listening verdict. Numerical/EOS differences are descriptive, while the structural WAV gate remains separate.",
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")

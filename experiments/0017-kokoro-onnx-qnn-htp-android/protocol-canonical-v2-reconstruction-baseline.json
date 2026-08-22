@@ -1,0 +1,241 @@
+{
+  "claim_boundary": "This policy authorizes only a prospective same-current-environment CPU comparison baseline. It is not QNN execution, physical phone HTP proof, benchmark performance, or a listening verdict.",
+  "comparison_policy": {
+    "historical_comparison": "Keep the WSL hashes visible, but do not claim bit reproducibility or compute unavailable historical element-wise metrics.",
+    "listening": "Numerical and structural evidence does not accept or reject audio. Only Moritz may review the exact eventual WAV hash.",
+    "next_qnn_reference": "current_environment_baseline",
+    "same_stage_comparison": "Compare every new QNN stage output to the corresponding current-environment CPU stage output declared above.",
+    "unavailable_metrics": "Historical first differing element, max_abs, RMSE, cosine, and other value-based deltas remain null unless the exact historical payload is recovered."
+  },
+  "current_environment_baseline": {
+    "audio": {
+      "complete_graph_to_staged_bit_exact": true,
+      "elements": 361200,
+      "sha256": "56ce6a24498d8db270c0a34eb1fe0a87b762a0fb8121616790f03391c132aa3c",
+      "structurally_valid": true,
+      "two_staged_runs_bit_exact": true
+    },
+    "duration": {
+      "complete_graph_to_staged_bit_exact": true,
+      "elements": 235,
+      "sha256": "99494f78e82ad3d8b506d5b0a5c4edde6292c6a52ca54a47b50f109fa534480c",
+      "sum": 602,
+      "two_staged_runs_bit_exact": true
+    },
+    "environment_identity": {
+      "alias_is_not_identity_proof": true,
+      "container_alias": "vibevoice-experiment-0010-qairt:2.49.0.260730-ubuntu22.04",
+      "container_full_image_id": "sha256:b170f55a61548cc3a78eb667837934e0f2f8659bf7cd0db7a71ec40e90d2f321",
+      "host_cpu": "AMD Ryzen 7 5800H with Radeon Graphics",
+      "host_kernel": "6.12.103-1-MANJARO",
+      "host_microcode": "0xa500012",
+      "host_os": "Manjaro Linux"
+    },
+    "graph_optimization": "disabled",
+    "independent_clean_staged_runs": 2,
+    "inputs_sha256": {
+      "speed": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c",
+      "style": "8acaca07623d98a1085f6b182fb997d715dd1d67862e350567e6d9b1bc8ec71b",
+      "tokens": "9c565b2a6ee1a811f188f3e3425a3188af58866988ce5a2197eeaacc81dde280"
+    },
+    "manifest_sha256": "3f21c996ec3d5a63b80cbceb9ff83a21cc86321cabfea3e2dedd1af4676fbad1",
+    "onnxruntime_shared_library_sha256": "bc9df5a7df1b5d9de4d87adcaa4cc864bbde0f790e80d48e00ce0e4253a2ae11",
+    "primary_checkpoint_observed_sha256": "8462b17abdba7f8f190ea0a1ae2b072efcdd9c0b328f499401fe3effa63846b0",
+    "primary_ignored_checkpoint": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/cpu127-reconstruction-rerun-2/pipeline-checkpoint.json",
+    "provider": "CPUExecutionProvider",
+    "record": {
+      "bytes": 27909,
+      "path": "experiments/0017-kokoro-onnx-qnn-htp-android/results/canonical-v2-cpu-reconstruction-baseline.json",
+      "sha256": "0aff238d1cc45b7729c59a24a5938230491333c42290e9a1fef8d87da4a2ccd9"
+    },
+    "runner_sha256": "938480879497262461dcc4632a0ebeebb92f721c9192441c17b406af8ac0e023",
+    "separate_process_per_stage": true,
+    "source_graph_sha256": "0c7ce33eac4c6664819a61e48469a9cf43ad403d852b01af5517a13c7ed2a066",
+    "stage_count": 18,
+    "stage_output_sha256": [
+      {
+        "index": 1,
+        "name": "bert",
+        "outputs": {
+          "/bert_encoder/Add_output_0": "01e4e86f9103f51430c4a46e96a1575ebae01d175e6f2d4e31a789dcb93db29a"
+        }
+      },
+      {
+        "index": 2,
+        "name": "duration_encoder",
+        "outputs": {
+          "/text_encoder/Where_13": "20ad45826cab458741ab469ce45d4d16b929c6ee5a3f7b4691801f92002098ea"
+        }
+      },
+      {
+        "index": 3,
+        "name": "text_encoder",
+        "outputs": {
+          "/text_encoder_1/Where_7_output_0": "bce9d294c34bf6e5103bca354890ba29c24b0ca7a9b1cadddc19d23dbf0a0205"
+        }
+      },
+      {
+        "index": 4,
+        "name": "duration_alignment",
+        "outputs": {
+          "/MatMul_1_output_0": "39f2da87a139b30a82d71f21837723a3484724d86faef1a6ba5d72a83f9a441d",
+          "/MatMul_output_0": "6de97ed682bb6b2049a9e54110c1e74f0844aaf3d08fee28c8229b7a0af7d0c4",
+          "pred_dur": "99494f78e82ad3d8b506d5b0a5c4edde6292c6a52ca54a47b50f109fa534480c"
+        }
+      },
+      {
+        "index": 5,
+        "name": "prosody",
+        "outputs": {
+          "/If_1_output_0": "ddda1324e326886de5fe9bc8b913963e3fa058ce27049201a6798686c181969d",
+          "/If_output_0": "bd5ed2253ed61c7bbc84069b5310d135679bfa2f1a6e0ca2b690129796c1e584"
+        }
+      },
+      {
+        "index": 6,
+        "name": "decoder",
+        "outputs": {
+          "/decoder/decode.3/Mul_output_0": "49cabe352e770f4254d8546fb35d631fa5bfafe7f530bcd3ed681bc00d109fe0"
+        }
+      },
+      {
+        "index": 7,
+        "name": "harmonic_source",
+        "outputs": {
+          "/decoder/generator/Concat_1_output_0": "25948d0319e79eda7c1be8e0866a97027d9fbccba5665af422ecfe415dd2bff6"
+        }
+      },
+      {
+        "index": 8,
+        "name": "generator_0_base",
+        "outputs": {
+          "/decoder/generator/Add_2_output_0": "9ad447ea26b4ba1a4463b8a52b8a121a4bc3469ad91106a006e5459dee524212"
+        }
+      },
+      {
+        "index": 9,
+        "name": "generator_0_resblock_0",
+        "outputs": {
+          "/decoder/generator/resblocks.0/Add_8_output_0": "9d6e5f04550b64cd61a92cd70d7bc1aa1575d3e6df0f2e9b28b074713a5d6cb0"
+        }
+      },
+      {
+        "index": 10,
+        "name": "generator_0_resblock_1",
+        "outputs": {
+          "/decoder/generator/resblocks.1/Add_8_output_0": "065156609477f047fc7eee83d94f1165786aeadca89bf60e75061c242a93af70"
+        }
+      },
+      {
+        "index": 11,
+        "name": "generator_0_resblock_2",
+        "outputs": {
+          "/decoder/generator/resblocks.2/Add_8_output_0": "d748b919173049437a21d59b8c278df326ea0b121661dd5282795bceeefa1953"
+        }
+      },
+      {
+        "index": 12,
+        "name": "generator_0_merge",
+        "outputs": {
+          "/decoder/generator/Div_1_output_0": "da479b6a1233a174847e8293c8522a5770f6f03b15b20a5a19e3260038162dd1"
+        }
+      },
+      {
+        "index": 13,
+        "name": "generator_1_base",
+        "outputs": {
+          "/decoder/generator/Add_5_output_0": "c7bfd60541bee0c9d5598d396abcc98668e3d63ec9aa6526dd7e29e170248d64"
+        }
+      },
+      {
+        "index": 14,
+        "name": "generator_1_resblock_3",
+        "outputs": {
+          "/decoder/generator/resblocks.3/Add_8_output_0": "0beb2de9ecd8a7a1aa0d97b8d5f821f9808781bb3d512b0c4910396fbf0360e0"
+        }
+      },
+      {
+        "index": 15,
+        "name": "generator_1_resblock_4",
+        "outputs": {
+          "/decoder/generator/resblocks.4/Add_8_output_0": "4b3a93ac22f2fe2c64ad6d8fe5babab53da2aaa035d5bbae0fec3ca6c5174f0e"
+        }
+      },
+      {
+        "index": 16,
+        "name": "generator_1_resblock_5",
+        "outputs": {
+          "/decoder/generator/resblocks.5/Add_8_output_0": "ee85c3eea5e1ac67828a80b864adb5c5f28b2d1ba0f47cd7ed1c38d481348c73"
+        }
+      },
+      {
+        "index": 17,
+        "name": "generator_1_merge",
+        "outputs": {
+          "/decoder/generator/Div_2_output_0": "7a873b6387177f8a57fe3523b4a1e1d3d7f83248f1978086c5184b1baabb9662"
+        }
+      },
+      {
+        "index": 18,
+        "name": "waveform_istft",
+        "outputs": {
+          "audio": "56ce6a24498d8db270c0a34eb1fe0a87b762a0fb8121616790f03391c132aa3c"
+        }
+      }
+    ],
+    "threads": 1
+  },
+  "experiment": "0017-kokoro-onnx-qnn-htp-android",
+  "frozen_at_utc": "2026-08-22T10:00:09.921387Z",
+  "frozen_before_new_qnn_outputs": true,
+  "historical_evidence": {
+    "cross_environment_bit_reproducibility": "unproven",
+    "interpretation": "The WSL baseline remains valid historical same-runtime evidence in its recorded scope. It is not rewritten or relabeled as the current native-host baseline.",
+    "preserved_unchanged": true,
+    "record_path": "experiments/0017-kokoro-onnx-qnn-htp-android/results/canonical-v2-stage-cpu-equivalence.json",
+    "record_sha256": "b79910fcc63f38d3e3bc7fde5a502598b9b918f775a43e929b7ff2a208d008d8",
+    "stage_1_output_sha256": "cb5d2d2caebec9a211c0591192f7ebf22ca044230f97069f20066cc3dd83e721",
+    "wsl_audio_sha256": "fb8895f6bb9c2ee94dd18f8b9bfdc6f1b36f99e01c40f5806bdd71076acd6d36"
+  },
+  "host_qnn_eligibility_gate": {
+    "cpu_checkpoint_gate": {
+      "completed_stages": 18,
+      "graph_optimization": "disabled",
+      "provider": "cpu",
+      "required_duration_sha256": "99494f78e82ad3d8b506d5b0a5c4edde6292c6a52ca54a47b50f109fa534480c",
+      "required_final_audio_sha256": "56ce6a24498d8db270c0a34eb1fe0a87b762a0fb8121616790f03391c132aa3c",
+      "required_stage_output_hashes": "must match current_environment_baseline.stage_output_sha256",
+      "separate_process_per_stage": true,
+      "status": "passed",
+      "threads": 1
+    },
+    "phone_forbidden_until_all_gates_pass": true,
+    "policy_and_baseline_hash_gate": true,
+    "qnn_execution_gate": {
+      "audio_elements": 361200,
+      "completed_stages": 18,
+      "cpu_provider_node_events": 0,
+      "duration_elements": 235,
+      "fallback_disabled": true,
+      "final_audio_structurally_valid": true,
+      "one_qnn_provider_node_event_per_stage": true,
+      "restart_from_stage": 1
+    }
+  },
+  "operator_cancelled_pre_gate_record": {
+    "classification": "operator_cancelled_pre_gate",
+    "path": "experiments/0017-kokoro-onnx-qnn-htp-android/results/canonical-v2-rerun-operator-cancelled-pre-gate.json",
+    "qnn_session_creation_began": false,
+    "sha256": "86b305bdb82fba2948544dd27473a34ef7d10438a6bdeb9cb94595522cd25bc2"
+  },
+  "purpose": "Prospective current-environment CPU comparison baseline for the next complete canonical-v2 host QNN gate.",
+  "route": "canonical_v2_official_frontend_fixed_fp32_staged_qnn_htp",
+  "schema_version": 1,
+  "stop_conditions": [
+    "Do not relaunch QNN until this policy, baseline, and current CPU checkpoint pass their hash/content gates.",
+    "Do not access the phone until the complete fresh 18-stage QNN host gate passes with zero CPU provider events and structurally valid final audio.",
+    "Do not rewrite the historical fb8895 WSL record.",
+    "Do not infer unavailable historical numerical metrics from hashes.",
+    "Do not introduce quantization or CPU fallback."
+  ]
+}

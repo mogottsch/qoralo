@@ -268,6 +268,108 @@ class ContractTests(unittest.TestCase):
         ):
             self.assertTrue((ROOT / relative).is_file(), relative)
 
+    def test_current_environment_reconstruction_baseline_is_frozen(self) -> None:
+        baseline_path = ROOT / "results/canonical-v2-cpu-reconstruction-baseline.json"
+        policy_path = ROOT / "protocol-canonical-v2-reconstruction-baseline.json"
+        cancelled_path = (
+            ROOT / "results/canonical-v2-rerun-operator-cancelled-pre-gate.json"
+        )
+        baseline = json.loads(baseline_path.read_text())
+        policy = json.loads(policy_path.read_text())
+        cancelled = json.loads(cancelled_path.read_text())
+
+        self.assertEqual(
+            hashlib.sha256(baseline_path.read_bytes()).hexdigest(),
+            "0aff238d1cc45b7729c59a24a5938230491333c42290e9a1fef8d87da4a2ccd9",
+        )
+        self.assertEqual(
+            hashlib.sha256(policy_path.read_bytes()).hexdigest(),
+            "886bd22eb278b884ccf50e41bb1792d1d36a9612667d8080e90ccd8e3f71231e",
+        )
+        self.assertTrue(policy["frozen_before_new_qnn_outputs"])
+        current = policy["current_environment_baseline"]
+        historical = policy["historical_evidence"]
+        self.assertEqual(
+            current["record"]["sha256"],
+            hashlib.sha256(baseline_path.read_bytes()).hexdigest(),
+        )
+        self.assertEqual(current["independent_clean_staged_runs"], 2)
+        self.assertTrue(current["audio"]["two_staged_runs_bit_exact"])
+        self.assertTrue(current["audio"]["complete_graph_to_staged_bit_exact"])
+        self.assertTrue(current["audio"]["structurally_valid"])
+        self.assertEqual(
+            current["audio"]["sha256"],
+            "56ce6a24498d8db270c0a34eb1fe0a87b762a0fb8121616790f03391c132aa3c",
+        )
+        self.assertEqual(
+            historical["wsl_audio_sha256"],
+            "fb8895f6bb9c2ee94dd18f8b9bfdc6f1b36f99e01c40f5806bdd71076acd6d36",
+        )
+        self.assertTrue(historical["preserved_unchanged"])
+        self.assertEqual(
+            historical["cross_environment_bit_reproducibility"], "unproven"
+        )
+        self.assertEqual(len(current["stage_output_sha256"]), 18)
+        self.assertEqual(
+            current["stage_output_sha256"][0]["outputs"]["/bert_encoder/Add_output_0"],
+            "01e4e86f9103f51430c4a46e96a1575ebae01d175e6f2d4e31a789dcb93db29a",
+        )
+
+        comparisons = baseline["numerical_comparisons"]
+        self.assertTrue(
+            comparisons["stage_1_reconstruction_rerun_1_vs_2"]["bit_exact"]
+        )
+        self.assertTrue(
+            comparisons["final_audio_reconstruction_rerun_1_vs_2"]["bit_exact"]
+        )
+        self.assertTrue(
+            comparisons["final_staged_vs_current_full_qnn_compat_cpu"]["bit_exact"]
+        )
+        unavailable = comparisons["historical_vs_current"]
+        self.assertFalse(unavailable["hash_equal"])
+        self.assertIsNone(unavailable["first_differing_flat_element"])
+        self.assertIsNone(unavailable["maximum_absolute_error"])
+        self.assertIsNone(unavailable["rmse"])
+        self.assertIsNone(unavailable["cosine"])
+        self.assertIn(
+            "historical stage-1 and final float payloads",
+            unavailable["unavailable_reason"],
+        )
+        self.assertTrue(
+            baseline["current_final_audio_structural"][
+                "valid_under_committed_structural_policy"
+            ]
+        )
+        self.assertEqual(
+            baseline["bounded_conclusion"]["qnn_gate"], "blocked_pending_review"
+        )
+
+        self.assertEqual(
+            hashlib.sha256(cancelled_path.read_bytes()).hexdigest(),
+            "86b305bdb82fba2948544dd27473a34ef7d10438a6bdeb9cb94595522cd25bc2",
+        )
+        self.assertEqual(
+            policy["operator_cancelled_pre_gate_record"]["sha256"],
+            hashlib.sha256(cancelled_path.read_bytes()).hexdigest(),
+        )
+        self.assertEqual(cancelled["status"], "operator_cancelled_pre_gate")
+        self.assertFalse(cancelled["boundary"]["docker_container_created"])
+        self.assertFalse(cancelled["boundary"]["qnn_session_creation_began"])
+        self.assertEqual(cancelled["boundary"]["stage_processes_started"], 0)
+        self.assertFalse(cancelled["boundary"]["phone_access"])
+        self.assertIn("/usr/bin/time", cancelled["boundary"]["launcher_error"])
+
+        host_gate = (ROOT / "host/run_canonical_v2_staged_host_qnn.sh").read_text()
+        summary_tool = (ROOT / "tools/summarize_staged_qnn_run.py").read_text()
+        for expected_hash in (
+            "0aff238d1cc45b7729c59a24a5938230491333c42290e9a1fef8d87da4a2ccd9",
+            "886bd22eb278b884ccf50e41bb1792d1d36a9612667d8080e90ccd8e3f71231e",
+        ):
+            self.assertIn(expected_hash, host_gate + summary_tool)
+        self.assertIn("--reconstruction-policy", summary_tool)
+        self.assertIn("--reconstruction-baseline", summary_tool)
+        self.assertIn("PREFLIGHT_ONLY", host_gate)
+
     def test_erased_experiment_0015_remains_absent(self) -> None:
         self.assertFalse((REPO / "experiments/0015-pocket-tts-qnn-htp-android").exists())
 

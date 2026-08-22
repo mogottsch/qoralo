@@ -4,19 +4,24 @@ This is the durable clean-machine reconstruction and execution guide for experim
 
 ## Current execution boundary
 
-No phone access has occurred for the canonical-v2 Kokoro route.
+No phone access has occurred for the canonical-v2 Kokoro route. QNN relaunch remains blocked until the scoped reconstruction-baseline commit is reviewed and every new preflight gate passes.
 
-The current canonical host attempt was externally interrupted by a WSL shutdown/restart:
+The original canonical host attempt was externally interrupted by a WSL shutdown/restart:
 
 - canonical stages **1–15** finalized and executed successfully in separate fallback-disabled QNN host processes;
 - each of those 15 ORT profiles contains one `QNNExecutionProvider` node event and zero CPU-provider events;
 - stage 16, `generator_1_resblock_5`, reached `Graph Sequencing for Target` **12%** but did not finalize or execute;
 - stages 17 (`generator_1_merge`) and 18 (`waveform_istft`) were not attempted;
 - no canonical QNN final audio exists;
-- this is an **external infrastructure interruption**, not a stage-16 technical failure or OOM;
-- phone eligibility is false.
+- this is an **external infrastructure interruption**, not a stage-16 technical failure or OOM.
 
-The complete durable record, including per-stage model/output/profile hashes, QNN metrics, CPU comparisons, resource samples, the partial stage-16 compiler times, and claim boundaries, is [`results/canonical-v2-host-qnn-interrupted-checkpoint.json`](results/canonical-v2-host-qnn-interrupted-checkpoint.json).
+Native-host reconstruction then recovered every committed asset hash. Two clean staged CPU runs and one complete compatibility-graph CPU run were mutually bit-exact at current audio SHA `56ce6a24498d8db270c0a34eb1fe0a87b762a0fb8121616790f03391c132aa3c`; duration stayed exact and final audio was structurally valid. The historical WSL `fb8895f6…` evidence is unchanged. Hash divergence begins at stage 1, but historical element-wise metrics are unavailable because its ignored tensors no longer exist, so cross-environment bit reproducibility is **unproven**.
+
+The prospective policy [`protocol-canonical-v2-reconstruction-baseline.json`](protocol-canonical-v2-reconstruction-baseline.json), SHA `886bd22eb278b884ccf50e41bb1792d1d36a9612667d8080e90ccd8e3f71231e`, requires future QNN comparisons to use the current `56ce6a…` stage checkpoint while preserving `fb8895…` as historical WSL evidence. Its durable evidence is [`results/canonical-v2-cpu-reconstruction-baseline.json`](results/canonical-v2-cpu-reconstruction-baseline.json), SHA `0aff238d1cc45b7729c59a24a5938230491333c42290e9a1fef8d87da4a2ccd9`.
+
+A crossed-message launch was stopped before Docker creation because host `/usr/bin/time` was absent. No QNN session/compiler/stage began. [`results/canonical-v2-rerun-operator-cancelled-pre-gate.json`](results/canonical-v2-rerun-operator-cancelled-pre-gate.json) preserves that operator-cancelled pre-gate boundary. The host script now makes GNU `time` optional and retains its five-second memory monitor.
+
+The original interrupted record remains [`results/canonical-v2-host-qnn-interrupted-checkpoint.json`](results/canonical-v2-host-qnn-interrupted-checkpoint.json). Phone eligibility is false until a new 18/18 gate passes.
 
 ## Canonical-v2 route contract
 
@@ -58,8 +63,11 @@ The frozen machine contract is [`protocol-canonical-v2-stage-decomposition.json`
 | Metadata-shaped graph | `d81053acc21a9fa42a7ff09bae17abad1ef7499aa2252f70bda27f9ac89194a3`; [`results/canonical-v2-profile-shape-provenance.json`](results/canonical-v2-profile-shape-provenance.json) |
 | QNN compatibility graph | `0c7ce33eac4c6664819a61e48469a9cf43ad403d852b01af5517a13c7ed2a066`; 1,685 nodes, 809 initializers, no quantization or retained initializer changes; bit-exact to shaped CPU source; [`results/canonical-v2-qnn-compat-rewrite-provenance.json`](results/canonical-v2-qnn-compat-rewrite-provenance.json) |
 | Stage decomposition | 18 stages, all 1,685 source nodes covered, five named support nodes recomputed at boundaries; deterministic model hashes/interfaces; [`results/canonical-v2-stage-decomposition-provenance.json`](results/canonical-v2-stage-decomposition-provenance.json) |
-| Stage CPU recomposition | bit-exact audio/duration; audio SHA `fb8895f6bb9c2ee94dd18f8b9bfdc6f1b36f99e01c40f5806bdd71076acd6d36`; [`results/canonical-v2-stage-cpu-equivalence.json`](results/canonical-v2-stage-cpu-equivalence.json) |
+| Historical WSL stage CPU recomposition | bit-exact audio/duration in its original scope; audio SHA `fb8895f6bb9c2ee94dd18f8b9bfdc6f1b36f99e01c40f5806bdd71076acd6d36`; [`results/canonical-v2-stage-cpu-equivalence.json`](results/canonical-v2-stage-cpu-equivalence.json) |
+| Current-environment CPU reconstruction | two clean staged runs plus complete graph are mutually bit-exact; structurally valid audio SHA `56ce6a24498d8db270c0a34eb1fe0a87b762a0fb8121616790f03391c132aa3c`; cross-environment bit reproducibility unproven; [`results/canonical-v2-cpu-reconstruction-baseline.json`](results/canonical-v2-cpu-reconstruction-baseline.json) |
+| Prospective comparison policy | frozen before new QNN output; next QNN comparison uses current `56ce6a…` checkpoint without rewriting historical `fb8895…`; [`protocol-canonical-v2-reconstruction-baseline.json`](protocol-canonical-v2-reconstruction-baseline.json) |
 | Interrupted canonical QNN attempt | 15 completed, stage 16 partial, 17–18 unattempted; [`results/canonical-v2-host-qnn-interrupted-checkpoint.json`](results/canonical-v2-host-qnn-interrupted-checkpoint.json) |
+| Operator-cancelled pre-gate launch | Docker/QNN never started; [`results/canonical-v2-rerun-operator-cancelled-pre-gate.json`](results/canonical-v2-rerun-operator-cancelled-pre-gate.json) |
 
 The completed **noncanonical** 116-byte historical stage experiment is separately preserved in [`results/staged-host-qnn-feasibility.json`](results/staged-host-qnn-feasibility.json): all 18 host stages ran with QNN assignment, but duration changed from 304 to 305 and the final float audio was invalid (`peak 94848`, 182,236 samples with `abs >= 1`). It is feasibility/debug evidence only, never canonical, phone-eligible, or listening material.
 
@@ -127,7 +135,7 @@ PROFILE=$(find "$EXP17/work/canonical-v2/ort123-basic-v1" -maxdepth 1 -name 'pro
   --manifest "$EXP17/work/canonical-v2/stages-v1/manifest.json"
 ```
 
-Rebuild the ignored Ubuntu 22 runner against the existing patched ORT build:
+Verify the available image by **full image ID**, history, tracked Dockerfile, Ubuntu version, and pinned packages. The current policy records full image ID `sha256:b170f55a61548cc3a78eb667837934e0f2f8659bf7cd0db7a71ec40e90d2f321`; a local alias to the expected tag is not identity proof. Rebuild the ignored Ubuntu 22 runner against the existing patched ORT build:
 
 ```bash
 ROOT=$PWD
@@ -144,22 +152,75 @@ sha256sum "$EXP/.local/bin/kokoro-canonical-stage-host-docker"
 # Must be 938480879497262461dcc4632a0ebeebb92f721c9192441c17b406af8ac0e023
 ```
 
+Regenerate the frozen current-environment CPU checkpoint twice in clean Ubuntu 22 processes. Both runs must pass all 18 stages and match every per-stage hash in the reconstruction policy. The second run is the prospective QNN comparison checkpoint:
+
+```bash
+ROOT=$PWD
+EXP=experiments/0017-kokoro-onnx-qnn-htp-android
+BUILD=$ROOT/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/Release
+for N in 1 2; do
+  OUT=$EXP/work/canonical-v2/stages-v1/cpu127-reconstruction-rerun-$N
+  rm -rf "$OUT"
+  docker run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp \
+    -v "$ROOT:/repo" -v "$BUILD:/build:ro" -w /repo \
+    vibevoice-experiment-0010-qairt:2.49.0.260730-ubuntu22.04 \
+    env -i HOME=/tmp PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
+    LD_LIBRARY_PATH=/build python3 /repo/$EXP/tools/run_staged_pipeline.py \
+    --manifest /repo/$EXP/work/canonical-v2/stages-v1/manifest.json \
+    --repo-root /repo --runner /repo/$EXP/.local/bin/kokoro-canonical-stage-host-docker \
+    --output-dir /repo/$OUT --provider cpu --optimization disabled --runs 1 \
+    --pipeline-input tokens=/repo/$EXP/work/canonical-v2/frontend-official-v1/tokens.raw \
+    --pipeline-input style=/repo/$EXP/work/canonical-v2/frontend-official-v1/style.raw \
+    --pipeline-input speed=/repo/$EXP/work/canonical-v2/frontend-official-v1/speed.raw
+done
+```
+
+Also run the complete compatibility graph once under the same runner/runtime and require bit equality with staged audio/duration:
+
+```bash
+OUT=$EXP/work/canonical-v2/rewrite-cpu127-reconstruction
+rm -rf "$OUT" && mkdir -p "$OUT"
+docker run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp \
+  -v "$ROOT:/repo" -v "$BUILD:/build:ro" -w /repo \
+  vibevoice-experiment-0010-qairt:2.49.0.260730-ubuntu22.04 \
+  env -i HOME=/tmp PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
+  LD_LIBRARY_PATH=/build /repo/$EXP/.local/bin/kokoro-canonical-stage-host-docker \
+  --model /repo/$EXP/work/canonical-v2/rewrite-v1/kokoro-canonical-v2-qnn-compat.onnx \
+  --stage full_qnn_compat_cpu_reconstruction --provider cpu --optimization disabled --runs 1 \
+  --profile-prefix /repo/$OUT/profile \
+  --input-spec "tokens|int64|1,235|/repo/$EXP/work/canonical-v2/frontend-official-v1/tokens.raw" \
+  --input-spec "style|float32|1,256|/repo/$EXP/work/canonical-v2/frontend-official-v1/style.raw" \
+  --input-spec "speed|float32|1|/repo/$EXP/work/canonical-v2/frontend-official-v1/speed.raw" \
+  --output-spec "audio|float32|361200|/repo/$OUT/audio.f32" \
+  --output-spec "pred_dur|int64|235|/repo/$OUT/duration.i64"
+cmp "$OUT/audio.f32" \
+  "$EXP/work/canonical-v2/stages-v1/cpu127-reconstruction-rerun-2/tensors/18-01-6ed8919ce204.f32"
+cmp "$OUT/duration.i64" \
+  "$EXP/work/canonical-v2/stages-v1/cpu127-reconstruction-rerun-2/tensors/04-03-a93e7df81f11.i64"
+```
+
+The exact current output contract is audio SHA `56ce6a24498d8db270c0a34eb1fe0a87b762a0fb8121616790f03391c132aa3c` and duration SHA `99494f78e82ad3d8b506d5b0a5c4edde6292c6a52ca54a47b50f109fa534480c`. Do not substitute the historical WSL `fb8895…` payload for the prospective same-environment comparison.
+
 The committed contract tests and hash gates must pass before QNN:
 
 ```bash
 python3 -m unittest experiments/0017-kokoro-onnx-qnn-htp-android/tests/test_contract.py -v
+PREFLIGHT_ONLY=yes \
+  experiments/0017-kokoro-onnx-qnn-htp-android/host/run_canonical_v2_staged_host_qnn.sh
 ```
+
+`PREFLIGHT_ONLY=yes` exercises the policy, baseline, model, input, runner, current CPU tensor, concurrency, and memory gates, then exits before Docker/QNN launch.
 
 ## Exact next action
 
-Do **not** resume from stage 16. Restart the complete canonical host record from stage 1:
+Do **not** relaunch until the scoped reconstruction-baseline commit is reviewed. Then do **not** resume from stage 16: restart the complete canonical host record from stage 1:
 
 ```bash
 RUN_ID=canonical-v2-rerun \
   experiments/0017-kokoro-onnx-qnn-htp-android/host/run_canonical_v2_staged_host_qnn.sh
 ```
 
-The script verifies the manifest, all 18 model hashes, runner, and inputs; defaults to refusing a concurrent QNN compiler; runs one stage process at a time; records memory every five seconds; and never accesses the phone. `QAIRT_ROOT` defaults to `/home/moritz/opt/qairt/2.49.0.260730`.
+Before Docker invocation, the script verifies the exact committed reconstruction policy/baseline hashes, manifest, all 18 model hashes, runner, inputs, and all 18 current CPU stage-output files/hashes. It defaults to refusing a concurrent QNN compiler, runs one stage process at a time, records memory every five seconds, and never accesses the phone. GNU `/usr/bin/time` is optional and its absence is recorded. `QAIRT_ROOT` defaults to `/home/moritz/opt/qairt/2.49.0.260730`.
 
 After an 18/18 pass, create the durable host execution summary (replace `$RUN`):
 
@@ -169,7 +230,9 @@ RUN="$EXP/work/canonical-v2/stages-v1/qnn-host-canonical-v2-rerun"
 python3 "$EXP/tools/summarize_staged_qnn_run.py" \
   --manifest "$EXP/work/canonical-v2/stages-v1/manifest.json" \
   --checkpoint "$RUN/pipeline-checkpoint.json" \
-  --cpu-checkpoint "$EXP/work/canonical-v2/stages-v1/cpu127/pipeline-checkpoint.json" \
+  --cpu-checkpoint "$EXP/work/canonical-v2/stages-v1/cpu127-reconstruction-rerun-2/pipeline-checkpoint.json" \
+  --reconstruction-policy "$EXP/protocol-canonical-v2-reconstruction-baseline.json" \
+  --reconstruction-baseline "$EXP/results/canonical-v2-cpu-reconstruction-baseline.json" \
   --route canonical_v2_official_frontend_fixed_fp32_staged_qnn_host \
   --transcript-sha256 424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67 \
   --comparability canonical_v2 \
@@ -187,6 +250,8 @@ Then inspect structural validity and numerical/acoustic metrics. Numerical or EO
 - CPU orchestration, tensor transport, frontend work, and WAV encoding must be disclosed separately from neural HTP execution.
 - `ru_maxrss`/`VmHWM` are process-lifetime high-water marks, not steady PSS or component-isolated memory.
 - The canonical source ONNX passed the named phase-tolerant policy but failed the separate strict waveform screen; neither decides listening quality.
+- Historical WSL audio SHA `fb8895…` and current native-host/Ubuntu 22 audio SHA `56ce6a…` are separate environment-scoped CPU records. Cross-environment bit reproducibility is unproven.
+- Historical first-element/max-absolute-error/RMSE/cosine values remain null unless the exact ignored WSL payload is recovered; hashes alone cannot supply them.
 - The accepted experiment-0013 CPU WAV and every historical metric/verdict remain scoped to their old noncanonical route and do not transfer to canonical v2.
 - Canonical QNN listening status is `not_reviewed`; only Moritz may accept or reject an exact WAV hash.
 - No quantization is authorized.
