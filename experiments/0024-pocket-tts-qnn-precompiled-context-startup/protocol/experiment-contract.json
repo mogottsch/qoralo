@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "experiment": "0024-pocket-tts-qnn-precompiled-context-startup",
+  "status": "cpu_reconstruction_checkpoint_before_context_generation_or_phone_use",
+  "goal": "Compare cold QNN session readiness from source ONNX against external precompiled QNN EPContext reload for a freshly validated 0024 reconstruction derivative of the accepted Pocket canonical-v2 fixed-Alba cache512 route.",
+  "comparison": {
+    "arm_a": "Eight source ONNX graphs; QNN compilation occurs inside measured session creation.",
+    "arm_b": "Eight non-embedded EPContext ONNX descriptors plus external QNN context binaries; offline generation cost is reported separately and excluded from cold reload setup.",
+    "matched": [
+      "effective graph and ABI",
+      "ORT and QAIRT versions",
+      "provider options",
+      "CPU fallback disabled",
+      "canonical transcript and tokenizer IDs",
+      "fixed Alba cache",
+      "seed-0 noise fixture",
+      "temperature 0.3 and one flow step",
+      "device and benchmark runner"
+    ],
+    "fresh_cold_processes_per_arm_minimum": 3,
+    "arbitrary_speedup_gate": null
+  },
+  "canonical_transcript": {
+    "path": "protocols/android-tts-benchmark/transcript.txt",
+    "bytes": 226,
+    "trailing_newline": false,
+    "sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67"
+  },
+  "route": {
+    "id": "pocket-fixed-alba-text64-cache512-canonical-v2-0024-reconstruction-derivative",
+    "relationship_to_0014": "Same pinned learned source/config/input contract and canonical ABI, but raw reconstructed ONNX hashes differ. Never label as the exact 0014 graph set; fresh QNN/E2E/audio validation is required.",
+    "reconstruction_evidence": "results/reconstruction.json",
+    "voice": "official pinned fixed Alba state; not voice cloning",
+    "weights_sha256": "be9c6b4876d3f30740a8225dfcaa2e43dc4aeb753c15272735bee16bbb4abb0a",
+    "tokenizer_sha256": "d461765ae179566678c93091c5fa6f2984c31bbe990bf1aa62d92c64d91bc3f6",
+    "alba_state_sha256": "e4a323e8e771f14fd669428d83e7af6d83b4d6d0f0e282c30122f04824f17b1c",
+    "alba_cache_pack_sha256": "eb6e2d714fe75cb9a726c7742f32e7c6b500cc6de4dae8b533f2bfa7b41bc6d2",
+    "token_count": 64,
+    "token_fixture_sha256": "56d50c958627be19a7f2c86dde68a537a80f3f6d9087c16f55fde58c4d117c82",
+    "noise_fixture_sha256": "c70130d0d42d7a281bad2258b7820fab85d5cd0c6b869b463a1a3281869ddbb1",
+    "capacity": 512,
+    "voice_positions": 126,
+    "text_positions": 64,
+    "frame_cap": 292,
+    "bos_absolute_position": 190,
+    "temperature": 0.3,
+    "seed": 0,
+    "lsd_steps": 1,
+    "eos_threshold": -4.0,
+    "frames_after_eos": 3,
+    "expected_eos_step": 160,
+    "expected_frames": 163,
+    "expected_samples": 312960,
+    "expected_audio_seconds": 13.04
+  },
+  "historical_0014_graph_sha256_for_comparison_not_identity": {
+    "text_conditioner.onnx": "c4212aa0deb4d16b4b9340484489c03b4566929a0d23e3ccd115bbcbd6263f18",
+    "flow_prefill_text64.onnx": "3f070985ae719479a4ad8623938991010921b3bfdf654fb4060ae8d252bb08f3",
+    "flow_ar_bos1.onnx": "f60eacce2f90703495eb3d05314aff77b4a9baefc614b5a5727ca3bee9d4c8b0",
+    "flow_ar_latent1.onnx": "784f960a480c302f124df0ca8e40ea9e324e77cc86dbb29b4ee1e88567fdbad9",
+    "flow.onnx": "fa74e3777dc661135807d964d47f177bc93159392a0a484718ba0343130f7a60",
+    "mimi_decoder12.onnx": "6c3e398ef7a12a6798a67de4abeb606390b1710f45007640d789171ae814da56",
+    "mimi_decoder6.onnx": "9cb6d327f67344b0f1ac7ed7109b34502822bbd25271f16612021c42520ecd90",
+    "mimi_decoder1.onnx": "c9361ac87eedf60ada38638039c55a093d9cbb7ae7959703ff1837636f98a46c"
+  },
+  "reconstruction_amendment": {
+    "exact_0014_graph_hashes_reproduced": false,
+    "first_divergence": "Controlled ONNX serialization before 0024 specialization: used base files match committed byte sizes but not SHA-256.",
+    "host_cpu_behavior": {"eos_step": 160, "frames": 163, "samples": 312960, "audio_seconds": 13.04, "wav_sha256": "7979459f95752064b3aa025644a102d85d555e9684ff6f204d348025e394cb1d", "listening": "not_reviewed"},
+    "qnn_or_phone_attempted": false
+  },
+  "runtime": {
+    "onnxruntime": "1.27.1",
+    "qairt_qnn": "2.49.0.260730",
+    "threads": 1,
+    "provider": "QNNExecutionProvider",
+    "session.disable_cpu_ep_fallback": "1",
+    "graph_optimization": "ORT_ENABLE_BASIC",
+    "soc_model": "43",
+    "offload_graph_io_quantization": "0",
+    "htp_performance_mode": "burst",
+    "enable_htp_fp16_precision": "0"
+  },
+  "required_gates": [
+    "Reconstruct and hash-check all eight canonical derivatives.",
+    "Generate one external context and reload in a fresh isolated process with source ONNX absent, fallback disabled, and QNN-only profile events.",
+    "Repeat generation and isolated reload proof for all eight sessions.",
+    "Run complete structurally valid E2E audio for both arms.",
+    "Collect at least three fresh cold processes per arm; each benchmark process creates sessions once, runs one first complete generation and at least five warm generations with full state reset.",
+    "Collect physical provider/RPC/accelerator/cycle/HVX proof and report setup delta without a minimum speedup gate."
+  ],
+  "quality": {
+    "historical_0014_source_wav": {
+      "sha256": "601cd622dd0598c23dd7275074763aa37ae79b18a9d777ad946b1eaebd2c58e5",
+      "verdict": "accepted",
+      "authority": "Moritz",
+      "verbatim": "good"
+    },
+    "new_wav_policy": "Byte-identical accepted output may retain its exact bound verdict; any byte-different WAV is descriptive and not_reviewed until Moritz reviews that exact hash. Numerical or waveform differences are not automatic blockers."
+  },
+  "phone": {
+    "serial": "R5CW81PR8SY",
+    "model": "SM-S918B",
+    "soc": "SM8550",
+    "abi": "arm64-v8a",
+    "boot_completed": "1",
+    "lock": "actual nonblocking flock on artifacts/locks/phone.lock with lock FD closed in ADB children",
+    "transport": "Windows adb.exe with ADB_LIBUSB=1",
+    "staging": "unique /data/local/tmp/experiment-0024-* root, scoped evidence pull, verified cleanup",
+    "personal_data_or_settings": "not accessed or changed"
+  }
+}
