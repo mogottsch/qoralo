@@ -2,9 +2,9 @@
 
 ## Status
 
-**CPU reconstruction checkpoint complete; QNN and phone work are pending serialized clearance.**
+**All eight host external-context functional smokes pass; Android E2E and measured cold distributions remain pending because the phone is unavailable.**
 
-This experiment will compare source-ONNX QNN session creation with external precompiled QNN EPContext reload for a newly reconstructed derivative of experiment 0014’s accepted canonical-v2 fixed-Alba/cache512 Pocket route.
+This experiment compares source-ONNX QNN session creation with external precompiled QNN EPContext reload for a newly reconstructed derivative of experiment 0014’s accepted canonical-v2 fixed-Alba/cache512 Pocket route.
 
 It is **not** the exact 0014 graph set. The ignored historical graph/work files were cleaned. Reconstruction from the same public pinned weights, tokenizer, Alba state, code, and exporter first diverges at controlled ONNX serialization, before any 0024 context transformation:
 
@@ -31,9 +31,29 @@ The reconstructed fixed-Alba/text64/cache512 route then completed end to end on 
 
 This CPU run is a reconstruction/effectiveness gate, not an Android benchmark or QNN/HTP proof.
 
+## Host external-context result
+
+Every neural session—text, text prefill, BOS AR, latent AR, flow, and decoder-12/6/1—generated a non-embedded external context with CPU fallback disabled, then reloaded successfully in a separate fresh Docker process that mounted only its descriptor, `<stem>_qnn.bin`, smoke tool/input fixture, ORT runtime, and QNN backend. Source ONNX was unavailable in every reload.
+
+| Component | Source generation setup | Isolated reload setup | External binary |
+|---|---:|---:|---:|
+| Text | 0.115842 s | 0.034384 s | 8,245,976 B |
+| Text prefill | 5.757081 s | 0.111627 s | 133,112,008 B |
+| BOS AR | 3.571449 s | 0.116972 s | 145,429,536 B |
+| Latent AR | 3.703581 s | 0.130259 s | 151,717,872 B |
+| Flow | 0.425223 s | 0.049611 s | 19,967,696 B |
+| Decoder-12 | 7.037149 s | 0.049825 s | 22,515,448 B |
+| Decoder-6 | 2.051637 s | 0.048777 s | 21,757,688 B |
+| Decoder-1 | 1.233648 s | 0.044665 s | 21,384,952 B |
+| **Sum** | **23.895610 s** | **0.586121 s** | **524,131,176 B** |
+
+Generation and reload each recorded exactly eight `QNNExecutionProvider` events and zero CPU-provider events. Per component, all output tensor hashes were identical between generation and reload. Decoder zero-element inputs retain their declared shapes and have exactly zero elements/bytes.
+
+These are one-process-per-component functional host smokes, not a three-run cold distribution or physical-phone timing. Setup is measured only around `InferenceSession` construction. Host HTP-emulator first execution—up to roughly 44 seconds for decoder-12—is separately recorded and deliberately excluded from setup. Full evidence: [`results/host-context-smoke.json`](results/host-context-smoke.json), with the hash-bound ORT JSON, QNN CSV, and QNN logs under [`results/host-context-profiles/`](results/host-context-profiles/).
+
 ## Frozen comparison
 
-Both future arms use the same eight 0024 graph derivatives, ABI, runtime/provider options, canonical inputs, runner, and phone:
+Both eventual phone arms use the same eight 0024 graph derivatives, ABI, runtime/provider options, canonical inputs, runner, and phone:
 
 1. **Source arm:** create eight QNN sessions from source ONNX; compilation is inside measured setup.
 2. **Context arm:** create the same sessions from non-embedded EPContext ONNX descriptors plus external `<stem>_qnn.bin` files; offline context generation is reported separately and excluded from reload setup.
@@ -44,18 +64,14 @@ After host smoke and complete E2E, each arm requires at least three fresh cold p
 
 ## Pending claims
 
-As of this checkpoint:
+- Host QNN source assignment/context generation/isolated reload: **passed for all eight functional smokes**.
+- Android E2E for either arm: **pending / null**.
+- Cold setup runs: **0 source, 0 context**.
+- Warm RTF: **pending / null**.
+- Physical RPC/accelerator/cycle/HVX evidence: **pending / null**.
+- New phone WAV/listening verdict: **pending / null**.
 
-- host QNN source assignment: **pending / null**;
-- external context generation: **pending / null**;
-- isolated context reload: **pending / null**;
-- Android E2E for either arm: **pending / null**;
-- cold setup runs: **0 source, 0 context**;
-- warm RTF: **pending / null**;
-- physical RPC/accelerator/cycle/HVX evidence: **pending / null**;
-- new phone WAV/listening verdict: **pending / null**.
-
-No QNN session, HtpPrepare, or phone access occurred before this checkpoint. Work is waiting behind experiment 0017’s serialized compiler policy and requires explicit Pi/Jens clearance.
+No phone access occurred. The device became unavailable before a bounded phone campaign was prepared; no result is inferred from host emulation.
 
 ## Reproduction
 
@@ -80,7 +96,7 @@ experiments/0024-pocket-tts-qnn-precompiled-context-startup/.local/export-venv/b
   --output experiments/0024-pocket-tts-qnn-precompiled-context-startup/.local/host-e2e
 ```
 
-Do not run context generation merely because the tooling exists. [`tools/generate_contexts.sh`](tools/generate_contexts.sh) requires `QNN_HOST_ACCESS_CONFIRMED=yes`, takes `artifacts/locks/heavy-ram.lock` nonblockingly, and is permitted only after explicit serialized clearance. Phone tooling additionally requires both standing authorization and fresh coordination clearance, the real `artifacts/locks/phone.lock`, exact serial/model/SoC/ABI/boot gates, scoped staging, evidence pull, and verified cleanup.
+Context generation reproduction remains serialized: [`tools/generate_contexts.sh`](tools/generate_contexts.sh) requires `QNN_HOST_ACCESS_CONFIRMED=yes`, takes `artifacts/locks/heavy-ram.lock` nonblockingly, and is permitted only after explicit clearance. Aggregate it with [`tools/finalize_host_context_smoke.py`](tools/finalize_host_context_smoke.py). Phone tooling additionally requires both standing authorization and fresh coordination clearance, the real `artifacts/locks/phone.lock`, exact serial/model/SoC/ABI/boot gates, scoped staging, evidence pull, and verified cleanup.
 
 ## Validation
 

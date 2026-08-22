@@ -1,6 +1,7 @@
 import hashlib
 import json
 import os
+from collections import Counter
 import unittest
 from pathlib import Path
 
@@ -55,6 +56,43 @@ class ContractTest(unittest.TestCase):
         wav = EXP / "results/host-cpu-derivative.wav"
         self.assertEqual(hashlib.sha256(wav.read_bytes()).hexdigest(), result["host_cpu_e2e"]["wav"]["sha256"])
         self.assertEqual(result["quality"]["status"], "not_reviewed")
+
+    def test_host_context_smoke_is_complete_and_bounded(self):
+        result = json.loads((EXP / "results/host-context-smoke.json").read_text())
+        self.assertEqual(result["status"], "all_eight_host_context_functional_smokes_passed")
+        self.assertEqual([item["component"] for item in result["components"]],
+                         ["text", "prefill", "bos", "latent", "flow", "decoder12", "decoder6", "decoder1"])
+        aggregate = result["aggregate"]
+        self.assertEqual(aggregate["component_count"], 8)
+        self.assertEqual(aggregate["generation_qnn_provider_events"], 8)
+        self.assertEqual(aggregate["generation_cpu_provider_events"], 0)
+        self.assertEqual(aggregate["reload_qnn_provider_events"], 8)
+        self.assertEqual(aggregate["reload_cpu_provider_events"], 0)
+        self.assertTrue(aggregate["all_outputs_equal"])
+        self.assertTrue(aggregate["all_reloads_source_onnx_absent"])
+        self.assertAlmostEqual(aggregate["generation_session_create_seconds_sum"], 23.895610355000827)
+        self.assertAlmostEqual(aggregate["isolated_reload_session_create_seconds_sum"], 0.5861214130018197)
+        for component in result["components"]:
+            self.assertEqual(len(component["committed_profiles"]), 6)
+            for record in component["committed_profiles"]:
+                profile = ROOT / record["path"]
+                self.assertEqual(profile.stat().st_size, record["bytes"])
+                self.assertEqual(hashlib.sha256(profile.read_bytes()).hexdigest(), record["sha256"])
+                if profile.suffix == ".json":
+                    events = json.loads(profile.read_text())
+                    providers = Counter(event.get("args", {}).get("provider") for event in events)
+                    self.assertEqual(providers["QNNExecutionProvider"], 1)
+                    self.assertEqual(providers["CPUExecutionProvider"], 0)
+            self.assertEqual(component["generation"]["provider_events"], {"QNNExecutionProvider": 1})
+            self.assertEqual(component["isolated_reload"]["provider_events"], {"QNNExecutionProvider": 1})
+            self.assertTrue(component["generate_reload_outputs_equal"])
+            self.assertTrue(component["isolated_reload"]["source_onnx_absent"])
+            for value in component["zero_element_inputs"].values():
+                self.assertEqual(value["elements"], 0)
+                self.assertEqual(value["bytes"], 0)
+                self.assertEqual(value["sha256"], hashlib.sha256(b"").hexdigest())
+        self.assertIsNone(result["pending"]["android_e2e"])
+        self.assertIsNone(result["pending"]["phone_wav"])
 
     def test_executables(self):
         for path in list((EXP / "tools").glob("*.sh")) + list((EXP / "device").glob("*.sh")):

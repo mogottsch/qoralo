@@ -1,0 +1,1303 @@
+{
+  "schema_version": 1,
+  "date": "2026-08-22",
+  "status": "all_eight_host_context_functional_smokes_passed",
+  "route": "pocket-fixed-alba-text64-cache512-canonical-v2-0024-reconstruction-derivative",
+  "runtime": {
+    "onnxruntime": "1.27.1",
+    "qairt_qnn": "2.49.0.260730",
+    "provider": "QNNExecutionProvider",
+    "cpu_fallback_disabled": true,
+    "threads": 1,
+    "graph_optimization": "ORT_ENABLE_BASIC"
+  },
+  "graph_inventory": {
+    "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/.local/graphs/inventory.json",
+    "sha256": "478b2bfb7daa8d886a27e47ace09167bf428cfe4d876f76cdbe52c4c8146ce4e",
+    "exact_0014_hashes_reproduced": false,
+    "documented_derivative": true
+  },
+  "components": [
+    {
+      "component": "text",
+      "committed_profiles": [
+        {
+          "mode": "generation",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/generation/text/generate.qnn.csv",
+          "bytes": 1309,
+          "sha256": "896c355d2d3ab6c561cd4ac5ba29302f536054d1af5013e77fe10443ba4501a3"
+        },
+        {
+          "mode": "generation",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/generation/text/generate.qnn_qnn.log",
+          "bytes": 1880,
+          "sha256": "b53c529b0e064de0b44a8f8976af66cad044ae4053f9dd8961bfd40738d8f744"
+        },
+        {
+          "mode": "generation",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/generation/text/generate_2026-08-22_15-08-18_719.json",
+          "bytes": 936,
+          "sha256": "59eb2b89753a6b36895ba2bc83470b0f3b34ad26fda7f9fd7a10a22e35d0d494"
+        },
+        {
+          "mode": "reload",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/reload/text/reload.qnn.csv",
+          "bytes": 908,
+          "sha256": "ef8e15e183b7c31a9ce78788f0666e59610e9cbb9d007dcc70264c5bef79adb3"
+        },
+        {
+          "mode": "reload",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/reload/text/reload.qnn_qnn.log",
+          "bytes": 1448,
+          "sha256": "45ce4e5809ea3eec00edc9436207a596c6cb5baa6493e3e740e1b129106f70a1"
+        },
+        {
+          "mode": "reload",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/reload/text/reload_2026-08-22_15-08-20_140.json",
+          "bytes": 901,
+          "sha256": "d5eb6b77575cf39d4d44b3800a04809ffd0032e75e93353d07efbc59a16f695f"
+        }
+      ],
+      "source_graph": {
+        "bytes": 16388330,
+        "path": "text_conditioner.onnx",
+        "sha256": "a580b6bfb6728ca4fc181e786d2870a140a0a68c6c81a6ffab791918d6b83dc4"
+      },
+      "descriptor": {
+        "bytes": 739,
+        "path": "text_conditioner.onnx",
+        "sha256": "5212f387c036120ec68860d1691c579cd81ee5e7acc9a3fca0fed35d5001be34"
+      },
+      "external_context_binary": {
+        "bytes": 8245976,
+        "path": "text_conditioner_qnn.bin",
+        "sha256": "166fa92573321caae23e22be9ebb01671ee01dd89ef4ab29e38601388936fcf4"
+      },
+      "generation": {
+        "session_create_seconds": 0.11584243399920524,
+        "first_run_seconds": 0.006649073999142274,
+        "process_to_completed_run_seconds": 0.19120333600221784,
+        "provider_events": {
+          "QNNExecutionProvider": 1
+        },
+        "ort_profile": {
+          "bytes": 936,
+          "path": "generate_2026-08-22_15-08-18_719.json",
+          "sha256": "59eb2b89753a6b36895ba2bc83470b0f3b34ad26fda7f9fd7a10a22e35d0d494"
+        },
+        "qnn_profile": {
+          "bytes": 1309,
+          "path": "generate.qnn.csv",
+          "sha256": "896c355d2d3ab6c561cd4ac5ba29302f536054d1af5013e77fe10443ba4501a3"
+        },
+        "result_json_sha256": "4b61bb8167d480a754183275357e40a81e468323f29f39c903f792f5b3c0b483"
+      },
+      "isolated_reload": {
+        "session_create_seconds": 0.03438427000219235,
+        "first_run_seconds": 0.005254278999927919,
+        "process_to_completed_run_seconds": 0.1007112369989045,
+        "source_onnx_absent": true,
+        "provider_events": {
+          "QNNExecutionProvider": 1
+        },
+        "ort_profile": {
+          "bytes": 901,
+          "path": "reload_2026-08-22_15-08-20_140.json",
+          "sha256": "d5eb6b77575cf39d4d44b3800a04809ffd0032e75e93353d07efbc59a16f695f"
+        },
+        "qnn_profile": {
+          "bytes": 908,
+          "path": "reload.qnn.csv",
+          "sha256": "ef8e15e183b7c31a9ce78788f0666e59610e9cbb9d007dcc70264c5bef79adb3"
+        },
+        "result_json_sha256": "258ee9a7e51bb55effbe2d3c8b024f1e2c2af45740d51ffd3e4fe3e141e0769f"
+      },
+      "output_count": 1,
+      "output_sha256": [
+        "5f723c48a2d98cdec6eae610db813c924d9bb7a90c0c1dd2f325fb1fda910581"
+      ],
+      "generate_reload_outputs_equal": true,
+      "zero_element_inputs": {}
+    },
+    {
+      "component": "prefill",
+      "committed_profiles": [
+        {
+          "mode": "generation",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/generation/prefill/generate.qnn.csv",
+          "bytes": 27201,
+          "sha256": "c0c7943741514de6e87e5389c7fa3d02bd26fca6cb49dd2c555f86dba62c9198"
+        },
+        {
+          "mode": "generation",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/generation/prefill/generate.qnn_qnn.log",
+          "bytes": 27080,
+          "sha256": "8dd3eb4f21e3c8650b7b1b75e744b3ac0632795d1645462ad6b6829390f9b38d"
+        },
+        {
+          "mode": "generation",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/generation/prefill/generate_2026-08-22_15-09-36_608.json",
+          "bytes": 2667,
+          "sha256": "470dc21b44446db687e23f5fcc00f6c2afae114c4e14edaa45ca42ba92be5c6e"
+        },
+        {
+          "mode": "reload",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/reload/prefill/reload.qnn.csv",
+          "bytes": 26785,
+          "sha256": "53029a683541e98e0163678e6d73dc7b06f60b8d4f473150bbb81825d4fc8e53"
+        },
+        {
+          "mode": "reload",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/reload/prefill/reload.qnn_qnn.log",
+          "bytes": 26648,
+          "sha256": "aa140b9c1a2adc6ede5875b60058e6a7030f118dc8c89fbda402cdf325fecc1e"
+        },
+        {
+          "mode": "reload",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/reload/prefill/reload_2026-08-22_15-09-56_601.json",
+          "bytes": 1540,
+          "sha256": "420064fb58c39a1664af17c728273041c3b52db2350bc21de25cab0787356af0"
+        }
+      ],
+      "source_graph": {
+        "bytes": 264506190,
+        "path": "flow_prefill_text64.onnx",
+        "sha256": "1cb8e9521e89775f46d10af559c9684e30dd872b8eb2aa43d5daa3a24ad8a4b0"
+      },
+      "descriptor": {
+        "bytes": 2120,
+        "path": "flow_prefill_text64.onnx",
+        "sha256": "00b6737301b2de9dc134d883a4e779a5073c6d85d9246c4a1359b971e0097edc"
+      },
+      "external_context_binary": {
+        "bytes": 133112008,
+        "path": "flow_prefill_text64_qnn.bin",
+        "sha256": "e44491bdffe316d8247ad066e6dcd1c2d04dc17bd19f53e35138cb31ec125450"
+      },
+      "generation": {
+        "session_create_seconds": 5.757081018000463,
+        "first_run_seconds": 13.111027637001825,
+        "process_to_completed_run_seconds": 19.196024949000275,
+        "provider_events": {
+          "QNNExecutionProvider": 1
+        },
+        "ort_profile": {
+          "bytes": 2667,
+          "path": "generate_2026-08-22_15-09-36_608.json",
+          "sha256": "470dc21b44446db687e23f5fcc00f6c2afae114c4e14edaa45ca42ba92be5c6e"
+        },
+        "qnn_profile": {
+          "bytes": 27201,
+          "path": "generate.qnn.csv",
+          "sha256": "c0c7943741514de6e87e5389c7fa3d02bd26fca6cb49dd2c555f86dba62c9198"
+        },
+        "result_json_sha256": "09bd2eb816b6911c1c2ff36615faf8363f3329ecc35d72c98e99e9fee037d266"
+      },
+      "isolated_reload": {
+        "session_create_seconds": 0.11162745999899926,
+        "first_run_seconds": 13.093712253001286,
+        "process_to_completed_run_seconds": 13.393186561999755,
+        "source_onnx_absent": true,
+        "provider_events": {
+          "QNNExecutionProvider": 1
+        },
+        "ort_profile": {
+          "bytes": 1540,
+          "path": "reload_2026-08-22_15-09-56_601.json",
+          "sha256": "420064fb58c39a1664af17c728273041c3b52db2350bc21de25cab0787356af0"
+        },
+        "qnn_profile": {
+          "bytes": 26785,
+          "path": "reload.qnn.csv",
+          "sha256": "53029a683541e98e0163678e6d73dc7b06f60b8d4f473150bbb81825d4fc8e53"
+        },
+        "result_json_sha256": "85a4c28c45322b27ed2fecae130d03ec2ec3dac9953be86d91284a77bca77abc"
+      },
+      "output_count": 13,
+      "output_sha256": [
+        "f146455468a06948a0600637843a3476df073bdab2acc776dd1c1d8832c0c82d",
+        "6a362dcdcc56b5264ae9ea049bcd11b38053d1346339ffd0fb61a47584fbe8f4",
+        "cae7975b0995763c64ad8e6406f3a60af194d0822e2cdcb1a1996b30881a0083",
+        "3ff1f14f97031c419a466712901768a0bc83cb26fdbd286fd895d71c200b4fcb",
+        "1ebc560d04fbe98b902b442b792f70d8224343e23f18cc832570240e3b181923",
+        "26cf493bb9d42f8556038817773b24606d3a753d4e5681fa03ac5dc24a455688",
+        "e4d599e0cf724a72084b6b64a4b6e2829896b5f2a7f7a94ec757c9c050829e76",
+        "b53e788b51824d82fb58a3aee0d6b6cebef22824f37b374d000a3e87cc69244b",
+        "8180797dd53299c60a77af5c7cb74f8b01109cb6710ff61fe366e016c59c4ab3",
+        "76a95c37c3e5d8fa4e00ea8e06801ba33476d88c9378ae1306eb25e1829ab241",
+        "ff48162c1541a72346e0dac0ca4d0d5d16569bdcc1a733deffea9c1afbd3f0d0",
+        "78e45db3dfe30ee63fb0487c56cf19520b6a142a93f672f83a95f6670e249340",
+        "09ab5b0f3fe01948b58b8aae75793acbf5324fdf5c747316fb33eed9d265f3d0"
+      ],
+      "generate_reload_outputs_equal": true,
+      "zero_element_inputs": {}
+    },
+    {
+      "component": "bos",
+      "committed_profiles": [
+        {
+          "mode": "generation",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/generation/bos/generate.qnn.csv",
+          "bytes": 28417,
+          "sha256": "4373077553ecbcd0719f7b05ca87f9843ccedd00933183303cd1c100bbe30de2"
+        },
+        {
+          "mode": "generation",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/generation/bos/generate.qnn_qnn.log",
+          "bytes": 28560,
+          "sha256": "2204e7b3a4c651e2992c410604f52ca398d9e8fb03a1618ec9f11dad8f6a13d4"
+        },
+        {
+          "mode": "generation",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/generation/bos/generate_2026-08-22_15-10-10_635.json",
+          "bytes": 2917,
+          "sha256": "d73d73e6ab634ee71b8be0355acd625213a9c02540039dd5ae160750060f47a2"
+        },
+        {
+          "mode": "reload",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/reload/bos/reload.qnn.csv",
+          "bytes": 28007,
+          "sha256": "726d44259ea0766df0a5cfcb4a0609c593a6a04bfad598c56154c59f74759b59"
+        },
+        {
+          "mode": "reload",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/reload/bos/reload.qnn_qnn.log",
+          "bytes": 28128,
+          "sha256": "77dd43d7a3a1539c2dac49e99342a9d3b684f55bccf3797147c13782566ded6d"
+        },
+        {
+          "mode": "reload",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/reload/bos/reload_2026-08-22_15-10-21_126.json",
+          "bytes": 1551,
+          "sha256": "0343cc67f9db711503ca7f756f37914d388c1414abbb7b1786a0403020c21f94"
+        }
+      ],
+      "source_graph": {
+        "bytes": 302281767,
+        "path": "flow_ar_bos1.onnx",
+        "sha256": "43c2830df8f612a9558b72d87a644017bd9398f00cc8116c0c78fcc4034503ee"
+      },
+      "descriptor": {
+        "bytes": 2156,
+        "path": "flow_ar_bos1.onnx",
+        "sha256": "bc67d7f91c36626ad3a5896cd379f61b0d7f581b44940e4381acd9e5a976ac53"
+      },
+      "external_context_binary": {
+        "bytes": 145429536,
+        "path": "flow_ar_bos1_qnn.bin",
+        "sha256": "4ac0f700a8f7c3174e3cb81da70549af101ee331d86c91fccc34fd3443a9274a"
+      },
+      "generation": {
+        "session_create_seconds": 3.5714493679988664,
+        "first_run_seconds": 5.790948837002361,
+        "process_to_completed_run_seconds": 9.710229039003025,
+        "provider_events": {
+          "QNNExecutionProvider": 1
+        },
+        "ort_profile": {
+          "bytes": 2917,
+          "path": "generate_2026-08-22_15-10-10_635.json",
+          "sha256": "d73d73e6ab634ee71b8be0355acd625213a9c02540039dd5ae160750060f47a2"
+        },
+        "qnn_profile": {
+          "bytes": 28417,
+          "path": "generate.qnn.csv",
+          "sha256": "4373077553ecbcd0719f7b05ca87f9843ccedd00933183303cd1c100bbe30de2"
+        },
+        "result_json_sha256": "bddb39418d905f1ed0bf17f8cdab05e56fc3c82d49af82983070c7996172532d"
+      },
+      "isolated_reload": {
+        "session_create_seconds": 0.11697225399984745,
+        "first_run_seconds": 5.765948060998198,
+        "process_to_completed_run_seconds": 6.076257087999693,
+        "source_onnx_absent": true,
+        "provider_events": {
+          "QNNExecutionProvider": 1
+        },
+        "ort_profile": {
+          "bytes": 1551,
+          "path": "reload_2026-08-22_15-10-21_126.json",
+          "sha256": "0343cc67f9db711503ca7f756f37914d388c1414abbb7b1786a0403020c21f94"
+        },
+        "qnn_profile": {
+          "bytes": 28007,
+          "path": "reload.qnn.csv",
+          "sha256": "726d44259ea0766df0a5cfcb4a0609c593a6a04bfad598c56154c59f74759b59"
+        },
+        "result_json_sha256": "950dcce6e27edf6f588d2e21fbb6bac62cfe2c9d845c8cbf43baf8399928ffa8"
+      },
+      "output_count": 15,
+      "output_sha256": [
+        "c37e20a75b68e0e4ab4cbfaa92b10f9eb6a042f0ac0daacb669b17efb0420684",
+        "0291c02f504b9b95238712dff00a15b2aac49d99a7e9a7321fabcca641738a70",
+        "a1eb447f5d89bbedb07ce1c50e65269d91e59f0cfd8e593f6667bd16233756e7",
+        "7beaa6e8b08a52e19109fc8137f6f3ee6894cb0dde97ab8b96cf19ffe88538e5",
+        "5c9075920fbd2ef88b48210f8ed031253f1515b497aa98fecdb92ce06f9640b4",
+        "5e8b54c9089d071a875a32adbb5453533e75b2c2c93177d474eb20d9031777e3",
+        "4319eb36292245175f0d51a8e5618d404fe507e694667be3af95c688b0ac0ee0",
+        "0784226e2af469a533ae42afd2c4c1959db14d24bdd7f7ba5afc7671c64fa49e",
+        "7274a977c1db68a450c1116670743d178ea6f711d92bae71a62ca03337116597",
+        "3e43f15ba0ac6b650ede8394a7b668efb8f944abe44eddab9516b9553281c094",
+        "c22a97cd955356f0767d0fe2c9ff161facfc42956076b229bb597ddb63a15fef",
+        "0616c66989c6a78503c49f043ef2651dd18341e4ed97e97aa0b4c57626489f9d",
+        "af8f964b37d535deab59d422c7f80f3b7adbcfb79d29bfee20e4e1c0cbd14674",
+        "85daf3a8c13a1cd4c98a83559a3d9293d5fdef68b2107b1e9fa3f3eecdd563fc",
+        "da11689fb8e90337f493501453e816980b3773fc4063047e76cfd08537d60a8f"
+      ],
+      "generate_reload_outputs_equal": true,
+      "zero_element_inputs": {}
+    },
+    {
+      "component": "latent",
+      "committed_profiles": [
+        {
+          "mode": "generation",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/generation/latent/generate.qnn.csv",
+          "bytes": 30039,
+          "sha256": "646905d9168ffd15a44cbcfe488155c814812dcaf7cf24e8d82e998f484e732f"
+        },
+        {
+          "mode": "generation",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/generation/latent/generate.qnn_qnn.log",
+          "bytes": 30152,
+          "sha256": "f3880bbb78d7cc81893b98dc5caac0cc81cf377525daeb65d1a5293021051210"
+        },
+        {
+          "mode": "generation",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/generation/latent/generate_2026-08-22_15-10-27_840.json",
+          "bytes": 2879,
+          "sha256": "c0c617634d9e623a4411163f19ba63b66bf5bc4ad2bebb488b7ed73321c3209a"
+        },
+        {
+          "mode": "reload",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/reload/latent/reload.qnn.csv",
+          "bytes": 29605,
+          "sha256": "b097de42020726a87395ee8d6e23203027dea07d62c730b078c2669ab798a632"
+        },
+        {
+          "mode": "reload",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/reload/latent/reload.qnn_qnn.log",
+          "bytes": 29720,
+          "sha256": "f179edf784ee9d46a95c8d38b38a0587ed36f4a475f32de55b15895b9016502e"
+        },
+        {
+          "mode": "reload",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/reload/latent/reload_2026-08-22_15-10-38_726.json",
+          "bytes": 1568,
+          "sha256": "1b40f3a3f1183acd4bdce983d8a38a2034908f51aa5b83b7b9c3518bed4ee60f"
+        }
+      ],
+      "source_graph": {
+        "bytes": 302281631,
+        "path": "flow_ar_latent1.onnx",
+        "sha256": "ee7df8da04522c7ca11d0f4a0d38594c87091e5576c0144adb92cad30f45b4e6"
+      },
+      "descriptor": {
+        "bytes": 2198,
+        "path": "flow_ar_latent1.onnx",
+        "sha256": "f789761a048b7cd1b63d1c457b92adf899ea61f2f3d4caf6260ac98f55229b05"
+      },
+      "external_context_binary": {
+        "bytes": 151717872,
+        "path": "flow_ar_latent1_qnn.bin",
+        "sha256": "8bb3ec90e0bf5b2704fa1b43559f09fb6f5e86c7e988fb00ec926a8b7aeca565"
+      },
+      "generation": {
+        "session_create_seconds": 3.7035811099995044,
+        "first_run_seconds": 6.054103872000269,
+        "process_to_completed_run_seconds": 10.116500830001314,
+        "provider_events": {
+          "QNNExecutionProvider": 1
+        },
+        "ort_profile": {
+          "bytes": 2879,
+          "path": "generate_2026-08-22_15-10-27_840.json",
+          "sha256": "c0c617634d9e623a4411163f19ba63b66bf5bc4ad2bebb488b7ed73321c3209a"
+        },
+        "qnn_profile": {
+          "bytes": 30039,
+          "path": "generate.qnn.csv",
+          "sha256": "646905d9168ffd15a44cbcfe488155c814812dcaf7cf24e8d82e998f484e732f"
+        },
+        "result_json_sha256": "057e32e5b3d4891f7f2a893dc338018260d3993e8657179d96af145a8633759a"
+      },
+      "isolated_reload": {
+        "session_create_seconds": 0.13025874000231852,
+        "first_run_seconds": 6.0999387219999335,
+        "process_to_completed_run_seconds": 6.429452770000353,
+        "source_onnx_absent": true,
+        "provider_events": {
+          "QNNExecutionProvider": 1
+        },
+        "ort_profile": {
+          "bytes": 1568,
+          "path": "reload_2026-08-22_15-10-38_726.json",
+          "sha256": "1b40f3a3f1183acd4bdce983d8a38a2034908f51aa5b83b7b9c3518bed4ee60f"
+        },
+        "qnn_profile": {
+          "bytes": 29605,
+          "path": "reload.qnn.csv",
+          "sha256": "b097de42020726a87395ee8d6e23203027dea07d62c730b078c2669ab798a632"
+        },
+        "result_json_sha256": "b32f94613218268ee15d467f5bb4038073327208870db03ad8584c8842e43744"
+      },
+      "output_count": 15,
+      "output_sha256": [
+        "c50e7316b869bd146ecc131447502ffad875a2a448f4d73dd197e7f4e1b6e622",
+        "4e552183cd0fbbd248a10d3278c0d141e8035f6a0182eb0019d99bcc4bb1bccf",
+        "7851d06d921deda973988a4eaaeac2b906c2dbb093715b8c2cbc1f8f4983ba5c",
+        "415de20cdc460a4f6c4f58b03384e204fb09cfec5fc7a7a190cd3f2e6b7530e0",
+        "6c99f11c0be81d2de1fbd6825facbc3131f2541fe09c941d51e9f2eb4ca255c3",
+        "35992d91f52425a490ff018acf7dc34cf4965fa0d54c51a443c5362223adc8d5",
+        "bdf217eb1090a5c4a48f647ec735176bc3073b8372b548ea1aa2b5a80ccd4de5",
+        "6536ea4dc41e2ac539dc4b4bbb8a85cc8b8099689ac5d0154bcf818bb9b43d54",
+        "cf3ca4e4db489b9f166a3cb40f89a7cc03644a3abbc915bdef9073729a5a9b03",
+        "597806222b02b8388b20ca94b3e1bc8bb6a26a63bef03d501943a69bf7fd350e",
+        "abb05d2bb55270f7a27c46424cb6a651547319c9343ccbce04ebf2e4139fd745",
+        "9f373451d47928b9e68eac1b93d5473d6035e9b9b64dfdf8c6d430879acd8a0e",
+        "8496d0cefade9719e2168516a279ea933d15f3e41ae036a531371fbd279f08c9",
+        "7df14e10c08ed3e3ed812dbba4f75dafcc2aa1b0d56b4f4c0367750b7663faf0",
+        "da11689fb8e90337f493501453e816980b3773fc4063047e76cfd08537d60a8f"
+      ],
+      "generate_reload_outputs_equal": true,
+      "zero_element_inputs": {}
+    },
+    {
+      "component": "flow",
+      "committed_profiles": [
+        {
+          "mode": "generation",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/generation/flow/generate.qnn.csv",
+          "bytes": 18771,
+          "sha256": "65fc5c3379c4bf23b57f7a62113652fe634c1b79bb2838f4e2e59c2d3e8cc060"
+        },
+        {
+          "mode": "generation",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/generation/flow/generate.qnn_qnn.log",
+          "bytes": 19368,
+          "sha256": "987edfa9ab93449325a345f5363079c09464abacdb93376bbd07e90185504ada"
+        },
+        {
+          "mode": "generation",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/generation/flow/generate_2026-08-22_15-10-45_798.json",
+          "bytes": 2566,
+          "sha256": "e2cf7b658ff9c21bbb7ee05b910296cbc5596b2d07f7527561156bcf424a6f97"
+        },
+        {
+          "mode": "reload",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/reload/flow/reload.qnn.csv",
+          "bytes": 18359,
+          "sha256": "b5f167d9c72a4b51aa5b7da560e2eb945f0fc5109e4817a95efea0f9302ea722"
+        },
+        {
+          "mode": "reload",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/reload/flow/reload.qnn_qnn.log",
+          "bytes": 18936,
+          "sha256": "cb808c0ca2450c359dce9fc41f5967149a31d92fceb21eaf82ca7674e71b7e9a"
+        },
+        {
+          "mode": "reload",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/reload/flow/reload_2026-08-22_15-10-47_802.json",
+          "bytes": 951,
+          "sha256": "756fa5ebe915776b153bc2ef93d55967b204e748f55c2873d76a8cd1280609c5"
+        }
+      ],
+      "source_graph": {
+        "bytes": 39118717,
+        "path": "flow.onnx",
+        "sha256": "dae8f0b0f356e85194085793b5729a70d048a18fd827e3b1a58114b3200e09fa"
+      },
+      "descriptor": {
+        "bytes": 775,
+        "path": "flow.onnx",
+        "sha256": "7268da81612534c3461a8ecd044217b9d056bc5571d3e24fb365cc2e5d017214"
+      },
+      "external_context_binary": {
+        "bytes": 19967696,
+        "path": "flow_qnn.bin",
+        "sha256": "ac37ac063a3233f504e33a16dab50e036b8ca93c0fb7d62a3b0883d9e03b4828"
+      },
+      "generation": {
+        "session_create_seconds": 0.4252225769996585,
+        "first_run_seconds": 0.7970843789989885,
+        "process_to_completed_run_seconds": 1.3118912629979604,
+        "provider_events": {
+          "QNNExecutionProvider": 1
+        },
+        "ort_profile": {
+          "bytes": 2566,
+          "path": "generate_2026-08-22_15-10-45_798.json",
+          "sha256": "e2cf7b658ff9c21bbb7ee05b910296cbc5596b2d07f7527561156bcf424a6f97"
+        },
+        "qnn_profile": {
+          "bytes": 18771,
+          "path": "generate.qnn.csv",
+          "sha256": "65fc5c3379c4bf23b57f7a62113652fe634c1b79bb2838f4e2e59c2d3e8cc060"
+        },
+        "result_json_sha256": "8a2cee67219e08d9f1b0c0f5cf96a1016bef80e8655ded2fd9aee94c3eff7c78"
+      },
+      "isolated_reload": {
+        "session_create_seconds": 0.0496114289999241,
+        "first_run_seconds": 0.7893633849998878,
+        "process_to_completed_run_seconds": 0.9057805419979559,
+        "source_onnx_absent": true,
+        "provider_events": {
+          "QNNExecutionProvider": 1
+        },
+        "ort_profile": {
+          "bytes": 951,
+          "path": "reload_2026-08-22_15-10-47_802.json",
+          "sha256": "756fa5ebe915776b153bc2ef93d55967b204e748f55c2873d76a8cd1280609c5"
+        },
+        "qnn_profile": {
+          "bytes": 18359,
+          "path": "reload.qnn.csv",
+          "sha256": "b5f167d9c72a4b51aa5b7da560e2eb945f0fc5109e4817a95efea0f9302ea722"
+        },
+        "result_json_sha256": "3ada822c9a84d177fe096ba294c8adfab977eb4fcef17deb77700352f2a1e7b9"
+      },
+      "output_count": 1,
+      "output_sha256": [
+        "1c27dcf992c93f793a92797eb43cb8508f5470ca9356d1a5959f49b7c9c24a98"
+      ],
+      "generate_reload_outputs_equal": true,
+      "zero_element_inputs": {}
+    },
+    {
+      "component": "decoder12",
+      "committed_profiles": [
+        {
+          "mode": "generation",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/generation/decoder12/generate.qnn.csv",
+          "bytes": 43936,
+          "sha256": "6193ef0e78ddb91eae9fc12c6d008b1fb2dad0b30d2d582ee03b12829acc8691"
+        },
+        {
+          "mode": "generation",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/generation/decoder12/generate.qnn_qnn.log",
+          "bytes": 44080,
+          "sha256": "b3fcb6c664b3b79dbe1d776919b9904e89286122dc3aa8f4d520ea042d86a75c"
+        },
+        {
+          "mode": "generation",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/generation/decoder12/generate_2026-08-22_15-12-18_230.json",
+          "bytes": 3743,
+          "sha256": "07cca327fe9d7bcc699d122e5f5d3dfcf0b78a3ea947d51ab444351949db5b36"
+        },
+        {
+          "mode": "reload",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/reload/decoder12/reload.qnn.csv",
+          "bytes": 43283,
+          "sha256": "bd1c88911b88ce6f34206b20c15535cff8e264f875d653b626612245c2329e85"
+        },
+        {
+          "mode": "reload",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/reload/decoder12/reload.qnn_qnn.log",
+          "bytes": 43416,
+          "sha256": "4e7f50701680f2b5af38296daaa1f397d78bffe3726a5c19cfd9f82eb9f2d748"
+        },
+        {
+          "mode": "reload",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/reload/decoder12/reload_2026-08-22_15-13-10_499.json",
+          "bytes": 1549,
+          "sha256": "1805f95de5d3f177c3551897dc9bebb2f98d7676371299aa832a704e4345871d"
+        }
+      ],
+      "source_graph": {
+        "bytes": 41541565,
+        "path": "mimi_decoder12.onnx",
+        "sha256": "83466fc6cab7aea7085f170b887046d244068bf72a3723c37aa7964d537f3477"
+      },
+      "descriptor": {
+        "bytes": 4423,
+        "path": "mimi_decoder12.onnx",
+        "sha256": "5247e291c36bd5960986dbdbea349dfe84daab192f490532ba59eef9ab00b921"
+      },
+      "external_context_binary": {
+        "bytes": 22515448,
+        "path": "mimi_decoder12_qnn.bin",
+        "sha256": "d24d0b0aca3f824c3a7418a89b8c60f61ccd49186e955073e06b7183161e4343"
+      },
+      "generation": {
+        "session_create_seconds": 7.0371487619995605,
+        "first_run_seconds": 44.41691206000178,
+        "process_to_completed_run_seconds": 51.57513937999829,
+        "provider_events": {
+          "QNNExecutionProvider": 1
+        },
+        "ort_profile": {
+          "bytes": 3743,
+          "path": "generate_2026-08-22_15-12-18_230.json",
+          "sha256": "07cca327fe9d7bcc699d122e5f5d3dfcf0b78a3ea947d51ab444351949db5b36"
+        },
+        "qnn_profile": {
+          "bytes": 43936,
+          "path": "generate.qnn.csv",
+          "sha256": "6193ef0e78ddb91eae9fc12c6d008b1fb2dad0b30d2d582ee03b12829acc8691"
+        },
+        "result_json_sha256": "a4a8cfba1af1253342a49a72b05d1fb4aa3a9d03c786f5c8d4802a19b93ce8da"
+      },
+      "isolated_reload": {
+        "session_create_seconds": 0.04982507300155703,
+        "first_run_seconds": 44.665422205998766,
+        "process_to_completed_run_seconds": 44.817952339999465,
+        "source_onnx_absent": true,
+        "provider_events": {
+          "QNNExecutionProvider": 1
+        },
+        "ort_profile": {
+          "bytes": 1549,
+          "path": "reload_2026-08-22_15-13-10_499.json",
+          "sha256": "1805f95de5d3f177c3551897dc9bebb2f98d7676371299aa832a704e4345871d"
+        },
+        "qnn_profile": {
+          "bytes": 43283,
+          "path": "reload.qnn.csv",
+          "sha256": "bd1c88911b88ce6f34206b20c15535cff8e264f875d653b626612245c2329e85"
+        },
+        "result_json_sha256": "6bf00072fb3abe41226bc814a6ec6d7966daa21e6c2d39fe9c9eabf1c7535084"
+      },
+      "output_count": 57,
+      "output_sha256": [
+        "3ba93f59498d990531dc46770415e7c113c2043360f96dd18bdd229f7115adc3",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "761e641a823909dc4de412af0b92003988f58ed7e0bc309bea9dcc4675a973ca",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "fd4df57832c123a21e2378ea028961ad18a0d84e704e3f6c8660004746eb17bd",
+        "c34e1139a17c76d27241ad978090c1cca6d002a6a5e43d710df5bcc0cedab250",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "647c98dd2846bf54db89317b2eb1e3929e573dda3984647194e1e08c36c75198",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "219fd1a1da5a48f5b7f043381a4dc26fbac43c612de96a0129421914fa32748f",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "16f5377f3565dfa75eb2e45eca07351638e46b84678bc1df4fbba0d0cdfff65b",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "7f4214509f0a053dc8ae6485afd341489ba00b05e0252761a8acf6791db41d68",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "f05a581149d462d8e2820720fba7d31b77adab37c0234e6f523e6af19a2a1fca",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "b78d7f92fc7a87dd2cedc17cdf13b6dc4f5b851adf320cdd7338c33f6f435878",
+        "bfc8eb98ff2c59a56f2f0e8239a5a36f5f8367591cd0385696f0896be69c2c96",
+        "bfc8eb98ff2c59a56f2f0e8239a5a36f5f8367591cd0385696f0896be69c2c96",
+        "0e8930be1be4ca93834298a6bcdaf58e413f1768a0f7f8878976600cfdb45bbd",
+        "bfc8eb98ff2c59a56f2f0e8239a5a36f5f8367591cd0385696f0896be69c2c96",
+        "bfc8eb98ff2c59a56f2f0e8239a5a36f5f8367591cd0385696f0896be69c2c96",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "9d908ecfb6b256def8b49a7c504e6c889c4b0e41fe6ce3e01863dd7b61a20aa0",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "8ce8ba8e726ee8925e6560d86ac35be1097691d1cfac888e6bd20e804ea9eb15",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "fd9243e1ba57263ed469c3bdbd7ade6ec5254e7ed924a9f5737fa44749933cc0",
+        "830497acdc4cbdebb0fc5a05f65cb02a183648329f3067ac2ed27fbcb0ea3419",
+        "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+        "bfc8eb98ff2c59a56f2f0e8239a5a36f5f8367591cd0385696f0896be69c2c96",
+        "830497acdc4cbdebb0fc5a05f65cb02a183648329f3067ac2ed27fbcb0ea3419",
+        "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+        "bfc8eb98ff2c59a56f2f0e8239a5a36f5f8367591cd0385696f0896be69c2c96",
+        "308cdbcd6bf42a53abb75795ff5f301876b13ed3b3e55b16e30d31e730d82091"
+      ],
+      "generate_reload_outputs_equal": true,
+      "zero_element_inputs": {
+        "state_13": {
+          "bytes": 0,
+          "dtype": "float32",
+          "elements": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "shape": [
+            1,
+            64,
+            0
+          ]
+        },
+        "state_18": {
+          "bytes": 0,
+          "dtype": "float32",
+          "elements": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "shape": [
+            1,
+            32,
+            0
+          ]
+        },
+        "state_32": {
+          "bytes": 0,
+          "dtype": "float32",
+          "elements": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "shape": [
+            1,
+            32,
+            0
+          ]
+        },
+        "state_40": {
+          "bytes": 0,
+          "dtype": "float32",
+          "elements": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "shape": [
+            1,
+            64,
+            0
+          ]
+        },
+        "state_46": {
+          "bytes": 0,
+          "dtype": "float32",
+          "elements": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "shape": [
+            1,
+            128,
+            0
+          ]
+        },
+        "state_8": {
+          "bytes": 0,
+          "dtype": "float32",
+          "elements": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "shape": [
+            1,
+            128,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "component": "decoder6",
+      "committed_profiles": [
+        {
+          "mode": "generation",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/generation/decoder6/generate.qnn.csv",
+          "bytes": 43673,
+          "sha256": "560053801c5e972e5c1faeae956254a6daea79c986057f42569333b4f0b0659a"
+        },
+        {
+          "mode": "generation",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/generation/decoder6/generate.qnn_qnn.log",
+          "bytes": 43920,
+          "sha256": "2e7dcd3de01b191ea4bbd4bb6cf72319229931035f81c3432ad7aed78a05d342"
+        },
+        {
+          "mode": "generation",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/generation/decoder6/generate_2026-08-22_15-14-32_336.json",
+          "bytes": 3734,
+          "sha256": "892a1b91b7fd47cb95d56f7f8419932bc137c338cad2891dbfb6ca49aad9e548"
+        },
+        {
+          "mode": "reload",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/reload/decoder6/reload.qnn.csv",
+          "bytes": 43222,
+          "sha256": "168660ce4e651608fe2317c340a7dc325ce6e0c42ce2c80f5820cde2bf1a79fc"
+        },
+        {
+          "mode": "reload",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/reload/decoder6/reload.qnn_qnn.log",
+          "bytes": 43488,
+          "sha256": "fed6917f7ec5f809290fa3163f905da4c289da6b752fa2229ecc79c92da5c93e"
+        },
+        {
+          "mode": "reload",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/reload/decoder6/reload_2026-08-22_15-14-56_424.json",
+          "bytes": 1546,
+          "sha256": "4f01e250cd3756ca7bb00a4e926084d83e4c3fafc85bafc2e789975dd133463d"
+        }
+      ],
+      "source_graph": {
+        "bytes": 41541513,
+        "path": "mimi_decoder6.onnx",
+        "sha256": "ea20a13b90c38f56eaab6f9ded666b9a4737da9b65c24d9c0fbfe175f68f23a4"
+      },
+      "descriptor": {
+        "bytes": 4418,
+        "path": "mimi_decoder6.onnx",
+        "sha256": "cee1d2a78aafdda9b847695cfa6cd366fab933fdda948c57a74ecdce1e98bd65"
+      },
+      "external_context_binary": {
+        "bytes": 21757688,
+        "path": "mimi_decoder6_qnn.bin",
+        "sha256": "cbc67342780fe45ca4016bdfe7712004aaf03148e57ad373ed1ce9e153b1e92a"
+      },
+      "generation": {
+        "session_create_seconds": 2.051637460001075,
+        "first_run_seconds": 21.263324604002264,
+        "process_to_completed_run_seconds": 23.43862131700007,
+        "provider_events": {
+          "QNNExecutionProvider": 1
+        },
+        "ort_profile": {
+          "bytes": 3734,
+          "path": "generate_2026-08-22_15-14-32_336.json",
+          "sha256": "892a1b91b7fd47cb95d56f7f8419932bc137c338cad2891dbfb6ca49aad9e548"
+        },
+        "qnn_profile": {
+          "bytes": 43673,
+          "path": "generate.qnn.csv",
+          "sha256": "560053801c5e972e5c1faeae956254a6daea79c986057f42569333b4f0b0659a"
+        },
+        "result_json_sha256": "28a9d8ecec53af1d4ca0a8e76468f9fc62b99fe5840cc838ddce3d389305f6e1"
+      },
+      "isolated_reload": {
+        "session_create_seconds": 0.04877689899876714,
+        "first_run_seconds": 21.106328443001985,
+        "process_to_completed_run_seconds": 21.252069472000585,
+        "source_onnx_absent": true,
+        "provider_events": {
+          "QNNExecutionProvider": 1
+        },
+        "ort_profile": {
+          "bytes": 1546,
+          "path": "reload_2026-08-22_15-14-56_424.json",
+          "sha256": "4f01e250cd3756ca7bb00a4e926084d83e4c3fafc85bafc2e789975dd133463d"
+        },
+        "qnn_profile": {
+          "bytes": 43222,
+          "path": "reload.qnn.csv",
+          "sha256": "168660ce4e651608fe2317c340a7dc325ce6e0c42ce2c80f5820cde2bf1a79fc"
+        },
+        "result_json_sha256": "afea61b92a075282ef6b62d39fd86e73352f6c252b73d2aabeffe6496796469d"
+      },
+      "output_count": 57,
+      "output_sha256": [
+        "a351c0e66ab7fb77bda824c5d328698c723d18c9a630ddd3f867c46a9f0666a9",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "5dcaf213382f277c4cd471f79c16fe3d666a687e7ab6825da9b933eddfac2226",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "a199a6f7a0c978c705ad8c93de000bb8ee699f4bf602a9a6a1073119c05edfde",
+        "04d03713d74ec4137b7e0535902b8ad53927b2c1133a3cea830b60acdf890ef5",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "f6ff20d064dbcae66ef2c5696eb40fc7f18fba7971b7176285349fa00f18f869",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "ecaaee80ec4abdd82826f55cd9846890294cd38ec987d072860dd6d676ea707d",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "6399d67d363a7660bf123f560e5aa7eb385e0c30feae88a022ad21c054c189d3",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "30dddf0f7d4b943d7172d74bdd00453ac3ada2c2668804e1934fe7a7f7808322",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "69a840878e34b577df0be71116fa627d3c127f86aff256b48f877f2fb5bbdf2c",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "e5885d3f61055f2238cf70f5e17f7e76e6ec56ef7289e4f20abcb1c959c641df",
+        "a3fd08764e225228ee3e534d14ba14b56418d9f2c40c4b529cc9df6acafaff13",
+        "a3fd08764e225228ee3e534d14ba14b56418d9f2c40c4b529cc9df6acafaff13",
+        "921cd8c400184e5eb0bd5c94919b98a8a961646d457c1187303f7189b480d633",
+        "a3fd08764e225228ee3e534d14ba14b56418d9f2c40c4b529cc9df6acafaff13",
+        "a3fd08764e225228ee3e534d14ba14b56418d9f2c40c4b529cc9df6acafaff13",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "9d908ecfb6b256def8b49a7c504e6c889c4b0e41fe6ce3e01863dd7b61a20aa0",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "8ce8ba8e726ee8925e6560d86ac35be1097691d1cfac888e6bd20e804ea9eb15",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "fd9243e1ba57263ed469c3bdbd7ade6ec5254e7ed924a9f5737fa44749933cc0",
+        "830497acdc4cbdebb0fc5a05f65cb02a183648329f3067ac2ed27fbcb0ea3419",
+        "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+        "a3fd08764e225228ee3e534d14ba14b56418d9f2c40c4b529cc9df6acafaff13",
+        "830497acdc4cbdebb0fc5a05f65cb02a183648329f3067ac2ed27fbcb0ea3419",
+        "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+        "a3fd08764e225228ee3e534d14ba14b56418d9f2c40c4b529cc9df6acafaff13",
+        "308cdbcd6bf42a53abb75795ff5f301876b13ed3b3e55b16e30d31e730d82091"
+      ],
+      "generate_reload_outputs_equal": true,
+      "zero_element_inputs": {
+        "state_13": {
+          "bytes": 0,
+          "dtype": "float32",
+          "elements": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "shape": [
+            1,
+            64,
+            0
+          ]
+        },
+        "state_18": {
+          "bytes": 0,
+          "dtype": "float32",
+          "elements": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "shape": [
+            1,
+            32,
+            0
+          ]
+        },
+        "state_32": {
+          "bytes": 0,
+          "dtype": "float32",
+          "elements": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "shape": [
+            1,
+            32,
+            0
+          ]
+        },
+        "state_40": {
+          "bytes": 0,
+          "dtype": "float32",
+          "elements": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "shape": [
+            1,
+            64,
+            0
+          ]
+        },
+        "state_46": {
+          "bytes": 0,
+          "dtype": "float32",
+          "elements": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "shape": [
+            1,
+            128,
+            0
+          ]
+        },
+        "state_8": {
+          "bytes": 0,
+          "dtype": "float32",
+          "elements": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "shape": [
+            1,
+            128,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "component": "decoder1",
+      "committed_profiles": [
+        {
+          "mode": "generation",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/generation/decoder1/generate.qnn.csv",
+          "bytes": 43516,
+          "sha256": "e4f8e0acb77462d80034f11bbf1255960825094596c9278dfdc35fb886d252af"
+        },
+        {
+          "mode": "generation",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/generation/decoder1/generate.qnn_qnn.log",
+          "bytes": 43920,
+          "sha256": "3298bc59aeaa843e77e35c73d09e875d104a40966c0ac54d96580115fafe53b6"
+        },
+        {
+          "mode": "generation",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/generation/decoder1/generate_2026-08-22_15-15-18_304.json",
+          "bytes": 3732,
+          "sha256": "ee096c203117315fba56cb995f668558b807a29c4314954a93d3759e7aa38f1f"
+        },
+        {
+          "mode": "reload",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/reload/decoder1/reload.qnn.csv",
+          "bytes": 43088,
+          "sha256": "8bf4caa5e1012df99c2d7a2139fd93dbd9662e68e4e5a5d70ff1530772554e09"
+        },
+        {
+          "mode": "reload",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/reload/decoder1/reload.qnn_qnn.log",
+          "bytes": 43488,
+          "sha256": "8951523f5a40a088f0a8d739833050fdfb91bf4d30c2eddd80858b5b71e934dd"
+        },
+        {
+          "mode": "reload",
+          "path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-profiles/reload/decoder1/reload_2026-08-22_15-15-24_994.json",
+          "bytes": 1540,
+          "sha256": "0dd12f993e135300979b3f3b4b3a33d6d3d626d36a0dd5a7888f1644979d0a58"
+        }
+      ],
+      "source_graph": {
+        "bytes": 41541502,
+        "path": "mimi_decoder1.onnx",
+        "sha256": "cab35096c695a7f47e14d6ebd1ae77bf29526de6d6a1d0bf0279111ba9a1d050"
+      },
+      "descriptor": {
+        "bytes": 4421,
+        "path": "mimi_decoder1.onnx",
+        "sha256": "e5c9002eaf5b057822ad3349a64bb8a62d0487743b96565bd17690dcfa68544e"
+      },
+      "external_context_binary": {
+        "bytes": 21384952,
+        "path": "mimi_decoder1_qnn.bin",
+        "sha256": "53c833dbef3f74e25288d732a9dcc91b123f2d8ca1c00aaaaf7f16967c2863c8"
+      },
+      "generation": {
+        "session_create_seconds": 1.2336476260024938,
+        "first_run_seconds": 4.702647428999626,
+        "process_to_completed_run_seconds": 6.056622472999152,
+        "provider_events": {
+          "QNNExecutionProvider": 1
+        },
+        "ort_profile": {
+          "bytes": 3732,
+          "path": "generate_2026-08-22_15-15-18_304.json",
+          "sha256": "ee096c203117315fba56cb995f668558b807a29c4314954a93d3759e7aa38f1f"
+        },
+        "qnn_profile": {
+          "bytes": 43516,
+          "path": "generate.qnn.csv",
+          "sha256": "e4f8e0acb77462d80034f11bbf1255960825094596c9278dfdc35fb886d252af"
+        },
+        "result_json_sha256": "99a8b397e1182cdbd1142b87d59a657fa0283dbe787e857f8175fc0ada454b70"
+      },
+      "isolated_reload": {
+        "session_create_seconds": 0.0446652879982139,
+        "first_run_seconds": 4.642837395000242,
+        "process_to_completed_run_seconds": 4.786186928999086,
+        "source_onnx_absent": true,
+        "provider_events": {
+          "QNNExecutionProvider": 1
+        },
+        "ort_profile": {
+          "bytes": 1540,
+          "path": "reload_2026-08-22_15-15-24_994.json",
+          "sha256": "0dd12f993e135300979b3f3b4b3a33d6d3d626d36a0dd5a7888f1644979d0a58"
+        },
+        "qnn_profile": {
+          "bytes": 43088,
+          "path": "reload.qnn.csv",
+          "sha256": "8bf4caa5e1012df99c2d7a2139fd93dbd9662e68e4e5a5d70ff1530772554e09"
+        },
+        "result_json_sha256": "9e67b88c520dd3f4459b084fdb5627f698030a067b168826ff8aa18543af36a1"
+      },
+      "output_count": 57,
+      "output_sha256": [
+        "c28650fd98baca15988c0d1a840ed459572e729fbf1a47b9ea2a6ffbd2f6f52c",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "64963d90859aa45142b989909191ee6f8d2b2805d977be3db91922b2ef91233b",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "c738d5f83829485a42b307d450f135aaaf282237866641e62a855dc23f04af5a",
+        "c5acab5f5508a47660b5029e18e897456c48226e46b14904b7e6d9595728439b",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "5dd8d9d5e435c1369834d52cb17bb79a1d008c40954268bb07e32fa8128f2c3c",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "fc5a596f4b8deb29ee0daa4a22748a8a29f543a3b083add17f21acad20d9d99c",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "3202972dd3f4c2922e8b7218c011ea38d59dad8ae72a4ca8ac7c1c936e02a16b",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "7ac048f7b0cd5ae42ea402d79e3fb3a087e94583c9e37b2519286d448c831ebe",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "6ffbf0875fdcac87e1a2cf9a393b85a4b24070ef4773673c9c070c4e1473320b",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "e8d60bcdbe8548207169fb781ba070887bb9d4c24567d3220eb3b9be1a7c54a1",
+        "5eb6da0e0e522104c6d50b0748e6893762f7f2c00a7163a46ccbb535bfd61a0d",
+        "5eb6da0e0e522104c6d50b0748e6893762f7f2c00a7163a46ccbb535bfd61a0d",
+        "937ab781451c8ad0a39d5aa6cc0313414d245ed1586b0a788b6f4521d30a7fe8",
+        "5eb6da0e0e522104c6d50b0748e6893762f7f2c00a7163a46ccbb535bfd61a0d",
+        "5eb6da0e0e522104c6d50b0748e6893762f7f2c00a7163a46ccbb535bfd61a0d",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "9d908ecfb6b256def8b49a7c504e6c889c4b0e41fe6ce3e01863dd7b61a20aa0",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "8ce8ba8e726ee8925e6560d86ac35be1097691d1cfac888e6bd20e804ea9eb15",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+        "fd9243e1ba57263ed469c3bdbd7ade6ec5254e7ed924a9f5737fa44749933cc0",
+        "830497acdc4cbdebb0fc5a05f65cb02a183648329f3067ac2ed27fbcb0ea3419",
+        "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+        "5eb6da0e0e522104c6d50b0748e6893762f7f2c00a7163a46ccbb535bfd61a0d",
+        "830497acdc4cbdebb0fc5a05f65cb02a183648329f3067ac2ed27fbcb0ea3419",
+        "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+        "5eb6da0e0e522104c6d50b0748e6893762f7f2c00a7163a46ccbb535bfd61a0d",
+        "308cdbcd6bf42a53abb75795ff5f301876b13ed3b3e55b16e30d31e730d82091"
+      ],
+      "generate_reload_outputs_equal": true,
+      "zero_element_inputs": {
+        "state_13": {
+          "bytes": 0,
+          "dtype": "float32",
+          "elements": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "shape": [
+            1,
+            64,
+            0
+          ]
+        },
+        "state_18": {
+          "bytes": 0,
+          "dtype": "float32",
+          "elements": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "shape": [
+            1,
+            32,
+            0
+          ]
+        },
+        "state_32": {
+          "bytes": 0,
+          "dtype": "float32",
+          "elements": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "shape": [
+            1,
+            32,
+            0
+          ]
+        },
+        "state_40": {
+          "bytes": 0,
+          "dtype": "float32",
+          "elements": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "shape": [
+            1,
+            64,
+            0
+          ]
+        },
+        "state_46": {
+          "bytes": 0,
+          "dtype": "float32",
+          "elements": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "shape": [
+            1,
+            128,
+            0
+          ]
+        },
+        "state_8": {
+          "bytes": 0,
+          "dtype": "float32",
+          "elements": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "shape": [
+            1,
+            128,
+            0
+          ]
+        }
+      }
+    }
+  ],
+  "aggregate": {
+    "component_count": 8,
+    "generation_session_create_seconds": [
+      0.11584243399920524,
+      5.757081018000463,
+      3.5714493679988664,
+      3.7035811099995044,
+      0.4252225769996585,
+      7.0371487619995605,
+      2.051637460001075,
+      1.2336476260024938
+    ],
+    "generation_session_create_seconds_sum": 23.895610355000827,
+    "isolated_reload_session_create_seconds": [
+      0.03438427000219235,
+      0.11162745999899926,
+      0.11697225399984745,
+      0.13025874000231852,
+      0.0496114289999241,
+      0.04982507300155703,
+      0.04877689899876714,
+      0.0446652879982139
+    ],
+    "isolated_reload_session_create_seconds_sum": 0.5861214130018197,
+    "observed_host_smoke_setup_delta_seconds": 23.309488941999007,
+    "source_graph_bytes_sum": 1049201215,
+    "descriptor_bytes_sum": 21250,
+    "external_context_bytes_sum": 524131176,
+    "generation_qnn_provider_events": 8,
+    "generation_cpu_provider_events": 0,
+    "reload_qnn_provider_events": 8,
+    "reload_cpu_provider_events": 0,
+    "all_outputs_equal": true,
+    "all_reloads_source_onnx_absent": true
+  },
+  "timing_boundary": {
+    "setup": "Immediately before to immediately after one ORT InferenceSession construction in each fresh process.",
+    "first_run": "Immediately before to immediately after one session.run; HTP emulation first execution is intentionally separate from setup.",
+    "classification": "Functional host smoke with one fresh process per mode/component, not a three-run cold distribution and not physical-phone timing. Context generation is offline cost."
+  },
+  "pre_qnn_tooling_attempts": [
+    {
+      "component": "text",
+      "result": "launcher_error",
+      "exit_code": 127,
+      "reason": "Container used python instead of python3; no QNN session launched; excluded from measurements."
+    },
+    {
+      "component": "decoder12",
+      "result": "fixture_validator_error_after_context_emission",
+      "reason": "Initial smoke validator rejected declared static zero-length state shapes before session.run. Retry preserved shapes with zero elements/bytes; QNN/provider claims use retry only."
+    }
+  ],
+  "claim_boundary": "Host QNN provider assignment and external-context reload functionality only. Host HTP emulation is not physical phone proof. No Android E2E, cold timing distribution, warm RTF, physical RPC/cycle/HVX evidence, or new phone WAV is claimed.",
+  "pending": {
+    "android_e2e": null,
+    "cold_source_setup_runs": null,
+    "cold_context_setup_runs": null,
+    "warm_rtf": null,
+    "physical_htp_proof": null,
+    "phone_wav": null,
+    "phone_listening_verdict": null,
+    "reason": "Phone unavailable; no phone access attempted."
+  }
+}

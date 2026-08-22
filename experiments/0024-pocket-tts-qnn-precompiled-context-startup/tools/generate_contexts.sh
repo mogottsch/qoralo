@@ -46,7 +46,7 @@ run_isolated() {
     "export PYTHONPATH=/build LD_LIBRARY_PATH=/build:/build/onnxruntime/capi:/opt/qairt/lib/x86_64-linux-clang; $*"
 }
 for component in "${ORDER[@]}"; do
-  [[ $TARGET == all || $TARGET == "$component" ]] || continue
+  [[ $TARGET == all || $TARGET == "$component" || ($TARGET == remaining && $component != text) || ($TARGET == decoder-tail && ($component == decoder6 || $component == decoder1)) ]] || continue
   model="$GRAPHS/${MODELS[$component]}"
   [[ -f $model ]] || { echo "missing $model" >&2; exit 5; }
   out="$CONTEXTS/$component"
@@ -63,7 +63,7 @@ for component in "${ORDER[@]}"; do
   fi
   set +e
   run_container \
-    "python /repo/experiments/0024-pocket-tts-qnn-precompiled-context-startup/tools/qnn_context_component.py generate" \
+    "python3 /repo/experiments/0024-pocket-tts-qnn-precompiled-context-startup/tools/qnn_context_component.py generate" \
     "--component $component --model /repo/${model#$ROOT/}" \
     "--descriptor /repo/${descriptor#$ROOT/}" \
     "--backend /opt/qairt/lib/x86_64-linux-clang/libQnnHtp.so" \
@@ -84,7 +84,7 @@ for component in "${ORDER[@]}"; do
   fi
   set +e
   run_isolated "$isolated" \
-    "python /smoke/qnn_context_component.py reload" \
+    "python3 /smoke/qnn_context_component.py reload" \
     "--component $component --model /smoke/${MODELS[$component]}" \
     "--descriptor /smoke/${MODELS[$component]}" \
     "--backend /opt/qairt/lib/x86_64-linux-clang/libQnnHtp.so" \

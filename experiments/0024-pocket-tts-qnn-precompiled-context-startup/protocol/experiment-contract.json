@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0024-pocket-tts-qnn-precompiled-context-startup",
-  "status": "cpu_reconstruction_checkpoint_before_context_generation_or_phone_use",
+  "status": "all_eight_host_context_smokes_passed_phone_campaign_pending",
   "goal": "Compare cold QNN session readiness from source ONNX against external precompiled QNN EPContext reload for a freshly validated 0024 reconstruction derivative of the accepted Pocket canonical-v2 fixed-Alba cache512 route.",
   "comparison": {
     "arm_a": "Eight source ONNX graphs; QNN compilation occurs inside measured session creation.",
@@ -68,6 +68,19 @@
     "first_divergence": "Controlled ONNX serialization before 0024 specialization: used base files match committed byte sizes but not SHA-256.",
     "host_cpu_behavior": {"eos_step": 160, "frames": 163, "samples": 312960, "audio_seconds": 13.04, "wav_sha256": "7979459f95752064b3aa025644a102d85d555e9684ff6f204d348025e394cb1d", "listening": "not_reviewed"},
     "qnn_or_phone_attempted": false
+  },
+  "host_context_amendment": {
+    "evidence": "results/host-context-smoke.json",
+    "component_count": 8,
+    "all_generation_and_isolated_reload_passed": true,
+    "all_reload_source_onnx_absent": true,
+    "generation_provider_events": {"QNNExecutionProvider": 8, "CPUExecutionProvider": 0},
+    "reload_provider_events": {"QNNExecutionProvider": 8, "CPUExecutionProvider": 0},
+    "generation_session_create_seconds_sum": 23.895610355000827,
+    "isolated_reload_session_create_seconds_sum": 0.5861214130018197,
+    "external_context_bytes_sum": 524131176,
+    "timing_classification": "One fresh functional smoke per component/mode; setup excludes first execution; not a three-run cold distribution or phone timing.",
+    "phone_attempted": false
   },
   "runtime": {
     "onnxruntime": "1.27.1",

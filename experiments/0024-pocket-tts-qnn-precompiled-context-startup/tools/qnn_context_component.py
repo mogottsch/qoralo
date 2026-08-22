@@ -35,7 +35,7 @@ def file_record(path: Path) -> dict[str, Any]:
 def shape_of(meta: Any) -> tuple[int, ...]:
     shape: list[int] = []
     for value in meta.shape:
-        if not isinstance(value, int) or value <= 0:
+        if not isinstance(value, int) or value < 0:
             raise SystemExit(f"non-static input {meta.name}: {meta.shape}")
         shape.append(value)
     return tuple(shape)
@@ -69,10 +69,14 @@ def deterministic_feed(session: ort.InferenceSession, component: str,
         else:
             raise SystemExit(f"unsupported input dtype {meta.type} for {meta.name}")
         value = np.ascontiguousarray(value)
+        if value.size == 0 and value.nbytes != 0:
+            raise SystemExit(f"zero-element input has nonzero payload: {meta.name}")
         feed[meta.name] = value
         records[meta.name] = {
             "shape": list(value.shape),
             "dtype": value.dtype.name,
+            "elements": int(value.size),
+            "bytes": int(value.nbytes),
             "sha256": hashlib.sha256(value.tobytes()).hexdigest(),
         }
     return feed, records
@@ -122,12 +126,10 @@ def output_record(value: np.ndarray) -> dict[str, Any]:
         "sha256": hashlib.sha256(array.tobytes()).hexdigest(),
     }
     if np.issubdtype(array.dtype, np.floating):
-        record.update({
-            "finite": bool(np.all(np.isfinite(array))),
-            "min": float(np.min(array)),
-            "max": float(np.max(array)),
-            "mean": float(np.mean(array, dtype=np.float64)),
-        })
+        record["finite"] = bool(np.all(np.isfinite(array)))
+        record["min"] = float(np.min(array)) if array.size else None
+        record["max"] = float(np.max(array)) if array.size else None
+        record["mean"] = float(np.mean(array, dtype=np.float64)) if array.size else None
     return record
 
 
