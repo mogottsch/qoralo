@@ -9,6 +9,10 @@ RESULT_PATH = EXP / "results/host-context-smoke/host-context-functional-smoke.js
 RESULT = json.loads(RESULT_PATH.read_text())
 CLEAN_PATH = EXP / "results/clean-host-setup/clean-setup-result.json"
 CLEAN = json.loads(CLEAN_PATH.read_text())
+PREPARATION_PATH = EXP / "results/phone-preparation.json"
+PREPARATION = json.loads(PREPARATION_PATH.read_text())
+TRANSPORT_PATH = EXP / "protocol/phone-transport-contract.json"
+TRANSPORT = json.loads(TRANSPORT_PATH.read_text())
 TRANSCRIPT_SHA = "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f"
 EXPECTED_GRAPHS = {
     "duration": "8a1875ef0f6960ca16fc06814509b1c3258e8f50b04a5d590d3ab6db8c775016",
@@ -145,6 +149,70 @@ class HostContextSmokeTest(unittest.TestCase):
             self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), copied["sha256"])
         self.assertIn("inference latency or end-to-end RTF", CLEAN["claim_boundary"]["not_established"])
         self.assertIn("cold OS filesystem-cache behavior", CLEAN["claim_boundary"]["not_established"])
+
+    def test_native_linux_adb_transport_is_frozen_safely(self):
+        self.assertEqual(TRANSPORT["status"], "prepared_not_executed")
+        self.assertEqual(TRANSPORT["platform_adaptation"]["selected_transport"], "/usr/bin/adb")
+        self.assertFalse(TRANSPORT["platform_adaptation"]["historical_path_present"])
+        self.assertEqual(
+            TRANSPORT["adb"]["sha256"],
+            "506163fd859265bc895b64eeba28252fb0f7864decf8b42dac3cbf9711240f9f",
+        )
+        self.assertIn("not set", TRANSPORT["adb"]["ADB_LIBUSB"])
+        self.assertEqual(TRANSPORT["lock"]["path"], "artifacts/locks/phone.lock")
+        self.assertTrue(TRANSPORT["device_gate"]["exactly_one_authorized_device_state"])
+        self.assertEqual(TRANSPORT["device_gate"]["serial"], "R5CW81PR8SY")
+        self.assertFalse(TRANSPORT["safety"]["app_install"])
+
+    def test_phone_runner_stage_is_prepared_but_not_executed(self):
+        self.assertEqual(PREPARATION["status"], "phone_campaign_prepared_not_executed")
+        self.assertTrue(PREPARATION["host_setup_review_input"]["accepted_by_pi"])
+        self.assertEqual(PREPARATION["stage"]["manifest"]["entries"], 26)
+        self.assertRegex(PREPARATION["stage"]["manifest"]["sha256"], r"^[0-9a-f]{64}$")
+        self.assertIn("ARM aarch64", PREPARATION["runner"]["binary"]["file_output"])
+        self.assertEqual(PREPARATION["runner"]["android_api"], 28)
+        self.assertEqual(
+            PREPARATION["runtime_adaptation"]["sha256"],
+            "643c6f6fd3d2b375ca8f2407a1695acaf55320b8e947adc4284665640fdc3ae9",
+        )
+        self.assertFalse(PREPARATION["runtime_adaptation"]["historical_0011_binary_available"])
+        self.assertFalse(PREPARATION["validation"]["phone_access_during_preparation"])
+        self.assertEqual(PREPARATION["validation"]["stage_hash_check"], "passed")
+        source_paths = {
+            "source": EXP / "phone/supertonic_qnn_context_runner.cc",
+            "build_script": EXP / "tools/build_phone_runner.sh",
+        }
+        for key, path in source_paths.items():
+            record = PREPARATION["runner"][key]
+            self.assertEqual(record["bytes"], path.stat().st_size)
+            self.assertEqual(record["sha256"], hashlib.sha256(path.read_bytes()).hexdigest())
+        campaign_paths = {
+            "script": EXP / "device/run_phone_campaign.sh",
+            "validator": EXP / "tools/validate_phone_campaign.py",
+        }
+        for key, path in campaign_paths.items():
+            record = PREPARATION["campaign"][key]
+            self.assertEqual(record["bytes"], path.stat().st_size)
+            self.assertEqual(record["sha256"], hashlib.sha256(path.read_bytes()).hexdigest())
+
+    def test_phone_campaign_is_bounded_and_source_absent_for_context(self):
+        campaign = (EXP / "device/run_phone_campaign.sh").read_text()
+        runner = (EXP / "phone/supertonic_qnn_context_runner.cc").read_text()
+        validator = (EXP / "tools/validate_phone_campaign.py").read_text()
+        self.assertIn('ADB=/usr/bin/adb', campaign)
+        self.assertIn('flock -n 9', campaign)
+        self.assertIn('unset ADB_LIBUSB', campaign)
+        self.assertIn('for index in 1 2 3', campaign)
+        self.assertIn('run_native source-e2e source e2e', campaign)
+        self.assertIn('run_native context-e2e context e2e', campaign)
+        self.assertIn('run_native context-proof context proof', campaign)
+        self.assertLess(campaign.index("rm -rf '$REMOTE/source-models'"), campaign.index('run_native "context-setup-$index"'))
+        self.assertIn('a.action == "e2e" ? 6 : 1', runner)
+        self.assertIn('session.disable_cpu_ep_fallback', runner)
+        self.assertIn('ep.context_file_path', runner)
+        self.assertIn('if (a.action == "setup")', runner)
+        self.assertIn('HISTORICAL_ACCEPTED_WAV', validator)
+        self.assertIn('descriptive only; no numerical acceptance gate', validator)
 
 
 if __name__ == "__main__":

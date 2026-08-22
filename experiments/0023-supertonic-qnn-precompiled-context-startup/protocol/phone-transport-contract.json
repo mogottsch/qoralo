@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "experiment": "0023-supertonic-qnn-precompiled-context-startup",
+  "status": "prepared_not_executed",
+  "platform_adaptation": {
+    "host": "native Manjaro Linux",
+    "historical_transport": "Windows adb.exe under /mnt/c with ADB_LIBUSB=1",
+    "historical_path_present": false,
+    "selected_transport": "/usr/bin/adb",
+    "reason": "The historical WSL/Windows path is absent on this native Linux host. The installed distro Android platform-tools adb is the bounded native transport; using it avoids treating a platform-specific historical path as an execution blocker."
+  },
+  "adb": {
+    "path": "/usr/bin/adb",
+    "sha256": "506163fd859265bc895b64eeba28252fb0f7864decf8b42dac3cbf9711240f9f",
+    "bytes": 2950336,
+    "version_output": [
+      "Android Debug Bridge version 1.0.41",
+      "Version 37.0.0-android-tools",
+      "Installed as /usr/bin/adb",
+      "Running on Linux 6.12.103-1-MANJARO (x86_64)"
+    ],
+    "ADB_LIBUSB": "not set; that override belonged to the Windows transport and is not carried onto native Linux"
+  },
+  "lock": {
+    "path": "artifacts/locks/phone.lock",
+    "acquire": "nonblocking flock held for the complete identity, stage, execution, evidence pull and cleanup interval",
+    "child_fd_rule": "close lock FD 9 in every adb child"
+  },
+  "device_gate": {
+    "exactly_one_authorized_device_state": true,
+    "serial": "R5CW81PR8SY",
+    "manufacturer": "samsung",
+    "model": "SM-S918B",
+    "device": "dm3q",
+    "soc": "SM8550",
+    "abi": "arm64-v8a",
+    "boot_completed": "1",
+    "verified_boot_state": "green",
+    "flash_locked": "1"
+  },
+  "safety": {
+    "remote_root": "unique /data/local/tmp/vibevoice-0023-<UTC>-<PID>",
+    "stage_hash_verification": true,
+    "minimum_free_space_check": true,
+    "personal_data_or_settings": "not accessed",
+    "privileged_or_system_changes": "forbidden",
+    "firmware_or_security_changes": "forbidden",
+    "native_binary_only": true,
+    "app_install": false,
+    "cleanup": "trap removes only the unique scoped root and verifies it is absent before releasing the lock"
+  },
+  "campaign": {
+    "setup": "three fresh runner processes per arm; setup action creates four sessions and performs no inference",
+    "e2e": "one fresh process per arm, one first plus five same-session warm complete generations",
+    "physical_proof": "one separate context-arm detailed-profile process with one complete generation",
+    "source_unavailable_for_context": "source-models directory is deleted and absence verified before any context-arm process",
+    "profiling_separation": "profiled proof is excluded from setup and E2E timing summaries"
+  }
+}

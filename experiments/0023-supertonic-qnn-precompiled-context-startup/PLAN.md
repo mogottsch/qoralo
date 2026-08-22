@@ -2,7 +2,7 @@
 
 ## Current state
 
-All four exact experiment-0011 graph identities passed host QNN HTP external-context generation and independent source-unavailable reload. The preliminary functional wave overlapped experiment 0017, so its timing/resource values remain excluded. After explicit Pi clearance, a separate clean ten-process setup campaign completed under the full-lifetime heavy-RAM lock with five fresh containers per arm and no QNN overlap. Median exact four-session readiness was 24.731559668001864 seconds from source ONNX versus 0.2008688030000485 seconds from external context. Phone work remains paused pending review.
+All four exact experiment-0011 graph identities passed host QNN HTP external-context generation and independent source-unavailable reload. The preliminary functional wave overlapped experiment 0017, so its timing/resource values remain excluded. After explicit Pi clearance, a separate clean ten-process setup campaign completed under the full-lifetime heavy-RAM lock with five fresh containers per arm and no QNN overlap. Median exact four-session readiness was 24.731559668001864 seconds from source ONNX versus 0.2008688030000485 seconds from external context. A bounded matched Android runner, stage and native-Linux adb transport contract are prepared without phone access. Execution remains paused pending preparation review and device availability.
 
 ## Frozen pragmatic scope
 
@@ -62,16 +62,27 @@ Both modes set `session.disable_cpu_ep_fallback=1`. Generation additionally sets
 
 [`tools/run_clean_setup_campaign.sh`](tools/run_clean_setup_campaign.sh) requires explicit clearance, acquires `artifacts/locks/heavy-ram.lock` nonblocking for the full campaign, rejects an active QNN/compiler process, stages source-only and context-only packages, and launches each measurement in a fresh Docker container. [`tools/qnn_setup_timing_process.py`](tools/qnn_setup_timing_process.py) records script-entry, exact four-constructor sequence, per-component intervals and ready memory before post-ready hashing. [`tools/finalize_clean_setup_campaign.py`](tools/finalize_clean_setup_campaign.py) freezes all ten raw records and distributions.
 
-## Next execution sequence after review
+## Prepared Android campaign
 
-1. Implement one matched E2E runner with source/context modes and exact per-session/process-ready boundaries.
-2. Verify context mode with source ONNX unavailable.
-3. Acquire `artifacts/locks/phone.lock`; use Windows `adb.exe` with `ADB_LIBUSB=1`; verify exactly serial `R5CW81PR8SY`, model `SM-S918B`, device `dm3q`, boot complete and authorized state.
-4. Use unique scoped staging, hash verification, no personal settings/data, evidence pull, cleanup verification and lock release.
-5. Prove QNN provider and physical RPC/accelerator/cycle/HVX evidence separately if profiling perturbs timing.
-6. Collect at least three clean fresh-process phone setup runs for each arm. Record process-to-ready and each session construction time; compare distributions without a minimum-speedup gate.
-7. In measured processes run one first and five same-session warm complete generations with full deterministic state reset. Record actual WAV duration and RTF.
-8. Validate WAV RIFF/PCM structure, sample rate, channel count, samples, duration and SHA-256. Record numerical differences descriptively.
+- [`phone/supertonic_qnn_context_runner.cc`](phone/supertonic_qnn_context_runner.cc) supports matched `source`/`context` arms and separate `setup`/`e2e`/`proof` actions.
+- [`tools/build_phone_runner.sh`](tools/build_phone_runner.sh) cross-compiles Android API 28 AArch64 with warnings as errors.
+- [`tools/prepare_phone_stage.py`](tools/prepare_phone_stage.py) verifies every graph/context/runtime hash and produces the ignored stage plus remote manifest.
+- [`protocol/phone-transport-contract.json`](protocol/phone-transport-contract.json) documents native Linux `/usr/bin/adb` as the platform adaptation; the historical Windows path is absent.
+- [`device/run_phone_campaign.sh`](device/run_phone_campaign.sh) holds `phone.lock`, performs identity/space/hash gates, runs the bounded campaign, samples memory, pulls evidence and verifies scoped cleanup.
+- [`tools/validate_phone_campaign.py`](tools/validate_phone_campaign.py) separates setup, E2E and profiled proof evidence; numerical differences are descriptive.
+
+The current retained Android ORT 1.27.1 library hash is `643c6f6fd3d2b375ca8f2407a1695acaf55320b8e947adc4284665640fdc3ae9`. The historical 0011 library hash is not locally retained. Both 0023 arms therefore use the current rebuild identically; this is a documented pragmatic runtime adaptation, not a claim of exact 0011 binary reuse.
+
+## Next execution sequence after preparation review
+
+1. Wait for actual device availability; do not expand the bounded campaign.
+2. Acquire `artifacts/locks/phone.lock`; use native Linux `/usr/bin/adb`; verify exactly serial `R5CW81PR8SY`, manufacturer `samsung`, model `SM-S918B`, device `dm3q`, SoC `SM8550`, ABI `arm64-v8a`, Android 16/API 36, boot complete, verified boot green, flash locked and authorized state.
+3. Use unique scoped staging, minimum-free-space and remote hash gates, no personal settings/data, evidence pull, cleanup verification and lock release.
+4. Collect exactly three clean fresh-process phone setup runs per arm. Record process-entry-to-ready and each session construction time; compare distributions without a minimum-speedup gate.
+5. Run one separate six-generation E2E process per arm: one first plus five same-session warm generations with full deterministic state reset. Record actual WAV duration and RTF.
+6. Delete source models and verify absence before every context-arm process.
+7. Run one separate profiled context generation and require QNN-only ORT nodes plus RPC/accelerator/cycle/four-HVX-thread evidence. Exclude it from setup/E2E timing.
+8. Validate WAV RIFF/PCM structure, sample rate, channel count, samples, duration and SHA-256. Record numerical differences descriptively. Transfer historical listening only for an exact accepted WAV hash; otherwise mark `not_reviewed`.
 9. Commit only 0023 evidence and notify Pi. Alex owns dashboard ingestion.
 
 ## Validation

@@ -1,6 +1,6 @@
 # Experiment 0023 — Supertonic QNN precompiled-context startup
 
-**Status: clean isolated host setup campaign passed with five fresh processes per arm. Median exact four-session setup was 24.7316 s from source ONNX versus 0.2009 s from external EPContext, an observed 24.5307 s / 99.1878% reduction. Phone work remains paused pending review.**
+**Status: clean isolated host setup campaign passed with five fresh processes per arm. Median exact four-session setup was 24.7316 s from source ONNX versus 0.2009 s from external EPContext, an observed 24.5307 s / 99.1878% reduction. A bounded matched phone runner/stage is prepared but not executed; phone work remains paused pending preparation review and device availability.**
 
 ## Question
 
@@ -42,10 +42,26 @@ The host wave overlapped experiment 0017's serialized QNN run before its owner r
 
 Therefore **none of the preliminary functional-smoke setup, execution, ratio or resource observations are benchmark evidence**. They establish mechanism and functional reload only. The later clean ten-process campaign above supersedes those excluded preliminary setup observations for the host setup comparison.
 
+## Prepared phone campaign
+
+The matched Android ARM64 runner and 703 MiB hash-bound stage are prepared without phone access. Both arms use the current retained ORT 1.27.1 + QAIRT 2.49 Android build (`libonnxruntime.so` SHA-256 `643c6f6f…ae9`); the historical 0011 binary is no longer retained, so 0023 documents this same-runtime-both-arms adaptation rather than claiming binary identity.
+
+This native Manjaro host uses installed `/usr/bin/adb` 37.0.0 (SHA-256 `506163fd…40f9`). The historical Windows/WSL adb path is absent; `ADB_LIBUSB` is deliberately not carried over. The frozen transport contract still requires nonblocking `phone.lock`, exactly one authorized Galaxy S23 Ultra, full identity/boot/verified-lock gates, unique `/data/local/tmp` staging, remote hash verification, evidence pull and trap cleanup verification.
+
+The bounded campaign contains exactly:
+
+- three fresh four-session setup-only processes per arm;
+- one separate E2E process per arm with one first and five warm generations;
+- one separate profiled context-arm physical-proof generation;
+- source-model deletion and absence verification before every context-arm process;
+- sampled PSS/VmHWM, thermal/battery context, WAV structural validation and descriptive numerical comparison.
+
+See [`results/phone-preparation.json`](results/phone-preparation.json) and [`protocol/phone-transport-contract.json`](protocol/phone-transport-contract.json). No ADB/device command was run during preparation.
+
 ## Next gates
 
-1. Obtain review of the committed clean host setup campaign.
-2. Build the matched E2E runner for source and context arms.
+1. Obtain review of the committed phone preparation.
+2. When the device is available, run the bounded campaign without expanding scope.
 3. On the authorized Galaxy S23 Ultra, prove all four neural sessions with fallback disabled and physical QNN/RPC evidence.
 4. Run at least three clean fresh-process phone setup measurements per arm, using identical effective graphs/config/input and exact timing boundaries.
 5. Produce and structurally validate an E2E WAV. Numerical and byte differences are descriptive, not execution blockers.

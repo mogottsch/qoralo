@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0023-supertonic-qnn-precompiled-context-startup",
-  "status": "clean_host_setup_campaign_passed_waiting_for_review",
+  "status": "phone_campaign_prepared_waiting_for_review",
   "authorization": {
     "authorized_by": "Moritz via Pi",
     "question": "Can the accepted Supertonic route run all neural components on QNN, and does precompiled EPContext loading reduce cold setup versus source-ONNX QNN compilation?",
@@ -28,6 +28,14 @@
   },
   "runtime": {
     "onnxruntime": "1.27.1",
+    "android_libonnxruntime": {
+      "sha256": "643c6f6fd3d2b375ca8f2407a1695acaf55320b8e947adc4284665640fdc3ae9",
+      "bytes": 22399512,
+      "provenance": "current retained ORT 1.27.1 + QAIRT 2.49 Android arm64 build used identically by both phone arms",
+      "historical_0011_hash": "40bc591798287525f365e8ded4bbc40e0c4e9440737e876026ec09ba359ac041",
+      "historical_0011_binary_available": false,
+      "adaptation": "The historical binary is no longer retained locally. The pragmatic 0023 phone comparison uses the current pinned-version rebuild for both matched arms rather than blocking or claiming binary identity to 0011."
+    },
     "qairt": "2.49.0.260730",
     "provider": "QNNExecutionProvider / HTP",
     "session.disable_cpu_ep_fallback": "1",
@@ -78,6 +86,9 @@
       "source_over_context_median_ratio": 123.12295039661232,
       "context_setup_reduction_percent": 99.1878037386379
     },
-    "pause": "Clean host campaign complete. Review the committed evidence before any phone work."
+    "phone_preparation_evidence": "results/phone-preparation.json",
+    "phone_campaign": "Three fresh setup processes per arm; one separate six-generation E2E process per arm; one separate profiled context physical-proof process.",
+    "transport": "Native Linux /usr/bin/adb adaptation frozen in protocol/phone-transport-contract.json.",
+    "pause": "Commit and review the prepared runner/stage/transport contract before any phone execution."
   }
 }
