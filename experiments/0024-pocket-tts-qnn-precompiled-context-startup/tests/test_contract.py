@@ -94,6 +94,24 @@ class ContractTest(unittest.TestCase):
         self.assertIsNone(result["pending"]["android_e2e"])
         self.assertIsNone(result["pending"]["phone_wav"])
 
+    def test_android_stages_are_provenance_only(self):
+        result = json.loads((EXP / "results/android-stage-provenance.json").read_text())
+        self.assertEqual(result["status"], "source_and_context_android_stages_prepared_no_phone_access")
+        self.assertEqual(result["source_stage"]["file_count"], 19)
+        self.assertEqual(result["source_stage"]["file_bytes_sum"], 1179648983)
+        self.assertEqual(result["context_stage"]["file_count"], 27)
+        self.assertEqual(result["context_stage"]["file_bytes_sum"], 654600194)
+        self.assertEqual(result["context_stage"]["descriptor_count"], 8)
+        self.assertEqual(result["context_stage"]["external_binary_count"], 8)
+        self.assertTrue(result["context_stage"]["source_onnx_absent"])
+        self.assertEqual(result["runner"]["needed"],
+                         ["libonnxruntime.so", "libc++_shared.so", "libm.so", "libdl.so", "libc.so"])
+        self.assertTrue(all(result["gates"].values()))
+        self.assertFalse(result["phone"]["attempted"])
+        self.assertFalse(result["phone"]["phone_lock_acquired"])
+        self.assertFalse(result["phone"]["adb_invoked"])
+        self.assertIsNone(result["portability"]["physical_context_load_status"])
+
     def test_executables(self):
         for path in list((EXP / "tools").glob("*.sh")) + list((EXP / "device").glob("*.sh")):
             self.assertTrue(os.access(path, os.X_OK), path)
