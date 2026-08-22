@@ -1,0 +1,128 @@
+{
+  "artifacts": {
+    "backend": {
+      "bytes": 97556152,
+      "path": "libQnnHtp.so",
+      "sha256": "e557ca522713ea7ee7efd252083b927009cd54c158899c086b23d92b63bf1f33"
+    },
+    "descriptor": {
+      "bytes": 824,
+      "path": "text-context.onnx",
+      "sha256": "fcfa995621723f4eae9075ff503e8f62915366cd7d1e3313f3a0805c2f89389b"
+    },
+    "external_context_binary": {
+      "bytes": 19437184,
+      "path": "text-context_qnn.bin",
+      "sha256": "1353455784cd9dc6427884a96c08d5c0671c4adeac2c5e54ae877fe51433c718"
+    },
+    "inputs": {
+      "style_ttl": {
+        "bytes": 51200,
+        "dtype": "float32",
+        "path": "style_ttl.raw",
+        "sha256": "83d2429acffbc2456a42bcee08a56ff04e775d6ea5c5bbef1529a988628367e7",
+        "shape": [
+          1,
+          50,
+          256
+        ]
+      },
+      "text_ids": {
+        "bytes": 1912,
+        "dtype": "int64",
+        "path": "text_ids.raw",
+        "sha256": "0721bc005f28f9b174eb588bf6e332fd0e6d54950f64aa71dfbdfa50bfec9df0",
+        "shape": [
+          1,
+          239
+        ]
+      },
+      "text_mask": {
+        "bytes": 956,
+        "dtype": "float32",
+        "path": "text_mask.raw",
+        "sha256": "21c44c51bc85efb67ac0c677666d0d3af05bdc1f22ea9431cd80d6052de86908",
+        "shape": [
+          1,
+          1,
+          239
+        ]
+      }
+    },
+    "model_loaded": {
+      "bytes": 36566260,
+      "path": "text_encoder.onnx",
+      "sha256": "769fd1d257674e8624bdea941f7a903d9460051f9845b604cd2c2980f281a8c3"
+    },
+    "ort_profile": {
+      "bytes": 4850,
+      "path": "generate_2026-08-22_10-55-59_034.json",
+      "sha256": "57c213ba236b7b67fb032104281818248475e84534b934996f466565b6953942"
+    },
+    "qnn_profile": {
+      "bytes": 45720,
+      "path": "generate.qnn.csv",
+      "sha256": "51185c448781b280e99a054bba8372768606ad1d6f7231024d32d75d8c8571a5"
+    }
+  },
+  "component": "text",
+  "configuration": {
+    "ep.context_embed_mode": "0",
+    "ep.context_enable": "1",
+    "ep.context_file_path": "text-context.onnx",
+    "execution_mode": "ORT_SEQUENTIAL",
+    "graph_optimization": "ORT_ENABLE_ALL",
+    "provider_options": {
+      "backend_path": "libQnnHtp.so",
+      "htp_performance_mode": "burst",
+      "offload_graph_io_quantization": "0",
+      "profiling_file_path": "/repo/experiments/0023-supertonic-qnn-precompiled-context-startup/.local/contexts-host/text/profiles/generate.qnn.csv",
+      "profiling_level": "detailed",
+      "soc_model": "43"
+    },
+    "session.disable_cpu_ep_fallback": "1",
+    "threads": {
+      "inter_op": 1,
+      "intra_op": 1
+    }
+  },
+  "fresh_process": true,
+  "mode": "generate",
+  "output": {
+    "dtype": "float32",
+    "elements": 61184,
+    "finite": true,
+    "max": 8.726563453674316,
+    "mean": 0.009263385783703058,
+    "min": -2.261718988418579,
+    "sha256": "fca2308d0f0924fe4715efc6b8695c6dd6ae622029266df15fbc9756d3b434a0",
+    "shape": [
+      1,
+      256,
+      239
+    ]
+  },
+  "result": "passed",
+  "runtime": {
+    "onnxruntime": "1.27.1",
+    "pid": 1,
+    "providers_available": [
+      "QNNExecutionProvider",
+      "CPUExecutionProvider"
+    ],
+    "providers_session": [
+      "QNNExecutionProvider",
+      "CPUExecutionProvider"
+    ],
+    "python": "3.10.12"
+  },
+  "schema_version": 1,
+  "source_onnx_absent_from_isolation_root": false,
+  "timing": {
+    "first_run_seconds": 6.240844805000052,
+    "process_to_completed_run_seconds": 7.310177612000189,
+    "run_boundary": "immediately before to immediately after session.run",
+    "session_boundary": "immediately before to immediately after ort.InferenceSession construction",
+    "session_create_seconds": 0.9791406829999687
+  }
+}

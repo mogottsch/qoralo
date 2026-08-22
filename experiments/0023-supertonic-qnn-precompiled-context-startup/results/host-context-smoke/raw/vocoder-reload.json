@@ -1,0 +1,106 @@
+{
+  "artifacts": {
+    "backend": {
+      "bytes": 97556152,
+      "path": "libQnnHtp.so",
+      "sha256": "e557ca522713ea7ee7efd252083b927009cd54c158899c086b23d92b63bf1f33"
+    },
+    "descriptor": {
+      "bytes": 729,
+      "path": "vocoder-context.onnx",
+      "sha256": "5a60243f4831927b8979eed340faf0502cabb37e6c7225435f724c3967e20034"
+    },
+    "external_context_binary": {
+      "bytes": 55355808,
+      "path": "vocoder-context_qnn.bin",
+      "sha256": "dc17865e02ac164039d97c31adc5507943d282b19c1e60cd1dcbebbb8c3615f2"
+    },
+    "inputs": {
+      "latent": {
+        "bytes": 137088,
+        "dtype": "float32",
+        "path": "final_latent.raw",
+        "sha256": "500f3b0f0a3c342726abcd7fe4518d5972070fd9bd56fddc5551db9cbf7da085",
+        "shape": [
+          1,
+          144,
+          238
+        ]
+      }
+    },
+    "model_loaded": {
+      "bytes": 729,
+      "path": "vocoder-context.onnx",
+      "sha256": "5a60243f4831927b8979eed340faf0502cabb37e6c7225435f724c3967e20034"
+    },
+    "ort_profile": {
+      "bytes": 922,
+      "path": "reload_2026-08-22_11-18-33_916.json",
+      "sha256": "2b8cdc1ade851ada19d2be95b5e30685e36abb0a85435b570ad9ace056edbe8f"
+    },
+    "qnn_profile": {
+      "bytes": 16281,
+      "path": "reload.qnn.csv",
+      "sha256": "86b75f88d61e98731ceacf836273f69723f3f0c720dc21c032123418a0bdb6c7"
+    }
+  },
+  "component": "vocoder",
+  "configuration": {
+    "ep.context_embed_mode": "not_set",
+    "ep.context_enable": "not_set",
+    "ep.context_file_path": "vocoder-context.onnx",
+    "execution_mode": "ORT_SEQUENTIAL",
+    "graph_optimization": "ORT_ENABLE_ALL",
+    "provider_options": {
+      "backend_path": "libQnnHtp.so",
+      "htp_performance_mode": "burst",
+      "offload_graph_io_quantization": "0",
+      "profiling_file_path": "/smoke/profiles/reload.qnn.csv",
+      "profiling_level": "detailed",
+      "soc_model": "43"
+    },
+    "session.disable_cpu_ep_fallback": "1",
+    "threads": {
+      "inter_op": 1,
+      "intra_op": 1
+    }
+  },
+  "fresh_process": true,
+  "mode": "reload",
+  "output": {
+    "dtype": "float32",
+    "elements": 731136,
+    "finite": true,
+    "max": 0.6708984971046448,
+    "mean": -0.0003219529988659825,
+    "min": -0.6440430283546448,
+    "sha256": "94cc223e95cd1fdaff998a176d56b9da56327b5fe95bd9611e974c7be16efb80",
+    "shape": [
+      1,
+      731136
+    ]
+  },
+  "result": "passed",
+  "runtime": {
+    "onnxruntime": "1.27.1",
+    "pid": 1,
+    "providers_available": [
+      "QNNExecutionProvider",
+      "CPUExecutionProvider"
+    ],
+    "providers_session": [
+      "QNNExecutionProvider",
+      "CPUExecutionProvider"
+    ],
+    "python": "3.10.12"
+  },
+  "schema_version": 1,
+  "source_onnx_absent_from_isolation_root": true,
+  "timing": {
+    "first_run_seconds": 252.6310528920003,
+    "process_to_completed_run_seconds": 252.82736419699995,
+    "run_boundary": "immediately before to immediately after session.run",
+    "session_boundary": "immediately before to immediately after ort.InferenceSession construction",
+    "session_create_seconds": 0.08865742000034516
+  }
+}

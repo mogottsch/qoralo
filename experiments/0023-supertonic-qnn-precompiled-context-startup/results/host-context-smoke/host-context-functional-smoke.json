@@ -1,0 +1,1016 @@
+{
+  "aggregate": {
+    "all_functional_checks_passed": true,
+    "all_ort_node_events_qnn_only": true,
+    "components": 4,
+    "total_external_context_bytes": 213831943
+  },
+  "answer": "yes_on_host_qnn_htp_for_all_four_components",
+  "claim_boundary": {
+    "established": [
+      "All four accepted Supertonic graph identities generated external QNN EPContext descriptor/binary pairs on host QNN HTP with ORT CPU fallback disabled.",
+      "All four independently reloaded in fresh isolated containers where source ONNX was not mounted.",
+      "Every recorded ORT node event was assigned to QNNExecutionProvider and outputs were finite."
+    ],
+    "not_established": [
+      "isolated setup performance or speedup",
+      "physical phone HTP execution",
+      "end-to-end context-route WAV validity",
+      "three-process cold setup distributions"
+    ]
+  },
+  "components": {
+    "duration": {
+      "copied_evidence": {
+        "generation_ort_profile": {
+          "bytes": 3350,
+          "path": "duration-generation.ort.json",
+          "sha256": "925a989aad369b52abc9435ad4d9ed3295cd925a95398409489ded2bb1cf1087"
+        },
+        "generation_qnn_profile": {
+          "bytes": 28847,
+          "path": "duration-generation.qnn.csv",
+          "sha256": "a0a189d1f16a771828c8ac1df99cda825d663238eb212eeeb47319675fae109f"
+        },
+        "generation_result": {
+          "bytes": 3667,
+          "path": "duration-generation.json",
+          "sha256": "6979967972202e25fd825ae2fb2c22a2860dff327fc789e0e9647957eb114d08"
+        },
+        "reload_ort_profile": {
+          "bytes": 934,
+          "path": "duration-reload.ort.json",
+          "sha256": "bb18f944cae4a1fa93825f2d5b142906ebc54e6e8742a88ec94df6d6dfae1c65"
+        },
+        "reload_qnn_profile": {
+          "bytes": 28469,
+          "path": "duration-reload.qnn.csv",
+          "sha256": "74970610d82522f218c1cadf919f175ed7b33a4da97702c3fc20742032a45779"
+        },
+        "reload_result": {
+          "bytes": 3573,
+          "path": "duration-reload.json",
+          "sha256": "dea4b469fe9e9a28ea1d6b0aec76d6c3267298810b64160bc120a0cf61588676"
+        }
+      },
+      "external_context": {
+        "binary": {
+          "bytes": 2141048,
+          "path": "duration-context_qnn.bin",
+          "sha256": "2cba42081310e7fc19c6042a5e9cd2b1c336cfa6f5a6f4596ef4366e2198fda6"
+        },
+        "descriptor": {
+          "bytes": 815,
+          "path": "duration-context.onnx",
+          "sha256": "868610ca16753b474122c3547b4cc30fa478bd53d3ef74bc7d9c6906f1b6a6ab"
+        }
+      },
+      "functional_checks": {
+        "external_non_embedded_generation": true,
+        "fallback_disabled_generation": true,
+        "fallback_disabled_reload": true,
+        "finite_output": true,
+        "fresh_reload_process": true,
+        "generation_reload_output_sha256_equal": true,
+        "source_onnx_absent_from_reload_mount": true
+      },
+      "nonisolated_observed_timings_excluded_from_startup_claim": {
+        "context_reload_session_create_seconds": 0.04124008500002674,
+        "generation_first_run_seconds": 0.6885660519992598,
+        "reload_first_run_seconds": 1.2100994440006616,
+        "source_minus_reload_seconds": 0.23947677399974054,
+        "source_over_reload_ratio": 6.806893317498868,
+        "source_session_create_seconds": 0.2807168589997673
+      },
+      "output": {
+        "dtype": "float32",
+        "elements": 1,
+        "finite": true,
+        "max": 16.921876907348633,
+        "mean": 16.921876907348633,
+        "min": 16.921876907348633,
+        "sha256": "df3fdc46df830e5c358dd6613827f2d29051235b567ac95a4405e8687590df63",
+        "shape": [
+          1
+        ]
+      },
+      "profiles": {
+        "generation_ort": {
+          "events": 5,
+          "node_events": 1,
+          "provider_node_events": {
+            "QNNExecutionProvider": 1
+          },
+          "qnn_only_nodes": true
+        },
+        "generation_qnn": {
+          "has_accelerator_execute_cycles": true,
+          "has_finalize_event": true,
+          "has_load_binary_event": false,
+          "root_events": [
+            {
+              "identifier": "QNN (finalize) time",
+              "message": "FINALIZE",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 142505
+            },
+            {
+              "identifier": "Number of HVX threads used",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "COUNT",
+              "value": 0
+            },
+            {
+              "identifier": "Num times yield occured",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "COUNT",
+              "value": 0
+            },
+            {
+              "identifier": "Time for initial VTCM acquire",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 6705
+            },
+            {
+              "identifier": "Time for HVX + HMX power on and acquire",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 22768
+            },
+            {
+              "identifier": "Accelerator (execute) time (cycles)",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "CYCLES",
+              "value": 4543230746
+            },
+            {
+              "identifier": "Accelerator (execute) time",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 685873
+            },
+            {
+              "identifier": "QNN (execute) time",
+              "message": "EXECUTE",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 687001
+            }
+          ],
+          "rows": 283
+        },
+        "reload_ort": {
+          "events": 5,
+          "node_events": 1,
+          "provider_node_events": {
+            "QNNExecutionProvider": 1
+          },
+          "qnn_only_nodes": true
+        },
+        "reload_qnn": {
+          "has_accelerator_execute_cycles": true,
+          "has_finalize_event": false,
+          "has_load_binary_event": true,
+          "root_events": [
+            {
+              "identifier": "Accelerator (load binary) time",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 2617
+            },
+            {
+              "identifier": "QNN (load binary) time",
+              "message": "INIT",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 2996
+            },
+            {
+              "identifier": "Number of HVX threads used",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "COUNT",
+              "value": 0
+            },
+            {
+              "identifier": "Num times yield occured",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "COUNT",
+              "value": 0
+            },
+            {
+              "identifier": "Time for initial VTCM acquire",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 5238
+            },
+            {
+              "identifier": "Time for HVX + HMX power on and acquire",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 120616
+            },
+            {
+              "identifier": "Accelerator (execute) time (cycles)",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "CYCLES",
+              "value": 399208468
+            },
+            {
+              "identifier": "Accelerator (execute) time",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 1207950
+            },
+            {
+              "identifier": "QNN (execute) time",
+              "message": "EXECUTE",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 1208879
+            }
+          ],
+          "rows": 276
+        }
+      },
+      "source_graph": {
+        "bytes": 3787044,
+        "name": "duration_predictor.onnx",
+        "sha256": "8a1875ef0f6960ca16fc06814509b1c3258e8f50b04a5d590d3ab6db8c775016"
+      }
+    },
+    "text": {
+      "copied_evidence": {
+        "generation_ort_profile": {
+          "bytes": 4850,
+          "path": "text-generation.ort.json",
+          "sha256": "57c213ba236b7b67fb032104281818248475e84534b934996f466565b6953942"
+        },
+        "generation_qnn_profile": {
+          "bytes": 45720,
+          "path": "text-generation.qnn.csv",
+          "sha256": "51185c448781b280e99a054bba8372768606ad1d6f7231024d32d75d8c8571a5"
+        },
+        "generation_result": {
+          "bytes": 3674,
+          "path": "text-generation.json",
+          "sha256": "36a46431cc3401005c0d400e8319377512ac3c4ef0a8d4b3cfa51e9a06909cdb"
+        },
+        "reload_ort_profile": {
+          "bytes": 952,
+          "path": "text-reload.ort.json",
+          "sha256": "792d6f1558a5f0acc1444dd08e32724cfd837447a87b33b7d504bb82ba0f37b4"
+        },
+        "reload_qnn_profile": {
+          "bytes": 45340,
+          "path": "text-reload.qnn.csv",
+          "sha256": "2d950f69451339562fc751017df4ab4dea9b8bcaa04c37434c823525ac4e8301"
+        },
+        "reload_result": {
+          "bytes": 3586,
+          "path": "text-reload.json",
+          "sha256": "d4cb750c716b7729f685b9d8f2df4d1c292423471e84b778c3fbfddf8c75256a"
+        }
+      },
+      "external_context": {
+        "binary": {
+          "bytes": 19437184,
+          "path": "text-context_qnn.bin",
+          "sha256": "1353455784cd9dc6427884a96c08d5c0671c4adeac2c5e54ae877fe51433c718"
+        },
+        "descriptor": {
+          "bytes": 824,
+          "path": "text-context.onnx",
+          "sha256": "fcfa995621723f4eae9075ff503e8f62915366cd7d1e3313f3a0805c2f89389b"
+        }
+      },
+      "functional_checks": {
+        "external_non_embedded_generation": true,
+        "fallback_disabled_generation": true,
+        "fallback_disabled_reload": true,
+        "finite_output": true,
+        "fresh_reload_process": true,
+        "generation_reload_output_sha256_equal": true,
+        "source_onnx_absent_from_reload_mount": true
+      },
+      "nonisolated_observed_timings_excluded_from_startup_claim": {
+        "context_reload_session_create_seconds": 0.05226642900015577,
+        "generation_first_run_seconds": 6.240844805000052,
+        "reload_first_run_seconds": 8.53017603599983,
+        "source_minus_reload_seconds": 0.9268742539998129,
+        "source_over_reload_ratio": 18.733644171425038,
+        "source_session_create_seconds": 0.9791406829999687
+      },
+      "output": {
+        "dtype": "float32",
+        "elements": 61184,
+        "finite": true,
+        "max": 8.726563453674316,
+        "mean": 0.009263385783703058,
+        "min": -2.261718988418579,
+        "sha256": "fca2308d0f0924fe4715efc6b8695c6dd6ae622029266df15fbc9756d3b434a0",
+        "shape": [
+          1,
+          256,
+          239
+        ]
+      },
+      "profiles": {
+        "generation_ort": {
+          "events": 5,
+          "node_events": 1,
+          "provider_node_events": {
+            "QNNExecutionProvider": 1
+          },
+          "qnn_only_nodes": true
+        },
+        "generation_qnn": {
+          "has_accelerator_execute_cycles": true,
+          "has_finalize_event": true,
+          "has_load_binary_event": false,
+          "root_events": [
+            {
+              "identifier": "QNN (finalize) time",
+              "message": "FINALIZE",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 623924
+            },
+            {
+              "identifier": "Number of HVX threads used",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "COUNT",
+              "value": 0
+            },
+            {
+              "identifier": "Num times yield occured",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "COUNT",
+              "value": 0
+            },
+            {
+              "identifier": "Time for initial VTCM acquire",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 7752
+            },
+            {
+              "identifier": "Time for HVX + HMX power on and acquire",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 22838
+            },
+            {
+              "identifier": "Accelerator (execute) time (cycles)",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "CYCLES",
+              "value": 10098362038
+            },
+            {
+              "identifier": "Accelerator (execute) time",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 6236377
+            },
+            {
+              "identifier": "QNN (execute) time",
+              "message": "EXECUTE",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 6239144
+            }
+          ],
+          "rows": 446
+        },
+        "reload_ort": {
+          "events": 5,
+          "node_events": 1,
+          "provider_node_events": {
+            "QNNExecutionProvider": 1
+          },
+          "qnn_only_nodes": true
+        },
+        "reload_qnn": {
+          "has_accelerator_execute_cycles": true,
+          "has_finalize_event": false,
+          "has_load_binary_event": true,
+          "root_events": [
+            {
+              "identifier": "Accelerator (load binary) time",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 7864
+            },
+            {
+              "identifier": "QNN (load binary) time",
+              "message": "INIT",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 8269
+            },
+            {
+              "identifier": "Number of HVX threads used",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "COUNT",
+              "value": 0
+            },
+            {
+              "identifier": "Num times yield occured",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "COUNT",
+              "value": 0
+            },
+            {
+              "identifier": "Time for initial VTCM acquire",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 5657
+            },
+            {
+              "identifier": "Time for HVX + HMX power on and acquire",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 142196
+            },
+            {
+              "identifier": "Accelerator (execute) time (cycles)",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "CYCLES",
+              "value": 2513517716
+            },
+            {
+              "identifier": "Accelerator (execute) time",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 8525198
+            },
+            {
+              "identifier": "QNN (execute) time",
+              "message": "EXECUTE",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 8528764
+            }
+          ],
+          "rows": 439
+        }
+      },
+      "source_graph": {
+        "bytes": 36566260,
+        "name": "text_encoder.onnx",
+        "sha256": "769fd1d257674e8624bdea941f7a903d9460051f9845b604cd2c2980f281a8c3"
+      }
+    },
+    "vector": {
+      "copied_evidence": {
+        "generation_ort_profile": {
+          "bytes": 9333,
+          "path": "vector-generation.ort.json",
+          "sha256": "032794a9788723922a967339782ded2e77b7fdc347a05555c6a725737ea5ba73"
+        },
+        "generation_qnn_profile": {
+          "bytes": 112794,
+          "path": "vector-generation.qnn.csv",
+          "sha256": "92f1d2b959c63767c3a883ad4a49941652002d4b22077272a7b66abc4a677173"
+        },
+        "generation_result": {
+          "bytes": 4767,
+          "path": "vector-generation.json",
+          "sha256": "42f1aab3f0d8ee5fbbfc3778f90b2d199bbb2ad533c22ba957137ad633e744cb"
+        },
+        "reload_ort_profile": {
+          "bytes": 1039,
+          "path": "vector-reload.ort.json",
+          "sha256": "049a5fa59a5ab5f3c1c1c61d848e737aeef982bb69864daeb1b22e124a230985"
+        },
+        "reload_qnn_profile": {
+          "bytes": 112441,
+          "path": "vector-reload.qnn.csv",
+          "sha256": "c6f0565885c53833745a91fc0a06dfb00c6758ea5217f247e1e97f3ecb85af69"
+        },
+        "reload_result": {
+          "bytes": 4662,
+          "path": "vector-reload.json",
+          "sha256": "c0c2cc7804026b397e048eb2eae4da9b7c401aded95eee73037ec595536b11c3"
+        }
+      },
+      "external_context": {
+        "binary": {
+          "bytes": 136894512,
+          "path": "vector-context_qnn.bin",
+          "sha256": "37eaa80be53140e8f67596b78fbd76f09e6185b8293ab0b043eb4ebd76c28a24"
+        },
+        "descriptor": {
+          "bytes": 1023,
+          "path": "vector-context.onnx",
+          "sha256": "3c49d45a727631904e2ad2683b7c8f8e63c23a6ded817bf59aaf2a5f12a5172a"
+        }
+      },
+      "functional_checks": {
+        "external_non_embedded_generation": true,
+        "fallback_disabled_generation": true,
+        "fallback_disabled_reload": true,
+        "finite_output": true,
+        "fresh_reload_process": true,
+        "generation_reload_output_sha256_equal": true,
+        "source_onnx_absent_from_reload_mount": true
+      },
+      "nonisolated_observed_timings_excluded_from_startup_claim": {
+        "context_reload_session_create_seconds": 0.15870175600048242,
+        "generation_first_run_seconds": 441.6085673910002,
+        "reload_first_run_seconds": 585.5991345799994,
+        "source_minus_reload_seconds": 19.87665969599948,
+        "source_over_reload_ratio": 126.24536713972502,
+        "source_session_create_seconds": 20.03536145199996
+      },
+      "output": {
+        "dtype": "float32",
+        "elements": 34272,
+        "finite": true,
+        "max": 3.015625238418579,
+        "mean": 0.004176717554812192,
+        "min": -3.542968988418579,
+        "sha256": "20b969c993b3ee4e1fc4c271059ca97062c6bf83dfadbc5c015a8bc8d88337c3",
+        "shape": [
+          1,
+          144,
+          238
+        ]
+      },
+      "profiles": {
+        "generation_ort": {
+          "events": 5,
+          "node_events": 1,
+          "provider_node_events": {
+            "QNNExecutionProvider": 1
+          },
+          "qnn_only_nodes": true
+        },
+        "generation_qnn": {
+          "has_accelerator_execute_cycles": true,
+          "has_finalize_event": true,
+          "has_load_binary_event": false,
+          "root_events": [
+            {
+              "identifier": "QNN (finalize) time",
+              "message": "FINALIZE",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 18150015
+            },
+            {
+              "identifier": "Number of HVX threads used",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "COUNT",
+              "value": 0
+            },
+            {
+              "identifier": "Num times yield occured",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "COUNT",
+              "value": 0
+            },
+            {
+              "identifier": "Time for initial VTCM acquire",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 13549
+            },
+            {
+              "identifier": "Time for HVX + HMX power on and acquire",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 21162
+            },
+            {
+              "identifier": "Accelerator (execute) time (cycles)",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "CYCLES",
+              "value": 731640273212
+            },
+            {
+              "identifier": "Accelerator (execute) time",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 441555926
+            },
+            {
+              "identifier": "QNN (execute) time",
+              "message": "EXECUTE",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 441597438
+            }
+          ],
+          "rows": 926
+        },
+        "reload_ort": {
+          "events": 5,
+          "node_events": 1,
+          "provider_node_events": {
+            "QNNExecutionProvider": 1
+          },
+          "qnn_only_nodes": true
+        },
+        "reload_qnn": {
+          "has_accelerator_execute_cycles": true,
+          "has_finalize_event": false,
+          "has_load_binary_event": true,
+          "root_events": [
+            {
+              "identifier": "Accelerator (load binary) time",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 44389
+            },
+            {
+              "identifier": "QNN (load binary) time",
+              "message": "INIT",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 45119
+            },
+            {
+              "identifier": "Number of HVX threads used",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "COUNT",
+              "value": 0
+            },
+            {
+              "identifier": "Num times yield occured",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "COUNT",
+              "value": 0
+            },
+            {
+              "identifier": "Time for initial VTCM acquire",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 6775
+            },
+            {
+              "identifier": "Time for HVX + HMX power on and acquire",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 23466
+            },
+            {
+              "identifier": "Accelerator (execute) time (cycles)",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "CYCLES",
+              "value": 419109781644
+            },
+            {
+              "identifier": "Accelerator (execute) time",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 585553029
+            },
+            {
+              "identifier": "QNN (execute) time",
+              "message": "EXECUTE",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 585597139
+            }
+          ],
+          "rows": 919
+        }
+      },
+      "source_graph": {
+        "bytes": 256530693,
+        "name": "vector_estimator-stable-softplus.onnx",
+        "sha256": "f2318c54726a034dcc89aa9818a91f1c3db0e3067b9932c7c2dae65957897c7b"
+      }
+    },
+    "vocoder": {
+      "copied_evidence": {
+        "generation_ort_profile": {
+          "bytes": 3096,
+          "path": "vocoder-generation.ort.json",
+          "sha256": "75bcb4ed2bd31e040acec395cbc1a2f593e388cc48da9da8615a501096d3a882"
+        },
+        "generation_qnn_profile": {
+          "bytes": 16695,
+          "path": "vocoder-generation.qnn.csv",
+          "sha256": "f9a2b3e93cf7235263cae362176eaad6a0a5dce12782d9b1698a21f0d6267d20"
+        },
+        "generation_result": {
+          "bytes": 3160,
+          "path": "vocoder-generation.json",
+          "sha256": "41974e0f459aa7e349d9370c649887a0d3b1fe49dfea07ed1145a83c3e89fcfc"
+        },
+        "reload_ort_profile": {
+          "bytes": 922,
+          "path": "vocoder-reload.ort.json",
+          "sha256": "2b8cdc1ade851ada19d2be95b5e30685e36abb0a85435b570ad9ace056edbe8f"
+        },
+        "reload_qnn_profile": {
+          "bytes": 16281,
+          "path": "vocoder-reload.qnn.csv",
+          "sha256": "86b75f88d61e98731ceacf836273f69723f3f0c720dc21c032123418a0bdb6c7"
+        },
+        "reload_result": {
+          "bytes": 3082,
+          "path": "vocoder-reload.json",
+          "sha256": "5e74e9df2d85cc355ecdf98c7b2f55c0e460b76f3a1774c09dd4c37bdee9e891"
+        }
+      },
+      "external_context": {
+        "binary": {
+          "bytes": 55355808,
+          "path": "vocoder-context_qnn.bin",
+          "sha256": "dc17865e02ac164039d97c31adc5507943d282b19c1e60cd1dcbebbb8c3615f2"
+        },
+        "descriptor": {
+          "bytes": 729,
+          "path": "vocoder-context.onnx",
+          "sha256": "5a60243f4831927b8979eed340faf0502cabb37e6c7225435f724c3967e20034"
+        }
+      },
+      "functional_checks": {
+        "external_non_embedded_generation": true,
+        "fallback_disabled_generation": true,
+        "fallback_disabled_reload": true,
+        "finite_output": true,
+        "fresh_reload_process": true,
+        "generation_reload_output_sha256_equal": true,
+        "source_onnx_absent_from_reload_mount": true
+      },
+      "nonisolated_observed_timings_excluded_from_startup_claim": {
+        "context_reload_session_create_seconds": 0.08865742000034516,
+        "generation_first_run_seconds": 246.849017732,
+        "reload_first_run_seconds": 252.6310528920003,
+        "source_minus_reload_seconds": 4.563084581999647,
+        "source_over_reload_ratio": 52.46872740016438,
+        "source_session_create_seconds": 4.651742001999992
+      },
+      "output": {
+        "dtype": "float32",
+        "elements": 731136,
+        "finite": true,
+        "max": 0.6708984971046448,
+        "mean": -0.0003219529988659825,
+        "min": -0.6440430283546448,
+        "sha256": "94cc223e95cd1fdaff998a176d56b9da56327b5fe95bd9611e974c7be16efb80",
+        "shape": [
+          1,
+          731136
+        ]
+      },
+      "profiles": {
+        "generation_ort": {
+          "events": 5,
+          "node_events": 1,
+          "provider_node_events": {
+            "QNNExecutionProvider": 1
+          },
+          "qnn_only_nodes": true
+        },
+        "generation_qnn": {
+          "has_accelerator_execute_cycles": true,
+          "has_finalize_event": true,
+          "has_load_binary_event": false,
+          "root_events": [
+            {
+              "identifier": "QNN (finalize) time",
+              "message": "FINALIZE",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 3833141
+            },
+            {
+              "identifier": "Number of HVX threads used",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "COUNT",
+              "value": 0
+            },
+            {
+              "identifier": "Num times yield occured",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "COUNT",
+              "value": 0
+            },
+            {
+              "identifier": "Time for initial VTCM acquire",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 5308
+            },
+            {
+              "identifier": "Time for HVX + HMX power on and acquire",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 27727
+            },
+            {
+              "identifier": "Accelerator (execute) time (cycles)",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "CYCLES",
+              "value": 83420332186
+            },
+            {
+              "identifier": "Accelerator (execute) time",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 246834475
+            },
+            {
+              "identifier": "QNN (execute) time",
+              "message": "EXECUTE",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 246847934
+            }
+          ],
+          "rows": 179
+        },
+        "reload_ort": {
+          "events": 5,
+          "node_events": 1,
+          "provider_node_events": {
+            "QNNExecutionProvider": 1
+          },
+          "qnn_only_nodes": true
+        },
+        "reload_qnn": {
+          "has_accelerator_execute_cycles": true,
+          "has_finalize_event": false,
+          "has_load_binary_event": true,
+          "root_events": [
+            {
+              "identifier": "Accelerator (load binary) time",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 17493
+            },
+            {
+              "identifier": "QNN (load binary) time",
+              "message": "INIT",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 17796
+            },
+            {
+              "identifier": "Number of HVX threads used",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "COUNT",
+              "value": 0
+            },
+            {
+              "identifier": "Num times yield occured",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "COUNT",
+              "value": 0
+            },
+            {
+              "identifier": "Time for initial VTCM acquire",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 5239
+            },
+            {
+              "identifier": "Time for HVX + HMX power on and acquire",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 110977
+            },
+            {
+              "identifier": "Accelerator (execute) time (cycles)",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "CYCLES",
+              "value": 95976397776
+            },
+            {
+              "identifier": "Accelerator (execute) time",
+              "message": "BACKEND",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 252604089
+            },
+            {
+              "identifier": "QNN (execute) time",
+              "message": "EXECUTE",
+              "timing_source": "BACKEND",
+              "unit": "US",
+              "value": 252629925
+            }
+          ],
+          "rows": 172
+        }
+      },
+      "source_graph": {
+        "bytes": 101449890,
+        "name": "vocoder.onnx",
+        "sha256": "35b90eeae4a01d06f82dccc903a63d23c95eb2d9095ffa0d62f2cf151817c7c7"
+      }
+    }
+  },
+  "coordination_and_timing_exclusion": {
+    "classification": "functional evidence valid; all timing/resource observations excluded from startup comparison",
+    "disclosed_to": [
+      "Jens",
+      "Pi",
+      "Ben"
+    ],
+    "overlap_windows_utc": [
+      "2026-08-22T10:53Z to 10:54Z initial duration smoke",
+      "2026-08-22T10:55:56Z to 11:08:02Z four-component context generation",
+      "2026-08-22T11:08:35Z to 11:22:46Z four-component isolated reload/execution"
+    ],
+    "performance_claim_permitted": false,
+    "reason": "The host QNN generation/reload wave overlapped experiment 0017's serialized host QNN run before its owner replied to the coordination request.",
+    "required_follow_up": "After explicit clearance, run at least three clean fresh-process cold setup measurements per source/context arm with no concurrent QNN/HtpPrepare activity.",
+    "resource_claim_permitted": false
+  },
+  "experiment": "0023-supertonic-qnn-precompiled-context-startup",
+  "input": {
+    "latent_length": 238,
+    "processed_text_length": 239,
+    "route": "accepted experiment-0011 stable-Softplus all-HTP route",
+    "transcript": {
+      "bytes": 230,
+      "path": "transcript.txt",
+      "sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f"
+    },
+    "voice": "official public M1 / semantic SID5"
+  },
+  "question": "Can the accepted Supertonic all-HTP route generate external QNN contexts and reload them without source ONNX?",
+  "recorded_date": "2026-08-22",
+  "runtime": {
+    "backend": "QNN HTP host emulation, soc_model 43",
+    "onnxruntime": "1.27.1 host QNN build",
+    "provider_options": {
+      "htp_performance_mode": "burst",
+      "offload_graph_io_quantization": "0",
+      "soc_model": "43"
+    },
+    "qairt": "2.49.0.260730",
+    "session_options": {
+      "generation": {
+        "ep.context_embed_mode": "0",
+        "ep.context_enable": "1",
+        "ep.context_file_path": "per-component descriptor path"
+      },
+      "reload": {
+        "ep.context_enable": "not set",
+        "ep.context_file_path": "per-component descriptor path"
+      },
+      "session.disable_cpu_ep_fallback": "1"
+    }
+  },
+  "schema_version": 1,
+  "status": "functional_host_context_smoke_passed_timing_excluded"
+}

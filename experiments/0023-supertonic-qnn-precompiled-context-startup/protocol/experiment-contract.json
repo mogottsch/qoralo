@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "experiment": "0023-supertonic-qnn-precompiled-context-startup",
+  "status": "functional_host_context_smoke_passed_waiting_for_serialized_qnn_clearance",
+  "authorization": {
+    "authorized_by": "Moritz via Pi",
+    "question": "Can the accepted Supertonic route run all neural components on QNN, and does precompiled EPContext loading reduce cold setup versus source-ONNX QNN compilation?",
+    "phone": "Standing authorization after sound host/context smoke, subject to the shared phone lock and exact device/safety checks."
+  },
+  "scope": {
+    "owned_path": "experiments/0023-supertonic-qnn-precompiled-context-startup/",
+    "dashboard_owner": "Alex",
+    "baseline_route": "experiment 0011 accepted stable-Softplus all-HTP route",
+    "input": "experiment 0011 legacy 230-byte transcript, processed T239",
+    "voice": "official public M1 / semantic SID5",
+    "latent_length": 238,
+    "trimmed_samples": 729746,
+    "sample_rate_hz": 44100,
+    "seed": 20260813,
+    "vector_steps": 5
+  },
+  "graphs": {
+    "duration": "8a1875ef0f6960ca16fc06814509b1c3258e8f50b04a5d590d3ab6db8c775016",
+    "text": "769fd1d257674e8624bdea941f7a903d9460051f9845b604cd2c2980f281a8c3",
+    "vector_stable_softplus": "f2318c54726a034dcc89aa9818a91f1c3db0e3067b9932c7c2dae65957897c7b",
+    "vocoder": "35b90eeae4a01d06f82dccc903a63d23c95eb2d9095ffa0d62f2cf151817c7c7",
+    "matching_rule": "The source-compilation and context-reload arms must use the same effective graphs, provider configuration, input, runner and device. A documented context-generation derivative is allowed only if both arms remain matched to it."
+  },
+  "runtime": {
+    "onnxruntime": "1.27.1",
+    "qairt": "2.49.0.260730",
+    "provider": "QNNExecutionProvider / HTP",
+    "session.disable_cpu_ep_fallback": "1",
+    "offload_graph_io_quantization": "0",
+    "htp_performance_mode": "burst",
+    "soc_model": "43",
+    "context": {
+      "generation": {"ep.context_enable": "1", "ep.context_embed_mode": "0"},
+      "reload": "external descriptor plus binary; source ONNX unavailable"
+    }
+  },
+  "matched_arms": {
+    "source": "Fresh process creates all four sessions from source ONNX; compilation is inside measured setup.",
+    "context": "Fresh process creates all four sessions from external EPContext descriptors/binaries generated offline; source ONNX is unavailable.",
+    "setup_boundary": "Process start and per-session construction are both recorded; ready means all four sessions are constructed and the runner can begin generation."
+  },
+  "minimum_measurements": {
+    "fresh_process_cold_setup_runs_per_arm": 3,
+    "complete_generation_runs_in_each_measured_process": 6,
+    "first_run_index": 0,
+    "warm_run_indices": [1, 2, 3, 4, 5],
+    "rtf": "generation seconds divided by actual emitted audio seconds"
+  },
+  "claim_critical_safeguards": [
+    "ORT CPU fallback disabled for all QNN neural sessions",
+    "QNN provider node evidence",
+    "context reload proven with source ONNX unavailable",
+    "structurally valid WAV",
+    "exact setup timing boundaries",
+    "at least three fresh-process cold setup runs per arm",
+    "scoped phone lock, transport, identity, staging and cleanup safety"
+  ],
+  "non_blocking_descriptive_checks": [
+    "numerical differences",
+    "WAV byte differences",
+    "observed setup reduction magnitude"
+  ],
+  "current_checkpoint": {
+    "evidence": "results/host-context-smoke/host-context-functional-smoke.json",
+    "result": "All four graphs generated external contexts and independently reloaded in source-absent host containers with QNN-only ORT node events.",
+    "timing_exclusion": "All current host timing/resource observations overlapped experiment 0017 and are excluded from startup/performance claims.",
+    "pause": "No QNN session/compiler or phone work until Pi/Jens explicitly clears the serialized experiment-0017 host run."
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "artifacts": {
+    "backend": {
+      "bytes": 97556152,
+      "path": "libQnnHtp.so",
+      "sha256": "e557ca522713ea7ee7efd252083b927009cd54c158899c086b23d92b63bf1f33"
+    },
+    "descriptor": {
+      "bytes": 815,
+      "path": "duration-context.onnx",
+      "sha256": "868610ca16753b474122c3547b4cc30fa478bd53d3ef74bc7d9c6906f1b6a6ab"
+    },
+    "external_context_binary": {
+      "bytes": 2141048,
+      "path": "duration-context_qnn.bin",
+      "sha256": "2cba42081310e7fc19c6042a5e9cd2b1c336cfa6f5a6f4596ef4366e2198fda6"
+    },
+    "inputs": {
+      "style_dp": {
+        "bytes": 512,
+        "dtype": "float32",
+        "path": "style_dp.raw",
+        "sha256": "2eb6d16f4ede0ea14c9e84ba1f8b8d62bdfd28cce4bfd18fef963a9f4097ea62",
+        "shape": [
+          1,
+          8,
+          16
+        ]
+      },
+      "text_ids": {
+        "bytes": 1912,
+        "dtype": "int64",
+        "path": "text_ids.raw",
+        "sha256": "0721bc005f28f9b174eb588bf6e332fd0e6d54950f64aa71dfbdfa50bfec9df0",
+        "shape": [
+          1,
+          239
+        ]
+      },
+      "text_mask": {
+        "bytes": 956,
+        "dtype": "float32",
+        "path": "text_mask.raw",
+        "sha256": "21c44c51bc85efb67ac0c677666d0d3af05bdc1f22ea9431cd80d6052de86908",
+        "shape": [
+          1,
+          1,
+          239
+        ]
+      }
+    },
+    "model_loaded": {
+      "bytes": 815,
+      "path": "duration-context.onnx",
+      "sha256": "868610ca16753b474122c3547b4cc30fa478bd53d3ef74bc7d9c6906f1b6a6ab"
+    },
+    "ort_profile": {
+      "bytes": 934,
+      "path": "reload_2026-08-22_11-08-35_523.json",
+      "sha256": "bb18f944cae4a1fa93825f2d5b142906ebc54e6e8742a88ec94df6d6dfae1c65"
+    },
+    "qnn_profile": {
+      "bytes": 28469,
+      "path": "reload.qnn.csv",
+      "sha256": "74970610d82522f218c1cadf919f175ed7b33a4da97702c3fc20742032a45779"
+    }
+  },
+  "component": "duration",
+  "configuration": {
+    "ep.context_embed_mode": "not_set",
+    "ep.context_enable": "not_set",
+    "ep.context_file_path": "duration-context.onnx",
+    "execution_mode": "ORT_SEQUENTIAL",
+    "graph_optimization": "ORT_ENABLE_ALL",
+    "provider_options": {
+      "backend_path": "libQnnHtp.so",
+      "htp_performance_mode": "burst",
+      "offload_graph_io_quantization": "0",
+      "profiling_file_path": "/smoke/profiles/reload.qnn.csv",
+      "profiling_level": "detailed",
+      "soc_model": "43"
+    },
+    "session.disable_cpu_ep_fallback": "1",
+    "threads": {
+      "inter_op": 1,
+      "intra_op": 1
+    }
+  },
+  "fresh_process": true,
+  "mode": "reload",
+  "output": {
+    "dtype": "float32",
+    "elements": 1,
+    "finite": true,
+    "max": 16.921876907348633,
+    "mean": 16.921876907348633,
+    "min": 16.921876907348633,
+    "sha256": "df3fdc46df830e5c358dd6613827f2d29051235b567ac95a4405e8687590df63",
+    "shape": [
+      1
+    ]
+  },
+  "result": "passed",
+  "runtime": {
+    "onnxruntime": "1.27.1",
+    "pid": 1,
+    "providers_available": [
+      "QNNExecutionProvider",
+      "CPUExecutionProvider"
+    ],
+    "providers_session": [
+      "QNNExecutionProvider",
+      "CPUExecutionProvider"
+    ],
+    "python": "3.10.12"
+  },
+  "schema_version": 1,
+  "source_onnx_absent_from_isolation_root": true,
+  "timing": {
+    "first_run_seconds": 1.2100994440006616,
+    "process_to_completed_run_seconds": 1.31489595200037,
+    "run_boundary": "immediately before to immediately after session.run",
+    "session_boundary": "immediately before to immediately after ort.InferenceSession construction",
+    "session_create_seconds": 0.04124008500002674
+  }
+}
