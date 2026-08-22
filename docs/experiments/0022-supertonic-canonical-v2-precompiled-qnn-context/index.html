@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<link rel="icon" href="data:,">
+<title>Experiment 0022 — Supertonic canonical-v2 precompiled QNN context | experiment</title>
+<style>
+:root { --bg:#eeeae2; --paper:#fffdf8; --ink:#18201e; --muted:#66706c; --line:#d8d4ca; --accent:#006c60; --accent-2:#a44217; --soft:#e5f2ee; --code:#efede7; --shadow:0 18px 60px rgba(30,42,37,.09); }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; scroll-padding-top:88px; }
+body { margin:0; background:linear-gradient(135deg,#e7eee9 0,var(--bg) 42%,#eee6dc 100%); color:var(--ink); font:16px/1.68 system-ui,-apple-system,"Segoe UI",sans-serif; }
+a { color:var(--accent); text-underline-offset:3px; }
+a:focus-visible, audio:focus-visible { outline:3px solid #f09b65; outline-offset:3px; border-radius:4px; }
+.topbar { position:sticky; top:0; z-index:10; border-bottom:1px solid color-mix(in srgb,var(--line) 85%,transparent); background:color-mix(in srgb,var(--paper) 92%,transparent); backdrop-filter:blur(12px); }
+.topbar-inner { max-width:1120px; margin:auto; display:flex; align-items:center; justify-content:space-between; gap:18px; padding:13px 24px; }
+.brand { color:var(--ink); font-weight:780; text-decoration:none; letter-spacing:-.02em; }
+nav { display:flex; gap:6px; flex-wrap:wrap; }
+nav a { padding:7px 10px; color:var(--muted); border-radius:999px; font-size:13px; font-weight:650; text-decoration:none; }
+nav a:hover { color:var(--accent); background:var(--soft); }
+.shell { max-width:1120px; margin:auto; padding:clamp(24px,5vw,66px) 24px 80px; }
+.status-header { position:relative; overflow:hidden; padding:clamp(26px,5vw,54px); border:1px solid var(--line); border-radius:24px; background:var(--paper); box-shadow:var(--shadow); }
+.status-header::after { content:""; position:absolute; width:230px; height:230px; right:-90px; top:-105px; border-radius:50%; background:var(--soft); }
+.kicker { position:relative; z-index:1; display:flex; align-items:center; gap:10px; margin-bottom:18px; color:var(--muted); font-size:13px; font-weight:760; text-transform:uppercase; letter-spacing:.09em; }
+.status { display:inline-flex; gap:7px; align-items:center; padding:5px 10px; border:1px solid var(--line); border-radius:999px; color:var(--ink); background:var(--paper); letter-spacing:.04em; }
+.status::before { content:""; width:8px; height:8px; border-radius:50%; background:var(--accent-2); }
+h1 { position:relative; z-index:1; max-width:18ch; margin:0; font-size:clamp(36px,7vw,70px); line-height:.99; letter-spacing:-.048em; }
+.summary { position:relative; z-index:1; max-width:70ch; margin:24px 0 0; font-size:clamp(17px,2vw,21px); color:var(--muted); }
+.header-links { position:relative; z-index:1; display:flex; flex-wrap:wrap; gap:9px; margin-top:25px; }
+.header-links a { padding:9px 13px; border:1px solid var(--line); border-radius:9px; background:var(--paper); font-size:14px; font-weight:680; text-decoration:none; }
+.provenance { position:relative; z-index:1; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 22px; margin:30px 0 0; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; }
+.provenance span { min-width:0; overflow-wrap:anywhere; }
+article { max-width:880px; margin:18px auto 0; }
+.primary-section { margin-top:18px; padding:clamp(24px,5vw,48px); border:1px solid var(--line); border-radius:20px; background:var(--paper); }
+h2 { margin:0 0 19px; font-size:clamp(26px,4vw,38px); line-height:1.1; letter-spacing:-.025em; }
+h3 { margin:34px 0 10px; color:var(--accent); font-size:20px; line-height:1.25; }
+.anchor { margin-left:9px; opacity:0; font-weight:400; text-decoration:none; }
+h2:hover .anchor,h3:hover .anchor,.anchor:focus { opacity:.5; }
+p,ul,ol,blockquote { max-width:76ch; }
+li { margin:7px 0; }
+code { padding:2px 5px; border-radius:5px; background:var(--code); font:13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; overflow-wrap:anywhere; }
+pre { overflow:auto; padding:18px; border:1px solid var(--line); border-radius:10px; background:var(--code); }
+pre code { padding:0; background:none; overflow-wrap:normal; }
+blockquote { margin:22px 0; padding:12px 18px; border-left:4px solid var(--accent-2); background:#fbf1e9; color:#62412f; }
+.table-wrap { overflow:auto; margin:20px 0; border:1px solid var(--line); border-radius:12px; }
+table { width:100%; min-width:620px; border-collapse:collapse; }
+th,td { padding:12px 14px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+th { background:var(--soft); color:#174b45; font-size:12px; letter-spacing:.04em; text-transform:uppercase; }
+tr:last-child td { border-bottom:0; }
+.registry-card { margin:4px 0 30px; padding:18px; border:1px solid #b8d5cc; border-radius:14px; background:var(--soft); }
+.eyebrow { margin-bottom:13px; color:var(--accent); font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+.metrics { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; }
+.metric { padding:10px; border:1px solid color-mix(in srgb,var(--accent) 22%,transparent); border-radius:9px; background:var(--paper); }
+.metric span,.audio-card span { display:block; color:var(--muted); font-size:11px; line-height:1.35; }
+.metric strong { display:block; margin-top:4px; font-size:15px; }
+.audio-card { display:grid; grid-template-columns:minmax(160px,1fr) minmax(240px,2fr); align-items:center; gap:18px; margin-top:12px; padding:11px; border-radius:9px; background:var(--paper); }
+audio { width:100%; min-height:40px; }
+.unavailable { margin:12px 0 0; padding:11px; border-radius:9px; background:var(--paper); font-size:13px; }
+footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px; text-align:center; }
+@media (max-width:760px) { .topbar-inner { align-items:flex-start; flex-direction:column; padding:10px 16px; } nav { width:100%; overflow:auto; flex-wrap:nowrap; } .shell { padding:18px 10px 55px; } .status-header,.primary-section { border-radius:14px; } .provenance { grid-template-columns:1fr; } .metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } .audio-card { grid-template-columns:1fr; } }
+@media (prefers-color-scheme:dark) { :root { --bg:#111614; --paper:#19201e; --ink:#eef4f1; --muted:#aeb9b4; --line:#39443f; --accent:#70d7c5; --accent-2:#f09b65; --soft:#19332e; --code:#252c29; --shadow:none; } body { background:linear-gradient(135deg,#15231f,var(--bg)); } blockquote { background:#35271f; color:#efd8c8; } th { color:#bce7df; } }
+@media print { .topbar { position:relative; } body { background:white; } .shell { padding:16px; } .status-header,.primary-section { box-shadow:none; break-inside:avoid; } }
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar-inner"><a class="brand" href="../../android-benchmarks/index.html">VibeVoice Android research</a><nav aria-label="Experiment sections"><a href="#experiment-description">Description</a><a href="#progress">Progress</a><a href="#results">Results</a></nav></div></header>
+<main class="shell">
+<header class="status-header" data-status-header="true">
+<div class="kicker"><span>Experiment 0022</span><span class="status">Stopped</span></div>
+<h1>Experiment 0022 — Supertonic canonical-v2 precompiled QNN context</h1>
+<p class="summary">A predeclared host compatibility gate showed that canonical T235 semantics and the exact frozen T239 graph identities cannot both be preserved, so the route stopped before QNN context or phone work.</p>
+<div class="header-links"><a href="../../../experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/">Owning experiment files</a><a href="../../android-benchmarks/index.html">Benchmark overview</a></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-22</span><span>evidence commit: 0fe73e132f7bf1a6b29eb4f8ab2c8931f18170fc</span><span>page source: docs/experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/page.md</span><span>page source sha256: 55ab461d91340e2cc9f11431d824822c1663c347d45bd8a308fec090ef22e4e8</span></div>
+</header>
+<article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
+<h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
+<p>Experiment 0022 set out to compare the cold readiness of two matched Supertonic QNN routes: creating four sessions from source ONNX graphs, where QNN compilation would fall inside startup, and loading four independently validated external precompiled contexts, where context generation would be reported as a separate offline cost. Both arms were intended to use the accepted stable-Softplus all-HTP graph lineage with CPU fallback disabled.</p>
+<p>Before any context or Android work, the route had to reconcile two frozen requirements. Canonical v2 plus the complete <code>&lt;en&gt;…&lt;/en&gt;</code> wrapper produces a text extent of 235 positions, while the historical accepted graph identities are specialized to 239. The predeclared policy therefore tested whether four right-side filler positions with a zero mask could preserve the canonical dynamic-T235 calculation without changing the accepted T239 graph hashes.</p>
+<p>This was a host ONNX Runtime 1.27.1 CPU compatibility test, not QNN assignment or phone HTP evidence. It compared the dynamic-T235 canonical oracle with a dynamic-T239 masked input, then checked whether the exact frozen T239 duration and text graphs reproduced that padded T239 calculation. The scope and stop conditions are in the <a href="../../../experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/protocol/experiment-contract.json">experiment contract</a> and <a href="../../../experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/protocol/padding-compatibility-policy.json">padding compatibility policy</a>.</p>
+</section>
+<section class="primary-section" id="progress" data-primary-section="progress">
+<h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
+<ol>
+<li><strong>August 21, 2026: comparison contract prepared.</strong> The two startup arms, graph identities, canonical transcript, runtime and QAIRT baseline, provider restrictions, phone identity, and evidence gates were frozen. Context generation was explicitly separated from arm-B startup.</li>
+<li><strong>August 22, 2026: exact graphs reconstructed.</strong> The duration, text, stable-Softplus vector, and vocoder graphs were reconstructed locally and verified against the required hashes. The compatibility inputs, T235 oracle, filler probe, metrics, tolerances, and mandatory stop action were fixed before the proof ran.</li>
+<li><strong>August 22, 2026: first gate failed.</strong> Zero masks made all seven tested filler IDs byte-identical, so filler payload was irrelevant. Increasing the sequence extent itself was not neutral: duration and the semantic text-embedding prefix moved beyond every locked limit.</li>
+<li><strong>August 22, 2026: route stopped.</strong> The exact frozen T239 graphs reproduced the altered dynamic-T239 computation within specialization tolerances, not the canonical dynamic-T235 oracle. Under the frozen policy, runner implementation, EPContext work, output generation, and phone access became forbidden.</li>
+</ol>
+<p>The <a href="../../../experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/PLAN.md">terminal plan</a>, <a href="../../../experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/results/preflight-state.json">preflight state</a>, and <a href="../../../experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/results/t235-t239-masked-padding-compatibility.json">machine-readable compatibility proof</a> preserve the negative result and the abandoned route. Reproducing the proof is allowed; continuing past its failed gate is not part of experiment 0022.</p>
+</section>
+<section class="primary-section" id="results" data-primary-section="results">
+<h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
+<aside class="registry-card" data-registry-entry="0022-supertonic-t239-padding-blocked"><div class="eyebrow">Normalized benchmark registry</div><div class="metrics"><div class="metric" data-metric="load_seconds" data-value="None"><span>Setup / load</span><strong>Unavailable</strong></div><div class="metric" data-metric="cold_rtf" data-value="None"><span>First / cold RTF</span><strong>Unavailable</strong></div><div class="metric" data-metric="warm_median_rtf" data-value="None"><span>Warm median RTF</span><strong>Unavailable</strong></div><div class="metric" data-metric="peak_pss_bytes" data-value="None"><span>Peak sampled PSS</span><strong>Unavailable</strong></div><div class="metric" data-metric="peak_vm_hwm_bytes" data-value="None"><span>Process VmHWM</span><strong>Unavailable</strong></div></div><p class="unavailable"><strong>Audio unavailable.</strong> Stopped before output generation; no WAV exists.</p></aside>
+<p>The gate produced a useful terminal result. Canonical T235 duration was <strong>15.8623657 seconds</strong>; dynamic masked T239 duration was <strong>15.6378775 seconds</strong>, for absolute change <strong>0.2244883</strong> against a limit of <code>0.00001</code>. Across the first 235 text-embedding positions, maximum absolute change was <strong>0.1110139</strong>, RMSE was <strong>0.00629053</strong>, and cosine similarity was <strong>0.99988716</strong>. All failed their predeclared limits.</p>
+<div class="table-wrap"><table><thead><tr>
+<th>Evidence class</th>
+<th>What 0022 established</th>
+</tr></thead><tbody>
+<tr>
+<td>Technical execution</td>
+<td>A host CPU compatibility proof ran. No route runner, QNN session, EPContext, Android process, or physical accelerator execution existed.</td>
+</tr>
+<tr>
+<td>Structural audio</td>
+<td>Unavailable. The stop occurred before generation, so no PCM or WAV exists.</td>
+</tr>
+<tr>
+<td>Numerical/acoustic comparison</td>
+<td>Filler-ID invariance passed, but T235-to-T239 semantic equivalence failed. The exact frozen graphs matched the changed T239 calculation.</td>
+</tr>
+<tr>
+<td>Exact-sample listening</td>
+<td>Unavailable. No sample exists, and no verdict from another Supertonic WAV transfers to this route.</td>
+</tr>
+</tbody></table></div>
+<p>The result is narrow: <strong>exact canonical-v2 T235 semantics and these exact frozen T239 graph identities are jointly incompatible under the tested masked-padding policy</strong>. It does not show that Supertonic, ONNX Runtime, QNN, HTP, Android, or precompiled contexts are generally incompatible.</p>
+<p>No startup latency, RTF, memory figure, provider assignment, context size, physical RPC/accelerator/cycle/HVX trace, or listening evidence is available. Those values are unavailable because the required first gate stopped the work, not because they measured zero. Using the legacy transcript, generating differently hashed graphs, or labeling masked-T239 output as exact canonical-v2 output would have changed the frozen experiment rather than resolved it.</p>
+</section></article>
+<footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
+</main>
+</body>
+</html>

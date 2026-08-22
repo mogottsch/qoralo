@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<link rel="icon" href="data:,">
+<title>Experiment 0021 — Supertonic canonical-v2 Android CPU benchmark | experiment</title>
+<style>
+:root { --bg:#eeeae2; --paper:#fffdf8; --ink:#18201e; --muted:#66706c; --line:#d8d4ca; --accent:#006c60; --accent-2:#a44217; --soft:#e5f2ee; --code:#efede7; --shadow:0 18px 60px rgba(30,42,37,.09); }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; scroll-padding-top:88px; }
+body { margin:0; background:linear-gradient(135deg,#e7eee9 0,var(--bg) 42%,#eee6dc 100%); color:var(--ink); font:16px/1.68 system-ui,-apple-system,"Segoe UI",sans-serif; }
+a { color:var(--accent); text-underline-offset:3px; }
+a:focus-visible, audio:focus-visible { outline:3px solid #f09b65; outline-offset:3px; border-radius:4px; }
+.topbar { position:sticky; top:0; z-index:10; border-bottom:1px solid color-mix(in srgb,var(--line) 85%,transparent); background:color-mix(in srgb,var(--paper) 92%,transparent); backdrop-filter:blur(12px); }
+.topbar-inner { max-width:1120px; margin:auto; display:flex; align-items:center; justify-content:space-between; gap:18px; padding:13px 24px; }
+.brand { color:var(--ink); font-weight:780; text-decoration:none; letter-spacing:-.02em; }
+nav { display:flex; gap:6px; flex-wrap:wrap; }
+nav a { padding:7px 10px; color:var(--muted); border-radius:999px; font-size:13px; font-weight:650; text-decoration:none; }
+nav a:hover { color:var(--accent); background:var(--soft); }
+.shell { max-width:1120px; margin:auto; padding:clamp(24px,5vw,66px) 24px 80px; }
+.status-header { position:relative; overflow:hidden; padding:clamp(26px,5vw,54px); border:1px solid var(--line); border-radius:24px; background:var(--paper); box-shadow:var(--shadow); }
+.status-header::after { content:""; position:absolute; width:230px; height:230px; right:-90px; top:-105px; border-radius:50%; background:var(--soft); }
+.kicker { position:relative; z-index:1; display:flex; align-items:center; gap:10px; margin-bottom:18px; color:var(--muted); font-size:13px; font-weight:760; text-transform:uppercase; letter-spacing:.09em; }
+.status { display:inline-flex; gap:7px; align-items:center; padding:5px 10px; border:1px solid var(--line); border-radius:999px; color:var(--ink); background:var(--paper); letter-spacing:.04em; }
+.status::before { content:""; width:8px; height:8px; border-radius:50%; background:var(--accent-2); }
+h1 { position:relative; z-index:1; max-width:18ch; margin:0; font-size:clamp(36px,7vw,70px); line-height:.99; letter-spacing:-.048em; }
+.summary { position:relative; z-index:1; max-width:70ch; margin:24px 0 0; font-size:clamp(17px,2vw,21px); color:var(--muted); }
+.header-links { position:relative; z-index:1; display:flex; flex-wrap:wrap; gap:9px; margin-top:25px; }
+.header-links a { padding:9px 13px; border:1px solid var(--line); border-radius:9px; background:var(--paper); font-size:14px; font-weight:680; text-decoration:none; }
+.provenance { position:relative; z-index:1; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 22px; margin:30px 0 0; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; }
+.provenance span { min-width:0; overflow-wrap:anywhere; }
+article { max-width:880px; margin:18px auto 0; }
+.primary-section { margin-top:18px; padding:clamp(24px,5vw,48px); border:1px solid var(--line); border-radius:20px; background:var(--paper); }
+h2 { margin:0 0 19px; font-size:clamp(26px,4vw,38px); line-height:1.1; letter-spacing:-.025em; }
+h3 { margin:34px 0 10px; color:var(--accent); font-size:20px; line-height:1.25; }
+.anchor { margin-left:9px; opacity:0; font-weight:400; text-decoration:none; }
+h2:hover .anchor,h3:hover .anchor,.anchor:focus { opacity:.5; }
+p,ul,ol,blockquote { max-width:76ch; }
+li { margin:7px 0; }
+code { padding:2px 5px; border-radius:5px; background:var(--code); font:13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; overflow-wrap:anywhere; }
+pre { overflow:auto; padding:18px; border:1px solid var(--line); border-radius:10px; background:var(--code); }
+pre code { padding:0; background:none; overflow-wrap:normal; }
+blockquote { margin:22px 0; padding:12px 18px; border-left:4px solid var(--accent-2); background:#fbf1e9; color:#62412f; }
+.table-wrap { overflow:auto; margin:20px 0; border:1px solid var(--line); border-radius:12px; }
+table { width:100%; min-width:620px; border-collapse:collapse; }
+th,td { padding:12px 14px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+th { background:var(--soft); color:#174b45; font-size:12px; letter-spacing:.04em; text-transform:uppercase; }
+tr:last-child td { border-bottom:0; }
+.registry-card { margin:4px 0 30px; padding:18px; border:1px solid #b8d5cc; border-radius:14px; background:var(--soft); }
+.eyebrow { margin-bottom:13px; color:var(--accent); font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+.metrics { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; }
+.metric { padding:10px; border:1px solid color-mix(in srgb,var(--accent) 22%,transparent); border-radius:9px; background:var(--paper); }
+.metric span,.audio-card span { display:block; color:var(--muted); font-size:11px; line-height:1.35; }
+.metric strong { display:block; margin-top:4px; font-size:15px; }
+.audio-card { display:grid; grid-template-columns:minmax(160px,1fr) minmax(240px,2fr); align-items:center; gap:18px; margin-top:12px; padding:11px; border-radius:9px; background:var(--paper); }
+audio { width:100%; min-height:40px; }
+.unavailable { margin:12px 0 0; padding:11px; border-radius:9px; background:var(--paper); font-size:13px; }
+footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px; text-align:center; }
+@media (max-width:760px) { .topbar-inner { align-items:flex-start; flex-direction:column; padding:10px 16px; } nav { width:100%; overflow:auto; flex-wrap:nowrap; } .shell { padding:18px 10px 55px; } .status-header,.primary-section { border-radius:14px; } .provenance { grid-template-columns:1fr; } .metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } .audio-card { grid-template-columns:1fr; } }
+@media (prefers-color-scheme:dark) { :root { --bg:#111614; --paper:#19201e; --ink:#eef4f1; --muted:#aeb9b4; --line:#39443f; --accent:#70d7c5; --accent-2:#f09b65; --soft:#19332e; --code:#252c29; --shadow:none; } body { background:linear-gradient(135deg,#15231f,var(--bg)); } blockquote { background:#35271f; color:#efd8c8; } th { color:#bce7df; } }
+@media print { .topbar { position:relative; } body { background:white; } .shell { padding:16px; } .status-header,.primary-section { box-shadow:none; break-inside:avoid; } }
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar-inner"><a class="brand" href="../../android-benchmarks/index.html">VibeVoice Android research</a><nav aria-label="Experiment sections"><a href="#experiment-description">Description</a><a href="#progress">Progress</a><a href="#results">Results</a></nav></div></header>
+<main class="shell">
+<header class="status-header" data-status-header="true">
+<div class="kicker"><span>Experiment 0021</span><span class="status">Completed</span></div>
+<h1>Experiment 0021 — Supertonic canonical-v2 Android CPU benchmark</h1>
+<p class="summary">The canonical-v2 released-INT8 CPU route ran end to end on the Galaxy S23 Ultra, stayed below real time, and its exact representative WAV was accepted by Moritz.</p>
+<div class="header-links"><a href="../../../experiments/0021-supertonic-canonical-v2-android-cpu/">Owning experiment files</a><a href="../../android-benchmarks/index.html">Benchmark overview</a></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-20</span><span>evidence commit: 76b63c713fc589c7aa4b88587b334f1db3235a36</span><span>page source: docs/experiments/0021-supertonic-canonical-v2-android-cpu/page.md</span><span>page source sha256: 350285038645deebf47cd68f47046672357384ccca969839b58a908072af4bb6</span></div>
+</header>
+<article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
+<h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
+<p>Experiment 0021 established a clean Android CPU baseline for Supertonic 3 using the project&#x27;s exact canonical-v2 transcript. Earlier Supertonic measurements used the legacy-v1 text, so this was deliberately recorded as a new route rather than used to rewrite those rows.</p>
+<p>The route pinned the released INT8 ONNX archive and sherpa-onnx 1.13.5 Android runtime. It used the official M1 voice (semantic SID5), English, one inference thread, and the CPU provider on the authorized Samsung Galaxy S23 Ultra (<code>SM-S918B</code>, Snapdragon 8 Gen 2 / <code>SM8550</code>). The exact 226-byte transcript had no trailing newline and SHA-256 <code>424b3807…db67</code>; the official Unicode indexer mapped it to 226 IDs with packed-ID hash <code>32fc2695…fc5f1</code>.</p>
+<p>The timing contract kept setup separate, measured one first generation and five additional same-session warm generations, and divided generation time by each output&#x27;s actual duration. One <code>OfflineTts</code> instance was reused, but every timed iteration made an independent generation call without carrying a model cache, state tensor, or output object into the next call.</p>
+<p>The only adaptation from the frozen historical Android implementation changed verified input storage to the app&#x27;s internal files directory for Android 16 scoped-storage compatibility. Runtime, frontend, timing, memory collection, output validation, and WAV writing stayed frozen. See the <a href="../../../experiments/0021-supertonic-canonical-v2-android-cpu/protocol/benchmark-policy.json">route policy</a>, <a href="../../../experiments/0021-supertonic-canonical-v2-android-cpu/results/frontend-provenance.json">frontend provenance</a>, and <a href="../../../experiments/0021-supertonic-canonical-v2-android-cpu/results/build-and-stage-provenance.json">build/staging provenance</a>.</p>
+</section>
+<section class="primary-section" id="progress" data-primary-section="progress">
+<h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
+<ol>
+<li><strong>August 20, 2026: contract frozen.</strong> The experiment recorded the exact archive, runtime, transcript, voice, device, timing boundaries, thermal gate, state-reset rule, and phone-safety procedure before execution.</li>
+<li><strong>August 20, 2026: Android route completed.</strong> Inputs were hash-checked before and after the app-UID copy, setup completed once, and all six requested generations finished. Evidence was pulled with a binary-safe Windows ADB path before app data, package, and staging paths were removed and their absence verified.</li>
+<li><strong>August 20, 2026: representative reviewed.</strong> The warm-median run was retained, matched its recorded hash, and Moritz reviewed that exact WAV with the verdict “good.” The acceptance is scoped to this route and this file hash.</li>
+</ol>
+<p>The durable final state is recorded in the <a href="../../../experiments/0021-supertonic-canonical-v2-android-cpu/README.md">experiment README</a>, <a href="../../../experiments/0021-supertonic-canonical-v2-android-cpu/results/phone-cpu-result.json">normalized phone result</a>, and <a href="../../../experiments/0021-supertonic-canonical-v2-android-cpu/results/transport-and-cleanup.json">transport and cleanup record</a>. No follow-up action is required for the frozen 0021 route.</p>
+</section>
+<section class="primary-section" id="results" data-primary-section="results">
+<h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
+<aside class="registry-card" data-registry-entry="0021-supertonic-int8-cpu-v2"><div class="eyebrow">Normalized benchmark registry</div><div class="metrics"><div class="metric" data-metric="load_seconds" data-value="0.853867031"><span>Setup / load</span><strong>0.854 s</strong></div><div class="metric" data-metric="cold_rtf" data-value="0.39552098915111206"><span>First / cold RTF</span><strong>0.395521</strong></div><div class="metric" data-metric="warm_median_rtf" data-value="0.3956153837777073"><span>Warm median RTF</span><strong>0.395615</strong></div><div class="metric" data-metric="peak_pss_bytes" data-value="480366592"><span>Peak sampled PSS</span><strong>458.1 MiB</strong></div><div class="metric" data-metric="peak_vm_hwm_bytes" data-value="548986880"><span>Process VmHWM</span><strong>523.6 MiB</strong></div></div><div class="audio-card"><div><strong>Retained representative</strong><span>15.79 s · 44.1 kHz · <code>201f8e79d39e…</code></span></div><audio controls preload="metadata" src="../../android-benchmarks/media/0021-supertonic-int8-cpu-v2.wav"><a href="../../android-benchmarks/media/0021-supertonic-int8-cpu-v2.wav">Listen to the retained WAV</a></audio></div></aside>
+<p>The route completed technically and produced structurally valid audio. Setup took <strong>0.853867 seconds</strong>. The first generation took <strong>6.246927 seconds</strong> for 15.794172 seconds of audio, an RTF of <strong>0.395521</strong>. The five warm RTF values were <code>0.390631</code>, <code>0.391386</code>, <code>0.395615</code>, <code>0.395708</code>, and <code>0.397157</code>; their median was <strong>0.395615</strong>. These are route-specific results, not a claim about every Supertonic deployment.</p>
+<div class="table-wrap"><table><thead><tr>
+<th>Evidence class</th>
+<th>What 0021 established</th>
+</tr></thead><tbody>
+<tr>
+<td>Technical execution</td>
+<td>Six complete Android CPU generations ran with the pinned descriptor, engine, model archive, and one-thread configuration.</td>
+</tr>
+<tr>
+<td>Structural audio</td>
+<td>Every output was finite, non-silent, unclipped mono PCM16 at 44.1 kHz, with exactly 696,523 frames.</td>
+</tr>
+<tr>
+<td>Numerical/acoustic comparison</td>
+<td>No reference-signal similarity campaign was part of this route; the committed evidence establishes structure and per-run performance, not general acoustic equivalence.</td>
+</tr>
+<tr>
+<td>Exact-sample listening</td>
+<td>Moritz accepted the retained warm-median WAV (<code>201f8e79…87df</code>) as “good” on August 20, 2026. The verdict does not transfer to another WAV or route.</td>
+</tr>
+</tbody></table></div>
+<p>Peak sampled PSS was <strong>480,366,592 bytes</strong> (458.1 MiB), boundary PSS reached 479,744,000 bytes, and cumulative process VmHWM reached <strong>548,986,880 bytes</strong> (523.6 MiB). The pre-launch thermal gate reported Android status <code>NONE</code> at 33.8 °C, with no device tuning.</p>
+<p>The historical sherpa harness did not emit an ONNX Runtime provider profile. CPU provenance therefore comes from the pinned <code>provider=cpu</code> descriptor and fail-closed engine contract, not an ORT profiling trace. That limitation is explicit in the <a href="../../../experiments/0021-supertonic-canonical-v2-android-cpu/results/phone-cpu-result.json">source result</a>. The retained dashboard copy is available through the audio control above; it is linked rather than duplicated here.</p>
+</section></article>
+<footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
+</main>
+</body>
+</html>
