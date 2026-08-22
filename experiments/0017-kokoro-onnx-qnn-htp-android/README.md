@@ -2,7 +2,7 @@
 
 ## Current status
 
-**Canonical-v2 host evidence remains incomplete; current-environment CPU baseline is frozen, and a fresh `canonical-v2-native-rerun-2` must restart from stage 1 under the shared heavy-RAM lock. QNN relaunch and phone access remain blocked pending review/gates.**
+**Canonical-v2 completed all 18 fallback-disabled host QNN stages with zero CPU provider events, but final audio is structurally invalid. The route is host-executed, audio-invalid, and phone-ineligible. No rerun, fix, or phone work is authorized in this experiment.**
 
 The current comparable route uses the exact 226-byte canonical-v2 transcript, the pinned official Kokoro 0.9.4 American-English frontend, and a new fixed FP32 ONNX derivative. Its CPU gates are complete:
 
@@ -22,7 +22,9 @@ In the interrupted fallback-disabled host QNN attempt, stages 1–15 finalized a
 
 A later crossed-message launch was operator-cancelled before Docker creation: missing host `/usr/bin/time` prevented the Docker command, and no QNN session/compiler/stage began. The host script now treats GNU `time` as optional while retaining the memory monitor. This event is not a QNN failure.
 
-The approved `canonical-v2-native-rerun-1` completed stages 1–12 with exactly one QNN provider event and zero CPU events per stage. Disclosed experiment-0023 QNN work overlapped stages 7–10, contaminating only their timing/resource isolation under the committed eligibility policy. The run was then operator-stopped during stage 13 because that policy was initially interpreted too broadly; stage 13 did not finalize or run. This is an incomplete operator-stopped record, not a QNN correctness/provider/compiler failure. It cannot be resumed. The next run must use fresh ID `canonical-v2-native-rerun-2` from stage 1 and hold `artifacts/locks/heavy-ram.lock` for its full lifetime.
+The approved `canonical-v2-native-rerun-1` completed stages 1–12 with exactly one QNN provider event and zero CPU events per stage. Disclosed experiment-0023 QNN work overlapped stages 7–10, contaminating only their timing/resource isolation under the committed eligibility policy. The run was then operator-stopped during stage 13 because that policy was initially interpreted too broadly; stage 13 did not finalize or run. This is an incomplete operator-stopped record, not a QNN correctness/provider/compiler failure. It was not resumed.
+
+The fresh locked `canonical-v2-native-rerun-2` completed all 18 stages: 18 `QNNExecutionProvider` events, zero CPU events, and exit code 0. The duration tensor changed from CPU sum 602 to 605 at five indices. Final float audio has 361,200 finite samples but peak `87296.0078`, RMS `61982.4965`, and 360,921 samples with `abs >= 1`; audio SHA is `2992f71911b8af233841af4058e8218e8705c987a51643d1d709d96545b60a08`. The structural gate fails. Stage 1 is the first non-bit-exact output; stage 4 `duration_alignment` is the first discrete/material contract divergence. The evidence localizes divergence but does not establish a root cause.
 
 See:
 
@@ -32,7 +34,8 @@ See:
 - [`results/canonical-v2-host-qnn-interrupted-checkpoint.json`](results/canonical-v2-host-qnn-interrupted-checkpoint.json) — exact interrupted WSL attempt;
 - [`results/canonical-v2-rerun-operator-cancelled-pre-gate.json`](results/canonical-v2-rerun-operator-cancelled-pre-gate.json) — exact no-Docker/no-QNN operator-cancelled boundary;
 - [`results/canonical-v2-native-rerun-1-operator-stopped.json`](results/canonical-v2-native-rerun-1-operator-stopped.json) — 12-stage provider/output evidence, exact stages 7–10 timing contamination, partial stage 13, and corrected policy/stop boundary;
-- [`REPRODUCING.md`](REPRODUCING.md) — clean-machine reconstruction and restart instructions;
+- [`results/canonical-v2-host-qnn-gate.json`](results/canonical-v2-host-qnn-gate.json) — terminal 18/18 execution/provider proof, per-stage CPU comparisons, divergence boundary, resource/lock evidence, invalid structure, and phone-ineligible decision;
+- [`REPRODUCING.md`](REPRODUCING.md) — clean-machine reconstruction and terminal-summary instructions;
 - [`RESULTS.md`](RESULTS.md) — historical and canonical evidence with claim boundaries.
 
 ## Historical fixed-fixture route
@@ -60,8 +63,8 @@ Large models, fixtures, tensors, profiles, compiler logs, binaries, and audio re
 - CPU preprocessing/orchestration/tensor transport/WAV encoding must be disclosed separately.
 - The canonical source ONNX passes the named phase-tolerant acoustic policy but fails the separate strict `.999/.01` waveform screen; neither is a listening verdict.
 - Moritz's accepted experiment-0013 CPU sample is scoped to that old route and does not transfer to canonical v2.
-- No canonical QNN sample exists; its listening status is `not_reviewed`/not yet applicable.
+- No valid canonical QNN WAV/listening sample exists; the invalid float output is not listening material.
 - The next QNN summary must compare against the frozen current-environment `56ce6a…` CPU stage checkpoint; historical `fb8895…` remains separate WSL evidence.
 - Every real host run must hold `artifacts/locks/heavy-ram.lock` for its full lifetime; this is infrastructure serialization, not a model eligibility field.
-- No QNN relaunch is allowed until the committed reconstruction policy/baseline, current CPU checkpoint, fresh-output, and shared-lock gates pass.
-- No phone access is allowed until a fresh complete 18/18 canonical host record passes with zero CPU provider events and structurally valid final audio.
+- The 18/18 execution/provider gate passed, but the structural audio gate failed; phone eligibility is false.
+- Do not rerun, change graphs/runtime, attempt fixes, create a WAV, or access the phone in experiment 0017 unless Moritz explicitly opens a new experiment/scope.

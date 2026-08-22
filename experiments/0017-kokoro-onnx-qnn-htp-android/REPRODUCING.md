@@ -4,7 +4,7 @@ This is the durable clean-machine reconstruction and execution guide for experim
 
 ## Current execution boundary
 
-No phone access has occurred for the canonical-v2 Kokoro route. QNN relaunch remains blocked until the scoped operator-stop/shared-lock follow-up is reviewed and every preflight gate passes.
+No phone access has occurred for the canonical-v2 Kokoro route. Experiment 0017 is terminally host-executed but audio-invalid; no relaunch, fix, WAV, or phone work is authorized.
 
 The original canonical host attempt was externally interrupted by a WSL shutdown/restart:
 
@@ -23,9 +23,9 @@ A crossed-message launch was stopped before Docker creation because host `/usr/b
 
 The approved `canonical-v2-native-rerun-1` then completed stages 1–12 with exactly one QNN event and zero CPU events per stage. Experiment-0023 work overlapped stages 7–10, contaminating their wall/session/run/resource isolation but not, under the exact committed eligibility policy, their provider/output correctness. The run was operator-stopped during unfinalized stage 13 before that policy clarification arrived. It is incomplete and cannot be resumed. [`results/canonical-v2-native-rerun-1-operator-stopped.json`](results/canonical-v2-native-rerun-1-operator-stopped.json) preserves all output/profile/checkpoint hashes, exact UTC bounds, partial stage 13, and the corrected claim boundary.
 
-The replacement run is `canonical-v2-native-rerun-2`, starting from stage 1. The host script now acquires `artifacts/locks/heavy-ram.lock` nonblocking before preflight and holds its file descriptor for the complete script lifetime. That prevents 0023/0024 infrastructure overlap; it is not an additional model eligibility claim.
+The locked replacement `canonical-v2-native-rerun-2` completed all 18 stages with one QNN event per stage and zero CPU events. Duration changed from sum 602 to 605, and final finite audio is grossly out of range: peak `87296.0078`, RMS `61982.4965`, 360,921 samples with `abs >= 1`, SHA `2992f71911b8af233841af4058e8218e8705c987a51643d1d709d96545b60a08`. The structural gate failed and phone eligibility is false. [`results/canonical-v2-host-qnn-gate.json`](results/canonical-v2-host-qnn-gate.json) is the authoritative terminal record.
 
-The original interrupted record remains [`results/canonical-v2-host-qnn-interrupted-checkpoint.json`](results/canonical-v2-host-qnn-interrupted-checkpoint.json). Phone eligibility is false until a new 18/18 gate passes.
+The host script acquires `artifacts/locks/heavy-ram.lock` nonblocking before preflight and holds its file descriptor for the complete script lifetime. That prevented 0023/0024 infrastructure overlap in the terminal run; it is not an additional model eligibility claim. The original interrupted record remains [`results/canonical-v2-host-qnn-interrupted-checkpoint.json`](results/canonical-v2-host-qnn-interrupted-checkpoint.json).
 
 ## Canonical-v2 route contract
 
@@ -73,6 +73,7 @@ The frozen machine contract is [`protocol-canonical-v2-stage-decomposition.json`
 | Interrupted canonical QNN attempt | 15 completed, stage 16 partial, 17–18 unattempted; [`results/canonical-v2-host-qnn-interrupted-checkpoint.json`](results/canonical-v2-host-qnn-interrupted-checkpoint.json) |
 | Operator-cancelled pre-gate launch | Docker/QNN never started; [`results/canonical-v2-rerun-operator-cancelled-pre-gate.json`](results/canonical-v2-rerun-operator-cancelled-pre-gate.json) |
 | Native rerun 1 operator stop | stages 1–12 completed QNN-only; stages 7–10 timing/resource isolation contaminated by 0023 overlap; stage 13 partial; incomplete and not resumable; [`results/canonical-v2-native-rerun-1-operator-stopped.json`](results/canonical-v2-native-rerun-1-operator-stopped.json) |
+| Terminal native rerun 2 | 18/18 QNN-only execution passed; duration sum 605; final finite audio structurally invalid; phone-ineligible; [`results/canonical-v2-host-qnn-gate.json`](results/canonical-v2-host-qnn-gate.json) |
 
 The completed **noncanonical** 116-byte historical stage experiment is separately preserved in [`results/staged-host-qnn-feasibility.json`](results/staged-host-qnn-feasibility.json): all 18 host stages ran with QNN assignment, but duration changed from 304 to 305 and the final float audio was invalid (`peak 94848`, 182,236 samples with `abs >= 1`). It is feasibility/debug evidence only, never canonical, phone-eligible, or listening material.
 
@@ -206,7 +207,7 @@ cmp "$OUT/duration.i64" \
 
 The exact current output contract is audio SHA `56ce6a24498d8db270c0a34eb1fe0a87b762a0fb8121616790f03391c132aa3c` and duration SHA `99494f78e82ad3d8b506d5b0a5c4edde6292c6a52ca54a47b50f109fa534480c`. Do not substitute the historical WSL `fb8895…` payload for the prospective same-environment comparison.
 
-The committed contract tests and hash gates must pass before QNN:
+The committed contract tests and no-launch preflight remain reproducibility checks:
 
 ```bash
 python3 -m unittest experiments/0017-kokoro-onnx-qnn-htp-android/tests/test_contract.py -v
@@ -216,18 +217,9 @@ PREFLIGHT_ONLY=yes \
 
 `PREFLIGHT_ONLY=yes` exercises the policy, baseline, model, input, runner, current CPU tensor, concurrency, and memory gates, then exits before Docker/QNN launch.
 
-## Exact next action
+## Terminal result and summary reproduction
 
-Do **not** relaunch until the scoped operator-stop/shared-lock follow-up is reviewed. Then do **not** resume either prior partial run: restart the complete canonical host record from stage 1:
-
-```bash
-RUN_ID=canonical-v2-native-rerun-2 \
-  experiments/0017-kokoro-onnx-qnn-htp-android/host/run_canonical_v2_staged_host_qnn.sh
-```
-
-Before Docker invocation, the script acquires the shared heavy-RAM/QNN lock and verifies the exact committed reconstruction policy/baseline hashes, manifest, all 18 model hashes, runner, inputs, and all 18 current CPU stage-output files/hashes. A real launch refuses any pre-existing `qnn-host-$RUN_ID` path or Docker container name; never delete or reuse the preserved `qnn-host-canonical-v2-rerun` or `qnn-host-canonical-v2-native-rerun-1` directories. It defaults to refusing a concurrent QNN compiler, holds the shared lock for its entire lifetime, runs one stage process at a time, records memory every five seconds, and never accesses the phone. GNU `/usr/bin/time` is optional and its absence is recorded. `QAIRT_ROOT` defaults to `/home/moritz/opt/qairt/2.49.0.260730`.
-
-After an 18/18 pass, create the durable host execution summary (replace `$RUN`):
+Do **not** relaunch or resume any run. Preserve `qnn-host-canonical-v2-native-rerun-2` and all earlier directories unchanged. The only in-scope reproduction action is regenerating the committed terminal summary from the preserved 18/18 checkpoint:
 
 ```bash
 EXP=experiments/0017-kokoro-onnx-qnn-htp-android
@@ -246,7 +238,7 @@ python3 "$EXP/tools/summarize_staged_qnn_run.py" \
   --output "$EXP/results/canonical-v2-host-qnn-gate.json"
 ```
 
-Then inspect structural validity and numerical/acoustic metrics. Numerical or EOS divergence is descriptive, not a listening rejection. **Do not touch the phone** unless all 18 fallback-disabled stages ran, provider proof has zero CPU events, and the canonical host output is structurally valid. Physical RPC/accelerator/cycle/HVX evidence, first and five warm RTFs using actual emitted duration, thermal context, memory semantics, a fresh valid WAV, and Moritz's exact-sample verdict remain outstanding.
+The regenerated summary must have SHA `3926b2509f426744b14537d4e06898d6e3c9527694a94e0a0c646c9ce1815689`, status `failed_host_structural_gate_after_18_stage_qnn_pass`, provider counts `{QNNExecutionProvider: 18}`, zero CPU events, and `phone_eligible: false`. Numerical/EOS divergence is descriptive, not a listening verdict. The invalid float output must not be encoded as a WAV or sent for listening. Physical phone proof, setup/RTF runs, thermal context, and listening remain blocked—not outstanding work for this experiment.
 
 ## Claim boundaries
 
@@ -258,5 +250,6 @@ Then inspect structural validity and numerical/acoustic metrics. Numerical or EO
 - Historical WSL audio SHA `fb8895…` and current native-host/Ubuntu 22 audio SHA `56ce6a…` are separate environment-scoped CPU records. Cross-environment bit reproducibility is unproven.
 - Historical first-element/max-absolute-error/RMSE/cosine values remain null unless the exact ignored WSL payload is recovered; hashes alone cannot supply them.
 - The accepted experiment-0013 CPU WAV and every historical metric/verdict remain scoped to their old noncanonical route and do not transfer to canonical v2.
-- Canonical QNN listening status is `not_reviewed`; only Moritz may accept or reject an exact WAV hash.
-- No quantization is authorized.
+- Canonical QNN listening is not applicable because no valid WAV exists; the invalid float output is not listening material.
+- The 18/18 provider/execution pass does not override the failed structural gate or authorize phone work.
+- No rerun, fix, phone access, or quantization is authorized in experiment 0017.

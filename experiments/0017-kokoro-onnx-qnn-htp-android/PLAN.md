@@ -2,13 +2,13 @@
 
 ## Current checkpoint
 
-The canonical-v2 route is frozen for a fresh complete host gate, but no QNN relaunch occurs until the scoped operator-stop/shared-lock follow-up commit is reviewed. The first canonical host QNN attempt remains externally interrupted after stages 1–15 passed; stage 16 reached graph sequencing at 12% without finalizing, and stages 17–18 were not attempted.
+The canonical-v2 route has reached its terminal experiment-0017 host boundary. Locked run `canonical-v2-native-rerun-2` completed all 18 fallback-disabled stages with one `QNNExecutionProvider` event per stage, zero CPU provider events, and exit code 0. This proves full host QNN assignment/execution for the staged fixed contract.
 
-A native-host reconstruction recovered every model/input/runner hash. Two clean Ubuntu 22 CPU stage runs were bit-exact to each other and to a fresh complete compatibility-graph run, producing structurally valid audio SHA `56ce6a24498d8db270c0a34eb1fe0a87b762a0fb8121616790f03391c132aa3c`. The historical WSL CPU evidence remains unchanged at `fb8895f6bb9c2ee94dd18f8b9bfdc6f1b36f99e01c40f5806bdd71076acd6d36`; cross-environment bit reproducibility is unproven because the historical ignored payload is unavailable. The prospective comparison policy is [`protocol-canonical-v2-reconstruction-baseline.json`](protocol-canonical-v2-reconstruction-baseline.json), backed by [`results/canonical-v2-cpu-reconstruction-baseline.json`](results/canonical-v2-cpu-reconstruction-baseline.json).
+The output fails the separate structural gate. Duration `[235]` changed from CPU sum 602 to QNN sum 605 at five indices. Audio `[361200]` is finite but has SHA `2992f71911b8af233841af4058e8218e8705c987a51643d1d709d96545b60a08`, peak `87296.0078`, RMS `61982.4965`, and 360,921 samples with `abs >= 1`. It is invalid and not listening material. Phone eligibility is false.
 
-One crossed-message launch was stopped before Docker creation because host `/usr/bin/time` was absent. No QNN session, compiler, stage, or phone access began; [`results/canonical-v2-rerun-operator-cancelled-pre-gate.json`](results/canonical-v2-rerun-operator-cancelled-pre-gate.json) preserves that operator-cancelled boundary.
+Stage 1 `bert` is the earliest non-bit-exact output versus the frozen current CPU baseline (max absolute error `0.395303`, RMSE `0.0220692`, cosine `0.999870856`). Stage 4 `duration_alignment` is the first discrete/material contract divergence: `pred_dur` differs at five indices/sum 605 versus 602, while its aligned float outputs have cosine `0.854534` and `0.828855`. This localizes observed divergence without establishing a root cause.
 
-The later approved `canonical-v2-native-rerun-1` completed stages 1–12 with clean provider/output evidence. Experiment-0023 QNN work overlapped stages 7–10, so their timing/resource observations are not isolated. The run was then operator-stopped during unfinalized stage 13 under an overbroad concurrency-policy interpretation. The corrected boundary and exact evidence are [`results/canonical-v2-native-rerun-1-operator-stopped.json`](results/canonical-v2-native-rerun-1-operator-stopped.json). This is not a QNN correctness failure, but the incomplete run cannot be resumed. After review, `canonical-v2-native-rerun-2` must restart from stage 1 and hold `artifacts/locks/heavy-ram.lock` for its full lifetime. Clean-machine reconstruction and restart instructions are in [`REPRODUCING.md`](REPRODUCING.md).
+The complete terminal record is [`results/canonical-v2-host-qnn-gate.json`](results/canonical-v2-host-qnn-gate.json). Historical WSL and operator-stopped records remain preserved. No rerun, graph/runtime change, fix attempt, WAV, listening package, or phone work is authorized unless Moritz explicitly opens a new experiment/scope.
 
 ## Objective
 
@@ -27,42 +27,25 @@ The comparable route must use the exact committed canonical transcript and the p
 7. **Historical WSL stage CPU recomposition** — all 18 separate CPU processes reproduced the complete compatibility graph bit-for-bit at audio SHA `fb8895…`; this evidence is preserved in its original environment scope.
 8. **Current-environment reconstruction baseline** — two clean 18-stage runs produced identical per-stage tensors and final audio SHA `56ce6a…`; a fresh complete-graph run was bit-exact to the staged output, duration remained exact, and final audio passed the structural policy. The first cross-environment hash divergence is stage 1; value-based historical deltas remain unavailable because the ignored WSL tensor is gone.
 
-## Remaining gates
+## Terminal gate outcome
 
-1. **Fresh complete host QNN gate**
-   - regenerate/verify every ignored asset using [`REPRODUCING.md`](REPRODUCING.md);
-   - require the exact committed reconstruction policy/baseline hashes and a complete CPU checkpoint whose 18 per-stage outputs match the frozen current-environment `56ce6a…` baseline;
-   - preserve `fb8895…` as historical WSL evidence and make no cross-environment bit-exact claim;
-   - acquire nonblocking `artifacts/locks/heavy-ram.lock` before QNN preflight and hold it for the full script lifetime; this infrastructure lock prevents peer overlap but is not a model eligibility field;
-   - start fresh ID `canonical-v2-native-rerun-2` from stage 1 with [`host/run_canonical_v2_staged_host_qnn.sh`](host/run_canonical_v2_staged_host_qnn.sh);
-   - run one stage process at a time so compiler memory is released;
-   - require all 18 sessions to finalize and execute their real upstream tensors;
-   - require one QNN provider event per stage and zero CPU provider events;
-   - preserve per-stage exit, wall, session, inference, `ru_maxrss`, output, ORT profile, QNN CSV/log, and numerical comparison evidence;
-   - inspect final duration and audio. EOS/numerical divergence is descriptive, but invalid/non-finite/clipped audio blocks phone access.
-2. **Host fidelity and structure**
-   - record actual duration tensor/sum and emitted sample count;
-   - require finite non-silent, unclipped float audio within the frozen structural bounds;
-   - compare to the controlled eager and patched-ORT CPU references using the named phase-tolerant policy;
-   - report waveform metrics descriptively and never turn them into a listening verdict.
-3. **Phone run, only if every host gate passes**
-   - acquire Messenger and `artifacts/locks/phone.lock` locks;
-   - verify exact serial/model/SoC/ABI and sole-device state;
-   - use scoped internal staging and cleanup;
-   - create sessions once, record setup, one first and at least five warm complete generations with full model/cache/random-state reset before each generation;
-   - compute every RTF from the actual emitted duration;
-   - retain per-stage provider proof plus physical RPC, accelerator-time, accelerator-cycle, and HVX evidence;
-   - retain thermal context and process-lifetime memory high-water semantics;
-   - create a valid canonical-v2 WAV and a blind comparison package.
-4. **Listening**
-   - record the exact WAV SHA;
-   - listening status remains `not_reviewed` until Moritz explicitly accepts or rejects that exact sample;
-   - do not transfer the accepted historical experiment-0013 CPU verdict to this route.
+1. **Host QNN execution/provider gate — passed**
+   - 18/18 separate stage processes finalized and executed;
+   - provider counts `{QNNExecutionProvider: 18}`;
+   - CPU provider node events `0`;
+   - shared heavy-RAM lock held for the complete run.
+2. **Host structural audio gate — failed**
+   - duration sum 605 versus expected 602;
+   - audio finite but grossly out of range, with 360,921 clipped/out-of-range samples;
+   - no valid WAV or listening material.
+3. **Phone/benchmark/listening work — blocked**
+   - no ADB, staging, physical HTP proof, setup/RTF runs, thermal measurement, WAV, or listening verdict;
+   - future investigation requires explicit new authorization and scope, not an experiment-0017 retry.
 
 ## Stop rules
 
-- Do not relaunch until the operator-stop/shared-lock follow-up is reviewed and the policy/baseline/current CPU checkpoint/shared-lock gates pass.
-- Do not resume either interrupted attempt or operator-stopped `canonical-v2-native-rerun-1`; produce a fresh complete 18-stage record from stage 1.
+- Do not rerun experiment 0017 or resume any partial attempt.
+- Do not alter graphs, runtime/provider options, or introduce a fix inside this completed experiment; a new investigation requires explicit Moritz scope.
 - Do not retry the monolithic graph.
 - Do not enable CPU provider fallback.
 - Do not quantize without Moritz's explicit authorization.

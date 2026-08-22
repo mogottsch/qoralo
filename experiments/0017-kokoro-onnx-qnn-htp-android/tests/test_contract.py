@@ -379,7 +379,7 @@ class ContractTests(unittest.TestCase):
             host_gate.index("refusing to reuse pre-existing QNN output path"),
         )
         reproducing = (ROOT / "REPRODUCING.md").read_text()
-        self.assertIn("RUN_ID=canonical-v2-native-rerun-2", reproducing)
+        self.assertNotIn("RUN_ID=canonical-v2-native-rerun-2", reproducing)
         self.assertIn("qnn-host-canonical-v2-native-rerun-2", reproducing)
 
     def test_native_rerun_1_operator_stop_boundary_is_durable(self) -> None:
@@ -428,6 +428,78 @@ class ContractTests(unittest.TestCase):
             "canonical-v2-native-rerun-2",
         )
         self.assertIn("not a technical QNN failure", record["claim_boundary"])
+
+    def test_terminal_host_qnn_gate_is_audio_invalid_and_phone_ineligible(self) -> None:
+        result_path = ROOT / "results/canonical-v2-host-qnn-gate.json"
+        result = json.loads(result_path.read_text())
+        self.assertEqual(
+            hashlib.sha256(result_path.read_bytes()).hexdigest(),
+            "3926b2509f426744b14537d4e06898d6e3c9527694a94e0a0c646c9ce1815689",
+        )
+        self.assertEqual(
+            result["status"],
+            "failed_host_structural_gate_after_18_stage_qnn_pass",
+        )
+        execution = result["execution"]
+        self.assertEqual(execution["completed_stages"], 18)
+        self.assertEqual(
+            execution["provider_counts"], {"QNNExecutionProvider": 18}
+        )
+        self.assertEqual(execution["cpu_provider_node_events"], 0)
+        self.assertTrue(execution["fallback_disabled"])
+        self.assertTrue(
+            execution["shared_heavy_ram_lock"][
+                "held_for_full_script_lifetime_by_contract"
+            ]
+        )
+
+        duration = result["outputs"]["duration"]
+        self.assertEqual((duration["elements"], duration["sum"]), (235, 605))
+        self.assertEqual(duration["expected_sum"], 602)
+        self.assertFalse(duration["matches_expected_sum"])
+        self.assertEqual(
+            duration["sha256"],
+            "e4d557abb6cb47889d9eb1ca5aa80d0a0c5c4b06c65da10d373d137de641f635",
+        )
+
+        audio = result["outputs"]["audio"]
+        self.assertEqual(audio["elements"], 361200)
+        self.assertEqual(
+            audio["sha256"],
+            "2992f71911b8af233841af4058e8218e8705c987a51643d1d709d96545b60a08",
+        )
+        self.assertTrue(audio["structural"]["all_finite"])
+        self.assertFalse(audio["structural"]["valid"])
+        self.assertAlmostEqual(audio["structural"]["absolute_peak"], 87296.0078125)
+        self.assertAlmostEqual(audio["structural"]["rms"], 61982.49650008212)
+        self.assertEqual(audio["structural"]["samples_abs_ge_1"], 360921)
+
+        eligibility = result["eligibility"]
+        self.assertTrue(eligibility["complete_18_stage_execution"])
+        self.assertTrue(eligibility["provider_gate"])
+        self.assertFalse(eligibility["structural_audio_gate"])
+        self.assertFalse(eligibility["phone_eligible"])
+
+        divergence = result["divergence"]
+        first = divergence["earliest_non_bit_exact_output"]
+        self.assertEqual((first["index"], first["name"]), (1, "bert"))
+        self.assertAlmostEqual(first["comparison"]["maximum_absolute_error"], 0.395303338766098)
+        self.assertAlmostEqual(first["comparison"]["rmse"], 0.022069202342430087)
+        self.assertAlmostEqual(first["comparison"]["cosine"], 0.9998708561202958)
+        material = divergence["earliest_material_contract_divergence"]
+        self.assertEqual(
+            (material["index"], material["name"], material["output"]),
+            (4, "duration_alignment", "pred_dur"),
+        )
+        self.assertEqual(material["comparison"]["mismatch_count"], 5)
+        self.assertEqual(material["comparison"]["candidate_sum"], 605)
+        self.assertIsNone(divergence["root_cause"])
+
+        monitor = result["host_run"]["resource_monitor"]
+        self.assertEqual(monitor["samples"], 2270)
+        self.assertEqual(monitor["minimum_mem_available_kib"], 21541252)
+        self.assertEqual(monitor["paused_samples"], 0)
+        self.assertFalse(monitor["pause_event_file_exists"])
 
     def test_erased_experiment_0015_remains_absent(self) -> None:
         self.assertFalse((REPO / "experiments/0015-pocket-tts-qnn-htp-android").exists())

@@ -5,12 +5,12 @@
 The original 116-byte experiment-0013-derived route and the newer canonical-v2 route are separate evidence tracks.
 
 - The historical monolithic compatibility graph was blocked before execution by kernel OOM. An authorized later decomposition did execute all 18 historical stages on host QNN, but duration changed from 304 to 305 and its final float audio was structurally invalid. It remains noncanonical feasibility/debug evidence only.
-- The canonical-v2 route has complete frontend/export/CPU/stage-recomposition proof. Its first fallback-disabled host QNN attempt completed stages 1–15, then a WSL shutdown/restart externally interrupted stage 16 during graph sequencing at 12%. Stage 16 did not finalize or execute, stages 17–18 were not attempted, no final canonical QNN audio exists, and the phone remains forbidden.
 - Native-host reconstruction reproduced every source/model/input/runner hash but not the historical WSL CPU audio hash. Two clean current-environment staged CPU runs and a complete-graph run are mutually bit-exact at audio SHA `56ce6a24498d8db270c0a34eb1fe0a87b762a0fb8121616790f03391c132aa3c`. The historical WSL `fb8895…` record is preserved, and cross-environment bit reproducibility is explicitly unproven.
+- Canonical-v2 run `canonical-v2-native-rerun-2` completed all 18 fallback-disabled host QNN stages with 18 QNN provider events and zero CPU events. Its duration changed from CPU sum 602 to 605, and final finite audio is structurally invalid: peak `87296.0078`, RMS `61982.4965`, 360,921 samples with `abs >= 1`, SHA `2992f71911b8af233841af4058e8218e8705c987a51643d1d709d96545b60a08`.
 
-Neither track proves physical phone HTP execution. The canonical interrupted attempt is not a technical stage-16 failure or OOM; the next attempt must restart from stage 1. See [`REPRODUCING.md`](REPRODUCING.md).
+The canonical route therefore proves complete staged host QNN assignment/execution but fails host audio structure. Neither route proves physical phone HTP execution. Phone eligibility is false, and no rerun/fix/phone work is authorized in experiment 0017.
 
-Historical machine-readable evidence is [`results/host-gate-checkpoint.json`](results/host-gate-checkpoint.json) and [`results/staged-host-qnn-feasibility.json`](results/staged-host-qnn-feasibility.json). Canonical-v2 machine evidence begins with [`protocol-canonical-v2-stage-decomposition.json`](protocol-canonical-v2-stage-decomposition.json) and [`results/canonical-v2-host-qnn-interrupted-checkpoint.json`](results/canonical-v2-host-qnn-interrupted-checkpoint.json). The prospective current-environment comparison contract is [`protocol-canonical-v2-reconstruction-baseline.json`](protocol-canonical-v2-reconstruction-baseline.json), with evidence in [`results/canonical-v2-cpu-reconstruction-baseline.json`](results/canonical-v2-cpu-reconstruction-baseline.json). Large models, fixtures, profiles, compiler logs, tensors, local binaries, and audio remain ignored under `work/` and `.local/`; their hashes and regeneration commands are committed.
+Historical machine-readable evidence is [`results/host-gate-checkpoint.json`](results/host-gate-checkpoint.json) and [`results/staged-host-qnn-feasibility.json`](results/staged-host-qnn-feasibility.json). Canonical-v2 machine evidence begins with [`protocol-canonical-v2-stage-decomposition.json`](protocol-canonical-v2-stage-decomposition.json) and [`results/canonical-v2-host-qnn-interrupted-checkpoint.json`](results/canonical-v2-host-qnn-interrupted-checkpoint.json). The current-environment comparison contract is [`protocol-canonical-v2-reconstruction-baseline.json`](protocol-canonical-v2-reconstruction-baseline.json), with CPU evidence in [`results/canonical-v2-cpu-reconstruction-baseline.json`](results/canonical-v2-cpu-reconstruction-baseline.json). The terminal host record is [`results/canonical-v2-host-qnn-gate.json`](results/canonical-v2-host-qnn-gate.json), SHA `3926b2509f426744b14537d4e06898d6e3c9527694a94e0a0c646c9ce1815689`. Large models, fixtures, profiles, compiler logs, tensors, local binaries, and audio remain ignored under `work/` and `.local/`; their hashes and regeneration commands are committed.
 
 ## Historical verified source and contract
 
@@ -198,10 +198,40 @@ Stage 16 had no finalized session, inference, output, non-empty provider profile
 
 Exact per-stage timing, outputs, numerical comparisons, QNN metrics, log/profile hashes, and resource facts are committed in [`results/canonical-v2-host-qnn-interrupted-checkpoint.json`](results/canonical-v2-host-qnn-interrupted-checkpoint.json).
 
-## Current decision and next gate
+### Native rerun 1 operator stop
 
-No canonical QNN audio exists, so canonical QNN listening is `not_reviewed`/not yet applicable. Phone eligibility is false.
+`canonical-v2-native-rerun-1` completed stages 1–12 with QNN-only provider proof. Experiment-0023 work overlapped stages 7–10, so their timing/resource values are not isolated, though their output/provider evidence remains bounded correctness evidence under the committed policy. An overbroad policy interpretation caused an operator stop during stage 13 before finalization or inference. The run is incomplete, not a technical QNN failure, and was never resumed. [`results/canonical-v2-native-rerun-1-operator-stopped.json`](results/canonical-v2-native-rerun-1-operator-stopped.json) preserves the exact boundary.
 
-Regenerate and hash-verify ignored artifacts plus the current-environment CPU checkpoint. The host script now fail-closes on the exact committed reconstruction policy/baseline hashes and all 18 frozen current CPU stage-output hashes before any Docker/QNN launch. When reviewed, restart the complete host gate from stage 1; do not resume the partial stage-16 attempt. [`REPRODUCING.md`](REPRODUCING.md) contains the exact commands.
+### Terminal native rerun 2
 
-Only a fresh 18/18 fallback-disabled host pass with zero CPU provider events, comparison to the current `56ce6a…` baseline, and **structurally valid final audio** can advance to phone work. Historical `fb8895…` remains separate WSL evidence. Physical phone RPC/accelerator/cycle/HVX proof, setup/first/five-warm RTFs using actual emitted duration, thermal context, memory semantics, a fresh WAV/hash, and Moritz's exact-sample verdict remain outstanding. No quantization is authorized.
+`canonical-v2-native-rerun-2` held `artifacts/locks/heavy-ram.lock` for the full script lifetime and completed stages 1–18:
+
+- provider counts `{QNNExecutionProvider: 18}`; CPU provider node events `0`;
+- summed separate-process session creation `3614.11784 s`;
+- summed single-run stage inference `7765.36205 s`;
+- summed stage wall time `11390.86871 s`;
+- maximum separate process-lifetime `ru_maxrss` `4,262,404 KiB`;
+- 2,270 host memory samples, minimum `MemAvailable` `21,541,252 KiB`, no pause events.
+
+These timing sums are staged host observations, not an end-to-end phone benchmark. The shared lock is infrastructure serialization, not model eligibility or physical HTP proof.
+
+Every QNN output is non-bit-exact to its frozen same-stage CPU reference. The earliest numerical difference is stage 1 `bert` output `/bert_encoder/Add_output_0`: max absolute error `0.3953033`, RMSE `0.0220692`, cosine `0.999870856`. The first discrete/material contract divergence is stage 4 `duration_alignment`:
+
+- `pred_dur` differs at indices `[81, 91, 145, 169, 197]`, maximum difference 1, sum 605 versus CPU 602;
+- `/MatMul_output_0`: max absolute error `3.1526407`, RMSE `0.1882133`, cosine `0.8288549`;
+- `/MatMul_1_output_0`: max absolute error `1.7738955`, RMSE `0.1756138`, cosine `0.8545336`.
+
+Divergence grows through later stages. At stage 18, audio versus current CPU has max absolute error `87296.3854`, RMSE `61982.4959`, cosine `0.0111760`. This localizes the observed boundary but does not identify a root cause; none is inferred.
+
+Final outputs:
+
+- duration `[235]`, sum 605 versus expected 602, SHA `e4d557abb6cb47889d9eb1ca5aa80d0a0c5c4b06c65da10d373d137de641f635`;
+- audio `[361200]`, all finite, peak `87296.0078125`, RMS `61982.4965001`, 360,921 samples with `abs >= 1`, SHA `2992f71911b8af233841af4058e8218e8705c987a51643d1d709d96545b60a08`;
+- structural validity **failed**;
+- phone eligibility **false**.
+
+The complete machine record is [`results/canonical-v2-host-qnn-gate.json`](results/canonical-v2-host-qnn-gate.json).
+
+## Current decision
+
+Experiment 0017 is terminally **host-executed but audio-invalid**. No valid canonical QNN WAV exists, so there is no listening sample or verdict. Do not rerun, alter the graph/runtime, attempt a fix, access the phone, or publish benchmark metrics from this route unless Moritz explicitly opens a new experiment/scope. Historical `fb8895…` remains separate WSL evidence. No quantization is authorized.

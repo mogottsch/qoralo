@@ -28,6 +28,14 @@ def local(path: str) -> Path:
     return Path(path.removeprefix("/repo/"))
 
 
+def evidence(path: Path) -> dict[str, object]:
+    return {
+        "ignored_path": str(path),
+        "bytes": path.stat().st_size,
+        "sha256": sha256(path),
+    }
+
+
 def parse_labeled_path(value: str) -> tuple[str, Path]:
     if "=" not in value:
         raise argparse.ArgumentTypeError("expected label=path")
@@ -286,6 +294,33 @@ def main() -> int:
             }
         )
 
+    first_non_bit_exact = None
+    first_discrete_contract_divergence = None
+    for stage in stages:
+        for output_name, comparison in stage[
+            "comparison_to_same_stage_cpu"
+        ].items():
+            if not comparison["bit_exact"] and first_non_bit_exact is None:
+                first_non_bit_exact = {
+                    "index": stage["index"],
+                    "name": stage["name"],
+                    "output": output_name,
+                    "comparison": comparison,
+                }
+            if (
+                comparison.get("mismatch_count", 0) > 0
+                and first_discrete_contract_divergence is None
+            ):
+                first_discrete_contract_divergence = {
+                    "index": stage["index"],
+                    "name": stage["name"],
+                    "output": output_name,
+                    "comparison": comparison,
+                    "all_stage_output_comparisons": stage[
+                        "comparison_to_same_stage_cpu"
+                    ],
+                }
+
     audio_path = local(run["pipeline_outputs"]["audio"]["path"])
     duration_path = local(run["pipeline_outputs"]["pred_dur"]["path"])
     audio = np.fromfile(audio_path, dtype="<f4")
@@ -307,6 +342,39 @@ def main() -> int:
             and clipped == 0
         ),
     }
+    duration_matches_expected = int(duration.sum()) == args.expected_duration_sum
+    provider_gate = total_provider_counts == {"QNNExecutionProvider": 18}
+    phone_eligible = bool(provider_gate and structural["valid"])
+
+    run_dir = args.checkpoint.parent
+    memory_path = run_dir / "memory-monitor.log"
+    memory_samples = []
+    if memory_path.is_file():
+        for line in memory_path.read_text().splitlines():
+            fields = {
+                key: int(value)
+                for item in line.split()[1:]
+                if "=" in item
+                for key, value in [item.split("=", 1)]
+            }
+            if "mem_available_kib" in fields:
+                memory_samples.append(fields)
+    host_run_files = {}
+    for name in (
+        "start.txt",
+        "end.txt",
+        "exit-code.txt",
+        "heavy-ram-lock.txt",
+        "monitor-policy.txt",
+        "memory-monitor.log",
+        "time-unavailable.txt",
+        "launcher.stdout.log",
+        "launcher.stderr.log",
+    ):
+        path = run_dir / name
+        if path.is_file():
+            host_run_files[name] = evidence(path)
+
     acoustic_records = {}
     for label, path in args.acoustic_record:
         acoustic_records[label] = {
@@ -317,7 +385,11 @@ def main() -> int:
         }
     result = {
         "schema_version": 1,
-        "status": "passed_host_qnn_execution",
+        "status": (
+            "passed_host_qnn_execution_and_structural_gate"
+            if phone_eligible
+            else "failed_host_structural_gate_after_18_stage_qnn_pass"
+        ),
         "route": args.route,
         "comparability": args.comparability,
         "transcript_sha256": args.transcript_sha256,
@@ -380,6 +452,37 @@ def main() -> int:
                 stage["execution"]["ru_maxrss_kib"] for stage in stages
             ),
             "memory_semantics": "maximum of separate process-lifetime ru_maxrss high-water marks; not additive, not steady PSS, and not component-isolated",
+            "shared_heavy_ram_lock": {
+                "path": "artifacts/locks/heavy-ram.lock",
+                "held_for_full_script_lifetime_by_contract": True,
+                "classification": "infrastructure serialization; not a model eligibility field",
+            },
+        },
+        "divergence": {
+            "earliest_non_bit_exact_output": first_non_bit_exact,
+            "earliest_material_contract_divergence": first_discrete_contract_divergence,
+            "material_boundary_interpretation": "Stage 4 duration_alignment is the first discrete output-contract divergence: pred_dur differs at five indices and sum 605 versus CPU 602, while both aligned float outputs also diverge materially. Stage 1 is already non-bit-exact but retains cosine 0.9998708561. This localizes the observed boundary without assigning a root cause.",
+            "root_cause": None,
+            "root_cause_reason": "The host evidence localizes numerical divergence but does not isolate a QNN kernel, quantization path, or implementation defect. No cause is inferred.",
+        },
+        "host_run": {
+            "files": host_run_files,
+            "resource_monitor": {
+                "samples": len(memory_samples),
+                "minimum_mem_available_kib": min(
+                    (item["mem_available_kib"] for item in memory_samples),
+                    default=None,
+                ),
+                "minimum_swap_free_kib": min(
+                    (item.get("swap_free_kib", 0) for item in memory_samples),
+                    default=None,
+                ),
+                "paused_samples": sum(
+                    item.get("paused", 0) for item in memory_samples
+                ),
+                "pause_event_file_exists": (run_dir / "pause-events.log").is_file(),
+                "semantics": "host-wide five-second operational samples while the shared heavy-RAM lock was held; not process PSS or component-isolated memory",
+            },
         },
         "stages": stages,
         "outputs": {
@@ -395,12 +498,24 @@ def main() -> int:
                 "elements": int(duration.size),
                 "sum": int(duration.sum()),
                 "expected_sum": args.expected_duration_sum,
+                "matches_expected_sum": duration_matches_expected,
                 "bytes": duration_path.stat().st_size,
                 "sha256": sha256(duration_path),
             },
         },
+        "eligibility": {
+            "complete_18_stage_execution": len(stages) == 18,
+            "fallback_disabled": True,
+            "provider_gate": provider_gate,
+            "cpu_provider_node_events": total_provider_counts.get(
+                "CPUExecutionProvider", 0
+            ),
+            "structural_audio_gate": structural["valid"],
+            "duration_matches_expected_sum": duration_matches_expected,
+            "phone_eligible": phone_eligible,
+        },
         "acoustic_records": acoustic_records,
-        "claim_boundary": "Fallback-disabled host QNN session finalization and complete-input execution for all stages, compared to the frozen current-environment 56ce6a CPU baseline. The historical fb8895 WSL record remains separate and cross-environment bit reproducibility is unproven. This is assignment/host execution evidence, not physical phone HTP RPC/HVX proof, benchmark performance, or a listening verdict. Numerical/EOS differences are descriptive, while the structural WAV gate remains separate.",
+        "claim_boundary": "Fallback-disabled host QNN session finalization and complete-input execution for all stages, compared to the frozen current-environment 56ce6a CPU baseline. The historical fb8895 WSL record remains separate and cross-environment bit reproducibility is unproven. This is assignment/host execution evidence, not physical phone HTP RPC/HVX proof, benchmark performance, or a listening verdict. Numerical/EOS differences are descriptive. A failed structural audio gate blocks phone access and WAV/listening claims.",
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
