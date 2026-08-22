@@ -1,0 +1,424 @@
+{
+  "claim_boundary": "Preserves exact overlap/stop/output/provider/resource facts. The stop was an operator policy-interpretation error, not a technical QNN failure. No final audio or phone evidence exists.",
+  "classification": "Incomplete operator-stopped host run. Not a QNN correctness, provider, compiler, model, or structural failure.",
+  "completed_prefix": {
+    "count": 12,
+    "cpu_provider_node_events": 0,
+    "indices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "provider_counts": {
+      "QNNExecutionProvider": 12
+    },
+    "stages": [
+      {
+        "end_utc_stdout_mtime": "2026-08-22T10:11:27.512873Z",
+        "exit_code": 0,
+        "index": 1,
+        "name": "bert",
+        "outputs": {
+          "/bert_encoder/Add_output_0": {
+            "bytes": 481280,
+            "sha256": "cb3db74afca212831c375fa7b6a597d4f2f35f21775305497198fcba9ae2c153"
+          }
+        },
+        "provider_counts": {
+          "QNNExecutionProvider": 1
+        },
+        "start_utc_derived_from_stdout_mtime_minus_wall": "2026-08-22T10:10:35.349435Z",
+        "timing_and_resource_isolation": {
+          "reason": null,
+          "usable": true
+        }
+      },
+      {
+        "end_utc_stdout_mtime": "2026-08-22T10:23:21.706223Z",
+        "exit_code": 0,
+        "index": 2,
+        "name": "duration_encoder",
+        "outputs": {
+          "/text_encoder/Where_13": {
+            "bytes": 601600,
+            "sha256": "8d970aee686b26912364dbdfb725c94241ba910a02432b960da0057ab3983211"
+          }
+        },
+        "provider_counts": {
+          "QNNExecutionProvider": 1
+        },
+        "start_utc_derived_from_stdout_mtime_minus_wall": "2026-08-22T10:11:27.455593Z",
+        "timing_and_resource_isolation": {
+          "reason": null,
+          "usable": true
+        }
+      },
+      {
+        "end_utc_stdout_mtime": "2026-08-22T10:24:27.072285Z",
+        "exit_code": 0,
+        "index": 3,
+        "name": "text_encoder",
+        "outputs": {
+          "/text_encoder_1/Where_7_output_0": {
+            "bytes": 481280,
+            "sha256": "dcedc3f4dbfe5cba5a40f2a49bd6abeb7d29adfa89ae83c8dc51bf13ef11d500"
+          }
+        },
+        "provider_counts": {
+          "QNNExecutionProvider": 1
+        },
+        "start_utc_derived_from_stdout_mtime_minus_wall": "2026-08-22T10:23:21.789343Z",
+        "timing_and_resource_isolation": {
+          "reason": null,
+          "usable": true
+        }
+      },
+      {
+        "end_utc_stdout_mtime": "2026-08-22T10:26:19.790510Z",
+        "exit_code": 0,
+        "index": 4,
+        "name": "duration_alignment",
+        "outputs": {
+          "/MatMul_1_output_0": {
+            "bytes": 1232896,
+            "sha256": "7d0322901be65f153897a632dccc9077587109e020ebe606e1be98eb0f1b3fad"
+          },
+          "/MatMul_output_0": {
+            "bytes": 1541120,
+            "sha256": "03fa8da04044e4932eaf9da25a0672de1450158b2a32c433bb07a0a004e26e4f"
+          },
+          "pred_dur": {
+            "bytes": 1880,
+            "sha256": "e4d557abb6cb47889d9eb1ca5aa80d0a0c5c4b06c65da10d373d137de641f635"
+          }
+        },
+        "provider_counts": {
+          "QNNExecutionProvider": 1
+        },
+        "start_utc_derived_from_stdout_mtime_minus_wall": "2026-08-22T10:24:27.081839Z",
+        "timing_and_resource_isolation": {
+          "reason": null,
+          "usable": true
+        }
+      },
+      {
+        "end_utc_stdout_mtime": "2026-08-22T10:39:34.640414Z",
+        "exit_code": 0,
+        "index": 5,
+        "name": "prosody",
+        "outputs": {
+          "/If_1_output_0": {
+            "bytes": 4816,
+            "sha256": "5b459a011127a9c01901204f282136e596a1e1f5c087d8e353db1634ac4f025b"
+          },
+          "/If_output_0": {
+            "bytes": 4816,
+            "sha256": "06982bedcd1012d7f835d502c915a287f2a4741914b0b55e6b58960f9a41f64f"
+          }
+        },
+        "provider_counts": {
+          "QNNExecutionProvider": 1
+        },
+        "start_utc_derived_from_stdout_mtime_minus_wall": "2026-08-22T10:26:19.716305Z",
+        "timing_and_resource_isolation": {
+          "reason": null,
+          "usable": true
+        }
+      },
+      {
+        "end_utc_stdout_mtime": "2026-08-22T10:45:52.759660Z",
+        "exit_code": 0,
+        "index": 6,
+        "name": "decoder",
+        "outputs": {
+          "/decoder/decode.3/Mul_output_0": {
+            "bytes": 2465792,
+            "sha256": "d20c1322e73ba2eb0ea8063994e46104a38d7f8aa96720529cc334d292fe24b6"
+          }
+        },
+        "provider_counts": {
+          "QNNExecutionProvider": 1
+        },
+        "start_utc_derived_from_stdout_mtime_minus_wall": "2026-08-22T10:39:34.819516Z",
+        "timing_and_resource_isolation": {
+          "reason": null,
+          "usable": true
+        }
+      },
+      {
+        "end_utc_stdout_mtime": "2026-08-22T11:06:10.036658Z",
+        "exit_code": 0,
+        "index": 7,
+        "name": "harmonic_source",
+        "outputs": {
+          "/decoder/generator/Concat_1_output_0": {
+            "bytes": 6357208,
+            "sha256": "661c2e267e19897233b101da6da710775f60d98eca8f4f911e1e38e2c91ee15e"
+          }
+        },
+        "provider_counts": {
+          "QNNExecutionProvider": 1
+        },
+        "start_utc_derived_from_stdout_mtime_minus_wall": "2026-08-22T10:45:52.713341Z",
+        "timing_and_resource_isolation": {
+          "reason": "overlaps owner-disclosed 0023 QNN work; do not use wall/session/run/resource observations as isolated 0017 measurements",
+          "usable": false
+        }
+      },
+      {
+        "end_utc_stdout_mtime": "2026-08-22T11:13:31.121943Z",
+        "exit_code": 0,
+        "index": 8,
+        "name": "generator_0_base",
+        "outputs": {
+          "/decoder/generator/Add_2_output_0": {
+            "bytes": 12328960,
+            "sha256": "83efedff6af54ea5fb32bb6837aa69cd1a2f01aa6d7fac5e80efa04463ee9e83"
+          }
+        },
+        "provider_counts": {
+          "QNNExecutionProvider": 1
+        },
+        "start_utc_derived_from_stdout_mtime_minus_wall": "2026-08-22T11:06:10.098761Z",
+        "timing_and_resource_isolation": {
+          "reason": "overlaps owner-disclosed 0023 QNN work; do not use wall/session/run/resource observations as isolated 0017 measurements",
+          "usable": false
+        }
+      },
+      {
+        "end_utc_stdout_mtime": "2026-08-22T11:18:09.255703Z",
+        "exit_code": 0,
+        "index": 9,
+        "name": "generator_0_resblock_0",
+        "outputs": {
+          "/decoder/generator/resblocks.0/Add_8_output_0": {
+            "bytes": 12328960,
+            "sha256": "26fe28d4ad06513a4da71a9d9e43c883026085cdc8845ed0d3965793fdd7326e"
+          }
+        },
+        "provider_counts": {
+          "QNNExecutionProvider": 1
+        },
+        "start_utc_derived_from_stdout_mtime_minus_wall": "2026-08-22T11:13:31.138754Z",
+        "timing_and_resource_isolation": {
+          "reason": "overlaps owner-disclosed 0023 QNN work; do not use wall/session/run/resource observations as isolated 0017 measurements",
+          "usable": false
+        }
+      },
+      {
+        "end_utc_stdout_mtime": "2026-08-22T11:23:26.422419Z",
+        "exit_code": 0,
+        "index": 10,
+        "name": "generator_0_resblock_1",
+        "outputs": {
+          "/decoder/generator/resblocks.1/Add_8_output_0": {
+            "bytes": 12328960,
+            "sha256": "05f139f75b527f7514c35b2f3a065abb0673b0da977a130ddf97136fbdff2cb1"
+          }
+        },
+        "provider_counts": {
+          "QNNExecutionProvider": 1
+        },
+        "start_utc_derived_from_stdout_mtime_minus_wall": "2026-08-22T11:18:09.275783Z",
+        "timing_and_resource_isolation": {
+          "reason": "overlaps owner-disclosed 0023 QNN work; do not use wall/session/run/resource observations as isolated 0017 measurements",
+          "usable": false
+        }
+      },
+      {
+        "end_utc_stdout_mtime": "2026-08-22T11:28:23.802690Z",
+        "exit_code": 0,
+        "index": 11,
+        "name": "generator_0_resblock_2",
+        "outputs": {
+          "/decoder/generator/resblocks.2/Add_8_output_0": {
+            "bytes": 12328960,
+            "sha256": "76bb656f87951fbfd1468ae2ad751addafd8e8feba410dfddc495f6dc752cd7e"
+          }
+        },
+        "provider_counts": {
+          "QNNExecutionProvider": 1
+        },
+        "start_utc_derived_from_stdout_mtime_minus_wall": "2026-08-22T11:23:26.437411Z",
+        "timing_and_resource_isolation": {
+          "reason": null,
+          "usable": true
+        }
+      },
+      {
+        "end_utc_stdout_mtime": "2026-08-22T11:28:27.745983Z",
+        "exit_code": 0,
+        "index": 12,
+        "name": "generator_0_merge",
+        "outputs": {
+          "/decoder/generator/Div_1_output_0": {
+            "bytes": 12328960,
+            "sha256": "0bc228453b0743e3e860a72c8ef5e11b0add7971e6f91d6d43fad6c4b8af868a"
+          }
+        },
+        "provider_counts": {
+          "QNNExecutionProvider": 1
+        },
+        "start_utc_derived_from_stdout_mtime_minus_wall": "2026-08-22T11:28:23.844123Z",
+        "timing_and_resource_isolation": {
+          "reason": null,
+          "usable": true
+        }
+      }
+    ]
+  },
+  "eligibility": {
+    "final_audio_produced": false,
+    "fresh_18_of_18_pass": false,
+    "phone_eligible": false,
+    "structural_audio_gate": false
+  },
+  "interrupted_active_stage": {
+    "empty_ort_profile": {
+      "bytes": 0,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-canonical-v2-native-rerun-1/profiles/13-generator_1_base_2026-08-22_11-28-27_813.json",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "index": 13,
+    "name": "generator_1_base",
+    "observed_state": {
+      "checkpoint_stage_record_exists": false,
+      "graph_optimizations_completed": false,
+      "graph_optimizations_started": true,
+      "graph_preparation_completed_us": 241,
+      "inference_executed": false,
+      "output_produced": false,
+      "session_finalized": false
+    },
+    "stderr": {
+      "bytes": 807,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-canonical-v2-native-rerun-1/logs/13-generator_1_base.stderr.log",
+      "sha256": "9d473b23e922c6792d1791d590b92250cdd8c6ee121c31d0bc0fdc6f35ceca94"
+    },
+    "stdout": {
+      "bytes": 296,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-canonical-v2-native-rerun-1/logs/13-generator_1_base.stdout.json",
+      "sha256": "45343d861440a0c8a6c1b31e88d33853fefc764ec2d86bea558a37bf323b34df"
+    }
+  },
+  "operator_stop_requested_utc": "2026-08-22T11:28:54Z",
+  "operator_stop_verified_utc": "2026-08-22T11:29:06Z",
+  "overlap": {
+    "affected_0017_stages": [
+      7,
+      8,
+      9,
+      10
+    ],
+    "evidence_scope": "Exclude affected stage wall/session/run times and host-wide resource observations from isolated 0017 performance claims. Provider profiles and output hashes remain bounded correctness evidence.",
+    "owner_disclosed_windows": [
+      {
+        "end_utc": "2026-08-22T10:54:00Z",
+        "precision": "approximately one-minute bounds disclosed by 0023 owner",
+        "start_utc": "2026-08-22T10:53:00Z",
+        "work": "0023 duration generation/reload smoke"
+      },
+      {
+        "end_utc": "2026-08-22T11:08:02Z",
+        "precision": "owner-disclosed UTC bounds",
+        "start_utc": "2026-08-22T10:55:56Z",
+        "work": "0023 four source-context generation"
+      },
+      {
+        "end_utc": "2026-08-22T11:22:46Z",
+        "precision": "owner-disclosed UTC bounds",
+        "start_utc": "2026-08-22T11:08:35Z",
+        "work": "0023 four isolated context reload/execution"
+      }
+    ],
+    "peer_experiment": "0023-supertonic-qnn-precompiled-context-startup",
+    "stage_11_boundary": "Stage 11 began at 2026-08-22T11:23:26.437411Z, about 40.4 seconds after the final disclosed 0023 process ended; it is not overlap-contaminated under the disclosed bounds."
+  },
+  "policy_interpretation": {
+    "corrected_boundary": "The committed JSON eligibility gate does not require ongoing global host-process exclusivity. The launch script refused pre-existing QNN processes only at preflight; its separate-process rule isolates 0017 stages from one another.",
+    "operator_error": "0017 was stopped before the corrected policy clarification was received. Because the run is now incomplete, it cannot meet fresh 18/18 and must not be resumed.",
+    "overlap_effect": "0023 overlap contaminates timing/resource isolation for stages 7-10 but does not by itself invalidate their output/provider correctness evidence."
+  },
+  "required_next_action": {
+    "rule": "Start a brand-new run from stage 1 under the shared full-lifetime heavy-ram lock. Never resume or reuse native-rerun-1.",
+    "run_id": "canonical-v2-native-rerun-2"
+  },
+  "resource_monitor": {
+    "isolated_performance_use_for_entire_run": false,
+    "maximum_mem_available_kib": 27919528,
+    "minimum_mem_available_kib": 22183296,
+    "pause_events": 0,
+    "reason": "Host-wide samples overlap 0023 work; retain as operational evidence only.",
+    "samples": 938,
+    "swap_free_kib": 0
+  },
+  "run_id": "canonical-v2-native-rerun-1",
+  "run_start_utc": "2026-08-22T10:10:35Z",
+  "schema_version": 1,
+  "source": {
+    "docker_stop_log": {
+      "bytes": 105,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-canonical-v2-native-rerun-1/operator-docker-stop.log",
+      "sha256": "4c2e193cdbed2f2743da4910d8af1a3f3407346926c6248314ca7ea529f0890b"
+    },
+    "end_file_exists": false,
+    "exit_code_file_exists": false,
+    "memory_monitor": {
+      "bytes": 68474,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-canonical-v2-native-rerun-1/memory-monitor.log",
+      "sha256": "623693542b9cd7c08321a63454ddd2debea3a86fe87d3a2119600743d4c6c8bc"
+    },
+    "operator_stop_request": {
+      "bytes": 21,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-canonical-v2-native-rerun-1/operator-stop-requested-concurrency-contamination.txt",
+      "sha256": "4b832363d713526977f22e7cd014cb95a7e927fb1cbbccf00876533b2dc6b95b"
+    },
+    "operator_stop_verification": {
+      "bytes": 38,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-canonical-v2-native-rerun-1/operator-stop-verified-concurrency-contamination.txt",
+      "sha256": "ab2e7471f8fd9c51b1db573a4e1dcc963ee946a980a7ed80ae1bdf94ce712572"
+    },
+    "pipeline_checkpoint": {
+      "bytes": 62045,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/work/canonical-v2/stages-v1/qnn-host-canonical-v2-native-rerun-1/pipeline-checkpoint.json",
+      "sha256": "9fa49eab23e661e591252a57519d889609de3d7a7dd258f4ecdc2f27411f8abb"
+    },
+    "supervisor_log": {
+      "bytes": 92,
+      "ignored_path": "experiments/0017-kokoro-onnx-qnn-htp-android/.local/canonical-v2-native-rerun-1-supervisor.log",
+      "sha256": "3a7720fcfe321dbabb78036f4358fff2780f0189d3cccd822ba33ca1770fad78"
+    }
+  },
+  "status": "operator_stopped_incomplete_after_policy_misinterpretation",
+  "unattempted_stages": [
+    {
+      "index": 14,
+      "name": "generator_1_resblock_3"
+    },
+    {
+      "index": 15,
+      "name": "generator_1_resblock_4"
+    },
+    {
+      "index": 16,
+      "name": "generator_1_resblock_5"
+    },
+    {
+      "index": 17,
+      "name": "generator_1_merge"
+    },
+    {
+      "index": 18,
+      "name": "waveform_istft"
+    }
+  ]
+}

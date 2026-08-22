@@ -4,7 +4,7 @@ This is the durable clean-machine reconstruction and execution guide for experim
 
 ## Current execution boundary
 
-No phone access has occurred for the canonical-v2 Kokoro route. QNN relaunch remains blocked until the scoped reconstruction-baseline commit is reviewed and every new preflight gate passes.
+No phone access has occurred for the canonical-v2 Kokoro route. QNN relaunch remains blocked until the scoped operator-stop/shared-lock follow-up is reviewed and every preflight gate passes.
 
 The original canonical host attempt was externally interrupted by a WSL shutdown/restart:
 
@@ -20,6 +20,10 @@ Native-host reconstruction then recovered every committed asset hash. Two clean 
 The prospective policy [`protocol-canonical-v2-reconstruction-baseline.json`](protocol-canonical-v2-reconstruction-baseline.json), SHA `886bd22eb278b884ccf50e41bb1792d1d36a9612667d8080e90ccd8e3f71231e`, requires future QNN comparisons to use the current `56ce6a…` stage checkpoint while preserving `fb8895…` as historical WSL evidence. Its durable evidence is [`results/canonical-v2-cpu-reconstruction-baseline.json`](results/canonical-v2-cpu-reconstruction-baseline.json), SHA `0aff238d1cc45b7729c59a24a5938230491333c42290e9a1fef8d87da4a2ccd9`.
 
 A crossed-message launch was stopped before Docker creation because host `/usr/bin/time` was absent. No QNN session/compiler/stage began. [`results/canonical-v2-rerun-operator-cancelled-pre-gate.json`](results/canonical-v2-rerun-operator-cancelled-pre-gate.json) preserves that operator-cancelled pre-gate boundary. The host script now makes GNU `time` optional and retains its five-second memory monitor.
+
+The approved `canonical-v2-native-rerun-1` then completed stages 1–12 with exactly one QNN event and zero CPU events per stage. Experiment-0023 work overlapped stages 7–10, contaminating their wall/session/run/resource isolation but not, under the exact committed eligibility policy, their provider/output correctness. The run was operator-stopped during unfinalized stage 13 before that policy clarification arrived. It is incomplete and cannot be resumed. [`results/canonical-v2-native-rerun-1-operator-stopped.json`](results/canonical-v2-native-rerun-1-operator-stopped.json) preserves all output/profile/checkpoint hashes, exact UTC bounds, partial stage 13, and the corrected claim boundary.
+
+The replacement run is `canonical-v2-native-rerun-2`, starting from stage 1. The host script now acquires `artifacts/locks/heavy-ram.lock` nonblocking before preflight and holds its file descriptor for the complete script lifetime. That prevents 0023/0024 infrastructure overlap; it is not an additional model eligibility claim.
 
 The original interrupted record remains [`results/canonical-v2-host-qnn-interrupted-checkpoint.json`](results/canonical-v2-host-qnn-interrupted-checkpoint.json). Phone eligibility is false until a new 18/18 gate passes.
 
@@ -68,6 +72,7 @@ The frozen machine contract is [`protocol-canonical-v2-stage-decomposition.json`
 | Prospective comparison policy | frozen before new QNN output; next QNN comparison uses current `56ce6a…` checkpoint without rewriting historical `fb8895…`; [`protocol-canonical-v2-reconstruction-baseline.json`](protocol-canonical-v2-reconstruction-baseline.json) |
 | Interrupted canonical QNN attempt | 15 completed, stage 16 partial, 17–18 unattempted; [`results/canonical-v2-host-qnn-interrupted-checkpoint.json`](results/canonical-v2-host-qnn-interrupted-checkpoint.json) |
 | Operator-cancelled pre-gate launch | Docker/QNN never started; [`results/canonical-v2-rerun-operator-cancelled-pre-gate.json`](results/canonical-v2-rerun-operator-cancelled-pre-gate.json) |
+| Native rerun 1 operator stop | stages 1–12 completed QNN-only; stages 7–10 timing/resource isolation contaminated by 0023 overlap; stage 13 partial; incomplete and not resumable; [`results/canonical-v2-native-rerun-1-operator-stopped.json`](results/canonical-v2-native-rerun-1-operator-stopped.json) |
 
 The completed **noncanonical** 116-byte historical stage experiment is separately preserved in [`results/staged-host-qnn-feasibility.json`](results/staged-host-qnn-feasibility.json): all 18 host stages ran with QNN assignment, but duration changed from 304 to 305 and the final float audio was invalid (`peak 94848`, 182,236 samples with `abs >= 1`). It is feasibility/debug evidence only, never canonical, phone-eligible, or listening material.
 
@@ -213,20 +218,20 @@ PREFLIGHT_ONLY=yes \
 
 ## Exact next action
 
-Do **not** relaunch until the scoped reconstruction-baseline commit is reviewed. Then do **not** resume from stage 16: restart the complete canonical host record from stage 1:
+Do **not** relaunch until the scoped operator-stop/shared-lock follow-up is reviewed. Then do **not** resume either prior partial run: restart the complete canonical host record from stage 1:
 
 ```bash
-RUN_ID=canonical-v2-native-rerun-1 \
+RUN_ID=canonical-v2-native-rerun-2 \
   experiments/0017-kokoro-onnx-qnn-htp-android/host/run_canonical_v2_staged_host_qnn.sh
 ```
 
-Before Docker invocation, the script verifies the exact committed reconstruction policy/baseline hashes, manifest, all 18 model hashes, runner, inputs, and all 18 current CPU stage-output files/hashes. A real launch refuses any pre-existing `qnn-host-$RUN_ID` path or Docker container name; never delete or reuse the preserved operator-cancelled `qnn-host-canonical-v2-rerun` directory. It defaults to refusing a concurrent QNN compiler, runs one stage process at a time, records memory every five seconds, and never accesses the phone. GNU `/usr/bin/time` is optional and its absence is recorded. `QAIRT_ROOT` defaults to `/home/moritz/opt/qairt/2.49.0.260730`.
+Before Docker invocation, the script acquires the shared heavy-RAM/QNN lock and verifies the exact committed reconstruction policy/baseline hashes, manifest, all 18 model hashes, runner, inputs, and all 18 current CPU stage-output files/hashes. A real launch refuses any pre-existing `qnn-host-$RUN_ID` path or Docker container name; never delete or reuse the preserved `qnn-host-canonical-v2-rerun` or `qnn-host-canonical-v2-native-rerun-1` directories. It defaults to refusing a concurrent QNN compiler, holds the shared lock for its entire lifetime, runs one stage process at a time, records memory every five seconds, and never accesses the phone. GNU `/usr/bin/time` is optional and its absence is recorded. `QAIRT_ROOT` defaults to `/home/moritz/opt/qairt/2.49.0.260730`.
 
 After an 18/18 pass, create the durable host execution summary (replace `$RUN`):
 
 ```bash
 EXP=experiments/0017-kokoro-onnx-qnn-htp-android
-RUN="$EXP/work/canonical-v2/stages-v1/qnn-host-canonical-v2-native-rerun-1"
+RUN="$EXP/work/canonical-v2/stages-v1/qnn-host-canonical-v2-native-rerun-2"
 python3 "$EXP/tools/summarize_staged_qnn_run.py" \
   --manifest "$EXP/work/canonical-v2/stages-v1/manifest.json" \
   --checkpoint "$RUN/pipeline-checkpoint.json" \

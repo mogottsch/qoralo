@@ -369,15 +369,65 @@ class ContractTests(unittest.TestCase):
         self.assertIn("--reconstruction-policy", summary_tool)
         self.assertIn("--reconstruction-baseline", summary_tool)
         self.assertIn("PREFLIGHT_ONLY", host_gate)
+        self.assertIn("flock -n 9", host_gate)
+        self.assertIn("shared heavy RAM/QNN lock busy", host_gate)
         self.assertIn("refusing to reuse pre-existing QNN output path", host_gate)
         self.assertIn("refusing to reuse pre-existing QNN container name", host_gate)
+        self.assertLess(host_gate.index("flock -n 9"), host_gate.index("PREFLIGHT_ONLY"))
         self.assertLess(
             host_gate.index("PREFLIGHT_ONLY"),
             host_gate.index("refusing to reuse pre-existing QNN output path"),
         )
         reproducing = (ROOT / "REPRODUCING.md").read_text()
-        self.assertIn("RUN_ID=canonical-v2-native-rerun-1", reproducing)
-        self.assertIn("qnn-host-canonical-v2-native-rerun-1", reproducing)
+        self.assertIn("RUN_ID=canonical-v2-native-rerun-2", reproducing)
+        self.assertIn("qnn-host-canonical-v2-native-rerun-2", reproducing)
+
+    def test_native_rerun_1_operator_stop_boundary_is_durable(self) -> None:
+        record_path = (
+            ROOT / "results/canonical-v2-native-rerun-1-operator-stopped.json"
+        )
+        record = json.loads(record_path.read_text())
+        self.assertEqual(
+            hashlib.sha256(record_path.read_bytes()).hexdigest(),
+            "003095dbe22efd31feca508555c994545f343e46f6ce70b77e92ffcf69dd4bf0",
+        )
+        self.assertEqual(
+            record["status"],
+            "operator_stopped_incomplete_after_policy_misinterpretation",
+        )
+        self.assertEqual(
+            record["overlap"]["affected_0017_stages"], [7, 8, 9, 10]
+        )
+        self.assertEqual(record["completed_prefix"]["count"], 12)
+        self.assertEqual(
+            record["completed_prefix"]["provider_counts"],
+            {"QNNExecutionProvider": 12},
+        )
+        self.assertEqual(record["completed_prefix"]["cpu_provider_node_events"], 0)
+        self.assertEqual(
+            (
+                record["interrupted_active_stage"]["index"],
+                record["interrupted_active_stage"]["name"],
+            ),
+            (13, "generator_1_base"),
+        )
+        self.assertFalse(
+            record["interrupted_active_stage"]["observed_state"]["session_finalized"]
+        )
+        self.assertFalse(
+            record["interrupted_active_stage"]["observed_state"]["inference_executed"]
+        )
+        self.assertEqual(
+            [item["index"] for item in record["unattempted_stages"]],
+            [14, 15, 16, 17, 18],
+        )
+        self.assertFalse(record["eligibility"]["fresh_18_of_18_pass"])
+        self.assertFalse(record["eligibility"]["phone_eligible"])
+        self.assertEqual(
+            record["required_next_action"]["run_id"],
+            "canonical-v2-native-rerun-2",
+        )
+        self.assertIn("not a technical QNN failure", record["claim_boundary"])
 
     def test_erased_experiment_0015_remains_absent(self) -> None:
         self.assertFalse((REPO / "experiments/0015-pocket-tts-qnn-htp-android").exists())

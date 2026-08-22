@@ -18,6 +18,7 @@ RUN_ID="${RUN_ID:-$(date -u +%Y%m%dT%H%M%SZ)-$$}"
 OUT="$EXP/work/canonical-v2/stages-v1/qnn-host-$RUN_ID"
 NAME="exp0017-canonical-qnn-$RUN_ID"
 IMAGE="vibevoice-experiment-0010-qairt:2.49.0.260730-ubuntu22.04"
+HEAVY_RAM_LOCK="$REPO/artifacts/locks/heavy-ram.lock"
 
 require_sha() {
   local expected=$1 path=$2
@@ -42,6 +43,13 @@ require_sha e557ca522713ea7ee7efd252083b927009cd54c158899c086b23d92b63bf1f33 "$Q
 command -v docker >/dev/null
 command -v timeout >/dev/null
 command -v flock >/dev/null
+
+mkdir -p "$(dirname "$HEAVY_RAM_LOCK")"
+exec 9>>"$HEAVY_RAM_LOCK"
+flock -n 9 || {
+  echo "shared heavy RAM/QNN lock busy: $HEAVY_RAM_LOCK" >&2
+  exit 4
+}
 
 [[ $(uname -r) == "6.12.103-1-MANJARO" ]] || {
   echo "current-environment host kernel drift: $(uname -r)" >&2
@@ -160,6 +168,7 @@ fi
 
 mkdir -p "$OUT"
 date -u +%FT%TZ >"$OUT/start.txt"
+printf '%s\n' "$HEAVY_RAM_LOCK" >"$OUT/heavy-ram-lock.txt"
 printf '%s\n' "$RUN_ID" >"$OUT/run-id.txt"
 printf '%s\n' "$NAME" >"$OUT/container-name.txt"
 SWAP_BASE=$(awk '/SwapFree/ {print $2}' /proc/meminfo)
