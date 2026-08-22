@@ -21,6 +21,9 @@ CANONICAL_V2_SHA256 = "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037f
 LEGACY_V1_SHA256 = "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f"
 TRANSCRIPT_AUDIT_SOURCE = "experiments/0020-historic-android-benchmark-refresh/results/transcript-provenance-audit.json"
 FROZEN_0008_SUPERTONIC_METRICS = {"load_seconds": 0.765107603, "cold_rtf": 0.3854677480612432, "warm_median_rtf": 0.3703028479158501, "proof_run_rtf": None, "first_post_setup_rtf": None, "peak_pss_bytes": 463003648, "peak_vm_hwm_bytes": 531345408}
+EXP_0022 = ROOT / "experiments/0022-supertonic-canonical-v2-precompiled-qnn-context"
+EXP_0022_RESULT = EXP_0022 / "results/t235-t239-masked-padding-compatibility.json"
+EXP_0022_RESULT_SHA256 = "3de896971a64ca5d2833b5421d02e991a75f59922cf6a89c1ac3aa5da21dfc95"
 
 
 def fail(message):
@@ -248,6 +251,45 @@ def main():
             }
             if e["listening_review"] != expected_review or e["listening_review"]["sample_sha256"] != e["wav"]["sha256"]:
                 fail(f"{e['id']}: canonical-v2 listening review does not match committed exact-hash verdict evidence")
+        if e["id"] == "0022-supertonic-t239-padding-blocked":
+            result_bytes = EXP_0022_RESULT.read_bytes()
+            if hashlib.sha256(result_bytes).hexdigest() != EXP_0022_RESULT_SHA256:
+                fail(f"{e['id']}: committed terminal evidence hash mismatch")
+            source_result = json.loads(result_bytes)
+            policy_path = EXP_0022 / "protocol/padding-compatibility-policy.json"
+            policy = json.loads(policy_path.read_text())
+            if hashlib.sha256(policy_path.read_bytes()).hexdigest() != source_result["policy"]["sha256"]:
+                fail(f"{e['id']}: compatibility policy hash mismatch")
+            decision = source_result["decision"]
+            if decision["result"] != "failed_joint_constraint_incompatibility" or decision["compatible"] is not False:
+                fail(f"{e['id']}: terminal incompatibility decision mismatch")
+            if decision["oracle_equivalence_passed"] is not False or decision["frozen_t239_reproduction_passed"] is not True or decision["pad_payload_invariance_passed"] is not True:
+                fail(f"{e['id']}: compatibility sub-gate boundary mismatch")
+            if decision["required_action"] != "stop_before_runner_implementation_context_generation_output_or_phone_access":
+                fail(f"{e['id']}: fail-closed stop boundary mismatch")
+            comparison = source_result["comparisons"]["dynamic_t235_oracle_vs_dynamic_t239_masked"]
+            limits = policy["oracle_equivalence_limits"]
+            if comparison["duration"]["max_abs"] <= limits["duration_max_abs_lte"]:
+                fail(f"{e['id']}: duration incompatibility is not preserved")
+            text_comparison = comparison["text_embedding_semantic_prefix"]
+            if text_comparison["max_abs"] <= limits["text_embedding_semantic_prefix_max_abs_lte"] or text_comparison["rmse"] <= limits["text_embedding_semantic_prefix_rmse_lte"] or text_comparison["cosine"] >= limits["text_embedding_semantic_prefix_cosine_gte"]:
+                fail(f"{e['id']}: semantic-prefix incompatibility is not preserved")
+            if e["scope"] != "excluded_non_e2e" or e["attempt_status"] != "blocked" or e["android_attempted"] or e["provider"] is not None or e["precision"] is not None or e["threads"] is not None or e["device"] is not None:
+                fail(f"{e['id']}: stopped pre-run route execution boundary mismatch")
+            if any(value is not None for value in e["metrics"].values()) or e["wav"] is not None:
+                fail(f"{e['id']}: stopped pre-run route cannot carry metrics or WAV evidence")
+            expected_review = {"status": "not_reviewed", "reviewer": None, "date": None, "notes": None, "sample_sha256": None}
+            if e["listening_review"] != expected_review or e["structural_audio"] != {"status": "unavailable", "basis": None, "sample_sha256": None}:
+                fail(f"{e['id']}: absent audio/listening boundary mismatch")
+            if e["objective_evidence"]["status"] != "fail":
+                fail(f"{e['id']}: terminal objective gate failure is not represented")
+            semantic_ids = source_result["canonical_input"]["semantic_text_ids"]
+            frontend = e["transcript"]["effective_frontend"]
+            if semantic_ids["shape"] != [1, 235] or frontend["token_count"] != 235 or frontend["token_ids_sha256"] != semantic_ids["sha256"]:
+                fail(f"{e['id']}: canonical T235 frontend provenance mismatch")
+            required_missing = {"android_attempted", "provider", "precision", "threads", *METRIC_FIELDS, "wav", "physical_rpc_accelerator_cycle_hvx", "listening"}
+            if not required_missing.issubset(e["missing_reasons"]):
+                fail(f"{e['id']}: terminal negative result lacks exhaustive null reasons")
         remeasurements = e.get("remeasurements", [])
         if e["id"] == "0008-supertonic-cpu-t1":
             if e["metrics"] != FROZEN_0008_SUPERTONIC_METRICS or e["wav"] is not None:

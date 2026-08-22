@@ -3750,6 +3750,111 @@
       }
     },
     {
+      "id": "0022-supertonic-t239-padding-blocked",
+      "experiment": "0022",
+      "model": "Supertonic 3",
+      "route": "canonical-v2 exact-T239 precompiled-context compatibility gate",
+      "deployment_variant": "Canonical v2 / exact frozen T239 graph identity / terminal host compatibility gate",
+      "attempt_status": "blocked",
+      "technical_execution": {
+        "status": "blocked",
+        "android_attempted": false,
+        "provider": null,
+        "threads": null
+      },
+      "structural_audio": {
+        "status": "unavailable",
+        "basis": null,
+        "sample_sha256": null
+      },
+      "objective_evidence": {
+        "status": "fail",
+        "summary": "The locked canonical-T235-to-exact-frozen-T239 masked-padding compatibility gate failed, requiring a stop before runner, context, output, or phone work.",
+        "comparison_notes": [
+          "Filler-ID payload invariance passed, and the exact frozen T239 graphs reproduced dynamic T239 within specialization limits; dynamic T239 did not preserve the dynamic T235 canonical oracle within any locked duration/text-prefix limit."
+        ]
+      },
+      "listening_review": {
+        "status": "not_reviewed",
+        "reviewer": null,
+        "date": null,
+        "notes": null,
+        "sample_sha256": null
+      },
+      "android_attempted": false,
+      "provider": null,
+      "precision": null,
+      "threads": null,
+      "device": null,
+      "metrics": {
+        "load_seconds": null,
+        "cold_rtf": null,
+        "warm_median_rtf": null,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": null,
+        "peak_pss_bytes": null,
+        "peak_vm_hwm_bytes": null
+      },
+      "wav": null,
+      "summary": "Terminal negative host compatibility result: canonical v2 plus the complete <en>...</en> wrapper produced semantic T235. Four zero-masked right-padding slots made filler payload irrelevant, but changing the text extent to frozen T239 materially changed duration (max_abs 0.2244882583618164) and the first 235 text-embedding positions (max_abs 0.11101388931274414, RMSE 0.006290534672319703, cosine 0.9998871625637002). The exact frozen T239 graphs reproduced that altered T239 calculation, not the dynamic T235 canonical-v2 oracle, so the frozen policy required a stop before runner implementation, EPContext generation, output, or phone access.",
+      "limitations": [
+        "This proves only that exact canonical-v2 T235 semantics and the exact frozen T239 graph identities are jointly incompatible; it is not a general Supertonic, ONNX Runtime, QNN, HTP, or Android incompatibility claim.",
+        "The compatibility proof ran on host ONNX Runtime CPU. It is not route provider assignment, Android execution, or physical QNN/HTP proof.",
+        "No runner, QNN context, route session, timing campaign, memory measurement, audio output, WAV, phone access, or listening review exists.",
+        "Legacy-transcript substitution and differently hashed graph re-specialization were forbidden; either would define different semantics or a different route."
+      ],
+      "sources": [
+        "experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/results/t235-t239-masked-padding-compatibility.json",
+        "experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/protocol/padding-compatibility-policy.json",
+        "experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/protocol/experiment-contract.json",
+        "experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/results/preflight-state.json",
+        "experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/README.md"
+      ],
+      "missing_reasons": {
+        "wav": "Stopped before output generation; no WAV exists.",
+        "android_attempted": "The terminal host compatibility gate failed before phone staging or access.",
+        "provider": "No route runner, QNN session, or EPContext was created; host CPU compatibility evidence is not route provider assignment.",
+        "precision": "No QNN/HTP execution or lowering occurred, so provider arithmetic precision is not established.",
+        "threads": "No route runner or benchmark session existed.",
+        "load_seconds": "Stopped before runner implementation, QNN session creation, or EPContext generation.",
+        "cold_rtf": "No generation or audio output occurred.",
+        "warm_median_rtf": "No first or warm generation campaign occurred.",
+        "proof_run_rtf": "No Android or physical accelerator proof run occurred.",
+        "first_post_setup_rtf": "No route setup or post-setup generation existed.",
+        "peak_pss_bytes": "No route benchmark process or memory campaign existed.",
+        "peak_vm_hwm_bytes": "No route benchmark process or memory campaign existed.",
+        "physical_rpc_accelerator_cycle_hvx": "No phone access or physical accelerator execution occurred.",
+        "listening": "No WAV exists and no listening review was requested or recorded."
+      },
+      "model_identity": {
+        "name": "Supertone/supertonic-3",
+        "url": "https://huggingface.co/Supertone/supertonic-3/tree/724fb5abbf5502583fb520898d45929e62f02c0b",
+        "revision": "724fb5abbf5502583fb520898d45929e62f02c0b"
+      },
+      "quantization": "Unquantized FP32 official-source-derived frozen T239 graphs; no QNN context generation, lowering, quantization, or phone execution occurred",
+      "scope": "excluded_non_e2e",
+      "transcript": {
+        "classification": "canonical_v2",
+        "sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+        "bytes": 226,
+        "trailing_newline": false,
+        "source": "experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/protocol/transcript.txt",
+        "basis": "Experiment 0022 exact canonical-v2 bytes plus complete <en>...</en> wrapper and official unicode-indexer mapping produced the locked semantic T235 oracle input.",
+        "effective_frontend": {
+          "kind": "official Supertonic unicode-indexer mapping after complete language wrapper",
+          "token_count": 235,
+          "token_ids_sha256": "cf10ba8c539f92c9b0b6a6394ddc6788801bee0e15fb75405a4433c6833cfbba",
+          "token_ids_dtype": "int64",
+          "source": "experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/results/t235-t239-masked-padding-compatibility.json"
+        },
+        "canonical_v2_sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+        "canonical_v2_match": true,
+        "comparison_boundary": "Exact canonical-v2 transcript match.",
+        "audit_source": "experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/results/t235-t239-masked-padding-compatibility.json",
+        "missing_reasons": {}
+      }
+    },
+    {
       "id": "0014-pocket-alba-cpu-v2",
       "experiment": "0014",
       "model": "Pocket TTS",
