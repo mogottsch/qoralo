@@ -1,0 +1,587 @@
+{
+  "answer": "yes_for_this_clean_host_campaign",
+  "artifact_identities": {
+    "context": {
+      "duration": {
+        "external_context_binary": {
+          "bytes": 2141048,
+          "path": "duration-context_qnn.bin",
+          "sha256": "2cba42081310e7fc19c6042a5e9cd2b1c336cfa6f5a6f4596ef4366e2198fda6"
+        },
+        "model": {
+          "bytes": 815,
+          "path": "duration-context.onnx",
+          "sha256": "868610ca16753b474122c3547b4cc30fa478bd53d3ef74bc7d9c6906f1b6a6ab"
+        }
+      },
+      "text": {
+        "external_context_binary": {
+          "bytes": 19437184,
+          "path": "text-context_qnn.bin",
+          "sha256": "1353455784cd9dc6427884a96c08d5c0671c4adeac2c5e54ae877fe51433c718"
+        },
+        "model": {
+          "bytes": 824,
+          "path": "text-context.onnx",
+          "sha256": "fcfa995621723f4eae9075ff503e8f62915366cd7d1e3313f3a0805c2f89389b"
+        }
+      },
+      "vector": {
+        "external_context_binary": {
+          "bytes": 136894512,
+          "path": "vector-context_qnn.bin",
+          "sha256": "37eaa80be53140e8f67596b78fbd76f09e6185b8293ab0b043eb4ebd76c28a24"
+        },
+        "model": {
+          "bytes": 1023,
+          "path": "vector-context.onnx",
+          "sha256": "3c49d45a727631904e2ad2683b7c8f8e63c23a6ded817bf59aaf2a5f12a5172a"
+        }
+      },
+      "vocoder": {
+        "external_context_binary": {
+          "bytes": 55355808,
+          "path": "vocoder-context_qnn.bin",
+          "sha256": "dc17865e02ac164039d97c31adc5507943d282b19c1e60cd1dcbebbb8c3615f2"
+        },
+        "model": {
+          "bytes": 729,
+          "path": "vocoder-context.onnx",
+          "sha256": "5a60243f4831927b8979eed340faf0502cabb37e6c7225435f724c3967e20034"
+        }
+      }
+    },
+    "source": {
+      "duration": {
+        "model": {
+          "bytes": 3787044,
+          "path": "duration_predictor.onnx",
+          "sha256": "8a1875ef0f6960ca16fc06814509b1c3258e8f50b04a5d590d3ab6db8c775016"
+        }
+      },
+      "text": {
+        "model": {
+          "bytes": 36566260,
+          "path": "text_encoder.onnx",
+          "sha256": "769fd1d257674e8624bdea941f7a903d9460051f9845b604cd2c2980f281a8c3"
+        }
+      },
+      "vector": {
+        "model": {
+          "bytes": 256530693,
+          "path": "vector_estimator-stable-softplus.onnx",
+          "sha256": "f2318c54726a034dcc89aa9818a91f1c3db0e3067b9932c7c2dae65957897c7b"
+        }
+      },
+      "vocoder": {
+        "model": {
+          "bytes": 101449890,
+          "path": "vocoder.onnx",
+          "sha256": "35b90eeae4a01d06f82dccc903a63d23c95eb2d9095ffa0d62f2cf151817c7c7"
+        }
+      }
+    }
+  },
+  "campaign_files": {
+    "campaign_end": {
+      "bytes": 1811,
+      "path": "campaign-end.json",
+      "sha256": "1fe0eab77f2965d65643a9ccf418e74cc27ab7fe583868926ecdd18559c61605"
+    },
+    "campaign_start": {
+      "bytes": 2187,
+      "path": "campaign-start.json",
+      "sha256": "4ff6d321788f0b6d7bc94e8b3db27c9237e77f95ee5708e1495ea0aaf3bdab98"
+    },
+    "schedule": {
+      "bytes": 617,
+      "path": "schedule.tsv",
+      "sha256": "e88a1d5c6e4e02da767601ae4ae59c15eac704d3834263b307f69e98749172b3"
+    }
+  },
+  "campaign_isolation": {
+    "balanced_schedule": [
+      "source",
+      "context",
+      "context",
+      "source",
+      "context",
+      "source",
+      "source",
+      "context",
+      "source",
+      "context"
+    ],
+    "docker_image": "vibevoice-experiment-0010-qairt:2.49.0.260730-ubuntu22.04",
+    "docker_image_id": "sha256:b170f55a61548cc3a78eb667837934e0f2f8659bf7cd0db7a71ec40e90d2f321",
+    "fresh_container_per_run": true,
+    "fresh_processes_per_arm": 5,
+    "lock": "acquired nonblocking and held by the parent shell for the full campaign",
+    "lock_end_utc": "2026-08-22T14:52:37Z",
+    "lock_release": "parent shell released heavy-ram.lock immediately after campaign-end.json was written",
+    "lock_start_utc": "2026-08-22T14:50:23Z",
+    "other_qnn_campaign_overlap": false,
+    "phone_access": false,
+    "prelaunch_process_scan": "no QNNExecutionProvider/HtpPrepare/onnxruntime_perf_test/qnn_context_component process found"
+  },
+  "claim_boundary": {
+    "established": [
+      "Five fresh-process/fresh-container setup observations per arm under one full-lifetime exclusive heavy-RAM lock.",
+      "Observed host four-session QNN setup distribution and source-vs-context median delta for exact matched artifacts/configuration.",
+      "Context packages contained no source ONNX."
+    ],
+    "not_established": [
+      "inference latency or end-to-end RTF",
+      "physical phone HTP execution",
+      "phone setup reduction",
+      "WAV validity or listening quality",
+      "cold OS filesystem-cache behavior"
+    ]
+  },
+  "comparison": {
+    "context_median_seconds": 0.2008688030000485,
+    "context_over_source_median_ratio": 0.008121962613621015,
+    "context_setup_reduction_percent": 99.1878037386379,
+    "interpretation": "For this exact four-session host QNN setup boundary, external EPContext loading reduced observed median session setup versus source-ONNX QNN compilation. No minimum speedup threshold was applied.",
+    "source_median_seconds": 24.731559668001864,
+    "source_minus_context_median_seconds": 24.530690865001816,
+    "source_over_context_median_ratio": 123.12295039661232
+  },
+  "configuration": {
+    "ep.context_enable": "not_set",
+    "ep.context_file_path": "not_set",
+    "execution_mode": "ORT_SEQUENTIAL",
+    "graph_optimization": "ORT_ENABLE_ALL",
+    "profiling": false,
+    "provider_options": {
+      "backend_path": "libQnnHtp.so",
+      "htp_performance_mode": "burst",
+      "offload_graph_io_quantization": "0",
+      "soc_model": "43"
+    },
+    "session.disable_cpu_ep_fallback": "1",
+    "threads": {
+      "inter_op": 1,
+      "intra_op": 1
+    }
+  },
+  "experiment": "0023-supertonic-qnn-precompiled-context-startup",
+  "memory_at_ready_kb": {
+    "context": {
+      "vm_hwm": [
+        516172,
+        517876,
+        516212,
+        517192,
+        516776
+      ],
+      "vm_rss": [
+        448384,
+        449816,
+        448492,
+        449004,
+        448908
+      ]
+    },
+    "source": {
+      "vm_hwm": [
+        1621836,
+        1619392,
+        1622692,
+        1618644,
+        1623348
+      ],
+      "vm_rss": [
+        1621836,
+        1619392,
+        1622692,
+        1618644,
+        1623348
+      ]
+    }
+  },
+  "next_gate": "Review this committed host campaign before any phone work.",
+  "per_component_session_create": {
+    "duration": {
+      "context": {
+        "count": 5,
+        "maximum_seconds": 0.03690078699946753,
+        "mean_seconds": 0.035415309998643354,
+        "median_seconds": 0.03609342399795423,
+        "minimum_seconds": 0.032329760997527046,
+        "population_stddev_seconds": 0.0015974140191983566,
+        "range_seconds": 0.004571026001940481,
+        "values_seconds": [
+          0.036146992999420036,
+          0.03690078699946753,
+          0.03560558499884792,
+          0.03609342399795423,
+          0.032329760997527046
+        ]
+      },
+      "source": {
+        "count": 5,
+        "maximum_seconds": 0.34533001399904606,
+        "mean_seconds": 0.2897478825994767,
+        "median_seconds": 0.27375078100158134,
+        "minimum_seconds": 0.2673369289987022,
+        "population_stddev_seconds": 0.029510542719234156,
+        "range_seconds": 0.07799308500034385,
+        "values_seconds": [
+          0.34533001399904606,
+          0.29456522399777896,
+          0.26775646500027506,
+          0.27375078100158134,
+          0.2673369289987022
+        ]
+      }
+    },
+    "text": {
+      "context": {
+        "count": 5,
+        "maximum_seconds": 0.021392377002484864,
+        "mean_seconds": 0.018149895200622268,
+        "median_seconds": 0.01689985200209776,
+        "minimum_seconds": 0.016457269997772528,
+        "population_stddev_seconds": 0.001981827097597174,
+        "range_seconds": 0.004935107004712336,
+        "values_seconds": [
+          0.021392377002484864,
+          0.016457269997772528,
+          0.016474870000820374,
+          0.01689985200209776,
+          0.019525106999935815
+        ]
+      },
+      "source": {
+        "count": 5,
+        "maximum_seconds": 0.927140073999908,
+        "mean_seconds": 0.8745640533998085,
+        "median_seconds": 0.8662351380007749,
+        "minimum_seconds": 0.8294534259985085,
+        "population_stddev_seconds": 0.03588999002516955,
+        "range_seconds": 0.09768664800139959,
+        "values_seconds": [
+          0.8662351380007749,
+          0.927140073999908,
+          0.8294534259985085,
+          0.9030271060000814,
+          0.8469645229997695
+        ]
+      }
+    },
+    "vector": {
+      "context": {
+        "count": 5,
+        "maximum_seconds": 0.11003426100069191,
+        "mean_seconds": 0.10306888940103817,
+        "median_seconds": 0.10602440900038346,
+        "minimum_seconds": 0.09367609500259277,
+        "population_stddev_seconds": 0.006000792957001461,
+        "range_seconds": 0.01635816599809914,
+        "values_seconds": [
+          0.10602440900038346,
+          0.11003426100069191,
+          0.09865562100094394,
+          0.09367609500259277,
+          0.1069540610005788
+        ]
+      },
+      "source": {
+        "count": 5,
+        "maximum_seconds": 19.771758006998425,
+        "mean_seconds": 19.101039076798042,
+        "median_seconds": 19.040431148998323,
+        "minimum_seconds": 18.69567519499833,
+        "population_stddev_seconds": 0.39246405531134393,
+        "range_seconds": 1.0760828120000951,
+        "values_seconds": [
+          19.040431148998323,
+          18.74242110099658,
+          18.69567519499833,
+          19.254909931998554,
+          19.771758006998425
+        ]
+      }
+    },
+    "vocoder": {
+      "context": {
+        "count": 5,
+        "maximum_seconds": 0.04344565900100861,
+        "mean_seconds": 0.04073202820072765,
+        "median_seconds": 0.04113999800028978,
+        "minimum_seconds": 0.03735943300125655,
+        "population_stddev_seconds": 0.0020165280566766183,
+        "range_seconds": 0.00608622599975206,
+        "values_seconds": [
+          0.03735943300125655,
+          0.04344565900100861,
+          0.04113999800028978,
+          0.04002212200066424,
+          0.0416929290004191
+        ]
+      },
+      "source": {
+        "count": 5,
+        "maximum_seconds": 4.7526772290002555,
+        "mean_seconds": 4.366558855799667,
+        "median_seconds": 4.299515033002535,
+        "minimum_seconds": 4.049651790999633,
+        "population_stddev_seconds": 0.24681839965869828,
+        "range_seconds": 0.7030254380006227,
+        "values_seconds": [
+          4.524506403999112,
+          4.049651790999633,
+          4.7526772290002555,
+          4.299515033002535,
+          4.2064438219968
+        ]
+      }
+    }
+  },
+  "primary_timing_boundary": {
+    "end": "immediately after the vocoder Ort InferenceSession constructor returns; all four session objects remain alive",
+    "excludes": [
+      "Python interpreter startup/imports",
+      "inference",
+      "WAV generation",
+      "process teardown",
+      "artifact hashing"
+    ],
+    "filesystem_cache": "Fresh process and container for every run; OS filesystem page cache was not dropped or called cold.",
+    "name": "four_session_sequence_ready",
+    "start": "immediately before constructing the duration Ort InferenceSession"
+  },
+  "provider_and_fallback_evidence": {
+    "functional_companion": {
+      "all_ort_node_events_qnn_only": true,
+      "all_source_absent_reload_checks_passed": true,
+      "path": "experiments/0023-supertonic-qnn-precompiled-context-startup/results/host-context-smoke/host-context-functional-smoke.json",
+      "same_artifact_identities": true,
+      "sha256": "ff78eba85cc29ac347ac741283d25249d6242fbae0d6d48f389fd8c88cb9cf76"
+    },
+    "physical_phone_proof": false,
+    "timed_processes": "Every constructor used QNNExecutionProvider with session.disable_cpu_ep_fallback=1; all constructors returned. Profiling was disabled to avoid perturbing timing, so timed processes make no node-event or physical-execution claim."
+  },
+  "question": "Does external QNN EPContext loading reduce setup versus source-ONNX QNN compilation for the exact accepted four-session Supertonic route?",
+  "recorded_date": "2026-08-22",
+  "schedule": [
+    {
+      "end_utc": "2026-08-22T14:50:49Z",
+      "exit_code": 0,
+      "mode": "source",
+      "raw_record": {
+        "bytes": 4049,
+        "path": "01-source-1.json",
+        "sha256": "b9bc8a2ddeefea0acd8a3372d71c40c71e3f0d7ae4962c564293c94bcca0a8c6"
+      },
+      "run_index": 1,
+      "schedule_position": 1,
+      "start_utc": "2026-08-22T14:50:23Z"
+    },
+    {
+      "end_utc": "2026-08-22T14:50:50Z",
+      "exit_code": 0,
+      "mode": "context",
+      "raw_record": {
+        "bytes": 4835,
+        "path": "02-context-1.json",
+        "sha256": "531537c739ffaf6a0865666187274ec4693504a70aaead4d564d0e2f347ad407"
+      },
+      "run_index": 1,
+      "schedule_position": 2,
+      "start_utc": "2026-08-22T14:50:49Z"
+    },
+    {
+      "end_utc": "2026-08-22T14:50:51Z",
+      "exit_code": 0,
+      "mode": "context",
+      "raw_record": {
+        "bytes": 4831,
+        "path": "03-context-2.json",
+        "sha256": "a104b43fe3c6930d3e3703ee4006eca2c6746897dacefe753e1f89691bf1e354"
+      },
+      "run_index": 2,
+      "schedule_position": 3,
+      "start_utc": "2026-08-22T14:50:50Z"
+    },
+    {
+      "end_utc": "2026-08-22T14:51:16Z",
+      "exit_code": 0,
+      "mode": "source",
+      "raw_record": {
+        "bytes": 4046,
+        "path": "04-source-2.json",
+        "sha256": "8bef741f9f43c9a13f554328ccdcb72c1cb9f1b5b0627d09082ede0a7adbc721"
+      },
+      "run_index": 2,
+      "schedule_position": 4,
+      "start_utc": "2026-08-22T14:50:51Z"
+    },
+    {
+      "end_utc": "2026-08-22T14:51:17Z",
+      "exit_code": 0,
+      "mode": "context",
+      "raw_record": {
+        "bytes": 4830,
+        "path": "05-context-3.json",
+        "sha256": "d39f14686a2c140d5a6177611ae9a1d5157c68d7112f0f6986d4213d60b75b17"
+      },
+      "run_index": 3,
+      "schedule_position": 5,
+      "start_utc": "2026-08-22T14:51:16Z"
+    },
+    {
+      "end_utc": "2026-08-22T14:51:43Z",
+      "exit_code": 0,
+      "mode": "source",
+      "raw_record": {
+        "bytes": 4052,
+        "path": "06-source-3.json",
+        "sha256": "54e3e278338adf893e6810460da15ddf0d19b92fb9deaf3811ec3e5241e4e539"
+      },
+      "run_index": 3,
+      "schedule_position": 6,
+      "start_utc": "2026-08-22T14:51:17Z"
+    },
+    {
+      "end_utc": "2026-08-22T14:52:09Z",
+      "exit_code": 0,
+      "mode": "source",
+      "raw_record": {
+        "bytes": 4051,
+        "path": "07-source-4.json",
+        "sha256": "0cbf8bd8c597e0c864cf9f686871f3d88eb940d481440765602b7eedf5f225e3"
+      },
+      "run_index": 4,
+      "schedule_position": 7,
+      "start_utc": "2026-08-22T14:51:43Z"
+    },
+    {
+      "end_utc": "2026-08-22T14:52:10Z",
+      "exit_code": 0,
+      "mode": "context",
+      "raw_record": {
+        "bytes": 4830,
+        "path": "08-context-4.json",
+        "sha256": "11130113ba900c597dbe97cb329cfcd639729380752fbb64321efb127fd9ab2a"
+      },
+      "run_index": 4,
+      "schedule_position": 8,
+      "start_utc": "2026-08-22T14:52:09Z"
+    },
+    {
+      "end_utc": "2026-08-22T14:52:36Z",
+      "exit_code": 0,
+      "mode": "source",
+      "raw_record": {
+        "bytes": 4045,
+        "path": "09-source-5.json",
+        "sha256": "e486cc091d4ea4d6f15fb999c6cfd19c132f7ca762692864cc2c66d767137ba9"
+      },
+      "run_index": 5,
+      "schedule_position": 9,
+      "start_utc": "2026-08-22T14:52:10Z"
+    },
+    {
+      "end_utc": "2026-08-22T14:52:37Z",
+      "exit_code": 0,
+      "mode": "context",
+      "raw_record": {
+        "bytes": 4829,
+        "path": "10-context-5.json",
+        "sha256": "56267fd5de1f4deffa8bdcf2e8458b87a764c5d3208b8122e37e9f8d848399c8"
+      },
+      "run_index": 5,
+      "schedule_position": 10,
+      "start_utc": "2026-08-22T14:52:36Z"
+    }
+  ],
+  "schema_version": 1,
+  "script_entry_to_ready": {
+    "context": {
+      "count": 5,
+      "maximum_seconds": 0.3420756320010696,
+      "mean_seconds": 0.3314925911989121,
+      "median_seconds": 0.3344277559990587,
+      "minimum_seconds": 0.31765257099687005,
+      "population_stddev_seconds": 0.009606972785372663,
+      "range_seconds": 0.024423061004199553,
+      "values_seconds": [
+        0.3420756320010696,
+        0.3402922409986786,
+        0.32301475599888363,
+        0.31765257099687005,
+        0.3344277559990587
+      ]
+    },
+    "source": {
+      "count": 5,
+      "maximum_seconds": 25.229314870000962,
+      "mean_seconds": 24.808736932399917,
+      "median_seconds": 24.860247489999892,
+      "minimum_seconds": 24.144030800998735,
+      "population_stddev_seconds": 0.3848546438414499,
+      "range_seconds": 1.0852840690022276,
+      "values_seconds": [
+        25.129368427998998,
+        24.144030800998735,
+        24.68072307300099,
+        24.860247489999892,
+        25.229314870000962
+      ]
+    }
+  },
+  "secondary_timing_boundary": {
+    "end": "same all-four-sessions-ready point",
+    "excludes": [
+      "Python interpreter startup before script execution",
+      "inference",
+      "WAV generation",
+      "process teardown",
+      "artifact hashing"
+    ],
+    "name": "python_script_entry_to_ready",
+    "start": "first executable Python statement before argparse/json/onnxruntime imports"
+  },
+  "session_sequence": {
+    "context": {
+      "count": 5,
+      "maximum_seconds": 0.20715009700143128,
+      "mean_seconds": 0.19773928319991682,
+      "median_seconds": 0.2008688030000485,
+      "minimum_seconds": 0.18710627899781684,
+      "population_stddev_seconds": 0.007138465057765332,
+      "range_seconds": 0.020043818003614433,
+      "values_seconds": [
+        0.20134365400008392,
+        0.20715009700143128,
+        0.1922275830002036,
+        0.18710627899781684,
+        0.2008688030000485
+      ]
+    },
+    "source": {
+      "count": 5,
+      "maximum_seconds": 25.09281176800141,
+      "mean_seconds": 24.632252843400057,
+      "median_seconds": 24.731559668001864,
+      "minimum_seconds": 24.01408597900081,
+      "population_stddev_seconds": 0.35565983088529896,
+      "range_seconds": 1.0787257890006003,
+      "values_seconds": [
+        24.77686643799825,
+        24.01408597900081,
+        24.545940363997943,
+        24.731559668001864,
+        25.09281176800141
+      ]
+    }
+  },
+  "source_arm_context_difference": {
+    "context": "loads exact external descriptors/binaries with per-session ep.context_file_path; source ONNX absent from the package",
+    "otherwise_matched": "same script, container image, ORT/QNN runtime, provider options, graph optimization, threads, session order and host",
+    "source": "loads exact source ONNX with ep.context_enable and ep.context_file_path unset; QNN compilation occurs inside each constructor"
+  },
+  "status": "clean_host_setup_campaign_passed"
+}

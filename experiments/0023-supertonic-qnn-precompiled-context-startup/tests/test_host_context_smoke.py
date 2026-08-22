@@ -5,9 +5,10 @@ from pathlib import Path
 
 EXP = Path(__file__).resolve().parents[1]
 CONTRACT = json.loads((EXP / "protocol/experiment-contract.json").read_text())
-RESULT = json.loads(
-    (EXP / "results/host-context-smoke/host-context-functional-smoke.json").read_text()
-)
+RESULT_PATH = EXP / "results/host-context-smoke/host-context-functional-smoke.json"
+RESULT = json.loads(RESULT_PATH.read_text())
+CLEAN_PATH = EXP / "results/clean-host-setup/clean-setup-result.json"
+CLEAN = json.loads(CLEAN_PATH.read_text())
 TRANSCRIPT_SHA = "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f"
 EXPECTED_GRAPHS = {
     "duration": "8a1875ef0f6960ca16fc06814509b1c3258e8f50b04a5d590d3ab6db8c775016",
@@ -75,6 +76,75 @@ class HostContextSmokeTest(unittest.TestCase):
         self.assertIn("three clean fresh-process", exclusion["required_follow_up"])
         self.assertIn("isolated setup performance or speedup", RESULT["claim_boundary"]["not_established"])
         self.assertIn("physical phone HTP execution", RESULT["claim_boundary"]["not_established"])
+
+    def test_clean_campaign_has_five_fresh_balanced_runs_per_arm(self):
+        isolation = CLEAN["campaign_isolation"]
+        self.assertEqual(isolation["fresh_processes_per_arm"], 5)
+        self.assertTrue(isolation["fresh_container_per_run"])
+        self.assertFalse(isolation["other_qnn_campaign_overlap"])
+        self.assertFalse(isolation["phone_access"])
+        self.assertEqual(
+            isolation["balanced_schedule"],
+            ["source", "context", "context", "source", "context", "source", "source", "context", "source", "context"],
+        )
+        self.assertIn("held by the parent shell for the full campaign", isolation["lock"])
+        self.assertEqual(len(CLEAN["schedule"]), 10)
+        self.assertTrue(all(item["exit_code"] == 0 for item in CLEAN["schedule"]))
+
+    def test_clean_session_sequence_distribution_and_delta_are_exact(self):
+        source = CLEAN["session_sequence"]["source"]
+        context = CLEAN["session_sequence"]["context"]
+        self.assertEqual(source["count"], 5)
+        self.assertEqual(context["count"], 5)
+        self.assertEqual(
+            source["values_seconds"],
+            [24.77686643799825, 24.01408597900081, 24.545940363997943, 24.731559668001864, 25.09281176800141],
+        )
+        self.assertEqual(
+            context["values_seconds"],
+            [0.20134365400008392, 0.20715009700143128, 0.1922275830002036, 0.18710627899781684, 0.2008688030000485],
+        )
+        comparison = CLEAN["comparison"]
+        self.assertAlmostEqual(comparison["source_median_seconds"], source["median_seconds"])
+        self.assertAlmostEqual(comparison["context_median_seconds"], context["median_seconds"])
+        self.assertAlmostEqual(
+            comparison["source_minus_context_median_seconds"],
+            source["median_seconds"] - context["median_seconds"],
+        )
+        self.assertGreater(comparison["source_over_context_median_ratio"], 100.0)
+        self.assertGreater(comparison["context_setup_reduction_percent"], 99.0)
+        self.assertLess(comparison["context_setup_reduction_percent"], 100.0)
+
+    def test_clean_artifacts_and_provider_boundary_match_functional_proof(self):
+        for component, expected in EXPECTED_GRAPHS.items():
+            self.assertEqual(
+                CLEAN["artifact_identities"]["source"][component]["model"]["sha256"], expected
+            )
+            functional_context = RESULT["components"][component]["external_context"]
+            clean_context = CLEAN["artifact_identities"]["context"][component]
+            self.assertEqual(clean_context["model"]["sha256"], functional_context["descriptor"]["sha256"])
+            self.assertEqual(
+                clean_context["external_context_binary"]["sha256"], functional_context["binary"]["sha256"]
+            )
+        provider = CLEAN["provider_and_fallback_evidence"]
+        self.assertEqual(
+            provider["functional_companion"]["sha256"], hashlib.sha256(RESULT_PATH.read_bytes()).hexdigest()
+        )
+        self.assertTrue(provider["functional_companion"]["same_artifact_identities"])
+        self.assertTrue(provider["functional_companion"]["all_ort_node_events_qnn_only"])
+        self.assertFalse(provider["physical_phone_proof"])
+        self.assertIn("Profiling was disabled", provider["timed_processes"])
+
+    def test_clean_raw_results_are_committed_and_hash_bound(self):
+        root = EXP / "results/clean-host-setup/raw"
+        for item in CLEAN["schedule"]:
+            copied = item["raw_record"]
+            path = root / copied["path"]
+            self.assertTrue(path.is_file())
+            self.assertEqual(path.stat().st_size, copied["bytes"])
+            self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), copied["sha256"])
+        self.assertIn("inference latency or end-to-end RTF", CLEAN["claim_boundary"]["not_established"])
+        self.assertIn("cold OS filesystem-cache behavior", CLEAN["claim_boundary"]["not_established"])
 
 
 if __name__ == "__main__":

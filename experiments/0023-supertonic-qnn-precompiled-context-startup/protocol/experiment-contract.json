@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0023-supertonic-qnn-precompiled-context-startup",
-  "status": "functional_host_context_smoke_passed_waiting_for_serialized_qnn_clearance",
+  "status": "clean_host_setup_campaign_passed_waiting_for_review",
   "authorization": {
     "authorized_by": "Moritz via Pi",
     "question": "Can the accepted Supertonic route run all neural components on QNN, and does precompiled EPContext loading reduce cold setup versus source-ONNX QNN compilation?",
@@ -66,9 +66,18 @@
     "observed setup reduction magnitude"
   ],
   "current_checkpoint": {
-    "evidence": "results/host-context-smoke/host-context-functional-smoke.json",
-    "result": "All four graphs generated external contexts and independently reloaded in source-absent host containers with QNN-only ORT node events.",
-    "timing_exclusion": "All current host timing/resource observations overlapped experiment 0017 and are excluded from startup/performance claims.",
-    "pause": "No QNN session/compiler or phone work until Pi/Jens explicitly clears the serialized experiment-0017 host run."
+    "functional_evidence": "results/host-context-smoke/host-context-functional-smoke.json",
+    "functional_result": "All four graphs generated external contexts and independently reloaded in source-absent host containers with QNN-only ORT node events.",
+    "excluded_preliminary_timing": "The functional-smoke timing/resource observations overlapped experiment 0017 and remain excluded from startup/performance claims.",
+    "clean_setup_evidence": "results/clean-host-setup/clean-setup-result.json",
+    "clean_setup_result": {
+      "fresh_processes_per_arm": 5,
+      "source_four_session_median_seconds": 24.731559668001864,
+      "context_four_session_median_seconds": 0.2008688030000485,
+      "source_minus_context_median_seconds": 24.530690865001816,
+      "source_over_context_median_ratio": 123.12295039661232,
+      "context_setup_reduction_percent": 99.1878037386379
+    },
+    "pause": "Clean host campaign complete. Review the committed evidence before any phone work."
   }
 }

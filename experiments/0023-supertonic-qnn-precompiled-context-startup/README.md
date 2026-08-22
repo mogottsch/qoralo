@@ -1,6 +1,6 @@
 # Experiment 0023 — Supertonic QNN precompiled-context startup
 
-**Status: all four accepted Supertonic components passed functional host QNN EPContext generation and source-unavailable reload. Current timing is explicitly excluded because the run overlapped experiment 0017. QNN/compiler/phone work is paused until Pi/Jens clears the serialized host run.**
+**Status: clean isolated host setup campaign passed with five fresh processes per arm. Median exact four-session setup was 24.7316 s from source ONNX versus 0.2009 s from external EPContext, an observed 24.5307 s / 99.1878% reduction. Phone work remains paused pending review.**
 
 ## Question
 
@@ -21,20 +21,34 @@ ORT 1.27.1 with QAIRT 2.49.0.260730 generated non-embedded external descriptors 
 
 Total descriptor plus binary size is 213,831,943 bytes. See [`results/host-context-smoke/host-context-functional-smoke.json`](results/host-context-smoke/host-context-functional-smoke.json), its normalized raw records, and the committed ORT/QNN profiles.
 
+## Clean host setup campaign
+
+After experiment 0017 released the shared host, Pi explicitly cleared a clean rerun. The full ten-process campaign held `artifacts/locks/heavy-ram.lock` nonblocking for its complete `2026-08-22T14:50:23Z`–`14:52:37Z` interval. No other QNN campaign or phone work overlapped. A fixed balanced `S-C-C-S-C-S-S-C-S-C` schedule supplied five fresh Docker containers per arm.
+
+The primary boundary is immediately before construction of the duration session through immediately after the vocoder constructor returns, with all four sessions alive. It excludes Python startup/imports, inference, WAV generation, teardown and post-ready artifact hashing. OS filesystem caches were not dropped and are not called cold.
+
+| Arm | All five four-session setup values (s) | Median | Min–max | Population σ |
+|---|---|---:|---:|---:|
+| Source ONNX | 24.7769, 24.0141, 24.5459, 24.7316, 25.0928 | 24.7316 | 24.0141–25.0928 | 0.3557 |
+| External context | 0.20134, 0.20715, 0.19223, 0.18711, 0.20087 | 0.20087 | 0.18711–0.20715 | 0.00714 |
+
+Observed median delta: **24.53069 seconds**. Source/context median ratio: **123.123×**. Context setup reduction: **99.1878%**. There was no minimum-speedup gate.
+
+Per-component source/context medians were duration 0.27375/0.03609 s, text 0.86624/0.01690 s, vector 19.04043/0.10602 s, and vocoder 4.29952/0.04114 s. These are setup/readiness measurements only, not inference latency or E2E RTF. See [`results/clean-host-setup/clean-setup-result.json`](results/clean-host-setup/clean-setup-result.json) and its ten committed raw records.
+
 ## Timing exclusion and coordination incident
 
 The host wave overlapped experiment 0017's serialized QNN run before its owner replied to the coordination request. The overlap was disclosed to Jens, Pi and Ben. Exact windows are committed in the functional result.
 
-Therefore **none of the current setup, execution, ratio or resource observations are benchmark evidence**. They establish mechanism and functional reload only. After explicit clearance, the source and context arms must be rerun without any concurrent QNN/HtpPrepare work, with at least three fresh processes per arm. No performance or setup-reduction claim is made at this checkpoint.
+Therefore **none of the preliminary functional-smoke setup, execution, ratio or resource observations are benchmark evidence**. They establish mechanism and functional reload only. The later clean ten-process campaign above supersedes those excluded preliminary setup observations for the host setup comparison.
 
 ## Next gates
 
-1. Wait for explicit Pi/Jens clearance.
-2. Run a clean serialized host/phone eligibility pass as needed; do not reuse the excluded timing observations.
-3. Build the matched E2E runner for source and context arms.
-4. On the authorized Galaxy S23 Ultra, prove all four neural sessions with fallback disabled and physical QNN/RPC evidence.
-5. Run at least three clean fresh-process cold setup measurements per arm, using identical effective graphs/config/input and exact timing boundaries.
-6. Produce and structurally validate an E2E WAV. Numerical and byte differences are descriptive, not execution blockers.
-7. Commit only 0023 evidence and hand the commit to Pi; Alex owns dashboard ingestion.
+1. Obtain review of the committed clean host setup campaign.
+2. Build the matched E2E runner for source and context arms.
+3. On the authorized Galaxy S23 Ultra, prove all four neural sessions with fallback disabled and physical QNN/RPC evidence.
+4. Run at least three clean fresh-process phone setup measurements per arm, using identical effective graphs/config/input and exact timing boundaries.
+5. Produce and structurally validate an E2E WAV. Numerical and byte differences are descriptive, not execution blockers.
+6. Commit only 0023 evidence and hand the commit to Pi; Alex owns dashboard ingestion.
 
 See [`protocol/experiment-contract.json`](protocol/experiment-contract.json) and [`PLAN.md`](PLAN.md).

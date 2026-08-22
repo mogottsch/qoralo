@@ -1,0 +1,128 @@
+{
+  "artifacts": {
+    "duration": {
+      "model": {
+        "bytes": 3787044,
+        "path": "duration_predictor.onnx",
+        "sha256": "8a1875ef0f6960ca16fc06814509b1c3258e8f50b04a5d590d3ab6db8c775016"
+      }
+    },
+    "text": {
+      "model": {
+        "bytes": 36566260,
+        "path": "text_encoder.onnx",
+        "sha256": "769fd1d257674e8624bdea941f7a903d9460051f9845b604cd2c2980f281a8c3"
+      }
+    },
+    "vector": {
+      "model": {
+        "bytes": 256530693,
+        "path": "vector_estimator-stable-softplus.onnx",
+        "sha256": "f2318c54726a034dcc89aa9818a91f1c3db0e3067b9932c7c2dae65957897c7b"
+      }
+    },
+    "vocoder": {
+      "model": {
+        "bytes": 101449890,
+        "path": "vocoder.onnx",
+        "sha256": "35b90eeae4a01d06f82dccc903a63d23c95eb2d9095ffa0d62f2cf151817c7c7"
+      }
+    }
+  },
+  "cache_boundary": "fresh process and container; OS filesystem page cache was not dropped or claimed cold",
+  "configuration": {
+    "ep.context_enable": "not_set",
+    "ep.context_file_path": "not_set",
+    "execution_mode": "ORT_SEQUENTIAL",
+    "graph_optimization": "ORT_ENABLE_ALL",
+    "profiling": false,
+    "provider_options": {
+      "backend_path": "libQnnHtp.so",
+      "htp_performance_mode": "burst",
+      "offload_graph_io_quantization": "0",
+      "soc_model": "43"
+    },
+    "session.disable_cpu_ep_fallback": "1",
+    "threads": {
+      "inter_op": 1,
+      "intra_op": 1
+    }
+  },
+  "experiment": "0023-supertonic-qnn-precompiled-context-startup",
+  "fresh_container": true,
+  "fresh_process": true,
+  "memory_at_ready": {
+    "vm_hwm_kb": 1622692,
+    "vm_rss_kb": 1622692
+  },
+  "mode": "source",
+  "result": "passed",
+  "run_index": 3,
+  "runtime": {
+    "onnxruntime": "1.27.1",
+    "pid": 1,
+    "providers_available": [
+      "QNNExecutionProvider",
+      "CPUExecutionProvider"
+    ],
+    "python": "3.10.12"
+  },
+  "schedule_position": 6,
+  "schema_version": 1,
+  "source_onnx_absent": false,
+  "timing": {
+    "component_intervals": {
+      "duration": {
+        "create_seconds": 0.26775646500027506,
+        "end_from_script_entry_seconds": 0.4025798210022913,
+        "model": "duration_predictor.onnx",
+        "providers": [
+          "QNNExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "start_from_script_entry_seconds": 0.13482335600201623
+      },
+      "text": {
+        "create_seconds": 0.8294534259985085,
+        "end_from_script_entry_seconds": 1.2321449230003054,
+        "model": "text_encoder.onnx",
+        "providers": [
+          "QNNExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "start_from_script_entry_seconds": 0.40269149700179696
+      },
+      "vector": {
+        "create_seconds": 18.69567519499833,
+        "end_from_script_entry_seconds": 19.927899876001902,
+        "model": "vector_estimator-stable-softplus.onnx",
+        "providers": [
+          "QNNExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "start_from_script_entry_seconds": 1.2322246810035722
+      },
+      "vocoder": {
+        "create_seconds": 4.7526772290002555,
+        "end_from_script_entry_seconds": 24.68070686900319,
+        "model": "vocoder.onnx",
+        "providers": [
+          "QNNExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "start_from_script_entry_seconds": 19.928029640002933
+      }
+    },
+    "component_session_create_seconds": {
+      "duration": 0.26775646500027506,
+      "text": 0.8294534259985085,
+      "vector": 18.69567519499833,
+      "vocoder": 4.7526772290002555
+    },
+    "ready_definition": "all four Ort InferenceSession constructors returned successfully and all session objects remain alive",
+    "script_entry_definition": "first executable statement in the Python script, before argparse/json/onnxruntime imports",
+    "script_entry_to_ready_seconds": 24.68072307300099,
+    "session_sequence_definition": "immediately before the first constructor to immediately after the fourth constructor",
+    "session_sequence_seconds": 24.545940363997943
+  }
+}
