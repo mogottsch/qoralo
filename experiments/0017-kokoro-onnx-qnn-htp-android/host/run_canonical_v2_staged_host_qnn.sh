@@ -149,6 +149,15 @@ if [[ ${PREFLIGHT_ONLY:-no} == yes ]]; then
   exit 0
 fi
 
+[[ ! -e "$OUT" ]] || {
+  echo "refusing to reuse pre-existing QNN output path: $OUT" >&2
+  exit 4
+}
+if docker inspect "$NAME" >/dev/null 2>&1; then
+  echo "refusing to reuse pre-existing QNN container name: $NAME" >&2
+  exit 4
+fi
+
 mkdir -p "$OUT"
 date -u +%FT%TZ >"$OUT/start.txt"
 printf '%s\n' "$RUN_ID" >"$OUT/run-id.txt"

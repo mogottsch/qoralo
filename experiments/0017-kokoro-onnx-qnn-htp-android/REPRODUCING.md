@@ -216,17 +216,17 @@ PREFLIGHT_ONLY=yes \
 Do **not** relaunch until the scoped reconstruction-baseline commit is reviewed. Then do **not** resume from stage 16: restart the complete canonical host record from stage 1:
 
 ```bash
-RUN_ID=canonical-v2-rerun \
+RUN_ID=canonical-v2-native-rerun-1 \
   experiments/0017-kokoro-onnx-qnn-htp-android/host/run_canonical_v2_staged_host_qnn.sh
 ```
 
-Before Docker invocation, the script verifies the exact committed reconstruction policy/baseline hashes, manifest, all 18 model hashes, runner, inputs, and all 18 current CPU stage-output files/hashes. It defaults to refusing a concurrent QNN compiler, runs one stage process at a time, records memory every five seconds, and never accesses the phone. GNU `/usr/bin/time` is optional and its absence is recorded. `QAIRT_ROOT` defaults to `/home/moritz/opt/qairt/2.49.0.260730`.
+Before Docker invocation, the script verifies the exact committed reconstruction policy/baseline hashes, manifest, all 18 model hashes, runner, inputs, and all 18 current CPU stage-output files/hashes. A real launch refuses any pre-existing `qnn-host-$RUN_ID` path or Docker container name; never delete or reuse the preserved operator-cancelled `qnn-host-canonical-v2-rerun` directory. It defaults to refusing a concurrent QNN compiler, runs one stage process at a time, records memory every five seconds, and never accesses the phone. GNU `/usr/bin/time` is optional and its absence is recorded. `QAIRT_ROOT` defaults to `/home/moritz/opt/qairt/2.49.0.260730`.
 
 After an 18/18 pass, create the durable host execution summary (replace `$RUN`):
 
 ```bash
 EXP=experiments/0017-kokoro-onnx-qnn-htp-android
-RUN="$EXP/work/canonical-v2/stages-v1/qnn-host-canonical-v2-rerun"
+RUN="$EXP/work/canonical-v2/stages-v1/qnn-host-canonical-v2-native-rerun-1"
 python3 "$EXP/tools/summarize_staged_qnn_run.py" \
   --manifest "$EXP/work/canonical-v2/stages-v1/manifest.json" \
   --checkpoint "$RUN/pipeline-checkpoint.json" \

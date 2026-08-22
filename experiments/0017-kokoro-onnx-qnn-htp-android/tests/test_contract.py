@@ -369,6 +369,15 @@ class ContractTests(unittest.TestCase):
         self.assertIn("--reconstruction-policy", summary_tool)
         self.assertIn("--reconstruction-baseline", summary_tool)
         self.assertIn("PREFLIGHT_ONLY", host_gate)
+        self.assertIn("refusing to reuse pre-existing QNN output path", host_gate)
+        self.assertIn("refusing to reuse pre-existing QNN container name", host_gate)
+        self.assertLess(
+            host_gate.index("PREFLIGHT_ONLY"),
+            host_gate.index("refusing to reuse pre-existing QNN output path"),
+        )
+        reproducing = (ROOT / "REPRODUCING.md").read_text()
+        self.assertIn("RUN_ID=canonical-v2-native-rerun-1", reproducing)
+        self.assertIn("qnn-host-canonical-v2-native-rerun-1", reproducing)
 
     def test_erased_experiment_0015_remains_absent(self) -> None:
         self.assertFalse((REPO / "experiments/0015-pocket-tts-qnn-htp-android").exists())
