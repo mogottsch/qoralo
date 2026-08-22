@@ -28,11 +28,13 @@ PRESENTATION_SUPERSESSIONS = {
     "0008-pocket-cpu-t1": "0009-pocket-cpu-t1",
     "0008-kokoro-cpu-t1": "0009-kokoro-cpu-t1",
     "0008-supertonic-cpu-t1": "0009-supertonic-cpu-t1",
+    "0014-pocket-alba-fixed-qnn-htp": "0014-pocket-alba-qnn-htp-v2",
 }
-FROZEN_0008_DUPLICATE_METRICS = {
+FROZEN_PRESENTATION_SUPPRESSED_METRICS = {
     "0008-pocket-cpu-t1": {"load_seconds": 0.658703801, "cold_rtf": 0.4358031003580019, "warm_median_rtf": 0.38864718496483114, "proof_run_rtf": None, "first_post_setup_rtf": None, "peak_pss_bytes": 683577344, "peak_vm_hwm_bytes": 751427584},
     "0008-kokoro-cpu-t1": {"load_seconds": 1.303446875, "cold_rtf": 1.187996273027265, "warm_median_rtf": 1.1952115332875515, "proof_run_rtf": None, "first_post_setup_rtf": None, "peak_pss_bytes": 929677312, "peak_vm_hwm_bytes": 995078144},
     "0008-supertonic-cpu-t1": FROZEN_0008_SUPERTONIC_METRICS,
+    "0014-pocket-alba-fixed-qnn-htp": {"load_seconds": 58.1983, "cold_rtf": None, "warm_median_rtf": None, "proof_run_rtf": 0.525063, "first_post_setup_rtf": 0.165244, "peak_pss_bytes": None, "peak_vm_hwm_bytes": 2506731520},
 }
 
 
@@ -199,8 +201,18 @@ def main():
                 fail(f"{e['id']}: null metric {field} lacks a missing-evidence reason")
         if e["metrics"]["warm_median_rtf"] is not None and "One profiled generation only" in " ".join(e["limitations"]):
             fail(f"{e['id']}: a single profiled generation cannot populate warm_median_rtf")
-        if e["id"] in FROZEN_0008_DUPLICATE_METRICS and e["metrics"] != FROZEN_0008_DUPLICATE_METRICS[e["id"]]:
+        if e["id"] in FROZEN_PRESENTATION_SUPPRESSED_METRICS and e["metrics"] != FROZEN_PRESENTATION_SUPPRESSED_METRICS[e["id"]]:
             fail(f"{e['id']}: presentation suppression must not alter historical metrics")
+        if e["id"] == "0014-pocket-alba-fixed-qnn-htp":
+            frozen_sha = "2c3901ec39a53596759c1d95381a1d67e4f9ca8886cdf39ac03721863c63eb56"
+            frozen_sources = [
+                "experiments/0014-pocket-fp-onnx-qnn-htp/results/alba-quality-recovery.json",
+                "experiments/0014-pocket-fp-onnx-qnn-htp/results/quality-recovery-listening.json",
+                "experiments/0014-pocket-fp-onnx-qnn-htp/results/zero-voice-encoder-root-cause.json",
+            ]
+            review = e["listening_review"]
+            if e["wav"] is None or e["wav"]["sha256"] != frozen_sha or review["status"] != "accepted" or review["reviewer"] != "Moritz" or review["sample_sha256"] != frozen_sha or e["sources"] != frozen_sources:
+                fail(f"{e['id']}: presentation suppression must preserve WAV, verdict, and sources")
         if e["id"] == "0019-moss-canonical-v2-qnn-phone-blocked":
             source_blocker = json.loads((ROOT / "experiments/0019-moss-tts-nano-qnn-htp-android/results/fixed-capacity-phone-blocker.json").read_text())
             if e["scope"] != "excluded_non_e2e" or e["attempt_status"] != "blocked" or not e["android_attempted"]:

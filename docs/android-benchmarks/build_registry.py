@@ -445,6 +445,11 @@ PRESENTATION_SUPPRESSIONS = {
         "visibility_reason": "Superseded in the compact dashboard by the newer 0009 one-thread Supertonic thread-sweep row. The complete 0008 evidence, nested 0020 refresh, and retained refresh WAV remain unchanged in this registry and accessible on the 0020 experiment page.",
         "superseded_by": "0009-supertonic-cpu-t1",
     },
+    "0014-pocket-alba-fixed-qnn-htp": {
+        "dashboard_visible": False,
+        "visibility_reason": "Superseded in the compact dashboard by the canonical-v2 text64/cache512 full-QNN/HTP route. The older noncanonical fixed-Alba HTP route, exact WAV verdict, metrics, and sources remain unchanged in this registry.",
+        "superseded_by": "0014-pocket-alba-qnn-htp-v2",
+    },
 }
 
 
