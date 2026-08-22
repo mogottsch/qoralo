@@ -75,6 +75,14 @@
         "revision": {"type": ["string", "null"]}
       }, "additionalProperties": false
     },
+    "presentation": {
+      "type": "object", "required": ["dashboard_visible", "visibility_reason", "superseded_by"],
+      "properties": {
+        "dashboard_visible": {"const": false},
+        "visibility_reason": {"type": "string", "minLength": 1},
+        "superseded_by": {"type": "string", "pattern": "^[0-9]{4}-[a-z0-9-]+$"}
+      }, "additionalProperties": false
+    },
     "transcript": {
       "type": "object",
       "required": ["classification", "sha256", "bytes", "trailing_newline", "source", "basis", "effective_frontend", "canonical_v2_sha256", "canonical_v2_match", "comparison_boundary", "audit_source", "missing_reasons"],
@@ -136,6 +144,7 @@
         "quantization": {"type": ["string", "null"]},
         "transcript": {"anyOf": [{"$ref": "#/$defs/transcript"}, {"type": "null"}]},
         "scope": {"enum": ["full_e2e", "excluded_non_e2e"]},
+        "presentation": {"$ref": "#/$defs/presentation"},
         "attempt_status": {"enum": ["ran", "partial", "blocked", "deferred", "not_run"]},
         "technical_execution": {"$ref": "#/$defs/technical_execution"},
         "structural_audio": {"$ref": "#/$defs/structural_audio"},

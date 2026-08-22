@@ -23,8 +23,8 @@ During coordinated multi-session work, one named session owns `docs/android-benc
 4. Preserve `warm_median_rtf`, `first_post_setup_rtf`, and `proof_run_rtf` as distinct fields. The compact RTF cell may choose one headline but must retain all values and labels in registry/details.
 5. Only Moritz may set accepted or rejected, and only for the exact route and WAV hash recorded in committed evidence. Never inherit verdicts.
 6. Host QNN/context evidence is feasibility only. Physical HTP requires fallback disabled, zero neural CPU events, every required call invoked, and matching RPC/accelerator/cycle/HVX proof.
-7. Keep the registry exhaustive, but expose only complete `full_e2e` routes in the compact table. Blockers and probes remain `excluded_non_e2e` with null plus reason.
-8. Preserve historical evidence. Add dated nested remeasurements or distinct derivative routes; never replace old values silently.
+7. Keep the registry exhaustive, but expose only complete `full_e2e` routes in the compact table. Blockers and probes remain `excluded_non_e2e` with null plus reason. A redundant `full_e2e` row may be hidden only through an explicit presentation-only suppression containing `dashboard_visible: false`, a non-empty reason, and a valid `superseded_by` route; never change its scope or evidence to reduce visual bloat.
+8. Preserve historical evidence. Add dated nested remeasurements or distinct derivative routes; never replace old values silently. Presentation suppression must preserve nested refreshes and retained media in the registry and owning experiment page.
 9. Use scoped staging and `git commit --only -- docs/android-benchmarks/...`; never reset or unstage peer work. Verify every dashboard commit with `git diff-tree`.
 
 ## Transcript classification

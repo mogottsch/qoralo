@@ -24,6 +24,16 @@ FROZEN_0008_SUPERTONIC_METRICS = {"load_seconds": 0.765107603, "cold_rtf": 0.385
 EXP_0022 = ROOT / "experiments/0022-supertonic-canonical-v2-precompiled-qnn-context"
 EXP_0022_RESULT = EXP_0022 / "results/t235-t239-masked-padding-compatibility.json"
 EXP_0022_RESULT_SHA256 = "3de896971a64ca5d2833b5421d02e991a75f59922cf6a89c1ac3aa5da21dfc95"
+PRESENTATION_SUPERSESSIONS = {
+    "0008-pocket-cpu-t1": "0009-pocket-cpu-t1",
+    "0008-kokoro-cpu-t1": "0009-kokoro-cpu-t1",
+    "0008-supertonic-cpu-t1": "0009-supertonic-cpu-t1",
+}
+FROZEN_0008_DUPLICATE_METRICS = {
+    "0008-pocket-cpu-t1": {"load_seconds": 0.658703801, "cold_rtf": 0.4358031003580019, "warm_median_rtf": 0.38864718496483114, "proof_run_rtf": None, "first_post_setup_rtf": None, "peak_pss_bytes": 683577344, "peak_vm_hwm_bytes": 751427584},
+    "0008-kokoro-cpu-t1": {"load_seconds": 1.303446875, "cold_rtf": 1.187996273027265, "warm_median_rtf": 1.1952115332875515, "proof_run_rtf": None, "first_post_setup_rtf": None, "peak_pss_bytes": 929677312, "peak_vm_hwm_bytes": 995078144},
+    "0008-supertonic-cpu-t1": FROZEN_0008_SUPERTONIC_METRICS,
+}
 
 
 def fail(message):
@@ -62,6 +72,7 @@ def main():
     ids = [e.get("id") for e in entries]
     if len(ids) != len(set(ids)):
         fail("duplicate route id")
+    entries_by_id = {e["id"]: e for e in entries}
     seen_experiments = set()
     verified_media = 0
     transcript_counts = {"canonical_v2": 0, "legacy_v1": 0, "noncanonical": 0}
@@ -93,6 +104,19 @@ def main():
             fail(f"{e['id']}: null quantization lacks a missing-evidence reason")
         if e["scope"] not in {"full_e2e", "excluded_non_e2e"}:
             fail(f"{e['id']}: invalid route scope")
+        presentation = e.get("presentation")
+        expected_supersession = PRESENTATION_SUPERSESSIONS.get(e["id"])
+        if expected_supersession is None:
+            if presentation is not None:
+                fail(f"{e['id']}: unexpected presentation suppression")
+        else:
+            if not isinstance(presentation, dict) or set(presentation) != {"dashboard_visible", "visibility_reason", "superseded_by"}:
+                fail(f"{e['id']}: invalid presentation suppression contract")
+            if presentation["dashboard_visible"] is not False or not presentation["visibility_reason"].strip() or presentation["superseded_by"] != expected_supersession:
+                fail(f"{e['id']}: presentation supersession mismatch")
+            target = entries_by_id.get(expected_supersession)
+            if e["scope"] != "full_e2e" or target is None or target["scope"] != "full_e2e":
+                fail(f"{e['id']}: presentation suppression changed scope or lacks a full-E2E successor")
         transcript = e["transcript"]
         if e["scope"] == "full_e2e":
             if not isinstance(transcript, dict):
@@ -175,6 +199,8 @@ def main():
                 fail(f"{e['id']}: null metric {field} lacks a missing-evidence reason")
         if e["metrics"]["warm_median_rtf"] is not None and "One profiled generation only" in " ".join(e["limitations"]):
             fail(f"{e['id']}: a single profiled generation cannot populate warm_median_rtf")
+        if e["id"] in FROZEN_0008_DUPLICATE_METRICS and e["metrics"] != FROZEN_0008_DUPLICATE_METRICS[e["id"]]:
+            fail(f"{e['id']}: presentation suppression must not alter historical metrics")
         if e["id"] == "0019-moss-canonical-v2-qnn-phone-blocked":
             source_blocker = json.loads((ROOT / "experiments/0019-moss-tts-nano-qnn-htp-android/results/fixed-capacity-phone-blocker.json").read_text())
             if e["scope"] != "excluded_non_e2e" or e["attempt_status"] != "blocked" or not e["android_attempted"]:
@@ -339,6 +365,12 @@ def main():
             if rwav.get("verified") is not True:
                 fail(f"{e['id']}: refresh representative WAV is not marked verified")
             verified_media += 1
+        if e["id"] == "0008-supertonic-cpu-t1":
+            refresh_wav = e["remeasurements"][0]["representative_wav"]
+            experiment_page = ROOT / "docs/experiments/0020-historic-android-benchmark-refresh/index.html"
+            expected_src = f'../../android-benchmarks/{refresh_wav["path"]}'
+            if not experiment_page.is_file() or f'src="{expected_src}"' not in experiment_page.read_text():
+                fail(f"{e['id']}: suppressed row must preserve 0020 experiment-page access to retained refresh audio")
         wav = e["wav"]
         if wav is None:
             if "wav" not in e["missing_reasons"] and "all" not in e["missing_reasons"]:
@@ -382,16 +414,25 @@ def main():
             marker = f'data-route-id="{e["id"]}"'
             row_match = re.search(rf'<tr {re.escape(marker)}>.*?</tr>', page_text)
             row_html = row_match.group(0) if row_match else None
-            if e["scope"] == "full_e2e" and (page_text.count(marker) != 1 or row_html is None):
-                fail(f"{page_name}: full E2E route {e['id']} is missing or duplicated")
-            if e["scope"] == "excluded_non_e2e" and marker in page_text:
-                fail(f"{page_name}: non-E2E route {e['id']} leaked into presentation")
+            dashboard_visible = e["scope"] == "full_e2e" and e.get("presentation", {}).get("dashboard_visible", True)
+            if dashboard_visible and (page_text.count(marker) != 1 or row_html is None):
+                fail(f"{page_name}: visible full-E2E route {e['id']} is missing or duplicated")
+            if not dashboard_visible and marker in page_text:
+                fail(f"{page_name}: hidden route {e['id']} leaked into presentation")
             identity = e["model_identity"]
-            if e["scope"] == "full_e2e" and identity is not None and identity["url"] not in page_text:
+            if dashboard_visible and identity is not None and identity["url"] not in page_text:
                 fail(f"{page_name}: {e['id']} model source link is missing")
             refresh = e.get("remeasurements", [])[-1] if e.get("remeasurements") else None
             display_wav = refresh["representative_wav"] if refresh else e["wav"]
             display_review = refresh["listening_review"] if refresh else e["listening_review"]
+            if not dashboard_visible:
+                anchor = f"audio-{e['id']}"
+                review_anchor = f"needs-{e['id']}"
+                if f'href="#{anchor}"' in page_text or f'id="{anchor}"' in page_text or f'id="{review_anchor}"' in page_text:
+                    fail(f"{page_name}: hidden route {e['id']} leaked into audio presentation")
+                if e.get("presentation") is not None and display_wav is not None and f'src="{display_wav["path"]}"' in page_text:
+                    fail(f"{page_name}: presentation-suppressed route {e['id']} retained a compact audio player")
+                continue
             if display_wav is None:
                 if row_html is not None and 'class="listening-link"' in row_html:
                     fail(f"{page_name}: {e['id']} listening status links without retained audio")
@@ -403,11 +444,11 @@ def main():
             if f'id="{anchor}"' not in page_text:
                 fail(f"{page_name}: {e['id']} player anchor is missing")
             review_anchor = f"needs-{e['id']}"
-            if e["scope"] == "full_e2e" and display_review["status"] == "not_reviewed":
+            if display_review["status"] == "not_reviewed":
                 if f'id="{review_anchor}"' not in page_text:
                     fail(f"{page_name}: unreviewed sample {e['id']} missing from Needs review")
             elif f'id="{review_anchor}"' in page_text:
-                fail(f"{page_name}: reviewed/non-E2E sample {e['id']} leaked into Needs review")
+                fail(f"{page_name}: reviewed sample {e['id']} leaked into Needs review")
             if f'src="{display_wav["path"]}"' not in page_text:
                 fail(f"{page_name}: {e['id']} embedded audio source is missing")
     print(f"PASS: {len(entries)} routes across {len(seen_experiments)} experiments; {verified_media} verified Android WAVs")

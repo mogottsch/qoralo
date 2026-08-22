@@ -429,6 +429,25 @@ for _id in ("0014-pocket-alba-cpu-v2", "0014-pocket-alba-qnn-htp-v2"):
 TRANSCRIPT_METADATA["0019-moss-canonical-v2-qnn-phone-blocked"] = transcript_metadata("canonical_v2", CANONICAL_V2_SHA256, "experiments/0019-moss-tts-nano-qnn-htp-android/protocol/canonical-v2-transcript.txt", "Experiment 0019 exact canonical-v2 MOSS SentencePiece tokenization.", byte_count=226, trailing_newline=False, effective_frontend={"kind": "MOSS SentencePiece tokenizer", "token_count": 51, "tokenizer_model_sha256": "c353ee1479b536bf414c1b247f5542b6607fb8ae91320e5af1781fee200fddff", "token_ids": [5322,300,642,2160,9813,10364,676,6704,1680,10363,661,10376,530,524,3598,4991,1727,420,273,628,10380,6271,10364,332,10211,1079,7824,2276,2103,1734,3628,10364,606,1217,1107,298,3572,302,8741,5368,10364,311,425,1957,273,2868,831,10104,372,9153,10380], "source": "experiments/0019-moss-tts-nano-qnn-htp-android/protocol/canonical-v2-tokenization.json"}, audit_source="experiments/0019-moss-tts-nano-qnn-htp-android/results/fixed-capacity-phone-blocker.json")
 
 
+PRESENTATION_SUPPRESSIONS = {
+    "0008-pocket-cpu-t1": {
+        "dashboard_visible": False,
+        "visibility_reason": "Superseded in the compact dashboard by the newer 0009 one-thread Pocket TTS thread-sweep row. The complete 0008 evidence remains unchanged in this registry.",
+        "superseded_by": "0009-pocket-cpu-t1",
+    },
+    "0008-kokoro-cpu-t1": {
+        "dashboard_visible": False,
+        "visibility_reason": "Superseded in the compact dashboard by the newer 0009 one-thread Kokoro thread-sweep row. The complete 0008 evidence remains unchanged in this registry.",
+        "superseded_by": "0009-kokoro-cpu-t1",
+    },
+    "0008-supertonic-cpu-t1": {
+        "dashboard_visible": False,
+        "visibility_reason": "Superseded in the compact dashboard by the newer 0009 one-thread Supertonic thread-sweep row. The complete 0008 evidence, nested 0020 refresh, and retained refresh WAV remain unchanged in this registry and accessible on the 0020 experiment page.",
+        "superseded_by": "0009-supertonic-cpu-t1",
+    },
+}
+
+
 FULL_E2E_IDS = {
     "0002-executorch-full",
     "0008-pocket-cpu-t1", "0008-kokoro-cpu-t1", "0008-supertonic-cpu-t1",
@@ -448,6 +467,8 @@ for _row in ROWS:
     _row["model_identity"] = _metadata.get("model_identity")
     _row["quantization"] = _metadata.get("quantization")
     _row["scope"] = "full_e2e" if _row["id"] in FULL_E2E_IDS else "excluded_non_e2e"
+    if _row["id"] in PRESENTATION_SUPPRESSIONS:
+        _row["presentation"] = PRESENTATION_SUPPRESSIONS[_row["id"]]
     _row["transcript"] = TRANSCRIPT_METADATA.get(_row["id"])
     if _row["transcript"] is None:
         _row["missing_reasons"].setdefault("transcript", "This excluded/non-E2E route was not classified by the committed visible-route transcript audit.")
@@ -466,8 +487,9 @@ for _row in ROWS:
         if _metric_value is None:
             _row["missing_reasons"].setdefault(_metric_name, f"No committed normalized {_metric_name} measurement is established for this route.")
 # Keep ROWS exhaustive for machine evidence. The presentation layer filters to
-# FULL_E2E_IDS so component/probe attempts remain queryable but never appear in
-# the comparison table or audio presentation.
+# FULL_E2E_IDS and then applies explicit presentation-only suppressions, so
+# component/probe attempts and superseded duplicate rows remain queryable without
+# appearing in the compact comparison table or audio presentation.
 
 
 def verify_wav(owner_id, wav):
@@ -587,7 +609,7 @@ def format_rtf(entry):
 
 
 def build_html(registry):
-    entries = [e for e in registry["entries"] if e["scope"] == "full_e2e"]
+    entries = [e for e in registry["entries"] if e["scope"] == "full_e2e" and e.get("presentation", {}).get("dashboard_visible", True)]
     trs = []
     players = []
     needs_review_players = []
