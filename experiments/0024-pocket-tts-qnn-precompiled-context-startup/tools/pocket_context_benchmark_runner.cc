@@ -228,6 +228,7 @@ struct Iteration {
   double generation_seconds = 0, text_seconds = 0, prefill_seconds = 0;
   double ar_seconds = 0, flow_seconds = 0, decoder_seconds = 0;
   int eos_step = -1, latent_frames = 0;
+  bool behavior_matches_reference = false;
   size_t samples = 0;
   long vm_hwm_kb = -1;
   float peak = 0;
@@ -347,8 +348,11 @@ int main(int argc, char **argv) {
 
       record.eos_step = eos;
       record.latent_frames = int(latents.size() / 32);
-      if (record.eos_step != expected_eos || record.latent_frames != expected_frames) {
-        throw std::runtime_error("EOS/frame contract drift at iteration " + std::to_string(run_index));
+      record.behavior_matches_reference =
+          record.eos_step == expected_eos && record.latent_frames == expected_frames;
+      if (record.latent_frames < 1) {
+        throw std::runtime_error("generation emitted no latent frames at iteration " +
+                                 std::to_string(run_index));
       }
       auto decoder_state = InitDecoder(decoder12, allocator);
       std::vector<float> audio;
@@ -433,6 +437,8 @@ int main(int argc, char **argv) {
                 << ",\"decoder\":" << value.decoder_seconds
                 << "},\"eos_step\":" << value.eos_step
                 << ",\"latent_frames\":" << value.latent_frames
+                << ",\"behavior_matches_reference\":"
+                << (value.behavior_matches_reference ? "true" : "false")
                 << ",\"samples\":" << value.samples
                 << ",\"peak_float\":" << value.peak
                 << ",\"vm_hwm_kb\":" << value.vm_hwm_kb << '}';

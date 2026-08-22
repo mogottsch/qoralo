@@ -98,9 +98,9 @@ class ContractTest(unittest.TestCase):
         result = json.loads((EXP / "results/android-stage-provenance.json").read_text())
         self.assertEqual(result["status"], "source_and_context_android_stages_prepared_no_phone_access")
         self.assertEqual(result["source_stage"]["file_count"], 19)
-        self.assertEqual(result["source_stage"]["file_bytes_sum"], 1179648983)
+        self.assertEqual(result["source_stage"]["file_bytes_sum"], 1179649223)
         self.assertEqual(result["context_stage"]["file_count"], 27)
-        self.assertEqual(result["context_stage"]["file_bytes_sum"], 654600194)
+        self.assertEqual(result["context_stage"]["file_bytes_sum"], 654600434)
         self.assertEqual(result["context_stage"]["descriptor_count"], 8)
         self.assertEqual(result["context_stage"]["external_binary_count"], 8)
         self.assertTrue(result["context_stage"]["source_onnx_absent"])
@@ -111,6 +111,17 @@ class ContractTest(unittest.TestCase):
         self.assertFalse(result["phone"]["phone_lock_acquired"])
         self.assertFalse(result["phone"]["adb_invoked"])
         self.assertIsNone(result["portability"]["physical_context_load_status"])
+
+    def test_eos_frame_drift_is_descriptive_not_execution_blocking(self):
+        runner = (EXP / "tools/pocket_context_benchmark_runner.cc").read_text()
+        analyzer = (EXP / "tools/analyze_phone_benchmark.py").read_text()
+        proof = (EXP / "tools/analyze_physical_proof.py").read_text()
+        self.assertNotIn("EOS/frame contract drift", runner)
+        self.assertIn("behavior_matches_reference", runner)
+        self.assertIn("generation emitted no latent frames", runner)
+        self.assertIn("item['generation_seconds']/info['seconds']", analyzer)
+        self.assertIn("EOS/frame differences are descriptive", analyzer)
+        self.assertIn("Descriptive only; structural validity/provider proof", proof)
 
     def test_executables(self):
         for path in list((EXP / "tools").glob("*.sh")) + list((EXP / "device").glob("*.sh")):

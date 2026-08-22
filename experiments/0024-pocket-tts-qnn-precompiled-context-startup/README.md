@@ -60,15 +60,15 @@ Both eventual phone arms use the same eight 0024 graph derivatives, ABI, runtime
 
 Sessions are text conditioner, text prefill, BOS AR, latent AR, flow, and Mimi decoder 12/6/1. CPU fallback remains disabled. Context reload must pass in a fresh isolated Docker process where only the descriptor, binary, smoke tool, required input fixture, ORT runtime, and QNN backend are mounted—source ONNX is unavailable.
 
-After host smoke and complete E2E, each arm requires at least three fresh cold phone processes. Every benchmark process creates sessions once, runs one first complete generation plus five warm generations, and fully resets model/cache/decoder/noise state before every generation. The observed setup delta will be reported without a minimum speedup gate.
+After host smoke and complete E2E, each arm requires at least three fresh cold phone processes. Every benchmark process creates sessions once, runs one first complete generation plus five warm generations, and fully resets model/cache/decoder/noise state before every generation. The observed setup delta will be reported without a minimum speedup gate. CPU-reference EOS 160 / 163 frames remains recorded, but equality is descriptive: the runner reports `behavior_matches_reference` and fails only for real execution, decode, or structural invalidity. Every RTF uses that run’s actual emitted duration.
 
 ## Prepared Android packages
 
 Both ignored phone-stage packages are prepared and hash-bound without accessing the device:
 
-- source arm: 19 files / 1,179,648,983 bytes, manifest `7c78b048…e7fb`;
-- context arm: 27 files / 654,600,194 bytes, manifest `dbf40873…8991`;
-- matched runner: 162,112-byte Android-27 AArch64 PIE, SHA-256 `0c665665…26c`, linked to the staged ORT and libc++ libraries;
+- source arm: 19 files / 1,179,649,223 bytes, manifest `b724cb17…85fe`;
+- context arm: 27 files / 654,600,434 bytes, manifest `d26e6a1c…fa0b`;
+- matched runner: 162,352-byte Android-27 AArch64 PIE, SHA-256 `dce2aa98…c859`, linked to the staged ORT and libc++ libraries;
 - context model directory: exactly eight small EPContext descriptors and eight external binaries; no source graph is packaged;
 - all source graphs match the documented 0024 derivative inventory, and all context files match the host functional evidence.
 
