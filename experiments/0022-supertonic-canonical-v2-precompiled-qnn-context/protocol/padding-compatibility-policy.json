@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "gate": "T235 canonical-v2 to frozen T239 masked-padding compatibility",
+  "decision_rule": "The exact frozen T239 graphs are compatible with canonical-v2 only if right-side masked padding preserves the dynamic T235 oracle within every locked numerical limit, the frozen T239 graphs reproduce the dynamic T239 padded calculation within the specialization limits, and the pad payload is irrelevant.",
+  "canonical_oracle": {
+    "graph_kind": "official source FP32 ONNX with dynamic text length",
+    "runtime": "ONNX Runtime 1.27.1 CPUExecutionProvider",
+    "processed_text": "UTF-8 canonical-v2 bytes wrapped as <en>...</en>",
+    "text_length": 235,
+    "text_ids_mask": "official unicode_indexer mapping; all 235 semantic mask values are 1.0"
+  },
+  "candidate": {
+    "graph_kind": "exact frozen experiment-0011 T239 duration and text graph identities",
+    "padding_side": "right, after the complete </en> wrapper",
+    "zero_based_padding_positions": [235, 236, 237, 238],
+    "filler_id": 0,
+    "filler_id_meaning": "tensor filler only, not a transcript code point; the four positions have mask 0.0",
+    "semantic_mask_values": 1.0,
+    "padding_mask_values": 0.0,
+    "total_text_length": 239
+  },
+  "oracle_equivalence_limits": {
+    "duration_max_abs_lte": 0.00001,
+    "text_embedding_semantic_prefix_max_abs_lte": 0.0005,
+    "text_embedding_semantic_prefix_rmse_lte": 0.00001,
+    "text_embedding_semantic_prefix_cosine_gte": 0.999999,
+    "padded_text_embedding_abs_max_lte": 0.00001
+  },
+  "frozen_reproduction_limits": {
+    "duration_max_abs_lte": 0.00001,
+    "text_embedding_max_abs_lte": 0.0005,
+    "text_embedding_rmse_lte": 0.00001,
+    "text_embedding_cosine_gte": 0.999999
+  },
+  "pad_payload_invariance": {
+    "probe_ids": [0, 2, 29, 31, 64, 73, 100],
+    "required": "All probed filler IDs must produce byte-identical dynamic-T239 duration and text outputs when their four masks are 0.0. This proves only payload masking, not sequence-length neutrality."
+  },
+  "fail_closed_outcome": "If any oracle-equivalence limit fails, stop experiment 0022 before context generation, runner implementation, output generation, or phone access. Do not use the legacy transcript and do not regenerate differently shaped graph identities."
+}

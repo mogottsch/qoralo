@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0022-supertonic-canonical-v2-precompiled-qnn-context",
-  "status": "authorized_preimplementation_safe_boundary",
+  "status": "stopped_joint_constraint_incompatibility",
   "authorization": {
     "authorized_by": "Moritz via Pi",
     "date": "2026-08-20",
@@ -130,9 +130,19 @@
     "No historical record or dashboard source may be overwritten."
   ],
   "current_blocker_or_design_gate": {
-    "kind": "must_resolve_before_implementation_or_output",
+    "kind": "resolved_incompatible_stop",
     "fact": "The exact frozen 0011 graphs require processed T239/L238, but canonical-v2 text wrapped as <en>...</en> is length 235.",
-    "permitted_investigation": "Prove a four-position padding and mask policy is semantically neutral and preserves the exact frozen graph hashes, or report that the simultaneous canonical-v2 and exact-graph constraints are incompatible.",
-    "forbidden_shortcut": "Do not substitute the 230-byte legacy transcript, silently alter canonical bytes, or regenerate differently hashed graphs and call them the same route."
+    "investigation": "Four right-side positions used filler ID 0 and mask 0.0; seven filler IDs produced byte-identical outputs, proving payload masking, but the T239 sequence extent materially changed the dynamic-T235 canonical result.",
+    "result_path": "results/t235-t239-masked-padding-compatibility.json",
+    "policy_path": "protocol/padding-compatibility-policy.json",
+    "result": "failed_joint_constraint_incompatibility",
+    "measured_differences": {
+      "duration_max_abs": 0.2244882583618164,
+      "text_embedding_semantic_prefix_max_abs": 0.11101388931274414,
+      "text_embedding_semantic_prefix_rmse": 0.006290534672319703,
+      "text_embedding_semantic_prefix_cosine": 0.9998871625637002
+    },
+    "required_action": "Stop before runner implementation, EPContext generation, output generation, or phone access.",
+    "forbidden_shortcut": "Do not substitute the 230-byte legacy transcript, silently alter canonical bytes, regenerate differently hashed graphs and call them the same route, or label the masked T239 calculation exact canonical-v2 semantics."
   }
 }

@@ -3,32 +3,43 @@
   "experiment": "0022-supertonic-canonical-v2-precompiled-qnn-context",
   "recorded_date": "2026-08-20",
   "base_commit_observed": "fa7e96b",
-  "state": "safe_boundary_before_implementation",
+  "state": "stopped_joint_constraint_incompatibility",
   "completed": [
     "verified experiment ID/path was unused",
     "read android-tts-benchmark skill",
     "reserved only the 0022 path in Pi Messenger",
     "identified 0011 stable-Softplus all-HTP lineage",
     "verified canonical-v2 transcript bytes and hash",
-    "verified frozen graph and runtime hashes from local 0011 artifacts against committed 0011 evidence where available",
-    "identified fixed-shape compatibility gate: historical processed T239 versus canonical-v2 processed T235",
-    "froze matched-arm measurement and proof requirements"
+    "reconstructed and hash-verified the exact frozen T239/L238 graph identities",
+    "froze the T235-to-T239 masked-padding inputs, oracle and numerical limits",
+    "ran the ORT 1.27.1 CPU dynamic-T235 oracle and exact frozen-T239 comparison",
+    "proved filler-ID payload masking but disproved sequence-length neutrality",
+    "stopped before implementation, context generation, output or phone access"
   ],
-  "not_started": [
+  "not_started_due_to_terminal_gate_failure": [
     "runner implementation",
-    "canonical padding/mask proof",
     "host QNN assignment",
     "EPContext generation",
     "independent EPContext reload",
     "phone staging or execution",
     "output generation or listening request"
   ],
+  "compatibility_gate": {
+    "policy": "protocol/padding-compatibility-policy.json",
+    "evidence": "results/t235-t239-masked-padding-compatibility.json",
+    "result": "failed_joint_constraint_incompatibility",
+    "required_action": "stop under the frozen scope"
+  },
   "portable_sources_of_truth": [
     "README.md",
     "PLAN.md",
     "protocol/experiment-contract.json",
     "protocol/transcript.txt",
     "tests/test_contract.py",
+    "protocol/padding-compatibility-policy.json",
+    "results/t235-t239-masked-padding-compatibility.json",
+    "tools/reconstruct_frozen_graphs.sh",
+    "tools/prove_masked_padding_compatibility.py",
     "experiments/0011-supertonic-official-fp32-phone-comparison/results/softplus-matched-e2e-checkpoint.json",
     "experiments/0011-supertonic-official-fp32-phone-comparison/results/matched-e2e-protocol.json",
     "experiments/0011-supertonic-official-fp32-phone-comparison/results/source-inventory.json",
@@ -41,14 +52,15 @@
     "warning": "Ignored paths may not exist in another checkout. Reconstruct and verify every artifact against protocol hashes; never treat path presence as provenance."
   },
   "coordination": {
-    "qairt_memory_coordination": "not yet performed; check measured host headroom before compilation",
+    "qairt_memory_coordination": "not needed because no compilation was permitted after the gate failed",
     "phone_lock": "not acquired; no phone work occurred",
-    "dashboard_owner": "Marius; no dashboard files may be edited by Sean",
+    "dashboard_owner": "Alex; Jere must not edit dashboard paths",
     "orchestrator": "Pi",
     "agents_spawned": false
   },
   "transient_artifacts": {
-    "created": false,
+    "created": true,
+    "kind": "ignored host Python environment and reconstructed ONNX graphs used only for the committed proof",
     "cleanup_required": false
   }
 }

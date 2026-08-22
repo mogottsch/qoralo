@@ -4,36 +4,32 @@ This is the durable implementation plan for comparing source-ONNX QNN startup wi
 
 ## Current state
 
-No implementation, context generation, phone staging, or benchmark output exists. Only the approved scope, immutable lineage, protocol, copied canonical transcript, preflight state, and contract tests have been created. The experiment path alone is owned by Sean. Other sessions own their own experiments and dashboard paths.
+**Stopped at the first required design gate.** No implementation, context generation, phone staging, benchmark output, or WAV exists. Jere owns only this experiment path; other sessions own their experiments and dashboard paths.
 
-The approved comparison is source ONNX QNN compilation (arm A) versus external precompiled QNN EPContext reload (arm B) for the exact stable-Softplus all-HTP Supertonic graph set. Each arm must be matched in every respect except source compilation versus context reload. At least three independent cold processes per arm are required.
+The approved comparison was source ONNX QNN compilation (arm A) versus external precompiled QNN EPContext reload (arm B) for the exact stable-Softplus all-HTP Supertonic graph set. The comparison cannot proceed under the frozen scope because exact canonical-v2 semantics and exact T239 graph identity are jointly incompatible.
 
-## Important discovered compatibility gate
+## Resolved compatibility gate — failed
 
-The historical 0011 runner hard-codes:
+The historical 0011 runner hard-codes T239/L238/729,746 samples. Canonical v2 is exactly 226 bytes, so `<en>` plus canonical v2 plus `</en>` is T235. The predeclared policy tested right-side positions 235–238 with filler ID `0`, semantic masks `1.0`, and padding masks `0.0` against the official dynamic-T235 source graphs under ORT 1.27.1 CPU.
 
-- processed text length 239;
-- latent length 238;
-- 729,746 output samples;
-- `<en>` plus 230-byte legacy text plus `</en>` = 239 characters.
+The zero masks made all seven probed filler IDs byte-identical, so filler payload is masked. Sequence extent is not neutral:
 
-Canonical v2 is exactly 226 bytes, so `<en>` plus canonical v2 plus `</en>` = 235 characters. Yet the approved scope also says to preserve the same transformed graph hashes. Re-specializing shapes would change graph hashes and is therefore not an allowed silent choice.
+- duration `max_abs = 0.2244882583618164` (limit `0.00001`);
+- semantic text-embedding prefix `max_abs = 0.11101388931274414` (limit `0.0005`);
+- semantic text-embedding prefix `RMSE = 0.006290534672319703` (limit `0.00001`);
+- semantic text-embedding prefix cosine `0.9998871625637002` (minimum `0.999999`).
 
-Before implementing or producing output, prove whether four masked padding positions can preserve the exact T239/L238 graphs while retaining canonical-v2 semantic input. The proof must freeze the pad ID, mask values, positions, effective model inputs, and comparison to a dynamic/eager canonical-v2 oracle. If this cannot be proven, stop and tell Pi that exact canonical-v2 input and exact frozen graph identity are jointly incompatible. Never use the legacy transcript as a shortcut.
+The exact frozen T239 duration/text graph identities reproduce the padded dynamic-T239 result within the specialization tolerances, confirming that they compute the changed T239 semantics rather than the canonical dynamic-T235 result. Therefore the mandatory action is to stop. Never use the legacy transcript, regenerate differently hashed graphs, generate contexts/output, or access the phone for 0022.
 
-## Resume checklist
+## Terminal checklist
 
-1. Reserve only `experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/` during coordinated work.
-2. Run the contract tests and verify the working tree does not contain uncommitted 0022 changes.
-3. Reconstruct each ignored dependency and verify its SHA-256 against `protocol/experiment-contract.json`.
-4. Check current measured RAM use before any QAIRT/ORT compilation. Do not overlap near-machine-size compiler jobs without adequate measured headroom.
-5. Resolve the T235-to-T239 padding/mask gate and commit the proof before generating any QNN context or WAV.
-6. Inspect pinned ORT 1.27.1 QNN EPContext behavior, especially non-embedded external context generation and loading. Freeze exact provider/session options.
-7. Build one deterministic runner supporting both arms and emitting per-session readiness, total ready time, process time, six generation records, PSS/VmHWM, provider/profile paths, hashes, and cleanup status.
-8. Pass host source-assignment, context-generation, and independent reload gates before using the phone.
-9. Use Windows adb only with `ADB_LIBUSB=1`, `artifacts/locks/phone.lock`, exact identity/boot gates, verified staging, and verified cleanup/uninstall. Coordinate phone order with peers.
-10. Run physical proof separately if profiling perturbs benchmark timing. Context reload must itself be proven with source graphs unavailable.
-11. Commit only 0022 evidence, then hand exact commit/metrics/provenance/WAV/hash/missing reasons to Marius and FYI Pi.
+1. Reserve only `experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/` during coordinated work. **Done.**
+2. Run the contract tests and verify the working tree did not contain pre-existing 0022 changes. **Done.**
+3. Reconstruct the exact graph identities and verify their SHA-256 values. **Done for the compatibility proof.**
+4. Predeclare the padding policy, inputs, oracle and limits. **Done.**
+5. Resolve the T235-to-T239 padding/mask gate. **Failed; proof committed as terminal evidence.**
+6. EPContext inspection/generation, runner implementation, WAV generation and phone work. **Forbidden under this failed frozen scope.**
+7. Report the scoped blocker commit and missing-reason evidence to Pi. **Required after commit.**
 
 ## Exact validation command
 
@@ -44,17 +40,25 @@ python3 -m unittest discover \
 && git diff --check
 ```
 
-## Exact next technical command after validation
+## Exact proof reproduction commands
 
-Use this read-only inspection first; do not generate contexts yet:
+With Python containing ONNX 1.17.0, NumPy 1.26.4 and the pinned ORT 1.27.1 CPU runtime, reconstruct the ignored exact graph artifacts and rerun the proof:
 
 ```bash
-rg -n 'ep\.context_(enable|embed_mode|file_path)|EPContext' \
-  experiments/0010-supertonic-qnn-htp-feasibility/.local/onnxruntime-v1.27.1-source/onnxruntime/test/providers/qnn/qnn_ep_context_test.cc \
-  experiments/0010-supertonic-qnn-htp-feasibility/.local/onnxruntime-v1.27.1-source/onnxruntime/test/onnx/main.cc
+EXP=experiments/0022-supertonic-canonical-v2-precompiled-qnn-context
+"$EXP/tools/reconstruct_frozen_graphs.sh" \
+  "$PYTHON" "$OFFICIAL_SUPERTONIC_SNAPSHOT/onnx" "$EXP/.local/reconstructed-frozen"
+PYTHONPATH="$ORT_1_27_1_PYTHONPATH" "$PYTHON" \
+  "$EXP/tools/prove_masked_padding_compatibility.py" \
+  --source-onnx "$OFFICIAL_SUPERTONIC_SNAPSHOT/onnx" \
+  --voice "$OFFICIAL_SUPERTONIC_SNAPSHOT/voice_styles/M1.json" \
+  --frozen "$EXP/.local/reconstructed-frozen" \
+  --transcript "$EXP/protocol/transcript.txt" \
+  --policy "$EXP/protocol/padding-compatibility-policy.json" \
+  --output "$EXP/results/t235-t239-masked-padding-compatibility.json"
 ```
 
-If that ignored ORT source is absent on the new device, reconstruct the pinned ORT 1.27.1 source first, record its revision/archive hash in 0022, and then run the equivalent command. Do not infer API semantics from memory.
+Do not continue to EPContext work after reproducing the failed decision.
 
 ## Known portable hashes
 
