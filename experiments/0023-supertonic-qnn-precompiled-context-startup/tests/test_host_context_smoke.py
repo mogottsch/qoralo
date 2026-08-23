@@ -1,4 +1,5 @@
 import hashlib
+import importlib.util
 import json
 import os
 import subprocess
@@ -16,6 +17,8 @@ PREPARATION_PATH = EXP / "results/phone-preparation.json"
 PREPARATION = json.loads(PREPARATION_PATH.read_text())
 TRANSPORT_PATH = EXP / "protocol/phone-transport-contract.json"
 TRANSPORT = json.loads(TRANSPORT_PATH.read_text())
+PHONE_RESULT_PATH = EXP / "results/phone-campaign/phone-result.json"
+PHONE_RESULT = json.loads(PHONE_RESULT_PATH.read_text())
 TRANSCRIPT_SHA = "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f"
 EXPECTED_GRAPHS = {
     "duration": "8a1875ef0f6960ca16fc06814509b1c3258e8f50b04a5d590d3ab6db8c775016",
@@ -38,7 +41,9 @@ class HostContextSmokeTest(unittest.TestCase):
         self.assertEqual(CONTRACT["scope"]["latent_length"], 238)
         self.assertEqual(CONTRACT["scope"]["trimmed_samples"], 729746)
         self.assertEqual(CONTRACT["runtime"]["session.disable_cpu_ep_fallback"], "1")
-        self.assertEqual(CONTRACT["minimum_measurements"]["fresh_process_cold_setup_runs_per_arm"], 3)
+        self.assertEqual(CONTRACT["minimum_measurements"]["fresh_process_setup_runs_per_arm"], 3)
+        self.assertFalse(CONTRACT["minimum_measurements"]["setup_processes_run_inference"])
+        self.assertEqual(CONTRACT["minimum_measurements"]["complete_generation_runs_per_e2e_process"], 6)
 
     def test_all_four_components_pass_functionally(self):
         self.assertEqual(set(RESULT["components"]), set(EXPECTED_GRAPHS))
@@ -154,7 +159,7 @@ class HostContextSmokeTest(unittest.TestCase):
         self.assertIn("cold OS filesystem-cache behavior", CLEAN["claim_boundary"]["not_established"])
 
     def test_native_linux_adb_transport_is_frozen_safely(self):
-        self.assertEqual(TRANSPORT["status"], "prepared_not_executed")
+        self.assertEqual(TRANSPORT["status"], "executed_passed")
         self.assertEqual(TRANSPORT["platform_adaptation"]["selected_transport"], "/usr/bin/adb")
         self.assertFalse(TRANSPORT["platform_adaptation"]["historical_path_present"])
         self.assertEqual(
@@ -193,13 +198,16 @@ class HostContextSmokeTest(unittest.TestCase):
             self.assertEqual(record["sha256"], hashlib.sha256(path.read_bytes()).hexdigest())
         campaign_paths = {
             "script": EXP / "device/run_phone_campaign.sh",
-            "validator": EXP / "tools/validate_phone_campaign.py",
             "local_stage_preflight": EXP / "tools/check_phone_stage_preflight.py",
         }
         for key, path in campaign_paths.items():
             record = PREPARATION["campaign"][key]
             self.assertEqual(record["bytes"], path.stat().st_size)
             self.assertEqual(record["sha256"], hashlib.sha256(path.read_bytes()).hexdigest())
+        self.assertEqual(
+            PREPARATION["campaign"]["validator"]["sha256"],
+            "579ccb6df80efa5c65cb47dad95ed89f00209bc573d8ed04adaa953e5b3cd09e",
+        )
 
     def test_phone_campaign_is_bounded_and_source_absent_for_context(self):
         campaign = (EXP / "device/run_phone_campaign.sh").read_text()
@@ -229,6 +237,109 @@ class HostContextSmokeTest(unittest.TestCase):
         self.assertFalse(blocker["scope"]["adb_or_device_commands_executed"])
         self.assertFalse(blocker["scope"]["remote_stage_created"])
         self.assertEqual(blocker["scope"]["cleanup_verification"], "not_created")
+
+    def test_completed_phone_campaign_setup_e2e_physical_and_cleanup(self):
+        self.assertEqual(PHONE_RESULT["status"], "phone_campaign_passed")
+        self.assertEqual(PHONE_RESULT["setup"]["source"]["sequence_values_seconds"], [22.1599, 21.6129, 20.9571])
+        self.assertEqual(PHONE_RESULT["setup"]["context"]["sequence_values_seconds"], [0.785324, 0.496524, 0.497816])
+        comparison = PHONE_RESULT["setup_comparison"]
+        self.assertAlmostEqual(comparison["source_median_seconds"], 21.6129)
+        self.assertAlmostEqual(comparison["context_median_seconds"], 0.497816)
+        self.assertAlmostEqual(comparison["source_minus_context_median_seconds"], 21.115084)
+        self.assertGreater(comparison["context_setup_reduction_percent"], 97.0)
+        self.assertEqual(PHONE_RESULT["e2e"]["source"]["runner"]["runs"], 6)
+        self.assertEqual(PHONE_RESULT["e2e"]["context"]["runner"]["runs"], 6)
+        self.assertEqual(PHONE_RESULT["e2e"]["source"]["listening"]["status"], "accepted")
+        self.assertEqual(PHONE_RESULT["e2e"]["context"]["listening"]["status"], "accepted")
+        self.assertEqual(
+            PHONE_RESULT["e2e"]["source"]["wav"]["sha256"],
+            "47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c",
+        )
+        self.assertEqual(
+            PHONE_RESULT["e2e"]["source"]["wav"]["sha256"],
+            PHONE_RESULT["e2e"]["context"]["wav"]["sha256"],
+        )
+        self.assertTrue(PHONE_RESULT["source_vs_context_raw_comparison"]["byte_identical"])
+        self.assertTrue(PHONE_RESULT["physical_proof"]["physical_qnn_htp_proven"])
+        self.assertTrue(PHONE_RESULT["physical_proof"]["fallback_disabled"])
+        self.assertTrue(PHONE_RESULT["physical_proof"]["source_onnx_unavailable"])
+        for profile in PHONE_RESULT["physical_proof"]["ort_profiles"]:
+            self.assertEqual(profile["providers"], ["QNNExecutionProvider"])
+        for profile in PHONE_RESULT["physical_proof"]["qnn_profiles"]:
+            self.assertEqual(set(profile["hvx_thread_values"]), {4})
+            self.assertGreater(profile["rpc_events"], 0)
+            self.assertGreater(profile["accelerator_us_events"], 0)
+            self.assertGreater(profile["accelerator_cycle_events"], 0)
+        self.assertEqual(PHONE_RESULT["context_source_unavailable_gate"], "passed")
+        self.assertEqual(PHONE_RESULT["cleanup"]["remote_cleanup_exit_code"], 0)
+        self.assertTrue(PHONE_RESULT["cleanup"]["remote_root_absence_verified"])
+        self.assertTrue(PHONE_RESULT["cleanup"]["phone_lock_release_verified_nonblocking"])
+        self.assertFalse(PHONE_RESULT["parser_incident"]["phone_rerun"])
+        sample = EXP / "samples/supertonic-stable-softplus-qnn-context.wav"
+        self.assertEqual(sample.stat().st_size, 1459536)
+        self.assertEqual(
+            hashlib.sha256(sample.read_bytes()).hexdigest(),
+            "47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c",
+        )
+
+    def test_phone_evidence_manifest_and_raw_stdout_are_byte_preserved(self):
+        root = EXP / "results/phone-campaign"
+        for item in PHONE_RESULT["evidence_manifest"]:
+            path = root / item["path"]
+            self.assertTrue(path.is_file(), path)
+            self.assertEqual(path.stat().st_size, item["bytes"])
+            self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), item["sha256"])
+        for arm in ("source", "context"):
+            for run in PHONE_RESULT["setup"][arm]["runs"]:
+                diagnostic = run["runner_output"]
+                path = root / "evidence" / f"{arm}-setup-{run['run_index']}" / "stdout.json"
+                self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), diagnostic["raw"]["sha256"])
+        self.assertGreater(PHONE_RESULT["setup"]["source"]["runs"][0]["runner_output"]["stripped_prefix_bytes"], 0)
+        self.assertEqual(PHONE_RESULT["setup"]["context"]["runs"][0]["runner_output"]["stripped_prefix_bytes"], 0)
+        sidecar = json.loads((root / "sha256-manifest.json").read_text())
+        for item in sidecar:
+            path = root / item["path"]
+            self.assertEqual(path.stat().st_size, item["bytes"])
+            self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), item["sha256"])
+        validator = EXP / "tools/validate_phone_campaign.py"
+        finalizer = EXP / "tools/finalize_phone_campaign.py"
+        self.assertEqual(PHONE_RESULT["execution"]["offline_validator"]["sha256"], hashlib.sha256(validator.read_bytes()).hexdigest())
+        self.assertEqual(PHONE_RESULT["execution"]["finalizer"]["sha256"], hashlib.sha256(finalizer.read_bytes()).hexdigest())
+
+    def test_phone_runner_output_parser_fixtures(self):
+        module_path = EXP / "tools/validate_phone_campaign.py"
+        spec = importlib.util.spec_from_file_location("validate_phone_campaign", module_path)
+        module = importlib.util.module_from_spec(spec)
+        assert spec.loader is not None
+        spec.loader.exec_module(module)
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            clean = root / "clean.txt"
+            clean.write_text('{"result":"passed"}\n')
+            value, diagnostics = module.parse_runner_output(clean)
+            self.assertEqual(value, {"result": "passed"})
+            self.assertEqual(diagnostics["prefix_bytes"], 0)
+
+            prefixed = root / "prefixed.txt"
+            prefix = " # LIBNATIVE: diagnostic line\n"
+            prefixed.write_text(prefix + '{"result":"passed"}\n')
+            value, diagnostics = module.parse_runner_output(prefixed)
+            self.assertEqual(value, {"result": "passed"})
+            self.assertEqual(diagnostics["prefix_utf8"], prefix)
+            self.assertEqual(
+                diagnostics["stripped_prefix_sha256"],
+                hashlib.sha256(prefix.strip().encode()).hexdigest(),
+            )
+
+            malformed = root / "malformed.txt"
+            malformed.write_text('{"result":\n')
+            with self.assertRaises(SystemExit):
+                module.parse_runner_output(malformed)
+
+            ambiguous = root / "ambiguous.txt"
+            ambiguous.write_text('{"first":1}\n{"second":2}\n')
+            with self.assertRaises(SystemExit):
+                module.parse_runner_output(ambiguous)
 
     def test_exact_phone_stage_preflight_checks_hash_type_symlink_and_executable(self):
         checker = EXP / "tools/check_phone_stage_preflight.py"

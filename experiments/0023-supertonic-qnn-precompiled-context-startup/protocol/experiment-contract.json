@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0023-supertonic-qnn-precompiled-context-startup",
-  "status": "phone_campaign_prepared_waiting_for_review",
+  "status": "complete_phone_context_startup_and_e2e_passed",
   "authorization": {
     "authorized_by": "Moritz via Pi",
     "question": "Can the accepted Supertonic route run all neural components on QNN, and does precompiled EPContext loading reduce cold setup versus source-ONNX QNN compilation?",
@@ -53,10 +53,13 @@
     "setup_boundary": "Process start and per-session construction are both recorded; ready means all four sessions are constructed and the runner can begin generation."
   },
   "minimum_measurements": {
-    "fresh_process_cold_setup_runs_per_arm": 3,
-    "complete_generation_runs_in_each_measured_process": 6,
+    "fresh_process_setup_runs_per_arm": 3,
+    "setup_processes_run_inference": false,
+    "e2e_processes_per_arm": 1,
+    "complete_generation_runs_per_e2e_process": 6,
     "first_run_index": 0,
     "warm_run_indices": [1, 2, 3, 4, 5],
+    "separate_profiled_context_proof_processes": 1,
     "rtf": "generation seconds divided by actual emitted audio seconds"
   },
   "claim_critical_safeguards": [
@@ -91,6 +94,23 @@
     "pre_adb_blocker_fix": "Stage copy now preserves executable mode; the shared campaign/test preflight rejects symlinks, non-regular runner files, wrong hash, missing executable bits or manifest drift before ADB.",
     "phone_campaign": "Three fresh setup processes per arm; one separate six-generation E2E process per arm; one separate profiled context physical-proof process.",
     "transport": "Native Linux /usr/bin/adb adaptation frozen in protocol/phone-transport-contract.json.",
-    "pause": "Commit and review the prepared runner/stage/transport contract before any phone execution."
+    "phone_result_evidence": "results/phone-campaign/phone-result.json",
+    "phone_result": {
+      "source_setup_values_seconds": [22.1599, 21.6129, 20.9571],
+      "context_setup_values_seconds": [0.785324, 0.496524, 0.497816],
+      "source_setup_median_seconds": 21.6129,
+      "context_setup_median_seconds": 0.497816,
+      "source_minus_context_median_seconds": 21.115084,
+      "source_over_context_median_ratio": 43.415438635961884,
+      "context_setup_reduction_percent": 97.69667189502566,
+      "source_warm_median_rtf": 0.130773,
+      "context_warm_median_rtf": 0.130153,
+      "wav_sha256_both_arms": "47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c",
+      "listening_status": "accepted_exact_historical_hash",
+      "physical_context_proof": "QNN-only ORT nodes plus RPC, accelerator time, accelerator cycles and four HVX threads for all neural calls",
+      "cleanup_and_lock_release": "passed"
+    },
+    "parser_incident": "Device execution and cleanup passed; local json.loads initially rejected a LIBNATIVE prefix. Raw stdout was preserved and validated offline with a fail-closed exactly-one-final-object parser; phone was not rerun.",
+    "pause": "Experiment complete; hand committed evidence to Pi/Alex."
   }
 }

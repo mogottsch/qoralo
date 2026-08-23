@@ -31,8 +31,54 @@ def file_record(path: Path) -> dict[str, Any]:
     return {"path": path.name, "bytes": path.stat().st_size, "sha256": sha(path)}
 
 
+def parse_runner_output(path: Path) -> tuple[dict[str, Any], dict[str, Any]]:
+    raw = path.read_bytes()
+    try:
+        text = raw.decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise SystemExit(f"runner output is not UTF-8: {path}: {error}") from error
+    starts = []
+    offset = 0
+    for line in text.splitlines(keepends=True):
+        stripped = line.lstrip()
+        if stripped.startswith("{"):
+            starts.append(offset + len(line) - len(stripped))
+        offset += len(line)
+    candidates = []
+    decoder = json.JSONDecoder()
+    for start in starts:
+        try:
+            value, length = decoder.raw_decode(text[start:])
+        except json.JSONDecodeError:
+            continue
+        if isinstance(value, dict):
+            candidates.append((start, start + length, value))
+    if len(candidates) != 1:
+        raise SystemExit(
+            f"expected exactly one line-start JSON object in {path}, found {len(candidates)}"
+        )
+    start, end, value = candidates[0]
+    if text[end:].strip():
+        raise SystemExit(f"unexpected non-whitespace suffix after final runner JSON in {path}")
+    prefix = text[:start]
+    stripped_prefix = prefix.strip()
+    diagnostics = {
+        "raw": file_record(path),
+        "prefix_utf8": prefix,
+        "prefix_bytes": len(prefix.encode("utf-8")),
+        "prefix_sha256": hashlib.sha256(prefix.encode("utf-8")).hexdigest(),
+        "stripped_prefix_utf8": stripped_prefix,
+        "stripped_prefix_bytes": len(stripped_prefix.encode("utf-8")),
+        "stripped_prefix_sha256": hashlib.sha256(
+            stripped_prefix.encode("utf-8")
+        ).hexdigest(),
+        "json_start_byte": len(text[:start].encode("utf-8")),
+    }
+    return value, diagnostics
+
+
 def load_json(path: Path) -> dict[str, Any]:
-    return json.loads(path.read_text())
+    return parse_runner_output(path)[0]
 
 
 def parse_memory(path: Path) -> dict[str, int]:
@@ -60,7 +106,7 @@ def setup_summary(root: Path, arm: str) -> dict[str, Any]:
                 "process_entry_to_ready_seconds": result["process_entry_to_ready_seconds"],
                 "max_rss_at_ready_kb": result["max_rss_at_ready_kb"],
                 "sampled_memory": memory,
-                "raw_result": file_record(directory / "stdout.json"),
+                "runner_output": parse_runner_output(directory / "stdout.json")[1],
             }
         )
     sequence = [item["session_create_seconds"]["sequence"] for item in runs]
@@ -126,6 +172,7 @@ def e2e_summary(root: Path, arm: str) -> dict[str, Any]:
     )
     return {
         "runner": result,
+        "runner_output": parse_runner_output(directory / "stdout.json")[1],
         "sampled_memory": parse_memory(directory / "memory.txt"),
         "raw": file_record(raw),
         "wav": wav_info,
@@ -218,6 +265,7 @@ def physical_proof(root: Path) -> dict[str, Any]:
         )
     return {
         "runner": result,
+        "runner_output": parse_runner_output(directory / "stdout.json")[1],
         "sampled_memory": parse_memory(directory / "memory.txt"),
         "ort_profiles": ort_records,
         "qnn_profiles": qnn_records,

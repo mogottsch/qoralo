@@ -2,7 +2,7 @@
 
 ## Current state
 
-All four exact experiment-0011 graph identities passed host QNN HTP external-context generation and independent source-unavailable reload. The preliminary functional wave overlapped experiment 0017, so its timing/resource values remain excluded. After explicit Pi clearance, a separate clean ten-process setup campaign completed under the full-lifetime heavy-RAM lock with five fresh containers per arm and no QNN overlap. Median exact four-session readiness was 24.731559668001864 seconds from source ONNX versus 0.2008688030000485 seconds from external context. A bounded matched Android runner, stage and native-Linux adb transport contract are prepared without phone access. Execution remains paused pending preparation review and device availability.
+The experiment is complete. All four exact experiment-0011 graph identities passed host context generation/source-unavailable reload and a clean host setup comparison. The bounded Android campaign then passed on the authorized Galaxy S23 Ultra: three fresh setup processes per arm, one separate six-generation E2E process per arm, and one separate profiled context physical proof. Median phone readiness fell from 21.6129 seconds to 0.497816 seconds. Both arms emitted the same structurally valid and historically accepted WAV. Remote cleanup and phone-lock release were verified.
 
 ## Frozen pragmatic scope
 
@@ -76,17 +76,21 @@ The current retained Android ORT 1.27.1 library hash is `643c6f6fd3d2b375ca8f240
 
 The first approved invocation failed at the local pre-ADB executable check because the correct runner bytes had been copied as mode 0644. No device command ran, no remote stage was created, the lock was released, and cleanup was `not_created`. That attempt is preserved in `results/phone-preflight-blocker.json`; preparation now freezes and tests the corrected mode-preserving path before retry review.
 
-## Next execution sequence after preparation review
+## Completed phone sequence
 
-1. Wait for actual device availability; do not expand the bounded campaign.
-2. Acquire `artifacts/locks/phone.lock`; use native Linux `/usr/bin/adb`; verify exactly serial `R5CW81PR8SY`, manufacturer `samsung`, model `SM-S918B`, device `dm3q`, SoC `SM8550`, ABI `arm64-v8a`, Android 16/API 36, boot complete, verified boot green, flash locked and authorized state.
-3. Use unique scoped staging, minimum-free-space and remote hash gates, no personal settings/data, evidence pull, cleanup verification and lock release.
-4. Collect exactly three clean fresh-process phone setup runs per arm. Record process-entry-to-ready and each session construction time; compare distributions without a minimum-speedup gate.
-5. Run one separate six-generation E2E process per arm: one first plus five same-session warm generations with full deterministic state reset. Record actual WAV duration and RTF.
-6. Delete source models and verify absence before every context-arm process.
-7. Run one separate profiled context generation and require QNN-only ORT nodes plus RPC/accelerator/cycle/four-HVX-thread evidence. Exclude it from setup/E2E timing.
-8. Validate WAV RIFF/PCM structure, sample rate, channel count, samples, duration and SHA-256. Record numerical differences descriptively. Transfer historical listening only for an exact accepted WAV hash; otherwise mark `not_reviewed`.
-9. Commit only 0023 evidence and notify Pi. Alex owns dashboard ingestion.
+1. Acquired `artifacts/locks/phone.lock` and verified exactly serial `R5CW81PR8SY`, manufacturer `samsung`, model `SM-S918B`, device `dm3q`, SoC `SM8550`, ABI `arm64-v8a`, Android 16/API 36, boot complete, verified boot green, flash locked and authorized state.
+2. Used unique scoped staging, minimum-free-space and remote hash gates, no personal settings/data, evidence pull, cleanup verification and lock release.
+3. Collected exactly three fresh-process phone setup runs per arm with process-entry-to-ready and each session construction time.
+4. Ran one separate six-generation E2E process per arm: one first plus five same-session warm generations with deterministic full generation-state reset.
+5. Deleted source models and verified absence before every context-arm process.
+6. Ran one separate profiled context generation and proved QNN-only ORT nodes plus RPC/accelerator/cycle/four-HVX-thread evidence, excluded from setup/E2E timing.
+7. Validated both WAVs as 729,746-frame mono PCM16 44.1 kHz. They are byte-identical to each other and to the exact accepted experiment-0011 all-HTP hash.
+8. After the device run, fixed a local noisy-stdout parser offline without rerunning the phone; preserved every raw stdout byte and diagnostic prefix hash.
+9. Verified scoped remote cleanup and nonblocking phone-lock release.
+
+## Remaining handoff
+
+Commit only 0023 evidence and notify Pi with the exact result/sample hashes and metrics. Alex owns dashboard ingestion.
 
 ## Validation
 

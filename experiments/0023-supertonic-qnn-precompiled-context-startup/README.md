@@ -1,6 +1,6 @@
 # Experiment 0023 — Supertonic QNN precompiled-context startup
 
-**Status: clean isolated host setup campaign passed with five fresh processes per arm. Median exact four-session setup was 24.7316 s from source ONNX versus 0.2009 s from external EPContext, an observed 24.5307 s / 99.1878% reduction. A bounded matched phone runner/stage is prepared but not executed; phone work remains paused pending preparation review and device availability.**
+**Status: complete. On the Galaxy S23 Ultra, median four-session QNN setup was 21.6129 s from source ONNX versus 0.497816 s from external EPContext, a 21.115084 s / 97.6967% reduction. Both arms produced the same structurally valid, previously accepted WAV, and a separate source-unavailable context run physically proved all neural calls on HTP.**
 
 ## Question
 
@@ -60,13 +60,32 @@ See [`results/phone-preparation.json`](results/phone-preparation.json) and [`pro
 
 The first approved invocation failed closed locally before ADB because stage assembly had copied the correct runner bytes without its executable mode. The phone lock was acquired and released, no remote stage existed, and cleanup reported `not_created`. [`results/phone-preflight-blocker.json`](results/phone-preflight-blocker.json) preserves the attempt. Stage assembly now preserves metadata explicitly, and the exact campaign preflight is a shared checker that rejects symlinks, non-regular files, a wrong hash, or missing executable bits before any ADB command.
 
-## Next gates
+## Physical-phone result
 
-1. Obtain review of the committed phone preparation.
-2. When the device is available, run the bounded campaign without expanding scope.
-3. On the authorized Galaxy S23 Ultra, prove all four neural sessions with fallback disabled and physical QNN/RPC evidence.
-4. Run at least three clean fresh-process phone setup measurements per arm, using identical effective graphs/config/input and exact timing boundaries.
-5. Produce and structurally validate an E2E WAV. Numerical and byte differences are descriptive, not execution blockers.
-6. Commit only 0023 evidence and hand the commit to Pi; Alex owns dashboard ingestion.
+The corrected bounded campaign ran on the authorized Samsung SM-S918B / SM8550 with Android 16/API 36, verified boot green and flash locked. It used the committed native Linux adb transport, verified the full remote stage, deleted source ONNX before the context arm, pulled the evidence, removed the unique remote root, verified its absence and released `phone.lock`.
+
+| Arm | Three fresh setup values (s) | Median | Min–max | Population σ | Peak sampled PSS range |
+|---|---|---:|---:|---:|---:|
+| Source ONNX | 22.1599, 21.6129, 20.9571 | 21.6129 | 20.9571–22.1599 | 0.49171 | 1,341,123–1,354,631 KiB |
+| External context | 0.785324, 0.496524, 0.497816 | 0.497816 | 0.496524–0.785324 | 0.135838 | 162,301–162,649 KiB |
+
+Observed median setup delta: **21.115084 seconds**. Source/context ratio: **43.4154×**. Context setup reduction: **97.6967%**. This is session readiness only; it excludes inference.
+
+A separate E2E process per arm performed one first generation plus five same-session warm generations:
+
+| Arm | First latency / RTF | Warm median latency / RTF |
+|---|---:|---:|
+| Source ONNX | 2.17811 s / 0.131628 | 2.16397 s / 0.130773 |
+| External context | 2.15767 s / 0.130393 | 2.15371 s / 0.130153 |
+
+Both arms emitted 729,746 mono PCM16 samples at 44.1 kHz (16.547528 s) and were byte-identical in float output and WAV. WAV SHA-256 is `47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c`, exactly the Moritz-accepted experiment-0011 all-HTP WAV, so the existing exact-hash listening verdict applies. The listening copy is [`samples/supertonic-stable-softplus-qnn-context.wav`](samples/supertonic-stable-softplus-qnn-context.wav).
+
+One separate profiled context process, with source ONNX unavailable and fallback disabled, recorded QNN-only ORT node events for duration, text, five vector calls and vocoder. Every QNN profile contained RPC time, accelerator time, accelerator cycles and four-HVX-thread evidence. It is excluded from setup and E2E timing.
+
+The device processes all passed, but the first local validation invocation rejected a native `LIBNATIVE` prefix before source-arm JSON. No phone rerun occurred. The offline parser now requires exactly one final line-start JSON object, rejects zero/multiple/malformed candidates, preserves the raw stdout byte-for-byte, and hashes the exact diagnostic prefix. Cleanup had already completed successfully. Full evidence is in [`results/phone-campaign/phone-result.json`](results/phone-campaign/phone-result.json).
+
+## Handoff
+
+The experiment evidence is complete. Alex owns dashboard ingestion; no dashboard paths are edited here.
 
 See [`protocol/experiment-contract.json`](protocol/experiment-contract.json) and [`PLAN.md`](PLAN.md).

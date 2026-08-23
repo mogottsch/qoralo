@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0023-supertonic-qnn-precompiled-context-startup",
-  "status": "prepared_not_executed",
+  "status": "executed_passed",
   "platform_adaptation": {
     "host": "native Manjaro Linux",
     "historical_transport": "Windows adb.exe under /mnt/c with ADB_LIBUSB=1",
@@ -50,10 +50,12 @@
     "cleanup": "trap removes only the unique scoped root and verifies it is absent before releasing the lock"
   },
   "campaign": {
+    "result_path": "results/phone-campaign/phone-result.json",
     "setup": "three fresh runner processes per arm; setup action creates four sessions and performs no inference",
     "e2e": "one fresh process per arm, one first plus five same-session warm complete generations",
     "physical_proof": "one separate context-arm detailed-profile process with one complete generation",
     "source_unavailable_for_context": "source-models directory is deleted and absence verified before any context-arm process",
-    "profiling_separation": "profiled proof is excluded from setup and E2E timing summaries"
+    "profiling_separation": "profiled proof is excluded from setup and E2E timing summaries",
+    "result": "all nine native runner processes passed; pulled evidence validated offline; scoped remote cleanup and phone-lock release verified"
   }
 }
