@@ -6,6 +6,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
+import stat
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -44,6 +46,13 @@ def run(args: argparse.Namespace) -> None:
     if contract["current_checkpoint"]["pause"] != "Commit and review the prepared runner/stage/transport contract before any phone execution.":
         raise SystemExit("phone review gate drift")
     runner = stage / "runner"
+    expected_runner_sha = "00016c567b51c926c4c1bbdaaf21d05265d27c69e358e48ff34280c52635ce11"
+    if runner.is_symlink() or not runner.exists() or not stat.S_ISREG(runner.stat().st_mode):
+        raise SystemExit("staged runner must be a regular non-symlink file")
+    if sha(runner) != expected_runner_sha:
+        raise SystemExit("staged runner hash mismatch")
+    if not os.access(runner, os.X_OK) or runner.stat().st_mode & 0o111 == 0:
+        raise SystemExit("staged runner is not executable")
     file_output_raw = subprocess.check_output(["file", str(runner)], text=True).strip()
     file_output = file_output_raw.split(": ", 1)[-1]
     if "ARM aarch64" not in file_output or "Android 28" not in file_output:
@@ -78,6 +87,8 @@ def run(args: argparse.Namespace) -> None:
             "android_api": 28,
             "architecture": "arm64-v8a / AArch64 PIE",
             "warnings": "compiled with -Wall -Wextra -Werror",
+            "stage_executable": True,
+            "stage_mode_octal": oct(runner.stat().st_mode & 0o777),
         },
         "stage": {
             "manifest": {**record(manifest), "entries": len(entries)},
@@ -95,6 +106,7 @@ def run(args: argparse.Namespace) -> None:
         "campaign": {
             "script": record(args.campaign_script),
             "validator": record(args.validator),
+            "local_stage_preflight": record(args.stage_preflight),
             "setup": "three fresh native runner processes per arm; four-session readiness only",
             "e2e": "one fresh process per arm; one first plus five same-session warm complete generations",
             "physical_proof": "one separate context process; one profiled complete generation",
@@ -119,6 +131,7 @@ def run(args: argparse.Namespace) -> None:
             "runner_cross_compile": "passed",
             "runner_dependency_check": "passed",
             "stage_hash_check": "passed",
+            "runner_regular_non_symlink_expected_hash_executable_check": "passed",
             "campaign_bash_syntax": "passed",
             "python_compile": "passed",
             "phone_access_during_preparation": False,
@@ -137,6 +150,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--build-script", type=Path, required=True)
     parser.add_argument("--campaign-script", type=Path, required=True)
     parser.add_argument("--validator", type=Path, required=True)
+    parser.add_argument("--stage-preflight", type=Path, required=True)
     parser.add_argument("--transport", type=Path, required=True)
     parser.add_argument("--contract", type=Path, required=True)
     parser.add_argument("--readelf", type=Path, required=True)

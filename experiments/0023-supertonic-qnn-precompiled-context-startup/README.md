@@ -58,6 +58,8 @@ The bounded campaign contains exactly:
 
 See [`results/phone-preparation.json`](results/phone-preparation.json) and [`protocol/phone-transport-contract.json`](protocol/phone-transport-contract.json). No ADB/device command was run during preparation.
 
+The first approved invocation failed closed locally before ADB because stage assembly had copied the correct runner bytes without its executable mode. The phone lock was acquired and released, no remote stage existed, and cleanup reported `not_created`. [`results/phone-preflight-blocker.json`](results/phone-preflight-blocker.json) preserves the attempt. Stage assembly now preserves metadata explicitly, and the exact campaign preflight is a shared checker that rejects symlinks, non-regular files, a wrong hash, or missing executable bits before any ADB command.
+
 ## Next gates
 
 1. Obtain review of the committed phone preparation.

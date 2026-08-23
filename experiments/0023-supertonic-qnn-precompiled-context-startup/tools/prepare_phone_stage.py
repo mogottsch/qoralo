@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import shutil
+import stat
 import struct
 import subprocess
 from pathlib import Path
@@ -27,6 +28,7 @@ QNN_HASHES = {
 }
 ORT_HASH = "643c6f6fd3d2b375ca8f2407a1695acaf55320b8e947adc4284665640fdc3ae9"
 TRANSCRIPT_HASH = "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f"
+RUNNER_HASH = "00016c567b51c926c4c1bbdaaf21d05265d27c69e358e48ff34280c52635ce11"
 
 
 def sha(path: Path) -> str:
@@ -38,16 +40,23 @@ def sha(path: Path) -> str:
 
 
 def copy_checked(source: Path, destination: Path, expected: str | None = None) -> dict[str, Any]:
-    if not source.is_file():
-        raise SystemExit(f"missing source: {source}")
+    if source.is_symlink() or not source.exists() or not stat.S_ISREG(source.stat().st_mode):
+        raise SystemExit(f"source must be a regular non-symlink file: {source}")
     actual = sha(source)
     if expected and actual != expected:
         raise SystemExit(f"hash mismatch for {source}: expected {expected}, got {actual}")
     destination.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copyfile(source, destination)
+    shutil.copy2(source, destination)
+    if destination.is_symlink() or not stat.S_ISREG(destination.stat().st_mode):
+        raise SystemExit(f"destination must be a regular non-symlink file: {destination}")
     if sha(destination) != actual:
         raise SystemExit(f"copy hash mismatch: {destination}")
-    return {"source": str(source), "bytes": destination.stat().st_size, "sha256": actual}
+    return {
+        "source": str(source),
+        "bytes": destination.stat().st_size,
+        "sha256": actual,
+        "mode_octal": oct(destination.stat().st_mode & 0o777),
+    }
 
 
 def flatten(value: Any):
@@ -105,14 +114,18 @@ def run(args: argparse.Namespace) -> None:
         "schema_version": 1,
         "experiment": "0023-supertonic-qnn-precompiled-context-startup",
         "status": "phone_stage_prepared_not_executed",
-        "runner": copy_checked(args.runner, output / "runner"),
+        "runner": copy_checked(args.runner, output / "runner", RUNNER_HASH),
         "runtime": {},
         "source_graphs": {},
         "contexts": {},
     }
+    staged_runner = output / "runner"
+    if staged_runner.stat().st_mode & 0o111 == 0:
+        raise SystemExit("staged runner executable bits were not preserved")
     provenance["runner"].update(
         source_sha256=sha(args.runner_source),
         file_output=subprocess.check_output(["file", str(args.runner)], text=True).strip(),
+        executable=True,
     )
     provenance["runtime"]["libonnxruntime.so"] = copy_checked(
         args.ort, output / "lib/libonnxruntime.so", ORT_HASH

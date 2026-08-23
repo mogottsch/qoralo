@@ -2,14 +2,19 @@
   "campaign": {
     "e2e": "one fresh process per arm; one first plus five same-session warm complete generations",
     "listening_policy": "exact historical accepted hash transfers; any byte-different WAV is not_reviewed",
+    "local_stage_preflight": {
+      "bytes": 2017,
+      "path": "check_phone_stage_preflight.py",
+      "sha256": "07ce4a7259082f5183d89cdb4df459b2de886ce549242f400be12506c8c75e57"
+    },
     "memory": "100 ms sampled /proc/<pid>/smaps_rollup PSS plus VmHWM and runner getrusage max RSS",
     "numerical_policy": "descriptive only; no equivalence blocker",
     "outputs": "729746-sample mono PCM16 44100 Hz WAV plus float32 raw",
     "physical_proof": "one separate context process; one profiled complete generation",
     "script": {
-      "bytes": 8080,
+      "bytes": 8315,
       "path": "run_phone_campaign.sh",
-      "sha256": "d04fc420245f78942ecb520390f54ae2251b6120d9eaba158471f51f972a05c2"
+      "sha256": "ca0ab1650ebd08bc74e6a345973960d1e250a3b23596d2224c807ba4769cde4d"
     },
     "setup": "three fresh native runner processes per arm; four-session readiness only",
     "source_unavailable": "source-models deleted and absence verified before context setup/E2E/proof",
@@ -55,6 +60,8 @@
       "path": "supertonic_qnn_context_runner.cc",
       "sha256": "63b7b5256ed0c0194cb61cb5d8d22523debb2a862b2c40d206e8bc9a9f08d25f"
     },
+    "stage_executable": true,
+    "stage_mode_octal": "0o755",
     "warnings": "compiled with -Wall -Wextra -Werror"
   },
   "runtime_adaptation": {
@@ -175,9 +182,9 @@
         "sha256": "643c6f6fd3d2b375ca8f2407a1695acaf55320b8e947adc4284665640fdc3ae9"
       },
       {
-        "bytes": 5339,
+        "bytes": 5628,
         "path": "protocol/experiment-contract.json",
-        "sha256": "3e3c25a06230e78dba4167e55504a19386e383edfb4d0ca7ddc520a7d2e90fac"
+        "sha256": "f0af44ec375aa3abe0ea5b5bcf60e05fc8be849370f8512e53bbf1c98f59176f"
       },
       {
         "bytes": 2664,
@@ -210,9 +217,9 @@
         "sha256": "35b90eeae4a01d06f82dccc903a63d23c95eb2d9095ffa0d62f2cf151817c7c7"
       },
       {
-        "bytes": 11228,
+        "bytes": 11873,
         "path": "stage-provenance.json",
-        "sha256": "f9a50a14563d96c84d342e80be32fd76d4eeb9c7b8bdb1bcd0fd79f6ca358af9"
+        "sha256": "891bfb0aba7fc42ad013521a47fecd1ce9b3721affe96992c259c264121162c9"
       },
       {
         "bytes": 230,
@@ -225,14 +232,14 @@
       "bytes": 2424,
       "entries": 26,
       "path": "stage-manifest.sha256",
-      "sha256": "fc644080e2e0f6b0308e549f688b88161a626e498256aba093ce8342b79d8cb9"
+      "sha256": "73684c3050ea6ac980166b9f9ca2ffa7711f2d4634c3aee95a6b13928e241660"
     },
     "provenance": {
-      "bytes": 11228,
+      "bytes": 11873,
       "path": "stage-provenance.json",
-      "sha256": "f9a50a14563d96c84d342e80be32fd76d4eeb9c7b8bdb1bcd0fd79f6ca358af9"
+      "sha256": "891bfb0aba7fc42ad013521a47fecd1ce9b3721affe96992c259c264121162c9"
     },
-    "total_bytes_excluding_manifest": 736698067
+    "total_bytes_excluding_manifest": 736699001
   },
   "status": "phone_campaign_prepared_not_executed",
   "transport": {
@@ -267,6 +274,7 @@
     "python_compile": "passed",
     "runner_cross_compile": "passed",
     "runner_dependency_check": "passed",
+    "runner_regular_non_symlink_expected_hash_executable_check": "passed",
     "stage_hash_check": "passed"
   }
 }

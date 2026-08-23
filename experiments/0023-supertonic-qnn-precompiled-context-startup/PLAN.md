@@ -66,12 +66,15 @@ Both modes set `session.disable_cpu_ep_fallback=1`. Generation additionally sets
 
 - [`phone/supertonic_qnn_context_runner.cc`](phone/supertonic_qnn_context_runner.cc) supports matched `source`/`context` arms and separate `setup`/`e2e`/`proof` actions.
 - [`tools/build_phone_runner.sh`](tools/build_phone_runner.sh) cross-compiles Android API 28 AArch64 with warnings as errors.
-- [`tools/prepare_phone_stage.py`](tools/prepare_phone_stage.py) verifies every graph/context/runtime hash and produces the ignored stage plus remote manifest.
+- [`tools/prepare_phone_stage.py`](tools/prepare_phone_stage.py) verifies every graph/context/runtime hash, rejects symlink/non-regular sources, preserves file metadata, and produces the ignored stage plus remote manifest.
+- [`tools/check_phone_stage_preflight.py`](tools/check_phone_stage_preflight.py) is invoked verbatim by the campaign and tests; it requires a regular non-symlink runner with the exact expected hash and executable bits, then verifies the complete stage manifest.
 - [`protocol/phone-transport-contract.json`](protocol/phone-transport-contract.json) documents native Linux `/usr/bin/adb` as the platform adaptation; the historical Windows path is absent.
 - [`device/run_phone_campaign.sh`](device/run_phone_campaign.sh) holds `phone.lock`, performs identity/space/hash gates, runs the bounded campaign, samples memory, pulls evidence and verifies scoped cleanup.
 - [`tools/validate_phone_campaign.py`](tools/validate_phone_campaign.py) separates setup, E2E and profiled proof evidence; numerical differences are descriptive.
 
 The current retained Android ORT 1.27.1 library hash is `643c6f6fd3d2b375ca8f2407a1695acaf55320b8e947adc4284665640fdc3ae9`. The historical 0011 library hash is not locally retained. Both 0023 arms therefore use the current rebuild identically; this is a documented pragmatic runtime adaptation, not a claim of exact 0011 binary reuse.
+
+The first approved invocation failed at the local pre-ADB executable check because the correct runner bytes had been copied as mode 0644. No device command ran, no remote stage was created, the lock was released, and cleanup was `not_created`. That attempt is preserved in `results/phone-preflight-blocker.json`; preparation now freezes and tests the corrected mode-preserving path before retry review.
 
 ## Next execution sequence after preparation review
 

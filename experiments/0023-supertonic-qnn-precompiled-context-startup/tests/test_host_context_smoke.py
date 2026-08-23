@@ -1,5 +1,8 @@
 import hashlib
 import json
+import os
+import subprocess
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -171,6 +174,8 @@ class HostContextSmokeTest(unittest.TestCase):
         self.assertRegex(PREPARATION["stage"]["manifest"]["sha256"], r"^[0-9a-f]{64}$")
         self.assertIn("ARM aarch64", PREPARATION["runner"]["binary"]["file_output"])
         self.assertEqual(PREPARATION["runner"]["android_api"], 28)
+        self.assertTrue(PREPARATION["runner"]["stage_executable"])
+        self.assertEqual(PREPARATION["runner"]["stage_mode_octal"], "0o755")
         self.assertEqual(
             PREPARATION["runtime_adaptation"]["sha256"],
             "643c6f6fd3d2b375ca8f2407a1695acaf55320b8e947adc4284665640fdc3ae9",
@@ -189,6 +194,7 @@ class HostContextSmokeTest(unittest.TestCase):
         campaign_paths = {
             "script": EXP / "device/run_phone_campaign.sh",
             "validator": EXP / "tools/validate_phone_campaign.py",
+            "local_stage_preflight": EXP / "tools/check_phone_stage_preflight.py",
         }
         for key, path in campaign_paths.items():
             record = PREPARATION["campaign"][key]
@@ -213,6 +219,52 @@ class HostContextSmokeTest(unittest.TestCase):
         self.assertIn('if (a.action == "setup")', runner)
         self.assertIn('HISTORICAL_ACCEPTED_WAV', validator)
         self.assertIn('descriptive only; no numerical acceptance gate', validator)
+
+    def test_failed_phone_attempt_is_preserved_as_pre_adb(self):
+        blocker = json.loads((EXP / "results/phone-preflight-blocker.json").read_text())
+        self.assertEqual(blocker["result"], "failed_closed_before_adb")
+        self.assertEqual(blocker["exit_code"], 5)
+        self.assertTrue(blocker["scope"]["phone_lock_acquired_nonblocking"])
+        self.assertTrue(blocker["scope"]["phone_lock_released"])
+        self.assertFalse(blocker["scope"]["adb_or_device_commands_executed"])
+        self.assertFalse(blocker["scope"]["remote_stage_created"])
+        self.assertEqual(blocker["scope"]["cleanup_verification"], "not_created")
+
+    def test_exact_phone_stage_preflight_checks_hash_type_symlink_and_executable(self):
+        checker = EXP / "tools/check_phone_stage_preflight.py"
+        payload = b"deterministic-test-runner"
+        digest = hashlib.sha256(payload).hexdigest()
+        with tempfile.TemporaryDirectory() as temporary:
+            stage = Path(temporary)
+            runner = stage / "runner"
+            runner.write_bytes(payload)
+            runner.chmod(0o755)
+            (stage / "stage-manifest.sha256").write_text(f"{digest}  runner\n")
+            command = [
+                "python3",
+                str(checker),
+                "--stage",
+                str(stage),
+                "--expected-runner-sha",
+                digest,
+            ]
+            passed = subprocess.run(command, text=True, capture_output=True)
+            self.assertEqual(passed.returncode, 0, passed.stderr)
+            self.assertIn("runner_mode=0o755", passed.stdout)
+
+            runner.chmod(0o644)
+            not_executable = subprocess.run(command, text=True, capture_output=True)
+            self.assertNotEqual(not_executable.returncode, 0)
+            self.assertIn("not executable", not_executable.stderr)
+
+            runner.unlink()
+            target = stage / "runner-target"
+            target.write_bytes(payload)
+            target.chmod(0o755)
+            os.symlink(target.name, runner)
+            symlink = subprocess.run(command, text=True, capture_output=True)
+            self.assertNotEqual(symlink.returncode, 0)
+            self.assertIn("must not be a symlink", symlink.stderr)
 
 
 if __name__ == "__main__":

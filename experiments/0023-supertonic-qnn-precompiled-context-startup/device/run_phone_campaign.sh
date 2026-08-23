@@ -7,6 +7,7 @@ STAGE="$EXP/.local/phone-stage"
 ADB=/usr/bin/adb
 SERIAL=R5CW81PR8SY
 EXPECTED_ADB_SHA=506163fd859265bc895b64eeba28252fb0f7864decf8b42dac3cbf9711240f9f
+EXPECTED_RUNNER_SHA=00016c567b51c926c4c1bbdaaf21d05265d27c69e358e48ff34280c52635ce11
 RUN_ID="$(date -u +%Y%m%dT%H%M%SZ)-$$"
 REMOTE="/data/local/tmp/vibevoice-0023-$RUN_ID"
 OUT="$EXP/work/phone-$RUN_ID"
@@ -34,7 +35,10 @@ trap cleanup EXIT
 
 [[ -x $ADB ]] || { echo "missing Linux adb" >&2; exit 4; }
 [[ $(sha256sum "$ADB" | awk '{print $1}') == "$EXPECTED_ADB_SHA" ]] || { echo "adb hash mismatch" >&2; exit 4; }
-[[ -f "$STAGE/stage-manifest.sha256" && -x "$STAGE/runner" ]] || { echo "phone stage absent" >&2; exit 5; }
+python3 "$EXP/tools/check_phone_stage_preflight.py" \
+  --stage "$STAGE" --expected-runner-sha "$EXPECTED_RUNNER_SHA" \
+  >"$OUT/local-stage-preflight.txt" 2>"$OUT/local-stage-preflight.stderr.log" \
+  || { echo "phone stage preflight failed" >&2; exit 5; }
 if git status --porcelain --untracked-files=all -- "$EXP" | grep -q .; then
   echo "0023 tracked preparation is not committed/clean" >&2
   exit 6

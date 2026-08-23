@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "experiment": "0023-supertonic-qnn-precompiled-context-startup",
+  "recorded_date": "2026-08-23",
+  "attempt_commit": "7b4690a",
+  "result": "failed_closed_before_adb",
+  "exit_code": 5,
+  "stderr": "phone stage absent",
+  "root_cause": "The committed campaign preflight requires an executable staged runner. prepare_phone_stage.py copied the correct runner bytes with shutil.copyfile but did not preserve its executable mode, so `.local/phone-stage/runner` was mode 0644 rather than executable.",
+  "scope": {
+    "phone_lock_acquired_nonblocking": true,
+    "phone_lock_released": true,
+    "adb_or_device_commands_executed": false,
+    "remote_stage_created": false,
+    "cleanup_verification": "not_created",
+    "qnn_or_runner_process_started": false
+  },
+  "ignored_attempt_evidence": "work/phone-20260823T082753Z-219182/cleanup-verification.txt",
+  "fix": "Use metadata-preserving copy2 for stage assembly and make executable-mode validation part of committed preparation finalization/tests before any retry.",
+  "retry_gate": "Commit and review the corrected phone preparation before retrying."
+}

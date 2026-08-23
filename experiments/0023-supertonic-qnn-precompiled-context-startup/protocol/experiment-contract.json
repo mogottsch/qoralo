@@ -87,6 +87,8 @@
       "context_setup_reduction_percent": 99.1878037386379
     },
     "phone_preparation_evidence": "results/phone-preparation.json",
+    "pre_adb_blocker_evidence": "results/phone-preflight-blocker.json",
+    "pre_adb_blocker_fix": "Stage copy now preserves executable mode; the shared campaign/test preflight rejects symlinks, non-regular runner files, wrong hash, missing executable bits or manifest drift before ADB.",
     "phone_campaign": "Three fresh setup processes per arm; one separate six-generation E2E process per arm; one separate profiled context physical-proof process.",
     "transport": "Native Linux /usr/bin/adb adaptation frozen in protocol/phone-transport-contract.json.",
     "pause": "Commit and review the prepared runner/stage/transport contract before any phone execution."
