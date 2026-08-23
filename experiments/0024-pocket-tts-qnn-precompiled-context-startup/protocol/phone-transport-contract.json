@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "experiment": "0024-pocket-tts-qnn-precompiled-context-startup",
+  "status": "approved_native_transport_pre_retry",
+  "platform_adaptation": {
+    "host": "native Manjaro Linux",
+    "historical_transport": "Windows adb.exe under /mnt/c with ADB_LIBUSB=1",
+    "historical_path_present": false,
+    "selected_transport": "/usr/bin/adb",
+    "reason": "The historical WSL/Windows path is absent on this native Linux host. This is the exact native transport already authorized and proven by experiment 0023."
+  },
+  "adb": {
+    "path": "/usr/bin/adb",
+    "must_be_regular_executable": true,
+    "symlink_allowed": false,
+    "realpath_must_equal_declared_path": true,
+    "sha256": "506163fd859265bc895b64eeba28252fb0f7864decf8b42dac3cbf9711240f9f",
+    "bytes": 2950336,
+    "version_lines_required": [
+      "Android Debug Bridge version 1.0.41",
+      "Version 37.0.0-android-tools",
+      "Installed as /usr/bin/adb"
+    ],
+    "ADB_LIBUSB": "must be unset; the override belonged to the Windows transport"
+  },
+  "lock": {
+    "path": "artifacts/locks/phone.lock",
+    "acquire": "nonblocking flock for each complete identity/stage/run/evidence/cleanup transaction",
+    "child_fd_rule": "close lock FD 9 in every adb child"
+  },
+  "device_gate": {
+    "exactly_one_authorized_device_state": true,
+    "serial": "R5CW81PR8SY",
+    "manufacturer": "samsung",
+    "model": "SM-S918B",
+    "device": "dm3q",
+    "soc": "SM8550",
+    "abi": "arm64-v8a",
+    "boot_completed": "1",
+    "verified_boot_state": "green",
+    "flash_locked": "1"
+  },
+  "safety": {
+    "remote_root": "unique /data/local/tmp/experiment-0024-pocket-context-<arm>-<UTC>-<PID>",
+    "stage_hash_verification": true,
+    "context_source_absence_gate": true,
+    "personal_data_or_settings": "not accessed or changed",
+    "cleanup": "trap removes only the unique scoped root; final gate verifies absence before lock release"
+  }
+}

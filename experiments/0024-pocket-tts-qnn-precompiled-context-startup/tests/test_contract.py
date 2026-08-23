@@ -1,6 +1,7 @@
 import hashlib
 import json
 import os
+import subprocess
 from collections import Counter
 import unittest
 from pathlib import Path
@@ -25,13 +26,38 @@ class ContractTest(unittest.TestCase):
 
     def test_fail_closed_and_device_gates_are_literal(self):
         text = (EXP / "device/run_phone_arm.sh").read_text()
-        for literal in ("session.disable_cpu_ep_fallback", "R5CW81PR8SY", "SM-S918B",
-                        "SM8550", "arm64-v8a", "phone.lock", "ADB_LIBUSB=1",
-                        "PHONE_COORDINATION_CLEARED"):
+        for literal in ("session.disable_cpu_ep_fallback", "R5CW81PR8SY", "manufacturer=samsung",
+                        "SM-S918B", "device=dm3q", "SM8550", "arm64-v8a", "boot=1",
+                        "verified_boot=green", "flash_locked=1", "phone.lock",
+                        "unset ADB_LIBUSB", "PHONE_COORDINATION_CLEARED"):
             if literal == "session.disable_cpu_ep_fallback":
                 self.assertIn(literal, (EXP / "tools/pocket_context_benchmark_runner.cc").read_text())
             else:
                 self.assertIn(literal, text)
+
+    def test_native_adb_transport_is_exact_and_pre_adb_attempt_is_bounded(self):
+        transport = json.loads((EXP / "protocol/phone-transport-contract.json").read_text())
+        adb = Path(transport["adb"]["path"])
+        self.assertEqual(adb, Path("/usr/bin/adb"))
+        self.assertTrue(adb.is_file())
+        self.assertTrue(os.access(adb, os.X_OK))
+        self.assertFalse(adb.is_symlink())
+        self.assertEqual(adb.resolve(), adb)
+        self.assertEqual(hashlib.sha256(adb.read_bytes()).hexdigest(), transport["adb"]["sha256"])
+        version = subprocess.check_output([str(adb), "version"], text=True).splitlines()
+        for line in transport["adb"]["version_lines_required"]:
+            self.assertIn(line, version)
+        runner = (EXP / "device/run_phone_arm.sh").read_text()
+        self.assertIn("ADB=${ADB:-/usr/bin/adb}", runner)
+        self.assertIn(transport["adb"]["sha256"], runner)
+        self.assertIn("! -L $ADB", runner)
+        attempt = json.loads((EXP / "results/pre-adb-transport-attempt.json").read_text())
+        self.assertEqual(attempt["result"], "stopped_before_adb_or_device_access")
+        self.assertTrue(attempt["phone_lock"]["acquired_nonblocking"])
+        self.assertTrue(attempt["phone_lock"]["released"])
+        for field in ("adb_process_started", "device_accessed", "remote_root_created",
+                      "stage_pushed", "runner_started", "measurement"):
+            self.assertFalse(attempt[field])
 
     def test_context_isolation_and_proof(self):
         component = (EXP / "tools/qnn_context_component.py").read_text()

@@ -13,7 +13,17 @@ ROOT=$(cd "$(dirname "$0")/../../.." && pwd)
 EXP="$ROOT/experiments/0024-pocket-tts-qnn-precompiled-context-startup"
 STAGE="$EXP/.local/android-stage-$ARM"
 MANIFEST="$EXP/.local/android-stage-$ARM.sha256"
-ADB=${ADB:-/mnt/c/Users/mgottschling/AppData/Local/Android/platform-tools-pi/platform-tools/adb.exe}
+ADB=${ADB:-/usr/bin/adb}
+EXPECTED_ADB_SHA256=506163fd859265bc895b64eeba28252fb0f7864decf8b42dac3cbf9711240f9f
+[[ $ADB == /usr/bin/adb && -f $ADB && -x $ADB && ! -L $ADB && $(realpath "$ADB") == "$ADB" ]] || {
+  echo authorized_native_adb_identity_failed >&2
+  exit 2
+}
+[[ $(sha256sum "$ADB" | awk '{print $1}') == "$EXPECTED_ADB_SHA256" ]] || {
+  echo authorized_native_adb_hash_failed >&2
+  exit 2
+}
+unset ADB_LIBUSB
 ID="$(date -u +%Y%m%dT%H%M%SZ)-$$"
 TAG=$ARM
 [[ $PHYSICAL_PROOF == yes ]] && TAG="$ARM-proof"
@@ -22,7 +32,10 @@ OUT="$EXP/work/phone-$TAG-$ID"
 mkdir -p "$OUT" "$ROOT/artifacts/locks"
 exec 9>>"$ROOT/artifacts/locks/phone.lock"
 flock -n 9 || { echo phone_lock_busy >&2; exit 3; }
-export ADB_LIBUSB=1
+"$ADB" version </dev/null 9>&- >"$OUT/adb-version.txt"
+grep -Fxq 'Android Debug Bridge version 1.0.41' "$OUT/adb-version.txt"
+grep -Fxq 'Version 37.0.0-android-tools' "$OUT/adb-version.txt"
+grep -Fxq 'Installed as /usr/bin/adb' "$OUT/adb-version.txt"
 adb(){ "$ADB" -s "$SERIAL" "$@" </dev/null 9>&-; }
 cleanup(){ set +e; adb shell "rm -rf '$REMOTE'" >"$OUT/cleanup.stdout" 2>"$OUT/cleanup.stderr"; echo $? >"$OUT/cleanup.exit"; }
 trap cleanup EXIT
@@ -33,16 +46,24 @@ mapfile -t DEVICES < <(printf '%s\n' "$LIST" | awk 'NR>1&&$2=="device"{print $1}
 [[ ${#DEVICES[@]} == 1 && ${DEVICES[0]} == "$SERIAL" ]] || exit 4
 {
   echo serial=$(adb get-serialno | tr -d '\r')
+  echo manufacturer=$(adb shell getprop ro.product.manufacturer | tr -d '\r')
   echo model=$(adb shell getprop ro.product.model | tr -d '\r')
+  echo device=$(adb shell getprop ro.product.device | tr -d '\r')
   echo soc=$(adb shell getprop ro.soc.model | tr -d '\r')
   echo abi=$(adb shell getprop ro.product.cpu.abi | tr -d '\r')
   echo boot=$(adb shell getprop sys.boot_completed | tr -d '\r')
+  echo verified_boot=$(adb shell getprop ro.boot.verifiedbootstate | tr -d '\r')
+  echo flash_locked=$(adb shell getprop ro.boot.flash.locked | tr -d '\r')
 } >"$OUT/identity.txt"
 grep -Fxq serial=$SERIAL "$OUT/identity.txt"
+grep -Fxq manufacturer=samsung "$OUT/identity.txt"
 grep -Fxq model=SM-S918B "$OUT/identity.txt"
+grep -Fxq device=dm3q "$OUT/identity.txt"
 grep -Fxq soc=SM8550 "$OUT/identity.txt"
 grep -Fxq abi=arm64-v8a "$OUT/identity.txt"
 grep -Fxq boot=1 "$OUT/identity.txt"
+grep -Fxq verified_boot=green "$OUT/identity.txt"
+grep -Fxq flash_locked=1 "$OUT/identity.txt"
 adb shell dumpsys thermalservice >"$OUT/thermal-before.txt" || true
 adb shell "dumpsys battery | head -n 25" >"$OUT/battery-before.txt" || true
 

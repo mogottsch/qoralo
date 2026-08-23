@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "date": "2026-08-23",
+  "result": "stopped_before_adb_or_device_access",
+  "run_id": "phone-source-20260823T084843Z-222440",
+  "arm": "source",
+  "exit_code": 127,
+  "gate": "historical transport executable presence",
+  "error": "/mnt/c/Users/mgottschling/AppData/Local/Android/platform-tools-pi/platform-tools/adb.exe: No such file or directory",
+  "phone_lock": {
+    "acquired_nonblocking": true,
+    "released": true
+  },
+  "adb_process_started": false,
+  "device_accessed": false,
+  "remote_root_created": false,
+  "stage_pushed": false,
+  "runner_started": false,
+  "measurement": false,
+  "interpretation": "Pre-ADB launcher/transport error only. It is not a model, context, provider, phone, or cleanup result and is excluded from all measurements.",
+  "resolution": "Adopt the explicitly authorized native /usr/bin/adb transport only after the scoped transport contract/default/tests commit is reviewed and approved. Any retry uses a fresh run ID."
+}
