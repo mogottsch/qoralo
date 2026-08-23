@@ -1,0 +1,395 @@
+{
+  "schema_version": 1,
+  "run": "phone-source-20260823T085318Z-223890",
+  "route": "fixed_alba_fallback_disabled_qnn_context_comparison",
+  "arm": "source",
+  "model_format": "source_onnx",
+  "source_onnx_unavailable": false,
+  "variant": "pocket-fixed-alba-text64-cache512-canonical-v2-0024-reconstruction-derivative",
+  "canonical_transcript": {
+    "version": 2,
+    "bytes": 226,
+    "sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67"
+  },
+  "frontend": {
+    "token_count": 64,
+    "token_fixture_sha256": "56d50c958627be19a7f2c86dde68a537a80f3f6d9087c16f55fde58c4d117c82"
+  },
+  "static_abi": {
+    "capacity": 512,
+    "voice_positions": 126,
+    "text_positions": 64,
+    "frame_cap": 292,
+    "bos_absolute_position": 190
+  },
+  "provider": "QNNExecutionProvider",
+  "cpu_fallback": false,
+  "threads": 1,
+  "setup": {
+    "seconds": 27.0767,
+    "vm_hwm_kb_after_setup": 2422728
+  },
+  "first": {
+    "index": 0,
+    "kind": "first",
+    "wav": {
+      "path": "first.wav",
+      "sha256": "028f8a1e1861f8004619294738d9aa14509b2c3e5e5e626d99113700ab574241",
+      "bytes": 625964,
+      "channels": 1,
+      "sample_width_bytes": 2,
+      "sample_rate_hz": 24000,
+      "samples": 312960,
+      "seconds": 13.04,
+      "peak_abs_pcm16": 20191,
+      "rms_pcm16": 3828.053063144468,
+      "finite": true,
+      "non_silent": true,
+      "unclipped": true,
+      "complete_decode": true
+    },
+    "generation_seconds": 2.24852,
+    "audio_seconds": 13.04,
+    "rtf": 0.172432,
+    "component_seconds": {
+      "text": 0.00419115,
+      "prefill": 0.0178326,
+      "ar": 1.53546,
+      "flow": 0.0926728,
+      "decoder": 0.566989
+    },
+    "eos_step": 160,
+    "latent_frames": 163,
+    "behavior_matches_reference": true,
+    "samples": 312960,
+    "peak_float": 0.616211,
+    "vm_hwm_kb": 2542460
+  },
+  "warm": {
+    "count": 5,
+    "runs": [
+      {
+        "index": 1,
+        "kind": "warm",
+        "wav": {
+          "path": "warm-1.wav",
+          "sha256": "028f8a1e1861f8004619294738d9aa14509b2c3e5e5e626d99113700ab574241",
+          "bytes": 625964,
+          "channels": 1,
+          "sample_width_bytes": 2,
+          "sample_rate_hz": 24000,
+          "samples": 312960,
+          "seconds": 13.04,
+          "peak_abs_pcm16": 20191,
+          "rms_pcm16": 3828.053063144468,
+          "finite": true,
+          "non_silent": true,
+          "unclipped": true,
+          "complete_decode": true
+        },
+        "generation_seconds": 2.18729,
+        "audio_seconds": 13.04,
+        "rtf": 0.167737,
+        "component_seconds": {
+          "text": 0.00065776,
+          "prefill": 0.0124179,
+          "ar": 1.50614,
+          "flow": 0.0921204,
+          "decoder": 0.548143
+        },
+        "eos_step": 160,
+        "latent_frames": 163,
+        "behavior_matches_reference": true,
+        "samples": 312960,
+        "peak_float": 0.616211,
+        "vm_hwm_kb": 2557840
+      },
+      {
+        "index": 2,
+        "kind": "warm",
+        "wav": {
+          "path": "warm-2.wav",
+          "sha256": "028f8a1e1861f8004619294738d9aa14509b2c3e5e5e626d99113700ab574241",
+          "bytes": 625964,
+          "channels": 1,
+          "sample_width_bytes": 2,
+          "sample_rate_hz": 24000,
+          "samples": 312960,
+          "seconds": 13.04,
+          "peak_abs_pcm16": 20191,
+          "rms_pcm16": 3828.053063144468,
+          "finite": true,
+          "non_silent": true,
+          "unclipped": true,
+          "complete_decode": true
+        },
+        "generation_seconds": 2.18268,
+        "audio_seconds": 13.04,
+        "rtf": 0.167383,
+        "component_seconds": {
+          "text": 0.00042526,
+          "prefill": 0.0149068,
+          "ar": 1.50601,
+          "flow": 0.0914416,
+          "decoder": 0.544825
+        },
+        "eos_step": 160,
+        "latent_frames": 163,
+        "behavior_matches_reference": true,
+        "samples": 312960,
+        "peak_float": 0.616211,
+        "vm_hwm_kb": 2557840
+      },
+      {
+        "index": 3,
+        "kind": "warm",
+        "wav": {
+          "path": "warm-3.wav",
+          "sha256": "028f8a1e1861f8004619294738d9aa14509b2c3e5e5e626d99113700ab574241",
+          "bytes": 625964,
+          "channels": 1,
+          "sample_width_bytes": 2,
+          "sample_rate_hz": 24000,
+          "samples": 312960,
+          "seconds": 13.04,
+          "peak_abs_pcm16": 20191,
+          "rms_pcm16": 3828.053063144468,
+          "finite": true,
+          "non_silent": true,
+          "unclipped": true,
+          "complete_decode": true
+        },
+        "generation_seconds": 2.18959,
+        "audio_seconds": 13.04,
+        "rtf": 0.167914,
+        "component_seconds": {
+          "text": 0.000535156,
+          "prefill": 0.0121305,
+          "ar": 1.50316,
+          "flow": 0.0919539,
+          "decoder": 0.544509
+        },
+        "eos_step": 160,
+        "latent_frames": 163,
+        "behavior_matches_reference": true,
+        "samples": 312960,
+        "peak_float": 0.616211,
+        "vm_hwm_kb": 2557840
+      },
+      {
+        "index": 4,
+        "kind": "warm",
+        "wav": {
+          "path": "warm-4.wav",
+          "sha256": "028f8a1e1861f8004619294738d9aa14509b2c3e5e5e626d99113700ab574241",
+          "bytes": 625964,
+          "channels": 1,
+          "sample_width_bytes": 2,
+          "sample_rate_hz": 24000,
+          "samples": 312960,
+          "seconds": 13.04,
+          "peak_abs_pcm16": 20191,
+          "rms_pcm16": 3828.053063144468,
+          "finite": true,
+          "non_silent": true,
+          "unclipped": true,
+          "complete_decode": true
+        },
+        "generation_seconds": 2.17399,
+        "audio_seconds": 13.04,
+        "rtf": 0.166717,
+        "component_seconds": {
+          "text": 0.000670416,
+          "prefill": 0.0122097,
+          "ar": 1.497,
+          "flow": 0.0917863,
+          "decoder": 0.536464
+        },
+        "eos_step": 160,
+        "latent_frames": 163,
+        "behavior_matches_reference": true,
+        "samples": 312960,
+        "peak_float": 0.616211,
+        "vm_hwm_kb": 2557840
+      },
+      {
+        "index": 5,
+        "kind": "warm",
+        "wav": {
+          "path": "warm-5.wav",
+          "sha256": "028f8a1e1861f8004619294738d9aa14509b2c3e5e5e626d99113700ab574241",
+          "bytes": 625964,
+          "channels": 1,
+          "sample_width_bytes": 2,
+          "sample_rate_hz": 24000,
+          "samples": 312960,
+          "seconds": 13.04,
+          "peak_abs_pcm16": 20191,
+          "rms_pcm16": 3828.053063144468,
+          "finite": true,
+          "non_silent": true,
+          "unclipped": true,
+          "complete_decode": true
+        },
+        "generation_seconds": 2.19861,
+        "audio_seconds": 13.04,
+        "rtf": 0.168605,
+        "component_seconds": {
+          "text": 0.000760521,
+          "prefill": 0.0127299,
+          "ar": 1.51059,
+          "flow": 0.0923954,
+          "decoder": 0.545322
+        },
+        "eos_step": 160,
+        "latent_frames": 163,
+        "behavior_matches_reference": true,
+        "samples": 312960,
+        "peak_float": 0.616211,
+        "vm_hwm_kb": 2557840
+      }
+    ],
+    "latency_seconds": [
+      2.18729,
+      2.18268,
+      2.18959,
+      2.17399,
+      2.19861
+    ],
+    "rtf": [
+      0.167737,
+      0.167383,
+      0.167914,
+      0.166717,
+      0.168605
+    ],
+    "audio_seconds": [
+      13.04,
+      13.04,
+      13.04,
+      13.04,
+      13.04
+    ],
+    "median_latency_seconds": 2.18729,
+    "median_rtf": 0.167737,
+    "min_rtf": 0.166717,
+    "max_rtf": 0.168605
+  },
+  "determinism": {
+    "all_wav_sha256_identical": true,
+    "sha256": "028f8a1e1861f8004619294738d9aa14509b2c3e5e5e626d99113700ab574241",
+    "state_reset": {
+      "flow_cache": "fresh from immutable packed Alba for every iteration",
+      "decoder": "fresh complete 56-tensor state for every iteration",
+      "noise": "identical rows replayed from start for every iteration",
+      "tokens": "text conditioner rerun from identical IDs every iteration"
+    }
+  },
+  "reference_behavior": {
+    "expected_eos_step": 160,
+    "expected_frames": 163,
+    "observed": [
+      {
+        "index": 0,
+        "eos_step": 160,
+        "latent_frames": 163,
+        "matches_reference": true
+      },
+      {
+        "index": 1,
+        "eos_step": 160,
+        "latent_frames": 163,
+        "matches_reference": true
+      },
+      {
+        "index": 2,
+        "eos_step": 160,
+        "latent_frames": 163,
+        "matches_reference": true
+      },
+      {
+        "index": 3,
+        "eos_step": 160,
+        "latent_frames": 163,
+        "matches_reference": true
+      },
+      {
+        "index": 4,
+        "eos_step": 160,
+        "latent_frames": 163,
+        "matches_reference": true
+      },
+      {
+        "index": 5,
+        "eos_step": 160,
+        "latent_frames": 163,
+        "matches_reference": true
+      }
+    ],
+    "all_match_reference": true,
+    "policy": "EOS/frame differences are descriptive and do not fail an otherwise complete structurally valid decode."
+  },
+  "memory": {
+    "method": "getrusage(RUSAGE_SELF).ru_maxrss / process VmHWM on Android",
+    "lifecycle": "cumulative process high-water including setup, all persistent sessions, mappings, caches, buffers, and all completed generations; QNN contexts included for HTP",
+    "max_vm_hwm_kb": 2557840
+  },
+  "thermal": {
+    "before": {
+      "status": 0,
+      "temperatures_c": {
+        "AP": 34.9,
+        "BAT": 29.5,
+        "SKIN": 32.4
+      },
+      "sha256": "655d321ed4c018035c1864278d014b09cf0084b3674ce618e694bfcd5a40df6c"
+    },
+    "after": {
+      "status": 0,
+      "temperatures_c": {
+        "AP": 51.0,
+        "BAT": 30.0,
+        "SKIN": 34.6
+      },
+      "sha256": "c51bc1b5e5d6ea11d6294ce8cc45d82f613bddc326062cfe07ae271d3a12a7a1"
+    }
+  },
+  "battery": {
+    "before": {
+      "level_percent": 72,
+      "temperature_c": 29.5,
+      "usb_powered": true,
+      "ac_powered": false,
+      "sha256": "b4ae70f65936ad87ec949a97a632bb78e31c79b173d38630063311dd9e9e9312"
+    },
+    "after": {
+      "level_percent": 71,
+      "temperature_c": 30.2,
+      "usb_powered": true,
+      "ac_powered": false,
+      "sha256": "21cfe2f735fd91e4fb6ac43f71cdd12c93451809da8e3ae16c40bee6f2e53949"
+    }
+  },
+  "safety": {
+    "identity": [
+      "serial=R5CW81PR8SY",
+      "manufacturer=samsung",
+      "model=SM-S918B",
+      "device=dm3q",
+      "soc=SM8550",
+      "abi=arm64-v8a",
+      "boot=1",
+      "verified_boot=green",
+      "flash_locked=1"
+    ],
+    "local_remote_stage_hashes_equal": true,
+    "runner_exit": 0,
+    "cleanup_exit": 0,
+    "cleanup_verified": true
+  },
+  "listening": {
+    "status": "not_reviewed",
+    "sha256": "028f8a1e1861f8004619294738d9aa14509b2c3e5e5e626d99113700ab574241",
+    "reason": "Byte-different output requires exact-hash Moritz review; numerical differences are descriptive only."
+  }
+}

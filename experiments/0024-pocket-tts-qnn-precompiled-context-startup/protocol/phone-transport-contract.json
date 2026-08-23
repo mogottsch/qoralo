@@ -26,7 +26,14 @@
   "lock": {
     "path": "artifacts/locks/phone.lock",
     "acquire": "nonblocking flock for each complete identity/stage/run/evidence/cleanup transaction",
-    "child_fd_rule": "close lock FD 9 in every adb child"
+    "child_fd_rule": "close lock FD 9 in every adb child",
+    "cleanup_verification": {
+      "transport_probe_failure": "pending_device_reconnect",
+      "transport_ok_remote_test_exit_0": "remote_present",
+      "transport_ok_remote_test_exit_1": "verified_absent",
+      "other_remote_test_exit": "cleanup_verification_error",
+      "forbidden_inference": "Never interpret an ADB transport failure as remote absence."
+    }
   },
   "device_gate": {
     "exactly_one_authorized_device_state": true,

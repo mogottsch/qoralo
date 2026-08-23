@@ -59,6 +59,39 @@ class ContractTest(unittest.TestCase):
                       "stage_pushed", "runner_started", "measurement"):
             self.assertFalse(attempt[field])
 
+    def test_cleanup_status_is_tri_state(self):
+        helper = EXP / "tools/classify_cleanup_status.py"
+        cases = [
+            (["0", "1"], 0, "verified_absent"),
+            (["0", "0"], 1, "remote_present"),
+            (["1", "99"], 2, "pending_device_reconnect"),
+            (["0", "2"], 3, "cleanup_verification_error"),
+        ]
+        for args, expected_rc, expected_status in cases:
+            result = subprocess.run([str(helper), *args], text=True, capture_output=True)
+            self.assertEqual(result.returncode, expected_rc)
+            self.assertEqual(result.stdout.strip(), expected_status)
+        runner = (EXP / "device/run_phone_arm.sh").read_text()
+        self.assertIn("cleanup-transport.exit", runner)
+        self.assertIn("cleanup-exists.exit", runner)
+        self.assertIn("cleanup_pending_device_reconnect", runner)
+
+    def test_phone_interruption_checkpoint_is_excluded_and_cleanup_pending(self):
+        result = json.loads((EXP / "results/phone-campaign-checkpoint/checkpoint.json").read_text())
+        boundary = result["completed_boundary"]
+        self.assertEqual((boundary["source_runs_complete"], boundary["source_runs_required"]), (3, 3))
+        self.assertEqual((boundary["context_runs_complete"], boundary["context_runs_required"]), (1, 3))
+        self.assertTrue(boundary["source_wav_deterministic"])
+        interruption = result["interruption"]
+        self.assertEqual(interruption["classification"], "external_device_disconnect_incomplete_excluded")
+        self.assertEqual(interruption["runner_adb_exit_code"], 255)
+        self.assertFalse(interruption["measurement_included"])
+        self.assertFalse(interruption["result_json_present"])
+        self.assertFalse(interruption["wav_present"])
+        self.assertEqual(interruption["cleanup_status"], "pending_device_reconnect")
+        self.assertFalse(interruption["preserved_cleanup_proof"]["valid"])
+        self.assertTrue(result["phone_lock_released"])
+
     def test_context_isolation_and_proof(self):
         component = (EXP / "tools/qnn_context_component.py").read_text()
         campaign = (EXP / "tools/generate_contexts.sh").read_text()

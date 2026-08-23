@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0024-pocket-tts-qnn-precompiled-context-startup",
-  "status": "all_eight_host_context_smokes_passed_phone_campaign_pending",
+  "status": "phone_campaign_paused_external_disconnect_cleanup_pending",
   "goal": "Compare cold QNN session readiness from source ONNX against external precompiled QNN EPContext reload for a freshly validated 0024 reconstruction derivative of the accepted Pocket canonical-v2 fixed-Alba cache512 route.",
   "comparison": {
     "arm_a": "Eight source ONNX graphs; QNN compilation occurs inside measured session creation.",
@@ -91,6 +91,18 @@
     "phone_lock_acquired": false,
     "adb_invoked": false,
     "physical_portability_status": null
+  },
+  "phone_interruption_amendment": {
+    "evidence": "results/phone-campaign-checkpoint/checkpoint.json",
+    "source_runs_complete": 3,
+    "source_runs_required": 3,
+    "context_runs_complete": 1,
+    "context_runs_required": 3,
+    "interrupted_run": "phone-context-20260823T085809Z-225310",
+    "interruption_classification": "external_device_disconnect_incomplete_excluded",
+    "pending_remote_root": "/data/local/tmp/experiment-0024-pocket-context-context-20260823T085809Z-225310",
+    "cleanup_status": "pending_device_reconnect",
+    "resume_policy": "Before any new staging/run, acquire phone.lock, revalidate exact device/transport, remove exactly the pending root, verify absence with the tri-state gate, then use a fresh context run ID."
   },
   "runtime": {
     "onnxruntime": "1.27.1",

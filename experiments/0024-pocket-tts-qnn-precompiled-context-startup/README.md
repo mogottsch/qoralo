@@ -74,16 +74,29 @@ Both ignored phone-stage packages are prepared and hash-bound without accessing 
 
 See [`results/android-stage-provenance.json`](results/android-stage-provenance.json). This proves package construction, not device portability or execution. No `phone.lock`, ADB, or device access occurred.
 
+## Interrupted phone checkpoint
+
+The authorized campaign completed three source benchmark processes and one context benchmark process before the device disconnected during context run 2:
+
+- source setup: 27.0767, 23.8668, 28.6125 seconds; all three WAVs SHA-256 `028f8a1e…4241`;
+- context run 1 setup: 0.729463 seconds; WAV SHA-256 `7c3fc41d…6d81`;
+- every completed process ran one first plus five warm generations, matched reference EOS/frame behavior, passed structural/stage/identity gates, and verified cleanup;
+- both new WAV hashes are `not_reviewed`.
+
+Interrupted context run `phone-context-20260823T085809Z-225310` passed exact identity, context source-absence, full stage push, and local/remote manifest equality. The runner ADB command then returned 255 after the external disconnect; no result or WAV was pulled. It is excluded from measurements and is not a QNN/model failure. The exact remote root may still exist, so authoritative cleanup status is **`pending_device_reconnect`**. The preserved historical `cleanup-proof.txt=cleanup_ok` is invalid because the former two-state test conflated ADB failure with absence.
+
+Machine evidence and raw local interruption files: [`results/phone-campaign-checkpoint/checkpoint.json`](results/phone-campaign-checkpoint/checkpoint.json). Before any future staging, acquire `phone.lock`, validate the authorized device/transport, remove `/data/local/tmp/experiment-0024-pocket-context-context-20260823T085809Z-225310`, and prove it absent using the new transport-aware three-state cleanup gate. Resume with a fresh context run ID.
+
 ## Pending claims
 
 - Host QNN source assignment/context generation/isolated reload: **passed for all eight functional smokes**.
-- Android E2E for either arm: **pending / null**.
-- Cold setup runs: **0 source, 0 context**.
-- Warm RTF: **pending / null**.
+- Source cold setup runs: **3/3 complete**.
+- Context cold setup runs: **1/3 complete**; interrupted run excluded.
+- Full source/context setup comparison: **pending / null**.
 - Physical RPC/accelerator/cycle/HVX evidence: **pending / null**.
-- New phone WAV/listening verdict: **pending / null**.
+- New phone WAV listening verdicts: **not_reviewed**.
 
-No phone access occurred. The device became unavailable before a bounded phone campaign was prepared; no result is inferred from host emulation.
+The campaign remains paused on external device availability and pending remote cleanup verification.
 
 ## Reproduction
 

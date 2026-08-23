@@ -1,0 +1,236 @@
+{
+  "schema_version": 1,
+  "date": "2026-08-23",
+  "status": "paused_external_device_disconnect_cleanup_pending",
+  "route": "pocket-fixed-alba-text64-cache512-canonical-v2-0024-reconstruction-derivative",
+  "completed_boundary": {
+    "source_runs_complete": 3,
+    "source_runs_required": 3,
+    "context_runs_complete": 1,
+    "context_runs_required": 3,
+    "completed_runs": [
+      {
+        "run": "phone-context-20260823T085723Z-225031",
+        "arm": "context",
+        "analysis": {
+          "path": "completed/phone-context-20260823T085723Z-225031/analysis.json",
+          "bytes": 10930,
+          "sha256": "36d266bf70a28131acf8cc2b2e622c63b6ec4a2a0e7a6061e88b91665d59f1de"
+        },
+        "setup_seconds": 0.729463,
+        "first_rtf": 0.167568,
+        "warm_median_rtf": 0.165296,
+        "wav_sha256": "7c3fc41d320e391ed39c10398f9c013d01cba93b9c733d3df546d31a0d006d81",
+        "reference_behavior_all_match": true,
+        "stage_hashes_equal": true,
+        "runner_exit": 0,
+        "cleanup_exit": 0,
+        "cleanup_verified": true,
+        "listening": {
+          "status": "not_reviewed",
+          "sha256": "7c3fc41d320e391ed39c10398f9c013d01cba93b9c733d3df546d31a0d006d81",
+          "reason": "Byte-different output requires exact-hash Moritz review; numerical differences are descriptive only."
+        }
+      },
+      {
+        "run": "phone-source-20260823T085318Z-223890",
+        "arm": "source",
+        "analysis": {
+          "path": "completed/phone-source-20260823T085318Z-223890/analysis.json",
+          "bytes": 10920,
+          "sha256": "9ae57bd302c4f652bfbc39cd971eb18a2e212f8da732c105640f1c62696e12f4"
+        },
+        "setup_seconds": 27.0767,
+        "first_rtf": 0.172432,
+        "warm_median_rtf": 0.167737,
+        "wav_sha256": "028f8a1e1861f8004619294738d9aa14509b2c3e5e5e626d99113700ab574241",
+        "reference_behavior_all_match": true,
+        "stage_hashes_equal": true,
+        "runner_exit": 0,
+        "cleanup_exit": 0,
+        "cleanup_verified": true,
+        "listening": {
+          "status": "not_reviewed",
+          "sha256": "028f8a1e1861f8004619294738d9aa14509b2c3e5e5e626d99113700ab574241",
+          "reason": "Byte-different output requires exact-hash Moritz review; numerical differences are descriptive only."
+        }
+      },
+      {
+        "run": "phone-source-20260823T085445Z-224359",
+        "arm": "source",
+        "analysis": {
+          "path": "completed/phone-source-20260823T085445Z-224359/analysis.json",
+          "bytes": 10916,
+          "sha256": "d24ef850bad23add48687ee4a4021c938ee426cbea8266d9173d8bc0258df350"
+        },
+        "setup_seconds": 23.8668,
+        "first_rtf": 0.167197,
+        "warm_median_rtf": 0.170602,
+        "wav_sha256": "028f8a1e1861f8004619294738d9aa14509b2c3e5e5e626d99113700ab574241",
+        "reference_behavior_all_match": true,
+        "stage_hashes_equal": true,
+        "runner_exit": 0,
+        "cleanup_exit": 0,
+        "cleanup_verified": true,
+        "listening": {
+          "status": "not_reviewed",
+          "sha256": "028f8a1e1861f8004619294738d9aa14509b2c3e5e5e626d99113700ab574241",
+          "reason": "Byte-different output requires exact-hash Moritz review; numerical differences are descriptive only."
+        }
+      },
+      {
+        "run": "phone-source-20260823T085550Z-224644",
+        "arm": "source",
+        "analysis": {
+          "path": "completed/phone-source-20260823T085550Z-224644/analysis.json",
+          "bytes": 10915,
+          "sha256": "5065b759bcc3736ea5be38423b301d24267634c6f3fbeccfe438faeef2f6c3e3"
+        },
+        "setup_seconds": 28.6125,
+        "first_rtf": 0.182052,
+        "warm_median_rtf": 0.169318,
+        "wav_sha256": "028f8a1e1861f8004619294738d9aa14509b2c3e5e5e626d99113700ab574241",
+        "reference_behavior_all_match": true,
+        "stage_hashes_equal": true,
+        "runner_exit": 0,
+        "cleanup_exit": 0,
+        "cleanup_verified": true,
+        "listening": {
+          "status": "not_reviewed",
+          "sha256": "028f8a1e1861f8004619294738d9aa14509b2c3e5e5e626d99113700ab574241",
+          "reason": "Byte-different output requires exact-hash Moritz review; numerical differences are descriptive only."
+        }
+      }
+    ],
+    "source_wav_deterministic": true,
+    "context_run_1_structurally_valid": true,
+    "context_wav_status": {
+      "status": "not_reviewed",
+      "sha256": "7c3fc41d320e391ed39c10398f9c013d01cba93b9c733d3df546d31a0d006d81",
+      "reason": "Byte-different output requires exact-hash Moritz review; numerical differences are descriptive only."
+    }
+  },
+  "interruption": {
+    "run": "phone-context-20260823T085809Z-225310",
+    "arm": "context",
+    "classification": "external_device_disconnect_incomplete_excluded",
+    "last_verified_gate": "Full local-versus-remote stage manifest equality after exact identity and context source-absence gates.",
+    "runner_adb_exit_code": 255,
+    "result_json_present": false,
+    "wav_present": false,
+    "measurement_included": false,
+    "remote_root": "/data/local/tmp/experiment-0024-pocket-context-context-20260823T085809Z-225310",
+    "cleanup_status": "pending_device_reconnect",
+    "cleanup_command_exit": 1,
+    "preserved_cleanup_proof": {
+      "path": "interrupted-context-2/raw/cleanup-proof.txt",
+      "contents": "cleanup_ok",
+      "valid": false,
+      "reason": "The old two-state gate interpreted ADB transport failure as remote absence. Authoritative status is pending_device_reconnect."
+    },
+    "local_remote_stage_hashes_equal": true,
+    "raw_local_evidence": [
+      {
+        "path": "interrupted-context-2/raw/adb-version.txt",
+        "bytes": 136,
+        "sha256": "169ae5380473b8a9b1522ed195bffcc3e56978713ac0dd64e8ef0cd0799b898b"
+      },
+      {
+        "path": "interrupted-context-2/raw/battery-after.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "interrupted-context-2/raw/battery-before.txt",
+        "bytes": 728,
+        "sha256": "58a3a30b633b4de7ea3ee336779eba8a892acd1b8278cef0ec7655a58ad9fcd2"
+      },
+      {
+        "path": "interrupted-context-2/raw/cleanup-proof.txt",
+        "bytes": 11,
+        "sha256": "9232c399cd8102789965b4061604bae725e4a718cabdf8fa1e15ebcd1a9abbd8"
+      },
+      {
+        "path": "interrupted-context-2/raw/cleanup.exit",
+        "bytes": 2,
+        "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+      },
+      {
+        "path": "interrupted-context-2/raw/cleanup.stderr",
+        "bytes": 36,
+        "sha256": "e16115797c646cc06a4e1279b89745d882b86c480b163a2aaf8270ff859ce1cf"
+      },
+      {
+        "path": "interrupted-context-2/raw/cleanup.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "interrupted-context-2/raw/context-model-inventory.txt",
+        "bytes": 444,
+        "sha256": "36b1d93cbdca07575cb59e17c28323187677077d392252942a8d184db202a8e7"
+      },
+      {
+        "path": "interrupted-context-2/raw/devices.txt",
+        "bytes": 122,
+        "sha256": "f49cdb2b688b1573abc3c46adefe244bac889405fa118081765ed3cdf30bc6ce"
+      },
+      {
+        "path": "interrupted-context-2/raw/identity.txt",
+        "bytes": 134,
+        "sha256": "bbbda15e7b9934864960b72f167496c17de846b6876e800ae45f71d5e398611b"
+      },
+      {
+        "path": "interrupted-context-2/raw/local-stage-sha256.txt",
+        "bytes": 2562,
+        "sha256": "d26e6a1c230399e563d1a1c1575416435c0d13f335e6c13641640d31f524fa0b"
+      },
+      {
+        "path": "interrupted-context-2/raw/push.stderr",
+        "bytes": 201,
+        "sha256": "8452475600d6f907267aa3f120b2e66012a92d92fcd19d9577d180615d91ad5a"
+      },
+      {
+        "path": "interrupted-context-2/raw/push.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "interrupted-context-2/raw/remote-output-sha256.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "interrupted-context-2/raw/remote-stage-sha256.txt",
+        "bytes": 2562,
+        "sha256": "d26e6a1c230399e563d1a1c1575416435c0d13f335e6c13641640d31f524fa0b"
+      },
+      {
+        "path": "interrupted-context-2/raw/runner.exit",
+        "bytes": 4,
+        "sha256": "ce8bafb38615aeb5d44ebbabe78ec14ac35a5de87bdc5ad5ea82a72656024ce4"
+      },
+      {
+        "path": "interrupted-context-2/raw/thermal-after.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "interrupted-context-2/raw/thermal-before.txt",
+        "bytes": 1287,
+        "sha256": "8f81d8fcd62998dbdf07d8e224adad300dc76306bc67a5ad551c0b2f790cfe84"
+      }
+    ]
+  },
+  "resume_contract": {
+    "before_any_new_staging_or_run": "Acquire phone.lock nonblockingly, revalidate exact authorized device/transport, remove the exact pending remote root, and verify it is absent using the tri-state transport-aware cleanup gate.",
+    "resume_run": "Use a fresh context run ID; never reuse or include interrupted context run 2.",
+    "remaining": [
+      "context benchmark run 2 of 3",
+      "context benchmark run 3 of 3",
+      "separate source physical proof",
+      "separate context physical proof"
+    ]
+  },
+  "phone_lock_released": true
+}

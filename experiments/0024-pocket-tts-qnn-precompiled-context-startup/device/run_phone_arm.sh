@@ -37,8 +37,39 @@ grep -Fxq 'Android Debug Bridge version 1.0.41' "$OUT/adb-version.txt"
 grep -Fxq 'Version 37.0.0-android-tools' "$OUT/adb-version.txt"
 grep -Fxq 'Installed as /usr/bin/adb' "$OUT/adb-version.txt"
 adb(){ "$ADB" -s "$SERIAL" "$@" </dev/null 9>&-; }
-cleanup(){ set +e; adb shell "rm -rf '$REMOTE'" >"$OUT/cleanup.stdout" 2>"$OUT/cleanup.stderr"; echo $? >"$OUT/cleanup.exit"; }
-trap cleanup EXIT
+cleanup(){
+  local rc
+  if adb shell "rm -rf '$REMOTE'" >"$OUT/cleanup.stdout" 2>"$OUT/cleanup.stderr"; then rc=0; else rc=$?; fi
+  printf '%s\n' "$rc" >"$OUT/cleanup.exit"
+  return 0
+}
+verify_cleanup(){
+  local transport_rc exists_rc status
+  if adb get-state >"$OUT/cleanup-transport.stdout" 2>"$OUT/cleanup-transport.stderr"; then transport_rc=0; else transport_rc=$?; fi
+  exists_rc=99
+  if [[ $transport_rc == 0 ]]; then
+    if adb shell test -e "$REMOTE" >"$OUT/cleanup-exists.stdout" 2>"$OUT/cleanup-exists.stderr"; then exists_rc=0; else exists_rc=$?; fi
+  fi
+  printf '%s\n' "$transport_rc" >"$OUT/cleanup-transport.exit"
+  printf '%s\n' "$exists_rc" >"$OUT/cleanup-exists.exit"
+  if status=$(python3 "$EXP/tools/classify_cleanup_status.py" "$transport_rc" "$exists_rc"); then :; else :; fi
+  printf '%s\n' "$status" >"$OUT/cleanup-status.txt"
+  case "$status" in
+    verified_absent) echo cleanup_ok >"$OUT/cleanup-proof.txt"; return 0 ;;
+    remote_present) echo cleanup_failed_remote_present >&2; return 5 ;;
+    pending_device_reconnect) echo cleanup_pending_device_reconnect >"$OUT/cleanup-pending.txt"; return 6 ;;
+    *) echo cleanup_verification_error >&2; return 7 ;;
+  esac
+}
+on_exit(){
+  local original_rc=$? verify_rc
+  trap - EXIT
+  cleanup
+  if verify_cleanup; then verify_rc=0; else verify_rc=$?; fi
+  if [[ $original_rc != 0 ]]; then exit "$original_rc"; fi
+  exit "$verify_rc"
+}
+trap on_exit EXIT
 
 LIST=$("$ADB" devices -l 9>&- | tr -d '\r')
 printf '%s\n' "$LIST" >"$OUT/devices.txt"
@@ -94,13 +125,8 @@ adb pull "$REMOTE/outputs" "$OUT/" >/dev/null 2>&1 || true
 [[ $PHYSICAL_PROOF == yes ]] && adb pull "$REMOTE/profiles" "$OUT/" >/dev/null 2>&1 || true
 adb shell dumpsys thermalservice >"$OUT/thermal-after.txt" || true
 adb shell "dumpsys battery | head -n 25" >"$OUT/battery-after.txt" || true
-cleanup
 trap - EXIT
-if adb shell test -e "$REMOTE"; then
-  echo cleanup_failed >&2
-  exit 5
-else
-  echo cleanup_ok >"$OUT/cleanup-proof.txt"
-fi
+cleanup
+verify_cleanup
 printf '%s\n' "$OUT"
 [[ $run_rc == 0 ]] || exit "$run_rc"
