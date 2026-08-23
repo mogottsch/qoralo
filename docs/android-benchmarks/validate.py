@@ -27,6 +27,11 @@ EXP_0022_RESULT_SHA256 = "3de896971a64ca5d2833b5421d02e991a75f59922cf6a89c1ac3aa
 EXP_0017 = ROOT / "experiments/0017-kokoro-onnx-qnn-htp-android"
 EXP_0017_RESULT = EXP_0017 / "results/canonical-v2-host-qnn-gate.json"
 EXP_0017_RESULT_SHA256 = "3926b2509f426744b14537d4e06898d6e3c9527694a94e0a0c646c9ce1815689"
+EXP_0023 = ROOT / "experiments/0023-supertonic-qnn-precompiled-context-startup"
+EXP_0023_RESULT = EXP_0023 / "results/phone-campaign/phone-result.json"
+EXP_0023_RESULT_SHA256 = "86e4f3011c4f784d10fd7ad178887468383d91c2547651ca41f5fb63e741034a"
+EXP_0023_WAV_SHA256 = "47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c"
+EXP_0023_IDS = {"0023-supertonic-source-onnx-htp", "0023-supertonic-external-context-htp"}
 PRESENTATION_SUPERSESSIONS = {
     "0008-pocket-cpu-t1": "0009-pocket-cpu-t1",
     "0008-kokoro-cpu-t1": "0009-kokoro-cpu-t1",
@@ -151,7 +156,8 @@ def main():
             audit_source = transcript.get("audit_source", "")
             if not (ROOT / audit_source).is_file():
                 fail(f"{e['id']}: transcript classification source is missing")
-            if classification != "canonical_v2" and audit_source != TRANSCRIPT_AUDIT_SOURCE:
+            expected_0023_audit = "experiments/0023-supertonic-qnn-precompiled-context-startup/results/phone-campaign/phone-result.json"
+            if classification != "canonical_v2" and audit_source != TRANSCRIPT_AUDIT_SOURCE and not (e["id"] in EXP_0023_IDS and audit_source == expected_0023_audit):
                 fail(f"{e['id']}: historical transcript audit provenance mismatch")
         elif transcript is None:
             if "transcript" not in e["missing_reasons"]:
@@ -386,6 +392,71 @@ def main():
             required_missing = {"android_attempted", "provider", "precision", "threads", *METRIC_FIELDS, "wav", "physical_rpc_accelerator_cycle_hvx", "listening"}
             if not required_missing.issubset(e["missing_reasons"]):
                 fail(f"{e['id']}: terminal negative result lacks exhaustive null reasons")
+        if e["id"] in EXP_0023_IDS:
+            result_bytes = EXP_0023_RESULT.read_bytes()
+            if hashlib.sha256(result_bytes).hexdigest() != EXP_0023_RESULT_SHA256:
+                fail(f"{e['id']}: committed phone result hash mismatch")
+            source_result = json.loads(result_bytes)
+            arm = "source" if e["id"] == "0023-supertonic-source-onnx-htp" else "context"
+            setup = source_result["setup"][arm]
+            e2e = source_result["e2e"][arm]
+            proof = source_result["physical_proof"]
+            expected_setup_values = {"source": [22.1599, 21.6129, 20.9571], "context": [0.785324, 0.496524, 0.497816]}[arm]
+            if source_result["status"] != "phone_campaign_passed" or source_result["execution"]["all_nine_runner_processes_exit_zero"] is not True:
+                fail(f"{e['id']}: completed phone campaign status mismatch")
+            if setup["sequence_values_seconds"] != expected_setup_values or len(setup["runs"]) != 3:
+                fail(f"{e['id']}: fresh-process setup distribution mismatch")
+            comparison = source_result["setup_comparison"]
+            expected_comparison = {"source_median_seconds": 21.6129, "context_median_seconds": 0.497816, "source_minus_context_median_seconds": 21.115084, "source_over_context_median_ratio": 43.415438635961884, "context_setup_reduction_percent": 97.69667189502566}
+            if any(comparison[key] != value for key, value in expected_comparison.items()):
+                fail(f"{e['id']}: matched setup comparison mismatch")
+            expected_setup_pss = {"source": [1354060, 1354631, 1341123], "context": [162649, 162301, 162340]}[arm]
+            observed_setup_pss = [run["sampled_memory"]["peak_sampled_pss_kb"] for run in setup["runs"]]
+            pss_range = f"{min(expected_setup_pss):,}–{max(expected_setup_pss):,} KiB"
+            if observed_setup_pss != expected_setup_pss or pss_range not in e["summary"]:
+                fail(f"{e['id']}: setup-only PSS evidence mismatch")
+            contract = json.loads((EXP_0023 / "protocol/experiment-contract.json").read_text())
+            expected_graphs = {"duration": "8a1875ef0f6960ca16fc06814509b1c3258e8f50b04a5d590d3ab6db8c775016", "text": "769fd1d257674e8624bdea941f7a903d9460051f9845b604cd2c2980f281a8c3", "vector_stable_softplus": "f2318c54726a034dcc89aa9818a91f1c3db0e3067b9932c7c2dae65957897c7b", "vocoder": "35b90eeae4a01d06f82dccc903a63d23c95eb2d9095ffa0d62f2cf151817c7c7"}
+            runtime = contract["runtime"]
+            if contract["graphs"] != {**expected_graphs, "matching_rule": contract["graphs"]["matching_rule"]} or "experiment 0011" not in contract["scope"]["baseline_route"] or contract["scope"]["input"] != "experiment 0011 legacy 230-byte transcript, processed T239":
+                fail(f"{e['id']}: exact graph/input lineage mismatch")
+            if runtime["onnxruntime"] != "1.27.1" or runtime["qairt"] != "2.49.0.260730" or runtime["android_libonnxruntime"]["sha256"] != "643c6f6fd3d2b375ca8f2407a1695acaf55320b8e947adc4284665640fdc3ae9" or runtime["session.disable_cpu_ep_fallback"] != "1":
+                fail(f"{e['id']}: matched runtime lineage mismatch")
+            proof_rtf = None if arm == "source" else proof["runner"]["rtf"][0]
+            expected_metrics = {
+                "load_seconds": setup["median_seconds"],
+                "cold_rtf": e2e["first"]["rtf"],
+                "warm_median_rtf": e2e["warm"]["median_rtf"],
+                "proof_run_rtf": proof_rtf,
+                "first_post_setup_rtf": e2e["first"]["rtf"],
+                "peak_pss_bytes": e2e["sampled_memory"]["peak_sampled_pss_kb"] * 1024,
+                "peak_vm_hwm_bytes": e2e["sampled_memory"]["peak_observed_vmhwm_kb"] * 1024,
+            }
+            if e["metrics"] != expected_metrics or len(e2e["warm"]["rtf"]) != 5 or median(e2e["warm"]["rtf"]) != e["metrics"]["warm_median_rtf"]:
+                fail(f"{e['id']}: setup/first/five-warm metric provenance mismatch")
+            if e["scope"] != "full_e2e" or e["attempt_status"] != "ran" or not e["android_attempted"] or e["device"] != EXPECTED_DEVICE:
+                fail(f"{e['id']}: completed physical-phone route boundary mismatch")
+            if e["transcript"]["classification"] != "legacy_v1" or e["transcript"]["sha256"] != LEGACY_V1_SHA256 or e["transcript"]["canonical_v2_match"] is not False:
+                fail(f"{e['id']}: pragmatic legacy-v1 boundary mismatch")
+            source_sample = EXP_0023 / "samples/supertonic-stable-softplus-qnn-context.wav"
+            if e2e["runner"]["runs"] != 6 or e2e["wav"]["sha256"] != EXP_0023_WAV_SHA256 or e["wav"]["sha256"] != EXP_0023_WAV_SHA256 or hashlib.sha256(source_sample.read_bytes()).hexdigest() != EXP_0023_WAV_SHA256:
+                fail(f"{e['id']}: six-run/WAV provenance mismatch")
+            accepted_0011 = entries_by_id["0011-supertonic-all-htp"]["listening_review"]
+            if accepted_0011["status"] != "accepted" or accepted_0011["sample_sha256"] != EXP_0023_WAV_SHA256 or e["listening_review"]["status"] != "accepted" or e["listening_review"]["reviewer"] != "Moritz" or e["listening_review"]["sample_sha256"] != EXP_0023_WAV_SHA256:
+                fail(f"{e['id']}: exact-hash historical listening verdict mismatch")
+            if source_result["source_vs_context_raw_comparison"] != {"byte_identical": True, "cosine": 1.0, "elements": 729746, "interpretation": "descriptive only; no numerical acceptance gate", "max_abs": 0.0, "rmse": 0.0}:
+                fail(f"{e['id']}: matched-arm byte identity boundary mismatch")
+            if source_result["context_source_unavailable_gate"] != "passed" or source_result["cleanup"] != {"phone_lock_release_verified_nonblocking": True, "remote_cleanup_exit_code": 0, "remote_root_absence_verified": True} or source_result["parser_incident"]["phone_rerun"] is not False:
+                fail(f"{e['id']}: source-absence, cleanup, or offline-parser boundary mismatch")
+            if arm == "context":
+                if not proof["physical_qnn_htp_proven"] or not proof["fallback_disabled"] or not proof["source_onnx_unavailable"] or not proof["excluded_from_setup_and_e2e_timing"]:
+                    fail(f"{e['id']}: context physical-proof boundary mismatch")
+                if any(profile["providers"] != ["QNNExecutionProvider"] for profile in proof["ort_profiles"]):
+                    fail(f"{e['id']}: context ORT profile is not QNN-only")
+                if any(set(profile["hvx_thread_values"]) != {4} or profile["rpc_events"] <= 0 or profile["accelerator_us_events"] <= 0 or profile["accelerator_cycle_events"] <= 0 for profile in proof["qnn_profiles"]):
+                    fail(f"{e['id']}: context physical RPC/accelerator/cycle/HVX evidence mismatch")
+            elif "proof_run_rtf" not in e["missing_reasons"]:
+                fail(f"{e['id']}: absent source-arm proof run lacks a reason")
         remeasurements = e.get("remeasurements", [])
         if e["id"] == "0008-supertonic-cpu-t1":
             if e["metrics"] != FROZEN_0008_SUPERTONIC_METRICS or e["wav"] is not None:
@@ -467,7 +538,7 @@ def main():
         for source in e["sources"]:
             if not (ROOT / source).exists():
                 fail(f"{e['id']}: source path missing: {source}")
-    if transcript_counts["legacy_v1"] != 17 or transcript_counts["noncanonical"] != 9 or transcript_counts["canonical_v2"] < 1:
+    if transcript_counts["legacy_v1"] != 19 or transcript_counts["noncanonical"] != 9 or transcript_counts["canonical_v2"] < 1:
         fail(f"visible transcript classification baseline drifted: {transcript_counts}")
     report = HERE / "missing-fields.md"
     if not report.is_file() or "null" not in report.read_text():

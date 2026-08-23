@@ -3908,6 +3908,210 @@
       }
     },
     {
+      "id": "0023-supertonic-source-onnx-htp",
+      "experiment": "0023",
+      "model": "Supertonic 3",
+      "route": "legacy-v1 all-HTP source-ONNX compilation arm",
+      "deployment_variant": "Legacy v1 / stable-Softplus source ONNX / fallback-disabled QNN HTP",
+      "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "QNNExecutionProvider (fallback disabled; source ONNX)",
+        "threads": 1
+      },
+      "structural_audio": {
+        "status": "valid",
+        "basis": "verified committed Android WAV container and source result",
+        "sample_sha256": "47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c"
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Matched physical-phone source-ONNX arm for the accepted legacy-v1 experiment-0011 stable-Softplus route. Three fresh processes measured four-session source compilation at [22.1599, 21.6129, 20.9571] s (median 21.6129 s); setup-only sampled PSS ranged 1,341,123\u20131,354,631 KiB. A separate persistent-session process ran one first generation (RTF 0.131628) plus five warm generations (median RTF 0.130773). Its float output and WAV were byte-identical to the matched context arm and the exact Moritz-accepted 0011 all-HTP WAV.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "accepted",
+        "reviewer": "Moritz",
+        "date": "2026-08-19",
+        "notes": "Byte-identical to the exact experiment-0011 all-HTP WAV previously accepted by Moritz; the verdict applies to this identical retained hash, not to other outputs.",
+        "sample_sha256": "47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c"
+      },
+      "android_attempted": true,
+      "provider": "QNNExecutionProvider (fallback disabled; source ONNX)",
+      "precision": "FP32 source graphs / QNN HTP internal precision not established",
+      "threads": 1,
+      "device": {
+        "model": "SM-S918B",
+        "soc": "SM8550",
+        "serial": "R5CW81PR8SY",
+        "abi": "arm64-v8a"
+      },
+      "metrics": {
+        "load_seconds": 21.6129,
+        "cold_rtf": 0.131628,
+        "warm_median_rtf": 0.130773,
+        "proof_run_rtf": null,
+        "first_post_setup_rtf": 0.131628,
+        "peak_pss_bytes": 1407312896,
+        "peak_vm_hwm_bytes": 1413611520
+      },
+      "wav": {
+        "path": "media/0023-supertonic-stable-softplus-qnn-context.wav",
+        "sha256": "47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c",
+        "bytes": 1459536,
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "duration_seconds": 16.547528344671203,
+        "verified": true
+      },
+      "summary": "Matched physical-phone source-ONNX arm for the accepted legacy-v1 experiment-0011 stable-Softplus route. Three fresh processes measured four-session source compilation at [22.1599, 21.6129, 20.9571] s (median 21.6129 s); setup-only sampled PSS ranged 1,341,123\u20131,354,631 KiB. A separate persistent-session process ran one first generation (RTF 0.131628) plus five warm generations (median RTF 0.130773). Its float output and WAV were byte-identical to the matched context arm and the exact Moritz-accepted 0011 all-HTP WAV.",
+      "limitations": [
+        "Legacy-v1 230-byte transcript/T239/L238 route; not canonical v2 and not comparable as a matched canonical-v2 result.",
+        "The current retained ORT 1.27.1 + QAIRT 2.49 Android runtime was used identically for both 0023 arms; the historical 0011 binary was unavailable, so no binary-identity claim is made.",
+        "Setup is the median of three fresh setup-only processes from immediately before duration-session construction until all four sessions were ready; it excludes inference, teardown, and offline context generation.",
+        "The separate profiled physical proof used the context arm only; do not transfer its RPC/accelerator/cycle/HVX evidence to this source arm.",
+        "Peak PSS/VmHWM fields use the separate E2E process high-water observations; setup-only PSS is preserved in the summary. Parser repair was offline evidence handling over byte-preserved stdout and did not rerun the phone."
+      ],
+      "sources": [
+        "experiments/0023-supertonic-qnn-precompiled-context-startup/results/phone-campaign/phone-result.json",
+        "experiments/0023-supertonic-qnn-precompiled-context-startup/results/phone-campaign/sha256-manifest.json",
+        "experiments/0023-supertonic-qnn-precompiled-context-startup/protocol/experiment-contract.json",
+        "experiments/0023-supertonic-qnn-precompiled-context-startup/protocol/phone-transport-contract.json",
+        "experiments/0023-supertonic-qnn-precompiled-context-startup/results/host-context-smoke/host-context-functional-smoke.json",
+        "experiments/0023-supertonic-qnn-precompiled-context-startup/results/clean-host-setup/clean-setup-result.json",
+        "experiments/0023-supertonic-qnn-precompiled-context-startup/README.md",
+        "experiments/0011-supertonic-official-fp32-phone-comparison/results/softplus-matched-e2e-checkpoint.json"
+      ],
+      "missing_reasons": {
+        "proof_run_rtf": "The separate profiled physical proof was collected only for the context arm; no source-arm proof-run RTF exists."
+      },
+      "model_identity": {
+        "name": "Supertone/supertonic-3",
+        "url": "https://huggingface.co/Supertone/supertonic-3/tree/724fb5abbf5502583fb520898d45929e62f02c0b",
+        "revision": "724fb5abbf5502583fb520898d45929e62f02c0b"
+      },
+      "quantization": "Unquantized FP32 official-source graphs with stable-Softplus vector rewrite; QNN HTP internal lowering precision not established",
+      "scope": "full_e2e",
+      "transcript": {
+        "classification": "legacy_v1",
+        "sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
+        "bytes": 230,
+        "trailing_newline": false,
+        "source": "experiments/0023-supertonic-qnn-precompiled-context-startup/protocol/transcript.txt",
+        "basis": "Experiment 0023 exact accepted experiment-0011 legacy-v1 transcript and processed T239 route.",
+        "effective_frontend": null,
+        "canonical_v2_sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+        "canonical_v2_match": false,
+        "comparison_boundary": "Exact legacy-v1 matched-arm route; it is not canonical v2 and must not be compared as a canonical-v2 result.",
+        "audit_source": "experiments/0023-supertonic-qnn-precompiled-context-startup/results/phone-campaign/phone-result.json",
+        "missing_reasons": {
+          "effective_frontend": "The committed historical transcript audit does not establish exact effective tokenizer/frontend output for this route."
+        }
+      }
+    },
+    {
+      "id": "0023-supertonic-external-context-htp",
+      "experiment": "0023",
+      "model": "Supertonic 3",
+      "route": "legacy-v1 all-HTP external EPContext arm",
+      "deployment_variant": "Legacy v1 / stable-Softplus external EPContext / fallback-disabled QNN HTP",
+      "attempt_status": "ran",
+      "technical_execution": {
+        "status": "ran",
+        "android_attempted": true,
+        "provider": "QNNExecutionProvider (fallback disabled; external EPContext; source absent)",
+        "threads": 1
+      },
+      "structural_audio": {
+        "status": "valid",
+        "basis": "verified committed Android WAV container and source result",
+        "sample_sha256": "47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c"
+      },
+      "objective_evidence": {
+        "status": "descriptive",
+        "summary": "Matched physical-phone external-EPContext arm for the accepted legacy-v1 experiment-0011 stable-Softplus route. With source ONNX unavailable, three fresh processes loaded four external contexts in [0.785324, 0.496524, 0.497816] s (median 0.497816 s), 21.115084 s less than source compilation: 43.4154\u00d7 faster and a 97.6967% setup reduction. Setup-only sampled PSS ranged 162,301\u2013162,649 KiB. A separate E2E process measured first RTF 0.130393 and five-warm median RTF 0.130153. A separate profiled run proved QNN-only ORT nodes plus matching RPC, accelerator-time, accelerator-cycle, and four-HVX-thread evidence for all neural calls. Output was byte-identical to the source arm and exact accepted 0011 WAV.",
+        "comparison_notes": []
+      },
+      "listening_review": {
+        "status": "accepted",
+        "reviewer": "Moritz",
+        "date": "2026-08-19",
+        "notes": "Byte-identical to the exact experiment-0011 all-HTP WAV previously accepted by Moritz; the verdict applies to this identical retained hash, not to other outputs.",
+        "sample_sha256": "47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c"
+      },
+      "android_attempted": true,
+      "provider": "QNNExecutionProvider (fallback disabled; external EPContext; source absent)",
+      "precision": "FP32 source lineage / QNN HTP internal precision not established",
+      "threads": 1,
+      "device": {
+        "model": "SM-S918B",
+        "soc": "SM8550",
+        "serial": "R5CW81PR8SY",
+        "abi": "arm64-v8a"
+      },
+      "metrics": {
+        "load_seconds": 0.497816,
+        "cold_rtf": 0.130393,
+        "warm_median_rtf": 0.130153,
+        "proof_run_rtf": 0.197667,
+        "first_post_setup_rtf": 0.130393,
+        "peak_pss_bytes": 166568960,
+        "peak_vm_hwm_bytes": 170057728
+      },
+      "wav": {
+        "path": "media/0023-supertonic-stable-softplus-qnn-context.wav",
+        "sha256": "47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c",
+        "bytes": 1459536,
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "duration_seconds": 16.547528344671203,
+        "verified": true
+      },
+      "summary": "Matched physical-phone external-EPContext arm for the accepted legacy-v1 experiment-0011 stable-Softplus route. With source ONNX unavailable, three fresh processes loaded four external contexts in [0.785324, 0.496524, 0.497816] s (median 0.497816 s), 21.115084 s less than source compilation: 43.4154\u00d7 faster and a 97.6967% setup reduction. Setup-only sampled PSS ranged 162,301\u2013162,649 KiB. A separate E2E process measured first RTF 0.130393 and five-warm median RTF 0.130153. A separate profiled run proved QNN-only ORT nodes plus matching RPC, accelerator-time, accelerator-cycle, and four-HVX-thread evidence for all neural calls. Output was byte-identical to the source arm and exact accepted 0011 WAV.",
+      "limitations": [
+        "Legacy-v1 230-byte transcript/T239/L238 route; not canonical v2 and intentionally independent of experiment 0022's overconstrained T235/T239 gate.",
+        "The 43.4154\u00d7 / 97.6967% claim applies only to the matched 0023 four-session readiness boundary on the authorized phone; offline context-generation cost is separate and excluded from context startup.",
+        "The current retained ORT 1.27.1 + QAIRT 2.49 Android runtime was used identically for both arms; no binary-identity claim to historical 0011 is made.",
+        "Profiled proof RTF 0.197667 is instrumentation-bearing physical evidence, not the unprofiled warm performance headline.",
+        "Peak PSS/VmHWM fields use the E2E process high-water observations; setup-only PSS is preserved in the summary. Parser repair was offline evidence handling over byte-preserved stdout; device execution and cleanup had passed and no phone rerun occurred."
+      ],
+      "sources": [
+        "experiments/0023-supertonic-qnn-precompiled-context-startup/results/phone-campaign/phone-result.json",
+        "experiments/0023-supertonic-qnn-precompiled-context-startup/results/phone-campaign/sha256-manifest.json",
+        "experiments/0023-supertonic-qnn-precompiled-context-startup/protocol/experiment-contract.json",
+        "experiments/0023-supertonic-qnn-precompiled-context-startup/protocol/phone-transport-contract.json",
+        "experiments/0023-supertonic-qnn-precompiled-context-startup/results/host-context-smoke/host-context-functional-smoke.json",
+        "experiments/0023-supertonic-qnn-precompiled-context-startup/results/clean-host-setup/clean-setup-result.json",
+        "experiments/0023-supertonic-qnn-precompiled-context-startup/README.md",
+        "experiments/0011-supertonic-official-fp32-phone-comparison/results/softplus-matched-e2e-checkpoint.json"
+      ],
+      "missing_reasons": {},
+      "model_identity": {
+        "name": "Supertone/supertonic-3",
+        "url": "https://huggingface.co/Supertone/supertonic-3/tree/724fb5abbf5502583fb520898d45929e62f02c0b",
+        "revision": "724fb5abbf5502583fb520898d45929e62f02c0b"
+      },
+      "quantization": "Unquantized FP32 official-source graphs with stable-Softplus vector rewrite; QNN HTP internal lowering precision not established",
+      "scope": "full_e2e",
+      "transcript": {
+        "classification": "legacy_v1",
+        "sha256": "350c8d3d57525e65085b1d7c5ec733985c5467797cf50508b5e2a4eee313471f",
+        "bytes": 230,
+        "trailing_newline": false,
+        "source": "experiments/0023-supertonic-qnn-precompiled-context-startup/protocol/transcript.txt",
+        "basis": "Experiment 0023 exact accepted experiment-0011 legacy-v1 transcript and processed T239 route.",
+        "effective_frontend": null,
+        "canonical_v2_sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+        "canonical_v2_match": false,
+        "comparison_boundary": "Exact legacy-v1 matched-arm route; it is not canonical v2 and must not be compared as a canonical-v2 result.",
+        "audit_source": "experiments/0023-supertonic-qnn-precompiled-context-startup/results/phone-campaign/phone-result.json",
+        "missing_reasons": {
+          "effective_frontend": "The committed historical transcript audit does not establish exact effective tokenizer/frontend output for this route."
+        }
+      }
+    },
+    {
       "id": "0014-pocket-alba-cpu-v2",
       "experiment": "0014",
       "model": "Pocket TTS",
