@@ -895,11 +895,7 @@ def build_html(registry):
             review_anchor = f"needs-{e['id']}"
             review_detail = f"{e['route']} · refresh {latest['remeasured_at']} · listening review needed" if latest else f"{e['route']} · listening review needed"
             needs_review_players.append(f'<article class="player" id="{html.escape(review_anchor)}"><div><b>{html.escape(e["model"])}</b><br><small>{html.escape(review_detail)}</small></div><audio controls preload="metadata" src="{html.escape(display_wav["path"])}"></audio><a class="back" href="#routes">Back to table</a></article>')
-        summary = html.escape(e["summary"])
-        if latest:
-            delta = latest["comparison_to_original"]
-            summary += f'<br><small>Refresh {html.escape(latest["remeasured_at"])} ({html.escape(latest["id"])}): exact historical transcript v1/route rerun; warm median {latest["metrics"]["warm_median_rtf"]:.6f} vs original {e["metrics"]["warm_median_rtf"]:.6f} ({delta["warm_median_rtf_relative_change_percent"]:+.4f}%). Setup drift {delta["setup_relative_change_percent"]:+.4f}% is flagged. Three historical warm runs; not canonical v2 and not the current five-warm protocol.</small>'
-        trs.append(f'<tr data-route-id="{html.escape(e["id"])}"><td data-sort="{html.escape(e["experiment"])}">{html.escape(e["experiment"])}</td><td data-sort="{html.escape(e["model"] + " " + e["route"])}">{model_cell}</td><td data-sort="{quantization}">{quantization}</td><td data-sort="{html.escape(e["attempt_status"])}"><span class="status {cls}">{html.escape(e["attempt_status"])}</span></td><td data-sort="{review_status}">{listening}</td><td data-sort="{html.escape(e["provider"] or "")} {e["threads"] or ""}">{provider}</td><td data-metric="load_seconds" data-sort="{sort_setup}" title="{html.escape(setup_details, quote=True)}">{setup}</td><td data-sort="{sort_rtf}" title="{html.escape(rtf_details, quote=True)}">{html.escape(rtf)}</td><td data-sort="{sort_memory}">{memory}</td><td data-sort="{audio_sort}">{wav}</td><td data-sort="{html.escape(e["summary"])}">{summary}</td></tr>')
+        trs.append(f'<tr data-route-id="{html.escape(e["id"])}"><td data-sort="{html.escape(e["experiment"])}">{html.escape(e["experiment"])}</td><td data-sort="{html.escape(e["model"] + " " + e["route"])}">{model_cell}</td><td data-sort="{quantization}">{quantization}</td><td data-sort="{html.escape(e["attempt_status"])}"><span class="status {cls}">{html.escape(e["attempt_status"])}</span></td><td data-sort="{review_status}">{listening}</td><td data-sort="{html.escape(e["provider"] or "")} {e["threads"] or ""}">{provider}</td><td data-metric="load_seconds" data-sort="{sort_setup}" title="{html.escape(setup_details, quote=True)}">{setup}</td><td data-sort="{sort_rtf}" title="{html.escape(rtf_details, quote=True)}">{html.escape(rtf)}</td><td data-sort="{sort_memory}">{memory}</td><td data-sort="{audio_sort}">{wav}</td></tr>')
     timeline_rows = []
     for item in MODEL_TIMELINE:
         timeline_rows.append(f'<tr><td>{html.escape(item["model"])}</td><td><time datetime="{html.escape(item["first_release_date"])}">{html.escape(item["first_release_date"])}</time></td><td>{html.escape(item["date_basis"])}</td><td><a href="{html.escape(item["source_url"])}" target="_blank" rel="noopener">Source</a></td></tr>')
@@ -948,7 +944,7 @@ button:focus-visible,a:focus-visible,.table-wrap:focus-visible{{outline:3px soli
 .table-wrap::-webkit-scrollbar-thumb:hover{{background:var(--accent)}}
 .timeline-wrap{{border:1px solid var(--line);border-radius:12px}}
 table{{border-collapse:collapse;background:var(--panel)}}
-#routes{{width:100%;min-width:1695px;table-layout:fixed}}
+#routes{{width:100%;min-width:1365px;table-layout:fixed}}
 #timeline{{width:100%;min-width:760px}}
 th,td{{padding:12px 13px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}}
 #routes td{{overflow-wrap:anywhere}}
@@ -962,7 +958,6 @@ th,td{{padding:12px 13px;border-bottom:1px solid var(--line);vertical-align:top;
 #routes th:nth-child(8){{width:90px}}
 #routes th:nth-child(9){{width:130px}}
 #routes th:nth-child(10){{width:70px}}
-#routes th:nth-child(11){{width:330px}}
 #routes th{{position:sticky;z-index:3;top:0;padding:0;background:var(--panel-strong);color:#bae6fd;white-space:nowrap}}
 #routes th:first-child{{z-index:4;left:0}}
 #routes td:first-child{{position:sticky;z-index:2;left:0;background:var(--panel)}}
@@ -972,7 +967,6 @@ th,td{{padding:12px 13px;border-bottom:1px solid var(--line);vertical-align:top;
 th[aria-sort="ascending"] .sort-button::after{{content:' ↑';color:var(--accent)}}
 th[aria-sort="descending"] .sort-button::after{{content:' ↓';color:var(--accent)}}
 #timeline th{{background:var(--panel-strong);color:#bae6fd;white-space:nowrap}}
-#routes td:nth-child(11){{color:#cbd5e1}}
 #routes td[data-metric="load_seconds"]{{min-width:145px;white-space:nowrap}}
 .status{{border-radius:99px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap}}
 .listening-link{{display:inline-block;text-decoration:none}}
@@ -1026,7 +1020,6 @@ footer{{margin-top:16px;color:var(--muted);font-size:12px}}
 <th scope="col" data-type="number" aria-sort="ascending" title="Warm median by default; otherwise the designated non-warm headline type is shown in brackets. Hover a value for all RTF evidence and missing reasons."><button type="button" class="sort-button">RTF</button></th>
 <th scope="col" data-type="number"><button type="button" class="sort-button">Peak memory</button></th>
 <th scope="col" data-type="number"><button type="button" class="sort-button">Audio</button></th>
-<th scope="col" data-type="text"><button type="button" class="sort-button">Evidence summary</button></th>
 </tr></thead><tbody>{''.join(trs)}</tbody></table>
 </div>
 </div>

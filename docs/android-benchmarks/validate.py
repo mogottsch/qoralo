@@ -686,6 +686,7 @@ def main():
         'id="routes-scroll-end"',
         'id="routes-scroll-cue"',
         'max-height:min(72vh,760px)',
+        '>Evidence summary</button>',
     )
     for page_name in ("index.html", "dashboard.html"):
         page = HERE / page_name
@@ -711,6 +712,8 @@ def main():
             if not dashboard_visible and marker in page_text:
                 fail(f"{page_name}: hidden route {e['id']} leaked into presentation")
             if dashboard_visible:
+                if len(re.findall(r'<td(?:\s|>)', row_html)) != 10:
+                    fail(f"{page_name}: {e['id']} visible route must have exactly ten presentation cells")
                 setup_match = re.search(r'<td data-metric="load_seconds" data-sort="([^"]*)" title="[^"]*">(.*?)</td>', row_html)
                 if setup_match is None:
                     fail(f"{page_name}: {e['id']} setup cell is missing")
