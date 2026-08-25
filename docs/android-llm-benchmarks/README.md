@@ -33,4 +33,4 @@ A route row separates:
 
 Output sanity is not quality, correctness, grounding, usefulness, or acceptance. Actual transcript-quality work belongs to a later protocol and must not be inferred from these rows.
 
-Host smokes may be retained as explicitly non-Android evidence, but they cannot populate Android timing or memory results. Missing values remain null with explicit reasons.
+Host smokes remain experiment-local intermediate evidence and never become rows in this Android registry. Missing values remain null with explicit reasons.

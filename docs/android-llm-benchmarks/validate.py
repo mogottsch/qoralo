@@ -130,11 +130,8 @@ def validate_entry(entry: dict, manifest: dict[str, str], message_bytes: dict[st
         fail(f"duplicate route id: {label}")
     all_ids.add(label)
 
-    if entry["execution_target"] == "android":
-        if entry["device"] != EXPECTED_DEVICE:
-            fail(f"{label}: Android route must identify the canonical device")
-    elif entry["device"] is not None:
-        fail(f"{label}: host route must use device=null")
+    if entry["device"] != EXPECTED_DEVICE:
+        fail(f"{label}: every registry row must identify the canonical Android device")
 
     for source in entry["sources"]:
         repository_file(source, f"{label} source")

@@ -57,7 +57,7 @@ def render_rows(entries: list[dict]) -> str:
             "<tr>"
             f"<td>{model}<small>{esc(entry['quantization']['name'])}</small></td>"
             f"<td>{esc(entry['route'])}<small>{esc(entry['runtime']['name'])} {esc(entry['runtime']['version'])} · {esc(entry['runtime']['provider'])}</small></td>"
-            f"<td>{esc(entry['execution_target'])}<small>{esc(entry['attempt_status'])}</small></td>"
+            f"<td>{esc(entry['attempt_status'])}</td>"
             f"<td>{seconds(entry['setup']['seconds'])}</td>"
             f"<td>{seconds(medium['median_request_to_first_token_seconds'])}<small>medium tier median</small></td>"
             f"<td>{rate(medium['median_prefill_tokens_per_second'])}<small>medium tier median</small></td>"
@@ -74,7 +74,7 @@ def build(registry: dict) -> str:
     if entries:
         content = f"""
 <div class="table-wrap"><table>
-<thead><tr><th>Model</th><th>Route</th><th>Target</th><th>Setup</th><th>TTFT</th><th>Prefill</th><th>Decode</th><th>Peak memory</th><th>Output sanity</th></tr></thead>
+<thead><tr><th>Model</th><th>Route</th><th>Status</th><th>Setup</th><th>TTFT</th><th>Prefill</th><th>Decode</th><th>Peak memory</th><th>Output sanity</th></tr></thead>
 <tbody>{render_rows(entries)}</tbody>
 </table></div>
 """

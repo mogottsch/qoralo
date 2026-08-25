@@ -258,7 +258,7 @@
     },
     "entry": {
       "type": "object",
-      "required": ["id", "experiment", "model", "model_identity", "artifacts", "quantization", "tokenizer", "route", "execution_target", "attempt_status", "runtime", "device", "workloads", "setup", "runs", "aggregates", "memory", "thermal", "summary", "limitations", "sources", "missing_reasons"],
+      "required": ["id", "experiment", "model", "model_identity", "artifacts", "quantization", "tokenizer", "route", "attempt_status", "runtime", "device", "workloads", "setup", "runs", "aggregates", "memory", "thermal", "summary", "limitations", "sources", "missing_reasons"],
       "properties": {
         "id": {"type": "string", "pattern": "^[0-9]{4}-[a-z0-9-]+$"},
         "experiment": {"type": "string", "pattern": "^[0-9]{4}$"},
@@ -268,10 +268,9 @@
         "quantization": {"$ref": "#/$defs/quantization"},
         "tokenizer": {"$ref": "#/$defs/tokenizer"},
         "route": {"type": "string", "minLength": 1},
-        "execution_target": {"enum": ["android", "host"]},
         "attempt_status": {"enum": ["ran", "partial", "blocked", "not_run"]},
         "runtime": {"$ref": "#/$defs/runtime"},
-        "device": {"anyOf": [{"$ref": "#/$defs/device"}, {"type": "null"}]},
+        "device": {"$ref": "#/$defs/device"},
         "workloads": {
           "type": "object",
           "required": ["short", "medium", "long"],

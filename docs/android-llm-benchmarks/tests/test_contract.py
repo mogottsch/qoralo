@@ -42,6 +42,13 @@ class OutputSanitySchemaTest(unittest.TestCase):
 
 
 class RepositoryContractTest(unittest.TestCase):
+    def test_registry_rows_are_android_only(self) -> None:
+        schema = json.loads((REGISTRY_DIR / "schema.json").read_text(encoding="utf-8"))
+        entry = schema["$defs"]["entry"]
+        self.assertNotIn("execution_target", entry["required"])
+        self.assertNotIn("execution_target", entry["properties"])
+        self.assertEqual({"$ref": "#/$defs/device"}, entry["properties"]["device"])
+
     def test_current_registry_and_workload_validate(self) -> None:
         completed = subprocess.run(
             [sys.executable, str(REGISTRY_DIR / "validate.py")],
