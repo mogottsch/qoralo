@@ -1,6 +1,12 @@
 ---
 name: experiment-html-pages
-description: Create or update human-readable HTML pages for experiments in this repository. Use whenever the user asks for an experiment page, experiment HTML, research write-up, visual experiment summary, per-experiment progress page, or links from the project site to an experiment. Keep the page broad and narrative: a status header followed by exactly three primary sections—Experiment description, Progress, and Results.
+description: >-
+  Create or update human-readable HTML pages for experiments in this repository.
+  Use whenever the user asks for an experiment page, experiment HTML, research
+  write-up, visual experiment summary, per-experiment progress page, or links
+  from the project site to an experiment. Keep the page broad and narrative: a
+  status header followed by exactly three primary sections—Experiment
+  description, Progress, and Results.
 ---
 
 # Experiment HTML pages
