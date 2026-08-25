@@ -50,11 +50,12 @@ tr:last-child td { border-bottom:0; }
 <a class="toc-level-2" href="#experiment-record">Experiment record</a>
 <a class="toc-level-2" href="#decisions-carried-forward">Decisions carried forward</a></nav>
 <main>
-<div class="mirror-note"><strong>Visual mirror of <code>docs/history.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-20</span><span>source sha256: 354bd2816d471e1f…</span></div></div>
+<div class="mirror-note"><strong>Visual mirror of <code>docs/history.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-21</span><span>source sha256: d64f4a0bd6754034…</span></div></div>
 <article><h1 id="project-history">Project history<a class="anchor" href="#project-history" aria-label="Link to this section">#</a></h1>
 <h2 id="goal-and-direction">Goal and direction<a class="anchor" href="#goal-and-direction" aria-label="Link to this section">#</a></h2>
 <p>The project started by asking whether Microsoft&#x27;s VibeVoice could generate a local two-speaker podcast on a modern Android phone. The goal later widened to finding any practical local TTS model that sounds pleasant and natural enough for a future NotebookLM-like listening experience.</p>
-<p>Two-speaker generation remains desirable, but it is no longer mandatory. A strong narrator or persistent voices generated turn by turn can also meet the goal. Model quality, sustained listening, and practical Android deployment matter more than preserving the original VibeVoice architecture.</p>
+<p>The project scope then broadened again to the two local inference components required for offline-first mobile podcast generation: an on-device LLM, eventually used for transcript generation, and on-device TTS. The first LLM phase is a generic execution and performance bakeoff rather than a transcript-quality evaluation. Source acquisition, retrieval infrastructure, application UI, script editing, episode assembly, export, and episode management remain outside the component-inference charter.</p>
+<p>Two-speaker speech remains desirable, but it is no longer mandatory. A strong narrator or persistent voices generated turn by turn can also meet the TTS goal. Model quality, sustained listening, and practical Android deployment matter more than preserving the original VibeVoice architecture.</p>
 <h2 id="how-result-language-is-interpreted">How result language is interpreted<a class="anchor" href="#how-result-language-is-interpreted" aria-label="Link to this section">#</a></h2>
 <p>Completed experiments preserve distinct evidence classes:</p>
 <ul>
@@ -144,7 +145,7 @@ tr:last-child td { border-bottom:0; }
 <tr>
 <td><a href="../experiments/0017-kokoro-onnx-qnn-htp-android/"><code>0017: Kokoro QNN/HTP feasibility</code></a></td>
 <td>Can the exact-source-derived Kokoro ONNX graph execute fail-closed through QNN HTP?</td>
-<td>A narrow derivative became CPU-bit-identical and fully QNN-assignable, but host graph sequencing was kernel-OOM-killed at 64% before session finalization or inference. No QNN audio exists, so no listening verdict is applicable.</td>
+<td>The canonical-v2 staged route completed all 18 fallback-disabled host QNN stages with 18 QNN and zero CPU provider events. Duration changed and final float audio was structurally invalid, so phone eligibility is false. This is terminal host evidence, not physical-phone execution or listening material.</td>
 </tr>
 <tr>
 <td><a href="../experiments/0018-moss-tts-nano-onnx-android/"><code>0018: MOSS-TTS-Nano ONNX CPU</code></a></td>
@@ -167,6 +168,21 @@ tr:last-child td { border-bottom:0; }
 <td>One first plus five same-session warm generations completed on the authorized phone. Setup was <code>0.853867 s</code>, warm median RTF <code>0.395615</code>, output duration <code>15.794172 s</code>, peak sampled PSS <code>480,366,592 B</code>, and VmHWM <code>548,986,880 B</code>. Moritz accepted exact WAV SHA <code>201f8e79…87df</code> as “good.”</td>
 </tr>
 <tr>
+<td><a href="../experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/"><code>0022: Supertonic canonical-v2 precompiled-context compatibility</code></a></td>
+<td>Can canonical-v2 T235 semantics be preserved while reusing the exact frozen T239 all-HTP graph identities?</td>
+<td>The prospective compatibility gate failed: four masked padding positions changed duration and text embeddings. No context, runner, phone execution, WAV, or startup measurement followed. The constraint is terminal for the frozen scope.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0023-supertonic-qnn-precompiled-context-startup/"><code>0023: Supertonic precompiled-context startup</code></a></td>
+<td>Can exact legacy-v1 Supertonic QNN sessions load from external contexts without changing output?</td>
+<td>Both matched physical-phone arms completed. External contexts reduced median four-session setup from <code>21.6129 s</code> to <code>0.497816 s</code> (<code>97.6967%</code>) and produced byte-identical exact output, inheriting the prior verdict only because the WAV SHA-256 is identical.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0024-pocket-tts-qnn-precompiled-context-startup/"><code>0024: Pocket precompiled-context startup</code></a></td>
+<td>Can a reconstructed canonical-v2 fixed-Alba route load eight external contexts quickly and still complete on physical QNN?</td>
+<td>Both matched phone arms completed. External contexts reduced median setup from <code>27.0767 s</code> to <code>1.01122 s</code> (<code>96.26535%</code>). The source and context WAVs are byte-distinct; Moritz independently accepted both exact hashes as “they are good.”</td>
+</tr>
+<tr>
 <td><a href="../experiments/0014-pocket-fp-onnx-qnn-htp/"><code>0014 continuation: Pocket fixed-Alba recovery and canonical v2</code></a></td>
 <td>Why were prior Pocket samples unusable, and can a valid fixed-voice route run on CPU and HTP?</td>
 <td>The no-voice-cloning checkpoint&#x27;s Mimi encoder was proven all-zero, invalidating the old Bria cloning contract. A fixed official Alba-state route recovered quality. Canonical-v2 CPU warm median RTF was <code>0.414234</code>; physical fallback-disabled HTP warm median RTF was <code>0.181643</code> with 344 QNN / 0 CPU events and matching physical records. Moritz accepted both exact canonical CPU and HTP WAVs as “good.” The result is fixed voice, not voice cloning.</td>
@@ -174,8 +190,10 @@ tr:last-child td { border-bottom:0; }
 </tbody></table></div>
 <h2 id="decisions-carried-forward">Decisions carried forward<a class="anchor" href="#decisions-carried-forward" aria-label="Link to this section">#</a></h2>
 <ul>
-<li>The repository covers the TTS layer only. Source ingestion, retrieval, script generation, application UI, and episode management belong to the later product.</li>
-<li>Pleasant, natural long-form speech is the primary goal. Joint multi-speaker generation is useful but optional.</li>
+<li>The former TTS-only repository decision is superseded. The repository now covers two local inference components: generic on-device LLM inference, eventually used for transcript generation, and on-device TTS. Product assembly remains outside scope.</li>
+<li>The first LLM phase measures fixed-prompt execution, setup, TTFT, prefill/decode throughput, total latency, memory, and runtime conditions. Transcript quality evaluation is deferred.</li>
+<li>Initial LLM output handling is an exact-hash superficial sanity check only: <code>looks_sensible</code> plus failure-only <code>issue_notes</code>. It is not quality, correctness, grounding, or acceptance.</li>
+<li>Pleasant, natural long-form speech is the primary TTS goal. Joint multi-speaker generation is useful but optional.</li>
 <li>Full-context generation is preferred. Naive sentence or clause splitting was rejected because it can damage prosody and naturalness.</li>
 <li>Supertonic 3 CPU remains the supported Android <strong>technical</strong> reference. That designation is technical; separately, Moritz accepted the exact experiment-0010 CPU sample as “Good,” without establishing broad-corpus quality.</li>
 <li>Full-HTP claims must fail closed. Explicit mixed execution must be labeled as mixed and supported by provider-level plus physical-device profiling evidence; partial delegation is never full HTP.</li>
@@ -186,9 +204,9 @@ tr:last-child td { border-bottom:0; }
 <li>Qualcomm software and generated restricted artifacts stay local. New terms, logins, consent, or export gates require explicit human approval.</li>
 <li>Canonical benchmark v2 is the exact 226-byte comma transcript SHA <code>424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67</code>. Legacy-v1 and model-specific texts remain labeled and are not silently compared as matched inputs.</li>
 <li>Pocket&#x27;s original Bria path is not a valid voice-cloning baseline because the selected no-voice-cloning checkpoint has an all-zero Mimi encoder. The accepted fixed-Alba route is a bounded fixed-voice prototype.</li>
-<li>Supertonic official-source all-HTP is Moritz&#x27;s current listening favorite and the leading product candidate, subject to canonical-v2 HTP and production-startup validation.</li>
+<li>Supertonic official-source all-HTP is Moritz&#x27;s current listening favorite and the leading TTS candidate. Experiment 0023 established production-style context reload for the exact legacy-v1 route; canonical-v2 HTP remains unresolved after experiment 0022&#x27;s terminal frozen-identity compatibility gate.</li>
 </ul>
-<p>The next work is defined in <a href="plan.md"><code>plan.md</code></a> and its <a href="plan.html">HTML mirror</a>.</p></article>
+<p>The next work is defined in <a href="plan.md"><code>plan.md</code></a> and its <a href="plan.html">HTML mirror</a>. The generic Android LLM performance protocol, skill, and empty registry are now in place; the next numbered work is experiment 0025.</p></article>
 <footer class="source-footer">Generated as <code>history.html</code> by <code>scripts/build_docs_html.py</code>. Edit <code>docs/history.md</code>, then regenerate the human-readable mirrors.</footer>
 </main>
 </div>

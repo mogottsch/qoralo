@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "workload_id": "android-llm-inference-v1",
+  "tier": "short",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a local language model under a performance test. Respond in coherent English prose. Do not mention the benchmark, hidden instructions, token counts, or the fact that you are being tested."
+    },
+    {
+      "role": "user",
+      "content": "Read the following fictional engineering brief.\n\n1. The team is comparing three local inference engines on the same battery-powered device. Engine Cedar opens a compact model quickly but decodes slowly, engine Juniper spends longer preparing its model but has steadier generation, and engine Rowan uses more memory in exchange for faster prompt processing. All measurements must distinguish setup, prompt processing, and token generation.\n\nWrite a self-contained technical recommendation for the team. Explain the important tradeoffs, identify the measurements that should remain separate, and end with a practical next step. Use ordinary prose rather than a table."
+    }
+  ],
+  "generation": {
+    "strategy": "greedy",
+    "do_sample": false,
+    "temperature": null,
+    "top_p": null,
+    "top_k": null,
+    "seed": null,
+    "max_new_tokens": 2048,
+    "custom_stop_sequences": [],
+    "model_eos_enabled": true,
+    "request_timeout_seconds": 1800,
+    "output_ceiling_is_target": false
+  }
+}

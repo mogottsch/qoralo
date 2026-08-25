@@ -1,5 +1,5 @@
 ---
-title: VibeVoice Android Wiki
+title: Mobile Podcast Inference Wiki
 aliases:
   - VibeVoice Android
   - Project wiki
@@ -7,11 +7,11 @@ kind: home
 project: vibevoice-android-spike
 ---
 
-# VibeVoice Android Wiki
+# Mobile Podcast Inference Wiki
 
-> A human-readable map of the models, concepts, experiments, and decisions in this repository.
+> A human-readable map of the models, concepts, experiments, and decisions behind this repository's local LLM and TTS work.
 
-This vault explains project terminology before asking the reader to understand benchmark details. It is a maintained interpretation layer over the committed experiment evidence, not a replacement for that evidence.
+The project validates two local inference components for offline-first mobile podcast generation: an LLM, eventually used to generate transcripts, and TTS used to render speech. This vault explains project terminology before asking the reader to understand benchmark details. It is a maintained interpretation layer over the committed experiment evidence, not a replacement for that evidence.
 
 ## Start here
 
@@ -32,11 +32,11 @@ This vault explains project terminology before asking the reader to understand b
 
 The repository has two deliberately separate layers:
 
-1. **Evidence:** experiment directories, protocols, result JSON, retained samples, and the normalized Android benchmark registry.
+1. **Evidence:** experiment directories, component-specific protocols, result JSON, retained outputs, and the separate normalized Android LLM and TTS benchmark registries.
 2. **Explanation:** this vault, which connects that evidence into concept and overview pages.
 
 When the two disagree, the committed owning evidence wins. Wiki pages should be corrected and their source references updated.
 
 ## Current scope
 
-The vault now has a baseline note for every model label represented in the Android benchmark registry: VibeVoice 1.5B, VibeVoice Realtime 0.5B, Supertonic 3, Pocket TTS, Kokoro, and MOSS-TTS-Nano. The first concept set explains the terminology behind Pocket's “fixed-Alba text64/cache512” route. Experiment narratives and decision pages can be integrated incrementally without replacing their owning evidence.
+The vault has a baseline note for every TTS model label represented in the Android TTS benchmark registry: VibeVoice 1.5B, VibeVoice Realtime 0.5B, Supertonic 3, Pocket TTS, Kokoro, and MOSS-TTS-Nano. The first concept set explains the terminology behind Pocket's “fixed-Alba text64/cache512” route. The generic Android LLM protocol and registry now establish a separate performance-focused evidence path; LLM model notes can be added after committed experiments exist. Experiment narratives and decision pages can be integrated incrementally without replacing their owning evidence.

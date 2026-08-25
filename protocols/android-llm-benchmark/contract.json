@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "contract_id": "android-llm-inference-v1",
+  "purpose": "Comparable generic Android LLM execution and performance measurement; podcast transcript quality evaluation is out of scope.",
+  "canonical_workload": {
+    "version": 1,
+    "directory": "protocols/android-llm-benchmark/workloads/inference-v1",
+    "checksum_manifest": "protocols/android-llm-benchmark/workloads/inference-v1/SHA256SUMS",
+    "tier_order": [
+      "short",
+      "medium",
+      "long"
+    ],
+    "files": {
+      "short": "short.json",
+      "medium": "medium.json",
+      "long": "long.json"
+    }
+  },
+  "generation": {
+    "strategy": "greedy",
+    "do_sample": false,
+    "temperature": null,
+    "top_p": null,
+    "top_k": null,
+    "seed": null,
+    "max_new_tokens": 2048,
+    "custom_stop_sequences": [],
+    "model_eos_enabled": true,
+    "request_timeout_seconds": 1800,
+    "output_ceiling_is_target": false
+  },
+  "campaign": {
+    "setup_reported_separately": true,
+    "setup_count": 1,
+    "first_request_count": 1,
+    "first_request_tier": "short",
+    "minimum_same_session_requests_per_tier": 5,
+    "session_reused": true,
+    "conversation_state_reset_each_request": true,
+    "kv_state_reset_each_request": true,
+    "tier_order_fixed": true,
+    "retain_every_raw_output": true,
+    "byte_identical_output_required": false
+  },
+  "setup_boundary": {
+    "start": "Immediately before the first model/tokenizer file access or runtime creation, whichever occurs first.",
+    "end": "The route can accept a canonical request without additional model loading, runtime/session creation, accelerator compilation, or initial KV allocation.",
+    "included": [
+      "model and tokenizer file open or mapping",
+      "runtime and execution-provider creation",
+      "model or session creation",
+      "accelerator compilation when performed at runtime",
+      "initial KV-cache allocation required for readiness"
+    ]
+  },
+  "timing": {
+    "request_to_first_token": "Immediately before workload rendering/tokenization through delivery of the first generated token ID to the benchmark caller.",
+    "prefill": "Submission of effective prompt tokens to the model through readiness of the final prompt token KV state.",
+    "post_prefill_to_first_token": "Prefill completion through delivery of the first generated token ID.",
+    "decode": "First generated-token delivery through final generated-token delivery; throughput counts tokens after the first over that interval.",
+    "total_request": "The request-to-first-token start boundary through final output or stop delivery."
+  },
+  "stop_reasons": [
+    "eos",
+    "stop_sequence",
+    "max_tokens",
+    "timeout",
+    "error"
+  ],
+  "output_sanity": {
+    "fields": [
+      "looks_sensible",
+      "issue_notes"
+    ],
+    "valid_combinations": [
+      {
+        "looks_sensible": true,
+        "issue_notes": null
+      },
+      {
+        "looks_sensible": false,
+        "issue_notes": "nonempty failure description"
+      },
+      {
+        "looks_sensible": null,
+        "issue_notes": null
+      }
+    ],
+    "scope": "Superficial exact-output-hash corruption/gibberish smoke check only; not quality, correctness, grounding, usefulness, or acceptance."
+  },
+  "required_evidence": [
+    "exact model identity, source revision, artifact hashes, format, and size",
+    "exact quantization scheme and tool provenance",
+    "exact tokenizer revision and model-native chat-template provenance",
+    "canonical workload file and SHA-256",
+    "rendered prompt SHA-256, effective input-token count, and token-ID SHA-256",
+    "device, Android build, runtime, provider, thread, and accelerator configuration",
+    "setup boundary and elapsed time",
+    "per-request TTFT, prefill, decode, total latency, and throughput observations",
+    "actual generated-token count and stop reason",
+    "peak memory with method, sampling interval, and lifecycle semantics",
+    "thermal and power context or null with explicit reasons",
+    "every raw UTF-8 output path, byte count, and SHA-256",
+    "exact-hash output sanity using only looks_sensible and issue_notes",
+    "missing values represented as null with explicit reasons"
+  ]
+}

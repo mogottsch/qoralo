@@ -2,92 +2,92 @@
 
 ## Goal
 
-Select and productize a local Android text-to-speech route for a NotebookLM-like listening experience. Pleasant, natural long-form speech is the primary goal. A convincing two-speaker conversation is useful but optional; a strong narrator or persistent voices generated turn by turn can meet the goal.
+Build and validate the local inference components required for offline-first mobile podcast generation on Android:
 
-## Evidence language
+1. local LLM inference, eventually used to generate transcripts;
+2. local TTS inference, used to render those transcripts as speech.
+
+The immediate focus is not application assembly or transcript quality. It is establishing a comparable Android LLM benchmark, then using it to run multiple models and quantizations while measuring prompt processing, token generation, memory, and operational behavior.
+
+## Scope boundary
+
+The repository covers the two inference components and the evidence needed to select and deploy them. It does not currently cover source acquisition, retrieval infrastructure, application UI, script editing, segment rendering, episode assembly, export, or episode management.
+
+Historical TTS experiments and their claim boundaries remain unchanged. LLM work receives its own protocol, skill, registry, and dashboard rather than inheriting TTS transcript, WAV, RTF, or listening fields.
+
+## LLM evidence language
 
 Keep these claims separate:
 
-1. **Technical execution** — the declared route completed on the stated runtime/device with the required provider evidence.
-2. **Structurally valid WAV** — the file met format, length, finiteness, silence, and clipping checks.
-3. **Objective/descriptive comparison** — numerical or acoustic metrics passed or failed a named policy.
-4. **Moritz listening verdict** — only explicit feedback can accept or reject the exact reviewed route and WAV hash.
+1. **Technical execution** — the declared model route completed under the stated runtime, provider, device, and workload contract.
+2. **Output sanity** — the exact retained text merely looks sensible rather than obviously corrupted, binary-like, empty, or gibberish. This is recorded only as `looks_sensible` plus failure-only notes and is not a quality verdict.
+3. **Performance observation** — setup/readiness, TTFT, prefill, decode, total latency, memory, and thermal measurements apply only to the stated route and workload.
+4. **Quality evaluation** — deferred from the first LLM experiments. No successful run or sanity check establishes transcript quality, correctness, grounding, style, or acceptance.
 
-None implies another. A route-specific verdict never becomes a model-family verdict. Missing evidence remains null with a reason.
+Missing evidence remains null with an explicit reason. Host evidence never becomes Android evidence.
 
-## Comparable benchmark contract
+## Comparable Android LLM contract
 
-New comparable routes use [`protocols/android-tts-benchmark/transcript.txt`](../protocols/android-tts-benchmark/transcript.txt): canonical v2, 226 bytes, no trailing newline, SHA-256 `424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67`.
+New comparable routes follow [`protocols/android-llm-benchmark/`](../protocols/android-llm-benchmark/) and the project-local [Android LLM benchmark skill](../.agents/skills/android-llm-benchmark/SKILL.md).
 
-Follow [the Android TTS benchmark skill](../.agents/skills/android-tts-benchmark/SKILL.md): report setup separately, one first complete generation, at least five additional same-session warm generations with complete state reset, actual emitted-duration RTF, memory semantics, thermal/runtime/provider provenance, a validated hashed WAV, and exact listening status.
+The canonical inference-v1 workload freezes short, medium, and long message bytes. Each route separately pins its model artifacts, quantization, tokenizer revision, native chat template, rendered prompt hash, and effective token IDs because tokenizer token counts are model-specific.
 
-Historical legacy-v1 and model-specific-text routes remain valid evidence but are not text-matched to canonical v2.
+The workload uses a `2048` maximum-new-token ceiling. This bounds execution but is not a target output length. Every request records its actual generated-token count and stop reason. The campaign creates the model route once, records one first request, then at least five same-session requests per prompt tier with conversation and KV state reset before every request.
 
-## Current product direction
+Required observations include:
 
-Moritz's current favorite is the Supertonic 3 official-source, stable-Softplus, all-HTP route from experiment [`0011`](../experiments/0011-supertonic-official-fp32-phone-comparison/). Its exact legacy-v1 HTP WAV was accepted, and Moritz finds it somewhat more natural than Pocket.
+- exact model, tokenizer, quantization, runtime, provider, and device provenance;
+- the setup/readiness boundary and elapsed time;
+- prompt byte and effective input-token counts;
+- request-to-first-token and, when observable, post-prefill-to-first-token latency;
+- prefill latency and input tokens per second;
+- decode latency and output tokens per second;
+- total request time and actual output-token count;
+- peak memory with method, sampling interval, and lifecycle semantics;
+- thermal and power context when available;
+- every raw text output and SHA-256;
+- exact-hash output sanity using only `looks_sensible` and failure-only `issue_notes`;
+- null plus a reason for measurements the route cannot expose.
 
-Measured experiment-0011 properties:
+Tokens per second are always shown with tokenizer identity and actual counts. They are useful route measurements but are not perfectly tokenizer-independent units across model families.
 
-- setup: `22.8147 s`;
-- warm median RTF: `0.170316`;
-- process VmHWM: `1,407,393,792 B`;
-- all four neural components ran fallback-disabled on physical HTP;
-- the route failed its prospective numerical policy, despite its accepted listening result.
+## LLM benchmark foundation
 
-Supertonic is therefore the leading production candidate, but the product decision remains open until its canonical-v2 HTP route and production startup behavior are measured. CPU remains useful as a low-setup fallback for short requests; HTP is favored for longer generation when session reuse amortizes setup.
+The repository now has:
 
-## Active work
+1. canonical fixed short, medium, and long prompt tiers plus a machine-readable Android LLM contract;
+2. a project-local benchmark skill;
+3. a separate empty LLM registry, schema, validator, generator, and dashboard;
+4. shared project framing for the LLM and TTS component layers.
 
-### 0017 — Kokoro canonical-v2 QNN/HTP
+The empty registry contains no placeholder measurements. Only committed experiment evidence may populate it.
 
-Experiment [`0017`](../experiments/0017-kokoro-onnx-qnn-htp-android/) has a complete official-frontend canonical-v2 CPU/export/decomposition proof:
+## Next experiment
 
-- tokens `[1,235]`, style row 232;
-- 15.05-second CPU oracle;
-- fixed FP32 compatibility graph;
-- 18 stages covering all 1,685 nodes;
-- bit-exact staged CPU recomposition.
+### 0025 — Android LLM model bakeoff
 
-The first canonical fallback-disabled host QNN batch completed stages 1–15. A requested WSL restart externally interrupted stage 16 during graph sequencing at 12%; stage 16 did not finalize or execute, stages 17–18 were not attempted, and no canonical QNN audio exists. This is not an OOM or stage failure.
+Open a separately scoped experiment to run several practical LLM models or quantizations under the same inference-v1 workload. A bounded host smoke may reject an incompatible artifact before phone work, but it may not substitute for Android measurements or appear as an Android result.
 
-Next gate:
+The first experiment compares execution, setup, TTFT, prefill throughput, decode throughput, total latency, memory, and operational constraints. It retains text only for the narrow output-sanity smoke check. Podcast transcript quality evaluation is deliberately later work.
 
-```bash
-RUN_ID=canonical-v2-rerun \
-  experiments/0017-kokoro-onnx-qnn-htp-android/host/run_canonical_v2_staged_host_qnn.sh
-```
+Model choice, runtime, quantization, CPU/GPU/NPU route, and accelerator selection remain experiment decisions rather than assumptions in the shared protocol.
 
-Reconstruct and hash-check ignored assets using the experiment's [`REPRODUCING.md`](../experiments/0017-kokoro-onnx-qnn-htp-android/REPRODUCING.md). Restart from stage 1; never resume the partial stage-16 attempt. Phone work is forbidden until all 18 host stages execute fallback-disabled with zero CPU events and structurally valid final audio.
+## TTS direction carried forward
 
-### 0022 — Supertonic precompiled-context startup
+The TTS record is mature and currently has no active experiment in this plan. The complete normalized evidence remains in the [Android TTS dashboard](android-benchmarks/index.html) and [registry](android-benchmarks/registry.json).
 
-Experiment [`0022`](../experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/) compares two matched all-HTP startup routes:
+Current bounded conclusions include:
 
-1. source ONNX compiled/finalized by QNN at runtime;
-2. precompiled external QNN contexts loaded through ORT EPContext.
+- Supertonic 3 official-source stable-Softplus all-HTP remains Moritz's current listening favorite among reviewed exact samples.
+- Experiment 0023 reduced its exact legacy-v1 four-session setup boundary from `21.6129 s` to `0.497816 s` with byte-identical output.
+- Pocket's fixed-Alba canonical-v2 CPU and HTP routes are technically complete; experiment 0024 separately reduced setup for its reconstructed derivative from `27.0767 s` to `1.01122 s`.
+- Kokoro canonical-v2 completed all 18 fallback-disabled host QNN stages but produced structurally invalid final audio and is phone-ineligible in experiment 0017.
+- MOSS canonical-v2 passed CPU and host context gates but stopped at the recorded physical-phone QNN `CreateDevice` blocker.
 
-The purpose is to determine whether production-style contexts materially reduce the experiment-0011 `22.8147 s` setup. Both arms require at least three cold processes, per-session/total readiness, first plus five warm generations, memory/thermal/package-size evidence, fail-closed provider proof, physical RPC/accelerator/cycle/HVX evidence, and exact output/listening handling.
+Listening verdicts remain bound to exact reviewed WAV hashes. None of these conclusions selects a broad model family or establishes production readiness.
 
-The first design gate is unresolved: frozen experiment-0011 graphs require wrapped `T239/L238`, while canonical-v2 wraps naturally to `T235`. Prove that four masked padding positions preserve canonical semantics and the exact graph identities, or report the constraints incompatible. Never substitute the legacy transcript or silently regenerate differently shaped graphs. Continue from the experiment's [`PLAN.md`](../experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/PLAN.md).
+## Later work
 
-## Completed routes carried forward
+After performance evidence identifies practical LLM routes, define a separate quality workload for transcript generation. That later protocol can address structure, coherence, source use, style, repetition, spoken-language naturalness, editing burden, and exact-output review without retroactively turning performance outputs into quality evidence.
 
-- **Pocket canonical v2:** experiment [`0014`](../experiments/0014-pocket-fp-onnx-qnn-htp/) completed accepted Android CPU and physical fallback-disabled HTP routes. Warm median RTF is `0.414234` CPU and `0.181643` HTP; physical proof is 344 QNN / 0 CPU events with matching RPC/accelerator/cycle/HVX records. This is a fixed-Alba route, not voice cloning.
-- **Supertonic canonical-v2 CPU:** experiment [`0021`](../experiments/0021-supertonic-canonical-v2-android-cpu/) completed at warm median RTF `0.395615`; its exact WAV was accepted “good.”
-- **Supertonic historical refresh:** experiment [`0020`](../experiments/0020-historic-android-benchmark-refresh/) reproduced the legacy-v1 CPU route at warm median RTF `0.393086`; it remains a nested historical remeasurement, not canonical v2.
-- **MOSS canonical-v2 HTP feasibility:** experiment [`0019`](../experiments/0019-moss-tts-nano-qnn-htp-android/) passed CPU equivalence and host QNN/context gates but failed at physical QNN `CreateDevice` before session assignment or inference. It has no HTP WAV, RTF, memory result, or listening verdict.
-
-The complete normalized Android evidence is in the [benchmark dashboard](android-benchmarks/index.html) and its [registry](android-benchmarks/registry.json).
-
-## After active accelerator work
-
-Run a matched longer-form listening bake-off among accepted Supertonic, Pocket, Kokoro if it becomes viable, and any other technically complete route. Evaluate:
-
-- sustained naturalness and listener fatigue;
-- paragraph/chapter seams and prosody;
-- multiple voices if dialogue is required;
-- cold startup, session lifetime, storage, memory, thermal behavior, and battery;
-- a practical app policy such as CPU for short previews and persistent HTP sessions for long documents.
-
-Do not choose a production route from RTF alone. Moritz's listening preference and deployment practicality are both required.
+A future end-to-end benchmark may combine the selected LLM and TTS components. It is an integration view over the two component layers, not a third product-pipeline charter.

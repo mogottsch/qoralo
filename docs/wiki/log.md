@@ -8,6 +8,10 @@ project: vibevoice-android-spike
 
 This is an append-only record of meaningful wiki maintenance. Evidence changes remain recorded in their owning experiment commits.
 
+## [2026-08-25] scope | Add the local LLM component
+
+Broadened the wiki framing from TTS-only research to the two local inference components needed for offline-first mobile podcast generation: generic on-device LLM inference and TTS. The first LLM phase remains performance-focused; its output sanity check is not a transcript-quality verdict.
+
 ## [2026-08-25] listening | Pocket 0024 exact-hash acceptances
 
 Updated the Pocket model note after Moritz independently accepted the distinct experiment-0024 source-ONNX and external-context phone WAVs with the verdict “they are good.” The two verdicts remain bound to their exact hashes and do not establish output equivalence or transfer to host output, other hashes, or the Pocket family.
