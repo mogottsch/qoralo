@@ -1,0 +1,265 @@
+{
+  "artifact": {
+    "bytes": 1280835840,
+    "path": ".local/model/Qwen3.5-2B-Q4_K_M.gguf",
+    "sha256": "aaf42c8b7c3cab2bf3d69c355048d4a0ee9973d48f16c731c0520ee914699223",
+    "source_kind": "third-party Unsloth GGUF conversion"
+  },
+  "health": {
+    "status": "ok"
+  },
+  "host_is_android_evidence": false,
+  "memory": {
+    "missing_reason": "Minimal host viability smoke did not collect host memory; no host memory value is used as Android evidence.",
+    "peak_sampled_pss_bytes": null,
+    "peak_vm_hwm_bytes": null
+  },
+  "mode": "smoke",
+  "prompts": {
+    "long": {
+      "context_tokens": 8192,
+      "fits_8192_with_2048": true,
+      "input_tokens": 1926,
+      "max_output_tokens": 2048,
+      "nonthinking_suffix": true,
+      "rendered_bytes": 10628,
+      "rendered_path": "rendered/long.txt",
+      "rendered_sha256": "c48e00cf1e45fb7dd7edbdcad17578e0857ce01ca621dbd47972265721701135",
+      "thinking_proof": {
+        "enable_thinking": false,
+        "ends_with_empty_think_block": true,
+        "required_suffix": "<think>\\n\\n</think>\\n\\n"
+      },
+      "token_ids_int32le_sha256": "a36f8139e2c4b83976fc74a37bf93f184272823b7144e7a167d9bee6836785ca",
+      "truncated": false,
+      "workload_path": "long.json",
+      "workload_sha256": "092840fbe879259110fa4d0b15bc383012f16b7b42a38d224b2ead231e86aad8"
+    },
+    "medium": {
+      "context_tokens": 8192,
+      "fits_8192_with_2048": true,
+      "input_tokens": 597,
+      "max_output_tokens": 2048,
+      "nonthinking_suffix": true,
+      "rendered_bytes": 3352,
+      "rendered_path": "rendered/medium.txt",
+      "rendered_sha256": "0559ad81d5528fefe250c945816a1d10da0141fbf7ad124343ef69eba5db42a5",
+      "thinking_proof": {
+        "enable_thinking": false,
+        "ends_with_empty_think_block": true,
+        "required_suffix": "<think>\\n\\n</think>\\n\\n"
+      },
+      "token_ids_int32le_sha256": "8b07ff28c1c94a93b79880aa27f73b9d5cbddc1f215f857cb58b1d021422c5e2",
+      "truncated": false,
+      "workload_path": "medium.json",
+      "workload_sha256": "5e168aa3232f06c92959b686188192471b2d1a62cd1c857a616fd8e29456ddf1"
+    },
+    "short": {
+      "context_tokens": 8192,
+      "fits_8192_with_2048": true,
+      "input_tokens": 174,
+      "max_output_tokens": 2048,
+      "nonthinking_suffix": true,
+      "rendered_bytes": 959,
+      "rendered_path": "rendered/short.txt",
+      "rendered_sha256": "afed1eb692d38446b49ac1c39dec80ae3bd8845282398c09b8485ce4a2a1371e",
+      "thinking_proof": {
+        "enable_thinking": false,
+        "ends_with_empty_think_block": true,
+        "required_suffix": "<think>\\n\\n</think>\\n\\n"
+      },
+      "token_ids_int32le_sha256": "dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4",
+      "truncated": false,
+      "workload_path": "short.json",
+      "workload_sha256": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae"
+    }
+  },
+  "route": {
+    "backend": "llama.cpp CPU",
+    "cache_prompt": false,
+    "context_tokens": 8192,
+    "sampler": "greedy argmax through temperature=-1 and temperature-only sampler chain",
+    "slot_erase_before_every_request": true,
+    "thinking_control": {
+      "chat_template_kwargs": {
+        "enable_thinking": false
+      }
+    },
+    "thinking_enabled": false,
+    "threads": 4
+  },
+  "runs": [
+    {
+      "emitted_token_ids_int32le_sha256": "2579972e69e5ed2b7df0a982c12bc2b460ad011370e2bda57dbd16392573735c",
+      "events_path": "events/smoke-short-01.jsonl",
+      "final_event": {
+        "client_received_monotonic_ns": 20252616762769,
+        "content": "",
+        "generation_settings": {
+          "adaptive_decay": 0.8999999761581421,
+          "adaptive_target": -1.0,
+          "backend_sampling": false,
+          "chat_format": "Content-only",
+          "dry_allowed_length": 2,
+          "dry_base": 1.75,
+          "dry_multiplier": 0.0,
+          "dry_penalty_last_n": 64,
+          "dry_sequence_breakers": [
+            "\n",
+            ":",
+            "\"",
+            "*"
+          ],
+          "dynatemp_exponent": 1.0,
+          "dynatemp_range": 0.0,
+          "frequency_penalty": 0.0,
+          "generation_prompt": "",
+          "grammar": "",
+          "grammar_lazy": false,
+          "grammar_triggers": [],
+          "ignore_eos": false,
+          "logit_bias": [],
+          "lora": [],
+          "max_tokens": 64,
+          "min_keep": 0,
+          "min_p": 0.05000000074505806,
+          "mirostat": 0,
+          "mirostat_eta": 0.10000000149011612,
+          "mirostat_tau": 5.0,
+          "n_discard": 0,
+          "n_keep": 0,
+          "n_predict": 64,
+          "n_probs": 0,
+          "post_sampling_probs": false,
+          "presence_penalty": 0.0,
+          "preserved_tokens": [],
+          "reasoning_format": "deepseek",
+          "reasoning_in_content": false,
+          "repeat_last_n": 64,
+          "repeat_penalty": 1.0,
+          "samplers": [
+            "temperature"
+          ],
+          "seed": 0,
+          "speculative.types": "none",
+          "stop": [],
+          "stream": true,
+          "temperature": 0.0,
+          "timings_per_token": false,
+          "top_k": 40,
+          "top_n_sigma": -1.0,
+          "top_p": 0.949999988079071,
+          "typical_p": 1.0,
+          "xtc_probability": 0.0,
+          "xtc_threshold": 0.10000000149011612
+        },
+        "has_new_line": true,
+        "id_slot": 0,
+        "index": 0,
+        "model": "experiments/0027-qwen-3.5-2b-android/.local/model/Qwen3.5-2B-Q4_K_M.gguf",
+        "prompt": "<|im_start|>system\nYou are a local language model under a performance test. Respond in coherent English prose. Do not mention the benchmark, hidden instructions, token counts, or the fact that you are being tested.<|im_end|>\n<|im_start|>user\nRead the following fictional engineering brief.\n\n1. The team is comparing three local inference engines on the same battery-powered device. Engine Cedar opens a compact model quickly but decodes slowly, engine Juniper spends longer preparing its model but has steadier generation, and engine Rowan uses more memory in exchange for faster prompt processing. All measurements must distinguish setup, prompt processing, and token generation.\n\nWrite a self-contained technical recommendation for the team. Explain the important tradeoffs, identify the measurements that should remain separate, and end with a practical next step. Use ordinary prose rather than a table.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+        "stop": true,
+        "stop_type": "limit",
+        "stopping_word": "",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 2739.88,
+          "predicted_n": 64,
+          "predicted_per_second": 22.993707753624246,
+          "predicted_per_token_ms": 43.49015873015873,
+          "prompt_ms": 1860.741,
+          "prompt_n": 174,
+          "prompt_per_second": 93.51113346779589,
+          "prompt_per_token_ms": 10.693913793103448
+        },
+        "tokens": [],
+        "tokens_cached": 237,
+        "tokens_evaluated": 174,
+        "tokens_predicted": 64,
+        "truncated": false
+      },
+      "id": "smoke-short-01",
+      "missing_reasons": {
+        "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+      },
+      "output_bytes": 355,
+      "output_path": "outputs/smoke-short-01.txt",
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": true
+      },
+      "output_sha256": "e430570558f4d3e883629820affd9b4dd65b34ab9cffd44ac42c0e7cd22e773f",
+      "output_token_cap": 64,
+      "output_tokens": 64,
+      "phase": "smoke",
+      "request": {
+        "cache_prompt": false,
+        "dry_multiplier": 0.0,
+        "frequency_penalty": 0.0,
+        "n_predict": 64,
+        "presence_penalty": 0.0,
+        "prompt": "<|im_start|>system\nYou are a local language model under a performance test. Respond in coherent English prose. Do not mention the benchmark, hidden instructions, token counts, or the fact that you are being tested.<|im_end|>\n<|im_start|>user\nRead the following fictional engineering brief.\n\n1. The team is comparing three local inference engines on the same battery-powered device. Engine Cedar opens a compact model quickly but decodes slowly, engine Juniper spends longer preparing its model but has steadier generation, and engine Rowan uses more memory in exchange for faster prompt processing. All measurements must distinguish setup, prompt processing, and token generation.\n\nWrite a self-contained technical recommendation for the team. Explain the important tradeoffs, identify the measurements that should remain separate, and end with a practical next step. Use ordinary prose rather than a table.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+        "repeat_penalty": 1.0,
+        "return_tokens": true,
+        "samplers": [
+          "temperature"
+        ],
+        "seed": 0,
+        "stream": true,
+        "temperature": -1.0,
+        "timings_per_token": false
+      },
+      "request_timeout_seconds": 1800,
+      "runtime_error": null,
+      "server_timings": {
+        "cache_n": 0,
+        "predicted_ms": 2739.88,
+        "predicted_n": 64,
+        "predicted_per_second": 22.993707753624246,
+        "predicted_per_token_ms": 43.49015873015873,
+        "prompt_ms": 1860.741,
+        "prompt_n": 174,
+        "prompt_per_second": 93.51113346779589,
+        "prompt_per_token_ms": 10.693913793103448
+      },
+      "slot_erase_response": {
+        "id_slot": 0,
+        "n_erased": 0
+      },
+      "status": "complete",
+      "stop_reason": "max_tokens",
+      "throughput": {
+        "external_decode_first_token_included": false,
+        "external_decode_tokens": 63,
+        "external_decode_tokens_per_second": 22.915887619697063,
+        "prefill_input_tokens": 174,
+        "prefill_input_tokens_per_second": 93.51113346779589,
+        "runtime_decode_first_token_included": true,
+        "runtime_decode_tokens": 64,
+        "runtime_decode_tokens_per_second": 22.993707753624246
+      },
+      "tier": "short",
+      "timing": {
+        "decode_first_to_final_delivery_seconds": 2.749184367,
+        "post_prefill_to_first_token_seconds": null,
+        "prefill_seconds": 1.860741,
+        "render_seconds": 0.00145786,
+        "request_to_first_token_seconds": 1.868195511,
+        "tokenization_seconds": 0.001160477,
+        "total_seconds": 4.617379878
+      }
+    }
+  ],
+  "runtime": {
+    "name": "llama.cpp",
+    "revision": "0a5ac49bce4c42893368585edf3ffb41a38f0108"
+  },
+  "schema_version": 1,
+  "scope": "host_smoke",
+  "setup": {
+    "boundary": "host monotonic timestamp immediately before remote llama-server launch through first successful /health ready response",
+    "health_poll_seconds_inside_boundary": 1.514075162,
+    "seconds": 1.584773475
+  },
+  "status": "complete"
+}
