@@ -72,9 +72,9 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="status-header" data-status-header="true">
 <div class="kicker"><span>Experiment 0024</span><span class="status">Completed</span></div>
 <h1>Experiment 0024 — Pocket TTS QNN precompiled-context startup</h1>
-<p class="summary">Pocket TTS could run on QNN, but compiling its eight model sessions made startup take about 27 seconds. Loading precompiled contexts cut that to about one second; both new samples still need listening review.</p>
+<p class="summary">Pocket TTS could run on QNN, but compiling its eight model sessions made startup take about 27 seconds. Loading precompiled contexts cut that to about one second, and Moritz independently accepted both distinct exact-hash samples.</p>
 <div class="header-links"><a href="../../../experiments/0024-pocket-tts-qnn-precompiled-context-startup/">Owning experiment files</a><a href="../../android-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-08-25</span><span>evidence commit: b59601ef66d5d24b6af249ab082291f0c53d4b25</span><span>page source: docs/experiments/0024-pocket-tts-qnn-precompiled-context-startup/page.md</span><span>page source sha256: db953bacfe1f026e59fa9b5122ca9f42ed4bb3724d88ce29d96ecd03d08dddcb</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-25</span><span>evidence commit: 57941f8f8396ac42927d020341b899f20d683706</span><span>page source: docs/experiments/0024-pocket-tts-qnn-precompiled-context-startup/page.md</span><span>page source sha256: 2cf9851d488617fcf44b26666c9bfa03a960918908715c2aa406b8976dca1326</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
@@ -91,8 +91,9 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <li><strong>August 22–23, 2026: Android packages were prepared.</strong> The source and context stages shared the same runner and runtime. The context package contained eight small descriptors and eight external binaries with no source graph. A first approved attempt stopped before ADB because the historical Windows transport was absent; the committed contract then selected the pinned native Linux ADB path.</li>
 <li><strong>August 23, 2026: the first phone window was interrupted.</strong> Three complete source processes and one complete context process passed. During context run 2, an external device disconnect made ADB return 255 before any result was pulled. The run was excluded. A former two-state cleanup check had incorrectly treated transport failure as absence, so the pending root remained.</li>
 <li><strong>August 25, 2026: cleanup was closed and the campaign resumed.</strong> After reconnect, the exact pending root was removed and verified absent with a tri-state check under the phone lock. Two new context processes completed, followed by separate profiled proof processes for both arms.</li>
+<li><strong>August 25, 2026: both retained phone samples were reviewed.</strong> Moritz listened to the distinct source and context WAVs and said “they are good.” The committed record treats this as two independent acceptances, one for each exact hash; neither verdict transfers to another file, the host output, or the Pocket TTS family.</li>
 </ol>
-<p>The <a href="../../../experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-smoke.json">host context result</a> preserves the functional reload evidence. The interrupted run remains in the <a href="../../../experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign-checkpoint/checkpoint.json">phone checkpoint</a>, and the <a href="../../../experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign/cleanup-resume/cleanup-resume.json">cleanup-resume record</a> closes it before the final results. This failure history matters because the six measured benchmark processes span two phone windows rather than one laboratory-controlled sequence.</p>
+<p>The <a href="../../../experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-smoke.json">host context result</a> preserves the functional reload evidence. The interrupted run remains in the <a href="../../../experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign-checkpoint/checkpoint.json">phone checkpoint</a>, the <a href="../../../experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign/cleanup-resume/cleanup-resume.json">cleanup-resume record</a> closes it before the final results, and the <a href="../../../experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/listening-review-2026-08-25.json">listening record</a> binds both later verdicts to their exact retained hashes. This failure history matters because the six measured benchmark processes span two phone windows rather than one laboratory-controlled sequence.</p>
 </section>
 <section class="primary-section" id="results" data-primary-section="results">
 <h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
@@ -136,7 +137,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 </tr>
 </tbody></table></div>
 <p>Every completed benchmark generation reached reference EOS step 160, emitted 163 frames and 312,960 samples, and produced 13.04 seconds of finite, non-silent, unclipped 24 kHz mono PCM16 audio. The source arm was internally deterministic at SHA-256 <code>028f8a1e…4241</code>; the context arm was internally deterministic at <code>7c3fc41d…6d81</code>.</p>
-<p>The two arm outputs are not interchangeable. They are byte-distinct, with correlation <strong>0.453032</strong> and source-over-difference SNR <strong>−0.356050 dB</strong>. Those values are descriptive numerical evidence, not a listening verdict. Both retained phone WAVs remain <strong><code>not_reviewed</code></strong>. Neither inherits experiment 0014&#x27;s verdict because both exact hashes differ.</p>
+<p>The two arm outputs are not interchangeable. They are byte-distinct, with correlation <strong>0.453032</strong> and source-over-difference SNR <strong>−0.356050 dB</strong>. Those values remain descriptive numerical evidence rather than a quality score. Moritz later accepted both retained phone WAVs with “they are good.” These are independent exact-hash verdicts: source SHA-256 <code>028f8a1e…4241</code> is accepted as the source sample, and context SHA-256 <code>7c3fc41d…6d81</code> is accepted as the context sample. Neither verdict comes from experiment 0014 or transfers beyond its own file.</p>
 <div class="table-wrap"><table><thead><tr>
 <th>Evidence class</th>
 <th>What 0024 established</th>
@@ -159,7 +160,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 </tr>
 <tr>
 <td>Exact-sample listening</td>
-<td>Unavailable for both new hashes. Moritz has not committed a verdict for either retained 0024 phone WAV.</td>
+<td>Moritz independently accepted both distinct retained phone WAVs on August 25, 2026, with “they are good.” Each acceptance is bound to its own exact SHA-256.</td>
 </tr>
 </tbody></table></div>
 <p>The <a href="../../../experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/result.json">machine-readable final result</a> contains every run and comparison. Peak PSS was not recorded; the dashboard therefore keeps it unavailable rather than substituting zero. VmHWM is cumulative process-lifecycle high-water, not isolated model or DSP memory. Source runs happened before context runs, the campaign spans two dates, and recorded AP temperatures differed between runs; those order and thermal differences are disclosed confounders. The result is bounded to this reconstructed derivative and does not establish production readiness or an exact 0014 comparison.</p>
