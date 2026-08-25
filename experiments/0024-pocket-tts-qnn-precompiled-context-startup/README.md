@@ -2,7 +2,7 @@
 
 ## Status
 
-**All eight host external-context functional smokes pass; Android E2E and measured cold distributions remain pending because the phone is unavailable.**
+**Complete: external QNN contexts cut median physical-phone setup from 27.0767 seconds to 1.01122 seconds while preserving structurally valid canonical-v2 E2E execution. Both new exact WAVs remain `not_reviewed`.**
 
 This experiment compares source-ONNX QNN session creation with external precompiled QNN EPContext reload for a newly reconstructed derivative of experiment 0014’s accepted canonical-v2 fixed-Alba/cache512 Pocket route.
 
@@ -13,6 +13,35 @@ It is **not** the exact 0014 graph set. The ignored historical graph/work files 
 - all eight 0014 derivative hashes consequently differ.
 
 The unavailable historical Python/protobuf package state is not treated as an indefinite blocker. Experiment 0024 names and fingerprints its deterministic derivative honestly, requires fresh fallback-disabled QNN assignment for every graph, and requires fresh E2E/audio validation. See [`results/reconstruction.json`](results/reconstruction.json) for the full boundary, source/base hashes, operator counts, initializer-payload fingerprints, and I/O names.
+
+## Final physical-phone result
+
+Three independent fresh processes per arm each created all eight sessions, then ran one first and five warm complete generations with full state reset before every generation.
+
+| Measurement | Source ONNX | External QNN context |
+|---|---:|---:|
+| Fresh setup runs | 27.0767, 23.8668, 28.6125 s | 0.729463, 1.26412, 1.01122 s |
+| **Median setup** | **27.0767 s** | **1.01122 s** |
+| Median first RTF | 0.172432 | 0.167330 |
+| Pooled 15-warm median RTF | 0.168605 | 0.164032 |
+| Warm RTF range | 0.164660–0.177048 | 0.163039–0.165763 |
+| Maximum process VmHWM | 2,568,248 kB | 201,616 kB |
+| Representative WAV | `028f8a1e…4241` | `7c3fc41d…6d81` |
+| Listening status | `not_reviewed` | `not_reviewed` |
+
+Observed median setup delta is **26.06548 seconds**, a **96.26535% reduction** or **26.7763×** source/context ratio. There was no minimum speedup gate. Every completed output had reference EOS 160, 163 frames, 312,960 samples, and 13.04 seconds of finite, non-silent, unclipped 24 kHz mono PCM16 audio. RTF uses each run’s actual emitted duration.
+
+The campaign spans two authorized phone windows because of an external disconnect. Source runs occurred first; context run 1 followed on the same window, while context runs 2–3 and both proofs ran after reconnect two days later. AP start/end temperatures ranged 34.9→51.0, 36.2→51.1, and 50.8→59.0 °C for source; 44.5→53.6, 32.1→41.4, and 37.5→48.0 °C for context. The phone was USB powered. These order/date/thermal differences are disclosed confounders, not laboratory control. VmHWM is cumulative process high-water, not isolated model memory.
+
+The WAVs are byte-distinct and numerically divergent (correlation `0.4530`, source-over-difference SNR `-0.356 dB`). This is descriptive, not an execution blocker or listening verdict. Exact retained samples: [`results/phone-campaign/source.wav`](results/phone-campaign/source.wav) and [`results/phone-campaign/context.wav`](results/phone-campaign/context.wav).
+
+Separate profiled processes, excluded from the unprofiled setup/RTF distributions, proved both arms physical and fallback-free:
+
+- source: 344 QNN / 0 CPU events, exactly 344 RPC/accelerator/cycle/HVX records, 3,989,277,125 cycles;
+- context: 344 QNN / 0 CPU events, exactly 344 RPC/accelerator/cycle/HVX records, 3,998,683,560 cycles;
+- each HVX thread sum was 1,376.
+
+Full machine result: [`results/result.json`](results/result.json). Hash-bound phone package: [`results/phone-campaign/evidence-manifest.json`](results/phone-campaign/evidence-manifest.json).
 
 ## CPU gate
 
@@ -53,14 +82,14 @@ These are one-process-per-component functional host smokes, not a three-run cold
 
 ## Frozen comparison
 
-Both eventual phone arms use the same eight 0024 graph derivatives, ABI, runtime/provider options, canonical inputs, runner, and phone:
+Both measured phone arms used the same eight 0024 graph derivatives, ABI, runtime/provider options, canonical inputs, runner, and phone:
 
 1. **Source arm:** create eight QNN sessions from source ONNX; compilation is inside measured setup.
 2. **Context arm:** create the same sessions from non-embedded EPContext ONNX descriptors plus external `<stem>_qnn.bin` files; offline context generation is reported separately and excluded from reload setup.
 
 Sessions are text conditioner, text prefill, BOS AR, latent AR, flow, and Mimi decoder 12/6/1. CPU fallback remains disabled. Context reload must pass in a fresh isolated Docker process where only the descriptor, binary, smoke tool, required input fixture, ORT runtime, and QNN backend are mounted—source ONNX is unavailable.
 
-After host smoke and complete E2E, each arm requires at least three fresh cold phone processes. Every benchmark process creates sessions once, runs one first complete generation plus five warm generations, and fully resets model/cache/decoder/noise state before every generation. The observed setup delta will be reported without a minimum speedup gate. CPU-reference EOS 160 / 163 frames remains recorded, but equality is descriptive: the runner reports `behavior_matches_reference` and fails only for real execution, decode, or structural invalidity. Every RTF uses that run’s actual emitted duration.
+Each arm completed three fresh cold phone processes. Every benchmark process created sessions once, ran one first complete generation plus five warm generations, and fully reset model/cache/decoder/noise state before every generation. CPU-reference EOS 160 / 163 frames remained descriptive: the runner reports `behavior_matches_reference` and fails only for real execution, decode, or structural invalidity.
 
 ## Prepared Android packages
 
@@ -83,20 +112,15 @@ The authorized campaign completed three source benchmark processes and one conte
 - every completed process ran one first plus five warm generations, matched reference EOS/frame behavior, passed structural/stage/identity gates, and verified cleanup;
 - both new WAV hashes are `not_reviewed`.
 
-Interrupted context run `phone-context-20260823T085809Z-225310` passed exact identity, context source-absence, full stage push, and local/remote manifest equality. The runner ADB command then returned 255 after the external disconnect; no result or WAV was pulled. It is excluded from measurements and is not a QNN/model failure. The exact remote root may still exist, so authoritative cleanup status is **`pending_device_reconnect`**. The preserved historical `cleanup-proof.txt=cleanup_ok` is invalid because the former two-state test conflated ADB failure with absence.
+Interrupted context run `phone-context-20260823T085809Z-225310` passed exact identity, context source-absence, full stage push, and local/remote manifest equality. The runner ADB command then returned 255 after the external disconnect; no result or WAV was pulled. It is excluded from measurements and is not a QNN/model failure. The preserved historical `cleanup-proof.txt=cleanup_ok` is invalid because the former two-state test conflated ADB failure with absence. On the authorized reconnect, the exact pending root was removed and tri-state verified absent under `phone.lock` before any new staging. The campaign resumed with fresh context IDs; the interrupted run remained excluded.
 
-Machine evidence and raw local interruption files: [`results/phone-campaign-checkpoint/checkpoint.json`](results/phone-campaign-checkpoint/checkpoint.json). Before any future staging, acquire `phone.lock`, validate the authorized device/transport, remove `/data/local/tmp/experiment-0024-pocket-context-context-20260823T085809Z-225310`, and prove it absent using the new transport-aware three-state cleanup gate. Resume with a fresh context run ID.
+Machine interruption history: [`results/phone-campaign-checkpoint/checkpoint.json`](results/phone-campaign-checkpoint/checkpoint.json). Cleanup closure: [`results/phone-campaign/cleanup-resume/cleanup-resume.json`](results/phone-campaign/cleanup-resume/cleanup-resume.json).
 
-## Pending claims
+## Claim boundary
 
-- Host QNN source assignment/context generation/isolated reload: **passed for all eight functional smokes**.
-- Source cold setup runs: **3/3 complete**.
-- Context cold setup runs: **1/3 complete**; interrupted run excluded.
-- Full source/context setup comparison: **pending / null**.
-- Physical RPC/accelerator/cycle/HVX evidence: **pending / null**.
-- New phone WAV listening verdicts: **not_reviewed**.
+Completed claims are bounded to this deterministic 0024 reconstruction derivative, fixed Alba, canonical-v2 text, exact fixtures, ORT 1.27.1, QAIRT 2.49.0, and the authorized SM-S918B. Host context generation is offline cost and not charged to phone reload setup. Physical proof establishes the observed calls, not arbitrary graphs or production readiness.
 
-The campaign remains paused on external device availability and pending remote cleanup verification.
+The only remaining quality field is human review: both exact phone WAVs are **`not_reviewed`**. Neither inherits experiment 0014’s verdict because both hashes differ. No listening-quality claim is made.
 
 ## Reproduction
 

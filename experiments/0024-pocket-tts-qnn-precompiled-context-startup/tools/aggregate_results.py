@@ -6,8 +6,11 @@ import argparse
 import hashlib
 import json
 import statistics
+import wave
 from pathlib import Path
 from typing import Any
+
+import numpy as np
 
 
 def sha(path: Path) -> str:
@@ -16,6 +19,21 @@ def sha(path: Path) -> str:
 
 def load(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text())
+
+
+def wav_record(path: Path) -> tuple[dict[str, Any], np.ndarray]:
+    with wave.open(str(path), "rb") as stream:
+        if (stream.getnchannels(), stream.getsampwidth(), stream.getframerate(), stream.getcomptype()) != (1, 2, 24000, "NONE"):
+            raise SystemExit(f"unexpected WAV format: {path}")
+        frames = stream.getnframes()
+        values = np.frombuffer(stream.readframes(frames), dtype="<i2").astype(np.float64)
+    return ({"path": str(path), "bytes": path.stat().st_size, "sha256": sha(path),
+             "channels": 1, "sample_width_bytes": 2, "sample_rate_hz": 24000,
+             "samples": frames, "seconds": frames / 24000,
+             "peak_abs_pcm16": int(np.max(np.abs(values))),
+             "rms_pcm16": float(np.sqrt(np.mean(values * values))),
+             "finite": bool(np.isfinite(values).all()), "non_silent": bool(np.any(values)),
+             "unclipped": bool(np.max(np.abs(values)) < 32767)}, values)
 
 
 def arm_summary(paths: list[Path], expected: str) -> dict[str, Any]:
@@ -42,6 +60,7 @@ def arm_summary(paths: list[Path], expected: str) -> dict[str, Any]:
         "runs": [row["run"] for row in rows],
         "max_vm_hwm_kb": max(row["memory"]["max_vm_hwm_kb"] for row in rows),
         "listening": [row["listening"] for row in rows],
+        "run_evidence": rows,
     }
 
 
@@ -89,6 +108,10 @@ def main() -> None:
     parser.add_argument("--source-proof", type=Path)
     parser.add_argument("--context-proof", type=Path)
     parser.add_argument("--graph-inventory", type=Path, required=True)
+    parser.add_argument("--interruption-checkpoint", type=Path)
+    parser.add_argument("--cleanup-resume", type=Path)
+    parser.add_argument("--source-wav", type=Path, required=True)
+    parser.add_argument("--context-wav", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     source = arm_summary(args.source, "source")
@@ -96,6 +119,23 @@ def main() -> None:
     source_setup = source["setup_median_seconds"]
     context_setup = context["setup_median_seconds"]
     delta = source_setup - context_setup
+    source_wav, source_pcm = wav_record(args.source_wav)
+    context_wav, context_pcm = wav_record(args.context_wav)
+    if source_pcm.shape != context_pcm.shape:
+        raise SystemExit("source/context WAV lengths differ")
+    difference = source_pcm - context_pcm
+    output_comparison = {
+        "source": source_wav, "context": context_wav,
+        "byte_identical_between_arms": source_wav["sha256"] == context_wav["sha256"],
+        "equal_length": True,
+        "max_abs_pcm16": float(np.max(np.abs(difference))),
+        "mae_pcm16": float(np.mean(np.abs(difference))),
+        "correlation": float(np.corrcoef(source_pcm, context_pcm)[0, 1]),
+        "snr_db_source_over_difference": float(10 * np.log10(np.mean(source_pcm * source_pcm) / np.mean(difference * difference))) if np.any(difference) else None,
+        "source_listening": {"status": "not_reviewed", "sha256": source_wav["sha256"]},
+        "context_listening": {"status": "not_reviewed", "sha256": context_wav["sha256"]},
+        "policy": "Numerical/WAV differences are descriptive, not automatic blockers. Both exact byte-distinct WAVs remain not_reviewed pending Moritz."
+    }
     result = {
         "schema_version": 1,
         "status": "complete",
@@ -116,11 +156,11 @@ def main() -> None:
             "source": load(args.source_proof) if args.source_proof else None,
             "context": load(args.context_proof) if args.context_proof else None,
         },
-        "output_comparison": {
-            "source_wav_sha256": source["wav_sha256"],
-            "context_wav_sha256": context["wav_sha256"],
-            "byte_identical_between_arms": source["wav_sha256"] == context["wav_sha256"],
-            "policy": "Numerical/WAV differences are descriptive, not automatic blockers. Exact byte-different WAVs remain not_reviewed pending Moritz.",
+        "output_comparison": output_comparison,
+        "campaign_history": {
+            "interruption_checkpoint": load(args.interruption_checkpoint) if args.interruption_checkpoint else None,
+            "pending_root_cleanup_resume": load(args.cleanup_resume) if args.cleanup_resume else None,
+            "interrupted_run_excluded": True,
         },
         "benchmark_semantics": {
             "sessions_created_once_per_fresh_process": True,

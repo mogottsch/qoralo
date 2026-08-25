@@ -182,6 +182,40 @@ class ContractTest(unittest.TestCase):
         self.assertIn("EOS/frame differences are descriptive", analyzer)
         self.assertIn("Descriptive only; structural validity/provider proof", proof)
 
+    def test_final_phone_result_and_evidence_package(self):
+        result = json.loads((EXP / "results/result.json").read_text())
+        self.assertEqual(result["status"], "complete")
+        source = result["comparison"]["source"]
+        context = result["comparison"]["context"]
+        self.assertEqual(source["setup_seconds"], [27.0767, 23.8668, 28.6125])
+        self.assertEqual(context["setup_seconds"], [0.729463, 1.26412, 1.01122])
+        self.assertEqual(source["warm_generation_count"], 15)
+        self.assertEqual(context["warm_generation_count"], 15)
+        self.assertAlmostEqual(result["comparison"]["observed_setup_delta_seconds_source_minus_context"], 26.06548)
+        self.assertAlmostEqual(result["comparison"]["observed_setup_reduction_percent"], 96.26534991339418)
+        self.assertIsNone(result["comparison"]["minimum_speedup_gate"])
+        for arm in ("source", "context"):
+            aggregate = result["physical_proof"][arm]["aggregate"]
+            self.assertEqual(aggregate["provider_events"], {"QNNExecutionProvider": 344})
+            self.assertEqual(aggregate["rpc_execute_events"], 344)
+            self.assertEqual(aggregate["accelerator_execute_events"], 344)
+            self.assertEqual(aggregate["cycle_events"], 344)
+            self.assertEqual(aggregate["hvx_events"], 344)
+            self.assertTrue(aggregate["all_invoked_calls_qnn_only"])
+        output = result["output_comparison"]
+        self.assertEqual(output["source_listening"]["status"], "not_reviewed")
+        self.assertEqual(output["context_listening"]["status"], "not_reviewed")
+        for arm in ("source", "context"):
+            wav = EXP / "results/phone-campaign" / f"{arm}.wav"
+            self.assertEqual(hashlib.sha256(wav.read_bytes()).hexdigest(), output[arm]["sha256"])
+        self.assertEqual(result["campaign_history"]["pending_root_cleanup_resume"]["tri_state_status"], "verified_absent")
+        manifest = json.loads((EXP / "results/phone-campaign/evidence-manifest.json").read_text())
+        self.assertEqual(manifest["status"], "complete_hash_bound_phone_evidence")
+        for record in manifest["files"]:
+            path = EXP / "results/phone-campaign" / record["path"]
+            self.assertEqual(path.stat().st_size, record["bytes"])
+            self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), record["sha256"])
+
     def test_executables(self):
         for path in list((EXP / "tools").glob("*.sh")) + list((EXP / "device").glob("*.sh")):
             self.assertTrue(os.access(path, os.X_OK), path)

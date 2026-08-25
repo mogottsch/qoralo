@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0024-pocket-tts-qnn-precompiled-context-startup",
-  "status": "phone_campaign_paused_external_disconnect_cleanup_pending",
+  "status": "complete_phone_source_vs_context_cold_distribution_and_physical_proofs",
   "goal": "Compare cold QNN session readiness from source ONNX against external precompiled QNN EPContext reload for a freshly validated 0024 reconstruction derivative of the accepted Pocket canonical-v2 fixed-Alba cache512 route.",
   "comparison": {
     "arm_a": "Eight source ONNX graphs; QNN compilation occurs inside measured session creation.",
@@ -101,8 +101,28 @@
     "interrupted_run": "phone-context-20260823T085809Z-225310",
     "interruption_classification": "external_device_disconnect_incomplete_excluded",
     "pending_remote_root": "/data/local/tmp/experiment-0024-pocket-context-context-20260823T085809Z-225310",
-    "cleanup_status": "pending_device_reconnect",
+    "cleanup_status_at_checkpoint": "pending_device_reconnect",
+    "resolution": "On 2026-08-25, exact transport/device identity was revalidated under phone.lock, the pending root was removed, and tri-state status was verified_absent before fresh context run IDs were used.",
     "resume_policy": "Before any new staging/run, acquire phone.lock, revalidate exact device/transport, remove exactly the pending root, verify absence with the tri-state gate, then use a fresh context run ID."
+  },
+  "final_phone_result": {
+    "evidence": "results/result.json",
+    "source_setup_seconds": [27.0767, 23.8668, 28.6125],
+    "context_setup_seconds": [0.729463, 1.26412, 1.01122],
+    "source_median_setup_seconds": 27.0767,
+    "context_median_setup_seconds": 1.01122,
+    "observed_setup_delta_seconds": 26.06548,
+    "observed_setup_reduction_percent": 96.26534991339418,
+    "source_over_context_setup_ratio": 26.776270247819465,
+    "minimum_speedup_gate": null,
+    "source_pooled_warm_median_rtf": 0.168605,
+    "context_pooled_warm_median_rtf": 0.164032,
+    "source_wav": {"sha256": "028f8a1e1861f8004619294738d9aa14509b2c3e5e5e626d99113700ab574241", "listening": "not_reviewed"},
+    "context_wav": {"sha256": "7c3fc41d320e391ed39c10398f9c013d01cba93b9c733d3df546d31a0d006d81", "listening": "not_reviewed"},
+    "source_physical": {"QNNExecutionProvider": 344, "CPUExecutionProvider": 0, "rpc": 344, "accelerator": 344, "cycles": 344, "hvx": 344},
+    "context_physical": {"QNNExecutionProvider": 344, "CPUExecutionProvider": 0, "rpc": 344, "accelerator": 344, "cycles": 344, "hvx": 344},
+    "interrupted_run_excluded": true,
+    "pending_remote_root_cleanup": "verified_absent_before_resume"
   },
   "runtime": {
     "onnxruntime": "1.27.1",

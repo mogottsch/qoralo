@@ -1,0 +1,338 @@
+{
+  "schema_version": 1,
+  "run": "phone-context-proof-20260825T073954Z-322234",
+  "route": "fixed_alba_fallback_disabled_qnn_context_comparison",
+  "arm": "context",
+  "model_format": "external_qnn_epcontext",
+  "source_onnx_unavailable": true,
+  "canonical_transcript": {
+    "version": 2,
+    "bytes": 226,
+    "sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67"
+  },
+  "frontend": {
+    "token_count": 64,
+    "token_fixture_sha256": "56d50c958627be19a7f2c86dde68a537a80f3f6d9087c16f55fde58c4d117c82"
+  },
+  "static_abi": {
+    "capacity": 512,
+    "voice_positions": 126,
+    "text_positions": 64,
+    "frame_cap": 292,
+    "bos_absolute_position": 190
+  },
+  "cpu_fallback_disabled": true,
+  "profiles": [
+    {
+      "component": "ar_bos",
+      "ort_profile": "ar_bos_2026-08-25_09-40-07_892.json",
+      "provider_events": {
+        "QNNExecutionProvider": 1
+      },
+      "physical": {
+        "rpc_execute_events": 1,
+        "rpc_execute_us": 37244,
+        "accelerator_execute_events": 1,
+        "accelerator_execute_us": 36848,
+        "cycle_events": 1,
+        "accelerator_cycles": 16186255,
+        "hvx_events": 1,
+        "hvx_thread_sum": 4
+      }
+    },
+    {
+      "component": "ar_latent",
+      "ort_profile": "ar_latent_2026-08-25_09-40-07_996.json",
+      "provider_events": {
+        "QNNExecutionProvider": 163
+      },
+      "physical": {
+        "rpc_execute_events": 163,
+        "rpc_execute_us": 3238719,
+        "accelerator_execute_events": 163,
+        "accelerator_execute_us": 3099822,
+        "cycle_events": 163,
+        "accelerator_cycles": 2686624340,
+        "hvx_events": 163,
+        "hvx_thread_sum": 652
+      }
+    },
+    {
+      "component": "decoder12",
+      "ort_profile": "decoder12_2026-08-25_09-40-08_154.json",
+      "provider_events": {
+        "QNNExecutionProvider": 13
+      },
+      "physical": {
+        "rpc_execute_events": 13,
+        "rpc_execute_us": 944248,
+        "accelerator_execute_events": 13,
+        "accelerator_execute_us": 931744,
+        "cycle_events": 13,
+        "accelerator_cycles": 1047284500,
+        "hvx_events": 13,
+        "hvx_thread_sum": 52
+      }
+    },
+    {
+      "component": "decoder1",
+      "ort_profile": "decoder1_2026-08-25_09-40-08_244.json",
+      "provider_events": {
+        "QNNExecutionProvider": 1
+      },
+      "physical": {
+        "rpc_execute_events": 1,
+        "rpc_execute_us": 17980,
+        "accelerator_execute_events": 1,
+        "accelerator_execute_us": 17643,
+        "cycle_events": 1,
+        "accelerator_cycles": 18454164,
+        "hvx_events": 1,
+        "hvx_thread_sum": 4
+      }
+    },
+    {
+      "component": "decoder6",
+      "ort_profile": "decoder6_2026-08-25_09-40-08_203.json",
+      "provider_events": {
+        "QNNExecutionProvider": 1
+      },
+      "physical": {
+        "rpc_execute_events": 1,
+        "rpc_execute_us": 64144,
+        "accelerator_execute_events": 1,
+        "accelerator_execute_us": 63619,
+        "cycle_events": 1,
+        "accelerator_cycles": 49242560,
+        "hvx_events": 1,
+        "hvx_thread_sum": 4
+      }
+    },
+    {
+      "component": "flow",
+      "ort_profile": "flow_2026-08-25_09-40-08_134.json",
+      "provider_events": {
+        "QNNExecutionProvider": 163
+      },
+      "physical": {
+        "rpc_execute_events": 163,
+        "rpc_execute_us": 414445,
+        "accelerator_execute_events": 163,
+        "accelerator_execute_us": 409136,
+        "cycle_events": 163,
+        "accelerator_cycles": 156383503,
+        "hvx_events": 163,
+        "hvx_thread_sum": 652
+      }
+    },
+    {
+      "component": "prefill_text",
+      "ort_profile": "prefill_text_2026-08-25_09-40-07_778.json",
+      "provider_events": {
+        "QNNExecutionProvider": 1
+      },
+      "physical": {
+        "rpc_execute_events": 1,
+        "rpc_execute_us": 57263,
+        "accelerator_execute_events": 1,
+        "accelerator_execute_us": 57036,
+        "cycle_events": 1,
+        "accelerator_cycles": 24067531,
+        "hvx_events": 1,
+        "hvx_thread_sum": 4
+      }
+    },
+    {
+      "component": "text",
+      "ort_profile": "text_2026-08-25_09-40-07_530.json",
+      "provider_events": {
+        "QNNExecutionProvider": 1
+      },
+      "physical": {
+        "rpc_execute_events": 1,
+        "rpc_execute_us": 776,
+        "accelerator_execute_events": 1,
+        "accelerator_execute_us": 700,
+        "cycle_events": 1,
+        "accelerator_cycles": 440707,
+        "hvx_events": 1,
+        "hvx_thread_sum": 4
+      }
+    }
+  ],
+  "aggregate": {
+    "provider_events": {
+      "QNNExecutionProvider": 344
+    },
+    "rpc_execute_events": 344,
+    "rpc_execute_us": 4774819,
+    "accelerator_execute_events": 344,
+    "accelerator_execute_us": 4616548,
+    "cycle_events": 344,
+    "accelerator_cycles": 3998683560,
+    "hvx_events": 344,
+    "hvx_thread_sum": 1376,
+    "all_invoked_calls_qnn_only": true,
+    "all_physical_event_counts_match_qnn": true
+  },
+  "reference_behavior": {
+    "expected_eos_step": 160,
+    "expected_frames": 163,
+    "observed_eos_step": 160,
+    "observed_frames": 163,
+    "matches_reference": true,
+    "policy": "Descriptive only; structural validity/provider proof do not require EOS/frame equality."
+  },
+  "result": {
+    "route": "fixed_alba_fallback_disabled_qnn_context_comparison",
+    "arm": "context",
+    "model_format": "external_qnn_epcontext",
+    "source_onnx_unavailable": true,
+    "variant": "pocket-fixed-alba-text64-cache512-canonical-v2-0024-reconstruction-derivative",
+    "provider": "QNNExecutionProvider",
+    "cpu_fallback": false,
+    "graph_optimization": "basic",
+    "temperature": 0.3,
+    "seed": 0,
+    "noise_fixture": "NumPy RandomState MT19937 normal",
+    "canonical_transcript": {
+      "version": 2,
+      "bytes": 226,
+      "sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67"
+    },
+    "frontend": {
+      "token_count": 64,
+      "token_fixture_sha256": "56d50c958627be19a7f2c86dde68a537a80f3f6d9087c16f55fde58c4d117c82"
+    },
+    "static_abi": {
+      "capacity": 512,
+      "voice_positions": 126,
+      "text_positions": 64,
+      "frame_cap": 292,
+      "bos_absolute_position": 190
+    },
+    "max_frames": 292,
+    "warm_runs": 0,
+    "expected_eos_step": 160,
+    "expected_frames": 163,
+    "profiled": true,
+    "setup_seconds": 0.748315,
+    "setup_vm_hwm_kb": 187104,
+    "iterations": [
+      {
+        "index": 0,
+        "kind": "first",
+        "wav": "first.wav",
+        "generation_seconds": 7.95197,
+        "audio_seconds": 13.04,
+        "rtf": 0.609813,
+        "component_seconds": {
+          "text": 0.00126698,
+          "prefill": 0.0684925,
+          "ar": 5.54716,
+          "flow": 1.05022,
+          "decoder": 1.25135
+        },
+        "eos_step": 160,
+        "latent_frames": 163,
+        "behavior_matches_reference": true,
+        "samples": 312960,
+        "peak_float": 0.612793,
+        "vm_hwm_kb": 188300
+      }
+    ],
+    "state_reset": {
+      "flow_cache": "fresh from immutable packed Alba for every iteration",
+      "decoder": "fresh complete 56-tensor state for every iteration",
+      "noise": "identical rows replayed from start for every iteration",
+      "tokens": "text conditioner rerun from identical IDs every iteration"
+    },
+    "ort_profiles": [
+      "/data/local/tmp/experiment-0024-pocket-context-context-proof-20260825T073954Z-322234/profiles/text_2026-08-25_09-40-07_530.json",
+      "/data/local/tmp/experiment-0024-pocket-context-context-proof-20260825T073954Z-322234/profiles/prefill_text_2026-08-25_09-40-07_778.json",
+      "/data/local/tmp/experiment-0024-pocket-context-context-proof-20260825T073954Z-322234/profiles/ar_bos_2026-08-25_09-40-07_892.json",
+      "/data/local/tmp/experiment-0024-pocket-context-context-proof-20260825T073954Z-322234/profiles/ar_latent_2026-08-25_09-40-07_996.json",
+      "/data/local/tmp/experiment-0024-pocket-context-context-proof-20260825T073954Z-322234/profiles/flow_2026-08-25_09-40-08_134.json",
+      "/data/local/tmp/experiment-0024-pocket-context-context-proof-20260825T073954Z-322234/profiles/decoder12_2026-08-25_09-40-08_154.json",
+      "/data/local/tmp/experiment-0024-pocket-context-context-proof-20260825T073954Z-322234/profiles/decoder6_2026-08-25_09-40-08_203.json",
+      "/data/local/tmp/experiment-0024-pocket-context-context-proof-20260825T073954Z-322234/profiles/decoder1_2026-08-25_09-40-08_244.json"
+    ]
+  },
+  "wav": {
+    "sha256": "7c3fc41d320e391ed39c10398f9c013d01cba93b9c733d3df546d31a0d006d81",
+    "bytes": 625964,
+    "channels": 1,
+    "sample_width_bytes": 2,
+    "sample_rate_hz": 24000,
+    "samples": 312960,
+    "seconds": 13.04,
+    "peak_abs_pcm16": 20079,
+    "rms_pcm16": 3798.1005033062393,
+    "finite": true,
+    "non_silent": true,
+    "unclipped": true
+  },
+  "memory": {
+    "method": "getrusage(RUSAGE_SELF).ru_maxrss / process VmHWM on Android",
+    "vm_hwm_kb": 188300,
+    "lifecycle": "cumulative process high-water including profiled sessions, QNN contexts, caches, buffers, profiles, and output"
+  },
+  "thermal": {
+    "before": {
+      "status": 0,
+      "temperatures_c": {
+        "AP": 36.1,
+        "BAT": 31.5,
+        "SKIN": 34.2
+      },
+      "sha256": "af43780b99338c61ba1d3685f6ae9c76501651fe4ba11f9aa3ad76ec849ed801"
+    },
+    "after": {
+      "status": 0,
+      "temperatures_c": {
+        "AP": 39.3,
+        "BAT": 31.4,
+        "SKIN": 34.1
+      },
+      "sha256": "b7a32bc735b012e1d36d71a2faf67e4f33743e106f0aec995196ec3548efa148"
+    }
+  },
+  "battery": {
+    "before": {
+      "level_percent": 96,
+      "temperature_c": 31.5,
+      "usb_powered": true,
+      "ac_powered": false,
+      "sha256": "3d48fcfe7296d262272772e4d583387356ea38b990ae823eb7e8eeaceb154796"
+    },
+    "after": {
+      "level_percent": 97,
+      "temperature_c": 31.4,
+      "usb_powered": true,
+      "ac_powered": false,
+      "sha256": "ec27d27eca31ee5d073f5ca0ff40b059b5528b747a46a85fd008a4f0f27c81ac"
+    }
+  },
+  "safety": {
+    "identity": [
+      "serial=R5CW81PR8SY",
+      "manufacturer=samsung",
+      "model=SM-S918B",
+      "device=dm3q",
+      "soc=SM8550",
+      "abi=arm64-v8a",
+      "boot=1",
+      "verified_boot=green",
+      "flash_locked=1"
+    ],
+    "stage_hashes_equal": true,
+    "runner_exit": 0,
+    "cleanup_exit": 0,
+    "cleanup_verified": true
+  },
+  "listening": {
+    "status": "not_reviewed",
+    "sha256": "7c3fc41d320e391ed39c10398f9c013d01cba93b9c733d3df546d31a0d006d81",
+    "reason": "Byte-different output requires exact-hash Moritz review; numerical differences are descriptive only."
+  }
+}
