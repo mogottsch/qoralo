@@ -8,6 +8,10 @@ project: vibevoice-android-spike
 
 This is an append-only record of meaningful wiki maintenance. Evidence changes remain recorded in their owning experiment commits.
 
+## [2026-08-25] listening | Pocket 0024 exact-hash acceptances
+
+Updated the Pocket model note after Moritz independently accepted the distinct experiment-0024 source-ONNX and external-context phone WAVs with the verdict “they are good.” The two verdicts remain bound to their exact hashes and do not establish output equivalence or transfer to host output, other hashes, or the Pocket family.
+
 ## [2026-08-25] models | Registry-complete model baseline
 
 Added one evidence-bounded note for each of the six model labels in the Android benchmark registry: VibeVoice 1.5B, VibeVoice Realtime 0.5B, Supertonic 3, Pocket TTS, Kokoro, and MOSS-TTS-Nano. The notes record upstream identities, project routes, terminal blockers, limitations, and evidence paths without transferring route-specific listening verdicts.

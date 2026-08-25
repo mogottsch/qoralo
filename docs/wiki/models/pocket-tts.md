@@ -33,7 +33,7 @@ The source-derived experiments pin upstream Pocket code revision `d108410d23eef7
 | `0012` | Five-component source-derived FP ONNX CPU and ExecuTorch screen | **ONNX ran; ExecuTorch blocked.** Later evidence showed that the ONNX route had exercised an invalid Bria cloning contract against a no-voice-cloning checkpoint whose relevant Mimi encoder tensors were zero. |
 | `0014` | QNN investigation and recovered official fixed-Alba route | **Ran.** Historical invalid voice-input routes remain preserved. Separate fixed-Alba CPU and fallback-disabled QNN/HTP derivatives completed, including distinct canonical-v2 text64/cache512 routes. |
 | `0016` | Mixed QNN/HTP plus CPU fallback | **Ran, but remained hybrid.** It changed the output, was slower per generated audio second than the matched 0012 CPU route, and its exact retained sample was rejected. |
-| `0024` | Canonical-v2 reconstructed source ONNX versus external contexts | **Ran as a new derivative.** Context loading cut the matched eight-session setup boundary, but the source and context WAVs differ and both exact hashes remain `not_reviewed`. |
+| `0024` | Canonical-v2 reconstructed source ONNX versus external contexts | **Ran as a new derivative.** Context loading cut the matched eight-session setup boundary. The source and context phone WAVs are distinct; Moritz independently accepted each exact hash with the verdict “they are good.” |
 
 The current canonical fixed-voice route combines [Fixed Alba](../concepts/fixed-alba.md), [text64](../concepts/text64.md), and [cache512](../concepts/cache512.md). These names describe one bounded input and graph contract, not the entire Pocket model family.
 
@@ -43,7 +43,7 @@ The current canonical fixed-voice route combines [Fixed Alba](../concepts/fixed-
 - Experiment 0012's source/ONNX agreement validated a broken audio-cloning contract, not useful speech.
 - Fixed-cache derivatives, dynamic graphs, archive graphs, text26/cache256 graphs, text64/cache512 graphs, and the reconstructed 0024 graphs are distinct artifacts.
 - QNN provider assignment and physical accelerator evidence do not establish numerical equivalence or listening quality.
-- Experiment 0024 reconstructed from pinned sources but did not reproduce experiment 0014's graph hashes. Its results and unreviewed output hashes therefore stay separate.
+- Experiment 0024 reconstructed from pinned sources but did not reproduce experiment 0014's graph hashes. Its source WAV `028f8a1e1861f8004619294738d9aa14509b2c3e5e5e626d99113700ab574241` and context WAV `7c3fc41d320e391ed39c10398f9c013d01cba93b9c733d3df546d31a0d006d81` are byte-distinct and have separate exact-hash acceptances. Those verdicts do not establish equivalence and do not transfer to host output, other hashes, or the Pocket family.
 - Accepted or rejected listening verdicts apply only to their exact WAV hashes and routes. Neither kind of verdict generalizes to Pocket TTS as a family.
 - The committed routes do not establish arbitrary speakers, arbitrary text lengths, streaming first-audio latency, or production readiness.
 
@@ -69,3 +69,4 @@ See [Evidence boundaries](../methods/evidence-boundaries.md).
 - `experiments/0016-pocket-onnx-qnn-hybrid-android/results/hybrid-phone.json`
 - `experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/result.json`
 - `experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/reconstruction.json`
+- `experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/listening-review-2026-08-25.json`
