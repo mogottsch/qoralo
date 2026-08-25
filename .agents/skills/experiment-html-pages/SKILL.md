@@ -37,9 +37,19 @@ Status is presentation, not an execution gate. Use the owning committed evidence
 
 ### Experiment description
 
-Explain the experiment in a flexible narrative. Cover the motivation, question, approach, relevant setup, and scope to the degree useful for that experiment. Diagrams, tables, commands, graph lineage, model/runtime/device details, and links are optional tools rather than required fields.
+Lead with the human reason for the work. A reader who once knew the project but has forgotten this experiment should recover its purpose from the first paragraph in a few seconds. Start in plain language with:
 
-A reader should understand what was attempted and why without reading raw JSON.
+- the practical problem or uncertainty that prompted the experiment;
+- the simple idea or question being tested;
+- why answering it mattered to the project or user.
+
+Only then introduce graph identities, hashes, model/runtime details, provider constraints, protocols, and evidence boundaries. Those details are important, but opening with them makes the page accurate without making it useful.
+
+For example, prefer “Pocket TTS could run on QNN, but compiling eight sessions made startup take about 27 seconds. This experiment tested whether compiling once and loading saved contexts could remove that wait without breaking speech generation” over opening with EPContext terminology and fixed-shape identifiers.
+
+Continue with a flexible narrative. Cover the motivation, question, approach, relevant setup, and scope to the degree useful for that experiment. Diagrams, tables, commands, graph lineage, model/runtime/device details, and links are optional tools rather than required fields.
+
+A reader should understand what was attempted and why without reading raw JSON. Re-read the header summary and the opening paragraph before publishing: if they report only the result or implementation and do not quickly restore the experiment's purpose, rewrite them.
 
 ### Progress
 

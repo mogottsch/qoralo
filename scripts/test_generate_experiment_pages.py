@@ -80,6 +80,15 @@ class ExperimentPageTests(unittest.TestCase):
                 pages.inspect_headings(markdown, source)
                 self.assertEqual(metadata["experiment"], source.parent.name)
 
+    def test_description_opens_with_narrative_paragraph(self) -> None:
+        for source in self.sources:
+            with self.subTest(source=source):
+                _, markdown = pages.parse_source(source)
+                description = markdown.split("## Experiment description", 1)[1].split("## Progress", 1)[0]
+                opening = description.strip().split("\n\n", 1)[0].strip()
+                self.assertGreaterEqual(len(opening), 80)
+                self.assertFalse(opening.startswith(("#", "-", "*", "|", ">", "```")))
+
     def test_generated_files_are_current_and_deterministic(self) -> None:
         for source in self.sources:
             with self.subTest(source=source):

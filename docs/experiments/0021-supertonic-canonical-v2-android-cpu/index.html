@@ -39,6 +39,7 @@ h3 { margin:34px 0 10px; color:var(--accent); font-size:20px; line-height:1.25; 
 .anchor { margin-left:9px; opacity:0; font-weight:400; text-decoration:none; }
 h2:hover .anchor,h3:hover .anchor,.anchor:focus { opacity:.5; }
 p,ul,ol,blockquote { max-width:76ch; }
+#experiment-description > p:first-of-type { margin-top:0; color:var(--ink); font-size:1.13em; line-height:1.58; }
 li { margin:7px 0; }
 code { padding:2px 5px; border-radius:5px; background:var(--code); font:13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; overflow-wrap:anywhere; }
 pre { overflow:auto; padding:18px; border:1px solid var(--line); border-radius:10px; background:var(--code); }
@@ -71,13 +72,14 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="status-header" data-status-header="true">
 <div class="kicker"><span>Experiment 0021</span><span class="status">Completed</span></div>
 <h1>Experiment 0021 — Supertonic canonical-v2 Android CPU benchmark</h1>
-<p class="summary">The canonical-v2 released-INT8 CPU route ran end to end on the Galaxy S23 Ultra, stayed below real time, and its exact representative WAV was accepted by Moritz.</p>
+<p class="summary">Existing Supertonic CPU results used an older transcript, so the project needed a clean baseline for its current benchmark text. The new canonical-v2 CPU run stayed below real time, and Moritz accepted its exact retained sample.</p>
 <div class="header-links"><a href="../../../experiments/0021-supertonic-canonical-v2-android-cpu/">Owning experiment files</a><a href="../../android-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-08-20</span><span>evidence commit: 76b63c713fc589c7aa4b88587b334f1db3235a36</span><span>page source: docs/experiments/0021-supertonic-canonical-v2-android-cpu/page.md</span><span>page source sha256: 350285038645deebf47cd68f47046672357384ccca969839b58a908072af4bb6</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-20</span><span>evidence commit: 76b63c713fc589c7aa4b88587b334f1db3235a36</span><span>page source: docs/experiments/0021-supertonic-canonical-v2-android-cpu/page.md</span><span>page source sha256: 2c442247826190696123cbfac36ed355a441122737bb30bcb2d63ac21034c410</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
-<p>Experiment 0021 established a clean Android CPU baseline for Supertonic 3 using the project&#x27;s exact canonical-v2 transcript. Earlier Supertonic measurements used the legacy-v1 text, so this was deliberately recorded as a new route rather than used to rewrite those rows.</p>
+<p>The project needed a trustworthy Supertonic CPU baseline for its current benchmark sentence. Existing Android measurements used an older transcript, which meant they could not cleanly answer how the model performed under the new canonical-v2 test. Experiment 0021 took the straightforward approach: run the released INT8 model on the phone&#x27;s CPU with the exact new text, measure it under the current protocol, and retain a sample for listening.</p>
+<p>Because the transcript changed, this was recorded as a new route rather than used to rewrite the legacy results. That keeps later CPU and accelerator work anchored to the same input while preserving the historical rows for what they actually measured.</p>
 <p>The route pinned the released INT8 ONNX archive and sherpa-onnx 1.13.5 Android runtime. It used the official M1 voice (semantic SID5), English, one inference thread, and the CPU provider on the authorized Samsung Galaxy S23 Ultra (<code>SM-S918B</code>, Snapdragon 8 Gen 2 / <code>SM8550</code>). The exact 226-byte transcript had no trailing newline and SHA-256 <code>424b3807…db67</code>; the official Unicode indexer mapped it to 226 IDs with packed-ID hash <code>32fc2695…fc5f1</code>.</p>
 <p>The timing contract kept setup separate, measured one first generation and five additional same-session warm generations, and divided generation time by each output&#x27;s actual duration. One <code>OfflineTts</code> instance was reused, but every timed iteration made an independent generation call without carrying a model cache, state tensor, or output object into the next call.</p>
 <p>The only adaptation from the frozen historical Android implementation changed verified input storage to the app&#x27;s internal files directory for Android 16 scoped-storage compatibility. Runtime, frontend, timing, memory collection, output validation, and WAV writing stayed frozen. See the <a href="../../../experiments/0021-supertonic-canonical-v2-android-cpu/protocol/benchmark-policy.json">route policy</a>, <a href="../../../experiments/0021-supertonic-canonical-v2-android-cpu/results/frontend-provenance.json">frontend provenance</a>, and <a href="../../../experiments/0021-supertonic-canonical-v2-android-cpu/results/build-and-stage-provenance.json">build/staging provenance</a>.</p>

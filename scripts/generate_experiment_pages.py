@@ -407,6 +407,7 @@ h3 {{ margin:34px 0 10px; color:var(--accent); font-size:20px; line-height:1.25;
 .anchor {{ margin-left:9px; opacity:0; font-weight:400; text-decoration:none; }}
 h2:hover .anchor,h3:hover .anchor,.anchor:focus {{ opacity:.5; }}
 p,ul,ol,blockquote {{ max-width:76ch; }}
+#experiment-description > p:first-of-type {{ margin-top:0; color:var(--ink); font-size:1.13em; line-height:1.58; }}
 li {{ margin:7px 0; }}
 code {{ padding:2px 5px; border-radius:5px; background:var(--code); font:13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; overflow-wrap:anywhere; }}
 pre {{ overflow:auto; padding:18px; border:1px solid var(--line); border-radius:10px; background:var(--code); }}

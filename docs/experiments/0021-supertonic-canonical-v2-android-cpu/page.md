@@ -1,7 +1,7 @@
 ---
 experiment: 0021-supertonic-canonical-v2-android-cpu
 status: completed
-summary: The canonical-v2 released-INT8 CPU route ran end to end on the Galaxy S23 Ultra, stayed below real time, and its exact representative WAV was accepted by Moritz.
+summary: Existing Supertonic CPU results used an older transcript, so the project needed a clean baseline for its current benchmark text. The new canonical-v2 CPU run stayed below real time, and Moritz accepted its exact retained sample.
 registry: 0021-supertonic-int8-cpu-v2
 ---
 
@@ -9,7 +9,9 @@ registry: 0021-supertonic-int8-cpu-v2
 
 ## Experiment description
 
-Experiment 0021 established a clean Android CPU baseline for Supertonic 3 using the project's exact canonical-v2 transcript. Earlier Supertonic measurements used the legacy-v1 text, so this was deliberately recorded as a new route rather than used to rewrite those rows.
+The project needed a trustworthy Supertonic CPU baseline for its current benchmark sentence. Existing Android measurements used an older transcript, which meant they could not cleanly answer how the model performed under the new canonical-v2 test. Experiment 0021 took the straightforward approach: run the released INT8 model on the phone's CPU with the exact new text, measure it under the current protocol, and retain a sample for listening.
+
+Because the transcript changed, this was recorded as a new route rather than used to rewrite the legacy results. That keeps later CPU and accelerator work anchored to the same input while preserving the historical rows for what they actually measured.
 
 The route pinned the released INT8 ONNX archive and sherpa-onnx 1.13.5 Android runtime. It used the official M1 voice (semantic SID5), English, one inference thread, and the CPU provider on the authorized Samsung Galaxy S23 Ultra (`SM-S918B`, Snapdragon 8 Gen 2 / `SM8550`). The exact 226-byte transcript had no trailing newline and SHA-256 `424b3807…db67`; the official Unicode indexer mapped it to 226 IDs with packed-ID hash `32fc2695…fc5f1`.
 

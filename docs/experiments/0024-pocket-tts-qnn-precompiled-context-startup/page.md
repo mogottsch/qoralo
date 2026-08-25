@@ -1,7 +1,7 @@
 ---
 experiment: 0024-pocket-tts-qnn-precompiled-context-startup
 status: completed
-summary: For the documented Pocket reconstruction derivative, external contexts cut median eight-session phone setup from 27.0767 seconds to 1.01122 seconds; both arms ran on HTP and produced distinct, structurally valid WAVs that remain not reviewed.
+summary: Pocket TTS could run on QNN, but compiling its eight model sessions made startup take about 27 seconds. Loading precompiled contexts cut that to about one second; both new samples still need listening review.
 registry: 0024-pocket-reconstruction-source-onnx-htp, 0024-pocket-reconstruction-external-context-htp
 ---
 
@@ -9,9 +9,11 @@ registry: 0024-pocket-reconstruction-source-onnx-htp, 0024-pocket-reconstruction
 
 ## Experiment description
 
-Experiment 0024 compared source-ONNX QNN compilation with external EPContext reload for a fixed-Alba, text64, cache512 Pocket TTS route. Each arm created eight sessions: text conditioning, text prefill, BOS autoregression, latent autoregression, flow, and Mimi decoder variants for 12, 6, and 1 frame. Context generation was an offline cost and was excluded from phone reload setup.
+Pocket TTS could run through QNN on the phone, but it had a practical startup problem: building its eight model sessions from ONNX took about 27 seconds before speech generation could begin. Experiment 0024 tested a simple way around that delay. Could we compile those sessions ahead of time, save the compiled QNN contexts, and load them in about a second without breaking end-to-end speech generation?
 
-This is a new deterministic reconstruction derivative, not the exact experiment-0014 graph set. Reconstructing from the same pinned public weights, tokenizer, Alba state, code, and exporter reproduced the four controlled ONNX file sizes but not their SHA-256 values. All eight specialized graph hashes consequently differ from 0014. The experiment kept that boundary explicit and required fresh CPU, host QNN, phone execution, physical provider, and audio evidence instead of relabeling the derivative.
+The experiment compared those two startup paths for the same fixed-Alba, text64, cache512 Pocket route. The source arm compiled eight ONNX sessions at launch. The context arm loaded precompiled versions of those same sessions. In both cases the route still had to produce complete, structurally valid speech on the phone and prove that its neural work ran through QNN without CPU fallback. Offline context generation was a preparation cost, not part of the measured reload time.
+
+The implementation used a new deterministic reconstruction derivative, not the exact experiment-0014 graph set. Reconstructing from the same pinned public weights, tokenizer, Alba state, code, and exporter reproduced the four controlled ONNX file sizes but not their SHA-256 values. All eight specialized graph hashes consequently differ from 0014. The experiment kept that boundary explicit and required fresh CPU, host QNN, phone execution, physical provider, and audio evidence instead of relabeling the derivative.
 
 The matched phone route used the exact 226-byte canonical-v2 transcript, 64 Pocket tokenizer IDs, one thread, ORT 1.27.1, QAIRT 2.49, CPU fallback disabled, and the authorized Galaxy S23 Ultra. Every benchmark process created sessions once, ran one first and five warm complete generations, and reset tokens, flow cache, decoder state, and deterministic noise before each generation. The [reconstruction record](../../../experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/reconstruction.json) defines the derivative, while the [experiment contract](../../../experiments/0024-pocket-tts-qnn-precompiled-context-startup/protocol/experiment-contract.json) defines the matched comparison.
 

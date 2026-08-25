@@ -39,6 +39,7 @@ h3 { margin:34px 0 10px; color:var(--accent); font-size:20px; line-height:1.25; 
 .anchor { margin-left:9px; opacity:0; font-weight:400; text-decoration:none; }
 h2:hover .anchor,h3:hover .anchor,.anchor:focus { opacity:.5; }
 p,ul,ol,blockquote { max-width:76ch; }
+#experiment-description > p:first-of-type { margin-top:0; color:var(--ink); font-size:1.13em; line-height:1.58; }
 li { margin:7px 0; }
 code { padding:2px 5px; border-radius:5px; background:var(--code); font:13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; overflow-wrap:anywhere; }
 pre { overflow:auto; padding:18px; border:1px solid var(--line); border-radius:10px; background:var(--code); }
@@ -71,13 +72,14 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="status-header" data-status-header="true">
 <div class="kicker"><span>Experiment 0023</span><span class="status">Completed</span></div>
 <h1>Experiment 0023 — Supertonic QNN precompiled-context startup</h1>
-<p class="summary">External QNN contexts cut median four-session phone setup from 21.6129 seconds to 0.497816 seconds; both arms emitted the same accepted exact-hash WAV, and a separate context proof established physical HTP execution.</p>
+<p class="summary">Supertonic generated speech quickly once ready, but compiling its four QNN sessions took about 22 seconds at every launch. Loading precompiled contexts cut that setup to about half a second while preserving the exact accepted output.</p>
 <div class="header-links"><a href="../../../experiments/0023-supertonic-qnn-precompiled-context-startup/">Owning experiment files</a><a href="../../android-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-08-23</span><span>evidence commit: 1ac06f15709bece1be401b7869181c66149ff6f1</span><span>page source: docs/experiments/0023-supertonic-qnn-precompiled-context-startup/page.md</span><span>page source sha256: 6b306e63a85370764118b0b3594f1d367947c45545245cc340c133028f9fd32d</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-23</span><span>evidence commit: 1ac06f15709bece1be401b7869181c66149ff6f1</span><span>page source: docs/experiments/0023-supertonic-qnn-precompiled-context-startup/page.md</span><span>page source sha256: f29837ffddbd9fe1921e002e4d89a77ca0361335eb287561f62ff335386d9eef</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
-<p>Experiment 0023 asked whether external ONNX Runtime QNN EPContext artifacts could remove most of the session-compilation delay from the accepted Supertonic all-HTP route. It compared two otherwise matched arms: constructing duration, text, stable-Softplus vector, and vocoder sessions from source ONNX, or loading four non-embedded EPContext descriptors and their external QNN binaries. Offline context generation was not charged to context startup.</p>
+<p>The accepted Supertonic QNN route could generate a 16.5-second sample in a little over two seconds once it was ready. The frustrating part came first: compiling its four QNN sessions took about 22 seconds every time the route started. Experiment 0023 tested a simple fix. Could we compile those sessions once, save the result, and reload it in future launches without changing the speech output?</p>
+<p>To answer that, the experiment compared two otherwise matched paths. The source arm built duration, text, stable-Softplus vector, and vocoder sessions from ONNX at launch. The context arm loaded precompiled EPContext descriptors and external QNN binaries for those same four sessions. Offline context generation was preparation work and was not counted as startup.</p>
 <p>The experiment deliberately reused experiment 0011&#x27;s fixed legacy route: the 230-byte legacy-v1 transcript, T239/L238 shapes, deterministic seed, M1/SID5 voice, and 729,746-sample output. It is independent of experiment 0022&#x27;s failed canonical-T235 versus exact-T239 constraint. Both phone arms used the same current ORT 1.27.1 and QAIRT 2.49 Android build because the historical 0011 runtime binary was no longer retained; no binary-identity claim is made.</p>
 <p>Host work first generated and reloaded all four external contexts in fresh source-absent containers with CPU fallback disabled. A clean ten-process setup campaign then compared five fresh containers per arm under one exclusive heavy-RAM lock. The phone campaign repeated the comparison on the authorized Galaxy S23 Ultra with three fresh setup-only processes per arm, separate six-generation E2E processes, and a separate instrumented context proof. The <a href="../../../experiments/0023-supertonic-qnn-precompiled-context-startup/protocol/experiment-contract.json">experiment contract</a> and <a href="../../../experiments/0023-supertonic-qnn-precompiled-context-startup/protocol/phone-transport-contract.json">phone transport contract</a> define those boundaries.</p>
 </section>

@@ -1,7 +1,7 @@
 ---
 experiment: 0023-supertonic-qnn-precompiled-context-startup
 status: completed
-summary: External QNN contexts cut median four-session phone setup from 21.6129 seconds to 0.497816 seconds; both arms emitted the same accepted exact-hash WAV, and a separate context proof established physical HTP execution.
+summary: Supertonic generated speech quickly once ready, but compiling its four QNN sessions took about 22 seconds at every launch. Loading precompiled contexts cut that setup to about half a second while preserving the exact accepted output.
 registry: 0023-supertonic-source-onnx-htp, 0023-supertonic-external-context-htp
 ---
 
@@ -9,7 +9,9 @@ registry: 0023-supertonic-source-onnx-htp, 0023-supertonic-external-context-htp
 
 ## Experiment description
 
-Experiment 0023 asked whether external ONNX Runtime QNN EPContext artifacts could remove most of the session-compilation delay from the accepted Supertonic all-HTP route. It compared two otherwise matched arms: constructing duration, text, stable-Softplus vector, and vocoder sessions from source ONNX, or loading four non-embedded EPContext descriptors and their external QNN binaries. Offline context generation was not charged to context startup.
+The accepted Supertonic QNN route could generate a 16.5-second sample in a little over two seconds once it was ready. The frustrating part came first: compiling its four QNN sessions took about 22 seconds every time the route started. Experiment 0023 tested a simple fix. Could we compile those sessions once, save the result, and reload it in future launches without changing the speech output?
+
+To answer that, the experiment compared two otherwise matched paths. The source arm built duration, text, stable-Softplus vector, and vocoder sessions from ONNX at launch. The context arm loaded precompiled EPContext descriptors and external QNN binaries for those same four sessions. Offline context generation was preparation work and was not counted as startup.
 
 The experiment deliberately reused experiment 0011's fixed legacy route: the 230-byte legacy-v1 transcript, T239/L238 shapes, deterministic seed, M1/SID5 voice, and 729,746-sample output. It is independent of experiment 0022's failed canonical-T235 versus exact-T239 constraint. Both phone arms used the same current ORT 1.27.1 and QAIRT 2.49 Android build because the historical 0011 runtime binary was no longer retained; no binary-identity claim is made.
 

@@ -1,7 +1,7 @@
 ---
 experiment: 0022-supertonic-canonical-v2-precompiled-qnn-context
 status: stopped
-summary: A predeclared host compatibility gate showed that canonical T235 semantics and the exact frozen T239 graph identities cannot both be preserved, so the route stopped before QNN context or phone work.
+summary: The experiment aimed to shorten Supertonic's QNN startup with precompiled contexts, but the current benchmark text did not fit the accepted fixed-shape graphs without changing their meaning. Work stopped before context generation or phone testing.
 registry: 0022-supertonic-t239-padding-blocked
 ---
 
@@ -9,7 +9,11 @@ registry: 0022-supertonic-t239-padding-blocked
 
 ## Experiment description
 
-Experiment 0022 set out to compare the cold readiness of two matched Supertonic QNN routes: creating four sessions from source ONNX graphs, where QNN compilation would fall inside startup, and loading four independently validated external precompiled contexts, where context generation would be reported as a separate offline cost. Both arms were intended to use the accepted stable-Softplus all-HTP graph lineage with CPU fallback disabled.
+Supertonic could run on QNN, but compiling its model sessions at startup was slow. Experiment 0022 was meant to test the obvious improvement: compile those sessions ahead of time, load the precompiled contexts on the phone, and compare that startup with the normal source-ONNX path using the project's current benchmark text.
+
+Before spending time generating contexts or running the phone, the experiment checked whether the accepted fixed-shape Supertonic graphs could represent that newer text without changing the calculation. They could not. The compatibility check therefore answered an earlier, more basic question and stopped the planned startup comparison before it began.
+
+The intended comparison had two matched arms: creating four sessions from source ONNX, with QNN compilation inside startup, and loading four independently validated external contexts, with context generation reported as a separate offline cost. Both were meant to use the accepted stable-Softplus all-HTP lineage with CPU fallback disabled.
 
 Before any context or Android work, the route had to reconcile two frozen requirements. Canonical v2 plus the complete `<en>…</en>` wrapper produces a text extent of 235 positions, while the historical accepted graph identities are specialized to 239. The predeclared policy therefore tested whether four right-side filler positions with a zero mask could preserve the canonical dynamic-T235 calculation without changing the accepted T239 graph hashes.
 

@@ -39,6 +39,7 @@ h3 { margin:34px 0 10px; color:var(--accent); font-size:20px; line-height:1.25; 
 .anchor { margin-left:9px; opacity:0; font-weight:400; text-decoration:none; }
 h2:hover .anchor,h3:hover .anchor,.anchor:focus { opacity:.5; }
 p,ul,ol,blockquote { max-width:76ch; }
+#experiment-description > p:first-of-type { margin-top:0; color:var(--ink); font-size:1.13em; line-height:1.58; }
 li { margin:7px 0; }
 code { padding:2px 5px; border-radius:5px; background:var(--code); font:13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; overflow-wrap:anywhere; }
 pre { overflow:auto; padding:18px; border:1px solid var(--line); border-radius:10px; background:var(--code); }
@@ -71,13 +72,14 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="status-header" data-status-header="true">
 <div class="kicker"><span>Experiment 0020</span><span class="status">Completed</span></div>
 <h1>Experiment 0020 — Historical Android benchmark refresh</h1>
-<p class="summary">The historical Supertonic CPU route was rerun on the authorized phone after two transport and storage blockers; synthesis stayed within the comparison margin, setup slowed, and Moritz accepted the exact retained WAV.</p>
+<p class="summary">The project had an aging Supertonic CPU baseline with no retained WAV. Re-running the exact historical route showed that synthesis still fell within the comparison margin, exposed slower setup, and produced a sample Moritz accepted.</p>
 <div class="header-links"><a href="../../../experiments/0020-historic-android-benchmark-refresh/">Owning experiment files</a><a href="../../android-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-08-20</span><span>evidence commit: 5d70b772396eb1924ed9b8baa3cf413ee637ffda</span><span>page source: docs/experiments/0020-historic-android-benchmark-refresh/page.md</span><span>page source sha256: 92a01afc9909dd5e97c4bd03e67fc8494926a02b01852bbe2169b79bd47a1e48</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-20</span><span>evidence commit: 5d70b772396eb1924ed9b8baa3cf413ee637ffda</span><span>page source: docs/experiments/0020-historic-android-benchmark-refresh/page.md</span><span>page source sha256: e0d2322b059673f15137a59f042a497a47b7a965531d6f2b2fbbb25f418b0cf7</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
-<p>Experiment 0020 audited the Android benchmark registry and created a safe place for exact reruns without changing frozen historical results. Its first refresh target was the Supertonic 3 released-INT8 CPU route from experiment 0008. The comparison kept old and new values side by side rather than replacing the 0008 row.</p>
+<p>The project had useful Android benchmark numbers from earlier experiments, but some were aging and their original WAVs were no longer available to review. Experiment 0020 asked a simple question: if we rerun the exact same Supertonic CPU route on the authorized phone, do the old performance numbers still hold, and can we retain a trustworthy listening sample this time?</p>
+<p>The experiment first audited the benchmark registry, then recreated the released-INT8 CPU route from experiment 0008 without modifying that frozen history. Old and new measurements stayed side by side so the refresh could reveal drift rather than silently replace the original result.</p>
 <p>The rerun pinned the original model archive, sherpa-onnx 1.13.5 Android AAR, M1 voice (SID5), CPU provider, one thread, timing boundary, and actual-duration RTF calculation. It also reproduced the historical one-first-plus-three-warm protocol and the exact 230-byte legacy-v1 transcript with SHA-256 <code>350c8d3d…471f</code>.</p>
 <p>That historical match is also the experiment&#x27;s main limitation. Canonical v2 was adopted after this rerun and has different bytes, punctuation, and output duration. Experiment 0020 is therefore an old-versus-new check for the frozen legacy route, not a canonical-v2 benchmark. The <a href="../../../experiments/0020-historic-android-benchmark-refresh/protocol/refresh-policy.json">refresh policy</a> defines the 10% RTF comparison margin, evidence handling, and phone-safety rules.</p>
 <p>The wider registry audit classified every visible full end-to-end route by transcript provenance and missing evidence. It found no canonical-v2 visible rows at that checkpoint: 17 used legacy v1 and nine used other noncanonical text. See the <a href="../../../experiments/0020-historic-android-benchmark-refresh/results/transcript-provenance-audit.json">transcript provenance audit</a> and <a href="../../../experiments/0020-historic-android-benchmark-refresh/results/v2-normalization-queue.json">normalization queue</a>.</p>

@@ -1,7 +1,7 @@
 ---
 experiment: 0020-historic-android-benchmark-refresh
 status: completed
-summary: The historical Supertonic CPU route was rerun on the authorized phone after two transport and storage blockers; synthesis stayed within the comparison margin, setup slowed, and Moritz accepted the exact retained WAV.
+summary: The project had an aging Supertonic CPU baseline with no retained WAV. Re-running the exact historical route showed that synthesis still fell within the comparison margin, exposed slower setup, and produced a sample Moritz accepted.
 registry: 0020-supertonic-2026-08-20
 ---
 
@@ -9,7 +9,9 @@ registry: 0020-supertonic-2026-08-20
 
 ## Experiment description
 
-Experiment 0020 audited the Android benchmark registry and created a safe place for exact reruns without changing frozen historical results. Its first refresh target was the Supertonic 3 released-INT8 CPU route from experiment 0008. The comparison kept old and new values side by side rather than replacing the 0008 row.
+The project had useful Android benchmark numbers from earlier experiments, but some were aging and their original WAVs were no longer available to review. Experiment 0020 asked a simple question: if we rerun the exact same Supertonic CPU route on the authorized phone, do the old performance numbers still hold, and can we retain a trustworthy listening sample this time?
+
+The experiment first audited the benchmark registry, then recreated the released-INT8 CPU route from experiment 0008 without modifying that frozen history. Old and new measurements stayed side by side so the refresh could reveal drift rather than silently replace the original result.
 
 The rerun pinned the original model archive, sherpa-onnx 1.13.5 Android AAR, M1 voice (SID5), CPU provider, one thread, timing boundary, and actual-duration RTF calculation. It also reproduced the historical one-first-plus-three-warm protocol and the exact 230-byte legacy-v1 transcript with SHA-256 `350c8d3d…471f`.
 
