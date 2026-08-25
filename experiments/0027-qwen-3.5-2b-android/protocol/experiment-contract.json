@@ -137,7 +137,7 @@
     },
     "client_source": "experiments/0027-qwen-3.5-2b-android/tools/run_client.py",
     "greedy_proof": "temperature=-1 is normalized to zero in the server generation settings. At the pinned revision, src/llama-sampler.cpp:270-282 retains only the highest-logit token whenever temperature <= 0; the request sampler chain contains only temperature and all penalties are neutral.",
-    "state_reset": "Before every logical request, POST /slots/0?action=erase must succeed. Each completion also sets cache_prompt=false, and timings.cache_n must equal zero."
+    "state_reset": "Before every logical request, POST /slots/0?action=erase must succeed. Each completion also sets cache_prompt=false; timings.cache_n must equal zero, prompt_n must equal the full independently tokenized prompt count, and prompt_ms must be positive. Request 2 is the early in-campaign reset check and stops the campaign if any condition fails."
   },
   "device": {
     "model": "SM-S918B",

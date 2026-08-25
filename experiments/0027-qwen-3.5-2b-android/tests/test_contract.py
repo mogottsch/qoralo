@@ -74,8 +74,31 @@ class ContractTest(unittest.TestCase):
         self.assertIn('--reasoning off', phone)
         self.assertIn('/slots/0?action=erase', client)
         self.assertIn('"cache_prompt": False', client)
+        self.assertIn('server_timings.get("cache_n") != 0', client)
+        self.assertIn('server_timings.get("prompt_n") != len(token_ids)', client)
+        self.assertIn('prompt_ms <= 0', client)
         self.assertIn('range(1, 6)', client)
         self.assertIn('fsync', client)
+
+    def test_android_smoke_is_hash_bound_and_cleaned(self) -> None:
+        path = EXP / "results/android-smoke/result.json"
+        if not path.exists():
+            self.skipTest("Android smoke has not run yet")
+        result = json.loads(path.read_text())
+        self.assertEqual("android_smoke", result["scope"])
+        self.assertEqual("SM-S918B", result["device"]["model"])
+        self.assertEqual("SM8550", result["device"]["soc"])
+        self.assertTrue(result["stage_and_cleanup"]["local_remote_hashes_equal"])
+        self.assertEqual("verified_absent", result["stage_and_cleanup"]["cleanup_state"])
+        self.assertEqual(1, len(result["runs"]))
+        run = result["runs"][0]
+        output = EXP / "results/android-smoke" / run["output_path"]
+        self.assertEqual(run["output_sha256"], sha(output))
+        self.assertEqual({"looks_sensible": True, "issue_notes": None}, run["output_sanity"])
+        self.assertEqual(0, run["server_timings"]["cache_n"])
+        self.assertEqual(174, run["server_timings"]["prompt_n"])
+        self.assertGreater(run["server_timings"]["prompt_ms"], 0)
+        self.assertFalse(run["final_event"]["truncated"])
 
 
 if __name__ == "__main__":

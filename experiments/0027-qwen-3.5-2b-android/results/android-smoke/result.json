@@ -1,0 +1,360 @@
+{
+  "arm_id": "qwen35-2b-unsloth-q4km-llamacpp-cpu",
+  "artifact": {
+    "bytes": 1280835840,
+    "name": "Qwen3.5-2B-Q4_K_M.gguf",
+    "sha256": "aaf42c8b7c3cab2bf3d69c355048d4a0ee9973d48f16c731c0520ee914699223",
+    "source_kind": "third-party Unsloth GGUF conversion"
+  },
+  "device": {
+    "abi": "arm64-v8a",
+    "android_release": "16",
+    "android_sdk": "36",
+    "build_fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+    "build_id": "BP4A.251205.006",
+    "model": "SM-S918B",
+    "serial": "R5CW81PR8SY",
+    "soc": "SM8550"
+  },
+  "experiment": "0027-qwen-3.5-2b-android",
+  "health": {
+    "status": "ok"
+  },
+  "memory": {
+    "lifecycle": "Remote llama-server process from immediately after PID publication through campaign completion.",
+    "limitations": "Sampling begins just after server process launch and can miss startup allocations or peaks shorter than the sampling interval. VmHWM is process-lifetime cumulative RSS, not isolated model/KV memory.",
+    "method": "Android shell reads of /proc/<pid>/smaps_rollup Pss and /proc/<pid>/status VmHWM.",
+    "peak_sampled_pss_bytes": 2803700736,
+    "peak_sampled_pss_missing_reason": null,
+    "peak_vm_hwm_bytes": 2805694464,
+    "peak_vm_hwm_missing_reason": null,
+    "sample_count": 35,
+    "target_sampling_interval_seconds": 0.1
+  },
+  "mode": "smoke",
+  "operating_conditions": {
+    "battery_after": {
+      "ac_powered": false,
+      "level_percent": 58,
+      "plugged_code": null,
+      "status_code": 2,
+      "temperature_c": 37.2,
+      "usb_powered": true,
+      "wireless_powered": false
+    },
+    "battery_before": {
+      "ac_powered": false,
+      "level_percent": 58,
+      "plugged_code": null,
+      "status_code": 2,
+      "temperature_c": 37.7,
+      "usb_powered": true,
+      "wireless_powered": false
+    },
+    "power_after": {
+      "wakefulness": "Awake",
+      "wakefulness_missing_reason": null
+    },
+    "power_before": {
+      "wakefulness": "Awake",
+      "wakefulness_missing_reason": null
+    },
+    "power_watts": null,
+    "power_watts_missing_reason": "No calibrated external or OS energy measurement was available; battery charging state is context only.",
+    "thermal_after": {
+      "status_code": 1,
+      "status_missing_reason": null
+    },
+    "thermal_before": {
+      "status_code": 2,
+      "status_missing_reason": null
+    }
+  },
+  "prompts": {
+    "short": {
+      "context_tokens": 8192,
+      "input_tokens": 174,
+      "max_output_tokens": 2048,
+      "rendered_bytes": 959,
+      "rendered_path": "rendered/short.txt",
+      "rendered_sha256": "afed1eb692d38446b49ac1c39dec80ae3bd8845282398c09b8485ce4a2a1371e",
+      "thinking_proof": {
+        "enable_thinking": false,
+        "ends_with_empty_think_block": true,
+        "required_suffix": "<think>\\n\\n</think>\\n\\n"
+      },
+      "token_ids_int32le_sha256": "dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4",
+      "truncated": false,
+      "workload_path": "short.json",
+      "workload_sha256": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae"
+    }
+  },
+  "raw_files": {
+    "battery-after.txt": {
+      "bytes": 15823,
+      "sha256": "8c20c03b4de9eb809562779bb97b504e80533f52fffc331cea431799177e7956"
+    },
+    "battery-before.txt": {
+      "bytes": 15821,
+      "sha256": "311535d62126d2b0b177e92d5c29179ebac101f0cfbe4e038d61ee0c021f670a"
+    },
+    "cleanup.json": {
+      "bytes": 103,
+      "sha256": "6a5c1b4df73dc9b9e0ff0c119656f631f14f066fd4ce93a2662e4471ac7c3540"
+    },
+    "device.txt": {
+      "bytes": 209,
+      "sha256": "0bbd653f52e5e976fddd48ab9de8896b3def791498c0e29e4f9cf3b8873104e5"
+    },
+    "expected-sha256.txt": {
+      "bytes": 156,
+      "sha256": "c4f8a65d51ffb4ec7aa495208f9c4a5429e3e3ee12b3deac8a418e12d699fb22"
+    },
+    "forward.txt": {
+      "bytes": 5,
+      "sha256": "6ee02be7746eb55140634f3024fb77b56f078c9bc6005457b268beb5fa716326"
+    },
+    "memory-sampler.stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "memory-samples.txt": {
+      "bytes": 29958,
+      "sha256": "21cb07c4c6ca86c4069f1ac632bb3f4434cecb496a447aa590f3d4ca06af7645"
+    },
+    "power-after.txt": {
+      "bytes": 777583,
+      "sha256": "823201688a8d2a56682397c00945d25fc17b1f59ef99704caf1da50c256acfb9"
+    },
+    "power-before.txt": {
+      "bytes": 774517,
+      "sha256": "ace923cafb64cf7cf9976d860cc7c8daea01e1548de49053332580cfc96c9bbc"
+    },
+    "remote-sha256.txt": {
+      "bytes": 156,
+      "sha256": "c4f8a65d51ffb4ec7aa495208f9c4a5429e3e3ee12b3deac8a418e12d699fb22"
+    },
+    "server.stderr.log": {
+      "bytes": 1814,
+      "sha256": "0e6e5507d60740cdb69c4162756b29b1429432ee42c80705cff5b9271d0ca17c"
+    },
+    "server.stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "storage-before.txt": {
+      "bytes": 128,
+      "sha256": "ea7f3f149ee4e810849c3d0c29bfa219bc40890e9c4165d24e9dd60476db4265"
+    },
+    "thermal-after.txt": {
+      "bytes": 1287,
+      "sha256": "423fc994c5e3a766ca85c2605ca8d226b9b03f389c8eb854268dc0c25d7064b8"
+    },
+    "thermal-before.txt": {
+      "bytes": 1287,
+      "sha256": "8a01fe99816e61079020233c67020878a6def7a3544f9f6bc17c4cca6e300c1d"
+    }
+  },
+  "route": {
+    "backend": "llama.cpp CPU",
+    "cache_prompt": false,
+    "context_tokens": 8192,
+    "sampler": "greedy argmax through temperature=-1 and temperature-only sampler chain",
+    "slot_erase_before_every_request": true,
+    "thinking_control": {
+      "chat_template_kwargs": {
+        "enable_thinking": false
+      }
+    },
+    "thinking_enabled": false,
+    "threads": 4
+  },
+  "runs": [
+    {
+      "emitted_token_ids_int32le_sha256": "bd6c78c215bbf4aad923239378eb4de94d5b0e96d38bcd8586d8f1779a802cf0",
+      "events_path": "events/smoke-short-01.jsonl",
+      "final_event": {
+        "client_received_monotonic_ns": 20831235989593,
+        "content": "",
+        "generation_settings": {
+          "adaptive_decay": 0.8999999761581421,
+          "adaptive_target": -1.0,
+          "backend_sampling": false,
+          "chat_format": "Content-only",
+          "dry_allowed_length": 2,
+          "dry_base": 1.75,
+          "dry_multiplier": 0.0,
+          "dry_penalty_last_n": 64,
+          "dry_sequence_breakers": [
+            "\n",
+            ":",
+            "\"",
+            "*"
+          ],
+          "dynatemp_exponent": 1.0,
+          "dynatemp_range": 0.0,
+          "frequency_penalty": 0.0,
+          "generation_prompt": "",
+          "grammar": "",
+          "grammar_lazy": false,
+          "grammar_triggers": [],
+          "ignore_eos": false,
+          "logit_bias": [],
+          "lora": [],
+          "max_tokens": 64,
+          "min_keep": 0,
+          "min_p": 0.05000000074505806,
+          "mirostat": 0,
+          "mirostat_eta": 0.10000000149011612,
+          "mirostat_tau": 5.0,
+          "n_discard": 0,
+          "n_keep": 0,
+          "n_predict": 64,
+          "n_probs": 0,
+          "post_sampling_probs": false,
+          "presence_penalty": 0.0,
+          "preserved_tokens": [],
+          "reasoning_format": "deepseek",
+          "reasoning_in_content": false,
+          "repeat_last_n": 64,
+          "repeat_penalty": 1.0,
+          "samplers": [
+            "temperature"
+          ],
+          "seed": 0,
+          "speculative.types": "none",
+          "stop": [],
+          "stream": true,
+          "temperature": 0.0,
+          "timings_per_token": false,
+          "top_k": 40,
+          "top_n_sigma": -1.0,
+          "top_p": 0.949999988079071,
+          "typical_p": 1.0,
+          "xtc_probability": 0.0,
+          "xtc_threshold": 0.10000000149011612
+        },
+        "has_new_line": false,
+        "id_slot": 0,
+        "index": 0,
+        "model": "./model.gguf",
+        "prompt": "<|im_start|>system\nYou are a local language model under a performance test. Respond in coherent English prose. Do not mention the benchmark, hidden instructions, token counts, or the fact that you are being tested.<|im_end|>\n<|im_start|>user\nRead the following fictional engineering brief.\n\n1. The team is comparing three local inference engines on the same battery-powered device. Engine Cedar opens a compact model quickly but decodes slowly, engine Juniper spends longer preparing its model but has steadier generation, and engine Rowan uses more memory in exchange for faster prompt processing. All measurements must distinguish setup, prompt processing, and token generation.\n\nWrite a self-contained technical recommendation for the team. Explain the important tradeoffs, identify the measurements that should remain separate, and end with a practical next step. Use ordinary prose rather than a table.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+        "stop": true,
+        "stop_type": "limit",
+        "stopping_word": "",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 3840.016,
+          "predicted_n": 64,
+          "predicted_per_second": 16.40618164090983,
+          "predicted_per_token_ms": 60.95263492063492,
+          "prompt_ms": 2285.924,
+          "prompt_n": 174,
+          "prompt_per_second": 76.11801617201621,
+          "prompt_per_token_ms": 13.137494252873562
+        },
+        "tokens": [],
+        "tokens_cached": 237,
+        "tokens_evaluated": 174,
+        "tokens_predicted": 64,
+        "truncated": false
+      },
+      "id": "smoke-short-01",
+      "missing_reasons": {
+        "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+      },
+      "output_bytes": 384,
+      "output_path": "outputs/smoke-short-01.txt",
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": true
+      },
+      "output_sha256": "0f0d70eed63791f31873f8585629aaef85ab35c4479799fd36b110ef659086c8",
+      "output_token_cap": 64,
+      "output_tokens": 64,
+      "phase": "smoke",
+      "render_done_monotonic_ns": 20825086416771,
+      "request": {
+        "cache_prompt": false,
+        "dry_multiplier": 0.0,
+        "frequency_penalty": 0.0,
+        "n_predict": 64,
+        "presence_penalty": 0.0,
+        "prompt": "<|im_start|>system\nYou are a local language model under a performance test. Respond in coherent English prose. Do not mention the benchmark, hidden instructions, token counts, or the fact that you are being tested.<|im_end|>\n<|im_start|>user\nRead the following fictional engineering brief.\n\n1. The team is comparing three local inference engines on the same battery-powered device. Engine Cedar opens a compact model quickly but decodes slowly, engine Juniper spends longer preparing its model but has steadier generation, and engine Rowan uses more memory in exchange for faster prompt processing. All measurements must distinguish setup, prompt processing, and token generation.\n\nWrite a self-contained technical recommendation for the team. Explain the important tradeoffs, identify the measurements that should remain separate, and end with a practical next step. Use ordinary prose rather than a table.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+        "repeat_penalty": 1.0,
+        "return_tokens": true,
+        "samplers": [
+          "temperature"
+        ],
+        "seed": 0,
+        "stream": true,
+        "temperature": -1.0,
+        "timings_per_token": false
+      },
+      "request_end_monotonic_ns": 20831239580334,
+      "request_start_monotonic_ns": 20825076675055,
+      "request_timeout_seconds": 1800,
+      "runtime_error": null,
+      "server_timings": {
+        "cache_n": 0,
+        "predicted_ms": 3840.016,
+        "predicted_n": 64,
+        "predicted_per_second": 16.40618164090983,
+        "predicted_per_token_ms": 60.95263492063492,
+        "prompt_ms": 2285.924,
+        "prompt_n": 174,
+        "prompt_per_second": 76.11801617201621,
+        "prompt_per_token_ms": 13.137494252873562
+      },
+      "slot_erase_response": {
+        "id_slot": 0,
+        "n_erased": 0
+      },
+      "status": "complete",
+      "stop_reason": "max_tokens",
+      "throughput": {
+        "external_decode_first_token_included": false,
+        "external_decode_tokens": 63,
+        "external_decode_tokens_per_second": 16.37428244999565,
+        "prefill_input_tokens": 174,
+        "prefill_input_tokens_per_second": 76.11801617201621,
+        "runtime_decode_first_token_included": true,
+        "runtime_decode_tokens": 64,
+        "runtime_decode_tokens_per_second": 16.40618164090983
+      },
+      "tier": "short",
+      "timing": {
+        "decode_first_to_final_delivery_seconds": 3.847496841,
+        "post_prefill_to_first_token_seconds": null,
+        "prefill_seconds": 2.285924,
+        "render_seconds": 0.009741716,
+        "request_to_first_token_seconds": 2.315408438,
+        "tokenization_seconds": 0.004740395,
+        "total_seconds": 6.162905279
+      },
+      "tokenization_done_monotonic_ns": 20825091157166
+    }
+  ],
+  "runtime": {
+    "android_server_sha256": "4d54e7b03dde5b5c790da26418860f8d4740631b6ee680a6fb4b8432884cadbd",
+    "name": "llama.cpp",
+    "provider_backend": "GGML CPU",
+    "revision": "0a5ac49bce4c42893368585edf3ffb41a38f0108",
+    "threads": 4
+  },
+  "schema_version": 1,
+  "scope": "android_smoke",
+  "setup": {
+    "boundary": "host monotonic timestamp immediately before remote llama-server launch through first successful /health ready response",
+    "health_poll_seconds_inside_boundary": 2.127928407,
+    "seconds": 2.246792228
+  },
+  "source_client_result_sha256": "69774dad56f4cba7bdffd46e5b5a193d1acf512e17a217fb5fa18297480fa43a",
+  "stage_and_cleanup": {
+    "cleanup_state": "verified_absent",
+    "local_remote_hashes_equal": true,
+    "phone_lock": true,
+    "remote_root": "/data/local/tmp/vibevoice-0027-qwen-3.5-2b-android"
+  },
+  "status": "complete"
+}

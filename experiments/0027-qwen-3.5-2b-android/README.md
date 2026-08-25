@@ -2,7 +2,7 @@
 
 ## Status
 
-**Host viability passed; the Android CPU route is built and waiting for its serialized phone turn.**
+**Android CPU smoke passed; the fresh full canonical campaign remains to run.**
 
 This experiment measures the public post-trained `Qwen/Qwen3.5-2B` on the authorized Galaxy S23 Ultra under the repository's fixed short/medium/long LLM workload. It is text-only performance evidence, not a vision test or a podcast-quality evaluation.
 
@@ -50,6 +50,12 @@ The host inventory proved that every prompt plus the unchanged 2,048-token outpu
 The exact Q4_K_M artifact loaded through the pinned llama.cpp CPU runtime and generated a bounded 64-token canonical-short response. The output is retained at [`results/host-smoke/outputs/smoke-short-01.txt`](results/host-smoke/outputs/smoke-short-01.txt), SHA-256 `e430570558f4d3e883629820affd9b4dd65b34ab9cffd44ac42c0e7cd22e773f`, and looks like sensible prose under the narrow corruption/gibberish check.
 
 The host observed 93.51 input tokens/s and 22.99 generated tokens/s in the retained persistence-first smoke. These are viability observations only and are not Android evidence.
+
+## First Android result
+
+The bounded 64-token short smoke passed on the exact SM-S918B/SM8550 running Android 16. Setup took 2.247 seconds. The 174-token prompt reached the first generated token in 2.315 seconds; llama.cpp reported 76.12 input tokens/s and 16.41 generated tokens/s. The request completed in 6.163 seconds at the smoke ceiling without truncation or prompt-cache reuse. Peak sampled process PSS was 2,803,700,736 bytes and VmHWM was 2,805,694,464 bytes, with the documented sampling limitations.
+
+The exact sensible-prose output is SHA-256 `0f0d70ee…086c8`. The phone stage was hash-matched and `/data/local/tmp/vibevoice-0027-qwen-3.5-2b-android` was verified absent before the lock was released. This is viability evidence, not the required 1+5+5+5 publication campaign.
 
 ## Android execution discipline
 

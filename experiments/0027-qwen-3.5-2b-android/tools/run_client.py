@@ -302,14 +302,36 @@ def main() -> None:
                 "external_decode_tokens": max(0, len(emitted_ids) - 1),
                 "external_decode_first_token_included": False,
             }
+        validation_errors = []
+        if final_event is not None:
             if final_event.get("truncated"):
-                raise ValueError(f"{run_id}: server reported truncation")
+                validation_errors.append("server reported truncation")
             # tokens_cached is the slot's post-request cache size, not reused input.
             # The authoritative reused-prefix count is timings.cache_n.
-            if server_timings.get("cache_n") not in (None, 0):
-                raise ValueError(f"{run_id}: prompt cache unexpectedly reused")
+            if server_timings.get("cache_n") != 0:
+                validation_errors.append(
+                    f"prompt cache reused or unproved: cache_n={server_timings.get('cache_n')!r}"
+                )
+            if server_timings.get("prompt_n") != len(token_ids):
+                validation_errors.append(
+                    f"full prompt was not evaluated: prompt_n={server_timings.get('prompt_n')!r}, expected={len(token_ids)}"
+                )
+            prompt_ms = server_timings.get("prompt_ms")
+            if not isinstance(prompt_ms, (int, float)) or prompt_ms <= 0:
+                validation_errors.append(f"prefill was not plausibly nonzero: prompt_ms={prompt_ms!r}")
+        run["reset_validation"] = {
+            "slot_erase_succeeded": erase.get("id_slot") == 0,
+            "cache_n_zero": final_event is not None and server_timings.get("cache_n") == 0,
+            "full_prompt_evaluated": final_event is not None and server_timings.get("prompt_n") == len(token_ids),
+            "prefill_nonzero": final_event is not None and isinstance(server_timings.get("prompt_ms"), (int, float)) and server_timings["prompt_ms"] > 0,
+            "errors": validation_errors,
+        }
+        if not run["reset_validation"]["slot_erase_succeeded"]:
+            validation_errors.append("slot erase response did not confirm slot 0")
         run["output_sanity"] = {"looks_sensible": None, "issue_notes": None}
         durable_json(args.output / "result.partial.json", result)
+        if validation_errors:
+            raise ValueError(f"{run_id}: " + "; ".join(validation_errors))
 
     result["status"] = "complete"
     durable_json(args.output / "result.json", result)
