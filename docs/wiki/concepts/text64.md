@@ -35,6 +35,12 @@ Together with the maximum generated sequence, this determines why the route uses
 - Metrics and listening verdicts from older `text26/cache256` graphs do not automatically apply.
 - A newly reconstructed `text64` graph with a different hash remains a distinct artifact requiring fresh validation.
 
+## Related pages
+
+- [Pocket TTS](../models/pocket-tts.md)
+- [Fixed Alba](fixed-alba.md)
+- [cache512](cache512.md)
+
 ## Evidence sources
 
 - `protocols/android-tts-benchmark/transcript.txt`

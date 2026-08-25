@@ -46,6 +46,12 @@ The protocol represents this as twelve right-aligned `[1, 16, 512, 64]` key/valu
 - It does not describe the offline QNN context binary size.
 - It does not make graphs with different serialized hashes identical.
 
+## Related pages
+
+- [Pocket TTS](../models/pocket-tts.md)
+- [Fixed Alba](fixed-alba.md)
+- [text64](text64.md)
+
 ## Evidence sources
 
 - `experiments/0014-pocket-fp-onnx-qnn-htp/canonical-benchmark-protocol.json` at commit `751ad6c`

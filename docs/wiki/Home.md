@@ -16,6 +16,12 @@ This vault explains project terminology before asking the reader to understand b
 ## Start here
 
 - [Wiki index](index.md) — every maintained page and its purpose.
+- [VibeVoice 1.5B](models/vibevoice-1.5b.md) — the original large-model Android export and its terminal feasibility result.
+- [VibeVoice Realtime 0.5B](models/vibevoice-realtime-0.5b.md) — the smaller streaming model's feasibility-only status.
+- [Supertonic 3](models/supertonic-3.md) — CPU, hybrid, full-neural-HTP, and precompiled-context routes.
+- [Pocket TTS](models/pocket-tts.md) — archive, source-derived, fixed-Alba, and QNN routes.
+- [Kokoro-82M](models/kokoro-82m.md) — completed CPU routes and the terminal host-QNN boundary.
+- [MOSS-TTS-Nano](models/moss-tts-nano.md) — completed CPU execution and blocked physical-phone QNN work.
 - [Fixed Alba](concepts/fixed-alba.md) — why some Pocket routes use one pinned voice rather than voice cloning.
 - [text64](concepts/text64.md) — why the canonical Pocket transcript is described as a 64-token route.
 - [cache512](concepts/cache512.md) — what the 512-position static cache is and why QNN needs it.
@@ -33,4 +39,4 @@ When the two disagree, the committed owning evidence wins. Wiki pages should be 
 
 ## Current scope
 
-The initial vault is intentionally small. It starts with the terminology behind Pocket's “fixed-Alba text64/cache512” route because that phrase is difficult to understand without context. More concepts, model pages, experiment narratives, and decisions can be added incrementally as they become useful.
+The vault now has a baseline note for every model label represented in the Android benchmark registry: VibeVoice 1.5B, VibeVoice Realtime 0.5B, Supertonic 3, Pocket TTS, Kokoro, and MOSS-TTS-Nano. The first concept set explains the terminology behind Pocket's “fixed-Alba text64/cache512” route. Experiment narratives and decision pages can be integrated incrementally without replacing their owning evidence.

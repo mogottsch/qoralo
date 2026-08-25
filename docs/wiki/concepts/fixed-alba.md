@@ -39,8 +39,9 @@ In the canonical route, the state consumes 126 sequence positions before the tex
 
 See [Evidence boundaries](../methods/evidence-boundaries.md) for how the project handles these distinctions.
 
-## Related concepts
+## Related pages
 
+- [Pocket TTS](../models/pocket-tts.md)
 - [text64](text64.md)
 - [cache512](cache512.md)
 
