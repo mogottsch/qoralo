@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<link rel="icon" href="data:,">
+<title>Experiment 0023 — Supertonic QNN precompiled-context startup | experiment</title>
+<style>
+:root { --bg:#eeeae2; --paper:#fffdf8; --ink:#18201e; --muted:#66706c; --line:#d8d4ca; --accent:#006c60; --accent-2:#a44217; --soft:#e5f2ee; --code:#efede7; --shadow:0 18px 60px rgba(30,42,37,.09); }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; scroll-padding-top:88px; }
+body { margin:0; background:linear-gradient(135deg,#e7eee9 0,var(--bg) 42%,#eee6dc 100%); color:var(--ink); font:16px/1.68 system-ui,-apple-system,"Segoe UI",sans-serif; }
+a { color:var(--accent); text-underline-offset:3px; }
+a:focus-visible, audio:focus-visible { outline:3px solid #f09b65; outline-offset:3px; border-radius:4px; }
+.topbar { position:sticky; top:0; z-index:10; border-bottom:1px solid color-mix(in srgb,var(--line) 85%,transparent); background:color-mix(in srgb,var(--paper) 92%,transparent); backdrop-filter:blur(12px); }
+.topbar-inner { max-width:1120px; margin:auto; display:flex; align-items:center; justify-content:space-between; gap:18px; padding:13px 24px; }
+.brand { color:var(--ink); font-weight:780; text-decoration:none; letter-spacing:-.02em; }
+nav { display:flex; gap:6px; flex-wrap:wrap; }
+nav a { padding:7px 10px; color:var(--muted); border-radius:999px; font-size:13px; font-weight:650; text-decoration:none; }
+nav a:hover { color:var(--accent); background:var(--soft); }
+.shell { max-width:1120px; margin:auto; padding:clamp(24px,5vw,66px) 24px 80px; }
+.status-header { position:relative; overflow:hidden; padding:clamp(26px,5vw,54px); border:1px solid var(--line); border-radius:24px; background:var(--paper); box-shadow:var(--shadow); }
+.status-header::after { content:""; position:absolute; width:230px; height:230px; right:-90px; top:-105px; border-radius:50%; background:var(--soft); }
+.kicker { position:relative; z-index:1; display:flex; align-items:center; gap:10px; margin-bottom:18px; color:var(--muted); font-size:13px; font-weight:760; text-transform:uppercase; letter-spacing:.09em; }
+.status { display:inline-flex; gap:7px; align-items:center; padding:5px 10px; border:1px solid var(--line); border-radius:999px; color:var(--ink); background:var(--paper); letter-spacing:.04em; }
+.status::before { content:""; width:8px; height:8px; border-radius:50%; background:var(--accent-2); }
+h1 { position:relative; z-index:1; max-width:18ch; margin:0; font-size:clamp(36px,7vw,70px); line-height:.99; letter-spacing:-.048em; }
+.summary { position:relative; z-index:1; max-width:70ch; margin:24px 0 0; font-size:clamp(17px,2vw,21px); color:var(--muted); }
+.header-links { position:relative; z-index:1; display:flex; flex-wrap:wrap; gap:9px; margin-top:25px; }
+.header-links a { padding:9px 13px; border:1px solid var(--line); border-radius:9px; background:var(--paper); font-size:14px; font-weight:680; text-decoration:none; }
+.provenance { position:relative; z-index:1; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 22px; margin:30px 0 0; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; }
+.provenance span { min-width:0; overflow-wrap:anywhere; }
+article { max-width:880px; margin:18px auto 0; }
+.primary-section { margin-top:18px; padding:clamp(24px,5vw,48px); border:1px solid var(--line); border-radius:20px; background:var(--paper); }
+h2 { margin:0 0 19px; font-size:clamp(26px,4vw,38px); line-height:1.1; letter-spacing:-.025em; }
+h3 { margin:34px 0 10px; color:var(--accent); font-size:20px; line-height:1.25; }
+.anchor { margin-left:9px; opacity:0; font-weight:400; text-decoration:none; }
+h2:hover .anchor,h3:hover .anchor,.anchor:focus { opacity:.5; }
+p,ul,ol,blockquote { max-width:76ch; }
+li { margin:7px 0; }
+code { padding:2px 5px; border-radius:5px; background:var(--code); font:13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; overflow-wrap:anywhere; }
+pre { overflow:auto; padding:18px; border:1px solid var(--line); border-radius:10px; background:var(--code); }
+pre code { padding:0; background:none; overflow-wrap:normal; }
+blockquote { margin:22px 0; padding:12px 18px; border-left:4px solid var(--accent-2); background:#fbf1e9; color:#62412f; }
+.table-wrap { overflow:auto; margin:20px 0; border:1px solid var(--line); border-radius:12px; }
+table { width:100%; min-width:620px; border-collapse:collapse; }
+th,td { padding:12px 14px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+th { background:var(--soft); color:#174b45; font-size:12px; letter-spacing:.04em; text-transform:uppercase; }
+tr:last-child td { border-bottom:0; }
+.registry-card { margin:4px 0 30px; padding:18px; border:1px solid #b8d5cc; border-radius:14px; background:var(--soft); }
+.eyebrow { margin-bottom:13px; color:var(--accent); font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+.registry-route { display:block; margin-top:4px; color:var(--ink); font-size:13px; letter-spacing:0; text-transform:none; }
+.metrics { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; }
+.metric { padding:10px; border:1px solid color-mix(in srgb,var(--accent) 22%,transparent); border-radius:9px; background:var(--paper); }
+.metric span,.audio-card span { display:block; color:var(--muted); font-size:11px; line-height:1.35; }
+.metric strong { display:block; margin-top:4px; font-size:15px; }
+.audio-card { display:grid; grid-template-columns:minmax(160px,1fr) minmax(240px,2fr); align-items:center; gap:18px; margin-top:12px; padding:11px; border-radius:9px; background:var(--paper); }
+audio { width:100%; min-height:40px; }
+.unavailable,.shared-media { margin:12px 0 0; padding:11px; border-radius:9px; background:var(--paper); font-size:13px; }
+footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px; text-align:center; }
+@media (max-width:760px) { .topbar-inner { align-items:flex-start; flex-direction:column; padding:10px 16px; } nav { width:100%; overflow:auto; flex-wrap:nowrap; } .shell { padding:18px 10px 55px; } .status-header,.primary-section { border-radius:14px; } .provenance { grid-template-columns:1fr; } .metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } .audio-card { grid-template-columns:1fr; } }
+@media (prefers-color-scheme:dark) { :root { --bg:#111614; --paper:#19201e; --ink:#eef4f1; --muted:#aeb9b4; --line:#39443f; --accent:#70d7c5; --accent-2:#f09b65; --soft:#19332e; --code:#252c29; --shadow:none; } body { background:linear-gradient(135deg,#15231f,var(--bg)); } blockquote { background:#35271f; color:#efd8c8; } th { color:#bce7df; } }
+@media print { .topbar { position:relative; } body { background:white; } .shell { padding:16px; } .status-header,.primary-section { box-shadow:none; break-inside:avoid; } }
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar-inner"><a class="brand" href="../../android-benchmarks/index.html">VibeVoice Android research</a><nav aria-label="Experiment sections"><a href="#experiment-description">Description</a><a href="#progress">Progress</a><a href="#results">Results</a></nav></div></header>
+<main class="shell">
+<header class="status-header" data-status-header="true">
+<div class="kicker"><span>Experiment 0023</span><span class="status">Completed</span></div>
+<h1>Experiment 0023 — Supertonic QNN precompiled-context startup</h1>
+<p class="summary">External QNN contexts cut median four-session phone setup from 21.6129 seconds to 0.497816 seconds; both arms emitted the same accepted exact-hash WAV, and a separate context proof established physical HTP execution.</p>
+<div class="header-links"><a href="../../../experiments/0023-supertonic-qnn-precompiled-context-startup/">Owning experiment files</a><a href="../../android-benchmarks/index.html">Benchmark overview</a></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-23</span><span>evidence commit: 1ac06f15709bece1be401b7869181c66149ff6f1</span><span>page source: docs/experiments/0023-supertonic-qnn-precompiled-context-startup/page.md</span><span>page source sha256: 6b306e63a85370764118b0b3594f1d367947c45545245cc340c133028f9fd32d</span></div>
+</header>
+<article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
+<h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
+<p>Experiment 0023 asked whether external ONNX Runtime QNN EPContext artifacts could remove most of the session-compilation delay from the accepted Supertonic all-HTP route. It compared two otherwise matched arms: constructing duration, text, stable-Softplus vector, and vocoder sessions from source ONNX, or loading four non-embedded EPContext descriptors and their external QNN binaries. Offline context generation was not charged to context startup.</p>
+<p>The experiment deliberately reused experiment 0011&#x27;s fixed legacy route: the 230-byte legacy-v1 transcript, T239/L238 shapes, deterministic seed, M1/SID5 voice, and 729,746-sample output. It is independent of experiment 0022&#x27;s failed canonical-T235 versus exact-T239 constraint. Both phone arms used the same current ORT 1.27.1 and QAIRT 2.49 Android build because the historical 0011 runtime binary was no longer retained; no binary-identity claim is made.</p>
+<p>Host work first generated and reloaded all four external contexts in fresh source-absent containers with CPU fallback disabled. A clean ten-process setup campaign then compared five fresh containers per arm under one exclusive heavy-RAM lock. The phone campaign repeated the comparison on the authorized Galaxy S23 Ultra with three fresh setup-only processes per arm, separate six-generation E2E processes, and a separate instrumented context proof. The <a href="../../../experiments/0023-supertonic-qnn-precompiled-context-startup/protocol/experiment-contract.json">experiment contract</a> and <a href="../../../experiments/0023-supertonic-qnn-precompiled-context-startup/protocol/phone-transport-contract.json">phone transport contract</a> define those boundaries.</p>
+</section>
+<section class="primary-section" id="progress" data-primary-section="progress">
+<h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
+<ol>
+<li><strong>August 22, 2026: all four contexts reloaded on the host.</strong> Duration, text, vector, and vocoder descriptors loaded in isolated containers without source ONNX. Every recorded node event used <code>QNNExecutionProvider</code>, fallback was disabled, and generation/reload output hashes matched. The functional run overlapped another serialized QNN campaign, so all of its timing and resource observations were excluded.</li>
+<li><strong>August 22, 2026: clean host setup comparison completed.</strong> A balanced five-process-per-arm campaign measured the four-session constructor boundary at 24.7316 seconds median from source and 0.200869 seconds from context. This established a host setup result, not phone HTP execution or E2E latency.</li>
+<li><strong>August 22–23, 2026: the phone campaign was prepared and failed closed once.</strong> The first approved invocation found that the staged runner had correct bytes but mode 0644. Preflight stopped before ADB, released the phone lock, and created no remote stage. Preparation switched to metadata-preserving copy and added an executable-mode check.</li>
+<li><strong>August 23, 2026: the corrected phone campaign passed.</strong> It verified the authorized phone and remote hashes, deleted source ONNX before every context process, completed all setup and E2E runs, collected a separate profiled context generation, removed the remote root, and released the lock.</li>
+<li><strong>August 23, 2026: noisy stdout was repaired offline.</strong> The first validator rejected a native-library diagnostic before otherwise valid source JSON. Raw bytes were preserved; the parser was tightened to accept exactly one final line-start JSON object and reject ambiguous candidates. Device execution was not rerun.</li>
+</ol>
+<p>The excluded host timing incident is retained in the <a href="../../../experiments/0023-supertonic-qnn-precompiled-context-startup/results/host-context-smoke/host-context-functional-smoke.json">functional smoke result</a>. The valid host distribution is in the <a href="../../../experiments/0023-supertonic-qnn-precompiled-context-startup/results/clean-host-setup/clean-setup-result.json">clean setup result</a>. The <a href="../../../experiments/0023-supertonic-qnn-precompiled-context-startup/results/phone-preflight-blocker.json">preflight blocker</a>, <a href="../../../experiments/0023-supertonic-qnn-precompiled-context-startup/results/phone-preparation.json">corrected preparation</a>, and <a href="../../../experiments/0023-supertonic-qnn-precompiled-context-startup/results/phone-campaign/phone-result.json">final phone result</a> preserve the complete path.</p>
+</section>
+<section class="primary-section" id="results" data-primary-section="results">
+<h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
+<aside class="registry-card" data-registry-entry="0023-supertonic-source-onnx-htp"><div class="eyebrow">Normalized benchmark registry<strong class="registry-route">legacy-v1 all-HTP source-ONNX compilation arm</strong></div><div class="metrics"><div class="metric" data-metric="load_seconds" data-value="21.6129"><span>Setup / load</span><strong>21.613 s</strong></div><div class="metric" data-metric="cold_rtf" data-value="0.131628"><span>First / cold RTF</span><strong>0.131628</strong></div><div class="metric" data-metric="warm_median_rtf" data-value="0.130773"><span>Warm median RTF</span><strong>0.130773</strong></div><div class="metric" data-metric="peak_pss_bytes" data-value="1407312896"><span>Peak sampled PSS</span><strong>1342.1 MiB</strong></div><div class="metric" data-metric="peak_vm_hwm_bytes" data-value="1413611520"><span>Process VmHWM</span><strong>1348.1 MiB</strong></div></div><div class="audio-card"><div><strong>Retained representative</strong><span>16.55 s · 44.1 kHz · <code>47c30043ccc0…</code></span></div><audio controls preload="metadata" src="../../android-benchmarks/media/0023-supertonic-stable-softplus-qnn-context.wav"><a href="../../android-benchmarks/media/0023-supertonic-stable-softplus-qnn-context.wav">Listen to the retained WAV</a></audio></div></aside>
+<aside class="registry-card" data-registry-entry="0023-supertonic-external-context-htp"><div class="eyebrow">Normalized benchmark registry<strong class="registry-route">legacy-v1 all-HTP external EPContext arm</strong></div><div class="metrics"><div class="metric" data-metric="load_seconds" data-value="0.497816"><span>Setup / load</span><strong>0.498 s</strong></div><div class="metric" data-metric="cold_rtf" data-value="0.130393"><span>First / cold RTF</span><strong>0.130393</strong></div><div class="metric" data-metric="warm_median_rtf" data-value="0.130153"><span>Warm median RTF</span><strong>0.130153</strong></div><div class="metric" data-metric="peak_pss_bytes" data-value="166568960"><span>Peak sampled PSS</span><strong>158.9 MiB</strong></div><div class="metric" data-metric="peak_vm_hwm_bytes" data-value="170057728"><span>Process VmHWM</span><strong>162.2 MiB</strong></div></div><p class="shared-media"><strong>Shared exact retained media.</strong> This arm points to the same committed WAV and hash as the matched arm above; it is not a second audio artifact or separate review. <a href="../../android-benchmarks/media/0023-supertonic-stable-softplus-qnn-context.wav"><code>47c30043ccc0…</code></a></p></aside>
+<p>On the phone, external contexts reduced the median four-session setup boundary by <strong>21.115084 seconds</strong>, from <strong>21.6129 seconds</strong> to <strong>0.497816 seconds</strong>. That is a <strong>97.6967%</strong> reduction and a <strong>43.4154×</strong> source/context ratio for this exact route. It measures readiness only and excludes inference, offline context generation, and teardown.</p>
+<div class="table-wrap"><table><thead><tr>
+<th>Phone measurement</th>
+<th>Source ONNX</th>
+<th>External context</th>
+</tr></thead><tbody>
+<tr>
+<td>Three setup runs</td>
+<td>22.1599, 21.6129, 20.9571 s</td>
+<td>0.785324, 0.496524, 0.497816 s</td>
+</tr>
+<tr>
+<td>Median setup</td>
+<td>21.6129 s</td>
+<td>0.497816 s</td>
+</tr>
+<tr>
+<td>First generation</td>
+<td>2.17811 s / RTF 0.131628</td>
+<td>2.15767 s / RTF 0.130393</td>
+</tr>
+<tr>
+<td>Five-warm median</td>
+<td>2.16397 s / RTF 0.130773</td>
+<td>2.15371 s / RTF 0.130153</td>
+</tr>
+<tr>
+<td>Setup-only sampled PSS range</td>
+<td>1,341,123–1,354,631 KiB</td>
+<td>162,301–162,649 KiB</td>
+</tr>
+</tbody></table></div>
+<p>Both E2E arms emitted 729,746 samples of finite, non-silent, unclipped mono PCM16 at 44.1 kHz. Their float output and WAV bytes were identical. The WAV SHA-256, <code>47c30043…4783c</code>, is also exactly the previously accepted experiment-0011 all-HTP hash. The committed inherited listening verdict therefore applies to this identical file only; it does not transfer to any byte-different Supertonic output.</p>
+<div class="table-wrap"><table><thead><tr>
+<th>Evidence class</th>
+<th>What 0023 established</th>
+</tr></thead><tbody>
+<tr>
+<td>Technical execution</td>
+<td>Both matched Android arms completed setup and E2E generation with fallback disabled. Source ONNX was unavailable for context runs.</td>
+</tr>
+<tr>
+<td>Physical provider proof</td>
+<td>A separate context-arm process recorded only QNN ORT nodes plus RPC time, accelerator time, accelerator cycles, and four-HVX-thread evidence for every neural call. It was excluded from setup and E2E timing. That proof is not transferred to the source arm.</td>
+</tr>
+<tr>
+<td>Structural audio</td>
+<td>Both arms produced the same valid 16.547528-second WAV.</td>
+</tr>
+<tr>
+<td>Numerical/acoustic comparison</td>
+<td>Source and context output were byte-identical (<code>max_abs=0</code>, RMSE <code>0</code>, cosine <code>1.0</code>). This is an exact-output result for the measured route.</td>
+</tr>
+<tr>
+<td>Exact-sample listening</td>
+<td>Accepted by inheritance of the committed experiment-0011 verdict because the SHA-256 is identical. The boundary is the exact <code>47c30043…4783c</code> sample.</td>
+</tr>
+</tbody></table></div>
+<p>The normalized cards above use each separate E2E process&#x27;s high-water memory fields, not the setup-only PSS ranges shown in the table. The context proof&#x27;s RTF <code>0.197667</code> includes profiling overhead and is not a performance headline. Finally, this remains a legacy-v1, fixed-shape result for four exact graph identities on one authorized device; it is not a canonical-v2 result or a general claim about Supertonic startup.</p>
+</section></article>
+<footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
+</main>
+</body>
+</html>

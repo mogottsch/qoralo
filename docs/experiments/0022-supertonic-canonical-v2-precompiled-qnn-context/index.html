@@ -51,13 +51,14 @@ th { background:var(--soft); color:#174b45; font-size:12px; letter-spacing:.04em
 tr:last-child td { border-bottom:0; }
 .registry-card { margin:4px 0 30px; padding:18px; border:1px solid #b8d5cc; border-radius:14px; background:var(--soft); }
 .eyebrow { margin-bottom:13px; color:var(--accent); font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+.registry-route { display:block; margin-top:4px; color:var(--ink); font-size:13px; letter-spacing:0; text-transform:none; }
 .metrics { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; }
 .metric { padding:10px; border:1px solid color-mix(in srgb,var(--accent) 22%,transparent); border-radius:9px; background:var(--paper); }
 .metric span,.audio-card span { display:block; color:var(--muted); font-size:11px; line-height:1.35; }
 .metric strong { display:block; margin-top:4px; font-size:15px; }
 .audio-card { display:grid; grid-template-columns:minmax(160px,1fr) minmax(240px,2fr); align-items:center; gap:18px; margin-top:12px; padding:11px; border-radius:9px; background:var(--paper); }
 audio { width:100%; min-height:40px; }
-.unavailable { margin:12px 0 0; padding:11px; border-radius:9px; background:var(--paper); font-size:13px; }
+.unavailable,.shared-media { margin:12px 0 0; padding:11px; border-radius:9px; background:var(--paper); font-size:13px; }
 footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px; text-align:center; }
 @media (max-width:760px) { .topbar-inner { align-items:flex-start; flex-direction:column; padding:10px 16px; } nav { width:100%; overflow:auto; flex-wrap:nowrap; } .shell { padding:18px 10px 55px; } .status-header,.primary-section { border-radius:14px; } .provenance { grid-template-columns:1fr; } .metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } .audio-card { grid-template-columns:1fr; } }
 @media (prefers-color-scheme:dark) { :root { --bg:#111614; --paper:#19201e; --ink:#eef4f1; --muted:#aeb9b4; --line:#39443f; --accent:#70d7c5; --accent-2:#f09b65; --soft:#19332e; --code:#252c29; --shadow:none; } body { background:linear-gradient(135deg,#15231f,var(--bg)); } blockquote { background:#35271f; color:#efd8c8; } th { color:#bce7df; } }

@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<link rel="icon" href="data:,">
+<title>Experiment 0024 — Pocket TTS QNN precompiled-context startup | experiment</title>
+<style>
+:root { --bg:#eeeae2; --paper:#fffdf8; --ink:#18201e; --muted:#66706c; --line:#d8d4ca; --accent:#006c60; --accent-2:#a44217; --soft:#e5f2ee; --code:#efede7; --shadow:0 18px 60px rgba(30,42,37,.09); }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; scroll-padding-top:88px; }
+body { margin:0; background:linear-gradient(135deg,#e7eee9 0,var(--bg) 42%,#eee6dc 100%); color:var(--ink); font:16px/1.68 system-ui,-apple-system,"Segoe UI",sans-serif; }
+a { color:var(--accent); text-underline-offset:3px; }
+a:focus-visible, audio:focus-visible { outline:3px solid #f09b65; outline-offset:3px; border-radius:4px; }
+.topbar { position:sticky; top:0; z-index:10; border-bottom:1px solid color-mix(in srgb,var(--line) 85%,transparent); background:color-mix(in srgb,var(--paper) 92%,transparent); backdrop-filter:blur(12px); }
+.topbar-inner { max-width:1120px; margin:auto; display:flex; align-items:center; justify-content:space-between; gap:18px; padding:13px 24px; }
+.brand { color:var(--ink); font-weight:780; text-decoration:none; letter-spacing:-.02em; }
+nav { display:flex; gap:6px; flex-wrap:wrap; }
+nav a { padding:7px 10px; color:var(--muted); border-radius:999px; font-size:13px; font-weight:650; text-decoration:none; }
+nav a:hover { color:var(--accent); background:var(--soft); }
+.shell { max-width:1120px; margin:auto; padding:clamp(24px,5vw,66px) 24px 80px; }
+.status-header { position:relative; overflow:hidden; padding:clamp(26px,5vw,54px); border:1px solid var(--line); border-radius:24px; background:var(--paper); box-shadow:var(--shadow); }
+.status-header::after { content:""; position:absolute; width:230px; height:230px; right:-90px; top:-105px; border-radius:50%; background:var(--soft); }
+.kicker { position:relative; z-index:1; display:flex; align-items:center; gap:10px; margin-bottom:18px; color:var(--muted); font-size:13px; font-weight:760; text-transform:uppercase; letter-spacing:.09em; }
+.status { display:inline-flex; gap:7px; align-items:center; padding:5px 10px; border:1px solid var(--line); border-radius:999px; color:var(--ink); background:var(--paper); letter-spacing:.04em; }
+.status::before { content:""; width:8px; height:8px; border-radius:50%; background:var(--accent-2); }
+h1 { position:relative; z-index:1; max-width:18ch; margin:0; font-size:clamp(36px,7vw,70px); line-height:.99; letter-spacing:-.048em; }
+.summary { position:relative; z-index:1; max-width:70ch; margin:24px 0 0; font-size:clamp(17px,2vw,21px); color:var(--muted); }
+.header-links { position:relative; z-index:1; display:flex; flex-wrap:wrap; gap:9px; margin-top:25px; }
+.header-links a { padding:9px 13px; border:1px solid var(--line); border-radius:9px; background:var(--paper); font-size:14px; font-weight:680; text-decoration:none; }
+.provenance { position:relative; z-index:1; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 22px; margin:30px 0 0; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; }
+.provenance span { min-width:0; overflow-wrap:anywhere; }
+article { max-width:880px; margin:18px auto 0; }
+.primary-section { margin-top:18px; padding:clamp(24px,5vw,48px); border:1px solid var(--line); border-radius:20px; background:var(--paper); }
+h2 { margin:0 0 19px; font-size:clamp(26px,4vw,38px); line-height:1.1; letter-spacing:-.025em; }
+h3 { margin:34px 0 10px; color:var(--accent); font-size:20px; line-height:1.25; }
+.anchor { margin-left:9px; opacity:0; font-weight:400; text-decoration:none; }
+h2:hover .anchor,h3:hover .anchor,.anchor:focus { opacity:.5; }
+p,ul,ol,blockquote { max-width:76ch; }
+li { margin:7px 0; }
+code { padding:2px 5px; border-radius:5px; background:var(--code); font:13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; overflow-wrap:anywhere; }
+pre { overflow:auto; padding:18px; border:1px solid var(--line); border-radius:10px; background:var(--code); }
+pre code { padding:0; background:none; overflow-wrap:normal; }
+blockquote { margin:22px 0; padding:12px 18px; border-left:4px solid var(--accent-2); background:#fbf1e9; color:#62412f; }
+.table-wrap { overflow:auto; margin:20px 0; border:1px solid var(--line); border-radius:12px; }
+table { width:100%; min-width:620px; border-collapse:collapse; }
+th,td { padding:12px 14px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+th { background:var(--soft); color:#174b45; font-size:12px; letter-spacing:.04em; text-transform:uppercase; }
+tr:last-child td { border-bottom:0; }
+.registry-card { margin:4px 0 30px; padding:18px; border:1px solid #b8d5cc; border-radius:14px; background:var(--soft); }
+.eyebrow { margin-bottom:13px; color:var(--accent); font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+.registry-route { display:block; margin-top:4px; color:var(--ink); font-size:13px; letter-spacing:0; text-transform:none; }
+.metrics { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; }
+.metric { padding:10px; border:1px solid color-mix(in srgb,var(--accent) 22%,transparent); border-radius:9px; background:var(--paper); }
+.metric span,.audio-card span { display:block; color:var(--muted); font-size:11px; line-height:1.35; }
+.metric strong { display:block; margin-top:4px; font-size:15px; }
+.audio-card { display:grid; grid-template-columns:minmax(160px,1fr) minmax(240px,2fr); align-items:center; gap:18px; margin-top:12px; padding:11px; border-radius:9px; background:var(--paper); }
+audio { width:100%; min-height:40px; }
+.unavailable,.shared-media { margin:12px 0 0; padding:11px; border-radius:9px; background:var(--paper); font-size:13px; }
+footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px; text-align:center; }
+@media (max-width:760px) { .topbar-inner { align-items:flex-start; flex-direction:column; padding:10px 16px; } nav { width:100%; overflow:auto; flex-wrap:nowrap; } .shell { padding:18px 10px 55px; } .status-header,.primary-section { border-radius:14px; } .provenance { grid-template-columns:1fr; } .metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } .audio-card { grid-template-columns:1fr; } }
+@media (prefers-color-scheme:dark) { :root { --bg:#111614; --paper:#19201e; --ink:#eef4f1; --muted:#aeb9b4; --line:#39443f; --accent:#70d7c5; --accent-2:#f09b65; --soft:#19332e; --code:#252c29; --shadow:none; } body { background:linear-gradient(135deg,#15231f,var(--bg)); } blockquote { background:#35271f; color:#efd8c8; } th { color:#bce7df; } }
+@media print { .topbar { position:relative; } body { background:white; } .shell { padding:16px; } .status-header,.primary-section { box-shadow:none; break-inside:avoid; } }
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar-inner"><a class="brand" href="../../android-benchmarks/index.html">VibeVoice Android research</a><nav aria-label="Experiment sections"><a href="#experiment-description">Description</a><a href="#progress">Progress</a><a href="#results">Results</a></nav></div></header>
+<main class="shell">
+<header class="status-header" data-status-header="true">
+<div class="kicker"><span>Experiment 0024</span><span class="status">Completed</span></div>
+<h1>Experiment 0024 — Pocket TTS QNN precompiled-context startup</h1>
+<p class="summary">For the documented Pocket reconstruction derivative, external contexts cut median eight-session phone setup from 27.0767 seconds to 1.01122 seconds; both arms ran on HTP and produced distinct, structurally valid WAVs that remain not reviewed.</p>
+<div class="header-links"><a href="../../../experiments/0024-pocket-tts-qnn-precompiled-context-startup/">Owning experiment files</a><a href="../../android-benchmarks/index.html">Benchmark overview</a></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-25</span><span>evidence commit: b59601ef66d5d24b6af249ab082291f0c53d4b25</span><span>page source: docs/experiments/0024-pocket-tts-qnn-precompiled-context-startup/page.md</span><span>page source sha256: 9913cc3c87272fab7381b74fe6658e71cc616ddc6be0161b28d8a343d8c10cf9</span></div>
+</header>
+<article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
+<h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
+<p>Experiment 0024 compared source-ONNX QNN compilation with external EPContext reload for a fixed-Alba, text64, cache512 Pocket TTS route. Each arm created eight sessions: text conditioning, text prefill, BOS autoregression, latent autoregression, flow, and Mimi decoder variants for 12, 6, and 1 frame. Context generation was an offline cost and was excluded from phone reload setup.</p>
+<p>This is a new deterministic reconstruction derivative, not the exact experiment-0014 graph set. Reconstructing from the same pinned public weights, tokenizer, Alba state, code, and exporter reproduced the four controlled ONNX file sizes but not their SHA-256 values. All eight specialized graph hashes consequently differ from 0014. The experiment kept that boundary explicit and required fresh CPU, host QNN, phone execution, physical provider, and audio evidence instead of relabeling the derivative.</p>
+<p>The matched phone route used the exact 226-byte canonical-v2 transcript, 64 Pocket tokenizer IDs, one thread, ORT 1.27.1, QAIRT 2.49, CPU fallback disabled, and the authorized Galaxy S23 Ultra. Every benchmark process created sessions once, ran one first and five warm complete generations, and reset tokens, flow cache, decoder state, and deterministic noise before each generation. The <a href="../../../experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/reconstruction.json">reconstruction record</a> defines the derivative, while the <a href="../../../experiments/0024-pocket-tts-qnn-precompiled-context-startup/protocol/experiment-contract.json">experiment contract</a> defines the matched comparison.</p>
+</section>
+<section class="primary-section" id="progress" data-primary-section="progress">
+<h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
+<ol>
+<li><strong>August 22, 2026: reconstruction passed its CPU gates.</strong> The pinned exporter passed its component checks, and the derivative completed the canonical transcript on ORT CPU at EOS step 160 with 163 latent frames and 312,960 samples. The resulting host WAV was structurally valid but started <code>not_reviewed</code>.</li>
+<li><strong>August 22, 2026: eight external contexts passed host reload.</strong> Each component generated a non-embedded context and then reloaded in a separate source-absent container. Generation and reload recorded eight QNN events and zero CPU events, with matching output hashes per component. These were functional host smokes, not a physical-phone timing distribution.</li>
+<li><strong>August 22–23, 2026: Android packages were prepared.</strong> The source and context stages shared the same runner and runtime. The context package contained eight small descriptors and eight external binaries with no source graph. A first approved attempt stopped before ADB because the historical Windows transport was absent; the committed contract then selected the pinned native Linux ADB path.</li>
+<li><strong>August 23, 2026: the first phone window was interrupted.</strong> Three complete source processes and one complete context process passed. During context run 2, an external device disconnect made ADB return 255 before any result was pulled. The run was excluded. A former two-state cleanup check had incorrectly treated transport failure as absence, so the pending root remained.</li>
+<li><strong>August 25, 2026: cleanup was closed and the campaign resumed.</strong> After reconnect, the exact pending root was removed and verified absent with a tri-state check under the phone lock. Two new context processes completed, followed by separate profiled proof processes for both arms.</li>
+</ol>
+<p>The <a href="../../../experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/host-context-smoke.json">host context result</a> preserves the functional reload evidence. The interrupted run remains in the <a href="../../../experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign-checkpoint/checkpoint.json">phone checkpoint</a>, and the <a href="../../../experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign/cleanup-resume/cleanup-resume.json">cleanup-resume record</a> closes it before the final results. This failure history matters because the six measured benchmark processes span two phone windows rather than one laboratory-controlled sequence.</p>
+</section>
+<section class="primary-section" id="results" data-primary-section="results">
+<h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
+<aside class="registry-card" data-registry-entry="0024-pocket-reconstruction-source-onnx-htp"><div class="eyebrow">Normalized benchmark registry<strong class="registry-route">canonical-v2 reconstruction-derivative source-ONNX QNN arm</strong></div><div class="metrics"><div class="metric" data-metric="load_seconds" data-value="27.0767"><span>Setup / load</span><strong>27.077 s</strong></div><div class="metric" data-metric="cold_rtf" data-value="0.172432"><span>First / cold RTF</span><strong>0.172432</strong></div><div class="metric" data-metric="warm_median_rtf" data-value="0.168605"><span>Warm median RTF</span><strong>0.168605</strong></div><div class="metric" data-metric="peak_pss_bytes" data-value="None"><span>Peak sampled PSS</span><strong>Unavailable</strong></div><div class="metric" data-metric="peak_vm_hwm_bytes" data-value="2629885952"><span>Process VmHWM</span><strong>2508.1 MiB</strong></div></div><div class="audio-card"><div><strong>Retained representative</strong><span>13.04 s · 24 kHz · <code>028f8a1e1861…</code></span></div><audio controls preload="metadata" src="../../android-benchmarks/media/0024-pocket-reconstruction-source-onnx-htp.wav"><a href="../../android-benchmarks/media/0024-pocket-reconstruction-source-onnx-htp.wav">Listen to the retained WAV</a></audio></div></aside>
+<aside class="registry-card" data-registry-entry="0024-pocket-reconstruction-external-context-htp"><div class="eyebrow">Normalized benchmark registry<strong class="registry-route">canonical-v2 reconstruction-derivative external EPContext QNN arm</strong></div><div class="metrics"><div class="metric" data-metric="load_seconds" data-value="1.01122"><span>Setup / load</span><strong>1.011 s</strong></div><div class="metric" data-metric="cold_rtf" data-value="0.16733"><span>First / cold RTF</span><strong>0.167330</strong></div><div class="metric" data-metric="warm_median_rtf" data-value="0.164032"><span>Warm median RTF</span><strong>0.164032</strong></div><div class="metric" data-metric="peak_pss_bytes" data-value="None"><span>Peak sampled PSS</span><strong>Unavailable</strong></div><div class="metric" data-metric="peak_vm_hwm_bytes" data-value="206454784"><span>Process VmHWM</span><strong>196.9 MiB</strong></div></div><div class="audio-card"><div><strong>Retained representative</strong><span>13.04 s · 24 kHz · <code>7c3fc41d320e…</code></span></div><audio controls preload="metadata" src="../../android-benchmarks/media/0024-pocket-reconstruction-external-context-htp.wav"><a href="../../android-benchmarks/media/0024-pocket-reconstruction-external-context-htp.wav">Listen to the retained WAV</a></audio></div></aside>
+<p>External contexts reduced median eight-session phone setup by <strong>26.06548 seconds</strong>, from <strong>27.0767 seconds</strong> to <strong>1.01122 seconds</strong>. That is a <strong>96.26535%</strong> reduction and a <strong>26.7763×</strong> source/context ratio for the exact 0024 derivative. There was no minimum speedup gate.</p>
+<div class="table-wrap"><table><thead><tr>
+<th>Phone measurement</th>
+<th>Source ONNX</th>
+<th>External context</th>
+</tr></thead><tbody>
+<tr>
+<td>Three setup runs</td>
+<td>27.0767, 23.8668, 28.6125 s</td>
+<td>0.729463, 1.26412, 1.01122 s</td>
+</tr>
+<tr>
+<td>Median setup</td>
+<td>27.0767 s</td>
+<td>1.01122 s</td>
+</tr>
+<tr>
+<td>Median first RTF</td>
+<td>0.172432</td>
+<td>0.167330</td>
+</tr>
+<tr>
+<td>Pooled 15-warm median RTF</td>
+<td>0.168605</td>
+<td>0.164032</td>
+</tr>
+<tr>
+<td>Warm RTF range</td>
+<td>0.164660–0.177048</td>
+<td>0.163039–0.165763</td>
+</tr>
+<tr>
+<td>Maximum process VmHWM</td>
+<td>2,568,248 kB</td>
+<td>201,616 kB</td>
+</tr>
+</tbody></table></div>
+<p>Every completed benchmark generation reached reference EOS step 160, emitted 163 frames and 312,960 samples, and produced 13.04 seconds of finite, non-silent, unclipped 24 kHz mono PCM16 audio. The source arm was internally deterministic at SHA-256 <code>028f8a1e…4241</code>; the context arm was internally deterministic at <code>7c3fc41d…6d81</code>.</p>
+<p>The two arm outputs are not interchangeable. They are byte-distinct, with correlation <strong>0.453032</strong> and source-over-difference SNR <strong>−0.356050 dB</strong>. Those values are descriptive numerical evidence, not a listening verdict. Both retained phone WAVs remain <strong><code>not_reviewed</code></strong>. Neither inherits experiment 0014&#x27;s verdict because both exact hashes differ.</p>
+<div class="table-wrap"><table><thead><tr>
+<th>Evidence class</th>
+<th>What 0024 established</th>
+</tr></thead><tbody>
+<tr>
+<td>Technical execution</td>
+<td>Three fresh benchmark processes per arm completed the canonical-v2 route with full per-generation state reset.</td>
+</tr>
+<tr>
+<td>Physical provider proof</td>
+<td>Separate source and context proof processes each recorded 344 QNN and zero CPU events, with matching RPC, accelerator-time, accelerator-cycle, and HVX records. They were excluded from benchmark timing.</td>
+</tr>
+<tr>
+<td>Structural audio</td>
+<td>Both exact WAVs are complete and structurally valid at 13.04 seconds, but they differ from each other.</td>
+</tr>
+<tr>
+<td>Numerical/acoustic comparison</td>
+<td>Correlation and SNR describe the difference only; no equivalence or quality gate was applied.</td>
+</tr>
+<tr>
+<td>Exact-sample listening</td>
+<td>Unavailable for both new hashes. Moritz has not committed a verdict for either retained 0024 phone WAV.</td>
+</tr>
+</tbody></table></div>
+<p>The <a href="../../../experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/result.json">machine-readable final result</a> contains every run and comparison. Peak PSS was not recorded; the dashboard therefore keeps it unavailable rather than substituting zero. VmHWM is cumulative process-lifecycle high-water, not isolated model or DSP memory. Source runs happened before context runs, the campaign spans two dates, and recorded AP temperatures differed between runs; those order and thermal differences are disclosed confounders. The result is bounded to this reconstructed derivative and does not establish production readiness or an exact 0014 comparison.</p>
+</section></article>
+<footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
+</main>
+</body>
+</html>

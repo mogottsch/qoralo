@@ -113,9 +113,17 @@ def registry_records(registry: dict[str, object]) -> list[dict[str, object]]:
     return records
 
 
-def registry_entry(entry_id: str | None) -> dict[str, object] | None:
-    if not entry_id:
-        return None
+def registry_ids(value: str | None) -> list[str]:
+    """Parse the optional comma-separated registry records attached to a page."""
+    if not value:
+        return []
+    ids = [item.strip() for item in value.split(",")]
+    if any(not item for item in ids) or len(ids) != len(set(ids)):
+        raise ValueError("registry metadata must contain unique, non-empty IDs")
+    return ids
+
+
+def registry_entry(entry_id: str) -> dict[str, object]:
     registry = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
     matches = [entry for entry in registry_records(registry) if entry.get("id") == entry_id]
     if len(matches) != 1:
@@ -141,9 +149,9 @@ def format_metric(name: str, value: object) -> str:
     return str(value)
 
 
-def registry_snapshot(entry: dict[str, object] | None) -> str:
-    if entry is None:
-        return ""
+def registry_snapshot(
+    entry: dict[str, object], *, show_route: bool = False, seen_media: set[str] | None = None
+) -> str:
     metrics = entry["metrics"]
     assert isinstance(metrics, dict)
     labels = (
@@ -162,20 +170,41 @@ def registry_snapshot(entry: dict[str, object] | None) -> str:
     audio = ""
     if wav is not None and wav.get("path"):
         media = f"../../android-benchmarks/{wav['path']}"
-        audio = (
-            '<div class="audio-card"><div><strong>Retained representative</strong>'
-            f'<span>{float(wav["duration_seconds"]):.2f} s · {int(wav["sample_rate_hz"]) / 1000:g} kHz · '
-            f'<code>{html.escape(str(wav["sha256"])[:12])}…</code></span></div>'
-            f'<audio controls preload="metadata" src="{safe_url(media)}">'
-            f'<a href="{safe_url(media)}">Listen to the retained WAV</a></audio></div>'
-        )
+        if seen_media is not None and media in seen_media:
+            audio = (
+                '<p class="shared-media"><strong>Shared exact retained media.</strong> '
+                'This arm points to the same committed WAV and hash as the matched arm above; '
+                f'it is not a second audio artifact or separate review. <a href="{safe_url(media)}">'
+                f'<code>{html.escape(str(wav["sha256"])[:12])}…</code></a></p>'
+            )
+        else:
+            audio = (
+                '<div class="audio-card"><div><strong>Retained representative</strong>'
+                f'<span>{float(wav["duration_seconds"]):.2f} s · {int(wav["sample_rate_hz"]) / 1000:g} kHz · '
+                f'<code>{html.escape(str(wav["sha256"])[:12])}…</code></span></div>'
+                f'<audio controls preload="metadata" src="{safe_url(media)}">'
+                f'<a href="{safe_url(media)}">Listen to the retained WAV</a></audio></div>'
+            )
+            if seen_media is not None:
+                seen_media.add(media)
     else:
         reason = entry.get("missing_reasons", {}).get("wav", "No retained WAV is registered for this route.")
         audio = f'<p class="unavailable"><strong>Audio unavailable.</strong> {inline(str(reason))}</p>'
+    route = ""
+    if show_route:
+        route = f'<strong class="registry-route">{inline(str(entry.get("route", entry["id"])))}</strong>'
     return (
         f'<aside class="registry-card" data-registry-entry="{html.escape(str(entry["id"]))}">'
-        '<div class="eyebrow">Normalized benchmark registry</div>'
+        f'<div class="eyebrow">Normalized benchmark registry{route}</div>'
         f'<div class="metrics">{cells}</div>{audio}</aside>'
+    )
+
+
+def registry_snapshots(entries: list[dict[str, object]]) -> str:
+    seen_media: set[str] = set()
+    return "\n".join(
+        registry_snapshot(entry, show_route=len(entries) > 1, seen_media=seen_media)
+        for entry in entries
     )
 
 
@@ -328,12 +357,12 @@ def render_markdown(markdown: str, source: Path, snapshot: str) -> str:
 def build(source: Path) -> str:
     metadata, markdown = parse_source(source)
     title, _ = inspect_headings(markdown, source)
-    entry = registry_entry(metadata.get("registry"))
-    if entry is not None and str(entry.get("experiment")) != metadata["experiment"][:4]:
+    entries = [registry_entry(entry_id) for entry_id in registry_ids(metadata.get("registry"))]
+    if any(str(entry.get("experiment")) != metadata["experiment"][:4] for entry in entries):
         raise ValueError(f"{source}: registry entry belongs to another experiment")
     source_digest = hashlib.sha256(source.read_bytes()).hexdigest()
     commit, update_date = source_revision(metadata["experiment"])
-    body = render_markdown(markdown, source, registry_snapshot(entry))
+    body = render_markdown(markdown, source, registry_snapshots(entries))
     experiment_url = f"../../../experiments/{metadata['experiment']}/"
     dashboard_url = "../../android-benchmarks/index.html"
     status_label = metadata["status"].capitalize()
@@ -390,13 +419,14 @@ th {{ background:var(--soft); color:#174b45; font-size:12px; letter-spacing:.04e
 tr:last-child td {{ border-bottom:0; }}
 .registry-card {{ margin:4px 0 30px; padding:18px; border:1px solid #b8d5cc; border-radius:14px; background:var(--soft); }}
 .eyebrow {{ margin-bottom:13px; color:var(--accent); font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }}
+.registry-route {{ display:block; margin-top:4px; color:var(--ink); font-size:13px; letter-spacing:0; text-transform:none; }}
 .metrics {{ display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; }}
 .metric {{ padding:10px; border:1px solid color-mix(in srgb,var(--accent) 22%,transparent); border-radius:9px; background:var(--paper); }}
 .metric span,.audio-card span {{ display:block; color:var(--muted); font-size:11px; line-height:1.35; }}
 .metric strong {{ display:block; margin-top:4px; font-size:15px; }}
 .audio-card {{ display:grid; grid-template-columns:minmax(160px,1fr) minmax(240px,2fr); align-items:center; gap:18px; margin-top:12px; padding:11px; border-radius:9px; background:var(--paper); }}
 audio {{ width:100%; min-height:40px; }}
-.unavailable {{ margin:12px 0 0; padding:11px; border-radius:9px; background:var(--paper); font-size:13px; }}
+.unavailable,.shared-media {{ margin:12px 0 0; padding:11px; border-radius:9px; background:var(--paper); font-size:13px; }}
 footer {{ max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px; text-align:center; }}
 @media (max-width:760px) {{ .topbar-inner {{ align-items:flex-start; flex-direction:column; padding:10px 16px; }} nav {{ width:100%; overflow:auto; flex-wrap:nowrap; }} .shell {{ padding:18px 10px 55px; }} .status-header,.primary-section {{ border-radius:14px; }} .provenance {{ grid-template-columns:1fr; }} .metrics {{ grid-template-columns:repeat(2,minmax(0,1fr)); }} .audio-card {{ grid-template-columns:1fr; }} }}
 @media (prefers-color-scheme:dark) {{ :root {{ --bg:#111614; --paper:#19201e; --ink:#eef4f1; --muted:#aeb9b4; --line:#39443f; --accent:#70d7c5; --accent-2:#f09b65; --soft:#19332e; --code:#252c29; --shadow:none; }} body {{ background:linear-gradient(135deg,#15231f,var(--bg)); }} blockquote {{ background:#35271f; color:#efd8c8; }} th {{ color:#bce7df; }} }}

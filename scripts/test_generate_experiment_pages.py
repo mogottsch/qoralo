@@ -27,7 +27,9 @@ class PageInspector(HTMLParser):
         self.links: list[tuple[str, str]] = []
         self.ids: set[str] = set()
         self.registry_entries: list[str] = []
-        self.metrics: dict[str, str] = {}
+        self.registry_metrics: list[tuple[str, str, str]] = []
+        self.current_registry_entry: str | None = None
+        self.shared_media_notes = 0
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         values = dict(attrs)
@@ -38,12 +40,26 @@ class PageInspector(HTMLParser):
         if values.get("id"):
             self.ids.add(values["id"] or "")
         if values.get("data-registry-entry"):
-            self.registry_entries.append(values["data-registry-entry"] or "")
+            self.current_registry_entry = values["data-registry-entry"] or ""
+            self.registry_entries.append(self.current_registry_entry)
+        if "shared-media" in (values.get("class") or "").split():
+            self.shared_media_notes += 1
         if values.get("data-metric"):
-            self.metrics[values["data-metric"] or ""] = values.get("data-value") or ""
+            assert self.current_registry_entry is not None
+            self.registry_metrics.append(
+                (
+                    self.current_registry_entry,
+                    values["data-metric"] or "",
+                    values.get("data-value") or "",
+                )
+            )
         for attribute in ("href", "src"):
             if values.get(attribute):
                 self.links.append((attribute, values[attribute] or ""))
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "aside" and self.current_registry_entry is not None:
+            self.current_registry_entry = None
 
 
 def inspect(path: Path) -> PageInspector:
@@ -109,21 +125,28 @@ class ExperimentPageTests(unittest.TestCase):
         by_id = {entry["id"]: entry for entry in pages.registry_records(registry)}
         for source in self.sources:
             metadata, _ = pages.parse_source(source)
-            if "registry" not in metadata:
+            entry_ids = pages.registry_ids(metadata.get("registry"))
+            if not entry_ids:
                 continue
             parser = inspect(source.with_name("index.html"))
-            entry_id = metadata["registry"]
-            with self.subTest(source=source, registry=entry_id):
-                self.assertEqual(parser.registry_entries, [entry_id])
-                entry = by_id[entry_id]
-                for name, value in parser.metrics.items():
-                    self.assertEqual(value, str(entry["metrics"][name]))
-                wav = pages.registry_wav(entry)
+            with self.subTest(source=source, registry=entry_ids):
+                self.assertEqual(parser.registry_entries, entry_ids)
+                for entry_id, name, value in parser.registry_metrics:
+                    self.assertEqual(value, str(by_id[entry_id]["metrics"][name]))
+                expected_audio = []
+                seen_audio: set[str] = set()
+                wav_records = 0
+                for entry_id in entry_ids:
+                    wav = pages.registry_wav(by_id[entry_id])
+                    if wav:
+                        wav_records += 1
+                        media = f"../../android-benchmarks/{wav['path']}"
+                        if media not in seen_audio:
+                            expected_audio.append(media)
+                            seen_audio.add(media)
                 audio_sources = [url for attribute, url in parser.links if attribute == "src" and url.endswith(".wav")]
-                if wav:
-                    self.assertEqual(audio_sources, [f"../../android-benchmarks/{wav['path']}"])
-                else:
-                    self.assertEqual(audio_sources, [])
+                self.assertEqual(audio_sources, expected_audio)
+                self.assertEqual(parser.shared_media_notes, wav_records - len(expected_audio))
 
     def test_selected_target_and_check_cli(self) -> None:
         source = self.sources[0]
