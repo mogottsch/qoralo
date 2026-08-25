@@ -32,6 +32,17 @@ EXP_0023_RESULT = EXP_0023 / "results/phone-campaign/phone-result.json"
 EXP_0023_RESULT_SHA256 = "86e4f3011c4f784d10fd7ad178887468383d91c2547651ca41f5fb63e741034a"
 EXP_0023_WAV_SHA256 = "47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c"
 EXP_0023_IDS = {"0023-supertonic-source-onnx-htp", "0023-supertonic-external-context-htp"}
+EXP_0024 = ROOT / "experiments/0024-pocket-tts-qnn-precompiled-context-startup"
+EXP_0024_RESULT = EXP_0024 / "results/result.json"
+EXP_0024_RESULT_SHA256 = "744d93649ca7fe37a7f75774aec2524717deecf521b2b4a3593c1bed2d0c2dec"
+EXP_0024_MANIFEST = EXP_0024 / "results/phone-campaign/evidence-manifest.json"
+EXP_0024_MANIFEST_SHA256 = "b69ddc40a4364d8a5c57ce3cc304d7eb3abced81541569a768e78a73a7c801db"
+EXP_0024_WAV_SHA256 = {
+    "source": "028f8a1e1861f8004619294738d9aa14509b2c3e5e5e626d99113700ab574241",
+    "context": "7c3fc41d320e391ed39c10398f9c013d01cba93b9c733d3df546d31a0d006d81",
+}
+EXP_0024_IDS = {"0024-pocket-reconstruction-source-onnx-htp", "0024-pocket-reconstruction-external-context-htp"}
+EXP_0024_COMMIT = "b59601ef66d5d24b6af249ab082291f0c53d4b25"
 PRESENTATION_SUPERSESSIONS = {
     "0008-pocket-cpu-t1": "0009-pocket-cpu-t1",
     "0008-kokoro-cpu-t1": "0009-kokoro-cpu-t1",
@@ -457,6 +468,100 @@ def main():
                     fail(f"{e['id']}: context physical RPC/accelerator/cycle/HVX evidence mismatch")
             elif "proof_run_rtf" not in e["missing_reasons"]:
                 fail(f"{e['id']}: absent source-arm proof run lacks a reason")
+        if e["id"] in EXP_0024_IDS:
+            result_bytes = EXP_0024_RESULT.read_bytes()
+            if hashlib.sha256(result_bytes).hexdigest() != EXP_0024_RESULT_SHA256:
+                fail(f"{e['id']}: committed phone result hash mismatch")
+            if hashlib.sha256(EXP_0024_MANIFEST.read_bytes()).hexdigest() != EXP_0024_MANIFEST_SHA256:
+                fail(f"{e['id']}: evidence manifest hash mismatch")
+            source_result = json.loads(result_bytes)
+            evidence_manifest = json.loads(EXP_0024_MANIFEST.read_text())
+            arm = "source" if e["id"] == "0024-pocket-reconstruction-source-onnx-htp" else "context"
+            peer = "0024-pocket-reconstruction-external-context-htp" if arm == "source" else "0024-pocket-reconstruction-source-onnx-htp"
+            comparison = source_result["comparison"]
+            arm_result = comparison[arm]
+            proof = source_result["physical_proof"][arm]
+            if source_result["status"] != "complete" or source_result["route"] != "pocket-fixed-alba-text64-cache512-canonical-v2-0024-reconstruction-derivative":
+                fail(f"{e['id']}: completed reconstruction-derivative status mismatch")
+            inventory = source_result["graph_inventory"]["evidence"]
+            if inventory["exact_0014_hashes_reproduced"] is not False or inventory["documented_derivatives_allowed"] is not True or any(item["exact_0014_hash_match"] for item in inventory["graphs"].values()):
+                fail(f"{e['id']}: 0024 derivative was relabeled as exact 0014 graphs")
+            expected_setup = {"source": [27.0767, 23.8668, 28.6125], "context": [0.729463, 1.26412, 1.01122]}[arm]
+            expected_first = {"source": [0.172432, 0.167197, 0.182052], "context": [0.167568, 0.16733, 0.165802]}[arm]
+            expected_warm_median = {"source": 0.168605, "context": 0.164032}[arm]
+            expected_proof_rtf = proof["result"]["iterations"][0]["rtf"]
+            if arm_result["setup_seconds"] != expected_setup or len(arm_result["runs"]) != 3 or median(expected_setup) != arm_result["setup_median_seconds"]:
+                fail(f"{e['id']}: three-process setup distribution mismatch")
+            if arm_result["first_rtf"] != expected_first or median(expected_first) != arm_result["first_rtf_median"]:
+                fail(f"{e['id']}: first-generation distribution mismatch")
+            if len(arm_result["warm_rtf"]) != 15 or median(arm_result["warm_rtf"]) != arm_result["warm_rtf_median_pooled"] or arm_result["warm_rtf_median_pooled"] != expected_warm_median:
+                fail(f"{e['id']}: pooled 15-warm distribution mismatch")
+            if any(len(run["warm"]["runs"]) != 5 or run["warm"]["count"] != 5 or run["provider"] != "QNNExecutionProvider" or run["cpu_fallback"] is not False or run["determinism"]["state_reset"]["flow_cache"] != "fresh from immutable packed Alba for every iteration" for run in arm_result["run_evidence"]):
+                fail(f"{e['id']}: per-process first/five-warm reset contract mismatch")
+            expected_metrics = {
+                "load_seconds": arm_result["setup_median_seconds"],
+                "cold_rtf": arm_result["first_rtf_median"],
+                "warm_median_rtf": arm_result["warm_rtf_median_pooled"],
+                "proof_run_rtf": expected_proof_rtf,
+                "first_post_setup_rtf": None,
+                "peak_pss_bytes": None,
+                "peak_vm_hwm_bytes": arm_result["max_vm_hwm_kb"] * 1024,
+            }
+            if e["metrics"] != expected_metrics:
+                fail(f"{e['id']}: normalized setup/RTF/VmHWM metrics mismatch")
+            setup_expected = {
+                "observed_setup_delta_seconds_source_minus_context": 26.065479999999997,
+                "speedup_ratio_source_over_context": 26.776270247819465,
+                "observed_setup_reduction_percent": 96.26534991339418,
+                "minimum_speedup_gate": None,
+            }
+            if any(comparison[key] != value for key, value in setup_expected.items()):
+                fail(f"{e['id']}: matched setup comparison mismatch")
+            matched = e.get("matched_comparison")
+            if not isinstance(matched, dict) or matched["source_commit"] != EXP_0024_COMMIT or matched["arm"] != arm or matched["peer_route_id"] != peer:
+                fail(f"{e['id']}: matched comparison provenance mismatch")
+            if matched["source_setup_seconds"] != comparison["source"]["setup_seconds"] or matched["context_setup_seconds"] != comparison["context"]["setup_seconds"] or matched["source_first_rtf"] != comparison["source"]["first_rtf"] or matched["context_first_rtf"] != comparison["context"]["first_rtf"] or matched["source_warm_rtf"] != comparison["source"]["warm_rtf"] or matched["context_warm_rtf"] != comparison["context"]["warm_rtf"]:
+                fail(f"{e['id']}: matched comparison distributions mismatch")
+            if matched["source_minus_context_median_seconds"] != setup_expected["observed_setup_delta_seconds_source_minus_context"] or matched["source_over_context_median_ratio"] != setup_expected["speedup_ratio_source_over_context"] or matched["context_setup_reduction_percent"] != setup_expected["observed_setup_reduction_percent"] or matched["minimum_speedup_gate"] is not None or matched["offline_context_generation_included"] is not False or matched["proof_runs_excluded_from_benchmark_metrics"] is not True:
+                fail(f"{e['id']}: matched comparison boundary mismatch")
+            output = source_result["output_comparison"]
+            expected_output = {
+                "byte_identical": output["byte_identical_between_arms"],
+                "equal_length": output["equal_length"],
+                "correlation": output["correlation"],
+                "snr_db_source_over_difference": output["snr_db_source_over_difference"],
+                "interpretation": "descriptive only; both byte-distinct WAVs remain not_reviewed",
+            }
+            if matched["output_comparison"] != expected_output or output["source_listening"]["status"] != "not_reviewed" or output["context_listening"]["status"] != "not_reviewed":
+                fail(f"{e['id']}: descriptive output/listening boundary mismatch")
+            aggregate = proof["aggregate"]
+            if proof["cpu_fallback_disabled"] is not True or aggregate["provider_events"] != {"QNNExecutionProvider": 344} or not aggregate["all_invoked_calls_qnn_only"] or not aggregate["all_physical_event_counts_match_qnn"]:
+                fail(f"{e['id']}: fallback-disabled physical provider proof mismatch")
+            if len({aggregate["rpc_execute_events"], aggregate["accelerator_execute_events"], aggregate["cycle_events"], aggregate["hvx_events"]}) != 1 or aggregate["rpc_execute_events"] != 344 or aggregate["hvx_thread_sum"] != 1376:
+                fail(f"{e['id']}: physical RPC/accelerator/cycle/HVX counts mismatch")
+            expected_cycles = {"source": 3989277125, "context": 3998683560}[arm]
+            if aggregate["accelerator_cycles"] != expected_cycles or proof["safety"]["runner_exit"] != 0 or proof["safety"]["cleanup_exit"] != 0 or proof["safety"]["cleanup_verified"] is not True:
+                fail(f"{e['id']}: physical cycle/safety evidence mismatch")
+            if (arm == "context") != (proof["source_onnx_unavailable"] is True) or (arm == "context") != all(run["source_onnx_unavailable"] is True for run in arm_result["run_evidence"]):
+                fail(f"{e['id']}: source-ONNX availability boundary mismatch")
+            source_wav = EXP_0024 / f"results/phone-campaign/{arm}.wav"
+            if e["wav"]["sha256"] != EXP_0024_WAV_SHA256[arm] or hashlib.sha256(source_wav.read_bytes()).hexdigest() != EXP_0024_WAV_SHA256[arm] or proof["wav"]["sha256"] != EXP_0024_WAV_SHA256[arm]:
+                fail(f"{e['id']}: retained WAV provenance mismatch")
+            expected_review = {"status": "not_reviewed", "reviewer": None, "date": None, "notes": None, "sample_sha256": EXP_0024_WAV_SHA256[arm]}
+            if e["listening_review"] != expected_review or e["objective_evidence"]["status"] != "descriptive":
+                fail(f"{e['id']}: exact-hash listening/objective boundary mismatch")
+            history = source_result["campaign_history"]
+            cleanup = history["pending_root_cleanup_resume"]
+            if history["interrupted_run_excluded"] is not True or history["interruption_checkpoint"]["interruption"]["measurement_included"] is not False or cleanup["tri_state_status"] != "verified_absent" or not cleanup["transport_revalidated"] or not cleanup["device_identity_revalidated"] or not cleanup["phone_lock_released"]:
+                fail(f"{e['id']}: excluded-disconnect or cleanup-closure boundary mismatch")
+            if evidence_manifest["result"]["sha256"] != EXP_0024_RESULT_SHA256 or evidence_manifest["validation"] != {"source_cold_processes": 3, "context_cold_processes": 3, "profiled_proofs": ["source", "context"], "profile_files_per_proof": 24, "pending_remote_root_cleanup": "verified_absent", "source_listening": "not_reviewed", "context_listening": "not_reviewed"}:
+                fail(f"{e['id']}: hash-bound evidence manifest boundary mismatch")
+            if e["scope"] != "full_e2e" or e["attempt_status"] != "ran" or not e["android_attempted"] or e["device"] != EXPECTED_DEVICE:
+                fail(f"{e['id']}: completed physical-phone route boundary mismatch")
+            if e["transcript"]["classification"] != "canonical_v2" or e["transcript"]["effective_frontend"]["token_ids_sha256"] != "56d50c958627be19a7f2c86dde68a537a80f3f6d9087c16f55fde58c4d117c82":
+                fail(f"{e['id']}: canonical-v2 frontend boundary mismatch")
+            if "first_post_setup_rtf" not in e["missing_reasons"] or "peak_pss_bytes" not in e["missing_reasons"]:
+                fail(f"{e['id']}: aggregate-first/PSS null reasons missing")
         remeasurements = e.get("remeasurements", [])
         if e["id"] == "0008-supertonic-cpu-t1":
             if e["metrics"] != FROZEN_0008_SUPERTONIC_METRICS or e["wav"] is not None:

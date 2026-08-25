@@ -135,6 +135,106 @@ ROWS = [
     row("0022-supertonic-t239-padding-blocked", "0022", "Supertonic 3", "canonical-v2 exact-T239 precompiled-context compatibility gate", "blocked", attempted=False, provider=None, precision=None, threads=None, summary="Terminal negative host compatibility result: canonical v2 plus the complete <en>...</en> wrapper produced semantic T235. Four zero-masked right-padding slots made filler payload irrelevant, but changing the text extent to frozen T239 materially changed duration (max_abs 0.2244882583618164) and the first 235 text-embedding positions (max_abs 0.11101388931274414, RMSE 0.006290534672319703, cosine 0.9998871625637002). The exact frozen T239 graphs reproduced that altered T239 calculation, not the dynamic T235 canonical-v2 oracle, so the frozen policy required a stop before runner implementation, EPContext generation, output, or phone access.", limitations=("This proves only that exact canonical-v2 T235 semantics and the exact frozen T239 graph identities are jointly incompatible; it is not a general Supertonic, ONNX Runtime, QNN, HTP, or Android incompatibility claim.", "The compatibility proof ran on host ONNX Runtime CPU. It is not route provider assignment, Android execution, or physical QNN/HTP proof.", "No runner, QNN context, route session, timing campaign, memory measurement, audio output, WAV, phone access, or listening review exists.", "Legacy-transcript substitution and differently hashed graph re-specialization were forbidden; either would define different semantics or a different route."), sources=("experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/results/t235-t239-masked-padding-compatibility.json", "experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/protocol/padding-compatibility-policy.json", "experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/protocol/experiment-contract.json", "experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/results/preflight-state.json", "experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/README.md"), missing={"android_attempted": "The terminal host compatibility gate failed before phone staging or access.", "provider": "No route runner, QNN session, or EPContext was created; host CPU compatibility evidence is not route provider assignment.", "precision": "No QNN/HTP execution or lowering occurred, so provider arithmetic precision is not established.", "threads": "No route runner or benchmark session existed.", "load_seconds": "Stopped before runner implementation, QNN session creation, or EPContext generation.", "cold_rtf": "No generation or audio output occurred.", "warm_median_rtf": "No first or warm generation campaign occurred.", "proof_run_rtf": "No Android or physical accelerator proof run occurred.", "first_post_setup_rtf": "No route setup or post-setup generation existed.", "peak_pss_bytes": "No route benchmark process or memory campaign existed.", "peak_vm_hwm_bytes": "No route benchmark process or memory campaign existed.", "wav": "Stopped before output generation; no WAV exists.", "physical_rpc_accelerator_cycle_hvx": "No phone access or physical accelerator execution occurred.", "listening": "No WAV exists and no listening review was requested or recorded."}, variant="Canonical v2 / exact frozen T239 graph identity / terminal host compatibility gate"),
     row("0023-supertonic-source-onnx-htp", "0023", "Supertonic 3", "legacy-v1 all-HTP source-ONNX compilation arm", "ran", attempted=True, provider="QNNExecutionProvider (fallback disabled; source ONNX)", precision="FP32 source graphs / QNN HTP internal precision not established", threads=1, metrics={"load_seconds": 21.6129, "cold_rtf": 0.131628, "warm_median_rtf": 0.130773, "first_post_setup_rtf": 0.131628, "peak_pss_bytes": 1374329 * 1024, "peak_vm_hwm_bytes": 1380480 * 1024}, wav={"path":"media/0023-supertonic-stable-softplus-qnn-context.wav","sha256":"47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c","bytes":1459536,"sample_rate_hz":44100,"channels":1,"duration_seconds":729746/44100}, summary="Matched physical-phone source-ONNX arm for the accepted legacy-v1 experiment-0011 stable-Softplus route. Three fresh processes measured four-session source compilation at [22.1599, 21.6129, 20.9571] s (median 21.6129 s); setup-only sampled PSS ranged 1,341,123–1,354,631 KiB. A separate persistent-session process ran one first generation (RTF 0.131628) plus five warm generations (median RTF 0.130773). Its float output and WAV were byte-identical to the matched context arm and the exact Moritz-accepted 0011 all-HTP WAV.", limitations=("Legacy-v1 230-byte transcript/T239/L238 route; not canonical v2 and not comparable as a matched canonical-v2 result.", "The current retained ORT 1.27.1 + QAIRT 2.49 Android runtime was used identically for both 0023 arms; the historical 0011 binary was unavailable, so no binary-identity claim is made.", "Setup is the median of three fresh setup-only processes from immediately before duration-session construction until all four sessions were ready; it excludes inference, teardown, and offline context generation.", "The separate profiled physical proof used the context arm only; do not transfer its RPC/accelerator/cycle/HVX evidence to this source arm.", "Peak PSS/VmHWM fields use the separate E2E process high-water observations; setup-only PSS is preserved in the summary. Parser repair was offline evidence handling over byte-preserved stdout and did not rerun the phone."), sources=("experiments/0023-supertonic-qnn-precompiled-context-startup/results/phone-campaign/phone-result.json", "experiments/0023-supertonic-qnn-precompiled-context-startup/results/phone-campaign/sha256-manifest.json", "experiments/0023-supertonic-qnn-precompiled-context-startup/protocol/experiment-contract.json", "experiments/0023-supertonic-qnn-precompiled-context-startup/protocol/phone-transport-contract.json", "experiments/0023-supertonic-qnn-precompiled-context-startup/results/host-context-smoke/host-context-functional-smoke.json", "experiments/0023-supertonic-qnn-precompiled-context-startup/results/clean-host-setup/clean-setup-result.json", "experiments/0023-supertonic-qnn-precompiled-context-startup/README.md", "experiments/0011-supertonic-official-fp32-phone-comparison/results/softplus-matched-e2e-checkpoint.json"), missing={"proof_run_rtf": "The separate profiled physical proof was collected only for the context arm; no source-arm proof-run RTF exists."}, variant="Legacy v1 / stable-Softplus source ONNX / fallback-disabled QNN HTP"),
     row("0023-supertonic-external-context-htp", "0023", "Supertonic 3", "legacy-v1 all-HTP external EPContext arm", "ran", attempted=True, provider="QNNExecutionProvider (fallback disabled; external EPContext; source absent)", precision="FP32 source lineage / QNN HTP internal precision not established", threads=1, metrics={"load_seconds": 0.497816, "cold_rtf": 0.130393, "warm_median_rtf": 0.130153, "proof_run_rtf": 0.197667, "first_post_setup_rtf": 0.130393, "peak_pss_bytes": 162665 * 1024, "peak_vm_hwm_bytes": 166072 * 1024}, wav={"path":"media/0023-supertonic-stable-softplus-qnn-context.wav","sha256":"47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c","bytes":1459536,"sample_rate_hz":44100,"channels":1,"duration_seconds":729746/44100}, summary="Matched physical-phone external-EPContext arm for the accepted legacy-v1 experiment-0011 stable-Softplus route. With source ONNX unavailable, three fresh processes loaded four external contexts in [0.785324, 0.496524, 0.497816] s (median 0.497816 s), 21.115084 s less than source compilation: 43.4154× faster and a 97.6967% setup reduction. Setup-only sampled PSS ranged 162,301–162,649 KiB. A separate E2E process measured first RTF 0.130393 and five-warm median RTF 0.130153. A separate profiled run proved QNN-only ORT nodes plus matching RPC, accelerator-time, accelerator-cycle, and four-HVX-thread evidence for all neural calls. Output was byte-identical to the source arm and exact accepted 0011 WAV.", limitations=("Legacy-v1 230-byte transcript/T239/L238 route; not canonical v2 and intentionally independent of experiment 0022's overconstrained T235/T239 gate.", "The 43.4154× / 97.6967% claim applies only to the matched 0023 four-session readiness boundary on the authorized phone; offline context-generation cost is separate and excluded from context startup.", "The current retained ORT 1.27.1 + QAIRT 2.49 Android runtime was used identically for both arms; no binary-identity claim to historical 0011 is made.", "Profiled proof RTF 0.197667 is instrumentation-bearing physical evidence, not the unprofiled warm performance headline.", "Peak PSS/VmHWM fields use the E2E process high-water observations; setup-only PSS is preserved in the summary. Parser repair was offline evidence handling over byte-preserved stdout; device execution and cleanup had passed and no phone rerun occurred."), sources=("experiments/0023-supertonic-qnn-precompiled-context-startup/results/phone-campaign/phone-result.json", "experiments/0023-supertonic-qnn-precompiled-context-startup/results/phone-campaign/sha256-manifest.json", "experiments/0023-supertonic-qnn-precompiled-context-startup/protocol/experiment-contract.json", "experiments/0023-supertonic-qnn-precompiled-context-startup/protocol/phone-transport-contract.json", "experiments/0023-supertonic-qnn-precompiled-context-startup/results/host-context-smoke/host-context-functional-smoke.json", "experiments/0023-supertonic-qnn-precompiled-context-startup/results/clean-host-setup/clean-setup-result.json", "experiments/0023-supertonic-qnn-precompiled-context-startup/README.md", "experiments/0011-supertonic-official-fp32-phone-comparison/results/softplus-matched-e2e-checkpoint.json"), missing={}, variant="Legacy v1 / stable-Softplus external EPContext / fallback-disabled QNN HTP"),
+    row(
+        "0024-pocket-reconstruction-source-onnx-htp",
+        "0024",
+        "Pocket TTS",
+        "canonical-v2 reconstruction-derivative source-ONNX QNN arm",
+        "ran",
+        attempted=True,
+        provider="QNNExecutionProvider (fallback disabled; 0024 derivative source ONNX)",
+        precision="FP32 0024 reconstruction derivative / QNN HTP internal precision not established",
+        threads=1,
+        metrics={
+            "load_seconds": 27.0767,
+            "cold_rtf": 0.172432,
+            "warm_median_rtf": 0.168605,
+            "proof_run_rtf": 0.566431,
+            "peak_vm_hwm_bytes": 2568248 * 1024,
+        },
+        wav={
+            "path": "media/0024-pocket-reconstruction-source-onnx-htp.wav",
+            "sha256": "028f8a1e1861f8004619294738d9aa14509b2c3e5e5e626d99113700ab574241",
+            "bytes": 625964,
+            "sample_rate_hz": 24000,
+            "channels": 1,
+            "duration_seconds": 13.04,
+        },
+        summary="Matched canonical-v2 Pocket source-ONNX arm for the deterministic 0024 reconstruction derivative—not the exact 0014 graph set. Three fresh processes measured eight-session setup at [27.0767, 23.8668, 28.6125] s (median 27.0767 s), median first-generation RTF 0.172432, and pooled 15-warm median RTF 0.168605. A separate profiled process proved 344 QNN / 0 CPU calls with exactly matching RPC, accelerator, cycle, and HVX event counts. All benchmark generations reached EOS 160, emitted 163 frames / 312,960 samples / 13.04 s, and produced the same structurally valid WAV within this arm. The exact WAV is not reviewed.",
+        limitations=(
+            "This is a new deterministic 0024 reconstruction derivative whose controlled and specialized ONNX hashes differ from 0014; never relabel it as the exact 0014 graphs or transfer 0014 metrics/verdicts.",
+            "Setup is the median of three fresh process lifetimes around all eight session creations. Offline context generation is separate and excluded; no minimum speedup gate was applied.",
+            "The warm headline is the pooled median of 15 warm generations across three fresh processes, five warm generations per process with full state reset. The cold RTF field is the median of the three first complete generations, not a single designated run.",
+            "Profiled proof RTF 0.566431 is instrumentation-bearing physical evidence excluded from setup/first/warm distributions.",
+            "VmHWM is cumulative process-lifecycle high-water including sessions, mappings, caches, buffers, and completed generations; it is not isolated model/DSP memory. Peak PSS was not recorded.",
+            "The campaign spans two phone windows because of an excluded external disconnect. Order/date/thermal differences are disclosed confounders; verified tri-state cleanup closure preceded resumed staging.",
+            "The source and context WAVs are byte-distinct (correlation 0.453032; source-over-difference SNR -0.356050 dB). This is descriptive and neither sample has a listening verdict.",
+        ),
+        sources=(
+            "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/result.json",
+            "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign/evidence-manifest.json",
+            "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign/physical/source/physical-analysis.json",
+            "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign/cleanup-resume/cleanup-resume.json",
+            "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/reconstruction.json",
+            "experiments/0024-pocket-tts-qnn-precompiled-context-startup/protocol/experiment-contract.json",
+            "experiments/0024-pocket-tts-qnn-precompiled-context-startup/README.md",
+        ),
+        missing={
+            "first_post_setup_rtf": "The result publishes three first-generation RTFs and their median; no single run is designated as the normalized first_post_setup_rtf field.",
+            "peak_pss_bytes": "Only cumulative process VmHWM was recorded; no sampled peak PSS campaign exists.",
+        },
+        variant="Canonical v2 / fixed Alba / 0024 reconstruction derivative / source ONNX QNN HTP",
+    ),
+    row(
+        "0024-pocket-reconstruction-external-context-htp",
+        "0024",
+        "Pocket TTS",
+        "canonical-v2 reconstruction-derivative external EPContext QNN arm",
+        "ran",
+        attempted=True,
+        provider="QNNExecutionProvider (fallback disabled; external EPContext; source ONNX absent)",
+        precision="FP32 0024 source lineage / QNN HTP internal precision not established",
+        threads=1,
+        metrics={
+            "load_seconds": 1.01122,
+            "cold_rtf": 0.16733,
+            "warm_median_rtf": 0.164032,
+            "proof_run_rtf": 0.609813,
+            "peak_vm_hwm_bytes": 201616 * 1024,
+        },
+        wav={
+            "path": "media/0024-pocket-reconstruction-external-context-htp.wav",
+            "sha256": "7c3fc41d320e391ed39c10398f9c013d01cba93b9c733d3df546d31a0d006d81",
+            "bytes": 625964,
+            "sample_rate_hz": 24000,
+            "channels": 1,
+            "duration_seconds": 13.04,
+        },
+        summary="Matched canonical-v2 Pocket external-EPContext arm for the deterministic 0024 reconstruction derivative—not the exact 0014 graph set. With source ONNX absent, three fresh processes measured eight-session context reload at [0.729463, 1.26412, 1.01122] s (median 1.01122 s): 26.06548 s less than the source arm, 26.7763× faster, and a 96.26535% setup reduction. Median first-generation RTF was 0.167330 and pooled 15-warm median RTF was 0.164032. A separate profiled process proved 344 QNN / 0 CPU calls with exactly matching RPC, accelerator, cycle, and HVX event counts. All benchmark generations reached EOS 160, emitted 163 frames / 312,960 samples / 13.04 s, and produced the same structurally valid WAV within this arm. The exact WAV is not reviewed.",
+        limitations=(
+            "This is a new deterministic 0024 reconstruction derivative whose controlled and specialized ONNX hashes differ from 0014; never relabel it as the exact 0014 graphs or transfer 0014 metrics/verdicts.",
+            "The 26.7763× / 96.26535% claim applies only to the matched eight-session 0024 readiness boundary on the authorized phone. Offline context generation is separate and excluded; no minimum speedup gate was applied.",
+            "Every context reload and the physical proof ran with source ONNX unavailable. The warm headline is the pooled median of 15 warm generations across three fresh processes, five per process with full state reset. The cold RTF field is the median of three first complete generations.",
+            "Profiled proof RTF 0.609813 is instrumentation-bearing physical evidence excluded from setup/first/warm distributions.",
+            "VmHWM is cumulative process-lifecycle high-water including sessions, mappings, caches, buffers, and completed generations; it is not isolated model/DSP memory. Peak PSS was not recorded.",
+            "The campaign spans two phone windows because of an excluded external disconnect. Order/date/thermal differences are disclosed confounders; verified tri-state cleanup closure preceded resumed staging.",
+            "The source and context WAVs are byte-distinct (correlation 0.453032; source-over-difference SNR -0.356050 dB). This is descriptive and neither sample has a listening verdict.",
+        ),
+        sources=(
+            "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/result.json",
+            "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign/evidence-manifest.json",
+            "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign/physical/context/physical-analysis.json",
+            "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign/cleanup-resume/cleanup-resume.json",
+            "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/reconstruction.json",
+            "experiments/0024-pocket-tts-qnn-precompiled-context-startup/protocol/experiment-contract.json",
+            "experiments/0024-pocket-tts-qnn-precompiled-context-startup/README.md",
+        ),
+        missing={
+            "first_post_setup_rtf": "The result publishes three first-generation RTFs and their median; no single run is designated as the normalized first_post_setup_rtf field.",
+            "peak_pss_bytes": "Only cumulative process VmHWM was recorded; no sampled peak PSS campaign exists.",
+        },
+        variant="Canonical v2 / fixed Alba / 0024 reconstruction derivative / external EPContext QNN HTP",
+    ),
     row("0014-pocket-alba-cpu-v2", "0014", "Pocket TTS", "canonical-v2 fixed-Alba text64/cache512 Android CPU", "ran", attempted=True, provider="CPUExecutionProvider", precision="FP32", threads=1, metrics={"load_seconds": 2.597, "cold_rtf": 0.412321, "warm_median_rtf": 0.414234, "first_post_setup_rtf": 0.412321, "peak_vm_hwm_bytes": 1412276 * 1024}, wav={"path":"media/0014-pocket-alba-cpu-v2.wav","sha256":"2e9021b972d69e05e5cd301973e2dc17cb8143f2a029bc027ef619a3460c34bd","bytes":625964,"sample_rate_hz":24000,"channels":1,"duration_seconds":13.04}, summary="Distinct canonical-v2 Pocket fixed-Alba text64/cache512 Android CPU route. Exact v2 text produced 64 token IDs; one persistent session set ran one first plus five warm generations with full state reset. All six reached EOS step 160, emitted 163 frames/312,960 samples (13.04 s), and were byte-identical. Warm median RTF was 0.414234 from [0.412642, 0.406708, 0.414234, 0.416536, 0.419467]. Moritz accepted the exact representative WAV as good.", limitations=("This text64/cache512 derivative is distinct from every text26/cache256 route and does not relabel or inherit their metrics or verdicts.", "Exact official fixed Alba state SHA e4a323e8e771f14fd669428d83e7af6d83b4d6d0f0e282c30122f04824f17b1c, temperature 0.3, seed 0, fixed voice—not voice cloning.", "First-post-setup and cold RTF refer to the same first complete generation, not two observations.", "VmHWM is cumulative process lifecycle high-water; no peak PSS was recorded. Android OS and CPU affinity were not captured/pinned; normal scheduler/DVFS applies.", "Batch runner exposes no honest streaming first-audio latency. Thermal status stayed 0; AP 35.8→50.4°C and skin 33.8→35.7°C."), sources=("experiments/0014-pocket-fp-onnx-qnn-htp/results/canonical-v2-benchmark.json", "experiments/0014-pocket-fp-onnx-qnn-htp/canonical-benchmark-protocol.json", "experiments/0014-pocket-fp-onnx-qnn-htp/RESULTS.md"), missing={"proof_run_rtf": "No separate instrumented proof run applies to the CPU route.", "peak_pss_bytes": "Only cumulative process VmHWM was recorded.", "android_os": "Not captured in the completed campaign; no further phone use was authorized for metadata-only collection.", "cpu_affinity": "Not pinned; normal Android scheduler/DVFS applies.", "first_audio_latency": "Batch runner produces complete output after latent generation/decoding and exposes no honest streaming first-audio boundary."}, variant="Canonical v2 / fixed Alba / text64-cache512 / CPU"),
     row("0014-pocket-alba-qnn-htp-v2", "0014", "Pocket TTS", "canonical-v2 fixed-Alba text64/cache512 full QNN/HTP", "ran", attempted=True, provider="QNNExecutionProvider (fallback disabled; CPU orchestration only)", precision="FP32 source graphs / QNN HTP", threads=1, metrics={"load_seconds": 62.2327, "cold_rtf": 0.191013, "warm_median_rtf": 0.181643, "proof_run_rtf": 0.57369, "first_post_setup_rtf": 0.191013, "peak_vm_hwm_bytes": 2405820 * 1024}, wav={"path":"media/0014-pocket-alba-qnn-htp-v2.wav","sha256":"601cd622dd0598c23dd7275074763aa37ae79b18a9d777ad946b1eaebd2c58e5","bytes":625964,"sample_rate_hz":24000,"channels":1,"duration_seconds":13.04}, summary="Distinct canonical-v2 Pocket fixed-Alba text64/cache512 fallback-disabled QNN/HTP route. Persistent sessions ran one first plus five warm generations with full state reset; all six reached EOS step 160, emitted 163 frames/13.04 s, and were byte-identical. Warm median RTF was 0.181643 from [0.181754, 0.178637, 0.179288, 0.182449, 0.181643]. Separate profiled proof RTF was 0.57369: 344 QNN and 0 CPU neural events exactly matched 344 RPC, accelerator, cycle, and HVX records. Moritz independently accepted the exact representative WAV as good.", limitations=("The profiled 0.57369 RTF is instrumentation-bearing physical proof, not the performance headline or a warm observation.", "All invoked neural sessions were proven on HTP with CPU fallback disabled; CPU only handled fixed fixtures, recurrent tensor ownership, EOS/orchestration, concatenation, and WAV output.", "Exact official fixed Alba state SHA e4a323e8e771f14fd669428d83e7af6d83b4d6d0f0e282c30122f04824f17b1c, temperature 0.3, seed 0, fixed voice—not voice cloning.", "First-post-setup and cold RTF refer to the same first complete generation. VmHWM is cumulative lifecycle high-water; the primary field is the unprofiled benchmark maximum 2,463,559,680 bytes, while the separate profiled proof reached 2,580,541,440 bytes.", "Android OS and CPU affinity were not captured/pinned. Batch runner exposes no streaming first-audio latency. Unprofiled thermal status stayed 0; AP 41.2→53.6°C and skin 37.1→39.3°C."), sources=("experiments/0014-pocket-fp-onnx-qnn-htp/results/canonical-v2-benchmark.json", "experiments/0014-pocket-fp-onnx-qnn-htp/canonical-benchmark-protocol.json", "experiments/0014-pocket-fp-onnx-qnn-htp/RESULTS.md"), missing={"peak_pss_bytes": "Only cumulative process VmHWM was recorded.", "android_os": "Not captured in the completed campaign; no further phone use was authorized for metadata-only collection.", "cpu_affinity": "Not pinned; normal Android scheduler/DVFS applies.", "first_audio_latency": "Batch runner produces complete output after latent generation/decoding and exposes no honest streaming first-audio boundary."}, variant="Canonical v2 / fixed Alba / text64-cache512 / fallback-disabled QNN HTP"),
     row("0019-moss-canonical-v2-qnn-phone-blocked", "0019", "MOSS-TTS-Nano", "canonical-v2 fixed-capacity QNN/HTP phone route", "blocked", attempted=True, provider="QNNExecutionProvider (fallback disabled; session not created)", precision="FP32 official ONNX derivatives", summary="Canonical-v2 fixed-capacity MOSS derivatives passed CPU equivalence, fail-closed host QNN assignment, context generation, and context reload gates. On the authorized phone, the final app-UID carrier loaded QNN backend interface 2.38 but CreateDevice returned QNN_DEVICE_ERROR_INVALID_CONFIG before GetCapability, neural session assignment, or inference. No phone benchmark or physical HTP claim exists.", limitations=("The blocker is bounded to the recorded carrier/app UID, Android build, ORT/QNN versions, and phone; it does not prove all Android apps or QNN deployments incompatible.", "Host CPU equivalence, QNN eligibility, and four generated/reloaded context binaries are feasibility evidence only—not Android timing, memory, provider-event, or physical execution evidence.", "Public libcdsprpc declaration, exact native hashes, unique verified V73 skel/RFSA staging, fallback disabled, graph-I/O quantization off, runtime SoC auto-detect, and minimal device options did not move the failure beyond CreateDevice.", "No mixed fallback route, phone inference, audio decode, WAV, or listening verdict exists. Cleanup and lock reacquisition were verified."), sources=("experiments/0019-moss-tts-nano-qnn-htp-android/results/fixed-capacity-phone-blocker.json", "experiments/0019-moss-tts-nano-qnn-htp-android/results/fixed-capacity-cpu-equivalence.json", "experiments/0019-moss-tts-nano-qnn-htp-android/results/fixed-capacity-context-provenance.json", "experiments/0019-moss-tts-nano-qnn-htp-android/results/fixed-capacity-derivative-provenance.json", "experiments/0019-moss-tts-nano-qnn-htp-android/protocol/canonical-v2-tokenization.json", "experiments/0019-moss-tts-nano-qnn-htp-android/README.md"), missing={"load_seconds": "First fail-closed QNN session never created; backend setup is not a completed route setup measurement.", "cold_rtf": "No inference occurred.", "warm_median_rtf": "No first or warm inference occurred.", "proof_run_rtf": "No physical execution proof run occurred; CreateDevice failed before assignment.", "first_post_setup_rtf": "No session or post-setup generation existed.", "peak_pss_bytes": "No benchmark process progressed beyond backend setup.", "peak_vm_hwm_bytes": "No benchmark process progressed beyond backend setup.", "provider_events": "No session assignment or inference occurred.", "physical_rpc_accelerator_cycle_hvx": "CreateDevice failed before execution.", "wav": "No inference or audio decode occurred.", "listening": "No phone WAV exists; listening is not applicable."}, variant="Canonical v2 / fixed-capacity derivative / app-UID QNN phone blocker"),
@@ -224,6 +324,8 @@ MODEL_METADATA["0021-supertonic-int8-cpu-v2"] = {"model_identity": SUPERTONIC_SO
 MODEL_METADATA["0022-supertonic-t239-padding-blocked"] = {"model_identity": SUPERTONIC_SOURCE, "quantization": "Unquantized FP32 official-source-derived frozen T239 graphs; no QNN context generation, lowering, quantization, or phone execution occurred"}
 for _id in ("0023-supertonic-source-onnx-htp", "0023-supertonic-external-context-htp"):
     MODEL_METADATA[_id] = {"model_identity": SUPERTONIC_SOURCE, "quantization": "Unquantized FP32 official-source graphs with stable-Softplus vector rewrite; QNN HTP internal lowering precision not established"}
+for _id in ("0024-pocket-reconstruction-source-onnx-htp", "0024-pocket-reconstruction-external-context-htp"):
+    MODEL_METADATA[_id] = {"model_identity": POCKET_HF_SOURCE, "quantization": "Unquantized FP32 deterministic 0024 reconstruction derivative; all eight hashes differ from 0014; QNN HTP internal lowering precision not established"}
 MODEL_METADATA["0014-pocket-alba-cpu-v2"] = {"model_identity": POCKET_HF_SOURCE, "quantization": "Unquantized FP32 text64/cache512 ONNX derivative; zero quantization claimed"}
 MODEL_METADATA["0014-pocket-alba-qnn-htp-v2"] = {"model_identity": POCKET_HF_SOURCE, "quantization": "Unquantized FP32 source-graph text64/cache512 derivative; no quantized-operator claim"}
 
@@ -271,6 +373,16 @@ OBJECTIVE_EVIDENCE_OVERRIDES = {
         "status": "fail",
         "summary": "All 18 fallback-disabled canonical-v2 host QNN stages executed QNN-only, but the duration contract and structural audio gate failed; phone eligibility is false.",
         "comparison_notes": ["Stage 1 is the earliest non-bit-exact output; stage 4 is the earliest material/discrete divergence; root cause is unavailable and no Android, physical HTP, WAV, listening, or benchmark-performance claim follows."],
+    },
+    "0024-pocket-reconstruction-source-onnx-htp": {
+        "status": "descriptive",
+        "summary": "Completed canonical-v2 source-ONNX arm of the matched 0024 reconstruction-derivative startup comparison, with separate fallback-disabled physical proof and structurally valid but unreviewed audio.",
+        "comparison_notes": ["Matched context reload reduced median eight-session setup by 26.06548 s (96.26535%, 26.7763× source/context). Source/context WAV correlation 0.453032 and SNR -0.356050 dB are descriptive; neither exact hash has a listening verdict."],
+    },
+    "0024-pocket-reconstruction-external-context-htp": {
+        "status": "descriptive",
+        "summary": "Completed canonical-v2 external-EPContext arm of the matched 0024 reconstruction-derivative startup comparison, with source ONNX absent, separate fallback-disabled physical proof, and structurally valid but unreviewed audio.",
+        "comparison_notes": ["Median eight-session reload setup was 1.01122 s versus source compilation 27.0767 s. Offline context generation is excluded from setup, and no minimum speedup gate was applied."],
     },
 }
 LISTENING_REVIEWS = {
@@ -345,6 +457,49 @@ LISTENING_REVIEWS = {
     "0023-supertonic-external-context-htp": {
         "status": "accepted", "reviewer": "Moritz", "date": "2026-08-19",
         "notes": "Byte-identical to the exact experiment-0011 all-HTP WAV previously accepted by Moritz; the verdict applies to this identical retained hash, not to other outputs.", "sample_sha256": "47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c",
+    },
+}
+
+MATCHED_COMPARISON_0024 = {
+    "comparison_id": "0024-pocket-reconstruction-source-vs-external-context",
+    "source_commit": "b59601ef66d5d24b6af249ab082291f0c53d4b25",
+    "route_identity_boundary": "Matched deterministic 0024 reconstruction derivative; all eight graph hashes differ from 0014 and no 0014 identity or verdict transfers.",
+    "source_setup_seconds": [27.0767, 23.8668, 28.6125],
+    "context_setup_seconds": [0.729463, 1.26412, 1.01122],
+    "source_setup_median_seconds": 27.0767,
+    "context_setup_median_seconds": 1.01122,
+    "source_minus_context_median_seconds": 26.065479999999997,
+    "source_over_context_median_ratio": 26.776270247819465,
+    "context_setup_reduction_percent": 96.26534991339418,
+    "minimum_speedup_gate": None,
+    "source_first_rtf": [0.172432, 0.167197, 0.182052],
+    "context_first_rtf": [0.167568, 0.16733, 0.165802],
+    "source_first_rtf_median": 0.172432,
+    "context_first_rtf_median": 0.16733,
+    "source_warm_rtf": [0.167737, 0.167383, 0.167914, 0.166717, 0.168605, 0.170602, 0.16466, 0.166384, 0.170978, 0.172556, 0.177048, 0.170004, 0.169318, 0.169183, 0.16854],
+    "context_warm_rtf": [0.165296, 0.16402, 0.165763, 0.165462, 0.164016, 0.16418, 0.163039, 0.163203, 0.163868, 0.163095, 0.165363, 0.16382, 0.164594, 0.164763, 0.164032],
+    "source_warm_median_rtf": 0.168605,
+    "context_warm_median_rtf": 0.164032,
+    "offline_context_generation_included": False,
+    "proof_runs_excluded_from_benchmark_metrics": True,
+    "output_comparison": {
+        "byte_identical": False,
+        "equal_length": True,
+        "correlation": 0.45303178576893793,
+        "snr_db_source_over_difference": -0.3560496343804135,
+        "interpretation": "descriptive only; both byte-distinct WAVs remain not_reviewed",
+    },
+}
+MATCHED_COMPARISON_OVERRIDES = {
+    "0024-pocket-reconstruction-source-onnx-htp": {
+        **MATCHED_COMPARISON_0024,
+        "arm": "source",
+        "peer_route_id": "0024-pocket-reconstruction-external-context-htp",
+    },
+    "0024-pocket-reconstruction-external-context-htp": {
+        **MATCHED_COMPARISON_0024,
+        "arm": "context",
+        "peer_route_id": "0024-pocket-reconstruction-source-onnx-htp",
     },
 }
 
@@ -453,6 +608,8 @@ TRANSCRIPT_METADATA["0021-supertonic-int8-cpu-v2"] = transcript_metadata("canoni
 TRANSCRIPT_METADATA["0022-supertonic-t239-padding-blocked"] = transcript_metadata("canonical_v2", CANONICAL_V2_SHA256, "experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/protocol/transcript.txt", "Experiment 0022 exact canonical-v2 bytes plus complete <en>...</en> wrapper and official unicode-indexer mapping produced the locked semantic T235 oracle input.", byte_count=226, trailing_newline=False, effective_frontend={"kind": "official Supertonic unicode-indexer mapping after complete language wrapper", "token_count": 235, "token_ids_sha256": "cf10ba8c539f92c9b0b6a6394ddc6788801bee0e15fb75405a4433c6833cfbba", "token_ids_dtype": "int64", "source": "experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/results/t235-t239-masked-padding-compatibility.json"}, audit_source="experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/results/t235-t239-masked-padding-compatibility.json")
 for _id in ("0023-supertonic-source-onnx-htp", "0023-supertonic-external-context-htp"):
     TRANSCRIPT_METADATA[_id] = transcript_metadata("legacy_v1", LEGACY_V1_SHA256, "experiments/0023-supertonic-qnn-precompiled-context-startup/protocol/transcript.txt", "Experiment 0023 exact accepted experiment-0011 legacy-v1 transcript and processed T239 route.", byte_count=230, trailing_newline=False, audit_source="experiments/0023-supertonic-qnn-precompiled-context-startup/results/phone-campaign/phone-result.json", reason="Exact legacy-v1 matched-arm route; it is not canonical v2 and must not be compared as a canonical-v2 result.")
+for _id in ("0024-pocket-reconstruction-source-onnx-htp", "0024-pocket-reconstruction-external-context-htp"):
+    TRANSCRIPT_METADATA[_id] = transcript_metadata("canonical_v2", CANONICAL_V2_SHA256, "experiments/0024-pocket-tts-qnn-precompiled-context-startup/protocol/transcript.txt", "Experiment 0024 exact canonical-v2 bytes and Pocket tokenizer output for its deterministic reconstruction derivative.", byte_count=226, trailing_newline=False, effective_frontend={"kind": "Pocket tokenizer", "token_count": 64, "token_ids_encoding": "little-endian int64", "token_ids_sha256": "56d50c958627be19a7f2c86dde68a537a80f3f6d9087c16f55fde58c4d117c82", "tokenizer_sha256": "d461765ae179566678c93091c5fa6f2984c31bbe990bf1aa62d92c64d91bc3f6", "source": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/result.json"}, audit_source="experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/result.json", reason="Exact canonical-v2 matched 0024 reconstruction-derivative arms; not the exact 0014 graph identities and no 0014 verdict transfers.")
 for _id in ("0014-pocket-alba-cpu-v2", "0014-pocket-alba-qnn-htp-v2"):
     TRANSCRIPT_METADATA[_id] = transcript_metadata("canonical_v2", CANONICAL_V2_SHA256, "protocols/android-tts-benchmark/transcript.txt", "Experiment 0014 canonical-v2 text64/cache512 contract and exact Pocket tokenizer output.", byte_count=226, trailing_newline=False, effective_frontend={"kind": "Pocket tokenizer", "token_count": 64, "token_ids_encoding": "little-endian int64", "token_ids_sha256": "56d50c958627be19a7f2c86dde68a537a80f3f6d9087c16f55fde58c4d117c82", "tokenizer_sha256": "d461765ae179566678c93091c5fa6f2984c31bbe990bf1aa62d92c64d91bc3f6", "source": "experiments/0014-pocket-fp-onnx-qnn-htp/results/canonical-v2-benchmark.json"}, audit_source="experiments/0014-pocket-fp-onnx-qnn-htp/results/canonical-v2-benchmark.json")
 TRANSCRIPT_METADATA["0019-moss-canonical-v2-qnn-phone-blocked"] = transcript_metadata("canonical_v2", CANONICAL_V2_SHA256, "experiments/0019-moss-tts-nano-qnn-htp-android/protocol/canonical-v2-transcript.txt", "Experiment 0019 exact canonical-v2 MOSS SentencePiece tokenization.", byte_count=226, trailing_newline=False, effective_frontend={"kind": "MOSS SentencePiece tokenizer", "token_count": 51, "tokenizer_model_sha256": "c353ee1479b536bf414c1b247f5542b6607fb8ae91320e5af1781fee200fddff", "token_ids": [5322,300,642,2160,9813,10364,676,6704,1680,10363,661,10376,530,524,3598,4991,1727,420,273,628,10380,6271,10364,332,10211,1079,7824,2276,2103,1734,3628,10364,606,1217,1107,298,3572,302,8741,5368,10364,311,425,1957,273,2868,831,10104,372,9153,10380], "source": "experiments/0019-moss-tts-nano-qnn-htp-android/protocol/canonical-v2-tokenization.json"}, audit_source="experiments/0019-moss-tts-nano-qnn-htp-android/results/fixed-capacity-phone-blocker.json")
@@ -495,6 +652,7 @@ FULL_E2E_IDS = {
     "0016-pocket-qnn-hybrid-cpu", "0013-kokoro-onnx-cpu", "0018-moss-tts-nano-cpu",
     "0021-supertonic-int8-cpu-v2",
     "0023-supertonic-source-onnx-htp", "0023-supertonic-external-context-htp",
+    "0024-pocket-reconstruction-source-onnx-htp", "0024-pocket-reconstruction-external-context-htp",
     "0014-pocket-alba-cpu-v2", "0014-pocket-alba-qnn-htp-v2",
 }
 for _row in ROWS:
@@ -515,6 +673,8 @@ for _row in ROWS:
         _row["objective_evidence"] = OBJECTIVE_EVIDENCE_OVERRIDES[_row["id"]]
     if _row["id"] in LISTENING_REVIEWS:
         _row["listening_review"] = LISTENING_REVIEWS[_row["id"]]
+    if _row["id"] in MATCHED_COMPARISON_OVERRIDES:
+        _row["matched_comparison"] = MATCHED_COMPARISON_OVERRIDES[_row["id"]]
     _row["missing_reasons"].update(_metadata.get("missing", {}))
     if _row["model_identity"] is None:
         _row["missing_reasons"].setdefault("model_identity", "No committed source/model identity is established for this route.")
