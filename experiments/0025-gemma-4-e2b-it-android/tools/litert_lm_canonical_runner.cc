@@ -564,6 +564,24 @@ absl::Status MainHelper(int argc, char** argv) {
   }
 
   Json runs = Json::array();
+  auto persist_checkpoint = [&]() -> absl::Status {
+    Json checkpoint = {
+        {"schema_version", 1},
+        {"experiment", "0025-gemma-4-e2b-it-android"},
+        {"arm_id", arm_id},
+        {"backend", absl::GetFlag(FLAGS_backend)},
+        {"runtime_revision", kRuntimeRevision},
+        {"setup", {
+            {"seconds", Seconds(setup_end - setup_start)},
+            {"boundary", "before ModelAssets::Create through one Engine and one direct Session ready with KV capacity"},
+        }},
+        {"prompts", prompt_inventory},
+        {"completed_logical_request_count", runs.size()},
+        {"runs", runs},
+        {"checkpoint_complete", false},
+    };
+    return WriteFile(output_dir / "checkpoint.json", checkpoint.dump(2) + "\n");
+  };
   if (absl::GetFlag(FLAGS_smoke_only)) {
     ABSL_ASSIGN_OR_RETURN(Json run,
                           RunRequest(*engine, *session, workloads[0].second, "short",
@@ -573,6 +591,7 @@ absl::Status MainHelper(int argc, char** argv) {
                                      prompt_inventory["short"]["input_tokens"].get<size_t>(),
                                      output_dir));
     runs.push_back(std::move(run));
+    ABSL_RETURN_IF_ERROR(persist_checkpoint());
   } else {
     ABSL_ASSIGN_OR_RETURN(Json first,
                           RunRequest(*engine, *session, workloads[0].second, "short",
@@ -582,6 +601,7 @@ absl::Status MainHelper(int argc, char** argv) {
                                      prompt_inventory["short"]["input_tokens"].get<size_t>(),
                                      output_dir));
     runs.push_back(std::move(first));
+    ABSL_RETURN_IF_ERROR(persist_checkpoint());
     for (const auto& [tier, workload] : workloads) {
       for (int index = 1; index <= 5; ++index) {
         const std::string run_id = "same-session-" + tier + "-0" + std::to_string(index);
@@ -593,6 +613,7 @@ absl::Status MainHelper(int argc, char** argv) {
                                          prompt_inventory[tier]["input_tokens"].get<size_t>(),
                                          output_dir));
         runs.push_back(std::move(run));
+        ABSL_RETURN_IF_ERROR(persist_checkpoint());
       }
     }
   }
@@ -629,6 +650,11 @@ absl::Status MainHelper(int argc, char** argv) {
   };
   const auto result_path = output_dir / "runner-result.json";
   ABSL_RETURN_IF_ERROR(WriteFile(result_path, result.dump(2) + "\n"));
+  Json completed_checkpoint = result;
+  completed_checkpoint["completed_logical_request_count"] = runs.size();
+  completed_checkpoint["checkpoint_complete"] = true;
+  ABSL_RETURN_IF_ERROR(WriteFile(output_dir / "checkpoint.json",
+                                 completed_checkpoint.dump(2) + "\n"));
   std::cout << result.dump() << std::endl;
   return absl::OkStatus();
 }
