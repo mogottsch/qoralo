@@ -42,6 +42,7 @@ Counts are generated state, not constants. Never infer a classification from mod
 
 ## Metric and listening boundaries
 
+- `load_seconds` drives the sortable Setup column. Preserve the owning boundary: source arms include source compilation/session setup; external-context arms measure context load/reload and session setup while offline context generation remains separate. Null is unavailable, never zero, and sorts last.
 - `warm_median_rtf` exists only for a recorded warm distribution.
 - `proof_run_rtf` is an instrumented or bounded proof run, not warm performance.
 - `first_post_setup_rtf` is one first complete generation after setup.
@@ -61,7 +62,7 @@ git diff --check -- docs/android-benchmarks/
 git status --short -- docs/android-benchmarks/
 ```
 
-A deterministic rebuild must leave no unexplained diff. Then inspect JSON Schema, generated HTML, anchors, media links, sorting keys, transcript badges, missing reasons, and the owning experiment's tests.
+A deterministic rebuild must leave no unexplained diff. Then inspect JSON Schema, generated HTML, anchors, media links, sorting keys, transcript badges, missing reasons, and the owning experiment's tests. Browser-check the route table at narrow and desktop widths, both normally and in Fullscreen API mode: the table must use the available viewport, expose a visible horizontal-scroll cue/scrollbar when it overflows, retain keyboard scrolling and sorting, and show no clipped rightmost columns.
 
 ## Adding a result
 

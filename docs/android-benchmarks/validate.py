@@ -648,11 +648,26 @@ def main():
     report = HERE / "missing-fields.md"
     if not report.is_file() or "null" not in report.read_text():
         fail("missing-fields.md is absent or does not explain null semantics")
+    if (HERE / "index.html").read_bytes() != (HERE / "dashboard.html").read_bytes():
+        fail("generated index.html and dashboard.html differ")
+    required_dashboard_fragments = (
+        '>Setup</button>',
+        'data-metric="load_seconds"',
+        'id="routes-scroll" tabindex="0" role="region"',
+        'id="routes-fullscreen" aria-controls="routes-panel" aria-pressed="false"',
+        'requestFullscreen',
+        'fullscreenchange',
+        "sortTable(7,'ascending',false)",
+        'More columns are available horizontally',
+    )
     for page_name in ("index.html", "dashboard.html"):
         page = HERE / page_name
         if not page.is_file():
             fail(f"missing generated page: {page_name}")
         page_text = page.read_text()
+        for fragment in required_dashboard_fragments:
+            if fragment not in page_text:
+                fail(f"{page_name}: required sortable/scroll/fullscreen UI is missing {fragment!r}")
         for item in timeline:
             if item["model"] not in page_text or item["first_release_date"] not in page_text or item["source_url"] not in page_text:
                 fail(f"{page_name}: timeline entry missing for {item['model']}")
@@ -665,6 +680,21 @@ def main():
                 fail(f"{page_name}: visible full-E2E route {e['id']} is missing or duplicated")
             if not dashboard_visible and marker in page_text:
                 fail(f"{page_name}: hidden route {e['id']} leaked into presentation")
+            if dashboard_visible:
+                setup_match = re.search(r'<td data-metric="load_seconds" data-sort="([^"]*)" title="[^"]*">(.*?)</td>', row_html)
+                if setup_match is None:
+                    fail(f"{page_name}: {e['id']} setup cell is missing")
+                refresh = e.get("remeasurements", [])[-1] if e.get("remeasurements") else None
+                setup_value = (refresh["metrics"] if refresh else e["metrics"])["load_seconds"]
+                expected_sort = "" if setup_value is None else str(setup_value)
+                if setup_match.group(1) != expected_sort:
+                    fail(f"{page_name}: {e['id']} setup sort value does not match metrics.load_seconds")
+                route_text = f'{e["route"]} {e.get("deployment_variant") or ""}'.lower()
+                expected_semantics = "context load / reload" if "external epcontext" in route_text or "external context" in route_text else "source compile / setup" if "source-onnx" in route_text or "source onnx" in route_text else "route setup / load"
+                if expected_semantics not in setup_match.group(2):
+                    fail(f"{page_name}: {e['id']} setup semantics label mismatch")
+                if setup_value is None and not setup_match.group(2).startswith("—"):
+                    fail(f"{page_name}: {e['id']} unavailable setup was not rendered as unavailable")
             identity = e["model_identity"]
             if dashboard_visible and identity is not None and identity["url"] not in page_text:
                 fail(f"{page_name}: {e['id']} model source link is missing")

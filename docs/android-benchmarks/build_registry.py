@@ -749,6 +749,32 @@ def format_memory(metrics):
     return f'{display}<br><small>{measurement}</small>', str(value)
 
 
+def format_setup(entry):
+    """Render committed metrics.load_seconds without hiding its route semantics."""
+    remeasurements = entry.get("remeasurements", [])
+    latest = remeasurements[-1] if remeasurements else None
+    metrics = latest["metrics"] if latest else entry["metrics"]
+    value = metrics["load_seconds"]
+    route_text = f'{entry["route"]} {entry.get("deployment_variant") or ""}'.lower()
+    if "external epcontext" in route_text or "external context" in route_text:
+        short_semantics = "context load / reload"
+        semantics = "external context load/reload and session setup; offline context generation is excluded"
+    elif "source-onnx" in route_text or "source onnx" in route_text:
+        short_semantics = "source compile / setup"
+        semantics = "source ONNX compilation and session setup inside the measured readiness boundary"
+    else:
+        short_semantics = "route setup / load"
+        semantics = "the owning route's committed setup/load boundary"
+    missing_reasons = latest.get("missing_reasons", {}) if latest else entry["missing_reasons"]
+    if value is None:
+        reason = missing_reasons.get("load_seconds", "No committed normalized setup/load value is available.")
+        detail = f"Unavailable. metrics.load_seconds means {semantics}. {reason}"
+        return f'—<br><small>{html.escape(short_semantics)}</small>', "", detail
+    refresh = f" Refresh {latest['remeasured_at']} ({latest['id']})." if latest else ""
+    detail = f"metrics.load_seconds: {value:.9g} seconds; {semantics}.{refresh}"
+    return f'{value:.6g} s<br><small>{html.escape(short_semantics)}</small>', str(value), detail
+
+
 def format_rtf(entry):
     candidates = (
         ("warm_median_rtf", "warm median", ""),
@@ -815,6 +841,7 @@ def build_html(registry):
         latest = e.get("remeasurements", [])[-1] if e.get("remeasurements") else None
         display_wav = latest["representative_wav"] if latest else e["wav"]
         display_review = latest["listening_review"] if latest else e["listening_review"]
+        setup, sort_setup, setup_details = format_setup(e)
         rtf, sort_rtf, rtf_details = format_rtf(e)
         if display_wav:
             anchor = f'audio-{e["id"]}'
@@ -862,26 +889,237 @@ def build_html(registry):
         if latest:
             delta = latest["comparison_to_original"]
             summary += f'<br><small>Refresh {html.escape(latest["remeasured_at"])} ({html.escape(latest["id"])}): exact historical transcript v1/route rerun; warm median {latest["metrics"]["warm_median_rtf"]:.6f} vs original {e["metrics"]["warm_median_rtf"]:.6f} ({delta["warm_median_rtf_relative_change_percent"]:+.4f}%). Setup drift {delta["setup_relative_change_percent"]:+.4f}% is flagged. Three historical warm runs; not canonical v2 and not the current five-warm protocol.</small>'
-        trs.append(f'<tr data-route-id="{html.escape(e["id"])}"><td data-sort="{html.escape(e["experiment"])}">{html.escape(e["experiment"])}</td><td data-sort="{html.escape(e["model"] + " " + e["route"])}">{model_cell}</td><td data-sort="{quantization}">{quantization}</td><td data-sort="{html.escape(e["attempt_status"])}"><span class="status {cls}">{html.escape(e["attempt_status"])}</span></td><td data-sort="{review_status}">{listening}</td><td data-sort="{html.escape(e["provider"] or "")} {e["threads"] or ""}">{provider}</td><td data-sort="{sort_rtf}" title="{html.escape(rtf_details, quote=True)}">{html.escape(rtf)}</td><td data-sort="{sort_memory}">{memory}</td><td data-sort="{audio_sort}">{wav}</td><td data-sort="{html.escape(e["summary"])}">{summary}</td></tr>')
+        trs.append(f'<tr data-route-id="{html.escape(e["id"])}"><td data-sort="{html.escape(e["experiment"])}">{html.escape(e["experiment"])}</td><td data-sort="{html.escape(e["model"] + " " + e["route"])}">{model_cell}</td><td data-sort="{quantization}">{quantization}</td><td data-sort="{html.escape(e["attempt_status"])}"><span class="status {cls}">{html.escape(e["attempt_status"])}</span></td><td data-sort="{review_status}">{listening}</td><td data-sort="{html.escape(e["provider"] or "")} {e["threads"] or ""}">{provider}</td><td data-metric="load_seconds" data-sort="{sort_setup}" title="{html.escape(setup_details, quote=True)}">{setup}</td><td data-sort="{sort_rtf}" title="{html.escape(rtf_details, quote=True)}">{html.escape(rtf)}</td><td data-sort="{sort_memory}">{memory}</td><td data-sort="{audio_sort}">{wav}</td><td data-sort="{html.escape(e["summary"])}">{summary}</td></tr>')
     timeline_rows = []
     for item in MODEL_TIMELINE:
         timeline_rows.append(f'<tr><td>{html.escape(item["model"])}</td><td><time datetime="{html.escape(item["first_release_date"])}">{html.escape(item["first_release_date"])}</time></td><td>{html.escape(item["date_basis"])}</td><td><a href="{html.escape(item["source_url"])}" target="_blank" rel="noopener">Source</a></td></tr>')
-    return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Android benchmark registry</title><style>
-:root{{--bg:#0f172a;--panel:#172033;--line:#334155;--ink:#e5e7eb;--muted:#94a3b8;--accent:#67e8f9}}*{{box-sizing:border-box}}body{{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,sans-serif}}main{{max-width:1500px;margin:auto;padding:22px 24px}}h1{{font-size:24px;line-height:1.2;margin:0 0 16px}}small{{color:var(--muted)}}a{{color:var(--accent)}}.table-wrap{{overflow:auto;border:1px solid var(--line);border-radius:12px}}table{{border-collapse:collapse;width:100%;min-width:1320px;background:var(--panel)}}th,td{{padding:12px 13px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}}th{{position:sticky;top:0;background:#1e293b;color:#bae6fd;white-space:nowrap;user-select:none;cursor:pointer}}th:hover{{background:#26364d}}th::after{{content:' ↕';color:#64748b}}th[aria-sort="ascending"]::after{{content:' ↑';color:var(--accent)}}th[aria-sort="descending"]::after{{content:' ↓';color:var(--accent)}}td:nth-child(10){{min-width:350px;color:#cbd5e1}}.status{{border-radius:99px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap}}.listening-link{{display:inline-block;text-decoration:none}}.listening-link:hover .status{{text-decoration:underline}}.listening-link:focus-visible{{outline:2px solid var(--accent);outline-offset:3px;border-radius:99px}}.transcript{{font-weight:700}}.transcript-canonical_v2{{color:#a7f3d0}}.transcript-legacy_v1{{color:#fde68a}}.transcript-noncanonical{{color:#fecaca}}.ran{{background:#064e3b;color:#a7f3d0}}.listening-not-reviewed{{background:#713f12;color:#fde68a}}.listening-accepted{{background:#064e3b;color:#a7f3d0}}.listening-rejected{{background:#7f1d1d;color:#fecaca}}.blocked,.deferred,.not-run{{background:#713f12;color:#fde68a}}.partial{{background:#164e63;color:#a5f3fc}}code{{color:#bae6fd}}h2{{font-size:20px;margin:30px 0 12px}}.timeline-note{{color:var(--muted);margin-top:-4px}}.players{{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}}.player{{scroll-margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}}.player:target{{outline:2px solid var(--accent)}}.player audio{{display:block;width:100%;margin:11px 0 8px}}.back{{font-size:12px}}footer{{margin-top:16px;color:var(--muted);font-size:12px}}</style></head><body><main><h1>Android benchmark registry</h1><div class="table-wrap"><table id="routes"><thead><tr><th data-type="text">Experiment</th><th data-type="text">Model / route</th><th data-type="text">Quantization</th><th data-type="text">Status</th><th data-type="text">Listening</th><th data-type="text">Provider</th><th data-type="number" aria-sort="ascending" title="Warm median by default; otherwise the designated non-warm headline type is shown in brackets. Hover a value for all RTF evidence and missing reasons.">RTF</th><th data-type="number">Peak memory</th><th data-type="number">Audio</th><th data-type="text">Evidence summary</th></tr></thead><tbody>{''.join(trs)}</tbody></table></div><h2 id="audio-samples">Audio samples</h2><div class="players">{''.join(players)}</div><h2 id="needs-review">Needs review</h2><p class="timeline-note">Playable full-E2E samples with no explicit Moritz listening verdict yet.</p><div class="players">{''.join(needs_review_players)}</div><h2 id="model-timeline">Model release timeline</h2><p class="timeline-note">First public family/model release dates, not later quantized archives or Android package dates. The date basis and source are recorded in <code>registry.json</code>.</p><div class="table-wrap"><table id="timeline"><thead><tr><th>Model</th><th>First public release</th><th>Date basis</th><th>Source</th></tr></thead><tbody>{''.join(timeline_rows)}</tbody></table></div><footer>Click a column heading to sort. Missing values sort last. Details: <a href="README.md">README</a> · <a href="missing-fields.md">missing fields</a>.</footer></main><script>
-const table=document.getElementById('routes'), body=table.tBodies[0], headers=[...table.tHead.rows[0].cells];
-function sortTable(index,direction){{
- const type=headers[index].dataset.type, rows=[...body.rows];
+    return f'''<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Android benchmark registry</title>
+<style>
+:root{{--bg:#0f172a;--panel:#172033;--panel-strong:#1e293b;--line:#334155;--ink:#e5e7eb;--muted:#94a3b8;--accent:#67e8f9;--focus:#fbbf24}}
+*{{box-sizing:border-box}}
+html,body{{min-width:0}}
+body{{margin:0;overflow-x:hidden;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,sans-serif}}
+main{{width:100%;max-width:none;margin:0;padding:22px 24px}}
+h1{{font-size:24px;line-height:1.2;margin:0 0 16px}}
+h2{{font-size:20px;margin:30px 0 12px}}
+small{{color:var(--muted)}}
+a{{color:var(--accent)}}
+button{{font:inherit}}
+button:focus-visible,a:focus-visible,.table-wrap:focus-visible{{outline:3px solid var(--focus);outline-offset:3px}}
+.sr-only{{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}}
+.table-panel{{width:100%;min-width:0;border:1px solid var(--line);border-radius:12px;background:var(--panel)}}
+.table-toolbar{{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:12px 14px;border-bottom:1px solid var(--line);background:#111b2d;border-radius:12px 12px 0 0}}
+.table-toolbar h2{{margin:0;font-size:17px}}
+.scroll-hint{{margin:3px 0 0;color:var(--muted);font-size:12px}}
+.table-actions{{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}}
+.table-control{{min-height:36px;padding:7px 11px;border:1px solid #475569;border-radius:8px;background:var(--panel-strong);color:var(--ink);cursor:pointer}}
+.table-control:hover:not(:disabled){{border-color:var(--accent);color:var(--accent)}}
+.table-control:disabled{{opacity:.42;cursor:not-allowed}}
+.scroll-cue{{display:flex;align-items:center;justify-content:center;gap:8px;padding:6px 12px;border-bottom:1px solid var(--line);background:#164e63;color:#cffafe;font-size:12px;font-weight:700;letter-spacing:.01em}}
+.scroll-cue[hidden]{{display:none}}
+.table-viewport{{position:relative;min-width:0}}
+.table-viewport::before,.table-viewport::after{{content:"";position:absolute;z-index:5;top:0;bottom:14px;width:34px;pointer-events:none;opacity:0;transition:opacity .15s ease}}
+.table-viewport::before{{left:0;background:linear-gradient(90deg,rgba(15,23,42,.95),transparent)}}
+.table-viewport::after{{right:0;background:linear-gradient(270deg,rgba(15,23,42,.95),transparent)}}
+.table-panel.has-overflow:not(.at-start) .table-viewport::before,.table-panel.has-overflow:not(.at-end) .table-viewport::after{{opacity:1}}
+.table-wrap{{width:100%;min-width:0;max-height:min(72vh,760px);overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;border-radius:0 0 12px 12px;scroll-behavior:smooth}}
+.table-wrap::-webkit-scrollbar{{width:14px;height:14px}}
+.table-wrap::-webkit-scrollbar-track{{background:#0b1220}}
+.table-wrap::-webkit-scrollbar-thumb{{border:3px solid #0b1220;border-radius:10px;background:#64748b}}
+.table-wrap::-webkit-scrollbar-thumb:hover{{background:var(--accent)}}
+.timeline-wrap{{border:1px solid var(--line);border-radius:12px}}
+table{{border-collapse:collapse;background:var(--panel)}}
+#routes{{width:100%;min-width:1695px;table-layout:fixed}}
+#timeline{{width:100%;min-width:760px}}
+th,td{{padding:12px 13px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}}
+#routes td{{overflow-wrap:anywhere}}
+#routes th:nth-child(1){{width:90px}}
+#routes th:nth-child(2){{width:185px}}
+#routes th:nth-child(3){{width:245px}}
+#routes th:nth-child(4){{width:85px}}
+#routes th:nth-child(5){{width:115px}}
+#routes th:nth-child(6){{width:205px}}
+#routes th:nth-child(7){{width:150px}}
+#routes th:nth-child(8){{width:90px}}
+#routes th:nth-child(9){{width:130px}}
+#routes th:nth-child(10){{width:70px}}
+#routes th:nth-child(11){{width:330px}}
+#routes th{{position:sticky;z-index:3;top:0;padding:0;background:var(--panel-strong);color:#bae6fd;white-space:nowrap}}
+#routes th:first-child{{z-index:4;left:0}}
+#routes td:first-child{{position:sticky;z-index:2;left:0;background:var(--panel)}}
+.sort-button{{display:block;width:100%;min-height:44px;padding:12px 13px;border:0;background:transparent;color:inherit;text-align:left;white-space:nowrap;cursor:pointer}}
+.sort-button:hover{{background:#26364d}}
+.sort-button::after{{content:' ↕';color:#64748b}}
+th[aria-sort="ascending"] .sort-button::after{{content:' ↑';color:var(--accent)}}
+th[aria-sort="descending"] .sort-button::after{{content:' ↓';color:var(--accent)}}
+#timeline th{{background:var(--panel-strong);color:#bae6fd;white-space:nowrap}}
+#routes td:nth-child(11){{color:#cbd5e1}}
+#routes td[data-metric="load_seconds"]{{min-width:145px;white-space:nowrap}}
+.status{{border-radius:99px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap}}
+.listening-link{{display:inline-block;text-decoration:none}}
+.listening-link:hover .status{{text-decoration:underline}}
+.listening-link:focus-visible{{border-radius:99px}}
+.transcript{{font-weight:700}}
+.transcript-canonical_v2{{color:#a7f3d0}}
+.transcript-legacy_v1{{color:#fde68a}}
+.transcript-noncanonical{{color:#fecaca}}
+.ran{{background:#064e3b;color:#a7f3d0}}
+.listening-not-reviewed{{background:#713f12;color:#fde68a}}
+.listening-accepted{{background:#064e3b;color:#a7f3d0}}
+.listening-rejected{{background:#7f1d1d;color:#fecaca}}
+.blocked,.deferred,.not-run{{background:#713f12;color:#fde68a}}
+.partial{{background:#164e63;color:#a5f3fc}}
+code{{color:#bae6fd}}
+.timeline-note{{color:var(--muted);margin-top:-4px}}
+.players{{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:12px}}
+.player{{scroll-margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}}
+.player:target{{outline:2px solid var(--accent)}}
+.player audio{{display:block;width:100%;margin:11px 0 8px}}
+.back{{font-size:12px}}
+footer{{margin-top:16px;color:var(--muted);font-size:12px}}
+.table-panel:fullscreen{{display:flex;width:100vw;height:100vh;padding:14px;border:0;border-radius:0;background:var(--bg);flex-direction:column}}
+.table-panel:fullscreen .table-toolbar{{flex:0 0 auto;border:1px solid var(--line);border-radius:10px 10px 0 0}}
+.table-panel:fullscreen .scroll-cue{{flex:0 0 auto;border-inline:1px solid var(--line)}}
+.table-panel:fullscreen .table-viewport{{flex:1 1 auto;min-height:0;border:1px solid var(--line);border-top:0}}
+.table-panel:fullscreen .table-wrap{{height:100%;max-height:none;border-radius:0}}
+@media(max-width:700px){{main{{padding:10px 8px 24px}}h1{{font-size:21px}}.table-toolbar{{align-items:stretch;flex-direction:column}}.table-actions{{display:grid;grid-template-columns:1fr 1fr}}#routes-fullscreen{{grid-column:1/-1}}.table-control{{width:100%}}.scroll-hint{{max-width:58ch}}}}
+@media(prefers-reduced-motion:reduce){{.table-wrap{{scroll-behavior:auto}}.table-viewport::before,.table-viewport::after{{transition:none}}}}
+</style>
+</head>
+<body>
+<main>
+<h1>Android benchmark registry</h1>
+<section class="table-panel" id="routes-panel" aria-labelledby="routes-title">
+<div class="table-toolbar">
+<div><h2 id="routes-title">Benchmark routes</h2><p class="scroll-hint" id="routes-scroll-hint">Scroll horizontally with touch, a trackpad, Shift + mouse wheel, or the controls. Focus the table and use Left/Right or Home/End.</p></div>
+<div class="table-actions" aria-label="Table view controls"><button type="button" class="table-control" id="routes-scroll-start" aria-controls="routes-scroll" aria-label="Scroll table to first columns">← Start</button><button type="button" class="table-control" id="routes-scroll-end" aria-controls="routes-scroll" aria-label="Scroll table to last columns">End →</button><button type="button" class="table-control" id="routes-fullscreen" aria-controls="routes-panel" aria-pressed="false">Fullscreen table</button></div>
+</div>
+<div class="scroll-cue" id="routes-scroll-cue" aria-hidden="true"><span>↔</span><span>More columns are available horizontally</span><span>↔</span></div>
+<div class="table-viewport">
+<div class="table-wrap" id="routes-scroll" tabindex="0" role="region" aria-label="Android benchmark routes, horizontally and vertically scrollable" aria-describedby="routes-scroll-hint">
+<table id="routes"><thead><tr>
+<th scope="col" data-type="text"><button type="button" class="sort-button">Experiment</button></th>
+<th scope="col" data-type="text"><button type="button" class="sort-button">Model / route</button></th>
+<th scope="col" data-type="text"><button type="button" class="sort-button">Quantization</button></th>
+<th scope="col" data-type="text"><button type="button" class="sort-button">Status</button></th>
+<th scope="col" data-type="text"><button type="button" class="sort-button">Listening</button></th>
+<th scope="col" data-type="text"><button type="button" class="sort-button">Provider</button></th>
+<th scope="col" data-type="number" title="Committed metrics.load_seconds. Source arms include source compilation/setup; context arms measure context load/reload. Null stays unavailable and sorts last."><button type="button" class="sort-button">Setup</button></th>
+<th scope="col" data-type="number" aria-sort="ascending" title="Warm median by default; otherwise the designated non-warm headline type is shown in brackets. Hover a value for all RTF evidence and missing reasons."><button type="button" class="sort-button">RTF</button></th>
+<th scope="col" data-type="number"><button type="button" class="sort-button">Peak memory</button></th>
+<th scope="col" data-type="number"><button type="button" class="sort-button">Audio</button></th>
+<th scope="col" data-type="text"><button type="button" class="sort-button">Evidence summary</button></th>
+</tr></thead><tbody>{''.join(trs)}</tbody></table>
+</div>
+</div>
+<p class="sr-only" id="routes-sort-status" aria-live="polite"></p>
+</section>
+<h2 id="audio-samples">Audio samples</h2><div class="players">{''.join(players)}</div>
+<h2 id="needs-review">Needs review</h2><p class="timeline-note">Playable full-E2E samples with no explicit Moritz listening verdict yet.</p><div class="players">{''.join(needs_review_players)}</div>
+<h2 id="model-timeline">Model release timeline</h2><p class="timeline-note">First public family/model release dates, not later quantized archives or Android package dates. The date basis and source are recorded in <code>registry.json</code>.</p>
+<div class="table-wrap timeline-wrap" tabindex="0" role="region" aria-label="Model release timeline, horizontally scrollable"><table id="timeline"><thead><tr><th scope="col">Model</th><th scope="col">First public release</th><th scope="col">Date basis</th><th scope="col">Source</th></tr></thead><tbody>{''.join(timeline_rows)}</tbody></table></div>
+<footer>Use the column buttons to sort; missing values always sort last. Setup is committed <code>metrics.load_seconds</code>: source compilation/setup for source arms and context load/reload for context arms. Details: <a href="README.md">README</a> · <a href="missing-fields.md">missing fields</a>.</footer>
+</main>
+<script>
+const table=document.getElementById('routes');
+const body=table.tBodies[0];
+const headers=[...table.tHead.rows[0].cells];
+const panel=document.getElementById('routes-panel');
+const scrollRegion=document.getElementById('routes-scroll');
+const scrollCue=document.getElementById('routes-scroll-cue');
+const startButton=document.getElementById('routes-scroll-start');
+const endButton=document.getElementById('routes-scroll-end');
+const fullscreenButton=document.getElementById('routes-fullscreen');
+const sortStatus=document.getElementById('routes-sort-status');
+function updateSortLabels(){{
+ headers.forEach(header=>{{
+  const button=header.querySelector('.sort-button');
+  const direction=header.getAttribute('aria-sort');
+  const suffix=direction?`. Current order: ${{direction}}. Activate to sort ${{direction==='ascending'?'descending':'ascending'}}.`:'. Activate to sort ascending.';
+  button.setAttribute('aria-label',`Sort by ${{button.textContent.trim()}}${{suffix}}`);
+ }});
+}}
+function sortTable(index,direction,announce=true){{
+ const type=headers[index].dataset.type;
+ const rows=[...body.rows];
  rows.sort((a,b)=>{{
-  const av=a.cells[index].dataset.sort??'', bv=b.cells[index].dataset.sort??'';
-  if(av===''&&bv==='')return 0;if(av==='')return 1;if(bv==='')return -1;
+  const av=a.cells[index].dataset.sort??'';
+  const bv=b.cells[index].dataset.sort??'';
+  if(av===''&&bv==='')return 0;
+  if(av==='')return 1;
+  if(bv==='')return -1;
   const cmp=type==='number'?Number(av)-Number(bv):av.localeCompare(bv,undefined,{{numeric:true,sensitivity:'base'}});
   return direction==='ascending'?cmp:-cmp;
  }});
- body.append(...rows);headers.forEach(h=>h.removeAttribute('aria-sort'));headers[index].setAttribute('aria-sort',direction);
+ body.append(...rows);
+ headers.forEach(header=>header.removeAttribute('aria-sort'));
+ headers[index].setAttribute('aria-sort',direction);
+ updateSortLabels();
+ if(announce)sortStatus.textContent=`Sorted by ${{headers[index].querySelector('.sort-button').textContent.trim()}}, ${{direction}}; unavailable values last.`;
 }}
-headers.forEach((header,index)=>header.addEventListener('click',()=>{{const next=header.getAttribute('aria-sort')==='ascending'?'descending':'ascending';sortTable(index,next)}}));
-sortTable(6,'ascending');
-</script></body></html>'''
+headers.forEach((header,index)=>{{
+ const button=header.querySelector('.sort-button');
+ button.addEventListener('click',()=>{{
+  const next=header.getAttribute('aria-sort')==='ascending'?'descending':'ascending';
+  sortTable(index,next);
+ }});
+}});
+function updateScrollState(){{
+ const overflow=scrollRegion.scrollWidth>scrollRegion.clientWidth+1;
+ const atStart=scrollRegion.scrollLeft<=1;
+ const atEnd=table.getBoundingClientRect().right<=scrollRegion.getBoundingClientRect().right+1;
+ panel.classList.toggle('has-overflow',overflow);
+ panel.classList.toggle('at-start',atStart);
+ panel.classList.toggle('at-end',atEnd);
+ scrollCue.hidden=!overflow;
+ startButton.disabled=!overflow||atStart;
+ endButton.disabled=!overflow||atEnd;
+}}
+function jumpHorizontal(left){{
+ const previous=scrollRegion.style.scrollBehavior;
+ scrollRegion.style.scrollBehavior='auto';
+ scrollRegion.scrollLeft=left;
+ scrollRegion.style.scrollBehavior=previous;
+ updateScrollState();
+}}
+startButton.addEventListener('click',()=>jumpHorizontal(0));
+endButton.addEventListener('click',()=>jumpHorizontal(scrollRegion.scrollWidth));
+scrollRegion.addEventListener('scroll',updateScrollState,{{passive:true}});
+scrollRegion.addEventListener('keydown',event=>{{
+ if(event.target!==scrollRegion)return;
+ const step=Math.max(160,Math.round(scrollRegion.clientWidth*.65));
+ if(event.key==='ArrowLeft'||event.key==='ArrowRight'){{event.preventDefault();scrollRegion.scrollBy({{left:event.key==='ArrowLeft'?-step:step}});}}
+ if(event.key==='Home'||event.key==='End'){{event.preventDefault();jumpHorizontal(event.key==='Home'?0:scrollRegion.scrollWidth);}}
+}});
+async function toggleFullscreen(){{
+ try{{
+  if(document.fullscreenElement===panel)await document.exitFullscreen();
+  else await panel.requestFullscreen({{navigationUI:'hide'}});
+ }}catch(error){{sortStatus.textContent=`Fullscreen could not be opened: ${{error.message}}`;}}
+}}
+fullscreenButton.addEventListener('click',toggleFullscreen);
+document.addEventListener('fullscreenchange',()=>{{
+ const active=document.fullscreenElement===panel;
+ fullscreenButton.setAttribute('aria-pressed',String(active));
+ fullscreenButton.textContent=active?'Exit fullscreen':'Fullscreen table';
+ fullscreenButton.setAttribute('aria-label',active?'Exit table fullscreen; Escape also exits':'Open table fullscreen');
+ updateScrollState();
+}});
+document.addEventListener('fullscreenerror',()=>{{sortStatus.textContent='The browser refused table fullscreen.';}});
+if(!document.fullscreenEnabled){{fullscreenButton.disabled=true;fullscreenButton.title='Fullscreen is not supported by this browser.';}}
+if('ResizeObserver' in window)new ResizeObserver(updateScrollState).observe(scrollRegion);
+window.addEventListener('resize',updateScrollState);
+sortTable(7,'ascending',false);
+updateScrollState();
+</script>
+</body>
+</html>'''
 
 
 def main():
