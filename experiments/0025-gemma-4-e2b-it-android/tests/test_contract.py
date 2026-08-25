@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import hashlib
+import json
+import unittest
+from pathlib import Path
+
+EXP = Path(__file__).resolve().parents[1]
+ROOT = EXP.parents[1]
+CONTRACT = json.loads((EXP / "protocol/experiment-contract.json").read_text())
+
+
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+class ContractTest(unittest.TestCase):
+    def test_canonical_protocol_and_workloads_are_exact(self) -> None:
+        protocol = CONTRACT["canonical_protocol"]
+        self.assertEqual(protocol["sha256"], sha256(ROOT / protocol["path"]))
+        for tier, expected in protocol["workloads"].items():
+            path = ROOT / f"protocols/android-llm-benchmark/workloads/inference-v1/{tier}.json"
+            self.assertEqual(expected, sha256(path))
+        self.assertEqual(2048, protocol["max_output_tokens"])
+        self.assertEqual(1, protocol["first_request"]["count"])
+        self.assertEqual(5, protocol["same_session_requests_per_tier"])
+
+    def test_runner_source_is_frozen(self) -> None:
+        runner = CONTRACT["runtime"]["android_runner"]
+        self.assertEqual(runner["source_sha256"], sha256(ROOT / runner["source"]))
+
+    def test_only_cpu_and_gpu_arms_are_in_scope(self) -> None:
+        scope = CONTRACT["scope"]
+        self.assertEqual(2, len(scope["arms"]))
+        self.assertTrue(any("CPU" in arm for arm in scope["arms"]))
+        self.assertTrue(any("GPU" in arm for arm in scope["arms"]))
+        self.assertTrue(any("NPU" in item for item in scope["excluded"]))
+
+    def test_sampler_adapter_is_exact_greedy_equivalent(self) -> None:
+        route = CONTRACT["route"]
+        self.assertIn("k=1", route["sampler_configuration"])
+        self.assertIn("returns the single top-k token ID directly", route["greedy_equivalence_proof"]["behavior"])
+        self.assertFalse(route["thinking_enabled"])
+        self.assertFalse(route["speculative_decoding_enabled"])
+
+    def test_optional_runtime_turns_are_not_fatal(self) -> None:
+        nullable = " ".join(CONTRACT["nullable_not_fatal"])
+        self.assertIn("BenchmarkInfo", nullable)
+        fatal = " ".join(CONTRACT["fatal_gates"])
+        self.assertNotIn("BenchmarkInfo", fatal)
+        self.assertTrue(CONTRACT["timing_and_evidence"]["raw_first"])
+
+
+if __name__ == "__main__":
+    unittest.main()

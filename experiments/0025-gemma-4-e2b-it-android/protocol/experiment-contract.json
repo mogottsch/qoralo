@@ -1,0 +1,170 @@
+{
+  "schema_version": 1,
+  "experiment": "0025-gemma-4-e2b-it-android",
+  "status": "locked_before_android_execution",
+  "locked_at": "2026-08-25",
+  "question": "How do the official Gemma 4 E2B instruction-tuned LiteRT-LM CPU and GPU Android routes execute and perform on the authorized Galaxy S23 Ultra under the canonical fixed-prompt contract?",
+  "scope": {
+    "model": "Gemma 4 E2B IT only",
+    "arms": [
+      "official LiteRT-LM CPU artifact on the CPU backend",
+      "official LiteRT-LM GPU artifact on the GPU neural backend"
+    ],
+    "excluded": [
+      "other model families or Gemma sizes",
+      "NPU or HTP execution",
+      "speculative decoding",
+      "podcast transcript quality evaluation",
+      "host results in the Android registry"
+    ]
+  },
+  "canonical_protocol": {
+    "path": "protocols/android-llm-benchmark/contract.json",
+    "sha256": "4e9386ab45dfd9f596dcf6f3cc828c7df075dfdb97952a4e41ec563b4b9409a6",
+    "workloads": {
+      "short": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae",
+      "medium": "5e168aa3232f06c92959b686188192471b2d1a62cd1c857a616fd8e29456ddf1",
+      "long": "092840fbe879259110fa4d0b15bc383012f16b7b42a38d224b2ead231e86aad8"
+    },
+    "tier_order": ["short", "medium", "long"],
+    "first_request": {"tier": "short", "count": 1},
+    "same_session_requests_per_tier": 5,
+    "max_output_tokens": 2048,
+    "request_timeout_seconds": 1800,
+    "conversation_and_kv_reset_each_request": true,
+    "byte_identical_output_required": false
+  },
+  "upstream_model": {
+    "name": "google/gemma-4-E2B-it",
+    "url": "https://huggingface.co/google/gemma-4-E2B-it/tree/3e22461f65e89153144f8adb70e3b8c2cc9845a7",
+    "revision": "3e22461f65e89153144f8adb70e3b8c2cc9845a7",
+    "private": false,
+    "gated": false,
+    "license": "Apache-2.0",
+    "effective_parameters": 2300000000,
+    "total_parameters_including_per_layer_embeddings": 5100000000,
+    "text_context_tokens_upstream": 131072,
+    "parameter_and_context_source": "official upstream model card/config at the pinned revision"
+  },
+  "deployment_source": {
+    "name": "litert-community/gemma-4-E2B-it-litert-lm",
+    "url": "https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm/tree/6b78abd019e61a1ca4cbe3b212d2c9ce8ff38a94",
+    "revision": "6b78abd019e61a1ca4cbe3b212d2c9ce8ff38a94",
+    "private": false,
+    "gated": false,
+    "license": "Apache-2.0",
+    "quantization": {
+      "published_description": "Gemma-4 mobile quantization using a mixture of 2-bit, 4-bit, and 8-bit weights",
+      "exact_per_tensor_assignment": null,
+      "exact_per_tensor_assignment_missing_reason": "The official deployment model card does not publish a per-tensor bit allocation or calibration manifest.",
+      "source": "official deployment model card at the pinned revision"
+    },
+    "text_context_tokens_deployment_claim": 32768
+  },
+  "artifacts": {
+    "cpu": {
+      "filename": "gemma-4-E2B-it.litertlm",
+      "url": "https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm/resolve/6b78abd019e61a1ca4cbe3b212d2c9ce8ff38a94/gemma-4-E2B-it.litertlm",
+      "bytes": 2588147712,
+      "sha256": "181938105e0eefd105961417e8da75903eacda102c4fce9ce90f50b97139a63c",
+      "litertlm_container_version": "1.5.0",
+      "embedded_tokenizer_sha256": "e594c8a90eb08d8bda498ff4747977dc827ae0c3c56b5c0d41a605a22d02ef03",
+      "embedded_chat_template_sha256": "02b3091acf53c0b722e3db0c7a1b4980363edcc2d85549dafa339ff5dbfff629"
+    },
+    "gpu": {
+      "filename": "gemma-4-E2B-it-gpu.litertlm",
+      "url": "https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm/resolve/6b78abd019e61a1ca4cbe3b212d2c9ce8ff38a94/gemma-4-E2B-it-gpu.litertlm",
+      "bytes": 2008432640,
+      "sha256": "a53a59001894c58e6bdb5b9b227709f91a2e3e556baa7d85acf9c55402ba5cf5",
+      "litertlm_container_version": "1.6.0",
+      "embedded_tokenizer_sha256": "e594c8a90eb08d8bda498ff4747977dc827ae0c3c56b5c0d41a605a22d02ef03",
+      "embedded_chat_template_sha256": "3d51425dfacd3bd1e34055259c2488e283be19f5991b23744d474685fedd10fb"
+    },
+    "template_equivalence_boundary": "The two embedded templates differ only in a tool-response/thinking branch that is unreachable for the canonical two-message, no-tools, thinking-disabled workload. Their rendered canonical prompt bytes must match per tier and are hash-checked."
+  },
+  "runtime": {
+    "name": "LiteRT-LM",
+    "version": "v0.16.1",
+    "revision": "924e79c91542761242244e4f1651851f822e4cbb",
+    "source": "https://github.com/google-ai-edge/LiteRT-LM/tree/924e79c91542761242244e4f1651851f822e4cbb",
+    "build_system": "Bazel 7.6.1 through Bazelisk v1.27.0",
+    "android_ndk": "28.1.13356709 (r28b)",
+    "android_runner": {
+      "source": "experiments/0025-gemma-4-e2b-it-android/tools/litert_lm_canonical_runner.cc",
+      "source_sha256": "3a948c52fec4b3a08e5e2f552b823a7dac0f100f00ed7a9bacfd95084858dfce",
+      "binary_sha256": "41c489dd26bc3dc94ca4b2deaae8c49b04dceac1c6fe1966d24df0dfc273f20c",
+      "binary_bytes": 24956384,
+      "binary_abi": "Android arm64-v8a, API 31 minimum",
+      "build_mode": "dynamic LiteRT accelerator resolution; CPU/GPU selected at runtime"
+    },
+    "android_libraries": {
+      "libLiteRt.so": "3fdbf64355af65b3ca6ed0c633ffed1e4faa1bfa9256f5e7403fec1633ea1b74",
+      "libGemmaModelConstraintProvider.so": "d305460ed571ba0e527f9f75e34de4d8b13d5d6af906431c36d04795f14411ca",
+      "libLiteRtGpuAccelerator.so": "1287e5ae01666a605f2bc5d72453f32cf4a294ef38acabb86cd61140207e41c3",
+      "libLiteRtOpenClAccelerator.so": "dfdcb6a551dc78a9dab88883ad6e8e2d9b090ecda383a5cea3731c6b9561d244",
+      "libLiteRtTopKOpenClSampler.so": "4404dc68786460602685cab62ddfa29035e9cfc38bb4550dec15abaaa1302a82",
+      "libLiteRtTopKWebGpuSampler.so": "c52a1cf69a92a2d2c4d3c08f5c087d1eb405f709af61c3312b215221135e18db",
+      "libLiteRtWebGpuAccelerator.so": "acf02905cd1d7b7d1f0f70a6d885ddbd392c0c69a99b92834da7e26d6859abcf",
+      "libwebgpu_dawn.so": "3b2a53de934efabce2efb5e9f703a7bd6b63a5814b2f8f0c7ed610cabf53b147"
+    }
+  },
+  "route": {
+    "max_num_tokens": 8192,
+    "max_output_tokens": 2048,
+    "thinking_enabled": false,
+    "speculative_decoding_enabled": false,
+    "cpu_threads": 4,
+    "sampler_backend": "CPU for both arms",
+    "sampler_configuration": "TOP_P type with k=1, p=1.0, temperature=1.0, no seed",
+    "greedy_equivalence_proof": {
+      "source_revision": "924e79c91542761242244e4f1651851f822e4cbb",
+      "source_path": "runtime/components/sampling_cpu_util.cc",
+      "source_lines": "309-316",
+      "behavior": "When k == 1, LiteRT-LM returns the single top-k token ID directly and labels this Greedy sampling; p, temperature, and RNG are bypassed.",
+      "reason_for_enum_adapter": "v0.16.1 CreateCpuSampler implements TOP_P and returns UNIMPLEMENTED for the GREEDY and TOP_K enum values. TOP_P(k=1) reaches the documented greedy branch."
+    },
+    "prompt_render_policy": "Pinned Gemma 4 template specialization for exactly system+user, no tools, add_generation_prompt=true, enable_thinking=false",
+    "kv_reset": "One direct LiteRT-LM Session is reused and RewindToStep(0) is verified before every logical request.",
+    "cache_policy": "Each arm uses an experiment-owned cache directory cleared before setup; runtime compilation/cache creation is inside setup."
+  },
+  "device": {
+    "model": "SM-S918B",
+    "soc": "SM8550",
+    "serial": "R5CW81PR8SY",
+    "abi": "arm64-v8a",
+    "identity_must_match": true,
+    "remote_root": "/data/local/tmp/vibevoice-0025-gemma-4-e2b-it-android"
+  },
+  "timing_and_evidence": {
+    "setup_boundary": "Immediately before ModelAssets::Create through one Engine and one direct Session ready with 8192-token KV capacity.",
+    "request_boundary": "Immediately before canonical prompt rendering through final callback/stop delivery.",
+    "prefill": "LiteRT-LM BenchmarkInfo prefill duration/tokens when exposed after engine callback drain; otherwise null+reason. Synchronous frontend-plus-prefill wall time is retained separately and never relabeled as isolated prefill.",
+    "decode": "First emitted token callback through final callback; numerator excludes the first emitted token. Runtime BenchmarkInfo decode observations are retained separately when exposed.",
+    "raw_first": true,
+    "optional_telemetry_policy": "Missing/invariant runtime-internal turn counters are never a logical-request failure. Raw output and callback clocks are persisted first; unavailable splits remain null with explicit reasons.",
+    "memory": "100 ms process PSS/VmHWM sampling plus ru_maxrss over setup and the entire arm lifecycle; GPU device memory is unavailable unless independently exposed.",
+    "output_sanity": "Exact-hash looks_sensible plus failure-only issue_notes; corruption/gibberish smoke only."
+  },
+  "fatal_gates": [
+    "wrong workload, artifact, runtime, runner, library, or device identity",
+    "prompt plus 2048 ceiling exceeds 8192 or any silent truncation",
+    "requested backend or exact k=1 greedy-equivalent sampler not applied",
+    "failure to rewind the reused session to step zero before a logical request",
+    "unauthorized/destructive device operation or lock violation",
+    "raw output cannot be bound to the claimed request and route"
+  ],
+  "nullable_not_fatal": [
+    "runtime-internal BenchmarkInfo counters or timing splits",
+    "power telemetry",
+    "GPU-private memory not visible in process PSS",
+    "nonessential warnings or metadata"
+  ],
+  "phone_campaign_order": [
+    "locked identity/storage/stage verification",
+    "bounded CPU canonical-short smoke",
+    "bounded GPU canonical-short smoke",
+    "CPU full first+5+5+5 campaign",
+    "GPU full first+5+5+5 campaign",
+    "pull, hash, validate, and remove only the exact experiment-owned remote root"
+  ]
+}
