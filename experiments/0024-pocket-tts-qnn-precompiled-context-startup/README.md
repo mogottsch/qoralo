@@ -2,7 +2,7 @@
 
 ## Status
 
-**Complete: external QNN contexts cut median physical-phone setup from 27.0767 seconds to 1.01122 seconds while preserving structurally valid canonical-v2 E2E execution. Both new exact WAVs remain `not_reviewed`.**
+**Complete: external QNN contexts cut median physical-phone setup from 27.0767 seconds to 1.01122 seconds while preserving structurally valid canonical-v2 E2E execution. Moritz subsequently reviewed and accepted both distinct retained phone WAVs by exact hash.**
 
 This experiment compares source-ONNX QNN session creation with external precompiled QNN EPContext reload for a newly reconstructed derivative of experiment 0014’s accepted canonical-v2 fixed-Alba/cache512 Pocket route.
 
@@ -27,13 +27,13 @@ Three independent fresh processes per arm each created all eight sessions, then 
 | Warm RTF range | 0.164660–0.177048 | 0.163039–0.165763 |
 | Maximum process VmHWM | 2,568,248 kB | 201,616 kB |
 | Representative WAV | `028f8a1e…4241` | `7c3fc41d…6d81` |
-| Listening status | `not_reviewed` | `not_reviewed` |
+| Listening status | `accepted` (`028f8a1e…4241`) | `accepted` (`7c3fc41d…6d81`) |
 
 Observed median setup delta is **26.06548 seconds**, a **96.26535% reduction** or **26.7763×** source/context ratio. There was no minimum speedup gate. Every completed output had reference EOS 160, 163 frames, 312,960 samples, and 13.04 seconds of finite, non-silent, unclipped 24 kHz mono PCM16 audio. RTF uses each run’s actual emitted duration.
 
 The campaign spans two authorized phone windows because of an external disconnect. Source runs occurred first; context run 1 followed on the same window, while context runs 2–3 and both proofs ran after reconnect two days later. AP start/end temperatures ranged 34.9→51.0, 36.2→51.1, and 50.8→59.0 °C for source; 44.5→53.6, 32.1→41.4, and 37.5→48.0 °C for context. The phone was USB powered. These order/date/thermal differences are disclosed confounders, not laboratory control. VmHWM is cumulative process high-water, not isolated model memory.
 
-The WAVs are byte-distinct and numerically divergent (correlation `0.4530`, source-over-difference SNR `-0.356 dB`). This is descriptive, not an execution blocker or listening verdict. Exact retained samples: [`results/phone-campaign/source.wav`](results/phone-campaign/source.wav) and [`results/phone-campaign/context.wav`](results/phone-campaign/context.wav).
+The WAVs are byte-distinct and numerically divergent (correlation `0.4530`, source-over-difference SNR `-0.356 dB`). This remains descriptive rather than an execution or quality verdict. Moritz later reviewed both distinct retained phone WAVs and accepted each exact hash as “good”; neither verdict transfers to other outputs. Exact retained samples: [`results/phone-campaign/source.wav`](results/phone-campaign/source.wav) and [`results/phone-campaign/context.wav`](results/phone-campaign/context.wav). The hash-bound review record is [`results/listening-review-2026-08-25.json`](results/listening-review-2026-08-25.json).
 
 Separate profiled processes, excluded from the unprofiled setup/RTF distributions, proved both arms physical and fallback-free:
 
@@ -110,7 +110,7 @@ The authorized campaign completed three source benchmark processes and one conte
 - source setup: 27.0767, 23.8668, 28.6125 seconds; all three WAVs SHA-256 `028f8a1e…4241`;
 - context run 1 setup: 0.729463 seconds; WAV SHA-256 `7c3fc41d…6d81`;
 - every completed process ran one first plus five warm generations, matched reference EOS/frame behavior, passed structural/stage/identity gates, and verified cleanup;
-- both new WAV hashes are `not_reviewed`.
+- both new WAV hashes were `not_reviewed` at this checkpoint; Moritz's later exact-hash acceptances are recorded separately in `results/listening-review-2026-08-25.json`.
 
 Interrupted context run `phone-context-20260823T085809Z-225310` passed exact identity, context source-absence, full stage push, and local/remote manifest equality. The runner ADB command then returned 255 after the external disconnect; no result or WAV was pulled. It is excluded from measurements and is not a QNN/model failure. The preserved historical `cleanup-proof.txt=cleanup_ok` is invalid because the former two-state test conflated ADB failure with absence. On the authorized reconnect, the exact pending root was removed and tri-state verified absent under `phone.lock` before any new staging. The campaign resumed with fresh context IDs; the interrupted run remained excluded.
 
@@ -120,7 +120,7 @@ Machine interruption history: [`results/phone-campaign-checkpoint/checkpoint.jso
 
 Completed claims are bounded to this deterministic 0024 reconstruction derivative, fixed Alba, canonical-v2 text, exact fixtures, ORT 1.27.1, QAIRT 2.49.0, and the authorized SM-S918B. Host context generation is offline cost and not charged to phone reload setup. Physical proof establishes the observed calls, not arbitrary graphs or production readiness.
 
-The only remaining quality field is human review: both exact phone WAVs are **`not_reviewed`**. Neither inherits experiment 0014’s verdict because both hashes differ. No listening-quality claim is made.
+Human review is now complete for the two retained phone WAVs. Moritz independently accepted source SHA-256 `028f8a1e…4241` and context SHA-256 `7c3fc41d…6d81` as “good.” These are new exact-hash verdicts recorded in [`results/listening-review-2026-08-25.json`](results/listening-review-2026-08-25.json); neither is inherited from experiment 0014, and neither transfers to any other hash or to the Pocket TTS family.
 
 ## Reproduction
 

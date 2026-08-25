@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "experiment": "0024-pocket-tts-qnn-precompiled-context-startup",
+  "review_date": "2026-08-25",
+  "reviewer": "Moritz",
+  "verbatim": "they are good.",
+  "scope": "Two independent exact-hash verdicts for the distinct retained physical-phone WAVs; no verdict transfers to other hashes, host output, or the Pocket TTS family.",
+  "reviews": [
+    {
+      "arm": "source_onnx",
+      "route_id": "0024-pocket-reconstruction-source-onnx-htp",
+      "status": "accepted",
+      "wav_path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign/source.wav",
+      "wav_sha256": "028f8a1e1861f8004619294738d9aa14509b2c3e5e5e626d99113700ab574241",
+      "wav_bytes": 625964
+    },
+    {
+      "arm": "external_epcontext",
+      "route_id": "0024-pocket-reconstruction-external-context-htp",
+      "status": "accepted",
+      "wav_path": "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign/context.wav",
+      "wav_sha256": "7c3fc41d320e391ed39c10398f9c013d01cba93b9c733d3df546d31a0d006d81",
+      "wav_bytes": 625964
+    }
+  ],
+  "supersedes": "The not_reviewed listening fields emitted before human review in results/result.json and per-run analysis files; it does not alter their execution, numerical, or structural measurements."
+}
