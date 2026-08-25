@@ -24,6 +24,23 @@ sha256sum -c SHA256SUMS
 
 Use the exact `short.json`, `medium.json`, and `long.json` bytes. Do not normalize messages, add a private prefix, silently truncate, reduce the output ceiling, or substitute a different prompt.
 
+## Spend strictness only where it protects evidence
+
+The goal is credible Android measurements, not perfect instrumentation. Build time, model downloads, and phone campaigns cost real time and money. Use the cheapest check that protects the claim being made, and do not turn optional runtime behavior into a new publication gate.
+
+Before making any condition fatal:
+
+1. point to the protocol, a safety/authorization boundary, or the specific claim it protects;
+2. confirm that violating it invalidates the logical request or claim, rather than only one optional metric;
+3. ask whether retaining the raw observation plus `null` and a reason is more accurate;
+4. distinguish protocol-level requests from runtime-internal callbacks, chunks, turns, counters, or implementation details.
+
+Do not assume optional telemetry exists, increments, or has an exact count. A successful logical request remains evidence when an internal timing counter is absent. Persist raw output, callback state, timestamps, and errors before optional metric extraction or validation so post-processing cannot discard an expensive run.
+
+Use fatal gates for actual validity and safety failures, such as wrong workload or artifact identity, unauthorized device access, silent truncation, a requested configuration not being applied, or evidence that cannot be bound to the claimed route. Treat unavailable timing splits, unsupported counters, warnings, and nonessential metadata as nullable limitations unless the contract explicitly says otherwise.
+
+“Fail closed” means do not publish an unsupported claim. It does not mean crash, delete captured evidence, or reject valid inference because auxiliary instrumentation is imperfect. Add a new fatal implementation invariant only when its protocol justification is documented and a regression test proves it rejects invalid evidence rather than valid runtime variation.
+
 ## Pin the complete route
 
 Before performance work, record:
@@ -42,7 +59,7 @@ Different tokenizers produce different token counts. Never force one model's tok
 
 ## Gate before the phone
 
-Use the smallest bounded host or local smoke needed to prove that artifacts load, prompts render, context fits, and one output is obtainable. A host smoke is not Android performance evidence and must not populate Android timing or memory fields.
+Use the smallest bounded host or local smoke needed to prove that artifacts load, prompts render, context fits, and one output is obtainable. A host smoke is not Android performance evidence and must not populate Android timing or memory fields. Do not demand publication-complete telemetry from this viability smoke; record warnings and instrumentation gaps for the Android contract instead of repeatedly rerunning a successful load/generation path.
 
 Follow repository device locks and approval rules. Do not access a personal phone, accept terms, install proprietary software, or use restricted SDK material without explicit authorization.
 
@@ -72,7 +89,7 @@ With one loaded model/runtime route:
 
 The 2,048-token value is a ceiling, not a target. Do not pad, demand a word count, or relabel the ceiling as actual output. Do not require byte-identical output; preserve any variation.
 
-The canonical request timeout is 1,800 seconds. On timeout or error, fail closed, retain partial evidence, and use null plus explicit reasons for observations that never occurred.
+The canonical request timeout is 1,800 seconds. A timeout or error is evidence, not disposable work: retain partial output and observations, record the exact stop reason, and use null plus explicit reasons for events that never occurred. Do not relabel that request as complete or publish metrics it did not produce.
 
 ## Record timings precisely
 
@@ -126,7 +143,7 @@ This check is not quality, correctness, grounding, transcript usefulness, style,
 
 ## Finish and publish evidence
 
-Keep raw per-run evidence, outputs, hashes, commands, blockers, and limitations in the owning numbered experiment. Use tests to verify workload hashes, rate calculations, sanity combinations, output hashes, null reasons, and campaign counts.
+Keep raw per-run evidence, outputs, hashes, commands, blockers, and limitations in the owning numbered experiment. Use tests to verify workload hashes, rate calculations, sanity combinations, output hashes, null reasons, and protocol-level campaign counts. Tests should preserve successful requests with missing optional telemetry; do not enforce exact counts for runtime-internal callbacks, chunks, or benchmark turns unless the runtime documents that contract and the published metric depends on it.
 
 After the experiment evidence is committed:
 
