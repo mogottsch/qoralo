@@ -37,6 +37,8 @@ EXP_0024_RESULT = EXP_0024 / "results/result.json"
 EXP_0024_RESULT_SHA256 = "744d93649ca7fe37a7f75774aec2524717deecf521b2b4a3593c1bed2d0c2dec"
 EXP_0024_MANIFEST = EXP_0024 / "results/phone-campaign/evidence-manifest.json"
 EXP_0024_MANIFEST_SHA256 = "b69ddc40a4364d8a5c57ce3cc304d7eb3abced81541569a768e78a73a7c801db"
+EXP_0024_LISTENING = EXP_0024 / "results/listening-review-2026-08-25.json"
+EXP_0024_LISTENING_SHA256 = "863412436bdb76c686c08b17b4710d559481392f80bae95ee705a155d935e60f"
 EXP_0024_WAV_SHA256 = {
     "source": "028f8a1e1861f8004619294738d9aa14509b2c3e5e5e626d99113700ab574241",
     "context": "7c3fc41d320e391ed39c10398f9c013d01cba93b9c733d3df546d31a0d006d81",
@@ -476,6 +478,11 @@ def main():
                 fail(f"{e['id']}: evidence manifest hash mismatch")
             source_result = json.loads(result_bytes)
             evidence_manifest = json.loads(EXP_0024_MANIFEST.read_text())
+            listening_bytes = EXP_0024_LISTENING.read_bytes()
+            if hashlib.sha256(listening_bytes).hexdigest() != EXP_0024_LISTENING_SHA256:
+                fail(f"{e['id']}: exact-hash listening evidence mismatch")
+            listening_evidence = json.loads(listening_bytes)
+            listening_by_route = {review["route_id"]: review for review in listening_evidence["reviews"]}
             arm = "source" if e["id"] == "0024-pocket-reconstruction-source-onnx-htp" else "context"
             peer = "0024-pocket-reconstruction-external-context-htp" if arm == "source" else "0024-pocket-reconstruction-source-onnx-htp"
             comparison = source_result["comparison"]
@@ -530,7 +537,7 @@ def main():
                 "equal_length": output["equal_length"],
                 "correlation": output["correlation"],
                 "snr_db_source_over_difference": output["snr_db_source_over_difference"],
-                "interpretation": "descriptive only; both byte-distinct WAVs remain not_reviewed",
+                "interpretation": "descriptive numerical comparison only; both byte-distinct WAVs have independent exact-hash accepted listening reviews",
             }
             if matched["output_comparison"] != expected_output or output["source_listening"]["status"] != "not_reviewed" or output["context_listening"]["status"] != "not_reviewed":
                 fail(f"{e['id']}: descriptive output/listening boundary mismatch")
@@ -547,7 +554,18 @@ def main():
             source_wav = EXP_0024 / f"results/phone-campaign/{arm}.wav"
             if e["wav"]["sha256"] != EXP_0024_WAV_SHA256[arm] or hashlib.sha256(source_wav.read_bytes()).hexdigest() != EXP_0024_WAV_SHA256[arm] or proof["wav"]["sha256"] != EXP_0024_WAV_SHA256[arm]:
                 fail(f"{e['id']}: retained WAV provenance mismatch")
-            expected_review = {"status": "not_reviewed", "reviewer": None, "date": None, "notes": None, "sample_sha256": EXP_0024_WAV_SHA256[arm]}
+            source_review = listening_by_route.get(e["id"])
+            if source_review is None or source_review["status"] != "accepted" or source_review["wav_sha256"] != EXP_0024_WAV_SHA256[arm]:
+                fail(f"{e['id']}: owning exact-hash listening record mismatch")
+            note_scope = "source-ONNX" if arm == "source" else "external-EPContext"
+            peer_scope = "context" if arm == "source" else "source"
+            expected_review = {
+                "status": "accepted",
+                "reviewer": listening_evidence["reviewer"],
+                "date": listening_evidence["review_date"],
+                "notes": f"{listening_evidence['verbatim']} Independent exact-hash verdict for the distinct 0024 {note_scope} phone WAV; no transfer to the {peer_scope} WAV, host output, another hash, or the Pocket TTS family.",
+                "sample_sha256": EXP_0024_WAV_SHA256[arm],
+            }
             if e["listening_review"] != expected_review or e["objective_evidence"]["status"] != "descriptive":
                 fail(f"{e['id']}: exact-hash listening/objective boundary mismatch")
             history = source_result["campaign_history"]
@@ -659,6 +677,15 @@ def main():
         'fullscreenchange',
         "sortTable(7,'ascending',false)",
         'More columns are available horizontally',
+        'Vertical scrolling stays with the page.',
+        'id="routes-sticky-header"',
+        "window.addEventListener('scroll',scheduleStickyHeader",
+    )
+    prohibited_dashboard_fragments = (
+        'id="routes-scroll-start"',
+        'id="routes-scroll-end"',
+        'id="routes-scroll-cue"',
+        'max-height:min(72vh,760px)',
     )
     for page_name in ("index.html", "dashboard.html"):
         page = HERE / page_name
@@ -668,6 +695,9 @@ def main():
         for fragment in required_dashboard_fragments:
             if fragment not in page_text:
                 fail(f"{page_name}: required sortable/scroll/fullscreen UI is missing {fragment!r}")
+        for fragment in prohibited_dashboard_fragments:
+            if fragment in page_text:
+                fail(f"{page_name}: removed nested-scroll UI leaked into the generated dashboard: {fragment!r}")
         for item in timeline:
             if item["model"] not in page_text or item["first_release_date"] not in page_text or item["source_url"] not in page_text:
                 fail(f"{page_name}: timeline entry missing for {item['model']}")

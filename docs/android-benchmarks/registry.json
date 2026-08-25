@@ -4131,16 +4131,16 @@
       },
       "objective_evidence": {
         "status": "descriptive",
-        "summary": "Completed canonical-v2 source-ONNX arm of the matched 0024 reconstruction-derivative startup comparison, with separate fallback-disabled physical proof and structurally valid but unreviewed audio.",
+        "summary": "Completed canonical-v2 source-ONNX arm of the matched 0024 reconstruction-derivative startup comparison, with separate fallback-disabled physical proof and structurally valid audio accepted for this exact source-arm hash.",
         "comparison_notes": [
-          "Matched context reload reduced median eight-session setup by 26.06548 s (96.26535%, 26.7763\u00d7 source/context). Source/context WAV correlation 0.453032 and SNR -0.356050 dB are descriptive; neither exact hash has a listening verdict."
+          "Matched context reload reduced median eight-session setup by 26.06548 s (96.26535%, 26.7763\u00d7 source/context). Source/context WAV correlation 0.453032 and SNR -0.356050 dB remain descriptive; Moritz independently accepted both distinct exact hashes."
         ]
       },
       "listening_review": {
-        "status": "not_reviewed",
-        "reviewer": null,
-        "date": null,
-        "notes": null,
+        "status": "accepted",
+        "reviewer": "Moritz",
+        "date": "2026-08-25",
+        "notes": "they are good. Independent exact-hash verdict for the distinct 0024 source-ONNX phone WAV; no transfer to the context WAV, host output, another hash, or the Pocket TTS family.",
         "sample_sha256": "028f8a1e1861f8004619294738d9aa14509b2c3e5e5e626d99113700ab574241"
       },
       "android_attempted": true,
@@ -4171,7 +4171,7 @@
         "duration_seconds": 13.04,
         "verified": true
       },
-      "summary": "Matched canonical-v2 Pocket source-ONNX arm for the deterministic 0024 reconstruction derivative\u2014not the exact 0014 graph set. Three fresh processes measured eight-session setup at [27.0767, 23.8668, 28.6125] s (median 27.0767 s), median first-generation RTF 0.172432, and pooled 15-warm median RTF 0.168605. A separate profiled process proved 344 QNN / 0 CPU calls with exactly matching RPC, accelerator, cycle, and HVX event counts. All benchmark generations reached EOS 160, emitted 163 frames / 312,960 samples / 13.04 s, and produced the same structurally valid WAV within this arm. The exact WAV is not reviewed.",
+      "summary": "Matched canonical-v2 Pocket source-ONNX arm for the deterministic 0024 reconstruction derivative\u2014not the exact 0014 graph set. Three fresh processes measured eight-session setup at [27.0767, 23.8668, 28.6125] s (median 27.0767 s), median first-generation RTF 0.172432, and pooled 15-warm median RTF 0.168605. A separate profiled process proved 344 QNN / 0 CPU calls with exactly matching RPC, accelerator, cycle, and HVX event counts. All benchmark generations reached EOS 160, emitted 163 frames / 312,960 samples / 13.04 s, and produced the same structurally valid WAV within this arm. Moritz independently accepted this exact source-arm WAV as good; the verdict applies only to SHA-256 028f8a1e1861f8004619294738d9aa14509b2c3e5e5e626d99113700ab574241.",
       "limitations": [
         "This is a new deterministic 0024 reconstruction derivative whose controlled and specialized ONNX hashes differ from 0014; never relabel it as the exact 0014 graphs or transfer 0014 metrics/verdicts.",
         "Setup is the median of three fresh process lifetimes around all eight session creations. Offline context generation is separate and excluded; no minimum speedup gate was applied.",
@@ -4179,10 +4179,11 @@
         "Profiled proof RTF 0.566431 is instrumentation-bearing physical evidence excluded from setup/first/warm distributions.",
         "VmHWM is cumulative process-lifecycle high-water including sessions, mappings, caches, buffers, and completed generations; it is not isolated model/DSP memory. Peak PSS was not recorded.",
         "The campaign spans two phone windows because of an excluded external disconnect. Order/date/thermal differences are disclosed confounders; verified tri-state cleanup closure preceded resumed staging.",
-        "The source and context WAVs are byte-distinct (correlation 0.453032; source-over-difference SNR -0.356050 dB). This is descriptive and neither sample has a listening verdict."
+        "The source and context WAVs are byte-distinct (correlation 0.453032; source-over-difference SNR -0.356050 dB). This remains descriptive; Moritz accepted each distinct exact hash independently, without implying numerical equivalence or a Pocket-family verdict."
       ],
       "sources": [
         "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/result.json",
+        "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/listening-review-2026-08-25.json",
         "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign/evidence-manifest.json",
         "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign/physical/source/physical-analysis.json",
         "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign/cleanup-resume/cleanup-resume.json",
@@ -4297,7 +4298,7 @@
           "equal_length": true,
           "correlation": 0.45303178576893793,
           "snr_db_source_over_difference": -0.3560496343804135,
-          "interpretation": "descriptive only; both byte-distinct WAVs remain not_reviewed"
+          "interpretation": "descriptive numerical comparison only; both byte-distinct WAVs have independent exact-hash accepted listening reviews"
         },
         "arm": "source",
         "peer_route_id": "0024-pocket-reconstruction-external-context-htp"
@@ -4323,16 +4324,16 @@
       },
       "objective_evidence": {
         "status": "descriptive",
-        "summary": "Completed canonical-v2 external-EPContext arm of the matched 0024 reconstruction-derivative startup comparison, with source ONNX absent, separate fallback-disabled physical proof, and structurally valid but unreviewed audio.",
+        "summary": "Completed canonical-v2 external-EPContext arm of the matched 0024 reconstruction-derivative startup comparison, with source ONNX absent, separate fallback-disabled physical proof, and structurally valid audio accepted for this exact context-arm hash.",
         "comparison_notes": [
           "Median eight-session reload setup was 1.01122 s versus source compilation 27.0767 s. Offline context generation is excluded from setup, and no minimum speedup gate was applied."
         ]
       },
       "listening_review": {
-        "status": "not_reviewed",
-        "reviewer": null,
-        "date": null,
-        "notes": null,
+        "status": "accepted",
+        "reviewer": "Moritz",
+        "date": "2026-08-25",
+        "notes": "they are good. Independent exact-hash verdict for the distinct 0024 external-EPContext phone WAV; no transfer to the source WAV, host output, another hash, or the Pocket TTS family.",
         "sample_sha256": "7c3fc41d320e391ed39c10398f9c013d01cba93b9c733d3df546d31a0d006d81"
       },
       "android_attempted": true,
@@ -4363,7 +4364,7 @@
         "duration_seconds": 13.04,
         "verified": true
       },
-      "summary": "Matched canonical-v2 Pocket external-EPContext arm for the deterministic 0024 reconstruction derivative\u2014not the exact 0014 graph set. With source ONNX absent, three fresh processes measured eight-session context reload at [0.729463, 1.26412, 1.01122] s (median 1.01122 s): 26.06548 s less than the source arm, 26.7763\u00d7 faster, and a 96.26535% setup reduction. Median first-generation RTF was 0.167330 and pooled 15-warm median RTF was 0.164032. A separate profiled process proved 344 QNN / 0 CPU calls with exactly matching RPC, accelerator, cycle, and HVX event counts. All benchmark generations reached EOS 160, emitted 163 frames / 312,960 samples / 13.04 s, and produced the same structurally valid WAV within this arm. The exact WAV is not reviewed.",
+      "summary": "Matched canonical-v2 Pocket external-EPContext arm for the deterministic 0024 reconstruction derivative\u2014not the exact 0014 graph set. With source ONNX absent, three fresh processes measured eight-session context reload at [0.729463, 1.26412, 1.01122] s (median 1.01122 s): 26.06548 s less than the source arm, 26.7763\u00d7 faster, and a 96.26535% setup reduction. Median first-generation RTF was 0.167330 and pooled 15-warm median RTF was 0.164032. A separate profiled process proved 344 QNN / 0 CPU calls with exactly matching RPC, accelerator, cycle, and HVX event counts. All benchmark generations reached EOS 160, emitted 163 frames / 312,960 samples / 13.04 s, and produced the same structurally valid WAV within this arm. Moritz independently accepted this exact context-arm WAV as good; the verdict applies only to SHA-256 7c3fc41d320e391ed39c10398f9c013d01cba93b9c733d3df546d31a0d006d81.",
       "limitations": [
         "This is a new deterministic 0024 reconstruction derivative whose controlled and specialized ONNX hashes differ from 0014; never relabel it as the exact 0014 graphs or transfer 0014 metrics/verdicts.",
         "The 26.7763\u00d7 / 96.26535% claim applies only to the matched eight-session 0024 readiness boundary on the authorized phone. Offline context generation is separate and excluded; no minimum speedup gate was applied.",
@@ -4371,10 +4372,11 @@
         "Profiled proof RTF 0.609813 is instrumentation-bearing physical evidence excluded from setup/first/warm distributions.",
         "VmHWM is cumulative process-lifecycle high-water including sessions, mappings, caches, buffers, and completed generations; it is not isolated model/DSP memory. Peak PSS was not recorded.",
         "The campaign spans two phone windows because of an excluded external disconnect. Order/date/thermal differences are disclosed confounders; verified tri-state cleanup closure preceded resumed staging.",
-        "The source and context WAVs are byte-distinct (correlation 0.453032; source-over-difference SNR -0.356050 dB). This is descriptive and neither sample has a listening verdict."
+        "The source and context WAVs are byte-distinct (correlation 0.453032; source-over-difference SNR -0.356050 dB). This remains descriptive; Moritz accepted each distinct exact hash independently, without implying numerical equivalence or a Pocket-family verdict."
       ],
       "sources": [
         "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/result.json",
+        "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/listening-review-2026-08-25.json",
         "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign/evidence-manifest.json",
         "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign/physical/context/physical-analysis.json",
         "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign/cleanup-resume/cleanup-resume.json",
@@ -4489,7 +4491,7 @@
           "equal_length": true,
           "correlation": 0.45303178576893793,
           "snr_db_source_over_difference": -0.3560496343804135,
-          "interpretation": "descriptive only; both byte-distinct WAVs remain not_reviewed"
+          "interpretation": "descriptive numerical comparison only; both byte-distinct WAVs have independent exact-hash accepted listening reviews"
         },
         "arm": "context",
         "peer_route_id": "0024-pocket-reconstruction-source-onnx-htp"

@@ -160,7 +160,7 @@ ROWS = [
             "channels": 1,
             "duration_seconds": 13.04,
         },
-        summary="Matched canonical-v2 Pocket source-ONNX arm for the deterministic 0024 reconstruction derivative—not the exact 0014 graph set. Three fresh processes measured eight-session setup at [27.0767, 23.8668, 28.6125] s (median 27.0767 s), median first-generation RTF 0.172432, and pooled 15-warm median RTF 0.168605. A separate profiled process proved 344 QNN / 0 CPU calls with exactly matching RPC, accelerator, cycle, and HVX event counts. All benchmark generations reached EOS 160, emitted 163 frames / 312,960 samples / 13.04 s, and produced the same structurally valid WAV within this arm. The exact WAV is not reviewed.",
+        summary="Matched canonical-v2 Pocket source-ONNX arm for the deterministic 0024 reconstruction derivative—not the exact 0014 graph set. Three fresh processes measured eight-session setup at [27.0767, 23.8668, 28.6125] s (median 27.0767 s), median first-generation RTF 0.172432, and pooled 15-warm median RTF 0.168605. A separate profiled process proved 344 QNN / 0 CPU calls with exactly matching RPC, accelerator, cycle, and HVX event counts. All benchmark generations reached EOS 160, emitted 163 frames / 312,960 samples / 13.04 s, and produced the same structurally valid WAV within this arm. Moritz independently accepted this exact source-arm WAV as good; the verdict applies only to SHA-256 028f8a1e1861f8004619294738d9aa14509b2c3e5e5e626d99113700ab574241.",
         limitations=(
             "This is a new deterministic 0024 reconstruction derivative whose controlled and specialized ONNX hashes differ from 0014; never relabel it as the exact 0014 graphs or transfer 0014 metrics/verdicts.",
             "Setup is the median of three fresh process lifetimes around all eight session creations. Offline context generation is separate and excluded; no minimum speedup gate was applied.",
@@ -168,10 +168,11 @@ ROWS = [
             "Profiled proof RTF 0.566431 is instrumentation-bearing physical evidence excluded from setup/first/warm distributions.",
             "VmHWM is cumulative process-lifecycle high-water including sessions, mappings, caches, buffers, and completed generations; it is not isolated model/DSP memory. Peak PSS was not recorded.",
             "The campaign spans two phone windows because of an excluded external disconnect. Order/date/thermal differences are disclosed confounders; verified tri-state cleanup closure preceded resumed staging.",
-            "The source and context WAVs are byte-distinct (correlation 0.453032; source-over-difference SNR -0.356050 dB). This is descriptive and neither sample has a listening verdict.",
+            "The source and context WAVs are byte-distinct (correlation 0.453032; source-over-difference SNR -0.356050 dB). This remains descriptive; Moritz accepted each distinct exact hash independently, without implying numerical equivalence or a Pocket-family verdict.",
         ),
         sources=(
             "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/result.json",
+            "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/listening-review-2026-08-25.json",
             "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign/evidence-manifest.json",
             "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign/physical/source/physical-analysis.json",
             "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign/cleanup-resume/cleanup-resume.json",
@@ -210,7 +211,7 @@ ROWS = [
             "channels": 1,
             "duration_seconds": 13.04,
         },
-        summary="Matched canonical-v2 Pocket external-EPContext arm for the deterministic 0024 reconstruction derivative—not the exact 0014 graph set. With source ONNX absent, three fresh processes measured eight-session context reload at [0.729463, 1.26412, 1.01122] s (median 1.01122 s): 26.06548 s less than the source arm, 26.7763× faster, and a 96.26535% setup reduction. Median first-generation RTF was 0.167330 and pooled 15-warm median RTF was 0.164032. A separate profiled process proved 344 QNN / 0 CPU calls with exactly matching RPC, accelerator, cycle, and HVX event counts. All benchmark generations reached EOS 160, emitted 163 frames / 312,960 samples / 13.04 s, and produced the same structurally valid WAV within this arm. The exact WAV is not reviewed.",
+        summary="Matched canonical-v2 Pocket external-EPContext arm for the deterministic 0024 reconstruction derivative—not the exact 0014 graph set. With source ONNX absent, three fresh processes measured eight-session context reload at [0.729463, 1.26412, 1.01122] s (median 1.01122 s): 26.06548 s less than the source arm, 26.7763× faster, and a 96.26535% setup reduction. Median first-generation RTF was 0.167330 and pooled 15-warm median RTF was 0.164032. A separate profiled process proved 344 QNN / 0 CPU calls with exactly matching RPC, accelerator, cycle, and HVX event counts. All benchmark generations reached EOS 160, emitted 163 frames / 312,960 samples / 13.04 s, and produced the same structurally valid WAV within this arm. Moritz independently accepted this exact context-arm WAV as good; the verdict applies only to SHA-256 7c3fc41d320e391ed39c10398f9c013d01cba93b9c733d3df546d31a0d006d81.",
         limitations=(
             "This is a new deterministic 0024 reconstruction derivative whose controlled and specialized ONNX hashes differ from 0014; never relabel it as the exact 0014 graphs or transfer 0014 metrics/verdicts.",
             "The 26.7763× / 96.26535% claim applies only to the matched eight-session 0024 readiness boundary on the authorized phone. Offline context generation is separate and excluded; no minimum speedup gate was applied.",
@@ -218,10 +219,11 @@ ROWS = [
             "Profiled proof RTF 0.609813 is instrumentation-bearing physical evidence excluded from setup/first/warm distributions.",
             "VmHWM is cumulative process-lifecycle high-water including sessions, mappings, caches, buffers, and completed generations; it is not isolated model/DSP memory. Peak PSS was not recorded.",
             "The campaign spans two phone windows because of an excluded external disconnect. Order/date/thermal differences are disclosed confounders; verified tri-state cleanup closure preceded resumed staging.",
-            "The source and context WAVs are byte-distinct (correlation 0.453032; source-over-difference SNR -0.356050 dB). This is descriptive and neither sample has a listening verdict.",
+            "The source and context WAVs are byte-distinct (correlation 0.453032; source-over-difference SNR -0.356050 dB). This remains descriptive; Moritz accepted each distinct exact hash independently, without implying numerical equivalence or a Pocket-family verdict.",
         ),
         sources=(
             "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/result.json",
+            "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/listening-review-2026-08-25.json",
             "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign/evidence-manifest.json",
             "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign/physical/context/physical-analysis.json",
             "experiments/0024-pocket-tts-qnn-precompiled-context-startup/results/phone-campaign/cleanup-resume/cleanup-resume.json",
@@ -376,12 +378,12 @@ OBJECTIVE_EVIDENCE_OVERRIDES = {
     },
     "0024-pocket-reconstruction-source-onnx-htp": {
         "status": "descriptive",
-        "summary": "Completed canonical-v2 source-ONNX arm of the matched 0024 reconstruction-derivative startup comparison, with separate fallback-disabled physical proof and structurally valid but unreviewed audio.",
-        "comparison_notes": ["Matched context reload reduced median eight-session setup by 26.06548 s (96.26535%, 26.7763× source/context). Source/context WAV correlation 0.453032 and SNR -0.356050 dB are descriptive; neither exact hash has a listening verdict."],
+        "summary": "Completed canonical-v2 source-ONNX arm of the matched 0024 reconstruction-derivative startup comparison, with separate fallback-disabled physical proof and structurally valid audio accepted for this exact source-arm hash.",
+        "comparison_notes": ["Matched context reload reduced median eight-session setup by 26.06548 s (96.26535%, 26.7763× source/context). Source/context WAV correlation 0.453032 and SNR -0.356050 dB remain descriptive; Moritz independently accepted both distinct exact hashes."],
     },
     "0024-pocket-reconstruction-external-context-htp": {
         "status": "descriptive",
-        "summary": "Completed canonical-v2 external-EPContext arm of the matched 0024 reconstruction-derivative startup comparison, with source ONNX absent, separate fallback-disabled physical proof, and structurally valid but unreviewed audio.",
+        "summary": "Completed canonical-v2 external-EPContext arm of the matched 0024 reconstruction-derivative startup comparison, with source ONNX absent, separate fallback-disabled physical proof, and structurally valid audio accepted for this exact context-arm hash.",
         "comparison_notes": ["Median eight-session reload setup was 1.01122 s versus source compilation 27.0767 s. Offline context generation is excluded from setup, and no minimum speedup gate was applied."],
     },
 }
@@ -458,6 +460,14 @@ LISTENING_REVIEWS = {
         "status": "accepted", "reviewer": "Moritz", "date": "2026-08-19",
         "notes": "Byte-identical to the exact experiment-0011 all-HTP WAV previously accepted by Moritz; the verdict applies to this identical retained hash, not to other outputs.", "sample_sha256": "47c30043ccc053fe11b908a383c2bc9996c003b85ec293bae122c5794294783c",
     },
+    "0024-pocket-reconstruction-source-onnx-htp": {
+        "status": "accepted", "reviewer": "Moritz", "date": "2026-08-25",
+        "notes": "they are good. Independent exact-hash verdict for the distinct 0024 source-ONNX phone WAV; no transfer to the context WAV, host output, another hash, or the Pocket TTS family.", "sample_sha256": "028f8a1e1861f8004619294738d9aa14509b2c3e5e5e626d99113700ab574241",
+    },
+    "0024-pocket-reconstruction-external-context-htp": {
+        "status": "accepted", "reviewer": "Moritz", "date": "2026-08-25",
+        "notes": "they are good. Independent exact-hash verdict for the distinct 0024 external-EPContext phone WAV; no transfer to the source WAV, host output, another hash, or the Pocket TTS family.", "sample_sha256": "7c3fc41d320e391ed39c10398f9c013d01cba93b9c733d3df546d31a0d006d81",
+    },
 }
 
 MATCHED_COMPARISON_0024 = {
@@ -487,7 +497,7 @@ MATCHED_COMPARISON_0024 = {
         "equal_length": True,
         "correlation": 0.45303178576893793,
         "snr_db_source_over_difference": -0.3560496343804135,
-        "interpretation": "descriptive only; both byte-distinct WAVs remain not_reviewed",
+        "interpretation": "descriptive numerical comparison only; both byte-distinct WAVs have independent exact-hash accepted listening reviews",
     },
 }
 MATCHED_COMPARISON_OVERRIDES = {
@@ -917,18 +927,21 @@ button:focus-visible,a:focus-visible,.table-wrap:focus-visible{{outline:3px soli
 .table-toolbar{{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:12px 14px;border-bottom:1px solid var(--line);background:#111b2d;border-radius:12px 12px 0 0}}
 .table-toolbar h2{{margin:0;font-size:17px}}
 .scroll-hint{{margin:3px 0 0;color:var(--muted);font-size:12px}}
-.table-actions{{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}}
+.table-actions{{display:flex;justify-content:flex-end}}
 .table-control{{min-height:36px;padding:7px 11px;border:1px solid #475569;border-radius:8px;background:var(--panel-strong);color:var(--ink);cursor:pointer}}
 .table-control:hover:not(:disabled){{border-color:var(--accent);color:var(--accent)}}
 .table-control:disabled{{opacity:.42;cursor:not-allowed}}
-.scroll-cue{{display:flex;align-items:center;justify-content:center;gap:8px;padding:6px 12px;border-bottom:1px solid var(--line);background:#164e63;color:#cffafe;font-size:12px;font-weight:700;letter-spacing:.01em}}
-.scroll-cue[hidden]{{display:none}}
+.sticky-table-header{{position:fixed;z-index:100;top:0;overflow:hidden;border:1px solid var(--line);border-top:0;background:var(--panel-strong);box-shadow:0 8px 22px rgba(0,0,0,.32);pointer-events:none}}
+.sticky-table-header[hidden]{{display:none}}
+#routes-sticky-table{{table-layout:fixed;background:var(--panel-strong)}}
+#routes-sticky-table th{{position:static;padding:0;background:var(--panel-strong);color:#bae6fd;white-space:nowrap}}
+.sticky-first-column-header{{position:absolute;z-index:2;inset:0 auto 0 0;width:90px;padding:12px 13px;border-right:1px solid var(--line);background:var(--panel-strong);color:#bae6fd;font-weight:700;white-space:nowrap}}
 .table-viewport{{position:relative;min-width:0}}
 .table-viewport::before,.table-viewport::after{{content:"";position:absolute;z-index:5;top:0;bottom:14px;width:34px;pointer-events:none;opacity:0;transition:opacity .15s ease}}
 .table-viewport::before{{left:0;background:linear-gradient(90deg,rgba(15,23,42,.95),transparent)}}
 .table-viewport::after{{right:0;background:linear-gradient(270deg,rgba(15,23,42,.95),transparent)}}
 .table-panel.has-overflow:not(.at-start) .table-viewport::before,.table-panel.has-overflow:not(.at-end) .table-viewport::after{{opacity:1}}
-.table-wrap{{width:100%;min-width:0;max-height:min(72vh,760px);overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;border-radius:0 0 12px 12px;scroll-behavior:smooth}}
+.table-wrap{{width:100%;min-width:0;max-height:none;overflow-x:auto;overflow-y:visible;overscroll-behavior-x:contain;border-radius:0 0 12px 12px;scroll-behavior:smooth}}
 .table-wrap::-webkit-scrollbar{{width:14px;height:14px}}
 .table-wrap::-webkit-scrollbar-track{{background:#0b1220}}
 .table-wrap::-webkit-scrollbar-thumb{{border:3px solid #0b1220;border-radius:10px;background:#64748b}}
@@ -985,10 +998,9 @@ code{{color:#bae6fd}}
 footer{{margin-top:16px;color:var(--muted);font-size:12px}}
 .table-panel:fullscreen{{display:flex;width:100vw;height:100vh;padding:14px;border:0;border-radius:0;background:var(--bg);flex-direction:column}}
 .table-panel:fullscreen .table-toolbar{{flex:0 0 auto;border:1px solid var(--line);border-radius:10px 10px 0 0}}
-.table-panel:fullscreen .scroll-cue{{flex:0 0 auto;border-inline:1px solid var(--line)}}
 .table-panel:fullscreen .table-viewport{{flex:1 1 auto;min-height:0;border:1px solid var(--line);border-top:0}}
-.table-panel:fullscreen .table-wrap{{height:100%;max-height:none;border-radius:0}}
-@media(max-width:700px){{main{{padding:10px 8px 24px}}h1{{font-size:21px}}.table-toolbar{{align-items:stretch;flex-direction:column}}.table-actions{{display:grid;grid-template-columns:1fr 1fr}}#routes-fullscreen{{grid-column:1/-1}}.table-control{{width:100%}}.scroll-hint{{max-width:58ch}}}}
+.table-panel:fullscreen .table-wrap{{height:100%;max-height:none;overflow:auto;overscroll-behavior:contain;border-radius:0}}
+@media(max-width:700px){{main{{padding:10px 8px 24px}}h1{{font-size:21px}}.table-toolbar{{align-items:stretch;flex-direction:column}}.table-actions{{display:block}}.table-control{{width:100%}}.scroll-hint{{max-width:58ch}}}}
 @media(prefers-reduced-motion:reduce){{.table-wrap{{scroll-behavior:auto}}.table-viewport::before,.table-viewport::after{{transition:none}}}}
 </style>
 </head>
@@ -997,12 +1009,12 @@ footer{{margin-top:16px;color:var(--muted);font-size:12px}}
 <h1>Android benchmark registry</h1>
 <section class="table-panel" id="routes-panel" aria-labelledby="routes-title">
 <div class="table-toolbar">
-<div><h2 id="routes-title">Benchmark routes</h2><p class="scroll-hint" id="routes-scroll-hint">Scroll horizontally with touch, a trackpad, Shift + mouse wheel, or the controls. Focus the table and use Left/Right or Home/End.</p></div>
-<div class="table-actions" aria-label="Table view controls"><button type="button" class="table-control" id="routes-scroll-start" aria-controls="routes-scroll" aria-label="Scroll table to first columns">← Start</button><button type="button" class="table-control" id="routes-scroll-end" aria-controls="routes-scroll" aria-label="Scroll table to last columns">End →</button><button type="button" class="table-control" id="routes-fullscreen" aria-controls="routes-panel" aria-pressed="false">Fullscreen table</button></div>
+<div><h2 id="routes-title">Benchmark routes</h2><p class="scroll-hint" id="routes-scroll-hint">More columns are available horizontally when the table is wider than the window. Swipe, use a trackpad, or hold Shift while scrolling. Vertical scrolling stays with the page. Fullscreen uses the table's own vertical scroll.</p></div>
+<div class="table-actions"><button type="button" class="table-control" id="routes-fullscreen" aria-controls="routes-panel" aria-pressed="false">Fullscreen table</button></div>
 </div>
-<div class="scroll-cue" id="routes-scroll-cue" aria-hidden="true"><span>↔</span><span>More columns are available horizontally</span><span>↔</span></div>
+<div class="sticky-table-header" id="routes-sticky-header" aria-hidden="true" hidden><table id="routes-sticky-table"><thead></thead></table><div class="sticky-first-column-header">Experiment ↕</div></div>
 <div class="table-viewport">
-<div class="table-wrap" id="routes-scroll" tabindex="0" role="region" aria-label="Android benchmark routes, horizontally and vertically scrollable" aria-describedby="routes-scroll-hint">
+<div class="table-wrap" id="routes-scroll" tabindex="0" role="region" aria-label="Android benchmark routes, horizontally scrollable; page controls vertical scrolling" aria-describedby="routes-scroll-hint">
 <table id="routes"><thead><tr>
 <th scope="col" data-type="text"><button type="button" class="sort-button">Experiment</button></th>
 <th scope="col" data-type="text"><button type="button" class="sort-button">Model / route</button></th>
@@ -1032,11 +1044,14 @@ const body=table.tBodies[0];
 const headers=[...table.tHead.rows[0].cells];
 const panel=document.getElementById('routes-panel');
 const scrollRegion=document.getElementById('routes-scroll');
-const scrollCue=document.getElementById('routes-scroll-cue');
-const startButton=document.getElementById('routes-scroll-start');
-const endButton=document.getElementById('routes-scroll-end');
 const fullscreenButton=document.getElementById('routes-fullscreen');
 const sortStatus=document.getElementById('routes-sort-status');
+const stickyHeader=document.getElementById('routes-sticky-header');
+const stickyTable=document.getElementById('routes-sticky-table');
+const stickyHead=table.tHead.cloneNode(true);
+stickyTable.tHead.replaceWith(stickyHead);
+const stickyHeaders=[...stickyHead.rows[0].cells];
+stickyHead.querySelectorAll('button').forEach(button=>{{button.tabIndex=-1;button.setAttribute('aria-hidden','true');}});
 function updateSortLabels(){{
  headers.forEach(header=>{{
   const button=header.querySelector('.sort-button');
@@ -1059,7 +1074,9 @@ function sortTable(index,direction,announce=true){{
  }});
  body.append(...rows);
  headers.forEach(header=>header.removeAttribute('aria-sort'));
+ stickyHeaders.forEach(header=>header.removeAttribute('aria-sort'));
  headers[index].setAttribute('aria-sort',direction);
+ stickyHeaders[index].setAttribute('aria-sort',direction);
  updateSortLabels();
  if(announce)sortStatus.textContent=`Sorted by ${{headers[index].querySelector('.sort-button').textContent.trim()}}, ${{direction}}; unavailable values last.`;
 }}
@@ -1070,6 +1087,24 @@ headers.forEach((header,index)=>{{
   sortTable(index,next);
  }});
 }});
+function syncStickyHeader(){{
+ const sourceHead=table.tHead.getBoundingClientRect();
+ const tableRect=table.getBoundingClientRect();
+ const regionRect=scrollRegion.getBoundingClientRect();
+ const show=document.fullscreenElement!==panel&&sourceHead.bottom<0&&tableRect.bottom>44;
+ stickyHeader.hidden=!show;
+ if(!show)return;
+ stickyHeader.style.left=`${{regionRect.left}}px`;
+ stickyHeader.style.width=`${{regionRect.width}}px`;
+ stickyTable.style.width=`${{table.scrollWidth}}px`;
+ stickyTable.style.transform=`translateX(${{-scrollRegion.scrollLeft}}px)`;
+ headers.forEach((header,index)=>{{stickyHeaders[index].style.width=`${{header.getBoundingClientRect().width}}px`;}});
+}}
+let stickyFrame=0;
+function scheduleStickyHeader(){{
+ if(stickyFrame)return;
+ stickyFrame=requestAnimationFrame(()=>{{stickyFrame=0;syncStickyHeader();}});
+}}
 function updateScrollState(){{
  const overflow=scrollRegion.scrollWidth>scrollRegion.clientWidth+1;
  const atStart=scrollRegion.scrollLeft<=1;
@@ -1077,9 +1112,7 @@ function updateScrollState(){{
  panel.classList.toggle('has-overflow',overflow);
  panel.classList.toggle('at-start',atStart);
  panel.classList.toggle('at-end',atEnd);
- scrollCue.hidden=!overflow;
- startButton.disabled=!overflow||atStart;
- endButton.disabled=!overflow||atEnd;
+ scheduleStickyHeader();
 }}
 function jumpHorizontal(left){{
  const previous=scrollRegion.style.scrollBehavior;
@@ -1088,8 +1121,6 @@ function jumpHorizontal(left){{
  scrollRegion.style.scrollBehavior=previous;
  updateScrollState();
 }}
-startButton.addEventListener('click',()=>jumpHorizontal(0));
-endButton.addEventListener('click',()=>jumpHorizontal(scrollRegion.scrollWidth));
 scrollRegion.addEventListener('scroll',updateScrollState,{{passive:true}});
 scrollRegion.addEventListener('keydown',event=>{{
  if(event.target!==scrollRegion)return;
@@ -1110,11 +1141,13 @@ document.addEventListener('fullscreenchange',()=>{{
  fullscreenButton.textContent=active?'Exit fullscreen':'Fullscreen table';
  fullscreenButton.setAttribute('aria-label',active?'Exit table fullscreen; Escape also exits':'Open table fullscreen');
  updateScrollState();
+ scheduleStickyHeader();
 }});
 document.addEventListener('fullscreenerror',()=>{{sortStatus.textContent='The browser refused table fullscreen.';}});
 if(!document.fullscreenEnabled){{fullscreenButton.disabled=true;fullscreenButton.title='Fullscreen is not supported by this browser.';}}
 if('ResizeObserver' in window)new ResizeObserver(updateScrollState).observe(scrollRegion);
 window.addEventListener('resize',updateScrollState);
+window.addEventListener('scroll',scheduleStickyHeader,{{passive:true}});
 sortTable(7,'ascending',false);
 updateScrollState();
 </script>
