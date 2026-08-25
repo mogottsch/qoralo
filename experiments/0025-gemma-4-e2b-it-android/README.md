@@ -2,7 +2,7 @@
 
 ## Status
 
-**Contract locked; bounded Android CPU/GPU smoke and the canonical campaigns remain to run.**
+**Contract locked; Android CPU canonical-short smoke passed; full CPU campaign is next. GPU smoke/campaign remain to run.**
 
 This experiment compares only the official instruction-tuned Gemma 4 E2B LiteRT-LM CPU and GPU Android routes on the authorized Galaxy S23 Ultra. It measures execution, setup, TTFT, prefill/decode throughput, total latency, process memory, and operating conditions under the repository's fixed short/medium/long prompt contract. It does not evaluate transcript quality and makes no NPU/HTP claim.
 
@@ -27,6 +27,12 @@ The exact CPU deployment artifact loaded on the host through LiteRT-LM/XNNPACK a
 Host metrics and output remain experiment-local in [`results/host-smoke/result.json`](results/host-smoke/result.json). They are not Android evidence and will never enter the Android registry.
 
 Pre-contract runner development exposed two non-model issues: a Bazel daemon inherited the heavy-RAM lock, fixed by mandatory `--batch` builds, and early runner assertions treated optional LiteRT-LM BenchmarkInfo turn counters as required. The runner now drains callbacks, persists raw output first, and represents unavailable internal telemetry as null with a reason. The required logical 1+5+5+5 request contract remains strict.
+
+## First Android smoke
+
+The exact CPU route completed a bounded 64-token canonical-short smoke on the authorized phone. Setup was `3.7395 s`; TTFT `6.0621 s`; isolated prefill `4.2478 s` / `40.256 tok/s`; callback-boundary decode `4.5993 s` / `13.698 tok/s`; and total request time `10.6614 s`. Peak sampled process PSS was `3,132,081,152 B` and VmHWM `3,262,898,176 B`. Exact output SHA-256 `0f588698…4686` looks sensible under the narrow smoke check.
+
+See [`results/android-cpu-smoke/result.json`](results/android-cpu-smoke/result.json). This is viability evidence with a 64-token cap, not a full canonical campaign distribution.
 
 ## Claim boundaries
 

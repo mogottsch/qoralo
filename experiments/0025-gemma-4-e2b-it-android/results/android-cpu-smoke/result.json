@@ -1,0 +1,185 @@
+{
+  "arm_id": "0025-gemma4-e2b-cpu-smoke",
+  "artifact_identity": {
+    "libLiteRt_sha256": "3fdbf64355af65b3ca6ed0c633ffed1e4faa1bfa9256f5e7403fec1633ea1b74",
+    "model_sha256": "181938105e0eefd105961417e8da75903eacda102c4fce9ce90f50b97139a63c",
+    "remote_manifest_sha256": "542bb8467b4c639e257ec55b39f48737d3c013c7eebb3bf1d110886eb95a16d6",
+    "runner_sha256": "41c489dd26bc3dc94ca4b2deaae8c49b04dceac1c6fe1966d24df0dfc273f20c"
+  },
+  "backend": "cpu",
+  "contract_commit": "eab21d2",
+  "device": {
+    "abi": "arm64-v8a",
+    "android_build_fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+    "model": "SM-S918B",
+    "serial": "R5CW81PR8SY",
+    "soc": "SM8550"
+  },
+  "execution_target": "android",
+  "experiment": "0025-gemma-4-e2b-it-android",
+  "host_is_android_evidence": null,
+  "memory": {
+    "lifecycle": "benchmark process from immediately before setup through final request",
+    "peak_sampled_pss_bytes": 3132081152,
+    "peak_sampled_vm_hwm_bytes": 3262898176,
+    "ru_maxrss_bytes": 3262898176,
+    "sample_count": 87,
+    "sampling_interval_seconds": 0.1
+  },
+  "prompts": {
+    "long": {
+      "input_tokens": 1930,
+      "max_num_tokens": 8192,
+      "max_output_tokens": 2048,
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "rendered_bytes": 10589,
+      "rendered_path": "rendered/long.txt",
+      "rendered_sha256": "450b519d417e29c4239e39aef856db1813d2580cd62e9db9adaae3d94ba8f260",
+      "token_ids_int32le_sha256": "bbb4413aa186c843cbdc71a1f659e9d574c6fd0bc46fe844a310813445279bba",
+      "truncated": false
+    },
+    "medium": {
+      "input_tokens": 595,
+      "max_num_tokens": 8192,
+      "max_output_tokens": 2048,
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "rendered_bytes": 3313,
+      "rendered_path": "rendered/medium.txt",
+      "rendered_sha256": "8e3c03cb0d1ddce8455306b8b84585ce2ae07c083c4fdbdec1e946e3be56771d",
+      "token_ids_int32le_sha256": "2a89b5742b50060ad7510f8dfaa22eafda4a8fedbe06b5aaed36d5653390cf8d",
+      "truncated": false
+    },
+    "short": {
+      "input_tokens": 171,
+      "max_num_tokens": 8192,
+      "max_output_tokens": 2048,
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "rendered_bytes": 920,
+      "rendered_path": "rendered/short.txt",
+      "rendered_sha256": "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a",
+      "token_ids_int32le_sha256": "65d931b8fb39eacee9675b22e52d6ce0a091429e50451c2d1ea0463e250d7f4d",
+      "truncated": false
+    }
+  },
+  "remote_stage_cleanup": {
+    "path": "/data/local/tmp/vibevoice-0025-gemma-4-e2b-it-android",
+    "reason": "Exact hash-verified stage remains under the experiment-owned root for the immediately following GPU smoke and full campaigns; phone lock was released.",
+    "status": "retained_for_active_0025_campaign"
+  },
+  "route": {
+    "cache_dir": "/data/local/tmp/vibevoice-0025-gemma-4-e2b-it-android/cache-cpu",
+    "max_num_tokens": 8192,
+    "max_output_tokens": 2048,
+    "model_path": ".local/model/gemma-4-E2B-it.litertlm",
+    "num_cpu_threads": 4,
+    "prompt_template_applied_in_session": false,
+    "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+    "sampler": "CPU TOP_P(k=1,p=1) exact argmax implementation for both CPU and GPU neural backends",
+    "smoke_only": true,
+    "thinking_enabled": false
+  },
+  "runs": [
+    {
+      "emitted_token_ids_int32le_sha256": "b07ca9538903ed143935ae1555efd00661d515b50047dd8df8c2dc8fa6437616",
+      "expected_input_tokens": 171,
+      "id": "smoke-short-01",
+      "missing_reasons": {},
+      "output": {
+        "bytes": 347,
+        "path": "outputs/smoke-short-01.txt",
+        "sha256": "0f588698c440c00b97394ecb1aaf3c77ec3076271f37c7c1a89490e1ff444686"
+      },
+      "output_bytes": 347,
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": true
+      },
+      "output_token_cap": 64,
+      "output_tokens": 64,
+      "phase": "smoke",
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "request_timeout_seconds": 1800,
+      "runtime_benchmark_info": {
+        "after_error": null,
+        "before_error": null,
+        "decode_turns_after": 1,
+        "decode_turns_before": 0,
+        "prefill_turns_after": 1,
+        "prefill_turns_before": 0
+      },
+      "runtime_error": null,
+      "runtime_generated_tokens": 64,
+      "runtime_input_token_count_matches": true,
+      "runtime_prefill_tokens": 171,
+      "runtime_task_state": "done",
+      "stop_reason": "max_tokens",
+      "throughput": {
+        "decode_first_token_included": false,
+        "decode_tokens_per_second": 13.697630361867938,
+        "prefill_tokens_per_second": 40.25636014777529,
+        "runtime_decode_tokens_per_second": 9.981960583676685
+      },
+      "tier": "short",
+      "timing": {
+        "decode_seconds": 4.599335676,
+        "post_prefill_to_first_token_seconds": 1.812480728,
+        "prefill_seconds": 4.247775988,
+        "request_frontend_plus_prefill_seconds": 4.249621196,
+        "request_to_first_token_seconds": 6.062101924,
+        "runtime_decode_turn_seconds": 6.411566091,
+        "total_seconds": 10.6614376
+      }
+    }
+  ],
+  "runtime": {
+    "name": "LiteRT-LM",
+    "revision": "924e79c91542761242244e4f1651851f822e4cbb",
+    "version": "v0.16.1"
+  },
+  "schema_version": 1,
+  "scope": "android_smoke",
+  "setup": {
+    "boundary": "before ModelAssets::Create through one Engine and one direct Session ready with KV capacity",
+    "seconds": 3.739503228
+  },
+  "source_runner_result_sha256": "1eb3f52ab990a3ba8e8a0fc8cb91638872e5795ec3aefb746a1553f5e923edaf",
+  "sources": [
+    "protocol/experiment-contract.json",
+    "results/android-cpu-smoke/evidence/preflight.txt",
+    "results/android-cpu-smoke/evidence/remote-sha256.txt"
+  ],
+  "thermal": {
+    "after": {
+      "android_thermal_status": 0,
+      "ap_status": 0,
+      "ap_temperature_c": 45.1
+    },
+    "battery_after": {
+      "health": "2",
+      "powered": {
+        "ac": "false",
+        "usb": "true",
+        "wireless": "false"
+      },
+      "status": "2",
+      "temperature_c": 31.6
+    },
+    "battery_before": {
+      "health": "2",
+      "powered": {
+        "ac": "false",
+        "usb": "true",
+        "wireless": "false"
+      },
+      "status": "2",
+      "temperature_c": 31.6
+    },
+    "before": {
+      "android_thermal_status": 0,
+      "ap_status": 0,
+      "ap_temperature_c": 38.4
+    },
+    "power_missing_reason": "No calibrated external power measurement was collected for this bounded smoke.",
+    "power_watts": null
+  }
+}
