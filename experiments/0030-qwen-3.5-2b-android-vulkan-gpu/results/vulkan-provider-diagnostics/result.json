@@ -1,0 +1,70 @@
+{
+  "arm_id": "qwen35-2b-unsloth-q4km-llamacpp-vulkan-adreno",
+  "blocker": {
+    "durability": "The identical Adreno pipeline class failed with the pinned baseline compiler, with F16 disabled, and with one pinned newer public shader compiler. Broad compiler roulette stopped here.",
+    "error": "vk::Device::createComputePipeline: ErrorUnknown",
+    "pipeline": "mul_mat_vec_q5_k_f32_f32",
+    "required_action": "Choose whether to authorize a separately named and pinned public llama.cpp OpenCL/Adreno investigation. Do not relabel it Vulkan or change model/quantization silently.",
+    "stage": "Vulkan provider initialization before health/model readiness"
+  },
+  "canonical_campaign_started": false,
+  "canonical_request_count": 0,
+  "claims": {
+    "all_layers_offloaded": false,
+    "android_performance": false,
+    "android_vulkan_inference": false,
+    "output_sanity": null,
+    "vulkan_compute_buffer": false,
+    "vulkan_model_buffer": false
+  },
+  "completion_state": "not_complete",
+  "experiment": "0030-qwen-3.5-2b-android-vulkan-gpu",
+  "model_sha256": "aaf42c8b7c3cab2bf3d69c355048d4a0ee9973d48f16c731c0520ee914699223",
+  "provider": "llama.cpp GGML Vulkan / Vulkan0 / Adreno (TM) 740",
+  "safety": {
+    "all_cleanup_states": "verified_absent",
+    "phone_lock_held_each_attempt": true,
+    "process_remaining": false,
+    "remote_root": "/data/local/tmp/vibevoice-0030-qwen-3.5-2b-android-vulkan-gpu"
+  },
+  "schema_version": 1,
+  "status": "blocked_stopped",
+  "upstream_context": {
+    "captured_api_response_path": "upstream-issue-19746.json",
+    "captured_api_response_sha256": "78eef478ca0c66e67c44efe3a736ec883f0dc2a722ce699e9e49ef9fdce08391",
+    "scope": "Context only: reports the same Adreno 740 shader/pipeline failure class and says OpenCL worked on that device; does not prove this exact model route.",
+    "url": "https://github.com/ggml-org/llama.cpp/issues/19746"
+  },
+  "variants": [
+    {
+      "cleanup_state": "verified_absent",
+      "logical_request_count": 0,
+      "name": "baseline-ndk-glslc",
+      "record_path": "baseline-ndk-glslc/variant.json",
+      "record_sha256": "785a28de22f6be0dc7d1a947fa5be258d9fa86a56958c761f32d24eba46d1c5a",
+      "server_sha256": "b806fc03df6510eb7a141aea093cec7a878a2aa7456ea076a84791fadec68c00",
+      "server_stderr_path": "baseline-ndk-glslc/server.stderr.log",
+      "server_stderr_sha256": "440b617576b4cb968fcd5a05e057d0f590eeb9944a17682b55af2c43af576ed7"
+    },
+    {
+      "cleanup_state": "verified_absent",
+      "logical_request_count": 0,
+      "name": "baseline-disable-f16",
+      "record_path": "baseline-disable-f16/variant.json",
+      "record_sha256": "e06dc4beef1bd04332e6cba720a5bb12aaf64bfd5625b54740d4d6be97887abb",
+      "server_sha256": "b806fc03df6510eb7a141aea093cec7a878a2aa7456ea076a84791fadec68c00",
+      "server_stderr_path": "baseline-disable-f16/server.stderr.log",
+      "server_stderr_sha256": "5f5d17bd25bf8b033b41cd4c9ebbb1ea734c76474b06db593b369a118e1cf15e"
+    },
+    {
+      "cleanup_state": "verified_absent",
+      "logical_request_count": 0,
+      "name": "newer-ubuntu-glslc",
+      "record_path": "newer-ubuntu-glslc/variant.json",
+      "record_sha256": "5270af1086d2b26e4a19d753e57172580dc34ea361f9a964b5a1f3eb3e7a1345",
+      "server_sha256": "b666bd38aedb2d0c3008348f1866caee8f9168aa4655083fc1eb716342e57ce0",
+      "server_stderr_path": "newer-ubuntu-glslc/server.stderr.log",
+      "server_stderr_sha256": "85d422d1b2c522a285387050f00d28fde8d483e08aae3360e9a562eeca060660"
+    }
+  ]
+}

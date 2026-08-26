@@ -22,6 +22,14 @@ else
   CLIENT_BASE="http://127.0.0.1:$PORT"
 fi
 RUN_ID=$(date -u +%Y%m%dT%H%M%SZ)-$MODE
+COOLDOWN_SECONDS=${COOLDOWN_SECONDS:-180}
+HEALTH_DEADLINE_SECONDS=${HEALTH_DEADLINE_SECONDS:-600}
+DISABLE_VULKAN_F16=${DISABLE_VULKAN_F16:-0}
+[[ "$COOLDOWN_SECONDS" =~ ^[0-9]+$ ]] || { echo "COOLDOWN_SECONDS must be a nonnegative integer" >&2; exit 2; }
+[[ "$HEALTH_DEADLINE_SECONDS" =~ ^[1-9][0-9]*$ ]] || { echo "HEALTH_DEADLINE_SECONDS must be positive" >&2; exit 2; }
+[[ "$DISABLE_VULKAN_F16" == 0 || "$DISABLE_VULKAN_F16" == 1 ]] || { echo "DISABLE_VULKAN_F16 must be 0 or 1" >&2; exit 2; }
+VULKAN_ENV=
+if [[ "$DISABLE_VULKAN_F16" == 1 ]]; then VULKAN_ENV='GGML_VK_DISABLE_F16=1'; fi
 OUT="$EXP/.local/phone-$RUN_ID"
 LOCK="$ROOT/artifacts/locks/phone.lock"
 SERVER_PID=
@@ -62,7 +70,7 @@ trap cleanup EXIT INT TERM
 [[ -x "$STAGE/llama-server" ]] || { echo "missing executable staged server" >&2; exit 4; }
 [[ -f "$STAGE/model.gguf" ]] || { echo "missing staged model" >&2; exit 4; }
 printf '%s  %s\n' \
-  b806fc03df6510eb7a141aea093cec7a878a2aa7456ea076a84791fadec68c00 llama-server \
+  b666bd38aedb2d0c3008348f1866caee8f9168aa4655083fc1eb716342e57ce0 llama-server \
   aaf42c8b7c3cab2bf3d69c355048d4a0ee9973d48f16c731c0520ee914699223 model.gguf \
   >"$OUT/expected-sha256.txt"
 (cd "$STAGE" && sha256sum -c "$OUT/expected-sha256.txt") >"$OUT/local-hash-check.txt"
@@ -82,6 +90,13 @@ abi=$(adb_cmd shell getprop ro.product.cpu.abi | tr -d '\r')
   printf 'android_sdk='; adb_cmd shell getprop ro.build.version.sdk | tr -d '\r'
 } >"$OUT/device.txt"
 adb_cmd shell df -k /data/local/tmp >"$OUT/storage-before.txt"
+adb_cmd shell dumpsys battery >"$OUT/battery-pre-cooldown.txt"
+adb_cmd shell dumpsys thermalservice >"$OUT/thermal-pre-cooldown.txt"
+adb_cmd shell dumpsys power >"$OUT/power-pre-cooldown.txt"
+COOLDOWN_START=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+sleep "$COOLDOWN_SECONDS"
+COOLDOWN_END=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+printf '{"seconds":%s,"start_utc":"%s","end_utc":"%s","threshold_gated":false}\n' "$COOLDOWN_SECONDS" "$COOLDOWN_START" "$COOLDOWN_END" >"$OUT/cooldown.json"
 adb_cmd shell dumpsys battery >"$OUT/battery-before.txt"
 adb_cmd shell dumpsys thermalservice >"$OUT/thermal-before.txt"
 adb_cmd shell dumpsys power >"$OUT/power-before.txt"
@@ -97,11 +112,12 @@ adb_cmd shell "chmod 755 '$REMOTE/llama-server'"
 adb_cmd shell "cd '$REMOTE' && sha256sum llama-server model.gguf" | tr -d '\r' >"$OUT/remote-sha256.txt"
 diff -u "$OUT/expected-sha256.txt" "$OUT/remote-sha256.txt" >"$OUT/stage-hash-diff.txt"
 adb_cmd forward "tcp:$PORT" "tcp:$PORT" >"$OUT/forward.txt"
+printf 'server_variant=ubuntu-glslc-2023.8\nserver_sha256=b666bd38aedb2d0c3008348f1866caee8f9168aa4655083fc1eb716342e57ce0\nDISABLE_VULKAN_F16=%s\n' "$DISABLE_VULKAN_F16" >"$OUT/vulkan-env.txt"
 
 SETUP_START=$(python3 -c 'import time; print(time.monotonic_ns())')
 (
   exec 9>&-
-  "$ADB" -s "$SERIAL" shell "cd '$REMOTE' && echo \$\$ > server.pid && exec ./llama-server -m ./model.gguf --host 127.0.0.1 --port $PORT --ctx-size 8192 --parallel 1 --threads 4 --threads-batch 4 --device Vulkan0 --gpu-layers 25 --split-mode none --main-gpu 0 --reasoning off --jinja --slot-save-path ./cache --no-webui"
+  "$ADB" -s "$SERIAL" shell "cd '$REMOTE' && echo \$\$ > server.pid && $VULKAN_ENV exec ./llama-server -m ./model.gguf --host 127.0.0.1 --port $PORT --ctx-size 8192 --parallel 1 --threads 4 --threads-batch 4 --device Vulkan0 --gpu-layers 25 --split-mode none --main-gpu 0 --reasoning off --jinja --slot-save-path ./cache --no-webui"
 ) >"$OUT/server.stdout.log" 2>"$OUT/server.stderr.log" &
 ADB_SERVER_PID=$!
 for _ in $(seq 1 200); do
@@ -129,6 +145,7 @@ python3 "$EXP/tools/run_client.py" \
   --output "$OUT/client" \
   --workloads "$ROOT/protocols/android-llm-benchmark/workloads/inference-v1" \
   --setup-start-monotonic-ns "$SETUP_START" \
+  --health-deadline-seconds "$HEALTH_DEADLINE_SECONDS" \
   --backend-proof-log "$OUT/server.stderr.log"
 
 adb_cmd shell "kill '$SERVER_PID'"

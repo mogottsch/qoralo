@@ -149,11 +149,12 @@ def main() -> None:
     raw.mkdir()
     raw_names = [
         "server.stdout.log", "server.stderr.log", "memory-samples.txt", "memory-sampler.stderr.log",
-        "device.txt", "storage-before.txt", "battery-before.txt", "battery-after.txt",
+        "device.txt", "storage-before.txt", "cooldown.json", "battery-pre-cooldown.txt",
+        "thermal-pre-cooldown.txt", "power-pre-cooldown.txt", "battery-before.txt", "battery-after.txt",
         "thermal-before.txt", "thermal-after.txt", "power-before.txt", "power-after.txt",
         "expected-sha256.txt", "remote-sha256.txt", "local-hash-check.txt", "stage-hash-diff.txt",
         "push-server.txt", "push-model.txt", "adb-state.txt", "cleanup.json", "forward.txt", "client-base.txt",
-        "gpu-before.txt", "gpu-after.txt", "gpu-samples.txt", "gpu-sampler.stderr.log",
+        "gpu-before.txt", "gpu-after.txt", "gpu-samples.txt", "gpu-sampler.stderr.log", "vulkan-env.txt",
     ]
     raw_hashes = {}
     for name in raw_names:
@@ -176,8 +177,8 @@ def main() -> None:
         "name": "llama.cpp",
         "revision": "0a5ac49bce4c42893368585edf3ffb41a38f0108",
         "android_server_artifact_revision": 1,
-        "android_server_bytes": 34242152,
-        "android_server_sha256": "b806fc03df6510eb7a141aea093cec7a878a2aa7456ea076a84791fadec68c00",
+        "android_server_bytes": 38398232,
+        "android_server_sha256": "b666bd38aedb2d0c3008348f1866caee8f9168aa4655083fc1eb716342e57ce0",
         "embedded_web_ui": False,
         "provider_backend": "GGML Vulkan GPU offload",
         "provider_device": "Vulkan0 / Adreno (TM) 740",

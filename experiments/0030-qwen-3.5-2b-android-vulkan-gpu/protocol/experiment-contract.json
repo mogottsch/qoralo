@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0030-qwen-3.5-2b-android-vulkan-gpu",
-  "status": "android_vulkan_artifact_phone_ready_pending_device_viability",
+  "status": "blocked_stopped_vulkan_provider_initialization",
   "locked_at": "2026-08-26",
   "question": "Can the same pinned public Qwen3.5-2B Q4_K_M artifact execute through reproducible llama.cpp Vulkan offload on the authorized Galaxy S23 Ultra Adreno 740, with actual offload proven and CPU boundaries disclosed?",
   "scope": {
@@ -181,23 +181,6 @@
       "compute_shader_source_count": 147,
       "embedding": "The pinned vulkan-shaders-gen host tool invokes the pinned NDK glslc and embeds generated SPIR-V arrays into the static ggml-vulkan backend."
     },
-    "shader_compiler": {
-      "source": "Android NDK 28.1.13356709 shader-tools/linux-x86_64/glslc",
-      "bytes": 6896168,
-      "sha256": "452a8331070f15d126df5e263fb9f04e78240dac5f1defe6c434b2c2eef0a53a",
-      "version": "shaderc v2022.3 ndk-r27-beta1; SPIR-V 1.0 target",
-      "spirv_header_bytes": 125518,
-      "spirv_header_sha256": "e4e3a2cadd392141ca9f8b5528d450a39d891526b6cab25aa578a6e788f7b58d",
-      "optional_shader_extensions_compiled": {
-        "cooperative_matrix": false,
-        "cooperative_matrix2": false,
-        "cooperative_matrix_decode_vector": false,
-        "integer_dot_product": false,
-        "bfloat16": false,
-        "float_e2m1": false,
-        "float_e4m3": false
-      }
-    },
     "build": "CMake Release, GGML_VULKAN=ON, static llama/GGML and c++_static; Android libvulkan/libm/libdl/libc remain dynamic. Embedded SPIR-V is generated at build time with pinned NDK glslc. Source/build paths are prefix-mapped; OpenSSL and embedded web UI are disabled.",
     "dynamic_dependencies": [
       "libc.so",
@@ -208,13 +191,69 @@
     "embedded_web_ui": false,
     "android_server": {
       "artifact_revision": 1,
+      "variant": "ndk-r28b",
       "bytes": 34242152,
       "sha256": "b806fc03df6510eb7a141aea093cec7a878a2aa7456ea076a84791fadec68c00",
-      "clean_rebuilds_byte_identical": true
+      "clean_rebuilds_byte_identical": true,
+      "provider_result": "pipeline_creation_failed"
     },
     "client_source": "experiments/0030-qwen-3.5-2b-android-vulkan-gpu/tools/run_client.py",
     "greedy_proof": "temperature=-1 is normalized to zero in the server generation settings. At the pinned revision, src/llama-sampler.cpp:270-282 retains only the highest-logit token whenever temperature <= 0; the request sampler chain contains only temperature and all penalties are neutral.",
-    "state_reset": "The loaded llama-server Vulkan route and slot/session object remain alive. Before every logical request, POST /slots/0?action=erase must succeed and its duration is recorded separately outside total-request timing. Each completion sets cache_prompt=false; timings.cache_n must equal zero, prompt_n the full independently tokenized prompt count, and prompt_ms positive."
+    "state_reset": "The loaded llama-server Vulkan route and slot/session object remain alive. Before every logical request, POST /slots/0?action=erase must succeed and its duration is recorded separately outside total-request timing. Each completion sets cache_prompt=false; timings.cache_n must equal zero, prompt_n the full independently tokenized prompt count, and prompt_ms positive.",
+    "shader_compiler_variants": [
+      {
+        "id": "ndk-r28b",
+        "source": "Android NDK 28.1.13356709 shader-tools/linux-x86_64/glslc",
+        "executable_bytes": 6896168,
+        "executable_sha256": "452a8331070f15d126df5e263fb9f04e78240dac5f1defe6c434b2c2eef0a53a",
+        "version": "shaderc v2022.3 ndk-r27-beta1; SPIR-V 1.0 target",
+        "spirv_header_bytes": 125518,
+        "spirv_header_sha256": "e4e3a2cadd392141ca9f8b5528d450a39d891526b6cab25aa578a6e788f7b58d",
+        "optional_shader_extensions_compiled": {
+          "cooperative_matrix": false,
+          "cooperative_matrix2": false,
+          "cooperative_matrix_decode_vector": false,
+          "integer_dot_product": false,
+          "bfloat16": false,
+          "float_e2m1": false,
+          "float_e4m3": false
+        }
+      },
+      {
+        "id": "ubuntu-2023.8",
+        "source": "Ubuntu 24.04 archive packages glslc 2023.8-1build1 and libshaderc1 2023.8-1build1",
+        "glslc_deb_url": "http://archive.ubuntu.com/ubuntu/pool/universe/s/shaderc/glslc_2023.8-1build1_amd64.deb",
+        "glslc_deb_bytes": 76032,
+        "glslc_deb_sha256": "ee5f737e570b4b1713b4db9c8f9ead8258726af457391af00264350e59810bd4",
+        "libshaderc_deb_url": "http://archive.ubuntu.com/ubuntu/pool/universe/s/shaderc/libshaderc1_2023.8-1build1_amd64.deb",
+        "libshaderc_deb_bytes": 2423388,
+        "libshaderc_deb_sha256": "ebd699ab3feaf00676a7da0644dd74290f60cd1b34057256db90f60e126655b1",
+        "executable_bytes": 174800,
+        "executable_sha256": "71d72c98dc379daa3a7727740fcdd418e6f0426c8f8662b32018eba7e699bbc7",
+        "shared_library_bytes": 8437048,
+        "shared_library_sha256": "7716c4ddb83e17ca06b7a244e883d891c8b5729e8fdc2693dc4969443280c677",
+        "version": "shaderc 2023.8-1build1; SPIR-V 1.0 target",
+        "optional_shader_extensions_compiled": {
+          "cooperative_matrix": true,
+          "cooperative_matrix2": false,
+          "cooperative_matrix_decode_vector": false,
+          "integer_dot_product": false,
+          "bfloat16": false,
+          "float_e2m1": false,
+          "float_e4m3": false
+        }
+      }
+    ],
+    "diagnostic_android_servers": [
+      {
+        "artifact_revision": 2,
+        "variant": "ubuntu-2023.8",
+        "bytes": 38398232,
+        "sha256": "b666bd38aedb2d0c3008348f1866caee8f9168aa4655083fc1eb716342e57ce0",
+        "clean_rebuilds_byte_identical": true,
+        "provider_result": "same_pipeline_creation_failed"
+      }
+    ]
   },
   "device": {
     "model": "SM-S918B",
@@ -254,5 +293,24 @@
     "KGSL frequency/busy telemetry unavailable to Android shell when server-log offload proof is complete",
     "brief memory or GPU-activity peaks missed by 100 ms target sampling",
     "exact partition of individual graph operations between Vulkan and CPU when the route is described only as bounded GPU offload, not GPU-exclusive execution"
-  ]
+  ],
+  "blocked_result": {
+    "result_path": "experiments/0030-qwen-3.5-2b-android-vulkan-gpu/results/vulkan-provider-diagnostics/result.json",
+    "result_sha256": "6cb926ff31aaa16f478c53c0b116c5b5c42d76f7094b8c6c3d767af70a8e82bb",
+    "checksum_manifest": "experiments/0030-qwen-3.5-2b-android-vulkan-gpu/results/vulkan-provider-diagnostics/SHA256SUMS",
+    "checksum_manifest_sha256": "833eaeb93f9cac3dc85d0d0f9097dcb024be0379da18f55ffaa5a7fbaf3ceaee",
+    "logical_request_count": 0,
+    "canonical_campaign_started": false,
+    "provider_health_reached": false,
+    "pipeline": "mul_mat_vec_q5_k_f32_f32",
+    "error": "vk::Device::createComputePipeline: ErrorUnknown",
+    "variants_attempted": [
+      "baseline NDK glslc",
+      "baseline plus GGML_VK_DISABLE_F16=1",
+      "Ubuntu glslc/shaderc 2023.8"
+    ],
+    "all_cleanup_states": "verified_absent",
+    "process_remaining": false,
+    "next_decision": "Whether to authorize a separately named, pinned public llama.cpp OpenCL/Adreno investigation without changing model, quantization, or workload."
+  }
 }

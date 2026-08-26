@@ -1,0 +1,59 @@
+{
+  "clean_rebuilds_byte_identical": 2,
+  "cleanup_state": "verified_absent",
+  "counts_as_smoke": false,
+  "experiment": "0030-qwen-3.5-2b-android-vulkan-gpu",
+  "limitations": "The process failed during Vulkan compute-pipeline creation before health, model readiness, template rendering, tokenization, or any logical inference request. No performance/output claim is possible.",
+  "logical_request_count": 0,
+  "model_sha256": "aaf42c8b7c3cab2bf3d69c355048d4a0ee9973d48f16c731c0520ee914699223",
+  "observed_error": {
+    "all_layers_offload_proven": false,
+    "exception": "uncaught vk::SystemError",
+    "health_reached": false,
+    "model_loaded": false,
+    "pipeline": "mul_mat_vec_q5_k_f32_f32",
+    "vulkan_buffers_proven": false,
+    "vulkan_result": "ErrorUnknown"
+  },
+  "operating_conditions": {
+    "cooldown": {
+      "end_utc": "2026-08-26T16:48:27Z",
+      "seconds": 0,
+      "start_utc": "2026-08-26T16:48:27Z",
+      "threshold_gated": false
+    },
+    "post_cooldown_battery": {
+      "level_percent": 100,
+      "status_code": 5,
+      "temperature_c": 41.3,
+      "usb_powered": true
+    },
+    "post_cooldown_thermal_status_code": 3,
+    "pre_cooldown_battery": {
+      "level_percent": 100,
+      "status_code": 5,
+      "temperature_c": 41.3,
+      "usb_powered": true
+    },
+    "pre_cooldown_thermal_status_code": 3
+  },
+  "requested_provider": {
+    "device": "Vulkan0 / Adreno (TM) 740",
+    "gpu_layers": 25,
+    "main_gpu": 0,
+    "split_mode": "none"
+  },
+  "runtime_environment": {
+    "GGML_VK_DISABLE_F16": false
+  },
+  "runtime_revision": "0a5ac49bce4c42893368585edf3ffb41a38f0108",
+  "schema_version": 1,
+  "server_bytes": 38398232,
+  "server_sha256": "b666bd38aedb2d0c3008348f1866caee8f9168aa4655083fc1eb716342e57ce0",
+  "server_stderr_sha256": "85d422d1b2c522a285387050f00d28fde8d483e08aae3360e9a562eeca060660",
+  "shader_compiler": "Ubuntu 24.04 glslc 2023.8-1build1; shaderc 2023.8",
+  "shader_compiler_executable_sha256": "71d72c98dc379daa3a7727740fcdd418e6f0426c8f8662b32018eba7e699bbc7",
+  "stage_hashes_matched": true,
+  "status": "provider_initialization_failed",
+  "variant": "newer-ubuntu-glslc"
+}

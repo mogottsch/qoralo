@@ -55,7 +55,9 @@ class ContractTest(unittest.TestCase):
             "-DGGML_VULKAN=ON", "-DVulkan_GLSLC_EXECUTABLE=", "-DSPIRV-Headers_DIR=",
             "217e93c664ec6704ec2d8c36fa116c1a4a1e2d40", "3617c6a36daa7c2c60dc4e017be821b3e235341b",
             "452a8331070f15d126df5e263fb9f04e78240dac5f1defe6c434b2c2eef0a53a",
+            "71d72c98dc379daa3a7727740fcdd418e6f0426c8f8662b32018eba7e699bbc7",
             "b806fc03df6510eb7a141aea093cec7a878a2aa7456ea076a84791fadec68c00",
+            "b666bd38aedb2d0c3008348f1866caee8f9168aa4655083fc1eb716342e57ce0",
             "flock -w 1800", "LLAMA_BUILD_UI=OFF", "LLAMA_USE_PREBUILT_UI=OFF",
         ):
             self.assertIn(required, build)
@@ -76,6 +78,35 @@ class ContractTest(unittest.TestCase):
         self.assertIn('server_timings.get("cache_n") != 0', client)
         self.assertEqual(1, len(re.findall(r'\[\("first-short-01", "short", "first", 2048\)\]', client)))
         self.assertIn('range(1, 6)', client)
+
+    def test_provider_blocker_is_zero_request_hash_bound_evidence(self) -> None:
+        base = EXP / "results/vulkan-provider-diagnostics"
+        result_path = base / "result.json"
+        result = json.loads(result_path.read_text())
+        blocked = self.contract["blocked_result"]
+        self.assertEqual(blocked["result_sha256"], sha(result_path))
+        self.assertEqual(blocked["checksum_manifest_sha256"], sha(base / "SHA256SUMS"))
+        self.assertEqual("blocked_stopped", result["status"])
+        self.assertFalse(result["canonical_campaign_started"])
+        self.assertEqual(0, result["canonical_request_count"])
+        self.assertEqual("mul_mat_vec_q5_k_f32_f32", result["blocker"]["pipeline"])
+        self.assertEqual("vk::Device::createComputePipeline: ErrorUnknown", result["blocker"]["error"])
+        self.assertEqual(3, len(result["variants"]))
+        for variant in result["variants"]:
+            record = base / variant["record_path"]
+            stderr = base / variant["server_stderr_path"]
+            self.assertEqual(variant["record_sha256"], sha(record))
+            self.assertEqual(variant["server_stderr_sha256"], sha(stderr))
+            self.assertIn("Compute pipeline creation failed for mul_mat_vec_q5_k_f32_f32", stderr.read_text())
+            self.assertIn("ErrorUnknown", stderr.read_text())
+            self.assertEqual(0, variant["logical_request_count"])
+            self.assertEqual("verified_absent", variant["cleanup_state"])
+            evidence = json.loads(record.read_text())
+            self.assertFalse(evidence["observed_error"]["health_reached"])
+            self.assertFalse(evidence["observed_error"]["model_loaded"])
+            self.assertTrue(evidence["stage_hashes_matched"])
+        self.assertFalse(result["claims"]["android_vulkan_inference"])
+        self.assertFalse(result["claims"]["android_performance"])
 
     def test_gpu_claim_is_bounded_not_exclusive(self) -> None:
         rationale = self.contract["route_rationale"]

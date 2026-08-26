@@ -2,7 +2,7 @@
 
 ## Status
 
-**Reproducible Android Vulkan artifact built; awaiting the authorized Adreno 740 device viability gate. No Android GPU-performance claim exists yet.**
+**Blocked/stopped at Adreno Vulkan provider initialization. No logical request ran, no canonical campaign started, and no Android GPU-performance claim exists.**
 
 This is a separate route from CPU-only experiment 0027. It reuses the exact pinned Qwen3.5-2B Q4_K_M model bytes and canonical workload, but changes the runtime backend to public llama.cpp Vulkan. It does not rewrite or relabel 0027 evidence.
 
@@ -15,10 +15,17 @@ This is a separate route from CPU-only experiment 0027. It reuses the exact pinn
 - Vulkan headers: Khronos `217e93c664ec6704ec2d8c36fa116c1a4a1e2d40`, tree `3617c6a36daa7c2c60dc4e017be821b3e235341b` (tag `v1.3.275`)
 - Toolchain: Android NDK `28.1.13356709` (r28b); pinned NDK `glslc` SHA-256 `452a8331070f15d126df5e263fb9f04e78240dac5f1defe6c434b2c2eef0a53a`
 - Runtime request: `--device Vulkan0 --gpu-layers 25 --split-mode none --main-gpu 0`
-- Android server: 34,242,152 bytes, SHA-256 `b806fc03df6510eb7a141aea093cec7a878a2aa7456ea076a84791fadec68c00`
+- Baseline Android server: 34,242,152 bytes, SHA-256 `b806fc03df6510eb7a141aea093cec7a878a2aa7456ea076a84791fadec68c00`
+- Newer-compiler diagnostic server: 38,398,232 bytes, SHA-256 `b666bd38aedb2d0c3008348f1866caee8f9168aa4655083fc1eb716342e57ce0`
 - Dynamic dependencies: only Android `libc.so`, `libdl.so`, `libm.so`, and `libvulkan.so`
 
-Two clean builds in different build directories produced the exact same stripped server bytes. The build embeds generated SPIR-V and disables web UI, OpenSSL, OpenMP, and unpinned native optimization. The pinned NDK shader compiler did not support optional cooperative-matrix, integer-dot, bfloat16, or FP4 shader extensions, so those optional variants are not compiled; base Vulkan shader variants remain embedded.
+Two clean builds in different build directories produced the exact same stripped bytes for each server variant. The build embeds generated SPIR-V and disables web UI, OpenSSL, OpenMP, and unpinned native optimization. The baseline pinned NDK shader compiler did not support optional cooperative-matrix, integer-dot, bfloat16, or FP4 shader extensions. One bounded newer public Ubuntu glslc/shaderc 2023.8 build enabled only the compiler-detected cooperative-matrix source path and is separately hash-bound.
+
+## Durable provider blocker
+
+Three completely fresh device attempts stopped at the same provider stage: baseline, baseline with `GGML_VK_DISABLE_F16=1`, and the reproducible newer-compiler artifact. In every case the Adreno driver rejected `mul_mat_vec_q5_k_f32_f32` with `vk::Device::createComputePipeline: ErrorUnknown`, then llama.cpp terminated on an uncaught `vk::SystemError` before health/model readiness. No prompt or logical request ran.
+
+Exact raw evidence is under [`results/vulkan-provider-diagnostics/`](results/vulkan-provider-diagnostics/). Every local/remote artifact hash matched, each scoped remote root was verified absent, no process remains, and the phone lock was released. The full `1+5+5+5` campaign was correctly not started. A separately named/pinned OpenCL route is the cheapest evidence-backed next investigation, but requires an explicit decision and may not be relabeled Vulkan.
 
 ## GPU claim boundary
 
@@ -39,15 +46,15 @@ The route uses shared Android LLM protocol v2 and the exact inference-v1 workloa
 
 After the smallest bounded smoke proves real Adreno/Vulkan offload and output viability, a fresh server must execute one first short request followed by five warm short, five warm medium, and five warm long requests. All raw outputs, logs, offload proof, timestamps, process memory, KGSL observations, thermal/battery/power context, hashes, and scoped cleanup state must be retained.
 
-## Commands
+## Reproduction commands
 
 ```bash
-experiments/0030-qwen-3.5-2b-android-vulkan-gpu/tools/build_android.sh
-ADB_SERVER_SOCKET=tcp:172.27.80.1:5037 \
-  experiments/0030-qwen-3.5-2b-android-vulkan-gpu/tools/run_phone.sh smoke
-# Only after smoke proof is accepted:
-ADB_SERVER_SOCKET=tcp:172.27.80.1:5037 \
-  experiments/0030-qwen-3.5-2b-android-vulkan-gpu/tools/run_phone.sh campaign
+# Baseline artifact
+GLSLC_VARIANT=ndk-r28b \
+  experiments/0030-qwen-3.5-2b-android-vulkan-gpu/tools/build_android.sh
+# Bounded newer-compiler diagnostic artifact
+GLSLC_VARIANT=ubuntu-2023.8 \
+  experiments/0030-qwen-3.5-2b-android-vulkan-gpu/tools/build_android.sh
 ```
 
-Phone operations are restricted to `/data/local/tmp/vibevoice-0030-qwen-3.5-2b-android-vulkan-gpu` while holding `artifacts/locks/phone.lock` continuously through identity, stage, execution, evidence capture, and cleanup.
+The experiment is stopped; do not rerun a campaign without a new provider decision. Phone operations were restricted to `/data/local/tmp/vibevoice-0030-qwen-3.5-2b-android-vulkan-gpu` while holding `artifacts/locks/phone.lock` continuously through identity, stage, failure evidence capture, and cleanup.

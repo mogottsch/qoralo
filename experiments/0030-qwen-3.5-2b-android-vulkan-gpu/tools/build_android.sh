@@ -17,11 +17,24 @@ MODEL_BYTES=1280835840
 MODEL_SHA256=aaf42c8b7c3cab2bf3d69c355048d4a0ee9973d48f16c731c0520ee914699223
 GLSLC_BYTES=6896168
 GLSLC_SHA256=452a8331070f15d126df5e263fb9f04e78240dac5f1defe6c434b2c2eef0a53a
+UBUNTU_GLSLC_URL=http://archive.ubuntu.com/ubuntu/pool/universe/s/shaderc/glslc_2023.8-1build1_amd64.deb
+UBUNTU_GLSLC_DEB_BYTES=76032
+UBUNTU_GLSLC_DEB_SHA256=ee5f737e570b4b1713b4db9c8f9ead8258726af457391af00264350e59810bd4
+UBUNTU_SHADERC_URL=http://archive.ubuntu.com/ubuntu/pool/universe/s/shaderc/libshaderc1_2023.8-1build1_amd64.deb
+UBUNTU_SHADERC_DEB_BYTES=2423388
+UBUNTU_SHADERC_DEB_SHA256=ebd699ab3feaf00676a7da0644dd74290f60cd1b34057256db90f60e126655b1
+UBUNTU_GLSLC_BYTES=174800
+UBUNTU_GLSLC_SHA256=71d72c98dc379daa3a7727740fcdd418e6f0426c8f8662b32018eba7e699bbc7
+UBUNTU_SHADERC_BYTES=8437048
+UBUNTU_SHADERC_SHA256=7716c4ddb83e17ca06b7a244e883d891c8b5729e8fdc2693dc4969443280c677
+UBUNTU_SERVER_BYTES=38398232
+UBUNTU_SERVER_SHA256=b666bd38aedb2d0c3008348f1866caee8f9168aa4655083fc1eb716342e57ce0
 SPIRV_HEADER_SHA256=e4e3a2cadd392141ca9f8b5528d450a39d891526b6cab25aa578a6e788f7b58d
 VULKAN_HEADERS_REVISION=217e93c664ec6704ec2d8c36fa116c1a4a1e2d40
 VULKAN_HEADERS_TREE=3617c6a36daa7c2c60dc4e017be821b3e235341b
 VULKAN_HPP_BYTES=877362
 VULKAN_HPP_SHA256=2680718d7452870e5b2127b7cbfafcc2f71af7dd74106c44d25927698c8b18ac
+GLSLC_VARIANT=${GLSLC_VARIANT:-ndk-r28b}
 SERVER_BYTES=34242152
 SERVER_SHA256=b806fc03df6510eb7a141aea093cec7a878a2aa7456ea076a84791fadec68c00
 
@@ -50,9 +63,38 @@ verify_file() {
 
 NDK=$(find_ndk)
 GLSLC="$NDK/shader-tools/linux-x86_64/glslc"
+case "$GLSLC_VARIANT" in
+  ndk-r28b)
+    verify_file "$GLSLC" "$GLSLC_BYTES" "$GLSLC_SHA256"
+    ;;
+  ubuntu-2023.8)
+    SHADERC="$LOCAL/shaderc-2023.8"
+    mkdir -p "$SHADERC/debs" "$SHADERC/root"
+    verify_file "$SHADERC/debs/glslc.deb" "$UBUNTU_GLSLC_DEB_BYTES" "$UBUNTU_GLSLC_DEB_SHA256" 2>/dev/null || {
+      curl -L --fail --retry 5 -o "$SHADERC/debs/glslc.deb.part" "$UBUNTU_GLSLC_URL"
+      verify_file "$SHADERC/debs/glslc.deb.part" "$UBUNTU_GLSLC_DEB_BYTES" "$UBUNTU_GLSLC_DEB_SHA256"
+      mv "$SHADERC/debs/glslc.deb.part" "$SHADERC/debs/glslc.deb"
+    }
+    verify_file "$SHADERC/debs/libshaderc1.deb" "$UBUNTU_SHADERC_DEB_BYTES" "$UBUNTU_SHADERC_DEB_SHA256" 2>/dev/null || {
+      curl -L --fail --retry 5 -o "$SHADERC/debs/libshaderc1.deb.part" "$UBUNTU_SHADERC_URL"
+      verify_file "$SHADERC/debs/libshaderc1.deb.part" "$UBUNTU_SHADERC_DEB_BYTES" "$UBUNTU_SHADERC_DEB_SHA256"
+      mv "$SHADERC/debs/libshaderc1.deb.part" "$SHADERC/debs/libshaderc1.deb"
+    }
+    rm -rf "$SHADERC/root"
+    mkdir -p "$SHADERC/root"
+    dpkg-deb -x "$SHADERC/debs/glslc.deb" "$SHADERC/root"
+    dpkg-deb -x "$SHADERC/debs/libshaderc1.deb" "$SHADERC/root"
+    GLSLC="$SHADERC/root/usr/bin/glslc"
+    verify_file "$GLSLC" "$UBUNTU_GLSLC_BYTES" "$UBUNTU_GLSLC_SHA256"
+    verify_file "$SHADERC/root/usr/lib/x86_64-linux-gnu/libshaderc.so.1" "$UBUNTU_SHADERC_BYTES" "$UBUNTU_SHADERC_SHA256"
+    export LD_LIBRARY_PATH="$SHADERC/root/usr/lib/x86_64-linux-gnu${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    SERVER_BYTES=$UBUNTU_SERVER_BYTES
+    SERVER_SHA256=$UBUNTU_SERVER_SHA256
+    ;;
+  *) echo "unsupported GLSLC_VARIANT: $GLSLC_VARIANT" >&2; exit 2 ;;
+esac
 SPIRV_INCLUDE="$NDK/sources/third_party/shaderc/third_party/spirv-tools/external/spirv-headers/include"
 SPIRV_HEADER="$SPIRV_INCLUDE/spirv/unified1/spirv.hpp"
-verify_file "$GLSLC" "$GLSLC_BYTES" "$GLSLC_SHA256"
 verify_file "$SPIRV_HEADER" 125518 "$SPIRV_HEADER_SHA256"
 mkdir -p "$LOCAL/downloads" "$ROOT/artifacts/locks"
 MODEL="$LOCAL/downloads/Qwen3.5-2B-Q4_K_M.gguf"
@@ -141,7 +183,10 @@ INCLUDE="-isystem$VULKAN_HEADERS/include -isystem$SPIRV_INCLUDE"
   "$NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip" "$BUILD/bin/llama-server"
 )
 
-verify_file "$BUILD/bin/llama-server" "$SERVER_BYTES" "$SERVER_SHA256"
+if [[ -n "$SERVER_BYTES" || -n "$SERVER_SHA256" ]]; then
+  [[ -n "$SERVER_BYTES" && -n "$SERVER_SHA256" ]] || { echo "both expected server fields are required" >&2; exit 3; }
+  verify_file "$BUILD/bin/llama-server" "$SERVER_BYTES" "$SERVER_SHA256"
+fi
 NEEDED=$("$NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-readelf" -d "$BUILD/bin/llama-server" | sed -n 's/.*Shared library: \[\(.*\)\]/\1/p' | sort | paste -sd, -)
 [[ "$NEEDED" == "libc.so,libdl.so,libm.so,libvulkan.so" ]] || { echo "unexpected dynamic dependencies: $NEEDED" >&2; exit 3; }
 if strings "$BUILD/bin/llama-server" | grep -qF "$ROOT"; then
@@ -153,7 +198,7 @@ rm -rf "$STAGE"
 mkdir -p "$STAGE"
 install -m 755 "$BUILD/bin/llama-server" "$STAGE/llama-server"
 ln "$MODEL" "$STAGE/model.gguf"
-verify_file "$STAGE/llama-server" "$SERVER_BYTES" "$SERVER_SHA256"
+if [[ -n "$SERVER_BYTES" ]]; then verify_file "$STAGE/llama-server" "$SERVER_BYTES" "$SERVER_SHA256"; fi
 verify_file "$STAGE/model.gguf" "$MODEL_BYTES" "$MODEL_SHA256"
 (
   cd "$STAGE"

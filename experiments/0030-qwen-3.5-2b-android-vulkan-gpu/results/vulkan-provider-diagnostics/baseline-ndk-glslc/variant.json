@@ -1,0 +1,59 @@
+{
+  "clean_rebuilds_byte_identical": 2,
+  "cleanup_state": "verified_absent",
+  "counts_as_smoke": false,
+  "experiment": "0030-qwen-3.5-2b-android-vulkan-gpu",
+  "limitations": "The process failed during Vulkan compute-pipeline creation before health, model readiness, template rendering, tokenization, or any logical inference request. No performance/output claim is possible.",
+  "logical_request_count": 0,
+  "model_sha256": "aaf42c8b7c3cab2bf3d69c355048d4a0ee9973d48f16c731c0520ee914699223",
+  "observed_error": {
+    "all_layers_offload_proven": false,
+    "exception": "uncaught vk::SystemError",
+    "health_reached": false,
+    "model_loaded": false,
+    "pipeline": "mul_mat_vec_q5_k_f32_f32",
+    "vulkan_buffers_proven": false,
+    "vulkan_result": "ErrorUnknown"
+  },
+  "operating_conditions": {
+    "cooldown": {
+      "end_utc": "2026-08-26T16:19:07Z",
+      "seconds": 180,
+      "start_utc": "2026-08-26T16:16:07Z",
+      "threshold_gated": false
+    },
+    "post_cooldown_battery": {
+      "level_percent": 96,
+      "status_code": 2,
+      "temperature_c": 39.3,
+      "usb_powered": true
+    },
+    "post_cooldown_thermal_status_code": 2,
+    "pre_cooldown_battery": {
+      "level_percent": 95,
+      "status_code": 2,
+      "temperature_c": 39.5,
+      "usb_powered": true
+    },
+    "pre_cooldown_thermal_status_code": 2
+  },
+  "requested_provider": {
+    "device": "Vulkan0 / Adreno (TM) 740",
+    "gpu_layers": 25,
+    "main_gpu": 0,
+    "split_mode": "none"
+  },
+  "runtime_environment": {
+    "GGML_VK_DISABLE_F16": false
+  },
+  "runtime_revision": "0a5ac49bce4c42893368585edf3ffb41a38f0108",
+  "schema_version": 1,
+  "server_bytes": 34242152,
+  "server_sha256": "b806fc03df6510eb7a141aea093cec7a878a2aa7456ea076a84791fadec68c00",
+  "server_stderr_sha256": "440b617576b4cb968fcd5a05e057d0f590eeb9944a17682b55af2c43af576ed7",
+  "shader_compiler": "Android NDK r28b glslc; shaderc v2022.3 ndk-r27-beta1",
+  "shader_compiler_executable_sha256": "452a8331070f15d126df5e263fb9f04e78240dac5f1defe6c434b2c2eef0a53a",
+  "stage_hashes_matched": true,
+  "status": "provider_initialization_failed",
+  "variant": "baseline-ndk-glslc"
+}

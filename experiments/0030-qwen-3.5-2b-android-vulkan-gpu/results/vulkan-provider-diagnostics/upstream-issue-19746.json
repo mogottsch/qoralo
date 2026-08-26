@@ -1,0 +1,110 @@
+{
+  "url": "https://api.github.com/repos/ggml-org/llama.cpp/issues/19746",
+  "repository_url": "https://api.github.com/repos/ggml-org/llama.cpp",
+  "labels_url": "https://api.github.com/repos/ggml-org/llama.cpp/issues/19746/labels{/name}",
+  "comments_url": "https://api.github.com/repos/ggml-org/llama.cpp/issues/19746/comments",
+  "events_url": "https://api.github.com/repos/ggml-org/llama.cpp/issues/19746/events",
+  "html_url": "https://github.com/ggml-org/llama.cpp/issues/19746",
+  "id": 3965545114,
+  "node_id": "I_kwDOJH_K4M7sXWqa",
+  "number": 19746,
+  "title": "Vulkan: SIGSEGV on Adreno 740 — null pipeline from failed shader link not checked before vkCmdBindPipeline",
+  "user": {
+    "login": "KubeCat",
+    "id": 44813988,
+    "node_id": "MDQ6VXNlcjQ0ODEzOTg4",
+    "avatar_url": "https://avatars.githubusercontent.com/u/44813988?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/KubeCat",
+    "html_url": "https://github.com/KubeCat",
+    "followers_url": "https://api.github.com/users/KubeCat/followers",
+    "following_url": "https://api.github.com/users/KubeCat/following{/other_user}",
+    "gists_url": "https://api.github.com/users/KubeCat/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/KubeCat/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/KubeCat/subscriptions",
+    "organizations_url": "https://api.github.com/users/KubeCat/orgs",
+    "repos_url": "https://api.github.com/users/KubeCat/repos",
+    "events_url": "https://api.github.com/users/KubeCat/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/KubeCat/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 9749518448,
+      "node_id": "LA_kwDOJH_K4M8AAAACRR3YcA",
+      "url": "https://api.github.com/repos/ggml-org/llama.cpp/labels/vibe-coded",
+      "name": "vibe-coded",
+      "color": "05f5b2",
+      "default": false,
+      "description": "Created with heavy use of LLM assistants, requires human verification"
+    }
+  ],
+  "state": "closed",
+  "locked": false,
+  "assignees": [
+
+  ],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2026-02-19T22:49:56Z",
+  "updated_at": "2026-02-20T19:05:00Z",
+  "closed_at": "2026-02-20T19:05:00Z",
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [
+
+  ],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "## Summary\n\n`ggml_vk_quantize_q8_1` calls `vkCmdBindPipeline` with a null pipeline handle when the Adreno Vulkan driver fails to compile the Q8_1 quantization compute shader. This causes a SIGSEGV (null pointer dereference inside the driver).\n\nThe root cause is a missing null-check: when `vkCreateComputePipelines` fails (the driver logs `Failed to link shaders` / `Pipeline create failed`), the pipeline handle is null, but ggml proceeds to bind it unconditionally.\n\n## Device\n\n- **SoC:** Snapdragon 8 Gen 2 (Adreno 740)\n- **Device:** Samsung Galaxy Tab S9 Ultra (SM-X910)\n- **Tested on:** Android 14 and Android 16 — same crash on both\n- **Vulkan headers:** Matched to NDK (Vulkan-Hpp v1.3.275 for NDK r29)\n- **OpenCL backend:** Works correctly on the same device\n\n## Crash Stack Trace\n\n```\nAdrenoVK-0: Failed to link shaders.\nAdrenoVK-0: Pipeline create failed\nFatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x8\n\n#00 pc ...  /vendor/lib64/hw/vulkan.adreno.so (vkCmdBindPipeline+20)\n#01 pc ...  /system/lib64/libvulkan.so (CmdBindPipeline+136)\n#02 pc ...  base.apk (ggml_vk_quantize_q8_1+420)\n#03 pc ...  base.apk (ggml_vk_mul_mat_q_f16+5808)\n#04 pc ...  base.apk (ggml_backend_vk_graph_compute+44320)\n#05 pc ...  base.apk (ggml_backend_sched_graph_compute_async+2472)\n#06 pc ...  base.apk (llama_context::graph_compute+156)\n#07 pc ...  base.apk (llama_context::process_ubatch+752)\n#08 pc ...  base.apk (llama_context::decode+2012)\n#09 pc ...  base.apk (llama_decode+12)\n```\n\n## Reproduction\n\n1. Cross-compile llama.cpp with `GGML_VULKAN=ON` for `aarch64-linux-android` (NDK r29)\n2. Load any GGUF model (tested with Qwen3-0.6B Q4_0)\n3. Run inference (call `llama_decode`)\n4. Crash occurs on first decode batch\n\n## Suggested Fix\n\nCheck for null/failed pipeline handles after `vkCreateComputePipelines` in the Vulkan backend. When pipeline creation fails, either:\n- Fall back to CPU for that operation, or\n- Return an error from the graph compute instead of proceeding with a null handle\n\nThe relevant code path is in `ggml-vulkan.cpp`, specifically `ggml_vk_quantize_q8_1` and likely other pipeline dispatch sites that don't guard against creation failure.\n\n## Notes\n\n- The Adreno 740 is a widely deployed GPU (Snapdragon 8 Gen 2 — Galaxy S23/Tab S9 series). This affects a significant Android user base.\n- The OpenCL backend works perfectly on the same hardware — so the GPU is capable, the Vulkan shader compiler just can't handle these particular SPIR-V shaders.\n- Even if the driver is at fault for failing to compile the shaders, llama.cpp should not SIGSEGV — it should handle the error gracefully.",
+  "closed_by": {
+    "login": "KubeCat",
+    "id": 44813988,
+    "node_id": "MDQ6VXNlcjQ0ODEzOTg4",
+    "avatar_url": "https://avatars.githubusercontent.com/u/44813988?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/KubeCat",
+    "html_url": "https://github.com/KubeCat",
+    "followers_url": "https://api.github.com/users/KubeCat/followers",
+    "following_url": "https://api.github.com/users/KubeCat/following{/other_user}",
+    "gists_url": "https://api.github.com/users/KubeCat/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/KubeCat/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/KubeCat/subscriptions",
+    "organizations_url": "https://api.github.com/users/KubeCat/orgs",
+    "repos_url": "https://api.github.com/users/KubeCat/repos",
+    "events_url": "https://api.github.com/users/KubeCat/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/KubeCat/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "reactions": {
+    "url": "https://api.github.com/repos/ggml-org/llama.cpp/issues/19746/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/ggml-org/llama.cpp/issues/19746/timeline",
+  "performed_via_github_app": null,
+  "state_reason": "completed",
+  "pinned_comment": null
+}
