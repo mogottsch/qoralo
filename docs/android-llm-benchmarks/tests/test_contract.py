@@ -50,6 +50,7 @@ class RepositoryContractTest(unittest.TestCase):
         self.assertEqual({"$ref": "#/$defs/device"}, entry["properties"]["device"])
 
     def test_current_registry_and_workload_validate(self) -> None:
+        registry = json.loads((REGISTRY_DIR / "registry.json").read_text(encoding="utf-8"))
         completed = subprocess.run(
             [sys.executable, str(REGISTRY_DIR / "validate.py")],
             cwd=ROOT,
@@ -57,7 +58,10 @@ class RepositoryContractTest(unittest.TestCase):
             capture_output=True,
         )
         self.assertEqual(0, completed.returncode, completed.stdout + completed.stderr)
-        self.assertIn("PASS: 0 Android LLM registry entries", completed.stdout)
+        self.assertIn(
+            f"PASS: {len(registry['entries'])} Android LLM registry entries",
+            completed.stdout,
+        )
 
 
 if __name__ == "__main__":

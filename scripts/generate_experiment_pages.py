@@ -20,9 +20,16 @@ from urllib.parse import urlsplit
 
 REPO = Path(__file__).resolve().parents[1]
 PAGES_ROOT = REPO / "docs" / "experiments"
-REGISTRY_PATH = REPO / "docs" / "android-benchmarks" / "registry.json"
+TTS_REGISTRY_PATH = REPO / "docs" / "android-benchmarks" / "registry.json"
+LLM_REGISTRY_PATH = REPO / "docs" / "android-llm-benchmarks" / "registry.json"
+# Backwards-compatible alias used by existing page tests and imports.
+REGISTRY_PATH = TTS_REGISTRY_PATH
 PRIMARY_SECTIONS = ("Experiment description", "Progress", "Results")
 STATUSES = {"active", "completed", "blocked", "stopped", "deferred"}
+BENCHMARKS = {
+    "android-tts": (TTS_REGISTRY_PATH, "../../android-benchmarks/index.html"),
+    "android-llm": (LLM_REGISTRY_PATH, "../../android-llm-benchmarks/index.html"),
+}
 
 
 def parse_source(source: Path) -> tuple[dict[str, str], str]:
@@ -123,8 +130,8 @@ def registry_ids(value: str | None) -> list[str]:
     return ids
 
 
-def registry_entry(entry_id: str) -> dict[str, object]:
-    registry = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
+def registry_entry(entry_id: str, registry_path: Path = REGISTRY_PATH) -> dict[str, object]:
+    registry = json.loads(registry_path.read_text(encoding="utf-8"))
     matches = [entry for entry in registry_records(registry) if entry.get("id") == entry_id]
     if len(matches) != 1:
         raise ValueError(f"registry entry {entry_id!r} was not found exactly once")
@@ -205,6 +212,63 @@ def registry_snapshots(entries: list[dict[str, object]]) -> str:
     return "\n".join(
         registry_snapshot(entry, show_route=len(entries) > 1, seen_media=seen_media)
         for entry in entries
+    )
+
+
+def llm_registry_snapshot(entry: dict[str, object], *, show_route: bool = False) -> str:
+    aggregates = entry["aggregates"]
+    assert isinstance(aggregates, dict)
+    by_tier = aggregates["by_tier"]
+    assert isinstance(by_tier, dict)
+    medium = by_tier["medium"]
+    assert isinstance(medium, dict)
+    setup = entry["setup"]
+    memory_data = entry["memory"]
+    assert isinstance(setup, dict) and isinstance(memory_data, dict)
+    metrics = (
+        ("setup_seconds", "Setup", setup.get("seconds"), "seconds"),
+        ("medium_ttft_seconds", "Medium TTFT median", medium.get("median_request_to_first_token_seconds"), "seconds"),
+        ("medium_prefill_tokens_per_second", "Medium prefill median", medium.get("median_prefill_tokens_per_second"), "rate"),
+        ("medium_decode_tokens_per_second", "Medium decode median", medium.get("median_decode_tokens_per_second"), "rate"),
+        ("peak_pss_bytes", "Peak sampled PSS", memory_data.get("peak_pss_bytes"), "bytes"),
+    )
+
+    def display(value: object, kind: str) -> str:
+        if value is None:
+            return "Unavailable"
+        if kind == "seconds":
+            return f"{float(value):.3f} s"
+        if kind == "rate":
+            return f"{float(value):.2f} tok/s"
+        if kind == "bytes":
+            return f"{int(value) / (1024 * 1024):.1f} MiB"
+        return str(value)
+
+    cells = "".join(
+        f'<div class="metric" data-metric="{name}" data-value="{html.escape(str(value))}">'
+        f'<span>{label}</span><strong>{display(value, kind)}</strong></div>'
+        for name, label, value, kind in metrics
+    )
+    sanity_values = [run["output_sanity"]["looks_sensible"] for run in entry["runs"]]
+    sensible = sum(value is True for value in sanity_values)
+    failed = sum(value is False for value in sanity_values)
+    unchecked = sum(value is None for value in sanity_values)
+    sanity_text = f"{sensible} sensible / {failed} issue / {unchecked} unchecked"
+    route = ""
+    if show_route:
+        route = f'<strong class="registry-route">{inline(str(entry.get("route", entry["id"])))}</strong>'
+    return (
+        f'<aside class="registry-card" data-registry-entry="{html.escape(str(entry["id"]))}">'
+        f'<div class="eyebrow">Normalized Android LLM benchmark{route}</div>'
+        f'<div class="metrics">{cells}</div>'
+        '<p class="unavailable"><strong>Output sanity is not quality.</strong> '
+        f'{sanity_text}. This only screens exact retained outputs for obvious corruption or gibberish.</p></aside>'
+    )
+
+
+def llm_registry_snapshots(entries: list[dict[str, object]]) -> str:
+    return "\n".join(
+        llm_registry_snapshot(entry, show_route=len(entries) > 1) for entry in entries
     )
 
 
@@ -357,14 +421,21 @@ def render_markdown(markdown: str, source: Path, snapshot: str) -> str:
 def build(source: Path) -> str:
     metadata, markdown = parse_source(source)
     title, _ = inspect_headings(markdown, source)
-    entries = [registry_entry(entry_id) for entry_id in registry_ids(metadata.get("registry"))]
+    benchmark = metadata.get("benchmark", "android-tts")
+    if benchmark not in BENCHMARKS:
+        raise ValueError(f"{source}: unsupported benchmark {benchmark!r}")
+    registry_path, dashboard_url = BENCHMARKS[benchmark]
+    entries = [
+        registry_entry(entry_id, registry_path)
+        for entry_id in registry_ids(metadata.get("registry"))
+    ]
     if any(str(entry.get("experiment")) != metadata["experiment"][:4] for entry in entries):
         raise ValueError(f"{source}: registry entry belongs to another experiment")
     source_digest = hashlib.sha256(source.read_bytes()).hexdigest()
     commit, update_date = source_revision(metadata["experiment"])
-    body = render_markdown(markdown, source, registry_snapshots(entries))
+    snapshots = llm_registry_snapshots(entries) if benchmark == "android-llm" else registry_snapshots(entries)
+    body = render_markdown(markdown, source, snapshots)
     experiment_url = f"../../../experiments/{metadata['experiment']}/"
-    dashboard_url = "../../android-benchmarks/index.html"
     status_label = metadata["status"].capitalize()
     return f'''<!doctype html>
 <html lang="en">

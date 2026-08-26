@@ -130,30 +130,49 @@ class ExperimentPageTests(unittest.TestCase):
                         self.assertEqual(tracked.returncode, 0, f"media is not committed: {target}")
 
     def test_registry_snapshots_match_normalized_data(self) -> None:
-        registry = json.loads(pages.REGISTRY_PATH.read_text(encoding="utf-8"))
-        by_id = {entry["id"]: entry for entry in pages.registry_records(registry)}
         for source in self.sources:
             metadata, _ = pages.parse_source(source)
             entry_ids = pages.registry_ids(metadata.get("registry"))
             if not entry_ids:
                 continue
+            benchmark = metadata.get("benchmark", "android-tts")
+            registry_path = pages.BENCHMARKS[benchmark][0]
+            registry = json.loads(registry_path.read_text(encoding="utf-8"))
+            by_id = {entry["id"]: entry for entry in pages.registry_records(registry)}
             parser = inspect(source.with_name("index.html"))
             with self.subTest(source=source, registry=entry_ids):
                 self.assertEqual(parser.registry_entries, entry_ids)
                 for entry_id, name, value in parser.registry_metrics:
-                    self.assertEqual(value, str(by_id[entry_id]["metrics"][name]))
+                    entry = by_id[entry_id]
+                    if benchmark == "android-llm":
+                        medium = entry["aggregates"]["by_tier"]["medium"]
+                        expected = {
+                            "setup_seconds": entry["setup"]["seconds"],
+                            "medium_ttft_seconds": medium["median_request_to_first_token_seconds"],
+                            "medium_prefill_tokens_per_second": medium["median_prefill_tokens_per_second"],
+                            "medium_decode_tokens_per_second": medium["median_decode_tokens_per_second"],
+                            "peak_pss_bytes": entry["memory"]["peak_pss_bytes"],
+                        }[name]
+                    else:
+                        expected = entry["metrics"][name]
+                    self.assertEqual(value, str(expected))
                 expected_audio = []
                 seen_audio: set[str] = set()
                 wav_records = 0
-                for entry_id in entry_ids:
-                    wav = pages.registry_wav(by_id[entry_id])
-                    if wav:
-                        wav_records += 1
-                        media = f"../../android-benchmarks/{wav['path']}"
-                        if media not in seen_audio:
-                            expected_audio.append(media)
-                            seen_audio.add(media)
-                audio_sources = [url for attribute, url in parser.links if attribute == "src" and url.endswith(".wav")]
+                if benchmark == "android-tts":
+                    for entry_id in entry_ids:
+                        wav = pages.registry_wav(by_id[entry_id])
+                        if wav:
+                            wav_records += 1
+                            media = f"../../android-benchmarks/{wav['path']}"
+                            if media not in seen_audio:
+                                expected_audio.append(media)
+                                seen_audio.add(media)
+                audio_sources = [
+                    url
+                    for attribute, url in parser.links
+                    if attribute == "src" and url.endswith(".wav")
+                ]
                 self.assertEqual(audio_sources, expected_audio)
                 self.assertEqual(parser.shared_media_notes, wav_records - len(expected_audio))
 
@@ -166,6 +185,37 @@ class ExperimentPageTests(unittest.TestCase):
             capture_output=True,
         )
         self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_android_llm_metadata_selects_llm_overview_without_changing_tts_default(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            markdown = (
+                "# Experiment 9999 — Generator route test\n\n"
+                "## Experiment description\n\n"
+                "This temporary narrative is intentionally long enough to model a useful experiment opening paragraph.\n\n"
+                "## Progress\n\nPrepared.\n\n"
+                "## Results\n\nNo measurement claims.\n"
+            )
+            llm_source = root / "9999-llm" / "page.md"
+            llm_source.parent.mkdir()
+            llm_source.write_text(
+                "---\nexperiment: 9999-llm\nstatus: active\nsummary: LLM route test.\n"
+                "benchmark: android-llm\n---\n\n" + markdown,
+                encoding="utf-8",
+            )
+            tts_source = root / "9999-tts" / "page.md"
+            tts_source.parent.mkdir()
+            tts_source.write_text(
+                "---\nexperiment: 9999-tts\nstatus: active\nsummary: TTS route test.\n---\n\n"
+                + markdown,
+                encoding="utf-8",
+            )
+            llm_html = pages.build(llm_source)
+            tts_html = pages.build(tts_source)
+            self.assertIn('href="../../android-llm-benchmarks/index.html"', llm_html)
+            self.assertNotIn('href="../../android-benchmarks/index.html"', llm_html)
+            self.assertIn('href="../../android-benchmarks/index.html"', tts_html)
+            self.assertNotIn('href="../../android-llm-benchmarks/index.html"', tts_html)
 
     def test_invalid_shape_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
