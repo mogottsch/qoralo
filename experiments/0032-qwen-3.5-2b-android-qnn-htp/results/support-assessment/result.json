@@ -1,0 +1,139 @@
+{
+  "classification": "negative_phone_independent_qnn_htp_feasibility",
+  "exact_blocker": "The only currently published unauthenticated Qualcomm Qwen3.5-2B artifact is a qwen35 GGUF for GenieX llama.cpp. Installed QAIRT's direct GGUF builder does not support qwen35. Its separate Qwen3.5 HTP builder requires quantized ONNX plus encodings, but Qualcomm AI Hub Models v0.61.0 publishes no 2B model/export/quantize implementation or QNN checkpoint, and the installed builder hardcodes a 4096-wide split point that does not match either the official 2B full-attention KV width (512) or linear-key width (2048). No authorized local conversion input or compiled SM8550 context exists.",
+  "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
+  "installed_qairt": {
+    "direct_gguf_supported_model_types": [
+      "gemma",
+      "gemma2",
+      "gemma3",
+      "llama",
+      "mistral",
+      "phi3",
+      "qwen2",
+      "qwen3"
+    ],
+    "direct_gguf_supports_qwen35": false,
+    "example_backend_type": "QnnHtp",
+    "example_context_bins": [
+      "./models/ar128_cl4096_1_of_3_htp.bin",
+      "./models/ar128_cl4096_2_of_3_htp.bin",
+      "./models/ar128_cl4096_3_of_3_htp.bin"
+    ],
+    "factory_dispatches_qwen35": true,
+    "factory_sha256": "2095ea7e290f84e361c41bf4add0e40f05bf788aec7f2793d77ed1abd763bc55",
+    "only_shipped_qwen35_htp_example": "qwen3-5-4b-htp.json",
+    "qwen35_4b_example_sha256": "55b80eb8a723cba08d0bce3528ed1cf6b39254c0768dbe98292348cc2a94dc23",
+    "qwen35_builder_comment": "Hardcoded because num_key_value_heads and head_dim are generally fixed. Update if Qwen3.5 variants with different dimensions are added.",
+    "qwen35_builder_contains_dimension_update_warning": true,
+    "qwen35_builder_hardcoded_split_map": {
+      "group_width": 256,
+      "tensor_width": 4096
+    },
+    "qwen_builder_sha256": "f3dcc27b39051c573c6fea3dd78de01172d5bd430c2d50601f5369f7899e5dad",
+    "sdk_manifest_sha256": "309ac8f6c75c2fdc808f1c9b9d0da60be123c21a79532cca70a9c4b144d983f4",
+    "version": "2.49.0.260730"
+  },
+  "model": {
+    "architecture": "Qwen3_5ForConditionalGeneration",
+    "full_attention_kv_heads": 2,
+    "full_attention_kv_width": 512,
+    "head_dim": 256,
+    "hidden_size": 2048,
+    "linear_key_head_dim": 128,
+    "linear_key_heads": 16,
+    "linear_key_width": 2048,
+    "model_type": "qwen3_5",
+    "native_context": 262144,
+    "revision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "source": "Qwen/Qwen3.5-2B",
+    "text_layers": 24
+  },
+  "prohibited_shortcuts": [
+    "Relabel GenieX llama.cpp NPU metrics as this repository's QNN/HTP route.",
+    "Apply the 4B example or 4096-wide hardcoded builder split point to the 2B model.",
+    "Claim HTP from a CPU response or without a compiled-context/provider proof."
+  ],
+  "public_qualcomm_release": {
+    "export_py_present": false,
+    "model_py_present": false,
+    "model_source_directory_files": [
+      "README.md",
+      "manifest.yaml",
+      "perf.yaml",
+      "release-assets.yaml"
+    ],
+    "published_artifact": {
+      "bytes": 1214873856,
+      "filename": "Qwen3.5-2B-Q4_0.gguf",
+      "gguf_architecture": "qwen35",
+      "repository": "unsloth/Qwen3.5-2B-GGUF",
+      "revision": "f6d5376be1edb4d416d56da11e5397a961aca8ae",
+      "sha256": "cd70221bebaee0503e0f6717e174250cd7825aa88438b3aabec9ad55731d9bb1"
+    },
+    "published_precision": "q4_0",
+    "published_runtime": "GENIEX_LLAMACPP",
+    "qai_hub_models_commit": "5975a79b55b40f5cbc61f3ac5e52abe47d9d8bd5",
+    "qai_hub_models_version": "v0.61.0",
+    "qnn_context_binary_published": false,
+    "quantize_py_present": false,
+    "quantized_onnx_encodings_published": false,
+    "repository": "qualcomm/Qwen3.5-2B",
+    "revision": "bd885dfceb1a1f45564aef4cd69e183085ea9a24"
+  },
+  "required_user_action_or_decision": [
+    "Provide an authorized, provenance-bound Qwen3.5-2B quantized ONNX plus encodings compatible with installed QAIRT, or a serialized SM8550/HTP v73 context and complete runtime bundle; or",
+    "Explicitly authorize authenticated Qualcomm AI Hub Workbench use if a supported QNN context export for Qwen3.5-2B exists; or",
+    "Explicitly authorize an updated QAIRT/toolchain or a Qwen3.5-2B architecture implementation that adds qwen35 GGUF support or correct 2B ONNX builder dimensions, with independent equivalence and provider proof."
+  ],
+  "route_assessment": {
+    "android_execution": false,
+    "compiled_sm8550_context_available": false,
+    "direct_public_gguf_to_installed_qairt": "unsupported_architecture_qwen35",
+    "installed_qwen35_onnx_builder": "architecture dispatch exists but requires quantized ONNX plus encodings that are not publicly released for 2B; its dimension-specific start point is not compatible with the 2B config without a source change",
+    "local_conversion_input_available": false,
+    "qnn_htp_execution": false
+  },
+  "schema_version": 1,
+  "tokenizer_and_template": {
+    "files": {
+      "LICENSE": "bbedc3fda3305820b977265f01b8619d87570a6739de3a5582c3464840f1e57a",
+      "chat_template.jinja": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80",
+      "config.json": "ed1c1723241f23f7f4e23430759cbd7dcfb4103cbdfe052bfe7626b57c2615b4",
+      "merges.txt": "a9d356d7bdf1ef4949e3e748e95b8e10ad9d4e2e838eddc38a0a7b6b94d1db8d",
+      "tokenizer.json": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+      "tokenizer_config.json": "49e2b6e395f959f077f1e992b338919c0d4a9732fc6e613995e06557f843500c",
+      "vocab.json": "ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003"
+    },
+    "prompt_inventory": {
+      "long": {
+        "fits_context_4096": true,
+        "input_tokens": 1926,
+        "max_new_tokens": 2048,
+        "rendered_bytes": 10628,
+        "rendered_sha256": "c48e00cf1e45fb7dd7edbdcad17578e0857ce01ca621dbd47972265721701135",
+        "token_ids_int32le_sha256": "a36f8139e2c4b83976fc74a37bf93f184272823b7144e7a167d9bee6836785ca",
+        "workload_sha256": "092840fbe879259110fa4d0b15bc383012f16b7b42a38d224b2ead231e86aad8"
+      },
+      "medium": {
+        "fits_context_4096": true,
+        "input_tokens": 597,
+        "max_new_tokens": 2048,
+        "rendered_bytes": 3352,
+        "rendered_sha256": "0559ad81d5528fefe250c945816a1d10da0141fbf7ad124343ef69eba5db42a5",
+        "token_ids_int32le_sha256": "8b07ff28c1c94a93b79880aa27f73b9d5cbddc1f215f857cb58b1d021422c5e2",
+        "workload_sha256": "5e168aa3232f06c92959b686188192471b2d1a62cd1c857a616fd8e29456ddf1"
+      },
+      "short": {
+        "fits_context_4096": true,
+        "input_tokens": 174,
+        "max_new_tokens": 2048,
+        "rendered_bytes": 959,
+        "rendered_sha256": "afed1eb692d38446b49ac1c39dec80ae3bd8845282398c09b8485ce4a2a1371e",
+        "token_ids_int32le_sha256": "dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4",
+        "workload_sha256": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae"
+      }
+    },
+    "thinking_enabled": false
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
+  "status": "blocked_no_public_qnn_conversion_input_and_installed_qwen35_2b_mismatch",
+  "question": "Can Qwen3.5-2B run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
+  "scope": {
+    "model": "Qwen3.5-2B post-trained text generation only",
+    "backend": "QNN HTP",
+    "owns": "experiments/0032-qwen-3.5-2b-android-qnn-htp/**",
+    "immutable_prior_evidence": "experiments/0027-qwen-3.5-2b-android/**",
+    "excluded": ["vision inputs", "CPU/GPU arms", "authenticated AI Hub use", "SDK updates", "ad hoc converter patches", "publication"]
+  },
+  "canonical_protocol": {
+    "path": "protocols/android-llm-benchmark/contract.json",
+    "sha256": "2bb2de193745bc9b74c98639ee077f07615702655b2fc6118185148e2a0c0b46",
+    "workloads": {
+      "short": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae",
+      "medium": "5e168aa3232f06c92959b686188192471b2d1a62cd1c857a616fd8e29456ddf1",
+      "long": "092840fbe879259110fa4d0b15bc383012f16b7b42a38d224b2ead231e86aad8"
+    },
+    "first_request": {"tier": "short", "count": 1},
+    "warm_requests_per_tier": 5,
+    "tier_order": ["short", "medium", "long"],
+    "max_new_tokens": 2048,
+    "request_timeout_seconds": 1800,
+    "loaded_route_reuse_required": true,
+    "request_isolation_required": true
+  },
+  "model_identity": {
+    "source": "Qwen/Qwen3.5-2B",
+    "revision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "license": "Apache-2.0",
+    "architecture": "Qwen3_5ForConditionalGeneration",
+    "model_type": "qwen3_5",
+    "text_layers": 24,
+    "hidden_size": 2048,
+    "head_dim": 256,
+    "full_attention_kv_heads": 2,
+    "full_attention_kv_width": 512,
+    "linear_key_heads": 16,
+    "linear_key_head_dim": 128,
+    "linear_key_width": 2048,
+    "native_context_tokens": 262144
+  },
+  "public_qualcomm_release": {
+    "repository": "qualcomm/Qwen3.5-2B",
+    "revision": "bd885dfceb1a1f45564aef4cd69e183085ea9a24",
+    "qai_hub_models_version": "v0.61.0",
+    "qai_hub_models_commit": "5975a79b55b40f5cbc61f3ac5e52abe47d9d8bd5",
+    "only_published_runtime": "GENIEX_LLAMACPP",
+    "only_published_precision": "q4_0",
+    "artifact": {
+      "repository": "unsloth/Qwen3.5-2B-GGUF",
+      "revision": "f6d5376be1edb4d416d56da11e5397a961aca8ae",
+      "filename": "Qwen3.5-2B-Q4_0.gguf",
+      "bytes": 1214873856,
+      "sha256": "cd70221bebaee0503e0f6717e174250cd7825aa88438b3aabec9ad55731d9bb1",
+      "gguf_architecture": "qwen35"
+    },
+    "qnn_context_binary_published": false,
+    "quantized_onnx_encodings_published": false,
+    "source_implementation_files": ["README.md", "manifest.yaml", "perf.yaml", "release-assets.yaml"],
+    "model_export_or_quantize_implementation_present": false
+  },
+  "installed_qairt": {
+    "version": "2.49.0.260730",
+    "root": "/home/moritz/opt/qairt/2.49.0.260730",
+    "sdk_manifest_sha256": "309ac8f6c75c2fdc808f1c9b9d0da60be123c21a79532cca70a9c4b144d983f4",
+    "qwen_builder_sha256": "f3dcc27b39051c573c6fea3dd78de01172d5bd430c2d50601f5369f7899e5dad",
+    "factory_sha256": "2095ea7e290f84e361c41bf4add0e40f05bf788aec7f2793d77ed1abd763bc55",
+    "qwen35_4b_example_sha256": "55b80eb8a723cba08d0bce3528ed1cf6b39254c0768dbe98292348cc2a94dc23",
+    "qwen35_factory_dispatch_exists": true,
+    "qwen35_htp_example": "4B only, QnnHtp, three serialized context bins",
+    "direct_gguf_supported_architectures": ["llama", "mistral", "phi3", "qwen2", "qwen3", "gemma", "gemma2", "gemma3"],
+    "direct_gguf_supports_qwen35": false,
+    "qwen35_builder_hardcoded_width": 4096,
+    "qwen35_builder_group_width": 256,
+    "builder_source_warning": "Update if Qwen3.5 variants with different dimensions are added.",
+    "license_or_install_action_taken": false
+  },
+  "tokenizer_and_template": {
+    "source": "Qwen/Qwen3.5-2B",
+    "revision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "tokenizer_json_sha256": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+    "tokenizer_config_sha256": "49e2b6e395f959f077f1e992b338919c0d4a9732fc6e613995e06557f843500c",
+    "chat_template_sha256": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80",
+    "thinking_enabled": false,
+    "prompt_inventory": {
+      "short": {"input_tokens": 174, "rendered_sha256": "afed1eb692d38446b49ac1c39dec80ae3bd8845282398c09b8485ce4a2a1371e", "token_ids_int32le_sha256": "dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4", "fits_context_4096": true},
+      "medium": {"input_tokens": 597, "rendered_sha256": "0559ad81d5528fefe250c945816a1d10da0141fbf7ad124343ef69eba5db42a5", "token_ids_int32le_sha256": "8b07ff28c1c94a93b79880aa27f73b9d5cbddc1f215f857cb58b1d021422c5e2", "fits_context_4096": true},
+      "long": {"input_tokens": 1926, "rendered_sha256": "c48e00cf1e45fb7dd7edbdcad17578e0857ce01ca621dbd47972265721701135", "token_ids_int32le_sha256": "a36f8139e2c4b83976fc74a37bf93f184272823b7144e7a167d9bee6836785ca", "fits_context_4096": true}
+    }
+  },
+  "exact_blocker": {
+    "result_path": "results/support-assessment/result.json",
+    "summary": "The only public Qualcomm 2B deployment is a qwen35 GGUF for GenieX llama.cpp, but installed QAIRT's direct GGUF builder does not support qwen35. The separate installed Qwen3.5 HTP builder needs quantized ONNX plus encodings that are not publicly released for 2B, and its hardcoded 4096-wide start point is incompatible with the official 2B full-attention KV width 512 and linear-key width 2048.",
+    "compiled_context_created": false,
+    "android_execution": false,
+    "qnn_htp_execution": false,
+    "required_action": "Provide a provenance-bound Qwen3.5-2B ONNX+encodings or SM8550/v73 context bundle; authorize authenticated AI Hub if a supported QNN export exists; or authorize an updated/toolchain or 2B architecture implementation."
+  },
+  "required_provider_proof_if_unblocked": {
+    "compiled_context_identity": "Hash every deployed serialized context and bind SM8550/v73 compiler provenance.",
+    "partition_boundary": "Prompt/decode transformer graphs must be wholly HTP-bound; CPU frontend/sampler work stays explicit.",
+    "no_silent_cpu_only": "A text response or GenieX NPU metric without QNN context/provider proof is not this route.",
+    "loaded_route_isolation": "One loaded route plus proven full reset or fresh Session/Dialog per logical request."
+  },
+  "phone_boundary": "No ADB or phone.lock use occurred. Phone work requires Pi's explicit priority handoff after a compiled route exists.",
+  "prohibited_shortcuts": [
+    "relabelling GenieX llama.cpp NPU results as QNN/HTP",
+    "applying the shipped 4B example or hardcoded width to 2B",
+    "claiming HTP from CPU-only execution",
+    "changing the model identity or weakening artifact/provider gates"
+  ]
+}
