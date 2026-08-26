@@ -2,7 +2,7 @@
 
 ## Status
 
-**Android CPU smoke passed. The first full campaign was interrupted after eight complete requests and is retained only as diagnostic evidence; rerun the canonical campaign from the start.**
+**Android CPU smoke passed on historical server artifact revision 1. The first full campaign was interrupted after eight complete requests and is retained only as diagnostic evidence. Reproducible UI-disabled server artifact revision 2 is staged for a fresh canonical campaign after the required scoped stale-stage cleanup.**
 
 This experiment measures the public post-trained `Qwen/Qwen3.5-2B` on the authorized Galaxy S23 Ultra under the repository's fixed short/medium/long LLM workload. It is text-only performance evidence, not a vision test or a podcast-quality evaluation.
 
@@ -27,9 +27,10 @@ If official LiteRT-LM Qwen3.5 support and deployment artifacts arrive, they shou
 - Deployment artifact: third-party `unsloth/Qwen3.5-2B-GGUF@f6d5376be1edb4d416d56da11e5397a961aca8ae`, file `Qwen3.5-2B-Q4_K_M.gguf`, 1,280,835,840 bytes, SHA-256 `aaf42c8b7c3cab2bf3d69c355048d4a0ee9973d48f16c731c0520ee914699223`.
 - Quantization: Q4_K_M with an importance matrix; the GGUF names `unsloth_calibration_Qwen3.5-2B.txt`, 186 entries, and 80 chunks. The separately published matrix has SHA-256 `0661bad5…fbca`.
 - Runtime: llama.cpp `0a5ac49bce4c42893368585edf3ffb41a38f0108`, GGML CPU, four threads, one 8,192-token slot.
-- Android server: NDK r28b, arm64-v8a/API 31, `armv8.7-a`, stripped binary SHA-256 `4d54e7b0…adbd`.
+- Android server artifact revision 2: NDK r28b, arm64-v8a/API 31, `armv8.7-a`, no embedded web UI, 9,844,576 bytes, stripped binary SHA-256 `8ce2767e…b217`.
+- Historical server artifact revision 1: 12,969,392 bytes, SHA-256 `4d54e7b0…adbd`; it remains bound only to the committed smoke and interrupted evidence.
 - Greedy generation: temperature-only sampler chain with temperature normalized to zero and neutral penalties. The pinned sampler implementation keeps the maximum-logit token when temperature is at most zero.
-- Request reset: successful slot erase before every request, `cache_prompt=false`, and runtime `cache_n=0`.
+- Request isolation: reuse one loaded llama-server route and slot/session, separately time a successful slot erase before every request outside total-request timing, set `cache_prompt=false`, require runtime `cache_n=0`, and prohibit model reload/remap, accelerator recompilation, or retained prompt/KV reuse.
 
 ## Tokenizer, template, and non-thinking proof
 
@@ -61,13 +62,19 @@ The exact sensible-prose output is SHA-256 `0f0d70ee…086c8`. The phone stage w
 
 A fresh full campaign subsequently completed the first short request, all five repeated short requests, and two medium requests. Every one of those eight complete requests proved explicit slot erase, `cache_n == 0`, full prompt evaluation, and positive prefill time. The process was interrupted during `medium-03`, before the medium and long tiers, after-state collection, and cleanup record completed. It is therefore not canonical and must not be published.
 
-The pulled partial result, outputs, events, server log, and memory samples are retained under [`results/android-cpu-campaign-interrupted-20260825/`](results/android-cpu-campaign-interrupted-20260825/). Rerun the complete campaign from the start. Because cleanup could not be verified after interruption and the phone is currently unavailable, the next phone owner must first inspect only the scoped remote path/process and verify `/data/local/tmp/vibevoice-0027-qwen-3.5-2b-android` is absent before staging.
+The pulled partial result, outputs, events, server log, and memory samples are retained under [`results/android-cpu-campaign-interrupted-20260825/`](results/android-cpu-campaign-interrupted-20260825/). Rerun the complete campaign from the start. Because cleanup could not be verified after interruption, the next phone owner must first inspect only the scoped remote path/process and verify `/data/local/tmp/vibevoice-0027-qwen-3.5-2b-android` is absent before staging.
+
+## Reproducible Android artifact revision 2
+
+[`tools/build_android.sh`](tools/build_android.sh) reconstructs the route from pinned inputs: llama.cpp commit `0a5ac49b…0108` and tree `9355e5eb…5e0`, explicit build number 10627, NDK `28.1.13356709`, and the exact model URL/size/hash above. It uses the repository heavy-RAM lock, prefix-maps checkout/build paths, disables ccache and OpenSSL, statically links llama/GGML plus `c++_static`, and verifies that only Android `libm`, `libdl`, and `libc` remain dynamic.
+
+The new server disables both `LLAMA_BUILD_UI` and `LLAMA_USE_PREBUILT_UI`. The runner always passes `--no-webui`, so embedded UI bytes do not support an inference claim. Removing them prevents llama.cpp's mutable `latest` UI fallback from changing the executable. A bounded attempt to reproduce revision 1 with the August 25 `b10625` UI archive (3,086,917 bytes, SHA-256 `6d7c0ed6…16d70`) did not match: it produced 12,971,760 bytes / `943db6a4…9811d`. No historical evidence was relabeled. Two clean revision-2 builds produced the exact staged hash above.
 
 ## Android execution discipline
 
-[`tools/run_phone.sh`](tools/run_phone.sh) holds the repository phone lock across identity checks, scoped staging, execution, raw evidence capture, and verified cleanup. It stages only under `/data/local/tmp/vibevoice-0027-qwen-3.5-2b-android`, verifies the exact binary/model hashes remotely, uses ADB forwarding to one persistent llama.cpp server, and deletes only that experiment-owned root.
+[`tools/run_phone.sh`](tools/run_phone.sh) holds the repository phone lock across identity checks, scoped staging, execution, raw evidence capture, and verified cleanup. It stages only under `/data/local/tmp/vibevoice-0027-qwen-3.5-2b-android`, verifies the artifact-revision-2 binary and model hashes remotely, uses ADB forwarding to one persistent llama.cpp server with `--no-webui`, and deletes only that experiment-owned root.
 
-[`tools/run_client.py`](tools/run_client.py) writes each SSE event and output chunk durably before deriving optional metrics. Android begins with a bounded short smoke. The publication campaign then uses a fresh loaded server for one first short request followed by five same-session requests each for short, medium, and long, always in canonical order and with a reset before every request.
+[`tools/run_client.py`](tools/run_client.py) writes each SSE event and output chunk durably before deriving optional metrics. Android begins with a bounded short smoke. The publication campaign then uses a fresh loaded server for one first short request followed by five loaded-route requests each for short, medium, and long, always in canonical order. The same slot/session is reused, but a proven full conversation/KV erase is separately timed before every request and excluded from total-request timing.
 
 Missing internal splits or optional operating telemetry remain null with reasons; wrong identity, truncation, thinking, sampler, reset, workload, or artifact state fails closed without discarding captured evidence.
 

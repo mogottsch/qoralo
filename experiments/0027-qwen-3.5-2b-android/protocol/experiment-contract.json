@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0027-qwen-3.5-2b-android",
-  "status": "host_viability_passed_android_ready",
+  "status": "android_cpu_artifact_v2_phone_ready",
   "locked_at": "2026-08-25",
   "question": "How does the public post-trained Qwen3.5-2B execute on the authorized Galaxy S23 Ultra through a reproducible Android CPU route under the canonical fixed-prompt contract?",
   "scope": {
@@ -18,7 +18,7 @@
   },
   "canonical_protocol": {
     "path": "protocols/android-llm-benchmark/contract.json",
-    "sha256": "4e9386ab45dfd9f596dcf6f3cc828c7df075dfdb97952a4e41ec563b4b9409a6",
+    "sha256": "2bb2de193745bc9b74c98639ee077f07615702655b2fc6118185148e2a0c0b46",
     "workloads": {
       "short": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae",
       "medium": "5e168aa3232f06c92959b686188192471b2d1a62cd1c857a616fd8e29456ddf1",
@@ -26,10 +26,20 @@
     },
     "tier_order": ["short", "medium", "long"],
     "first_request": {"tier": "short", "count": 1},
-    "same_session_requests_per_tier": 5,
+    "minimum_loaded_route_requests_per_tier": 5,
+    "loaded_model_runtime_route_reused": true,
+    "engine_reused_when_runtime_exposes_engine": true,
+    "session_object_reuse_required": false,
+    "request_isolation_strategy": "proven_full_in_session_conversation_and_kv_reset",
+    "conversation_state_isolated_each_request": true,
+    "kv_state_isolated_each_request": true,
+    "reset_or_session_creation_duration_reported_separately": true,
+    "reset_included_in_total_request": false,
+    "model_remap_or_reload_between_requests": false,
+    "accelerator_recompilation_between_requests": false,
+    "retained_prompt_or_kv_reuse_between_requests": false,
     "max_output_tokens": 2048,
     "request_timeout_seconds": 1800,
-    "conversation_and_kv_reset_each_request": true,
     "byte_identical_output_required": false
   },
   "upstream_model": {
@@ -121,7 +131,10 @@
   "runtime": {
     "name": "llama.cpp",
     "revision": "0a5ac49bce4c42893368585edf3ffb41a38f0108",
+    "source_tree": "9355e5ebbca69eb403229473bec6ddfb38f055e0",
     "source": "https://github.com/ggml-org/llama.cpp/tree/0a5ac49bce4c42893368585edf3ffb41a38f0108",
+    "build_number": 10627,
+    "build_recipe": "experiments/0027-qwen-3.5-2b-android/tools/build_android.sh",
     "provider_backend": "GGML CPU",
     "cpu_threads": 4,
     "context_tokens": 8192,
@@ -130,14 +143,35 @@
     "android_api_minimum": 31,
     "android_abi": "arm64-v8a",
     "compile_arch": "armv8.7-a",
-    "build": "CMake Release, static llama/GGML and c++_static; only Android system libm/libdl/libc remain dynamic",
+    "build": "CMake Release, static llama/GGML and c++_static; only Android system libm/libdl/libc remain dynamic. Source/build paths are prefix-mapped, build metadata is explicit, OpenSSL is disabled, and no web UI is built, downloaded, or embedded.",
+    "embedded_web_ui": false,
+    "embedded_web_ui_reason": "The benchmark always launches llama-server with --no-webui. Disabling both LLAMA_BUILD_UI and LLAMA_USE_PREBUILT_UI removes a mutable, inference-unused build input.",
     "android_server": {
-      "bytes": 12969392,
-      "sha256": "4d54e7b03dde5b5c790da26418860f8d4740631b6ee680a6fb4b8432884cadbd"
+      "artifact_revision": 2,
+      "bytes": 9844576,
+      "sha256": "8ce2767eba7480326682d69963eeb483204ee1541c3b5b0c0ef409068ea2b217",
+      "clean_rebuilds_byte_identical": true
     },
+    "historical_android_servers": [
+      {
+        "artifact_revision": 1,
+        "bytes": 12969392,
+        "sha256": "4d54e7b03dde5b5c790da26418860f8d4740631b6ee680a6fb4b8432884cadbd",
+        "evidence_scope": "Existing Android smoke and interrupted campaign only; never relabel those observations as artifact revision 2.",
+        "replacement_reason": "A clean rebuild exposed an unpinned mutable embedded web-UI input. The UI was disabled at runtime and did not affect inference, but artifact revision 2 removes it and is separately hash-bound for the new campaign.",
+        "bounded_reconstruction_attempt": {
+          "ui_url": "https://huggingface.co/buckets/ggml-org/llama-ui/resolve/b10625/dist.tar.gz",
+          "ui_bytes": 3086917,
+          "ui_sha256": "6d7c0ed6e8260222458ab4c0e5363f1c8b2d7ab0d3bff23ff9f468ec84816d70",
+          "rebuilt_server_bytes": 12971760,
+          "rebuilt_server_sha256": "943db6a481d822b6eed9ab6aa228e9c6f45265e6bc2114ee3d702e41ddc9811d",
+          "matched_historical_server": false
+        }
+      }
+    ],
     "client_source": "experiments/0027-qwen-3.5-2b-android/tools/run_client.py",
     "greedy_proof": "temperature=-1 is normalized to zero in the server generation settings. At the pinned revision, src/llama-sampler.cpp:270-282 retains only the highest-logit token whenever temperature <= 0; the request sampler chain contains only temperature and all penalties are neutral.",
-    "state_reset": "Before every logical request, POST /slots/0?action=erase must succeed. Each completion also sets cache_prompt=false; timings.cache_n must equal zero, prompt_n must equal the full independently tokenized prompt count, and prompt_ms must be positive. Request 2 is the early in-campaign reset check and stops the campaign if any condition fails."
+    "state_reset": "The loaded llama-server route and slot/session object remain alive. Before every logical request, POST /slots/0?action=erase must succeed and its duration is recorded separately outside total-request timing. Each completion also sets cache_prompt=false; timings.cache_n must equal zero, prompt_n must equal the full independently tokenized prompt count, and prompt_ms must be positive. This proves full in-session conversation/KV isolation without model remap/reload, accelerator recompilation, or retained prompt/KV reuse. Request 2 is the early in-campaign reset check and stops the campaign if any condition fails."
   },
   "device": {
     "model": "SM-S918B",
@@ -150,7 +184,7 @@
   },
   "timing_and_evidence": {
     "setup_boundary": "Host monotonic timestamp immediately before remote llama-server launch through first successful /health ready response; includes artifact mapping, model/context creation, and readiness polling.",
-    "request_boundary": "Immediately before native template rendering through final streamed stop delivery.",
+    "request_boundary": "Immediately before native template rendering through final streamed stop delivery. The separately timed slot erase completes before this boundary and is not included in total request.",
     "request_to_first_token": "Client request start through the first SSE event carrying a generated token ID.",
     "prefill": "llama.cpp final-event prompt_ms and prompt_n; route-internal prompt evaluation timing.",
     "post_prefill_to_first_token": "Null because llama.cpp does not expose a server-clock first-token timestamp alignable with aggregate prompt_ms.",

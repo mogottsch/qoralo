@@ -51,7 +51,7 @@ trap cleanup EXIT INT TERM
 [[ -x "$STAGE/llama-server" ]] || { echo "missing executable staged server" >&2; exit 4; }
 [[ -f "$STAGE/model.gguf" ]] || { echo "missing staged model" >&2; exit 4; }
 printf '%s  %s\n' \
-  4d54e7b03dde5b5c790da26418860f8d4740631b6ee680a6fb4b8432884cadbd llama-server \
+  8ce2767eba7480326682d69963eeb483204ee1541c3b5b0c0ef409068ea2b217 llama-server \
   aaf42c8b7c3cab2bf3d69c355048d4a0ee9973d48f16c731c0520ee914699223 model.gguf \
   >"$OUT/expected-sha256.txt"
 (cd "$STAGE" && sha256sum -c "$OUT/expected-sha256.txt") >"$OUT/local-hash-check.txt"

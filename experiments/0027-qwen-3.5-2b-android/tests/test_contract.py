@@ -24,6 +24,18 @@ class ContractTest(unittest.TestCase):
     def test_canonical_contract_and_workloads_are_exact(self) -> None:
         canonical = self.contract["canonical_protocol"]
         self.assertEqual(canonical["sha256"], sha(ROOT / canonical["path"]))
+        shared = json.loads((ROOT / canonical["path"]).read_text())
+        self.assertEqual(2, shared["schema_version"])
+        self.assertEqual(5, canonical["minimum_loaded_route_requests_per_tier"])
+        self.assertTrue(canonical["loaded_model_runtime_route_reused"])
+        self.assertEqual(
+            "proven_full_in_session_conversation_and_kv_reset",
+            canonical["request_isolation_strategy"],
+        )
+        self.assertFalse(canonical["reset_included_in_total_request"])
+        self.assertFalse(canonical["model_remap_or_reload_between_requests"])
+        self.assertFalse(canonical["accelerator_recompilation_between_requests"])
+        self.assertFalse(canonical["retained_prompt_or_kv_reuse_between_requests"])
         for tier, expected in canonical["workloads"].items():
             path = ROOT / "protocols/android-llm-benchmark/workloads/inference-v1" / f"{tier}.json"
             self.assertEqual(expected, sha(path))
@@ -77,8 +89,41 @@ class ContractTest(unittest.TestCase):
         self.assertIn('server_timings.get("cache_n") != 0', client)
         self.assertIn('server_timings.get("prompt_n") != len(token_ids)', client)
         self.assertIn('prompt_ms <= 0', client)
+        self.assertIn('"reset_seconds": (reset_end_ns - reset_start_ns) / 1e9', client)
+        self.assertIn('"reset_included_in_total_request": False', client)
+        self.assertIn('"model_remap_or_reload": False', client)
+        self.assertIn('"accelerator_recompilation": False', client)
+        self.assertIn('"retained_prompt_or_kv_reuse": False', client)
         self.assertIn('range(1, 6)', client)
         self.assertIn('fsync', client)
+
+    def test_artifact_v2_build_is_pinned_and_historical_hash_is_preserved(self) -> None:
+        runtime = self.contract["runtime"]
+        server = runtime["android_server"]
+        self.assertEqual(2, server["artifact_revision"])
+        self.assertEqual(9844576, server["bytes"])
+        self.assertEqual(
+            "8ce2767eba7480326682d69963eeb483204ee1541c3b5b0c0ef409068ea2b217",
+            server["sha256"],
+        )
+        self.assertTrue(server["clean_rebuilds_byte_identical"])
+        self.assertFalse(runtime["embedded_web_ui"])
+        historical = runtime["historical_android_servers"]
+        self.assertEqual(1, len(historical))
+        self.assertEqual(
+            "4d54e7b03dde5b5c790da26418860f8d4740631b6ee680a6fb4b8432884cadbd",
+            historical[0]["sha256"],
+        )
+        recipe = (EXP / "tools/build_android.sh").read_text()
+        for required in (
+            "LLAMA_TREE=9355e5ebbca69eb403229473bec6ddfb38f055e0",
+            "LLAMA_BUILD_NUMBER=10627",
+            "-DLLAMA_BUILD_UI=OFF",
+            "-DLLAMA_USE_PREBUILT_UI=OFF",
+            "-ffile-prefix-map=",
+            "artifacts/locks/heavy-ram.lock",
+        ):
+            self.assertIn(required, recipe)
 
     def test_android_smoke_is_hash_bound_and_cleaned(self) -> None:
         path = EXP / "results/android-smoke/result.json"
@@ -86,6 +131,10 @@ class ContractTest(unittest.TestCase):
             self.skipTest("Android smoke has not run yet")
         result = json.loads(path.read_text())
         self.assertEqual("android_smoke", result["scope"])
+        self.assertEqual(
+            "4d54e7b03dde5b5c790da26418860f8d4740631b6ee680a6fb4b8432884cadbd",
+            result["runtime"]["android_server_sha256"],
+        )
         self.assertEqual("SM-S918B", result["device"]["model"])
         self.assertEqual("SM8550", result["device"]["soc"])
         self.assertTrue(result["stage_and_cleanup"]["local_remote_hashes_equal"])

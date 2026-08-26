@@ -130,7 +130,14 @@ def main() -> None:
             "thinking_control": {"chat_template_kwargs": {"enable_thinking": False}},
             "sampler": "greedy argmax through temperature=-1 and temperature-only sampler chain",
             "cache_prompt": False,
+            "request_isolation_strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "loaded_model_runtime_route_reused": True,
+            "session_object_reused": True,
             "slot_erase_before_every_request": True,
+            "reset_included_in_total_request": False,
+            "model_remap_or_reload_between_requests": False,
+            "accelerator_recompilation_between_requests": False,
+            "retained_prompt_or_kv_reuse_between_requests": False,
         },
         "prompts": {},
         "runs": [],
@@ -139,7 +146,9 @@ def main() -> None:
 
     expected_prompt: dict[str, tuple[str, list[int]]] = {}
     for run_id, tier, phase, output_cap in sequence(args.mode):
+        reset_start_ns = time.monotonic_ns()
         erase = client.json("/slots/0?action=erase", {})
+        reset_end_ns = time.monotonic_ns()
         request_start_ns = time.monotonic_ns()
         work = workloads[tier]
         template_request = {
@@ -204,6 +213,19 @@ def main() -> None:
             "phase": phase,
             "request_timeout_seconds": 1800,
             "output_token_cap": output_cap,
+            "request_isolation": {
+                "strategy": "proven_full_in_session_conversation_and_kv_reset",
+                "loaded_model_runtime_route_reused": True,
+                "session_object_reused": True,
+                "model_remap_or_reload": False,
+                "accelerator_recompilation": False,
+                "retained_prompt_or_kv_reuse": False,
+                "reset_operation": "POST /slots/0?action=erase",
+                "reset_start_monotonic_ns": reset_start_ns,
+                "reset_end_monotonic_ns": reset_end_ns,
+                "reset_seconds": (reset_end_ns - reset_start_ns) / 1e9,
+                "reset_included_in_total_request": False,
+            },
             "slot_erase_response": erase,
             "request": request_payload,
             "request_start_monotonic_ns": request_start_ns,

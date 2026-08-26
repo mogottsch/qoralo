@@ -137,7 +137,9 @@ def main() -> None:
     result["runtime"] = {
         "name": "llama.cpp",
         "revision": "0a5ac49bce4c42893368585edf3ffb41a38f0108",
-        "android_server_sha256": "4d54e7b03dde5b5c790da26418860f8d4740631b6ee680a6fb4b8432884cadbd",
+        "android_server_artifact_revision": 2,
+        "android_server_sha256": "8ce2767eba7480326682d69963eeb483204ee1541c3b5b0c0ef409068ea2b217",
+        "embedded_web_ui": False,
         "provider_backend": "GGML CPU",
         "threads": 4,
     }
