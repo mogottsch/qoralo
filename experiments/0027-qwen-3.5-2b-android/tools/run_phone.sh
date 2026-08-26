@@ -12,6 +12,15 @@ PORT=8027
 DEFAULT_ADB="$HOME/Android/Sdk/platform-tools/adb"
 [[ -x "$DEFAULT_ADB" ]] || DEFAULT_ADB=adb
 ADB=${ADB:-$DEFAULT_ADB}
+if [[ -n "${CLIENT_BASE:-}" ]]; then
+  CLIENT_BASE=$CLIENT_BASE
+elif [[ "${ADB_SERVER_SOCKET:-}" =~ ^tcp:([^:]+):[0-9]+$ ]]; then
+  # ADB forward listeners live on the Windows-hosted daemon when WSL uses a
+  # remote ADB server; connect through that host rather than WSL localhost.
+  CLIENT_BASE="http://${BASH_REMATCH[1]}:$PORT"
+else
+  CLIENT_BASE="http://127.0.0.1:$PORT"
+fi
 RUN_ID=$(date -u +%Y%m%dT%H%M%SZ)-$MODE
 OUT="$EXP/.local/phone-$RUN_ID"
 LOCK="$ROOT/artifacts/locks/phone.lock"
@@ -105,7 +114,9 @@ done
 ) >"$OUT/memory-samples.txt" 2>"$OUT/memory-sampler.stderr.log" &
 MEMORY_PID=$!
 
+printf '%s\n' "$CLIENT_BASE" >"$OUT/client-base.txt"
 python3 "$EXP/tools/run_client.py" \
+  --base "$CLIENT_BASE" \
   --mode "$MODE" \
   --output "$OUT/client" \
   --workloads "$ROOT/protocols/android-llm-benchmark/workloads/inference-v1" \

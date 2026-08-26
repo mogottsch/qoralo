@@ -115,7 +115,7 @@ def main() -> None:
         "server.stdout.log", "server.stderr.log", "memory-samples.txt", "memory-sampler.stderr.log",
         "device.txt", "storage-before.txt", "battery-before.txt", "battery-after.txt",
         "thermal-before.txt", "thermal-after.txt", "power-before.txt", "power-after.txt",
-        "expected-sha256.txt", "remote-sha256.txt", "cleanup.json", "forward.txt",
+        "expected-sha256.txt", "remote-sha256.txt", "cleanup.json", "forward.txt", "client-base.txt",
     ]
     raw_hashes = {}
     for name in raw_names:

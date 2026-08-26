@@ -64,6 +64,8 @@ A fresh full campaign subsequently completed the first short request, all five r
 
 The pulled partial result, outputs, events, server log, and memory samples are retained under [`results/android-cpu-campaign-interrupted-20260825/`](results/android-cpu-campaign-interrupted-20260825/). Rerun the complete campaign from the start. Because cleanup could not be verified after interruption, the next phone owner must first inspect only the scoped remote path/process and verify `/data/local/tmp/vibevoice-0027-qwen-3.5-2b-android` is absent before staging.
 
+That scoped preflight later found only a stale stage and a no-longer-running claimed PID, removed the stage, and verified absence. The first artifact-revision-2 campaign startup then timed out before any logical inference request because a Windows-hosted ADB forward was polled on WSL localhost. The complete raw startup diagnostic is retained under [`results/android-cpu-campaign-startup-diagnostic-20260826/`](results/android-cpu-campaign-startup-diagnostic-20260826/). It is not a campaign and cannot be resumed or published. The runner now derives the forwarding host from `ADB_SERVER_SOCKET`.
+
 ## Reproducible Android artifact revision 2
 
 [`tools/build_android.sh`](tools/build_android.sh) reconstructs the route from pinned inputs: llama.cpp commit `0a5ac49b…0108` and tree `9355e5eb…5e0`, explicit build number 10627, NDK `28.1.13356709`, and the exact model URL/size/hash above. It uses the repository heavy-RAM lock, prefix-maps checkout/build paths, disables ccache and OpenSSL, statically links llama/GGML plus `c++_static`, and verifies that only Android `libm`, `libdl`, and `libc` remain dynamic.

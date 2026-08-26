@@ -84,6 +84,8 @@ class ContractTest(unittest.TestCase):
         self.assertIn('SM-S918B', phone)
         self.assertIn('SM8550', phone)
         self.assertIn('--reasoning off', phone)
+        self.assertIn('ADB_SERVER_SOCKET', phone)
+        self.assertIn('--base "$CLIENT_BASE"', phone)
         self.assertIn('/slots/0?action=erase', client)
         self.assertIn('"cache_prompt": False', client)
         self.assertIn('server_timings.get("cache_n") != 0', client)
