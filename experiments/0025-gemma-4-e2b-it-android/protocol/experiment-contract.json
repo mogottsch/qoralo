@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0025-gemma-4-e2b-it-android",
-  "status": "cpu-complete-gpu-blocked-before-inference",
+  "status": "cpu-complete-gpu-generic-route-approved-transport-blocked",
   "locked_at": "2026-08-25",
   "amendments": [
     {
@@ -20,14 +20,20 @@
       "date": "2026-08-26",
       "reason": "Require durable proof that the requested GPU neural backend actually bound a GPU-only LiteRT accelerator/provider rather than accepting a CPU fallback claim.",
       "scope": "Evidence instrumentation only. The runner records post-compilation process mappings/device handles and fails closed unless libLiteRtGpuAccelerator plus a GPU driver library are mapped. CPU campaign evidence remains bound to its original runner and is unchanged."
+    },
+    {
+      "date": "2026-08-26",
+      "approval": "Moritz explicitly approved Option A through Pi under the results-driven route-choice authorization.",
+      "reason": "The dedicated 2,008,432,640-byte GPU artifact is an Artisan text-decoder route that the pinned open-source Android runtime cannot instantiate because no legacy TFLite engine is registered. The pinned deployment model card reports the Android GPU model at 2,583 MB, matching the generic 2,588,147,712-byte artifact.",
+      "scope": "For canonical Android GPU evidence only, use the already locked generic gemma-4-E2B-it.litertlm artifact with Backend::GPU and require post-compilation GPU provider binding. Preserve the dedicated-Artisan attempt as historical non-metric blocker evidence. CPU evidence and its route are unchanged."
     }
   ],
   "question": "How do the official Gemma 4 E2B instruction-tuned LiteRT-LM CPU and GPU Android routes execute and perform on the authorized Galaxy S23 Ultra under the canonical fixed-prompt contract?",
   "scope": {
     "model": "Gemma 4 E2B IT only",
     "arms": [
-      "official LiteRT-LM CPU artifact on the CPU backend",
-      "official LiteRT-LM GPU artifact on the GPU neural backend"
+      "official LiteRT-LM generic artifact on the CPU backend",
+      "official LiteRT-LM generic artifact on the GPU neural backend after the approved route amendment"
     ],
     "excluded": [
       "other model families or Gemma sizes",
@@ -109,9 +115,22 @@
       "sha256": "a53a59001894c58e6bdb5b9b227709f91a2e3e556baa7d85acf9c55402ba5cf5",
       "litertlm_container_version": "1.6.0",
       "embedded_tokenizer_sha256": "e594c8a90eb08d8bda498ff4747977dc827ae0c3c56b5c0d41a605a22d02ef03",
-      "embedded_chat_template_sha256": "3d51425dfacd3bd1e34055259c2488e283be19f5991b23744d474685fedd10fb"
+      "embedded_chat_template_sha256": "3d51425dfacd3bd1e34055259c2488e283be19f5991b23744d474685fedd10fb",
+      "route_status": "historical_incompatible_artisan_attempt_only",
+      "blocker_evidence": "results/android-gpu-blocker/result.json"
     },
-    "template_equivalence_boundary": "The two embedded templates differ only in a tool-response/thinking branch that is unreachable for the canonical two-message, no-tools, thinking-disabled workload. Their rendered canonical prompt bytes must match per tier and are hash-checked."
+    "template_equivalence_boundary": "The two embedded templates differ only in a tool-response/thinking branch that is unreachable for the canonical two-message, no-tools, thinking-disabled workload. Their rendered canonical prompt bytes must match per tier and are hash-checked.",
+    "gpu_canonical_selected": {
+      "filename": "gemma-4-E2B-it.litertlm",
+      "url": "https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm/resolve/6b78abd019e61a1ca4cbe3b212d2c9ce8ff38a94/gemma-4-E2B-it.litertlm",
+      "bytes": 2588147712,
+      "sha256": "181938105e0eefd105961417e8da75903eacda102c4fce9ce90f50b97139a63c",
+      "litertlm_container_version": "1.5.0",
+      "embedded_tokenizer_sha256": "e594c8a90eb08d8bda498ff4747977dc827ae0c3c56b5c0d41a605a22d02ef03",
+      "embedded_chat_template_sha256": "02b3091acf53c0b722e3db0c7a1b4980363edcc2d85549dafa339ff5dbfff629",
+      "backend": "GPU",
+      "selection_reason": "Explicitly approved after the dedicated artifact proved to be an unsupported GPU_ARTISAN route; matches the deployment card Android GPU model-size row."
+    }
   },
   "runtime": {
     "name": "LiteRT-LM",
@@ -217,14 +236,12 @@
     "pull, hash, validate, and remove only the exact experiment-owned remote root"
   ],
   "gpu_route_status": {
-    "status": "blocked_before_inference",
-    "artifact_sha256": "a53a59001894c58e6bdb5b9b227709f91a2e3e556baa7d85acf9c55402ba5cf5",
-    "runtime_observation": "EngineSettings detected ModelType::kArtisanTextDecoder and changed GPU to GPU_ARTISAN.",
-    "exact_error": "No available engine for backend: GPU_ARTISAN. Preferred engine types: [kAdvancedLegacyTfLite, kLegacyTfLite]. Available (registered) engine types: [kAdvancedLiteRTCompiledModel]",
-    "logical_requests_started": 0,
-    "provider_binding_proven": false,
-    "cpu_fallback_used": false,
-    "evidence": "results/android-gpu-blocker/result.json",
-    "decision_needed": "Authorize a different official artifact/backend pairing or a runtime with a registered legacy Artisan engine."
+    "status": "generic_artifact_route_approved_transport_blocked_before_identity",
+    "canonical_artifact_sha256": "181938105e0eefd105961417e8da75903eacda102c4fce9ce90f50b97139a63c",
+    "backend": "GPU",
+    "provider_binding_required": true,
+    "historical_artisan_blocker_evidence": "results/android-gpu-blocker/result.json",
+    "cpu_fallback_permitted": false,
+    "transport_blocker_evidence": "results/android-gpu-generic-preflight-blocker/result.json"
   }
 }

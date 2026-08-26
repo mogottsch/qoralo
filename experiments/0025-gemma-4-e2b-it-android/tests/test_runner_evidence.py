@@ -18,6 +18,17 @@ SPEC.loader.exec_module(MODULE)
 
 
 class PersistenceFirstRegressionTest(unittest.TestCase):
+    def test_approved_gpu_preflight_blocker_did_not_touch_phone(self) -> None:
+        result = json.loads(
+            (ROOT / "results/android-gpu-generic-preflight-blocker/result.json").read_text()
+        )
+        self.assertEqual("blocked_before_identity_capture", result["status"])
+        self.assertFalse(result["stage_created"])
+        self.assertFalse(result["process_launched"])
+        self.assertFalse(result["remote_mutation"])
+        self.assertFalse(result["gpu_provider_binding_tested"])
+        self.assertTrue(result["phone_lock_released"])
+
     def test_gpu_blocker_never_claims_fallback_or_performance(self) -> None:
         result = json.loads(
             (ROOT / "results/android-gpu-blocker/result.json").read_text()

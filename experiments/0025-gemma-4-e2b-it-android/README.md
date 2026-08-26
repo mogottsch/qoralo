@@ -2,7 +2,7 @@
 
 ## Status
 
-**Fresh-Session isolation is approved and contract-locked. The complete canonical Android CPU campaign passed. The pinned dedicated GPU artifact is blocked before inference by an exact LiteRT-LM engine-registration mismatch; no GPU performance claim is made.**
+**Fresh-Session isolation is approved and contract-locked. The complete canonical Android CPU campaign passed. Moritz approved the official generic artifact with `Backend::GPU` as the amended canonical GPU route after the dedicated Artisan artifact was durably blocked. Its first provider-bound smoke preflight is currently transport-blocked because the authorized serial is absent from the Windows ADB bridge.**
 
 This experiment compares only the official instruction-tuned Gemma 4 E2B LiteRT-LM CPU and GPU Android routes on the authorized Galaxy S23 Ultra. It measures execution, setup, TTFT, prefill/decode throughput, total latency, process memory, and operating conditions under the repository's fixed short/medium/long prompt contract. It does not evaluate transcript quality and makes no NPU/HTP claim.
 
@@ -11,7 +11,8 @@ This experiment compares only the official instruction-tuned Gemma 4 E2B LiteRT-
 - Base model: `google/gemma-4-E2B-it@3e22461f65e89153144f8adb70e3b8c2cc9845a7`.
 - Deployment: `litert-community/gemma-4-E2B-it-litert-lm@6b78abd019e61a1ca4cbe3b212d2c9ce8ff38a94`.
 - CPU artifact: `gemma-4-E2B-it.litertlm`, SHA-256 `18193810…a63c`, 2,588,147,712 bytes.
-- GPU artifact: `gemma-4-E2B-it-gpu.litertlm`, SHA-256 `a53a5900…5cf5`, 2,008,432,640 bytes.
+- Canonical GPU route (approved amendment, 2026-08-26): `gemma-4-E2B-it.litertlm`, SHA-256 `18193810…a63c`, 2,588,147,712 bytes with `Backend::GPU`. The deployment card's Android GPU row reports a matching 2,583 MB model size.
+- Historical incompatible Artisan artifact: `gemma-4-E2B-it-gpu.litertlm`, SHA-256 `a53a5900…5cf5`, 2,008,432,640 bytes. Its pre-inference blocker remains non-metric evidence and is never relabeled.
 - Runtime: LiteRT-LM v0.16.1 at `924e79c91542761242244e4f1651851f822e4cbb`.
 - Device: SM-S918B / SM8550 / `arm64-v8a`, serial `R5CW81PR8SY`.
 - Context/KV capacity: 8,192 tokens; every canonical prompt plus the 2,048-token output ceiling must fit without truncation.
@@ -58,12 +59,14 @@ See [`results/android-cpu-campaign/result.json`](results/android-cpu-campaign/re
 
 A bounded, hash-verified Android smoke requested the official GPU backend with the pinned `gemma-4-E2B-it-gpu.litertlm` artifact. LiteRT-LM detected an Artisan text decoder and switched `GPU` to `GPU_ARTISAN`, then stopped before inference because v0.16.1's open-source build had only `kAdvancedLiteRTCompiledModel` registered while `GPU_ARTISAN` requires `kAdvancedLegacyTfLite` or `kLegacyTfLite`.
 
-No logical request ran, no provider bound, and no CPU fallback was relabeled as GPU. The experiment-owned phone stage was removed and verified absent. Continuing requires an explicit route decision: either authorize the generic 2,588,147,712-byte artifact for `Backend::GPU` (the pinned model card's Android GPU row reports a matching 2,583 MB model size), or provide/authorize a runtime that registers a supported legacy Artisan engine. See [`results/android-gpu-blocker/`](results/android-gpu-blocker/).
+No logical request ran, no provider bound, and no CPU fallback was relabeled as GPU. The experiment-owned phone stage was removed and verified absent. Moritz subsequently approved the generic 2,588,147,712-byte artifact with `Backend::GPU` as the canonical Android GPU route. This historical attempt remains preserved and non-metric at [`results/android-gpu-blocker/`](results/android-gpu-blocker/); it is not overwritten by the amended route.
+
+The first amended-route smoke preflight stopped before identity capture because `R5CW81PR8SY` was absent from the configured Windows ADB bridge. No stage or process was created. Transport-only evidence is retained at [`results/android-gpu-generic-preflight-blocker/`](results/android-gpu-generic-preflight-blocker/).
 
 ## Claim boundaries
 
 - A successful host smoke is not Android execution or performance.
-- CPU and GPU use distinct official `.litertlm` files and remain distinct deployment routes.
+- Following the dated approved amendment, CPU and canonical GPU use the same official generic artifact with distinct requested and proven execution backends; the incompatible dedicated Artisan artifact remains historical blocker evidence.
 - Process PSS/VmHWM does not directly measure private GPU memory.
 - `looks_sensible` is not quality, correctness, grounding, transcript usefulness, or acceptance.
 - Missing runtime-internal timing splits remain null with reasons; they do not invalidate a completed logical request.

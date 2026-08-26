@@ -55,6 +55,19 @@ class ContractTest(unittest.TestCase):
         self.assertIn("libLiteRtGpuAccelerator.so", source)
         self.assertIn("libOpenCL", source)
 
+    def test_approved_gpu_route_uses_generic_artifact_and_preserves_blocker(self) -> None:
+        artifacts = CONTRACT["artifacts"]
+        selected = artifacts["gpu_canonical_selected"]
+        self.assertEqual(artifacts["cpu"]["sha256"], selected["sha256"])
+        self.assertEqual(artifacts["cpu"]["bytes"], selected["bytes"])
+        self.assertEqual("GPU", selected["backend"])
+        self.assertEqual(
+            "historical_incompatible_artisan_attempt_only",
+            artifacts["gpu"]["route_status"],
+        )
+        self.assertFalse(CONTRACT["gpu_route_status"]["cpu_fallback_permitted"])
+        self.assertTrue(CONTRACT["gpu_route_status"]["provider_binding_required"])
+
     def test_only_cpu_and_gpu_arms_are_in_scope(self) -> None:
         scope = CONTRACT["scope"]
         self.assertEqual(2, len(scope["arms"]))

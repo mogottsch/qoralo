@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "experiment": "0025-gemma-4-e2b-it-android",
+  "status": "blocked_before_identity_capture",
+  "route": {
+    "artifact": "gemma-4-E2B-it.litertlm",
+    "artifact_bytes": 2588147712,
+    "artifact_sha256": "181938105e0eefd105961417e8da75903eacda102c4fce9ce90f50b97139a63c",
+    "backend": "GPU",
+    "approval": "Moritz explicitly approved Option A through Pi"
+  },
+  "transport": {
+    "adb_server_socket": "tcp:172.27.80.1:5037",
+    "serial": "R5CW81PR8SY",
+    "get_state_exit_code": 1,
+    "exact_error": "error: device 'R5CW81PR8SY' not found"
+  },
+  "device_identity_captured": false,
+  "stage_created": false,
+  "process_launched": false,
+  "remote_mutation": false,
+  "gpu_provider_binding_tested": false,
+  "phone_lock_released": true,
+  "action_needed": "Restore R5CW81PR8SY on the configured Windows ADB bridge, then rerun the provider-bound smoke entirely fresh."
+}
