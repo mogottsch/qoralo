@@ -50,17 +50,21 @@ class ContractTest(unittest.TestCase):
         self.assertIn("serialized.bin", support["example_context_binaries"][0])
         self.assertTrue(support["sm8550_compile_target_supported_by_installed_api"])
 
-    def test_public_checkpoint_is_provisional_until_download_hash(self) -> None:
-        artifact = self.support["public_w4a16_checkpoint"]
-        self.assertEqual(200, artifact["http_status"])
-        self.assertEqual(2_013_959_998, artifact["content_length_bytes"])
-        self.assertFalse(artifact["authentication_used"])
-        self.assertFalse(artifact["downloaded"])
-        self.assertIsNone(artifact["sha256"])
-        self.assertTrue(artifact["sha256_null_reason"])
-        contract_artifact = self.contract["selected_public_checkpoint"]
-        self.assertEqual(artifact["url"], contract_artifact["url"])
-        self.assertEqual(artifact["content_length_bytes"], contract_artifact["bytes_from_http_head"])
+    def test_public_checkpoint_head_and_downloaded_identity(self) -> None:
+        head = self.support["public_w4a16_checkpoint"]
+        self.assertEqual(200, head["http_status"])
+        self.assertEqual(2_013_959_998, head["content_length_bytes"])
+        self.assertFalse(head["authentication_used"])
+        analysis = json.loads((EXP / "results/checkpoint-analysis/result.json").read_text())
+        artifact = analysis["archive"]
+        self.assertEqual(head["url"], artifact["url"])
+        self.assertEqual(head["content_length_bytes"], artifact["bytes"])
+        self.assertEqual("ed45053c8582f2646fb8dd80e0d8f55a462394199160bade96401615b6ce84a7", artifact["sha256"])
+        self.assertEqual("passed", artifact["zip_integrity"])
+        self.assertTrue(analysis["heavy_ram_lock_held"])
+        self.assertTrue(analysis["onnx"]["external_ranges_within_model_data"])
+        self.assertEqual(analysis["onnx"]["external_referenced_bytes_sum"], analysis["onnx"]["model_data_bytes"])
+        self.assertEqual(analysis["onnx"]["external_max_offset_plus_length"], analysis["onnx"]["model_data_bytes"])
 
     def test_direct_gguf_shortcut_is_rejected(self) -> None:
         gguf = self.support["direct_gguf_path"]
@@ -79,8 +83,55 @@ class ContractTest(unittest.TestCase):
         self.assertIn("physical HTP", fatal)
         self.assertIn("fallback", fatal)
 
-    def test_phone_and_campaign_are_not_yet_claimed(self) -> None:
-        self.assertIn("awaiting_heavy_lock", self.contract["status"])
+    def test_checkpoint_quantization_and_prompts_are_bound(self) -> None:
+        analysis = json.loads((EXP / "results/checkpoint-analysis/result.json").read_text())
+        enc = analysis["quantization"]["encodings_summary"]
+        self.assertEqual({"4": 522}, enc["param_encodings"]["bitwidth_record_counts"])
+        self.assertEqual({"16": 6194}, enc["activation_encodings"]["bitwidth_record_counts"])
+        expected = {
+            "short": (170, "31a85f9c813266bbbb3505a04a226a9b184882b636cc2f6f67193a6b1eb2ad78"),
+            "medium": (594, "a0175c3e00e0a4863171ef8c2ab8f789e033529dd0449f6bd74028dd233ab0aa"),
+            "long": (1929, "3b5c04febbc9d55c529ee7ece510607203dbdc8256a6abc05ba0498cf4e52b64"),
+        }
+        for tier, (count, token_hash) in expected.items():
+            prompt = analysis["tokenizer_and_template"]["prompt_inventory"][tier]
+            self.assertEqual(count, prompt["input_tokens"])
+            self.assertEqual(token_hash, prompt["token_ids_int32le_sha256"])
+            self.assertEqual(1, prompt["leading_bos_count"])
+            self.assertTrue(prompt["fits_context_4096"])
+
+    def test_exact_transform_blocker_and_no_execution_claim(self) -> None:
+        blocker = json.loads((EXP / "results/transform-blocker/result.json").read_text())
+        self.assertIn("blocked_local_qairt", self.contract["status"])
+        self.assertFalse(blocker["android_execution"])
+        self.assertFalse(blocker["qnn_htp_execution"])
+        self.assertFalse(blocker["compiled_context_created"])
+        self.assertFalse(blocker["phone_accessed"])
+        self.assertFalse(blocker["public_checkpoint_mutated"])
+        probe = blocker["bounded_transform_probe"]
+        self.assertFalse(probe["conversion_requested"])
+        self.assertFalse(probe["compilation_requested"])
+        self.assertEqual("KeyError", probe["exception_type"])
+        self.assertIn("ConstantPropagation", probe["failing_stage"])
+        self.assertTrue(blocker["identity_after_failure"]["onnx_unchanged"])
+        self.assertTrue(blocker["required_user_action_or_decision"])
+
+    def test_retained_evidence_manifests(self) -> None:
+        for directory in (
+            EXP / "results/support-assessment",
+            EXP / "results/checkpoint-analysis",
+            EXP / "results/transform-blocker",
+        ):
+            entries = {}
+            for line in (directory / "SHA256SUMS").read_text().splitlines():
+                digest, name = line.split("  ", 1)
+                entries[name] = digest
+            retained = {path.name for path in directory.iterdir() if path.is_file() and path.name != "SHA256SUMS"}
+            self.assertEqual(retained, set(entries))
+            for name, digest in entries.items():
+                self.assertEqual(digest, sha(directory / name))
+
+    def test_phone_and_campaign_are_not_claimed(self) -> None:
         gate = self.contract["campaign_gate"]
         self.assertTrue(gate["bounded_viability_first"])
         self.assertTrue(gate["canonical_after_viability"])

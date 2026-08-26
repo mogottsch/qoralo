@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
-  "status": "phone_independent_public_w4a16_route_selected_awaiting_heavy_lock",
+  "status": "blocked_local_qairt_gemma4_transform_unsupported_no_compiled_context",
   "question": "Can Gemma 4 E2B IT run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Gemma 4 E2B IT text generation only",
@@ -33,8 +33,9 @@
     "request_isolation_required": true
   },
   "model_identity": {
-    "upstream": "google/gemma-4-E2B-it",
-    "upstream_revision": "pending checkpoint archive inspection",
+    "upstream": "google/gemma-4-E2B-it-qat-mobile-transformers",
+    "upstream_revision": "dd693ff40353f057ca5f07e945ad867f4afbf2ec",
+    "base_model": "google/gemma-4-E2B-it",
     "effective_parameters": 2300000000,
     "architecture": "Gemma4 E2B: 35 layers, 1536 hidden size, interleaved sliding-window/global attention, per-layer embeddings, shared KV layers",
     "architecture_source": "Qualcomm AI Hub Models v0.61.0 model.py at commit 5975a79b55b40f5cbc61f3ac5e52abe47d9d8bd5"
@@ -43,10 +44,17 @@
     "url": "https://qaihub-public-assets.s3.us-west-2.amazonaws.com/qai-hub-models/models/gemma_4_e2b_it/v1/gemma_4_e2b_it_w4a16.zip",
     "publisher": "Qualcomm AI Hub Models public asset store",
     "asset_version": 1,
-    "bytes_from_http_head": 2013959998,
-    "sha256": null,
-    "sha256_null_reason": "Download is deferred until heavy-ram.lock is acquired.",
-    "quantization": "w4a16 calibrated checkpoint; exact encoding inventory pending archive inspection",
+    "bytes": 2013959998,
+    "sha256": "ed45053c8582f2646fb8dd80e0d8f55a462394199160bade96401615b6ce84a7",
+    "quantization": {
+      "name": "w4a16",
+      "weights": "522 symmetric per-channel INT4 encoding records",
+      "activations": "6194 per-tensor INT16 encoding records",
+      "calibration_samples": 20,
+      "calibration_input": "chat-formatted WikiText",
+      "sequential_mse": true,
+      "encodings_sha256": "254c439615e1c0a7b40fb0076c844cc3f9a5ec7ef0b93001077eec2adb228e9c"
+    },
     "authentication_required": false
   },
   "tooling": {
@@ -70,7 +78,8 @@
   },
   "candidate_route": {
     "target": "chipset:SM8550 / HTP v73",
-    "context_tokens": 8192,
+    "requested_context_tokens": 4096,
+    "installed_example_context_tokens": 8192,
     "prompt_processor_arn": 128,
     "token_generator_arn": 1,
     "weight_sharing": true,
@@ -87,12 +96,19 @@
     "direct_gguf_route_rejected": "The public Google GGUF identifies architecture gemma4, while the installed QAIRT direct GGUF builder supports only llama, mistral, phi3, qwen2, qwen3, gemma, gemma2, and gemma3."
   },
   "tokenizer_and_template": {
-    "status": "must be bound from the selected checkpoint archive before conversion",
-    "prior_0025_inventory_is_expectation_only": {
-      "short": {"input_tokens": 171, "rendered_sha256": "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a", "token_ids_int32le_sha256": "65d931b8fb39eacee9675b22e52d6ce0a091429e50451c2d1ea0463e250d7f4d"},
-      "medium": {"input_tokens": 595, "rendered_sha256": "8e3c03cb0d1ddce8455306b8b84585ce2ae07c083c4fdbdec1e946e3be56771d", "token_ids_int32le_sha256": "2a89b5742b50060ad7510f8dfaa22eafda4a8fedbe06b5aaed36d5653390cf8d"},
-      "long": {"input_tokens": 1930, "rendered_sha256": "450b519d417e29c4239e39aef856db1813d2580cd62e9db9adaae3d94ba8f260", "token_ids_int32le_sha256": "bbb4413aa186c843cbdc71a1f659e9d574c6fd0bc46fe844a310813445279bba"}
-    }
+    "source": "selected public checkpoint archive",
+    "tokenizer_json_sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f",
+    "tokenizer_config_sha256": "9f4fec4b1dc6ecddf8f4a92e9caea5971c0e67d81309f3f9066a2bee8c362633",
+    "chat_template_sha256": "0a2c8073c878ab1da004bee933a998606537bbb62016310352c7285c3f01c5b5",
+    "thinking_enabled": false,
+    "bos_token_id": 2,
+    "leading_bos_count": 1,
+    "prompt_inventory": {
+      "short": {"input_tokens": 170, "rendered_sha256": "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a", "token_ids_int32le_sha256": "31a85f9c813266bbbb3505a04a226a9b184882b636cc2f6f67193a6b1eb2ad78", "fits_context_4096": true},
+      "medium": {"input_tokens": 594, "rendered_sha256": "8e3c03cb0d1ddce8455306b8b84585ce2ae07c083c4fdbdec1e946e3be56771d", "token_ids_int32le_sha256": "a0175c3e00e0a4863171ef8c2ab8f789e033529dd0449f6bd74028dd233ab0aa", "fits_context_4096": true},
+      "long": {"input_tokens": 1929, "rendered_sha256": "450b519d417e29c4239e39aef856db1813d2580cd62e9db9adaae3d94ba8f260", "token_ids_int32le_sha256": "3b5c04febbc9d55c529ee7ece510607203dbdc8256a6abc05ba0498cf4e52b64", "fits_context_4096": true}
+    },
+    "difference_from_0025": "Rendered canonical bytes are identical, but this checkpoint's tokenizer produces one fewer token per tier. 0025 token IDs are not reused."
   },
   "required_provider_proof": {
     "compiled_context_identity": "Hash every deployed serialized context and bind its SM8550/HTP compiler metadata.",
@@ -100,6 +116,12 @@
     "partition_boundary": "Transformer prompt and token graphs must be wholly accepted by HTP. Any unsupported graph, CPU QNN backend, or undocumented transformer fallback is fatal.",
     "cpu_boundary_disclosure": "Tokenizer, LUT lookup/requantization, sampler, and orchestration CPU work remains explicit and is not misreported as HTP execution.",
     "no_silent_cpu_only": "A successful text response without the physical provider proof above is not QNN/HTP evidence."
+  },
+  "conversion_blocker": {
+    "result_path": "results/transform-blocker/result.json",
+    "compiled_context_created": false,
+    "exact_failure": "Installed QAIRT 2.49 has no Gemma4 factory dispatch. Generic fallback AR/CL transformation of the unchanged public graph fails in ConstantPropagation with KeyError('value') before conversion or compilation.",
+    "required_action": "Provide a provenance-bound Gemma4 E2B SM8550/v73 serialized context and LUT bundle; authorize authenticated AI Hub Workbench if a supported QNN export exists; or explicitly authorize an updated QAIRT/toolchain or architecture-aware converter fix."
   },
   "campaign_gate": {
     "phone_priority": "follows coordinated GPU paths; no ADB until Pi explicitly grants priority",

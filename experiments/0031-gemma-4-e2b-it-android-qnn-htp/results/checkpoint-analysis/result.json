@@ -1,0 +1,1002 @@
+{
+  "archive": {
+    "bytes": 2013959998,
+    "sha256": "ed45053c8582f2646fb8dd80e0d8f55a462394199160bade96401615b6ce84a7",
+    "url": "https://qaihub-public-assets.s3.us-west-2.amazonaws.com/qai-hub-models/models/gemma_4_e2b_it/v1/gemma_4_e2b_it_w4a16.zip",
+    "zip_integrity": "passed"
+  },
+  "classification": "public_checkpoint_identity_and_conversion_input_analysis",
+  "conversion_input_mutated": false,
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "heavy_ram_lock_held": true,
+  "members": [
+    {
+      "bytes": 179,
+      "path": "args.json",
+      "sha256": "5c136b4ddd7760953d0b7bccfd979f4d1a7a03de6669a21b413eacedaa4e065c"
+    },
+    {
+      "bytes": 18569,
+      "path": "chat_template.jinja",
+      "sha256": "0a2c8073c878ab1da004bee933a998606537bbb62016310352c7285c3f01c5b5"
+    },
+    {
+      "bytes": 4954,
+      "path": "config.json",
+      "sha256": "1b28f3d2c3100f6c594754b81107428bd7b822a7f48272ca681dae9d2ec38330"
+    },
+    {
+      "bytes": 208,
+      "path": "generation_config.json",
+      "sha256": "d4226bbe3117d2d253ba4609720ba82c6c4ce4627a9a6ae05387c78983ac03de"
+    },
+    {
+      "bytes": 9119006720,
+      "path": "model.data",
+      "sha256": "e156c33d176273555003039959ecb0ae0ddc8a328eceeec1e8f4a6255840e072"
+    },
+    {
+      "bytes": 74795410,
+      "path": "model.encodings",
+      "sha256": "254c439615e1c0a7b40fb0076c844cc3f9a5ec7ef0b93001077eec2adb228e9c"
+    },
+    {
+      "bytes": 20653219,
+      "path": "model_dynamic.onnx",
+      "sha256": "51d4e8183a6734a8c7bbd24ebc072768f080e54b011725ae645dfa32498bf0d0"
+    },
+    {
+      "bytes": 32169626,
+      "path": "tokenizer.json",
+      "sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f"
+    },
+    {
+      "bytes": 3082,
+      "path": "tokenizer_config.json",
+      "sha256": "9f4fec4b1dc6ecddf8f4a92e9caea5971c0e67d81309f3f9066a2bee8c362633"
+    }
+  ],
+  "onnx": {
+    "external_initializer_count": 724,
+    "external_locations": {
+      "model.data": 724
+    },
+    "external_max_offset_plus_length": 9119006720,
+    "external_ranges_within_model_data": true,
+    "external_referenced_bytes_sum": 9119006720,
+    "graph_name": "main_graph",
+    "initializer_count": 764,
+    "inputs": [
+      {
+        "elem_type": 1,
+        "name": "inputs_embeds",
+        "shape": [
+          1,
+          "seq_len",
+          1536
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "per_layer_inputs",
+        "shape": [
+          1,
+          "seq_len",
+          35,
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "attention_mask",
+        "shape": [
+          1,
+          1,
+          "seq_len",
+          "ctx_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_attention_mask",
+        "shape": [
+          1,
+          1,
+          "seq_len",
+          "seq_len + 512"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_position_ids_cos",
+        "shape": [
+          1,
+          1,
+          "seq_len",
+          128
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_position_ids_sin",
+        "shape": [
+          1,
+          1,
+          "seq_len",
+          128
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "position_ids_global_cos",
+        "shape": [
+          1,
+          1,
+          "seq_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "position_ids_global_sin",
+        "shape": [
+          1,
+          1,
+          "seq_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_key_0_h0_in",
+        "shape": [
+          1,
+          1,
+          256,
+          "swa_kv_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_value_0_h0_in",
+        "shape": [
+          1,
+          1,
+          "swa_kv_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_key_1_h0_in",
+        "shape": [
+          1,
+          1,
+          256,
+          "swa_kv_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_value_1_h0_in",
+        "shape": [
+          1,
+          1,
+          "swa_kv_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_key_2_h0_in",
+        "shape": [
+          1,
+          1,
+          256,
+          "swa_kv_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_value_2_h0_in",
+        "shape": [
+          1,
+          1,
+          "swa_kv_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_key_3_h0_in",
+        "shape": [
+          1,
+          1,
+          256,
+          "swa_kv_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_value_3_h0_in",
+        "shape": [
+          1,
+          1,
+          "swa_kv_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "past_key_4_h0_in",
+        "shape": [
+          1,
+          1,
+          512,
+          "kv_seq_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "past_value_4_h0_in",
+        "shape": [
+          1,
+          1,
+          "kv_seq_len",
+          512
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_key_5_h0_in",
+        "shape": [
+          1,
+          1,
+          256,
+          "swa_kv_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_value_5_h0_in",
+        "shape": [
+          1,
+          1,
+          "swa_kv_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_key_6_h0_in",
+        "shape": [
+          1,
+          1,
+          256,
+          "swa_kv_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_value_6_h0_in",
+        "shape": [
+          1,
+          1,
+          "swa_kv_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_key_7_h0_in",
+        "shape": [
+          1,
+          1,
+          256,
+          "swa_kv_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_value_7_h0_in",
+        "shape": [
+          1,
+          1,
+          "swa_kv_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_key_8_h0_in",
+        "shape": [
+          1,
+          1,
+          256,
+          "swa_kv_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_value_8_h0_in",
+        "shape": [
+          1,
+          1,
+          "swa_kv_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "past_key_9_h0_in",
+        "shape": [
+          1,
+          1,
+          512,
+          "kv_seq_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "past_value_9_h0_in",
+        "shape": [
+          1,
+          1,
+          "kv_seq_len",
+          512
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_key_10_h0_in",
+        "shape": [
+          1,
+          1,
+          256,
+          "swa_kv_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_value_10_h0_in",
+        "shape": [
+          1,
+          1,
+          "swa_kv_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_key_11_h0_in",
+        "shape": [
+          1,
+          1,
+          256,
+          "swa_kv_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_value_11_h0_in",
+        "shape": [
+          1,
+          1,
+          "swa_kv_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_key_12_h0_in",
+        "shape": [
+          1,
+          1,
+          256,
+          "swa_kv_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_value_12_h0_in",
+        "shape": [
+          1,
+          1,
+          "swa_kv_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_key_13_h0_in",
+        "shape": [
+          1,
+          1,
+          256,
+          "swa_kv_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_value_13_h0_in",
+        "shape": [
+          1,
+          1,
+          "swa_kv_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "past_key_14_h0_in",
+        "shape": [
+          1,
+          1,
+          512,
+          "kv_seq_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "past_value_14_h0_in",
+        "shape": [
+          1,
+          1,
+          "kv_seq_len",
+          512
+        ]
+      }
+    ],
+    "ir_version": 10,
+    "model_data_bytes": 9119006720,
+    "model_data_sha256": "e156c33d176273555003039959ecb0ae0ddc8a328eceeec1e8f4a6255840e072",
+    "node_count": 9596,
+    "op_type_counts": {
+      "Add": 1308,
+      "Concat": 361,
+      "Constant": 52,
+      "Conv": 521,
+      "Div": 1,
+      "Gather": 35,
+      "MatMul": 561,
+      "Mul": 2527,
+      "Pow": 734,
+      "Reciprocal": 310,
+      "ReduceMean": 487,
+      "Reshape": 2,
+      "Shape": 1,
+      "Slice": 590,
+      "Softmax": 280,
+      "Sqrt": 310,
+      "Squeeze": 212,
+      "Sub": 295,
+      "Tanh": 71,
+      "Transpose": 762,
+      "Unsqueeze": 176
+    },
+    "opset_imports": {
+      "ai.onnx": 18
+    },
+    "outputs": [
+      {
+        "elem_type": 1,
+        "name": "logits",
+        "shape": [
+          1,
+          "seq_len",
+          262144
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_key_0_h0_out",
+        "shape": [
+          1,
+          1,
+          256,
+          "seq_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_value_0_h0_out",
+        "shape": [
+          1,
+          1,
+          "seq_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_key_1_h0_out",
+        "shape": [
+          1,
+          1,
+          256,
+          "seq_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_value_1_h0_out",
+        "shape": [
+          1,
+          1,
+          "seq_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_key_2_h0_out",
+        "shape": [
+          1,
+          1,
+          256,
+          "seq_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_value_2_h0_out",
+        "shape": [
+          1,
+          1,
+          "seq_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_key_3_h0_out",
+        "shape": [
+          1,
+          1,
+          256,
+          "seq_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_value_3_h0_out",
+        "shape": [
+          1,
+          1,
+          "seq_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "past_key_4_h0_out",
+        "shape": [
+          1,
+          1,
+          512,
+          "seq_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "past_value_4_h0_out",
+        "shape": [
+          1,
+          1,
+          "seq_len",
+          512
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_key_5_h0_out",
+        "shape": [
+          1,
+          1,
+          256,
+          "seq_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_value_5_h0_out",
+        "shape": [
+          1,
+          1,
+          "seq_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_key_6_h0_out",
+        "shape": [
+          1,
+          1,
+          256,
+          "seq_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_value_6_h0_out",
+        "shape": [
+          1,
+          1,
+          "seq_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_key_7_h0_out",
+        "shape": [
+          1,
+          1,
+          256,
+          "seq_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_value_7_h0_out",
+        "shape": [
+          1,
+          1,
+          "seq_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_key_8_h0_out",
+        "shape": [
+          1,
+          1,
+          256,
+          "seq_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_value_8_h0_out",
+        "shape": [
+          1,
+          1,
+          "seq_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "past_key_9_h0_out",
+        "shape": [
+          1,
+          1,
+          512,
+          "seq_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "past_value_9_h0_out",
+        "shape": [
+          1,
+          1,
+          "seq_len",
+          512
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_key_10_h0_out",
+        "shape": [
+          1,
+          1,
+          256,
+          "seq_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_value_10_h0_out",
+        "shape": [
+          1,
+          1,
+          "seq_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_key_11_h0_out",
+        "shape": [
+          1,
+          1,
+          256,
+          "seq_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_value_11_h0_out",
+        "shape": [
+          1,
+          1,
+          "seq_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_key_12_h0_out",
+        "shape": [
+          1,
+          1,
+          256,
+          "seq_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_value_12_h0_out",
+        "shape": [
+          1,
+          1,
+          "seq_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_key_13_h0_out",
+        "shape": [
+          1,
+          1,
+          256,
+          "seq_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "swa_value_13_h0_out",
+        "shape": [
+          1,
+          1,
+          "seq_len",
+          256
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "past_key_14_h0_out",
+        "shape": [
+          1,
+          1,
+          512,
+          "seq_len"
+        ]
+      },
+      {
+        "elem_type": 1,
+        "name": "past_value_14_h0_out",
+        "shape": [
+          1,
+          1,
+          "seq_len",
+          512
+        ]
+      }
+    ]
+  },
+  "quantization": {
+    "calibration_samples": 20,
+    "encodings_summary": {
+      "activation_encodings": {
+        "bitwidth_record_counts": {
+          "16": 6194
+        },
+        "dtype_record_counts": {
+          "INT": 6194
+        },
+        "encoding_record_count": 6194,
+        "encoding_type_record_counts": {
+          "PER_TENSOR": 6194
+        },
+        "symmetric_record_counts": {
+          "false": 6003,
+          "true": 191
+        },
+        "tensor_entry_count": 6194
+      },
+      "param_encodings": {
+        "bitwidth_record_counts": {
+          "4": 522
+        },
+        "dtype_record_counts": {
+          "INT": 522
+        },
+        "encoding_record_count": 522,
+        "encoding_type_record_counts": {
+          "PER_CHANNEL": 522
+        },
+        "symmetric_record_counts": {
+          "true": 522
+        },
+        "tensor_entry_count": 522
+      },
+      "quantizer_args": {
+        "activation_bitwidth": 16,
+        "dtype": "int",
+        "is_symmetric": true,
+        "param_bitwidth": 4,
+        "per_channel_quantization": true,
+        "quant_scheme": "min_max"
+      },
+      "top_level_keys": [
+        "activation_encodings",
+        "param_encodings",
+        "quantizer_args",
+        "version"
+      ],
+      "version": {
+        "type": "str",
+        "value": "1.0.0"
+      }
+    },
+    "published_name": "w4a16",
+    "raw_text_calibration": false,
+    "sequential_mse": true
+  },
+  "schema_version": 1,
+  "source": {
+    "architecture": "gemma4",
+    "checkpoint": "google/gemma-4-E2B-it-qat-mobile-transformers",
+    "current_public_revision": "dd693ff40353f057ca5f07e945ad867f4afbf2ec",
+    "text_config": {
+      "attention_bias": false,
+      "attention_dropout": 0.0,
+      "attention_k_eq_v": false,
+      "bos_token_id": 2,
+      "dtype": "bfloat16",
+      "enable_moe_block": false,
+      "eos_token_id": 1,
+      "expert_intermediate_size": null,
+      "final_logit_softcapping": 30.0,
+      "global_head_dim": 512,
+      "head_dim": 256,
+      "hidden_activation": "gelu_pytorch_tanh",
+      "hidden_size": 1536,
+      "hidden_size_per_layer_input": 256,
+      "initializer_range": 0.02,
+      "intermediate_size": 6144,
+      "layer_types": [
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "full_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "full_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "full_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "full_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "full_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "full_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "sliding_attention",
+        "full_attention"
+      ],
+      "max_position_embeddings": 131072,
+      "model_type": "gemma4_text",
+      "num_attention_heads": 8,
+      "num_experts": null,
+      "num_global_key_value_heads": null,
+      "num_hidden_layers": 35,
+      "num_key_value_heads": 1,
+      "num_kv_shared_layers": 20,
+      "pad_token_id": 0,
+      "rms_norm_eps": 1e-06,
+      "rope_parameters": {
+        "full_attention": {
+          "partial_rotary_factor": 0.25,
+          "rope_theta": 1000000.0,
+          "rope_type": "proportional"
+        },
+        "sliding_attention": {
+          "rope_theta": 10000.0,
+          "rope_type": "default"
+        }
+      },
+      "sliding_window": 512,
+      "tie_word_embeddings": true,
+      "top_k_experts": null,
+      "use_bidirectional_attention": null,
+      "use_cache": true,
+      "use_double_wide_mlp": true,
+      "vocab_size": 262144,
+      "vocab_size_per_layer_input": 262144
+    }
+  },
+  "tokenizer_and_template": {
+    "chat_template_sha256": "0a2c8073c878ab1da004bee933a998606537bbb62016310352c7285c3f01c5b5",
+    "prompt_inventory": {
+      "long": {
+        "bos_token_id": 2,
+        "first_token_ids": [
+          2,
+          105,
+          9731,
+          107
+        ],
+        "fits_context_4096": true,
+        "fits_context_8192": true,
+        "input_tokens": 1929,
+        "leading_bos_count": 1,
+        "max_new_tokens": 2048,
+        "rendered_bytes": 10589,
+        "rendered_sha256": "450b519d417e29c4239e39aef856db1813d2580cd62e9db9adaae3d94ba8f260",
+        "token_ids_int32le_sha256": "3b5c04febbc9d55c529ee7ece510607203dbdc8256a6abc05ba0498cf4e52b64",
+        "workload_sha256": "092840fbe879259110fa4d0b15bc383012f16b7b42a38d224b2ead231e86aad8"
+      },
+      "medium": {
+        "bos_token_id": 2,
+        "first_token_ids": [
+          2,
+          105,
+          9731,
+          107
+        ],
+        "fits_context_4096": true,
+        "fits_context_8192": true,
+        "input_tokens": 594,
+        "leading_bos_count": 1,
+        "max_new_tokens": 2048,
+        "rendered_bytes": 3313,
+        "rendered_sha256": "8e3c03cb0d1ddce8455306b8b84585ce2ae07c083c4fdbdec1e946e3be56771d",
+        "token_ids_int32le_sha256": "a0175c3e00e0a4863171ef8c2ab8f789e033529dd0449f6bd74028dd233ab0aa",
+        "workload_sha256": "5e168aa3232f06c92959b686188192471b2d1a62cd1c857a616fd8e29456ddf1"
+      },
+      "short": {
+        "bos_token_id": 2,
+        "first_token_ids": [
+          2,
+          105,
+          9731,
+          107
+        ],
+        "fits_context_4096": true,
+        "fits_context_8192": true,
+        "input_tokens": 170,
+        "leading_bos_count": 1,
+        "max_new_tokens": 2048,
+        "rendered_bytes": 920,
+        "rendered_sha256": "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a",
+        "token_ids_int32le_sha256": "31a85f9c813266bbbb3505a04a226a9b184882b636cc2f6f67193a6b1eb2ad78",
+        "workload_sha256": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae"
+      }
+    },
+    "tokenizer_config_sha256": "9f4fec4b1dc6ecddf8f4a92e9caea5971c0e67d81309f3f9066a2bee8c362633",
+    "tokenizer_json_sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f"
+  }
+}

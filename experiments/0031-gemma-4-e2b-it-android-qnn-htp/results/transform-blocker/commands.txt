@@ -1,0 +1,9 @@
+# Environment for both probes
+source experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/qairt-venv/bin/activate
+source /home/moritz/opt/qairt/2.49.0.260730/bin/envsetup.sh
+export LD_LIBRARY_PATH="$PWD/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/host-libs:$LD_LIBRARY_PATH"
+export QAIRT_TMP_DIR="$PWD/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/qairt-tmp"
+
+# Each command was independently enclosed by flock on artifacts/locks/heavy-ram.lock.
+experiments/0031-gemma-4-e2b-it-android-qnn-htp/tools/probe_qairt_builder.py
+timeout --signal=TERM --kill-after=60 7200 experiments/0031-gemma-4-e2b-it-android-qnn-htp/tools/probe_qairt_transform.py

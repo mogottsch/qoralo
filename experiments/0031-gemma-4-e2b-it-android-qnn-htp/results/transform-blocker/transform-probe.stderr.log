@@ -1,0 +1,77 @@
+Architecture is unknown or unsupported; Returning default. This builder may work but will probably require additional configuration.
+2026-08-26 16:46:28,432 - qairt.gen_ai_api.builders.gen_ai_utils - WARNING - Attention mask not found in expected location of input layers. Searching by name. 
+qairt.optimizer.onnx: 2026-08-26T16:46:28Z | WARNING | get_input_ids | utils.py:1125 - Unable to find 'input_ids' graph input. Using the first graph input: inputs_embeds
+Traceback (most recent call last):
+  File "/home/moritz/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/tools/probe_qairt_transform.py", line 78, in <module>
+    main()
+  File "/home/moritz/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/tools/probe_qairt_transform.py", line 50, in main
+    transformed = builder.transform(
+                  ^^^^^^^^^^^^^^^^^^
+  File "/home/moritz/opt/qairt/2.49.0.260730/lib/python/qairt/api/profiler/resource_profiler/decorator.py", line 94, in _wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/moritz/opt/qairt/2.49.0.260730/lib/python/qairt/gen_ai_api/builders/htp_mixin.py", line 288, in wrapper
+    split_transformed_files: list[list[ExportedFiles]] = func(
+                                                         ^^^^^
+  File "/home/moritz/opt/qairt/2.49.0.260730/lib/python/qairt/gen_ai_api/builders/htp_mixin.py", line 652, in transform
+    models_to_transform = self.ar_cl_conversion(model_path, arn_cl_config)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/moritz/opt/qairt/2.49.0.260730/lib/python/qairt/api/profiler/resource_profiler/decorator.py", line 94, in _wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/moritz/opt/qairt/2.49.0.260730/lib/python/qairt/gen_ai_api/builders/htp_mixin.py", line 476, in wrapper
+    newly_created: list[ExportedFiles] = func(self, model_path, config)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/moritz/opt/qairt/2.49.0.260730/lib/python/qairt/gen_ai_api/builders/htp_mixin.py", line 557, in ar_cl_conversion
+    exported = self._convert_single_ar_cl(str(model_path), ar, cl)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/moritz/opt/qairt/2.49.0.260730/lib/python/qairt/api/profiler/resource_profiler/decorator.py", line 94, in _wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/moritz/opt/qairt/2.49.0.260730/lib/python/qairt/gen_ai_api/builders/htp_mixin.py", line 578, in _convert_single_ar_cl
+    ctx = GraphContext.from_files(model_path)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/moritz/opt/qairt/2.49.0.260730/lib/python/qairt/optimizer/onnx/graph.py", line 251, in from_files
+    return GraphContext(model, named_encodings, named_safetensors, updatable_tensors, naming_prefix)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/moritz/opt/qairt/2.49.0.260730/lib/python/qairt/optimizer/onnx/graph.py", line 165, in __init__
+    ShapeInference().apply(self)
+  File "/home/moritz/opt/qairt/2.49.0.260730/lib/python/qairt/optimizer/onnx/passes/shape_infer/shape_infer.py", line 392, in apply
+    ConstantPropagation().apply(ctx)
+  File "/home/moritz/opt/qairt/2.49.0.260730/lib/python/qairt/optimizer/onnx/passes/base/visitor.py", line 37, in apply
+    self.visit_node(ctx.graph_ir, n)
+  File "/home/moritz/opt/qairt/2.49.0.260730/lib/python/qairt/optimizer/onnx/passes/base/visitor.py", line 55, in visit_node
+    getattr(self, f"visit_node_{node.op_type}")(graph, node)
+  File "/home/moritz/opt/qairt/2.49.0.260730/lib/python/qairt/optimizer/onnx/passes/shape_infer/shape_infer.py", line 728, in visit_node_Constant
+    out_np = get_constant_np(node.outputs[0], load_external_data=False)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/moritz/opt/qairt/2.49.0.260730/lib/python/qairt/optimizer/onnx/utils/utils.py", line 292, in get_constant_np
+    if not load_external_data and isinstance(producer.attributes["value"].value, ir.ExternalTensor):
+                                             ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/moritz/.local/share/mise/installs/python/3.12.12/lib/python3.12/collections/__init__.py", line 1135, in __getitem__
+    raise KeyError(key)
+KeyError: 'value'
+Command exited with non-zero status 1
+	Command being timed: "timeout --signal=TERM --kill-after=60 7200 experiments/0031-gemma-4-e2b-it-android-qnn-htp/tools/probe_qairt_transform.py"
+	User time (seconds): 8.41
+	System time (seconds): 3.11
+	Percent of CPU this job got: 147%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:07.81
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 774824
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 1
+	Minor (reclaiming a frame) page faults: 184505
+	Voluntary context switches: 80
+	Involuntary context switches: 97383
+	Swaps: 0
+	File system inputs: 184
+	File system outputs: 146120
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

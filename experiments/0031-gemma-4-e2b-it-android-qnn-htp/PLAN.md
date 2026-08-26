@@ -10,16 +10,26 @@
 6. Located the unauthenticated public 2,013,959,998-byte w4a16 checkpoint archive.
 7. Rejected the direct GGUF shortcut because installed GGUF conversion does not support the artifact's `gemma4` architecture.
 
-## Next gates
+## Completed artifact and conversion gates
 
-1. Acquire `artifacts/locks/heavy-ram.lock`; only then download and unpack the public checkpoint.
-2. Bind archive and member sizes/hashes, quantization encodings, source revision, tokenizer, template, and all canonical prompt/token inventories.
-3. Attempt the cheapest local installed-QAIRT preparation and SM8550 HTP compilation. Preserve raw logs and stop at any auth, license, missing converter, unsupported graph, or hardware-target blocker.
-4. Bind the compiled serialized context and all LUT/runtime artifacts. Prove that the entire transformer prompt/decode graph is HTP-bound and document intentional CPU frontend/sampler boundaries.
-5. Build a raw-first Android runner that reuses one loaded Engine and proves fresh-Dialog or full-reset isolation per logical request.
-6. Wait for Pi's explicit phone priority. Under `phone.lock`, run one bounded viability request with physical HTP proof and scoped cleanup.
-7. Only if viability and isolation pass, run one complete canonical first-short + 5 short + 5 medium + 5 long campaign on the same loaded route.
-8. Validate and commit owning evidence. Do not publish from this experiment.
+1. Acquired `artifacts/locks/heavy-ram.lock` and held it across the full checkpoint download, integrity test, extraction, and member hashing.
+2. Bound the 2,013,959,998-byte archive, its 9.1 GB external data relationship, w4a16 encodings, source revision, tokenizer, template, and canonical 170/594/1929-token prompt inventories.
+3. Created an isolated local QAIRT environment without altering system tooling or accepting another license.
+4. Ran the smallest faithful QAIRT support probes under `heavy-ram.lock`:
+   - the factory resolved SM8550 to HTP v73 but identified Gemma4 as unknown/unsupported and used a generic builder;
+   - the transform-only AR1+AR128, CL4096, one-graph probe failed in ONNX ConstantPropagation with `KeyError('value')` before conversion or compilation;
+   - post-failure hashes proved that ONNX, external data, and encodings remained unchanged.
+5. Stopped at the exact unsupported-graph blocker. No context binary, Android execution, or HTP claim was fabricated.
+
+## Blocked next gate
+
+Moritz must choose one of the following before work can continue:
+
+1. supply an authorized Gemma4 E2B w4a16 serialized QNN context compiled for SM8550/HTP v73 plus the matching embedding and PLE LUT bundle and full provenance;
+2. authorize authenticated Qualcomm AI Hub Workbench use if a supported QNN context export currently exists for this checkpoint and target; or
+3. authorize an updated QAIRT/toolchain installation or an architecture-aware source fix that handles the public graph, with the new tooling separately bound.
+
+Until then: do not patch the graph ad hoc, do not access the phone, do not run a canonical campaign, and do not publish.
 
 ## Stop conditions
 

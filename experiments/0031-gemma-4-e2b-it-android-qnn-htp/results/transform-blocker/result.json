@@ -1,0 +1,72 @@
+{
+  "android_execution": false,
+  "bounded_transform_probe": {
+    "compilation_requested": false,
+    "conversion_requested": false,
+    "exception_message": "'value'",
+    "exception_type": "KeyError",
+    "failing_source": "qairt/optimizer/onnx/passes/shape_infer/shape_infer.py visit_node_Constant -> get_constant_np -> producer.attributes[\"value\"]",
+    "failing_stage": "QAIRT ONNX GraphContext shape inference / ConstantPropagation while reading a Constant node",
+    "raw_stderr_sha256": "f0c692d702ff88d10f2dddc9ebb8d478961e79d6903ce42065dbfd6f54b043df",
+    "raw_stdout_sha256": "fbda6f1439409abc028bd1541753de54e2c45b601ad813e4c38dac53190a2afc",
+    "result": "failed_before_AR_CL_materialization",
+    "scope": "AR1 and AR128, CL4096, one unsplit transformer graph, no embedding split, no LM-head split; transform only, with a copied encoding file."
+  },
+  "classification": "negative_phone_independent_local_conversion_feasibility",
+  "compiled_context_created": false,
+  "exact_blocker": "The installed QAIRT 2.49 high-level GenAI factory has no Gemma4 architecture dispatch. Its generic fallback cannot transform the unchanged public Qualcomm w4a16 Gemma4 dynamic ONNX: AR/CL conversion fails in constant propagation with KeyError('value') before QNN conversion or HTP compilation. No compiled SM8550 context exists, so physical HTP execution cannot be claimed.",
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "heavy_ram_lock": {
+    "builder_probe": {
+      "acquired_utc": "2026-08-26T15:45:36Z",
+      "released_utc": "2026-08-26T15:45:43Z"
+    },
+    "post_failure_identity_verification": {
+      "acquired_utc": "2026-08-26T15:47:01Z",
+      "released_utc": "2026-08-26T15:47:07Z"
+    },
+    "transform_probe": {
+      "acquired_utc": "2026-08-26T15:46:23Z",
+      "released_utc": "2026-08-26T15:46:31Z"
+    }
+  },
+  "identity_after_failure": {
+    "encodings_unchanged": true,
+    "external_data_unchanged": true,
+    "onnx_unchanged": true,
+    "verification_path": "post-transform-original-sha256.txt"
+  },
+  "input": {
+    "archive_bytes": 2013959998,
+    "archive_sha256": "ed45053c8582f2646fb8dd80e0d8f55a462394199160bade96401615b6ce84a7",
+    "encodings_sha256": "254c439615e1c0a7b40fb0076c844cc3f9a5ec7ef0b93001077eec2adb228e9c",
+    "external_data_sha256": "e156c33d176273555003039959ecb0ae0ddc8a328eceeec1e8f4a6255840e072",
+    "onnx_sha256": "51d4e8183a6734a8c7bbd24ebc072768f080e54b011725ae645dfa32498bf0d0"
+  },
+  "installed_route_support": {
+    "architecture_dispatch": "unknown_or_unsupported_default_generic_builder",
+    "builder_class": "qairt.gen_ai_api.builders.gen_ai_builder_htp.GenAIBuilderHTP",
+    "default_builder_warning": "Architecture is unknown or unsupported; Returning default. This builder may work but will probably require additional configuration.",
+    "qairt_version": "2.49.0.260730",
+    "resolved_dsp_arch": 73,
+    "resolved_hvx_threads": 4,
+    "resolved_soc_model": "43",
+    "resolved_vtcm_mib": 8,
+    "target": "chipset:SM8550"
+  },
+  "not_valid_workarounds": [
+    "Treating the successful generic builder construction as conversion support.",
+    "Using the unsupported direct gemma4 GGUF path.",
+    "Patching the public ONNX ad hoc without an architecture-aware equivalence proof.",
+    "Running Genie without a compiled context or accepting a CPU-only response."
+  ],
+  "phone_accessed": false,
+  "public_checkpoint_mutated": false,
+  "qnn_htp_execution": false,
+  "required_user_action_or_decision": [
+    "Provide an authorized Gemma4 E2B w4a16 serialized QNN context compiled specifically for SM8550/HTP v73, together with exact compiler/checkpoint provenance and the token plus per-layer embedding LUT bundle; or",
+    "Explicitly authorize authenticated Qualcomm AI Hub Workbench use for this checkpoint and target, if a currently supported QNN context export is available; or",
+    "Explicitly authorize an updated QAIRT/toolchain installation or a source-level converter fix that adds supported Gemma4 dispatch and handles this public graph. The public checkpoint must remain immutable and any new toolchain must be separately bound."
+  ],
+  "schema_version": 1
+}
