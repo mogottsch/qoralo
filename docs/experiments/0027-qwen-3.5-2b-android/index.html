@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<link rel="icon" href="data:,">
+<title>Experiment 0027 — Qwen3.5-2B on Android CPU | experiment</title>
+<style>
+:root { --bg:#eeeae2; --paper:#fffdf8; --ink:#18201e; --muted:#66706c; --line:#d8d4ca; --accent:#006c60; --accent-2:#a44217; --soft:#e5f2ee; --code:#efede7; --shadow:0 18px 60px rgba(30,42,37,.09); }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; scroll-padding-top:88px; }
+body { margin:0; background:linear-gradient(135deg,#e7eee9 0,var(--bg) 42%,#eee6dc 100%); color:var(--ink); font:16px/1.68 system-ui,-apple-system,"Segoe UI",sans-serif; }
+a { color:var(--accent); text-underline-offset:3px; }
+a:focus-visible, audio:focus-visible { outline:3px solid #f09b65; outline-offset:3px; border-radius:4px; }
+.topbar { position:sticky; top:0; z-index:10; border-bottom:1px solid color-mix(in srgb,var(--line) 85%,transparent); background:color-mix(in srgb,var(--paper) 92%,transparent); backdrop-filter:blur(12px); }
+.topbar-inner { max-width:1120px; margin:auto; display:flex; align-items:center; justify-content:space-between; gap:18px; padding:13px 24px; }
+.brand { color:var(--ink); font-weight:780; text-decoration:none; letter-spacing:-.02em; }
+nav { display:flex; gap:6px; flex-wrap:wrap; }
+nav a { padding:7px 10px; color:var(--muted); border-radius:999px; font-size:13px; font-weight:650; text-decoration:none; }
+nav a:hover { color:var(--accent); background:var(--soft); }
+.shell { max-width:1120px; margin:auto; padding:clamp(24px,5vw,66px) 24px 80px; }
+.status-header { position:relative; overflow:hidden; padding:clamp(26px,5vw,54px); border:1px solid var(--line); border-radius:24px; background:var(--paper); box-shadow:var(--shadow); }
+.status-header::after { content:""; position:absolute; width:230px; height:230px; right:-90px; top:-105px; border-radius:50%; background:var(--soft); }
+.kicker { position:relative; z-index:1; display:flex; align-items:center; gap:10px; margin-bottom:18px; color:var(--muted); font-size:13px; font-weight:760; text-transform:uppercase; letter-spacing:.09em; }
+.status { display:inline-flex; gap:7px; align-items:center; padding:5px 10px; border:1px solid var(--line); border-radius:999px; color:var(--ink); background:var(--paper); letter-spacing:.04em; }
+.status::before { content:""; width:8px; height:8px; border-radius:50%; background:var(--accent-2); }
+h1 { position:relative; z-index:1; max-width:18ch; margin:0; font-size:clamp(36px,7vw,70px); line-height:.99; letter-spacing:-.048em; }
+.summary { position:relative; z-index:1; max-width:70ch; margin:24px 0 0; font-size:clamp(17px,2vw,21px); color:var(--muted); }
+.header-links { position:relative; z-index:1; display:flex; flex-wrap:wrap; gap:9px; margin-top:25px; }
+.header-links a { padding:9px 13px; border:1px solid var(--line); border-radius:9px; background:var(--paper); font-size:14px; font-weight:680; text-decoration:none; }
+.provenance { position:relative; z-index:1; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 22px; margin:30px 0 0; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; }
+.provenance span { min-width:0; overflow-wrap:anywhere; }
+article { max-width:880px; margin:18px auto 0; }
+.primary-section { margin-top:18px; padding:clamp(24px,5vw,48px); border:1px solid var(--line); border-radius:20px; background:var(--paper); }
+h2 { margin:0 0 19px; font-size:clamp(26px,4vw,38px); line-height:1.1; letter-spacing:-.025em; }
+h3 { margin:34px 0 10px; color:var(--accent); font-size:20px; line-height:1.25; }
+.anchor { margin-left:9px; opacity:0; font-weight:400; text-decoration:none; }
+h2:hover .anchor,h3:hover .anchor,.anchor:focus { opacity:.5; }
+p,ul,ol,blockquote { max-width:76ch; }
+#experiment-description > p:first-of-type { margin-top:0; color:var(--ink); font-size:1.13em; line-height:1.58; }
+li { margin:7px 0; }
+code { padding:2px 5px; border-radius:5px; background:var(--code); font:13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; overflow-wrap:anywhere; }
+pre { overflow:auto; padding:18px; border:1px solid var(--line); border-radius:10px; background:var(--code); }
+pre code { padding:0; background:none; overflow-wrap:normal; }
+blockquote { margin:22px 0; padding:12px 18px; border-left:4px solid var(--accent-2); background:#fbf1e9; color:#62412f; }
+.table-wrap { overflow:auto; margin:20px 0; border:1px solid var(--line); border-radius:12px; }
+table { width:100%; min-width:620px; border-collapse:collapse; }
+th,td { padding:12px 14px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+th { background:var(--soft); color:#174b45; font-size:12px; letter-spacing:.04em; text-transform:uppercase; }
+tr:last-child td { border-bottom:0; }
+.registry-card { margin:4px 0 30px; padding:18px; border:1px solid #b8d5cc; border-radius:14px; background:var(--soft); }
+.eyebrow { margin-bottom:13px; color:var(--accent); font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+.registry-route { display:block; margin-top:4px; color:var(--ink); font-size:13px; letter-spacing:0; text-transform:none; }
+.metrics { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; }
+.metric { padding:10px; border:1px solid color-mix(in srgb,var(--accent) 22%,transparent); border-radius:9px; background:var(--paper); }
+.metric span,.audio-card span { display:block; color:var(--muted); font-size:11px; line-height:1.35; }
+.metric strong { display:block; margin-top:4px; font-size:15px; }
+.audio-card { display:grid; grid-template-columns:minmax(160px,1fr) minmax(240px,2fr); align-items:center; gap:18px; margin-top:12px; padding:11px; border-radius:9px; background:var(--paper); }
+audio { width:100%; min-height:40px; }
+.unavailable,.shared-media { margin:12px 0 0; padding:11px; border-radius:9px; background:var(--paper); font-size:13px; }
+footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px; text-align:center; }
+@media (max-width:760px) { .topbar-inner { align-items:flex-start; flex-direction:column; padding:10px 16px; } nav { width:100%; overflow:auto; flex-wrap:nowrap; } .shell { padding:18px 10px 55px; } .status-header,.primary-section { border-radius:14px; } .provenance { grid-template-columns:1fr; } .metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } .audio-card { grid-template-columns:1fr; } }
+@media (prefers-color-scheme:dark) { :root { --bg:#111614; --paper:#19201e; --ink:#eef4f1; --muted:#aeb9b4; --line:#39443f; --accent:#70d7c5; --accent-2:#f09b65; --soft:#19332e; --code:#252c29; --shadow:none; } body { background:linear-gradient(135deg,#15231f,var(--bg)); } blockquote { background:#35271f; color:#efd8c8; } th { color:#bce7df; } }
+@media print { .topbar { position:relative; } body { background:white; } .shell { padding:16px; } .status-header,.primary-section { box-shadow:none; break-inside:avoid; } }
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar-inner"><a class="brand" href="../../android-llm-benchmarks/index.html">VibeVoice Android research</a><nav aria-label="Experiment sections"><a href="#experiment-description">Description</a><a href="#progress">Progress</a><a href="#results">Results</a></nav></div></header>
+<main class="shell">
+<header class="status-header" data-status-header="true">
+<div class="kicker"><span>Experiment 0027</span><span class="status">Completed</span></div>
+<h1>Experiment 0027 — Qwen3.5-2B on Android CPU</h1>
+<p class="summary">The project needed a credible Android route for Qwen3.5-2B despite having no official ready-to-run mobile artifact. A pinned third-party Q4_K_M GGUF completed the full CPU campaign, with medium-tier medians of 16.689 seconds TTFT and 8.77 output tokens per second.</p>
+<div class="header-links"><a href="../../../experiments/0027-qwen-3.5-2b-android/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-26</span><span>evidence commit: 8ee467922c121927925f621425ed34889d9b8c11</span><span>page source: docs/experiments/0027-qwen-3.5-2b-android/page.md</span><span>page source sha256: e9c18ccf5daac117451c30ec20e2f65d98489ac5df2c6951c82fb3029ae61d54</span></div>
+</header>
+<article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
+<h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
+<p>The project wanted to know whether Qwen3.5-2B could run credibly on the Galaxy S23 Ultra and how its local CPU route behaved under the same fixed prompts used for other Android language models. No official ready-to-run Qwen3.5 Android artifact was available, so the experiment tested the shortest reproducible alternative: a pinned Unsloth Q4_K_M GGUF served by a pinned llama.cpp build.</p>
+<p>This is a route-level measurement, not a pure model-family comparison. The deployed GGUF and quantization are third-party work, the runtime is CPU-only, and its conversion tool revision is unpublished. The route used one loaded llama-server with four threads and an 8,192-token context. Before every logical request it erased the reused slot, disabled prompt caching, and required <code>cache_n == 0</code>, full prompt evaluation, and positive prefill time. Thinking was disabled and every tier retained its rendered-prompt and token-ID hashes.</p>
+<p>The canonical workload kept the exact repository prompt bytes and a 2,048-token output ceiling. Qwen&#x27;s own tokenizer produced 174 short, 597 medium, and 1,926 long input tokens. The phone was the authorized SM-S918B / SM8550 running Android 16. The owning <a href="../../../experiments/0027-qwen-3.5-2b-android/README.md">experiment README</a>, <a href="../../../experiments/0027-qwen-3.5-2b-android/protocol/experiment-contract.json">route contract</a>, and <a href="../../../experiments/0027-qwen-3.5-2b-android/results/android-cpu-campaign/result.json">canonical result</a> preserve the exact evidence.</p>
+</section>
+<section class="primary-section" id="progress" data-primary-section="progress">
+<h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
+<p>The experiment first pinned the official Qwen source revision, the Unsloth deployment artifact, tokenizer and template identities, the llama.cpp runtime, and the Android build. A bounded host run proved only that the route could load and generate; those host timings were kept out of the Android leaderboard.</p>
+<p>A 64-token phone smoke then established Android viability on an earlier server artifact. The first full campaign did not become leaderboard evidence: it was interrupted after eight complete requests, before the medium and long requirements and cleanup record were complete. A later artifact-revision-2 startup also timed out before inference because a Windows-hosted ADB forward was polled on WSL localhost. Both attempts remain committed as diagnostics rather than being relabeled.</p>
+<p>The build was then made reproducible without an embedded web UI, and the client learned the correct forwarding host from <code>ADB_SERVER_SOCKET</code>. The final run used the UI-disabled server artifact, SHA-256 <code>8ce2767eba7480326682d69963eeb483204ee1541c3b5b0c0ef409068ea2b217</code>, and the Q4_K_M model artifact, SHA-256 <code>aaf42c8b7c3cab2bf3d69c355048d4a0ee9973d48f16c731c0520ee914699223</code>.</p>
+<p>That fresh campaign completed the required shape: one first short request, followed by five loaded-route requests for each of short, medium, and long. All 16 requests reached EOS, performed full prefill with no retained prompt/KV state, and avoided truncation. The experiment-owned phone stage was verified absent after cleanup. The <a href="../../../experiments/0027-qwen-3.5-2b-android/results/android-cpu-campaign/SHA256SUMS">59-file checksum manifest</a> binds the retained result, raw events, outputs, operating evidence, and rendered prompts.</p>
+</section>
+<section class="primary-section" id="results" data-primary-section="results">
+<h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
+<aside class="registry-card" data-registry-entry="0027-qwen35-2b-unsloth-q4km-llamacpp-cpu"><div class="eyebrow">Normalized Android LLM benchmark</div><div class="metrics"><div class="metric" data-metric="setup_seconds" data-value="2.936103108"><span>Setup</span><strong>2.936 s</strong></div><div class="metric" data-metric="medium_ttft_seconds" data-value="16.688610536"><span>Medium TTFT median</span><strong>16.689 s</strong></div><div class="metric" data-metric="medium_prefill_tokens_per_second" data-value="38.71504945409835"><span>Medium prefill median</span><strong>38.72 tok/s</strong></div><div class="metric" data-metric="medium_decode_tokens_per_second" data-value="8.767743885115669"><span>Medium decode median</span><strong>8.77 tok/s</strong></div><div class="metric" data-metric="peak_pss_bytes" data-value="2833463296"><span>Peak sampled PSS</span><strong>2702.2 MiB</strong></div></div><p class="unavailable"><strong>Output sanity is not quality.</strong> 16 sensible / 0 issue / 0 unchecked. This only screens exact retained outputs for obvious corruption or gibberish.</p></aside>
+<p>Setup took <strong>2.936 seconds</strong>, measured from immediately before remote server launch through the first successful health response. The first short request reached its first token in <strong>2.619 seconds</strong>, processed the prompt at <strong>73.24 input tok/s</strong>, externally decoded at <strong>12.91 output tok/s</strong>, and completed in <strong>42.817 seconds</strong>.</p>
+<div class="table-wrap"><table><thead><tr>
+<th>Tier</th>
+<th>Loaded-route requests</th>
+<th>Input tokens</th>
+<th>Median TTFT</th>
+<th>Median prefill</th>
+<th>Median external decode</th>
+<th>Median total</th>
+</tr></thead><tbody>
+<tr>
+<td>short</td>
+<td>5</td>
+<td>174</td>
+<td>3.876 s</td>
+<td>49.04 input tok/s</td>
+<td>10.34 output tok/s</td>
+<td>53.406 s</td>
+</tr>
+<tr>
+<td>medium</td>
+<td>5</td>
+<td>597</td>
+<td>16.689 s</td>
+<td>38.72 input tok/s</td>
+<td>8.77 output tok/s</td>
+<td>81.022 s</td>
+</tr>
+<tr>
+<td>long</td>
+<td>5</td>
+<td>1,926</td>
+<td>61.837 s</td>
+<td>33.80 input tok/s</td>
+<td>6.40 output tok/s</td>
+<td>243.575 s</td>
+</tr>
+</tbody></table></div>
+<p>Peak sampled process PSS was <strong>2,833,463,296 bytes</strong> (about 2,702 MiB), and process VmHWM reached <strong>2,835,431,424 bytes</strong>. Sampling targeted 100 ms across the server lifecycle, so it can miss brief peaks; VmHWM is cumulative process RSS rather than isolated model, KV, or workspace memory.</p>
+<p>The external decode metric excludes the first generated token from both its numerator and interval. The post-prefill-to-first-token split is unavailable because llama.cpp did not expose an alignable server-clock first-token timestamp. Request delivery timings include the local WSL-to-Windows ADB forwarding path. No calibrated power or OS energy measurement was available. During the campaign, battery temperature rose from 37.0 °C to 44.3 °C and the thermal status code rose from 0 to 3, so the medians are retained observations rather than thermally normalized values.</p>
+<p>Every exact output was marked <code>looks_sensible: true</code> with null issue notes. That is only a corruption/gibberish smoke check: it does not establish correctness, grounding, usefulness, style, transcript quality, or acceptance. The result supports this specific third-party Q4_K_M llama.cpp CPU route; it does not establish an official Qwen Android artifact or an architecture-only advantage over routes using other runtimes and quantizations.</p>
+</section></article>
+<footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
+</main>
+</body>
+</html>
