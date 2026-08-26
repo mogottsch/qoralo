@@ -1,0 +1,258 @@
+{
+  "schema_version": 1,
+  "experiment": "0030-qwen-3.5-2b-android-vulkan-gpu",
+  "status": "android_vulkan_artifact_phone_ready_pending_device_viability",
+  "locked_at": "2026-08-26",
+  "question": "Can the same pinned public Qwen3.5-2B Q4_K_M artifact execute through reproducible llama.cpp Vulkan offload on the authorized Galaxy S23 Ultra Adreno 740, with actual offload proven and CPU boundaries disclosed?",
+  "scope": {
+    "model": "Qwen3.5-2B post-trained model only",
+    "arm_id": "qwen35-2b-unsloth-q4km-llamacpp-vulkan-adreno",
+    "included": "Text-only inference through the same third-party Unsloth GGUF conversion on llama.cpp Vulkan0 / Adreno 740 with 25 model layers requested for GPU offload.",
+    "excluded": [
+      "vision inputs or the vision encoder",
+      "CPU-only execution or Vulkan initialization followed by silent CPU fallback",
+      "a GPU-exclusive claim: CPU server/tokenizer/sampler/orchestration and unsupported-operation fallback remain possible and must be disclosed",
+      "NPU, QNN, HTP, or proprietary SDK execution",
+      "thinking-mode output",
+      "podcast transcript quality evaluation",
+      "host measurements in the Android registry"
+    ]
+  },
+  "canonical_protocol": {
+    "path": "protocols/android-llm-benchmark/contract.json",
+    "sha256": "2bb2de193745bc9b74c98639ee077f07615702655b2fc6118185148e2a0c0b46",
+    "workloads": {
+      "short": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae",
+      "medium": "5e168aa3232f06c92959b686188192471b2d1a62cd1c857a616fd8e29456ddf1",
+      "long": "092840fbe879259110fa4d0b15bc383012f16b7b42a38d224b2ead231e86aad8"
+    },
+    "tier_order": [
+      "short",
+      "medium",
+      "long"
+    ],
+    "first_request": {
+      "tier": "short",
+      "count": 1
+    },
+    "minimum_loaded_route_requests_per_tier": 5,
+    "loaded_model_runtime_route_reused": true,
+    "engine_reused_when_runtime_exposes_engine": true,
+    "session_object_reuse_required": false,
+    "request_isolation_strategy": "proven_full_in_session_conversation_and_kv_reset",
+    "conversation_state_isolated_each_request": true,
+    "kv_state_isolated_each_request": true,
+    "reset_or_session_creation_duration_reported_separately": true,
+    "reset_included_in_total_request": false,
+    "model_remap_or_reload_between_requests": false,
+    "accelerator_recompilation_between_requests": false,
+    "retained_prompt_or_kv_reuse_between_requests": false,
+    "max_output_tokens": 2048,
+    "request_timeout_seconds": 1800,
+    "byte_identical_output_required": false
+  },
+  "upstream_model": {
+    "name": "Qwen/Qwen3.5-2B",
+    "url": "https://huggingface.co/Qwen/Qwen3.5-2B/tree/15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "revision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "private": false,
+    "gated": false,
+    "license": "Apache-2.0",
+    "license_sha256": "bbedc3fda3305820b977265f01b8619d87570a6739de3a5582c3464840f1e57a",
+    "published_parameter_count": "2B",
+    "llama_cpp_runtime_reported_parameter_count": "1.88 B (rounded)",
+    "native_context_tokens": 262144,
+    "architecture": "24-layer dense hybrid: three Gated DeltaNet layers followed by one full-attention layer, repeated six times",
+    "source": "Pinned official model card and config.json. The official repository is Transformers-format source, not the deployed Android artifact."
+  },
+  "deployment_artifact": {
+    "publisher": "Unsloth",
+    "official_qwen_artifact": false,
+    "source_kind": "third-party GGUF conversion and quantization derived from Qwen/Qwen3.5-2B",
+    "repository": "unsloth/Qwen3.5-2B-GGUF",
+    "repository_url": "https://huggingface.co/unsloth/Qwen3.5-2B-GGUF/tree/f6d5376be1edb4d416d56da11e5397a961aca8ae",
+    "revision": "f6d5376be1edb4d416d56da11e5397a961aca8ae",
+    "filename": "Qwen3.5-2B-Q4_K_M.gguf",
+    "url": "https://huggingface.co/unsloth/Qwen3.5-2B-GGUF/resolve/f6d5376be1edb4d416d56da11e5397a961aca8ae/Qwen3.5-2B-Q4_K_M.gguf",
+    "bytes": 1280835840,
+    "sha256": "aaf42c8b7c3cab2bf3d69c355048d4a0ee9973d48f16c731c0520ee914699223",
+    "format": "GGUF v3, one self-contained shard, text model only",
+    "quantization": {
+      "name": "Q4_K_M",
+      "gguf_file_type": 15,
+      "gguf_quantization_version": 2,
+      "publisher": "Unsloth",
+      "weight_scheme": "GGML K-quant medium: primarily Q4_K block quantization with the Q4_K_M mixed tensor policy",
+      "nominal_bit_width": 4,
+      "block_scheme": "Q4_K uses 256-weight super-blocks composed of 32-weight blocks with quantized scales/minima; the M variant retains selected tensors at higher precision according to the quantizer policy.",
+      "calibration": "importance-matrix assisted",
+      "imatrix_file_metadata": "Qwen3.5-2B-GGUF/imatrix_unsloth.gguf",
+      "imatrix_file_sha256": "0661bad5020138c6da2d45d2223ba32f0e4e8329a2fbf8e2ae382e782348fbca",
+      "imatrix_dataset_metadata": "unsloth_calibration_Qwen3.5-2B.txt",
+      "imatrix_entries": 186,
+      "imatrix_chunks": 80,
+      "conversion_tool_revision": null,
+      "conversion_tool_revision_missing_reason": "The pinned Unsloth repository and GGUF metadata identify Unsloth, Q4_K_M, and the importance matrix but do not publish the exact converter/quantizer commit. Artifact bytes are still bound by revision, size, and SHA-256; this provenance limitation must remain visible."
+    }
+  },
+  "tokenizer_and_template": {
+    "source": "Qwen/Qwen3.5-2B",
+    "revision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "tokenizer_class": "Qwen2Tokenizer",
+    "files": {
+      "tokenizer.json": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+      "tokenizer_config.json": "49e2b6e395f959f077f1e992b338919c0d4a9732fc6e613995e06557f843500c",
+      "merges.txt": "a9d356d7bdf1ef4949e3e748e95b8e10ad9d4e2e838eddc38a0a7b6b94d1db8d",
+      "vocab.json": "ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003"
+    },
+    "upstream_chat_template_sha256": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80",
+    "deployed_embedded_chat_template_sha256": "7f0e529032c25183bcd66c7f238da2d377f43be754a94e2725a58c4e16d2ed67",
+    "template_difference": "The deployed template changes only iteration over tool-call argument mappings. The canonical system+user, no-tools branch is unaffected; canonical rendered bytes are independently hash-bound.",
+    "thinking": {
+      "enabled": false,
+      "server_option": "--reasoning off",
+      "per_request_option": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "proof": "Every canonical rendered prompt must end with the exact bytes <think>\\n\\n</think>\\n\\n. A nonempty thinking prefix is a fatal mismatch."
+    },
+    "host_prompt_inventory": {
+      "short": {
+        "input_tokens": 174,
+        "rendered_sha256": "afed1eb692d38446b49ac1c39dec80ae3bd8845282398c09b8485ce4a2a1371e",
+        "token_ids_int32le_sha256": "dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4"
+      },
+      "medium": {
+        "input_tokens": 597,
+        "rendered_sha256": "0559ad81d5528fefe250c945816a1d10da0141fbf7ad124343ef69eba5db42a5",
+        "token_ids_int32le_sha256": "8b07ff28c1c94a93b79880aa27f73b9d5cbddc1f215f857cb58b1d021422c5e2"
+      },
+      "long": {
+        "input_tokens": 1926,
+        "rendered_sha256": "c48e00cf1e45fb7dd7edbdcad17578e0857ce01ca621dbd47972265721701135",
+        "token_ids_int32le_sha256": "a36f8139e2c4b83976fc74a37bf93f184272823b7144e7a167d9bee6836785ca"
+      }
+    }
+  },
+  "route_rationale": {
+    "chosen": "Pinned public llama.cpp Vulkan backend using the same already viable Qwen3.5-2B Q4_K_M GGUF isolates backend effects while avoiding model or quantization changes.",
+    "offload_claim_boundary": "The route may be called Vulkan GPU offload only when the device log proves Vulkan0 on Adreno 740, a Vulkan model buffer, a Vulkan compute buffer, and all 25/25 offloadable model layers offloaded. CPU retains server, tokenizer, sampler, graph scheduling/orchestration, and any operation unsupported by Vulkan. The route is not GPU-exclusive.",
+    "tradeoffs": [
+      "The deployment artifact and quantization remain third-party, not official Qwen artifacts.",
+      "Vulkan is public and reproducible but Android uses the device vendor Vulkan driver.",
+      "The pinned NDK glslc cannot compile optional cooperative-matrix, integer-dot, bfloat16, or FP4 shader extensions, so only the generated base shader variants are embedded.",
+      "Runtime and quantization differ from other model routes, so family comparisons are confounded."
+    ],
+    "fallback_policy": "Any missing Adreno/Vulkan/offloaded-layer/model-buffer/compute-buffer proof, GPU option ignored warning, Vulkan initialization failure, or CPU-only result is a blocker rather than publishable GPU evidence."
+  },
+  "runtime": {
+    "name": "llama.cpp",
+    "revision": "0a5ac49bce4c42893368585edf3ffb41a38f0108",
+    "source_tree": "9355e5ebbca69eb403229473bec6ddfb38f055e0",
+    "source": "https://github.com/ggml-org/llama.cpp/tree/0a5ac49bce4c42893368585edf3ffb41a38f0108",
+    "build_number": 10627,
+    "build_recipe": "experiments/0030-qwen-3.5-2b-android-vulkan-gpu/tools/build_android.sh",
+    "provider_backend": "GGML Vulkan GPU offload",
+    "requested_device": "Vulkan0 / Adreno (TM) 740",
+    "requested_gpu_layers": 25,
+    "split_mode": "none",
+    "main_gpu": 0,
+    "cpu_threads": 4,
+    "context_tokens": 8192,
+    "parallel_slots": 1,
+    "android_ndk": "28.1.13356709 (r28b)",
+    "android_api_minimum": 31,
+    "android_abi": "arm64-v8a",
+    "compile_arch": "armv8.7-a",
+    "vulkan_headers": {
+      "repository": "KhronosGroup/Vulkan-Headers",
+      "revision": "217e93c664ec6704ec2d8c36fa116c1a4a1e2d40",
+      "source_tree": "3617c6a36daa7c2c60dc4e017be821b3e235341b",
+      "tag": "v1.3.275",
+      "vulkan_hpp_bytes": 877362,
+      "vulkan_hpp_sha256": "2680718d7452870e5b2127b7cbfafcc2f71af7dd74106c44d25927698c8b18ac"
+    },
+    "shader_sources": {
+      "source_revision": "llama.cpp tree 9355e5ebbca69eb403229473bec6ddfb38f055e0",
+      "manifest": "experiments/0030-qwen-3.5-2b-android-vulkan-gpu/protocol/vulkan-shaders.SHA256SUMS",
+      "manifest_sha256": "1a5117a7810b987549237ef3ab87b026626bf76e591bc3cd699c17a3b08c1f16",
+      "compute_shader_source_count": 147,
+      "embedding": "The pinned vulkan-shaders-gen host tool invokes the pinned NDK glslc and embeds generated SPIR-V arrays into the static ggml-vulkan backend."
+    },
+    "shader_compiler": {
+      "source": "Android NDK 28.1.13356709 shader-tools/linux-x86_64/glslc",
+      "bytes": 6896168,
+      "sha256": "452a8331070f15d126df5e263fb9f04e78240dac5f1defe6c434b2c2eef0a53a",
+      "version": "shaderc v2022.3 ndk-r27-beta1; SPIR-V 1.0 target",
+      "spirv_header_bytes": 125518,
+      "spirv_header_sha256": "e4e3a2cadd392141ca9f8b5528d450a39d891526b6cab25aa578a6e788f7b58d",
+      "optional_shader_extensions_compiled": {
+        "cooperative_matrix": false,
+        "cooperative_matrix2": false,
+        "cooperative_matrix_decode_vector": false,
+        "integer_dot_product": false,
+        "bfloat16": false,
+        "float_e2m1": false,
+        "float_e4m3": false
+      }
+    },
+    "build": "CMake Release, GGML_VULKAN=ON, static llama/GGML and c++_static; Android libvulkan/libm/libdl/libc remain dynamic. Embedded SPIR-V is generated at build time with pinned NDK glslc. Source/build paths are prefix-mapped; OpenSSL and embedded web UI are disabled.",
+    "dynamic_dependencies": [
+      "libc.so",
+      "libdl.so",
+      "libm.so",
+      "libvulkan.so"
+    ],
+    "embedded_web_ui": false,
+    "android_server": {
+      "artifact_revision": 1,
+      "bytes": 34242152,
+      "sha256": "b806fc03df6510eb7a141aea093cec7a878a2aa7456ea076a84791fadec68c00",
+      "clean_rebuilds_byte_identical": true
+    },
+    "client_source": "experiments/0030-qwen-3.5-2b-android-vulkan-gpu/tools/run_client.py",
+    "greedy_proof": "temperature=-1 is normalized to zero in the server generation settings. At the pinned revision, src/llama-sampler.cpp:270-282 retains only the highest-logit token whenever temperature <= 0; the request sampler chain contains only temperature and all penalties are neutral.",
+    "state_reset": "The loaded llama-server Vulkan route and slot/session object remain alive. Before every logical request, POST /slots/0?action=erase must succeed and its duration is recorded separately outside total-request timing. Each completion sets cache_prompt=false; timings.cache_n must equal zero, prompt_n the full independently tokenized prompt count, and prompt_ms positive."
+  },
+  "device": {
+    "model": "SM-S918B",
+    "soc": "SM8550",
+    "serial": "R5CW81PR8SY",
+    "abi": "arm64-v8a",
+    "identity_must_match": true,
+    "remote_root": "/data/local/tmp/vibevoice-0030-qwen-3.5-2b-android-vulkan-gpu",
+    "phone_lock": "artifacts/locks/phone.lock held across identity, staging, execution, evidence, and cleanup"
+  },
+  "timing_and_evidence": {
+    "setup_boundary": "Host monotonic timestamp immediately before remote Vulkan llama-server launch through health readiness plus required backend-proof observation; includes artifact mapping, Vulkan device/runtime/pipeline initialization, model/context creation, and readiness polling.",
+    "request_boundary": "Immediately before native template rendering through final streamed stop delivery. The separately timed slot erase completes before this boundary and is not included in total request.",
+    "request_to_first_token": "Client request start through the first SSE event carrying a generated token ID.",
+    "prefill": "llama.cpp final-event prompt_ms and prompt_n; route-internal prompt evaluation timing.",
+    "post_prefill_to_first_token": "Null because llama.cpp does not expose a server-clock first-token timestamp alignable with aggregate prompt_ms.",
+    "decode": "External first generated-token event through final stop event, with the first token excluded from the numerator; llama.cpp predicted timing is retained separately and includes all generated tokens.",
+    "raw_first": true,
+    "memory": "100 ms target sampling of process PSS/VmHWM plus public KGSL busy/frequency sysfs nodes over the server lifecycle. Process memory includes CPU-visible allocations but does not directly isolate vendor-driver/GPU-private allocations.",
+    "output_sanity": "Exact-output-hash sensible-text corruption smoke only."
+  },
+  "fatal_gates": [
+    "wrong workload, model, runtime, runner, device, or staged hash",
+    "missing Vulkan0 / Adreno 740 initialization proof",
+    "missing all 25/25 layers offloaded, Vulkan model buffer, or Vulkan compute buffer proof",
+    "GPU option ignored, Vulkan initialization failure, or CPU-only fallback evidence",
+    "prompt plus 2048 ceiling exceeds 8192, or server reports truncation",
+    "non-thinking template control or greedy sampler configuration not applied",
+    "slot erase fails, timings.cache_n is nonzero, or full prompt evaluation is unproved",
+    "unauthorized/destructive device operation or phone-lock violation",
+    "raw output cannot be bound to the claimed request"
+  ],
+  "nullable_not_fatal": [
+    "post-prefill-to-first-token split",
+    "calibrated power telemetry",
+    "individual thermal sensors unavailable to shell",
+    "KGSL frequency/busy telemetry unavailable to Android shell when server-log offload proof is complete",
+    "brief memory or GPU-activity peaks missed by 100 ms target sampling",
+    "exact partition of individual graph operations between Vulkan and CPU when the route is described only as bounded GPU offload, not GPU-exclusive execution"
+  ]
+}
