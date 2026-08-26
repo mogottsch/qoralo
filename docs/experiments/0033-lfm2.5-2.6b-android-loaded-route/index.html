@@ -70,32 +70,31 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="topbar"><div class="topbar-inner"><a class="brand" href="../../android-llm-benchmarks/index.html">VibeVoice Android research</a><nav aria-label="Experiment sections"><a href="#experiment-description">Description</a><a href="#progress">Progress</a><a href="#results">Results</a></nav></div></header>
 <main class="shell">
 <header class="status-header" data-status-header="true">
-<div class="kicker"><span>Experiment 0033</span><span class="status">Active</span></div>
+<div class="kicker"><span>Experiment 0033</span><span class="status">Completed</span></div>
 <h1>Experiment 0033 — LFM2.5-2.6B Android loaded routes</h1>
-<p class="summary">LFM2.5-2.6B completed its canonical persistent Android CPU campaign with proven slot isolation. The separate OpenCL GPU arm remains active and pending.</p>
+<p class="summary">LFM2.5-2.6B completed separate canonical persistent Android CPU and provider-proven OpenCL campaigns with full slot isolation. The GPU route is mixed offload, not GPU-exclusive.</p>
 <div class="header-links"><a href="../../../experiments/0033-lfm2.5-2.6b-android-loaded-route/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-08-26</span><span>evidence commit: 8c71f03d54fa98e147570471b640a9ea55fe7503</span><span>page source: docs/experiments/0033-lfm2.5-2.6b-android-loaded-route/page.md</span><span>page source sha256: e91401ffe3a512586dee750b8b6ef75d1e26742c50556960302319a9829d887a</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-27</span><span>evidence commit: 306c777d9a80fe83d238997c75053854761dddd1</span><span>page source: docs/experiments/0033-lfm2.5-2.6b-android-loaded-route/page.md</span><span>page source sha256: 66b3b1cc5136bfe5827b718fee153f6113a0c10bcb407663432fb13b13f26e6f</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
-<p>This experiment supplies the persistent loaded-route evidence that experiment 0029 intentionally did not attempt. Experiment 0029 remains a one-request Android CPU viability smoke through <code>llama-completion</code>; it is not relabeled, upgraded, or used as a campaign distribution. Experiment 0033 instead uses one persistent llama-server and one reusable slot for separate canonical CPU and OpenCL/Adreno arms.</p>
-<p>Both arms use LiquidAI&#x27;s official <code>LFM2.5-2.6B-Q4_K_M.gguf</code>, <strong>1,674,455,040 bytes</strong> with SHA-256 <code>02a8b7e17487d326e46d68ce0ba24211e1b80a14c4cd0597fa73c1cd697f52ed</code>. The pinned tokenizer produces 171 short, 600 medium, and 1,922 long input tokens. The native template and reasoning continuation are preserved, including one BOS and the <code>&lt;think&gt;</code> generation prefix. Every prompt fits the 8,192-token route context with the fixed 2,048-token output ceiling.</p>
-<p>The completed CPU arm uses llama.cpp build 10627 at commit <code>0a5ac49bce4c42893368585edf3ffb41a38f0108</code>, four inference and batch threads, <code>--device none</code>, and <code>--gpu-layers 0</code>. Its server is <strong>9,844,576 bytes</strong>, SHA-256 <code>8ce2767eba7480326682d69963eeb483204ee1541c3b5b0c0ef409068ea2b217</code>. Before every request the runner separately times a full slot erase, disables prompt caching, and requires <code>cache_n == 0</code>, the full independently counted prompt, positive prefill, and no truncation. The owning <a href="../../../experiments/0033-lfm2.5-2.6b-android-loaded-route/README.md">experiment README</a>, <a href="../../../experiments/0033-lfm2.5-2.6b-android-loaded-route/protocol/experiment-contract.json">route contract</a>, and <a href="../../../experiments/0033-lfm2.5-2.6b-android-loaded-route/results/android-cpu-campaign/result.json">CPU result</a> bind the claim.</p>
+<p>This experiment supplies the persistent loaded-route evidence that experiment 0029 intentionally did not attempt. Experiment 0029 remains a one-request Android CPU viability smoke through <code>llama-completion</code>; it is not relabeled, upgraded, or used as a campaign distribution. Experiment 0033 instead uses one persistent llama-server and one reusable slot for separate canonical CPU and OpenCL/Adreno campaigns.</p>
+<p>Both completed arms use LiquidAI&#x27;s official <code>LFM2.5-2.6B-Q4_K_M.gguf</code>, <strong>1,674,455,040 bytes</strong> with SHA-256 <code>02a8b7e17487d326e46d68ce0ba24211e1b80a14c4cd0597fa73c1cd697f52ed</code>. The pinned tokenizer produces 171 short, 600 medium, and 1,922 long input tokens. The native template and reasoning continuation are preserved, including one BOS and the <code>&lt;think&gt;</code> generation prefix. Every prompt fits the 8,192-token route context with the fixed 2,048-token output ceiling.</p>
+<p>Both arms use llama.cpp build 10627 at commit <code>0a5ac49bce4c42893368585edf3ffb41a38f0108</code>. The CPU-only server is <strong>9,844,576 bytes</strong>, SHA-256 <code>8ce2767eba7480326682d69963eeb483204ee1541c3b5b0c0ef409068ea2b217</code>, with <code>--device none</code> and zero GPU layers. The OpenCL server is <strong>12,313,808 bytes</strong>, SHA-256 <code>64409e6e96a7d003ed6c68ec12363f3e6d7c34d46af40bc439cb84f060cd4ced</code>, requesting <code>GPUOpenCL</code> and 31 GPU layers. Each arm used its own fresh server, setup boundary, operating evidence, and canonical campaign. The owning <a href="../../../experiments/0033-lfm2.5-2.6b-android-loaded-route/README.md">experiment README</a>, <a href="../../../experiments/0033-lfm2.5-2.6b-android-loaded-route/protocol/experiment-contract.json">route contract</a>, <a href="../../../experiments/0033-lfm2.5-2.6b-android-loaded-route/results/android-cpu-campaign/result.json">CPU result</a>, and <a href="../../../experiments/0033-lfm2.5-2.6b-android-loaded-route/results/android-opencl-campaign/result.json">OpenCL result</a> bind the two routes.</p>
 </section>
 <section class="primary-section" id="progress" data-primary-section="progress">
 <h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
-<p>Experiment 0029 first established that the exact official artifact could execute one bounded request on Android. Its one-shot executable necessarily reloads the model, exposes neither the protocol setup boundary nor caller-observed TTFT, and cannot satisfy loaded-route campaign semantics. That active predecessor remains honest viability evidence only.</p>
-<p>Experiment 0033 moved to a newer pinned persistent llama-server revision. The CPU-only server was independently bound and launched on the authorized Galaxy S23 Ultra with no accelerator device and zero GPU layers. A single loaded server and slot then completed one first short request plus five loaded-route requests for each of short, medium, and long.</p>
-<p>All 16 requests successfully erased the slot before execution, excluded reset time from request totals, reported zero cached prompt tokens, evaluated each full prompt with positive prefill time, and retained exact output bytes. No model remap/reload, accelerator recompilation, or prompt/KV reuse occurred between requests. Short and medium requests ended at EOS. Every long request validly reached the exact 2,048-token output ceiling with <code>max_tokens</code>; no input was truncated, so this is a valid protocol stop rather than a failed request. Cleanup verified the scoped remote root absent. The <a href="../../../experiments/0033-lfm2.5-2.6b-android-loaded-route/results/android-cpu-campaign/SHA256SUMS">68-file checksum manifest</a> binds the campaign.</p>
-<p>The second arm remains active and pending. It will use a separately launched OpenCL server and must independently prove the Qualcomm driver, <code>Adreno740v2</code>, Adreno-optimized source kernels, all 31/31 offloadable layers, exact OpenCL buffers, request isolation, and its own fresh canonical campaign. No GPU row or result is implied by the completed CPU work.</p>
+<p>Experiment 0029 first established that the exact official artifact could execute one bounded request on Android. Its one-shot executable reloads the model and cannot satisfy loaded-route campaign semantics. That predecessor remains honest viability evidence only.</p>
+<p>Experiment 0033 moved to a newer pinned persistent llama-server revision. For each arm, a single loaded server and slot completed one first short request plus five loaded-route requests for each of short, medium, and long. Before every request, a separately timed <code>POST /slots/0?action=erase</code> succeeded. Every request disabled prompt caching, reported <code>cache_n == 0</code>, evaluated its full prompt with positive prefill time, avoided input truncation, and retained exact output bytes. No model remap/reload, accelerator recompilation, or prompt/KV reuse occurred between requests. The CPU <a href="../../../experiments/0033-lfm2.5-2.6b-android-loaded-route/results/android-cpu-campaign/SHA256SUMS">68-file manifest</a> and OpenCL <a href="../../../experiments/0033-lfm2.5-2.6b-android-loaded-route/results/android-opencl-campaign/SHA256SUMS">69-file manifest</a> bind the two fresh campaigns.</p>
+<p>The OpenCL campaign also proved its provider in the measured server process: sysfs identified <code>Adreno740v2</code>; the driver reported Qualcomm OpenCL 3.0 compiler <code>E031.41.03.64</code>; public Adreno-optimized kernels were selected; all 31/31 offloadable layers were placed on GPU; and OpenCL model, KV, recurrent-state, and compute buffers were allocated. Exact observed OpenCL sizes were 1,384.03 MiB model, 128.00 MiB KV, 0.34 MiB recurrent state, and 546.01 MiB compute. CPU model and CPU_REPACK buffers of 205.08 MiB each plus a 26.01 MiB CPU compute buffer remained. The accepted claim is therefore mixed <strong>OpenCL GPU offload</strong>, never GPU-exclusive execution.</p>
 </section>
 <section class="primary-section" id="results" data-primary-section="results">
 <h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
-<aside class="registry-card" data-registry-entry="0033-lfm25-26b-liquidai-q4km-llamacpp-cpu"><div class="eyebrow">Normalized Android LLM benchmark</div><div class="metrics"><div class="metric" data-metric="setup_seconds" data-value="15.806043938"><span>Setup</span><strong>15.806 s</strong></div><div class="metric" data-metric="medium_ttft_seconds" data-value="20.378455517"><span>Loaded-route medium TTFT</span><strong>20.378 s</strong></div><div class="metric" data-metric="medium_prefill_tokens_per_second" data-value="30.340836824552287"><span>Loaded-route medium prefill</span><strong>30.34 tok/s</strong></div><div class="metric" data-metric="medium_decode_tokens_per_second" data-value="7.9388775371969595"><span>Loaded-route medium decode</span><strong>7.94 tok/s</strong></div><div class="metric" data-metric="peak_pss_bytes" data-value="3559703552"><span>Peak sampled PSS</span><strong>3394.8 MiB</strong></div></div><p class="unavailable"><strong>Output sanity is not quality.</strong> 16 sensible / 0 issue / 0 unchecked. This only screens exact retained outputs for obvious corruption or gibberish.</p></aside>
-<p>CPU setup took <strong>15.806 seconds</strong>, from immediately before remote server launch through the first healthy response after model and context readiness. The first short request reached its first token in <strong>3.400 seconds</strong>, processed 171 input tokens at <strong>52.12 input tok/s</strong>, externally decoded at <strong>11.33 output tok/s</strong>, and completed at EOS in <strong>91.329 seconds</strong>.</p>
+<aside class="registry-card" data-registry-entry="0033-lfm25-26b-liquidai-q4km-llamacpp-cpu"><div class="eyebrow">Normalized Android LLM benchmark<strong class="registry-route">llama.cpp CPU · GGML · 4 threads · loaded server with slot erase</strong></div><div class="metrics"><div class="metric" data-metric="setup_seconds" data-value="15.806043938"><span>Setup</span><strong>15.806 s</strong></div><div class="metric" data-metric="medium_ttft_seconds" data-value="20.378455517"><span>Loaded-route medium TTFT</span><strong>20.378 s</strong></div><div class="metric" data-metric="medium_prefill_tokens_per_second" data-value="30.340836824552287"><span>Loaded-route medium prefill</span><strong>30.34 tok/s</strong></div><div class="metric" data-metric="medium_decode_tokens_per_second" data-value="7.9388775371969595"><span>Loaded-route medium decode</span><strong>7.94 tok/s</strong></div><div class="metric" data-metric="peak_pss_bytes" data-value="3559703552"><span>Peak sampled PSS</span><strong>3394.8 MiB</strong></div></div><p class="unavailable"><strong>Output sanity is not quality.</strong> 16 sensible / 0 issue / 0 unchecked. This only screens exact retained outputs for obvious corruption or gibberish.</p></aside>
+<aside class="registry-card" data-registry-entry="0033-lfm25-26b-liquidai-q4km-llamacpp-opencl-adreno"><div class="eyebrow">Normalized Android LLM benchmark<strong class="registry-route">llama.cpp OpenCL GPU offload · Adreno 740 · 31/31 layers · loaded server with slot erase</strong></div><div class="metrics"><div class="metric" data-metric="setup_seconds" data-value="20.763595189"><span>Setup</span><strong>20.764 s</strong></div><div class="metric" data-metric="medium_ttft_seconds" data-value="10.281889435"><span>Loaded-route medium TTFT</span><strong>10.282 s</strong></div><div class="metric" data-metric="medium_prefill_tokens_per_second" data-value="60.53003732483869"><span>Loaded-route medium prefill</span><strong>60.53 tok/s</strong></div><div class="metric" data-metric="medium_decode_tokens_per_second" data-value="7.142290389703314"><span>Loaded-route medium decode</span><strong>7.14 tok/s</strong></div><div class="metric" data-metric="peak_pss_bytes" data-value="675495936"><span>Peak sampled PSS</span><strong>644.2 MiB</strong></div></div><p class="unavailable"><strong>Output sanity is not quality.</strong> 16 sensible / 0 issue / 0 unchecked. This only screens exact retained outputs for obvious corruption or gibberish.</p></aside>
+<p>The table compares medians from the five loaded-route requests in each tier. The CPU and OpenCL rows are independent campaigns; their outputs and stop lengths can differ because backend-dependent floating-point execution is not required to be byte-identical.</p>
 <div class="table-wrap"><table><thead><tr>
-<th>Tier</th>
-<th>Loaded-route requests</th>
+<th>Backend / tier</th>
 <th>Input / output tokens</th>
 <th>Stop</th>
 <th>Median TTFT</th>
@@ -104,8 +103,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <th>Median total</th>
 </tr></thead><tbody>
 <tr>
-<td>short</td>
-<td>5</td>
+<td>CPU short</td>
 <td>171 / 997</td>
 <td>EOS</td>
 <td>5.821 s</td>
@@ -114,8 +112,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>118.926 s</td>
 </tr>
 <tr>
-<td>medium</td>
-<td>5</td>
+<td>CPU medium</td>
 <td>600 / 1,672</td>
 <td>EOS</td>
 <td>20.378 s</td>
@@ -124,8 +121,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>230.932 s</td>
 </tr>
 <tr>
-<td>long</td>
-<td>5</td>
+<td>CPU long</td>
 <td>1,922 / 2,048</td>
 <td>max tokens</td>
 <td>68.271 s</td>
@@ -133,11 +129,37 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>6.87 output tok/s</td>
 <td>366.145 s</td>
 </tr>
+<tr>
+<td>OpenCL short</td>
+<td>171 / 1,488</td>
+<td>EOS</td>
+<td>2.888 s</td>
+<td>61.97 input tok/s</td>
+<td>7.98 output tok/s</td>
+<td>189.261 s</td>
+</tr>
+<tr>
+<td>OpenCL medium</td>
+<td>600 / 2,048</td>
+<td>max tokens</td>
+<td>10.282 s</td>
+<td>60.53 input tok/s</td>
+<td>7.14 output tok/s</td>
+<td>296.002 s</td>
+</tr>
+<tr>
+<td>OpenCL long</td>
+<td>1,922 / 2,023</td>
+<td>EOS</td>
+<td>31.328 s</td>
+<td>63.65 input tok/s</td>
+<td>7.04 output tok/s</td>
+<td>317.972 s</td>
+</tr>
 </tbody></table></div>
-<p>Peak sampled process PSS was <strong>3,559,703,552 bytes</strong> and process VmHWM was <strong>3,560,947,712 bytes</strong>. Sampling began just after process launch, can miss brief peaks, and does not isolate model or KV memory. VmHWM is a cumulative process-lifetime high-water mark.</p>
-<p>Operating conditions materially limit comparisons. Thermal status moved from 1 to 4 and battery temperature rose from 38.3 °C to 44.7 °C; sustained throttling likely affected later requests. The phone was USB powered, but no calibrated external or OS energy measurement was available.</p>
-<p>The post-prefill-to-first-token split remains null because llama.cpp reports aggregate prompt time without an alignable server-clock first-token timestamp. External decode excludes the first generated token and includes the WSL-to-Windows ADB delivery boundary. All 16 outputs passed only the narrow exact-hash sensible-text corruption check, not a quality, correctness, grounding, usefulness, or acceptance evaluation.</p>
-<p>This normalized row establishes the canonical persistent <strong>CPU-only</strong> route. The experiment page remains active until its independently evidenced OpenCL arm completes or is explicitly stopped; that arm currently has no leaderboard row.</p>
+<p>CPU setup took <strong>15.806 seconds</strong>; peak sampled process PSS was <strong>3,559,703,552 bytes</strong>, and VmHWM was <strong>3,560,947,712 bytes</strong>. OpenCL setup took <strong>20.764 seconds</strong>; process PSS peaked at <strong>675,495,936 bytes</strong>, and VmHWM at <strong>758,554,624 bytes</strong>. The OpenCL process metrics exclude isolated vendor-driver and GPU-private memory and cannot be treated as total-memory parity with CPU. Sampling can miss brief peaks, and VmHWM is cumulative.</p>
+<p>The CPU campaign moved from thermal status 1 to 4 with battery temperature 38.3 °C to 44.7 °C. OpenCL moved from status 1 to 3 and 38.4 °C to 43.8 °C. Likely thermal throttling limits comparison. Both were USB powered; neither has calibrated external or OS energy evidence. OpenCL KGSL observations ranged from 220 to 719 MHz and reached 99% sampled busy, which is operating context rather than power measurement.</p>
+<p>All 32 logical requests completed. CPU short/medium and OpenCL short/long ended at EOS. CPU long and OpenCL medium validly reached the exact 2,048-token output ceiling with <code>max_tokens</code>; no input was truncated. Post-prefill-to-first-token remains null because llama.cpp exposes no alignable server-clock first-token timestamp. Output sanity only screens exact retained text for obvious corruption or gibberish and is not a quality, correctness, grounding, usefulness, or acceptance judgment.</p>
 </section></article>
 <footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
 </main>
