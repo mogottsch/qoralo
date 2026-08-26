@@ -19,6 +19,12 @@ class TestContract(unittest.TestCase):
   for x in ('android-stage-cpu','android-stage-opencl','--device none --gpu-layers 0','--device GPUOpenCL --gpu-layers 31','POST /slots/0?action=erase','range(1, 6)','cache_n'): self.assertIn(x,s+c)
   self.assertIn('tokenizer.ggml.add_bos_token=bool:false',s); self.assertIn('<|im_start|>assistant\\n<think>',c)
   self.assertIn('vibevoice-0033-lfm2.5-2.6b-android-loaded-route-$ARM',s); self.assertIn('flock -n 9',s); self.assertNotIn('/sdcard',s)
+ def test_complete_cpu_campaign_is_separate_and_valid(self):
+  base=EXP/'results/android-cpu-campaign'; d=json.loads((base/'result.json').read_text()); c=self.c['completed_cpu_campaign']; self.assertEqual(c['result_sha256'],sha(base/'result.json')); self.assertEqual(c['checksum_manifest_sha256'],sha(base/'SHA256SUMS')); self.assertEqual(16,len(d['runs'])); self.assertEqual('GGML CPU',d['runtime']['provider_backend']); self.assertEqual('none',d['runtime']['provider_device']); self.assertEqual(0,d['runtime']['observed_offloaded_layers']); self.assertIsNone(d['gpu_telemetry']); self.assertTrue(d['gpu_telemetry_missing_reason'])
+  ids=['first-short-01']+[f'short-{i:02d}' for i in range(1,6)]+[f'medium-{i:02d}' for i in range(1,6)]+[f'long-{i:02d}' for i in range(1,6)]; self.assertEqual(ids,[r['id'] for r in d['runs']]); counts={'short':171,'medium':600,'long':1922}
+  for r in d['runs']:
+   self.assertEqual('complete',r['status']); self.assertEqual('max_tokens' if r['tier']=='long' else 'eos',r['stop_reason']); self.assertEqual([],r['reset_validation']['errors']); self.assertEqual(0,r['server_timings']['cache_n']); self.assertEqual(counts[r['tier']],r['server_timings']['prompt_n']); self.assertFalse(r['final_event']['truncated']); self.assertTrue(r['output_sanity']['looks_sensible']); self.assertEqual(r['output_sha256'],sha(base/r['output_path'])); self.assertFalse(r['request_isolation']['model_remap_or_reload']); self.assertFalse(r['request_isolation']['accelerator_recompilation']); self.assertFalse(r['request_isolation']['retained_prompt_or_kv_reuse'])
+  self.assertEqual('verified_absent',d['stage_and_cleanup']['cleanup_state'])
  def test_opencl_proof_and_bounded_claim(self):
   c=(EXP/'tools/run_client.py').read_text();
   for x in ('offloaded 31/31 layers to GPU','OpenCL model buffer size','OpenCL compute buffer size','using kernels optimized for Adreno','OpenCL driver: OpenCL'): self.assertIn(x,c)

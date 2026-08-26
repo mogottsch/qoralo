@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0033-lfm2.5-2.6b-android-loaded-route",
-  "status": "cpu_and_opencl_loaded_route_artifacts_phone_ready",
+  "status": "cpu_campaign_complete_opencl_campaign_pending",
   "question": "How does the pinned official LFM2.5-2.6B Q4_K_M artifact perform in separate canonical persistent Android CPU and OpenCL/Adreno loaded-route campaigns?",
   "scope": {
     "arms": [
@@ -244,6 +244,17 @@
     "phone lock or remote-scope violation",
     "raw output cannot be bound"
   ],
+  "completed_cpu_campaign": {
+    "result_path": "experiments/0033-lfm2.5-2.6b-android-loaded-route/results/android-cpu-campaign/result.json",
+    "result_sha256": "46bd496b331228d580f1f56f0ec851ac9b43360520788d6f2f89d24ad72b0834",
+    "checksum_manifest_sha256": "644164b6c9df008db2865bf029223f2c96341d4ddeb6e63b17229bc2c2638472",
+    "request_count": 16,
+    "all_requests_complete": true,
+    "short_and_medium_stop_reason": "eos",
+    "long_stop_reason": "max_tokens",
+    "all_outputs_sanity_reviewed": true,
+    "cleanup_state": "verified_absent"
+  },
   "nullable_not_fatal": [
     "post-prefill-to-first-token split",
     "calibrated power",

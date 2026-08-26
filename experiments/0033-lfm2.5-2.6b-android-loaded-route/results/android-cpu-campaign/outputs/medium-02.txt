@@ -1,0 +1,86 @@
+The user wants me to read a fictional engineering brief about comparing three local inference engines (Cedar, Juniper, Rowan) on a battery-powered device. I need to write a self-contained technical recommendation that:
+
+1. Explains important tradeoffs
+2. Identifies measurements that should remain separate
+3. Ends with a practical next step
+4. Uses ordinary prose (no tables)
+5. Is coherent English prose
+
+Let me analyze the key points from the brief:
+
+**Engine characteristics:**
+- Cedar: opens compact model quickly but decodes slowly
+- Juniper: spends longer preparing its model but has steadier generation
+- Rowan: uses more memory in exchange for faster prompt processing
+
+**Measurement requirements:**
+- All measurements must distinguish setup, prompt processing, and token generation
+- Peak sampled proportional set size and process high-water marks must be labeled (not interchangeable)
+
+**Prompt length variation:**
+- Short requests (direct instruction)
+- Medium requests (several pages of notes)
+- Long requests (approaches useful context expected by application)
+- Token counts differ across model tokenizers even with identical UTF-8 prompt bytes
+
+**Timing breakdown:**
+- Time to first token (TTFT) includes work before text appears
+- Prefill throughput isolates processing of input tokens
+- Decode throughput describes generated token stream
+- Cannot credit a combined timing with an invented split between prefill and sampling
+
+**Session behavior:**
+- First request can trigger page faults, lazy initialization, cache allocation, accelerator compilation
+- Repeated requests must clear conversation and key-value state while retaining loaded model session
+- Report must preserve first observation separately from same-session distribution
+
+**Thermal conditions:**
+- Sustained generation may heat the phone, changing clock rates
+- Charging changes power and temperature
+- Battery and thermal state recorded before/after, no unmeasured power value treated as zero
+
+**Output quality:**
+- Outputs retained so execution failures visible
+- Nonempty string not automatically useful
+- Initial screen asks only whether output looks like sensible text
+
+Now I need to write a technical recommendation that:
+- Explains tradeoffs between the three engines
+- Identifies which measurements should be kept separate (setup vs prompt processing vs token generation, etc.)
+- Ends with a practical next step
+
+Key tradeoffs to highlight:
+1. Cedar vs Juniper: Cedar is fast to start but slow at generation; Juniper is slower to start but steadier generation. For short requests, Cedar might win; for long generation, Juniper might be better.
+2. Rowan uses more memory for faster prompt processing - this is a memory vs speed tradeoff.
+3. The first request timing is different from subsequent requests due to cold-start effects (page faults, lazy initialization, etc.)
+4. Memory pressure and thermal conditions matter - the device has limited memory and OS may reclaim background processes.
+5. Token count variability across models means we need to measure per-model, not aggregate.
+
+Measurements that should remain separate:
+- Setup time (model loading, initialization, accelerator compilation) - this is cold-start specific
+- Prompt processing time (prefill) - how long to process the input
+- Token generation time (decode throughput) - how fast tokens are produced
+- Memory usage (peak high-water marks, memory allocation patterns)
+- Thermal and power state (temperature, battery level, clock frequency changes)
+- First-request vs same-session timing (cold-start vs warm-start)
+- Output quality (not just "sensible text" but specific failure modes)
+
+The recommendation should:
+1. Acknowledge the three engines and their profiles
+2. Explain the critical tradeoffs
+3. Identify what measurements must be kept separate
+4. Provide a practical next step (e.g., a controlled benchmark campaign)
+
+Let me write this in coherent prose.</think>The brief presents a clear picture of three competing local inference engines—Cedar, Juniper, and Rowan—each optimized along different axes. Cedar opens a compact model quickly but decodes slowly, which is advantageous for short, single-shot requests but problematic when the user expects a sustained conversation. Juniper spends longer preparing its model but delivers steadier generation, making it more predictable for longer sessions where generation time dominates. Rowan trades memory for speed in prompt processing, which can be beneficial when the input is large but may leave the device with less headroom for other tasks.
+
+The most important tradeoff the team must evaluate is the interaction between cold-start overhead and steady-state performance. The first request from a new session incurs significant setup work—model loading, accelerator compilation, and potentially lazy initialization of caches and memory pools. This setup time is not representative of the experience for a user who opens the app repeatedly. Subsequent requests in the same session avoid this cold-start penalty, but they still face memory pressure and thermal constraints. The recommendation must therefore separate first-request timing from same-session timing, and it must keep setup, prompt processing (prefill), and token generation (decode) as distinct measurements rather than aggregating them into a single "total latency."
+
+Memory is another critical dimension. Rowan's memory-heavy approach can be attractive for long prompts, but it leaves less room for the OS to keep other processes alive under pressure. The device has limited memory, and the operating system may reclaim background processes when the system is under load. The report must label peak sampled proportional set size and process high-water marks explicitly, because these metrics are not interchangeable across models with different memory footprints. A model that uses more memory may also consume more cache, which affects both prefill throughput and decode throughput in ways that are not captured by raw token counts.
+
+The timing breakdown is equally important. Time to first token (TTFT) includes work done before any text appears—loading the model, parsing the prompt, and initializing the decoder. Prefill throughput measures how quickly the input tokens are processed, which is distinct from the later decode throughput that governs the streaming of generated tokens. A runtime that reports only a combined metric cannot be credited with an invented split between these two phases. The team should measure TTFT, prefill throughput, and decode throughput separately, and correlate them with the observed model behavior.
+
+Thermal and power conditions must be recorded as part of the evaluation. Sustained generation can heat the device, causing the CPU to downclock and reducing throughput. Charging changes both power availability and temperature. The brief notes that battery and thermal state are recorded before and after the campaign, and no unmeasured power value is treated as zero. This is a crucial detail: the team must include actual measured power draw and temperature readings, not assumed values, because the device's behavior is highly sensitive to these factors.
+
+Output quality should not be overstated. The system retains outputs so that execution failures remain visible. A nonempty string is not automatically useful; broken routes may emit token identifiers, binary-looking fragments, or repeated punctuation. The initial screen should only ask whether the exact output looks like sensible text, and it should deliberately avoid broader quality claims. This restraint protects the team from over-optimizing on metrics that don't reflect real user experience.
+
+**Practical next step.** The team should run a controlled benchmark campaign that isolates each timing dimension. For each engine, measure: (1) TTFT for a cold start and for a warm start (after the model is loaded), (2) prefill throughput for prompts of short, medium, and long lengths, (3) decode throughput for generation of short, medium, and long outputs, (4) peak memory usage and its growth over time, (5) thermal and power measurements at regular intervals, and (6) a sample of actual outputs from each engine to assess quality. The campaign should run on the same device configuration (same battery level, same thermal environment) and record all measurements with explicit labels. This will produce a clear picture of where each engine excels and where its weaknesses lie, allowing the team to make an informed recommendation based on the actual use patterns of the application—short one-shot requests versus longer, multi-turn sessions.

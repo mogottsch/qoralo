@@ -2,7 +2,7 @@
 
 ## Status
 
-**CPU and OpenCL loaded-route artifacts are host-ready. Phone execution waits for experiment 0035 to finish and explicit priority. Neither arm has canonical evidence yet.**
+**CPU canonical campaign complete; OpenCL arm remains pending explicit phone priority.**
 
 This experiment closes the gap left intentionally by experiment 0029. The earlier experiment contains one bounded CPU viability request through `llama-completion`; it is not a loaded-route campaign and remains immutable. Experiment 0033 uses the same exact official LiquidAI model, tokenizer, template, and canonical workloads but a newer pinned llama.cpp persistent server required for protocol-v2 isolation and the public OpenCL backend.
 
@@ -30,7 +30,7 @@ Before every request, the runner separately times `POST /slots/0?action=erase`. 
 - Dynamic dependencies: Android `libc.so`, `libdl.so`, and `libm.so`
 - Remote root: `/data/local/tmp/vibevoice-0033-lfm2.5-2.6b-android-loaded-route-cpu`
 
-This arm runs first and is a distinct CPU result, never a fallback row.
+This arm ran first and is a distinct CPU result, never a fallback row. All 16 canonical requests completed with validated state isolation. Warm median TTFT / prefill / external decode / total were 5.821 s / 30.36 input tok/s / 8.75 output tok/s / 118.926 s for short; 20.378 s / 30.34 / 7.94 / 230.932 s for medium; and 68.271 s / 29.01 / 6.87 / 366.145 s for long. Short and medium reached EOS; long validly reached the 2,048-token ceiling. Peak sampled PSS was 3,559,703,552 bytes. Exact evidence is under [`results/android-cpu-campaign/`](results/android-cpu-campaign/).
 
 ## Arm 2: OpenCL/Adreno GPU offload
 
