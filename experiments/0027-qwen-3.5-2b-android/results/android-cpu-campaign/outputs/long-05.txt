@@ -1,0 +1,39 @@
+**Technical Recommendation: Selecting the Best Inference Engine for the Device**
+
+Based on the provided engineering brief, the team must avoid selecting a single engine based on a single metric. Instead, the decision requires a rigorous analysis of setup time, prompt processing latency, and token generation throughput, while strictly adhering to the constraints of limited memory, variable thermal conditions, and the need for artifact integrity.
+
+**Primary Selection Criteria**
+The most critical factor for selection is the **setup time** combined with **prompt processing latency**. Engine Cedar excels in setup speed but suffers from slow decoding, which is unacceptable for a device with limited memory where background processes are frequently reclaimed. Engine Rowan offers faster prompt processing but consumes significantly more memory, which is risky given the device's constraints and the potential for OS-level memory reclamation under pressure. Engine Juniper presents a balanced profile with steady generation, though it requires more preparation time.
+
+Given the brief's instruction that "A route with expensive setup can therefore be reasonable only when the loaded session is reused," and considering that the application typically remains open for 20 to 40 minutes, the **setup cost** is the dominant differentiator. If the device is used in a scenario where the session is not reused, Cedar's speed is the only viable option. If the session is reused, Juniper's steady generation and lower memory footprint (compared to Rowan) become the primary differentiators.
+
+**Critical Measurement Separation**
+The report must strictly separate three distinct measurement categories to avoid misinterpretation:
+1.  **Setup and Initialization:** This includes the time to open the model, load the tokenizer, and initialize the runtime. This must be measured separately from generation.
+2.  **Prompt Processing:** This isolates the time spent decoding the input prompt tokens. This is distinct from generation and must not be conflated with setup time.
+3.  **Token Generation:** This covers both prefill (input tokens) and decode (output tokens). The brief explicitly states that a runtime exposing only one combined timing cannot be credited with an invented split; therefore, the report must explicitly state whether prefill and decode are measured separately.
+
+**Handling Edge Cases and Limitations**
+Several factors must be acknowledged to ensure the recommendation is robust:
+*   **Thermal and Power Variability:** Since the device is shared with normal development work and battery/thermal states change during the campaign, the report must list the specific controlled conditions (battery state, temperature, power level) rather than claiming they were constant. If a route fails due to thermal throttling or power constraints, that failure mode must be documented as a limitation, not as a reason to discard the route.
+*   **Artifact Integrity:** The output must be retained to ensure obvious execution failures remain visible. A route that emits binary-looking fragments or short loops is not a failure of the engine but a failure of the specific output format or prompt handling. The recommendation should focus on whether the engine produces *sensible text* rather than a broad quality claim, as the initial screen explicitly avoids this.
+*   **Provenance and Source:** Since artifacts come from different sources (original checkpoints, community conversions, quantized packages), the report must attach file hashes and format information to every route. A model label alone is insufficient; the source revision and conversion tool must be attached to prove the route's origin.
+*   **Tokenizer Independence:** The benchmark must record the tokenizer revision, template provenance, and rendered-prompt hash separately from the model weights. The team must not force one model family's tokenizer onto another to match token counts, as this would invalidate the comparison.
+
+**Artifact Storage and Reporting**
+The report must distinguish between artifact storage and runtime memory. While model file size affects installation cost, it does not answer whether the route fits on the phone. The report should include the exact byte count and SHA-256 hash of the raw output to bind later observations to exact bytes. This allows the registry to add evidence of output sanity without altering the original performance measurements.
+
+**Final Recommendation**
+The team should select the engine that offers the best balance of **setup time** and **generation throughput** for the specific usage pattern (single request vs. long session). If the device is used for a single request, Cedar is the clear winner. If the device is used for a long session where the session is reused, Juniper is the superior choice due to its steady generation and lower memory footprint.
+
+The final recommendation must explicitly state the tradeoffs: Cedar provides speed at the cost of setup time, while Juniper provides stability at the cost of preparation time. The report should not invent product requirements but rather describe these tradeoffs clearly.
+
+**Next Step**
+The team should immediately execute the benchmark campaign using the **exclusive device lock** to ensure no concurrent activity invalidates resource observations. Once the data is collected, the report must be generated with the following structure:
+1.  **Executive Summary:** Selecting the top 2 engines based on the setup vs. generation tradeoff.
+2.  **Detailed Metrics:** Separate tables for Setup, Prompt Processing, and Generation (including prefill and decode).
+3.  **Limitations:** A section detailing thermal conditions, power states, and artifact types observed.
+4.  **Provenance:** A list of file hashes and source revisions for all selected and rejected routes.
+5.  **Recommendation:** A clear statement on which engine to deploy and why, explicitly noting the tradeoffs.
+
+This approach ensures the team makes a data-driven decision that respects the device's constraints and the specific requirements of the benchmark, avoiding the pitfalls of conflating different measurement types or ignoring the unique behaviors of the hardware and software environment.

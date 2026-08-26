@@ -32,11 +32,15 @@ def parse_battery(path: Path) -> dict:
     def integer(key: str):
         try: return int(values[key])
         except (KeyError, ValueError): return None
+    plugged_code = integer("plugged")
     return {
         "level_percent": integer("level"),
         "temperature_c": None if integer("temperature") is None else integer("temperature") / 10.0,
         "status_code": integer("status"),
-        "plugged_code": integer("plugged"),
+        "plugged_code": plugged_code,
+        "plugged_code_missing_reason": None if plugged_code is not None else (
+            "dumpsys battery did not expose a plugged field; the individual AC/USB/wireless booleans are retained."
+        ),
         "ac_powered": values.get("AC powered") == "true" if "AC powered" in values else None,
         "usb_powered": values.get("USB powered") == "true" if "USB powered" in values else None,
         "wireless_powered": values.get("Wireless powered") == "true" if "Wireless powered" in values else None,
@@ -115,7 +119,8 @@ def main() -> None:
         "server.stdout.log", "server.stderr.log", "memory-samples.txt", "memory-sampler.stderr.log",
         "device.txt", "storage-before.txt", "battery-before.txt", "battery-after.txt",
         "thermal-before.txt", "thermal-after.txt", "power-before.txt", "power-after.txt",
-        "expected-sha256.txt", "remote-sha256.txt", "cleanup.json", "forward.txt", "client-base.txt",
+        "expected-sha256.txt", "remote-sha256.txt", "local-hash-check.txt", "stage-hash-diff.txt",
+        "push-server.txt", "push-model.txt", "adb-state.txt", "cleanup.json", "forward.txt", "client-base.txt",
     ]
     raw_hashes = {}
     for name in raw_names:

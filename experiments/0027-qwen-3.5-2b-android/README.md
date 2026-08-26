@@ -2,7 +2,7 @@
 
 ## Status
 
-**Android CPU smoke passed on historical server artifact revision 1. The first full campaign was interrupted after eight complete requests and is retained only as diagnostic evidence. Reproducible UI-disabled server artifact revision 2 is staged for a fresh canonical campaign after the required scoped stale-stage cleanup.**
+**Canonical Android CPU campaign complete on reproducible UI-disabled server artifact revision 2. Historical artifact-revision-1 smoke and interrupted evidence remain separately bound and are not relabeled.**
 
 This experiment measures the public post-trained `Qwen/Qwen3.5-2B` on the authorized Galaxy S23 Ultra under the repository's fixed short/medium/long LLM workload. It is text-only performance evidence, not a vision test or a podcast-quality evaluation.
 
@@ -71,6 +71,20 @@ That scoped preflight later found only a stale stage and a no-longer-running cla
 [`tools/build_android.sh`](tools/build_android.sh) reconstructs the route from pinned inputs: llama.cpp commit `0a5ac49b…0108` and tree `9355e5eb…5e0`, explicit build number 10627, NDK `28.1.13356709`, and the exact model URL/size/hash above. It uses the repository heavy-RAM lock, prefix-maps checkout/build paths, disables ccache and OpenSSL, statically links llama/GGML plus `c++_static`, and verifies that only Android `libm`, `libdl`, and `libc` remain dynamic.
 
 The new server disables both `LLAMA_BUILD_UI` and `LLAMA_USE_PREBUILT_UI`. The runner always passes `--no-webui`, so embedded UI bytes do not support an inference claim. Removing them prevents llama.cpp's mutable `latest` UI fallback from changing the executable. A bounded attempt to reproduce revision 1 with the August 25 `b10625` UI archive (3,086,917 bytes, SHA-256 `6d7c0ed6…16d70`) did not match: it produced 12,971,760 bytes / `943db6a4…9811d`. No historical evidence was relabeled. Two clean revision-2 builds produced the exact staged hash above.
+
+## Complete Android CPU campaign
+
+The fresh artifact-revision-2 campaign completed all 16 canonical requests: one first short, five warm short, five warm medium, and five warm long. All requests stopped at EOS; every slot erase succeeded, every request reported `cache_n == 0`, full prompt evaluation, positive prefill time, and no truncation. The exact raw result and checksum manifest are under [`results/android-cpu-campaign/`](results/android-cpu-campaign/).
+
+Setup was 2.936 seconds. The first short request delivered its first token in 2.619 seconds, reported 73.24 input tok/s, externally decoded at 12.91 output tok/s, and completed in 42.817 seconds. Warm medians were:
+
+| Tier | TTFT | Prefill | External decode | Total |
+|---|---:|---:|---:|---:|
+| short | 3.876 s | 49.04 input tok/s | 10.34 output tok/s | 53.406 s |
+| medium | 16.689 s | 38.72 input tok/s | 8.77 output tok/s | 81.022 s |
+| long | 61.837 s | 33.80 input tok/s | 6.40 output tok/s | 243.575 s |
+
+Peak sampled PSS was 2,833,463,296 bytes and VmHWM was 2,835,431,424 bytes. Battery temperature rose from 37.0 °C to 44.3 °C and the thermal status code moved from 0 to 3; these operating conditions remain part of the result rather than being normalized away. Every exact output passed only the narrow sensible-prose corruption check. No quality, correctness, grounding, usefulness, or acceptance claim is made.
 
 ## Android execution discipline
 

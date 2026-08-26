@@ -127,6 +127,124 @@ class ContractTest(unittest.TestCase):
         ):
             self.assertIn(required, recipe)
 
+    def test_complete_android_campaign_is_canonical_and_hash_bound(self) -> None:
+        base = EXP / "results/android-cpu-campaign"
+        result_path = base / "result.json"
+        self.assertTrue(result_path.exists())
+        result = json.loads(result_path.read_text())
+        completed = self.contract["completed_campaign"]
+        self.assertEqual(completed["result_sha256"], sha(result_path))
+        self.assertEqual(completed["checksum_manifest_sha256"], sha(base / "SHA256SUMS"))
+        self.assertEqual("complete", result["status"])
+        self.assertEqual("android_campaign", result["scope"])
+        self.assertEqual(2, result["runtime"]["android_server_artifact_revision"])
+        self.assertEqual(
+            self.contract["runtime"]["android_server"]["sha256"],
+            result["runtime"]["android_server_sha256"],
+        )
+        self.assertFalse(result["runtime"]["embedded_web_ui"])
+        self.assertEqual("SM-S918B", result["device"]["model"])
+        self.assertEqual("SM8550", result["device"]["soc"])
+        self.assertEqual("http://172.27.80.1:8027\n", (base / "raw/client-base.txt").read_text())
+        self.assertEqual("verified_absent", result["stage_and_cleanup"]["cleanup_state"])
+        self.assertTrue(result["stage_and_cleanup"]["local_remote_hashes_equal"])
+        for boundary in ("battery_before", "battery_after"):
+            battery = result["operating_conditions"][boundary]
+            if battery["plugged_code"] is None:
+                self.assertTrue(battery["plugged_code_missing_reason"])
+        self.assertIsNone(result["operating_conditions"]["power_watts"])
+        self.assertTrue(result["operating_conditions"]["power_watts_missing_reason"])
+
+        expected_ids = ["first-short-01"]
+        expected_ids += [f"short-{i:02d}" for i in range(1, 6)]
+        expected_ids += [f"medium-{i:02d}" for i in range(1, 6)]
+        expected_ids += [f"long-{i:02d}" for i in range(1, 6)]
+        self.assertEqual(expected_ids, [run["id"] for run in result["runs"]])
+        self.assertEqual(["first"] + ["warm"] * 15, [run["phase"] for run in result["runs"]])
+
+        prompt_tokens = {"short": 174, "medium": 597, "long": 1926}
+        prompt_inventory = self.contract["tokenizer_and_template"]["host_prompt_inventory"]
+        for tier, prompt in result["prompts"].items():
+            self.assertEqual(prompt_tokens[tier], prompt["input_tokens"])
+            self.assertEqual(prompt_inventory[tier]["rendered_sha256"], prompt["rendered_sha256"])
+            self.assertEqual(
+                prompt_inventory[tier]["token_ids_int32le_sha256"],
+                prompt["token_ids_int32le_sha256"],
+            )
+            self.assertEqual(prompt["rendered_sha256"], sha(base / prompt["rendered_path"]))
+            self.assertFalse(prompt["truncated"])
+            self.assertLessEqual(prompt["input_tokens"] + 2048, prompt["context_tokens"])
+
+        for run in result["runs"]:
+            output = base / run["output_path"]
+            events = base / run["events_path"]
+            self.assertEqual(run["output_sha256"], sha(output))
+            self.assertEqual(run["output_bytes"], output.stat().st_size)
+            self.assertEqual({"looks_sensible": True, "issue_notes": None}, run["output_sanity"])
+            self.assertEqual("complete", run["status"])
+            self.assertEqual("eos", run["stop_reason"])
+            self.assertIsNone(run["runtime_error"])
+            self.assertFalse(run["final_event"]["truncated"])
+            self.assertEqual("eos", run["final_event"]["stop_type"])
+            self.assertGreater(run["output_tokens"], 0)
+
+            isolation = run["request_isolation"]
+            self.assertEqual(
+                "proven_full_in_session_conversation_and_kv_reset",
+                isolation["strategy"],
+            )
+            self.assertTrue(isolation["loaded_model_runtime_route_reused"])
+            self.assertTrue(isolation["session_object_reused"])
+            self.assertFalse(isolation["model_remap_or_reload"])
+            self.assertFalse(isolation["accelerator_recompilation"])
+            self.assertFalse(isolation["retained_prompt_or_kv_reuse"])
+            self.assertFalse(isolation["reset_included_in_total_request"])
+            self.assertGreater(isolation["reset_seconds"], 0)
+            self.assertLessEqual(isolation["reset_end_monotonic_ns"], run["request_start_monotonic_ns"])
+
+            timings = run["server_timings"]
+            self.assertEqual(0, timings["cache_n"])
+            self.assertEqual(prompt_tokens[run["tier"]], timings["prompt_n"])
+            self.assertGreater(timings["prompt_ms"], 0)
+            self.assertEqual([], run["reset_validation"]["errors"])
+            self.assertTrue(run["reset_validation"]["slot_erase_succeeded"])
+            self.assertTrue(run["reset_validation"]["cache_n_zero"])
+            self.assertTrue(run["reset_validation"]["full_prompt_evaluated"])
+            self.assertTrue(run["reset_validation"]["prefill_nonzero"])
+            self.assertAlmostEqual(timings["prompt_ms"] / 1000, run["timing"]["prefill_seconds"], places=9)
+            self.assertIsNone(run["timing"]["post_prefill_to_first_token_seconds"])
+            self.assertIn("timing.post_prefill_to_first_token_seconds", run["missing_reasons"])
+            external_tokens = run["throughput"]["external_decode_tokens"]
+            external_seconds = run["timing"]["decode_first_to_final_delivery_seconds"]
+            self.assertEqual(run["output_tokens"] - 1, external_tokens)
+            self.assertFalse(run["throughput"]["external_decode_first_token_included"])
+            self.assertAlmostEqual(
+                external_tokens / external_seconds,
+                run["throughput"]["external_decode_tokens_per_second"],
+                places=9,
+            )
+
+            emitted_ids = []
+            emitted_text = []
+            with events.open() as stream:
+                for line in stream:
+                    event = json.loads(line)
+                    emitted_ids.extend(event.get("tokens", []))
+                    emitted_text.append(event.get("content", ""))
+            self.assertEqual(run["output_tokens"], len(emitted_ids))
+            self.assertEqual(run["emitted_token_ids_int32le_sha256"], hashlib.sha256(
+                b"".join(struct.pack("<i", token) for token in emitted_ids)
+            ).hexdigest())
+            self.assertEqual(output.read_text(), "".join(emitted_text))
+
+        for name, record in result["raw_files"].items():
+            raw = base / "raw" / name
+            self.assertEqual(record["bytes"], raw.stat().st_size)
+            self.assertEqual(record["sha256"], sha(raw))
+        self.assertEqual(16, completed["request_count"])
+        self.assertEqual(5, completed["warm_requests_per_tier"])
+        self.assertTrue(completed["all_outputs_sanity_reviewed"])
+
     def test_android_smoke_is_hash_bound_and_cleaned(self) -> None:
         path = EXP / "results/android-smoke/result.json"
         if not path.exists():
