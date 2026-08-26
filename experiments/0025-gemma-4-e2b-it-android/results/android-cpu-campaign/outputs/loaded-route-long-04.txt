@@ -1,0 +1,32 @@
+Here is a technical recommendation based on the provided engineering brief.
+
+The core challenge of this comparison lies in accurately distinguishing between the performance characteristics of the three inference engines—Cedar, Juniper, and Rowan—while accounting for the complex, variable environment of a battery-powered device and the inherent differences in how memory and time are measured across the entire lifecycle of a request.
+
+### Key Tradeoffs to Address
+
+The primary tradeoff revolves around the balance between setup cost, prompt processing speed, and token generation speed, all while respecting the device's constrained resources.
+
+1.  **Setup vs. Session Reuse:** The decision to favor a route with an expensive setup must be explicitly weighed against the likelihood of session reuse. A route that requires significant initial setup might be viable only if the loaded session is expected to be reused frequently. A one-off request should not be judged solely on setup time; the total cost of the session lifecycle must be considered.
+2.  **Memory Allocation Semantics:** The differing memory behaviors (mapped files, private allocations, caches) mean that simple memory metrics are insufficient. We must treat peak sampled proportional set size and process high-water marks as distinct, labeled entities rather than interchangeable resources.
+3.  **Timing Granularity:** The distinction between prefill throughput and decode throughput is critical. A combined timing metric is misleading. We must separate the time spent processing the input prompt (prefill) from the time spent generating the output stream (decode).
+4.  **Environment Variability:** Thermal conditions, battery state, and operating system scheduling introduce significant noise. The evidence must explicitly record the controlled conditions established by the runner and clearly delineate the limitations imposed by uncontrolled variables.
+
+### Essential Measurement Separation
+
+To maintain fidelity and avoid misinterpretation, several measurements must remain strictly separate:
+
+*   **Setup Cost:** This must be isolated from prompt processing and token generation. It includes model loading, session creation, and initial cache allocation.
+*   **Prompt Processing (Prefill Throughput):** This isolates the cost of understanding the input prompt, independent of the generation speed.
+*   **Token Generation (Decode Throughput):** This measures the speed of the output stream. It must be clearly separated from the prefill cost and explicitly state whether the first generated token is included in the measurement.
+*   **Memory Metrics:** Peak sampled set size and high-water marks must be reported separately, with explicit labeling detailing what they represent (e.g., model weights vs. runtime cache).
+*   **Provenance Data:** Model labels alone are insufficient. Every artifact must be tied to its source revision, file hash, quantization method, and conversion tool.
+
+### Practical Next Step
+
+The immediate next step should be to refine the data collection pipeline to enforce strict separation and explicit labeling for all measured components. Specifically, we need to implement a system that mandates the recording of the following for every run:
+
+1.  **Explicit Timing Segments:** Ensure the timing mechanism captures distinct, non-overlapping intervals for setup, prefill, and decode phases.
+2.  **Contextual Memory Tagging:** Develop a tagging schema that clearly distinguishes between memory types (e.g., `model_weights_peak`, `runtime_cache_high_water`, `key_value_cache_size`).
+3.  **Comprehensive Provenance Logging:** Integrate a mandatory logging step that captures the full metadata chain for every artifact used, linking the final output hash back to the original model source and conversion process.
+
+This focused effort will ensure that the resulting evidence is robust enough to support a nuanced recommendation that describes the specific tradeoffs between speed, memory footprint, and setup complexity, rather than presenting an incomplete or misleading performance summary.

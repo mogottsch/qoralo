@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import tempfile
@@ -17,6 +18,44 @@ SPEC.loader.exec_module(MODULE)
 
 
 class PersistenceFirstRegressionTest(unittest.TestCase):
+    def test_canonical_cpu_campaign_is_complete_and_hash_bound(self) -> None:
+        result_dir = ROOT / "results/android-cpu-campaign"
+        result = json.loads((result_dir / "result.json").read_text())
+        runs = result["runs"]
+        self.assertEqual(16, len(runs))
+        self.assertEqual(1, sum(run["phase"] == "first" for run in runs))
+        self.assertEqual(
+            {"short": 5, "medium": 5, "long": 5},
+            {
+                tier: sum(
+                    run["phase"] == "loaded_route" and run["tier"] == tier
+                    for run in runs
+                )
+                for tier in ("short", "medium", "long")
+            },
+        )
+        for index, run in enumerate(runs):
+            self.assertTrue(run["runtime_input_token_count_matches"])
+            self.assertIsNone(run["runtime_error"])
+            self.assertFalse(run["session_recreation_in_total_request"])
+            if index:
+                self.assertEqual(
+                    "fresh_session_per_logical_request",
+                    run["request_isolation_strategy"],
+                )
+                self.assertGreater(run["session_recreation_seconds"], 0)
+            output = result_dir / run["output"]["path"]
+            self.assertEqual(
+                run["output"]["sha256"],
+                hashlib.sha256(output.read_bytes()).hexdigest(),
+            )
+            self.assertEqual(
+                {"looks_sensible": True, "issue_notes": None},
+                run["output_sanity"],
+            )
+        self.assertEqual("removed_and_verified_absent", result["remote_stage_cleanup"]["status"])
+        self.assertEqual(0, result["validation"]["runner_exit_code"])
+
     def test_successful_output_survives_empty_optional_benchmark_turns(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             base = Path(temporary)

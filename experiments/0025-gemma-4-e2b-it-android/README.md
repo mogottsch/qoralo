@@ -2,7 +2,7 @@
 
 ## Status
 
-**Fresh-Session isolation is approved and contract-locked; Android CPU canonical-short smoke passed. The first full CPU run is retained only as a reset diagnostic. The adapted Android runner is rebuilt and hash-bound; the canonical CPU rerun is phone-ready. GPU work has not started.**
+**Fresh-Session isolation is approved and contract-locked. The complete canonical Android CPU campaign passed and is retained with raw evidence. The earlier rewind run remains only a reset diagnostic; GPU work has not started.**
 
 This experiment compares only the official instruction-tuned Gemma 4 E2B LiteRT-LM CPU and GPU Android routes on the authorized Galaxy S23 Ultra. It measures execution, setup, TTFT, prefill/decode throughput, total latency, process memory, and operating conditions under the repository's fixed short/medium/long prompt contract. It does not evaluate transcript quality and makes no NPU/HTP claim.
 
@@ -41,6 +41,18 @@ The first 16-request CPU run completed, but it is **not canonical evidence**. `R
 Two bounded host probes isolated the behavior. Rewinding one Session reproduced prefix reuse on request two. Keeping one loaded Engine but creating a fresh Session before each request forced genuine 171-token prefill on both requests, with measured Session recreation of about 41 microseconds. Those probes are retained under [`results/host-reset-probes/`](results/host-reset-probes/).
 
 Moritz approved the smallest honest adaptation on 2026-08-26: **one loaded Engine, fresh Session per logical request**. The shared protocol now treats loaded-route reuse plus actual conversation/KV isolation as the invariant rather than Session object identity. Every fresh-Session creation is measured separately and excluded from the runner's request timing; the Engine and mapped model remain loaded, accelerator compilation is not repeated, and no prompt-prefix/KV state carries across requests.
+
+## Canonical Android CPU campaign
+
+The fresh from-scratch CPU campaign completed all 16 requests: one first short request followed by five loaded-route requests for each of short, medium, and long. Every request performed full prompt prefill, completed at EOS, retained exact output bytes, and used the approved isolation strategy. Median loaded-route observations were:
+
+- short (171 input / 421 output tokens): TTFT `3.044 s`, prefill `58.33 tok/s`, decode `10.57 tok/s`, total `42.82 s`;
+- medium (595 / 700): TTFT `7.560 s`, prefill `80.08 tok/s`, decode `10.28 tok/s`, total `75.57 s`;
+- long (1,930 / 756): TTFT `28.663 s`, prefill `67.65 tok/s`, decode `8.65 tok/s`, total `115.81 s`.
+
+Setup was `6.474 s`. Peak sampled PSS was `5,726,960,640 B`; VmHWM/ru_maxrss was `5,887,778,816 B`. Median fresh-Session recreation was below `0.35 ms` for every tier and is excluded from request timing. The phone began warm (AP `45.4 C`, skin `39.7 C`) and ended at Android thermal status 3 (AP `51.7 C`, skin `45.0 C`), so sustained thermal throttling is an explicit limitation rather than hidden or treated as a failed request.
+
+See [`results/android-cpu-campaign/result.json`](results/android-cpu-campaign/result.json) and its hash-bound raw evidence.
 
 ## Claim boundaries
 
