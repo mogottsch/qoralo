@@ -32,6 +32,7 @@ SERVER_PID=
 ADB_SERVER_PID=
 MEMORY_PID=
 GPU_SAMPLER_PID=
+REMOTE_CREATED=0
 CLEANUP_STATE=not_started
 mkdir -p "$OUT" "$ROOT/artifacts/locks"
 
@@ -55,10 +56,14 @@ cleanup() {
   [[ -n "$GPU_SAMPLER_PID" ]] && kill "$GPU_SAMPLER_PID" >/dev/null 2>&1
   [[ -n "$ADB_SERVER_PID" ]] && wait "$ADB_SERVER_PID" >/dev/null 2>&1
   adb_cmd forward --remove "tcp:$PORT" >/dev/null 2>&1
-  if adb_cmd shell "test -d '$REMOTE'" >/dev/null 2>&1; then
-    adb_cmd shell "rm -rf '$REMOTE'" >/dev/null 2>&1
+  if [[ "$REMOTE_CREATED" == 0 ]]; then
+    CLEANUP_STATE=not_applicable_no_remote_creation
+  else
+    if adb_cmd shell "test -d '$REMOTE'" >/dev/null 2>&1; then
+      adb_cmd shell "rm -rf '$REMOTE'" >/dev/null 2>&1
+    fi
+    if adb_cmd shell "test ! -e '$REMOTE'" >/dev/null 2>&1; then CLEANUP_STATE=verified_absent; else CLEANUP_STATE=failed; fi
   fi
-  if adb_cmd shell "test ! -e '$REMOTE'" >/dev/null 2>&1; then CLEANUP_STATE=verified_absent; else CLEANUP_STATE=failed; fi
   printf '{"remote_root":"%s","cleanup_state":"%s"}\n' "$REMOTE" "$CLEANUP_STATE" >"$OUT/cleanup.json"
 }
 trap cleanup EXIT INT TERM
@@ -101,7 +106,8 @@ if adb_cmd shell "test -e '$REMOTE'" >/dev/null 2>&1; then
   echo "remote experiment root already exists; refusing to overwrite: $REMOTE" >&2
   exit 6
 fi
-adb_cmd shell "mkdir -p '$REMOTE/cache'"
+REMOTE_CREATED=1
+adb_cmd shell "mkdir -p '$REMOTE/cache/opencl'"
 adb_cmd push "$STAGE/llama-server" "$REMOTE/llama-server" | tee "$OUT/push-server.txt"
 adb_cmd push "$STAGE/model.gguf" "$REMOTE/model.gguf" | tee "$OUT/push-model.txt"
 adb_cmd shell "chmod 755 '$REMOTE/llama-server'"
