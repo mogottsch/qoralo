@@ -1,0 +1,99 @@
+{
+  "assessment": "phone_independent_support_and_public_artifact_inventory",
+  "direct_gguf_path": {
+    "decision": "rejected",
+    "gemma4_supported": false,
+    "google_public_gguf_architecture": "gemma4",
+    "installed_gguf_builder_supported_model_types": [
+      "gemma",
+      "gemma2",
+      "gemma3",
+      "llama",
+      "mistral",
+      "phi3",
+      "qwen2",
+      "qwen3"
+    ],
+    "reason": "The installed direct GGUF-to-HTP builder has no gemma4 architecture entry; it cannot credibly consume the public Gemma 4 GGUF."
+  },
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "public_w4a16_checkpoint": {
+    "authentication_used": false,
+    "content_length_bytes": 2013959998,
+    "content_type": "application/zip",
+    "downloaded": false,
+    "etag": "\"b07506b2e45e35b0d96f1a1df089d3b7-241\"",
+    "http_status": 200,
+    "last_modified": "Mon, 03 Aug 2026 19:43:01 GMT",
+    "sha256": null,
+    "sha256_null_reason": "HEAD-only inventory; hash is recorded only after a heavy-ram.lock-protected download.",
+    "url": "https://qaihub-public-assets.s3.us-west-2.amazonaws.com/qai-hub-models/models/gemma_4_e2b_it/v1/gemma_4_e2b_it_w4a16.zip"
+  },
+  "schema_version": 1,
+  "sdk": {
+    "already_installed": true,
+    "files": {
+      "android_genie_t2t_run": {
+        "bytes": 564216,
+        "path": "/home/moritz/opt/qairt/2.49.0.260730/bin/aarch64-android/genie-t2t-run",
+        "sha256": "0affa2c2773e8253223e2ff5b258bfc9d57a926712296d2b458fc58419991ce9"
+      },
+      "android_lib_genie": {
+        "bytes": 11149832,
+        "path": "/home/moritz/opt/qairt/2.49.0.260730/lib/aarch64-android/libGenie.so",
+        "sha256": "6cfe4dc7b9fe2095ed1bb1ab6d66f77f1638b5f198654addd1b98182f8170471"
+      },
+      "android_lib_qnn_htp": {
+        "bytes": 3786064,
+        "path": "/home/moritz/opt/qairt/2.49.0.260730/lib/aarch64-android/libQnnHtp.so",
+        "sha256": "a09b3af28342331b3ec9e57ecbe42bfe54a5fff37c4323ce5685c395ae3ee604"
+      },
+      "gemma4_htp_config": {
+        "bytes": 3682,
+        "path": "/home/moritz/opt/qairt/2.49.0.260730/examples/Genie/configs/gemma4/gemma4-e2b-htp.json",
+        "sha256": "39f588d6fbe21079990001794940b8bfb4150fb589086bd1d781609b97a1b1c1"
+      },
+      "gguf_htp_builder": {
+        "bytes": 20475,
+        "path": "/home/moritz/opt/qairt/2.49.0.260730/lib/python/qairt/gen_ai_api/builders/gguf_builder_htp.py",
+        "sha256": "ea9f4d1c081de5a879e36f065f8f006894945a865ba623d1fdc1b8d002d6a750"
+      },
+      "gguf_support_table": {
+        "bytes": 119382,
+        "path": "/home/moritz/opt/qairt/2.49.0.260730/lib/python/qti/aisw/converters/gguf_builder/utils.py",
+        "sha256": "9cda939812402f99304a2cd7bb0286dd5ca4ef43e60492e4cef4f2fda85acdb7"
+      },
+      "release_notes": {
+        "bytes": 266828,
+        "path": "/home/moritz/opt/qairt/2.49.0.260730/QAIRT_ReleaseNotes.txt",
+        "sha256": "84507e5a7c00a5c2d862c3d8582359be486a17a006e1a0124a4e39cf13f11ad4"
+      },
+      "sdk_manifest": {
+        "bytes": 975,
+        "path": "/home/moritz/opt/qairt/2.49.0.260730/sdk.yaml",
+        "sha256": "309ac8f6c75c2fdc808f1c9b9d0da60be123c21a79532cca70a9c4b144d983f4"
+      }
+    },
+    "license_acceptance_or_sdk_download_performed": false,
+    "root": "/home/moritz/opt/qairt/2.49.0.260730",
+    "version": "2.49.0.260730"
+  },
+  "selected_candidate": {
+    "conversion": "local installed QAIRT 2.49 HTP compilation targeting SM8550",
+    "input": "public Qualcomm AI Hub Models v1 w4a16 calibrated checkpoint archive",
+    "runtime": "Genie QnnHtp with serialized context binary",
+    "status": "awaiting heavy-ram.lock-protected download and archive inspection"
+  },
+  "support": {
+    "example_backend_type": "QnnHtp",
+    "example_context_binaries": [
+      "./models/weight_sharing_model_ar128_ar1_cl8192_scl512_1_of_1.serialized.bin"
+    ],
+    "example_context_size": 8192,
+    "example_embedding_type": "lut",
+    "example_per_layer_embedding_type": "lut",
+    "release_notes_explicit_gemma4": true,
+    "sm8550_compile_target_source": "qairt/api/compiler/config.py documents CompileConfig(backend='HTP', soc_details='chipset:SM8550').",
+    "sm8550_compile_target_supported_by_installed_api": true
+  }
+}

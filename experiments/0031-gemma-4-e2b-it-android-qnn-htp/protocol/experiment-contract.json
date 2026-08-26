@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "status": "phone_independent_public_w4a16_route_selected_awaiting_heavy_lock",
+  "question": "Can Gemma 4 E2B IT run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
+  "scope": {
+    "model": "Gemma 4 E2B IT text generation only",
+    "backend": "QNN HTP",
+    "owns": "experiments/0031-gemma-4-e2b-it-android-qnn-htp/**",
+    "immutable_prior_evidence": "experiments/0025-gemma-4-e2b-it-android/**",
+    "excluded": [
+      "CPU or GPU publication arms",
+      "vision or audio inputs",
+      "speculative decoding",
+      "accepting licenses or downloading another QAIRT SDK",
+      "benchmark publication"
+    ]
+  },
+  "canonical_protocol": {
+    "path": "protocols/android-llm-benchmark/contract.json",
+    "sha256": "2bb2de193745bc9b74c98639ee077f07615702655b2fc6118185148e2a0c0b46",
+    "workloads": {
+      "short": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae",
+      "medium": "5e168aa3232f06c92959b686188192471b2d1a62cd1c857a616fd8e29456ddf1",
+      "long": "092840fbe879259110fa4d0b15bc383012f16b7b42a38d224b2ead231e86aad8"
+    },
+    "first_request": {"tier": "short", "count": 1},
+    "warm_requests_per_tier": 5,
+    "tier_order": ["short", "medium", "long"],
+    "max_new_tokens": 2048,
+    "request_timeout_seconds": 1800,
+    "loaded_route_reuse_required": true,
+    "request_isolation_required": true
+  },
+  "model_identity": {
+    "upstream": "google/gemma-4-E2B-it",
+    "upstream_revision": "pending checkpoint archive inspection",
+    "effective_parameters": 2300000000,
+    "architecture": "Gemma4 E2B: 35 layers, 1536 hidden size, interleaved sliding-window/global attention, per-layer embeddings, shared KV layers",
+    "architecture_source": "Qualcomm AI Hub Models v0.61.0 model.py at commit 5975a79b55b40f5cbc61f3ac5e52abe47d9d8bd5"
+  },
+  "selected_public_checkpoint": {
+    "url": "https://qaihub-public-assets.s3.us-west-2.amazonaws.com/qai-hub-models/models/gemma_4_e2b_it/v1/gemma_4_e2b_it_w4a16.zip",
+    "publisher": "Qualcomm AI Hub Models public asset store",
+    "asset_version": 1,
+    "bytes_from_http_head": 2013959998,
+    "sha256": null,
+    "sha256_null_reason": "Download is deferred until heavy-ram.lock is acquired.",
+    "quantization": "w4a16 calibrated checkpoint; exact encoding inventory pending archive inspection",
+    "authentication_required": false
+  },
+  "tooling": {
+    "qai_hub_models": {
+      "version": "v0.61.0",
+      "commit": "5975a79b55b40f5cbc61f3ac5e52abe47d9d8bd5",
+      "model_py_sha256": "1d07ab745f376ad71002501c5e98c7129c16b3c23eaa20208c678e34dd24ce73",
+      "quantize_py_sha256": "d3f60f366a3426fc23d606306c3b04791c6eb19694e75ce70c70806287b7f7ba",
+      "manifest_sha256": "99772a2ea6fd5d4a598799fe7d1cac0ebdf11fa0669c60c0daaa87b603638df3",
+      "release_assets_sha256": "097e7936cfe6ea52ddc2f36209cde47146a6cfe008605775b9623ad6a1ff8b18"
+    },
+    "qairt": {
+      "version": "2.49.0.260730",
+      "root": "/home/moritz/opt/qairt/2.49.0.260730",
+      "already_installed": true,
+      "sdk_yaml_sha256": "309ac8f6c75c2fdc808f1c9b9d0da60be123c21a79532cca70a9c4b144d983f4",
+      "release_notes_sha256": "84507e5a7c00a5c2d862c3d8582359be486a17a006e1a0124a4e39cf13f11ad4",
+      "gemma4_htp_config_sha256": "39f588d6fbe21079990001794940b8bfb4150fb589086bd1d781609b97a1b1c1",
+      "license_or_install_action_taken": false
+    }
+  },
+  "candidate_route": {
+    "target": "chipset:SM8550 / HTP v73",
+    "context_tokens": 8192,
+    "prompt_processor_arn": 128,
+    "token_generator_arn": 1,
+    "weight_sharing": true,
+    "compiled_context_count_expected": 1,
+    "runtime": "Genie",
+    "backend_config_type": "QnnHtp",
+    "transformer_execution": "HTP only",
+    "intentional_cpu_boundaries": [
+      "tokenizer and chat-template rendering",
+      "embedding and per-layer embedding LUT lookup/requantization",
+      "greedy sampler and output detokenization",
+      "host orchestration"
+    ],
+    "direct_gguf_route_rejected": "The public Google GGUF identifies architecture gemma4, while the installed QAIRT direct GGUF builder supports only llama, mistral, phi3, qwen2, qwen3, gemma, gemma2, and gemma3."
+  },
+  "tokenizer_and_template": {
+    "status": "must be bound from the selected checkpoint archive before conversion",
+    "prior_0025_inventory_is_expectation_only": {
+      "short": {"input_tokens": 171, "rendered_sha256": "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a", "token_ids_int32le_sha256": "65d931b8fb39eacee9675b22e52d6ce0a091429e50451c2d1ea0463e250d7f4d"},
+      "medium": {"input_tokens": 595, "rendered_sha256": "8e3c03cb0d1ddce8455306b8b84585ce2ae07c083c4fdbdec1e946e3be56771d", "token_ids_int32le_sha256": "2a89b5742b50060ad7510f8dfaa22eafda4a8fedbe06b5aaed36d5653390cf8d"},
+      "long": {"input_tokens": 1930, "rendered_sha256": "450b519d417e29c4239e39aef856db1813d2580cd62e9db9adaae3d94ba8f260", "token_ids_int32le_sha256": "bbb4413aa186c843cbdc71a1f659e9d574c6fd0bc46fe844a310813445279bba"}
+    }
+  },
+  "required_provider_proof": {
+    "compiled_context_identity": "Hash every deployed serialized context and bind its SM8550/HTP compiler metadata.",
+    "runtime_binding": "Retain QnnHtp backend config, verbose Genie/QNN logs, loaded HTP host/stub/v73 skeleton libraries, and HTP profile evidence.",
+    "partition_boundary": "Transformer prompt and token graphs must be wholly accepted by HTP. Any unsupported graph, CPU QNN backend, or undocumented transformer fallback is fatal.",
+    "cpu_boundary_disclosure": "Tokenizer, LUT lookup/requantization, sampler, and orchestration CPU work remains explicit and is not misreported as HTP execution.",
+    "no_silent_cpu_only": "A successful text response without the physical provider proof above is not QNN/HTP evidence."
+  },
+  "campaign_gate": {
+    "phone_priority": "follows coordinated GPU paths; no ADB until Pi explicitly grants priority",
+    "bounded_viability_first": true,
+    "canonical_after_viability": true,
+    "request_isolation_candidate": "One loaded Genie Engine with a fresh Dialog per logical request, or a proven full GenieDialog_reset; measure reset/creation separately and reject retained KV/prefix reuse.",
+    "memory": "100 ms target process PSS and VmHWM sampling across setup and campaign; HTP memory only when directly observable.",
+    "raw_first": true,
+    "cleanup": "Remove and verify only /data/local/tmp/vibevoice-0031-gemma-4-e2b-it-android-qnn-htp while holding phone.lock."
+  },
+  "fatal_gates": [
+    "wrong model, checkpoint, tokenizer, template, workload, target, runtime, compiled context, or device identity",
+    "prompt plus 2048 ceiling exceeds context or any silent truncation",
+    "transformer graph is not fully bound to physical HTP or provider/fallback evidence is ambiguous",
+    "model/context remap, HTP recompilation, or retained prompt/KV state between canonical logical requests",
+    "unauthorized SDK/license/auth/device operation or lock violation",
+    "raw output cannot be bound to the claimed request and route"
+  ],
+  "nullable_not_fatal": [
+    "runtime timing splits not exposed by authoritative callbacks/profile data",
+    "power telemetry unavailable to shell",
+    "HTP-private memory unavailable to process sampling",
+    "nonessential warnings that do not invalidate route identity or logical requests"
+  ]
+}
