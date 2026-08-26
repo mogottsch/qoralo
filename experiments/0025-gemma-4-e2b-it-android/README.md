@@ -2,7 +2,7 @@
 
 ## Status
 
-**Fresh-Session isolation is approved and contract-locked. The complete canonical Android CPU campaign passed. Moritz approved the official generic artifact with `Backend::GPU` as the amended canonical GPU route after the dedicated Artisan artifact was durably blocked. Its first provider-bound smoke preflight is currently transport-blocked because the authorized serial is absent from the Windows ADB bridge.**
+**Fresh-Session isolation is approved and contract-locked. The complete canonical Android CPU campaign and the explicitly approved generic-artifact GPU campaign both passed with raw evidence. The dedicated Artisan artifact blocker remains historical/non-metric.**
 
 This experiment compares only the official instruction-tuned Gemma 4 E2B LiteRT-LM CPU and GPU Android routes on the authorized Galaxy S23 Ultra. It measures execution, setup, TTFT, prefill/decode throughput, total latency, process memory, and operating conditions under the repository's fixed short/medium/long prompt contract. It does not evaluate transcript quality and makes no NPU/HTP claim.
 
@@ -62,6 +62,20 @@ A bounded, hash-verified Android smoke requested the official GPU backend with t
 No logical request ran, no provider bound, and no CPU fallback was relabeled as GPU. The experiment-owned phone stage was removed and verified absent. Moritz subsequently approved the generic 2,588,147,712-byte artifact with `Backend::GPU` as the canonical Android GPU route. This historical attempt remains preserved and non-metric at [`results/android-gpu-blocker/`](results/android-gpu-blocker/); it is not overwritten by the amended route.
 
 The first amended-route smoke preflight stopped before identity capture because `R5CW81PR8SY` was absent from the configured Windows ADB bridge. No stage or process was created. Transport-only evidence is retained at [`results/android-gpu-generic-preflight-blocker/`](results/android-gpu-generic-preflight-blocker/).
+
+## Canonical Android GPU campaign
+
+The provider-bound smoke was only a viability milestone. The subsequent fresh canonical campaign completed all 16 requests with one loaded GPU Engine and a fresh Session for each later request. The campaign process recorded `kGpu` as the only requested hardware accelerator bit, the fully-delegated single-delegate hint, mapped `libLiteRtGpuAccelerator.so` plus Qualcomm/Adreno OpenCL/GLES drivers, and an open `/dev/kgsl-3d0`; no CPU fallback bit was requested.
+
+Median loaded-route observations were:
+
+- short (171 input / 392 output tokens): TTFT `0.649 s`, prefill `320.90 tok/s`, decode `12.32 tok/s`, total `32.38 s`;
+- medium (595 / 640): TTFT `1.339 s`, prefill `485.17 tok/s`, decode `13.16 tok/s`, total `50.80 s`;
+- long (1,930 / 756): TTFT `2.076 s`, prefill `981.43 tok/s`, decode `16.30 tok/s`, total `48.31 s`.
+
+Setup was `10.520 s`. Peak sampled process PSS was `1,003,954,176 B`; VmHWM/ru_maxrss was `1,016,340,480 B`. Median fresh-Session recreation remained below `0.20 ms` for every tier and is excluded from request timing. The phone began at AP `44.0 C` / skin `38.1 C` and ended at Android thermal status 3, AP `50.1 C` / skin `44.5 C`, so likely sustained thermal throttling is explicit. See [`results/android-gpu-campaign/`](results/android-gpu-campaign/).
+
+The first canonical orchestration attempt failed before any request because its configured GPU cache directory was not created. That attempt is non-counted and preserved at [`results/android-gpu-missing-cache-diagnostic/`](results/android-gpu-missing-cache-diagnostic/); the succeeding campaign was entirely fresh and write-probed the exact cache path before launch.
 
 ## Claim boundaries
 

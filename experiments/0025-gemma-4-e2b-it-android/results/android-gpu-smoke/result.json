@@ -1,0 +1,279 @@
+{
+  "arm_id": "gemma-4-e2b-it-litert-lm-generic-gpu-smoke",
+  "artifact_identity": {
+    "libLiteRt_sha256": "3fdbf64355af65b3ca6ed0c633ffed1e4faa1bfa9256f5e7403fec1633ea1b74",
+    "model_bytes": 2588147712,
+    "model_sha256": "181938105e0eefd105961417e8da75903eacda102c4fce9ce90f50b97139a63c",
+    "remote_input_manifest_sha256": "d0eaa6f933818e8acc2c567e4b025575497ac043d0a91291d87bb63ca0c318e7",
+    "remote_output_manifest_sha256": "c40ca0d1a72573197b1cdff97f3c9cf2f7cd367607af05846517a1bd68ea41f8",
+    "runner_sha256": "5f6c423ad154acd91741eefd0b1a554662fe3f6bd6cc510fb8fcf90de12435ed"
+  },
+  "backend": "gpu",
+  "contract_commit": "566fa2531741ac7dd1109a39b11015bfd7e01a58",
+  "device": {
+    "abi": "arm64-v8a",
+    "android_build_fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+    "model": "SM-S918B",
+    "serial": "R5CW81PR8SY",
+    "soc": "SM8550"
+  },
+  "execution_target": "android",
+  "experiment": "0025-gemma-4-e2b-it-android",
+  "gpu_provider_binding": {
+    "accelerator_library_loaded": true,
+    "binding_proven": true,
+    "fully_delegated_to_single_delegate_hint": true,
+    "gpu_device_fds": [
+      "/dev/kgsl-3d0"
+    ],
+    "gpu_driver_library_loaded": true,
+    "litert_hardware_accelerators": "kGpu only (no CPU fallback bit)",
+    "mapped_provider_and_driver_libraries": [
+      "757cc44000-757cd97000 r--p 00000000 fe:0a 40074240                       /vendor/lib64/egl/libGLESv2_adreno.so",
+      "757cd97000-757d17b000 r-xp 00153000 fe:0a 40074240                       /vendor/lib64/egl/libGLESv2_adreno.so",
+      "757d17b000-757d18b000 r--p 00537000 fe:0a 40074240                       /vendor/lib64/egl/libGLESv2_adreno.so",
+      "757d18b000-757d191000 rw-p 00546000 fe:0a 40074240                       /vendor/lib64/egl/libGLESv2_adreno.so",
+      "7593806000-7593b10000 r-xp 00000000 fe:3f 838303                         /data/local/tmp/vibevoice-0025-gemma-4-e2b-it-android/lib/libLiteRtGpuAccelerator.so",
+      "7593b12000-7593b1f000 r--p 0030c000 fe:3f 838303                         /data/local/tmp/vibevoice-0025-gemma-4-e2b-it-android/lib/libLiteRtGpuAccelerator.so",
+      "7593b22000-7593b24000 rw-p 0031c000 fe:3f 838303                         /data/local/tmp/vibevoice-0025-gemma-4-e2b-it-android/lib/libLiteRtGpuAccelerator.so",
+      "7595d5f000-7595d71000 r--p 00000000 fe:07 144757504                      /system/lib64/libGLESv2.so",
+      "7595d71000-7595d77000 r-xp 00012000 fe:07 144757504                      /system/lib64/libGLESv2.so",
+      "7595d77000-7595d78000 r--p 00018000 fe:07 144757504                      /system/lib64/libGLESv2.so",
+      "7596ddb000-7596de1000 r--p 00000000 fe:07 144757248                      /system/lib64/libGLESv1_CM.so",
+      "7596de1000-7596de3000 r-xp 00006000 fe:07 144757248                      /system/lib64/libGLESv1_CM.so",
+      "7596de3000-7596de4000 r--p 00008000 fe:07 144757248                      /system/lib64/libGLESv1_CM.so",
+      "7596e00000-7596e12000 r--p 00000000 fe:0a 39876718                       /vendor/lib64/egl/libGLESv1_CM_adreno.so",
+      "7596e12000-7596e3d000 r-xp 00012000 fe:0a 39876718                       /vendor/lib64/egl/libGLESv1_CM_adreno.so",
+      "7596e3d000-7596e3e000 r--p 0003d000 fe:0a 39876718                       /vendor/lib64/egl/libGLESv1_CM_adreno.so",
+      "7596e3e000-7596e3f000 rw-p 0003d000 fe:0a 39876718                       /vendor/lib64/egl/libGLESv1_CM_adreno.so",
+      "75c81c6000-75c81da000 r--p 00000000 fe:0a 41491214                       /vendor/lib64/libOpenCL.so",
+      "75c81da000-75c81ec000 r-xp 00014000 fe:0a 41491214                       /vendor/lib64/libOpenCL.so",
+      "75c81ec000-75c81ed000 r--p 00026000 fe:0a 41491214                       /vendor/lib64/libOpenCL.so",
+      "75c81ed000-75c81ef000 rw-p 00026000 fe:0a 41491214                       /vendor/lib64/libOpenCL.so",
+      "764a241000-764a253000 r--p 00000000 fe:07 144757760                      /system/lib64/libGLESv3.so",
+      "764a253000-764a259000 r-xp 00012000 fe:07 144757760                      /system/lib64/libGLESv3.so",
+      "764a259000-764a25a000 r--p 00018000 fe:07 144757760                      /system/lib64/libGLESv3.so"
+    ],
+    "proof_boundary": "Captured from the benchmark process after GPU Engine compilation and initial Session creation; LiteRT-LM configures the GPU arm with HwAccelerators::kGpu only and a fully-delegated single-delegate hint.",
+    "requested_neural_backend": "gpu"
+  },
+  "host_is_android_evidence": null,
+  "limitations": [
+    "This 64-token smoke proves route viability/provider binding only and is not experiment completion or a canonical campaign distribution.",
+    "The phone ended at Android thermal status 3; sustained thermal throttling likely affected later observations.",
+    "No calibrated external power measurement was collected.",
+    "Process PSS/VmHWM does not include independently measured private GPU memory.",
+    "PSS is sampled at 100 ms and may miss brief peaks; VmHWM/ru_maxrss is cumulative.",
+    "Fresh-Session recreation is measured separately and excluded from request timing.",
+    "Output sanity is a corruption/gibberish check, not quality or correctness."
+  ],
+  "memory": {
+    "lifecycle": "benchmark process from immediately before setup through final request",
+    "peak_sampled_pss_bytes": 665146368,
+    "peak_sampled_vm_hwm_bytes": 675291136,
+    "ru_maxrss_bytes": 675291136,
+    "sample_count": 139,
+    "sampling_interval_seconds": 0.1
+  },
+  "operating_conditions": {
+    "battery_after": {
+      "ac_powered": false,
+      "health": 2,
+      "level_percent": 93,
+      "status": 2,
+      "temperature_c": 34.6,
+      "usb_powered": true,
+      "wireless_powered": false
+    },
+    "battery_before": {
+      "ac_powered": false,
+      "health": 2,
+      "level_percent": 93,
+      "status": 2,
+      "temperature_c": 34.1,
+      "usb_powered": true,
+      "wireless_powered": false
+    },
+    "power_missing_reason": "No calibrated external power measurement was collected; Android battery/charging state is retained.",
+    "power_watts": null,
+    "thermal_after": {
+      "android_thermal_status": 0,
+      "ap_status": 0,
+      "ap_temperature_c": 42.4,
+      "battery_status": 0,
+      "battery_temperature_c": 34.6,
+      "skin_status": 0,
+      "skin_temperature_c": 37.3
+    },
+    "thermal_before": {
+      "android_thermal_status": 0,
+      "ap_status": 0,
+      "ap_temperature_c": 39.7,
+      "battery_status": 0,
+      "battery_temperature_c": 34.1,
+      "skin_status": 0,
+      "skin_temperature_c": 36.1
+    },
+    "transport": "Windows-native ADB daemon bridged to WSL over tcp:172.27.80.1:5037."
+  },
+  "prompts": {
+    "long": {
+      "input_tokens": 1930,
+      "max_num_tokens": 8192,
+      "max_output_tokens": 2048,
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "rendered_bytes": 10589,
+      "rendered_path": "rendered/long.txt",
+      "rendered_sha256": "450b519d417e29c4239e39aef856db1813d2580cd62e9db9adaae3d94ba8f260",
+      "token_ids_int32le_sha256": "bbb4413aa186c843cbdc71a1f659e9d574c6fd0bc46fe844a310813445279bba",
+      "truncated": false
+    },
+    "medium": {
+      "input_tokens": 595,
+      "max_num_tokens": 8192,
+      "max_output_tokens": 2048,
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "rendered_bytes": 3313,
+      "rendered_path": "rendered/medium.txt",
+      "rendered_sha256": "8e3c03cb0d1ddce8455306b8b84585ce2ae07c083c4fdbdec1e946e3be56771d",
+      "token_ids_int32le_sha256": "2a89b5742b50060ad7510f8dfaa22eafda4a8fedbe06b5aaed36d5653390cf8d",
+      "truncated": false
+    },
+    "short": {
+      "input_tokens": 171,
+      "max_num_tokens": 8192,
+      "max_output_tokens": 2048,
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "rendered_bytes": 920,
+      "rendered_path": "rendered/short.txt",
+      "rendered_sha256": "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a",
+      "token_ids_int32le_sha256": "65d931b8fb39eacee9675b22e52d6ce0a091429e50451c2d1ea0463e250d7f4d",
+      "truncated": false
+    }
+  },
+  "remote_stage_cleanup": {
+    "path": "/data/local/tmp/vibevoice-0025-gemma-4-e2b-it-android",
+    "status": "removed_and_verified_absent",
+    "verified_at": "2026-08-26T16:54:48,069605519+01:00"
+  },
+  "route": {
+    "accelerator_recompilation_between_requests": false,
+    "cache_dir": "/data/local/tmp/vibevoice-0025-gemma-4-e2b-it-android/cache-generic-gpu-smoke",
+    "loaded_engine_reused": true,
+    "max_num_tokens": 8192,
+    "max_output_tokens": 2048,
+    "model_path": ".local/model/gemma-4-E2B-it.litertlm",
+    "model_remap_or_reload_between_requests": false,
+    "num_cpu_threads": 4,
+    "prompt_template_applied_in_session": false,
+    "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+    "reset_mode": "fresh_session",
+    "reset_probe_only": false,
+    "retained_prompt_or_kv_reuse_between_requests": false,
+    "sampler": "CPU TOP_P(k=1,p=1) exact argmax implementation for both CPU and GPU neural backends",
+    "smoke_only": true,
+    "thinking_enabled": false
+  },
+  "route_amendment": {
+    "approval": "Moritz explicitly approved Option A through Pi",
+    "artifact": "generic gemma-4-E2B-it.litertlm",
+    "backend": "GPU",
+    "historical_blocker": "results/android-gpu-blocker/result.json",
+    "reason": "Dedicated 2,008 MB Artisan artifact was incompatible with the pinned open-source runtime; deployment card Android GPU row reports a matching 2,583 MB model size for the generic artifact."
+  },
+  "runs": [
+    {
+      "emitted_token_ids_int32le_sha256": "71636282e5827eb66351d10eda149c40aa45991fe8c4eadd5908a5a568e0a6d2",
+      "expected_input_tokens": 171,
+      "id": "smoke-short-01",
+      "missing_reasons": {},
+      "output": {
+        "bytes": 345,
+        "path": "outputs/smoke-short-01.txt",
+        "sha256": "878dab991503af86c9b196d42debb286c5b3b41993933f2edd0db95b5f6a9645"
+      },
+      "output_bytes": 345,
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": true
+      },
+      "output_token_cap": 64,
+      "output_tokens": 64,
+      "phase": "smoke",
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "request_isolation_strategy": "setup_created_initial_session",
+      "request_timeout_seconds": 1800,
+      "rewind_called": false,
+      "runtime_benchmark_info": {
+        "after_error": null,
+        "before_error": null,
+        "decode_turns_after": 1,
+        "decode_turns_before": 0,
+        "prefill_turns_after": 1,
+        "prefill_turns_before": 0
+      },
+      "runtime_error": null,
+      "runtime_generated_tokens": 64,
+      "runtime_input_token_count_matches": true,
+      "runtime_prefill_tokens": 171,
+      "runtime_task_state": "done",
+      "session_recreation_in_setup": true,
+      "session_recreation_in_total_request": false,
+      "session_recreation_seconds": 4.0052e-05,
+      "session_step_after_reset": 0,
+      "session_step_before_reset": 0,
+      "stop_reason": "max_tokens",
+      "throughput": {
+        "decode_first_token_included": false,
+        "decode_tokens_per_second": 19.77293201138059,
+        "prefill_tokens_per_second": 142.26011518482068,
+        "runtime_decode_tokens_per_second": 19.31747804116018
+      },
+      "tier": "short",
+      "timing": {
+        "decode_seconds": 3.186173905,
+        "post_prefill_to_first_token_seconds": 0.127291719,
+        "prefill_seconds": 1.202023489,
+        "request_frontend_plus_prefill_seconds": 1.20845052,
+        "request_to_first_token_seconds": 1.335742239,
+        "runtime_decode_turn_seconds": 3.313061874,
+        "total_seconds": 4.521916144
+      }
+    }
+  ],
+  "runtime": {
+    "name": "LiteRT-LM",
+    "revision": "924e79c91542761242244e4f1651851f822e4cbb",
+    "version": "v0.16.1"
+  },
+  "schema_version": 1,
+  "scope": "android_smoke",
+  "setup": {
+    "boundary": "before ModelAssets::Create through one Engine and the initial direct Session ready with KV capacity",
+    "initial_session_creation_seconds": 4.0052e-05,
+    "seconds": 11.724487287
+  },
+  "source_runner_result_sha256": "c5d7f00972d67c494a08923f3510f458477da4d2c101981a2a65ac3fb1bfa92c",
+  "sources": [
+    "results/android-gpu-smoke/raw/preflight.txt",
+    "results/android-gpu-smoke/raw/remote-sha256-before.txt",
+    "results/android-gpu-smoke/raw/remote-output-sha256.txt",
+    "results/android-gpu-smoke/raw/gpu-provider-binding.json",
+    "results/android-gpu-smoke/raw/runner-stdout.jsonl",
+    "results/android-gpu-smoke/raw/runner-stderr.log"
+  ],
+  "status": "viability_passed_not_experiment_complete",
+  "validation": {
+    "all_requests_completed_without_error": true,
+    "all_runtime_input_counts_match": true,
+    "fully_delegated_hint": true,
+    "gpu_accelerator_library_loaded": true,
+    "gpu_device_node_open": true,
+    "gpu_driver_library_loaded": true,
+    "gpu_only_no_cpu_fallback_bit": true,
+    "gpu_provider_binding_proven": true,
+    "logical_request_count": 1,
+    "raw_outputs_hash_bound": true,
+    "runner_exit_code": 0
+  }
+}

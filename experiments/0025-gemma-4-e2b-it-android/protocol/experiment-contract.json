@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0025-gemma-4-e2b-it-android",
-  "status": "cpu-complete-gpu-generic-route-approved-transport-blocked",
+  "status": "cpu-and-approved-generic-gpu-canonical-campaigns-complete",
   "locked_at": "2026-08-25",
   "amendments": [
     {
@@ -236,12 +236,22 @@
     "pull, hash, validate, and remove only the exact experiment-owned remote root"
   ],
   "gpu_route_status": {
-    "status": "generic_artifact_route_approved_transport_blocked_before_identity",
+    "status": "canonical_campaign_complete",
     "canonical_artifact_sha256": "181938105e0eefd105961417e8da75903eacda102c4fce9ce90f50b97139a63c",
     "backend": "GPU",
     "provider_binding_required": true,
+    "provider_binding_proven": true,
+    "proof": {
+      "litert_hardware_accelerators": "kGpu only (no CPU fallback bit)",
+      "fully_delegated_to_single_delegate_hint": true,
+      "accelerator_library": "libLiteRtGpuAccelerator.so mapped",
+      "driver_libraries": "Qualcomm/Adreno libOpenCL and libGLES mapped",
+      "gpu_device": "/dev/kgsl-3d0 open"
+    },
+    "cpu_fallback_used": false,
+    "smoke_evidence": "results/android-gpu-smoke/result.json",
+    "canonical_evidence": "results/android-gpu-campaign/result.json",
     "historical_artisan_blocker_evidence": "results/android-gpu-blocker/result.json",
-    "cpu_fallback_permitted": false,
-    "transport_blocker_evidence": "results/android-gpu-generic-preflight-blocker/result.json"
+    "historical_missing_cache_diagnostic": "results/android-gpu-missing-cache-diagnostic/result.json"
   }
 }

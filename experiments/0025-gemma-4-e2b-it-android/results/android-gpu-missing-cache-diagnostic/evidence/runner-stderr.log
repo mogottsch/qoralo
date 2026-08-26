@@ -1,0 +1,57 @@
+INFO: [environment.cc:36] Creating LiteRT environment with options
+WARNING: [npu_registry.cc:34] NPU accelerator could not be loaded and registered: kLiteRtStatusErrorInvalidArgument.
+INFO: [gpu_registry.cc:101] Attempting to load GPU accelerator(libLiteRtGpuAccelerator.so).
+INFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xb400007a0f00d410, name=LiteRT GPU
+INFO: [gpu_registry.cc:109] Dynamically loaded GPU accelerator(libLiteRtGpuAccelerator.so) registered.
+INFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xb400007a0f00da50, name=CpuAccelerator
+INFO: [cpu_registry.cc:75] XNNPACK CPU accelerator registered.
+INFO: [environment.cc:36] Creating LiteRT environment with options
+WARNING: [npu_registry.cc:34] NPU accelerator could not be loaded and registered: kLiteRtStatusErrorInvalidArgument.
+INFO: [gpu_registry.cc:101] Attempting to load GPU accelerator(libLiteRtGpuAccelerator.so).
+INFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xb400007a0f00db90, name=LiteRT GPU
+INFO: [gpu_registry.cc:109] Dynamically loaded GPU accelerator(libLiteRtGpuAccelerator.so) registered.
+INFO: [accelerator_registry.cc:54] RegisterAccelerator: ptr=0xb400007a0f00e040, name=CpuAccelerator
+INFO: [cpu_registry.cc:75] XNNPACK CPU accelerator registered.
+INFO: [magic_number_utils.cc:101] Loaded: num_subgraphs=976, num_signatures=4
+INFO: [magic_number_utils.cc:109]   signature=decode, subgraph_index=0, num_tensors=2703, num_inputs=35, num_outputs=32, num_ops=2068
+INFO: [magic_number_utils.cc:109]   signature=prefill_1024, subgraph_index=1, num_tensors=1454, num_inputs=35, num_outputs=30, num_ops=1107
+INFO: [magic_number_utils.cc:109]   signature=prefill_128, subgraph_index=2, num_tensors=1454, num_inputs=35, num_outputs=30, num_ops=1107
+INFO: [magic_number_utils.cc:109]   signature=verify, subgraph_index=3, num_tensors=2887, num_inputs=35, num_outputs=32, num_ops=2243
+INFO: [magic_number_utils.cc:113] Magic number configs: num_configs=1
+INFO: [magic_number_utils.cc:120]   config[0]: magic_number=32003, target_number=8192, signature_prefix=null
+INFO: [magic_number_utils.cc:536] 439 tensors of signature decode have been updated for magic number  32003 to target number 8192
+INFO: [magic_number_utils.cc:536] 271 tensors of signature prefill_1024 have been updated for magic number  32003 to target number 8192
+INFO: [magic_number_utils.cc:536] 270 tensors of signature prefill_128 have been updated for magic number  32003 to target number 8192
+INFO: [magic_number_utils.cc:536] 444 tensors of signature verify have been updated for magic number  32003 to target number 8192
+INFO: [compiled_model.cc:815] Flatbuffer model initialized directly from incoming litert model.
+INFO: Initialized TensorFlow Lite runtime.
+I0000 00:00:1787759817.077683   11299 delegate_opencl.cc:603] options->hint_waiting_for_completion: false
+I0000 00:00:1787759817.077836   11299 delegate_opencl.cc:605] options->kernel_batch_size: -1
+INFO: [environment.cc:47] Adding options to the existing LiteRT environment
+INFO: [gpu_environment.cc:220] Created OpenCL device from provided device id and platform id.
+INFO: [gpu_environment.cc:283] Reusing provided EGL environment.
+INFO: [gpu_environment.h:155] Created LiteRT GpuEnvironment.
+INFO: [environment.cc:47] Adding options to the existing LiteRT environment
+VERBOSE: Replacing 2068 out of 2068 node(s) with delegate (LITERT_CL) node, yielding 1 partitions for subgraph 0 (decode).
+E0000 00:00:1787759817.127427   11299 delegate_opencl.cc:340] Failed to create litert::ml_drift::DelegateKernelLiteRt: INTERNAL: Could not open file ('/data/local/tmp/vibevoice-0025-gemma-4-e2b-it-android/cache-generic-gpu-canonical-v2/gemma-4-E2B-it.litertlm_1787742754_2588147712_mldrift_weight_cache.bin'): No such file or directory
+=== Source Location Trace: ===
+third_party/odml/litert/ml_drift/delegate/serialization_weight_cache/cache_builder.cc:112
+third_party/odml/litert/ml_drift/delegate/delegate_kernel.cc:962
+third_party/odml/litert/ml_drift/delegate/delegate_kernel.cc:380
+third_party/odml/litert/ml_drift/delegate/delegate_kernel.cc:318
+third_party/odml/litert/ml_drift/delegate/delegate_kernel_litert.cc:144
+ERROR: Failed to initialize kernel.
+ERROR: Restored original execution plan after delegate application failure.
+INFO: [accelerator_registry.cc:43] DestroyAccelerator: ptr=0xb400007a0f00e040, name=CpuAccelerator
+INFO: [accelerator_registry.cc:43] DestroyAccelerator: ptr=0xb400007a0f00db90, name=LiteRT GPU
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+F0000 00:00:1787759817.274302   11299 litert_lm_canonical_runner.cc:809] Check failed: MainHelper(argc, argv) is OK (UNKNOWN: ERROR: [runtime/executor/llm_litert_compiled_model_executor_factory.cc:200]
+└ ERROR: [runtime/executor/llm_litert_compiled_model_executor.cc:1830]
+└ ERROR: [external/litert/litert/cc/litert_compiled_model.h:1895]
+=== Source Location Trace: ===
+external/litert/litert/cc/litert_macros.h:565
+runtime/core/engine_advanced_impl.cc:308
+runtime/engine/litert_lm_canonical_runner.cc:579
+) 
+*** Check failure stack trace: ***
+Aborted 

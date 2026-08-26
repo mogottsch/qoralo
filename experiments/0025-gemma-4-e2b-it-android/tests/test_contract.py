@@ -65,8 +65,9 @@ class ContractTest(unittest.TestCase):
             "historical_incompatible_artisan_attempt_only",
             artifacts["gpu"]["route_status"],
         )
-        self.assertFalse(CONTRACT["gpu_route_status"]["cpu_fallback_permitted"])
+        self.assertFalse(CONTRACT["gpu_route_status"]["cpu_fallback_used"])
         self.assertTrue(CONTRACT["gpu_route_status"]["provider_binding_required"])
+        self.assertTrue(CONTRACT["gpu_route_status"]["provider_binding_proven"])
 
     def test_only_cpu_and_gpu_arms_are_in_scope(self) -> None:
         scope = CONTRACT["scope"]

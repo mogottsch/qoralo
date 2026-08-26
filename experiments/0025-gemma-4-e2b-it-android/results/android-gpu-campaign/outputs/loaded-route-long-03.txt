@@ -1,0 +1,26 @@
+Here is a technical recommendation for the team based on the provided engineering brief.
+
+The core challenge in comparing inference engines—Cedar, Juniper, and Rowan—on a resource-constrained, battery-powered device is not simply comparing raw speed, but understanding the distinct costs associated with model loading, prompt handling, and token generation across different operational phases.
+
+**Key Tradeoffs to Consider:**
+
+The primary trade-off revolves around the balance between setup time, prompt processing time, and token generation time, all while respecting the device's limited memory and fluctuating thermal/power state.
+
+1.  **Setup vs. Generation:** Engine Cedar excels at quick model loading but suffers from slow decoding. Juniper offers steadier generation but incurs a longer initial setup cost. Rowan trades increased memory usage for faster prompt processing. The decision between these engines must be weighed against the expected session reuse. If sessions are short, the setup cost of Juniper might be prohibitive, favoring Cedar's quick start, provided its slow decoding is acceptable. If sessions are long, the steadiness of Juniper might outweigh the initial delay.
+2.  **Memory Management:** The device's memory semantics are complex. Memory observations—whether it's mapped files, private allocations, or caches—cannot be treated as interchangeable. We must explicitly label peak memory usage (like sampled proportional set size and high-water marks) to distinguish between different memory components. A route that appears memory-efficient might be masking a hidden, non-deterministic memory spike.
+3.  **Timing Granularity:** A single combined timing metric is insufficient. We must separate the measurement into distinct phases: time to first token (including prefill), prefill throughput, and decode throughput. Any single combined metric is misleading.
+4.  **Output Fidelity:** Performance metrics must not solely focus on raw token counts. We need to track the actual output quality—specifically, the sanity check for sensible text—and the precise stop reason for termination (timeout, EOS, or ceiling hit). A route that generates tokens but produces garbage output should be flagged, regardless of its speed.
+
+**Measurements to Keep Separate:**
+
+To maintain rigorous evidence integrity, several measurements must remain distinct and not be pooled:
+
+*   **Setup Costs:** The time taken for initial model loading, tokenizer initialization, and any necessary accelerator compilation. This must be separated from runtime costs.
+*   **Prompt Processing Costs:** The time spent handling the input prompt, including prefill throughput, which isolates the initial input token processing.
+*   **Generation Costs:** The time spent on decoding, which includes the decode throughput and the actual token count. This must be separated from the prompt processing.
+*   **Memory Footprint:** Memory observations must be granular, distinguishing between model weights, runtime caches, and temporary allocations.
+*   **Provenance:** The source information (file hashes, quantization method, toolchain) must be attached to every route, independent of the performance timing results.
+
+**Practical Next Step**
+
+The immediate next step is to define the precise operational parameters for the next comparison run, focusing heavily on explicit environmental control. We must document the exact device model release, system build configuration, and runtime libraries for the next iteration. Furthermore, we need to establish a clear, explicit, and documented decision-making framework that explicitly translates the measured trade-offs (e.g., "We accept a 10.5s setup penalty for a 10.1s generation gain if the session length is guaranteed to be > 10 requests"). This framework must guide the interpretation of the raw data, ensuring that the final recommendation describes the *why* a specific route is chosen, rather than simply stating which route is fastest.
