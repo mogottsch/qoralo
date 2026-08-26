@@ -1,0 +1,244 @@
+{
+  "schema_version": 1,
+  "experiment": "0035-qwen-3.5-2b-android-opencl-gpu",
+  "status": "android_opencl_artifact_phone_ready",
+  "locked_at": "2026-08-26",
+  "question": "Can the pinned public Qwen3.5-2B Q4_K_M artifact complete the canonical Android campaign through public llama.cpp OpenCL offload on the Galaxy S23 Ultra Adreno 740?",
+  "scope": {
+    "model": "Qwen3.5-2B post-trained model only",
+    "arm_id": "qwen35-2b-unsloth-q4km-llamacpp-opencl-adreno",
+    "included": "Text-only inference using the same pinned Unsloth GGUF through llama.cpp GPUOpenCL0 / Adreno 740 with all 25 model layers requested for offload.",
+    "excluded": [
+      "Vulkan; experiment 0030 remains separately blocked",
+      "CPU-only execution or silent fallback",
+      "GPU-exclusive claims: CPU orchestration and unsupported OpenCL operations remain in bounds and disclosed",
+      "NPU/QNN/HTP",
+      "vision/thinking",
+      "quality evaluation",
+      "host metrics"
+    ]
+  },
+  "canonical_protocol": {
+    "path": "protocols/android-llm-benchmark/contract.json",
+    "sha256": "2bb2de193745bc9b74c98639ee077f07615702655b2fc6118185148e2a0c0b46",
+    "workloads": {
+      "short": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae",
+      "medium": "5e168aa3232f06c92959b686188192471b2d1a62cd1c857a616fd8e29456ddf1",
+      "long": "092840fbe879259110fa4d0b15bc383012f16b7b42a38d224b2ead231e86aad8"
+    },
+    "tier_order": [
+      "short",
+      "medium",
+      "long"
+    ],
+    "first_request": {
+      "tier": "short",
+      "count": 1
+    },
+    "minimum_loaded_route_requests_per_tier": 5,
+    "loaded_model_runtime_route_reused": true,
+    "engine_reused_when_runtime_exposes_engine": true,
+    "session_object_reuse_required": false,
+    "request_isolation_strategy": "proven_full_in_session_conversation_and_kv_reset",
+    "conversation_state_isolated_each_request": true,
+    "kv_state_isolated_each_request": true,
+    "reset_or_session_creation_duration_reported_separately": true,
+    "reset_included_in_total_request": false,
+    "model_remap_or_reload_between_requests": false,
+    "accelerator_recompilation_between_requests": false,
+    "retained_prompt_or_kv_reuse_between_requests": false,
+    "max_output_tokens": 2048,
+    "request_timeout_seconds": 1800,
+    "byte_identical_output_required": false
+  },
+  "upstream_model": {
+    "name": "Qwen/Qwen3.5-2B",
+    "url": "https://huggingface.co/Qwen/Qwen3.5-2B/tree/15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "revision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "private": false,
+    "gated": false,
+    "license": "Apache-2.0",
+    "license_sha256": "bbedc3fda3305820b977265f01b8619d87570a6739de3a5582c3464840f1e57a",
+    "published_parameter_count": "2B",
+    "llama_cpp_runtime_reported_parameter_count": "1.88 B (rounded)",
+    "native_context_tokens": 262144,
+    "architecture": "24-layer dense hybrid: three Gated DeltaNet layers followed by one full-attention layer, repeated six times",
+    "source": "Pinned official model card and config.json. The official repository is Transformers-format source, not the deployed Android artifact."
+  },
+  "deployment_artifact": {
+    "publisher": "Unsloth",
+    "official_qwen_artifact": false,
+    "source_kind": "third-party GGUF conversion and quantization derived from Qwen/Qwen3.5-2B",
+    "repository": "unsloth/Qwen3.5-2B-GGUF",
+    "repository_url": "https://huggingface.co/unsloth/Qwen3.5-2B-GGUF/tree/f6d5376be1edb4d416d56da11e5397a961aca8ae",
+    "revision": "f6d5376be1edb4d416d56da11e5397a961aca8ae",
+    "filename": "Qwen3.5-2B-Q4_K_M.gguf",
+    "url": "https://huggingface.co/unsloth/Qwen3.5-2B-GGUF/resolve/f6d5376be1edb4d416d56da11e5397a961aca8ae/Qwen3.5-2B-Q4_K_M.gguf",
+    "bytes": 1280835840,
+    "sha256": "aaf42c8b7c3cab2bf3d69c355048d4a0ee9973d48f16c731c0520ee914699223",
+    "format": "GGUF v3, one self-contained shard, text model only",
+    "quantization": {
+      "name": "Q4_K_M",
+      "gguf_file_type": 15,
+      "gguf_quantization_version": 2,
+      "publisher": "Unsloth",
+      "weight_scheme": "GGML K-quant medium: primarily Q4_K block quantization with the Q4_K_M mixed tensor policy",
+      "nominal_bit_width": 4,
+      "block_scheme": "Q4_K uses 256-weight super-blocks composed of 32-weight blocks with quantized scales/minima; the M variant retains selected tensors at higher precision according to the quantizer policy.",
+      "calibration": "importance-matrix assisted",
+      "imatrix_file_metadata": "Qwen3.5-2B-GGUF/imatrix_unsloth.gguf",
+      "imatrix_file_sha256": "0661bad5020138c6da2d45d2223ba32f0e4e8329a2fbf8e2ae382e782348fbca",
+      "imatrix_dataset_metadata": "unsloth_calibration_Qwen3.5-2B.txt",
+      "imatrix_entries": 186,
+      "imatrix_chunks": 80,
+      "conversion_tool_revision": null,
+      "conversion_tool_revision_missing_reason": "The pinned Unsloth repository and GGUF metadata identify Unsloth, Q4_K_M, and the importance matrix but do not publish the exact converter/quantizer commit. Artifact bytes are still bound by revision, size, and SHA-256; this provenance limitation must remain visible."
+    }
+  },
+  "tokenizer_and_template": {
+    "source": "Qwen/Qwen3.5-2B",
+    "revision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "tokenizer_class": "Qwen2Tokenizer",
+    "files": {
+      "tokenizer.json": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+      "tokenizer_config.json": "49e2b6e395f959f077f1e992b338919c0d4a9732fc6e613995e06557f843500c",
+      "merges.txt": "a9d356d7bdf1ef4949e3e748e95b8e10ad9d4e2e838eddc38a0a7b6b94d1db8d",
+      "vocab.json": "ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003"
+    },
+    "upstream_chat_template_sha256": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80",
+    "deployed_embedded_chat_template_sha256": "7f0e529032c25183bcd66c7f238da2d377f43be754a94e2725a58c4e16d2ed67",
+    "template_difference": "The deployed template changes only iteration over tool-call argument mappings. The canonical system+user, no-tools branch is unaffected; canonical rendered bytes are independently hash-bound.",
+    "thinking": {
+      "enabled": false,
+      "server_option": "--reasoning off",
+      "per_request_option": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "proof": "Every canonical rendered prompt must end with the exact bytes <think>\\n\\n</think>\\n\\n. A nonempty thinking prefix is a fatal mismatch."
+    },
+    "host_prompt_inventory": {
+      "short": {
+        "input_tokens": 174,
+        "rendered_sha256": "afed1eb692d38446b49ac1c39dec80ae3bd8845282398c09b8485ce4a2a1371e",
+        "token_ids_int32le_sha256": "dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4"
+      },
+      "medium": {
+        "input_tokens": 597,
+        "rendered_sha256": "0559ad81d5528fefe250c945816a1d10da0141fbf7ad124343ef69eba5db42a5",
+        "token_ids_int32le_sha256": "8b07ff28c1c94a93b79880aa27f73b9d5cbddc1f215f857cb58b1d021422c5e2"
+      },
+      "long": {
+        "input_tokens": 1926,
+        "rendered_sha256": "c48e00cf1e45fb7dd7edbdcad17578e0857ce01ca621dbd47972265721701135",
+        "token_ids_int32le_sha256": "a36f8139e2c4b83976fc74a37bf93f184272823b7144e7a167d9bee6836785ca"
+      }
+    }
+  },
+  "route_rationale": {
+    "chosen": "After the same-device Vulkan shader pipeline proved durably blocked, upstream llama.cpp issue #19746 reported OpenCL working on Adreno 740. The pinned llama.cpp revision already includes a public OpenCL backend designed first for Qualcomm Adreno, Q4_K/Q5_K support, Adreno 7xx detection, embedded source kernels, and Qwen3.5 gated-delta-net kernels.",
+    "revision_difference": "None: the same llama.cpp commit used for CPU and Vulkan is retained, avoiding a silent runtime revision change.",
+    "offload_claim_boundary": "GPU offload requires OpenCL platform selection, an Adreno 740 device, 25/25 layers offloaded, and OpenCL model and compute buffers in the same server log. CPU retains server/tokenizer/sampler/scheduler orchestration and operations unsupported by OpenCL; this is not GPU-exclusive.",
+    "fallback_policy": "Missing device/buffer/layer proof, an ignored GPU request, unsupported device, OpenCL build error, or CPU-only route is blocked evidence, not a GPU result."
+  },
+  "runtime": {
+    "name": "llama.cpp",
+    "revision": "0a5ac49bce4c42893368585edf3ffb41a38f0108",
+    "source_tree": "9355e5ebbca69eb403229473bec6ddfb38f055e0",
+    "source": "https://github.com/ggml-org/llama.cpp/tree/0a5ac49bce4c42893368585edf3ffb41a38f0108",
+    "build_number": 10627,
+    "build_recipe": "experiments/0035-qwen-3.5-2b-android-opencl-gpu/tools/build_android.sh",
+    "provider_backend": "GGML OpenCL GPU offload",
+    "requested_device": "GPUOpenCL0 / Adreno 740",
+    "requested_gpu_layers": 25,
+    "split_mode": "none",
+    "main_gpu": 0,
+    "cpu_threads": 4,
+    "context_tokens": 8192,
+    "parallel_slots": 1,
+    "android_ndk": "28.1.13356709 (r28b)",
+    "android_api_minimum": 31,
+    "android_abi": "arm64-v8a",
+    "compile_arch": "armv8.7-a",
+    "opencl_headers": {
+      "repository": "KhronosGroup/OpenCL-Headers",
+      "revision": "6fe718c31a45fe25151362a72ef041c3a1047cbd",
+      "source_tree": "185dae17ab1e5bf078e50a42a2f851ae868465d0",
+      "tag": "v2026.05.29",
+      "cl_h_bytes": 83360,
+      "cl_h_sha256": "16d09614cd7eef73b4094089cc4ce2af777181d3ffe9613473fb6d552234a4d1"
+    },
+    "opencl_link_loader": {
+      "repository": "KhronosGroup/OpenCL-ICD-Loader",
+      "revision": "b7bd2803acc779c03d96588e9ca9e9568a18698a",
+      "source_tree": "992f5bd721d4460224aa2a3d3885ddc1ac72b3c9",
+      "tag": "v2026.05.29",
+      "bytes": 225848,
+      "sha256": "48547338beba273298467ab39f14458fd7b10539f45fdfd938e8df4bb81b40fe",
+      "deployment": "Link-only artifact, never deployed. Android resolves DT_NEEDED libOpenCL.so to the authorized phone vendor implementation."
+    },
+    "kernel_sources": {
+      "source_revision": "llama.cpp tree 9355e5ebbca69eb403229473bec6ddfb38f055e0",
+      "manifest": "experiments/0035-qwen-3.5-2b-android-opencl-gpu/protocol/opencl-kernels.SHA256SUMS",
+      "manifest_sha256": "db17a882fcc799e394bc83fedba5f2979e011b132a1441bb6a4e0383e8902b7e",
+      "source_count": 170,
+      "embedding": "All listed OpenCL C kernel sources and embed_kernel.py are embedded in the executable; the phone vendor driver compiles them during route setup.",
+      "binary_kernel_library": false
+    },
+    "build": "CMake Release, GGML_OPENCL=ON, OpenCL target 3.0, embedded source kernels, Adreno optimized kernels enabled, restricted binary kernel library disabled; static llama/GGML and c++_static. Source/build paths prefix-mapped; web UI and OpenSSL disabled.",
+    "dynamic_dependencies": [
+      "libOpenCL.so",
+      "libc.so",
+      "libdl.so",
+      "libm.so"
+    ],
+    "android_server": {
+      "artifact_revision": 1,
+      "bytes": 12313808,
+      "sha256": "64409e6e96a7d003ed6c68ec12363f3e6d7c34d46af40bc439cb84f060cd4ced",
+      "clean_rebuilds_byte_identical": true
+    },
+    "client_source": "experiments/0035-qwen-3.5-2b-android-opencl-gpu/tools/run_client.py",
+    "greedy_proof": "Same pinned llama.cpp temperature=-1 argmax path as 0027.",
+    "state_reset": "One loaded server/slot; separately timed POST /slots/0?action=erase; cache_prompt=false; require cache_n=0, full prompt_n, positive prompt_ms."
+  },
+  "device": {
+    "model": "SM-S918B",
+    "soc": "SM8550",
+    "serial": "R5CW81PR8SY",
+    "abi": "arm64-v8a",
+    "identity_must_match": true,
+    "remote_root": "/data/local/tmp/vibevoice-0035-qwen-3.5-2b-android-opencl-gpu",
+    "phone_lock": "artifacts/locks/phone.lock held across identity, staging, execution, evidence, and cleanup"
+  },
+  "timing_and_evidence": {
+    "setup_boundary": "Immediately before server launch through health plus required OpenCL backend proof; includes vendor kernel compilation, model mapping/offload, context and initial KV allocation.",
+    "request_boundary": "Immediately before native template rendering through final streamed stop delivery. The separately timed slot erase completes before this boundary and is not included in total request.",
+    "request_to_first_token": "Client request start through the first SSE event carrying a generated token ID.",
+    "prefill": "llama.cpp final-event prompt_ms and prompt_n; route-internal prompt evaluation timing.",
+    "post_prefill_to_first_token": "Null because llama.cpp does not expose a server-clock first-token timestamp alignable with aggregate prompt_ms.",
+    "decode": "External first generated-token event through final stop event, with the first token excluded from the numerator; llama.cpp predicted timing is retained separately and includes all generated tokens.",
+    "raw_first": true,
+    "memory": "100 ms target process PSS/VmHWM plus public KGSL busy/frequency sampling. Process PSS does not isolate vendor driver/GPU-private allocations.",
+    "output_sanity": "Exact-output-hash sensible-text corruption smoke only."
+  },
+  "fatal_gates": [
+    "wrong workload/model/runtime/runner/device/staged hash",
+    "missing OpenCL Adreno 740 device, 25/25 layer offload, OpenCL model buffer, or OpenCL compute buffer proof",
+    "GPU option ignored, unsupported OpenCL device, OpenCL kernel build failure, or CPU-only fallback",
+    "prompt+2048 exceeds 8192 or truncation",
+    "thinking/greedy control mismatch",
+    "reset/cache/full-prompt proof failure",
+    "phone-lock/remote-scope violation",
+    "raw output cannot be bound"
+  ],
+  "nullable_not_fatal": [
+    "post-prefill-to-first-token split",
+    "calibrated power",
+    "individual thermal sensors",
+    "KGSL telemetry when server OpenCL proof is complete",
+    "brief memory/activity peaks missed by sampling",
+    "exact individual-op OpenCL/CPU split when claim remains bounded GPU offload"
+  ]
+}
