@@ -61,6 +61,8 @@ Different tokenizers produce different token counts. Never force one model's tok
 
 Use the smallest bounded host or local smoke needed to prove that artifacts load, prompts render, context fits, and one output is obtainable. A host smoke is not Android performance evidence and must not populate Android timing or memory fields. Do not demand publication-complete telemetry from this viability smoke; record warnings and instrumentation gaps for the Android contract instead of repeatedly rerunning a successful load/generation path.
 
+A bounded smoke is only a viability milestone. A numbered execution or benchmark experiment must be scoped toward the complete end-to-end canonical campaign; never mark the experiment complete from smoke evidence alone. If the full campaign cannot be reached, keep the experiment status explicitly active, blocked, or stopped and retain the exact durable blocker evidence.
+
 Follow repository device locks and approval rules. Do not access a personal phone, accept terms, install proprietary software, or use restricted SDK material without explicit authorization.
 
 ## Measure setup once
