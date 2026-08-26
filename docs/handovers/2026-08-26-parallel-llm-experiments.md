@@ -1,6 +1,6 @@
-# Temporary cross-device handover
+# 2026-08-26 — Parallel Android LLM experiments
 
-Remove this file after the work below has been resumed and its remaining decisions are recorded in the owning experiments.
+Persistent cross-device handover for the parallel Gemma, Qwen, and LFM experiment sessions completed on 2026-08-25. This records the state as observed during transfer; later experiment documents and commits supersede it where they differ.
 
 ## Source conversations reviewed
 
@@ -104,4 +104,4 @@ Continue from `experiments/0029-lfm2.5-2.6b-android/PLAN.md`. Finish the full to
 4. Decide the 0025 fresh-Session protocol deviation, then rerun CPU if approved.
 5. Recreate 0029 artifacts, finish its contract and Android build, then run its first bounded phone smoke.
 6. Continue 0025 GPU, 0028, and 0026 only after their prerequisite routes are stable.
-7. Remove this temporary handover file once the new sessions have absorbed the state.
+7. Add a newer dated handover if work pauses again; retain this file as historical context.

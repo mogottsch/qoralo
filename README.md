@@ -15,6 +15,7 @@ Historical TTS experiments remain unchanged. New LLM experiments use the same nu
 
 - [`docs/history.md`](docs/history.md) and its [HTML mirror](docs/history.html): completed experiments, results, and decisions carried forward.
 - [`docs/plan.md`](docs/plan.md) and its [HTML mirror](docs/plan.html): the current goal and unfinished work.
+- [`docs/handovers/`](docs/handovers/): persistent dated snapshots for cross-device and cross-session continuation.
 - [`docs/wiki/`](docs/wiki/): repository-backed explanatory wiki; open this directory as its own Obsidian vault if desired.
 - [`docs/devices/`](docs/devices/): target-device baselines and constraints.
 - [`docs/architectures/index.html`](docs/architectures/index.html): preserved interactive architecture reference for the compared TTS families.
