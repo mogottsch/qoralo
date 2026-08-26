@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<link rel="icon" href="data:,">
+<title>Experiment 0034 — LFM2.5-2.6B Android QNN/HTP | experiment</title>
+<style>
+:root { --bg:#eeeae2; --paper:#fffdf8; --ink:#18201e; --muted:#66706c; --line:#d8d4ca; --accent:#006c60; --accent-2:#a44217; --soft:#e5f2ee; --code:#efede7; --shadow:0 18px 60px rgba(30,42,37,.09); }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; scroll-padding-top:88px; }
+body { margin:0; background:linear-gradient(135deg,#e7eee9 0,var(--bg) 42%,#eee6dc 100%); color:var(--ink); font:16px/1.68 system-ui,-apple-system,"Segoe UI",sans-serif; }
+a { color:var(--accent); text-underline-offset:3px; }
+a:focus-visible, audio:focus-visible { outline:3px solid #f09b65; outline-offset:3px; border-radius:4px; }
+.topbar { position:sticky; top:0; z-index:10; border-bottom:1px solid color-mix(in srgb,var(--line) 85%,transparent); background:color-mix(in srgb,var(--paper) 92%,transparent); backdrop-filter:blur(12px); }
+.topbar-inner { max-width:1120px; margin:auto; display:flex; align-items:center; justify-content:space-between; gap:18px; padding:13px 24px; }
+.brand { color:var(--ink); font-weight:780; text-decoration:none; letter-spacing:-.02em; }
+nav { display:flex; gap:6px; flex-wrap:wrap; }
+nav a { padding:7px 10px; color:var(--muted); border-radius:999px; font-size:13px; font-weight:650; text-decoration:none; }
+nav a:hover { color:var(--accent); background:var(--soft); }
+.shell { max-width:1120px; margin:auto; padding:clamp(24px,5vw,66px) 24px 80px; }
+.status-header { position:relative; overflow:hidden; padding:clamp(26px,5vw,54px); border:1px solid var(--line); border-radius:24px; background:var(--paper); box-shadow:var(--shadow); }
+.status-header::after { content:""; position:absolute; width:230px; height:230px; right:-90px; top:-105px; border-radius:50%; background:var(--soft); }
+.kicker { position:relative; z-index:1; display:flex; align-items:center; gap:10px; margin-bottom:18px; color:var(--muted); font-size:13px; font-weight:760; text-transform:uppercase; letter-spacing:.09em; }
+.status { display:inline-flex; gap:7px; align-items:center; padding:5px 10px; border:1px solid var(--line); border-radius:999px; color:var(--ink); background:var(--paper); letter-spacing:.04em; }
+.status::before { content:""; width:8px; height:8px; border-radius:50%; background:var(--accent-2); }
+h1 { position:relative; z-index:1; max-width:18ch; margin:0; font-size:clamp(36px,7vw,70px); line-height:.99; letter-spacing:-.048em; }
+.summary { position:relative; z-index:1; max-width:70ch; margin:24px 0 0; font-size:clamp(17px,2vw,21px); color:var(--muted); }
+.header-links { position:relative; z-index:1; display:flex; flex-wrap:wrap; gap:9px; margin-top:25px; }
+.header-links a { padding:9px 13px; border:1px solid var(--line); border-radius:9px; background:var(--paper); font-size:14px; font-weight:680; text-decoration:none; }
+.provenance { position:relative; z-index:1; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 22px; margin:30px 0 0; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; }
+.provenance span { min-width:0; overflow-wrap:anywhere; }
+article { max-width:880px; margin:18px auto 0; }
+.primary-section { margin-top:18px; padding:clamp(24px,5vw,48px); border:1px solid var(--line); border-radius:20px; background:var(--paper); }
+h2 { margin:0 0 19px; font-size:clamp(26px,4vw,38px); line-height:1.1; letter-spacing:-.025em; }
+h3 { margin:34px 0 10px; color:var(--accent); font-size:20px; line-height:1.25; }
+.anchor { margin-left:9px; opacity:0; font-weight:400; text-decoration:none; }
+h2:hover .anchor,h3:hover .anchor,.anchor:focus { opacity:.5; }
+p,ul,ol,blockquote { max-width:76ch; }
+#experiment-description > p:first-of-type { margin-top:0; color:var(--ink); font-size:1.13em; line-height:1.58; }
+li { margin:7px 0; }
+code { padding:2px 5px; border-radius:5px; background:var(--code); font:13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; overflow-wrap:anywhere; }
+pre { overflow:auto; padding:18px; border:1px solid var(--line); border-radius:10px; background:var(--code); }
+pre code { padding:0; background:none; overflow-wrap:normal; }
+blockquote { margin:22px 0; padding:12px 18px; border-left:4px solid var(--accent-2); background:#fbf1e9; color:#62412f; }
+.table-wrap { overflow:auto; margin:20px 0; border:1px solid var(--line); border-radius:12px; }
+table { width:100%; min-width:620px; border-collapse:collapse; }
+th,td { padding:12px 14px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+th { background:var(--soft); color:#174b45; font-size:12px; letter-spacing:.04em; text-transform:uppercase; }
+tr:last-child td { border-bottom:0; }
+.registry-card { margin:4px 0 30px; padding:18px; border:1px solid #b8d5cc; border-radius:14px; background:var(--soft); }
+.eyebrow { margin-bottom:13px; color:var(--accent); font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+.registry-route { display:block; margin-top:4px; color:var(--ink); font-size:13px; letter-spacing:0; text-transform:none; }
+.metrics { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; }
+.metric { padding:10px; border:1px solid color-mix(in srgb,var(--accent) 22%,transparent); border-radius:9px; background:var(--paper); }
+.metric span,.audio-card span { display:block; color:var(--muted); font-size:11px; line-height:1.35; }
+.metric strong { display:block; margin-top:4px; font-size:15px; }
+.audio-card { display:grid; grid-template-columns:minmax(160px,1fr) minmax(240px,2fr); align-items:center; gap:18px; margin-top:12px; padding:11px; border-radius:9px; background:var(--paper); }
+audio { width:100%; min-height:40px; }
+.unavailable,.shared-media { margin:12px 0 0; padding:11px; border-radius:9px; background:var(--paper); font-size:13px; }
+footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px; text-align:center; }
+@media (max-width:760px) { .topbar-inner { align-items:flex-start; flex-direction:column; padding:10px 16px; } nav { width:100%; overflow:auto; flex-wrap:nowrap; } .shell { padding:18px 10px 55px; } .status-header,.primary-section { border-radius:14px; } .provenance { grid-template-columns:1fr; } .metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } .audio-card { grid-template-columns:1fr; } }
+@media (prefers-color-scheme:dark) { :root { --bg:#111614; --paper:#19201e; --ink:#eef4f1; --muted:#aeb9b4; --line:#39443f; --accent:#70d7c5; --accent-2:#f09b65; --soft:#19332e; --code:#252c29; --shadow:none; } body { background:linear-gradient(135deg,#15231f,var(--bg)); } blockquote { background:#35271f; color:#efd8c8; } th { color:#bce7df; } }
+@media print { .topbar { position:relative; } body { background:white; } .shell { padding:16px; } .status-header,.primary-section { box-shadow:none; break-inside:avoid; } }
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar-inner"><a class="brand" href="../../android-llm-benchmarks/index.html">VibeVoice Android research</a><nav aria-label="Experiment sections"><a href="#experiment-description">Description</a><a href="#progress">Progress</a><a href="#results">Results</a></nav></div></header>
+<main class="shell">
+<header class="status-header" data-status-header="true">
+<div class="kicker"><span>Experiment 0034</span><span class="status">Blocked</span></div>
+<h1>Experiment 0034 — LFM2.5-2.6B Android QNN/HTP</h1>
+<p class="summary">The LFM2.5-2.6B QNN/HTP arm is blocked before conversion because neither installed QAIRT 2.49 nor current public Qualcomm tooling provides an authorized LFM2 route.</p>
+<div class="header-links"><a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-26</span><span>evidence commit: cd82622cf9e58db1454ede793ae2cffda0ac4955</span><span>page source: docs/experiments/0034-lfm2.5-2.6b-android-qnn-htp/page.md</span><span>page source sha256: 6178d56e11da527d5ded62381d3659e16e182ed86f5ed0e4cfd2f926a4434a92</span></div>
+</header>
+<article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
+<h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
+<p>This experiment asks whether LFM2.5-2.6B can run end to end through Qualcomm QNN on the Galaxy S23 Ultra&#x27;s HTP. It is an independent accelerator feasibility arm: it preserves the bounded Android CPU viability result in experiment 0029 and does not alter the separate loaded-route CPU/Vulkan work assigned to experiment 0033. The intended result was a model-correct SM8550/HTP v73 compiled context, physical <code>QnnHtp</code> provider proof, a bounded phone viability gate, proven request-state isolation on one loaded route, and finally the canonical one-first-plus-five-short/five-medium/five-long campaign.</p>
+<p>LFM2 cannot safely be treated as a renamed Llama-like transformer. The pinned 2.6B model has 22 convolutional-state layers and 8 full-attention layers. A credible route must handle both convolutional and KV state, establish the cache layout and reset behavior, and prove that the transformer graph executes on HTP rather than falling back to CPU.</p>
+<p>The owning <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/support-assessment/result.json">support assessment</a> bind the negative feasibility result and its exact limits.</p>
+</section>
+<section class="primary-section" id="progress" data-primary-section="progress">
+<h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
+<p>The route retained the official LiquidAI artifact identity already reconstructed by 0029: <code>LFM2.5-2.6B-Q4_K_M.gguf</code>, 1,674,455,040 bytes, SHA-256 <code>02a8b7e17487d326e46d68ce0ba24211e1b80a14c4cd0597fa73c1cd697f52ed</code>, with GGUF architecture <code>lfm2</code>. The tokenizer and native reasoning template were reconstructed independently. Canonical short/medium/long prompts contain 171/600/1922 tokens, each has one BOS, ends at the native <code>&lt;think&gt;</code> continuation, and fits a 4096-token context with the 2048-token ceiling.</p>
+<p>The cheapest authorized QAIRT paths both fail at the architecture-support gate. QAIRT 2.49&#x27;s direct GGUF builder supports several families but not <code>lfm2</code>; its HTP factory has no <code>Lfm2ForCausalLM</code> dispatch. The installed SDK also has no LFM Genie configuration or LFM/Liquid support statement. Qualcomm&#x27;s public Hugging Face material and AI Hub Models v0.61.0 provide no LFM model recipe, quantized ONNX+encodings, or serialized QNN context.</p>
+<p>Because architecture rejection is known before reading weights and the exact GGUF bytes are already bound, downloading another 1.67 GB copy would add no evidence and was avoided. Writing a generic fallback would actually begin a new model-specific converter and runtime project, including recurrent-state conversion and orchestration, which was not authorized.</p>
+</section>
+<section class="primary-section" id="results" data-primary-section="results">
+<h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
+<p><strong>The route is blocked before conversion.</strong> No authorized LFM2 QNN input, model-specific builder, or compiled SM8550 context exists. No ADB or phone work occurred, and no QNN/HTP execution or provider proof exists. As a result there is no setup, TTFT, prefill, decode, memory, thermal, power, output-sanity, or campaign evidence. The intended end-to-end target and canonical 1+5+5+5 campaign were not reached, so this experiment is not completed and has <strong>no leaderboard row</strong>.</p>
+<p>A generic SM8550 compiler target does not prove model support. Mapping <code>lfm2</code> to Llama or Qwen, ignoring convolutional recurrent state, or citing CPU/Vulkan output as HTP execution would violate the architecture, isolation, and provider gates.</p>
+<p>Continuation requires one explicit authorized input or toolchain decision from Moritz:</p>
+<ol>
+<li>provide a provenance-bound LFM2.5-2.6B quantized ONNX+encodings input with a model-specific QAIRT builder, or a complete SM8550/HTP v73 serialized-context runtime bundle;</li>
+<li>authorize authenticated Qualcomm AI Hub or engineering support if a non-public LFM QNN route exists; or</li>
+<li>authorize a separately bound updated QAIRT/toolchain or a new LFM2 converter/runtime implementation, including host equivalence, convolutional/KV state-reset, partition, fallback, and provider proofs.</li>
+</ol>
+<p>Until one of those paths is authorized and succeeds, this page records a durable phone-independent pre-conversion blocker with no context, Android, HTP, or performance claim.</p>
+</section></article>
+<footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
+</main>
+</body>
+</html>

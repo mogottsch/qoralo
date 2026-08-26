@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<link rel="icon" href="data:,">
+<title>Experiment 0032 — Qwen3.5-2B Android QNN/HTP | experiment</title>
+<style>
+:root { --bg:#eeeae2; --paper:#fffdf8; --ink:#18201e; --muted:#66706c; --line:#d8d4ca; --accent:#006c60; --accent-2:#a44217; --soft:#e5f2ee; --code:#efede7; --shadow:0 18px 60px rgba(30,42,37,.09); }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; scroll-padding-top:88px; }
+body { margin:0; background:linear-gradient(135deg,#e7eee9 0,var(--bg) 42%,#eee6dc 100%); color:var(--ink); font:16px/1.68 system-ui,-apple-system,"Segoe UI",sans-serif; }
+a { color:var(--accent); text-underline-offset:3px; }
+a:focus-visible, audio:focus-visible { outline:3px solid #f09b65; outline-offset:3px; border-radius:4px; }
+.topbar { position:sticky; top:0; z-index:10; border-bottom:1px solid color-mix(in srgb,var(--line) 85%,transparent); background:color-mix(in srgb,var(--paper) 92%,transparent); backdrop-filter:blur(12px); }
+.topbar-inner { max-width:1120px; margin:auto; display:flex; align-items:center; justify-content:space-between; gap:18px; padding:13px 24px; }
+.brand { color:var(--ink); font-weight:780; text-decoration:none; letter-spacing:-.02em; }
+nav { display:flex; gap:6px; flex-wrap:wrap; }
+nav a { padding:7px 10px; color:var(--muted); border-radius:999px; font-size:13px; font-weight:650; text-decoration:none; }
+nav a:hover { color:var(--accent); background:var(--soft); }
+.shell { max-width:1120px; margin:auto; padding:clamp(24px,5vw,66px) 24px 80px; }
+.status-header { position:relative; overflow:hidden; padding:clamp(26px,5vw,54px); border:1px solid var(--line); border-radius:24px; background:var(--paper); box-shadow:var(--shadow); }
+.status-header::after { content:""; position:absolute; width:230px; height:230px; right:-90px; top:-105px; border-radius:50%; background:var(--soft); }
+.kicker { position:relative; z-index:1; display:flex; align-items:center; gap:10px; margin-bottom:18px; color:var(--muted); font-size:13px; font-weight:760; text-transform:uppercase; letter-spacing:.09em; }
+.status { display:inline-flex; gap:7px; align-items:center; padding:5px 10px; border:1px solid var(--line); border-radius:999px; color:var(--ink); background:var(--paper); letter-spacing:.04em; }
+.status::before { content:""; width:8px; height:8px; border-radius:50%; background:var(--accent-2); }
+h1 { position:relative; z-index:1; max-width:18ch; margin:0; font-size:clamp(36px,7vw,70px); line-height:.99; letter-spacing:-.048em; }
+.summary { position:relative; z-index:1; max-width:70ch; margin:24px 0 0; font-size:clamp(17px,2vw,21px); color:var(--muted); }
+.header-links { position:relative; z-index:1; display:flex; flex-wrap:wrap; gap:9px; margin-top:25px; }
+.header-links a { padding:9px 13px; border:1px solid var(--line); border-radius:9px; background:var(--paper); font-size:14px; font-weight:680; text-decoration:none; }
+.provenance { position:relative; z-index:1; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 22px; margin:30px 0 0; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; }
+.provenance span { min-width:0; overflow-wrap:anywhere; }
+article { max-width:880px; margin:18px auto 0; }
+.primary-section { margin-top:18px; padding:clamp(24px,5vw,48px); border:1px solid var(--line); border-radius:20px; background:var(--paper); }
+h2 { margin:0 0 19px; font-size:clamp(26px,4vw,38px); line-height:1.1; letter-spacing:-.025em; }
+h3 { margin:34px 0 10px; color:var(--accent); font-size:20px; line-height:1.25; }
+.anchor { margin-left:9px; opacity:0; font-weight:400; text-decoration:none; }
+h2:hover .anchor,h3:hover .anchor,.anchor:focus { opacity:.5; }
+p,ul,ol,blockquote { max-width:76ch; }
+#experiment-description > p:first-of-type { margin-top:0; color:var(--ink); font-size:1.13em; line-height:1.58; }
+li { margin:7px 0; }
+code { padding:2px 5px; border-radius:5px; background:var(--code); font:13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; overflow-wrap:anywhere; }
+pre { overflow:auto; padding:18px; border:1px solid var(--line); border-radius:10px; background:var(--code); }
+pre code { padding:0; background:none; overflow-wrap:normal; }
+blockquote { margin:22px 0; padding:12px 18px; border-left:4px solid var(--accent-2); background:#fbf1e9; color:#62412f; }
+.table-wrap { overflow:auto; margin:20px 0; border:1px solid var(--line); border-radius:12px; }
+table { width:100%; min-width:620px; border-collapse:collapse; }
+th,td { padding:12px 14px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+th { background:var(--soft); color:#174b45; font-size:12px; letter-spacing:.04em; text-transform:uppercase; }
+tr:last-child td { border-bottom:0; }
+.registry-card { margin:4px 0 30px; padding:18px; border:1px solid #b8d5cc; border-radius:14px; background:var(--soft); }
+.eyebrow { margin-bottom:13px; color:var(--accent); font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+.registry-route { display:block; margin-top:4px; color:var(--ink); font-size:13px; letter-spacing:0; text-transform:none; }
+.metrics { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; }
+.metric { padding:10px; border:1px solid color-mix(in srgb,var(--accent) 22%,transparent); border-radius:9px; background:var(--paper); }
+.metric span,.audio-card span { display:block; color:var(--muted); font-size:11px; line-height:1.35; }
+.metric strong { display:block; margin-top:4px; font-size:15px; }
+.audio-card { display:grid; grid-template-columns:minmax(160px,1fr) minmax(240px,2fr); align-items:center; gap:18px; margin-top:12px; padding:11px; border-radius:9px; background:var(--paper); }
+audio { width:100%; min-height:40px; }
+.unavailable,.shared-media { margin:12px 0 0; padding:11px; border-radius:9px; background:var(--paper); font-size:13px; }
+footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px; text-align:center; }
+@media (max-width:760px) { .topbar-inner { align-items:flex-start; flex-direction:column; padding:10px 16px; } nav { width:100%; overflow:auto; flex-wrap:nowrap; } .shell { padding:18px 10px 55px; } .status-header,.primary-section { border-radius:14px; } .provenance { grid-template-columns:1fr; } .metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } .audio-card { grid-template-columns:1fr; } }
+@media (prefers-color-scheme:dark) { :root { --bg:#111614; --paper:#19201e; --ink:#eef4f1; --muted:#aeb9b4; --line:#39443f; --accent:#70d7c5; --accent-2:#f09b65; --soft:#19332e; --code:#252c29; --shadow:none; } body { background:linear-gradient(135deg,#15231f,var(--bg)); } blockquote { background:#35271f; color:#efd8c8; } th { color:#bce7df; } }
+@media print { .topbar { position:relative; } body { background:white; } .shell { padding:16px; } .status-header,.primary-section { box-shadow:none; break-inside:avoid; } }
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar-inner"><a class="brand" href="../../android-llm-benchmarks/index.html">VibeVoice Android research</a><nav aria-label="Experiment sections"><a href="#experiment-description">Description</a><a href="#progress">Progress</a><a href="#results">Results</a></nav></div></header>
+<main class="shell">
+<header class="status-header" data-status-header="true">
+<div class="kicker"><span>Experiment 0032</span><span class="status">Blocked</span></div>
+<h1>Experiment 0032 — Qwen3.5-2B Android QNN/HTP</h1>
+<p class="summary">The Qwen3.5-2B QNN/HTP arm is blocked before conversion because no authorized 2B QNN input exists and installed QAIRT&#x27;s Qwen3.5 path is not dimension-compatible with this variant.</p>
+<div class="header-links"><a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-26</span><span>evidence commit: 44da2f2a86ce0a8d0ed4f44fb8100598570361a8</span><span>page source: docs/experiments/0032-qwen-3.5-2b-android-qnn-htp/page.md</span><span>page source sha256: 81ab313b29a811335665d49dd8fd0d01922d962b9ce7af044d459feace962875</span></div>
+</header>
+<article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
+<h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
+<p>This experiment evaluates a distinct QNN/HTP route for Qwen3.5-2B without changing the CPU evidence in experiment 0027. The intended end-to-end target was a provenance-bound SM8550/HTP v73 compiled context, physical <code>QnnHtp</code> provider proof on the Galaxy S23 Ultra, a bounded viability request, proven loaded-route isolation, and the canonical one-first-plus-five-short/five-medium/five-long campaign.</p>
+<p>The assessment deliberately separates publicly available Qwen deployment artifacts from actual QNN conversion inputs. Qualcomm&#x27;s public Qwen3.5-2B release currently identifies a GenieX llama.cpp Q4_0 GGUF. A GGUF advertised for that runtime is not automatically an ONNX/QNN graph or an HTP context, and published metrics from another route cannot be relabeled as this repository&#x27;s provider evidence.</p>
+<p>The owning <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, and <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/support-assessment/result.json">support assessment</a> bind the exact feasibility finding.</p>
+</section>
+<section class="primary-section" id="progress" data-primary-section="progress">
+<h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
+<p>The route assessment pinned the official Qwen3.5-2B model revision and its hybrid architecture geometry. It also reconstructed the official tokenizer and template with thinking disabled. The canonical short/medium/long prompts contain 174/597/1926 tokens, fit the 4096-token route context with the 2048-token output ceiling, and have independently bound rendered-prompt and token-ID hashes.</p>
+<p>The only unauthenticated public Qualcomm artifact found for this model is <code>Qwen3.5-2B-Q4_0.gguf</code>, 1,214,873,856 bytes with published SHA-256 <code>cd70221bebaee0503e0f6717e174250cd7825aa88438b3aabec9ad55731d9bb1</code>, for the GenieX llama.cpp route. Installed QAIRT 2.49&#x27;s direct GGUF builder does not support its <code>qwen35</code> architecture. Downloading 1.2 GB could not change that support-table result, so the unnecessary transfer was avoided.</p>
+<p>QAIRT does have a separate <code>Qwen3_5ForConditionalGeneration</code> HTP factory dispatch, but that path requires a quantized ONNX graph plus encodings. Qualcomm AI Hub Models v0.61.0 publishes no Qwen3.5-2B model, export, or quantization implementation and no ONNX+encodings or serialized context. Moreover, the installed builder hardcodes a 4096-wide split point grouped by 256 while the official 2B geometry uses a 512-wide full-attention KV path and 2048-wide linear-key path. Borrowing the shipped 4B HTP example would therefore be unsupported.</p>
+</section>
+<section class="primary-section" id="results" data-primary-section="results">
+<h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
+<p><strong>The route is blocked before conversion.</strong> No authorized local QNN conversion input or compiled SM8550 context exists. No ADB or phone work occurred, and no QNN/HTP execution or provider proof exists. There is therefore no setup, TTFT, prefill, decode, memory, thermal, power, output-sanity, or campaign evidence. The intended end-to-end target and canonical 1+5+5+5 campaign were not reached, so this experiment is not completed and has <strong>no leaderboard row</strong>.</p>
+<p>A GenieX llama.cpp release, the shipped 4B QNN example, or CPU-only text output cannot substitute for a physical 2B QNN/HTP route. Applying the dimension-specific 4B builder to the 2B model would weaken the architecture and provider gates rather than unblock them.</p>
+<p>Continuation requires one explicit authorized input or toolchain decision from Moritz:</p>
+<ol>
+<li>provide a provenance-bound Qwen3.5-2B quantized ONNX+encodings input compatible with installed QAIRT, or a complete serialized SM8550/HTP v73 context and runtime bundle;</li>
+<li>authorize authenticated Qualcomm AI Hub Workbench use if it exposes a supported Qwen3.5-2B context export; or</li>
+<li>authorize a separately bound updated QAIRT/toolchain or a 2B-aware converter implementation that adds <code>qwen35</code> GGUF support or corrects the ONNX builder dimensions, followed by independent equivalence and provider proof.</li>
+</ol>
+<p>Until one of those routes is authorized and succeeds, this page records a durable phone-independent pre-conversion blocker and makes no context, Android, HTP, or performance claim.</p>
+</section></article>
+<footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
+</main>
+</body>
+</html>
