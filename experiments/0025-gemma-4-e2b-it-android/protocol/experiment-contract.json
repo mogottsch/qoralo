@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0025-gemma-4-e2b-it-android",
-  "status": "locked_with_raw-checkpoint-amendment",
+  "status": "locked_with_fresh-session-isolation-amendment",
   "locked_at": "2026-08-25",
   "amendments": [
     {
@@ -9,6 +9,12 @@
       "reason": "Persist checkpoint.json after every logical request so an interrupted full campaign retains raw output and per-request metrics.",
       "prior_cpu_smoke_runner_sha256": "41c489dd26bc3dc94ca4b2deaae8c49b04dceac1c6fe1966d24df0dfc273f20c",
       "scope": "Evidence persistence only; model, runtime, workload, sampling, backend, timing, and campaign semantics are unchanged."
+    },
+    {
+      "date": "2026-08-26",
+      "approval": "Moritz explicitly approved the fresh-Session protocol amendment.",
+      "reason": "RewindToStep(0) retained reusable prompt-prefix/KV state; bounded probes show that a fresh Session restores full prefill while one loaded Engine remains reused.",
+      "scope": "Use one loaded Engine and a fresh Session per logical request. Measure Session creation separately and exclude it from total-request timing. Model remap/reload, accelerator recompilation, and retained prompt/KV reuse between logical requests are prohibited."
     }
   ],
   "question": "How do the official Gemma 4 E2B instruction-tuned LiteRT-LM CPU and GPU Android routes execute and perform on the authorized Galaxy S23 Ultra under the canonical fixed-prompt contract?",
@@ -28,19 +34,31 @@
   },
   "canonical_protocol": {
     "path": "protocols/android-llm-benchmark/contract.json",
-    "sha256": "4e9386ab45dfd9f596dcf6f3cc828c7df075dfdb97952a4e41ec563b4b9409a6",
+    "sha256": "2bb2de193745bc9b74c98639ee077f07615702655b2fc6118185148e2a0c0b46",
     "workloads": {
       "short": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae",
       "medium": "5e168aa3232f06c92959b686188192471b2d1a62cd1c857a616fd8e29456ddf1",
       "long": "092840fbe879259110fa4d0b15bc383012f16b7b42a38d224b2ead231e86aad8"
     },
-    "tier_order": ["short", "medium", "long"],
-    "first_request": {"tier": "short", "count": 1},
-    "same_session_requests_per_tier": 5,
+    "tier_order": [
+      "short",
+      "medium",
+      "long"
+    ],
+    "first_request": {
+      "tier": "short",
+      "count": 1
+    },
     "max_output_tokens": 2048,
     "request_timeout_seconds": 1800,
-    "conversation_and_kv_reset_each_request": true,
-    "byte_identical_output_required": false
+    "byte_identical_output_required": false,
+    "loaded_route_requests_per_tier": 5,
+    "loaded_engine_reused": true,
+    "session_object_reused": false,
+    "request_isolation_strategy": "fresh_session_per_logical_request",
+    "conversation_and_kv_isolated_each_request": true,
+    "session_creation_reported_separately": true,
+    "session_creation_in_total_request": false
   },
   "upstream_model": {
     "name": "google/gemma-4-E2B-it",
@@ -99,11 +117,11 @@
     "android_ndk": "28.1.13356709 (r28b)",
     "android_runner": {
       "source": "experiments/0025-gemma-4-e2b-it-android/tools/litert_lm_canonical_runner.cc",
-      "source_sha256": "6b0f6d14c42fa3397dc5c291d0827521a693ae4611b7b2f82a9edf8bcb634254",
-      "binary_sha256": "d0bbb62d81a377dc4980e8818bbaa204ab181627dac41de5e7e928789e138e53",
-      "binary_bytes": 24964792,
-      "binary_built_from_source_sha256": "aff096054dc6bd3489460a5e04c3cd7fad2267bdd2498012027ec495cc805803",
-      "binary_status": "Last executed smoke/diagnostic binary. The current source adds host reset-probe modes and must be rebuilt and rebound before any further Android execution.",
+      "source_sha256": "6880df645461380d32cf9c3c26750bd31d800d4e7294df8d1bedd9195f773801",
+      "binary_sha256": "93ccb2092311004d66fa4d5a0c8eb2f6eabb4bfc68c2151afa7a61f68a29e712",
+      "binary_bytes": 24983320,
+      "binary_built_from_source_sha256": "6880df645461380d32cf9c3c26750bd31d800d4e7294df8d1bedd9195f773801",
+      "binary_status": "Approved fresh-Session Android arm64 binary rebuilt successfully on 2026-08-26 and bound to the current source.",
       "binary_abi": "Android arm64-v8a, API 31 minimum",
       "build_mode": "dynamic LiteRT accelerator resolution; CPU/GPU selected at runtime"
     },
@@ -134,8 +152,14 @@
       "reason_for_enum_adapter": "v0.16.1 CreateCpuSampler implements TOP_P and returns UNIMPLEMENTED for the GREEDY and TOP_K enum values. TOP_P(k=1) reaches the documented greedy branch."
     },
     "prompt_render_policy": "Pinned Gemma 4 template specialization for exactly system+user, no tools, add_generation_prompt=true, enable_thinking=false",
-    "kv_reset": "The locked requirement was one reused Session plus RewindToStep(0), but retained diagnostics prove that this resets the logical step without clearing reusable prefix/KV state. Canonical execution is blocked pending explicit approval or rejection of one loaded Engine plus a fresh Session per logical request.",
-    "cache_policy": "Each arm uses an experiment-owned cache directory cleared before setup; runtime compilation/cache creation is inside setup."
+    "kv_reset": "One loaded Engine is retained for the arm. The initial Session is created during setup; before every later logical request, the prior Session is destroyed and a fresh Session is created. This is the approved full conversation/KV isolation strategy.",
+    "cache_policy": "Each arm uses an experiment-owned cache directory cleared before setup; runtime compilation/cache creation is inside setup.",
+    "loaded_route_invariants": {
+      "engine_reused": true,
+      "model_remap_or_reload_between_requests": false,
+      "accelerator_recompilation_between_requests": false,
+      "retained_prompt_or_kv_reuse_between_requests": false
+    }
   },
   "device": {
     "model": "SM-S918B",
@@ -146,21 +170,22 @@
     "remote_root": "/data/local/tmp/vibevoice-0025-gemma-4-e2b-it-android"
   },
   "timing_and_evidence": {
-    "setup_boundary": "Immediately before ModelAssets::Create through one Engine and one direct Session ready with 8192-token KV capacity.",
-    "request_boundary": "Immediately before canonical prompt rendering through final callback/stop delivery.",
+    "setup_boundary": "Immediately before ModelAssets::Create through one Engine and the initial direct Session ready with 8192-token KV capacity.",
+    "request_boundary": "Immediately before canonical prompt rendering through final callback/stop delivery. Fresh-Session creation occurs before this boundary.",
     "prefill": "LiteRT-LM BenchmarkInfo prefill duration/tokens when exposed after engine callback drain; otherwise null+reason. Synchronous frontend-plus-prefill wall time is retained separately and never relabeled as isolated prefill.",
     "decode": "First emitted token callback through final callback; numerator excludes the first emitted token. Runtime BenchmarkInfo decode observations are retained separately when exposed.",
     "raw_first": true,
     "optional_telemetry_policy": "Missing/invariant runtime-internal turn counters are never a logical-request failure. Raw output and callback clocks are persisted first; unavailable splits remain null with explicit reasons.",
     "memory": "100 ms process PSS/VmHWM sampling plus ru_maxrss over setup and the entire arm lifecycle; GPU device memory is unavailable unless independently exposed.",
-    "output_sanity": "Exact-hash looks_sensible plus failure-only issue_notes; corruption/gibberish smoke only."
+    "output_sanity": "Exact-hash looks_sensible plus failure-only issue_notes; corruption/gibberish smoke only.",
+    "session_creation": "Measured separately for every logical request. The initial Session creation is included in setup and recorded separately there; later fresh-Session recreation is measured before the request boundary. All are excluded from request-to-first-token, prefill, decode, and total-request timing."
   },
   "fatal_gates": [
     "wrong workload, artifact, runtime, runner, library, or device identity",
     "prompt plus 2048 ceiling exceeds 8192 or any silent truncation",
     "requested backend or exact k=1 greedy-equivalent sampler not applied",
-    "failure to rewind the reused session to step zero before a logical request",
     "unauthorized/destructive device operation or lock violation",
+    "failure to create a fresh Session before each logical request after the first, or evidence of retained prompt-prefix/KV state",
     "raw output cannot be bound to the claimed request and route"
   ],
   "nullable_not_fatal": [

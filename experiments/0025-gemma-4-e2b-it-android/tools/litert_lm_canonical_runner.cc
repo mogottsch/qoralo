@@ -49,7 +49,7 @@ ABSL_FLAG(int, num_cpu_threads, 4, "CPU executor threads.");
 ABSL_FLAG(int, request_timeout_seconds, 1800, "Per-request timeout.");
 ABSL_FLAG(bool, smoke_only, false, "Run one bounded canonical-short smoke.");
 ABSL_FLAG(bool, reset_probe_only, false, "Run exactly two bounded canonical-short requests to probe reset semantics.");
-ABSL_FLAG(std::string, reset_mode, "rewind", "Reset probe mode: rewind or fresh_session.");
+ABSL_FLAG(std::string, reset_mode, "fresh_session", "Request isolation mode: rewind (diagnostic only) or fresh_session.");
 ABSL_FLAG(int, smoke_max_output_tokens, 64, "Smoke/probe generated-token ceiling.");
 
 namespace {
@@ -311,7 +311,7 @@ absl::StatusOr<Json> RunRequest(Engine& engine, Engine::Session& session,
     ABSL_RETURN_IF_ERROR(session.RewindToStep(0));
   }
   ABSL_ASSIGN_OR_RETURN(const int reset_step, session.GetCurrentStep());
-  if (reset_step != 0) return absl::InternalError("session did not rewind to step zero");
+  if (reset_step != 0) return absl::InternalError("session did not begin request at step zero");
 
   const auto request_start = Clock::now();
   ABSL_ASSIGN_OR_RETURN(const std::string rendered_prompt, RenderCanonicalPrompt(workload));
@@ -543,7 +543,10 @@ absl::Status MainHelper(int argc, char** argv) {
   session_config.SetSamplerBackend(Backend::CPU);
   session_config.SetApplyPromptTemplateInSession(false);
   session_config.SetMaxOutputTokens(absl::GetFlag(FLAGS_max_output_tokens));
+  const auto initial_session_creation_start = Clock::now();
   ABSL_ASSIGN_OR_RETURN(auto session, engine->CreateSession(session_config));
+  const double initial_session_creation_seconds =
+      Seconds(Clock::now() - initial_session_creation_start);
   const auto setup_end = Clock::now();
 
   Json prompt_inventory = Json::object();
@@ -579,7 +582,8 @@ absl::Status MainHelper(int argc, char** argv) {
         {"runtime_revision", kRuntimeRevision},
         {"setup", {
             {"seconds", Seconds(setup_end - setup_start)},
-            {"boundary", "before ModelAssets::Create through one Engine and one direct Session ready with KV capacity"},
+            {"initial_session_creation_seconds", initial_session_creation_seconds},
+            {"boundary", "before ModelAssets::Create through one Engine and the initial direct Session ready with KV capacity"},
         }},
         {"prompts", prompt_inventory},
         {"completed_logical_request_count", runs.size()},
@@ -587,6 +591,13 @@ absl::Status MainHelper(int argc, char** argv) {
         {"checkpoint_complete", false},
     };
     return WriteFile(output_dir / "checkpoint.json", checkpoint.dump(2) + "\n");
+  };
+  auto annotate_isolation = [](Json* run, const std::string& strategy,
+                               double seconds, bool included_in_setup) {
+    (*run)["request_isolation_strategy"] = strategy;
+    (*run)["session_recreation_seconds"] = seconds;
+    (*run)["session_recreation_in_total_request"] = false;
+    (*run)["session_recreation_in_setup"] = included_in_setup;
   };
   if (absl::GetFlag(FLAGS_smoke_only) &&
       absl::GetFlag(FLAGS_reset_probe_only)) {
@@ -600,6 +611,8 @@ absl::Status MainHelper(int argc, char** argv) {
                                      absl::GetFlag(FLAGS_request_timeout_seconds),
                                      prompt_inventory["short"]["input_tokens"].get<size_t>(),
                                      output_dir));
+    annotate_isolation(&run, "setup_created_initial_session",
+                       initial_session_creation_seconds, true);
     runs.push_back(std::move(run));
     ABSL_RETURN_IF_ERROR(persist_checkpoint());
   } else if (absl::GetFlag(FLAGS_reset_probe_only)) {
@@ -615,7 +628,8 @@ absl::Status MainHelper(int argc, char** argv) {
                                      prompt_inventory["short"]["input_tokens"].get<size_t>(),
                                      output_dir));
     first["reset_mode"] = reset_mode;
-    first["session_recreation_seconds"] = 0.0;
+    annotate_isolation(&first, "setup_created_initial_session",
+                       initial_session_creation_seconds, true);
     runs.push_back(std::move(first));
     ABSL_RETURN_IF_ERROR(persist_checkpoint());
 
@@ -634,10 +648,18 @@ absl::Status MainHelper(int argc, char** argv) {
                                      prompt_inventory["short"]["input_tokens"].get<size_t>(),
                                      output_dir));
     second["reset_mode"] = reset_mode;
-    second["session_recreation_seconds"] = recreation_seconds;
+    annotate_isolation(&second,
+                       reset_mode == "fresh_session"
+                           ? "fresh_session_per_logical_request"
+                           : "diagnostic_rewind_to_step_zero",
+                       recreation_seconds, false);
     runs.push_back(std::move(second));
     ABSL_RETURN_IF_ERROR(persist_checkpoint());
   } else {
+    if (absl::GetFlag(FLAGS_reset_mode) != "fresh_session") {
+      return absl::InvalidArgumentError(
+          "canonical campaign requires fresh_session request isolation");
+    }
     ABSL_ASSIGN_OR_RETURN(Json first,
                           RunRequest(*engine, *session, workloads[0].second, "short",
                                      "first-short-01", "first",
@@ -645,18 +667,28 @@ absl::Status MainHelper(int argc, char** argv) {
                                      absl::GetFlag(FLAGS_request_timeout_seconds),
                                      prompt_inventory["short"]["input_tokens"].get<size_t>(),
                                      output_dir));
+    annotate_isolation(&first, "setup_created_initial_session",
+                       initial_session_creation_seconds, true);
     runs.push_back(std::move(first));
     ABSL_RETURN_IF_ERROR(persist_checkpoint());
     for (const auto& [tier, workload] : workloads) {
       for (int index = 1; index <= 5; ++index) {
-        const std::string run_id = "same-session-" + tier + "-0" + std::to_string(index);
+        const auto recreation_start = Clock::now();
+        session.reset();
+        ABSL_ASSIGN_OR_RETURN(session, engine->CreateSession(session_config));
+        const double recreation_seconds =
+            Seconds(Clock::now() - recreation_start);
+        const std::string run_id =
+            "loaded-route-" + tier + "-0" + std::to_string(index);
         ABSL_ASSIGN_OR_RETURN(Json run,
                               RunRequest(*engine, *session, workload, tier, run_id,
-                                         "same_session",
+                                         "loaded_route",
                                          absl::GetFlag(FLAGS_max_output_tokens),
                                          absl::GetFlag(FLAGS_request_timeout_seconds),
                                          prompt_inventory[tier]["input_tokens"].get<size_t>(),
                                          output_dir));
+        annotate_isolation(&run, "fresh_session_per_logical_request",
+                           recreation_seconds, false);
         runs.push_back(std::move(run));
         ABSL_RETURN_IF_ERROR(persist_checkpoint());
       }
@@ -686,10 +718,15 @@ absl::Status MainHelper(int argc, char** argv) {
           {"smoke_only", absl::GetFlag(FLAGS_smoke_only)},
           {"reset_probe_only", absl::GetFlag(FLAGS_reset_probe_only)},
           {"reset_mode", absl::GetFlag(FLAGS_reset_mode)},
+          {"loaded_engine_reused", true},
+          {"model_remap_or_reload_between_requests", false},
+          {"accelerator_recompilation_between_requests", false},
+          {"retained_prompt_or_kv_reuse_between_requests", false},
       }},
       {"setup", {
           {"seconds", Seconds(setup_end - setup_start)},
-          {"boundary", "before ModelAssets::Create through one Engine and one direct Session ready with KV capacity"},
+          {"initial_session_creation_seconds", initial_session_creation_seconds},
+          {"boundary", "before ModelAssets::Create through one Engine and the initial direct Session ready with KV capacity"},
       }},
       {"prompts", prompt_inventory},
       {"runs", runs},

@@ -24,11 +24,28 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(expected, sha256(path))
         self.assertEqual(2048, protocol["max_output_tokens"])
         self.assertEqual(1, protocol["first_request"]["count"])
-        self.assertEqual(5, protocol["same_session_requests_per_tier"])
+        self.assertEqual(5, protocol["loaded_route_requests_per_tier"])
+        self.assertTrue(protocol["loaded_engine_reused"])
+        self.assertFalse(protocol["session_object_reused"])
+        self.assertEqual("fresh_session_per_logical_request", protocol["request_isolation_strategy"])
+        self.assertFalse(protocol["session_creation_in_total_request"])
 
     def test_runner_source_is_frozen(self) -> None:
         runner = CONTRACT["runtime"]["android_runner"]
         self.assertEqual(runner["source_sha256"], sha256(ROOT / runner["source"]))
+
+    def test_runner_recreates_session_without_reloading_engine(self) -> None:
+        source = (EXP / "tools/litert_lm_canonical_runner.cc").read_text()
+        campaign_start = source.index('canonical campaign requires fresh_session')
+        campaign = source[
+            campaign_start:source.index("  Json result = {", campaign_start)
+        ]
+        self.assertIn("session.reset();", campaign)
+        self.assertIn("engine->CreateSession(session_config)", campaign)
+        self.assertNotIn("EngineFactory::CreateDefault", campaign)
+        self.assertNotIn("ModelAssets::Create", campaign)
+        self.assertIn('"session_recreation_in_total_request"] = false', source)
+        self.assertIn('"fresh_session_per_logical_request"', campaign)
 
     def test_only_cpu_and_gpu_arms_are_in_scope(self) -> None:
         scope = CONTRACT["scope"]

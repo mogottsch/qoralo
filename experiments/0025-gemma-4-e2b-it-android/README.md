@@ -2,7 +2,7 @@
 
 ## Status
 
-**Contract locked; Android CPU canonical-short smoke passed. The first full CPU run is retained only as a reset diagnostic. A fresh-session adaptation needs approval before the CPU rerun; GPU work has not started.**
+**Fresh-Session isolation is approved and contract-locked; Android CPU canonical-short smoke passed. The first full CPU run is retained only as a reset diagnostic. The adapted Android runner is rebuilt and hash-bound; the canonical CPU rerun is phone-ready. GPU work has not started.**
 
 This experiment compares only the official instruction-tuned Gemma 4 E2B LiteRT-LM CPU and GPU Android routes on the authorized Galaxy S23 Ultra. It measures execution, setup, TTFT, prefill/decode throughput, total latency, process memory, and operating conditions under the repository's fixed short/medium/long prompt contract. It does not evaluate transcript quality and makes no NPU/HTP claim.
 
@@ -40,7 +40,7 @@ The first 16-request CPU run completed, but it is **not canonical evidence**. `R
 
 Two bounded host probes isolated the behavior. Rewinding one Session reproduced prefix reuse on request two. Keeping one loaded Engine but creating a fresh Session before each request forced genuine 171-token prefill on both requests, with measured Session recreation of about 41 microseconds. Those probes are retained under [`results/host-reset-probes/`](results/host-reset-probes/).
 
-The smallest honest adaptation is therefore **one loaded Engine, fresh Session per logical request**. This preserves loaded-model reuse and full conversation/KV isolation, but conflicts with the protocol's literal same-session wording. Do not run or publish the adapted CPU/GPU campaign until that deviation is explicitly approved and documented.
+Moritz approved the smallest honest adaptation on 2026-08-26: **one loaded Engine, fresh Session per logical request**. The shared protocol now treats loaded-route reuse plus actual conversation/KV isolation as the invariant rather than Session object identity. Every fresh-Session creation is measured separately and excluded from the runner's request timing; the Engine and mapped model remain loaded, accelerator compilation is not repeated, and no prompt-prefix/KV state carries across requests.
 
 ## Claim boundaries
 
