@@ -2518,6 +2518,860 @@
         "quantization.tool_revision": "The pinned Unsloth repository and GGUF metadata identify Unsloth, Q4_K_M, and the importance matrix but do not publish the exact converter/quantizer commit. Artifact bytes are still bound by revision, size, and SHA-256; this provenance limitation must remain visible.",
         "thermal.power_watts": "No calibrated external or OS energy measurement was available; battery charging state is context only."
       }
+    },
+    {
+      "id": "0035-qwen35-2b-unsloth-q4km-llamacpp-opencl-adreno",
+      "experiment": "0035",
+      "model": "Qwen3.5-2B",
+      "model_identity": {
+        "name": "Qwen/Qwen3.5-2B",
+        "url": "https://huggingface.co/Qwen/Qwen3.5-2B/tree/15852e8c16360a2fea060d615a32b45270f8a8fc",
+        "revision": "15852e8c16360a2fea060d615a32b45270f8a8fc"
+      },
+      "artifacts": [
+        {
+          "path": "Qwen3.5-2B-Q4_K_M.gguf",
+          "sha256": "aaf42c8b7c3cab2bf3d69c355048d4a0ee9973d48f16c731c0520ee914699223",
+          "bytes": 1280835840,
+          "format": "GGUF v3, one self-contained shard, text model only"
+        }
+      ],
+      "quantization": {
+        "name": "Q4_K_M",
+        "bits": 4,
+        "scheme": "GGML K-quant medium: primarily Q4_K block quantization with the Q4_K_M mixed tensor policy; Q4_K uses 256-weight super-blocks composed of 32-weight blocks with quantized scales/minima; the M variant retains selected tensors at higher precision according to the quantizer policy. Calibration: importance-matrix assisted.",
+        "source": "https://huggingface.co/unsloth/Qwen3.5-2B-GGUF/tree/f6d5376be1edb4d416d56da11e5397a961aca8ae",
+        "tool": null,
+        "tool_revision": null
+      },
+      "tokenizer": {
+        "name": "Qwen2Tokenizer",
+        "url": "https://huggingface.co/Qwen/Qwen3.5-2B/tree/15852e8c16360a2fea060d615a32b45270f8a8fc",
+        "revision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+        "chat_template_source": "Deployed GGUF embedded chat template; canonical no-tools branch independently rendered and hash-bound.",
+        "chat_template_sha256": "7f0e529032c25183bcd66c7f238da2d377f43be754a94e2725a58c4e16d2ed67"
+      },
+      "route": "llama.cpp OpenCL GPU offload · Adreno 740 · 25/25 layers · loaded server with slot erase",
+      "attempt_status": "ran",
+      "runtime": {
+        "name": "llama.cpp",
+        "version": "build 10627",
+        "revision": "0a5ac49bce4c42893368585edf3ffb41a38f0108",
+        "provider": "GGML OpenCL · QUALCOMM OpenCL 3.0 E031.41.03.64 · Adreno 740",
+        "threads": 4,
+        "options": {
+          "android_ndk": "28.1.13356709 (r28b)",
+          "server_sha256": "64409e6e96a7d003ed6c68ec12363f3e6d7c34d46af40bc439cb84f060cd4ced",
+          "server_bytes": 12313808,
+          "max_num_tokens": 8192,
+          "sampler": "greedy argmax through temperature=-1 and temperature-only sampler chain",
+          "thinking_enabled": false,
+          "speculative_decoding_enabled": false,
+          "neural_backend": "GPU",
+          "gpu_backend": "OpenCL",
+          "gpu_provider_binding_proven": true,
+          "cpu_fallback_used": false,
+          "provider_device": "GPUOpenCL0 / Adreno 740",
+          "sysfs_gpu_model": "Adreno740v2",
+          "opencl_driver": "OpenCL 3.0 QUALCOMM build: 0676.77.1 Compiler E031.41.03.64",
+          "adreno_optimized_source_kernels": true,
+          "requested_gpu_layers": 25,
+          "observed_offloaded_layers": 25,
+          "observed_total_offloadable_layers": 25,
+          "request_isolation_strategy": "proven_full_in_session_conversation_and_kv_reset",
+          "session_object_reused": true,
+          "loaded_server_reused": true,
+          "reset_in_total_request": false,
+          "cache_prompt": false,
+          "flash_attention_enabled": false,
+          "mixed_execution_boundary": "CPU remains responsible for server, tokenizer, sampler, scheduler/orchestration, and any operation unsupported by OpenCL; the route is not GPU-exclusive."
+        }
+      },
+      "device": {
+        "model": "SM-S918B",
+        "soc": "SM8550",
+        "serial": "R5CW81PR8SY",
+        "abi": "arm64-v8a"
+      },
+      "workloads": {
+        "short": {
+          "contract_id": "android-llm-inference-v1",
+          "tier": "short",
+          "path": "protocols/android-llm-benchmark/workloads/inference-v1/short.json",
+          "sha256": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae",
+          "rendered_prompt_sha256": "afed1eb692d38446b49ac1c39dec80ae3bd8845282398c09b8485ce4a2a1371e",
+          "input_bytes": 860,
+          "input_tokens": 174,
+          "token_ids_sha256": "dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4",
+          "context_limit_tokens": 8192,
+          "max_new_tokens": 2048,
+          "truncated": false
+        },
+        "medium": {
+          "contract_id": "android-llm-inference-v1",
+          "tier": "medium",
+          "path": "protocols/android-llm-benchmark/workloads/inference-v1/medium.json",
+          "sha256": "5e168aa3232f06c92959b686188192471b2d1a62cd1c857a616fd8e29456ddf1",
+          "rendered_prompt_sha256": "0559ad81d5528fefe250c945816a1d10da0141fbf7ad124343ef69eba5db42a5",
+          "input_bytes": 3253,
+          "input_tokens": 597,
+          "token_ids_sha256": "8b07ff28c1c94a93b79880aa27f73b9d5cbddc1f215f857cb58b1d021422c5e2",
+          "context_limit_tokens": 8192,
+          "max_new_tokens": 2048,
+          "truncated": false
+        },
+        "long": {
+          "contract_id": "android-llm-inference-v1",
+          "tier": "long",
+          "path": "protocols/android-llm-benchmark/workloads/inference-v1/long.json",
+          "sha256": "092840fbe879259110fa4d0b15bc383012f16b7b42a38d224b2ead231e86aad8",
+          "rendered_prompt_sha256": "c48e00cf1e45fb7dd7edbdcad17578e0857ce01ca621dbd47972265721701135",
+          "input_bytes": 10529,
+          "input_tokens": 1926,
+          "token_ids_sha256": "a36f8139e2c4b83976fc74a37bf93f184272823b7144e7a167d9bee6836785ca",
+          "context_limit_tokens": 8192,
+          "max_new_tokens": 2048,
+          "truncated": false
+        }
+      },
+      "setup": {
+        "seconds": 17.112630361,
+        "boundary": "host monotonic timestamp immediately before remote llama-server launch through first successful /health ready response",
+        "components": {
+          "health_poll_seconds_inside_boundary": 17.000561239
+        }
+      },
+      "runs": [
+        {
+          "id": "first-short-01",
+          "phase": "first",
+          "tier": "short",
+          "input_tokens": 174,
+          "output_token_cap": 2048,
+          "output_tokens": 477,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.017787466,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 2.293631056,
+            "prefill_seconds": 2.20681,
+            "post_prefill_to_first_token_seconds": null,
+            "decode_seconds": 46.974382974,
+            "total_seconds": 49.26801403
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 78.84684227459546,
+            "decode_tokens_per_second": 10.13318259578764,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0035-qwen-3.5-2b-android-opencl-gpu/results/android-opencl-campaign/outputs/first-short-01.txt",
+            "sha256": "71296ae9c12b67a9f8bbf6cd1111c8b74b519d376017da828a0d5efe5631f8fb",
+            "bytes": 2673
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          }
+        },
+        {
+          "id": "short-01",
+          "phase": "loaded_route",
+          "tier": "short",
+          "input_tokens": 174,
+          "output_token_cap": 2048,
+          "output_tokens": 477,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.011765203,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 2.687340858,
+            "prefill_seconds": 2.5604810000000002,
+            "post_prefill_to_first_token_seconds": null,
+            "decode_seconds": 50.947443766,
+            "total_seconds": 53.634784624
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 67.95598170812436,
+            "decode_tokens_per_second": 9.34296138951059,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0035-qwen-3.5-2b-android-opencl-gpu/results/android-opencl-campaign/outputs/short-01.txt",
+            "sha256": "71296ae9c12b67a9f8bbf6cd1111c8b74b519d376017da828a0d5efe5631f8fb",
+            "bytes": 2673
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          }
+        },
+        {
+          "id": "short-02",
+          "phase": "loaded_route",
+          "tier": "short",
+          "input_tokens": 174,
+          "output_token_cap": 2048,
+          "output_tokens": 477,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.018736073,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 2.645800722,
+            "prefill_seconds": 2.520598,
+            "post_prefill_to_first_token_seconds": null,
+            "decode_seconds": 52.249321656,
+            "total_seconds": 54.895122378
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 69.0312378253097,
+            "decode_tokens_per_second": 9.11016612108186,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0035-qwen-3.5-2b-android-opencl-gpu/results/android-opencl-campaign/outputs/short-02.txt",
+            "sha256": "71296ae9c12b67a9f8bbf6cd1111c8b74b519d376017da828a0d5efe5631f8fb",
+            "bytes": 2673
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          }
+        },
+        {
+          "id": "short-03",
+          "phase": "loaded_route",
+          "tier": "short",
+          "input_tokens": 174,
+          "output_token_cap": 2048,
+          "output_tokens": 477,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.018471207,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 2.807855765,
+            "prefill_seconds": 2.6910279999999998,
+            "post_prefill_to_first_token_seconds": null,
+            "decode_seconds": 52.396934898,
+            "total_seconds": 55.204790663
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 64.65930491990422,
+            "decode_tokens_per_second": 9.084500857285242,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0035-qwen-3.5-2b-android-opencl-gpu/results/android-opencl-campaign/outputs/short-03.txt",
+            "sha256": "71296ae9c12b67a9f8bbf6cd1111c8b74b519d376017da828a0d5efe5631f8fb",
+            "bytes": 2673
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          }
+        },
+        {
+          "id": "short-04",
+          "phase": "loaded_route",
+          "tier": "short",
+          "input_tokens": 174,
+          "output_token_cap": 2048,
+          "output_tokens": 477,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.0125491,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 2.83379971,
+            "prefill_seconds": 2.736573,
+            "post_prefill_to_first_token_seconds": null,
+            "decode_seconds": 58.204189614,
+            "total_seconds": 61.037989324
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 63.58317501488175,
+            "decode_tokens_per_second": 8.178105444930145,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0035-qwen-3.5-2b-android-opencl-gpu/results/android-opencl-campaign/outputs/short-04.txt",
+            "sha256": "71296ae9c12b67a9f8bbf6cd1111c8b74b519d376017da828a0d5efe5631f8fb",
+            "bytes": 2673
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          }
+        },
+        {
+          "id": "short-05",
+          "phase": "loaded_route",
+          "tier": "short",
+          "input_tokens": 174,
+          "output_token_cap": 2048,
+          "output_tokens": 477,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.013681356,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 3.246090586,
+            "prefill_seconds": 3.1472510000000002,
+            "post_prefill_to_first_token_seconds": null,
+            "decode_seconds": 59.341261759,
+            "total_seconds": 62.587352345
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 55.28634354234854,
+            "decode_tokens_per_second": 8.02140004931404,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0035-qwen-3.5-2b-android-opencl-gpu/results/android-opencl-campaign/outputs/short-05.txt",
+            "sha256": "71296ae9c12b67a9f8bbf6cd1111c8b74b519d376017da828a0d5efe5631f8fb",
+            "bytes": 2673
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          }
+        },
+        {
+          "id": "medium-01",
+          "phase": "loaded_route",
+          "tier": "medium",
+          "input_tokens": 597,
+          "output_token_cap": 2048,
+          "output_tokens": 575,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.017425525,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 9.20569812,
+            "prefill_seconds": 8.946866,
+            "post_prefill_to_first_token_seconds": null,
+            "decode_seconds": 72.411867974,
+            "total_seconds": 81.617566094
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 66.72727634458815,
+            "decode_tokens_per_second": 7.9268774036612175,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0035-qwen-3.5-2b-android-opencl-gpu/results/android-opencl-campaign/outputs/medium-01.txt",
+            "sha256": "494e4f8784adcb078c792ec42ebef21d2cf1cf383708096a4b0a6cf7f087973f",
+            "bytes": 3266
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          }
+        },
+        {
+          "id": "medium-02",
+          "phase": "loaded_route",
+          "tier": "medium",
+          "input_tokens": 597,
+          "output_token_cap": 2048,
+          "output_tokens": 575,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.017708583,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 9.136847163,
+            "prefill_seconds": 8.889517,
+            "post_prefill_to_first_token_seconds": null,
+            "decode_seconds": 72.125251027,
+            "total_seconds": 81.26209819
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 67.1577544651751,
+            "decode_tokens_per_second": 7.958377847241374,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0035-qwen-3.5-2b-android-opencl-gpu/results/android-opencl-campaign/outputs/medium-02.txt",
+            "sha256": "494e4f8784adcb078c792ec42ebef21d2cf1cf383708096a4b0a6cf7f087973f",
+            "bytes": 3266
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          }
+        },
+        {
+          "id": "medium-03",
+          "phase": "loaded_route",
+          "tier": "medium",
+          "input_tokens": 597,
+          "output_token_cap": 2048,
+          "output_tokens": 575,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.014466716,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 9.101523576,
+            "prefill_seconds": 8.864567999999998,
+            "post_prefill_to_first_token_seconds": null,
+            "decode_seconds": 72.370850654,
+            "total_seconds": 81.47237423
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 67.34676749053085,
+            "decode_tokens_per_second": 7.931370086338409,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0035-qwen-3.5-2b-android-opencl-gpu/results/android-opencl-campaign/outputs/medium-03.txt",
+            "sha256": "494e4f8784adcb078c792ec42ebef21d2cf1cf383708096a4b0a6cf7f087973f",
+            "bytes": 3266
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          }
+        },
+        {
+          "id": "medium-04",
+          "phase": "loaded_route",
+          "tier": "medium",
+          "input_tokens": 597,
+          "output_token_cap": 2048,
+          "output_tokens": 575,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.020654793,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 9.186510158,
+            "prefill_seconds": 8.945692999999999,
+            "post_prefill_to_first_token_seconds": null,
+            "decode_seconds": 72.343278715,
+            "total_seconds": 81.529788873
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 66.73602592890232,
+            "decode_tokens_per_second": 7.934392941482539,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0035-qwen-3.5-2b-android-opencl-gpu/results/android-opencl-campaign/outputs/medium-04.txt",
+            "sha256": "494e4f8784adcb078c792ec42ebef21d2cf1cf383708096a4b0a6cf7f087973f",
+            "bytes": 3266
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          }
+        },
+        {
+          "id": "medium-05",
+          "phase": "loaded_route",
+          "tier": "medium",
+          "input_tokens": 597,
+          "output_token_cap": 2048,
+          "output_tokens": 575,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.014588598,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 9.186424463,
+            "prefill_seconds": 8.952418,
+            "post_prefill_to_first_token_seconds": null,
+            "decode_seconds": 72.51212689,
+            "total_seconds": 81.698551353
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 66.68589424667168,
+            "decode_tokens_per_second": 7.915917304022138,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0035-qwen-3.5-2b-android-opencl-gpu/results/android-opencl-campaign/outputs/medium-05.txt",
+            "sha256": "494e4f8784adcb078c792ec42ebef21d2cf1cf383708096a4b0a6cf7f087973f",
+            "bytes": 3266
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          }
+        },
+        {
+          "id": "long-01",
+          "phase": "loaded_route",
+          "tier": "long",
+          "input_tokens": 1926,
+          "output_token_cap": 2048,
+          "output_tokens": 645,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.017005258,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 26.477411932,
+            "prefill_seconds": 25.774926,
+            "post_prefill_to_first_token_seconds": null,
+            "decode_seconds": 74.256663039,
+            "total_seconds": 100.734074971
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 74.72378388205654,
+            "decode_tokens_per_second": 8.672622410486824,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0035-qwen-3.5-2b-android-opencl-gpu/results/android-opencl-campaign/outputs/long-01.txt",
+            "sha256": "6b3bed0ee5067bf571d9299a72cef490b741d8888b7f55462076c6c38c352204",
+            "bytes": 3578
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          }
+        },
+        {
+          "id": "long-02",
+          "phase": "loaded_route",
+          "tier": "long",
+          "input_tokens": 1926,
+          "output_token_cap": 2048,
+          "output_tokens": 645,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.033325302,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 22.311894968,
+            "prefill_seconds": 21.684448,
+            "post_prefill_to_first_token_seconds": null,
+            "decode_seconds": 74.763953319,
+            "total_seconds": 97.075848287
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 88.81941564756455,
+            "decode_tokens_per_second": 8.613776712050061,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0035-qwen-3.5-2b-android-opencl-gpu/results/android-opencl-campaign/outputs/long-02.txt",
+            "sha256": "6b3bed0ee5067bf571d9299a72cef490b741d8888b7f55462076c6c38c352204",
+            "bytes": 3578
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          }
+        },
+        {
+          "id": "long-03",
+          "phase": "loaded_route",
+          "tier": "long",
+          "input_tokens": 1926,
+          "output_token_cap": 2048,
+          "output_tokens": 645,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.017925313,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 23.990772632,
+            "prefill_seconds": 23.347068,
+            "post_prefill_to_first_token_seconds": null,
+            "decode_seconds": 73.940671367,
+            "total_seconds": 97.931443999
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 82.49429864169667,
+            "decode_tokens_per_second": 8.709685591080794,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0035-qwen-3.5-2b-android-opencl-gpu/results/android-opencl-campaign/outputs/long-03.txt",
+            "sha256": "6b3bed0ee5067bf571d9299a72cef490b741d8888b7f55462076c6c38c352204",
+            "bytes": 3578
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          }
+        },
+        {
+          "id": "long-04",
+          "phase": "loaded_route",
+          "tier": "long",
+          "input_tokens": 1926,
+          "output_token_cap": 2048,
+          "output_tokens": 645,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.016712134,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 22.948404619,
+            "prefill_seconds": 22.327059000000002,
+            "post_prefill_to_first_token_seconds": null,
+            "decode_seconds": 75.698202262,
+            "total_seconds": 98.646606881
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 86.26304073456338,
+            "decode_tokens_per_second": 8.507467558754481,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0035-qwen-3.5-2b-android-opencl-gpu/results/android-opencl-campaign/outputs/long-04.txt",
+            "sha256": "6b3bed0ee5067bf571d9299a72cef490b741d8888b7f55462076c6c38c352204",
+            "bytes": 3578
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          }
+        },
+        {
+          "id": "long-05",
+          "phase": "loaded_route",
+          "tier": "long",
+          "input_tokens": 1926,
+          "output_token_cap": 2048,
+          "output_tokens": 645,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.018639066,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 22.969389282,
+            "prefill_seconds": 22.369223,
+            "post_prefill_to_first_token_seconds": null,
+            "decode_seconds": 77.902763015,
+            "total_seconds": 100.872152297
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 86.100442558957,
+            "decode_tokens_per_second": 8.266715775870482,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0035-qwen-3.5-2b-android-opencl-gpu/results/android-opencl-campaign/outputs/long-05.txt",
+            "sha256": "6b3bed0ee5067bf571d9299a72cef490b741d8888b7f55462076c6c38c352204",
+            "bytes": 3578
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          }
+        }
+      ],
+      "aggregates": {
+        "by_tier": {
+          "short": {
+            "loaded_route_count": 5,
+            "median_request_to_first_token_seconds": 2.807855765,
+            "median_prefill_tokens_per_second": 64.65930491990422,
+            "median_decode_tokens_per_second": 9.084500857285242,
+            "median_total_seconds": 55.204790663
+          },
+          "medium": {
+            "loaded_route_count": 5,
+            "median_request_to_first_token_seconds": 9.186424463,
+            "median_prefill_tokens_per_second": 66.73602592890232,
+            "median_decode_tokens_per_second": 7.931370086338409,
+            "median_total_seconds": 81.529788873
+          },
+          "long": {
+            "loaded_route_count": 5,
+            "median_request_to_first_token_seconds": 22.969389282,
+            "median_prefill_tokens_per_second": 86.100442558957,
+            "median_decode_tokens_per_second": 8.613776712050061,
+            "median_total_seconds": 98.646606881
+          }
+        }
+      },
+      "memory": {
+        "peak_pss_bytes": 1365059584,
+        "peak_vm_hwm_bytes": 1377951744,
+        "method": "Android shell reads of /proc/<pid>/smaps_rollup Pss and /proc/<pid>/status VmHWM. Sampling begins just after server process launch and can miss startup allocations or peaks shorter than the sampling interval. VmHWM is process-lifetime cumulative RSS, not isolated model/KV memory.",
+        "sampling_interval_seconds": 0.1,
+        "lifecycle": "Remote llama-server process from immediately after PID publication through campaign completion."
+      },
+      "thermal": {
+        "battery_after": {
+          "ac_powered": false,
+          "level_percent": 91,
+          "plugged_code": null,
+          "plugged_code_missing_reason": "dumpsys battery did not expose a plugged field; the individual AC/USB/wireless booleans are retained.",
+          "status_code": 4,
+          "temperature_c": 42.5,
+          "usb_powered": true,
+          "wireless_powered": false
+        },
+        "battery_before": {
+          "ac_powered": false,
+          "level_percent": 91,
+          "plugged_code": null,
+          "plugged_code_missing_reason": "dumpsys battery did not expose a plugged field; the individual AC/USB/wireless booleans are retained.",
+          "status_code": 2,
+          "temperature_c": 32.5,
+          "usb_powered": true,
+          "wireless_powered": false
+        },
+        "power_missing_reason": "No calibrated external or OS energy measurement was available; battery charging state is context only.",
+        "power_watts": null,
+        "thermal_after": {
+          "status_code": 3,
+          "status_missing_reason": null
+        },
+        "thermal_before": {
+          "status_code": 0,
+          "status_missing_reason": null
+        },
+        "transport": "Windows-native ADB daemon bridged to WSL; delivery timing includes that forwarding boundary."
+      },
+      "summary": "Complete canonical Android OpenCL GPU-offload campaign: one first short plus five loaded-route requests per tier on one loaded server/slot, with full slot erase, cache_n=0, full prompt evaluation, EOS, and exact provider proof for all 16 requests.",
+      "limitations": [
+        "OpenCL GPU offload is mixed execution, not GPU-exclusive: CPU/CPU_REPACK model buffers and a CPU compute buffer remain; HTTP, tokenizer, sampler, scheduling/orchestration, and unsupported operations remain CPU-side.",
+        "Flash Attention is disabled because this OpenCL route does not support it; exact individual-operation OpenCL/CPU partition is unavailable.",
+        "The campaign ended at thermal status 3; battery temperature rose from 32.5 C to 42.5 C, so sustained thermal throttling likely affected later observations.",
+        "No calibrated external or OS energy measurement was available; USB charging state is context only.",
+        "Process memory sampling can miss brief peaks and does not isolate vendor-driver or GPU-private allocation; VmHWM is cumulative.",
+        "Post-prefill-to-first-token remains null because the server exposes no alignable server-clock first-token timestamp.",
+        "Output sanity is an exact-hash corruption/gibberish check, not quality or correctness.",
+        "The Unsloth Q4_K_M artifact is a third-party conversion and its exact converter revision is unpublished."
+      ],
+      "sources": [
+        "experiments/0035-qwen-3.5-2b-android-opencl-gpu/results/android-opencl-campaign/result.json",
+        "experiments/0035-qwen-3.5-2b-android-opencl-gpu/results/android-opencl-campaign/SHA256SUMS",
+        "experiments/0035-qwen-3.5-2b-android-opencl-gpu/results/android-opencl-campaign/README.md",
+        "experiments/0035-qwen-3.5-2b-android-opencl-gpu/results/android-opencl-campaign/raw/server.stderr.log",
+        "experiments/0035-qwen-3.5-2b-android-opencl-gpu/protocol/experiment-contract.json",
+        "experiments/0035-qwen-3.5-2b-android-opencl-gpu/README.md"
+      ],
+      "missing_reasons": {
+        "quantization.tool": "The pinned Unsloth repository and GGUF metadata do not publish the exact converter/quantizer tool identity.",
+        "quantization.tool_revision": "The pinned Unsloth repository and GGUF metadata identify Unsloth, Q4_K_M, and the importance matrix but do not publish the exact converter/quantizer commit. Artifact bytes are still bound by revision, size, and SHA-256; this provenance limitation must remain visible.",
+        "thermal.power_watts": "No calibrated external or OS energy measurement was available; battery charging state is context only."
+      }
     }
   ]
 }

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<link rel="icon" href="data:,">
+<title>Experiment 0035 — Qwen3.5-2B Android OpenCL GPU offload | experiment</title>
+<style>
+:root { --bg:#eeeae2; --paper:#fffdf8; --ink:#18201e; --muted:#66706c; --line:#d8d4ca; --accent:#006c60; --accent-2:#a44217; --soft:#e5f2ee; --code:#efede7; --shadow:0 18px 60px rgba(30,42,37,.09); }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; scroll-padding-top:88px; }
+body { margin:0; background:linear-gradient(135deg,#e7eee9 0,var(--bg) 42%,#eee6dc 100%); color:var(--ink); font:16px/1.68 system-ui,-apple-system,"Segoe UI",sans-serif; }
+a { color:var(--accent); text-underline-offset:3px; }
+a:focus-visible, audio:focus-visible { outline:3px solid #f09b65; outline-offset:3px; border-radius:4px; }
+.topbar { position:sticky; top:0; z-index:10; border-bottom:1px solid color-mix(in srgb,var(--line) 85%,transparent); background:color-mix(in srgb,var(--paper) 92%,transparent); backdrop-filter:blur(12px); }
+.topbar-inner { max-width:1120px; margin:auto; display:flex; align-items:center; justify-content:space-between; gap:18px; padding:13px 24px; }
+.brand { color:var(--ink); font-weight:780; text-decoration:none; letter-spacing:-.02em; }
+nav { display:flex; gap:6px; flex-wrap:wrap; }
+nav a { padding:7px 10px; color:var(--muted); border-radius:999px; font-size:13px; font-weight:650; text-decoration:none; }
+nav a:hover { color:var(--accent); background:var(--soft); }
+.shell { max-width:1120px; margin:auto; padding:clamp(24px,5vw,66px) 24px 80px; }
+.status-header { position:relative; overflow:hidden; padding:clamp(26px,5vw,54px); border:1px solid var(--line); border-radius:24px; background:var(--paper); box-shadow:var(--shadow); }
+.status-header::after { content:""; position:absolute; width:230px; height:230px; right:-90px; top:-105px; border-radius:50%; background:var(--soft); }
+.kicker { position:relative; z-index:1; display:flex; align-items:center; gap:10px; margin-bottom:18px; color:var(--muted); font-size:13px; font-weight:760; text-transform:uppercase; letter-spacing:.09em; }
+.status { display:inline-flex; gap:7px; align-items:center; padding:5px 10px; border:1px solid var(--line); border-radius:999px; color:var(--ink); background:var(--paper); letter-spacing:.04em; }
+.status::before { content:""; width:8px; height:8px; border-radius:50%; background:var(--accent-2); }
+h1 { position:relative; z-index:1; max-width:18ch; margin:0; font-size:clamp(36px,7vw,70px); line-height:.99; letter-spacing:-.048em; }
+.summary { position:relative; z-index:1; max-width:70ch; margin:24px 0 0; font-size:clamp(17px,2vw,21px); color:var(--muted); }
+.header-links { position:relative; z-index:1; display:flex; flex-wrap:wrap; gap:9px; margin-top:25px; }
+.header-links a { padding:9px 13px; border:1px solid var(--line); border-radius:9px; background:var(--paper); font-size:14px; font-weight:680; text-decoration:none; }
+.provenance { position:relative; z-index:1; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 22px; margin:30px 0 0; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; }
+.provenance span { min-width:0; overflow-wrap:anywhere; }
+article { max-width:880px; margin:18px auto 0; }
+.primary-section { margin-top:18px; padding:clamp(24px,5vw,48px); border:1px solid var(--line); border-radius:20px; background:var(--paper); }
+h2 { margin:0 0 19px; font-size:clamp(26px,4vw,38px); line-height:1.1; letter-spacing:-.025em; }
+h3 { margin:34px 0 10px; color:var(--accent); font-size:20px; line-height:1.25; }
+.anchor { margin-left:9px; opacity:0; font-weight:400; text-decoration:none; }
+h2:hover .anchor,h3:hover .anchor,.anchor:focus { opacity:.5; }
+p,ul,ol,blockquote { max-width:76ch; }
+#experiment-description > p:first-of-type { margin-top:0; color:var(--ink); font-size:1.13em; line-height:1.58; }
+li { margin:7px 0; }
+code { padding:2px 5px; border-radius:5px; background:var(--code); font:13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; overflow-wrap:anywhere; }
+pre { overflow:auto; padding:18px; border:1px solid var(--line); border-radius:10px; background:var(--code); }
+pre code { padding:0; background:none; overflow-wrap:normal; }
+blockquote { margin:22px 0; padding:12px 18px; border-left:4px solid var(--accent-2); background:#fbf1e9; color:#62412f; }
+.table-wrap { overflow:auto; margin:20px 0; border:1px solid var(--line); border-radius:12px; }
+table { width:100%; min-width:620px; border-collapse:collapse; }
+th,td { padding:12px 14px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+th { background:var(--soft); color:#174b45; font-size:12px; letter-spacing:.04em; text-transform:uppercase; }
+tr:last-child td { border-bottom:0; }
+.registry-card { margin:4px 0 30px; padding:18px; border:1px solid #b8d5cc; border-radius:14px; background:var(--soft); }
+.eyebrow { margin-bottom:13px; color:var(--accent); font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+.registry-route { display:block; margin-top:4px; color:var(--ink); font-size:13px; letter-spacing:0; text-transform:none; }
+.metrics { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; }
+.metric { padding:10px; border:1px solid color-mix(in srgb,var(--accent) 22%,transparent); border-radius:9px; background:var(--paper); }
+.metric span,.audio-card span { display:block; color:var(--muted); font-size:11px; line-height:1.35; }
+.metric strong { display:block; margin-top:4px; font-size:15px; }
+.audio-card { display:grid; grid-template-columns:minmax(160px,1fr) minmax(240px,2fr); align-items:center; gap:18px; margin-top:12px; padding:11px; border-radius:9px; background:var(--paper); }
+audio { width:100%; min-height:40px; }
+.unavailable,.shared-media { margin:12px 0 0; padding:11px; border-radius:9px; background:var(--paper); font-size:13px; }
+footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px; text-align:center; }
+@media (max-width:760px) { .topbar-inner { align-items:flex-start; flex-direction:column; padding:10px 16px; } nav { width:100%; overflow:auto; flex-wrap:nowrap; } .shell { padding:18px 10px 55px; } .status-header,.primary-section { border-radius:14px; } .provenance { grid-template-columns:1fr; } .metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } .audio-card { grid-template-columns:1fr; } }
+@media (prefers-color-scheme:dark) { :root { --bg:#111614; --paper:#19201e; --ink:#eef4f1; --muted:#aeb9b4; --line:#39443f; --accent:#70d7c5; --accent-2:#f09b65; --soft:#19332e; --code:#252c29; --shadow:none; } body { background:linear-gradient(135deg,#15231f,var(--bg)); } blockquote { background:#35271f; color:#efd8c8; } th { color:#bce7df; } }
+@media print { .topbar { position:relative; } body { background:white; } .shell { padding:16px; } .status-header,.primary-section { box-shadow:none; break-inside:avoid; } }
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar-inner"><a class="brand" href="../../android-llm-benchmarks/index.html">VibeVoice Android research</a><nav aria-label="Experiment sections"><a href="#experiment-description">Description</a><a href="#progress">Progress</a><a href="#results">Results</a></nav></div></header>
+<main class="shell">
+<header class="status-header" data-status-header="true">
+<div class="kicker"><span>Experiment 0035</span><span class="status">Completed</span></div>
+<h1>Experiment 0035 — Qwen3.5-2B Android OpenCL GPU offload</h1>
+<p class="summary">Qwen3.5-2B completed the canonical Android campaign through provider-proven llama.cpp OpenCL offload on Adreno 740. The route is mixed CPU/OpenCL execution, not GPU-exclusive.</p>
+<div class="header-links"><a href="../../../experiments/0035-qwen-3.5-2b-android-opencl-gpu/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-26</span><span>evidence commit: 338091eb45cf181c440f5090cd6abcebe7f624c6</span><span>page source: docs/experiments/0035-qwen-3.5-2b-android-opencl-gpu/page.md</span><span>page source sha256: 1112cfc7685a1ea8ef8a8e72211282153d6b3ccbc93f0f05244db113e84df5b8</span></div>
+</header>
+<article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
+<h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
+<p>This experiment asks whether the exact Qwen3.5-2B Q4_K_M model used by the CPU route can complete the canonical Android workload through public llama.cpp OpenCL offload on the Galaxy S23 Ultra&#x27;s Adreno 740. It follows experiment 0030&#x27;s durable Vulkan provider blocker but is a separately named backend route. Nothing here relabels the failed Vulkan attempts as successful GPU evidence.</p>
+<p>The route uses the third-party Unsloth <code>Qwen3.5-2B-Q4_K_M.gguf</code>, <strong>1,280,835,840 bytes</strong> with SHA-256 <code>aaf42c8b7c3cab2bf3d69c355048d4a0ee9973d48f16c731c0520ee914699223</code>. The Android llama.cpp build is <strong>12,313,808 bytes</strong>, SHA-256 <code>64409e6e96a7d003ed6c68ec12363f3e6d7c34d46af40bc439cb84f060cd4ced</code>, from build 10627 at commit <code>0a5ac49bce4c42893368585edf3ffb41a38f0108</code>. It requests <code>GPUOpenCL0</code>, 25 GPU layers, no split, and GPU index 0. Thinking is disabled and temperature <code>-1</code> reaches the pinned greedy argmax path.</p>
+<p>The accepted claim is deliberately <strong>OpenCL GPU offload</strong>, not GPU-exclusive execution. Provider proof requires one server process to select Adreno 740, report the Qualcomm OpenCL driver and Adreno-optimized source kernels, offload all 25/25 model layers, and allocate exact OpenCL model and compute buffers. CPU and CPU_REPACK model buffers and a CPU compute buffer remain; HTTP serving, tokenizer, sampler, scheduling/orchestration, and unsupported operations are CPU-side. The owning <a href="../../../experiments/0035-qwen-3.5-2b-android-opencl-gpu/README.md">experiment README</a>, <a href="../../../experiments/0035-qwen-3.5-2b-android-opencl-gpu/protocol/experiment-contract.json">route contract</a>, and <a href="../../../experiments/0035-qwen-3.5-2b-android-opencl-gpu/results/android-opencl-campaign/result.json">canonical result</a> bind those boundaries.</p>
+</section>
+<section class="primary-section" id="progress" data-primary-section="progress">
+<h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
+<p>Two clean builds in independent directories produced byte-identical server artifacts. The executable embeds 170 pinned public OpenCL C source/tool files, dynamically resolves the phone vendor&#x27;s <code>libOpenCL.so</code>, and does not deploy the link-only Khronos ICD loader or proprietary precompiled Adreno kernels.</p>
+<p>A fresh one-request smoke proved viability: sysfs identified <code>Adreno740v2</code>; the provider reported <code>OpenCL 3.0 QUALCOMM build: 0676.77.1 Compiler E031.41.03.64</code>; Adreno-optimized kernels were selected; all 25/25 layers were offloaded; and OpenCL model, KV/recurrent-state, and compute buffers were allocated. The smoke completed a bounded 64-token output and verified cleanup, but remained a one-request milestone rather than canonical benchmark evidence.</p>
+<p>A separate fresh server then completed the protocol-v2 campaign: one first short request followed by five loaded-route requests for each of short, medium, and long. One loaded server and slot remained alive. Before every logical request, a separately timed <code>POST /slots/0?action=erase</code> succeeded. Every request disabled prompt caching, reported <code>cache_n == 0</code>, evaluated the full independently counted prompt with positive prefill time, avoided truncation, ended at EOS, and retained its exact output. No model reload, remap, accelerator recompilation, or prompt/KV reuse occurred between requests. The scoped stage was removed and verified absent. The <a href="../../../experiments/0035-qwen-3.5-2b-android-opencl-gpu/results/android-opencl-campaign/SHA256SUMS">69-file checksum manifest</a> binds the evidence.</p>
+</section>
+<section class="primary-section" id="results" data-primary-section="results">
+<h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
+<aside class="registry-card" data-registry-entry="0035-qwen35-2b-unsloth-q4km-llamacpp-opencl-adreno"><div class="eyebrow">Normalized Android LLM benchmark</div><div class="metrics"><div class="metric" data-metric="setup_seconds" data-value="17.112630361"><span>Setup</span><strong>17.113 s</strong></div><div class="metric" data-metric="medium_ttft_seconds" data-value="9.186424463"><span>Loaded-route medium TTFT</span><strong>9.186 s</strong></div><div class="metric" data-metric="medium_prefill_tokens_per_second" data-value="66.73602592890232"><span>Loaded-route medium prefill</span><strong>66.74 tok/s</strong></div><div class="metric" data-metric="medium_decode_tokens_per_second" data-value="7.931370086338409"><span>Loaded-route medium decode</span><strong>7.93 tok/s</strong></div><div class="metric" data-metric="peak_pss_bytes" data-value="1365059584"><span>Peak sampled PSS</span><strong>1301.8 MiB</strong></div></div><p class="unavailable"><strong>Output sanity is not quality.</strong> 16 sensible / 0 issue / 0 unchecked. This only screens exact retained outputs for obvious corruption or gibberish.</p></aside>
+<p>Setup took <strong>17.113 seconds</strong>, measured from immediately before remote server launch through the first healthy response after provider initialization, vendor OpenCL kernel compilation, model offload, and context readiness. The first short request reached its first token in <strong>2.294 seconds</strong>, processed 174 input tokens at <strong>78.85 input tok/s</strong>, externally decoded at <strong>10.13 output tok/s</strong>, and completed at EOS in <strong>49.268 seconds</strong>.</p>
+<div class="table-wrap"><table><thead><tr>
+<th>Tier</th>
+<th>Loaded-route requests</th>
+<th>Input / output tokens</th>
+<th>Median TTFT</th>
+<th>Median prefill</th>
+<th>Median external decode</th>
+<th>Median total</th>
+<th>Median slot erase</th>
+</tr></thead><tbody>
+<tr>
+<td>short</td>
+<td>5</td>
+<td>174 / 477</td>
+<td>2.808 s</td>
+<td>64.66 input tok/s</td>
+<td>9.08 output tok/s</td>
+<td>55.205 s</td>
+<td>0.0137 s</td>
+</tr>
+<tr>
+<td>medium</td>
+<td>5</td>
+<td>597 / 575</td>
+<td>9.186 s</td>
+<td>66.74 input tok/s</td>
+<td>7.93 output tok/s</td>
+<td>81.530 s</td>
+<td>0.0174 s</td>
+</tr>
+<tr>
+<td>long</td>
+<td>5</td>
+<td>1,926 / 645</td>
+<td>22.969 s</td>
+<td>86.10 input tok/s</td>
+<td>8.61 output tok/s</td>
+<td>98.647 s</td>
+<td>0.0179 s</td>
+</tr>
+</tbody></table></div>
+<p>Peak sampled process PSS was <strong>1,365,059,584 bytes</strong> and process VmHWM was <strong>1,377,951,744 bytes</strong>. Sampling can miss brief peaks and does not isolate vendor-driver or GPU-private allocation. KGSL observations ranged from 220 MHz to 719 MHz and reached 99% sampled busy; those values are operating evidence, not calibrated energy.</p>
+<p>The campaign began at thermal status 0 and ended at status 3. Battery temperature rose from 32.5 °C to 42.5 °C while the phone remained USB powered at 91%. Likely thermal throttling is a limitation, and no calibrated external or OS energy measurement was available. Flash Attention is disabled on this route, and the exact operation-by-operation OpenCL/CPU split is unavailable.</p>
+<p>The post-prefill-to-first-token split remains null because llama.cpp reports aggregate prefill time but no alignable server-clock first-token timestamp. External decode starts at first generated-token delivery and excludes that first token from its numerator; WSL-to-Windows ADB forwarding remains inside delivery timing. All 16 exact outputs passed the narrow sensible-text corruption check, which is not a correctness, grounding, usefulness, style, or acceptance evaluation.</p>
+</section></article>
+<footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
+</main>
+</body>
+</html>
