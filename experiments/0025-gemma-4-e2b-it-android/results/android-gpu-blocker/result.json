@@ -1,0 +1,98 @@
+{
+  "artifact": {
+    "bytes": 2008432640,
+    "filename": "gemma-4-E2B-it-gpu.litertlm",
+    "sha256": "a53a59001894c58e6bdb5b9b227709f91a2e3e556baa7d85acf9c55402ba5cf5",
+    "source_revision": "6b78abd019e61a1ca4cbe3b212d2c9ce8ff38a94"
+  },
+  "attempt": {
+    "backend_requested": "gpu",
+    "execution_target": "android",
+    "logical_requests_started": 0,
+    "runner_exit_code": 134,
+    "smoke_output_token_cap": 64,
+    "transport_dropped": false
+  },
+  "blocker": {
+    "cpu_fallback_used": false,
+    "exact_error": "NOT_FOUND: No available engine for backend: GPU_ARTISAN. Preferred engine types: [kAdvancedLegacyTfLite, kLegacyTfLite]. Available (registered) engine types: [kAdvancedLiteRTCompiledModel]",
+    "mechanism": "EngineSettings::CreateDefault inspected the pinned artifact, found an Artisan text-decoder section, and changed the requested GPU backend to GPU_ARTISAN. The pinned v0.16.1 open-source Android runner links only engine_advanced_impl, which registers kAdvancedLiteRTCompiledModel. EngineFactory requires one of the legacy TFLite engine types for GPU_ARTISAN, but neither is registered in this build.",
+    "provider_binding_proven": false,
+    "reason_no_fallback_claim": "The runner failed closed before inference; no output or timing was relabeled as GPU.",
+    "stage": "EngineFactory::CreateDefault before prompt inventory or first request"
+  },
+  "claim": "No Android GPU performance claim. The pinned GPU artifact did not create an Engine and no logical request ran.",
+  "cleanup": {
+    "phone_lock": "released",
+    "remote_root": "/data/local/tmp/vibevoice-0025-gemma-4-e2b-it-android",
+    "status": "removed_and_verified_absent"
+  },
+  "decision_needed": [
+    "Authorize amending the GPU arm to use the 2,588,147,712-byte generic gemma-4-E2B-it.litertlm artifact with Backend::GPU. The pinned deployment model card reports the Android GPU model size as 2,583 MB, matching that generic artifact rather than the 2,008 MB dedicated GPU artifact.",
+    "Or provide/authorize a LiteRT-LM Android runtime route that registers kAdvancedLegacyTfLite or kLegacyTfLite for this pinned Artisan GPU artifact."
+  ],
+  "device": {
+    "abi": "arm64-v8a",
+    "android_build_fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+    "model": "SM-S918B",
+    "serial": "R5CW81PR8SY",
+    "soc": "SM8550"
+  },
+  "evidence": {
+    "battery-after.txt": "e79ba1e2e2b1f656478e6fa6e44053235eb2d16569ca3433fb40ec2856c981c6",
+    "battery-before.txt": "0c51eafd8f26948b2908d438307256aa1e869b18cd9a6e61af29c0dec441cae5",
+    "blocker.txt": "a3f51aaebce88f4e8d97db00dc94a30b3e7e383e791528a02fe74feae25c6d2e",
+    "cleanup.txt": "177d3e2ad6be6919d885c8aab2b254a6695223ef61e6206ab362719cac7aa146",
+    "gpu-busy-polls.txt": "4525a30a4227c1d38b8e107f14e58137d9a994497337eee13d39cda5a8ccc148",
+    "host-build-exit-code.txt": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "host-build.log": "e155f9a0921d5e54ab82761382fc791aae6b961dcfb07c12721b18476fb02529",
+    "launcher.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "local-pulled-sha256.txt": "1bde456b4fb4502df827aabd4132345da913c7c7c438e4d668cfa004b861499b",
+    "local-static-gate.txt": "0f75891299bb3e7033164e679f91716674f775bfdd9ae5908ab1ec8e8bff5921",
+    "lock.txt": "cf4eb4689fbb520b020c024b217a5242d0fa06696665c9f900643b34ec8c8bd2",
+    "pinned-runtime-route-excerpts.txt": "846d1b641a8f91e66ca10dcb372de63fef1fad5c6a0ccd10f6e7f1002722a297",
+    "preflight.txt": "0544b707a739337ea1b0ac8dda8beb961e1afa037576aad5be140a7efcde25df",
+    "process.txt": "5315d6669c68994e2487fd0274903a090bd272afafe323578a59e30a9efb6759",
+    "pull-output.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pull-raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "push.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "remote-output-sha256.txt": "efafdfcb0819e613fac780c9f42e361d3d05ee7dacd833ded43b3097391d7077",
+    "remote-sha256-before.txt": "43ac86c23dd4288f11d508515219f12e1cafbe291eb2fa4e998dec41d08abff9",
+    "runner-exit-code.txt": "e726b440cc164001999e718b51780d80314709efe06e7857282377be9111127b",
+    "runner-stderr.log": "a7cc4af0ad01dcab2ce53344a0b0596e76215ca3f8a2b7346c3ab68b3212f06d",
+    "runner-stdout.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "runner.pid": "ece8e7dd9f48b32089fce6f3c81c49afa127c2ddb465de16ff62353f4866637e",
+    "thermal-after.txt": "e59939f71c1c57750433a5eb7e75e9aa00e621745e91b7a6b5558a7926a58da9",
+    "thermal-before.txt": "a7227d8906488baed498e440b57edda5ea31f96139ef6cf27a7a9be0a56977fe"
+  },
+  "experiment": "0025-gemma-4-e2b-it-android",
+  "limitations": [
+    "The dedicated GPU artifact was verified by hash and reached official runtime detection, but no provider was bound and no request ran.",
+    "The model-card artifact interpretation is a route-selection question, not permission to silently replace the locked artifact."
+  ],
+  "local_viability_gate": {
+    "android_cross_compile": "passed",
+    "artifact_identity_and_size": "passed",
+    "canonical_workload_hashes": "passed",
+    "host_build": "unavailable",
+    "host_build_missing_reason": "The pinned Bazel host configuration forces CC=clang/CXX=clang++, but this host exposes gcc/g++ and no clang. This does not alter the Android runtime blocker, which was captured with the successfully built arm64 binary on the authorized phone."
+  },
+  "runner": {
+    "android_binary_bytes": 25008680,
+    "android_binary_sha256": "5f6c423ad154acd91741eefd0b1a554662fe3f6bd6cc510fb8fcf90de12435ed",
+    "source_sha256": "5148aec25a39178224e6765e63ff448d27211375d83d394739c7182afc74ba59"
+  },
+  "runtime": {
+    "name": "LiteRT-LM",
+    "revision": "924e79c91542761242244e4f1651851f822e4cbb",
+    "version": "v0.16.1"
+  },
+  "schema_version": 1,
+  "starting_conditions": {
+    "android_thermal_status": 2,
+    "ap_temperature_c": 45.4,
+    "battery_temperature_c": 38.2,
+    "skin_temperature_c": 40.3
+  },
+  "status": "blocked_before_inference"
+}

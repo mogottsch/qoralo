@@ -2,6 +2,7 @@
 // Built against pinned LiteRT-LM v0.16.1 (924e79c91542761242244e4f1651851f822e4cbb).
 
 #include <sys/resource.h>
+#include <unistd.h>
 
 #include <algorithm>
 #include <atomic>
@@ -96,6 +97,53 @@ MemorySnapshot ReadMemory() {
   return {
       .pss_bytes = ReadKbField("/proc/self/smaps_rollup", "Pss:"),
       .vm_hwm_bytes = ReadKbField("/proc/self/status", "VmHWM:"),
+  };
+}
+
+Json CollectGpuProviderBinding() {
+  Json mapped_libraries = Json::array();
+  bool accelerator_library_loaded = false;
+  bool gpu_driver_library_loaded = false;
+  std::ifstream maps("/proc/self/maps");
+  std::string line;
+  while (std::getline(maps, line)) {
+    if (line.find("libLiteRtGpuAccelerator.so") != std::string::npos) {
+      accelerator_library_loaded = true;
+      mapped_libraries.push_back(line);
+    } else if (line.find("libOpenCL") != std::string::npos ||
+               line.find("libGLES") != std::string::npos ||
+               line.find("libvulkan") != std::string::npos) {
+      gpu_driver_library_loaded = true;
+      mapped_libraries.push_back(line);
+    }
+  }
+
+  Json gpu_device_fds = Json::array();
+  std::error_code iterator_error;
+  for (const auto& entry :
+       std::filesystem::directory_iterator("/proc/self/fd", iterator_error)) {
+    std::error_code link_error;
+    const auto target = std::filesystem::read_symlink(entry.path(), link_error);
+    if (link_error) continue;
+    const std::string value = target.string();
+    if (value.find("kgsl") != std::string::npos ||
+        value.find("mali") != std::string::npos ||
+        value.find("dri/render") != std::string::npos) {
+      gpu_device_fds.push_back(value);
+    }
+  }
+  return {
+      {"requested_neural_backend", "gpu"},
+      {"litert_hardware_accelerators", "kGpu only (no CPU fallback bit)"},
+      {"fully_delegated_to_single_delegate_hint", true},
+      {"accelerator_library_loaded", accelerator_library_loaded},
+      {"gpu_driver_library_loaded", gpu_driver_library_loaded},
+      {"gpu_device_fds", gpu_device_fds},
+      {"mapped_provider_and_driver_libraries", mapped_libraries},
+      {"binding_proven",
+       accelerator_library_loaded && gpu_driver_library_loaded},
+      {"proof_boundary",
+       "Captured from the benchmark process after GPU Engine compilation and initial Session creation; LiteRT-LM configures the GPU arm with HwAccelerators::kGpu only and a fully-delegated single-delegate hint."},
   };
 }
 
@@ -548,6 +596,16 @@ absl::Status MainHelper(int argc, char** argv) {
   const double initial_session_creation_seconds =
       Seconds(Clock::now() - initial_session_creation_start);
   const auto setup_end = Clock::now();
+  Json gpu_provider_binding = nullptr;
+  if (backend == Backend::GPU) {
+    gpu_provider_binding = CollectGpuProviderBinding();
+    ABSL_RETURN_IF_ERROR(WriteFile(output_dir / "gpu-provider-binding.json",
+                                   gpu_provider_binding.dump(2) + "\n"));
+    if (!gpu_provider_binding["binding_proven"].get<bool>()) {
+      return absl::FailedPreconditionError(
+          "GPU provider binding was not proven after Engine and Session creation; refusing to publish this route as GPU");
+    }
+  }
 
   Json prompt_inventory = Json::object();
   for (const auto& [tier, workload] : workloads) {
@@ -586,6 +644,7 @@ absl::Status MainHelper(int argc, char** argv) {
             {"boundary", "before ModelAssets::Create through one Engine and the initial direct Session ready with KV capacity"},
         }},
         {"prompts", prompt_inventory},
+        {"gpu_provider_binding", gpu_provider_binding},
         {"completed_logical_request_count", runs.size()},
         {"runs", runs},
         {"checkpoint_complete", false},
@@ -729,6 +788,7 @@ absl::Status MainHelper(int argc, char** argv) {
           {"boundary", "before ModelAssets::Create through one Engine and the initial direct Session ready with KV capacity"},
       }},
       {"prompts", prompt_inventory},
+      {"gpu_provider_binding", gpu_provider_binding},
       {"runs", runs},
       {"memory", memory_monitor.Stop()},
   };

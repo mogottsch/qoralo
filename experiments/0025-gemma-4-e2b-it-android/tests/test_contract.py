@@ -47,6 +47,14 @@ class ContractTest(unittest.TestCase):
         self.assertIn('"session_recreation_in_total_request"] = false', source)
         self.assertIn('"fresh_session_per_logical_request"', campaign)
 
+    def test_gpu_claim_fails_closed_without_provider_binding(self) -> None:
+        source = (EXP / "tools/litert_lm_canonical_runner.cc").read_text()
+        self.assertIn('"litert_hardware_accelerators", "kGpu only (no CPU fallback bit)"', source)
+        self.assertIn('"binding_proven"', source)
+        self.assertIn("GPU provider binding was not proven", source)
+        self.assertIn("libLiteRtGpuAccelerator.so", source)
+        self.assertIn("libOpenCL", source)
+
     def test_only_cpu_and_gpu_arms_are_in_scope(self) -> None:
         scope = CONTRACT["scope"]
         self.assertEqual(2, len(scope["arms"]))

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0025-gemma-4-e2b-it-android",
-  "status": "locked_with_fresh-session-isolation-amendment",
+  "status": "cpu-complete-gpu-blocked-before-inference",
   "locked_at": "2026-08-25",
   "amendments": [
     {
@@ -15,6 +15,11 @@
       "approval": "Moritz explicitly approved the fresh-Session protocol amendment.",
       "reason": "RewindToStep(0) retained reusable prompt-prefix/KV state; bounded probes show that a fresh Session restores full prefill while one loaded Engine remains reused.",
       "scope": "Use one loaded Engine and a fresh Session per logical request. Measure Session creation separately and exclude it from total-request timing. Model remap/reload, accelerator recompilation, and retained prompt/KV reuse between logical requests are prohibited."
+    },
+    {
+      "date": "2026-08-26",
+      "reason": "Require durable proof that the requested GPU neural backend actually bound a GPU-only LiteRT accelerator/provider rather than accepting a CPU fallback claim.",
+      "scope": "Evidence instrumentation only. The runner records post-compilation process mappings/device handles and fails closed unless libLiteRtGpuAccelerator plus a GPU driver library are mapped. CPU campaign evidence remains bound to its original runner and is unchanged."
     }
   ],
   "question": "How do the official Gemma 4 E2B instruction-tuned LiteRT-LM CPU and GPU Android routes execute and perform on the authorized Galaxy S23 Ultra under the canonical fixed-prompt contract?",
@@ -117,11 +122,11 @@
     "android_ndk": "28.1.13356709 (r28b)",
     "android_runner": {
       "source": "experiments/0025-gemma-4-e2b-it-android/tools/litert_lm_canonical_runner.cc",
-      "source_sha256": "6880df645461380d32cf9c3c26750bd31d800d4e7294df8d1bedd9195f773801",
-      "binary_sha256": "93ccb2092311004d66fa4d5a0c8eb2f6eabb4bfc68c2151afa7a61f68a29e712",
-      "binary_bytes": 24983320,
-      "binary_built_from_source_sha256": "6880df645461380d32cf9c3c26750bd31d800d4e7294df8d1bedd9195f773801",
-      "binary_status": "Approved fresh-Session Android arm64 binary rebuilt successfully on 2026-08-26 and bound to the current source.",
+      "source_sha256": "5148aec25a39178224e6765e63ff448d27211375d83d394739c7182afc74ba59",
+      "binary_sha256": "5f6c423ad154acd91741eefd0b1a554662fe3f6bd6cc510fb8fcf90de12435ed",
+      "binary_bytes": 25008680,
+      "binary_built_from_source_sha256": "5148aec25a39178224e6765e63ff448d27211375d83d394739c7182afc74ba59",
+      "binary_status": "GPU-binding-evidence Android arm64 binary rebuilt successfully on 2026-08-26 and bound to current source. Prior CPU evidence remains bound to its retained binary hash.",
       "binary_abi": "Android arm64-v8a, API 31 minimum",
       "build_mode": "dynamic LiteRT accelerator resolution; CPU/GPU selected at runtime"
     },
@@ -159,6 +164,14 @@
       "model_remap_or_reload_between_requests": false,
       "accelerator_recompilation_between_requests": false,
       "retained_prompt_or_kv_reuse_between_requests": false
+    },
+    "gpu_provider_binding": {
+      "requested_executor_backend": "GPU",
+      "litert_hardware_accelerators": "HwAccelerators::kGpu only; unlike the NPU generic route, no CPU fallback bit is requested",
+      "delegation_hint": "prefill and decode fully delegated to one delegate",
+      "runtime_proof": "After Engine compilation and initial Session creation, require the benchmark process to map libLiteRtGpuAccelerator.so and a GPU driver library (OpenCL/GLES/Vulkan). Retain matching /proc/self/maps lines and GPU device-node handles when visible.",
+      "failure_policy": "Fatal before any request when binding_proven is false; never relabel fallback as GPU.",
+      "source": "Pinned LiteRT-LM runtime/executor/llm_executor_settings_utils.cc and runner evidence"
     }
   },
   "device": {
@@ -186,7 +199,8 @@
     "requested backend or exact k=1 greedy-equivalent sampler not applied",
     "unauthorized/destructive device operation or lock violation",
     "failure to create a fresh Session before each logical request after the first, or evidence of retained prompt-prefix/KV state",
-    "raw output cannot be bound to the claimed request and route"
+    "raw output cannot be bound to the claimed request and route",
+    "GPU arm lacks post-compilation provider binding evidence from libLiteRtGpuAccelerator plus a mapped GPU driver library"
   ],
   "nullable_not_fatal": [
     "runtime-internal BenchmarkInfo counters or timing splits",
@@ -201,5 +215,16 @@
     "CPU full first+5+5+5 campaign",
     "GPU full first+5+5+5 campaign",
     "pull, hash, validate, and remove only the exact experiment-owned remote root"
-  ]
+  ],
+  "gpu_route_status": {
+    "status": "blocked_before_inference",
+    "artifact_sha256": "a53a59001894c58e6bdb5b9b227709f91a2e3e556baa7d85acf9c55402ba5cf5",
+    "runtime_observation": "EngineSettings detected ModelType::kArtisanTextDecoder and changed GPU to GPU_ARTISAN.",
+    "exact_error": "No available engine for backend: GPU_ARTISAN. Preferred engine types: [kAdvancedLegacyTfLite, kLegacyTfLite]. Available (registered) engine types: [kAdvancedLiteRTCompiledModel]",
+    "logical_requests_started": 0,
+    "provider_binding_proven": false,
+    "cpu_fallback_used": false,
+    "evidence": "results/android-gpu-blocker/result.json",
+    "decision_needed": "Authorize a different official artifact/backend pairing or a runtime with a registered legacy Artisan engine."
+  }
 }

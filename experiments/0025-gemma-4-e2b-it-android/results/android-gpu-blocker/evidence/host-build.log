@@ -1,0 +1,83 @@
+revision=924e79c91542761242244e4f1651851f822e4cbb
+runner_sha256=5148aec25a39178224e6765e63ff448d27211375d83d394739c7182afc74ba59
+ M runtime/engine/BUILD
+?? runtime/engine/litert_lm_canonical_runner.cc
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+INFO: Options provided by the client:
+  Inherited 'common' options: --isatty=0 --terminal_columns=80
+INFO: Reading rc options for 'build' from /home/moritz/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/.local/LiteRT-LM/.bazelrc:
+  Inherited 'common' options: --experimental_repo_remote_exec --registry=https://raw.githubusercontent.com/bazelbuild/bazel-central-registry/main/ --experimental_repo_remote_exec --noenable_bzlmod
+INFO: Reading rc options for 'build' from /home/moritz/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/.local/LiteRT-LM/.bazelrc:
+  'build' options: --define=resolve_symbols_in_exec=true --repo_env=USE_PYWRAP_RULES=True --copt=-DGRPC_BAZEL_BUILD --host_copt=-DGRPC_BAZEL_BUILD --action_env=GRPC_BAZEL_RUNTIME=1 --repo_env=PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=upb --action_env=PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=upb --@rules_python//python/config_settings:precompile=force_disabled --define framework_shared_object=true --define tsl_protobuf_header_only=true --define=allow_oversize_protos=true --spawn_strategy=standalone -c opt --announce_rc --define=grpc_no_ares=true --noincompatible_remove_legacy_whole_archive --features=-force_no_whole_archive --host_features=-force_no_whole_archive --enable_platform_specific_config --define=with_xla_support=true --config=short_logs --experimental_cc_shared_library --experimental_link_static_libraries_once=false --incompatible_enforce_config_setting_visibility --@rules_ml_toolchain//common:enable_hermetic_cc=False --repo_env USE_HERMETIC_CC_TOOLCHAIN=0 --repo_env=HERMETIC_PYTHON_VERSION=3.13 --config=v2 --config=litert_prefixes --features=-layering_check --host_features=-layering_check --features=-header_modules --host_features=-header_modules
+INFO: Found applicable config definition build:short_logs in file /home/moritz/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/.local/LiteRT-LM/.bazelrc: --output_filter=DONT_MATCH_ANYTHING
+INFO: Found applicable config definition build:v2 in file /home/moritz/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/.local/LiteRT-LM/.bazelrc: --define=tf_api_version=2 --action_env=TF2_BEHAVIOR=1
+INFO: Found applicable config definition build:litert_prefixes in file /home/moritz/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/.local/LiteRT-LM/.bazelrc: --define=litert_prefixes=external/org_tensorflow/
+INFO: Found applicable config definition build:linux in file /home/moritz/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/.local/LiteRT-LM/.bazelrc: --copt=-DLITERT_DISABLE_OPENCL_SUPPORT=1 --action_env=CC=clang --action_env=CXX=clang++ --host_copt=-w --copt=-Wno-all --copt=-Wno-extra --copt=-Wno-deprecated --copt=-Wno-deprecated-declarations --copt=-Wno-ignored-attributes --copt=-Wno-array-bounds --copt=-Wunused-result --copt=-Werror=unused-result --copt=-Wswitch --copt=-Werror=switch --copt=-Wno-switch-default --copt=-Wno-gnu-offsetof-extensions --define=PREFIX=/usr --define=LIBDIR=$(PREFIX)/lib --define=INCLUDEDIR=$(PREFIX)/include --define=PROTOBUF_INCLUDE_PATH=$(PREFIX)/include --cxxopt=-std=c++20 --host_cxxopt=-std=c++20 --config=dynamic_kernels --experimental_guard_against_concurrent_changes
+INFO: Found applicable config definition build:dynamic_kernels in file /home/moritz/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/.local/LiteRT-LM/.bazelrc: --define=dynamic_loaded_kernels=true --copt=-DAUTOLOAD_DYNAMIC_KERNELS
+Computing main repo mapping: 
+DEBUG: /home/moritz/.cache/bazel/_bazel_moritz/c33e0951b57e81739b8f8a2a4f6c5942/external/org_tensorflow/third_party/repo.bzl:138:14: 
+Warning: skipping import of repository 'bazel_skylib' because it already exists.
+DEBUG: /home/moritz/.cache/bazel/_bazel_moritz/c33e0951b57e81739b8f8a2a4f6c5942/external/org_tensorflow/third_party/repo.bzl:138:14: 
+Warning: skipping import of repository 'bazel_features' because it already exists.
+DEBUG: /home/moritz/.cache/bazel/_bazel_moritz/c33e0951b57e81739b8f8a2a4f6c5942/external/org_tensorflow/third_party/repo.bzl:138:14: 
+Warning: skipping import of repository 'platforms' because it already exists.
+Computing main repo mapping: 
+DEBUG: /home/moritz/.cache/bazel/_bazel_moritz/c33e0951b57e81739b8f8a2a4f6c5942/external/rules_ml_toolchain/py/python_repo.bzl:108:14: !!!Using pywrap rules instead of directly creating .so objects!!!
+DEBUG: /home/moritz/.cache/bazel/_bazel_moritz/c33e0951b57e81739b8f8a2a4f6c5942/external/rules_ml_toolchain/py/python_repo.bzl:113:10: 
+=============================
+Hermetic Python configuration:
+Version: "3.13"
+Kind: ""
+Interpreter: "default" (provided by rules_python)
+Requirements_lock label: "@python_version_repo//:requirements_lock_3_13.txt"
+=====================================
+DEBUG: /home/moritz/.cache/bazel/_bazel_moritz/c33e0951b57e81739b8f8a2a4f6c5942/external/org_tensorflow/third_party/repo.bzl:138:14: 
+Warning: skipping import of repository 'build_bazel_rules_apple' because it already exists.
+DEBUG: /home/moritz/.cache/bazel/_bazel_moritz/c33e0951b57e81739b8f8a2a4f6c5942/external/org_tensorflow/third_party/repo.bzl:138:14: 
+Warning: skipping import of repository 'build_bazel_rules_swift' because it already exists.
+DEBUG: /home/moritz/.cache/bazel/_bazel_moritz/c33e0951b57e81739b8f8a2a4f6c5942/external/org_tensorflow/third_party/repo.bzl:138:14: 
+Warning: skipping import of repository 'build_bazel_apple_support' because it already exists.
+DEBUG: /home/moritz/.cache/bazel/_bazel_moritz/c33e0951b57e81739b8f8a2a4f6c5942/external/org_tensorflow/third_party/repo.bzl:138:14: 
+Warning: skipping import of repository 'xctestrunner' because it already exists.
+DEBUG: /home/moritz/.cache/bazel/_bazel_moritz/c33e0951b57e81739b8f8a2a4f6c5942/external/org_tensorflow/third_party/repo.bzl:138:14: 
+Warning: skipping import of repository 'net_zstd' because it already exists.
+Computing main repo mapping: 
+DEBUG: /home/moritz/.cache/bazel/_bazel_moritz/c33e0951b57e81739b8f8a2a4f6c5942/external/org_tensorflow/third_party/repo.bzl:138:14: 
+Warning: skipping import of repository 'rules_proto' because it already exists.
+Computing main repo mapping: 
+Loading: 
+Loading: 2 packages loaded
+Analyzing: target //runtime/engine:litert_lm_canonical_runner (3 packages loaded, 0 targets configured)
+Analyzing: target //runtime/engine:litert_lm_canonical_runner (3 packages loaded, 0 targets configured)
+
+DEBUG: /home/moritz/.cache/bazel/_bazel_moritz/c33e0951b57e81739b8f8a2a4f6c5942/external/build_bazel_rules_swift/swift/internal/swift_autoconfiguration.bzl:211:14: No 'swiftc' executable found in $PATH. Not auto-generating a Linux Swift toolchain.
+Analyzing: target //runtime/engine:litert_lm_canonical_runner (177 packages loaded, 11 targets configured)
+
+INFO: Repository local_config_cc instantiated at:
+  /DEFAULT.WORKSPACE.SUFFIX:181:13: in <toplevel>
+  /home/moritz/.cache/bazel/_bazel_moritz/c33e0951b57e81739b8f8a2a4f6c5942/external/bazel_tools/tools/cpp/cc_configure.bzl:149:16: in cc_configure
+Repository rule cc_autoconf defined at:
+  /home/moritz/.cache/bazel/_bazel_moritz/c33e0951b57e81739b8f8a2a4f6c5942/external/bazel_tools/tools/cpp/cc_configure.bzl:109:30: in <toplevel>
+DEBUG: /home/moritz/.cache/bazel/_bazel_moritz/c33e0951b57e81739b8f8a2a4f6c5942/external/rules_ml_toolchain/gpu/cuda/cuda_configure.bzl:98:14: Cannot find clang, either correct your path, or set the CLANG_CUDA_COMPILER_PATH or CC environment variables
+ERROR: /home/moritz/.cache/bazel/_bazel_moritz/c33e0951b57e81739b8f8a2a4f6c5942/external/bazel_tools/tools/cpp/lib_cc_configure.bzl:112:9: An error occurred during the fetch of repository 'local_config_cc':
+   Traceback (most recent call last):
+	File "/home/moritz/.cache/bazel/_bazel_moritz/c33e0951b57e81739b8f8a2a4f6c5942/external/bazel_tools/tools/cpp/cc_configure.bzl", line 91, column 33, in cc_autoconf_impl
+		configure_unix_toolchain(repository_ctx, cpu_value, overriden_tools)
+	File "/home/moritz/.cache/bazel/_bazel_moritz/c33e0951b57e81739b8f8a2a4f6c5942/external/bazel_tools/tools/cpp/unix_cc_configure.bzl", line 351, column 17, in configure_unix_toolchain
+		cc = find_cc(repository_ctx, overriden_tools)
+	File "/home/moritz/.cache/bazel/_bazel_moritz/c33e0951b57e81739b8f8a2a4f6c5942/external/bazel_tools/tools/cpp/unix_cc_configure.bzl", line 315, column 23, in find_cc
+		cc = _find_generic(repository_ctx, "gcc", "CC", overriden_tools)
+	File "/home/moritz/.cache/bazel/_bazel_moritz/c33e0951b57e81739b8f8a2a4f6c5942/external/bazel_tools/tools/cpp/unix_cc_configure.bzl", line 311, column 32, in _find_generic
+		auto_configure_fail(msg)
+	File "/home/moritz/.cache/bazel/_bazel_moritz/c33e0951b57e81739b8f8a2a4f6c5942/external/bazel_tools/tools/cpp/lib_cc_configure.bzl", line 112, column 9, in auto_configure_fail
+		fail("\n%sAuto-Configuration Error:%s %s\n" % (red, no_color, msg))
+Error in fail: 
+Auto-Configuration Error: Cannot find gcc or CC (clang); either correct your path or set the CC environment variable
+ERROR: no such package '@@local_config_cc//': 
+Auto-Configuration Error: Cannot find gcc or CC (clang); either correct your path or set the CC environment variable
+ERROR: /home/moritz/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/.local/LiteRT-LM/runtime/engine/BUILD:430:10: //runtime/engine:litert_lm_canonical_runner depends on @@local_config_cc//:cc-compiler-k8 in repository @@local_config_cc which failed to fetch. no such package '@@local_config_cc//': 
+Auto-Configuration Error: Cannot find gcc or CC (clang); either correct your path or set the CC environment variable
+ERROR: Analysis of target '//runtime/engine:litert_lm_canonical_runner' failed; build aborted: Analysis failed
+INFO: Elapsed time: 7.780s, Critical Path: 0.07s
+INFO: 1 process: 1 internal.
+ERROR: Build did NOT complete successfully

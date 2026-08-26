@@ -1,0 +1,100 @@
+LiteRT-LM revision: 924e79c91542761242244e4f1651851f822e4cbb (v0.16.1 tag)
+
+runtime/engine/engine_settings.cc lines 144-196: GPU artifact inspection and GPU_ARTISAN switch
+  144 // static
+  145 absl::StatusOr<EngineSettings> EngineSettings::CreateDefault(
+  146     ModelAssets model_assets, Backend backend,
+  147     std::optional<Backend> vision_backend, std::optional<Backend> audio_backend,
+  148     std::optional<Backend> sampler_backend) {
+  149   if (backend == Backend::GPU) {
+  150     bool is_text_artisan = false;
+  151 
+  152     std::optional<absl::StatusOr<std::unique_ptr<LitertLmLoader>>>
+  153         loader_status;
+  154     // Optimize peak memory usage by reusing the existing memory mapping if
+  155     // available, avoiding duplicating file descriptors and creating new
+  156     // mappings.
+  157     if (model_assets.HasMemoryMappedFile()) {
+  158       auto mapped_file_status = model_assets.GetMemoryMappedFile();
+  159       if (mapped_file_status.ok()) {
+  160         loader_status = LitertLmLoader::Create(*mapped_file_status);
+  161       }
+  162     } else {
+  163       auto scoped_file_status = model_assets.GetOrCreateScopedFile();
+  164       if (scoped_file_status.ok()) {
+  165         auto duplicated_file_status = (*scoped_file_status)->Duplicate();
+  166         if (duplicated_file_status.ok()) {
+  167           loader_status =
+  168               LitertLmLoader::Create(std::move(*duplicated_file_status));
+  169         }
+  170       }
+  171     }
+  172 
+  173     if (loader_status.has_value() && (*loader_status).ok()) {
+  174       // loader_status is
+  175       // std::optional<absl::StatusOr<std::unique_ptr<LitertLmLoader>>>. We need
+  176       // to dereference 3 times to get to the LitertLmLoader object:
+  177       // 1. *loader_status gets the StatusOr.
+  178       // 2. **loader_status gets the unique_ptr.
+  179       // 3. ***loader_status gets the LitertLmLoader.
+  180       const auto& loader = ***loader_status;
+  181       if (loader
+  182               .GetSectionLocation(
+  183                   BufferKey(schema::AnySectionDataType_TFLiteModel,
+  184                             ModelType::kArtisanTextDecoder))
+  185               .ok()) {
+  186         is_text_artisan = true;
+  187       }
+  188     }
+  189 
+  190     if (is_text_artisan) {
+  191       ABSL_VLOG(1) << "Artisan model detected. Switching backend from GPU to "
+  192                       "GPU_ARTISAN.";
+  193       backend = Backend::GPU_ARTISAN;
+  194       if (audio_backend.has_value() && audio_backend.value() == Backend::GPU) {
+  195         audio_backend = Backend::GPU_ARTISAN;
+  196       }
+
+runtime/engine/engine_factory.h lines 190-208: preferred engines by backend
+  190   EngineFactory()
+  191       : preferred_engines_({
+  192             {Backend::CPU,
+  193              {
+  194                  EngineType::kAdvancedLiteRTCompiledModel,
+  195                  EngineType::kLiteRTCompiledModel,
+  196              }},
+  197             {Backend::GPU,
+  198              {
+  199                  EngineType::kAdvancedLiteRTCompiledModel,
+  200                  EngineType::kLiteRTCompiledModel,
+  201              }},
+  202             {Backend::GPU_ARTISAN,
+  203              {
+  204                  EngineType::kAdvancedLegacyTfLite,
+  205                  EngineType::kLegacyTfLite,
+  206              }},
+  207             {Backend::NPU,
+  208              {
+
+runtime/engine/BUILD lines 87-96: only selected advanced implementation linked
+   87 )
+   88 
+   89 # The selected engine implementations based on the build flags.
+   90 cc_library(
+   91     name = "engine_impl_selected",
+   92     deps = select({
+   93         "//conditions:default": ["//runtime/core:engine_advanced_impl"],
+   94     }),
+   95     alwayslink = 1,
+   96 )
+
+runtime/core/engine_advanced_impl.cc registration
+387-  return llm_impl;
+388-};
+389-
+390:LITERT_LM_REGISTER_ENGINE(
+391-    EngineFactory::EngineType::kAdvancedLiteRTCompiledModel,
+392-    [](EngineSettings settings, absl::string_view input_prompt_as_hint) {
+393-      return EngineAdvancedImpl::Create(std::move(settings),
+394-                                        input_prompt_as_hint);
+395-    });

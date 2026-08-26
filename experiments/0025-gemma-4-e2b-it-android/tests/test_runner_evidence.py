@@ -18,6 +18,19 @@ SPEC.loader.exec_module(MODULE)
 
 
 class PersistenceFirstRegressionTest(unittest.TestCase):
+    def test_gpu_blocker_never_claims_fallback_or_performance(self) -> None:
+        result = json.loads(
+            (ROOT / "results/android-gpu-blocker/result.json").read_text()
+        )
+        self.assertEqual("blocked_before_inference", result["status"])
+        self.assertEqual(0, result["attempt"]["logical_requests_started"])
+        self.assertFalse(result["blocker"]["cpu_fallback_used"])
+        self.assertFalse(result["blocker"]["provider_binding_proven"])
+        self.assertIn("GPU_ARTISAN", result["blocker"]["exact_error"])
+        self.assertEqual(
+            "removed_and_verified_absent", result["cleanup"]["status"]
+        )
+
     def test_canonical_cpu_campaign_is_complete_and_hash_bound(self) -> None:
         result_dir = ROOT / "results/android-cpu-campaign"
         result = json.loads((result_dir / "result.json").read_text())

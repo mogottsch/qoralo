@@ -2,7 +2,7 @@
 
 ## Status
 
-**Fresh-Session isolation is approved and contract-locked. The complete canonical Android CPU campaign passed and is retained with raw evidence. The earlier rewind run remains only a reset diagnostic; GPU work has not started.**
+**Fresh-Session isolation is approved and contract-locked. The complete canonical Android CPU campaign passed. The pinned dedicated GPU artifact is blocked before inference by an exact LiteRT-LM engine-registration mismatch; no GPU performance claim is made.**
 
 This experiment compares only the official instruction-tuned Gemma 4 E2B LiteRT-LM CPU and GPU Android routes on the authorized Galaxy S23 Ultra. It measures execution, setup, TTFT, prefill/decode throughput, total latency, process memory, and operating conditions under the repository's fixed short/medium/long prompt contract. It does not evaluate transcript quality and makes no NPU/HTP claim.
 
@@ -53,6 +53,12 @@ The fresh from-scratch CPU campaign completed all 16 requests: one first short r
 Setup was `6.474 s`. Peak sampled PSS was `5,726,960,640 B`; VmHWM/ru_maxrss was `5,887,778,816 B`. Median fresh-Session recreation was below `0.35 ms` for every tier and is excluded from request timing. The phone began warm (AP `45.4 C`, skin `39.7 C`) and ended at Android thermal status 3 (AP `51.7 C`, skin `45.0 C`), so sustained thermal throttling is an explicit limitation rather than hidden or treated as a failed request.
 
 See [`results/android-cpu-campaign/result.json`](results/android-cpu-campaign/result.json) and its hash-bound raw evidence.
+
+## Android GPU blocker
+
+A bounded, hash-verified Android smoke requested the official GPU backend with the pinned `gemma-4-E2B-it-gpu.litertlm` artifact. LiteRT-LM detected an Artisan text decoder and switched `GPU` to `GPU_ARTISAN`, then stopped before inference because v0.16.1's open-source build had only `kAdvancedLiteRTCompiledModel` registered while `GPU_ARTISAN` requires `kAdvancedLegacyTfLite` or `kLegacyTfLite`.
+
+No logical request ran, no provider bound, and no CPU fallback was relabeled as GPU. The experiment-owned phone stage was removed and verified absent. Continuing requires an explicit route decision: either authorize the generic 2,588,147,712-byte artifact for `Backend::GPU` (the pinned model card's Android GPU row reports a matching 2,583 MB model size), or provide/authorize a runtime that registers a supported legacy Artisan engine. See [`results/android-gpu-blocker/`](results/android-gpu-blocker/).
 
 ## Claim boundaries
 
