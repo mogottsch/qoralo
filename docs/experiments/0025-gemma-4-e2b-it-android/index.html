@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<link rel="icon" href="data:,">
+<title>Experiment 0025 — Gemma 4 E2B IT on Android | experiment</title>
+<style>
+:root { --bg:#eeeae2; --paper:#fffdf8; --ink:#18201e; --muted:#66706c; --line:#d8d4ca; --accent:#006c60; --accent-2:#a44217; --soft:#e5f2ee; --code:#efede7; --shadow:0 18px 60px rgba(30,42,37,.09); }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; scroll-padding-top:88px; }
+body { margin:0; background:linear-gradient(135deg,#e7eee9 0,var(--bg) 42%,#eee6dc 100%); color:var(--ink); font:16px/1.68 system-ui,-apple-system,"Segoe UI",sans-serif; }
+a { color:var(--accent); text-underline-offset:3px; }
+a:focus-visible, audio:focus-visible { outline:3px solid #f09b65; outline-offset:3px; border-radius:4px; }
+.topbar { position:sticky; top:0; z-index:10; border-bottom:1px solid color-mix(in srgb,var(--line) 85%,transparent); background:color-mix(in srgb,var(--paper) 92%,transparent); backdrop-filter:blur(12px); }
+.topbar-inner { max-width:1120px; margin:auto; display:flex; align-items:center; justify-content:space-between; gap:18px; padding:13px 24px; }
+.brand { color:var(--ink); font-weight:780; text-decoration:none; letter-spacing:-.02em; }
+nav { display:flex; gap:6px; flex-wrap:wrap; }
+nav a { padding:7px 10px; color:var(--muted); border-radius:999px; font-size:13px; font-weight:650; text-decoration:none; }
+nav a:hover { color:var(--accent); background:var(--soft); }
+.shell { max-width:1120px; margin:auto; padding:clamp(24px,5vw,66px) 24px 80px; }
+.status-header { position:relative; overflow:hidden; padding:clamp(26px,5vw,54px); border:1px solid var(--line); border-radius:24px; background:var(--paper); box-shadow:var(--shadow); }
+.status-header::after { content:""; position:absolute; width:230px; height:230px; right:-90px; top:-105px; border-radius:50%; background:var(--soft); }
+.kicker { position:relative; z-index:1; display:flex; align-items:center; gap:10px; margin-bottom:18px; color:var(--muted); font-size:13px; font-weight:760; text-transform:uppercase; letter-spacing:.09em; }
+.status { display:inline-flex; gap:7px; align-items:center; padding:5px 10px; border:1px solid var(--line); border-radius:999px; color:var(--ink); background:var(--paper); letter-spacing:.04em; }
+.status::before { content:""; width:8px; height:8px; border-radius:50%; background:var(--accent-2); }
+h1 { position:relative; z-index:1; max-width:18ch; margin:0; font-size:clamp(36px,7vw,70px); line-height:.99; letter-spacing:-.048em; }
+.summary { position:relative; z-index:1; max-width:70ch; margin:24px 0 0; font-size:clamp(17px,2vw,21px); color:var(--muted); }
+.header-links { position:relative; z-index:1; display:flex; flex-wrap:wrap; gap:9px; margin-top:25px; }
+.header-links a { padding:9px 13px; border:1px solid var(--line); border-radius:9px; background:var(--paper); font-size:14px; font-weight:680; text-decoration:none; }
+.provenance { position:relative; z-index:1; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 22px; margin:30px 0 0; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; }
+.provenance span { min-width:0; overflow-wrap:anywhere; }
+article { max-width:880px; margin:18px auto 0; }
+.primary-section { margin-top:18px; padding:clamp(24px,5vw,48px); border:1px solid var(--line); border-radius:20px; background:var(--paper); }
+h2 { margin:0 0 19px; font-size:clamp(26px,4vw,38px); line-height:1.1; letter-spacing:-.025em; }
+h3 { margin:34px 0 10px; color:var(--accent); font-size:20px; line-height:1.25; }
+.anchor { margin-left:9px; opacity:0; font-weight:400; text-decoration:none; }
+h2:hover .anchor,h3:hover .anchor,.anchor:focus { opacity:.5; }
+p,ul,ol,blockquote { max-width:76ch; }
+#experiment-description > p:first-of-type { margin-top:0; color:var(--ink); font-size:1.13em; line-height:1.58; }
+li { margin:7px 0; }
+code { padding:2px 5px; border-radius:5px; background:var(--code); font:13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; overflow-wrap:anywhere; }
+pre { overflow:auto; padding:18px; border:1px solid var(--line); border-radius:10px; background:var(--code); }
+pre code { padding:0; background:none; overflow-wrap:normal; }
+blockquote { margin:22px 0; padding:12px 18px; border-left:4px solid var(--accent-2); background:#fbf1e9; color:#62412f; }
+.table-wrap { overflow:auto; margin:20px 0; border:1px solid var(--line); border-radius:12px; }
+table { width:100%; min-width:620px; border-collapse:collapse; }
+th,td { padding:12px 14px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+th { background:var(--soft); color:#174b45; font-size:12px; letter-spacing:.04em; text-transform:uppercase; }
+tr:last-child td { border-bottom:0; }
+.registry-card { margin:4px 0 30px; padding:18px; border:1px solid #b8d5cc; border-radius:14px; background:var(--soft); }
+.eyebrow { margin-bottom:13px; color:var(--accent); font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+.registry-route { display:block; margin-top:4px; color:var(--ink); font-size:13px; letter-spacing:0; text-transform:none; }
+.metrics { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; }
+.metric { padding:10px; border:1px solid color-mix(in srgb,var(--accent) 22%,transparent); border-radius:9px; background:var(--paper); }
+.metric span,.audio-card span { display:block; color:var(--muted); font-size:11px; line-height:1.35; }
+.metric strong { display:block; margin-top:4px; font-size:15px; }
+.audio-card { display:grid; grid-template-columns:minmax(160px,1fr) minmax(240px,2fr); align-items:center; gap:18px; margin-top:12px; padding:11px; border-radius:9px; background:var(--paper); }
+audio { width:100%; min-height:40px; }
+.unavailable,.shared-media { margin:12px 0 0; padding:11px; border-radius:9px; background:var(--paper); font-size:13px; }
+footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px; text-align:center; }
+@media (max-width:760px) { .topbar-inner { align-items:flex-start; flex-direction:column; padding:10px 16px; } nav { width:100%; overflow:auto; flex-wrap:nowrap; } .shell { padding:18px 10px 55px; } .status-header,.primary-section { border-radius:14px; } .provenance { grid-template-columns:1fr; } .metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } .audio-card { grid-template-columns:1fr; } }
+@media (prefers-color-scheme:dark) { :root { --bg:#111614; --paper:#19201e; --ink:#eef4f1; --muted:#aeb9b4; --line:#39443f; --accent:#70d7c5; --accent-2:#f09b65; --soft:#19332e; --code:#252c29; --shadow:none; } body { background:linear-gradient(135deg,#15231f,var(--bg)); } blockquote { background:#35271f; color:#efd8c8; } th { color:#bce7df; } }
+@media print { .topbar { position:relative; } body { background:white; } .shell { padding:16px; } .status-header,.primary-section { box-shadow:none; break-inside:avoid; } }
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar-inner"><a class="brand" href="../../android-llm-benchmarks/index.html">VibeVoice Android research</a><nav aria-label="Experiment sections"><a href="#experiment-description">Description</a><a href="#progress">Progress</a><a href="#results">Results</a></nav></div></header>
+<main class="shell">
+<header class="status-header" data-status-header="true">
+<div class="kicker"><span>Experiment 0025</span><span class="status">Completed</span></div>
+<h1>Experiment 0025 — Gemma 4 E2B IT on Android</h1>
+<p class="summary">The project needed a trustworthy Android baseline for the official Gemma 4 E2B mobile package. After rejecting a reset method that silently reused prompt state, the CPU route completed the full campaign with a loaded Engine and fresh Session isolation.</p>
+<div class="header-links"><a href="../../../experiments/0025-gemma-4-e2b-it-android/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-26</span><span>evidence commit: 12e0e32a1852de6b1db23499948bd092ab5d8a49</span><span>page source: docs/experiments/0025-gemma-4-e2b-it-android/page.md</span><span>page source sha256: 175dd787c060f2560d942bc320f9c44d65bcc2e55dd35da6d76c6afb5318cf19</span></div>
+</header>
+<article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
+<h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
+<p>The project wanted to measure an official Gemma mobile deployment on the Galaxy S23 Ultra without mistaking cached prompt work for real performance. The experiment therefore asked two linked questions: could the official Gemma 4 E2B IT LiteRT-LM CPU route complete the fixed Android workload, and could every repeated request be isolated while the expensive model and Engine remained loaded?</p>
+<p>The published arm uses the official <code>gemma-4-E2B-it.litertlm</code> CPU artifact, LiteRT-LM v0.16.1, four CPU threads, an 8,192-token route capacity, thinking disabled, and an exact greedy-equivalent <code>TOP_P(k=1)</code> sampler. Gemma&#x27;s embedded tokenizer produced 171 short, 595 medium, and 1,930 long input tokens. Every prompt still fit with the unchanged 2,048-token output ceiling.</p>
+<p>Isolation matters for this result. The route retained one loaded Engine, but destroyed the prior Session and created a fresh Session before every later logical request. Session creation was measured separately and excluded from TTFT, prefill, decode, and total-request timing. The owning <a href="../../../experiments/0025-gemma-4-e2b-it-android/README.md">experiment README</a>, <a href="../../../experiments/0025-gemma-4-e2b-it-android/protocol/experiment-contract.json">route contract</a>, and <a href="../../../experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/result.json">canonical CPU result</a> preserve the exact route and claim boundaries.</p>
+</section>
+<section class="primary-section" id="progress" data-primary-section="progress">
+<h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
+<p>The experiment first pinned the official base and deployment revisions, CPU and GPU artifact identities, tokenizer and template hashes, LiteRT-LM runtime, Android runner and libraries, workload hashes, and the authorized SM-S918B device. A bounded host smoke proved only that the CPU package could load and generate. A later 64-token phone smoke established Android CPU viability, but neither smoke was a canonical leaderboard campaign.</p>
+<p>The first 16-request CPU attempt exposed a critical reset problem. <code>RewindToStep(0)</code> reset the logical step while retaining reusable prompt/KV state, causing repeated prompts to report microsecond prefill and impossible multi-million-token-per-second rates. That complete run remains a diagnostic and was not published as performance evidence.</p>
+<p>Two bounded host probes separated the reset choices. Rewinding one Session reproduced prefix reuse, while retaining the Engine and creating a fresh Session forced full prefill again. Moritz approved that narrower protocol-v2 isolation strategy. The runner was rebuilt and hash-bound so every later request measures fresh-Session creation separately without remapping the model or recompiling the route.</p>
+<p>The final CPU campaign then completed one first short request plus five loaded-Engine requests for each of short, medium, and long. All 16 requests used the correct input counts, completed at EOS, retained their exact raw outputs, and passed the narrow sensible-text check. The scoped remote stage was removed and verified absent. The <a href="../../../experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/SHA256SUMS">42-file checksum manifest</a> binds the retained campaign evidence.</p>
+</section>
+<section class="primary-section" id="results" data-primary-section="results">
+<h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
+<aside class="registry-card" data-registry-entry="0025-gemma-4-e2b-it-litert-lm-cpu"><div class="eyebrow">Normalized Android LLM benchmark</div><div class="metrics"><div class="metric" data-metric="setup_seconds" data-value="6.473695049"><span>Setup</span><strong>6.474 s</strong></div><div class="metric" data-metric="medium_ttft_seconds" data-value="7.560051872"><span>Loaded-route medium TTFT</span><strong>7.560 s</strong></div><div class="metric" data-metric="medium_prefill_tokens_per_second" data-value="80.08105910859905"><span>Loaded-route medium prefill</span><strong>80.08 tok/s</strong></div><div class="metric" data-metric="medium_decode_tokens_per_second" data-value="10.278034349851502"><span>Loaded-route medium decode</span><strong>10.28 tok/s</strong></div><div class="metric" data-metric="peak_pss_bytes" data-value="5726960640"><span>Peak sampled PSS</span><strong>5461.7 MiB</strong></div></div><p class="unavailable"><strong>Output sanity is not quality.</strong> 16 sensible / 0 issue / 0 unchecked. This only screens exact retained outputs for obvious corruption or gibberish.</p></aside>
+<p>Setup took <strong>6.474 seconds</strong>, from before model assets were created through one Engine and the initial Session being ready with its KV capacity. The first short request reached its first token in <strong>6.452 seconds</strong>, processed 171 input tokens at <strong>59.76 input tok/s</strong>, decoded at <strong>13.01 output tok/s</strong>, and completed in <strong>38.741 seconds</strong>.</p>
+<div class="table-wrap"><table><thead><tr>
+<th>Tier</th>
+<th>Loaded-route requests</th>
+<th>Input / output tokens</th>
+<th>Median TTFT</th>
+<th>Median prefill</th>
+<th>Median decode</th>
+<th>Median total</th>
+<th>Median Session recreation</th>
+</tr></thead><tbody>
+<tr>
+<td>short</td>
+<td>5</td>
+<td>171 / 421</td>
+<td>3.044 s</td>
+<td>58.33 input tok/s</td>
+<td>10.57 output tok/s</td>
+<td>42.822 s</td>
+<td>0.201 ms</td>
+</tr>
+<tr>
+<td>medium</td>
+<td>5</td>
+<td>595 / 700</td>
+<td>7.560 s</td>
+<td>80.08 input tok/s</td>
+<td>10.28 output tok/s</td>
+<td>75.569 s</td>
+<td>0.342 ms</td>
+</tr>
+<tr>
+<td>long</td>
+<td>5</td>
+<td>1,930 / 756</td>
+<td>28.663 s</td>
+<td>67.65 input tok/s</td>
+<td>8.65 output tok/s</td>
+<td>115.812 s</td>
+<td>0.278 ms</td>
+</tr>
+</tbody></table></div>
+<p>Peak sampled process PSS was <strong>5,726,960,640 bytes</strong> (about 5,461 MiB). Process VmHWM and <code>ru_maxrss</code> reached <strong>5,887,778,816 bytes</strong>. PSS was sampled every 100 ms and can miss brief peaks; VmHWM and <code>ru_maxrss</code> are cumulative process high-water marks rather than isolated model or KV memory.</p>
+<p>The operating conditions materially limit comparison. The phone began warm at 45.4 °C AP and 39.7 °C skin, then ended at Android thermal status 3 with 51.7 °C AP and 45.0 °C skin. Sustained thermal throttling likely affected later observations, so these are the measured campaign values rather than thermally normalized model constants. The phone was USB powered, but no calibrated external power measurement was collected.</p>
+<p>All 16 exact outputs recorded <code>looks_sensible: true</code> with null issue notes. This only checks for obvious corruption or gibberish; it is not a judgment of correctness, grounding, usefulness, transcript quality, or acceptance. The result establishes the official CPU artifact on this LiteRT-LM route. The distinct official GPU artifact was not run and has no published row.</p>
+</section></article>
+<footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
+</main>
+</body>
+</html>

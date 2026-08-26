@@ -145,6 +145,18 @@
       },
       "additionalProperties": false
     },
+    "request_isolation": {
+      "type": "object",
+      "required": ["strategy", "reset_or_session_creation_seconds", "included_in_total_request", "session_object_reused", "loaded_model_runtime_route_reused"],
+      "properties": {
+        "strategy": {"type": "string", "minLength": 1},
+        "reset_or_session_creation_seconds": {"$ref": "#/$defs/nullable_metric"},
+        "included_in_total_request": {"type": "boolean"},
+        "session_object_reused": {"type": "boolean"},
+        "loaded_model_runtime_route_reused": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
     "output_sanity": {
       "oneOf": [
         {
@@ -188,15 +200,16 @@
     },
     "run": {
       "type": "object",
-      "required": ["id", "phase", "tier", "input_tokens", "output_token_cap", "output_tokens", "stop_reason", "timing", "throughput", "output", "output_sanity", "missing_reasons"],
+      "required": ["id", "phase", "tier", "input_tokens", "output_token_cap", "output_tokens", "stop_reason", "request_isolation", "timing", "throughput", "output", "output_sanity", "missing_reasons"],
       "properties": {
         "id": {"type": "string", "minLength": 1},
-        "phase": {"enum": ["first", "same_session"]},
+        "phase": {"enum": ["first", "loaded_route"]},
         "tier": {"enum": ["short", "medium", "long"]},
         "input_tokens": {"type": "integer", "minimum": 1},
         "output_token_cap": {"const": 2048},
         "output_tokens": {"type": "integer", "minimum": 0, "maximum": 2048},
         "stop_reason": {"enum": ["eos", "stop_sequence", "max_tokens", "timeout", "error"]},
+        "request_isolation": {"$ref": "#/$defs/request_isolation"},
         "timing": {"$ref": "#/$defs/timing"},
         "throughput": {"$ref": "#/$defs/throughput"},
         "output": {"$ref": "#/$defs/output"},
@@ -246,9 +259,9 @@
     },
     "tier_aggregate": {
       "type": "object",
-      "required": ["same_session_count", "median_request_to_first_token_seconds", "median_prefill_tokens_per_second", "median_decode_tokens_per_second", "median_total_seconds"],
+      "required": ["loaded_route_count", "median_request_to_first_token_seconds", "median_prefill_tokens_per_second", "median_decode_tokens_per_second", "median_total_seconds"],
       "properties": {
-        "same_session_count": {"type": "integer", "minimum": 0},
+        "loaded_route_count": {"type": "integer", "minimum": 0},
         "median_request_to_first_token_seconds": {"$ref": "#/$defs/nullable_metric"},
         "median_prefill_tokens_per_second": {"$ref": "#/$defs/nullable_metric"},
         "median_decode_tokens_per_second": {"$ref": "#/$defs/nullable_metric"},

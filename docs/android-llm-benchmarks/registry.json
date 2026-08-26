@@ -15,6 +15,827 @@
   },
   "entries": [
     {
+      "id": "0025-gemma-4-e2b-it-litert-lm-cpu",
+      "experiment": "0025",
+      "model": "Gemma 4 E2B IT",
+      "model_identity": {
+        "name": "google/gemma-4-E2B-it",
+        "url": "https://huggingface.co/google/gemma-4-E2B-it/tree/3e22461f65e89153144f8adb70e3b8c2cc9845a7",
+        "revision": "3e22461f65e89153144f8adb70e3b8c2cc9845a7"
+      },
+      "artifacts": [
+        {
+          "path": "gemma-4-E2B-it.litertlm",
+          "sha256": "181938105e0eefd105961417e8da75903eacda102c4fce9ce90f50b97139a63c",
+          "bytes": 2588147712,
+          "format": "LiteRT-LM container 1.5.0"
+        }
+      ],
+      "quantization": {
+        "name": "official mixed 2/4/8-bit mobile quantization",
+        "bits": null,
+        "scheme": "Gemma-4 mobile quantization using a mixture of 2-bit, 4-bit, and 8-bit weights; exact per-tensor assignment is unpublished.",
+        "source": "https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm/tree/6b78abd019e61a1ca4cbe3b212d2c9ce8ff38a94",
+        "tool": null,
+        "tool_revision": null
+      },
+      "tokenizer": {
+        "name": "Gemma tokenizer embedded in the official LiteRT-LM CPU artifact",
+        "url": "https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm/tree/6b78abd019e61a1ca4cbe3b212d2c9ce8ff38a94",
+        "revision": "6b78abd019e61a1ca4cbe3b212d2c9ce8ff38a94",
+        "chat_template_source": "Embedded CPU-artifact chat template with pinned no-tools, no-thinking system+user render specialization.",
+        "chat_template_sha256": "02b3091acf53c0b722e3db0c7a1b4980363edcc2d85549dafa339ff5dbfff629"
+      },
+      "route": "LiteRT-LM CPU · 4 threads · loaded Engine with fresh Session per request",
+      "attempt_status": "ran",
+      "runtime": {
+        "name": "LiteRT-LM",
+        "version": "v0.16.1",
+        "revision": "924e79c91542761242244e4f1651851f822e4cbb",
+        "provider": "LiteRT-LM CPU backend",
+        "threads": 4,
+        "options": {
+          "android_ndk": "28.1.13356709 (r28b)",
+          "runner_sha256": "93ccb2092311004d66fa4d5a0c8eb2f6eabb4bfc68c2151afa7a61f68a29e712",
+          "libLiteRt_sha256": "3fdbf64355af65b3ca6ed0c633ffed1e4faa1bfa9256f5e7403fec1633ea1b74",
+          "max_num_tokens": 8192,
+          "sampler": "TOP_P type with k=1, p=1.0, temperature=1.0, no seed",
+          "thinking_enabled": false,
+          "speculative_decoding_enabled": false,
+          "request_isolation_strategy": "fresh_session_per_logical_request",
+          "session_object_reused": false,
+          "loaded_engine_reused": true,
+          "session_creation_in_total_request": false,
+          "session_recreation_median_seconds": {
+            "short": 0.000200677,
+            "medium": 0.000341875,
+            "long": 0.000278281
+          }
+        }
+      },
+      "device": {
+        "model": "SM-S918B",
+        "soc": "SM8550",
+        "serial": "R5CW81PR8SY",
+        "abi": "arm64-v8a"
+      },
+      "workloads": {
+        "short": {
+          "contract_id": "android-llm-inference-v1",
+          "tier": "short",
+          "path": "protocols/android-llm-benchmark/workloads/inference-v1/short.json",
+          "sha256": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae",
+          "rendered_prompt_sha256": "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a",
+          "input_bytes": 860,
+          "input_tokens": 171,
+          "token_ids_sha256": "65d931b8fb39eacee9675b22e52d6ce0a091429e50451c2d1ea0463e250d7f4d",
+          "context_limit_tokens": 8192,
+          "max_new_tokens": 2048,
+          "truncated": false
+        },
+        "medium": {
+          "contract_id": "android-llm-inference-v1",
+          "tier": "medium",
+          "path": "protocols/android-llm-benchmark/workloads/inference-v1/medium.json",
+          "sha256": "5e168aa3232f06c92959b686188192471b2d1a62cd1c857a616fd8e29456ddf1",
+          "rendered_prompt_sha256": "8e3c03cb0d1ddce8455306b8b84585ce2ae07c083c4fdbdec1e946e3be56771d",
+          "input_bytes": 3253,
+          "input_tokens": 595,
+          "token_ids_sha256": "2a89b5742b50060ad7510f8dfaa22eafda4a8fedbe06b5aaed36d5653390cf8d",
+          "context_limit_tokens": 8192,
+          "max_new_tokens": 2048,
+          "truncated": false
+        },
+        "long": {
+          "contract_id": "android-llm-inference-v1",
+          "tier": "long",
+          "path": "protocols/android-llm-benchmark/workloads/inference-v1/long.json",
+          "sha256": "092840fbe879259110fa4d0b15bc383012f16b7b42a38d224b2ead231e86aad8",
+          "rendered_prompt_sha256": "450b519d417e29c4239e39aef856db1813d2580cd62e9db9adaae3d94ba8f260",
+          "input_bytes": 10529,
+          "input_tokens": 1930,
+          "token_ids_sha256": "bbb4413aa186c843cbdc71a1f659e9d574c6fd0bc46fe844a310813445279bba",
+          "context_limit_tokens": 8192,
+          "max_new_tokens": 2048,
+          "truncated": false
+        }
+      },
+      "setup": {
+        "seconds": 6.473695049,
+        "boundary": "before ModelAssets::Create through one Engine and the initial direct Session ready with KV capacity",
+        "components": {
+          "initial_session_creation_seconds": 2.599e-05
+        }
+      },
+      "runs": [
+        {
+          "id": "first-short-01",
+          "phase": "first",
+          "tier": "short",
+          "input_tokens": 171,
+          "output_token_cap": 2048,
+          "output_tokens": 421,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "setup_created_initial_session",
+            "reset_or_session_creation_seconds": 2.599e-05,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 6.451790153,
+            "prefill_seconds": 2.861451717,
+            "post_prefill_to_first_token_seconds": 3.561814425,
+            "decode_seconds": 32.289555405,
+            "total_seconds": 38.741345558
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 59.75987607412073,
+            "decode_tokens_per_second": 13.007302043402042,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/outputs/first-short-01.txt",
+            "sha256": "5476838c8a50de407d1a9128b2054b94b6949dc844279125e04218b2c09f50bd",
+            "bytes": 2390
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-short-01",
+          "phase": "loaded_route",
+          "tier": "short",
+          "input_tokens": 171,
+          "output_token_cap": 2048,
+          "output_tokens": 421,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.003379375,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 2.717722187,
+            "prefill_seconds": 2.601218541,
+            "post_prefill_to_first_token_seconds": 0.112009427,
+            "decode_seconds": 38.094819204,
+            "total_seconds": 40.812541391
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 65.73842116866565,
+            "decode_tokens_per_second": 11.02512123107542,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/outputs/loaded-route-short-01.txt",
+            "sha256": "5476838c8a50de407d1a9128b2054b94b6949dc844279125e04218b2c09f50bd",
+            "bytes": 2390
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-short-02",
+          "phase": "loaded_route",
+          "tier": "short",
+          "input_tokens": 171,
+          "output_token_cap": 2048,
+          "output_tokens": 421,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000198385,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 3.036763957,
+            "prefill_seconds": 2.901641457,
+            "post_prefill_to_first_token_seconds": 0.130186979,
+            "decode_seconds": 40.112440506,
+            "total_seconds": 43.149204463
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 58.932160480225726,
+            "decode_tokens_per_second": 10.470567103419613,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/outputs/loaded-route-short-02.txt",
+            "sha256": "5476838c8a50de407d1a9128b2054b94b6949dc844279125e04218b2c09f50bd",
+            "bytes": 2390
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-short-03",
+          "phase": "loaded_route",
+          "tier": "short",
+          "input_tokens": 171,
+          "output_token_cap": 2048,
+          "output_tokens": 421,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000142031,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 3.08880578,
+            "prefill_seconds": 2.961679113,
+            "post_prefill_to_first_token_seconds": 0.124465156,
+            "decode_seconds": 39.733530037,
+            "total_seconds": 42.822335817
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 57.73751762958123,
+            "decode_tokens_per_second": 10.570417468795108,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/outputs/loaded-route-short-03.txt",
+            "sha256": "5476838c8a50de407d1a9128b2054b94b6949dc844279125e04218b2c09f50bd",
+            "bytes": 2390
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-short-04",
+          "phase": "loaded_route",
+          "tier": "short",
+          "input_tokens": 171,
+          "output_token_cap": 2048,
+          "output_tokens": 421,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000200677,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 3.044085936,
+            "prefill_seconds": 2.931795624,
+            "post_prefill_to_first_token_seconds": 0.109096406,
+            "decode_seconds": 40.059142641,
+            "total_seconds": 43.103228577
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 58.32603016396344,
+            "decode_tokens_per_second": 10.484497977501285,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/outputs/loaded-route-short-04.txt",
+            "sha256": "5476838c8a50de407d1a9128b2054b94b6949dc844279125e04218b2c09f50bd",
+            "bytes": 2390
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-short-05",
+          "phase": "loaded_route",
+          "tier": "short",
+          "input_tokens": 171,
+          "output_token_cap": 2048,
+          "output_tokens": 421,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000219895,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 3.069992603,
+            "prefill_seconds": 2.948008957,
+            "post_prefill_to_first_token_seconds": 0.118132656,
+            "decode_seconds": 39.443336183,
+            "total_seconds": 42.513328786
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 58.00525116925552,
+            "decode_tokens_per_second": 10.648186503580272,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/outputs/loaded-route-short-05.txt",
+            "sha256": "5476838c8a50de407d1a9128b2054b94b6949dc844279125e04218b2c09f50bd",
+            "bytes": 2390
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-medium-01",
+          "phase": "loaded_route",
+          "tier": "medium",
+          "input_tokens": 595,
+          "output_token_cap": 2048,
+          "output_tokens": 700,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000392448,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 8.384315986,
+            "prefill_seconds": 8.23899708,
+            "post_prefill_to_first_token_seconds": 0.133253541,
+            "decode_seconds": 66.906447214,
+            "total_seconds": 75.2907632
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 72.21752771879851,
+            "decode_tokens_per_second": 10.447423665528845,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/outputs/loaded-route-medium-01.txt",
+            "sha256": "c85bcd836ff7df9a4ae885512264117d1ac262dc226a903c79cbaffe513c2490",
+            "bytes": 4074
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-medium-02",
+          "phase": "loaded_route",
+          "tier": "medium",
+          "input_tokens": 595,
+          "output_token_cap": 2048,
+          "output_tokens": 700,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000116771,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 7.548628122,
+            "prefill_seconds": 7.415337393,
+            "post_prefill_to_first_token_seconds": 0.125631615,
+            "decode_seconds": 66.728944558,
+            "total_seconds": 74.27757268
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 80.23910018735947,
+            "decode_tokens_per_second": 10.475214386051583,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/outputs/loaded-route-medium-02.txt",
+            "sha256": "c85bcd836ff7df9a4ae885512264117d1ac262dc226a903c79cbaffe513c2490",
+            "bytes": 4074
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-medium-03",
+          "phase": "loaded_route",
+          "tier": "medium",
+          "input_tokens": 595,
+          "output_token_cap": 2048,
+          "output_tokens": 700,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000392604,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 7.560051872,
+            "prefill_seconds": 7.429971664,
+            "post_prefill_to_first_token_seconds": 0.118745364,
+            "decode_seconds": 68.009113047,
+            "total_seconds": 75.569164919
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 80.08105910859905,
+            "decode_tokens_per_second": 10.278034349851502,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/outputs/loaded-route-medium-03.txt",
+            "sha256": "c85bcd836ff7df9a4ae885512264117d1ac262dc226a903c79cbaffe513c2490",
+            "bytes": 4074
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-medium-04",
+          "phase": "loaded_route",
+          "tier": "medium",
+          "input_tokens": 595,
+          "output_token_cap": 2048,
+          "output_tokens": 700,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000341875,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 7.394326925,
+            "prefill_seconds": 7.275579893,
+            "post_prefill_to_first_token_seconds": 0.106806719,
+            "decode_seconds": 69.736739504,
+            "total_seconds": 77.131066429
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 81.78042283233849,
+            "decode_tokens_per_second": 10.023410973492766,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/outputs/loaded-route-medium-04.txt",
+            "sha256": "c85bcd836ff7df9a4ae885512264117d1ac262dc226a903c79cbaffe513c2490",
+            "bytes": 4074
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-medium-05",
+          "phase": "loaded_route",
+          "tier": "medium",
+          "input_tokens": 595,
+          "output_token_cap": 2048,
+          "output_tokens": 700,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000154062,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 8.142767028,
+            "prefill_seconds": 7.994567236,
+            "post_prefill_to_first_token_seconds": 0.138398854,
+            "decode_seconds": 77.253720647,
+            "total_seconds": 85.396487675
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 74.42554205069169,
+            "decode_tokens_per_second": 9.048107898828357,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/outputs/loaded-route-medium-05.txt",
+            "sha256": "c85bcd836ff7df9a4ae885512264117d1ac262dc226a903c79cbaffe513c2490",
+            "bytes": 4074
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-long-01",
+          "phase": "loaded_route",
+          "tier": "long",
+          "input_tokens": 1930,
+          "output_token_cap": 2048,
+          "output_tokens": 756,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000257343,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 32.448109571,
+            "prefill_seconds": 32.300583113,
+            "post_prefill_to_first_token_seconds": 0.114737709,
+            "decode_seconds": 79.881024188,
+            "total_seconds": 112.329133759
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 59.751243290194154,
+            "decode_tokens_per_second": 9.451556332366339,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/outputs/loaded-route-long-01.txt",
+            "sha256": "51591a313ea227eec1247d6481fa1a143be6dec282a0b9ae63911f1db1ed943f",
+            "bytes": 4089
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-long-02",
+          "phase": "loaded_route",
+          "tier": "long",
+          "input_tokens": 1930,
+          "output_token_cap": 2048,
+          "output_tokens": 756,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000278281,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 28.565753687,
+            "prefill_seconds": 28.417105406,
+            "post_prefill_to_first_token_seconds": 0.124304375,
+            "decode_seconds": 87.246093873,
+            "total_seconds": 115.81184756
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 67.91683996050136,
+            "decode_tokens_per_second": 8.653682548802903,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/outputs/loaded-route-long-02.txt",
+            "sha256": "51591a313ea227eec1247d6481fa1a143be6dec282a0b9ae63911f1db1ed943f",
+            "bytes": 4089
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-long-03",
+          "phase": "loaded_route",
+          "tier": "long",
+          "input_tokens": 1930,
+          "output_token_cap": 2048,
+          "output_tokens": 756,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000829792,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 27.949328999,
+            "prefill_seconds": 27.777202229,
+            "post_prefill_to_first_token_seconds": 0.145597083,
+            "decode_seconds": 85.831880384,
+            "total_seconds": 113.781209383
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 69.48143963847583,
+            "decode_tokens_per_second": 8.796265404209183,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/outputs/loaded-route-long-03.txt",
+            "sha256": "51591a313ea227eec1247d6481fa1a143be6dec282a0b9ae63911f1db1ed943f",
+            "bytes": 4089
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-long-04",
+          "phase": "loaded_route",
+          "tier": "long",
+          "input_tokens": 1930,
+          "output_token_cap": 2048,
+          "output_tokens": 756,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000486459,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 28.66347202,
+            "prefill_seconds": 28.530315458,
+            "post_prefill_to_first_token_seconds": 0.107189427,
+            "decode_seconds": 89.290676477,
+            "total_seconds": 117.954148497
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 67.64734174920667,
+            "decode_tokens_per_second": 8.4555300708745,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/outputs/loaded-route-long-04.txt",
+            "sha256": "51591a313ea227eec1247d6481fa1a143be6dec282a0b9ae63911f1db1ed943f",
+            "bytes": 4089
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-long-05",
+          "phase": "loaded_route",
+          "tier": "long",
+          "input_tokens": 1930,
+          "output_token_cap": 2048,
+          "output_tokens": 756,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000196771,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 29.902063582,
+            "prefill_seconds": 29.738467385,
+            "post_prefill_to_first_token_seconds": 0.138921093,
+            "decode_seconds": 91.826473142,
+            "total_seconds": 121.728536724
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 64.89910777895322,
+            "decode_tokens_per_second": 8.222029815219754,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/outputs/loaded-route-long-05.txt",
+            "sha256": "51591a313ea227eec1247d6481fa1a143be6dec282a0b9ae63911f1db1ed943f",
+            "bytes": 4089
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        }
+      ],
+      "aggregates": {
+        "by_tier": {
+          "short": {
+            "loaded_route_count": 5,
+            "median_request_to_first_token_seconds": 3.044085936,
+            "median_prefill_tokens_per_second": 58.32603016396344,
+            "median_decode_tokens_per_second": 10.570417468795108,
+            "median_total_seconds": 42.822335817
+          },
+          "medium": {
+            "loaded_route_count": 5,
+            "median_request_to_first_token_seconds": 7.560051872,
+            "median_prefill_tokens_per_second": 80.08105910859905,
+            "median_decode_tokens_per_second": 10.278034349851502,
+            "median_total_seconds": 75.569164919
+          },
+          "long": {
+            "loaded_route_count": 5,
+            "median_request_to_first_token_seconds": 28.66347202,
+            "median_prefill_tokens_per_second": 67.64734174920667,
+            "median_decode_tokens_per_second": 8.653682548802903,
+            "median_total_seconds": 115.81184756
+          }
+        }
+      },
+      "memory": {
+        "peak_pss_bytes": 5726960640,
+        "peak_vm_hwm_bytes": 5887778816,
+        "method": "100 ms process PSS and VmHWM sampling plus ru_maxrss; reported VmHWM equals ru_maxrss.",
+        "sampling_interval_seconds": 0.1,
+        "lifecycle": "benchmark process from immediately before setup through final request"
+      },
+      "thermal": {
+        "battery_after": {
+          "ac_powered": false,
+          "health": 2,
+          "level_percent": 95,
+          "status": 2,
+          "temperature_c": 42.9,
+          "usb_powered": true,
+          "wireless_powered": false
+        },
+        "battery_before": {
+          "ac_powered": false,
+          "health": 2,
+          "level_percent": 99,
+          "status": 5,
+          "temperature_c": 36.5,
+          "usb_powered": true,
+          "wireless_powered": false
+        },
+        "power_missing_reason": "No calibrated external power measurement was collected; USB power/charging state is retained from Android battery service.",
+        "power_watts": null,
+        "thermal_after": {
+          "android_thermal_status": 3,
+          "ap_status": 0,
+          "ap_temperature_c": 51.7,
+          "battery_status": 0,
+          "battery_temperature_c": 42.9,
+          "skin_status": 3,
+          "skin_temperature_c": 45.0
+        },
+        "thermal_before": {
+          "android_thermal_status": 0,
+          "ap_status": 0,
+          "ap_temperature_c": 45.4,
+          "battery_status": 0,
+          "battery_temperature_c": 36.5,
+          "skin_status": 0,
+          "skin_temperature_c": 39.7
+        },
+        "transport": "Windows-native platform-tools 37.0.1 ADB daemon bridged to WSL over tcp:172.27.80.1:5037 after a successful transport-only soak."
+      },
+      "summary": "Complete canonical Android CPU campaign: one first short request plus five loaded-Engine requests per tier, with a fresh Session for every logical request, full prompt prefill, EOS completion, and no truncation for all 16 requests.",
+      "limitations": [
+        "The phone began warm (AP 45.4 C, skin 39.7 C) and ended at Android thermal status 3 (AP 51.7 C, skin 45.0 C/status 3); sustained thermal throttling likely affected later observations.",
+        "No calibrated external power measurement was collected.",
+        "PSS is sampled at 100 ms and may miss brief peaks; VmHWM/ru_maxrss is a cumulative process high-water mark.",
+        "Fresh-Session recreation is measured separately and excluded from request-to-first-token and total-request timing.",
+        "Output sanity is only an exact-hash corruption/gibberish check, not quality or correctness.",
+        "The phone was USB powered, but charging state is operating context rather than calibrated power evidence.",
+        "Only the official CPU artifact was run. The distinct official GPU artifact has no campaign result and no registry row."
+      ],
+      "sources": [
+        "experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/result.json",
+        "experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/SHA256SUMS",
+        "experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/README.md",
+        "experiments/0025-gemma-4-e2b-it-android/protocol/experiment-contract.json",
+        "experiments/0025-gemma-4-e2b-it-android/README.md"
+      ],
+      "missing_reasons": {
+        "quantization.bits": "The official artifact mixes 2-bit, 4-bit, and 8-bit weights, so no single bit width is accurate.",
+        "quantization.exact_per_tensor_assignment": "The official deployment model card does not publish a per-tensor bit allocation or calibration manifest.",
+        "quantization.tool": "The official deployment model card does not publish the exact conversion/quantization tool identity.",
+        "quantization.tool_revision": "The official deployment model card does not publish an exact conversion/quantization tool revision.",
+        "thermal.power_watts": "No calibrated external power measurement was collected; USB power/charging state is retained from Android battery service."
+      }
+    },
+    {
       "id": "0027-qwen35-2b-unsloth-q4km-llamacpp-cpu",
       "experiment": "0027",
       "model": "Qwen3.5-2B",
@@ -155,11 +976,18 @@
           },
           "missing_reasons": {
             "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          },
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.011419379,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
           }
         },
         {
           "id": "short-01",
-          "phase": "same_session",
+          "phase": "loaded_route",
           "tier": "short",
           "input_tokens": 174,
           "output_token_cap": 2048,
@@ -188,11 +1016,18 @@
           },
           "missing_reasons": {
             "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          },
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.011855811,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
           }
         },
         {
           "id": "short-02",
-          "phase": "same_session",
+          "phase": "loaded_route",
           "tier": "short",
           "input_tokens": 174,
           "output_token_cap": 2048,
@@ -221,11 +1056,18 @@
           },
           "missing_reasons": {
             "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          },
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.012421716,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
           }
         },
         {
           "id": "short-03",
-          "phase": "same_session",
+          "phase": "loaded_route",
           "tier": "short",
           "input_tokens": 174,
           "output_token_cap": 2048,
@@ -254,11 +1096,18 @@
           },
           "missing_reasons": {
             "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          },
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.013161462,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
           }
         },
         {
           "id": "short-04",
-          "phase": "same_session",
+          "phase": "loaded_route",
           "tier": "short",
           "input_tokens": 174,
           "output_token_cap": 2048,
@@ -287,11 +1136,18 @@
           },
           "missing_reasons": {
             "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          },
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.011943974,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
           }
         },
         {
           "id": "short-05",
-          "phase": "same_session",
+          "phase": "loaded_route",
           "tier": "short",
           "input_tokens": 174,
           "output_token_cap": 2048,
@@ -320,11 +1176,18 @@
           },
           "missing_reasons": {
             "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          },
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.015444827,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
           }
         },
         {
           "id": "medium-01",
-          "phase": "same_session",
+          "phase": "loaded_route",
           "tier": "medium",
           "input_tokens": 597,
           "output_token_cap": 2048,
@@ -353,11 +1216,18 @@
           },
           "missing_reasons": {
             "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          },
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.017039925,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
           }
         },
         {
           "id": "medium-02",
-          "phase": "same_session",
+          "phase": "loaded_route",
           "tier": "medium",
           "input_tokens": 597,
           "output_token_cap": 2048,
@@ -386,11 +1256,18 @@
           },
           "missing_reasons": {
             "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          },
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.014859451,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
           }
         },
         {
           "id": "medium-03",
-          "phase": "same_session",
+          "phase": "loaded_route",
           "tier": "medium",
           "input_tokens": 597,
           "output_token_cap": 2048,
@@ -419,11 +1296,18 @@
           },
           "missing_reasons": {
             "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          },
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.022593751,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
           }
         },
         {
           "id": "medium-04",
-          "phase": "same_session",
+          "phase": "loaded_route",
           "tier": "medium",
           "input_tokens": 597,
           "output_token_cap": 2048,
@@ -452,11 +1336,18 @@
           },
           "missing_reasons": {
             "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          },
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.019924367,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
           }
         },
         {
           "id": "medium-05",
-          "phase": "same_session",
+          "phase": "loaded_route",
           "tier": "medium",
           "input_tokens": 597,
           "output_token_cap": 2048,
@@ -485,11 +1376,18 @@
           },
           "missing_reasons": {
             "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          },
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.019124097,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
           }
         },
         {
           "id": "long-01",
-          "phase": "same_session",
+          "phase": "loaded_route",
           "tier": "long",
           "input_tokens": 1926,
           "output_token_cap": 2048,
@@ -518,11 +1416,18 @@
           },
           "missing_reasons": {
             "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          },
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.019474129,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
           }
         },
         {
           "id": "long-02",
-          "phase": "same_session",
+          "phase": "loaded_route",
           "tier": "long",
           "input_tokens": 1926,
           "output_token_cap": 2048,
@@ -551,11 +1456,18 @@
           },
           "missing_reasons": {
             "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          },
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.022475389,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
           }
         },
         {
           "id": "long-03",
-          "phase": "same_session",
+          "phase": "loaded_route",
           "tier": "long",
           "input_tokens": 1926,
           "output_token_cap": 2048,
@@ -584,11 +1496,18 @@
           },
           "missing_reasons": {
             "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          },
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.021372055,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
           }
         },
         {
           "id": "long-04",
-          "phase": "same_session",
+          "phase": "loaded_route",
           "tier": "long",
           "input_tokens": 1926,
           "output_token_cap": 2048,
@@ -617,11 +1536,18 @@
           },
           "missing_reasons": {
             "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          },
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.021690024,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
           }
         },
         {
           "id": "long-05",
-          "phase": "same_session",
+          "phase": "loaded_route",
           "tier": "long",
           "input_tokens": 1926,
           "output_token_cap": 2048,
@@ -650,31 +1576,38 @@
           },
           "missing_reasons": {
             "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+          },
+          "request_isolation": {
+            "strategy": "proven_full_in_session_conversation_and_kv_reset",
+            "reset_or_session_creation_seconds": 0.020544269,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
           }
         }
       ],
       "aggregates": {
         "by_tier": {
           "short": {
-            "same_session_count": 5,
             "median_request_to_first_token_seconds": 3.876350862,
             "median_prefill_tokens_per_second": 49.03646170928705,
             "median_decode_tokens_per_second": 10.343934646512436,
-            "median_total_seconds": 53.405645693
+            "median_total_seconds": 53.405645693,
+            "loaded_route_count": 5
           },
           "medium": {
-            "same_session_count": 5,
             "median_request_to_first_token_seconds": 16.688610536,
             "median_prefill_tokens_per_second": 38.71504945409835,
             "median_decode_tokens_per_second": 8.767743885115669,
-            "median_total_seconds": 81.0218264
+            "median_total_seconds": 81.0218264,
+            "loaded_route_count": 5
           },
           "long": {
-            "same_session_count": 5,
             "median_request_to_first_token_seconds": 61.837021561,
             "median_prefill_tokens_per_second": 33.80412925688063,
             "median_decode_tokens_per_second": 6.404535577794518,
-            "median_total_seconds": 243.574563143
+            "median_total_seconds": 243.574563143,
+            "loaded_route_count": 5
           }
         }
       },

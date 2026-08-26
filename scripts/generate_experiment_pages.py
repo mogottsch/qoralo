@@ -227,9 +227,9 @@ def llm_registry_snapshot(entry: dict[str, object], *, show_route: bool = False)
     assert isinstance(setup, dict) and isinstance(memory_data, dict)
     metrics = (
         ("setup_seconds", "Setup", setup.get("seconds"), "seconds"),
-        ("medium_ttft_seconds", "Medium TTFT median", medium.get("median_request_to_first_token_seconds"), "seconds"),
-        ("medium_prefill_tokens_per_second", "Medium prefill median", medium.get("median_prefill_tokens_per_second"), "rate"),
-        ("medium_decode_tokens_per_second", "Medium decode median", medium.get("median_decode_tokens_per_second"), "rate"),
+        ("medium_ttft_seconds", "Loaded-route medium TTFT", medium.get("median_request_to_first_token_seconds"), "seconds"),
+        ("medium_prefill_tokens_per_second", "Loaded-route medium prefill", medium.get("median_prefill_tokens_per_second"), "rate"),
+        ("medium_decode_tokens_per_second", "Loaded-route medium decode", medium.get("median_decode_tokens_per_second"), "rate"),
         ("peak_pss_bytes", "Peak sampled PSS", memory_data.get("peak_pss_bytes"), "bytes"),
     )
 

@@ -49,6 +49,18 @@ class RepositoryContractTest(unittest.TestCase):
         self.assertNotIn("execution_target", entry["properties"])
         self.assertEqual({"$ref": "#/$defs/device"}, entry["properties"]["device"])
 
+    def test_protocol_v2_uses_loaded_route_without_claiming_session_reuse(self) -> None:
+        schema = json.loads((REGISTRY_DIR / "schema.json").read_text(encoding="utf-8"))
+        self.assertEqual(["first", "loaded_route"], schema["$defs"]["run"]["properties"]["phase"]["enum"])
+        run = schema["$defs"]["run"]
+        aggregate = schema["$defs"]["tier_aggregate"]
+        self.assertIn("loaded_route_count", aggregate["required"])
+        self.assertNotIn("same_session_count", aggregate["properties"])
+        self.assertIn("request_isolation", run["required"])
+        isolation = schema["$defs"]["request_isolation"]
+        self.assertIn("reset_or_session_creation_seconds", isolation["required"])
+        self.assertIn("loaded_model_runtime_route_reused", isolation["required"])
+
     def test_current_registry_and_workload_validate(self) -> None:
         registry = json.loads((REGISTRY_DIR / "registry.json").read_text(encoding="utf-8"))
         completed = subprocess.run(

@@ -121,7 +121,7 @@ def validate_rate(run: dict, field: str, numerator: int, seconds_field: str, lab
 
 def aggregate_values(runs: list[dict], tier: str, path: tuple[str, str]) -> list[float]:
     section, field = path
-    return [r[section][field] for r in runs if r["phase"] == "same_session" and r["tier"] == tier and r[section][field] is not None]
+    return [r[section][field] for r in runs if r["phase"] == "loaded_route" and r["tier"] == tier and r[section][field] is not None]
 
 
 def validate_entry(entry: dict, manifest: dict[str, str], message_bytes: dict[str, int], all_ids: set[str]) -> None:
@@ -165,6 +165,15 @@ def validate_entry(entry: dict, manifest: dict[str, str], message_bytes: dict[st
             fail(f"{run_label}: raw output bytes/hash mismatch")
 
         reasons = run["missing_reasons"]
+        isolation = run["request_isolation"]
+        required_null_reason(
+            reasons,
+            isolation["reset_or_session_creation_seconds"],
+            "request_isolation.reset_or_session_creation_seconds",
+            run_label,
+        )
+        if run["phase"] == "loaded_route" and not isolation["loaded_model_runtime_route_reused"]:
+            fail(f"{run_label}: loaded-route request must retain the loaded model/runtime route")
         for field, value in run["timing"].items():
             required_null_reason(reasons, value, f"timing.{field}", run_label)
         prefill_numerator = run["input_tokens"]
@@ -183,9 +192,9 @@ def validate_entry(entry: dict, manifest: dict[str, str], message_bytes: dict[st
         if len(first) != 1 or first[0]["tier"] != "short":
             fail(f"{label}: ran route requires exactly one short first request")
         for tier in EXPECTED_TIERS:
-            count = sum(r["phase"] == "same_session" and r["tier"] == tier for r in runs)
+            count = sum(r["phase"] == "loaded_route" and r["tier"] == tier for r in runs)
             if count < 5:
-                fail(f"{label}: ran route requires at least five same-session {tier} requests")
+                fail(f"{label}: ran route requires at least five loaded-route {tier} requests")
 
     aggregate_map = {
         "median_request_to_first_token_seconds": ("timing", "request_to_first_token_seconds"),
@@ -195,8 +204,8 @@ def validate_entry(entry: dict, manifest: dict[str, str], message_bytes: dict[st
     }
     for tier in EXPECTED_TIERS:
         agg = entry["aggregates"]["by_tier"][tier]
-        actual_count = sum(r["phase"] == "same_session" and r["tier"] == tier for r in runs)
-        if agg["same_session_count"] != actual_count:
+        actual_count = sum(r["phase"] == "loaded_route" and r["tier"] == tier for r in runs)
+        if agg["loaded_route_count"] != actual_count:
             fail(f"{label}: {tier} aggregate count mismatch")
         for aggregate_field, raw_path in aggregate_map.items():
             values = aggregate_values(runs, tier, raw_path)
