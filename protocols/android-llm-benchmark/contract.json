@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "contract_id": "android-llm-inference-v1",
   "purpose": "Comparable generic Android LLM execution and performance measurement; podcast transcript quality evaluation is out of scope.",
   "canonical_workload": {
@@ -35,17 +35,29 @@
     "setup_count": 1,
     "first_request_count": 1,
     "first_request_tier": "short",
-    "minimum_same_session_requests_per_tier": 5,
-    "session_reused": true,
-    "conversation_state_reset_each_request": true,
-    "kv_state_reset_each_request": true,
+    "minimum_loaded_route_requests_per_tier": 5,
+    "loaded_model_runtime_route_reused": true,
+    "engine_reused_when_runtime_exposes_engine": true,
+    "session_object_reuse_required": false,
+    "allowed_request_isolation_strategies": [
+      "proven_full_in_session_conversation_and_kv_reset",
+      "fresh_session_per_logical_request"
+    ],
+    "request_isolation_strategy_recorded": true,
+    "conversation_state_isolated_each_request": true,
+    "kv_state_isolated_each_request": true,
+    "reset_or_session_creation_duration_reported_separately": true,
+    "reset_duration_in_total_request_reported": true,
+    "model_remap_or_reload_between_requests": false,
+    "accelerator_recompilation_between_requests": false,
+    "retained_prompt_or_kv_reuse_between_requests": false,
     "tier_order_fixed": true,
     "retain_every_raw_output": true,
     "byte_identical_output_required": false
   },
   "setup_boundary": {
     "start": "Immediately before the first model/tokenizer file access or runtime creation, whichever occurs first.",
-    "end": "The route can accept a canonical request without additional model loading, runtime/session creation, accelerator compilation, or initial KV allocation.",
+    "end": "The loaded route can accept a canonical request without additional model loading, initial runtime/session creation, accelerator compilation, or initial KV allocation. Later per-request reset or fresh-Session creation is measured separately.",
     "included": [
       "model and tokenizer file open or mapping",
       "runtime and execution-provider creation",
@@ -59,7 +71,8 @@
     "prefill": "Submission of effective prompt tokens to the model through readiness of the final prompt token KV state.",
     "post_prefill_to_first_token": "Prefill completion through delivery of the first generated token ID.",
     "decode": "First generated-token delivery through final generated-token delivery; throughput counts tokens after the first over that interval.",
-    "total_request": "The request-to-first-token start boundary through final output or stop delivery."
+    "total_request": "The request-to-first-token start boundary through final output or stop delivery.",
+    "request_state_reset_or_session_creation": "Measured separately before each logical request, with an explicit statement of whether it is included in total request; it must not include model remapping/reloading or accelerator recompilation."
   },
   "stop_reasons": [
     "eos",
@@ -98,6 +111,7 @@
     "device, Android build, runtime, provider, thread, and accelerator configuration",
     "setup boundary and elapsed time",
     "per-request TTFT, prefill, decode, total latency, and throughput observations",
+    "per-request isolation strategy and reset or fresh-Session creation duration, including whether it is inside total-request timing",
     "actual generated-token count and stop reason",
     "peak memory with method, sampling interval, and lifecycle semantics",
     "thermal and power context or null with explicit reasons",

@@ -76,16 +76,18 @@ Record the exact boundary and any internal phases the route exposes. Keep offlin
 
 ## Run the canonical campaign
 
-With one loaded model/runtime route:
+With one loaded model/runtime route (and one Engine when the runtime exposes one):
 
 1. run one first complete request with the short tier;
-2. run at least five additional same-session requests for short;
-3. run at least five same-session requests for medium;
-4. run at least five same-session requests for long;
-5. reset conversation and KV state before every request;
+2. run at least five additional loaded-route requests for short;
+3. run at least five loaded-route requests for medium;
+4. run at least five loaded-route requests for long;
+5. isolate conversation and KV state before every logical request;
 6. keep the canonical tier order and greedy generation settings;
 7. retain every raw UTF-8 output, including partial timeout/error output;
 8. record actual output tokens and the exact stop reason for every request.
+
+Runtime object identity is not a validity goal. Use either a proven full in-session conversation/KV reset or a fresh Session per logical request, and record the strategy. For fresh Sessions, measure creation/reset separately on every request and state whether it is included in total-request timing. Keep the model/runtime route loaded: do not remap or reload the model, recompile the accelerator route, or retain prompt-prefix/KV state between logical requests.
 
 The 2,048-token value is a ceiling, not a target. Do not pad, demand a word count, or relabel the ceiling as actual output. Do not require byte-identical output; preserve any variation.
 
@@ -100,12 +102,13 @@ For every request record raw timestamps/durations and derived rates:
 - post-prefill-to-first-token: prefill completion through first generated token delivery;
 - decode: first generated-token delivery through final generated-token delivery;
 - total request: request start through final output/stop delivery;
+- request-state reset or fresh-Session creation: separately measured, with an explicit statement of whether it is included in total request;
 - prefill input tokens/s with input-token numerator and prefill-seconds denominator;
 - decode output tokens/s with its exact generated-token numerator and decode-seconds denominator.
 
 State whether the first generated token is included in the runtime's decode-rate definition. If the runtime cannot expose a split, keep that field null with a reason instead of deriving it from an unrelated callback.
 
-Keep the first request separate from same-session distributions. Do not pool short, medium, and long tiers or compare distributions collected with different repetition contracts as matched.
+Keep the first request separate from loaded-route warm distributions. Do not pool short, medium, and long tiers or compare distributions collected with different repetition contracts as matched.
 
 ## Measure memory and operating conditions
 

@@ -45,15 +45,17 @@ Never pad output to the ceiling or report the ceiling as the generated-token cou
 
 ## Campaign shape
 
-Create the model/runtime route once and report setup separately. Setup begins immediately before the first model/tokenizer file access or runtime creation, whichever occurs first. It ends only when the route can accept the canonical request without additional model loading, runtime/session creation, accelerator compilation, or initial KV allocation.
+Create the model/runtime route once and report setup separately. Setup begins immediately before the first model/tokenizer file access or runtime creation, whichever occurs first. It ends only when the route can accept the canonical request without additional model loading, initial runtime/session creation, accelerator compilation, or initial KV allocation.
 
 Then run:
 
 1. one first complete request using the short tier;
-2. at least five additional same-session requests for each of the short, medium, and long tiers;
-3. a full conversation and KV-cache reset before every request;
-4. the same loaded model/runtime session for the warm campaign;
+2. at least five additional loaded-route requests for each of the short, medium, and long tiers;
+3. full conversation and KV-cache isolation before every logical request;
+4. the same loaded model/runtime route (and Engine when the runtime exposes one) for the warm campaign;
 5. the fixed tier order and exact generation settings from `contract.json`.
+
+Runtime object identity is not itself evidence. A route may isolate requests with either a proven full in-session conversation/KV reset or a fresh Session per logical request. Record the strategy. For fresh Sessions, measure creation/reset separately for every request and state whether it is included in total-request timing. Neither strategy may remap or reload the model, recompile the accelerator route, or retain prompt-prefix/KV state across logical requests.
 
 Retain all raw outputs. Greedy inference should normally be reproducible, but byte identity is not a pass gate; disclose any output variation rather than discarding it.
 
@@ -66,6 +68,7 @@ The canonical per-request timeout is 1,800 seconds. A timeout is evidence: retai
 - **Post-prefill-to-first-token:** from prefill completion to delivery of the first generated token ID.
 - **Decode:** from first generated-token delivery through final generated-token delivery. Decode throughput counts tokens after the first over that interval; if the runtime exposes only an authoritative equivalent, record its definition.
 - **Total request:** from the same request start through final output/stop delivery.
+- **Request-state reset or Session creation:** measure separately before each logical request and state whether this duration is included in total request. Do not relabel model loading or accelerator compilation as reset.
 
 Report request-to-first-token even when the runtime cannot split prefill from first-token sampling. In that case keep prefill and post-prefill fields null with explicit reasons; never invent the split.
 
