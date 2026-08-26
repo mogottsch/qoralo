@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<link rel="icon" href="data:,">
+<title>Experiment 0029 — LFM2.5-2.6B on Android | experiment</title>
+<style>
+:root { --bg:#eeeae2; --paper:#fffdf8; --ink:#18201e; --muted:#66706c; --line:#d8d4ca; --accent:#006c60; --accent-2:#a44217; --soft:#e5f2ee; --code:#efede7; --shadow:0 18px 60px rgba(30,42,37,.09); }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; scroll-padding-top:88px; }
+body { margin:0; background:linear-gradient(135deg,#e7eee9 0,var(--bg) 42%,#eee6dc 100%); color:var(--ink); font:16px/1.68 system-ui,-apple-system,"Segoe UI",sans-serif; }
+a { color:var(--accent); text-underline-offset:3px; }
+a:focus-visible, audio:focus-visible { outline:3px solid #f09b65; outline-offset:3px; border-radius:4px; }
+.topbar { position:sticky; top:0; z-index:10; border-bottom:1px solid color-mix(in srgb,var(--line) 85%,transparent); background:color-mix(in srgb,var(--paper) 92%,transparent); backdrop-filter:blur(12px); }
+.topbar-inner { max-width:1120px; margin:auto; display:flex; align-items:center; justify-content:space-between; gap:18px; padding:13px 24px; }
+.brand { color:var(--ink); font-weight:780; text-decoration:none; letter-spacing:-.02em; }
+nav { display:flex; gap:6px; flex-wrap:wrap; }
+nav a { padding:7px 10px; color:var(--muted); border-radius:999px; font-size:13px; font-weight:650; text-decoration:none; }
+nav a:hover { color:var(--accent); background:var(--soft); }
+.shell { max-width:1120px; margin:auto; padding:clamp(24px,5vw,66px) 24px 80px; }
+.status-header { position:relative; overflow:hidden; padding:clamp(26px,5vw,54px); border:1px solid var(--line); border-radius:24px; background:var(--paper); box-shadow:var(--shadow); }
+.status-header::after { content:""; position:absolute; width:230px; height:230px; right:-90px; top:-105px; border-radius:50%; background:var(--soft); }
+.kicker { position:relative; z-index:1; display:flex; align-items:center; gap:10px; margin-bottom:18px; color:var(--muted); font-size:13px; font-weight:760; text-transform:uppercase; letter-spacing:.09em; }
+.status { display:inline-flex; gap:7px; align-items:center; padding:5px 10px; border:1px solid var(--line); border-radius:999px; color:var(--ink); background:var(--paper); letter-spacing:.04em; }
+.status::before { content:""; width:8px; height:8px; border-radius:50%; background:var(--accent-2); }
+h1 { position:relative; z-index:1; max-width:18ch; margin:0; font-size:clamp(36px,7vw,70px); line-height:.99; letter-spacing:-.048em; }
+.summary { position:relative; z-index:1; max-width:70ch; margin:24px 0 0; font-size:clamp(17px,2vw,21px); color:var(--muted); }
+.header-links { position:relative; z-index:1; display:flex; flex-wrap:wrap; gap:9px; margin-top:25px; }
+.header-links a { padding:9px 13px; border:1px solid var(--line); border-radius:9px; background:var(--paper); font-size:14px; font-weight:680; text-decoration:none; }
+.provenance { position:relative; z-index:1; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 22px; margin:30px 0 0; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; }
+.provenance span { min-width:0; overflow-wrap:anywhere; }
+article { max-width:880px; margin:18px auto 0; }
+.primary-section { margin-top:18px; padding:clamp(24px,5vw,48px); border:1px solid var(--line); border-radius:20px; background:var(--paper); }
+h2 { margin:0 0 19px; font-size:clamp(26px,4vw,38px); line-height:1.1; letter-spacing:-.025em; }
+h3 { margin:34px 0 10px; color:var(--accent); font-size:20px; line-height:1.25; }
+.anchor { margin-left:9px; opacity:0; font-weight:400; text-decoration:none; }
+h2:hover .anchor,h3:hover .anchor,.anchor:focus { opacity:.5; }
+p,ul,ol,blockquote { max-width:76ch; }
+#experiment-description > p:first-of-type { margin-top:0; color:var(--ink); font-size:1.13em; line-height:1.58; }
+li { margin:7px 0; }
+code { padding:2px 5px; border-radius:5px; background:var(--code); font:13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; overflow-wrap:anywhere; }
+pre { overflow:auto; padding:18px; border:1px solid var(--line); border-radius:10px; background:var(--code); }
+pre code { padding:0; background:none; overflow-wrap:normal; }
+blockquote { margin:22px 0; padding:12px 18px; border-left:4px solid var(--accent-2); background:#fbf1e9; color:#62412f; }
+.table-wrap { overflow:auto; margin:20px 0; border:1px solid var(--line); border-radius:12px; }
+table { width:100%; min-width:620px; border-collapse:collapse; }
+th,td { padding:12px 14px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+th { background:var(--soft); color:#174b45; font-size:12px; letter-spacing:.04em; text-transform:uppercase; }
+tr:last-child td { border-bottom:0; }
+.registry-card { margin:4px 0 30px; padding:18px; border:1px solid #b8d5cc; border-radius:14px; background:var(--soft); }
+.eyebrow { margin-bottom:13px; color:var(--accent); font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+.registry-route { display:block; margin-top:4px; color:var(--ink); font-size:13px; letter-spacing:0; text-transform:none; }
+.metrics { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; }
+.metric { padding:10px; border:1px solid color-mix(in srgb,var(--accent) 22%,transparent); border-radius:9px; background:var(--paper); }
+.metric span,.audio-card span { display:block; color:var(--muted); font-size:11px; line-height:1.35; }
+.metric strong { display:block; margin-top:4px; font-size:15px; }
+.audio-card { display:grid; grid-template-columns:minmax(160px,1fr) minmax(240px,2fr); align-items:center; gap:18px; margin-top:12px; padding:11px; border-radius:9px; background:var(--paper); }
+audio { width:100%; min-height:40px; }
+.unavailable,.shared-media { margin:12px 0 0; padding:11px; border-radius:9px; background:var(--paper); font-size:13px; }
+footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px; text-align:center; }
+@media (max-width:760px) { .topbar-inner { align-items:flex-start; flex-direction:column; padding:10px 16px; } nav { width:100%; overflow:auto; flex-wrap:nowrap; } .shell { padding:18px 10px 55px; } .status-header,.primary-section { border-radius:14px; } .provenance { grid-template-columns:1fr; } .metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } .audio-card { grid-template-columns:1fr; } }
+@media (prefers-color-scheme:dark) { :root { --bg:#111614; --paper:#19201e; --ink:#eef4f1; --muted:#aeb9b4; --line:#39443f; --accent:#70d7c5; --accent-2:#f09b65; --soft:#19332e; --code:#252c29; --shadow:none; } body { background:linear-gradient(135deg,#15231f,var(--bg)); } blockquote { background:#35271f; color:#efd8c8; } th { color:#bce7df; } }
+@media print { .topbar { position:relative; } body { background:white; } .shell { padding:16px; } .status-header,.primary-section { box-shadow:none; break-inside:avoid; } }
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar-inner"><a class="brand" href="../../android-llm-benchmarks/index.html">VibeVoice Android research</a><nav aria-label="Experiment sections"><a href="#experiment-description">Description</a><a href="#progress">Progress</a><a href="#results">Results</a></nav></div></header>
+<main class="shell">
+<header class="status-header" data-status-header="true">
+<div class="kicker"><span>Experiment 0029</span><span class="status">Active</span></div>
+<h1>Experiment 0029 — LFM2.5-2.6B on Android</h1>
+<p class="summary">The official LFM2.5-2.6B Q4_K_M route has now executed one bounded request on the Galaxy S23 Ultra. This proves Android CPU viability, but a persistent loaded-route runner and the canonical 1+5+5+5 campaign are still future work.</p>
+<div class="header-links"><a href="../../../experiments/0029-lfm2.5-2.6b-android/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-26</span><span>evidence commit: b5c1c73561ac7799c1a30da126893b3b821ddf10</span><span>page source: docs/experiments/0029-lfm2.5-2.6b-android/page.md</span><span>page source sha256: 3fe62d60a453bdce5416533fa14dce1ffc9ed50f3bede96321c173fbf70b2b25</span></div>
+</header>
+<article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
+<h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
+<p>The project needed to know whether the official LFM2.5-2.6B GGUF could execute at all on the target Android phone before investing in a full benchmark runner. This experiment therefore started with a deliberately narrow question: can a pinned, bounded llama.cpp CPU route load the exact model, consume the canonical short prompt without truncation or a duplicate BOS token, and return one retained continuation on the Galaxy S23 Ultra?</p>
+<p>The route uses LiquidAI&#x27;s official <code>LFM2.5-2.6B-Q4_K_M.gguf</code>, pinned at 1,674,455,040 bytes and SHA-256 <code>02a8b7e17487d326e46d68ce0ba24211e1b80a14c4cd0597fa73c1cd697f52ed</code>. Its model-native template intentionally continues from <code>&lt;think&gt;</code>; this is not treated as equivalent to Qwen&#x27;s non-thinking route. The runtime is llama.cpp build 7446 on GGML CPU with four inference and four batch threads. The stripped Android <code>llama-completion</code> binary is 5,074,184 bytes with SHA-256 <code>88a91aba5511a712f45aca21c566275681de30e2161f10bb99f9ac54f45b979e</code>.</p>
+<p>This binary is suitable only for one bounded viability request. Each process loads the model, so looping it would violate the protocol-v2 requirement to retain one loaded model/runtime route across the canonical campaign. The owning <a href="../../../experiments/0029-lfm2.5-2.6b-android/README.md">experiment README</a>, <a href="../../../experiments/0029-lfm2.5-2.6b-android/protocol/experiment-contract.json">route contract</a>, and <a href="../../../experiments/0029-lfm2.5-2.6b-android/results/android-smoke/result.json">Android smoke result</a> define that evidence boundary.</p>
+</section>
+<section class="primary-section" id="progress" data-primary-section="progress">
+<h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
+<p>The experiment first pinned the official model and GGUF revisions, LFM Open License, Q4_K_M tensor inventory, tokenizer files, byte-identical embedded/native template, and rendered prompt and token-ID hashes for all three canonical tiers. The official repository does not disclose an exact converter/quantizer commit or calibration provenance, so those values remain unavailable rather than inferred.</p>
+<p>A bounded host smoke and a clean reconstruction proved local feasibility and reproduced the exact host output. Those host observations remain separate from Android evidence. The project then built and hash-bound an AArch64 <code>llama-completion</code> executable with NDK r28b and only Android system library dependencies.</p>
+<p>Before the successful phone request, a passive cooldown observation retained the actual warm conditions. The first staged attempt then stopped before inference when the Windows-hosted ADB transport disappeared during required remote hash verification. That <a href="../../../experiments/0029-lfm2.5-2.6b-android/results/android-smoke-pre-inference-transport-failure/result.json">pre-inference transport diagnostic</a> is not counted as a smoke; its scoped stage was subsequently removed and verified absent.</p>
+<p>A fresh authorized retry matched the model, binary, and prompt hashes locally and remotely, ran one bounded canonical-short-derived request, exited zero, and retained the raw output and operating evidence. Cleanup again verified the experiment-owned remote root absent, with no experiment process remaining. The <a href="../../../experiments/0029-lfm2.5-2.6b-android/results/android-smoke/SHA256SUMS">Android smoke checksum manifest</a> binds the successful evidence, while the separate <a href="../../../experiments/0029-lfm2.5-2.6b-android/results/android-smoke-cooldown/SHA256SUMS">cooldown manifest</a> preserves its context.</p>
+</section>
+<section class="primary-section" id="results" data-primary-section="results">
+<h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
+<p>The authorized phone completed exactly one Android CPU viability smoke. The short prompt contained <strong>171 input tokens</strong>, matched rendered-prompt SHA-256 <code>9e6c713e83f0987f283264b789e102b9704d6067665fc7a0fee652938a3ae622</code>, was not truncated, and did not receive a second BOS token. Greedy generation reached the bounded <strong>64-token</strong> ceiling and stopped with <code>max_tokens</code>.</p>
+<p>The retained output is <strong>324 bytes</strong>, SHA-256 <code>75f52326f67379c63d86b49e4520a074dbbd074329fc0d8d53693340ffc0a0c5</code>. Its sanity record is <code>looks_sensible: true</code> with null issue notes. That observation only excludes obvious corruption or gibberish; it does not establish correctness, grounding, usefulness, transcript quality, or acceptance.</p>
+<div class="table-wrap"><table><thead><tr>
+<th>Runtime observation</th>
+<th>Retained value</th>
+</tr></thead><tbody>
+<tr>
+<td>Prompt evaluation</td>
+<td>13.56415 s</td>
+</tr>
+<tr>
+<td>Prompt evaluation throughput</td>
+<td>12.61 input tok/s</td>
+</tr>
+<tr>
+<td>Follow-on model evaluations</td>
+<td>63 runs in 7.13287 s</td>
+</tr>
+<tr>
+<td>Runtime-reported follow-on rate</td>
+<td>8.83 runs/s</td>
+</tr>
+<tr>
+<td>Total runtime-reported work</td>
+<td>20.70975 s</td>
+</tr>
+<tr>
+<td>Peak sampled PSS</td>
+<td>1,870,697 KiB / 1,915,593,728 bytes</td>
+</tr>
+<tr>
+<td>Process VmHWM</td>
+<td>1,873,176 KiB / 1,918,132,224 bytes</td>
+</tr>
+</tbody></table></div>
+<p>These runtime internals are not a complete protocol timing record. <strong>Protocol setup is unavailable</strong> because the one-shot executable exposes no readiness boundary separate from its request, and its reported load time overlaps prompt evaluation. <strong>Protocol TTFT is unavailable</strong> because the non-streaming executable provides no caller-observed first-token delivery timestamp. The 63 follow-on evaluations are runtime-internal eval work, not relabeled as protocol decode delivery timing. No missing value is treated as zero or derived from an unrelated clock.</p>
+<p>The phone began warm at thermal status 2, AP 47.6 °C, and skin 41.4 °C. It ended at status 2, AP 60.5 °C, and skin 42.5 °C. Battery remained at 95% while USB powered. No external or authoritative device power meter was available. PSS sampling ran approximately every 100–260 ms and may miss brief peaks; mapped model bytes are included.</p>
+<p>This page establishes Android CPU viability only. It adds <strong>no leaderboard row</strong> and supports no distribution or cross-route performance ranking. The next technical step is a separately bound persistent loaded-route runner with a proven full in-session reset or fresh-Session strategy, followed by a newly authorized canonical one-first-plus-five-short/five-medium/five-long campaign.</p>
+</section></article>
+<footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
+</main>
+</body>
+</html>
