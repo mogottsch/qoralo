@@ -2,7 +2,7 @@
 
 ## Status
 
-**Reproducible public OpenCL artifact is phone-ready; Android GPU inference is not claimed until the provider-bound smoke succeeds.**
+**Provider-bound OpenCL/Adreno smoke passed; the full canonical campaign remains required for completion.**
 
 This route follows the durable Adreno Vulkan provider blocker in experiment 0030. It is a separately named OpenCL route and never relabels Vulkan evidence. The model, quantization, tokenizer, template, llama.cpp revision, and canonical workloads remain unchanged from 0027/0030.
 
@@ -32,8 +32,21 @@ A linked OpenCL backend is not GPU evidence. A device run must prove in one serv
 
 A passing route is described as **OpenCL GPU offload**, not GPU-exclusive execution. CPU remains responsible for HTTP serving, tokenizer, sampler, scheduling/orchestration, and operations unsupported by the OpenCL backend. The exact individual-operation split is a limitation rather than an inferred claim.
 
-## Execution plan
+## Provider-bound smoke
 
-The smallest bounded smoke must first prove provider identity, buffers, full layer offload, and one coherent output. It does not complete the experiment. After scoped cleanup, a separate fresh server must execute the complete canonical protocol-v2 campaign: one first short request, five warm short, five warm medium, and five warm long, with full slot erasure before each logical request and no model reload or retained prompt/KV reuse.
+A fresh one-request smoke proved the public route on the authorized phone:
+
+- sysfs GPU model: `Adreno740v2`;
+- OpenCL driver: `OpenCL 3.0 QUALCOMM build: 0676.77.1 Compiler E031.41.03.64`;
+- all `25/25` layers reported offloaded;
+- OpenCL model buffer: 813.29 MiB;
+- OpenCL KV/recurrent-state buffers: 96.00 / 19.27 MiB;
+- OpenCL compute buffer: 166.01 MiB;
+- CPU and CPU_REPACK model buffers: 397.85 MiB each; CPU compute buffer: 26.01 MiB;
+- 64-token bounded output completed at `max_tokens`, passed the narrow sensible-text check, and cleanup was verified absent.
+
+The CPU buffers and disabled Flash Attention are explicit mixed-execution boundaries. This is not a GPU-exclusive route. Exact smoke evidence is under [`results/android-opencl-smoke/`](results/android-opencl-smoke/).
+
+The smoke is only a milestone. A separate fresh server must execute the complete canonical protocol-v2 campaign: one first short request, five warm short, five warm medium, and five warm long, with full slot erasure before each logical request and no model reload or retained prompt/KV reuse.
 
 Phone operations are restricted to `/data/local/tmp/vibevoice-0035-qwen-3.5-2b-android-opencl-gpu` under `artifacts/locks/phone.lock` continuously through identity, staging, execution, raw capture, and verified cleanup.

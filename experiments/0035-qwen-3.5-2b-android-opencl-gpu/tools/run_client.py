@@ -76,10 +76,10 @@ def wait_for_health(client: Client, deadline_seconds: int) -> tuple[int, dict]:
     raise TimeoutError(f"server health deadline exceeded: {last_error}")
 
 
-def wait_for_backend_proof(path: Path, deadline_seconds: int) -> dict:
+def wait_for_backend_proof(path: Path, gpu_model_path: Path, deadline_seconds: int) -> dict:
     required = {
-        "opencl_platform": r"ggml_opencl: selected platform:",
-        "adreno_740_device": r"ggml_opencl: (?:device|default device):[^\n]*Adreno[^\n]*740",
+        "qualcomm_opencl_driver": r"ggml_opencl: OpenCL driver: OpenCL[^\n]*QUALCOMM",
+        "adreno_optimized_kernels": r"ggml_opencl: using kernels optimized for Adreno",
         "all_layers_offloaded": r"offloaded 25/25 layers to GPU",
         "opencl_model_buffer": r"OpenCL model buffer size",
         "opencl_compute_buffer": r"OpenCL compute buffer size",
@@ -103,7 +103,9 @@ def wait_for_backend_proof(path: Path, deadline_seconds: int) -> dict:
                 "source_log": "raw/server.stderr.log",
                 "required_matches": matches,
                 "forbidden_matches": {},
-                "requested_device": "GPUOpenCL0",
+                "requested_device": "GPUOpenCL",
+                "gpu_model_proof_path": "raw/gpu-model.txt",
+                "gpu_model_proof": gpu_model_path.read_text(errors="replace").strip(),
                 "requested_gpu_layers": 25,
                 "claim_boundary": (
                     "llama.cpp selected an Adreno 740 OpenCL device, placed all 25/25 model layers in an OpenCL model buffer, "
@@ -135,6 +137,7 @@ def main() -> None:
     parser.add_argument("--setup-start-monotonic-ns", type=int)
     parser.add_argument("--health-deadline-seconds", type=int, default=600)
     parser.add_argument("--backend-proof-log", type=Path, required=True)
+    parser.add_argument("--gpu-model-proof", type=Path, required=True)
     args = parser.parse_args()
 
     args.output.mkdir(parents=True, exist_ok=False)
@@ -143,7 +146,10 @@ def main() -> None:
     (args.output / "rendered").mkdir()
     client = Client(args.base)
     health_wait_ns, health = wait_for_health(client, args.health_deadline_seconds)
-    backend_proof = wait_for_backend_proof(args.backend_proof_log, args.health_deadline_seconds)
+    gpu_model_text = args.gpu_model_proof.read_text(errors="replace")
+    if not re.search(r"Adreno[^\n]*740|740[^\n]*Adreno", gpu_model_text, re.I):
+        raise RuntimeError(f"authoritative GPU model proof is not Adreno 740: {gpu_model_text!r}")
+    backend_proof = wait_for_backend_proof(args.backend_proof_log, args.gpu_model_proof, args.health_deadline_seconds)
     ready_ns = time.monotonic_ns()
     setup_ns = None if args.setup_start_monotonic_ns is None else ready_ns - args.setup_start_monotonic_ns
 

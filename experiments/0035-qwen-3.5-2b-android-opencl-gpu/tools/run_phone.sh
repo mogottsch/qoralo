@@ -101,6 +101,8 @@ printf '{"seconds":%s,"start_utc":"%s","end_utc":"%s","threshold_gated":false}\n
 adb_cmd shell dumpsys battery >"$OUT/battery-before.txt"
 adb_cmd shell dumpsys thermalservice >"$OUT/thermal-before.txt"
 adb_cmd shell dumpsys power >"$OUT/power-before.txt"
+adb_cmd shell 'printf "gpu_model="; cat /sys/class/kgsl/kgsl-3d0/gpu_model; printf "opencl_library="; ls -l /vendor/lib64/libOpenCL.so /system/vendor/lib64/libOpenCL.so 2>&1 || true' | tr -d '\r' >"$OUT/gpu-model.txt"
+grep -Eqi 'gpu_model=.*Adreno.*740' "$OUT/gpu-model.txt" || { echo "Adreno 740 sysfs proof missing" >&2; exit 5; }
 adb_cmd shell 'for p in /sys/class/kgsl/kgsl-3d0/gpubusy /sys/class/kgsl/kgsl-3d0/gpu_busy_percentage /sys/class/kgsl/kgsl-3d0/devfreq/cur_freq /sys/class/kgsl/kgsl-3d0/devfreq/available_frequencies; do echo "== $p"; cat "$p" 2>&1 || true; done' >"$OUT/gpu-before.txt"
 if adb_cmd shell "test -e '$REMOTE'" >/dev/null 2>&1; then
   echo "remote experiment root already exists; refusing to overwrite: $REMOTE" >&2
@@ -119,7 +121,7 @@ printf 'server_variant=opencl-embedded-source-kernels\nserver_sha256=64409e6e96a
 SETUP_START=$(python3 -c 'import time; print(time.monotonic_ns())')
 (
   exec 9>&-
-  "$ADB" -s "$SERIAL" shell "cd '$REMOTE' && echo \$\$ > server.pid && GGML_OPENCL_PLATFORM=QUALCOMM GGML_OPENCL_DEVICE=Adreno GGML_OPENCL_KERNEL_CACHE_DIR=./cache/opencl exec ./llama-server -m ./model.gguf --host 127.0.0.1 --port $PORT --ctx-size 8192 --parallel 1 --threads 4 --threads-batch 4 --device GPUOpenCL0 --gpu-layers 25 --split-mode none --main-gpu 0 --reasoning off --jinja --slot-save-path ./cache --no-webui"
+  "$ADB" -s "$SERIAL" shell "cd '$REMOTE' && echo \$\$ > server.pid && GGML_OPENCL_PLATFORM=QUALCOMM GGML_OPENCL_DEVICE=Adreno GGML_OPENCL_KERNEL_CACHE_DIR=./cache/opencl exec ./llama-server -m ./model.gguf --host 127.0.0.1 --port $PORT --ctx-size 8192 --parallel 1 --threads 4 --threads-batch 4 --device GPUOpenCL --gpu-layers 25 --split-mode none --main-gpu 0 --flash-attn off --verbosity 5 --reasoning off --jinja --slot-save-path ./cache --no-webui"
 ) >"$OUT/server.stdout.log" 2>"$OUT/server.stderr.log" &
 ADB_SERVER_PID=$!
 for _ in $(seq 1 200); do
@@ -148,7 +150,8 @@ python3 "$EXP/tools/run_client.py" \
   --workloads "$ROOT/protocols/android-llm-benchmark/workloads/inference-v1" \
   --setup-start-monotonic-ns "$SETUP_START" \
   --health-deadline-seconds "$HEALTH_DEADLINE_SECONDS" \
-  --backend-proof-log "$OUT/server.stderr.log"
+  --backend-proof-log "$OUT/server.stderr.log" \
+  --gpu-model-proof "$OUT/gpu-model.txt"
 
 adb_cmd shell "kill '$SERVER_PID'"
 wait "$ADB_SERVER_PID" || true

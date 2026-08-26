@@ -20,9 +20,14 @@ class ContractTest(unittest.TestCase):
   for x in ('-DGGML_OPENCL=ON','-DGGML_OPENCL_EMBED_KERNELS=ON','-DGGML_OPENCL_USE_ADRENO_KERNELS=ON','-DGGML_OPENCL_USE_ADRENO_BIN_KERNELS=OFF','6fe718c31a45fe25151362a72ef041c3a1047cbd','b7bd2803acc779c03d96588e9ca9e9568a18698a','flock -w 1800'): self.assertIn(x,b)
  def test_phone_and_provider_gates(self):
   s=(EXP/'tools/run_phone.sh').read_text(); c=(EXP/'tools/run_client.py').read_text()
-  self.assertIn('/data/local/tmp/vibevoice-0035-qwen-3.5-2b-android-opencl-gpu',s); self.assertIn('flock -n 9',s); self.assertIn('--device GPUOpenCL0 --gpu-layers 25',s); self.assertNotIn('/sdcard',s)
+  self.assertIn('/data/local/tmp/vibevoice-0035-qwen-3.5-2b-android-opencl-gpu',s); self.assertIn('flock -n 9',s); self.assertIn('--device GPUOpenCL --gpu-layers 25',s); self.assertNotIn('/sdcard',s)
   for x in ('offloaded 25/25 layers to GPU','OpenCL model buffer size','OpenCL compute buffer size','Adreno[^\\n]*740','POST /slots/0?action=erase','server_timings.get("cache_n") != 0'): self.assertIn(x,c)
   self.assertIn('range(1, 6)',c)
+ def test_provider_smoke_is_hash_bound_but_not_canonical(self):
+  base=EXP/'results/android-opencl-smoke'; result=json.loads((base/'result.json').read_text()); smoke=self.c['viability_smoke']
+  self.assertEqual(smoke['result_sha256'],sha(base/'result.json')); self.assertEqual(smoke['checksum_manifest_sha256'],sha(base/'SHA256SUMS'))
+  self.assertEqual('android_smoke',result['scope']); self.assertEqual(1,len(result['runs'])); self.assertEqual(64,result['runs'][0]['output_tokens']); self.assertEqual('max_tokens',result['runs'][0]['stop_reason']); self.assertEqual([],result['runs'][0]['reset_validation']['errors']); self.assertTrue(result['runs'][0]['output_sanity']['looks_sensible'])
+  proof=result['route']['backend_proof']; self.assertEqual({},proof['forbidden_matches']); self.assertEqual(25,result['route']['observed_offloaded_layers']); self.assertIn('Adreno740v2',proof['gpu_model_proof']); self.assertEqual('verified_absent',result['stage_and_cleanup']['cleanup_state'])
  def test_claim_is_not_gpu_exclusive(self):
   x=self.c['route_rationale']['offload_claim_boundary']; self.assertIn('CPU retains',x); self.assertIn('not GPU-exclusive',x)
 if __name__=='__main__': unittest.main()

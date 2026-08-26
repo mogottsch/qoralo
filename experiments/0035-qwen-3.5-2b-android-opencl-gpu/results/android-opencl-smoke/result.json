@@ -1,0 +1,500 @@
+{
+  "arm_id": "qwen35-2b-unsloth-q4km-llamacpp-opencl-adreno",
+  "artifact": {
+    "bytes": 1280835840,
+    "name": "Qwen3.5-2B-Q4_K_M.gguf",
+    "sha256": "aaf42c8b7c3cab2bf3d69c355048d4a0ee9973d48f16c731c0520ee914699223",
+    "source_kind": "third-party Unsloth GGUF conversion"
+  },
+  "device": {
+    "abi": "arm64-v8a",
+    "android_release": "16",
+    "android_sdk": "36",
+    "build_fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+    "build_id": "BP4A.251205.006",
+    "model": "SM-S918B",
+    "serial": "R5CW81PR8SY",
+    "soc": "SM8550"
+  },
+  "experiment": "0035-qwen-3.5-2b-android-opencl-gpu",
+  "gpu_telemetry": {
+    "busy_percentage_max": 99,
+    "busy_percentage_missing_reason": null,
+    "current_frequency_hz_max": 719000000,
+    "current_frequency_hz_min": 220000000,
+    "current_frequency_missing_reason": null,
+    "gpubusy_counter_first": {
+      "busy": 1018218,
+      "total": 1018547
+    },
+    "gpubusy_counter_last": {
+      "busy": 1018218,
+      "total": 1018547
+    },
+    "gpubusy_counter_missing_reason": null,
+    "method": "Android shell reads of public KGSL sysfs nodes; counters/frequency are operating evidence, not calibrated power.",
+    "sample_count": 107,
+    "target_sampling_interval_seconds": 0.1
+  },
+  "health": {
+    "status": "ok"
+  },
+  "memory": {
+    "lifecycle": "Remote llama-server process from immediately after PID publication through campaign completion.",
+    "limitations": "Sampling begins just after server process launch and can miss startup allocations or peaks shorter than the sampling interval. VmHWM is process-lifetime cumulative RSS, not isolated model/KV memory.",
+    "method": "Android shell reads of /proc/<pid>/smaps_rollup Pss and /proc/<pid>/status VmHWM.",
+    "peak_sampled_pss_bytes": 1261930496,
+    "peak_sampled_pss_missing_reason": null,
+    "peak_vm_hwm_bytes": 1377927168,
+    "peak_vm_hwm_missing_reason": null,
+    "sample_count": 140,
+    "target_sampling_interval_seconds": 0.1
+  },
+  "mode": "smoke",
+  "operating_conditions": {
+    "battery_after": {
+      "ac_powered": false,
+      "level_percent": 89,
+      "plugged_code": null,
+      "plugged_code_missing_reason": "dumpsys battery did not expose a plugged field; the individual AC/USB/wireless booleans are retained.",
+      "status_code": 2,
+      "temperature_c": 32.6,
+      "usb_powered": true,
+      "wireless_powered": false
+    },
+    "battery_before": {
+      "ac_powered": false,
+      "level_percent": 88,
+      "plugged_code": null,
+      "plugged_code_missing_reason": "dumpsys battery did not expose a plugged field; the individual AC/USB/wireless booleans are retained.",
+      "status_code": 2,
+      "temperature_c": 32.4,
+      "usb_powered": true,
+      "wireless_powered": false
+    },
+    "power_after": {
+      "wakefulness": "Awake",
+      "wakefulness_missing_reason": null
+    },
+    "power_before": {
+      "wakefulness": "Awake",
+      "wakefulness_missing_reason": null
+    },
+    "power_watts": null,
+    "power_watts_missing_reason": "No calibrated external or OS energy measurement was available; battery charging state is context only.",
+    "thermal_after": {
+      "status_code": 0,
+      "status_missing_reason": null
+    },
+    "thermal_before": {
+      "status_code": 0,
+      "status_missing_reason": null
+    }
+  },
+  "prompts": {
+    "short": {
+      "context_tokens": 8192,
+      "input_tokens": 174,
+      "max_output_tokens": 2048,
+      "rendered_bytes": 959,
+      "rendered_path": "rendered/short.txt",
+      "rendered_sha256": "afed1eb692d38446b49ac1c39dec80ae3bd8845282398c09b8485ce4a2a1371e",
+      "thinking_proof": {
+        "enable_thinking": false,
+        "ends_with_empty_think_block": true,
+        "required_suffix": "<think>\\n\\n</think>\\n\\n"
+      },
+      "token_ids_int32le_sha256": "dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4",
+      "truncated": false,
+      "workload_path": "short.json",
+      "workload_sha256": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae"
+    }
+  },
+  "raw_files": {
+    "adb-state.txt": {
+      "bytes": 7,
+      "sha256": "c98373c1abef78070f6beef6b4ae4fbf3de348dac280195c7f93441920584af9"
+    },
+    "battery-after.txt": {
+      "bytes": 15818,
+      "sha256": "53c4859ce8354c0f78de7bbf4ae0a34bcaaec21f3420ae660d4292e68a2283b9"
+    },
+    "battery-before.txt": {
+      "bytes": 15818,
+      "sha256": "04a8c9ffe0a51993d2bc2281a93859b4e232c9fb1fb1a936bb639ee01a5a4691"
+    },
+    "battery-pre-cooldown.txt": {
+      "bytes": 15818,
+      "sha256": "04a8c9ffe0a51993d2bc2281a93859b4e232c9fb1fb1a936bb639ee01a5a4691"
+    },
+    "cleanup.json": {
+      "bytes": 114,
+      "sha256": "5566a1fb085f58caa691bbc97ed2589b5cc6d5cfae65f1e5df17821f44dec94a"
+    },
+    "client-base.txt": {
+      "bytes": 24,
+      "sha256": "e9aafa406b62c0d5c6750c429c42c1e663e56e792610abda39232fc39735d5d0"
+    },
+    "cooldown.json": {
+      "bytes": 106,
+      "sha256": "6cf236c5ae9b29cb7beb3de3c90f6633e74ca205020475fb863019514ebafcef"
+    },
+    "device.txt": {
+      "bytes": 209,
+      "sha256": "0bbd653f52e5e976fddd48ab9de8896b3def791498c0e29e4f9cf3b8873104e5"
+    },
+    "expected-sha256.txt": {
+      "bytes": 156,
+      "sha256": "03818293dddede43795d4c2f7a53bd59dbda3a66e9ad4fa0ca49694d71c9fb7a"
+    },
+    "forward.txt": {
+      "bytes": 5,
+      "sha256": "63058ced3a0dabafe76b8d56be10a871822d34a9d56d45e87c51820d24db4f1f"
+    },
+    "gpu-after.txt": {
+      "bytes": 317,
+      "sha256": "dae9fdbe9fb7b0f702f912c8bfe03f0ee06f4183c4e0ae6dc889ac4353f83eed"
+    },
+    "gpu-before.txt": {
+      "bytes": 317,
+      "sha256": "b6cf31e4c84b187f75ca2aeb7c19c8a79d4defe3c05eb095ba18dba8873a0517"
+    },
+    "gpu-model.txt": {
+      "bytes": 191,
+      "sha256": "929826f9140399826d2cc85efa11dcf19043901fa9d1b3e58ad99777d287f744"
+    },
+    "gpu-sampler.stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "gpu-samples.txt": {
+      "bytes": 18829,
+      "sha256": "57bef2495dead90fa430605405fd3fe15d54d70a2958b1ddd62a50085138c1a4"
+    },
+    "local-hash-check.txt": {
+      "bytes": 32,
+      "sha256": "94fb3c2975fe4056553e80730cc4669ff5c38eaebbfc1771164f6e02247ad5e7"
+    },
+    "memory-sampler.stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "memory-samples.txt": {
+      "bytes": 119800,
+      "sha256": "eaa6456c3460684d8816ccc80d04d47dddc810afab3fdc141586fa19b17ccaa0"
+    },
+    "opencl-env.txt": {
+      "bytes": 225,
+      "sha256": "c8afed90de411f6e15c380e54cecf46eccc2031fe0f794cde7dc3a7031f40efc"
+    },
+    "power-after.txt": {
+      "bytes": 824371,
+      "sha256": "a116662434a1e1a9b6ee1179cf232d92cfbb4954577f183325a2f96a0095d8c2"
+    },
+    "power-before.txt": {
+      "bytes": 824798,
+      "sha256": "c171d83b298e76004232575b1e0dfd82066c87f5eb9e02f6edfa763df60d5f1d"
+    },
+    "power-pre-cooldown.txt": {
+      "bytes": 824798,
+      "sha256": "5fed5e1306e4becd22dc241ca82f84efc44cf0efb7d1b867fee60f6e801c6bcd"
+    },
+    "push-model.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "push-server.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "remote-sha256.txt": {
+      "bytes": 156,
+      "sha256": "03818293dddede43795d4c2f7a53bd59dbda3a66e9ad4fa0ca49694d71c9fb7a"
+    },
+    "server.stderr.log": {
+      "bytes": 255058,
+      "sha256": "3ab7a493538de3a6b66ce8aca5d0a116a586139d541ebabb9a431c50aad77783"
+    },
+    "server.stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stage-hash-diff.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "storage-before.txt": {
+      "bytes": 128,
+      "sha256": "ba08076d704a237e427fb12f69fe8223937a316d3c88490cd5969769fff6db21"
+    },
+    "thermal-after.txt": {
+      "bytes": 1288,
+      "sha256": "32830c4c1efcbc6929ce073bdc0e36e3982709641dcedeef94c42f62c730454a"
+    },
+    "thermal-before.txt": {
+      "bytes": 1288,
+      "sha256": "f95a3c65487bafbed320e91869820f0c92a7d38dfbea972514ed4b8bd958e14b"
+    },
+    "thermal-pre-cooldown.txt": {
+      "bytes": 1288,
+      "sha256": "f95a3c65487bafbed320e91869820f0c92a7d38dfbea972514ed4b8bd958e14b"
+    }
+  },
+  "route": {
+    "accelerator_recompilation_between_requests": false,
+    "backend": "llama.cpp OpenCL GPU offload with CPU orchestration and unsupported-op fallback",
+    "backend_proof": {
+      "claim_boundary": "llama.cpp selected an Adreno 740 OpenCL device, placed all 25/25 model layers in an OpenCL model buffer, and allocated an OpenCL compute buffer. CPU remains responsible for server/tokenizer/sampler orchestration and operations not supported by the OpenCL scheduler; this is not GPU-exclusive execution.",
+      "forbidden_matches": {},
+      "gpu_model_proof": "gpu_model=Adreno740v2opencl_library=-rw-r--r-- 1 root root 163320 2022-01-01 01:00 /system/vendor/lib64/libOpenCL.so\n-rw-r--r-- 1 root root 163320 2022-01-01 01:00 /vendor/lib64/libOpenCL.so",
+      "gpu_model_proof_path": "raw/gpu-model.txt",
+      "requested_device": "GPUOpenCL",
+      "requested_gpu_layers": 25,
+      "required_matches": {
+        "adreno_optimized_kernels": "ggml_opencl: using kernels optimized for Adreno",
+        "all_layers_offloaded": "offloaded 25/25 layers to GPU",
+        "opencl_compute_buffer": "OpenCL compute buffer size",
+        "opencl_model_buffer": "OpenCL model buffer size",
+        "qualcomm_opencl_driver": "ggml_opencl: OpenCL driver: OpenCL 3.0 QUALCOMM"
+      },
+      "source_log": "raw/server.stderr.log"
+    },
+    "cache_prompt": false,
+    "context_tokens": 8192,
+    "loaded_model_runtime_route_reused": true,
+    "model_remap_or_reload_between_requests": false,
+    "observed_offloaded_layers": 25,
+    "observed_total_offloadable_layers": 25,
+    "provider_device": "GPUOpenCL0 / Adreno 740",
+    "request_isolation_strategy": "proven_full_in_session_conversation_and_kv_reset",
+    "requested_gpu_layers": 25,
+    "reset_included_in_total_request": false,
+    "retained_prompt_or_kv_reuse_between_requests": false,
+    "sampler": "greedy argmax through temperature=-1 and temperature-only sampler chain",
+    "session_object_reused": true,
+    "slot_erase_before_every_request": true,
+    "thinking_control": {
+      "chat_template_kwargs": {
+        "enable_thinking": false
+      }
+    },
+    "thinking_enabled": false,
+    "threads": 4
+  },
+  "runs": [
+    {
+      "emitted_token_ids_int32le_sha256": "be4294d739706050517398eae38e18bc80d65460f52d72e614839dd3f76e28b7",
+      "events_path": "events/smoke-short-01.jsonl",
+      "final_event": {
+        "client_received_monotonic_ns": 44885377634408,
+        "content": "",
+        "generation_settings": {
+          "adaptive_decay": 0.8999999761581421,
+          "adaptive_target": -1.0,
+          "backend_sampling": false,
+          "chat_format": "Content-only",
+          "dry_allowed_length": 2,
+          "dry_base": 1.75,
+          "dry_multiplier": 0.0,
+          "dry_penalty_last_n": 64,
+          "dry_sequence_breakers": [
+            "\n",
+            ":",
+            "\"",
+            "*"
+          ],
+          "dynatemp_exponent": 1.0,
+          "dynatemp_range": 0.0,
+          "frequency_penalty": 0.0,
+          "generation_prompt": "",
+          "grammar": "",
+          "grammar_lazy": false,
+          "grammar_triggers": [],
+          "ignore_eos": false,
+          "logit_bias": [],
+          "lora": [],
+          "max_tokens": 64,
+          "min_keep": 0,
+          "min_p": 0.05000000074505806,
+          "mirostat": 0,
+          "mirostat_eta": 0.10000000149011612,
+          "mirostat_tau": 5.0,
+          "n_discard": 0,
+          "n_keep": 0,
+          "n_predict": 64,
+          "n_probs": 0,
+          "post_sampling_probs": false,
+          "presence_penalty": 0.0,
+          "preserved_tokens": [],
+          "reasoning_format": "deepseek",
+          "reasoning_in_content": false,
+          "repeat_last_n": 64,
+          "repeat_penalty": 1.0,
+          "samplers": [
+            "temperature"
+          ],
+          "seed": 0,
+          "speculative.types": "none",
+          "stop": [],
+          "stream": true,
+          "temperature": 0.0,
+          "timings_per_token": false,
+          "top_k": 40,
+          "top_n_sigma": -1.0,
+          "top_p": 0.949999988079071,
+          "typical_p": 1.0,
+          "xtc_probability": 0.0,
+          "xtc_threshold": 0.10000000149011612
+        },
+        "has_new_line": false,
+        "id_slot": 0,
+        "index": 0,
+        "model": "./model.gguf",
+        "prompt": "<|im_start|>system\nYou are a local language model under a performance test. Respond in coherent English prose. Do not mention the benchmark, hidden instructions, token counts, or the fact that you are being tested.<|im_end|>\n<|im_start|>user\nRead the following fictional engineering brief.\n\n1. The team is comparing three local inference engines on the same battery-powered device. Engine Cedar opens a compact model quickly but decodes slowly, engine Juniper spends longer preparing its model but has steadier generation, and engine Rowan uses more memory in exchange for faster prompt processing. All measurements must distinguish setup, prompt processing, and token generation.\n\nWrite a self-contained technical recommendation for the team. Explain the important tradeoffs, identify the measurements that should remain separate, and end with a practical next step. Use ordinary prose rather than a table.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+        "stop": true,
+        "stop_type": "limit",
+        "stopping_word": "",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 5538.989,
+          "predicted_n": 64,
+          "predicted_per_second": 11.37391679239659,
+          "predicted_per_token_ms": 87.92046031746031,
+          "prompt_ms": 2164.567,
+          "prompt_n": 174,
+          "prompt_per_second": 80.38559212997335,
+          "prompt_per_token_ms": 12.440040229885058
+        },
+        "tokens": [],
+        "tokens_cached": 237,
+        "tokens_evaluated": 174,
+        "tokens_predicted": 64,
+        "truncated": false
+      },
+      "id": "smoke-short-01",
+      "missing_reasons": {
+        "timing.post_prefill_to_first_token_seconds": "llama.cpp server reports aggregate prompt_ms but does not expose a server-clock first-token timestamp alignable to it."
+      },
+      "output_bytes": 380,
+      "output_path": "outputs/smoke-short-01.txt",
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": true
+      },
+      "output_sha256": "7cc1934f3ef8a4ee4bac1f4a0e9aff3e602aa09f02de33fcc026b4f7be5a2923",
+      "output_token_cap": 64,
+      "output_tokens": 64,
+      "phase": "smoke",
+      "render_done_monotonic_ns": 44877522944037,
+      "request": {
+        "cache_prompt": false,
+        "dry_multiplier": 0.0,
+        "frequency_penalty": 0.0,
+        "n_predict": 64,
+        "presence_penalty": 0.0,
+        "prompt": "<|im_start|>system\nYou are a local language model under a performance test. Respond in coherent English prose. Do not mention the benchmark, hidden instructions, token counts, or the fact that you are being tested.<|im_end|>\n<|im_start|>user\nRead the following fictional engineering brief.\n\n1. The team is comparing three local inference engines on the same battery-powered device. Engine Cedar opens a compact model quickly but decodes slowly, engine Juniper spends longer preparing its model but has steadier generation, and engine Rowan uses more memory in exchange for faster prompt processing. All measurements must distinguish setup, prompt processing, and token generation.\n\nWrite a self-contained technical recommendation for the team. Explain the important tradeoffs, identify the measurements that should remain separate, and end with a practical next step. Use ordinary prose rather than a table.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+        "repeat_penalty": 1.0,
+        "return_tokens": true,
+        "samplers": [
+          "temperature"
+        ],
+        "seed": 0,
+        "stream": true,
+        "temperature": -1.0,
+        "timings_per_token": false
+      },
+      "request_end_monotonic_ns": 44885380702890,
+      "request_isolation": {
+        "accelerator_recompilation": false,
+        "loaded_model_runtime_route_reused": true,
+        "model_remap_or_reload": false,
+        "reset_end_monotonic_ns": 44877508415745,
+        "reset_included_in_total_request": false,
+        "reset_operation": "POST /slots/0?action=erase",
+        "reset_seconds": 0.011553087,
+        "reset_start_monotonic_ns": 44877496862658,
+        "retained_prompt_or_kv_reuse": false,
+        "session_object_reused": true,
+        "strategy": "proven_full_in_session_conversation_and_kv_reset"
+      },
+      "request_start_monotonic_ns": 44877508416071,
+      "request_timeout_seconds": 1800,
+      "reset_validation": {
+        "cache_n_zero": true,
+        "errors": [],
+        "full_prompt_evaluated": true,
+        "prefill_nonzero": true,
+        "slot_erase_succeeded": true
+      },
+      "runtime_error": null,
+      "server_timings": {
+        "cache_n": 0,
+        "predicted_ms": 5538.989,
+        "predicted_n": 64,
+        "predicted_per_second": 11.37391679239659,
+        "predicted_per_token_ms": 87.92046031746031,
+        "prompt_ms": 2164.567,
+        "prompt_n": 174,
+        "prompt_per_second": 80.38559212997335,
+        "prompt_per_token_ms": 12.440040229885058
+      },
+      "slot_erase_response": {
+        "id_slot": 0,
+        "n_erased": 0
+      },
+      "status": "complete",
+      "stop_reason": "max_tokens",
+      "throughput": {
+        "external_decode_first_token_included": false,
+        "external_decode_tokens": 63,
+        "external_decode_tokens_per_second": 11.183436721836003,
+        "prefill_input_tokens": 174,
+        "prefill_input_tokens_per_second": 80.38559212997335,
+        "runtime_decode_first_token_included": true,
+        "runtime_decode_tokens": 64,
+        "runtime_decode_tokens_per_second": 11.37391679239659
+      },
+      "tier": "short",
+      "timing": {
+        "decode_first_to_final_delivery_seconds": 5.633330931,
+        "post_prefill_to_first_token_seconds": null,
+        "prefill_seconds": 2.164567,
+        "render_seconds": 0.014527966,
+        "request_to_first_token_seconds": 2.238955888,
+        "tokenization_seconds": 0.008665628,
+        "total_seconds": 7.872286819
+      },
+      "tokenization_done_monotonic_ns": 44877531609665
+    }
+  ],
+  "runtime": {
+    "android_server_artifact_revision": 1,
+    "android_server_bytes": 12313808,
+    "android_server_sha256": "64409e6e96a7d003ed6c68ec12363f3e6d7c34d46af40bc439cb84f060cd4ced",
+    "cpu_boundary": "CPU remains responsible for server, tokenizer, sampler, scheduler/orchestration, and any operation unsupported by OpenCL; the route is not GPU-exclusive.",
+    "embedded_web_ui": false,
+    "name": "llama.cpp",
+    "observed_offloaded_layers": 25,
+    "observed_total_offloadable_layers": 25,
+    "provider_backend": "GGML OpenCL GPU offload",
+    "provider_device": "GPUOpenCL0 / Adreno 740",
+    "requested_gpu_layers": 25,
+    "revision": "0a5ac49bce4c42893368585edf3ffb41a38f0108",
+    "threads": 4
+  },
+  "schema_version": 1,
+  "scope": "android_smoke",
+  "setup": {
+    "boundary": "host monotonic timestamp immediately before remote llama-server launch through first successful /health ready response",
+    "health_poll_seconds_inside_boundary": 17.289073628,
+    "seconds": 17.389739286
+  },
+  "source_client_result_sha256": "e37b53d97a43cd60cbf0114869cd1d006126e7a3bab7140bfac8186a95a9fbf2",
+  "stage_and_cleanup": {
+    "cleanup_state": "verified_absent",
+    "local_remote_hashes_equal": true,
+    "phone_lock": true,
+    "remote_root": "/data/local/tmp/vibevoice-0035-qwen-3.5-2b-android-opencl-gpu"
+  },
+  "status": "complete"
+}

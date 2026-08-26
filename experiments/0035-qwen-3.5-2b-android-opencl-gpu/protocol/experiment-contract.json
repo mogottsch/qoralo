@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0035-qwen-3.5-2b-android-opencl-gpu",
-  "status": "android_opencl_artifact_phone_ready",
+  "status": "android_opencl_smoke_passed_campaign_pending",
   "locked_at": "2026-08-26",
   "question": "Can the pinned public Qwen3.5-2B Q4_K_M artifact complete the canonical Android campaign through public llama.cpp OpenCL offload on the Galaxy S23 Ultra Adreno 740?",
   "scope": {
@@ -233,6 +233,27 @@
     "phone-lock/remote-scope violation",
     "raw output cannot be bound"
   ],
+  "viability_smoke": {
+    "classification": "provider-bound one-request milestone only; not canonical benchmark evidence",
+    "result_path": "experiments/0035-qwen-3.5-2b-android-opencl-gpu/results/android-opencl-smoke/result.json",
+    "result_sha256": "15dd94dca6b814afc1335a30cb4b996e291f8eea12cd4b1cdf84305291f5e304",
+    "checksum_manifest_sha256": "42e5e0d5447197a9c0aa2e70f20d68f53309071ef5e39c5b7a0cb092a4dee352",
+    "logical_request_count": 1,
+    "output_tokens": 64,
+    "stop_reason": "max_tokens",
+    "provider_proof": {
+      "gpu_model": "Adreno740v2",
+      "opencl_driver": "OpenCL 3.0 QUALCOMM build: 0676.77.1 Compiler E031.41.03.64",
+      "offloaded_layers": "25/25",
+      "opencl_model_buffer_mib": 813.29,
+      "opencl_compute_buffer_mib": 166.01,
+      "cpu_model_buffer_mib": 397.85,
+      "cpu_repack_model_buffer_mib": 397.85,
+      "cpu_compute_buffer_mib": 26.01,
+      "mixed_execution_disclosed": true
+    },
+    "cleanup_state": "verified_absent"
+  },
   "nullable_not_fatal": [
     "post-prefill-to-first-token split",
     "calibrated power",

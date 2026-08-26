@@ -134,7 +134,7 @@ def main() -> None:
         raise ValueError("client result is incomplete")
     proof = result.get("route", {}).get("backend_proof", {})
     required_proof = {
-        "opencl_platform", "adreno_740_device", "all_layers_offloaded",
+        "qualcomm_opencl_driver", "adreno_optimized_kernels", "all_layers_offloaded",
         "opencl_model_buffer", "opencl_compute_buffer",
     }
     if set(proof.get("required_matches", {})) != required_proof or proof.get("forbidden_matches") != {}:
@@ -154,7 +154,7 @@ def main() -> None:
         "thermal-before.txt", "thermal-after.txt", "power-before.txt", "power-after.txt",
         "expected-sha256.txt", "remote-sha256.txt", "local-hash-check.txt", "stage-hash-diff.txt",
         "push-server.txt", "push-model.txt", "adb-state.txt", "cleanup.json", "forward.txt", "client-base.txt",
-        "gpu-before.txt", "gpu-after.txt", "gpu-samples.txt", "gpu-sampler.stderr.log", "opencl-env.txt",
+        "gpu-model.txt", "gpu-before.txt", "gpu-after.txt", "gpu-samples.txt", "gpu-sampler.stderr.log", "opencl-env.txt",
     ]
     raw_hashes = {}
     for name in raw_names:
