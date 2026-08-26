@@ -104,7 +104,7 @@ fi
 rm -rf "$STAGE"
 mkdir -p "$STAGE"
 install -m 755 "$BUILD/bin/llama-server" "$STAGE/llama-server"
-ln -s ../downloads/Qwen3.5-2B-Q4_K_M.gguf "$STAGE/model.gguf"
+ln "$MODEL" "$STAGE/model.gguf"
 verify_file "$STAGE/llama-server" "$SERVER_BYTES" "$SERVER_SHA256"
 verify_file "$STAGE/model.gguf" "$MODEL_BYTES" "$MODEL_SHA256"
 (
