@@ -2,7 +2,7 @@
 
 ## Status
 
-**Provider-bound OpenCL/Adreno smoke passed; the full canonical campaign remains required for completion.**
+**Complete canonical OpenCL/Adreno GPU-offload campaign.**
 
 This route follows the durable Adreno Vulkan provider blocker in experiment 0030. It is a separately named OpenCL route and never relabels Vulkan evidence. The model, quantization, tokenizer, template, llama.cpp revision, and canonical workloads remain unchanged from 0027/0030.
 
@@ -47,6 +47,8 @@ A fresh one-request smoke proved the public route on the authorized phone:
 
 The CPU buffers and disabled Flash Attention are explicit mixed-execution boundaries. This is not a GPU-exclusive route. Exact smoke evidence is under [`results/android-opencl-smoke/`](results/android-opencl-smoke/).
 
-The smoke is only a milestone. A separate fresh server must execute the complete canonical protocol-v2 campaign: one first short request, five warm short, five warm medium, and five warm long, with full slot erasure before each logical request and no model reload or retained prompt/KV reuse.
+The smoke was only a milestone. A separate fresh server subsequently completed the full canonical protocol-v2 campaign: one first short, five warm short, five warm medium, and five warm long. All 16 requests reached EOS with successful slot erasure, `cache_n == 0`, full prompt evaluation, positive prefill time, and no truncation.
+
+Canonical evidence is under [`results/android-opencl-campaign/`](results/android-opencl-campaign/). Setup was 17.113 s. Warm median TTFT / prefill / external decode / total were 2.808 s / 64.66 input tok/s / 9.08 output tok/s / 55.205 s for short; 9.186 s / 66.74 / 7.93 / 81.530 s for medium; and 22.969 s / 86.10 / 8.61 / 98.647 s for long. Peak sampled process PSS was 1,365,059,584 bytes. KGSL reached 719 MHz and 99% sampled busy; battery temperature rose from 32.5 °C to 42.5 °C and thermal status from 0 to 3. These conditions and mixed CPU/OpenCL buffers remain explicit rather than normalized away.
 
 Phone operations are restricted to `/data/local/tmp/vibevoice-0035-qwen-3.5-2b-android-opencl-gpu` under `artifacts/locks/phone.lock` continuously through identity, staging, execution, raw capture, and verified cleanup.

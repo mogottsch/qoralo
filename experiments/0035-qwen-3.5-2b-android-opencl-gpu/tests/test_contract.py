@@ -28,6 +28,15 @@ class ContractTest(unittest.TestCase):
   self.assertEqual(smoke['result_sha256'],sha(base/'result.json')); self.assertEqual(smoke['checksum_manifest_sha256'],sha(base/'SHA256SUMS'))
   self.assertEqual('android_smoke',result['scope']); self.assertEqual(1,len(result['runs'])); self.assertEqual(64,result['runs'][0]['output_tokens']); self.assertEqual('max_tokens',result['runs'][0]['stop_reason']); self.assertEqual([],result['runs'][0]['reset_validation']['errors']); self.assertTrue(result['runs'][0]['output_sanity']['looks_sensible'])
   proof=result['route']['backend_proof']; self.assertEqual({},proof['forbidden_matches']); self.assertEqual(25,result['route']['observed_offloaded_layers']); self.assertIn('Adreno740v2',proof['gpu_model_proof']); self.assertEqual('verified_absent',result['stage_and_cleanup']['cleanup_state'])
+ def test_complete_campaign_shape_hashes_isolation_and_provider(self):
+  base=EXP/'results/android-opencl-campaign'; d=json.loads((base/'result.json').read_text()); c=self.c['completed_campaign']
+  self.assertEqual(c['result_sha256'],sha(base/'result.json')); self.assertEqual(c['checksum_manifest_sha256'],sha(base/'SHA256SUMS')); self.assertEqual('complete',d['status']); self.assertEqual(16,len(d['runs']))
+  ids=['first-short-01']+[f'short-{i:02d}' for i in range(1,6)]+[f'medium-{i:02d}' for i in range(1,6)]+[f'long-{i:02d}' for i in range(1,6)]; self.assertEqual(ids,[r['id'] for r in d['runs']])
+  proof=d['route']['backend_proof']; self.assertEqual({},proof['forbidden_matches']); self.assertIn('Adreno740v2',proof['gpu_model_proof']); self.assertEqual(25,d['route']['observed_offloaded_layers'])
+  counts={'short':174,'medium':597,'long':1926}
+  for r in d['runs']:
+   self.assertEqual('complete',r['status']); self.assertEqual('eos',r['stop_reason']); self.assertEqual([],r['reset_validation']['errors']); self.assertEqual(0,r['server_timings']['cache_n']); self.assertEqual(counts[r['tier']],r['server_timings']['prompt_n']); self.assertTrue(r['output_sanity']['looks_sensible']); self.assertEqual(r['output_sha256'],sha(base/r['output_path'])); self.assertFalse(r['request_isolation']['reset_included_in_total_request']); self.assertFalse(r['request_isolation']['model_remap_or_reload']); self.assertFalse(r['request_isolation']['accelerator_recompilation']); self.assertFalse(r['request_isolation']['retained_prompt_or_kv_reuse'])
+  self.assertEqual('verified_absent',d['stage_and_cleanup']['cleanup_state']); self.assertGreater(d['gpu_telemetry']['busy_percentage_max'],0)
  def test_claim_is_not_gpu_exclusive(self):
   x=self.c['route_rationale']['offload_claim_boundary']; self.assertIn('CPU retains',x); self.assertIn('not GPU-exclusive',x)
 if __name__=='__main__': unittest.main()
