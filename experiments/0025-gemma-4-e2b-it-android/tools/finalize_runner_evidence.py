@@ -41,7 +41,7 @@ def finalize(input_dir: Path, output_dir: Path, scope: str, looks_sensible: bool
     result = raw
     result["scope"] = scope
     result["source_runner_result_sha256"] = sha256_file(raw_path)
-    result["host_is_android_evidence"] = False if scope == "host_smoke" else None
+    result["host_is_android_evidence"] = False if scope.startswith("host_") else None
     if "route" in result and result["route"].get("model_path"):
         result["route"]["model_path"] = ".local/model/" + Path(
             result["route"]["model_path"]
@@ -81,7 +81,17 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input-dir", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
-    parser.add_argument("--scope", choices=["host_smoke", "android_smoke", "android_campaign"], required=True)
+    parser.add_argument(
+        "--scope",
+        choices=[
+            "host_smoke",
+            "host_reset_diagnostic",
+            "android_smoke",
+            "android_campaign",
+            "android_reset_diagnostic",
+        ],
+        required=True,
+    )
     parser.add_argument("--looks-sensible", choices=["true", "false", "null"], default="null")
     parser.add_argument("--issue-notes")
     args = parser.parse_args()

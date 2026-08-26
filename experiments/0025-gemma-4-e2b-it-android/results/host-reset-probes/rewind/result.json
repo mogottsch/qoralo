@@ -1,0 +1,189 @@
+{
+  "arm_id": "host-reset-probe-rewind",
+  "backend": "cpu",
+  "experiment": "0025-gemma-4-e2b-it-android",
+  "host_is_android_evidence": false,
+  "memory": {
+    "lifecycle": "benchmark process from immediately before setup through final request",
+    "peak_sampled_pss_bytes": 6306593792,
+    "peak_sampled_vm_hwm_bytes": 6317940736,
+    "ru_maxrss_bytes": 6317940736,
+    "sample_count": 140,
+    "sampling_interval_seconds": 0.1
+  },
+  "prompts": {
+    "long": {
+      "input_tokens": 1930,
+      "max_num_tokens": 8192,
+      "max_output_tokens": 2048,
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "rendered_bytes": 10589,
+      "rendered_path": "rendered/long.txt",
+      "rendered_sha256": "450b519d417e29c4239e39aef856db1813d2580cd62e9db9adaae3d94ba8f260",
+      "token_ids_int32le_sha256": "bbb4413aa186c843cbdc71a1f659e9d574c6fd0bc46fe844a310813445279bba",
+      "truncated": false
+    },
+    "medium": {
+      "input_tokens": 595,
+      "max_num_tokens": 8192,
+      "max_output_tokens": 2048,
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "rendered_bytes": 3313,
+      "rendered_path": "rendered/medium.txt",
+      "rendered_sha256": "8e3c03cb0d1ddce8455306b8b84585ce2ae07c083c4fdbdec1e946e3be56771d",
+      "token_ids_int32le_sha256": "2a89b5742b50060ad7510f8dfaa22eafda4a8fedbe06b5aaed36d5653390cf8d",
+      "truncated": false
+    },
+    "short": {
+      "input_tokens": 171,
+      "max_num_tokens": 8192,
+      "max_output_tokens": 2048,
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "rendered_bytes": 920,
+      "rendered_path": "rendered/short.txt",
+      "rendered_sha256": "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a",
+      "token_ids_int32le_sha256": "65d931b8fb39eacee9675b22e52d6ce0a091429e50451c2d1ea0463e250d7f4d",
+      "truncated": false
+    }
+  },
+  "route": {
+    "cache_dir": ":nocache",
+    "max_num_tokens": 8192,
+    "max_output_tokens": 2048,
+    "model_path": ".local/model/gemma-4-E2B-it.litertlm",
+    "num_cpu_threads": 4,
+    "prompt_template_applied_in_session": false,
+    "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+    "reset_mode": "rewind",
+    "reset_probe_only": true,
+    "sampler": "CPU TOP_P(k=1,p=1) exact argmax implementation for both CPU and GPU neural backends",
+    "smoke_only": false,
+    "thinking_enabled": false
+  },
+  "runs": [
+    {
+      "emitted_token_ids_int32le_sha256": "747c0b828e59b7ea1166a626ed65c82bfff81d94398e7812597294ca1550171c",
+      "expected_input_tokens": 171,
+      "id": "probe-short-01",
+      "missing_reasons": {},
+      "output": {
+        "bytes": 351,
+        "path": "outputs/probe-short-01.txt",
+        "sha256": "217bfbc9150d552cf60dd396a9493bbaf95c3b177c39d2be143e812b2757bdf4"
+      },
+      "output_bytes": 351,
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": null
+      },
+      "output_token_cap": 64,
+      "output_tokens": 64,
+      "phase": "reset_probe",
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "request_timeout_seconds": 1800,
+      "reset_mode": "rewind",
+      "rewind_called": false,
+      "runtime_benchmark_info": {
+        "after_error": null,
+        "before_error": null,
+        "decode_turns_after": 1,
+        "decode_turns_before": 0,
+        "prefill_turns_after": 1,
+        "prefill_turns_before": 0
+      },
+      "runtime_error": null,
+      "runtime_generated_tokens": 64,
+      "runtime_input_token_count_matches": true,
+      "runtime_prefill_tokens": 171,
+      "runtime_task_state": "done",
+      "session_recreation_seconds": 0.0,
+      "session_step_after_reset": 0,
+      "session_step_before_reset": 0,
+      "stop_reason": "max_tokens",
+      "throughput": {
+        "decode_first_token_included": false,
+        "decode_tokens_per_second": 21.958152175194126,
+        "prefill_tokens_per_second": 86.73548967489242,
+        "runtime_decode_tokens_per_second": 10.524025647251774
+      },
+      "tier": "short",
+      "timing": {
+        "decode_seconds": 2.869093879,
+        "post_prefill_to_first_token_seconds": 3.212338008,
+        "prefill_seconds": 1.971511323,
+        "request_frontend_plus_prefill_seconds": 1.995395003,
+        "request_to_first_token_seconds": 5.207733011,
+        "runtime_decode_turn_seconds": 6.081323074,
+        "total_seconds": 8.07682689
+      }
+    },
+    {
+      "emitted_token_ids_int32le_sha256": "747c0b828e59b7ea1166a626ed65c82bfff81d94398e7812597294ca1550171c",
+      "expected_input_tokens": 171,
+      "id": "probe-short-02",
+      "missing_reasons": {},
+      "output": {
+        "bytes": 351,
+        "path": "outputs/probe-short-02.txt",
+        "sha256": "217bfbc9150d552cf60dd396a9493bbaf95c3b177c39d2be143e812b2757bdf4"
+      },
+      "output_bytes": 351,
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": null
+      },
+      "output_token_cap": 64,
+      "output_tokens": 64,
+      "phase": "reset_probe",
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "request_timeout_seconds": 1800,
+      "reset_mode": "rewind",
+      "rewind_called": true,
+      "runtime_benchmark_info": {
+        "after_error": null,
+        "before_error": null,
+        "decode_turns_after": 2,
+        "decode_turns_before": 1,
+        "prefill_turns_after": 2,
+        "prefill_turns_before": 1
+      },
+      "runtime_error": null,
+      "runtime_generated_tokens": 64,
+      "runtime_input_token_count_matches": true,
+      "runtime_prefill_tokens": 171,
+      "runtime_task_state": "done",
+      "session_recreation_seconds": 0.0,
+      "session_step_after_reset": 0,
+      "session_step_before_reset": 235,
+      "stop_reason": "max_tokens",
+      "throughput": {
+        "decode_first_token_included": false,
+        "decode_tokens_per_second": 21.808439197246432,
+        "prefill_tokens_per_second": 40811455.84725537,
+        "runtime_decode_tokens_per_second": 21.632590953062532
+      },
+      "tier": "short",
+      "timing": {
+        "decode_seconds": 2.888789951,
+        "post_prefill_to_first_token_seconds": 0.069788867,
+        "prefill_seconds": 4.19e-06,
+        "request_frontend_plus_prefill_seconds": 0.000511935,
+        "request_to_first_token_seconds": 0.070300802,
+        "runtime_decode_turn_seconds": 2.95849906,
+        "total_seconds": 2.959090753
+      }
+    }
+  ],
+  "runtime": {
+    "name": "LiteRT-LM",
+    "revision": "924e79c91542761242244e4f1651851f822e4cbb",
+    "version": "v0.16.1"
+  },
+  "schema_version": 1,
+  "scope": "host_reset_diagnostic",
+  "setup": {
+    "boundary": "before ModelAssets::Create through one Engine and one direct Session ready with KV capacity",
+    "seconds": 8.441494259
+  },
+  "source_runner_result_sha256": "dd9063e42a9170d47aa8587e051fbd391d720fe5ec2f955794ba9870890047e8"
+}

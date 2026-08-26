@@ -1,0 +1,891 @@
+{
+  "arm_id": "0025-gemma4-e2b-cpu",
+  "backend": "cpu",
+  "experiment": "0025-gemma-4-e2b-it-android",
+  "host_is_android_evidence": null,
+  "memory": {
+    "lifecycle": "benchmark process from immediately before setup through final request",
+    "peak_sampled_pss_bytes": 4689031168,
+    "peak_sampled_vm_hwm_bytes": 4702810112,
+    "ru_maxrss_bytes": 4702810112,
+    "sample_count": 2325,
+    "sampling_interval_seconds": 0.1
+  },
+  "prompts": {
+    "long": {
+      "input_tokens": 1930,
+      "max_num_tokens": 8192,
+      "max_output_tokens": 2048,
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "rendered_bytes": 10589,
+      "rendered_path": "rendered/long.txt",
+      "rendered_sha256": "450b519d417e29c4239e39aef856db1813d2580cd62e9db9adaae3d94ba8f260",
+      "token_ids_int32le_sha256": "bbb4413aa186c843cbdc71a1f659e9d574c6fd0bc46fe844a310813445279bba",
+      "truncated": false
+    },
+    "medium": {
+      "input_tokens": 595,
+      "max_num_tokens": 8192,
+      "max_output_tokens": 2048,
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "rendered_bytes": 3313,
+      "rendered_path": "rendered/medium.txt",
+      "rendered_sha256": "8e3c03cb0d1ddce8455306b8b84585ce2ae07c083c4fdbdec1e946e3be56771d",
+      "token_ids_int32le_sha256": "2a89b5742b50060ad7510f8dfaa22eafda4a8fedbe06b5aaed36d5653390cf8d",
+      "truncated": false
+    },
+    "short": {
+      "input_tokens": 171,
+      "max_num_tokens": 8192,
+      "max_output_tokens": 2048,
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "rendered_bytes": 920,
+      "rendered_path": "rendered/short.txt",
+      "rendered_sha256": "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a",
+      "token_ids_int32le_sha256": "65d931b8fb39eacee9675b22e52d6ce0a091429e50451c2d1ea0463e250d7f4d",
+      "truncated": false
+    }
+  },
+  "route": {
+    "cache_dir": "/data/local/tmp/vibevoice-0025-gemma-4-e2b-it-android/cache-cpu-full",
+    "max_num_tokens": 8192,
+    "max_output_tokens": 2048,
+    "model_path": ".local/model/gemma-4-E2B-it.litertlm",
+    "num_cpu_threads": 4,
+    "prompt_template_applied_in_session": false,
+    "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+    "sampler": "CPU TOP_P(k=1,p=1) exact argmax implementation for both CPU and GPU neural backends",
+    "smoke_only": false,
+    "thinking_enabled": false
+  },
+  "runs": [
+    {
+      "emitted_token_ids_int32le_sha256": "2539fb9da4c4a904f8c0eec9ea8d55879e6e281c90ee96e5471cc44878c28d79",
+      "expected_input_tokens": 171,
+      "id": "first-short-01",
+      "missing_reasons": {},
+      "output": {
+        "bytes": 2390,
+        "path": "outputs/first-short-01.txt",
+        "sha256": "5476838c8a50de407d1a9128b2054b94b6949dc844279125e04218b2c09f50bd"
+      },
+      "output_bytes": 2390,
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": null
+      },
+      "output_token_cap": 2048,
+      "output_tokens": 421,
+      "phase": "first",
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "request_timeout_seconds": 1800,
+      "runtime_benchmark_info": {
+        "after_error": null,
+        "before_error": null,
+        "decode_turns_after": 1,
+        "decode_turns_before": 0,
+        "prefill_turns_after": 1,
+        "prefill_turns_before": 0
+      },
+      "runtime_error": null,
+      "runtime_generated_tokens": 422,
+      "runtime_input_token_count_matches": true,
+      "runtime_prefill_tokens": 171,
+      "runtime_task_state": "done",
+      "stop_reason": "eos",
+      "throughput": {
+        "decode_first_token_included": false,
+        "decode_tokens_per_second": 13.443448429073717,
+        "prefill_tokens_per_second": 51.09062266329774,
+        "runtime_decode_tokens_per_second": 12.722851547597267
+      },
+      "tier": "short",
+      "timing": {
+        "decode_seconds": 31.241983946,
+        "post_prefill_to_first_token_seconds": 1.926885468,
+        "prefill_seconds": 3.346993853,
+        "request_frontend_plus_prefill_seconds": 3.347969634,
+        "request_to_first_token_seconds": 5.274855102,
+        "runtime_decode_turn_seconds": 33.168664935,
+        "total_seconds": 36.516839048
+      }
+    },
+    {
+      "emitted_token_ids_int32le_sha256": "2539fb9da4c4a904f8c0eec9ea8d55879e6e281c90ee96e5471cc44878c28d79",
+      "expected_input_tokens": 171,
+      "id": "same-session-short-01",
+      "missing_reasons": {},
+      "output": {
+        "bytes": 2390,
+        "path": "outputs/same-session-short-01.txt",
+        "sha256": "5476838c8a50de407d1a9128b2054b94b6949dc844279125e04218b2c09f50bd"
+      },
+      "output_bytes": 2390,
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": null
+      },
+      "output_token_cap": 2048,
+      "output_tokens": 421,
+      "phase": "same_session",
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "request_timeout_seconds": 1800,
+      "runtime_benchmark_info": {
+        "after_error": null,
+        "before_error": null,
+        "decode_turns_after": 2,
+        "decode_turns_before": 1,
+        "prefill_turns_after": 2,
+        "prefill_turns_before": 1
+      },
+      "runtime_error": null,
+      "runtime_generated_tokens": 422,
+      "runtime_input_token_count_matches": true,
+      "runtime_prefill_tokens": 171,
+      "runtime_task_state": "done",
+      "stop_reason": "eos",
+      "throughput": {
+        "decode_first_token_included": false,
+        "decode_tokens_per_second": 14.603036055330252,
+        "prefill_tokens_per_second": 20143715.396395337,
+        "runtime_decode_tokens_per_second": 14.634090815145374
+      },
+      "tier": "short",
+      "timing": {
+        "decode_seconds": 28.761142437,
+        "post_prefill_to_first_token_seconds": 0.075921875,
+        "prefill_seconds": 8.489e-06,
+        "request_frontend_plus_prefill_seconds": 0.007643802,
+        "request_to_first_token_seconds": 0.083565677,
+        "runtime_decode_turn_seconds": 28.836776082,
+        "total_seconds": 28.844708114
+      }
+    },
+    {
+      "emitted_token_ids_int32le_sha256": "2539fb9da4c4a904f8c0eec9ea8d55879e6e281c90ee96e5471cc44878c28d79",
+      "expected_input_tokens": 171,
+      "id": "same-session-short-02",
+      "missing_reasons": {},
+      "output": {
+        "bytes": 2390,
+        "path": "outputs/same-session-short-02.txt",
+        "sha256": "5476838c8a50de407d1a9128b2054b94b6949dc844279125e04218b2c09f50bd"
+      },
+      "output_bytes": 2390,
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": null
+      },
+      "output_token_cap": 2048,
+      "output_tokens": 421,
+      "phase": "same_session",
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "request_timeout_seconds": 1800,
+      "runtime_benchmark_info": {
+        "after_error": null,
+        "before_error": null,
+        "decode_turns_after": 3,
+        "decode_turns_before": 2,
+        "prefill_turns_after": 3,
+        "prefill_turns_before": 2
+      },
+      "runtime_error": null,
+      "runtime_generated_tokens": 422,
+      "runtime_input_token_count_matches": true,
+      "runtime_prefill_tokens": 171,
+      "runtime_task_state": "done",
+      "stop_reason": "eos",
+      "throughput": {
+        "decode_first_token_included": false,
+        "decode_tokens_per_second": 14.37515790978336,
+        "prefill_tokens_per_second": 27589545.014520813,
+        "runtime_decode_tokens_per_second": 14.39977701359749
+      },
+      "tier": "short",
+      "timing": {
+        "decode_seconds": 29.217070354,
+        "post_prefill_to_first_token_seconds": 0.089095677,
+        "prefill_seconds": 6.198e-06,
+        "request_frontend_plus_prefill_seconds": 0.001276562,
+        "request_to_first_token_seconds": 0.090372239,
+        "runtime_decode_turn_seconds": 29.306009364,
+        "total_seconds": 29.307442593
+      }
+    },
+    {
+      "emitted_token_ids_int32le_sha256": "2539fb9da4c4a904f8c0eec9ea8d55879e6e281c90ee96e5471cc44878c28d79",
+      "expected_input_tokens": 171,
+      "id": "same-session-short-03",
+      "missing_reasons": {},
+      "output": {
+        "bytes": 2390,
+        "path": "outputs/same-session-short-03.txt",
+        "sha256": "5476838c8a50de407d1a9128b2054b94b6949dc844279125e04218b2c09f50bd"
+      },
+      "output_bytes": 2390,
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": null
+      },
+      "output_token_cap": 2048,
+      "output_tokens": 421,
+      "phase": "same_session",
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "request_timeout_seconds": 1800,
+      "runtime_benchmark_info": {
+        "after_error": null,
+        "before_error": null,
+        "decode_turns_after": 4,
+        "decode_turns_before": 3,
+        "prefill_turns_after": 4,
+        "prefill_turns_before": 3
+      },
+      "runtime_error": null,
+      "runtime_generated_tokens": 422,
+      "runtime_input_token_count_matches": true,
+      "runtime_prefill_tokens": 171,
+      "runtime_task_state": "done",
+      "stop_reason": "eos",
+      "throughput": {
+        "decode_first_token_included": false,
+        "decode_tokens_per_second": 13.425199684821074,
+        "prefill_tokens_per_second": 26478786.00185816,
+        "runtime_decode_tokens_per_second": 13.453165246862842
+      },
+      "tier": "short",
+      "timing": {
+        "decode_seconds": 31.284450873,
+        "post_prefill_to_first_token_seconds": 0.083780886,
+        "prefill_seconds": 6.458e-06,
+        "request_frontend_plus_prefill_seconds": 0.001134271,
+        "request_to_first_token_seconds": 0.084915157,
+        "runtime_decode_turn_seconds": 31.368082697,
+        "total_seconds": 31.36936603
+      }
+    },
+    {
+      "emitted_token_ids_int32le_sha256": "2539fb9da4c4a904f8c0eec9ea8d55879e6e281c90ee96e5471cc44878c28d79",
+      "expected_input_tokens": 171,
+      "id": "same-session-short-04",
+      "missing_reasons": {},
+      "output": {
+        "bytes": 2390,
+        "path": "outputs/same-session-short-04.txt",
+        "sha256": "5476838c8a50de407d1a9128b2054b94b6949dc844279125e04218b2c09f50bd"
+      },
+      "output_bytes": 2390,
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": null
+      },
+      "output_token_cap": 2048,
+      "output_tokens": 421,
+      "phase": "same_session",
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "request_timeout_seconds": 1800,
+      "runtime_benchmark_info": {
+        "after_error": null,
+        "before_error": null,
+        "decode_turns_after": 5,
+        "decode_turns_before": 4,
+        "prefill_turns_after": 5,
+        "prefill_turns_before": 4
+      },
+      "runtime_error": null,
+      "runtime_generated_tokens": 422,
+      "runtime_input_token_count_matches": true,
+      "runtime_prefill_tokens": 171,
+      "runtime_task_state": "done",
+      "stop_reason": "eos",
+      "throughput": {
+        "decode_first_token_included": false,
+        "decode_tokens_per_second": 12.900659179683618,
+        "prefill_tokens_per_second": 25062289.315550346,
+        "runtime_decode_tokens_per_second": 12.921983179040932
+      },
+      "tier": "short",
+      "timing": {
+        "decode_seconds": 32.556475925,
+        "post_prefill_to_first_token_seconds": 0.101223542,
+        "prefill_seconds": 6.823e-06,
+        "request_frontend_plus_prefill_seconds": 0.00123901,
+        "request_to_first_token_seconds": 0.102462552,
+        "runtime_decode_turn_seconds": 32.657525873,
+        "total_seconds": 32.658938477
+      }
+    },
+    {
+      "emitted_token_ids_int32le_sha256": "2539fb9da4c4a904f8c0eec9ea8d55879e6e281c90ee96e5471cc44878c28d79",
+      "expected_input_tokens": 171,
+      "id": "same-session-short-05",
+      "missing_reasons": {},
+      "output": {
+        "bytes": 2390,
+        "path": "outputs/same-session-short-05.txt",
+        "sha256": "5476838c8a50de407d1a9128b2054b94b6949dc844279125e04218b2c09f50bd"
+      },
+      "output_bytes": 2390,
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": null
+      },
+      "output_token_cap": 2048,
+      "output_tokens": 421,
+      "phase": "same_session",
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "request_timeout_seconds": 1800,
+      "runtime_benchmark_info": {
+        "after_error": null,
+        "before_error": null,
+        "decode_turns_after": 6,
+        "decode_turns_before": 5,
+        "prefill_turns_after": 6,
+        "prefill_turns_before": 5
+      },
+      "runtime_error": null,
+      "runtime_generated_tokens": 422,
+      "runtime_input_token_count_matches": true,
+      "runtime_prefill_tokens": 171,
+      "runtime_task_state": "done",
+      "stop_reason": "eos",
+      "throughput": {
+        "decode_first_token_included": false,
+        "decode_tokens_per_second": 13.26262008753472,
+        "prefill_tokens_per_second": 26478786.00185816,
+        "runtime_decode_tokens_per_second": 13.290910361266443
+      },
+      "tier": "short",
+      "timing": {
+        "decode_seconds": 31.667950769,
+        "post_prefill_to_first_token_seconds": 0.083259167,
+        "prefill_seconds": 6.458e-06,
+        "request_frontend_plus_prefill_seconds": 0.001743906,
+        "request_to_first_token_seconds": 0.085003073,
+        "runtime_decode_turn_seconds": 31.751022957,
+        "total_seconds": 31.752953842
+      }
+    },
+    {
+      "emitted_token_ids_int32le_sha256": "a76d935ff804ab99e6b24c831136a8f1543bdd78a26741a0d819d2490ffcca65",
+      "expected_input_tokens": 595,
+      "id": "same-session-medium-01",
+      "missing_reasons": {},
+      "output": {
+        "bytes": 3707,
+        "path": "outputs/same-session-medium-01.txt",
+        "sha256": "3aa7dce23c27116deb4f27f05769c39218d9c061e2cf15c642c4b6cc046c18e3"
+      },
+      "output_bytes": 3707,
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": null
+      },
+      "output_token_cap": 2048,
+      "output_tokens": 665,
+      "phase": "same_session",
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "request_timeout_seconds": 1800,
+      "runtime_benchmark_info": {
+        "after_error": null,
+        "before_error": null,
+        "decode_turns_after": 7,
+        "decode_turns_before": 6,
+        "prefill_turns_after": 7,
+        "prefill_turns_before": 6
+      },
+      "runtime_error": null,
+      "runtime_generated_tokens": 666,
+      "runtime_input_token_count_matches": true,
+      "runtime_prefill_tokens": 595,
+      "runtime_task_state": "done",
+      "stop_reason": "eos",
+      "throughput": {
+        "decode_first_token_included": false,
+        "decode_tokens_per_second": 12.964497176735497,
+        "prefill_tokens_per_second": 112.0780767000441,
+        "runtime_decode_tokens_per_second": 12.977843830085408
+      },
+      "tier": "medium",
+      "timing": {
+        "decode_seconds": 51.216795449,
+        "post_prefill_to_first_token_seconds": 0.101697344,
+        "prefill_seconds": 5.308799165,
+        "request_frontend_plus_prefill_seconds": 5.327138435,
+        "request_to_first_token_seconds": 5.428835779,
+        "runtime_decode_turn_seconds": 51.318231959,
+        "total_seconds": 56.645631228
+      }
+    },
+    {
+      "emitted_token_ids_int32le_sha256": "a76d935ff804ab99e6b24c831136a8f1543bdd78a26741a0d819d2490ffcca65",
+      "expected_input_tokens": 595,
+      "id": "same-session-medium-02",
+      "missing_reasons": {},
+      "output": {
+        "bytes": 3707,
+        "path": "outputs/same-session-medium-02.txt",
+        "sha256": "3aa7dce23c27116deb4f27f05769c39218d9c061e2cf15c642c4b6cc046c18e3"
+      },
+      "output_bytes": 3707,
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": null
+      },
+      "output_token_cap": 2048,
+      "output_tokens": 665,
+      "phase": "same_session",
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "request_timeout_seconds": 1800,
+      "runtime_benchmark_info": {
+        "after_error": null,
+        "before_error": null,
+        "decode_turns_after": 8,
+        "decode_turns_before": 7,
+        "prefill_turns_after": 8,
+        "prefill_turns_before": 7
+      },
+      "runtime_error": null,
+      "runtime_generated_tokens": 666,
+      "runtime_input_token_count_matches": true,
+      "runtime_prefill_tokens": 595,
+      "runtime_task_state": "done",
+      "stop_reason": "eos",
+      "throughput": {
+        "decode_first_token_included": false,
+        "decode_tokens_per_second": 13.196301309284095,
+        "prefill_tokens_per_second": 52645549.46027252,
+        "runtime_decode_tokens_per_second": 13.211867939831322
+      },
+      "tier": "medium",
+      "timing": {
+        "decode_seconds": 50.317129356,
+        "post_prefill_to_first_token_seconds": 0.092263073,
+        "prefill_seconds": 1.1302e-05,
+        "request_frontend_plus_prefill_seconds": 0.010969948,
+        "request_to_first_token_seconds": 0.103233021,
+        "runtime_decode_turn_seconds": 50.40922321,
+        "total_seconds": 50.420362377
+      }
+    },
+    {
+      "emitted_token_ids_int32le_sha256": "a76d935ff804ab99e6b24c831136a8f1543bdd78a26741a0d819d2490ffcca65",
+      "expected_input_tokens": 595,
+      "id": "same-session-medium-03",
+      "missing_reasons": {},
+      "output": {
+        "bytes": 3707,
+        "path": "outputs/same-session-medium-03.txt",
+        "sha256": "3aa7dce23c27116deb4f27f05769c39218d9c061e2cf15c642c4b6cc046c18e3"
+      },
+      "output_bytes": 3707,
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": null
+      },
+      "output_token_cap": 2048,
+      "output_tokens": 665,
+      "phase": "same_session",
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "request_timeout_seconds": 1800,
+      "runtime_benchmark_info": {
+        "after_error": null,
+        "before_error": null,
+        "decode_turns_after": 9,
+        "decode_turns_before": 8,
+        "prefill_turns_after": 9,
+        "prefill_turns_before": 8
+      },
+      "runtime_error": null,
+      "runtime_generated_tokens": 666,
+      "runtime_input_token_count_matches": true,
+      "runtime_prefill_tokens": 595,
+      "runtime_task_state": "done",
+      "stop_reason": "eos",
+      "throughput": {
+        "decode_first_token_included": false,
+        "decode_tokens_per_second": 13.210117848572052,
+        "prefill_tokens_per_second": 58887569.27949327,
+        "runtime_decode_tokens_per_second": 13.225358690721272
+      },
+      "tier": "medium",
+      "timing": {
+        "decode_seconds": 50.264502377,
+        "post_prefill_to_first_token_seconds": 0.093933229,
+        "prefill_seconds": 1.0104e-05,
+        "request_frontend_plus_prefill_seconds": 0.008817187,
+        "request_to_first_token_seconds": 0.102750416,
+        "runtime_decode_turn_seconds": 50.357802429,
+        "total_seconds": 50.367252793
+      }
+    },
+    {
+      "emitted_token_ids_int32le_sha256": "a76d935ff804ab99e6b24c831136a8f1543bdd78a26741a0d819d2490ffcca65",
+      "expected_input_tokens": 595,
+      "id": "same-session-medium-04",
+      "missing_reasons": {},
+      "output": {
+        "bytes": 3707,
+        "path": "outputs/same-session-medium-04.txt",
+        "sha256": "3aa7dce23c27116deb4f27f05769c39218d9c061e2cf15c642c4b6cc046c18e3"
+      },
+      "output_bytes": 3707,
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": null
+      },
+      "output_token_cap": 2048,
+      "output_tokens": 665,
+      "phase": "same_session",
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "request_timeout_seconds": 1800,
+      "runtime_benchmark_info": {
+        "after_error": null,
+        "before_error": null,
+        "decode_turns_after": 10,
+        "decode_turns_before": 9,
+        "prefill_turns_after": 10,
+        "prefill_turns_before": 9
+      },
+      "runtime_error": null,
+      "runtime_generated_tokens": 666,
+      "runtime_input_token_count_matches": true,
+      "runtime_prefill_tokens": 595,
+      "runtime_task_state": "done",
+      "stop_reason": "eos",
+      "throughput": {
+        "decode_first_token_included": false,
+        "decode_tokens_per_second": 13.27164011585378,
+        "prefill_tokens_per_second": 56834463.654599294,
+        "runtime_decode_tokens_per_second": 13.289060525165915
+      },
+      "tier": "medium",
+      "timing": {
+        "decode_seconds": 50.031495294,
+        "post_prefill_to_first_token_seconds": 0.085120937,
+        "prefill_seconds": 1.0469e-05,
+        "request_frontend_plus_prefill_seconds": 0.008855469,
+        "request_to_first_token_seconds": 0.093976406,
+        "runtime_decode_turn_seconds": 50.116409564,
+        "total_seconds": 50.1254717
+      }
+    },
+    {
+      "emitted_token_ids_int32le_sha256": "a76d935ff804ab99e6b24c831136a8f1543bdd78a26741a0d819d2490ffcca65",
+      "expected_input_tokens": 595,
+      "id": "same-session-medium-05",
+      "missing_reasons": {},
+      "output": {
+        "bytes": 3707,
+        "path": "outputs/same-session-medium-05.txt",
+        "sha256": "3aa7dce23c27116deb4f27f05769c39218d9c061e2cf15c642c4b6cc046c18e3"
+      },
+      "output_bytes": 3707,
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": null
+      },
+      "output_token_cap": 2048,
+      "output_tokens": 665,
+      "phase": "same_session",
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "request_timeout_seconds": 1800,
+      "runtime_benchmark_info": {
+        "after_error": null,
+        "before_error": null,
+        "decode_turns_after": 11,
+        "decode_turns_before": 10,
+        "prefill_turns_after": 11,
+        "prefill_turns_before": 10
+      },
+      "runtime_error": null,
+      "runtime_generated_tokens": 666,
+      "runtime_input_token_count_matches": true,
+      "runtime_prefill_tokens": 595,
+      "runtime_task_state": "done",
+      "stop_reason": "eos",
+      "throughput": {
+        "decode_first_token_included": false,
+        "decode_tokens_per_second": 13.163809612080495,
+        "prefill_tokens_per_second": 72765072.76507276,
+        "runtime_decode_tokens_per_second": 13.18137722755922
+      },
+      "tier": "medium",
+      "timing": {
+        "decode_seconds": 50.441325085,
+        "post_prefill_to_first_token_seconds": 0.084698281,
+        "prefill_seconds": 8.177e-06,
+        "request_frontend_plus_prefill_seconds": 0.010090313,
+        "request_to_first_token_seconds": 0.094788594,
+        "runtime_decode_turn_seconds": 50.525828106,
+        "total_seconds": 50.536113679
+      }
+    },
+    {
+      "emitted_token_ids_int32le_sha256": "b2b7f954ebe6cb7f2687e5844ca8d8df47bf24ac6c3b7a31cae6192ca8ed3bfc",
+      "expected_input_tokens": 1930,
+      "id": "same-session-long-01",
+      "missing_reasons": {},
+      "output": {
+        "bytes": 3875,
+        "path": "outputs/same-session-long-01.txt",
+        "sha256": "c1903b4ce7c20fe8f984cd7915324033dc0ad03baa17dbebfe5c42569ce57de4"
+      },
+      "output_bytes": 3875,
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": null
+      },
+      "output_token_cap": 2048,
+      "output_tokens": 693,
+      "phase": "same_session",
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "request_timeout_seconds": 1800,
+      "runtime_benchmark_info": {
+        "after_error": null,
+        "before_error": null,
+        "decode_turns_after": 12,
+        "decode_turns_before": 11,
+        "prefill_turns_after": 12,
+        "prefill_turns_before": 11
+      },
+      "runtime_error": null,
+      "runtime_generated_tokens": 694,
+      "runtime_input_token_count_matches": true,
+      "runtime_prefill_tokens": 1930,
+      "runtime_task_state": "done",
+      "stop_reason": "eos",
+      "throughput": {
+        "decode_first_token_included": false,
+        "decode_tokens_per_second": 12.765066935895199,
+        "prefill_tokens_per_second": 117.12490045301344,
+        "runtime_decode_tokens_per_second": 12.77760284317886
+      },
+      "tier": "long",
+      "timing": {
+        "decode_seconds": 54.210448208,
+        "post_prefill_to_first_token_seconds": 0.104044323,
+        "prefill_seconds": 16.47813567,
+        "request_frontend_plus_prefill_seconds": 16.506258327,
+        "request_to_first_token_seconds": 16.61030265,
+        "runtime_decode_turn_seconds": 54.313787063,
+        "total_seconds": 70.820750858
+      }
+    },
+    {
+      "emitted_token_ids_int32le_sha256": "b2b7f954ebe6cb7f2687e5844ca8d8df47bf24ac6c3b7a31cae6192ca8ed3bfc",
+      "expected_input_tokens": 1930,
+      "id": "same-session-long-02",
+      "missing_reasons": {},
+      "output": {
+        "bytes": 3875,
+        "path": "outputs/same-session-long-02.txt",
+        "sha256": "c1903b4ce7c20fe8f984cd7915324033dc0ad03baa17dbebfe5c42569ce57de4"
+      },
+      "output_bytes": 3875,
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": null
+      },
+      "output_token_cap": 2048,
+      "output_tokens": 693,
+      "phase": "same_session",
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "request_timeout_seconds": 1800,
+      "runtime_benchmark_info": {
+        "after_error": null,
+        "before_error": null,
+        "decode_turns_after": 13,
+        "decode_turns_before": 12,
+        "prefill_turns_after": 13,
+        "prefill_turns_before": 12
+      },
+      "runtime_error": null,
+      "runtime_generated_tokens": 694,
+      "runtime_input_token_count_matches": true,
+      "runtime_prefill_tokens": 1930,
+      "runtime_task_state": "done",
+      "stop_reason": "eos",
+      "throughput": {
+        "decode_first_token_included": false,
+        "decode_tokens_per_second": 12.30652227403382,
+        "prefill_tokens_per_second": 123110288.95834664,
+        "runtime_decode_tokens_per_second": 12.319967922637986
+      },
+      "tier": "long",
+      "timing": {
+        "decode_seconds": 56.230345551,
+        "post_prefill_to_first_token_seconds": 0.101222187,
+        "prefill_seconds": 1.5677e-05,
+        "request_frontend_plus_prefill_seconds": 0.012174948,
+        "request_to_first_token_seconds": 0.113397135,
+        "runtime_decode_turn_seconds": 56.3313155,
+        "total_seconds": 56.343742686
+      }
+    },
+    {
+      "emitted_token_ids_int32le_sha256": "b2b7f954ebe6cb7f2687e5844ca8d8df47bf24ac6c3b7a31cae6192ca8ed3bfc",
+      "expected_input_tokens": 1930,
+      "id": "same-session-long-03",
+      "missing_reasons": {},
+      "output": {
+        "bytes": 3875,
+        "path": "outputs/same-session-long-03.txt",
+        "sha256": "c1903b4ce7c20fe8f984cd7915324033dc0ad03baa17dbebfe5c42569ce57de4"
+      },
+      "output_bytes": 3875,
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": null
+      },
+      "output_token_cap": 2048,
+      "output_tokens": 693,
+      "phase": "same_session",
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "request_timeout_seconds": 1800,
+      "runtime_benchmark_info": {
+        "after_error": null,
+        "before_error": null,
+        "decode_turns_after": 14,
+        "decode_turns_before": 13,
+        "prefill_turns_after": 14,
+        "prefill_turns_before": 13
+      },
+      "runtime_error": null,
+      "runtime_generated_tokens": 694,
+      "runtime_input_token_count_matches": true,
+      "runtime_prefill_tokens": 1930,
+      "runtime_task_state": "done",
+      "stop_reason": "eos",
+      "throughput": {
+        "decode_first_token_included": false,
+        "decode_tokens_per_second": 11.83077114525234,
+        "prefill_tokens_per_second": 105568318.56470846,
+        "runtime_decode_tokens_per_second": 11.842564068392937
+      },
+      "tier": "long",
+      "timing": {
+        "decode_seconds": 58.491537999,
+        "post_prefill_to_first_token_seconds": 0.110842812,
+        "prefill_seconds": 1.8282e-05,
+        "request_frontend_plus_prefill_seconds": 0.014500365,
+        "request_to_first_token_seconds": 0.125343177,
+        "runtime_decode_turn_seconds": 58.602173988,
+        "total_seconds": 58.616881176
+      }
+    },
+    {
+      "emitted_token_ids_int32le_sha256": "b2b7f954ebe6cb7f2687e5844ca8d8df47bf24ac6c3b7a31cae6192ca8ed3bfc",
+      "expected_input_tokens": 1930,
+      "id": "same-session-long-04",
+      "missing_reasons": {},
+      "output": {
+        "bytes": 3875,
+        "path": "outputs/same-session-long-04.txt",
+        "sha256": "c1903b4ce7c20fe8f984cd7915324033dc0ad03baa17dbebfe5c42569ce57de4"
+      },
+      "output_bytes": 3875,
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": null
+      },
+      "output_token_cap": 2048,
+      "output_tokens": 693,
+      "phase": "same_session",
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "request_timeout_seconds": 1800,
+      "runtime_benchmark_info": {
+        "after_error": null,
+        "before_error": null,
+        "decode_turns_after": 15,
+        "decode_turns_before": 14,
+        "prefill_turns_after": 15,
+        "prefill_turns_before": 14
+      },
+      "runtime_error": null,
+      "runtime_generated_tokens": 694,
+      "runtime_input_token_count_matches": true,
+      "runtime_prefill_tokens": 1930,
+      "runtime_task_state": "done",
+      "stop_reason": "eos",
+      "throughput": {
+        "decode_first_token_included": false,
+        "decode_tokens_per_second": 11.681972073354181,
+        "prefill_tokens_per_second": 117268197.8369182,
+        "runtime_decode_tokens_per_second": 11.69494927022226
+      },
+      "tier": "long",
+      "timing": {
+        "decode_seconds": 59.236573727,
+        "post_prefill_to_first_token_seconds": 0.106109532,
+        "prefill_seconds": 1.6458e-05,
+        "request_frontend_plus_prefill_seconds": 0.012189375,
+        "request_to_first_token_seconds": 0.118298907,
+        "runtime_decode_turn_seconds": 59.341856383,
+        "total_seconds": 59.354872634
+      }
+    },
+    {
+      "emitted_token_ids_int32le_sha256": "b2b7f954ebe6cb7f2687e5844ca8d8df47bf24ac6c3b7a31cae6192ca8ed3bfc",
+      "expected_input_tokens": 1930,
+      "id": "same-session-long-05",
+      "missing_reasons": {},
+      "output": {
+        "bytes": 3875,
+        "path": "outputs/same-session-long-05.txt",
+        "sha256": "c1903b4ce7c20fe8f984cd7915324033dc0ad03baa17dbebfe5c42569ce57de4"
+      },
+      "output_bytes": 3875,
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": null
+      },
+      "output_token_cap": 2048,
+      "output_tokens": 693,
+      "phase": "same_session",
+      "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+      "request_timeout_seconds": 1800,
+      "runtime_benchmark_info": {
+        "after_error": null,
+        "before_error": null,
+        "decode_turns_after": 16,
+        "decode_turns_before": 15,
+        "prefill_turns_after": 16,
+        "prefill_turns_before": 15
+      },
+      "runtime_error": null,
+      "runtime_generated_tokens": 694,
+      "runtime_input_token_count_matches": true,
+      "runtime_prefill_tokens": 1930,
+      "runtime_task_state": "done",
+      "stop_reason": "eos",
+      "throughput": {
+        "decode_first_token_included": false,
+        "decode_tokens_per_second": 11.156200113564472,
+        "prefill_tokens_per_second": 99880970.86373751,
+        "runtime_decode_tokens_per_second": 11.168455497045636
+      },
+      "tier": "long",
+      "timing": {
+        "decode_seconds": 62.028288571,
+        "post_prefill_to_first_token_seconds": 0.111267916,
+        "prefill_seconds": 1.9323e-05,
+        "request_frontend_plus_prefill_seconds": 0.014560938,
+        "request_to_first_token_seconds": 0.125828854,
+        "runtime_decode_turn_seconds": 62.139299403,
+        "total_seconds": 62.154117425
+      }
+    }
+  ],
+  "runtime": {
+    "name": "LiteRT-LM",
+    "revision": "924e79c91542761242244e4f1651851f822e4cbb",
+    "version": "v0.16.1"
+  },
+  "schema_version": 1,
+  "scope": "android_reset_diagnostic",
+  "setup": {
+    "boundary": "before ModelAssets::Create through one Engine and one direct Session ready with KV capacity",
+    "seconds": 3.310868749
+  },
+  "source_runner_result_sha256": "0ffb4f80bc786e1e43cd04bfe4f29573ce8bbf8bf417a0ba268a047536fbaa03"
+}

@@ -2,7 +2,7 @@
 
 ## Status
 
-**Contract locked; Android CPU canonical-short smoke passed; full CPU campaign is next. GPU smoke/campaign remain to run.**
+**Contract locked; Android CPU canonical-short smoke passed. The first full CPU run is retained only as a reset diagnostic. A fresh-session adaptation needs approval before the CPU rerun; GPU work has not started.**
 
 This experiment compares only the official instruction-tuned Gemma 4 E2B LiteRT-LM CPU and GPU Android routes on the authorized Galaxy S23 Ultra. It measures execution, setup, TTFT, prefill/decode throughput, total latency, process memory, and operating conditions under the repository's fixed short/medium/long prompt contract. It does not evaluate transcript quality and makes no NPU/HTP claim.
 
@@ -33,6 +33,14 @@ Pre-contract runner development exposed two non-model issues: a Bazel daemon inh
 The exact CPU route completed a bounded 64-token canonical-short smoke on the authorized phone. Setup was `3.7395 s`; TTFT `6.0621 s`; isolated prefill `4.2478 s` / `40.256 tok/s`; callback-boundary decode `4.5993 s` / `13.698 tok/s`; and total request time `10.6614 s`. Peak sampled process PSS was `3,132,081,152 B` and VmHWM `3,262,898,176 B`. Exact output SHA-256 `0f588698…4686` looks sensible under the narrow smoke check.
 
 See [`results/android-cpu-smoke/result.json`](results/android-cpu-smoke/result.json). This is viability evidence with a 64-token cap, not a full canonical campaign distribution.
+
+## Reset-semantics diagnostic
+
+The first 16-request CPU run completed, but it is **not canonical evidence**. `RewindToStep(0)` reset LiteRT-LM's logical step while retaining reusable prefix/KV state. The first request for each tier performed real prefill; repeated identical prompts then reported microsecond prefill and impossible multi-million-token/s rates. The complete run is retained under [`results/android-cpu-reset-diagnostic/`](results/android-cpu-reset-diagnostic/) rather than published.
+
+Two bounded host probes isolated the behavior. Rewinding one Session reproduced prefix reuse on request two. Keeping one loaded Engine but creating a fresh Session before each request forced genuine 171-token prefill on both requests, with measured Session recreation of about 41 microseconds. Those probes are retained under [`results/host-reset-probes/`](results/host-reset-probes/).
+
+The smallest honest adaptation is therefore **one loaded Engine, fresh Session per logical request**. This preserves loaded-model reuse and full conversation/KV isolation, but conflicts with the protocol's literal same-session wording. Do not run or publish the adapted CPU/GPU campaign until that deviation is explicitly approved and documented.
 
 ## Claim boundaries
 

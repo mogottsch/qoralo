@@ -99,9 +99,11 @@
     "android_ndk": "28.1.13356709 (r28b)",
     "android_runner": {
       "source": "experiments/0025-gemma-4-e2b-it-android/tools/litert_lm_canonical_runner.cc",
-      "source_sha256": "aff096054dc6bd3489460a5e04c3cd7fad2267bdd2498012027ec495cc805803",
+      "source_sha256": "6b0f6d14c42fa3397dc5c291d0827521a693ae4611b7b2f82a9edf8bcb634254",
       "binary_sha256": "d0bbb62d81a377dc4980e8818bbaa204ab181627dac41de5e7e928789e138e53",
       "binary_bytes": 24964792,
+      "binary_built_from_source_sha256": "aff096054dc6bd3489460a5e04c3cd7fad2267bdd2498012027ec495cc805803",
+      "binary_status": "Last executed smoke/diagnostic binary. The current source adds host reset-probe modes and must be rebuilt and rebound before any further Android execution.",
       "binary_abi": "Android arm64-v8a, API 31 minimum",
       "build_mode": "dynamic LiteRT accelerator resolution; CPU/GPU selected at runtime"
     },
@@ -132,7 +134,7 @@
       "reason_for_enum_adapter": "v0.16.1 CreateCpuSampler implements TOP_P and returns UNIMPLEMENTED for the GREEDY and TOP_K enum values. TOP_P(k=1) reaches the documented greedy branch."
     },
     "prompt_render_policy": "Pinned Gemma 4 template specialization for exactly system+user, no tools, add_generation_prompt=true, enable_thinking=false",
-    "kv_reset": "One direct LiteRT-LM Session is reused and RewindToStep(0) is verified before every logical request.",
+    "kv_reset": "The locked requirement was one reused Session plus RewindToStep(0), but retained diagnostics prove that this resets the logical step without clearing reusable prefix/KV state. Canonical execution is blocked pending explicit approval or rejection of one loaded Engine plus a fresh Session per logical request.",
     "cache_policy": "Each arm uses an experiment-owned cache directory cleared before setup; runtime compilation/cache creation is inside setup."
   },
   "device": {

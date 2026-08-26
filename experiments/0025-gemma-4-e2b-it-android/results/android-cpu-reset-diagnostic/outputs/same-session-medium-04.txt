@@ -1,0 +1,29 @@
+Here is a technical recommendation for the team regarding the comparison of inference engines.
+
+The core challenge in comparing Engine Cedar, Juniper, and Rowan lies in the differing operational characteristics of each engine and the need to accurately isolate the performance characteristics of setup, prompt processing, and token generation.
+
+**Tradeoffs and Measurement Separation**
+
+The team must be acutely aware of the distinct trade-offs presented by the three engines:
+
+*   **Engine Cedar** excels at quick setup but suffers from slow decoding.
+*   **Engine Juniper** prioritizes steady generation but incurs a longer setup time.
+*   **Engine Rowan** offers fast prompt processing but demands more memory.
+
+Because the application session can be short or long, the timing measurements must be carefully segmented. A single combined timing metric is insufficient because it conflates the time taken for initial setup, the time spent processing the input prompt, and the time spent generating the output stream.
+
+Therefore, the measurements must be strictly separated into three distinct categories:
+
+1.  **Setup Time:** This measures the time required to initialize the engine and load the necessary resources for a session. This is crucial for understanding the cost of starting a new interaction, especially considering the potential for repeated requests to benefit from a loaded session.
+2.  **Prompt Processing Time (Prefill Throughput):** This isolates the time taken to process the input prompt. This measurement is vital for comparing how efficiently each engine handles varying prompt lengths—short instructions versus lengthy contextual notes—and how quickly they can prepare for generation.
+3.  **Token Generation Time (Decode Throughput):** This measures the speed at which the actual output tokens are streamed. This is where the differences between the engines' decoding strategies (e.g., Juniper's steadiness versus Rowan's speed) will be most evident.
+
+It is critical to recognize that the time to first token, prefill throughput, and decode throughput are not interchangeable. A runtime that reports a single combined time cannot be accurately credited for a specific split between prefill and sampling.
+
+**Handling State and Environment**
+
+The team must also account for the non-uniform memory semantics of the device's runtime environment. Since memory management is complex—involving mapped files, private allocations, and caches—the team cannot treat peak sampled proportional set size or process high-water marks as equivalent metrics. These memory indicators must be labeled precisely to reflect their actual resource consumption profile. Furthermore, the first request can introduce transient overhead (like page faults or initialization) that subsequent requests might avoid. Therefore, the report must separate the performance of the very first request from the performance of the same session after it has been established.
+
+**Practical Next Step**
+
+The immediate next step should be to design a standardized benchmarking protocol that enforces these strict separation rules. This protocol must mandate that every test run explicitly captures and reports the three distinct timing metrics (Setup, Prompt Processing, and Token Generation) for each engine across a defined set of varied prompt lengths. Simultaneously, the team must establish a clear, labeled metric for memory usage that distinguishes between static loading costs and dynamic runtime overhead. This structured approach will ensure that the final comparison provides actionable insights into which engine offers the best performance profile for the specific constraints of the battery-powered device.

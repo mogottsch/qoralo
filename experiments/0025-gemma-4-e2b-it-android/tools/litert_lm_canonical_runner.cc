@@ -48,7 +48,9 @@ ABSL_FLAG(int, max_output_tokens, 2048, "Maximum generated tokens per canonical 
 ABSL_FLAG(int, num_cpu_threads, 4, "CPU executor threads.");
 ABSL_FLAG(int, request_timeout_seconds, 1800, "Per-request timeout.");
 ABSL_FLAG(bool, smoke_only, false, "Run one bounded canonical-short smoke.");
-ABSL_FLAG(int, smoke_max_output_tokens, 64, "Smoke-only generated-token ceiling.");
+ABSL_FLAG(bool, reset_probe_only, false, "Run exactly two bounded canonical-short requests to probe reset semantics.");
+ABSL_FLAG(std::string, reset_mode, "rewind", "Reset probe mode: rewind or fresh_session.");
+ABSL_FLAG(int, smoke_max_output_tokens, 64, "Smoke/probe generated-token ceiling.");
 
 namespace {
 
@@ -304,7 +306,8 @@ absl::StatusOr<Json> RunRequest(Engine& engine, Engine::Session& session,
     benchmark_info_before_error = info_before.status().ToString();
   }
   ABSL_ASSIGN_OR_RETURN(const int current_step, session.GetCurrentStep());
-  if (current_step != 0) {
+  const bool rewind_called = current_step != 0;
+  if (rewind_called) {
     ABSL_RETURN_IF_ERROR(session.RewindToStep(0));
   }
   ABSL_ASSIGN_OR_RETURN(const int reset_step, session.GetCurrentStep());
@@ -434,6 +437,9 @@ absl::StatusOr<Json> RunRequest(Engine& engine, Engine::Session& session,
       {"phase", phase},
       {"tier", tier},
       {"render_policy", kRenderPolicy},
+      {"session_step_before_reset", current_step},
+      {"rewind_called", rewind_called},
+      {"session_step_after_reset", reset_step},
       {"request_timeout_seconds", timeout_seconds},
       {"output_token_cap", output_cap},
       {"expected_input_tokens", expected_input_tokens},
@@ -582,6 +588,10 @@ absl::Status MainHelper(int argc, char** argv) {
     };
     return WriteFile(output_dir / "checkpoint.json", checkpoint.dump(2) + "\n");
   };
+  if (absl::GetFlag(FLAGS_smoke_only) &&
+      absl::GetFlag(FLAGS_reset_probe_only)) {
+    return absl::InvalidArgumentError("smoke_only and reset_probe_only are mutually exclusive");
+  }
   if (absl::GetFlag(FLAGS_smoke_only)) {
     ABSL_ASSIGN_OR_RETURN(Json run,
                           RunRequest(*engine, *session, workloads[0].second, "short",
@@ -591,6 +601,41 @@ absl::Status MainHelper(int argc, char** argv) {
                                      prompt_inventory["short"]["input_tokens"].get<size_t>(),
                                      output_dir));
     runs.push_back(std::move(run));
+    ABSL_RETURN_IF_ERROR(persist_checkpoint());
+  } else if (absl::GetFlag(FLAGS_reset_probe_only)) {
+    const std::string reset_mode = absl::GetFlag(FLAGS_reset_mode);
+    if (reset_mode != "rewind" && reset_mode != "fresh_session") {
+      return absl::InvalidArgumentError("reset_mode must be rewind or fresh_session");
+    }
+    ABSL_ASSIGN_OR_RETURN(Json first,
+                          RunRequest(*engine, *session, workloads[0].second, "short",
+                                     "probe-short-01", "reset_probe",
+                                     absl::GetFlag(FLAGS_smoke_max_output_tokens),
+                                     absl::GetFlag(FLAGS_request_timeout_seconds),
+                                     prompt_inventory["short"]["input_tokens"].get<size_t>(),
+                                     output_dir));
+    first["reset_mode"] = reset_mode;
+    first["session_recreation_seconds"] = 0.0;
+    runs.push_back(std::move(first));
+    ABSL_RETURN_IF_ERROR(persist_checkpoint());
+
+    double recreation_seconds = 0.0;
+    if (reset_mode == "fresh_session") {
+      const auto recreation_start = Clock::now();
+      session.reset();
+      ABSL_ASSIGN_OR_RETURN(session, engine->CreateSession(session_config));
+      recreation_seconds = Seconds(Clock::now() - recreation_start);
+    }
+    ABSL_ASSIGN_OR_RETURN(Json second,
+                          RunRequest(*engine, *session, workloads[0].second, "short",
+                                     "probe-short-02", "reset_probe",
+                                     absl::GetFlag(FLAGS_smoke_max_output_tokens),
+                                     absl::GetFlag(FLAGS_request_timeout_seconds),
+                                     prompt_inventory["short"]["input_tokens"].get<size_t>(),
+                                     output_dir));
+    second["reset_mode"] = reset_mode;
+    second["session_recreation_seconds"] = recreation_seconds;
+    runs.push_back(std::move(second));
     ABSL_RETURN_IF_ERROR(persist_checkpoint());
   } else {
     ABSL_ASSIGN_OR_RETURN(Json first,
@@ -639,6 +684,8 @@ absl::Status MainHelper(int argc, char** argv) {
           {"prompt_template_applied_in_session", false},
           {"render_policy", kRenderPolicy},
           {"smoke_only", absl::GetFlag(FLAGS_smoke_only)},
+          {"reset_probe_only", absl::GetFlag(FLAGS_reset_probe_only)},
+          {"reset_mode", absl::GetFlag(FLAGS_reset_mode)},
       }},
       {"setup", {
           {"seconds", Seconds(setup_end - setup_start)},

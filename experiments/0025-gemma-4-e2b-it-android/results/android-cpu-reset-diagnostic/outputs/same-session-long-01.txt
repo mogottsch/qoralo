@@ -1,0 +1,23 @@
+Here is a technical recommendation for the team based on the provided engineering brief.
+
+The core challenge of this comparison lies in accurately distinguishing between the performance characteristics of the three inference engines—Cedar, Juniper, and Rowan—while accounting for the complex, non-uniform environment of a battery-powered device and the inherent variability of the input and output. The primary goal should not be to find a single "best" engine, but to generate a nuanced understanding of the trade-offs between setup time, prompt processing speed, and token generation speed under realistic, constrained conditions.
+
+**Key Trade-offs to Emphasize:**
+
+The analysis must explicitly frame the decision-making around the operational context, not just raw speed metrics. For instance, the trade-off between Engine Cedar's quick setup and slow decoding must be weighed against Engine Juniper's slower setup but steadier generation, and Engine Rowan's memory-intensive approach for faster prompt processing. A route that excels in prompt processing might be impractical if its memory footprint or setup time makes it unsuitable for the intended use case, especially considering the device's limited resources and potential for background process reclamation.
+
+Furthermore, the analysis must separate the costs associated with different aspects of the route. The cost of loading the model session (setup), the time spent processing the initial input (prefill throughput), and the time spent generating the output stream (decode throughput) must be treated as distinct variables. A combined timing metric is insufficient; the report must clearly delineate these components to allow the team to understand *why* one engine is superior in a specific scenario.
+
+**Measurements Requiring Separation:**
+
+It is critical that the following measurements are treated as distinct entities and not conflated:
+
+1. **Memory Semantics:** Memory usage must be labeled precisely. Peak sampled proportional set size and process high-water marks must be reported separately from other memory metrics, as they do not share identical semantics with runtime workspaces or caches.
+2. **Input/Output Variability:** Prompt lengths must be categorized (short, medium, long), and token counts must be analyzed across different tokenizers, recognizing that identical byte sequences can yield different token counts.
+3. **Timing Components:** The distinction between time to first token, prefill throughput, and decode throughput must be rigorously maintained. A single combined timing metric is invalid for attributing performance gains or losses.
+4. **Provenance and Artifacts:** The source of the artifacts (checkpoints, conversions, quantization methods) must be meticulously documented for every route. Model labels alone are insufficient; source revision, file hashes, and conversion tool details are essential for verifiable provenance.
+5. **Runtime Behavior:** The distinction between accelerator assignment and CPU preprocessing must be explicitly documented. Provider claims must specify *where* the computation occurred to validate host compatibility claims.
+
+**Practical Next Step:**
+
+The immediate next step should be to develop a structured reporting framework that enforces these separation principles. This framework should mandate that every comparison report must include a section dedicated to the "Tradeoff Analysis," explicitly detailing the operational context (e.g., "This configuration is optimal for short, frequent requests," or "This configuration is best for long, sustained sessions despite higher memory usage"). This ensures that the final recommendation moves beyond simply stating which engine is fastest, to explaining *why* a specific engine is the most appropriate choice given the constraints of the battery-powered device and the expected user behavior.
