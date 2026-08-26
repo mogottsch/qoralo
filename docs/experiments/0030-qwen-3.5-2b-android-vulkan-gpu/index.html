@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<link rel="icon" href="data:,">
+<title>Experiment 0030 — Qwen3.5-2B Android Vulkan GPU offload | experiment</title>
+<style>
+:root { --bg:#eeeae2; --paper:#fffdf8; --ink:#18201e; --muted:#66706c; --line:#d8d4ca; --accent:#006c60; --accent-2:#a44217; --soft:#e5f2ee; --code:#efede7; --shadow:0 18px 60px rgba(30,42,37,.09); }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; scroll-padding-top:88px; }
+body { margin:0; background:linear-gradient(135deg,#e7eee9 0,var(--bg) 42%,#eee6dc 100%); color:var(--ink); font:16px/1.68 system-ui,-apple-system,"Segoe UI",sans-serif; }
+a { color:var(--accent); text-underline-offset:3px; }
+a:focus-visible, audio:focus-visible { outline:3px solid #f09b65; outline-offset:3px; border-radius:4px; }
+.topbar { position:sticky; top:0; z-index:10; border-bottom:1px solid color-mix(in srgb,var(--line) 85%,transparent); background:color-mix(in srgb,var(--paper) 92%,transparent); backdrop-filter:blur(12px); }
+.topbar-inner { max-width:1120px; margin:auto; display:flex; align-items:center; justify-content:space-between; gap:18px; padding:13px 24px; }
+.brand { color:var(--ink); font-weight:780; text-decoration:none; letter-spacing:-.02em; }
+nav { display:flex; gap:6px; flex-wrap:wrap; }
+nav a { padding:7px 10px; color:var(--muted); border-radius:999px; font-size:13px; font-weight:650; text-decoration:none; }
+nav a:hover { color:var(--accent); background:var(--soft); }
+.shell { max-width:1120px; margin:auto; padding:clamp(24px,5vw,66px) 24px 80px; }
+.status-header { position:relative; overflow:hidden; padding:clamp(26px,5vw,54px); border:1px solid var(--line); border-radius:24px; background:var(--paper); box-shadow:var(--shadow); }
+.status-header::after { content:""; position:absolute; width:230px; height:230px; right:-90px; top:-105px; border-radius:50%; background:var(--soft); }
+.kicker { position:relative; z-index:1; display:flex; align-items:center; gap:10px; margin-bottom:18px; color:var(--muted); font-size:13px; font-weight:760; text-transform:uppercase; letter-spacing:.09em; }
+.status { display:inline-flex; gap:7px; align-items:center; padding:5px 10px; border:1px solid var(--line); border-radius:999px; color:var(--ink); background:var(--paper); letter-spacing:.04em; }
+.status::before { content:""; width:8px; height:8px; border-radius:50%; background:var(--accent-2); }
+h1 { position:relative; z-index:1; max-width:18ch; margin:0; font-size:clamp(36px,7vw,70px); line-height:.99; letter-spacing:-.048em; }
+.summary { position:relative; z-index:1; max-width:70ch; margin:24px 0 0; font-size:clamp(17px,2vw,21px); color:var(--muted); }
+.header-links { position:relative; z-index:1; display:flex; flex-wrap:wrap; gap:9px; margin-top:25px; }
+.header-links a { padding:9px 13px; border:1px solid var(--line); border-radius:9px; background:var(--paper); font-size:14px; font-weight:680; text-decoration:none; }
+.provenance { position:relative; z-index:1; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 22px; margin:30px 0 0; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; }
+.provenance span { min-width:0; overflow-wrap:anywhere; }
+article { max-width:880px; margin:18px auto 0; }
+.primary-section { margin-top:18px; padding:clamp(24px,5vw,48px); border:1px solid var(--line); border-radius:20px; background:var(--paper); }
+h2 { margin:0 0 19px; font-size:clamp(26px,4vw,38px); line-height:1.1; letter-spacing:-.025em; }
+h3 { margin:34px 0 10px; color:var(--accent); font-size:20px; line-height:1.25; }
+.anchor { margin-left:9px; opacity:0; font-weight:400; text-decoration:none; }
+h2:hover .anchor,h3:hover .anchor,.anchor:focus { opacity:.5; }
+p,ul,ol,blockquote { max-width:76ch; }
+#experiment-description > p:first-of-type { margin-top:0; color:var(--ink); font-size:1.13em; line-height:1.58; }
+li { margin:7px 0; }
+code { padding:2px 5px; border-radius:5px; background:var(--code); font:13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; overflow-wrap:anywhere; }
+pre { overflow:auto; padding:18px; border:1px solid var(--line); border-radius:10px; background:var(--code); }
+pre code { padding:0; background:none; overflow-wrap:normal; }
+blockquote { margin:22px 0; padding:12px 18px; border-left:4px solid var(--accent-2); background:#fbf1e9; color:#62412f; }
+.table-wrap { overflow:auto; margin:20px 0; border:1px solid var(--line); border-radius:12px; }
+table { width:100%; min-width:620px; border-collapse:collapse; }
+th,td { padding:12px 14px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+th { background:var(--soft); color:#174b45; font-size:12px; letter-spacing:.04em; text-transform:uppercase; }
+tr:last-child td { border-bottom:0; }
+.registry-card { margin:4px 0 30px; padding:18px; border:1px solid #b8d5cc; border-radius:14px; background:var(--soft); }
+.eyebrow { margin-bottom:13px; color:var(--accent); font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+.registry-route { display:block; margin-top:4px; color:var(--ink); font-size:13px; letter-spacing:0; text-transform:none; }
+.metrics { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; }
+.metric { padding:10px; border:1px solid color-mix(in srgb,var(--accent) 22%,transparent); border-radius:9px; background:var(--paper); }
+.metric span,.audio-card span { display:block; color:var(--muted); font-size:11px; line-height:1.35; }
+.metric strong { display:block; margin-top:4px; font-size:15px; }
+.audio-card { display:grid; grid-template-columns:minmax(160px,1fr) minmax(240px,2fr); align-items:center; gap:18px; margin-top:12px; padding:11px; border-radius:9px; background:var(--paper); }
+audio { width:100%; min-height:40px; }
+.unavailable,.shared-media { margin:12px 0 0; padding:11px; border-radius:9px; background:var(--paper); font-size:13px; }
+footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px; text-align:center; }
+@media (max-width:760px) { .topbar-inner { align-items:flex-start; flex-direction:column; padding:10px 16px; } nav { width:100%; overflow:auto; flex-wrap:nowrap; } .shell { padding:18px 10px 55px; } .status-header,.primary-section { border-radius:14px; } .provenance { grid-template-columns:1fr; } .metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } .audio-card { grid-template-columns:1fr; } }
+@media (prefers-color-scheme:dark) { :root { --bg:#111614; --paper:#19201e; --ink:#eef4f1; --muted:#aeb9b4; --line:#39443f; --accent:#70d7c5; --accent-2:#f09b65; --soft:#19332e; --code:#252c29; --shadow:none; } body { background:linear-gradient(135deg,#15231f,var(--bg)); } blockquote { background:#35271f; color:#efd8c8; } th { color:#bce7df; } }
+@media print { .topbar { position:relative; } body { background:white; } .shell { padding:16px; } .status-header,.primary-section { box-shadow:none; break-inside:avoid; } }
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar-inner"><a class="brand" href="../../android-llm-benchmarks/index.html">VibeVoice Android research</a><nav aria-label="Experiment sections"><a href="#experiment-description">Description</a><a href="#progress">Progress</a><a href="#results">Results</a></nav></div></header>
+<main class="shell">
+<header class="status-header" data-status-header="true">
+<div class="kicker"><span>Experiment 0030</span><span class="status">Blocked</span></div>
+<h1>Experiment 0030 — Qwen3.5-2B Android Vulkan GPU offload</h1>
+<p class="summary">The Qwen3.5-2B Vulkan arm is blocked before inference because three controlled builds reach the same Adreno compute-pipeline failure. Zero logical requests ran and no GPU performance claim exists.</p>
+<div class="header-links"><a href="../../../experiments/0030-qwen-3.5-2b-android-vulkan-gpu/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-26</span><span>evidence commit: 115d3154a60703a7fe6ddd28a7f219e1cf892d07</span><span>page source: docs/experiments/0030-qwen-3.5-2b-android-vulkan-gpu/page.md</span><span>page source sha256: 10ddbc506ac2579236376e8054c607aefc5538aa369c88965308687aa1d70924</span></div>
+</header>
+<article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
+<h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
+<p>This experiment asks whether the Qwen3.5-2B Q4_K_M model already proven on Android CPU can execute through a reproducible public llama.cpp Vulkan route on the Galaxy S23 Ultra&#x27;s Adreno 740. It is a separate backend assessment and does not modify or relabel experiment 0027&#x27;s CPU evidence. The intended end-to-end result was real Vulkan offload proof, a bounded viability request, one loaded server route with proven slot reset, and the canonical one-first-plus-five-short/five-medium/five-long campaign.</p>
+<p>The route pins the same third-party Unsloth <code>Qwen3.5-2B-Q4_K_M.gguf</code>: <strong>1,280,835,840 bytes</strong>, SHA-256 <code>aaf42c8b7c3cab2bf3d69c355048d4a0ee9973d48f16c731c0520ee914699223</code>. It uses llama.cpp build 10627 at commit <code>0a5ac49bce4c42893368585edf3ffb41a38f0108</code>, an Android NDK r28b build with Vulkan enabled, and requests <code>Vulkan0</code>, 25 GPU layers, no split, and GPU index 0.</p>
+<p>A valid result had to fail closed unless the same server process proved Adreno 740 initialization, all 25/25 offloadable layers moved to GPU, both Vulkan model and compute buffers, and no ignored-option or initialization-failure evidence. Even with that proof, the accepted claim would have been <strong>Vulkan GPU offload</strong>, not GPU-exclusive execution: server, tokenizer, sampler, orchestration, and unsupported operations can remain CPU-side. The owning <a href="../../../experiments/0030-qwen-3.5-2b-android-vulkan-gpu/README.md">experiment README</a>, <a href="../../../experiments/0030-qwen-3.5-2b-android-vulkan-gpu/protocol/experiment-contract.json">route contract</a>, and <a href="../../../experiments/0030-qwen-3.5-2b-android-vulkan-gpu/results/vulkan-provider-diagnostics/result.json">provider diagnostic</a> bind those boundaries.</p>
+</section>
+<section class="primary-section" id="progress" data-primary-section="progress">
+<h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
+<p>The baseline Android server was reproduced byte-for-byte in two clean build directories at 34,242,152 bytes and SHA-256 <code>b806fc03df6510eb7a141aea093cec7a878a2aa7456ea076a84791fadec68c00</code>. Its generated SPIR-V used the pinned NDK shader compiler. A separately hash-bound diagnostic server used public Ubuntu glslc/shaderc 2023.8 and was likewise reproducible at 38,398,232 bytes with SHA-256 <code>b666bd38aedb2d0c3008348f1866caee8f9168aa4655083fc1eb716342e57ce0</code>.</p>
+<p>Three fresh, controlled phone attempts changed one relevant variable at a time:</p>
+<div class="table-wrap"><table><thead><tr>
+<th>Variant</th>
+<th>Controlled change</th>
+<th>Provider observation</th>
+</tr></thead><tbody>
+<tr>
+<td>baseline NDK glslc</td>
+<td>pinned baseline</td>
+<td><code>mul_mat_vec_q5_k_f32_f32</code> rejected with <code>ErrorUnknown</code></td>
+</tr>
+<tr>
+<td>baseline plus <code>GGML_VK_DISABLE_F16=1</code></td>
+<td>F16 disabled only</td>
+<td>same pipeline and error</td>
+</tr>
+<tr>
+<td>Ubuntu glslc/shaderc 2023.8</td>
+<td>newer pinned shader compiler only</td>
+<td>same pipeline and error</td>
+</tr>
+</tbody></table></div>
+<p>In every attempt, local and remote hashes matched and the Adreno driver failed during compute-pipeline creation before health or model readiness. llama.cpp then terminated on an uncaught <code>vk::SystemError</code>. The run never reached prompt rendering, tokenization, or a logical inference request. Each attempt held the phone lock across staging and evidence capture, removed the exact scoped remote root, verified it absent, and left no server process. The <a href="../../../experiments/0030-qwen-3.5-2b-android-vulkan-gpu/results/vulkan-provider-diagnostics/SHA256SUMS">diagnostic checksum manifest</a> binds all three variants.</p>
+</section>
+<section class="primary-section" id="results" data-primary-section="results">
+<h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
+<p><strong>The Vulkan route is blocked before inference.</strong> The canonical campaign did not start and the canonical request count is <strong>zero</strong>. There is no output, sanity result, setup boundary through readiness, TTFT, prefill, decode, memory, thermal campaign, or performance metric. Required proofs for 25/25 layer offload, a Vulkan model buffer, and a Vulkan compute buffer are all absent. This experiment is not completed and has <strong>no leaderboard row</strong>.</p>
+<p>The durable blocker is <code>vk::Device::createComputePipeline: ErrorUnknown</code> for <code>mul_mat_vec_q5_k_f32_f32</code> during Vulkan provider initialization. Disabling F16 and changing to the bounded newer shader compiler did not change that failure class, so broad compiler roulette stopped rather than producing an unbounded series of incomparable attempts.</p>
+<p>The retained <a href="../../../experiments/0030-qwen-3.5-2b-android-vulkan-gpu/results/vulkan-provider-diagnostics/upstream-issue-19746.json">llama.cpp issue #19746 context</a> reports a related Adreno 740 shader/pipeline failure and says OpenCL worked on that issue author&#x27;s device. It is context only: it uses another device/model path and does not prove that this exact Qwen route works through OpenCL. Any OpenCL investigation belongs to the separately named experiment 0035 and must have its own pinned runtime, provider proof, evidence, and campaign. It must never be relabeled as a successful Vulkan result.</p>
+<p>The Vulkan experiment is stopped pending a new provider decision. A future retry would require a specific evidence-backed Vulkan driver/backend change and fresh authorization; the already failed variants must not be promoted to GPU execution or performance evidence.</p>
+</section></article>
+<footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
+</main>
+</body>
+</html>
