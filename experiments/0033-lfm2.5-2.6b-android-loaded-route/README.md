@@ -2,7 +2,7 @@
 
 ## Status
 
-**CPU canonical campaign complete; OpenCL arm remains pending explicit phone priority.**
+**Both separate canonical campaigns complete: CPU-only first, then OpenCL/Adreno GPU offload.**
 
 This experiment closes the gap left intentionally by experiment 0029. The earlier experiment contains one bounded CPU viability request through `llama-completion`; it is not a loaded-route campaign and remains immutable. Experiment 0033 uses the same exact official LiquidAI model, tokenizer, template, and canonical workloads but a newer pinned llama.cpp persistent server required for protocol-v2 isolation and the public OpenCL backend.
 
@@ -40,7 +40,9 @@ This arm ran first and is a distinct CPU result, never a fallback row. All 16 ca
 - Proprietary/precompiled binary kernels are disabled
 - Remote root: `/data/local/tmp/vibevoice-0033-lfm2.5-2.6b-android-loaded-route-opencl`
 
-GPU evidence requires `Adreno740v2` sysfs identity, the QUALCOMM OpenCL driver, Adreno-optimized source kernels, all 31/31 offloadable layers, and OpenCL model and compute buffers. CPU server/tokenizer/sampler/scheduling and unsupported operations remain in the route, so this is not GPU-exclusive.
+GPU evidence proved `Adreno740v2` sysfs identity, the QUALCOMM OpenCL driver, Adreno-optimized source kernels, all 31/31 offloadable layers, and OpenCL model and compute buffers. CPU server/tokenizer/sampler/scheduling and unsupported operations remain in the route, so this is not GPU-exclusive.
+
+All 16 OpenCL requests completed with validated isolation. Warm median TTFT / prefill / external decode / total were 2.888 s / 61.97 input tok/s / 7.98 output tok/s / 189.261 s for short; 10.282 s / 60.53 / 7.14 / 296.002 s for medium; and 31.328 s / 63.65 / 7.04 / 317.972 s for long. Short and long reached EOS; medium reached the 2,048-token ceiling. Peak sampled process PSS was 675,495,936 bytes, but this does not include isolated GPU-private/vendor-driver allocation and cannot be treated as total-memory parity with CPU. Exact evidence is under [`results/android-opencl-campaign/`](results/android-opencl-campaign/).
 
 ## Required sequence
 

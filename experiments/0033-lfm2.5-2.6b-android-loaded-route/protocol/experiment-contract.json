@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0033-lfm2.5-2.6b-android-loaded-route",
-  "status": "cpu_campaign_complete_opencl_campaign_pending",
+  "status": "cpu_and_opencl_campaigns_complete",
   "question": "How does the pinned official LFM2.5-2.6B Q4_K_M artifact perform in separate canonical persistent Android CPU and OpenCL/Adreno loaded-route campaigns?",
   "scope": {
     "arms": [
@@ -252,6 +252,18 @@
     "all_requests_complete": true,
     "short_and_medium_stop_reason": "eos",
     "long_stop_reason": "max_tokens",
+    "all_outputs_sanity_reviewed": true,
+    "cleanup_state": "verified_absent"
+  },
+  "completed_opencl_campaign": {
+    "result_path": "experiments/0033-lfm2.5-2.6b-android-loaded-route/results/android-opencl-campaign/result.json",
+    "result_sha256": "b389c1b396e2813915f485ab9a5e50a26ef4c40bc42e5be8e8d03def75126c19",
+    "checksum_manifest_sha256": "c2544c47a7007bb8d86fa5c8d3a56505a67e7be2ca7c5f7da35edcb2073046af",
+    "request_count": 16,
+    "all_requests_complete": true,
+    "short_and_long_stop_reason": "eos",
+    "medium_stop_reason": "max_tokens",
+    "provider_proof_complete": true,
     "all_outputs_sanity_reviewed": true,
     "cleanup_state": "verified_absent"
   },
