@@ -1,0 +1,8 @@
+# Recreate .local/model/LFM2.5-2.6B-Q4_K_M.gguf and .local/build-host/bin/llama-completion first.
+timeout --signal=TERM --kill-after=5s 180s bash -c 'ulimit -f 2048; exec "$@"' _ \
+  .local/build-host/bin/llama-completion \
+  -m .local/model/LFM2.5-2.6B-Q4_K_M.gguf \
+  -f results/host-smoke/rendered/short.txt \
+  -n 64 -c 4096 -t 4 -tb 4 \
+  --no-warmup --no-display-prompt --simple-io -no-cnv --temp 0 \
+  --override-kv tokenizer.ggml.add_bos_token=bool:false
