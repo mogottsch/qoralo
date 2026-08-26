@@ -17,14 +17,20 @@
    - SHA-256 `88a91aba5511a712f45aca21c566275681de30e2161f10bb99f9ac54f45b979e`;
    - AArch64 PIE; only `libm.so`, `libdl.so`, and `libc.so` are dynamically required.
 6. Added a bounded phone-smoke harness with fresh coordination and phone-lock gates, exact device/storage/hash checks, scoped staging, direct-to-host raw output capture, nullable optional telemetry, and verified cleanup.
+7. Preserved a bounded passive cooldown observation and a first pre-inference ADB transport failure separately. The failed attempt stopped before remote hash verification completed, was never counted, and ended with verified scoped cleanup.
+8. Ran one fresh approved Android CPU short smoke:
+   - exact 171-token prompt; 64 generated tokens; exit zero;
+   - output SHA-256 `75f52326f67379c63d86b49e4520a074dbbd074329fc0d8d53693340ffc0a0c5`;
+   - peak sampled PSS 1,870,697 KiB and VmHWM 1,873,176 KiB;
+   - warm starting thermal state retained rather than hidden;
+   - local/remote hashes matched and scoped cleanup was verified absent.
 
 ## Next coordinated steps
 
-1. Wait for Pi to grant 0029 phone priority. Do not access the phone before that grant.
-2. Run one bounded Android CPU short smoke with `PHONE_RUN_APPROVED=yes`; preserve raw output/error/timing/device evidence even on timeout or error.
-3. If the smoke passes, bind a persistent loaded-route runner before a canonical campaign. Do **not** loop `llama-completion`: that would reload/remap the model and violate protocol v2.
-4. Prove and record one allowed request-isolation strategy (full in-session conversation/KV reset or fresh Session per logical request), including reset/creation duration and whether it is in total-request timing.
-5. Run the fresh canonical 1+5+5+5 campaign only after that proof.
-6. Commit owning Android evidence and send a structured handoff to the publisher. Do not edit the shared dashboard or experiment HTML from this experiment session.
+1. Do not rerun the one-request smoke or loop `llama-completion`.
+2. Bind a persistent loaded-route runner before a canonical campaign; a per-process completion loop would reload/remap the model and violate protocol v2.
+3. Prove and record one allowed request-isolation strategy (full in-session conversation/KV reset or fresh Session per logical request), including reset/creation duration and whether it is in total-request timing.
+4. Run the fresh canonical 1+5+5+5 campaign only after that proof and new coordination.
+5. Send the owning smoke evidence as a structured handoff. Do not publish this noncanonical smoke in the shared Android benchmark registry or experiment HTML.
 
 The two historical `llama-cli` attempts remain invalid. One entered automatic conversation and generated a 9.2 GiB runaway stdout before termination. Only bounded, noninteractive tooling is permitted.

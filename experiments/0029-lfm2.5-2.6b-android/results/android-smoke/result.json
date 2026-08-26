@@ -1,0 +1,133 @@
+{
+  "android_execution_evidence": true,
+  "canonical_campaign": false,
+  "canonical_campaign_exclusion_reason": "One llama-completion process with a 64-token ceiling proves bounded Android viability only; it is not the protocol-v2 loaded-route 1+5+5+5 campaign.",
+  "classification": "bounded_android_cpu_viability_smoke",
+  "device": {
+    "abi": "arm64-v8a",
+    "build_fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+    "model": "SM-S918B",
+    "serial": "R5CW81PR8SY",
+    "soc": "SM8550"
+  },
+  "evidence": {
+    "cleanup_state": "verified_absent",
+    "local_hash_diff_empty": true,
+    "memory_samples_sha256": "cdf496dea324e971ceb084fb70b730fe64c7ce16963c3e4b34469c9fc55a80aa",
+    "phone_lock_held": true,
+    "process_exit_code": 0,
+    "remote_hash_diff_empty": true,
+    "scoped_remote_root": "/data/local/tmp/vibevoice-0029-lfm2.5-2.6b-android",
+    "stderr_sha256": "e19ec8489ebdd1de10cdab9753189c3833af7d235f8fcbcc06b54ee6821141a2"
+  },
+  "experiment": "0029-lfm2.5-2.6b-android",
+  "failed_pre_inference_attempt_counted": false,
+  "generation": {
+    "actual_output_tokens": 64,
+    "actual_output_tokens_method": "llama-completion n_predict=64 reached with 63 follow-on eval runs and no EOG stop; CLI appends one terminal newline outside generated token bytes.",
+    "output_sanity": {
+      "issue_notes": null,
+      "looks_sensible": true
+    },
+    "raw_output_bytes": 324,
+    "raw_output_path": "output.txt",
+    "raw_output_sha256": "75f52326f67379c63d86b49e4520a074dbbd074329fc0d8d53693340ffc0a0c5",
+    "stop_reason": "max_tokens"
+  },
+  "limitations": [
+    "Warm starting conditions were retained rather than hidden: thermal status 2, AP 47.6 C, skin 41.4 C.",
+    "This one-request 64-token smoke cannot populate the Android benchmark registry or support canonical campaign distributions.",
+    "No protocol TTFT or setup boundary is available from llama-completion."
+  ],
+  "memory": {
+    "mapped_model_bytes_included_in_pss": true,
+    "median_interval_seconds": 0.260353,
+    "method": "Approximately 100-260 ms shell sampling of /proc/<pid>/smaps_rollup and /proc/<pid>/status over the llama-completion process lifecycle.",
+    "observed_span_seconds": 21.600344,
+    "peak_sampled_pss_bytes": 1915593728,
+    "peak_sampled_pss_kib": 1870697,
+    "peak_sampled_rss_kib": 1872804,
+    "peak_vm_hwm_bytes": 1918132224,
+    "peak_vm_hwm_kib": 1873176,
+    "sample_count": 85
+  },
+  "model_artifact": {
+    "bytes": 1674455040,
+    "filename": "LFM2.5-2.6B-Q4_K_M.gguf",
+    "sha256": "02a8b7e17487d326e46d68ce0ba24211e1b80a14c4cd0597fa73c1cd697f52ed"
+  },
+  "operating_context": {
+    "after": {
+      "battery": {
+        "level_percent": 95,
+        "status_code": 2,
+        "temperature_c": 40.1,
+        "usb_powered": true
+      },
+      "thermal": {
+        "ap_c": 60.5,
+        "skin_c": 42.5,
+        "status": 2
+      }
+    },
+    "before": {
+      "battery": {
+        "level_percent": 95,
+        "status_code": 2,
+        "temperature_c": 40.2,
+        "usb_powered": true
+      },
+      "thermal": {
+        "ap_c": 47.6,
+        "skin_c": 41.4,
+        "status": 2
+      }
+    },
+    "power_measurement": null,
+    "power_measurement_null_reason": "No external or authoritative device power meter was available; USB powered state and battery dumps are retained."
+  },
+  "request": {
+    "canonical_workload_sha256": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae",
+    "double_bos": false,
+    "input_tokens": 171,
+    "max_new_tokens": 64,
+    "rendered_prompt_sha256": "9e6c713e83f0987f283264b789e102b9704d6067665fc7a0fee652938a3ae622",
+    "strategy": "greedy",
+    "temperature": 0,
+    "tier": "short",
+    "token_ids_int32le_sha256": "eae8e828110f634d5c9954df0372e869f67f67aed846f9f544781faa1d4d29bc",
+    "truncated": false
+  },
+  "runtime": {
+    "abi": "arm64-v8a",
+    "android_api": 36,
+    "batch_threads": 4,
+    "binary_bytes": 5074184,
+    "binary_sha256": "88a91aba5511a712f45aca21c566275681de30e2161f10bb99f9ac54f45b979e",
+    "build": 7446,
+    "context_tokens": 8192,
+    "executable": "llama-completion",
+    "name": "llama.cpp",
+    "provider_backend": "GGML CPU",
+    "revision": "5c0d18881e0e9794c96b2602736b758bac9d9388",
+    "threads": 4
+  },
+  "schema_version": 1,
+  "timing": {
+    "decode_follow_on_eval_runs": 63,
+    "decode_seconds": 7.13287,
+    "post_prefill_to_first_token_null_reason": "No alignable first-token delivery timestamp is exposed.",
+    "post_prefill_to_first_token_seconds": null,
+    "prefill_input_tokens": 171,
+    "prefill_seconds": 13.56415,
+    "prefill_tokens_per_second": 12.61,
+    "request_to_first_token_null_reason": "The non-streaming completion executable does not expose a caller-observed first generated token-ID timestamp.",
+    "request_to_first_token_seconds": null,
+    "runtime_decode_definition": "llama.cpp eval time covers 63 follow-on model evaluations after the first sampled token; it is retained as runtime internal timing, not relabeled as protocol decode delivery timing.",
+    "runtime_reported_decode_runs_per_second": 8.83,
+    "runtime_reported_load_seconds": 13.56476,
+    "setup_seconds": null,
+    "setup_seconds_null_reason": "llama-completion does not expose a readiness boundary separate from its single request; runtime-reported load time overlaps prompt evaluation and is retained without relabeling it as setup.",
+    "total_runtime_seconds": 20.70975
+  }
+}

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0029-lfm2.5-2.6b-android",
-  "status": "contract_locked_android_smoke_ready_waiting_for_phone_coordination",
+  "status": "bounded_android_viability_smoke_passed_loaded_route_campaign_runner_pending",
   "question": "Can the official LFM2.5-2.6B Q4_K_M GGUF execute through a bounded llama.cpp CPU route on the authorized Galaxy S23 Ultra under the canonical fixed-prompt contract?",
   "scope": {
     "arm_id": "lfm25-2.6b-liquidai-q4km-llamacpp-cpu",
@@ -164,6 +164,17 @@
     "remote_root": "/data/local/tmp/vibevoice-0029-lfm2.5-2.6b-android",
     "phone_lock": "artifacts/locks/phone.lock must be held across identity, staging, execution, evidence capture, and verified cleanup",
     "phone_work_status": "Not authorized for this continuation until Pi coordinates phone priority."
+  },
+  "bounded_android_smoke": {
+    "classification": "one-request viability evidence only",
+    "result_path": "results/android-smoke/result.json",
+    "tier": "short",
+    "max_new_tokens": 64,
+    "actual_output_tokens": 64,
+    "output_sha256": "75f52326f67379c63d86b49e4520a074dbbd074329fc0d8d53693340ffc0a0c5",
+    "process_exit_code": 0,
+    "cleanup_state": "verified_absent",
+    "canonical_campaign": false
   },
   "fatal_gates": [
     "wrong workload, artifact, runtime, binary, device, or staged hash",

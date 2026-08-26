@@ -2,7 +2,7 @@
 
 ## Status
 
-**Pinned official GGUF route, complete tokenizer/template/quantization contract, and bounded host viability smoke passed. The Android smoke binary is built and hash-bound; no phone run or Android execution result exists.**
+**Pinned official GGUF route, complete tokenizer/template/quantization contract, bounded host reconstruction, and one-request Android CPU viability smoke passed. No canonical Android campaign exists.**
 
 This experiment evaluates `LiquidAI/LFM2.5-2.6B` through a pinned CPU-only llama.cpp route. It preserves the model-native reasoning continuation and does not treat it as equivalent to the non-thinking Qwen route. Host work is feasibility evidence only and must never enter the Android registry.
 
@@ -47,8 +47,22 @@ The bound `llama-completion` artifact is:
 
 See [`results/android-build/`](results/android-build/). This is build evidence, not Android execution or performance evidence.
 
-## Phone boundary
+## Android viability smoke
 
-[`tools/run_phone_smoke.sh`](tools/run_phone_smoke.sh) is prepared for one bounded 64-token viability smoke. It requires both fresh `PHONE_RUN_APPROVED=yes` coordination and the repository phone lock, verifies the exact device and all staged hashes, writes output directly to durable host evidence, treats optional battery/thermal telemetry as nullable, and removes only `/data/local/tmp/vibevoice-0029-lfm2.5-2.6b-android` with verified cleanup.
+After a bounded passive cooldown observation, the first staged attempt stopped before inference when Windows-hosted ADB transport disappeared during required remote hash verification. That diagnostic is preserved separately; cleanup later removed and verified absence of only the scoped 0029 root. It is not counted as a smoke.
 
-The completion binary is intentionally scoped to the one-request smoke. It must not be looped for a canonical protocol-v2 campaign because each process reloads the model. Before the 1+5+5+5 campaign, bind a loaded-route runner and prove either full in-session state reset or fresh-Session isolation while retaining the loaded model/runtime route. No phone work may begin until Pi coordinates priority.
+A fresh approved retry through [`tools/run_phone_smoke.sh`](tools/run_phone_smoke.sh) passed on the authorized Galaxy S23 Ultra:
+
+- exact short prompt: 171 input tokens, no truncation or double BOS;
+- bounded greedy continuation: 64 output tokens, `max_tokens` stop;
+- output: 324 bytes, SHA-256 `75f52326f67379c63d86b49e4520a074dbbd074329fc0d8d53693340ffc0a0c5`, sensible-text smoke passed;
+- runtime prompt evaluation: 13.56415 s, 12.61 tokens/s;
+- runtime follow-on evaluation: 63 runs in 7.13287 s, 8.83 runs/s;
+- total runtime-reported request work: 20.70975 s;
+- peak sampled PSS: 1,870,697 KiB; process VmHWM: 1,873,176 KiB;
+- actual starting thermal state retained: status 2, AP 47.6 C, skin 41.4 C; after: status 2, AP 60.5 C, skin 42.5 C;
+- exit zero; local and remote artifact hashes matched; scoped cleanup was verified absent; no experiment process remained.
+
+See [`results/android-smoke/result.json`](results/android-smoke/result.json), [`results/android-smoke-cooldown/`](results/android-smoke-cooldown/), and [`results/android-smoke-pre-inference-transport-failure/`](results/android-smoke-pre-inference-transport-failure/). This is Android execution evidence, but not registry-eligible benchmark evidence. `llama-completion` exposes neither the protocol setup boundary nor first-token delivery timestamps, so those fields remain null with reasons.
+
+The completion binary is intentionally scoped to this one-request smoke. It must not be looped for a canonical protocol-v2 campaign because each process reloads the model. Before the 1+5+5+5 campaign, bind a loaded-route runner and prove either full in-session state reset or fresh-Session isolation while retaining the loaded model/runtime route.
