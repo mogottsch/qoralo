@@ -6,6 +6,7 @@ A handover records the repository and machine state observed at that time, inclu
 
 ## Handovers
 
+- [2026-08-26 — Android LLM accelerator results](2026-08-26-android-llm-accelerator-results.md)
 - [2026-08-26 — Parallel Android LLM experiments](2026-08-26-parallel-llm-experiments.md)
 
 Use `YYYY-MM-DD-short-topic.md` for future handovers and add each file to this index.
