@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "experiment": "0029-lfm2.5-2.6b-android",
+  "status": "contract_locked_android_smoke_ready_waiting_for_phone_coordination",
+  "question": "Can the official LFM2.5-2.6B Q4_K_M GGUF execute through a bounded llama.cpp CPU route on the authorized Galaxy S23 Ultra under the canonical fixed-prompt contract?",
+  "scope": {
+    "arm_id": "lfm25-2.6b-liquidai-q4km-llamacpp-cpu",
+    "included": "Text-only native reasoning continuation through the official LiquidAI GGUF and llama.cpp CPU.",
+    "excluded": [
+      "GPU, NPU, HTP, or proprietary accelerator execution",
+      "podcast transcript quality evaluation",
+      "host observations in the Android registry"
+    ]
+  },
+  "canonical_protocol": {
+    "path": "protocols/android-llm-benchmark/contract.json",
+    "schema_version": 2,
+    "sha256": "2bb2de193745bc9b74c98639ee077f07615702655b2fc6118185148e2a0c0b46",
+    "workloads": {
+      "short": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae",
+      "medium": "5e168aa3232f06c92959b686188192471b2d1a62cd1c857a616fd8e29456ddf1",
+      "long": "092840fbe879259110fa4d0b15bc383012f16b7b42a38d224b2ead231e86aad8"
+    },
+    "tier_order": ["short", "medium", "long"],
+    "first_request": {"tier": "short", "count": 1},
+    "minimum_loaded_route_requests_per_tier": 5,
+    "loaded_model_runtime_route_reused": true,
+    "allowed_request_isolation_strategies": [
+      "proven_full_in_session_conversation_and_kv_reset",
+      "fresh_session_per_logical_request"
+    ],
+    "request_isolation_strategy": null,
+    "request_isolation_strategy_pending_reason": "The bound llama-completion executable is for the first bounded Android viability smoke only. Before a canonical campaign, bind a loaded-route runner and prove one allowed isolation strategy; a per-process llama-completion loop is forbidden because it reloads the model.",
+    "reset_or_session_creation_duration_reported_separately": true,
+    "reset_duration_in_total_request_reported": true,
+    "model_remap_or_reload_between_requests": false,
+    "accelerator_recompilation_between_requests": false,
+    "retained_prompt_or_kv_reuse_between_requests": false,
+    "max_output_tokens": 2048,
+    "request_timeout_seconds": 1800
+  },
+  "upstream_model": {
+    "name": "LiquidAI/LFM2.5-2.6B",
+    "url": "https://huggingface.co/LiquidAI/LFM2.5-2.6B/tree/ab00687315bc1298e9d54e9c4b611dde9867ccc2",
+    "revision": "ab00687315bc1298e9d54e9c4b611dde9867ccc2",
+    "revision_proof": "The deployed GGUF general.name is Ab00687315Bc1298E9D54E9C4B611Dde9867Ccc2; pinned upstream files at the normalized revision independently match the embedded tokenizer/template metadata.",
+    "private": false,
+    "gated": false,
+    "license": "LFM Open License v1.0",
+    "license_source": "https://huggingface.co/LiquidAI/LFM2.5-2.6B-GGUF/blob/84022ce711b28455e8c4fc364ce68c00cf995875/LICENSE",
+    "license_sha256": "30adf9d6478191fb87f2424f63ba0728598335aaf99cd2848ef17e8e545fe94b",
+    "license_local_path": "protocol/upstream-LICENSE",
+    "published_parameter_count": "2.6B",
+    "exact_tensor_element_count": 2697198592,
+    "native_context_tokens": 131072,
+    "architecture": "LFM2, 30 layers, hidden size 2048, vocabulary size 128000"
+  },
+  "deployment_artifact": {
+    "publisher": "LiquidAI",
+    "official_liquidai_artifact": true,
+    "repository": "LiquidAI/LFM2.5-2.6B-GGUF",
+    "repository_url": "https://huggingface.co/LiquidAI/LFM2.5-2.6B-GGUF/tree/84022ce711b28455e8c4fc364ce68c00cf995875",
+    "revision": "84022ce711b28455e8c4fc364ce68c00cf995875",
+    "artifact_addition_commit": "5b4a064e446f1d3127263642a2f65253688971ea",
+    "filename": "LFM2.5-2.6B-Q4_K_M.gguf",
+    "url": "https://huggingface.co/LiquidAI/LFM2.5-2.6B-GGUF/resolve/84022ce711b28455e8c4fc364ce68c00cf995875/LFM2.5-2.6B-Q4_K_M.gguf",
+    "bytes": 1674455040,
+    "sha256": "02a8b7e17487d326e46d68ce0ba24211e1b80a14c4cd0597fa73c1cd697f52ed",
+    "format": "GGUF v3, one self-contained shard",
+    "metadata_inventory": "protocol/gguf-metadata.json",
+    "quantization": {
+      "name": "Q4_K_M",
+      "gguf_file_type": 15,
+      "gguf_quantization_version": 2,
+      "nominal_bit_width": 4,
+      "block_scheme": "GGML K-quant medium. Q4_K uses 256-weight super-blocks; the M policy retains selected tensors at Q6_K and non-quantized metadata tensors at F32.",
+      "tensor_type_counts": {"Q4_K": 148, "Q6_K": 19, "F32": 99},
+      "tensor_element_counts": {"Q4_K": 2122317824, "Q6_K": 574619648, "F32": 261120},
+      "calibration": null,
+      "calibration_missing_reason": "The official pinned repository and GGUF publish no importance-matrix or calibration provenance for this standard Q4_K_M artifact.",
+      "conversion_tool": "llama.cpp GGUF conversion/quantization is implied by the official repository format and README",
+      "conversion_tool_revision": null,
+      "conversion_tool_revision_missing_reason": "The official pinned repository and embedded GGUF metadata do not publish the exact converter/quantizer commit. Artifact bytes remain bound by repository revision, addition commit, size, and SHA-256."
+    }
+  },
+  "tokenizer_and_template": {
+    "source": "LiquidAI/LFM2.5-2.6B",
+    "revision": "ab00687315bc1298e9d54e9c4b611dde9867ccc2",
+    "tokenizer_class": "TokenizersBackend",
+    "tokenizer_type": "embedded GGUF GPT-2/BPE with lfm2 pre-tokenizer",
+    "upstream_files": {
+      "tokenizer.json": "695be7802a0e4b8a81048f0ff5ebb7fc811a0ba5a6be63dbb24deb5a81096f41",
+      "tokenizer_config.json": "11f1de897317b489dd09199284528382eeb17f566398b16e2039bb2266d26b09",
+      "chat_template.jinja": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef"
+    },
+    "special_token_ids": {"bos": 124894, "eos": 124900, "padding": 124893},
+    "embedded_chat_template_path": "protocol/chat_template.jinja",
+    "embedded_chat_template_bytes": 5443,
+    "embedded_chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
+    "template_proof": "Pinned upstream chat_template.jinja is byte-identical to tokenizer.chat_template embedded in the GGUF. tools/render_workloads.py is the exact no-tools, system+user, add_generation_prompt=true specialization.",
+    "bos_handling": "The renderer emits <|startoftext|>; runtime tokenization must set tokenizer.ggml.add_bos_token=false to prevent a second BOS.",
+    "reasoning": "The model-native generation prompt ends with <think>; the route intentionally preserves the native reasoning continuation.",
+    "prompt_inventory": {
+      "short": {"rendered_bytes": 962, "rendered_sha256": "9e6c713e83f0987f283264b789e102b9704d6067665fc7a0fee652938a3ae622", "input_tokens": 171, "token_ids_int32le_sha256": "eae8e828110f634d5c9954df0372e869f67f67aed846f9f544781faa1d4d29bc"},
+      "medium": {"rendered_bytes": 3355, "rendered_sha256": "b19079dc6ed712ece98c5d60ea86c179d01ce30c4db4688a2b75f6cbca07c6ed", "input_tokens": 600, "token_ids_int32le_sha256": "bfd8e9ee4fecef5b3203ad67ee0c2fe1a5a4d3267cfabc83c4388f04e25789e9"},
+      "long": {"rendered_bytes": 10631, "rendered_sha256": "d247578b3a6247a457504d7c9ee153e7c737354d455804f5d198aeb2cd8ff442", "input_tokens": 1922, "token_ids_int32le_sha256": "bf6cd4a807f1933a4890a52fc847242be44c45cfc712bc9767ed8030845ec512"}
+    },
+    "token_id_hash_encoding": "Signed 32-bit token IDs serialized consecutively in little-endian order with no header."
+  },
+  "context_capacity": {
+    "native_tokens": 131072,
+    "route_tokens": 8192,
+    "max_output_tokens": 2048,
+    "proof": {
+      "short": {"input_plus_ceiling": 2219, "fits": true},
+      "medium": {"input_plus_ceiling": 2648, "fits": true},
+      "long": {"input_plus_ceiling": 3970, "fits": true}
+    },
+    "truncation_allowed": false
+  },
+  "runtime": {
+    "name": "llama.cpp",
+    "build": 7446,
+    "revision": "5c0d18881e0e9794c96b2602736b758bac9d9388",
+    "source": "https://github.com/ggml-org/llama.cpp/tree/5c0d18881e0e9794c96b2602736b758bac9d9388",
+    "provider_backend": "GGML CPU",
+    "cpu_threads": 4,
+    "batch_threads": 4,
+    "context_tokens": 8192,
+    "executable": "llama-completion",
+    "required_options": ["-m model.gguf", "-f rendered-prompt.txt", "-n 2048", "-c 8192", "-t 4", "-tb 4", "--no-display-prompt", "--simple-io", "-no-cnv", "--temp 0", "--override-kv tokenizer.ggml.add_bos_token=bool:false"],
+    "bounding": "External 1800-second timeout plus a 16 MiB stdout file-size limit; raw partial output and stderr must be retained on timeout/error.",
+    "binary_scope": "Bounded one-request Android viability smoke only. It must not be looped as a canonical campaign because each process reloads/remaps the model. A separately bound loaded-route runner and proven protocol-v2 isolation strategy are required before the 1+5+5+5 campaign.",
+    "android_build": {
+      "script": "tools/build_llama_cpp.sh android",
+      "ndk": "28.1.13356709 (r28b)",
+      "ndk_archive_url": "https://dl.google.com/android/repository/android-ndk-r28b-linux.zip",
+      "ndk_archive_bytes": 722264879,
+      "ndk_archive_sha1": "f574d3165405bd59ffc5edaadac02689075a729f",
+      "android_api": 31,
+      "abi": "arm64-v8a",
+      "cmake_build_type": "Release",
+      "build_identity": "LLAMA_BUILD_NUMBER=7446 and LLAMA_BUILD_COMMIT=5c0d18881e0e9794c96b2602736b758bac9d9388",
+      "reproducibility_flags": "ffile-prefix-map for source and build roots; GGML_CCACHE=OFF; final binary stripped with the pinned NDK llvm-strip",
+      "shared_libraries": false,
+      "cxx_runtime": "c++_static",
+      "ggml_native": false,
+      "openmp": false,
+      "curl": false,
+      "binary_bytes": 5074184,
+      "binary_sha256": "88a91aba5511a712f45aca21c566275681de30e2161f10bb99f9ac54f45b979e",
+      "elf": "ELF64 little-endian AArch64 PIE, stripped",
+      "elf_build_id_sha1": "cecdefd1782ad6058ec56fffe03a982ba314ba30",
+      "dynamic_dependencies": ["libm.so", "libdl.so", "libc.so"],
+      "validation_manifest": "results/android-build/manifest.json"
+    }
+  },
+  "device": {
+    "model": "SM-S918B",
+    "soc": "SM8550",
+    "serial": "R5CW81PR8SY",
+    "abi": "arm64-v8a",
+    "identity_must_match": true,
+    "remote_root": "/data/local/tmp/vibevoice-0029-lfm2.5-2.6b-android",
+    "phone_lock": "artifacts/locks/phone.lock must be held across identity, staging, execution, evidence capture, and verified cleanup",
+    "phone_work_status": "Not authorized for this continuation until Pi coordinates phone priority."
+  },
+  "fatal_gates": [
+    "wrong workload, artifact, runtime, binary, device, or staged hash",
+    "prompt plus 2048-token ceiling exceeds route context or any truncation occurs",
+    "double BOS or native template mismatch",
+    "greedy sampler option not applied",
+    "unauthorized phone access or phone-lock violation",
+    "raw output cannot be bound to the claimed request"
+  ]
+}

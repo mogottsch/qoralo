@@ -1,0 +1,9 @@
+# Run while holding artifacts/locks/heavy-ram.lock.
+python3 experiments/0029-lfm2.5-2.6b-android/tools/inventory_prompts.py \
+  --tokenize experiments/0029-lfm2.5-2.6b-android/.local/build/host/bin/llama-tokenize \
+  --model experiments/0029-lfm2.5-2.6b-android/.local/models/LFM2.5-2.6B-Q4_K_M.gguf \
+  --rendered-dir experiments/0029-lfm2.5-2.6b-android/results/host-smoke/rendered \
+  --output prompt-inventory.json
+
+# Then recreate results/host-smoke/command.txt with the reconstructed pinned host binary/model,
+# writing stdout to output.txt and stderr to stderr.log.

@@ -2,7 +2,7 @@
 
 ## Status
 
-**Pinned official GGUF route and bounded host viability smoke passed. Android build was interrupted before producing a binary; no phone run or Android result exists.**
+**Pinned official GGUF route, complete tokenizer/template/quantization contract, and bounded host viability smoke passed. The Android smoke binary is built and hash-bound; no phone run or Android execution result exists.**
 
 This experiment evaluates `LiquidAI/LFM2.5-2.6B` through a pinned CPU-only llama.cpp route. It preserves the model-native reasoning continuation and does not treat it as equivalent to the non-thinking Qwen route. Host work is feasibility evidence only and must never enter the Android registry.
 
@@ -18,7 +18,7 @@ This experiment evaluates `LiquidAI/LFM2.5-2.6B` through a pinned CPU-only llama
 - Runtime: llama.cpp build 7446, commit `5c0d18881e0e9794c96b2602736b758bac9d9388`
 - Initial backend: ARM CPU, four inference and four batch threads
 
-The route contract is not yet complete: before phone execution, add the full tokenizer/chat-template and quantization provenance required by the shared Android LLM protocol and bind the final Android binary hash.
+[`protocol/experiment-contract.json`](protocol/experiment-contract.json) pins shared Android LLM protocol v2, the exact source revision embedded by the GGUF, tokenizer files, native template, every rendered prompt and token-ID hash, context proof, quantization inventory and provenance limitations, runtime options, and Android artifact. The official GGUF exposes source revision `ab00687315bc1298e9d54e9c4b611dde9867ccc2`; its embedded 5,443-byte template is byte-identical to that revision's `chat_template.jinja`. The official repository does not publish the exact converter/quantizer commit or calibration/importance-matrix provenance, so those values remain null with explicit reasons rather than being inferred.
 
 ## Host viability
 
@@ -32,10 +32,23 @@ Observed on the host:
 - raw 64-token continuation: 323 bytes;
 - output SHA-256: `3f703023ba052195c3f074178b1979bed040bfff867fbc917e5de77994490f52`.
 
-See [`results/host-smoke/`](results/host-smoke/). These numbers are not Android evidence.
+See [`results/host-smoke/`](results/host-smoke/). These numbers are not Android evidence. A clean reconstruction on the current workstation independently reproduced all three tokenizer inventories and the exact 323-byte host output SHA-256.
 
-## Interrupted Android preparation
+## Android smoke artifact
 
-The NDK build was configured for `arm64-v8a`, API 31, Release, static libraries, and no OpenMP. The session ended during compilation and no `llama-completion` Android binary exists. Ignored local state on the originating workstation contained the 1.6 GB model, a 175 MB llama.cpp checkout, a 57 MB host build, and the incomplete Android build; none is transferred through Git.
+[`tools/build_llama_cpp.sh`](tools/build_llama_cpp.sh) verifies the pinned clean llama.cpp checkout, acquires `artifacts/locks/heavy-ram.lock`, and builds with NDK `28.1.13356709` (`r28b`), `arm64-v8a`, API 31, Release, static llama/GGML and `c++_static`, `GGML_NATIVE=OFF`, `GGML_OPENMP=OFF`, `GGML_CCACHE=OFF`, and `LLAMA_CURL=OFF`. Source/build paths are prefix-mapped and the final executable is stripped.
 
-Continue from [`PLAN.md`](PLAN.md). Do not access the phone until the bounded host route, full contract, Android binary hash, lock, identity, storage, and scoped cleanup gates are all restored.
+The bound `llama-completion` artifact is:
+
+- 5,074,184 bytes;
+- SHA-256 `88a91aba5511a712f45aca21c566275681de30e2161f10bb99f9ac54f45b979e`;
+- ELF64 little-endian AArch64 PIE, build ID `cecdefd1782ad6058ec56fffe03a982ba314ba30`;
+- dynamically dependent only on Android system `libm.so`, `libdl.so`, and `libc.so`.
+
+See [`results/android-build/`](results/android-build/). This is build evidence, not Android execution or performance evidence.
+
+## Phone boundary
+
+[`tools/run_phone_smoke.sh`](tools/run_phone_smoke.sh) is prepared for one bounded 64-token viability smoke. It requires both fresh `PHONE_RUN_APPROVED=yes` coordination and the repository phone lock, verifies the exact device and all staged hashes, writes output directly to durable host evidence, treats optional battery/thermal telemetry as nullable, and removes only `/data/local/tmp/vibevoice-0029-lfm2.5-2.6b-android` with verified cleanup.
+
+The completion binary is intentionally scoped to the one-request smoke. It must not be looped for a canonical protocol-v2 campaign because each process reloads the model. Before the 1+5+5+5 campaign, bind a loaded-route runner and prove either full in-session state reset or fresh-Session isolation while retaining the loaded model/runtime route. No phone work may begin until Pi coordinates priority.
