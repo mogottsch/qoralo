@@ -818,7 +818,7 @@
         "Fresh-Session recreation is measured separately and excluded from request-to-first-token and total-request timing.",
         "Output sanity is only an exact-hash corruption/gibberish check, not quality or correctness.",
         "The phone was USB powered, but charging state is operating context rather than calibrated power evidence.",
-        "Only the official CPU artifact was run. The distinct official GPU artifact has no campaign result and no registry row."
+        "This CPU row does not characterize the separate provider-proven GPU backend; see its distinct normalized row."
       ],
       "sources": [
         "experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/result.json",
@@ -833,6 +833,842 @@
         "quantization.tool": "The official deployment model card does not publish the exact conversion/quantization tool identity.",
         "quantization.tool_revision": "The official deployment model card does not publish an exact conversion/quantization tool revision.",
         "thermal.power_watts": "No calibrated external power measurement was collected; USB power/charging state is retained from Android battery service."
+      }
+    },
+    {
+      "id": "0025-gemma-4-e2b-it-litert-lm-generic-gpu",
+      "experiment": "0025",
+      "model": "Gemma 4 E2B IT",
+      "model_identity": {
+        "name": "google/gemma-4-E2B-it",
+        "url": "https://huggingface.co/google/gemma-4-E2B-it/tree/3e22461f65e89153144f8adb70e3b8c2cc9845a7",
+        "revision": "3e22461f65e89153144f8adb70e3b8c2cc9845a7"
+      },
+      "artifacts": [
+        {
+          "path": "gemma-4-E2B-it.litertlm",
+          "sha256": "181938105e0eefd105961417e8da75903eacda102c4fce9ce90f50b97139a63c",
+          "bytes": 2588147712,
+          "format": "LiteRT-LM container 1.5.0"
+        }
+      ],
+      "quantization": {
+        "name": "official mixed 2/4/8-bit mobile quantization",
+        "bits": null,
+        "scheme": "Gemma-4 mobile quantization using a mixture of 2-bit, 4-bit, and 8-bit weights; exact per-tensor assignment is unpublished.",
+        "source": "https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm/tree/6b78abd019e61a1ca4cbe3b212d2c9ce8ff38a94",
+        "tool": null,
+        "tool_revision": null
+      },
+      "tokenizer": {
+        "name": "Gemma tokenizer embedded in the official generic LiteRT-LM artifact",
+        "url": "https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm/tree/6b78abd019e61a1ca4cbe3b212d2c9ce8ff38a94",
+        "revision": "6b78abd019e61a1ca4cbe3b212d2c9ce8ff38a94",
+        "chat_template_source": "Embedded generic-artifact chat template with pinned no-tools, no-thinking system+user render specialization.",
+        "chat_template_sha256": "02b3091acf53c0b722e3db0c7a1b4980363edcc2d85549dafa339ff5dbfff629"
+      },
+      "route": "LiteRT-LM GPU · GPU-only LiteRT delegate · loaded Engine with fresh Session per request",
+      "attempt_status": "ran",
+      "runtime": {
+        "name": "LiteRT-LM",
+        "version": "v0.16.1",
+        "revision": "924e79c91542761242244e4f1651851f822e4cbb",
+        "provider": "LiteRT GPU accelerator · Qualcomm/Adreno OpenCL/GLES",
+        "threads": 4,
+        "options": {
+          "android_ndk": "28.1.13356709 (r28b)",
+          "runner_sha256": "5f6c423ad154acd91741eefd0b1a554662fe3f6bd6cc510fb8fcf90de12435ed",
+          "libLiteRt_sha256": "3fdbf64355af65b3ca6ed0c633ffed1e4faa1bfa9256f5e7403fec1633ea1b74",
+          "max_num_tokens": 8192,
+          "sampler": "CPU TOP_P(k=1,p=1) exact argmax implementation for both CPU and GPU neural backends",
+          "thinking_enabled": false,
+          "speculative_decoding_enabled": false,
+          "neural_backend": "GPU",
+          "request_isolation_strategy": "fresh_session_per_logical_request",
+          "session_object_reused": false,
+          "loaded_engine_reused": true,
+          "session_creation_in_total_request": false,
+          "session_recreation_median_seconds": {
+            "short": 0.000145729,
+            "medium": 0.000196875,
+            "long": 0.000179063
+          },
+          "gpu_provider_binding_proven": true,
+          "litert_hardware_accelerators": "kGpu only (no CPU fallback bit)",
+          "fully_delegated_to_single_delegate_hint": true,
+          "gpu_accelerator_library_loaded": true,
+          "gpu_driver_library_loaded": true,
+          "gpu_device_fds": [
+            "/dev/kgsl-3d0"
+          ],
+          "cpu_fallback_used": false
+        }
+      },
+      "device": {
+        "model": "SM-S918B",
+        "soc": "SM8550",
+        "serial": "R5CW81PR8SY",
+        "abi": "arm64-v8a"
+      },
+      "workloads": {
+        "short": {
+          "contract_id": "android-llm-inference-v1",
+          "tier": "short",
+          "path": "protocols/android-llm-benchmark/workloads/inference-v1/short.json",
+          "sha256": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae",
+          "rendered_prompt_sha256": "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a",
+          "input_bytes": 860,
+          "input_tokens": 171,
+          "token_ids_sha256": "65d931b8fb39eacee9675b22e52d6ce0a091429e50451c2d1ea0463e250d7f4d",
+          "context_limit_tokens": 8192,
+          "max_new_tokens": 2048,
+          "truncated": false
+        },
+        "medium": {
+          "contract_id": "android-llm-inference-v1",
+          "tier": "medium",
+          "path": "protocols/android-llm-benchmark/workloads/inference-v1/medium.json",
+          "sha256": "5e168aa3232f06c92959b686188192471b2d1a62cd1c857a616fd8e29456ddf1",
+          "rendered_prompt_sha256": "8e3c03cb0d1ddce8455306b8b84585ce2ae07c083c4fdbdec1e946e3be56771d",
+          "input_bytes": 3253,
+          "input_tokens": 595,
+          "token_ids_sha256": "2a89b5742b50060ad7510f8dfaa22eafda4a8fedbe06b5aaed36d5653390cf8d",
+          "context_limit_tokens": 8192,
+          "max_new_tokens": 2048,
+          "truncated": false
+        },
+        "long": {
+          "contract_id": "android-llm-inference-v1",
+          "tier": "long",
+          "path": "protocols/android-llm-benchmark/workloads/inference-v1/long.json",
+          "sha256": "092840fbe879259110fa4d0b15bc383012f16b7b42a38d224b2ead231e86aad8",
+          "rendered_prompt_sha256": "450b519d417e29c4239e39aef856db1813d2580cd62e9db9adaae3d94ba8f260",
+          "input_bytes": 10529,
+          "input_tokens": 1930,
+          "token_ids_sha256": "bbb4413aa186c843cbdc71a1f659e9d574c6fd0bc46fe844a310813445279bba",
+          "context_limit_tokens": 8192,
+          "max_new_tokens": 2048,
+          "truncated": false
+        }
+      },
+      "setup": {
+        "seconds": 10.519980517,
+        "boundary": "before ModelAssets::Create through one Engine and the initial direct Session ready with KV capacity",
+        "components": {
+          "initial_session_creation_seconds": 2.8698e-05
+        }
+      },
+      "runs": [
+        {
+          "id": "first-short-01",
+          "phase": "first",
+          "tier": "short",
+          "input_tokens": 171,
+          "output_token_cap": 2048,
+          "output_tokens": 392,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "setup_created_initial_session",
+            "reset_or_session_creation_seconds": 2.8698e-05,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "decode_seconds": 17.517998118,
+            "post_prefill_to_first_token_seconds": 0.059383959,
+            "prefill_seconds": 1.021676353,
+            "request_to_first_token_seconds": 1.082435833,
+            "total_seconds": 18.600433951
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 167.37198575447505,
+            "decode_tokens_per_second": 22.31990192978967,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/outputs/first-short-01.txt",
+            "sha256": "0c9b37983e88d9ecccb9054fdcadbe729f52e1778aac7ef63d11465452481aae",
+            "bytes": 2236
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-short-01",
+          "phase": "loaded_route",
+          "tier": "short",
+          "input_tokens": 171,
+          "output_token_cap": 2048,
+          "output_tokens": 392,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000145261,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "decode_seconds": 30.806764988,
+            "post_prefill_to_first_token_seconds": 0.074817292,
+            "prefill_seconds": 0.274907656,
+            "request_to_first_token_seconds": 0.353246927,
+            "total_seconds": 31.160011915
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 622.0270562417512,
+            "decode_tokens_per_second": 12.692017488765996,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/outputs/loaded-route-short-01.txt",
+            "sha256": "0c9b37983e88d9ecccb9054fdcadbe729f52e1778aac7ef63d11465452481aae",
+            "bytes": 2236
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-short-02",
+          "phase": "loaded_route",
+          "tier": "short",
+          "input_tokens": 171,
+          "output_token_cap": 2048,
+          "output_tokens": 392,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000145729,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "decode_seconds": 31.558871603,
+            "post_prefill_to_first_token_seconds": 0.130548177,
+            "prefill_seconds": 0.566565676,
+            "request_to_first_token_seconds": 0.700752135,
+            "total_seconds": 32.259623738
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 301.8184956195617,
+            "decode_tokens_per_second": 12.389543102765163,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/outputs/loaded-route-short-02.txt",
+            "sha256": "0c9b37983e88d9ecccb9054fdcadbe729f52e1778aac7ef63d11465452481aae",
+            "bytes": 2236
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-short-03",
+          "phase": "loaded_route",
+          "tier": "short",
+          "input_tokens": 171,
+          "output_token_cap": 2048,
+          "output_tokens": 392,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000231979,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "decode_seconds": 31.938105769,
+            "post_prefill_to_first_token_seconds": 0.102255781,
+            "prefill_seconds": 0.486869688,
+            "request_to_first_token_seconds": 0.593076042,
+            "total_seconds": 32.531181811
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 351.22334418157493,
+            "decode_tokens_per_second": 12.242429241984517,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/outputs/loaded-route-short-03.txt",
+            "sha256": "0c9b37983e88d9ecccb9054fdcadbe729f52e1778aac7ef63d11465452481aae",
+            "bytes": 2236
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-short-04",
+          "phase": "loaded_route",
+          "tier": "short",
+          "input_tokens": 171,
+          "output_token_cap": 2048,
+          "output_tokens": 392,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000129739,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "decode_seconds": 31.728859363,
+            "post_prefill_to_first_token_seconds": 0.113609062,
+            "prefill_seconds": 0.532884011,
+            "request_to_first_token_seconds": 0.649172812,
+            "total_seconds": 32.378032175
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 320.8953477119808,
+            "decode_tokens_per_second": 12.323165970975847,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/outputs/loaded-route-short-04.txt",
+            "sha256": "0c9b37983e88d9ecccb9054fdcadbe729f52e1778aac7ef63d11465452481aae",
+            "bytes": 2236
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-short-05",
+          "phase": "loaded_route",
+          "tier": "short",
+          "input_tokens": 171,
+          "output_token_cap": 2048,
+          "output_tokens": 392,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000154479,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "decode_seconds": 31.953435457,
+            "post_prefill_to_first_token_seconds": 0.108773073,
+            "prefill_seconds": 0.565128281,
+            "request_to_first_token_seconds": 0.676560052,
+            "total_seconds": 32.629995509
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 302.58616627257413,
+            "decode_tokens_per_second": 12.236555926080996,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/outputs/loaded-route-short-05.txt",
+            "sha256": "0c9b37983e88d9ecccb9054fdcadbe729f52e1778aac7ef63d11465452481aae",
+            "bytes": 2236
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-medium-01",
+          "phase": "loaded_route",
+          "tier": "medium",
+          "input_tokens": 595,
+          "output_token_cap": 2048,
+          "output_tokens": 640,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000157864,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "decode_seconds": 48.54820394,
+            "post_prefill_to_first_token_seconds": 0.106023802,
+            "prefill_seconds": 2.141223177,
+            "request_to_first_token_seconds": 2.256065051,
+            "total_seconds": 50.804268991
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 277.8785538991016,
+            "decode_tokens_per_second": 13.162175902320312,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/outputs/loaded-route-medium-01.txt",
+            "sha256": "5fffedf45f341972564cf587672a4be59903f1ee9ac04feccbcb86ddfd3e1cfe",
+            "bytes": 3781
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-medium-02",
+          "phase": "loaded_route",
+          "tier": "medium",
+          "input_tokens": 595,
+          "output_token_cap": 2048,
+          "output_tokens": 640,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000193177,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "decode_seconds": 47.484174774,
+            "post_prefill_to_first_token_seconds": 0.090858854,
+            "prefill_seconds": 1.226377395,
+            "request_to_first_token_seconds": 1.327008228,
+            "total_seconds": 48.811183002
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 485.1687599802832,
+            "decode_tokens_per_second": 13.45711498707323,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/outputs/loaded-route-medium-02.txt",
+            "sha256": "5fffedf45f341972564cf587672a4be59903f1ee9ac04feccbcb86ddfd3e1cfe",
+            "bytes": 3781
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-medium-03",
+          "phase": "loaded_route",
+          "tier": "medium",
+          "input_tokens": 595,
+          "output_token_cap": 2048,
+          "output_tokens": 640,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000196875,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "decode_seconds": 47.742387534,
+            "post_prefill_to_first_token_seconds": 0.095457864,
+            "prefill_seconds": 1.148663177,
+            "request_to_first_token_seconds": 1.253602291,
+            "total_seconds": 48.995989825
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 517.9934483091731,
+            "decode_tokens_per_second": 13.384332728331458,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/outputs/loaded-route-medium-03.txt",
+            "sha256": "5fffedf45f341972564cf587672a4be59903f1ee9ac04feccbcb86ddfd3e1cfe",
+            "bytes": 3781
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-medium-04",
+          "phase": "loaded_route",
+          "tier": "medium",
+          "input_tokens": 595,
+          "output_token_cap": 2048,
+          "output_tokens": 640,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.00025552,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "decode_seconds": 53.448148,
+            "post_prefill_to_first_token_seconds": 0.105004687,
+            "prefill_seconds": 1.223228905,
+            "request_to_first_token_seconds": 1.338511302,
+            "total_seconds": 54.786659302
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 486.4175442289765,
+            "decode_tokens_per_second": 11.955512471638867,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/outputs/loaded-route-medium-04.txt",
+            "sha256": "5fffedf45f341972564cf587672a4be59903f1ee9ac04feccbcb86ddfd3e1cfe",
+            "bytes": 3781
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-medium-05",
+          "phase": "loaded_route",
+          "tier": "medium",
+          "input_tokens": 595,
+          "output_token_cap": 2048,
+          "output_tokens": 640,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000222292,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "decode_seconds": 52.224325085,
+            "post_prefill_to_first_token_seconds": 0.121793958,
+            "prefill_seconds": 1.64975276,
+            "request_to_first_token_seconds": 1.781470311,
+            "total_seconds": 54.005795396
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 360.66010279019025,
+            "decode_tokens_per_second": 12.235677511580427,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/outputs/loaded-route-medium-05.txt",
+            "sha256": "5fffedf45f341972564cf587672a4be59903f1ee9ac04feccbcb86ddfd3e1cfe",
+            "bytes": 3781
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-long-01",
+          "phase": "loaded_route",
+          "tier": "long",
+          "input_tokens": 1930,
+          "output_token_cap": 2048,
+          "output_tokens": 756,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000327656,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "decode_seconds": 51.075793679,
+            "post_prefill_to_first_token_seconds": 0.093872448,
+            "prefill_seconds": 3.836000727,
+            "request_to_first_token_seconds": 3.962869686,
+            "total_seconds": 55.038663365
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 503.1281632496938,
+            "decode_tokens_per_second": 14.781953360235713,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/outputs/loaded-route-long-01.txt",
+            "sha256": "82971d099b4ba897a3331a462cf8e694ff64f1cccd22b522708feef065f12a3f",
+            "bytes": 3985
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-long-02",
+          "phase": "loaded_route",
+          "tier": "long",
+          "input_tokens": 1930,
+          "output_token_cap": 2048,
+          "output_tokens": 756,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000179063,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "decode_seconds": 46.313979045,
+            "post_prefill_to_first_token_seconds": 0.083840625,
+            "prefill_seconds": 1.888618645,
+            "request_to_first_token_seconds": 1.996967603,
+            "total_seconds": 48.310946648
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 1021.9109109769485,
+            "decode_tokens_per_second": 16.30177358042202,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/outputs/loaded-route-long-02.txt",
+            "sha256": "82971d099b4ba897a3331a462cf8e694ff64f1cccd22b522708feef065f12a3f",
+            "bytes": 3985
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-long-03",
+          "phase": "loaded_route",
+          "tier": "long",
+          "input_tokens": 1930,
+          "output_token_cap": 2048,
+          "output_tokens": 756,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 8.4583e-05,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "decode_seconds": 48.260763888,
+            "post_prefill_to_first_token_seconds": 0.105179218,
+            "prefill_seconds": 2.146168593,
+            "request_to_first_token_seconds": 2.264483645,
+            "total_seconds": 50.525247533
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 899.2769749286887,
+            "decode_tokens_per_second": 15.644178400328432,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/outputs/loaded-route-long-03.txt",
+            "sha256": "82971d099b4ba897a3331a462cf8e694ff64f1cccd22b522708feef065f12a3f",
+            "bytes": 3985
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-long-04",
+          "phase": "loaded_route",
+          "tier": "long",
+          "input_tokens": 1930,
+          "output_token_cap": 2048,
+          "output_tokens": 756,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 7.8334e-05,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "decode_seconds": 45.087685243,
+            "post_prefill_to_first_token_seconds": 0.083890833,
+            "prefill_seconds": 1.923202291,
+            "request_to_first_token_seconds": 2.019992239,
+            "total_seconds": 47.107677482
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 1003.5345782561778,
+            "decode_tokens_per_second": 16.74514883456378,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/outputs/loaded-route-long-04.txt",
+            "sha256": "82971d099b4ba897a3331a462cf8e694ff64f1cccd22b522708feef065f12a3f",
+            "bytes": 3985
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        },
+        {
+          "id": "loaded-route-long-05",
+          "phase": "loaded_route",
+          "tier": "long",
+          "input_tokens": 1930,
+          "output_token_cap": 2048,
+          "output_tokens": 756,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "fresh_session_per_logical_request",
+            "reset_or_session_creation_seconds": 0.000191458,
+            "included_in_total_request": false,
+            "session_object_reused": false,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "decode_seconds": 45.70985493,
+            "post_prefill_to_first_token_seconds": 0.090332344,
+            "prefill_seconds": 1.966515468,
+            "request_to_first_token_seconds": 2.075712135,
+            "total_seconds": 47.785567065
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 981.4313853136699,
+            "decode_tokens_per_second": 16.51722590579659,
+            "decode_first_token_included": false
+          },
+          "output": {
+            "path": "experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/outputs/loaded-route-long-05.txt",
+            "sha256": "82971d099b4ba897a3331a462cf8e694ff64f1cccd22b522708feef065f12a3f",
+            "bytes": 3985
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {}
+        }
+      ],
+      "aggregates": {
+        "by_tier": {
+          "short": {
+            "loaded_route_count": 5,
+            "median_request_to_first_token_seconds": 0.649172812,
+            "median_prefill_tokens_per_second": 320.8953477119808,
+            "median_decode_tokens_per_second": 12.323165970975847,
+            "median_total_seconds": 32.378032175
+          },
+          "medium": {
+            "loaded_route_count": 5,
+            "median_request_to_first_token_seconds": 1.338511302,
+            "median_prefill_tokens_per_second": 485.1687599802832,
+            "median_decode_tokens_per_second": 13.162175902320312,
+            "median_total_seconds": 50.804268991
+          },
+          "long": {
+            "loaded_route_count": 5,
+            "median_request_to_first_token_seconds": 2.075712135,
+            "median_prefill_tokens_per_second": 981.4313853136699,
+            "median_decode_tokens_per_second": 16.30177358042202,
+            "median_total_seconds": 48.310946648
+          }
+        }
+      },
+      "memory": {
+        "peak_pss_bytes": 1003954176,
+        "peak_vm_hwm_bytes": 1016340480,
+        "method": "100 ms process PSS and VmHWM sampling plus ru_maxrss; GPU-private memory is not independently measured.",
+        "sampling_interval_seconds": 0.1,
+        "lifecycle": "benchmark process from immediately before setup through final request"
+      },
+      "thermal": {
+        "battery_after": {
+          "ac_powered": false,
+          "health": 2,
+          "level_percent": 94,
+          "status": 2,
+          "temperature_c": 40.5,
+          "usb_powered": true,
+          "wireless_powered": false
+        },
+        "battery_before": {
+          "ac_powered": false,
+          "health": 2,
+          "level_percent": 94,
+          "status": 2,
+          "temperature_c": 35.7,
+          "usb_powered": true,
+          "wireless_powered": false
+        },
+        "power_missing_reason": "No calibrated external power measurement was collected; Android battery/charging state is retained.",
+        "power_watts": null,
+        "thermal_after": {
+          "android_thermal_status": 3,
+          "ap_status": 0,
+          "ap_temperature_c": 50.1,
+          "battery_status": 0,
+          "battery_temperature_c": 40.5,
+          "skin_status": 3,
+          "skin_temperature_c": 44.5
+        },
+        "thermal_before": {
+          "android_thermal_status": 0,
+          "ap_status": 0,
+          "ap_temperature_c": 44.0,
+          "battery_status": 0,
+          "battery_temperature_c": 35.7,
+          "skin_status": 0,
+          "skin_temperature_c": 38.1
+        },
+        "transport": "Windows-native ADB daemon bridged to WSL over tcp:172.27.80.1:5037."
+      },
+      "summary": "Complete provider-proven canonical Android GPU campaign: one first short request plus five loaded-GPU-Engine requests per tier, with a fresh Session for every later request, all EOS, no truncation, and no CPU fallback bit for all 16 requests.",
+      "limitations": [
+        "The phone ended at Android thermal status 3; sustained thermal throttling likely affected later observations.",
+        "No calibrated external power measurement was collected.",
+        "Process PSS/VmHWM does not include independently measured private GPU memory.",
+        "PSS is sampled at 100 ms and may miss brief peaks; VmHWM/ru_maxrss is cumulative.",
+        "Fresh-Session recreation is measured separately and excluded from request timing.",
+        "Output sanity is a corruption/gibberish check, not quality or correctness.",
+        "The canonical GPU arm uses the approved official generic artifact with Backend::GPU; the dedicated Artisan artifact failed before inference and remains historical non-metric evidence.",
+        "The provider-bound one-request smoke proved viability only; this row is sourced from the separate complete canonical campaign.",
+        "The first canonical launch lacking its configured cache directory is a separate non-counted pre-inference diagnostic."
+      ],
+      "sources": [
+        "experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/result.json",
+        "experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/SHA256SUMS",
+        "experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/README.md",
+        "experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/raw/gpu-provider-binding.json",
+        "experiments/0025-gemma-4-e2b-it-android/results/android-gpu-blocker/result.json",
+        "experiments/0025-gemma-4-e2b-it-android/results/android-gpu-missing-cache-diagnostic/result.json",
+        "experiments/0025-gemma-4-e2b-it-android/protocol/experiment-contract.json",
+        "experiments/0025-gemma-4-e2b-it-android/README.md"
+      ],
+      "missing_reasons": {
+        "quantization.bits": "The official artifact mixes 2-bit, 4-bit, and 8-bit weights, so no single bit width is accurate.",
+        "quantization.exact_per_tensor_assignment": "The official deployment model card does not publish a per-tensor bit allocation or calibration manifest.",
+        "quantization.tool": "The official deployment model card does not publish the exact conversion/quantization tool identity.",
+        "quantization.tool_revision": "The official deployment model card does not publish an exact conversion/quantization tool revision.",
+        "thermal.power_watts": "No calibrated external power measurement was collected; Android battery/charging state is retained."
       }
     },
     {

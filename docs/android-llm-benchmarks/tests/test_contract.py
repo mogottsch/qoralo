@@ -61,6 +61,18 @@ class RepositoryContractTest(unittest.TestCase):
         self.assertIn("reset_or_session_creation_seconds", isolation["required"])
         self.assertIn("loaded_model_runtime_route_reused", isolation["required"])
 
+    def test_gpu_rows_bind_provider_and_exclude_cpu_fallback(self) -> None:
+        registry = json.loads((REGISTRY_DIR / "registry.json").read_text(encoding="utf-8"))
+        gpu_rows = [
+            entry for entry in registry["entries"]
+            if entry["runtime"]["options"].get("neural_backend") == "GPU"
+        ]
+        self.assertGreaterEqual(len(gpu_rows), 1)
+        for entry in gpu_rows:
+            options = entry["runtime"]["options"]
+            self.assertIs(options.get("gpu_provider_binding_proven"), True)
+            self.assertIs(options.get("cpu_fallback_used"), False)
+
     def test_current_registry_and_workload_validate(self) -> None:
         registry = json.loads((REGISTRY_DIR / "registry.json").read_text(encoding="utf-8"))
         completed = subprocess.run(

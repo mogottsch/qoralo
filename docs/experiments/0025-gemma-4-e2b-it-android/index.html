@@ -72,30 +72,30 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="status-header" data-status-header="true">
 <div class="kicker"><span>Experiment 0025</span><span class="status">Completed</span></div>
 <h1>Experiment 0025 — Gemma 4 E2B IT on Android</h1>
-<p class="summary">The project needed a trustworthy Android baseline for the official Gemma 4 E2B mobile package. After rejecting a reset method that silently reused prompt state, the CPU route completed the full campaign with a loaded Engine and fresh Session isolation.</p>
+<p class="summary">The official Gemma 4 E2B IT generic LiteRT-LM artifact completed distinct canonical Android CPU and provider-proven GPU campaigns. Both retain one loaded Engine and use fresh-Session isolation.</p>
 <div class="header-links"><a href="../../../experiments/0025-gemma-4-e2b-it-android/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-08-26</span><span>evidence commit: 12e0e32a1852de6b1db23499948bd092ab5d8a49</span><span>page source: docs/experiments/0025-gemma-4-e2b-it-android/page.md</span><span>page source sha256: 175dd787c060f2560d942bc320f9c44d65bcc2e55dd35da6d76c6afb5318cf19</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-26</span><span>evidence commit: c2d1906c0cb1db2177588b43106ffec0dcd22bc1</span><span>page source: docs/experiments/0025-gemma-4-e2b-it-android/page.md</span><span>page source sha256: 12cb081bb295efdc304e4b56ac5be4743fe00be773b8595f0887fa992c281e33</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
-<p>The project wanted to measure an official Gemma mobile deployment on the Galaxy S23 Ultra without mistaking cached prompt work for real performance. The experiment therefore asked two linked questions: could the official Gemma 4 E2B IT LiteRT-LM CPU route complete the fixed Android workload, and could every repeated request be isolated while the expensive model and Engine remained loaded?</p>
-<p>The published arm uses the official <code>gemma-4-E2B-it.litertlm</code> CPU artifact, LiteRT-LM v0.16.1, four CPU threads, an 8,192-token route capacity, thinking disabled, and an exact greedy-equivalent <code>TOP_P(k=1)</code> sampler. Gemma&#x27;s embedded tokenizer produced 171 short, 595 medium, and 1,930 long input tokens. Every prompt still fit with the unchanged 2,048-token output ceiling.</p>
-<p>Isolation matters for this result. The route retained one loaded Engine, but destroyed the prior Session and created a fresh Session before every later logical request. Session creation was measured separately and excluded from TTFT, prefill, decode, and total-request timing. The owning <a href="../../../experiments/0025-gemma-4-e2b-it-android/README.md">experiment README</a>, <a href="../../../experiments/0025-gemma-4-e2b-it-android/protocol/experiment-contract.json">route contract</a>, and <a href="../../../experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/result.json">canonical CPU result</a> preserve the exact route and claim boundaries.</p>
+<p>The project wanted trustworthy CPU and GPU measurements for an official Gemma mobile deployment on the Galaxy S23 Ultra without mistaking cached prompt work or a fallback route for real performance. The final experiment therefore answers two linked questions: can the official Gemma 4 E2B IT LiteRT-LM artifact complete the fixed Android campaign on each neural backend, and can every repeated request be isolated while the expensive model and Engine remain loaded?</p>
+<p>Following an explicitly approved route amendment, both published arms use the official generic <code>gemma-4-E2B-it.litertlm</code> artifact: <strong>2,588,147,712 bytes</strong>, SHA-256 <code>181938105e0eefd105961417e8da75903eacda102c4fce9ce90f50b97139a63c</code>. The CPU arm uses four threads. The GPU arm requests <code>Backend::GPU</code>, with <code>kGpu</code> as the only LiteRT hardware accelerator bit and no CPU fallback bit. Both use LiteRT-LM v0.16.1, an 8,192-token route capacity, thinking disabled, and the runtime&#x27;s exact greedy-equivalent CPU <code>TOP_P(k=1)</code> sampler. The embedded tokenizer produces 171 short, 595 medium, and 1,930 long input tokens, all fitting with the unchanged 2,048-token output ceiling.</p>
+<p>Each arm retains one loaded Engine, destroys the prior Session, and creates a fresh Session before every later logical request. Session creation is measured separately and excluded from TTFT, prefill, decode, and total-request timing. The owning <a href="../../../experiments/0025-gemma-4-e2b-it-android/README.md">experiment README</a>, <a href="../../../experiments/0025-gemma-4-e2b-it-android/protocol/experiment-contract.json">route contract</a>, <a href="../../../experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/result.json">canonical CPU result</a>, and <a href="../../../experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/result.json">canonical GPU result</a> preserve the exact route and claim boundaries.</p>
 </section>
 <section class="primary-section" id="progress" data-primary-section="progress">
 <h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
-<p>The experiment first pinned the official base and deployment revisions, CPU and GPU artifact identities, tokenizer and template hashes, LiteRT-LM runtime, Android runner and libraries, workload hashes, and the authorized SM-S918B device. A bounded host smoke proved only that the CPU package could load and generate. A later 64-token phone smoke established Android CPU viability, but neither smoke was a canonical leaderboard campaign.</p>
-<p>The first 16-request CPU attempt exposed a critical reset problem. <code>RewindToStep(0)</code> reset the logical step while retaining reusable prompt/KV state, causing repeated prompts to report microsecond prefill and impossible multi-million-token-per-second rates. That complete run remains a diagnostic and was not published as performance evidence.</p>
-<p>Two bounded host probes separated the reset choices. Rewinding one Session reproduced prefix reuse, while retaining the Engine and creating a fresh Session forced full prefill again. Moritz approved that narrower protocol-v2 isolation strategy. The runner was rebuilt and hash-bound so every later request measures fresh-Session creation separately without remapping the model or recompiling the route.</p>
-<p>The final CPU campaign then completed one first short request plus five loaded-Engine requests for each of short, medium, and long. All 16 requests used the correct input counts, completed at EOS, retained their exact raw outputs, and passed the narrow sensible-text check. The scoped remote stage was removed and verified absent. The <a href="../../../experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/SHA256SUMS">42-file checksum manifest</a> binds the retained campaign evidence.</p>
+<p>The experiment first pinned the model, deployment, tokenizer/template, runtime, runner, libraries, workload hashes, and authorized SM-S918B device. Host and 64-token phone smokes established bounded viability only; neither is used as a canonical campaign distribution.</p>
+<p>The first 16-request CPU attempt exposed a critical reset problem. <code>RewindToStep(0)</code> retained reusable prompt/KV state and produced impossible repeated-prompt prefill rates. The diagnostic was rejected. Bounded probes showed that retaining one Engine while creating a fresh Session restores full prompt work, and Moritz approved that protocol-v2 isolation strategy. The final CPU campaign then completed one first short plus five loaded-route requests per tier. All 16 requests used the correct input counts, ended at EOS, retained exact output bytes, and passed the narrow sensible-text check. Its <a href="../../../experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/SHA256SUMS">42-file manifest</a> binds the evidence.</p>
+<p>The original dedicated <code>gemma-4-E2B-it-gpu.litertlm</code> Artisan artifact was assessed first. LiteRT-LM switched the request to <code>GPU_ARTISAN</code> but the pinned open-source runtime lacked the required legacy TFLite engine, so execution stopped before inference. No request ran, no provider bound, and no metric was published. That durable <a href="../../../experiments/0025-gemma-4-e2b-it-android/results/android-gpu-blocker/result.json">Artisan blocker</a> remains historical rather than being overwritten by the amended route.</p>
+<p>Moritz then approved the official generic artifact with <code>Backend::GPU</code>. A provider-bound one-request smoke established viability only. The first canonical launch attempt stopped before any request because its configured cache directory did not exist; the <a href="../../../experiments/0025-gemma-4-e2b-it-android/results/android-gpu-missing-cache-diagnostic/result.json">missing-cache diagnostic</a> is non-counted. A completely fresh succeeding campaign write-probed the cache and completed the canonical 1+5+5+5 shape. From that campaign process, provider binding is proven by the GPU-only/no-fallback accelerator mask, fully delegated single-delegate hint, mapped <code>libLiteRtGpuAccelerator.so</code> and Qualcomm/Adreno OpenCL/GLES libraries, and open <code>/dev/kgsl-3d0</code>. All 16 requests ended at EOS with exact retained outputs and fresh-Session isolation. Its <a href="../../../experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/SHA256SUMS">47-file manifest</a> binds the result.</p>
 </section>
 <section class="primary-section" id="results" data-primary-section="results">
 <h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
-<aside class="registry-card" data-registry-entry="0025-gemma-4-e2b-it-litert-lm-cpu"><div class="eyebrow">Normalized Android LLM benchmark</div><div class="metrics"><div class="metric" data-metric="setup_seconds" data-value="6.473695049"><span>Setup</span><strong>6.474 s</strong></div><div class="metric" data-metric="medium_ttft_seconds" data-value="7.560051872"><span>Loaded-route medium TTFT</span><strong>7.560 s</strong></div><div class="metric" data-metric="medium_prefill_tokens_per_second" data-value="80.08105910859905"><span>Loaded-route medium prefill</span><strong>80.08 tok/s</strong></div><div class="metric" data-metric="medium_decode_tokens_per_second" data-value="10.278034349851502"><span>Loaded-route medium decode</span><strong>10.28 tok/s</strong></div><div class="metric" data-metric="peak_pss_bytes" data-value="5726960640"><span>Peak sampled PSS</span><strong>5461.7 MiB</strong></div></div><p class="unavailable"><strong>Output sanity is not quality.</strong> 16 sensible / 0 issue / 0 unchecked. This only screens exact retained outputs for obvious corruption or gibberish.</p></aside>
-<p>Setup took <strong>6.474 seconds</strong>, from before model assets were created through one Engine and the initial Session being ready with its KV capacity. The first short request reached its first token in <strong>6.452 seconds</strong>, processed 171 input tokens at <strong>59.76 input tok/s</strong>, decoded at <strong>13.01 output tok/s</strong>, and completed in <strong>38.741 seconds</strong>.</p>
+<aside class="registry-card" data-registry-entry="0025-gemma-4-e2b-it-litert-lm-cpu"><div class="eyebrow">Normalized Android LLM benchmark<strong class="registry-route">LiteRT-LM CPU · 4 threads · loaded Engine with fresh Session per request</strong></div><div class="metrics"><div class="metric" data-metric="setup_seconds" data-value="6.473695049"><span>Setup</span><strong>6.474 s</strong></div><div class="metric" data-metric="medium_ttft_seconds" data-value="7.560051872"><span>Loaded-route medium TTFT</span><strong>7.560 s</strong></div><div class="metric" data-metric="medium_prefill_tokens_per_second" data-value="80.08105910859905"><span>Loaded-route medium prefill</span><strong>80.08 tok/s</strong></div><div class="metric" data-metric="medium_decode_tokens_per_second" data-value="10.278034349851502"><span>Loaded-route medium decode</span><strong>10.28 tok/s</strong></div><div class="metric" data-metric="peak_pss_bytes" data-value="5726960640"><span>Peak sampled PSS</span><strong>5461.7 MiB</strong></div></div><p class="unavailable"><strong>Output sanity is not quality.</strong> 16 sensible / 0 issue / 0 unchecked. This only screens exact retained outputs for obvious corruption or gibberish.</p></aside>
+<aside class="registry-card" data-registry-entry="0025-gemma-4-e2b-it-litert-lm-generic-gpu"><div class="eyebrow">Normalized Android LLM benchmark<strong class="registry-route">LiteRT-LM GPU · GPU-only LiteRT delegate · loaded Engine with fresh Session per request</strong></div><div class="metrics"><div class="metric" data-metric="setup_seconds" data-value="10.519980517"><span>Setup</span><strong>10.520 s</strong></div><div class="metric" data-metric="medium_ttft_seconds" data-value="1.338511302"><span>Loaded-route medium TTFT</span><strong>1.339 s</strong></div><div class="metric" data-metric="medium_prefill_tokens_per_second" data-value="485.1687599802832"><span>Loaded-route medium prefill</span><strong>485.17 tok/s</strong></div><div class="metric" data-metric="medium_decode_tokens_per_second" data-value="13.162175902320312"><span>Loaded-route medium decode</span><strong>13.16 tok/s</strong></div><div class="metric" data-metric="peak_pss_bytes" data-value="1003954176"><span>Peak sampled PSS</span><strong>957.4 MiB</strong></div></div><p class="unavailable"><strong>Output sanity is not quality.</strong> 16 sensible / 0 issue / 0 unchecked. This only screens exact retained outputs for obvious corruption or gibberish.</p></aside>
+<p>The table compares medians from the five loaded-route requests in each tier. CPU and GPU are distinct normalized rows even though they share the same official generic artifact.</p>
 <div class="table-wrap"><table><thead><tr>
-<th>Tier</th>
-<th>Loaded-route requests</th>
+<th>Backend / tier</th>
 <th>Input / output tokens</th>
 <th>Median TTFT</th>
 <th>Median prefill</th>
@@ -104,8 +104,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <th>Median Session recreation</th>
 </tr></thead><tbody>
 <tr>
-<td>short</td>
-<td>5</td>
+<td>CPU short</td>
 <td>171 / 421</td>
 <td>3.044 s</td>
 <td>58.33 input tok/s</td>
@@ -114,8 +113,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>0.201 ms</td>
 </tr>
 <tr>
-<td>medium</td>
-<td>5</td>
+<td>CPU medium</td>
 <td>595 / 700</td>
 <td>7.560 s</td>
 <td>80.08 input tok/s</td>
@@ -124,8 +122,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>0.342 ms</td>
 </tr>
 <tr>
-<td>long</td>
-<td>5</td>
+<td>CPU long</td>
 <td>1,930 / 756</td>
 <td>28.663 s</td>
 <td>67.65 input tok/s</td>
@@ -133,10 +130,37 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>115.812 s</td>
 <td>0.278 ms</td>
 </tr>
+<tr>
+<td>GPU short</td>
+<td>171 / 392</td>
+<td>0.649 s</td>
+<td>320.90 input tok/s</td>
+<td>12.32 output tok/s</td>
+<td>32.378 s</td>
+<td>0.146 ms</td>
+</tr>
+<tr>
+<td>GPU medium</td>
+<td>595 / 640</td>
+<td>1.339 s</td>
+<td>485.17 input tok/s</td>
+<td>13.16 output tok/s</td>
+<td>50.804 s</td>
+<td>0.197 ms</td>
+</tr>
+<tr>
+<td>GPU long</td>
+<td>1,930 / 756</td>
+<td>2.076 s</td>
+<td>981.43 input tok/s</td>
+<td>16.30 output tok/s</td>
+<td>48.311 s</td>
+<td>0.179 ms</td>
+</tr>
 </tbody></table></div>
-<p>Peak sampled process PSS was <strong>5,726,960,640 bytes</strong> (about 5,461 MiB). Process VmHWM and <code>ru_maxrss</code> reached <strong>5,887,778,816 bytes</strong>. PSS was sampled every 100 ms and can miss brief peaks; VmHWM and <code>ru_maxrss</code> are cumulative process high-water marks rather than isolated model or KV memory.</p>
-<p>The operating conditions materially limit comparison. The phone began warm at 45.4 °C AP and 39.7 °C skin, then ended at Android thermal status 3 with 51.7 °C AP and 45.0 °C skin. Sustained thermal throttling likely affected later observations, so these are the measured campaign values rather than thermally normalized model constants. The phone was USB powered, but no calibrated external power measurement was collected.</p>
-<p>All 16 exact outputs recorded <code>looks_sensible: true</code> with null issue notes. This only checks for obvious corruption or gibberish; it is not a judgment of correctness, grounding, usefulness, transcript quality, or acceptance. The result establishes the official CPU artifact on this LiteRT-LM route. The distinct official GPU artifact was not run and has no published row.</p>
+<p>CPU setup took <strong>6.474 seconds</strong>; peak sampled process PSS was <strong>5,726,960,640 bytes</strong>, and VmHWM/<code>ru_maxrss</code> reached <strong>5,887,778,816 bytes</strong>. GPU setup took <strong>10.520 seconds</strong>; peak sampled process PSS was <strong>1,003,954,176 bytes</strong>, and VmHWM/<code>ru_maxrss</code> reached <strong>1,016,340,480 bytes</strong>. Process PSS/VmHWM does not independently measure private GPU memory. The 100 ms PSS sampler can miss brief peaks, while VmHWM and <code>ru_maxrss</code> are cumulative process high-water marks.</p>
+<p>Operating conditions limit direct interpretation. The CPU campaign began warm at 45.4 °C AP / 39.7 °C skin and ended at Android thermal status 3, 51.7 °C AP / 45.0 °C skin. The GPU campaign began at status 0, 44.0 °C AP / 38.1 °C skin and ended at status 3, 50.1 °C AP / 44.5 °C skin. Likely sustained thermal throttling is therefore explicit. Both runs were USB powered, and neither has calibrated external power evidence.</p>
+<p>All 32 canonical outputs across the two arms record <code>looks_sensible: true</code> with null issue notes. This only checks exact retained text for obvious corruption or gibberish; it is not a judgment of correctness, grounding, usefulness, transcript quality, or acceptance. The two rows establish the official generic LiteRT-LM artifact on distinct CPU and provider-proven GPU execution backends. They make no NPU or HTP claim.</p>
 </section></article>
 <footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
 </main>

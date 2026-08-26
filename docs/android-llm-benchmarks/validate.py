@@ -133,6 +133,13 @@ def validate_entry(entry: dict, manifest: dict[str, str], message_bytes: dict[st
     if entry["device"] != EXPECTED_DEVICE:
         fail(f"{label}: every registry row must identify the canonical Android device")
 
+    runtime_options = entry["runtime"]["options"]
+    if runtime_options.get("neural_backend") == "GPU":
+        if runtime_options.get("gpu_provider_binding_proven") is not True:
+            fail(f"{label}: GPU row requires explicit provider-binding proof")
+        if runtime_options.get("cpu_fallback_used") is not False:
+            fail(f"{label}: GPU row must explicitly exclude CPU fallback")
+
     for source in entry["sources"]:
         repository_file(source, f"{label} source")
 
