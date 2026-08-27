@@ -72,15 +72,15 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="status-header" data-status-header="true">
 <div class="kicker"><span>Experiment 0031</span><span class="status">Active</span></div>
 <h1>Experiment 0031 — Gemma 4 E2B IT Android QNN/HTP</h1>
-<p class="summary">A narrow QAIRT 2.49.40 compatibility layer transformed the unchanged public W4A16 source into static AR1 and AR128 CL4096 variants; QNN conversion and HTP context compilation remain open.</p>
+<p class="summary">Both static Gemma 4 AR variants converted into hash-bound HTP-targeted DLCs, with mixed-precision boundaries retained; weight-shared HTP context compilation remains open.</p>
 <div class="header-links"><a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-08-27</span><span>evidence commit: a1979f1dc3e32224d3ce3290cae9994184e5efb2</span><span>page source: docs/experiments/0031-gemma-4-e2b-it-android-qnn-htp/page.md</span><span>page source sha256: 09c7324365fb3f856734a5efaf8b19c513817385890795188fb700905c3efba8</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-27</span><span>evidence commit: 5497c01350e7884cd3ed680fe975972f239580f4</span><span>page source: docs/experiments/0031-gemma-4-e2b-it-android-qnn-htp/page.md</span><span>page source sha256: 751df8a3b659f067ea163b51936167c0ec8886b9cbe116e31e44413e1927aedf</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
-<p>Gemma 4 E2B IT already has measured Android CPU and GPU routes, but its QNN arm stopped when QAIRT 2.49.0 could not transform the exact public W4A16 graph. The newly authorized QAIRT 2.49.40 package retained the implicated defect, so this experiment introduced a narrow schema-and-shape compatibility layer. That layer has now cleared the transform stage without changing the public checkpoint; QNN conversion and target context compilation are next.</p>
+<p>Gemma 4 E2B IT already has measured Android CPU and GPU routes, but its QNN arm stopped when QAIRT 2.49.0 could not transform the exact public W4A16 graph. The newly authorized QAIRT 2.49.40 package retained the implicated defect, so this experiment introduced a narrow schema-and-shape compatibility layer. That layer cleared the transform stage without changing the public checkpoint, and both static variants have now passed host QNN conversion. Weight-shared HTP context compilation is next.</p>
 <p>The intended end-to-end result has not changed: an exact, provenance-bound Gemma 4 E2B context compiled for SM8550/HTP v73, physical <code>QnnHtp</code> provider proof on the authorized Galaxy S23 Ultra, a bounded viability request, proven loaded-route state isolation, and only then the canonical one-first-plus-five-short/five-medium/five-long Android campaign. Toolchain acquisition or file presence alone cannot satisfy any of those gates.</p>
-<p>The public <code>gemma_4_e2b_it_w4a16.zip</code> checkpoint remains the pinned model input. It is hash-bound at 2,013,959,998 bytes and includes the exact ONNX/external data, W4A16 encodings, tokenizer, template, and configuration assessed by the earlier transform probe. The owning <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/transform-blocker/result.json">original transform blocker</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-capability/result.json">QAIRT 2.49.40 capability comparison</a>, and <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-transform-compat/result.json">positive transform result</a> are the evidence authority.</p>
+<p>The public <code>gemma_4_e2b_it_w4a16.zip</code> checkpoint remains the pinned model input. It is hash-bound at 2,013,959,998 bytes and includes the exact ONNX/external data, W4A16 encodings, tokenizer, template, and configuration assessed by the earlier transform probe. The owning <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/transform-blocker/result.json">original transform blocker</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-capability/result.json">QAIRT 2.49.40 capability comparison</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-transform-compat/result.json">positive transform result</a>, and <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-qnn-conversion/result.json">QNN conversion result</a> are the evidence authority.</p>
 </section>
 <section class="primary-section" id="progress" data-primary-section="progress">
 <h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
@@ -96,11 +96,17 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <li>shared 9,119,006,720-byte transformed external data at SHA-256 <code>b9b73b98…a65d</code>.</li>
 </ul>
 <p>Both output graphs pass the ONNX checker, and every graph input and output is static. Post-transform hashes prove that the original ONNX, external data, and encodings remain unchanged. This milestone requested no QNN conversion, HTP compilation, inference, phone access, or paid Workbench job.</p>
-<p>The active next gate is QNN conversion of both bound static variants, followed by one weight-shared serialized context compiled for SM8550/HTP v73 and generation of the matching embedding/per-layer-embedding LUTs. Any paid Workbench compile/link use remains a separate unapproved cost-and-terms checkpoint. No phone access is permitted before a compiled route exists.</p>
+<p>Both static variants now pass QAIRT 2.49.40 QNN conversion with <code>backend=HTP</code> and the published quantization overrides:</p>
+<ul>
+<li>AR1 DLC: 2,356,831,668 bytes, SHA-256 <code>02a79060…ff68</code>;</li>
+<li>AR128 DLC: 2,356,851,284 bytes, SHA-256 <code>5f17ece8…56ee</code>.</li>
+</ul>
+<p><code>qairt-dlc-info</code> binds each converted graph at 2,280,676,608 parameters and retains its operator and I/O encoding inventory. The conversion is not uniformly integer: the converter reports 15 RmsNorm float fallbacks in each variant. AR1 also exposes 15 value-cache outputs as Float16, while all 31 AR128 outputs are uFxp16. These mixed-precision facts remain visible for compilation and runtime validation; they are not silently described as uniform W4A16 or as CPU-provider fallback.</p>
+<p>The active next gate is compiling both DLCs together into one weight-shared serialized context for SM8550/HTP v73, inspecting graph/provider and partition metadata, and generating the matching embedding/per-layer-embedding LUTs. Any paid Workbench compile/link use remains a separate unapproved cost-and-terms checkpoint. No phone access is permitted before a compiled route exists.</p>
 </section>
 <section class="primary-section" id="results" data-primary-section="results">
 <h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
-<p><strong>The experiment is active after a positive host transform and before QNN conversion.</strong> The result establishes that a bounded compatibility layer can materialize static AR1 and AR128 CL4096 variants from the unchanged public W4A16 source. The earlier <code>KeyError(&#x27;value&#x27;)</code> remains historical evidence for the unpatched QAIRT path rather than the current stopping point.</p>
+<p><strong>The experiment is active after positive host QNN conversion and before HTP context compilation.</strong> The result establishes that the static AR1 and AR128 CL4096 variants from the unchanged public W4A16 source can be converted into hash-bound, HTP-targeted QAIRT DLCs. The earlier <code>KeyError(&#x27;value&#x27;)</code> remains historical evidence for the unpatched transform path rather than the current stopping point.</p>
 <div class="table-wrap"><table><thead><tr>
 <th>Evidence boundary</th>
 <th>Current result</th>
@@ -130,7 +136,19 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>Original ONNX, external data, and encodings unchanged after transform</td>
 </tr>
 <tr>
-<td>QNN conversion or compiled context</td>
+<td>Host QNN conversion</td>
+<td>AR1 and AR128 HTP-targeted DLCs completed and hash-bound</td>
+</tr>
+<tr>
+<td>Converted graph inventory</td>
+<td>2,280,676,608 parameters per DLC</td>
+</tr>
+<tr>
+<td>Mixed-precision boundary</td>
+<td>15 RmsNorm float fallbacks per variant; 15 AR1 Float16 value-cache outputs; AR128 outputs uFxp16</td>
+</tr>
+<tr>
+<td>Compiled serialized HTP context / partition proof</td>
 <td>None; not requested in this milestone</td>
 </tr>
 <tr>
@@ -146,8 +164,8 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>None; toolchain capability evidence is not registry-eligible</td>
 </tr>
 </tbody></table></div>
-<p>A successful static transform is not QNN conversion and is not physical provider proof. The bound ONNX+encodings outputs have not been accepted into a QNN context, compiled for HTP, loaded on Android, or executed. The compatibility layer is limited to the recorded schema/shape handling and does not license broader graph rewriting or an HTP claim.</p>
-<p>No context binary was created, no phone or ADB operation occurred, no paid Workbench job ran, and no QNN/HTP inference or performance evidence exists. A future page may advance beyond this milestone only from committed conversion, compilation, or provider evidence. The Android LLM registry remains limited to complete valid physical Android campaigns, so 0031 has no benchmark row.</p>
+<p>A successful HTP-targeted DLC conversion is not HTP compilation and is not provider or partition proof. The <code>backend=HTP</code> converter configuration and quantization metadata do not show that all operations can enter one compiled context or run physically. The 15 RmsNorm fallbacks and AR1 Float16 cache outputs are conversion facts whose compile/runtime handling remains unresolved.</p>
+<p>No serialized context binary was created, no phone or ADB operation occurred, no paid Workbench job ran, and no QNN/HTP inference or performance evidence exists. A future page may advance beyond this milestone only from committed context compilation, partition inspection, or provider evidence. The Android LLM registry remains limited to complete valid physical Android campaigns, so 0031 has no benchmark row.</p>
 </section></article>
 <footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
 </main>
