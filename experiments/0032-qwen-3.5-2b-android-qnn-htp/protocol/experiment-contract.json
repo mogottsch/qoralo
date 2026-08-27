@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
-  "status": "active_qnn_recurrence_broadcast_root_cause_fixed_in_minimal_probe_exact_recompile_pending",
+  "status": "active_exact_explicit_broadcast_pte_host_validated_revised_physical_check_pending_decision",
   "question": "Can Qwen3.5-2B run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Qwen3.5-2B post-trained text generation only",
@@ -138,7 +138,12 @@
     "first_divergence_root_cause": "QNN implicit elementwise broadcast failed to materialize the full recurrent outer product",
     "explicit_broadcast_minimal_probe_passed": true,
     "deployed_pte_contains_explicit_broadcast_fix": false,
-    "next_gate": "Recompile the exact route with explicit recurrence broadcasts, then validate the revised PTE against QDQ on the QNN x86 backend; no phone retry or campaign is authorized."
+    "revised_pte_result_path": "results/exact-qnn-explicit-broadcast-host-validation/result.json",
+    "revised_pte_sha256": "23ac8abd7e39b596d62bdc6b098a3e61fe0688bf6d1f4d537959e13492d2c506",
+    "revised_pte_all_tensor_compute_delegated": true,
+    "revised_pte_qnn_x86_layer0_recurrent_state_cosine": 0.9998289346694946,
+    "revised_pte_physical_execution": false,
+    "next_gate": "No phone run is currently authorized. Decide with Pi whether the exact repaired-PTE host evidence justifies one separately scoped physical output check; no campaign is authorized."
   },
   "required_provider_proof_if_unblocked": {
     "compiled_context_identity": "Hash every deployed serialized context and bind SM8550/v73 compiler provenance.",

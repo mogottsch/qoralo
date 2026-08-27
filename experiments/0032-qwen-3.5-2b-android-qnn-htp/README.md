@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active. The physically executed route's token mismatch has been localized on the host to implicit QNN broadcasting in the first Gated Delta recurrent outer product. Explicit static expansion fixes a minimal W4A16 QNN repro; the exact 24-layer route now needs recompilation and host validation before any further phone work.**
+**Active. The exact 24-layer route has been recompiled with explicit Gated Delta broadcasts and validated through QNN's x86 backend. The repaired PTE removes the first-layer recurrent corruption and massive logit saturation, but it has not run physically; any further phone check requires a new explicit Pi handoff.**
 
 This is a separate HTP feasibility arm. It does not change or relabel `0027` CPU evidence.
 
@@ -43,11 +43,15 @@ A lower-retention two-process host replay in [`results/host-w4a16-qdq-output-dia
 
 [`results/host-qnn-broadcast-divergence-localization/`](results/host-qnn-broadcast-divergence-localization/) locates the first mismatch at token position zero: layer-0 convolution state still matches QDQ, but recurrent state is corrupt before cross-token transport or later layers. A tiny W4A16 repro showed that QNN wrote only 16 of 128 implicit outer-product values. Explicitly expanding operands restored all values, recurrent-state cosine 1.0, and final-logit maximum error `2.96e-5`.
 
+## Exact repaired-PTE milestone
+
+[`results/exact-qnn-explicit-broadcast-host-validation/`](results/exact-qnn-explicit-broadcast-host-validation/) binds the revised 1,994,754,552-byte PTE. All 4,210 tensor-compute nodes are delegated. QNN-x86 first-token validation improves layer-0 recurrent-state cosine from 0.0064 to 0.999829 and reduces the logit maximum from a 39,209-way tie to one unique value. Overall first-token logits still differ from QDQ, so this is repair validation rather than complete numerical equivalence.
+
 ## Current next gate
 
-1. Recompile the exact 24-layer route with explicit recurrence broadcasts.
-2. Execute the revised PTE through QNN's x86 backend and compare first-token states/logits against QDQ before considering physical work.
-3. Do not reacquire `phone.lock`, invoke ADB, or stage anything without a new explicit Pi handoff.
+1. Keep the revised PTE and phone preflight hash fixed.
+2. Do not reacquire `phone.lock`, invoke ADB, or stage anything without a new explicit Pi handoff.
+3. If Pi authorizes a separately bounded physical output check, preserve the same strict provider/output/cleanup evidence; no campaign is currently authorized.
 4. Only after credible output fidelity is established may the loaded-route multi-request runner and fixed 1+5+5+5 campaign be considered.
 
 GenieX llama.cpp NPU metrics, the shipped 4B HTP example, direct-Hexagon output without QNN, and CPU-only text output are not substitutes for physical QNN/HTP provider proof.

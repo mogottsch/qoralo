@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import time
 from pathlib import Path
 
 import numpy as np
@@ -73,7 +74,9 @@ def make_inputs_from_pte_meta(meta) -> list[torch.Tensor]:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--phase", choices=("qdq", "qnn", "compare"), required=True)
+    parser.add_argument(
+        "--phase", choices=("qdq", "qnn", "qnn-prompt", "compare"), required=True
+    )
     parser.add_argument("--params", type=Path, required=True)
     parser.add_argument("--token-ids", type=Path, required=True)
     parser.add_argument("--qdq-file", type=Path)
@@ -81,6 +84,7 @@ def main() -> None:
     parser.add_argument("--qdq-outputs", type=Path, required=True)
     parser.add_argument("--qnn-outputs", type=Path, required=True)
     parser.add_argument("--result", type=Path, required=True)
+    parser.add_argument("--prompt-result", type=Path)
     parser.add_argument("--context", type=int, default=4096)
     args = parser.parse_args()
 
@@ -122,7 +126,7 @@ def main() -> None:
         print(args.qdq_outputs)
         return
 
-    if args.phase == "qnn":
+    if args.phase in ("qnn", "qnn-prompt"):
         if args.pte is None:
             raise ValueError("--pte is required for qnn phase")
         from executorch.extension.pybindings.portable_lib import _load_for_executorch
@@ -133,16 +137,78 @@ def main() -> None:
         inputs = make_inputs_from_pte_meta(meta)
         if len(inputs) != 51:
             raise RuntimeError(f"expected 51 PTE inputs, got {len(inputs)}")
-        inputs[0][0, 0] = token
         inputs[1].fill_(-65504.0)
         inputs[1][..., -1] = 0.0
-        inputs[2][0, 0] = 0
-        outputs = module.forward(inputs)
-        if len(outputs) != 49:
-            raise RuntimeError(f"expected 49 PTE outputs, got {len(outputs)}")
-        args.qnn_outputs.parent.mkdir(parents=True, exist_ok=True)
-        torch.save([output.detach().cpu().clone() for output in outputs], args.qnn_outputs)
-        print(args.qnn_outputs)
+        if args.phase == "qnn":
+            inputs[0][0, 0] = token
+            inputs[2][0, 0] = 0
+            outputs = module.forward(inputs)
+            if len(outputs) != 49:
+                raise RuntimeError(f"expected 49 PTE outputs, got {len(outputs)}")
+            args.qnn_outputs.parent.mkdir(parents=True, exist_ok=True)
+            torch.save([output.detach().cpu().clone() for output in outputs], args.qnn_outputs)
+            print(args.qnn_outputs)
+            return
+
+        if args.prompt_result is None:
+            raise ValueError("--prompt-result is required for qnn-prompt phase")
+        token_ids = np.fromfile(args.token_ids, dtype="<i4").astype(np.int64).tolist()
+        started = time.perf_counter()
+        per_token = []
+        for position, input_token in enumerate(token_ids):
+            inputs[0][0, 0] = input_token
+            inputs[2][0, 0] = position
+            if position:
+                inputs[1][..., position - 1] = 0.0
+            outputs = module.forward(inputs)
+            logits = outputs[0].float().reshape(-1)
+            if len(outputs) != 49:
+                raise RuntimeError(f"expected 49 PTE outputs, got {len(outputs)}")
+            for layer in range(config.n_layers):
+                state_a = inputs[3 + layer]
+                next_a = outputs[1 + layer]
+                state_b = inputs[3 + config.n_layers + layer]
+                next_b = outputs[1 + config.n_layers + layer]
+                if state_a.numel() == next_a.numel():
+                    state_a.copy_(next_a)
+                    state_b.copy_(next_b)
+                else:
+                    state_a[..., position].copy_(next_a[..., 0])
+                    state_b[:, :, position, :].copy_(next_b[:, :, 0, :])
+            record = {
+                "position": position,
+                "input_token": int(input_token),
+                "argmax": int(logits.argmax()),
+                "finite": bool(torch.isfinite(logits).all()),
+                "max": float(logits.max()),
+                "max_count": int((logits == logits.max()).sum()),
+            }
+            per_token.append(record)
+            if position == 0 or (position + 1) % 10 == 0 or position + 1 == len(token_ids):
+                print(json.dumps(record), flush=True)
+        final_logits = outputs[0].float().reshape(-1)
+        top_values, top_ids = torch.topk(final_logits, 10)
+        prompt_result = {
+            "schema_version": 1,
+            "evidence_class": "host_qnn_x86_fixed_pte_canonical_short_replay",
+            "prompt_tokens": len(token_ids),
+            "elapsed_seconds": time.perf_counter() - started,
+            "all_logits_finite": all(record["finite"] for record in per_token),
+            "final": {
+                "argmax": int(final_logits.argmax()),
+                "top_ids": [int(value) for value in top_ids],
+                "top_values": [float(value) for value in top_values],
+                "max_count": int((final_logits == final_logits.max()).sum()),
+            },
+            "per_token": per_token,
+            "claim_limits": [
+                "QNN x86 host simulation only; this is not a revised physical result.",
+                "This replay validates explicit state transport but is not a campaign.",
+            ],
+        }
+        args.prompt_result.parent.mkdir(parents=True, exist_ok=True)
+        args.prompt_result.write_text(json.dumps(prompt_result, indent=2) + "\n")
+        print(args.prompt_result)
         return
 
     qdq_outputs = torch.load(args.qdq_outputs, map_location="cpu", weights_only=True)

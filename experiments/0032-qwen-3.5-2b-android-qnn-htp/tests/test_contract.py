@@ -60,6 +60,9 @@ class ContractTest(unittest.TestCase):
         cls.broadcast_localization = json.loads(
             (EXP / "results/host-qnn-broadcast-divergence-localization/result.json").read_text()
         )
+        cls.repaired_pte = json.loads(
+            (EXP / "results/exact-qnn-explicit-broadcast-host-validation/result.json").read_text()
+        )
 
     def test_canonical_protocol_and_workloads(self) -> None:
         canonical = self.contract["canonical_protocol"]
@@ -351,6 +354,34 @@ class ContractTest(unittest.TestCase):
         self.assertEqual(after["source_sha256"], sha(EXP / after["source_path"]))
         self.assertFalse(self.contract["executorch_qnn_route"]["deployed_pte_contains_explicit_broadcast_fix"])
 
+    def test_exact_repaired_pte_is_host_validated_not_physically_claimed(self) -> None:
+        result = self.repaired_pte
+        self.assertEqual(
+            "exact_explicit_broadcast_pte_host_compile_and_qnn_x86_validation",
+            result["evidence_class"],
+        )
+        compile_result = json.loads(
+            (EXP / "results/exact-qnn-explicit-broadcast-host-validation/compile-result.json").read_text()
+        )
+        self.assertTrue(compile_result["all_tensor_compute_delegated"])
+        self.assertEqual({}, compile_result["non_delegated_tensor_compute"])
+        self.assertEqual(4, compile_result["delegated_subgraphs"])
+        self.assertEqual(4210, compile_result["delegated_nodes"])
+        self.assertEqual(120, compile_result["explicit_expand_nodes_delegated"])
+        self.assertEqual(174, compile_result["calibration"]["tokens"])
+        self.assertEqual(21365, compile_result["calibration"]["last_argmax"])
+
+        first = result["qnn_x86_first_token"]
+        self.assertGreater(first["layer0_recurrent_state_cosine"], 0.999)
+        self.assertLess(abs(first["layer0_recurrent_state_qnn_to_qdq_l2_ratio"] - 1), 0.01)
+        self.assertEqual(1, first["logits_exact_max_count"])
+        comparison = result["comparison_to_deployed_pte"]
+        self.assertEqual(39209, comparison["deployed_logits_exact_max_count"])
+        self.assertEqual(1, comparison["revised_logits_exact_max_count"])
+        self.assertFalse(self.contract["executorch_qnn_route"]["revised_pte_physical_execution"])
+        phone_script = (EXP / "tools/run_phone_viability.sh").read_text()
+        self.assertIn(result["compile"]["pte_sha256"], phone_script)
+
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
             EXP / "protocol",
@@ -363,6 +394,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/android-qnn-physical-viability-20260827-attempt-02",
             EXP / "results/host-w4a16-qdq-output-diagnosis",
             EXP / "results/host-qnn-broadcast-divergence-localization",
+            EXP / "results/exact-qnn-explicit-broadcast-host-validation",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

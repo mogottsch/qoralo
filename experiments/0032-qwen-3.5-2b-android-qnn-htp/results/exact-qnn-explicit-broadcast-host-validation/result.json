@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
+  "evidence_class": "exact_explicit_broadcast_pte_host_compile_and_qnn_x86_validation",
+  "status": "exact_fixed_pte_compiled_first_divergence_repaired_full_prompt_host_simulator_impractical",
+  "compile": {
+    "result": "compile-result.json",
+    "target": "SM8550/HTP v73",
+    "qnn_subgraphs": 4,
+    "delegated_tensor_compute_nodes": 4210,
+    "non_delegated_tensor_compute_nodes": 0,
+    "delegated_explicit_expand_nodes": 120,
+    "qnn_graph_finalize_status_0x0": 4,
+    "serialized_context_bytes": [1198835592, 177320840, 180660120, 437915896],
+    "pte_bytes": 1994754552,
+    "pte_sha256": "23ac8abd7e39b596d62bdc6b098a3e61fe0688bf6d1f4d537959e13492d2c506",
+    "pte_policy": "local-only; not staged"
+  },
+  "qnn_x86_first_token": {
+    "token_position": 0,
+    "token_id": 248045,
+    "state_inputs": "all zero",
+    "qdq_argmax": 62,
+    "qnn_x86_argmax": 198,
+    "logits_finite": true,
+    "logits_exact_max_count": 1,
+    "logits_cosine": 0.4336029887199402,
+    "layer0_recurrent_state_cosine": 0.9998289346694946,
+    "layer0_recurrent_state_max_abs": 0.013593435287475586,
+    "layer0_recurrent_state_qnn_to_qdq_l2_ratio": 0.9983182182456636,
+    "layer0_conv_state_cosine": 0.9999996423721313,
+    "detail": "first-token-validation.json",
+    "interpretation": "The exact fix removes the first-layer recurrent corruption and 39,209-way logit saturation seen in the deployed PTE. Remaining first-token numeric drift accumulates beyond the repaired first state."
+  },
+  "canonical_short_qnn_x86_partial": {
+    "termination": "host simulator command stopped at the 3600-second tool timeout; no process remained",
+    "last_logged_completed_position": 29,
+    "logged_positions": [0, 9, 19, 29],
+    "all_logged_logits_finite": true,
+    "all_logged_exact_max_counts": 1,
+    "log": "canonical-short-partial.stdout.log",
+    "claim_boundary": "This partial simulator replay is not a final canonical-short output and is not physical evidence."
+  },
+  "comparison_to_deployed_pte": {
+    "deployed_pte_sha256": "bfdae1c3327c954566ec0d4a5a0ee8873eb145d0921bc3f9d988a6a2557be6df",
+    "deployed_layer0_recurrent_state_cosine": 0.00644123088568449,
+    "deployed_layer0_recurrent_state_qnn_to_qdq_l2_ratio": 117.81045985941773,
+    "deployed_logits_exact_max_count": 39209,
+    "revised_layer0_recurrent_state_cosine": 0.9998289346694946,
+    "revised_layer0_recurrent_state_qnn_to_qdq_l2_ratio": 0.9983182182456636,
+    "revised_logits_exact_max_count": 1
+  },
+  "next_gate": "Do not infer revised physical output from QNN x86. Decide with Pi whether the repaired exact-PTE host evidence justifies one separately authorized bounded physical check; no phone run or campaign is currently authorized.",
+  "claim_limits": [
+    "The revised exact PTE is host-compiled and validated only through QNN x86 simulation.",
+    "The first identified divergence is repaired, but QNN x86 first-token logits still differ numerically from PT2E QDQ.",
+    "The full 174-token x86 simulation did not complete within one hour and provides no final output claim.",
+    "No revised physical output, useful-text, performance, campaign, or registry claim is made."
+  ]
+}

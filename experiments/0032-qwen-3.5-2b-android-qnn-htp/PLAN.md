@@ -2,7 +2,7 @@
 
 ## Status
 
-Active. Host localization identified failed implicit QNN broadcasting in the first Gated Delta recurrent outer product. Explicit expansion fixes a minimal W4A16 repro; exact-route recompilation and host QNN validation are pending.
+Active. The exact route has been recompiled with explicit recurrent broadcasts and validated through QNN x86. The first-layer corruption and massive logit saturation are repaired; revised physical output remains untested and requires a new explicit handoff.
 
 ## Completed
 
@@ -27,12 +27,13 @@ Active. Host localization identified failed implicit QNN broadcasting in the fir
 14. Ran the one authorized retry. All 696 expected QNN graph calls completed with status `0x0`; ETDump proves HTP accelerator cycles, RPC time, and four HVX threads per graph call. The route produced token 0 (`!`) rather than pre-PTQ host-reference token 21365 (`Given`), and scoped cleanup was independently verified.
 15. Preserved the complete physical evidence with lossless compression and verified raw-hash recovery, then replayed the exact W4A16 PT2E QDQ graph in a separate lower-retention host process. QDQ produced token 760 (`The`), proving PTQ changes the top token but does not by itself explain physical token 0.
 16. Ran the exact deployed PTE through QNN's x86 backend at token position zero and localized the first large mismatch to layer-0 recurrent state while convolution state remained aligned. A tiny repro confirmed implicit outer-product broadcasting wrote only 16/128 values; explicit static expansion restored full state and near-exact logits.
+17. Recompiled the exact 24-layer W4A16 route with 120 delegated explicit expands and zero tensor-compute fallback. Revised-PTE QNN-x86 validation restores layer-0 recurrent cosine to 0.999829 and removes the 39,209-way logit saturation. A full simulator prompt is impractically slow and stopped after 30 tokens at one hour.
 
 ## Current work
 
-1. Recompile the exact 24-layer route with explicit recurrence broadcasts.
-2. Compare revised-PTE first-token state and logits against QDQ through QNN's x86 backend.
-3. Do not use ADB or `phone.lock`; no retry or campaign is authorized.
+1. Preserve the repaired PTE and strict phone preflight hashes without staging.
+2. Do not use ADB or `phone.lock`; no revised physical check or campaign is authorized.
+3. If Pi separately authorizes one bounded physical output check, test only the repaired route and report before any further run.
 4. Only after output fidelity is credible, prepare loaded-route multi-request reset/reuse and request a separate campaign handoff.
 
 Do not use CPU fallback, borrow the 4B config, relabel direct Hexagon/GenieX evidence as QNN, or publish before the complete route satisfies the benchmark contract.

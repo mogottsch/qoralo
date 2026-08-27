@@ -9,7 +9,7 @@ ROOT=$(git rev-parse --show-toplevel)
 EXP="$ROOT/experiments/0032-qwen-3.5-2b-android-qnn-htp"
 ET="$EXP/.local/executorch"
 QNN=${QNN_SDK_ROOT:-/home/moritz/opt/qairt/2.49.0.260730}
-PTE=${PTE:-$EXP/.local/exact-qnn/qwen35-2b-w4a16-qnn.pte}
+PTE=${PTE:-$EXP/.local/exact-qnn-explicit-broadcast/qwen35-2b-w4a16-qnn.pte}
 RUNNER="$ET/build-android/examples/qualcomm/executor_runner/qwen35_explicit_state_runner"
 PROMPT_IDS=${PROMPT_IDS:-$EXP/protocol/token-ids/short.int32le}
 BACKEND="$ET/build-android/backends/qualcomm/libqnn_executorch_backend.so"
@@ -65,7 +65,7 @@ expected_hash() {
     exit 4
   }
 }
-expected_hash bfdae1c3327c954566ec0d4a5a0ee8873eb145d0921bc3f9d988a6a2557be6df "$PTE"
+expected_hash 23ac8abd7e39b596d62bdc6b098a3e61fe0688bf6d1f4d537959e13492d2c506 "$PTE"
 expected_hash 0b5bef7984738d60d2f4b2f4dbae1c13f1f5914b75b8cc00e5ae3e2ed0f81fc5 "$RUNNER"
 expected_hash dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4 "$PROMPT_IDS"
 expected_hash 0d97f44ac9abcaf7e5e025440c41c3727acc6315f2bd2613ab1cb31afe508b37 "$BACKEND"
