@@ -85,10 +85,20 @@ class Runner {
       throw std::runtime_error("embedding asset size mismatch");
     }
     env_.RegisterExecutionProviderLibrary("QNNExecutionProvider", root_ / "libonnxruntime_providers_qnn.so");
+    std::cerr << "ort_version=" << Ort::GetVersionString() << "\n";
     for (auto device : env_.GetEpDevices()) {
-      if (std::string(device.EpName()) == "QNNExecutionProvider") devices_.push_back(device);
+      const auto hardware = device.Device();
+      std::cerr << "ep_device name=" << device.EpName()
+                << " type=" << static_cast<int>(hardware.Type())
+                << " vendor=" << hardware.Vendor()
+                << " vendor_id=" << hardware.VendorId()
+                << " device_id=" << hardware.DeviceId() << "\n";
+      if (std::string(device.EpName()) == "QNNExecutionProvider" &&
+          hardware.Type() == OrtHardwareDeviceType_NPU) {
+        devices_.push_back(device);
+      }
     }
-    if (devices_.empty()) throw std::runtime_error("QNNExecutionProvider device not found");
+    if (devices_.empty()) throw std::runtime_error("QNNExecutionProvider NPU device not found");
     fs::create_directories(root_ / "profiles");
     LoadSessions();
     Reset();
@@ -277,6 +287,7 @@ class Runner {
     }
     for (size_t index = 0; index < names.size(); ++index) {
       const auto& name = names[index];
+      std::cerr << "loading_session=" << name << "\n";
       Ort::KeyValuePairs provider_options;
       provider_options.Add("backend_path", (root_ / "libQnnHtp.so").c_str());
       provider_options.Add("htp_performance_mode", "burst");

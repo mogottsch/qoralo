@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active. The exact model now has an architecture-aware Q4 export, a bounded host viability pass, and 263 fallback-disabled QNN contexts compiled for SM8550/HTP v73 with complete framework-op ownership traces. The hash-bound 2.0 GB phone stage is ready locally, but Pi still reports the phone as ADB-unauthorized; no 0034 ADB contact, phone stage, Android execution, or benchmark exists yet.**
+**Active after one fail-closed physical pre-inference failure. Exact identity and all 540 staged hashes passed, but the Android QNN plugin did not claim the first EPContext; CPU fallback remained disabled, no session/model token/HTP graph executed, and cleanup was verified absent. Pi authorized exactly one bounded NPU-selection diagnostic retry; no campaign is authorized.**
 
 This is a separate accelerator arm. It preserves `0029` CPU viability and `0033` CPU/OpenCL campaign evidence without modifying either experiment.
 
@@ -61,7 +61,9 @@ A bounded host reconstruction submitted the exact 171-token canonical short prom
 
 The native API-31 AArch64 runner and ignored phone stage are ready. The runner loads all 263 context sessions once, requests HTP resource sharing and basic per-context profiling, keeps fallback disabled, submits the exact 171-token short prompt, and caps the viability continuation at 16 tokens. Public Maven artifacts, the runner, every context pair, Q4 embedding tables, and the prompt are covered by a local 540-file stage manifest. The license-controlled stage is 2,015,057,362 bytes before its metadata/manifests and remains outside Git.
 
-See [`results/phone-preparation/result.json`](results/phone-preparation/result.json). This is host preparation only. Pi currently reports `R5CW81PR8SY unauthorized`; the 0034 owner has not contacted ADB or acquired `phone.lock`. Work pauses until Moritz accepts the RSA prompt and Pi confirms `device` state.
+The first physical attempt used the full `phone.lock` lifecycle, verified the exact authorized device and every local/remote staged hash, then failed while creating the first EPContext session. ORT reported that nodes would remain on the default CPU EP; `session.disable_cpu_ep_fallback=1` correctly stopped the route. No context session, model token, HTP graph, output, or profile was produced. The 2.0 GB scoped remote root was removed and verified absent. Raw evidence is retained in [`results/phone-attempt-1-provider-selection-failure/`](results/phone-attempt-1-provider-selection-failure/).
+
+The revised runner logs every advertised EP device type and selects only `QNNExecutionProvider` with Android NPU hardware type. Its SHA-256 is `fe3351b84f6588a063642d036bbd4d2a2856a179dbab83d6f21b7978886043ea`; the replacement local stage is again fully hash-bound. See [`results/phone-preparation/result.json`](results/phone-preparation/result.json). Pi authorized exactly one bounded retry with the no-fallback gate unchanged.
 
 ## HTP validity gates still open
 

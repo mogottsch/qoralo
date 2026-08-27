@@ -1,71 +1,72 @@
 {
-  "schema_version": 1,
-  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
-  "classification": "host_only_hash_bound_phone_stage_not_android_execution",
-  "status": "prepared_locally_waiting_for_user_to_authorize_adb_rsa",
   "bounded_request": {
-    "tier": "short",
-    "prompt_tokens": 171,
-    "prompt_token_ids_int32le_sha256": "eae8e828110f634d5c9954df0372e869f67f67aed846f9f544781faa1d4d29bc",
+    "canonical_campaign": false,
     "max_new_tokens": 16,
-    "canonical_campaign": false
+    "prompt_token_ids_int32le_sha256": "eae8e828110f634d5c9954df0372e869f67f67aed846f9f544781faa1d4d29bc",
+    "prompt_tokens": 171,
+    "tier": "short"
+  },
+  "claim_boundary": "Attempt 1 is separately retained as a physical pre-inference failure. This revised hash-bound retry stage is host preparation only and is not registry eligible.",
+  "classification": "host_only_hash_bound_phone_stage_not_android_execution",
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "ignored_stage": {
+    "bytes_excluding_stage_metadata_and_sha_manifest": 2015058722,
+    "files_excluding_sha_manifest": 539,
+    "local_sha256_check": "passed",
+    "preparation_tool": "tools/prepare_phone_stage.py",
+    "retained_outside_git": true,
+    "sha256_manifest_bytes": 57364,
+    "sha256_manifest_sha256": "df9546ccaec07663fddca2c6cdcb2b4f9e8d5c85cf94790144cb21f116fe30a4",
+    "stage_metadata_bytes": 94972,
+    "stage_metadata_sha256": "3af3174ea2ed099f2ad65f51108296fb4fc6759b2b3526bc6bebf6488822ddcc"
+  },
+  "phone_boundary": {
+    "adb_contact_by_0034_owner": true,
+    "known_coordination_state": "Attempt 1 ended before session/model execution, cleaned scoped root absent, and released phone.lock. Pi authorized exactly one diagnostic retry with NPU-only selection.",
+    "next_action": "Run exactly one bounded retry under the full phone.lock lifecycle; no campaign.",
+    "phone_lock_acquired": false,
+    "stage_or_install_on_phone": false
+  },
+  "public_android_packages": {
+    "onnxruntime_android_1_26_0": {
+      "bytes": 43596581,
+      "maven": "com.microsoft.onnxruntime:onnxruntime-android:1.26.0",
+      "sha256": "09c0780ae8d734ef2774bdf498b624729a855e6f9a8e488a0e7398a4e7396032"
+    },
+    "onnxruntime_android_qnn_2_5_0": {
+      "bytes": 1499488,
+      "maven": "com.qualcomm.qti:onnxruntime-android-qnn:2.5.0",
+      "sha256": "da496414c0c8374cefede14c9a8c433d331b9ba06b5b02ff0bf4a510a26fc772"
+    },
+    "qnn_runtime_2_49_0": {
+      "bytes": 67007460,
+      "maven": "com.qualcomm.qti:qnn-runtime:2.49.0",
+      "sha256": "fbb55c5680da8c44398fd78dfbaa50473b17a1cb35a10126d85fd93ea47787b0"
+    }
   },
   "runner": {
-    "source": "phone/lfm2_qnn_runner.cpp",
     "build_tool": "tools/build_phone_runner.sh",
-    "bytes": 106080,
-    "sha256": "9b799bb6676a05e427a00f1b4bf5651a8f38e5fbc46cb75ab589658df6dd89d2",
-    "target": "Android API 31 AArch64 PIE",
+    "bytes": 107440,
     "compiler": "Android NDK r28b / 28.1.13356709",
-    "setup": "load all 263 QNN context sessions once",
-    "provider_policy": "session.disable_cpu_ep_fallback=1 for every session",
-    "htp_options": [
-      "htp_performance_mode=burst",
-      "htp_share_resource_optimization=1",
-      "profiling_level=basic"
-    ],
+    "device_selection": "print every ORT EP device and select only QNNExecutionProvider with OrtHardwareDeviceType_NPU",
     "explicit_cpu_boundary": [
       "selected-row asymmetric Q4 embedding dequantization",
       "token/request orchestration",
       "global greedy argmax across 22 HTP LM-head chunks"
     ],
+    "htp_options": [
+      "htp_performance_mode=burst",
+      "htp_share_resource_optimization=1",
+      "profiling_level=basic"
+    ],
+    "output": "actual generated token IDs as int32 little-endian",
+    "provider_policy": "session.disable_cpu_ep_fallback=1 for every session",
+    "setup": "load all 263 QNN context sessions once",
+    "sha256": "fe3351b84f6588a063642d036bbd4d2a2856a179dbab83d6f21b7978886043ea",
+    "source": "phone/lfm2_qnn_runner.cpp",
     "state_reset": "zero all 22 convolution states and all 8 attention K/V pairs",
-    "output": "actual generated token IDs as int32 little-endian"
+    "target": "Android API 31 AArch64 PIE"
   },
-  "public_android_packages": {
-    "onnxruntime_android_1_26_0": {
-      "maven": "com.microsoft.onnxruntime:onnxruntime-android:1.26.0",
-      "bytes": 43596581,
-      "sha256": "09c0780ae8d734ef2774bdf498b624729a855e6f9a8e488a0e7398a4e7396032"
-    },
-    "onnxruntime_android_qnn_2_5_0": {
-      "maven": "com.qualcomm.qti:onnxruntime-android-qnn:2.5.0",
-      "bytes": 1499488,
-      "sha256": "da496414c0c8374cefede14c9a8c433d331b9ba06b5b02ff0bf4a510a26fc772"
-    },
-    "qnn_runtime_2_49_0": {
-      "maven": "com.qualcomm.qti:qnn-runtime:2.49.0",
-      "bytes": 67007460,
-      "sha256": "fbb55c5680da8c44398fd78dfbaa50473b17a1cb35a10126d85fd93ea47787b0"
-    }
-  },
-  "ignored_stage": {
-    "preparation_tool": "tools/prepare_phone_stage.py",
-    "files_excluding_sha_manifest": 539,
-    "bytes_excluding_stage_metadata_and_sha_manifest": 2015057362,
-    "stage_metadata_bytes": 94972,
-    "stage_metadata_sha256": "dc34cbad09f9a9068cef4cb2c7a90df83c9bbe49cd47afb048751632602e88e7",
-    "sha256_manifest_bytes": 57364,
-    "sha256_manifest_sha256": "34b84f37f5456fefd034ed41cf5d934ab377ac3f1e64f3839b6953a01a75310e",
-    "local_sha256_check": "passed",
-    "retained_outside_git": true
-  },
-  "phone_boundary": {
-    "adb_contact_by_0034_owner": false,
-    "stage_or_install_on_phone": false,
-    "phone_lock_acquired": false,
-    "known_coordination_state": "Pi reports R5CW81PR8SY unauthorized; Moritz must accept the RSA prompt before Pi authorizes any 0034 ADB contact.",
-    "next_action": "After Pi confirms device state, hold artifacts/locks/phone.lock for identity, storage, hash, stage, bounded run, evidence pull, and scoped cleanup."
-  },
-  "claim_boundary": "Host preparation only. This proves neither Android execution nor QNN/HTP execution and is not registry eligible."
+  "schema_version": 1,
+  "status": "retry_stage_prepared_with_npu_device_filter_and_diagnostics"
 }

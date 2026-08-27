@@ -22,13 +22,15 @@
 14. Validated every framework-op trace: all 1,583 source nodes map to 2,747 QNN ops with zero unsupported nodes. The 1,779,492,144 bytes of contexts remain outside Git.
 15. Replayed the exact 171-token canonical short prompt through the final split ordering on the host with zeroed state; its first five greedy tokens matched both transformed-monolith and original export references. This is wiring/viability evidence, not Android performance.
 
-16. Built the native API-31 AArch64 phone runner and a locally verified 540-file ignored stage containing the 263 context pairs, public Android runtime libraries, exact Q4 embedding tables, and exact 171-token short prompt. The stage is hash-bound and has not contacted or modified the phone.
+16. Built the native API-31 AArch64 phone runner and a locally verified 540-file ignored stage containing the 263 context pairs, public Android runtime libraries, exact Q4 embedding tables, and exact 171-token short prompt.
+17. Ran one full-lock physical attempt after RSA authorization. Exact identity and all stage hashes passed, but the first EPContext remained unclaimed; fallback-disabled ORT stopped before session/model execution. Preserved the raw failure and verified scoped cleanup absent.
+18. Updated the runner to log all EP device types and select only the Android QNN NPU device; rebuilt and hash-bound the replacement runner/stage.
 
 ## In progress
 
-1. Wait for Moritz to accept the Android RSA prompt and for Pi to confirm `R5CW81PR8SY` is in `device` state. Do not contact or stage the phone beforehand.
-2. Under the full `phone.lock` lifecycle, deploy the hash-bound stage and run only one bounded 16-token viability request.
-3. Retain fallback-disabled physical QNN/HTP profiles/logs, state behavior, output token IDs/text, memory/device/thermal observations, and scoped cleanup proof.
+1. Under the full `phone.lock` lifecycle, run Pi's one authorized NPU-selection diagnostic retry with the 16-token ceiling and unchanged no-fallback gate.
+2. Retain physical device/provider/profile/output or exact failure evidence before validation, then verify scoped cleanup and release the lock.
+3. Stop and report the retry outcome. Do not start a campaign regardless of success.
 
 ## Phone and campaign sequence
 

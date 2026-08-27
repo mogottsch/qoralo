@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "run_id": "viability-20260827T110202Z-1500807",
+  "classification": "physical_phone_pre_inference_provider_selection_failure",
+  "request_scope": {
+    "tier": "short",
+    "input_tokens": 171,
+    "max_new_tokens": 16,
+    "canonical_campaign": false
+  },
+  "device": {
+    "serial": "R5CW81PR8SY",
+    "manufacturer": "samsung",
+    "model": "SM-S918B",
+    "device": "dm3q",
+    "soc": "SM8550",
+    "abi": "arm64-v8a",
+    "android_release": "16",
+    "api": 36,
+    "fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+    "verified_boot": "green",
+    "flash_locked": true
+  },
+  "stage": {
+    "local_files_verified": 540,
+    "remote_files_verified": 540,
+    "bytes_pushed": 2015209698,
+    "adb_reported_push_seconds": 45.275,
+    "adb_reported_mib_per_second": 42.4,
+    "remote_root": "/data/local/tmp/vibevoice-0034-lfm2-qnn-viability-20260827T110202Z-1500807"
+  },
+  "execution": {
+    "process_started": true,
+    "exit_code": 1,
+    "sessions_loaded": 0,
+    "model_token_execution": false,
+    "qnn_htp_graph_execution": false,
+    "output_created": false,
+    "profiles_created": 0,
+    "stderr": "fatal=This session contains graph nodes that are assigned to the default CPU EP, but fallback to CPU EP has been explicitly disabled by the user.",
+    "failure_boundary": "creation of the first EPContext session before any model token or graph execution",
+    "diagnosis": "The provider device set supplied to ORT did not claim the first EPContext model. The fail-closed setting correctly prevented default CPU execution. The retained evidence does not establish whether the Android plugin advertised multiple device types or selected a non-NPU device; the one authorized retry adds those diagnostics and explicitly filters for NPU."
+  },
+  "memory": {
+    "sample_count": 1,
+    "vmhwm_kib": 3000,
+    "vmrss_kib": 3000,
+    "total_pss_kib": 5971,
+    "lifecycle": "single sample during process startup before session creation failure"
+  },
+  "operating_context": {
+    "usb_powered": true,
+    "battery_level_before_percent": 86,
+    "battery_level_after_percent": 86,
+    "battery_temperature_before_c": 42.0,
+    "battery_temperature_after_c": 41.8,
+    "thermal_status_before": 1,
+    "thermal_status_after": 1,
+    "ap_temperature_before_c": 44.0,
+    "ap_temperature_after_c": 46.9,
+    "skin_temperature_before_c": 40.3,
+    "skin_temperature_after_c": 40.4
+  },
+  "cleanup": {
+    "experiment_process_after": false,
+    "scoped_remote_root_verified_absent": true,
+    "phone_lock_held_for_full_lifecycle": true,
+    "phone_lock_released": true
+  },
+  "next_gate": "One Pi-authorized bounded provider-selection retry: print every EP device type, explicitly select only the Android QNN NPU device, retain session.disable_cpu_ep_fallback=1, and stop again before any campaign.",
+  "claim_boundary": "This is physical phone transport and a fail-closed pre-inference diagnostic. It is not model execution, QNN/HTP graph execution, output, performance, or registry evidence."
+}

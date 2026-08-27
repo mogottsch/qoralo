@@ -50,9 +50,9 @@
     "android_execution": false,
     "compiled_context_created": false,
     "qnn_htp_execution": false,
-    "required_action": "Moritz must accept the RSA prompt on R5CW81PR8SY, then Pi must confirm device state and release 0034 to acquire phone.lock for the bounded viability lifecycle.",
+    "required_action": "No user action. Run exactly one bounded diagnostic retry with all EP device types logged and QNN NPU-only selection; preserve failure/success and stop before any campaign.",
     "result_path": "results/support-assessment/result.json",
-    "summary": "Host conversion and phone-stage preparation are complete. The immediate external blocker is Android RSA authorization; Pi reports R5CW81PR8SY unauthorized. No 0034 phone contact is allowed until authorization is confirmed."
+    "summary": "Attempt 1 reached the authorized phone but stopped before first session/model execution because the QNN plugin did not claim the first EPContext and fallback was disabled. One NPU-filtered diagnostic retry is authorized."
   },
   "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
   "host_export_milestone": {
@@ -134,11 +134,22 @@
     "revision": "84022ce711b28455e8c4fc364ce68c00cf995875",
     "sha256": "02a8b7e17487d326e46d68ce0ba24211e1b80a14c4cd0597fa73c1cd697f52ed"
   },
-  "phone_boundary": "The 0034 owner has made no ADB contact and has not acquired phone.lock. A 2.0 GB hash-bound stage is ready locally. Do not contact/stage until Moritz accepts RSA and Pi confirms device state.",
+  "phone_attempt_1": {
+    "classification": "physical_phone_pre_inference_provider_selection_failure",
+    "evidence": "results/phone-attempt-1-provider-selection-failure/result.json",
+    "model_token_execution": false,
+    "output_created": false,
+    "phone_lock_released": true,
+    "qnn_htp_graph_execution": false,
+    "scoped_cleanup_verified_absent": true,
+    "sessions_loaded": 0,
+    "stage_hashes_verified_local_and_remote": true
+  },
+  "phone_boundary": "Attempt 1 used phone.lock for the full lifecycle, verified exact identity and all stage hashes, failed before execution, cleaned the scoped root absent, and released the lock. One bounded NPU-selection retry is authorized; no campaign.",
   "phone_preparation": {
-    "adb_contact_by_owner": false,
+    "adb_contact_by_owner": true,
     "android_execution": false,
-    "blocker": "Pi reports R5CW81PR8SY unauthorized. Moritz must accept the RSA prompt and Pi must confirm device state before 0034 may acquire phone.lock or contact ADB.",
+    "blocker": "Attempt 1 failed before first session execution because QNN did not claim the first EPContext; fail-closed prevented CPU. Pi authorized exactly one retry with device diagnostics and NPU-only selection.",
     "bounded_request": {
       "input_tokens": 171,
       "max_new_tokens": 16,
@@ -149,15 +160,16 @@
     "phone_staged": false,
     "registry_eligible": false,
     "runner": {
-      "sha256": "9b799bb6676a05e427a00f1b4bf5651a8f38e5fbc46cb75ab589658df6dd89d2",
+      "device_selection": "QNNExecutionProvider NPU only, with all EP device types logged",
+      "sha256": "fe3351b84f6588a063642d036bbd4d2a2856a179dbab83d6f21b7978886043ea",
       "target": "Android API 31 AArch64 PIE"
     },
     "stage": {
-      "bytes_excluding_stage_metadata_and_sha_manifest": 2015057362,
+      "bytes_excluding_stage_metadata_and_sha_manifest": 2015058722,
       "files_excluding_sha_manifest": 539,
       "retained_outside_git": true,
-      "sha256_manifest_sha256": "34b84f37f5456fefd034ed41cf5d934ab377ac3f1e64f3839b6953a01a75310e",
-      "stage_metadata_sha256": "dc34cbad09f9a9068cef4cb2c7a90df83c9bbe49cd47afb048751632602e88e7"
+      "sha256_manifest_sha256": "df9546ccaec07663fddca2c6cdcb2b4f9e8d5c85cf94790144cb21f116fe30a4",
+      "stage_metadata_sha256": "3af3174ea2ed099f2ad65f51108296fb4fc6759b2b3526bc6bebf6488822ddcc"
     }
   },
   "prohibited_shortcuts": [
@@ -232,7 +244,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "active_phone_stage_ready_waiting_for_adb_rsa_authorization",
+  "status": "active_attempt1_provider_selection_failed_one_bounded_retry_authorized",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",

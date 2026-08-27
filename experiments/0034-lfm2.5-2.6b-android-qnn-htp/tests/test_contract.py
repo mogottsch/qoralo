@@ -79,7 +79,7 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
     def test_active_export_does_not_claim_qnn_android_or_completion(self) -> None:
-        self.assertIn("active_phone_stage_ready_waiting", self.contract["status"])
+        self.assertIn("active_attempt1_provider_selection_failed", self.contract["status"])
         route = self.result["route_assessment"]
         self.assertFalse(route["compiled_sm8550_context_available"])
         self.assertFalse(route["android_execution"])
@@ -88,7 +88,7 @@ class ContractTest(unittest.TestCase):
         self.assertIn("not_android_qnn_or_htp", milestone["classification"])
         self.assertEqual("passed", milestone["rewritten_onnx"]["onnx_checker"])
         self.assertEqual(16, milestone["bounded_output"]["max_new_tokens"])
-        self.assertIn("no ADB contact", self.contract["phone_boundary"])
+        self.assertIn("failed before execution", self.contract["phone_boundary"])
 
     def test_qnn_aot_is_complete_but_not_physical_execution(self) -> None:
         milestone = self.contract["qnn_aot_milestone"]
@@ -112,15 +112,29 @@ class ContractTest(unittest.TestCase):
     def test_phone_stage_is_preparation_only(self) -> None:
         preparation = self.contract["phone_preparation"]
         self.assertIn("host_only", preparation["classification"])
-        self.assertFalse(preparation["adb_contact_by_owner"])
+        self.assertTrue(preparation["adb_contact_by_owner"])
         self.assertFalse(preparation["phone_staged"])
         self.assertFalse(preparation["android_execution"])
         self.assertFalse(preparation["registry_eligible"])
         self.assertEqual(16, preparation["bounded_request"]["max_new_tokens"])
         evidence = json.loads((EXP / preparation["evidence"]).read_text())
-        self.assertEqual("prepared_locally_waiting_for_user_to_authorize_adb_rsa", evidence["status"])
-        self.assertFalse(evidence["phone_boundary"]["adb_contact_by_0034_owner"])
+        self.assertEqual("retry_stage_prepared_with_npu_device_filter_and_diagnostics", evidence["status"])
+        self.assertTrue(evidence["phone_boundary"]["adb_contact_by_0034_owner"])
         self.assertTrue(evidence["ignored_stage"]["retained_outside_git"])
+
+    def test_first_phone_attempt_failed_closed_before_execution(self) -> None:
+        attempt = self.contract["phone_attempt_1"]
+        self.assertIn("pre_inference", attempt["classification"])
+        self.assertTrue(attempt["stage_hashes_verified_local_and_remote"])
+        self.assertEqual(0, attempt["sessions_loaded"])
+        self.assertFalse(attempt["model_token_execution"])
+        self.assertFalse(attempt["qnn_htp_graph_execution"])
+        self.assertFalse(attempt["output_created"])
+        self.assertTrue(attempt["scoped_cleanup_verified_absent"])
+        result = json.loads((EXP / attempt["evidence"]).read_text())
+        self.assertEqual(1, result["execution"]["exit_code"])
+        self.assertIn("fallback", result["execution"]["stderr"])
+        self.assertTrue(result["cleanup"]["phone_lock_held_for_full_lifecycle"])
 
     def test_final_pipeline_host_equivalence_is_bounded(self) -> None:
         result = json.loads((EXP / "results/htp-pipeline-host-equivalence/result.json").read_text())
@@ -153,6 +167,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/htp-pipeline-host-equivalence",
             EXP / "results/qnn-aot",
             EXP / "results/phone-preparation",
+            EXP / "results/phone-attempt-1-provider-selection-failure",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():
