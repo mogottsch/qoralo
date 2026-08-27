@@ -1,0 +1,304 @@
+{
+  "all_graphs_present_once_in_exact_order": true,
+  "android_stage": {
+    "context_count": 1,
+    "elf_preflight": true,
+    "graph_count": 37,
+    "local_hash_check": true,
+    "manifest_sha256": "b3ee38ecc999bb74d989058f2342aeee3ab535eee364f14776b94cba9e36400f",
+    "payload_bytes": 1805523151,
+    "payload_files": 12,
+    "retained_outside_git": true,
+    "runner_sha256": "92689331d11ecf48fb226e82c0f77133e2b72c505b976f2e801c6fffda506f83",
+    "stage_metadata_sha256": "9fafbe10f2d69ed4f6690d4e3b010c565f0c222778144d1415d4fa76e79715d7"
+  },
+  "claim_boundary": "Host AOT and metadata only. The one-context binary has not executed on physical Android/HTP.",
+  "classification": "host_whole_route_single_shared_qnn_context_metadata",
+  "context_binary": {
+    "blob_bytes": 1601445888,
+    "build_id": "v2.49.40.260810104044",
+    "bytes": 1601482752,
+    "sha256": "7942ad31b0bae6d4368ec4a3c86c84ce022c2e6c62bafebeb513c7f38228d8a3"
+  },
+  "decision_boundary": "This is materially stronger within-context sharing and exactly preserves all-loaded semantics, but Android shared-weight context support remains unproven because the x86 HTP emulator rejects it. A physical gate requires separate authorization.",
+  "execution_order": [
+    "layer-00",
+    "layer-01",
+    "layer-02",
+    "layer-03",
+    "layer-04",
+    "layer-05",
+    "layer-06",
+    "layer-07",
+    "layer-08",
+    "layer-09",
+    "layer-10",
+    "layer-11",
+    "layer-12",
+    "layer-13",
+    "layer-14",
+    "layer-15",
+    "layer-16",
+    "layer-17",
+    "layer-18",
+    "layer-19",
+    "layer-20",
+    "layer-21",
+    "layer-22",
+    "layer-23",
+    "layer-24",
+    "layer-25",
+    "layer-26",
+    "layer-27",
+    "layer-28",
+    "layer-29",
+    "final-norm",
+    "heads-00",
+    "heads-01",
+    "heads-02",
+    "heads-03",
+    "heads-04",
+    "heads-05"
+  ],
+  "graph_count": 37,
+  "host_retrieval": {
+    "contexts_attempted": 1,
+    "exact_error": "Shared weights buffer is not supported on this platform",
+    "graphs_in_context": 37,
+    "interpretation": "x86 HTP emulator limitation; physical Android support remains unproven",
+    "runner_exit_code": 1,
+    "stderr_sha256": "0b87e3d7d84fb033fa1e0e641c7e9d3bb8ab1c0b47dc834cf6c942c4c42249c8",
+    "stdout_sha256": "32abad9a91a7331632d6717e655270b5f5b49d0c9cbc8933859bb53c8538fb5c",
+    "success": false
+  },
+  "loaded_route_semantics": "one context loaded once containing all 37 ordered graphs; no per-layer/token reload",
+  "models": [
+    {
+      "alias": "layer-00",
+      "context_model_sha256": "524439289819fa7bb13cd9b8352c884b2d056580ac15d3f34c5abfde1bfe3085",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_18016822757146411074_1_0",
+      "ordinal": 0
+    },
+    {
+      "alias": "layer-01",
+      "context_model_sha256": "f2868f49f4b50c45be520c0be89c272af0ee9a4768145592b325ae0d24699e27",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_4437876284807785648_1_0",
+      "ordinal": 1
+    },
+    {
+      "alias": "layer-02",
+      "context_model_sha256": "db5b4b3a44269a9d991dd12e9ebda0b0e268153d4a9fd0d16a7cf0243799c451",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_10913385294727252879_1_0",
+      "ordinal": 2
+    },
+    {
+      "alias": "layer-03",
+      "context_model_sha256": "31ba41cbf0403b3e97daa98cb970eb9d426e77fcc8ecec336edf9a948e2e502e",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_11823484520663240982_1_0",
+      "ordinal": 3
+    },
+    {
+      "alias": "layer-04",
+      "context_model_sha256": "a7de9b7cd429ba32b8fe7baa1163b0f83fa103b252fb26eb26d94d0dbf489b73",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_17613794521473493617_1_0",
+      "ordinal": 4
+    },
+    {
+      "alias": "layer-05",
+      "context_model_sha256": "0d4d9fe90db4a2dac78a402f29c2b3bd7089e21d68c783af4db5a9752535bba1",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_6386859573762091876_1_0",
+      "ordinal": 5
+    },
+    {
+      "alias": "layer-06",
+      "context_model_sha256": "7a3b025cee9f9ef4d0989d1e6fdc09a9050f56d79932503bd988297cfff3ed9a",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_8140104866617406612_1_0",
+      "ordinal": 6
+    },
+    {
+      "alias": "layer-07",
+      "context_model_sha256": "804d44e3b835b39c2fcb0dd921bed9b7a0515382871d07b3f0a7b2642abb23c4",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_10284766326718411424_1_0",
+      "ordinal": 7
+    },
+    {
+      "alias": "layer-08",
+      "context_model_sha256": "b038cb5dd089f4e1a203b2bd700ac21fa8c8e32abddfe8176e6485394c04d6d1",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_11991339427269016826_1_0",
+      "ordinal": 8
+    },
+    {
+      "alias": "layer-09",
+      "context_model_sha256": "6100bb7116cdd2a42af327f74da23318e2891e71ede1ae6ff52ebfbddadfb5cf",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_2307671819818439257_1_0",
+      "ordinal": 9
+    },
+    {
+      "alias": "layer-10",
+      "context_model_sha256": "ff3e8cf567e949df15cffa38d751f1dd9bb61d82bdd1686ac11fdeedeb1a45a3",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_4368864518653503510_1_0",
+      "ordinal": 10
+    },
+    {
+      "alias": "layer-11",
+      "context_model_sha256": "78b8ff85d5f1b63b0a61e484b41811a1fdee991a0859a7a4d08feb115f96f7b5",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_3200013884763311294_1_0",
+      "ordinal": 11
+    },
+    {
+      "alias": "layer-12",
+      "context_model_sha256": "a7afa3cdf8150a6ef549a48beae34ec0ca189cb23af0c0d0cf6a581aeead4799",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_3416194713060520247_1_0",
+      "ordinal": 12
+    },
+    {
+      "alias": "layer-13",
+      "context_model_sha256": "b3e056b644c2372c03a0c9f10ad5aa9b56d3cfb19ffb84d52b56f5b4b31f3f83",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_3810993759661319637_1_0",
+      "ordinal": 13
+    },
+    {
+      "alias": "layer-14",
+      "context_model_sha256": "d3612b0cffd7b981e8cc3fdff0dd27d94934f0c6845baafd69818ca160f6bc12",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_19263368938274874_1_0",
+      "ordinal": 14
+    },
+    {
+      "alias": "layer-15",
+      "context_model_sha256": "4266cad34c809f913d0a921ef585ee0cd3cb40f73379033fb64ca4ff79204b4f",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_932861819639019155_1_0",
+      "ordinal": 15
+    },
+    {
+      "alias": "layer-16",
+      "context_model_sha256": "20e8ab7c2948e7fa9e31655554c150f4c9d8f59bacff03e3f51b0579e4bb2c40",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_3250437193426276182_1_0",
+      "ordinal": 16
+    },
+    {
+      "alias": "layer-17",
+      "context_model_sha256": "651c5123934c94f88eb8d98fac0d127086470e767725c8beb184f38013030563",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_11781687107135279053_1_0",
+      "ordinal": 17
+    },
+    {
+      "alias": "layer-18",
+      "context_model_sha256": "5df95de38f2f6871cf68f45db11c65ae3a3345b10f91035aed1f9b70f6b2ba60",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_5192080694207663143_1_0",
+      "ordinal": 18
+    },
+    {
+      "alias": "layer-19",
+      "context_model_sha256": "374fceb2a238c5668f3feef0584e5abcc6636d0709d76d655eea3b85d5001e14",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_17284604208373863483_1_0",
+      "ordinal": 19
+    },
+    {
+      "alias": "layer-20",
+      "context_model_sha256": "5c64632e075be804a476cc1f19f73e1d800bd366ece153d2483d521314e55b0c",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_269563370904038787_1_0",
+      "ordinal": 20
+    },
+    {
+      "alias": "layer-21",
+      "context_model_sha256": "33e4b2b8dcb0effc5b3be0bc38b46263b6f811ff9082fdf9e59a5dc78985e5d6",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_11657406461860319258_1_0",
+      "ordinal": 21
+    },
+    {
+      "alias": "layer-22",
+      "context_model_sha256": "f9b9d8c14e0bb430dc194446a866cdbd8857e649d3a2b1913f6de8c9c0a83363",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_9335279260727999778_1_0",
+      "ordinal": 22
+    },
+    {
+      "alias": "layer-23",
+      "context_model_sha256": "5c579b91641df57d134ac716e724ad8db836c2b56f3f2c09a8d737ce89629f8b",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_17875946383507197350_1_0",
+      "ordinal": 23
+    },
+    {
+      "alias": "layer-24",
+      "context_model_sha256": "78915c8989dc9356ef88e5a67ed01a76f0dd4ef91d5a6f5150b1290d67ef3b6f",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_15187720159344972630_1_0",
+      "ordinal": 24
+    },
+    {
+      "alias": "layer-25",
+      "context_model_sha256": "9a1ec704b3c2ae12d140df74c52622f7f83bcd2c1f788ccda8f615b18c7c03b0",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_14617446921293320370_1_0",
+      "ordinal": 25
+    },
+    {
+      "alias": "layer-26",
+      "context_model_sha256": "fc2e77f9214d08b8d66ca9930391d56189660be8d0d079a9c997bd74c2ab5d98",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_2213691616102923567_1_0",
+      "ordinal": 26
+    },
+    {
+      "alias": "layer-27",
+      "context_model_sha256": "eba498c0032897df07a375859fc2c0336905b7f945bd42d483f2e10b69f531d2",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_6406225979637426733_1_0",
+      "ordinal": 27
+    },
+    {
+      "alias": "layer-28",
+      "context_model_sha256": "054aa36622f805ccf7ca8623cea11e013368bfc773b8d981335628220b11d592",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_4818807433563188090_1_0",
+      "ordinal": 28
+    },
+    {
+      "alias": "layer-29",
+      "context_model_sha256": "37ca8ffc2563995bce2d598cc872e231eef037d99f80b19ac71c59765358ff4d",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_3609335832848956838_1_0",
+      "ordinal": 29
+    },
+    {
+      "alias": "final-norm",
+      "context_model_sha256": "cb13a49a5505232dd2a9c8bca7db25248c76042aee334e6532c3e56a606b1bab",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_1147106419870789188_1_0",
+      "ordinal": 30
+    },
+    {
+      "alias": "heads-00",
+      "context_model_sha256": "57c1f1107dfa90ad9c74162c5871e81b28293ab8d622e75ebd1ad3c79251ce2c",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_12948769355050870898_1_0",
+      "ordinal": 31
+    },
+    {
+      "alias": "heads-01",
+      "context_model_sha256": "e9b1680d7b68ccc7f35a717214890dd15fcc2e5157442e1ad4b6a6343eab51a9",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_15373242252776811436_1_0",
+      "ordinal": 32
+    },
+    {
+      "alias": "heads-02",
+      "context_model_sha256": "a4c4a92e64fbce714a272db9dc01444825c801ac2f2a7ee73398340e7c226d74",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_9557563080711492712_1_0",
+      "ordinal": 33
+    },
+    {
+      "alias": "heads-03",
+      "context_model_sha256": "dcea611cfb8096179aabe78b09dca8c5022849ff7ce5ace0509a78c74255c258",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_11158549986651215437_1_0",
+      "ordinal": 34
+    },
+    {
+      "alias": "heads-04",
+      "context_model_sha256": "ef62f046b5b163868cb203273c13dcffc96631c67f1845b693b89f3452e0c489",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_14985030647383071950_1_0",
+      "ordinal": 35
+    },
+    {
+      "alias": "heads-05",
+      "context_model_sha256": "e629933980cacfa5c529a449af80c5245ce19a0c980dc3029c085f32b2adfb13",
+      "graph_name": "QNNExecutionProvider_QNNExecutionProvider_2529913997493213905_1_0",
+      "ordinal": 36
+    }
+  ],
+  "schema_version": 1,
+  "target": {
+    "htp_arch": 73,
+    "soc_model": 43
+  }
+}

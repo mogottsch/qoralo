@@ -160,9 +160,9 @@
     "android_execution": false,
     "compiled_context_created": false,
     "qnn_htp_execution": false,
-    "required_action": "Host-only materially stronger within-context sharing or whole-route fusion preserving loaded-route semantics. Per-layer/token reload is not an equivalent workaround.",
+    "required_action": "After durable commit/review, explicitly authorize at most one physical shared-context compatibility gate. No campaign.",
     "result_path": "results/support-assessment/result.json",
-    "summary": "Physical SM8550 direct QNN loads 19 fused contexts, then fails creating context 20 of 37 before readiness. Smaller contexts previously reached 57, proving a resident QNN/DSP resource boundary rather than a fixed handle count."
+    "summary": "The 37 ordinary-context route hits physical residency at context 20. A one-context/37-graph shared-resource replacement is host-prepared, but x86 HTP retrieval rejects shared weights and physical Android support is unproven."
   },
   "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
   "host_export_milestone": {
@@ -274,7 +274,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "Consolidated attempt cleaned absent and released phone.lock. No further phone run or campaign is authorized.",
+  "phone_boundary": "No phone access occurred for the one-context continuation. Its 12-file stage is host-prepared only pending explicit Pi priority.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -373,7 +373,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "blocked_physical_direct_qnn_residency_context_20_of_37",
+  "status": "active_host_prepared_single_shared_context_physical_support_unproven",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",
@@ -406,5 +406,30 @@
     },
     "tokenizer_config_sha256": "11f1de897317b489dd09199284528382eeb17f566398b16e2039bb2266d26b09",
     "tokenizer_json_sha256": "695be7802a0e4b8a81048f0ff5ebb7fc811a0ba5a6be63dbb24deb5a81096f41"
+  },
+  "whole_route_shared_context": {
+    "all_contexts_loaded_once": true,
+    "all_graphs_present_once_in_exact_order": true,
+    "android_stage": {
+      "elf_preflight": true,
+      "hash_check": true,
+      "manifest_sha256": "b3ee38ecc999bb74d989058f2342aeee3ab535eee364f14776b94cba9e36400f",
+      "payload_bytes": 1805523151,
+      "payload_files": 12,
+      "runner_sha256": "92689331d11ecf48fb226e82c0f77133e2b72c505b976f2e801c6fffda506f83",
+      "stage_metadata_sha256": "9fafbe10f2d69ed4f6690d4e3b010c565f0c222778144d1415d4fa76e79715d7"
+    },
+    "context_binary_bytes": 1601482752,
+    "context_binary_sha256": "7942ad31b0bae6d4368ec4a3c86c84ce022c2e6c62bafebeb513c7f38228d8a3",
+    "context_count": 1,
+    "evidence": "results/qnn-whole-route-shared-host-preparation/result.json",
+    "graph_count": 37,
+    "host_retrieval": false,
+    "host_retrieval_error": "Shared weights buffer is not supported on this platform",
+    "per_request_or_token_reload": false,
+    "physical_android_support": "unproven",
+    "physical_execution": false,
+    "shared_weights": true,
+    "source_part_count": 263
   }
 }

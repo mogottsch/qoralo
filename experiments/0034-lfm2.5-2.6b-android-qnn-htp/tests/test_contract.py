@@ -79,7 +79,7 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
     def test_active_export_does_not_claim_qnn_android_or_completion(self) -> None:
-        self.assertIn("blocked_physical_direct_qnn_residency_context_20", self.contract["status"])
+        self.assertIn("active_host_prepared_single_shared_context", self.contract["status"])
         route = self.result["route_assessment"]
         self.assertFalse(route["compiled_sm8550_context_available"])
         self.assertFalse(route["android_execution"])
@@ -88,7 +88,7 @@ class ContractTest(unittest.TestCase):
         self.assertIn("not_android_qnn_or_htp", milestone["classification"])
         self.assertEqual("passed", milestone["rewritten_onnx"]["onnx_checker"])
         self.assertEqual(16, milestone["bounded_output"]["max_new_tokens"])
-        self.assertIn("No further phone run", self.contract["phone_boundary"])
+        self.assertIn("No phone access occurred for the one-context continuation", self.contract["phone_boundary"])
 
     def test_qnn_aot_is_complete_but_not_physical_execution(self) -> None:
         milestone = self.contract["qnn_aot_milestone"]
@@ -196,6 +196,18 @@ class ContractTest(unittest.TestCase):
         self.assertEqual("QnnContext_createFromBinary", result["direct_qnn"]["failure_api"])
         self.assertFalse(result["direct_qnn"]["output_created"])
 
+    def test_whole_route_shared_context_is_host_prepared_only(self) -> None:
+        route = self.contract["whole_route_shared_context"]
+        self.assertEqual((1, 37, 263), (route["context_count"], route["graph_count"], route["source_part_count"]))
+        self.assertTrue(route["all_graphs_present_once_in_exact_order"])
+        self.assertFalse(route["per_request_or_token_reload"])
+        self.assertFalse(route["host_retrieval"])
+        self.assertEqual("unproven", route["physical_android_support"])
+        result = json.loads((EXP / route["evidence"]).read_text())
+        self.assertEqual(37, len(result["execution_order"]))
+        self.assertIn("not supported on this platform", result["host_retrieval"]["exact_error"])
+        self.assertFalse(result["host_retrieval"]["success"])
+
     def test_final_pipeline_host_equivalence_is_bounded(self) -> None:
         result = json.loads((EXP / "results/htp-pipeline-host-equivalence/result.json").read_text())
         self.assertIn("host_only", result["classification"])
@@ -234,6 +246,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/direct-qnn-phone-attempt-2-context-limit",
             EXP / "results/qnn-consolidated-host-preparation",
             EXP / "results/consolidated-qnn-phone-attempt-1-residency-limit",
+            EXP / "results/qnn-whole-route-shared-host-preparation",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

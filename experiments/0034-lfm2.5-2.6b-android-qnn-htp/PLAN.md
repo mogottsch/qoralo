@@ -44,12 +44,16 @@
 34. Rebuilt the direct runner for consolidated graph ABIs and prepared a hash-bound 48-file Android stage with 37 contexts; ELF and manifest preflights pass.
 35. Ran one authorized physical fused-route gate. Direct QNN loaded 19 fused layer contexts, then failed creating context 20 (`layer-19`) before route readiness or graph execution. Preserved raw evidence and verified cleanup absent.
 36. Reclassified the blocker as physical resident QNN/DSP resources rather than a simple context-count or process-RSS threshold.
+37. Compiled all 37 fused graphs into one 1,601,482,752-byte shared-resource SM8550/V73 QNN context while retaining their exact order.
+38. Verified QNN system metadata and every graph descriptor: 37/37 graph names bind in order to the one binary.
+39. Confirmed the x86 HTP emulator rejects the shared-weights buffer as unsupported on that host platform; physical Android support remains unproven.
+40. Prepared a 12-file ignored Android stage whose runner loads one context once and retrieves all 37 graphs; hashes and ELF preflight pass.
 
 ## In progress
 
-1. Commit and publish the exact 19-loaded/context-20 failure boundary.
-2. Remain off the phone. Continue host-only only if pursuing materially stronger within-context resource sharing or whole-route fusion that preserves loaded-route semantics.
-3. Do not use per-layer/token context reload as a silent workaround, and do not run a campaign.
+1. Commit and publish the single-context host AOT/metadata milestone with its explicit host-retrieval limitation.
+2. Remain off the phone until Pi independently reviews it and explicitly authorizes one compatibility gate.
+3. Do not use per-layer/token reload and do not run a campaign.
 
 ## Phone and campaign sequence
 

@@ -2,7 +2,7 @@
 
 ## Status
 
-**Blocked on physical all-loaded QNN residency. The 37-context fused route passed every host gate and all phone-stage hashes, but physical SM8550 loading stopped at context 20 (`layer-19`) after 19 successful fused-context deserializations. Setup never completed and no graph, output, performance result, or campaign exists.**
+**Active with a host-prepared single-context shared-resource route after the 37-context physical residency failure. One 1,601,482,752-byte SM8550/V73 QNN context now contains all 37 fused graphs in exact order and preserves loaded-once semantics. Android support for its shared-weights buffer is unproven; no new physical execution, output, performance result, or campaign exists.**
 
 This is a separate accelerator arm. It preserves `0029` CPU viability and `0033` CPU/OpenCL campaign evidence without modifying either experiment.
 
@@ -99,4 +99,10 @@ The rebuilt API-31 direct runner is SHA-256 `92689331d11ecf48fb226e82c0f77133e2b
 
 The one authorized physical gate verified the exact 48-file stage and entered direct QNN backend `v2.49.0.260730134355`. It loaded `layer-00` through `layer-18`, then `QnnContext_createFromBinary` failed on the twentieth context, `layer-19`. No graph executed because the complete route was not resident. Sampled Android-process VmHWM peaked at 109,940 KiB, but that excludes DSP/backend allocations and does not measure total HTP residency. The scoped root was verified absent and `phone.lock` released. Raw evidence is under [`results/consolidated-qnn-phone-attempt-1-residency-limit/`](results/consolidated-qnn-phone-attempt-1-residency-limit/).
 
-The result shows that the blocker is total resident backend resources rather than a fixed number of context handles: the smaller route loaded 57 contexts, while larger fused contexts stopped after 19. A compliant next route would require materially stronger within-context sharing or whole-route fusion that still passes host compilation and preserves exact state/order. Per-layer or per-token context reload is not treated as equivalent loaded-route behavior. No further phone run or campaign is authorized.
+The result shows that the blocker is total resident backend resources rather than a fixed number of context handles: the smaller route loaded 57 contexts, while larger fused contexts stopped after 19. Per-layer or per-token context reload is not treated as equivalent loaded-route behavior.
+
+A materially stronger host-only continuation now packages all 37 fused graphs into **one** shared-resource QNN context. Its binary is 1,601,482,752 bytes, SHA-256 `7942ad31b0bae6d4368ec4a3c86c84ce022c2e6c62bafebeb513c7f38228d8a3`. QNN system metadata reports exactly 37 graphs in the required layer/final-norm/head order, and each retained EPContext descriptor binds the corresponding graph name to that single binary. The runner loads this context once and retrieves all 37 graphs; no reload workaround is introduced.
+
+The x86 HTP emulator rejects context creation with `Shared weights buffer isn't supported on this platform`. That is a host-platform limitation and leaves physical Android support explicitly unproven; it is not execution evidence. The ignored 12-payload Android stage totals 1,805,523,151 bytes, passes all local hashes and ELF preflight, and is bound by stage SHA-256 `9fafbe10f2d69ed4f6690d4e3b010c565f0c222778144d1415d4fa76e79715d7` and manifest SHA-256 `b3ee38ecc999bb74d989058f2342aeee3ab535eee364f14776b94cba9e36400f`. See [`results/qnn-whole-route-shared-host-preparation/`](results/qnn-whole-route-shared-host-preparation/).
+
+This is a host AOT/metadata milestone only. A single bounded physical compatibility gate requires a new explicit Pi priority grant; no retry or campaign is currently authorized.
