@@ -30,6 +30,9 @@ class ContractTest(unittest.TestCase):
         cls.runner = json.loads(
             (EXP / "results/android-explicit-state-runner-host-build/result.json").read_text()
         )
+        cls.physical_attempt = json.loads(
+            (EXP / "results/android-qnn-physical-viability-20260827-attempt-01/result.json").read_text()
+        )
 
     def test_canonical_protocol_and_workloads(self) -> None:
         canonical = self.contract["canonical_protocol"]
@@ -104,7 +107,9 @@ class ContractTest(unittest.TestCase):
         self.assertTrue(route["exact_model_compiled"])
         self.assertEqual(4102, route["exact_model_delegated_tensor_compute_nodes"])
         self.assertEqual(0, route["exact_model_non_delegated_tensor_compute_nodes"])
-        self.assertFalse(route["android_execution"])
+        self.assertTrue(route["android_runner_execution"])
+        self.assertFalse(route["android_model_execution"])
+        self.assertTrue(route["physical_qnn_htp_context_load"])
         self.assertFalse(route["physical_qnn_htp_execution"])
 
     def test_structural_probe_is_bounded_and_fallback_free(self) -> None:
@@ -139,7 +144,7 @@ class ContractTest(unittest.TestCase):
         self.assertEqual(4096, result["context_tokens"])
         self.assertEqual(174, result["calibration"]["tokens"])
         self.assertTrue(result["calibration"]["last_logits_finite"])
-        self.assertFalse(self.contract["executorch_qnn_route"]["android_execution"])
+        self.assertFalse(self.contract["executorch_qnn_route"]["android_model_execution"])
         self.assertIn("not run on Android", " ".join(result["claim_limits"]))
 
     def test_android_runner_is_host_only_and_matches_exact_pte_abi(self) -> None:
@@ -157,7 +162,49 @@ class ContractTest(unittest.TestCase):
         limits = " ".join(runner["claim_limits"])
         self.assertIn("host only", limits)
         self.assertIn("staged", limits)
-        self.assertFalse(self.contract["executorch_qnn_route"]["android_execution"])
+        self.assertFalse(self.contract["executorch_qnn_route"]["android_model_execution"])
+
+    def test_first_physical_attempt_preserves_provider_load_and_failure_boundary(self) -> None:
+        attempt = self.physical_attempt
+        self.assertEqual(
+            "physical_qnn_htp_provider_and_context_load_before_model_execution_failure",
+            attempt["evidence_class"],
+        )
+        provider = attempt["physical_provider_observations"]
+        self.assertEqual(4, provider["qnn_backend_markers"])
+        self.assertEqual(4, provider["dsp_arch_markers"])
+        self.assertEqual(4, provider["serialized_contexts_created_successfully"])
+        self.assertEqual(4, provider["qnn_graphs_retrieved_successfully"])
+        self.assertEqual(0, provider["qnn_graph_execute_markers"])
+        self.assertEqual("llama::fallback.out", attempt["failure"]["missing_operator"])
+        self.assertFalse(attempt["request"]["model_graph_executed"])
+        self.assertEqual(0, attempt["request"]["generated_tokens"])
+        self.assertIsNone(attempt["request"]["output_path"])
+        self.assertEqual(
+            {"looks_sensible": None, "issue_notes": None},
+            attempt["request"]["output_sanity"],
+        )
+        self.assertFalse(attempt["failure"]["retry_performed"])
+        self.assertEqual("verified_absent", attempt["cleanup"]["remote_root"])
+        self.assertEqual("verified_absent", attempt["cleanup"]["runner_process"])
+
+        raw_dir = EXP / "results/android-qnn-physical-viability-20260827-attempt-01/raw"
+        provider_log = (raw_dir / "runner.stderr.log").read_text()
+        self.assertEqual(4, provider_log.count("backend_type: kHtpBackend"))
+        self.assertEqual(4, provider_log.count("DSP ARCH graph is set to 73"))
+        self.assertEqual(
+            4, provider_log.count("QnnContext_createFromBinary done successfully")
+        )
+        self.assertEqual(4, provider_log.count("QnnGraph_retrieve done. status 0x0"))
+        self.assertNotIn("QnnGraph_execute", provider_log)
+        self.assertEqual(3, provider_log.count("kernel 'llama::fallback.out' not found"))
+        self.assertEqual(
+            (raw_dir / "local-sha256.txt").read_text(),
+            (raw_dir / "remote-sha256.txt").read_text(),
+        )
+        cleanup = json.loads((raw_dir / "cleanup.json").read_text())
+        self.assertEqual("verified_absent", cleanup["cleanup_state"])
+        self.assertEqual("verified_absent", cleanup["process_cleanup_state"])
 
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
@@ -166,6 +213,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/executorch-qnn-structural-probe",
             EXP / "results/executorch-qnn-exact-host-compile",
             EXP / "results/android-explicit-state-runner-host-build",
+            EXP / "results/android-qnn-physical-viability-20260827-attempt-01",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

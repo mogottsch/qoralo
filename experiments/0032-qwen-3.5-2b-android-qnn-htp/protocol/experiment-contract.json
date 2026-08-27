@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
-  "status": "active_exact_checkpoint_host_qnn_compiled_physical_execution_pending",
+  "status": "active_physical_qnn_htp_context_load_proven_model_execution_blocked_missing_boundary_kernel",
   "question": "Can Qwen3.5-2B run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Qwen3.5-2B post-trained text generation only",
@@ -115,9 +115,13 @@
     "android_runner_result_path": "results/android-explicit-state-runner-host-build/result.json",
     "exact_pte_forward_inputs": 51,
     "exact_pte_forward_outputs": 49,
-    "android_execution": false,
+    "android_runner_execution": true,
+    "android_model_execution": false,
+    "physical_qnn_htp_context_load": true,
     "physical_qnn_htp_execution": false,
-    "next_gate": "After Pi explicitly transfers phone priority, stage the hash-bound PTE and run a bounded physical QNN/HTP viability request with provider and accelerator evidence."
+    "physical_attempt_result_path": "results/android-qnn-physical-viability-20260827-attempt-01/result.json",
+    "physical_attempt_blocker": "Three non-compute llama::fallback.out sharding-boundary kernels were not registered in the Android runner.",
+    "next_gate": "Host-link and verify the three llama::fallback.out boundary registrations, then await a new explicit Pi phone-priority handoff for one bounded retry."
   },
   "required_provider_proof_if_unblocked": {
     "compiled_context_identity": "Hash every deployed serialized context and bind SM8550/v73 compiler provenance.",
@@ -125,7 +129,7 @@
     "no_silent_cpu_only": "A text response or GenieX NPU metric without QNN context/provider proof is not this route.",
     "loaded_route_isolation": "One loaded route plus proven full reset or fresh Session/Dialog per logical request."
   },
-  "phone_boundary": "No model or runtime was staged. Phone work remains prohibited until Pi explicitly transfers priority, even if ADB authorization becomes available.",
+  "phone_boundary": "One explicitly authorized bounded attempt staged the exact route, loaded all four QNN HTP contexts, then failed before model execution; cleanup was verified. No retry or campaign is authorized without a new explicit Pi priority handoff.",
   "prohibited_shortcuts": [
     "relabelling GenieX llama.cpp NPU results as QNN/HTP",
     "applying the shipped 4B example or hardcoded width to 2B",

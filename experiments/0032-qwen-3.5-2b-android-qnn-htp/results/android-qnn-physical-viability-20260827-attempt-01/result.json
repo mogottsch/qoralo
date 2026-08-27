@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
+  "attempt": 1,
+  "attempt_timestamp_utc": "2026-08-27T11:10:17Z",
+  "evidence_class": "physical_qnn_htp_provider_and_context_load_before_model_execution_failure",
+  "status": "blocked_before_model_execution_missing_sharding_boundary_kernel",
+  "authorization": {
+    "device_authorized": true,
+    "phone_priority_explicitly_transferred_by": "Pi",
+    "scope": "one bounded Qwen physical viability request; no retry and no campaign"
+  },
+  "device": {
+    "serial": "R5CW81PR8SY",
+    "model": "SM-S918B",
+    "soc": "SM8550",
+    "abi": "arm64-v8a",
+    "android_sdk": 36,
+    "build_fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys"
+  },
+  "request": {
+    "tier": "short",
+    "input_tokens": 174,
+    "token_ids_sha256": "dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4",
+    "max_new_tokens": 1,
+    "generation": "greedy",
+    "runner_exit_code": 1,
+    "model_method_loaded": false,
+    "model_graph_executed": false,
+    "generated_tokens": 0,
+    "output_path": null,
+    "output_sha256": null,
+    "output_sanity": {
+      "looks_sensible": null,
+      "issue_notes": null
+    },
+    "metrics_path": null,
+    "etdump_path": null
+  },
+  "deployed_artifacts": {
+    "pte": {
+      "bytes": 1994572968,
+      "sha256": "bfdae1c3327c954566ec0d4a5a0ee8873eb145d0921bc3f9d988a6a2557be6df"
+    },
+    "runner": {
+      "bytes": 3444472,
+      "sha256": "4b05bf24f6b55d349383dfdcfa54c0d968ea944a7b7ce6bb7971f348850aec58"
+    },
+    "qnn_backend_sha256": "0d97f44ac9abcaf7e5e025440c41c3727acc6315f2bd2613ab1cb31afe508b37",
+    "qnn_htp_sha256": "a09b3af28342331b3ec9e57ecbe42bfe54a5fff37c4323ce5685c395ae3ee604",
+    "qnn_system_sha256": "536201ed918f4066f9ef35671198c072faf9ef04af24545f5fae0fc79aa05baa",
+    "qnn_htp_v73_stub_sha256": "2912cc4f29cc5163c36c6c58f931bd08b798ccf8545a670a9498549f95b9036f",
+    "qnn_htp_v73_skel_sha256": "bd54463547f0234d06045699b1f747b7d9d3e3b581874840af50c295b3124f25",
+    "local_remote_hash_diff_empty": true
+  },
+  "physical_provider_observations": {
+    "qnn_backend": "HTP",
+    "qnn_backend_markers": 4,
+    "dsp_arch": 73,
+    "dsp_arch_markers": 4,
+    "serialized_contexts_created_successfully": 4,
+    "qnn_graphs_retrieved_successfully": 4,
+    "fastrpc_memory_map_success_markers": 21,
+    "max_available_hvx_threads_reported_per_graph": 4,
+    "hvx_configuration_markers": 4,
+    "qnn_graph_execute_markers": 0,
+    "provider_log": "raw/runner.stderr.log",
+    "provider_log_bytes": 126807,
+    "provider_log_sha256": "a57b9944dd1d8c8fc4904da73a43f9d96e0f8b7aa16654864e5c6df79cabd268"
+  },
+  "failure": {
+    "phase": "ExecuTorch method load after all four QNN HTP contexts were loaded",
+    "missing_operator": "llama::fallback.out",
+    "missing_operator_markers": 3,
+    "summary": "The runner did not link/register the three non-compute graph-sharding boundary kernels.",
+    "raw_error": "There are 3 instructions don't have corresponding operator registered.",
+    "retry_performed": false
+  },
+  "cleanup": {
+    "owned_remote_root": "/data/local/tmp/vibevoice-0032-qwen35-qnn-viability",
+    "remote_root": "verified_absent",
+    "runner_process": "verified_absent",
+    "phone_lock_released": true,
+    "independently_reverified_by": "Pi"
+  },
+  "raw_evidence": {
+    "directory": "raw",
+    "battery_before": "raw/battery-before.txt",
+    "battery_after": "raw/battery-after.txt",
+    "thermal_before": "raw/thermal-before.txt",
+    "thermal_after": "raw/thermal-after.txt",
+    "remote_file_inventory": "raw/remote-files.txt",
+    "local_hashes": "raw/local-sha256.txt",
+    "remote_hashes": "raw/remote-sha256.txt",
+    "cleanup": "raw/cleanup.json"
+  },
+  "claim_limits": [
+    "This proves physical QNN HTP v73 provider initialization, FastRPC mapping, and loading/retrieval of all four exact-model serialized contexts on the authorized SM8550 phone.",
+    "The ExecuTorch method did not load and no model graph executed, so this is not physical model-inference evidence.",
+    "No token was generated; output sanity and all performance metrics are null.",
+    "This attempt is not benchmark-registry eligible and does not authorize a retry or campaign."
+  ]
+}

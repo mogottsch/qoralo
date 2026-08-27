@@ -22,6 +22,7 @@ OUT=${OUT:-$EXP/.local/phone-$(date -u +%Y%m%dT%H%M%SZ)-viability}
 RUN_TIMEOUT_SECONDS=${RUN_TIMEOUT_SECONDS:-1800}
 LOCK="$ROOT/artifacts/locks/phone.lock"
 CLEANUP_STATE=not_started
+PROCESS_CLEANUP_STATE=not_started
 mkdir -p "$OUT"
 
 exec 9>"$LOCK"
@@ -29,13 +30,22 @@ flock -n 9 || { echo "phone lock busy: $LOCK" >&2; exit 3; }
 adb_cmd() { (exec 9>&-; "$ADB" -s "$SERIAL" "$@"); }
 cleanup() {
   set +e
+  # This runner name and remote root are unique to experiment 0032.
+  adb_cmd shell "pidof qwen35_explicit_state_runner 2>/dev/null | tr ' ' '\n' | while read pid; do test -z \"\$pid\" || kill \"\$pid\"; done" >/dev/null 2>&1
+  sleep 1
+  if [[ -z "$(adb_cmd shell "pidof qwen35_explicit_state_runner 2>/dev/null" | tr -d '\r[:space:]')" ]]; then
+    PROCESS_CLEANUP_STATE=verified_absent
+  else
+    PROCESS_CLEANUP_STATE=failed
+  fi
   adb_cmd shell "test ! -e '$REMOTE' || rm -rf '$REMOTE'" >/dev/null 2>&1
   if adb_cmd shell "test ! -e '$REMOTE'" >/dev/null 2>&1; then
     CLEANUP_STATE=verified_absent
   else
     CLEANUP_STATE=failed
   fi
-  printf '{"remote_root":"%s","cleanup_state":"%s"}\n' "$REMOTE" "$CLEANUP_STATE" >"$OUT/cleanup.json"
+  printf '{"remote_root":"%s","cleanup_state":"%s","process_cleanup_state":"%s"}\n' \
+    "$REMOTE" "$CLEANUP_STATE" "$PROCESS_CLEANUP_STATE" >"$OUT/cleanup.json"
 }
 trap cleanup EXIT INT TERM
 
@@ -46,6 +56,23 @@ for path in "$PTE" "$RUNNER" "$PROMPT_IDS" "$BACKEND" \
   "$QNN/lib/hexagon-v73/unsigned/libQnnHtpV73Skel.so"; do
   [[ -f "$path" ]] || { echo "missing $path" >&2; exit 4; }
 done
+expected_hash() {
+  local expected=$1 path=$2
+  local observed
+  observed=$(sha256sum "$path" | cut -d' ' -f1)
+  [[ "$observed" == "$expected" ]] || {
+    echo "hash mismatch for $path: $observed != $expected" >&2
+    exit 4
+  }
+}
+expected_hash bfdae1c3327c954566ec0d4a5a0ee8873eb145d0921bc3f9d988a6a2557be6df "$PTE"
+expected_hash 4b05bf24f6b55d349383dfdcfa54c0d968ea944a7b7ce6bb7971f348850aec58 "$RUNNER"
+expected_hash dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4 "$PROMPT_IDS"
+expected_hash 0d97f44ac9abcaf7e5e025440c41c3727acc6315f2bd2613ab1cb31afe508b37 "$BACKEND"
+expected_hash a09b3af28342331b3ec9e57ecbe42bfe54a5fff37c4323ce5685c395ae3ee604 "$QNN/lib/aarch64-android/libQnnHtp.so"
+expected_hash 536201ed918f4066f9ef35671198c072faf9ef04af24545f5fae0fc79aa05baa "$QNN/lib/aarch64-android/libQnnSystem.so"
+expected_hash 2912cc4f29cc5163c36c6c58f931bd08b798ccf8545a670a9498549f95b9036f "$QNN/lib/aarch64-android/libQnnHtpV73Stub.so"
+expected_hash bd54463547f0234d06045699b1f747b7d9d3e3b581874840af50c295b3124f25 "$QNN/lib/hexagon-v73/unsigned/libQnnHtpV73Skel.so"
 
 adb_cmd get-state >"$OUT/adb-state.txt"
 model=$(adb_cmd shell getprop ro.product.model | tr -d '\r')
@@ -108,6 +135,6 @@ adb_cmd shell dumpsys thermalservice >"$OUT/thermal-after.txt" 2>"$OUT/thermal-a
 sha256sum "$OUT"/runner.* "$OUT"/etdump.etdp "$OUT"/metrics.json "$OUT"/generated.int32le 2>/dev/null >"$OUT/evidence-sha256.txt" || true
 cleanup
 trap - EXIT INT TERM
-[[ "$CLEANUP_STATE" == verified_absent ]] || exit 7
+[[ "$CLEANUP_STATE" == verified_absent && "$PROCESS_CLEANUP_STATE" == verified_absent ]] || exit 7
 printf '%s\n' "$OUT"
 exit "$run_exit"

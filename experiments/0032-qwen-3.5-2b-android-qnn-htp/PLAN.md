@@ -2,7 +2,7 @@
 
 ## Status
 
-Active. The former installed QAIRT ONNX/GGUF route remains blocked. The separate ExecuTorch route has now passed exact-checkpoint host eager equivalence and complete SM8550/HTP-v73 AOT compilation; physical execution remains pending.
+Active. The ExecuTorch route has passed exact-checkpoint host compilation and physical QNN/HTP context loading. The first phone attempt failed before model execution because three non-compute sharding-boundary kernels were not registered in the runner.
 
 ## Completed
 
@@ -21,13 +21,14 @@ Active. The former installed QAIRT ONNX/GGUF route remains blocked. The separate
 8. Compiled a tiny one-layer Gated DeltaNet graph as one SM8550/v73 QNN subgraph with 151 delegated tensor-compute nodes and zero tensor-compute fallback. Retained the compiler-finalize/context evidence and kept generated QNN artifacts out of Git.
 9. Downloaded and hash-bound the exact official revision outside Git, converted it with ExecuTorch v1.2.0, and matched the pinned eager implementation exactly for logits and state transitions.
 10. Calibrated W4A16 PTQ on the canonical short prompt and compiled the exact 24-layer model as four SM8550/HTP-v73 QNN subgraphs. All 4,102 tensor-compute nodes were delegated, all four graphs finalized with status `0x0`, and the hash-bound PTE remains outside Git.
-11. Cross-compiled a single-request Android arm64 runner for the exact 51-input/49-output PTE ABI. It performs greedy token generation and explicit KV/recurrent/convolution state advancement, but remains host-only and is not campaign-eligible yet.
+11. Cross-compiled a single-request Android arm64 runner for the exact 51-input/49-output PTE ABI. It performs greedy token generation and explicit KV/recurrent/convolution state advancement, but remains not campaign-eligible.
+12. Ran one explicitly authorized bounded phone attempt. Exact local/remote hashes matched; physical QNN HTP v73 initialized and loaded/retrieved all four exact contexts through FastRPC. Method loading then failed before execution on three missing `llama::fallback.out` identity boundary registrations. No retry occurred, and root/process cleanup was verified.
 
 ## Current work
 
-1. Wait for Pi's explicit phone-priority transfer; ADB and staging remain prohibited until then.
-2. Under `phone.lock`, perform a scoped single-request physical viability gate and capture provider, RPC, accelerator time/cycles, and HVX evidence; a text response alone is insufficient.
-3. Extend the runner for loaded-route multi-request reuse and prove full explicit-state reset.
-4. Run the canonical 1+5+5+5 campaign.
+1. Register/link ExecuTorch's non-compute `llama::fallback.out` boundary kernel and rebuild/hash-bind the Android runner entirely on the host.
+2. Wait for a new explicit Pi phone-priority transfer; ADB and staging are prohibited until then.
+3. Under `phone.lock`, perform at most one newly authorized physical viability retry and require actual graph execution plus provider/RPC/accelerator evidence.
+4. Only after viability, extend the runner for loaded-route multi-request reuse, prove full explicit-state reset, and run the canonical 1+5+5+5 campaign.
 
 Do not use CPU fallback, borrow the 4B config, relabel direct Hexagon/GenieX evidence as QNN, or publish before the complete route satisfies the benchmark contract.

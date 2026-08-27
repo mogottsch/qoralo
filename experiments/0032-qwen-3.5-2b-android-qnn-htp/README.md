@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active. The exact official 24-layer Qwen3.5-2B checkpoint has passed host eager equivalence and a complete SM8550/HTP-v73 QNN AOT compile with zero non-delegated tensor compute. Android and physical HTP execution remain pending.**
+**Active. Physical QNN/HTP-v73 provider initialization and all four exact-context loads are proven on the authorized SM8550 phone. Attempt 01 then failed safely before model execution because the Android runner lacked three non-compute `llama::fallback.out` sharding-boundary registrations.**
 
 This is a separate HTP feasibility arm. It does not change or relabel `0027` CPU evidence.
 
@@ -14,7 +14,7 @@ A one-layer synthetic-geometry gate compiled for `SM8550` / HTP v73 as one QNN s
 
 That first result proved only architecture-route viability. The subsequent exact-checkpoint milestone is retained in [`results/executorch-qnn-exact-host-compile/`](results/executorch-qnn-exact-host-compile/): the official revision was hash-bound and converted, the explicit-state adapter matched ExecuTorch eager logits and first-layer states exactly, and the W4A16 graph compiled as four QNN subgraphs with all 4,102 tensor-compute nodes delegated. All four graphs finalized and serialized for SM8550/HTP v73. The local-only 1,994,572,968-byte PTE has SHA-256 `bfdae1c3327c954566ec0d4a5a0ee8873eb145d0921bc3f9d988a6a2557be6df`.
 
-This remains host AOT evidence. The PTE has not run on Android and produces no physical QNN RPC, HTP timing/cycle, HVX, text-output, or performance claim.
+The first physical attempt subsequently loaded this exact PTE through the QNN HTP backend: all four contexts were created and all four graphs retrieved on DSP architecture 73 with FastRPC mappings. ExecuTorch then rejected the method before execution because the runner did not register the three non-compute `llama::fallback.out` sharding boundaries. See [`results/android-qnn-physical-viability-20260827-attempt-01/`](results/android-qnn-physical-viability-20260827-attempt-01/). No graph executed and no output or performance claim exists.
 
 ## Cheapest credible route assessment
 
@@ -35,9 +35,9 @@ The pinned official tokenizer/template was reconstructed independently. With thi
 
 ## Current next gate
 
-1. Use the cross-compiled single-request explicit-state runner for the bounded viability gate; its host-build and exact-PTE ABI evidence is in [`results/android-explicit-state-runner-host-build/`](results/android-explicit-state-runner-host-build/).
-2. Only after Pi explicitly transfers phone priority, stage the hash-bound PTE and scoped runner under `phone.lock`.
-3. Run one bounded viability request with physical QNN RPC/accelerator/cycle/HVX proof, generated-token sanity, and verified cleanup.
-4. Extend the runner to reuse the loaded route across reset-isolated requests, then run the fixed 1+5+5+5 campaign.
+1. Host-link and verify ExecuTorch's `llama::fallback.out` identity boundary operator in the Android runner; this operator performs no tensor computation.
+2. Await a new explicit Pi phone-priority transfer before reacquiring `phone.lock` or staging anything.
+3. Run at most one authorized bounded retry and require actual graph execution, QNN RPC/accelerator evidence, one generated-token sanity check, and verified cleanup.
+4. Only after viability, extend the runner to reuse the loaded route across reset-isolated requests and run the fixed 1+5+5+5 campaign.
 
 GenieX llama.cpp NPU metrics, the shipped 4B HTP example, direct-Hexagon output without QNN, and CPU-only text output are not substitutes for physical QNN/HTP provider proof.
