@@ -224,6 +224,15 @@ class ContractTest(unittest.TestCase):
         self.assertFalse(result["requested"]["physical_htp_execution"])
         self.assertFalse(result["requested"]["inference"])
 
+    def test_bounded_phone_gate_script_holds_lock_and_cleans_scope(self) -> None:
+        script = (EXP / "tools/run_phone_viability.sh").read_text()
+        self.assertIn('artifacts/locks/phone.lock', script)
+        self.assertIn('flock -n 9', script)
+        self.assertIn('trap cleanup EXIT', script)
+        self.assertIn("dialog setMaxNumTokens dialog1 16", (EXP / "tools/prepare_phone_stage.py").read_text())
+        self.assertIn("rm -rf '$REMOTE'", script)
+        self.assertIn("remote-hash-check.txt", script)
+
     def test_phone_and_campaign_are_not_claimed(self) -> None:
         gate = self.contract["campaign_gate"]
         self.assertTrue(gate["bounded_viability_first"])
