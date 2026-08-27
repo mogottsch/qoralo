@@ -48,9 +48,10 @@ tr:last-child td { border-bottom:0; }
 <a class="toc-level-2" href="#goal-and-direction">Goal and direction</a>
 <a class="toc-level-2" href="#how-result-language-is-interpreted">How result language is interpreted</a>
 <a class="toc-level-2" href="#experiment-record">Experiment record</a>
+<a class="toc-level-2" href="#android-llm-bakeoff-milestone">Android LLM bakeoff milestone</a>
 <a class="toc-level-2" href="#decisions-carried-forward">Decisions carried forward</a></nav>
 <main>
-<div class="mirror-note"><strong>Visual mirror of <code>docs/history.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-21</span><span>source sha256: d64f4a0bd6754034…</span></div></div>
+<div class="mirror-note"><strong>Visual mirror of <code>docs/history.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-27</span><span>source sha256: edb5fbb0946bcee4…</span></div></div>
 <article><h1 id="project-history">Project history<a class="anchor" href="#project-history" aria-label="Link to this section">#</a></h1>
 <h2 id="goal-and-direction">Goal and direction<a class="anchor" href="#goal-and-direction" aria-label="Link to this section">#</a></h2>
 <p>The project started by asking whether Microsoft&#x27;s VibeVoice could generate a local two-speaker podcast on a modern Android phone. The goal later widened to finding any practical local TTS model that sounds pleasant and natural enough for a future NotebookLM-like listening experience.</p>
@@ -65,8 +66,9 @@ tr:last-child td { border-bottom:0; }
 <li><strong>listening acceptance or rejection</strong> exists only when Moritz explicitly reviewed the exact route/sample.</li>
 </ul>
 <p>These classes do not imply one another. In particular, “no audible difference” is a comparison between two samples, not acceptance of either sample&#x27;s quality. An unreviewed route is <strong>not reviewed / unknown</strong>, and a route-specific rejection is not generalized to a model family. Frozen machine records keep their original status tokens and metrics; the narrative below explains their scope.</p>
+<p>For LLM work, <strong>output sanity</strong> is only the exact-hash <code>looks_sensible</code> corruption/gibberish screen. It is not quality, correctness, grounding, transcript usefulness, or acceptance. Host smokes remain host viability evidence, and a blocked provider or pre-conversion route contributes no Android performance result. GPU/OpenCL offload claims retain their disclosed CPU boundaries.</p>
 <h2 id="experiment-record">Experiment record<a class="anchor" href="#experiment-record" aria-label="Link to this section">#</a></h2>
-<p>Each summary links to the experiment that holds the detailed commands, measurements, artifacts, and limitations. Active experiments are intentionally not represented as completed outcomes.</p>
+<p>Each summary links to the experiment that holds the detailed commands, measurements, artifacts, and limitations. Completed, deferred, stopped, and durable milestone outcomes are represented without turning unfinished work into completed evidence.</p>
 <div class="table-wrap"><table><thead><tr>
 <th>Experiment</th>
 <th>Question at the time</th>
@@ -187,12 +189,63 @@ tr:last-child td { border-bottom:0; }
 <td>Why were prior Pocket samples unusable, and can a valid fixed-voice route run on CPU and HTP?</td>
 <td>The no-voice-cloning checkpoint&#x27;s Mimi encoder was proven all-zero, invalidating the old Bria cloning contract. A fixed official Alba-state route recovered quality. Canonical-v2 CPU warm median RTF was <code>0.414234</code>; physical fallback-disabled HTP warm median RTF was <code>0.181643</code> with 344 QNN / 0 CPU events and matching physical records. Moritz accepted both exact canonical CPU and HTP WAVs as “good.” The result is fixed voice, not voice cloning.</td>
 </tr>
+<tr>
+<td><a href="../experiments/0025-gemma-4-e2b-it-android/"><code>0025: Gemma 4 E2B IT Android CPU/GPU</code></a></td>
+<td>Can the official instruction-tuned Gemma deployment complete the canonical workload through LiteRT-LM CPU and GPU?</td>
+<td>Both canonical campaigns completed and are published. Warm medium CPU versus GPU medians were TTFT <code>7.560</code> versus <code>1.339 s</code>, prefill <code>80.08</code> versus <code>485.17 tok/s</code>, decode <code>10.28</code> versus <code>13.16 tok/s</code>, and total <code>75.57</code> versus <code>50.80 s</code>. The dedicated Artisan GPU artifact failed before inference and remains non-metric historical evidence; the approved generic-artifact GPU route supplied provider proof. Process memory excludes private GPU allocation, and sensible-looking text is not a quality result.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0027-qwen-3.5-2b-android/"><code>0027: Qwen3.5-2B Android CPU</code></a></td>
+<td>Can a pinned Q4_K_M Qwen route complete the canonical Android CPU campaign?</td>
+<td>The reproducible UI-disabled llama.cpp artifact completed all 16 requests with proven slot erasure and no prompt/KV reuse. Setup was <code>2.936 s</code>; warm medium medians were TTFT <code>16.689 s</code>, prefill <code>38.72 tok/s</code>, decode <code>8.77 tok/s</code>, and total <code>81.022 s</code>; peak sampled PSS was <code>2,833,463,296 B</code>. The deployment GGUF is third-party Unsloth work, not an official Qwen Android artifact.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0029-lfm2.5-2.6b-android/"><code>0029: LFM2.5-2.6B Android viability predecessor</code></a></td>
+<td>Can the pinned official LFM GGUF execute on Android CPU before building a persistent route?</td>
+<td>One bounded 64-token Android CPU request passed. It is viability-only evidence: the one-shot executable cannot satisfy protocol-v2 loaded-route reuse, so no canonical campaign or registry row exists here. Experiment 0033 owns the completed routes.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0030-qwen-3.5-2b-android-vulkan-gpu/"><code>0030: Qwen3.5-2B Vulkan/Adreno</code></a></td>
+<td>Can public llama.cpp Vulkan provide a provider-bound Qwen GPU-offload route?</td>
+<td>Blocked before request one. Baseline, F16-disabled, and newer-compiler variants all failed while Adreno created <code>mul_mat_vec_q5_k_f32_f32</code>; no model readiness, inference, or GPU-performance metric exists. The later OpenCL result is a separate route, not Vulkan.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0031-gemma-4-e2b-it-android-qnn-htp/"><code>0031: Gemma 4 E2B IT QNN/HTP</code></a></td>
+<td>Can the public W4A16 Gemma checkpoint be converted for SM8550/HTP v73 with installed QAIRT?</td>
+<td>Blocked before conversion. QAIRT lacks Gemma4 high-level dispatch, and the unchanged graph fails in ShapeInference/ConstantPropagation with <code>KeyError(&#x27;value&#x27;)</code>. No context, Android execution, or HTP result exists.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0032-qwen-3.5-2b-android-qnn-htp/"><code>0032: Qwen3.5-2B QNN/HTP</code></a></td>
+<td>Does an authorized, dimension-correct QNN input/tool path exist for the exact 2B model?</td>
+<td>Blocked before conversion. Direct-GGUF support stops at qwen2/qwen3, no compatible public 2B quantized ONNX+encodings or context was found, and the installed Qwen3.5 specialization is dimension-incompatible. No Android or HTP result exists.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0033-lfm2.5-2.6b-android-loaded-route/"><code>0033: LFM2.5-2.6B persistent CPU/OpenCL</code></a></td>
+<td>Can the exact LFM route complete separate protocol-v2 CPU and OpenCL campaigns?</td>
+<td>Both 16-request campaigns completed and are published. Warm medium CPU versus OpenCL medians were TTFT <code>20.378</code> versus <code>10.282 s</code>, prefill <code>30.34</code> versus <code>60.53 tok/s</code>, decode <code>7.94</code> versus <code>7.14 tok/s</code>, and total <code>230.932</code> versus <code>296.002 s</code>. OpenCL proved 31/31 layer offload but retained CPU work; its sampled process PSS excludes private/vendor GPU allocation.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0034-lfm2.5-2.6b-android-qnn-htp/"><code>0034: LFM2.5-2.6B QNN/HTP</code></a></td>
+<td>Does installed QAIRT or a public Qualcomm artifact provide an LFM2 QNN route?</td>
+<td>Blocked before conversion. No <code>lfm2</code> GGUF support, HTP factory dispatch, Genie configuration, recipe, or context exists in the assessed tooling. Its hybrid recurrent/attention state requires separately authorized model-specific converter and runtime work. No Android or HTP result exists.</td>
+</tr>
+<tr>
+<td><a href="../experiments/0035-qwen-3.5-2b-android-opencl-gpu/"><code>0035: Qwen3.5-2B OpenCL/Adreno</code></a></td>
+<td>Can a separately named OpenCL route succeed after the Vulkan provider blocker?</td>
+<td>The provider-bound route completed all 16 canonical requests and is published. It proved Qualcomm OpenCL, Adreno identity, and 25/25 layer offload. Setup was <code>17.113 s</code>; warm medium medians were TTFT <code>9.186 s</code>, prefill <code>66.74 tok/s</code>, decode <code>7.93 tok/s</code>, and total <code>81.530 s</code>; peak sampled process PSS was <code>1,365,059,584 B</code>. CPU buffers/orchestration remain explicit, and this does not establish GPU-exclusive execution.</td>
+</tr>
 </tbody></table></div>
+<h2 id="android-llm-bakeoff-milestone">Android LLM bakeoff milestone<a class="anchor" href="#android-llm-bakeoff-milestone" aria-label="Link to this section">#</a></h2>
+<p>The Android LLM registry now contains exactly six canonical routes: Gemma LiteRT-LM CPU and GPU, Qwen llama.cpp CPU and OpenCL/Adreno, and LFM llama.cpp CPU and OpenCL/Adreno. Each row comes from a complete canonical Android campaign. The 0029 host/phone viability smokes, the blocked 0030 Vulkan route, and the pre-conversion 0031/0032/0034 QNN routes remain outside canonical results.</p>
+<p>Protocol v2 permits either a proven complete in-session reset or a fresh Session for request isolation while the expensive model/runtime route stays loaded. It forbids model reload/remap, accelerator recompilation, and retained prompt/KV state between measured requests.</p>
 <h2 id="decisions-carried-forward">Decisions carried forward<a class="anchor" href="#decisions-carried-forward" aria-label="Link to this section">#</a></h2>
 <ul>
 <li>The former TTS-only repository decision is superseded. The repository now covers two local inference components: generic on-device LLM inference, eventually used for transcript generation, and on-device TTS. Product assembly remains outside scope.</li>
-<li>The first LLM phase measures fixed-prompt execution, setup, TTFT, prefill/decode throughput, total latency, memory, and runtime conditions. Transcript quality evaluation is deferred.</li>
-<li>Initial LLM output handling is an exact-hash superficial sanity check only: <code>looks_sensible</code> plus failure-only <code>issue_notes</code>. It is not quality, correctness, grounding, or acceptance.</li>
+<li>The first LLM performance phase produced six canonical Android rows across Gemma, Qwen, and LFM CPU/GPU routes. Transcript quality evaluation remains deferred.</li>
+<li>LLM output handling is an exact-hash superficial sanity check only: <code>looks_sensible</code> plus failure-only <code>issue_notes</code>. It is not quality, correctness, grounding, usefulness, or acceptance.</li>
+<li>Gemma LiteRT GPU and the Qwen/LFM OpenCL routes prove bounded accelerator use, not GPU-exclusive execution. Their disclosed CPU work and process-memory measurement limits remain part of the result.</li>
+<li>Qwen Vulkan is blocked before request one and contributes no performance row. Its provider failure must not be rewritten as the successful, separately owned OpenCL route.</li>
+<li>Gemma, Qwen, and LFM QNN/HTP routes are each blocked before conversion. Resuming them requires explicit authorization for exact context/runtime bundles, authenticated Qualcomm access, a newer licensed QAIRT/toolchain, or architecture-aware converter/runtime engineering with equivalence, identity, partition, no-fallback, and state-isolation proof.</li>
 <li>Pleasant, natural long-form speech is the primary TTS goal. Joint multi-speaker generation is useful but optional.</li>
 <li>Full-context generation is preferred. Naive sentence or clause splitting was rejected because it can damage prosody and naturalness.</li>
 <li>Supertonic 3 CPU remains the supported Android <strong>technical</strong> reference. That designation is technical; separately, Moritz accepted the exact experiment-0010 CPU sample as “Good,” without establishing broad-corpus quality.</li>
@@ -206,7 +259,7 @@ tr:last-child td { border-bottom:0; }
 <li>Pocket&#x27;s original Bria path is not a valid voice-cloning baseline because the selected no-voice-cloning checkpoint has an all-zero Mimi encoder. The accepted fixed-Alba route is a bounded fixed-voice prototype.</li>
 <li>Supertonic official-source all-HTP is Moritz&#x27;s current listening favorite and the leading TTS candidate. Experiment 0023 established production-style context reload for the exact legacy-v1 route; canonical-v2 HTP remains unresolved after experiment 0022&#x27;s terminal frozen-identity compatibility gate.</li>
 </ul>
-<p>The next work is defined in <a href="plan.md"><code>plan.md</code></a> and its <a href="plan.html">HTML mirror</a>. The generic Android LLM performance protocol, skill, and empty registry are now in place; the next numbered work is experiment 0025.</p></article>
+<p>The current decision boundary is defined in <a href="plan.md"><code>plan.md</code></a> and its <a href="plan.html">HTML mirror</a>. The LLM registry now holds six canonical routes; no QNN work resumes without Moritz&#x27;s explicit tooling/access/engineering authorization.</p></article>
 <footer class="source-footer">Generated as <code>history.html</code> by <code>scripts/build_docs_html.py</code>. Edit <code>docs/history.md</code>, then regenerate the human-readable mirrors.</footer>
 </main>
 </div>

@@ -7,7 +7,7 @@ Build and validate the local inference components required for offline-first mob
 1. local LLM inference, eventually used to generate transcripts;
 2. local TTS inference, used to render those transcripts as speech.
 
-The immediate focus is not application assembly or transcript quality. It is establishing a comparable Android LLM benchmark, then using it to run multiple models and quantizations while measuring prompt processing, token generation, memory, and operational behavior.
+The comparable Android LLM benchmark is now established, and six canonical CPU/GPU routes have completed it. The immediate open decision is whether to authorize additional Qualcomm QNN/HTP tooling or architecture-specific engineering; application assembly and transcript quality remain outside the current benchmark phase.
 
 ## Scope boundary
 
@@ -32,7 +32,7 @@ New comparable routes follow [`protocols/android-llm-benchmark/`](../protocols/a
 
 The canonical inference-v1 workload freezes short, medium, and long message bytes. Each route separately pins its model artifacts, quantization, tokenizer revision, native chat template, rendered prompt hash, and effective token IDs because tokenizer token counts are model-specific.
 
-The workload uses a `2048` maximum-new-token ceiling. This bounds execution but is not a target output length. Every request records its actual generated-token count and stop reason. The campaign creates the model route once, records one first request, then at least five same-session requests per prompt tier with conversation and KV state reset before every request.
+The workload uses a `2048` maximum-new-token ceiling. This bounds execution but is not a target output length. Every request records its actual generated-token count and stop reason. Protocol v2 keeps the expensive model/runtime route loaded, records one first request, then at least five loaded-route requests per prompt tier. Before every request, conversation and KV state must be fully isolated through either a proven complete in-session reset or a fresh Session that does not remap/reload the model or recompile the accelerator.
 
 Required observations include:
 
@@ -51,26 +51,41 @@ Required observations include:
 
 Tokens per second are always shown with tokenizer identity and actual counts. They are useful route measurements but are not perfectly tokenizer-independent units across model families.
 
-## LLM benchmark foundation
+## Current LLM evidence
 
-The repository now has:
+The [Android LLM dashboard](android-llm-benchmarks/index.html) and [registry](android-llm-benchmarks/registry.json) now publish six canonical Android routes:
 
-1. canonical fixed short, medium, and long prompt tiers plus a machine-readable Android LLM contract;
-2. a project-local benchmark skill;
-3. a separate empty LLM registry, schema, validator, generator, and dashboard;
-4. shared project framing for the LLM and TTS component layers.
+1. Gemma 4 E2B IT through LiteRT-LM CPU;
+2. Gemma 4 E2B IT through LiteRT GPU;
+3. Qwen3.5-2B Q4_K_M through llama.cpp CPU;
+4. Qwen3.5-2B Q4_K_M through llama.cpp OpenCL/Adreno offload;
+5. LFM2.5-2.6B Q4_K_M through llama.cpp CPU;
+6. LFM2.5-2.6B Q4_K_M through llama.cpp OpenCL/Adreno offload.
 
-The empty registry contains no placeholder measurements. Only committed experiment evidence may populate it.
+Each row is backed by a complete one-first-plus-five-loaded-route-requests-per-tier Android campaign. Exact metrics, output hashes, stop reasons, thermal context, and limitations stay in the normalized registry and owning experiments. The GPU/OpenCL rows prove accelerator use but are not GPU-exclusive; disclosed CPU orchestration and unsupported-operation boundaries remain part of each route. Process PSS/VmHWM does not include independently allocated GPU-private or vendor memory.
 
-## Next experiment
+Host smokes remain viability evidence only and never become canonical Android rows. In particular, experiment 0029's one-request LFM CPU smoke is historical; experiment 0033 owns the complete LFM CPU and OpenCL routes.
 
-### 0025 — Android LLM model bakeoff
+## Blocked accelerator routes
 
-Open a separately scoped experiment to run several practical LLM models or quantizations under the same inference-v1 workload. A bounded host smoke may reject an incompatible artifact before phone work, but it may not substitute for Android measurements or appear as an Android result.
+Experiment 0030's Qwen Vulkan route is stopped before request one. Three controlled variants failed while the Adreno driver created `mul_mat_vec_q5_k_f32_f32`; no provider-bound inference or performance metric exists. Experiment 0035's successful OpenCL route is separate and must not be relabeled Vulkan.
 
-The first experiment compares execution, setup, TTFT, prefill throughput, decode throughput, total latency, memory, and operational constraints. It retains text only for the narrow output-sanity smoke check. Podcast transcript quality evaluation is deliberately later work.
+Three QNN/HTP experiments are blocked before conversion and have no registry rows, contexts, phone execution, or HTP performance claims:
 
-Model choice, runtime, quantization, CPU/GPU/NPU route, and accelerator selection remain experiment decisions rather than assumptions in the shared protocol.
+- **0031 Gemma:** installed QAIRT resolves SM8550 to HTP v73, but its high-level factory lacks Gemma4 dispatch and the exact public W4A16 graph fails during ShapeInference/ConstantPropagation with `KeyError('value')` before QNN conversion.
+- **0032 Qwen:** installed direct-GGUF support covers qwen2/qwen3 rather than qwen35; no public compatible 2B quantized ONNX+encodings or SM8550 context is available, and the installed Qwen3.5 specialization is dimension-incompatible with the 2B model.
+- **0034 LFM:** installed QAIRT and current public Qualcomm materials provide no `lfm2` GGUF, HTP-factory, Genie, recipe, or context route. Its hybrid convolutional/attention state requires model-specific conversion, runtime orchestration, and reset proof.
+
+## Current decision boundary
+
+No currently authorized benchmark execution remains unfinished. Resuming any QNN route requires Moritz to choose and explicitly authorize at least one of these paths:
+
+1. provide provenance-bound SM8550/HTP-v73 contexts and complete runtime/LUT bundles for the exact model;
+2. authorize authenticated Qualcomm AI Hub, Workbench, or engineering access, including any service terms or costs;
+3. authorize installation and binding of a newer licensed QAIRT/toolchain; or
+4. authorize architecture-aware converter/runtime engineering with host numerical equivalence, context identity, full-HTP partition/no-fallback proof, and request-state isolation.
+
+Until then, experiments 0031, 0032, and 0034 remain unchanged. Generic fallback, mismatched model configurations, borrowed metrics, authenticated services, new SDKs, and ad hoc graph patches are not authorized work. The concise cross-route resume record is the [latest accelerator handover](handovers/2026-08-26-android-llm-accelerator-results.md); owning experiment evidence remains authoritative.
 
 ## TTS direction carried forward
 
@@ -88,6 +103,6 @@ Listening verdicts remain bound to exact reviewed WAV hashes. None of these conc
 
 ## Later work
 
-After performance evidence identifies practical LLM routes, define a separate quality workload for transcript generation. That later protocol can address structure, coherence, source use, style, repetition, spoken-language naturalness, editing burden, and exact-output review without retroactively turning performance outputs into quality evidence.
+After Moritz selects a practical LLM route from the current performance evidence, define a separate quality workload for transcript generation. That later protocol can address structure, coherence, source use, style, repetition, spoken-language naturalness, editing burden, and exact-output review without retroactively turning performance outputs into quality evidence.
 
 A future end-to-end benchmark may combine the selected LLM and TTS components. It is an integration view over the two component layers, not a third product-pipeline charter.

@@ -49,13 +49,13 @@ tr:last-child td { border-bottom:0; }
 <a class="toc-level-2" href="#scope-boundary">Scope boundary</a>
 <a class="toc-level-2" href="#llm-evidence-language">LLM evidence language</a>
 <a class="toc-level-2" href="#comparable-android-llm-contract">Comparable Android LLM contract</a>
-<a class="toc-level-2" href="#llm-benchmark-foundation">LLM benchmark foundation</a>
-<a class="toc-level-2" href="#next-experiment">Next experiment</a>
-<a class="toc-level-3" href="#0025-android-llm-model-bakeoff">0025 — Android LLM model bakeoff</a>
+<a class="toc-level-2" href="#current-llm-evidence">Current LLM evidence</a>
+<a class="toc-level-2" href="#blocked-accelerator-routes">Blocked accelerator routes</a>
+<a class="toc-level-2" href="#current-decision-boundary">Current decision boundary</a>
 <a class="toc-level-2" href="#tts-direction-carried-forward">TTS direction carried forward</a>
 <a class="toc-level-2" href="#later-work">Later work</a></nav>
 <main>
-<div class="mirror-note"><strong>Visual mirror of <code>docs/plan.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-21</span><span>source sha256: fd572d23559e76a7…</span></div></div>
+<div class="mirror-note"><strong>Visual mirror of <code>docs/plan.md</code></strong>The Markdown file is the source of truth.<div class="meta"><span>source commit date: 2026-08-27</span><span>source sha256: 704651091dae27b9…</span></div></div>
 <article><h1 id="current-plan">Current plan<a class="anchor" href="#current-plan" aria-label="Link to this section">#</a></h1>
 <h2 id="goal">Goal<a class="anchor" href="#goal" aria-label="Link to this section">#</a></h2>
 <p>Build and validate the local inference components required for offline-first mobile podcast generation on Android:</p>
@@ -63,7 +63,7 @@ tr:last-child td { border-bottom:0; }
 <li>local LLM inference, eventually used to generate transcripts;</li>
 <li>local TTS inference, used to render those transcripts as speech.</li>
 </ol>
-<p>The immediate focus is not application assembly or transcript quality. It is establishing a comparable Android LLM benchmark, then using it to run multiple models and quantizations while measuring prompt processing, token generation, memory, and operational behavior.</p>
+<p>The comparable Android LLM benchmark is now established, and six canonical CPU/GPU routes have completed it. The immediate open decision is whether to authorize additional Qualcomm QNN/HTP tooling or architecture-specific engineering; application assembly and transcript quality remain outside the current benchmark phase.</p>
 <h2 id="scope-boundary">Scope boundary<a class="anchor" href="#scope-boundary" aria-label="Link to this section">#</a></h2>
 <p>The repository covers the two inference components and the evidence needed to select and deploy them. It does not currently cover source acquisition, retrieval infrastructure, application UI, script editing, segment rendering, episode assembly, export, or episode management.</p>
 <p>Historical TTS experiments and their claim boundaries remain unchanged. LLM work receives its own protocol, skill, registry, and dashboard rather than inheriting TTS transcript, WAV, RTF, or listening fields.</p>
@@ -79,7 +79,7 @@ tr:last-child td { border-bottom:0; }
 <h2 id="comparable-android-llm-contract">Comparable Android LLM contract<a class="anchor" href="#comparable-android-llm-contract" aria-label="Link to this section">#</a></h2>
 <p>New comparable routes follow <a href="../protocols/android-llm-benchmark/"><code>protocols/android-llm-benchmark/</code></a> and the project-local <a href="../.agents/skills/android-llm-benchmark/SKILL.md">Android LLM benchmark skill</a>.</p>
 <p>The canonical inference-v1 workload freezes short, medium, and long message bytes. Each route separately pins its model artifacts, quantization, tokenizer revision, native chat template, rendered prompt hash, and effective token IDs because tokenizer token counts are model-specific.</p>
-<p>The workload uses a <code>2048</code> maximum-new-token ceiling. This bounds execution but is not a target output length. Every request records its actual generated-token count and stop reason. The campaign creates the model route once, records one first request, then at least five same-session requests per prompt tier with conversation and KV state reset before every request.</p>
+<p>The workload uses a <code>2048</code> maximum-new-token ceiling. This bounds execution but is not a target output length. Every request records its actual generated-token count and stop reason. Protocol v2 keeps the expensive model/runtime route loaded, records one first request, then at least five loaded-route requests per prompt tier. Before every request, conversation and KV state must be fully isolated through either a proven complete in-session reset or a fresh Session that does not remap/reload the model or recompile the accelerator.</p>
 <p>Required observations include:</p>
 <ul>
 <li>exact model, tokenizer, quantization, runtime, provider, and device provenance;</li>
@@ -96,20 +96,35 @@ tr:last-child td { border-bottom:0; }
 <li>null plus a reason for measurements the route cannot expose.</li>
 </ul>
 <p>Tokens per second are always shown with tokenizer identity and actual counts. They are useful route measurements but are not perfectly tokenizer-independent units across model families.</p>
-<h2 id="llm-benchmark-foundation">LLM benchmark foundation<a class="anchor" href="#llm-benchmark-foundation" aria-label="Link to this section">#</a></h2>
-<p>The repository now has:</p>
+<h2 id="current-llm-evidence">Current LLM evidence<a class="anchor" href="#current-llm-evidence" aria-label="Link to this section">#</a></h2>
+<p>The <a href="android-llm-benchmarks/index.html">Android LLM dashboard</a> and <a href="android-llm-benchmarks/registry.json">registry</a> now publish six canonical Android routes:</p>
 <ol>
-<li>canonical fixed short, medium, and long prompt tiers plus a machine-readable Android LLM contract;</li>
-<li>a project-local benchmark skill;</li>
-<li>a separate empty LLM registry, schema, validator, generator, and dashboard;</li>
-<li>shared project framing for the LLM and TTS component layers.</li>
+<li>Gemma 4 E2B IT through LiteRT-LM CPU;</li>
+<li>Gemma 4 E2B IT through LiteRT GPU;</li>
+<li>Qwen3.5-2B Q4_K_M through llama.cpp CPU;</li>
+<li>Qwen3.5-2B Q4_K_M through llama.cpp OpenCL/Adreno offload;</li>
+<li>LFM2.5-2.6B Q4_K_M through llama.cpp CPU;</li>
+<li>LFM2.5-2.6B Q4_K_M through llama.cpp OpenCL/Adreno offload.</li>
 </ol>
-<p>The empty registry contains no placeholder measurements. Only committed experiment evidence may populate it.</p>
-<h2 id="next-experiment">Next experiment<a class="anchor" href="#next-experiment" aria-label="Link to this section">#</a></h2>
-<h3 id="0025-android-llm-model-bakeoff">0025 — Android LLM model bakeoff<a class="anchor" href="#0025-android-llm-model-bakeoff" aria-label="Link to this section">#</a></h3>
-<p>Open a separately scoped experiment to run several practical LLM models or quantizations under the same inference-v1 workload. A bounded host smoke may reject an incompatible artifact before phone work, but it may not substitute for Android measurements or appear as an Android result.</p>
-<p>The first experiment compares execution, setup, TTFT, prefill throughput, decode throughput, total latency, memory, and operational constraints. It retains text only for the narrow output-sanity smoke check. Podcast transcript quality evaluation is deliberately later work.</p>
-<p>Model choice, runtime, quantization, CPU/GPU/NPU route, and accelerator selection remain experiment decisions rather than assumptions in the shared protocol.</p>
+<p>Each row is backed by a complete one-first-plus-five-loaded-route-requests-per-tier Android campaign. Exact metrics, output hashes, stop reasons, thermal context, and limitations stay in the normalized registry and owning experiments. The GPU/OpenCL rows prove accelerator use but are not GPU-exclusive; disclosed CPU orchestration and unsupported-operation boundaries remain part of each route. Process PSS/VmHWM does not include independently allocated GPU-private or vendor memory.</p>
+<p>Host smokes remain viability evidence only and never become canonical Android rows. In particular, experiment 0029&#x27;s one-request LFM CPU smoke is historical; experiment 0033 owns the complete LFM CPU and OpenCL routes.</p>
+<h2 id="blocked-accelerator-routes">Blocked accelerator routes<a class="anchor" href="#blocked-accelerator-routes" aria-label="Link to this section">#</a></h2>
+<p>Experiment 0030&#x27;s Qwen Vulkan route is stopped before request one. Three controlled variants failed while the Adreno driver created <code>mul_mat_vec_q5_k_f32_f32</code>; no provider-bound inference or performance metric exists. Experiment 0035&#x27;s successful OpenCL route is separate and must not be relabeled Vulkan.</p>
+<p>Three QNN/HTP experiments are blocked before conversion and have no registry rows, contexts, phone execution, or HTP performance claims:</p>
+<ul>
+<li><strong>0031 Gemma:</strong> installed QAIRT resolves SM8550 to HTP v73, but its high-level factory lacks Gemma4 dispatch and the exact public W4A16 graph fails during ShapeInference/ConstantPropagation with <code>KeyError(&#x27;value&#x27;)</code> before QNN conversion.</li>
+<li><strong>0032 Qwen:</strong> installed direct-GGUF support covers qwen2/qwen3 rather than qwen35; no public compatible 2B quantized ONNX+encodings or SM8550 context is available, and the installed Qwen3.5 specialization is dimension-incompatible with the 2B model.</li>
+<li><strong>0034 LFM:</strong> installed QAIRT and current public Qualcomm materials provide no <code>lfm2</code> GGUF, HTP-factory, Genie, recipe, or context route. Its hybrid convolutional/attention state requires model-specific conversion, runtime orchestration, and reset proof.</li>
+</ul>
+<h2 id="current-decision-boundary">Current decision boundary<a class="anchor" href="#current-decision-boundary" aria-label="Link to this section">#</a></h2>
+<p>No currently authorized benchmark execution remains unfinished. Resuming any QNN route requires Moritz to choose and explicitly authorize at least one of these paths:</p>
+<ol>
+<li>provide provenance-bound SM8550/HTP-v73 contexts and complete runtime/LUT bundles for the exact model;</li>
+<li>authorize authenticated Qualcomm AI Hub, Workbench, or engineering access, including any service terms or costs;</li>
+<li>authorize installation and binding of a newer licensed QAIRT/toolchain; or</li>
+<li>authorize architecture-aware converter/runtime engineering with host numerical equivalence, context identity, full-HTP partition/no-fallback proof, and request-state isolation.</li>
+</ol>
+<p>Until then, experiments 0031, 0032, and 0034 remain unchanged. Generic fallback, mismatched model configurations, borrowed metrics, authenticated services, new SDKs, and ad hoc graph patches are not authorized work. The concise cross-route resume record is the <a href="handovers/2026-08-26-android-llm-accelerator-results.md">latest accelerator handover</a>; owning experiment evidence remains authoritative.</p>
 <h2 id="tts-direction-carried-forward">TTS direction carried forward<a class="anchor" href="#tts-direction-carried-forward" aria-label="Link to this section">#</a></h2>
 <p>The TTS record is mature and currently has no active experiment in this plan. The complete normalized evidence remains in the <a href="android-benchmarks/index.html">Android TTS dashboard</a> and <a href="android-benchmarks/registry.json">registry</a>.</p>
 <p>Current bounded conclusions include:</p>
@@ -122,7 +137,7 @@ tr:last-child td { border-bottom:0; }
 </ul>
 <p>Listening verdicts remain bound to exact reviewed WAV hashes. None of these conclusions selects a broad model family or establishes production readiness.</p>
 <h2 id="later-work">Later work<a class="anchor" href="#later-work" aria-label="Link to this section">#</a></h2>
-<p>After performance evidence identifies practical LLM routes, define a separate quality workload for transcript generation. That later protocol can address structure, coherence, source use, style, repetition, spoken-language naturalness, editing burden, and exact-output review without retroactively turning performance outputs into quality evidence.</p>
+<p>After Moritz selects a practical LLM route from the current performance evidence, define a separate quality workload for transcript generation. That later protocol can address structure, coherence, source use, style, repetition, spoken-language naturalness, editing burden, and exact-output review without retroactively turning performance outputs into quality evidence.</p>
 <p>A future end-to-end benchmark may combine the selected LLM and TTS components. It is an integration view over the two component layers, not a third product-pipeline charter.</p></article>
 <footer class="source-footer">Generated as <code>plan.html</code> by <code>scripts/build_docs_html.py</code>. Edit <code>docs/plan.md</code>, then regenerate the human-readable mirrors.</footer>
 </main>
