@@ -72,15 +72,15 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="status-header" data-status-header="true">
 <div class="kicker"><span>Experiment 0034</span><span class="status">Active</span></div>
 <h1>Experiment 0034 — LFM2.5-2.6B Android QNN/HTP</h1>
-<p class="summary">All 263 target-specific QNN parts compiled for SM8550/HTP v73 with CPU provider fallback disabled and complete host ownership traces; physical-phone HTP execution remains the next gate.</p>
+<p class="summary">The hash-bound 539-file phone stage and native runner are ready locally, but the experiment is waiting for ADB RSA authorization; no phone contact or physical HTP execution exists.</p>
 <div class="header-links"><a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-08-27</span><span>evidence commit: 594064df2581362de97dd95e226a27dc4cfaa438</span><span>page source: docs/experiments/0034-lfm2.5-2.6b-android-qnn-htp/page.md</span><span>page source sha256: 6b08c026c6d515b62075c2ad628ef7b05e17c85b666781f53c941971f20dda22</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-27</span><span>evidence commit: ed17a096d2e8522aeb30d80ef74f8d5560288ec6</span><span>page source: docs/experiments/0034-lfm2.5-2.6b-android-qnn-htp/page.md</span><span>page source sha256: ab0d1aa3241b041ed1d3c95bc14793d6de089c03db808803dc8ac9e221bf3b32</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
 <p>LFM2.5-2.6B has complete Android CPU and OpenCL benchmark routes, but its original QNN assessment found no high-level tool path for the model&#x27;s <code>lfm2</code> architecture. This experiment now tests an architecture-aware route: export the exact model to Q4 ONNX, split its stateful computation into memory-bounded parts, compile every claimed neural part for the Galaxy S23 Ultra&#x27;s SM8550/HTP v73 target with CPU provider fallback disabled, and then prove that the complete route can execute physically on the phone.</p>
 <p>LFM2 is not a renamed Llama-like transformer. Its 30 layers combine 22 recurrent short-convolution layers with 8 full-attention layers, so the route must preserve both convolution state and attention KV state, bind their reset behavior, and prove that claimed model computation runs through QNN HTP. The intentionally CPU-side tokenizer, selected-row Q4 embedding lookup, request orchestration, and one global greedy argmax remain explicit; they are not hidden provider fallback.</p>
-<p>The route binds <code>LiquidAI/LFM2.5-2.6B</code> revision <code>ab006873…</code>, the architecture-aware <code>Liquid4All/onnx-export</code> exporter at <code>9a23ddd…</code>, symmetric block-32 INT4 weights, ONNX Runtime QNN EP 2.5.0, and host QNN runtime 2.49.40 targeting SoC model 43 / SM8550 / HTP v73. Moritz reviewed and authorized the named public Qualcomm package license. Packages, source weights, large ONNX data, and compiled contexts stay outside Git. The owning <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-aot/result.json">QNN AOT result</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/htp-pipeline-host-equivalence/result.json">host pipeline comparison</a> are the evidence authority.</p>
+<p>The route binds <code>LiquidAI/LFM2.5-2.6B</code> revision <code>ab006873…</code>, the architecture-aware <code>Liquid4All/onnx-export</code> exporter at <code>9a23ddd…</code>, symmetric block-32 INT4 weights, ONNX Runtime QNN EP 2.5.0, and host QNN runtime 2.49.40 targeting SoC model 43 / SM8550 / HTP v73. Moritz reviewed and authorized the named public Qualcomm package license. Packages, source weights, large ONNX data, compiled contexts, and the assembled phone stage stay outside Git. The owning <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-aot/result.json">QNN AOT result</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/htp-pipeline-host-equivalence/result.json">host pipeline comparison</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/phone-preparation/result.json">phone-preparation result</a> are the evidence authority.</p>
 </section>
 <section class="primary-section" id="progress" data-primary-section="progress">
 <h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
@@ -95,7 +95,9 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <li>263 context binaries total 1,779,492,144 bytes and remain outside Git.</li>
 </ul>
 <p>A bounded host reconstruction then submitted the exact 171-token canonical short prompt through the final 263-part ordering with zeroed state. The first five greedy token IDs matched the original export, the transformed monolith, and the final split pipeline. This protects the selected route wiring and greedy decisions for those five steps; the recorded logits are not numerically identical, and the host timings/logits are not Android or physical-HTP evidence.</p>
-<p>The next gate is to package and hash-bind all 263 contexts with a phone runtime that loads the route once, maintains the explicit state, performs only the declared CPU frontend/global-argmax work, and runs a bounded physical-phone request under <code>phone.lock</code>. Provider logs and profiles must prove the transformer/state/norm/head contexts execute on HTP before a canonical campaign may begin.</p>
+<p>The native phone runner and ignored local stage are now prepared. The 106,080-byte Android API-31 AArch64 PIE runner has SHA-256 <code>9b799bb6…89d2</code>. It is configured to load all 263 context sessions once, keep CPU EP fallback disabled, request shared HTP resources and basic profiling, zero all recurrent and attention state, submit the exact 171-token canonical-short prompt, and cap the viability continuation at 16 tokens. It retains only the declared CPU selected-row embedding, request orchestration, and global argmax boundary.</p>
+<p>The locally verified stage contains 539 payload files totaling 2,015,057,362 bytes before its additional metadata and SHA manifest. It covers the public Android runtime artifacts, runner, every context pair, Q4 embedding tables, and prompt. The complete stage is ignored and remains outside Git; committed hashes bind its metadata, manifest, runner, and public packages.</p>
+<p>This preparation made no ADB contact. The 0034 owner did not acquire <code>phone.lock</code>, stage or install anything, or execute the runner. Pi&#x27;s committed coordination state reports <code>R5CW81PR8SY unauthorized</code>, so work waits for Moritz to accept the Android RSA prompt and for Pi to confirm <code>device</code> state. Only then may 0034 hold the full phone-lock lifecycle for identity checks, staging, one bounded request, evidence pull, and scoped cleanup.</p>
 </section>
 <section class="primary-section" id="results" data-primary-section="results">
 <h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
@@ -129,6 +131,14 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>First five greedy tokens matched reference, transformed monolith, and final pipeline; not exact-logit equivalence</td>
 </tr>
 <tr>
+<td>Host-only phone preparation</td>
+<td>API-31 AArch64 runner plus 539 payload files / 2,015,057,362 bytes locally hash-verified outside Git</td>
+</tr>
+<tr>
+<td>ADB contact, phone lock, or phone staging</td>
+<td>None; waiting for RSA authorization and Pi confirmation</td>
+</tr>
+<tr>
 <td>Android / physical HTP execution</td>
 <td>Not yet attempted; no claim</td>
 </tr>
@@ -141,7 +151,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>None; host AOT and wiring evidence are not registry-eligible</td>
 </tr>
 </tbody></table></div>
-<p>The fallback-disabled compiler result is stronger than generic target availability, but it is still host preparation evidence. It does not show that the authorized phone can load 1,779,492,144 bytes of contexts, keep the complete route resident, execute every context through physical HTP, reset state correctly, or return valid text. Host context creation, host output sanity, and matching five greedy decisions cannot substitute for phone provider/RPC/accelerator/cycle/HVX proof.</p>
+<p>The fallback-disabled compiler result and locally verified phone stage are stronger than generic target availability, but both remain host preparation evidence. A ready native runner and 2.0 GB local stage do not show that the authorized phone can load 1,779,492,144 bytes of contexts, keep the complete route resident, execute every context through physical HTP, reset state correctly, or return valid text. No inference output exists from this runner. Host context creation, stage hashes, host output sanity, and matching five greedy decisions cannot substitute for phone provider/RPC/accelerator/cycle/HVX proof.</p>
 <p>No 0034 row belongs in the Android LLM registry until a complete valid physical Android canonical campaign exists. If physical context loading fails, CPU work expands beyond the declared boundary, any neural context falls back, or full request reset cannot be proven, the route must stop rather than weaken the HTP claim.</p>
 </section></article>
 <footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>

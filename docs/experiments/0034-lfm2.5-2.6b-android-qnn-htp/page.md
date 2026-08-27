@@ -1,7 +1,7 @@
 ---
 experiment: 0034-lfm2.5-2.6b-android-qnn-htp
 status: active
-summary: All 263 target-specific QNN parts compiled for SM8550/HTP v73 with CPU provider fallback disabled and complete host ownership traces; physical-phone HTP execution remains the next gate.
+summary: The hash-bound 539-file phone stage and native runner are ready locally, but the experiment is waiting for ADB RSA authorization; no phone contact or physical HTP execution exists.
 benchmark: android-llm
 ---
 
@@ -13,7 +13,7 @@ LFM2.5-2.6B has complete Android CPU and OpenCL benchmark routes, but its origin
 
 LFM2 is not a renamed Llama-like transformer. Its 30 layers combine 22 recurrent short-convolution layers with 8 full-attention layers, so the route must preserve both convolution state and attention KV state, bind their reset behavior, and prove that claimed model computation runs through QNN HTP. The intentionally CPU-side tokenizer, selected-row Q4 embedding lookup, request orchestration, and one global greedy argmax remain explicit; they are not hidden provider fallback.
 
-The route binds `LiquidAI/LFM2.5-2.6B` revision `ab006873…`, the architecture-aware `Liquid4All/onnx-export` exporter at `9a23ddd…`, symmetric block-32 INT4 weights, ONNX Runtime QNN EP 2.5.0, and host QNN runtime 2.49.40 targeting SoC model 43 / SM8550 / HTP v73. Moritz reviewed and authorized the named public Qualcomm package license. Packages, source weights, large ONNX data, and compiled contexts stay outside Git. The owning [experiment README](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/README.md), [experiment contract](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/protocol/experiment-contract.json), [QNN AOT result](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-aot/result.json), and [host pipeline comparison](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/htp-pipeline-host-equivalence/result.json) are the evidence authority.
+The route binds `LiquidAI/LFM2.5-2.6B` revision `ab006873…`, the architecture-aware `Liquid4All/onnx-export` exporter at `9a23ddd…`, symmetric block-32 INT4 weights, ONNX Runtime QNN EP 2.5.0, and host QNN runtime 2.49.40 targeting SoC model 43 / SM8550 / HTP v73. Moritz reviewed and authorized the named public Qualcomm package license. Packages, source weights, large ONNX data, compiled contexts, and the assembled phone stage stay outside Git. The owning [experiment README](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/README.md), [experiment contract](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/protocol/experiment-contract.json), [QNN AOT result](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-aot/result.json), [host pipeline comparison](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/htp-pipeline-host-equivalence/result.json), and [phone-preparation result](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/phone-preparation/result.json) are the evidence authority.
 
 ## Progress
 
@@ -32,7 +32,11 @@ The final memory-bounded route contains 263 compiled parts covering convolution 
 
 A bounded host reconstruction then submitted the exact 171-token canonical short prompt through the final 263-part ordering with zeroed state. The first five greedy token IDs matched the original export, the transformed monolith, and the final split pipeline. This protects the selected route wiring and greedy decisions for those five steps; the recorded logits are not numerically identical, and the host timings/logits are not Android or physical-HTP evidence.
 
-The next gate is to package and hash-bind all 263 contexts with a phone runtime that loads the route once, maintains the explicit state, performs only the declared CPU frontend/global-argmax work, and runs a bounded physical-phone request under `phone.lock`. Provider logs and profiles must prove the transformer/state/norm/head contexts execute on HTP before a canonical campaign may begin.
+The native phone runner and ignored local stage are now prepared. The 106,080-byte Android API-31 AArch64 PIE runner has SHA-256 `9b799bb6…89d2`. It is configured to load all 263 context sessions once, keep CPU EP fallback disabled, request shared HTP resources and basic profiling, zero all recurrent and attention state, submit the exact 171-token canonical-short prompt, and cap the viability continuation at 16 tokens. It retains only the declared CPU selected-row embedding, request orchestration, and global argmax boundary.
+
+The locally verified stage contains 539 payload files totaling 2,015,057,362 bytes before its additional metadata and SHA manifest. It covers the public Android runtime artifacts, runner, every context pair, Q4 embedding tables, and prompt. The complete stage is ignored and remains outside Git; committed hashes bind its metadata, manifest, runner, and public packages.
+
+This preparation made no ADB contact. The 0034 owner did not acquire `phone.lock`, stage or install anything, or execute the runner. Pi's committed coordination state reports `R5CW81PR8SY unauthorized`, so work waits for Moritz to accept the Android RSA prompt and for Pi to confirm `device` state. Only then may 0034 hold the full phone-lock lifecycle for identity checks, staging, one bounded request, evidence pull, and scoped cleanup.
 
 ## Results
 
@@ -46,10 +50,12 @@ The next gate is to package and hash-bind all 263 contexts with a phone runtime 
 | CPU provider fallback inside QNN parts | Disabled |
 | Declared CPU work outside QNN parts | Tokenizer, selected-row Q4 embedding, orchestration, and global argmax across 22 HTP LM-head chunks |
 | Host route-wiring comparison | First five greedy tokens matched reference, transformed monolith, and final pipeline; not exact-logit equivalence |
+| Host-only phone preparation | API-31 AArch64 runner plus 539 payload files / 2,015,057,362 bytes locally hash-verified outside Git |
+| ADB contact, phone lock, or phone staging | None; waiting for RSA authorization and Pi confirmation |
 | Android / physical HTP execution | Not yet attempted; no claim |
 | Canonical campaign and Android performance | Not run; no setup, TTFT, prefill, decode, memory, thermal, or power result |
 | Android LLM registry row | None; host AOT and wiring evidence are not registry-eligible |
 
-The fallback-disabled compiler result is stronger than generic target availability, but it is still host preparation evidence. It does not show that the authorized phone can load 1,779,492,144 bytes of contexts, keep the complete route resident, execute every context through physical HTP, reset state correctly, or return valid text. Host context creation, host output sanity, and matching five greedy decisions cannot substitute for phone provider/RPC/accelerator/cycle/HVX proof.
+The fallback-disabled compiler result and locally verified phone stage are stronger than generic target availability, but both remain host preparation evidence. A ready native runner and 2.0 GB local stage do not show that the authorized phone can load 1,779,492,144 bytes of contexts, keep the complete route resident, execute every context through physical HTP, reset state correctly, or return valid text. No inference output exists from this runner. Host context creation, stage hashes, host output sanity, and matching five greedy decisions cannot substitute for phone provider/RPC/accelerator/cycle/HVX proof.
 
 No 0034 row belongs in the Android LLM registry until a complete valid physical Android canonical campaign exists. If physical context loading fails, CPU work expands beyond the declared boundary, any neural context falls back, or full request reset cannot be proven, the route must stop rather than weaken the HTP claim.
