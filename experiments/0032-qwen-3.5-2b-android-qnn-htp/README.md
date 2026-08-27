@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active. Physical QNN/HTP-v73 provider initialization and all four exact-context loads are proven on the authorized SM8550 phone. Attempt 01 then failed safely before model execution because the Android runner lacked three non-compute `llama::fallback.out` sharding-boundary registrations.**
+**Active. Physical QNN/HTP-v73 provider initialization and all four exact-context loads are proven on the authorized SM8550 phone. Attempt 01 failed safely before model execution; the missing non-compute `llama::fallback.out` sharding-boundary registration is now linked and hash-bound in a revised host-built runner. A bounded retry awaits explicit phone priority.**
 
 This is a separate HTP feasibility arm. It does not change or relabel `0027` CPU evidence.
 
@@ -35,7 +35,7 @@ The pinned official tokenizer/template was reconstructed independently. With thi
 
 ## Current next gate
 
-1. Host-link and verify ExecuTorch's `llama::fallback.out` identity boundary operator in the Android runner; this operator performs no tensor computation.
+1. Retain the revised runner evidence in [`results/android-runner-boundary-fix-host-build/`](results/android-runner-boundary-fix-host-build/); the exact `llama::fallback.out` registration is whole-archive linked and the phone preflight pins the new runner hash.
 2. Await a new explicit Pi phone-priority transfer before reacquiring `phone.lock` or staging anything.
 3. Run at most one authorized bounded retry and require actual graph execution, QNN RPC/accelerator evidence, one generated-token sanity check, and verified cleanup.
 4. Only after viability, extend the runner to reuse the loaded route across reset-isolated requests and run the fixed 1+5+5+5 campaign.

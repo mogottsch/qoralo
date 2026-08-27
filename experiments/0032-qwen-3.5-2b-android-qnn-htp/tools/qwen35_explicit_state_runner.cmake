@@ -9,6 +9,7 @@ target_link_libraries(
   qwen35_explicit_state_runner
   qnn_executorch_backend
   executorch_core
+  custom_ops
   extension_module
   extension_tensor
   full_portable_ops_lib

@@ -1,0 +1,17 @@
+Curated host boundary-kernel rebuild proof
+source build log bytes: 5409
+source build log sha256: 91329091755120e58febfde0f6a8b2b7e2a1f839aba0f0ef8227517b64a32159
+
+[ 75%] Built target custom_ops
+[100%] Linking CXX executable qwen35_explicit_state_runner
+[100%] Built target qwen35_explicit_state_runner
+verified embedded boundary registration: llama::fallback.out
+ELF 64-bit LSB pie executable, ARM aarch64, for Android 30, NDK r28b, stripped
+bytes=3446144
+sha256=0b5bef7984738d60d2f4b2f4dbae1c13f1f5914b75b8cc00e5ae3e2ed0f81fc5
+
+Curated exact link-command segment:
+-Xlinker --whole-archive .../oss_scripts/llama/libcustom_ops.a -Xlinker --no-whole-archive
+link command sha256: 3b964877588e499f029935902b5ffa5c8cebed4a6116ca2208ad2a216014bffb
+custom_ops archive sha256: 8b304e2c4b56208bd05f815679d91ba5f138eb3dda15c5b1d62e0d6d6fdbfdd0
+ExecuTorch op_fallback.cpp sha256: 90933290543e3a0ba2ce3b99dcfcbaef801142fa3b985a70aaecbbc976cf8c4d

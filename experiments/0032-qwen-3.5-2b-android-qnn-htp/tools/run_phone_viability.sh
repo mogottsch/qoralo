@@ -66,7 +66,7 @@ expected_hash() {
   }
 }
 expected_hash bfdae1c3327c954566ec0d4a5a0ee8873eb145d0921bc3f9d988a6a2557be6df "$PTE"
-expected_hash 4b05bf24f6b55d349383dfdcfa54c0d968ea944a7b7ce6bb7971f348850aec58 "$RUNNER"
+expected_hash 0b5bef7984738d60d2f4b2f4dbae1c13f1f5914b75b8cc00e5ae3e2ed0f81fc5 "$RUNNER"
 expected_hash dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4 "$PROMPT_IDS"
 expected_hash 0d97f44ac9abcaf7e5e025440c41c3727acc6315f2bd2613ab1cb31afe508b37 "$BACKEND"
 expected_hash a09b3af28342331b3ec9e57ecbe42bfe54a5fff37c4323ce5685c395ae3ee604 "$QNN/lib/aarch64-android/libQnnHtp.so"

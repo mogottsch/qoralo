@@ -30,6 +30,11 @@ RUNNER="$QUALCOMM_BUILD/executor_runner/qwen35_explicit_state_runner"
 STRIP=$(sed -n 's/^CMAKE_STRIP:FILEPATH=//p' "$QUALCOMM_BUILD/CMakeCache.txt")
 [[ -x "$STRIP" ]] || { echo "missing Android strip tool: $STRIP" >&2; exit 4; }
 "$STRIP" --strip-unneeded "$RUNNER"
+grep -aFq 'llama::fallback.out' "$RUNNER" || {
+  echo "runner is missing the llama::fallback.out boundary registration" >&2
+  exit 5
+}
+echo "verified embedded boundary registration: llama::fallback.out"
 file "$RUNNER"
 stat -c 'bytes=%s' "$RUNNER"
 sha256sum "$RUNNER"

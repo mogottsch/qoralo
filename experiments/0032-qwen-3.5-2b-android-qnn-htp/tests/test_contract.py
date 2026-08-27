@@ -33,6 +33,9 @@ class ContractTest(unittest.TestCase):
         cls.physical_attempt = json.loads(
             (EXP / "results/android-qnn-physical-viability-20260827-attempt-01/result.json").read_text()
         )
+        cls.boundary_fix = json.loads(
+            (EXP / "results/android-runner-boundary-fix-host-build/result.json").read_text()
+        )
 
     def test_canonical_protocol_and_workloads(self) -> None:
         canonical = self.contract["canonical_protocol"]
@@ -206,6 +209,25 @@ class ContractTest(unittest.TestCase):
         self.assertEqual("verified_absent", cleanup["cleanup_state"])
         self.assertEqual("verified_absent", cleanup["process_cleanup_state"])
 
+    def test_boundary_fix_is_host_only_and_hash_bound(self) -> None:
+        fix = self.boundary_fix
+        self.assertEqual("host_android_runner_boundary_kernel_link_fix", fix["evidence_class"])
+        self.assertEqual("host_prepared_not_staged", fix["status"])
+        self.assertEqual("llama::fallback.out", fix["blocker_addressed"]["missing_operator"])
+        self.assertEqual(3, fix["blocker_addressed"]["required_registrations"])
+        self.assertTrue(fix["link_evidence"]["whole_archive"])
+        self.assertTrue(fix["link_evidence"]["embedded_registration_verified"])
+        self.assertEqual(
+            fix["revised_runner"]["sha256"],
+            fix["retry_preflight"]["phone_script_expected_runner_sha256"],
+        )
+        self.assertFalse(fix["retry_preflight"]["phone_access_performed"])
+        self.assertTrue(fix["retry_preflight"]["new_phone_priority_required"])
+        cmake = (EXP / "tools/qwen35_explicit_state_runner.cmake").read_text()
+        self.assertIn("custom_ops", cmake)
+        phone_script = (EXP / "tools/run_phone_viability.sh").read_text()
+        self.assertIn(fix["revised_runner"]["sha256"], phone_script)
+
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
             EXP / "protocol",
@@ -214,6 +236,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/executorch-qnn-exact-host-compile",
             EXP / "results/android-explicit-state-runner-host-build",
             EXP / "results/android-qnn-physical-viability-20260827-attempt-01",
+            EXP / "results/android-runner-boundary-fix-host-build",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
+  "evidence_class": "host_android_runner_boundary_kernel_link_fix",
+  "status": "host_prepared_not_staged",
+  "blocker_addressed": {
+    "attempt_result": "results/android-qnn-physical-viability-20260827-attempt-01/result.json",
+    "missing_operator": "llama::fallback.out",
+    "required_registrations": 3,
+    "implementation": "ExecuTorch v1.2.0 extension/llm/custom_ops/op_fallback.cpp",
+    "implementation_sha256": "90933290543e3a0ba2ce3b99dcfcbaef801142fa3b985a70aaecbbc976cf8c4d",
+    "behavior": "resize output to input shape, verify identical shape/dtype, and memcpy input bytes to output; no arithmetic tensor computation"
+  },
+  "link_evidence": {
+    "cmake_target": "custom_ops",
+    "custom_ops_archive_bytes": 154750,
+    "custom_ops_archive_sha256": "8b304e2c4b56208bd05f815679d91ba5f138eb3dda15c5b1d62e0d6d6fdbfdd0",
+    "whole_archive": true,
+    "link_command_sha256": "3b964877588e499f029935902b5ffa5c8cebed4a6116ca2208ad2a216014bffb",
+    "embedded_registration_string": "llama::fallback.out",
+    "embedded_registration_verified": true
+  },
+  "revised_runner": {
+    "target": "Android arm64-v8a API 30",
+    "ndk": "28.1.13356709 (r28b)",
+    "stripped": true,
+    "bytes": 3446144,
+    "sha256": "0b5bef7984738d60d2f4b2f4dbae1c13f1f5914b75b8cc00e5ae3e2ed0f81fc5",
+    "previous_runner_sha256": "4b05bf24f6b55d349383dfdcfa54c0d968ea944a7b7ce6bb7971f348850aec58",
+    "policy": "local-only; not committed"
+  },
+  "build": {
+    "log_bytes": 5409,
+    "log_sha256": "91329091755120e58febfde0f6a8b2b7e2a1f839aba0f0ef8227517b64a32159",
+    "source_runner_sha256": "72a8e786de75055757a340505d739fd5a57020856fb246a31e7fa195dd01c258",
+    "source_cmake_sha256": "3eb07db8f8c3dddec180882a3d5ebd03d32fdba6435364235539675bc8bb968b",
+    "build_script_sha256": "9437c28a69de73e13a0d630eb46fe6eca1300d3e5c8a0fdbb8314333373688aa"
+  },
+  "retry_preflight": {
+    "phone_script_expected_runner_sha256": "0b5bef7984738d60d2f4b2f4dbae1c13f1f5914b75b8cc00e5ae3e2ed0f81fc5",
+    "pte_sha256_unchanged": "bfdae1c3327c954566ec0d4a5a0ee8873eb145d0921bc3f9d988a6a2557be6df",
+    "phone_access_performed": false,
+    "new_phone_priority_required": true
+  },
+  "claim_limits": [
+    "This proves only that the revised Android runner cross-build whole-archive links the pinned ExecuTorch fallback boundary implementation and embeds its registration name.",
+    "The revised runner has not been staged or executed on Android.",
+    "The prior physical attempt remains failed before model execution; this host fix does not retroactively prove inference.",
+    "There is no new physical QNN/HTP, output, sanity, or performance claim, and no retry is authorized by this result."
+  ]
+}

@@ -23,11 +23,12 @@ Active. The ExecuTorch route has passed exact-checkpoint host compilation and ph
 10. Calibrated W4A16 PTQ on the canonical short prompt and compiled the exact 24-layer model as four SM8550/HTP-v73 QNN subgraphs. All 4,102 tensor-compute nodes were delegated, all four graphs finalized with status `0x0`, and the hash-bound PTE remains outside Git.
 11. Cross-compiled a single-request Android arm64 runner for the exact 51-input/49-output PTE ABI. It performs greedy token generation and explicit KV/recurrent/convolution state advancement, but remains not campaign-eligible.
 12. Ran one explicitly authorized bounded phone attempt. Exact local/remote hashes matched; physical QNN HTP v73 initialized and loaded/retrieved all four exact contexts through FastRPC. Method loading then failed before execution on three missing `llama::fallback.out` identity boundary registrations. No retry occurred, and root/process cleanup was verified.
+13. Whole-archive linked ExecuTorch's pinned non-compute `llama::fallback.out` implementation, cross-compiled the Android runner, verified the registration name is embedded, and hash-bound the revised binary in the guarded phone script—all host-only.
 
 ## Current work
 
-1. Register/link ExecuTorch's non-compute `llama::fallback.out` boundary kernel and rebuild/hash-bind the Android runner entirely on the host.
-2. Wait for a new explicit Pi phone-priority transfer; ADB and staging are prohibited until then.
+1. Wait for a new explicit Pi phone-priority transfer; ADB and staging are prohibited until then.
+2. Keep the revised runner hash and exact-PTE/runtime hashes fixed for the bounded retry.
 3. Under `phone.lock`, perform at most one newly authorized physical viability retry and require actual graph execution plus provider/RPC/accelerator evidence.
 4. Only after viability, extend the runner for loaded-route multi-request reuse, prove full explicit-state reset, and run the canonical 1+5+5+5 campaign.
 
