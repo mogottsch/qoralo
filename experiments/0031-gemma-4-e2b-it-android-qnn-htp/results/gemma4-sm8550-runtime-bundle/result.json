@@ -1,0 +1,162 @@
+{
+  "bundle_manifest": {
+    "bytes": 2426,
+    "large_or_restricted_files_stored_outside_git": true,
+    "sha256": "24ca90b48ec14a61a8c5bdc6bae5b1cd3340d50e5a10536148f7de23cc114062"
+  },
+  "claim_boundary": "A private Genie bundle now binds the SM8550/v73 context, exact tokenizer, QnnHtp runtime libraries, and source-derived token/PLE LUTs whose sampled dequantization error is within half of one uint8 step. This is host preparation only; no Android staging, physical HTP loading/execution, text, or performance is claimed.",
+  "classification": "positive_host_runtime_bundle_and_lut_fidelity",
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "formula": {
+    "bit_order": "low bits first",
+    "revision": "323f24345ed92f88e68a14aeef7db78ee2b52475",
+    "scale": "per-row/per-block multiplication, followed by architectural embedding scale",
+    "sha256": "9bf6d109dfc3540a46953f5b183af766edcf6a044529c12d7751db47ee71cc17",
+    "signed_mapping": {
+      "int2": "unsigned 0..3 minus 2",
+      "int4": "unsigned 0..15 minus 8"
+    },
+    "source": "https://github.com/huggingface/transformers/blob/323f24345ed92f88e68a14aeef7db78ee2b52475/src/transformers/integrations/gemma_quant.py"
+  },
+  "luts": {
+    "embedding": {
+      "architectural_scale": 39.191835884530846,
+      "bytes": 402653184,
+      "encoding": {
+        "bw": 8,
+        "max": 4.294310092926025,
+        "min": -8.58862018585205,
+        "offset": -170,
+        "scale": 0.050521295210894414
+      },
+      "fidelity": {
+        "half_step_error_bound": 0.025261647605447208,
+        "max_abs_error": 0.024453401565551758,
+        "mean_abs_error": 0.0074137793853878975,
+        "rmse": 0.01074124313890934,
+        "sample_row_ids": [
+          0,
+          1,
+          2,
+          105,
+          106,
+          256000,
+          258880,
+          258881,
+          258882,
+          258883,
+          262143
+        ],
+        "sample_values": 16896,
+        "within_half_step": true
+      },
+      "filename": "embedding_int8_lut.bin",
+      "sha256": "3b55bb6bf947bf6a26056a25bc19a50564047c550b64c0d5f505a478cdb64239",
+      "source_bits": 2,
+      "width": 1536
+    },
+    "perlayer_embedding": {
+      "architectural_scale": 16.0,
+      "bytes": 2348810240,
+      "encoding": {
+        "bw": 8,
+        "max": 13.422158241271973,
+        "min": -14.808453559875488,
+        "offset": -134,
+        "scale": 0.1107082815731273
+      },
+      "fidelity": {
+        "half_step_error_bound": 0.05535514078656365,
+        "max_abs_error": 0.05529487133026123,
+        "mean_abs_error": 0.020654184743762016,
+        "rmse": 0.026794815436005592,
+        "sample_row_ids": [
+          0,
+          1,
+          2,
+          105,
+          106,
+          256000,
+          258880,
+          258881,
+          258882,
+          258883,
+          262143
+        ],
+        "sample_values": 98560,
+        "within_half_step": true
+      },
+      "filename": "embed_tokens_per_layer_int8_lut.bin",
+      "sha256": "bc5f25db058421efa5ac9cd38f9cd74e250e286ab4f6fe094c134a997dc29fa4",
+      "source_bits": 4,
+      "width": 8960
+    }
+  },
+  "next_gate": "After explicit phone-priority transfer, acquire phone.lock for the full ADB lifecycle, stage to an experiment-specific directory, and run one bounded context-load/short-prompt viability request with verbose QNN/HTP evidence.",
+  "requested": {
+    "inference": false,
+    "performance_campaign": false,
+    "phone_access": false,
+    "physical_htp_execution": false
+  },
+  "route": "gemma4-e2b-it-w4a16-qairt-2.49.40-sm8550-v73",
+  "runtime": {
+    "ar_variants": [
+      1,
+      128
+    ],
+    "backend": "QnnHtp",
+    "cache_groups": [
+      "past_ global KV dim 512",
+      "swa_ sliding-window KV dim 256/window 512"
+    ],
+    "config_path": "gemma4-e2b-htp-cl4096-greedy.json",
+    "config_sha256": "1728487331b7d4a0f5619a523a23cc954eca05ce9e1a819b85287079e5523951",
+    "context_length": 4096,
+    "context_sha256": "b8c169cedf9a00dde67e2e555805b1a773cb6fd128f5c3912a684c371f4af95a",
+    "max_new_tokens": 2048,
+    "runtime_files": {
+      "bin/genie-app": {
+        "bytes": 1022168,
+        "sha256": "f3edc2bfa064cfb3fda0195590efaf2f9300b6a287a03925b09d5d6896eebbc9"
+      },
+      "htp_backend_ext_config.json": {
+        "bytes": 128,
+        "sha256": "9204e9591bc557bb8618fb7dd3e0696ade5f5fc33c8164588bd1e7885139bba4"
+      },
+      "lib/libGenie.so": {
+        "bytes": 11149832,
+        "sha256": "1398c4b0837dfbb4a0b156906f7d533bf9d0ee9bb1f3b6c3efa2973c102c660a"
+      },
+      "lib/libQnnHtp.so": {
+        "bytes": 3786400,
+        "sha256": "4f5b4d11b128d78433730a4f5e88841e51aec472c6bd28ffd858dba8ea1012fb"
+      },
+      "lib/libQnnHtpV73Skel.so": {
+        "bytes": 11859192,
+        "sha256": "e618168c82a0ec763b8543268b2783f5d28c9525fb6d0741afd667869ee493c8"
+      },
+      "lib/libQnnHtpV73Stub.so": {
+        "bytes": 771928,
+        "sha256": "7837f29bd84dbcf542faf1047d3904dc14f578e3d1a472c41eee792e7a1a8db0"
+      },
+      "lib/libQnnSystem.so": {
+        "bytes": 4072160,
+        "sha256": "536201ed918f4066f9ef35671198c072faf9ef04af24545f5fae0fc79aa05baa"
+      }
+    },
+    "sampling": "greedy",
+    "target": "SM8550/v73",
+    "tokenizer_sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f"
+  },
+  "schema_version": 1,
+  "source": {
+    "bytes": 2458111846,
+    "filename": "model.safetensors",
+    "gated": false,
+    "license": "apache-2.0",
+    "repo": "google/gemma-4-E2B-it-qat-mobile-transformers",
+    "revision": "dd693ff40353f057ca5f07e945ad867f4afbf2ec",
+    "sha256": "efab429012b97ab986c4d4838a46ff3ad95d618b42ce514771ca40fadc76a9a4"
+  }
+}

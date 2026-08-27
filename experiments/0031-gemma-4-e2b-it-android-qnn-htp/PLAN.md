@@ -36,7 +36,9 @@ QNN conversion now passes for both variants, producing hash-bound AR1 and AR128 
 
 Weight-shared compilation now passes. One hash-bound serialized context contains AR1 and AR128 graphs; official metadata binds QNN HTP backend ID 6 and the exact QAIRT build, while embedded compiler markers bind SM8550, architecture 73, and native HMX a16w4. This remains host AOT evidence only.
 
-The active next step is generating and binding matching embedding and per-layer embedding LUTs from the pinned public upstream checkpoint, then preparing the exact Genie `QnnHtp` runtime bundle. Do not acquire `phone.lock` or stage the phone until Pi explicitly transfers priority. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
+The private runtime bundle is now complete. The pinned ungated Apache-2.0 QAT safetensors is hash-bound; its packed INT2 token and INT4 PLE embeddings are unpacked with the authoritative Google/Hugging Face formula, scaled, and block-streamed into uint8 LUTs. Deterministic sampled dequantization is within half a quantization step. The manifest binds both LUTs, context, tokenizer, greedy CL4096 config, Genie binary, and QNN HTP host/stub/v73 skeleton libraries.
+
+The active next step is one bounded short-prompt physical context-load/inference probe. Do not acquire `phone.lock` or stage anything until Pi explicitly transfers priority. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
 
 ## Stop conditions
 

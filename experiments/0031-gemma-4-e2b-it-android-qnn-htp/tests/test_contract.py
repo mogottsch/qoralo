@@ -106,11 +106,11 @@ class ContractTest(unittest.TestCase):
 
     def test_historical_transform_blocker_and_active_no_execution_claim(self) -> None:
         blocker = json.loads((EXP / "results/transform-blocker/result.json").read_text())
-        self.assertEqual("active_sm8550_htp_context_compiled_pre_phone_stage", self.contract["status"])
+        self.assertEqual("ready_for_phone_viability_waiting_priority", self.contract["status"])
         active = self.contract["conversion_blocker"]
         self.assertIn("historical_failure", active)
         self.assertEqual("passed", active["transform_gate"])
-        self.assertIn("Generate matching token/per-layer embedding LUTs", active["next_gate"])
+        self.assertIn("phone.lock", active["next_gate"])
         self.assertFalse(blocker["android_execution"])
         self.assertFalse(blocker["qnn_htp_execution"])
         self.assertFalse(blocker["compiled_context_created"])
@@ -133,6 +133,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/qairt-2.49.40-transform-compat",
             EXP / "results/qairt-2.49.40-qnn-conversion",
             EXP / "results/qairt-2.49.40-sm8550-context",
+            EXP / "results/gemma4-sm8550-runtime-bundle",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():
@@ -202,6 +203,23 @@ class ContractTest(unittest.TestCase):
         self.assertEqual(2, result["inspection"]["num_graphs"])
         self.assertTrue(all(result["inspection"]["embedded_markers"].values()))
         self.assertTrue(result["requested"]["htp_compilation"])
+        self.assertFalse(result["requested"]["phone_access"])
+        self.assertFalse(result["requested"]["physical_htp_execution"])
+        self.assertFalse(result["requested"]["inference"])
+
+    def test_runtime_bundle_and_luts_are_bound_but_not_staged(self) -> None:
+        result = json.loads(
+            (EXP / "results/gemma4-sm8550-runtime-bundle/result.json").read_text()
+        )
+        self.assertEqual("positive_host_runtime_bundle_and_lut_fidelity", result["classification"])
+        self.assertEqual("QnnHtp", result["runtime"]["backend"])
+        self.assertEqual("greedy", result["runtime"]["sampling"])
+        self.assertEqual(2048, result["runtime"]["max_new_tokens"])
+        for lut in result["luts"].values():
+            self.assertTrue(lut["fidelity"]["within_half_step"])
+            self.assertLessEqual(
+                lut["fidelity"]["max_abs_error"], lut["fidelity"]["half_step_error_bound"]
+            )
         self.assertFalse(result["requested"]["phone_access"])
         self.assertFalse(result["requested"]["physical_htp_execution"])
         self.assertFalse(result["requested"]["inference"])

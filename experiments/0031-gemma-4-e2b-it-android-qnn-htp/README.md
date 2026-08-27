@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active after SM8550/HTP v73 compilation and before phone staging. The unchanged public w4a16 checkpoint now yields static AR1 and AR128, CL4096 variants, two HTP-targeted DLCs, and one weight-shared serialized context. Official context metadata binds QNN HTP backend ID 6 and both graphs; embedded compiler markers bind SM8550/architecture 73. No Android loading, physical HTP execution, generated text, or performance result exists yet.**
+**Ready for a bounded phone viability gate, waiting for explicit phone priority. The unchanged public w4a16 checkpoint now yields static AR1/AR128 CL4096 variants, two HTP-targeted DLCs, one weight-shared SM8550/v73 context, source-derived token/PLE LUTs, and a hash-bound Genie `QnnHtp` bundle. No Android loading, physical HTP execution, generated text, or performance result exists yet.**
 
 This experiment is a separate HTP arm for the model studied in `0025`. It does not rewrite or relabel the CPU/GPU evidence there.
 
@@ -60,7 +60,16 @@ Both transformed variants now pass QNN conversion:
 
 Both DLCs now compile together in QAIRT weight-sharing mode. The resulting 1,186,349,056-byte context has SHA-256 `b8c169cedf9a00dde67e2e555805b1a773cb6fd128f5c3912a684c371f4af95a`. `qnn-context-binary-utility` reports build `v2.49.40.260810104044`, QNN HTP backend ID 6, and exactly two graphs (`ar1_cl4096_1_of_1`, `ar128_cl4096_1_of_1`), each with 38 inputs and 31 outputs. The binary also contains `soc_type=SM8550`, `arch=73`, and `native_hmx_a16w4=true`. See [`results/qairt-2.49.40-sm8550-context/result.json`](results/qairt-2.49.40-sm8550-context/result.json).
 
-This is host AOT/context evidence, not physical provider proof. The exact next gate is generating and binding the matching token/per-layer embedding LUTs and Genie `QnnHtp` configuration. Phone staging remains queued behind explicit priority and `phone.lock`. Workbench compile/link remains a separate unapproved cost/terms checkpoint. Ad hoc checkpoint graph rewriting, a CPU response, or the unsupported Gemma4 GGUF route is not acceptable.
+This is host AOT/context evidence, not physical provider proof.
+
+The private runtime bundle is now complete. From the pinned ungated Apache-2.0 QAT checkpoint, the host tooling unpacks Google/Hugging Face's low-bits-first signed INT2 token and INT4 PLE tables, applies their per-row/per-block scales and Gemma architectural embedding scales, then requantizes to the uint8 LUT form consumed by the QAIRT Gemma4 example:
+
+- token LUT: 402,653,184 bytes, SHA-256 `3b55bb6bf947bf6a26056a25bc19a50564047c550b64c0d5f505a478cdb64239`;
+- PLE LUT: 2,348,810,240 bytes, SHA-256 `bc5f25db058421efa5ac9cd38f9cd74e250e286ab4f6fe094c134a997dc29fa4`.
+
+Deterministic sampled reconstruction stays within half of one uint8 quantization step. The bundle binds those LUTs, the compiled context, exact tokenizer, QAIRT 2.49.40 Genie/QNN/HTP/v73 libraries, a CL4096 configuration, and greedy 2048-token ceiling. See [`results/gemma4-sm8550-runtime-bundle/result.json`](results/gemma4-sm8550-runtime-bundle/result.json).
+
+The exact next gate is one bounded short-prompt context-load/inference probe after Pi transfers phone priority. The entire ADB lifecycle requires `phone.lock`; no staging has occurred. Workbench compile/link remains a separate unapproved cost/terms checkpoint. Ad hoc checkpoint graph rewriting, a CPU response, or the unsupported Gemma4 GGUF route is not acceptable.
 
 ## Proof boundary
 

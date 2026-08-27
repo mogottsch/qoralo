@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
-  "status": "active_sm8550_htp_context_compiled_pre_phone_stage",
+  "status": "ready_for_phone_viability_waiting_priority",
   "question": "Can Gemma 4 E2B IT run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Gemma 4 E2B IT text generation only",
@@ -139,7 +139,8 @@
     "transform_gate": "passed",
     "qnn_conversion_gate": "passed",
     "htp_compile_gate": "passed",
-    "next_gate": "Generate matching token/per-layer embedding LUTs and the Genie QnnHtp bundle, then wait for explicit phone priority and phone.lock.",
+    "runtime_bundle_gate": "passed",
+    "next_gate": "After explicit phone-priority transfer, hold phone.lock for one bounded short-prompt Genie QnnHtp physical viability probe.",
     "workbench_checkpoint": "Any paid Workbench compile/link job requires a separate explicit cost/terms decision."
   },
   "transform_result": {
@@ -204,6 +205,40 @@
     "context_build_id": "v2.49.40.260810104044",
     "graphs": ["ar1_cl4096_1_of_1", "ar128_cl4096_1_of_1"],
     "embedded_target_markers": ["soc_type=SM8550", "arch=73", "native_hmx_a16w4=true"],
+    "phone_access": false,
+    "physical_htp_execution": false,
+    "inference": false
+  },
+  "runtime_bundle_result": {
+    "result_path": "results/gemma4-sm8550-runtime-bundle/result.json",
+    "classification": "positive_host_runtime_bundle_and_lut_fidelity",
+    "source_checkpoint": {
+      "repo": "google/gemma-4-E2B-it-qat-mobile-transformers",
+      "revision": "dd693ff40353f057ca5f07e945ad867f4afbf2ec",
+      "bytes": 2458111846,
+      "sha256": "efab429012b97ab986c4d4838a46ff3ad95d618b42ce514771ca40fadc76a9a4",
+      "gated": false,
+      "license": "apache-2.0"
+    },
+    "token_lut": {
+      "bytes": 402653184,
+      "sha256": "3b55bb6bf947bf6a26056a25bc19a50564047c550b64c0d5f505a478cdb64239",
+      "source_bits": 2,
+      "uint8_scale": 0.050521295210894414,
+      "uint8_offset": -170
+    },
+    "perlayer_lut": {
+      "bytes": 2348810240,
+      "sha256": "bc5f25db058421efa5ac9cd38f9cd74e250e286ab4f6fe094c134a997dc29fa4",
+      "source_bits": 4,
+      "uint8_scale": 0.1107082815731273,
+      "uint8_offset": -134
+    },
+    "sampled_lut_fidelity_within_half_step": true,
+    "backend": "QnnHtp",
+    "sampling": "greedy",
+    "max_new_tokens": 2048,
+    "large_or_restricted_files_stored_outside_git": true,
     "phone_access": false,
     "physical_htp_execution": false,
     "inference": false
