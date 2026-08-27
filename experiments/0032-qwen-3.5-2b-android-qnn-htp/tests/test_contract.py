@@ -54,6 +54,9 @@ class ContractTest(unittest.TestCase):
         cls.physical_execution = json.loads(
             (EXP / "results/android-qnn-physical-viability-20260827-attempt-02/result.json").read_text()
         )
+        cls.qdq_diagnosis = json.loads(
+            (EXP / "results/host-w4a16-qdq-output-diagnosis/result.json").read_text()
+        )
 
     def test_canonical_protocol_and_workloads(self) -> None:
         canonical = self.contract["canonical_protocol"]
@@ -293,6 +296,33 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(entry["raw_bytes"], recovered_bytes)
             self.assertTrue(entry["decompression_verified"])
 
+    def test_host_qdq_narrows_but_does_not_explain_physical_mismatch(self) -> None:
+        diagnosis = self.qdq_diagnosis
+        self.assertEqual("host_w4a16_qdq_output_diagnosis", diagnosis["evidence_class"])
+        self.assertEqual(21365, diagnosis["pre_ptq"]["argmax"])
+        self.assertEqual(760, diagnosis["post_ptq_qdq"]["argmax"])
+        self.assertEqual(0, diagnosis["physical_observation"]["argmax"])
+        self.assertEqual(
+            {"pre_ptq": "Given", "host_w4a16_qdq": "The", "physical_qnn": "!"},
+            {name: value["text"] for name, value in diagnosis["decoded_tokens"].items()},
+        )
+        self.assertNotEqual(
+            diagnosis["post_ptq_qdq"]["argmax"],
+            diagnosis["physical_observation"]["argmax"],
+        )
+        self.assertTrue(diagnosis["separate_process_boundary"])
+        self.assertEqual(2467.0443990659987, diagnosis["timing_seconds"]["converted_qdq_execution"])
+        self.assertEqual(6094088, diagnosis["process_boundaries"]["run_observed_peak_rss_kib"])
+        for name in ("prepare_log", "run_log"):
+            artifact = diagnosis["local_artifacts"][name]
+            path = EXP / "results/host-w4a16-qdq-output-diagnosis" / name.replace("_", ".")
+            self.assertEqual(artifact["sha256"], sha(path))
+            self.assertEqual(artifact["bytes"], path.stat().st_size)
+        tool = diagnosis["local_artifacts"]["tool"]
+        tool_path = EXP / "tools" / Path(tool["path"]).name
+        self.assertEqual(tool["sha256"], sha(tool_path))
+        self.assertEqual(tool["bytes"], tool_path.stat().st_size)
+
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
             EXP / "protocol",
@@ -303,6 +333,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/android-qnn-physical-viability-20260827-attempt-01",
             EXP / "results/android-runner-boundary-fix-host-build",
             EXP / "results/android-qnn-physical-viability-20260827-attempt-02",
+            EXP / "results/host-w4a16-qdq-output-diagnosis",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

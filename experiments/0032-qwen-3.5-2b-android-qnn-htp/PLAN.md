@@ -25,12 +25,12 @@ Active. The exact route has physically executed through QNN/HTP v73. The bounded
 12. Ran one explicitly authorized bounded phone attempt. Exact local/remote hashes matched; physical QNN HTP v73 initialized and loaded/retrieved all four exact contexts through FastRPC. Method loading then failed before execution on three missing `llama::fallback.out` identity boundary registrations. No retry occurred, and root/process cleanup was verified.
 13. Whole-archive linked ExecuTorch's pinned non-compute `llama::fallback.out` implementation, cross-compiled the Android runner, verified the registration name is embedded, and hash-bound the revised binary in the guarded phone script—all host-only.
 14. Ran the one authorized retry. All 696 expected QNN graph calls completed with status `0x0`; ETDump proves HTP accelerator cycles, RPC time, and four HVX threads per graph call. The route produced token 0 (`!`) rather than pre-PTQ host-reference token 21365 (`Given`), and scoped cleanup was independently verified.
+15. Preserved the complete physical evidence with lossless compression and verified raw-hash recovery, then replayed the exact W4A16 PT2E QDQ graph in a separate lower-retention host process. QDQ produced token 760 (`The`), proving PTQ changes the top token but does not by itself explain physical token 0.
 
 ## Current work
 
-1. Preserve the complete physical evidence with losslessly compressed provider log and ETDump plus verified raw-hash recovery.
-2. Diagnose the token mismatch entirely on the host across PTQ output, explicit-state updates, shard boundaries, and output handling.
-3. Do not use ADB or `phone.lock`; no retry or campaign is authorized.
-4. Only after output fidelity is credible, prepare loaded-route multi-request reset/reuse and request a separate campaign handoff.
+1. Localize the first post-QDQ divergence across QNN lowering/runtime, explicit state/input transport, shard boundaries, and output handling.
+2. Do not use ADB or `phone.lock`; no retry or campaign is authorized.
+3. Only after output fidelity is credible, prepare loaded-route multi-request reset/reuse and request a separate campaign handoff.
 
 Do not use CPU fallback, borrow the 4B config, relabel direct Hexagon/GenieX evidence as QNN, or publish before the complete route satisfies the benchmark contract.

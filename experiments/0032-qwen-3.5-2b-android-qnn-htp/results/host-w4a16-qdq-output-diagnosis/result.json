@@ -1,0 +1,144 @@
+{
+  "claim_limits": [
+    "Host PT2E QDQ execution only; this does not add Android or physical-provider evidence.",
+    "The single canonical-short replay is a mismatch diagnostic, not benchmark performance.",
+    "PTQ changes the top token but does not explain physical token 0; no downstream cause has been established.",
+    "No phone retry or campaign is authorized."
+  ],
+  "conclusion": "PTQ materially changes the top token from 21365 to 760, but the same host PT2E QDQ graph does not produce physical token 0; PTQ alone does not explain the physical mismatch.",
+  "context_tokens": 4096,
+  "decoded_tokens": {
+    "host_w4a16_qdq": {
+      "id": 760,
+      "text": "The"
+    },
+    "physical_qnn": {
+      "id": 0,
+      "text": "!"
+    },
+    "pre_ptq": {
+      "id": 21365,
+      "text": "Given"
+    }
+  },
+  "difference": {
+    "max_abs": 9.914398193359375,
+    "mean_abs": 1.3932369947433472
+  },
+  "evidence_class": "host_w4a16_qdq_output_diagnosis",
+  "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
+  "local_artifacts": {
+    "pre_logits": {
+      "bytes": 994878,
+      "policy": "local-only; not committed",
+      "sha256": "77bd1abb280aafb2b0e631489659c4196785dc9e9a8f2e72b999897cd5665a16"
+    },
+    "prepare_log": {
+      "bytes": 3813,
+      "sha256": "757f6e865b27cf29dc623a1d3fbc15b9eabd5208a7ccf3f7a8656ca47aeebe68"
+    },
+    "qdq_pt2": {
+      "bytes": 13644225801,
+      "policy": "local-only; not committed",
+      "sha256": "be0c1a0af6efa9ba37fde0e0bc1ff21de63a9c80e34f3c0b16770f7bf7c57563"
+    },
+    "run_log": {
+      "bytes": 2488,
+      "sha256": "809c5555f898555893154307bda946b872ceedd4205c04446a736b9905fe16dc"
+    },
+    "tool": {
+      "bytes": 11716,
+      "path": "tools/diagnose_quantized_output.py",
+      "sha256": "bd889b85a2a1a2d0c24bf30f1e7ccd8ac3525e9a0d01bcb8134834c1545b8033"
+    }
+  },
+  "next_diagnostic_boundary": "Localize the first divergence after PT2E QDQ across QNN lowering/runtime, explicit state/input transport, shard boundaries, and final output handling.",
+  "physical_observation": {
+    "argmax": 0,
+    "decoded": "!"
+  },
+  "post_ptq_qdq": {
+    "argmax": 760,
+    "finite": true,
+    "max": 18.23406219482422,
+    "mean": -0.38397493958473206,
+    "min": -9.23621940612793,
+    "numel": 248320,
+    "std": 2.297816276550293,
+    "top_ids": [
+      760,
+      40,
+      1206,
+      12189,
+      3733,
+      32,
+      8160,
+      21365,
+      14177,
+      4274
+    ],
+    "top_logits": [
+      18.23406219482422,
+      17.94402313232422,
+      17.563947677612305,
+      17.375015258789062,
+      17.056194305419922,
+      17.03110122680664,
+      16.73294448852539,
+      16.724088668823242,
+      16.394197463989258,
+      16.298255920410156
+    ],
+    "zero_count": 31
+  },
+  "pre_ptq": {
+    "argmax": 21365,
+    "finite": true,
+    "max": 21.486692428588867,
+    "mean": 0.034014586359262466,
+    "min": -9.681032180786133,
+    "numel": 248320,
+    "std": 2.3156344890594482,
+    "top_ids": [
+      21365,
+      760,
+      27775,
+      2381,
+      332,
+      1206,
+      1919,
+      4422,
+      3270,
+      623
+    ],
+    "top_logits": [
+      21.486692428588867,
+      21.34432601928711,
+      20.84269142150879,
+      20.393409729003906,
+      20.017414093017578,
+      19.681346893310547,
+      19.358692169189453,
+      18.4849853515625,
+      18.455299377441406,
+      18.03782081604004
+    ],
+    "zero_count": 1
+  },
+  "process_boundaries": {
+    "prepare_observed_peak_rss_kib": 16992556,
+    "prepare_phase": "load/export/calibrate/convert/save QDQ, then exit and release all memory",
+    "run_observed_peak_rss_kib": 6094088,
+    "run_phase": "fresh process loads only persisted QDQ plus explicit state templates",
+    "run_phase_result_rss_kib": 4722360
+  },
+  "prompt_tokens": 174,
+  "quantization": "same QNN W4A16 PTQ recipe used by compile_exact_qnn.py",
+  "schema_version": 1,
+  "separate_process_boundary": true,
+  "status": "host_qdq_does_not_reproduce_physical_zero_token",
+  "timing_seconds": {
+    "calibration": 262.3018677510008,
+    "converted_qdq_execution": 2467.0443990659987
+  }
+}

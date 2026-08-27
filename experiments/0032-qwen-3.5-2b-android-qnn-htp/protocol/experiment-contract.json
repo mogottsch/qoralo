@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
-  "status": "active_physical_exact_qnn_htp_execution_proven_one_token_mismatch_host_diagnosis_pending",
+  "status": "active_physical_execution_proven_host_qdq_excludes_ptq_only_explanation_downstream_diagnosis_pending",
   "question": "Can Qwen3.5-2B run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Qwen3.5-2B post-trained text generation only",
@@ -129,7 +129,11 @@
     "physical_execution_generated_token_ids": [0],
     "physical_execution_output_sanity": {"looks_sensible": null, "issue_notes": null},
     "campaign_ready": false,
-    "next_gate": "Diagnose the physical token-0 versus pre-PTQ host-reference mismatch entirely on the host; no retry or campaign is authorized."
+    "host_qdq_diagnosis_result_path": "results/host-w4a16-qdq-output-diagnosis/result.json",
+    "host_qdq_argmax_token_id": 760,
+    "physical_argmax_token_id": 0,
+    "ptq_alone_explains_physical_mismatch": false,
+    "next_gate": "Localize the first post-QDQ divergence across QNN lowering/runtime, explicit state/input transport, shard boundaries, and output handling entirely on the host; no retry or campaign is authorized."
   },
   "required_provider_proof_if_unblocked": {
     "compiled_context_identity": "Hash every deployed serialized context and bind SM8550/v73 compiler provenance.",

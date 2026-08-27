@@ -39,9 +39,11 @@ The pinned official tokenizer/template was reconstructed independently. With thi
 
 The authorized one-token output was ID 0 (`!`), whereas pre-PTQ host calibration over the same prompt ended at ID 21365 (`Given`). Because a one-token punctuation output cannot support the narrow sanity check, `looks_sensible` is null. No campaign or retry is authorized.
 
+A lower-retention two-process host replay in [`results/host-w4a16-qdq-output-diagnosis/`](results/host-w4a16-qdq-output-diagnosis/) produced W4A16 QDQ argmax token 760 (`The`). PTQ changes the top token materially, but it does not reproduce physical token 0 and therefore is not a complete explanation.
+
 ## Current next gate
 
-1. Diagnose host-side quantized output, explicit-state transport, shard boundaries, and output handling to locate the token mismatch.
+1. Localize the first post-QDQ divergence across QNN lowering/runtime, explicit-state transport, shard boundaries, and output handling.
 2. Do not reacquire `phone.lock`, invoke ADB, or stage anything without a new explicit Pi handoff.
 3. Only after credible output fidelity is established may the loaded-route multi-request runner and fixed 1+5+5+5 campaign be considered.
 
