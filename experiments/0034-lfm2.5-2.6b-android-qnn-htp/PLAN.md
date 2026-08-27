@@ -34,12 +34,13 @@
 24. Assembled and locally verified a complete ignored direct-QNN phone stage.
 25. Ran one bounded physical gate; the Android linker stopped before `main` because the stage omitted `libc++_shared.so`. Preserved raw evidence and verified cleanup absent.
 26. Added the exact NDK r28b `libc++_shared.so`, rebuilt the 273-file manifest, and added an architecture-aware DT_NEEDED preflight that runs before phone.lock or ADB.
+27. Ran the corrected direct-QNN phone gate. The runtime loaded 57 exact contexts, then context 58 (`layer-07-up-0`) failed in `QnnContext_createFromBinary` before readiness/graph execution. Preserved raw evidence and verified cleanup absent.
 
 ## In progress
 
-1. Wait for Pi to review the committed pre-main failure and explicitly authorize one corrected retry.
-2. If authorized, run only the bounded direct-QNN physical gate under the full lock lifecycle.
-3. Preserve raw evidence, clean the scoped root, release the lock, and report before any campaign decision.
+1. Host-side, consolidate the 263 graphs into fewer multi-graph/weight-sharing QNN contexts while preserving exact graph order, tensor ABI, state, and loaded-route semantics.
+2. Prove consolidated-context metadata, graph count/order, hashes, and host functional equivalence.
+3. Commit a prepared design before requesting any new phone gate. Do not replace the loaded route with per-token context reload.
 
 ## Phone and campaign sequence
 

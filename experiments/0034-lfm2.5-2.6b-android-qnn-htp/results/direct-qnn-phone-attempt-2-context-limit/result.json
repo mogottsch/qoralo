@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "run_id": "viability-20260827T122607Z-2713706",
+  "classification": "physical_direct_qnn_context_loading_limit_before_graph_execution",
+  "device": {"serial":"R5CW81PR8SY","model":"SM-S918B","soc":"SM8550","abi":"arm64-v8a","android_release":"16","api":36},
+  "stage": {"payload_files_verified_local":273,"payload_files_verified_remote":273,"elf_preflight":"passed","stage_metadata_sha256":"8fd14833edb4d671c8bb009ebc1a1f41e86e1895d4873d257a6794d08e5be123","manifest_sha256":"e857fbdfb6a5088d753019ab92b8954a86b1b16642eb9d08209fbbd3229c92cc"},
+  "direct_qnn": {
+    "backend_build_id":"v2.49.0.260730134355",
+    "contexts_required":263,
+    "contexts_loaded_successfully":57,
+    "failed_context_ordinal":58,
+    "failed_context":"layer-07-up-0",
+    "failure_api":"QnnContext_createFromBinary",
+    "graphs_executed":0,
+    "output_created":false,
+    "exact_blocker":"The physical SM8550 direct-QNN route successfully deserializes individual exact contexts but cannot keep the required 263 independent contexts resident. Context creation fails at ordinal 58 before the route is ready or any graph executes."
+  },
+  "memory": {"sampled_vmhwm_peak_kib":74164,"sampled_total_pss_peak_kib":43419,"note":"process RSS excludes DSP/backend allocations and does not explain the backend context limit"},
+  "cleanup": {"scoped_remote_root_verified_absent":true,"process_after":false,"phone_lock_held_for_full_lifecycle":true,"phone_lock_released":true},
+  "required_action":"Consolidate the 263 graphs into fewer multi-graph QNN context binaries, or design another complete loaded route that stays below the physical context limit without reloading model contexts between requests. Revalidate host identity/state semantics before another phone gate.",
+  "claim_boundary":"Physical direct-QNN context deserialization evidence only. No graph/model/HTP execution, output, performance, or registry result exists."
+}

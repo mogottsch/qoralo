@@ -89,13 +89,25 @@
     "phone_lock_released": true,
     "qnn_graphs_executed": 0
   },
+  "direct_qnn_phone_attempt_2": {
+    "cleanup_absent": true,
+    "contexts_loaded": 57,
+    "contexts_required": 263,
+    "evidence": "results/direct-qnn-phone-attempt-2-context-limit/result.json",
+    "failed_context": "layer-07-up-0",
+    "failed_context_ordinal": 58,
+    "failure_api": "QnnContext_createFromBinary",
+    "graphs_executed": 0,
+    "output_created": false,
+    "phone_lock_released": true
+  },
   "exact_blocker": {
     "android_execution": false,
     "compiled_context_created": false,
     "qnn_htp_execution": false,
-    "required_action": "Pi must explicitly authorize one bounded retry after reviewing the committed pre-main failure and corrected stage; no campaign.",
+    "required_action": "Host-side consolidate graphs into fewer multi-graph/weight-sharing QNN contexts, preserving exact order/state/loaded-route semantics; commit metadata/equivalence before any new phone request.",
     "result_path": "results/support-assessment/result.json",
-    "summary": "First direct phone attempt failed before main due omitted libc++_shared. Corrected 273-file stage includes exact NDK runtime and passes architecture-aware readelf dependency preflight."
+    "summary": "Physical direct QNN bypasses ORT and deserializes 57 exact contexts, but context 58 of 263 fails in QnnContext_createFromBinary before readiness or graph execution."
   },
   "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
   "host_export_milestone": {
@@ -207,7 +219,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "Direct attempt 1 cleaned absent and released phone.lock. Corrected stage is host-only until Pi authorizes a retry.",
+  "phone_boundary": "Corrected direct attempt cleaned absent and released phone.lock. No further phone run/campaign; host consolidation only.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -306,7 +318,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "active_direct_qnn_retry_stage_corrected_waiting_for_priority",
+  "status": "blocked_physical_direct_qnn_context_58_of_263_load_failure",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",

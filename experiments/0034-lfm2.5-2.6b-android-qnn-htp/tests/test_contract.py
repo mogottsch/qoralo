@@ -79,7 +79,7 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
     def test_active_export_does_not_claim_qnn_android_or_completion(self) -> None:
-        self.assertIn("active_direct_qnn", self.contract["status"])
+        self.assertIn("blocked_physical_direct_qnn_context_58", self.contract["status"])
         route = self.result["route_assessment"]
         self.assertFalse(route["compiled_sm8550_context_available"])
         self.assertFalse(route["android_execution"])
@@ -88,7 +88,7 @@ class ContractTest(unittest.TestCase):
         self.assertIn("not_android_qnn_or_htp", milestone["classification"])
         self.assertEqual("passed", milestone["rewritten_onnx"]["onnx_checker"])
         self.assertEqual(16, milestone["bounded_output"]["max_new_tokens"])
-        self.assertIn("Corrected stage", self.contract["phone_boundary"])
+        self.assertIn("No further phone", self.contract["phone_boundary"])
 
     def test_qnn_aot_is_complete_but_not_physical_execution(self) -> None:
         milestone = self.contract["qnn_aot_milestone"]
@@ -208,6 +208,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/phone-attempt-2-npu-context-claim-failure",
             EXP / "results/direct-qnn-host-preparation",
             EXP / "results/direct-qnn-phone-attempt-1-linker-failure",
+            EXP / "results/direct-qnn-phone-attempt-2-context-limit",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():
