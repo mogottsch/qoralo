@@ -2,7 +2,7 @@
 
 ## Status
 
-Active. The exact route has physically executed through QNN/HTP v73. The bounded retry completed all 696 graph calls but its one-token output mismatched the host reference, so host-only fidelity diagnosis is now required before campaign work.
+Active. Host localization identified failed implicit QNN broadcasting in the first Gated Delta recurrent outer product. Explicit expansion fixes a minimal W4A16 repro; exact-route recompilation and host QNN validation are pending.
 
 ## Completed
 
@@ -26,11 +26,13 @@ Active. The exact route has physically executed through QNN/HTP v73. The bounded
 13. Whole-archive linked ExecuTorch's pinned non-compute `llama::fallback.out` implementation, cross-compiled the Android runner, verified the registration name is embedded, and hash-bound the revised binary in the guarded phone script—all host-only.
 14. Ran the one authorized retry. All 696 expected QNN graph calls completed with status `0x0`; ETDump proves HTP accelerator cycles, RPC time, and four HVX threads per graph call. The route produced token 0 (`!`) rather than pre-PTQ host-reference token 21365 (`Given`), and scoped cleanup was independently verified.
 15. Preserved the complete physical evidence with lossless compression and verified raw-hash recovery, then replayed the exact W4A16 PT2E QDQ graph in a separate lower-retention host process. QDQ produced token 760 (`The`), proving PTQ changes the top token but does not by itself explain physical token 0.
+16. Ran the exact deployed PTE through QNN's x86 backend at token position zero and localized the first large mismatch to layer-0 recurrent state while convolution state remained aligned. A tiny repro confirmed implicit outer-product broadcasting wrote only 16/128 values; explicit static expansion restored full state and near-exact logits.
 
 ## Current work
 
-1. Localize the first post-QDQ divergence across QNN lowering/runtime, explicit state/input transport, shard boundaries, and output handling.
-2. Do not use ADB or `phone.lock`; no retry or campaign is authorized.
-3. Only after output fidelity is credible, prepare loaded-route multi-request reset/reuse and request a separate campaign handoff.
+1. Recompile the exact 24-layer route with explicit recurrence broadcasts.
+2. Compare revised-PTE first-token state and logits against QDQ through QNN's x86 backend.
+3. Do not use ADB or `phone.lock`; no retry or campaign is authorized.
+4. Only after output fidelity is credible, prepare loaded-route multi-request reset/reuse and request a separate campaign handoff.
 
 Do not use CPU fallback, borrow the 4B config, relabel direct Hexagon/GenieX evidence as QNN, or publish before the complete route satisfies the benchmark contract.

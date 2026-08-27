@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
-  "status": "active_physical_execution_proven_host_qdq_excludes_ptq_only_explanation_downstream_diagnosis_pending",
+  "status": "active_qnn_recurrence_broadcast_root_cause_fixed_in_minimal_probe_exact_recompile_pending",
   "question": "Can Qwen3.5-2B run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Qwen3.5-2B post-trained text generation only",
@@ -133,7 +133,12 @@
     "host_qdq_argmax_token_id": 760,
     "physical_argmax_token_id": 0,
     "ptq_alone_explains_physical_mismatch": false,
-    "next_gate": "Localize the first post-QDQ divergence across QNN lowering/runtime, explicit state/input transport, shard boundaries, and output handling entirely on the host; no retry or campaign is authorized."
+    "broadcast_localization_result_path": "results/host-qnn-broadcast-divergence-localization/result.json",
+    "first_divergent_output": "layer 0 Gated Delta recurrent state at token position 0",
+    "first_divergence_root_cause": "QNN implicit elementwise broadcast failed to materialize the full recurrent outer product",
+    "explicit_broadcast_minimal_probe_passed": true,
+    "deployed_pte_contains_explicit_broadcast_fix": false,
+    "next_gate": "Recompile the exact route with explicit recurrence broadcasts, then validate the revised PTE against QDQ on the QNN x86 backend; no phone retry or campaign is authorized."
   },
   "required_provider_proof_if_unblocked": {
     "compiled_context_identity": "Hash every deployed serialized context and bind SM8550/v73 compiler provenance.",

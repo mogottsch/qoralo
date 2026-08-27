@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
+  "evidence_class": "host_qnn_x86_first_token_and_minimal_broadcast_localization",
+  "status": "implicit_outer_product_broadcast_root_cause_reproduced_and_fixed_in_tiny_probe",
+  "exact_first_token": {
+    "input_position": 0,
+    "input_token_id": 248045,
+    "state_inputs": "all zero",
+    "host_qdq_logits_argmax": 62,
+    "qnn_x86_logits_argmax": 38,
+    "qnn_x86_logits_finite": true,
+    "qnn_x86_logits_exact_max_count": 39209,
+    "qnn_x86_logits_qdq_cosine": -0.056601330637931824,
+    "layer0_conv_state_cosine": 0.9999996423721313,
+    "layer0_conv_state_max_abs": 0.00460052490234375,
+    "layer0_recurrent_state_cosine": 0.00644123088568449,
+    "layer0_recurrent_state_max_abs": 2.6935079097747803,
+    "layer0_recurrent_state_qnn_to_qdq_l2_ratio": 117.81045985941773,
+    "interpretation": "The first large divergence is the first Gated Delta recurrent state. It occurs at position zero, before any cross-token state update. The same layer's causal-convolution state remains aligned."
+  },
+  "minimal_w4a16_probe_before_fix": {
+    "geometry": "one synthetic linear-attention layer, 2 heads, key/value dimension 8",
+    "qdq_recurrent_state_nonzero_values": 128,
+    "qnn_x86_recurrent_state_nonzero_values": 16,
+    "recurrent_state_cosine": 0.35355332493782043,
+    "recurrent_state_max_abs": 0.00032241857843473554,
+    "final_logits_max_abs": 0.004767894744873047,
+    "interpretation": "Implicit QNN broadcasting for [B,H,K,1] * [B,H,1,V] writes only 16 of 128 expected outer-product values."
+  },
+  "explicit_broadcast_fix": {
+    "implementation": "Expand decay, key, beta, delta, and query operands to identical static geometry before every recurrent ElementWiseMultiply.",
+    "source_path": "tools/qwen35_qnn_model.py",
+    "source_sha256": "67ac80610b5028e8fbde62f46ed89f3a278163627792edee1f077be50894a4ed",
+    "qdq_recurrent_state_unchanged": true,
+    "qdq_recurrent_state_nonzero_values": 128,
+    "qnn_x86_recurrent_state_nonzero_values": 128,
+    "recurrent_state_cosine": 1.0,
+    "recurrent_state_max_abs": 4.1324528865516186e-07,
+    "final_logits_cosine": 1.0000001192092896,
+    "final_logits_max_abs": 2.956390380859375e-05
+  },
+  "local_artifacts": {
+    "exact_first_token_detail": "exact-first-token.json",
+    "exact_qnn_x86_log": {
+      "path": "exact-qnn-x86.log",
+      "bytes": 90753,
+      "sha256": "ca670a9c50e82e6eb8c6fbb31d41881d7269ad914bf9c2ada0fafc2e3bdf5a13"
+    },
+    "tiny_implicit_pte": {
+      "bytes": 100800,
+      "sha256": "ad7bb8db33f2ed0dbc3ad32ccfbbebc987aad31824771835bea709c942d406c5",
+      "policy": "local-only"
+    },
+    "tiny_explicit_pte": {
+      "bytes": 105184,
+      "sha256": "35a997d102711af28a402b5af375ed9fa73d4e8d2a862bfed13d4fc106117fa0",
+      "policy": "local-only"
+    },
+    "tiny_implicit_qdq": {
+      "bytes": 1587861,
+      "sha256": "05b11e598ef9beee8a98ea785b4bf99fcfa237593433303099e3e3651ac385e8",
+      "policy": "local-only"
+    },
+    "tiny_explicit_qdq": {
+      "bytes": 1660362,
+      "sha256": "e9b4ddec0c21b45434ef260906a6d3d24aa6153145dd19bb694ea760a94ecd01",
+      "policy": "local-only"
+    }
+  },
+  "ruled_out_at_first_divergence": [
+    "Android-only execution behavior",
+    "cross-token runner state insertion/copy",
+    "later transformer layers",
+    "final argmax implementation"
+  ],
+  "not_yet_proven": [
+    "Exact 24-layer recompilation with explicit broadcasts",
+    "Exact-model QNN x86 output fidelity after the fix",
+    "Any revised physical output"
+  ],
+  "claim_limits": [
+    "QNN x86 is host simulator evidence, not a new physical HTP run.",
+    "The minimal probe identifies and fixes the implicit-broadcast failure, but the exact 24-layer route has not yet been recompiled with the fix.",
+    "No phone retry or campaign is authorized."
+  ]
+}

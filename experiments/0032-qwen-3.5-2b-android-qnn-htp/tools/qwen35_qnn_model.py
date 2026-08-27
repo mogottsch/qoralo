@@ -173,11 +173,23 @@ class GatedDeltaRecurrence(nn.Module):
             -torch.exp(self._a_log.float())
             * softplus(a.float() + self._dt_bias.float())[:, 0]
         )
-        state = recurrent_state.float() * torch.exp(decay_log).unsqueeze(-1).unsqueeze(-1)
-        remembered = (state * key32.unsqueeze(-1)).sum(dim=-2)
-        delta = (value32 - remembered) * beta.unsqueeze(-1)
-        state = state + key32.unsqueeze(-1) * delta.unsqueeze(-2)
-        core = (state * query32.unsqueeze(-1)).sum(dim=-2).unsqueeze(1)
+        # QNN ElementWiseMultiply accepted implicit broadcast shapes here but
+        # did not materialize the full outer product at runtime. Make every
+        # broadcast explicit so both operands have identical static geometry.
+        decay = torch.exp(decay_log).unsqueeze(-1).unsqueeze(-1)
+        decay = decay.expand_as(recurrent_state)
+        state = recurrent_state.float() * decay
+        key_matrix = key32.unsqueeze(-1).expand_as(state)
+        remembered = (state * key_matrix).sum(dim=-2)
+        beta_matrix = beta.unsqueeze(-1).expand_as(value32)
+        delta = (value32 - remembered) * beta_matrix
+        key_outer = key32.unsqueeze(-1).expand(
+            key32.shape[0], key32.shape[1], key32.shape[2], value32.shape[2]
+        )
+        delta_outer = delta.unsqueeze(-2).expand_as(key_outer)
+        state = state + key_outer * delta_outer
+        query_matrix = query32.unsqueeze(-1).expand_as(state)
+        core = (state * query_matrix).sum(dim=-2).unsqueeze(1)
         return core, state.to(recurrent_state.dtype)
 
 

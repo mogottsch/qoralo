@@ -57,6 +57,9 @@ class ContractTest(unittest.TestCase):
         cls.qdq_diagnosis = json.loads(
             (EXP / "results/host-w4a16-qdq-output-diagnosis/result.json").read_text()
         )
+        cls.broadcast_localization = json.loads(
+            (EXP / "results/host-qnn-broadcast-divergence-localization/result.json").read_text()
+        )
 
     def test_canonical_protocol_and_workloads(self) -> None:
         canonical = self.contract["canonical_protocol"]
@@ -323,6 +326,31 @@ class ContractTest(unittest.TestCase):
         self.assertEqual(tool["sha256"], sha(tool_path))
         self.assertEqual(tool["bytes"], tool_path.stat().st_size)
 
+    def test_qnn_broadcast_root_cause_and_minimal_fix(self) -> None:
+        result = self.broadcast_localization
+        self.assertEqual(
+            "host_qnn_x86_first_token_and_minimal_broadcast_localization",
+            result["evidence_class"],
+        )
+        exact = result["exact_first_token"]
+        self.assertEqual(0, exact["input_position"])
+        self.assertGreater(exact["layer0_conv_state_cosine"], 0.999)
+        self.assertLess(abs(exact["layer0_recurrent_state_cosine"]), 0.01)
+        self.assertGreater(exact["layer0_recurrent_state_qnn_to_qdq_l2_ratio"], 100)
+        self.assertEqual(39209, exact["qnn_x86_logits_exact_max_count"])
+
+        before = result["minimal_w4a16_probe_before_fix"]
+        after = result["explicit_broadcast_fix"]
+        self.assertEqual(128, before["qdq_recurrent_state_nonzero_values"])
+        self.assertEqual(16, before["qnn_x86_recurrent_state_nonzero_values"])
+        self.assertEqual(128, after["qnn_x86_recurrent_state_nonzero_values"])
+        self.assertEqual(1.0, after["recurrent_state_cosine"])
+        self.assertLess(after["recurrent_state_max_abs"], 1e-6)
+        self.assertLess(after["final_logits_max_abs"], 3e-5)
+        self.assertTrue(after["qdq_recurrent_state_unchanged"])
+        self.assertEqual(after["source_sha256"], sha(EXP / after["source_path"]))
+        self.assertFalse(self.contract["executorch_qnn_route"]["deployed_pte_contains_explicit_broadcast_fix"])
+
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
             EXP / "protocol",
@@ -334,6 +362,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/android-runner-boundary-fix-host-build",
             EXP / "results/android-qnn-physical-viability-20260827-attempt-02",
             EXP / "results/host-w4a16-qdq-output-diagnosis",
+            EXP / "results/host-qnn-broadcast-divergence-localization",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active. The exact four-subgraph Qwen3.5-2B route has physically executed through QNN/HTP-v73 on the authorized SM8550 phone. The bounded retry completed 696/696 graph calls successfully and generated one token, but token 0 (`!`) mismatches the pre-PTQ host reference, so output fidelity and campaign readiness remain under host-only diagnosis.**
+**Active. The physically executed route's token mismatch has been localized on the host to implicit QNN broadcasting in the first Gated Delta recurrent outer product. Explicit static expansion fixes a minimal W4A16 QNN repro; the exact 24-layer route now needs recompilation and host validation before any further phone work.**
 
 This is a separate HTP feasibility arm. It does not change or relabel `0027` CPU evidence.
 
@@ -41,10 +41,13 @@ The authorized one-token output was ID 0 (`!`), whereas pre-PTQ host calibration
 
 A lower-retention two-process host replay in [`results/host-w4a16-qdq-output-diagnosis/`](results/host-w4a16-qdq-output-diagnosis/) produced W4A16 QDQ argmax token 760 (`The`). PTQ changes the top token materially, but it does not reproduce physical token 0 and therefore is not a complete explanation.
 
+[`results/host-qnn-broadcast-divergence-localization/`](results/host-qnn-broadcast-divergence-localization/) locates the first mismatch at token position zero: layer-0 convolution state still matches QDQ, but recurrent state is corrupt before cross-token transport or later layers. A tiny W4A16 repro showed that QNN wrote only 16 of 128 implicit outer-product values. Explicitly expanding operands restored all values, recurrent-state cosine 1.0, and final-logit maximum error `2.96e-5`.
+
 ## Current next gate
 
-1. Localize the first post-QDQ divergence across QNN lowering/runtime, explicit-state transport, shard boundaries, and output handling.
-2. Do not reacquire `phone.lock`, invoke ADB, or stage anything without a new explicit Pi handoff.
-3. Only after credible output fidelity is established may the loaded-route multi-request runner and fixed 1+5+5+5 campaign be considered.
+1. Recompile the exact 24-layer route with explicit recurrence broadcasts.
+2. Execute the revised PTE through QNN's x86 backend and compare first-token states/logits against QDQ before considering physical work.
+3. Do not reacquire `phone.lock`, invoke ADB, or stage anything without a new explicit Pi handoff.
+4. Only after credible output fidelity is established may the loaded-route multi-request runner and fixed 1+5+5+5 campaign be considered.
 
 GenieX llama.cpp NPU metrics, the shipped 4B HTP example, direct-Hexagon output without QNN, and CPU-only text output are not substitutes for physical QNN/HTP provider proof.
