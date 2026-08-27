@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "run_id": "viability-20260827T110731Z-1504336",
+  "classification": "physical_phone_pre_inference_npu_epcontext_claim_failure",
+  "request_scope": {
+    "tier": "short",
+    "input_tokens": 171,
+    "max_new_tokens": 16,
+    "canonical_campaign": false,
+    "authorized_retry_ordinal": 1,
+    "further_phone_retry_authorized": false
+  },
+  "device": {
+    "serial": "R5CW81PR8SY",
+    "manufacturer": "samsung",
+    "model": "SM-S918B",
+    "device": "dm3q",
+    "soc": "SM8550",
+    "abi": "arm64-v8a",
+    "android_release": "16",
+    "api": 36,
+    "fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+    "verified_boot": "green",
+    "flash_locked": true
+  },
+  "stage": {
+    "runner_sha256": "fe3351b84f6588a063642d036bbd4d2a2856a179dbab83d6f21b7978886043ea",
+    "stage_metadata_sha256": "3af3174ea2ed099f2ad65f51108296fb4fc6759b2b3526bc6bebf6488822ddcc",
+    "sha256_manifest_sha256": "df9546ccaec07663fddca2c6cdcb2b4f9e8d5c85cf94790144cb21f116fe30a4",
+    "local_files_verified": 540,
+    "remote_files_verified": 540,
+    "bytes_pushed": 2015211058,
+    "adb_reported_push_seconds": 45.521,
+    "adb_reported_mib_per_second": 42.2,
+    "remote_root": "/data/local/tmp/vibevoice-0034-lfm2-qnn-viability-20260827T110731Z-1504336"
+  },
+  "provider_diagnostics": {
+    "onnxruntime": "1.26.0",
+    "available_devices": [
+      {
+        "ep_name": "CPUExecutionProvider",
+        "hardware_type": 0,
+        "hardware_type_name": "CPU",
+        "vendor": "ARM",
+        "vendor_id": 5045,
+        "device_id": 0
+      },
+      {
+        "ep_name": "QNNExecutionProvider",
+        "hardware_type": 2,
+        "hardware_type_name": "NPU",
+        "vendor": "Qualcomm",
+        "vendor_id": 1297040209,
+        "device_id": 0
+      }
+    ],
+    "selection": "only QNNExecutionProvider with OrtHardwareDeviceType_NPU",
+    "first_context": "layer-00-core-norm",
+    "session_disable_cpu_ep_fallback": true
+  },
+  "execution": {
+    "process_started": true,
+    "exit_code": 1,
+    "sessions_loaded": 0,
+    "model_token_execution": false,
+    "qnn_htp_graph_execution": false,
+    "output_created": false,
+    "profiles_created": 0,
+    "stderr_final": "fatal=This session contains graph nodes that are assigned to the default CPU EP, but fallback to CPU EP has been explicitly disabled by the user.",
+    "failure_boundary": "the Android QNN NPU plugin was selected successfully, but did not claim the first EPContext wrapper during session creation",
+    "exact_blocker": "The official Android onnxruntime-qnn 2.5.0 plugin advertises the Qualcomm NPU, yet refuses the fallback-disabled host-AOT EPContext produced by the matched 2.5.0 host package for SM8550/V73. Since the first EPContext remains assigned to default CPU, no model graph can execute through this ORT plugin route."
+  },
+  "memory": {
+    "sample_count": 1,
+    "vmhwm_kib": 7960,
+    "vmrss_kib": 7960,
+    "total_pss_kib": 31938,
+    "lifecycle": "single sample during process startup and first-session claim failure"
+  },
+  "operating_context": {
+    "usb_powered": true,
+    "battery_level_before_percent": 86,
+    "battery_level_after_percent": 86,
+    "battery_temperature_before_c": 41.6,
+    "battery_temperature_after_c": 41.6,
+    "thermal_status_before": 1,
+    "thermal_status_after": 1,
+    "ap_temperature_before_c": 44.4,
+    "ap_temperature_after_c": 45.8,
+    "skin_temperature_before_c": 40.2,
+    "skin_temperature_after_c": 40.5
+  },
+  "cleanup": {
+    "experiment_process_after": false,
+    "scoped_remote_root_verified_absent": true,
+    "phone_lock_held_for_full_lifecycle": true,
+    "phone_lock_released": true
+  },
+  "required_action_or_decision": [
+    "Provide or authorize a public/matched Android QNN EP/runtime build that claims these 2.49.40 SM8550/V73 EPContext wrappers; or",
+    "Authorize a separately bounded direct-QNN context loader that bypasses the failing ORT EPContext-claim layer while retaining the same compiled contexts, explicit state contract, and no CPU fallback; or",
+    "Authorize escalation to Qualcomm ONNX Runtime QNN maintainers with the minimal first-context compatibility artifact and logs."
+  ],
+  "claim_boundary": "This proves that the QNN plugin advertises the physical Qualcomm NPU but rejects the first EPContext before execution. It is not model inference, HTP graph execution, output, performance, or registry evidence."
+}

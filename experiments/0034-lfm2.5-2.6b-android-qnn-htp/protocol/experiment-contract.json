@@ -50,9 +50,9 @@
     "android_execution": false,
     "compiled_context_created": false,
     "qnn_htp_execution": false,
-    "required_action": "No user action. Run exactly one bounded diagnostic retry with all EP device types logged and QNN NPU-only selection; preserve failure/success and stop before any campaign.",
+    "required_action": "Provide/authorize a matched Android QNN EP/runtime that claims the current 2.49.40 SM8550/V73 EPContexts; authorize a separately bounded direct-QNN context loader bypassing ORT claim; or authorize escalation of a minimal compatibility artifact/logs to Qualcomm maintainers.",
     "result_path": "results/support-assessment/result.json",
-    "summary": "Attempt 1 reached the authorized phone but stopped before first session/model execution because the QNN plugin did not claim the first EPContext and fallback was disabled. One NPU-filtered diagnostic retry is authorized."
+    "summary": "On the authorized SM8550 phone, ORT 1.26 advertises official QNN EP 2.5.0 as a Qualcomm NPU and the retry selected only that device, but the plugin still did not claim the first matched host-AOT EPContext. Fail-closed prevented default CPU; zero sessions/tokens/HTP graphs/outputs/profiles exist."
   },
   "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
   "host_export_milestone": {
@@ -145,7 +145,26 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "Attempt 1 used phone.lock for the full lifecycle, verified exact identity and all stage hashes, failed before execution, cleaned the scoped root absent, and released the lock. One bounded NPU-selection retry is authorized; no campaign.",
+  "phone_attempt_2": {
+    "classification": "physical_phone_pre_inference_npu_epcontext_claim_failure",
+    "evidence": "results/phone-attempt-2-npu-context-claim-failure/result.json",
+    "further_phone_retry_authorized": false,
+    "model_token_execution": false,
+    "npu_only_selection": true,
+    "output_created": false,
+    "phone_lock_released": true,
+    "profiles_created": 0,
+    "qnn_ep_device": {
+      "hardware_type": 2,
+      "hardware_type_name": "NPU",
+      "vendor": "Qualcomm"
+    },
+    "qnn_htp_graph_execution": false,
+    "scoped_cleanup_verified_absent": true,
+    "sessions_loaded": 0,
+    "stage_hashes_verified_local_and_remote": true
+  },
+  "phone_boundary": "Both authorized attempts held phone.lock for identity/hash/stage/run/evidence/cleanup, stopped before execution, verified their scoped roots absent, and released the lock. No further phone attempt or campaign is authorized.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -244,7 +263,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "active_attempt1_provider_selection_failed_one_bounded_retry_authorized",
+  "status": "blocked_android_qnn_npu_refuses_first_epcontext_before_execution",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",

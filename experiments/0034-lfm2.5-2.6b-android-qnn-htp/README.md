@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active after one fail-closed physical pre-inference failure. Exact identity and all 540 staged hashes passed, but the Android QNN plugin did not claim the first EPContext; CPU fallback remained disabled, no session/model token/HTP graph executed, and cleanup was verified absent. Pi authorized exactly one bounded NPU-selection diagnostic retry; no campaign is authorized.**
+**Blocked after two fail-closed physical pre-inference attempts. The diagnostic retry proved that ONNX Runtime 1.26 sees the official QNN EP 2.5.0 as a Qualcomm NPU and selects only that device, but the plugin still refuses to claim the first matched host-AOT EPContext. No context session, model token, HTP graph, output, profile, benchmark, or campaign exists.**
 
 This is a separate accelerator arm. It preserves `0029` CPU viability and `0033` CPU/OpenCL campaign evidence without modifying either experiment.
 
@@ -63,16 +63,16 @@ The native API-31 AArch64 runner and ignored phone stage are ready. The runner l
 
 The first physical attempt used the full `phone.lock` lifecycle, verified the exact authorized device and every local/remote staged hash, then failed while creating the first EPContext session. ORT reported that nodes would remain on the default CPU EP; `session.disable_cpu_ep_fallback=1` correctly stopped the route. No context session, model token, HTP graph, output, or profile was produced. The 2.0 GB scoped remote root was removed and verified absent. Raw evidence is retained in [`results/phone-attempt-1-provider-selection-failure/`](results/phone-attempt-1-provider-selection-failure/).
 
-The revised runner logs every advertised EP device type and selects only `QNNExecutionProvider` with Android NPU hardware type. Its SHA-256 is `fe3351b84f6588a063642d036bbd4d2a2856a179dbab83d6f21b7978886043ea`; the replacement local stage is again fully hash-bound. See [`results/phone-preparation/result.json`](results/phone-preparation/result.json). Pi authorized exactly one bounded retry with the no-fallback gate unchanged.
+The revised runner logged both advertised devices: the ARM CPU and `QNNExecutionProvider type=2 vendor=Qualcomm` (NPU). It selected only the NPU, began loading `layer-00-core-norm`, and received the same default-CPU assignment error. The unchanged `session.disable_cpu_ep_fallback=1` gate stopped it. Again all 540 staged hashes matched locally and remotely; no session/model/HTP execution occurred; the scoped root was verified absent and `phone.lock` released. Raw evidence is in [`results/phone-attempt-2-npu-context-claim-failure/`](results/phone-attempt-2-npu-context-claim-failure/).
 
-## HTP validity gates still open
+The blocker is now precise: the public Android QNN EP 2.5.0 plugin advertises the physical NPU but does not claim the first SM8550/V73 EPContext emitted by the matched 2.5.0 host package. Progress requires a matched Android plugin/runtime that claims these contexts, authorization for a separately bounded direct-QNN context loader that bypasses ORT's failing claim layer, or authorization to escalate the minimal compatibility artifact to Qualcomm's maintainers. No further phone attempt or campaign is authorized.
 
-Before a physical HTP or benchmark claim, this experiment must:
+## Exact unblock gate
 
-1. package the 263 target contexts and a runtime that keeps the complete route loaded;
-2. prove the declared CPU embedding/argmax boundary and all transformer/state/final-norm/head contexts on the authorized phone;
-3. demonstrate clean state reset and a bounded sensible-text request under `artifacts/locks/phone.lock`;
-4. retain physical QNN/HTP profile/log evidence, device state, memory, and scoped cleanup proof;
-5. only then run the canonical loaded-route `1+5+5+5` campaign.
+Moritz must choose one before work continues:
 
-A generic SM8550 target, successful host context creation, or sensible host text alone is not physical HTP proof.
+1. provide or authorize a public/matched Android QNN EP/runtime build that claims the QNN EP 2.5.0 / QAIRT 2.49.40 SM8550/V73 contexts;
+2. authorize a separately bounded direct-QNN context loader that bypasses ORT's failing EPContext-claim layer while retaining the exact contexts, explicit state contract, and no-fallback boundary; or
+3. authorize escalation to Qualcomm's ONNX Runtime QNN maintainers with a minimal first-context compatibility artifact and the retained logs.
+
+Even after unblocking, a new bounded phone viability gate must succeed before any canonical campaign. A generic SM8550 target, host context creation, NPU advertisement, or sensible host text is not physical HTP proof.

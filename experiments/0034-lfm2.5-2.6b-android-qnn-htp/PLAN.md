@@ -25,12 +25,16 @@
 16. Built the native API-31 AArch64 phone runner and a locally verified 540-file ignored stage containing the 263 context pairs, public Android runtime libraries, exact Q4 embedding tables, and exact 171-token short prompt.
 17. Ran one full-lock physical attempt after RSA authorization. Exact identity and all stage hashes passed, but the first EPContext remained unclaimed; fallback-disabled ORT stopped before session/model execution. Preserved the raw failure and verified scoped cleanup absent.
 18. Updated the runner to log all EP device types and select only the Android QNN NPU device; rebuilt and hash-bound the replacement runner/stage.
+19. Ran the one authorized retry under the full lock lifecycle. ORT advertised the Qualcomm NPU and the runner selected it exclusively, but QNN EP 2.5.0 still did not claim `layer-00-core-norm`'s matched host-AOT EPContext. Fail-closed stopped before execution; all hashes passed; cleanup was absent and the lock released.
+20. Stopped without a campaign and retained the complete raw blocker evidence.
 
-## In progress
+## Blocked
 
-1. Under the full `phone.lock` lifecycle, run Pi's one authorized NPU-selection diagnostic retry with the 16-token ceiling and unchanged no-fallback gate.
-2. Retain physical device/provider/profile/output or exact failure evidence before validation, then verify scoped cleanup and release the lock.
-3. Stop and report the retry outcome. Do not start a campaign regardless of success.
+One explicit Moritz decision or external artifact is required:
+
+1. provide/authorize a matched Android QNN EP/runtime that claims the current SM8550/V73 contexts; or
+2. authorize a bounded direct-QNN loader that bypasses ORT EPContext claim while keeping the exact contexts/state/no-fallback contract; or
+3. authorize escalation of a minimal compatibility artifact and logs to Qualcomm's maintainers.
 
 ## Phone and campaign sequence
 

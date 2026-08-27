@@ -79,7 +79,7 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
     def test_active_export_does_not_claim_qnn_android_or_completion(self) -> None:
-        self.assertIn("active_attempt1_provider_selection_failed", self.contract["status"])
+        self.assertIn("blocked_android_qnn_npu_refuses", self.contract["status"])
         route = self.result["route_assessment"]
         self.assertFalse(route["compiled_sm8550_context_available"])
         self.assertFalse(route["android_execution"])
@@ -88,7 +88,7 @@ class ContractTest(unittest.TestCase):
         self.assertIn("not_android_qnn_or_htp", milestone["classification"])
         self.assertEqual("passed", milestone["rewritten_onnx"]["onnx_checker"])
         self.assertEqual(16, milestone["bounded_output"]["max_new_tokens"])
-        self.assertIn("failed before execution", self.contract["phone_boundary"])
+        self.assertIn("stopped before execution", self.contract["phone_boundary"])
 
     def test_qnn_aot_is_complete_but_not_physical_execution(self) -> None:
         milestone = self.contract["qnn_aot_milestone"]
@@ -136,6 +136,26 @@ class ContractTest(unittest.TestCase):
         self.assertIn("fallback", result["execution"]["stderr"])
         self.assertTrue(result["cleanup"]["phone_lock_held_for_full_lifecycle"])
 
+    def test_second_phone_attempt_proves_npu_selection_but_no_execution(self) -> None:
+        attempt = self.contract["phone_attempt_2"]
+        self.assertIn("npu_epcontext_claim_failure", attempt["classification"])
+        self.assertTrue(attempt["npu_only_selection"])
+        self.assertEqual("NPU", attempt["qnn_ep_device"]["hardware_type_name"])
+        self.assertEqual("Qualcomm", attempt["qnn_ep_device"]["vendor"])
+        self.assertEqual(0, attempt["sessions_loaded"])
+        self.assertFalse(attempt["model_token_execution"])
+        self.assertFalse(attempt["qnn_htp_graph_execution"])
+        self.assertFalse(attempt["output_created"])
+        self.assertEqual(0, attempt["profiles_created"])
+        self.assertTrue(attempt["scoped_cleanup_verified_absent"])
+        self.assertFalse(attempt["further_phone_retry_authorized"])
+        result = json.loads((EXP / attempt["evidence"]).read_text())
+        qnn = result["provider_diagnostics"]["available_devices"][1]
+        self.assertEqual({"ep_name": "QNNExecutionProvider", "hardware_type": 2, "hardware_type_name": "NPU", "vendor": "Qualcomm", "vendor_id": 1297040209, "device_id": 0}, qnn)
+        self.assertTrue(result["provider_diagnostics"]["session_disable_cpu_ep_fallback"])
+        self.assertEqual(0, result["execution"]["sessions_loaded"])
+        self.assertTrue(result["cleanup"]["scoped_remote_root_verified_absent"])
+
     def test_final_pipeline_host_equivalence_is_bounded(self) -> None:
         result = json.loads((EXP / "results/htp-pipeline-host-equivalence/result.json").read_text())
         self.assertIn("host_only", result["classification"])
@@ -168,6 +188,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/qnn-aot",
             EXP / "results/phone-preparation",
             EXP / "results/phone-attempt-1-provider-selection-failure",
+            EXP / "results/phone-attempt-2-npu-context-claim-failure",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():
