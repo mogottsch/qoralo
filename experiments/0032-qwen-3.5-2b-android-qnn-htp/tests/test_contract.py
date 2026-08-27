@@ -18,6 +18,9 @@ class ContractTest(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.contract = json.loads((EXP / "protocol/experiment-contract.json").read_text())
         cls.result = json.loads((EXP / "results/support-assessment/result.json").read_text())
+        cls.structural = json.loads(
+            (EXP / "results/executorch-qnn-structural-probe/result.json").read_text()
+        )
 
     def test_canonical_protocol_and_workloads(self) -> None:
         canonical = self.contract["canonical_protocol"]
@@ -81,16 +84,33 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(prompt["rendered_sha256"], sha(EXP / f"protocol/rendered/{tier}.txt"))
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
-    def test_negative_result_never_claims_execution(self) -> None:
-        self.assertIn("blocked_no_public_qnn", self.contract["status"])
-        assessment = self.result["route_assessment"]
-        self.assertFalse(assessment["android_execution"])
-        self.assertFalse(assessment["qnn_htp_execution"])
-        self.assertTrue(self.result["required_user_action_or_decision"])
-        self.assertIn("No ADB", self.contract["phone_boundary"])
+    def test_active_route_does_not_claim_physical_execution(self) -> None:
+        self.assertTrue(self.contract["status"].startswith("active_executorch"))
+        prior = self.result["route_assessment"]
+        self.assertFalse(prior["android_execution"])
+        self.assertFalse(prior["qnn_htp_execution"])
+        route = self.contract["executorch_qnn_route"]
+        self.assertEqual(151, route["structural_probe_delegated_tensor_compute_nodes"])
+        self.assertEqual(0, route["structural_probe_non_delegated_tensor_compute_nodes"])
+        self.assertFalse(route["exact_model_compiled"])
+        self.assertFalse(route["android_execution"])
+        self.assertFalse(route["physical_qnn_htp_execution"])
+
+    def test_structural_probe_is_bounded_and_fallback_free(self) -> None:
+        probe = self.structural
+        self.assertEqual("host_aot_structural_viability_only", probe["evidence_class"])
+        self.assertTrue(probe["all_tensor_compute_delegated"])
+        self.assertEqual(0, probe["delegation"]["non_delegated_tensor_compute_nodes"])
+        self.assertEqual(1, probe["delegation"]["qnn_subgraphs"])
+        self.assertIn("synthetic", " ".join(probe["claim_limits"]).lower())
+        self.assertIn("not Android", " ".join(probe["claim_limits"]))
 
     def test_manifests_bind_retained_evidence(self) -> None:
-        for directory in (EXP / "protocol", EXP / "results/support-assessment"):
+        for directory in (
+            EXP / "protocol",
+            EXP / "results/support-assessment",
+            EXP / "results/executorch-qnn-structural-probe",
+        ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():
                 digest, name = line.split("  ", 1)

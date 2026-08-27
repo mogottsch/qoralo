@@ -1,0 +1,86 @@
+{
+  "all_tensor_compute_delegated": true,
+  "claim": "A one-layer Qwen3.5 Gated DeltaNet decode graph with explicit recurrent and causal-convolution state compiled as one SM8550/HTP v73 QNN subgraph with zero non-delegated tensor-compute operators.",
+  "claim_limits": [
+    "The graph uses synthetic tiny dimensions and deterministic synthetic weights; it is not the exact Qwen3.5-2B checkpoint.",
+    "This is x86 host ahead-of-time compilation and context serialization, not Android inference or physical HTP execution.",
+    "No performance, output-sanity, model-quality, or campaign claim follows from this probe.",
+    "The generated PTE/context is restricted local-only material and is identified by hash rather than committed."
+  ],
+  "command": "PATH=$PWD/artifacts/tools/flatbuffers-25.12.19:$PATH QNN_SDK_ROOT=/home/moritz/opt/qairt/2.49.0.260730 PYTHONPATH=$PWD/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch-src:$PWD LD_LIBRARY_PATH=$QNN_SDK_ROOT/lib/x86_64-linux-clang:$PWD/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/sdk/libcxx-14.0.0 artifacts/venv-executorch-1.2/bin/python experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/probe_qnn_lowering.py --params experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch-probe/tiny-qwen35.json --checkpoint experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch-probe/tiny-linear-finite.pt --context 16 --output experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch-probe/explicit-state-linear-fp16.pte --result experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch-probe/explicit-state-linear-fp16.json",
+  "compiler": {
+    "adapter_tested_qnn_api": "2.27.0",
+    "compatibility_warning_retained": true,
+    "context_blob_bytes": 110432,
+    "context_payload_bytes": 106336,
+    "executorch_git_revision": "0b0e2c5cdd67c8b4396a46ea1d1aa72ffb0128d7",
+    "executorch_version": "1.2.0+cpu",
+    "executorch_version_file_sha256": "de6cacbe264d894989b7c7b1fe938c5cf328acc0358c70e404dc829711307d24",
+    "finalize_status": "0x0",
+    "observed_qnn_api": "2.38.0",
+    "qairt_sdk_manifest_sha256": "309ac8f6c75c2fdc808f1c9b9d0da60be123c21a79532cca70a9c4b144d983f4",
+    "qairt_version": "2.49.0.260730"
+  },
+  "delegation": {
+    "delegated_tensor_compute_nodes": 151,
+    "important_delegated_operators": {
+      "aten_convolution_default": 10,
+      "aten_embedding_default": 1,
+      "aten_exp_default": 2,
+      "aten_rsqrt_default": 5,
+      "aten_sum_dim_int_list": 4,
+      "qwen35_softplus_default": 1
+    },
+    "non_delegated_plumbing_nodes": {
+      "getitem": 3
+    },
+    "non_delegated_tensor_compute_nodes": 0,
+    "qnn_subgraphs": 1
+  },
+  "evidence_class": "host_aot_structural_viability_only",
+  "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
+  "implementation": {
+    "compiler_excerpt": "compiler-proof.log",
+    "model_adapter": {
+      "path": "tools/qwen35_qnn_model.py",
+      "sha256": "e14f34328f52577d4826f4738bf0031f8527d8309ffa67a3c6c7d42904333766"
+    },
+    "probe": {
+      "path": "tools/probe_qnn_lowering.py",
+      "sha256": "437c683b53cde230867af30d12c40224457f2201c747b32c7d903f67b2c854a5"
+    }
+  },
+  "input_geometry": {
+    "hidden_size": 32,
+    "intermediate_size": 64,
+    "layer_types": [
+      "linear_attention"
+    ],
+    "layers": 1,
+    "linear_key_head_dim": 8,
+    "linear_key_heads": 2,
+    "linear_value_head_dim": 8,
+    "linear_value_heads": 2,
+    "vocabulary": 128
+  },
+  "local_artifact": {
+    "bytes": 116576,
+    "committed": false,
+    "path": ".local/executorch-probe/explicit-state-linear-fp16.pte",
+    "sha256": "20811676dead783234ec9a9cd4ccd14e98c61787617573c9e2bda2329c83b065"
+  },
+  "next_gate": "Compile the exact pinned 24-layer Qwen3.5-2B text checkpoint, then run a bounded physical-phone QNN/HTP viability request with detailed provider/RPC/accelerator proof before any canonical campaign.",
+  "route": {
+    "backend": "QNN HTP",
+    "cpu_fallback_policy": "zero non-delegated tensor-compute operators; three non-delegated getitem nodes are ExecuTorch tuple plumbing",
+    "frontend": "ExecuTorch 1.2.0 explicit-state PyTorch graph",
+    "precision": "QNN relaxed FP16 graph; graph I/O remains the export ABI",
+    "provider": "ExecuTorch Qualcomm QNN delegate",
+    "request_shape": "batch 1, one token, context 16",
+    "request_state": "full-attention KV and Gated DeltaNet recurrent/causal-convolution state are explicit graph inputs and outputs; no mutable PyTorch state is required",
+    "softplus": "custom edge op qwen35.softplus.default mapped to qti.aisw:ElementWiseNeuron(operation=SOFTPLUS); compiled schedule reports q::Softplus_fp16",
+    "target": "SM8550 / HTP v73"
+  },
+  "schema_version": 1,
+  "status": "passed_bounded_host_structural_qnn_compile"
+}

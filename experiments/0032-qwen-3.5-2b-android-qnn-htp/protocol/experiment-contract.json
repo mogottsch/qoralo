@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
-  "status": "blocked_no_public_qnn_conversion_input_and_installed_qwen35_2b_mismatch",
+  "status": "active_executorch_explicit_state_qnn_route_structurally_compiled_exact_model_pending",
   "question": "Can Qwen3.5-2B run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Qwen3.5-2B post-trained text generation only",
     "backend": "QNN HTP",
     "owns": "experiments/0032-qwen-3.5-2b-android-qnn-htp/**",
     "immutable_prior_evidence": "experiments/0027-qwen-3.5-2b-android/**",
-    "excluded": ["vision inputs", "CPU/GPU arms", "authenticated AI Hub use", "SDK updates", "ad hoc converter patches", "publication"]
+    "excluded": ["vision inputs", "CPU/GPU arms", "paid or authenticated AI Hub jobs without renewed authorization", "unapproved SDK license activation", "dashboard or HTML publication"]
   },
   "canonical_protocol": {
     "path": "protocols/android-llm-benchmark/contract.json",
@@ -91,13 +91,23 @@
       "long": {"input_tokens": 1926, "rendered_sha256": "c48e00cf1e45fb7dd7edbdcad17578e0857ce01ca621dbd47972265721701135", "token_ids_int32le_sha256": "a36f8139e2c4b83976fc74a37bf93f184272823b7144e7a167d9bee6836785ca", "fits_context_4096": true}
     }
   },
-  "exact_blocker": {
+  "prior_blocker": {
     "result_path": "results/support-assessment/result.json",
-    "summary": "The only public Qualcomm 2B deployment is a qwen35 GGUF for GenieX llama.cpp, but installed QAIRT's direct GGUF builder does not support qwen35. The separate installed Qwen3.5 HTP builder needs quantized ONNX plus encodings that are not publicly released for 2B, and its hardcoded 4096-wide start point is incompatible with the official 2B full-attention KV width 512 and linear-key width 2048.",
-    "compiled_context_created": false,
+    "summary": "The installed QAIRT ONNX/GGUF route remains blocked: no public 2B ONNX+encodings exists, direct GGUF does not support qwen35, and the installed ONNX builder has an incompatible hardcoded 4B split point. This is retained historical route evidence, not the boundary of the new ExecuTorch route."
+  },
+  "executorch_qnn_route": {
+    "status": "bounded_structural_compile_passed_exact_model_pending",
+    "result_path": "results/executorch-qnn-structural-probe/result.json",
+    "runtime": "ExecuTorch 1.2.0 Qualcomm QNN delegate",
+    "target": "SM8550/HTP v73",
+    "state_abi": "explicit full-attention KV and Gated DeltaNet recurrent/causal-convolution graph inputs and outputs",
+    "structural_probe_qnn_subgraphs": 1,
+    "structural_probe_delegated_tensor_compute_nodes": 151,
+    "structural_probe_non_delegated_tensor_compute_nodes": 0,
+    "exact_model_compiled": false,
     "android_execution": false,
-    "qnn_htp_execution": false,
-    "required_action": "Provide a provenance-bound Qwen3.5-2B ONNX+encodings or SM8550/v73 context bundle; authorize authenticated AI Hub if a supported QNN export exists; or authorize an updated/toolchain or 2B architecture implementation."
+    "physical_qnn_htp_execution": false,
+    "next_gate": "Hash-bind and convert the exact pinned 24-layer checkpoint, verify eager explicit-state equivalence, then compile it with zero tensor-compute fallback before phone staging."
   },
   "required_provider_proof_if_unblocked": {
     "compiled_context_identity": "Hash every deployed serialized context and bind SM8550/v73 compiler provenance.",

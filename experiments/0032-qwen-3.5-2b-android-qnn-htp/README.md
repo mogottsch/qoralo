@@ -2,9 +2,17 @@
 
 ## Status
 
-**Blocked before conversion: no authorized public QNN conversion input exists for the 2B model, and the installed QAIRT Qwen3.5 support is not dimension-compatible with this variant. No compiled context, Android execution, or QNN/HTP result exists.**
+**Active. A new ExecuTorch explicit-state route has passed a bounded host QNN compile gate, removing the former “no converter implementation” boundary. The exact 2B checkpoint is not compiled yet, and no Android or physical HTP execution claim exists.**
 
 This is a separate HTP feasibility arm. It does not change or relabel `0027` CPU evidence.
+
+## New route milestone
+
+[`tools/qwen35_qnn_model.py`](tools/qwen35_qnn_model.py) expresses full-attention KV cache and Gated DeltaNet recurrent/causal-convolution state as graph I/O. This avoids mutable-buffer fallback and makes logical-request reset explicit. It also keeps Softplus as one edge operator and maps it to QNN's HTP-supported `ElementWiseNeuron(SOFTPLUS)` operation.
+
+A one-layer synthetic-geometry gate compiled for `SM8550` / HTP v73 as one QNN subgraph: 151 tensor-compute operators were delegated and none remained outside QNN. The compiler finalized and serialized a 110,432-byte context; the generated PTE stays local-only. See [`results/executorch-qnn-structural-probe/result.json`](results/executorch-qnn-structural-probe/result.json).
+
+This proves only architecture-route viability. The graph used tiny deterministic synthetic weights, ran on the x86 host compiler, and produced no Android text. Exact-checkpoint compilation, physical HTP execution, output sanity, and the canonical campaign remain open.
 
 ## Cheapest credible route assessment
 
@@ -23,14 +31,12 @@ Downloading the 1.2 GB GGUF cannot change this architecture-support result, so t
 
 The pinned official tokenizer/template was reconstructed independently. With thinking disabled, canonical short/medium/long prompts contain 174/597/1926 tokens and all fit a 4096-token context with the 2048-token ceiling. Rendered prompt and token-ID hashes are in [`protocol/experiment-contract.json`](protocol/experiment-contract.json) and [`results/support-assessment/result.json`](results/support-assessment/result.json).
 
-## Exact unblock action
+## Current next gate
 
-Moritz must choose one:
+1. Download and hash-bind the pinned official Qwen3.5-2B checkpoint outside Git.
+2. Convert its text weights with the pinned ExecuTorch mapping and verify eager equivalence for explicit state.
+3. Compile the exact 24-layer route for SM8550/HTP v73, retaining zero non-delegated tensor compute.
+4. Only then stage a bounded phone viability request under `phone.lock`, with physical QNN RPC/accelerator/cycle/HVX proof and verified cleanup.
+5. After viability, implement loaded-route request reset and run the fixed 1+5+5+5 campaign.
 
-1. provide an authorized, provenance-bound Qwen3.5-2B quantized ONNX+encodings input compatible with installed QAIRT, or a complete serialized SM8550/HTP v73 context bundle;
-2. authorize authenticated Qualcomm AI Hub Workbench use if it exposes a supported 2B QNN context export; or
-3. authorize a separately bound updated QAIRT/toolchain or a Qwen3.5-2B converter implementation that adds `qwen35` GGUF support or correct 2B ONNX builder dimensions.
-
-GenieX llama.cpp NPU metrics, the shipped 4B HTP example, and CPU-only text output are not substitutes for physical QNN/HTP provider proof.
-
-No ADB was used. Phone work remains blocked behind both a compiled route and Pi's explicit priority handoff.
+GenieX llama.cpp NPU metrics, the shipped 4B HTP example, direct-Hexagon output without QNN, and CPU-only text output are not substitutes for physical QNN/HTP provider proof.
