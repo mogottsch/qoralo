@@ -107,12 +107,13 @@ class ContractTest(unittest.TestCase):
     def test_historical_transform_blocker_and_active_no_execution_claim(self) -> None:
         blocker = json.loads((EXP / "results/transform-blocker/result.json").read_text())
         self.assertEqual(
-            "phone_attempt_01_failed_pre_query_corrected_retry_pending", self.contract["status"]
+            "phone_attempt_02_failed_quantization_validation_host_rebuild_required",
+            self.contract["status"],
         )
         active = self.contract["conversion_blocker"]
         self.assertIn("historical_failure", active)
         self.assertEqual("passed", active["transform_gate"])
-        self.assertIn("phone.lock", active["next_gate"])
+        self.assertIn("Host-only", active["next_gate"])
         self.assertFalse(blocker["android_execution"])
         self.assertFalse(blocker["qnn_htp_execution"])
         self.assertFalse(blocker["compiled_context_created"])
@@ -137,6 +138,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/qairt-2.49.40-sm8550-context",
             EXP / "results/gemma4-sm8550-runtime-bundle",
             EXP / "results/android-qnn-physical-viability-attempt-01",
+            EXP / "results/android-qnn-physical-viability-attempt-02",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():
@@ -253,6 +255,23 @@ class ContractTest(unittest.TestCase):
         self.assertEqual(0, result["outcome"]["generated_tokens"])
         self.assertEqual("absent", result["stage"]["remote_cleanup_status"])
         self.assertFalse(result["gate"]["retry_performed"])
+
+    def test_second_phone_attempt_deserialized_context_but_never_executed(self) -> None:
+        result = json.loads(
+            (EXP / "results/android-qnn-physical-viability-attempt-02/result.json").read_text()
+        )
+        self.assertEqual(
+            "physical_qnn_htp_context_deserialized_model_validation_failure_before_execution",
+            result["classification"],
+        )
+        self.assertTrue(all(result["physical_provider_evidence"].values()))
+        self.assertEqual(30, result["outcome"]["validation_error_count"])
+        self.assertTrue(all("_value_" in name for name in result["outcome"]["mismatched_tensors"]))
+        self.assertFalse(result["outcome"]["graph_execution_observed"])
+        self.assertFalse(result["outcome"]["output_created"])
+        self.assertEqual(0, result["outcome"]["generated_tokens"])
+        self.assertEqual("absent", result["stage"]["remote_cleanup_status"])
+        self.assertFalse(result["gate"]["further_retry_performed"])
 
     def test_bounded_phone_gate_script_holds_lock_and_cleans_scope(self) -> None:
         script = (EXP / "tools/run_phone_viability.sh").read_text()

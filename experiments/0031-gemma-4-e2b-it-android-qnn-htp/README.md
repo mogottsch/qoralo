@@ -2,7 +2,7 @@
 
 ## Status
 
-**First bounded phone gate failed before inference; corrected stage is ready for one authorized retry. On the physical SM8550 phone, Genie discovered both context graphs and initialized the QNN HTP provider/backend/device plus v73 stub connection, then segfaulted because `libQnnHtpNetRunExtensions.so` was omitted. No graph execution or output exists. The missing library is now hash-bound with an explicit stage-completeness check; no retry has run.**
+**Second bounded phone gate reached full physical context deserialization, then failed model validation before dialog/query. The corrected bundle loaded its extension, initialized QNN HTP on SM8550, and deserialized both weight-shared graphs. Genie rejected 30 cross-variant value-cache entries because AR1 exposes 15 Float16 value outputs while the matching AR128 cache inputs/outputs are uFxp16. No graph execution or output exists. Further phone work is blocked on a host-side quantization-identical context rebuild.**
 
 This experiment is a separate HTP arm for the model studied in `0025`. It does not rewrite or relabel the CPU/GPU evidence there.
 
@@ -82,7 +82,11 @@ The first authorized 16-token short-prompt gate held `phone.lock`, verified all 
 
 See [`results/android-qnn-physical-viability-attempt-01/result.json`](results/android-qnn-physical-viability-attempt-01/result.json). The scoped remote path is verified absent after cleanup.
 
-The missing QAIRT 2.49.40 Android extension is now included (1,091,656 bytes, SHA-256 `e25a816d008b3d342d1e52eaebef6748194f194aea3154049ab3692004f704ae`) and both stage preparation and execution scripts fail closed if any required runtime dependency is absent. The exact next gate is one separately authorized bounded retry under `phone.lock`; no campaign is permitted yet. Workbench compile/link remains a separate unapproved cost/terms checkpoint. Ad hoc checkpoint graph rewriting, a CPU response, or the unsupported Gemma4 GGUF route is not acceptable.
+The missing QAIRT 2.49.40 Android extension is now included (1,091,656 bytes, SHA-256 `e25a816d008b3d342d1e52eaebef6748194f194aea3154049ab3692004f704ae`) and both stage preparation and execution scripts fail closed if any required runtime dependency is absent.
+
+The one authorized corrected retry then loaded the extension, initialized the physical HTP provider/backend/device, and deserialized the weight-shared context. Genie stopped before dialog/query with 30 `Non-identical quantization parameters` errors: the 15 AR1 value-cache outputs are Float16, while the corresponding AR128 value-cache inputs and outputs are uFxp16. An empty profile was retained, no graph execution or output occurred, and scoped cleanup passed. See [`results/android-qnn-physical-viability-attempt-02/result.json`](results/android-qnn-physical-viability-attempt-02/result.json).
+
+The exact next gate is host-only: make all 15 AR1 value-cache outputs datatype/scale/offset-identical to AR128, re-convert, recompile, and inspect the context before requesting any further phone gate. No validation weakening, CPU conversion boundary, retry, or campaign is authorized. Workbench compile/link remains a separate unapproved cost/terms checkpoint. Ad hoc checkpoint graph rewriting, a CPU response, or the unsupported Gemma4 GGUF route is not acceptable.
 
 ## Proof boundary
 

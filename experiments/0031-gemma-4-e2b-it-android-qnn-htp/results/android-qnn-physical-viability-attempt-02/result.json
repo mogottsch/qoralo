@@ -1,0 +1,229 @@
+{
+  "claim_boundary": "The corrected physical bundle loaded its backend extension, initialized QNN HTP on SM8550, and deserialized the two-graph weight-shared context. Genie then rejected cross-variant value-cache quantization mismatches before dialog creation/query. No QNN graph execution, generated output, or performance is claimed.",
+  "classification": "physical_qnn_htp_context_deserialized_model_validation_failure_before_execution",
+  "device": {
+    "abi": "arm64-v8a",
+    "boot": "1",
+    "device": "dm3q",
+    "fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+    "flash_locked": "1",
+    "manufacturer": "samsung",
+    "model": "SM-S918B",
+    "release": "16",
+    "sdk": "36",
+    "serial": "R5CW81PR8SY",
+    "soc": "SM8550",
+    "verified_boot": "green"
+  },
+  "exact_unblock": "Make all 15 AR1 value-cache outputs datatype/scale/offset identical to the corresponding AR128 value-cache tensors, then re-convert, recompile, and inspect host artifacts before requesting any new phone retry.",
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "gate": {
+    "attempt": 2,
+    "bounded_viability_only": true,
+    "canonical_campaign": false,
+    "further_retry_performed": false,
+    "max_new_tokens": 16,
+    "phone_lock_held_full_adb_lifecycle": true,
+    "retry_performed": true
+  },
+  "outcome": {
+    "exit_code": 1,
+    "generated_tokens": 0,
+    "graph_execution_observed": false,
+    "host_bound_root_cause": "AR1 value-cache outputs are QNN_DATATYPE_FLOAT_16 while matching AR128 cache tensors are QNN_DATATYPE_UFIXED_POINT_16 with defined scale/offset encodings.",
+    "mismatch_family": "15 AR128 value-cache inputs plus 15 AR128 value-cache outputs",
+    "mismatched_tensors": [
+      "past_value_14_h0_in",
+      "past_value_14_h0_out",
+      "past_value_4_h0_in",
+      "past_value_4_h0_out",
+      "past_value_9_h0_in",
+      "past_value_9_h0_out",
+      "swa_value_0_h0_in",
+      "swa_value_0_h0_out",
+      "swa_value_10_h0_in",
+      "swa_value_10_h0_out",
+      "swa_value_11_h0_in",
+      "swa_value_11_h0_out",
+      "swa_value_12_h0_in",
+      "swa_value_12_h0_out",
+      "swa_value_13_h0_in",
+      "swa_value_13_h0_out",
+      "swa_value_1_h0_in",
+      "swa_value_1_h0_out",
+      "swa_value_2_h0_in",
+      "swa_value_2_h0_out",
+      "swa_value_3_h0_in",
+      "swa_value_3_h0_out",
+      "swa_value_5_h0_in",
+      "swa_value_5_h0_out",
+      "swa_value_6_h0_in",
+      "swa_value_6_h0_out",
+      "swa_value_7_h0_in",
+      "swa_value_7_h0_out",
+      "swa_value_8_h0_in",
+      "swa_value_8_h0_out"
+    ],
+    "output_created": false,
+    "output_sanity": {
+      "issue_notes": null,
+      "looks_sensible": null
+    },
+    "profile_components": null,
+    "profile_created": true,
+    "result": "failed_model_validation_before_dialog_and_query",
+    "stop_reason": "error",
+    "validation_error_count": 30
+  },
+  "physical_provider_evidence": {
+    "backend_extension_requested_without_dlopen_error": true,
+    "both_graphs_initialized": true,
+    "context_deserialized": true,
+    "htp_provider_initialized": true,
+    "physical_soc_detected": true,
+    "qnn_device_created": true,
+    "qnn_htp_backend_created": true,
+    "qnn_stub_connection_established": true,
+    "v73_stub_loaded": true,
+    "weight_sharing_context_detected": true
+  },
+  "raw_evidence": {
+    "adb-state.txt": {
+      "bytes": 7,
+      "sha256": "c98373c1abef78070f6beef6b4ae4fbf3de348dac280195c7f93441920584af9"
+    },
+    "battery-after.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "battery-after.txt": {
+      "bytes": 15808,
+      "sha256": "48c99ab2fa05d61bb56940cb4dad923cb4d15339af2b804858be140967e64c8f"
+    },
+    "battery-before.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "battery-before.txt": {
+      "bytes": 15805,
+      "sha256": "a3c905e357632e9862f9b27bba7ea2c966a008335aa8cbfb17bc162ebba8439c"
+    },
+    "cleanup-status.txt": {
+      "bytes": 7,
+      "sha256": "7925d3e9a9613a093e5eb4054b32aa39de910d2b03ba7e8046c3b4550b8de1e4"
+    },
+    "cleanup.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cleanup.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "exit-code.txt": {
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    "genie-verbose.log": {
+      "bytes": 216899,
+      "sha256": "88dad6e5a7cdfe968a17846a9c4fa0ac503d84e3a13efef52ac4c58ae6719e07"
+    },
+    "identity.txt": {
+      "bytes": 237,
+      "sha256": "6cc6731865e0f47abb5f749d2d18d784b81b1f90332aed0dc763f1ebb61327b3"
+    },
+    "local-hash-check.txt": {
+      "bytes": 519,
+      "sha256": "26cd1ee7cea68096728d5d584dcb06ebf5c0304cb5564e3fba7c189482b143fa"
+    },
+    "memory-samples.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "memory-samples.txt": {
+      "bytes": 714,
+      "sha256": "bde6914c3b9ffe36e3c8e1a4af115f2644924e160d9bab8cac1ddadf89350e26"
+    },
+    "process-after.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pull-genie-verbose.log.txt": {
+      "bytes": 156,
+      "sha256": "7cc8dfbc28e7444ab20f698549e231623e01a39910ee49be023b46d4af4dd42c"
+    },
+    "pull-viability-output.txt.txt": {
+      "bytes": 168,
+      "sha256": "c724a0e873cdc87cbc9731782604fa2aa7be9e8413c8a1dc584dfef9d0f0173c"
+    },
+    "pull-viability-profile.json.txt": {
+      "bytes": 158,
+      "sha256": "dc61356347e2a677318c9e5bf23d82738310b1eacc428c5a1f8a5263d13dcb49"
+    },
+    "push.txt": {
+      "bytes": 180,
+      "sha256": "40d9721c465c1749ffce90709a1e1750ff13761a5bfd51986efea0758fa00b7e"
+    },
+    "remote-hash-check.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "remote-hash-check.txt": {
+      "bytes": 519,
+      "sha256": "26cd1ee7cea68096728d5d584dcb06ebf5c0304cb5564e3fba7c189482b143fa"
+    },
+    "runner.stderr": {
+      "bytes": 4234,
+      "sha256": "4e47c64ba89dd11e706057cd03b8d3545fadda4b40ba565e5fb7fa94f936569f"
+    },
+    "runner.stdout": {
+      "bytes": 575,
+      "sha256": "95e8d8b71d47fc46a0d8f80871afc13ca655373303c592bedee4db4cfc7be585"
+    },
+    "runtime-completeness.txt": {
+      "bytes": 176,
+      "sha256": "c2f842f873a149c2d6fe0f45d62e7fcf89ca5822d107f53bcaca610375c46b3f"
+    },
+    "storage-before.txt": {
+      "bytes": 128,
+      "sha256": "49271b6da472d083f66e67475cf7969185e1de12c3cf99112bb0922b7c621763"
+    },
+    "thermal-after.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "thermal-after.txt": {
+      "bytes": 1287,
+      "sha256": "13fad0360bae99ea5bc72314a03990f187d3eb91cadc1923540516c35d67ddec"
+    },
+    "thermal-before.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "thermal-before.txt": {
+      "bytes": 1288,
+      "sha256": "4b8e504df3f5cffb56e7c4c3cf3eb7a721b5383d509d7d8c9b09b45e9ce13792"
+    },
+    "viability-profile.json": {
+      "bytes": 293,
+      "sha256": "941beff67d81b21ca0d3949579aaa7b311bed5c10550a3ad777ee189ea96e915"
+    }
+  },
+  "run_id": "viability-20260827T120501Z-1537803",
+  "schema_version": 1,
+  "stage": {
+    "local_hash_check_passed": true,
+    "remote_cleanup_status": "absent",
+    "remote_hash_check_passed": true,
+    "runtime_completeness_files": [
+      "bin/genie-app",
+      "lib/libGenie.so",
+      "lib/libQnnHtp.so",
+      "lib/libQnnSystem.so",
+      "lib/libQnnHtpV73Stub.so",
+      "lib/libQnnHtpV73Skel.so",
+      "lib/libQnnHtpNetRunExtensions.so",
+      "htp_backend_ext_config.json"
+    ]
+  }
+}

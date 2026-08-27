@@ -40,7 +40,9 @@ The private runtime bundle is now complete. The pinned ungated Apache-2.0 QAT sa
 
 The first authorized bounded phone gate held `phone.lock`, verified local/remote stage hashes, and cleaned its scoped remote path. It reached physical SM8550 QNN HTP provider/backend/device initialization, loaded both context graphs and the v73 stub, then failed before query with exit 139 because the stage omitted `libQnnHtpNetRunExtensions.so`. No graph execution/output/profile occurred. Raw evidence is retained in `results/android-qnn-physical-viability-attempt-01/`.
 
-The missing QAIRT 2.49.40 Android extension is now hash-bound in the bundle and stage. Preparation and execution both enforce an explicit required-runtime dependency list. The active next step is one separately authorized bounded retry under `phone.lock`. Do not start a canonical campaign from the partial context-load evidence. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
+The missing QAIRT 2.49.40 Android extension is now hash-bound in the bundle and stage. Preparation and execution both enforce an explicit required-runtime dependency list. The one authorized corrected retry loaded the extension and fully deserialized the two-graph weight-shared context on physical SM8550 HTP, but Genie model validation rejected 30 cross-variant value-cache entries before dialog/query: 15 AR1 value outputs are Float16 while corresponding AR128 cache inputs/outputs are uFxp16. No graph execution/output occurred; cleanup passed.
+
+The active next step is host-only: enforce identical datatype/scale/offset for all 15 AR1 value-cache outputs and corresponding AR128 tensors, then re-convert, recompile, and inspect the context. Do not weaken Genie validation, add a CPU conversion boundary, request another phone gate, or start a campaign. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
 
 ## Stop conditions
 

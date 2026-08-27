@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
-  "status": "phone_attempt_01_failed_pre_query_corrected_retry_pending",
+  "status": "phone_attempt_02_failed_quantization_validation_host_rebuild_required",
   "question": "Can Gemma 4 E2B IT run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Gemma 4 E2B IT text generation only",
@@ -142,7 +142,8 @@
     "runtime_bundle_gate": "passed",
     "phone_attempt_01": "failed_pre_query_missing_libQnnHtpNetRunExtensions_exit_139",
     "corrected_stage_gate": "passed",
-    "next_gate": "After separate authorization, hold phone.lock for exactly one corrected 16-token short-prompt Genie QnnHtp retry; no campaign.",
+    "phone_attempt_02": "failed_pre_query_30_cross_variant_value_cache_quantization_mismatches_exit_1",
+    "next_gate": "Host-only: make all 15 AR1 value-cache outputs datatype/scale/offset-identical to corresponding AR128 tensors, then re-convert/recompile/inspect before any new phone request.",
     "workbench_checkpoint": "Any paid Workbench compile/link job requires a separate explicit cost/terms decision."
   },
   "transform_result": {
@@ -270,6 +271,26 @@
     "output_created": false,
     "remote_cleanup_verified_absent": true,
     "retry_performed": false
+  },
+  "phone_viability_attempt_02": {
+    "result_path": "results/android-qnn-physical-viability-attempt-02/result.json",
+    "classification": "physical_qnn_htp_context_deserialized_model_validation_failure_before_execution",
+    "phone_lock_held": true,
+    "device": "Samsung SM-S918B / SM8550 / arm64-v8a",
+    "max_new_tokens": 16,
+    "canonical_campaign": false,
+    "exit_code": 1,
+    "backend_extension_loaded": true,
+    "physical_context_deserialized": true,
+    "weight_sharing_context_detected": true,
+    "validation_error_count": 30,
+    "root_cause": "15 AR1 value-cache outputs are Float16 while corresponding AR128 cache inputs/outputs are uFxp16 with defined encodings",
+    "graph_execution_observed": false,
+    "generated_tokens": 0,
+    "output_created": false,
+    "profile_components": null,
+    "remote_cleanup_verified_absent": true,
+    "further_retry_performed": false
   },
   "campaign_gate": {
     "phone_priority": "follows coordinated GPU paths; no ADB until Pi explicitly grants priority",
