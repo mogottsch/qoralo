@@ -1,7 +1,7 @@
 ---
 experiment: 0032-qwen-3.5-2b-android-qnn-htp
 status: active
-summary: A stripped Android arm64 explicit-state runner is host-built and metadata-bound to the exact compiled PTE ABI; nothing has been staged or executed, and phone priority remains pending.
+summary: The authorized phone initialized QNN HTP v73 and loaded all four exact contexts, then stopped before model execution because three non-compute sharding-boundary kernels were not registered.
 benchmark: android-llm
 ---
 
@@ -13,7 +13,7 @@ Qwen3.5-2B already has a measured Android CPU route, but the first QNN assessmen
 
 The explicit-state design makes full-attention KV cache plus Gated DeltaNet recurrent and causal-convolution state graph inputs and outputs. This avoids hidden mutable-buffer fallback and gives a future loaded route an auditable reset boundary. Softplus remains an explicit edge operation mapped to QNN's HTP-supported `ElementWiseNeuron(SOFTPLUS)` operation.
 
-The end-to-end target remains stricter than compilation: the exact pinned 24-layer text checkpoint must run through physical QNN/HTP on the authorized phone, retain provider/RPC/accelerator/cycle/HVX proof, produce bounded text, demonstrate complete request-state isolation, and only then run the canonical one-first-plus-five-short/five-medium/five-long campaign. The owning [experiment README](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/README.md), [experiment contract](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/protocol/experiment-contract.json), [exact host compile summary](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-exact-host-compile/README.md), [compile result](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-exact-host-compile/compile-result.json), [eager comparison](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-exact-host-compile/eager-equivalence.json), and [Android runner host-build result](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-explicit-state-runner-host-build/result.json) are the evidence authority.
+The end-to-end target remains stricter than compilation or context loading: the exact pinned 24-layer text checkpoint must execute through physical QNN/HTP on the authorized phone, retain provider/RPC/accelerator/cycle/HVX proof, produce bounded text, demonstrate complete request-state isolation, and only then run the canonical one-first-plus-five-short/five-medium/five-long campaign. The owning [experiment README](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/README.md), [experiment contract](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/protocol/experiment-contract.json), [exact host compile summary](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-exact-host-compile/README.md), [compile result](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-exact-host-compile/compile-result.json), [eager comparison](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-exact-host-compile/eager-equivalence.json), [Android runner host-build result](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-explicit-state-runner-host-build/result.json), and [first physical attempt](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-qnn-physical-viability-20260827-attempt-01/result.json) are the evidence authority.
 
 ## Progress
 
@@ -45,13 +45,19 @@ A single-request explicit-state runner is now host-built for Android arm64-v8a A
 - zero initialization of all 48 state inputs for request reset;
 - greedy generated token IDs, QNN runtime profile/log controls, ETDump, and request/model-step timings.
 
-The runner intentionally supports only one logical request per process. It is suitable only for the first bounded physical viability gate; it does not implement the loaded-route multi-request reuse required by the canonical campaign. The scoped viability script has a dual approval guard, was not run, and staged nothing.
+The runner intentionally supports only one logical request per process. It is suitable only for a bounded physical viability gate; it does not implement the loaded-route multi-request reuse required by the canonical campaign.
 
-Phone access remains prohibited until Pi explicitly transfers priority from Jens. Under `phone.lock`, the first device gate must be one bounded viability request with exact runner/PTE identity and physical QNN/HTP proof. Only after that succeeds may the runner be extended for loaded-route reuse and proven full reset before the 1+5+5+5 campaign.
+Pi explicitly transferred phone priority for one attempt capped at one generated token. Under the full `phone.lock` lifecycle, the authorized SM-S918B/SM8550 matched the expected identity, and every deployed runner, PTE, backend, HTP, system, v73 stub, and v73 skeleton hash matched locally and remotely.
+
+Physical provider initialization reached a meaningful but pre-execution boundary. The retained 126,807-byte QNN log records four `kHtpBackend` markers, DSP architecture 73 for all four graphs, 21 successful FastRPC memory-map markers, four serialized contexts created, and all four QNN graphs retrieved with status `0x0`. It also reports the HTP/HVX configuration for each graph.
+
+ExecuTorch then rejected the method before any graph execution because the runner had not linked or registered exactly three `llama::fallback.out` instructions. These are the non-compute identity boundaries used to join the four QNN shards; the failure is runner linkage, not tensor-compute fallback. The log contains zero graph-execute markers, and the attempt generated zero tokens, outputs, ETDump files, metrics, or performance evidence. Output sanity remains null.
+
+No retry was performed. The runner process and experiment-scoped remote root were verified absent, `phone.lock` was released, and Pi independently rechecked cleanup. Work returns to host-only linkage of the three boundary kernels. Any retry requires a new explicit Pi phone-priority handoff; no campaign is authorized.
 
 ## Results
 
-**The experiment is active, with the exact-checkpoint host AOT route and its single-request Android runner prepared but not executed.** The durable evidence establishes exact official checkpoint identity, exact host eager behavior before quantization, complete tensor-compute delegation for the W4A16 host compiler route, and a metadata-compatible cross-compiled runner.
+**The experiment is active after proving physical QNN/HTP-v73 provider initialization and loading all four exact contexts, but before model execution.** The durable evidence now establishes exact phone artifact identity, FastRPC mappings, context creation, and QNN graph retrieval. The missing non-compute boundary registrations prevented the ExecuTorch method and every model graph from executing.
 
 | Evidence boundary | Current result |
 |---|---|
@@ -63,11 +69,13 @@ Phone access remains prohibited until Pi explicitly transfers priority from Jens
 | W4A16 PTE | 1,994,572,968 bytes, hash-bound, local-only |
 | Android runner host build | arm64-v8a API 30; 3,444,472 bytes; stripped and hash-bound outside Git |
 | Exact PTE ABI inspection | 51 inputs / 49 outputs, including 48 explicit state inputs and outputs |
-| Phone staging or Android / physical QNN-HTP execution | Not attempted; no RPC, cycle, accelerator, or HVX claim |
-| W4A16 generated text and output sanity | Unavailable; neither PTE nor runner has run |
+| Physical provider/context loading | QNN HTP backend and DSP arch 73 identified; FastRPC mapped; 4 contexts created and 4 graphs retrieved `0x0` |
+| Model execution boundary | Method load failed on 3 missing non-compute `llama::fallback.out` registrations; 0 graph executes |
+| W4A16 generated text and output sanity | 0 tokens; no output; sanity null |
+| Cleanup | Process and scoped root verified absent; lock released and independently rechecked |
 | Setup, TTFT, prefill, decode, memory, thermal, or power | Unavailable; no Android campaign ran |
 | Android LLM registry row | None; host AOT evidence is not registry-eligible |
 
-“All tensor compute delegated” describes the host-compiled graph partition, not physical execution. A cross-compiled Android executable and metadata-compatible PTE ABI likewise prove only host preparation. The four serialized QNN graphs have not been loaded on Android, the guarded viability script was not run, and no text response or device provider evidence exists. The exact eager comparison occurred before W4A16 quantization, so it does not establish numerical equivalence, output sanity, quality, or correctness for the compiled route. The single-request runner is not campaign-eligible.
+“All tensor compute delegated” describes the host-compiled partition. The phone evidence now proves physical QNN/HTP provider initialization and exact serialized-context loading/retrieval, but not physical model inference: no graph-execute marker exists. The boundary-kernel failure occurred after context loading and before the method could run. The exact eager comparison occurred before W4A16 quantization, so it does not establish numerical equivalence, output sanity, quality, or correctness for the compiled route. The single-request runner is not campaign-eligible.
 
 A CPU-only response, GenieX NPU metric, direct-Hexagon output without QNN proof, or the dimension-incompatible shipped 4B example cannot satisfy this experiment. No 0032 host-only milestone belongs in the Android LLM registry; publication there remains conditional on a complete valid physical Android canonical campaign with exact route identity, provider/no-fallback proof, state isolation, retained outputs, and performance evidence.
