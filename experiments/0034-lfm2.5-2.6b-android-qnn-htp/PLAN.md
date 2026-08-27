@@ -11,32 +11,40 @@
 7. Exported the exact source as symmetric block-32 Q4 ONNX, preserving all recurrent convolutional and attention cache state.
 8. Replaced an invalid contrib-op domain emission with an explicit standard-ONNX RMSNorm decomposition; the rewritten graph passes `onnx.checker`.
 9. Passed a bounded host CPU smoke with the exact canonical short prompt and retained output bytes/hash. This is host viability only.
+10. Built a one-token, 4,096-capacity explicit-state route and lowered RoPE/GQA to standard ONNX while retaining new K/V slices and 22 convolution states as graph I/O.
+11. Declared the unsupported block-Q4 embedding as an explicit CPU selected-row frontend rather than allowing fallback. Transformer/state/final-norm/LM-head compute remains in QNN-owned parts; CPU performs the global greedy reduction and tokenization.
+12. Solved v73 preparation limits without changing weights:
+    - split 10,752-wide MLP projections into 6,144 + 4,608;
+    - zero-pad only the second down-projection activation and quantized weight blocks to K=6,144;
+    - split graph preparation into memory-bounded ordered contexts;
+    - split the 128,000-wide LM head into 22 HTP chunks.
+13. Compiled all 263 contexts for SoC model 43 / SM8550 / HTP V73 using ONNX Runtime QNN EP 2.5.0, block-quant optimization, and `session.disable_cpu_ep_fallback=1`.
+14. Validated every framework-op trace: all 1,583 source nodes map to 2,747 QNN ops with zero unsupported nodes. The 1,779,492,144 bytes of contexts remain outside Git.
+15. Replayed the exact 171-token canonical short prompt through the final split ordering on the host with zeroed state; its first five greedy tokens matched both transformed-monolith and original export references. This is wiring/viability evidence, not Android performance.
 
 ## In progress
 
-1. Build static profiles:
-   - short prefill: sequence 171;
-   - medium prefill: sequence 600;
-   - long prefill: sequence 1,922;
-   - decode: sequence 1;
-   - shared maximum attention KV capacity: 4,096;
-   - recurrent convolution cache: 22 explicit `[1, 2048, 3]` states.
-2. Lower the Q4 embedding to an HTP-owned representation while preserving the 167 block-quantized matrix routes.
-3. Generate fallback-disabled SM8550 / HTP v73 AOT contexts through Qualcomm ONNX Runtime QNN EP 2.5.0 with block-quant-to-LPBQ optimization and framework-op tracing enabled.
-4. Validate QNN graph ownership, profile I/O/cache geometry, host equivalence, and reset semantics.
+1. Package the 263 target contexts with a phone runtime that:
+   - loads every context once during setup;
+   - performs the explicit selected-row Q4 embedding frontend;
+   - executes all ordered model/state/head contexts through QNN;
+   - maintains left-aligned attention K/V and convolution state;
+   - compares all LM-head chunks for one global greedy token;
+   - zeroes all state for each logical request.
+2. Retain a compact deployed artifact manifest binding every context hash, QNN runtime artifact, tokenizer/template, and executable.
+3. Run one bounded physical-phone viability request with fallback disabled and physical HTP profile/log proof.
 
 ## Phone and campaign sequence
-
-Only after AOT/provider gates pass:
 
 1. obtain Pi's phone priority handoff;
 2. acquire `artifacts/locks/phone.lock` for the full ADB lifecycle;
 3. stage only under the experiment-scoped remote root and verify every deployed hash;
-4. run one bounded viability request and retain physical HTP logs/profile evidence;
-5. run one first short request plus five additional short, five medium, and five long requests on one loaded route;
-6. retain all outputs, timings, memory, thermal/power context, stop reasons, sanity states, and cleanup proof;
-7. publish normalized registry rows only after experiment evidence is committed.
+4. record identity, Android build, battery/thermal/storage state, and startup boundaries;
+5. run one bounded viability request and retain physical HTP logs/profile evidence;
+6. if viable, run one first short request plus five additional short, five medium, and five long requests on one loaded route;
+7. retain all outputs, timings, memory, thermal/power context, stop reasons, sanity states, and cleanup proof;
+8. publish normalized registry rows only after experiment evidence is committed and handed to Kate.
 
 ## Stop conditions
 
-Stop and report rather than weaken the claim if fallback-disabled compilation fails, any model/state operator remains outside HTP, cache reset cannot be proven, the phone cannot load the exact contexts, or a different license/export-control/paid-service checkpoint appears. CPU/GPU fallback, a generic target declaration, or text without physical provider proof is not success.
+Stop and report rather than weaken the claim if any model/state context fails physical HTP loading/execution, explicit CPU work expands beyond the declared embedding/orchestration/global-argmax boundary, cache reset cannot be proven, the phone cannot retain the complete loaded route, or a different license/export-control/paid-service checkpoint appears. CPU/GPU provider fallback, a generic target declaration, or text without physical provider proof is not success.

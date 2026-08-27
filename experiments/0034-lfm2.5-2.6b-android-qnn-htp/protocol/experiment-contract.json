@@ -50,9 +50,9 @@
     "android_execution": false,
     "compiled_context_created": false,
     "qnn_htp_execution": false,
-    "required_action": "No user action currently required. Continue static profile rewriting and fallback-disabled SM8550/v73 AOT; stop if a new terms/export/paid checkpoint appears.",
+    "required_action": "No user action currently required. Package the context pipeline and run the bounded authorized-phone viability gate under phone.lock; stop if the complete loaded route or physical provider proof fails.",
     "result_path": "results/support-assessment/result.json",
-    "summary": "Historical rejected route only: installed high-level QAIRT GGUF/factory conversion has no LFM2 dispatch. The active architecture-aware LiquidONNX + QNN EP route has passed exact export and host viability; fallback-disabled HTP AOT remains unproven."
+    "summary": "No current host conversion blocker: all 263 SM8550/V73 contexts compile with fallback disabled and zero unsupported source nodes. Physical Android HTP loading/execution and the canonical campaign remain pending."
   },
   "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
   "host_export_milestone": {
@@ -134,7 +134,7 @@
     "revision": "84022ce711b28455e8c4fc364ce68c00cf995875",
     "sha256": "02a8b7e17487d326e46d68ce0ba24211e1b80a14c4cd0597fa73c1cd697f52ed"
   },
-  "phone_boundary": "No ADB or phone.lock use has occurred in 0034. Phone work waits for fallback-disabled compiled contexts, provider trace, and Pi priority.",
+  "phone_boundary": "No ADB or phone.lock use has occurred in 0034 yet. Target-specific AOT is complete; physical phone work now requires Pi priority and the full scoped lock lifecycle.",
   "prohibited_shortcuts": [
     "mapping lfm2 to llama/qwen or ignoring convolutional recurrent state",
     "downloading the already-rejected GGUF as a substitute for support",
@@ -149,6 +149,39 @@
     "qnn_context_binary_published": false,
     "qualcomm_huggingface_lfm_models": 0,
     "quantized_onnx_encodings_published": false
+  },
+  "qnn_aot_milestone": {
+    "attention_capacity": 4096,
+    "block_quant_weight_optimization": true,
+    "classification": "fallback_disabled_sm8550_v73_host_aot_not_physical_execution",
+    "context_binary_bytes": 1779492144,
+    "evidence": "results/qnn-aot/result.json",
+    "explicit_cpu_boundary": [
+      "selected-row asymmetric Q4 token embedding dequantization",
+      "global greedy argmax across HTP LM-head chunks",
+      "tokenizer and request orchestration"
+    ],
+    "host_equivalence": "results/htp-pipeline-host-equivalence/result.json",
+    "host_equivalence_boundary": "Exact canonical short prompt and five greedy tokens matched original export, transformed monolith, and final split ordering; host timing/logits are not Android/HTP evidence.",
+    "physical_execution": false,
+    "pipeline_parts": 263,
+    "qnn_ops": 2747,
+    "registry_eligible": false,
+    "runtime": {
+      "host_qnn_runtime": "2.49.40",
+      "onnxruntime": "1.26.0",
+      "onnxruntime_qnn": "2.5.0"
+    },
+    "session_disable_cpu_ep_fallback": true,
+    "source_nodes": 1583,
+    "state_reset": "zero all 22 convolution caches and all 8 attention K/V pairs before each logical request",
+    "supported_source_nodes": 1583,
+    "target": {
+      "chipset": "SM8550",
+      "htp_arch": "V73",
+      "soc_model": 43
+    },
+    "unsupported_source_nodes": 0
   },
   "question": "Can LFM2.5-2.6B run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "required_provider_proof_if_unblocked": {
@@ -174,7 +207,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "active_exact_architecture_aware_q4_export_qnn_aot_pending",
+  "status": "active_fallback_disabled_sm8550_v73_aot_complete_physical_htp_pending",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",

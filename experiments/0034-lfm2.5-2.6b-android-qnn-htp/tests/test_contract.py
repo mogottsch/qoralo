@@ -79,7 +79,7 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
     def test_active_export_does_not_claim_qnn_android_or_completion(self) -> None:
-        self.assertIn("active_exact_architecture_aware", self.contract["status"])
+        self.assertIn("active_fallback_disabled_sm8550_v73_aot_complete", self.contract["status"])
         route = self.result["route_assessment"]
         self.assertFalse(route["compiled_sm8550_context_available"])
         self.assertFalse(route["android_execution"])
@@ -89,6 +89,36 @@ class ContractTest(unittest.TestCase):
         self.assertEqual("passed", milestone["rewritten_onnx"]["onnx_checker"])
         self.assertEqual(16, milestone["bounded_output"]["max_new_tokens"])
         self.assertIn("No ADB", self.contract["phone_boundary"])
+
+    def test_qnn_aot_is_complete_but_not_physical_execution(self) -> None:
+        milestone = self.contract["qnn_aot_milestone"]
+        self.assertEqual(263, milestone["pipeline_parts"])
+        self.assertEqual(1583, milestone["source_nodes"])
+        self.assertEqual(1583, milestone["supported_source_nodes"])
+        self.assertEqual(0, milestone["unsupported_source_nodes"])
+        self.assertEqual(2747, milestone["qnn_ops"])
+        self.assertTrue(milestone["session_disable_cpu_ep_fallback"])
+        self.assertFalse(milestone["physical_execution"])
+        self.assertFalse(milestone["registry_eligible"])
+        evidence = json.loads((EXP / milestone["evidence"]).read_text())
+        self.assertTrue(evidence["compiler"]["all_parts_compiled"])
+        self.assertEqual({"chipset": "SM8550", "htp_arch": "V73", "soc_model": 43}, evidence["compiler"]["target"])
+        self.assertEqual(0, evidence["compiler"]["total_unsupported_source_nodes"])
+        self.assertEqual(263, len(evidence["parts"]))
+        for part in evidence["parts"]:
+            self.assertEqual(part["source_nodes"], part["supported_nodes"])
+            self.assertEqual(0, part["unsupported_nodes"])
+
+    def test_final_pipeline_host_equivalence_is_bounded(self) -> None:
+        result = json.loads((EXP / "results/htp-pipeline-host-equivalence/result.json").read_text())
+        self.assertIn("host_only", result["classification"])
+        self.assertEqual(171, result["canonical_short"]["input_tokens"])
+        self.assertEqual(263, result["pipeline"]["parts"])
+        self.assertTrue(result["all_five_greedy_tokens_equal"])
+        self.assertEqual(5, len(result["comparisons"]))
+        self.assertTrue(all(item["all_argmax_equal"] for item in result["comparisons"]))
+        output = (EXP / "results/htp-pipeline-host-equivalence/output.txt").read_bytes()
+        self.assertEqual(result["output_sha256"], hashlib.sha256(output).hexdigest())
 
     def test_export_provenance_and_host_output_are_bound(self) -> None:
         provenance = json.loads((EXP / "results/export-provenance/result.json").read_text())
@@ -107,6 +137,8 @@ class ContractTest(unittest.TestCase):
             EXP / "results/support-assessment",
             EXP / "results/export-provenance",
             EXP / "results/host-export-smoke",
+            EXP / "results/htp-pipeline-host-equivalence",
+            EXP / "results/qnn-aot",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():
