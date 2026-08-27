@@ -2,7 +2,7 @@
 
 ## Status
 
-**Blocked on the physical direct-QNN loaded-route context limit. The corrected runner bypassed ORT and successfully deserialized 57 exact QNN contexts on SM8550, but `QnnContext_createFromBinary` failed at context 58 of 263 before readiness or graph execution. No output, performance result, or campaign exists.**
+**Active with a host-prepared 37-context direct-QNN consolidation. The prior physical route loaded 57 contexts and failed at context 58 of 263; the replacement fuses each layer's eight sequential graphs and groups LM-head chunks without changing explicit state or CPU boundaries. All 37 contexts compile fallback-disabled for SM8550/V73. No new physical execution or performance claim exists.**
 
 This is a separate accelerator arm. It preserves `0029` CPU viability and `0033` CPU/OpenCL campaign evidence without modifying either experiment.
 
@@ -79,4 +79,22 @@ The first direct phone gate verified identity and every stage hash, then the And
 
 The corrected retry passed all 273 hashes and ELF preflight, entered the direct runtime, and loaded 57 contexts (all parts through layer 6 plus layer 7 core). Context 58, `layer-07-up-0`, failed in `QnnContext_createFromBinary`. No graph executed because setup never reached readiness. Cleanup was verified absent and `phone.lock` released. See [`results/direct-qnn-phone-attempt-2-context-limit/`](results/direct-qnn-phone-attempt-2-context-limit/).
 
-The exact next engineering gate is to consolidate 263 graphs into fewer multi-graph QNN context binaries, or create another complete loaded route below the device context limit without remapping contexts between requests. No further phone run or campaign is authorized.
+That result established the need to reduce simultaneously resident contexts. No campaign followed.
+
+## Consolidated loaded route
+
+The host-prepared replacement reduces 263 contexts to **37 ordinary single-graph contexts**:
+
+- 30 layer contexts, each fusing the exact eight prior core/MLP/residual parts in their original dependency order;
+- one final-normalization context;
+- six LM-head contexts containing at most four independent vocabulary chunks each;
+- all contexts loaded once at runner setup, with no per-request or per-token context reload;
+- the same 22 explicit convolution states, 8 explicit attention K/V pairs, CPU embedding/orchestration/global-argmax boundary, and 4,096-token capacity.
+
+The initial shared-EP-context approach did compile 263 ordered graphs into 33 multi-graph binaries, but host retrieval rejected its shared-weights buffer as unsupported on that platform. The retained route therefore uses graph fusion rather than weight-sharing serialization.
+
+Every fused model passed ONNX checking. All 37 contexts compiled with fallback disabled for SoC 43 / HTP V73; their traces again bind all 1,583 source nodes to 2,747 QNN operations with zero unsupported nodes. The binaries total 1,733,937,336 bytes. Five bounded CPU steps produced the same greedy decision as the proven split route while exposing all logit and state deltas caused by changed graph-optimization boundaries. A fused layer-0 context also loaded and executed successfully in x86 HTP emulation, returning finite hidden/state outputs close to CPU reference. Neither check is physical-phone evidence.
+
+The rebuilt API-31 direct runner is SHA-256 `92689331d11ecf48fb226e82c0f77133e2b72c505b976f2e801c6fffda506f83`. Its ignored Android stage has 48 payload files totaling 1,937,978,519 bytes; stage metadata SHA-256 is `c17f77a1493c6465a4ba91b410a3f4f586da283cdb19702ca040ac75825a3dd8`, manifest SHA-256 is `675e441c6adac5c46671f325f46477b182d1233ae56806f3c1dfaf74855a1e79`, and the ELF dependency/hash preflight passes. See [`results/qnn-consolidated-host-preparation/`](results/qnn-consolidated-host-preparation/).
+
+This is a host-prepared milestone only. A new bounded physical gate requires Pi's explicit phone priority; no phone run or campaign is currently authorized.

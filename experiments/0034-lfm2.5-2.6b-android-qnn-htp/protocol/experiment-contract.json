@@ -46,6 +46,45 @@
       "short": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae"
     }
   },
+  "consolidated_direct_qnn_route": {
+    "all_contexts_loaded_once": true,
+    "android_runner_sha256": "92689331d11ecf48fb226e82c0f77133e2b72c505b976f2e801c6fffda506f83",
+    "android_stage": {
+      "elf_preflight": true,
+      "manifest_sha256": "675e441c6adac5c46671f325f46477b182d1233ae56806f3c1dfaf74855a1e79",
+      "payload_bytes": 1937978519,
+      "payload_files": 48,
+      "stage_metadata_sha256": "c17f77a1493c6465a4ba91b410a3f4f586da283cdb19702ca040ac75825a3dd8"
+    },
+    "composition": {
+      "final_norm_contexts": 1,
+      "heads_per_group_ceiling": 4,
+      "layer_contexts": 30,
+      "lm_head_group_contexts": 6
+    },
+    "context_count": 37,
+    "cpu_boundary": [
+      "selected-row asymmetric Q4 embedding dequantization",
+      "request/token orchestration",
+      "global greedy argmax"
+    ],
+    "evidence": "results/qnn-consolidated-host-preparation/result.json",
+    "explicit_state": "22 convolution states plus 8 attention K/V pairs",
+    "fallback_disabled": true,
+    "host_cpu_five_step_argmax_match": true,
+    "host_htp_emulator_fused_layer_execute": true,
+    "per_request_or_token_reload": false,
+    "performance_claim": false,
+    "physical_execution": false,
+    "qnn_ops": 2747,
+    "source_nodes": 1583,
+    "source_part_count": 263,
+    "target": {
+      "htp_arch": 73,
+      "soc_model": 43
+    },
+    "unsupported_nodes": 0
+  },
   "direct_qnn_continuation": {
     "android_runner": {
       "bytes": 307416,
@@ -105,9 +144,9 @@
     "android_execution": false,
     "compiled_context_created": false,
     "qnn_htp_execution": false,
-    "required_action": "Host-side consolidate graphs into fewer multi-graph/weight-sharing QNN contexts, preserving exact order/state/loaded-route semantics; commit metadata/equivalence before any new phone request.",
+    "required_action": "After durable commit and independent review, authorize at most one bounded physical loaded-route gate; no campaign.",
     "result_path": "results/support-assessment/result.json",
-    "summary": "Physical direct QNN bypasses ORT and deserializes 57 exact contexts, but context 58 of 263 fails in QnnContext_createFromBinary before readiness or graph execution."
+    "summary": "Historical physical blocker: the 263-context route fails at context 58. A 37-context replacement is host-prepared but has not been physically tested."
   },
   "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
   "host_export_milestone": {
@@ -219,7 +258,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "Corrected direct attempt cleaned absent and released phone.lock. No further phone run/campaign; host consolidation only.",
+  "phone_boundary": "No phone access occurred for consolidation. The 37-context stage remains host-prepared only until Pi explicitly grants priority.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -318,7 +357,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "blocked_physical_direct_qnn_context_58_of_263_load_failure",
+  "status": "active_host_prepared_37_context_direct_qnn_route_pending_physical_gate",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",

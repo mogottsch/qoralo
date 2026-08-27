@@ -1,0 +1,1168 @@
+{
+  "android_stage": {
+    "elf_preflight": "passed",
+    "manifest_sha256": "675e441c6adac5c46671f325f46477b182d1233ae56806f3c1dfaf74855a1e79",
+    "payload_bytes": 1937978519,
+    "payload_files": 48,
+    "runner_sha256": "92689331d11ecf48fb226e82c0f77133e2b72c505b976f2e801c6fffda506f83",
+    "stage_json_sha256": "c17f77a1493c6465a4ba91b410a3f4f586da283cdb19702ca040ac75825a3dd8"
+  },
+  "claim_boundary": "Host transformation, fallback-disabled SM8550/V73 AOT, CPU equivalence, and one x86 HTP-emulator layer execution only. No new physical phone/HTP or performance claim.",
+  "classification": "host_prepared_37_context_direct_qnn_route_not_physical_execution",
+  "compiler": {
+    "context_binary_bytes": 1733937336,
+    "fallback_disabled": true,
+    "onnxruntime": "1.26.0",
+    "onnxruntime_qnn": "2.5.0",
+    "qnn_operator_counts": {
+      "Cast": 564,
+      "Concat": 100,
+      "Conv2d": 278,
+      "DepthWiseConv2d": 22,
+      "ElementWiseAdd": 192,
+      "ElementWiseDivide": 77,
+      "ElementWiseMultiply": 281,
+      "ElementWiseNeg": 16,
+      "ElementWisePower": 77,
+      "ElementWiseSquareRoot": 77,
+      "Gather": 16,
+      "MatMul": 16,
+      "ReduceMean": 77,
+      "Reshape": 712,
+      "Sigmoid": 60,
+      "Softmax": 8,
+      "Split": 38,
+      "StridedSlice": 44,
+      "Tile": 16,
+      "Transpose": 76
+    },
+    "qnn_ops": 2747,
+    "source_nodes": 1583,
+    "supported_nodes": 1583,
+    "target": {
+      "htp_arch": 73,
+      "soc_model": 43
+    },
+    "unsupported_nodes": 0
+  },
+  "contexts": [
+    {
+      "context_binary_bytes": 49187272,
+      "context_binary_sha256": "67bc7efe7d2b93a4479f73e97d66796ace638abb18003982ca4d30a0d84b9111",
+      "inputs": [
+        "/model/embed_tokens/GatherBlockQuantized/output_0",
+        "past_conv.0"
+      ],
+      "name": "layer-00",
+      "outputs": [
+        "/model/layers.0/Add_2/output_0",
+        "present_conv.0"
+      ],
+      "qnn_ops": 73,
+      "source_nodes": 39,
+      "source_onnx_sha256": "ddfd1e322bdd893e779c1e55785349e4a4a86bdef74a3557f357a49c88d8f006",
+      "source_parts": [
+        "layer-00-core-norm",
+        "layer-00-up-0",
+        "layer-00-gate-activate-0",
+        "layer-00-up-1",
+        "layer-00-gate-activate-1",
+        "layer-00-down-0",
+        "layer-00-down-1",
+        "layer-00-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 49187248,
+      "context_binary_sha256": "05edac9b83e1fa2b4284442068987d3921b9828cef25700e699fc314234debc4",
+      "inputs": [
+        "/model/layers.0/Add_2/output_0",
+        "past_conv.1"
+      ],
+      "name": "layer-01",
+      "outputs": [
+        "/model/layers.1/Add_2/output_0",
+        "present_conv.1"
+      ],
+      "qnn_ops": 73,
+      "source_nodes": 39,
+      "source_onnx_sha256": "dfcc83b3b3c465c1121f5e2b61d4da04b6634adc2a5e6391742cc071fbc41014",
+      "source_parts": [
+        "layer-01-core-norm",
+        "layer-01-up-0",
+        "layer-01-gate-activate-0",
+        "layer-01-up-1",
+        "layer-01-gate-activate-1",
+        "layer-01-down-0",
+        "layer-01-down-1",
+        "layer-01-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 62787416,
+      "context_binary_sha256": "855e04173501f7b4cb55bcbaab8207ca30ef684ee3f67349286e62f9c38a5e93",
+      "inputs": [
+        "/model/layers.1/Add_2/output_0",
+        "position_ids",
+        "attention_mask",
+        "past_key_values.2.key",
+        "past_key_values.2.value"
+      ],
+      "name": "layer-02",
+      "outputs": [
+        "/model/layers.2/Add_2/output_0",
+        "present.2.key",
+        "present.2.value"
+      ],
+      "qnn_ops": 128,
+      "source_nodes": 87,
+      "source_onnx_sha256": "9145bc32a62aef841d61177b5445f711cbd2d8f27f61b1796f8a70c90d0879c3",
+      "source_parts": [
+        "layer-02-core-norm",
+        "layer-02-up-0",
+        "layer-02-gate-activate-0",
+        "layer-02-up-1",
+        "layer-02-gate-activate-1",
+        "layer-02-down-0",
+        "layer-02-down-1",
+        "layer-02-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 49187248,
+      "context_binary_sha256": "69675c78d6aec4c263baba4d65277274eeefcb2ce5dec247663d1f7e578b7742",
+      "inputs": [
+        "/model/layers.2/Add_2/output_0",
+        "past_conv.3"
+      ],
+      "name": "layer-03",
+      "outputs": [
+        "/model/layers.3/Add_2/output_0",
+        "present_conv.3"
+      ],
+      "qnn_ops": 73,
+      "source_nodes": 39,
+      "source_onnx_sha256": "20050d6f633109d787cbcc63f8a7ee43fc0a1b0260f8f684bbdfc12682667414",
+      "source_parts": [
+        "layer-03-core-norm",
+        "layer-03-up-0",
+        "layer-03-gate-activate-0",
+        "layer-03-up-1",
+        "layer-03-gate-activate-1",
+        "layer-03-down-0",
+        "layer-03-down-1",
+        "layer-03-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 49187248,
+      "context_binary_sha256": "0ed6773acc88a7bb4c32c3a5688cd01d9e17b01a2e9072ca73bf1af228986f03",
+      "inputs": [
+        "/model/layers.3/Add_2/output_0",
+        "past_conv.4"
+      ],
+      "name": "layer-04",
+      "outputs": [
+        "/model/layers.4/Add_2/output_0",
+        "present_conv.4"
+      ],
+      "qnn_ops": 73,
+      "source_nodes": 39,
+      "source_onnx_sha256": "97f0ff7b3971675e36925af80e510850e69f96c64965a8129eaa293102bf286d",
+      "source_parts": [
+        "layer-04-core-norm",
+        "layer-04-up-0",
+        "layer-04-gate-activate-0",
+        "layer-04-up-1",
+        "layer-04-gate-activate-1",
+        "layer-04-down-0",
+        "layer-04-down-1",
+        "layer-04-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 62787416,
+      "context_binary_sha256": "34a0e718f4688f534d89dcfaf9a94d3002a270d635ce7d59709f80cfa1157be5",
+      "inputs": [
+        "/model/layers.4/Add_2/output_0",
+        "position_ids",
+        "attention_mask",
+        "past_key_values.5.key",
+        "past_key_values.5.value"
+      ],
+      "name": "layer-05",
+      "outputs": [
+        "/model/layers.5/Add_2/output_0",
+        "present.5.key",
+        "present.5.value"
+      ],
+      "qnn_ops": 128,
+      "source_nodes": 87,
+      "source_onnx_sha256": "cf62e08ee3aa6ba98f6e5dd28ece96fd19bf672849f5bb4da8af7dafd66bfacc",
+      "source_parts": [
+        "layer-05-core-norm",
+        "layer-05-up-0",
+        "layer-05-gate-activate-0",
+        "layer-05-up-1",
+        "layer-05-gate-activate-1",
+        "layer-05-down-0",
+        "layer-05-down-1",
+        "layer-05-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 49187248,
+      "context_binary_sha256": "130723f0a09894cff4a6e4f0b7f3d11ee51f2a85b2a1805a767b32a88e38b629",
+      "inputs": [
+        "/model/layers.5/Add_2/output_0",
+        "past_conv.6"
+      ],
+      "name": "layer-06",
+      "outputs": [
+        "/model/layers.6/Add_2/output_0",
+        "present_conv.6"
+      ],
+      "qnn_ops": 73,
+      "source_nodes": 39,
+      "source_onnx_sha256": "cba383a457cf84f5c01749456dcf6cf850a9797ebe0d5a38e36d61dc225793f7",
+      "source_parts": [
+        "layer-06-core-norm",
+        "layer-06-up-0",
+        "layer-06-gate-activate-0",
+        "layer-06-up-1",
+        "layer-06-gate-activate-1",
+        "layer-06-down-0",
+        "layer-06-down-1",
+        "layer-06-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 49187248,
+      "context_binary_sha256": "2ccda9905153263799682a27b40c98402f80ddd8036c1ac687812507b2a24275",
+      "inputs": [
+        "/model/layers.6/Add_2/output_0",
+        "past_conv.7"
+      ],
+      "name": "layer-07",
+      "outputs": [
+        "/model/layers.7/Add_2/output_0",
+        "present_conv.7"
+      ],
+      "qnn_ops": 73,
+      "source_nodes": 39,
+      "source_onnx_sha256": "1b1810beca358413cb48c4c80a79ca3ad026f862ddf70669bce3c6160236f3bc",
+      "source_parts": [
+        "layer-07-core-norm",
+        "layer-07-up-0",
+        "layer-07-gate-activate-0",
+        "layer-07-up-1",
+        "layer-07-gate-activate-1",
+        "layer-07-down-0",
+        "layer-07-down-1",
+        "layer-07-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 49187248,
+      "context_binary_sha256": "36ca0926ff8dcb157aaace17d16358277c4e20cc89453fa7f45c3f07cc1ea4a8",
+      "inputs": [
+        "/model/layers.7/Add_2/output_0",
+        "past_conv.8"
+      ],
+      "name": "layer-08",
+      "outputs": [
+        "/model/layers.8/Add_2/output_0",
+        "present_conv.8"
+      ],
+      "qnn_ops": 73,
+      "source_nodes": 39,
+      "source_onnx_sha256": "4a370af24954a3cc1dc04ab7776545f06280c1887d3441051f2e1731e3a26d40",
+      "source_parts": [
+        "layer-08-core-norm",
+        "layer-08-up-0",
+        "layer-08-gate-activate-0",
+        "layer-08-up-1",
+        "layer-08-gate-activate-1",
+        "layer-08-down-0",
+        "layer-08-down-1",
+        "layer-08-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 62787416,
+      "context_binary_sha256": "b0445c5be6efd49f99ff679fe6723f7dafe80eec33570bdd7d2f7921b4fc9473",
+      "inputs": [
+        "/model/layers.8/Add_2/output_0",
+        "position_ids",
+        "attention_mask",
+        "past_key_values.9.key",
+        "past_key_values.9.value"
+      ],
+      "name": "layer-09",
+      "outputs": [
+        "/model/layers.9/Add_2/output_0",
+        "present.9.key",
+        "present.9.value"
+      ],
+      "qnn_ops": 128,
+      "source_nodes": 87,
+      "source_onnx_sha256": "5a0cfd5d629136238e1e01f2d978fd2a9b6dc5a3bed5b4c445a58c69759d767a",
+      "source_parts": [
+        "layer-09-core-norm",
+        "layer-09-up-0",
+        "layer-09-gate-activate-0",
+        "layer-09-up-1",
+        "layer-09-gate-activate-1",
+        "layer-09-down-0",
+        "layer-09-down-1",
+        "layer-09-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 49187320,
+      "context_binary_sha256": "040f3b3f277b2483efbf15da30924e7158d2dd6db7d080cf5bd983a06b5dc777",
+      "inputs": [
+        "/model/layers.9/Add_2/output_0",
+        "past_conv.10"
+      ],
+      "name": "layer-10",
+      "outputs": [
+        "/model/layers.10/Add_2/output_0",
+        "present_conv.10"
+      ],
+      "qnn_ops": 73,
+      "source_nodes": 39,
+      "source_onnx_sha256": "004ae4b0e80023b4318d6cda522993aa16e0b0dc91ea506bafe946fed9ae3b65",
+      "source_parts": [
+        "layer-10-core-norm",
+        "layer-10-up-0",
+        "layer-10-gate-activate-0",
+        "layer-10-up-1",
+        "layer-10-gate-activate-1",
+        "layer-10-down-0",
+        "layer-10-down-1",
+        "layer-10-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 49187320,
+      "context_binary_sha256": "eacd8fb57c97bd51c7cc142050a0f34b15beb0ccc2b263f4353c95de2c6e74d4",
+      "inputs": [
+        "/model/layers.10/Add_2/output_0",
+        "past_conv.11"
+      ],
+      "name": "layer-11",
+      "outputs": [
+        "/model/layers.11/Add_2/output_0",
+        "present_conv.11"
+      ],
+      "qnn_ops": 73,
+      "source_nodes": 39,
+      "source_onnx_sha256": "0120e36465f253c29e623ec10ce24b2716b555e36976c835da55ef2a8b685dff",
+      "source_parts": [
+        "layer-11-core-norm",
+        "layer-11-up-0",
+        "layer-11-gate-activate-0",
+        "layer-11-up-1",
+        "layer-11-gate-activate-1",
+        "layer-11-down-0",
+        "layer-11-down-1",
+        "layer-11-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 49187320,
+      "context_binary_sha256": "5726617af6d36643cef73399eb29a9134917a9958429f05ec2eec1c4efca07bf",
+      "inputs": [
+        "/model/layers.11/Add_2/output_0",
+        "past_conv.12"
+      ],
+      "name": "layer-12",
+      "outputs": [
+        "/model/layers.12/Add_2/output_0",
+        "present_conv.12"
+      ],
+      "qnn_ops": 73,
+      "source_nodes": 39,
+      "source_onnx_sha256": "eb78fcc3f7df2523e4cb6490e41f20fc4154461c206477bd1f41a2f2c8ce4dbb",
+      "source_parts": [
+        "layer-12-core-norm",
+        "layer-12-up-0",
+        "layer-12-gate-activate-0",
+        "layer-12-up-1",
+        "layer-12-gate-activate-1",
+        "layer-12-down-0",
+        "layer-12-down-1",
+        "layer-12-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 62787592,
+      "context_binary_sha256": "d7970f0f07844c1240c2685235ab1fa9de679bdc00181f6fd86f9d263d666021",
+      "inputs": [
+        "/model/layers.12/Add_2/output_0",
+        "position_ids",
+        "attention_mask",
+        "past_key_values.13.key",
+        "past_key_values.13.value"
+      ],
+      "name": "layer-13",
+      "outputs": [
+        "/model/layers.13/Add_2/output_0",
+        "present.13.key",
+        "present.13.value"
+      ],
+      "qnn_ops": 128,
+      "source_nodes": 87,
+      "source_onnx_sha256": "1f037b5efb0d1fd3dbe3e39877f828af94fb85ca92ce8af226e2ed18c3905a9c",
+      "source_parts": [
+        "layer-13-core-norm",
+        "layer-13-up-0",
+        "layer-13-gate-activate-0",
+        "layer-13-up-1",
+        "layer-13-gate-activate-1",
+        "layer-13-down-0",
+        "layer-13-down-1",
+        "layer-13-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 49187312,
+      "context_binary_sha256": "289a7375e38f1c2790d0ab65220d21ef71a8a6d06eac1178b8bb5f1ec371d2be",
+      "inputs": [
+        "/model/layers.13/Add_2/output_0",
+        "past_conv.14"
+      ],
+      "name": "layer-14",
+      "outputs": [
+        "/model/layers.14/Add_2/output_0",
+        "present_conv.14"
+      ],
+      "qnn_ops": 73,
+      "source_nodes": 39,
+      "source_onnx_sha256": "4dae8ac2953531741fdbf1754941a84c9071441f8df9d5b7d187f3fcf5b58a8a",
+      "source_parts": [
+        "layer-14-core-norm",
+        "layer-14-up-0",
+        "layer-14-gate-activate-0",
+        "layer-14-up-1",
+        "layer-14-gate-activate-1",
+        "layer-14-down-0",
+        "layer-14-down-1",
+        "layer-14-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 49187320,
+      "context_binary_sha256": "a80b69b18e74185a8190c7613e3d2a90594b52665d7d312f77b7c848af80dd58",
+      "inputs": [
+        "/model/layers.14/Add_2/output_0",
+        "past_conv.15"
+      ],
+      "name": "layer-15",
+      "outputs": [
+        "/model/layers.15/Add_2/output_0",
+        "present_conv.15"
+      ],
+      "qnn_ops": 73,
+      "source_nodes": 39,
+      "source_onnx_sha256": "27972ae404d58ae7886608b28893c17a303c5b6e3b0f90f98439c99dab6a0aa0",
+      "source_parts": [
+        "layer-15-core-norm",
+        "layer-15-up-0",
+        "layer-15-gate-activate-0",
+        "layer-15-up-1",
+        "layer-15-gate-activate-1",
+        "layer-15-down-0",
+        "layer-15-down-1",
+        "layer-15-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 49187320,
+      "context_binary_sha256": "4f9ee38265a07070a27f968b8cbd333712cbdc495bb7f67b73c592baffc5ae7b",
+      "inputs": [
+        "/model/layers.15/Add_2/output_0",
+        "past_conv.16"
+      ],
+      "name": "layer-16",
+      "outputs": [
+        "/model/layers.16/Add_2/output_0",
+        "present_conv.16"
+      ],
+      "qnn_ops": 73,
+      "source_nodes": 39,
+      "source_onnx_sha256": "0c4545bc69b292d47b2e9b8b63a5ff6a00272e877356680ca105243180ab48a3",
+      "source_parts": [
+        "layer-16-core-norm",
+        "layer-16-up-0",
+        "layer-16-gate-activate-0",
+        "layer-16-up-1",
+        "layer-16-gate-activate-1",
+        "layer-16-down-0",
+        "layer-16-down-1",
+        "layer-16-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 62787592,
+      "context_binary_sha256": "56a139d6d5334e7fd3b5d896db17dfef56f18acf47c533e18f6e46630d62033b",
+      "inputs": [
+        "/model/layers.16/Add_2/output_0",
+        "position_ids",
+        "attention_mask",
+        "past_key_values.17.key",
+        "past_key_values.17.value"
+      ],
+      "name": "layer-17",
+      "outputs": [
+        "/model/layers.17/Add_2/output_0",
+        "present.17.key",
+        "present.17.value"
+      ],
+      "qnn_ops": 128,
+      "source_nodes": 87,
+      "source_onnx_sha256": "c9648518bc45b919cc4cf2fa01cf90bda880932a788b1ee3adecaba97199fd35",
+      "source_parts": [
+        "layer-17-core-norm",
+        "layer-17-up-0",
+        "layer-17-gate-activate-0",
+        "layer-17-up-1",
+        "layer-17-gate-activate-1",
+        "layer-17-down-0",
+        "layer-17-down-1",
+        "layer-17-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 49187320,
+      "context_binary_sha256": "aec4dd0272120537b70d345074cecc84b9ec846ea8241968ec14626dda6d719c",
+      "inputs": [
+        "/model/layers.17/Add_2/output_0",
+        "past_conv.18"
+      ],
+      "name": "layer-18",
+      "outputs": [
+        "/model/layers.18/Add_2/output_0",
+        "present_conv.18"
+      ],
+      "qnn_ops": 73,
+      "source_nodes": 39,
+      "source_onnx_sha256": "f33e5ac10708e7b25873e5964eb545688c39e9fa0a96b92ae6a05bd9613752d3",
+      "source_parts": [
+        "layer-18-core-norm",
+        "layer-18-up-0",
+        "layer-18-gate-activate-0",
+        "layer-18-up-1",
+        "layer-18-gate-activate-1",
+        "layer-18-down-0",
+        "layer-18-down-1",
+        "layer-18-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 49187320,
+      "context_binary_sha256": "e809fcce15df026d3d6e3ac92b1daf5c01bee83a7d4d9813f9c20d99c00c8872",
+      "inputs": [
+        "/model/layers.18/Add_2/output_0",
+        "past_conv.19"
+      ],
+      "name": "layer-19",
+      "outputs": [
+        "/model/layers.19/Add_2/output_0",
+        "present_conv.19"
+      ],
+      "qnn_ops": 73,
+      "source_nodes": 39,
+      "source_onnx_sha256": "71fefdfd20bfce2f605dbdf15cff79079455dab3fd29df97f1f278169afc7790",
+      "source_parts": [
+        "layer-19-core-norm",
+        "layer-19-up-0",
+        "layer-19-gate-activate-0",
+        "layer-19-up-1",
+        "layer-19-gate-activate-1",
+        "layer-19-down-0",
+        "layer-19-down-1",
+        "layer-19-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 49187320,
+      "context_binary_sha256": "640f4d272ee4ac179242ada56bed438263d2700a436929fda269e266f7991d35",
+      "inputs": [
+        "/model/layers.19/Add_2/output_0",
+        "past_conv.20"
+      ],
+      "name": "layer-20",
+      "outputs": [
+        "/model/layers.20/Add_2/output_0",
+        "present_conv.20"
+      ],
+      "qnn_ops": 73,
+      "source_nodes": 39,
+      "source_onnx_sha256": "4fab982d4e598dfbf62e7471a2b3c822ec0ef5c537bf9f2e2cd2366ad4c58fea",
+      "source_parts": [
+        "layer-20-core-norm",
+        "layer-20-up-0",
+        "layer-20-gate-activate-0",
+        "layer-20-up-1",
+        "layer-20-gate-activate-1",
+        "layer-20-down-0",
+        "layer-20-down-1",
+        "layer-20-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 62787592,
+      "context_binary_sha256": "a13164bf01c9e6a3454c973e35506cd84bdda0e1aa94df3f451feb45bcca90fe",
+      "inputs": [
+        "/model/layers.20/Add_2/output_0",
+        "position_ids",
+        "attention_mask",
+        "past_key_values.21.key",
+        "past_key_values.21.value"
+      ],
+      "name": "layer-21",
+      "outputs": [
+        "/model/layers.21/Add_2/output_0",
+        "present.21.key",
+        "present.21.value"
+      ],
+      "qnn_ops": 128,
+      "source_nodes": 87,
+      "source_onnx_sha256": "c24bf810026bf27624a4df74aa490b6f64b36515ccc10f2ffc0abe0ed6ec759e",
+      "source_parts": [
+        "layer-21-core-norm",
+        "layer-21-up-0",
+        "layer-21-gate-activate-0",
+        "layer-21-up-1",
+        "layer-21-gate-activate-1",
+        "layer-21-down-0",
+        "layer-21-down-1",
+        "layer-21-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 49187320,
+      "context_binary_sha256": "778e1739b90418ae1fcc2d5c0877bf55fe0a09d7c0efd836b5f8570080800ce7",
+      "inputs": [
+        "/model/layers.21/Add_2/output_0",
+        "past_conv.22"
+      ],
+      "name": "layer-22",
+      "outputs": [
+        "/model/layers.22/Add_2/output_0",
+        "present_conv.22"
+      ],
+      "qnn_ops": 73,
+      "source_nodes": 39,
+      "source_onnx_sha256": "50d672c58764600385d73e56819b3ee597b98139620d7ddf10ac058bdb1b540c",
+      "source_parts": [
+        "layer-22-core-norm",
+        "layer-22-up-0",
+        "layer-22-gate-activate-0",
+        "layer-22-up-1",
+        "layer-22-gate-activate-1",
+        "layer-22-down-0",
+        "layer-22-down-1",
+        "layer-22-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 49187320,
+      "context_binary_sha256": "c5a4f9f1107ae1059e1b948003b564a5d480540a57964dea1e3d9df30f084c2d",
+      "inputs": [
+        "/model/layers.22/Add_2/output_0",
+        "past_conv.23"
+      ],
+      "name": "layer-23",
+      "outputs": [
+        "/model/layers.23/Add_2/output_0",
+        "present_conv.23"
+      ],
+      "qnn_ops": 73,
+      "source_nodes": 39,
+      "source_onnx_sha256": "15e9a881e15cd37d9170af9f668f2c24c6ef56a3d6b86cefbf6c3c222128d0b2",
+      "source_parts": [
+        "layer-23-core-norm",
+        "layer-23-up-0",
+        "layer-23-gate-activate-0",
+        "layer-23-up-1",
+        "layer-23-gate-activate-1",
+        "layer-23-down-0",
+        "layer-23-down-1",
+        "layer-23-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 62787592,
+      "context_binary_sha256": "4dfc5fa5ac5fae092192452619f3a2f0b0d859f825b674cf88db72af59d16b43",
+      "inputs": [
+        "/model/layers.23/Add_2/output_0",
+        "position_ids",
+        "attention_mask",
+        "past_key_values.24.key",
+        "past_key_values.24.value"
+      ],
+      "name": "layer-24",
+      "outputs": [
+        "/model/layers.24/Add_2/output_0",
+        "present.24.key",
+        "present.24.value"
+      ],
+      "qnn_ops": 128,
+      "source_nodes": 87,
+      "source_onnx_sha256": "702d79fa716a29f79844d382004a165ffbfffb8d412d0ebe52e5c55f06eeb461",
+      "source_parts": [
+        "layer-24-core-norm",
+        "layer-24-up-0",
+        "layer-24-gate-activate-0",
+        "layer-24-up-1",
+        "layer-24-gate-activate-1",
+        "layer-24-down-0",
+        "layer-24-down-1",
+        "layer-24-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 49187320,
+      "context_binary_sha256": "467438e97130199e7b15b6f2990f70eb33c1b4ed79be6da4a9a361696c976062",
+      "inputs": [
+        "/model/layers.24/Add_2/output_0",
+        "past_conv.25"
+      ],
+      "name": "layer-25",
+      "outputs": [
+        "/model/layers.25/Add_2/output_0",
+        "present_conv.25"
+      ],
+      "qnn_ops": 73,
+      "source_nodes": 39,
+      "source_onnx_sha256": "e6d2c969a47d23c77cf69afdc4b156e6ecec04ee9208dca8bd393c29c01975b4",
+      "source_parts": [
+        "layer-25-core-norm",
+        "layer-25-up-0",
+        "layer-25-gate-activate-0",
+        "layer-25-up-1",
+        "layer-25-gate-activate-1",
+        "layer-25-down-0",
+        "layer-25-down-1",
+        "layer-25-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 49187320,
+      "context_binary_sha256": "cb8daa92ebb7c9ccbaabdb2eba98e9600569a6bd697c939df17dca99377ad2ee",
+      "inputs": [
+        "/model/layers.25/Add_2/output_0",
+        "past_conv.26"
+      ],
+      "name": "layer-26",
+      "outputs": [
+        "/model/layers.26/Add_2/output_0",
+        "present_conv.26"
+      ],
+      "qnn_ops": 73,
+      "source_nodes": 39,
+      "source_onnx_sha256": "d381daa8f7cc8b94ed8f5d006efab98e0024a440f7f9055992766cfddcaa66a0",
+      "source_parts": [
+        "layer-26-core-norm",
+        "layer-26-up-0",
+        "layer-26-gate-activate-0",
+        "layer-26-up-1",
+        "layer-26-gate-activate-1",
+        "layer-26-down-0",
+        "layer-26-down-1",
+        "layer-26-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 62787592,
+      "context_binary_sha256": "4576fd1ccdcf33ddf023b0ea64b98fb849a61fea1b292ec7b3b773a74314824f",
+      "inputs": [
+        "/model/layers.26/Add_2/output_0",
+        "position_ids",
+        "attention_mask",
+        "past_key_values.27.key",
+        "past_key_values.27.value"
+      ],
+      "name": "layer-27",
+      "outputs": [
+        "/model/layers.27/Add_2/output_0",
+        "present.27.key",
+        "present.27.value"
+      ],
+      "qnn_ops": 128,
+      "source_nodes": 87,
+      "source_onnx_sha256": "8f8e91a40c180028a27c46b2b21d3491e56e4edd0a2ee57413016911d75c2a0e",
+      "source_parts": [
+        "layer-27-core-norm",
+        "layer-27-up-0",
+        "layer-27-gate-activate-0",
+        "layer-27-up-1",
+        "layer-27-gate-activate-1",
+        "layer-27-down-0",
+        "layer-27-down-1",
+        "layer-27-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 49187320,
+      "context_binary_sha256": "b9d8d7368e4dd3cb7e174a4255bb25119e308004fbf2b4779c513f70bb201059",
+      "inputs": [
+        "/model/layers.27/Add_2/output_0",
+        "past_conv.28"
+      ],
+      "name": "layer-28",
+      "outputs": [
+        "/model/layers.28/Add_2/output_0",
+        "present_conv.28"
+      ],
+      "qnn_ops": 73,
+      "source_nodes": 39,
+      "source_onnx_sha256": "5b8f66310e9f257365160c473617bb27029eddecb5a4049377117edcbb7aa040",
+      "source_parts": [
+        "layer-28-core-norm",
+        "layer-28-up-0",
+        "layer-28-gate-activate-0",
+        "layer-28-up-1",
+        "layer-28-gate-activate-1",
+        "layer-28-down-0",
+        "layer-28-down-1",
+        "layer-28-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 49187320,
+      "context_binary_sha256": "6dc7eaee116dbfae8e95b49d95c540b0b2ccca376fb8663134e0b4169e140564",
+      "inputs": [
+        "/model/layers.28/Add_2/output_0",
+        "past_conv.29"
+      ],
+      "name": "layer-29",
+      "outputs": [
+        "/model/layers.29/Add_2/output_0",
+        "present_conv.29"
+      ],
+      "qnn_ops": 73,
+      "source_nodes": 39,
+      "source_onnx_sha256": "8ebef6c18b831a467ec4e46c0dae9ff5591ad4850e3a0b14d707db4912f87c01",
+      "source_parts": [
+        "layer-29-core-norm",
+        "layer-29-up-0",
+        "layer-29-gate-activate-0",
+        "layer-29-up-1",
+        "layer-29-gate-activate-1",
+        "layer-29-down-0",
+        "layer-29-down-1",
+        "layer-29-residual"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 181632,
+      "context_binary_sha256": "1bf9c183db8510e201008e78d41d907f945dccdbbebd33a0f544047e7e54ca3f",
+      "inputs": [
+        "/model/layers.29/Add_2/output_0"
+      ],
+      "name": "final-norm",
+      "outputs": [
+        "/model/layers.30/final_norm_layernorm/output_0"
+      ],
+      "qnn_ops": 7,
+      "source_nodes": 7,
+      "source_onnx_sha256": "a98565ce434802740b2cd8500734a48381784598e5affa14eeaa420b80b913b1",
+      "source_parts": [
+        "final-norm"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 28575640,
+      "context_binary_sha256": "7f322ebc17d142cdffe24e4531ddda5f2f8f8394302ade62a36ebb59668d2e25",
+      "inputs": [
+        "/model/layers.30/final_norm_layernorm/output_0"
+      ],
+      "name": "heads-00",
+      "outputs": [
+        "logits_vocab_0_6144",
+        "logits_vocab_6144_12288",
+        "logits_vocab_12288_18432",
+        "logits_vocab_18432_24576"
+      ],
+      "qnn_ops": 20,
+      "source_nodes": 4,
+      "source_onnx_sha256": "f9a400e3808e1b094a0e7bca533375673e77214de578ab2ccc566b23df4d6296",
+      "source_parts": [
+        "head-00",
+        "head-01",
+        "head-02",
+        "head-03"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 28575656,
+      "context_binary_sha256": "ad3dddb37f2225b95400783f9643fc8ef7427d186d73d65584149c72e8ed927f",
+      "inputs": [
+        "/model/layers.30/final_norm_layernorm/output_0"
+      ],
+      "name": "heads-01",
+      "outputs": [
+        "logits_vocab_24576_30720",
+        "logits_vocab_30720_36864",
+        "logits_vocab_36864_43008",
+        "logits_vocab_43008_49152"
+      ],
+      "qnn_ops": 20,
+      "source_nodes": 4,
+      "source_onnx_sha256": "624505736b07d2e95f333b4a491c7bf159e913cd2c279918ed9f708e0f1bec3c",
+      "source_parts": [
+        "head-04",
+        "head-05",
+        "head-06",
+        "head-07"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 28575672,
+      "context_binary_sha256": "b9cd4c03cbb1f74d2c482fd7f80ffae24b558a2c57698a0aaaa4d0a6c927e6f6",
+      "inputs": [
+        "/model/layers.30/final_norm_layernorm/output_0"
+      ],
+      "name": "heads-02",
+      "outputs": [
+        "logits_vocab_49152_55296",
+        "logits_vocab_55296_61440",
+        "logits_vocab_61440_67584",
+        "logits_vocab_67584_73728"
+      ],
+      "qnn_ops": 20,
+      "source_nodes": 4,
+      "source_onnx_sha256": "6cef3aa83c984ec8a486a12db980e87106601eff5f0a2d4bac00895837efd8f1",
+      "source_parts": [
+        "head-08",
+        "head-09",
+        "head-10",
+        "head-11"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 28575688,
+      "context_binary_sha256": "5d02f3f5356fcddc311acf258b783aec832d1555b9531d4b03539a940ebb542f",
+      "inputs": [
+        "/model/layers.30/final_norm_layernorm/output_0"
+      ],
+      "name": "heads-03",
+      "outputs": [
+        "logits_vocab_73728_79872",
+        "logits_vocab_79872_86016",
+        "logits_vocab_86016_92160",
+        "logits_vocab_92160_98304"
+      ],
+      "qnn_ops": 20,
+      "source_nodes": 4,
+      "source_onnx_sha256": "3b7b56bc3ddd1a33875540e7496bf242a800ec8b094a0acb0e26b36a91e9e325",
+      "source_parts": [
+        "head-12",
+        "head-13",
+        "head-14",
+        "head-15"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 28575688,
+      "context_binary_sha256": "9e3c5315031f3c0478ca2413f3fd14ede2d16ab84e802d42736d7a1fab43adaa",
+      "inputs": [
+        "/model/layers.30/final_norm_layernorm/output_0"
+      ],
+      "name": "heads-04",
+      "outputs": [
+        "logits_vocab_98304_104448",
+        "logits_vocab_104448_110592",
+        "logits_vocab_110592_116736",
+        "logits_vocab_116736_122880"
+      ],
+      "qnn_ops": 20,
+      "source_nodes": 4,
+      "source_onnx_sha256": "0a623df085e4bc9a555487ba181b7df211fa3eebafce99b1a5b18548dd9994c4",
+      "source_parts": [
+        "head-16",
+        "head-17",
+        "head-18",
+        "head-19"
+      ],
+      "unsupported_nodes": 0
+    },
+    {
+      "context_binary_bytes": 6456600,
+      "context_binary_sha256": "82dcdddb2b7c57800d61e094333a673827d7527323f6a284c2eb76deaa96c4d2",
+      "inputs": [
+        "/model/layers.30/final_norm_layernorm/output_0"
+      ],
+      "name": "heads-05",
+      "outputs": [
+        "logits_vocab_122880_126976",
+        "logits_vocab_126976_128000"
+      ],
+      "qnn_ops": 10,
+      "source_nodes": 2,
+      "source_onnx_sha256": "aabca57ff2f64fa911fe25184a93839b652af29a78a6cb27f2bf8ab76d478d0c",
+      "source_parts": [
+        "head-20",
+        "head-21"
+      ],
+      "unsupported_nodes": 0
+    }
+  ],
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "host_validation": {
+    "cpu_differences_reported": true,
+    "cpu_equivalence": {
+      "all_argmax_equal": true,
+      "allclose": false,
+      "claim_boundary": "CPU semantic/greedy-decision equivalence only; not HTP execution.",
+      "classification": "host_cpu_bounded_graph_consolidation_equivalence",
+      "schema_version": 1,
+      "started_ns": 1787836112859746003,
+      "state_boundary": "Both routes independently update and compare all 22 convolution and 8 attention K/V states for every token. Differences reflect changed graph optimization boundaries and are reported, not hidden.",
+      "stopped_ns": 1787836115925746405,
+      "tokens": [
+        {
+          "allclose": false,
+          "consolidated_argmax": 124894,
+          "max_abs": 0.020768046379089355,
+          "mean_abs": 0.0028939584735780954,
+          "position": 0,
+          "split_argmax": 124894,
+          "state_max_abs": 0.028745442628860474,
+          "token": 124894
+        },
+        {
+          "allclose": false,
+          "consolidated_argmax": 25,
+          "max_abs": 0.3653850555419922,
+          "mean_abs": 0.045594651252031326,
+          "position": 1,
+          "split_argmax": 25,
+          "state_max_abs": 0.04649710655212402,
+          "token": 124899
+        },
+        {
+          "allclose": false,
+          "consolidated_argmax": 124895,
+          "max_abs": 0.06208038330078125,
+          "mean_abs": 0.008817127905786037,
+          "position": 2,
+          "split_argmax": 124895,
+          "state_max_abs": 0.053021252155303955,
+          "token": 23630
+        },
+        {
+          "allclose": false,
+          "consolidated_argmax": 124895,
+          "max_abs": 0.13237524032592773,
+          "mean_abs": 0.020280582830309868,
+          "position": 3,
+          "split_argmax": 124895,
+          "state_max_abs": 0.053021252155303955,
+          "token": 207
+        },
+        {
+          "allclose": false,
+          "consolidated_argmax": 124901,
+          "max_abs": 0.3319077491760254,
+          "mean_abs": 0.07672281563282013,
+          "position": 4,
+          "split_argmax": 124901,
+          "state_max_abs": 0.17344829440116882,
+          "token": 3582
+        }
+      ]
+    },
+    "cpu_five_token_all_greedy_decisions_equal": true,
+    "full_loaded_host_emulator_limit": "Host emulator loaded 22 consolidated contexts then rejected context 23; this is not physical SM8550 evidence and does not invalidate per-context AOT/metadata.",
+    "htp_emulator_layer00": {
+      "claim_boundary": "One consolidated layer executed in x86 HTP emulation; not physical Android/HTP evidence.",
+      "classification": "host_htp_emulator_consolidated_layer_execution",
+      "context_sha256": "67bc7efe7d2b93a4479f73e97d66796ace638abb18003982ca4d30a0d84b9111",
+      "graph_execute_succeeded": true,
+      "outputs": [
+        {
+          "allclose_rtol_0_02_atol_0_02": true,
+          "cpu_max_abs": 0.0006631910800933838,
+          "cpu_mean_abs": 5.567255720961839e-05,
+          "elements": 2048,
+          "finite": true,
+          "name": "/model/layers.0/Add_2/output_0",
+          "qnn_sha256": "93c5fee437ee889d354e0df4f4882c37027ff99746d432e37d020c67a433b9f6"
+        },
+        {
+          "allclose_rtol_0_02_atol_0_02": true,
+          "cpu_max_abs": 0.012290000915527344,
+          "cpu_mean_abs": 8.996311953524128e-05,
+          "elements": 6144,
+          "finite": true,
+          "name": "present_conv.0",
+          "qnn_sha256": "153e4f955066c4fcbcca3a2dd6d0e10860caa05a8df180e48bae4105246dab96"
+        }
+      ],
+      "qnn_backend": "v2.49.40.260810104044 x86 HTP emulator",
+      "schema_version": 1,
+      "target_context": {
+        "htp_arch": 73,
+        "soc_model": 43
+      }
+    }
+  },
+  "rejected_design": "ORT shared-EP-context generation produced 33 multi-graph binaries but QNN host retrieval rejected shared weights buffer as unsupported on this platform; the prepared route instead fuses sequential operations into 37 ordinary single-graph contexts.",
+  "route": {
+    "all_contexts_loaded_once": true,
+    "context_count": 37,
+    "cpu_boundary": [
+      "selected-row asymmetric Q4 embedding dequantization",
+      "request/token orchestration",
+      "global greedy argmax"
+    ],
+    "explicit_state": "22 convolution states and 8 attention K/V pairs",
+    "final_norm_contexts": 1,
+    "heads_per_group_ceiling": 4,
+    "layer_contexts": 30,
+    "lm_head_group_contexts": 6,
+    "per_request_or_token_context_reload": false,
+    "source_part_count": 263
+  },
+  "schema_version": 1
+}

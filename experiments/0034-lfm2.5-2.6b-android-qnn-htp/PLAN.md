@@ -35,12 +35,19 @@
 25. Ran one bounded physical gate; the Android linker stopped before `main` because the stage omitted `libc++_shared.so`. Preserved raw evidence and verified cleanup absent.
 26. Added the exact NDK r28b `libc++_shared.so`, rebuilt the 273-file manifest, and added an architecture-aware DT_NEEDED preflight that runs before phone.lock or ADB.
 27. Ran the corrected direct-QNN phone gate. The runtime loaded 57 exact contexts, then context 58 (`layer-07-up-0`) failed in `QnnContext_createFromBinary` before readiness/graph execution. Preserved raw evidence and verified cleanup absent.
+28. Probed ORT shared EP contexts: 263 ordered graphs compiled into 33 binaries, but host retrieval rejected the shared-weights buffer. Retained this as a rejected diagnostic rather than assuming Android support.
+29. Fused each layer's eight sequential parts into one graph and grouped four independent LM-head chunks per graph, reducing the loaded route to 37 ordinary contexts without context reload.
+30. ONNX-checked all 37 models and compiled every context fallback-disabled for SM8550/V73.
+31. Revalidated all traces: 1,583/1,583 source nodes map to 2,747 QNN operations with zero unsupported nodes.
+32. Compared five token steps against the 263-part CPU route: all greedy decisions match, and all logit/state deltas from changed optimization boundaries are retained.
+33. Loaded and executed fused layer 0 in x86 HTP emulation; both hidden/state outputs are finite and close to CPU reference.
+34. Rebuilt the direct runner for consolidated graph ABIs and prepared a hash-bound 48-file Android stage with 37 contexts; ELF and manifest preflights pass.
 
 ## In progress
 
-1. Host-side, consolidate the 263 graphs into fewer multi-graph/weight-sharing QNN contexts while preserving exact graph order, tensor ABI, state, and loaded-route semantics.
-2. Prove consolidated-context metadata, graph count/order, hashes, and host functional equivalence.
-3. Commit a prepared design before requesting any new phone gate. Do not replace the loaded route with per-token context reload.
+1. Commit the host-prepared 37-context milestone and send Pi/Kate the exact host-only claim boundary.
+2. Remain off the phone until Pi independently reviews the milestone and explicitly grants a single bounded gate.
+3. Do not run a campaign until a physical loaded-route viability result is committed and separately approved.
 
 ## Phone and campaign sequence
 

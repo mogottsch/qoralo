@@ -76,9 +76,16 @@ static void Require(StatusCode actual, const std::string& operation) {
 
 class DirectContext {
  public:
+  struct GraphSlot {
+    qnn_wrapper_api::GraphInfo_t* graph = nullptr;
+    Qnn_Tensor_t* inputs = nullptr;
+    Qnn_Tensor_t* outputs = nullptr;
+  };
+
   DirectContext(const QnnFunctionPointers& pointers, void* backend_library,
                 Qnn_BackendHandle_t backend, Qnn_DeviceHandle_t device,
-                Qnn_ProfileHandle_t profile, const fs::path& binary)
+                Qnn_ProfileHandle_t profile, const fs::path& binary,
+                const std::vector<std::string>& aliases)
       : app_(std::make_unique<QnnSampleApp>(
             pointers, "", "", backend_library, "", false,
             qnn::tools::iotensor::OutputDataType::FLOAT_ONLY,
@@ -92,27 +99,41 @@ class DirectContext {
     if (app_->isFinalizeDeserializedGraphSupported() == StatusCode::SUCCESS) {
       Require(app_->finalizeGraphs(), "finalize deserialized graph " + binary.string());
     }
-    if (app_->m_graphsCount != 1) throw std::runtime_error("expected one graph in " + binary.string());
-    graph_ = &(*app_->m_graphsInfo)[0];
-    if (app_->m_ioTensor.setupInputAndOutputTensors(&inputs_, &outputs_, *graph_) !=
-        qnn::tools::iotensor::StatusCode::SUCCESS) {
-      throw std::runtime_error("setup QNN tensors failed: " + binary.string());
+    if (app_->m_graphsCount != aliases.size()) {
+      throw std::runtime_error("graph/alias count mismatch in " + binary.string());
+    }
+    slots_.resize(aliases.size());
+    for (size_t index = 0; index < aliases.size(); ++index) {
+      auto& slot = slots_[index];
+      slot.graph = &(*app_->m_graphsInfo)[index];
+      if (app_->m_ioTensor.setupInputAndOutputTensors(&slot.inputs, &slot.outputs, *slot.graph) !=
+          qnn::tools::iotensor::StatusCode::SUCCESS) {
+        throw std::runtime_error("setup QNN tensors failed: " + aliases[index]);
+      }
+      aliases_[aliases[index]] = index;
     }
   }
 
   ~DirectContext() {
-    if (graph_) {
-      app_->m_ioTensor.tearDownInputAndOutputTensors(
-          inputs_, outputs_, graph_->numInputTensors, graph_->numOutputTensors);
+    for (auto& slot : slots_) {
+      if (slot.graph) app_->m_ioTensor.tearDownInputAndOutputTensors(
+          slot.inputs, slot.outputs, slot.graph->numInputTensors, slot.graph->numOutputTensors);
     }
     if (app_ && app_->m_isContextCreated) app_->freeContext();
   }
 
-  std::vector<std::vector<float>> Run(const std::vector<Input>& values,
+  std::vector<std::vector<float>> Run(const std::string& alias,
+                                      const std::vector<Input>& values,
                                       const std::vector<std::string>& requested_outputs) {
-    if (values.size() != graph_->numInputTensors) throw std::runtime_error("QNN input count mismatch");
-    for (uint32_t index = 0; index < graph_->numInputTensors; ++index) {
-      Qnn_Tensor_t& tensor = inputs_[index];
+    const auto found_slot = aliases_.find(alias);
+    if (found_slot == aliases_.end()) throw std::runtime_error("missing graph alias: " + alias);
+    auto& slot = slots_[found_slot->second];
+    auto* graph = slot.graph;
+    auto* inputs = slot.inputs;
+    auto* outputs = slot.outputs;
+    if (values.size() != graph->numInputTensors) throw std::runtime_error("QNN input count mismatch");
+    for (uint32_t index = 0; index < graph->numInputTensors; ++index) {
+      Qnn_Tensor_t& tensor = inputs[index];
       const std::string name = QNN_TENSOR_GET_NAME(tensor) ? QNN_TENSOR_GET_NAME(tensor) : "";
       auto found = std::find_if(values.begin(), values.end(), [&](const Input& item) { return item.name == name; });
       if (found == values.end()) throw std::runtime_error("missing QNN input: " + name);
@@ -129,7 +150,7 @@ class DirectContext {
       std::memcpy(QNN_TENSOR_GET_CLIENT_BUF(tensor).data, found->data, bytes);
     }
     const Qnn_ErrorHandle_t status = app_->m_qnnFunctionPointers.qnnInterface.graphExecute(
-        graph_->graph, inputs_, graph_->numInputTensors, outputs_, graph_->numOutputTensors,
+        graph->graph, inputs, graph->numInputTensors, outputs, graph->numOutputTensors,
         app_->m_profileBackendHandle, nullptr);
     if (status != QNN_GRAPH_NO_ERROR) {
       throw std::runtime_error("QnnGraph_execute failed: " + std::to_string(status));
@@ -138,8 +159,8 @@ class DirectContext {
     copied.reserve(requested_outputs.size());
     for (const auto& requested : requested_outputs) {
       bool matched = false;
-      for (uint32_t index = 0; index < graph_->numOutputTensors; ++index) {
-        Qnn_Tensor_t& tensor = outputs_[index];
+      for (uint32_t index = 0; index < graph->numOutputTensors; ++index) {
+        Qnn_Tensor_t& tensor = outputs[index];
         const std::string name = QNN_TENSOR_GET_NAME(tensor) ? QNN_TENSOR_GET_NAME(tensor) : "";
         if (name != requested) continue;
         if (QNN_TENSOR_GET_DATA_TYPE(tensor) != QNN_DATATYPE_FLOAT_32) {
@@ -158,9 +179,8 @@ class DirectContext {
 
  private:
   std::unique_ptr<QnnSampleApp> app_;
-  qnn_wrapper_api::GraphInfo_t* graph_ = nullptr;
-  Qnn_Tensor_t* inputs_ = nullptr;
-  Qnn_Tensor_t* outputs_ = nullptr;
+  std::vector<GraphSlot> slots_;
+  std::unordered_map<std::string, size_t> aliases_;
 };
 
 static bool IsAttention(int layer) {
@@ -211,6 +231,7 @@ class Runner {
 
   ~Runner() {
     sessions_.clear();
+    contexts_.clear();
     if (owner_) {
       owner_->freeDevice();
       owner_->terminateBackend();
@@ -235,6 +256,7 @@ class Runner {
   }
 
   int RunToken(int token, int position, bool sample) {
+    if (consolidated_) return RunTokenConsolidated(token, position, sample);
     if (position < 0 || position >= kCacheLength) throw std::runtime_error("position out of range");
     std::vector<float> hidden = Embedding(token);
     std::string hidden_name = "/model/embed_tokens/GatherBlockQuantized/output_0";
@@ -341,9 +363,70 @@ class Runner {
     return best_token;
   }
 
-  size_t SessionCount() const { return sessions_.size(); }
+  size_t SessionCount() const { return contexts_.size(); }
 
  private:
+  int RunTokenConsolidated(int token, int position, bool sample) {
+    if (position < 0 || position >= kCacheLength) throw std::runtime_error("position out of range");
+    std::vector<float> hidden = Embedding(token);
+    std::string hidden_name = "/model/embed_tokens/GatherBlockQuantized/output_0";
+    std::vector<float> mask(kCapacity, -65504.0f);
+    std::fill(mask.begin(), mask.begin() + position, 0.0f);
+    mask.back() = 0.0f;
+    int64_t position_value = position;
+    for (int layer = 0; layer < kLayers; ++layer) {
+      std::vector<Input> inputs = {{hidden_name, Input::Type::Float, hidden.data(), hidden.size(), {1, 1, kHidden}}};
+      const std::string next_hidden = "/model/layers." + std::to_string(layer) + "/Add_2/output_0";
+      std::vector<std::string> outputs = {next_hidden};
+      if (IsAttention(layer)) {
+        inputs.push_back({"position_ids", Input::Type::Int64, &position_value, 1, {1, 1}});
+        inputs.push_back({"attention_mask", Input::Type::Float, mask.data(), mask.size(), {1, 1, 1, kCapacity}});
+        inputs.push_back({"past_key_values." + std::to_string(layer) + ".key", Input::Type::Float, key_[layer].data(), key_[layer].size(), {1, 8, 64, kCacheLength}});
+        inputs.push_back({"past_key_values." + std::to_string(layer) + ".value", Input::Type::Float, value_[layer].data(), value_[layer].size(), {1, 8, kCacheLength, 64}});
+        outputs.push_back("present." + std::to_string(layer) + ".key");
+        outputs.push_back("present." + std::to_string(layer) + ".value");
+      } else {
+        inputs.push_back({"past_conv." + std::to_string(layer), Input::Type::Float, conv_[layer].data(), conv_[layer].size(), {1, kHidden, 3}});
+        outputs.push_back("present_conv." + std::to_string(layer));
+      }
+      auto values = Run("layer-" + (layer < 10 ? std::string("0") : std::string()) + std::to_string(layer), inputs, outputs);
+      hidden = std::move(values[0]);
+      hidden_name = next_hidden;
+      if (IsAttention(layer)) {
+        for (int head = 0; head < 8; ++head) for (int dim = 0; dim < 64; ++dim) {
+          key_[layer][(head * 64 + dim) * kCacheLength + position] = values[1][head * 64 + dim];
+          value_[layer][(head * kCacheLength + position) * 64 + dim] = values[2][head * 64 + dim];
+        }
+      } else {
+        conv_[layer] = std::move(values[1]);
+      }
+    }
+    if (!sample) return -1;
+    const std::string normalized_name = "/model/layers.30/final_norm_layernorm/output_0";
+    auto normalized = Run("final-norm", {{hidden_name, Input::Type::Float, hidden.data(), hidden.size(), {1, 1, kHidden}}}, {normalized_name})[0];
+    float best = -std::numeric_limits<float>::infinity();
+    int best_token = -1;
+    int offset = 0;
+    for (int group = 0; group < 6; ++group) {
+      std::vector<std::string> output_names;
+      int group_width = 0;
+      for (int chunk = group * 4; chunk < std::min(22, group * 4 + 4); ++chunk) {
+        int remaining = kVocab - offset - group_width;
+        int width = remaining == 5120 ? 4096 : std::min(6144, remaining);
+        output_names.push_back("logits_vocab_" + std::to_string(offset + group_width) + "_" + std::to_string(offset + group_width + width));
+        group_width += width;
+      }
+      auto chunks = Run("heads-0" + std::to_string(group), {{normalized_name, Input::Type::Float, normalized.data(), normalized.size(), {1, 1, kHidden}}}, output_names);
+      for (const auto& logits : chunks) {
+        for (size_t index = 0; index < logits.size(); ++index) if (logits[index] > best) {
+          best = logits[index]; best_token = offset + static_cast<int>(index);
+        }
+        offset += static_cast<int>(logits.size());
+      }
+    }
+    return best_token;
+  }
+
   fs::path root_;
   MappedFile quant_;
   MappedFile scales_;
@@ -352,7 +435,9 @@ class Runner {
   void* backend_library_ = nullptr;
   void* model_library_ = nullptr;
   std::unique_ptr<QnnSampleApp> owner_;
-  std::unordered_map<std::string, std::unique_ptr<DirectContext>> sessions_;
+  bool consolidated_ = false;
+  std::vector<std::unique_ptr<DirectContext>> contexts_;
+  std::unordered_map<std::string, DirectContext*> sessions_;
   std::unordered_map<int, std::vector<float>> conv_;
   std::unordered_map<int, std::vector<float>> key_;
   std::unordered_map<int, std::vector<float>> value_;
@@ -394,12 +479,54 @@ class Runner {
       std::snprintf(value, sizeof(value), "%02d", chunk);
       names.push_back("head-" + std::string(value));
     }
+    fs::path shared_manifest = root_ / "shared-contexts.tsv";
+    if (fs::exists(root_ / "consolidated-contexts.tsv")) {
+      shared_manifest = root_ / "consolidated-contexts.tsv";
+      consolidated_ = true;
+    }
+    if (fs::exists(shared_manifest)) {
+      std::ifstream stream(shared_manifest);
+      if (!stream) throw std::runtime_error("cannot open shared context manifest");
+      std::string line;
+      size_t loaded_graphs = 0;
+      while (std::getline(stream, line)) {
+        if (line.empty()) continue;
+        std::vector<std::string> fields;
+        size_t begin = 0;
+        while (true) {
+          size_t end = line.find('\t', begin);
+          fields.push_back(line.substr(begin, end - begin));
+          if (end == std::string::npos) break;
+          begin = end + 1;
+        }
+        if (fields.size() < 2) throw std::runtime_error("invalid shared context manifest line");
+        std::vector<std::string> aliases(fields.begin() + 1, fields.end());
+        std::cerr << "loading_shared_context=" << fields[0] << " graphs=" << aliases.size() << "\n";
+        auto context = std::make_unique<DirectContext>(
+            pointers_, backend_library_, owner_->m_backendHandle, owner_->m_deviceHandle,
+            owner_->m_profileBackendHandle, root_ / fields[0], aliases);
+        for (const auto& alias : aliases) {
+          if (!sessions_.emplace(alias, context.get()).second) throw std::runtime_error("duplicate graph alias: " + alias);
+        }
+        loaded_graphs += aliases.size();
+        contexts_.push_back(std::move(context));
+      }
+      const size_t expected = consolidated_ ? 37 : names.size();
+      if (loaded_graphs != expected || sessions_.size() != expected) {
+        throw std::runtime_error("context manifest does not cover exact pipeline");
+      }
+      std::cerr << "loaded_contexts=" << contexts_.size() << " loaded_graphs=" << loaded_graphs << "\n";
+      return;
+    }
     for (size_t index = 0; index < names.size(); ++index) {
       const auto& name = names[index];
       std::cerr << "loading_context=" << name << "\n";
-      sessions_[name] = std::make_unique<DirectContext>(
+      auto context = std::make_unique<DirectContext>(
           pointers_, backend_library_, owner_->m_backendHandle, owner_->m_deviceHandle,
-          owner_->m_profileBackendHandle, root_ / "contexts" / name / "context_qnn.bin");
+          owner_->m_profileBackendHandle, root_ / "contexts" / name / "context_qnn.bin",
+          std::vector<std::string>{name});
+      sessions_[name] = context.get();
+      contexts_.push_back(std::move(context));
       if ((index + 1) % 20 == 0 || index + 1 == names.size()) {
         std::cerr << "loaded_contexts=" << (index + 1) << "/" << names.size() << "\n";
       }
@@ -411,7 +538,7 @@ class Runner {
                                       const std::vector<std::string>& output_names) {
     auto found = sessions_.find(session_name);
     if (found == sessions_.end()) throw std::runtime_error("missing context: " + session_name);
-    return found->second->Run(inputs, output_names);
+    return found->second->Run(session_name, inputs, output_names);
   }
 };
 
