@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
-  "status": "host_cache_quantization_corrected_recompiled_phone_gate_required",
+  "status": "cache_corrected_phone_stage_ready_waiting_device_identity_and_priority",
   "question": "Can Gemma 4 E2B IT run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Gemma 4 E2B IT text generation only",
@@ -268,6 +268,7 @@
     },
     "sampled_lut_fidelity_within_half_step": true,
     "backend": "QnnHtp",
+    "context_sha256": "a1d52d0087a0719d5907a98d99e8bc5996b699c9cf8f3a21b301588b9f51cc44",
     "sampling": "greedy",
     "max_new_tokens": 2048,
     "required_backend_extension": {
@@ -279,6 +280,21 @@
     "phone_access": false,
     "physical_htp_execution": false,
     "inference": false
+  },
+  "cache_corrected_phone_stage": {
+    "result_path": "results/cache-corrected-phone-stage/result.json",
+    "classification": "positive_host_cache_corrected_phone_stage_preparation",
+    "source_bundle_context_sha256": "a1d52d0087a0719d5907a98d99e8bc5996b699c9cf8f3a21b301588b9f51cc44",
+    "viability_output_ceiling_tokens": 16,
+    "canonical_campaign": false,
+    "required_runtime_completeness": true,
+    "all_manifest_files_verified": true,
+    "sha256sums_complete_and_verified": true,
+    "permissions_verified": true,
+    "adb_used": false,
+    "phone_lock_acquired": false,
+    "phone_identity_verified": false,
+    "phone_run_authorized_now": false
   },
   "phone_viability_attempt_01": {
     "result_path": "results/android-qnn-physical-viability-attempt-01/result.json",
@@ -322,7 +338,7 @@
     "further_retry_performed": false
   },
   "campaign_gate": {
-    "phone_priority": "follows coordinated GPU paths; no ADB until Pi explicitly grants priority",
+    "phone_priority": "next after R5CW81PR8SY reconnects as device and Pi verifies identity and explicitly transfers priority; no ADB before that handoff",
     "bounded_viability_first": true,
     "canonical_after_viability": true,
     "request_isolation_candidate": "One loaded Genie Engine with a fresh Dialog per logical request, or a proven full GenieDialog_reset; measure reset/creation separately and reject retained KV/prefix reuse.",

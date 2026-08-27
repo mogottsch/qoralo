@@ -2,7 +2,7 @@
 
 ## Status
 
-**The host-side cache contract is corrected and recompiled. A schema-standard AR1 output boundary now maps all 15 value caches to the exact uFxp16 scale/offset used by AR1 inputs and AR128 inputs/outputs. Official metadata for the rebuilt SM8550/v73 weight-shared context confirms all 15 four-way signatures are identical. This clears the attempt-02 host blocker only: the rebuilt context has not been loaded or executed on the phone, and no output or performance result exists. A new phone gate still requires Pi's explicit priority transfer.**
+**The host-side cache contract is corrected and recompiled, and the private 16-token phone stage is rebuilt and hash-verified around the new context. All 15 value-cache datatype/scale/offset signatures are identical across AR1 inputs/outputs and AR128 inputs/outputs. This clears the attempt-02 host blocker only: the rebuilt context has not been loaded or executed on the phone, and no output or performance result exists. Wait for `R5CW81PR8SY` to reconnect and for Pi to verify identity and explicitly transfer phone priority.**
 
 This experiment is a separate HTP arm for the model studied in `0025`. It does not rewrite or relabel the CPU/GPU evidence there.
 
@@ -88,7 +88,11 @@ The one authorized corrected retry then loaded the extension, initialized the ph
 
 The host-side blocker is now corrected without changing the checkpoint or weakening Genie validation. The correction adds a schema-standard ONNX float fork and `QuantizeLinear` boundary at each of the 15 public AR1 value-cache outputs, using the already-bound QAT scale and uint16 zero point 32768 (QNN offset -32768). QNN conversion retains all 2,280,676,608 parameters and all 31 outputs; every output is now uFxp16. The resulting 1,186,369,536-byte weight-shared context has SHA-256 `a1d52d0087a0719d5907a98d99e8bc5996b699c9cf8f3a21b301588b9f51cc44`. `qnn-context-binary-utility` identifies QNN HTP backend ID 6, SM8550/v73 markers, both 38-input/31-output graphs, and 15 value-cache contracts whose AR1 input/output and AR128 input/output datatype, scale, and offset signatures are exactly identical. See [`results/qairt-2.49.40-cache-quantization-correction/result.json`](results/qairt-2.49.40-cache-quantization-correction/result.json).
 
-The boundary is compiled inside the HTP-targeted graph; it is not a host CPU cache conversion. QAIRT still reports float-precision component fallbacks around affected normalization paths, so this is not a uniform-integer claim. More importantly, host compilation does not prove physical context acceptance or execution. No retry or campaign is authorized yet. After independent review and an explicit Pi phone-priority transfer, the private runtime bundle/stage must be rebuilt around the new context before one separately bounded 16-token physical gate. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
+The boundary is compiled inside the HTP-targeted graph; it is not a host CPU cache conversion. QAIRT still reports float-precision component fallbacks around affected normalization paths, so this is not a uniform-integer claim. More importantly, host compilation does not prove physical context acceptance or execution.
+
+The private runtime bundle and phone stage are now rebuilt around the corrected context. The stage reuses the exact tokenizer, source-derived LUTs, QnnHtp runtime dependencies, canonical short prompt, and 16-token viability ceiling; all manifest hashes, `SHA256SUMS`, required dependencies, and restrictive permissions pass. Stage preparation used no ADB and did not acquire `phone.lock`. See [`results/cache-corrected-phone-stage/result.json`](results/cache-corrected-phone-stage/result.json).
+
+No phone attempt, retry, or campaign is authorized yet. Wait for `R5CW81PR8SY` to reconnect as `device` and for Pi to verify identity and explicitly transfer phone priority; then run one bounded 16-token gate only. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
 
 ## Proof boundary
 

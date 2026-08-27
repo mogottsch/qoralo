@@ -12,6 +12,8 @@ EXP = Path(__file__).resolve().parents[1]
 BUNDLE = EXP / ".local/runtime-bundle"
 STAGE = EXP / ".local/phone-stage"
 SHORT = EXP / "protocol/rendered/short.txt"
+CONTEXT_NAME = "models/weight_sharing_model_ar128_ar1_cl4096_scl512_1_of_1.serialized.bin"
+EXPECTED_CONTEXT_SHA256 = "a1d52d0087a0719d5907a98d99e8bc5996b699c9cf8f3a21b301588b9f51cc44"
 
 
 def sha256(path: Path) -> str:
@@ -53,6 +55,8 @@ def main() -> None:
     missing = [name for name in required_runtime_files if not (STAGE / name).is_file()]
     if missing:
         raise RuntimeError(f"incomplete QnnHtp runtime stage, missing: {missing}")
+    if sha256(STAGE / CONTEXT_NAME) != EXPECTED_CONTEXT_SHA256:
+        raise RuntimeError("phone stage does not contain the cache-corrected context")
 
     script = """log create log1 verbose genie-verbose.log
 profile create profile1
@@ -88,6 +92,7 @@ exit
         "phone_lock_acquired": False,
         "required_runtime_files": required_runtime_files,
         "stage_completeness_check_passed": True,
+        "corrected_context_sha256": EXPECTED_CONTEXT_SHA256,
         "files": files,
     }
     (STAGE / "stage-manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")

@@ -44,7 +44,9 @@ The missing QAIRT 2.49.40 Android extension is now hash-bound in the bundle and 
 
 The host-side cache correction now passes. A schema-standard ONNX float fork plus `QuantizeLinear` boundary applies the source QAT uint16 scale/zero-point contract to all 15 public AR1 value-cache outputs without modifying checkpoint bytes or adding a host CPU boundary. The corrected DLC retains 2,280,676,608 parameters and 31/31 uFxp16 outputs. The rebuilt weight-shared SM8550/v73 context has QNN HTP backend ID 6, two 38-input/31-output graphs, and exact four-way datatype/scale/offset identity across every AR1-input/AR1-output/AR128-input/AR128-output value-cache contract. QAIRT still reports float-precision component fallbacks, so this is not a uniform-integer or physical-execution claim.
 
-The active next step is review and a separately authorized physical gate: after Pi verifies the durable host evidence and explicitly transfers phone priority, rebuild the private runtime bundle/stage around the corrected context and run one locked 16-token attempt. Do not access ADB, weaken Genie validation, or start a campaign before that handoff. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
+Pi independently reviewed and pushed the host correction. The private runtime bundle and stage are now rebuilt around the corrected context; all file hashes, `SHA256SUMS`, required runtime dependencies, and restrictive permissions pass. This preparation used no ADB and did not acquire `phone.lock`.
+
+The active next step is to wait for `R5CW81PR8SY` to reconnect as `device` and for Pi to verify identity and explicitly transfer phone priority. Then run exactly one locked 16-token physical gate, with no retry or campaign. Do not access ADB, weaken Genie validation, or start a campaign before that handoff. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
 
 ## Stop conditions
 

@@ -1,0 +1,43 @@
+{
+  "authorization_boundary": {
+    "adb_used": false,
+    "expected_serial": "R5CW81PR8SY",
+    "phone_identity_verified": false,
+    "phone_lock_acquired": false,
+    "phone_run_authorized_now": false
+  },
+  "claim_boundary": "The private stage is complete, permission-hardened, and hash-bound to the cache-corrected context, exact runtime dependencies, canonical short prompt, and 16-token gate. Preparation and validation used no ADB and did not acquire phone.lock. This is not phone identity, context loading, physical HTP execution, no-fallback, output, or performance evidence.",
+  "classification": "positive_host_cache_corrected_phone_stage_preparation",
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "next_gate": "Wait for R5CW81PR8SY to reconnect as device and for Pi to verify identity and explicitly transfer phone priority; then run exactly one locked 16-token gate, with no retry or campaign.",
+  "schema_version": 1,
+  "stage": {
+    "all_manifest_files_verified": true,
+    "canonical_campaign": false,
+    "canonical_short_rendered_sha256": "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a",
+    "corrected_context_sha256": "a1d52d0087a0719d5907a98d99e8bc5996b699c9cf8f3a21b301588b9f51cc44",
+    "file_count": 17,
+    "logical_bytes": 4003765361,
+    "permissions_verified": true,
+    "private_root": ".local/phone-stage",
+    "required_runtime_completeness": true,
+    "required_runtime_files": [
+      "bin/genie-app",
+      "lib/libGenie.so",
+      "lib/libQnnHtp.so",
+      "lib/libQnnSystem.so",
+      "lib/libQnnHtpV73Stub.so",
+      "lib/libQnnHtpV73Skel.so",
+      "lib/libQnnHtpNetRunExtensions.so",
+      "htp_backend_ext_config.json"
+    ],
+    "sha256sums_bytes": 1635,
+    "sha256sums_complete_and_verified": true,
+    "sha256sums_sha256": "4e7ef82d678910257aa1b1988b05f96cfaa679d396da184618b6462d159a0428",
+    "source_bundle_manifest_sha256": "28ddcd26bfb9cbdf6bf57e9654594835461c3be69a394b5a5d40e0df143cc664",
+    "stage_manifest_bytes": 3350,
+    "stage_manifest_sha256": "84544711f37540b115ab72e65edb50c2ffeb0cad2056387d6dba9c9fc7bbe5f4",
+    "viability_output_ceiling_tokens": 16
+  },
+  "status": "cache_corrected_phone_stage_ready_waiting_device_identity_and_priority"
+}

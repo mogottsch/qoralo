@@ -16,7 +16,7 @@ EXP = Path(__file__).resolve().parents[1]
 BUNDLE = EXP / ".local/runtime-bundle"
 CHECKPOINT = EXP / ".local/hf-checkpoint/model.safetensors"
 OUT = EXP / "results/gemma4-sm8550-runtime-bundle/result.json"
-EXPECTED_CONTEXT = "b8c169cedf9a00dde67e2e555805b1a773cb6fd128f5c3912a684c371f4af95a"
+EXPECTED_CONTEXT = "a1d52d0087a0719d5907a98d99e8bc5996b699c9cf8f3a21b301588b9f51cc44"
 EXPECTED_TOKENIZER = "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f"
 
 
@@ -104,7 +104,7 @@ def main() -> None:
         "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
         "classification": "positive_host_runtime_bundle_and_lut_fidelity",
         "claim_boundary": (
-            "A private Genie bundle now binds the SM8550/v73 context, exact tokenizer, QnnHtp runtime libraries, "
+            "A private Genie bundle now binds the cache-corrected SM8550/v73 context, exact tokenizer, QnnHtp runtime libraries, "
             "and source-derived token/PLE LUTs whose sampled dequantization error is within half of one uint8 step. "
             "This is host preparation only; no Android staging, physical HTP loading/execution, text, or performance is claimed."
         ),

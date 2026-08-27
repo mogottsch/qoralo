@@ -5,10 +5,17 @@ REPO=$(cd "$EXP/../.." && pwd)
 ADB=${ADB:-adb}
 SERIAL=${SERIAL:-R5CW81PR8SY}
 STAGE=${STAGE:-$EXP/.local/phone-stage}
+EXPECTED_CONTEXT_SHA256=a1d52d0087a0719d5907a98d99e8bc5996b699c9cf8f3a21b301588b9f51cc44
 RUN_ID=${RUN_ID:-viability-$(date -u +%Y%m%dT%H%M%SZ)-$$}
 REMOTE="/data/local/tmp/vibevoice-0031-gemma4-qnn-$RUN_ID"
 OUT="$EXP/.local/phone-runs/$RUN_ID"
 mkdir -p "$OUT"
+python3 - "$STAGE/stage-manifest.json" "$EXPECTED_CONTEXT_SHA256" <<'PY'
+import json, sys
+manifest = json.load(open(sys.argv[1]))
+if manifest.get("corrected_context_sha256") != sys.argv[2]:
+    raise SystemExit("phone stage is not bound to the cache-corrected context")
+PY
 exec 9>"$REPO/artifacts/locks/phone.lock"
 flock -n 9 || { echo "phone lock busy" >&2; exit 75; }
 adb_cmd() { "$ADB" -s "$SERIAL" "$@" 9>&-; }

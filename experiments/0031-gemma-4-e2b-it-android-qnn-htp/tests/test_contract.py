@@ -107,7 +107,7 @@ class ContractTest(unittest.TestCase):
     def test_historical_transform_blocker_and_active_no_execution_claim(self) -> None:
         blocker = json.loads((EXP / "results/transform-blocker/result.json").read_text())
         self.assertEqual(
-            "host_cache_quantization_corrected_recompiled_phone_gate_required",
+            "cache_corrected_phone_stage_ready_waiting_device_identity_and_priority",
             self.contract["status"],
         )
         active = self.contract["conversion_blocker"]
@@ -142,6 +142,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/qairt-2.49.40-sm8550-context",
             EXP / "results/qairt-2.49.40-cache-quantization-correction",
             EXP / "results/gemma4-sm8550-runtime-bundle",
+            EXP / "results/cache-corrected-phone-stage",
             EXP / "results/android-qnn-physical-viability-attempt-01",
             EXP / "results/android-qnn-physical-viability-attempt-02",
         ):
@@ -255,6 +256,10 @@ class ContractTest(unittest.TestCase):
         self.assertEqual("QnnHtp", result["runtime"]["backend"])
         self.assertEqual("greedy", result["runtime"]["sampling"])
         self.assertEqual(2048, result["runtime"]["max_new_tokens"])
+        self.assertEqual(
+            "a1d52d0087a0719d5907a98d99e8bc5996b699c9cf8f3a21b301588b9f51cc44",
+            result["runtime"]["context_sha256"],
+        )
         for lut in result["luts"].values():
             self.assertTrue(lut["fidelity"]["within_half_step"])
             self.assertLessEqual(
@@ -304,6 +309,28 @@ class ContractTest(unittest.TestCase):
         self.assertEqual("absent", result["stage"]["remote_cleanup_status"])
         self.assertFalse(result["gate"]["further_retry_performed"])
 
+    def test_cache_corrected_phone_stage_is_ready_without_phone_access(self) -> None:
+        result = json.loads(
+            (EXP / "results/cache-corrected-phone-stage/result.json").read_text()
+        )
+        self.assertEqual(
+            "positive_host_cache_corrected_phone_stage_preparation",
+            result["classification"],
+        )
+        self.assertEqual(
+            "a1d52d0087a0719d5907a98d99e8bc5996b699c9cf8f3a21b301588b9f51cc44",
+            result["stage"]["corrected_context_sha256"],
+        )
+        self.assertEqual(16, result["stage"]["viability_output_ceiling_tokens"])
+        self.assertFalse(result["stage"]["canonical_campaign"])
+        self.assertTrue(result["stage"]["required_runtime_completeness"])
+        self.assertTrue(result["stage"]["all_manifest_files_verified"])
+        self.assertTrue(result["stage"]["sha256sums_complete_and_verified"])
+        self.assertTrue(result["stage"]["permissions_verified"])
+        self.assertFalse(result["authorization_boundary"]["adb_used"])
+        self.assertFalse(result["authorization_boundary"]["phone_lock_acquired"])
+        self.assertFalse(result["authorization_boundary"]["phone_run_authorized_now"])
+
     def test_bounded_phone_gate_script_holds_lock_and_cleans_scope(self) -> None:
         script = (EXP / "tools/run_phone_viability.sh").read_text()
         self.assertIn('artifacts/locks/phone.lock', script)
@@ -313,6 +340,8 @@ class ContractTest(unittest.TestCase):
         self.assertIn("rm -rf '$REMOTE'", script)
         self.assertIn("remote-hash-check.txt", script)
         self.assertIn("libQnnHtpNetRunExtensions.so", script)
+        self.assertIn("EXPECTED_CONTEXT_SHA256", script)
+        self.assertIn("a1d52d0087a0719d5907a98d99e8bc5996b699c9cf8f3a21b301588b9f51cc44", script)
         self.assertIn("stage_completeness_check_passed", (EXP / "tools/prepare_phone_stage.py").read_text())
 
     def test_phone_and_campaign_are_not_claimed(self) -> None:
