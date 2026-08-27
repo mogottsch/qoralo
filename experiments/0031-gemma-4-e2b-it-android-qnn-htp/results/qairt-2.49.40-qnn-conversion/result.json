@@ -1,0 +1,154 @@
+{
+  "claim_boundary": "Both bound static Gemma4 variants converted to QAIRT DLC with backend=HTP and quantization overrides. This proves host QNN conversion only; no HTP compilation, serialized context, partition acceptance, Android execution, or inference is claimed.",
+  "classification": "positive_host_qnn_conversion_result",
+  "converted_models": [
+    {
+      "ar": 1,
+      "bytes": 2356831668,
+      "name": "ar1_cl4096_1_of_1",
+      "path": ".local/qairt-2.49.40-transform-compat/c576afe7d7944d85f697569ae1dcacb3ed15918cffd7708bacb11df18ea4c3ad/ar1_cl4096_1_of_1.dlc",
+      "sha256": "02a790601b561a9ebb122c3101b916dfe8e3496435eee08a514237112a57ff68"
+    },
+    {
+      "ar": 128,
+      "bytes": 2356851284,
+      "name": "ar128_cl4096_1_of_1",
+      "path": ".local/qairt-2.49.40-transform-compat/b6d26811dd2e256e852d69eb1742afa7db057b47c58401f6b4ce394ee9847e4b/ar128_cl4096_1_of_1.dlc",
+      "sha256": "5f17ece8a99cd649abdadb61e2e104e5cd569a1d1735e9e6ecb5c297286156ee"
+    }
+  ],
+  "dlc_info": [
+    {
+      "ar": 1,
+      "dlc_path": ".local/qairt-2.49.40-transform-compat/c576afe7d7944d85f697569ae1dcacb3ed15918cffd7708bacb11df18ea4c3ad/ar1_cl4096_1_of_1.dlc",
+      "estimated_steady_state_memory_mib": 8699.7,
+      "float16_outputs": [
+        "swa_value_0_h0_out",
+        "swa_value_1_h0_out",
+        "swa_value_2_h0_out",
+        "swa_value_3_h0_out",
+        "past_value_4_h0_out",
+        "swa_value_5_h0_out",
+        "swa_value_6_h0_out",
+        "swa_value_7_h0_out",
+        "swa_value_8_h0_out",
+        "past_value_9_h0_out",
+        "swa_value_10_h0_out",
+        "swa_value_11_h0_out",
+        "swa_value_12_h0_out",
+        "swa_value_13_h0_out",
+        "past_value_14_h0_out"
+      ],
+      "macs_reported": "117644800M",
+      "ops": [
+        "Concat",
+        "Conv2d",
+        "Convert",
+        "ElementWiseNeuron",
+        "Eltwise_Binary",
+        "FullyConnected",
+        "Gather",
+        "MatMul",
+        "Reduce",
+        "Reshape",
+        "RmsNorm",
+        "Softmax",
+        "StridedSlice",
+        "Transpose"
+      ],
+      "output_count": 31,
+      "output_type_counts": {
+        "Float_16": 15,
+        "uFxp_16": 16
+      },
+      "parameters": 2280676608,
+      "report_bytes": 22408537,
+      "report_path": ".local/qairt-2.49.40-convert-run/dlc-2.stdout.log",
+      "report_sha256": "d6a29fe7bc500c163e0b96e2bad7e460cca3f1b6e30736a57059a32cf8a12439"
+    },
+    {
+      "ar": 128,
+      "dlc_path": ".local/qairt-2.49.40-transform-compat/b6d26811dd2e256e852d69eb1742afa7db057b47c58401f6b4ce394ee9847e4b/ar128_cl4096_1_of_1.dlc",
+      "estimated_steady_state_memory_mib": 9226.8,
+      "float16_outputs": [],
+      "macs_reported": "15058534526M",
+      "ops": [
+        "Concat",
+        "Conv2d",
+        "Convert",
+        "ElementWiseNeuron",
+        "Eltwise_Binary",
+        "FullyConnected",
+        "Gather",
+        "MatMul",
+        "Reduce",
+        "Reshape",
+        "RmsNorm",
+        "Softmax",
+        "StridedSlice",
+        "Transpose"
+      ],
+      "output_count": 31,
+      "output_type_counts": {
+        "uFxp_16": 31
+      },
+      "parameters": 2280676608,
+      "report_bytes": 23783983,
+      "report_path": ".local/qairt-2.49.40-convert-run/dlc-1.stdout.log",
+      "report_sha256": "dadfa18a13e60ac593364e1552fc22b1aa3fb82e9da5ac2a1a40db221daf5daa"
+    }
+  ],
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "host_memory_coordination": "Conversion ran alone after checking actual host memory pressure; heavy-ram.lock is retired.",
+  "next_gate": "Compile the two DLCs together in weight-sharing mode for chipset:SM8550/HTP v73, then inspect the serialized context and graph/provider metadata before phone staging.",
+  "qairt_version": "2.49.40.260810",
+  "quantization": {
+    "activations_published_precision": "a16",
+    "ar128_float16_outputs": [],
+    "ar1_float16_outputs": [
+      "swa_value_0_h0_out",
+      "swa_value_1_h0_out",
+      "swa_value_2_h0_out",
+      "swa_value_3_h0_out",
+      "past_value_4_h0_out",
+      "swa_value_5_h0_out",
+      "swa_value_6_h0_out",
+      "swa_value_7_h0_out",
+      "swa_value_8_h0_out",
+      "past_value_9_h0_out",
+      "swa_value_10_h0_out",
+      "swa_value_11_h0_out",
+      "swa_value_12_h0_out",
+      "swa_value_13_h0_out",
+      "past_value_14_h0_out"
+    ],
+    "boundary": "The converter reports 15 RmsNorm float fallbacks per variant. AR1 exposes its 15 value-cache outputs as Float_16 while AR128 exposes all outputs as uFxp_16. These facts are retained for compile/runtime validation and are not silently relabeled as uniform integer execution.",
+    "converter_float_fallback_op_kind": "RmsNorm",
+    "converter_float_fallback_ops_per_variant": [
+      15,
+      15
+    ],
+    "converter_float_fallback_warning_groups": 2,
+    "overrides_supplied": true,
+    "weights_published_precision": "w4"
+  },
+  "raw_logs": {
+    "stderr.log": {
+      "bytes": 1963,
+      "sha256": "05eb05e65694d29cb3b8e510f334863b569f6c39f44dbcb15948bafb59f8ea77"
+    },
+    "stdout.log": {
+      "bytes": 28257,
+      "sha256": "4a571f625a799bfb2f39bd9bde0c430bdb7fb67e6706da488bcd620bc3f39828"
+    }
+  },
+  "requested": {
+    "htp_compilation": false,
+    "inference": false,
+    "paid_workbench_job": false,
+    "phone_access": false,
+    "qnn_conversion": true
+  },
+  "schema_version": 1,
+  "target_configuration": "chipset:SM8550"
+}

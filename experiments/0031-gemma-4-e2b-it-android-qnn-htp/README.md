@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active after transform and before QNN conversion. The public w4a16 checkpoint is fully hash-bound and QAIRT 2.49.40 is authorized and private. A narrow schema/shape compatibility layer now produces static AR1 and AR128, CL4096, one-split ONNX+encodings variants without mutating the checkpoint. No QNN conversion, compiled context, Android execution, or HTP result exists yet.**
+**Active after QNN conversion and before HTP compilation. The unchanged public w4a16 checkpoint now yields static AR1 and AR128, CL4096, one-split variants and two hash-bound QAIRT DLCs. The conversion target is HTP and quantization overrides are present, with explicit RmsNorm/AR1 value-cache float boundaries retained. No compiled context, Android execution, or HTP inference result exists yet.**
 
 This experiment is a separate HTP arm for the model studied in `0025`. It does not rewrite or relabel the CPU/GPU evidence there.
 
@@ -51,7 +51,14 @@ The bounded compatibility route now passes. It handles the checkpoint's four sta
 
 Both pass the ONNX checker with static graph inputs/outputs, their transformed external data is hash-bound, and source ONNX/data/encodings remain unchanged. See [`results/qairt-2.49.40-transform-compat/result.json`](results/qairt-2.49.40-transform-compat/result.json).
 
-The exact next gate is QNN conversion of both bound variants followed by weight-shared SM8550/HTP v73 context compilation. Workbench compile/link remains a separate unapproved cost/terms checkpoint. Ad hoc checkpoint graph rewriting, a CPU response, or the unsupported Gemma4 GGUF route is not acceptable.
+Both transformed variants now pass QNN conversion:
+
+- AR1 DLC: 2,356,831,668 bytes, SHA-256 `02a790601b561a9ebb122c3101b916dfe8e3496435eee08a514237112a57ff68`;
+- AR128 DLC: 2,356,851,284 bytes, SHA-256 `5f17ece8a99cd649abdadb61e2e104e5cd569a1d1735e9e6ecb5c297286156ee`.
+
+`qairt-dlc-info` reports `backend=HTP`, 2,280,676,608 parameters, and the intended integer encodings. It also retains an important mixed-precision boundary: the converter reports 15 RmsNorm float fallbacks per variant; AR1 exposes 15 value-cache outputs as Float16 while AR128 exposes all outputs as uFxp16. See [`results/qairt-2.49.40-qnn-conversion/result.json`](results/qairt-2.49.40-qnn-conversion/result.json). This is conversion evidence, not physical provider proof.
+
+The exact next gate is compiling both DLCs together into one weight-shared serialized context for SM8550/HTP v73, then inspecting its graph/provider metadata. Workbench compile/link remains a separate unapproved cost/terms checkpoint. Ad hoc checkpoint graph rewriting, a CPU response, or the unsupported Gemma4 GGUF route is not acceptable.
 
 ## Proof boundary
 

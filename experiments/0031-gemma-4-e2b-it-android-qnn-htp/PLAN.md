@@ -32,7 +32,9 @@ Moritz selected the updated local-toolchain/source-fix route. Completed authoriz
 
 QAIRT 2.49.40 did not itself remove the prior failure: the factory and implicated optimizer sources are byte-identical to 2.49.0. The isolated compatibility route now passes the bounded transform-only gate. It binds standards-valid `value_ints` constants, Gemma4 input-axis semantics, exact SWA cache/mask widths, and shape-preserving Reciprocal propagation without changing the checkpoint. AR1 and AR128 CL4096 one-split ONNX+encodings outputs pass static-IO and ONNX checks and are hash-bound in `results/qairt-2.49.40-transform-compat/`.
 
-The active next step is QNN conversion for both variants, followed by one weight-shared serialized context compiled for SM8550/HTP v73 and generation of the matching embedding/PLE LUTs. Workbench compile/link remains a separate unapproved cost/terms checkpoint. Do not access the phone or run a canonical campaign before a compiled route exists.
+QNN conversion now passes for both variants, producing hash-bound AR1 and AR128 DLCs. `qairt-dlc-info` binds their HTP converter configuration, 2,280,676,608-parameter graph, operator inventory, I/O encodings, and mixed-precision boundary. The converter reports 15 RmsNorm float fallbacks per variant; AR1 has 15 Float16 value-cache outputs while AR128 outputs remain uFxp16. These are retained facts to validate at compile/runtime, not a CPU-provider claim.
+
+The active next step is compiling both DLCs together into one weight-shared serialized context for SM8550/HTP v73, followed by context inspection and generation of matching embedding/PLE LUTs. Workbench compile/link remains a separate unapproved cost/terms checkpoint. Do not access the phone or run a canonical campaign before a compiled route exists.
 
 ## Stop conditions
 

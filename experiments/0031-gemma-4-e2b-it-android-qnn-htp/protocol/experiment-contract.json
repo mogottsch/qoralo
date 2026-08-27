@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
-  "status": "active_transform_passed_pre_qnn_conversion",
+  "status": "active_qnn_conversion_passed_pre_htp_compile",
   "question": "Can Gemma 4 E2B IT run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Gemma 4 E2B IT text generation only",
@@ -137,7 +137,8 @@
     "historical_failure": "Installed QAIRT 2.49 has no Gemma4 factory dispatch. Generic fallback AR/CL transformation of the unchanged public graph fails in ConstantPropagation with KeyError('value') before conversion or compilation.",
     "selected_action": "Use authorized QAIRT 2.49.40 runtime artifacts and an isolated schema-faithful converter compatibility fix without mutating the public checkpoint.",
     "transform_gate": "passed",
-    "next_gate": "QNN-convert the two bound static variants, then compile one weight-shared serialized context for SM8550/HTP v73 before phone access.",
+    "qnn_conversion_gate": "passed",
+    "next_gate": "Compile the two bound DLCs into one weight-shared serialized context for SM8550/HTP v73 before phone access.",
     "workbench_checkpoint": "Any paid Workbench compile/link job requires a separate explicit cost/terms decision."
   },
   "transform_result": {
@@ -162,6 +163,31 @@
       "ar128_encodings_sha256": "7e26400519d338171bc9d3e9c87182ef0853ce6dfc0c543ad85ea2d815dea251",
       "shared_transformed_data_sha256": "b9b73b984c2258099bc77ce6d1e2aa92d12bb67abe456e5ef509136d7494a65d"
     }
+  },
+  "qnn_conversion_result": {
+    "result_path": "results/qairt-2.49.40-qnn-conversion/result.json",
+    "classification": "positive_host_qnn_conversion_result",
+    "qairt_version": "2.49.40.260810",
+    "target_configuration": "chipset:SM8550",
+    "backend": "HTP",
+    "quantization_overrides_supplied": true,
+    "parameters": 2280676608,
+    "ar1_dlc": {
+      "bytes": 2356831668,
+      "sha256": "02a790601b561a9ebb122c3101b916dfe8e3496435eee08a514237112a57ff68"
+    },
+    "ar128_dlc": {
+      "bytes": 2356851284,
+      "sha256": "5f17ece8a99cd649abdadb61e2e104e5cd569a1d1735e9e6ecb5c297286156ee"
+    },
+    "mixed_precision_boundary": {
+      "rmsnorm_float_fallback_ops_per_variant": 15,
+      "ar1_float16_value_cache_outputs": 15,
+      "ar128_float16_outputs": 0
+    },
+    "htp_compilation_requested": false,
+    "serialized_context_created": false,
+    "android_execution": false
   },
   "campaign_gate": {
     "phone_priority": "follows coordinated GPU paths; no ADB until Pi explicitly grants priority",

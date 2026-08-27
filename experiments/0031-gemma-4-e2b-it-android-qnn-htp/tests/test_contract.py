@@ -106,11 +106,11 @@ class ContractTest(unittest.TestCase):
 
     def test_historical_transform_blocker_and_active_no_execution_claim(self) -> None:
         blocker = json.loads((EXP / "results/transform-blocker/result.json").read_text())
-        self.assertEqual("active_transform_passed_pre_qnn_conversion", self.contract["status"])
+        self.assertEqual("active_qnn_conversion_passed_pre_htp_compile", self.contract["status"])
         active = self.contract["conversion_blocker"]
         self.assertIn("historical_failure", active)
         self.assertEqual("passed", active["transform_gate"])
-        self.assertIn("QNN-convert", active["next_gate"])
+        self.assertIn("Compile the two bound DLCs", active["next_gate"])
         self.assertFalse(blocker["android_execution"])
         self.assertFalse(blocker["qnn_htp_execution"])
         self.assertFalse(blocker["compiled_context_created"])
@@ -131,6 +131,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/transform-blocker",
             EXP / "results/qairt-2.49.40-capability",
             EXP / "results/qairt-2.49.40-transform-compat",
+            EXP / "results/qairt-2.49.40-qnn-conversion",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():
@@ -169,6 +170,20 @@ class ContractTest(unittest.TestCase):
             self.assertTrue(artifact["all_graph_inputs_static"])
             self.assertTrue(artifact["all_graph_outputs_static"])
         self.assertFalse(result["requested"]["qnn_conversion"])
+        self.assertFalse(result["requested"]["htp_compilation"])
+        self.assertFalse(result["requested"]["phone_access"])
+        self.assertFalse(result["requested"]["inference"])
+
+    def test_qnn_conversion_is_bound_but_compile_is_not_claimed(self) -> None:
+        result = json.loads(
+            (EXP / "results/qairt-2.49.40-qnn-conversion/result.json").read_text()
+        )
+        self.assertEqual("positive_host_qnn_conversion_result", result["classification"])
+        self.assertEqual([1, 128], [item["ar"] for item in result["converted_models"]])
+        self.assertTrue(result["quantization"]["overrides_supplied"])
+        self.assertEqual([15, 15], result["quantization"]["converter_float_fallback_ops_per_variant"])
+        self.assertEqual(15, len(result["quantization"]["ar1_float16_outputs"]))
+        self.assertEqual([], result["quantization"]["ar128_float16_outputs"])
         self.assertFalse(result["requested"]["htp_compilation"])
         self.assertFalse(result["requested"]["phone_access"])
         self.assertFalse(result["requested"]["inference"])
