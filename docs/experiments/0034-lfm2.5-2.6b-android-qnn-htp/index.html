@@ -70,17 +70,17 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="topbar"><div class="topbar-inner"><a class="brand" href="../../android-llm-benchmarks/index.html">VibeVoice Android research</a><nav aria-label="Experiment sections"><a href="#experiment-description">Description</a><a href="#progress">Progress</a><a href="#results">Results</a></nav></div></header>
 <main class="shell">
 <header class="status-header" data-status-header="true">
-<div class="kicker"><span>Experiment 0034</span><span class="status">Blocked</span></div>
+<div class="kicker"><span>Experiment 0034</span><span class="status">Active</span></div>
 <h1>Experiment 0034 — LFM2.5-2.6B Android QNN/HTP</h1>
-<p class="summary">Two fail-closed phone attempts stopped before the first EPContext session; even the exclusively selected Qualcomm NPU did not claim the matched SM8550/v73 context, so an external runtime or loader decision is required.</p>
+<p class="summary">Moritz authorized a direct-QNN continuation that bypasses ORT EPContext; the first exact context executes on the host emulator and the full Android runner/stage is hash-bound, with physical-phone proof pending.</p>
 <div class="header-links"><a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-08-27</span><span>evidence commit: 6f2e55637de98de52c6d57d3b923b53538831b36</span><span>page source: docs/experiments/0034-lfm2.5-2.6b-android-qnn-htp/page.md</span><span>page source sha256: 89e42d3631421ea527584b7656120371d3ebd9cb7ce4725baebccd9d0e4a8541</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-27</span><span>evidence commit: d021af8f5ce1f4a9ed67a54e5479f5d6f2b9c8de</span><span>page source: docs/experiments/0034-lfm2.5-2.6b-android-qnn-htp/page.md</span><span>page source sha256: 51dc9ffe551ed416fdd634635b91d716a9b5d892ccef43ecd38c83f99bc12b14</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
 <p>LFM2.5-2.6B has complete Android CPU and OpenCL benchmark routes, but its original QNN assessment found no high-level tool path for the model&#x27;s <code>lfm2</code> architecture. This experiment now tests an architecture-aware route: export the exact model to Q4 ONNX, split its stateful computation into memory-bounded parts, compile every claimed neural part for the Galaxy S23 Ultra&#x27;s SM8550/HTP v73 target with CPU provider fallback disabled, and then prove that the complete route can execute physically on the phone.</p>
 <p>LFM2 is not a renamed Llama-like transformer. Its 30 layers combine 22 recurrent short-convolution layers with 8 full-attention layers, so the route must preserve both convolution state and attention KV state, bind their reset behavior, and prove that claimed model computation runs through QNN HTP. The intentionally CPU-side tokenizer, selected-row Q4 embedding lookup, request orchestration, and one global greedy argmax remain explicit; they are not hidden provider fallback.</p>
-<p>The route binds <code>LiquidAI/LFM2.5-2.6B</code> revision <code>ab006873…</code>, the architecture-aware <code>Liquid4All/onnx-export</code> exporter at <code>9a23ddd…</code>, symmetric block-32 INT4 weights, ONNX Runtime QNN EP 2.5.0, and host QNN runtime 2.49.40 targeting SoC model 43 / SM8550 / HTP v73. Moritz reviewed and authorized the named public Qualcomm package license. Packages, source weights, large ONNX data, compiled contexts, and the assembled phone stage stay outside Git. The owning <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-aot/result.json">QNN AOT result</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/htp-pipeline-host-equivalence/result.json">host pipeline comparison</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/phone-preparation/result.json">phone-preparation result</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/phone-attempt-1-provider-selection-failure/result.json">first phone attempt</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/phone-attempt-2-npu-context-claim-failure/result.json">NPU-selection retry</a> are the evidence authority.</p>
+<p>The route binds <code>LiquidAI/LFM2.5-2.6B</code> revision <code>ab006873…</code>, the architecture-aware <code>Liquid4All/onnx-export</code> exporter at <code>9a23ddd…</code>, symmetric block-32 INT4 weights, and 263 contexts prepared for SoC model 43 / SM8550 / HTP v73. The failed phone route used ONNX Runtime QNN EP 2.5.0; the active continuation now bypasses its EPContext claim layer and calls the public QNN context/graph APIs directly. Moritz reviewed and authorized the named Qualcomm package license and this bounded direct-loader continuation. Packages, source weights, large ONNX data, compiled contexts, and phone stages stay outside Git. The owning <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-aot/result.json">QNN AOT result</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/htp-pipeline-host-equivalence/result.json">host pipeline comparison</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/phone-attempt-2-npu-context-claim-failure/result.json">NPU-selection retry</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/direct-qnn-host-preparation/result.json">direct-QNN host preparation</a> are the evidence authority.</p>
 </section>
 <section class="primary-section" id="progress" data-primary-section="progress">
 <h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
@@ -100,11 +100,14 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <p>The failure occurred before any context session loaded or model token executed. It produced zero HTP graphs, outputs, or profile files. The single retained memory observation covers only process startup and cannot be treated as model memory or performance. The experiment process was absent afterward, the 2.0 GB scoped remote root was removed and verified absent, and <code>phone.lock</code> was released.</p>
 <p>The replacement runner logged both advertised device types: ARM <code>CPUExecutionProvider</code> hardware type 0 and <code>QNNExecutionProvider</code> hardware type 2, vendor Qualcomm, identified as NPU. Runner SHA-256 <code>fe3351b8…43ea</code> selected only that QNN NPU device and kept CPU fallback disabled.</p>
 <p>The one authorized retry again verified all 540 hashes locally and remotely under the full <code>phone.lock</code> lifecycle. It selected the Qualcomm NPU successfully and began loading <code>layer-00-core-norm</code>, but the official Android QNN EP 2.5.0 plugin still did not claim the first EPContext produced by the matched host package for SM8550/v73. ONNX Runtime therefore left the wrapper assigned to default CPU, and the unchanged fail-closed gate stopped before session creation. The retry again produced zero loaded sessions, model tokens, HTP graphs, profiles, or output. Cleanup removed and verified the scoped root absent, and <code>phone.lock</code> was released.</p>
-<p>The route is now blocked. No further phone attempt or campaign is authorized. Progress requires one of three explicit decisions: a public or matched Android QNN EP/runtime that claims these contexts; a separately bounded direct-QNN context loader that bypasses the failing ORT claim layer while retaining exact contexts, state, and no-fallback boundaries; or escalation of a minimal compatibility artifact and logs to Qualcomm&#x27;s ONNX Runtime QNN maintainers.</p>
+<p>Those two attempts remain terminal evidence for the ORT EPContext route. Moritz selected the separately bounded direct-QNN option rather than weakening the claim or retrying the same plugin. The new native loader bypasses ONNX Runtime entirely and uses <code>QnnContext_createFromBinary</code>, <code>QnnGraph_retrieve</code>, and <code>QnnGraph_execute</code> on the same exact 263 contexts. The declared CPU boundary remains selected-row asymmetric Q4 embedding, token/request orchestration, and one global greedy argmax across 22 QNN LM-head chunks; model body, state, final norm, and head chunks remain QNN graphs.</p>
+<p>A host probe loaded exact first context <code>layer-00-core-norm</code> at SHA-256 <code>63e6f58a…21f1</code>, retrieved its SM8550/v73 graph, and executed it with QNN status 0. Residual, FFN-normalized, and convolution-state outputs were finite. Their maximum absolute differences from the CPU reference were approximately <code>0.000202</code>, <code>0.002389</code>, and <code>0.01229</code> respectively. This protects first-context loader wiring only: the x86 HTP backend reports internal v79 emulation for the requested v73 context, so it is not physical SM8550 execution or performance evidence.</p>
+<p>The complete API-31 AArch64 direct runner is 307,416 bytes with SHA-256 <code>484c4a19…3148</code>. It is designed to load all 263 contexts once, preserve explicit 22-convolution plus 8-attention state, and execute the same direct QNN API sequence. A locally verified ignored stage contains 272 payload files totaling 1,974,276,800 bytes before its additional metadata/manifest; it includes the exact contexts, embedding tables, prompt, runner, and QNN runtime.</p>
+<p>No phone access occurred for the direct-QNN continuation. Jere retains higher device priority, and 0034 must wait for explicit Pi priority before taking <code>phone.lock</code> or staging the direct runner. The first phone gate remains bounded physical viability only and does not authorize a campaign.</p>
 </section>
 <section class="primary-section" id="results" data-primary-section="results">
 <h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
-<p><strong>The experiment is blocked after two fail-closed physical pre-inference diagnostics.</strong> Host AOT preparation remains valid, and the attempts establish exact device/stage identity, official Qualcomm NPU advertisement and exclusive selection, and the EPContext-claim failure boundary. They do not establish model execution or physical HTP use.</p>
+<p><strong>The experiment is active on the authorized direct-QNN continuation, with physical phone execution pending.</strong> The ORT attempts remain valid negative evidence: the plugin advertised and exclusively selected the Qualcomm NPU but refused the first EPContext. The new result establishes direct-QNN first-context load/retrieve/execute wiring on the host emulator and a complete hash-bound Android runner/stage, not physical HTP use.</p>
 <div class="table-wrap"><table><thead><tr>
 <th>Evidence boundary</th>
 <th>Current result</th>
@@ -154,12 +157,28 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>Experiment process absent; scoped remote root verified absent; lock released after both attempts</td>
 </tr>
 <tr>
-<td>Further phone work</td>
-<td>Not authorized; external runtime/loader/escalation decision required</td>
+<td>ORT EPContext route</td>
+<td>Stopped after two pre-inference phone attempts; plugin did not claim first context</td>
 </tr>
 <tr>
-<td>Android / physical HTP execution</td>
-<td>Not established; no claim</td>
+<td>Direct-QNN host probe</td>
+<td>Exact first context loaded, graph retrieved, and graph executed status 0 on x86 HTP emulation; outputs finite</td>
+</tr>
+<tr>
+<td>Direct Android runner</td>
+<td>API-31 AArch64, 307,416 bytes / SHA <code>484c4a19…3148</code>; direct public QNN APIs, no ORT</td>
+</tr>
+<tr>
+<td>Direct phone stage</td>
+<td>272 payload files / 1,974,276,800 bytes, locally hash-verified outside Git</td>
+</tr>
+<tr>
+<td>Declared CPU boundary</td>
+<td>Selected-row Q4 embedding, orchestration, and global argmax only</td>
+</tr>
+<tr>
+<td>Android / physical HTP execution for direct route</td>
+<td>Not attempted; pending Pi priority</td>
 </tr>
 <tr>
 <td>Canonical campaign and Android performance</td>
@@ -170,8 +189,8 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>None; host AOT and wiring evidence are not registry-eligible</td>
 </tr>
 </tbody></table></div>
-<p>Both attempts are physical phone transport and pre-inference diagnostic evidence, not physical HTP execution. Exclusive Qualcomm NPU selection is stronger than provider availability alone, but it does not show that the plugin claimed or loaded a context. The fail-closed error correctly prevented default CPU execution; consequently there is no model-output, state-reset, or performance result. Each low startup-only memory sample is not benchmark memory. Host context creation, phone staging, NPU advertisement, and matching five host greedy decisions cannot substitute for phone provider/RPC/accelerator/cycle/HVX proof.</p>
-<p>No 0034 row belongs in the Android LLM registry. The route stopped rather than weaken the HTP claim, and it remains blocked until Moritz authorizes or provides one of the matched-runtime, direct-loader, or maintainer-escalation paths above. Even after an unblock, a new bounded physical viability gate must pass before any canonical campaign.</p>
+<p>The previous phone attempts are physical transport/provider-selection diagnostics, not HTP execution. The new direct-QNN result is host emulator execution, not physical execution: host emulation, finite outputs, a cross-compiled runner, and a verified local stage cannot substitute for phone context loading plus provider/RPC/accelerator/cycle/HVX proof. The CPU-bounded host differences are descriptive wiring checks, not a numerical acceptance policy or Android metric.</p>
+<p>No 0034 row belongs in the Android LLM registry. A new bounded direct-QNN phone viability gate must first succeed with exact context identity, declared CPU boundaries, physical QNN proof, output evidence, state reset, and scoped cleanup. Even success would be a milestone; a separate complete loaded-route campaign is required for registry publication.</p>
 </section></article>
 <footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
 </main>
