@@ -106,7 +106,9 @@ class ContractTest(unittest.TestCase):
 
     def test_historical_transform_blocker_and_active_no_execution_claim(self) -> None:
         blocker = json.loads((EXP / "results/transform-blocker/result.json").read_text())
-        self.assertEqual("ready_for_phone_viability_waiting_priority", self.contract["status"])
+        self.assertEqual(
+            "phone_attempt_01_failed_pre_query_corrected_retry_pending", self.contract["status"]
+        )
         active = self.contract["conversion_blocker"]
         self.assertIn("historical_failure", active)
         self.assertEqual("passed", active["transform_gate"])
@@ -134,12 +136,17 @@ class ContractTest(unittest.TestCase):
             EXP / "results/qairt-2.49.40-qnn-conversion",
             EXP / "results/qairt-2.49.40-sm8550-context",
             EXP / "results/gemma4-sm8550-runtime-bundle",
+            EXP / "results/android-qnn-physical-viability-attempt-01",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():
                 digest, name = line.split("  ", 1)
                 entries[name] = digest
-            retained = {path.name for path in directory.iterdir() if path.is_file() and path.name != "SHA256SUMS"}
+            retained = {
+                str(path.relative_to(directory))
+                for path in directory.rglob("*")
+                if path.is_file() and path.name != "SHA256SUMS"
+            }
             self.assertEqual(retained, set(entries))
             for name, digest in entries.items():
                 self.assertEqual(digest, sha(directory / name))
@@ -223,6 +230,29 @@ class ContractTest(unittest.TestCase):
         self.assertFalse(result["requested"]["phone_access"])
         self.assertFalse(result["requested"]["physical_htp_execution"])
         self.assertFalse(result["requested"]["inference"])
+        extension = result["runtime"]["runtime_files"]["lib/libQnnHtpNetRunExtensions.so"]
+        self.assertEqual(1091656, extension["bytes"])
+        self.assertEqual(
+            "e25a816d008b3d342d1e52eaebef6748194f194aea3154049ab3692004f704ae",
+            extension["sha256"],
+        )
+
+    def test_first_phone_attempt_is_partial_context_load_not_inference(self) -> None:
+        result = json.loads(
+            (EXP / "results/android-qnn-physical-viability-attempt-01/result.json").read_text()
+        )
+        self.assertEqual(
+            "physical_qnn_htp_context_load_partial_failure_before_inference",
+            result["classification"],
+        )
+        self.assertTrue(all(result["physical_provider_evidence"].values()))
+        self.assertEqual(139, result["outcome"]["exit_code"])
+        self.assertEqual("libQnnHtpNetRunExtensions.so", result["outcome"]["missing_library"])
+        self.assertFalse(result["outcome"]["graph_execution_observed"])
+        self.assertFalse(result["outcome"]["output_created"])
+        self.assertEqual(0, result["outcome"]["generated_tokens"])
+        self.assertEqual("absent", result["stage"]["remote_cleanup_status"])
+        self.assertFalse(result["gate"]["retry_performed"])
 
     def test_bounded_phone_gate_script_holds_lock_and_cleans_scope(self) -> None:
         script = (EXP / "tools/run_phone_viability.sh").read_text()
@@ -232,6 +262,8 @@ class ContractTest(unittest.TestCase):
         self.assertIn("dialog setMaxNumTokens dialog1 16", (EXP / "tools/prepare_phone_stage.py").read_text())
         self.assertIn("rm -rf '$REMOTE'", script)
         self.assertIn("remote-hash-check.txt", script)
+        self.assertIn("libQnnHtpNetRunExtensions.so", script)
+        self.assertIn("stage_completeness_check_passed", (EXP / "tools/prepare_phone_stage.py").read_text())
 
     def test_phone_and_campaign_are_not_claimed(self) -> None:
         gate = self.contract["campaign_gate"]

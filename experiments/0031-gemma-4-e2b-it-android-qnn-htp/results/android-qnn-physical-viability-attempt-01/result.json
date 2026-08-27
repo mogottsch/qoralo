@@ -1,0 +1,178 @@
+{
+  "claim_boundary": "On the authorized physical SM8550 phone, Genie parsed QnnHtp, discovered both compiled graphs, initialized the HTP provider/backend/device, loaded the v73 stub, and established a QNN stub connection. Dialog creation then segfaulted because the staged bundle omitted the requested HTP backend-extension library. No graph execution, generated token/text, or performance is claimed.",
+  "classification": "physical_qnn_htp_context_load_partial_failure_before_inference",
+  "device": {
+    "abi": "arm64-v8a",
+    "boot": "1",
+    "device": "dm3q",
+    "fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+    "flash_locked": "1",
+    "manufacturer": "samsung",
+    "model": "SM-S918B",
+    "release": "16",
+    "sdk": "36",
+    "serial": "R5CW81PR8SY",
+    "soc": "SM8550",
+    "verified_boot": "green"
+  },
+  "exact_unblock": "Add and hash QAIRT 2.49.40 lib/aarch64-android/libQnnHtpNetRunExtensions.so, rebuild and verify the private stage, then obtain explicit authorization for exactly one retry under phone.lock.",
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "gate": {
+    "attempt": 1,
+    "bounded_viability_only": true,
+    "canonical_campaign": false,
+    "max_new_tokens": 16,
+    "phone_lock_held_full_adb_lifecycle": true,
+    "retry_performed": false
+  },
+  "outcome": {
+    "exit_code": 139,
+    "failure": "Backend-extension dlopen failed; Genie continued and segfaulted during dialog create.",
+    "generated_tokens": 0,
+    "graph_execution_observed": false,
+    "missing_library": "libQnnHtpNetRunExtensions.so",
+    "output_created": false,
+    "output_sanity": {
+      "issue_notes": null,
+      "looks_sensible": null
+    },
+    "profile_created": false,
+    "result": "failed_before_dialog_creation_and_inference",
+    "stop_reason": "error"
+  },
+  "physical_provider_evidence": {
+    "ar128_graph_loaded": true,
+    "ar1_graph_loaded": true,
+    "both_graphs_initialized": true,
+    "htp_provider_initialized": true,
+    "physical_soc_detected": true,
+    "qnn_device_created": true,
+    "qnn_htp_backend_created": true,
+    "qnn_htp_config_parsed": true,
+    "qnn_stub_connection_established": true,
+    "swa_ar128_width_640": true,
+    "swa_ar1_width_513": true,
+    "v73_stub_loaded": true
+  },
+  "raw_evidence": {
+    "adb-state.txt": {
+      "bytes": 7,
+      "sha256": "c98373c1abef78070f6beef6b4ae4fbf3de348dac280195c7f93441920584af9"
+    },
+    "battery-after.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "battery-after.txt": {
+      "bytes": 15806,
+      "sha256": "738543505a3bcab0c0ef88ffcc9029e3f23b5402f69cfb9935696b6f10c411da"
+    },
+    "battery-before.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "battery-before.txt": {
+      "bytes": 15826,
+      "sha256": "42e4047ecb9ac38417fed3cdda37add0f6b0342f6f9dda859f55c8a0d69c94d3"
+    },
+    "cleanup-status.txt": {
+      "bytes": 7,
+      "sha256": "7925d3e9a9613a093e5eb4054b32aa39de910d2b03ba7e8046c3b4550b8de1e4"
+    },
+    "cleanup.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cleanup.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "exit-code.txt": {
+      "bytes": 4,
+      "sha256": "690e07064753123c967bbac0180f32da6a753a5bd8b79a47644cef58e776d9f0"
+    },
+    "genie-verbose.log": {
+      "bytes": 12288,
+      "sha256": "46578f83cfd73ef33c77011addd9bad70c5c1d115fc9f4688d784119e5186d79"
+    },
+    "identity.txt": {
+      "bytes": 237,
+      "sha256": "6cc6731865e0f47abb5f749d2d18d784b81b1f90332aed0dc763f1ebb61327b3"
+    },
+    "local-hash-check.txt": {
+      "bytes": 482,
+      "sha256": "0aeac3aff81cd87cd3ba25ad9ab63844d9bf0e4b4ad68ef9ba6db73d069dfa28"
+    },
+    "memory-samples.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "memory-samples.txt": {
+      "bytes": 42,
+      "sha256": "67dbb6bea81ba3a2c8c9d4ecfbcfd950ccedb92d936dcbdab83b8e961dc9c27e"
+    },
+    "process-after.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pull-genie-verbose.log.txt": {
+      "bytes": 155,
+      "sha256": "a50fe108718aa014b76731ce43cd3788a432ab9ebab72c51a5ef5e6004618065"
+    },
+    "pull-viability-output.txt.txt": {
+      "bytes": 168,
+      "sha256": "50bb1e9ab23fcc67489fa690ed6d96c504d6dc086776d8acabd3154b96ad9bb8"
+    },
+    "pull-viability-profile.json.txt": {
+      "bytes": 170,
+      "sha256": "fbfadcfa39cb2d324f235b177db88a22279472a8e66819f15ce63692171aaae5"
+    },
+    "push.txt": {
+      "bytes": 180,
+      "sha256": "4abfdfc2e21b40a0c078fcd059202e89172a983951177b0135c9368416ed5598"
+    },
+    "remote-hash-check.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "remote-hash-check.txt": {
+      "bytes": 482,
+      "sha256": "0aeac3aff81cd87cd3ba25ad9ab63844d9bf0e4b4ad68ef9ba6db73d069dfa28"
+    },
+    "runner.stderr": {
+      "bytes": 411,
+      "sha256": "075c1b50c7424cc05084015127e807fc5053c731b9e54606c486c0d18cb58b4f"
+    },
+    "runner.stdout": {
+      "bytes": 277,
+      "sha256": "b960253b4a51efa85538aa654ead19cf943183bf93558e85f18637210e0134b9"
+    },
+    "storage-before.txt": {
+      "bytes": 128,
+      "sha256": "bfc389b588089ac4de34ca99d8765b1e9b64f5fd1f54930a0e562ff1757c0e7b"
+    },
+    "thermal-after.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "thermal-after.txt": {
+      "bytes": 1287,
+      "sha256": "8ddada60e108c71bec15b2d36b1bd4e8dac672bc6cf82fafd3a2c2c9adea3581"
+    },
+    "thermal-before.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "thermal-before.txt": {
+      "bytes": 1287,
+      "sha256": "4f3c90e4ae118e99ef4cdc30a9b444fa7b144bbbd49afb0027a5b38dd77a5280"
+    }
+  },
+  "run_id": "viability-20260827T115008Z-1531920",
+  "schema_version": 1,
+  "stage": {
+    "local_hash_check_passed": true,
+    "remote_cleanup_status": "absent",
+    "remote_hash_check_passed": true
+  }
+}

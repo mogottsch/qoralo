@@ -144,6 +144,7 @@ def main() -> None:
                     "lib/libQnnHtp.so",
                     "lib/libQnnSystem.so",
                     "lib/libQnnHtpV73Stub.so",
+                    "lib/libQnnHtpNetRunExtensions.so",
                     "lib/libQnnHtpV73Skel.so",
                     "htp_backend_ext_config.json",
                 )

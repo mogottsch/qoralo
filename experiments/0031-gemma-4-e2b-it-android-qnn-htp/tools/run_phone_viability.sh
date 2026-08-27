@@ -47,6 +47,16 @@ available=$(awk 'NR==2{print $4}' "$OUT/storage-before.txt")
 adb_cmd shell "mkdir -p '$REMOTE'"
 adb_cmd push "$STAGE/." "$REMOTE/" >"$OUT/push.txt" 2>&1
 adb_cmd shell "cd '$REMOTE' && sha256sum -c SHA256SUMS" >"$OUT/remote-hash-check.txt" 2>"$OUT/remote-hash-check.stderr"
+required_runtime=(
+  bin/genie-app lib/libGenie.so lib/libQnnHtp.so lib/libQnnSystem.so
+  lib/libQnnHtpV73Stub.so lib/libQnnHtpV73Skel.so lib/libQnnHtpNetRunExtensions.so
+  htp_backend_ext_config.json
+)
+for required in "${required_runtime[@]}"; do
+  [[ -s "$STAGE/$required" ]] || { echo "missing local runtime dependency: $required" >&2; exit 7; }
+  adb_cmd shell "test -s '$REMOTE/$required'" || { echo "missing remote runtime dependency: $required" >&2; exit 8; }
+done
+printf '%s\n' "${required_runtime[@]}" >"$OUT/runtime-completeness.txt"
 adb_cmd shell "chmod 700 '$REMOTE/bin/genie-app'; rm -f '$REMOTE/viability-output.txt' '$REMOTE/viability-profile.json' '$REMOTE/genie-verbose.log'"
 
 set +e

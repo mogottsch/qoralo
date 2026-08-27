@@ -40,6 +40,20 @@ def main() -> None:
         link_or_copy(source, STAGE / source.relative_to(BUNDLE))
     link_or_copy(SHORT, STAGE / "short.txt")
 
+    required_runtime_files = [
+        "bin/genie-app",
+        "lib/libGenie.so",
+        "lib/libQnnHtp.so",
+        "lib/libQnnSystem.so",
+        "lib/libQnnHtpV73Stub.so",
+        "lib/libQnnHtpV73Skel.so",
+        "lib/libQnnHtpNetRunExtensions.so",
+        "htp_backend_ext_config.json",
+    ]
+    missing = [name for name in required_runtime_files if not (STAGE / name).is_file()]
+    if missing:
+        raise RuntimeError(f"incomplete QnnHtp runtime stage, missing: {missing}")
+
     script = """log create log1 verbose genie-verbose.log
 profile create profile1
 dialog config create config1 gemma4-e2b-htp-cl4096-greedy.json
@@ -72,6 +86,8 @@ exit
         "canonical_campaign": False,
         "adb_used": False,
         "phone_lock_acquired": False,
+        "required_runtime_files": required_runtime_files,
+        "stage_completeness_check_passed": True,
         "files": files,
     }
     (STAGE / "stage-manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")

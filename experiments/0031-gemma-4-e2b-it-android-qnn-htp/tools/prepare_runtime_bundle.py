@@ -66,6 +66,7 @@ def main() -> None:
         "libQnnHtp.so": SDK / "lib/aarch64-android/libQnnHtp.so",
         "libQnnSystem.so": SDK / "lib/aarch64-android/libQnnSystem.so",
         "libQnnHtpV73Stub.so": SDK / "lib/aarch64-android/libQnnHtpV73Stub.so",
+        "libQnnHtpNetRunExtensions.so": SDK / "lib/aarch64-android/libQnnHtpNetRunExtensions.so",
         "libQnnHtpV73Skel.so": SDK / "lib/hexagon-v73/unsigned/libQnnHtpV73Skel.so",
     }
     for name, source in runtime_sources.items():

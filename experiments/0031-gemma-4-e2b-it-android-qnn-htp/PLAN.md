@@ -38,7 +38,9 @@ Weight-shared compilation now passes. One hash-bound serialized context contains
 
 The private runtime bundle is now complete. The pinned ungated Apache-2.0 QAT safetensors is hash-bound; its packed INT2 token and INT4 PLE embeddings are unpacked with the authoritative Google/Hugging Face formula, scaled, and block-streamed into uint8 LUTs. Deterministic sampled dequantization is within half a quantization step. The manifest binds both LUTs, context, tokenizer, greedy CL4096 config, Genie binary, and QNN HTP host/stub/v73 skeleton libraries.
 
-The active next step is one bounded short-prompt physical context-load/inference probe. Do not acquire `phone.lock` or stage anything until Pi explicitly transfers priority. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
+The first authorized bounded phone gate held `phone.lock`, verified local/remote stage hashes, and cleaned its scoped remote path. It reached physical SM8550 QNN HTP provider/backend/device initialization, loaded both context graphs and the v73 stub, then failed before query with exit 139 because the stage omitted `libQnnHtpNetRunExtensions.so`. No graph execution/output/profile occurred. Raw evidence is retained in `results/android-qnn-physical-viability-attempt-01/`.
+
+The missing QAIRT 2.49.40 Android extension is now hash-bound in the bundle and stage. Preparation and execution both enforce an explicit required-runtime dependency list. The active next step is one separately authorized bounded retry under `phone.lock`. Do not start a canonical campaign from the partial context-load evidence. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
 
 ## Stop conditions
 

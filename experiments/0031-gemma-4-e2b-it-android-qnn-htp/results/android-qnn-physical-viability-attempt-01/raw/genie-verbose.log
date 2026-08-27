@@ -1,0 +1,215 @@
+     0.9ms [INFO]: Entering GenieDialog_create [GenieDialog.cpp:147]
+     3.2ms [VERBOSE]: dialog-new: dialog0 config {"context":{"bos-token":2,"embedding-datatype":"QNN_DATATYPE_UFIXED_POINT_8","eos-token":[1,106],"n-embd":1536,"n-per-layer-embd":8960,"n-vocab":262144,"pad-token":0,"quant-param":{"offset":-170,"scale":0.050521295210894414},"size":4096},"encoder":{"context":{"bos-token":2,"embedding-datatype":"QNN_DATATYPE_UFIXED_POINT_8","eos-token":[1,106],"n-embd":1536,"n-per-layer-embd":8960,"n-vocab":262144,"pad-token":0,"quant-param":{"offset":-170,"scale":0.050521295210894414},"size":4096},"lut-path":"./embedding_int8_lut.bin","tokenizer":"./tokenizer.json","type":"lut"},"engine":{"backend-ext-conf":"./htp_backend_ext_config.json","backend-lib":"libQnnHtp.so","cache-groups":[{"attention-mask-tensor-name":"attention_mask","kv-dim":512,"prefix":"past_","version":1},{"attention-mask-tensor-name":"swa_attention_mask","kv-dim":256,"longcontext":{"reserved-tokens":0,"type":"sliding-window","window-size":512},"prefix":"swa_","version":1}],"cpumask":"0xe0","enable-graph-switch
+     3.2ms [VERBOSE]: ctx-new: dialog0 config {"bos-token":2,"embedding-datatype":"QNN_DATATYPE_UFIXED_POINT_8","eos-token":[1,106],"n-embd":1536,"n-per-layer-embd":8960,"n-vocab":262144,"pad-token":0,"quant-param":{"offset":-170,"scale":0.050521295210894414},"size":4096}
+     3.4ms [VERBOSE]: sampler-new: basic ctx dialog0 config {"greedy":true,"role":"primary","seed":42,"temp":0.0,"top-k":1,"top-p":1.0,"type":"basic"}
+     3.5ms [VERBOSE]: engine-new: qnn-htp ctx dialog0 config {"backend-ext-conf":"./htp_backend_ext_config.json","backend-lib":"libQnnHtp.so","cache-groups":[{"attention-mask-tensor-name":"attention_mask","kv-dim":512,"prefix":"past_","version":1},{"attention-mask-tensor-name":"swa_attention_mask","kv-dim":256,"longcontext":{"reserved-tokens":0,"type":"sliding-window","window-size":512},"prefix":"swa_","version":1}],"cpumask":"0xe0","enable-graph-switching":true,"kv-dim":256,"mmap-budget":40,"model-list":["./models/weight_sharing_model_ar128_ar1_cl4096_scl512_1_of_1.serialized.bin"],"n-threads":3,"poll":true,"positional-encoding":[{"rope-dim":256,"rope-scaling":{"partial-rotary-factor":0.25,"rope-type":"proportional"},"rope-theta":1000000.0,"type":"rope"},{"prefix":"swa_","rope-dim":128,"rope-theta":10000.0,"type":"rope"}],"role":"primary","shared-engine":false,"spill-fill-bufsize":0,"type":"qnn-htp","use-async-Init":true,"use-mmap":true}
+     3.5ms [VERBOSE]: qnn-htp: init start
+     3.8ms [VERBOSE]: Cache groups parameters = [{"attention-mask-tensor-name":"attention_mask","cache-index-tensor-name":"","longcontext":{"type":"disabled"},"prefix":"past_"},{"attention-mask-tensor-name":"swa_attention_mask","cache-index-tensor-name":"","longcontext":{"reserved-tokens":0,"type":"sliding-window","window-size":512},"prefix":"swa_"}]
+     3.8ms [INFO]: qnn-htp: loading model
+     3.9ms [WARNING]: kv-update-method is deprecated. Defaulting to SMART_MASK or NATIVE_KV
+     3.9ms [VERBOSE]: nsp-model: starting threadpool : n_threads 3 params. 0xe0 poll true
+     4.2ms [VERBOSE]: qnn-htp: model init start
+     4.2ms [INFO]: Backend library : libQnnHtp.so
+     4.2ms [INFO]: System library  : libQnnSystem.so
+     4.2ms [INFO]: Model dir   : 
+     4.2ms [INFO]: Model files : ["./models/weight_sharing_model_ar128_ar1_cl4096_scl512_1_of_1.serialized.bin"]
+     4.2ms [INFO]: Backend extensions lib path : libQnnHtpNetRunExtensions.so
+     4.2ms [INFO]: Backend extensions config path : ./htp_backend_ext_config.json
+     4.8ms [INFO]: qnn-api initialized with 2 graph(s)
+     4.9ms [VERBOSE]: Detected CacheGroup parameters = [{"attention-mask-tensor-name":"attention_mask","cache-index-tensor-name":"","longcontext":{"type":"disabled"},"prefix":"past_"},{"attention-mask-tensor-name":"swa_attention_mask","cache-index-tensor-name":"","longcontext":{"reserved-tokens":0,"type":"sliding-window","window-size":512},"prefix":"swa_"}]
+     4.9ms [VERBOSE]: Could not find cache index tensor for CacheGroup past_
+     4.9ms [VERBOSE]: Could not find cache index tensor for CacheGroup swa_
+     4.9ms [VERBOSE]: qnn-htp: Graph ar1_cl4096_1_of_1
+     5.0ms [INFO]: graphName ar1_cl4096_1_of_1 and its variant Type DEFAULT
+     5.0ms [VERBOSE]: qnn-htp: Graph ar128_cl4096_1_of_1
+     5.1ms [INFO]: graphName ar128_cl4096_1_of_1 and its variant Type DEFAULT
+     5.1ms [INFO]: Inserting graph ar1_cl4096_1_of_1 as idx 0 for AR-1 CL-4096
+     5.1ms [INFO]: Inserting graph ar128_cl4096_1_of_1 as idx 0 for AR-128 CL-4096
+     5.1ms [INFO]: qnn-htp: Graphs loaded ((AR-n, CL-x): #splits): {(1, 4096): 1, (128, 4096): 1}
+     5.1ms [VERBOSE]: Mapping for Cachegroup past_
+     5.1ms [VERBOSE]: Found AR-1 CL-4096 -> AR-1 CL-4096
+     5.1ms [VERBOSE]: Found AR-128 CL-4096 -> AR-128 CL-4096
+     5.1ms [VERBOSE]: Mapping for Cachegroup swa_
+     5.1ms [VERBOSE]: Found AR-1 CL-4096 -> AR-1 CL-513
+     5.1ms [VERBOSE]: Found AR-128 CL-4096 -> AR-128 CL-640
+     0.0ms [INFO]: QnnDsp <I> QnnLog_create started.
+
+     0.0ms [VERBOSE]: QnnDsp <V> Registered a new graph environment 0 with priority: 100, num hvx threads: 1001, num hmx threads: 1001
+
+     0.0ms [WARNING]: QnnDsp <W> Initializing HtpProvider
+
+     0.0ms [VERBOSE]: QnnDsp <V> Creating default router
+
+     0.0ms [VERBOSE]: QnnDsp <V> RouterFastRPC create
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: Initializing the router
+
+     0.0ms [VERBOSE]: QnnDsp <V> Detected Snapdragon SOC SM8550 with 4 SOCs
+
+     0.0ms [VERBOSE]: QnnDsp <V> Allocating PlatformInfo struct size 120
+
+     0.0ms [VERBOSE]: QnnDsp <V> Async property not supported or not activated. Skipping setup async threads
+
+     0.0ms [VERBOSE]: QnnDsp <V> Detected Snapdragon SOC SM8550 with 4 SOCs
+
+     0.0ms [VERBOSE]: QnnDsp <V> Allocating PlatformInfo struct size 120
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: Initializing the graph registry
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: Initializing the context registry
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: Initializing the device registry
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: Initializing the tensor counter
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: setting isExitCalled to false
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: setting ssrInProgress to false
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: FinalCleanupFn fnPtr is nullptr
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: initializing mem registry
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: initializing mmap registry
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: Initializing the logger lifecycle manager
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: constructing bundle
+
+     0.0ms [VERBOSE]: QnnDsp <V> Set default graph environment 0 remoteHandle 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Opened default graph env, envRemoteHandle 0
+
+     0.0ms [INFO]: QnnDsp <I> exit with 0
+
+     0.0ms [INFO]: QnnDsp <I> exit with 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> HTP: initialization completed successfully
+
+     0.0ms [INFO]: QnnDsp <I> QnnLog_create exit.
+
+     3.3ms [INFO]: Creating backend with QnnGraphTransformerAdapter
+     0.0ms [INFO]: QnnDsp <I> QnnBackend_create started. backend = 0xdfe9f050
+
+     0.0ms [VERBOSE]: QnnDsp <V> Oem key validation infra not found, limiting oemMaxPriority to HIGHEST
+
+     0.0ms [VERBOSE]: QnnDsp <V> Backend handle created: 1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Set default graph environment 0 remoteHandle 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Opened default graph env, envRemoteHandle 0
+
+     0.0ms [INFO]: QnnDsp <I> QnnBackend_create done successfully. backend = 0xdfe9f050
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with handle 0x1
+
+     4.7ms [INFO]: QnnGraphTransformer createBackend done, status = 0x0
+     0.0ms [INFO]: QnnDsp <I> QnnDevice_create started
+
+     0.0ms [VERBOSE]: QnnDsp <V> Create device with id 0x1
+
+     0.0ms [VERBOSE]: QnnDsp <V> Config not passed. Loading default platform info!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Setting default value for unsigned PD usage
+
+     0.0ms [VERBOSE]: QnnDsp <V> Attempting to open dynamically linked so: /data/local/tmp/vibevoice-0031-gemma4-qnn-viability-20260827T115008Z-1531920/lib/libQnnHtpV73Stub.so using absolute filename
+
+     0.0ms [INFO]: QnnDsp <I> First connection to QNN stub established!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Loading remote funcs
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successfully loaded off-chip memory allocation functions
+
+     0.0ms [VERBOSE]: QnnDsp <V> Kailua PD 0 uses default Domain ID
+
+     0.0ms [VERBOSE]: QnnDsp <V> No ADAS pltform detected, BCS disabled
+
+     0.0ms [VERBOSE]: QnnDsp <V> Transport config  BCS_enable:0  [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> isPollingAvailable 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Polling not supported in queueMapping
+
+     0.0ms [VERBOSE]: QnnDsp <V> exits with 2, successfully initialized rpc memory
+
+     0.0ms [VERBOSE]: QnnDsp <V> Successful rpcMemInit
+
+     0.0ms [VERBOSE]: QnnDsp <V> 8 isInit true
+
+     0.0ms [WARNING]: QnnDsp <W> This META does not have Alloc2 Support
+
+     0.0ms [VERBOSE]: QnnDsp <V> 136 isInit true
+
+     0.0ms [WARNING]: QnnDsp <W> This META does not have Alloc2 Support
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007ddfe9aa18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007ddfe9aa18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport run [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> 8 isInit true
+
+     0.0ms [WARNING]: QnnDsp <W> This META does not have Alloc2 Support
+
+     0.0ms [VERBOSE]: QnnDsp <V> 8 isInit true
+
+     0.0ms [WARNING]: QnnDsp <W> This META does not have Alloc2 Support
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007ddfe9aa18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007ddfe9aa18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport run [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> Created transport wrapper for device {0 0 0} and devType 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007ddfe9aa18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007ddfe9aa18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> 56 isInit true
+
+     0.0ms [WARNING]: QnnDsp <W> This META does not have Alloc2 Support
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007ddfe9aa18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> First entry for fd 14 on domain 3, adding to refCount
+
+     0.0ms [VERBOSE]: QnnDsp <V> fastrpc memory map for fd: 14 with length: 56 succeeded
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007ddfe9aa18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport shared buffer [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> sharedBufferMapping op 2 fd 14 with offset 0 size 56, va 0x000000fdffc000, devConfig {0, 0, 0}, err 0
+
+     0.0ms [VERBOSE]: QnnDsp <V> SharedMemoryMod 2 create/register fd 14 with len 56, offset(dspPa) = 0, va 0x000000fdffc000
+
+     0.0ms [VERBOSE]: QnnDsp <V> sharedMemoryMod Latency 870
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007ddfe9aa18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007ddfe9aa18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport execute faster ipc start polling [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> createDevicePollingContext for priority 100
+
+     0.0ms [VERBOSE]: QnnDsp <V> Async property not supported. Skipping setup Async context
+
+     0.0ms [VERBOSE]: QnnDsp <V> exits device initialization with  0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Function not called, PrepareLib isn't loaded!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007ddfe9aa18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> Found transport session 0xb400007ddfe9aa18 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+     0.0ms [VERBOSE]: QnnDsp <V> transport run [status = 0]
+
+     0.0ms [VERBOSE]: QnnDsp <V> setSkelLogLevel return 0
+
+     0.0ms [INFO]: QnnDsp <I> QnnDevice_create done. device = 0x1. status 0x0
+
+     0.0ms [VERBOSE]: QnnDsp <V> Deactivated logger with hand

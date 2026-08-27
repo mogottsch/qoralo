@@ -2,7 +2,7 @@
 
 ## Status
 
-**Ready for a bounded phone viability gate, waiting for explicit phone priority. The unchanged public w4a16 checkpoint now yields static AR1/AR128 CL4096 variants, two HTP-targeted DLCs, one weight-shared SM8550/v73 context, source-derived token/PLE LUTs, and a hash-bound Genie `QnnHtp` bundle. No Android loading, physical HTP execution, generated text, or performance result exists yet.**
+**First bounded phone gate failed before inference; corrected stage is ready for one authorized retry. On the physical SM8550 phone, Genie discovered both context graphs and initialized the QNN HTP provider/backend/device plus v73 stub connection, then segfaulted because `libQnnHtpNetRunExtensions.so` was omitted. No graph execution or output exists. The missing library is now hash-bound with an explicit stage-completeness check; no retry has run.**
 
 This experiment is a separate HTP arm for the model studied in `0025`. It does not rewrite or relabel the CPU/GPU evidence there.
 
@@ -69,7 +69,20 @@ The private runtime bundle is now complete. From the pinned ungated Apache-2.0 Q
 
 Deterministic sampled reconstruction stays within half of one uint8 quantization step. The bundle binds those LUTs, the compiled context, exact tokenizer, QAIRT 2.49.40 Genie/QNN/HTP/v73 libraries, a CL4096 configuration, and greedy 2048-token ceiling. See [`results/gemma4-sm8550-runtime-bundle/result.json`](results/gemma4-sm8550-runtime-bundle/result.json).
 
-The exact next gate is one bounded short-prompt context-load/inference probe after Pi transfers phone priority. The entire ADB lifecycle requires `phone.lock`; no staging has occurred. Workbench compile/link remains a separate unapproved cost/terms checkpoint. Ad hoc checkpoint graph rewriting, a CPU response, or the unsupported Gemma4 GGUF route is not acceptable.
+## First physical gate and exact blocker
+
+The first authorized 16-token short-prompt gate held `phone.lock`, verified all staged hashes, and cleaned its experiment-specific remote path. It exited 139 during `dialog create`. Raw logs show:
+
+- `QnnHtp` configuration parsed and both AR1/AR128 graphs discovered;
+- exact SWA mappings AR1/513 and AR128/640;
+- physical SM8550 detected;
+- HTP provider, QNN backend/device, v73 stub, and first QNN stub connection initialized;
+- backend-extension load failed because `libQnnHtpNetRunExtensions.so` was absent;
+- no query, graph execution, generated output, or profile occurred.
+
+See [`results/android-qnn-physical-viability-attempt-01/result.json`](results/android-qnn-physical-viability-attempt-01/result.json). The scoped remote path is verified absent after cleanup.
+
+The missing QAIRT 2.49.40 Android extension is now included (1,091,656 bytes, SHA-256 `e25a816d008b3d342d1e52eaebef6748194f194aea3154049ab3692004f704ae`) and both stage preparation and execution scripts fail closed if any required runtime dependency is absent. The exact next gate is one separately authorized bounded retry under `phone.lock`; no campaign is permitted yet. Workbench compile/link remains a separate unapproved cost/terms checkpoint. Ad hoc checkpoint graph rewriting, a CPU response, or the unsupported Gemma4 GGUF route is not acceptable.
 
 ## Proof boundary
 

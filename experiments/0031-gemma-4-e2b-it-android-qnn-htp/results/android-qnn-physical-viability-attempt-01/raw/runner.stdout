@@ -1,0 +1,7 @@
+> script viability.script
+> log create log1 verbose genie-verbose.log
+> profile create profile1
+> dialog config create config1 gemma4-e2b-htp-cl4096-greedy.json
+> dialog config bind profile config1 profile1
+> dialog config bind log config1 log1
+> dialog create dialog1 config1

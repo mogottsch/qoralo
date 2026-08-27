@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
-  "status": "ready_for_phone_viability_waiting_priority",
+  "status": "phone_attempt_01_failed_pre_query_corrected_retry_pending",
   "question": "Can Gemma 4 E2B IT run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Gemma 4 E2B IT text generation only",
@@ -140,7 +140,9 @@
     "qnn_conversion_gate": "passed",
     "htp_compile_gate": "passed",
     "runtime_bundle_gate": "passed",
-    "next_gate": "After explicit phone-priority transfer, hold phone.lock for one bounded short-prompt Genie QnnHtp physical viability probe.",
+    "phone_attempt_01": "failed_pre_query_missing_libQnnHtpNetRunExtensions_exit_139",
+    "corrected_stage_gate": "passed",
+    "next_gate": "After separate authorization, hold phone.lock for exactly one corrected 16-token short-prompt Genie QnnHtp retry; no campaign.",
     "workbench_checkpoint": "Any paid Workbench compile/link job requires a separate explicit cost/terms decision."
   },
   "transform_result": {
@@ -238,10 +240,36 @@
     "backend": "QnnHtp",
     "sampling": "greedy",
     "max_new_tokens": 2048,
+    "required_backend_extension": {
+      "filename": "libQnnHtpNetRunExtensions.so",
+      "bytes": 1091656,
+      "sha256": "e25a816d008b3d342d1e52eaebef6748194f194aea3154049ab3692004f704ae"
+    },
     "large_or_restricted_files_stored_outside_git": true,
     "phone_access": false,
     "physical_htp_execution": false,
     "inference": false
+  },
+  "phone_viability_attempt_01": {
+    "result_path": "results/android-qnn-physical-viability-attempt-01/result.json",
+    "classification": "physical_qnn_htp_context_load_partial_failure_before_inference",
+    "phone_lock_held": true,
+    "device": "Samsung SM-S918B / SM8550 / arm64-v8a",
+    "max_new_tokens": 16,
+    "canonical_campaign": false,
+    "exit_code": 139,
+    "physical_context_load_evidence": [
+      "QnnHtp config parsed and both AR graphs initialized",
+      "physical SM8550 detected",
+      "HTP provider and QNN backend/device initialized",
+      "v73 stub loaded and first QNN stub connection established"
+    ],
+    "failure": "libQnnHtpNetRunExtensions.so was missing; extension dlopen failed and dialog creation segfaulted",
+    "graph_execution_observed": false,
+    "generated_tokens": 0,
+    "output_created": false,
+    "remote_cleanup_verified_absent": true,
+    "retry_performed": false
   },
   "campaign_gate": {
     "phone_priority": "follows coordinated GPU paths; no ADB until Pi explicitly grants priority",
