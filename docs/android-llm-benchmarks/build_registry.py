@@ -30,6 +30,29 @@ def sort_number(value) -> str:
     return "" if value is None else str(value)
 
 
+def execution(entry: dict) -> tuple[str, str, str, str]:
+    """Return a bounded execution label without implying exclusive acceleration."""
+    runtime = entry["runtime"]
+    provider = runtime["provider"].lower()
+    options = runtime.get("options", {})
+    neural_backend = str(options.get("neural_backend", "")).lower()
+    if "qnn" in provider or "htp" in provider or neural_backend in {"qnn", "htp"}:
+        return (
+            "QNN / HTP",
+            "qnn",
+            "3",
+            "QNN/HTP route. This label does not establish full-HTP execution or no-fallback proof.",
+        )
+    if neural_backend == "gpu" or "opencl" in provider or "gpu" in provider:
+        return (
+            "GPU offload",
+            "gpu",
+            "2",
+            "GPU-offload route, not GPU-exclusive execution. CPU orchestration and disclosed unsupported-operation boundaries remain part of the route.",
+        )
+    return "CPU", "cpu", "1", "CPU execution route."
+
+
 def memory(entry: dict) -> tuple[str, str, str]:
     data = entry["memory"]
     if data["peak_pss_bytes"] is not None:
@@ -78,11 +101,19 @@ def render_rows(entries: list[dict]) -> str:
             f'{esc(entry["model"])}</a>'
             f'<br><small>{esc(identity["name"])}</small>'
         )
+        full_route = entry["route"]
+        full_provider = entry["runtime"]["provider"]
+        route_headline = full_route.split(" · ", 1)[0]
+        provider_headline = full_provider.split(" · ", 1)[0]
         route = (
-            f'{esc(entry["route"])}'
-            f'<br><small>{esc(entry["runtime"]["name"])} {esc(entry["runtime"]["version"])}</small>'
+            f'{esc(route_headline)}'
+            '<details class="route-details"><summary>Full route + provider</summary>'
+            f'<small><b>Route:</b> {esc(full_route)}<br><b>Provider:</b> {esc(full_provider)}</small>'
+            "</details>"
         )
-        provider = esc(entry["runtime"]["provider"])
+        provider = esc(provider_headline)
+        execution_label, execution_class, execution_sort, execution_detail = execution(entry)
+        execution_note = "not GPU-exclusive" if execution_class == "gpu" else "execution route"
         status = esc(entry["attempt_status"])
         status_class = entry["attempt_status"].replace("_", "-")
         memory_display, memory_sort, memory_detail = memory(entry)
@@ -94,11 +125,12 @@ def render_rows(entries: list[dict]) -> str:
         rows.append(
             f'<tr data-route-id="{esc(entry["id"])}">'
             f'<td data-sort="{esc(entry["experiment"])}">{esc(entry["experiment"])}</td>'
+            f'<td data-sort="{execution_sort}" title="{esc(execution_detail)}"><span class="execution execution-{esc(execution_class)}">{esc(execution_label)}</span><br><small class="execution-note">{esc(execution_note)}</small></td>'
             f'<td data-sort="{esc(entry["model"])}">{model}</td>'
             f'<td data-sort="{esc(entry["route"])}">{route}</td>'
             f'<td data-sort="{esc(entry["quantization"]["name"])}">{esc(entry["quantization"]["name"])}</td>'
             f'<td data-sort="{status}"><span class="status {esc(status_class)}">{status}</span></td>'
-            f'<td data-sort="{provider}">{provider}</td>'
+            f'<td data-sort="{esc(full_provider)}" title="{esc(full_provider)}">{provider}</td>'
             f'<td data-sort="{sort_number(setup)}" title="{esc(entry["setup"]["boundary"])}">{seconds(setup)}</td>'
             f'<td data-sort="{sort_number(ttft)}" title="Loaded-route medium median request-to-first-token.">{seconds(ttft)}<br><small>medium median</small></td>'
             f'<td data-sort="{sort_number(prefill)}" title="Loaded-route medium median prefill throughput.">{rate(prefill)}<br><small>medium median</small></td>'
@@ -124,6 +156,7 @@ def build(registry: dict) -> str:
 <div class="table-wrap" id="routes-scroll" tabindex="0" role="region" aria-label="Android LLM benchmark routes, horizontally scrollable; page controls vertical scrolling" aria-describedby="routes-scroll-hint">
 <table id="routes"><thead><tr>
 <th scope="col" data-type="text"><button type="button" class="sort-button">Experiment</button></th>
+<th scope="col" data-type="number"><button type="button" class="sort-button">Execution</button></th>
 <th scope="col" data-type="text"><button type="button" class="sort-button">Model</button></th>
 <th scope="col" data-type="text"><button type="button" class="sort-button">Route</button></th>
 <th scope="col" data-type="text"><button type="button" class="sort-button">Quantization</button></th>
@@ -252,7 +285,7 @@ if(!document.fullscreenEnabled){fullscreenButton.disabled=true;fullscreenButton.
 if('ResizeObserver' in window)new ResizeObserver(updateScrollState).observe(scrollRegion);
 window.addEventListener('resize',updateScrollState);
 window.addEventListener('scroll',scheduleStickyHeader,{passive:true});
-sortTable(7,'ascending',false);
+sortTable(8,'ascending',false);
 updateScrollState();
 </script>
 """
@@ -317,21 +350,22 @@ code {{color:#bae6fd}}
 .table-wrap::-webkit-scrollbar-thumb {{border:3px solid #0b1220;border-radius:10px;background:#64748b}}
 .table-wrap::-webkit-scrollbar-thumb:hover {{background:var(--accent)}}
 table {{border-collapse:collapse;background:var(--panel)}}
-#routes {{width:100%;min-width:1815px;table-layout:fixed}}
+#routes {{width:100%;min-width:1905px;table-layout:fixed}}
 th,td {{padding:12px 13px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}}
 #routes td {{overflow-wrap:anywhere}}
 #routes th:nth-child(1) {{width:90px}}
-#routes th:nth-child(2) {{width:170px}}
-#routes th:nth-child(3) {{width:205px}}
-#routes th:nth-child(4) {{width:220px}}
-#routes th:nth-child(5) {{width:85px}}
-#routes th:nth-child(6) {{width:260px}}
-#routes th:nth-child(7) {{width:100px}}
-#routes th:nth-child(8) {{width:120px}}
-#routes th:nth-child(9) {{width:130px}}
+#routes th:nth-child(2) {{width:140px}}
+#routes th:nth-child(3) {{width:170px}}
+#routes th:nth-child(4) {{width:190px}}
+#routes th:nth-child(5) {{width:220px}}
+#routes th:nth-child(6) {{width:85px}}
+#routes th:nth-child(7) {{width:175px}}
+#routes th:nth-child(8) {{width:100px}}
+#routes th:nth-child(9) {{width:120px}}
 #routes th:nth-child(10) {{width:130px}}
-#routes th:nth-child(11) {{width:135px}}
-#routes th:nth-child(12) {{width:170px}}
+#routes th:nth-child(11) {{width:130px}}
+#routes th:nth-child(12) {{width:135px}}
+#routes th:nth-child(13) {{width:170px}}
 #routes th {{position:sticky;z-index:3;top:0;padding:0;background:var(--panel-strong);color:#bae6fd;white-space:nowrap}}
 #routes th:first-child {{z-index:4;left:0}}
 #routes td:first-child {{position:sticky;z-index:2;left:0;background:var(--panel)}}
@@ -340,7 +374,14 @@ th,td {{padding:12px 13px;border-bottom:1px solid var(--line);vertical-align:top
 .sort-button::after {{content:' ↕';color:#64748b}}
 th[aria-sort="ascending"] .sort-button::after {{content:' ↑';color:var(--accent)}}
 th[aria-sort="descending"] .sort-button::after {{content:' ↓';color:var(--accent)}}
-.status {{border-radius:99px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap}}
+.status,.execution {{display:inline-block;border-radius:99px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap}}
+.execution-cpu {{background:#164e63;color:#a5f3fc}}
+.execution-gpu {{background:#1e3a8a;color:#bfdbfe}}
+.execution-qnn {{background:#581c87;color:#e9d5ff}}
+.execution-note {{display:inline-block;margin-top:5px}}
+.route-details {{margin-top:6px;color:var(--muted);font-size:12px}}
+.route-details summary {{color:var(--accent);cursor:pointer}}
+.route-details small {{display:block;margin-top:6px;color:var(--muted)}}
 .ran {{background:#064e3b;color:#a7f3d0}}
 .blocked,.deferred,.not-run {{background:#713f12;color:#fde68a}}
 .partial {{background:#164e63;color:#a5f3fc}}

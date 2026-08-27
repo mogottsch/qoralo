@@ -45,6 +45,7 @@ class OutputSanitySchemaTest(unittest.TestCase):
 class DashboardContractTest(unittest.TestCase):
     SORTABLE_COLUMNS = [
         "Experiment",
+        "Execution",
         "Model",
         "Route",
         "Quantization",
@@ -69,6 +70,7 @@ class DashboardContractTest(unittest.TestCase):
         assert spec is not None and spec.loader is not None
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
+        cls.generator = module
         cls.generated = module.build(cls.registry)
 
     def test_committed_dashboard_matches_generator(self) -> None:
@@ -104,10 +106,49 @@ class DashboardContractTest(unittest.TestCase):
         ):
             self.assertIn(token, self.dashboard)
 
+    def test_execution_badges_are_bounded_and_scanable(self) -> None:
+        cpu_entries = [
+            entry for entry in self.registry["entries"]
+            if self.generator.execution(entry)[1] == "cpu"
+        ]
+        gpu_entries = [
+            entry for entry in self.registry["entries"]
+            if self.generator.execution(entry)[1] == "gpu"
+        ]
+        self.assertEqual(
+            len(cpu_entries),
+            self.dashboard.count('<span class="execution execution-cpu">CPU</span>'),
+        )
+        self.assertEqual(
+            len(gpu_entries),
+            self.dashboard.count('<span class="execution execution-gpu">GPU offload</span>'),
+        )
+        self.assertEqual(
+            len(gpu_entries),
+            self.dashboard.count('<small class="execution-note">not GPU-exclusive</small>'),
+        )
+        self.assertNotIn('<span class="execution execution-qnn">', self.dashboard)
+        self.assertTrue(
+            {"0031", "0032", "0034"}.isdisjoint(
+                entry["experiment"] for entry in self.registry["entries"]
+            ),
+            "Pre-conversion QNN blockers must not become benchmark rows.",
+        )
+        self.assertEqual(
+            len(self.registry["entries"]),
+            self.dashboard.count("<summary>Full route + provider</summary>"),
+        )
+
+        qnn_probe = json.loads(json.dumps(cpu_entries[0]))
+        qnn_probe["runtime"]["provider"] = "QNN HTP provider"
+        self.assertEqual("QNN / HTP", self.generator.execution(qnn_probe)[0])
+        self.assertIn("does not establish full-HTP", self.generator.execution(qnn_probe)[3])
+
     def test_dashboard_retains_llm_claim_boundaries(self) -> None:
         self.assertIn("Output sanity is not quality.", self.dashboard)
         self.assertIn("does not establish correctness, grounding, transcript usefulness, or acceptance", self.dashboard)
         self.assertIn("process PSS/VmHWM does not establish total GPU-private or vendor memory", self.dashboard)
+        self.assertIn("GPU-offload route, not GPU-exclusive execution", self.dashboard)
         self.assertNotIn("Listening", self.SORTABLE_COLUMNS)
         self.assertNotIn("RTF", self.SORTABLE_COLUMNS)
         self.assertNotIn("Audio", self.SORTABLE_COLUMNS)
