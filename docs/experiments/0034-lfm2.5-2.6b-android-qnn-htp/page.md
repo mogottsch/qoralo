@@ -1,7 +1,7 @@
 ---
 experiment: 0034-lfm2.5-2.6b-android-qnn-htp
-status: active
-summary: The first direct-QNN phone attempt stopped before `main` on an omitted C++ runtime; a corrected 273-file stage now includes the exact NDK library and passes dependency preflight, with retry permission pending.
+status: blocked
+summary: The corrected direct-QNN phone route physically deserialized 57 exact contexts, then context 58 of 263 failed before readiness or graph execution; the route now requires host-side context consolidation.
 benchmark: android-llm
 ---
 
@@ -13,7 +13,7 @@ LFM2.5-2.6B has complete Android CPU and OpenCL benchmark routes, but its origin
 
 LFM2 is not a renamed Llama-like transformer. Its 30 layers combine 22 recurrent short-convolution layers with 8 full-attention layers, so the route must preserve both convolution state and attention KV state, bind their reset behavior, and prove that claimed model computation runs through QNN HTP. The intentionally CPU-side tokenizer, selected-row Q4 embedding lookup, request orchestration, and one global greedy argmax remain explicit; they are not hidden provider fallback.
 
-The route binds `LiquidAI/LFM2.5-2.6B` revision `ab006873…`, the architecture-aware `Liquid4All/onnx-export` exporter at `9a23ddd…`, symmetric block-32 INT4 weights, and 263 contexts prepared for SoC model 43 / SM8550 / HTP v73. The failed phone route used ONNX Runtime QNN EP 2.5.0; the active continuation now bypasses its EPContext claim layer and calls the public QNN context/graph APIs directly. Moritz reviewed and authorized the named Qualcomm package license and this bounded direct-loader continuation. Packages, source weights, large ONNX data, compiled contexts, and phone stages stay outside Git. The owning [experiment README](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/README.md), [experiment contract](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/protocol/experiment-contract.json), [QNN AOT result](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-aot/result.json), [host pipeline comparison](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/htp-pipeline-host-equivalence/result.json), [NPU-selection retry](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/phone-attempt-2-npu-context-claim-failure/result.json), [direct-QNN host preparation](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/direct-qnn-host-preparation/result.json), and [first direct phone attempt](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/direct-qnn-phone-attempt-1-linker-failure/result.json) are the evidence authority.
+The route binds `LiquidAI/LFM2.5-2.6B` revision `ab006873…`, the architecture-aware `Liquid4All/onnx-export` exporter at `9a23ddd…`, symmetric block-32 INT4 weights, and 263 contexts prepared for SoC model 43 / SM8550 / HTP v73. The failed phone route used ONNX Runtime QNN EP 2.5.0; the active continuation now bypasses its EPContext claim layer and calls the public QNN context/graph APIs directly. Moritz reviewed and authorized the named Qualcomm package license and this bounded direct-loader continuation. Packages, source weights, large ONNX data, compiled contexts, and phone stages stay outside Git. The owning [experiment README](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/README.md), [experiment contract](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/protocol/experiment-contract.json), [QNN AOT result](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-aot/result.json), [host pipeline comparison](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/htp-pipeline-host-equivalence/result.json), [NPU-selection retry](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/phone-attempt-2-npu-context-claim-failure/result.json), [direct-QNN host preparation](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/direct-qnn-host-preparation/result.json), [first direct phone attempt](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/direct-qnn-phone-attempt-1-linker-failure/result.json), and [corrected direct phone attempt](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/direct-qnn-phone-attempt-2-context-limit/result.json) are the evidence authority.
 
 ## Progress
 
@@ -50,13 +50,17 @@ The complete API-31 AArch64 direct runner is 307,416 bytes with SHA-256 `484c4a1
 
 The first bounded direct phone attempt held `phone.lock`, verified the authorized device plus all 272 local and remote payload hashes, and then stopped before entering `main`. Android's dynamic linker reported a missing `std::__ndk1::basic_ifstream` symbol because the stage omitted the NDK `libc++_shared.so` required by the runner. No QNN API was called, no context loaded, no graph or HTP work executed, and no output or performance observation exists. The one memory sample is pre-main only. The process and scoped root were verified absent, and `phone.lock` was released.
 
-The corrected ignored stage now contains 273 payload files totaling 1,983,513,152 bytes before its additional metadata and manifest. It includes exact NDK r28b `libc++_shared.so` at SHA-256 `77a34d3f…c754`. An architecture-aware host `readelf` preflight checks that every AArch64 `DT_NEEDED` dependency is either staged or Android-system-provided and records the DSP6 libc++ dependency as firmware-provided. The corrected local manifest and dependency preflight pass.
+The corrected ignored stage contains 273 payload files totaling 1,983,513,152 bytes before its additional metadata and manifest. It includes exact NDK r28b `libc++_shared.so` at SHA-256 `77a34d3f…c754`. An architecture-aware host `readelf` preflight confirms that every AArch64 `DT_NEEDED` dependency is either staged or Android-system-provided and records the DSP6 libc++ dependency as firmware-provided.
 
-This correction is host preparation only. The new stage has not run on the phone, and the first attempt remains a pre-main linker diagnostic. Any corrected retry requires explicit Pi permission and a new full `phone.lock` lifecycle; no campaign is authorized.
+The authorized corrected attempt passed the ELF preflight and verified all 273 hashes locally and remotely under the full `phone.lock` lifecycle. The direct QNN runtime then physically deserialized the first 57 exact contexts on SM8550. Context 58 of 263, `layer-07-up-0`, failed in `QnnContext_createFromBinary` before the complete route became ready.
+
+No graph executed and no output or performance result exists. Peak sampled process VmHWM was 74,164 KiB and PSS 43,419 KiB, but process memory excludes DSP/backend allocations and does not explain the backend context limit; these startup observations are not benchmark memory. The process and scoped root were verified absent, and `phone.lock` was released.
+
+The route is blocked on the simultaneous independent-context count. The next gate is host-only consolidation of the 263 graphs into fewer multi-graph or weight-sharing QNN context binaries while preserving exact graph order, tensor ABI, explicit state, and loaded-route semantics. Per-token context reload is not an acceptable workaround. No further phone run or campaign is authorized.
 
 ## Results
 
-**The experiment is active with a corrected direct-QNN phone stage awaiting explicit retry permission.** The ORT attempts remain valid negative evidence, and the direct host probe still establishes first-context wiring only. The first direct phone attempt adds a physical transport/linker diagnostic but never reached the runner or QNN.
+**The experiment is blocked on the physical direct-QNN context-count limit.** The corrected runner bypassed ORT and proved that exact contexts can deserialize on SM8550, but only 57 of the required 263 loaded before context creation failed. The route never reached readiness or graph execution.
 
 | Evidence boundary | Current result |
 |---|---|
@@ -75,13 +79,16 @@ This correction is host preparation only. The new stage has not run on the phone
 | Direct-QNN host probe | Exact first context loaded, graph retrieved, and graph executed status 0 on x86 HTP emulation; outputs finite |
 | Direct Android runner | API-31 AArch64, 307,416 bytes / SHA `484c4a19…3148`; direct public QNN APIs, no ORT |
 | First direct phone attempt | 272 hashes passed; Android linker failed before `main` because `libc++_shared.so` was omitted |
-| Attempt-1 QNN/context/HTP/output | None / 0 / none / none; cleanup verified and lock released |
 | Corrected direct stage | 273 payload files / 1,983,513,152 bytes, exact NDK r28b libc++ included, ELF dependency preflight passed |
+| Corrected physical context loading | 57/263 exact contexts deserialized on SM8550 |
+| Current blocker | Context 58, `layer-07-up-0`, failed in `QnnContext_createFromBinary` before readiness |
+| Graph/model/HTP execution and output | 0 graphs; no output or performance result |
+| Memory boundary | Process-only startup samples exclude DSP/backend allocations and do not explain the limit |
+| Cleanup | Scoped root/process absent; `phone.lock` released |
 | Declared CPU boundary | Selected-row Q4 embedding, orchestration, and global argmax only |
-| Android / physical HTP execution for corrected direct route | Not attempted; retry permission pending |
 | Canonical campaign and Android performance | Not run; no setup, TTFT, prefill, decode, memory, thermal, or power result |
 | Android LLM registry row | None; host AOT and wiring evidence are not registry-eligible |
 
-The previous ORT attempts and the first direct attempt are physical transport/provider/linker diagnostics, not HTP execution. A pre-main failure proves no direct-QNN behavior. Host emulation, finite outputs, a cross-compiled runner, and a corrected local stage cannot substitute for phone context loading plus provider/RPC/accelerator/cycle/HVX proof. The CPU-bounded host differences are descriptive wiring checks, not a numerical acceptance policy or Android metric.
+The corrected attempt proves physical direct-QNN context deserialization for 57 exact contexts, not HTP graph execution. A started runtime and partial context set cannot substitute for loading the complete route, reaching readiness, and retaining provider/RPC/accelerator/cycle/HVX execution proof. The CPU-bounded host differences and process-only startup memory are descriptive observations, not a numerical acceptance policy or Android performance metric.
 
-No 0034 row belongs in the Android LLM registry. A new bounded direct-QNN phone viability gate must first succeed with exact context identity, declared CPU boundaries, physical QNN proof, output evidence, state reset, and scoped cleanup. Even success would be a milestone; a separate complete loaded-route campaign is required for registry publication.
+No 0034 row belongs in the Android LLM registry. Host consolidation must first produce fewer exact multi-graph contexts with validated identity/state semantics; only a separately authorized bounded phone gate could then test physical viability. Even success would be a milestone, and a separate complete loaded-route campaign is required for registry publication.
