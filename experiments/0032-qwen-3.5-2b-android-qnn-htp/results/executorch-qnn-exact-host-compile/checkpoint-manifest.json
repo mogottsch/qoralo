@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "evidence_class": "exact_checkpoint_identity_and_conversion",
+  "model": {
+    "source": "Qwen/Qwen3.5-2B",
+    "revision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "license": "Apache-2.0",
+    "text_layers": 24,
+    "official_weight": {
+      "filename": "model.safetensors-00001-of-00001.safetensors",
+      "bytes": 4548221488,
+      "sha256": "aa33250c4fc64891ddfaba3a314fd9542ea371843c387178b425fbcc5ed680b1"
+    },
+    "config_sha256": "ed1c1723241f23f7f4e23430759cbd7dcfb4103cbdfe052bfe7626b57c2615b4",
+    "tokenizer_json_sha256": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+    "tokenizer_config_sha256": "49e2b6e395f959f077f1e992b338919c0d4a9732fc6e613995e06557f843500c",
+    "chat_template_sha256": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80"
+  },
+  "conversion": {
+    "implementation": "executorch.examples.models.qwen3_5.convert_weights",
+    "executorch_git_revision": "0b0e2c5cdd67c8b4396a46ea1d1aa72ffb0128d7",
+    "converted_checkpoint_bytes": 3763756713,
+    "converted_checkpoint_sha256": "a2640184f26ce851c3bf305fd77f4dac6af3381025a4ace1d431e7d685c70e86"
+  },
+  "artifact_policy": "Official and converted weight files remain local-only and are not committed.",
+  "claim_limits": [
+    "Identity and conversion evidence only; the files themselves are restricted to local storage.",
+    "This file is not Android execution or physical QNN/HTP evidence."
+  ]
+}

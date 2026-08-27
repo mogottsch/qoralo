@@ -21,6 +21,12 @@ class ContractTest(unittest.TestCase):
         cls.structural = json.loads(
             (EXP / "results/executorch-qnn-structural-probe/result.json").read_text()
         )
+        cls.exact_compile = json.loads(
+            (EXP / "results/executorch-qnn-exact-host-compile/compile-result.json").read_text()
+        )
+        cls.eager = json.loads(
+            (EXP / "results/executorch-qnn-exact-host-compile/eager-equivalence.json").read_text()
+        )
 
     def test_canonical_protocol_and_workloads(self) -> None:
         canonical = self.contract["canonical_protocol"]
@@ -85,14 +91,16 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
     def test_active_route_does_not_claim_physical_execution(self) -> None:
-        self.assertTrue(self.contract["status"].startswith("active_executorch"))
+        self.assertTrue(self.contract["status"].startswith("active_"))
         prior = self.result["route_assessment"]
         self.assertFalse(prior["android_execution"])
         self.assertFalse(prior["qnn_htp_execution"])
         route = self.contract["executorch_qnn_route"]
         self.assertEqual(151, route["structural_probe_delegated_tensor_compute_nodes"])
         self.assertEqual(0, route["structural_probe_non_delegated_tensor_compute_nodes"])
-        self.assertFalse(route["exact_model_compiled"])
+        self.assertTrue(route["exact_model_compiled"])
+        self.assertEqual(4102, route["exact_model_delegated_tensor_compute_nodes"])
+        self.assertEqual(0, route["exact_model_non_delegated_tensor_compute_nodes"])
         self.assertFalse(route["android_execution"])
         self.assertFalse(route["physical_qnn_htp_execution"])
 
@@ -105,11 +113,38 @@ class ContractTest(unittest.TestCase):
         self.assertIn("synthetic", " ".join(probe["claim_limits"]).lower())
         self.assertIn("not Android", " ".join(probe["claim_limits"]))
 
+    def test_exact_checkpoint_eager_equivalence(self) -> None:
+        eager = self.eager
+        self.assertEqual("exact_checkpoint_host_eager_equivalence", eager["evidence_class"])
+        for key in ("logits", "recurrent_state_layer0", "conv_state_layer0"):
+            self.assertEqual(0.0, eager[key]["max_abs"])
+            self.assertEqual(0.0, eager[key]["mean_abs"])
+        self.assertEqual(eager["reference_argmax"], eager["adapter_argmax"])
+        self.assertEqual([], eager["missing"])
+        self.assertEqual([], eager["unexpected"])
+
+    def test_exact_checkpoint_compile_is_tensor_compute_fallback_free(self) -> None:
+        result = self.exact_compile
+        self.assertEqual("compiled", result["status"])
+        self.assertEqual("exact_checkpoint_host_aot_compile", result["evidence_class"])
+        self.assertTrue(result["all_tensor_compute_delegated"])
+        self.assertEqual({}, result["non_delegated_tensor_compute"])
+        self.assertEqual(4, result["delegated_subgraphs"])
+        self.assertEqual(4102, result["delegated_nodes"])
+        self.assertEqual(0, result["delegation_by_operator"]["qwen35_softplus_default"]["non_delegated"])
+        self.assertEqual({"soc": "SM8550", "htp_arch": 73}, result["target"])
+        self.assertEqual(4096, result["context_tokens"])
+        self.assertEqual(174, result["calibration"]["tokens"])
+        self.assertTrue(result["calibration"]["last_logits_finite"])
+        self.assertFalse(self.contract["executorch_qnn_route"]["android_execution"])
+        self.assertIn("not run on Android", " ".join(result["claim_limits"]))
+
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
             EXP / "protocol",
             EXP / "results/support-assessment",
             EXP / "results/executorch-qnn-structural-probe",
+            EXP / "results/executorch-qnn-exact-host-compile",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

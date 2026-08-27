@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active. A new ExecuTorch explicit-state route has passed a bounded host QNN compile gate, removing the former “no converter implementation” boundary. The exact 2B checkpoint is not compiled yet, and no Android or physical HTP execution claim exists.**
+**Active. The exact official 24-layer Qwen3.5-2B checkpoint has passed host eager equivalence and a complete SM8550/HTP-v73 QNN AOT compile with zero non-delegated tensor compute. Android and physical HTP execution remain pending.**
 
 This is a separate HTP feasibility arm. It does not change or relabel `0027` CPU evidence.
 
@@ -12,7 +12,9 @@ This is a separate HTP feasibility arm. It does not change or relabel `0027` CPU
 
 A one-layer synthetic-geometry gate compiled for `SM8550` / HTP v73 as one QNN subgraph: 151 tensor-compute operators were delegated and none remained outside QNN. The compiler finalized and serialized a 110,432-byte context; the generated PTE stays local-only. See [`results/executorch-qnn-structural-probe/result.json`](results/executorch-qnn-structural-probe/result.json).
 
-This proves only architecture-route viability. The graph used tiny deterministic synthetic weights, ran on the x86 host compiler, and produced no Android text. Exact-checkpoint compilation, physical HTP execution, output sanity, and the canonical campaign remain open.
+That first result proved only architecture-route viability. The subsequent exact-checkpoint milestone is retained in [`results/executorch-qnn-exact-host-compile/`](results/executorch-qnn-exact-host-compile/): the official revision was hash-bound and converted, the explicit-state adapter matched ExecuTorch eager logits and first-layer states exactly, and the W4A16 graph compiled as four QNN subgraphs with all 4,102 tensor-compute nodes delegated. All four graphs finalized and serialized for SM8550/HTP v73. The local-only 1,994,572,968-byte PTE has SHA-256 `bfdae1c3327c954566ec0d4a5a0ee8873eb145d0921bc3f9d988a6a2557be6df`.
+
+This remains host AOT evidence. The PTE has not run on Android and produces no physical QNN RPC, HTP timing/cycle, HVX, text-output, or performance claim.
 
 ## Cheapest credible route assessment
 
@@ -33,10 +35,9 @@ The pinned official tokenizer/template was reconstructed independently. With thi
 
 ## Current next gate
 
-1. Download and hash-bind the pinned official Qwen3.5-2B checkpoint outside Git.
-2. Convert its text weights with the pinned ExecuTorch mapping and verify eager equivalence for explicit state.
-3. Compile the exact 24-layer route for SM8550/HTP v73, retaining zero non-delegated tensor compute.
-4. Only then stage a bounded phone viability request under `phone.lock`, with physical QNN RPC/accelerator/cycle/HVX proof and verified cleanup.
-5. After viability, implement loaded-route request reset and run the fixed 1+5+5+5 campaign.
+1. Continue host-only runtime/runner preparation while the shared phone remains assigned elsewhere.
+2. Only after Pi explicitly transfers phone priority, stage the hash-bound PTE and a scoped runner under `phone.lock`.
+3. Run one bounded viability request with physical QNN RPC/accelerator/cycle/HVX proof, generated-token sanity, and verified cleanup.
+4. Prove loaded-route state reset, then run the fixed 1+5+5+5 campaign.
 
 GenieX llama.cpp NPU metrics, the shipped 4B HTP example, direct-Hexagon output without QNN, and CPU-only text output are not substitutes for physical QNN/HTP provider proof.

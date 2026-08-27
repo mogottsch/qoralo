@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
-  "status": "active_executorch_explicit_state_qnn_route_structurally_compiled_exact_model_pending",
+  "status": "active_exact_checkpoint_host_qnn_compiled_physical_execution_pending",
   "question": "Can Qwen3.5-2B run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Qwen3.5-2B post-trained text generation only",
@@ -96,18 +96,24 @@
     "summary": "The installed QAIRT ONNX/GGUF route remains blocked: no public 2B ONNX+encodings exists, direct GGUF does not support qwen35, and the installed ONNX builder has an incompatible hardcoded 4B split point. This is retained historical route evidence, not the boundary of the new ExecuTorch route."
   },
   "executorch_qnn_route": {
-    "status": "bounded_structural_compile_passed_exact_model_pending",
-    "result_path": "results/executorch-qnn-structural-probe/result.json",
+    "status": "exact_checkpoint_host_aot_compile_passed_physical_execution_pending",
+    "structural_result_path": "results/executorch-qnn-structural-probe/result.json",
+    "exact_compile_result_path": "results/executorch-qnn-exact-host-compile/compile-result.json",
     "runtime": "ExecuTorch 1.2.0 Qualcomm QNN delegate",
     "target": "SM8550/HTP v73",
     "state_abi": "explicit full-attention KV and Gated DeltaNet recurrent/causal-convolution graph inputs and outputs",
     "structural_probe_qnn_subgraphs": 1,
     "structural_probe_delegated_tensor_compute_nodes": 151,
     "structural_probe_non_delegated_tensor_compute_nodes": 0,
-    "exact_model_compiled": false,
+    "exact_model_compiled": true,
+    "exact_model_quantization": "W4A16 PTQ with per-channel Linear/Conv weights and 16-bit activations",
+    "exact_model_qnn_subgraphs": 4,
+    "exact_model_delegated_tensor_compute_nodes": 4102,
+    "exact_model_non_delegated_tensor_compute_nodes": 0,
+    "exact_model_pte_sha256": "bfdae1c3327c954566ec0d4a5a0ee8873eb145d0921bc3f9d988a6a2557be6df",
     "android_execution": false,
     "physical_qnn_htp_execution": false,
-    "next_gate": "Hash-bind and convert the exact pinned 24-layer checkpoint, verify eager explicit-state equivalence, then compile it with zero tensor-compute fallback before phone staging."
+    "next_gate": "After Pi explicitly transfers phone priority, stage the hash-bound PTE and run a bounded physical QNN/HTP viability request with provider and accelerator evidence."
   },
   "required_provider_proof_if_unblocked": {
     "compiled_context_identity": "Hash every deployed serialized context and bind SM8550/v73 compiler provenance.",
@@ -115,7 +121,7 @@
     "no_silent_cpu_only": "A text response or GenieX NPU metric without QNN context/provider proof is not this route.",
     "loaded_route_isolation": "One loaded route plus proven full reset or fresh Session/Dialog per logical request."
   },
-  "phone_boundary": "No ADB or phone.lock use occurred. Phone work requires Pi's explicit priority handoff after a compiled route exists.",
+  "phone_boundary": "No model or runtime was staged. Phone work remains prohibited until Pi explicitly transfers priority, even if ADB authorization becomes available.",
   "prohibited_shortcuts": [
     "relabelling GenieX llama.cpp NPU results as QNN/HTP",
     "applying the shipped 4B example or hardcoded width to 2B",

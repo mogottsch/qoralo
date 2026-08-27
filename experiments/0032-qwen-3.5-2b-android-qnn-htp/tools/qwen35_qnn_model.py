@@ -73,15 +73,15 @@ class RMSNormGated(nn.Module):
 def _apply_rope(
     x: torch.Tensor, cos: torch.Tensor, sin: torch.Tensor, rotary_dim: int
 ) -> torch.Tensor:
-    # x: [B, H, S, D], cos/sin: [S, rotary_dim/2]
+    # Match ExecuTorch/Hugging Face partial RoPE: rotate the first and second
+    # halves of the rotary region rather than adjacent even/odd elements.
     x_rot, x_pass = x[..., :rotary_dim], x[..., rotary_dim:]
-    x1 = x_rot[..., 0::2]
-    x2 = x_rot[..., 1::2]
-    cos = cos.view(1, 1, cos.shape[0], -1)
-    sin = sin.view(1, 1, sin.shape[0], -1)
-    rotated = torch.stack((x1 * cos - x2 * sin, x1 * sin + x2 * cos), dim=-1)
-    rotated = rotated.flatten(-2)
-    return torch.cat((rotated, x_pass), dim=-1)
+    first = x_rot[..., : rotary_dim // 2]
+    second = x_rot[..., rotary_dim // 2 :]
+    rotate_half = torch.cat((-second, first), dim=-1)
+    cos = cos.view(1, 1, cos.shape[0], rotary_dim)
+    sin = sin.view(1, 1, sin.shape[0], rotary_dim)
+    return torch.cat((x_rot * cos + rotate_half * sin, x_pass), dim=-1)
 
 
 def _repeat_kv(x: torch.Tensor, repeats: int) -> torch.Tensor:
@@ -147,6 +147,40 @@ class Qwen35FullAttention(nn.Module):
         return output, all_key, all_value
 
 
+class GatedDeltaRecurrence(nn.Module):
+    """Numerically sensitive Qwen3.5 recurrence, isolated for FP16 QNN lowering."""
+
+    def __init__(self, key_head_dim: int, a_log: nn.Parameter, dt_bias: nn.Parameter) -> None:
+        super().__init__()
+        # Keep the owning attention module's parameter names stable. These are
+        # plain references for computation, not separately registered copies.
+        object.__setattr__(self, "_a_log", a_log)
+        object.__setattr__(self, "_dt_bias", dt_bias)
+        self.key_head_dim = key_head_dim
+
+    def forward(self, query, key, value, a, b, recurrent_state):
+        query32 = query.float()
+        key32 = key.float()
+        query32 = query32 * torch.rsqrt(
+            (query32 * query32).sum(-1, keepdim=True) + 1e-6
+        )
+        key32 = key32 * torch.rsqrt((key32 * key32).sum(-1, keepdim=True) + 1e-6)
+        query32 = query32[:, 0] * (1.0 / math.sqrt(self.key_head_dim))
+        key32 = key32[:, 0]
+        value32 = value.float()[:, 0]
+        beta = torch.sigmoid(b.float())[:, 0]
+        decay_log = (
+            -torch.exp(self._a_log.float())
+            * softplus(a.float() + self._dt_bias.float())[:, 0]
+        )
+        state = recurrent_state.float() * torch.exp(decay_log).unsqueeze(-1).unsqueeze(-1)
+        remembered = (state * key32.unsqueeze(-1)).sum(dim=-2)
+        delta = (value32 - remembered) * beta.unsqueeze(-1)
+        state = state + key32.unsqueeze(-1) * delta.unsqueeze(-2)
+        core = (state * query32.unsqueeze(-1)).sum(dim=-2).unsqueeze(1)
+        return core, state.to(recurrent_state.dtype)
+
+
 class Qwen35GatedDeltaNet(nn.Module):
     def __init__(self, config) -> None:
         super().__init__()
@@ -173,6 +207,7 @@ class Qwen35GatedDeltaNet(nn.Module):
         )
         self.dt_bias = nn.Parameter(torch.ones(self.num_value_heads))
         self.A_log = nn.Parameter(torch.zeros(self.num_value_heads))
+        self.recurrence = GatedDeltaRecurrence(self.key_head_dim, self.A_log, self.dt_bias)
         self.norm = RMSNormGated(self.value_head_dim, config.norm_eps)
         self.out_proj = nn.Linear(self.value_dim, self.dim, bias=False)
 
@@ -200,25 +235,14 @@ class Qwen35GatedDeltaNet(nn.Module):
         if self.head_repeat > 1:
             query = query.repeat_interleave(self.head_repeat, dim=2)
             key = key.repeat_interleave(self.head_repeat, dim=2)
-        query32 = query.float()
-        key32 = key.float()
-        query32 = query32 * torch.rsqrt(
-            (query32 * query32).sum(-1, keepdim=True) + 1e-6
+        core, state = self.recurrence(
+            query,
+            key,
+            value,
+            self.in_proj_a(hidden),
+            self.in_proj_b(hidden),
+            recurrent_state,
         )
-        key32 = key32 * torch.rsqrt((key32 * key32).sum(-1, keepdim=True) + 1e-6)
-        query32 = query32[:, 0] * (1.0 / math.sqrt(self.key_head_dim))
-        key32 = key32[:, 0]
-        value32 = value.float()[:, 0]
-        beta = torch.sigmoid(self.in_proj_b(hidden).float())[:, 0]
-        decay_log = (
-            -torch.exp(self.A_log.float())
-            * softplus(self.in_proj_a(hidden).float() + self.dt_bias.float())[:, 0]
-        )
-        state = recurrent_state.float() * torch.exp(decay_log).unsqueeze(-1).unsqueeze(-1)
-        remembered = (state * key32.unsqueeze(-1)).sum(dim=-2)
-        delta = (value32 - remembered) * beta.unsqueeze(-1)
-        state = state + key32.unsqueeze(-1) * delta.unsqueeze(-2)
-        core = (state * query32.unsqueeze(-1)).sum(dim=-2).unsqueeze(1)
         gate = self.in_proj_z(hidden).view(batch, 1, self.num_value_heads, self.value_head_dim)
         core = self.norm(core.reshape(-1, self.value_head_dim), gate.reshape(-1, self.value_head_dim))
         output = self.out_proj(core.view(batch, 1, self.value_dim))
@@ -287,8 +311,9 @@ class Qwen35QnnModel(nn.Module):
         )
         positions = torch.arange(context_len, dtype=torch.float32)
         freqs = torch.outer(positions, inv_freq)
-        self.register_buffer("freqs_cos", freqs.cos(), persistent=False)
-        self.register_buffer("freqs_sin", freqs.sin(), persistent=False)
+        doubled_freqs = torch.cat((freqs, freqs), dim=-1)
+        self.register_buffer("freqs_cos", doubled_freqs.cos(), persistent=False)
+        self.register_buffer("freqs_sin", doubled_freqs.sin(), persistent=False)
 
     def forward(
         self,

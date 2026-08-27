@@ -1,0 +1,189 @@
+{
+  "all_tensor_compute_delegated": true,
+  "allowed_non_compute_boundary_ops": [
+    "getitem",
+    "llama_fallback_default"
+  ],
+  "calibration": {
+    "last_argmax": 21365,
+    "last_logits_finite": true,
+    "seconds": 231.78204415500113,
+    "tokens": 174
+  },
+  "claim_limits": [
+    "Host AOT compiler evidence only; the PTE has not run on Android.",
+    "No physical QNN RPC, HTP timing/cycles, HVX, text-output, or performance claim exists.",
+    "W4A16 numerical/output sanity still requires runtime validation."
+  ],
+  "compiler": {
+    "executorch_git_revision": "0b0e2c5cdd67c8b4396a46ea1d1aa72ffb0128d7",
+    "executorch_version": "1.2.0+cpu",
+    "qairt_version": "2.49.0.260730",
+    "qnn_api_observed": "2.38.0",
+    "qnn_api_tested_by_adapter": "2.27.0"
+  },
+  "context_tokens": 4096,
+  "converted_checkpoint_sha256": "a2640184f26ce851c3bf305fd77f4dac6af3381025a4ace1d431e7d685c70e86",
+  "delegated_nodes": 4102,
+  "delegated_subgraphs": 4,
+  "delegation_by_operator": {
+    "aten__softmax_default": {
+      "delegated": 6,
+      "non_delegated": 0
+    },
+    "aten__to_copy_default": {
+      "delegated": 205,
+      "non_delegated": 0
+    },
+    "aten_add_tensor": {
+      "delegated": 278,
+      "non_delegated": 0
+    },
+    "aten_cat_default": {
+      "delegated": 54,
+      "non_delegated": 0
+    },
+    "aten_convolution_default": {
+      "delegated": 205,
+      "non_delegated": 0
+    },
+    "aten_div_tensor": {
+      "delegated": 6,
+      "non_delegated": 0
+    },
+    "aten_embedding_default": {
+      "delegated": 1,
+      "non_delegated": 0
+    },
+    "aten_exp_default": {
+      "delegated": 36,
+      "non_delegated": 0
+    },
+    "aten_expand_copy_default": {
+      "delegated": 12,
+      "non_delegated": 0
+    },
+    "aten_index_tensor": {
+      "delegated": 2,
+      "non_delegated": 0
+    },
+    "aten_matmul_default": {
+      "delegated": 12,
+      "non_delegated": 0
+    },
+    "aten_mean_dim": {
+      "delegated": 79,
+      "non_delegated": 0
+    },
+    "aten_mul_tensor": {
+      "delegated": 567,
+      "non_delegated": 0
+    },
+    "aten_neg_default": {
+      "delegated": 30,
+      "non_delegated": 0
+    },
+    "aten_permute_copy_default": {
+      "delegated": 440,
+      "non_delegated": 0
+    },
+    "aten_rsqrt_default": {
+      "delegated": 115,
+      "non_delegated": 0
+    },
+    "aten_select_copy_int": {
+      "delegated": 92,
+      "non_delegated": 0
+    },
+    "aten_sigmoid_default": {
+      "delegated": 84,
+      "non_delegated": 0
+    },
+    "aten_slice_copy_tensor": {
+      "delegated": 84,
+      "non_delegated": 0
+    },
+    "aten_split_with_sizes_copy_default": {
+      "delegated": 24,
+      "non_delegated": 0
+    },
+    "aten_squeeze_copy_dims": {
+      "delegated": 18,
+      "non_delegated": 0
+    },
+    "aten_sub_tensor": {
+      "delegated": 18,
+      "non_delegated": 0
+    },
+    "aten_sum_dim_int_list": {
+      "delegated": 72,
+      "non_delegated": 0
+    },
+    "aten_unsqueeze_copy_default": {
+      "delegated": 174,
+      "non_delegated": 0
+    },
+    "aten_view_copy_default": {
+      "delegated": 881,
+      "non_delegated": 0
+    },
+    "getitem": {
+      "delegated": 66,
+      "non_delegated": 68
+    },
+    "llama_fallback_default": {
+      "delegated": 0,
+      "non_delegated": 3
+    },
+    "quantized_decomposed_dequantize_per_channel_default": {
+      "delegated": 205,
+      "non_delegated": 0
+    },
+    "quantized_decomposed_dequantize_per_tensor_default": {
+      "delegated": 318,
+      "non_delegated": 0
+    },
+    "qwen35_softplus_default": {
+      "delegated": 18,
+      "non_delegated": 0
+    }
+  },
+  "evidence_class": "exact_checkpoint_host_aot_compile",
+  "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
+  "model": "Qwen/Qwen3.5-2B",
+  "model_revision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+  "non_delegated_nodes": 71,
+  "non_delegated_tensor_compute": {},
+  "phase_timestamps": {
+    "calibration_end_unix_ns": 1787825657802043149,
+    "convert_end_unix_ns": 1787825676467943903,
+    "export_end_unix_ns": 1787825409691082685,
+    "export_start_unix_ns": 1787825387105305603,
+    "qnn_compile_end_unix_ns": 1787826088081387017,
+    "qnn_compile_start_unix_ns": 1787825676472649517
+  },
+  "pte": {
+    "bytes": 1994572968,
+    "policy": "local-only; not committed",
+    "sha256": "bfdae1c3327c954566ec0d4a5a0ee8873eb145d0921bc3f9d988a6a2557be6df"
+  },
+  "quantization": "W4A16 PTQ with per-channel Linear/Conv weights and 16-bit activations, including Gated DeltaNet recurrence",
+  "schema_version": 1,
+  "serialized_context_bytes": [
+    1198797288,
+    177291016,
+    180630008,
+    437832744
+  ],
+  "shards": 4,
+  "source_compile_log": {
+    "bytes": 39470474,
+    "policy": "local-only; curated compiler-proof.log is committed",
+    "sha256": "c8c7cd5b18edc8b20bbdb30304e947eb84c7aa541f35dca69311307cf25c24ae"
+  },
+  "status": "compiled",
+  "target": {
+    "htp_arch": 73,
+    "soc": "SM8550"
+  }
+}
