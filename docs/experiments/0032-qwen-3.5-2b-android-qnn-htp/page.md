@@ -1,7 +1,7 @@
 ---
 experiment: 0032-qwen-3.5-2b-android-qnn-htp
 status: active
-summary: Host QNN localization identifies implicit broadcasting in the first Gated Delta recurrent outer product as the first large divergence; explicit static expansion fixes the minimal W4A16 repro, with exact-route recompilation pending.
+summary: The exact route is recompiled with explicit recurrent broadcasts; QNN-x86 removes the first-layer corruption and saturation, but overall logits still drift and the full-prompt simulator replay timed out.
 benchmark: android-llm
 ---
 
@@ -13,7 +13,7 @@ Qwen3.5-2B already has a measured Android CPU route, but the first QNN assessmen
 
 The explicit-state design makes full-attention KV cache plus Gated DeltaNet recurrent and causal-convolution state graph inputs and outputs. This avoids hidden mutable-buffer fallback and gives a future loaded route an auditable reset boundary. Softplus remains an explicit edge operation mapped to QNN's HTP-supported `ElementWiseNeuron(SOFTPLUS)` operation.
 
-The end-to-end target remains stricter than one physical request: the exact pinned 24-layer text checkpoint must produce credible bounded output through physical QNN/HTP, demonstrate complete loaded-route request-state isolation, and only then run the canonical one-first-plus-five-short/five-medium/five-long campaign. The owning [experiment README](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/README.md), [experiment contract](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/protocol/experiment-contract.json), [host compile result](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-exact-host-compile/compile-result.json), [eager comparison](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-exact-host-compile/eager-equivalence.json), [Android runner host build](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-explicit-state-runner-host-build/result.json), [first physical attempt](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-qnn-physical-viability-20260827-attempt-01/result.json), [boundary-kernel host fix](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-runner-boundary-fix-host-build/result.json), [physical execution result](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-qnn-physical-viability-20260827-attempt-02/result.json), [host W4A16 QDQ diagnosis](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/host-w4a16-qdq-output-diagnosis/result.json), and [host broadcast-divergence localization](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/host-qnn-broadcast-divergence-localization/result.json) are the evidence authority.
+The end-to-end target remains stricter than one physical request: the exact pinned 24-layer text checkpoint must produce credible bounded output through physical QNN/HTP, demonstrate complete loaded-route request-state isolation, and only then run the canonical one-first-plus-five-short/five-medium/five-long campaign. The owning [experiment README](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/README.md), [experiment contract](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/protocol/experiment-contract.json), [host compile result](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-exact-host-compile/compile-result.json), [eager comparison](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-exact-host-compile/eager-equivalence.json), [Android runner host build](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-explicit-state-runner-host-build/result.json), [first physical attempt](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-qnn-physical-viability-20260827-attempt-01/result.json), [boundary-kernel host fix](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-runner-boundary-fix-host-build/result.json), [physical execution result](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-qnn-physical-viability-20260827-attempt-02/result.json), [host W4A16 QDQ diagnosis](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/host-w4a16-qdq-output-diagnosis/result.json), and [host broadcast-divergence localization](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/host-qnn-broadcast-divergence-localization/result.json), and [exact repaired-PTE validation](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/exact-qnn-explicit-broadcast-host-validation/result.json) are the evidence authority.
 
 ## Progress
 
@@ -92,11 +92,26 @@ The exact deployed PTE was then run through QNN's x86 backend at token position 
 
 A minimal one-layer W4A16 reproduction isolated the failed operation. QDQ produced 128 nonzero recurrent outer-product values for implicit multiplication `[B,H,K,1] * [B,H,1,V]`; QNN x86 wrote only 16, with cosine `0.353553`. Explicitly expanding decay, key, beta, delta, and query operands to identical static geometry before the recurrence's elementwise multiplications leaves QDQ semantics unchanged and restores QNN to 128/128 values. The corrected minimal probe reached recurrent cosine `1.0`, maximum recurrent error `4.13e-7`, and maximum final-logit error `2.96e-5`.
 
-This identifies implicit QNN elementwise broadcasting as the first divergence and demonstrates a bounded fix in the minimal graph. The exact 24-layer route has not yet been recompiled or validated with that fix, so no revised physical output or fidelity claim exists.
+This identifies implicit QNN elementwise broadcasting as the first divergence and demonstrates a bounded fix in the minimal graph.
+
+The exact 24-layer route is now recompiled with explicit static expansion. The new local-only PTE is 1,994,754,552 bytes with SHA-256 `23ac8abd…c506`. Its four SM8550/v73 QNN subgraphs contain 4,210 delegated tensor-compute nodes, including 120 explicit expand nodes, with zero non-delegated tensor compute; all four graphs finalized and serialized at status `0x0`.
+
+At token position zero, QNN-x86 validation shows the exact repair is present:
+
+- layer-0 recurrent-state cosine improves from about `0.0064` to `0.999829`;
+- QNN-to-QDQ recurrent norm ratio improves from `117.81` to `0.9983`;
+- layer-0 convolution-state cosine remains about `0.9999996`;
+- the previous 39,209-way exact logit maximum becomes one unique maximum.
+
+The result is still not full numerical equivalence. Overall first-token logits have cosine about `0.434`, and QDQ selects token 62 while QNN-x86 selects token 198. The first identified recurrent corruption is repaired, but numeric drift remains beyond that state.
+
+A full 174-token QNN-x86 replay was attempted and stopped at the 3,600-second tool timeout after completing position 29. Four sampled checkpoints at positions 0, 9, 19, and 29 had finite logits and unique maxima, but the replay produced no final canonical-short output. No simulator process remained afterward.
+
+The repaired PTE has not been staged or executed physically. The phone preflight pins its new hash, but any bounded physical check requires a separate explicit Pi handoff. No revised output, performance, campaign, or registry claim exists.
 
 ## Results
 
-**The experiment is active with the first large mismatch localized to implicit QNN broadcasting in layer 0 recurrence.** Physical provider execution remains established, and host diagnosis now demonstrates a minimal explicit-expansion fix. Exact 24-layer recompilation, revised-route fidelity, and campaign readiness remain unproven.
+**The experiment is active with the exact broadcast repair compiled and host-validated through QNN x86.** The first-layer recurrent corruption and massive logit saturation are removed, while remaining first-token logit drift and an incomplete full-prompt simulator replay prevent a complete fidelity claim. Revised physical behavior and campaign readiness remain unproven.
 
 | Evidence boundary | Current result |
 |---|---|
@@ -121,11 +136,15 @@ This identifies implicit QNN elementwise broadcasting as the first divergence an
 | Exact old-PTE first divergence | Layer-0 conv state aligned; recurrent state cosine ~0.0064 / ~117.81× QDQ L2; 39,209 logits at exact max |
 | Minimal implicit-broadcast repro | QDQ 128 nonzeros vs QNN 16; cosine 0.353553 |
 | Minimal explicit-expand fix | QNN 128/128; recurrent cosine 1.0 / max error 4.13e-7; logits max error 2.96e-5 |
-| Exact fixed 24-layer route | Not yet recompiled or host-validated; no revised physical result |
-| Output sanity | `looks_sensible: null`, `issue_notes: null`; one punctuation token is insufficient to check |
+| Exact repaired PTE | 1,994,754,552 bytes / SHA `23ac8abd…c506`; 4 subgraphs, 4,210 delegated compute incl. 120 expands, zero tensor fallback |
+| Exact repaired first state | Recurrent cosine 0.999829 / norm ratio 0.9983; conv cosine 0.9999996; unique logit max |
+| Remaining QNN-x86 drift | Overall logits cosine 0.434; QDQ argmax 62 vs QNN-x86 198; not full equivalence |
+| Full-prompt simulator replay | Timed out at 3,600 s after position 29; four checkpoints finite/unique, no final output |
+| Revised physical route | Not staged or executed; no revised output/performance claim |
+| Output sanity | Existing physical attempt remains `looks_sensible: null`, `issue_notes: null` |
 | Cleanup | Process and scoped root verified absent; lock released and independently rechecked |
 | Android LLM registry row | None; host AOT evidence is not registry-eligible |
 
-Attempt 02 proves bounded physical execution of the exact old route through QNN HTP v73, including accelerator/RPC/cycle/HVX observations. It does not prove quantized numerical fidelity or credible generated text. The host work now identifies the first cause as implicit recurrent broadcasting for the tested QNN lowering path and rules out several later or Android-only mechanisms as the first divergence. The minimal fix is not an exact-route result. Physical and host timings remain respectively one max-new-tokens-1 viability observation and diagnostic work, not loaded-route campaign performance; the single-request runner remains campaign-ineligible.
+Attempt 02 proves bounded physical execution of the old route through QNN HTP v73, including accelerator/RPC/cycle/HVX observations. It does not prove quantized numerical fidelity or credible generated text. The host work identifies and now carries the explicit-broadcast repair into an exact PTE, but QNN-x86 still differs materially from QDQ overall. The incomplete simulator replay cannot supply a final host output, and QNN-x86 cannot predict revised physical output. Physical and host timings remain respectively one max-new-tokens-1 viability observation and diagnostic work, not loaded-route campaign performance; the single-request runner remains campaign-ineligible.
 
 A CPU-only response, GenieX NPU metric, direct-Hexagon output without QNN proof, or the dimension-incompatible shipped 4B example cannot satisfy this experiment. Neither can one mismatching punctuation token justify output sanity, usefulness, quality, or a campaign. No 0032 row belongs in the Android LLM registry until a complete valid physical Android canonical campaign establishes exact route identity, provider/no-fallback proof, state isolation, retained outputs, and a loaded-route performance distribution.
