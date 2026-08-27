@@ -1,117 +1,211 @@
 {
-  "schema_version": 1,
-  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
-  "status": "blocked_no_installed_or_public_lfm2_qnn_conversion_route",
-  "question": "Can LFM2.5-2.6B run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
-  "scope": {
-    "model": "LiquidAI LFM2.5-2.6B text generation only",
-    "backend": "QNN HTP",
-    "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**",
-    "immutable_prior_evidence": ["experiments/0029-lfm2.5-2.6b-android/**", "experiments/0033-*/**"],
-    "excluded": ["CPU/GPU arms", "authenticated AI Hub", "SDK updates", "new converter implementation", "rejected GGUF download", "publication"]
+  "authorized_architecture_aware_route": {
+    "aot_options_required": [
+      "session.disable_cpu_ep_fallback=1",
+      "enable_block_quant_weight_optimization=1",
+      "enable_framework_op_trace=1",
+      "soc_model=SM8550",
+      "htp_arch=73"
+    ],
+    "exporter": {
+      "license_sha256": "30adf9d6478191fb87f2424f63ba0728598335aaf99cd2848ef17e8e545fe94b",
+      "repository": "https://github.com/Liquid4All/onnx-export.git",
+      "revision": "9a23ddd23035165f7414a5de3220a51e85780f64"
+    },
+    "license_decision": "Moritz personally reviewed and authorized the public Qualcomm AI Stack License for the named packages on 2026-08-27.",
+    "qnn_ep": {
+      "android_plugin": "com.qualcomm.qti:onnxruntime-android-qnn:2.5.0",
+      "android_runtime": "com.qualcomm.qti:qnn-runtime:2.49.0",
+      "onnxruntime_version": "1.26.0",
+      "package": "onnxruntime-qnn",
+      "target": "SM8550 / HTP v73",
+      "version": "2.5.0"
+    },
+    "storage_boundary": "Qualcomm packages/binaries and license-controlled generated artifacts remain outside Git."
   },
   "canonical_protocol": {
-    "path": "protocols/android-llm-benchmark/contract.json",
-    "sha256": "2bb2de193745bc9b74c98639ee077f07615702655b2fc6118185148e2a0c0b46",
-    "workloads": {
-      "short": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae",
-      "medium": "5e168aa3232f06c92959b686188192471b2d1a62cd1c857a616fd8e29456ddf1",
-      "long": "092840fbe879259110fa4d0b15bc383012f16b7b42a38d224b2ead231e86aad8"
+    "first_request": {
+      "count": 1,
+      "tier": "short"
     },
-    "first_request": {"tier": "short", "count": 1},
-    "warm_requests_per_tier": 5,
-    "tier_order": ["short", "medium", "long"],
-    "max_new_tokens": 2048,
-    "request_timeout_seconds": 1800,
     "loaded_route_reuse_required": true,
-    "request_isolation_required": true
-  },
-  "model_identity": {
-    "source": "LiquidAI/LFM2.5-2.6B",
-    "revision": "ab00687315bc1298e9d54e9c4b611dde9867ccc2",
-    "license": "LFM Open License v1.0",
-    "license_sha256": "30adf9d6478191fb87f2424f63ba0728598335aaf99cd2848ef17e8e545fe94b",
-    "architecture": "Lfm2ForCausalLM",
-    "model_type": "lfm2",
-    "layers": 30,
-    "layer_type_counts": {"conv": 22, "full_attention": 8},
-    "conv_cache_length": 3,
-    "hidden_size": 2048,
-    "attention_heads": 32,
-    "kv_heads": 8,
-    "vocab_size": 128000,
-    "native_context_tokens": 131072
-  },
-  "official_public_artifact": {
-    "repository": "LiquidAI/LFM2.5-2.6B-GGUF",
-    "revision": "84022ce711b28455e8c4fc364ce68c00cf995875",
-    "filename": "LFM2.5-2.6B-Q4_K_M.gguf",
-    "bytes": 1674455040,
-    "sha256": "02a8b7e17487d326e46d68ce0ba24211e1b80a14c4cd0597fa73c1cd697f52ed",
-    "format": "GGUF v3",
-    "gguf_architecture": "lfm2",
-    "quantization": "Q4_K_M",
-    "downloaded_for_0034": false,
-    "download_avoided_reason": "0029 already binds exact bytes, and installed QAIRT rejects lfm2 by architecture before weights are required."
-  },
-  "public_qualcomm_support": {
-    "qualcomm_huggingface_lfm_models": 0,
-    "qai_hub_models_version": "v0.61.0",
-    "qai_hub_models_commit": "5975a79b55b40f5cbc61f3ac5e52abe47d9d8bd5",
-    "matching_model_directories": [],
-    "qnn_context_binary_published": false,
-    "quantized_onnx_encodings_published": false,
-    "model_export_or_quantize_implementation_present": false
-  },
-  "installed_qairt": {
-    "version": "2.49.0.260730",
-    "root": "/home/moritz/opt/qairt/2.49.0.260730",
-    "sdk_manifest_sha256": "309ac8f6c75c2fdc808f1c9b9d0da60be123c21a79532cca70a9c4b144d983f4",
-    "factory_sha256": "2095ea7e290f84e361c41bf4add0e40f05bf788aec7f2793d77ed1abd763bc55",
-    "gguf_support_table_sha256": "9cda939812402f99304a2cd7bb0286dd5ca4ef43e60492e4cef4f2fda85acdb7",
-    "release_notes_sha256": "84507e5a7c00a5c2d862c3d8582359be486a17a006e1a0124a4e39cf13f11ad4",
-    "factory_supports_Lfm2ForCausalLM": false,
-    "direct_gguf_supports_lfm2": false,
-    "matching_genie_configs": [],
-    "release_notes_mentions_lfm_or_liquid": false,
-    "sm8550_compile_target_supported_generically": true,
-    "generic_sm8550_target_is_not_lfm2_support": true,
-    "license_or_install_action_taken": false
-  },
-  "tokenizer_and_template": {
-    "source": "LiquidAI/LFM2.5-2.6B",
-    "revision": "ab00687315bc1298e9d54e9c4b611dde9867ccc2",
-    "tokenizer_json_sha256": "695be7802a0e4b8a81048f0ff5ebb7fc811a0ba5a6be63dbb24deb5a81096f41",
-    "tokenizer_config_sha256": "11f1de897317b489dd09199284528382eeb17f566398b16e2039bb2266d26b09",
-    "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
-    "special_token_ids": {"bos": 124894, "eos": 124900, "pad": 124893},
-    "native_reasoning_continuation": "Generation prompt ends with <think>.",
-    "prompt_inventory": {
-      "short": {"input_tokens": 171, "rendered_sha256": "9e6c713e83f0987f283264b789e102b9704d6067665fc7a0fee652938a3ae622", "token_ids_int32le_sha256": "eae8e828110f634d5c9954df0372e869f67f67aed846f9f544781faa1d4d29bc", "fits_context_4096": true},
-      "medium": {"input_tokens": 600, "rendered_sha256": "b19079dc6ed712ece98c5d60ea86c179d01ce30c4db4688a2b75f6cbca07c6ed", "token_ids_int32le_sha256": "bfd8e9ee4fecef5b3203ad67ee0c2fe1a5a4d3267cfabc83c4388f04e25789e9", "fits_context_4096": true},
-      "long": {"input_tokens": 1922, "rendered_sha256": "d247578b3a6247a457504d7c9ee153e7c737354d455804f5d198aeb2cd8ff442", "token_ids_int32le_sha256": "bf6cd4a807f1933a4890a52fc847242be44c45cfc712bc9767ed8030845ec512", "fits_context_4096": true}
+    "max_new_tokens": 2048,
+    "path": "protocols/android-llm-benchmark/contract.json",
+    "request_isolation_required": true,
+    "request_timeout_seconds": 1800,
+    "sha256": "2bb2de193745bc9b74c98639ee077f07615702655b2fc6118185148e2a0c0b46",
+    "tier_order": [
+      "short",
+      "medium",
+      "long"
+    ],
+    "warm_requests_per_tier": 5,
+    "workloads": {
+      "long": "092840fbe879259110fa4d0b15bc383012f16b7b42a38d224b2ead231e86aad8",
+      "medium": "5e168aa3232f06c92959b686188192471b2d1a62cd1c857a616fd8e29456ddf1",
+      "short": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae"
     }
   },
   "exact_blocker": {
-    "result_path": "results/support-assessment/result.json",
-    "summary": "Installed QAIRT supports neither lfm2 GGUF nor Lfm2ForCausalLM HTP factory conversion. Qualcomm publishes no LFM recipe, QNN conversion input, or context. Correct handling requires model-specific conversion and runtime orchestration for 22 convolutional state layers and 8 attention layers, which would be a new converter implementation outside authorization.",
-    "compiled_context_created": false,
     "android_execution": false,
+    "compiled_context_created": false,
     "qnn_htp_execution": false,
-    "required_action": "Provide a provenance-bound LFM2 quantized ONNX+encodings and builder or SM8550/v73 context bundle; authorize authenticated Qualcomm support if a non-public route exists; or authorize a separately bound updated/new LFM2 converter/runtime implementation."
+    "required_action": "No user action currently required. Continue static profile rewriting and fallback-disabled SM8550/v73 AOT; stop if a new terms/export/paid checkpoint appears.",
+    "result_path": "results/support-assessment/result.json",
+    "summary": "Historical rejected route only: installed high-level QAIRT GGUF/factory conversion has no LFM2 dispatch. The active architecture-aware LiquidONNX + QNN EP route has passed exact export and host viability; fallback-disabled HTP AOT remains unproven."
   },
-  "required_provider_proof_if_unblocked": {
-    "compiled_context_identity": "Hash every serialized context and bind SM8550/v73 compiler provenance.",
-    "state_boundary": "Bind convolutional recurrent state and attention KV state layout, reset semantics, and no retained state between requests.",
-    "partition_boundary": "All claimed transformer/state graphs must be HTP-bound; intentional CPU frontend/sampler work remains explicit.",
-    "no_silent_cpu_only": "A text response or generic SM8550 target without model/provider proof is not this route.",
-    "loaded_route_isolation": "One loaded route plus proven full state reset or fresh Session/Dialog per logical request."
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "host_export_milestone": {
+    "bounded_output": {
+      "bytes": 88,
+      "issue_notes": null,
+      "looks_sensible": true,
+      "max_new_tokens": 16,
+      "sha256": "f048f9244ab0728a86719fa502f954da2acc987eabb68220995b98ff18718518"
+    },
+    "classification": "host_only_not_android_qnn_or_htp_evidence",
+    "provenance": "results/export-provenance/result.json",
+    "q4_external_data": {
+      "bytes": 1855348736,
+      "retained_outside_git": true,
+      "sha256": "d3cf09855c69d5226d9ce481a83bce31981496e2a686a7879750a3f82e90f457"
+    },
+    "rewritten_onnx": {
+      "bytes": 410142,
+      "onnx_checker": "passed",
+      "sha256": "c2020ab7371d52df51683e663abff5d07eefcda604ddee159d02b7d73432d157"
+    },
+    "smoke": "results/host-export-smoke/result.json",
+    "source_revision": "ab00687315bc1298e9d54e9c4b611dde9867ccc2",
+    "source_shards": {
+      "model-00001-of-00002.safetensors": {
+        "bytes": 5329406264,
+        "sha256": "05be188e6570a7642b4690545ab22ebf4d0a6068775dd776a452eebf738854cc"
+      },
+      "model-00002-of-00002.safetensors": {
+        "bytes": 65021192,
+        "sha256": "532f803a9e6f127adc124d977503b438d8cc9c18f96e0862bf6835e38867bca8"
+      }
+    }
   },
-  "phone_boundary": "No ADB or phone.lock use occurred. Phone work requires a compiled route and Pi's explicit priority handoff.",
+  "installed_qairt": {
+    "direct_gguf_supports_lfm2": false,
+    "factory_sha256": "2095ea7e290f84e361c41bf4add0e40f05bf788aec7f2793d77ed1abd763bc55",
+    "factory_supports_Lfm2ForCausalLM": false,
+    "generic_sm8550_target_is_not_lfm2_support": true,
+    "gguf_support_table_sha256": "9cda939812402f99304a2cd7bb0286dd5ca4ef43e60492e4cef4f2fda85acdb7",
+    "license_or_install_action_taken": false,
+    "matching_genie_configs": [],
+    "release_notes_mentions_lfm_or_liquid": false,
+    "release_notes_sha256": "84507e5a7c00a5c2d862c3d8582359be486a17a006e1a0124a4e39cf13f11ad4",
+    "root": "/home/moritz/opt/qairt/2.49.0.260730",
+    "sdk_manifest_sha256": "309ac8f6c75c2fdc808f1c9b9d0da60be123c21a79532cca70a9c4b144d983f4",
+    "sm8550_compile_target_supported_generically": true,
+    "version": "2.49.0.260730"
+  },
+  "model_identity": {
+    "architecture": "Lfm2ForCausalLM",
+    "attention_heads": 32,
+    "conv_cache_length": 3,
+    "hidden_size": 2048,
+    "kv_heads": 8,
+    "layer_type_counts": {
+      "conv": 22,
+      "full_attention": 8
+    },
+    "layers": 30,
+    "license": "LFM Open License v1.0",
+    "license_sha256": "30adf9d6478191fb87f2424f63ba0728598335aaf99cd2848ef17e8e545fe94b",
+    "model_type": "lfm2",
+    "native_context_tokens": 131072,
+    "revision": "ab00687315bc1298e9d54e9c4b611dde9867ccc2",
+    "source": "LiquidAI/LFM2.5-2.6B",
+    "vocab_size": 128000
+  },
+  "official_public_artifact": {
+    "bytes": 1674455040,
+    "download_avoided_reason": "0029 already binds exact bytes, and installed QAIRT rejects lfm2 by architecture before weights are required.",
+    "downloaded_for_0034": false,
+    "filename": "LFM2.5-2.6B-Q4_K_M.gguf",
+    "format": "GGUF v3",
+    "gguf_architecture": "lfm2",
+    "quantization": "Q4_K_M",
+    "repository": "LiquidAI/LFM2.5-2.6B-GGUF",
+    "revision": "84022ce711b28455e8c4fc364ce68c00cf995875",
+    "sha256": "02a8b7e17487d326e46d68ce0ba24211e1b80a14c4cd0597fa73c1cd697f52ed"
+  },
+  "phone_boundary": "No ADB or phone.lock use has occurred in 0034. Phone work waits for fallback-disabled compiled contexts, provider trace, and Pi priority.",
   "prohibited_shortcuts": [
     "mapping lfm2 to llama/qwen or ignoring convolutional recurrent state",
     "downloading the already-rejected GGUF as a substitute for support",
     "claiming HTP from CPU/GPU execution or generic target support",
     "modifying 0029 or 0033 evidence"
-  ]
+  ],
+  "public_qualcomm_support": {
+    "matching_model_directories": [],
+    "model_export_or_quantize_implementation_present": false,
+    "qai_hub_models_commit": "5975a79b55b40f5cbc61f3ac5e52abe47d9d8bd5",
+    "qai_hub_models_version": "v0.61.0",
+    "qnn_context_binary_published": false,
+    "qualcomm_huggingface_lfm_models": 0,
+    "quantized_onnx_encodings_published": false
+  },
+  "question": "Can LFM2.5-2.6B run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
+  "required_provider_proof_if_unblocked": {
+    "compiled_context_identity": "Hash every serialized context and bind SM8550/v73 compiler provenance.",
+    "loaded_route_isolation": "One loaded route plus proven full state reset or fresh Session/Dialog per logical request.",
+    "no_silent_cpu_only": "A text response or generic SM8550 target without model/provider proof is not this route.",
+    "partition_boundary": "All claimed transformer/state graphs must be HTP-bound; intentional CPU frontend/sampler work remains explicit.",
+    "state_boundary": "Bind convolutional recurrent state and attention KV state layout, reset semantics, and no retained state between requests."
+  },
+  "schema_version": 1,
+  "scope": {
+    "backend": "QNN HTP",
+    "excluded": [
+      "CPU/GPU benchmark arms",
+      "paid AI Hub jobs",
+      "unreviewed license terms",
+      "publication before physical HTP evidence"
+    ],
+    "immutable_prior_evidence": [
+      "experiments/0029-lfm2.5-2.6b-android/**",
+      "experiments/0033-*/**"
+    ],
+    "model": "LiquidAI LFM2.5-2.6B text generation only",
+    "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
+  },
+  "status": "active_exact_architecture_aware_q4_export_qnn_aot_pending",
+  "tokenizer_and_template": {
+    "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
+    "native_reasoning_continuation": "Generation prompt ends with <think>.",
+    "prompt_inventory": {
+      "long": {
+        "fits_context_4096": true,
+        "input_tokens": 1922,
+        "rendered_sha256": "d247578b3a6247a457504d7c9ee153e7c737354d455804f5d198aeb2cd8ff442",
+        "token_ids_int32le_sha256": "bf6cd4a807f1933a4890a52fc847242be44c45cfc712bc9767ed8030845ec512"
+      },
+      "medium": {
+        "fits_context_4096": true,
+        "input_tokens": 600,
+        "rendered_sha256": "b19079dc6ed712ece98c5d60ea86c179d01ce30c4db4688a2b75f6cbca07c6ed",
+        "token_ids_int32le_sha256": "bfd8e9ee4fecef5b3203ad67ee0c2fe1a5a4d3267cfabc83c4388f04e25789e9"
+      },
+      "short": {
+        "fits_context_4096": true,
+        "input_tokens": 171,
+        "rendered_sha256": "9e6c713e83f0987f283264b789e102b9704d6067665fc7a0fee652938a3ae622",
+        "token_ids_int32le_sha256": "eae8e828110f634d5c9954df0372e869f67f67aed846f9f544781faa1d4d29bc"
+      }
+    },
+    "revision": "ab00687315bc1298e9d54e9c4b611dde9867ccc2",
+    "source": "LiquidAI/LFM2.5-2.6B",
+    "special_token_ids": {
+      "bos": 124894,
+      "eos": 124900,
+      "pad": 124893
+    },
+    "tokenizer_config_sha256": "11f1de897317b489dd09199284528382eeb17f566398b16e2039bb2266d26b09",
+    "tokenizer_json_sha256": "695be7802a0e4b8a81048f0ff5ebb7fc811a0ba5a6be63dbb24deb5a81096f41"
+  }
 }

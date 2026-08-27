@@ -78,18 +78,36 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(prompt["rendered_sha256"], sha(EXP / f"protocol/rendered/{tier}.txt"))
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
-    def test_negative_result_never_claims_execution_or_completion(self) -> None:
-        self.assertIn("blocked_no_installed", self.contract["status"])
+    def test_active_export_does_not_claim_qnn_android_or_completion(self) -> None:
+        self.assertIn("active_exact_architecture_aware", self.contract["status"])
         route = self.result["route_assessment"]
-        self.assertFalse(route["authorized_quantized_onnx_encodings_available"])
         self.assertFalse(route["compiled_sm8550_context_available"])
         self.assertFalse(route["android_execution"])
         self.assertFalse(route["qnn_htp_execution"])
-        self.assertTrue(self.result["required_user_action_or_decision"])
+        milestone = self.contract["host_export_milestone"]
+        self.assertIn("not_android_qnn_or_htp", milestone["classification"])
+        self.assertEqual("passed", milestone["rewritten_onnx"]["onnx_checker"])
+        self.assertEqual(16, milestone["bounded_output"]["max_new_tokens"])
         self.assertIn("No ADB", self.contract["phone_boundary"])
 
+    def test_export_provenance_and_host_output_are_bound(self) -> None:
+        provenance = json.loads((EXP / "results/export-provenance/result.json").read_text())
+        smoke = json.loads((EXP / "results/host-export-smoke/result.json").read_text())
+        self.assertEqual(22, provenance["exported_graph"]["architecture_state_inventory"]["recurrent_conv_layers"])
+        self.assertEqual(8, provenance["exported_graph"]["architecture_state_inventory"]["group_query_attention_layers"])
+        self.assertEqual(167, provenance["exported_graph"]["architecture_state_inventory"]["matmul_nbits"])
+        self.assertEqual("host_only_bounded_export_viability", smoke["classification"])
+        output = (EXP / "results/host-export-smoke/output.txt").read_bytes()
+        self.assertEqual(smoke["observation"]["output_sha256"], hashlib.sha256(output).hexdigest())
+        self.assertEqual({"looks_sensible": True, "issue_notes": None}, smoke["observation"]["output_sanity"])
+
     def test_manifests_bind_retained_evidence(self) -> None:
-        for directory in (EXP / "protocol", EXP / "results/support-assessment"):
+        for directory in (
+            EXP / "protocol",
+            EXP / "results/support-assessment",
+            EXP / "results/export-provenance",
+            EXP / "results/host-export-smoke",
+        ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():
                 digest, name = line.split("  ", 1)

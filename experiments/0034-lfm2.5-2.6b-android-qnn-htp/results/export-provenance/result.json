@@ -1,0 +1,93 @@
+{
+  "claim_boundary": "This is exact source/export and host graph evidence only; it is not Android, QNN, HTP, performance, or campaign evidence.",
+  "classification": "host_only_exact_export_provenance",
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "exported_graph": {
+    "architecture_state_inventory": {
+      "group_query_attention_layers": 8,
+      "matmul_nbits": 167,
+      "recurrent_conv_layers": 22
+    },
+    "external_data": {
+      "bytes": 1855348736,
+      "retained_outside_git": true,
+      "sha256": "d3cf09855c69d5226d9ce481a83bce31981496e2a686a7879750a3f82e90f457"
+    },
+    "initializer_count": 451,
+    "input_count": 41,
+    "ir_version": 10,
+    "node_count": 1129,
+    "onnx": {
+      "bytes": 410142,
+      "sha256": "c2020ab7371d52df51683e663abff5d07eefcda604ddee159d02b7d73432d157"
+    },
+    "onnx_checker": "passed_after_standard_rms_norm_rewrite",
+    "operator_counts": {
+      "Add": 138,
+      "Cast": 2,
+      "Concat": 22,
+      "Conv": 22,
+      "Div": 77,
+      "Gather": 23,
+      "Mul": 203,
+      "Pow": 77,
+      "ReduceMean": 77,
+      "ReduceSum": 1,
+      "Reshape": 32,
+      "Shape": 23,
+      "Sigmoid": 30,
+      "Slice": 44,
+      "Split": 22,
+      "Sqrt": 77,
+      "Sub": 1,
+      "Transpose": 44,
+      "Unsqueeze": 22,
+      "com.microsoft:GatherBlockQuantized": 1,
+      "com.microsoft:GroupQueryAttention": 8,
+      "com.microsoft:MatMulNBits": 167,
+      "com.microsoft:RotaryEmbedding": 16
+    },
+    "opsets": {
+      "ai.onnx": 21,
+      "com.microsoft": 1
+    },
+    "output_count": 39
+  },
+  "exporter": {
+    "command_shape": "lfm2-export <pinned-local-source> --skip-export --precision q4 --no-split-data",
+    "license_matches_bound_model_license": true,
+    "license_sha256": "30adf9d6478191fb87f2424f63ba0728598335aaf99cd2848ef17e8e545fe94b",
+    "repository": "https://github.com/Liquid4All/onnx-export.git",
+    "revision": "9a23ddd23035165f7414a5de3220a51e85780f64"
+  },
+  "model": {
+    "repository": "LiquidAI/LFM2.5-2.6B",
+    "revision": "ab00687315bc1298e9d54e9c4b611dde9867ccc2",
+    "source_files": {
+      "model-00001-of-00002.safetensors": {
+        "bytes": 5329406264,
+        "sha256": "05be188e6570a7642b4690545ab22ebf4d0a6068775dd776a452eebf738854cc"
+      },
+      "model-00002-of-00002.safetensors": {
+        "bytes": 65021192,
+        "sha256": "532f803a9e6f127adc124d977503b438d8cc9c18f96e0862bf6835e38867bca8"
+      }
+    }
+  },
+  "quantization": {
+    "block_size": 32,
+    "calibration": null,
+    "calibration_null_reason": "weight-only symmetric block quantization does not use activation calibration",
+    "format": "ONNX MatMulNBits/GatherBlockQuantized",
+    "symmetric": true,
+    "weight_bits": 4
+  },
+  "rms_norm_rewrite": {
+    "formula": "x * scale / sqrt(reduce_mean(pow(x, 2), axis=-1) + 1e-5)",
+    "reason": "LiquidONNX 9a23ddd emitted the contrib op in the standard domain; ORT 1.26 rejected it before provider selection.",
+    "simplified_layer_norm_nodes": 76,
+    "skip_simplified_layer_norm_nodes": 1,
+    "tool": "tools/rewrite_rms_norm.py"
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,38 @@
+{
+  "bounds": {
+    "canonical_ceiling_2048_used": false,
+    "max_new_tokens": 16,
+    "reason": "smallest host-only gate proving the architecture-aware exported graph loads and returns text"
+  },
+  "canonical_input": {
+    "input_tokens": 171,
+    "rendered_sha256": "9e6c713e83f0987f283264b789e102b9704d6067665fc7a0fee652938a3ae622",
+    "token_ids_int32le_sha256": "eae8e828110f634d5c9954df0372e869f67f67aed846f9f544781faa1d4d29bc",
+    "truncated": false,
+    "workload": "protocols/android-llm-benchmark/workloads/inference-v1/short.json",
+    "workload_sha256": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae"
+  },
+  "claim_boundary": "Host viability only. Timings are not Android/QNN/HTP evidence and must not enter the registry.",
+  "classification": "host_only_bounded_export_viability",
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "observation": {
+    "load_seconds": 6.720246051,
+    "output_bytes": 88,
+    "output_path": "output.txt",
+    "output_sanity": {
+      "issue_notes": null,
+      "looks_sensible": true
+    },
+    "output_sha256": "f048f9244ab0728a86719fa502f954da2acc987eabb68220995b98ff18718518",
+    "request_seconds": 4.322464069
+  },
+  "route": {
+    "artifact": ".local/exports/exact-ab006873-q4/onnx/model_q4_standardnorm.onnx",
+    "liquidonnx_revision": "9a23ddd23035165f7414a5de3220a51e85780f64",
+    "model": "LiquidAI/LFM2.5-2.6B",
+    "onnxruntime": "1.26.0",
+    "provider": "CPUExecutionProvider",
+    "revision": "ab00687315bc1298e9d54e9c4b611dde9867ccc2"
+  },
+  "schema_version": 1
+}

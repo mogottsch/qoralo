@@ -2,37 +2,57 @@
 
 ## Status
 
-**Blocked before conversion: neither installed QAIRT 2.49 nor current public Qualcomm artifacts/tooling provide an LFM2 QNN route. No compiled context, Android execution, or QNN/HTP result exists.**
+**Active. The exact model has an architecture-aware Q4 ONNX export and a bounded host viability pass. Static shared-cache QNN profiles and fallback-disabled SM8550/v73 AOT compilation are next; no Android or HTP result exists yet.**
 
-This is a separate accelerator feasibility arm. It preserves `0029` viability evidence and does not touch the combined CPU/GPU work in `0033`.
+This is a separate accelerator arm. It preserves `0029` CPU viability and `0033` CPU/OpenCL campaign evidence without modifying either experiment.
 
-## Exact support assessment
+## Exact route
 
-The official route identity remains the pinned LiquidAI Q4_K_M GGUF already reconstructed by `0029`: 1,674,455,040 bytes, SHA-256 `02a8b7e17487d326e46d68ce0ba24211e1b80a14c4cd0597fa73c1cd697f52ed`, GGUF architecture `lfm2`.
+- Model: `LiquidAI/LFM2.5-2.6B`
+- Source revision: `ab00687315bc1298e9d54e9c4b611dde9867ccc2`
+- Source shards: 5,329,406,264 bytes / SHA-256 `05be188e…854cc`; 65,021,192 bytes / SHA-256 `532f803a…bca8`
+- Architecture: 22 recurrent short-convolution layers plus 8 full-attention layers
+- Exporter: `Liquid4All/onnx-export` commit `9a23ddd23035165f7414a5de3220a51e85780f64`
+- Quantization: symmetric INT4 weight-only block quantization, block size 32, represented with `MatMulNBits` and `GatherBlockQuantized`; no activation calibration
+- Candidate provider: Qualcomm-maintained ONNX Runtime QNN EP 2.5.0 with QNN runtime 2.49.0, targeting SM8550 / HTP v73
 
-The cheapest possible installed-QAIRT paths both fail at the architecture-support gate:
+Moritz personally reviewed and authorized the Qualcomm AI Stack License for the named public QNN packages. Those packages, source weights, large ONNX data, and future license-controlled compiled artifacts remain outside Git. Git retains only permitted tools, hashes, provenance, analysis, and evidence.
 
-- the direct GGUF builder supports llama, mistral, phi3, qwen2, qwen3, gemma, gemma2, and gemma3—not `lfm2`;
-- the HTP factory has no `Lfm2ForCausalLM` dispatch;
-- QAIRT ships no LFM Genie config and its release notes contain no LFM/Liquid support claim;
-- Qualcomm's public Hugging Face organization and AI Hub Models v0.61.0 contain no LFM model recipe, quantized ONNX+encodings, or serialized QNN context.
+## Export milestone
 
-LFM2 is not a Llama-shaped transformer that can safely use a generic fallback. The pinned 2.6B configuration has 22 convolutional state layers and 8 full-attention layers. Correct compilation and execution require model-specific convolutional-state and KV-state conversion, cache geometry, runtime orchestration, and reset proof. Implementing that would be a new converter/runtime project, which is outside current authorization.
+The exporter produced a 315,101-byte ONNX graph and 1,855,348,736-byte external tensor file. The raw graph exposed all expected stateful architecture components: 22 convolution nodes, 8 `GroupQueryAttention` nodes, and 167 `MatMulNBits` nodes.
 
-Because architecture rejection is known before weights are read, downloading another copy of the already-bound 1.67 GB GGUF would provide no additional evidence and was avoided.
+LiquidONNX commit `9a23ddd…` emitted 76 `SimplifiedLayerNormalization` nodes into the standard ONNX domain even though that op is a Microsoft contrib op. ONNX Runtime 1.26 correctly rejected it before provider selection. [`tools/rewrite_rms_norm.py`](tools/rewrite_rms_norm.py) applies the mathematically equivalent standard-ONNX formula to those 76 nodes and the final skip-RMSNorm:
 
-## Bound frontend contract
+```text
+x * scale / sqrt(reduce_mean(pow(x, 2), axis=-1) + 1e-5)
+```
 
-The pinned tokenizer and native template were independently reconstructed from the authorized `0029` source metadata. Canonical short/medium/long prompts contain 171/600/1922 tokens, each has exactly one BOS, ends at the model-native `<think>` generation continuation, and fits a 4096-token context with the 2048-token ceiling.
+The rewritten graph is 410,142 bytes, SHA-256 `c2020ab7371d52df51683e663abff5d07eefcda604ddee159d02b7d73432d157`, passes the ONNX checker, and still references the exact external tensor file SHA-256 `d3cf09855c69d5226d9ce481a83bce31981496e2a686a7879750a3f82e90f457`.
 
-Exact hashes and support evidence are in [`protocol/experiment-contract.json`](protocol/experiment-contract.json) and [`results/support-assessment/result.json`](results/support-assessment/result.json).
+Exact source, exporter, graph, operator, and quantization provenance is in [`results/export-provenance/result.json`](results/export-provenance/result.json).
 
-## Exact unblock action
+## Bounded host viability
 
-Moritz must choose one:
+The rewritten export loaded with ONNX Runtime 1.26 CPU and processed the exact canonical short workload using the pinned tokenizer/template:
 
-1. provide an authorized, provenance-bound LFM2.5-2.6B quantized ONNX+encodings input plus a model-specific QAIRT builder, or a complete SM8550/HTP v73 serialized-context runtime bundle;
-2. authorize authenticated Qualcomm AI Hub/engineering support if a non-public LFM QNN route exists; or
-3. authorize a separately bound updated QAIRT/toolchain or a new LFM2 converter/runtime implementation with host equivalence, recurrent-state reset, partition, and provider proofs.
+- workload SHA-256: `81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae`;
+- 171 input tokens, rendered prompt SHA-256 `9e6c713e…e622`;
+- bounded 16-token continuation: 88 UTF-8 bytes, SHA-256 `f048f9244ab0728a86719fa502f954da2acc987eabb68220995b98ff18718518`;
+- superficial sensible-text check: passed.
 
-No ADB was used. A phone viability gate and canonical campaign remain impossible until a compiled route exists and Pi grants phone priority.
+See [`results/host-export-smoke/`](results/host-export-smoke/). This is only an economical export viability check. Its timing, output length, and CPU provider are not Android/QNN/HTP evidence and are not registry eligible.
+
+## HTP validity gates still open
+
+Before any HTP claim, this experiment must:
+
+1. create static prefill and one-token decode profiles with a fixed 4,096-token shared KV capacity and explicit convolutional-state handling;
+2. replace or lower every operator that QNN HTP cannot own, including the block-quantized embedding if necessary;
+3. compile with CPU fallback disabled for SM8550 / HTP v73;
+4. retain a framework-op trace binding every claimed model/state graph to QNN HTP;
+5. prove host equivalence and full convolution/KV reset semantics;
+6. run a bounded physical-phone viability request under `artifacts/locks/phone.lock`;
+7. only then run the canonical loaded-route `1+5+5+5` campaign.
+
+A generic SM8550 target, successful context creation, or sensible text alone is not physical HTP proof.
