@@ -25,6 +25,7 @@ def main() -> None:
     p.add_argument('--prior-stage',type=Path,required=True)
     p.add_argument('--android-deps',type=Path,required=True)
     p.add_argument('--runner',type=Path,required=True)
+    p.add_argument('--libcxx',type=Path,required=True)
     p.add_argument('--output-dir',type=Path,required=True)
     a=p.parse_args();stage=a.output_dir
     if stage.exists():shutil.rmtree(stage)
@@ -41,6 +42,7 @@ def main() -> None:
       a.android_deps/'qnnruntime/jni/arm64-v8a/libQnnHtpV73Stub.so':'libQnnHtpV73Stub.so',
       a.android_deps/'qnnruntime/jni/arm64-v8a/libQnnHtpV73Skel.so':'libQnnHtpV73Skel.so',
     }
+    libs[a.libcxx]='libc++_shared.so'
     for source,name in libs.items():link(source,stage/name)
     files=sorted(x for x in stage.rglob('*') if x.is_file())
     entries=[]

@@ -1,67 +1,88 @@
 {
-  "schema_version": 1,
-  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
-  "classification": "direct_qnn_host_emulator_and_android_stage_preparation_not_physical_execution",
+  "android_runner": {
+    "binary_bytes": 307416,
+    "binary_sha256": "484c4a196f2951f20ef3dbba25c08467451b6a5bac8e7320e12b64b3fab03148",
+    "build_tool": "tools/build_direct_qnn_runner.sh",
+    "context_count_loaded_once": 263,
+    "declared_cpu_boundary": [
+      "selected-row asymmetric Q4 embedding",
+      "token/request orchestration",
+      "global greedy argmax across 22 direct-QNN LM-head chunks"
+    ],
+    "onnxruntime_or_epcontext_used": false,
+    "runtime_path": "QnnContext_createFromBinary -> QnnGraph_retrieve -> QnnGraph_execute",
+    "source": "phone/direct_lfm2_qnn_runner.cpp",
+    "state_contract": "22 convolution states and 8 attention K/V pairs are explicit, zeroed per logical request, and updated only from direct QNN graph outputs",
+    "target": "Android API 31 AArch64 PIE"
+  },
   "authorization": "Moritz selected the bounded direct-QNN continuation, retaining exact contexts and CPU embedding/orchestration/global-argmax boundaries.",
+  "claim_boundary": "The first exact context loads and executes through direct QNN on the host emulator, and the complete direct Android runner/stage is hash-bound. No physical Android/HTP execution or benchmark claim follows.",
+  "classification": "direct_qnn_host_emulator_and_android_stage_preparation_not_physical_execution",
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
   "host_probe": {
-    "tool": "tools/run_direct_qnn_host_probe.sh",
-    "qnn_net_run_build": "v2.49.0.260730134355",
-    "qnn_backend_build": "v2.49.40.260810104044",
     "context": {
-      "part": "layer-00-core-norm",
-      "bytes": 9952600,
-      "sha256": "63e6f58aa3033b6785c28ccd776afdff5dfca6eea801a9d0e71f47162b6621f1",
-      "backend_id": 6,
-      "core_api": "2.38.0",
       "backend_api": "5.49.0",
+      "backend_id": 6,
+      "bytes": 9952600,
+      "core_api": "2.38.0",
       "dsp_arch": 73,
-      "soc_model": 43,
       "graph_inputs": 2,
-      "graph_outputs": 3
-    },
-    "input": {
-      "token_id": 124894,
-      "embedding_f32_sha256": "072dae5548471ffd81f671e4d4cde8bd91b8996d9a49d2841fab0a9be1157062",
-      "zero_conv_state_sha256": "de676bae28a480011d3d012db14bef539324e62a841a9627863c689bea168af3"
+      "graph_outputs": 3,
+      "part": "layer-00-core-norm",
+      "sha256": "63e6f58aa3033b6785c28ccd776afdff5dfca6eea801a9d0e71f47162b6621f1",
+      "soc_model": 43
     },
     "direct_api_evidence": {
       "QnnContext_createFromBinary": "success",
-      "QnnGraph_retrieve": "success",
       "QnnGraph_execute": "status 0",
+      "QnnGraph_retrieve": "success",
       "graphs_executed": 1,
       "neural_cpu_fallback_possible": false
     },
-    "outputs": {
-      "residual": {"bytes": 8192, "sha256": "7bc83cd89fd695624cb3490695acaa01b2130669eeefeae578e1b3dca5ffe498", "cpu_reference_max_abs_difference": 0.00020234286785125732, "cpu_reference_mean_abs_difference": 0.00002035163197433576},
-      "ffn_norm": {"bytes": 8192, "sha256": "44572e2410d419dd043274e1a4e988b5d025953b65a1b0cb503ec5dcf46b9e4f", "cpu_reference_max_abs_difference": 0.00238889642059803, "cpu_reference_mean_abs_difference": 0.000304382701870054},
-      "conv_state": {"bytes": 24576, "sha256": "153e4f955066c4fcbcca3a2dd6d0e10860caa05a8df180e48bae4105246dab96", "cpu_reference_max_abs_difference": 0.012290000915527344, "cpu_reference_mean_abs_difference": 0.00008996311953524128},
-      "all_finite": true
+    "input": {
+      "embedding_f32_sha256": "072dae5548471ffd81f671e4d4cde8bd91b8996d9a49d2841fab0a9be1157062",
+      "token_id": 124894,
+      "zero_conv_state_sha256": "de676bae28a480011d3d012db14bef539324e62a841a9627863c689bea168af3"
     },
-    "limitation": "The x86 HTP emulation backend reports that it uses internal v79 emulation for the requested v73 context. This is direct-QNN functional evidence only, not physical SM8550 execution or performance."
-  },
-  "android_runner": {
-    "source": "phone/direct_lfm2_qnn_runner.cpp",
-    "build_tool": "tools/build_direct_qnn_runner.sh",
-    "binary_bytes": 307416,
-    "binary_sha256": "484c4a196f2951f20ef3dbba25c08467451b6a5bac8e7320e12b64b3fab03148",
-    "target": "Android API 31 AArch64 PIE",
-    "runtime_path": "QnnContext_createFromBinary -> QnnGraph_retrieve -> QnnGraph_execute",
-    "onnxruntime_or_epcontext_used": false,
-    "context_count_loaded_once": 263,
-    "state_contract": "22 convolution states and 8 attention K/V pairs are explicit, zeroed per logical request, and updated only from direct QNN graph outputs",
-    "declared_cpu_boundary": ["selected-row asymmetric Q4 embedding", "token/request orchestration", "global greedy argmax across 22 direct-QNN LM-head chunks"]
+    "limitation": "The x86 HTP emulation backend reports that it uses internal v79 emulation for the requested v73 context. This is direct-QNN functional evidence only, not physical SM8550 execution or performance.",
+    "outputs": {
+      "all_finite": true,
+      "conv_state": {
+        "bytes": 24576,
+        "cpu_reference_max_abs_difference": 0.012290000915527344,
+        "cpu_reference_mean_abs_difference": 8.996311953524128e-05,
+        "sha256": "153e4f955066c4fcbcca3a2dd6d0e10860caa05a8df180e48bae4105246dab96"
+      },
+      "ffn_norm": {
+        "bytes": 8192,
+        "cpu_reference_max_abs_difference": 0.00238889642059803,
+        "cpu_reference_mean_abs_difference": 0.000304382701870054,
+        "sha256": "44572e2410d419dd043274e1a4e988b5d025953b65a1b0cb503ec5dcf46b9e4f"
+      },
+      "residual": {
+        "bytes": 8192,
+        "cpu_reference_max_abs_difference": 0.00020234286785125732,
+        "cpu_reference_mean_abs_difference": 2.035163197433576e-05,
+        "sha256": "7bc83cd89fd695624cb3490695acaa01b2130669eeefeae578e1b3dca5ffe498"
+      }
+    },
+    "qnn_backend_build": "v2.49.40.260810104044",
+    "qnn_net_run_build": "v2.49.0.260730134355",
+    "tool": "tools/run_direct_qnn_host_probe.sh"
   },
   "ignored_android_stage": {
-    "preparation_tool": "tools/prepare_direct_qnn_phone_stage.py",
-    "payload_files": 272,
-    "payload_bytes": 1974276800,
-    "stage_metadata_bytes": 49026,
-    "stage_metadata_sha256": "00ebc623300805fbf834454fcabfd2f76a4b65f952cbd616b4c3f9f0fd7a94fc",
-    "sha256_manifest_bytes": 29365,
-    "sha256_manifest_sha256": "d3b56d2ed4f3a8aac5c701a8ece22980c6a68cb6329d0fc48231adb0bff0ac3f",
+    "elf_preflight": "passed; AArch64 dependencies staged/system, DSP6 libc++ dependencies classified as firmware-provided",
+    "libcxx_shared_sha256": "77a34d3f03b17709f3f6473f37cb7795314e51fa3e5e652b5c37d53cfd05c754",
     "local_hash_check": "passed",
-    "retained_outside_git": true
+    "payload_bytes": 1983513152,
+    "payload_files": 273,
+    "preparation_tool": "tools/prepare_direct_qnn_phone_stage.py",
+    "retained_outside_git": true,
+    "sha256_manifest_bytes": 29448,
+    "sha256_manifest_sha256": "e857fbdfb6a5088d753019ab92b8954a86b1b16642eb9d08209fbbd3229c92cc",
+    "stage_metadata_bytes": 49180,
+    "stage_metadata_sha256": "8fd14833edb4d671c8bb009ebc1a1f41e86e1895d4873d257a6794d08e5be123"
   },
-  "phone_boundary": "No phone access occurred under this direct-QNN continuation. Jere has higher phone priority. Pi must explicitly grant 0034 priority after this host-prepared loader/stage milestone is committed.",
-  "claim_boundary": "The first exact context loads and executes through direct QNN on the host emulator, and the complete direct Android runner/stage is hash-bound. No physical Android/HTP execution or benchmark claim follows."
+  "phone_boundary": "First direct attempt failed before main because libc++_shared was omitted; raw evidence is separate and cleanup passed. Corrected stage is local and no retry is authorized until Pi grants it.",
+  "schema_version": 1
 }

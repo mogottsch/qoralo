@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "run_id": "viability-20260827T121841Z-1546168",
+  "classification": "physical_phone_pre_main_dynamic_linker_failure",
+  "device": {"serial":"R5CW81PR8SY","model":"SM-S918B","soc":"SM8550","abi":"arm64-v8a","android_release":"16","api":36},
+  "stage": {"payload_files_verified_local":272,"payload_files_verified_remote":272,"runner_sha256":"484c4a196f2951f20ef3dbba25c08467451b6a5bac8e7320e12b64b3fab03148"},
+  "execution": {
+    "exit_code": 1,
+    "main_entered": false,
+    "contexts_loaded": 0,
+    "qnn_graphs_executed": 0,
+    "output_created": false,
+    "stderr": "CANNOT LINK EXECUTABLE: missing libc++ symbol for std::__ndk1::basic_ifstream",
+    "exact_cause": "prepare_direct_qnn_phone_stage.py omitted the NDK libc++_shared.so required by the direct runner."
+  },
+  "memory": {"vmhwm_kib":3320,"total_pss_kib":4515,"lifecycle":"single pre-main sample"},
+  "cleanup": {"scoped_remote_root_verified_absent":true,"process_after":false,"phone_lock_held_for_full_lifecycle":true,"phone_lock_released":true},
+  "corrective_action": "Add the exact previously authorized NDK r28b libc++_shared.so to the direct stage and bind the replacement stage hash before requesting any retry.",
+  "claim_boundary": "Physical transport/linker diagnostic only; no direct QNN API, context, model, HTP, output, or performance evidence."
+}

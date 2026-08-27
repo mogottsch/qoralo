@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active on Moritz's authorized direct-QNN continuation. The first exact context now loads and executes through `QnnContext_createFromBinary` / `QnnGraph_retrieve` / `QnnGraph_execute` on the host HTP emulator, and the complete 263-context direct Android runner/stage is hash-bound. This bypasses the failing ORT EPContext layer; physical phone execution is still pending behind Jere's phone priority.**
+**Active with one corrected direct-QNN phone stage awaiting explicit retry permission. The first physical direct attempt stopped before `main` because `libc++_shared.so` was omitted; no QNN API/context/graph ran, and cleanup passed. The corrected 273-file stage includes the exact NDK library and passes a local architecture-aware DT_NEEDED preflight.**
 
 This is a separate accelerator arm. It preserves `0029` CPU viability and `0033` CPU/OpenCL campaign evidence without modifying either experiment.
 
@@ -73,6 +73,6 @@ Moritz selected the direct loader option. The new native runner bypasses ONNX Ru
 
 A bounded host probe loaded `layer-00-core-norm` directly with QNN backend build `v2.49.40.260810104044`, retrieved its SM8550/V73 graph, and executed it successfully. Its residual, FFN-normalized, and convolution-state outputs are finite and closely match the CPU graph reference. The x86 backend internally emulates on v79, so this protects direct-loader wiring but is not physical HTP or performance evidence.
 
-The API-31 AArch64 direct runner is 307,416 bytes, SHA-256 `484c4a196f2951f20ef3dbba25c08467451b6a5bac8e7320e12b64b3fab03148`. A 272-payload-file, 1,974,276,800-byte ignored stage contains the exact 263 contexts, embedding tables, prompt, and QNN runtime; its local manifest passes. See [`results/direct-qnn-host-preparation/`](results/direct-qnn-host-preparation/).
+The API-31 AArch64 direct runner is 307,416 bytes, SHA-256 `484c4a196f2951f20ef3dbba25c08467451b6a5bac8e7320e12b64b3fab03148`. The corrected 273-payload-file, 1,983,513,152-byte ignored stage contains the exact 263 contexts, embedding tables, prompt, QNN runtime, and NDK `libc++_shared.so`; its local manifest and ELF dependency preflight pass. See [`results/direct-qnn-host-preparation/`](results/direct-qnn-host-preparation/).
 
-No phone access occurred for this continuation. Jere is ahead in the device queue, and Pi must explicitly grant 0034 priority before a new bounded direct-QNN phone gate. Even a successful first-context physical probe would remain a milestone, not permission for a campaign.
+The first direct phone gate verified identity and every stage hash, then the Android linker rejected the runner before `main` because the original stage omitted `libc++_shared.so`. No QNN API, context, graph, output, or performance observation exists. The scoped root was verified absent and `phone.lock` released. Raw evidence is under [`results/direct-qnn-phone-attempt-1-linker-failure/`](results/direct-qnn-phone-attempt-1-linker-failure/). Pi must explicitly authorize any corrected retry; no campaign is authorized.

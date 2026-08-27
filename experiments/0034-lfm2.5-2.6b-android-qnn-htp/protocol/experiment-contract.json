@@ -52,11 +52,13 @@
       "sha256": "484c4a196f2951f20ef3dbba25c08467451b6a5bac8e7320e12b64b3fab03148"
     },
     "android_stage": {
-      "payload_bytes": 1974276800,
-      "payload_files": 272,
+      "elf_preflight": true,
+      "libcxx_shared_sha256": "77a34d3f03b17709f3f6473f37cb7795314e51fa3e5e652b5c37d53cfd05c754",
+      "payload_bytes": 1983513152,
+      "payload_files": 273,
       "retained_outside_git": true,
-      "sha256_manifest_sha256": "d3b56d2ed4f3a8aac5c701a8ece22980c6a68cb6329d0fc48231adb0bff0ac3f",
-      "stage_metadata_sha256": "00ebc623300805fbf834454fcabfd2f76a4b65f952cbd616b4c3f9f0fd7a94fc"
+      "sha256_manifest_sha256": "e857fbdfb6a5088d753019ab92b8954a86b1b16642eb9d08209fbbd3229c92cc",
+      "stage_metadata_sha256": "8fd14833edb4d671c8bb009ebc1a1f41e86e1895d4873d257a6794d08e5be123"
     },
     "authorization": "Moritz selected option 2: bounded direct-QNN loader bypassing ORT EPContext claim while reusing exact contexts/state/CPU boundaries.",
     "context_count": 263,
@@ -79,13 +81,21 @@
       "QnnGraph_execute"
     ]
   },
+  "direct_qnn_phone_attempt_1": {
+    "cleanup_absent": true,
+    "contexts_loaded": 0,
+    "evidence": "results/direct-qnn-phone-attempt-1-linker-failure/result.json",
+    "main_entered": false,
+    "phone_lock_released": true,
+    "qnn_graphs_executed": 0
+  },
   "exact_blocker": {
     "android_execution": false,
     "compiled_context_created": false,
     "qnn_htp_execution": false,
-    "required_action": "No Moritz action. Wait for Pi to grant 0034 phone priority, then run one bounded direct-QNN physical gate under phone.lock; no campaign without a separate decision.",
+    "required_action": "Pi must explicitly authorize one bounded retry after reviewing the committed pre-main failure and corrected stage; no campaign.",
     "result_path": "results/support-assessment/result.json",
-    "summary": "No current host loader blocker. The first context executes through direct QNN emulation and the full Android runner/stage is ready. Physical validation waits behind Jere in the phone queue and requires Pi priority."
+    "summary": "First direct phone attempt failed before main due omitted libc++_shared. Corrected 273-file stage includes exact NDK runtime and passes architecture-aware readelf dependency preflight."
   },
   "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
   "host_export_milestone": {
@@ -197,7 +207,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "No phone access occurred for the direct-QNN continuation. Jere has higher priority; 0034 must wait for Pi before acquiring phone.lock or staging the direct runner.",
+  "phone_boundary": "Direct attempt 1 cleaned absent and released phone.lock. Corrected stage is host-only until Pi authorizes a retry.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -296,7 +306,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "active_direct_qnn_loader_and_phone_stage_ready_waiting_for_priority",
+  "status": "active_direct_qnn_retry_stage_corrected_waiting_for_priority",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",

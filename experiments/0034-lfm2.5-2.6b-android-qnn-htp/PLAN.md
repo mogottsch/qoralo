@@ -31,13 +31,15 @@
 21. Moritz selected and authorized the direct-QNN continuation.
 22. Built an API-31 AArch64 runner that loads the same 263 contexts once through public QNN APIs and preserves the explicit state and CPU embedding/orchestration/global-argmax boundaries.
 23. Proved the first exact context loads, retrieves, and executes directly on the host HTP emulator; outputs are finite and bounded against the CPU reference.
-24. Assembled and locally verified a complete ignored direct-QNN phone stage. No phone access occurred for this continuation.
+24. Assembled and locally verified a complete ignored direct-QNN phone stage.
+25. Ran one bounded physical gate; the Android linker stopped before `main` because the stage omitted `libc++_shared.so`. Preserved raw evidence and verified cleanup absent.
+26. Added the exact NDK r28b `libc++_shared.so`, rebuilt the 273-file manifest, and added an architecture-aware DT_NEEDED preflight that runs before phone.lock or ADB.
 
 ## In progress
 
-1. Wait for Jere's higher-priority phone work and Pi's explicit 0034 priority grant.
-2. Under a new full `phone.lock` lifecycle, run only a bounded direct-QNN physical gate, first proving context deserialization/retrieval/execution on SM8550/V73.
-3. Preserve raw physical QNN logs/profile/output or the exact direct-loader blocker, clean the scoped root, release the lock, and report before any campaign decision.
+1. Wait for Pi to review the committed pre-main failure and explicitly authorize one corrected retry.
+2. If authorized, run only the bounded direct-QNN physical gate under the full lock lifecycle.
+3. Preserve raw evidence, clean the scoped root, release the lock, and report before any campaign decision.
 
 ## Phone and campaign sequence
 
