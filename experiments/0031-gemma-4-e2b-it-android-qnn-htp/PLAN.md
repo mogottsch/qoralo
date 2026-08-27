@@ -34,7 +34,9 @@ QAIRT 2.49.40 did not itself remove the prior failure: the factory and implicate
 
 QNN conversion now passes for both variants, producing hash-bound AR1 and AR128 DLCs. `qairt-dlc-info` binds their HTP converter configuration, 2,280,676,608-parameter graph, operator inventory, I/O encodings, and mixed-precision boundary. The converter reports 15 RmsNorm float fallbacks per variant; AR1 has 15 Float16 value-cache outputs while AR128 outputs remain uFxp16. These are retained facts to validate at compile/runtime, not a CPU-provider claim.
 
-The active next step is compiling both DLCs together into one weight-shared serialized context for SM8550/HTP v73, followed by context inspection and generation of matching embedding/PLE LUTs. Workbench compile/link remains a separate unapproved cost/terms checkpoint. Do not access the phone or run a canonical campaign before a compiled route exists.
+Weight-shared compilation now passes. One hash-bound serialized context contains AR1 and AR128 graphs; official metadata binds QNN HTP backend ID 6 and the exact QAIRT build, while embedded compiler markers bind SM8550, architecture 73, and native HMX a16w4. This remains host AOT evidence only.
+
+The active next step is generating and binding matching embedding and per-layer embedding LUTs from the pinned public upstream checkpoint, then preparing the exact Genie `QnnHtp` runtime bundle. Do not acquire `phone.lock` or stage the phone until Pi explicitly transfers priority. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
 
 ## Stop conditions
 

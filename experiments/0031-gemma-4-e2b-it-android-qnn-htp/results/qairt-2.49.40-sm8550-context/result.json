@@ -1,0 +1,280 @@
+{
+  "claim_boundary": "The two bound QNN DLCs compiled into one weight-sharing context whose official metadata identifies QNN HTP backend ID 6 and two AR graphs, and whose embedded compiler markers bind SM8550/architecture 73. This is host AOT evidence only, not physical Android loading, HTP execution, no-fallback proof, generated text, or performance evidence.",
+  "classification": "positive_host_sm8550_htp_context_compile_and_inspection",
+  "compile": {
+    "context_bytes": 1186349056,
+    "context_path": ".local/qairt-2.49.40-transform-compat/c61fd6db17546d351691e354d99c1befe9a14720f16eaffa7892e363aa526acd/ar1_cl4096_1_of_1.bin",
+    "context_sha256": "b8c169cedf9a00dde67e2e555805b1a773cb6fd128f5c3912a684c371f4af95a",
+    "dsp_arch": "v73",
+    "input_dlcs": [
+      {
+        "ar": 1,
+        "dlc_sha256": "02a790601b561a9ebb122c3101b916dfe8e3496435eee08a514237112a57ff68",
+        "name": "ar1_cl4096_1_of_1"
+      },
+      {
+        "ar": 128,
+        "dlc_sha256": "5f17ece8a99cd649abdadb61e2e104e5cd569a1d1735e9e6ecb5c297286156ee",
+        "name": "ar128_cl4096_1_of_1"
+      }
+    ],
+    "mode": "weight_sharing",
+    "pd_session": "unsigned",
+    "soc_model": 43,
+    "target": "chipset:SM8550"
+  },
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "inspection": {
+    "artifact_type": "CONTEXT_BINARY_INFO",
+    "backend_api_version": "5.49.0",
+    "backend_id": 6,
+    "backend_id_source": "QAIRT 2.49.40 include/QNN/HTP/QnnHtpCommon.h: QNN_BACKEND_ID_HTP 6",
+    "backend_id_source_sha256": "f91b2a8de80e7c5e662d03b73483d98caf878c32546058a04f701204ede58b0e",
+    "build_id": "v2.49.40.260810104044",
+    "context_blob_bytes": 1186328576,
+    "context_blob_version": "4.0.4",
+    "core_api_version": "2.38.0",
+    "embedded_markers": {
+      "ar128_cl4096_1_of_1": true,
+      "ar1_cl4096_1_of_1": true,
+      "arch=73": true,
+      "native_hmx_a16w4=true": true,
+      "soc_type=SM8550": true
+    },
+    "graphs": [
+      {
+        "inputs": {
+          "count": 38,
+          "datatype_counts": {
+            "QNN_DATATYPE_UFIXED_POINT_16": 38
+          },
+          "memtype_counts": {
+            "QNN_TENSORMEMTYPE_MEMHANDLE": 38
+          },
+          "names": [
+            "inputs_embeds",
+            "per_layer_inputs",
+            "swa_position_ids_cos",
+            "swa_position_ids_sin",
+            "swa_key_0_h0_in",
+            "swa_value_0_h0_in",
+            "swa_attention_mask",
+            "swa_key_1_h0_in",
+            "swa_value_1_h0_in",
+            "swa_key_2_h0_in",
+            "swa_value_2_h0_in",
+            "swa_key_3_h0_in",
+            "swa_value_3_h0_in",
+            "position_ids_global_cos",
+            "position_ids_global_sin",
+            "past_key_4_h0_in",
+            "past_value_4_h0_in",
+            "attention_mask",
+            "swa_key_5_h0_in",
+            "swa_value_5_h0_in",
+            "swa_key_6_h0_in",
+            "swa_value_6_h0_in",
+            "swa_key_7_h0_in",
+            "swa_value_7_h0_in",
+            "swa_key_8_h0_in",
+            "swa_value_8_h0_in",
+            "past_key_9_h0_in",
+            "past_value_9_h0_in",
+            "swa_key_10_h0_in",
+            "swa_value_10_h0_in",
+            "swa_key_11_h0_in",
+            "swa_value_11_h0_in",
+            "swa_key_12_h0_in",
+            "swa_value_12_h0_in",
+            "swa_key_13_h0_in",
+            "swa_value_13_h0_in",
+            "past_key_14_h0_in",
+            "past_value_14_h0_in"
+          ]
+        },
+        "name": "ar128_cl4096_1_of_1",
+        "outputs": {
+          "count": 31,
+          "datatype_counts": {
+            "QNN_DATATYPE_UFIXED_POINT_16": 31
+          },
+          "memtype_counts": {
+            "QNN_TENSORMEMTYPE_MEMHANDLE": 31
+          },
+          "names": [
+            "swa_value_0_h0_out",
+            "swa_key_0_h0_out",
+            "swa_value_1_h0_out",
+            "swa_key_1_h0_out",
+            "swa_value_2_h0_out",
+            "swa_key_2_h0_out",
+            "swa_value_3_h0_out",
+            "swa_key_3_h0_out",
+            "past_value_4_h0_out",
+            "past_key_4_h0_out",
+            "swa_value_5_h0_out",
+            "swa_key_5_h0_out",
+            "swa_value_6_h0_out",
+            "swa_key_6_h0_out",
+            "swa_value_7_h0_out",
+            "swa_key_7_h0_out",
+            "swa_value_8_h0_out",
+            "swa_key_8_h0_out",
+            "past_value_9_h0_out",
+            "past_key_9_h0_out",
+            "swa_value_10_h0_out",
+            "swa_key_10_h0_out",
+            "swa_value_11_h0_out",
+            "swa_key_11_h0_out",
+            "swa_value_12_h0_out",
+            "swa_key_12_h0_out",
+            "swa_value_13_h0_out",
+            "swa_key_13_h0_out",
+            "past_value_14_h0_out",
+            "past_key_14_h0_out",
+            "logits"
+          ]
+        }
+      },
+      {
+        "inputs": {
+          "count": 38,
+          "datatype_counts": {
+            "QNN_DATATYPE_UFIXED_POINT_16": 38
+          },
+          "memtype_counts": {
+            "QNN_TENSORMEMTYPE_MEMHANDLE": 38
+          },
+          "names": [
+            "inputs_embeds",
+            "per_layer_inputs",
+            "swa_position_ids_cos",
+            "swa_position_ids_sin",
+            "swa_key_0_h0_in",
+            "swa_value_0_h0_in",
+            "swa_attention_mask",
+            "swa_key_1_h0_in",
+            "swa_value_1_h0_in",
+            "swa_key_2_h0_in",
+            "swa_value_2_h0_in",
+            "swa_key_3_h0_in",
+            "swa_value_3_h0_in",
+            "position_ids_global_cos",
+            "position_ids_global_sin",
+            "past_key_4_h0_in",
+            "past_value_4_h0_in",
+            "attention_mask",
+            "swa_key_5_h0_in",
+            "swa_value_5_h0_in",
+            "swa_key_6_h0_in",
+            "swa_value_6_h0_in",
+            "swa_key_7_h0_in",
+            "swa_value_7_h0_in",
+            "swa_key_8_h0_in",
+            "swa_value_8_h0_in",
+            "past_key_9_h0_in",
+            "past_value_9_h0_in",
+            "swa_key_10_h0_in",
+            "swa_value_10_h0_in",
+            "swa_key_11_h0_in",
+            "swa_value_11_h0_in",
+            "swa_key_12_h0_in",
+            "swa_value_12_h0_in",
+            "swa_key_13_h0_in",
+            "swa_value_13_h0_in",
+            "past_key_14_h0_in",
+            "past_value_14_h0_in"
+          ]
+        },
+        "name": "ar1_cl4096_1_of_1",
+        "outputs": {
+          "count": 31,
+          "datatype_counts": {
+            "QNN_DATATYPE_FLOAT_16": 15,
+            "QNN_DATATYPE_UFIXED_POINT_16": 16
+          },
+          "memtype_counts": {
+            "QNN_TENSORMEMTYPE_MEMHANDLE": 31
+          },
+          "names": [
+            "swa_value_0_h0_out",
+            "swa_key_0_h0_out",
+            "swa_value_1_h0_out",
+            "swa_key_1_h0_out",
+            "swa_value_2_h0_out",
+            "swa_key_2_h0_out",
+            "swa_value_3_h0_out",
+            "swa_key_3_h0_out",
+            "past_value_4_h0_out",
+            "past_key_4_h0_out",
+            "swa_value_5_h0_out",
+            "swa_key_5_h0_out",
+            "swa_value_6_h0_out",
+            "swa_key_6_h0_out",
+            "swa_value_7_h0_out",
+            "swa_key_7_h0_out",
+            "swa_value_8_h0_out",
+            "swa_key_8_h0_out",
+            "past_value_9_h0_out",
+            "past_key_9_h0_out",
+            "swa_value_10_h0_out",
+            "swa_key_10_h0_out",
+            "swa_value_11_h0_out",
+            "swa_key_11_h0_out",
+            "swa_value_12_h0_out",
+            "swa_key_12_h0_out",
+            "swa_value_13_h0_out",
+            "swa_key_13_h0_out",
+            "past_value_14_h0_out",
+            "past_key_14_h0_out",
+            "logits"
+          ]
+        }
+      }
+    ],
+    "metadata_bytes": 189413,
+    "metadata_path": ".local/qairt-2.49.40-compile-run/context-info.json",
+    "metadata_sha256": "403426a9811803a35cbe795d4d562cfecd2ec776aef7f2d4edd8466361186c09",
+    "metadata_version": "QNN_SYSTEM_CONTEXT_BINARY_INFO_VERSION_3",
+    "num_graphs": 2,
+    "utility": "qnn-context-binary-utility"
+  },
+  "mixed_precision_boundary": {
+    "ar128_output_datatypes": {
+      "QNN_DATATYPE_UFIXED_POINT_16": 31
+    },
+    "ar1_output_datatypes": {
+      "QNN_DATATYPE_FLOAT_16": 15,
+      "QNN_DATATYPE_UFIXED_POINT_16": 16
+    },
+    "not_uniform_integer_execution_claim": true
+  },
+  "next_gate": "Generate and bind matching token + per-layer embedding LUTs and a Genie QnnHtp config, then wait for explicit phone priority and acquire phone.lock before a bounded physical context-load/inference probe.",
+  "qairt_version": "2.49.40.260810",
+  "raw_logs": {
+    "context-info.stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "context-info.stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stderr.log": {
+      "bytes": 587,
+      "sha256": "371b995b75431e54e4d1f5019d4207d66847ba065640f8c056658b3f7d03761a"
+    },
+    "stdout.log": {
+      "bytes": 1339,
+      "sha256": "6001323a6db04a0928a20dfef476f9531dac717425af2c2d180fcfeaecca790c"
+    }
+  },
+  "requested": {
+    "htp_compilation": true,
+    "inference": false,
+    "paid_workbench_job": false,
+    "phone_access": false,
+    "physical_htp_execution": false
+  },
+  "schema_version": 1
+}

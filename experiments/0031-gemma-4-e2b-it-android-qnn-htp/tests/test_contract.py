@@ -106,11 +106,11 @@ class ContractTest(unittest.TestCase):
 
     def test_historical_transform_blocker_and_active_no_execution_claim(self) -> None:
         blocker = json.loads((EXP / "results/transform-blocker/result.json").read_text())
-        self.assertEqual("active_qnn_conversion_passed_pre_htp_compile", self.contract["status"])
+        self.assertEqual("active_sm8550_htp_context_compiled_pre_phone_stage", self.contract["status"])
         active = self.contract["conversion_blocker"]
         self.assertIn("historical_failure", active)
         self.assertEqual("passed", active["transform_gate"])
-        self.assertIn("Compile the two bound DLCs", active["next_gate"])
+        self.assertIn("Generate matching token/per-layer embedding LUTs", active["next_gate"])
         self.assertFalse(blocker["android_execution"])
         self.assertFalse(blocker["qnn_htp_execution"])
         self.assertFalse(blocker["compiled_context_created"])
@@ -132,6 +132,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/qairt-2.49.40-capability",
             EXP / "results/qairt-2.49.40-transform-compat",
             EXP / "results/qairt-2.49.40-qnn-conversion",
+            EXP / "results/qairt-2.49.40-sm8550-context",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():
@@ -186,6 +187,23 @@ class ContractTest(unittest.TestCase):
         self.assertEqual([], result["quantization"]["ar128_float16_outputs"])
         self.assertFalse(result["requested"]["htp_compilation"])
         self.assertFalse(result["requested"]["phone_access"])
+        self.assertFalse(result["requested"]["inference"])
+
+    def test_sm8550_context_is_bound_but_physical_execution_is_not_claimed(self) -> None:
+        result = json.loads(
+            (EXP / "results/qairt-2.49.40-sm8550-context/result.json").read_text()
+        )
+        self.assertEqual(
+            "positive_host_sm8550_htp_context_compile_and_inspection", result["classification"]
+        )
+        self.assertEqual("weight_sharing", result["compile"]["mode"])
+        self.assertEqual("chipset:SM8550", result["compile"]["target"])
+        self.assertEqual(6, result["inspection"]["backend_id"])
+        self.assertEqual(2, result["inspection"]["num_graphs"])
+        self.assertTrue(all(result["inspection"]["embedded_markers"].values()))
+        self.assertTrue(result["requested"]["htp_compilation"])
+        self.assertFalse(result["requested"]["phone_access"])
+        self.assertFalse(result["requested"]["physical_htp_execution"])
         self.assertFalse(result["requested"]["inference"])
 
     def test_phone_and_campaign_are_not_claimed(self) -> None:

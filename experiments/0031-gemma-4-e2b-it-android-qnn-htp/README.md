@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active after QNN conversion and before HTP compilation. The unchanged public w4a16 checkpoint now yields static AR1 and AR128, CL4096, one-split variants and two hash-bound QAIRT DLCs. The conversion target is HTP and quantization overrides are present, with explicit RmsNorm/AR1 value-cache float boundaries retained. No compiled context, Android execution, or HTP inference result exists yet.**
+**Active after SM8550/HTP v73 compilation and before phone staging. The unchanged public w4a16 checkpoint now yields static AR1 and AR128, CL4096 variants, two HTP-targeted DLCs, and one weight-shared serialized context. Official context metadata binds QNN HTP backend ID 6 and both graphs; embedded compiler markers bind SM8550/architecture 73. No Android loading, physical HTP execution, generated text, or performance result exists yet.**
 
 This experiment is a separate HTP arm for the model studied in `0025`. It does not rewrite or relabel the CPU/GPU evidence there.
 
@@ -58,7 +58,9 @@ Both transformed variants now pass QNN conversion:
 
 `qairt-dlc-info` reports `backend=HTP`, 2,280,676,608 parameters, and the intended integer encodings. It also retains an important mixed-precision boundary: the converter reports 15 RmsNorm float fallbacks per variant; AR1 exposes 15 value-cache outputs as Float16 while AR128 exposes all outputs as uFxp16. See [`results/qairt-2.49.40-qnn-conversion/result.json`](results/qairt-2.49.40-qnn-conversion/result.json). This is conversion evidence, not physical provider proof.
 
-The exact next gate is compiling both DLCs together into one weight-shared serialized context for SM8550/HTP v73, then inspecting its graph/provider metadata. Workbench compile/link remains a separate unapproved cost/terms checkpoint. Ad hoc checkpoint graph rewriting, a CPU response, or the unsupported Gemma4 GGUF route is not acceptable.
+Both DLCs now compile together in QAIRT weight-sharing mode. The resulting 1,186,349,056-byte context has SHA-256 `b8c169cedf9a00dde67e2e555805b1a773cb6fd128f5c3912a684c371f4af95a`. `qnn-context-binary-utility` reports build `v2.49.40.260810104044`, QNN HTP backend ID 6, and exactly two graphs (`ar1_cl4096_1_of_1`, `ar128_cl4096_1_of_1`), each with 38 inputs and 31 outputs. The binary also contains `soc_type=SM8550`, `arch=73`, and `native_hmx_a16w4=true`. See [`results/qairt-2.49.40-sm8550-context/result.json`](results/qairt-2.49.40-sm8550-context/result.json).
+
+This is host AOT/context evidence, not physical provider proof. The exact next gate is generating and binding the matching token/per-layer embedding LUTs and Genie `QnnHtp` configuration. Phone staging remains queued behind explicit priority and `phone.lock`. Workbench compile/link remains a separate unapproved cost/terms checkpoint. Ad hoc checkpoint graph rewriting, a CPU response, or the unsupported Gemma4 GGUF route is not acceptable.
 
 ## Proof boundary
 

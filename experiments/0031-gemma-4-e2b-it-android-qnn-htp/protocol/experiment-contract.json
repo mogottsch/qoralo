@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
-  "status": "active_qnn_conversion_passed_pre_htp_compile",
+  "status": "active_sm8550_htp_context_compiled_pre_phone_stage",
   "question": "Can Gemma 4 E2B IT run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Gemma 4 E2B IT text generation only",
@@ -138,7 +138,8 @@
     "selected_action": "Use authorized QAIRT 2.49.40 runtime artifacts and an isolated schema-faithful converter compatibility fix without mutating the public checkpoint.",
     "transform_gate": "passed",
     "qnn_conversion_gate": "passed",
-    "next_gate": "Compile the two bound DLCs into one weight-shared serialized context for SM8550/HTP v73 before phone access.",
+    "htp_compile_gate": "passed",
+    "next_gate": "Generate matching token/per-layer embedding LUTs and the Genie QnnHtp bundle, then wait for explicit phone priority and phone.lock.",
     "workbench_checkpoint": "Any paid Workbench compile/link job requires a separate explicit cost/terms decision."
   },
   "transform_result": {
@@ -188,6 +189,24 @@
     "htp_compilation_requested": false,
     "serialized_context_created": false,
     "android_execution": false
+  },
+  "compiled_context_result": {
+    "result_path": "results/qairt-2.49.40-sm8550-context/result.json",
+    "classification": "positive_host_sm8550_htp_context_compile_and_inspection",
+    "qairt_version": "2.49.40.260810",
+    "compile_mode": "weight_sharing",
+    "target": "chipset:SM8550",
+    "dsp_arch": "v73",
+    "context_bytes": 1186349056,
+    "context_sha256": "b8c169cedf9a00dde67e2e555805b1a773cb6fd128f5c3912a684c371f4af95a",
+    "context_backend_id": 6,
+    "context_backend": "QNN HTP",
+    "context_build_id": "v2.49.40.260810104044",
+    "graphs": ["ar1_cl4096_1_of_1", "ar128_cl4096_1_of_1"],
+    "embedded_target_markers": ["soc_type=SM8550", "arch=73", "native_hmx_a16w4=true"],
+    "phone_access": false,
+    "physical_htp_execution": false,
+    "inference": false
   },
   "campaign_gate": {
     "phone_priority": "follows coordinated GPU paths; no ADB until Pi explicitly grants priority",
