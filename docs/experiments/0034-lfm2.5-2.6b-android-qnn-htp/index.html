@@ -72,64 +72,77 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="status-header" data-status-header="true">
 <div class="kicker"><span>Experiment 0034</span><span class="status">Active</span></div>
 <h1>Experiment 0034 — LFM2.5-2.6B Android QNN/HTP</h1>
-<p class="summary">The exact LFM2.5-2.6B source now has an architecture-aware Q4 ONNX export and bounded host CPU viability result; QNN AOT compilation and physical-phone HTP proof remain open.</p>
+<p class="summary">All 263 target-specific QNN parts compiled for SM8550/HTP v73 with CPU provider fallback disabled and complete host ownership traces; physical-phone HTP execution remains the next gate.</p>
 <div class="header-links"><a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-08-27</span><span>evidence commit: e39d758f861339f766a892310863ae290ee2f679</span><span>page source: docs/experiments/0034-lfm2.5-2.6b-android-qnn-htp/page.md</span><span>page source sha256: f31e93aae5e8e467d968516a4c7a777812ccd4eaee74c29d24f4b893e530236d</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-27</span><span>evidence commit: 594064df2581362de97dd95e226a27dc4cfaa438</span><span>page source: docs/experiments/0034-lfm2.5-2.6b-android-qnn-htp/page.md</span><span>page source sha256: 6b08c026c6d515b62075c2ad628ef7b05e17c85b666781f53c941971f20dda22</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
-<p>LFM2.5-2.6B has complete Android CPU and OpenCL benchmark routes, but its first QNN assessment stopped because the installed high-level QAIRT tools did not understand the model&#x27;s <code>lfm2</code> architecture. This experiment now tests a separately authorized path: export the exact model to architecture-aware Q4 ONNX, preserve both kinds of recurrent state, and prepare it for fallback-disabled QNN compilation targeting the Galaxy S23 Ultra&#x27;s SM8550/HTP v73.</p>
-<p>LFM2 is not a renamed Llama-like transformer. Its 30 layers combine 22 recurrent short-convolution layers with 8 full-attention layers, so a credible route must preserve convolutional state and attention KV state, bind their layout and reset behavior, and prove that claimed model computation executes through QNN HTP rather than silently falling back to CPU. A generic SM8550 target or a serialized context alone would not provide that proof.</p>
-<p>The exact route uses <code>LiquidAI/LFM2.5-2.6B</code> revision <code>ab006873…</code>, the architecture-aware <code>Liquid4All/onnx-export</code> exporter at commit <code>9a23ddd…</code>, symmetric block-32 INT4 weights, and Qualcomm-maintained ONNX Runtime QNN EP 2.5.0 with QNN runtime 2.49.0 as the candidate provider. Moritz reviewed and authorized the Qualcomm AI Stack License for the named public QNN packages; packages, source weights, large ONNX data, and future license-controlled contexts remain outside Git. The owning <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/export-provenance/result.json">export provenance</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/host-export-smoke/result.json">host-smoke result</a> are the evidence authority.</p>
+<p>LFM2.5-2.6B has complete Android CPU and OpenCL benchmark routes, but its original QNN assessment found no high-level tool path for the model&#x27;s <code>lfm2</code> architecture. This experiment now tests an architecture-aware route: export the exact model to Q4 ONNX, split its stateful computation into memory-bounded parts, compile every claimed neural part for the Galaxy S23 Ultra&#x27;s SM8550/HTP v73 target with CPU provider fallback disabled, and then prove that the complete route can execute physically on the phone.</p>
+<p>LFM2 is not a renamed Llama-like transformer. Its 30 layers combine 22 recurrent short-convolution layers with 8 full-attention layers, so the route must preserve both convolution state and attention KV state, bind their reset behavior, and prove that claimed model computation runs through QNN HTP. The intentionally CPU-side tokenizer, selected-row Q4 embedding lookup, request orchestration, and one global greedy argmax remain explicit; they are not hidden provider fallback.</p>
+<p>The route binds <code>LiquidAI/LFM2.5-2.6B</code> revision <code>ab006873…</code>, the architecture-aware <code>Liquid4All/onnx-export</code> exporter at <code>9a23ddd…</code>, symmetric block-32 INT4 weights, ONNX Runtime QNN EP 2.5.0, and host QNN runtime 2.49.40 targeting SoC model 43 / SM8550 / HTP v73. Moritz reviewed and authorized the named public Qualcomm package license. Packages, source weights, large ONNX data, and compiled contexts stay outside Git. The owning <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-aot/result.json">QNN AOT result</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/htp-pipeline-host-equivalence/result.json">host pipeline comparison</a> are the evidence authority.</p>
 </section>
 <section class="primary-section" id="progress" data-primary-section="progress">
 <h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
-<p>The earlier support assessment remains valid for the rejected high-level route: installed QAIRT 2.49 has no <code>lfm2</code> direct-GGUF support, HTP factory dispatch, Genie configuration, or public Qualcomm recipe/context. Rather than weakening model identity or ignoring recurrent state, the experiment moved to the separately bound architecture-aware exporter.</p>
-<p>The exact source shards and exporter revision were hash-bound. The initial Q4 export contained the expected architecture inventory: 22 convolution nodes, 8 <code>GroupQueryAttention</code> nodes, and 167 <code>MatMulNBits</code> nodes. Its 1,855,348,736-byte external tensor file remains outside Git with SHA-256 <code>d3cf0985…f457</code>.</p>
-<p>The exporter emitted 76 <code>SimplifiedLayerNormalization</code> nodes in the standard ONNX domain even though that operator is a Microsoft contrib operation, so ONNX Runtime 1.26 rejected the raw graph before any provider selection. A committed rewrite replaces those nodes and the final skip-RMSNorm with the equivalent standard-ONNX expression:</p>
-<pre><code class="language-text">x * scale / sqrt(reduce_mean(pow(x, 2), axis=-1) + 1e-5)</code></pre>
-<p>The rewritten 410,142-byte graph has SHA-256 <code>c2020ab7…d157</code>, still references the exact external tensor file, and passes the ONNX checker. The committed provenance records 1,129 graph nodes, 451 initializers, 41 inputs, 39 outputs, the recurrent/attention operator inventory, quantization details, source hashes, and rewrite boundary.</p>
-<p>A bounded host CPU smoke then loaded that exact rewritten export through ONNX Runtime 1.26 and processed the canonical short workload without truncation. The prompt contained 171 input tokens. Generation was deliberately capped at 16 tokens rather than the canonical 2,048-token ceiling; it retained 88 output bytes at SHA-256 <code>f048f924…518</code>, and the narrow exact-output sanity screen marked them sensible. The recorded host load and request timings remain host-only viability observations and cannot become Android, QNN, HTP, or performance evidence.</p>
-<p>The next committed gates are to build static prefill and one-token decode profiles with a shared 4,096-token KV capacity and explicit 22-layer convolution state, lower every operation into an HTP-owned form, compile fallback-disabled SM8550/v73 contexts with framework-operation tracing, and validate host equivalence plus complete state reset. Only after those gates pass may a bounded physical-phone viability request run under <code>phone.lock</code>; a canonical campaign comes later.</p>
+<p>The historical high-level blocker remains a rejected route: installed QAIRT&#x27;s direct-GGUF and factory paths do not support <code>lfm2</code>. The experiment instead bound the exact source shards and produced an architecture-aware Q4 ONNX export containing the expected 22 convolution nodes, 8 <code>GroupQueryAttention</code> nodes, and 167 <code>MatMulNBits</code> nodes. A standard-ONNX RMSNorm rewrite corrected an invalid contrib-operator domain emission, after which the graph passed the ONNX checker and completed a bounded canonical-short host CPU smoke. That smoke established export viability only, not QNN or Android execution.</p>
+<p>The model was then lowered into a one-token pipeline with a fixed 4,096-token attention capacity. Reset is explicit: all 22 convolution caches and all 8 attention K/V pairs start at zero for each logical request. RoPE and grouped-query attention are expanded into QNN-owned standard operations while returning only the new K/V slices for a left-aligned cache.</p>
+<p>The selected-row asymmetric Q4 embedding remains an intentional CPU frontend because QNN EP 2.5 does not claim <code>GatherBlockQuantized</code> on HTP. Wide 10,752-element MLP projections were split into 6,144 + 4,608 paths; only the second down-projection dot product receives mathematically zero activation and quantized-weight padding to meet the v73-supported width. The 128,000-wide LM head was split into 22 HTP chunks, followed by one declared CPU global argmax. Tokenizer work and orchestration are also CPU-side. No QNN CPU provider fallback is accepted for the submitted neural parts.</p>
+<p>The final memory-bounded route contains 263 compiled parts covering convolution and attention cores, MLP projection/activation/residual work, final normalization, and the 22 LM-head chunks. Every part compiled through ONNX Runtime QNN EP 2.5.0 with <code>session.disable_cpu_ep_fallback=1</code>, block-quant optimization, framework-operation tracing, and target SoC 43 / HTP v73. Across the retained QNN source parts:</p>
+<ul>
+<li>all 1,583 source ONNX nodes are marked supported;</li>
+<li>zero source nodes are unsupported;</li>
+<li>the traces map them to 2,747 QNN operations;</li>
+<li>263 context binaries total 1,779,492,144 bytes and remain outside Git.</li>
+</ul>
+<p>A bounded host reconstruction then submitted the exact 171-token canonical short prompt through the final 263-part ordering with zeroed state. The first five greedy token IDs matched the original export, the transformed monolith, and the final split pipeline. This protects the selected route wiring and greedy decisions for those five steps; the recorded logits are not numerically identical, and the host timings/logits are not Android or physical-HTP evidence.</p>
+<p>The next gate is to package and hash-bind all 263 contexts with a phone runtime that loads the route once, maintains the explicit state, performs only the declared CPU frontend/global-argmax work, and runs a bounded physical-phone request under <code>phone.lock</code>. Provider logs and profiles must prove the transformer/state/norm/head contexts execute on HTP before a canonical campaign may begin.</p>
 </section>
 <section class="primary-section" id="results" data-primary-section="results">
 <h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
-<p><strong>The experiment is active, and exact-model export viability has passed on the host.</strong> This milestone establishes that the exact pinned LFM2.5-2.6B source can be represented as an architecture-aware, checker-valid Q4 ONNX graph retaining its 22 recurrent-convolution and 8 attention layers, and that the rewritten export can return bounded text through host CPU execution.</p>
+<p><strong>The experiment remains active, with target-specific fallback-disabled host AOT complete and physical execution pending.</strong> The durable result establishes that every retained neural source part can be prepared into an SM8550/v73 QNN context under the stated ONNX Runtime QNN configuration, with complete framework-operation ownership traces and no CPU EP fallback inside those parts.</p>
 <div class="table-wrap"><table><thead><tr>
 <th>Evidence boundary</th>
 <th>Current result</th>
 </tr></thead><tbody>
 <tr>
-<td>Exact-model Q4 ONNX export</td>
-<td>Completed and hash-bound; checker passed after the standard RMSNorm rewrite</td>
+<td>Exact-model architecture-aware Q4 export</td>
+<td>Completed and hash-bound</td>
 </tr>
 <tr>
-<td>Architecture/state inventory</td>
-<td>22 recurrent-convolution layers and 8 GQA layers retained</td>
+<td>Target-specific QNN AOT</td>
+<td>263 contexts compiled for SoC 43 / SM8550 / HTP v73</td>
 </tr>
 <tr>
-<td>Bounded canonical-short host CPU smoke</td>
-<td>Completed at a 16-token cap; exact output retained and superficially sensible</td>
+<td>Retained source-part ownership</td>
+<td>1,583/1,583 source nodes supported; 0 unsupported; 2,747 QNN operations</td>
 </tr>
 <tr>
-<td>QNN provider / fallback-disabled AOT context</td>
-<td>Not yet established</td>
+<td>CPU provider fallback inside QNN parts</td>
+<td>Disabled</td>
+</tr>
+<tr>
+<td>Declared CPU work outside QNN parts</td>
+<td>Tokenizer, selected-row Q4 embedding, orchestration, and global argmax across 22 HTP LM-head chunks</td>
+</tr>
+<tr>
+<td>Host route-wiring comparison</td>
+<td>First five greedy tokens matched reference, transformed monolith, and final pipeline; not exact-logit equivalence</td>
 </tr>
 <tr>
 <td>Android / physical HTP execution</td>
-<td>Not attempted; no claim</td>
+<td>Not yet attempted; no claim</td>
 </tr>
 <tr>
-<td>Canonical 1+5+5+5 campaign and Android performance</td>
+<td>Canonical campaign and Android performance</td>
 <td>Not run; no setup, TTFT, prefill, decode, memory, thermal, or power result</td>
 </tr>
 <tr>
 <td>Android LLM registry row</td>
-<td>None; host export viability is not registry-eligible</td>
+<td>None; host AOT and wiring evidence are not registry-eligible</td>
 </tr>
 </tbody></table></div>
-<p>The host smoke&#x27;s sensible-looking text is not quality, correctness, grounding, usefulness, or acceptance. It also does not prove QNN compatibility: CPUExecutionProvider ran the smoke, no QNN provider was selected, no AOT context was produced, and no phone was accessed. “Exact model” describes source/export identity only at this milestone, not exact-model HTP execution.</p>
-<p>The historical high-level QAIRT architecture blocker is now a rejected route rather than the experiment&#x27;s overall stopping point. The active route still must fail closed if any model/state operator remains outside HTP, full reset cannot be proven, the phone cannot load the exact contexts, or a new licensing/export/paid-service checkpoint appears. No 0034 host-only or blocked evidence appears in the Android LLM registry.</p>
+<p>The fallback-disabled compiler result is stronger than generic target availability, but it is still host preparation evidence. It does not show that the authorized phone can load 1,779,492,144 bytes of contexts, keep the complete route resident, execute every context through physical HTP, reset state correctly, or return valid text. Host context creation, host output sanity, and matching five greedy decisions cannot substitute for phone provider/RPC/accelerator/cycle/HVX proof.</p>
+<p>No 0034 row belongs in the Android LLM registry until a complete valid physical Android canonical campaign exists. If physical context loading fails, CPU work expands beyond the declared boundary, any neural context falls back, or full request reset cannot be proven, the route must stop rather than weaken the HTP claim.</p>
 </section></article>
 <footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
 </main>
