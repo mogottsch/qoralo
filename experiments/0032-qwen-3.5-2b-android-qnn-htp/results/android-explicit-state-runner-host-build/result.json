@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
+  "evidence_class": "android_runner_host_build_and_exact_pte_abi_inspection",
+  "status": "host_prepared_not_staged",
+  "runner": {
+    "source": "tools/qwen35_explicit_state_runner.cpp",
+    "build_script": "tools/build_android_runner.sh",
+    "target": "Android arm64-v8a API 30",
+    "ndk": "28.1.13356709 (r28b)",
+    "stripped_binary": {
+      "bytes": 3444472,
+      "sha256": "4b05bf24f6b55d349383dfdcfa54c0d968ea944a7b7ce6bb7971f348850aec58",
+      "policy": "local-only; not committed"
+    },
+    "qnn_backend_library": {
+      "bytes": 699608,
+      "sha256": "0d97f44ac9abcaf7e5e025440c41c3727acc6315f2bd2613ab1cb31afe508b37",
+      "policy": "local-only; not committed"
+    },
+    "elf_needed": [
+      "libqnn_executorch_backend.so",
+      "liblog.so",
+      "libm.so",
+      "libdl.so",
+      "libc.so"
+    ],
+    "build_log": {
+      "bytes": 5317,
+      "sha256": "b2db27dadb53760669bf109444b97f327ab74cf6ec5c7cec8121bf9e98d1b457",
+      "policy": "local-only; build-proof.log is a curated extract"
+    }
+  },
+  "runner_behavior": {
+    "input_format": "little-endian int32 token IDs",
+    "output_format": "little-endian int32 generated token IDs",
+    "generation": "greedy",
+    "default_eos_token_ids": [248044, 248046],
+    "max_new_tokens_guard": 2048,
+    "context_tokens": 4096,
+    "state_reset": "zero all 48 explicit state inputs and rebuild the attention mask",
+    "linear_state_update": "copy each complete recurrent and causal-convolution output into its next input",
+    "full_attention_state_update": "insert each one-token K/V output at the current position of its 4095-slot explicit cache",
+    "profiling": "QNN runtime log/profile controls, ETDump, and request/model-step timing fields",
+    "campaign_eligibility": "single-request physical viability only; loaded-route multi-request campaign reuse is not yet implemented"
+  },
+  "exact_pte_abi": {
+    "pte_sha256": "bfdae1c3327c954566ec0d4a5a0ee8873eb145d0921bc3f9d988a6a2557be6df",
+    "inputs": 51,
+    "outputs": 49,
+    "input_bytes": 121298952,
+    "output_bytes": 21661696,
+    "token": {"shape": [1, 1], "dtype": "Int"},
+    "attention_mask": {"shape": [1, 1, 1, 4096], "dtype": "Float"},
+    "position": {"shape": [1, 1], "dtype": "Int"},
+    "logits": {"shape": [1, 1, 248320], "dtype": "Float"},
+    "state_inputs": 48,
+    "state_outputs": 48
+  },
+  "claim_limits": [
+    "The Android binary was cross-compiled and the exact PTE metadata was inspected on the host only.",
+    "Nothing in this milestone was staged to or executed on Android.",
+    "There is no physical QNN/HTP, output-sanity, or performance claim.",
+    "This single-request runner is not eligible for the canonical loaded-route campaign."
+  ]
+}

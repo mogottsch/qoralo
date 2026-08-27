@@ -35,9 +35,9 @@ The pinned official tokenizer/template was reconstructed independently. With thi
 
 ## Current next gate
 
-1. Continue host-only runtime/runner preparation while the shared phone remains assigned elsewhere.
-2. Only after Pi explicitly transfers phone priority, stage the hash-bound PTE and a scoped runner under `phone.lock`.
+1. Use the cross-compiled single-request explicit-state runner for the bounded viability gate; its host-build and exact-PTE ABI evidence is in [`results/android-explicit-state-runner-host-build/`](results/android-explicit-state-runner-host-build/).
+2. Only after Pi explicitly transfers phone priority, stage the hash-bound PTE and scoped runner under `phone.lock`.
 3. Run one bounded viability request with physical QNN RPC/accelerator/cycle/HVX proof, generated-token sanity, and verified cleanup.
-4. Prove loaded-route state reset, then run the fixed 1+5+5+5 campaign.
+4. Extend the runner to reuse the loaded route across reset-isolated requests, then run the fixed 1+5+5+5 campaign.
 
 GenieX llama.cpp NPU metrics, the shipped 4B HTP example, direct-Hexagon output without QNN, and CPU-only text output are not substitutes for physical QNN/HTP provider proof.

@@ -27,6 +27,9 @@ class ContractTest(unittest.TestCase):
         cls.eager = json.loads(
             (EXP / "results/executorch-qnn-exact-host-compile/eager-equivalence.json").read_text()
         )
+        cls.runner = json.loads(
+            (EXP / "results/android-explicit-state-runner-host-build/result.json").read_text()
+        )
 
     def test_canonical_protocol_and_workloads(self) -> None:
         canonical = self.contract["canonical_protocol"]
@@ -139,12 +142,30 @@ class ContractTest(unittest.TestCase):
         self.assertFalse(self.contract["executorch_qnn_route"]["android_execution"])
         self.assertIn("not run on Android", " ".join(result["claim_limits"]))
 
+    def test_android_runner_is_host_only_and_matches_exact_pte_abi(self) -> None:
+        runner = self.runner
+        self.assertEqual("host_prepared_not_staged", runner["status"])
+        self.assertEqual(51, runner["exact_pte_abi"]["inputs"])
+        self.assertEqual(49, runner["exact_pte_abi"]["outputs"])
+        self.assertEqual(48, runner["exact_pte_abi"]["state_inputs"])
+        self.assertEqual(48, runner["exact_pte_abi"]["state_outputs"])
+        self.assertEqual(
+            self.exact_compile["pte"]["sha256"], runner["exact_pte_abi"]["pte_sha256"]
+        )
+        self.assertEqual("greedy", runner["runner_behavior"]["generation"])
+        self.assertIn("single-request", runner["runner_behavior"]["campaign_eligibility"])
+        limits = " ".join(runner["claim_limits"])
+        self.assertIn("host only", limits)
+        self.assertIn("staged", limits)
+        self.assertFalse(self.contract["executorch_qnn_route"]["android_execution"])
+
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
             EXP / "protocol",
             EXP / "results/support-assessment",
             EXP / "results/executorch-qnn-structural-probe",
             EXP / "results/executorch-qnn-exact-host-compile",
+            EXP / "results/android-explicit-state-runner-host-build",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

@@ -1,0 +1,151 @@
+{
+  "claim_limits": [
+    "PTE FlatBuffer metadata inspection only; no graph was executed.",
+    "This is not Android or physical QNN/HTP evidence."
+  ],
+  "evidence_class": "exact_pte_host_abi_inspection",
+  "fixed_inputs": {
+    "mask": {
+      "dtype": "Float",
+      "shape": [
+        1,
+        1,
+        1,
+        4096
+      ]
+    },
+    "position": {
+      "dtype": "Int",
+      "shape": [
+        1,
+        1
+      ]
+    },
+    "token": {
+      "dtype": "Int",
+      "shape": [
+        1,
+        1
+      ]
+    }
+  },
+  "fixed_output_logits": {
+    "dtype": "Float",
+    "shape": [
+      1,
+      1,
+      248320
+    ]
+  },
+  "input_bytes": 121298952,
+  "inputs": 51,
+  "method": "forward",
+  "output_bytes": 21661696,
+  "outputs": 49,
+  "pte": {
+    "bytes": 1994572968,
+    "sha256": "bfdae1c3327c954566ec0d4a5a0ee8873eb145d0921bc3f9d988a6a2557be6df"
+  },
+  "schema_version": 1,
+  "state": {
+    "full_attention_key_example": {
+      "input": {
+        "dtype": "Float",
+        "memory_planned": false,
+        "nbytes": 8386560,
+        "shape": [
+          1,
+          2,
+          256,
+          4095
+        ]
+      },
+      "output": {
+        "dtype": "Float",
+        "memory_planned": true,
+        "nbytes": 2048,
+        "shape": [
+          1,
+          2,
+          256,
+          1
+        ]
+      }
+    },
+    "full_attention_value_example": {
+      "input": {
+        "dtype": "Float",
+        "memory_planned": false,
+        "nbytes": 8386560,
+        "shape": [
+          1,
+          2,
+          4095,
+          256
+        ]
+      },
+      "output": {
+        "dtype": "Float",
+        "memory_planned": true,
+        "nbytes": 2048,
+        "shape": [
+          1,
+          2,
+          1,
+          256
+        ]
+      }
+    },
+    "layers": 24,
+    "linear_conv_example": {
+      "input": {
+        "dtype": "Float",
+        "memory_planned": false,
+        "nbytes": 98304,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ]
+      },
+      "output": {
+        "dtype": "Float",
+        "memory_planned": true,
+        "nbytes": 98304,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ]
+      }
+    },
+    "linear_recurrent_example": {
+      "input": {
+        "dtype": "Float",
+        "memory_planned": false,
+        "nbytes": 1048576,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ]
+      },
+      "output": {
+        "dtype": "Float",
+        "memory_planned": true,
+        "nbytes": 1048576,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ]
+      }
+    },
+    "state_inputs": 48,
+    "state_outputs": 48
+  }
+}
