@@ -1,7 +1,7 @@
 ---
 experiment: 0031-gemma-4-e2b-it-android-qnn-htp
 status: active
-summary: The two static Gemma 4 AR variants now compile into one hash-bound weight-shared SM8550/HTP-v73 context; runtime bundle preparation and physical-phone proof remain open.
+summary: A hash-bound Genie QnnHtp bundle now combines the SM8550/v73 context, exact tokenizer, source-derived token/PLE LUTs, and runtime libraries; it is ready for a bounded phone gate but has not been staged.
 benchmark: android-llm
 ---
 
@@ -9,11 +9,11 @@ benchmark: android-llm
 
 ## Experiment description
 
-Gemma 4 E2B IT already has measured Android CPU and GPU routes, but its QNN arm stopped when QAIRT 2.49.0 could not transform the exact public W4A16 graph. The newly authorized QAIRT 2.49.40 package retained the implicated defect, so this experiment introduced a narrow schema-and-shape compatibility layer. That layer cleared transformation without changing the public checkpoint, both static variants passed host QNN conversion, and one weight-shared SM8550/HTP-v73 context has now compiled. Physical-phone loading and execution are still unproven.
+Gemma 4 E2B IT already has measured Android CPU and GPU routes, but its QNN arm stopped when QAIRT 2.49.0 could not transform the exact public W4A16 graph. The newly authorized QAIRT 2.49.40 package retained the implicated defect, so this experiment introduced a narrow schema-and-shape compatibility layer. That layer cleared transformation without changing the public checkpoint, both static variants passed host QNN conversion, one weight-shared SM8550/HTP-v73 context compiled, and the source-derived embedding/runtime bundle is now prepared. Physical-phone loading and execution are still unproven.
 
 The intended end-to-end result has not changed: an exact, provenance-bound Gemma 4 E2B context compiled for SM8550/HTP v73, physical `QnnHtp` provider proof on the authorized Galaxy S23 Ultra, a bounded viability request, proven loaded-route state isolation, and only then the canonical one-first-plus-five-short/five-medium/five-long Android campaign. Toolchain acquisition or file presence alone cannot satisfy any of those gates.
 
-The public `gemma_4_e2b_it_w4a16.zip` checkpoint remains the pinned model input. It is hash-bound at 2,013,959,998 bytes and includes the exact ONNX/external data, W4A16 encodings, tokenizer, template, and configuration assessed by the earlier transform probe. The owning [experiment README](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/README.md), [experiment contract](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/protocol/experiment-contract.json), [original transform blocker](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/transform-blocker/result.json), [QAIRT 2.49.40 capability comparison](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-capability/result.json), [positive transform result](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-transform-compat/result.json), [QNN conversion result](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-qnn-conversion/result.json), and [compiled-context inspection](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-sm8550-context/result.json) are the evidence authority.
+The public `gemma_4_e2b_it_w4a16.zip` checkpoint remains the pinned model input. It is hash-bound at 2,013,959,998 bytes and includes the exact ONNX/external data, W4A16 encodings, tokenizer, template, and configuration assessed by the earlier transform probe. The owning [experiment README](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/README.md), [experiment contract](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/protocol/experiment-contract.json), [original transform blocker](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/transform-blocker/result.json), [positive transform result](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-transform-compat/result.json), [QNN conversion result](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-qnn-conversion/result.json), [compiled-context inspection](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-sm8550-context/result.json), and [runtime-bundle/LUT result](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/gemma4-sm8550-runtime-bundle/result.json) are the evidence authority.
 
 ## Progress
 
@@ -51,11 +51,20 @@ Both DLCs now compile together in QAIRT weight-sharing mode. The resulting 1,186
 
 The mixed-precision boundary remains present in compiled metadata: all 31 AR128 outputs are unsigned fixed-point 16, while AR1 retains 15 Float16 value-cache outputs and 16 unsigned fixed-point outputs. This is not a uniform-integer claim.
 
-The active next gate is generating and binding matching token and per-layer-embedding LUTs plus the exact Genie `QnnHtp` runtime configuration. Phone staging remains gated on explicit Pi priority and the full `phone.lock` lifecycle. Any paid Workbench compile/link use remains a separate unapproved cost-and-terms checkpoint.
+The private runtime bundle is now prepared from the pinned, ungated Apache-2.0 QAT checkpoint. A pinned Google/Hugging Face formula decodes its low-bits-first signed INT2 token embeddings and INT4 per-layer embeddings, applies per-row/per-block plus architectural embedding scales, and requantizes them into the uint8 LUT format expected by the QAIRT Gemma 4 runtime:
+
+- token LUT: 402,653,184 bytes, SHA-256 `3b55bb6b…4239`;
+- per-layer embedding LUT: 2,348,810,240 bytes, SHA-256 `bc5f25db…9fa4`.
+
+Deterministic sampled reconstruction covers selected vocabulary rows and remains within half of one uint8 quantization step for both LUTs. This is a bounded LUT-fidelity check, not full-tensor numerical equivalence or model-output validation.
+
+The bundle manifest binds both LUTs, context SHA-256 `b8c169ce…af95a`, exact tokenizer, QAIRT 2.49.40 Genie plus QNN HTP host/stub/v73 skeleton libraries, and a `QnnHtp` configuration with CL4096, greedy sampling, and the 2,048-token ceiling. All large or restricted artifacts stay outside Git.
+
+The next gate is one bounded short-prompt physical context-load/inference probe. No staging has occurred in this milestone. The complete ADB lifecycle requires explicit Pi priority and `phone.lock`; any paid Workbench use remains a separate unapproved cost-and-terms checkpoint.
 
 ## Results
 
-**The experiment is active after positive host SM8550/HTP-v73 context compilation and before phone staging.** The static AR1 and AR128 CL4096 variants now exist together in one hash-bound, weight-shared context whose official metadata identifies QNN HTP backend ID 6 and both graph interfaces. The earlier `KeyError('value')` remains historical evidence for the unpatched transform path.
+**The experiment is ready for a bounded phone viability gate, with all current evidence still host-only.** The static AR1/AR128 context, source-derived embedding LUTs, exact tokenizer, runtime libraries, and Genie `QnnHtp` configuration are hash-bound together. The earlier `KeyError('value')` remains historical evidence for the unpatched transform path.
 
 | Evidence boundary | Current result |
 |---|---|
@@ -70,10 +79,14 @@ The active next gate is generating and binding matching token and per-layer-embe
 | Mixed-precision boundary | 15 RmsNorm float fallbacks per variant; 15 AR1 Float16 value-cache outputs; AR128 outputs uFxp16 |
 | Host weight-shared context | 1,186,349,056 bytes / SHA `b8c169ce…af95a`; QNN HTP backend ID 6 |
 | Context graph inventory | AR1 + AR128, each 38 inputs / 31 outputs; SM8550, arch 73, native HMX A16W4 markers |
+| Token LUT | 402,653,184 bytes / SHA `3b55bb6b…4239`; source INT2 to runtime uint8 |
+| Per-layer embedding LUT | 2,348,810,240 bytes / SHA `bc5f25db…9fa4`; source INT4 to runtime uint8 |
+| Sampled LUT fidelity | Both within half of one uint8 quantization step on the deterministic sample |
+| Runtime bundle | Context + tokenizer + Genie/QNN HTP/v73 libraries + CL4096 greedy configuration hash-bound outside Git |
 | Android load / physical HTP no-fallback execution | Not attempted; no claim |
 | Output, setup, TTFT, prefill, decode, memory, or campaign | Unavailable; no inference ran |
 | Android LLM registry row | None; toolchain capability evidence is not registry-eligible |
 
-A successful host context compile is not physical provider or no-fallback execution proof. Backend ID 6 and embedded SM8550/v73 markers bind the target and artifact metadata; they do not show that Android can load the context, that every transformer graph executes on HTP, or that the mixed-precision boundaries behave correctly at runtime.
+A complete host-prepared runtime bundle is not physical provider or no-fallback execution proof. Source-derived LUT hashes and sampled half-step fidelity do not show that Android can load the context, that every transformer graph executes on HTP, that mixed-precision cache boundaries behave correctly, or that generated text is valid.
 
-No phone or ADB operation occurred, no paid Workbench job ran, and no QNN/HTP inference, output, or performance evidence exists. A future page may advance beyond this milestone only from committed runtime-bundle, phone-load, or provider evidence. The Android LLM registry remains limited to complete valid physical Android campaigns, so 0031 has no benchmark row.
+No phone or ADB operation occurred, no paid Workbench job ran, and no QNN/HTP inference, output, or performance evidence exists. A future page may advance beyond this milestone only from committed phone-load or provider evidence. The Android LLM registry remains limited to complete valid physical Android campaigns, so 0031 has no benchmark row.
