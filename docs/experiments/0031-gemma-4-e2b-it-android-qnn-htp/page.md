@@ -1,7 +1,7 @@
 ---
 experiment: 0031-gemma-4-e2b-it-android-qnn-htp
 status: active
-summary: The corrected bundle deserialized its weight-shared context on physical SM8550 HTP, then stopped before dialog/query on 30 cross-variant value-cache quantization mismatches; a host rebuild is required.
+summary: A rebuilt SM8550/v73 context now gives all 15 value caches identical four-way uFxp16 contracts across AR1 and AR128, clearing the attempt-02 host blocker; a new physical gate is required.
 benchmark: android-llm
 ---
 
@@ -9,11 +9,11 @@ benchmark: android-llm
 
 ## Experiment description
 
-Gemma 4 E2B IT already has measured Android CPU and GPU routes, but its QNN arm stopped when QAIRT 2.49.0 could not transform the exact public W4A16 graph. The authorized QAIRT 2.49.40 route has since cleared transformation, QNN conversion, weight-shared SM8550/v73 compilation, runtime-bundle preparation, and physical context deserialization. The current blocker is model validation before dialog/query: AR1 and AR128 disagree on 15 value-cache quantization boundaries. No graph has executed.
+Gemma 4 E2B IT already has measured Android CPU and GPU routes, but its QNN arm stopped when QAIRT 2.49.0 could not transform the exact public W4A16 graph. The authorized QAIRT 2.49.40 route has since cleared transformation, QNN conversion, weight-shared SM8550/v73 compilation, runtime-bundle preparation, and physical context deserialization. The first runtime bundle stopped before dialog/query because AR1 and AR128 disagreed on 15 value-cache quantization boundaries. A host correction now gives all four AR1-input/output and AR128-input/output signatures identical datatype, scale, and offset; the rebuilt context still requires physical validation. No graph has executed.
 
 The intended end-to-end result has not changed: an exact, provenance-bound Gemma 4 E2B context compiled for SM8550/HTP v73, physical `QnnHtp` provider proof on the authorized Galaxy S23 Ultra, a bounded viability request, proven loaded-route state isolation, and only then the canonical one-first-plus-five-short/five-medium/five-long Android campaign. Toolchain acquisition or file presence alone cannot satisfy any of those gates.
 
-The public `gemma_4_e2b_it_w4a16.zip` checkpoint remains the pinned model input. It is hash-bound at 2,013,959,998 bytes and includes the exact ONNX/external data, W4A16 encodings, tokenizer, template, and configuration assessed by the earlier transform probe. The owning [experiment README](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/README.md), [experiment contract](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/protocol/experiment-contract.json), [positive transform result](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-transform-compat/result.json), [QNN conversion result](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-qnn-conversion/result.json), [compiled-context inspection](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-sm8550-context/result.json), [runtime-bundle/LUT result](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/gemma4-sm8550-runtime-bundle/result.json), [first phone attempt](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-viability-attempt-01/result.json), and [corrected retry](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-viability-attempt-02/result.json) are the evidence authority.
+The public `gemma_4_e2b_it_w4a16.zip` checkpoint remains the pinned model input. It is hash-bound at 2,013,959,998 bytes and includes the exact ONNX/external data, W4A16 encodings, tokenizer, template, and configuration assessed by the earlier transform probe. The owning [experiment README](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/README.md), [experiment contract](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/protocol/experiment-contract.json), [positive transform result](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-transform-compat/result.json), [QNN conversion result](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-qnn-conversion/result.json), [compiled-context inspection](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-sm8550-context/result.json), [runtime-bundle/LUT result](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/gemma4-sm8550-runtime-bundle/result.json), [first phone attempt](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-viability-attempt-01/result.json), and [corrected retry](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-viability-attempt-02/result.json), and [cache-quantization correction](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-cache-quantization-correction/result.json) are the evidence authority.
 
 ## Progress
 
@@ -68,11 +68,19 @@ Genie then rejected model validation before dialog/query with exactly 30 non-ide
 
 Attempt 02 exited 1 with zero graph executions, tokens, or output. Its profile exists but contains no components. Both attempts verified their stage hashes, removed and verified the scoped remote root absent, and released `phone.lock`.
 
-The next gate is host-only: make each of the 15 AR1 value-cache outputs datatype/scale/offset-identical to its AR128 counterpart, then re-convert, recompile, and inspect the context. No validation weakening, CPU conversion boundary, further phone retry, or campaign is authorized. Any paid Workbench use remains a separate unapproved cost-and-terms checkpoint.
+The cache blocker is now corrected without changing the checkpoint or weakening Genie validation. A schema-standard ONNX float fork and `QuantizeLinear` boundary maps each of the 15 public AR1 value-cache outputs to the already-bound source-QAT uint16 zero point 32768, QNN offset -32768, and exact per-cache scale. Internal transformer consumers keep the existing path; this adds no host CPU cache-conversion boundary.
+
+The corrected AR1 DLC is 2,356,847,444 bytes with SHA-256 `7e88facd…c9e1`, retains 2,280,676,608 parameters, and exposes 31/31 outputs as uFxp16. Recompiling it with the unchanged AR128 DLC produced a 1,186,369,536-byte weight-shared SM8550/v73 context at SHA-256 `a1d52d00…cc44`. Official metadata identifies QNN HTP backend ID 6, the exact QAIRT 2.49.40 build, and two 38-input/31-output graphs.
+
+For every one of the 15 value caches, official context inspection verifies that AR1 input, AR1 output, AR128 input, and AR128 output now share identical uFxp16 datatype, scale, and offset signatures. This clears the exact attempt-02 validation mismatch on the host.
+
+The correction is not a uniform-integer execution claim: QAIRT still reports 75 float-precision component fallback operations around affected normalization paths. Host conversion, recompilation, and metadata inspection also do not prove that the phone will accept or execute the revised context.
+
+The next gate is to rebuild the private bundle/stage around the corrected context and run one separately authorized 16-token physical gate under `phone.lock`. No phone run, validation weakening, campaign, or paid Workbench use occurred in this milestone.
 
 ## Results
 
-**The experiment is active with a host rebuild required after two physical pre-execution failures.** Attempt 01 established partial physical provider/backend/device and graph initialization before revealing a missing runtime extension. Attempt 02 loaded the corrected runtime and fully deserialized the weight-shared context before the exact 30-entry value-cache validation blocker. Neither attempt executed a graph.
+**The experiment is active with the attempt-02 cache contract corrected and recompiled on the host.** The physical attempts remain pre-execution evidence, while the new context's metadata proves four-way cache-signature equality for all 15 value caches. Physical acceptance and execution of that corrected context remain unproven.
 
 | Evidence boundary | Current result |
 |---|---|
@@ -94,11 +102,15 @@ The next gate is host-only: make each of the 15 AR1 value-cache outputs datatype
 | Attempt 01 physical boundary | Both AR graphs/SWA mappings and SM8550 HTP stack initialized; missing NetRun extension caused exit 139 pre-query |
 | Attempt 02 physical boundary | Corrected extension loaded and context deserialized; 30 value-cache quantization mismatches caused exit 1 pre-dialog/query |
 | Root cause | 15 AR1 Float16 value outputs versus matched AR128 uFxp16 inputs and outputs with differing quantization parameters |
-| Graph execution, tokens, output, usable profile | None / 0 / none / none |
+| Corrected AR1 DLC | 2,356,847,444 bytes / SHA `7e88facd…c9e1`; 2,280,676,608 params; 31/31 uFxp16 outputs |
+| Corrected context | 1,186,369,536 bytes / SHA `a1d52d00…cc44`; QNN HTP backend ID 6; two 38-in/31-out graphs |
+| Cache correction proof | All 15 AR1-in/out + AR128-in/out datatype/scale/offset signatures identical |
+| Remaining precision boundary | 75 float-precision component fallback ops retained; not uniform-integer/no-fallback proof |
+| Revised physical execution | Not attempted; no output or performance claim |
+| Prior graph execution, tokens, output, usable profile | None / 0 / none / none |
 | Cleanup | Stage hashes passed; scoped root absent and `phone.lock` released after both attempts |
-| Next work | Host-only quantization-identical context rebuild; no phone retry or campaign authorized |
 | Android LLM registry row | None; toolchain capability evidence is not registry-eligible |
 
-The phone evidence proves progressively deeper physical initialization and, in attempt 02, full context deserialization. It does not prove physical model inference or no-fallback graph execution: Genie stopped validation before dialog/query and no execution profile component exists. The 30 mismatch messages are not performance evidence, and the empty profile is not a zero-time measurement.
+The phone evidence proves progressively deeper physical initialization and, in attempt 02, full context deserialization of the old context. It does not prove physical model inference or no-fallback graph execution: Genie stopped validation before dialog/query and no execution profile component exists. The host correction removes the recorded signature mismatch in rebuilt metadata, but it cannot retroactively change either phone attempt or establish revised physical behavior.
 
-No paid Workbench job ran, and no QNN/HTP graph execution, generated output, output sanity, or performance evidence exists. A future page may advance beyond this milestone only from a committed quantization-identical rebuild and separately authorized physical result. The Android LLM registry remains limited to complete valid physical Android campaigns, so 0031 has no benchmark row.
+No paid Workbench job ran, and no QNN/HTP graph execution, generated output, output sanity, or performance evidence exists. A future page may advance beyond this milestone only from a separately authorized physical result using the exact corrected context. The Android LLM registry remains limited to complete valid physical Android campaigns, so 0031 has no benchmark row.

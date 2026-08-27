@@ -72,15 +72,15 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="status-header" data-status-header="true">
 <div class="kicker"><span>Experiment 0031</span><span class="status">Active</span></div>
 <h1>Experiment 0031 — Gemma 4 E2B IT Android QNN/HTP</h1>
-<p class="summary">The corrected bundle deserialized its weight-shared context on physical SM8550 HTP, then stopped before dialog/query on 30 cross-variant value-cache quantization mismatches; a host rebuild is required.</p>
+<p class="summary">A rebuilt SM8550/v73 context now gives all 15 value caches identical four-way uFxp16 contracts across AR1 and AR128, clearing the attempt-02 host blocker; a new physical gate is required.</p>
 <div class="header-links"><a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-08-27</span><span>evidence commit: 9a3b54ee1a11755caadc9783e7d13a7ee7995ee1</span><span>page source: docs/experiments/0031-gemma-4-e2b-it-android-qnn-htp/page.md</span><span>page source sha256: 859bdddd5165e8999b38ecfd6dfa61ec1b506be59bc6f96df17df3db8d1f3e7d</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-27</span><span>evidence commit: 3bca3f9f3de6548376501f45178a59f798c0dddb</span><span>page source: docs/experiments/0031-gemma-4-e2b-it-android-qnn-htp/page.md</span><span>page source sha256: 032e23b4730b5baba3f685f6eaf5a856ad51a47aa0226740017eaa60fd844576</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
-<p>Gemma 4 E2B IT already has measured Android CPU and GPU routes, but its QNN arm stopped when QAIRT 2.49.0 could not transform the exact public W4A16 graph. The authorized QAIRT 2.49.40 route has since cleared transformation, QNN conversion, weight-shared SM8550/v73 compilation, runtime-bundle preparation, and physical context deserialization. The current blocker is model validation before dialog/query: AR1 and AR128 disagree on 15 value-cache quantization boundaries. No graph has executed.</p>
+<p>Gemma 4 E2B IT already has measured Android CPU and GPU routes, but its QNN arm stopped when QAIRT 2.49.0 could not transform the exact public W4A16 graph. The authorized QAIRT 2.49.40 route has since cleared transformation, QNN conversion, weight-shared SM8550/v73 compilation, runtime-bundle preparation, and physical context deserialization. The first runtime bundle stopped before dialog/query because AR1 and AR128 disagreed on 15 value-cache quantization boundaries. A host correction now gives all four AR1-input/output and AR128-input/output signatures identical datatype, scale, and offset; the rebuilt context still requires physical validation. No graph has executed.</p>
 <p>The intended end-to-end result has not changed: an exact, provenance-bound Gemma 4 E2B context compiled for SM8550/HTP v73, physical <code>QnnHtp</code> provider proof on the authorized Galaxy S23 Ultra, a bounded viability request, proven loaded-route state isolation, and only then the canonical one-first-plus-five-short/five-medium/five-long Android campaign. Toolchain acquisition or file presence alone cannot satisfy any of those gates.</p>
-<p>The public <code>gemma_4_e2b_it_w4a16.zip</code> checkpoint remains the pinned model input. It is hash-bound at 2,013,959,998 bytes and includes the exact ONNX/external data, W4A16 encodings, tokenizer, template, and configuration assessed by the earlier transform probe. The owning <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-transform-compat/result.json">positive transform result</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-qnn-conversion/result.json">QNN conversion result</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-sm8550-context/result.json">compiled-context inspection</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/gemma4-sm8550-runtime-bundle/result.json">runtime-bundle/LUT result</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-viability-attempt-01/result.json">first phone attempt</a>, and <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-viability-attempt-02/result.json">corrected retry</a> are the evidence authority.</p>
+<p>The public <code>gemma_4_e2b_it_w4a16.zip</code> checkpoint remains the pinned model input. It is hash-bound at 2,013,959,998 bytes and includes the exact ONNX/external data, W4A16 encodings, tokenizer, template, and configuration assessed by the earlier transform probe. The owning <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-transform-compat/result.json">positive transform result</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-qnn-conversion/result.json">QNN conversion result</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-sm8550-context/result.json">compiled-context inspection</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/gemma4-sm8550-runtime-bundle/result.json">runtime-bundle/LUT result</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-viability-attempt-01/result.json">first phone attempt</a>, and <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-viability-attempt-02/result.json">corrected retry</a>, and <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-cache-quantization-correction/result.json">cache-quantization correction</a> are the evidence authority.</p>
 </section>
 <section class="primary-section" id="progress" data-primary-section="progress">
 <h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
@@ -121,11 +121,15 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <p>The missing QAIRT 2.49.40 Android extension was added at 1,091,656 bytes, SHA-256 <code>e25a816d…04ae</code>, and both stage and run tooling now fail closed on an incomplete runtime. The one authorized corrected retry loaded that extension, initialized the physical HTP stack, and fully deserialized the two-graph weight-shared context.</p>
 <p>Genie then rejected model validation before dialog/query with exactly 30 non-identical quantization-parameter errors. The 15 AR1 value-cache outputs are Float16, while the corresponding 15 AR128 cache inputs and 15 AR128 cache outputs are unsigned fixed-point 16 with defined scale/offset encodings. This is the mixed-precision boundary already visible in host context metadata, now confirmed as a physical runtime blocker.</p>
 <p>Attempt 02 exited 1 with zero graph executions, tokens, or output. Its profile exists but contains no components. Both attempts verified their stage hashes, removed and verified the scoped remote root absent, and released <code>phone.lock</code>.</p>
-<p>The next gate is host-only: make each of the 15 AR1 value-cache outputs datatype/scale/offset-identical to its AR128 counterpart, then re-convert, recompile, and inspect the context. No validation weakening, CPU conversion boundary, further phone retry, or campaign is authorized. Any paid Workbench use remains a separate unapproved cost-and-terms checkpoint.</p>
+<p>The cache blocker is now corrected without changing the checkpoint or weakening Genie validation. A schema-standard ONNX float fork and <code>QuantizeLinear</code> boundary maps each of the 15 public AR1 value-cache outputs to the already-bound source-QAT uint16 zero point 32768, QNN offset -32768, and exact per-cache scale. Internal transformer consumers keep the existing path; this adds no host CPU cache-conversion boundary.</p>
+<p>The corrected AR1 DLC is 2,356,847,444 bytes with SHA-256 <code>7e88facd…c9e1</code>, retains 2,280,676,608 parameters, and exposes 31/31 outputs as uFxp16. Recompiling it with the unchanged AR128 DLC produced a 1,186,369,536-byte weight-shared SM8550/v73 context at SHA-256 <code>a1d52d00…cc44</code>. Official metadata identifies QNN HTP backend ID 6, the exact QAIRT 2.49.40 build, and two 38-input/31-output graphs.</p>
+<p>For every one of the 15 value caches, official context inspection verifies that AR1 input, AR1 output, AR128 input, and AR128 output now share identical uFxp16 datatype, scale, and offset signatures. This clears the exact attempt-02 validation mismatch on the host.</p>
+<p>The correction is not a uniform-integer execution claim: QAIRT still reports 75 float-precision component fallback operations around affected normalization paths. Host conversion, recompilation, and metadata inspection also do not prove that the phone will accept or execute the revised context.</p>
+<p>The next gate is to rebuild the private bundle/stage around the corrected context and run one separately authorized 16-token physical gate under <code>phone.lock</code>. No phone run, validation weakening, campaign, or paid Workbench use occurred in this milestone.</p>
 </section>
 <section class="primary-section" id="results" data-primary-section="results">
 <h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
-<p><strong>The experiment is active with a host rebuild required after two physical pre-execution failures.</strong> Attempt 01 established partial physical provider/backend/device and graph initialization before revealing a missing runtime extension. Attempt 02 loaded the corrected runtime and fully deserialized the weight-shared context before the exact 30-entry value-cache validation blocker. Neither attempt executed a graph.</p>
+<p><strong>The experiment is active with the attempt-02 cache contract corrected and recompiled on the host.</strong> The physical attempts remain pre-execution evidence, while the new context&#x27;s metadata proves four-way cache-signature equality for all 15 value caches. Physical acceptance and execution of that corrected context remain unproven.</p>
 <div class="table-wrap"><table><thead><tr>
 <th>Evidence boundary</th>
 <th>Current result</th>
@@ -203,7 +207,27 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>15 AR1 Float16 value outputs versus matched AR128 uFxp16 inputs and outputs with differing quantization parameters</td>
 </tr>
 <tr>
-<td>Graph execution, tokens, output, usable profile</td>
+<td>Corrected AR1 DLC</td>
+<td>2,356,847,444 bytes / SHA <code>7e88facd…c9e1</code>; 2,280,676,608 params; 31/31 uFxp16 outputs</td>
+</tr>
+<tr>
+<td>Corrected context</td>
+<td>1,186,369,536 bytes / SHA <code>a1d52d00…cc44</code>; QNN HTP backend ID 6; two 38-in/31-out graphs</td>
+</tr>
+<tr>
+<td>Cache correction proof</td>
+<td>All 15 AR1-in/out + AR128-in/out datatype/scale/offset signatures identical</td>
+</tr>
+<tr>
+<td>Remaining precision boundary</td>
+<td>75 float-precision component fallback ops retained; not uniform-integer/no-fallback proof</td>
+</tr>
+<tr>
+<td>Revised physical execution</td>
+<td>Not attempted; no output or performance claim</td>
+</tr>
+<tr>
+<td>Prior graph execution, tokens, output, usable profile</td>
 <td>None / 0 / none / none</td>
 </tr>
 <tr>
@@ -211,16 +235,12 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>Stage hashes passed; scoped root absent and <code>phone.lock</code> released after both attempts</td>
 </tr>
 <tr>
-<td>Next work</td>
-<td>Host-only quantization-identical context rebuild; no phone retry or campaign authorized</td>
-</tr>
-<tr>
 <td>Android LLM registry row</td>
 <td>None; toolchain capability evidence is not registry-eligible</td>
 </tr>
 </tbody></table></div>
-<p>The phone evidence proves progressively deeper physical initialization and, in attempt 02, full context deserialization. It does not prove physical model inference or no-fallback graph execution: Genie stopped validation before dialog/query and no execution profile component exists. The 30 mismatch messages are not performance evidence, and the empty profile is not a zero-time measurement.</p>
-<p>No paid Workbench job ran, and no QNN/HTP graph execution, generated output, output sanity, or performance evidence exists. A future page may advance beyond this milestone only from a committed quantization-identical rebuild and separately authorized physical result. The Android LLM registry remains limited to complete valid physical Android campaigns, so 0031 has no benchmark row.</p>
+<p>The phone evidence proves progressively deeper physical initialization and, in attempt 02, full context deserialization of the old context. It does not prove physical model inference or no-fallback graph execution: Genie stopped validation before dialog/query and no execution profile component exists. The host correction removes the recorded signature mismatch in rebuilt metadata, but it cannot retroactively change either phone attempt or establish revised physical behavior.</p>
+<p>No paid Workbench job ran, and no QNN/HTP graph execution, generated output, output sanity, or performance evidence exists. A future page may advance beyond this milestone only from a separately authorized physical result using the exact corrected context. The Android LLM registry remains limited to complete valid physical Android campaigns, so 0031 has no benchmark row.</p>
 </section></article>
 <footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
 </main>
