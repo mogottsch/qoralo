@@ -1,0 +1,163 @@
+{
+  "assessment": {
+    "android_runtime_binaries_changed": true,
+    "decision": "Do not expect the previously observed transform defect to disappear in 2.49.40: the factory and implicated optimizer sources are byte-identical to 2.49.0. Retain 2.49.40 as the runtime candidate and test an isolated, schema-faithful converter compatibility fix.",
+    "gemma4_factory_dispatch_added": false,
+    "gemma4_qnn_htp_example_present": true,
+    "old_constant_attribute_bug_fixed": false,
+    "selected_converter_sources_byte_identical": true,
+    "sm8550_v73_runtime_present": true,
+    "transform_probe_ran": false
+  },
+  "authorization": {
+    "account_identity_recorded": false,
+    "identifiers_recorded": false,
+    "license_end_date": "2030-08-22",
+    "license_status": "ACTIVE",
+    "product": "Qualcomm_AI_Runtime_SDK",
+    "secret_material_recorded": false
+  },
+  "claim_boundary": "Package provenance and selected host/runtime capability comparison only. No Gemma transform, QNN conversion, HTP compilation, Android execution, or paid Workbench job is claimed.",
+  "classification": "authorized_toolchain_acquisition_and_host_capability_comparison",
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "package": {
+    "bytes": 2410405384,
+    "qik_filename": "Qualcomm_AI_Runtime_SDK.2.49.40.260810.Linux-AnyCPU.qik",
+    "qpm_product": "Qualcomm_AI_Runtime_SDK",
+    "qpm_version": "2.49.40.260810",
+    "sha256": "ef4a63b81c9b3a42b8c23921a322754b2fa15f7ef5737c85911d4c527c1fdb0c",
+    "source": "https://qpm.qualcomm.com/#/main/tools/details/Qualcomm_AI_Runtime_SDK",
+    "stored_outside_git": true
+  },
+  "schema_version": 1,
+  "sdk": {
+    "new": {
+      "build_id": "260810104044",
+      "product": "QAIRT",
+      "qnn_backend_api_version": "2.18.0",
+      "sdk_flavor": "[premium]",
+      "version": "2.49.40"
+    },
+    "new_root": "/home/moritz/opt/qairt/2.49.40.260810",
+    "new_root_outside_git": true,
+    "old": {
+      "build_id": "260730134355",
+      "product": "QAIRT",
+      "qnn_backend_api_version": "2.18.0",
+      "sdk_flavor": "[premium]",
+      "version": "2.49.0"
+    },
+    "selected_file_comparison": [
+      {
+        "byte_identical": false,
+        "new_bytes": 976,
+        "new_sha256": "08d752936482cdf83ca772f3cf284769eb6fea06634bba631904dcbacd89527c",
+        "old_bytes": 975,
+        "old_sha256": "309ac8f6c75c2fdc808f1c9b9d0da60be123c21a79532cca70a9c4b144d983f4",
+        "relative_path": "sdk.yaml"
+      },
+      {
+        "byte_identical": true,
+        "new_bytes": 266828,
+        "new_sha256": "84507e5a7c00a5c2d862c3d8582359be486a17a006e1a0124a4e39cf13f11ad4",
+        "old_bytes": 266828,
+        "old_sha256": "84507e5a7c00a5c2d862c3d8582359be486a17a006e1a0124a4e39cf13f11ad4",
+        "relative_path": "QAIRT_ReleaseNotes.txt"
+      },
+      {
+        "byte_identical": true,
+        "new_bytes": 19407,
+        "new_sha256": "2095ea7e290f84e361c41bf4add0e40f05bf788aec7f2793d77ed1abd763bc55",
+        "old_bytes": 19407,
+        "old_sha256": "2095ea7e290f84e361c41bf4add0e40f05bf788aec7f2793d77ed1abd763bc55",
+        "relative_path": "lib/python/qairt/gen_ai_api/gen_ai_builder_factory.py"
+      },
+      {
+        "byte_identical": true,
+        "new_bytes": 42917,
+        "new_sha256": "145766123a324e876bf1e306ec65a42b247856877c7083574ab105b5f1fd7c1d",
+        "old_bytes": 42917,
+        "old_sha256": "145766123a324e876bf1e306ec65a42b247856877c7083574ab105b5f1fd7c1d",
+        "relative_path": "lib/python/qairt/optimizer/onnx/utils/utils.py"
+      },
+      {
+        "byte_identical": true,
+        "new_bytes": 31026,
+        "new_sha256": "2f56fd3ae6137687d7702cda0155df3c74810972ff0aee51a4e138981b5b01a0",
+        "old_bytes": 31026,
+        "old_sha256": "2f56fd3ae6137687d7702cda0155df3c74810972ff0aee51a4e138981b5b01a0",
+        "relative_path": "lib/python/qairt/optimizer/onnx/passes/shape_infer/shape_infer.py"
+      },
+      {
+        "byte_identical": true,
+        "new_bytes": 3682,
+        "new_sha256": "39f588d6fbe21079990001794940b8bfb4150fb589086bd1d781609b97a1b1c1",
+        "old_bytes": 3682,
+        "old_sha256": "39f588d6fbe21079990001794940b8bfb4150fb589086bd1d781609b97a1b1c1",
+        "relative_path": "examples/Genie/configs/gemma4/gemma4-e2b-htp.json"
+      },
+      {
+        "byte_identical": true,
+        "new_bytes": 1022168,
+        "new_sha256": "f3edc2bfa064cfb3fda0195590efaf2f9300b6a287a03925b09d5d6896eebbc9",
+        "old_bytes": 1022168,
+        "old_sha256": "f3edc2bfa064cfb3fda0195590efaf2f9300b6a287a03925b09d5d6896eebbc9",
+        "relative_path": "bin/aarch64-android/genie-app"
+      },
+      {
+        "byte_identical": true,
+        "new_bytes": 564216,
+        "new_sha256": "0affa2c2773e8253223e2ff5b258bfc9d57a926712296d2b458fc58419991ce9",
+        "old_bytes": 564216,
+        "old_sha256": "0affa2c2773e8253223e2ff5b258bfc9d57a926712296d2b458fc58419991ce9",
+        "relative_path": "bin/aarch64-android/genie-t2t-run"
+      },
+      {
+        "byte_identical": false,
+        "new_bytes": 11149832,
+        "new_sha256": "1398c4b0837dfbb4a0b156906f7d533bf9d0ee9bb1f3b6c3efa2973c102c660a",
+        "old_bytes": 11149832,
+        "old_sha256": "6cfe4dc7b9fe2095ed1bb1ab6d66f77f1638b5f198654addd1b98182f8170471",
+        "relative_path": "lib/aarch64-android/libGenie.so"
+      },
+      {
+        "byte_identical": false,
+        "new_bytes": 3786400,
+        "new_sha256": "4f5b4d11b128d78433730a4f5e88841e51aec472c6bd28ffd858dba8ea1012fb",
+        "old_bytes": 3786064,
+        "old_sha256": "a09b3af28342331b3ec9e57ecbe42bfe54a5fff37c4323ce5685c395ae3ee604",
+        "relative_path": "lib/aarch64-android/libQnnHtp.so"
+      },
+      {
+        "byte_identical": false,
+        "new_bytes": 771928,
+        "new_sha256": "7837f29bd84dbcf542faf1047d3904dc14f578e3d1a472c41eee792e7a1a8db0",
+        "old_bytes": 771928,
+        "old_sha256": "2912cc4f29cc5163c36c6c58f931bd08b798ccf8545a670a9498549f95b9036f",
+        "relative_path": "lib/aarch64-android/libQnnHtpV73Stub.so"
+      },
+      {
+        "byte_identical": false,
+        "new_bytes": 11859192,
+        "new_sha256": "e618168c82a0ec763b8543268b2783f5d28c9525fb6d0741afd667869ee493c8",
+        "old_bytes": 11859192,
+        "old_sha256": "bd54463547f0234d06045699b1f747b7d9d3e3b581874840af50c295b3124f25",
+        "relative_path": "lib/hexagon-v73/unsigned/libQnnHtpV73Skel.so"
+      },
+      {
+        "byte_identical": true,
+        "new_bytes": 217040,
+        "new_sha256": "7100e61054426976aed09efa155734a005bc33ee048998c5d960cb13b3f014e9",
+        "old_bytes": 217040,
+        "old_sha256": "7100e61054426976aed09efa155734a005bc33ee048998c5d960cb13b3f014e9",
+        "relative_path": "lib/hexagon-v73/unsigned/libQnnSystem.so"
+      }
+    ]
+  },
+  "security": {
+    "credential_contents_inspected": false,
+    "qpm_private_state_directories_mode": "0700",
+    "qpm_private_state_files_mode": "0600",
+    "restricted_package_or_sdk_committed": false
+  }
+}
