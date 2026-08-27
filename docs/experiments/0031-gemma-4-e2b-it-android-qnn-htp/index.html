@@ -72,15 +72,15 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="status-header" data-status-header="true">
 <div class="kicker"><span>Experiment 0031</span><span class="status">Active</span></div>
 <h1>Experiment 0031 — Gemma 4 E2B IT Android QNN/HTP</h1>
-<p class="summary">A hash-bound Genie QnnHtp bundle now combines the SM8550/v73 context, exact tokenizer, source-derived token/PLE LUTs, and runtime libraries; it is ready for a bounded phone gate but has not been staged.</p>
+<p class="summary">The corrected bundle deserialized its weight-shared context on physical SM8550 HTP, then stopped before dialog/query on 30 cross-variant value-cache quantization mismatches; a host rebuild is required.</p>
 <div class="header-links"><a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-08-27</span><span>evidence commit: bc4a864f5ec1ccccdb65af36974b0056fe1a79e2</span><span>page source: docs/experiments/0031-gemma-4-e2b-it-android-qnn-htp/page.md</span><span>page source sha256: 42face674ddfc565b70122704d1eee4d1059a77f0b5e5da8de42072ecc7375fc</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-27</span><span>evidence commit: 9a3b54ee1a11755caadc9783e7d13a7ee7995ee1</span><span>page source: docs/experiments/0031-gemma-4-e2b-it-android-qnn-htp/page.md</span><span>page source sha256: 859bdddd5165e8999b38ecfd6dfa61ec1b506be59bc6f96df17df3db8d1f3e7d</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
-<p>Gemma 4 E2B IT already has measured Android CPU and GPU routes, but its QNN arm stopped when QAIRT 2.49.0 could not transform the exact public W4A16 graph. The newly authorized QAIRT 2.49.40 package retained the implicated defect, so this experiment introduced a narrow schema-and-shape compatibility layer. That layer cleared transformation without changing the public checkpoint, both static variants passed host QNN conversion, one weight-shared SM8550/HTP-v73 context compiled, and the source-derived embedding/runtime bundle is now prepared. Physical-phone loading and execution are still unproven.</p>
+<p>Gemma 4 E2B IT already has measured Android CPU and GPU routes, but its QNN arm stopped when QAIRT 2.49.0 could not transform the exact public W4A16 graph. The authorized QAIRT 2.49.40 route has since cleared transformation, QNN conversion, weight-shared SM8550/v73 compilation, runtime-bundle preparation, and physical context deserialization. The current blocker is model validation before dialog/query: AR1 and AR128 disagree on 15 value-cache quantization boundaries. No graph has executed.</p>
 <p>The intended end-to-end result has not changed: an exact, provenance-bound Gemma 4 E2B context compiled for SM8550/HTP v73, physical <code>QnnHtp</code> provider proof on the authorized Galaxy S23 Ultra, a bounded viability request, proven loaded-route state isolation, and only then the canonical one-first-plus-five-short/five-medium/five-long Android campaign. Toolchain acquisition or file presence alone cannot satisfy any of those gates.</p>
-<p>The public <code>gemma_4_e2b_it_w4a16.zip</code> checkpoint remains the pinned model input. It is hash-bound at 2,013,959,998 bytes and includes the exact ONNX/external data, W4A16 encodings, tokenizer, template, and configuration assessed by the earlier transform probe. The owning <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/transform-blocker/result.json">original transform blocker</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-transform-compat/result.json">positive transform result</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-qnn-conversion/result.json">QNN conversion result</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-sm8550-context/result.json">compiled-context inspection</a>, and <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/gemma4-sm8550-runtime-bundle/result.json">runtime-bundle/LUT result</a> are the evidence authority.</p>
+<p>The public <code>gemma_4_e2b_it_w4a16.zip</code> checkpoint remains the pinned model input. It is hash-bound at 2,013,959,998 bytes and includes the exact ONNX/external data, W4A16 encodings, tokenizer, template, and configuration assessed by the earlier transform probe. The owning <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-transform-compat/result.json">positive transform result</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-qnn-conversion/result.json">QNN conversion result</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-sm8550-context/result.json">compiled-context inspection</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/gemma4-sm8550-runtime-bundle/result.json">runtime-bundle/LUT result</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-viability-attempt-01/result.json">first phone attempt</a>, and <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-viability-attempt-02/result.json">corrected retry</a> are the evidence authority.</p>
 </section>
 <section class="primary-section" id="progress" data-primary-section="progress">
 <h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
@@ -117,11 +117,15 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 </ul>
 <p>Deterministic sampled reconstruction covers selected vocabulary rows and remains within half of one uint8 quantization step for both LUTs. This is a bounded LUT-fidelity check, not full-tensor numerical equivalence or model-output validation.</p>
 <p>The bundle manifest binds both LUTs, context SHA-256 <code>b8c169ce…af95a</code>, exact tokenizer, QAIRT 2.49.40 Genie plus QNN HTP host/stub/v73 skeleton libraries, and a <code>QnnHtp</code> configuration with CL4096, greedy sampling, and the 2,048-token ceiling. All large or restricted artifacts stay outside Git.</p>
-<p>The next gate is one bounded short-prompt physical context-load/inference probe. No staging has occurred in this milestone. The complete ADB lifecycle requires explicit Pi priority and <code>phone.lock</code>; any paid Workbench use remains a separate unapproved cost-and-terms checkpoint.</p>
+<p>The bounded phone tooling required <code>phone.lock</code>, exact device and artifact hashes, raw-first evidence capture, a 16-token ceiling, and verified scoped cleanup. The first authorized attempt passed identity and hash checks, parsed the <code>QnnHtp</code> configuration, discovered both AR graphs and their sliding-window mappings, detected physical SM8550, and initialized the HTP provider/backend/device, v73 stub, and first QNN stub connection. It then exited 139 during dialog creation because <code>libQnnHtpNetRunExtensions.so</code> was absent. No query, graph execution, output, or profile occurred.</p>
+<p>The missing QAIRT 2.49.40 Android extension was added at 1,091,656 bytes, SHA-256 <code>e25a816d…04ae</code>, and both stage and run tooling now fail closed on an incomplete runtime. The one authorized corrected retry loaded that extension, initialized the physical HTP stack, and fully deserialized the two-graph weight-shared context.</p>
+<p>Genie then rejected model validation before dialog/query with exactly 30 non-identical quantization-parameter errors. The 15 AR1 value-cache outputs are Float16, while the corresponding 15 AR128 cache inputs and 15 AR128 cache outputs are unsigned fixed-point 16 with defined scale/offset encodings. This is the mixed-precision boundary already visible in host context metadata, now confirmed as a physical runtime blocker.</p>
+<p>Attempt 02 exited 1 with zero graph executions, tokens, or output. Its profile exists but contains no components. Both attempts verified their stage hashes, removed and verified the scoped remote root absent, and released <code>phone.lock</code>.</p>
+<p>The next gate is host-only: make each of the 15 AR1 value-cache outputs datatype/scale/offset-identical to its AR128 counterpart, then re-convert, recompile, and inspect the context. No validation weakening, CPU conversion boundary, further phone retry, or campaign is authorized. Any paid Workbench use remains a separate unapproved cost-and-terms checkpoint.</p>
 </section>
 <section class="primary-section" id="results" data-primary-section="results">
 <h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
-<p><strong>The experiment is ready for a bounded phone viability gate, with all current evidence still host-only.</strong> The static AR1/AR128 context, source-derived embedding LUTs, exact tokenizer, runtime libraries, and Genie <code>QnnHtp</code> configuration are hash-bound together. The earlier <code>KeyError(&#x27;value&#x27;)</code> remains historical evidence for the unpatched transform path.</p>
+<p><strong>The experiment is active with a host rebuild required after two physical pre-execution failures.</strong> Attempt 01 established partial physical provider/backend/device and graph initialization before revealing a missing runtime extension. Attempt 02 loaded the corrected runtime and fully deserialized the weight-shared context before the exact 30-entry value-cache validation blocker. Neither attempt executed a graph.</p>
 <div class="table-wrap"><table><thead><tr>
 <th>Evidence boundary</th>
 <th>Current result</th>
@@ -187,20 +191,36 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>Context + tokenizer + Genie/QNN HTP/v73 libraries + CL4096 greedy configuration hash-bound outside Git</td>
 </tr>
 <tr>
-<td>Android load / physical HTP no-fallback execution</td>
-<td>Not attempted; no claim</td>
+<td>Attempt 01 physical boundary</td>
+<td>Both AR graphs/SWA mappings and SM8550 HTP stack initialized; missing NetRun extension caused exit 139 pre-query</td>
 </tr>
 <tr>
-<td>Output, setup, TTFT, prefill, decode, memory, or campaign</td>
-<td>Unavailable; no inference ran</td>
+<td>Attempt 02 physical boundary</td>
+<td>Corrected extension loaded and context deserialized; 30 value-cache quantization mismatches caused exit 1 pre-dialog/query</td>
+</tr>
+<tr>
+<td>Root cause</td>
+<td>15 AR1 Float16 value outputs versus matched AR128 uFxp16 inputs and outputs with differing quantization parameters</td>
+</tr>
+<tr>
+<td>Graph execution, tokens, output, usable profile</td>
+<td>None / 0 / none / none</td>
+</tr>
+<tr>
+<td>Cleanup</td>
+<td>Stage hashes passed; scoped root absent and <code>phone.lock</code> released after both attempts</td>
+</tr>
+<tr>
+<td>Next work</td>
+<td>Host-only quantization-identical context rebuild; no phone retry or campaign authorized</td>
 </tr>
 <tr>
 <td>Android LLM registry row</td>
 <td>None; toolchain capability evidence is not registry-eligible</td>
 </tr>
 </tbody></table></div>
-<p>A complete host-prepared runtime bundle is not physical provider or no-fallback execution proof. Source-derived LUT hashes and sampled half-step fidelity do not show that Android can load the context, that every transformer graph executes on HTP, that mixed-precision cache boundaries behave correctly, or that generated text is valid.</p>
-<p>No phone or ADB operation occurred, no paid Workbench job ran, and no QNN/HTP inference, output, or performance evidence exists. A future page may advance beyond this milestone only from committed phone-load or provider evidence. The Android LLM registry remains limited to complete valid physical Android campaigns, so 0031 has no benchmark row.</p>
+<p>The phone evidence proves progressively deeper physical initialization and, in attempt 02, full context deserialization. It does not prove physical model inference or no-fallback graph execution: Genie stopped validation before dialog/query and no execution profile component exists. The 30 mismatch messages are not performance evidence, and the empty profile is not a zero-time measurement.</p>
+<p>No paid Workbench job ran, and no QNN/HTP graph execution, generated output, output sanity, or performance evidence exists. A future page may advance beyond this milestone only from a committed quantization-identical rebuild and separately authorized physical result. The Android LLM registry remains limited to complete valid physical Android campaigns, so 0031 has no benchmark row.</p>
 </section></article>
 <footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
 </main>
