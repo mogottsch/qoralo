@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "classification": "direct_qnn_host_emulator_and_android_stage_preparation_not_physical_execution",
+  "authorization": "Moritz selected the bounded direct-QNN continuation, retaining exact contexts and CPU embedding/orchestration/global-argmax boundaries.",
+  "host_probe": {
+    "tool": "tools/run_direct_qnn_host_probe.sh",
+    "qnn_net_run_build": "v2.49.0.260730134355",
+    "qnn_backend_build": "v2.49.40.260810104044",
+    "context": {
+      "part": "layer-00-core-norm",
+      "bytes": 9952600,
+      "sha256": "63e6f58aa3033b6785c28ccd776afdff5dfca6eea801a9d0e71f47162b6621f1",
+      "backend_id": 6,
+      "core_api": "2.38.0",
+      "backend_api": "5.49.0",
+      "dsp_arch": 73,
+      "soc_model": 43,
+      "graph_inputs": 2,
+      "graph_outputs": 3
+    },
+    "input": {
+      "token_id": 124894,
+      "embedding_f32_sha256": "072dae5548471ffd81f671e4d4cde8bd91b8996d9a49d2841fab0a9be1157062",
+      "zero_conv_state_sha256": "de676bae28a480011d3d012db14bef539324e62a841a9627863c689bea168af3"
+    },
+    "direct_api_evidence": {
+      "QnnContext_createFromBinary": "success",
+      "QnnGraph_retrieve": "success",
+      "QnnGraph_execute": "status 0",
+      "graphs_executed": 1,
+      "neural_cpu_fallback_possible": false
+    },
+    "outputs": {
+      "residual": {"bytes": 8192, "sha256": "7bc83cd89fd695624cb3490695acaa01b2130669eeefeae578e1b3dca5ffe498", "cpu_reference_max_abs_difference": 0.00020234286785125732, "cpu_reference_mean_abs_difference": 0.00002035163197433576},
+      "ffn_norm": {"bytes": 8192, "sha256": "44572e2410d419dd043274e1a4e988b5d025953b65a1b0cb503ec5dcf46b9e4f", "cpu_reference_max_abs_difference": 0.00238889642059803, "cpu_reference_mean_abs_difference": 0.000304382701870054},
+      "conv_state": {"bytes": 24576, "sha256": "153e4f955066c4fcbcca3a2dd6d0e10860caa05a8df180e48bae4105246dab96", "cpu_reference_max_abs_difference": 0.012290000915527344, "cpu_reference_mean_abs_difference": 0.00008996311953524128},
+      "all_finite": true
+    },
+    "limitation": "The x86 HTP emulation backend reports that it uses internal v79 emulation for the requested v73 context. This is direct-QNN functional evidence only, not physical SM8550 execution or performance."
+  },
+  "android_runner": {
+    "source": "phone/direct_lfm2_qnn_runner.cpp",
+    "build_tool": "tools/build_direct_qnn_runner.sh",
+    "binary_bytes": 307416,
+    "binary_sha256": "484c4a196f2951f20ef3dbba25c08467451b6a5bac8e7320e12b64b3fab03148",
+    "target": "Android API 31 AArch64 PIE",
+    "runtime_path": "QnnContext_createFromBinary -> QnnGraph_retrieve -> QnnGraph_execute",
+    "onnxruntime_or_epcontext_used": false,
+    "context_count_loaded_once": 263,
+    "state_contract": "22 convolution states and 8 attention K/V pairs are explicit, zeroed per logical request, and updated only from direct QNN graph outputs",
+    "declared_cpu_boundary": ["selected-row asymmetric Q4 embedding", "token/request orchestration", "global greedy argmax across 22 direct-QNN LM-head chunks"]
+  },
+  "ignored_android_stage": {
+    "preparation_tool": "tools/prepare_direct_qnn_phone_stage.py",
+    "payload_files": 272,
+    "payload_bytes": 1974276800,
+    "stage_metadata_bytes": 49026,
+    "stage_metadata_sha256": "00ebc623300805fbf834454fcabfd2f76a4b65f952cbd616b4c3f9f0fd7a94fc",
+    "sha256_manifest_bytes": 29365,
+    "sha256_manifest_sha256": "d3b56d2ed4f3a8aac5c701a8ece22980c6a68cb6329d0fc48231adb0bff0ac3f",
+    "local_hash_check": "passed",
+    "retained_outside_git": true
+  },
+  "phone_boundary": "No phone access occurred under this direct-QNN continuation. Jere has higher phone priority. Pi must explicitly grant 0034 priority after this host-prepared loader/stage milestone is committed.",
+  "claim_boundary": "The first exact context loads and executes through direct QNN on the host emulator, and the complete direct Android runner/stage is hash-bound. No physical Android/HTP execution or benchmark claim follows."
+}

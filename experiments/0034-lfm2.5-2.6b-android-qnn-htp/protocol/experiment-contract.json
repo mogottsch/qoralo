@@ -46,13 +46,46 @@
       "short": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae"
     }
   },
+  "direct_qnn_continuation": {
+    "android_runner": {
+      "bytes": 307416,
+      "sha256": "484c4a196f2951f20ef3dbba25c08467451b6a5bac8e7320e12b64b3fab03148"
+    },
+    "android_stage": {
+      "payload_bytes": 1974276800,
+      "payload_files": 272,
+      "retained_outside_git": true,
+      "sha256_manifest_sha256": "d3b56d2ed4f3a8aac5c701a8ece22980c6a68cb6329d0fc48231adb0bff0ac3f",
+      "stage_metadata_sha256": "00ebc623300805fbf834454fcabfd2f76a4b65f952cbd616b4c3f9f0fd7a94fc"
+    },
+    "authorization": "Moritz selected option 2: bounded direct-QNN loader bypassing ORT EPContext claim while reusing exact contexts/state/CPU boundaries.",
+    "context_count": 263,
+    "evidence": "results/direct-qnn-host-preparation/result.json",
+    "first_context_host_emulator": {
+      "all_outputs_finite": true,
+      "context_sha256": "63e6f58aa3033b6785c28ccd776afdff5dfca6eea801a9d0e71f47162b6621f1",
+      "executed": true,
+      "loaded": true,
+      "retrieved": true,
+      "target_dsp_arch": 73,
+      "target_soc_model": 43
+    },
+    "onnxruntime_used": false,
+    "physical_android_execution": false,
+    "registry_eligible": false,
+    "runtime_path": [
+      "QnnContext_createFromBinary",
+      "QnnGraph_retrieve",
+      "QnnGraph_execute"
+    ]
+  },
   "exact_blocker": {
     "android_execution": false,
     "compiled_context_created": false,
     "qnn_htp_execution": false,
-    "required_action": "Provide/authorize a matched Android QNN EP/runtime that claims the current 2.49.40 SM8550/V73 EPContexts; authorize a separately bounded direct-QNN context loader bypassing ORT claim; or authorize escalation of a minimal compatibility artifact/logs to Qualcomm maintainers.",
+    "required_action": "No Moritz action. Wait for Pi to grant 0034 phone priority, then run one bounded direct-QNN physical gate under phone.lock; no campaign without a separate decision.",
     "result_path": "results/support-assessment/result.json",
-    "summary": "On the authorized SM8550 phone, ORT 1.26 advertises official QNN EP 2.5.0 as a Qualcomm NPU and the retry selected only that device, but the plugin still did not claim the first matched host-AOT EPContext. Fail-closed prevented default CPU; zero sessions/tokens/HTP graphs/outputs/profiles exist."
+    "summary": "No current host loader blocker. The first context executes through direct QNN emulation and the full Android runner/stage is ready. Physical validation waits behind Jere in the phone queue and requires Pi priority."
   },
   "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
   "host_export_milestone": {
@@ -164,7 +197,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "Both authorized attempts held phone.lock for identity/hash/stage/run/evidence/cleanup, stopped before execution, verified their scoped roots absent, and released the lock. No further phone attempt or campaign is authorized.",
+  "phone_boundary": "No phone access occurred for the direct-QNN continuation. Jere has higher priority; 0034 must wait for Pi before acquiring phone.lock or staging the direct runner.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -263,7 +296,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "blocked_android_qnn_npu_refuses_first_epcontext_before_execution",
+  "status": "active_direct_qnn_loader_and_phone_stage_ready_waiting_for_priority",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",

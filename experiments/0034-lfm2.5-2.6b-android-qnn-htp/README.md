@@ -2,7 +2,7 @@
 
 ## Status
 
-**Blocked after two fail-closed physical pre-inference attempts. The diagnostic retry proved that ONNX Runtime 1.26 sees the official QNN EP 2.5.0 as a Qualcomm NPU and selects only that device, but the plugin still refuses to claim the first matched host-AOT EPContext. No context session, model token, HTP graph, output, profile, benchmark, or campaign exists.**
+**Active on Moritz's authorized direct-QNN continuation. The first exact context now loads and executes through `QnnContext_createFromBinary` / `QnnGraph_retrieve` / `QnnGraph_execute` on the host HTP emulator, and the complete 263-context direct Android runner/stage is hash-bound. This bypasses the failing ORT EPContext layer; physical phone execution is still pending behind Jere's phone priority.**
 
 This is a separate accelerator arm. It preserves `0029` CPU viability and `0033` CPU/OpenCL campaign evidence without modifying either experiment.
 
@@ -67,12 +67,12 @@ The revised runner logged both advertised devices: the ARM CPU and `QNNExecution
 
 The blocker is now precise: the public Android QNN EP 2.5.0 plugin advertises the physical NPU but does not claim the first SM8550/V73 EPContext emitted by the matched 2.5.0 host package. Progress requires a matched Android plugin/runtime that claims these contexts, authorization for a separately bounded direct-QNN context loader that bypasses ORT's failing claim layer, or authorization to escalate the minimal compatibility artifact to Qualcomm's maintainers. No further phone attempt or campaign is authorized.
 
-## Exact unblock gate
+## Direct-QNN continuation
 
-Moritz must choose one before work continues:
+Moritz selected the direct loader option. The new native runner bypasses ONNX Runtime entirely and uses the public QNN APIs to deserialize, retrieve, and execute the same exact 263 context binaries. The declared CPU boundary is unchanged: selected-row Q4 embedding, orchestration, and global greedy argmax only. All model body, explicit state, final norm, and LM-head chunks remain QNN graphs.
 
-1. provide or authorize a public/matched Android QNN EP/runtime build that claims the QNN EP 2.5.0 / QAIRT 2.49.40 SM8550/V73 contexts;
-2. authorize a separately bounded direct-QNN context loader that bypasses ORT's failing EPContext-claim layer while retaining the exact contexts, explicit state contract, and no-fallback boundary; or
-3. authorize escalation to Qualcomm's ONNX Runtime QNN maintainers with a minimal first-context compatibility artifact and the retained logs.
+A bounded host probe loaded `layer-00-core-norm` directly with QNN backend build `v2.49.40.260810104044`, retrieved its SM8550/V73 graph, and executed it successfully. Its residual, FFN-normalized, and convolution-state outputs are finite and closely match the CPU graph reference. The x86 backend internally emulates on v79, so this protects direct-loader wiring but is not physical HTP or performance evidence.
 
-Even after unblocking, a new bounded phone viability gate must succeed before any canonical campaign. A generic SM8550 target, host context creation, NPU advertisement, or sensible host text is not physical HTP proof.
+The API-31 AArch64 direct runner is 307,416 bytes, SHA-256 `484c4a196f2951f20ef3dbba25c08467451b6a5bac8e7320e12b64b3fab03148`. A 272-payload-file, 1,974,276,800-byte ignored stage contains the exact 263 contexts, embedding tables, prompt, and QNN runtime; its local manifest passes. See [`results/direct-qnn-host-preparation/`](results/direct-qnn-host-preparation/).
+
+No phone access occurred for this continuation. Jere is ahead in the device queue, and Pi must explicitly grant 0034 priority before a new bounded direct-QNN phone gate. Even a successful first-context physical probe would remain a milestone, not permission for a campaign.

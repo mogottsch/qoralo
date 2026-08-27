@@ -28,13 +28,16 @@
 19. Ran the one authorized retry under the full lock lifecycle. ORT advertised the Qualcomm NPU and the runner selected it exclusively, but QNN EP 2.5.0 still did not claim `layer-00-core-norm`'s matched host-AOT EPContext. Fail-closed stopped before execution; all hashes passed; cleanup was absent and the lock released.
 20. Stopped without a campaign and retained the complete raw blocker evidence.
 
-## Blocked
+21. Moritz selected and authorized the direct-QNN continuation.
+22. Built an API-31 AArch64 runner that loads the same 263 contexts once through public QNN APIs and preserves the explicit state and CPU embedding/orchestration/global-argmax boundaries.
+23. Proved the first exact context loads, retrieves, and executes directly on the host HTP emulator; outputs are finite and bounded against the CPU reference.
+24. Assembled and locally verified a complete ignored direct-QNN phone stage. No phone access occurred for this continuation.
 
-One explicit Moritz decision or external artifact is required:
+## In progress
 
-1. provide/authorize a matched Android QNN EP/runtime that claims the current SM8550/V73 contexts; or
-2. authorize a bounded direct-QNN loader that bypasses ORT EPContext claim while keeping the exact contexts/state/no-fallback contract; or
-3. authorize escalation of a minimal compatibility artifact and logs to Qualcomm's maintainers.
+1. Wait for Jere's higher-priority phone work and Pi's explicit 0034 priority grant.
+2. Under a new full `phone.lock` lifecycle, run only a bounded direct-QNN physical gate, first proving context deserialization/retrieval/execution on SM8550/V73.
+3. Preserve raw physical QNN logs/profile/output or the exact direct-loader blocker, clean the scoped root, release the lock, and report before any campaign decision.
 
 ## Phone and campaign sequence
 
