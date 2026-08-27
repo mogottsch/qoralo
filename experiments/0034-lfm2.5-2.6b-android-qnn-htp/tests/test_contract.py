@@ -79,7 +79,7 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
     def test_active_export_does_not_claim_qnn_android_or_completion(self) -> None:
-        self.assertIn("active_host_prepared_37_context", self.contract["status"])
+        self.assertIn("blocked_physical_direct_qnn_residency_context_20", self.contract["status"])
         route = self.result["route_assessment"]
         self.assertFalse(route["compiled_sm8550_context_available"])
         self.assertFalse(route["android_execution"])
@@ -88,7 +88,7 @@ class ContractTest(unittest.TestCase):
         self.assertIn("not_android_qnn_or_htp", milestone["classification"])
         self.assertEqual("passed", milestone["rewritten_onnx"]["onnx_checker"])
         self.assertEqual(16, milestone["bounded_output"]["max_new_tokens"])
-        self.assertIn("No phone access occurred for consolidation", self.contract["phone_boundary"])
+        self.assertIn("No further phone run", self.contract["phone_boundary"])
 
     def test_qnn_aot_is_complete_but_not_physical_execution(self) -> None:
         milestone = self.contract["qnn_aot_milestone"]
@@ -186,6 +186,16 @@ class ContractTest(unittest.TestCase):
         self.assertEqual(37, len(result["contexts"]))
         self.assertTrue(result["host_validation"]["htp_emulator_layer00"]["graph_execute_succeeded"])
 
+    def test_consolidated_phone_attempt_fails_before_execution(self) -> None:
+        attempt = self.contract["consolidated_direct_qnn_phone_attempt_1"]
+        self.assertEqual((19, 20, "layer-19"), (attempt["contexts_loaded"], attempt["failed_context_ordinal"], attempt["failed_context"]))
+        self.assertEqual(0, attempt["graphs_executed"])
+        self.assertTrue(attempt["process_rss_is_not_total_backend_residency"])
+        self.assertTrue(attempt["cleanup_absent"])
+        result = json.loads((EXP / attempt["evidence"]).read_text())
+        self.assertEqual("QnnContext_createFromBinary", result["direct_qnn"]["failure_api"])
+        self.assertFalse(result["direct_qnn"]["output_created"])
+
     def test_final_pipeline_host_equivalence_is_bounded(self) -> None:
         result = json.loads((EXP / "results/htp-pipeline-host-equivalence/result.json").read_text())
         self.assertIn("host_only", result["classification"])
@@ -223,6 +233,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/direct-qnn-phone-attempt-1-linker-failure",
             EXP / "results/direct-qnn-phone-attempt-2-context-limit",
             EXP / "results/qnn-consolidated-host-preparation",
+            EXP / "results/consolidated-qnn-phone-attempt-1-residency-limit",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

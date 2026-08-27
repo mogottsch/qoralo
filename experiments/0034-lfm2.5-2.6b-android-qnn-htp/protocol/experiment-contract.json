@@ -46,6 +46,21 @@
       "short": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae"
     }
   },
+  "consolidated_direct_qnn_phone_attempt_1": {
+    "cleanup_absent": true,
+    "contexts_loaded": 19,
+    "contexts_required": 37,
+    "evidence": "results/consolidated-qnn-phone-attempt-1-residency-limit/result.json",
+    "failed_context": "layer-19",
+    "failed_context_ordinal": 20,
+    "failure_api": "QnnContext_createFromBinary",
+    "graphs_executed": 0,
+    "loaded_context_range": "layer-00 through layer-18",
+    "output_created": false,
+    "phone_lock_released": true,
+    "process_rss_is_not_total_backend_residency": true,
+    "sampled_process_vmhwm_kib": 109940
+  },
   "consolidated_direct_qnn_route": {
     "all_contexts_loaded_once": true,
     "android_runner_sha256": "92689331d11ecf48fb226e82c0f77133e2b72c505b976f2e801c6fffda506f83",
@@ -75,6 +90,7 @@
     "host_htp_emulator_fused_layer_execute": true,
     "per_request_or_token_reload": false,
     "performance_claim": false,
+    "physical_attempt_evidence": "results/consolidated-qnn-phone-attempt-1-residency-limit/result.json",
     "physical_execution": false,
     "qnn_ops": 2747,
     "source_nodes": 1583,
@@ -144,9 +160,9 @@
     "android_execution": false,
     "compiled_context_created": false,
     "qnn_htp_execution": false,
-    "required_action": "After durable commit and independent review, authorize at most one bounded physical loaded-route gate; no campaign.",
+    "required_action": "Host-only materially stronger within-context sharing or whole-route fusion preserving loaded-route semantics. Per-layer/token reload is not an equivalent workaround.",
     "result_path": "results/support-assessment/result.json",
-    "summary": "Historical physical blocker: the 263-context route fails at context 58. A 37-context replacement is host-prepared but has not been physically tested."
+    "summary": "Physical SM8550 direct QNN loads 19 fused contexts, then fails creating context 20 of 37 before readiness. Smaller contexts previously reached 57, proving a resident QNN/DSP resource boundary rather than a fixed handle count."
   },
   "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
   "host_export_milestone": {
@@ -258,7 +274,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "No phone access occurred for consolidation. The 37-context stage remains host-prepared only until Pi explicitly grants priority.",
+  "phone_boundary": "Consolidated attempt cleaned absent and released phone.lock. No further phone run or campaign is authorized.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -357,7 +373,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "active_host_prepared_37_context_direct_qnn_route_pending_physical_gate",
+  "status": "blocked_physical_direct_qnn_residency_context_20_of_37",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",

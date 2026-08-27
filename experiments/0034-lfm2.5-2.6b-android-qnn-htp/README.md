@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active with a host-prepared 37-context direct-QNN consolidation. The prior physical route loaded 57 contexts and failed at context 58 of 263; the replacement fuses each layer's eight sequential graphs and groups LM-head chunks without changing explicit state or CPU boundaries. All 37 contexts compile fallback-disabled for SM8550/V73. No new physical execution or performance claim exists.**
+**Blocked on physical all-loaded QNN residency. The 37-context fused route passed every host gate and all phone-stage hashes, but physical SM8550 loading stopped at context 20 (`layer-19`) after 19 successful fused-context deserializations. Setup never completed and no graph, output, performance result, or campaign exists.**
 
 This is a separate accelerator arm. It preserves `0029` CPU viability and `0033` CPU/OpenCL campaign evidence without modifying either experiment.
 
@@ -97,4 +97,6 @@ Every fused model passed ONNX checking. All 37 contexts compiled with fallback d
 
 The rebuilt API-31 direct runner is SHA-256 `92689331d11ecf48fb226e82c0f77133e2b72c505b976f2e801c6fffda506f83`. Its ignored Android stage has 48 payload files totaling 1,937,978,519 bytes; stage metadata SHA-256 is `c17f77a1493c6465a4ba91b410a3f4f586da283cdb19702ca040ac75825a3dd8`, manifest SHA-256 is `675e441c6adac5c46671f325f46477b182d1233ae56806f3c1dfaf74855a1e79`, and the ELF dependency/hash preflight passes. See [`results/qnn-consolidated-host-preparation/`](results/qnn-consolidated-host-preparation/).
 
-This is a host-prepared milestone only. A new bounded physical gate requires Pi's explicit phone priority; no phone run or campaign is currently authorized.
+The one authorized physical gate verified the exact 48-file stage and entered direct QNN backend `v2.49.0.260730134355`. It loaded `layer-00` through `layer-18`, then `QnnContext_createFromBinary` failed on the twentieth context, `layer-19`. No graph executed because the complete route was not resident. Sampled Android-process VmHWM peaked at 109,940 KiB, but that excludes DSP/backend allocations and does not measure total HTP residency. The scoped root was verified absent and `phone.lock` released. Raw evidence is under [`results/consolidated-qnn-phone-attempt-1-residency-limit/`](results/consolidated-qnn-phone-attempt-1-residency-limit/).
+
+The result shows that the blocker is total resident backend resources rather than a fixed number of context handles: the smaller route loaded 57 contexts, while larger fused contexts stopped after 19. A compliant next route would require materially stronger within-context sharing or whole-route fusion that still passes host compilation and preserves exact state/order. Per-layer or per-token context reload is not treated as equivalent loaded-route behavior. No further phone run or campaign is authorized.

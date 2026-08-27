@@ -42,12 +42,14 @@
 32. Compared five token steps against the 263-part CPU route: all greedy decisions match, and all logit/state deltas from changed optimization boundaries are retained.
 33. Loaded and executed fused layer 0 in x86 HTP emulation; both hidden/state outputs are finite and close to CPU reference.
 34. Rebuilt the direct runner for consolidated graph ABIs and prepared a hash-bound 48-file Android stage with 37 contexts; ELF and manifest preflights pass.
+35. Ran one authorized physical fused-route gate. Direct QNN loaded 19 fused layer contexts, then failed creating context 20 (`layer-19`) before route readiness or graph execution. Preserved raw evidence and verified cleanup absent.
+36. Reclassified the blocker as physical resident QNN/DSP resources rather than a simple context-count or process-RSS threshold.
 
 ## In progress
 
-1. Commit the host-prepared 37-context milestone and send Pi/Kate the exact host-only claim boundary.
-2. Remain off the phone until Pi independently reviews the milestone and explicitly grants a single bounded gate.
-3. Do not run a campaign until a physical loaded-route viability result is committed and separately approved.
+1. Commit and publish the exact 19-loaded/context-20 failure boundary.
+2. Remain off the phone. Continue host-only only if pursuing materially stronger within-context resource sharing or whole-route fusion that preserves loaded-route semantics.
+3. Do not use per-layer/token context reload as a silent workaround, and do not run a campaign.
 
 ## Phone and campaign sequence
 

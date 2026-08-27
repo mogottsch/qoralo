@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "run_id": "viability-20260827T131336Z-3408337",
+  "classification": "physical_direct_qnn_fused_context_residency_limit_before_graph_execution",
+  "device": {"serial":"R5CW81PR8SY","model":"SM-S918B","soc":"SM8550","abi":"arm64-v8a","android_release":"16","api":36},
+  "stage": {"payload_files_verified_local":48,"payload_files_verified_remote":48,"elf_preflight":"passed","stage_metadata_sha256":"c17f77a1493c6465a4ba91b410a3f4f586da283cdb19702ca040ac75825a3dd8","manifest_sha256":"675e441c6adac5c46671f325f46477b182d1233ae56806f3c1dfaf74855a1e79","runner_sha256":"92689331d11ecf48fb226e82c0f77133e2b72c505b976f2e801c6fffda506f83"},
+  "direct_qnn": {
+    "backend_build_id":"v2.49.0.260730134355",
+    "contexts_required":37,
+    "contexts_loaded_successfully":19,
+    "loaded_context_range":"layer-00 through layer-18",
+    "failed_context_ordinal":20,
+    "failed_context":"layer-19",
+    "failure_api":"QnnContext_createFromBinary",
+    "graphs_executed":0,
+    "output_created":false,
+    "exact_blocker":"The physical SM8550 cannot keep the complete 37-context fused route resident. Larger fused contexts reach the backend residency/resource limit at ordinal 20, before setup completes or any graph executes."
+  },
+  "memory": {"sampled_vmhwm_peak_kib":109940,"note":"Android process RSS excludes DSP/backend allocations and cannot quantify total HTP residency"},
+  "cleanup": {"scoped_remote_root_verified_absent":true,"process_after":false,"phone_lock_held_for_full_lifecycle":true,"phone_lock_released":true},
+  "required_action":"An all-loaded route now requires materially stronger within-context sharing or whole-route fusion that also passes host compilation and exact state/ordering validation. Layer/token context reload is not accepted as equivalent without a separate protocol decision.",
+  "claim_boundary":"Physical direct-QNN deserialization evidence only. No graph/model/HTP execution, output, performance, campaign, or registry result exists."
+}
