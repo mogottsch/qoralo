@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import importlib.util
 import json
 import subprocess
 import sys
@@ -39,6 +40,77 @@ class OutputSanitySchemaTest(unittest.TestCase):
 
     def test_exactly_two_fields(self) -> None:
         self.assert_invalid({"looks_sensible": True, "issue_notes": None, "quality": "good"})
+
+
+class DashboardContractTest(unittest.TestCase):
+    SORTABLE_COLUMNS = [
+        "Experiment",
+        "Model",
+        "Route",
+        "Quantization",
+        "Status",
+        "Provider",
+        "Setup",
+        "TTFT",
+        "Prefill",
+        "Decode",
+        "Peak memory",
+        "Output sanity",
+    ]
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.registry = json.loads((REGISTRY_DIR / "registry.json").read_text(encoding="utf-8"))
+        cls.dashboard = (REGISTRY_DIR / "index.html").read_text(encoding="utf-8")
+        spec = importlib.util.spec_from_file_location(
+            "android_llm_dashboard_generator",
+            REGISTRY_DIR / "build_registry.py",
+        )
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        cls.generated = module.build(cls.registry)
+
+    def test_committed_dashboard_matches_generator(self) -> None:
+        self.assertEqual(self.generated, self.dashboard)
+
+    def test_every_llm_column_is_sortable(self) -> None:
+        self.assertEqual(
+            len(self.SORTABLE_COLUMNS),
+            self.dashboard.count('<button type="button" class="sort-button">'),
+        )
+        for label in self.SORTABLE_COLUMNS:
+            self.assertIn(
+                f'<button type="button" class="sort-button">{label}</button>',
+                self.dashboard,
+            )
+        self.assertEqual(
+            len(self.registry["entries"]) * len(self.SORTABLE_COLUMNS),
+            self.dashboard.count("<td data-sort="),
+        )
+        self.assertIn("unavailable values last", self.dashboard)
+        self.assertIn("aria-sort", self.dashboard)
+
+    def test_dashboard_uses_shared_tts_visual_and_table_controls(self) -> None:
+        for token in (
+            "--bg:#0f172a",
+            "--panel:#172033",
+            "--accent:#67e8f9",
+            "--focus:#fbbf24",
+            'id="routes-fullscreen"',
+            'id="routes-sticky-header"',
+            ".table-panel:fullscreen",
+            ".sort-button::after {content:' ↕'",
+        ):
+            self.assertIn(token, self.dashboard)
+
+    def test_dashboard_retains_llm_claim_boundaries(self) -> None:
+        self.assertIn("Output sanity is not quality.", self.dashboard)
+        self.assertIn("does not establish correctness, grounding, transcript usefulness, or acceptance", self.dashboard)
+        self.assertIn("process PSS/VmHWM does not establish total GPU-private or vendor memory", self.dashboard)
+        self.assertNotIn("Listening", self.SORTABLE_COLUMNS)
+        self.assertNotIn("RTF", self.SORTABLE_COLUMNS)
+        self.assertNotIn("Audio", self.SORTABLE_COLUMNS)
 
 
 class RepositoryContractTest(unittest.TestCase):
