@@ -1,7 +1,7 @@
 ---
 experiment: 0034-lfm2.5-2.6b-android-qnn-htp
-status: blocked
-summary: The LFM2.5-2.6B QNN/HTP arm is blocked before conversion because neither installed QAIRT 2.49 nor current public Qualcomm tooling provides an authorized LFM2 route.
+status: active
+summary: The exact LFM2.5-2.6B source now has an architecture-aware Q4 ONNX export and bounded host CPU viability result; QNN AOT compilation and physical-phone HTP proof remain open.
 benchmark: android-llm
 ---
 
@@ -9,30 +9,44 @@ benchmark: android-llm
 
 ## Experiment description
 
-This experiment asks whether LFM2.5-2.6B can run end to end through Qualcomm QNN on the Galaxy S23 Ultra's HTP. It is an independent accelerator feasibility arm: it preserves the bounded Android CPU viability result in experiment 0029 and does not alter the separate loaded-route CPU/Vulkan work assigned to experiment 0033. The intended result was a model-correct SM8550/HTP v73 compiled context, physical `QnnHtp` provider proof, a bounded phone viability gate, proven request-state isolation on one loaded route, and finally the canonical one-first-plus-five-short/five-medium/five-long campaign.
+LFM2.5-2.6B has complete Android CPU and OpenCL benchmark routes, but its first QNN assessment stopped because the installed high-level QAIRT tools did not understand the model's `lfm2` architecture. This experiment now tests a separately authorized path: export the exact model to architecture-aware Q4 ONNX, preserve both kinds of recurrent state, and prepare it for fallback-disabled QNN compilation targeting the Galaxy S23 Ultra's SM8550/HTP v73.
 
-LFM2 cannot safely be treated as a renamed Llama-like transformer. The pinned 2.6B model has 22 convolutional-state layers and 8 full-attention layers. A credible route must handle both convolutional and KV state, establish the cache layout and reset behavior, and prove that the transformer graph executes on HTP rather than falling back to CPU.
+LFM2 is not a renamed Llama-like transformer. Its 30 layers combine 22 recurrent short-convolution layers with 8 full-attention layers, so a credible route must preserve convolutional state and attention KV state, bind their layout and reset behavior, and prove that claimed model computation executes through QNN HTP rather than silently falling back to CPU. A generic SM8550 target or a serialized context alone would not provide that proof.
 
-The owning [experiment README](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/README.md), [experiment contract](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/protocol/experiment-contract.json), and [support assessment](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/support-assessment/result.json) bind the negative feasibility result and its exact limits.
+The exact route uses `LiquidAI/LFM2.5-2.6B` revision `ab006873…`, the architecture-aware `Liquid4All/onnx-export` exporter at commit `9a23ddd…`, symmetric block-32 INT4 weights, and Qualcomm-maintained ONNX Runtime QNN EP 2.5.0 with QNN runtime 2.49.0 as the candidate provider. Moritz reviewed and authorized the Qualcomm AI Stack License for the named public QNN packages; packages, source weights, large ONNX data, and future license-controlled contexts remain outside Git. The owning [experiment README](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/README.md), [experiment contract](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/protocol/experiment-contract.json), [export provenance](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/export-provenance/result.json), and [host-smoke result](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/host-export-smoke/result.json) are the evidence authority.
 
 ## Progress
 
-The route retained the official LiquidAI artifact identity already reconstructed by 0029: `LFM2.5-2.6B-Q4_K_M.gguf`, 1,674,455,040 bytes, SHA-256 `02a8b7e17487d326e46d68ce0ba24211e1b80a14c4cd0597fa73c1cd697f52ed`, with GGUF architecture `lfm2`. The tokenizer and native reasoning template were reconstructed independently. Canonical short/medium/long prompts contain 171/600/1922 tokens, each has one BOS, ends at the native `<think>` continuation, and fits a 4096-token context with the 2048-token ceiling.
+The earlier support assessment remains valid for the rejected high-level route: installed QAIRT 2.49 has no `lfm2` direct-GGUF support, HTP factory dispatch, Genie configuration, or public Qualcomm recipe/context. Rather than weakening model identity or ignoring recurrent state, the experiment moved to the separately bound architecture-aware exporter.
 
-The cheapest authorized QAIRT paths both fail at the architecture-support gate. QAIRT 2.49's direct GGUF builder supports several families but not `lfm2`; its HTP factory has no `Lfm2ForCausalLM` dispatch. The installed SDK also has no LFM Genie configuration or LFM/Liquid support statement. Qualcomm's public Hugging Face material and AI Hub Models v0.61.0 provide no LFM model recipe, quantized ONNX+encodings, or serialized QNN context.
+The exact source shards and exporter revision were hash-bound. The initial Q4 export contained the expected architecture inventory: 22 convolution nodes, 8 `GroupQueryAttention` nodes, and 167 `MatMulNBits` nodes. Its 1,855,348,736-byte external tensor file remains outside Git with SHA-256 `d3cf0985…f457`.
 
-Because architecture rejection is known before reading weights and the exact GGUF bytes are already bound, downloading another 1.67 GB copy would add no evidence and was avoided. Writing a generic fallback would actually begin a new model-specific converter and runtime project, including recurrent-state conversion and orchestration, which was not authorized.
+The exporter emitted 76 `SimplifiedLayerNormalization` nodes in the standard ONNX domain even though that operator is a Microsoft contrib operation, so ONNX Runtime 1.26 rejected the raw graph before any provider selection. A committed rewrite replaces those nodes and the final skip-RMSNorm with the equivalent standard-ONNX expression:
+
+```text
+x * scale / sqrt(reduce_mean(pow(x, 2), axis=-1) + 1e-5)
+```
+
+The rewritten 410,142-byte graph has SHA-256 `c2020ab7…d157`, still references the exact external tensor file, and passes the ONNX checker. The committed provenance records 1,129 graph nodes, 451 initializers, 41 inputs, 39 outputs, the recurrent/attention operator inventory, quantization details, source hashes, and rewrite boundary.
+
+A bounded host CPU smoke then loaded that exact rewritten export through ONNX Runtime 1.26 and processed the canonical short workload without truncation. The prompt contained 171 input tokens. Generation was deliberately capped at 16 tokens rather than the canonical 2,048-token ceiling; it retained 88 output bytes at SHA-256 `f048f924…518`, and the narrow exact-output sanity screen marked them sensible. The recorded host load and request timings remain host-only viability observations and cannot become Android, QNN, HTP, or performance evidence.
+
+The next committed gates are to build static prefill and one-token decode profiles with a shared 4,096-token KV capacity and explicit 22-layer convolution state, lower every operation into an HTP-owned form, compile fallback-disabled SM8550/v73 contexts with framework-operation tracing, and validate host equivalence plus complete state reset. Only after those gates pass may a bounded physical-phone viability request run under `phone.lock`; a canonical campaign comes later.
 
 ## Results
 
-**The route is blocked before conversion.** No authorized LFM2 QNN input, model-specific builder, or compiled SM8550 context exists. No ADB or phone work occurred, and no QNN/HTP execution or provider proof exists. As a result there is no setup, TTFT, prefill, decode, memory, thermal, power, output-sanity, or campaign evidence. The intended end-to-end target and canonical 1+5+5+5 campaign were not reached, so this experiment is not completed and has **no leaderboard row**.
+**The experiment is active, and exact-model export viability has passed on the host.** This milestone establishes that the exact pinned LFM2.5-2.6B source can be represented as an architecture-aware, checker-valid Q4 ONNX graph retaining its 22 recurrent-convolution and 8 attention layers, and that the rewritten export can return bounded text through host CPU execution.
 
-A generic SM8550 compiler target does not prove model support. Mapping `lfm2` to Llama or Qwen, ignoring convolutional recurrent state, or citing CPU/Vulkan output as HTP execution would violate the architecture, isolation, and provider gates.
+| Evidence boundary | Current result |
+|---|---|
+| Exact-model Q4 ONNX export | Completed and hash-bound; checker passed after the standard RMSNorm rewrite |
+| Architecture/state inventory | 22 recurrent-convolution layers and 8 GQA layers retained |
+| Bounded canonical-short host CPU smoke | Completed at a 16-token cap; exact output retained and superficially sensible |
+| QNN provider / fallback-disabled AOT context | Not yet established |
+| Android / physical HTP execution | Not attempted; no claim |
+| Canonical 1+5+5+5 campaign and Android performance | Not run; no setup, TTFT, prefill, decode, memory, thermal, or power result |
+| Android LLM registry row | None; host export viability is not registry-eligible |
 
-Continuation requires one explicit authorized input or toolchain decision from Moritz:
+The host smoke's sensible-looking text is not quality, correctness, grounding, usefulness, or acceptance. It also does not prove QNN compatibility: CPUExecutionProvider ran the smoke, no QNN provider was selected, no AOT context was produced, and no phone was accessed. “Exact model” describes source/export identity only at this milestone, not exact-model HTP execution.
 
-1. provide a provenance-bound LFM2.5-2.6B quantized ONNX+encodings input with a model-specific QAIRT builder, or a complete SM8550/HTP v73 serialized-context runtime bundle;
-2. authorize authenticated Qualcomm AI Hub or engineering support if a non-public LFM QNN route exists; or
-3. authorize a separately bound updated QAIRT/toolchain or a new LFM2 converter/runtime implementation, including host equivalence, convolutional/KV state-reset, partition, fallback, and provider proofs.
-
-Until one of those paths is authorized and succeeds, this page records a durable phone-independent pre-conversion blocker with no context, Android, HTP, or performance claim.
+The historical high-level QAIRT architecture blocker is now a rejected route rather than the experiment's overall stopping point. The active route still must fail closed if any model/state operator remains outside HTP, full reset cannot be proven, the phone cannot load the exact contexts, or a new licensing/export/paid-service checkpoint appears. No 0034 host-only or blocked evidence appears in the Android LLM registry.

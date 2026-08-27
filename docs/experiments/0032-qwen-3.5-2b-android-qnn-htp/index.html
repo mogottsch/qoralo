@@ -70,35 +70,70 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="topbar"><div class="topbar-inner"><a class="brand" href="../../android-llm-benchmarks/index.html">VibeVoice Android research</a><nav aria-label="Experiment sections"><a href="#experiment-description">Description</a><a href="#progress">Progress</a><a href="#results">Results</a></nav></div></header>
 <main class="shell">
 <header class="status-header" data-status-header="true">
-<div class="kicker"><span>Experiment 0032</span><span class="status">Blocked</span></div>
+<div class="kicker"><span>Experiment 0032</span><span class="status">Active</span></div>
 <h1>Experiment 0032 — Qwen3.5-2B Android QNN/HTP</h1>
-<p class="summary">The Qwen3.5-2B QNN/HTP arm is blocked before conversion because no authorized 2B QNN input exists and installed QAIRT&#x27;s Qwen3.5 path is not dimension-compatible with this variant.</p>
+<p class="summary">A synthetic one-layer explicit-state Qwen3.5 decode graph passed a bounded host QNN compile gate; exact 2B compilation and physical-phone HTP execution remain open.</p>
 <div class="header-links"><a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-08-26</span><span>evidence commit: 44da2f2a86ce0a8d0ed4f44fb8100598570361a8</span><span>page source: docs/experiments/0032-qwen-3.5-2b-android-qnn-htp/page.md</span><span>page source sha256: 81ab313b29a811335665d49dd8fd0d01922d962b9ce7af044d459feace962875</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-27</span><span>evidence commit: 25ce27756f9d92d619a461e6bbc2d759e0842606</span><span>page source: docs/experiments/0032-qwen-3.5-2b-android-qnn-htp/page.md</span><span>page source sha256: 23073f08396a0d9bb04e476adfba826570a7ffeb623e78cb315f78589903e836</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
-<p>This experiment evaluates a distinct QNN/HTP route for Qwen3.5-2B without changing the CPU evidence in experiment 0027. The intended end-to-end target was a provenance-bound SM8550/HTP v73 compiled context, physical <code>QnnHtp</code> provider proof on the Galaxy S23 Ultra, a bounded viability request, proven loaded-route isolation, and the canonical one-first-plus-five-short/five-medium/five-long campaign.</p>
-<p>The assessment deliberately separates publicly available Qwen deployment artifacts from actual QNN conversion inputs. Qualcomm&#x27;s public Qwen3.5-2B release currently identifies a GenieX llama.cpp Q4_0 GGUF. A GGUF advertised for that runtime is not automatically an ONNX/QNN graph or an HTP context, and published metrics from another route cannot be relabeled as this repository&#x27;s provider evidence.</p>
-<p>The owning <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, and <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/support-assessment/result.json">support assessment</a> bind the exact feasibility finding.</p>
+<p>Qwen3.5-2B already has a measured Android CPU route, but the first QNN assessment found no credible way to convert this exact 2B architecture with the installed high-level QAIRT path. This experiment now tests a different idea: express the model&#x27;s attention and recurrent state explicitly in an ExecuTorch graph, then ask Qualcomm&#x27;s QNN delegate to compile that graph for the Galaxy S23 Ultra&#x27;s SM8550/HTP v73 target without silently leaving tensor computation on the CPU.</p>
+<p>The explicit-state design makes full-attention KV cache plus Gated DeltaNet recurrent and causal-convolution state graph inputs and outputs. That is important for a future loaded route because request reset must be provable rather than hidden in mutable framework state. Softplus remains an explicit edge operation mapped to QNN&#x27;s HTP-supported <code>ElementWiseNeuron(SOFTPLUS)</code> operation.</p>
+<p>This is still a feasibility arm, not a performance result. The end-to-end target remains the exact pinned 24-layer Qwen3.5-2B text checkpoint, physical QNN/HTP provider proof on the authorized phone, a bounded text-generation request, proven loaded-route isolation, and only then the canonical one-first-plus-five-short/five-medium/five-long campaign. The owning <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, and <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-structural-probe/result.json">structural-probe result</a> are the evidence authority.</p>
 </section>
 <section class="primary-section" id="progress" data-primary-section="progress">
 <h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
-<p>The route assessment pinned the official Qwen3.5-2B model revision and its hybrid architecture geometry. It also reconstructed the official tokenizer and template with thinking disabled. The canonical short/medium/long prompts contain 174/597/1926 tokens, fit the 4096-token route context with the 2048-token output ceiling, and have independently bound rendered-prompt and token-ID hashes.</p>
-<p>The only unauthenticated public Qualcomm artifact found for this model is <code>Qwen3.5-2B-Q4_0.gguf</code>, 1,214,873,856 bytes with published SHA-256 <code>cd70221bebaee0503e0f6717e174250cd7825aa88438b3aabec9ad55731d9bb1</code>, for the GenieX llama.cpp route. Installed QAIRT 2.49&#x27;s direct GGUF builder does not support its <code>qwen35</code> architecture. Downloading 1.2 GB could not change that support-table result, so the unnecessary transfer was avoided.</p>
-<p>QAIRT does have a separate <code>Qwen3_5ForConditionalGeneration</code> HTP factory dispatch, but that path requires a quantized ONNX graph plus encodings. Qualcomm AI Hub Models v0.61.0 publishes no Qwen3.5-2B model, export, or quantization implementation and no ONNX+encodings or serialized context. Moreover, the installed builder hardcodes a 4096-wide split point grouped by 256 while the official 2B geometry uses a 512-wide full-attention KV path and 2048-wide linear-key path. Borrowing the shipped 4B HTP example would therefore be unsupported.</p>
+<p>The original support assessment pinned the official model, tokenizer, native template, hybrid architecture geometry, and canonical prompt hashes. It also established that the public GenieX llama.cpp GGUF is not a QNN input, installed QAIRT&#x27;s direct GGUF builder does not support <code>qwen35</code>, and its separate Qwen3.5 ONNX builder assumes a 4B-derived width that is incompatible with the 2B model. That high-level conversion route remains blocked and its evidence is preserved rather than rewritten.</p>
+<p>A new ExecuTorch 1.2 adapter now represents one-token Qwen3.5 decode with explicit graph state. A bounded host ahead-of-time probe used one linear-attention layer, tiny deterministic synthetic geometry and weights, context 16, and relaxed FP16 lowering. The compiler targeted SM8550/HTP v73 through the Qualcomm QNN delegate and completed with:</p>
+<ul>
+<li>one QNN subgraph;</li>
+<li>151 delegated tensor-compute nodes;</li>
+<li>zero non-delegated tensor-compute nodes;</li>
+<li>three non-delegated <code>getitem</code> nodes identified as ExecuTorch tuple plumbing;</li>
+<li>successful finalization and a serialized 110,432-byte QNN context inside a 116,576-byte local-only PTE.</li>
+</ul>
+<p>The committed <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-structural-probe/compiler-proof.log">compiler excerpt</a> and <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-structural-probe/SHA256SUMS">checksum manifest</a> bind this milestone. The restricted generated PTE/context remains outside Git and is referenced only by its recorded hash.</p>
+<p>The next gate is substantially larger: download and hash-bind the exact pinned checkpoint, map its text weights into the explicit-state implementation, verify eager numerical equivalence, and compile all 24 layers while retaining zero tensor-compute fallback. Phone staging remains gated on that exact-model compile. A physical viability request must then prove QNN RPC, accelerator, cycle, and HVX activity under <code>phone.lock</code> before any canonical campaign can begin.</p>
 </section>
 <section class="primary-section" id="results" data-primary-section="results">
 <h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
-<p><strong>The route is blocked before conversion.</strong> No authorized local QNN conversion input or compiled SM8550 context exists. No ADB or phone work occurred, and no QNN/HTP execution or provider proof exists. There is therefore no setup, TTFT, prefill, decode, memory, thermal, power, output-sanity, or campaign evidence. The intended end-to-end target and canonical 1+5+5+5 campaign were not reached, so this experiment is not completed and has <strong>no leaderboard row</strong>.</p>
-<p>A GenieX llama.cpp release, the shipped 4B QNN example, or CPU-only text output cannot substitute for a physical 2B QNN/HTP route. Applying the dimension-specific 4B builder to the 2B model would weaken the architecture and provider gates rather than unblock them.</p>
-<p>Continuation requires one explicit authorized input or toolchain decision from Moritz:</p>
-<ol>
-<li>provide a provenance-bound Qwen3.5-2B quantized ONNX+encodings input compatible with installed QAIRT, or a complete serialized SM8550/HTP v73 context and runtime bundle;</li>
-<li>authorize authenticated Qualcomm AI Hub Workbench use if it exposes a supported Qwen3.5-2B context export; or</li>
-<li>authorize a separately bound updated QAIRT/toolchain or a 2B-aware converter implementation that adds <code>qwen35</code> GGUF support or corrects the ONNX builder dimensions, followed by independent equivalence and provider proof.</li>
-</ol>
-<p>Until one of those routes is authorized and succeeds, this page records a durable phone-independent pre-conversion blocker and makes no context, Android, HTP, or performance claim.</p>
+<p><strong>The experiment is active, and only the bounded host structural gate has passed.</strong> The result establishes that the new explicit-state architecture can be accepted by this ExecuTorch/QNN compiler path for a synthetic one-layer Gated DeltaNet decode graph. It removes the earlier blanket “no converter implementation” boundary for that alternate route, but it does not establish that the exact Qwen3.5-2B checkpoint compiles or runs.</p>
+<div class="table-wrap"><table><thead><tr>
+<th>Evidence boundary</th>
+<th>Current result</th>
+</tr></thead><tbody>
+<tr>
+<td>Host AOT structural compilation</td>
+<td>Passed for the synthetic one-layer graph</td>
+</tr>
+<tr>
+<td>QNN partition in that probe</td>
+<td>1 subgraph; 151 tensor-compute nodes delegated; 0 tensor-compute fallback</td>
+</tr>
+<tr>
+<td>Exact 24-layer Qwen3.5-2B checkpoint</td>
+<td>Not yet converted or compiled</td>
+</tr>
+<tr>
+<td>Android / physical HTP execution</td>
+<td>Not attempted; no claim</td>
+</tr>
+<tr>
+<td>Generated text or output sanity</td>
+<td>Unavailable; no inference ran</td>
+</tr>
+<tr>
+<td>Setup, TTFT, prefill, decode, memory, thermal, or power</td>
+<td>Unavailable; no Android campaign ran</td>
+</tr>
+<tr>
+<td>Android LLM registry row</td>
+<td>None; the result is not registry-eligible</td>
+</tr>
+</tbody></table></div>
+<p>The host compiler&#x27;s serialized context is not evidence that the phone executed HTP work. A text response from CPU, GenieX NPU metrics, direct-Hexagon output without QNN proof, or the dimension-incompatible shipped 4B example would not satisfy this route. Likewise, “zero tensor-compute fallback” applies only to the committed synthetic probe; it is not yet a no-fallback claim for the full model.</p>
+<p>No current QNN blocker or host-only milestone appears in the Android LLM benchmark registry. Publication there remains conditional on a complete, valid physical Android canonical campaign with exact route identity, provider/no-fallback proof, request-state isolation, outputs, and performance evidence.</p>
 </section></article>
 <footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
 </main>
