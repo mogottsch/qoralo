@@ -72,15 +72,15 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="status-header" data-status-header="true">
 <div class="kicker"><span>Experiment 0032</span><span class="status">Active</span></div>
 <h1>Experiment 0032 — Qwen3.5-2B Android QNN/HTP</h1>
-<p class="summary">The exact four-subgraph W4A16 route executed physically through QNN HTP v73 for all 174 prompt tokens, but its one-token output was <code>!</code> rather than the host reference, so fidelity diagnosis remains open.</p>
+<p class="summary">Physical QNN HTP execution produced <code>!</code>; a matching host W4A16 QDQ replay produced <code>The</code>, proving PTQ changes the top token but does not explain the physical zero-token result.</p>
 <div class="header-links"><a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-08-27</span><span>evidence commit: bc6f893a1c150d06d4424cf709cd369d0a3a723b</span><span>page source: docs/experiments/0032-qwen-3.5-2b-android-qnn-htp/page.md</span><span>page source sha256: 24299ceb7abd7e4cf8e90d3cf4e189fb4c626548d146cfc3beff35e624fbc0de</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-27</span><span>evidence commit: 507a82fcbaecfa77d2ba7d48d2ee35c71f1151ff</span><span>page source: docs/experiments/0032-qwen-3.5-2b-android-qnn-htp/page.md</span><span>page source sha256: 66bd542db48af2c4ae34be4b52fb047e7084982942efd9a05564cc4c7ed56a8b</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
 <p>Qwen3.5-2B already has a measured Android CPU route, but the first QNN assessment found no usable high-level conversion path for this exact 2B architecture. This experiment tests a separate ExecuTorch route: express the hybrid attention model and all request state explicitly, quantize the exact official checkpoint, compile its tensor computation for the Galaxy S23 Ultra&#x27;s SM8550/HTP v73 target, and then prove physical execution on the phone.</p>
 <p>The explicit-state design makes full-attention KV cache plus Gated DeltaNet recurrent and causal-convolution state graph inputs and outputs. This avoids hidden mutable-buffer fallback and gives a future loaded route an auditable reset boundary. Softplus remains an explicit edge operation mapped to QNN&#x27;s HTP-supported <code>ElementWiseNeuron(SOFTPLUS)</code> operation.</p>
-<p>The end-to-end target remains stricter than one physical request: the exact pinned 24-layer text checkpoint must produce credible bounded output through physical QNN/HTP, demonstrate complete loaded-route request-state isolation, and only then run the canonical one-first-plus-five-short/five-medium/five-long campaign. The owning <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-exact-host-compile/compile-result.json">host compile result</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-exact-host-compile/eager-equivalence.json">eager comparison</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-explicit-state-runner-host-build/result.json">Android runner host build</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-qnn-physical-viability-20260827-attempt-01/result.json">first physical attempt</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-runner-boundary-fix-host-build/result.json">boundary-kernel host fix</a>, and <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-qnn-physical-viability-20260827-attempt-02/result.json">physical execution result</a> are the evidence authority.</p>
+<p>The end-to-end target remains stricter than one physical request: the exact pinned 24-layer text checkpoint must produce credible bounded output through physical QNN/HTP, demonstrate complete loaded-route request-state isolation, and only then run the canonical one-first-plus-five-short/five-medium/five-long campaign. The owning <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-exact-host-compile/compile-result.json">host compile result</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-exact-host-compile/eager-equivalence.json">eager comparison</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-explicit-state-runner-host-build/result.json">Android runner host build</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-qnn-physical-viability-20260827-attempt-01/result.json">first physical attempt</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-runner-boundary-fix-host-build/result.json">boundary-kernel host fix</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-qnn-physical-viability-20260827-attempt-02/result.json">physical execution result</a>, and <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/host-w4a16-qdq-output-diagnosis/result.json">host W4A16 QDQ diagnosis</a> are the evidence authority.</p>
 </section>
 <section class="primary-section" id="progress" data-primary-section="progress">
 <h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
@@ -126,10 +126,19 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <p>The request completed at <code>max_tokens</code> with token ID 0, which the pinned tokenizer decodes to exact one-byte UTF-8 <code>!</code> at SHA-256 <code>bb7208bc…3b62</code>. The pre-PTQ host calibration over the same short prompt ended at token 21365, <code>Given</code>; the physical token does not match. The evidence does not choose whether quantization, state/input transport, shard boundaries, or output handling caused the difference.</p>
 <p>Because the authorized output is only one punctuation token, it cannot support the narrow text screen. Output sanity is correctly <code>looks_sensible: null</code> and <code>issue_notes: null</code>; no sensible, useful, correct, or quality claim exists.</p>
 <p>The 104,402,838-byte provider log and 55,018,400-byte ETDump are retained as lossless zstd files with raw/compressed hashes and verified decompression recovery. The process and scoped root were verified absent, <code>phone.lock</code> was released, and Pi independently rechecked cleanup. No additional phone run or campaign is authorized; diagnosis proceeds on the host.</p>
+<p>A lower-retention host diagnosis replayed the exact 174-token canonical short prompt through the same PT2E W4A16 QDQ recipe used for the physical compile. Preparation and replay ran in separate processes: the first exported, calibrated, converted, and persisted the graph before exiting; the second loaded only that QDQ graph and explicit-state templates. The 13,644,225,801-byte QDQ artifact remains local-only at SHA-256 <code>be0c1a0a…7563</code>.</p>
+<p>The exact three-way top-token result is:</p>
+<ul>
+<li>pre-PTQ host calibration: token 21365, <code>Given</code>;</li>
+<li>host W4A16 QDQ: token 760, <code>The</code>;</li>
+<li>physical QNN HTP: token 0, <code>!</code>.</li>
+</ul>
+<p>PTQ materially changes the top token, but host QDQ does not reproduce physical token 0, so PTQ alone is not a complete explanation. The first post-QDQ divergence remains to be localized among QNN lowering/runtime, explicit state or input transport, shard boundaries, and final output handling.</p>
+<p>The host replay took 2,467.044 seconds and its observed peak RSS was 6,094,088 KiB. Those values describe one diagnostic replay and host resource requirement, not Android or benchmark performance.</p>
 </section>
 <section class="primary-section" id="results" data-primary-section="results">
 <h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
-<p><strong>The experiment is active after bounded physical execution of the exact four-subgraph W4A16 route.</strong> All expected QNN graph calls completed through HTP v73, but the one-token output mismatches the pre-PTQ host reference. Physical provider execution is established; output fidelity and campaign readiness are not.</p>
+<p><strong>The experiment is active after bounded physical execution, with host diagnosis excluding a PTQ-only explanation for the output mismatch.</strong> All expected QNN graph calls completed through HTP v73, but pre-PTQ, host QDQ, and physical QNN select three different top tokens. Physical provider execution is established; the first downstream divergence, output fidelity, and campaign readiness are not.</p>
 <div class="table-wrap"><table><thead><tr>
 <th>Evidence boundary</th>
 <th>Current result</th>
@@ -192,7 +201,19 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 </tr>
 <tr>
 <td>W4A16 output</td>
-<td>Token 0 / <code>!</code> / SHA <code>bb7208bc…3b62</code>; differs from pre-PTQ host token 21365 / <code>Given</code></td>
+<td>Physical token 0 / <code>!</code> / SHA <code>bb7208bc…3b62</code></td>
+</tr>
+<tr>
+<td>Three-way host/phone diagnosis</td>
+<td>Pre-PTQ 21365 / <code>Given</code>; host W4A16 QDQ 760 / <code>The</code>; physical QNN 0 / <code>!</code></td>
+</tr>
+<tr>
+<td>Diagnostic conclusion</td>
+<td>PTQ changes the top token but does not reproduce or explain physical token 0</td>
+</tr>
+<tr>
+<td>Host QDQ replay boundary</td>
+<td>2,467.044 s, peak RSS 6,094,088 KiB, 13.64 GB local-only artifact; diagnostic, not performance</td>
 </tr>
 <tr>
 <td>Output sanity</td>
@@ -207,7 +228,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>None; host AOT evidence is not registry-eligible</td>
 </tr>
 </tbody></table></div>
-<p>Attempt 02 proves bounded physical execution of the exact route through QNN HTP v73, including accelerator/RPC/cycle/HVX observations. It does not prove quantized numerical fidelity or credible generated text. The exact eager comparison occurred before W4A16 quantization, and the physical token mismatch prevents transferring that result to the deployed route. The displayed timings are one max-new-tokens-1 viability observation, not loaded-route campaign performance; the single-request runner remains campaign-ineligible.</p>
+<p>Attempt 02 proves bounded physical execution of the exact route through QNN HTP v73, including accelerator/RPC/cycle/HVX observations. It does not prove quantized numerical fidelity or credible generated text. The host QDQ replay narrows the diagnosis by showing that PTQ changes the pre-PTQ top token but still does not produce the physical result; it does not identify the downstream cause. Physical and host timings are respectively one max-new-tokens-1 viability observation and one diagnostic replay, not loaded-route campaign performance. The single-request runner remains campaign-ineligible.</p>
 <p>A CPU-only response, GenieX NPU metric, direct-Hexagon output without QNN proof, or the dimension-incompatible shipped 4B example cannot satisfy this experiment. Neither can one mismatching punctuation token justify output sanity, usefulness, quality, or a campaign. No 0032 row belongs in the Android LLM registry until a complete valid physical Android canonical campaign establishes exact route identity, provider/no-fallback proof, state isolation, retained outputs, and a loaded-route performance distribution.</p>
 </section></article>
 <footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>

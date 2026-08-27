@@ -72,15 +72,15 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="status-header" data-status-header="true">
 <div class="kicker"><span>Experiment 0034</span><span class="status">Blocked</span></div>
 <h1>Experiment 0034 — LFM2.5-2.6B Android QNN/HTP</h1>
-<p class="summary">The corrected direct-QNN phone route physically deserialized 57 exact contexts, then context 58 of 263 failed before readiness or graph execution; the route now requires host-side context consolidation.</p>
+<p class="summary">The fused direct-QNN route physically loaded 19 of 37 exact contexts, then context 20 failed before readiness or graph execution; stronger within-context sharing or whole-route fusion is required.</p>
 <div class="header-links"><a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-08-27</span><span>evidence commit: 3d0d39fe1e875ebabdae3f2c8fbe8a57de5c2f7e</span><span>page source: docs/experiments/0034-lfm2.5-2.6b-android-qnn-htp/page.md</span><span>page source sha256: 3e9228a41d69b2bcab584fb8997aec755c7c1f597dbc037c1a7ec73c90db8ff3</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-27</span><span>evidence commit: 8361d4bde633ac2b71a5222bbaa68a342b9a7488</span><span>page source: docs/experiments/0034-lfm2.5-2.6b-android-qnn-htp/page.md</span><span>page source sha256: 28ef4522cdf9c583e53959ce160ce8bdf7d578af620d6ba0eee6f9d7c5b550d0</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
 <p>LFM2.5-2.6B has complete Android CPU and OpenCL benchmark routes, but its original QNN assessment found no high-level tool path for the model&#x27;s <code>lfm2</code> architecture. This experiment now tests an architecture-aware route: export the exact model to Q4 ONNX, split its stateful computation into memory-bounded parts, compile every claimed neural part for the Galaxy S23 Ultra&#x27;s SM8550/HTP v73 target with CPU provider fallback disabled, and then prove that the complete route can execute physically on the phone.</p>
 <p>LFM2 is not a renamed Llama-like transformer. Its 30 layers combine 22 recurrent short-convolution layers with 8 full-attention layers, so the route must preserve both convolution state and attention KV state, bind their reset behavior, and prove that claimed model computation runs through QNN HTP. The intentionally CPU-side tokenizer, selected-row Q4 embedding lookup, request orchestration, and one global greedy argmax remain explicit; they are not hidden provider fallback.</p>
-<p>The route binds <code>LiquidAI/LFM2.5-2.6B</code> revision <code>ab006873…</code>, the architecture-aware <code>Liquid4All/onnx-export</code> exporter at <code>9a23ddd…</code>, symmetric block-32 INT4 weights, and 263 contexts prepared for SoC model 43 / SM8550 / HTP v73. The failed phone route used ONNX Runtime QNN EP 2.5.0; the active continuation now bypasses its EPContext claim layer and calls the public QNN context/graph APIs directly. Moritz reviewed and authorized the named Qualcomm package license and this bounded direct-loader continuation. Packages, source weights, large ONNX data, compiled contexts, and phone stages stay outside Git. The owning <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-aot/result.json">QNN AOT result</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/htp-pipeline-host-equivalence/result.json">host pipeline comparison</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/phone-attempt-2-npu-context-claim-failure/result.json">NPU-selection retry</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/direct-qnn-host-preparation/result.json">direct-QNN host preparation</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/direct-qnn-phone-attempt-1-linker-failure/result.json">first direct phone attempt</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/direct-qnn-phone-attempt-2-context-limit/result.json">corrected direct phone attempt</a> are the evidence authority.</p>
+<p>The route binds <code>LiquidAI/LFM2.5-2.6B</code> revision <code>ab006873…</code>, the architecture-aware <code>Liquid4All/onnx-export</code> exporter at <code>9a23ddd…</code>, symmetric block-32 INT4 weights, and 263 contexts prepared for SoC model 43 / SM8550 / HTP v73. The failed phone route used ONNX Runtime QNN EP 2.5.0; the active continuation now bypasses its EPContext claim layer and calls the public QNN context/graph APIs directly. Moritz reviewed and authorized the named Qualcomm package license and this bounded direct-loader continuation. Packages, source weights, large ONNX data, compiled contexts, and phone stages stay outside Git. The owning <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-aot/result.json">QNN AOT result</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/htp-pipeline-host-equivalence/result.json">host pipeline comparison</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/phone-attempt-2-npu-context-claim-failure/result.json">NPU-selection retry</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/direct-qnn-host-preparation/result.json">direct-QNN host preparation</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/direct-qnn-phone-attempt-1-linker-failure/result.json">first direct phone attempt</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/direct-qnn-phone-attempt-2-context-limit/result.json">corrected direct phone attempt</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-consolidated-host-preparation/result.json">37-context host preparation</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/consolidated-qnn-phone-attempt-1-residency-limit/result.json">fused-route physical attempt</a> are the evidence authority.</p>
 </section>
 <section class="primary-section" id="progress" data-primary-section="progress">
 <h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
@@ -107,11 +107,24 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <p>The corrected ignored stage contains 273 payload files totaling 1,983,513,152 bytes before its additional metadata and manifest. It includes exact NDK r28b <code>libc++_shared.so</code> at SHA-256 <code>77a34d3f…c754</code>. An architecture-aware host <code>readelf</code> preflight confirms that every AArch64 <code>DT_NEEDED</code> dependency is either staged or Android-system-provided and records the DSP6 libc++ dependency as firmware-provided.</p>
 <p>The authorized corrected attempt passed the ELF preflight and verified all 273 hashes locally and remotely under the full <code>phone.lock</code> lifecycle. The direct QNN runtime then physically deserialized the first 57 exact contexts on SM8550. Context 58 of 263, <code>layer-07-up-0</code>, failed in <code>QnnContext_createFromBinary</code> before the complete route became ready.</p>
 <p>No graph executed and no output or performance result exists. Peak sampled process VmHWM was 74,164 KiB and PSS 43,419 KiB, but process memory excludes DSP/backend allocations and does not explain the backend context limit; these startup observations are not benchmark memory. The process and scoped root were verified absent, and <code>phone.lock</code> was released.</p>
-<p>The route is blocked on the simultaneous independent-context count. The next gate is host-only consolidation of the 263 graphs into fewer multi-graph or weight-sharing QNN context binaries while preserving exact graph order, tensor ABI, explicit state, and loaded-route semantics. Per-token context reload is not an acceptable workaround. No further phone run or campaign is authorized.</p>
+<p>The 57-context limit established the need to reduce simultaneously resident contexts. A first shared-EP-context diagnostic compiled 263 ordered graphs into 33 multi-graph binaries, but host retrieval rejected its shared-weights buffer. That 33-context route is retained as rejected rather than assumed to work on Android.</p>
+<p>The prepared replacement instead fuses each layer&#x27;s eight sequential graphs in dependency order and groups independent LM-head chunks. It contains 37 ordinary single-graph contexts:</p>
+<ul>
+<li>30 fused layer contexts;</li>
+<li>one final-normalization context;</li>
+<li>six LM-head group contexts, each containing at most four vocabulary chunks.</li>
+</ul>
+<p>All 37 contexts are loaded once during setup. No request-level or token-level context reload is allowed. The route retains the same 22 convolution states, 8 attention K/V pairs, 4,096-token capacity, and declared CPU selected-row embedding, orchestration, and global-argmax boundaries.</p>
+<p>Every fused ONNX model passes checking. All 37 contexts compile fallback-disabled for SoC 43 / HTP v73; framework traces still cover all 1,583 source nodes, 2,747 QNN operations, and zero unsupported nodes. The context binaries total 1,733,937,336 bytes.</p>
+<p>Five bounded host CPU steps preserve the split route&#x27;s greedy decisions while retaining the exact logit/state deltas introduced by changed graph-optimization boundaries. A fused layer-0 context also loads and executes through x86 HTP emulation with finite hidden/state outputs close to CPU reference. These checks protect consolidation wiring only, not exact numerical equivalence, physical HTP, or performance.</p>
+<p>The rebuilt API-31 direct runner has SHA-256 <code>92689331…6f83</code>. Its ignored stage contains 48 payload files totaling 1,937,978,519 bytes; metadata SHA-256 <code>c17f77a1…3dd8</code>, manifest SHA-256 <code>675e441c…1e79</code>, and the ELF/hash preflights pass.</p>
+<p>The bounded physical gate verified all 48 stage hashes locally and remotely and passed the ELF preflight under the full <code>phone.lock</code> lifecycle. Direct QNN successfully deserialized 19 exact fused contexts, <code>layer-00</code> through <code>layer-18</code>. Context 20 of 37, <code>layer-19</code>, then failed in <code>QnnContext_createFromBinary</code> before setup completed.</p>
+<p>No graph executed and no output or performance result exists. Peak sampled Android process VmHWM was 109,940 KiB, but process RSS excludes DSP/backend allocations and cannot quantify total HTP residency. Because the larger fused contexts fail at a lower count than the former 263-context route, the evidence indicates a resident backend/DSP resource limit rather than a simple context-handle threshold. The process and scoped root were verified absent, and <code>phone.lock</code> was released.</p>
+<p>The route is blocked. An all-loaded implementation requires materially stronger within-context sharing or whole-route fusion that still passes host compilation and exact graph-order/state validation. Per-layer or per-token context reload is not accepted as equivalent without a separate protocol decision. No further phone run or campaign is authorized.</p>
 </section>
 <section class="primary-section" id="results" data-primary-section="results">
 <h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
-<p><strong>The experiment is blocked on the physical direct-QNN context-count limit.</strong> The corrected runner bypassed ORT and proved that exact contexts can deserialize on SM8550, but only 57 of the required 263 loaded before context creation failed. The route never reached readiness or graph execution.</p>
+<p><strong>The experiment is blocked on physical all-loaded QNN/DSP residency.</strong> Consolidation reduced the route from 263 to 37 contexts, but the phone loaded only 19 before context 20 failed. The route did not reach readiness or graph execution.</p>
 <div class="table-wrap"><table><thead><tr>
 <th>Evidence boundary</th>
 <th>Current result</th>
@@ -185,8 +198,36 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>57/263 exact contexts deserialized on SM8550</td>
 </tr>
 <tr>
+<td>Historical physical blocker</td>
+<td>263-context route failed at context 58, <code>layer-07-up-0</code>, before readiness or graph execution</td>
+</tr>
+<tr>
+<td>Rejected consolidation diagnostic</td>
+<td>33 shared-weight multi-graph contexts compiled, but host retrieval rejected the shared buffer</td>
+</tr>
+<tr>
+<td>Prepared consolidated route</td>
+<td>37 ordinary loaded-once contexts: 30 fused layers + final norm + 6 head groups; no per-token reload</td>
+</tr>
+<tr>
+<td>Consolidated host ownership</td>
+<td>1,583 source nodes / 2,747 QNN ops / 0 unsupported; fallback-disabled SM8550/v73 compile</td>
+</tr>
+<tr>
+<td>Consolidated host checks</td>
+<td>Five greedy decisions preserved with deltas retained; fused layer 0 executes in x86 HTP emulation</td>
+</tr>
+<tr>
+<td>Consolidated Android stage</td>
+<td>Runner SHA <code>92689331…6f83</code>; 48 payload files / 1,937,978,519 bytes; local/remote hash and ELF preflight passed</td>
+</tr>
+<tr>
+<td>Physical fused-context loading</td>
+<td>19/37 contexts (<code>layer-00</code>…<code>layer-18</code>) deserialized on SM8550</td>
+</tr>
+<tr>
 <td>Current blocker</td>
-<td>Context 58, <code>layer-07-up-0</code>, failed in <code>QnnContext_createFromBinary</code> before readiness</td>
+<td>Context 20, <code>layer-19</code>, failed in <code>QnnContext_createFromBinary</code> before readiness</td>
 </tr>
 <tr>
 <td>Graph/model/HTP execution and output</td>
@@ -194,7 +235,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 </tr>
 <tr>
 <td>Memory boundary</td>
-<td>Process-only startup samples exclude DSP/backend allocations and do not explain the limit</td>
+<td>Process VmHWM 109,940 KiB excludes DSP/backend allocations; not total residency or benchmark memory</td>
 </tr>
 <tr>
 <td>Cleanup</td>
@@ -213,8 +254,8 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>None; host AOT and wiring evidence are not registry-eligible</td>
 </tr>
 </tbody></table></div>
-<p>The corrected attempt proves physical direct-QNN context deserialization for 57 exact contexts, not HTP graph execution. A started runtime and partial context set cannot substitute for loading the complete route, reaching readiness, and retaining provider/RPC/accelerator/cycle/HVX execution proof. The CPU-bounded host differences and process-only startup memory are descriptive observations, not a numerical acceptance policy or Android performance metric.</p>
-<p>No 0034 row belongs in the Android LLM registry. Host consolidation must first produce fewer exact multi-graph contexts with validated identity/state semantics; only a separately authorized bounded phone gate could then test physical viability. Even success would be a milestone, and a separate complete loaded-route campaign is required for registry publication.</p>
+<p>The fused attempt proves physical direct-QNN deserialization for 19 exact contexts, not HTP graph execution. It also shows that reducing handle count alone does not resolve the all-loaded residency requirement. Fallback-disabled host compilation, matching five greedy choices, x86 emulation, and partial phone loading cannot substitute for complete readiness plus provider/RPC/accelerator/cycle/HVX execution proof. Retained host deltas and process-only memory are descriptive observations, not an Android performance metric.</p>
+<p>No 0034 row belongs in the Android LLM registry. A new host design must materially increase within-context sharing or fuse the whole route while preserving exact loaded-route semantics; only then could a separately authorized physical viability gate be considered. No per-layer/token reload, retry, campaign, or registry publication is currently authorized.</p>
 </section></article>
 <footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
 </main>
