@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active. The exact model now has an architecture-aware Q4 export, a bounded host viability pass, and 263 fallback-disabled QNN contexts compiled for SM8550/HTP v73 with complete framework-op ownership traces. Physical Android/HTP execution is the next gate; no phone result or benchmark exists yet.**
+**Active. The exact model now has an architecture-aware Q4 export, a bounded host viability pass, and 263 fallback-disabled QNN contexts compiled for SM8550/HTP v73 with complete framework-op ownership traces. The hash-bound 2.0 GB phone stage is ready locally, but Pi still reports the phone as ADB-unauthorized; no 0034 ADB contact, phone stage, Android execution, or benchmark exists yet.**
 
 This is a separate accelerator arm. It preserves `0029` CPU viability and `0033` CPU/OpenCL campaign evidence without modifying either experiment.
 
@@ -56,6 +56,12 @@ A one-token static route now submits prompt and generated tokens sequentially th
 All **263** parts compiled through ONNX Runtime QNN EP 2.5.0 with `session.disable_cpu_ep_fallback=1`, block-quant optimization enabled, and target SoC 43 / HTP V73. Their traces bind all 1,583 source ONNX nodes to 2,747 QNN operations, with zero unsupported nodes. Context binaries total 1,779,492,144 bytes and remain outside Git. See [`results/qnn-aot/result.json`](results/qnn-aot/result.json).
 
 A bounded host reconstruction submitted the exact 171-token canonical short prompt through the final 263-part ordering with zeroed state. Its first five greedy tokens matched both the unsplit transformed graph and the original exported reference. Exact comparisons and limitations are in [`results/htp-pipeline-host-equivalence/`](results/htp-pipeline-host-equivalence/). This protects route wiring; CPU timings and host logits are not Android or HTP results.
+
+## Phone preparation
+
+The native API-31 AArch64 runner and ignored phone stage are ready. The runner loads all 263 context sessions once, requests HTP resource sharing and basic per-context profiling, keeps fallback disabled, submits the exact 171-token short prompt, and caps the viability continuation at 16 tokens. Public Maven artifacts, the runner, every context pair, Q4 embedding tables, and the prompt are covered by a local 540-file stage manifest. The license-controlled stage is 2,015,057,362 bytes before its metadata/manifests and remains outside Git.
+
+See [`results/phone-preparation/result.json`](results/phone-preparation/result.json). This is host preparation only. Pi currently reports `R5CW81PR8SY unauthorized`; the 0034 owner has not contacted ADB or acquired `phone.lock`. Work pauses until Moritz accepts the RSA prompt and Pi confirms `device` state.
 
 ## HTP validity gates still open
 

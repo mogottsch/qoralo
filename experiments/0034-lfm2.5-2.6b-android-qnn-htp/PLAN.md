@@ -22,17 +22,13 @@
 14. Validated every framework-op trace: all 1,583 source nodes map to 2,747 QNN ops with zero unsupported nodes. The 1,779,492,144 bytes of contexts remain outside Git.
 15. Replayed the exact 171-token canonical short prompt through the final split ordering on the host with zeroed state; its first five greedy tokens matched both transformed-monolith and original export references. This is wiring/viability evidence, not Android performance.
 
+16. Built the native API-31 AArch64 phone runner and a locally verified 540-file ignored stage containing the 263 context pairs, public Android runtime libraries, exact Q4 embedding tables, and exact 171-token short prompt. The stage is hash-bound and has not contacted or modified the phone.
+
 ## In progress
 
-1. Package the 263 target contexts with a phone runtime that:
-   - loads every context once during setup;
-   - performs the explicit selected-row Q4 embedding frontend;
-   - executes all ordered model/state/head contexts through QNN;
-   - maintains left-aligned attention K/V and convolution state;
-   - compares all LM-head chunks for one global greedy token;
-   - zeroes all state for each logical request.
-2. Retain a compact deployed artifact manifest binding every context hash, QNN runtime artifact, tokenizer/template, and executable.
-3. Run one bounded physical-phone viability request with fallback disabled and physical HTP profile/log proof.
+1. Wait for Moritz to accept the Android RSA prompt and for Pi to confirm `R5CW81PR8SY` is in `device` state. Do not contact or stage the phone beforehand.
+2. Under the full `phone.lock` lifecycle, deploy the hash-bound stage and run only one bounded 16-token viability request.
+3. Retain fallback-disabled physical QNN/HTP profiles/logs, state behavior, output token IDs/text, memory/device/thermal observations, and scoped cleanup proof.
 
 ## Phone and campaign sequence
 

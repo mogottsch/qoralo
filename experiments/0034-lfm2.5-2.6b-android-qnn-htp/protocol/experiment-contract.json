@@ -50,9 +50,9 @@
     "android_execution": false,
     "compiled_context_created": false,
     "qnn_htp_execution": false,
-    "required_action": "No user action currently required. Package the context pipeline and run the bounded authorized-phone viability gate under phone.lock; stop if the complete loaded route or physical provider proof fails.",
+    "required_action": "Moritz must accept the RSA prompt on R5CW81PR8SY, then Pi must confirm device state and release 0034 to acquire phone.lock for the bounded viability lifecycle.",
     "result_path": "results/support-assessment/result.json",
-    "summary": "No current host conversion blocker: all 263 SM8550/V73 contexts compile with fallback disabled and zero unsupported source nodes. Physical Android HTP loading/execution and the canonical campaign remain pending."
+    "summary": "Host conversion and phone-stage preparation are complete. The immediate external blocker is Android RSA authorization; Pi reports R5CW81PR8SY unauthorized. No 0034 phone contact is allowed until authorization is confirmed."
   },
   "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
   "host_export_milestone": {
@@ -134,7 +134,32 @@
     "revision": "84022ce711b28455e8c4fc364ce68c00cf995875",
     "sha256": "02a8b7e17487d326e46d68ce0ba24211e1b80a14c4cd0597fa73c1cd697f52ed"
   },
-  "phone_boundary": "No ADB or phone.lock use has occurred in 0034 yet. Target-specific AOT is complete; physical phone work now requires Pi priority and the full scoped lock lifecycle.",
+  "phone_boundary": "The 0034 owner has made no ADB contact and has not acquired phone.lock. A 2.0 GB hash-bound stage is ready locally. Do not contact/stage until Moritz accepts RSA and Pi confirms device state.",
+  "phone_preparation": {
+    "adb_contact_by_owner": false,
+    "android_execution": false,
+    "blocker": "Pi reports R5CW81PR8SY unauthorized. Moritz must accept the RSA prompt and Pi must confirm device state before 0034 may acquire phone.lock or contact ADB.",
+    "bounded_request": {
+      "input_tokens": 171,
+      "max_new_tokens": 16,
+      "tier": "short"
+    },
+    "classification": "host_only_hash_bound_phone_stage_not_android_execution",
+    "evidence": "results/phone-preparation/result.json",
+    "phone_staged": false,
+    "registry_eligible": false,
+    "runner": {
+      "sha256": "9b799bb6676a05e427a00f1b4bf5651a8f38e5fbc46cb75ab589658df6dd89d2",
+      "target": "Android API 31 AArch64 PIE"
+    },
+    "stage": {
+      "bytes_excluding_stage_metadata_and_sha_manifest": 2015057362,
+      "files_excluding_sha_manifest": 539,
+      "retained_outside_git": true,
+      "sha256_manifest_sha256": "34b84f37f5456fefd034ed41cf5d934ab377ac3f1e64f3839b6953a01a75310e",
+      "stage_metadata_sha256": "dc34cbad09f9a9068cef4cb2c7a90df83c9bbe49cd47afb048751632602e88e7"
+    }
+  },
   "prohibited_shortcuts": [
     "mapping lfm2 to llama/qwen or ignoring convolutional recurrent state",
     "downloading the already-rejected GGUF as a substitute for support",
@@ -207,7 +232,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "active_fallback_disabled_sm8550_v73_aot_complete_physical_htp_pending",
+  "status": "active_phone_stage_ready_waiting_for_adb_rsa_authorization",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",
