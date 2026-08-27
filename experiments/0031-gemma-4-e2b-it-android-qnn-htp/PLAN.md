@@ -30,7 +30,9 @@ Moritz selected the updated local-toolchain/source-fix route. Completed authoriz
 3. acquired and privately extracted QAIRT 2.49.40 outside Git; and
 4. bound its QIK, SDK manifest, selected converter sources, Gemma4 configuration, Android Genie runtime, QNN HTP host/stub, and v73 skeleton hashes in `results/qairt-2.49.40-capability/`.
 
-QAIRT 2.49.40 does not itself remove the prior failure: the factory and implicated optimizer sources are byte-identical to 2.49.0. The active next step is a bounded transform-only probe with an isolated, schema-faithful ONNX Constant-attribute compatibility fix. Preserve the public checkpoint bytes and bind all generated artifacts. Do not request QNN conversion or SM8550 compilation until that transform gate passes. Workbench compile/link remains a separate unapproved cost/terms checkpoint. Do not access the phone or run a canonical campaign before a compiled route exists.
+QAIRT 2.49.40 did not itself remove the prior failure: the factory and implicated optimizer sources are byte-identical to 2.49.0. The isolated compatibility route now passes the bounded transform-only gate. It binds standards-valid `value_ints` constants, Gemma4 input-axis semantics, exact SWA cache/mask widths, and shape-preserving Reciprocal propagation without changing the checkpoint. AR1 and AR128 CL4096 one-split ONNX+encodings outputs pass static-IO and ONNX checks and are hash-bound in `results/qairt-2.49.40-transform-compat/`.
+
+The active next step is QNN conversion for both variants, followed by one weight-shared serialized context compiled for SM8550/HTP v73 and generation of the matching embedding/PLE LUTs. Workbench compile/link remains a separate unapproved cost/terms checkpoint. Do not access the phone or run a canonical campaign before a compiled route exists.
 
 ## Stop conditions
 

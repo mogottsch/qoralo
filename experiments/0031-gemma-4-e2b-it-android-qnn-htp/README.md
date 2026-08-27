@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active before QNN conversion. The public w4a16 checkpoint is fully hash-bound and QAIRT 2.49.40 is now authorized, acquired, and privately extracted. Its implicated converter sources are byte-identical to 2.49.0, so the prior transform defect remains; work is proceeding through an isolated schema-faithful converter compatibility fix. No transformed graph, QNN conversion, compiled context, Android execution, or HTP result exists yet.**
+**Active after transform and before QNN conversion. The public w4a16 checkpoint is fully hash-bound and QAIRT 2.49.40 is authorized and private. A narrow schema/shape compatibility layer now produces static AR1 and AR128, CL4096, one-split ONNX+encodings variants without mutating the checkpoint. No QNN conversion, compiled context, Android execution, or HTP result exists yet.**
 
 This experiment is a separate HTP arm for the model studied in `0025`. It does not rewrite or relabel the CPU/GPU evidence there.
 
@@ -44,7 +44,14 @@ No conversion or compilation was requested after this exact unsupported-graph fa
 
 Moritz has now authorized the third route. Qualcomm Package Manager access and the `Qualcomm_AI_Runtime_SDK` license are active; QAIRT 2.49.40 was acquired as a 2,410,405,384-byte QIK with SHA-256 `ef4a63b81c9b3a42b8c23921a322754b2fa15f7ef5737c85911d4c527c1fdb0c` and extracted outside Git. The factory and implicated optimizer sources are byte-identical to 2.49.0, while selected Android Genie/QNN/HTP runtime binaries changed. See [`results/qairt-2.49.40-capability/result.json`](results/qairt-2.49.40-capability/result.json).
 
-The exact next gate is a bounded transform-only rerun using an isolated compatibility fix for ONNX Constant attributes that preserves the checkpoint bytes. Only after a hash-bound transform succeeds may QNN conversion and SM8550 compilation begin. Workbench compile/link remains a separate unapproved cost/terms checkpoint. Ad hoc checkpoint graph rewriting, a CPU response, or the unsupported Gemma4 GGUF route is not acceptable.
+The bounded compatibility route now passes. It handles the checkpoint's four standards-valid `Constant(value_ints=...)` nodes, seeds Gemma4-specific axes, materializes exact SWA cache/mask widths, and propagates the shape-preserving `Reciprocal` operation. Under `heavy-ram.lock`, QAIRT emitted two static one-split variants:
+
+- AR1/CL4096 ONNX SHA-256 `9f3077b4a8ccec48781843f6391bb9d77bf4d0c2578a864c108a916b24c9e472`;
+- AR128/CL4096 ONNX SHA-256 `d1171990305f50e89076709dcf024056f66393a90d35a79e774dc5612b0e3a9a`.
+
+Both pass the ONNX checker with static graph inputs/outputs, their transformed external data is hash-bound, and source ONNX/data/encodings remain unchanged. See [`results/qairt-2.49.40-transform-compat/result.json`](results/qairt-2.49.40-transform-compat/result.json).
+
+The exact next gate is QNN conversion of both bound variants followed by weight-shared SM8550/HTP v73 context compilation. Workbench compile/link remains a separate unapproved cost/terms checkpoint. Ad hoc checkpoint graph rewriting, a CPU response, or the unsupported Gemma4 GGUF route is not acceptable.
 
 ## Proof boundary
 

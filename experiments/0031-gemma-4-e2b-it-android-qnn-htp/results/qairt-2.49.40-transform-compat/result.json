@@ -1,0 +1,1028 @@
+{
+  "claim_boundary": "The unchanged public Gemma4 w4a16 graph was materialized into static AR1 and AR128, CL4096, one-split ONNX+encodings variants. This is not QNN conversion, HTP compilation, serialized-context creation, Android execution, or inference evidence.",
+  "classification": "positive_host_transform_only_compatibility_result",
+  "compatibility_patch": {
+    "checkpoint_rewritten": false,
+    "patched_bindings": [
+      "qairt.optimizer.onnx.passes.adaptations.adapt_moe.adapt_moe_components.get_constant_np",
+      "qairt.optimizer.onnx.passes.adaptations.adapt_moe.extract_moe_components.get_constant_np",
+      "qairt.optimizer.onnx.passes.adaptations.extract_lora_alpha.get_constant_np",
+      "qairt.optimizer.onnx.passes.axis_denotation_infer.propagation_passes.get_constant_np",
+      "qairt.optimizer.onnx.passes.cleaning.remove_null_mul.get_constant_np",
+      "qairt.optimizer.onnx.passes.cleaning.remove_null_tile.get_constant_np",
+      "qairt.optimizer.onnx.passes.io_shape_rewriter.io_shape_rewriter.get_constant_np",
+      "qairt.optimizer.onnx.passes.mha2sha.fold_init_gslice.get_constant_np",
+      "qairt.optimizer.onnx.passes.mha2sha.mark_pack_qkv_splittable.get_constant_np",
+      "qairt.optimizer.onnx.passes.mha2sha.reorder_cumsum_gslice.get_constant_np",
+      "qairt.optimizer.onnx.passes.mha2sha.reorder_pad_gslice.get_constant_np",
+      "qairt.optimizer.onnx.passes.mha2sha.reorder_reduce_gslice.get_constant_np",
+      "qairt.optimizer.onnx.passes.mha2sha.reorder_slice_gslice.get_constant_np",
+      "qairt.optimizer.onnx.passes.mha2sha.reorder_tile_gslice.get_constant_np",
+      "qairt.optimizer.onnx.passes.mha2sha.reorder_unsqueeze_gslice.get_constant_np",
+      "qairt.optimizer.onnx.passes.mha2sha.replace_gather_gslice_with_gslice_gslice.get_constant_np",
+      "qairt.optimizer.onnx.passes.mha2sha.replace_gslice.get_constant_np",
+      "qairt.optimizer.onnx.passes.shape_infer.shape_infer.get_constant_np",
+      "qairt.optimizer.onnx.utils.model_matching.get_constant_np",
+      "qairt.optimizer.onnx.utils.utils.get_constant_np",
+      "qairt.gen_ai_api.builders.htp_mixin.change_seq_and_context_length"
+    ],
+    "patches": [
+      {
+        "name": "onnx_constant_value_ints_to_int64_numpy",
+        "scope": "Constant nodes without value and with value_ints only"
+      },
+      {
+        "name": "gemma4_per_layer_inputs_axis_seed",
+        "scope": [
+          "BATCH",
+          "SEQ_LENGTH",
+          "UNKNOWN",
+          "UNKNOWN"
+        ]
+      },
+      {
+        "name": "gemma4_global_rope_axis_seed",
+        "scope": [
+          "BATCH",
+          "UNKNOWN",
+          "SEQ_LENGTH",
+          "UNKNOWN"
+        ]
+      },
+      {
+        "name": "gemma4_h-indexed_kv_axis_seeds",
+        "scope": {
+          "past_key": [
+            "BATCH",
+            "UNKNOWN",
+            "UNKNOWN",
+            "PAST_SEQ_LENGTH"
+          ],
+          "past_value": [
+            "BATCH",
+            "UNKNOWN",
+            "PAST_SEQ_LENGTH",
+            "UNKNOWN"
+          ],
+          "swa_key": [
+            "BATCH",
+            "UNKNOWN",
+            "UNKNOWN",
+            "SLIDING_CONTEXT_LENGTH"
+          ],
+          "swa_value": [
+            "BATCH",
+            "UNKNOWN",
+            "SLIDING_CONTEXT_LENGTH",
+            "UNKNOWN"
+          ]
+        }
+      },
+      {
+        "name": "gemma4_swa_static_shape_materialization",
+        "scope": "12 key + 12 value external cache inputs and one SWA attention mask; later shared-KV layers have no graph-cache inputs"
+      },
+      {
+        "name": "reciprocal_axis_propagation",
+        "scope": "shape-preserving unary identity denotation"
+      }
+    ]
+  },
+  "constant_inventory": {
+    "attribute_forms": {
+      "value": 48,
+      "value_ints": 4
+    },
+    "constant_nodes": 52,
+    "value_ints_values": [
+      [
+        -1
+      ],
+      [
+        1
+      ],
+      [
+        35
+      ],
+      [
+        256
+      ]
+    ]
+  },
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "heavy_ram_lock_held": true,
+  "next_gate": "Run QNN conversion for both bound variants, then compile a weight-shared serialized context for chipset:SM8550/HTP v73 before any phone access.",
+  "qairt_version": "2.49.40.260810",
+  "raw_logs": {
+    "stderr_bytes": 1845,
+    "stderr_sha256": "a2db3705b336b824992bc976b8a63b73c8534a3fd3a572e1bb06d3da974e8a78",
+    "stdout_bytes": 8142,
+    "stdout_sha256": "1f68e6f43aedb93582befad5fa8413b7b99fa67c55b6b2677f1b98f8b6b65857"
+  },
+  "requested": {
+    "htp_compilation": false,
+    "inference": false,
+    "paid_workbench_job": false,
+    "phone_access": false,
+    "qnn_conversion": false
+  },
+  "schema_version": 1,
+  "source_identity": {
+    "encodings": "254c439615e1c0a7b40fb0076c844cc3f9a5ec7ef0b93001077eec2adb228e9c",
+    "external_data": "e156c33d176273555003039959ecb0ae0ddc8a328eceeec1e8f4a6255840e072",
+    "onnx": "51d4e8183a6734a8c7bbd24ebc072768f080e54b011725ae645dfa32498bf0d0"
+  },
+  "source_identity_unchanged": true,
+  "target_configuration": "chipset:SM8550",
+  "transform": {
+    "artifacts": [
+      {
+        "all_graph_inputs_static": true,
+        "all_graph_outputs_static": true,
+        "encodings_bytes": 75377102,
+        "encodings_path": ".local/qairt-2.49.40-transform-compat/fc048f76ab789e216bc07fda880004165846e8d93ce5d5477104acc1a1c43177/ar1_cl4096_1_of_1/ar1_cl4096_1_of_1.encodings",
+        "encodings_sha256": "0dbb1aad69b419594707cc45d31656b95457b5a78c0bce462f1f03db77bfe2a8",
+        "external_data_bytes": 9119006720,
+        "external_data_path": ".local/qairt-2.49.40-transform-compat/fc048f76ab789e216bc07fda880004165846e8d93ce5d5477104acc1a1c43177/ar1_cl4096_1_of_1/ar1_cl4096_1_of_1.data",
+        "external_data_sha256": "b9b73b984c2258099bc77ce6d1e2aa92d12bb67abe456e5ef509136d7494a65d",
+        "external_initializer_count": 724,
+        "external_max_offset_plus_length": 9119006720,
+        "inputs": {
+          "attention_mask": [
+            1,
+            1,
+            1,
+            4096
+          ],
+          "inputs_embeds": [
+            1,
+            1,
+            1536
+          ],
+          "past_key_14_h0_in": [
+            1,
+            1,
+            512,
+            4095
+          ],
+          "past_key_4_h0_in": [
+            1,
+            1,
+            512,
+            4095
+          ],
+          "past_key_9_h0_in": [
+            1,
+            1,
+            512,
+            4095
+          ],
+          "past_value_14_h0_in": [
+            1,
+            1,
+            4095,
+            512
+          ],
+          "past_value_4_h0_in": [
+            1,
+            1,
+            4095,
+            512
+          ],
+          "past_value_9_h0_in": [
+            1,
+            1,
+            4095,
+            512
+          ],
+          "per_layer_inputs": [
+            1,
+            1,
+            35,
+            256
+          ],
+          "position_ids_global_cos": [
+            1,
+            1,
+            1,
+            256
+          ],
+          "position_ids_global_sin": [
+            1,
+            1,
+            1,
+            256
+          ],
+          "swa_attention_mask": [
+            1,
+            1,
+            1,
+            513
+          ],
+          "swa_key_0_h0_in": [
+            1,
+            1,
+            256,
+            512
+          ],
+          "swa_key_10_h0_in": [
+            1,
+            1,
+            256,
+            512
+          ],
+          "swa_key_11_h0_in": [
+            1,
+            1,
+            256,
+            512
+          ],
+          "swa_key_12_h0_in": [
+            1,
+            1,
+            256,
+            512
+          ],
+          "swa_key_13_h0_in": [
+            1,
+            1,
+            256,
+            512
+          ],
+          "swa_key_1_h0_in": [
+            1,
+            1,
+            256,
+            512
+          ],
+          "swa_key_2_h0_in": [
+            1,
+            1,
+            256,
+            512
+          ],
+          "swa_key_3_h0_in": [
+            1,
+            1,
+            256,
+            512
+          ],
+          "swa_key_5_h0_in": [
+            1,
+            1,
+            256,
+            512
+          ],
+          "swa_key_6_h0_in": [
+            1,
+            1,
+            256,
+            512
+          ],
+          "swa_key_7_h0_in": [
+            1,
+            1,
+            256,
+            512
+          ],
+          "swa_key_8_h0_in": [
+            1,
+            1,
+            256,
+            512
+          ],
+          "swa_position_ids_cos": [
+            1,
+            1,
+            1,
+            128
+          ],
+          "swa_position_ids_sin": [
+            1,
+            1,
+            1,
+            128
+          ],
+          "swa_value_0_h0_in": [
+            1,
+            1,
+            512,
+            256
+          ],
+          "swa_value_10_h0_in": [
+            1,
+            1,
+            512,
+            256
+          ],
+          "swa_value_11_h0_in": [
+            1,
+            1,
+            512,
+            256
+          ],
+          "swa_value_12_h0_in": [
+            1,
+            1,
+            512,
+            256
+          ],
+          "swa_value_13_h0_in": [
+            1,
+            1,
+            512,
+            256
+          ],
+          "swa_value_1_h0_in": [
+            1,
+            1,
+            512,
+            256
+          ],
+          "swa_value_2_h0_in": [
+            1,
+            1,
+            512,
+            256
+          ],
+          "swa_value_3_h0_in": [
+            1,
+            1,
+            512,
+            256
+          ],
+          "swa_value_5_h0_in": [
+            1,
+            1,
+            512,
+            256
+          ],
+          "swa_value_6_h0_in": [
+            1,
+            1,
+            512,
+            256
+          ],
+          "swa_value_7_h0_in": [
+            1,
+            1,
+            512,
+            256
+          ],
+          "swa_value_8_h0_in": [
+            1,
+            1,
+            512,
+            256
+          ]
+        },
+        "node_count": 10161,
+        "onnx_bytes": 18012249,
+        "onnx_checker_passed": true,
+        "onnx_path": ".local/qairt-2.49.40-transform-compat/fc048f76ab789e216bc07fda880004165846e8d93ce5d5477104acc1a1c43177/ar1_cl4096_1_of_1/ar1_cl4096_1_of_1.onnx",
+        "onnx_sha256": "9f3077b4a8ccec48781843f6391bb9d77bf4d0c2578a864c108a916b24c9e472",
+        "outputs": {
+          "logits": [
+            1,
+            1,
+            262144
+          ],
+          "past_key_14_h0_out": [
+            1,
+            1,
+            512,
+            1
+          ],
+          "past_key_4_h0_out": [
+            1,
+            1,
+            512,
+            1
+          ],
+          "past_key_9_h0_out": [
+            1,
+            1,
+            512,
+            1
+          ],
+          "past_value_14_h0_out": [
+            1,
+            1,
+            1,
+            512
+          ],
+          "past_value_4_h0_out": [
+            1,
+            1,
+            1,
+            512
+          ],
+          "past_value_9_h0_out": [
+            1,
+            1,
+            1,
+            512
+          ],
+          "swa_key_0_h0_out": [
+            1,
+            1,
+            256,
+            1
+          ],
+          "swa_key_10_h0_out": [
+            1,
+            1,
+            256,
+            1
+          ],
+          "swa_key_11_h0_out": [
+            1,
+            1,
+            256,
+            1
+          ],
+          "swa_key_12_h0_out": [
+            1,
+            1,
+            256,
+            1
+          ],
+          "swa_key_13_h0_out": [
+            1,
+            1,
+            256,
+            1
+          ],
+          "swa_key_1_h0_out": [
+            1,
+            1,
+            256,
+            1
+          ],
+          "swa_key_2_h0_out": [
+            1,
+            1,
+            256,
+            1
+          ],
+          "swa_key_3_h0_out": [
+            1,
+            1,
+            256,
+            1
+          ],
+          "swa_key_5_h0_out": [
+            1,
+            1,
+            256,
+            1
+          ],
+          "swa_key_6_h0_out": [
+            1,
+            1,
+            256,
+            1
+          ],
+          "swa_key_7_h0_out": [
+            1,
+            1,
+            256,
+            1
+          ],
+          "swa_key_8_h0_out": [
+            1,
+            1,
+            256,
+            1
+          ],
+          "swa_value_0_h0_out": [
+            1,
+            1,
+            1,
+            256
+          ],
+          "swa_value_10_h0_out": [
+            1,
+            1,
+            1,
+            256
+          ],
+          "swa_value_11_h0_out": [
+            1,
+            1,
+            1,
+            256
+          ],
+          "swa_value_12_h0_out": [
+            1,
+            1,
+            1,
+            256
+          ],
+          "swa_value_13_h0_out": [
+            1,
+            1,
+            1,
+            256
+          ],
+          "swa_value_1_h0_out": [
+            1,
+            1,
+            1,
+            256
+          ],
+          "swa_value_2_h0_out": [
+            1,
+            1,
+            1,
+            256
+          ],
+          "swa_value_3_h0_out": [
+            1,
+            1,
+            1,
+            256
+          ],
+          "swa_value_5_h0_out": [
+            1,
+            1,
+            1,
+            256
+          ],
+          "swa_value_6_h0_out": [
+            1,
+            1,
+            1,
+            256
+          ],
+          "swa_value_7_h0_out": [
+            1,
+            1,
+            1,
+            256
+          ],
+          "swa_value_8_h0_out": [
+            1,
+            1,
+            1,
+            256
+          ]
+        },
+        "split_index": 0,
+        "variant_index": 0
+      },
+      {
+        "all_graph_inputs_static": true,
+        "all_graph_outputs_static": true,
+        "encodings_bytes": 75377189,
+        "encodings_path": ".local/qairt-2.49.40-transform-compat/fc048f76ab789e216bc07fda880004165846e8d93ce5d5477104acc1a1c43177/ar128_cl4096_1_of_1/ar128_cl4096_1_of_1.encodings",
+        "encodings_sha256": "7e26400519d338171bc9d3e9c87182ef0853ce6dfc0c543ad85ea2d815dea251",
+        "external_data_bytes": 9119006720,
+        "external_data_path": ".local/qairt-2.49.40-transform-compat/fc048f76ab789e216bc07fda880004165846e8d93ce5d5477104acc1a1c43177/ar128_cl4096_1_of_1/ar128_cl4096_1_of_1.data",
+        "external_data_sha256": "b9b73b984c2258099bc77ce6d1e2aa92d12bb67abe456e5ef509136d7494a65d",
+        "external_initializer_count": 724,
+        "external_max_offset_plus_length": 9119006720,
+        "inputs": {
+          "attention_mask": [
+            1,
+            1,
+            128,
+            4096
+          ],
+          "inputs_embeds": [
+            1,
+            128,
+            1536
+          ],
+          "past_key_14_h0_in": [
+            1,
+            1,
+            512,
+            3968
+          ],
+          "past_key_4_h0_in": [
+            1,
+            1,
+            512,
+            3968
+          ],
+          "past_key_9_h0_in": [
+            1,
+            1,
+            512,
+            3968
+          ],
+          "past_value_14_h0_in": [
+            1,
+            1,
+            3968,
+            512
+          ],
+          "past_value_4_h0_in": [
+            1,
+            1,
+            3968,
+            512
+          ],
+          "past_value_9_h0_in": [
+            1,
+            1,
+            3968,
+            512
+          ],
+          "per_layer_inputs": [
+            1,
+            128,
+            35,
+            256
+          ],
+          "position_ids_global_cos": [
+            1,
+            1,
+            128,
+            256
+          ],
+          "position_ids_global_sin": [
+            1,
+            1,
+            128,
+            256
+          ],
+          "swa_attention_mask": [
+            1,
+            1,
+            128,
+            640
+          ],
+          "swa_key_0_h0_in": [
+            1,
+            1,
+            256,
+            512
+          ],
+          "swa_key_10_h0_in": [
+            1,
+            1,
+            256,
+            512
+          ],
+          "swa_key_11_h0_in": [
+            1,
+            1,
+            256,
+            512
+          ],
+          "swa_key_12_h0_in": [
+            1,
+            1,
+            256,
+            512
+          ],
+          "swa_key_13_h0_in": [
+            1,
+            1,
+            256,
+            512
+          ],
+          "swa_key_1_h0_in": [
+            1,
+            1,
+            256,
+            512
+          ],
+          "swa_key_2_h0_in": [
+            1,
+            1,
+            256,
+            512
+          ],
+          "swa_key_3_h0_in": [
+            1,
+            1,
+            256,
+            512
+          ],
+          "swa_key_5_h0_in": [
+            1,
+            1,
+            256,
+            512
+          ],
+          "swa_key_6_h0_in": [
+            1,
+            1,
+            256,
+            512
+          ],
+          "swa_key_7_h0_in": [
+            1,
+            1,
+            256,
+            512
+          ],
+          "swa_key_8_h0_in": [
+            1,
+            1,
+            256,
+            512
+          ],
+          "swa_position_ids_cos": [
+            1,
+            1,
+            128,
+            128
+          ],
+          "swa_position_ids_sin": [
+            1,
+            1,
+            128,
+            128
+          ],
+          "swa_value_0_h0_in": [
+            1,
+            1,
+            512,
+            256
+          ],
+          "swa_value_10_h0_in": [
+            1,
+            1,
+            512,
+            256
+          ],
+          "swa_value_11_h0_in": [
+            1,
+            1,
+            512,
+            256
+          ],
+          "swa_value_12_h0_in": [
+            1,
+            1,
+            512,
+            256
+          ],
+          "swa_value_13_h0_in": [
+            1,
+            1,
+            512,
+            256
+          ],
+          "swa_value_1_h0_in": [
+            1,
+            1,
+            512,
+            256
+          ],
+          "swa_value_2_h0_in": [
+            1,
+            1,
+            512,
+            256
+          ],
+          "swa_value_3_h0_in": [
+            1,
+            1,
+            512,
+            256
+          ],
+          "swa_value_5_h0_in": [
+            1,
+            1,
+            512,
+            256
+          ],
+          "swa_value_6_h0_in": [
+            1,
+            1,
+            512,
+            256
+          ],
+          "swa_value_7_h0_in": [
+            1,
+            1,
+            512,
+            256
+          ],
+          "swa_value_8_h0_in": [
+            1,
+            1,
+            512,
+            256
+          ]
+        },
+        "node_count": 10176,
+        "onnx_bytes": 18055214,
+        "onnx_checker_passed": true,
+        "onnx_path": ".local/qairt-2.49.40-transform-compat/fc048f76ab789e216bc07fda880004165846e8d93ce5d5477104acc1a1c43177/ar128_cl4096_1_of_1/ar128_cl4096_1_of_1.onnx",
+        "onnx_sha256": "d1171990305f50e89076709dcf024056f66393a90d35a79e774dc5612b0e3a9a",
+        "outputs": {
+          "logits": [
+            1,
+            128,
+            262144
+          ],
+          "past_key_14_h0_out": [
+            1,
+            1,
+            512,
+            128
+          ],
+          "past_key_4_h0_out": [
+            1,
+            1,
+            512,
+            128
+          ],
+          "past_key_9_h0_out": [
+            1,
+            1,
+            512,
+            128
+          ],
+          "past_value_14_h0_out": [
+            1,
+            1,
+            128,
+            512
+          ],
+          "past_value_4_h0_out": [
+            1,
+            1,
+            128,
+            512
+          ],
+          "past_value_9_h0_out": [
+            1,
+            1,
+            128,
+            512
+          ],
+          "swa_key_0_h0_out": [
+            1,
+            1,
+            256,
+            128
+          ],
+          "swa_key_10_h0_out": [
+            1,
+            1,
+            256,
+            128
+          ],
+          "swa_key_11_h0_out": [
+            1,
+            1,
+            256,
+            128
+          ],
+          "swa_key_12_h0_out": [
+            1,
+            1,
+            256,
+            128
+          ],
+          "swa_key_13_h0_out": [
+            1,
+            1,
+            256,
+            128
+          ],
+          "swa_key_1_h0_out": [
+            1,
+            1,
+            256,
+            128
+          ],
+          "swa_key_2_h0_out": [
+            1,
+            1,
+            256,
+            128
+          ],
+          "swa_key_3_h0_out": [
+            1,
+            1,
+            256,
+            128
+          ],
+          "swa_key_5_h0_out": [
+            1,
+            1,
+            256,
+            128
+          ],
+          "swa_key_6_h0_out": [
+            1,
+            1,
+            256,
+            128
+          ],
+          "swa_key_7_h0_out": [
+            1,
+            1,
+            256,
+            128
+          ],
+          "swa_key_8_h0_out": [
+            1,
+            1,
+            256,
+            128
+          ],
+          "swa_value_0_h0_out": [
+            1,
+            1,
+            128,
+            256
+          ],
+          "swa_value_10_h0_out": [
+            1,
+            1,
+            128,
+            256
+          ],
+          "swa_value_11_h0_out": [
+            1,
+            1,
+            128,
+            256
+          ],
+          "swa_value_12_h0_out": [
+            1,
+            1,
+            128,
+            256
+          ],
+          "swa_value_13_h0_out": [
+            1,
+            1,
+            128,
+            256
+          ],
+          "swa_value_1_h0_out": [
+            1,
+            1,
+            128,
+            256
+          ],
+          "swa_value_2_h0_out": [
+            1,
+            1,
+            128,
+            256
+          ],
+          "swa_value_3_h0_out": [
+            1,
+            1,
+            128,
+            256
+          ],
+          "swa_value_5_h0_out": [
+            1,
+            1,
+            128,
+            256
+          ],
+          "swa_value_6_h0_out": [
+            1,
+            1,
+            128,
+            256
+          ],
+          "swa_value_7_h0_out": [
+            1,
+            1,
+            128,
+            256
+          ],
+          "swa_value_8_h0_out": [
+            1,
+            1,
+            128,
+            256
+          ]
+        },
+        "split_index": 0,
+        "variant_index": 1
+      }
+    ],
+    "auto_regression_number": [
+      1,
+      128
+    ],
+    "context_length": [
+      4096
+    ],
+    "num_splits": 1,
+    "split_embedding": false,
+    "split_lm_head": false,
+    "variant_count": 2
+  },
+  "warnings": {
+    "axis_denotation_matmul_warning_count": 2,
+    "axis_denotation_shape_warning_count": 2,
+    "unknown_architecture_generic_builder": true,
+    "warning_boundary": "Warnings are retained. They are not treated as transform failure because every exported graph input/output is independently verified static and ONNX checker passes; conversion has not yet been attempted."
+  }
+}

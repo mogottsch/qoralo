@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
-  "status": "active_authorized_qairt_2_49_40_converter_compatibility_fix_pre_transform",
+  "status": "active_transform_passed_pre_qnn_conversion",
   "question": "Can Gemma 4 E2B IT run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Gemma 4 E2B IT text generation only",
@@ -136,8 +136,32 @@
     "compiled_context_created": false,
     "historical_failure": "Installed QAIRT 2.49 has no Gemma4 factory dispatch. Generic fallback AR/CL transformation of the unchanged public graph fails in ConstantPropagation with KeyError('value') before conversion or compilation.",
     "selected_action": "Use authorized QAIRT 2.49.40 runtime artifacts and an isolated schema-faithful converter compatibility fix without mutating the public checkpoint.",
-    "next_gate": "A heavy-ram.lock-protected transform-only AR1+AR128 CL4096 probe must succeed and bind outputs before QNN conversion or SM8550 compilation is requested.",
+    "transform_gate": "passed",
+    "next_gate": "QNN-convert the two bound static variants, then compile one weight-shared serialized context for SM8550/HTP v73 before phone access.",
     "workbench_checkpoint": "Any paid Workbench compile/link job requires a separate explicit cost/terms decision."
+  },
+  "transform_result": {
+    "result_path": "results/qairt-2.49.40-transform-compat/result.json",
+    "qairt_version": "2.49.40.260810",
+    "heavy_ram_lock_held": true,
+    "checkpoint_rewritten": false,
+    "source_identity_unchanged": true,
+    "auto_regression_numbers": [1, 128],
+    "context_length": 4096,
+    "num_splits": 1,
+    "all_graph_inputs_static": true,
+    "all_graph_outputs_static": true,
+    "onnx_checker_passed": true,
+    "qnn_conversion_requested": false,
+    "htp_compilation_requested": false,
+    "android_execution": false,
+    "artifacts": {
+      "ar1_onnx_sha256": "9f3077b4a8ccec48781843f6391bb9d77bf4d0c2578a864c108a916b24c9e472",
+      "ar1_encodings_sha256": "0dbb1aad69b419594707cc45d31656b95457b5a78c0bce462f1f03db77bfe2a8",
+      "ar128_onnx_sha256": "d1171990305f50e89076709dcf024056f66393a90d35a79e774dc5612b0e3a9a",
+      "ar128_encodings_sha256": "7e26400519d338171bc9d3e9c87182ef0853ce6dfc0c543ad85ea2d815dea251",
+      "shared_transformed_data_sha256": "b9b73b984c2258099bc77ce6d1e2aa92d12bb67abe456e5ef509136d7494a65d"
+    }
   },
   "campaign_gate": {
     "phone_priority": "follows coordinated GPU paths; no ADB until Pi explicitly grants priority",

@@ -2,12 +2,16 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sys
 import unittest
 from pathlib import Path
 
 
 EXP = Path(__file__).resolve().parents[1]
 REPO = EXP.parents[1]
+sys.path.insert(0, str(EXP / "tools"))
+
+from qairt_constant_compat import gemma4_swa_lengths, value_ints_values  # noqa: E402
 
 
 def sha(path: Path) -> str:
@@ -102,13 +106,11 @@ class ContractTest(unittest.TestCase):
 
     def test_historical_transform_blocker_and_active_no_execution_claim(self) -> None:
         blocker = json.loads((EXP / "results/transform-blocker/result.json").read_text())
-        self.assertEqual(
-            "active_authorized_qairt_2_49_40_converter_compatibility_fix_pre_transform",
-            self.contract["status"],
-        )
+        self.assertEqual("active_transform_passed_pre_qnn_conversion", self.contract["status"])
         active = self.contract["conversion_blocker"]
         self.assertIn("historical_failure", active)
-        self.assertIn("transform-only", active["next_gate"])
+        self.assertEqual("passed", active["transform_gate"])
+        self.assertIn("QNN-convert", active["next_gate"])
         self.assertFalse(blocker["android_execution"])
         self.assertFalse(blocker["qnn_htp_execution"])
         self.assertFalse(blocker["compiled_context_created"])
@@ -128,6 +130,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/checkpoint-analysis",
             EXP / "results/transform-blocker",
             EXP / "results/qairt-2.49.40-capability",
+            EXP / "results/qairt-2.49.40-transform-compat",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():
@@ -137,6 +140,38 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(retained, set(entries))
             for name, digest in entries.items():
                 self.assertEqual(digest, sha(directory / name))
+
+    def test_constant_value_ints_compatibility_is_narrow_and_schema_faithful(self) -> None:
+        convert = lambda attr: attr
+        self.assertEqual(
+            (-1, 1, 35, 256),
+            value_ints_values({"value_ints": [-1, 1, 35, 256]}, convert),
+        )
+        self.assertIsNone(value_ints_values({"value": object(), "value_ints": [1]}, convert))
+        self.assertIsNone(value_ints_values({"value_float": 1.0}, convert))
+
+    def test_gemma4_sliding_window_and_mask_width(self) -> None:
+        self.assertEqual((512, 513), gemma4_swa_lengths(1, 4096))
+        self.assertEqual((512, 640), gemma4_swa_lengths(128, 4096))
+        self.assertEqual((3, 4), gemma4_swa_lengths(1, 4))
+        with self.assertRaises(ValueError):
+            gemma4_swa_lengths(4, 4)
+
+    def test_positive_transform_is_static_but_not_qnn_or_android(self) -> None:
+        result = json.loads(
+            (EXP / "results/qairt-2.49.40-transform-compat/result.json").read_text()
+        )
+        self.assertEqual("positive_host_transform_only_compatibility_result", result["classification"])
+        self.assertTrue(result["source_identity_unchanged"])
+        self.assertEqual(2, result["transform"]["variant_count"])
+        for artifact in result["transform"]["artifacts"]:
+            self.assertTrue(artifact["onnx_checker_passed"])
+            self.assertTrue(artifact["all_graph_inputs_static"])
+            self.assertTrue(artifact["all_graph_outputs_static"])
+        self.assertFalse(result["requested"]["qnn_conversion"])
+        self.assertFalse(result["requested"]["htp_compilation"])
+        self.assertFalse(result["requested"]["phone_access"])
+        self.assertFalse(result["requested"]["inference"])
 
     def test_phone_and_campaign_are_not_claimed(self) -> None:
         gate = self.contract["campaign_gate"]
