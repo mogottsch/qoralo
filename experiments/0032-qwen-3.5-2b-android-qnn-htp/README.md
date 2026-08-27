@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active. Physical QNN/HTP-v73 provider initialization and all four exact-context loads are proven on the authorized SM8550 phone. Attempt 01 failed safely before model execution; the missing non-compute `llama::fallback.out` sharding-boundary registration is now linked and hash-bound in a revised host-built runner. A bounded retry awaits explicit phone priority.**
+**Active. The exact four-subgraph Qwen3.5-2B route has physically executed through QNN/HTP-v73 on the authorized SM8550 phone. The bounded retry completed 696/696 graph calls successfully and generated one token, but token 0 (`!`) mismatches the pre-PTQ host reference, so output fidelity and campaign readiness remain under host-only diagnosis.**
 
 This is a separate HTP feasibility arm. It does not change or relabel `0027` CPU evidence.
 
@@ -33,11 +33,16 @@ Downloading the 1.2 GB GGUF cannot change this architecture-support result, so t
 
 The pinned official tokenizer/template was reconstructed independently. With thinking disabled, canonical short/medium/long prompts contain 174/597/1926 tokens and all fit a 4096-token context with the 2048-token ceiling. Rendered prompt and token-ID hashes are in [`protocol/experiment-contract.json`](protocol/experiment-contract.json) and [`results/support-assessment/result.json`](results/support-assessment/result.json).
 
+## Physical execution milestone
+
+[`results/android-qnn-physical-viability-20260827-attempt-02/`](results/android-qnn-physical-viability-20260827-attempt-02/) retains the bounded physical execution evidence. The exact route ran all four graphs for each of 174 prompt tokens, with 696 QNN graph starts and 696 status-`0x0` completions. Detailed ETDump data records HTP-v73 RPC, accelerator-cycle, and four-thread HVX observations. The single request took 326.170 seconds; this is viability timing only, not a loaded-route benchmark distribution.
+
+The authorized one-token output was ID 0 (`!`), whereas pre-PTQ host calibration over the same prompt ended at ID 21365 (`Given`). Because a one-token punctuation output cannot support the narrow sanity check, `looks_sensible` is null. No campaign or retry is authorized.
+
 ## Current next gate
 
-1. Retain the revised runner evidence in [`results/android-runner-boundary-fix-host-build/`](results/android-runner-boundary-fix-host-build/); the exact `llama::fallback.out` registration is whole-archive linked and the phone preflight pins the new runner hash.
-2. Await a new explicit Pi phone-priority transfer before reacquiring `phone.lock` or staging anything.
-3. Run at most one authorized bounded retry and require actual graph execution, QNN RPC/accelerator evidence, one generated-token sanity check, and verified cleanup.
-4. Only after viability, extend the runner to reuse the loaded route across reset-isolated requests and run the fixed 1+5+5+5 campaign.
+1. Diagnose host-side quantized output, explicit-state transport, shard boundaries, and output handling to locate the token mismatch.
+2. Do not reacquire `phone.lock`, invoke ADB, or stage anything without a new explicit Pi handoff.
+3. Only after credible output fidelity is established may the loaded-route multi-request runner and fixed 1+5+5+5 campaign be considered.
 
 GenieX llama.cpp NPU metrics, the shipped 4B HTP example, direct-Hexagon output without QNN, and CPU-only text output are not substitutes for physical QNN/HTP provider proof.

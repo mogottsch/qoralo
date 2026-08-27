@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -11,6 +12,20 @@ REPO = EXP.parents[1]
 
 def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def sha_zstd(path: Path) -> tuple[str, int]:
+    digest = hashlib.sha256()
+    total = 0
+    process = subprocess.Popen(["zstd", "-q", "-dc", path], stdout=subprocess.PIPE)
+    assert process.stdout is not None
+    for block in iter(lambda: process.stdout.read(1024 * 1024), b""):
+        digest.update(block)
+        total += len(block)
+    process.stdout.close()
+    if process.wait() != 0:
+        raise RuntimeError(f"zstd decompression failed: {path}")
+    return digest.hexdigest(), total
 
 
 class ContractTest(unittest.TestCase):
@@ -35,6 +50,9 @@ class ContractTest(unittest.TestCase):
         )
         cls.boundary_fix = json.loads(
             (EXP / "results/android-runner-boundary-fix-host-build/result.json").read_text()
+        )
+        cls.physical_execution = json.loads(
+            (EXP / "results/android-qnn-physical-viability-20260827-attempt-02/result.json").read_text()
         )
 
     def test_canonical_protocol_and_workloads(self) -> None:
@@ -99,7 +117,7 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(prompt["rendered_sha256"], sha(EXP / f"protocol/rendered/{tier}.txt"))
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
-    def test_active_route_does_not_claim_physical_execution(self) -> None:
+    def test_active_route_scopes_physical_execution_without_campaign_claim(self) -> None:
         self.assertTrue(self.contract["status"].startswith("active_"))
         prior = self.result["route_assessment"]
         self.assertFalse(prior["android_execution"])
@@ -111,9 +129,10 @@ class ContractTest(unittest.TestCase):
         self.assertEqual(4102, route["exact_model_delegated_tensor_compute_nodes"])
         self.assertEqual(0, route["exact_model_non_delegated_tensor_compute_nodes"])
         self.assertTrue(route["android_runner_execution"])
-        self.assertFalse(route["android_model_execution"])
+        self.assertTrue(route["android_model_execution"])
         self.assertTrue(route["physical_qnn_htp_context_load"])
-        self.assertFalse(route["physical_qnn_htp_execution"])
+        self.assertTrue(route["physical_qnn_htp_execution"])
+        self.assertFalse(route["campaign_ready"])
 
     def test_structural_probe_is_bounded_and_fallback_free(self) -> None:
         probe = self.structural
@@ -147,7 +166,6 @@ class ContractTest(unittest.TestCase):
         self.assertEqual(4096, result["context_tokens"])
         self.assertEqual(174, result["calibration"]["tokens"])
         self.assertTrue(result["calibration"]["last_logits_finite"])
-        self.assertFalse(self.contract["executorch_qnn_route"]["android_model_execution"])
         self.assertIn("not run on Android", " ".join(result["claim_limits"]))
 
     def test_android_runner_is_host_only_and_matches_exact_pte_abi(self) -> None:
@@ -165,7 +183,6 @@ class ContractTest(unittest.TestCase):
         limits = " ".join(runner["claim_limits"])
         self.assertIn("host only", limits)
         self.assertIn("staged", limits)
-        self.assertFalse(self.contract["executorch_qnn_route"]["android_model_execution"])
 
     def test_first_physical_attempt_preserves_provider_load_and_failure_boundary(self) -> None:
         attempt = self.physical_attempt
@@ -228,6 +245,54 @@ class ContractTest(unittest.TestCase):
         phone_script = (EXP / "tools/run_phone_viability.sh").read_text()
         self.assertIn(fix["revised_runner"]["sha256"], phone_script)
 
+    def test_second_attempt_proves_bounded_execution_but_not_output_fidelity(self) -> None:
+        attempt = self.physical_execution
+        self.assertEqual(
+            "bounded_physical_exact_route_qnn_htp_model_execution",
+            attempt["evidence_class"],
+        )
+        self.assertTrue(attempt["request"]["model_graph_executed"])
+        self.assertEqual(696, attempt["request"]["qnn_graph_execute_started"])
+        self.assertEqual(696, attempt["request"]["qnn_graph_execute_status_0x0"])
+        self.assertEqual([0], attempt["request"]["generated_token_ids"])
+        self.assertEqual("!", attempt["request"]["decoded_output"])
+        self.assertFalse(attempt["request"]["host_reference"]["physical_token_matches"])
+        self.assertEqual(
+            {"looks_sensible": None, "issue_notes": None},
+            attempt["request"]["output_sanity"],
+        )
+        self.assertEqual("single_request_viability_only", attempt["timings"]["campaign_eligibility"])
+        self.assertFalse(attempt["timings"]["loaded_route_reused_across_requests"])
+        self.assertIsNone(attempt["timings"]["decode_tokens_per_second"])
+        self.assertEqual("verified_absent", attempt["cleanup"]["remote_root"])
+        self.assertEqual("verified_absent", attempt["cleanup"]["runner_process"])
+        self.assertEqual(
+            attempt["request"]["decoded_output_sha256"],
+            sha(EXP / "results/android-qnn-physical-viability-20260827-attempt-02/output.txt"),
+        )
+
+        profile = json.loads(
+            (EXP / "results/android-qnn-physical-viability-20260827-attempt-02/profile-summary.json").read_text()
+        )
+        self.assertEqual(696, profile["expected_graph_executions"])
+        for event in profile["events"].values():
+            self.assertEqual(696, event["observations"])
+        self.assertEqual(
+            4.0, profile["events"]["Number of HVX threads used (count)"]["mean"]
+        )
+
+    def test_second_attempt_compressed_raw_evidence_recovers_exact_hashes(self) -> None:
+        directory = EXP / "results/android-qnn-physical-viability-20260827-attempt-02"
+        manifest = json.loads((directory / "compression-manifest.json").read_text())
+        self.assertTrue(manifest["lossless"])
+        for entry in manifest["files"]:
+            compressed = directory / entry["compressed_name"]
+            self.assertEqual(entry["compressed_sha256"], sha(compressed))
+            recovered_sha, recovered_bytes = sha_zstd(compressed)
+            self.assertEqual(entry["raw_sha256"], recovered_sha)
+            self.assertEqual(entry["raw_bytes"], recovered_bytes)
+            self.assertTrue(entry["decompression_verified"])
+
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
             EXP / "protocol",
@@ -237,6 +302,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/android-explicit-state-runner-host-build",
             EXP / "results/android-qnn-physical-viability-20260827-attempt-01",
             EXP / "results/android-runner-boundary-fix-host-build",
+            EXP / "results/android-qnn-physical-viability-20260827-attempt-02",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

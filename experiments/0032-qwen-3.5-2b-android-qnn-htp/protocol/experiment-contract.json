@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
-  "status": "active_physical_qnn_htp_context_load_proven_boundary_kernel_host_fixed_retry_pending",
+  "status": "active_physical_exact_qnn_htp_execution_proven_one_token_mismatch_host_diagnosis_pending",
   "question": "Can Qwen3.5-2B run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Qwen3.5-2B post-trained text generation only",
@@ -116,15 +116,20 @@
     "exact_pte_forward_inputs": 51,
     "exact_pte_forward_outputs": 49,
     "android_runner_execution": true,
-    "android_model_execution": false,
+    "android_model_execution": true,
     "physical_qnn_htp_context_load": true,
-    "physical_qnn_htp_execution": false,
+    "physical_qnn_htp_execution": true,
     "physical_attempt_result_path": "results/android-qnn-physical-viability-20260827-attempt-01/result.json",
+    "physical_execution_result_path": "results/android-qnn-physical-viability-20260827-attempt-02/result.json",
     "physical_attempt_blocker": "Attempt 01 stopped before model execution because three non-compute llama::fallback.out sharding-boundary kernels were not registered in the Android runner.",
     "boundary_kernel_host_fix_result_path": "results/android-runner-boundary-fix-host-build/result.json",
     "revised_runner_sha256": "0b5bef7984738d60d2f4b2f4dbae1c13f1f5914b75b8cc00e5ae3e2ed0f81fc5",
     "boundary_kernel_registration_host_verified": true,
-    "next_gate": "Await a new explicit Pi phone-priority handoff for one bounded retry with the hash-bound revised runner."
+    "physical_execution_qnn_graph_calls": 696,
+    "physical_execution_generated_token_ids": [0],
+    "physical_execution_output_sanity": {"looks_sensible": null, "issue_notes": null},
+    "campaign_ready": false,
+    "next_gate": "Diagnose the physical token-0 versus pre-PTQ host-reference mismatch entirely on the host; no retry or campaign is authorized."
   },
   "required_provider_proof_if_unblocked": {
     "compiled_context_identity": "Hash every deployed serialized context and bind SM8550/v73 compiler provenance.",
@@ -132,7 +137,7 @@
     "no_silent_cpu_only": "A text response or GenieX NPU metric without QNN context/provider proof is not this route.",
     "loaded_route_isolation": "One loaded route plus proven full reset or fresh Session/Dialog per logical request."
   },
-  "phone_boundary": "One explicitly authorized bounded attempt staged the exact route, loaded all four QNN HTP contexts, then failed before model execution; cleanup was verified. No retry or campaign is authorized without a new explicit Pi priority handoff.",
+  "phone_boundary": "Two explicitly authorized bounded attempts occurred. Attempt 02 physically executed the exact route and generated one token; cleanup was verified after both. No additional phone run or campaign is authorized without a new explicit Pi priority handoff.",
   "prohibited_shortcuts": [
     "relabelling GenieX llama.cpp NPU results as QNN/HTP",
     "applying the shipped 4B example or hardcoded width to 2B",
