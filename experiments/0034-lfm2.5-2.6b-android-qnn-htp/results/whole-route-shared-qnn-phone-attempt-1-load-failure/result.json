@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "run_id": "viability-20260827T132518Z-3415428",
+  "classification": "physical_single_shared_qnn_context_create_failure_before_graph_retrieval",
+  "device": {"serial":"R5CW81PR8SY","model":"SM-S918B","soc":"SM8550","abi":"arm64-v8a","android_release":"16","api":36},
+  "stage": {"payload_files_verified_local":12,"payload_files_verified_remote":12,"elf_preflight":"passed","stage_metadata_sha256":"9fafbe10f2d69ed4f6690d4e3b010c565f0c222778144d1415d4fa76e79715d7","manifest_sha256":"b3ee38ecc999bb74d989058f2342aeee3ab535eee364f14776b94cba9e36400f","runner_sha256":"92689331d11ecf48fb226e82c0f77133e2b72c505b976f2e801c6fffda506f83"},
+  "direct_qnn": {
+    "backend_build_id":"v2.49.0.260730134355",
+    "contexts_required":1,
+    "graphs_in_context":37,
+    "context_binary_bytes":1601482752,
+    "context_binary_sha256":"7942ad31b0bae6d4368ec4a3c86c84ce022c2e6c62bafebeb513c7f38228d8a3",
+    "contexts_loaded_successfully":0,
+    "failure_api":"QnnContext_createFromBinary",
+    "backend_error":"Could not create context from binary",
+    "graphs_retrieved":0,
+    "graphs_executed":0,
+    "output_created":false,
+    "exact_blocker":"The physical SM8550 QNN backend cannot create the single shared-resource context containing the complete 37-graph route. Failure occurs before graph retrieval."
+  },
+  "memory": {"sampled_vmhwm_peak_kib":1613220,"sampled_total_pss_peak_kib":1599271,"interpretation":"The Android process materialized approximately the context-blob size. This does not prove successful DSP allocation or explain the backend's generic failure."},
+  "cleanup": {"scoped_remote_root_verified_absent":true,"process_after":false,"phone_lock_held_for_full_lifecycle":true,"phone_lock_released":true},
+  "required_action":"No remaining prepared all-loaded direct-QNN route fits/loads on this physical backend. Any continuation requires a new materially different memory/residency architecture or an explicit protocol decision permitting context streaming; neither is currently authorized.",
+  "claim_boundary":"Physical compatibility failure only. No graph retrieval/model/HTP execution, output, performance, campaign, or registry result exists."
+}

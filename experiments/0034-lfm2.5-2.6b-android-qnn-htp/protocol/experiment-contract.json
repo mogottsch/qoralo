@@ -160,9 +160,9 @@
     "android_execution": false,
     "compiled_context_created": false,
     "qnn_htp_execution": false,
-    "required_action": "After durable commit/review, explicitly authorize at most one physical shared-context compatibility gate. No campaign.",
+    "required_action": "Terminal for current local route. Resume only with a materially different Qualcomm-supported context format/runtime or maintainer guidance; context streaming requires an explicit protocol decision.",
     "result_path": "results/support-assessment/result.json",
-    "summary": "The 37 ordinary-context route hits physical residency at context 20. A one-context/37-graph shared-resource replacement is host-prepared, but x86 HTP retrieval rejects shared weights and physical Android support is unproven."
+    "summary": "Physical SM8550 rejected the complete 1.60 GB/37-graph shared-resource context in QnnContext_createFromBinary before graph retrieval. Many-context and single-context all-loaded designs both fail."
   },
   "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
   "host_export_milestone": {
@@ -274,7 +274,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "No phone access occurred for the one-context continuation. Its 12-file stage is host-prepared only pending explicit Pi priority.",
+  "phone_boundary": "Single-context attempt cleaned absent and released phone.lock. No retry or campaign is authorized.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -373,7 +373,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "active_host_prepared_single_shared_context_physical_support_unproven",
+  "status": "blocked_terminal_physical_single_shared_context_create_failure",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",
@@ -427,9 +427,26 @@
     "host_retrieval": false,
     "host_retrieval_error": "Shared weights buffer is not supported on this platform",
     "per_request_or_token_reload": false,
-    "physical_android_support": "unproven",
+    "physical_android_support": "rejected_by_context_create",
     "physical_execution": false,
     "shared_weights": true,
     "source_part_count": 263
+  },
+  "whole_route_shared_context_phone_attempt_1": {
+    "cleanup_absent": true,
+    "context_binary_bytes": 1601482752,
+    "contexts_loaded": 0,
+    "contexts_required": 1,
+    "evidence": "results/whole-route-shared-qnn-phone-attempt-1-load-failure/result.json",
+    "failure_api": "QnnContext_createFromBinary",
+    "graphs_executed": 0,
+    "graphs_in_context": 37,
+    "graphs_retrieved": 0,
+    "output_created": false,
+    "phone_lock_released": true,
+    "process_vmhwm_interpretation": "blob materialization only, not successful DSP allocation",
+    "sampled_process_vmhwm_kib": 1613220,
+    "stage_files_verified_local": 12,
+    "stage_files_verified_remote": 12
   }
 }

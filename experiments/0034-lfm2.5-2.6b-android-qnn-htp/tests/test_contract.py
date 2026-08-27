@@ -79,7 +79,7 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
     def test_active_export_does_not_claim_qnn_android_or_completion(self) -> None:
-        self.assertIn("active_host_prepared_single_shared_context", self.contract["status"])
+        self.assertIn("blocked_terminal_physical_single_shared_context", self.contract["status"])
         route = self.result["route_assessment"]
         self.assertFalse(route["compiled_sm8550_context_available"])
         self.assertFalse(route["android_execution"])
@@ -88,7 +88,7 @@ class ContractTest(unittest.TestCase):
         self.assertIn("not_android_qnn_or_htp", milestone["classification"])
         self.assertEqual("passed", milestone["rewritten_onnx"]["onnx_checker"])
         self.assertEqual(16, milestone["bounded_output"]["max_new_tokens"])
-        self.assertIn("No phone access occurred for the one-context continuation", self.contract["phone_boundary"])
+        self.assertIn("No retry or campaign", self.contract["phone_boundary"])
 
     def test_qnn_aot_is_complete_but_not_physical_execution(self) -> None:
         milestone = self.contract["qnn_aot_milestone"]
@@ -202,11 +202,21 @@ class ContractTest(unittest.TestCase):
         self.assertTrue(route["all_graphs_present_once_in_exact_order"])
         self.assertFalse(route["per_request_or_token_reload"])
         self.assertFalse(route["host_retrieval"])
-        self.assertEqual("unproven", route["physical_android_support"])
+        self.assertEqual("rejected_by_context_create", route["physical_android_support"])
         result = json.loads((EXP / route["evidence"]).read_text())
         self.assertEqual(37, len(result["execution_order"]))
         self.assertIn("not supported on this platform", result["host_retrieval"]["exact_error"])
         self.assertFalse(result["host_retrieval"]["success"])
+
+    def test_whole_route_shared_phone_attempt_fails_before_retrieval(self) -> None:
+        attempt = self.contract["whole_route_shared_context_phone_attempt_1"]
+        self.assertEqual((1, 37, 0), (attempt["contexts_required"], attempt["graphs_in_context"], attempt["contexts_loaded"]))
+        self.assertEqual((0, 0), (attempt["graphs_retrieved"], attempt["graphs_executed"]))
+        self.assertIn("blob materialization", attempt["process_vmhwm_interpretation"])
+        result = json.loads((EXP / attempt["evidence"]).read_text())
+        self.assertEqual("QnnContext_createFromBinary", result["direct_qnn"]["failure_api"])
+        self.assertFalse(result["direct_qnn"]["output_created"])
+        self.assertTrue(result["cleanup"]["scoped_remote_root_verified_absent"])
 
     def test_final_pipeline_host_equivalence_is_bounded(self) -> None:
         result = json.loads((EXP / "results/htp-pipeline-host-equivalence/result.json").read_text())
@@ -247,6 +257,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/qnn-consolidated-host-preparation",
             EXP / "results/consolidated-qnn-phone-attempt-1-residency-limit",
             EXP / "results/qnn-whole-route-shared-host-preparation",
+            EXP / "results/whole-route-shared-qnn-phone-attempt-1-load-failure",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

@@ -48,12 +48,14 @@
 38. Verified QNN system metadata and every graph descriptor: 37/37 graph names bind in order to the one binary.
 39. Confirmed the x86 HTP emulator rejects the shared-weights buffer as unsupported on that host platform; physical Android support remains unproven.
 40. Prepared a 12-file ignored Android stage whose runner loads one context once and retrieves all 37 graphs; hashes and ELF preflight pass.
+41. Ran one authorized physical shared-context gate. All stage checks passed, but `QnnContext_createFromBinary` rejected the 1.60 GB context before graph retrieval/readiness/execution.
+42. Preserved the raw result, verified scoped cleanup absent, and stopped without retry or campaign.
 
-## In progress
+## Blocked / terminal local route
 
-1. Commit and publish the single-context host AOT/metadata milestone with its explicit host-retrieval limitation.
-2. Remain off the phone until Pi independently reviews it and explicitly authorizes one compatibility gate.
-3. Do not use per-layer/token reload and do not run a campaign.
+1. The physical backend cannot retain the many-context route and cannot create the complete single shared-resource context.
+2. Resume only with a materially different Qualcomm-supported context format/runtime or maintainer guidance.
+3. Context streaming changes loaded-route semantics and is not authorized. No phone retry or campaign.
 
 ## Phone and campaign sequence
 

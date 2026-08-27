@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active with a host-prepared single-context shared-resource route after the 37-context physical residency failure. One 1,601,482,752-byte SM8550/V73 QNN context now contains all 37 fused graphs in exact order and preserves loaded-once semantics. Android support for its shared-weights buffer is unproven; no new physical execution, output, performance result, or campaign exists.**
+**Blocked/terminal for the current local all-loaded route. The physical SM8550 backend rejected both the 37-context fused design at context 20 and the stronger single 1.60 GB shared-resource context in `QnnContext_createFromBinary`. The single-context failure occurred before graph retrieval, readiness, execution, or output. No performance result or campaign exists.**
 
 This is a separate accelerator arm. It preserves `0029` CPU viability and `0033` CPU/OpenCL campaign evidence without modifying either experiment.
 
@@ -105,4 +105,6 @@ A materially stronger host-only continuation now packages all 37 fused graphs in
 
 The x86 HTP emulator rejects context creation with `Shared weights buffer isn't supported on this platform`. That is a host-platform limitation and leaves physical Android support explicitly unproven; it is not execution evidence. The ignored 12-payload Android stage totals 1,805,523,151 bytes, passes all local hashes and ELF preflight, and is bound by stage SHA-256 `9fafbe10f2d69ed4f6690d4e3b010c565f0c222778144d1415d4fa76e79715d7` and manifest SHA-256 `b3ee38ecc999bb74d989058f2342aeee3ab535eee364f14776b94cba9e36400f`. See [`results/qnn-whole-route-shared-host-preparation/`](results/qnn-whole-route-shared-host-preparation/).
 
-This is a host AOT/metadata milestone only. A single bounded physical compatibility gate requires a new explicit Pi priority grant; no retry or campaign is currently authorized.
+The authorized physical compatibility gate passed all 12 local/remote hashes and ELF preflight, entered direct QNN backend `v2.49.0.260730134355`, and attempted the single 1,601,482,752-byte context. `QnnContext_createFromBinary` returned failure before any graph could be retrieved. Android emitted only the generic `Could not create context from binary`, not the host emulator's explicit shared-weight message. Process VmHWM reached 1,613,220 KiB while materializing the blob; this is not evidence that DSP allocation succeeded. The scoped root was verified absent and `phone.lock` released. See [`results/whole-route-shared-qnn-phone-attempt-1-load-failure/`](results/whole-route-shared-qnn-phone-attempt-1-load-failure/).
+
+The current local engineering route is terminal: neither many ordinary resident contexts nor one complete shared-resource context loads on the physical backend. Continuation requires a materially different Qualcomm-supported context format/runtime or maintainer guidance. Context streaming would change the loaded-route protocol and is not authorized. No retry, campaign, performance claim, or registry row is permitted.
