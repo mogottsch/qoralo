@@ -70,17 +70,17 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="topbar"><div class="topbar-inner"><a class="brand" href="../../android-llm-benchmarks/index.html">VibeVoice Android research</a><nav aria-label="Experiment sections"><a href="#experiment-description">Description</a><a href="#progress">Progress</a><a href="#results">Results</a></nav></div></header>
 <main class="shell">
 <header class="status-header" data-status-header="true">
-<div class="kicker"><span>Experiment 0034</span><span class="status">Active</span></div>
+<div class="kicker"><span>Experiment 0034</span><span class="status">Blocked</span></div>
 <h1>Experiment 0034 — LFM2.5-2.6B Android QNN/HTP</h1>
-<p class="summary">The first physical attempt verified device and stage identity but failed closed before its first EPContext session because QNN did not claim the graph; one NPU-filtered diagnostic retry is authorized.</p>
+<p class="summary">Two fail-closed phone attempts stopped before the first EPContext session; even the exclusively selected Qualcomm NPU did not claim the matched SM8550/v73 context, so an external runtime or loader decision is required.</p>
 <div class="header-links"><a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-08-27</span><span>evidence commit: 7cf74979b510615317fa287ded5cf4cfc2183e91</span><span>page source: docs/experiments/0034-lfm2.5-2.6b-android-qnn-htp/page.md</span><span>page source sha256: 98d7184f7788e9f7028a37d8e84739f54d9c806da8e5ee631768a86489a120fb</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-27</span><span>evidence commit: 6f2e55637de98de52c6d57d3b923b53538831b36</span><span>page source: docs/experiments/0034-lfm2.5-2.6b-android-qnn-htp/page.md</span><span>page source sha256: 89e42d3631421ea527584b7656120371d3ebd9cb7ce4725baebccd9d0e4a8541</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
 <p>LFM2.5-2.6B has complete Android CPU and OpenCL benchmark routes, but its original QNN assessment found no high-level tool path for the model&#x27;s <code>lfm2</code> architecture. This experiment now tests an architecture-aware route: export the exact model to Q4 ONNX, split its stateful computation into memory-bounded parts, compile every claimed neural part for the Galaxy S23 Ultra&#x27;s SM8550/HTP v73 target with CPU provider fallback disabled, and then prove that the complete route can execute physically on the phone.</p>
 <p>LFM2 is not a renamed Llama-like transformer. Its 30 layers combine 22 recurrent short-convolution layers with 8 full-attention layers, so the route must preserve both convolution state and attention KV state, bind their reset behavior, and prove that claimed model computation runs through QNN HTP. The intentionally CPU-side tokenizer, selected-row Q4 embedding lookup, request orchestration, and one global greedy argmax remain explicit; they are not hidden provider fallback.</p>
-<p>The route binds <code>LiquidAI/LFM2.5-2.6B</code> revision <code>ab006873…</code>, the architecture-aware <code>Liquid4All/onnx-export</code> exporter at <code>9a23ddd…</code>, symmetric block-32 INT4 weights, ONNX Runtime QNN EP 2.5.0, and host QNN runtime 2.49.40 targeting SoC model 43 / SM8550 / HTP v73. Moritz reviewed and authorized the named public Qualcomm package license. Packages, source weights, large ONNX data, compiled contexts, and the assembled phone stage stay outside Git. The owning <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-aot/result.json">QNN AOT result</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/htp-pipeline-host-equivalence/result.json">host pipeline comparison</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/phone-preparation/result.json">phone-preparation result</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/phone-attempt-1-provider-selection-failure/result.json">first phone-attempt result</a> are the evidence authority.</p>
+<p>The route binds <code>LiquidAI/LFM2.5-2.6B</code> revision <code>ab006873…</code>, the architecture-aware <code>Liquid4All/onnx-export</code> exporter at <code>9a23ddd…</code>, symmetric block-32 INT4 weights, ONNX Runtime QNN EP 2.5.0, and host QNN runtime 2.49.40 targeting SoC model 43 / SM8550 / HTP v73. Moritz reviewed and authorized the named public Qualcomm package license. Packages, source weights, large ONNX data, compiled contexts, and the assembled phone stage stay outside Git. The owning <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-aot/result.json">QNN AOT result</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/htp-pipeline-host-equivalence/result.json">host pipeline comparison</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/phone-preparation/result.json">phone-preparation result</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/phone-attempt-1-provider-selection-failure/result.json">first phone attempt</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/phone-attempt-2-npu-context-claim-failure/result.json">NPU-selection retry</a> are the evidence authority.</p>
 </section>
 <section class="primary-section" id="progress" data-primary-section="progress">
 <h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
@@ -98,11 +98,13 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <p>The native Android API-31 AArch64 runner and ignored local stage were prepared for one bounded 16-token canonical-short request. The initial 539-payload-file stage covered public Android runtime artifacts, the runner, every context pair, Q4 embedding tables, and the prompt; metadata and hash manifests were additional. The complete license-controlled stage remained outside Git.</p>
 <p>After RSA authorization and Pi&#x27;s phone handoff, the first physical attempt held <code>phone.lock</code> for its full lifecycle. It verified the exact SM-S918B/SM8550 identity, all 540 local stage hashes, all 540 remote hashes, and pushed 2,015,209,698 bytes into an experiment-scoped root. The process started, but the first EPContext model was not claimed by the QNN provider device set. ONNX Runtime reported that graph nodes would remain on the default CPU EP; because <code>session.disable_cpu_ep_fallback=1</code> remained enabled, the route stopped at creation of the first session.</p>
 <p>The failure occurred before any context session loaded or model token executed. It produced zero HTP graphs, outputs, or profile files. The single retained memory observation covers only process startup and cannot be treated as model memory or performance. The experiment process was absent afterward, the 2.0 GB scoped remote root was removed and verified absent, and <code>phone.lock</code> was released.</p>
-<p>The replacement runner now logs every advertised execution-provider device type and selects only <code>QNNExecutionProvider</code> with Android NPU hardware type. Its SHA-256 is <code>fe3351b8…43ea</code>, and the replacement 539-payload-file stage is fully hash-bound. Pi authorized exactly one bounded NPU-selection diagnostic retry with CPU fallback still disabled; no campaign is authorized regardless of that retry&#x27;s outcome.</p>
+<p>The replacement runner logged both advertised device types: ARM <code>CPUExecutionProvider</code> hardware type 0 and <code>QNNExecutionProvider</code> hardware type 2, vendor Qualcomm, identified as NPU. Runner SHA-256 <code>fe3351b8…43ea</code> selected only that QNN NPU device and kept CPU fallback disabled.</p>
+<p>The one authorized retry again verified all 540 hashes locally and remotely under the full <code>phone.lock</code> lifecycle. It selected the Qualcomm NPU successfully and began loading <code>layer-00-core-norm</code>, but the official Android QNN EP 2.5.0 plugin still did not claim the first EPContext produced by the matched host package for SM8550/v73. ONNX Runtime therefore left the wrapper assigned to default CPU, and the unchanged fail-closed gate stopped before session creation. The retry again produced zero loaded sessions, model tokens, HTP graphs, profiles, or output. Cleanup removed and verified the scoped root absent, and <code>phone.lock</code> was released.</p>
+<p>The route is now blocked. No further phone attempt or campaign is authorized. Progress requires one of three explicit decisions: a public or matched Android QNN EP/runtime that claims these contexts; a separately bounded direct-QNN context loader that bypasses the failing ORT claim layer while retaining exact contexts, state, and no-fallback boundaries; or escalation of a minimal compatibility artifact and logs to Qualcomm&#x27;s ONNX Runtime QNN maintainers.</p>
 </section>
 <section class="primary-section" id="results" data-primary-section="results">
 <h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
-<p><strong>The experiment remains active after one fail-closed physical pre-inference diagnostic.</strong> Host AOT preparation remains valid, and the phone attempt established device/stage identity plus the exact provider-selection failure boundary. It did not establish model execution or physical HTP use.</p>
+<p><strong>The experiment is blocked after two fail-closed physical pre-inference diagnostics.</strong> Host AOT preparation remains valid, and the attempts establish exact device/stage identity, official Qualcomm NPU advertisement and exclusive selection, and the EPContext-claim failure boundary. They do not establish model execution or physical HTP use.</p>
 <div class="table-wrap"><table><thead><tr>
 <th>Evidence boundary</th>
 <th>Current result</th>
@@ -132,24 +134,28 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>First five greedy tokens matched reference, transformed monolith, and final pipeline; not exact-logit equivalence</td>
 </tr>
 <tr>
-<td>First phone attempt identity/staging</td>
-<td>Exact device plus 540 local/remote stage hashes verified under full <code>phone.lock</code> lifecycle</td>
+<td>Phone attempt identity/staging</td>
+<td>Both attempts verified exact device and all 540 local/remote stage hashes under full <code>phone.lock</code> lifecycles</td>
+</tr>
+<tr>
+<td>Retry provider selection</td>
+<td>ORT 1.26 advertised QNN EP 2.5.0 as Qualcomm NPU type 2; runner selected only it</td>
 </tr>
 <tr>
 <td>Failure boundary</td>
-<td>First EPContext session creation; graph remained unclaimed and fail-closed prevented default CPU execution</td>
+<td>NPU plugin did not claim first matched EPContext; fail-closed prevented default CPU execution before session creation</td>
 </tr>
 <tr>
 <td>Sessions, model tokens, HTP graphs, outputs, profiles</td>
-<td>0 / 0 / 0 / none / none</td>
+<td>0 / 0 / 0 / none / none in both attempts</td>
 </tr>
 <tr>
 <td>Cleanup</td>
-<td>Experiment process absent; scoped remote root verified absent; lock released</td>
+<td>Experiment process absent; scoped remote root verified absent; lock released after both attempts</td>
 </tr>
 <tr>
-<td>Authorized retry</td>
-<td>One NPU-filtered provider-selection diagnostic with runner SHA <code>fe3351b8…43ea</code>; no campaign</td>
+<td>Further phone work</td>
+<td>Not authorized; external runtime/loader/escalation decision required</td>
 </tr>
 <tr>
 <td>Android / physical HTP execution</td>
@@ -164,8 +170,8 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>None; host AOT and wiring evidence are not registry-eligible</td>
 </tr>
 </tbody></table></div>
-<p>The first attempt is physical phone transport and pre-inference diagnostic evidence, not physical HTP execution. Exact stage hashes and a started Android process do not show that the phone loaded any context or ran QNN. The fail-closed error correctly prevented default CPU execution, but it also means there is no provider, model-output, state-reset, or performance result. The low startup-only memory sample is not benchmark memory. Host context creation, phone staging, and matching five host greedy decisions cannot substitute for phone provider/RPC/accelerator/cycle/HVX proof.</p>
-<p>No 0034 row belongs in the Android LLM registry until a complete valid physical Android canonical campaign exists. If physical context loading fails, CPU work expands beyond the declared boundary, any neural context falls back, or full request reset cannot be proven, the route must stop rather than weaken the HTP claim.</p>
+<p>Both attempts are physical phone transport and pre-inference diagnostic evidence, not physical HTP execution. Exclusive Qualcomm NPU selection is stronger than provider availability alone, but it does not show that the plugin claimed or loaded a context. The fail-closed error correctly prevented default CPU execution; consequently there is no model-output, state-reset, or performance result. Each low startup-only memory sample is not benchmark memory. Host context creation, phone staging, NPU advertisement, and matching five host greedy decisions cannot substitute for phone provider/RPC/accelerator/cycle/HVX proof.</p>
+<p>No 0034 row belongs in the Android LLM registry. The route stopped rather than weaken the HTP claim, and it remains blocked until Moritz authorizes or provides one of the matched-runtime, direct-loader, or maintainer-escalation paths above. Even after an unblock, a new bounded physical viability gate must pass before any canonical campaign.</p>
 </section></article>
 <footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
 </main>
