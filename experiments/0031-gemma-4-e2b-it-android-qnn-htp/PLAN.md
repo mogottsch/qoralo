@@ -42,7 +42,9 @@ The first authorized bounded phone gate held `phone.lock`, verified local/remote
 
 The missing QAIRT 2.49.40 Android extension is now hash-bound in the bundle and stage. Preparation and execution both enforce an explicit required-runtime dependency list. The one authorized corrected retry loaded the extension and fully deserialized the two-graph weight-shared context on physical SM8550 HTP, but Genie model validation rejected 30 cross-variant value-cache entries before dialog/query: 15 AR1 value outputs are Float16 while corresponding AR128 cache inputs/outputs are uFxp16. No graph execution/output occurred; cleanup passed.
 
-The active next step is host-only: enforce identical datatype/scale/offset for all 15 AR1 value-cache outputs and corresponding AR128 tensors, then re-convert, recompile, and inspect the context. Do not weaken Genie validation, add a CPU conversion boundary, request another phone gate, or start a campaign. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
+The host-side cache correction now passes. A schema-standard ONNX float fork plus `QuantizeLinear` boundary applies the source QAT uint16 scale/zero-point contract to all 15 public AR1 value-cache outputs without modifying checkpoint bytes or adding a host CPU boundary. The corrected DLC retains 2,280,676,608 parameters and 31/31 uFxp16 outputs. The rebuilt weight-shared SM8550/v73 context has QNN HTP backend ID 6, two 38-input/31-output graphs, and exact four-way datatype/scale/offset identity across every AR1-input/AR1-output/AR128-input/AR128-output value-cache contract. QAIRT still reports float-precision component fallbacks, so this is not a uniform-integer or physical-execution claim.
+
+The active next step is review and a separately authorized physical gate: after Pi verifies the durable host evidence and explicitly transfers phone priority, rebuild the private runtime bundle/stage around the corrected context and run one locked 16-token attempt. Do not access ADB, weaken Genie validation, or start a campaign before that handoff. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
 
 ## Stop conditions
 

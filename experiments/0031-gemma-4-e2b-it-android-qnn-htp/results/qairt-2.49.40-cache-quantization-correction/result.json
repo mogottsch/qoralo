@@ -1,0 +1,386 @@
+{
+  "claim_boundary": "A schema-standard ONNX float fork plus QuantizeLinear boundary converted each of the 15 AR1 value-cache outputs to the exact uFxp16 scale/offset already required by the source QAT encodings. Official context metadata proves all four AR1-input/AR1-output/AR128-input/AR128-output signatures are identical in a two-graph QNN HTP backend-ID-6 SM8550/v73 context. This is host conversion and AOT inspection only; it does not prove physical context acceptance, graph execution, no-fallback execution, output, text quality, or performance.",
+  "classification": "positive_host_cache_quantization_correction_and_sm8550_recompile",
+  "compile": {
+    "context_bytes": 1186369536,
+    "context_sha256": "a1d52d0087a0719d5907a98d99e8bc5996b699c9cf8f3a21b301588b9f51cc44",
+    "dsp_arch": "v73",
+    "input_dlcs": [
+      {
+        "ar": 1,
+        "dlc_sha256": "7e88facdba8c8b015579cbc3bf76dbad4f2f913cd29b450d555d6174bd48c9e1",
+        "name": "ar1_cl4096_1_of_1"
+      },
+      {
+        "ar": 128,
+        "dlc_sha256": "5f17ece8a99cd649abdadb61e2e104e5cd569a1d1735e9e6ecb5c297286156ee",
+        "name": "ar128_cl4096_1_of_1"
+      }
+    ],
+    "mode": "weight_sharing",
+    "pd_session": "unsigned",
+    "qairt_version": "2.49.40.260810",
+    "soc_model": 43,
+    "target": "chipset:SM8550"
+  },
+  "correction": {
+    "boundary_count": 15,
+    "corrected_ar1_dlc_bytes": 2356847444,
+    "corrected_ar1_dlc_sha256": "7e88facdba8c8b015579cbc3bf76dbad4f2f913cd29b450d555d6174bd48c9e1",
+    "dlc_output_datatypes": {
+      "uFxp_16": 31
+    },
+    "dlc_parameters": 2280676608,
+    "float_precision_fallback_component_op_count": 75,
+    "float_precision_fallback_component_ops": [
+      "node_pow_134",
+      "node_mean_101",
+      "node_add_5800",
+      "node_Sqrt_2598",
+      "node_rsqrt_69",
+      "node_pow_154",
+      "node_mean_116",
+      "node_add_6709",
+      "node_Sqrt_3005",
+      "node_rsqrt_79",
+      "node_pow_174",
+      "node_mean_131",
+      "node_add_7618",
+      "node_Sqrt_3412",
+      "node_rsqrt_89",
+      "node_pow_194",
+      "node_mean_146",
+      "node_add_8527",
+      "node_Sqrt_3819",
+      "node_rsqrt_99",
+      "node_pow_214",
+      "node_mean_161",
+      "node_add_9436",
+      "node_Sqrt_4226",
+      "node_rsqrt_109",
+      "node_pow_234",
+      "node_mean_176",
+      "node_add_10345",
+      "node_Sqrt_4633",
+      "node_rsqrt_119",
+      "node_pow_54",
+      "node_mean_41",
+      "node_add_2164",
+      "node_Sqrt_970",
+      "node_rsqrt_29",
+      "node_pow_74",
+      "node_mean_56",
+      "node_add_3073",
+      "node_Sqrt_1376",
+      "node_rsqrt_39",
+      "node_pow_94",
+      "node_mean_71",
+      "node_add_3982",
+      "node_Sqrt_1783",
+      "node_rsqrt_49",
+      "node_pow_114",
+      "node_mean_86",
+      "node_add_4891",
+      "node_Sqrt_2191",
+      "node_rsqrt_59",
+      "node_pow_14",
+      "node_mean_11",
+      "node_add_346",
+      "node_Sqrt_153",
+      "node_rsqrt_9",
+      "node_pow_34",
+      "node_mean_26",
+      "node_add_1255",
+      "node_Sqrt_563",
+      "node_rsqrt_19",
+      "node_pow_254",
+      "node_mean_191",
+      "node_add_11254",
+      "node_Sqrt_5040",
+      "node_rsqrt_129",
+      "node_pow_274",
+      "node_mean_206",
+      "node_add_12163",
+      "node_Sqrt_5447",
+      "node_rsqrt_139",
+      "node_pow_294",
+      "node_mean_221",
+      "node_add_13072",
+      "node_Sqrt_5854",
+      "node_rsqrt_149"
+    ],
+    "internal_transformer_consumer_path_preserved": true,
+    "method": "ONNX Cast fork plus QuantizeLinear at each public AR1 value-cache output",
+    "not_a_uniform_integer_execution_claim": true,
+    "patched_encodings_sha256": "0dbb1aad69b419594707cc45d31656b95457b5a78c0bce462f1f03db77bfe2a8",
+    "patched_onnx_sha256": "2be60a02bc205fe43ba68b45f110c70071fdedd8842a5b8774af2b65675bb40e",
+    "qnn_offset": -32768,
+    "quantize_zero_point_uint16": 32768,
+    "value_cache_outputs_ufxp16": 15
+  },
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "inspection": {
+    "all_cache_contracts_identical": true,
+    "backend_id": 6,
+    "backend_id_source": "QAIRT 2.49.40 QnnHtpCommon.h: QNN_BACKEND_ID_HTP 6",
+    "build_id": "v2.49.40.260810104044",
+    "cache_contract_count": 15,
+    "cache_contracts": [
+      {
+        "all_four_signatures_identical": true,
+        "ar128_input": "past_value_14_h0_in",
+        "ar128_output": "past_value_14_h0_out",
+        "ar1_input": "past_value_14_h0_in",
+        "ar1_output": "past_value_14_h0_out",
+        "base": "past_value_14_h0",
+        "datatype": "QNN_DATATYPE_UFIXED_POINT_16",
+        "offset": -32768,
+        "scale": 0.0005627884529531002
+      },
+      {
+        "all_four_signatures_identical": true,
+        "ar128_input": "past_value_4_h0_in",
+        "ar128_output": "past_value_4_h0_out",
+        "ar1_input": "past_value_4_h0_in",
+        "ar1_output": "past_value_4_h0_out",
+        "base": "past_value_4_h0",
+        "datatype": "QNN_DATATYPE_UFIXED_POINT_16",
+        "offset": -32768,
+        "scale": 0.000621282437350601
+      },
+      {
+        "all_four_signatures_identical": true,
+        "ar128_input": "past_value_9_h0_in",
+        "ar128_output": "past_value_9_h0_out",
+        "ar1_input": "past_value_9_h0_in",
+        "ar1_output": "past_value_9_h0_out",
+        "base": "past_value_9_h0",
+        "datatype": "QNN_DATATYPE_UFIXED_POINT_16",
+        "offset": -32768,
+        "scale": 0.0005983238224871457
+      },
+      {
+        "all_four_signatures_identical": true,
+        "ar128_input": "swa_value_0_h0_in",
+        "ar128_output": "swa_value_0_h0_out",
+        "ar1_input": "swa_value_0_h0_in",
+        "ar1_output": "swa_value_0_h0_out",
+        "base": "swa_value_0_h0",
+        "datatype": "QNN_DATATYPE_UFIXED_POINT_16",
+        "offset": -32768,
+        "scale": 0.0003522512561175972
+      },
+      {
+        "all_four_signatures_identical": true,
+        "ar128_input": "swa_value_10_h0_in",
+        "ar128_output": "swa_value_10_h0_out",
+        "ar1_input": "swa_value_10_h0_in",
+        "ar1_output": "swa_value_10_h0_out",
+        "base": "swa_value_10_h0",
+        "datatype": "QNN_DATATYPE_UFIXED_POINT_16",
+        "offset": -32768,
+        "scale": 0.0003409326309338212
+      },
+      {
+        "all_four_signatures_identical": true,
+        "ar128_input": "swa_value_11_h0_in",
+        "ar128_output": "swa_value_11_h0_out",
+        "ar1_input": "swa_value_11_h0_in",
+        "ar1_output": "swa_value_11_h0_out",
+        "base": "swa_value_11_h0",
+        "datatype": "QNN_DATATYPE_UFIXED_POINT_16",
+        "offset": -32768,
+        "scale": 0.0002595729019958526
+      },
+      {
+        "all_four_signatures_identical": true,
+        "ar128_input": "swa_value_12_h0_in",
+        "ar128_output": "swa_value_12_h0_out",
+        "ar1_input": "swa_value_12_h0_in",
+        "ar1_output": "swa_value_12_h0_out",
+        "base": "swa_value_12_h0",
+        "datatype": "QNN_DATATYPE_UFIXED_POINT_16",
+        "offset": -32768,
+        "scale": 0.0004097459896001965
+      },
+      {
+        "all_four_signatures_identical": true,
+        "ar128_input": "swa_value_13_h0_in",
+        "ar128_output": "swa_value_13_h0_out",
+        "ar1_input": "swa_value_13_h0_in",
+        "ar1_output": "swa_value_13_h0_out",
+        "base": "swa_value_13_h0",
+        "datatype": "QNN_DATATYPE_UFIXED_POINT_16",
+        "offset": -32768,
+        "scale": 0.00047218456165865064
+      },
+      {
+        "all_four_signatures_identical": true,
+        "ar128_input": "swa_value_1_h0_in",
+        "ar128_output": "swa_value_1_h0_out",
+        "ar1_input": "swa_value_1_h0_in",
+        "ar1_output": "swa_value_1_h0_out",
+        "base": "swa_value_1_h0",
+        "datatype": "QNN_DATATYPE_UFIXED_POINT_16",
+        "offset": -32768,
+        "scale": 0.00041688259807415307
+      },
+      {
+        "all_four_signatures_identical": true,
+        "ar128_input": "swa_value_2_h0_in",
+        "ar128_output": "swa_value_2_h0_out",
+        "ar1_input": "swa_value_2_h0_in",
+        "ar1_output": "swa_value_2_h0_out",
+        "base": "swa_value_2_h0",
+        "datatype": "QNN_DATATYPE_UFIXED_POINT_16",
+        "offset": -32768,
+        "scale": 0.00044839197653345764
+      },
+      {
+        "all_four_signatures_identical": true,
+        "ar128_input": "swa_value_3_h0_in",
+        "ar128_output": "swa_value_3_h0_out",
+        "ar1_input": "swa_value_3_h0_in",
+        "ar1_output": "swa_value_3_h0_out",
+        "base": "swa_value_3_h0",
+        "datatype": "QNN_DATATYPE_UFIXED_POINT_16",
+        "offset": -32768,
+        "scale": 0.00034944622893817723
+      },
+      {
+        "all_four_signatures_identical": true,
+        "ar128_input": "swa_value_5_h0_in",
+        "ar128_output": "swa_value_5_h0_out",
+        "ar1_input": "swa_value_5_h0_in",
+        "ar1_output": "swa_value_5_h0_out",
+        "base": "swa_value_5_h0",
+        "datatype": "QNN_DATATYPE_UFIXED_POINT_16",
+        "offset": -32768,
+        "scale": 0.00044485097168944776
+      },
+      {
+        "all_four_signatures_identical": true,
+        "ar128_input": "swa_value_6_h0_in",
+        "ar128_output": "swa_value_6_h0_out",
+        "ar1_input": "swa_value_6_h0_in",
+        "ar1_output": "swa_value_6_h0_out",
+        "base": "swa_value_6_h0",
+        "datatype": "QNN_DATATYPE_UFIXED_POINT_16",
+        "offset": -32768,
+        "scale": 0.00035334617132321
+      },
+      {
+        "all_four_signatures_identical": true,
+        "ar128_input": "swa_value_7_h0_in",
+        "ar128_output": "swa_value_7_h0_out",
+        "ar1_input": "swa_value_7_h0_in",
+        "ar1_output": "swa_value_7_h0_out",
+        "base": "swa_value_7_h0",
+        "datatype": "QNN_DATATYPE_UFIXED_POINT_16",
+        "offset": -32768,
+        "scale": 0.0004439398180693388
+      },
+      {
+        "all_four_signatures_identical": true,
+        "ar128_input": "swa_value_8_h0_in",
+        "ar128_output": "swa_value_8_h0_out",
+        "ar1_input": "swa_value_8_h0_in",
+        "ar1_output": "swa_value_8_h0_out",
+        "base": "swa_value_8_h0",
+        "datatype": "QNN_DATATYPE_UFIXED_POINT_16",
+        "offset": -32768,
+        "scale": 0.0004616079095285386
+      }
+    ],
+    "embedded_markers": {
+      "ar128_cl4096_1_of_1": true,
+      "ar1_cl4096_1_of_1": true,
+      "arch=73": true,
+      "native_hmx_a16w4=true": true,
+      "soc_type=SM8550": true
+    },
+    "graphs": {
+      "ar128_cl4096_1_of_1": {
+        "input_count": 38,
+        "input_datatypes": {
+          "QNN_DATATYPE_UFIXED_POINT_16": 38
+        },
+        "output_count": 31,
+        "output_datatypes": {
+          "QNN_DATATYPE_UFIXED_POINT_16": 31
+        }
+      },
+      "ar1_cl4096_1_of_1": {
+        "input_count": 38,
+        "input_datatypes": {
+          "QNN_DATATYPE_UFIXED_POINT_16": 38
+        },
+        "output_count": 31,
+        "output_datatypes": {
+          "QNN_DATATYPE_UFIXED_POINT_16": 31
+        }
+      }
+    },
+    "num_graphs": 2,
+    "utility": "qnn-context-binary-utility"
+  },
+  "next_gate": "After Pi independently reviews this host correction and explicitly transfers phone priority, rebuild the private runtime bundle/stage around the corrected context and run one locked 16-token physical gate.",
+  "raw_log_hashes": {
+    "compile": {
+      "context-info.json": {
+        "bytes": 192868,
+        "sha256": "5051fe62a6ea03d31fa013b403d33a9d0a4aa84fe511c974b41f80713127f4f0"
+      },
+      "context-info.stderr.log": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "context-info.stdout.log": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr.log": {
+        "bytes": 587,
+        "sha256": "0f82675d039efce915ac4e3dfcb492ec7e025cc0633f4f591ab144aad4e5a6c8"
+      },
+      "stdout.log": {
+        "bytes": 1375,
+        "sha256": "d22f87dc30941a669e6be5a1c67626c16766489d921a30e017cec6a5d263ae7e"
+      }
+    },
+    "conversion": {
+      "aligned-ar1.dlc-info.log": {
+        "bytes": 23417758,
+        "sha256": "9dfee8e9cef4218993330f251e54edf5281964f58a4e01f771e368761aa8d602"
+      },
+      "aligned-ar1.dlc-info.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr.log": {
+        "bytes": 1268,
+        "sha256": "fd0bdcfa2ea1926b542005f6ba74c83649b3bfeb401abde7c9cf958ede452c48"
+      },
+      "stdout.log": {
+        "bytes": 16346,
+        "sha256": "4b2dcb4393598181b8a40ee5afb51fc3af61a0679cca4d8edac16ee247791c91"
+      }
+    }
+  },
+  "requested": {
+    "htp_compilation": true,
+    "inference": false,
+    "paid_workbench_job": false,
+    "phone_access": false,
+    "physical_htp_execution": false,
+    "qnn_conversion": true
+  },
+  "schema_version": 1,
+  "source_identity": {
+    "ar1_source_encodings_sha256": "0dbb1aad69b419594707cc45d31656b95457b5a78c0bce462f1f03db77bfe2a8",
+    "ar1_transformed_onnx_sha256": "9f3077b4a8ccec48781843f6391bb9d77bf4d0c2578a864c108a916b24c9e472",
+    "checkpoint_modified": false,
+    "shared_external_data_sha256": "b9b73b984c2258099bc77ce6d1e2aa92d12bb67abe456e5ef509136d7494a65d"
+  },
+  "status": "host_cache_quantization_corrected_recompiled_phone_gate_required"
+}

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
-  "status": "phone_attempt_02_failed_quantization_validation_host_rebuild_required",
+  "status": "host_cache_quantization_corrected_recompiled_phone_gate_required",
   "question": "Can Gemma 4 E2B IT run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Gemma 4 E2B IT text generation only",
@@ -143,7 +143,8 @@
     "phone_attempt_01": "failed_pre_query_missing_libQnnHtpNetRunExtensions_exit_139",
     "corrected_stage_gate": "passed",
     "phone_attempt_02": "failed_pre_query_30_cross_variant_value_cache_quantization_mismatches_exit_1",
-    "next_gate": "Host-only: make all 15 AR1 value-cache outputs datatype/scale/offset-identical to corresponding AR128 tensors, then re-convert/recompile/inspect before any new phone request.",
+    "cache_quantization_correction_gate": "passed_host_conversion_recompile_and_four_way_metadata_inspection",
+    "next_gate": "After independent review and explicit Pi phone-priority transfer, rebuild the private bundle/stage around the corrected context and run one locked 16-token physical gate.",
     "workbench_checkpoint": "Any paid Workbench compile/link job requires a separate explicit cost/terms decision."
   },
   "transform_result": {
@@ -208,6 +209,34 @@
     "context_build_id": "v2.49.40.260810104044",
     "graphs": ["ar1_cl4096_1_of_1", "ar128_cl4096_1_of_1"],
     "embedded_target_markers": ["soc_type=SM8550", "arch=73", "native_hmx_a16w4=true"],
+    "phone_access": false,
+    "physical_htp_execution": false,
+    "inference": false
+  },
+  "cache_quantization_correction_result": {
+    "result_path": "results/qairt-2.49.40-cache-quantization-correction/result.json",
+    "classification": "positive_host_cache_quantization_correction_and_sm8550_recompile",
+    "qairt_version": "2.49.40.260810",
+    "method": "ONNX Cast fork plus QuantizeLinear at each of 15 public AR1 value-cache outputs",
+    "checkpoint_modified": false,
+    "source_qat_encoding_reused": true,
+    "corrected_ar1_dlc": {
+      "bytes": 2356847444,
+      "sha256": "7e88facdba8c8b015579cbc3bf76dbad4f2f913cd29b450d555d6174bd48c9e1",
+      "parameters": 2280676608,
+      "output_datatypes": {"uFxp_16": 31}
+    },
+    "corrected_context": {
+      "bytes": 1186369536,
+      "sha256": "a1d52d0087a0719d5907a98d99e8bc5996b699c9cf8f3a21b301588b9f51cc44",
+      "backend_id": 6,
+      "backend": "QNN HTP",
+      "build_id": "v2.49.40.260810104044",
+      "graphs": ["ar1_cl4096_1_of_1", "ar128_cl4096_1_of_1"]
+    },
+    "value_cache_contracts": 15,
+    "all_ar1_input_output_ar128_input_output_signatures_identical": true,
+    "uniform_integer_execution_claim": false,
     "phone_access": false,
     "physical_htp_execution": false,
     "inference": false

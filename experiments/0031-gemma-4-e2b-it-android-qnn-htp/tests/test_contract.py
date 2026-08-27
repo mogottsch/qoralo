@@ -107,13 +107,17 @@ class ContractTest(unittest.TestCase):
     def test_historical_transform_blocker_and_active_no_execution_claim(self) -> None:
         blocker = json.loads((EXP / "results/transform-blocker/result.json").read_text())
         self.assertEqual(
-            "phone_attempt_02_failed_quantization_validation_host_rebuild_required",
+            "host_cache_quantization_corrected_recompiled_phone_gate_required",
             self.contract["status"],
         )
         active = self.contract["conversion_blocker"]
         self.assertIn("historical_failure", active)
         self.assertEqual("passed", active["transform_gate"])
-        self.assertIn("Host-only", active["next_gate"])
+        self.assertEqual(
+            "passed_host_conversion_recompile_and_four_way_metadata_inspection",
+            active["cache_quantization_correction_gate"],
+        )
+        self.assertIn("explicit Pi phone-priority transfer", active["next_gate"])
         self.assertFalse(blocker["android_execution"])
         self.assertFalse(blocker["qnn_htp_execution"])
         self.assertFalse(blocker["compiled_context_created"])
@@ -136,6 +140,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/qairt-2.49.40-transform-compat",
             EXP / "results/qairt-2.49.40-qnn-conversion",
             EXP / "results/qairt-2.49.40-sm8550-context",
+            EXP / "results/qairt-2.49.40-cache-quantization-correction",
             EXP / "results/gemma4-sm8550-runtime-bundle",
             EXP / "results/android-qnn-physical-viability-attempt-01",
             EXP / "results/android-qnn-physical-viability-attempt-02",
@@ -211,6 +216,32 @@ class ContractTest(unittest.TestCase):
         self.assertEqual(6, result["inspection"]["backend_id"])
         self.assertEqual(2, result["inspection"]["num_graphs"])
         self.assertTrue(all(result["inspection"]["embedded_markers"].values()))
+        self.assertTrue(result["requested"]["htp_compilation"])
+        self.assertFalse(result["requested"]["phone_access"])
+        self.assertFalse(result["requested"]["physical_htp_execution"])
+        self.assertFalse(result["requested"]["inference"])
+
+    def test_cache_quantization_correction_is_host_only_and_exact(self) -> None:
+        result = json.loads(
+            (EXP / "results/qairt-2.49.40-cache-quantization-correction/result.json").read_text()
+        )
+        self.assertEqual(
+            "positive_host_cache_quantization_correction_and_sm8550_recompile",
+            result["classification"],
+        )
+        self.assertFalse(result["source_identity"]["checkpoint_modified"])
+        self.assertEqual(15, result["correction"]["boundary_count"])
+        self.assertEqual({"uFxp_16": 31}, result["correction"]["dlc_output_datatypes"])
+        self.assertEqual(2_280_676_608, result["correction"]["dlc_parameters"])
+        self.assertEqual(6, result["inspection"]["backend_id"])
+        self.assertEqual(2, result["inspection"]["num_graphs"])
+        self.assertEqual(15, result["inspection"]["cache_contract_count"])
+        self.assertTrue(result["inspection"]["all_cache_contracts_identical"])
+        for contract in result["inspection"]["cache_contracts"]:
+            self.assertEqual("QNN_DATATYPE_UFIXED_POINT_16", contract["datatype"])
+            self.assertEqual(-32768, contract["offset"])
+            self.assertTrue(contract["all_four_signatures_identical"])
+        self.assertTrue(result["requested"]["qnn_conversion"])
         self.assertTrue(result["requested"]["htp_compilation"])
         self.assertFalse(result["requested"]["phone_access"])
         self.assertFalse(result["requested"]["physical_htp_execution"])

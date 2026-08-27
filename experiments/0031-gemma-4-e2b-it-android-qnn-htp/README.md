@@ -2,7 +2,7 @@
 
 ## Status
 
-**Second bounded phone gate reached full physical context deserialization, then failed model validation before dialog/query. The corrected bundle loaded its extension, initialized QNN HTP on SM8550, and deserialized both weight-shared graphs. Genie rejected 30 cross-variant value-cache entries because AR1 exposes 15 Float16 value outputs while the matching AR128 cache inputs/outputs are uFxp16. No graph execution or output exists. Further phone work is blocked on a host-side quantization-identical context rebuild.**
+**The host-side cache contract is corrected and recompiled. A schema-standard AR1 output boundary now maps all 15 value caches to the exact uFxp16 scale/offset used by AR1 inputs and AR128 inputs/outputs. Official metadata for the rebuilt SM8550/v73 weight-shared context confirms all 15 four-way signatures are identical. This clears the attempt-02 host blocker only: the rebuilt context has not been loaded or executed on the phone, and no output or performance result exists. A new phone gate still requires Pi's explicit priority transfer.**
 
 This experiment is a separate HTP arm for the model studied in `0025`. It does not rewrite or relabel the CPU/GPU evidence there.
 
@@ -30,7 +30,7 @@ The selected tokenizer produces 170/594/1929 tokens for short/medium/long. Rende
 
 The newer public Google Q4_0 GGUF identifies `general.architecture=gemma4`. QAIRT 2.49's direct GGUF-to-HTP support table contains Gemma, Gemma 2, and Gemma 3 but not Gemma 4. Treating that route as supported would weaken the provider and architecture gates, so it is rejected.
 
-## Historical conversion blocker and active route
+## Conversion history and active route
 
 A bounded, lock-protected support probe resolved `chipset:SM8550` to HTP v73, but QAIRT's high-level GenAI factory has no `Gemma4ForConditionalGeneration` dispatch and returned its generic builder with an explicit unsupported-architecture warning. With the public checkpoint left unchanged and only a copied encoding file supplied, the smallest faithful transform request—AR1+AR128, CL4096, one unsplit graph, no embedding or LM-head split—failed before QNN conversion:
 
@@ -86,7 +86,9 @@ The missing QAIRT 2.49.40 Android extension is now included (1,091,656 bytes, SH
 
 The one authorized corrected retry then loaded the extension, initialized the physical HTP provider/backend/device, and deserialized the weight-shared context. Genie stopped before dialog/query with 30 `Non-identical quantization parameters` errors: the 15 AR1 value-cache outputs are Float16, while the corresponding AR128 value-cache inputs and outputs are uFxp16. An empty profile was retained, no graph execution or output occurred, and scoped cleanup passed. See [`results/android-qnn-physical-viability-attempt-02/result.json`](results/android-qnn-physical-viability-attempt-02/result.json).
 
-The exact next gate is host-only: make all 15 AR1 value-cache outputs datatype/scale/offset-identical to AR128, re-convert, recompile, and inspect the context before requesting any further phone gate. No validation weakening, CPU conversion boundary, retry, or campaign is authorized. Workbench compile/link remains a separate unapproved cost/terms checkpoint. Ad hoc checkpoint graph rewriting, a CPU response, or the unsupported Gemma4 GGUF route is not acceptable.
+The host-side blocker is now corrected without changing the checkpoint or weakening Genie validation. The correction adds a schema-standard ONNX float fork and `QuantizeLinear` boundary at each of the 15 public AR1 value-cache outputs, using the already-bound QAT scale and uint16 zero point 32768 (QNN offset -32768). QNN conversion retains all 2,280,676,608 parameters and all 31 outputs; every output is now uFxp16. The resulting 1,186,369,536-byte weight-shared context has SHA-256 `a1d52d0087a0719d5907a98d99e8bc5996b699c9cf8f3a21b301588b9f51cc44`. `qnn-context-binary-utility` identifies QNN HTP backend ID 6, SM8550/v73 markers, both 38-input/31-output graphs, and 15 value-cache contracts whose AR1 input/output and AR128 input/output datatype, scale, and offset signatures are exactly identical. See [`results/qairt-2.49.40-cache-quantization-correction/result.json`](results/qairt-2.49.40-cache-quantization-correction/result.json).
+
+The boundary is compiled inside the HTP-targeted graph; it is not a host CPU cache conversion. QAIRT still reports float-precision component fallbacks around affected normalization paths, so this is not a uniform-integer claim. More importantly, host compilation does not prove physical context acceptance or execution. No retry or campaign is authorized yet. After independent review and an explicit Pi phone-priority transfer, the private runtime bundle/stage must be rebuilt around the new context before one separately bounded 16-token physical gate. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
 
 ## Proof boundary
 
