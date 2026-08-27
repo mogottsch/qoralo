@@ -21,15 +21,16 @@
    - post-failure hashes proved that ONNX, external data, and encodings remained unchanged.
 5. Stopped at the exact unsupported-graph blocker. No context binary, Android execution, or HTP claim was fabricated.
 
-## Blocked next gate
+## Authorized active gate
 
-Moritz must choose one of the following before work can continue:
+Moritz selected the updated local-toolchain/source-fix route. Completed authorization work:
 
-1. supply an authorized Gemma4 E2B w4a16 serialized QNN context compiled for SM8550/HTP v73 plus the matching embedding and PLE LUT bundle and full provenance;
-2. authorize authenticated Qualcomm AI Hub Workbench use if a supported QNN context export currently exists for this checkpoint and target; or
-3. authorize an updated QAIRT/toolchain installation or an architecture-aware source fix that handles the public graph, with the new tooling separately bound.
+1. established durable authenticated Qualcomm AI Hub and QPM catalog access without committing credentials;
+2. personally activated the `Qualcomm_AI_Runtime_SDK` license;
+3. acquired and privately extracted QAIRT 2.49.40 outside Git; and
+4. bound its QIK, SDK manifest, selected converter sources, Gemma4 configuration, Android Genie runtime, QNN HTP host/stub, and v73 skeleton hashes in `results/qairt-2.49.40-capability/`.
 
-Until then: do not patch the graph ad hoc, do not access the phone, do not run a canonical campaign, and do not publish.
+QAIRT 2.49.40 does not itself remove the prior failure: the factory and implicated optimizer sources are byte-identical to 2.49.0. The active next step is a bounded transform-only probe with an isolated, schema-faithful ONNX Constant-attribute compatibility fix. Preserve the public checkpoint bytes and bind all generated artifacts. Do not request QNN conversion or SM8550 compilation until that transform gate passes. Workbench compile/link remains a separate unapproved cost/terms checkpoint. Do not access the phone or run a canonical campaign before a compiled route exists.
 
 ## Stop conditions
 

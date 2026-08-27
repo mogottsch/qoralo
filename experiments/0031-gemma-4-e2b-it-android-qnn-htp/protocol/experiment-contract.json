@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
-  "status": "blocked_local_qairt_gemma4_transform_unsupported_no_compiled_context",
+  "status": "active_authorized_qairt_2_49_40_converter_compatibility_fix_pre_transform",
   "question": "Can Gemma 4 E2B IT run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Gemma 4 E2B IT text generation only",
@@ -12,8 +12,8 @@
       "CPU or GPU publication arms",
       "vision or audio inputs",
       "speculative decoding",
-      "accepting licenses or downloading another QAIRT SDK",
-      "benchmark publication"
+      "paid Workbench compile or link jobs without separate approval",
+      "benchmark publication by the experiment owner"
     ]
   },
   "canonical_protocol": {
@@ -74,6 +74,20 @@
       "release_notes_sha256": "84507e5a7c00a5c2d862c3d8582359be486a17a006e1a0124a4e39cf13f11ad4",
       "gemma4_htp_config_sha256": "39f588d6fbe21079990001794940b8bfb4150fb589086bd1d781609b97a1b1c1",
       "license_or_install_action_taken": false
+    },
+    "qairt_authorized_candidate": {
+      "version": "2.49.40.260810",
+      "root": "/home/moritz/opt/qairt/2.49.40.260810",
+      "qpm_product": "Qualcomm_AI_Runtime_SDK",
+      "qik_bytes": 2410405384,
+      "qik_sha256": "ef4a63b81c9b3a42b8c23921a322754b2fa15f7ef5737c85911d4c527c1fdb0c",
+      "sdk_yaml_sha256": "08d752936482cdf83ca772f3cf284769eb6fea06634bba631904dcbacd89527c",
+      "release_notes_sha256": "84507e5a7c00a5c2d862c3d8582359be486a17a006e1a0124a4e39cf13f11ad4",
+      "gemma4_htp_config_sha256": "39f588d6fbe21079990001794940b8bfb4150fb589086bd1d781609b97a1b1c1",
+      "license_status": "ACTIVE",
+      "license_end_date": "2030-08-22",
+      "restricted_content_stored_outside_git": true,
+      "capability_result_path": "results/qairt-2.49.40-capability/result.json"
     }
   },
   "candidate_route": {
@@ -120,8 +134,10 @@
   "conversion_blocker": {
     "result_path": "results/transform-blocker/result.json",
     "compiled_context_created": false,
-    "exact_failure": "Installed QAIRT 2.49 has no Gemma4 factory dispatch. Generic fallback AR/CL transformation of the unchanged public graph fails in ConstantPropagation with KeyError('value') before conversion or compilation.",
-    "required_action": "Provide a provenance-bound Gemma4 E2B SM8550/v73 serialized context and LUT bundle; authorize authenticated AI Hub Workbench if a supported QNN export exists; or explicitly authorize an updated QAIRT/toolchain or architecture-aware converter fix."
+    "historical_failure": "Installed QAIRT 2.49 has no Gemma4 factory dispatch. Generic fallback AR/CL transformation of the unchanged public graph fails in ConstantPropagation with KeyError('value') before conversion or compilation.",
+    "selected_action": "Use authorized QAIRT 2.49.40 runtime artifacts and an isolated schema-faithful converter compatibility fix without mutating the public checkpoint.",
+    "next_gate": "A heavy-ram.lock-protected transform-only AR1+AR128 CL4096 probe must succeed and bind outputs before QNN conversion or SM8550 compilation is requested.",
+    "workbench_checkpoint": "Any paid Workbench compile/link job requires a separate explicit cost/terms decision."
   },
   "campaign_gate": {
     "phone_priority": "follows coordinated GPU paths; no ADB until Pi explicitly grants priority",

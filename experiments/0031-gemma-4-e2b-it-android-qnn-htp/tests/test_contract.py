@@ -100,9 +100,15 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(1, prompt["leading_bos_count"])
             self.assertTrue(prompt["fits_context_4096"])
 
-    def test_exact_transform_blocker_and_no_execution_claim(self) -> None:
+    def test_historical_transform_blocker_and_active_no_execution_claim(self) -> None:
         blocker = json.loads((EXP / "results/transform-blocker/result.json").read_text())
-        self.assertIn("blocked_local_qairt", self.contract["status"])
+        self.assertEqual(
+            "active_authorized_qairt_2_49_40_converter_compatibility_fix_pre_transform",
+            self.contract["status"],
+        )
+        active = self.contract["conversion_blocker"]
+        self.assertIn("historical_failure", active)
+        self.assertIn("transform-only", active["next_gate"])
         self.assertFalse(blocker["android_execution"])
         self.assertFalse(blocker["qnn_htp_execution"])
         self.assertFalse(blocker["compiled_context_created"])
@@ -121,6 +127,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/support-assessment",
             EXP / "results/checkpoint-analysis",
             EXP / "results/transform-blocker",
+            EXP / "results/qairt-2.49.40-capability",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

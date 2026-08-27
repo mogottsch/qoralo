@@ -2,7 +2,7 @@
 
 ## Status
 
-**Blocked before QNN conversion. The public w4a16 checkpoint is fully hash-bound, but installed QAIRT 2.49 cannot transform its Gemma4 graph and no SM8550 compiled context exists. No Android or HTP execution result exists.**
+**Active before QNN conversion. The public w4a16 checkpoint is fully hash-bound and QAIRT 2.49.40 is now authorized, acquired, and privately extracted. Its implicated converter sources are byte-identical to 2.49.0, so the prior transform defect remains; work is proceeding through an isolated schema-faithful converter compatibility fix. No transformed graph, QNN conversion, compiled context, Android execution, or HTP result exists yet.**
 
 This experiment is a separate HTP arm for the model studied in `0025`. It does not rewrite or relabel the CPU/GPU evidence there.
 
@@ -30,7 +30,7 @@ The selected tokenizer produces 170/594/1929 tokens for short/medium/long. Rende
 
 The newer public Google Q4_0 GGUF identifies `general.architecture=gemma4`. QAIRT 2.49's direct GGUF-to-HTP support table contains Gemma, Gemma 2, and Gemma 3 but not Gemma 4. Treating that route as supported would weaken the provider and architecture gates, so it is rejected.
 
-## Exact conversion blocker
+## Historical conversion blocker and active route
 
 A bounded, lock-protected support probe resolved `chipset:SM8550` to HTP v73, but QAIRT's high-level GenAI factory has no `Gemma4ForConditionalGeneration` dispatch and returned its generic builder with an explicit unsupported-architecture warning. With the public checkpoint left unchanged and only a copied encoding file supplied, the smallest faithful transform request—AR1+AR128, CL4096, one unsplit graph, no embedding or LM-head split—failed before QNN conversion:
 
@@ -42,13 +42,9 @@ KeyError: 'value'
 
 No conversion or compilation was requested after this exact unsupported-graph failure. Post-failure hashes prove that ONNX, external data, and encodings remained unchanged. See [`results/transform-blocker/result.json`](results/transform-blocker/result.json) and the retained raw logs.
 
-Continuing requires one explicit user decision:
+Moritz has now authorized the third route. Qualcomm Package Manager access and the `Qualcomm_AI_Runtime_SDK` license are active; QAIRT 2.49.40 was acquired as a 2,410,405,384-byte QIK with SHA-256 `ef4a63b81c9b3a42b8c23921a322754b2fa15f7ef5737c85911d4c527c1fdb0c` and extracted outside Git. The factory and implicated optimizer sources are byte-identical to 2.49.0, while selected Android Genie/QNN/HTP runtime binaries changed. See [`results/qairt-2.49.40-capability/result.json`](results/qairt-2.49.40-capability/result.json).
 
-1. provide an authorized, provenance-bound Gemma4 E2B w4a16 serialized context compiled for SM8550/HTP v73 plus token and per-layer embedding LUTs;
-2. authorize authenticated Qualcomm AI Hub Workbench use if it currently exposes a supported QNN context export for this checkpoint/target; or
-3. authorize a separately bound updated QAIRT/toolchain or architecture-aware converter fix.
-
-Ad hoc graph rewriting, a CPU response, or the unsupported Gemma4 GGUF route is not an acceptable workaround.
+The exact next gate is a bounded transform-only rerun using an isolated compatibility fix for ONNX Constant attributes that preserves the checkpoint bytes. Only after a hash-bound transform succeeds may QNN conversion and SM8550 compilation begin. Workbench compile/link remains a separate unapproved cost/terms checkpoint. Ad hoc checkpoint graph rewriting, a CPU response, or the unsupported Gemma4 GGUF route is not acceptable.
 
 ## Proof boundary
 
