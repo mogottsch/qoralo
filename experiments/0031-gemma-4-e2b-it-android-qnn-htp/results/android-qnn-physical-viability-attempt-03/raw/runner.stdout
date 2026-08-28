@@ -1,0 +1,16 @@
+> script viability.script
+> log create log1 verbose genie-verbose.log
+> profile create profile1
+> dialog config create config1 gemma4-e2b-htp-cl4096-greedy.json
+> dialog config bind profile config1 profile1
+> dialog config bind log config1 log1
+> dialog create dialog1 config1
+> dialog setMaxNumTokens dialog1 16
+> dialog query dialog1 short.txt viability-output.txt
+> dialog getValue dialog1 GENIE_DIALOG_PARAM_CONTEXT_OCCUPANCY
+> profile save profile1 viability-profile.json
+> dialog free dialog1
+> dialog config free config1
+> profile free profile1
+> log free log1
+> exit

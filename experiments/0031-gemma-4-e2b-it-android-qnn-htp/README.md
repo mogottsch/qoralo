@@ -2,7 +2,7 @@
 
 ## Status
 
-**The host-side cache contract is corrected and recompiled, and the private 16-token phone stage is rebuilt and hash-verified around the new context. All 15 value-cache datatype/scale/offset signatures are identical across AR1 inputs/outputs and AR128 inputs/outputs. This clears the attempt-02 host blocker only: the rebuilt context has not been loaded or executed on the phone, and no output or performance result exists. Wait for `R5CW81PR8SY` to reconnect and for Pi to verify identity and explicitly transfer phone priority.**
+**The third bounded phone gate physically loaded the cache-corrected context and cleared the prior 30 cache-quantization validation errors. It then failed during Genie I/O discovery before dialog creation or graph execution: the context exposes `position_ids_global_cos/sin`, while the unprefixed runtime positional binding searches for `position_ids_cos/sin`. No output or performance result exists. Further phone work is blocked on a host-side positional tensor-name binding correction, rebuild, review, and new explicit handoff.**
 
 This experiment is a separate HTP arm for the model studied in `0025`. It does not rewrite or relabel the CPU/GPU evidence there.
 
@@ -92,7 +92,11 @@ The boundary is compiled inside the HTP-targeted graph; it is not a host CPU cac
 
 The private runtime bundle and phone stage are now rebuilt around the corrected context. The stage reuses the exact tokenizer, source-derived LUTs, QnnHtp runtime dependencies, canonical short prompt, and 16-token viability ceiling; all manifest hashes, `SHA256SUMS`, required dependencies, and restrictive permissions pass. Stage preparation used no ADB and did not acquire `phone.lock`. See [`results/cache-corrected-phone-stage/result.json`](results/cache-corrected-phone-stage/result.json).
 
-No phone attempt, retry, or campaign is authorized yet. Wait for `R5CW81PR8SY` to reconnect as `device` and for Pi to verify identity and explicitly transfer phone priority; then run one bounded 16-token gate only. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
+The one authorized cache-corrected physical gate then held `phone.lock` for the full ADB lifecycle and passed device identity, local/remote stage hashes, and runtime completeness. On physical SM8550, the extension loaded, QNN HTP provider/backend/device and v73 stub initialized, and the corrected two-graph context deserialized. The prior 30 `Non-identical quantization parameters` errors were absent, physically confirming that the cache-contract correction cleared that validation blocker.
+
+Genie next reported the context inputs `position_ids_global_cos` and `position_ids_global_sin` as unconnected, searched for missing `position_ids_cos` and `position_ids_sin`, and failed with `Could not find I/O tensors in loaded graphs`. Dialog creation failed; the later scripted query targeted a nonexistent dialog. The retained profile has null components, no output was created, no graph execution occurred, and scoped cleanup verified the remote path absent with no residual process. See [`results/android-qnn-physical-viability-attempt-03/result.json`](results/android-qnn-physical-viability-attempt-03/result.json).
+
+No retry or campaign is authorized. The exact next gate is host-only: correct and validate the global positional-encoding tensor-name binding, rebuild/hash the private config and stage, report for review, and obtain a new explicit phone handoff. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
 
 ## Proof boundary
 

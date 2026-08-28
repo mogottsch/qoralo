@@ -1,0 +1,219 @@
+{
+  "claim_boundary": "The cache-corrected physical bundle passed local/remote hashes, loaded its extension, initialized QNN HTP on the verified SM8550 phone, and deserialized the two-graph weight-shared context. The prior 30 cache-quantization validation errors were absent. Genie then failed dialog creation because the context exposes position_ids_global_cos/sin while runtime positional binding searched for position_ids_cos/sin. No graph execution, generated output, or performance is claimed.",
+  "classification": "physical_qnn_htp_context_deserialized_io_tensor_discovery_failure_before_execution",
+  "device": {
+    "abi": "arm64-v8a",
+    "boot": "1",
+    "device": "dm3q",
+    "fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+    "flash_locked": "1",
+    "manufacturer": "samsung",
+    "model": "SM-S918B",
+    "release": "16",
+    "sdk": "36",
+    "serial": "R5CW81PR8SY",
+    "soc": "SM8550",
+    "verified_boot": "green"
+  },
+  "exact_unblock": "Correct and host-validate the Genie positional-encoding-to-context tensor-name binding for the global cos/sin inputs, rebuild/hash the private config/stage, report for review, and obtain a new explicit phone handoff before any retry.",
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "gate": {
+    "attempt": 3,
+    "bounded_viability_only": true,
+    "canonical_campaign": false,
+    "corrected_context_sha256": "a1d52d0087a0719d5907a98d99e8bc5996b699c9cf8f3a21b301588b9f51cc44",
+    "further_retry_performed": false,
+    "max_new_tokens": 16,
+    "phone_lock_held_full_adb_lifecycle": true
+  },
+  "outcome": {
+    "exit_code": 1,
+    "generated_tokens": 0,
+    "graph_execution_observed": false,
+    "host_bound_root_cause": "The first positional-encoding entry has no prefix, so Genie searches for position_ids_cos/sin; the transformed context names the corresponding global inputs position_ids_global_cos/sin.",
+    "output_created": false,
+    "output_sanity": {
+      "issue_notes": null,
+      "looks_sensible": null
+    },
+    "prior_cache_quantization_blocker_cleared_on_physical_load": true,
+    "prior_cache_quantization_validation_error_count": 0,
+    "profile_components": null,
+    "profile_created": true,
+    "result": "failed_io_tensor_discovery_before_dialog_and_graph_execution",
+    "runtime_requested_missing_inputs": [
+      "position_ids_cos",
+      "position_ids_sin"
+    ],
+    "stop_reason": "error",
+    "unconnected_context_inputs": [
+      "position_ids_global_cos",
+      "position_ids_global_sin"
+    ]
+  },
+  "physical_provider_evidence": {
+    "backend_extension_requested_without_dlopen_error": true,
+    "both_graphs_initialized": true,
+    "context_deserialized": true,
+    "htp_provider_initialized": true,
+    "physical_soc_detected": true,
+    "qnn_device_created": true,
+    "qnn_htp_backend_created": true,
+    "qnn_stub_connection_established": true,
+    "v73_stub_loaded": true,
+    "weight_sharing_context_detected": true
+  },
+  "raw_evidence": {
+    "adb-state.txt": {
+      "bytes": 7,
+      "sha256": "c98373c1abef78070f6beef6b4ae4fbf3de348dac280195c7f93441920584af9"
+    },
+    "battery-after.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "battery-after.txt": {
+      "bytes": 15927,
+      "sha256": "8d50311c36c5e3f4ed027e8ca9a265926231985082839f994d0cc3bc71ca0542"
+    },
+    "battery-before.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "battery-before.txt": {
+      "bytes": 15928,
+      "sha256": "cd5274e2efa160cd00bac8df8e13c40b5b3c78c712822f193e4fc6564ed5da74"
+    },
+    "cleanup-status.txt": {
+      "bytes": 7,
+      "sha256": "7925d3e9a9613a093e5eb4054b32aa39de910d2b03ba7e8046c3b4550b8de1e4"
+    },
+    "cleanup.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cleanup.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "exit-code.txt": {
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    "genie-verbose.log": {
+      "bytes": 220176,
+      "sha256": "482029815e7bb77b1894c28ef3deb83c6cbeab87e65e9cbf4d4ddb5596b8a26d"
+    },
+    "identity.txt": {
+      "bytes": 237,
+      "sha256": "6cc6731865e0f47abb5f749d2d18d784b81b1f90332aed0dc763f1ebb61327b3"
+    },
+    "launcher-exit-code.txt": {
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    "launcher.stderr": {
+      "bytes": 17,
+      "sha256": "eaa4b438e491a6e776d55e3c3a82093505252ef58309c43d28177085924f48d0"
+    },
+    "launcher.stdout": {
+      "bytes": 244,
+      "sha256": "b1c03d95c8e9cd0c0ccf628f9a2930500e63552adffeb43e582db6d48422d56c"
+    },
+    "local-hash-check.txt": {
+      "bytes": 519,
+      "sha256": "26cd1ee7cea68096728d5d584dcb06ebf5c0304cb5564e3fba7c189482b143fa"
+    },
+    "memory-samples.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "memory-samples.txt": {
+      "bytes": 948,
+      "sha256": "62ad3b441dd5158bd7e4aa5a309d8fb487b74b72a80b7c069541c79481e50603"
+    },
+    "process-after.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pull-genie-verbose.log.txt": {
+      "bytes": 176,
+      "sha256": "270312932ddbd1f59fca8cbfe9a7cd1f018e35a9f87888a46d2609d8bbd9104f"
+    },
+    "pull-viability-output.txt.txt": {
+      "bytes": 187,
+      "sha256": "45feab54bd8c112aff021a44d1eb3a3476ed5557bdf05380eef989a0a5676ac6"
+    },
+    "pull-viability-profile.json.txt": {
+      "bytes": 177,
+      "sha256": "21d2b93148fedc9b813a67b6690712bbe9b41c69ac610c600476120b9b3e5d7d"
+    },
+    "push.txt": {
+      "bytes": 180,
+      "sha256": "9d328a20d2329a3bab9bd3e689c6a7c7856ff4a0169c409c6466146f23841fc0"
+    },
+    "remote-hash-check.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "remote-hash-check.txt": {
+      "bytes": 519,
+      "sha256": "26cd1ee7cea68096728d5d584dcb06ebf5c0304cb5564e3fba7c189482b143fa"
+    },
+    "runner.stderr": {
+      "bytes": 509,
+      "sha256": "0ac4832f02089a55440fe038ef87a1c8bf9a6e443ab94e409bec1b7b89c4ad01"
+    },
+    "runner.stdout": {
+      "bytes": 575,
+      "sha256": "95e8d8b71d47fc46a0d8f80871afc13ca655373303c592bedee4db4cfc7be585"
+    },
+    "runtime-completeness.txt": {
+      "bytes": 176,
+      "sha256": "c2f842f873a149c2d6fe0f45d62e7fcf89ca5822d107f53bcaca610375c46b3f"
+    },
+    "storage-before.txt": {
+      "bytes": 128,
+      "sha256": "9cd642e1b018fff39cbb8d0f80c10ec1f77d745f3aa78671e06ae1205264f0cd"
+    },
+    "thermal-after.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "thermal-after.txt": {
+      "bytes": 1288,
+      "sha256": "8d9cda4a28be1262c8b7d08f4755b28bda93de1c27890d0d0ad459b989eae468"
+    },
+    "thermal-before.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "thermal-before.txt": {
+      "bytes": 1288,
+      "sha256": "d7a2cdf1938b63771441d976198851c4e875ddc6e15dee23ad48a4a7367509ae"
+    },
+    "viability-profile.json": {
+      "bytes": 293,
+      "sha256": "b2450200abbb590eef4c276425a986e0634a9eb9a45f04f3d00d701ecf07dd3b"
+    }
+  },
+  "run_id": "viability-20260828T092300Z-cache-corrected-attempt-03",
+  "schema_version": 1,
+  "stage": {
+    "local_hash_check_passed": true,
+    "remote_cleanup_status": "absent",
+    "remote_hash_check_passed": true,
+    "residual_process_observed": false,
+    "runtime_completeness_files": [
+      "bin/genie-app",
+      "lib/libGenie.so",
+      "lib/libQnnHtp.so",
+      "lib/libQnnSystem.so",
+      "lib/libQnnHtpV73Stub.so",
+      "lib/libQnnHtpV73Skel.so",
+      "lib/libQnnHtpNetRunExtensions.so",
+      "htp_backend_ext_config.json"
+    ]
+  },
+  "status": "phone_attempt_03_failed_position_id_tensor_name_binding_host_fix_required"
+}

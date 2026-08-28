@@ -107,7 +107,7 @@ class ContractTest(unittest.TestCase):
     def test_historical_transform_blocker_and_active_no_execution_claim(self) -> None:
         blocker = json.loads((EXP / "results/transform-blocker/result.json").read_text())
         self.assertEqual(
-            "cache_corrected_phone_stage_ready_waiting_device_identity_and_priority",
+            "phone_attempt_03_failed_position_id_tensor_name_binding_host_fix_required",
             self.contract["status"],
         )
         active = self.contract["conversion_blocker"]
@@ -117,7 +117,7 @@ class ContractTest(unittest.TestCase):
             "passed_host_conversion_recompile_and_four_way_metadata_inspection",
             active["cache_quantization_correction_gate"],
         )
-        self.assertIn("explicit Pi phone-priority transfer", active["next_gate"])
+        self.assertIn("new explicit phone handoff", active["next_gate"])
         self.assertFalse(blocker["android_execution"])
         self.assertFalse(blocker["qnn_htp_execution"])
         self.assertFalse(blocker["compiled_context_created"])
@@ -145,6 +145,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/cache-corrected-phone-stage",
             EXP / "results/android-qnn-physical-viability-attempt-01",
             EXP / "results/android-qnn-physical-viability-attempt-02",
+            EXP / "results/android-qnn-physical-viability-attempt-03",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():
@@ -330,6 +331,33 @@ class ContractTest(unittest.TestCase):
         self.assertFalse(result["authorization_boundary"]["adb_used"])
         self.assertFalse(result["authorization_boundary"]["phone_lock_acquired"])
         self.assertFalse(result["authorization_boundary"]["phone_run_authorized_now"])
+
+    def test_third_phone_attempt_clears_cache_validation_then_fails_io_binding(self) -> None:
+        result = json.loads(
+            (EXP / "results/android-qnn-physical-viability-attempt-03/result.json").read_text()
+        )
+        self.assertEqual(
+            "physical_qnn_htp_context_deserialized_io_tensor_discovery_failure_before_execution",
+            result["classification"],
+        )
+        self.assertTrue(all(result["physical_provider_evidence"].values()))
+        self.assertEqual(1, result["outcome"]["exit_code"])
+        self.assertEqual(0, result["outcome"]["prior_cache_quantization_validation_error_count"])
+        self.assertTrue(result["outcome"]["prior_cache_quantization_blocker_cleared_on_physical_load"])
+        self.assertEqual(
+            ["position_ids_global_cos", "position_ids_global_sin"],
+            result["outcome"]["unconnected_context_inputs"],
+        )
+        self.assertEqual(
+            ["position_ids_cos", "position_ids_sin"],
+            result["outcome"]["runtime_requested_missing_inputs"],
+        )
+        self.assertFalse(result["outcome"]["graph_execution_observed"])
+        self.assertFalse(result["outcome"]["output_created"])
+        self.assertEqual(0, result["outcome"]["generated_tokens"])
+        self.assertIsNone(result["outcome"]["profile_components"])
+        self.assertEqual("absent", result["stage"]["remote_cleanup_status"])
+        self.assertFalse(result["gate"]["further_retry_performed"])
 
     def test_bounded_phone_gate_script_holds_lock_and_cleans_scope(self) -> None:
         script = (EXP / "tools/run_phone_viability.sh").read_text()

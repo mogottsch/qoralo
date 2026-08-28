@@ -46,7 +46,9 @@ The host-side cache correction now passes. A schema-standard ONNX float fork plu
 
 Pi independently reviewed and pushed the host correction. The private runtime bundle and stage are now rebuilt around the corrected context; all file hashes, `SHA256SUMS`, required runtime dependencies, and restrictive permissions pass. This preparation used no ADB and did not acquire `phone.lock`.
 
-The active next step is to wait for `R5CW81PR8SY` to reconnect as `device` and for Pi to verify identity and explicitly transfer phone priority. Then run exactly one locked 16-token physical gate, with no retry or campaign. Do not access ADB, weaken Genie validation, or start a campaign before that handoff. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
+The one authorized corrected physical gate ran under the full `phone.lock` lifecycle. It passed identity, local/remote hashes, dependency completeness, QNN HTP provider/backend/device initialization, v73 stub connection, and corrected context deserialization. The prior 30 cache-quantization errors were absent. Genie then failed I/O discovery before dialog creation or graph execution: the context exposes `position_ids_global_cos/sin`, while the unprefixed positional configuration searches for `position_ids_cos/sin`. No output was created; profile components are null; scoped cleanup and process termination passed.
+
+The active next step is host-only: correct and validate the global positional-encoding tensor-name binding, rebuild/hash the private config and stage, commit and report the evidence, and obtain a new explicit phone handoff. Do not access ADB, retry, or start a campaign before that handoff. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
 
 ## Stop conditions
 

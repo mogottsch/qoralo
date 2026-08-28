@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
-  "status": "cache_corrected_phone_stage_ready_waiting_device_identity_and_priority",
+  "status": "phone_attempt_03_failed_position_id_tensor_name_binding_host_fix_required",
   "question": "Can Gemma 4 E2B IT run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Gemma 4 E2B IT text generation only",
@@ -144,7 +144,8 @@
     "corrected_stage_gate": "passed",
     "phone_attempt_02": "failed_pre_query_30_cross_variant_value_cache_quantization_mismatches_exit_1",
     "cache_quantization_correction_gate": "passed_host_conversion_recompile_and_four_way_metadata_inspection",
-    "next_gate": "After independent review and explicit Pi phone-priority transfer, rebuild the private bundle/stage around the corrected context and run one locked 16-token physical gate.",
+    "phone_attempt_03": "failed_pre_dialog_io_discovery_position_ids_global_vs_unprefixed_name_binding_exit_1",
+    "next_gate": "Host-only: correct and validate the global positional-encoding tensor-name binding, rebuild/hash the private config and stage, commit/report, and obtain a new explicit phone handoff.",
     "workbench_checkpoint": "Any paid Workbench compile/link job requires a separate explicit cost/terms decision."
   },
   "transform_result": {
@@ -337,8 +338,32 @@
     "remote_cleanup_verified_absent": true,
     "further_retry_performed": false
   },
+  "phone_viability_attempt_03": {
+    "result_path": "results/android-qnn-physical-viability-attempt-03/result.json",
+    "classification": "physical_qnn_htp_context_deserialized_io_tensor_discovery_failure_before_execution",
+    "phone_lock_held": true,
+    "device": "Samsung SM-S918B / SM8550 / arm64-v8a",
+    "max_new_tokens": 16,
+    "canonical_campaign": false,
+    "exit_code": 1,
+    "corrected_context_sha256": "a1d52d0087a0719d5907a98d99e8bc5996b699c9cf8f3a21b301588b9f51cc44",
+    "backend_extension_loaded": true,
+    "physical_context_deserialized": true,
+    "weight_sharing_context_detected": true,
+    "prior_cache_quantization_validation_error_count": 0,
+    "prior_cache_quantization_blocker_cleared_on_physical_load": true,
+    "unconnected_context_inputs": ["position_ids_global_cos", "position_ids_global_sin"],
+    "runtime_requested_missing_inputs": ["position_ids_cos", "position_ids_sin"],
+    "root_cause": "The unprefixed Genie positional binding searches for position_ids_cos/sin, while the context exposes position_ids_global_cos/sin.",
+    "graph_execution_observed": false,
+    "generated_tokens": 0,
+    "output_created": false,
+    "profile_components": null,
+    "remote_cleanup_verified_absent": true,
+    "further_retry_performed": false
+  },
   "campaign_gate": {
-    "phone_priority": "next after R5CW81PR8SY reconnects as device and Pi verifies identity and explicitly transfers priority; no ADB before that handoff",
+    "phone_priority": "blocked on host positional-name correction and a new explicit Pi handoff; no ADB before that handoff",
     "bounded_viability_first": true,
     "canonical_after_viability": true,
     "request_isolation_candidate": "One loaded Genie Engine with a fresh Dialog per logical request, or a proven full GenieDialog_reset; measure reset/creation separately and reject retained KV/prefix reuse.",
