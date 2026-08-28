@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>Podcast app UX — Material 3 working draft</title>
+  <style>
+    :root {
+      /* Material 3 baseline tokens, adapted for the podcast product */
+      --md-primary: #65558f;
+      --md-on-primary: #ffffff;
+      --md-primary-container: #e9ddff;
+      --md-on-primary-container: #211047;
+      --md-secondary: #625b71;
+      --md-secondary-container: #e8def8;
+      --md-on-secondary-container: #1e192b;
+      --md-tertiary: #7d5260;
+      --md-tertiary-container: #ffd9e3;
+      --md-on-tertiary-container: #31101d;
+      --md-error: #ba1a1a;
+      --md-surface: #fef7ff;
+      --md-surface-dim: #ded8e1;
+      --md-surface-bright: #fef7ff;
+      --md-surface-container-lowest: #ffffff;
+      --md-surface-container-low: #f7f2fa;
+      --md-surface-container: #f3edf7;
+      --md-surface-container-high: #ece6f0;
+      --md-surface-container-highest: #e6e0e9;
+      --md-on-surface: #1d1b20;
+      --md-on-surface-variant: #49454f;
+      --md-outline: #79747e;
+      --md-outline-variant: #cac4d0;
+      --doc-bg: #e8e3eb;
+      --shadow: 0 24px 70px rgba(29,27,32,.18), 0 4px 16px rgba(29,27,32,.10);
+      /* Galaxy S22 Ultra display proportions: 1440 × 3088 (≈2.144:1) */
+      --phone-w: 384px;
+      --phone-h: 824px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--doc-bg);
+      color: var(--md-on-surface);
+      font-family: Roboto, "Segoe UI", system-ui, -apple-system, sans-serif;
+      line-height: 1.45;
+    }
+    button, input, textarea { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+
+    .doc-header {
+      padding: 24px max(24px, calc((100vw - 1460px) / 2));
+      background: var(--md-primary);
+      color: var(--md-on-primary);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .eyebrow { margin: 0 0 5px; font-size: 11px; line-height: 16px; text-transform: uppercase; letter-spacing: .12em; font-weight: 700; opacity: .78; }
+    .doc-header h1 { margin: 0; font-size: clamp(26px, 3vw, 38px); line-height: 1.1; font-weight: 500; letter-spacing: -.025em; }
+    .doc-meta { font-size: 12px; text-align: right; opacity: .78; }
+
+    .lifecycle-wrap {
+      padding: 18px max(24px, calc((100vw - 1460px) / 2));
+      background: var(--md-surface);
+      border-bottom: 1px solid var(--md-outline-variant);
+    }
+    .lifecycle-label { margin: 0 0 10px; color: var(--md-primary); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; }
+    .lifecycle { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; max-width: 1180px; }
+    .life-step {
+      position: relative;
+      min-height: 68px;
+      padding: 11px 13px;
+      border-radius: 16px;
+      background: var(--md-surface-container-low);
+      border: 1px solid var(--md-outline-variant);
+      text-decoration: none;
+      color: inherit;
+    }
+    .life-step b { display: block; font-size: 12px; font-weight: 700; }
+    .life-step span { color: var(--md-on-surface-variant); font-size: 10px; }
+    .life-step.lock { background: var(--md-tertiary-container); color: var(--md-on-tertiary-container); border-color: transparent; }
+    .life-step.frozen { background: var(--md-primary-container); color: var(--md-on-primary-container); border-color: transparent; }
+
+    .doc-layout {
+      max-width: 1460px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
+      gap: 22px;
+      padding: 24px 20px 80px;
+    }
+    .side-nav {
+      position: sticky;
+      top: 16px;
+      height: fit-content;
+      padding: 12px;
+      border-radius: 24px;
+      background: var(--md-surface-container-low);
+      border: 1px solid var(--md-outline-variant);
+    }
+    .side-nav h2 { margin: 8px 12px 9px; color: var(--md-on-surface-variant); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; }
+    .side-nav a { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 24px; color: inherit; text-decoration: none; font-size: 13px; font-weight: 600; }
+    .side-nav a:hover { background: var(--md-secondary-container); }
+    .side-nav .index { width: 25px; height: 25px; display: grid; place-items: center; border-radius: 50%; background: var(--md-surface-container-highest); color: var(--md-on-surface-variant); font-size: 11px; }
+    .side-note { margin: 10px 12px 4px; padding-top: 12px; border-top: 1px solid var(--md-outline-variant); color: var(--md-on-surface-variant); font-size: 10px; }
+    main { min-width: 0; }
+
+    .thesis {
+      margin-bottom: 22px;
+      padding: 20px 22px;
+      border-radius: 28px;
+      background: var(--md-surface-container-low);
+      border: 1px solid var(--md-outline-variant);
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 22px;
+    }
+    .thesis h2 { margin: 0 0 6px; font-size: 23px; font-weight: 500; letter-spacing: -.02em; }
+    .thesis p { margin: 0; color: var(--md-on-surface-variant); font-size: 13px; }
+    .token-list { display: flex; gap: 7px; flex-wrap: wrap; align-content: start; justify-content: flex-end; }
+    .doc-chip { padding: 7px 11px; border-radius: 10px; background: var(--md-secondary-container); color: var(--md-on-secondary-container); font-size: 10px; font-weight: 700; }
+    .doc-chip.confirmed { background: var(--md-primary-container); color: var(--md-on-primary-container); }
+
+    .screen-section {
+      scroll-margin-top: 18px;
+      margin-bottom: 24px;
+      border-radius: 28px;
+      background: rgba(254,247,255,.7);
+      border: 1px solid var(--md-outline-variant);
+      overflow: hidden;
+    }
+    .screen-header {
+      padding: 17px 21px;
+      background: var(--md-surface-container-low);
+      border-bottom: 1px solid var(--md-outline-variant);
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: start;
+    }
+    .screen-header h2 { margin: 0 0 3px; font-size: 20px; line-height: 26px; font-weight: 500; }
+    .screen-header p { margin: 0; color: var(--md-on-surface-variant); font-size: 12px; }
+    .status-chip { flex: none; padding: 6px 9px; border-radius: 8px; background: var(--md-primary-container); color: var(--md-on-primary-container); font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+    .screen-body { padding: 28px 22px; display: grid; grid-template-columns: minmax(410px, 470px) minmax(270px, 1fr); gap: 30px; align-items: start; }
+    .phone-stage { min-height: 874px; display: grid; place-items: start center; }
+    .notes h3 { margin: 2px 0 10px; color: var(--md-on-surface-variant); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; }
+    .note-card { margin-bottom: 9px; padding: 13px 14px; border-radius: 16px; background: var(--md-surface-container-lowest); border: 1px solid var(--md-outline-variant); }
+    .note-card.confirmed { border-left: 4px solid var(--md-primary); }
+    .note-card.behavior { border-left: 4px solid var(--md-tertiary); }
+    .note-card b { display: block; margin-bottom: 3px; font-size: 12px; }
+    .note-card p { margin: 0; color: var(--md-on-surface-variant); font-size: 11px; }
+    details { padding: 10px 2px; border-top: 1px solid var(--md-outline-variant); color: var(--md-on-surface-variant); font-size: 11px; }
+    details summary { color: var(--md-on-surface); font-weight: 700; cursor: pointer; }
+    details p, details ul { margin: 7px 0 0; }
+
+    /* Phone shell */
+    .phone {
+      position: relative;
+      width: var(--phone-w);
+      height: var(--phone-h);
+      overflow: hidden;
+      border: 7px solid #242228;
+      outline: 1px solid rgba(255,255,255,.2);
+      border-radius: 25px;
+      background: var(--md-surface);
+      color: var(--md-on-surface);
+      box-shadow: var(--shadow);
+    }
+    .phone::before { content: ""; position: absolute; z-index: 30; top: 8px; left: 50%; translate: -50% 0; width: 11px; height: 11px; border-radius: 50%; background: #17151a; box-shadow: 0 0 0 1px rgba(255,255,255,.12); }
+    .phone::after { content: ""; position: absolute; z-index: 60; left: 50%; bottom: 4px; translate: -50% 0; width: 104px; height: 4px; border-radius: 4px; background: var(--md-on-surface); opacity: .72; }
+    .statusbar { position: relative; z-index: 20; height: 36px; padding: 8px 17px 0; display: flex; justify-content: space-between; font-size: 10px; font-weight: 700; }
+    .phone-body { height: calc(100% - 36px); overflow: hidden; padding: 0 16px 92px; }
+    .topbar { min-height: 56px; display: grid; grid-template-columns: 48px 1fr 48px; align-items: center; }
+    .topbar.center { text-align: center; }
+    .topbar-title { font-size: 14px; font-weight: 600; }
+    .icon-button { width: 40px; height: 40px; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; font-size: 18px; }
+    .icon-button:hover { background: var(--md-surface-container-high); }
+    .avatar-button { background: var(--md-primary-container); color: var(--md-on-primary-container); font-size: 12px; font-weight: 800; }
+    .headline { margin: 18px 4px 15px; font-size: 30px; line-height: 36px; font-weight: 400; letter-spacing: -.02em; }
+    .section-title { margin: 19px 4px 9px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 700; }
+    .text-button { border: 0; background: transparent; color: var(--md-primary); font-size: 11px; font-weight: 700; }
+    .filled-button { min-height: 48px; padding: 0 24px; border: 0; border-radius: 24px; background: var(--md-primary); color: var(--md-on-primary); font-size: 13px; font-weight: 700; }
+    .tonal-button { min-height: 44px; padding: 0 20px; border: 0; border-radius: 22px; background: var(--md-secondary-container); color: var(--md-on-secondary-container); font-size: 12px; font-weight: 700; }
+    .outlined-button { min-height: 44px; padding: 0 20px; border: 1px solid var(--md-outline); border-radius: 22px; background: transparent; color: var(--md-primary); font-size: 12px; font-weight: 700; }
+    .extended-fab { min-height: 56px; padding: 0 18px; border: 0; border-radius: 16px; background: var(--md-primary-container); color: var(--md-on-primary-container); box-shadow: 0 3px 8px rgba(29,27,32,.22); font-size: 12px; font-weight: 700; }
+    .bottom-action { position: absolute; z-index: 22; left: 16px; right: 16px; bottom: 20px; display: grid; gap: 7px; }
+    .bottom-action .filled-button { width: 100%; }
+    .nav-bar { position: absolute; z-index: 20; left: 0; right: 0; bottom: 0; height: 80px; padding: 8px 16px 12px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; background: var(--md-surface-container); }
+    .nav-item { min-width: 70px; display: grid; place-items: center; gap: 2px; color: var(--md-on-surface-variant); font-size: 9px; font-weight: 600; }
+    .nav-item .nav-icon { min-width: 54px; height: 30px; display: grid; place-items: center; border-radius: 16px; font-size: 17px; }
+    .nav-item.active { color: var(--md-on-surface); }
+    .nav-item.active .nav-icon { background: var(--md-secondary-container); }
+    .assist-chip { min-height: 32px; padding: 0 12px; border: 1px solid var(--md-outline); border-radius: 8px; background: transparent; color: var(--md-on-surface-variant); font-size: 10px; font-weight: 600; }
+
+    /* Library */
+    .home-top { min-height: 62px; display: flex; justify-content: space-between; align-items: center; }
+    .wordmark { font-size: 21px; font-weight: 650; letter-spacing: -.025em; }
+    .hero-card { padding: 14px; border-radius: 24px; background: var(--md-primary-container); color: var(--md-on-primary-container); display: grid; grid-template-columns: 106px 1fr; gap: 13px; }
+    .cover { position: relative; overflow: hidden; border-radius: 18px; background: #cbb8ee; }
+    .cover::before { content: ""; position: absolute; width: 110px; height: 110px; border-radius: 50%; right: -45px; top: -35px; background: #ffb0c5; }
+    .cover::after { content: ""; position: absolute; width: 140px; height: 55px; border: 17px solid #4b3b72; border-radius: 50%; left: -55px; bottom: 15px; rotate: -16deg; }
+    .hero-card .cover { height: 137px; }
+    .label { font-size: 9px; line-height: 14px; text-transform: uppercase; letter-spacing: .1em; font-weight: 800; opacity: .75; }
+    .episode-title { margin: 4px 0 5px; font-size: 18px; line-height: 22px; font-weight: 500; letter-spacing: -.01em; }
+    .small-meta { color: var(--md-on-surface-variant); font-size: 9px; }
+    .hero-card .small-meta { color: #51436e; }
+    .progress { height: 4px; margin-top: 13px; border-radius: 4px; background: rgba(33,16,71,.16); overflow: hidden; }
+    .progress span { display: block; height: 100%; background: var(--md-primary); border-radius: inherit; }
+    .resume-row { margin-top: 8px; display: flex; align-items: center; justify-content: space-between; font-size: 9px; }
+    .mini-play { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; border: 0; background: var(--md-primary); color: white; }
+    .episode-list { display: grid; gap: 7px; }
+    .episode-row { display: grid; grid-template-columns: 55px 1fr 36px; align-items: center; gap: 11px; min-height: 70px; padding: 8px; border-radius: 16px; background: var(--md-surface-container-low); }
+    .episode-row .cover { width: 55px; height: 55px; border-radius: 13px; }
+    .episode-row b { display: block; font-size: 12px; line-height: 16px; font-weight: 600; }
+    .episode-row small { color: var(--md-on-surface-variant); font-size: 9px; }
+
+    /* Sources */
+    .step-line { display: flex; gap: 5px; margin: 3px 4px 18px; }
+    .step-line span { height: 4px; flex: 1; border-radius: 4px; background: var(--md-surface-container-highest); }
+    .step-line .active { background: var(--md-primary); }
+    .source-tile { width: 100%; min-height: 72px; margin-bottom: 8px; padding: 12px; display: grid; grid-template-columns: 44px 1fr 24px; gap: 10px; align-items: center; text-align: left; border: 1px solid var(--md-outline-variant); border-radius: 16px; background: var(--md-surface-container-low); }
+    .source-icon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 14px; background: var(--md-secondary-container); color: var(--md-on-secondary-container); font-size: 18px; }
+    .source-tile b { display: block; font-size: 12px; }
+    .source-tile small { display: block; margin-top: 2px; color: var(--md-on-surface-variant); font-size: 9px; }
+    .source-card { margin-top: 14px; overflow: hidden; border-radius: 20px; background: var(--md-surface-container); }
+    .source-card-top { padding: 12px; display: grid; grid-template-columns: 40px 1fr 32px; gap: 9px; align-items: center; }
+    .doc-icon { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; background: var(--md-tertiary-container); color: var(--md-on-tertiary-container); font-size: 10px; font-weight: 800; }
+    .source-card b { display: block; font-size: 11px; }
+    .source-card small { color: var(--md-on-surface-variant); font-size: 9px; }
+
+    /* Instructions */
+    .instruction-field { position: relative; margin-top: 14px; }
+    .instruction-field textarea { width: 100%; min-height: 195px; resize: none; padding: 18px 15px; border: 1px solid var(--md-outline); border-radius: 16px; outline: 0; background: transparent; color: var(--md-on-surface); font-size: 13px; line-height: 19px; }
+    .instruction-field textarea:focus { border: 2px solid var(--md-primary); padding: 17px 14px; }
+    .floating-label { position: absolute; top: -7px; left: 12px; padding: 0 5px; background: var(--md-surface); color: var(--md-primary); font-size: 9px; font-weight: 600; }
+    .hint-heading { margin: 14px 2px 7px; color: var(--md-on-surface-variant); font-size: 10px; font-weight: 600; }
+    .hint-chips { display: flex; gap: 7px; flex-wrap: wrap; }
+    .hint-chips .assist-chip:hover { background: var(--md-secondary-container); border-color: transparent; }
+    .toggle-card { margin-top: 18px; padding: 13px 14px; border-radius: 16px; background: var(--md-surface-container); display: grid; grid-template-columns: 1fr 48px; align-items: center; gap: 10px; }
+    .toggle-card b { display: block; font-size: 12px; }
+    .toggle-card small { display: block; margin-top: 2px; color: var(--md-on-surface-variant); font-size: 9px; line-height: 13px; }
+    .switch { width: 48px; height: 28px; padding: 4px; border: 0; border-radius: 16px; background: var(--md-outline); }
+    .switch span { display: block; width: 20px; height: 20px; border-radius: 50%; background: white; transition: translate .15s; }
+    .switch.on { background: var(--md-primary); }
+    .switch.on span { translate: 20px 0; }
+
+    /* Review / agent editing */
+    .draft-bar { margin: 2px 0 12px; padding: 10px 12px; border-radius: 14px; background: var(--md-secondary-container); color: var(--md-on-secondary-container); display: flex; justify-content: space-between; align-items: center; font-size: 10px; }
+    .draft-bar b { font-weight: 800; }
+    .chapter-stack { height: 480px; overflow: auto; padding-right: 2px; }
+    .chapter { margin-bottom: 8px; border-radius: 18px; background: var(--md-surface-container-low); border: 1px solid var(--md-outline-variant); overflow: hidden; }
+    .chapter[open] { background: var(--md-surface-container-lowest); }
+    .chapter summary { list-style: none; padding: 12px; display: grid; grid-template-columns: 31px 1fr 22px; gap: 9px; align-items: center; cursor: pointer; }
+    .chapter summary::-webkit-details-marker { display: none; }
+    .chapter-index { width: 31px; height: 31px; display: grid; place-items: center; border-radius: 10px; background: var(--md-primary-container); color: var(--md-on-primary-container); font-size: 10px; font-weight: 800; }
+    .chapter summary b { display: block; font-size: 11px; }
+    .chapter summary small { color: var(--md-on-surface-variant); font-size: 8px; }
+    .chapter-copy { padding: 0 13px 14px; color: var(--md-on-surface-variant); font-size: 10px; line-height: 15px; }
+    .agent-fab { position: absolute; z-index: 24; right: 17px; bottom: 82px; min-height: 52px; padding: 0 16px; border: 0; border-radius: 16px; background: var(--md-tertiary-container); color: var(--md-on-tertiary-container); box-shadow: 0 3px 8px rgba(29,27,32,.22); font-size: 11px; font-weight: 800; }
+    .review-action { position: absolute; z-index: 23; left: 0; right: 0; bottom: 0; min-height: 72px; padding: 10px 16px 14px; background: var(--md-surface-container); }
+    .review-action .filled-button { width: 100%; }
+
+    .chat-sheet { position: absolute; z-index: 40; left: 0; right: 0; bottom: 0; height: 625px; padding: 8px 16px 16px; border-radius: 28px 28px 0 0; background: var(--md-surface-container-low); box-shadow: 0 -8px 24px rgba(29,27,32,.18); transform: translateY(100%); transition: transform .22s ease; }
+    .chat-sheet.open { transform: translateY(0); }
+    .handle { width: 32px; height: 4px; margin: 1px auto 10px; border-radius: 3px; background: var(--md-outline); }
+    .chat-header { display: grid; grid-template-columns: 40px 1fr 40px; align-items: center; text-align: center; }
+    .chat-header b { font-size: 13px; }
+    .message { max-width: 84%; margin-bottom: 9px; padding: 10px 12px; border-radius: 16px; font-size: 10px; line-height: 15px; }
+    .message.user { margin-left: auto; border-radius: 16px 16px 4px 16px; background: var(--md-primary); color: white; }
+    .message.agent { border-radius: 16px 16px 16px 4px; background: var(--md-surface-container-highest); }
+    .change-summary { margin: 12px 0; padding: 11px; border: 1px solid var(--md-outline-variant); border-radius: 14px; background: white; font-size: 9px; }
+    .change-summary b { display: block; margin-bottom: 3px; }
+    .chat-composer { position: absolute; left: 16px; right: 16px; bottom: 16px; min-height: 53px; padding: 7px 7px 7px 15px; display: grid; grid-template-columns: 1fr 40px; align-items: center; border: 1px solid var(--md-outline); border-radius: 27px; background: white; }
+    .chat-composer span { color: var(--md-on-surface-variant); font-size: 10px; }
+    .send-button { width: 40px; height: 40px; display: grid; place-items: center; border: 0; border-radius: 50%; background: var(--md-primary); color: white; }
+
+    /* Lock dialog */
+    .dialog-screen .phone-body { filter: brightness(.68); }
+    .scrim { position: absolute; z-index: 35; inset: 0; background: rgba(0,0,0,.34); }
+    .dialog { position: absolute; z-index: 36; left: 32px; right: 32px; top: 50%; translate: 0 -50%; padding: 24px; border-radius: 28px; background: var(--md-surface-container-high); box-shadow: 0 10px 35px rgba(0,0,0,.26); }
+    .dialog-icon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 14px; background: var(--md-tertiary-container); color: var(--md-on-tertiary-container); font-size: 19px; }
+    .dialog h2 { margin: 16px 0 9px; font-size: 24px; line-height: 30px; font-weight: 500; }
+    .dialog p { margin: 0; color: var(--md-on-surface-variant); font-size: 11px; line-height: 16px; }
+    .dialog-actions { margin-top: 22px; display: flex; justify-content: flex-end; align-items: center; gap: 5px; }
+
+    /* Generating */
+    .gen-art { width: 218px; height: 218px; margin: 55px auto 30px; border-radius: 64px; background: var(--md-primary-container); position: relative; overflow: hidden; }
+    .gen-art::before { content: ""; position: absolute; width: 150px; height: 150px; border-radius: 50%; right: -50px; top: -40px; background: #ffb1c5; }
+    .gen-art::after { content: ""; position: absolute; width: 220px; height: 80px; border: 22px solid var(--md-primary); border-radius: 50%; left: -75px; bottom: 34px; rotate: -16deg; }
+    .wave { position: absolute; z-index: 2; inset: 0; display: flex; gap: 7px; align-items: center; justify-content: center; }
+    .wave i { display: block; width: 5px; border-radius: 5px; background: var(--md-on-primary-container); }
+    .wave i:nth-child(1) { height: 24px; } .wave i:nth-child(2) { height: 52px; } .wave i:nth-child(3) { height: 78px; } .wave i:nth-child(4) { height: 44px; } .wave i:nth-child(5) { height: 64px; }
+    .gen-label { text-align: center; color: var(--md-primary); font-size: 10px; text-transform: uppercase; letter-spacing: .1em; font-weight: 800; }
+    .gen-title { margin: 7px auto; max-width: 300px; text-align: center; font-size: 26px; line-height: 32px; font-weight: 500; }
+    .gen-copy { margin: 0 auto; max-width: 290px; text-align: center; color: var(--md-on-surface-variant); font-size: 10px; line-height: 15px; }
+    .chapter-progress { margin: 25px 8px 10px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+    .chapter-progress span { height: 6px; border-radius: 5px; background: var(--md-surface-container-highest); }
+    .chapter-progress .done { background: var(--md-primary); }
+    .gen-meta { margin: 0 8px; display: flex; justify-content: space-between; color: var(--md-on-surface-variant); font-size: 9px; }
+
+    /* Player with lyrics-like transcript */
+    .player-phone { background: var(--md-surface); color: var(--md-on-surface); }
+    .player-phone .icon-button { color: var(--md-on-surface); }
+    .player-phone .phone-body { padding-left: 20px; padding-right: 20px; }
+    .player-cover { height: 310px; margin: 8px 0 19px; border-radius: 28px; background: #bfa9e8; position: relative; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,.26); }
+    .player-cover::before { content: ""; position: absolute; width: 250px; height: 250px; border-radius: 50%; right: -90px; top: -70px; background: #ff9ab6; }
+    .player-cover::after { content: ""; position: absolute; width: 320px; height: 100px; border: 28px solid #49366f; border-radius: 50%; left: -110px; bottom: 45px; rotate: -17deg; }
+    .art-copy { position: absolute; z-index: 2; left: 23px; right: 23px; bottom: 25px; font-size: 30px; line-height: 34px; font-weight: 500; letter-spacing: -.03em; }
+    .now-chapter { color: var(--md-primary); font-size: 9px; text-transform: uppercase; letter-spacing: .1em; font-weight: 800; }
+    .player-name { margin: 4px 0 2px; font-size: 19px; line-height: 24px; font-weight: 500; }
+    .player-source { color: var(--md-on-surface-variant); font-size: 9px; }
+    .dark-progress { margin-top: 18px; height: 4px; border-radius: 4px; background: var(--md-surface-container-highest); }
+    .dark-progress span { display: block; width: 38%; height: 100%; border-radius: inherit; background: var(--md-primary); }
+    .timecodes { display: flex; justify-content: space-between; margin-top: 5px; color: var(--md-on-surface-variant); font-size: 8px; }
+    .transport { margin-top: 14px; display: flex; align-items: center; justify-content: space-around; }
+    .transport span { width: 42px; height: 42px; display: grid; place-items: center; font-size: 15px; }
+    .transport .main { width: 62px; height: 62px; border-radius: 50%; background: var(--md-primary); color: var(--md-on-primary); font-size: 20px; }
+    .player-actions { margin-top: 13px; display: grid; grid-template-columns: repeat(3,1fr); gap: 7px; }
+    .dark-chip { min-height: 36px; border: 1px solid var(--md-outline); border-radius: 9px; background: transparent; color: var(--md-on-surface-variant); font-size: 9px; font-weight: 600; }
+    .transcript-sheet { position: absolute; z-index: 25; left: 13px; right: 13px; bottom: 13px; height: 570px; padding: 8px 18px 18px; border-radius: 28px; background: var(--md-primary-container); color: var(--md-on-primary-container); transform: translateY(110%); transition: transform .24s ease; box-shadow: 0 -8px 30px rgba(29,27,32,.22); }
+    .transcript-sheet.open { transform: translateY(0); }
+    .lyrics-head { display: flex; justify-content: space-between; align-items: center; margin: 9px 0 22px; }
+    .lyrics-head b { font-size: 13px; }
+    .lyrics-copy { height: 420px; overflow: hidden; font-size: 24px; line-height: 32px; font-weight: 650; letter-spacing: -.02em; }
+    .lyrics-copy p { margin: 0 0 22px; opacity: .34; }
+    .lyrics-copy p.current { opacity: 1; }
+    .lyrics-footer { display: flex; justify-content: space-between; color: var(--md-on-primary-container); opacity: .72; font-size: 9px; }
+
+    .bottom-panels { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .panel { padding: 19px; border-radius: 24px; background: var(--md-surface-container-low); border: 1px solid var(--md-outline-variant); }
+    .panel h2 { margin: 0 0 10px; font-size: 18px; font-weight: 500; }
+    .decision-list { display: grid; gap: 8px; }
+    .decision { display: grid; grid-template-columns: 29px 1fr; gap: 9px; align-items: start; font-size: 11px; }
+    .decision .d { width: 29px; height: 29px; display: grid; place-items: center; border-radius: 10px; background: var(--md-primary-container); color: var(--md-on-primary-container); font-size: 9px; font-weight: 800; }
+    .decision b { display: block; }
+    .decision span { color: var(--md-on-surface-variant); font-size: 10px; }
+
+    @media (max-width: 1040px) {
+      .doc-layout { grid-template-columns: 1fr; }
+      .side-nav { position: static; display: flex; overflow-x: auto; }
+      .side-nav h2, .side-note { display: none; }
+      .side-nav a { white-space: nowrap; }
+      .screen-body { grid-template-columns: 1fr; }
+      .notes { width: min(620px, 100%); margin: 0 auto; }
+      .thesis { grid-template-columns: 1fr; }
+      .token-list { justify-content: flex-start; }
+    }
+    @media (max-width: 760px) {
+      .lifecycle { grid-template-columns: 1fr 1fr; }
+      .doc-header { flex-direction: column; align-items: start; }
+      .doc-meta { text-align: left; }
+      .bottom-panels { grid-template-columns: 1fr; }
+      .screen-body { padding: 22px 8px; }
+      .phone-stage { min-height: auto; padding-bottom: 25px; overflow-x: auto; }
+    }
+    @media (max-width: 420px) {
+      .doc-layout { padding-inline: 8px; }
+      .phone { width: 360px; height: 772px; border-radius: 24px; }
+    }
+    @media print {
+      body { background: white; }
+      .side-nav { display: none; }
+      .doc-layout { display: block; }
+      .screen-section { break-inside: avoid; }
+      .phone { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="doc-header">
+    <div>
+      <p class="eyebrow">UX working draft · Material 3 direction</p>
+      <h1>Offline podcast-generation app</h1>
+    </div>
+    <div class="doc-meta">Draft 0.2<br>Updated 2026-08-28<br>Discussion artifact — not implementation</div>
+  </header>
+
+  <section class="lifecycle-wrap" aria-labelledby="lifecycle-title">
+    <p class="lifecycle-label" id="lifecycle-title">Episode lifecycle</p>
+    <nav class="lifecycle" aria-label="Episode lifecycle">
+      <a class="life-step" href="#sources"><b>1 · Sources</b><span>Add one or more materials</span></a>
+      <a class="life-step" href="#instructions"><b>2 · Instructions</b><span>One free-text direction</span></a>
+      <a class="life-step" href="#review"><b>3 · Script</b><span>Optional chapter review</span></a>
+      <a class="life-step" href="#agent"><b>4 · Agent edit</b><span>Change via conversation only</span></a>
+      <a class="life-step lock" href="#lock"><b>5 · Lock</b><span>Irreversible before audio</span></a>
+      <a class="life-step frozen" href="#player"><b>6 · Frozen episode</b><span>Listen and follow transcript</span></a>
+    </nav>
+  </section>
+
+  <div class="doc-layout">
+    <aside class="side-nav" aria-label="Screen index">
+      <h2>Screen index</h2>
+      <a href="#library"><span class="index">1</span>Library</a>
+      <a href="#sources"><span class="index">2</span>Sources</a>
+      <a href="#instructions"><span class="index">3</span>Instructions</a>
+      <a href="#review"><span class="index">4</span>Review chapters</a>
+      <a href="#agent"><span class="index">5</span>Agent editing</a>
+      <a href="#lock"><span class="index">6</span>Lock script</a>
+      <a href="#generating"><span class="index">7</span>Create audio</a>
+      <a href="#player"><span class="index">8</span>Listen</a>
+      <div class="side-note">Material 3 interaction and shape language. Transcript becomes immutable once audio generation begins.</div>
+    </aside>
+
+    <main>
+      <section class="thesis">
+        <div>
+          <h2>Material 3, with a strict draft-to-frozen model</h2>
+          <p>Sources and one instruction field create an episode script composed of chapters. If review is enabled, the user reads those chapters and asks an editing agent for changes. Locking the script starts audio creation and permanently ends editing. During playback, the frozen transcript can be opened like synchronized lyrics.</p>
+        </div>
+        <div class="token-list">
+          <span class="doc-chip confirmed">Material 3</span>
+          <span class="doc-chip confirmed">One instruction field</span>
+          <span class="doc-chip confirmed">Agent-only editing</span>
+          <span class="doc-chip confirmed">Chapter structure</span>
+          <span class="doc-chip confirmed">Frozen after lock</span>
+          <span class="doc-chip confirmed">Galaxy Ultra frame</span>
+        </div>
+      </section>
+
+      <section class="screen-section" id="library">
+        <header class="screen-header"><div><h2>1. Library</h2><p>Resume listening or start a new episode.</p></div><span class="status-chip">Material 3</span></header>
+        <div class="screen-body">
+          <div class="phone-stage">
+            <div class="phone" aria-label="Material 3 library mockup">
+              <div class="statusbar"><span>9:41</span><span>▰ ◒ 82%</span></div>
+              <div class="phone-body">
+                <div class="home-top"><span class="wordmark">Library</span><button class="icon-button avatar-button">M</button></div>
+                <div class="hero-card">
+                  <div class="cover"></div>
+                  <div><span class="label">Continue listening</span><h2 class="episode-title">Why cities remember rivers</h2><div class="small-meta">Chapter 2 of 4</div><div class="progress"><span style="width:38%"></span></div><div class="resume-row"><span>6:24 left</span><button class="mini-play" aria-label="Play">▶</button></div></div>
+                </div>
+                <div class="section-title"><span>Recent episodes</span><button class="text-button">See all</button></div>
+                <div class="episode-list">
+                  <div class="episode-row"><div class="cover"></div><div><b>A field guide to better sleep</b><small>3 chapters · 08:42</small></div><button class="icon-button">⋮</button></div>
+                  <div class="episode-row"><div class="cover" style="filter:hue-rotate(34deg)"></div><div><b>What octopuses can teach us</b><small>5 chapters · 11:16</small></div><button class="icon-button">⋮</button></div>
+                </div>
+              </div>
+              <nav class="nav-bar"><span class="nav-item active"><span class="nav-icon">▣</span>Library</span><button class="extended-fab">＋ New episode</button><span class="nav-item"><span class="nav-icon">⚙</span>Settings</span></nav>
+            </div>
+          </div>
+          <aside class="notes">
+            <h3>Screen behavior</h3>
+            <div class="note-card confirmed"><b>Completed episodes are listening objects</b><p>No edit action exists. Immutability is explained once at lock, not repeated on every finished episode.</p></div>
+            <div class="note-card"><b>Chapters appear in metadata</b><p>“3 chapters · 08:42” communicates structure without another badge.</p></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="screen-section" id="sources">
+        <header class="screen-header"><div><h2>2. Add sources</h2><p>Collect the material first; instructions come only after the sources are clear.</p></div><span class="status-chip">Draft</span></header>
+        <div class="screen-body">
+          <div class="phone-stage">
+            <div class="phone" aria-label="Material 3 source intake mockup">
+              <div class="statusbar"><span>9:41</span><span>▰ ◒ 82%</span></div>
+              <div class="phone-body">
+                <div class="topbar center"><button class="icon-button">‹</button><span class="topbar-title">New episode</span><span></span></div>
+                <div class="step-line"><span class="active"></span><span></span></div>
+                <h1 class="headline">Add sources</h1>
+                <button class="source-tile"><span class="source-icon">⌁</span><span><b>Paste text</b><small>Article, notes, or anything copied</small></span><span>›</span></button>
+                <button class="source-tile"><span class="source-icon">▤</span><span><b>Choose a file</b><small>Document or text file</small></span><span>›</span></button>
+                <div class="section-title"><span>Added sources</span><button class="text-button">＋ Add</button></div>
+                <div class="source-card">
+                  <div class="source-card-top"><span class="doc-icon">TXT</span><span><b>The forgotten waterways beneath us</b><small>4,860 words</small></span><button class="icon-button">×</button></div>
+                </div>
+                <div class="bottom-action"><button class="filled-button" onclick="location.hash='instructions'">Continue</button></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <h3>Screen behavior</h3>
+            <div class="note-card confirmed"><b>Sources and instructions stay separate</b><p>This step answers “what is the episode based on?” The next step answers “what should the episode do?”</p></div>
+            <div class="note-card"><b>One or more sources</b><p>The episode is not forced to a single source. Each added source stays visible and removable before generation.</p></div>
+            <details><summary>Not decided here</summary><p>The mockup shows paste and file input, but the exact source formats remain an MVP scope decision.</p></details>
+          </aside>
+        </div>
+      </section>
+
+      <section class="screen-section" id="instructions">
+        <header class="screen-header"><div><h2>3. Initial instructions</h2><p>Exactly one free-text field, helpful prompts, and the script-review toggle.</p></div><span class="status-chip">Confirmed</span></header>
+        <div class="screen-body">
+          <div class="phone-stage">
+            <div class="phone" aria-label="Material 3 episode instructions mockup">
+              <div class="statusbar"><span>9:41</span><span>▰ ◒ 82%</span></div>
+              <div class="phone-body">
+                <div class="topbar center"><button class="icon-button">‹</button><span class="topbar-title">New episode</span><span></span></div>
+                <div class="step-line"><span class="active"></span><span class="active"></span></div>
+                <h1 class="headline">Shape your episode</h1>
+                <div class="instruction-field">
+                  <label class="floating-label" for="instructions-field">Initial instructions</label>
+                  <textarea id="instructions-field" placeholder="Make it about 10 minutes. Focus on flooding today. Explain whether cities can restore buried rivers. Skip the biographies."></textarea>
+                </div>
+                <div class="hint-heading">Things you could mention</div>
+                <div class="hint-chips">
+                  <button class="assist-chip" data-hint="Keep it under five minutes.">Length</button>
+                  <button class="assist-chip" data-hint="Focus on the practical consequences.">Focus</button>
+                  <button class="assist-chip" data-hint="Answer these questions: ">Questions to answer</button>
+                  <button class="assist-chip" data-hint="Leave out: ">Things to drop</button>
+                  <button class="assist-chip" data-hint="Explain it for someone new to the topic.">Audience</button>
+                </div>
+                <div class="toggle-card"><span><b>Review script first</b><small>See the chapters before audio.</small></span><button class="switch on" id="review-toggle" aria-pressed="true"><span></span></button></div>
+                <div class="bottom-action"><button class="filled-button" onclick="location.hash='review'">Create</button></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <h3>Confirmed behavior</h3>
+            <div class="note-card confirmed"><b>One field means one mental model</b><p>Length, focus, questions, omissions, audience, and tone are all natural-language instructions—not separate controls.</p></div>
+            <div class="note-card behavior"><b>Hints teach; they do not configure</b><p>The chips insert example language into the same text field. They are writing prompts, not hidden structured settings.</p></div>
+            <div class="note-card confirmed"><b>The only additional control is review</b><p>No title, narrator, duration selector, tone picker, or advanced settings appear here.</p></div>
+            <details open><summary>Toggle semantics</summary><p>On: Create produces a chaptered script and stops for review. Off: the script is generated, automatically locked, and proceeds to audio creation without an editing opportunity.</p></details>
+          </aside>
+        </div>
+      </section>
+
+      <section class="screen-section" id="review">
+        <header class="screen-header"><div><h2>4. Review the chaptered script</h2><p>Read and navigate the episode structure. Direct text editing does not exist.</p></div><span class="status-chip">Editable draft</span></header>
+        <div class="screen-body">
+          <div class="phone-stage">
+            <div class="phone" aria-label="Material 3 chapter review mockup">
+              <div class="statusbar"><span>9:41</span><span>▰ ◒ 78%</span></div>
+              <div class="phone-body" style="padding-bottom:80px">
+                <div class="topbar center"><button class="icon-button">‹</button><span class="topbar-title">Review script</span><button class="icon-button">⋮</button></div>
+                <div class="draft-bar"><span><b>Draft</b></span><span>4 chapters</span></div>
+                <div class="chapter-stack">
+                  <details class="chapter" open>
+                    <summary><span class="chapter-index">1</span><span><b>Before the street grid</b><small>Introduction · about 1 min</small></span><span>⌃</span></summary>
+                    <div class="chapter-copy">Every city carries the shape of the water that made it. Long before roads fixed our routes, streams determined where people settled, moved, and built. Some remain visible. Others were redirected underground, but their influence did not disappear.</div>
+                  </details>
+                  <details class="chapter">
+                    <summary><span class="chapter-index">2</span><span><b>The streams beneath our streets</b><small>About 2 min</small></span><span>⌄</span></summary>
+                    <div class="chapter-copy">As neighborhoods grew, many streams were redirected into brick channels beneath roads and buildings…</div>
+                  </details>
+                  <details class="chapter">
+                    <summary><span class="chapter-index">3</span><span><b>What flooding remembers</b><small>About 2 min</small></span><span>⌄</span></summary>
+                    <div class="chapter-copy">During heavy rain, buried waterways often reveal themselves as water follows old routes…</div>
+                  </details>
+                  <details class="chapter">
+                    <summary><span class="chapter-index">4</span><span><b>Can cities bring rivers back?</b><small>Conclusion · about 2 min</small></span><span>⌄</span></summary>
+                    <div class="chapter-copy">Some cities are reopening former waterways, replacing culverts with parks and flood plains…</div>
+                  </details>
+                </div>
+              </div>
+              <button class="agent-fab" onclick="openAgent()">✦ Edit with agent</button>
+              <div class="review-action"><button class="filled-button" onclick="location.hash='lock'">Lock script &amp; create audio</button></div>
+            </div>
+          </div>
+          <aside class="notes">
+            <h3>Confirmed behavior</h3>
+            <div class="note-card confirmed"><b>An episode is a sequence of chapters</b><p>Each chapter has a name and transcript. The same structure later powers playback navigation and transcript following.</p></div>
+            <div class="note-card confirmed"><b>Review is read-only</b><p>There is no edit icon, textarea, drag handle, or regenerate button on a chapter. All changes begin with “Edit with agent.”</p></div>
+            <div class="note-card behavior"><b>Draft status is explicit</b><p>The user always knows that changes are still possible now and will end at lock.</p></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="screen-section" id="agent">
+        <header class="screen-header"><div><h2>5. Edit through an agent</h2><p>The user describes the desired outcome. The agent edits the chaptered transcript.</p></div><span class="status-chip">Conversation</span></header>
+        <div class="screen-body">
+          <div class="phone-stage">
+            <div class="phone" aria-label="Material 3 transcript editing agent mockup">
+              <div class="statusbar"><span>9:41</span><span>▰ ◒ 77%</span></div>
+              <div class="phone-body" style="padding-bottom:80px">
+                <div class="topbar center"><button class="icon-button">‹</button><span class="topbar-title">Review script</span><button class="icon-button">⋮</button></div>
+                <div class="draft-bar"><span><b>Draft</b></span><span>4 chapters</span></div>
+                <div class="chapter-stack" style="opacity:.35"><details class="chapter" open><summary><span class="chapter-index">1</span><span><b>Before the street grid</b><small>Introduction</small></span><span>⌃</span></summary><div class="chapter-copy">Every city carries the shape of the water that made it…</div></details><details class="chapter"><summary><span class="chapter-index">2</span><span><b>The streams beneath our streets</b><small>About 2 min</small></span><span>⌄</span></summary></details></div>
+              </div>
+              <div class="chat-sheet open" id="agent-sheet-static">
+                <div class="handle"></div>
+                <div class="chat-header"><span></span><b>Edit the script</b><button class="icon-button">×</button></div>
+                <div class="message agent">What should I change?</div>
+                <div class="message user">Make chapter 2 less historical. Focus on what happens during heavy rain today, and move the restoration examples into their own short chapter.</div>
+                <div class="message agent">I revised chapter 2 around present-day flooding and created a new chapter called “Bringing water back to the surface.” The episode now has 5 chapters.</div>
+                <div class="change-summary"><b>Changes ready</b>Chapter 2 rewritten · Chapter 4 split · 1 new chapter</div>
+                <button class="tonal-button">Review changes</button>
+                <div class="chat-composer"><span>Ask for another change…</span><button class="send-button">➤</button></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <h3>Confirmed behavior</h3>
+            <div class="note-card confirmed"><b>Conversation is the only editing interface</b><p>The agent owns transcript mutations. Users express intent instead of manipulating script text directly.</p></div>
+            <div class="note-card behavior"><b>Every change is summarized</b><p>The response names affected chapters and structural changes. “Review changes” returns to the updated chapter view.</p></div>
+            <div class="note-card"><b>Agent capability language is bounded</b><p>The intro says what it can change: rewrite, shorten, remove, split, combine, and rename. It does not present a blank, mysterious chatbot.</p></div>
+            <details open><summary>Important UX safeguard</summary><p>The agent should never lock the episode. It may edit the draft, but the user owns the irreversible “Lock script & create audio” action.</p></details>
+          </aside>
+        </div>
+      </section>
+
+      <section class="screen-section" id="lock">
+        <header class="screen-header"><div><h2>6. Lock the script</h2><p>The irreversible boundary is confirmed before expensive audio generation begins.</p></div><span class="status-chip">Irreversible</span></header>
+        <div class="screen-body">
+          <div class="phone-stage">
+            <div class="phone dialog-screen" aria-label="Material 3 lock confirmation mockup">
+              <div class="statusbar"><span>9:41</span><span>▰ ◒ 76%</span></div>
+              <div class="phone-body"><div class="topbar center"><button class="icon-button">‹</button><span class="topbar-title">Review script</span><span></span></div><div class="draft-bar"><span><b>Draft</b></span><span>5 chapters</span></div><div class="chapter-stack"><details class="chapter" open><summary><span class="chapter-index">1</span><span><b>Before the street grid</b><small>Introduction</small></span><span>⌃</span></summary><div class="chapter-copy">Every city carries the shape of the water that made it…</div></details></div></div>
+              <div class="scrim"></div>
+              <div class="dialog">
+                <div class="dialog-icon">◇</div>
+                <h2>Ready to create audio?</h2>
+                <p>These 5 chapters can’t be changed once audio generation starts.</p>
+                <div class="dialog-actions"><button class="text-button">Cancel</button><button class="filled-button" onclick="location.hash='generating'">Lock &amp; create</button></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <h3>Confirmed behavior</h3>
+            <div class="note-card confirmed"><b>Lock is the point of no return</b><p>The exact consequences are stated: chapter names and transcripts can no longer change.</p></div>
+            <div class="note-card behavior"><b>Confirmation uses consequence language</b><p>Not “Are you sure?” The dialog says what happens, how many chapters are affected, and what becomes immutable.</p></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="screen-section" id="generating">
+        <header class="screen-header"><div><h2>7. Create the audio</h2><p>Show chapter progress. The script is already frozen.</p></div><span class="status-chip">Locked</span></header>
+        <div class="screen-body">
+          <div class="phone-stage">
+            <div class="phone" aria-label="Material 3 audio generation mockup">
+              <div class="statusbar"><span>9:41</span><span>▰ ◒ 74%</span></div>
+              <div class="phone-body">
+                <div class="topbar center"><button class="icon-button">×</button><span class="topbar-title">Creating episode</span><button class="icon-button">⋮</button></div>
+                <div class="gen-art"><span class="wave"><i></i><i></i><i></i><i></i><i></i></span></div>
+                <div class="gen-label">Chapter 3 of 5</div>
+                <h1 class="gen-title">What flooding remembers</h1>
+                <p class="gen-copy">Why cities remember rivers</p>
+                <div class="chapter-progress"><span class="done"></span><span class="done"></span><span class="done"></span><span></span></div>
+                <div class="gen-meta"><span>3 complete</span><span>2 remaining</span></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <h3>Screen behavior</h3>
+            <div class="note-card confirmed"><b>Progress follows chapters</b><p>The unit the user reviewed is the same unit used during generation and later navigation.</p></div>
+            <div class="note-card behavior"><b>Locked state stays visible</b><p>The user cannot mistake this screen for another editable draft stage.</p></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="screen-section" id="player">
+        <header class="screen-header"><div><h2>8. Listen and toggle transcript</h2><p>The finished episode is immutable. Transcript following behaves like Spotify lyrics.</p></div><span class="status-chip">Frozen episode</span></header>
+        <div class="screen-body">
+          <div class="phone-stage">
+            <div class="phone player-phone" aria-label="Material 3 player with lyrics-like transcript mockup">
+              <div class="statusbar"><span>9:41</span><span>▰ ◒ 72%</span></div>
+              <div class="phone-body">
+                <div class="topbar center"><button class="icon-button">⌄</button><span class="topbar-title">Now playing</span><button class="icon-button">⋮</button></div>
+                <div class="player-cover"><span class="art-copy">Why cities remember rivers</span></div>
+                <div class="now-chapter">Chapter 3 of 5</div>
+                <h1 class="player-name">What flooding remembers</h1>
+                <div class="player-source">12:18 · 5 chapters</div>
+                <div class="dark-progress"><span></span></div>
+                <div class="timecodes"><span>04:38</span><span>12:18</span></div>
+                <div class="transport"><span>↶15</span><span>◀</span><span class="main">Ⅱ</span><span>▶</span><span>15↷</span></div>
+                <div class="player-actions"><button class="dark-chip">1× Speed</button><button class="dark-chip" onclick="toggleTranscript()">≡ Transcript</button><button class="dark-chip">☾ Sleep</button></div>
+              </div>
+              <div class="transcript-sheet" id="transcript-sheet">
+                <div class="handle"></div>
+                <div class="lyrics-head"><b>Chapter 3 · What flooding remembers</b><button class="icon-button" onclick="toggleTranscript()">×</button></div>
+                <div class="lyrics-copy">
+                  <p>When heavy rain arrives, water does not care where the modern street grid says it should go.</p>
+                  <p class="current">It follows the older landscape, collecting along the paths of streams that were buried generations ago.</p>
+                  <p>That is why certain intersections flood again and again, even after drains are widened.</p>
+                  <p>The city may have forgotten the river. The water has not.</p>
+                </div>
+                <div class="lyrics-footer"><span>Follows playback</span><span>3 / 5</span></div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <h3>Confirmed behavior</h3>
+            <div class="note-card confirmed"><b>Transcript is a playback mode, not an editor</b><p>It opens over the player, follows the current spoken passage, and can be dismissed back to artwork.</p></div>
+            <div class="note-card confirmed"><b>Chapters remain the navigation model</b><p>The transcript sheet names the current chapter; previous/next controls move through chapter boundaries.</p></div>
+            <div class="note-card behavior"><b>Immutability does not become chrome</b><p>The user learned about the lock before generation. Playback does not repeat it.</p></div>
+            <details open><summary>Try the mockup</summary><p>Click <strong>Transcript</strong> in the phone player to open and close the lyrics-like transcript panel.</p></details>
+          </aside>
+        </div>
+      </section>
+
+      <section class="bottom-panels">
+        <div class="panel">
+          <h2>Confirmed design decisions</h2>
+          <div class="decision-list">
+            <div class="decision"><span class="d">D1</span><div><b>Material 3 direction</b><span>Components, shapes, hierarchy, color roles, and interaction patterns.</span></div></div>
+            <div class="decision"><span class="d">D2</span><div><b>One initial-instructions field</b><span>Hint chips teach what can be written; no other creation settings except review.</span></div></div>
+            <div class="decision"><span class="d">D3</span><div><b>Optional review</b><span>If enabled, creation stops at a chaptered script before audio.</span></div></div>
+            <div class="decision"><span class="d">D4</span><div><b>Agent-only editing</b><span>No direct transcript editor; all draft changes happen through conversation.</span></div></div>
+            <div class="decision"><span class="d">D5</span><div><b>Irreversible lock</b><span>Starting audio generation freezes chapter names and transcript permanently.</span></div></div>
+            <div class="decision"><span class="d">D6</span><div><b>Lyrics-like transcript</b><span>Frozen transcript can be toggled and followed during playback.</span></div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>UI system</h2>
+          <div class="decision-list">
+            <div class="decision"><span class="d">M3</span><div><b>Material 3 components</b><span>One focal point per view, restrained supporting copy, and tonal surface hierarchy.</span></div></div>
+            <div class="decision"><span class="d">S22</span><div><b>Galaxy Ultra target frame</b><span>2.144:1 display ratio, centered punch-hole camera, and Android gesture navigation.</span></div></div>
+            <div class="decision"><span class="d">CH</span><div><b>Chapters as the signature</b><span>The same named units organize review, progress, navigation, and transcript following.</span></div></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const instructionField = document.getElementById('instructions-field');
+    document.querySelectorAll('[data-hint]').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const prefix = instructionField.value.trim();
+        instructionField.value = (prefix ? prefix + '\n' : '') + chip.dataset.hint;
+        instructionField.focus();
+      });
+    });
+
+    const reviewToggle = document.getElementById('review-toggle');
+    reviewToggle.addEventListener('click', () => {
+      const on = !reviewToggle.classList.contains('on');
+      reviewToggle.classList.toggle('on', on);
+      reviewToggle.setAttribute('aria-pressed', String(on));
+    });
+
+    function toggleTranscript() {
+      document.getElementById('transcript-sheet').classList.toggle('open');
+    }
+
+    function openAgent() {
+      location.hash = 'agent';
+    }
+  </script>
+</body>
+</html>
