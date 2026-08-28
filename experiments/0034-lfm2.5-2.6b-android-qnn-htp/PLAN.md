@@ -61,12 +61,15 @@
 49. Verified ordinary context metadata: one 1,600,097,976-byte context, one graph, 41 inputs, 60 outputs, build `v2.49.40.260810104044`.
 50. Loaded once and executed the complete graph through x86 HTP emulation; position-zero greedy token 124894 matched both prior CPU reference routes.
 51. Built the ignored exact-runtime Android stage and passed local hash plus ELF preflight without phone access.
+52. Ran one authorized physical position-zero gate under `phone.lock`: all 12 stage hashes passed, the ordinary context loaded once, one graph loaded, and one direct-QNN HTP graph execution completed.
+53. Verified global argmax 124894 exactly matches both CPU routes and x86 HTP; preserved timing as a single diagnostic only.
+54. Preserved raw provider, hashes, identity, input/output, memory, thermal/power, and cleanup evidence; remote root absent and lock released.
 
 ## In progress
 
-1. Commit and independently review the ordinary monolithic host-prepared route before any phone request.
-2. If explicitly authorized, run only one bounded physical viability gate under full `phone.lock` and raw-evidence lifecycle.
-3. Context streaming remains prohibited. No campaign without successful viability and separate authorization.
+1. Commit and independently review the first correct physical full-graph option-2 viability evidence.
+2. Stop all ADB and expanded workload activity until an agreed next route gate receives explicit authorization.
+3. Context streaming remains prohibited. No output-quality, campaign, performance, or registry claim.
 
 ## Phone and campaign sequence
 

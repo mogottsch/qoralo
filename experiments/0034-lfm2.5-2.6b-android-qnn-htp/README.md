@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active with authorized option 2 host-prepared. One ordinary monolithic one-token QNN context now contains one complete graph covering all 30 layers, final normalization, and LM head. It uses no shared-resource/weight-sharing format, loads once, keeps all recurrent/attention state explicit, and compiled fallback-disabled with 1,541/1,541 optimized nodes delegated. The graph loads and executes in x86 HTP emulation with the expected greedy token. No physical Android execution or performance result exists.**
+**Physical direct-QNN HTP viability passed for the exact ordinary monolithic route. On the authorized Galaxy S23 Ultra, the single non-shared context loaded once, its complete one-token graph executed once at position zero, and global argmax 124894 matched both CPU references. This is a bounded viability result—not a canonical prompt, multi-token output-quality result, benchmark campaign, or registry entry.**
 
 This is a separate accelerator arm. It preserves `0029` CPU viability and `0033` CPU/OpenCL campaign evidence without modifying either experiment.
 
@@ -138,4 +138,8 @@ A direct-QNN host probe loaded the single context once and executed the complete
 
 The ignored QAIRT 2.49.40 Android stage contains 12 payload files totaling 1,798,094,075 bytes. Stage metadata SHA-256 is `3260c006faf29fc8081f29f4c87069cafeee7919a9af54ac3ceb184e03bcc952`; manifest SHA-256 is `5dc9815787046507b3b09a4aebbe0eb6fd97e6effda3247cfeddda6fb474169c`; the API-31 runner SHA-256 is `4515d7f58889121542b9ff3535d5e083a89095f008fb7bb23ae421f67c8cacfd`. Local hashes and ELF preflight pass. See [`results/qnn-ordinary-monolithic-host-preparation/`](results/qnn-ordinary-monolithic-host-preparation/).
 
-No phone access occurred for option 2. The host milestone must be committed and independently reviewed before any bounded phone request. Context streaming remains prohibited; no campaign is authorized.
+After independent review, one bounded physical gate used that exact stage. All 12 local and remote hashes plus ELF preflight passed. Physical backend `v2.49.40.260810104044` loaded the single ordinary context and retrieved its one graph. Exactly one position-zero token/state graph execution completed through direct QNN HTP, with neural CPU fallback unavailable. Input token 124894 produced global greedy argmax 124894, matching the split CPU, consolidated CPU, and x86 HTP references.
+
+Setup took 4.02188 seconds and the single position-zero request took 0.980297 seconds. These values are diagnostic only: one execution is not a canonical benchmark or throughput campaign. Peak sampled process VmHWM was 1,611,888 KiB and is not total system/DSP residency. Raw identity, provider, stage hashes, input/output, timing, memory, thermal/power snapshots, and cleanup evidence are retained in [`results/qnn-ordinary-monolithic-phone-viability-position0/`](results/qnn-ordinary-monolithic-phone-viability-position0/). The scoped remote root was verified absent and `phone.lock` released.
+
+This establishes physical full-graph viability only. No further ADB, expanded prompt, output-quality claim, campaign, performance publication, or registry row is authorized pending independent review and a separately agreed next gate. Context streaming remains prohibited.

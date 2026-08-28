@@ -5,6 +5,7 @@ REPO=$(cd "$EXP/../.." && pwd)
 ADB=${ADB:-adb}
 SERIAL=${SERIAL:-R5CW81PR8SY}
 STAGE=${STAGE:-$EXP/.local/direct-qnn-phone-stage}
+POSITION0_ONLY=${POSITION0_ONLY:-0}
 RUN_ID=${RUN_ID:-viability-$(date -u +%Y%m%dT%H%M%SZ)-$$}
 REMOTE="/data/local/tmp/vibevoice-0034-lfm2-direct-qnn-$RUN_ID"
 OUT="$EXP/.local/direct-qnn-phone-runs/$RUN_ID"
@@ -49,9 +50,17 @@ adb_cmd shell "mkdir -p '$REMOTE'"
 adb_cmd push "$STAGE/." "$REMOTE/" >"$OUT/push.txt" 2>&1
 adb_cmd shell "cd '$REMOTE' && sha256sum -c SHA256SUMS" >"$OUT/remote-hash-check.txt" 2>"$OUT/remote-hash-check.stderr"
 adb_cmd shell "chmod 700 '$REMOTE/direct_lfm2_qnn_runner'"
+prompt_rel=short.int32le
+max_new=16
+if [[ "$POSITION0_ONLY" == 1 ]]; then
+  prompt_rel=position0.int32le
+  max_new=1
+  adb_cmd shell "head -c 4 '$REMOTE/short.int32le' > '$REMOTE/$prompt_rel' && sha256sum '$REMOTE/$prompt_rel'" >"$OUT/probe-input-sha256.txt"
+fi
+printf 'prompt=%s\nmax_new=%s\nposition0_only=%s\n' "$prompt_rel" "$max_new" "$POSITION0_ONLY" >"$OUT/workload-scope.txt"
 
 set +e
-timeout 1800 "$ADB" -s "$SERIAL" shell "cd '$REMOTE' && export LD_LIBRARY_PATH='$REMOTE' ADSP_LIBRARY_PATH='$REMOTE' && ./direct_lfm2_qnn_runner '$REMOTE' '$REMOTE/short.int32le' 16 '$REMOTE/output.int32le'" 9>&- >"$OUT/runner.stdout" 2>"$OUT/runner.stderr" &
+timeout 1800 "$ADB" -s "$SERIAL" shell "cd '$REMOTE' && export LD_LIBRARY_PATH='$REMOTE' ADSP_LIBRARY_PATH='$REMOTE' && ./direct_lfm2_qnn_runner '$REMOTE' '$REMOTE/$prompt_rel' '$max_new' '$REMOTE/output.int32le'" 9>&- >"$OUT/runner.stdout" 2>"$OUT/runner.stderr" &
 run_pid=$!
 (
   while kill -0 "$run_pid" 2>/dev/null; do

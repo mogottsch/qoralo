@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "run_id": "viability-20260828T095703Z-4006830",
+  "classification": "physical_direct_qnn_htp_ordinary_monolithic_position0_viability_pass",
+  "device": {"serial":"R5CW81PR8SY","manufacturer":"samsung","model":"SM-S918B","soc":"SM8550","abi":"arm64-v8a","android_release":"16","api":36,"verified_boot":"green","flash_locked":true},
+  "stage": {
+    "payload_files_verified_local":12,
+    "payload_files_verified_remote":12,
+    "elf_preflight":"passed",
+    "stage_metadata_sha256":"3260c006faf29fc8081f29f4c87069cafeee7919a9af54ac3ceb184e03bcc952",
+    "manifest_sha256":"5dc9815787046507b3b09a4aebbe0eb6fd97e6effda3247cfeddda6fb474169c",
+    "runner_sha256":"4515d7f58889121542b9ff3535d5e083a89095f008fb7bb23ae421f67c8cacfd"
+  },
+  "provider": {
+    "api":"direct QNN",
+    "backend":"HTP",
+    "backend_build_id":"v2.49.40.260810104044",
+    "target_htp_arch":73,
+    "target_soc_model":43,
+    "neural_cpu_fallback_available":false,
+    "compiled_delegation":"1541/1541 optimized source nodes, 2698 QNN operations, zero unsupported nodes"
+  },
+  "route": {
+    "context_format":"ordinary non-shared",
+    "context_binary_bytes":1600097976,
+    "context_binary_sha256":"76ba15e7fd95e5e13e92be0e88e8e6bbd3123f2b993b6986c9dac8800a9bf212",
+    "contexts_required":1,
+    "contexts_loaded":1,
+    "graphs_required":1,
+    "graphs_loaded":1,
+    "loaded_once":true,
+    "shared_resource_format":false,
+    "weight_sharing_format":false,
+    "context_streaming":false,
+    "explicit_state_inputs":38,
+    "explicit_state_outputs":38,
+    "graph_executions":1
+  },
+  "workload": {
+    "scope":"one position-zero token/state graph execution only",
+    "prompt_tokens":1,
+    "max_new_tokens":1,
+    "input_token":124894,
+    "input_sha256":"d60fda42eec12c1f8a601886c1f5aa3c4737adf738cdf81c565206c1641a9717",
+    "output_tokens":[124894],
+    "output_sha256":"d60fda42eec12c1f8a601886c1f5aa3c4737adf738cdf81c565206c1641a9717",
+    "expected_global_argmax":124894,
+    "global_argmax_equal":true,
+    "reference_routes":["split CPU pipeline","consolidated CPU pipeline","x86 HTP ordinary monolith"]
+  },
+  "timing": {
+    "setup_seconds":4.02188,
+    "request_to_first_token_seconds":0.980297,
+    "total_request_seconds":0.980298,
+    "interpretation":"Single bounded viability diagnostic only; not a canonical benchmark or campaign performance result."
+  },
+  "memory": {
+    "sampled_process_vmhwm_peak_kib":1611888,
+    "sampled_total_pss_peak_kib":1597572,
+    "interpretation":"Android process measurements only; not total system or DSP residency. The successful graph execution, not process RSS, establishes viability."
+  },
+  "thermal_and_power":"Raw dumpsys battery and thermalservice snapshots before and after are retained without deriving a benchmark claim.",
+  "cleanup": {"scoped_remote_root_verified_absent":true,"process_after":false,"phone_lock_held_for_full_lifecycle":true,"phone_lock_released":true},
+  "claim_boundary":"Positive physical direct-QNN HTP viability for exactly one ordinary monolithic position-zero token/state graph execution and correct global argmax. Not a canonical prompt, multi-token generation, throughput benchmark, campaign, or registry result. Separate Pi authorization is required for any further phone run or campaign."
+}

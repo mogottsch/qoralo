@@ -48,9 +48,9 @@
     "host_htp_graph_execute_succeeded": true,
     "logit_chunks": 22,
     "optimized_source_nodes": 1541,
-    "phase": "host_prepared_pending_independent_review",
+    "phase": "physical_position0_viability_passed_pending_review",
     "phone_request_allowed_before_commit": false,
-    "physical_execution": false,
+    "physical_execution": true,
     "preserve_declared_cpu_boundaries": true,
     "preserve_exact_model_state_order": true,
     "qnn_operations": 2698,
@@ -198,9 +198,9 @@
     "android_execution": false,
     "compiled_context_created": false,
     "qnn_htp_execution": false,
-    "required_action": "Independently review the committed ordinary monolithic route before considering one bounded phone gate.",
+    "required_action": "Independently review committed viability evidence and agree a separate next route gate before any ADB.",
     "result_path": "results/support-assessment/result.json",
-    "summary": "Shared-resource option 1 is closed. Ordinary monolithic option 2 is fully host-prepared and awaits independent review; physical context load/execution remains unproven."
+    "summary": "Ordinary monolithic option 2 passed one physical direct-QNN HTP position-zero full-graph execution with correct argmax. Expanded prompt and campaign remain untested and unauthorized."
   },
   "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
   "host_export_milestone": {
@@ -324,6 +324,33 @@
     "revision": "84022ce711b28455e8c4fc364ce68c00cf995875",
     "sha256": "02a8b7e17487d326e46d68ce0ba24211e1b80a14c4cd0597fa73c1cd697f52ed"
   },
+  "ordinary_monolithic_phone_viability_position0": {
+    "argmax_equal": true,
+    "backend": "direct QNN HTP",
+    "backend_build_id": "v2.49.40.260810104044",
+    "canonical_campaign": false,
+    "cleanup_absent": true,
+    "context_count": 1,
+    "context_loaded": true,
+    "context_streaming": false,
+    "evidence": "results/qnn-ordinary-monolithic-phone-viability-position0/result.json",
+    "graph_count": 1,
+    "graph_executions": 1,
+    "graph_loaded": true,
+    "input_token": 124894,
+    "loaded_once": true,
+    "neural_cpu_fallback_available": false,
+    "output_global_argmax": 124894,
+    "phone_lock_released": true,
+    "position": 0,
+    "reference_global_argmax": 124894,
+    "registry_result": false,
+    "request_seconds_diagnostic": 0.980297,
+    "sampled_process_vmhwm_kib": 1611888,
+    "setup_seconds_diagnostic": 4.02188,
+    "stage_files_verified_local": 12,
+    "stage_files_verified_remote": 12
+  },
   "phone_attempt_1": {
     "classification": "physical_phone_pre_inference_provider_selection_failure",
     "evidence": "results/phone-attempt-1-provider-selection-failure/result.json",
@@ -354,7 +381,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "No phone access occurred for option 2. Await independent host milestone review and explicit priority before any gate.",
+  "phone_boundary": "Position-zero gate cleaned absent and released phone.lock. No further ADB, expanded prompt, or campaign until separate explicit authorization.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -453,7 +480,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "active_host_prepared_option_2_ordinary_monolithic_one_token_context",
+  "status": "physical_direct_qnn_htp_ordinary_monolithic_position0_viability_passed",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",
