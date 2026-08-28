@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
-  "status": "phone_attempt_03_failed_position_id_tensor_name_binding_host_fix_required",
+  "status": "position_id_binding_corrected_stage_ready_phone_handoff_required",
   "question": "Can Gemma 4 E2B IT run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Gemma 4 E2B IT text generation only",
@@ -145,7 +145,8 @@
     "phone_attempt_02": "failed_pre_query_30_cross_variant_value_cache_quantization_mismatches_exit_1",
     "cache_quantization_correction_gate": "passed_host_conversion_recompile_and_four_way_metadata_inspection",
     "phone_attempt_03": "failed_pre_dialog_io_discovery_position_ids_global_vs_unprefixed_name_binding_exit_1",
-    "next_gate": "Host-only: correct and validate the global positional-encoding tensor-name binding, rebuild/hash the private config and stage, commit/report, and obtain a new explicit phone handoff.",
+    "position_id_binding_correction_gate": "passed_host_dual_conversion_recompile_name_set_and_stage_validation",
+    "next_gate": "After independent review, obtain a new explicit Pi handoff for one further locked 16-token physical gate; no retry or campaign before that handoff.",
     "workbench_checkpoint": "Any paid Workbench compile/link job requires a separate explicit cost/terms decision."
   },
   "transform_result": {
@@ -242,6 +243,39 @@
     "physical_htp_execution": false,
     "inference": false
   },
+  "position_id_binding_correction_result": {
+    "result_path": "results/qairt-2.49.40-position-id-binding-correction/result.json",
+    "classification": "positive_host_position_id_binding_correction_and_sm8550_recompile",
+    "qairt_version": "2.49.40.260810",
+    "method": "Numerically identity rename of position_ids_global_cos/sin to position_ids_cos/sin in both graph inputs and activation encodings",
+    "checkpoint_modified": false,
+    "ar1_dlc": {
+      "bytes": 2356847508,
+      "sha256": "f080cce522588baadcea38444b480038198918cd8a580dee1026591d638aa044",
+      "parameters": 2280676608,
+      "output_datatypes": {"uFxp_16": 31}
+    },
+    "ar128_dlc": {
+      "bytes": 2356851164,
+      "sha256": "23a27a84529990adeda07b9b81cc0dd7d360b396d48233e37170f4e62a2c0759",
+      "parameters": 2280676608,
+      "output_datatypes": {"uFxp_16": 31}
+    },
+    "corrected_context": {
+      "bytes": 1186369536,
+      "sha256": "7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394",
+      "backend_id": 6,
+      "backend": "QNN HTP",
+      "build_id": "v2.49.40.260810104044",
+      "graphs": ["ar1_cl4096_1_of_1", "ar128_cl4096_1_of_1"]
+    },
+    "global_context_inputs": ["position_ids_cos", "position_ids_sin"],
+    "swa_context_inputs": ["swa_position_ids_cos", "swa_position_ids_sin"],
+    "all_cache_contracts_still_identical": true,
+    "phone_access": false,
+    "physical_htp_execution": false,
+    "inference": false
+  },
   "runtime_bundle_result": {
     "result_path": "results/gemma4-sm8550-runtime-bundle/result.json",
     "classification": "positive_host_runtime_bundle_and_lut_fidelity",
@@ -269,7 +303,7 @@
     },
     "sampled_lut_fidelity_within_half_step": true,
     "backend": "QnnHtp",
-    "context_sha256": "a1d52d0087a0719d5907a98d99e8bc5996b699c9cf8f3a21b301588b9f51cc44",
+    "context_sha256": "7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394",
     "sampling": "greedy",
     "max_new_tokens": 2048,
     "required_backend_extension": {
@@ -295,6 +329,21 @@
     "adb_used": false,
     "phone_lock_acquired": false,
     "phone_identity_verified": false,
+    "phone_run_authorized_now": false
+  },
+  "position_id_corrected_phone_stage": {
+    "result_path": "results/position-id-corrected-phone-stage/result.json",
+    "classification": "positive_host_position_id_corrected_phone_stage_preparation",
+    "context_sha256": "7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394",
+    "position_id_binding_corrected": true,
+    "viability_output_ceiling_tokens": 16,
+    "canonical_campaign": false,
+    "required_runtime_completeness": true,
+    "all_manifest_files_verified": true,
+    "sha256sums_complete_and_verified": true,
+    "permissions_verified": true,
+    "adb_used": false,
+    "phone_lock_acquired": false,
     "phone_run_authorized_now": false
   },
   "phone_viability_attempt_01": {
@@ -363,7 +412,7 @@
     "further_retry_performed": false
   },
   "campaign_gate": {
-    "phone_priority": "blocked on host positional-name correction and a new explicit Pi handoff; no ADB before that handoff",
+    "phone_priority": "host positional-name correction is ready; blocked on independent review and a new explicit Pi handoff; no ADB before that handoff",
     "bounded_viability_first": true,
     "canonical_after_viability": true,
     "request_isolation_candidate": "One loaded Genie Engine with a fresh Dialog per logical request, or a proven full GenieDialog_reset; measure reset/creation separately and reject retained KV/prefix reuse.",

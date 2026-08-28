@@ -1,0 +1,44 @@
+{
+  "authorization_boundary": {
+    "adb_used": false,
+    "expected_serial": "R5CW81PR8SY",
+    "phone_identity_verified": false,
+    "phone_lock_acquired": false,
+    "phone_run_authorized_now": false
+  },
+  "claim_boundary": "The private stage is complete, permission-hardened, and hash-bound to the cache- and positional-name-corrected context, exact runtime dependencies, canonical short prompt, and 16-token gate. Preparation and validation used no ADB and did not acquire phone.lock. This is not phone identity, context loading, physical HTP execution, no-fallback, output, or performance evidence.",
+  "classification": "positive_host_position_id_corrected_phone_stage_preparation",
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "next_gate": "Wait for R5CW81PR8SY to reconnect as device and for Pi to verify identity and explicitly transfer phone priority; then run exactly one locked 16-token gate, with no retry or campaign.",
+  "schema_version": 1,
+  "stage": {
+    "all_manifest_files_verified": true,
+    "canonical_campaign": false,
+    "canonical_short_rendered_sha256": "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a",
+    "corrected_context_sha256": "7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394",
+    "file_count": 17,
+    "logical_bytes": 4003765361,
+    "permissions_verified": true,
+    "position_id_binding_corrected": true,
+    "private_root": ".local/phone-stage",
+    "required_runtime_completeness": true,
+    "required_runtime_files": [
+      "bin/genie-app",
+      "lib/libGenie.so",
+      "lib/libQnnHtp.so",
+      "lib/libQnnSystem.so",
+      "lib/libQnnHtpV73Stub.so",
+      "lib/libQnnHtpV73Skel.so",
+      "lib/libQnnHtpNetRunExtensions.so",
+      "htp_backend_ext_config.json"
+    ],
+    "sha256sums_bytes": 1635,
+    "sha256sums_complete_and_verified": true,
+    "sha256sums_sha256": "64d2e3282bf4524ede3158b8fb7360f4b6c4f6e60b7ec7b466c55152cb4409f0",
+    "source_bundle_manifest_sha256": "88b35a4c566059e3ff1c0485a82f98813fdb3bf5133196a76bf5585ff15396a8",
+    "stage_manifest_bytes": 3350,
+    "stage_manifest_sha256": "01ef46b23faa63412b3ed89f6eacf81acb70735e1e4c6c8025ba9ade213c78f3",
+    "viability_output_ceiling_tokens": 16
+  },
+  "status": "position_id_binding_corrected_stage_ready_phone_handoff_required"
+}

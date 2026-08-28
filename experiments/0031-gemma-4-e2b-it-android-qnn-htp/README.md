@@ -2,7 +2,7 @@
 
 ## Status
 
-**The third bounded phone gate physically loaded the cache-corrected context and cleared the prior 30 cache-quantization validation errors. It then failed during Genie I/O discovery before dialog creation or graph execution: the context exposes `position_ids_global_cos/sin`, while the unprefixed runtime positional binding searches for `position_ids_cos/sin`. No output or performance result exists. Further phone work is blocked on a host-side positional tensor-name binding correction, rebuild, review, and new explicit handoff.**
+**The attempt-03 positional tensor-name blocker is corrected host-side and the private stage is rebuilt. Both AR graphs now expose the exact `position_ids_cos/sin` names searched by Genie's unprefixed global RoPE binding while retaining `swa_position_ids_cos/sin` and all 15 corrected cache contracts. The new SM8550/v73 context and 16-token stage are hash-verified, but have not been loaded on the phone. No graph execution, output, or performance result exists; another phone gate requires independent review and a new explicit handoff.**
 
 This experiment is a separate HTP arm for the model studied in `0025`. It does not rewrite or relabel the CPU/GPU evidence there.
 
@@ -96,7 +96,14 @@ The one authorized cache-corrected physical gate then held `phone.lock` for the 
 
 Genie next reported the context inputs `position_ids_global_cos` and `position_ids_global_sin` as unconnected, searched for missing `position_ids_cos` and `position_ids_sin`, and failed with `Could not find I/O tensors in loaded graphs`. Dialog creation failed; the later scripted query targeted a nonexistent dialog. The retained profile has null components, no output was created, no graph execution occurred, and scoped cleanup verified the remote path absent with no residual process. See [`results/android-qnn-physical-viability-attempt-03/result.json`](results/android-qnn-physical-viability-attempt-03/result.json).
 
-No retry or campaign is authorized. The exact next gate is host-only: correct and validate the global positional-encoding tensor-name binding, rebuild/hash the private config and stage, report for review, and obtain a new explicit phone handoff. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
+The positional binding is now corrected without numerical graph changes: both transformed variants rename only `position_ids_global_cos/sin` to `position_ids_cos/sin` in graph inputs and their activation-encoding records. The rebuilt full DLCs retain 2,280,676,608 parameters and 31/31 uFxp16 outputs:
+
+- AR1: 2,356,847,508 bytes, SHA-256 `f080cce522588baadcea38444b480038198918cd8a580dee1026591d638aa044`;
+- AR128: 2,356,851,164 bytes, SHA-256 `23a27a84529990adeda07b9b81cc0dd7d360b396d48233e37170f4e62a2c0759`.
+
+The resulting 1,186,369,536-byte weight-shared context has SHA-256 `7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394`. Official metadata identifies QNN HTP backend ID 6, SM8550/v73, both 38-input/31-output graphs, the exact global and SWA positional names expected by the unchanged Genie configuration, and all 15 four-way value-cache signatures still identical. See [`results/qairt-2.49.40-position-id-binding-correction/result.json`](results/qairt-2.49.40-position-id-binding-correction/result.json).
+
+The private runtime bundle and 16-token stage are rebuilt and fully hash/permission/dependency verified around this context without ADB or `phone.lock`. See [`results/position-id-corrected-phone-stage/result.json`](results/position-id-corrected-phone-stage/result.json). No retry or campaign is authorized. Obtain independent review and a new explicit phone handoff before one further bounded gate. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
 
 ## Proof boundary
 

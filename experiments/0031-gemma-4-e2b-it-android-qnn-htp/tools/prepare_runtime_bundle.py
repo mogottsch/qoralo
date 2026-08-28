@@ -11,7 +11,7 @@ from pathlib import Path
 EXP = Path(__file__).resolve().parents[1]
 SDK = Path("/home/moritz/opt/qairt/2.49.40.260810")
 BUNDLE = EXP / ".local/runtime-bundle"
-CONTEXT_SHA256 = "a1d52d0087a0719d5907a98d99e8bc5996b699c9cf8f3a21b301588b9f51cc44"
+CONTEXT_SHA256 = "7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394"
 EXPECTED_LUTS = {
     "embedding": ("embedding_int8_lut.bin", 402653184),
     "perlayer_embedding": ("embed_tokens_per_layer_int8_lut.bin", 2348810240),
@@ -47,7 +47,7 @@ def main() -> None:
         if path.stat().st_size != size or sha256(path) != item["sha256"]:
             raise RuntimeError(f"unexpected {name} artifact")
 
-    context_matches = list((EXP / ".local/qairt-2.49.40-context-cache-aligned-v5").rglob("ar1_cl4096_1_of_1.bin"))
+    context_matches = list((EXP / ".local/qairt-2.49.40-context-cache-aligned-v6").rglob("ar1_cl4096_1_of_1.bin"))
     if len(context_matches) != 1 or sha256(context_matches[0]) != CONTEXT_SHA256:
         raise RuntimeError("compiled context identity mismatch")
     context_out = BUNDLE / "models/weight_sharing_model_ar128_ar1_cl4096_scl512_1_of_1.serialized.bin"

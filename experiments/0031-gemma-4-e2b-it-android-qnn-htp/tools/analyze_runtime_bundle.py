@@ -16,7 +16,7 @@ EXP = Path(__file__).resolve().parents[1]
 BUNDLE = EXP / ".local/runtime-bundle"
 CHECKPOINT = EXP / ".local/hf-checkpoint/model.safetensors"
 OUT = EXP / "results/gemma4-sm8550-runtime-bundle/result.json"
-EXPECTED_CONTEXT = "a1d52d0087a0719d5907a98d99e8bc5996b699c9cf8f3a21b301588b9f51cc44"
+EXPECTED_CONTEXT = "7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394"
 EXPECTED_TOKENIZER = "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f"
 
 

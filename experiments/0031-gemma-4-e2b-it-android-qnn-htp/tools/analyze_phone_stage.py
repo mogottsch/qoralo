@@ -10,8 +10,8 @@ from pathlib import Path
 EXP = Path(__file__).resolve().parents[1]
 BUNDLE = EXP / ".local/runtime-bundle"
 STAGE = EXP / ".local/phone-stage"
-OUT = EXP / "results/cache-corrected-phone-stage/result.json"
-EXPECTED_CONTEXT = "a1d52d0087a0719d5907a98d99e8bc5996b699c9cf8f3a21b301588b9f51cc44"
+OUT = EXP / "results/position-id-corrected-phone-stage/result.json"
+EXPECTED_CONTEXT = "7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394"
 EXPECTED_SHORT = "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a"
 CONTEXT_NAME = "models/weight_sharing_model_ar128_ar1_cl4096_scl512_1_of_1.serialized.bin"
 
@@ -80,10 +80,10 @@ def main() -> None:
     result = {
         "schema_version": 1,
         "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
-        "classification": "positive_host_cache_corrected_phone_stage_preparation",
-        "status": "cache_corrected_phone_stage_ready_waiting_device_identity_and_priority",
+        "classification": "positive_host_position_id_corrected_phone_stage_preparation",
+        "status": "position_id_binding_corrected_stage_ready_phone_handoff_required",
         "claim_boundary": (
-            "The private stage is complete, permission-hardened, and hash-bound to the cache-corrected context, "
+            "The private stage is complete, permission-hardened, and hash-bound to the cache- and positional-name-corrected context, "
             "exact runtime dependencies, canonical short prompt, and 16-token gate. Preparation and validation "
             "used no ADB and did not acquire phone.lock. This is not phone identity, context loading, physical HTP "
             "execution, no-fallback, output, or performance evidence."
@@ -101,6 +101,7 @@ def main() -> None:
             "permissions_verified": True,
             "source_bundle_manifest_sha256": bundle_manifest_hash,
             "corrected_context_sha256": EXPECTED_CONTEXT,
+            "position_id_binding_corrected": True,
             "canonical_short_rendered_sha256": EXPECTED_SHORT,
             "viability_output_ceiling_tokens": 16,
             "canonical_campaign": False,

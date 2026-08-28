@@ -1,0 +1,228 @@
+{
+  "claim_boundary": "Both AR variants were numerically unchanged except for renaming the global RoPE input symbols from position_ids_global_cos/sin to the exact position_ids_cos/sin names searched by the unprefixed Genie positional configuration. Both full DLCs retain 2,280,676,608 parameters and 31 uFxp16 outputs. Official metadata for the rebuilt two-graph QNN HTP SM8550/v73 context confirms the corrected names and all 15 four-way cache signatures remain identical. This is host conversion/AOT inspection only, not physical dialog creation, graph execution, no-fallback, output, or performance evidence.",
+  "classification": "positive_host_position_id_binding_correction_and_sm8550_recompile",
+  "compile": {
+    "context_bytes": 1186369536,
+    "context_sha256": "7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394",
+    "dsp_arch": "v73",
+    "mode": "weight_sharing",
+    "pd_session": "unsigned",
+    "soc_model": 43,
+    "target": "chipset:SM8550"
+  },
+  "config_binding": {
+    "global_context_inputs": [
+      "position_ids_cos",
+      "position_ids_sin"
+    ],
+    "global_entry_has_no_prefix": true,
+    "host_name_set_match": true,
+    "swa_context_inputs": [
+      "swa_position_ids_cos",
+      "swa_position_ids_sin"
+    ],
+    "swa_prefix": "swa_"
+  },
+  "conversion": {
+    "dlc_inspection": {
+      "1": {
+        "input_count": 38,
+        "output_count": 31,
+        "output_datatypes": {
+          "uFxp_16": 31
+        },
+        "parameters": 2280676608,
+        "positional_inputs": [
+          "swa_position_ids_cos",
+          "swa_position_ids_sin",
+          "position_ids_cos",
+          "position_ids_sin"
+        ]
+      },
+      "128": {
+        "input_count": 38,
+        "output_count": 31,
+        "output_datatypes": {
+          "uFxp_16": 31
+        },
+        "parameters": 2280676608,
+        "positional_inputs": [
+          "swa_position_ids_cos",
+          "swa_position_ids_sin",
+          "position_ids_cos",
+          "position_ids_sin"
+        ]
+      }
+    },
+    "models": [
+      {
+        "ar": 1,
+        "bytes": 2356847508,
+        "name": "ar1_cl4096_1_of_1",
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/qairt-2.49.40-cache-aligned-v6/2732bf78b98829652bd2d46cd6529c8dcbe2706d70aee6ed643ebb07d62a203a/ar1_cl4096_1_of_1.dlc",
+        "sha256": "f080cce522588baadcea38444b480038198918cd8a580dee1026591d638aa044"
+      },
+      {
+        "ar": 128,
+        "bytes": 2356851164,
+        "name": "ar128_cl4096_1_of_1",
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/qairt-2.49.40-cache-aligned-v6/5b9caff536177bac582f118d284cdc433d889f146d22e85b7b5845d2ec78c481/ar128_cl4096_1_of_1.dlc",
+        "sha256": "23a27a84529990adeda07b9b81cc0dd7d360b396d48233e37170f4e62a2c0759"
+      }
+    ],
+    "qairt_version": "2.49.40.260810",
+    "target": "chipset:SM8550"
+  },
+  "correction": {
+    "ar1_value_cache_qdq_boundary_preserved": true,
+    "checkpoint_modified": false,
+    "kind": "ONNX graph-input and activation-encoding symbol rename",
+    "numerically_identity": true,
+    "renames": {
+      "position_ids_global_cos": "position_ids_cos",
+      "position_ids_global_sin": "position_ids_sin"
+    },
+    "variants": [
+      {
+        "ar": 1,
+        "external_data_sha256": "b9b73b984c2258099bc77ce6d1e2aa92d12bb67abe456e5ef509136d7494a65d",
+        "input_renames": {
+          "position_ids_global_cos": "position_ids_cos",
+          "position_ids_global_sin": "position_ids_sin"
+        },
+        "onnx_checker_passed": true,
+        "patched_encodings_sha256": "a09c73d919cda428e53d3b0f3bc16ed079847ba696cca6026f47e59bfa5dce75",
+        "patched_onnx_sha256": "eb530a0bf7aedeabe7d7a706d69aa72168d415c6afdc948e6c642c54c550c478",
+        "source_encodings_sha256": "0dbb1aad69b419594707cc45d31656b95457b5a78c0bce462f1f03db77bfe2a8",
+        "source_onnx_sha256": "2be60a02bc205fe43ba68b45f110c70071fdedd8842a5b8774af2b65675bb40e"
+      },
+      {
+        "ar": 128,
+        "external_data_sha256": "b9b73b984c2258099bc77ce6d1e2aa92d12bb67abe456e5ef509136d7494a65d",
+        "input_renames": {
+          "position_ids_global_cos": "position_ids_cos",
+          "position_ids_global_sin": "position_ids_sin"
+        },
+        "onnx_checker_passed": true,
+        "patched_encodings_sha256": "9ed0d5deb5bff959c738dc3bca7994b1f7796f257377479c82959c5bb693e12f",
+        "patched_onnx_sha256": "819a8af4d6244dc7cea57b5f930778d324b8b81c8012e981780fd4adcdf9fb89",
+        "source_encodings_sha256": "7e26400519d338171bc9d3e9c87182ef0853ce6dfc0c543ad85ea2d815dea251",
+        "source_onnx_sha256": "d1171990305f50e89076709dcf024056f66393a90d35a79e774dc5612b0e3a9a"
+      }
+    ]
+  },
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "inspection": {
+    "all_cache_contracts_still_identical": true,
+    "backend_id": 6,
+    "build_id": "v2.49.40.260810104044",
+    "cache_contract_count": 15,
+    "embedded_markers": {
+      "ar128_cl4096_1_of_1": true,
+      "ar1_cl4096_1_of_1": true,
+      "arch=73": true,
+      "native_hmx_a16w4=true": true,
+      "soc_type=SM8550": true
+    },
+    "genie_default_global_inputs_present_in_both_graphs": true,
+    "graphs": {
+      "ar128_cl4096_1_of_1": {
+        "input_count": 38,
+        "input_datatypes": {
+          "QNN_DATATYPE_UFIXED_POINT_16": 38
+        },
+        "output_count": 31,
+        "output_datatypes": {
+          "QNN_DATATYPE_UFIXED_POINT_16": 31
+        },
+        "positional_inputs": [
+          "swa_position_ids_cos",
+          "swa_position_ids_sin",
+          "position_ids_cos",
+          "position_ids_sin"
+        ]
+      },
+      "ar1_cl4096_1_of_1": {
+        "input_count": 38,
+        "input_datatypes": {
+          "QNN_DATATYPE_UFIXED_POINT_16": 38
+        },
+        "output_count": 31,
+        "output_datatypes": {
+          "QNN_DATATYPE_UFIXED_POINT_16": 31
+        },
+        "positional_inputs": [
+          "swa_position_ids_cos",
+          "swa_position_ids_sin",
+          "position_ids_cos",
+          "position_ids_sin"
+        ]
+      }
+    },
+    "num_graphs": 2,
+    "old_global_positional_input_count": 0,
+    "swa_prefixed_inputs_present_in_both_graphs": true,
+    "utility": "qnn-context-binary-utility"
+  },
+  "next_gate": "Rebuild and hash the private runtime bundle/stage around this context before requesting any phone handoff.",
+  "raw_log_hashes": {
+    "compile": {
+      "context-info.json": {
+        "bytes": 192840,
+        "sha256": "b43be15553726707a3c1362dec333493856d472b4aaddd52b1c9972eb9fcd73e"
+      },
+      "context-info.stderr.log": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "context-info.stdout.log": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr.log": {
+        "bytes": 587,
+        "sha256": "b4ffff59f1cfaaba5b77d5eef1cb0f3ef10eaa47b02879b4c80186c9f2b81586"
+      },
+      "stdout.log": {
+        "bytes": 1375,
+        "sha256": "269eab757e3b54965ab9031a4d1a59e11d5663d3344be53c64c41aabae443343"
+      }
+    },
+    "conversion": {
+      "ar1.dlc-info.log": {
+        "bytes": 23417686,
+        "sha256": "98712098af4f12ff1794ffe76a0f875277c64dfc33a2ccc443176b2f06ffa4fd"
+      },
+      "ar1.dlc-info.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "ar128.dlc-info.log": {
+        "bytes": 23783823,
+        "sha256": "ace99677bd62a6ebc1d7b30ead9e7c2d7beccaad5b2992e5f3b7f547e978956f"
+      },
+      "ar128.dlc-info.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr.log": {
+        "bytes": 1963,
+        "sha256": "b1b70996b5b44861885758bbe2577d58e8d2cfe7a76571da2762ac287910b492"
+      },
+      "stdout.log": {
+        "bytes": 26101,
+        "sha256": "e9f6172d41358eeb7fff00c08d6d8bbca9dac253d68ce16a5ab3c8d7ca25ebc5"
+      }
+    }
+  },
+  "requested": {
+    "htp_compilation": true,
+    "inference": false,
+    "paid_workbench_job": false,
+    "phone_access": false,
+    "physical_htp_execution": false,
+    "qnn_conversion": true
+  },
+  "schema_version": 1,
+  "status": "position_id_binding_corrected_recompiled_stage_rebuild_required"
+}

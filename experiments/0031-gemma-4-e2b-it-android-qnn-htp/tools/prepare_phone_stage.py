@@ -13,7 +13,7 @@ BUNDLE = EXP / ".local/runtime-bundle"
 STAGE = EXP / ".local/phone-stage"
 SHORT = EXP / "protocol/rendered/short.txt"
 CONTEXT_NAME = "models/weight_sharing_model_ar128_ar1_cl4096_scl512_1_of_1.serialized.bin"
-EXPECTED_CONTEXT_SHA256 = "a1d52d0087a0719d5907a98d99e8bc5996b699c9cf8f3a21b301588b9f51cc44"
+EXPECTED_CONTEXT_SHA256 = "7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394"
 
 
 def sha256(path: Path) -> str:

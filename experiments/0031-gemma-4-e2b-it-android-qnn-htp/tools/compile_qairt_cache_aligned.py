@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compile corrected AR1 and original AR128 as one SM8550 weight-shared context."""
+"""Compile cache- and positional-name-corrected AR1/AR128 as one SM8550 context."""
 from __future__ import annotations
 
 import hashlib
@@ -10,12 +10,11 @@ from qairt_constant_compat import install
 
 EXP = Path(__file__).resolve().parents[1]
 CKPT = EXP / ".local/checkpoint/extracted/gemma_4_e2b_it_w4a16"
-SOURCE_CACHE = EXP / ".local/qairt-2.49.40-transform-compat"
-AR1_CACHE = EXP / ".local/qairt-2.49.40-cache-aligned-v5"
-COMPILE_CACHE = EXP / ".local/qairt-2.49.40-context-cache-aligned-v5"
+DLC_CACHE = EXP / ".local/qairt-2.49.40-cache-aligned-v6"
+COMPILE_CACHE = EXP / ".local/qairt-2.49.40-context-cache-aligned-v6"
 EXPECTED_DLCS = {
-    1: "7e88facdba8c8b015579cbc3bf76dbad4f2f913cd29b450d555d6174bd48c9e1",
-    128: "5f17ece8a99cd649abdadb61e2e104e5cd569a1d1735e9e6ecb5c297286156ee",
+    1: "f080cce522588baadcea38444b480038198918cd8a580dee1026591d638aa044",
+    128: "23a27a84529990adeda07b9b81cc0dd7d360b396d48233e37170f4e62a2c0759",
 }
 
 
@@ -28,8 +27,7 @@ def sha256(path: Path) -> str:
 
 
 def find_dlc(ar: int) -> Path:
-    cache = AR1_CACHE if ar == 1 else SOURCE_CACHE
-    matches = list(cache.rglob(f"ar{ar}_cl4096_1_of_1.dlc"))
+    matches = list(DLC_CACHE.rglob(f"ar{ar}_cl4096_1_of_1.dlc"))
     if len(matches) != 1:
         raise RuntimeError(f"expected one AR{ar} DLC, found {len(matches)}")
     if sha256(matches[0]) != EXPECTED_DLCS[ar]:

@@ -107,7 +107,7 @@ class ContractTest(unittest.TestCase):
     def test_historical_transform_blocker_and_active_no_execution_claim(self) -> None:
         blocker = json.loads((EXP / "results/transform-blocker/result.json").read_text())
         self.assertEqual(
-            "phone_attempt_03_failed_position_id_tensor_name_binding_host_fix_required",
+            "position_id_binding_corrected_stage_ready_phone_handoff_required",
             self.contract["status"],
         )
         active = self.contract["conversion_blocker"]
@@ -117,7 +117,11 @@ class ContractTest(unittest.TestCase):
             "passed_host_conversion_recompile_and_four_way_metadata_inspection",
             active["cache_quantization_correction_gate"],
         )
-        self.assertIn("new explicit phone handoff", active["next_gate"])
+        self.assertEqual(
+            "passed_host_dual_conversion_recompile_name_set_and_stage_validation",
+            active["position_id_binding_correction_gate"],
+        )
+        self.assertIn("new explicit Pi handoff", active["next_gate"])
         self.assertFalse(blocker["android_execution"])
         self.assertFalse(blocker["qnn_htp_execution"])
         self.assertFalse(blocker["compiled_context_created"])
@@ -141,8 +145,10 @@ class ContractTest(unittest.TestCase):
             EXP / "results/qairt-2.49.40-qnn-conversion",
             EXP / "results/qairt-2.49.40-sm8550-context",
             EXP / "results/qairt-2.49.40-cache-quantization-correction",
+            EXP / "results/qairt-2.49.40-position-id-binding-correction",
             EXP / "results/gemma4-sm8550-runtime-bundle",
             EXP / "results/cache-corrected-phone-stage",
+            EXP / "results/position-id-corrected-phone-stage",
             EXP / "results/android-qnn-physical-viability-attempt-01",
             EXP / "results/android-qnn-physical-viability-attempt-02",
             EXP / "results/android-qnn-physical-viability-attempt-03",
@@ -249,6 +255,30 @@ class ContractTest(unittest.TestCase):
         self.assertFalse(result["requested"]["physical_htp_execution"])
         self.assertFalse(result["requested"]["inference"])
 
+    def test_position_id_binding_correction_is_host_only_and_preserves_cache_contracts(self) -> None:
+        result = json.loads(
+            (EXP / "results/qairt-2.49.40-position-id-binding-correction/result.json").read_text()
+        )
+        self.assertEqual(
+            "positive_host_position_id_binding_correction_and_sm8550_recompile",
+            result["classification"],
+        )
+        self.assertTrue(result["correction"]["numerically_identity"])
+        self.assertFalse(result["correction"]["checkpoint_modified"])
+        self.assertEqual(
+            {"position_ids_global_cos": "position_ids_cos", "position_ids_global_sin": "position_ids_sin"},
+            result["correction"]["renames"],
+        )
+        self.assertEqual(6, result["inspection"]["backend_id"])
+        self.assertEqual(2, result["inspection"]["num_graphs"])
+        self.assertEqual(0, result["inspection"]["old_global_positional_input_count"])
+        self.assertTrue(result["inspection"]["genie_default_global_inputs_present_in_both_graphs"])
+        self.assertTrue(result["inspection"]["all_cache_contracts_still_identical"])
+        self.assertTrue(result["config_binding"]["host_name_set_match"])
+        self.assertFalse(result["requested"]["phone_access"])
+        self.assertFalse(result["requested"]["physical_htp_execution"])
+        self.assertFalse(result["requested"]["inference"])
+
     def test_runtime_bundle_and_luts_are_bound_but_not_staged(self) -> None:
         result = json.loads(
             (EXP / "results/gemma4-sm8550-runtime-bundle/result.json").read_text()
@@ -258,7 +288,7 @@ class ContractTest(unittest.TestCase):
         self.assertEqual("greedy", result["runtime"]["sampling"])
         self.assertEqual(2048, result["runtime"]["max_new_tokens"])
         self.assertEqual(
-            "a1d52d0087a0719d5907a98d99e8bc5996b699c9cf8f3a21b301588b9f51cc44",
+            "7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394",
             result["runtime"]["context_sha256"],
         )
         for lut in result["luts"].values():
@@ -359,6 +389,27 @@ class ContractTest(unittest.TestCase):
         self.assertEqual("absent", result["stage"]["remote_cleanup_status"])
         self.assertFalse(result["gate"]["further_retry_performed"])
 
+    def test_position_id_corrected_phone_stage_is_ready_without_phone_access(self) -> None:
+        result = json.loads(
+            (EXP / "results/position-id-corrected-phone-stage/result.json").read_text()
+        )
+        self.assertEqual(
+            "positive_host_position_id_corrected_phone_stage_preparation",
+            result["classification"],
+        )
+        self.assertEqual(
+            "7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394",
+            result["stage"]["corrected_context_sha256"],
+        )
+        self.assertTrue(result["stage"]["position_id_binding_corrected"])
+        self.assertEqual(16, result["stage"]["viability_output_ceiling_tokens"])
+        self.assertTrue(result["stage"]["all_manifest_files_verified"])
+        self.assertTrue(result["stage"]["sha256sums_complete_and_verified"])
+        self.assertTrue(result["stage"]["permissions_verified"])
+        self.assertFalse(result["authorization_boundary"]["adb_used"])
+        self.assertFalse(result["authorization_boundary"]["phone_lock_acquired"])
+        self.assertFalse(result["authorization_boundary"]["phone_run_authorized_now"])
+
     def test_bounded_phone_gate_script_holds_lock_and_cleans_scope(self) -> None:
         script = (EXP / "tools/run_phone_viability.sh").read_text()
         self.assertIn('artifacts/locks/phone.lock', script)
@@ -369,7 +420,7 @@ class ContractTest(unittest.TestCase):
         self.assertIn("remote-hash-check.txt", script)
         self.assertIn("libQnnHtpNetRunExtensions.so", script)
         self.assertIn("EXPECTED_CONTEXT_SHA256", script)
-        self.assertIn("a1d52d0087a0719d5907a98d99e8bc5996b699c9cf8f3a21b301588b9f51cc44", script)
+        self.assertIn("7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394", script)
         self.assertIn("stage_completeness_check_passed", (EXP / "tools/prepare_phone_stage.py").read_text())
 
     def test_phone_and_campaign_are_not_claimed(self) -> None:

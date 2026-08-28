@@ -48,7 +48,9 @@ Pi independently reviewed and pushed the host correction. The private runtime bu
 
 The one authorized corrected physical gate ran under the full `phone.lock` lifecycle. It passed identity, local/remote hashes, dependency completeness, QNN HTP provider/backend/device initialization, v73 stub connection, and corrected context deserialization. The prior 30 cache-quantization errors were absent. Genie then failed I/O discovery before dialog creation or graph execution: the context exposes `position_ids_global_cos/sin`, while the unprefixed positional configuration searches for `position_ids_cos/sin`. No output was created; profile components are null; scoped cleanup and process termination passed.
 
-The active next step is host-only: correct and validate the global positional-encoding tensor-name binding, rebuild/hash the private config and stage, commit and report the evidence, and obtain a new explicit phone handoff. Do not access ADB, retry, or start a campaign before that handoff. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
+The global positional binding is now corrected host-side by a numerically identity graph-input and activation-encoding symbol rename in both AR variants. Both full DLCs retain 2,280,676,608 parameters and 31 uFxp16 outputs. Official metadata for the rebuilt SM8550/v73 context confirms both graphs expose `position_ids_cos/sin` plus `swa_position_ids_cos/sin`, all 15 cache contracts remain identical, and the unchanged Genie positional configuration's global/SWA name sets now match. The private bundle and 16-token stage are rebuilt and hash/permission/dependency verified without ADB or `phone.lock`.
+
+The active next step is independent review and a new explicit phone handoff for one further bounded gate. Do not access ADB, retry, or start a campaign before that handoff. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
 
 ## Stop conditions
 
