@@ -50,7 +50,9 @@ The one authorized corrected physical gate ran under the full `phone.lock` lifec
 
 The global positional binding is now corrected host-side by a numerically identity graph-input and activation-encoding symbol rename in both AR variants. Both full DLCs retain 2,280,676,608 parameters and 31 uFxp16 outputs. Official metadata for the rebuilt SM8550/v73 context confirms both graphs expose `position_ids_cos/sin` plus `swa_position_ids_cos/sin`, all 15 cache contracts remain identical, and the unchanged Genie positional configuration's global/SWA name sets now match. The private bundle and 16-token stage are rebuilt and hash/permission/dependency verified without ADB or `phone.lock`.
 
-The active next step is independent review and a new explicit phone handoff for one further bounded gate. Do not access ADB, retry, or start a campaign before that handoff. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
+The one authorized attempt-04 physical gate succeeded under `phone.lock`: verified SM8550 QnnHtp context deserialization, two successful AR128 prompt-graph executions, fifteen successful AR1 decode-graph executions, 16 generated tokens, coherent UTF-8 output, nonempty profile, scoped cleanup, and no QNN CPU-backend/runtime-fallback marker. This proves bounded physical HTP transformer inference but is not yet canonical campaign evidence.
+
+The run revealed a fatal effective-prompt mismatch: the bound rendering has 170 tokens and one BOS, while Genie reports 171 prompt tokens and logs a `[2, 2, ...]` prefix whose tail matches the bound sequence. The active next step is host-only: suppress the runtime's automatic extra BOS without rewriting canonical workload bytes, prove exact effective-token identity, rebuild/hash the stage, commit/report, and obtain a new explicit handoff. Do not access ADB, retry, or start a campaign before that handoff. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
 
 ## Stop conditions
 

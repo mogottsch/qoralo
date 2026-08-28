@@ -107,7 +107,7 @@ class ContractTest(unittest.TestCase):
     def test_historical_transform_blocker_and_active_no_execution_claim(self) -> None:
         blocker = json.loads((EXP / "results/transform-blocker/result.json").read_text())
         self.assertEqual(
-            "position_id_binding_corrected_stage_ready_phone_handoff_required",
+            "physical_qnn_htp_inference_positive_canonical_campaign_blocked_on_extra_bos",
             self.contract["status"],
         )
         active = self.contract["conversion_blocker"]
@@ -121,7 +121,7 @@ class ContractTest(unittest.TestCase):
             "passed_host_dual_conversion_recompile_name_set_and_stage_validation",
             active["position_id_binding_correction_gate"],
         )
-        self.assertIn("new explicit Pi handoff", active["next_gate"])
+        self.assertIn("automatic extra BOS", active["next_gate"])
         self.assertFalse(blocker["android_execution"])
         self.assertFalse(blocker["qnn_htp_execution"])
         self.assertFalse(blocker["compiled_context_created"])
@@ -152,6 +152,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/android-qnn-physical-viability-attempt-01",
             EXP / "results/android-qnn-physical-viability-attempt-02",
             EXP / "results/android-qnn-physical-viability-attempt-03",
+            EXP / "results/android-qnn-physical-viability-attempt-04",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():
@@ -409,6 +410,33 @@ class ContractTest(unittest.TestCase):
         self.assertFalse(result["authorization_boundary"]["adb_used"])
         self.assertFalse(result["authorization_boundary"]["phone_lock_acquired"])
         self.assertFalse(result["authorization_boundary"]["phone_run_authorized_now"])
+
+    def test_fourth_phone_attempt_proves_bounded_htp_inference_but_not_canonical_input(self) -> None:
+        result = json.loads(
+            (EXP / "results/android-qnn-physical-viability-attempt-04/result.json").read_text()
+        )
+        self.assertEqual(
+            "positive_physical_qnn_htp_bounded_inference_with_effective_prompt_bos_mismatch",
+            result["classification"],
+        )
+        self.assertTrue(all(result["physical_provider_and_execution_evidence"].values()))
+        self.assertEqual(17, result["execution"]["successful_qnn_graph_executions"])
+        self.assertEqual(2, result["execution"]["successful_ar128_graph_executions"])
+        self.assertEqual(15, result["execution"]["successful_ar1_graph_executions"])
+        self.assertEqual(0, result["execution"]["qnn_cpu_backend_markers"])
+        self.assertEqual(0, result["execution"]["runtime_fallback_markers"])
+        self.assertTrue(result["execution"]["physical_htp_transformer_execution_proven"])
+        self.assertEqual(170, result["prompt_identity"]["bound_single_bos_token_count"])
+        self.assertEqual(171, result["prompt_identity"]["runtime_profile_prompt_tokens"])
+        self.assertEqual(1, result["prompt_identity"]["effective_extra_leading_bos_count"])
+        self.assertFalse(result["prompt_identity"]["canonical_effective_prompt_identity_passed"])
+        self.assertTrue(result["outcome"]["graph_execution_observed"])
+        self.assertEqual(16, result["outcome"]["generated_tokens"])
+        self.assertEqual("max_tokens", result["outcome"]["stop_reason"])
+        self.assertEqual({"looks_sensible": True, "issue_notes": None}, result["outcome"]["output_sanity"])
+        self.assertEqual("absent", result["stage"]["remote_cleanup_status"])
+        self.assertFalse(result["gate"]["canonical_campaign"])
+        self.assertFalse(result["gate"]["further_retry_performed"])
 
     def test_bounded_phone_gate_script_holds_lock_and_cleans_scope(self) -> None:
         script = (EXP / "tools/run_phone_viability.sh").read_text()

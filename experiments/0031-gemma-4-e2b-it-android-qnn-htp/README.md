@@ -2,7 +2,7 @@
 
 ## Status
 
-**The attempt-03 positional tensor-name blocker is corrected host-side and the private stage is rebuilt. Both AR graphs now expose the exact `position_ids_cos/sin` names searched by Genie's unprefixed global RoPE binding while retaining `swa_position_ids_cos/sin` and all 15 corrected cache contracts. The new SM8550/v73 context and 16-token stage are hash-verified, but have not been loaded on the phone. No graph execution, output, or performance result exists; another phone gate requires independent review and a new explicit handoff.**
+**Bounded physical QNN HTP inference now succeeds. On the verified SM8550 phone, the corrected context deserialized, two AR128 prompt calls and fifteen AR1 decode calls completed with QNN status 0, and Genie returned 16 coherent UTF-8 tokens. No QNN CPU backend or runtime fallback marker appears. The canonical campaign remains blocked: Genie processed 171 prompt tokens and logged `[2, 2, ...]`, proving it automatically prepended one BOS to the bound 170-token single-BOS rendering. No campaign or registry claim is permitted until effective prompt identity is corrected and separately authorized.**
 
 This experiment is a separate HTP arm for the model studied in `0025`. It does not rewrite or relabel the CPU/GPU evidence there.
 
@@ -103,7 +103,11 @@ The positional binding is now corrected without numerical graph changes: both tr
 
 The resulting 1,186,369,536-byte weight-shared context has SHA-256 `7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394`. Official metadata identifies QNN HTP backend ID 6, SM8550/v73, both 38-input/31-output graphs, the exact global and SWA positional names expected by the unchanged Genie configuration, and all 15 four-way value-cache signatures still identical. See [`results/qairt-2.49.40-position-id-binding-correction/result.json`](results/qairt-2.49.40-position-id-binding-correction/result.json).
 
-The private runtime bundle and 16-token stage are rebuilt and fully hash/permission/dependency verified around this context without ADB or `phone.lock`. See [`results/position-id-corrected-phone-stage/result.json`](results/position-id-corrected-phone-stage/result.json). No retry or campaign is authorized. Obtain independent review and a new explicit phone handoff before one further bounded gate. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
+The private runtime bundle and 16-token stage were rebuilt and fully hash/permission/dependency verified around this context without ADB or `phone.lock`. See [`results/position-id-corrected-phone-stage/result.json`](results/position-id-corrected-phone-stage/result.json).
+
+The one authorized attempt-04 gate then completed under the full `phone.lock` lifecycle. Physical evidence includes QnnHtp-only configuration, SM8550 detection, v73 stub connection, corrected context deserialization, successful graph switching, two `ar128_cl4096_1_of_1` executions and fifteen `ar1_cl4096_1_of_1` executions finishing with result/status 0, and no QNN CPU-backend or runtime-fallback marker. Genie produced 16 tokens and an 82-byte coherent text fragment. The bounded profile reports 1,900,166 µs initialization, 522,527 µs TTFT, 327.332 prompt tokens/s, and 17.572 generated tokens/s; these are viability observations, not canonical campaign metrics. Scoped cleanup verified the remote path absent with no residual process. See [`results/android-qnn-physical-viability-attempt-04/result.json`](results/android-qnn-physical-viability-attempt-04/result.json).
+
+The same run exposed a fatal canonical-input mismatch. The committed route inventory binds a 170-token rendering with one leading BOS, while Genie reports 171 prompt tokens and its truncated token log begins `[2, 2, 105, ...]`; after the extra first token, the logged prefix matches the bound token sequence. This proves one automatic BOS was added at runtime. No campaign or registry row is authorized. The next step is host-only: suppress the automatic extra BOS without changing canonical workload bytes, prove the effective sequence equals the bound 170-token sequence, rebuild/hash the stage, and obtain a new explicit handoff. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
 
 ## Proof boundary
 

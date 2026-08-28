@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
-  "status": "position_id_binding_corrected_stage_ready_phone_handoff_required",
+  "status": "physical_qnn_htp_inference_positive_canonical_campaign_blocked_on_extra_bos",
   "question": "Can Gemma 4 E2B IT run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Gemma 4 E2B IT text generation only",
@@ -146,7 +146,8 @@
     "cache_quantization_correction_gate": "passed_host_conversion_recompile_and_four_way_metadata_inspection",
     "phone_attempt_03": "failed_pre_dialog_io_discovery_position_ids_global_vs_unprefixed_name_binding_exit_1",
     "position_id_binding_correction_gate": "passed_host_dual_conversion_recompile_name_set_and_stage_validation",
-    "next_gate": "After independent review, obtain a new explicit Pi handoff for one further locked 16-token physical gate; no retry or campaign before that handoff.",
+    "phone_attempt_04": "passed_bounded_physical_qnn_htp_inference_16_tokens_but_effective_prompt_has_one_extra_bos",
+    "next_gate": "Host-only: suppress the automatic extra BOS without changing canonical workload bytes, prove the runtime-effective token sequence equals the bound 170-token sequence, rebuild/hash, commit/report, and obtain a new explicit handoff.",
     "workbench_checkpoint": "Any paid Workbench compile/link job requires a separate explicit cost/terms decision."
   },
   "transform_result": {
@@ -411,8 +412,33 @@
     "remote_cleanup_verified_absent": true,
     "further_retry_performed": false
   },
+  "phone_viability_attempt_04": {
+    "result_path": "results/android-qnn-physical-viability-attempt-04/result.json",
+    "classification": "positive_physical_qnn_htp_bounded_inference_with_effective_prompt_bos_mismatch",
+    "phone_lock_held": true,
+    "device": "Samsung SM-S918B / SM8550 / arm64-v8a",
+    "context_sha256": "7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394",
+    "max_new_tokens": 16,
+    "canonical_campaign": false,
+    "exit_code": 0,
+    "physical_htp_transformer_execution_proven": true,
+    "successful_ar128_graph_executions": 2,
+    "successful_ar1_graph_executions": 15,
+    "qnn_cpu_backend_markers": 0,
+    "runtime_fallback_markers": 0,
+    "generated_tokens": 16,
+    "output_created": true,
+    "output_sha256": "c7f1bbe392bb29d0cae6917cdf07aa84e221d3918c4389f9ab83cc0da728e44c",
+    "output_sanity": {"looks_sensible": true, "issue_notes": null},
+    "bound_single_bos_prompt_tokens": 170,
+    "runtime_profile_prompt_tokens": 171,
+    "effective_extra_leading_bos_count": 1,
+    "canonical_effective_prompt_identity_passed": false,
+    "remote_cleanup_verified_absent": true,
+    "further_retry_performed": false
+  },
   "campaign_gate": {
-    "phone_priority": "host positional-name correction is ready; blocked on independent review and a new explicit Pi handoff; no ADB before that handoff",
+    "phone_priority": "blocked on host correction of the automatic extra BOS and a new explicit Pi handoff; no ADB before that handoff",
     "bounded_viability_first": true,
     "canonical_after_viability": true,
     "request_isolation_candidate": "One loaded Genie Engine with a fresh Dialog per logical request, or a proven full GenieDialog_reset; measure reset/creation separately and reject retained KV/prefix reuse.",

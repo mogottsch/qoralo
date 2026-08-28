@@ -1,0 +1,427 @@
+{
+  "claim_boundary": "The verified SM8550 phone loaded the exact position-ID-corrected context through QnnHtp, physically executed two successful AR128 prompt graph calls and fifteen successful AR1 decode graph calls on QnnDsp/HTP, and returned a coherent 16-token UTF-8 output. No QNN CPU backend or runtime fallback marker appears. This proves bounded physical transformer inference, not a canonical campaign: Genie processed 171 prompt tokens and the runtime log begins [2,2,...], proving one automatic BOS was prepended to the bound 170-token, single-BOS rendering. Campaign metrics/publication remain blocked until the effective prompt identity is corrected and separately authorized.",
+  "classification": "positive_physical_qnn_htp_bounded_inference_with_effective_prompt_bos_mismatch",
+  "device": {
+    "abi": "arm64-v8a",
+    "boot": "1",
+    "device": "dm3q",
+    "fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+    "flash_locked": "1",
+    "manufacturer": "samsung",
+    "model": "SM-S918B",
+    "release": "16",
+    "sdk": "36",
+    "serial": "R5CW81PR8SY",
+    "soc": "SM8550",
+    "verified_boot": "green"
+  },
+  "exact_unblock": "Host-correct the automatic extra BOS without rewriting canonical workload bytes, prove the runtime-effective token sequence equals the bound single-BOS 170-token sequence, rebuild/hash the stage, and obtain a new explicit handoff before any campaign or retry.",
+  "execution": {
+    "nonfatal_uses_cross_attention_capability_log": "qnn-htp-engine does not support usesCrossAttention",
+    "physical_htp_transformer_execution_proven": true,
+    "qnn_cpu_backend_markers": 0,
+    "qnn_graph_execute_success_status": "0x0",
+    "runtime_fallback_markers": 0,
+    "successful_ar128_graph_executions": 2,
+    "successful_ar1_graph_executions": 15,
+    "successful_qnn_graph_executions": 17,
+    "uniform_integer_execution_claim": false
+  },
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "gate": {
+    "attempt": 4,
+    "bounded_viability_only": true,
+    "canonical_campaign": false,
+    "context_sha256": "7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394",
+    "further_retry_performed": false,
+    "max_new_tokens": 16,
+    "phone_lock_held_full_adb_lifecycle": true
+  },
+  "memory_observations": {
+    "actual_intervals_ms": [
+      815.711,
+      679.674,
+      739.643,
+      706.979
+    ],
+    "limitations": "Process observations exclude unreported HTP-private memory and sparse sampling can miss peaks.",
+    "method": "0.5 s target shell sampling of /proc status and dumpsys meminfo",
+    "peak_process_vmhwm_kb": 459276,
+    "peak_sampled_total_pss_kb": 205091,
+    "sample_count": 5
+  },
+  "outcome": {
+    "context_occupancy": 186,
+    "dialog_created": true,
+    "exit_code": 0,
+    "generated_tokens": 16,
+    "graph_execution_observed": true,
+    "output": {
+      "bytes": 82,
+      "path": "raw/viability-output.txt",
+      "sha256": "c7f1bbe392bb29d0cae6917cdf07aa84e221d3918c4389f9ab83cc0da728e44c"
+    },
+    "output_created": true,
+    "output_sanity": {
+      "issue_notes": null,
+      "looks_sensible": true
+    },
+    "result": "bounded_physical_inference_succeeded",
+    "stop_reason": "max_tokens"
+  },
+  "physical_provider_and_execution_evidence": {
+    "ar128_graph_switched_and_executed": true,
+    "ar1_graph_switched_and_executed": true,
+    "backend_extension_loaded": true,
+    "both_graphs_initialized": true,
+    "context_deserialized": true,
+    "htp_provider_initialized": true,
+    "physical_soc_detected": true,
+    "qnn_device_created": true,
+    "qnn_htp_backend_created": true,
+    "qnn_stub_connection_established": true,
+    "v73_stub_loaded": true,
+    "weight_sharing_context_detected": true
+  },
+  "profile_observations": {
+    "decode_rate_first_token_inclusion": null,
+    "decode_rate_first_token_inclusion_reason": "Genie profile does not state whether its rate numerator includes the first token.",
+    "dialog_create_duration_us": 1902152,
+    "dialog_init_time_us": 1900166,
+    "generated_tokens": 16,
+    "prompt_processing_rate_tokens_per_second": 327.3322448730469,
+    "query_duration_us": 1536080,
+    "runtime_prompt_tokens": 171,
+    "scope": "bounded viability only; not canonical campaign metrics",
+    "time_to_first_token_us": 522527,
+    "token_generation_rate_tokens_per_second": 17.572221755981445,
+    "token_generation_time_us": 853626
+  },
+  "prompt_identity": {
+    "bound_single_bos_token_count": 170,
+    "bound_token_ids_int32le_sha256": "31a85f9c813266bbbb3505a04a226a9b184882b636cc2f6f67193a6b1eb2ad78",
+    "canonical_effective_prompt_identity_passed": false,
+    "canonical_short_rendered_sha256": "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a",
+    "effective_extra_leading_bos_count": 1,
+    "logged_prefix_after_extra_bos_matches_bound_token_prefix": true,
+    "runtime_logged_prefix": [
+      2,
+      2,
+      105,
+      9731,
+      107,
+      3048,
+      659,
+      496,
+      2263,
+      5192,
+      2028,
+      1208,
+      496,
+      3736,
+      1594,
+      236761,
+      58025,
+      528,
+      40137,
+      5422,
+      57243,
+      236761,
+      3574,
+      711,
+      4928,
+      506,
+      30998,
+      236764,
+      11497,
+      11808,
+      236764,
+      8369,
+      18558,
+      236764,
+      653,
+      506,
+      1707,
+      600,
+      611,
+      659,
+      1646,
+      10418,
+      236761,
+      106,
+      107,
+      105,
+      2364,
+      107,
+      6190,
+      506,
+      2269,
+      57728,
+      10630,
+      8652,
+      236761,
+      108,
+      236770,
+      236761,
+      669,
+      2434,
+      563,
+      22020,
+      1806,
+      2263,
+      34711,
+      18362,
+      580,
+      506,
+      1638,
+      10055,
+      236772,
+      36359,
+      4744,
+      236761,
+      7850,
+      64026,
+      19015,
+      496,
+      11236,
+      2028,
+      6077,
+      840,
+      1521,
+      4182,
+      13198,
+      236764,
+      3958,
+      150548,
+      49060,
+      4890,
+      17373,
+      1061,
+      2028,
+      840,
+      815,
+      29227,
+      1099,
+      8299,
+      236764,
+      532,
+      3958,
+      127649,
+      6178,
+      919,
+      6571,
+      528,
+      8770,
+      573,
+      11442,
+      11172,
+      8487,
+      236761,
+      2343,
+      10802,
+      1921,
+      23227,
+      10884,
+      236764,
+      11172,
+      8487,
+      236764,
+      532,
+      8369,
+      8299,
+      236761,
+      108,
+      6974,
+      496,
+      1265,
+      236772,
+      66436,
+      8330,
+      25809,
+      573,
+      506,
+      2434,
+      236761,
+      42085,
+      506,
+      2132,
+      211302,
+      236764,
+      8701,
+      506,
+      10802,
+      600,
+      1374,
+      4595,
+      7732,
+      236764,
+      532,
+      1345,
+      607,
+      496,
+      10231,
+      2148,
+      2918,
+      236761
+    ],
+    "runtime_profile_prompt_tokens": 171,
+    "runtime_token_log_truncated_by_logger": true
+  },
+  "raw_evidence": {
+    "adb-state.txt": {
+      "bytes": 7,
+      "sha256": "c98373c1abef78070f6beef6b4ae4fbf3de348dac280195c7f93441920584af9"
+    },
+    "battery-after.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "battery-after.txt": {
+      "bytes": 15845,
+      "sha256": "1daac48432ec0b6e62dd59fdf544b9af6ea97b2c615b6f728dba34c2d2ee8906"
+    },
+    "battery-before.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "battery-before.txt": {
+      "bytes": 15844,
+      "sha256": "720c5c3d49e932f6aa60cffab772fda94da502345ab64791b4b446b1783e8f23"
+    },
+    "cleanup-status.txt": {
+      "bytes": 7,
+      "sha256": "7925d3e9a9613a093e5eb4054b32aa39de910d2b03ba7e8046c3b4550b8de1e4"
+    },
+    "cleanup.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cleanup.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "exit-code.txt": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "genie-verbose.log": {
+      "bytes": 717769,
+      "sha256": "9194b4bb193d1f9b43cd1e86879e3b2485d4a880a064a2f4a062b2a9f46b199d"
+    },
+    "identity.txt": {
+      "bytes": 237,
+      "sha256": "6cc6731865e0f47abb5f749d2d18d784b81b1f90332aed0dc763f1ebb61327b3"
+    },
+    "launcher-exit-code.txt": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "launcher.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "launcher.stdout": {
+      "bytes": 304,
+      "sha256": "a7a1346d46eddab9c582343c8f813f0cd6bb1eb946bba6a38255d587bdc3ee3b"
+    },
+    "local-hash-check.txt": {
+      "bytes": 519,
+      "sha256": "26cd1ee7cea68096728d5d584dcb06ebf5c0304cb5564e3fba7c189482b143fa"
+    },
+    "memory-samples.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "memory-samples.txt": {
+      "bytes": 1185,
+      "sha256": "73fbbee322cae54b46da2145504b3011f2052d8ddd8004858f25146c94f22e92"
+    },
+    "process-after.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pull-genie-verbose.log.txt": {
+      "bytes": 181,
+      "sha256": "4155e5bf244ab9aac2948c1d558fa5824eac623be6ce5cea0b146d11450f07a5"
+    },
+    "pull-viability-output.txt.txt": {
+      "bytes": 180,
+      "sha256": "7407219027c3ff669e36a722f6aa33bb977a58f3c6a8aa9e61fcb8822d32ccef"
+    },
+    "pull-viability-profile.json.txt": {
+      "bytes": 184,
+      "sha256": "b1decbcbba028772feb6e5a052fe692bcb6e708d4b52a594175eaa0179537fd7"
+    },
+    "push.txt": {
+      "bytes": 180,
+      "sha256": "ca94a489c73fa27f5cb5028e66582c7861455f9cb5f14a91d74a31dcba06d1a7"
+    },
+    "remote-hash-check.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "remote-hash-check.txt": {
+      "bytes": 519,
+      "sha256": "26cd1ee7cea68096728d5d584dcb06ebf5c0304cb5564e3fba7c189482b143fa"
+    },
+    "runner.stderr": {
+      "bytes": 106,
+      "sha256": "8fa0826ca9043d016e4e0a174cc301a18f22ca00e1f755942e2916b59e1140ba"
+    },
+    "runner.stdout": {
+      "bytes": 1549,
+      "sha256": "5926b930697563dad6a2989be72cfa3e3997a681d1b2334473bac1c90360ea93"
+    },
+    "runtime-completeness.txt": {
+      "bytes": 176,
+      "sha256": "c2f842f873a149c2d6fe0f45d62e7fcf89ca5822d107f53bcaca610375c46b3f"
+    },
+    "storage-before.txt": {
+      "bytes": 128,
+      "sha256": "27ef783cb95e4c23871d1ddcd8ab9dff55eec33cf129d2d78eea6f33e10ad31f"
+    },
+    "thermal-after.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "thermal-after.txt": {
+      "bytes": 1288,
+      "sha256": "0cb9a684d13f539949e530e4a39cc02255c8b65f899e89edccb9dfbabf750a33"
+    },
+    "thermal-before.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "thermal-before.txt": {
+      "bytes": 1288,
+      "sha256": "3d7e7bf3261e9761ed213c5cde054bb5ca2a92acfbbf2500d4bec92f53b429db"
+    },
+    "viability-output.txt": {
+      "bytes": 82,
+      "sha256": "c7f1bbe392bb29d0cae6917cdf07aa84e221d3918c4389f9ab83cc0da728e44c"
+    },
+    "viability-profile.json": {
+      "bytes": 1430,
+      "sha256": "85fbd294f96dbe53b26c3525e417956636eea8c28a18df8f755f9115aedff328"
+    }
+  },
+  "run_id": "viability-20260828T103518Z-position-id-corrected-attempt-04",
+  "schema_version": 1,
+  "stage": {
+    "local_hash_check_passed": true,
+    "remote_cleanup_status": "absent",
+    "remote_hash_check_passed": true,
+    "residual_process_observed": false,
+    "runtime_completeness_files": [
+      "bin/genie-app",
+      "lib/libGenie.so",
+      "lib/libQnnHtp.so",
+      "lib/libQnnSystem.so",
+      "lib/libQnnHtpV73Stub.so",
+      "lib/libQnnHtpV73Skel.so",
+      "lib/libQnnHtpNetRunExtensions.so",
+      "htp_backend_ext_config.json"
+    ]
+  },
+  "status": "physical_qnn_htp_inference_positive_canonical_campaign_blocked_on_extra_bos"
+}
