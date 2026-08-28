@@ -72,15 +72,15 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="status-header" data-status-header="true">
 <div class="kicker"><span>Experiment 0032</span><span class="status">Active</span></div>
 <h1>Experiment 0032 — Qwen3.5-2B Android QNN/HTP</h1>
-<p class="summary">The exact route is recompiled with explicit recurrent broadcasts; QNN-x86 removes the first-layer corruption and saturation, but overall logits still drift and the full-prompt simulator replay timed out.</p>
+<p class="summary">The repaired exact route now executes physically through QNN HTP v73 and produces lexical token <code>To</code> instead of <code>!</code>; host-QDQ mismatch and the one-token ceiling still block fidelity and campaign claims.</p>
 <div class="header-links"><a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-08-27</span><span>evidence commit: e47ea7347063bf8496861ddb8d02f951b02c9c00</span><span>page source: docs/experiments/0032-qwen-3.5-2b-android-qnn-htp/page.md</span><span>page source sha256: 35184a9ab915c424d635e81292520aedb410b5fc7916afdb393c9c58c7faadb4</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-28</span><span>evidence commit: 83871549b77acc2aaa33847a4be2887b1ddfd3c4</span><span>page source: docs/experiments/0032-qwen-3.5-2b-android-qnn-htp/page.md</span><span>page source sha256: 138708f5ec2e7f8ca5f5fc52c1d04ccb1ce9c030def66c4f8044572f8cf0ff22</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
 <p>Qwen3.5-2B already has a measured Android CPU route, but the first QNN assessment found no usable high-level conversion path for this exact 2B architecture. This experiment tests a separate ExecuTorch route: express the hybrid attention model and all request state explicitly, quantize the exact official checkpoint, compile its tensor computation for the Galaxy S23 Ultra&#x27;s SM8550/HTP v73 target, and then prove physical execution on the phone.</p>
 <p>The explicit-state design makes full-attention KV cache plus Gated DeltaNet recurrent and causal-convolution state graph inputs and outputs. This avoids hidden mutable-buffer fallback and gives a future loaded route an auditable reset boundary. Softplus remains an explicit edge operation mapped to QNN&#x27;s HTP-supported <code>ElementWiseNeuron(SOFTPLUS)</code> operation.</p>
-<p>The end-to-end target remains stricter than one physical request: the exact pinned 24-layer text checkpoint must produce credible bounded output through physical QNN/HTP, demonstrate complete loaded-route request-state isolation, and only then run the canonical one-first-plus-five-short/five-medium/five-long campaign. The owning <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-exact-host-compile/compile-result.json">host compile result</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-exact-host-compile/eager-equivalence.json">eager comparison</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-explicit-state-runner-host-build/result.json">Android runner host build</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-qnn-physical-viability-20260827-attempt-01/result.json">first physical attempt</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-runner-boundary-fix-host-build/result.json">boundary-kernel host fix</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-qnn-physical-viability-20260827-attempt-02/result.json">physical execution result</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/host-w4a16-qdq-output-diagnosis/result.json">host W4A16 QDQ diagnosis</a>, and <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/host-qnn-broadcast-divergence-localization/result.json">host broadcast-divergence localization</a>, and <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/exact-qnn-explicit-broadcast-host-validation/result.json">exact repaired-PTE validation</a> are the evidence authority.</p>
+<p>The end-to-end target remains stricter than one physical request: the exact pinned 24-layer text checkpoint must produce credible bounded output through physical QNN/HTP, demonstrate complete loaded-route request-state isolation, and only then run the canonical one-first-plus-five-short/five-medium/five-long campaign. The owning <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-exact-host-compile/compile-result.json">host compile result</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-exact-host-compile/eager-equivalence.json">eager comparison</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-explicit-state-runner-host-build/result.json">Android runner host build</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-qnn-physical-viability-20260827-attempt-01/result.json">first physical attempt</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-runner-boundary-fix-host-build/result.json">boundary-kernel host fix</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-qnn-physical-viability-20260827-attempt-02/result.json">physical execution result</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/host-w4a16-qdq-output-diagnosis/result.json">host W4A16 QDQ diagnosis</a>, and <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/host-qnn-broadcast-divergence-localization/result.json">host broadcast-divergence localization</a>, <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/exact-qnn-explicit-broadcast-host-validation/result.json">exact repaired-PTE validation</a>, and <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-qnn-physical-viability-20260828-attempt-03/result.json">repaired-route physical result</a> are the evidence authority.</p>
 </section>
 <section class="primary-section" id="progress" data-primary-section="progress">
 <h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
@@ -148,11 +148,14 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 </ul>
 <p>The result is still not full numerical equivalence. Overall first-token logits have cosine about <code>0.434</code>, and QDQ selects token 62 while QNN-x86 selects token 198. The first identified recurrent corruption is repaired, but numeric drift remains beyond that state.</p>
 <p>A full 174-token QNN-x86 replay was attempted and stopped at the 3,600-second tool timeout after completing position 29. Four sampled checkpoints at positions 0, 9, 19, and 29 had finite logits and unique maxima, but the replay produced no final canonical-short output. No simulator process remained afterward.</p>
-<p>The repaired PTE has not been staged or executed physically. The phone preflight pins its new hash, but any bounded physical check requires a separate explicit Pi handoff. No revised output, performance, campaign, or registry claim exists.</p>
+<p>Pi then authorized exactly one repaired-PTE physical check capped at one generated token. Under the full <code>phone.lock</code> lifecycle, the authorized SM-S918B/SM8550 identity and every staged hash matched. The pinned 1,994,754,552-byte PTE at SHA-256 <code>23ac8abd…c506</code> loaded through QNN HTP v73: four serialized contexts were created, four graphs retrieved, and all 696 expected graph executions completed with status <code>0x0</code>. Provider observations record four HVX threads per graph call, 253.641795 seconds aggregate accelerator execution, 255.033891 seconds aggregate RPC execution, and 61,253,612,902 accelerator cycles. The runner exited 0.</p>
+<p>The single generated token is ID 1206, exact UTF-8 <code>To</code>, SHA-256 <code>f4b06e…d28146</code>. This replaces the unrepaired physical token 0 / <code>!</code> and removes that obvious punctuation-corruption symptom. It does not match host W4A16 QDQ token 760 / <code>The</code>, so output or numerical fidelity is not established. <code>looks_sensible: true</code> is only the narrow observation that <code>To</code> is an ordinary lexical token rather than obvious corruption; a one-token cap cannot establish sentence-level usefulness, correctness, or quality.</p>
+<p>This is one viability observation, not a loaded-route distribution. Setup was 3.777 seconds; TTFT and total were 332.784 seconds; prefill model execution was 332.367 seconds, or 0.524 input tokens/s. Decode throughput is null because there is no after-first-token interval. These figures are not campaign performance.</p>
+<p>The 107,315,601-byte raw provider log at SHA-256 <code>cdf175…d39c</code> and 56,603,888-byte raw ETDump at SHA-256 <code>b805d0…8f1a</code> have committed lossless zstd copies with recovery verified. Cleanup and an independent locked check found the runner process and scoped remote root absent; <code>phone.lock</code> was released. No retry or campaign is authorized.</p>
 </section>
 <section class="primary-section" id="results" data-primary-section="results">
 <h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
-<p><strong>The experiment is active with the exact broadcast repair compiled and host-validated through QNN x86.</strong> The first-layer recurrent corruption and massive logit saturation are removed, while remaining first-token logit drift and an incomplete full-prompt simulator replay prevent a complete fidelity claim. Revised physical behavior and campaign readiness remain unproven.</p>
+<p><strong>The experiment is active after physical execution of the repaired exact route through QNN HTP v73.</strong> The repaired PTE removes the prior obvious token-0/punctuation symptom and yields lexical token <code>To</code>, but it still disagrees with host W4A16 QDQ. One token cannot prove sentence quality, fidelity, or campaign readiness.</p>
 <div class="table-wrap"><table><thead><tr>
 <th>Evidence boundary</th>
 <th>Current result</th>
@@ -258,12 +261,32 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>Timed out at 3,600 s after position 29; four checkpoints finite/unique, no final output</td>
 </tr>
 <tr>
-<td>Revised physical route</td>
-<td>Not staged or executed; no revised output/performance claim</td>
+<td>Repaired physical route</td>
+<td>Verified SM-S918B/SM8550; 4 contexts created/retrieved; 696/696 QNN HTP-v73 graph executions status <code>0x0</code>; exit 0</td>
+</tr>
+<tr>
+<td>Repaired provider profile</td>
+<td>4 HVX threads/call; 253.641795 s accelerator; 255.033891 s RPC; 61,253,612,902 cycles</td>
+</tr>
+<tr>
+<td>Repaired single output</td>
+<td>Token 1206 / <code>To</code> / SHA <code>f4b06e…d28146</code>; prior obvious token-0/punctuation symptom removed</td>
+</tr>
+<tr>
+<td>Output-fidelity boundary</td>
+<td>Physical <code>To</code> differs from host W4A16 QDQ <code>The</code>; no equivalence claim</td>
 </tr>
 <tr>
 <td>Output sanity</td>
-<td>Existing physical attempt remains <code>looks_sensible: null</code>, <code>issue_notes: null</code></td>
+<td><code>looks_sensible: true</code>, <code>issue_notes: null</code> only for one ordinary lexical token; no sentence-level quality claim</td>
+</tr>
+<tr>
+<td>Repaired viability timing</td>
+<td>Setup 3.777 s; TTFT/total 332.784 s; prefill execute 332.367 s / 0.524 tok/s; single observation only</td>
+</tr>
+<tr>
+<td>Retained provider evidence</td>
+<td>Raw provider log 107,315,601 B and ETDump 56,603,888 B; lossless zstd recovery verified</td>
 </tr>
 <tr>
 <td>Cleanup</td>
@@ -274,8 +297,8 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>None; host AOT evidence is not registry-eligible</td>
 </tr>
 </tbody></table></div>
-<p>Attempt 02 proves bounded physical execution of the old route through QNN HTP v73, including accelerator/RPC/cycle/HVX observations. It does not prove quantized numerical fidelity or credible generated text. The host work identifies and now carries the explicit-broadcast repair into an exact PTE, but QNN-x86 still differs materially from QDQ overall. The incomplete simulator replay cannot supply a final host output, and QNN-x86 cannot predict revised physical output. Physical and host timings remain respectively one max-new-tokens-1 viability observation and diagnostic work, not loaded-route campaign performance; the single-request runner remains campaign-ineligible.</p>
-<p>A CPU-only response, GenieX NPU metric, direct-Hexagon output without QNN proof, or the dimension-incompatible shipped 4B example cannot satisfy this experiment. Neither can one mismatching punctuation token justify output sanity, usefulness, quality, or a campaign. No 0032 row belongs in the Android LLM registry until a complete valid physical Android canonical campaign establishes exact route identity, provider/no-fallback proof, state isolation, retained outputs, and a loaded-route performance distribution.</p>
+<p>Attempt 03 proves bounded physical execution of the repaired route through QNN HTP v73, including accelerator/RPC/cycle/HVX observations. It removes the prior obvious token-0 corruption symptom, but physical token <code>To</code> still differs from QDQ token <code>The</code>; neither one token nor QNN-x86 establishes end-to-end fidelity. Physical and host timings remain respectively one max-new-tokens-1 viability observation and diagnostic work, not loaded-route campaign performance; the single-request runner remains campaign-ineligible.</p>
+<p>A CPU-only response, GenieX NPU metric, direct-Hexagon output without QNN proof, or the dimension-incompatible shipped 4B example cannot satisfy this experiment. Neither can one lexical but mismatching token justify output fidelity, usefulness, sentence quality, or a campaign. No 0032 row belongs in the Android LLM registry until a complete valid physical Android canonical campaign establishes exact route identity, provider/no-fallback proof, state isolation, retained outputs, and a loaded-route performance distribution.</p>
 </section></article>
 <footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
 </main>
