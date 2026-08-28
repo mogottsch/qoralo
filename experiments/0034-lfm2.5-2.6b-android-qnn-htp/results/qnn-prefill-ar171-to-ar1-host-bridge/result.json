@@ -12,9 +12,9 @@
     "physical_ar171_state_warning": "Retained physical state is layout-valid and finite but numerically far from CPU AR171: only 3/38 state tensors allclose and max abs is 10586.69. The next greedy decision still agrees at 4695 across all three sources; this is not numerical equivalence.",
     "position": 171,
     "source_seconds": {
-      "cpu_ar171": 0.4078683853149414,
-      "physical_ar171": 0.4229910373687744,
-      "sequential_ar1": 0.3462977409362793
+      "cpu_ar171": 0.46130919456481934,
+      "physical_ar171": 0.5063176155090332,
+      "sequential_ar1": 0.5565571784973145
     },
     "token": 597
   },
@@ -1009,7 +1009,7 @@
       }
     }
   },
-  "cpu_ar171_seconds": 4.163244247436523,
+  "cpu_ar171_seconds": 4.72078013420105,
   "fidelity_boundary": "All numeric state/logit deltas are retained. Endpoint greedy equality is not numerical equivalence or broad output fidelity.",
   "models": {
     "ar171_sha256": "55674c5d5937ea442551b4d9a063630a2e6105f8171e02cbfe5b7a134d9c5db6",
@@ -1022,6 +1022,25 @@
     "endpoint_argmax": 597,
     "logit_files": 22,
     "state_files": 38
+  },
+  "pre_bridge_endpoint_logits": {
+    "cpu_ar171_argmax": 597,
+    "physical_argmax": 597,
+    "physical_vs_cpu_ar171": {
+      "allclose_rtol_0_02_atol_0_02": false,
+      "elements": 128000,
+      "finite": true,
+      "max_abs": 7.218463897705078,
+      "mean_abs": 1.0551224946975708
+    },
+    "physical_vs_sequential_ar1": {
+      "allclose_rtol_0_02_atol_0_02": false,
+      "elements": 128000,
+      "finite": true,
+      "max_abs": 7.311894416809082,
+      "mean_abs": 1.0526795387268066
+    },
+    "sequential_ar1_argmax": 597
   },
   "pre_bridge_physical_vs_cpu_ar171_state": {
     "allclose_count": 3,
@@ -1335,6 +1354,250 @@
     "mean_abs_max": 1.9787847995758057,
     "tensor_count": 38
   },
+  "present_2_key_outliers": {
+    "abs_diff_quantiles": {
+      "0": 1.4506581781012216e-34,
+      "0.5": 0.05479986220598221,
+      "0.9": 1.8819438219070435,
+      "0.99": 4.8260040283203125,
+      "0.999": 7.563785076141357,
+      "1": 10586.6943359375
+    },
+    "abs_diff_threshold_counts": {
+      "0.02": 54396,
+      "0.1": 39113,
+      "1": 16758,
+      "10": 59,
+      "100": 58,
+      "1000": 35
+    },
+    "cpu_quantiles": {
+      "0": -9.685845375061035,
+      "0.001": -5.259378910064697,
+      "0.01": -3.365994453430176,
+      "0.5": 1.917961973479622e-31,
+      "0.99": 3.7351174354553223,
+      "0.999": 5.523082256317139,
+      "1": 10.246749877929688
+    },
+    "cpu_range": [
+      -9.685845375061035,
+      10.246749877929688
+    ],
+    "physical_abs_threshold_counts": {
+      "10": 61,
+      "100": 58,
+      "1000": 35,
+      "20": 59
+    },
+    "physical_quantiles": {
+      "0": -5024.00048828125,
+      "0.001": -5.841598033905029,
+      "0.01": -3.5283010005950928,
+      "0.5": 0.0,
+      "0.99": 3.8036959171295166,
+      "0.999": 5.815674304962158,
+      "1": 10592.0009765625
+    },
+    "physical_range": [
+      -5024.00048828125,
+      10592.0009765625
+    ],
+    "top_abs_diff_indices": [
+      {
+        "abs_diff": 10586.6943359375,
+        "cpu": 5.307071208953857,
+        "flat_index": 64543,
+        "index": [
+          0,
+          5,
+          57,
+          76
+        ],
+        "physical": 10592.0009765625
+      },
+      {
+        "abs_diff": 6648.658203125,
+        "cpu": 3.342207193374634,
+        "flat_index": 58045,
+        "index": [
+          0,
+          5,
+          19,
+          76
+        ],
+        "physical": 6652.00048828125
+      },
+      {
+        "abs_diff": 5973.0126953125,
+        "cpu": 2.9878857135772705,
+        "flat_index": 65398,
+        "index": [
+          0,
+          5,
+          62,
+          76
+        ],
+        "physical": 5976.00048828125
+      },
+      {
+        "abs_diff": 5021.521484375,
+        "cpu": -2.478778123855591,
+        "flat_index": 59584,
+        "index": [
+          0,
+          5,
+          28,
+          76
+        ],
+        "physical": -5024.00048828125
+      },
+      {
+        "abs_diff": 4634.76171875,
+        "cpu": 1.238593578338623,
+        "flat_index": 56506,
+        "index": [
+          0,
+          5,
+          10,
+          76
+        ],
+        "physical": 4636.00048828125
+      },
+      {
+        "abs_diff": 4361.80126953125,
+        "cpu": -2.199216365814209,
+        "flat_index": 64372,
+        "index": [
+          0,
+          5,
+          56,
+          76
+        ],
+        "physical": -4364.00048828125
+      },
+      {
+        "abs_diff": 4169.9326171875,
+        "cpu": -2.068071126937866,
+        "flat_index": 58558,
+        "index": [
+          0,
+          5,
+          22,
+          76
+        ],
+        "physical": -4172.00048828125
+      },
+      {
+        "abs_diff": 4089.67529296875,
+        "cpu": -1.6751402616500854,
+        "flat_index": 55993,
+        "index": [
+          0,
+          5,
+          7,
+          76
+        ],
+        "physical": 4088.000244140625
+      },
+      {
+        "abs_diff": 4077.5703125,
+        "cpu": 1.5700445175170898,
+        "flat_index": 61636,
+        "index": [
+          0,
+          5,
+          40,
+          76
+        ],
+        "physical": -4076.000244140625
+      },
+      {
+        "abs_diff": 3944.14697265625,
+        "cpu": 1.853336215019226,
+        "flat_index": 62491,
+        "index": [
+          0,
+          5,
+          45,
+          76
+        ],
+        "physical": 3946.000244140625
+      },
+      {
+        "abs_diff": 3890.4033203125,
+        "cpu": -1.5969016551971436,
+        "flat_index": 56677,
+        "index": [
+          0,
+          5,
+          11,
+          76
+        ],
+        "physical": -3892.000244140625
+      },
+      {
+        "abs_diff": 3600.257080078125,
+        "cpu": 1.743120551109314,
+        "flat_index": 56848,
+        "index": [
+          0,
+          5,
+          12,
+          76
+        ],
+        "physical": 3602.000244140625
+      },
+      {
+        "abs_diff": 3598.322998046875,
+        "cpu": -1.677314043045044,
+        "flat_index": 57361,
+        "index": [
+          0,
+          5,
+          15,
+          76
+        ],
+        "physical": -3600.000244140625
+      },
+      {
+        "abs_diff": 3416.27197265625,
+        "cpu": -1.7283211946487427,
+        "flat_index": 64885,
+        "index": [
+          0,
+          5,
+          59,
+          76
+        ],
+        "physical": -3418.000244140625
+      },
+      {
+        "abs_diff": 3394.294677734375,
+        "cpu": -1.7055672407150269,
+        "flat_index": 64714,
+        "index": [
+          0,
+          5,
+          58,
+          76
+        ],
+        "physical": -3396.000244140625
+      },
+      {
+        "abs_diff": 3286.7421875,
+        "cpu": -1.2581653594970703,
+        "flat_index": 61294,
+        "index": [
+          0,
+          5,
+          38,
+          76
+        ],
+        "physical": -3288.000244140625
+      }
+    ]
+  },
   "raw_layout_validation": {
     "all_file_sizes_match_declared_dtype_and_dimensions": true,
     "all_files_exist": true,
@@ -1342,13 +1605,19 @@
     "evidence": "output-layout-validation.json",
     "metadata_output_tensors": 60,
     "present_2_key_outlier_observation": {
-      "abs_gt_100_count": 58,
       "elements": 87552,
       "interpretation": "Values are finite and correctly sized FP32 according to qnn-net-run metadata; large physical-vs-CPU drift is real output evidence, not hidden or normalized away.",
-      "max_abs": 10592.0009765625
+      "max_abs": 10592.0009765625,
+      "physical_abs_gt_10": 61,
+      "physical_abs_gt_100": 58,
+      "physical_abs_gt_1000": 35
     }
   },
+  "retained_sequential_physical_ar1_state": {
+    "available": false,
+    "reason": "Accepted physical AR1 runners retained state only in process memory and preserved generated token output, not raw 38-state tensors; cleanup ended the process."
+  },
   "schema_version": 1,
-  "sequential_ar1_171_seconds": 70.10106301307678,
-  "session_create_seconds": 16.78733515739441
+  "sequential_ar1_171_seconds": 71.21748423576355,
+  "session_create_seconds": 7.1597230434417725
 }

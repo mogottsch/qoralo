@@ -90,11 +90,14 @@
 78. Matched next argmax 4695 across physical-AR171, CPU-AR171, and sequential-AR1 sources; retained large physical state/logit drift without equivalence claims.
 79. Verified all 60 physical raw files match declared tensor dtype/dimensions and are finite, including real large finite state outliers.
 80. Assessed concurrent AR171+AR1 residency from metadata as high risk but unmeasured; selected one explicit prefill-to-decode context phase transition, not per-token streaming.
+81. Added physical-vs-CPU endpoint-logit metrics and localized extreme `present.2.key` values to layer 2/head 5/token position 76; confirmed no retained physical sequential-AR1 raw state exists.
+82. Built and host-validated an Android CPU bridge utility: exact physical conv copies, row-wise 171→4,095 K/V padding, token-597 embedding, position 171, and AR1 mask.
+83. Prepared a hash/ELF-bound 51-file ignored stage and unexecuted runner plan measuring AR171 load/execute, CPU bridge, and AR1 load/execute separately.
 
 ## In progress: performance engineering
 
-1. Commit and independently review the bounded AR171→AR1 host bridge and residency assessment.
-2. Build a reset-isolated prefill→free→AR1-load→decode runner and time CPU input prep plus phase transition host-side before phone profiling.
+1. Commit and independently review the expanded drift localization and phase-switch readiness milestone.
+2. After explicit priority, run at most one bounded phase-switch continuation diagnostic; do not campaign.
 3. Then evaluate lower-precision/device-resident state, reduced-logit routes, and coarse declared hybrid partitions.
 4. Do not campaign until the fastest sensible complete route is selected and reset-isolated.
 

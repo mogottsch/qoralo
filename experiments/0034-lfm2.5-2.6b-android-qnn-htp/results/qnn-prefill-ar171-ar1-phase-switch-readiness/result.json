@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "classification": "host_prepared_ar171_to_ar1_explicit_phase_switch_phone_diagnostic_not_executed",
+  "authorization_status": "not authorized for phone execution; pending independent review and explicit Pi priority",
+  "bridge_evidence": {
+    "source":"results/qnn-prefill-ar171-to-ar1-host-bridge/result.json",
+    "physical_prefill_endpoint_argmax":597,
+    "pre_bridge_endpoint_logits": {
+      "physical_vs_cpu_ar171_max_abs":7.218463897705078,
+      "physical_vs_cpu_ar171_mean_abs":1.0551224946975708,
+      "physical_vs_sequential_ar1_max_abs":7.311894416809082,
+      "physical_vs_sequential_ar1_mean_abs":1.0526795387268066,
+      "all_endpoint_argmax":597
+    },
+    "next_argmax": {"physical_ar171":4695,"cpu_ar171":4695,"sequential_ar1":4695},
+    "numerical_equivalence":false
+  },
+  "present_2_key_localization": {
+    "shape":[1,8,64,171],
+    "physical_range":[-5024.00048828125,10592.0009765625],
+    "cpu_range":[-9.685845375061035,10.246749877929688],
+    "physical_quantiles":{"p0":-5024.00048828125,"p0_1":-5.841598033905029,"p1":-3.5283010005950928,"p50":0.0,"p99":3.8036959171295166,"p99_9":5.815674304962158,"p100":10592.0009765625},
+    "absolute_difference_quantiles":{"p50":0.05479986220598221,"p90":1.8819438219070435,"p99":4.8260040283203125,"p99_9":7.563785076141357,"p100":10586.6943359375},
+    "physical_abs_gt_10":61,
+    "physical_abs_gt_100":58,
+    "physical_abs_gt_1000":35,
+    "diff_gt_10":59,
+    "diff_gt_100":58,
+    "diff_gt_1000":35,
+    "largest_outlier_index":[0,5,57,76],
+    "largest_outlier_physical":10592.0009765625,
+    "largest_outlier_cpu":5.307071208953857,
+    "localization":"The 16 largest recorded differences all occur in attention layer 2 key, head 5, token position 76, across different head dimensions.",
+    "interpretation":"A small localized set of finite physical FP32 values is extreme; layout/type/size validation passes, so it remains a real fidelity risk."
+  },
+  "sequential_physical_ar1_state": {
+    "retained":false,
+    "reason":"Accepted physical AR1 runners kept the 38 states only in process memory and retained generated tokens, provider logs, and cleanup—not raw state tensors. A physical-vs-physical state comparison cannot be made from existing evidence."
+  },
+  "cpu_bridge_utility": {
+    "source":"phone/prefill_ar1_state_bridge.cpp",
+    "source_sha256":"414b537d9c21007b106761b346f3c4669ffcfe719405b2f0f8cb035f061dae88",
+    "android_binary_sha256":"7fb48b9dabe7062090ccdc83660b2ff6d30072e50401dfc345b85fa93993a64b",
+    "host_validation":"bridge-utility-validation.json",
+    "ar1_input_tensors":41,
+    "ar1_input_raw_bytes":134750212,
+    "all_22_conv_states_byte_identical_to_physical_source":true,
+    "all_16_kv_prefixes_byte_identical_to_physical_source":true,
+    "all_kv_padding_zero":true,
+    "position_native_int32":171,
+    "mask_prefix_0_171_zero":true,
+    "mask_middle_finite_negative":-65504,
+    "mask_current_final_slot_zero":true,
+    "embedding597_sha256":"f480d23d98af7ebe0782cc608fe2ff5031350100810418d4f12517a29c15a34c"
+  },
+  "ignored_stage": {
+    "path_outside_git":".local/qnn-prefill/phase-switch/phone-stage",
+    "payload_files":51,
+    "payload_bytes":3362360562,
+    "stage_metadata_sha256":"4be7fb1dd02ee5ab7e154705bef4bbf273dd8affeeeae4f9cc479907b2d5f17d",
+    "manifest_sha256":"98bdc0fc20085bc30473865b4db72db9bc4eef44e65c1bd0eadcc022bd01effe",
+    "ar171_context_sha256":"d5ca624cc71a173c7de969fac777e2ce136db3b502e04c2991651b510dabba5a",
+    "ar1_context_sha256":"76ba15e7fd95e5e13e92be0e88e8e6bbd3123f2b993b6986c9dac8800a9bf212",
+    "qnn_net_run_sha256":"7b0b806033bb2bd074c233632eb0f06f34c5f5f10040c5a363e8720dd60fd8e9",
+    "bridge_sha256":"7fb48b9dabe7062090ccdc83660b2ff6d30072e50401dfc345b85fa93993a64b",
+    "all_local_hashes_verified":true,
+    "elf_preflight":true
+  },
+  "planned_execution": {
+    "lifecycle":[
+      "Acquire phone.lock, verify exact device, capture pre-state, verify 51 local/remote payload hashes.",
+      "Start timer and process-memory sampler; load AR171 context once and execute exact 171-token graph once with detailed QNN profile.",
+      "Pull and preserve raw 60-output AR171 directory before bridge interpretation.",
+      "AR171 qnn-net-run exits and frees context; measure phase wall and profile load/execute boundaries.",
+      "Run CPU bridge utility and measure wall time; hash generated 41 AR1 input files.",
+      "Start timer and process-memory sampler; load AR1 context once and execute token 597 at position 171 once with detailed QNN profile.",
+      "Pull raw AR1 outputs before validation; capture post-state, remove scoped root, verify process/root absent, release lock.",
+      "Only after raw preservation/cleanup compare global argmax with 4695 and report before any further run."
+    ],
+    "prefill_timeout_seconds":120,
+    "ar1_timeout_seconds":120,
+    "expected_prefill_argmax":597,
+    "expected_ar1_argmax":4695,
+    "simultaneous_context_residency":false,
+    "explicit_phase_transition_count":1,
+    "per_token_context_streaming":false,
+    "cpu_input_preparation_boundary":"Initial 171 embeddings are precomputed and excluded; physical CPU bridge conversion wall time is measured. Both QNN profiles and host phase walls bind context load/setup and execution separately.",
+    "runner_script":"tools/run_prefill_ar1_phase_phone_diagnostic.sh",
+    "runner_script_sha256":"1cc6f901b2a0cf7d25e9935eef06a3f9187df0c9953e5e1e5cb122bc8f6f84f5"
+  },
+  "claim_boundary":"Expanded bridge analysis and exact ignored-stage/runner readiness only. No phone phase-switch execution occurred. Even a future pass is one bounded engineering diagnostic, not a campaign or registry result."
+}

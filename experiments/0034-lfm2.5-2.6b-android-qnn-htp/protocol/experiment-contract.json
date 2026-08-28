@@ -1,4 +1,26 @@
 {
+  "ar171_ar1_phase_switch_readiness": {
+    "all_state_copy_padding_mask_checks": true,
+    "ar171_context_sha256": "d5ca624cc71a173c7de969fac777e2ce136db3b502e04c2991651b510dabba5a",
+    "ar1_context_sha256": "76ba15e7fd95e5e13e92be0e88e8e6bbd3123f2b993b6986c9dac8800a9bf212",
+    "bridge_ar1_input_bytes": 134750212,
+    "bridge_ar1_input_tensors": 41,
+    "bridge_host_validation": true,
+    "bridge_sha256": "7fb48b9dabe7062090ccdc83660b2ff6d30072e50401dfc345b85fa93993a64b",
+    "evidence": "results/qnn-prefill-ar171-ar1-phase-switch-readiness/result.json",
+    "expected_next_argmax": 4695,
+    "expected_prefill_argmax": 597,
+    "explicit_phase_transition_count": 1,
+    "manifest_sha256": "98bdc0fc20085bc30473865b4db72db9bc4eef44e65c1bd0eadcc022bd01effe",
+    "per_token_context_streaming": false,
+    "phase_execution_completed": false,
+    "phone_access": false,
+    "phone_authorized": false,
+    "simultaneous_context_residency": false,
+    "stage_metadata_sha256": "4be7fb1dd02ee5ab7e154705bef4bbf273dd8affeeeae4f9cc479907b2d5f17d",
+    "stage_payload_bytes": 3362360562,
+    "stage_payload_files": 51
+  },
   "ar171_physical_state_to_ar1_host_bridge": {
     "all_argmax_equal": true,
     "all_physical_outputs_finite": true,
@@ -31,9 +53,35 @@
     "physical_state_source_commit": "1f2d36055ed2b2cba4dbc62bc9069cb853120153",
     "post_step_physical_cpu_logit_max_abs": 7.070076942443848,
     "post_step_physical_cpu_state_max_abs": 3.6112756729125977,
+    "pre_bridge_endpoint_logit_metrics": {
+      "physical_vs_cpu_ar171_max_abs": 7.218463897705078,
+      "physical_vs_cpu_ar171_mean_abs": 1.0551224946975708,
+      "physical_vs_sequential_ar1_max_abs": 7.311894416809082,
+      "physical_vs_sequential_ar1_mean_abs": 1.0526795387268066
+    },
     "pre_bridge_physical_cpu_state_allclose_count": 3,
     "pre_bridge_state_max_abs": 10586.6943359375,
+    "present_2_key_outliers": {
+      "cpu_range": [
+        -9.685845375061035,
+        10.246749877929688
+      ],
+      "largest_index": [
+        0,
+        5,
+        57,
+        76
+      ],
+      "localization": "layer2 head5 token position76",
+      "physical_abs_gt_100": 58,
+      "physical_abs_gt_1000": 35,
+      "physical_range": [
+        -5024.00048828125,
+        10592.0009765625
+      ]
+    },
     "raw_layout_files_match_metadata": true,
+    "retained_sequential_physical_ar1_state": false,
     "selected_phase_transition": "AR171 load once, preserve state, free; CPU cache conversion; AR1 load once for decode",
     "state_tensor_count": 38
   },
@@ -703,7 +751,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "No phone access occurred for AR171-to-AR1 host bridge. Await review before any reset-isolated complete-route diagnostic.",
+  "phone_boundary": "No phone access occurred for expanded bridge analysis or phase-switch readiness. Await independent review and explicit Pi priority.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -802,7 +850,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "performance_engineering_ar171_to_ar1_physical_state_host_bridge_passed_with_large_drift",
+  "status": "performance_engineering_ar171_ar1_phase_switch_ready_not_authorized",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",
