@@ -127,12 +127,20 @@ class DashboardContractTest(unittest.TestCase):
             len(gpu_entries),
             self.dashboard.count('<small class="execution-note">not GPU-exclusive</small>'),
         )
-        self.assertNotIn('<span class="execution execution-qnn">', self.dashboard)
+        qnn_entries = [
+            entry for entry in self.registry["entries"]
+            if self.generator.execution(entry)[1] == "qnn"
+        ]
+        self.assertEqual(
+            len(qnn_entries),
+            self.dashboard.count('<span class="execution execution-qnn">QNN / HTP</span>'),
+        )
+        self.assertEqual(["0031"], [entry["experiment"] for entry in qnn_entries])
         self.assertTrue(
-            {"0031", "0032", "0034"}.isdisjoint(
+            {"0032", "0034"}.isdisjoint(
                 entry["experiment"] for entry in self.registry["entries"]
             ),
-            "Pre-conversion QNN blockers must not become benchmark rows.",
+            "Host or bounded QNN evidence must not become benchmark rows.",
         )
         self.assertEqual(
             len(self.registry["entries"]),

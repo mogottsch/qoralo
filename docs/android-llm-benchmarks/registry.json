@@ -5078,6 +5078,862 @@
         "quantization.tool_revision": "The official pinned repository and embedded GGUF metadata do not publish the exact converter/quantizer commit. Artifact bytes remain bound by repository revision, addition commit, size, and SHA-256.",
         "thermal.power_watts": "No calibrated external or OS energy measurement was available; battery charging state is context only."
       }
+    },
+    {
+      "id": "0031-gemma-4-e2b-it-qnn-htp",
+      "experiment": "0031",
+      "model": "Gemma 4 E2B IT",
+      "model_identity": {
+        "name": "google/gemma-4-E2B-it-qat-mobile-transformers",
+        "url": "https://huggingface.co/google/gemma-4-E2B-it-qat-mobile-transformers/tree/dd693ff40353f057ca5f07e945ad867f4afbf2ec",
+        "revision": "dd693ff40353f057ca5f07e945ad867f4afbf2ec"
+      },
+      "artifacts": [
+        {
+          "path": "gemma4-e2b-ar1-ar128-cl4096-sm8550.bin",
+          "sha256": "7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394",
+          "bytes": 1186369536,
+          "format": "QAIRT 2.49.40 QNN HTP weight-shared serialized context"
+        }
+      ],
+      "quantization": {
+        "name": "W4A16 QAT with INT2/INT4 embedding LUTs",
+        "bits": null,
+        "scheme": "W4A16 transformer graph; source INT2 token and INT4 per-layer embeddings requantized to runtime uint8 LUTs; mixed-precision normalization components disclosed.",
+        "source": "google/gemma-4-E2B-it-qat-mobile-transformers@dd693ff40353f057ca5f07e945ad867f4afbf2ec",
+        "tool": "QAIRT",
+        "tool_revision": "2.49.40.260810"
+      },
+      "tokenizer": {
+        "name": "Gemma tokenizer from pinned QAT checkpoint",
+        "url": "https://huggingface.co/google/gemma-4-E2B-it-qat-mobile-transformers/tree/dd693ff40353f057ca5f07e945ad867f4afbf2ec",
+        "revision": "dd693ff40353f057ca5f07e945ad867f4afbf2ec",
+        "chat_template_source": "Pinned checkpoint chat template, thinking disabled, with automatic runtime BOS suppressed.",
+        "chat_template_sha256": "0a2c8073c878ab1da004bee933a998606537bbb62016310352c7285c3f01c5b5"
+      },
+      "route": "QAIRT Genie · QNN HTP v73 · weight-shared AR128/AR1 · one loaded dialog with full reset per request",
+      "attempt_status": "ran",
+      "runtime": {
+        "name": "QAIRT Genie",
+        "version": "2.49.40.260810",
+        "revision": null,
+        "provider": "QnnHtp / QnnDsp on SM8550 HTP v73",
+        "threads": null,
+        "options": {
+          "neural_backend": "qnn",
+          "context_sha256": "7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394",
+          "request_isolation_strategy": "full_GenieDialog_reset_without_model_remap",
+          "dialog_reused": true,
+          "loaded_context_reused": true,
+          "reset_count": 15,
+          "qnn_graph_completions": 15275,
+          "qnn_cpu_backend_markers": 0,
+          "runtime_fallback_markers": 0,
+          "decode_rate_first_token_included": null
+        }
+      },
+      "device": {
+        "model": "SM-S918B",
+        "soc": "SM8550",
+        "serial": "R5CW81PR8SY",
+        "abi": "arm64-v8a"
+      },
+      "workloads": {
+        "short": {
+          "contract_id": "android-llm-inference-v1",
+          "tier": "short",
+          "path": "protocols/android-llm-benchmark/workloads/inference-v1/short.json",
+          "sha256": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae",
+          "rendered_prompt_sha256": "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a",
+          "input_bytes": 860,
+          "input_tokens": 170,
+          "token_ids_sha256": "31a85f9c813266bbbb3505a04a226a9b184882b636cc2f6f67193a6b1eb2ad78",
+          "context_limit_tokens": 4096,
+          "max_new_tokens": 2048,
+          "truncated": false
+        },
+        "medium": {
+          "contract_id": "android-llm-inference-v1",
+          "tier": "medium",
+          "path": "protocols/android-llm-benchmark/workloads/inference-v1/medium.json",
+          "sha256": "5e168aa3232f06c92959b686188192471b2d1a62cd1c857a616fd8e29456ddf1",
+          "rendered_prompt_sha256": "8e3c03cb0d1ddce8455306b8b84585ce2ae07c083c4fdbdec1e946e3be56771d",
+          "input_bytes": 3253,
+          "input_tokens": 594,
+          "token_ids_sha256": "a0175c3e00e0a4863171ef8c2ab8f789e033529dd0449f6bd74028dd233ab0aa",
+          "context_limit_tokens": 4096,
+          "max_new_tokens": 2048,
+          "truncated": false
+        },
+        "long": {
+          "contract_id": "android-llm-inference-v1",
+          "tier": "long",
+          "path": "protocols/android-llm-benchmark/workloads/inference-v1/long.json",
+          "sha256": "092840fbe879259110fa4d0b15bc383012f16b7b42a38d224b2ead231e86aad8",
+          "rendered_prompt_sha256": "450b519d417e29c4239e39aef856db1813d2580cd62e9db9adaae3d94ba8f260",
+          "input_bytes": 10529,
+          "input_tokens": 1929,
+          "token_ids_sha256": "3b5c04febbc9d55c529ee7ece510607203dbdc8256a6abc05ba0498cf4e52b64",
+          "context_limit_tokens": 4096,
+          "max_new_tokens": 2048,
+          "truncated": false
+        }
+      },
+      "setup": {
+        "seconds": 2.111957,
+        "boundary": "Immediately before genie-app/dialog/context creation through one loaded dialog ready for the first request.",
+        "components": {
+          "dialog_create_seconds": 2.114272
+        }
+      },
+      "runs": [
+        {
+          "id": "first-short-00",
+          "phase": "first",
+          "tier": "short",
+          "input_tokens": 170,
+          "output_token_cap": 2048,
+          "output_tokens": 474,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "initial_dialog_state",
+            "reset_or_session_creation_seconds": 0.0,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 0.470796,
+            "prefill_seconds": 0.47073,
+            "post_prefill_to_first_token_seconds": 6.60000000000105e-05,
+            "decode_seconds": 24.098574,
+            "total_seconds": 24.652811
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 361.1412048339844,
+            "decode_tokens_per_second": null,
+            "decode_first_token_included": null
+          },
+          "output": {
+            "path": "experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-campaign-attempt-02/raw/campaign/outputs/first-short-00.txt",
+            "sha256": "52b1f900c9ba15aed1527bd813cbfb630a90b5f02ed66249a7d8737439bd0232",
+            "bytes": 2672
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "throughput.decode_first_token_included": "Genie profile does not state whether its generation-rate numerator includes the first token.",
+            "throughput.decode_tokens_per_second": "Registry normalization withholds decode rate because first-token inclusion semantics are unspecified."
+          }
+        },
+        {
+          "id": "warm-short-01",
+          "phase": "loaded_route",
+          "tier": "short",
+          "input_tokens": 170,
+          "output_token_cap": 2048,
+          "output_tokens": 474,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "full_GenieDialog_reset_without_model_remap",
+            "reset_or_session_creation_seconds": 0.0,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 0.459698,
+            "prefill_seconds": 0.45968,
+            "post_prefill_to_first_token_seconds": 1.8000000000018e-05,
+            "decode_seconds": 23.886762,
+            "total_seconds": 24.369195
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 369.8224792480469,
+            "decode_tokens_per_second": null,
+            "decode_first_token_included": null
+          },
+          "output": {
+            "path": "experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-campaign-attempt-02/raw/campaign/outputs/warm-short-01.txt",
+            "sha256": "52b1f900c9ba15aed1527bd813cbfb630a90b5f02ed66249a7d8737439bd0232",
+            "bytes": 2672
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "throughput.decode_first_token_included": "Genie profile does not state whether its generation-rate numerator includes the first token.",
+            "throughput.decode_tokens_per_second": "Registry normalization withholds decode rate because first-token inclusion semantics are unspecified."
+          }
+        },
+        {
+          "id": "warm-short-02",
+          "phase": "loaded_route",
+          "tier": "short",
+          "input_tokens": 170,
+          "output_token_cap": 2048,
+          "output_tokens": 474,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "full_GenieDialog_reset_without_model_remap",
+            "reset_or_session_creation_seconds": 0.0001,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 0.462433,
+            "prefill_seconds": 0.4624,
+            "post_prefill_to_first_token_seconds": 3.300000000000525e-05,
+            "decode_seconds": 24.092503,
+            "total_seconds": 24.578944
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 367.6470642089844,
+            "decode_tokens_per_second": null,
+            "decode_first_token_included": null
+          },
+          "output": {
+            "path": "experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-campaign-attempt-02/raw/campaign/outputs/warm-short-02.txt",
+            "sha256": "52b1f900c9ba15aed1527bd813cbfb630a90b5f02ed66249a7d8737439bd0232",
+            "bytes": 2672
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "throughput.decode_first_token_included": "Genie profile does not state whether its generation-rate numerator includes the first token.",
+            "throughput.decode_tokens_per_second": "Registry normalization withholds decode rate because first-token inclusion semantics are unspecified."
+          }
+        },
+        {
+          "id": "warm-short-03",
+          "phase": "loaded_route",
+          "tier": "short",
+          "input_tokens": 170,
+          "output_token_cap": 2048,
+          "output_tokens": 474,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "full_GenieDialog_reset_without_model_remap",
+            "reset_or_session_creation_seconds": 0.0,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 0.466456,
+            "prefill_seconds": 0.46631,
+            "post_prefill_to_first_token_seconds": 0.00014599999999997948,
+            "decode_seconds": 24.1521,
+            "total_seconds": 24.646687
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 364.5643310546875,
+            "decode_tokens_per_second": null,
+            "decode_first_token_included": null
+          },
+          "output": {
+            "path": "experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-campaign-attempt-02/raw/campaign/outputs/warm-short-03.txt",
+            "sha256": "52b1f900c9ba15aed1527bd813cbfb630a90b5f02ed66249a7d8737439bd0232",
+            "bytes": 2672
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "throughput.decode_first_token_included": "Genie profile does not state whether its generation-rate numerator includes the first token.",
+            "throughput.decode_tokens_per_second": "Registry normalization withholds decode rate because first-token inclusion semantics are unspecified."
+          }
+        },
+        {
+          "id": "warm-short-04",
+          "phase": "loaded_route",
+          "tier": "short",
+          "input_tokens": 170,
+          "output_token_cap": 2048,
+          "output_tokens": 474,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "full_GenieDialog_reset_without_model_remap",
+            "reset_or_session_creation_seconds": 0.0,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 0.461166,
+            "prefill_seconds": 0.46104,
+            "post_prefill_to_first_token_seconds": 0.000126000000000015,
+            "decode_seconds": 24.321001,
+            "total_seconds": 24.809995
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 368.7315673828125,
+            "decode_tokens_per_second": null,
+            "decode_first_token_included": null
+          },
+          "output": {
+            "path": "experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-campaign-attempt-02/raw/campaign/outputs/warm-short-04.txt",
+            "sha256": "52b1f900c9ba15aed1527bd813cbfb630a90b5f02ed66249a7d8737439bd0232",
+            "bytes": 2672
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "throughput.decode_first_token_included": "Genie profile does not state whether its generation-rate numerator includes the first token.",
+            "throughput.decode_tokens_per_second": "Registry normalization withholds decode rate because first-token inclusion semantics are unspecified."
+          }
+        },
+        {
+          "id": "warm-short-05",
+          "phase": "loaded_route",
+          "tier": "short",
+          "input_tokens": 170,
+          "output_token_cap": 2048,
+          "output_tokens": 474,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "full_GenieDialog_reset_without_model_remap",
+            "reset_or_session_creation_seconds": 0.0,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 0.481002,
+            "prefill_seconds": 0.48093,
+            "post_prefill_to_first_token_seconds": 7.199999999996098e-05,
+            "decode_seconds": 25.628459,
+            "total_seconds": 26.137272
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 353.4817810058594,
+            "decode_tokens_per_second": null,
+            "decode_first_token_included": null
+          },
+          "output": {
+            "path": "experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-campaign-attempt-02/raw/campaign/outputs/warm-short-05.txt",
+            "sha256": "52b1f900c9ba15aed1527bd813cbfb630a90b5f02ed66249a7d8737439bd0232",
+            "bytes": 2672
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "throughput.decode_first_token_included": "Genie profile does not state whether its generation-rate numerator includes the first token.",
+            "throughput.decode_tokens_per_second": "Registry normalization withholds decode rate because first-token inclusion semantics are unspecified."
+          }
+        },
+        {
+          "id": "warm-medium-01",
+          "phase": "loaded_route",
+          "tier": "medium",
+          "input_tokens": 594,
+          "output_token_cap": 2048,
+          "output_tokens": 418,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "full_GenieDialog_reset_without_model_remap",
+            "reset_or_session_creation_seconds": 0.0,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 0.94787,
+            "prefill_seconds": 0.94743,
+            "post_prefill_to_first_token_seconds": 0.00043999999999999595,
+            "decode_seconds": 22.827966,
+            "total_seconds": 24.14217
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 626.959228515625,
+            "decode_tokens_per_second": null,
+            "decode_first_token_included": null
+          },
+          "output": {
+            "path": "experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-campaign-attempt-02/raw/campaign/outputs/warm-medium-01.txt",
+            "sha256": "686c2867447740b8ed7c52096bbf9cbbed9f3e2d62fc5b832e3b1be3841899e7",
+            "bytes": 2345
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "throughput.decode_first_token_included": "Genie profile does not state whether its generation-rate numerator includes the first token.",
+            "throughput.decode_tokens_per_second": "Registry normalization withholds decode rate because first-token inclusion semantics are unspecified."
+          }
+        },
+        {
+          "id": "warm-medium-02",
+          "phase": "loaded_route",
+          "tier": "medium",
+          "input_tokens": 594,
+          "output_token_cap": 2048,
+          "output_tokens": 418,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "full_GenieDialog_reset_without_model_remap",
+            "reset_or_session_creation_seconds": 0.0,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 0.9185,
+            "prefill_seconds": 0.918324,
+            "post_prefill_to_first_token_seconds": 0.00017599999999995397,
+            "decode_seconds": 21.986229,
+            "total_seconds": 23.029794
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 646.8305053710938,
+            "decode_tokens_per_second": null,
+            "decode_first_token_included": null
+          },
+          "output": {
+            "path": "experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-campaign-attempt-02/raw/campaign/outputs/warm-medium-02.txt",
+            "sha256": "686c2867447740b8ed7c52096bbf9cbbed9f3e2d62fc5b832e3b1be3841899e7",
+            "bytes": 2345
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "throughput.decode_first_token_included": "Genie profile does not state whether its generation-rate numerator includes the first token.",
+            "throughput.decode_tokens_per_second": "Registry normalization withholds decode rate because first-token inclusion semantics are unspecified."
+          }
+        },
+        {
+          "id": "warm-medium-03",
+          "phase": "loaded_route",
+          "tier": "medium",
+          "input_tokens": 594,
+          "output_token_cap": 2048,
+          "output_tokens": 418,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "full_GenieDialog_reset_without_model_remap",
+            "reset_or_session_creation_seconds": 0.0001,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 0.904208,
+            "prefill_seconds": 0.904068,
+            "post_prefill_to_first_token_seconds": 0.000140000000000029,
+            "decode_seconds": 22.046495,
+            "total_seconds": 23.089982
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 657.0302124023438,
+            "decode_tokens_per_second": null,
+            "decode_first_token_included": null
+          },
+          "output": {
+            "path": "experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-campaign-attempt-02/raw/campaign/outputs/warm-medium-03.txt",
+            "sha256": "686c2867447740b8ed7c52096bbf9cbbed9f3e2d62fc5b832e3b1be3841899e7",
+            "bytes": 2345
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "throughput.decode_first_token_included": "Genie profile does not state whether its generation-rate numerator includes the first token.",
+            "throughput.decode_tokens_per_second": "Registry normalization withholds decode rate because first-token inclusion semantics are unspecified."
+          }
+        },
+        {
+          "id": "warm-medium-04",
+          "phase": "loaded_route",
+          "tier": "medium",
+          "input_tokens": 594,
+          "output_token_cap": 2048,
+          "output_tokens": 418,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "full_GenieDialog_reset_without_model_remap",
+            "reset_or_session_creation_seconds": 0.0001,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 0.894553,
+            "prefill_seconds": 0.89397,
+            "post_prefill_to_first_token_seconds": 0.0005830000000000002,
+            "decode_seconds": 22.261205,
+            "total_seconds": 23.28491
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 664.4518432617188,
+            "decode_tokens_per_second": null,
+            "decode_first_token_included": null
+          },
+          "output": {
+            "path": "experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-campaign-attempt-02/raw/campaign/outputs/warm-medium-04.txt",
+            "sha256": "686c2867447740b8ed7c52096bbf9cbbed9f3e2d62fc5b832e3b1be3841899e7",
+            "bytes": 2345
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "throughput.decode_first_token_included": "Genie profile does not state whether its generation-rate numerator includes the first token.",
+            "throughput.decode_tokens_per_second": "Registry normalization withholds decode rate because first-token inclusion semantics are unspecified."
+          }
+        },
+        {
+          "id": "warm-medium-05",
+          "phase": "loaded_route",
+          "tier": "medium",
+          "input_tokens": 594,
+          "output_token_cap": 2048,
+          "output_tokens": 418,
+          "stop_reason": "eos",
+          "request_isolation": {
+            "strategy": "full_GenieDialog_reset_without_model_remap",
+            "reset_or_session_creation_seconds": 0.0001,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 0.907551,
+            "prefill_seconds": 0.907038,
+            "post_prefill_to_first_token_seconds": 0.0005129999999999857,
+            "decode_seconds": 22.212086,
+            "total_seconds": 23.235372
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 654.8788452148438,
+            "decode_tokens_per_second": null,
+            "decode_first_token_included": null
+          },
+          "output": {
+            "path": "experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-campaign-attempt-02/raw/campaign/outputs/warm-medium-05.txt",
+            "sha256": "686c2867447740b8ed7c52096bbf9cbbed9f3e2d62fc5b832e3b1be3841899e7",
+            "bytes": 2345
+          },
+          "output_sanity": {
+            "issue_notes": null,
+            "looks_sensible": true
+          },
+          "missing_reasons": {
+            "throughput.decode_first_token_included": "Genie profile does not state whether its generation-rate numerator includes the first token.",
+            "throughput.decode_tokens_per_second": "Registry normalization withholds decode rate because first-token inclusion semantics are unspecified."
+          }
+        },
+        {
+          "id": "warm-long-01",
+          "phase": "loaded_route",
+          "tier": "long",
+          "input_tokens": 1929,
+          "output_token_cap": 2048,
+          "output_tokens": 2048,
+          "stop_reason": "max_tokens",
+          "request_isolation": {
+            "strategy": "full_GenieDialog_reset_without_model_remap",
+            "reset_or_session_creation_seconds": 0.0,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 2.599574,
+            "prefill_seconds": 2.598363,
+            "post_prefill_to_first_token_seconds": 0.0012110000000000731,
+            "decode_seconds": 114.654741,
+            "total_seconds": 118.256069
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 742.3905029296875,
+            "decode_tokens_per_second": null,
+            "decode_first_token_included": null
+          },
+          "output": {
+            "path": "experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-campaign-attempt-02/raw/campaign/outputs/warm-long-01.txt",
+            "sha256": "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d",
+            "bytes": 10027
+          },
+          "output_sanity": {
+            "issue_notes": "Severe repetition collapse in the exact max-token output.",
+            "looks_sensible": false
+          },
+          "missing_reasons": {
+            "throughput.decode_first_token_included": "Genie profile does not state whether its generation-rate numerator includes the first token.",
+            "throughput.decode_tokens_per_second": "Registry normalization withholds decode rate because first-token inclusion semantics are unspecified."
+          }
+        },
+        {
+          "id": "warm-long-02",
+          "phase": "loaded_route",
+          "tier": "long",
+          "input_tokens": 1929,
+          "output_token_cap": 2048,
+          "output_tokens": 2048,
+          "stop_reason": "max_tokens",
+          "request_isolation": {
+            "strategy": "full_GenieDialog_reset_without_model_remap",
+            "reset_or_session_creation_seconds": 0.0001,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 2.58428,
+            "prefill_seconds": 2.582931,
+            "post_prefill_to_first_token_seconds": 0.0013490000000002667,
+            "decode_seconds": 113.818929,
+            "total_seconds": 117.011223
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 746.8259887695312,
+            "decode_tokens_per_second": null,
+            "decode_first_token_included": null
+          },
+          "output": {
+            "path": "experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-campaign-attempt-02/raw/campaign/outputs/warm-long-02.txt",
+            "sha256": "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d",
+            "bytes": 10027
+          },
+          "output_sanity": {
+            "issue_notes": "Severe repetition collapse in the exact max-token output.",
+            "looks_sensible": false
+          },
+          "missing_reasons": {
+            "throughput.decode_first_token_included": "Genie profile does not state whether its generation-rate numerator includes the first token.",
+            "throughput.decode_tokens_per_second": "Registry normalization withholds decode rate because first-token inclusion semantics are unspecified."
+          }
+        },
+        {
+          "id": "warm-long-03",
+          "phase": "loaded_route",
+          "tier": "long",
+          "input_tokens": 1929,
+          "output_token_cap": 2048,
+          "output_tokens": 2048,
+          "stop_reason": "max_tokens",
+          "request_isolation": {
+            "strategy": "full_GenieDialog_reset_without_model_remap",
+            "reset_or_session_creation_seconds": 0.0001,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 2.605519,
+            "prefill_seconds": 2.60415,
+            "post_prefill_to_first_token_seconds": 0.0013689999999999536,
+            "decode_seconds": 114.819726,
+            "total_seconds": 117.94207
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 740.74072265625,
+            "decode_tokens_per_second": null,
+            "decode_first_token_included": null
+          },
+          "output": {
+            "path": "experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-campaign-attempt-02/raw/campaign/outputs/warm-long-03.txt",
+            "sha256": "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d",
+            "bytes": 10027
+          },
+          "output_sanity": {
+            "issue_notes": "Severe repetition collapse in the exact max-token output.",
+            "looks_sensible": false
+          },
+          "missing_reasons": {
+            "throughput.decode_first_token_included": "Genie profile does not state whether its generation-rate numerator includes the first token.",
+            "throughput.decode_tokens_per_second": "Registry normalization withholds decode rate because first-token inclusion semantics are unspecified."
+          }
+        },
+        {
+          "id": "warm-long-04",
+          "phase": "loaded_route",
+          "tier": "long",
+          "input_tokens": 1929,
+          "output_token_cap": 2048,
+          "output_tokens": 2048,
+          "stop_reason": "max_tokens",
+          "request_isolation": {
+            "strategy": "full_GenieDialog_reset_without_model_remap",
+            "reset_or_session_creation_seconds": 0.0002,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 2.615427,
+            "prefill_seconds": 2.613795,
+            "post_prefill_to_first_token_seconds": 0.0016319999999998558,
+            "decode_seconds": 120.224494,
+            "total_seconds": 123.560213
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 738.0073852539062,
+            "decode_tokens_per_second": null,
+            "decode_first_token_included": null
+          },
+          "output": {
+            "path": "experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-campaign-attempt-02/raw/campaign/outputs/warm-long-04.txt",
+            "sha256": "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d",
+            "bytes": 10027
+          },
+          "output_sanity": {
+            "issue_notes": "Severe repetition collapse in the exact max-token output.",
+            "looks_sensible": false
+          },
+          "missing_reasons": {
+            "throughput.decode_first_token_included": "Genie profile does not state whether its generation-rate numerator includes the first token.",
+            "throughput.decode_tokens_per_second": "Registry normalization withholds decode rate because first-token inclusion semantics are unspecified."
+          }
+        },
+        {
+          "id": "warm-long-05",
+          "phase": "loaded_route",
+          "tier": "long",
+          "input_tokens": 1929,
+          "output_token_cap": 2048,
+          "output_tokens": 2048,
+          "stop_reason": "max_tokens",
+          "request_isolation": {
+            "strategy": "full_GenieDialog_reset_without_model_remap",
+            "reset_or_session_creation_seconds": 0.0024,
+            "included_in_total_request": false,
+            "session_object_reused": true,
+            "loaded_model_runtime_route_reused": true
+          },
+          "timing": {
+            "request_to_first_token_seconds": 2.787909,
+            "prefill_seconds": 2.787405,
+            "post_prefill_to_first_token_seconds": 0.0005039999999998379,
+            "decode_seconds": 115.454107,
+            "total_seconds": 119.459752
+          },
+          "throughput": {
+            "prefill_tokens_per_second": 692.04150390625,
+            "decode_tokens_per_second": null,
+            "decode_first_token_included": null
+          },
+          "output": {
+            "path": "experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-campaign-attempt-02/raw/campaign/outputs/warm-long-05.txt",
+            "sha256": "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d",
+            "bytes": 10027
+          },
+          "output_sanity": {
+            "issue_notes": "Severe repetition collapse in the exact max-token output.",
+            "looks_sensible": false
+          },
+          "missing_reasons": {
+            "throughput.decode_first_token_included": "Genie profile does not state whether its generation-rate numerator includes the first token.",
+            "throughput.decode_tokens_per_second": "Registry normalization withholds decode rate because first-token inclusion semantics are unspecified."
+          }
+        }
+      ],
+      "aggregates": {
+        "by_tier": {
+          "long": {
+            "loaded_route_count": 5,
+            "median_request_to_first_token_seconds": 2.605519,
+            "median_prefill_tokens_per_second": 740.74072265625,
+            "median_decode_tokens_per_second": null,
+            "median_total_seconds": 118.256069
+          },
+          "medium": {
+            "loaded_route_count": 5,
+            "median_request_to_first_token_seconds": 0.907551,
+            "median_prefill_tokens_per_second": 654.8788452148438,
+            "median_decode_tokens_per_second": null,
+            "median_total_seconds": 23.235372
+          },
+          "short": {
+            "loaded_route_count": 5,
+            "median_request_to_first_token_seconds": 0.462433,
+            "median_prefill_tokens_per_second": 367.6470642089844,
+            "median_decode_tokens_per_second": null,
+            "median_total_seconds": 24.646687
+          }
+        }
+      },
+      "memory": {
+        "peak_pss_bytes": 352461824,
+        "peak_vm_hwm_bytes": 471244800,
+        "method": "0.5 s target /proc status and dumpsys meminfo sampling across setup/campaign HTP-private memory unavailable.",
+        "sampling_interval_seconds": 0.5,
+        "lifecycle": "One campaign process from before setup through final request; process measurements exclude HTP-private memory."
+      },
+      "thermal": {
+        "battery_after": {
+          "charge_counter": 2407020,
+          "level_percent": 52,
+          "temperature_c": 44.0,
+          "usb_powered": true,
+          "voltage_mv": 3850
+        },
+        "battery_before": {
+          "charge_counter": 2698080,
+          "level_percent": 58,
+          "temperature_c": 35.7,
+          "usb_powered": true,
+          "voltage_mv": 3929
+        },
+        "thermal_after": {
+          "status": 4,
+          "temperatures_c": {
+            "AP": 57.1,
+            "BAT": 44.1,
+            "MAINBATRAW": 44.0,
+            "PA": 56.3,
+            "SKIN": 49.0,
+            "SUBBAT": 0.0,
+            "USB": 38.7
+          }
+        },
+        "thermal_before": {
+          "status": 0,
+          "temperatures_c": {
+            "AP": 37.8,
+            "BAT": 35.7,
+            "MAINBATRAW": 35.6,
+            "PA": 37.4,
+            "SKIN": 35.9,
+            "SUBBAT": 0.0,
+            "USB": 34.3
+          }
+        }
+      },
+      "summary": "Complete physical QNN HTP campaign with one loaded context/dialog and 15 full resets. Performance evidence is valid; all five long outputs fail narrow sanity due to severe repetition collapse.",
+      "limitations": [
+        "All five long outputs reached max_tokens and fail output sanity: Severe repetition collapse in the exact max-token output.",
+        "Output sanity is not quality acceptance; this row establishes execution and performance only.",
+        "Process PSS/VmHWM excludes unreported HTP-private memory and sparse sampling can miss peaks.",
+        "Thermal status rose from 0 to 4; skin reached 49.0 C and AP reached 57.1 C.",
+        "Genie does not state whether generation-rate numerator includes the first generated token.",
+        "Registry decode throughput is null because Genie does not define first-token inclusion; raw profile generation-rate observations remain in owner evidence."
+      ],
+      "sources": [
+        "experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-campaign-attempt-02/result.json",
+        "experiments/0031-gemma-4-e2b-it-android-qnn-htp/protocol/experiment-contract.json"
+      ],
+      "missing_reasons": {
+        "power_watts": "No calibrated external power measurement; USB and battery service observations retained.",
+        "htp_private_memory": "Unavailable from committed process sampling.",
+        "decode_first_token_included": "Genie profile does not define whether the first generated token is included."
+      }
     }
   ]
 }

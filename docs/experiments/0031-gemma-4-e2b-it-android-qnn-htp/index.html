@@ -70,17 +70,17 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="topbar"><div class="topbar-inner"><a class="brand" href="../../android-llm-benchmarks/index.html">VibeVoice Android research</a><nav aria-label="Experiment sections"><a href="#experiment-description">Description</a><a href="#progress">Progress</a><a href="#results">Results</a></nav></div></header>
 <main class="shell">
 <header class="status-header" data-status-header="true">
-<div class="kicker"><span>Experiment 0031</span><span class="status">Active</span></div>
+<div class="kicker"><span>Experiment 0031</span><span class="status">Completed</span></div>
 <h1>Experiment 0031 — Gemma 4 E2B IT Android QNN/HTP</h1>
-<p class="summary">The rejected shared-engine schema route is replaced by one normal loaded QnnHtp dialog plus 15 source-proven full resets across the exact 16-request campaign; the corrected harness is host-verified only.</p>
+<p class="summary">The canonical 16-request QNN HTP campaign completed with reset-isolated performance distributions; short/medium outputs pass narrow sanity, while every long output fails for severe repetition collapse.</p>
 <div class="header-links"><a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-08-28</span><span>evidence commit: d710fa54ff8fe3dfb9d9b35a9594d904fb958239</span><span>page source: docs/experiments/0031-gemma-4-e2b-it-android-qnn-htp/page.md</span><span>page source sha256: a30a541bfaddab562972e4a1750e561ae3c7e133f62d549b7d1db27af73b5f1a</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-08-28</span><span>evidence commit: 37a29536cb571b9e734f99313f1e72d95c00e39a</span><span>page source: docs/experiments/0031-gemma-4-e2b-it-android-qnn-htp/page.md</span><span>page source sha256: 3e50dc16624bee8371905e5594e18358db9d3596fe736c67f74e55d4ec3b65db</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
 <p>Gemma 4 E2B IT already has measured Android CPU and GPU routes, but its QNN arm stopped when QAIRT 2.49.0 could not transform the exact public W4A16 graph. The authorized QAIRT 2.49.40 route has since cleared transformation, QNN conversion, weight-shared SM8550/v73 compilation, runtime-bundle preparation, and physical context deserialization. An initial context stopped before dialog/query because AR1 and AR128 disagreed on 15 value-cache quantization boundaries. A host correction made all four AR1-input/output and AR128-input/output signatures identical, and that context physically deserialized without the prior 30 validation errors. Genie then stopped before dialog or graph execution because its positional binding requested tensor names that differed from the context. A numerically identical input-symbol correction aligned both AR variants with the exact Genie names. The rebuilt context completes bounded physical QNN HTP inference, but that run prepended one automatic BOS to the bound single-BOS sequence. A source-proven configuration correction suppresses the automatic prefix without changing workload, model, tokenizer, LUTs, or context. Physical confirmation now reports the exact 170-token single-BOS sequence and coherent bounded output, clearing effective-input identity for this max-16 viability gate.</p>
 <p>The intended end-to-end result has not changed: an exact, provenance-bound Gemma 4 E2B context compiled for SM8550/HTP v73, physical <code>QnnHtp</code> provider proof on the authorized Galaxy S23 Ultra, a bounded viability request, proven loaded-route state isolation, and only then the canonical one-first-plus-five-short/five-medium/five-long Android campaign. Toolchain acquisition or file presence alone cannot satisfy any of those gates.</p>
-<p>The public <code>gemma_4_e2b_it_w4a16.zip</code> checkpoint remains the pinned model input. It is hash-bound at 2,013,959,998 bytes and includes the exact ONNX/external data, W4A16 encodings, tokenizer, template, and configuration assessed by the earlier transform probe. The owning <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-transform-compat/result.json">positive transform result</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-qnn-conversion/result.json">QNN conversion result</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-sm8550-context/result.json">compiled-context inspection</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/gemma4-sm8550-runtime-bundle/result.json">runtime-bundle/LUT result</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-viability-attempt-01/result.json">first phone attempt</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-viability-attempt-02/result.json">corrected retry</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-cache-quantization-correction/result.json">cache-quantization correction</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/cache-corrected-phone-stage/result.json">cache-corrected phone-stage preparation</a>, and <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-viability-attempt-03/result.json">third physical attempt</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-position-id-binding-correction/result.json">position-ID binding correction</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/position-id-corrected-phone-stage/result.json">position-ID-corrected phone stage</a>, and <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-viability-attempt-04/result.json">fourth physical attempt</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/genie-automatic-bos-suppression/result.json">automatic-BOS suppression</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/canonical-bos-corrected-phone-stage/result.json">canonical-BOS-corrected stage</a>, and <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-viability-attempt-05/result.json">fifth physical attempt</a>, and <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/canonical-campaign-harness-readiness/result.json">canonical campaign harness readiness</a>, and <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/canonical-campaign-launch-preflight/result.json">campaign launch preflight</a>, and <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-campaign-attempt-01/result.json">physical campaign setup attempt</a>, and <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/canonical-campaign-reset-harness-readiness/result.json">single-dialog reset harness readiness</a> are the evidence authority.</p>
+<p>The public <code>gemma_4_e2b_it_w4a16.zip</code> checkpoint remains the pinned model input. It is hash-bound at 2,013,959,998 bytes and includes the exact ONNX/external data, W4A16 encodings, tokenizer, template, and configuration assessed by the earlier transform probe. The owning <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-transform-compat/result.json">positive transform result</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-qnn-conversion/result.json">QNN conversion result</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-sm8550-context/result.json">compiled-context inspection</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/gemma4-sm8550-runtime-bundle/result.json">runtime-bundle/LUT result</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-viability-attempt-01/result.json">first phone attempt</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-viability-attempt-02/result.json">corrected retry</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-cache-quantization-correction/result.json">cache-quantization correction</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/cache-corrected-phone-stage/result.json">cache-corrected phone-stage preparation</a>, and <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-viability-attempt-03/result.json">third physical attempt</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/qairt-2.49.40-position-id-binding-correction/result.json">position-ID binding correction</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/position-id-corrected-phone-stage/result.json">position-ID-corrected phone stage</a>, and <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-viability-attempt-04/result.json">fourth physical attempt</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/genie-automatic-bos-suppression/result.json">automatic-BOS suppression</a>, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/canonical-bos-corrected-phone-stage/result.json">canonical-BOS-corrected stage</a>, and <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-viability-attempt-05/result.json">fifth physical attempt</a>, and <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/canonical-campaign-harness-readiness/result.json">canonical campaign harness readiness</a>, and <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/canonical-campaign-launch-preflight/result.json">campaign launch preflight</a>, and <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-campaign-attempt-01/result.json">physical campaign setup attempt</a>, and <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/canonical-campaign-reset-harness-readiness/result.json">single-dialog reset harness readiness</a>, and <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/results/android-qnn-physical-campaign-attempt-02/result.json">completed canonical campaign</a> are the evidence authority.</p>
 </section>
 <section class="primary-section" id="progress" data-primary-section="progress">
 <h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
@@ -159,11 +159,48 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <p>Host analysis found that stock standalone Engine schema cannot carry Gemma&#x27;s two dialog-level cache groups. The corrected harness therefore abandons <code>shared-engine</code> rather than weakening the cache contract. One normal, already proven QnnHtp dialog and context remain loaded for the full process; the public <code>GenieDialog_reset</code> API runs before every request after the first. Both <code>past_</code> and <code>swa_</code> cache groups remain in the normal dialog configuration.</p>
 <p>Hash-bound QAIRT source proves reset clears past/prompt/generated/decode/query counters, last and pending tokens and embeddings, HTP KV and model state via <code>updateKV(0)</code>, sampler/grammar/Harmony state, and dialog state without remapping the model. The corrected runner creates and frees one dialog, issues exactly 16 first+5/5/5 queries with 2,048-token ceilings, and performs exactly 15 resets.</p>
 <p>Each request writes a unique raw output and cumulative profile snapshot. Validation assigns request N only the newly appended query event and checks exact event-count growth. Reset duration is extracted separately from verbose <code>GenieDialog_reset</code> entry/return timestamps; it is not folded into query profile time. The existing 1,800-second timeout, no-retry, raw-first, approval/lock/hash, memory/thermal, and cleanup boundaries remain.</p>
-<p>The rebuilt private 20-file stage totals 4,003,786,019 logical bytes; hashes and modes pass. This committed correction used no ADB or <code>phone.lock</code> and executed no campaign. Source semantics do not yet prove physical full-reset isolation, outputs, or a distribution.</p>
+<p>The rebuilt private 20-file stage totals 4,003,786,019 logical bytes; hashes and modes pass.</p>
+<p>The corrected campaign then completed under the full lock, hash, raw-capture, thermal, and cleanup lifecycle. One process deserialized one context and created one dialog. All 16 exact requests completed in first-short plus five short, five medium, and five long order, with 15 successful full resets, no timeout, error, or retry, and the 2,048-token ceiling intact. Every cumulative profile added exactly one query event.</p>
+<p>Provider logs retain 117 successful AR128 and 15,158 successful AR1 graph completions: 15,275 QnnDsp executions, all status <code>0x0</code>, with zero QnnCpu, CPU-backend, runtime-fallback, or fatal validation markers. Setup initialization was 2.112 seconds.</p>
+<p>Warm loaded-route medians are:</p>
+<div class="table-wrap"><table><thead><tr>
+<th>Tier</th>
+<th>TTFT</th>
+<th>Prefill</th>
+<th>Genie generation-rate observation</th>
+<th>Output</th>
+</tr></thead><tbody>
+<tr>
+<td>Short</td>
+<td>462.433 ms</td>
+<td>367.647 tok/s</td>
+<td>19.584 tok/s</td>
+<td>474 tokens, EOS</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>907.551 ms</td>
+<td>654.879 tok/s</td>
+<td>18.774 tok/s</td>
+<td>418 tokens, EOS</td>
+</tr>
+<tr>
+<td>Long</td>
+<td>2,605.519 ms</td>
+<td>740.741 tok/s</td>
+<td>17.828 tok/s</td>
+<td>2,048 tokens, max ceiling</td>
+</tr>
+</tbody></table></div>
+<p>Genie does not define whether its generation-rate numerator includes the first token. The experiment retains those authoritative profile observations, while registry-normalized decode throughput is null rather than inventing inclusion semantics.</p>
+<p>All greedy outputs are byte-identical within each tier. Short and medium outputs pass the narrow exact-output sanity check. All five long outputs fail it with the exact issue: <code>Severe repetition collapse in the exact max-token output.</code> The failure is retained rather than discarded; this is valid execution/performance evidence, not correctness, usefulness, or quality acceptance.</p>
+<p>Peak sampled process PSS was 344,201 kB and VmHWM was 460,200 kB. These exclude unreported HTP-private memory, and sparse sampling can miss peaks. Thermal status rose from 0 to 4; skin rose from 35.9°C to 49.0°C and AP from 37.8°C to 57.1°C. Battery moved from 58% at 35.7°C to 52% at 44.0°C while USB-powered. No calibrated external power measurement exists.</p>
+<p>The original 399,795,157-byte provider log is hash-bound and retained losslessly as deterministic gzip alongside every output and profile. Cleanup verified the scoped root and process absent and released <code>phone.lock</code>.</p>
 </section>
 <section class="primary-section" id="results" data-primary-section="results">
 <h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
-<p><strong>The experiment is active with a corrected single-dialog reset harness host-verified.</strong> The invalid shared-engine schema route is closed. The replacement keeps one normal QnnHtp dialog/context loaded and performs 15 source-proven full resets across 16 exact requests. No corrected campaign has executed, so physical isolation, outputs, and distributions remain unproven.</p>
+<aside class="registry-card" data-registry-entry="0031-gemma-4-e2b-it-qnn-htp"><div class="eyebrow">Normalized Android LLM benchmark</div><div class="metrics"><div class="metric" data-metric="setup_seconds" data-value="2.111957"><span>Setup</span><strong>2.112 s</strong></div><div class="metric" data-metric="medium_ttft_seconds" data-value="0.907551"><span>Loaded-route medium TTFT</span><strong>0.908 s</strong></div><div class="metric" data-metric="medium_prefill_tokens_per_second" data-value="654.8788452148438"><span>Loaded-route medium prefill</span><strong>654.88 tok/s</strong></div><div class="metric" data-metric="medium_decode_tokens_per_second" data-value="None"><span>Loaded-route medium decode</span><strong>Unavailable</strong></div><div class="metric" data-metric="peak_pss_bytes" data-value="352461824"><span>Peak sampled PSS</span><strong>336.1 MiB</strong></div></div><p class="unavailable"><strong>Output sanity is not quality.</strong> 11 sensible / 5 issue / 0 unchecked. This only screens exact retained outputs for obvious corruption or gibberish.</p></aside>
+<p><strong>The experiment is complete as physical execution/performance evidence, with a disclosed long-output sanity failure.</strong> One loaded QNN HTP dialog/context completed all 16 exact requests with 15 full resets and no retry. Short and medium outputs pass narrow sanity; every long output collapses into severe repetition through the max-token ceiling, so this is not quality acceptance.</p>
 <div class="table-wrap"><table><thead><tr>
 <th>Evidence boundary</th>
 <th>Current result</th>
@@ -449,20 +486,64 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>20 files / 4,003,786,019 logical bytes; hashes/modes verified</td>
 </tr>
 <tr>
-<td>Current evidence boundary</td>
-<td>Host-only reset plan; no ADB/campaign, physical reset isolation, metrics distribution, or registry</td>
+<td>Canonical campaign</td>
+<td>Complete: 1 first short + 5 short + 5 medium + 5 long; max 2048; 0 timeout/error/retry</td>
+</tr>
+<tr>
+<td>Loaded-route isolation</td>
+<td>One process/context/dialog; 15 source-proven full resets; cumulative event growth validated</td>
+</tr>
+<tr>
+<td>Physical provider proof</td>
+<td>117 AR128 + 15,158 AR1 = 15,275 QnnDsp completions status <code>0x0</code>; zero CPU/runtime fallback/fatal markers</td>
+</tr>
+<tr>
+<td>Setup</td>
+<td>2.112 s through one loaded dialog ready for first request</td>
+</tr>
+<tr>
+<td>Warm short median</td>
+<td>TTFT 462.433 ms; prefill 367.647 tok/s; Genie generation rate 19.584 tok/s; 474 tokens/EOS</td>
+</tr>
+<tr>
+<td>Warm medium median</td>
+<td>TTFT 907.551 ms; prefill 654.879 tok/s; Genie generation rate 18.774 tok/s; 418 tokens/EOS</td>
+</tr>
+<tr>
+<td>Warm long median</td>
+<td>TTFT 2,605.519 ms; prefill 740.741 tok/s; Genie generation rate 17.828 tok/s; 2,048/max</td>
+</tr>
+<tr>
+<td>Registry decode boundary</td>
+<td>Null: Genie does not define first-token inclusion in its generation rate</td>
+</tr>
+<tr>
+<td>Output sanity</td>
+<td>Short/medium true; all 5 long false: <code>Severe repetition collapse in the exact max-token output.</code></td>
+</tr>
+<tr>
+<td>Process memory</td>
+<td>Peak PSS 344,201 kB / VmHWM 460,200 kB; HTP-private unavailable, sparse samples may miss peaks</td>
+</tr>
+<tr>
+<td>Thermal/battery</td>
+<td>Status 0→4; skin 35.9→49.0°C; AP 37.8→57.1°C; battery 58→52%, USB-powered</td>
+</tr>
+<tr>
+<td>Raw provider log</td>
+<td>399,795,157 bytes, hash-bound and losslessly gzip-retained</td>
 </tr>
 <tr>
 <td>Cleanup</td>
-<td>Scoped root/process absent and <code>phone.lock</code> released after attempt 01; no retry</td>
+<td>Scoped root/process absent and <code>phone.lock</code> released</td>
 </tr>
 <tr>
 <td>Android LLM registry row</td>
 <td>None; toolchain capability evidence is not registry-eligible</td>
 </tr>
 </tbody></table></div>
-<p>Attempt 05 physically clears the canonical effective-input blocker while retaining positive provider/no-runtime-fallback and coherent bounded-output evidence. Campaign attempt 01 proves the outer lock/stage/process path but fails before a request. The corrected harness replaces its invalid shared-engine design with the protocol&#x27;s alternative full-reset isolation path; source proof and verified files cannot substitute for physical reset behavior or retained per-request evidence.</p>
-<p>No paid Workbench job ran. The bounded profile remains a one-run viability observation, not campaign performance. A future page may advance only from corrected campaign execution evidence that passes request identity, provider/no-fallback, output sanity, reset isolation, count, and distribution checks. The Android LLM registry remains limited to complete valid physical Android campaigns, so 0031 has no benchmark row.</p>
+<p>Attempt chronology remains intact: the initial campaign setup failed before any request on the invalid shared-engine schema, and the corrected full-reset campaign is a distinct complete attempt rather than selective request reruns. The successful attempt proves execution and loaded-route performance distributions while retaining every output and the long-tier failure.</p>
+<p>No paid Workbench job ran. Output sanity is a narrow corruption/repetition screen, not model quality. The Android LLM registry now includes this complete physical campaign with the five long failures, thermal escalation, process-memory scope, unavailable HTP-private memory, and undefined decode first-token semantics preserved.</p>
 </section></article>
 <footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
 </main>
