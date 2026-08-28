@@ -107,7 +107,7 @@ class ContractTest(unittest.TestCase):
     def test_historical_transform_blocker_and_active_no_execution_claim(self) -> None:
         blocker = json.loads((EXP / "results/transform-blocker/result.json").read_text())
         self.assertEqual(
-            "campaign_runner_executable_fixed_reapproval_required",
+            "campaign_attempt_01_failed_shared_engine_cache_groups_schema_host_fix_required",
             self.contract["status"],
         )
         active = self.contract["conversion_blocker"]
@@ -129,7 +129,7 @@ class ContractTest(unittest.TestCase):
             "passed_host_shared_engine_keeper_fresh_dialog_isolation_and_stage_validation",
             active["canonical_campaign_harness_gate"],
         )
-        self.assertIn("renewed explicit canonical-campaign approval", active["next_gate"])
+        self.assertIn("Registry-accepted standalone shared-engine object", active["next_gate"])
         self.assertFalse(blocker["android_execution"])
         self.assertFalse(blocker["qnn_htp_execution"])
         self.assertFalse(blocker["compiled_context_created"])
@@ -166,6 +166,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/android-qnn-physical-viability-attempt-05",
             EXP / "results/canonical-campaign-harness-readiness",
             EXP / "results/canonical-campaign-launch-preflight",
+            EXP / "results/android-qnn-physical-campaign-attempt-01",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():
@@ -563,6 +564,29 @@ class ContractTest(unittest.TestCase):
         self.assertEqual(0, result["outcome"]["logical_requests_started"])
         self.assertFalse(result["outcome"]["automatic_retry_performed"])
         self.assertEqual("100755", result["outcome"]["corrected_mode_after"])
+
+    def test_physical_campaign_attempt_failed_before_provider_context_or_request(self) -> None:
+        result = json.loads(
+            (EXP / "results/android-qnn-physical-campaign-attempt-01/result.json").read_text()
+        )
+        self.assertEqual(
+            "physical_campaign_setup_shared_engine_schema_failure_before_provider_context_or_request",
+            result["classification"],
+        )
+        self.assertEqual(1, result["outcome"]["exit_code"])
+        self.assertTrue(result["outcome"]["genie_process_started"])
+        self.assertEqual(17, result["outcome"]["unknown_cache_groups_engine_key_count"])
+        self.assertFalse(result["outcome"]["keeper_dialog_created"])
+        self.assertEqual(0, result["outcome"]["request_dialogs_created"])
+        self.assertEqual(0, result["outcome"]["logical_requests_started"])
+        self.assertEqual(17, result["outcome"]["profile_files_created"])
+        self.assertEqual(0, result["outcome"]["profiles_with_components"])
+        self.assertEqual(0, result["outcome"]["output_files_created"])
+        self.assertFalse(result["outcome"]["qnn_provider_initialized"])
+        self.assertFalse(result["outcome"]["context_deserialized"])
+        self.assertFalse(result["outcome"]["graph_execution_observed"])
+        self.assertEqual("absent", result["stage"]["remote_cleanup_status"])
+        self.assertFalse(result["gate"]["automatic_retry_performed"])
 
     def test_bounded_phone_gate_script_holds_lock_and_cleans_scope(self) -> None:
         script = (EXP / "tools/run_phone_viability.sh").read_text()

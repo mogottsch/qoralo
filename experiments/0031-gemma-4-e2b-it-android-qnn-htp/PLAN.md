@@ -64,7 +64,9 @@ The host-only canonical harness is now prepared: one `genie-app` process, one Re
 
 The first approved launch exited locally with code 126 before entering the runner because `run_phone_campaign.sh` lacked executable mode. No `phone.lock`, ADB, remote root, Genie process, or logical request occurred; this is not a physical campaign attempt. The runner mode is corrected from `100644` to `100755`, and readiness/tests now assert executability without changing campaign design or scope.
 
-The active next gate is independent review followed by renewed explicit campaign approval and phone handoff. Do not access ADB or relaunch before that approval. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
+After renewed approval, physical campaign attempt 01 entered the full locked phone lifecycle and passed identity, local/remote hashes, dependency completeness, and process launch. It failed before QNN provider/context/query because shared-engine extraction passed dialog-only `cache-groups` into standalone Engine validation. The keeper and all 16 request dialogs failed; all 17 profiles are null, zero logical requests started, no outputs exist, and cleanup passed.
+
+The active next gate is evidence review followed by host-only shared-engine schema correction: derive a Registry-accepted standalone HTP engine object without moving `cache-groups`, retain cache behavior at the dialog/orchestration layer, rebuild/source-prove/test, then request a new explicit handoff. Do not access ADB or retry before that approval. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
 
 ## Stop conditions
 

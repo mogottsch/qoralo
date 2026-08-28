@@ -2,7 +2,7 @@
 
 ## Status
 
-**Bounded physical QNN HTP inference with exact canonical short-input identity is proven, and the full campaign harness is host-ready. The first approved launch never entered the runner: the shell returned code 126 because `run_phone_campaign.sh` lacked executable mode. No `phone.lock`, ADB, remote root, Genie process, or logical request occurred. The mode is corrected to `100755` with a regression assertion; campaign design and scope are unchanged. Relaunch requires renewed review and explicit approval.**
+**Bounded physical QNN HTP inference with exact canonical short-input identity remains proven. The first physical campaign attempt entered the locked phone lifecycle but failed during shared-engine configuration before provider/context/query: standalone Engine validation rejects the dialog-only `cache-groups` key moved by shared-engine extraction. The keeper and all 16 request dialogs failed; every profile is null and no output exists. Cleanup passed. Further work is host-only until the standalone shared-engine schema is corrected, reviewed, and explicitly reauthorized.**
 
 This experiment is a separate HTP arm for the model studied in `0025`. It does not rewrite or relabel the CPU/GPU evidence there.
 
@@ -121,7 +121,9 @@ The host-only campaign harness is now prepared. It enables QAIRT's `shared-engin
 
 All private campaign-stage hashes and permissions pass. The initially approved launch nevertheless exited locally with code 126 before the runner body because `run_phone_campaign.sh` was committed as mode `100644`. No lock, ADB, remote root, process, request, output, or profile existed, so this is a host launcher preflight failure rather than a phone/campaign attempt. The runner is now mode `100755`, the readiness analyzer and tests assert executability, and the campaign design/scope remain unchanged. See [`results/canonical-campaign-launch-preflight/result.json`](results/canonical-campaign-launch-preflight/result.json).
 
-No relaunch is authorized. Independent review and renewed explicit campaign approval/phone-priority handoff are required. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
+After renewed approval, physical campaign attempt 01 passed device identity, local/remote hashes, dependency checks, stage push, and process launch under `phone.lock`. It then failed before HTP provider initialization or context loading. QAIRT's shared-engine extraction moved the full dialog engine object into standalone Engine validation, where `cache-groups` is not accepted. The keeper plus all 16 request dialog creations failed with that exact error; no `GenieDialog_query`, QNN graph execution, or logical request began. The setup profile and all 16 request profiles have null components, no outputs exist, and scoped cleanup verified the remote path absent with no residual process. See [`results/android-qnn-physical-campaign-attempt-01/result.json`](results/android-qnn-physical-campaign-attempt-01/result.json).
+
+No retry is authorized. After independent evidence review, the next work is host-only: construct a Registry-accepted standalone shared-engine object without passing dialog-only `cache-groups` into Engine schema, retain cache behavior at the correct configuration layer, and source-prove/test the rebuilt stage before requesting a new handoff. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
 
 ## Proof boundary
 

@@ -1,0 +1,205 @@
+> script campaign.script
+> log create campaign-log verbose campaign/genie-verbose.log
+> profile create setup-profile
+> dialog config create keeper-config gemma4-e2b-htp-cl4096-campaign.json
+> dialog config bind profile keeper-config setup-profile
+> dialog config bind log keeper-config campaign-log
+> dialog create keeper-dialog keeper-config
+> profile save setup-profile campaign/setup-profile.json
+> profile create profile-00
+> dialog config create config-00 gemma4-e2b-htp-cl4096-campaign.json
+> dialog config bind profile config-00 profile-00
+> dialog config bind log config-00 campaign-log
+> dialog create dialog-00 config-00
+> dialog setMaxNumTokens dialog-00 2048
+> dialog query dialog-00 prompts/short.txt campaign/outputs/first-short-00.txt
+> dialog getValue dialog-00 GENIE_DIALOG_PARAM_CONTEXT_OCCUPANCY
+> profile save profile-00 campaign/profiles/first-short-00.json
+> dialog free dialog-00
+> dialog config free config-00
+> profile free profile-00
+> profile create profile-01
+> dialog config create config-01 gemma4-e2b-htp-cl4096-campaign.json
+> dialog config bind profile config-01 profile-01
+> dialog config bind log config-01 campaign-log
+> dialog create dialog-01 config-01
+> dialog setMaxNumTokens dialog-01 2048
+> dialog query dialog-01 prompts/short.txt campaign/outputs/warm-short-01.txt
+> dialog getValue dialog-01 GENIE_DIALOG_PARAM_CONTEXT_OCCUPANCY
+> profile save profile-01 campaign/profiles/warm-short-01.json
+> dialog free dialog-01
+> dialog config free config-01
+> profile free profile-01
+> profile create profile-02
+> dialog config create config-02 gemma4-e2b-htp-cl4096-campaign.json
+> dialog config bind profile config-02 profile-02
+> dialog config bind log config-02 campaign-log
+> dialog create dialog-02 config-02
+> dialog setMaxNumTokens dialog-02 2048
+> dialog query dialog-02 prompts/short.txt campaign/outputs/warm-short-02.txt
+> dialog getValue dialog-02 GENIE_DIALOG_PARAM_CONTEXT_OCCUPANCY
+> profile save profile-02 campaign/profiles/warm-short-02.json
+> dialog free dialog-02
+> dialog config free config-02
+> profile free profile-02
+> profile create profile-03
+> dialog config create config-03 gemma4-e2b-htp-cl4096-campaign.json
+> dialog config bind profile config-03 profile-03
+> dialog config bind log config-03 campaign-log
+> dialog create dialog-03 config-03
+> dialog setMaxNumTokens dialog-03 2048
+> dialog query dialog-03 prompts/short.txt campaign/outputs/warm-short-03.txt
+> dialog getValue dialog-03 GENIE_DIALOG_PARAM_CONTEXT_OCCUPANCY
+> profile save profile-03 campaign/profiles/warm-short-03.json
+> dialog free dialog-03
+> dialog config free config-03
+> profile free profile-03
+> profile create profile-04
+> dialog config create config-04 gemma4-e2b-htp-cl4096-campaign.json
+> dialog config bind profile config-04 profile-04
+> dialog config bind log config-04 campaign-log
+> dialog create dialog-04 config-04
+> dialog setMaxNumTokens dialog-04 2048
+> dialog query dialog-04 prompts/short.txt campaign/outputs/warm-short-04.txt
+> dialog getValue dialog-04 GENIE_DIALOG_PARAM_CONTEXT_OCCUPANCY
+> profile save profile-04 campaign/profiles/warm-short-04.json
+> dialog free dialog-04
+> dialog config free config-04
+> profile free profile-04
+> profile create profile-05
+> dialog config create config-05 gemma4-e2b-htp-cl4096-campaign.json
+> dialog config bind profile config-05 profile-05
+> dialog config bind log config-05 campaign-log
+> dialog create dialog-05 config-05
+> dialog setMaxNumTokens dialog-05 2048
+> dialog query dialog-05 prompts/short.txt campaign/outputs/warm-short-05.txt
+> dialog getValue dialog-05 GENIE_DIALOG_PARAM_CONTEXT_OCCUPANCY
+> profile save profile-05 campaign/profiles/warm-short-05.json
+> dialog free dialog-05
+> dialog config free config-05
+> profile free profile-05
+> profile create profile-06
+> dialog config create config-06 gemma4-e2b-htp-cl4096-campaign.json
+> dialog config bind profile config-06 profile-06
+> dialog config bind log config-06 campaign-log
+> dialog create dialog-06 config-06
+> dialog setMaxNumTokens dialog-06 2048
+> dialog query dialog-06 prompts/medium.txt campaign/outputs/warm-medium-01.txt
+> dialog getValue dialog-06 GENIE_DIALOG_PARAM_CONTEXT_OCCUPANCY
+> profile save profile-06 campaign/profiles/warm-medium-01.json
+> dialog free dialog-06
+> dialog config free config-06
+> profile free profile-06
+> profile create profile-07
+> dialog config create config-07 gemma4-e2b-htp-cl4096-campaign.json
+> dialog config bind profile config-07 profile-07
+> dialog config bind log config-07 campaign-log
+> dialog create dialog-07 config-07
+> dialog setMaxNumTokens dialog-07 2048
+> dialog query dialog-07 prompts/medium.txt campaign/outputs/warm-medium-02.txt
+> dialog getValue dialog-07 GENIE_DIALOG_PARAM_CONTEXT_OCCUPANCY
+> profile save profile-07 campaign/profiles/warm-medium-02.json
+> dialog free dialog-07
+> dialog config free config-07
+> profile free profile-07
+> profile create profile-08
+> dialog config create config-08 gemma4-e2b-htp-cl4096-campaign.json
+> dialog config bind profile config-08 profile-08
+> dialog config bind log config-08 campaign-log
+> dialog create dialog-08 config-08
+> dialog setMaxNumTokens dialog-08 2048
+> dialog query dialog-08 prompts/medium.txt campaign/outputs/warm-medium-03.txt
+> dialog getValue dialog-08 GENIE_DIALOG_PARAM_CONTEXT_OCCUPANCY
+> profile save profile-08 campaign/profiles/warm-medium-03.json
+> dialog free dialog-08
+> dialog config free config-08
+> profile free profile-08
+> profile create profile-09
+> dialog config create config-09 gemma4-e2b-htp-cl4096-campaign.json
+> dialog config bind profile config-09 profile-09
+> dialog config bind log config-09 campaign-log
+> dialog create dialog-09 config-09
+> dialog setMaxNumTokens dialog-09 2048
+> dialog query dialog-09 prompts/medium.txt campaign/outputs/warm-medium-04.txt
+> dialog getValue dialog-09 GENIE_DIALOG_PARAM_CONTEXT_OCCUPANCY
+> profile save profile-09 campaign/profiles/warm-medium-04.json
+> dialog free dialog-09
+> dialog config free config-09
+> profile free profile-09
+> profile create profile-10
+> dialog config create config-10 gemma4-e2b-htp-cl4096-campaign.json
+> dialog config bind profile config-10 profile-10
+> dialog config bind log config-10 campaign-log
+> dialog create dialog-10 config-10
+> dialog setMaxNumTokens dialog-10 2048
+> dialog query dialog-10 prompts/medium.txt campaign/outputs/warm-medium-05.txt
+> dialog getValue dialog-10 GENIE_DIALOG_PARAM_CONTEXT_OCCUPANCY
+> profile save profile-10 campaign/profiles/warm-medium-05.json
+> dialog free dialog-10
+> dialog config free config-10
+> profile free profile-10
+> profile create profile-11
+> dialog config create config-11 gemma4-e2b-htp-cl4096-campaign.json
+> dialog config bind profile config-11 profile-11
+> dialog config bind log config-11 campaign-log
+> dialog create dialog-11 config-11
+> dialog setMaxNumTokens dialog-11 2048
+> dialog query dialog-11 prompts/long.txt campaign/outputs/warm-long-01.txt
+> dialog getValue dialog-11 GENIE_DIALOG_PARAM_CONTEXT_OCCUPANCY
+> profile save profile-11 campaign/profiles/warm-long-01.json
+> dialog free dialog-11
+> dialog config free config-11
+> profile free profile-11
+> profile create profile-12
+> dialog config create config-12 gemma4-e2b-htp-cl4096-campaign.json
+> dialog config bind profile config-12 profile-12
+> dialog config bind log config-12 campaign-log
+> dialog create dialog-12 config-12
+> dialog setMaxNumTokens dialog-12 2048
+> dialog query dialog-12 prompts/long.txt campaign/outputs/warm-long-02.txt
+> dialog getValue dialog-12 GENIE_DIALOG_PARAM_CONTEXT_OCCUPANCY
+> profile save profile-12 campaign/profiles/warm-long-02.json
+> dialog free dialog-12
+> dialog config free config-12
+> profile free profile-12
+> profile create profile-13
+> dialog config create config-13 gemma4-e2b-htp-cl4096-campaign.json
+> dialog config bind profile config-13 profile-13
+> dialog config bind log config-13 campaign-log
+> dialog create dialog-13 config-13
+> dialog setMaxNumTokens dialog-13 2048
+> dialog query dialog-13 prompts/long.txt campaign/outputs/warm-long-03.txt
+> dialog getValue dialog-13 GENIE_DIALOG_PARAM_CONTEXT_OCCUPANCY
+> profile save profile-13 campaign/profiles/warm-long-03.json
+> dialog free dialog-13
+> dialog config free config-13
+> profile free profile-13
+> profile create profile-14
+> dialog config create config-14 gemma4-e2b-htp-cl4096-campaign.json
+> dialog config bind profile config-14 profile-14
+> dialog config bind log config-14 campaign-log
+> dialog create dialog-14 config-14
+> dialog setMaxNumTokens dialog-14 2048
+> dialog query dialog-14 prompts/long.txt campaign/outputs/warm-long-04.txt
+> dialog getValue dialog-14 GENIE_DIALOG_PARAM_CONTEXT_OCCUPANCY
+> profile save profile-14 campaign/profiles/warm-long-04.json
+> dialog free dialog-14
+> dialog config free config-14
+> profile free profile-14
+> profile create profile-15
+> dialog config create config-15 gemma4-e2b-htp-cl4096-campaign.json
+> dialog config bind profile config-15 profile-15
+> dialog config bind log config-15 campaign-log
+> dialog create dialog-15 config-15
+> dialog setMaxNumTokens dialog-15 2048
+> dialog query dialog-15 prompts/long.txt campaign/outputs/warm-long-05.txt
+> dialog getValue dialog-15 GENIE_DIALOG_PARAM_CONTEXT_OCCUPANCY
+> profile save profile-15 campaign/profiles/warm-long-05.json
+> dialog free dialog-15
+> dialog config free config-15
+> profile free profile-15
+> dialog free keeper-dialog
+> dialog config free keeper-config
+> profile free setup-profile
+> log free campaign-log
+> exit
