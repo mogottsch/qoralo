@@ -1,0 +1,424 @@
+{
+  "claim_boundary": "The verified SM8550 phone loaded the exact corrected context through QnnHtp and completed 17 QnnDsp/HTP graph calls with status 0, producing a coherent 16-token UTF-8 output with no QNN CPU or runtime fallback marker. Genie reports exactly 170 prompt tokens. Both runtime token logs begin with the bound one-BOS prefix [2,105,9731,...] and match the committed token sequence through every complete logged token; the logger truncates mid-number at its fixed line limit. This physically confirms canonical effective short prompt identity for a max16 viability gate. It is not the canonical 2048-ceiling campaign, a warm distribution, or registry-eligible performance evidence.",
+  "classification": "positive_physical_qnn_htp_bounded_inference_with_canonical_effective_prompt_identity",
+  "device": {
+    "abi": "arm64-v8a",
+    "boot": "1",
+    "device": "dm3q",
+    "fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+    "flash_locked": "1",
+    "manufacturer": "samsung",
+    "model": "SM-S918B",
+    "release": "16",
+    "sdk": "36",
+    "serial": "R5CW81PR8SY",
+    "soc": "SM8550",
+    "verified_boot": "green"
+  },
+  "execution": {
+    "nonfatal_uses_cross_attention_capability_log": "qnn-htp-engine does not support usesCrossAttention",
+    "physical_htp_transformer_execution_proven": true,
+    "qnn_cpu_backend_markers": 0,
+    "qnn_graph_execute_success_status": "0x0",
+    "runtime_fallback_markers": 0,
+    "successful_ar128_graph_executions": 2,
+    "successful_ar1_graph_executions": 15,
+    "successful_qnn_graph_executions": 17,
+    "uniform_integer_execution_claim": false
+  },
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "gate": {
+    "attempt": 5,
+    "bounded_viability_only": true,
+    "canonical_campaign": false,
+    "context_sha256": "7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394",
+    "further_retry_performed": false,
+    "max_new_tokens": 16,
+    "phone_lock_held_full_adb_lifecycle": true
+  },
+  "memory_observations": {
+    "complete_pss_sample_count": 5,
+    "limitations": "Process observations exclude unreported HTP-private memory and sparse sampling can miss peaks.",
+    "method": "0.5 s target shell sampling of /proc status and dumpsys meminfo",
+    "peak_process_vmhwm_kb": 462576,
+    "peak_sampled_total_pss_kb": 288704,
+    "timestamp_sample_count": 6
+  },
+  "next_gate": "Report for independent review. A canonical 2048-ceiling campaign requires a separate explicit approval and must use one loaded route with fresh-dialog or proven reset isolation for all required requests.",
+  "outcome": {
+    "context_occupancy": 185,
+    "dialog_created": true,
+    "exit_code": 0,
+    "generated_tokens": 16,
+    "graph_execution_observed": true,
+    "output": {
+      "bytes": 89,
+      "path": "raw/viability-output.txt",
+      "sha256": "70711436da1fba6f0b7d869c319f8d97c0819d36affbd369e119c1c3f04d6357"
+    },
+    "output_created": true,
+    "output_sanity": {
+      "issue_notes": null,
+      "looks_sensible": true
+    },
+    "result": "bounded_physical_inference_succeeded_with_exact_effective_prompt",
+    "stop_reason": "max_tokens"
+  },
+  "physical_provider_and_execution_evidence": {
+    "ar128_graph_switched_and_executed": true,
+    "ar1_graph_switched_and_executed": true,
+    "backend_extension_loaded": true,
+    "both_graphs_initialized": true,
+    "context_deserialized": true,
+    "htp_provider_initialized": true,
+    "physical_soc_detected": true,
+    "qnn_device_created": true,
+    "qnn_htp_backend_created": true,
+    "qnn_stub_connection_established": true,
+    "v73_stub_loaded": true,
+    "weight_sharing_context_detected": true
+  },
+  "profile_observations": {
+    "decode_rate_first_token_inclusion": null,
+    "decode_rate_first_token_inclusion_reason": "Genie profile does not state whether its rate numerator includes the first token.",
+    "dialog_create_duration_us": 2098534,
+    "dialog_init_time_us": 2095134,
+    "generated_tokens": 16,
+    "prompt_processing_rate_tokens_per_second": 321.8538818359375,
+    "query_duration_us": 1558226,
+    "runtime_prompt_tokens": 170,
+    "scope": "bounded max16 viability only; not canonical campaign metrics",
+    "time_to_first_token_us": 528217,
+    "token_generation_rate_tokens_per_second": 17.7028751373291,
+    "token_generation_time_us": 847324
+  },
+  "prompt_identity": {
+    "bound_leading_bos_count": 1,
+    "bound_token_count": 170,
+    "bound_token_ids_int32le_sha256": "31a85f9c813266bbbb3505a04a226a9b184882b636cc2f6f67193a6b1eb2ad78",
+    "canonical_effective_prompt_identity_passed": true,
+    "canonical_short_rendered_sha256": "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a",
+    "runtime_complete_logged_prefix_token_count": 157,
+    "runtime_logged_leading_bos_count": 1,
+    "runtime_logged_prefix": [
+      2,
+      105,
+      9731,
+      107,
+      3048,
+      659,
+      496,
+      2263,
+      5192,
+      2028,
+      1208,
+      496,
+      3736,
+      1594,
+      236761,
+      58025,
+      528,
+      40137,
+      5422,
+      57243,
+      236761,
+      3574,
+      711,
+      4928,
+      506,
+      30998,
+      236764,
+      11497,
+      11808,
+      236764,
+      8369,
+      18558,
+      236764,
+      653,
+      506,
+      1707,
+      600,
+      611,
+      659,
+      1646,
+      10418,
+      236761,
+      106,
+      107,
+      105,
+      2364,
+      107,
+      6190,
+      506,
+      2269,
+      57728,
+      10630,
+      8652,
+      236761,
+      108,
+      236770,
+      236761,
+      669,
+      2434,
+      563,
+      22020,
+      1806,
+      2263,
+      34711,
+      18362,
+      580,
+      506,
+      1638,
+      10055,
+      236772,
+      36359,
+      4744,
+      236761,
+      7850,
+      64026,
+      19015,
+      496,
+      11236,
+      2028,
+      6077,
+      840,
+      1521,
+      4182,
+      13198,
+      236764,
+      3958,
+      150548,
+      49060,
+      4890,
+      17373,
+      1061,
+      2028,
+      840,
+      815,
+      29227,
+      1099,
+      8299,
+      236764,
+      532,
+      3958,
+      127649,
+      6178,
+      919,
+      6571,
+      528,
+      8770,
+      573,
+      11442,
+      11172,
+      8487,
+      236761,
+      2343,
+      10802,
+      1921,
+      23227,
+      10884,
+      236764,
+      11172,
+      8487,
+      236764,
+      532,
+      8369,
+      8299,
+      236761,
+      108,
+      6974,
+      496,
+      1265,
+      236772,
+      66436,
+      8330,
+      25809,
+      573,
+      506,
+      2434,
+      236761,
+      42085,
+      506,
+      2132,
+      211302,
+      236764,
+      8701,
+      506,
+      10802,
+      600,
+      1374,
+      4595,
+      7732,
+      236764,
+      532,
+      1345,
+      607,
+      496,
+      10231,
+      2148,
+      2918,
+      236761
+    ],
+    "runtime_logged_prefix_matches_bound_tokens": true,
+    "runtime_logger_truncated_final_numeric_fragment": 68,
+    "runtime_profile_prompt_tokens": 170
+  },
+  "raw_evidence": {
+    "adb-state.txt": {
+      "bytes": 7,
+      "sha256": "c98373c1abef78070f6beef6b4ae4fbf3de348dac280195c7f93441920584af9"
+    },
+    "battery-after.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "battery-after.txt": {
+      "bytes": 15841,
+      "sha256": "d85714d8fd483e647787d4207541d68afe8a48c87dd00274646787e6df404cd6"
+    },
+    "battery-before.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "battery-before.txt": {
+      "bytes": 15840,
+      "sha256": "df68dbae86ea67ba919b439b456102e22c4aa621dee156caa34bf25711b033a6"
+    },
+    "cleanup-status.txt": {
+      "bytes": 7,
+      "sha256": "7925d3e9a9613a093e5eb4054b32aa39de910d2b03ba7e8046c3b4550b8de1e4"
+    },
+    "cleanup.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cleanup.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "exit-code.txt": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "genie-verbose.log": {
+      "bytes": 710421,
+      "sha256": "5b82bef24d629a598ce8366d002ed717a5afd01130016bb70d99e911927aa03d"
+    },
+    "identity.txt": {
+      "bytes": 237,
+      "sha256": "6cc6731865e0f47abb5f749d2d18d784b81b1f90332aed0dc763f1ebb61327b3"
+    },
+    "launcher-exit-code.txt": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "launcher.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "launcher.stdout": {
+      "bytes": 306,
+      "sha256": "c423945bad4b25d09895d5c3fe8be348884868701107adcaa400d2239cbbffb0"
+    },
+    "local-hash-check.txt": {
+      "bytes": 519,
+      "sha256": "26cd1ee7cea68096728d5d584dcb06ebf5c0304cb5564e3fba7c189482b143fa"
+    },
+    "memory-samples.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "memory-samples.txt": {
+      "bytes": 1329,
+      "sha256": "db5a363ec2d9e8f7566decb6efa0c185b5b8130a21620bc7fa20159732c807a2"
+    },
+    "process-after.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pull-genie-verbose.log.txt": {
+      "bytes": 184,
+      "sha256": "5443282d4c5b157d3deab698d0145fdb1cd8ac0198200c5fa720bfc55878b1c9"
+    },
+    "pull-viability-output.txt.txt": {
+      "bytes": 182,
+      "sha256": "66b00febb1b84cac464a2f8bfa9a985394fa6435927fa5f0d4193a3b54c14b26"
+    },
+    "pull-viability-profile.json.txt": {
+      "bytes": 186,
+      "sha256": "7eb6b2d9bce07d00fffad71c3611aed2f6d1d0163e5637248acf46063d27f357"
+    },
+    "push.txt": {
+      "bytes": 180,
+      "sha256": "099893f142d10758ace2061922b102520a7abfaf16f1a23c35fed5f7ec53325e"
+    },
+    "remote-hash-check.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "remote-hash-check.txt": {
+      "bytes": 519,
+      "sha256": "26cd1ee7cea68096728d5d584dcb06ebf5c0304cb5564e3fba7c189482b143fa"
+    },
+    "runner.stderr": {
+      "bytes": 106,
+      "sha256": "8fa0826ca9043d016e4e0a174cc301a18f22ca00e1f755942e2916b59e1140ba"
+    },
+    "runner.stdout": {
+      "bytes": 1549,
+      "sha256": "1874c8f82c135ffaa805d11cce17dba2692000464f63495ab7bb4c656cf2db04"
+    },
+    "runtime-completeness.txt": {
+      "bytes": 176,
+      "sha256": "c2f842f873a149c2d6fe0f45d62e7fcf89ca5822d107f53bcaca610375c46b3f"
+    },
+    "storage-before.txt": {
+      "bytes": 128,
+      "sha256": "851b54d5c89283e97baf329ccfec184f29a574b84bea07d99e373181a6d153c3"
+    },
+    "thermal-after.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "thermal-after.txt": {
+      "bytes": 1288,
+      "sha256": "70848d9a3ef12001a518c114913b81670790a2a30610b767e6d1a4e31511d9a2"
+    },
+    "thermal-before.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "thermal-before.txt": {
+      "bytes": 1288,
+      "sha256": "66f15fd27f5c7f7971f6d2eedac604d0a03ce8fa93a70297ae6f8d8a0cbe25db"
+    },
+    "viability-output.txt": {
+      "bytes": 89,
+      "sha256": "70711436da1fba6f0b7d869c319f8d97c0819d36affbd369e119c1c3f04d6357"
+    },
+    "viability-profile.json": {
+      "bytes": 1428,
+      "sha256": "2eeb60e34b524fc2cfc9611a945b8d9e6e473240d5dd46fe9db46bba28eaadb4"
+    }
+  },
+  "run_id": "viability-20260828T105115Z-canonical-bos-corrected-attempt-05",
+  "schema_version": 1,
+  "stage": {
+    "bos_token_config": -1,
+    "local_hash_check_passed": true,
+    "remote_cleanup_status": "absent",
+    "remote_hash_check_passed": true,
+    "residual_process_observed": false,
+    "runtime_completeness_files": [
+      "bin/genie-app",
+      "lib/libGenie.so",
+      "lib/libQnnHtp.so",
+      "lib/libQnnSystem.so",
+      "lib/libQnnHtpV73Stub.so",
+      "lib/libQnnHtpV73Skel.so",
+      "lib/libQnnHtpNetRunExtensions.so",
+      "htp_backend_ext_config.json"
+    ]
+  },
+  "status": "physical_qnn_htp_canonical_input_confirmed_campaign_authorization_required"
+}
