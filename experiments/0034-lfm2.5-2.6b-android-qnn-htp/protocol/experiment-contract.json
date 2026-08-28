@@ -96,7 +96,8 @@
     "expected_graph_executions_min": 171,
     "graph_count": 1,
     "max_new_tokens": 16,
-    "phone_authorized": false,
+    "outcome": "passed_bounded_max16_output_sanity",
+    "phone_authorized": true,
     "plan_only": true,
     "protocol_output_ceiling": 2048,
     "raw_output_preserved_before_validation": true,
@@ -216,9 +217,9 @@
     "android_execution": false,
     "compiled_context_created": false,
     "qnn_htp_execution": false,
-    "required_action": "Pi and Moritz must agree the committed plan and explicitly transfer phone priority before ADB.",
+    "required_action": "Independently review committed evidence and agree any separate next gate before ADB; no retry or campaign.",
     "result_path": "results/support-assessment/result.json",
-    "summary": "Physical two-step evidence passes and a bounded canonical-short gate plan is host-reviewed locally. Expanded physical scope remains unauthorized."
+    "summary": "Exact canonical-short prompt consumption and coherent 16-token physical continuation pass. The continuation hit max16 without EOS and is not a complete answer or campaign."
   },
   "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
   "host_export_milestone": {
@@ -365,6 +366,39 @@
     ],
     "reference_global_argmax": 25
   },
+  "ordinary_monolithic_phone_canonical_short_max16": {
+    "all_token_ids_in_vocab": true,
+    "backend": "direct QNN HTP",
+    "backend_build_id": "v2.49.40.260810104044",
+    "campaign": false,
+    "canonical_short_input_tokens": 171,
+    "cleanup_absent": true,
+    "coherent_partial_continuation": true,
+    "complete_answer": false,
+    "context_count": 1,
+    "context_reloads": 0,
+    "context_streaming": false,
+    "decoded_text": "The user wants me to read a fictional engineering brief about three local inference engines (",
+    "eos_present": false,
+    "evidence": "results/qnn-ordinary-monolithic-phone-canonical-short-max16/result.json",
+    "explicit_state_tensors_carried": 38,
+    "generated_tokens": 16,
+    "graph_count": 1,
+    "graph_executions": 186,
+    "loaded_once": true,
+    "phone_lock_released": true,
+    "raw_output_preserved_before_validation": true,
+    "raw_output_sha256": "214a8f58d0fa410b99c6b4ba417d24289079c0a0579467c0e91859b1297d8ef2",
+    "registry_result": false,
+    "request_to_first_token_seconds_diagnostic": 185.986,
+    "sampled_process_vmhwm_kib": 1611816,
+    "setup_seconds_diagnostic": 3.47177,
+    "stage_files_verified_local": 12,
+    "stage_files_verified_remote": 12,
+    "statistical_performance": false,
+    "stop_reason": "max_tokens",
+    "total_request_seconds_diagnostic": 202.433
+  },
   "ordinary_monolithic_phone_two_step_state_check": {
     "all_argmax_equal": true,
     "backend": "direct QNN HTP",
@@ -458,7 +492,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "No phone access occurred for canonical-short plan preparation. No ADB until Pi/Moritz agreement and explicit authorization.",
+  "phone_boundary": "Canonical-short max16 gate cleaned absent and released phone.lock. No further ADB, retry, or campaign until separate explicit authorization.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -557,7 +591,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "physical_two_step_passed_canonical_short_gate_plan_ready_not_authorized",
+  "status": "physical_direct_qnn_htp_canonical_short_max16_output_sanity_passed",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",

@@ -71,12 +71,15 @@
 59. Preserved exact provider/stage/prefix/output/memory/thermal/identity/cleanup evidence; remote root absent and lock released.
 60. Prepared a host-reviewed plan only for a proposed canonical-short gate: exact 171-token prompt, at most 16 greedy tokens, same context loaded once, full evidence-before-validation and cleanup lifecycle.
 61. Bound the unchanged stage/runtime/context/runner, canonical workload/rendered/token hashes, tokenizer/template identity, fail-closed checks, and diagnostic claim boundary without phone access.
+62. Ran the independently reviewed canonical-short gate once under explicit priority: one context/graph loaded once, 171 prompt tokens plus 16 generated tokens, 186 stateful executions, no reload/streaming.
+63. Preserved raw 64-byte token output before validation, then decoded after cleanup to a coherent partial continuation; no EOS or completed answer.
+64. Preserved provider, hashes, timings, process memory, thermal/power, identity, and cleanup; remote root absent and lock released.
 
 ## In progress
 
-1. Commit and independently review the canonical-short bounded-generation gate plan.
-2. Stop all ADB until Pi and Moritz agree the plan and explicitly transfer priority.
-3. Context streaming remains prohibited. No full campaign, statistical performance, broad output-quality, or registry claim.
+1. Commit and independently review the canonical-short bounded physical output evidence.
+2. Stop all ADB until a separately agreed next gate receives explicit authorization.
+3. No retry, statistical performance campaign, broad output-quality claim, or registry row.
 
 ## Phone and campaign sequence
 

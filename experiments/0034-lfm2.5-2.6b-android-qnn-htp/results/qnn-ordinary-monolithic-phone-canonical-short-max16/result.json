@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "run_id": "viability-20260828T102218Z-2581008",
+  "classification": "physical_direct_qnn_htp_canonical_short_prompt_bounded_16_token_sanity_pass",
+  "device": {"serial":"R5CW81PR8SY","manufacturer":"samsung","model":"SM-S918B","soc":"SM8550","abi":"arm64-v8a","android_release":"16","api":36,"verified_boot":"green","flash_locked":true},
+  "stage": {"payload_files_verified_local":12,"payload_files_verified_remote":12,"elf_preflight":"passed","stage_metadata_sha256":"3260c006faf29fc8081f29f4c87069cafeee7919a9af54ac3ceb184e03bcc952","manifest_sha256":"5dc9815787046507b3b09a4aebbe0eb6fd97e6effda3247cfeddda6fb474169c","runner_sha256":"4515d7f58889121542b9ff3535d5e083a89095f008fb7bb23ae421f67c8cacfd"},
+  "provider": {"api":"direct QNN","backend":"HTP","backend_build_id":"v2.49.40.260810104044","target_htp_arch":73,"target_soc_model":43,"neural_cpu_fallback_available":false,"compiled_delegation":"1541/1541 optimized source nodes, 2698 QNN operations, zero unsupported nodes"},
+  "route": {
+    "context_format":"ordinary non-shared",
+    "context_binary_sha256":"76ba15e7fd95e5e13e92be0e88e8e6bbd3123f2b993b6986c9dac8800a9bf212",
+    "contexts_loaded":1,
+    "graphs_loaded":1,
+    "loaded_once":true,
+    "graph_executions":186,
+    "context_reloads":0,
+    "context_streaming":false,
+    "explicit_state_tensors_carried":38,
+    "position_range":[0,185],
+    "state_position_mask_behavior":"All 38 recurrent/attention states were carried between executions; position_ids advanced and attention mask opened populated prior positions without reloading the context."
+  },
+  "workload": {
+    "canonical":"protocols/android-llm-benchmark/workloads/inference-v1/short.txt",
+    "workload_text_sha256":"81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae",
+    "rendered_prompt_sha256":"9e6c713e83f0987f283264b789e102b9704d6067665fc7a0fee652938a3ae622",
+    "token_ids_int32le_sha256":"eae8e828110f634d5c9954df0372e869f67f67aed846f9f544781faa1d4d29bc",
+    "input_tokens":171,
+    "max_new_tokens":16,
+    "generated_tokens":16,
+    "stop_reason":"max_tokens",
+    "eos_124900_present":false,
+    "raw_output_bytes":64,
+    "raw_output_sha256":"214a8f58d0fa410b99c6b4ba417d24289079c0a0579467c0e91859b1297d8ef2",
+    "raw_output_preserved_before_validation":true,
+    "token_ids":[597,4695,10966,622,310,1561,267,37139,9527,8771,836,1703,2165,39246,17354,342],
+    "all_token_ids_in_vocab":true
+  },
+  "decode": {
+    "performed_after_cleanup_and_raw_preservation":true,
+    "tokenizer_source":"LiquidAI/LFM2.5-2.6B",
+    "tokenizer_revision":"ab00687315bc1298e9d54e9c4b611dde9867ccc2",
+    "tokenizer_json_sha256":"695be7802a0e4b8a81048f0ff5ebb7fc811a0ba5a6be63dbb24deb5a81096f41",
+    "text":"The user wants me to read a fictional engineering brief about three local inference engines (",
+    "sanity":"nonempty coherent continuation fragment truncated at the authorized 16-token ceiling",
+    "complete_answer":false
+  },
+  "timing": {
+    "setup_seconds":3.47177,
+    "request_to_first_token_seconds":185.986,
+    "total_request_seconds":202.433,
+    "interpretation":"One bounded physical run only; diagnostic timings are not a statistical benchmark or canonical performance campaign."
+  },
+  "memory": {"sampled_process_vmhwm_peak_kib":1611816,"sampled_total_pss_peak_kib":1599584,"interpretation":"Android process measurements only; not total system or DSP residency."},
+  "thermal_and_power":"Raw dumpsys battery and thermalservice snapshots before and after are retained without deriving a benchmark claim.",
+  "cleanup": {"scoped_remote_root_verified_absent":true,"process_after":false,"phone_lock_held_for_full_lifecycle":true,"phone_lock_released":true},
+  "claim_boundary":"Positive physical direct-QNN HTP evidence for complete consumption of the exact canonical-short prompt and a coherent partial 16-token greedy continuation using one loaded context and 186 stateful graph executions. No EOS or sentence completion, broad output-quality claim, statistical performance result, canonical campaign, or registry row."
+}

@@ -2,7 +2,7 @@
 
 ## Status
 
-**Physical direct-QNN HTP loaded-state viability passed for the exact ordinary monolithic route. On the Galaxy S23 Ultra, one non-shared context loaded once and the complete graph executed twice over canonical-short tokens `[124894, 124899]`, carrying all 38 states and advancing position/mask. Position-1 global argmax 25 matches physical, CPU, and x86 HTP references. This is not full prompt consumption, generated text, a benchmark campaign, or a registry entry.**
+**Physical direct-QNN HTP canonical-short bounded generation passed. The Galaxy S23 Ultra loaded one ordinary non-shared context once, consumed all 171 exact canonical-short tokens, and produced a coherent 16-token greedy continuation through 186 stateful graph executions with no reload or streaming. This is one bounded output-sanity run—not a completed answer, statistical performance campaign, or registry entry.**
 
 This is a separate accelerator arm. It preserves `0029` CPU viability and `0033` CPU/OpenCL campaign evidence without modifying either experiment.
 
@@ -154,4 +154,12 @@ That two-token prefix is not canonical prompt completion or text generation. No 
 
 A host-reviewed **plan only** now binds the proposed next gate without using the phone: consume all 171 exact canonical-short prompt tokens with the same loaded context and generate at most 16 greedy tokens, stopping early at EOS 124900. The unchanged 12-file stage, context, runner, QAIRT build, workload/rendered/token hashes, tokenizer/template hashes, state/position/mask semantics, evidence order, fail-closed checks, and cleanup lifecycle are fixed in [`results/qnn-ordinary-monolithic-canonical-short-gate-plan/`](results/qnn-ordinary-monolithic-canonical-short-gate-plan/). Raw token output must be pulled and preserved before post-run range checks or decoding.
 
-The plan is not authorization and no ADB occurred. Pi and Moritz must still agree the scope and explicitly transfer phone priority. Even a pass would be bounded generated-token sanity, not a benchmark campaign, statistical performance result, registry row, or broad output-quality claim.
+After independent review and explicit priority, exactly that planned gate ran once. All local/remote hashes and ELF checks passed; backend `v2.49.40.260810104044` loaded one ordinary context/graph once. The runner consumed 171 prompt tokens and generated 16 tokens, for 186 sequential graph executions with all 38 states carried and positions/masks advanced. It stopped at the authorized ceiling, not EOS.
+
+The raw 64-byte output was pulled and preserved before validation, SHA-256 `214a8f58d0fa410b99c6b4ba417d24289079c0a0579467c0e91859b1297d8ef2`. Post-cleanup decoding with the bound tokenizer produced:
+
+> The user wants me to read a fictional engineering brief about three local inference engines (
+
+All token IDs are in vocabulary. This is a coherent partial continuation but not a complete sentence or answer. Setup took 3.47177 seconds, request-to-first-token took 185.986 seconds, and total request time was 202.433 seconds. These are single-run diagnostics, not statistical benchmark results. Peak sampled process VmHWM was 1,611,816 KiB, not total DSP/system residency.
+
+Raw provider, stage/workload hashes, output, memory, thermal/power, identity, and cleanup evidence plus post-cleanup decode are retained in [`results/qnn-ordinary-monolithic-phone-canonical-short-max16/`](results/qnn-ordinary-monolithic-phone-canonical-short-max16/). The scoped root was absent and `phone.lock` released. No retry or campaign is authorized pending independent review and a separately agreed next gate; no registry row or broad output-quality claim exists.
