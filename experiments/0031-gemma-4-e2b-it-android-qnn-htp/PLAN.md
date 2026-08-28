@@ -62,7 +62,9 @@ The viability path is now proven through exact effective canonical short-input i
 
 The host-only canonical harness is now prepared: one `genie-app` process, one Registry-backed shared HTP engine retained by an unqueried keeper dialog, and a fresh dialog/independent `EngineState` for each first+5/5/5 request. It binds exact prompt hashes, 2048 ceilings, unique per-request outputs/profiles, setup and fresh-dialog timings, per-request timeout monitoring, failure isolation, raw-first capture, memory/thermal evidence, and scoped cleanup. Source and stage hashes/permissions pass; no ADB was used.
 
-The active next gate is independent review followed by a separate decision on authorizing the full campaign. Do not access ADB or start the campaign before that approval and explicit phone handoff. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
+The first approved launch exited locally with code 126 before entering the runner because `run_phone_campaign.sh` lacked executable mode. No `phone.lock`, ADB, remote root, Genie process, or logical request occurred; this is not a physical campaign attempt. The runner mode is corrected from `100644` to `100755`, and readiness/tests now assert executability without changing campaign design or scope.
+
+The active next gate is independent review followed by renewed explicit campaign approval and phone handoff. Do not access ADB or relaunch before that approval. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
 
 ## Stop conditions
 

@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "run_id": "campaign-20260828T110734Z-canonical-01",
+  "classification": "host_campaign_launcher_permission_failure_before_runner_or_phone_access",
+  "status": "campaign_runner_executable_fixed_reapproval_required",
+  "claim_boundary": "The approved campaign command exited locally with code 126 because run_phone_campaign.sh was not executable. The runner body never started: no phone.lock, ADB, remote root, Genie process, logical request, output, profile, or campaign evidence exists. This is a host packaging preflight failure, not a physical campaign attempt.",
+  "outcome": {
+    "launcher_exit_code": 126,
+    "failure": "run_phone_campaign.sh: Permission denied",
+    "committed_mode_before": "100644",
+    "corrected_mode_after": "100755",
+    "runner_body_entered": false,
+    "phone_lock_acquired": false,
+    "adb_used": false,
+    "remote_root_created": false,
+    "genie_process_started": false,
+    "logical_requests_started": 0,
+    "automatic_retry_performed": false
+  },
+  "campaign_design_changed": false,
+  "campaign_scope_changed": false,
+  "raw_evidence": {
+    "launcher-exit-code.txt": {
+      "bytes": 4,
+      "sha256": "703d2c10fa601276a4dd96193faed68902a642a44eb5b01b40d6fc8499e12822"
+    },
+    "launcher.stderr": {
+      "bytes": 114,
+      "sha256": "0c599d15fc7c7eef13648337bbce175db1382378bc35f3413b863f6485f62cdd"
+    },
+    "launcher.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "next_gate": "Commit the executable-mode correction and regression assertion, obtain independent review, then require a renewed explicit campaign handoff before relaunch."
+}

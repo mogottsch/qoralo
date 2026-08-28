@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
-  "status": "canonical_campaign_harness_ready_review_and_phone_approval_required",
+  "status": "campaign_runner_executable_fixed_reapproval_required",
   "question": "Can Gemma 4 E2B IT run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Gemma 4 E2B IT text generation only",
@@ -150,7 +150,8 @@
     "automatic_bos_suppression_gate": "passed_host_source_semantics_exact_170_token_identity_and_stage_validation",
     "phone_attempt_05": "passed_bounded_physical_qnn_htp_inference_with_exact_170_token_single_bos_effective_input",
     "canonical_campaign_harness_gate": "passed_host_shared_engine_keeper_fresh_dialog_isolation_and_stage_validation",
-    "next_gate": "Independent review followed by separate explicit canonical-campaign approval and phone-priority handoff; no ADB or campaign before approval.",
+    "campaign_launch_preflight": "failed_local_exit_126_before_runner_due_non_executable_mode_then_fixed_to_100755",
+    "next_gate": "Independent review of the executable-mode fix followed by renewed explicit canonical-campaign approval and phone-priority handoff; no ADB or relaunch before approval.",
     "workbench_checkpoint": "Any paid Workbench compile/link job requires a separate explicit cost/terms decision."
   },
   "transform_result": {
@@ -502,6 +503,22 @@
     "remote_cleanup_verified_absent": true,
     "further_retry_performed": false
   },
+  "canonical_campaign_launch_preflight": {
+    "result_path": "results/canonical-campaign-launch-preflight/result.json",
+    "classification": "host_campaign_launcher_permission_failure_before_runner_or_phone_access",
+    "launcher_exit_code": 126,
+    "runner_mode_before": "100644",
+    "runner_mode_after": "100755",
+    "runner_body_entered": false,
+    "phone_lock_acquired": false,
+    "adb_used": false,
+    "remote_root_created": false,
+    "genie_process_started": false,
+    "logical_requests_started": 0,
+    "automatic_retry_performed": false,
+    "campaign_design_changed": false,
+    "campaign_scope_changed": false
+  },
   "canonical_campaign_harness_readiness": {
     "result_path": "results/canonical-campaign-harness-readiness/result.json",
     "classification": "positive_host_canonical_campaign_harness_and_fresh_dialog_isolation_plan",
@@ -523,10 +540,11 @@
     "permissions_verified": true,
     "adb_used": false,
     "campaign_executed": false,
-    "campaign_authorized": false
+    "campaign_authorized": false,
+    "runner_executable": true
   },
   "campaign_gate": {
-    "phone_priority": "host campaign harness is ready; blocked on independent review and separate explicit canonical-campaign approval; no ADB before approval",
+    "phone_priority": "runner executable fix is ready; blocked on independent review and renewed explicit canonical-campaign approval; no ADB before approval",
     "bounded_viability_first": true,
     "canonical_after_viability": true,
     "request_isolation_candidate": "One loaded Genie Engine with a fresh Dialog per logical request, or a proven full GenieDialog_reset; measure reset/creation separately and reject retained KV/prefix reuse.",

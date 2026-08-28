@@ -107,7 +107,7 @@ class ContractTest(unittest.TestCase):
     def test_historical_transform_blocker_and_active_no_execution_claim(self) -> None:
         blocker = json.loads((EXP / "results/transform-blocker/result.json").read_text())
         self.assertEqual(
-            "canonical_campaign_harness_ready_review_and_phone_approval_required",
+            "campaign_runner_executable_fixed_reapproval_required",
             self.contract["status"],
         )
         active = self.contract["conversion_blocker"]
@@ -129,7 +129,7 @@ class ContractTest(unittest.TestCase):
             "passed_host_shared_engine_keeper_fresh_dialog_isolation_and_stage_validation",
             active["canonical_campaign_harness_gate"],
         )
-        self.assertIn("separate explicit canonical-campaign approval", active["next_gate"])
+        self.assertIn("renewed explicit canonical-campaign approval", active["next_gate"])
         self.assertFalse(blocker["android_execution"])
         self.assertFalse(blocker["qnn_htp_execution"])
         self.assertFalse(blocker["compiled_context_created"])
@@ -165,6 +165,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/android-qnn-physical-viability-attempt-04",
             EXP / "results/android-qnn-physical-viability-attempt-05",
             EXP / "results/canonical-campaign-harness-readiness",
+            EXP / "results/canonical-campaign-launch-preflight",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():
@@ -541,6 +542,27 @@ class ContractTest(unittest.TestCase):
         self.assertFalse(result["requested"]["adb"])
         self.assertFalse(result["requested"]["campaign_execution"])
         self.assertFalse(result["authorization"]["campaign_authorized"])
+        runner = EXP / "tools/run_phone_campaign.sh"
+        self.assertTrue(runner.stat().st_mode & 0o111)
+        self.assertTrue(result["runner"]["runner_executable"])
+
+    def test_campaign_launch_preflight_failed_before_runner_or_phone(self) -> None:
+        result = json.loads(
+            (EXP / "results/canonical-campaign-launch-preflight/result.json").read_text()
+        )
+        self.assertEqual(
+            "host_campaign_launcher_permission_failure_before_runner_or_phone_access",
+            result["classification"],
+        )
+        self.assertEqual(126, result["outcome"]["launcher_exit_code"])
+        self.assertFalse(result["outcome"]["runner_body_entered"])
+        self.assertFalse(result["outcome"]["phone_lock_acquired"])
+        self.assertFalse(result["outcome"]["adb_used"])
+        self.assertFalse(result["outcome"]["remote_root_created"])
+        self.assertFalse(result["outcome"]["genie_process_started"])
+        self.assertEqual(0, result["outcome"]["logical_requests_started"])
+        self.assertFalse(result["outcome"]["automatic_retry_performed"])
+        self.assertEqual("100755", result["outcome"]["corrected_mode_after"])
 
     def test_bounded_phone_gate_script_holds_lock_and_cleans_scope(self) -> None:
         script = (EXP / "tools/run_phone_viability.sh").read_text()

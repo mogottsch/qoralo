@@ -165,6 +165,7 @@ def main() -> None:
     runner_path = EXP / "tools/run_phone_campaign.sh"
     runner = runner_path.read_text()
     runner_facts = {
+        "runner_executable": bool(runner_path.stat().st_mode & 0o111),
         "explicit_approval_guard": "CAMPAIGN_APPROVED" in runner,
         "phone_lock_full_lifecycle": "artifacts/locks/phone.lock" in runner and "trap cleanup EXIT" in runner,
         "identity_fail_closed": all(value in runner for value in ("model=SM-S918B", "soc=SM8550", "abi=arm64-v8a")),

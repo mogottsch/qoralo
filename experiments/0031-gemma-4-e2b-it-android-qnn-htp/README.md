@@ -2,7 +2,7 @@
 
 ## Status
 
-**Bounded physical QNN HTP inference with exact canonical short-input identity is proven, and the full campaign harness is host-ready for review. The private plan uses one `genie-app` process, a keeper dialog holding one source-proven shared HTP engine, and a fresh independent-state dialog for each of the required first+5/5/5 logical requests. Exact prompts, 2048 ceilings, per-request profiles/outputs, timeout monitoring, raw-first capture, and cleanup are hash-bound. No campaign has run; execution requires separate explicit approval and phone handoff.**
+**Bounded physical QNN HTP inference with exact canonical short-input identity is proven, and the full campaign harness is host-ready. The first approved launch never entered the runner: the shell returned code 126 because `run_phone_campaign.sh` lacked executable mode. No `phone.lock`, ADB, remote root, Genie process, or logical request occurred. The mode is corrected to `100755` with a regression assertion; campaign design and scope are unchanged. Relaunch requires renewed review and explicit approval.**
 
 This experiment is a separate HTP arm for the model studied in `0025`. It does not rewrite or relabel the CPU/GPU evidence there.
 
@@ -119,7 +119,9 @@ This physically clears the effective-input blocker, but it does not retroactivel
 
 The host-only campaign harness is now prepared. It enables QAIRT's `shared-engine` mode and creates an unqueried keeper dialog so the Registry-backed HTP engine remains alive for the entire process. Each of the 16 logical requests creates a fresh dialog with a source-proven independent `EngineState`, applies that state before query, writes a unique raw output and profile, then frees the dialog while the keeper retains the loaded engine. The fixed order is first short, five warm short, five warm medium, and five warm long, all with exact rendered prompt hashes and 2048 ceilings. A monitor records memory and enforces the 1,800-second per-request timeout by terminating the process without retry; post-run validation will classify every retained request independently. The runner also fail-closes on explicit approval, device identity, `phone.lock`, local/remote hashes, dependencies, and scoped cleanup. See [`results/canonical-campaign-harness-readiness/result.json`](results/canonical-campaign-harness-readiness/result.json).
 
-All private campaign-stage hashes and permissions pass, but preparation used no ADB and no campaign is authorized or executed. Independent review and a separate explicit campaign approval/phone-priority handoff are required. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
+All private campaign-stage hashes and permissions pass. The initially approved launch nevertheless exited locally with code 126 before the runner body because `run_phone_campaign.sh` was committed as mode `100644`. No lock, ADB, remote root, process, request, output, or profile existed, so this is a host launcher preflight failure rather than a phone/campaign attempt. The runner is now mode `100755`, the readiness analyzer and tests assert executability, and the campaign design/scope remain unchanged. See [`results/canonical-campaign-launch-preflight/result.json`](results/canonical-campaign-launch-preflight/result.json).
+
+No relaunch is authorized. Independent review and renewed explicit campaign approval/phone-priority handoff are required. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
 
 ## Proof boundary
 
