@@ -193,9 +193,6 @@ fun PlayerScreen(
         chapter = currentChapter,
         chapterNumber = chapterNumber,
         chapterCount = chapters.size,
-        chapterAudio = currentAudio,
-        positionMs = position,
-        onSeek = { player.seekTo(it) },
         onDismiss = { transcript = false; onPersist(position, speed, false) },
     )
 }
@@ -206,16 +203,9 @@ private fun TranscriptSheet(
     chapter: ChapterEntity,
     chapterNumber: Int,
     chapterCount: Int,
-    chapterAudio: ChapterAudioEntity?,
-    positionMs: Long,
-    onSeek: (Long) -> Unit,
     onDismiss: () -> Unit,
 ) {
     val paragraphs = chapter.text.split(Regex("(?<=[.!?])\\s+(?=[A-Z])")).filter(String::isNotBlank)
-    val start = chapterAudio?.let { it.startFrame * 1_000L / it.sampleRateHz } ?: 0L
-    val end = chapterAudio?.let { it.endFrame * 1_000L / it.sampleRateHz } ?: (start + 1)
-    val ratio = ((positionMs - start).toDouble() / (end - start).coerceAtLeast(1)).coerceIn(0.0, .999)
-    val current = (ratio * paragraphs.size).toInt()
     ModalBottomSheet(onDismissRequest = onDismiss, containerColor = MaterialTheme.colorScheme.primaryContainer) {
         Column(Modifier.fillMaxWidth().navigationBarsPadding()) {
             Row(Modifier.fillMaxWidth().padding(horizontal = 20.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -223,21 +213,17 @@ private fun TranscriptSheet(
                 IconButton(onClick = onDismiss) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Close transcript") }
             }
             LazyColumn(Modifier.fillMaxWidth().weight(1f), contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(22.dp)) {
-                itemsIndexed(paragraphs) { index, paragraph ->
+                itemsIndexed(paragraphs) { _, paragraph ->
                     Text(
                         paragraph,
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = if (index == current) 1f else .34f),
-                        modifier = Modifier.clickable {
-                            val fraction = index.toDouble() / paragraphs.size.coerceAtLeast(1)
-                            onSeek(start + ((end - start) * fraction).toLong())
-                        },
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                 }
             }
             Row(Modifier.fillMaxWidth().padding(20.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("Follows playback", style = MaterialTheme.typography.labelMedium)
+                Text("Frozen chapter transcript", style = MaterialTheme.typography.labelMedium)
                 Text("$chapterNumber / $chapterCount", style = MaterialTheme.typography.labelMedium)
             }
         }

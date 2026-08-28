@@ -121,7 +121,7 @@ private fun RuntimeCard(title: String, subtitle: String, present: Boolean) {
             Column {
                 Text(title, style = MaterialTheme.typography.titleSmall)
                 Text(subtitle, style = MaterialTheme.typography.bodySmall)
-                Text(if (present) "Pack present and pinned" else "Pack missing or hash not pinned", style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(top = 4.dp))
+                Text(if (present) "Pack present and hash configured · verified when generation starts" else "Pack missing or hash not configured", style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(top = 4.dp))
             }
         }
     }

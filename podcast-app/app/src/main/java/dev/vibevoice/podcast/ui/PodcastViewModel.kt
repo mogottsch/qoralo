@@ -13,7 +13,6 @@ import dev.vibevoice.podcast.data.EpisodePhase
 import dev.vibevoice.podcast.data.EpisodeSourceEntity
 import dev.vibevoice.podcast.data.GenerationJobEntity
 import dev.vibevoice.podcast.data.PlaybackStateEntity
-import dev.vibevoice.podcast.generation.GenerationService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -50,15 +49,7 @@ class PodcastViewModel(application: Application) : AndroidViewModel(application)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     val screen: StateFlow<AppScreen> = combine(episode, explicitScreen) { current, explicit ->
-        explicit ?: when (current?.phase) {
-            null -> AppScreen.Library
-            EpisodePhase.SOURCES -> AppScreen.Sources
-            EpisodePhase.INSTRUCTIONS -> AppScreen.Instructions
-            EpisodePhase.GENERATING_SCRIPT, EpisodePhase.LOCKED, EpisodePhase.GENERATING_AUDIO, EpisodePhase.FAILED -> AppScreen.Generating
-            EpisodePhase.SCRIPT_DRAFT -> AppScreen.Review
-            EpisodePhase.FROZEN_READY -> AppScreen.Player
-            else -> AppScreen.Library
-        }
+        explicit ?: screenForPersistedPhase(current?.phase)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AppScreen.Library)
 
     fun newEpisode() = launchAction {
@@ -105,24 +96,21 @@ class PodcastViewModel(application: Application) : AndroidViewModel(application)
 
     fun createScript(instructions: String, review: Boolean) = launchAction {
         val id = requireNotNull(selectedEpisodeId.value)
-        val jobId = repository.queueScriptGeneration(id, instructions, review)
+        repository.queueScriptGeneration(id, instructions, review)
         explicitScreen.value = null
-        GenerationService.startScript(getApplication(), id, jobId)
     }
 
     fun requestAgentEdit(request: String) = launchAction {
         val id = requireNotNull(selectedEpisodeId.value)
-        val jobId = repository.queueAgentEdit(id, request)
-        GenerationService.startEdit(getApplication(), id, jobId)
+        repository.queueAgentEdit(id, request)
     }
 
     fun lockAndCreate() = launchAction {
         val id = requireNotNull(selectedEpisodeId.value)
-        val jobId = repository.lockAndQueueAudio(id)
+        repository.lockAndQueueAudio(id)
         lockDialogOpen.value = false
         agentSheetOpen.value = false
         explicitScreen.value = null
-        GenerationService.startAudio(getApplication(), id, jobId)
     }
 
     fun savePlayback(positionMs: Long, speed: Float, transcriptVisible: Boolean) = launchAction(showFailure = false) {

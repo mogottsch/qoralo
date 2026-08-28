@@ -52,6 +52,7 @@ fun LibraryScreen(
 ) {
     val ready = episodes.filter { it.phase == EpisodePhase.FROZEN_READY }
     val hero = ready.firstOrNull()
+    val unfinished = episodes.filter { it.phase != EpisodePhase.FROZEN_READY }
     PhoneContent {
         Scaffold(
             bottomBar = {
@@ -92,15 +93,16 @@ fun LibraryScreen(
                         }
                     }
                 }
-                if (hero != null) {
-                    item { ContinueCard(hero, onOpen) }
+                if (hero != null) item { ContinueCard(hero, onOpen) }
+                if (unfinished.isNotEmpty()) {
+                    item { Text("Continue creating", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp)) }
+                    items(unfinished, key = { it.id }) { EpisodeStatusRow(it, onOpen) }
+                }
+                if (ready.isNotEmpty()) {
                     item { Text("Recent episodes", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp)) }
                     items(ready.drop(1), key = { it.id }) { EpisodeRow(it, onOpen) }
-                } else {
-                    item {
-                        EmptyLibrary(onNew)
-                    }
                 }
+                if (episodes.isEmpty()) item { EmptyLibrary(onNew) }
             }
         }
     }
@@ -146,6 +148,34 @@ private fun EpisodeRow(episode: EpisodeEntity, onOpen: (EpisodeEntity) -> Unit) 
                 Text(episode.durationMs?.let(::formatDuration) ?: "Ready", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             IconButton(onClick = { onOpen(episode) }) { Icon(Icons.Default.PlayArrow, "Play") }
+        }
+    }
+}
+
+@Composable
+private fun EpisodeStatusRow(episode: EpisodeEntity, onOpen: (EpisodeEntity) -> Unit) {
+    val status = when (episode.phase) {
+        EpisodePhase.SOURCES -> "Add sources"
+        EpisodePhase.INSTRUCTIONS -> "Add instructions"
+        EpisodePhase.GENERATING_SCRIPT -> "Creating script"
+        EpisodePhase.SCRIPT_DRAFT -> "Draft ready to review"
+        EpisodePhase.LOCKED -> "Waiting to create audio"
+        EpisodePhase.GENERATING_AUDIO -> "Creating audio"
+        EpisodePhase.FAILED -> "Generation stopped"
+        else -> episode.phase.lowercase().replace('_', ' ')
+    }
+    Surface(
+        color = if (episode.phase == EpisodePhase.FAILED) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.surfaceContainerLow,
+        shape = RoundedCornerShape(20.dp),
+        modifier = Modifier.fillMaxWidth().clickable { onOpen(episode) },
+    ) {
+        Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            VibeArtwork(Modifier.size(56.dp), compact = true)
+            Column(Modifier.weight(1f)) {
+                Text(episode.title, style = MaterialTheme.typography.titleSmall, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                Text(status, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            Text("›", style = MaterialTheme.typography.titleLarge)
         }
     }
 }

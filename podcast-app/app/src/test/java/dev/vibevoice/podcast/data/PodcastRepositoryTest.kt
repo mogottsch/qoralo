@@ -16,6 +16,8 @@ import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import java.io.RandomAccessFile
+import dev.vibevoice.podcast.runtime.WavInspector
 
 @RunWith(RobolectricTestRunner::class)
 class PodcastRepositoryTest {
@@ -96,6 +98,17 @@ class PodcastRepositoryTest {
         assertEquals(EpisodePhase.GENERATING_AUDIO, repository.episode(episodeId).phase)
     }
 
+    @Test fun chapterAudioRejectsWrongRevisionAtWriteBoundary() = runTest {
+        val episodeId = draftEpisode()
+        val audioJob = repository.lockAndQueueAudio(episodeId)
+        repository.claimJob(episodeId, audioJob, JobKind.AUDIO, "rendering", 2)
+        val locked = repository.lockedChapterData(episodeId).second.first()
+        val file = temporary.newFile("chapter.wav").also(::writeWav)
+        val metadata = WavInspector.inspectSupertonicOutput(file)
+        expectIllegal { repository.commitChapterAudio(episodeId, audioJob, locked.copy(rowId = "wrong", revisionId = "another-revision"), metadata, file, 0) }
+        assertTrue(repository.audio(episodeId).isEmpty())
+    }
+
     @Test fun staleFailureNeverRegressesLockedEpisode() = runTest {
         val episodeId = draftEpisode()
         val editJob = repository.queueAgentEdit(episodeId, "Rename it")
@@ -139,4 +152,15 @@ class PodcastRepositoryTest {
     private suspend fun PodcastRepository.addPastedForTest(id: String) {
         addSource(id, "Source", "text/plain", "Source material".byteInputStream())
     }
+
+    private fun writeWav(file: java.io.File) {
+        RandomAccessFile(file, "rw").use { out ->
+            val frames = 100; val bytes = frames * 2L
+            out.writeBytes("RIFF"); out.u32(36 + bytes); out.writeBytes("WAVEfmt "); out.u32(16)
+            out.u16(1); out.u16(1); out.u32(44_100); out.u32(88_200); out.u16(2); out.u16(16)
+            out.writeBytes("data"); out.u32(bytes); repeat(frames) { out.u16(500) }
+        }
+    }
+    private fun RandomAccessFile.u16(value: Int) { write(value and 255); write((value ushr 8) and 255) }
+    private fun RandomAccessFile.u32(value: Long) { u16((value and 0xFFFF).toInt()); u16(((value ushr 16) and 0xFFFF).toInt()) }
 }

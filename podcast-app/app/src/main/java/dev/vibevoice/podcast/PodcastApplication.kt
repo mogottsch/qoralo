@@ -5,6 +5,7 @@ import dev.vibevoice.podcast.data.ArtifactStore
 import dev.vibevoice.podcast.data.PodcastDatabase
 import dev.vibevoice.podcast.data.PodcastRepository
 import dev.vibevoice.podcast.generation.GenerationWatchdog
+import dev.vibevoice.podcast.generation.QueuedCommandDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -17,6 +18,9 @@ class PodcastApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        if (getProcessName() == packageName) GenerationWatchdog(this, repository, appScope).start()
+        if (getProcessName() == packageName) {
+            GenerationWatchdog(this, repository, appScope).start()
+            QueuedCommandDispatcher(this, repository, appScope).start()
+        }
     }
 }

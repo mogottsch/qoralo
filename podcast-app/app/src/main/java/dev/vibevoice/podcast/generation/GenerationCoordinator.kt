@@ -101,13 +101,14 @@ class GenerationCoordinator(
                 progress("Creating chapter ${index + 1} of ${chapters.size}")
                 val output = artifacts.chapterWav(episodeId, chapter.position)
                 val metadata = engine.renderChapter(FrozenChapter(chapter.stableChapterId, chapter.title, chapter.text), output)
-                repository.commitChapterAudio(episodeId, chapter, metadata, output, cursorFrame)
+                repository.commitChapterAudio(episodeId, jobId, chapter, metadata, output, cursorFrame)
                 rendered += WavAssembler.Input(chapter.stableChapterId, chapter.title, output)
                 cursorFrame += metadata.frameCount + if (index < chapters.lastIndex) pauseFrames else 0L
             }
         } finally {
             engine.close()
         }
+        repository.updateJobProgress(episodeId, jobId, JobKind.AUDIO, chapters.size + 1, chapters.size, "Assembling episode")
         progress("Assembling ${episode.title}")
         val final = WavAssembler(artifacts).assemble(episodeId, jobId, rendered)
         repository.completeAudio(episodeId, jobId, final)

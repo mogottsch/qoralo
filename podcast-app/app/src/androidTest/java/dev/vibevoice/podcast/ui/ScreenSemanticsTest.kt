@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.test.assertHasClickAction
+import androidx.compose.ui.test.assertHasNoClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.hasSetTextAction
@@ -48,9 +49,17 @@ class ScreenSemanticsTest {
         rule.onNodeWithText("Continue").assertIsDisplayed()
     }
 
+    @Test fun libraryShowsUnfinishedEpisodeAsResumableStatusRow() {
+        val unfinished = episode(EpisodePhase.SCRIPT_DRAFT).copy(title = "Draft episode")
+        setNarrow { LibraryScreen(listOf(unfinished), {}, {}, {}) }
+        rule.onNodeWithText("Continue creating").assertExists()
+        rule.onNodeWithText("Draft episode").assertExists().assertHasClickAction()
+        rule.onNodeWithText("Draft ready to review").assertExists()
+    }
+
     @Test fun instructionsHaveOneEditableFieldHintChipsReviewToggleAndCreate() {
         val episode = episode(EpisodePhase.INSTRUCTIONS)
-        rule.setContent { VibeVoiceTheme { InstructionsScreen(episode, {}, { _, _ -> }) } }
+        setNarrow { InstructionsScreen(episode, {}, { _, _ -> }) }
         assertEquals(1, rule.onAllNodes(hasSetTextAction()).fetchSemanticsNodes().size)
         rule.onNodeWithText("Length").performClick()
         rule.onNodeWithText("Initial instructions", useUnmergedTree = true).assertExists()
@@ -61,10 +70,8 @@ class ScreenSemanticsTest {
     @Test fun reviewAgentAndLockKeepTranscriptReadOnlyAndConsequencesExplicit() {
         var agent by mutableStateOf(false)
         var lock by mutableStateOf(false)
-        rule.setContent {
-            VibeVoiceTheme {
-                ReviewScreen(chapters(), emptyList(), null, agent, lock, {}, { agent = true }, { agent = false }, {}, { lock = true }, { lock = false }, {})
-            }
+        setNarrow {
+            ReviewScreen(chapters(), emptyList(), null, agent, lock, {}, { agent = true }, { agent = false }, {}, { lock = true }, { lock = false }, {})
         }
         assertEquals(0, rule.onAllNodes(hasSetTextAction()).fetchSemanticsNodes().size)
         rule.onNodeWithText("Edit with agent").performClick()
@@ -78,7 +85,7 @@ class ScreenSemanticsTest {
 
     @Test fun generationShowsChapterProgressAndFailClosedBoundary() {
         val job = GenerationJobEntity("job", "episode", JobKind.AUDIO, JobStatus.RUNNING, "revision", 1, 2, "Creating One", null, 1, 2)
-        rule.setContent { VibeVoiceTheme { GeneratingScreen(episode(EpisodePhase.GENERATING_AUDIO), job, {}) } }
+        setNarrow { GeneratingScreen(episode(EpisodePhase.GENERATING_AUDIO), job, {}) }
         rule.onNodeWithText("CHAPTER 1 OF 2").assertIsDisplayed()
         rule.onNodeWithText("The selected inference route must succeed; no fallback will be used.").assertIsDisplayed()
     }
@@ -89,12 +96,14 @@ class ScreenSemanticsTest {
         val episode = episode(EpisodePhase.FROZEN_READY).copy(title = "Why cities remember rivers", finalAudioPath = wav.path, durationMs = 1_000)
         val chapter = chapters().first()
         val audio = ChapterAudioEntity("audio", "episode", "revision", chapter.stableChapterId, 0, wav.path, "a".repeat(64), wav.length(), 44_100, 1, 44_100, 0, 44_100)
-        rule.setContent { VibeVoiceTheme { PlayerScreen(episode, listOf(chapter), listOf(audio), null, wav, {}, {}, { _, _, _ -> }) } }
+        setNarrow { PlayerScreen(episode, listOf(chapter), listOf(audio), null, wav, {}, {}, { _, _, _ -> }) }
         rule.onNodeWithText("Now playing").assertIsDisplayed()
         rule.onNodeWithContentDescription("Play").assertHasClickAction()
         rule.onNodeWithText("Transcript").performClick()
         rule.onNodeWithText("Chapter 1 · Before the street grid").assertIsDisplayed()
-        rule.onNodeWithText("Every city carries the shape of the water that made it.").assertIsDisplayed()
+        rule.onNodeWithText("Frozen chapter transcript").assertIsDisplayed()
+        rule.onNodeWithText("Follows playback").assertDoesNotExist()
+        rule.onNodeWithText("Every city carries the shape of the water that made it.").assertIsDisplayed().assertHasNoClickAction()
     }
 
     private fun setNarrow(content: @androidx.compose.runtime.Composable () -> Unit) {

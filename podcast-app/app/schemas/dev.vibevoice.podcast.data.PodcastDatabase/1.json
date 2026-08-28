@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "dad93b29ae9597772318b2d055505cb8",
+    "identityHash": "d06a6e741650cad2ff912c9ad1f0eee1",
     "entities": [
       {
         "tableName": "episodes",
@@ -506,7 +506,7 @@
       },
       {
         "tableName": "generation_jobs",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `episodeId` TEXT NOT NULL, `kind` TEXT NOT NULL, `status` TEXT NOT NULL, `requestedRevisionId` TEXT, `currentChapter` INTEGER NOT NULL, `totalChapters` INTEGER NOT NULL, `statusText` TEXT NOT NULL, `errorMessage` TEXT, `createdAtEpochMs` INTEGER NOT NULL, `updatedAtEpochMs` INTEGER NOT NULL, `requestMessageId` TEXT, `failureStage` TEXT, `heartbeatAtEpochMs` INTEGER, `terminalAtEpochMs` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`episodeId`) REFERENCES `episodes`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `episodeId` TEXT NOT NULL, `kind` TEXT NOT NULL, `status` TEXT NOT NULL, `requestedRevisionId` TEXT, `currentChapter` INTEGER NOT NULL, `totalChapters` INTEGER NOT NULL, `statusText` TEXT NOT NULL, `errorMessage` TEXT, `createdAtEpochMs` INTEGER NOT NULL, `updatedAtEpochMs` INTEGER NOT NULL, `requestMessageId` TEXT, `failureStage` TEXT, `heartbeatAtEpochMs` INTEGER, `terminalAtEpochMs` INTEGER, `dispatchAttemptCount` INTEGER NOT NULL, `lastDispatchAtEpochMs` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`episodeId`) REFERENCES `episodes`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -595,6 +595,18 @@
           {
             "fieldPath": "terminalAtEpochMs",
             "columnName": "terminalAtEpochMs",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dispatchAttemptCount",
+            "columnName": "dispatchAttemptCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastDispatchAtEpochMs",
+            "columnName": "lastDispatchAtEpochMs",
             "affinity": "INTEGER",
             "notNull": false
           }
@@ -880,7 +892,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dad93b29ae9597772318b2d055505cb8')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd06a6e741650cad2ff912c9ad1f0eee1')"
     ]
   }
 }

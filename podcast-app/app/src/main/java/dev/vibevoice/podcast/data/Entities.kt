@@ -129,6 +129,8 @@ data class GenerationJobEntity(
     val failureStage: String? = null,
     val heartbeatAtEpochMs: Long? = null,
     val terminalAtEpochMs: Long? = null,
+    val dispatchAttemptCount: Int = 0,
+    val lastDispatchAtEpochMs: Long? = null,
 )
 
 @Entity(

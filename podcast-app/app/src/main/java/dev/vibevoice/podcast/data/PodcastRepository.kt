@@ -57,9 +57,11 @@ class PodcastRepository(
 
     suspend fun moveToInstructions(episodeId: String) = database.withTransaction {
         val episode = requireEpisode(episodeId)
-        require(episode.phase == EpisodePhase.SOURCES) { "Episode is not accepting sources" }
+        require(episode.phase == EpisodePhase.SOURCES || episode.phase == EpisodePhase.INSTRUCTIONS) { "Episode is not accepting sources" }
         require(dao.sources(episodeId).isNotEmpty()) { "Add at least one source" }
-        dao.updateEpisode(episode.copy(phase = EpisodePhase.INSTRUCTIONS, updatedAtEpochMs = clock()))
+        if (episode.phase != EpisodePhase.INSTRUCTIONS) {
+            dao.updateEpisode(episode.copy(phase = EpisodePhase.INSTRUCTIONS, updatedAtEpochMs = clock()))
+        }
     }
 
     suspend fun queueScriptGeneration(episodeId: String, instructions: String, reviewEnabled: Boolean): String = database.withTransaction {
@@ -226,9 +228,16 @@ class PodcastRepository(
 
     suspend fun resetChapterAudio(episodeId: String) = dao.clearChapterAudio(episodeId)
 
-    suspend fun commitChapterAudio(episodeId: String, chapter: ChapterEntity, metadata: AudioMetadata, file: File, startFrame: Long) {
+    suspend fun commitChapterAudio(episodeId: String, jobId: String, chapter: ChapterEntity, metadata: AudioMetadata, file: File, startFrame: Long) = database.withTransaction {
         val episode = requireEpisode(episodeId)
         val lockedRevisionId = episode.lockedRevisionId ?: error("Episode is not locked")
+        val job = requireJob(jobId)
+        require(job.episodeId == episodeId && job.kind == JobKind.AUDIO && job.status == JobStatus.RUNNING &&
+            job.requestedRevisionId == lockedRevisionId && episode.phase == EpisodePhase.GENERATING_AUDIO
+        ) { "Chapter audio write has no matching running locked-revision job" }
+        require(chapter.revisionId == lockedRevisionId && dao.chapters(lockedRevisionId).any {
+            it.rowId == chapter.rowId && it.stableChapterId == chapter.stableChapterId && it.position == chapter.position
+        }) { "Chapter audio does not belong to the locked revision" }
         require(file.isFile && file.length() > 44L) { "Chapter audio artifact is missing" }
         val inspected = WavInspector.inspectSupertonicOutput(file)
         require(inspected == metadata) { "Chapter WAV changed across the native/storage boundary" }
@@ -296,6 +305,38 @@ class PodcastRepository(
     }
 
     suspend fun runningJobs(): List<GenerationJobEntity> = dao.runningJobs()
+    suspend fun queuedJobs(): List<GenerationJobEntity> = dao.queuedJobs()
+
+    suspend fun markQueuedDispatchAttempt(episodeId: String, jobId: String): GenerationJobEntity? = database.withTransaction {
+        val job = requireJob(jobId)
+        require(job.episodeId == episodeId) { "Dispatch command is cross-wired" }
+        if (job.status != JobStatus.QUEUED) return@withTransaction null
+        val now = clock()
+        job.copy(dispatchAttemptCount = job.dispatchAttemptCount + 1, lastDispatchAtEpochMs = now, updatedAtEpochMs = now)
+            .also { dao.updateJob(it) }
+    }
+
+    suspend fun failQueuedJob(episodeId: String, jobId: String, message: String, stage: String = "service_dispatch"): Boolean = database.withTransaction {
+        val job = requireJob(jobId)
+        require(job.episodeId == episodeId) { "Queued failure command is cross-wired" }
+        if (job.status != JobStatus.QUEUED) return@withTransaction false
+        val episode = requireEpisode(episodeId)
+        val ownsState = when (job.kind) {
+            JobKind.SCRIPT -> episode.phase == EpisodePhase.GENERATING_SCRIPT
+            JobKind.AGENT_EDIT -> episode.phase == EpisodePhase.SCRIPT_DRAFT && episode.activeRevisionId == job.requestedRevisionId
+            JobKind.AUDIO -> episode.phase == EpisodePhase.LOCKED && episode.lockedRevisionId == job.requestedRevisionId
+            else -> false
+        }
+        val now = clock()
+        dao.updateJob(job.copy(status = JobStatus.FAILED, errorMessage = message.take(1000), failureStage = stage,
+            statusText = "Generation failed", terminalAtEpochMs = now, updatedAtEpochMs = now))
+        if (ownsState && job.kind != JobKind.AGENT_EDIT) {
+            dao.updateEpisode(episode.copy(phase = EpisodePhase.FAILED, failurePhase = stage, failureMessage = message.take(1000), updatedAtEpochMs = now))
+        } else if (ownsState) {
+            dao.updateEpisode(episode.copy(failurePhase = stage, failureMessage = message.take(1000), updatedAtEpochMs = now))
+        }
+        true
+    }
 
     suspend fun savePlayback(episodeId: String, positionMs: Long, speed: Float, transcript: Boolean) {
         val episode = requireEpisode(episodeId)

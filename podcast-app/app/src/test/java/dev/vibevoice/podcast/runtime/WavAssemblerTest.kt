@@ -59,7 +59,7 @@ class WavAssemblerTest {
             assembler.assemble("episode", "job-fail", listOf(WavAssembler.Input("one", "One", wav("failure.wav", 100, 10))))
         }
         assertFalse(store.finalGenerationDir("episode", "job-fail").exists())
-        assertTrue(store.finalGenerationDir("episode", "job-fail").parentFile.listFiles().orEmpty().none { it.name.contains("job-fail") })
+        assertTrue(store.finalGenerationDir("episode", "job-fail").parentFile!!.listFiles().orEmpty().none { it.name.contains("job-fail") })
     }
 
     private fun store() = ArtifactStore(temporary.newFolder(), temporary.newFolder())

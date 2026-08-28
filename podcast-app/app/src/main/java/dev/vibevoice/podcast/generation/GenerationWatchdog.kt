@@ -19,15 +19,18 @@ class GenerationWatchdog(
             while (isActive) {
                 val processAlive = context.getSystemService(ActivityManager::class.java)
                     .runningAppProcesses.orEmpty().any { it.processName == "${context.packageName}:generation" }
-                if (!processAlive) {
-                    repository.runningJobs().forEach { job ->
-                        val heartbeat = job.heartbeatAtEpochMs ?: job.updatedAtEpochMs
-                        if (clock() - heartbeat >= ORPHAN_GRACE_MS) {
-                            repository.failJob(job.episodeId, job.id, "The isolated generation process ended unexpectedly", "process_death:${job.statusText}")
-                        }
-                    }
-                }
+                reconcileOnce(processAlive)
                 delay(POLL_MS)
+            }
+        }
+    }
+
+    suspend fun reconcileOnce(processAlive: Boolean, now: Long = clock()) {
+        if (processAlive) return
+        repository.runningJobs().forEach { job ->
+            val heartbeat = job.heartbeatAtEpochMs ?: job.updatedAtEpochMs
+            if (now - heartbeat >= ORPHAN_GRACE_MS) {
+                repository.failJob(job.episodeId, job.id, "The isolated generation process ended unexpectedly", "process_death:${job.statusText}")
             }
         }
     }

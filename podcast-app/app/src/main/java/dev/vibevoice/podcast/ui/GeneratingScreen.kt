@@ -72,8 +72,10 @@ private fun GenerationPanel(episode: EpisodeEntity?, job: GenerationJobEntity?) 
     ) { VibeArtwork(Modifier.fillMaxSize(), compact = true) }
     val total = job?.totalChapters ?: 0
     val current = job?.currentChapter ?: 0
+    val completed = if (total > 0) (current - 1).coerceIn(0, total) else 0
+    val assembling = total > 0 && current > total
     Text(
-        if (total > 0) "CHAPTER $current OF $total" else "ON-DEVICE GENERATION",
+        if (assembling) "ASSEMBLING EPISODE" else if (total > 0) "CHAPTER ${current.coerceIn(1, total)} OF $total" else "ON-DEVICE GENERATION",
         style = MaterialTheme.typography.labelLarge,
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier.padding(top = 34.dp),
@@ -94,10 +96,10 @@ private fun GenerationPanel(episode: EpisodeEntity?, job: GenerationJobEntity?) 
         modifier = Modifier.padding(top = 8.dp),
     )
     if (total > 0) {
-        LinearProgressIndicator(progress = { current.toFloat() / total.coerceAtLeast(1) }, modifier = Modifier.fillMaxWidth().padding(top = 28.dp).height(7.dp))
+        LinearProgressIndicator(progress = { completed.toFloat() / total.coerceAtLeast(1) }, modifier = Modifier.fillMaxWidth().padding(top = 28.dp).height(7.dp))
         Row(Modifier.fillMaxWidth().padding(top = 8.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text("${current.coerceAtMost(total)} complete", style = MaterialTheme.typography.labelMedium)
-            Text("${(total - current).coerceAtLeast(0)} remaining", style = MaterialTheme.typography.labelMedium)
+            Text("$completed complete", style = MaterialTheme.typography.labelMedium)
+            Text("${(total - completed).coerceAtLeast(0)} remaining", style = MaterialTheme.typography.labelMedium)
         }
     } else LinearProgressIndicator(Modifier.fillMaxWidth().padding(top = 28.dp))
     Text("The selected inference route must succeed; no fallback will be used.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 24.dp))

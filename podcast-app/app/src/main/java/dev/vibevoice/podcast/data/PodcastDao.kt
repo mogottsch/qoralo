@@ -41,6 +41,7 @@ interface PodcastDao {
     @Query("SELECT COUNT(*) FROM generation_jobs WHERE status = 'RUNNING'") suspend fun runningJobCount(): Int
     @Query("SELECT COUNT(*) FROM generation_jobs WHERE episodeId = :episodeId AND status IN ('QUEUED', 'RUNNING')") suspend fun activeJobCount(episodeId: String): Int
     @Query("SELECT * FROM generation_jobs WHERE status = 'RUNNING'") suspend fun runningJobs(): List<GenerationJobEntity>
+    @Query("SELECT * FROM generation_jobs WHERE status = 'QUEUED' ORDER BY createdAtEpochMs, rowid") suspend fun queuedJobs(): List<GenerationJobEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun insertChapterAudio(value: ChapterAudioEntity)
     @Query("DELETE FROM chapter_audio WHERE episodeId = :episodeId") suspend fun clearChapterAudio(episodeId: String)

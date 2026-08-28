@@ -14,6 +14,8 @@ import androidx.core.content.ContextCompat
 import dev.vibevoice.podcast.MainActivity
 import dev.vibevoice.podcast.PodcastApplication
 import dev.vibevoice.podcast.R
+import dev.vibevoice.podcast.data.GenerationJobEntity
+import dev.vibevoice.podcast.data.JobKind
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +26,7 @@ import kotlinx.coroutines.launch
 class GenerationService : Service() {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private lateinit var coordinator: GenerationCoordinator
+    private val commandGate = SingleActiveGenerationGate()
     @Volatile private var activeJobId: String? = null
     @Volatile private var activeEpisodeId: String? = null
 
@@ -46,7 +49,7 @@ class GenerationService : Service() {
             stopSelf(startId)
             return START_NOT_STICKY
         }
-        if (activeJobId != null) return START_NOT_STICKY
+        if (!commandGate.tryAcquire()) return START_NOT_STICKY
         activeJobId = jobId
         activeEpisodeId = episodeId
         startAsForeground("Preparing on-device generation")
@@ -80,6 +83,7 @@ class GenerationService : Service() {
             } finally {
                 activeJobId = null
                 activeEpisodeId = null
+                commandGate.release()
                 stopForeground(STOP_FOREGROUND_REMOVE)
                 stopSelf(startId)
             }
@@ -144,6 +148,12 @@ class GenerationService : Service() {
         fun startScript(context: Context, episodeId: String, jobId: String) = start(context, ACTION_SCRIPT, episodeId, jobId)
         fun startEdit(context: Context, episodeId: String, jobId: String) = start(context, ACTION_EDIT, episodeId, jobId)
         fun startAudio(context: Context, episodeId: String, jobId: String) = start(context, ACTION_AUDIO, episodeId, jobId)
+        fun start(context: Context, job: GenerationJobEntity) = when (job.kind) {
+            JobKind.SCRIPT -> startScript(context, job.episodeId, job.id)
+            JobKind.AGENT_EDIT -> startEdit(context, job.episodeId, job.id)
+            JobKind.AUDIO -> startAudio(context, job.episodeId, job.id)
+            else -> error("Unsupported durable job kind")
+        }
 
         private fun start(context: Context, action: String, episodeId: String, jobId: String) {
             ContextCompat.startForegroundService(context, Intent(context, GenerationService::class.java).apply {
