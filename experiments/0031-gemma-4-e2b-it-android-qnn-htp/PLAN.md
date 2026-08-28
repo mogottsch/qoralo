@@ -66,7 +66,9 @@ The first approved launch exited locally with code 126 before entering the runne
 
 After renewed approval, physical campaign attempt 01 entered the full locked phone lifecycle and passed identity, local/remote hashes, dependency completeness, and process launch. It failed before QNN provider/context/query because shared-engine extraction passed dialog-only `cache-groups` into standalone Engine validation. The keeper and all 16 request dialogs failed; all 17 profiles are null, zero logical requests started, no outputs exist, and cleanup passed.
 
-The active next gate is evidence review followed by host-only shared-engine schema correction: derive a Registry-accepted standalone HTP engine object without moving `cache-groups`, retain cache behavior at the dialog/orchestration layer, rebuild/source-prove/test, then request a new explicit handoff. Do not access ADB or retry before that approval. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
+Host source analysis shows standalone shared-engine schema cannot carry the two Gemma cache groups without the rejected dialog-only key. The corrected harness therefore uses the protocol's allowed full-reset strategy: one normal QnnHtp dialog/context remains loaded, with 15 `GenieDialog_reset` calls between the 16 requests. Hash-bound QAIRT source proves reset clears conversation/prompt/decode counters, last/pending inputs, HTP KV/model state, sampler, and dialog state without remapping. The rebuilt script retains both `past_` and `swa_` cache groups, exact first+5/5/5 order, 2048 ceilings, unique outputs, cumulative per-request profile snapshots, separate reset timestamps, timeouts, raw capture, and cleanup. Stage hashes/modes pass without ADB.
+
+The active next gate is independent review and a new explicit campaign/phone handoff. Do not access ADB or retry before approval. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
 
 ## Stop conditions
 

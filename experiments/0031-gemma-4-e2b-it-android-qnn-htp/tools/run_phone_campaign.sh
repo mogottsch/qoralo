@@ -16,10 +16,11 @@ python3 - "$STAGE/campaign-manifest.json" "$EXPECTED_CONTEXT" <<'PY'
 import json, sys
 manifest = json.load(open(sys.argv[1]))
 assert manifest["context_sha256"] == sys.argv[2]
-assert manifest["shared_engine"] and manifest["keeper_dialog_retains_engine"]
+assert not manifest["shared_engine"] and manifest["single_dialog_retains_loaded_engine"]
 assert manifest["one_genie_process"] and manifest["request_count"] == 16
+assert manifest["reset_count"] == 15
 assert manifest["max_new_tokens"] == 2048 and manifest["request_timeout_seconds"] == 1800
-assert manifest["request_isolation"] == "fresh_dialog_per_logical_request_with_independent_engine_state"
+assert manifest["request_isolation"] == "proven_full_in_session_conversation_and_kv_reset"
 PY
 exec 9>"$REPO/artifacts/locks/phone.lock"
 flock -n 9 || { echo "phone lock busy" >&2; exit 75; }

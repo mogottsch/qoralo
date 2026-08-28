@@ -61,50 +61,43 @@ def main() -> None:
     dialog = config["dialog"]
     dialog["max-num-tokens"] = 2048
     dialog["context"]["bos-token"] = -1
-    dialog["engine"]["backend"]["QnnHtp"]["shared-engine"] = True
+    dialog["engine"]["backend"]["QnnHtp"]["shared-engine"] = False
     campaign_config = STAGE / "gemma4-e2b-htp-cl4096-campaign.json"
     campaign_config.write_text(json.dumps(config, indent=2) + "\n")
 
     lines = [
         "log create campaign-log verbose campaign/genie-verbose.log",
-        "profile create setup-profile",
-        "dialog config create keeper-config gemma4-e2b-htp-cl4096-campaign.json",
-        "dialog config bind profile keeper-config setup-profile",
-        "dialog config bind log keeper-config campaign-log",
-        "dialog create keeper-dialog keeper-config",
-        "profile save setup-profile campaign/setup-profile.json",
+        "profile create campaign-profile",
+        "dialog config create campaign-config gemma4-e2b-htp-cl4096-campaign.json",
+        "dialog config bind profile campaign-config campaign-profile",
+        "dialog config bind log campaign-config campaign-log",
+        "dialog create campaign-dialog campaign-config",
+        "dialog setMaxNumTokens campaign-dialog 2048",
+        "profile save campaign-profile campaign/setup-profile.json",
     ]
     requests = []
     for ordinal, (request_id, tier) in enumerate(WORKLOADS):
-        dialog_name = f"dialog-{ordinal:02d}"
-        config_name = f"config-{ordinal:02d}"
-        profile_name = f"profile-{ordinal:02d}"
+        if ordinal:
+            lines.append("dialog reset campaign-dialog")
         lines.extend([
-            f"profile create {profile_name}",
-            f"dialog config create {config_name} gemma4-e2b-htp-cl4096-campaign.json",
-            f"dialog config bind profile {config_name} {profile_name}",
-            f"dialog config bind log {config_name} campaign-log",
-            f"dialog create {dialog_name} {config_name}",
-            f"dialog setMaxNumTokens {dialog_name} 2048",
-            f"dialog query {dialog_name} prompts/{tier}.txt campaign/outputs/{request_id}.txt",
-            f"dialog getValue {dialog_name} GENIE_DIALOG_PARAM_CONTEXT_OCCUPANCY",
-            f"profile save {profile_name} campaign/profiles/{request_id}.json",
-            f"dialog free {dialog_name}",
-            f"dialog config free {config_name}",
-            f"profile free {profile_name}",
+            f"dialog query campaign-dialog prompts/{tier}.txt campaign/outputs/{request_id}.txt",
+            "dialog getValue campaign-dialog GENIE_DIALOG_PARAM_CONTEXT_OCCUPANCY",
+            f"profile save campaign-profile campaign/profiles/{request_id}.json",
         ])
         requests.append({
             "ordinal": ordinal, "request_id": request_id, "tier": tier,
             "prompt_path": f"prompts/{tier}.txt",
             "output_path": f"campaign/outputs/{request_id}.txt",
             "profile_path": f"campaign/profiles/{request_id}.json",
+            "profile_snapshot_kind": "cumulative_through_this_request",
+            "reset_before_request": bool(ordinal),
             "max_new_tokens": 2048,
             "input_tokens": EXPECTED_PROMPTS[tier][0],
         })
     lines.extend([
-        "dialog free keeper-dialog",
-        "dialog config free keeper-config",
-        "profile free setup-profile",
+        "dialog free campaign-dialog",
+        "dialog config free campaign-config",
+        "profile free campaign-profile",
         "log free campaign-log",
         "exit",
     ])
@@ -123,9 +116,10 @@ def main() -> None:
         "classification": "private_canonical_campaign_stage_preparation_only",
         "source_bundle_manifest_sha256": sha256(BUNDLE / "runtime-manifest.json"),
         "context_sha256": EXPECTED_CONTEXT,
-        "shared_engine": True,
-        "keeper_dialog_retains_engine": True,
-        "request_isolation": "fresh_dialog_per_logical_request_with_independent_engine_state",
+        "shared_engine": False,
+        "single_dialog_retains_loaded_engine": True,
+        "request_isolation": "proven_full_in_session_conversation_and_kv_reset",
+        "reset_count": 15,
         "one_genie_process": True,
         "model_remap_between_requests": False,
         "max_new_tokens": 2048,

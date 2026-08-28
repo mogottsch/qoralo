@@ -2,7 +2,7 @@
 
 ## Status
 
-**Bounded physical QNN HTP inference with exact canonical short-input identity remains proven. The first physical campaign attempt entered the locked phone lifecycle but failed during shared-engine configuration before provider/context/query: standalone Engine validation rejects the dialog-only `cache-groups` key moved by shared-engine extraction. The keeper and all 16 request dialogs failed; every profile is null and no output exists. Cleanup passed. Further work is host-only until the standalone shared-engine schema is corrected, reviewed, and explicitly reauthorized.**
+**Bounded physical QNN HTP inference with exact canonical short-input identity remains proven. The failed shared-engine campaign design is replaced host-side with one proven non-shared dialog/context plus full `GenieDialog_reset` isolation between requests. Hash-bound QAIRT source shows reset clears conversation counters, pending/last tokens, HTP KV/model state, sampler, and dialog state without remapping. The rebuilt first+5/5/5 stage passes all checks, but no corrected campaign has run; independent review and new explicit approval are required.**
 
 This experiment is a separate HTP arm for the model studied in `0025`. It does not rewrite or relabel the CPU/GPU evidence there.
 
@@ -123,7 +123,11 @@ All private campaign-stage hashes and permissions pass. The initially approved l
 
 After renewed approval, physical campaign attempt 01 passed device identity, local/remote hashes, dependency checks, stage push, and process launch under `phone.lock`. It then failed before HTP provider initialization or context loading. QAIRT's shared-engine extraction moved the full dialog engine object into standalone Engine validation, where `cache-groups` is not accepted. The keeper plus all 16 request dialog creations failed with that exact error; no `GenieDialog_query`, QNN graph execution, or logical request began. The setup profile and all 16 request profiles have null components, no outputs exist, and scoped cleanup verified the remote path absent with no residual process. See [`results/android-qnn-physical-campaign-attempt-01/result.json`](results/android-qnn-physical-campaign-attempt-01/result.json).
 
-No retry is authorized. After independent evidence review, the next work is host-only: construct a Registry-accepted standalone shared-engine object without passing dialog-only `cache-groups` into Engine schema, retain cache behavior at the correct configuration layer, and source-prove/test the rebuilt stage before requesting a new handoff. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
+No retry was authorized from that failure. Host analysis found that stock standalone Engine schema cannot carry Gemma's two dialog-level cache groups, so the corrected harness uses the protocol's alternative isolation strategy rather than weakening the cache contract: one normal, already-proven QnnHtp dialog/context remains loaded for all requests, and `dialog reset` runs before every request after the first. Hash-bound QAIRT source proves reset zeros past/prompt/generated/decode/query counters, clears last and unprocessed tokens/embeddings, calls HTP engine reset to drop KV and reset model state, resets sampler/grammar/Harmony state, and clears dialog state. The single-dialog configuration retains both `past_` and `swa_` cache groups.
+
+The rebuilt script contains one dialog create/free, 16 exact first+5/5/5 queries, 15 resets, 2048 ceilings, unique raw outputs, and cumulative profile snapshots after each request. Reset durations will be extracted separately from verbose API timestamps; query durations remain in profile events. The timeout/raw/lock/hash/cleanup runner is unchanged. All private stage hashes and modes pass without ADB. See [`results/canonical-campaign-reset-harness-readiness/result.json`](results/canonical-campaign-reset-harness-readiness/result.json).
+
+No corrected campaign is authorized or executed. Independent review and a new explicit campaign/phone handoff are required. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
 
 ## Proof boundary
 

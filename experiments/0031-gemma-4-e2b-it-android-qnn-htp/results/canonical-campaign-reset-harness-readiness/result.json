@@ -1,0 +1,142 @@
+{
+  "authorization": {
+    "campaign_authorized": false,
+    "required_next_action": "Independent review and a new explicit campaign approval/phone handoff."
+  },
+  "campaign": {
+    "accelerator_recompile_between_requests": false,
+    "cache_groups": [
+      "past_",
+      "swa_"
+    ],
+    "dialog_count": 1,
+    "loaded_context_count": 1,
+    "max_new_tokens": 2048,
+    "model_remap_between_requests": false,
+    "process_count": 1,
+    "request_count": 16,
+    "request_isolation": "proven_full_in_session_conversation_and_kv_reset",
+    "request_timeout_seconds": 1800,
+    "reset_count": 15,
+    "shared_engine": false,
+    "tier_counts": {
+      "long": 5,
+      "medium": 5,
+      "short": 6
+    },
+    "tier_order": [
+      "short",
+      "short",
+      "short",
+      "short",
+      "short",
+      "short",
+      "medium",
+      "medium",
+      "medium",
+      "medium",
+      "medium",
+      "long",
+      "long",
+      "long",
+      "long",
+      "long"
+    ]
+  },
+  "claim_boundary": "The corrected private campaign uses one already-proven non-shared QnnHtp dialog/context for all 16 requests and invokes the public Genie dialog reset between requests. Hash-bound QAIRT source proves reset clears prompt/conversation counters, last/pending tokens, HTP KV state, model state, sampler, and dialog State without remapping the model. The exact first+5/5/5 order, 2048 ceilings, cumulative per-request profile snapshots, unique outputs, timeout/failure handling, raw capture, hashes, and cleanup are verified. This is host proof only: no corrected campaign was run or authorized.",
+  "classification": "positive_host_canonical_campaign_single_dialog_full_reset_isolation_plan",
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "failure_isolation": {
+    "automatic_retry": false,
+    "missing_or_partial_request_evidence_retained_as_error_or_timeout": true,
+    "per_request_timeout_monitor": true,
+    "process_killed_on_timeout": true,
+    "timeout_seconds": 1800,
+    "unique_output_per_request": true
+  },
+  "profiles": {
+    "one_cumulative_snapshot_after_each_request": true,
+    "post_run_extraction": "Request N uses the newly appended query event in snapshot N; exact event-count growth is validated.",
+    "setup_profile": "campaign/setup-profile.json",
+    "snapshot_paths": [
+      "campaign/profiles/first-short-00.json",
+      "campaign/profiles/warm-short-01.json",
+      "campaign/profiles/warm-short-02.json",
+      "campaign/profiles/warm-short-03.json",
+      "campaign/profiles/warm-short-04.json",
+      "campaign/profiles/warm-short-05.json",
+      "campaign/profiles/warm-medium-01.json",
+      "campaign/profiles/warm-medium-02.json",
+      "campaign/profiles/warm-medium-03.json",
+      "campaign/profiles/warm-medium-04.json",
+      "campaign/profiles/warm-medium-05.json",
+      "campaign/profiles/warm-long-01.json",
+      "campaign/profiles/warm-long-02.json",
+      "campaign/profiles/warm-long-03.json",
+      "campaign/profiles/warm-long-04.json",
+      "campaign/profiles/warm-long-05.json"
+    ]
+  },
+  "requested": {
+    "adb": false,
+    "campaign_execution": false,
+    "phone_lock": false
+  },
+  "reset_proof": {
+    "api_reset_calls_dialog_reset": true,
+    "genie_app_exposes_reset": true,
+    "htp_reset_drops_kv_and_resets_model_state": true,
+    "reset_before_every_subsequent_request": true,
+    "reset_before_first_request": false,
+    "reset_clears_last_token_and_pending_inputs": true,
+    "reset_duration_source": "Entering/Returning GenieDialog_reset timestamps in verbose raw log",
+    "reset_outside_profile_query_duration": true,
+    "reset_resets_engine_sampler_and_dialog_state": true,
+    "reset_zeros_past_prompt_generated_decode_queries": true
+  },
+  "runner": {
+    "explicit_approval_guard": true,
+    "full_phone_lock_cleanup": true,
+    "path": "tools/run_phone_campaign.sh",
+    "per_request_timeout_monitor": true,
+    "raw_pull_before_validation": true,
+    "runner_executable": true,
+    "sha256": "7c32d2c1be6db3db0c29071f4105466d8910f7996210751ccc5a6eccbddedfab",
+    "single_genie_process": true
+  },
+  "schema_version": 1,
+  "source_provenance": {
+    "genie_app_docs": {
+      "bytes": 47136,
+      "path": "/home/moritz/opt/qairt/2.49.40.260810/docs/QAIRT-Docs/Genie/general/tools/genie-app.html",
+      "sha256": "f2d1c839d6508c87be4b5c14d1d6e233606fcbcf5af643884ad1362ddf2e197a"
+    },
+    "genie_dialog_cpp": {
+      "bytes": 37857,
+      "path": "/home/moritz/opt/qairt/2.49.40.260810/examples/Genie/Genie/src/GenieDialog.cpp",
+      "sha256": "db7a3e9035f980fe130877d892826a82158d2d1062c2314d7b347f5dea69a05f"
+    },
+    "qnn_htp_cpp": {
+      "bytes": 55955,
+      "path": "/home/moritz/opt/qairt/2.49.40.260810/examples/Genie/Genie/src/qualla/engines/qnn-htp.cpp",
+      "sha256": "e060a8ddc4195fa1ddc6adeeba4a2bae4b5a86d305db5c3affdd6853d86c2e22"
+    },
+    "qualla_dialog_cpp": {
+      "bytes": 113159,
+      "path": "/home/moritz/opt/qairt/2.49.40.260810/examples/Genie/Genie/src/qualla/dialog.cpp",
+      "sha256": "baa2ff5b37431160b3d6526e009846f80272b75922f8a2ee3de24b476e5f0746"
+    }
+  },
+  "stage": {
+    "all_files_verified": true,
+    "campaign_config_sha256": "6363805caa9462ac21768ce21247c844b184fa240c3040f176d8db0cd975cc34",
+    "campaign_script_sha256": "cc433ef966a38aee962c55d2959ada89aa02323ab6ca14f25da36e701a5f7c0d",
+    "file_count": 20,
+    "logical_bytes": 4003786019,
+    "manifest_sha256": "3bacd7c1ae44fef01b8493621eabe55d92f09106c3c165c5d89b386e9f9cf7ec",
+    "permissions_verified": true,
+    "private_root": ".local/campaign-stage",
+    "sha256sums_sha256": "80f422d33db71139a56a72c9a90fc56213a51400a6015f30385a154cf5e51a48"
+  },
+  "status": "canonical_campaign_reset_harness_ready_review_and_phone_approval_required"
+}
