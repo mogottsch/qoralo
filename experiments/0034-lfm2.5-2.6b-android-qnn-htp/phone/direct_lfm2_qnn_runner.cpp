@@ -255,6 +255,53 @@ class Runner {
     }
   }
 
+  void LoadState(const fs::path& input_list, int expected_position) {
+    std::ifstream stream(input_list);
+    if (!stream) throw std::runtime_error("cannot open resume input list");
+    std::unordered_map<std::string, fs::path> files;
+    std::string field;
+    while (stream >> field) {
+      const size_t split = field.find(":=");
+      if (split == std::string::npos) throw std::runtime_error("invalid resume input field");
+      fs::path path = field.substr(split + 2);
+      if (path.is_relative()) path = root_ / path;
+      files[field.substr(0, split)] = path;
+    }
+    auto floats = [&](const std::string& name, size_t count) {
+      auto found = files.find(name);
+      if (found == files.end()) throw std::runtime_error("missing resume state: " + name);
+      std::ifstream input(found->second, std::ios::binary | std::ios::ate);
+      if (!input || static_cast<size_t>(input.tellg()) != count * sizeof(float)) {
+        throw std::runtime_error("resume state size mismatch: " + name);
+      }
+      input.seekg(0); std::vector<float> result(count);
+      input.read(reinterpret_cast<char*>(result.data()), count * sizeof(float));
+      return result;
+    };
+    for (int layer = 0; layer < kLayers; ++layer) {
+      if (IsAttention(layer)) {
+        key_[layer] = floats("past_key_values." + std::to_string(layer) + ".key", 8 * 64 * kCacheLength);
+        value_[layer] = floats("past_key_values." + std::to_string(layer) + ".value", 8 * kCacheLength * 64);
+      } else {
+        conv_[layer] = floats("past_conv." + std::to_string(layer), kHidden * 3);
+      }
+    }
+    auto position_file = files.find("position_ids");
+    if (position_file == files.end()) throw std::runtime_error("missing resume position_ids");
+    std::ifstream position_stream(position_file->second, std::ios::binary | std::ios::ate);
+    if (!position_stream || position_stream.tellg() != static_cast<std::streampos>(sizeof(int32_t))) {
+      throw std::runtime_error("resume position size mismatch");
+    }
+    position_stream.seekg(0); int32_t position = -1;
+    position_stream.read(reinterpret_cast<char*>(&position), sizeof(position));
+    if (position != expected_position) throw std::runtime_error("resume position value mismatch");
+    auto mask = floats("attention_mask", kCapacity);
+    for (int index = 0; index < kCapacity; ++index) {
+      const float expected = index < expected_position || index == kCapacity - 1 ? 0.0f : -65504.0f;
+      if (mask[index] != expected) throw std::runtime_error("resume mask mismatch");
+    }
+  }
+
   int RunToken(int token, int position, bool sample) {
     if (monolithic_) return RunTokenMonolithic(token, position, sample);
     if (consolidated_) return RunTokenConsolidated(token, position, sample);
@@ -623,36 +670,51 @@ static std::vector<int32_t> ReadTokens(const fs::path& path) {
 
 int main(int argc, char** argv) {
   try {
-    if (argc != 5) {
-      std::cerr << "usage: lfm2_qnn_runner ROOT PROMPT.int32le MAX_NEW OUTPUT.int32le\n";
+    const bool resume = argc == 7;
+    if (argc != 5 && !resume) {
+      std::cerr << "usage: lfm2_qnn_runner ROOT PROMPT.int32le MAX_NEW OUTPUT.int32le\n"
+                   "   or: lfm2_qnn_runner ROOT RESUME_INPUT_LIST START_TOKEN START_POSITION MAX_NEW OUTPUT.int32le\n";
       return 2;
     }
     const fs::path root = argv[1];
-    const auto prompt = ReadTokens(argv[2]);
-    const int max_new = std::stoi(argv[3]);
+    const auto prompt = resume ? std::vector<int32_t>{} : ReadTokens(argv[2]);
+    const int start_token = resume ? std::stoi(argv[3]) : -1;
+    const int start_position = resume ? std::stoi(argv[4]) : 0;
+    const int max_new = std::stoi(argv[resume ? 5 : 3]);
     if (max_new < 1) throw std::runtime_error("MAX_NEW must be positive");
-    if (prompt.size() + static_cast<size_t>(max_new) > kCacheLength) {
+    if ((resume ? static_cast<size_t>(start_position) : prompt.size()) + static_cast<size_t>(max_new) > kCacheLength) {
       throw std::runtime_error("prompt plus output exceeds route capacity");
     }
     const auto setup_start = Clock::now();
     Runner runner(root);
+    if (resume) runner.LoadState(argv[2], start_position);
     const auto setup_end = Clock::now();
     std::vector<int32_t> generated;
     generated.reserve(max_new);
     const auto request_start = Clock::now();
+    auto first_token = request_start;
     int token = -1;
-    for (size_t position = 0; position < prompt.size(); ++position) {
-      token = runner.RunToken(prompt[position], static_cast<int>(position), position + 1 == prompt.size());
-    }
-    const auto first_token = Clock::now();
-    if (max_new > 0) generated.push_back(token);
-    for (int index = 1; index < max_new && generated.back() != kEos; ++index) {
-      const int position = static_cast<int>(prompt.size()) + index - 1;
-      token = runner.RunToken(generated.back(), position, true);
-      generated.push_back(token);
+    if (resume) {
+      int current = start_token;
+      for (int index = 0; index < max_new && (index == 0 || generated.back() != kEos); ++index) {
+        token = runner.RunToken(current, start_position + index, true);
+        generated.push_back(token); current = token;
+        if (index == 0) first_token = Clock::now();
+      }
+    } else {
+      for (size_t position = 0; position < prompt.size(); ++position) {
+        token = runner.RunToken(prompt[position], static_cast<int>(position), position + 1 == prompt.size());
+      }
+      if (max_new > 0) generated.push_back(token);
+      first_token = Clock::now();
+      for (int index = 1; index < max_new && generated.back() != kEos; ++index) {
+        const int position = static_cast<int>(prompt.size()) + index - 1;
+        token = runner.RunToken(generated.back(), position, true);
+        generated.push_back(token);
+      }
     }
     const auto request_end = Clock::now();
-    std::ofstream output(argv[4], std::ios::binary);
+    std::ofstream output(argv[resume ? 6 : 4], std::ios::binary);
     if (!output) throw std::runtime_error("cannot open output token file");
     output.write(reinterpret_cast<const char*>(generated.data()),
                  static_cast<std::streamsize>(generated.size() * sizeof(int32_t)));
@@ -664,6 +726,7 @@ int main(int argc, char** argv) {
               << "  \"result\": \"passed\",\n"
               << "  \"sessions_loaded\": " << runner.SessionCount() << ",\n"
               << "  \"prompt_tokens\": " << prompt.size() << ",\n"
+      << "  \"resume_start_position\": " << (resume ? start_position : -1) << ",\n"
               << "  \"generated_tokens\": " << generated.size() << ",\n"
               << "  \"stop_reason\": \"" << ((!generated.empty() && generated.back() == kEos) ? "eos" : "max_tokens") << "\",\n"
               << "  \"setup_seconds\": " << seconds(setup_end - setup_start) << ",\n"

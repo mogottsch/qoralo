@@ -1,20 +1,83 @@
 {
   "bridge": {
     "all_argmax_equal": true,
+    "all_generated_sequences_equal": false,
     "all_sources_argmax": {
       "cpu_ar171": 4695,
       "physical_ar171": 4695,
       "sequential_ar1": 4695
     },
     "conv_placement": "all 22 physical/CPU convolution states carried directly",
+    "decoded_sequences_with_prefill_endpoint": {
+      "cpu_ar171": "The user wants me to read a fictional engineering brief about three local inference engines (C",
+      "physical_ar171": "The user wants me to write a self-contained technical recommendation for the team comparing three local",
+      "sequential_ar1": "The user wants me to read a fictional engineering brief about three local inference engines (C"
+    },
+    "generated_sequences": {
+      "cpu_ar171": [
+        4695,
+        10966,
+        622,
+        310,
+        1561,
+        267,
+        37139,
+        9527,
+        8771,
+        836,
+        1703,
+        2165,
+        39246,
+        17354,
+        342,
+        43
+      ],
+      "physical_ar171": [
+        4695,
+        10966,
+        622,
+        310,
+        5272,
+        267,
+        2014,
+        116311,
+        9516,
+        28817,
+        374,
+        278,
+        2909,
+        19260,
+        1703,
+        2165
+      ],
+      "sequential_ar1": [
+        4695,
+        10966,
+        622,
+        310,
+        1561,
+        267,
+        37139,
+        9527,
+        8771,
+        836,
+        1703,
+        2165,
+        39246,
+        17354,
+        342,
+        43
+      ]
+    },
     "kv_placement": "AR171 171-position slices copied into AR1 left-aligned cache 0:171; remaining 3924 positions zero",
     "mask": "zeros for valid cache positions 0:171 and current final slot; finite-negative elsewhere",
-    "physical_ar171_state_warning": "Retained physical state is layout-valid and finite but numerically far from CPU AR171: only 3/38 state tensors allclose and max abs is 10586.69. The next greedy decision still agrees at 4695 across all three sources; this is not numerical equivalence.",
+    "max_new_tokens": 16,
+    "physical_ar171_state_warning": "Retained physical state is layout-valid and finite but numerically far from CPU AR171. Greedy sequences match for their first four continuation tokens, diverge at decode index 4, briefly realign at index 5, then mostly diverge; this is not numerical equivalence.",
     "position": 171,
     "source_seconds": {
-      "cpu_ar171": 0.46130919456481934,
-      "physical_ar171": 0.5063176155090332,
-      "sequential_ar1": 0.5565571784973145
+      "cpu_ar171": 11.397795915603638,
+      "physical_ar171": 12.124596118927002,
+      "sequential_ar1": 11.896668195724487
     },
     "token": 597
   },
@@ -1009,8 +1072,442 @@
       }
     }
   },
-  "cpu_ar171_seconds": 4.72078013420105,
+  "cpu_ar171_seconds": 8.072771549224854,
   "fidelity_boundary": "All numeric state/logit deltas are retained. Endpoint greedy equality is not numerical equivalence or broad output fidelity.",
+  "generation_step_comparisons": [
+    {
+      "decode_index": 0,
+      "physical_ar171_vs_cpu_ar171": {
+        "argmax_equal": true,
+        "logit_max_abs": 7.070076942443848,
+        "logit_mean_abs": 1.4451682567596436,
+        "state_allclose_count": 4,
+        "state_max_abs": 3.6112756729125977,
+        "state_mean_abs_max": 0.38202372193336487,
+        "state_tensor_count": 38
+      },
+      "physical_ar171_vs_sequential_ar1": {
+        "argmax_equal": true,
+        "logit_max_abs": 6.795814514160156,
+        "logit_mean_abs": 1.370410680770874,
+        "state_allclose_count": 4,
+        "state_max_abs": 3.5829646587371826,
+        "state_mean_abs_max": 0.37319958209991455,
+        "state_tensor_count": 38
+      },
+      "position": 171,
+      "tokens": {
+        "cpu_ar171": 4695,
+        "physical_ar171": 4695,
+        "sequential_ar1": 4695
+      }
+    },
+    {
+      "decode_index": 1,
+      "physical_ar171_vs_cpu_ar171": {
+        "argmax_equal": true,
+        "logit_max_abs": 11.632330894470215,
+        "logit_mean_abs": 1.5008336305618286,
+        "state_allclose_count": 4,
+        "state_max_abs": 2.0738158226013184,
+        "state_mean_abs_max": 0.27541646361351013,
+        "state_tensor_count": 38
+      },
+      "physical_ar171_vs_sequential_ar1": {
+        "argmax_equal": true,
+        "logit_max_abs": 11.579291343688965,
+        "logit_mean_abs": 1.4550508260726929,
+        "state_allclose_count": 5,
+        "state_max_abs": 2.039952039718628,
+        "state_mean_abs_max": 0.27637800574302673,
+        "state_tensor_count": 38
+      },
+      "position": 172,
+      "tokens": {
+        "cpu_ar171": 10966,
+        "physical_ar171": 10966,
+        "sequential_ar1": 10966
+      }
+    },
+    {
+      "decode_index": 2,
+      "physical_ar171_vs_cpu_ar171": {
+        "argmax_equal": true,
+        "logit_max_abs": 10.876551628112793,
+        "logit_mean_abs": 3.2472195625305176,
+        "state_allclose_count": 5,
+        "state_max_abs": 3.035609483718872,
+        "state_mean_abs_max": 0.2592583894729614,
+        "state_tensor_count": 38
+      },
+      "physical_ar171_vs_sequential_ar1": {
+        "argmax_equal": true,
+        "logit_max_abs": 10.815215110778809,
+        "logit_mean_abs": 3.200852394104004,
+        "state_allclose_count": 5,
+        "state_max_abs": 2.9972524642944336,
+        "state_mean_abs_max": 0.25844234228134155,
+        "state_tensor_count": 38
+      },
+      "position": 173,
+      "tokens": {
+        "cpu_ar171": 622,
+        "physical_ar171": 622,
+        "sequential_ar1": 622
+      }
+    },
+    {
+      "decode_index": 3,
+      "physical_ar171_vs_cpu_ar171": {
+        "argmax_equal": true,
+        "logit_max_abs": 5.812641143798828,
+        "logit_mean_abs": 0.802047848701477,
+        "state_allclose_count": 4,
+        "state_max_abs": 3.035609483718872,
+        "state_mean_abs_max": 0.2627643644809723,
+        "state_tensor_count": 38
+      },
+      "physical_ar171_vs_sequential_ar1": {
+        "argmax_equal": true,
+        "logit_max_abs": 5.7417802810668945,
+        "logit_mean_abs": 0.7827444076538086,
+        "state_allclose_count": 4,
+        "state_max_abs": 2.9972524642944336,
+        "state_mean_abs_max": 0.2649054527282715,
+        "state_tensor_count": 38
+      },
+      "position": 174,
+      "tokens": {
+        "cpu_ar171": 310,
+        "physical_ar171": 310,
+        "sequential_ar1": 310
+      }
+    },
+    {
+      "decode_index": 4,
+      "physical_ar171_vs_cpu_ar171": {
+        "argmax_equal": false,
+        "logit_max_abs": 11.976696014404297,
+        "logit_mean_abs": 2.880683183670044,
+        "state_allclose_count": 4,
+        "state_max_abs": 3.501797914505005,
+        "state_mean_abs_max": 0.3630303144454956,
+        "state_tensor_count": 38
+      },
+      "physical_ar171_vs_sequential_ar1": {
+        "argmax_equal": false,
+        "logit_max_abs": 11.898235321044922,
+        "logit_mean_abs": 2.8931479454040527,
+        "state_allclose_count": 4,
+        "state_max_abs": 3.5083117485046387,
+        "state_mean_abs_max": 0.36209410429000854,
+        "state_tensor_count": 38
+      },
+      "position": 175,
+      "tokens": {
+        "cpu_ar171": 1561,
+        "physical_ar171": 5272,
+        "sequential_ar1": 1561
+      }
+    },
+    {
+      "decode_index": 5,
+      "physical_ar171_vs_cpu_ar171": {
+        "argmax_equal": true,
+        "logit_max_abs": 19.01668357849121,
+        "logit_mean_abs": 3.522597074508667,
+        "state_allclose_count": 0,
+        "state_max_abs": 4.83236837387085,
+        "state_mean_abs_max": 0.6068884134292603,
+        "state_tensor_count": 38
+      },
+      "physical_ar171_vs_sequential_ar1": {
+        "argmax_equal": true,
+        "logit_max_abs": 18.9114990234375,
+        "logit_mean_abs": 3.542067527770996,
+        "state_allclose_count": 0,
+        "state_max_abs": 4.784714221954346,
+        "state_mean_abs_max": 0.6083155274391174,
+        "state_tensor_count": 38
+      },
+      "position": 176,
+      "tokens": {
+        "cpu_ar171": 267,
+        "physical_ar171": 267,
+        "sequential_ar1": 267
+      }
+    },
+    {
+      "decode_index": 6,
+      "physical_ar171_vs_cpu_ar171": {
+        "argmax_equal": false,
+        "logit_max_abs": 15.987568855285645,
+        "logit_mean_abs": 3.165450096130371,
+        "state_allclose_count": 0,
+        "state_max_abs": 5.633406639099121,
+        "state_mean_abs_max": 0.7447954416275024,
+        "state_tensor_count": 38
+      },
+      "physical_ar171_vs_sequential_ar1": {
+        "argmax_equal": false,
+        "logit_max_abs": 15.8395357131958,
+        "logit_mean_abs": 3.1536073684692383,
+        "state_allclose_count": 0,
+        "state_max_abs": 5.633842945098877,
+        "state_mean_abs_max": 0.7438567280769348,
+        "state_tensor_count": 38
+      },
+      "position": 177,
+      "tokens": {
+        "cpu_ar171": 37139,
+        "physical_ar171": 2014,
+        "sequential_ar1": 37139
+      }
+    },
+    {
+      "decode_index": 7,
+      "physical_ar171_vs_cpu_ar171": {
+        "argmax_equal": false,
+        "logit_max_abs": 36.122371673583984,
+        "logit_mean_abs": 3.218792676925659,
+        "state_allclose_count": 0,
+        "state_max_abs": 6.683223247528076,
+        "state_mean_abs_max": 0.8808832168579102,
+        "state_tensor_count": 38
+      },
+      "physical_ar171_vs_sequential_ar1": {
+        "argmax_equal": false,
+        "logit_max_abs": 36.14760208129883,
+        "logit_mean_abs": 3.189842700958252,
+        "state_allclose_count": 0,
+        "state_max_abs": 6.6759138107299805,
+        "state_mean_abs_max": 0.8827400803565979,
+        "state_tensor_count": 38
+      },
+      "position": 178,
+      "tokens": {
+        "cpu_ar171": 9527,
+        "physical_ar171": 116311,
+        "sequential_ar1": 9527
+      }
+    },
+    {
+      "decode_index": 8,
+      "physical_ar171_vs_cpu_ar171": {
+        "argmax_equal": false,
+        "logit_max_abs": 21.01245880126953,
+        "logit_mean_abs": 2.418487787246704,
+        "state_allclose_count": 0,
+        "state_max_abs": 8.995226860046387,
+        "state_mean_abs_max": 0.9958050847053528,
+        "state_tensor_count": 38
+      },
+      "physical_ar171_vs_sequential_ar1": {
+        "argmax_equal": false,
+        "logit_max_abs": 20.922183990478516,
+        "logit_mean_abs": 2.4111807346343994,
+        "state_allclose_count": 0,
+        "state_max_abs": 9.03355598449707,
+        "state_mean_abs_max": 0.9932750463485718,
+        "state_tensor_count": 38
+      },
+      "position": 179,
+      "tokens": {
+        "cpu_ar171": 8771,
+        "physical_ar171": 9516,
+        "sequential_ar1": 8771
+      }
+    },
+    {
+      "decode_index": 9,
+      "physical_ar171_vs_cpu_ar171": {
+        "argmax_equal": false,
+        "logit_max_abs": 27.65816879272461,
+        "logit_mean_abs": 2.226620674133301,
+        "state_allclose_count": 0,
+        "state_max_abs": 8.947690963745117,
+        "state_mean_abs_max": 0.9247671365737915,
+        "state_tensor_count": 38
+      },
+      "physical_ar171_vs_sequential_ar1": {
+        "argmax_equal": false,
+        "logit_max_abs": 27.714599609375,
+        "logit_mean_abs": 2.2483038902282715,
+        "state_allclose_count": 0,
+        "state_max_abs": 8.932564735412598,
+        "state_mean_abs_max": 0.9238741993904114,
+        "state_tensor_count": 38
+      },
+      "position": 180,
+      "tokens": {
+        "cpu_ar171": 836,
+        "physical_ar171": 28817,
+        "sequential_ar1": 836
+      }
+    },
+    {
+      "decode_index": 10,
+      "physical_ar171_vs_cpu_ar171": {
+        "argmax_equal": false,
+        "logit_max_abs": 21.917156219482422,
+        "logit_mean_abs": 1.7837461233139038,
+        "state_allclose_count": 0,
+        "state_max_abs": 8.312078475952148,
+        "state_mean_abs_max": 1.0253159999847412,
+        "state_tensor_count": 38
+      },
+      "physical_ar171_vs_sequential_ar1": {
+        "argmax_equal": false,
+        "logit_max_abs": 21.728904724121094,
+        "logit_mean_abs": 1.7878845930099487,
+        "state_allclose_count": 0,
+        "state_max_abs": 8.32787036895752,
+        "state_mean_abs_max": 1.02392578125,
+        "state_tensor_count": 38
+      },
+      "position": 181,
+      "tokens": {
+        "cpu_ar171": 1703,
+        "physical_ar171": 374,
+        "sequential_ar1": 1703
+      }
+    },
+    {
+      "decode_index": 11,
+      "physical_ar171_vs_cpu_ar171": {
+        "argmax_equal": false,
+        "logit_max_abs": 17.1398983001709,
+        "logit_mean_abs": 2.1132936477661133,
+        "state_allclose_count": 0,
+        "state_max_abs": 9.655920028686523,
+        "state_mean_abs_max": 1.0879230499267578,
+        "state_tensor_count": 38
+      },
+      "physical_ar171_vs_sequential_ar1": {
+        "argmax_equal": false,
+        "logit_max_abs": 17.15814781188965,
+        "logit_mean_abs": 2.1066670417785645,
+        "state_allclose_count": 0,
+        "state_max_abs": 9.685108184814453,
+        "state_mean_abs_max": 1.0870792865753174,
+        "state_tensor_count": 38
+      },
+      "position": 182,
+      "tokens": {
+        "cpu_ar171": 2165,
+        "physical_ar171": 278,
+        "sequential_ar1": 2165
+      }
+    },
+    {
+      "decode_index": 12,
+      "physical_ar171_vs_cpu_ar171": {
+        "argmax_equal": false,
+        "logit_max_abs": 20.448585510253906,
+        "logit_mean_abs": 4.726867198944092,
+        "state_allclose_count": 0,
+        "state_max_abs": 10.051717758178711,
+        "state_mean_abs_max": 1.1362310647964478,
+        "state_tensor_count": 38
+      },
+      "physical_ar171_vs_sequential_ar1": {
+        "argmax_equal": false,
+        "logit_max_abs": 20.47757339477539,
+        "logit_mean_abs": 4.7313008308410645,
+        "state_allclose_count": 0,
+        "state_max_abs": 10.01259994506836,
+        "state_mean_abs_max": 1.1373546123504639,
+        "state_tensor_count": 38
+      },
+      "position": 183,
+      "tokens": {
+        "cpu_ar171": 39246,
+        "physical_ar171": 2909,
+        "sequential_ar1": 39246
+      }
+    },
+    {
+      "decode_index": 13,
+      "physical_ar171_vs_cpu_ar171": {
+        "argmax_equal": false,
+        "logit_max_abs": 24.259319305419922,
+        "logit_mean_abs": 3.436290740966797,
+        "state_allclose_count": 0,
+        "state_max_abs": 14.797430038452148,
+        "state_mean_abs_max": 1.071586012840271,
+        "state_tensor_count": 38
+      },
+      "physical_ar171_vs_sequential_ar1": {
+        "argmax_equal": false,
+        "logit_max_abs": 24.02297592163086,
+        "logit_mean_abs": 3.3911054134368896,
+        "state_allclose_count": 0,
+        "state_max_abs": 14.799814224243164,
+        "state_mean_abs_max": 1.0716017484664917,
+        "state_tensor_count": 38
+      },
+      "position": 184,
+      "tokens": {
+        "cpu_ar171": 17354,
+        "physical_ar171": 19260,
+        "sequential_ar1": 17354
+      }
+    },
+    {
+      "decode_index": 14,
+      "physical_ar171_vs_cpu_ar171": {
+        "argmax_equal": false,
+        "logit_max_abs": 22.686920166015625,
+        "logit_mean_abs": 3.3237032890319824,
+        "state_allclose_count": 0,
+        "state_max_abs": 9.784756660461426,
+        "state_mean_abs_max": 0.9839894771575928,
+        "state_tensor_count": 38
+      },
+      "physical_ar171_vs_sequential_ar1": {
+        "argmax_equal": false,
+        "logit_max_abs": 22.694225311279297,
+        "logit_mean_abs": 3.312173843383789,
+        "state_allclose_count": 0,
+        "state_max_abs": 9.863245010375977,
+        "state_mean_abs_max": 0.9842569231987,
+        "state_tensor_count": 38
+      },
+      "position": 185,
+      "tokens": {
+        "cpu_ar171": 342,
+        "physical_ar171": 1703,
+        "sequential_ar1": 342
+      }
+    },
+    {
+      "decode_index": 15,
+      "physical_ar171_vs_cpu_ar171": {
+        "argmax_equal": false,
+        "logit_max_abs": 36.50083923339844,
+        "logit_mean_abs": 4.628268241882324,
+        "state_allclose_count": 0,
+        "state_max_abs": 8.29403305053711,
+        "state_mean_abs_max": 0.9419423341751099,
+        "state_tensor_count": 38
+      },
+      "physical_ar171_vs_sequential_ar1": {
+        "argmax_equal": false,
+        "logit_max_abs": 36.58588790893555,
+        "logit_mean_abs": 4.657033920288086,
+        "state_allclose_count": 0,
+        "state_max_abs": 8.29403305053711,
+        "state_mean_abs_max": 0.9385619759559631,
+        "state_tensor_count": 38
+      },
+      "position": 186,
+      "tokens": {
+        "cpu_ar171": 43,
+        "physical_ar171": 2165,
+        "sequential_ar1": 43
+      }
+    }
+  ],
   "models": {
     "ar171_sha256": "55674c5d5937ea442551b4d9a063630a2e6105f8171e02cbfe5b7a134d9c5db6",
     "ar1_sha256": "40e0e0bf4e0ba0076402b6bcd78496485c7b93117aeb2867968dd421cb2c3eb4",
@@ -1618,6 +2115,6 @@
     "reason": "Accepted physical AR1 runners retained state only in process memory and preserved generated token output, not raw 38-state tensors; cleanup ended the process."
   },
   "schema_version": 1,
-  "sequential_ar1_171_seconds": 71.21748423576355,
-  "session_create_seconds": 7.1597230434417725
+  "sequential_ar1_171_seconds": 147.96720099449158,
+  "session_create_seconds": 83.62335157394409
 }

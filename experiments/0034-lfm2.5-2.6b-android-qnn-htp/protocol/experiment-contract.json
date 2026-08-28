@@ -96,6 +96,68 @@
       0,
       171
     ],
+    "max16_sequences": {
+      "coherent_partial": true,
+      "cpu_ar171": [
+        4695,
+        10966,
+        622,
+        310,
+        1561,
+        267,
+        37139,
+        9527,
+        8771,
+        836,
+        1703,
+        2165,
+        39246,
+        17354,
+        342,
+        43
+      ],
+      "first_divergence_index": 4,
+      "matching_prefix_tokens": 4,
+      "physical_ar171": [
+        4695,
+        10966,
+        622,
+        310,
+        5272,
+        267,
+        2014,
+        116311,
+        9516,
+        28817,
+        374,
+        278,
+        2909,
+        19260,
+        1703,
+        2165
+      ],
+      "physical_decoded": "The user wants me to write a self-contained technical recommendation for the team comparing three local",
+      "reference_decoded": "The user wants me to read a fictional engineering brief about three local inference engines (C",
+      "reference_equal": false,
+      "sequential_ar1": [
+        4695,
+        10966,
+        622,
+        310,
+        1561,
+        267,
+        37139,
+        9527,
+        8771,
+        836,
+        1703,
+        2165,
+        39246,
+        17354,
+        342,
+        43
+      ]
+    },
     "next_argmax": {
       "cpu_ar171": 4695,
       "physical_ar171": 4695,
@@ -139,6 +201,37 @@
     "retained_sequential_physical_ar1_state": false,
     "selected_phase_transition": "AR171 load once, preserve state, free; CPU cache conversion; AR1 load once for decode",
     "state_tensor_count": 38
+  },
+  "ar1_max16_resume_readiness": {
+    "context_count": 1,
+    "context_reloads": 0,
+    "context_streaming": false,
+    "evidence": "results/qnn-prefill-ar171-ar1-max16-readiness/result.json",
+    "first_divergence_index": 4,
+    "host_x86_htp_max1": {
+      "context_loaded": true,
+      "expected": 4695,
+      "graph_loaded": true,
+      "output_argmax": 4695,
+      "request_seconds_diagnostic": 751.048
+    },
+    "max_new_tokens": 16,
+    "numerical_equivalence": false,
+    "phone_access": false,
+    "phone_authorized": false,
+    "physical_execution": false,
+    "physical_reference_matching_prefix_tokens": 4,
+    "stage": {
+      "elf_preflight": true,
+      "hash_check": true,
+      "manifest_sha256": "be9eaff06ea5846794b2ea6b689d2accba88ff0ce50835aa67395eed7dc72ea6",
+      "payload_bytes": 1932854438,
+      "payload_files": 53,
+      "runner_sha256": "659fa97a84d789d0630051d5ff0031d494820de6517e34cccfcb6d116edf9758",
+      "stage_metadata_sha256": "c77ed599e25e913a93fe53c0cbea15977ce306d76d02d74130e78da6fdf4f88e"
+    },
+    "start_position": 171,
+    "start_token": 597
   },
   "authorized_architecture_aware_route": {
     "aot_options_required": [
@@ -806,7 +899,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "Physical AR171-to-AR1 phase diagnostic cleaned absent and released phone.lock. No rerun or campaign pending review.",
+  "phone_boundary": "No phone access occurred for AR1 max16 resume readiness. Await review and explicit Pi priority.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -905,7 +998,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "performance_engineering_physical_ar171_ar1_phase_switch_diagnostic_passed",
+  "status": "performance_engineering_ar1_max16_resume_from_physical_prefill_ready_not_authorized",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",

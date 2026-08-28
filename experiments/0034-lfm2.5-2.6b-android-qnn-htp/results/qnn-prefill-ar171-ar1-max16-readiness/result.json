@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "classification": "host_prepared_ar1_in_process_max16_resume_from_physical_ar171_state_not_phone_executed",
+  "authorization_status":"not authorized for phone execution; pending independent review and explicit Pi priority",
+  "physical_state_source": {
+    "source_evidence":"results/qnn-prefill-ar171-phone-runtime-diagnostic/raw/output/Result_0",
+    "state_tensors":38,
+    "finite_and_layout_valid":true,
+    "physical_reproduction_check":"All 60 raw outputs are byte-identical between the standalone AR171 diagnostic and phase-switch AR171 execution.",
+    "byte_identical_output_files":60,
+    "physical_state_fidelity_warning":"Only 3/38 physical-vs-CPU prefill states meet rtol=0.02/atol=0.02; max absolute delta 10586.69 with localized layer2/head5/position76 outliers."
+  },
+  "cpu_max16_validation": {
+    "start_token":597,
+    "start_position":171,
+    "physical_ar171_state_tokens":[4695,10966,622,310,5272,267,2014,116311,9516,28817,374,278,2909,19260,1703,2165],
+    "cpu_ar171_state_tokens":[4695,10966,622,310,1561,267,37139,9527,8771,836,1703,2165,39246,17354,342,43],
+    "sequential_ar1_state_tokens":[4695,10966,622,310,1561,267,37139,9527,8771,836,1703,2165,39246,17354,342,43],
+    "matching_prefix_tokens":4,
+    "first_divergence_decode_index":4,
+    "first_divergence_position":175,
+    "physical_token_at_first_divergence":5272,
+    "reference_token_at_first_divergence":1561,
+    "matching_indices":[0,1,2,3,5],
+    "physical_route_decoded_with_endpoint597":"The user wants me to write a self-contained technical recommendation for the team comparing three local",
+    "cpu_reference_decoded_with_endpoint597":"The user wants me to read a fictional engineering brief about three local inference engines (C",
+    "physical_route_sanity":"coherent partial continuation despite reference divergence",
+    "reference_equality":false,
+    "all_step_state_and_logit_deltas":"results/qnn-prefill-ar171-to-ar1-host-bridge/result.json#generation_step_comparisons",
+    "physical_vs_cpu_step_state_max_abs_range":[2.0738158226013184,14.797430038452148],
+    "physical_vs_cpu_step_logit_max_abs_range":[5.812641143798828,36.50083923339844],
+    "numerical_equivalence":false
+  },
+  "custom_runner": {
+    "source":"phone/direct_lfm2_qnn_runner.cpp",
+    "resume_behavior":"Load all 38 bridged states and validate position/mask during setup; load one AR1 QNN context once; for each token CPU-dequantize one embedding row, execute one HTP graph, update all states in process, and CPU-reduce 22 logit chunks.",
+    "context_count":1,
+    "context_reloads":0,
+    "context_streaming":false,
+    "android_runner_sha256":"659fa97a84d789d0630051d5ff0031d494820de6517e34cccfcb6d116edf9758",
+    "host_runner_sha256":"d5c3846e4b847e7552d692986550a9bbbe9afbb4238f4d280627f8698e059c7a",
+    "host_x86_htp_max1": {
+      "context_loaded":true,
+      "graph_loaded":true,
+      "input_state_loaded":true,
+      "token":597,
+      "position":171,
+      "output_argmax":4695,
+      "expected_argmax":4695,
+      "argmax_equal":true,
+      "setup_seconds":8.9859,
+      "request_seconds":751.048,
+      "interpretation":"x86 HTP emulator functional proof and impractical-runtime bound only; max16 was intentionally not run."
+    }
+  },
+  "ignored_android_stage": {
+    "path_outside_git":".local/qnn-prefill/resume-max16-phone-stage",
+    "payload_files":53,
+    "payload_bytes":1932854438,
+    "stage_metadata_sha256":"c77ed599e25e913a93fe53c0cbea15977ce306d76d02d74130e78da6fdf4f88e",
+    "manifest_sha256":"be9eaff06ea5846794b2ea6b689d2accba88ff0ce50835aa67395eed7dc72ea6",
+    "context_sha256":"76ba15e7fd95e5e13e92be0e88e8e6bbd3123f2b993b6986c9dac8800a9bf212",
+    "runner_sha256":"659fa97a84d789d0630051d5ff0031d494820de6517e34cccfcb6d116edf9758",
+    "resume_input_files":41,
+    "all_local_hashes_verified":true,
+    "elf_preflight":true
+  },
+  "proposed_phone_gate": {
+    "scope":"One AR1 process, one context load, max16 greedy continuation from retained physical AR171 state, start token597 at position171.",
+    "runner_script":"tools/run_ar1_resume_phone_diagnostic.sh",
+    "runner_script_sha256":"d38d8ced9c3b3dd77cb72930841d263776ef52b0ffea671548f7e1146bd057a2",
+    "expected_first_token":4695,
+    "later_reference_equality_required":false,
+    "success_criterion":"All state/logit outputs remain finite, runner completes without context reload, token IDs are in vocabulary, and decoded partial text is coherent; every divergence from CPU sequence is retained.",
+    "evidence":"Raw token output before decode, provider/context proof, per-run timings, process memory/thermal, cleanup and lock lifecycle.",
+    "not_in_scope":["prefill timing","reference equality beyond expected first token","numerical equivalence","output quality score","medium/long prompts","campaign","registry"]
+  },
+  "claim_boundary":"Host CPU max16 divergence/fidelity diagnostics, custom-runner x86 HTP max1 functional proof, and ignored phone-stage readiness only. No new phone execution or performance campaign."
+}

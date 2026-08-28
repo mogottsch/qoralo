@@ -2,7 +2,7 @@
 
 ## Status
 
-**The physical AR171→AR1 phase-switch route is operational. One HTP graph consumed all 171 prompt tokens, its 38 physical states were converted on CPU, the AR171 process/context exited, and a separately loaded AR1 HTP graph produced next argmax 4695 from token 597 at position 171. Prefill accelerator time was 4.967 seconds; AR1 accelerator time was 1.048 seconds. Severe state drift remains, and CPU input preparation is excluded, so this is a bounded operability diagnostic—not numerical equivalence, canonical TTFT, or a campaign.**
+**The physical AR171→AR1 phase switch works for one decode token, and a max16 in-process AR1 continuation is host-prepared. The retained physical prefill state yields the same first four CPU-decoded tokens as references, then diverges at token five while remaining coherent. The custom runner loads the AR1 context once and carries all 38 states without reload; x86 HTP proves its first resumed token is 4695. Severe drift remains, so the planned phone gate tests coherent operability—not reference equality or numerical equivalence.**
 
 This is a separate accelerator arm. It preserves `0029` CPU viability and `0033` CPU/OpenCL campaign evidence without modifying either experiment.
 
@@ -229,4 +229,22 @@ Detailed phase profiles report:
 
 Peak sampled process VmHWM was 1,577,640 KiB for prefill and 1,575,268 KiB for AR1. Both are process-only measurements. Raw phase outputs, QNN profiles, separate lifecycle timings, bridge-input hashes, memory, thermal/power, provider, and cleanup evidence are retained in [`results/qnn-prefill-ar171-ar1-phone-phase-switch-diagnostic/`](results/qnn-prefill-ar171-ar1-phone-phase-switch-diagnostic/). The scoped process/root were absent and the lock released.
 
-This is not a loaded dual-context route: contexts are mutually exclusive across one explicit phase transition. It proves one continuation token and greedy agreement only; severe localized state drift remains. No numerical-equivalence, text-generation, canonical-TTFT, statistical-performance, campaign, or registry claim is made. FP16/uFxp16 state, registered/device-resident memory, reduced logit return, and coarse declared hybrid partitions remain later candidates.
+This is not a loaded dual-context route: contexts are mutually exclusive across one explicit phase transition. It proves one continuation token and greedy agreement only; severe localized state drift remains. No numerical-equivalence, text-generation, canonical-TTFT, statistical-performance, campaign, or registry claim is made.
+
+## In-process AR1 max16 continuation readiness
+
+CPU generation from the retained physical AR171 state is now extended for 16 AR1 steps in [`results/qnn-prefill-ar171-ar1-max16-readiness/`](results/qnn-prefill-ar171-ar1-max16-readiness/). Its continuation token sequence starts `[4695, 10966, 622, 310]`, matching CPU-AR171 and sequential-AR1 references for four tokens, then diverges at decode index 4 / position 175: physical state chooses 5272 while both references choose 1561. Index 5 briefly realigns at token 267, after which the sequences mostly diverge. Per-step state/logit deltas are retained; physical-versus-CPU logit maximum deltas reach 36.50.
+
+With endpoint token 597 included, the physical-state CPU continuation decodes to:
+
+> The user wants me to write a self-contained technical recommendation for the team comparing three local
+
+The CPU reference decodes to:
+
+> The user wants me to read a fictional engineering brief about three local inference engines (C
+
+Both are coherent partial continuations, but they are not equal. The divergence prevents any fidelity-equivalence claim.
+
+The custom direct-QNN runner can now load all 38 bridged states from raw files, validate position 171 and the exact mask, load one AR1 context once, and greedily update state in process for up to 16 tokens. A bounded x86 HTP max1 probe loaded the context/graph and produced 4695; its 751-second runtime makes max16 emulation impractical. The ignored Android stage contains 53 payloads totaling 1,932,854,438 bytes, with context SHA-256 `76ba15e7fd95e5e13e92be0e88e8e6bbd3123f2b993b6986c9dac8800a9bf212`, runner SHA-256 `659fa97a84d789d0630051d5ff0031d494820de6517e34cccfcb6d116edf9758`, and passing hashes/ELF preflight.
+
+No phone run occurred for max16 readiness. A later bounded physical gate may test finite, coherent continuation and must retain every divergence; it cannot require reference equality or claim numerical equivalence. FP16/uFxp16 state, registered/device-resident memory, reduced logit return, and coarse declared hybrid partitions remain later candidates.

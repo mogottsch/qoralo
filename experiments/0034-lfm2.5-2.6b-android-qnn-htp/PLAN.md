@@ -96,11 +96,15 @@
 84. Ran one authorized phase-switch diagnostic: AR171 loaded/executed/preserved and exited, CPU bridge converted physical state, then AR1 loaded and executed one continuation token.
 85. Verified 60 finite/size-valid outputs in each phase and physical argmax transition 597→4695; retained severe pre-existing fidelity risk.
 86. Preserved separate QNN load/execute/accelerator profiles, host walls, bridge input hashes, process memory, thermal/provider, and cleanup/lock evidence.
+87. Extended CPU AR1 continuation from physical/CPU-AR171/sequential states for max16. Physical-state tokens match the references for four steps, diverge at step 5, briefly realign, then mostly diverge; all per-step drift is retained.
+88. Adapted the custom runner to load physical bridged state, validate position/mask, load one AR1 context once, and update all 38 states in process without reload.
+89. Host x86 HTP max1 resume produced 4695; max16 was skipped because one emulator call took 751 seconds.
+90. Built a hash/ELF-bound 53-file ignored Android max16 resume stage without phone access.
 
 ## In progress: performance engineering
 
-1. Commit and independently review the bounded physical explicit phase-switch evidence; do not rerun.
-2. Build a reset-isolated integrated route that times initial CPU embedding preparation and bounded multi-token AR1 decode before any campaign.
+1. Commit and independently review max16 in-process AR1 resume readiness and divergence evidence.
+2. If explicitly prioritized, run one bounded physical max16 coherence diagnostic; reference equality is not a success criterion.
 3. Evaluate lower-precision/device-resident state and reduced-logit routes; keep CPU/GPU/HTP boundaries explicit.
 4. Do not campaign until the fastest sensible complete route is selected and reset-isolated.
 
