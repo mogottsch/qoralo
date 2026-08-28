@@ -1,6 +1,5 @@
 package dev.vibevoice.podcast.runtime
 
-import android.annotation.SuppressLint
 import dev.vibevoice.podcast.model.ModelRoute
 import dev.vibevoice.podcast.model.VerifiedModelPack
 import kotlinx.coroutines.Dispatchers
@@ -9,25 +8,32 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 
-/** JNI is supplied by the verified Gemma pack; absence or failure is terminal for this route. */
+/** JNI/runtime is supplied by the installed APK; the verified Gemma pack contains data only. */
 class GemmaLiteRtGpuEngine : LlmEngine {
     private var handle = 0L
+    override var provenance: RuntimeProvenance? = null
+        private set
 
-    @SuppressLint("UnsafeDynamicallyLoadedCode") // Entrypoint is size/hash verified immediately before loading.
     override suspend fun load(pack: VerifiedModelPack) = withContext(Dispatchers.IO) {
         requireRoute(pack, ModelRoute.GEMMA_4_E2B_LITERT_GPU)
         try {
-            System.load(pack.entrypoint.absolutePath)
+            NativeAppRuntime.ensureLoaded()
             handle = GemmaNative.create(pack.root.absolutePath)
             if (handle == 0L) throw InferenceRouteException("Gemma LiteRT GPU initialization returned no engine")
+            provenance = validateProvenance(
+                GemmaNative.provenance(handle),
+                expectedModel = "GEMMA_4_E2B",
+                expectedBackend = "LITERT_GPU",
+                requiredComponents = setOf("model", "tokenizer", "gpu_delegate"),
+            )
         } catch (error: Throwable) {
+            close()
             throw InferenceRouteException("Gemma 4 E2B LiteRT GPU failed to initialize", error)
         }
     }
 
     override suspend fun createOutline(sources: List<SourceMaterial>, instructions: String): EpisodeOutline {
-        val result = generate("outline", requestJson(sources, instructions).toString())
-        val json = JSONObject(result)
+        val json = JSONObject(generate("outline", requestJson(sources, instructions).toString()))
         val chapters = json.getJSONArray("chapters")
         return EpisodeOutline(
             title = json.getString("title"),
@@ -67,6 +73,7 @@ class GemmaLiteRtGpuEngine : LlmEngine {
     override fun close() {
         if (handle != 0L) runCatching { GemmaNative.destroy(handle) }
         handle = 0L
+        provenance = null
     }
 
     private fun requestJson(sources: List<SourceMaterial>, instructions: String) = JSONObject()
@@ -75,18 +82,26 @@ class GemmaLiteRtGpuEngine : LlmEngine {
         .put("sources", JSONArray(sources.map { JSONObject().put("id", it.id).put("title", it.title).put("text", it.text) }))
 }
 
-/** JNI is supplied by the verified Supertonic pack and must execute the external-context QNN/HTP route. */
+/** APK-supplied JNI/runtime executes QNN/HTP; the verified Supertonic pack contains data only. */
 class SupertonicQnnHtpEngine : TtsEngine {
     private var handle = 0L
+    override var provenance: RuntimeProvenance? = null
+        private set
 
-    @SuppressLint("UnsafeDynamicallyLoadedCode") // Entrypoint is size/hash verified immediately before loading.
     override suspend fun load(pack: VerifiedModelPack, voiceId: String) = withContext(Dispatchers.IO) {
         requireRoute(pack, ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP)
         try {
-            System.load(pack.entrypoint.absolutePath)
+            NativeAppRuntime.ensureLoaded()
             handle = SupertonicNative.create(pack.root.absolutePath, voiceId)
             if (handle == 0L) throw InferenceRouteException("Supertonic QNN initialization returned no engine")
+            provenance = validateProvenance(
+                SupertonicNative.provenance(handle),
+                expectedModel = "SUPERTONIC_3_EXTERNAL_CONTEXT",
+                expectedBackend = "QNN_HTP",
+                requiredComponents = setOf("duration_context", "text_context", "vector_context", "vocoder_context", "htp"),
+            )
         } catch (error: Throwable) {
+            close()
             throw InferenceRouteException("Supertonic external-context QNN/HTP failed to initialize", error)
         }
     }
@@ -97,11 +112,13 @@ class SupertonicQnnHtpEngine : TtsEngine {
         val temporary = File(output.parentFile, ".${output.name}.tmp")
         temporary.delete()
         try {
-            val result = SupertonicNative.renderCompleteChapter(handle, chapter.id, chapter.text, temporary.absolutePath)
-                ?: throw InferenceRouteException("Supertonic returned no chapter metadata")
+            if (!SupertonicNative.renderCompleteChapter(handle, chapter.id, chapter.text, temporary.absolutePath)) {
+                throw InferenceRouteException("Supertonic rejected the complete chapter")
+            }
             if (!temporary.isFile || temporary.length() == 0L) throw InferenceRouteException("Supertonic emitted no chapter WAV")
-            if (!temporary.renameTo(output)) throw InferenceRouteException("Could not commit chapter WAV")
-            AudioMetadata(result.sampleRateHz, result.channelCount, result.frameCount, result.sha256)
+            val metadata = WavInspector.inspectSupertonicOutput(temporary)
+            AtomicArtifactCommit.commit(temporary, output)
+            metadata
         } catch (error: Throwable) {
             temporary.delete()
             throw InferenceRouteException("Complete-chapter Supertonic QNN/HTP synthesis failed; no splitting or fallback was attempted", error)
@@ -111,6 +128,45 @@ class SupertonicQnnHtpEngine : TtsEngine {
     override fun close() {
         if (handle != 0L) runCatching { SupertonicNative.destroy(handle) }
         handle = 0L
+        provenance = null
+    }
+}
+
+private fun validateProvenance(
+    raw: String?,
+    expectedModel: String,
+    expectedBackend: String,
+    requiredComponents: Set<String>,
+): RuntimeProvenance {
+    val json = try { JSONObject(raw ?: error("Native runtime returned no provenance")) } catch (error: Throwable) {
+        throw InferenceRouteException("Native runtime provenance is invalid", error)
+    }
+    val components = json.getJSONArray("readyComponents").let { array ->
+        (0 until array.length()).map(array::getString).toSet()
+    }
+    val value = RuntimeProvenance(
+        runtimeApiVersion = json.getInt("runtimeApiVersion"),
+        model = json.getString("model"),
+        backend = json.getString("backend"),
+        runtimeVersion = json.getString("runtimeVersion"),
+        cpuFallbackEnabled = json.getBoolean("cpuFallbackEnabled"),
+        readyComponents = components,
+    )
+    if (value.runtimeApiVersion != 1 || value.model != expectedModel || value.backend != expectedBackend ||
+        value.cpuFallbackEnabled || !components.containsAll(requiredComponents)
+    ) throw InferenceRouteException("Native runtime did not prove the required $expectedBackend route readiness")
+    return value
+}
+
+private object NativeAppRuntime {
+    @Volatile private var loaded = false
+
+    @Synchronized
+    fun ensureLoaded() {
+        if (!loaded) {
+            System.loadLibrary("podcast_runtime")
+            loaded = true
+        }
     }
 }
 
@@ -120,14 +176,14 @@ private fun requireRoute(pack: VerifiedModelPack, expected: ModelRoute) {
 
 private object GemmaNative {
     @JvmStatic external fun create(packRoot: String): Long
+    @JvmStatic external fun provenance(handle: Long): String?
     @JvmStatic external fun generate(handle: Long, mode: String, requestJson: String): String?
     @JvmStatic external fun destroy(handle: Long)
 }
 
-data class NativeAudioResult(val sampleRateHz: Int, val channelCount: Int, val frameCount: Long, val sha256: String)
-
 private object SupertonicNative {
     @JvmStatic external fun create(packRoot: String, voiceId: String): Long
-    @JvmStatic external fun renderCompleteChapter(handle: Long, chapterId: String, text: String, outputWav: String): NativeAudioResult?
+    @JvmStatic external fun provenance(handle: Long): String?
+    @JvmStatic external fun renderCompleteChapter(handle: Long, chapterId: String, text: String, outputWav: String): Boolean
     @JvmStatic external fun destroy(handle: Long)
 }

@@ -1,9 +1,17 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
     id("com.google.devtools.ksp")
 }
+
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.isFile) file.inputStream().use(::load)
+}
+fun pinnedHash(name: String): String = localProperties.getProperty(name, "").replace("\\", "\\\\").replace("\"", "\\\"")
 
 android {
     namespace = "dev.vibevoice.podcast"
@@ -15,6 +23,8 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "0.1.0-internal"
+        buildConfigField("String", "GEMMA_MANIFEST_SHA256", "\"${pinnedHash("gemma.manifest.sha256")}\"")
+        buildConfigField("String", "SUPERTONIC_MANIFEST_SHA256", "\"${pinnedHash("supertonic.manifest.sha256")}\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -38,6 +48,7 @@ android {
     kotlinOptions { jvmTarget = "17" }
     buildFeatures { compose = true; buildConfig = true }
     packaging.resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
+    sourceSets["main"].jniLibs.srcDir("runtime-libs")
 
     testOptions {
         unitTests.isIncludeAndroidResources = true
