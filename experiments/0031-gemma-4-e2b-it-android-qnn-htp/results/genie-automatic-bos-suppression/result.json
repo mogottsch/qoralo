@@ -1,0 +1,82 @@
+{
+  "attempt04_diagnosis": {
+    "bound_prompt_tokens": 170,
+    "effective_extra_leading_bos_count": 1,
+    "runtime_prompt_tokens": 171,
+    "source_result": "results/android-qnn-physical-viability-attempt-04/result.json"
+  },
+  "bundle": {
+    "config_sha256": "f8008e047443d70c0db32c7775dba8a1a958f7c838bd2683f33b4d7a8a457eba",
+    "context_sha256": "7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394",
+    "runtime_manifest_sha256": "e74f21a3478146b9afe332a42b3e39ec4b9c3dc38280bfab8ff94cce01172096"
+  },
+  "claim_boundary": "QAIRT 2.49.40 source and shipped examples/documentation define negative bos-token as the no-prepend sentinel, and the LUT encoder inserts BOS only for nonnegative values. The corrected private config sets bos-token=-1. The pinned tokenizer independently reproduces the exact committed 170-token, single-BOS sequence from unchanged canonical rendered bytes. Therefore the host-derived effective sequence is exactly the bound sequence with no automatic prefix. This is host proof; a later locked physical gate must confirm Genie's runtime profile/log reports the same 170-token identity.",
+  "classification": "positive_host_genie_automatic_bos_suppression_and_effective_token_proof",
+  "correction": {
+    "bos_token_config_after": -1,
+    "bos_token_config_before": 2,
+    "canonical_workload_bytes_changed": false,
+    "config_path": "gemma4-e2b-htp-cl4096-greedy.json",
+    "model_or_context_changed": false,
+    "rendered_prompt_bytes_changed": false,
+    "source_semantics": {
+      "lut_prepends_only_when_bos_nonnegative": true,
+      "negative_bos_is_sentinel": true,
+      "shipped_documentation_uses_negative_bos_to_suppress_prefix": true,
+      "shipped_negative_bos_example_present": true
+    },
+    "tokenizer_changed": false
+  },
+  "effective_short_identity": {
+    "first_token_ids": [
+      2,
+      105,
+      9731,
+      107,
+      3048,
+      659,
+      496,
+      2263
+    ],
+    "host_effective_sequence_exact": true,
+    "leading_bos_count": 1,
+    "matches_committed_token_ids_byte_for_byte": true,
+    "rendered_sha256": "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a",
+    "token_count": 170,
+    "token_ids_int32le_sha256": "31a85f9c813266bbbb3505a04a226a9b184882b636cc2f6f67193a6b1eb2ad78",
+    "tokenizer_sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f"
+  },
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "next_gate": "Rebuild/hash the private stage, obtain independent review and a new explicit phone handoff, then confirm one bounded run reports exactly 170 prompt tokens and no extra BOS before any campaign.",
+  "qairt_source_provenance": {
+    "context_cpp": {
+      "bytes": 3705,
+      "path": "/home/moritz/opt/qairt/2.49.40.260810/examples/Genie/Genie/src/qualla/context.cpp",
+      "sha256": "2e46999f7e519b321120ffc2f614c57805958a823fc15f1efa8acbc997a2c62b"
+    },
+    "lut_cpp": {
+      "bytes": 10241,
+      "path": "/home/moritz/opt/qairt/2.49.40.260810/examples/Genie/Genie/src/qualla/encoders/text-encoders/LUT.cpp",
+      "sha256": "ff7a399f9c14fb20ba21495a2dc51f025d6f88a86148f85b7682ee38ae43bc0f"
+    },
+    "prefix_quant_docs": {
+      "bytes": 19935,
+      "path": "/home/moritz/opt/qairt/2.49.40.260810/docs/QAIRT-Docs/Genie/general/tutorials/dialog/prefix_quant/prefix_quant.html",
+      "sha256": "725e5af3538ee6132f5ccdcd218f90a9f2d694571ea0b483b40e6faa1b73a2ff"
+    },
+    "standalone_sampler_example": {
+      "bytes": 433,
+      "path": "/home/moritz/opt/qairt/2.49.40.260810/examples/Genie/configs/standalone-sampler.json",
+      "sha256": "4a04629be725c5cef11719252253ac2755dc001102a9ae2cb04eb70783956598"
+    }
+  },
+  "requested": {
+    "campaign": false,
+    "inference": false,
+    "phone_access": false,
+    "phone_lock": false,
+    "physical_htp_execution": false
+  },
+  "schema_version": 1,
+  "status": "automatic_bos_suppressed_host_proven_stage_rebuild_required"
+}

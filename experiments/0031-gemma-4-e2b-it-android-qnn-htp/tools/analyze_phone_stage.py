@@ -10,7 +10,7 @@ from pathlib import Path
 EXP = Path(__file__).resolve().parents[1]
 BUNDLE = EXP / ".local/runtime-bundle"
 STAGE = EXP / ".local/phone-stage"
-OUT = EXP / "results/position-id-corrected-phone-stage/result.json"
+OUT = EXP / "results/canonical-bos-corrected-phone-stage/result.json"
 EXPECTED_CONTEXT = "7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394"
 EXPECTED_SHORT = "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a"
 CONTEXT_NAME = "models/weight_sharing_model_ar128_ar1_cl4096_scl512_1_of_1.serialized.bin"
@@ -36,6 +36,9 @@ def main() -> None:
         raise RuntimeError("stage canonical short prompt mismatch")
     if manifest["viability_output_ceiling_tokens"] != 16 or manifest["canonical_campaign"]:
         raise RuntimeError("stage is not the bounded 16-token gate")
+    config = json.loads((STAGE / "gemma4-e2b-htp-cl4096-greedy.json").read_text())
+    if config["dialog"]["context"]["bos-token"] != -1:
+        raise RuntimeError("stage does not suppress Genie's automatic BOS")
     if manifest["adb_used"] or manifest["phone_lock_acquired"]:
         raise RuntimeError("host-only stage preparation boundary violated")
     if not manifest["stage_completeness_check_passed"]:
@@ -80,10 +83,10 @@ def main() -> None:
     result = {
         "schema_version": 1,
         "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
-        "classification": "positive_host_position_id_corrected_phone_stage_preparation",
-        "status": "position_id_binding_corrected_stage_ready_phone_handoff_required",
+        "classification": "positive_host_canonical_bos_corrected_phone_stage_preparation",
+        "status": "canonical_bos_corrected_stage_ready_phone_handoff_required",
         "claim_boundary": (
-            "The private stage is complete, permission-hardened, and hash-bound to the cache- and positional-name-corrected context, "
+            "The private stage is complete, permission-hardened, and hash-bound to the cache/position-ID-corrected context and source-proven automatic-BOS suppression, "
             "exact runtime dependencies, canonical short prompt, and 16-token gate. Preparation and validation "
             "used no ADB and did not acquire phone.lock. This is not phone identity, context loading, physical HTP "
             "execution, no-fallback, output, or performance evidence."
@@ -102,6 +105,10 @@ def main() -> None:
             "source_bundle_manifest_sha256": bundle_manifest_hash,
             "corrected_context_sha256": EXPECTED_CONTEXT,
             "position_id_binding_corrected": True,
+            "bos_token_config": -1,
+            "automatic_bos_suppressed": True,
+            "host_effective_short_token_count": 170,
+            "host_effective_short_leading_bos_count": 1,
             "canonical_short_rendered_sha256": EXPECTED_SHORT,
             "viability_output_ceiling_tokens": 16,
             "canonical_campaign": False,

@@ -85,7 +85,7 @@ def main() -> None:
                 "version": 1,
                 "size": 4096,
                 "n-vocab": 262144,
-                "bos-token": 2,
+                "bos-token": -1,
                 "eos-token": [1, 106],
                 "pad-token": 0,
             },

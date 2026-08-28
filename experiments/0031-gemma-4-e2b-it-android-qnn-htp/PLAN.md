@@ -52,7 +52,11 @@ The global positional binding is now corrected host-side by a numerically identi
 
 The one authorized attempt-04 physical gate succeeded under `phone.lock`: verified SM8550 QnnHtp context deserialization, two successful AR128 prompt-graph executions, fifteen successful AR1 decode-graph executions, 16 generated tokens, coherent UTF-8 output, nonempty profile, scoped cleanup, and no QNN CPU-backend/runtime-fallback marker. This proves bounded physical HTP transformer inference but is not yet canonical campaign evidence.
 
-The run revealed a fatal effective-prompt mismatch: the bound rendering has 170 tokens and one BOS, while Genie reports 171 prompt tokens and logs a `[2, 2, ...]` prefix whose tail matches the bound sequence. The active next step is host-only: suppress the runtime's automatic extra BOS without rewriting canonical workload bytes, prove exact effective-token identity, rebuild/hash the stage, commit/report, and obtain a new explicit handoff. Do not access ADB, retry, or start a campaign before that handoff. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
+The run revealed a fatal effective-prompt mismatch: the bound rendering has 170 tokens and one BOS, while Genie reports 171 prompt tokens and logs a `[2, 2, ...]` prefix whose tail matches the bound sequence.
+
+The host correction now passes. Hash-bound QAIRT source parses negative `bos-token` and inserts an automatic BOS only for nonnegative values; shipped examples/documentation use `-1` as the suppression sentinel. The rebuilt config sets `bos-token: -1`, and the pinned tokenizer reproduces the exact committed 170-token single-BOS sequence byte-for-byte from unchanged rendered prompt bytes. The private bundle and 17-file stage are rebuilt and hash/permission/dependency verified without ADB or `phone.lock`.
+
+The active next step is independent review and a new explicit handoff for one bounded physical confirmation of exactly 170 runtime prompt tokens and one leading BOS. Do not access ADB, retry, or start a campaign before that handoff. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
 
 ## Stop conditions
 

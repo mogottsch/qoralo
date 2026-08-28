@@ -107,7 +107,7 @@ class ContractTest(unittest.TestCase):
     def test_historical_transform_blocker_and_active_no_execution_claim(self) -> None:
         blocker = json.loads((EXP / "results/transform-blocker/result.json").read_text())
         self.assertEqual(
-            "physical_qnn_htp_inference_positive_canonical_campaign_blocked_on_extra_bos",
+            "canonical_bos_corrected_stage_ready_phone_handoff_required",
             self.contract["status"],
         )
         active = self.contract["conversion_blocker"]
@@ -121,7 +121,11 @@ class ContractTest(unittest.TestCase):
             "passed_host_dual_conversion_recompile_name_set_and_stage_validation",
             active["position_id_binding_correction_gate"],
         )
-        self.assertIn("automatic extra BOS", active["next_gate"])
+        self.assertEqual(
+            "passed_host_source_semantics_exact_170_token_identity_and_stage_validation",
+            active["automatic_bos_suppression_gate"],
+        )
+        self.assertIn("exactly 170 runtime prompt tokens", active["next_gate"])
         self.assertFalse(blocker["android_execution"])
         self.assertFalse(blocker["qnn_htp_execution"])
         self.assertFalse(blocker["compiled_context_created"])
@@ -149,6 +153,8 @@ class ContractTest(unittest.TestCase):
             EXP / "results/gemma4-sm8550-runtime-bundle",
             EXP / "results/cache-corrected-phone-stage",
             EXP / "results/position-id-corrected-phone-stage",
+            EXP / "results/genie-automatic-bos-suppression",
+            EXP / "results/canonical-bos-corrected-phone-stage",
             EXP / "results/android-qnn-physical-viability-attempt-01",
             EXP / "results/android-qnn-physical-viability-attempt-02",
             EXP / "results/android-qnn-physical-viability-attempt-03",
@@ -288,6 +294,8 @@ class ContractTest(unittest.TestCase):
         self.assertEqual("QnnHtp", result["runtime"]["backend"])
         self.assertEqual("greedy", result["runtime"]["sampling"])
         self.assertEqual(2048, result["runtime"]["max_new_tokens"])
+        self.assertEqual(-1, result["runtime"]["bos_token_config"])
+        self.assertTrue(result["runtime"]["automatic_bos_suppressed"])
         self.assertEqual(
             "7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394",
             result["runtime"]["context_sha256"],
@@ -340,6 +348,26 @@ class ContractTest(unittest.TestCase):
         self.assertEqual(0, result["outcome"]["generated_tokens"])
         self.assertEqual("absent", result["stage"]["remote_cleanup_status"])
         self.assertFalse(result["gate"]["further_retry_performed"])
+
+    def test_genie_automatic_bos_suppression_is_source_proven_host_only(self) -> None:
+        result = json.loads(
+            (EXP / "results/genie-automatic-bos-suppression/result.json").read_text()
+        )
+        self.assertEqual(
+            "positive_host_genie_automatic_bos_suppression_and_effective_token_proof",
+            result["classification"],
+        )
+        self.assertEqual(2, result["correction"]["bos_token_config_before"])
+        self.assertEqual(-1, result["correction"]["bos_token_config_after"])
+        self.assertFalse(result["correction"]["canonical_workload_bytes_changed"])
+        self.assertTrue(result["correction"]["source_semantics"]["negative_bos_is_sentinel"])
+        self.assertTrue(result["correction"]["source_semantics"]["lut_prepends_only_when_bos_nonnegative"])
+        self.assertEqual(170, result["effective_short_identity"]["token_count"])
+        self.assertEqual(1, result["effective_short_identity"]["leading_bos_count"])
+        self.assertTrue(result["effective_short_identity"]["matches_committed_token_ids_byte_for_byte"])
+        self.assertFalse(result["requested"]["phone_access"])
+        self.assertFalse(result["requested"]["inference"])
+        self.assertFalse(result["requested"]["campaign"])
 
     def test_cache_corrected_phone_stage_is_ready_without_phone_access(self) -> None:
         result = json.loads(
@@ -438,6 +466,24 @@ class ContractTest(unittest.TestCase):
         self.assertFalse(result["gate"]["canonical_campaign"])
         self.assertFalse(result["gate"]["further_retry_performed"])
 
+    def test_canonical_bos_corrected_stage_is_ready_without_phone_access(self) -> None:
+        result = json.loads(
+            (EXP / "results/canonical-bos-corrected-phone-stage/result.json").read_text()
+        )
+        self.assertEqual(
+            "positive_host_canonical_bos_corrected_phone_stage_preparation",
+            result["classification"],
+        )
+        self.assertEqual(-1, result["stage"]["bos_token_config"])
+        self.assertTrue(result["stage"]["automatic_bos_suppressed"])
+        self.assertEqual(170, result["stage"]["host_effective_short_token_count"])
+        self.assertEqual(1, result["stage"]["host_effective_short_leading_bos_count"])
+        self.assertTrue(result["stage"]["all_manifest_files_verified"])
+        self.assertTrue(result["stage"]["sha256sums_complete_and_verified"])
+        self.assertFalse(result["authorization_boundary"]["adb_used"])
+        self.assertFalse(result["authorization_boundary"]["phone_lock_acquired"])
+        self.assertFalse(result["authorization_boundary"]["phone_run_authorized_now"])
+
     def test_bounded_phone_gate_script_holds_lock_and_cleans_scope(self) -> None:
         script = (EXP / "tools/run_phone_viability.sh").read_text()
         self.assertIn('artifacts/locks/phone.lock', script)
@@ -448,6 +494,7 @@ class ContractTest(unittest.TestCase):
         self.assertIn("remote-hash-check.txt", script)
         self.assertIn("libQnnHtpNetRunExtensions.so", script)
         self.assertIn("EXPECTED_CONTEXT_SHA256", script)
+        self.assertIn('manifest.get("bos_token_config") != -1', script)
         self.assertIn("7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394", script)
         self.assertIn("stage_completeness_check_passed", (EXP / "tools/prepare_phone_stage.py").read_text())
 

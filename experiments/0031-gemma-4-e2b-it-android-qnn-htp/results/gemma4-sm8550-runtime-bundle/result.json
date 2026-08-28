@@ -2,9 +2,9 @@
   "bundle_manifest": {
     "bytes": 2582,
     "large_or_restricted_files_stored_outside_git": true,
-    "sha256": "88b35a4c566059e3ff1c0485a82f98813fdb3bf5133196a76bf5585ff15396a8"
+    "sha256": "e74f21a3478146b9afe332a42b3e39ec4b9c3dc38280bfab8ff94cce01172096"
   },
-  "claim_boundary": "A private Genie bundle now binds the cache-corrected SM8550/v73 context, exact tokenizer, QnnHtp runtime libraries, and source-derived token/PLE LUTs whose sampled dequantization error is within half of one uint8 step. This is host preparation only; no Android staging, physical HTP loading/execution, text, or performance is claimed.",
+  "claim_boundary": "A private Genie bundle now binds the cache/position-ID-corrected SM8550/v73 context, exact tokenizer, QnnHtp runtime libraries, source-proven automatic-BOS suppression, and source-derived token/PLE LUTs whose sampled dequantization error is within half of one uint8 step. This is host preparation only; no Android staging, physical HTP loading/execution, text, or performance is claimed.",
   "classification": "positive_host_runtime_bundle_and_lut_fidelity",
   "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
   "formula": {
@@ -105,13 +105,15 @@
       1,
       128
     ],
+    "automatic_bos_suppressed": true,
     "backend": "QnnHtp",
+    "bos_token_config": -1,
     "cache_groups": [
       "past_ global KV dim 512",
       "swa_ sliding-window KV dim 256/window 512"
     ],
     "config_path": "gemma4-e2b-htp-cl4096-greedy.json",
-    "config_sha256": "1728487331b7d4a0f5619a523a23cc954eca05ce9e1a819b85287079e5523951",
+    "config_sha256": "f8008e047443d70c0db32c7775dba8a1a958f7c838bd2683f33b4d7a8a457eba",
     "context_length": 4096,
     "context_sha256": "7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394",
     "max_new_tokens": 2048,

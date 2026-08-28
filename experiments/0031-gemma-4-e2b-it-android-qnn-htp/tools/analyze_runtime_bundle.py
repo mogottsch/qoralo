@@ -75,6 +75,8 @@ def main() -> None:
         raise RuntimeError("runtime backend is not QnnHtp")
     if dialog["context"]["size"] != 4096 or dialog["max-num-tokens"] != 2048:
         raise RuntimeError("runtime context/output ceiling mismatch")
+    if dialog["context"]["bos-token"] != -1:
+        raise RuntimeError("runtime automatic BOS suppression is not configured")
     if not dialog["sampler"]["greedy"] or dialog["sampler"]["top-k"] != 1:
         raise RuntimeError("runtime sampling is not greedy")
     if dialog["engine"]["model"]["binary"]["ctx-bins"] != [f"./{context_name}"]:
@@ -104,8 +106,9 @@ def main() -> None:
         "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
         "classification": "positive_host_runtime_bundle_and_lut_fidelity",
         "claim_boundary": (
-            "A private Genie bundle now binds the cache-corrected SM8550/v73 context, exact tokenizer, QnnHtp runtime libraries, "
-            "and source-derived token/PLE LUTs whose sampled dequantization error is within half of one uint8 step. "
+            "A private Genie bundle now binds the cache/position-ID-corrected SM8550/v73 context, exact tokenizer, "
+            "QnnHtp runtime libraries, source-proven automatic-BOS suppression, and source-derived token/PLE LUTs "
+            "whose sampled dequantization error is within half of one uint8 step. "
             "This is host preparation only; no Android staging, physical HTP loading/execution, text, or performance is claimed."
         ),
         "route": manifest["route"],
@@ -135,6 +138,8 @@ def main() -> None:
             "tokenizer_sha256": EXPECTED_TOKENIZER,
             "sampling": "greedy",
             "max_new_tokens": 2048,
+            "bos_token_config": -1,
+            "automatic_bos_suppressed": True,
             "cache_groups": ["past_ global KV dim 512", "swa_ sliding-window KV dim 256/window 512"],
             "runtime_files": {
                 name: file_manifest[name]

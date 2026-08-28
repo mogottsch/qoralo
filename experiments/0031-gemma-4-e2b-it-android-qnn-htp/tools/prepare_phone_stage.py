@@ -56,7 +56,10 @@ def main() -> None:
     if missing:
         raise RuntimeError(f"incomplete QnnHtp runtime stage, missing: {missing}")
     if sha256(STAGE / CONTEXT_NAME) != EXPECTED_CONTEXT_SHA256:
-        raise RuntimeError("phone stage does not contain the cache-corrected context")
+        raise RuntimeError("phone stage does not contain the corrected context")
+    config = json.loads((STAGE / "gemma4-e2b-htp-cl4096-greedy.json").read_text())
+    if config["dialog"]["context"]["bos-token"] != -1:
+        raise RuntimeError("phone stage does not suppress Genie's automatic BOS")
 
     script = """log create log1 verbose genie-verbose.log
 profile create profile1
@@ -93,6 +96,8 @@ exit
         "required_runtime_files": required_runtime_files,
         "stage_completeness_check_passed": True,
         "corrected_context_sha256": EXPECTED_CONTEXT_SHA256,
+        "bos_token_config": -1,
+        "automatic_bos_suppressed": True,
         "files": files,
     }
     (STAGE / "stage-manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")

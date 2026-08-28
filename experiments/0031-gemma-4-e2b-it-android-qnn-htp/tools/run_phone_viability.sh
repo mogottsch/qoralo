@@ -14,7 +14,9 @@ python3 - "$STAGE/stage-manifest.json" "$EXPECTED_CONTEXT_SHA256" <<'PY'
 import json, sys
 manifest = json.load(open(sys.argv[1]))
 if manifest.get("corrected_context_sha256") != sys.argv[2]:
-    raise SystemExit("phone stage is not bound to the cache-corrected context")
+    raise SystemExit("phone stage is not bound to the corrected context")
+if manifest.get("bos_token_config") != -1 or not manifest.get("automatic_bos_suppressed"):
+    raise SystemExit("phone stage does not suppress Genie's automatic BOS")
 PY
 exec 9>"$REPO/artifacts/locks/phone.lock"
 flock -n 9 || { echo "phone lock busy" >&2; exit 75; }
