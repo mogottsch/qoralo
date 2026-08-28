@@ -58,7 +58,11 @@ The host correction now passes. Hash-bound QAIRT source parses negative `bos-tok
 
 The one authorized attempt-05 physical confirmation succeeded. Genie reports exactly 170 prompt tokens; both truncated runtime token logs begin with one BOS `[2, 105, 9731, ...]` and match the committed sequence through every complete logged token. Two AR128 and fifteen AR1 QnnDsp graph calls completed with status 0, no QNN CPU/runtime-fallback marker appeared, and Genie returned a coherent 16-token output. Cleanup and lock release passed.
 
-The viability path is now proven through exact effective canonical short-input identity, but the run retained the explicitly bounded 16-token ceiling. The active next gate is independent review followed by a separate decision on authorizing the full 2048-ceiling campaign. Do not access ADB or start a campaign before that approval. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
+The viability path is now proven through exact effective canonical short-input identity, but the run retained the explicitly bounded 16-token ceiling.
+
+The host-only canonical harness is now prepared: one `genie-app` process, one Registry-backed shared HTP engine retained by an unqueried keeper dialog, and a fresh dialog/independent `EngineState` for each first+5/5/5 request. It binds exact prompt hashes, 2048 ceilings, unique per-request outputs/profiles, setup and fresh-dialog timings, per-request timeout monitoring, failure isolation, raw-first capture, memory/thermal evidence, and scoped cleanup. Source and stage hashes/permissions pass; no ADB was used.
+
+The active next gate is independent review followed by a separate decision on authorizing the full campaign. Do not access ADB or start the campaign before that approval and explicit phone handoff. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
 
 ## Stop conditions
 

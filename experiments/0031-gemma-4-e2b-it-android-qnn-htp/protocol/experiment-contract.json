@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
-  "status": "physical_qnn_htp_canonical_input_confirmed_campaign_authorization_required",
+  "status": "canonical_campaign_harness_ready_review_and_phone_approval_required",
   "question": "Can Gemma 4 E2B IT run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Gemma 4 E2B IT text generation only",
@@ -149,7 +149,8 @@
     "phone_attempt_04": "passed_bounded_physical_qnn_htp_inference_16_tokens_but_effective_prompt_has_one_extra_bos",
     "automatic_bos_suppression_gate": "passed_host_source_semantics_exact_170_token_identity_and_stage_validation",
     "phone_attempt_05": "passed_bounded_physical_qnn_htp_inference_with_exact_170_token_single_bos_effective_input",
-    "next_gate": "After independent review, request a separate explicit decision on the full canonical 2048-ceiling campaign; no ADB or campaign before approval.",
+    "canonical_campaign_harness_gate": "passed_host_shared_engine_keeper_fresh_dialog_isolation_and_stage_validation",
+    "next_gate": "Independent review followed by separate explicit canonical-campaign approval and phone-priority handoff; no ADB or campaign before approval.",
     "workbench_checkpoint": "Any paid Workbench compile/link job requires a separate explicit cost/terms decision."
   },
   "transform_result": {
@@ -501,8 +502,31 @@
     "remote_cleanup_verified_absent": true,
     "further_retry_performed": false
   },
+  "canonical_campaign_harness_readiness": {
+    "result_path": "results/canonical-campaign-harness-readiness/result.json",
+    "classification": "positive_host_canonical_campaign_harness_and_fresh_dialog_isolation_plan",
+    "process_count": 1,
+    "loaded_engine_count": 1,
+    "shared_engine": true,
+    "keeper_dialog_unqueried": true,
+    "request_isolation": "fresh_dialog_per_logical_request_with_independent_engine_state",
+    "request_count": 16,
+    "first_request": {"tier": "short", "count": 1},
+    "warm_requests": {"short": 5, "medium": 5, "long": 5},
+    "tier_order": ["short", "short", "short", "short", "short", "short", "medium", "medium", "medium", "medium", "medium", "long", "long", "long", "long", "long"],
+    "max_new_tokens": 2048,
+    "request_timeout_seconds": 1800,
+    "unique_output_per_request": true,
+    "unique_profile_per_request": true,
+    "automatic_retry": false,
+    "all_stage_files_verified": true,
+    "permissions_verified": true,
+    "adb_used": false,
+    "campaign_executed": false,
+    "campaign_authorized": false
+  },
   "campaign_gate": {
-    "phone_priority": "bounded viability is proven; blocked on independent review and separate explicit canonical-campaign approval; no ADB before approval",
+    "phone_priority": "host campaign harness is ready; blocked on independent review and separate explicit canonical-campaign approval; no ADB before approval",
     "bounded_viability_first": true,
     "canonical_after_viability": true,
     "request_isolation_candidate": "One loaded Genie Engine with a fresh Dialog per logical request, or a proven full GenieDialog_reset; measure reset/creation separately and reject retained KV/prefix reuse.",

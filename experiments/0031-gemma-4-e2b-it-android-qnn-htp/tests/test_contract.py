@@ -107,7 +107,7 @@ class ContractTest(unittest.TestCase):
     def test_historical_transform_blocker_and_active_no_execution_claim(self) -> None:
         blocker = json.loads((EXP / "results/transform-blocker/result.json").read_text())
         self.assertEqual(
-            "physical_qnn_htp_canonical_input_confirmed_campaign_authorization_required",
+            "canonical_campaign_harness_ready_review_and_phone_approval_required",
             self.contract["status"],
         )
         active = self.contract["conversion_blocker"]
@@ -125,7 +125,11 @@ class ContractTest(unittest.TestCase):
             "passed_host_source_semantics_exact_170_token_identity_and_stage_validation",
             active["automatic_bos_suppression_gate"],
         )
-        self.assertIn("separate explicit decision", active["next_gate"])
+        self.assertEqual(
+            "passed_host_shared_engine_keeper_fresh_dialog_isolation_and_stage_validation",
+            active["canonical_campaign_harness_gate"],
+        )
+        self.assertIn("separate explicit canonical-campaign approval", active["next_gate"])
         self.assertFalse(blocker["android_execution"])
         self.assertFalse(blocker["qnn_htp_execution"])
         self.assertFalse(blocker["compiled_context_created"])
@@ -160,6 +164,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/android-qnn-physical-viability-attempt-03",
             EXP / "results/android-qnn-physical-viability-attempt-04",
             EXP / "results/android-qnn-physical-viability-attempt-05",
+            EXP / "results/canonical-campaign-harness-readiness",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():
@@ -510,6 +515,33 @@ class ContractTest(unittest.TestCase):
         self.assertFalse(result["gate"]["canonical_campaign"])
         self.assertFalse(result["gate"]["further_retry_performed"])
 
+    def test_canonical_campaign_harness_is_host_ready_but_unapproved(self) -> None:
+        result = json.loads(
+            (EXP / "results/canonical-campaign-harness-readiness/result.json").read_text()
+        )
+        self.assertEqual(
+            "positive_host_canonical_campaign_harness_and_fresh_dialog_isolation_plan",
+            result["classification"],
+        )
+        campaign = result["campaign"]
+        self.assertEqual(1, campaign["process_count"])
+        self.assertEqual(1, campaign["loaded_engine_count"])
+        self.assertTrue(campaign["shared_engine"])
+        self.assertTrue(campaign["keeper_dialog_unqueried"])
+        self.assertEqual("fresh_dialog_per_logical_request_with_independent_engine_state", campaign["request_isolation"])
+        self.assertEqual(16, campaign["request_count"])
+        self.assertEqual({"short": 6, "medium": 5, "long": 5}, campaign["tier_counts"])
+        self.assertEqual(2048, campaign["max_new_tokens"])
+        self.assertEqual(1800, campaign["request_timeout_seconds"])
+        self.assertTrue(result["failure_isolation"]["unique_output_per_request"])
+        self.assertTrue(result["failure_isolation"]["unique_profile_per_request"])
+        self.assertFalse(result["failure_isolation"]["automatic_retry"])
+        self.assertTrue(all(result["host_source_proof"].values()))
+        self.assertTrue(all(value for key, value in result["runner"].items() if isinstance(value, bool)))
+        self.assertFalse(result["requested"]["adb"])
+        self.assertFalse(result["requested"]["campaign_execution"])
+        self.assertFalse(result["authorization"]["campaign_authorized"])
+
     def test_bounded_phone_gate_script_holds_lock_and_cleans_scope(self) -> None:
         script = (EXP / "tools/run_phone_viability.sh").read_text()
         self.assertIn('artifacts/locks/phone.lock', script)
@@ -526,6 +558,8 @@ class ContractTest(unittest.TestCase):
 
     def test_phone_and_campaign_are_not_claimed(self) -> None:
         gate = self.contract["campaign_gate"]
+        self.assertFalse(self.contract["canonical_campaign_harness_readiness"]["campaign_executed"])
+        self.assertFalse(self.contract["canonical_campaign_harness_readiness"]["campaign_authorized"])
         self.assertTrue(gate["bounded_viability_first"])
         self.assertTrue(gate["canonical_after_viability"])
         self.assertIn("no ADB", gate["phone_priority"])
