@@ -55,10 +55,35 @@ class DurableDispatchTest {
         assertEquals(EpisodePhase.LOCKED, repository.episode(episode).phase)
     }
 
-    @Test fun repeatedProcessDeathBeforeClaimEventuallyTerminalizesQueue() = runTest {
+    @Test fun frequentPollsBeforeClaimTimeoutNeitherRelaunchNorConsumeAttempt() = runTest {
         val (episode, _) = queuedScript(true)
-        val dispatcher = QueuedCommandDispatcher(repository, this) { /* process accepted launch but died before claim */ }
-        repeat(QueuedCommandDispatcher.MAX_DISPATCH_ATTEMPTS + 1) { dispatcher.dispatchOnce() }
+        var launches = 0
+        val dispatcher = QueuedCommandDispatcher(repository, this, { now }) { launches++ }
+        dispatcher.dispatchOnce()
+        repeat(7) {
+            now += QueuedCommandDispatcher.POLL_MS
+            dispatcher.dispatchOnce()
+        }
+        val queued = repository.latestJob(episode)!!
+        assertEquals(JobStatus.QUEUED, queued.status)
+        assertEquals(1, queued.dispatchAttemptCount)
+        assertEquals(1, launches)
+    }
+
+    @Test fun unacknowledgedCommandExhaustsOnlyAfterThreeElapsedTimeoutWindows() = runTest {
+        val (episode, _) = queuedScript(true)
+        var launches = 0
+        val dispatcher = QueuedCommandDispatcher(repository, this, { now }) { launches++ }
+        dispatcher.dispatchOnce()
+        repeat(2) {
+            now += QueuedCommandDispatcher.CLAIM_TIMEOUT_MS
+            dispatcher.dispatchOnce()
+        }
+        assertEquals(JobStatus.QUEUED, repository.latestJob(episode)?.status)
+        assertEquals(3, repository.latestJob(episode)?.dispatchAttemptCount)
+        assertEquals(3, launches)
+        now += QueuedCommandDispatcher.CLAIM_TIMEOUT_MS
+        dispatcher.dispatchOnce()
         assertEquals(JobStatus.FAILED, repository.latestJob(episode)?.status)
         assertEquals(EpisodePhase.FAILED, repository.episode(episode).phase)
         assertTrue(repository.queuedJobs().isEmpty())
