@@ -2,7 +2,7 @@
 
 ## Status
 
-**Bounded physical QNN HTP inference with exact canonical short-input identity remains proven. The failed shared-engine campaign design is replaced host-side with one proven non-shared dialog/context plus full `GenieDialog_reset` isolation between requests. Hash-bound QAIRT source shows reset clears conversation counters, pending/last tokens, HTP KV/model state, sampler, and dialog state without remapping. The rebuilt first+5/5/5 stage passes all checks, but no corrected campaign has run; independent review and new explicit approval are required.**
+**The canonical physical QNN HTP campaign is complete. One verified SM8550 QnnHtp process loaded the corrected context once and completed one first short plus five warm short, five medium, and five long requests with exact prompts, 2048 ceilings, and 15 source-proven full resets. All 15,275 QnnDsp graph completions returned status 0 with no QNN CPU/runtime-fallback marker. Short and medium outputs pass the narrow sanity check; all long outputs hit 2048 tokens and fail sanity for severe repetition collapse. Performance evidence is valid, but this is not a quality-acceptance claim.**
 
 This experiment is a separate HTP arm for the model studied in `0025`. It does not rewrite or relabel the CPU/GPU evidence there.
 
@@ -127,7 +127,13 @@ No retry was authorized from that failure. Host analysis found that stock standa
 
 The rebuilt script contains one dialog create/free, 16 exact first+5/5/5 queries, 15 resets, 2048 ceilings, unique raw outputs, and cumulative profile snapshots after each request. Reset durations will be extracted separately from verbose API timestamps; query durations remain in profile events. The timeout/raw/lock/hash/cleanup runner is unchanged. All private stage hashes and modes pass without ADB. See [`results/canonical-campaign-reset-harness-readiness/result.json`](results/canonical-campaign-reset-harness-readiness/result.json).
 
-No corrected campaign is authorized or executed. Independent review and a new explicit campaign/phone handoff are required. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
+The authorized reset-isolated campaign then completed successfully under the full `phone.lock`, hash, raw-capture, thermal, and cleanup lifecycle. The context deserialized exactly once; one dialog served all 16 requests; 15 reset API calls completed; all cumulative profile snapshots grew by exactly one query event. Physical logs contain 117 successful AR128 and 15,158 successful AR1 completions, totaling 15,275 status-0 QnnDsp executions, with zero QNN CPU-backend, runtime-fallback, or fatal validation markers.
+
+The first short request produced 474 tokens. All five warm short requests produced 474 tokens and had median TTFT 462,433 µs, prefill 367.647 tokens/s, and decode 19.584 tokens/s. All five medium requests produced 418 tokens and had median TTFT 907,551 µs, prefill 654.879 tokens/s, and decode 18.774 tokens/s. All five long requests reached the 2,048-token ceiling and had median TTFT 2,605,519 µs, prefill 740.741 tokens/s, and decode 17.828 tokens/s. Setup initialization was 2,111,957 µs. Peak sampled process PSS was 344,201 kB and VmHWM was 460,200 kB; HTP-private memory remains unreported.
+
+Every greedy output was byte-identical within its tier. Short and medium exact outputs pass the narrow sensible-text check. The long exact output fails it: it collapses into severe repetition through the max-token ceiling. This is a required disclosed output-sanity failure, not grounds to discard valid execution/performance evidence. Battery moved from 58%/35.7°C to 52%/44.0°C while USB-powered; thermal status moved from 0 to 4, with final skin 49.0°C and AP 57.1°C. Cleanup verified the remote path absent and no process remained.
+
+The original 399,795,157-byte provider log is hash-bound and retained losslessly as a deterministic 7.1 MB gzip alongside all profiles and outputs. See [`results/android-qnn-physical-campaign-attempt-02/result.json`](results/android-qnn-physical-campaign-attempt-02/result.json). After independent review, Kate may normalize registry rows with the long-output sanity failure and thermal/memory limitations preserved. This is execution/performance evidence, not correctness, grounding, usefulness, or quality acceptance. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
 
 ## Proof boundary
 

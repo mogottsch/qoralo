@@ -1,0 +1,11 @@
+The core challenge here is to(the system) to analyze the trade-offs presented by the operational brief and provide a clear path forward for the engineering team.
+
+The primary trade-off revolves around performance versus resource management and user experience. The primary decision points revolve around model selection, resource management, and how the system handles state.
+
+First, the distinction between the three inference engines—Cedar, Juniper, Rowan—must be clearly defined based on the specific application's needs. If speed is paramount, the latency profile of the inference time must be prioritized. If stability and consistency are paramount, the stability of the output quality, or the consistency of the resource usage, becomes the deciding factor. Rowan, Juniper, and Cedar must be benchmarked not just on raw speed, but on the trade-off between speed, memory footprint, and output quality for each specific task.
+
+Second, the operational constraints regarding session management and resource management are critical. The system must clearly delineate which metrics are independent. The setup, prompt processing, and token generation must be treated as distinct measurement vectors. The setup phase is distinct from the prompt processing, which is distinct from the token generation phase. These must be measured independently to diagnose bottlenecks accurately.
+
+The most significant recommendation is to isolate the measurement points. The system needs to clearly separate the setup time, the prompt processing time, and the actual token generation time.confusing these metrics will lead to misdiagnosis.
+
+The next step must be a rigorous benchmarking phase. The team needs to establish a clear, repeatable test suite. They must define a clear metric for what "successful performance" looks like for each engine under specific load conditions. This requires defining clear performance metrics for setup time, memory usage, and the throughput for each request, and then systematically testing the trade-offs between these metrics across different workloads. This will allow the team to make a data-driven decision on which engine provides the optimal balance between speed, resource utilization, and performance, ensuring stability, and the final recommendation is based on empirical performance, not just theoretical claims.

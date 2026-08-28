@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
-  "status": "canonical_campaign_reset_harness_ready_review_and_phone_approval_required",
+  "status": "canonical_campaign_complete_long_output_repetition_sanity_failed",
   "question": "Can Gemma 4 E2B IT run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Gemma 4 E2B IT text generation only",
@@ -153,7 +153,8 @@
     "campaign_launch_preflight": "failed_local_exit_126_before_runner_due_non_executable_mode_then_fixed_to_100755",
     "campaign_attempt_01": "failed_before_provider_context_query_shared_engine_standalone_schema_rejected_cache_groups",
     "canonical_campaign_reset_harness_gate": "passed_host_single_dialog_full_reset_source_proof_and_stage_validation",
-    "next_gate": "Independent review followed by a new explicit canonical-campaign approval and phone-priority handoff; no ADB or corrected campaign before approval.",
+    "campaign_attempt_02": "passed_complete_reset_isolated_physical_qnn_htp_campaign_with_long_output_sanity_failure",
+    "next_gate": "Independent evidence review followed by Kate-owned registry normalization with long-output sanity failure and memory/thermal limitations preserved.",
     "workbench_checkpoint": "Any paid Workbench compile/link job requires a separate explicit cost/terms decision."
   },
   "transform_result": {
@@ -592,8 +593,51 @@
     "campaign_executed": false,
     "campaign_authorized": false
   },
+  "physical_campaign_attempt_02": {
+    "result_path": "results/android-qnn-physical-campaign-attempt-02/result.json",
+    "classification": "positive_physical_qnn_htp_canonical_campaign_with_long_output_sanity_failure",
+    "complete": true,
+    "phone_lock_held": true,
+    "device": "Samsung SM-S918B / SM8550 / arm64-v8a",
+    "context_sha256": "7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394",
+    "process_count": 1,
+    "dialog_count": 1,
+    "context_deserialization_count": 1,
+    "request_isolation": "proven_full_in_session_conversation_and_kv_reset",
+    "reset_count": 15,
+    "request_count": 16,
+    "first_request_count": 1,
+    "warm_request_counts": {"short": 5, "medium": 5, "long": 5},
+    "max_new_tokens": 2048,
+    "timed_out_requests": 0,
+    "error_requests": 0,
+    "automatic_retries": 0,
+    "successful_ar128_graph_completions": 117,
+    "successful_ar1_graph_completions": 15158,
+    "successful_qnn_graph_completions": 15275,
+    "qnn_cpu_backend_markers": 0,
+    "runtime_fallback_markers": 0,
+    "setup_init_time_us": 2111957,
+    "warm_medians": {
+      "short": {"ttft_us": 462433, "prefill_tokens_per_second": 367.6470642089844, "decode_tokens_per_second": 19.58441925048828},
+      "medium": {"ttft_us": 907551, "prefill_tokens_per_second": 654.8788452148438, "decode_tokens_per_second": 18.77370262145996},
+      "long": {"ttft_us": 2605519, "prefill_tokens_per_second": 740.74072265625, "decode_tokens_per_second": 17.82817268371582}
+    },
+    "generated_tokens": {"short": 474, "medium": 418, "long": 2048},
+    "output_sanity": {
+      "short": {"looks_sensible": true, "issue_notes": null},
+      "medium": {"looks_sensible": true, "issue_notes": null},
+      "long": {"looks_sensible": false, "issue_notes": "Severe repetition collapse in the exact max-token output."}
+    },
+    "peak_process_vmhwm_kb": 460200,
+    "peak_sampled_total_pss_kb": 344201,
+    "thermal_status_before": 0,
+    "thermal_status_after": 4,
+    "remote_cleanup_verified_absent": true,
+    "registry_publication_pending_kate": true
+  },
   "campaign_gate": {
-    "phone_priority": "single-dialog full-reset harness is ready; blocked on independent review and new explicit campaign approval; no ADB before approval",
+    "phone_priority": "canonical campaign complete; no additional phone run authorized or required",
     "bounded_viability_first": true,
     "canonical_after_viability": true,
     "request_isolation_candidate": "One loaded Genie Engine with a fresh Dialog per logical request, or a proven full GenieDialog_reset; measure reset/creation separately and reject retained KV/prefix reuse.",

@@ -1,0 +1,1062 @@
+{
+  "campaign": {
+    "automatic_retries": 0,
+    "complete": true,
+    "context_deserialization_count": 1,
+    "dialog_count": 1,
+    "error_requests": 0,
+    "first_request_count": 1,
+    "max_new_tokens": 2048,
+    "process_count": 1,
+    "request_count": 16,
+    "request_isolation": "proven_full_in_session_conversation_and_kv_reset",
+    "request_timeout_seconds": 1800,
+    "reset_count": 15,
+    "timed_out_requests": 0,
+    "warm_request_counts": {
+      "long": 5,
+      "medium": 5,
+      "short": 5
+    }
+  },
+  "claim_boundary": "One verified SM8550 QnnHtp process loaded/deserialized the corrected context exactly once and completed the canonical first short plus five warm short/medium/long requests with exact 2048 ceilings. Fifteen source-proven full resets isolated requests without remapping. All 15,275 successful QnnDsp graph completions returned status 0 with no QNN CPU/runtime-fallback marker. Exact outputs/profiles and timing distributions are retained. Short/medium outputs pass the narrow sanity check; every identical long max-token output fails it for severe repetition collapse. This is execution/performance evidence, not a quality acceptance claim.",
+  "classification": "positive_physical_qnn_htp_canonical_campaign_with_long_output_sanity_failure",
+  "device": {
+    "abi": "arm64-v8a",
+    "boot": "1",
+    "device": "dm3q",
+    "fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+    "flash_locked": "1",
+    "manufacturer": "samsung",
+    "model": "SM-S918B",
+    "release": "16",
+    "sdk": "36",
+    "serial": "R5CW81PR8SY",
+    "soc": "SM8550",
+    "verified_boot": "green"
+  },
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "first_request": {
+    "decode_duration_us": 24098574,
+    "decode_rate_first_token_inclusion": null,
+    "decode_rate_first_token_inclusion_reason": "Genie profile does not state whether its rate numerator includes the first token.",
+    "decode_rate_tokens_per_second": 19.62785530090332,
+    "dialog_create_or_reset_duration_ms": 0.0,
+    "generated_tokens": 474,
+    "input_tokens": 170,
+    "ordinal": 0,
+    "output": {
+      "bytes": 2672,
+      "path": "raw/campaign/outputs/first-short-00.txt",
+      "sha256": "52b1f900c9ba15aed1527bd813cbfb630a90b5f02ed66249a7d8737439bd0232"
+    },
+    "output_sanity": {
+      "issue_notes": null,
+      "looks_sensible": true
+    },
+    "prefill_duration_us_derived_from_authoritative_rate": 470730,
+    "prefill_rate_tokens_per_second": 361.1412048339844,
+    "profile_snapshot_path": "raw/campaign/profiles/first-short-00.json",
+    "profile_snapshot_sha256": "2aaf364c36f6a40f4c5fffa11819abd9c251f8ad8898deaeca32d5306042b4ac",
+    "request_class": "first",
+    "request_id": "first-short-00",
+    "request_to_first_token_us": 470796,
+    "reset_duration_in_total_request": false,
+    "stop_reason": "eos",
+    "tier": "short",
+    "total_request_duration_us": 24652811
+  },
+  "memory": {
+    "complete_pss_samples": 285,
+    "limitations": "Process values exclude unreported HTP-private memory; sampled PSS can miss peaks.",
+    "mapped_context_bytes": 1186369536,
+    "method": "0.5 s target /proc status and dumpsys meminfo sampling across setup/campaign",
+    "peak_process_vmhwm_kb": 460200,
+    "peak_sampled_total_pss_kb": 344201,
+    "timestamp_samples": 286
+  },
+  "operating_context": {
+    "battery_after": {
+      "charge_counter": 2407020,
+      "level_percent": 52,
+      "temperature_c": 44.0,
+      "usb_powered": true,
+      "voltage_mv": 3850
+    },
+    "battery_before": {
+      "charge_counter": 2698080,
+      "level_percent": 58,
+      "temperature_c": 35.7,
+      "usb_powered": true,
+      "voltage_mv": 3929
+    },
+    "thermal_after": {
+      "status": 4,
+      "temperatures_c": {
+        "AP": 57.1,
+        "BAT": 44.1,
+        "MAINBATRAW": 44.0,
+        "PA": 56.3,
+        "SKIN": 49.0,
+        "SUBBAT": 0.0,
+        "USB": 38.7
+      }
+    },
+    "thermal_before": {
+      "status": 0,
+      "temperatures_c": {
+        "AP": 37.8,
+        "BAT": 35.7,
+        "MAINBATRAW": 35.6,
+        "PA": 37.4,
+        "SKIN": 35.9,
+        "SUBBAT": 0.0,
+        "USB": 34.3
+      }
+    }
+  },
+  "output_identity_observation": {
+    "all_outputs_identical_within_each_tier": true,
+    "greedy_output_byte_identity_required": false,
+    "unique_hashes_by_tier": {
+      "long": [
+        "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d"
+      ],
+      "medium": [
+        "686c2867447740b8ed7c52096bbf9cbbed9f3e2d62fc5b832e3b1be3841899e7"
+      ],
+      "short": [
+        "52b1f900c9ba15aed1527bd813cbfb630a90b5f02ed66249a7d8737439bd0232"
+      ]
+    }
+  },
+  "publication": {
+    "experiment_evidence_complete": true,
+    "long_output_sanity_failure_must_be_disclosed": true,
+    "quality_acceptance_claim": false,
+    "registry_normalization_owner": "Kate"
+  },
+  "raw_evidence": {
+    "adb-state.txt": {
+      "bytes": 7,
+      "sha256": "c98373c1abef78070f6beef6b4ae4fbf3de348dac280195c7f93441920584af9"
+    },
+    "battery-after.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "battery-after.txt": {
+      "bytes": 15839,
+      "sha256": "cbbf7f1f68b85fb376a847ccfa2933beb773825ae6d35c14baa5440f12ca3002"
+    },
+    "battery-before.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "battery-before.txt": {
+      "bytes": 15859,
+      "sha256": "441c9192d0ff6e86d0dfc77c92aa3d64554e941f4aa8108590bb2c94ef57b488"
+    },
+    "campaign/genie-verbose.log.gz": {
+      "bytes": 7108304,
+      "sha256": "84bb2a028c45d80efbab48678acd8c95e1be0351b92c49f9907058a211d473fd"
+    },
+    "campaign/outputs/first-short-00.txt": {
+      "bytes": 2672,
+      "sha256": "52b1f900c9ba15aed1527bd813cbfb630a90b5f02ed66249a7d8737439bd0232"
+    },
+    "campaign/outputs/warm-long-01.txt": {
+      "bytes": 10027,
+      "sha256": "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d"
+    },
+    "campaign/outputs/warm-long-02.txt": {
+      "bytes": 10027,
+      "sha256": "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d"
+    },
+    "campaign/outputs/warm-long-03.txt": {
+      "bytes": 10027,
+      "sha256": "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d"
+    },
+    "campaign/outputs/warm-long-04.txt": {
+      "bytes": 10027,
+      "sha256": "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d"
+    },
+    "campaign/outputs/warm-long-05.txt": {
+      "bytes": 10027,
+      "sha256": "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d"
+    },
+    "campaign/outputs/warm-medium-01.txt": {
+      "bytes": 2345,
+      "sha256": "686c2867447740b8ed7c52096bbf9cbbed9f3e2d62fc5b832e3b1be3841899e7"
+    },
+    "campaign/outputs/warm-medium-02.txt": {
+      "bytes": 2345,
+      "sha256": "686c2867447740b8ed7c52096bbf9cbbed9f3e2d62fc5b832e3b1be3841899e7"
+    },
+    "campaign/outputs/warm-medium-03.txt": {
+      "bytes": 2345,
+      "sha256": "686c2867447740b8ed7c52096bbf9cbbed9f3e2d62fc5b832e3b1be3841899e7"
+    },
+    "campaign/outputs/warm-medium-04.txt": {
+      "bytes": 2345,
+      "sha256": "686c2867447740b8ed7c52096bbf9cbbed9f3e2d62fc5b832e3b1be3841899e7"
+    },
+    "campaign/outputs/warm-medium-05.txt": {
+      "bytes": 2345,
+      "sha256": "686c2867447740b8ed7c52096bbf9cbbed9f3e2d62fc5b832e3b1be3841899e7"
+    },
+    "campaign/outputs/warm-short-01.txt": {
+      "bytes": 2672,
+      "sha256": "52b1f900c9ba15aed1527bd813cbfb630a90b5f02ed66249a7d8737439bd0232"
+    },
+    "campaign/outputs/warm-short-02.txt": {
+      "bytes": 2672,
+      "sha256": "52b1f900c9ba15aed1527bd813cbfb630a90b5f02ed66249a7d8737439bd0232"
+    },
+    "campaign/outputs/warm-short-03.txt": {
+      "bytes": 2672,
+      "sha256": "52b1f900c9ba15aed1527bd813cbfb630a90b5f02ed66249a7d8737439bd0232"
+    },
+    "campaign/outputs/warm-short-04.txt": {
+      "bytes": 2672,
+      "sha256": "52b1f900c9ba15aed1527bd813cbfb630a90b5f02ed66249a7d8737439bd0232"
+    },
+    "campaign/outputs/warm-short-05.txt": {
+      "bytes": 2672,
+      "sha256": "52b1f900c9ba15aed1527bd813cbfb630a90b5f02ed66249a7d8737439bd0232"
+    },
+    "campaign/profiles/first-short-00.json": {
+      "bytes": 1433,
+      "sha256": "2aaf364c36f6a40f4c5fffa11819abd9c251f8ad8898deaeca32d5306042b4ac"
+    },
+    "campaign/profiles/warm-long-01.json": {
+      "bytes": 10265,
+      "sha256": "7d90441a7dd96d7acbca671d83bb9a71d65a717d8860da928342914566ef7f7a"
+    },
+    "campaign/profiles/warm-long-02.json": {
+      "bytes": 11072,
+      "sha256": "5778525e0e053f6b16be11b1e06d9574b1934d37552fed647750fa71c37d3574"
+    },
+    "campaign/profiles/warm-long-03.json": {
+      "bytes": 11877,
+      "sha256": "3e5c1f322eb0e8de2fb5bffccf34bf7e5a4a4bec2790b726f016a1944ae91eb7"
+    },
+    "campaign/profiles/warm-long-04.json": {
+      "bytes": 12685,
+      "sha256": "17375daf2902ee803ef535ecf51dd2ce44f565d3253fb589139faab7edc353df"
+    },
+    "campaign/profiles/warm-long-05.json": {
+      "bytes": 13491,
+      "sha256": "42cdd248c8a44d1b6b48f6b4c58940961d9e538869c21943f14e89a75d3e97ed"
+    },
+    "campaign/profiles/warm-medium-01.json": {
+      "bytes": 6247,
+      "sha256": "15a8bfab6ec35654ddd51a1d8ce8b2df42950ee1a313488f1842339ce700b500"
+    },
+    "campaign/profiles/warm-medium-02.json": {
+      "bytes": 7050,
+      "sha256": "4021c8ec5b6be1abf246dfef1dfd0eaa69d8f7829e7b224eb4f7a9e31da37257"
+    },
+    "campaign/profiles/warm-medium-03.json": {
+      "bytes": 7853,
+      "sha256": "7cb27f5231bae92a7813ee0707e4411f81025d1fdcf95bb9d673cb61d873ee68"
+    },
+    "campaign/profiles/warm-medium-04.json": {
+      "bytes": 8655,
+      "sha256": "b56a6b84baf5af674bfc99baa6d018500f950a635aef184504ca3be8333d7a06"
+    },
+    "campaign/profiles/warm-medium-05.json": {
+      "bytes": 9457,
+      "sha256": "02e483008f054c0330e9969848b11d3306b1936252cc6490e58611ec9439c76d"
+    },
+    "campaign/profiles/warm-short-01.json": {
+      "bytes": 2235,
+      "sha256": "7374a20e58cee3e6826e50f5ae230694474d82edfdddc9dc2f781ce59e6daf08"
+    },
+    "campaign/profiles/warm-short-02.json": {
+      "bytes": 3037,
+      "sha256": "9dec29becd078e591e848a30074e9ba6c5e676b1abc4bd91fdb04c51426b5fe2"
+    },
+    "campaign/profiles/warm-short-03.json": {
+      "bytes": 3839,
+      "sha256": "5b48fd5c98f4d126409837a162290d0d8afe5440fb12c709f38e06556038a24d"
+    },
+    "campaign/profiles/warm-short-04.json": {
+      "bytes": 4642,
+      "sha256": "11effb84b916ddd636e9326e4d2c74e686a2e53478abdf427e931d9c32cc0efd"
+    },
+    "campaign/profiles/warm-short-05.json": {
+      "bytes": 5445,
+      "sha256": "7acccb6053efa063d47fa4401d733c4d4ca813813d8f5dcf7f994e45257fb072"
+    },
+    "campaign/setup-profile.json": {
+      "bytes": 631,
+      "sha256": "126bf967aca0260fc257cb2836066e2a1590ffd271592759f2e53e6f1d2e9ec7"
+    },
+    "cleanup-status.txt": {
+      "bytes": 7,
+      "sha256": "7925d3e9a9613a093e5eb4054b32aa39de910d2b03ba7e8046c3b4550b8de1e4"
+    },
+    "cleanup.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cleanup.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "exit-code.txt": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "identity.txt": {
+      "bytes": 237,
+      "sha256": "6cc6731865e0f47abb5f749d2d18d784b81b1f90332aed0dc763f1ebb61327b3"
+    },
+    "launcher-exit-code.txt": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "launcher.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "launcher.stdout": {
+      "bytes": 289,
+      "sha256": "6455161614417c10583f6b90f112b754c2c8ffea926775aaa3b5ebfc1b2f3ea1"
+    },
+    "local-hash-check.txt": {
+      "bytes": 613,
+      "sha256": "777f874a396d89f89860ff588ff90faf324e506ef667d1a014fe54bfbe422f23"
+    },
+    "monitor-and-memory.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "monitor-and-memory.txt": {
+      "bytes": 76436,
+      "sha256": "e19a2fa804524e57104012d15faee37b43c2e522084431aed756d5874c9914f7"
+    },
+    "process-after.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pull-campaign.txt": {
+      "bytes": 170,
+      "sha256": "c7232cbe3d664b02a038e5513c2ee6eab8c69f99dbf0a714f2f1b20740b81b5c"
+    },
+    "push.txt": {
+      "bytes": 183,
+      "sha256": "7eb3eadbe89128a03accf958e6aa59fe6e9aa51da7ff13873bb9101c0aaa0aba"
+    },
+    "remote-hash-check.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "remote-hash-check.txt": {
+      "bytes": 613,
+      "sha256": "777f874a396d89f89860ff588ff90faf324e506ef667d1a014fe54bfbe422f23"
+    },
+    "runner.stderr": {
+      "bytes": 106,
+      "sha256": "8fa0826ca9043d016e4e0a174cc301a18f22ca00e1f755942e2916b59e1140ba"
+    },
+    "runner.stdout": {
+      "bytes": 80550,
+      "sha256": "34ba8a46ded5dfc9c84b055e1c77e5f0b8d503c5093bfd7151d0cd0ae2de4dd5"
+    },
+    "runtime-completeness.txt": {
+      "bytes": 176,
+      "sha256": "c2f842f873a149c2d6fe0f45d62e7fcf89ca5822d107f53bcaca610375c46b3f"
+    },
+    "storage-before.txt": {
+      "bytes": 128,
+      "sha256": "d1adefc2bb18645fde2b0afdc9ae2e4549562d865223ec93baad091bb552f144"
+    },
+    "thermal-after.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "thermal-after.txt": {
+      "bytes": 1288,
+      "sha256": "24920d93043ef1163eda73780609881ace4624ef31d9515d6ca1c108661f576a"
+    },
+    "thermal-before.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "thermal-before.txt": {
+      "bytes": 1288,
+      "sha256": "943cbc81773ca5b12a5902e4269a9310466395e906516a1cca9064347f249933"
+    }
+  },
+  "raw_provider_log": {
+    "compressed_bytes": 7108304,
+    "compressed_path": "raw/campaign/genie-verbose.log.gz",
+    "compressed_sha256": "84bb2a028c45d80efbab48678acd8c95e1be0351b92c49f9907058a211d473fd",
+    "compression_reversible": true,
+    "original_bytes": 399795157,
+    "original_sha256": "32f516c5f9775a39bfd003907438ae430bf019d2081e1c76a80bb706377e8baa"
+  },
+  "requests": [
+    {
+      "decode_duration_us": 24098574,
+      "decode_rate_first_token_inclusion": null,
+      "decode_rate_first_token_inclusion_reason": "Genie profile does not state whether its rate numerator includes the first token.",
+      "decode_rate_tokens_per_second": 19.62785530090332,
+      "dialog_create_or_reset_duration_ms": 0.0,
+      "generated_tokens": 474,
+      "input_tokens": 170,
+      "ordinal": 0,
+      "output": {
+        "bytes": 2672,
+        "path": "raw/campaign/outputs/first-short-00.txt",
+        "sha256": "52b1f900c9ba15aed1527bd813cbfb630a90b5f02ed66249a7d8737439bd0232"
+      },
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": true
+      },
+      "prefill_duration_us_derived_from_authoritative_rate": 470730,
+      "prefill_rate_tokens_per_second": 361.1412048339844,
+      "profile_snapshot_path": "raw/campaign/profiles/first-short-00.json",
+      "profile_snapshot_sha256": "2aaf364c36f6a40f4c5fffa11819abd9c251f8ad8898deaeca32d5306042b4ac",
+      "request_class": "first",
+      "request_id": "first-short-00",
+      "request_to_first_token_us": 470796,
+      "reset_duration_in_total_request": false,
+      "stop_reason": "eos",
+      "tier": "short",
+      "total_request_duration_us": 24652811
+    },
+    {
+      "decode_duration_us": 23886762,
+      "decode_rate_first_token_inclusion": null,
+      "decode_rate_first_token_inclusion_reason": "Genie profile does not state whether its rate numerator includes the first token.",
+      "decode_rate_tokens_per_second": 19.80198097229004,
+      "dialog_create_or_reset_duration_ms": 0.0,
+      "generated_tokens": 474,
+      "input_tokens": 170,
+      "ordinal": 1,
+      "output": {
+        "bytes": 2672,
+        "path": "raw/campaign/outputs/warm-short-01.txt",
+        "sha256": "52b1f900c9ba15aed1527bd813cbfb630a90b5f02ed66249a7d8737439bd0232"
+      },
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": true
+      },
+      "prefill_duration_us_derived_from_authoritative_rate": 459680,
+      "prefill_rate_tokens_per_second": 369.8224792480469,
+      "profile_snapshot_path": "raw/campaign/profiles/warm-short-01.json",
+      "profile_snapshot_sha256": "7374a20e58cee3e6826e50f5ae230694474d82edfdddc9dc2f781ce59e6daf08",
+      "request_class": "warm",
+      "request_id": "warm-short-01",
+      "request_to_first_token_us": 459698,
+      "reset_duration_in_total_request": false,
+      "stop_reason": "eos",
+      "tier": "short",
+      "total_request_duration_us": 24369195
+    },
+    {
+      "decode_duration_us": 24092503,
+      "decode_rate_first_token_inclusion": null,
+      "decode_rate_first_token_inclusion_reason": "Genie profile does not state whether its rate numerator includes the first token.",
+      "decode_rate_tokens_per_second": 19.63286590576172,
+      "dialog_create_or_reset_duration_ms": 0.1,
+      "generated_tokens": 474,
+      "input_tokens": 170,
+      "ordinal": 2,
+      "output": {
+        "bytes": 2672,
+        "path": "raw/campaign/outputs/warm-short-02.txt",
+        "sha256": "52b1f900c9ba15aed1527bd813cbfb630a90b5f02ed66249a7d8737439bd0232"
+      },
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": true
+      },
+      "prefill_duration_us_derived_from_authoritative_rate": 462400,
+      "prefill_rate_tokens_per_second": 367.6470642089844,
+      "profile_snapshot_path": "raw/campaign/profiles/warm-short-02.json",
+      "profile_snapshot_sha256": "9dec29becd078e591e848a30074e9ba6c5e676b1abc4bd91fdb04c51426b5fe2",
+      "request_class": "warm",
+      "request_id": "warm-short-02",
+      "request_to_first_token_us": 462433,
+      "reset_duration_in_total_request": false,
+      "stop_reason": "eos",
+      "tier": "short",
+      "total_request_duration_us": 24578944
+    },
+    {
+      "decode_duration_us": 24152100,
+      "decode_rate_first_token_inclusion": null,
+      "decode_rate_first_token_inclusion_reason": "Genie profile does not state whether its rate numerator includes the first token.",
+      "decode_rate_tokens_per_second": 19.58441925048828,
+      "dialog_create_or_reset_duration_ms": 0.0,
+      "generated_tokens": 474,
+      "input_tokens": 170,
+      "ordinal": 3,
+      "output": {
+        "bytes": 2672,
+        "path": "raw/campaign/outputs/warm-short-03.txt",
+        "sha256": "52b1f900c9ba15aed1527bd813cbfb630a90b5f02ed66249a7d8737439bd0232"
+      },
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": true
+      },
+      "prefill_duration_us_derived_from_authoritative_rate": 466310,
+      "prefill_rate_tokens_per_second": 364.5643310546875,
+      "profile_snapshot_path": "raw/campaign/profiles/warm-short-03.json",
+      "profile_snapshot_sha256": "5b48fd5c98f4d126409837a162290d0d8afe5440fb12c709f38e06556038a24d",
+      "request_class": "warm",
+      "request_id": "warm-short-03",
+      "request_to_first_token_us": 466456,
+      "reset_duration_in_total_request": false,
+      "stop_reason": "eos",
+      "tier": "short",
+      "total_request_duration_us": 24646687
+    },
+    {
+      "decode_duration_us": 24321001,
+      "decode_rate_first_token_inclusion": null,
+      "decode_rate_first_token_inclusion_reason": "Genie profile does not state whether its rate numerator includes the first token.",
+      "decode_rate_tokens_per_second": 19.448442459106445,
+      "dialog_create_or_reset_duration_ms": 0.0,
+      "generated_tokens": 474,
+      "input_tokens": 170,
+      "ordinal": 4,
+      "output": {
+        "bytes": 2672,
+        "path": "raw/campaign/outputs/warm-short-04.txt",
+        "sha256": "52b1f900c9ba15aed1527bd813cbfb630a90b5f02ed66249a7d8737439bd0232"
+      },
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": true
+      },
+      "prefill_duration_us_derived_from_authoritative_rate": 461040,
+      "prefill_rate_tokens_per_second": 368.7315673828125,
+      "profile_snapshot_path": "raw/campaign/profiles/warm-short-04.json",
+      "profile_snapshot_sha256": "11effb84b916ddd636e9326e4d2c74e686a2e53478abdf427e931d9c32cc0efd",
+      "request_class": "warm",
+      "request_id": "warm-short-04",
+      "request_to_first_token_us": 461166,
+      "reset_duration_in_total_request": false,
+      "stop_reason": "eos",
+      "tier": "short",
+      "total_request_duration_us": 24809995
+    },
+    {
+      "decode_duration_us": 25628459,
+      "decode_rate_first_token_inclusion": null,
+      "decode_rate_first_token_inclusion_reason": "Genie profile does not state whether its rate numerator includes the first token.",
+      "decode_rate_tokens_per_second": 18.456314086914062,
+      "dialog_create_or_reset_duration_ms": 0.0,
+      "generated_tokens": 474,
+      "input_tokens": 170,
+      "ordinal": 5,
+      "output": {
+        "bytes": 2672,
+        "path": "raw/campaign/outputs/warm-short-05.txt",
+        "sha256": "52b1f900c9ba15aed1527bd813cbfb630a90b5f02ed66249a7d8737439bd0232"
+      },
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": true
+      },
+      "prefill_duration_us_derived_from_authoritative_rate": 480930,
+      "prefill_rate_tokens_per_second": 353.4817810058594,
+      "profile_snapshot_path": "raw/campaign/profiles/warm-short-05.json",
+      "profile_snapshot_sha256": "7acccb6053efa063d47fa4401d733c4d4ca813813d8f5dcf7f994e45257fb072",
+      "request_class": "warm",
+      "request_id": "warm-short-05",
+      "request_to_first_token_us": 481002,
+      "reset_duration_in_total_request": false,
+      "stop_reason": "eos",
+      "tier": "short",
+      "total_request_duration_us": 26137272
+    },
+    {
+      "decode_duration_us": 22827966,
+      "decode_rate_first_token_inclusion": null,
+      "decode_rate_first_token_inclusion_reason": "Genie profile does not state whether its rate numerator includes the first token.",
+      "decode_rate_tokens_per_second": 18.267175674438477,
+      "dialog_create_or_reset_duration_ms": 0.0,
+      "generated_tokens": 418,
+      "input_tokens": 594,
+      "ordinal": 6,
+      "output": {
+        "bytes": 2345,
+        "path": "raw/campaign/outputs/warm-medium-01.txt",
+        "sha256": "686c2867447740b8ed7c52096bbf9cbbed9f3e2d62fc5b832e3b1be3841899e7"
+      },
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": true
+      },
+      "prefill_duration_us_derived_from_authoritative_rate": 947430,
+      "prefill_rate_tokens_per_second": 626.959228515625,
+      "profile_snapshot_path": "raw/campaign/profiles/warm-medium-01.json",
+      "profile_snapshot_sha256": "15a8bfab6ec35654ddd51a1d8ce8b2df42950ee1a313488f1842339ce700b500",
+      "request_class": "warm",
+      "request_id": "warm-medium-01",
+      "request_to_first_token_us": 947870,
+      "reset_duration_in_total_request": false,
+      "stop_reason": "eos",
+      "tier": "medium",
+      "total_request_duration_us": 24142170
+    },
+    {
+      "decode_duration_us": 21986229,
+      "decode_rate_first_token_inclusion": null,
+      "decode_rate_first_token_inclusion_reason": "Genie profile does not state whether its rate numerator includes the first token.",
+      "decode_rate_tokens_per_second": 18.966693878173828,
+      "dialog_create_or_reset_duration_ms": 0.0,
+      "generated_tokens": 418,
+      "input_tokens": 594,
+      "ordinal": 7,
+      "output": {
+        "bytes": 2345,
+        "path": "raw/campaign/outputs/warm-medium-02.txt",
+        "sha256": "686c2867447740b8ed7c52096bbf9cbbed9f3e2d62fc5b832e3b1be3841899e7"
+      },
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": true
+      },
+      "prefill_duration_us_derived_from_authoritative_rate": 918324,
+      "prefill_rate_tokens_per_second": 646.8305053710938,
+      "profile_snapshot_path": "raw/campaign/profiles/warm-medium-02.json",
+      "profile_snapshot_sha256": "4021c8ec5b6be1abf246dfef1dfd0eaa69d8f7829e7b224eb4f7a9e31da37257",
+      "request_class": "warm",
+      "request_id": "warm-medium-02",
+      "request_to_first_token_us": 918500,
+      "reset_duration_in_total_request": false,
+      "stop_reason": "eos",
+      "tier": "medium",
+      "total_request_duration_us": 23029794
+    },
+    {
+      "decode_duration_us": 22046495,
+      "decode_rate_first_token_inclusion": null,
+      "decode_rate_first_token_inclusion_reason": "Genie profile does not state whether its rate numerator includes the first token.",
+      "decode_rate_tokens_per_second": 18.914676666259766,
+      "dialog_create_or_reset_duration_ms": 0.1,
+      "generated_tokens": 418,
+      "input_tokens": 594,
+      "ordinal": 8,
+      "output": {
+        "bytes": 2345,
+        "path": "raw/campaign/outputs/warm-medium-03.txt",
+        "sha256": "686c2867447740b8ed7c52096bbf9cbbed9f3e2d62fc5b832e3b1be3841899e7"
+      },
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": true
+      },
+      "prefill_duration_us_derived_from_authoritative_rate": 904068,
+      "prefill_rate_tokens_per_second": 657.0302124023438,
+      "profile_snapshot_path": "raw/campaign/profiles/warm-medium-03.json",
+      "profile_snapshot_sha256": "7cb27f5231bae92a7813ee0707e4411f81025d1fdcf95bb9d673cb61d873ee68",
+      "request_class": "warm",
+      "request_id": "warm-medium-03",
+      "request_to_first_token_us": 904208,
+      "reset_duration_in_total_request": false,
+      "stop_reason": "eos",
+      "tier": "medium",
+      "total_request_duration_us": 23089982
+    },
+    {
+      "decode_duration_us": 22261205,
+      "decode_rate_first_token_inclusion": null,
+      "decode_rate_first_token_inclusion_reason": "Genie profile does not state whether its rate numerator includes the first token.",
+      "decode_rate_tokens_per_second": 18.73220443725586,
+      "dialog_create_or_reset_duration_ms": 0.1,
+      "generated_tokens": 418,
+      "input_tokens": 594,
+      "ordinal": 9,
+      "output": {
+        "bytes": 2345,
+        "path": "raw/campaign/outputs/warm-medium-04.txt",
+        "sha256": "686c2867447740b8ed7c52096bbf9cbbed9f3e2d62fc5b832e3b1be3841899e7"
+      },
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": true
+      },
+      "prefill_duration_us_derived_from_authoritative_rate": 893970,
+      "prefill_rate_tokens_per_second": 664.4518432617188,
+      "profile_snapshot_path": "raw/campaign/profiles/warm-medium-04.json",
+      "profile_snapshot_sha256": "b56a6b84baf5af674bfc99baa6d018500f950a635aef184504ca3be8333d7a06",
+      "request_class": "warm",
+      "request_id": "warm-medium-04",
+      "request_to_first_token_us": 894553,
+      "reset_duration_in_total_request": false,
+      "stop_reason": "eos",
+      "tier": "medium",
+      "total_request_duration_us": 23284910
+    },
+    {
+      "decode_duration_us": 22212086,
+      "decode_rate_first_token_inclusion": null,
+      "decode_rate_first_token_inclusion_reason": "Genie profile does not state whether its rate numerator includes the first token.",
+      "decode_rate_tokens_per_second": 18.77370262145996,
+      "dialog_create_or_reset_duration_ms": 0.1,
+      "generated_tokens": 418,
+      "input_tokens": 594,
+      "ordinal": 10,
+      "output": {
+        "bytes": 2345,
+        "path": "raw/campaign/outputs/warm-medium-05.txt",
+        "sha256": "686c2867447740b8ed7c52096bbf9cbbed9f3e2d62fc5b832e3b1be3841899e7"
+      },
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": true
+      },
+      "prefill_duration_us_derived_from_authoritative_rate": 907038,
+      "prefill_rate_tokens_per_second": 654.8788452148438,
+      "profile_snapshot_path": "raw/campaign/profiles/warm-medium-05.json",
+      "profile_snapshot_sha256": "02e483008f054c0330e9969848b11d3306b1936252cc6490e58611ec9439c76d",
+      "request_class": "warm",
+      "request_id": "warm-medium-05",
+      "request_to_first_token_us": 907551,
+      "reset_duration_in_total_request": false,
+      "stop_reason": "eos",
+      "tier": "medium",
+      "total_request_duration_us": 23235372
+    },
+    {
+      "decode_duration_us": 114654741,
+      "decode_rate_first_token_inclusion": null,
+      "decode_rate_first_token_inclusion_reason": "Genie profile does not state whether its rate numerator includes the first token.",
+      "decode_rate_tokens_per_second": 17.853635787963867,
+      "dialog_create_or_reset_duration_ms": 0.0,
+      "generated_tokens": 2048,
+      "input_tokens": 1929,
+      "ordinal": 11,
+      "output": {
+        "bytes": 10027,
+        "path": "raw/campaign/outputs/warm-long-01.txt",
+        "sha256": "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d"
+      },
+      "output_sanity": {
+        "issue_notes": "Severe repetition collapse in the exact max-token output.",
+        "looks_sensible": false
+      },
+      "prefill_duration_us_derived_from_authoritative_rate": 2598363,
+      "prefill_rate_tokens_per_second": 742.3905029296875,
+      "profile_snapshot_path": "raw/campaign/profiles/warm-long-01.json",
+      "profile_snapshot_sha256": "7d90441a7dd96d7acbca671d83bb9a71d65a717d8860da928342914566ef7f7a",
+      "request_class": "warm",
+      "request_id": "warm-long-01",
+      "request_to_first_token_us": 2599574,
+      "reset_duration_in_total_request": false,
+      "stop_reason": "max_tokens",
+      "tier": "long",
+      "total_request_duration_us": 118256069
+    },
+    {
+      "decode_duration_us": 113818929,
+      "decode_rate_first_token_inclusion": null,
+      "decode_rate_first_token_inclusion_reason": "Genie profile does not state whether its rate numerator includes the first token.",
+      "decode_rate_tokens_per_second": 17.98496437072754,
+      "dialog_create_or_reset_duration_ms": 0.1,
+      "generated_tokens": 2048,
+      "input_tokens": 1929,
+      "ordinal": 12,
+      "output": {
+        "bytes": 10027,
+        "path": "raw/campaign/outputs/warm-long-02.txt",
+        "sha256": "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d"
+      },
+      "output_sanity": {
+        "issue_notes": "Severe repetition collapse in the exact max-token output.",
+        "looks_sensible": false
+      },
+      "prefill_duration_us_derived_from_authoritative_rate": 2582931,
+      "prefill_rate_tokens_per_second": 746.8259887695312,
+      "profile_snapshot_path": "raw/campaign/profiles/warm-long-02.json",
+      "profile_snapshot_sha256": "5778525e0e053f6b16be11b1e06d9574b1934d37552fed647750fa71c37d3574",
+      "request_class": "warm",
+      "request_id": "warm-long-02",
+      "request_to_first_token_us": 2584280,
+      "reset_duration_in_total_request": false,
+      "stop_reason": "max_tokens",
+      "tier": "long",
+      "total_request_duration_us": 117011223
+    },
+    {
+      "decode_duration_us": 114819726,
+      "decode_rate_first_token_inclusion": null,
+      "decode_rate_first_token_inclusion_reason": "Genie profile does not state whether its rate numerator includes the first token.",
+      "decode_rate_tokens_per_second": 17.82817268371582,
+      "dialog_create_or_reset_duration_ms": 0.1,
+      "generated_tokens": 2048,
+      "input_tokens": 1929,
+      "ordinal": 13,
+      "output": {
+        "bytes": 10027,
+        "path": "raw/campaign/outputs/warm-long-03.txt",
+        "sha256": "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d"
+      },
+      "output_sanity": {
+        "issue_notes": "Severe repetition collapse in the exact max-token output.",
+        "looks_sensible": false
+      },
+      "prefill_duration_us_derived_from_authoritative_rate": 2604150,
+      "prefill_rate_tokens_per_second": 740.74072265625,
+      "profile_snapshot_path": "raw/campaign/profiles/warm-long-03.json",
+      "profile_snapshot_sha256": "3e5c1f322eb0e8de2fb5bffccf34bf7e5a4a4bec2790b726f016a1944ae91eb7",
+      "request_class": "warm",
+      "request_id": "warm-long-03",
+      "request_to_first_token_us": 2605519,
+      "reset_duration_in_total_request": false,
+      "stop_reason": "max_tokens",
+      "tier": "long",
+      "total_request_duration_us": 117942070
+    },
+    {
+      "decode_duration_us": 120224494,
+      "decode_rate_first_token_inclusion": null,
+      "decode_rate_first_token_inclusion_reason": "Genie profile does not state whether its rate numerator includes the first token.",
+      "decode_rate_tokens_per_second": 17.026493072509766,
+      "dialog_create_or_reset_duration_ms": 0.2,
+      "generated_tokens": 2048,
+      "input_tokens": 1929,
+      "ordinal": 14,
+      "output": {
+        "bytes": 10027,
+        "path": "raw/campaign/outputs/warm-long-04.txt",
+        "sha256": "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d"
+      },
+      "output_sanity": {
+        "issue_notes": "Severe repetition collapse in the exact max-token output.",
+        "looks_sensible": false
+      },
+      "prefill_duration_us_derived_from_authoritative_rate": 2613795,
+      "prefill_rate_tokens_per_second": 738.0073852539062,
+      "profile_snapshot_path": "raw/campaign/profiles/warm-long-04.json",
+      "profile_snapshot_sha256": "17375daf2902ee803ef535ecf51dd2ce44f565d3253fb589139faab7edc353df",
+      "request_class": "warm",
+      "request_id": "warm-long-04",
+      "request_to_first_token_us": 2615427,
+      "reset_duration_in_total_request": false,
+      "stop_reason": "max_tokens",
+      "tier": "long",
+      "total_request_duration_us": 123560213
+    },
+    {
+      "decode_duration_us": 115454107,
+      "decode_rate_first_token_inclusion": null,
+      "decode_rate_first_token_inclusion_reason": "Genie profile does not state whether its rate numerator includes the first token.",
+      "decode_rate_tokens_per_second": 17.730182647705078,
+      "dialog_create_or_reset_duration_ms": 2.4,
+      "generated_tokens": 2048,
+      "input_tokens": 1929,
+      "ordinal": 15,
+      "output": {
+        "bytes": 10027,
+        "path": "raw/campaign/outputs/warm-long-05.txt",
+        "sha256": "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d"
+      },
+      "output_sanity": {
+        "issue_notes": "Severe repetition collapse in the exact max-token output.",
+        "looks_sensible": false
+      },
+      "prefill_duration_us_derived_from_authoritative_rate": 2787405,
+      "prefill_rate_tokens_per_second": 692.04150390625,
+      "profile_snapshot_path": "raw/campaign/profiles/warm-long-05.json",
+      "profile_snapshot_sha256": "42cdd248c8a44d1b6b48f6b4c58940961d9e538869c21943f14e89a75d3e97ed",
+      "request_class": "warm",
+      "request_id": "warm-long-05",
+      "request_to_first_token_us": 2787909,
+      "reset_duration_in_total_request": false,
+      "stop_reason": "max_tokens",
+      "tier": "long",
+      "total_request_duration_us": 119459752
+    }
+  ],
+  "route": {
+    "backend": "QnnHtp",
+    "context_sha256": "7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394",
+    "dsp_arch": "v73",
+    "physical_htp_transformer_execution_proven": true,
+    "qnn_cpu_backend_markers": 0,
+    "runtime_fallback_markers": 0,
+    "successful_ar128_graph_completions": 117,
+    "successful_ar1_graph_completions": 15158,
+    "successful_qnn_graph_completions": 15275,
+    "uniform_integer_execution_claim": false
+  },
+  "run_id": "campaign-20260828T113040Z-canonical-03-reset",
+  "schema_version": 1,
+  "setup": {
+    "boundary": "Immediately before genie-app/dialog/context creation through one loaded dialog ready for the first request.",
+    "dialog_create_duration_us": 2114272,
+    "dialog_init_time_us": 2111957,
+    "profile_path": "raw/campaign/setup-profile.json",
+    "profile_sha256": "126bf967aca0260fc257cb2836066e2a1590ffd271592759f2e53e6f1d2e9ec7"
+  },
+  "stage_and_cleanup": {
+    "local_hash_check_passed": true,
+    "phone_lock_held_full_adb_lifecycle": true,
+    "remote_cleanup_status": "absent",
+    "remote_hash_check_passed": true,
+    "residual_process_observed": false,
+    "runtime_completeness_passed": true
+  },
+  "status": "canonical_campaign_complete_long_output_repetition_sanity_failed",
+  "warm_distributions": {
+    "long": {
+      "all_output_sanity_passed": false,
+      "decode_tokens_per_second": {
+        "count": 5,
+        "max": 17.98496437072754,
+        "mean": 17.684689712524413,
+        "median": 17.82817268371582,
+        "min": 17.026493072509766
+      },
+      "generated_tokens": [
+        2048
+      ],
+      "input_tokens": 1929,
+      "output_hashes": [
+        "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d"
+      ],
+      "prefill_tokens_per_second": {
+        "count": 5,
+        "max": 746.8259887695312,
+        "mean": 732.001220703125,
+        "median": 740.74072265625,
+        "min": 692.04150390625
+      },
+      "request_count": 5,
+      "reset_duration_ms": {
+        "count": 5,
+        "max": 2.4,
+        "mean": 0.5599999999999999,
+        "median": 0.1,
+        "min": 0.0
+      },
+      "stop_reasons": {
+        "max_tokens": 5
+      },
+      "total_request_us": {
+        "count": 5,
+        "max": 123560213,
+        "mean": 119245865.4,
+        "median": 118256069,
+        "min": 117011223
+      },
+      "ttft_us": {
+        "count": 5,
+        "max": 2787909,
+        "mean": 2638541.8,
+        "median": 2605519,
+        "min": 2584280
+      }
+    },
+    "medium": {
+      "all_output_sanity_passed": true,
+      "decode_tokens_per_second": {
+        "count": 5,
+        "max": 18.966693878173828,
+        "mean": 18.730890655517577,
+        "median": 18.77370262145996,
+        "min": 18.267175674438477
+      },
+      "generated_tokens": [
+        418
+      ],
+      "input_tokens": 594,
+      "output_hashes": [
+        "686c2867447740b8ed7c52096bbf9cbbed9f3e2d62fc5b832e3b1be3841899e7"
+      ],
+      "prefill_tokens_per_second": {
+        "count": 5,
+        "max": 664.4518432617188,
+        "mean": 650.030126953125,
+        "median": 654.8788452148438,
+        "min": 626.959228515625
+      },
+      "request_count": 5,
+      "reset_duration_ms": {
+        "count": 5,
+        "max": 0.1,
+        "mean": 0.06000000000000001,
+        "median": 0.1,
+        "min": 0.0
+      },
+      "stop_reasons": {
+        "eos": 5
+      },
+      "total_request_us": {
+        "count": 5,
+        "max": 24142170,
+        "mean": 23356445.6,
+        "median": 23235372,
+        "min": 23029794
+      },
+      "ttft_us": {
+        "count": 5,
+        "max": 947870,
+        "mean": 914536.4,
+        "median": 907551,
+        "min": 894553
+      }
+    },
+    "short": {
+      "all_output_sanity_passed": true,
+      "decode_tokens_per_second": {
+        "count": 5,
+        "max": 19.80198097229004,
+        "mean": 19.38480453491211,
+        "median": 19.58441925048828,
+        "min": 18.456314086914062
+      },
+      "generated_tokens": [
+        474
+      ],
+      "input_tokens": 170,
+      "output_hashes": [
+        "52b1f900c9ba15aed1527bd813cbfb630a90b5f02ed66249a7d8737439bd0232"
+      ],
+      "prefill_tokens_per_second": {
+        "count": 5,
+        "max": 369.8224792480469,
+        "mean": 364.8494445800781,
+        "median": 367.6470642089844,
+        "min": 353.4817810058594
+      },
+      "request_count": 5,
+      "reset_duration_ms": {
+        "count": 5,
+        "max": 0.1,
+        "mean": 0.02,
+        "median": 0.0,
+        "min": 0.0
+      },
+      "stop_reasons": {
+        "eos": 5
+      },
+      "total_request_us": {
+        "count": 5,
+        "max": 26137272,
+        "mean": 24908418.6,
+        "median": 24646687,
+        "min": 24369195
+      },
+      "ttft_us": {
+        "count": 5,
+        "max": 481002,
+        "mean": 466151.0,
+        "median": 462433,
+        "min": 459698
+      }
+    }
+  }
+}

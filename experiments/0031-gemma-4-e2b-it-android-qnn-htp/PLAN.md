@@ -68,7 +68,11 @@ After renewed approval, physical campaign attempt 01 entered the full locked pho
 
 Host source analysis shows standalone shared-engine schema cannot carry the two Gemma cache groups without the rejected dialog-only key. The corrected harness therefore uses the protocol's allowed full-reset strategy: one normal QnnHtp dialog/context remains loaded, with 15 `GenieDialog_reset` calls between the 16 requests. Hash-bound QAIRT source proves reset clears conversation/prompt/decode counters, last/pending inputs, HTP KV/model state, sampler, and dialog state without remapping. The rebuilt script retains both `past_` and `swa_` cache groups, exact first+5/5/5 order, 2048 ceilings, unique outputs, cumulative per-request profile snapshots, separate reset timestamps, timeouts, raw capture, and cleanup. Stage hashes/modes pass without ADB.
 
-The active next gate is independent review and a new explicit campaign/phone handoff. Do not access ADB or retry before approval. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
+The authorized reset-isolated canonical campaign completed. One QnnHtp process/context/dialog served all 16 exact first+5/5/5 requests with 15 completed resets, cumulative profile growth, 2048 ceilings, and no errors/timeouts/retries. Physical evidence records 117 AR128 plus 15,158 AR1 status-0 QnnDsp completions, one context deserialization, zero QNN CPU/runtime-fallback markers, exact outputs/profiles, memory/thermal telemetry, and successful scoped cleanup.
+
+Short and medium outputs pass the narrow sanity check. All long requests reach 2,048 tokens and produce the same severely repetitive output, so long output sanity is false with a required issue note. This does not erase valid execution/performance evidence and is not a quality verdict.
+
+The active next gate is independent evidence review and Kate-owned registry normalization/publication with the long-output sanity failure and memory/thermal limitations preserved. No additional phone run is needed or authorized. Workbench compile/link remains a separate unapproved cost/terms checkpoint.
 
 ## Stop conditions
 

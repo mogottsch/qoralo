@@ -107,7 +107,7 @@ class ContractTest(unittest.TestCase):
     def test_historical_transform_blocker_and_active_no_execution_claim(self) -> None:
         blocker = json.loads((EXP / "results/transform-blocker/result.json").read_text())
         self.assertEqual(
-            "canonical_campaign_reset_harness_ready_review_and_phone_approval_required",
+            "canonical_campaign_complete_long_output_repetition_sanity_failed",
             self.contract["status"],
         )
         active = self.contract["conversion_blocker"]
@@ -133,7 +133,7 @@ class ContractTest(unittest.TestCase):
             "passed_host_single_dialog_full_reset_source_proof_and_stage_validation",
             active["canonical_campaign_reset_harness_gate"],
         )
-        self.assertIn("new explicit canonical-campaign approval", active["next_gate"])
+        self.assertIn("Kate-owned registry normalization", active["next_gate"])
         self.assertFalse(blocker["android_execution"])
         self.assertFalse(blocker["qnn_htp_execution"])
         self.assertFalse(blocker["compiled_context_created"])
@@ -172,6 +172,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/canonical-campaign-launch-preflight",
             EXP / "results/android-qnn-physical-campaign-attempt-01",
             EXP / "results/canonical-campaign-reset-harness-readiness",
+            EXP / "results/android-qnn-physical-campaign-attempt-02",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():
@@ -622,6 +623,45 @@ class ContractTest(unittest.TestCase):
         self.assertFalse(result["requested"]["campaign_execution"])
         self.assertFalse(result["authorization"]["campaign_authorized"])
 
+    def test_canonical_campaign_completed_with_long_output_sanity_failure(self) -> None:
+        result = json.loads(
+            (EXP / "results/android-qnn-physical-campaign-attempt-02/result.json").read_text()
+        )
+        self.assertEqual(
+            "positive_physical_qnn_htp_canonical_campaign_with_long_output_sanity_failure",
+            result["classification"],
+        )
+        campaign = result["campaign"]
+        self.assertTrue(campaign["complete"])
+        self.assertEqual(1, campaign["process_count"])
+        self.assertEqual(1, campaign["dialog_count"])
+        self.assertEqual(1, campaign["context_deserialization_count"])
+        self.assertEqual(15, campaign["reset_count"])
+        self.assertEqual(16, campaign["request_count"])
+        self.assertEqual({"short": 5, "medium": 5, "long": 5}, campaign["warm_request_counts"])
+        self.assertEqual(0, campaign["timed_out_requests"])
+        self.assertEqual(0, campaign["error_requests"])
+        self.assertEqual(0, campaign["automatic_retries"])
+        self.assertEqual(15_275, result["route"]["successful_qnn_graph_completions"])
+        self.assertEqual(117, result["route"]["successful_ar128_graph_completions"])
+        self.assertEqual(15_158, result["route"]["successful_ar1_graph_completions"])
+        self.assertEqual(0, result["route"]["qnn_cpu_backend_markers"])
+        self.assertEqual(0, result["route"]["runtime_fallback_markers"])
+        self.assertEqual(16, len(result["requests"]))
+        for index, request in enumerate(result["requests"]):
+            self.assertEqual(index, request["ordinal"])
+            self.assertEqual({"looks_sensible", "issue_notes"}, set(request["output_sanity"]))
+            self.assertTrue(request["output"]["sha256"])
+        self.assertTrue(result["warm_distributions"]["short"]["all_output_sanity_passed"])
+        self.assertTrue(result["warm_distributions"]["medium"]["all_output_sanity_passed"])
+        self.assertFalse(result["warm_distributions"]["long"]["all_output_sanity_passed"])
+        self.assertEqual({"max_tokens": 5}, result["warm_distributions"]["long"]["stop_reasons"])
+        self.assertEqual(344_201, result["memory"]["peak_sampled_total_pss_kb"])
+        self.assertEqual(4, result["operating_context"]["thermal_after"]["status"])
+        self.assertEqual("absent", result["stage_and_cleanup"]["remote_cleanup_status"])
+        self.assertTrue(result["publication"]["long_output_sanity_failure_must_be_disclosed"])
+        self.assertFalse(result["publication"]["quality_acceptance_claim"])
+
     def test_bounded_phone_gate_script_holds_lock_and_cleans_scope(self) -> None:
         script = (EXP / "tools/run_phone_viability.sh").read_text()
         self.assertIn('artifacts/locks/phone.lock', script)
@@ -636,15 +676,15 @@ class ContractTest(unittest.TestCase):
         self.assertIn("7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394", script)
         self.assertIn("stage_completeness_check_passed", (EXP / "tools/prepare_phone_stage.py").read_text())
 
-    def test_phone_and_campaign_are_not_claimed(self) -> None:
+    def test_campaign_completion_and_publication_boundary(self) -> None:
         gate = self.contract["campaign_gate"]
         self.assertFalse(self.contract["canonical_campaign_harness_readiness"]["campaign_executed"])
-        self.assertFalse(self.contract["canonical_campaign_harness_readiness"]["campaign_authorized"])
         self.assertFalse(self.contract["canonical_campaign_reset_harness_readiness"]["campaign_executed"])
-        self.assertFalse(self.contract["canonical_campaign_reset_harness_readiness"]["campaign_authorized"])
+        self.assertTrue(self.contract["physical_campaign_attempt_02"]["complete"])
+        self.assertTrue(self.contract["physical_campaign_attempt_02"]["registry_publication_pending_kate"])
         self.assertTrue(gate["bounded_viability_first"])
         self.assertTrue(gate["canonical_after_viability"])
-        self.assertIn("no ADB", gate["phone_priority"])
+        self.assertIn("no additional phone run", gate["phone_priority"])
 
 
 if __name__ == "__main__":
