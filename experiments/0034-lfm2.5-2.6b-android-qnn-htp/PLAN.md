@@ -51,11 +51,15 @@
 41. Ran one authorized physical shared-context gate. All stage checks passed, but `QnnContext_createFromBinary` rejected the 1.60 GB context before graph retrieval/readiness/execution.
 42. Preserved the raw result, verified scoped cleanup absent, and stopped without retry or campaign.
 
-## Blocked / terminal local route
+43. Moritz authorized an exact-runtime correction after identifying that the physical single-context attempt used Android backend v2.49.0 against a v2.49.40 host context.
+44. Rebuilt the ignored 12-file stage with licensed QAIRT 2.49.40 Android HTP/stub/skel libraries. Context and runtime build IDs exactly match `v2.49.40.260810104044`; hashes, ABIs, SONAMEs, and dependencies are bound and verified.
 
-1. The physical backend cannot retain the many-context route and cannot create the complete single shared-resource context.
-2. Resume only with a materially different Qualcomm-supported context format/runtime or maintainer guidance.
-3. Context streaming changes loaded-route semantics and is not authorized. No phone retry or campaign.
+## In progress
+
+1. Wait behind Gemma and for Pi's explicit phone priority.
+2. Run exactly one bounded matched-runtime single-context compatibility/viability gate under full `phone.lock` lifecycle.
+3. If it fails, commit the exact boundary and proceed host-only to the already-authorized ordinary monolithic one-token graph/context route.
+4. Context streaming remains prohibited. No campaign without a successful bounded gate and separate Pi authorization.
 
 ## Phone and campaign sequence
 

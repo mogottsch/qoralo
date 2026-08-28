@@ -160,9 +160,9 @@
     "android_execution": false,
     "compiled_context_created": false,
     "qnn_htp_execution": false,
-    "required_action": "Terminal for current local route. Resume only with a materially different Qualcomm-supported context format/runtime or maintainer guidance; context streaming requires an explicit protocol decision.",
+    "required_action": "After Gemma and explicit Pi priority, run one bounded exact-runtime gate. On failure proceed host-only to authorized ordinary monolithic context.",
     "result_path": "results/support-assessment/result.json",
-    "summary": "Physical SM8550 rejected the complete 1.60 GB/37-graph shared-resource context in QnnContext_createFromBinary before graph retrieval. Many-context and single-context all-loaded designs both fail."
+    "summary": "Historical single-context rejection used Android QNN backend v2.49.0 against a context compiled by v2.49.40. The exact matched v2.49.40 Android stage is prepared but physically untested."
   },
   "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
   "host_export_milestone": {
@@ -212,6 +212,28 @@
     "sdk_manifest_sha256": "309ac8f6c75c2fdc808f1c9b9d0da60be123c21a79532cca70a9c4b144d983f4",
     "sm8550_compile_target_supported_generically": true,
     "version": "2.49.0.260730"
+  },
+  "matched_qairt_24940_android_retry": {
+    "all_loaded_once": true,
+    "android_backend_build_id_expected": "v2.49.40.260810104044",
+    "authorized_by": "Moritz",
+    "build_ids_exactly_equal": true,
+    "context_build_id": "v2.49.40.260810104044",
+    "context_count": 1,
+    "context_streaming": false,
+    "evidence": "results/qairt-24940-matched-android-preparation/result.json",
+    "graph_count": 37,
+    "phone_priority_granted": false,
+    "physical_execution": false,
+    "stage": {
+      "elf_preflight": true,
+      "hash_check": true,
+      "manifest_sha256": "ae0e147f1d352984ded9f42bb10545478ce7e979f92451b20dec532d01e79602",
+      "payload_bytes": 1799472275,
+      "payload_files": 12,
+      "stage_metadata_sha256": "ec531bd03cfbb0a271f9b7c1c5d6471ccff202223cab25e36a6da63eee649edb"
+    },
+    "waiting_behind": "Gemma"
   },
   "model_identity": {
     "architecture": "Lfm2ForCausalLM",
@@ -274,7 +296,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "Single-context attempt cleaned absent and released phone.lock. No retry or campaign is authorized.",
+  "phone_boundary": "No phone access occurred for exact-runtime preparation. Wait behind Gemma and for explicit Pi priority.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -373,7 +395,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "blocked_terminal_physical_single_shared_context_create_failure",
+  "status": "active_exact_qairt_2_49_40_android_runtime_prepared_waiting_after_gemma",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",

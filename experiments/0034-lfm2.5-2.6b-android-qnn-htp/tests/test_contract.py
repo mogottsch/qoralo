@@ -79,7 +79,7 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
     def test_active_export_does_not_claim_qnn_android_or_completion(self) -> None:
-        self.assertIn("blocked_terminal_physical_single_shared_context", self.contract["status"])
+        self.assertIn("active_exact_qairt_2_49_40", self.contract["status"])
         route = self.result["route_assessment"]
         self.assertFalse(route["compiled_sm8550_context_available"])
         self.assertFalse(route["android_execution"])
@@ -88,7 +88,7 @@ class ContractTest(unittest.TestCase):
         self.assertIn("not_android_qnn_or_htp", milestone["classification"])
         self.assertEqual("passed", milestone["rewritten_onnx"]["onnx_checker"])
         self.assertEqual(16, milestone["bounded_output"]["max_new_tokens"])
-        self.assertIn("No retry or campaign", self.contract["phone_boundary"])
+        self.assertIn("Wait behind Gemma", self.contract["phone_boundary"])
 
     def test_qnn_aot_is_complete_but_not_physical_execution(self) -> None:
         milestone = self.contract["qnn_aot_milestone"]
@@ -218,6 +218,19 @@ class ContractTest(unittest.TestCase):
         self.assertFalse(result["direct_qnn"]["output_created"])
         self.assertTrue(result["cleanup"]["scoped_remote_root_verified_absent"])
 
+    def test_matched_qairt_24940_android_stage_is_preparation_only(self) -> None:
+        route = self.contract["matched_qairt_24940_android_retry"]
+        self.assertEqual(route["context_build_id"], route["android_backend_build_id_expected"])
+        self.assertTrue(route["build_ids_exactly_equal"])
+        self.assertEqual((1, 37), (route["context_count"], route["graph_count"]))
+        self.assertFalse(route["context_streaming"])
+        self.assertFalse(route["physical_execution"])
+        self.assertFalse(route["phone_priority_granted"])
+        result = json.loads((EXP / route["evidence"]).read_text())
+        self.assertTrue(result["matched_android_runtime"]["context_runtime_build_ids_equal"])
+        self.assertEqual("v2.49.0.260730134355", result["superseded_runtime"]["backend_build_id_observed_physically"])
+        self.assertTrue(result["ignored_android_stage"]["all_local_hashes_verified"])
+
     def test_final_pipeline_host_equivalence_is_bounded(self) -> None:
         result = json.loads((EXP / "results/htp-pipeline-host-equivalence/result.json").read_text())
         self.assertIn("host_only", result["classification"])
@@ -258,6 +271,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/consolidated-qnn-phone-attempt-1-residency-limit",
             EXP / "results/qnn-whole-route-shared-host-preparation",
             EXP / "results/whole-route-shared-qnn-phone-attempt-1-load-failure",
+            EXP / "results/qairt-24940-matched-android-preparation",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

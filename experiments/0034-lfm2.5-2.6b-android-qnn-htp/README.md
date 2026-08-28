@@ -2,7 +2,7 @@
 
 ## Status
 
-**Blocked/terminal for the current local all-loaded route. The physical SM8550 backend rejected both the 37-context fused design at context 20 and the stronger single 1.60 GB shared-resource context in `QnnContext_createFromBinary`. The single-context failure occurred before graph retrieval, readiness, execution, or output. No performance result or campaign exists.**
+**Active on Moritz's authorized exact-runtime retry. The prior single-context failure paired a v2.49.40 host context with a v2.49.0 Android backend. A replacement 12-file stage now uses the exact licensed QAIRT 2.49.40 Android HTP/stub/skel runtime matching context build `v2.49.40.260810104044`. No new phone execution or performance claim exists; the gate waits behind Gemma and explicit Pi priority.**
 
 This is a separate accelerator arm. It preserves `0029` CPU viability and `0033` CPU/OpenCL campaign evidence without modifying either experiment.
 
@@ -107,4 +107,19 @@ The x86 HTP emulator rejects context creation with `Shared weights buffer isn't 
 
 The authorized physical compatibility gate passed all 12 local/remote hashes and ELF preflight, entered direct QNN backend `v2.49.0.260730134355`, and attempted the single 1,601,482,752-byte context. `QnnContext_createFromBinary` returned failure before any graph could be retrieved. Android emitted only the generic `Could not create context from binary`, not the host emulator's explicit shared-weight message. Process VmHWM reached 1,613,220 KiB while materializing the blob; this is not evidence that DSP allocation succeeded. The scoped root was verified absent and `phone.lock` released. See [`results/whole-route-shared-qnn-phone-attempt-1-load-failure/`](results/whole-route-shared-qnn-phone-attempt-1-load-failure/).
 
-The current local engineering route is terminal: neither many ordinary resident contexts nor one complete shared-resource context loads on the physical backend. Continuation requires a materially different Qualcomm-supported context format/runtime or maintainer guidance. Context streaming would change the loaded-route protocol and is not authorized. No retry, campaign, performance claim, or registry row is permitted.
+That result was terminal for the mismatched v2.49.0 Android runtime used by the attempt. Context streaming remains a protocol change and is not authorized.
+
+## Exact QAIRT 2.49.40 Android runtime continuation
+
+Moritz authorized one ordered correction: retry the unchanged one-context/37-graph route with the exact licensed QAIRT 2.49.40 Android libraries matching the host compiler. The prepared runtime identifies itself as `v2.49.40.260810104044`, exactly equal to the context metadata build ID. The prior physical backend identified as `v2.49.0.260730134355`.
+
+The replacement stage binds:
+
+- `libQnnHtp.so`: SHA-256 `4f5b4d11b128d78433730a4f5e88841e51aec472c6bd28ffd858dba8ea1012fb`;
+- `libQnnSystem.so`: SHA-256 `536201ed918f4066f9ef35671198c072faf9ef04af24545f5fae0fc79aa05baa`;
+- `libQnnHtpV73Stub.so`: SHA-256 `7837f29bd84dbcf542faf1047d3904dc14f578e3d1a472c41eee792e7a1a8db0`;
+- `libQnnHtpV73Skel.so`: SHA-256 `e618168c82a0ec763b8543268b2783f5d28c9525fb6d0741afd667869ee493c8`.
+
+All Android libraries retain the expected AArch64/DSP6 ABIs, SONAMEs, and declared system dependencies. The ignored stage has 12 payload files totaling 1,799,472,275 bytes; stage metadata SHA-256 is `ec531bd03cfbb0a271f9b7c1c5d6471ccff202223cab25e36a6da63eee649edb`, manifest SHA-256 is `ae0e147f1d352984ded9f42bb10545478ce7e979f92451b20dec532d01e79602`, and local hash plus ELF dependency checks pass. See [`results/qairt-24940-matched-android-preparation/`](results/qairt-24940-matched-android-preparation/).
+
+No phone access occurred for this preparation. One bounded physical compatibility/viability gate may run only after Gemma and a new explicit Pi priority grant. If it fails, the exact boundary will be committed and work proceeds to the authorized ordinary monolithic one-token graph route without another decision. No campaign is authorized.

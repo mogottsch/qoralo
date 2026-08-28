@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "classification": "host_prepared_exact_qairt_2_49_40_android_runtime_stage_not_physical_execution",
+  "authorization": "Moritz explicitly authorized the exact licensed QAIRT 2.49.40 Android runtime route; runtime libraries and contexts remain outside Git.",
+  "compiled_context": {
+    "path_outside_git": ".local/qnn-whole-route-shared-context/parts-000-036/000-layer-00-ctx_qnn.bin",
+    "bytes": 1601482752,
+    "sha256": "7942ad31b0bae6d4368ec4a3c86c84ce022c2e6c62bafebeb513c7f38228d8a3",
+    "qnn_build_id": "v2.49.40.260810104044",
+    "graphs": 37,
+    "target": {"soc_model":43,"htp_arch":73}
+  },
+  "matched_android_runtime": {
+    "qairt_installation": "2.49.40.260810",
+    "backend_build_id": "v2.49.40.260810104044",
+    "aisw_version": "2.49.40",
+    "libraries": {
+      "libQnnHtp.so": {"bytes":3786400,"sha256":"4f5b4d11b128d78433730a4f5e88841e51aec472c6bd28ffd858dba8ea1012fb","elf":"AArch64 Android 21","soname":"libQnnHtp.so"},
+      "libQnnSystem.so": {"bytes":4072160,"sha256":"536201ed918f4066f9ef35671198c072faf9ef04af24545f5fae0fc79aa05baa","elf":"AArch64 Android 21","soname":"libQnnSystem.so"},
+      "libQnnHtpV73Stub.so": {"bytes":771928,"sha256":"7837f29bd84dbcf542faf1047d3904dc14f578e3d1a472c41eee792e7a1a8db0","elf":"AArch64 Android 21","soname":"libQnnHtpV73Stub.so"},
+      "libQnnHtpV73Skel.so": {"bytes":11859192,"sha256":"e618168c82a0ec763b8543268b2783f5d28c9525fb6d0741afd667869ee493c8","elf":"QUALCOMM DSP6 v73","build_id":"v2.49.40.260810104044"}
+    },
+    "context_runtime_build_ids_equal": true,
+    "readelf_dependency_preflight": "passed",
+    "android_abi": "arm64-v8a",
+    "minimum_android_api": 21
+  },
+  "superseded_runtime": {
+    "qairt_version": "2.49.0.260730",
+    "backend_build_id_observed_physically": "v2.49.0.260730134355",
+    "libQnnHtp_sha256": "a09b3af28342331b3ec9e57ecbe42bfe54a5fff37c4323ce5685c395ae3ee604",
+    "libQnnHtpV73Stub_sha256": "2912cc4f29cc5163c36c6c58f931bd08b798ccf8545a670a9498549f95b9036f",
+    "libQnnHtpV73Skel_sha256": "bd54463547f0234d06045699b1f747b7d9d3e3b581874840af50c295b3124f25",
+    "reason": "The previous physical attempt paired a v2.49.40 host context with a v2.49.0 Android backend and therefore did not test an exact runtime match."
+  },
+  "ignored_android_stage": {
+    "path_outside_git": ".local/whole-route-shared-qnn-phone-stage-qairt-24940",
+    "payload_files": 12,
+    "payload_bytes": 1799472275,
+    "stage_metadata_sha256": "ec531bd03cfbb0a271f9b7c1c5d6471ccff202223cab25e36a6da63eee649edb",
+    "manifest_sha256": "ae0e147f1d352984ded9f42bb10545478ce7e979f92451b20dec532d01e79602",
+    "runner_sha256": "92689331d11ecf48fb226e82c0f77133e2b72c505b976f2e801c6fffda506f83",
+    "all_local_hashes_verified": true,
+    "elf_dependency_preflight": true
+  },
+  "phone_boundary": "No phone access occurred. Wait behind Gemma and for Pi's explicit priority before one bounded compatibility/viability gate.",
+  "claim_boundary": "Exact build-ID, artifact, ABI, dependency, and ignored-stage preparation only. No physical context load, HTP execution, output, or performance evidence."
+}
