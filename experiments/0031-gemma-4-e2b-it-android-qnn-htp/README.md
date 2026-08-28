@@ -6,6 +6,10 @@
 
 This experiment is a separate HTP arm for the model studied in `0025`. It does not rewrite or relabel the CPU/GPU evidence there.
 
+## Distinct active improvement track
+
+Moritz reopened optimization as [`improvements/0001-long-collapse-speed-quality/`](improvements/0001-long-collapse-speed-quality/README.md). The completed campaign and registry row remain immutable baselines. The new track quantifies collapse, compares accepted QNN/LiteRT trajectories with tokenizer and artifact differences explicit, and evaluates fallback-free HTP precision plus disclosed request-level hybrid candidates. Its first milestone is host-only and does not change the completed status above.
+
 ## Selected route
 
 The already-installed `/home/moritz/opt/qairt/2.49.0.260730` contains unusually strong first-party support evidence:

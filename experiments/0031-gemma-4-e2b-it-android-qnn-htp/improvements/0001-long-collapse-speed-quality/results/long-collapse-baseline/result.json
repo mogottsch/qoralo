@@ -1,0 +1,396 @@
+{
+  "accepted_references": {
+    "cpu": {
+      "artifact_bytes": 2588147712,
+      "artifact_sha256": "181938105e0eefd105961417e8da75903eacda102c4fce9ce90f50b97139a63c",
+      "experiment": "0025-gemma-4-e2b-it-android",
+      "input_tokens": 1930,
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": true
+      },
+      "output_sha256": "51591a313ea227eec1247d6481fa1a143be6dec282a0b9ae63911f1db1ed943f",
+      "output_tokens": 756,
+      "rendered_long_sha256": "450b519d417e29c4239e39aef856db1813d2580cd62e9db9adaae3d94ba8f260",
+      "stop_reason": "eos",
+      "trajectory": {
+        "dominant_word_6gram": {
+          "count": 2,
+          "first_word_index_zero_based": 400,
+          "text": "throughput ) : * * this"
+        },
+        "exact_periodic_suffix": null,
+        "ngram_metrics": {
+          "16": {
+            "most_common_count": 1,
+            "most_common_first_token_index_zero_based": 0,
+            "total": 741,
+            "unique": 741,
+            "unique_ratio": 1.0
+          },
+          "4": {
+            "most_common_count": 4,
+            "most_common_first_token_index_zero_based": 394,
+            "total": 753,
+            "unique": 736,
+            "unique_ratio": 0.9774236387782205
+          },
+          "8": {
+            "most_common_count": 1,
+            "most_common_first_token_index_zero_based": 0,
+            "total": 749,
+            "unique": 749,
+            "unique_ratio": 1.0
+          }
+        },
+        "rolling_collapse_onset": null,
+        "token_count": 756,
+        "word_token_count": 743
+      }
+    },
+    "gpu": {
+      "artifact_bytes": 2588147712,
+      "artifact_sha256": "181938105e0eefd105961417e8da75903eacda102c4fce9ce90f50b97139a63c",
+      "experiment": "0025-gemma-4-e2b-it-android",
+      "input_tokens": 1930,
+      "output_sanity": {
+        "issue_notes": null,
+        "looks_sensible": true
+      },
+      "output_sha256": "82971d099b4ba897a3331a462cf8e694ff64f1cccd22b522708feef065f12a3f",
+      "output_tokens": 756,
+      "rendered_long_sha256": "450b519d417e29c4239e39aef856db1813d2580cd62e9db9adaae3d94ba8f260",
+      "stop_reason": "eos",
+      "trajectory": {
+        "dominant_word_6gram": {
+          "count": 3,
+          "first_word_index_zero_based": 454,
+          "text": "costs : * * the time"
+        },
+        "exact_periodic_suffix": null,
+        "ngram_metrics": {
+          "16": {
+            "most_common_count": 1,
+            "most_common_first_token_index_zero_based": 0,
+            "total": 741,
+            "unique": 741,
+            "unique_ratio": 1.0
+          },
+          "4": {
+            "most_common_count": 4,
+            "most_common_first_token_index_zero_based": 480,
+            "total": 753,
+            "unique": 735,
+            "unique_ratio": 0.9760956175298805
+          },
+          "8": {
+            "most_common_count": 1,
+            "most_common_first_token_index_zero_based": 0,
+            "total": 749,
+            "unique": 749,
+            "unique_ratio": 1.0
+          }
+        },
+        "rolling_collapse_onset": null,
+        "token_count": 756,
+        "word_token_count": 754
+      }
+    }
+  },
+  "candidate_matrix": [
+    {
+      "assessment": "Best currently evidenced speed+quality option: preserves faster HTP short/medium completion and cuts accepted long median completion time by about 59.5%.",
+      "candidate": "explicit request-level HTP/LiteRT-GPU hybrid",
+      "fallback_semantics": "No tensor-level or hidden fallback; backend is selected before each complete logical request and labeled in evidence.",
+      "memory_setup_boundary": "Two distinct route setups if co-resident; accepted setup is 2.112 s HTP plus 10.520 s GPU and process-memory observations are not additive HTP/GPU-private memory.",
+      "partition": "short and medium requests remain on QNN HTP; long requests use the accepted LiteRT GPU route",
+      "priority": 1,
+      "quality_evidence": "Accepted GPU long output is sensible and EOS-stops at 756 tokens; HTP long repeats to 2048.",
+      "speed_evidence": {
+        "long": {
+          "accepted_htp": {
+            "decode_tokens_per_second": 17.82817268371582,
+            "output_tokens": 2048,
+            "prefill_tokens_per_second": 740.74072265625,
+            "sensible": false,
+            "total_seconds": 118.256069,
+            "ttft_seconds": 2.605519
+          },
+          "accepted_litert_gpu": {
+            "decode_tokens_per_second": 16.30177358042202,
+            "output_tokens": 756,
+            "prefill_tokens_per_second": 981.4313853136699,
+            "sensible": true,
+            "total_seconds": 48.310946648,
+            "ttft_seconds": 2.075712135
+          },
+          "gpu_vs_htp_percent": {
+            "decode_rate": -8.561724919166892,
+            "prefill_rate": 32.4932402520437,
+            "total_completion_time": -59.14717353914411,
+            "ttft": -20.33402423854903
+          }
+        },
+        "medium": {
+          "accepted_htp": {
+            "decode_tokens_per_second": 18.77370262145996,
+            "output_tokens": 418,
+            "prefill_tokens_per_second": 654.8788452148438,
+            "sensible": true,
+            "total_seconds": 23.235372,
+            "ttft_seconds": 0.907551
+          },
+          "accepted_litert_gpu": {
+            "decode_tokens_per_second": 13.162175902320312,
+            "output_tokens": 640,
+            "prefill_tokens_per_second": 485.1687599802832,
+            "sensible": true,
+            "total_seconds": 50.804268991,
+            "ttft_seconds": 1.338511302
+          },
+          "gpu_vs_htp_percent": {
+            "decode_rate": -29.890356911934834,
+            "prefill_rate": -25.914730102311424,
+            "total_completion_time": 118.65055137055691,
+            "ttft": 47.48606987375914
+          }
+        },
+        "short": {
+          "accepted_htp": {
+            "decode_tokens_per_second": 19.58441925048828,
+            "output_tokens": 474,
+            "prefill_tokens_per_second": 367.6470642089844,
+            "sensible": true,
+            "total_seconds": 24.646687,
+            "ttft_seconds": 0.462433
+          },
+          "accepted_litert_gpu": {
+            "decode_tokens_per_second": 12.323165970975847,
+            "output_tokens": 392,
+            "prefill_tokens_per_second": 320.8953477119808,
+            "sensible": true,
+            "total_seconds": 32.378032175,
+            "ttft_seconds": 0.649172812
+          },
+          "gpu_vs_htp_percent": {
+            "decode_rate": -37.07668420819472,
+            "prefill_rate": -12.716466700908613,
+            "total_completion_time": 31.368699472671537,
+            "ttft": 40.382025504235216
+          }
+        }
+      }
+    },
+    {
+      "assessment": "Smallest fallback-free precision experiment; requires host reconvert/recompile and bounded trajectory evidence.",
+      "candidate": "fallback-free HTP FP16 value caches on the three global-attention layers",
+      "partition": "Keep all transformer ops on HTP; change only past_value_{4,9,14} AR1/AR128 cache IO from uFxp16 to identical FP16 and remove their conversion boundaries.",
+      "priority": 2,
+      "rationale": "Global value caches carry the complete long history and are the narrowest stateful precision boundary implicated by long-position failure.",
+      "speed_hypothesis": "Same 16-bit storage width and fewer Convert ops could avoid a speed loss, but this is unmeasured."
+    },
+    {
+      "assessment": "Broader diagnostic, not first choice.",
+      "candidate": "fallback-free HTP FP16 value caches on all 15 layers",
+      "partition": "Keep keys and all compute on HTP; make every AR1/AR128 value cache IO identically FP16.",
+      "priority": 3,
+      "rationale": "Tests broader cache-quantization accumulation if global-only precision is insufficient.",
+      "speed_hypothesis": "May remove conversions but increases FP16 execution exposure; unmeasured."
+    },
+    {
+      "assessment": "Potential interaction, but less state-specific than global cache precision.",
+      "candidate": "normalization precision/fusion variant",
+      "partition": "HTP-only; preserve fused FP16 RmsNorm/value path without the correction-induced expanded float component pattern.",
+      "priority": 4,
+      "rationale": "The corrected AR1 conversion reports 75 float-precision normalization components and explicit value conversions."
+    }
+  ],
+  "cause_evidence": {
+    "deprioritized": [
+      {
+        "cause": "4096 boundary crossing",
+        "reason": "Collapse criterion begins around absolute position 2012 and exact looping by 2407; generation ends at 3977, below 4096."
+      },
+      {
+        "cause": "greedy randomness",
+        "reason": "All five outputs are byte-identical and all routes use deterministic argmax/top-k1 semantics."
+      },
+      {
+        "cause": "request reset leakage",
+        "reason": "All 15 source-proven resets completed, prompt counts remained exact, and per-tier outputs are deterministic."
+      }
+    ],
+    "still_plausible": [
+      {
+        "cause": "deployment artifact/checkpoint quantization difference",
+        "evidence": "QNN and LiteRT share rendered bytes but use distinct artifacts/quantizers/tokenizers and diverge at the first output word."
+      },
+      {
+        "cause": "long-position RoPE/SWA/global-mask or cache-state interaction",
+        "evidence": "Only the 1929-token prompt route collapses; onset is near absolute position 2012, well before capacity but after substantial cached context."
+      },
+      {
+        "cause": "uFxp16 global value-cache feedback or normalization conversion path",
+        "evidence": "The HTP correction introduced explicit quantized AR1 value feedback; global value layers retain full history and are the narrowest precision experiment."
+      }
+    ],
+    "text_only_causality_claim": false
+  },
+  "claim_boundary": "This host-only milestone quantifies retained text/token trajectories and compares already accepted campaigns. QNN and LiteRT use different deployment artifacts, quantization schemes, and tokenizers; their outputs diverge at the first common word, so text cannot identify a numerical first-logit or internal-state divergence. The cause matrix ranks bounded hypotheses rather than claiming causality. No completed campaign file, registry row, phone run, or model artifact is changed.",
+  "classification": "host_long_collapse_quantification_cross_route_comparison_and_candidate_ranking",
+  "cross_route_comparison": {
+    "identical_rendered_long_bytes": true,
+    "inference_limit": "No cross-route token-ID/logit equality claim: tokenizers and artifacts differ, and QNN emitted IDs were not directly retained.",
+    "litert_gpu_vs_cpu_first_emitted_token_divergence_zero_based": 5,
+    "performance": {
+      "long": {
+        "accepted_htp": {
+          "decode_tokens_per_second": 17.82817268371582,
+          "output_tokens": 2048,
+          "prefill_tokens_per_second": 740.74072265625,
+          "sensible": false,
+          "total_seconds": 118.256069,
+          "ttft_seconds": 2.605519
+        },
+        "accepted_litert_gpu": {
+          "decode_tokens_per_second": 16.30177358042202,
+          "output_tokens": 756,
+          "prefill_tokens_per_second": 981.4313853136699,
+          "sensible": true,
+          "total_seconds": 48.310946648,
+          "ttft_seconds": 2.075712135
+        },
+        "gpu_vs_htp_percent": {
+          "decode_rate": -8.561724919166892,
+          "prefill_rate": 32.4932402520437,
+          "total_completion_time": -59.14717353914411,
+          "ttft": -20.33402423854903
+        }
+      },
+      "medium": {
+        "accepted_htp": {
+          "decode_tokens_per_second": 18.77370262145996,
+          "output_tokens": 418,
+          "prefill_tokens_per_second": 654.8788452148438,
+          "sensible": true,
+          "total_seconds": 23.235372,
+          "ttft_seconds": 0.907551
+        },
+        "accepted_litert_gpu": {
+          "decode_tokens_per_second": 13.162175902320312,
+          "output_tokens": 640,
+          "prefill_tokens_per_second": 485.1687599802832,
+          "sensible": true,
+          "total_seconds": 50.804268991,
+          "ttft_seconds": 1.338511302
+        },
+        "gpu_vs_htp_percent": {
+          "decode_rate": -29.890356911934834,
+          "prefill_rate": -25.914730102311424,
+          "total_completion_time": 118.65055137055691,
+          "ttft": 47.48606987375914
+        }
+      },
+      "short": {
+        "accepted_htp": {
+          "decode_tokens_per_second": 19.58441925048828,
+          "output_tokens": 474,
+          "prefill_tokens_per_second": 367.6470642089844,
+          "sensible": true,
+          "total_seconds": 24.646687,
+          "ttft_seconds": 0.462433
+        },
+        "accepted_litert_gpu": {
+          "decode_tokens_per_second": 12.323165970975847,
+          "output_tokens": 392,
+          "prefill_tokens_per_second": 320.8953477119808,
+          "sensible": true,
+          "total_seconds": 32.378032175,
+          "ttft_seconds": 0.649172812
+        },
+        "gpu_vs_htp_percent": {
+          "decode_rate": -37.07668420819472,
+          "prefill_rate": -12.716466700908613,
+          "total_completion_time": 31.368699472671537,
+          "ttft": 40.382025504235216
+        }
+      }
+    },
+    "qnn_vs_cpu_first_common_word_divergence_zero_based": 0,
+    "qnn_vs_gpu_first_common_word_divergence_zero_based": 0,
+    "tokenizer_spaces_are_different": true
+  },
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "improvement_track": "0001-long-collapse-speed-quality",
+  "qnn_collapse": {
+    "absolute_context_positions": {
+      "context_capacity": 4096,
+      "crossed_context_boundary": false,
+      "exact_periodic_suffix_start_zero_based": 2407,
+      "maximum_position_reached_exclusive": 3977,
+      "prompt_tokens": 1929,
+      "rolling_collapse_onset_zero_based": 2012
+    },
+    "all_outputs_byte_identical": true,
+    "output_count": 5,
+    "output_sha256": "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d",
+    "profile_generated_tokens": 2048,
+    "retokenized_output_matches_profile_count": true,
+    "trajectory": {
+      "dominant_word_6gram": {
+        "count": 215,
+        "first_word_index_zero_based": 83,
+        "text": ". the most important takeaway is"
+      },
+      "exact_periodic_suffix": {
+        "complete_cycles": 174,
+        "period_tokens": 9,
+        "start_token_index_zero_based": 478,
+        "suffix_tokens": 1570,
+        "trailing_partial_cycle_tokens": 4
+      },
+      "ngram_metrics": {
+        "16": {
+          "most_common_count": 208,
+          "most_common_first_token_index_zero_based": 117,
+          "total": 2033,
+          "unique": 169,
+          "unique_ratio": 0.08312838170191834
+        },
+        "4": {
+          "most_common_count": 216,
+          "most_common_first_token_index_zero_based": 84,
+          "total": 2045,
+          "unique": 121,
+          "unique_ratio": 0.05916870415647922
+        },
+        "8": {
+          "most_common_count": 215,
+          "most_common_first_token_index_zero_based": 84,
+          "total": 2041,
+          "unique": 142,
+          "unique_ratio": 0.06957373836354729
+        }
+      },
+      "rolling_collapse_onset": {
+        "criterion": "first 128-token window whose 4-gram unique ratio is <= 0.25",
+        "observed_unique_ratio": 0.248,
+        "start_token_index_zero_based": 83,
+        "start_token_ordinal_one_based": 84
+      },
+      "token_count": 2048,
+      "word_token_count": 1829
+    }
+  },
+  "recommended_next_milestones": [
+    "Build a no-phone HTP-only global-value-cache FP16 AR1/AR128 candidate and inspect cache identity, Convert count, context size, and host compile time.",
+    "Define an explicit request-level hybrid route using accepted HTP short/medium and LiteRT GPU long arms; model dual-route setup/memory honestly before any phone gate.",
+    "Add a bounded logit/state capture design around QNN generated tokens 64-128 and periodic onset 478; do not infer internal divergence from text alone."
+  ],
+  "requested": {
+    "campaign_rerun": false,
+    "model_conversion": false,
+    "phone_access": false
+  },
+  "schema_version": 1
+}

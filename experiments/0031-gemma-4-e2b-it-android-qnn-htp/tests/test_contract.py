@@ -662,6 +662,30 @@ class ContractTest(unittest.TestCase):
         self.assertTrue(result["publication"]["long_output_sanity_failure_must_be_disclosed"])
         self.assertFalse(result["publication"]["quality_acceptance_claim"])
 
+    def test_distinct_improvement_track_quantifies_long_collapse_without_phone(self) -> None:
+        track = EXP / "improvements/0001-long-collapse-speed-quality"
+        result = json.loads((track / "results/long-collapse-baseline/result.json").read_text())
+        self.assertEqual("0001-long-collapse-speed-quality", result["improvement_track"])
+        collapse = result["qnn_collapse"]
+        self.assertEqual(5, collapse["output_count"])
+        self.assertTrue(collapse["all_outputs_byte_identical"])
+        self.assertEqual(2048, collapse["trajectory"]["token_count"])
+        self.assertEqual(83, collapse["trajectory"]["rolling_collapse_onset"]["start_token_index_zero_based"])
+        self.assertEqual(478, collapse["trajectory"]["exact_periodic_suffix"]["start_token_index_zero_based"])
+        self.assertEqual(9, collapse["trajectory"]["exact_periodic_suffix"]["period_tokens"])
+        self.assertEqual(1570, collapse["trajectory"]["exact_periodic_suffix"]["suffix_tokens"])
+        self.assertFalse(collapse["absolute_context_positions"]["crossed_context_boundary"])
+        self.assertEqual(0, result["cross_route_comparison"]["qnn_vs_gpu_first_common_word_divergence_zero_based"])
+        self.assertEqual(5, result["cross_route_comparison"]["litert_gpu_vs_cpu_first_emitted_token_divergence_zero_based"])
+        self.assertFalse(result["cause_evidence"]["text_only_causality_claim"])
+        self.assertEqual("explicit request-level HTP/LiteRT-GPU hybrid", result["candidate_matrix"][0]["candidate"])
+        self.assertFalse(result["requested"]["phone_access"])
+        self.assertFalse(result["requested"]["model_conversion"])
+        result_dir = track / "results/long-collapse-baseline"
+        digest, name = (result_dir / "SHA256SUMS").read_text().strip().split("  ", 1)
+        self.assertEqual("result.json", name)
+        self.assertEqual(digest, sha(result_dir / name))
+
     def test_bounded_phone_gate_script_holds_lock_and_cleans_scope(self) -> None:
         script = (EXP / "tools/run_phone_viability.sh").read_text()
         self.assertIn('artifacts/locks/phone.lock', script)
