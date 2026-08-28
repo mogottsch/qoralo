@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "classification": "host_x86_htp_ordinary_monolithic_two_step_loaded_state_check",
+  "route": {
+    "context_sha256":"76ba15e7fd95e5e13e92be0e88e8e6bbd3123f2b993b6986c9dac8800a9bf212",
+    "backend_build_id":"v2.49.40.260810104044",
+    "contexts_loaded":1,
+    "graphs_loaded":1,
+    "graph_executions":2,
+    "loaded_once":true,
+    "context_streaming":false,
+    "explicit_state_tensors":38,
+    "state_behavior":"After position 0, all 22 recurrent-convolution states are replaced and each of 8 attention K/V pairs writes its 512-element token slice at position 0. Those states are supplied to position 1 without reload.",
+    "position_behavior":"position_ids advances 0 to 1; attention mask opens the prior position and keeps the current final slot visible exactly as in the established route."
+  },
+  "canonical_short_binding": {
+    "workload_text_sha256":"81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae",
+    "token_file_sha256":"eae8e828110f634d5c9954df0372e869f67f67aed846f9f544781faa1d4d29bc",
+    "prefix_token_count":2,
+    "prefix_tokens":[124894,124899],
+    "prefix_binary_sha256":"6c80ab19fd1ba71bdf57ba31d5925ea2c3363c66c7139730176823ade26d675a"
+  },
+  "result": {
+    "position_1_global_argmax":25,
+    "split_cpu_reference_argmax":25,
+    "consolidated_cpu_reference_argmax":25,
+    "greedy_decision_equal":true,
+    "output_sha256":"0623ccb9b1619bd388284a438034d8cb6431964ba727d8b1c450303105735488",
+    "full_graph_execution_succeeded":true
+  },
+  "timing": {
+    "setup_seconds":3.09097,
+    "two_step_request_seconds":778.395,
+    "interpretation":"x86 HTP emulator feasibility diagnostic only; not physical or benchmark performance evidence."
+  },
+  "next_gate_boundary":"This is the smallest feasible multi-step state/position/mask check. It does not execute the full canonical short prompt or generate text. Physical expansion still requires Pi/Moritz agreement and explicit phone priority.",
+  "claim_boundary":"Host x86 HTP two-step loaded-state and greedy-decision evidence only. No new physical Android execution, canonical prompt completion, generated-text quality, performance campaign, or registry result."
+}

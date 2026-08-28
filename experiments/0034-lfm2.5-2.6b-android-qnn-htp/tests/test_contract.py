@@ -79,7 +79,7 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
     def test_active_export_does_not_claim_qnn_android_or_completion(self) -> None:
-        self.assertIn("physical_direct_qnn_htp_ordinary_monolithic_position0_viability_passed", self.contract["status"])
+        self.assertIn("physical_position0_viability_passed_host_two_step_state_check_passed", self.contract["status"])
         route = self.result["route_assessment"]
         self.assertFalse(route["compiled_sm8550_context_available"])
         self.assertFalse(route["android_execution"])
@@ -88,7 +88,7 @@ class ContractTest(unittest.TestCase):
         self.assertIn("not_android_qnn_or_htp", milestone["classification"])
         self.assertEqual("passed", milestone["rewritten_onnx"]["onnx_checker"])
         self.assertEqual(16, milestone["bounded_output"]["max_new_tokens"])
-        self.assertIn("No further ADB", self.contract["phone_boundary"])
+        self.assertIn("No phone access occurred for the two-step host check", self.contract["phone_boundary"])
 
     def test_qnn_aot_is_complete_but_not_physical_execution(self) -> None:
         milestone = self.contract["qnn_aot_milestone"]
@@ -279,6 +279,21 @@ class ContractTest(unittest.TestCase):
         self.assertIn("not a canonical benchmark", result["timing"]["interpretation"])
         self.assertTrue(result["cleanup"]["scoped_remote_root_verified_absent"])
 
+    def test_ordinary_monolithic_host_two_step_carries_state(self) -> None:
+        check = self.contract["ordinary_monolithic_host_two_step_state_check"]
+        self.assertEqual((1, 1, 2, 0), (check["context_count"], check["graph_count"], check["graph_executions"], check["context_reloads"]))
+        self.assertEqual([124894, 124899], check["canonical_short_prefix_tokens"])
+        self.assertEqual([0, 1], check["positions"])
+        self.assertEqual(38, check["explicit_state_tensors_carried"])
+        self.assertTrue(check["position_and_mask_updated"])
+        self.assertEqual(check["reference_global_argmax"], check["position_1_global_argmax"])
+        self.assertFalse(check["physical_execution"])
+        self.assertFalse(check["canonical_prompt_completed"])
+        result = json.loads((EXP / check["evidence"]).read_text())
+        self.assertTrue(result["result"]["greedy_decision_equal"])
+        self.assertIn("without reload", result["route"]["state_behavior"])
+        self.assertIn("not physical", result["timing"]["interpretation"])
+
     def test_final_pipeline_host_equivalence_is_bounded(self) -> None:
         result = json.loads((EXP / "results/htp-pipeline-host-equivalence/result.json").read_text())
         self.assertIn("host_only", result["classification"])
@@ -323,6 +338,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/qairt-24940-matched-phone-attempt-1-context-create-failure",
             EXP / "results/qnn-ordinary-monolithic-host-preparation",
             EXP / "results/qnn-ordinary-monolithic-phone-viability-position0",
+            EXP / "results/qnn-ordinary-monolithic-host-two-step-state-check",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

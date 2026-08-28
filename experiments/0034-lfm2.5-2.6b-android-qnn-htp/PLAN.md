@@ -64,12 +64,14 @@
 52. Ran one authorized physical position-zero gate under `phone.lock`: all 12 stage hashes passed, the ordinary context loaded once, one graph loaded, and one direct-QNN HTP graph execution completed.
 53. Verified global argmax 124894 exactly matches both CPU routes and x86 HTP; preserved timing as a single diagnostic only.
 54. Preserved raw provider, hashes, identity, input/output, memory, thermal/power, and cleanup evidence; remote root absent and lock released.
+55. Ran the smallest feasible host multi-step check: first two canonical-short tokens through one loaded context and two x86 HTP graph executions.
+56. Carried all 38 states, advanced position/mask, and matched both CPU references at position 1 with global argmax 25.
 
 ## In progress
 
-1. Commit and independently review the first correct physical full-graph option-2 viability evidence.
-2. Stop all ADB and expanded workload activity until an agreed next route gate receives explicit authorization.
-3. Context streaming remains prohibited. No output-quality, campaign, performance, or registry claim.
+1. Commit and independently review the host two-step state/position/mask evidence.
+2. Stop all ADB and expanded workload activity until Pi and Moritz agree a next route gate and explicitly authorize it.
+3. Context streaming remains prohibited. No canonical completion, output-quality, campaign, performance, or registry claim.
 
 ## Phone and campaign sequence
 
