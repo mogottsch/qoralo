@@ -79,7 +79,7 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
     def test_active_export_does_not_claim_qnn_android_or_completion(self) -> None:
-        self.assertIn("physical_direct_qnn_htp_canonical_short_max16_output_sanity_passed", self.contract["status"])
+        self.assertIn("performance_engineering_ar1_profile_complete", self.contract["status"])
         route = self.result["route_assessment"]
         self.assertFalse(route["compiled_sm8550_context_available"])
         self.assertFalse(route["android_execution"])
@@ -88,7 +88,7 @@ class ContractTest(unittest.TestCase):
         self.assertIn("not_android_qnn_or_htp", milestone["classification"])
         self.assertEqual("passed", milestone["rewritten_onnx"]["onnx_checker"])
         self.assertEqual(16, milestone["bounded_output"]["max_new_tokens"])
-        self.assertIn("Canonical-short max16 gate cleaned absent", self.contract["phone_boundary"])
+        self.assertIn("No phone access occurred for AR1 profiling", self.contract["phone_boundary"])
 
     def test_qnn_aot_is_complete_but_not_physical_execution(self) -> None:
         milestone = self.contract["qnn_aot_milestone"]
@@ -344,6 +344,21 @@ class ContractTest(unittest.TestCase):
         self.assertIn("truncated", result["decode"]["sanity"])
         self.assertTrue(result["cleanup"]["scoped_remote_root_verified_absent"])
 
+    def test_ar1_performance_profile_quantifies_current_bottlenecks(self) -> None:
+        profile = self.contract["ordinary_monolithic_ar1_performance_profile"]
+        self.assertFalse(profile["phone_access"])
+        self.assertEqual(134750216, profile["input_raw_bytes_per_execution"])
+        self.assertEqual(134184960, profile["fp32_attention_state_input_bytes"])
+        self.assertEqual(512000, profile["fp32_logit_output_bytes"])
+        self.assertEqual(6029426688, profile["compiler_estimated_spill_bytes"])
+        self.assertEqual(6068150272, profile["compiler_estimated_fill_bytes"])
+        self.assertFalse(profile["statistical_performance"])
+        result = json.loads((EXP / profile["evidence"]).read_text())
+        self.assertTrue(result["per_execution_raw_io"]["inputs"]["all_raw_memory"])
+        self.assertEqual(1596407808, result["context"]["graph_blob_v2"]["constSize"])
+        self.assertEqual(2698, sum(result["qnn_graph"]["operation_types"].values()))
+        self.assertIn("metadata does not prove", result["bottleneck_assessment"][0])
+
     def test_final_pipeline_host_equivalence_is_bounded(self) -> None:
         result = json.loads((EXP / "results/htp-pipeline-host-equivalence/result.json").read_text())
         self.assertIn("host_only", result["classification"])
@@ -392,6 +407,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/qnn-ordinary-monolithic-phone-two-step-state-check",
             EXP / "results/qnn-ordinary-monolithic-canonical-short-gate-plan",
             EXP / "results/qnn-ordinary-monolithic-phone-canonical-short-max16",
+            EXP / "results/qnn-ordinary-monolithic-ar1-profile",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

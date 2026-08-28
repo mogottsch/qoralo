@@ -163,3 +163,15 @@ The raw 64-byte output was pulled and preserved before validation, SHA-256 `214a
 All token IDs are in vocabulary. This is a coherent partial continuation but not a complete sentence or answer. Setup took 3.47177 seconds, request-to-first-token took 185.986 seconds, and total request time was 202.433 seconds. These are single-run diagnostics, not statistical benchmark results. Peak sampled process VmHWM was 1,611,816 KiB, not total DSP/system residency.
 
 Raw provider, stage/workload hashes, output, memory, thermal/power, identity, and cleanup evidence plus post-cleanup decode are retained in [`results/qnn-ordinary-monolithic-phone-canonical-short-max16/`](results/qnn-ordinary-monolithic-phone-canonical-short-max16/). The scoped root was absent and `phone.lock` released. No retry or campaign is authorized pending independent review and a separately agreed next gate; no registry row or broad output-quality claim exists.
+
+## Performance baseline and bottleneck inventory
+
+Moritz authorized performance engineering, including explicitly declared hybrid routes, but not a campaign of the current AR1 graph. The host-side inventory in [`results/qnn-ordinary-monolithic-ar1-profile/`](results/qnn-ordinary-monolithic-ar1-profile/) binds QNN metadata, compiler traffic estimates, runner copy behavior, and the accepted single physical baseline without using the phone again.
+
+Each AR1 execution exposes 41 raw-buffer inputs totaling **134,750,216 bytes (128.508 MiB)**. FP32 attention K/V state accounts for 134,184,960 bytes; recurrent convolution state adds 540,672 bytes. The runner memcpy-copies every input from CPU memory into QNN raw buffers. Sixty FP32 outputs total 1,085,440 bytes, including 573,440 bytes of updated state and 512,000 bytes across 22 logit chunks.
+
+The context metadata reports a 1,596,407,808-byte constant footprint, 135,979,008 bytes of IO tensors, a 103,874,560-byte spill/fill buffer, 15,385,088 bytes of DDR tensors, 6,409,984 bytes of op data, and zero shared weights. Compiler sequencing estimates 6,029,426,688 spill bytes, 6,068,150,272 fill bytes, 6,105,014,528 total write bytes, and 7,816,581,632 total read bytes per graph execution. Those are compiler estimates, not measured bus counters, and the constant footprint does not prove every constant byte is reread.
+
+The 2,698 QNN operations include 698 reshapes, 557 casts, 281 elementwise multiplies, 278 Conv2d operations, 192 adds, 16 MatMuls, 22 depthwise convolutions, and 8 Softmax operations. From the one accepted physical canonical-short run, prompt processing averaged 1.088 seconds per AR1 graph (including final prompt argmax) and the 15 post-first decode calls averaged 1.096 seconds each; these remain single-run diagnostics.
+
+The highest-leverage next candidate is chunked prompt prefill, starting with bounded AR32 and AR128 compilation/semantic probes. FP16/uFxp16 state plus registered/device-resident memory, reduced logit return, and coarse explicitly declared hybrid partitions follow. Every candidate must preserve recurrent ordering and attention KV semantics and compare output/state against trusted CPU references before a phone request.

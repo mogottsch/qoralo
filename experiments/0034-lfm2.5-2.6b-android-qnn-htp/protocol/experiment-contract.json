@@ -343,6 +343,28 @@
     "revision": "84022ce711b28455e8c4fc364ce68c00cf995875",
     "sha256": "02a8b7e17487d326e46d68ce0ba24211e1b80a14c4cd0597fa73c1cd697f52ed"
   },
+  "ordinary_monolithic_ar1_performance_profile": {
+    "compiler_estimated_fill_bytes": 6068150272,
+    "compiler_estimated_read_bytes": 7816581632,
+    "compiler_estimated_spill_bytes": 6029426688,
+    "compiler_estimated_write_bytes": 6105014528,
+    "context_const_bytes": 1596407808,
+    "evidence": "results/qnn-ordinary-monolithic-ar1-profile/result.json",
+    "fp32_attention_state_input_bytes": 134184960,
+    "fp32_logit_output_bytes": 512000,
+    "fp32_state_output_bytes": 573440,
+    "input_raw_bytes_per_execution": 134750216,
+    "input_raw_mib_per_execution": 128.50782012939453,
+    "io_tensor_bytes": 135979008,
+    "next_candidate": "chunked prompt prefill AR32/AR128 host semantic and compilation probes",
+    "output_raw_bytes_per_execution": 1085440,
+    "phone_access": false,
+    "qnn_operations": 2698,
+    "single_run_decode_graph_seconds": 1.096466666666667,
+    "single_run_prompt_graph_seconds": 1.0876374269005848,
+    "spill_fill_buffer_bytes": 103874560,
+    "statistical_performance": false
+  },
   "ordinary_monolithic_host_two_step_state_check": {
     "argmax_equal": true,
     "canonical_prompt_completed": false,
@@ -492,7 +514,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "Canonical-short max16 gate cleaned absent and released phone.lock. No further ADB, retry, or campaign until separate explicit authorization.",
+  "phone_boundary": "No phone access occurred for AR1 profiling. Every performance candidate requires committed host validation and separate bounded priority; no current campaign.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -591,7 +613,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "physical_direct_qnn_htp_canonical_short_max16_output_sanity_passed",
+  "status": "performance_engineering_ar1_profile_complete_chunked_prefill_host_probes_next",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",

@@ -1,0 +1,133 @@
+{
+  "bottleneck_assessment": [
+    "The AR1 graph has a 1.596 GB constant footprint and incurs compiler-estimated multi-GB DDR read/write plus ~6 GB spill/fill per execution; metadata does not prove every constant byte is reread.",
+    "Raw FP32 attention-state input alone is ~128 MiB per execution; all 41 input tensors are host memcpy-copied into QNN buffers.",
+    "All 22 FP32 logit chunks total 512,000 bytes and are graph outputs even on prompt steps where CPU does not request argmax.",
+    "AR1 prompt latency scales almost linearly with 171 graph executions; chunked prefill is the highest-leverage first candidate.",
+    "FP16/uFxp16 state and registered/device-resident memory are subsequent levers; any hybrid route must declare every CPU/GPU boundary."
+  ],
+  "claim_boundary": "Static metadata/compiler profile plus arithmetic over one accepted physical baseline. No new phone run or performance candidate result.",
+  "classification": "host_static_profile_of_current_physical_ar1_baseline",
+  "context": {
+    "binary_bytes": 1600097976,
+    "build_id": "v2.49.40.260810104044",
+    "graph_blob": {
+      "htpDlbc": 0,
+      "numHvxThreads": 0,
+      "optimizationLevel": 1,
+      "spillFillBufferSize": 103874560,
+      "vtcmSize": 4
+    },
+    "graph_blob_v2": {
+      "constSize": 1596407808,
+      "ddrTensorSize": 15385088,
+      "ioTensorSize": 135979008,
+      "isSafeShareIO": 0,
+      "nativeKChannelSize": 256,
+      "nativeVChannelSize": 64,
+      "opDataSize": 6409984,
+      "sharedWeightsSize": 0,
+      "version": "QNN_SYSTEM_CONTEXT_HTP_GRAPH_INFO_BLOB_VERSION_V2"
+    },
+    "graph_count": 1,
+    "graph_inputs": 41,
+    "graph_outputs": 60
+  },
+  "next_host_candidates": [
+    {
+      "name": "chunked_prefill_AR32",
+      "reason": "Fits 171 tokens as five full chunks plus one 11-token tail if static tail variants or padding semantics are proven; reduces weight/runlist replay drastically."
+    },
+    {
+      "name": "chunked_prefill_AR128",
+      "reason": "Potentially two prompt calls (128+43) but larger activation/logit/state graph may exceed compilation or residency limits; test after a bounded compiler probe."
+    },
+    {
+      "name": "state_fp16_registered_memory",
+      "reason": "Can halve external state bytes; requires fidelity comparison and direct QNN mem registration support."
+    },
+    {
+      "name": "last_token_logits_or_htp_argmax",
+      "reason": "Avoids returning 22 full FP32 chunks on prompt steps and can reduce decode output traffic."
+    }
+  ],
+  "per_execution_raw_io": {
+    "inputs": {
+      "all_raw_memory": true,
+      "bytes": 134750216,
+      "groups": {
+        "attention_mask": 16384,
+        "attention_state": 134184960,
+        "conv_state": 540672,
+        "hidden_embedding": 8192,
+        "position_ids": 8
+      },
+      "mib": 128.50782012939453
+    },
+    "outputs": {
+      "all_raw_memory": true,
+      "bytes": 1085440,
+      "groups": {
+        "attention_state": 32768,
+        "conv_state": 540672,
+        "logits": 512000
+      },
+      "mib": 1.03515625
+    },
+    "total_external_io_bytes": 135835656
+  },
+  "physical_baseline_single_run": {
+    "generated_tokens": 16,
+    "graph_executions": 186,
+    "interpretation": "One physical run; timing is diagnostic, not statistical.",
+    "mean_post_first_decode_graph_seconds": 1.096466666666667,
+    "mean_prompt_graph_seconds_including_first_argmax": 1.0876374269005848,
+    "process_vmhwm_kib": 1611816,
+    "prompt_tokens": 171,
+    "request_to_first_token_seconds": 185.986,
+    "setup_seconds": 3.47177,
+    "total_request_seconds": 202.433
+  },
+  "qnn_graph": {
+    "compiler_ddr_summary_per_execution": {
+      "fill_bytes": 6068150272,
+      "read_total_bytes": 7816581632,
+      "spill_bytes": 6029426688,
+      "write_total_bytes": 6105014528
+    },
+    "operation_types": {
+      "Cast": 557,
+      "Concat": 86,
+      "Conv2d": 278,
+      "DepthWiseConv2d": 22,
+      "ElementWiseAdd": 192,
+      "ElementWiseDivide": 77,
+      "ElementWiseMultiply": 281,
+      "ElementWiseNeg": 16,
+      "ElementWisePower": 77,
+      "ElementWiseSquareRoot": 77,
+      "Gather": 2,
+      "MatMul": 16,
+      "ReduceMean": 77,
+      "Reshape": 698,
+      "Sigmoid": 60,
+      "Softmax": 8,
+      "Split": 38,
+      "StridedSlice": 44,
+      "Tile": 16,
+      "Transpose": 76
+    },
+    "optimized_source_nodes": 1541,
+    "qnn_operations": 2698,
+    "supported_nodes": 1541,
+    "unsupported_nodes": 0
+  },
+  "runner_copy_boundary": {
+    "cpu_to_qnn_each_execution_bytes": 134750216,
+    "logits_copied_for_global_argmax_on_sampled_steps_bytes": 512000,
+    "note": "DirectContext::Run memcpy-copies every input into QNN raw buffers. The graph exposes all state and 22 FP32 logit chunks as app-readable raw outputs.",
+    "qnn_output_raw_buffers_each_execution_bytes": 1085440,
+    "state_outputs_copied_by_cpu_each_execution_bytes": 573440
+  },
+  "schema_version": 1
+}

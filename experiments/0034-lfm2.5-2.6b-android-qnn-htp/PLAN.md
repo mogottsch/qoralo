@@ -74,12 +74,15 @@
 62. Ran the independently reviewed canonical-short gate once under explicit priority: one context/graph loaded once, 171 prompt tokens plus 16 generated tokens, 186 stateful executions, no reload/streaming.
 63. Preserved raw 64-byte token output before validation, then decoded after cleanup to a coherent partial continuation; no EOS or completed answer.
 64. Preserved provider, hashes, timings, process memory, thermal/power, identity, and cleanup; remote root absent and lock released.
+65. Profiled the current AR1 route host-side: exact raw IO bytes, FP32 state/logit traffic, context constant/IO/spill/DDR/op-data sizes, compiler read/write/spill/fill estimates, QNN op mix, and single-run physical timing arithmetic.
+66. Identified chunked prefill as the highest-leverage candidate, followed by lower-precision/registered state, reduced logit return, and coarse explicitly declared hybrid partitions.
 
-## In progress
+## In progress: performance engineering
 
-1. Commit and independently review the canonical-short bounded physical output evidence.
-2. Stop all ADB until a separately agreed next gate receives explicit authorization.
-3. No retry, statistical performance campaign, broad output-quality claim, or registry row.
+1. Commit and independently review the AR1 bottleneck inventory without another phone run.
+2. Build bounded AR32 and AR128 prompt-prefill semantic/compilation probes preserving sequential recurrent and attention KV behavior; pair the selected prefill graph with AR1 decode.
+3. Then evaluate lower-precision/device-resident state and reduced-logit routes, with exact CPU/GPU/HTP responsibility labels.
+4. Build/hash/host-validate each candidate before any bounded phone request. Do not campaign until the fastest sensible route is selected and reset-isolated.
 
 ## Phone and campaign sequence
 
