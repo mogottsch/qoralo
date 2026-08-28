@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
+  "attempt": 3,
+  "attempt_timestamp_utc": "2026-08-28T09:29:27Z",
+  "evidence_class": "bounded_physical_repaired_exact_route_qnn_htp_model_execution",
+  "status": "repaired_pte_physical_execution_succeeded_token_zero_corruption_removed_qdq_mismatch_remains",
+  "authorization": {
+    "device_authorized": true,
+    "phone_priority_explicitly_transferred_by": "Pi",
+    "scope": "exactly one repaired-PTE max_new_tokens=1 physical check; no retry and no campaign"
+  },
+  "device": {
+    "serial": "R5CW81PR8SY",
+    "model": "SM-S918B",
+    "soc": "SM8550",
+    "abi": "arm64-v8a",
+    "android_sdk": 36,
+    "build_fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys"
+  },
+  "deployed_artifacts": {
+    "pte": {
+      "bytes": 1994754552,
+      "sha256": "23ac8abd7e39b596d62bdc6b098a3e61fe0688bf6d1f4d537959e13492d2c506",
+      "fix": "explicit static expansion for Gated Delta recurrent elementwise broadcasts"
+    },
+    "runner": {
+      "bytes": 3446144,
+      "sha256": "0b5bef7984738d60d2f4b2f4dbae1c13f1f5914b75b8cc00e5ae3e2ed0f81fc5"
+    },
+    "canonical_short_token_ids_sha256": "dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4",
+    "qnn_backend_sha256": "0d97f44ac9abcaf7e5e025440c41c3727acc6315f2bd2613ab1cb31afe508b37",
+    "qnn_htp_sha256": "a09b3af28342331b3ec9e57ecbe42bfe54a5fff37c4323ce5685c395ae3ee604",
+    "qnn_system_sha256": "536201ed918f4066f9ef35671198c072faf9ef04af24545f5fae0fc79aa05baa",
+    "qnn_htp_v73_stub_sha256": "2912cc4f29cc5163c36c6c58f931bd08b798ccf8545a670a9498549f95b9036f",
+    "qnn_htp_v73_skel_sha256": "bd54463547f0234d06045699b1f747b7d9d3e3b581874840af50c295b3124f25",
+    "local_remote_hash_diff_empty": true
+  },
+  "request": {
+    "tier": "short",
+    "input_tokens": 174,
+    "max_new_tokens": 1,
+    "generation": "greedy",
+    "runner_exit_code": 0,
+    "model_method_loaded": true,
+    "model_graph_executed": true,
+    "qnn_graphs_per_token": 4,
+    "qnn_graph_execute_started": 696,
+    "qnn_graph_execute_status_0x0": 696,
+    "generated_tokens": 1,
+    "stop_reason": "max_tokens",
+    "generated_token_ids": [1206],
+    "generated_token_ids_path": "raw/generated.int32le",
+    "generated_token_ids_sha256": "2be0a1d6d0f9590c8f825dacfbc129991fe002d12e4384f3205caf256f9f0dd8",
+    "decoded_output": "To",
+    "decoded_output_path": "output.txt",
+    "decoded_output_bytes": 2,
+    "decoded_output_sha256": "f4b06ef6d3c81436f60a318c81c42f8f7e2d774d45a22f3b9b5f3b6980d28146",
+    "output_sanity": {
+      "looks_sensible": true,
+      "issue_notes": null
+    },
+    "output_sanity_scope": "Token 1206 decodes to an ordinary English lexical token and is not obvious corruption; the one-token cap cannot establish sentence-level usefulness or quality.",
+    "fidelity_comparison": {
+      "deployed_unrepaired_physical_token_id": 0,
+      "deployed_unrepaired_physical_decoded_token": "!",
+      "host_w4a16_qdq_token_id": 760,
+      "host_w4a16_qdq_decoded_token": "The",
+      "repaired_physical_matches_unrepaired_physical": false,
+      "repaired_physical_matches_host_w4a16_qdq": false,
+      "interpretation": "The repaired PTE removes the prior token-0/punctuation corruption and yields a lexical token, but physical/QDQ output fidelity is not established."
+    }
+  },
+  "timings": {
+    "scope": "single-request viability only; not a loaded-route benchmark distribution",
+    "setup_ms": 3777.09,
+    "reset_ms": 4.15943,
+    "reset_included_in_total": true,
+    "token_ids_load_ms": 0.888438,
+    "request_total_ms": 332784.0,
+    "ttft_ms": 332784.0,
+    "prefill_ms": 332775.0,
+    "post_prefill_to_first_token_ms": 3.20964,
+    "prefill_execute_ms": 332367.0,
+    "input_tokens_per_second_from_prefill_execute": 0.5235176777477908,
+    "decode_ms": 0.0,
+    "decode_tokens_per_second": null,
+    "decode_rate_null_reason": "Only the first generated token was requested; no after-first-token decode interval exists.",
+    "loaded_route_reused_across_requests": false,
+    "campaign_eligibility": "single_request_viability_only"
+  },
+  "physical_provider_observations": {
+    "qnn_backend": "HTP",
+    "qnn_backend_markers": 4,
+    "dsp_arch": 73,
+    "dsp_arch_markers": 4,
+    "serialized_contexts_created_successfully": 4,
+    "qnn_graphs_retrieved_successfully": 4,
+    "qnn_graph_execute_started": 696,
+    "qnn_graph_execute_status_0x0": 696,
+    "hvx_threads_used_per_graph_execution": 4,
+    "detailed_profile": "profile-summary.json",
+    "qnn_accelerator_execute_seconds_total": 253.641795,
+    "rpc_execute_seconds_total": 255.033891,
+    "accelerator_execute_cycles_total": 61253612902,
+    "provider_log_raw_bytes": 107315601,
+    "provider_log_raw_sha256": "cdf1752c4f5ec815cbc7e754ebe7109af3ad98b9fd434b981f296b83a57dd39c",
+    "etdump_raw_bytes": 56603888,
+    "etdump_raw_sha256": "b805d0b64614007b36974bcb4935cbd57f270a56a5ab6473365dcc72b25c8f1a"
+  },
+  "operating_conditions": {
+    "usb_powered_before_and_after": true,
+    "battery_level_percent_before": 51,
+    "battery_level_percent_after": 52,
+    "battery_temperature_c_before": 32.3,
+    "battery_temperature_c_after": 34.3,
+    "thermal_status_before": 0,
+    "thermal_status_after": 0,
+    "ap_temperature_c_before": 33.2,
+    "ap_temperature_c_after": 39.6,
+    "skin_temperature_c_before": 32.8,
+    "skin_temperature_c_after": 35.4
+  },
+  "retained_evidence": {
+    "metrics": "raw/metrics.json",
+    "generated_token_ids": "raw/generated.int32le",
+    "decoded_output": "output.txt",
+    "compressed_provider_log": "raw/runner.stderr.log.zst",
+    "compressed_etdump": "raw/etdump.etdp.zst",
+    "compression_manifest": "compression-manifest.json",
+    "profile_summary": "profile-summary.json",
+    "curated_provider_proof": "provider-proof.log",
+    "device": "raw/device.txt",
+    "local_hashes": "raw/local-sha256.txt",
+    "remote_hashes": "raw/remote-sha256.txt",
+    "battery_before": "raw/battery-before.txt",
+    "battery_after": "raw/battery-after.txt",
+    "thermal_before": "raw/thermal-before.txt",
+    "thermal_after": "raw/thermal-after.txt",
+    "cleanup": "raw/cleanup.json",
+    "independent_cleanup_verification": "raw/independent-cleanup-verification.txt"
+  },
+  "cleanup": {
+    "owned_remote_root": "/data/local/tmp/vibevoice-0032-qwen35-qnn-viability",
+    "remote_root": "verified_absent",
+    "runner_process": "verified_absent",
+    "phone_lock_released": true,
+    "independently_reverified_by": "Ben under lock, then Pi"
+  },
+  "claim_limits": [
+    "This proves physical execution of the repaired exact four-subgraph W4A16 route through QNN HTP v73 on the authorized SM8550 phone.",
+    "The repaired route produced token 1206 (`To`) rather than the prior token 0 (`!`), removing that obvious corruption symptom.",
+    "Token 1206 still differs from host W4A16 QDQ token 760 (`The`); numerical/output equivalence is not claimed.",
+    "The request was a max_new_tokens=1 gate, not the canonical loaded-route campaign; timings are single-request observations only.",
+    "No sentence-level usefulness, model quality, campaign-readiness, campaign-performance, or benchmark-registry claim is made, and no retry or campaign is authorized."
+  ]
+}

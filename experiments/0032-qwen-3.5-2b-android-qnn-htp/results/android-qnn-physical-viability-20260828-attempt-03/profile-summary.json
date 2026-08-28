@@ -1,0 +1,68 @@
+{
+  "claim_limits": [
+    "Single-request max_new_tokens=1 viability profile only.",
+    "These observations are not a loaded-route campaign distribution or registry benchmark."
+  ],
+  "delegate_unit_handling": "identity conversion; units are taken from each QNN event name",
+  "derived_viability_observations": {
+    "qnn_accelerator_seconds_per_prompt_token": 1.4577114655172414,
+    "qnn_accelerator_seconds_total": 253.641795,
+    "rpc_execute_seconds_per_prompt_token": 1.4657120172413793,
+    "rpc_execute_seconds_total": 255.033891
+  },
+  "events": {
+    "Accelerator (execute) time (cycles)": {
+      "event_series": 4,
+      "max": 130305473,
+      "mean": 88008064.51436782,
+      "min": 54368186,
+      "observations": 696,
+      "sum": 61253612902
+    },
+    "Number of HVX threads used (count)": {
+      "event_series": 4,
+      "max": 4,
+      "mean": 4.0,
+      "min": 4,
+      "observations": 696,
+      "sum": 2784
+    },
+    "QNN accelerator (execute) time (us)": {
+      "event_series": 4,
+      "max": 1308652,
+      "mean": 364427.8663793103,
+      "min": 211775,
+      "observations": 696,
+      "sum": 253641795
+    },
+    "RPC (execute) time (us)": {
+      "event_series": 4,
+      "max": 1311215,
+      "mean": 366428.0043103448,
+      "min": 213345,
+      "observations": 696,
+      "sum": 255033891
+    },
+    "Time for HVX + HMX power on and acquire (us)": {
+      "event_series": 4,
+      "max": 25738,
+      "mean": 7848.158045977011,
+      "min": 3698,
+      "observations": 696,
+      "sum": 5462318
+    },
+    "Time for initial VTCM acquire (us)": {
+      "event_series": 4,
+      "max": 6683,
+      "mean": 6114.1551724137935,
+      "min": 3060,
+      "observations": 696,
+      "sum": 4255452
+    }
+  },
+  "expected_graph_executions": 696,
+  "prompt_tokens": 174,
+  "qnn_graphs_per_token": 4,
+  "schema_version": 1,
+  "source": "ExecuTorch Inspector over physical-attempt ETDump"
+}

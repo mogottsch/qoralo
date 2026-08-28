@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active. The exact 24-layer route has been recompiled with explicit Gated Delta broadcasts and validated through QNN's x86 backend. The repaired PTE removes the first-layer recurrent corruption and massive logit saturation, but it has not run physically; any further phone check requires a new explicit Pi handoff.**
+**Active. The repaired exact 24-layer route has now executed physically through QNN/HTP and produced token 1206 (`To`) rather than the unrepaired token 0 (`!`). This removes the obvious token-0 corruption symptom, but it still differs from host W4A16 QDQ token 760 (`The`); campaign readiness is not established.**
 
 This is a separate HTP feasibility arm. It does not change or relabel `0027` CPU evidence.
 
@@ -47,11 +47,15 @@ A lower-retention two-process host replay in [`results/host-w4a16-qdq-output-dia
 
 [`results/exact-qnn-explicit-broadcast-host-validation/`](results/exact-qnn-explicit-broadcast-host-validation/) binds the revised 1,994,754,552-byte PTE. All 4,210 tensor-compute nodes are delegated. QNN-x86 first-token validation improves layer-0 recurrent-state cosine from 0.0064 to 0.999829 and reduces the logit maximum from a 39,209-way tie to one unique value. Overall first-token logits still differ from QDQ, so this is repair validation rather than complete numerical equivalence.
 
+## Repaired-route physical milestone
+
+[`results/android-qnn-physical-viability-20260828-attempt-03/`](results/android-qnn-physical-viability-20260828-attempt-03/) binds the one authorized physical check. All 696 expected QNN graph calls completed on HTP-v73 and the runner exited 0. The single generated token was ID 1206 (`To`). This is no longer the obvious token-0 corruption, but it does not match the QDQ token and is not a sentence-level useful-output or campaign claim.
+
 ## Current next gate
 
-1. Keep the revised PTE and phone preflight hash fixed.
+1. Keep the repaired PTE and phone preflight hash fixed.
 2. Do not reacquire `phone.lock`, invoke ADB, or stage anything without a new explicit Pi handoff.
-3. If Pi authorizes a separately bounded physical output check, preserve the same strict provider/output/cleanup evidence; no campaign is currently authorized.
-4. Only after credible output fidelity is established may the loaded-route multi-request runner and fixed 1+5+5+5 campaign be considered.
+3. Treat residual QDQ-versus-physical drift and one-token-only output as unresolved campaign-readiness boundaries.
+4. Only after a separately agreed fidelity/output gate may the loaded-route multi-request runner and fixed 1+5+5+5 campaign be considered.
 
 GenieX llama.cpp NPU metrics, the shipped 4B HTP example, direct-Hexagon output without QNN, and CPU-only text output are not substitutes for physical QNN/HTP provider proof.

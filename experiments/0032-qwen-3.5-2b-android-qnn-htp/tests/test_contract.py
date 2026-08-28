@@ -63,6 +63,9 @@ class ContractTest(unittest.TestCase):
         cls.repaired_pte = json.loads(
             (EXP / "results/exact-qnn-explicit-broadcast-host-validation/result.json").read_text()
         )
+        cls.repaired_physical = json.loads(
+            (EXP / "results/android-qnn-physical-viability-20260828-attempt-03/result.json").read_text()
+        )
 
     def test_canonical_protocol_and_workloads(self) -> None:
         canonical = self.contract["canonical_protocol"]
@@ -352,9 +355,9 @@ class ContractTest(unittest.TestCase):
         self.assertLess(after["final_logits_max_abs"], 3e-5)
         self.assertTrue(after["qdq_recurrent_state_unchanged"])
         self.assertEqual(after["source_sha256"], sha(EXP / after["source_path"]))
-        self.assertFalse(self.contract["executorch_qnn_route"]["deployed_pte_contains_explicit_broadcast_fix"])
+        self.assertTrue(self.contract["executorch_qnn_route"]["deployed_pte_contains_explicit_broadcast_fix"])
 
-    def test_exact_repaired_pte_is_host_validated_not_physically_claimed(self) -> None:
+    def test_exact_repaired_pte_host_validation_is_preserved(self) -> None:
         result = self.repaired_pte
         self.assertEqual(
             "exact_explicit_broadcast_pte_host_compile_and_qnn_x86_validation",
@@ -378,9 +381,67 @@ class ContractTest(unittest.TestCase):
         comparison = result["comparison_to_deployed_pte"]
         self.assertEqual(39209, comparison["deployed_logits_exact_max_count"])
         self.assertEqual(1, comparison["revised_logits_exact_max_count"])
-        self.assertFalse(self.contract["executorch_qnn_route"]["revised_pte_physical_execution"])
+        self.assertTrue(self.contract["executorch_qnn_route"]["revised_pte_physical_execution"])
         phone_script = (EXP / "tools/run_phone_viability.sh").read_text()
         self.assertIn(result["compile"]["pte_sha256"], phone_script)
+
+    def test_repaired_pte_physical_check_removes_token_zero_but_not_qdq_drift(self) -> None:
+        attempt = self.repaired_physical
+        self.assertEqual(
+            "bounded_physical_repaired_exact_route_qnn_htp_model_execution",
+            attempt["evidence_class"],
+        )
+        self.assertEqual(
+            self.repaired_pte["compile"]["pte_sha256"],
+            attempt["deployed_artifacts"]["pte"]["sha256"],
+        )
+        request = attempt["request"]
+        self.assertEqual(0, request["runner_exit_code"])
+        self.assertEqual(696, request["qnn_graph_execute_started"])
+        self.assertEqual(696, request["qnn_graph_execute_status_0x0"])
+        self.assertEqual([1206], request["generated_token_ids"])
+        self.assertEqual("To", request["decoded_output"])
+        self.assertEqual({"looks_sensible": True, "issue_notes": None}, request["output_sanity"])
+        self.assertFalse(request["fidelity_comparison"]["repaired_physical_matches_host_w4a16_qdq"])
+        self.assertEqual(760, request["fidelity_comparison"]["host_w4a16_qdq_token_id"])
+        self.assertEqual(
+            request["decoded_output_sha256"],
+            sha(EXP / "results/android-qnn-physical-viability-20260828-attempt-03/output.txt"),
+        )
+        self.assertAlmostEqual(
+            174 / (attempt["timings"]["prefill_execute_ms"] / 1000),
+            attempt["timings"]["input_tokens_per_second_from_prefill_execute"],
+        )
+        self.assertEqual("single_request_viability_only", attempt["timings"]["campaign_eligibility"])
+        self.assertFalse(attempt["timings"]["loaded_route_reused_across_requests"])
+        self.assertEqual("verified_absent", attempt["cleanup"]["remote_root"])
+        self.assertEqual("verified_absent", attempt["cleanup"]["runner_process"])
+        independent = (
+            EXP
+            / "results/android-qnn-physical-viability-20260828-attempt-03/raw/independent-cleanup-verification.txt"
+        ).read_text()
+        self.assertIn("runner_pids=\n", independent)
+        self.assertIn("remote_root=absent", independent)
+
+        profile = json.loads(
+            (EXP / "results/android-qnn-physical-viability-20260828-attempt-03/profile-summary.json").read_text()
+        )
+        self.assertEqual(696, profile["expected_graph_executions"])
+        for event in profile["events"].values():
+            self.assertEqual(696, event["observations"])
+        self.assertEqual(4.0, profile["events"]["Number of HVX threads used (count)"]["mean"])
+
+    def test_repaired_physical_compressed_evidence_recovers_exact_hashes(self) -> None:
+        directory = EXP / "results/android-qnn-physical-viability-20260828-attempt-03"
+        manifest = json.loads((directory / "compression-manifest.json").read_text())
+        self.assertTrue(manifest["lossless"])
+        for entry in manifest["files"]:
+            compressed = directory / entry["compressed_name"]
+            self.assertEqual(entry["compressed_sha256"], sha(compressed))
+            recovered_sha, recovered_bytes = sha_zstd(compressed)
+            self.assertEqual(entry["raw_sha256"], recovered_sha)
+            self.assertEqual(entry["raw_bytes"], recovered_bytes)
+            self.assertTrue(entry["decompression_verified"])
 
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
@@ -395,6 +456,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/host-w4a16-qdq-output-diagnosis",
             EXP / "results/host-qnn-broadcast-divergence-localization",
             EXP / "results/exact-qnn-explicit-broadcast-host-validation",
+            EXP / "results/android-qnn-physical-viability-20260828-attempt-03",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():
