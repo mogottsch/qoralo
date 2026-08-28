@@ -32,7 +32,7 @@ Improve both practical completion speed and long-output fidelity while preservin
 
 ## Candidate order
 
-1. **Request-level hybrid:** HTP for short/medium, LiteRT GPU for long. Existing accepted medians predict no short/medium regression and a 59.1% lower long completion time, while replacing the repetitive 2,048-token output with a sensible 756-token EOS response. The cost is a second explicit route setup and memory footprint.
+1. **Request-level hybrid:** HTP for short/medium, LiteRT GPU for long. Existing accepted medians predict no short/medium regression and a 59.1% lower long completion time (59.147%), while replacing the repetitive 2,048-token output with a sensible 756-token EOS response. Total completion reflects different stop/output counts, and prefill/TTFT use route-native tokenizers. QNN decode is retained only as a raw Genie observation because first-token inclusion is unspecified; it is not strictly normalized against LiteRT and no decode-rate delta is used for the decision. The cost is a second explicit route setup and memory footprint.
 2. **HTP-only global-value FP16:** change only `past_value_{4,9,14}` cache I/O to identical FP16 across AR1/AR128. Storage width remains 16 bits and conversion removal could avoid a speed penalty, but this is a hypothesis requiring measurement.
 3. **HTP-only all-value FP16:** broaden to all 15 value caches if necessary.
 4. **Normalization/fusion variant:** investigate the expanded float normalization components and value conversion path if cache precision alone does not fix the trajectory.

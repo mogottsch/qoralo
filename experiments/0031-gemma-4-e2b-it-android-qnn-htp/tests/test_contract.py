@@ -679,6 +679,11 @@ class ContractTest(unittest.TestCase):
         self.assertEqual(5, result["cross_route_comparison"]["litert_gpu_vs_cpu_first_emitted_token_divergence_zero_based"])
         self.assertFalse(result["cause_evidence"]["text_only_causality_claim"])
         self.assertEqual("explicit request-level HTP/LiteRT-GPU hybrid", result["candidate_matrix"][0]["candidate"])
+        long_delta = result["cross_route_comparison"]["performance"]["long"]["gpu_vs_htp_percent"]
+        self.assertAlmostEqual(-59.14717353914411, long_delta["total_completion_time"])
+        self.assertIsNone(long_delta["decode_rate"])
+        self.assertIn("not a normalized optimization metric", long_delta["decode_rate_reason"])
+        self.assertIn("Not strictly normalized", result["cross_route_comparison"]["performance_comparability"]["decode"])
         self.assertFalse(result["requested"]["phone_access"])
         self.assertFalse(result["requested"]["model_conversion"])
         result_dir = track / "results/long-collapse-baseline"

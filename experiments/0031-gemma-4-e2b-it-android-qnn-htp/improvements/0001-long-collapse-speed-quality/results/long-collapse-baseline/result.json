@@ -99,7 +99,7 @@
   },
   "candidate_matrix": [
     {
-      "assessment": "Best currently evidenced speed+quality option: preserves faster HTP short/medium completion and cuts accepted long median completion time by about 59.5%.",
+      "assessment": "Best currently evidenced speed+quality option: preserves faster HTP short/medium completion and cuts accepted long median completion time by about 59.1% (59.147%). Raw decode rates are not used for this decision.",
       "candidate": "explicit request-level HTP/LiteRT-GPU hybrid",
       "fallback_semantics": "No tensor-level or hidden fallback; backend is selected before each complete logical request and labeled in evidence.",
       "memory_setup_boundary": "Two distinct route setups if co-resident; accepted setup is 2.112 s HTP plus 10.520 s GPU and process-memory observations are not additive HTP/GPU-private memory.",
@@ -109,15 +109,18 @@
       "speed_evidence": {
         "long": {
           "accepted_htp": {
-            "decode_tokens_per_second": 17.82817268371582,
+            "decode_rate_first_token_inclusion": null,
+            "decode_rate_strictly_normalized_comparable": false,
             "output_tokens": 2048,
             "prefill_tokens_per_second": 740.74072265625,
+            "raw_genie_decode_observation_tokens_per_second": 17.82817268371582,
             "sensible": false,
             "total_seconds": 118.256069,
             "ttft_seconds": 2.605519
           },
           "accepted_litert_gpu": {
-            "decode_tokens_per_second": 16.30177358042202,
+            "decode_rate_first_token_inclusion": false,
+            "normalized_decode_tokens_per_second": 16.30177358042202,
             "output_tokens": 756,
             "prefill_tokens_per_second": 981.4313853136699,
             "sensible": true,
@@ -125,7 +128,8 @@
             "ttft_seconds": 2.075712135
           },
           "gpu_vs_htp_percent": {
-            "decode_rate": -8.561724919166892,
+            "decode_rate": null,
+            "decode_rate_reason": "QNN is a raw Genie rate whose first-token inclusion is unspecified; LiteRT explicitly excludes the first token. The numerical delta is not a normalized optimization metric.",
             "prefill_rate": 32.4932402520437,
             "total_completion_time": -59.14717353914411,
             "ttft": -20.33402423854903
@@ -133,15 +137,18 @@
         },
         "medium": {
           "accepted_htp": {
-            "decode_tokens_per_second": 18.77370262145996,
+            "decode_rate_first_token_inclusion": null,
+            "decode_rate_strictly_normalized_comparable": false,
             "output_tokens": 418,
             "prefill_tokens_per_second": 654.8788452148438,
+            "raw_genie_decode_observation_tokens_per_second": 18.77370262145996,
             "sensible": true,
             "total_seconds": 23.235372,
             "ttft_seconds": 0.907551
           },
           "accepted_litert_gpu": {
-            "decode_tokens_per_second": 13.162175902320312,
+            "decode_rate_first_token_inclusion": false,
+            "normalized_decode_tokens_per_second": 13.162175902320312,
             "output_tokens": 640,
             "prefill_tokens_per_second": 485.1687599802832,
             "sensible": true,
@@ -149,7 +156,8 @@
             "ttft_seconds": 1.338511302
           },
           "gpu_vs_htp_percent": {
-            "decode_rate": -29.890356911934834,
+            "decode_rate": null,
+            "decode_rate_reason": "QNN is a raw Genie rate whose first-token inclusion is unspecified; LiteRT explicitly excludes the first token. The numerical delta is not a normalized optimization metric.",
             "prefill_rate": -25.914730102311424,
             "total_completion_time": 118.65055137055691,
             "ttft": 47.48606987375914
@@ -157,15 +165,18 @@
         },
         "short": {
           "accepted_htp": {
-            "decode_tokens_per_second": 19.58441925048828,
+            "decode_rate_first_token_inclusion": null,
+            "decode_rate_strictly_normalized_comparable": false,
             "output_tokens": 474,
             "prefill_tokens_per_second": 367.6470642089844,
+            "raw_genie_decode_observation_tokens_per_second": 19.58441925048828,
             "sensible": true,
             "total_seconds": 24.646687,
             "ttft_seconds": 0.462433
           },
           "accepted_litert_gpu": {
-            "decode_tokens_per_second": 12.323165970975847,
+            "decode_rate_first_token_inclusion": false,
+            "normalized_decode_tokens_per_second": 12.323165970975847,
             "output_tokens": 392,
             "prefill_tokens_per_second": 320.8953477119808,
             "sensible": true,
@@ -173,7 +184,8 @@
             "ttft_seconds": 0.649172812
           },
           "gpu_vs_htp_percent": {
-            "decode_rate": -37.07668420819472,
+            "decode_rate": null,
+            "decode_rate_reason": "QNN is a raw Genie rate whose first-token inclusion is unspecified; LiteRT explicitly excludes the first token. The numerical delta is not a normalized optimization metric.",
             "prefill_rate": -12.716466700908613,
             "total_completion_time": 31.368699472671537,
             "ttft": 40.382025504235216
@@ -245,15 +257,18 @@
     "performance": {
       "long": {
         "accepted_htp": {
-          "decode_tokens_per_second": 17.82817268371582,
+          "decode_rate_first_token_inclusion": null,
+          "decode_rate_strictly_normalized_comparable": false,
           "output_tokens": 2048,
           "prefill_tokens_per_second": 740.74072265625,
+          "raw_genie_decode_observation_tokens_per_second": 17.82817268371582,
           "sensible": false,
           "total_seconds": 118.256069,
           "ttft_seconds": 2.605519
         },
         "accepted_litert_gpu": {
-          "decode_tokens_per_second": 16.30177358042202,
+          "decode_rate_first_token_inclusion": false,
+          "normalized_decode_tokens_per_second": 16.30177358042202,
           "output_tokens": 756,
           "prefill_tokens_per_second": 981.4313853136699,
           "sensible": true,
@@ -261,7 +276,8 @@
           "ttft_seconds": 2.075712135
         },
         "gpu_vs_htp_percent": {
-          "decode_rate": -8.561724919166892,
+          "decode_rate": null,
+          "decode_rate_reason": "QNN is a raw Genie rate whose first-token inclusion is unspecified; LiteRT explicitly excludes the first token. The numerical delta is not a normalized optimization metric.",
           "prefill_rate": 32.4932402520437,
           "total_completion_time": -59.14717353914411,
           "ttft": -20.33402423854903
@@ -269,15 +285,18 @@
       },
       "medium": {
         "accepted_htp": {
-          "decode_tokens_per_second": 18.77370262145996,
+          "decode_rate_first_token_inclusion": null,
+          "decode_rate_strictly_normalized_comparable": false,
           "output_tokens": 418,
           "prefill_tokens_per_second": 654.8788452148438,
+          "raw_genie_decode_observation_tokens_per_second": 18.77370262145996,
           "sensible": true,
           "total_seconds": 23.235372,
           "ttft_seconds": 0.907551
         },
         "accepted_litert_gpu": {
-          "decode_tokens_per_second": 13.162175902320312,
+          "decode_rate_first_token_inclusion": false,
+          "normalized_decode_tokens_per_second": 13.162175902320312,
           "output_tokens": 640,
           "prefill_tokens_per_second": 485.1687599802832,
           "sensible": true,
@@ -285,7 +304,8 @@
           "ttft_seconds": 1.338511302
         },
         "gpu_vs_htp_percent": {
-          "decode_rate": -29.890356911934834,
+          "decode_rate": null,
+          "decode_rate_reason": "QNN is a raw Genie rate whose first-token inclusion is unspecified; LiteRT explicitly excludes the first token. The numerical delta is not a normalized optimization metric.",
           "prefill_rate": -25.914730102311424,
           "total_completion_time": 118.65055137055691,
           "ttft": 47.48606987375914
@@ -293,15 +313,18 @@
       },
       "short": {
         "accepted_htp": {
-          "decode_tokens_per_second": 19.58441925048828,
+          "decode_rate_first_token_inclusion": null,
+          "decode_rate_strictly_normalized_comparable": false,
           "output_tokens": 474,
           "prefill_tokens_per_second": 367.6470642089844,
+          "raw_genie_decode_observation_tokens_per_second": 19.58441925048828,
           "sensible": true,
           "total_seconds": 24.646687,
           "ttft_seconds": 0.462433
         },
         "accepted_litert_gpu": {
-          "decode_tokens_per_second": 12.323165970975847,
+          "decode_rate_first_token_inclusion": false,
+          "normalized_decode_tokens_per_second": 12.323165970975847,
           "output_tokens": 392,
           "prefill_tokens_per_second": 320.8953477119808,
           "sensible": true,
@@ -309,12 +332,19 @@
           "ttft_seconds": 0.649172812
         },
         "gpu_vs_htp_percent": {
-          "decode_rate": -37.07668420819472,
+          "decode_rate": null,
+          "decode_rate_reason": "QNN is a raw Genie rate whose first-token inclusion is unspecified; LiteRT explicitly excludes the first token. The numerical delta is not a normalized optimization metric.",
           "prefill_rate": -12.716466700908613,
           "total_completion_time": 31.368699472671537,
           "ttft": 40.382025504235216
         }
       }
+    },
+    "performance_comparability": {
+      "decode": "Not strictly normalized: Genie first-token inclusion is unspecified while LiteRT excludes it. No decode percentage delta is used in candidate ranking.",
+      "prefill": "Same rendered bytes but route-native tokenizer counts are 1929 HTP vs 1930 LiteRT.",
+      "total_completion_time": "Comparable as end-to-end completion on identical rendered bytes, but output counts/stops differ: HTP repeats to 2048 while LiteRT GPU EOS-stops at 756.",
+      "ttft": "Protocol-aligned observations from different runtimes; tokenizer counts differ by one token."
     },
     "qnn_vs_cpu_first_common_word_divergence_zero_based": 0,
     "qnn_vs_gpu_first_common_word_divergence_zero_based": 0,

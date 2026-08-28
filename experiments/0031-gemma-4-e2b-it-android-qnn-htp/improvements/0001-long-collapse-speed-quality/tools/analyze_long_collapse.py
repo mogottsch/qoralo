@@ -193,7 +193,9 @@ def main() -> None:
         htp = {
             "ttft_seconds": qnn_warm[tier]["ttft_us"]["median"] / 1_000_000,
             "prefill_tokens_per_second": qnn_warm[tier]["prefill_tokens_per_second"]["median"],
-            "decode_tokens_per_second": qnn_warm[tier]["decode_tokens_per_second"]["median"],
+            "raw_genie_decode_observation_tokens_per_second": qnn_warm[tier]["decode_tokens_per_second"]["median"],
+            "decode_rate_first_token_inclusion": None,
+            "decode_rate_strictly_normalized_comparable": False,
             "total_seconds": qnn_warm[tier]["total_request_us"]["median"] / 1_000_000,
             "output_tokens": qnn_warm[tier]["generated_tokens"][0],
             "sensible": qnn_warm[tier]["all_output_sanity_passed"],
@@ -201,7 +203,8 @@ def main() -> None:
         gpu = {
             "ttft_seconds": gpu_agg[tier]["request_to_first_token_seconds"]["median"],
             "prefill_tokens_per_second": gpu_agg[tier]["prefill_tokens_per_second"]["median"],
-            "decode_tokens_per_second": gpu_agg[tier]["decode_tokens_per_second"]["median"],
+            "normalized_decode_tokens_per_second": gpu_agg[tier]["decode_tokens_per_second"]["median"],
+            "decode_rate_first_token_inclusion": False,
             "total_seconds": gpu_agg[tier]["total_seconds"]["median"],
             "output_tokens": gpu_agg[tier]["output_tokens"]["median"],
             "sensible": True,
@@ -212,7 +215,11 @@ def main() -> None:
             "gpu_vs_htp_percent": {
                 "ttft": pct_change(gpu["ttft_seconds"], htp["ttft_seconds"]),
                 "prefill_rate": pct_change(gpu["prefill_tokens_per_second"], htp["prefill_tokens_per_second"]),
-                "decode_rate": pct_change(gpu["decode_tokens_per_second"], htp["decode_tokens_per_second"]),
+                "decode_rate": None,
+                "decode_rate_reason": (
+                    "QNN is a raw Genie rate whose first-token inclusion is unspecified; LiteRT explicitly excludes "
+                    "the first token. The numerical delta is not a normalized optimization metric."
+                ),
                 "total_completion_time": pct_change(gpu["total_seconds"], htp["total_seconds"]),
             },
         }
@@ -228,7 +235,7 @@ def main() -> None:
             "quality_evidence": "Accepted GPU long output is sensible and EOS-stops at 756 tokens; HTP long repeats to 2048.",
             "speed_evidence": comparisons,
             "memory_setup_boundary": "Two distinct route setups if co-resident; accepted setup is 2.112 s HTP plus 10.520 s GPU and process-memory observations are not additive HTP/GPU-private memory.",
-            "assessment": "Best currently evidenced speed+quality option: preserves faster HTP short/medium completion and cuts accepted long median completion time by about 59.5%.",
+            "assessment": "Best currently evidenced speed+quality option: preserves faster HTP short/medium completion and cuts accepted long median completion time by about 59.1% (59.147%). Raw decode rates are not used for this decision.",
         },
         {
             "priority": 2,
@@ -295,6 +302,18 @@ def main() -> None:
             "litert_gpu_vs_cpu_first_emitted_token_divergence_zero_based": first_divergence(gpu_ids, cpu_ids),
             "inference_limit": "No cross-route token-ID/logit equality claim: tokenizers and artifacts differ, and QNN emitted IDs were not directly retained.",
             "performance": comparisons,
+            "performance_comparability": {
+                "total_completion_time": (
+                    "Comparable as end-to-end completion on identical rendered bytes, but output counts/stops differ: "
+                    "HTP repeats to 2048 while LiteRT GPU EOS-stops at 756."
+                ),
+                "ttft": "Protocol-aligned observations from different runtimes; tokenizer counts differ by one token.",
+                "prefill": "Same rendered bytes but route-native tokenizer counts are 1929 HTP vs 1930 LiteRT.",
+                "decode": (
+                    "Not strictly normalized: Genie first-token inclusion is unspecified while LiteRT excludes it. "
+                    "No decode percentage delta is used in candidate ranking."
+                ),
+            },
         },
         "cause_evidence": {
             "deprioritized": [
