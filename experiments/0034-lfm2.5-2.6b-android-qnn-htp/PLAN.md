@@ -53,13 +53,15 @@
 
 43. Moritz authorized an exact-runtime correction after identifying that the physical single-context attempt used Android backend v2.49.0 against a v2.49.40 host context.
 44. Rebuilt the ignored 12-file stage with licensed QAIRT 2.49.40 Android HTP/stub/skel libraries. Context and runtime build IDs exactly match `v2.49.40.260810104044`; hashes, ABIs, SONAMEs, and dependencies are bound and verified.
+45. Ran one authorized matched-runtime physical gate. The backend build ID exactly matched the context, but context creation still failed before graph retrieval/readiness/execution.
+46. Preserved raw evidence and verified scoped cleanup absent plus lock release. Runtime mismatch is ruled out and option 1 will not be retried.
 
-## In progress
+## In progress: authorized option 2
 
-1. Wait behind Gemma and for Pi's explicit phone priority.
-2. Run exactly one bounded matched-runtime single-context compatibility/viability gate under full `phone.lock` lifecycle.
-3. If it fails, commit the exact boundary and proceed host-only to the already-authorized ordinary monolithic one-token graph/context route.
-4. Context streaming remains prohibited. No campaign without a successful bounded gate and separate Pi authorization.
+1. Build one ordinary monolithic one-token QNN graph/context with no shared-resource/weight-sharing format.
+2. Preserve exact model, explicit recurrent/attention state, graph order, loaded-once semantics, and existing CPU boundaries; do not stream contexts.
+3. Host-validate model identity, full HTP delegation with fallback disabled, context metadata, retrieval/execution behavior, and output/state equivalence.
+4. Commit the prepared route or exact blocker before any phone request. No campaign.
 
 ## Phone and campaign sequence
 

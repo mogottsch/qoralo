@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active on Moritz's authorized exact-runtime retry. The prior single-context failure paired a v2.49.40 host context with a v2.49.0 Android backend. A replacement 12-file stage now uses the exact licensed QAIRT 2.49.40 Android HTP/stub/skel runtime matching context build `v2.49.40.260810104044`. No new phone execution or performance claim exists; the gate waits behind Gemma and explicit Pi priority.**
+**Active host-only on authorized option 2. The exact-matched QAIRT 2.49.40 physical gate ruled out runtime mismatch: backend and context both identified as `v2.49.40.260810104044`, yet the single shared-resource context still failed in `QnnContext_createFromBinary` before graph retrieval. Work now proceeds to one ordinary monolithic one-token graph/context with no shared-resource format. No physical execution, output, or performance result exists.**
 
 This is a separate accelerator arm. It preserves `0029` CPU viability and `0033` CPU/OpenCL campaign evidence without modifying either experiment.
 
@@ -122,4 +122,6 @@ The replacement stage binds:
 
 All Android libraries retain the expected AArch64/DSP6 ABIs, SONAMEs, and declared system dependencies. The ignored stage has 12 payload files totaling 1,799,472,275 bytes; stage metadata SHA-256 is `ec531bd03cfbb0a271f9b7c1c5d6471ccff202223cab25e36a6da63eee649edb`, manifest SHA-256 is `ae0e147f1d352984ded9f42bb10545478ce7e979f92451b20dec532d01e79602`, and local hash plus ELF dependency checks pass. See [`results/qairt-24940-matched-android-preparation/`](results/qairt-24940-matched-android-preparation/).
 
-No phone access occurred for this preparation. One bounded physical compatibility/viability gate may run only after Gemma and a new explicit Pi priority grant. If it fails, the exact boundary will be committed and work proceeds to the authorized ordinary monolithic one-token graph route without another decision. No campaign is authorized.
+The one authorized matched-runtime physical gate passed all 12 local/remote hashes and ELF preflight. The direct backend reported exact build `v2.49.40.260810104044`, equal to the context build, but rejected the 1.60 GB shared context in `QnnContext_createFromBinary`. No graph was retrieved or executed. Peak sampled process VmHWM was 1,613,264 KiB while materializing the blob and is not evidence of successful DSP allocation. Cleanup and lock release passed. See [`results/qairt-24940-matched-phone-attempt-1-context-create-failure/`](results/qairt-24940-matched-phone-attempt-1-context-create-failure/).
+
+Option 1 is rejected and will not be retried. Authorized option 2 is host-only: build one ordinary monolithic one-token QNN graph/context without the shared-resource/weight-sharing format, while preserving exact model identity, explicit state, execution order, loaded-once semantics, and the declared CPU boundary. No phone request is permitted until identity, delegation, fallback, host behavior, and context metadata are validated and committed. Context streaming remains prohibited; no campaign is authorized.

@@ -23,6 +23,17 @@
     },
     "storage_boundary": "Qualcomm packages/binaries and license-controlled generated artifacts remain outside Git."
   },
+  "authorized_option_2": {
+    "all_loaded_once": true,
+    "context_streaming": false,
+    "phase": "host_build_and_validation",
+    "phone_request_allowed_before_commit": false,
+    "preserve_declared_cpu_boundaries": true,
+    "preserve_exact_model_state_order": true,
+    "route": "one ordinary monolithic one-token QNN graph/context",
+    "shared_resource_format": false,
+    "weight_sharing_format": false
+  },
   "canonical_protocol": {
     "first_request": {
       "count": 1,
@@ -160,9 +171,9 @@
     "android_execution": false,
     "compiled_context_created": false,
     "qnn_htp_execution": false,
-    "required_action": "After Gemma and explicit Pi priority, run one bounded exact-runtime gate. On failure proceed host-only to authorized ordinary monolithic context.",
+    "required_action": "Proceed host-only to authorized option 2 ordinary monolithic one-token graph/context; commit validation before any phone request.",
     "result_path": "results/support-assessment/result.json",
-    "summary": "Historical single-context rejection used Android QNN backend v2.49.0 against a context compiled by v2.49.40. The exact matched v2.49.40 Android stage is prepared but physically untested."
+    "summary": "Exact-matched QAIRT 2.49.40 backend rejected the single shared-resource context before graph retrieval, ruling out runtime mismatch. Option 1 is closed."
   },
   "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
   "host_export_milestone": {
@@ -213,6 +224,25 @@
     "sm8550_compile_target_supported_generically": true,
     "version": "2.49.0.260730"
   },
+  "matched_qairt_24940_android_phone_attempt_1": {
+    "build_ids_exactly_equal": true,
+    "cleanup_absent": true,
+    "context_build_id": "v2.49.40.260810104044",
+    "contexts_loaded": 0,
+    "contexts_required": 1,
+    "evidence": "results/qairt-24940-matched-phone-attempt-1-context-create-failure/result.json",
+    "failure_api": "QnnContext_createFromBinary",
+    "graphs_executed": 0,
+    "graphs_in_context": 37,
+    "graphs_retrieved": 0,
+    "output_created": false,
+    "phone_lock_released": true,
+    "physical_backend_build_id": "v2.49.40.260810104044",
+    "process_vmhwm_interpretation": "blob materialization only, not successful DSP allocation",
+    "sampled_process_vmhwm_kib": 1613264,
+    "stage_files_verified_local": 12,
+    "stage_files_verified_remote": 12
+  },
   "matched_qairt_24940_android_retry": {
     "all_loaded_once": true,
     "android_backend_build_id_expected": "v2.49.40.260810104044",
@@ -223,7 +253,8 @@
     "context_streaming": false,
     "evidence": "results/qairt-24940-matched-android-preparation/result.json",
     "graph_count": 37,
-    "phone_priority_granted": false,
+    "outcome": "rejected_by_QnnContext_createFromBinary_before_graph_retrieval",
+    "phone_priority_granted": true,
     "physical_execution": false,
     "stage": {
       "elf_preflight": true,
@@ -296,7 +327,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "No phone access occurred for exact-runtime preparation. Wait behind Gemma and for explicit Pi priority.",
+  "phone_boundary": "Matched-runtime attempt cleaned absent and released phone.lock. No retry; option 2 is host-only until committed.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -395,7 +426,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "active_exact_qairt_2_49_40_android_runtime_prepared_waiting_after_gemma",
+  "status": "active_host_only_option_2_ordinary_monolithic_one_token_context",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",
