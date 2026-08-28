@@ -100,11 +100,14 @@
 88. Adapted the custom runner to load physical bridged state, validate position/mask, load one AR1 context once, and update all 38 states in process without reload.
 89. Host x86 HTP max1 resume produced 4695; max16 was skipped because one emulator call took 751 seconds.
 90. Built a hash/ELF-bound 53-file ignored Android max16 resume stage without phone access.
+91. Ran one authorized physical max16 resume diagnostic: one AR1 context/graph loaded once and 16 HTP calls carried all 38 states in process without reload.
+92. Matched the exact CPU physical-state reference token sequence and decoded a coherent partial continuation; retained divergence from sequential-AR1 fidelity reference.
+93. Preserved raw tokens before decode, provider/basic-profile logs, timing, process memory, thermal, hashes, and cleanup; documented missing raw state/logit and detailed-profile evidence.
 
 ## In progress: performance engineering
 
-1. Commit and independently review max16 in-process AR1 resume readiness and divergence evidence.
-2. If explicitly prioritized, run one bounded physical max16 coherence diagnostic; reference equality is not a success criterion.
+1. Commit and independently review the physical max16 bounded operability evidence; do not rerun.
+2. Decide whether to add explicit per-call finite checks/profile serialization before a reset-isolated end-to-end candidate.
 3. Evaluate lower-precision/device-resident state and reduced-logit routes; keep CPU/GPU/HTP boundaries explicit.
 4. Do not campaign until the fastest sensible complete route is selected and reset-isolated.
 

@@ -2,7 +2,7 @@
 
 ## Status
 
-**The physical AR171→AR1 phase switch works for one decode token, and a max16 in-process AR1 continuation is host-prepared. The retained physical prefill state yields the same first four CPU-decoded tokens as references, then diverges at token five while remaining coherent. The custom runner loads the AR1 context once and carries all 38 states without reload; x86 HTP proves its first resumed token is 4695. Severe drift remains, so the planned phone gate tests coherent operability—not reference equality or numerical equivalence.**
+**The accelerated physical route now completes AR171 prefill plus bounded AR1 decode. From retained physical prefill state, one AR1 context loaded once and executed 16 stateful HTP calls without reload, producing the exact host physical-state reference sequence and a coherent partial continuation. Setup was 3.804 seconds, first resumed token 1.118 seconds, and max16 17.418 seconds. Per-call raw states/logits and detailed profiles were not serialized, and severe prefill drift remains, so this is bounded operability—not equivalence or a campaign.**
 
 This is a separate accelerator arm. It preserves `0029` CPU viability and `0033` CPU/OpenCL campaign evidence without modifying either experiment.
 
@@ -247,4 +247,16 @@ Both are coherent partial continuations, but they are not equal. The divergence 
 
 The custom direct-QNN runner can now load all 38 bridged states from raw files, validate position 171 and the exact mask, load one AR1 context once, and greedily update state in process for up to 16 tokens. A bounded x86 HTP max1 probe loaded the context/graph and produced 4695; its 751-second runtime makes max16 emulation impractical. The ignored Android stage contains 53 payloads totaling 1,932,854,438 bytes, with context SHA-256 `76ba15e7fd95e5e13e92be0e88e8e6bbd3123f2b993b6986c9dac8800a9bf212`, runner SHA-256 `659fa97a84d789d0630051d5ff0031d494820de6517e34cccfcb6d116edf9758`, and passing hashes/ELF preflight.
 
-No phone run occurred for max16 readiness. A later bounded physical gate may test finite, coherent continuation and must retain every divergence; it cannot require reference equality or claim numerical equivalence. FP16/uFxp16 state, registered/device-resident memory, reduced logit return, and coarse declared hybrid partitions remain later candidates.
+One reviewed physical max16 resume diagnostic used that exact stage. All 53 hashes passed locally and remotely. The custom direct-QNN runner loaded the accepted AR1 context and all bridged states, validated position 171 and the mask, then completed 16 HTP graph executions while keeping one context and all 38 states in process. It produced exactly the CPU physical-state reference sequence:
+
+`[4695, 10966, 622, 310, 5272, 267, 2014, 116311, 9516, 28817, 374, 278, 2909, 19260, 1703, 2165]`
+
+With prefill endpoint 597, the bound decode is:
+
+> The user wants me to write a self-contained technical recommendation for the team comparing three local
+
+The runner reported 3.80356 seconds setup, 1.11786 seconds to the first resumed token, and 17.4183 seconds for max16; the post-first 15 calls average 1.086696 seconds in this one diagnostic. Request timing includes CPU row embedding and global argmax plus HTP calls, but excludes AR171 prefill and the CPU phase bridge. Peak sampled process VmHWM was 1,611,744 KiB.
+
+Evidence limitations are explicit: the custom runner retained states/logits only in process, did not serialize a detailed QNN profile, and did not explicitly finite-scan each output tensor. It did validate initial state/mask and each QNN input type/size, complete all 16 stateful calls, and emit the exact expected token sequence. Raw token/provider/timing/memory/thermal/cleanup evidence is retained in [`results/qnn-prefill-ar171-ar1-phone-max16-resume/`](results/qnn-prefill-ar171-ar1-phone-max16-resume/). Cleanup passed.
+
+This is not per-call state/logit finiteness evidence, numerical equivalence, a complete answer, canonical end-to-end TTFT, or a statistical campaign. FP16/uFxp16 state, registered/device-resident memory, reduced logit return, and coarse declared hybrid partitions remain later candidates.

@@ -79,7 +79,7 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
     def test_active_export_does_not_claim_qnn_android_or_completion(self) -> None:
-        self.assertIn("performance_engineering_ar1_max16_resume_from_physical_prefill_ready", self.contract["status"])
+        self.assertIn("performance_engineering_physical_ar1_max16_resume_operability_passed", self.contract["status"])
         route = self.result["route_assessment"]
         self.assertFalse(route["compiled_sm8550_context_available"])
         self.assertFalse(route["android_execution"])
@@ -88,7 +88,7 @@ class ContractTest(unittest.TestCase):
         self.assertIn("not_android_qnn_or_htp", milestone["classification"])
         self.assertEqual("passed", milestone["rewritten_onnx"]["onnx_checker"])
         self.assertEqual(16, milestone["bounded_output"]["max_new_tokens"])
-        self.assertIn("No phone access occurred for AR1 max16 resume readiness", self.contract["phone_boundary"])
+        self.assertIn("Physical AR1 max16 resume diagnostic cleaned absent", self.contract["phone_boundary"])
 
     def test_qnn_aot_is_complete_but_not_physical_execution(self) -> None:
         milestone = self.contract["qnn_aot_milestone"]
@@ -485,7 +485,7 @@ class ContractTest(unittest.TestCase):
     def test_ar1_max16_resume_is_ready_not_executed(self) -> None:
         ready = self.contract["ar1_max16_resume_readiness"]
         self.assertFalse(ready["phone_access"])
-        self.assertFalse(ready["phone_authorized"])
+        self.assertTrue(ready["phone_authorized"])
         self.assertEqual((597, 171, 16), (ready["start_token"], ready["start_position"], ready["max_new_tokens"]))
         self.assertEqual((1, 0), (ready["context_count"], ready["context_reloads"]))
         self.assertFalse(ready["context_streaming"])
@@ -494,11 +494,33 @@ class ContractTest(unittest.TestCase):
         self.assertTrue(ready["host_x86_htp_max1"]["context_loaded"])
         self.assertEqual(4695, ready["host_x86_htp_max1"]["output_argmax"])
         self.assertEqual((53, 1932854438), (ready["stage"]["payload_files"], ready["stage"]["payload_bytes"]))
-        self.assertFalse(ready["physical_execution"])
+        self.assertTrue(ready["physical_execution"])
+        self.assertEqual("passed_exact_cpu_physical_state_reference_sequence", ready["outcome"])
         result = json.loads((EXP / ready["evidence"]).read_text())
         self.assertIn("impractical-runtime", result["custom_runner"]["host_x86_htp_max1"]["interpretation"])
         self.assertIn("coherent partial", result["cpu_max16_validation"]["physical_route_sanity"])
         self.assertNotEqual(result["cpu_max16_validation"]["physical_ar171_state_tokens"], result["cpu_max16_validation"]["cpu_ar171_state_tokens"])
+
+    def test_physical_ar1_max16_resume_operability_has_explicit_gaps(self) -> None:
+        gate = self.contract["ar1_max16_phone_resume_diagnostic"]
+        self.assertEqual((53, 53), (gate["stage_files_verified_local"], gate["stage_files_verified_remote"]))
+        self.assertEqual((597, 171), (gate["start_token"], gate["start_position"]))
+        self.assertEqual((1, 1, 0, 16), (gate["context_count"], gate["graph_count"], gate["context_reloads"], gate["graph_executions"]))
+        self.assertFalse(gate["context_streaming"])
+        self.assertEqual([4695,10966,622,310,5272,267,2014,116311,9516,28817,374,278,2909,19260,1703,2165], gate["tokens"])
+        self.assertTrue(gate["exact_cpu_physical_state_sequence_equal"])
+        self.assertTrue(gate["coherent_partial"])
+        self.assertFalse(gate["raw_states_serialized"])
+        self.assertFalse(gate["raw_logits_serialized"])
+        self.assertFalse(gate["explicit_output_finite_scan"])
+        self.assertFalse(gate["detailed_profile_serialized"])
+        self.assertFalse(gate["numerical_equivalence"])
+        self.assertFalse(gate["canonical_end_to_end_ttft"])
+        result = json.loads((EXP / gate["evidence"]).read_text())
+        self.assertEqual(64, result["output"]["raw_bytes"])
+        self.assertIn("Per-call raw state/logit finiteness", result["evidence_gap"]["what_is_not_proven"])
+        self.assertIn("excludes AR171 prefill", result["timing"]["scope"])
+        self.assertTrue(result["cleanup"]["scoped_remote_root_verified_absent"])
 
     def test_final_pipeline_host_equivalence_is_bounded(self) -> None:
         result = json.loads((EXP / "results/htp-pipeline-host-equivalence/result.json").read_text())
@@ -556,6 +578,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/qnn-prefill-ar171-ar1-phase-switch-readiness",
             EXP / "results/qnn-prefill-ar171-ar1-phone-phase-switch-diagnostic",
             EXP / "results/qnn-prefill-ar171-ar1-max16-readiness",
+            EXP / "results/qnn-prefill-ar171-ar1-phone-max16-resume",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

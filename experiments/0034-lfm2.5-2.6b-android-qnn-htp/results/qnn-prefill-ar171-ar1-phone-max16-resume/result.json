@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "run_id": "resume-20260828T133905Z-2739029",
+  "classification": "physical_direct_qnn_htp_bounded_coherent_ar1_max16_resume_operability_pass",
+  "device": {"serial":"R5CW81PR8SY","manufacturer":"samsung","model":"SM-S918B","soc":"SM8550","abi":"arm64-v8a","android_release":"16","api":36,"verified_boot":"green","flash_locked":true},
+  "stage": {
+    "payload_files":53,
+    "payload_bytes":1932854438,
+    "stage_metadata_sha256":"c77ed599e25e913a93fe53c0cbea15977ce306d76d02d74130e78da6fdf4f88e",
+    "manifest_sha256":"be9eaff06ea5846794b2ea6b689d2accba88ff0ce50835aa67395eed7dc72ea6",
+    "all_local_hashes_verified":true,
+    "all_remote_hashes_verified":true,
+    "elf_preflight":true,
+    "context_sha256":"76ba15e7fd95e5e13e92be0e88e8e6bbd3123f2b993b6986c9dac8800a9bf212",
+    "runner_sha256":"659fa97a84d789d0630051d5ff0031d494820de6517e34cccfcb6d116edf9758"
+  },
+  "provider": {
+    "api":"direct QNN custom runner",
+    "backend":"HTP",
+    "backend_build_id":"v2.49.40.260810104044",
+    "neural_cpu_fallback_available":false,
+    "compiled_delegation":"1541/1541 optimized source nodes, 2698 QNN operations, zero unsupported",
+    "profiling":"Basic QNN profile handle initialized and raw backend logs retained; events were not serialized or extracted."
+  },
+  "route": {
+    "state_source":"CPU-bridged retained physical AR171 state",
+    "start_token":597,
+    "start_position":171,
+    "contexts_loaded":1,
+    "graphs_loaded":1,
+    "context_reloads":0,
+    "context_streaming":false,
+    "graph_executions":16,
+    "generated_tokens":16,
+    "state_tensors_carried_in_process":38,
+    "input_validation":"Initial position/mask and all 38 state file sizes validated; each per-call QNN input type and byte size validated.",
+    "cpu_work":"selected-row asymmetric Q4 embedding dequantization, request/token orchestration, in-process state placement, and global greedy argmax",
+    "htp_work":"all transformer/recurrent/attention/final-norm/LM-head graph work for each of 16 decode calls"
+  },
+  "output": {
+    "raw_token_output_preserved_before_decode":true,
+    "raw_bytes":64,
+    "raw_sha256":"bcf315ba11a617cd436d6abd4db99f5e94000b9059fc2cf1ed3a560c922f8b7e",
+    "tokens":[4695,10966,622,310,5272,267,2014,116311,9516,28817,374,278,2909,19260,1703,2165],
+    "cpu_physical_state_reference_tokens":[4695,10966,622,310,5272,267,2014,116311,9516,28817,374,278,2909,19260,1703,2165],
+    "exact_sequence_equal_to_cpu_physical_state_reference":true,
+    "expected_first_token":4695,
+    "first_token_equal":true,
+    "all_token_ids_in_vocab":true,
+    "eos_present":false,
+    "decoded_with_prefill_endpoint597":"The user wants me to write a self-contained technical recommendation for the team comparing three local",
+    "sanity":"coherent partial continuation truncated at max16"
+  },
+  "timing": {
+    "setup_seconds":3.80356,
+    "request_to_first_token_seconds":1.11786,
+    "total_request_seconds":17.4183,
+    "post_first_15_token_mean_seconds":1.086696,
+    "scope":"One physical max16 resume diagnostic. Request timing includes per-token CPU embedding/global argmax and HTP graph calls, but excludes AR171 prefill and CPU phase bridge.",
+    "interpretation":"Not canonical end-to-end TTFT, a statistical decode benchmark, or a campaign."
+  },
+  "memory": {"sampled_process_vmhwm_peak_kib":1611744,"interpretation":"Android process VmHWM only; not total system or DSP residency."},
+  "evidence_gap": {
+    "raw_state_tensors_serialized":false,
+    "raw_logit_tensors_serialized":false,
+    "explicit_output_finite_scan":false,
+    "detailed_qnn_profile_serialized":false,
+    "what_is_proven":"The runner validated initial state and per-call QNN types/sizes, completed 16 state-carrying graph calls and argmax reductions, and emitted the exact expected bounded token sequence.",
+    "what_is_not_proven":"Per-call raw state/logit finiteness, detailed operator timing, or numerical state/logit equivalence."
+  },
+  "fidelity_boundary":"Exact token equality to the host CPU continuation from the same physical AR171 state does not erase the severe previously measured physical-prefill-versus-CPU state drift or establish fidelity to sequential AR1.",
+  "thermal_and_power":"Raw battery and thermalservice snapshots before and after are retained without a campaign claim.",
+  "cleanup": {"scoped_remote_root_verified_absent":true,"process_after":false,"phone_lock_held_for_full_lifecycle":true,"phone_lock_released":true},
+  "claim_boundary":"Positive physical direct-QNN HTP bounded max16 resume operability and coherent token output from retained physical AR171 state, with one AR1 context loaded once. No raw state/logit finiteness claim, detailed profile claim, numerical equivalence, complete answer, canonical end-to-end performance, campaign, or registry evidence."
+}
