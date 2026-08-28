@@ -180,4 +180,12 @@ Both candidates compile fallback-disabled to one SM8550/V73 subgraph with 1,542/
 
 CPU comparison against the accepted sequential AR1 transformation preserves the final greedy decision: AR32 token 32 is 20 in both routes, and AR128 token 128 is 116311 in both. A second AR32 chunk also preserves argmax 342 at token 64. Numeric differences remain material and are not hidden: only 20/38 AR32 and 19/38 AR128 state tensors meet `rtol=0.02, atol=0.02`; state max-absolute deltas are 0.307 and 0.552, while logit max-absolute deltas are 0.512 and 0.383. These are viability probes, not exact numerical equivalence or output-quality evidence.
 
-Neither width exactly tiles the 171-token canonical short prompt without a tail graph or padding. The next host probes are AR57 (three equal chunks) and AR171 (one prompt chunk), followed by host HTP execution of the best practical route. FP16/uFxp16 state, registered/device-resident memory, reduced logit return, and coarse explicitly declared hybrid partitions remain later candidates. No phone access occurred.
+Neither width exactly tiles the 171-token canonical short prompt without a tail graph or padding. Exact-tiling AR57 and AR171 results are now retained in [`results/qnn-prefill-ar57-ar171-host-probes/`](results/qnn-prefill-ar57-ar171-host-probes/).
+
+AR57 carries all 38 states across three chunks and preserves sequential-AR1 greedy decisions at every boundary: `[8771, 437, 597]` at tokens `[57, 114, 171]`. AR171 preserves final argmax 597 in one chunk. Numeric differences remain material: AR57's maximum state/logit deltas reach 0.665/0.724; AR171 reaches 0.514/0.771. No exact numerical or broad-equivalence claim is made.
+
+Both compile fallback-disabled as one ordinary QNN graph with 1,542/1,542 optimized nodes, 2,699 QNN operations, and zero unsupported nodes. AR57's 1,600,858,704-byte context has a 156,434,432-byte spill/fill buffer. AR171's 1,602,378,320-byte context has a 463,667,200-byte spill/fill buffer. One AR171 call has lower aggregate compiler-estimated prompt read/write traffic than three AR57 calls, so AR171 is the strongest current physical diagnostic candidate.
+
+A bounded AR171 x86 HTP-emulator probe loaded its context and retrieved its graph, then exceeded 1,800 seconds during graph execution and produced no graph output. The process was absent afterward. This establishes only that the emulator is impractical for the candidate; it is not a target-SM8550 failure or physical timing result. No phone access occurred. A bounded physical AR171 diagnostic requires independent review and explicit Pi priority.
+
+FP16/uFxp16 state, registered/device-resident memory, reduced logit return, and coarse explicitly declared hybrid partitions remain later candidates.

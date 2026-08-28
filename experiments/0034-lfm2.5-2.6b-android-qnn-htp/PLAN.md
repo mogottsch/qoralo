@@ -79,13 +79,17 @@
 67. Built AR32 and AR128 fixed-width prefill graphs with causal within-chunk attention, new-slice K/V outputs, final-position-only LM head, and explicit CPU embedding/global-argmax boundaries.
 68. Compared against accepted sequential AR1 and symmetric-head GQA CPU references. Greedy decisions match, including two carried AR32 chunks; material state/logit deltas are retained.
 69. Compiled both fallback-disabled as one SM8550/V73 QNN subgraph: 1,542/1,542 supported, 2,699 QNN ops, zero unsupported.
+70. Built AR57 and AR171 exact-tiling variants. AR57 carries state across three chunks; AR171 consumes canonical short in one call.
+71. Compared AR57 against sequential AR1 at tokens 57/114/171 and AR171 at token 171. All endpoint argmax values match; all numeric state/logit deltas are retained.
+72. Compiled both fallback-disabled with 1,542/1,542 nodes and zero unsupported. Compiler estimates favor one AR171 call over three AR57 calls for aggregate prompt traffic.
+73. Ran the strongest AR171 candidate through a bounded x86 HTP probe: context create/retrieve passed, graph execution exceeded 1,800 seconds, no graph output, process absent afterward.
 
 ## In progress: performance engineering
 
-1. Commit and independently review the AR32/AR128 CPU semantic and QNN compilation probes.
-2. Probe AR57 (exact three-way tiling of 171 tokens) and AR171 (single prompt call), then host-execute the best practical candidate before phone staging.
-3. Then evaluate lower-precision/device-resident state and reduced-logit routes, with exact CPU/GPU/HTP responsibility labels.
-4. Build/hash/host-validate each candidate before bounded phone profiling. Do not campaign until the fastest sensible route is selected and reset-isolated.
+1. Commit and independently review the AR57/AR171 CPU fidelity, QNN AOT, compiler metadata, and host-emulator timeout evidence.
+2. After explicit Pi priority, use at most a bounded physical AR171 diagnostic to measure actual SM8550 viability; fall back to AR57 only if reviewed evidence requires it.
+3. Then evaluate lower-precision/device-resident state, reduced-logit routes, and coarse declared hybrid partitions.
+4. Do not campaign until the fastest sensible route is selected and reset-isolated.
 
 ## Phone and campaign sequence
 

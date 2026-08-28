@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "classification": "host_exact_tiling_chunk_prefill_cpu_semantic_qnn_aot_and_bounded_htp_emulator_timeout",
+  "shared_design": {
+    "model_revision":"ab00687315bc1298e9d54e9c4b611dde9867ccc2",
+    "canonical_short_tokens":171,
+    "cpu_work":"selected-row asymmetric Q4 embedding dequantization, chunk/context orchestration, state-cache placement, and global greedy argmax",
+    "qnn_htp_candidate_work":"all 30 transformer/recurrent/attention layers, final norm, and final-position symmetric-Q4 LM-head chunks",
+    "explicit_state_tensors":38,
+    "context_streaming":false,
+    "neural_cpu_fallback":false
+  },
+  "ar57": {
+    "route":"three sequential 57-token chunks with one fixed-width context retained",
+    "chunk_count":3,
+    "boundary_positions":[57,114,171],
+    "cpu_vs_sequential_ar1": {
+      "all_boundary_argmax_equal":true,
+      "sequential_ar1_argmax":[8771,437,597],
+      "chunk_argmax":[8771,437,597],
+      "state_allclose_counts":[19,18,19],
+      "state_tensor_count":38,
+      "state_max_abs":[0.6651463508605957,0.6651463508605957,0.6651463508605957],
+      "state_mean_abs_max":[0.021251333877444267,0.02000100165605545,0.019010381773114204],
+      "logit_max_abs":[0.3006114959716797,0.3367729187011719,0.7239789962768555],
+      "logit_mean_abs":[0.04573499411344528,0.055054012686014175,0.11407503485679626]
+    },
+    "qnn_compile": {
+      "success":true,
+      "supported_nodes":1542,
+      "optimized_source_nodes":1542,
+      "unsupported_nodes":0,
+      "qnn_operations":2699,
+      "subgraphs":1,
+      "context_bytes":1600858704,
+      "context_sha256":"4e2a92ac382f33fb72096079500ecd472c987c28e81d5a4e444e341e996fac00",
+      "build_id":"v2.49.40.260810104044",
+      "spill_fill_buffer_bytes":156434432,
+      "io_tensor_bytes":137355264,
+      "op_data_bytes":8352512,
+      "ddr_tensor_bytes":15180288,
+      "compiler_estimated_spill_bytes_per_call":9461555200,
+      "compiler_estimated_fill_bytes_per_call":9712492544,
+      "compiler_estimated_write_bytes_per_call":9541058816,
+      "compiler_estimated_read_bytes_per_call":11469695488
+    },
+    "host_htp_execution":"not attempted after AR171 was selected as the stronger traffic/call candidate"
+  },
+  "ar171": {
+    "route":"one 171-token canonical-short prompt chunk",
+    "chunk_count":1,
+    "boundary_positions":[171],
+    "cpu_vs_sequential_ar1": {
+      "all_boundary_argmax_equal":true,
+      "sequential_ar1_argmax":[597],
+      "chunk_argmax":[597],
+      "state_allclose_counts":[16],
+      "state_tensor_count":38,
+      "state_max_abs":[0.5136106014251709],
+      "state_mean_abs_max":[0.019158033654093742],
+      "logit_max_abs":[0.7706184387207031],
+      "logit_mean_abs":[0.10723400115966797]
+    },
+    "qnn_compile": {
+      "success":true,
+      "supported_nodes":1542,
+      "optimized_source_nodes":1542,
+      "unsupported_nodes":0,
+      "qnn_operations":2699,
+      "subgraphs":1,
+      "context_bytes":1602378320,
+      "context_sha256":"d5ca624cc71a173c7de969fac777e2ce136db3b502e04c2991651b510dabba5a",
+      "build_id":"v2.49.40.260810104044",
+      "spill_fill_buffer_bytes":463667200,
+      "io_tensor_bytes":140156928,
+      "op_data_bytes":21904128,
+      "ddr_tensor_bytes":34081280,
+      "compiler_estimated_spill_bytes_per_call":18344132608,
+      "compiler_estimated_fill_bytes_per_call":19733266432,
+      "compiler_estimated_write_bytes_per_call":21322261248,
+      "compiler_estimated_read_bytes_per_call":21902957568
+    },
+    "host_htp_execution": {
+      "input_tensors":41,
+      "input_bytes":133358252,
+      "context_create_succeeded":true,
+      "graph_retrieve_succeeded":true,
+      "graph_execution_started":true,
+      "timeout_seconds":1800,
+      "exit_code":124,
+      "graph_execution_completed":false,
+      "graph_output_files":0,
+      "process_after_timeout":"absent",
+      "interpretation":"The x86 HTP emulator is too slow for this graph within the bounded window. This is not a target-SM8550 execution failure or physical performance result."
+    }
+  },
+  "candidate_selection": {
+    "strongest_candidate":"AR171",
+    "reason":"One prompt call and one exact canonical-short chunk; compiler-estimated aggregate prompt traffic is lower than three AR57 calls despite higher per-call spill/fill and a larger spill buffer.",
+    "ar57_three_call_estimated_read_bytes":34409086464,
+    "ar57_three_call_estimated_write_bytes":28623176448,
+    "ar171_one_call_estimated_read_bytes":21902957568,
+    "ar171_one_call_estimated_write_bytes":21322261248,
+    "caveat":"Compiler estimates are not measured physical bus counters; a bounded physical runtime diagnostic is required."
+  },
+  "fidelity_boundary":"Endpoint greedy decisions match at all tested boundaries, but state and logits are not numerically allclose and their exact deltas are retained. This does not establish broad equivalence or output quality.",
+  "phone_boundary":"No phone access occurred. Await independent review and explicit Pi priority before any bounded physical candidate diagnostic.",
+  "claim_boundary":"Host CPU carried-state fidelity, fallback-disabled QNN AOT, compiler metadata, and a bounded x86 HTP emulator timeout only. No completed HTP host graph execution, physical candidate result, campaign, or registry evidence."
+}

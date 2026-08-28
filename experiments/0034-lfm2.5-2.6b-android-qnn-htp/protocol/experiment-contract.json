@@ -145,6 +145,78 @@
       }
     }
   },
+  "chunked_prefill_ar57_ar171_host_probes": {
+    "ar171": {
+      "all_argmax_equal": true,
+      "argmax_chunk": [
+        597
+      ],
+      "argmax_reference": [
+        597
+      ],
+      "boundaries": [
+        171
+      ],
+      "chunks": 1,
+      "context_sha256": "d5ca624cc71a173c7de969fac777e2ce136db3b502e04c2991651b510dabba5a",
+      "final_logit_max_abs": 0.7706184387207031,
+      "host_htp_context_create": true,
+      "host_htp_execution_completed": false,
+      "host_htp_graph_retrieve": true,
+      "host_htp_output_files": 0,
+      "host_htp_timeout_seconds": 1800,
+      "host_process_after": "absent",
+      "qnn_compile_success": true,
+      "qnn_operations": 2699,
+      "state_allclose_counts": [
+        16
+      ],
+      "state_max_abs": 0.5136106014251709,
+      "state_tensor_count": 38,
+      "supported_nodes": 1542,
+      "unsupported_nodes": 0
+    },
+    "ar57": {
+      "all_argmax_equal": true,
+      "argmax_chunk": [
+        8771,
+        437,
+        597
+      ],
+      "argmax_reference": [
+        8771,
+        437,
+        597
+      ],
+      "boundaries": [
+        57,
+        114,
+        171
+      ],
+      "chunks": 3,
+      "context_sha256": "4e2a92ac382f33fb72096079500ecd472c987c28e81d5a4e444e341e996fac00",
+      "final_logit_max_abs": 0.7239789962768555,
+      "qnn_compile_success": true,
+      "qnn_operations": 2699,
+      "state_allclose_counts": [
+        19,
+        18,
+        19
+      ],
+      "state_max_abs": 0.6651463508605957,
+      "state_tensor_count": 38,
+      "supported_nodes": 1542,
+      "unsupported_nodes": 0
+    },
+    "context_streaming": false,
+    "cpu_work": "selected-row Q4 embedding, orchestration, state placement, global argmax",
+    "evidence": "results/qnn-prefill-ar57-ar171-host-probes/result.json",
+    "exact_numerical_equivalence": false,
+    "phone_access": false,
+    "physical_execution": false,
+    "qnn_htp_candidate_work": "all model layers/recurrent/attention/final norm/final-position LM head",
+    "selected_candidate": "AR171"
+  },
   "consolidated_direct_qnn_phone_attempt_1": {
     "cleanup_absent": true,
     "contexts_loaded": 19,
@@ -556,7 +628,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "No phone access occurred for AR32/AR128 probes. They are host compilation/CPU fidelity results, not phone candidates.",
+  "phone_boundary": "No phone access occurred for AR57/AR171 probes. Await review and explicit Pi priority for a bounded candidate diagnostic.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -655,7 +727,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "performance_engineering_ar32_ar128_host_probes_pass_next_ar57_ar171",
+  "status": "performance_engineering_ar57_ar171_host_probes_complete_ar171_emulator_timeout",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",
