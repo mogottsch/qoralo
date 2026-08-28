@@ -83,13 +83,16 @@
 71. Compared AR57 against sequential AR1 at tokens 57/114/171 and AR171 at token 171. All endpoint argmax values match; all numeric state/logit deltas are retained.
 72. Compiled both fallback-disabled with 1,542/1,542 nodes and zero unsupported. Compiler estimates favor one AR171 call over three AR57 calls for aggregate prompt traffic.
 73. Ran the strongest AR171 candidate through a bounded x86 HTP probe: context create/retrieve passed, graph execution exceeded 1,800 seconds, no graph output, process absent afterward.
+74. Ran one reviewed physical AR171 diagnostic under `phone.lock`: exact stage/context/41 inputs verified locally and remotely; one context/graph loaded and one execution completed.
+75. Pulled all 38 state and 22 logit outputs before validation; all are finite and endpoint argmax 597 matches both CPU routes without claiming numeric equivalence.
+76. Preserved detailed QNN timing/profile data with CPU input-preparation exclusion, process-only memory, thermal/power, identity, and verified cleanup.
 
 ## In progress: performance engineering
 
-1. Commit and independently review the AR57/AR171 CPU fidelity, QNN AOT, compiler metadata, and host-emulator timeout evidence.
-2. After explicit Pi priority, use at most a bounded physical AR171 diagnostic to measure actual SM8550 viability; fall back to AR57 only if reviewed evidence requires it.
+1. Commit and independently review the bounded physical AR171 runtime evidence; do not rerun.
+2. Build a reset-isolated prefill+AR1 decode route and measure all CPU preparation/phase-transition boundaries before any campaign.
 3. Then evaluate lower-precision/device-resident state, reduced-logit routes, and coarse declared hybrid partitions.
-4. Do not campaign until the fastest sensible route is selected and reset-isolated.
+4. Do not campaign until the fastest sensible complete route is selected and reset-isolated.
 
 ## Phone and campaign sequence
 

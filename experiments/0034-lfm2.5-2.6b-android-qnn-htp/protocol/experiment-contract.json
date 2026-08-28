@@ -103,6 +103,41 @@
     "raw_output_preserved_before_validation": true,
     "registry_result": false
   },
+  "chunked_prefill_ar171_phone_runtime_diagnostic": {
+    "accelerator_execute_us": 5234013,
+    "all_outputs_finite": true,
+    "argmax_equal": true,
+    "backend": "direct QNN HTP through qnn-net-run",
+    "backend_build_id": "v2.49.40.260810104044",
+    "campaign": false,
+    "canonical_end_to_end_ttft": false,
+    "cleanup_absent": true,
+    "context_count": 1,
+    "context_sha256": "d5ca624cc71a173c7de969fac777e2ce136db3b502e04c2991651b510dabba5a",
+    "cpu_global_argmax": 597,
+    "cpu_input_preparation_timed": false,
+    "evidence": "results/qnn-prefill-ar171-phone-runtime-diagnostic/result.json",
+    "execution_succeeded": true,
+    "graph_count": 1,
+    "graph_executions": 1,
+    "input_bytes": 133358252,
+    "input_tensors": 41,
+    "logit_files": 22,
+    "netrun_execute_us": 6308347,
+    "netrun_init_us": 1724910,
+    "numerical_equivalence": false,
+    "output_files": 60,
+    "phone_lock_released": true,
+    "physical_global_argmax": 597,
+    "qnn_execute_us": 6308240,
+    "registry_result": false,
+    "sampled_process_vmhwm_kib": 1576200,
+    "stage_files_verified_local": 48,
+    "stage_files_verified_remote": 48,
+    "state_files": 38,
+    "statistical_performance": false,
+    "tokens_consumed": 171
+  },
   "chunked_prefill_ar32_ar128_host_probes": {
     "context_streaming": false,
     "cpu_boundary": "selected-row Q4 embedding dequantization and global argmax",
@@ -166,6 +201,8 @@
       "host_htp_output_files": 0,
       "host_htp_timeout_seconds": 1800,
       "host_process_after": "absent",
+      "physical_execution": true,
+      "physical_outcome": "one_graph_execution_passed_argmax_597",
       "qnn_compile_success": true,
       "qnn_operations": 2699,
       "state_allclose_counts": [
@@ -628,7 +665,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "No phone access occurred for AR57/AR171 probes. Await review and explicit Pi priority for a bounded candidate diagnostic.",
+  "phone_boundary": "AR171 physical diagnostic cleaned absent and released phone.lock. No rerun or campaign pending review and a reset-isolated prefill+decode route.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -727,7 +764,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "performance_engineering_ar57_ar171_host_probes_complete_ar171_emulator_timeout",
+  "status": "performance_engineering_ar171_physical_runtime_diagnostic_passed",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",

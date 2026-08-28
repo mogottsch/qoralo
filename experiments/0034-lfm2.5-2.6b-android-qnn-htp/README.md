@@ -2,7 +2,7 @@
 
 ## Status
 
-**Physical direct-QNN HTP canonical-short bounded generation passed. The Galaxy S23 Ultra loaded one ordinary non-shared context once, consumed all 171 exact canonical-short tokens, and produced a coherent 16-token greedy continuation through 186 stateful graph executions with no reload or streaming. This is one bounded output-sanity run—not a completed answer, statistical performance campaign, or registry entry.**
+**AR171 physical direct-QNN HTP prefill diagnostic passed. One ordinary graph consumed the exact 171-token canonical-short prompt in one HTP call and returned 38 finite state tensors plus 22 finite logit chunks; physical endpoint argmax 597 matches both CPU routes. Detailed profile reports 5.234 seconds accelerator execution and 6.308 seconds NetRun execution, excluding CPU embedding/input preparation. This is a bounded diagnostic—not end-to-end TTFT, a statistical campaign, or registry evidence.**
 
 This is a separate accelerator arm. It preserves `0029` CPU viability and `0033` CPU/OpenCL campaign evidence without modifying either experiment.
 
@@ -187,5 +187,23 @@ AR57 carries all 38 states across three chunks and preserves sequential-AR1 gree
 Both compile fallback-disabled as one ordinary QNN graph with 1,542/1,542 optimized nodes, 2,699 QNN operations, and zero unsupported nodes. AR57's 1,600,858,704-byte context has a 156,434,432-byte spill/fill buffer. AR171's 1,602,378,320-byte context has a 463,667,200-byte spill/fill buffer. One AR171 call has lower aggregate compiler-estimated prompt read/write traffic than three AR57 calls, so AR171 is the strongest current physical diagnostic candidate.
 
 A bounded AR171 x86 HTP-emulator probe loaded its context and retrieved its graph, then exceeded 1,800 seconds during graph execution and produced no graph output. The process was absent afterward. This establishes only that the emulator is impractical for the candidate; it is not a target-SM8550 failure or physical timing result. No phone access occurred. A bounded physical AR171 diagnostic requires independent review and explicit Pi priority.
+
+After review, one bounded physical AR171 runtime diagnostic used exact context SHA-256 `d5ca624cc71a173c7de969fac777e2ce136db3b502e04c2991651b510dabba5a` and 41 precomputed raw inputs totaling 133,358,252 bytes. All 48 staged payload hashes passed locally and remotely. Physical QAIRT `v2.49.40.260810104044` created the context, retrieved one graph, and completed one execution.
+
+All 60 raw outputs were pulled before validation: 38 state tensors and 22 logit chunks were finite. Physical final-position argmax was 597, matching sequential AR1 and chunk CPU references. Numerical state/logit equivalence is not claimed.
+
+The detailed QNN profile reports:
+
+- NetRun initialization: 1.724910 seconds;
+- backend accelerator binary load: 0.656467 seconds;
+- NetRun execution including IO/misc: 6.308347 seconds;
+- QNN execution: 6.308240 seconds;
+- RPC execution: 6.294107 seconds;
+- accelerator execution: 5.234013 seconds (5.231422 seconds excluding wait);
+- 3,260,126,464 accelerator cycles using four HVX threads.
+
+Inputs, including CPU-dequantized embeddings, were precomputed before qnn-net-run; CPU embedding/input preparation was not timed. Therefore these numbers are neither end-to-end TTFT nor directly comparable campaign measurements against the 185.986-second AR1 custom-runner TTFT. Peak sampled process VmHWM was 1,576,200 KiB and is not total DSP/system residency.
+
+Raw provider/profile, stage hashes, all outputs, output validation, memory, thermal/power, identity, and cleanup are retained in [`results/qnn-prefill-ar171-phone-runtime-diagnostic/`](results/qnn-prefill-ar171-phone-runtime-diagnostic/). Scoped process/root cleanup passed and `phone.lock` was released. No rerun or campaign is authorized pending review and selection of a reset-isolated prefill+decode route.
 
 FP16/uFxp16 state, registered/device-resident memory, reduced logit return, and coarse explicitly declared hybrid partitions remain later candidates.

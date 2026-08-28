@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "run_id": "ar171-20260828T123223Z-2690318",
+  "classification": "physical_direct_qnn_htp_ar171_single_chunk_runtime_diagnostic_pass",
+  "device": {"serial":"R5CW81PR8SY","manufacturer":"samsung","model":"SM-S918B","soc":"SM8550","abi":"arm64-v8a","android_release":"16","api":36,"verified_boot":"green","flash_locked":true},
+  "stage": {
+    "payload_files":48,
+    "payload_bytes":1761482066,
+    "stage_metadata_sha256":"6aa51601aaade02783b9826b5627695b053e9193c9d5ee5b7e0e0302cfb2d058",
+    "manifest_sha256":"842a5fa3627581a948b9ef41589251cf95b683a7c4e0d89925cb25c85818fdf0",
+    "qnn_net_run_sha256":"7b0b806033bb2bd074c233632eb0f06f34c5f5f10040c5a363e8720dd60fd8e9",
+    "context_sha256":"d5ca624cc71a173c7de969fac777e2ce136db3b502e04c2991651b510dabba5a",
+    "local_hash_check":true,
+    "remote_hash_check":true,
+    "elf_preflight":true
+  },
+  "provider": {
+    "api":"direct QNN through qnn-net-run",
+    "backend":"HTP",
+    "backend_build_id":"v2.49.40.260810104044",
+    "target_soc_model":43,
+    "target_htp_arch":73,
+    "neural_cpu_fallback_available":false,
+    "compiled_delegation":"1542/1542 optimized source nodes, 2699 QNN operations, zero unsupported nodes"
+  },
+  "route": {
+    "sequence_length":171,
+    "input_tensors":41,
+    "input_bytes":133358252,
+    "contexts_loaded":1,
+    "graphs_loaded":1,
+    "context_create_succeeded":true,
+    "graph_retrieve_succeeded":true,
+    "graph_executions":1,
+    "graph_execution_succeeded":true,
+    "shared_resource_format":false,
+    "context_streaming":false,
+    "cpu_work":"selected-row asymmetric Q4 embedding dequantization, raw-input staging, and post-run global argmax",
+    "htp_work":"all 30 transformer/recurrent/attention layers over 171 tokens, final norm, final-position 22-chunk symmetric-Q4 LM head",
+    "state_outputs":"22 convolution states and 8 K/V pairs (38 raw tensors)"
+  },
+  "workload": {
+    "canonical_short_text_sha256":"81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae",
+    "canonical_short_token_file_sha256":"eae8e828110f634d5c9954df0372e869f67f67aed846f9f544781faa1d4d29bc",
+    "tokens_consumed":171,
+    "position_range":[0,170]
+  },
+  "outputs": {
+    "raw_preserved_before_validation":true,
+    "raw_output_files":60,
+    "state_files":38,
+    "logit_chunk_files":22,
+    "all_finite":true,
+    "full_logits_sha256":"8822442fe2070eac712de28215ca183d7dc21c5bc1f91be5577f77caeb7b87a6",
+    "physical_global_argmax":597,
+    "sequential_ar1_cpu_argmax":597,
+    "chunk_cpu_argmax":597,
+    "argmax_equal":true,
+    "numerical_equivalence_claim":false
+  },
+  "profile": {
+    "profiling_level":"detailed",
+    "perf_profile":"burst",
+    "netrun_init_us":1724910,
+    "backend_rpc_load_binary_us":658537,
+    "backend_accelerator_load_binary_us":656467,
+    "netrun_execute_us":6308347,
+    "qnn_execute_us":6308240,
+    "rpc_execute_us":6294107,
+    "accelerator_execute_us":5234013,
+    "accelerator_execute_excluding_wait_us":5231422,
+    "accelerator_cycles":3260126464,
+    "hvx_threads":4,
+    "yield_count":0,
+    "initial_vtcm_acquire_us":2901,
+    "hvx_hmx_power_on_and_acquire_us":26887,
+    "interpretation":"One physical diagnostic run over precomputed raw inputs. CPU embedding/input preparation was not timed; this is not end-to-end TTFT, a statistical performance result, or a campaign."
+  },
+  "baseline_comparison": {
+    "ar1_prompt_request_to_first_token_seconds":185.986,
+    "ar171_netrun_execute_seconds":6.308347,
+    "ratio_ar1_ttft_to_ar171_netrun_execute":29.482534,
+    "scope_caveat":"The AR1 value includes CPU embedding work, 171 executions, and final argmax in the custom runner. AR171 uses precomputed raw embedding/state inputs and qnn-net-run timing, so CPU input preparation is excluded. This ratio is diagnostic and not an apples-to-apples campaign statistic."
+  },
+  "memory": {"sampled_process_vmhwm_peak_kib":1576200,"sampled_total_pss_peak_kib":1572936,"interpretation":"Android process measurements only; not total system or DSP residency."},
+  "thermal_and_power":"Raw battery and thermalservice snapshots before and after are retained without a derived campaign claim.",
+  "cleanup": {"scoped_remote_root_verified_absent":true,"process_after":false,"phone_lock_held_for_full_lifecycle":true,"phone_lock_released":true},
+  "claim_boundary":"Positive physical direct-QNN HTP AR171 runtime viability and endpoint argmax agreement for one exact canonical-short prefill call. Numeric state/logit equivalence is not claimed. Timings are a single engineering diagnostic, not a canonical campaign, statistical performance result, decode route, generated-text result, or registry evidence."
+}
