@@ -66,12 +66,15 @@
 54. Preserved raw provider, hashes, identity, input/output, memory, thermal/power, and cleanup evidence; remote root absent and lock released.
 55. Ran the smallest feasible host multi-step check: first two canonical-short tokens through one loaded context and two x86 HTP graph executions.
 56. Carried all 38 states, advanced position/mask, and matched both CPU references at position 1 with global argmax 25.
+57. Ran one authorized physical two-step gate: loaded one ordinary context/graph once and completed two sequential direct-QNN HTP executions without reload.
+58. Verified position-1 global argmax 25 across physical, CPU, and x86 HTP; preserved diagnostic-only timing and process-memory limits.
+59. Preserved exact provider/stage/prefix/output/memory/thermal/identity/cleanup evidence; remote root absent and lock released.
 
 ## In progress
 
-1. Commit and independently review the host two-step state/position/mask evidence.
-2. Stop all ADB and expanded workload activity until Pi and Moritz agree a next route gate and explicitly authorize it.
-3. Context streaming remains prohibited. No canonical completion, output-quality, campaign, performance, or registry claim.
+1. Commit and independently review the physical two-step loaded-state evidence.
+2. Stop all ADB and expanded workload activity until a separately agreed next gate receives explicit authorization.
+3. Context streaming remains prohibited. No full canonical completion, output-quality, campaign, performance, or registry claim.
 
 ## Phone and campaign sequence
 

@@ -2,7 +2,7 @@
 
 ## Status
 
-**Physical direct-QNN HTP viability passed for the exact ordinary monolithic route. On the authorized Galaxy S23 Ultra, the single non-shared context loaded once, its complete one-token graph executed once at position zero, and global argmax 124894 matched both CPU references. This is a bounded viability result—not a canonical prompt, multi-token output-quality result, benchmark campaign, or registry entry.**
+**Physical direct-QNN HTP loaded-state viability passed for the exact ordinary monolithic route. On the Galaxy S23 Ultra, one non-shared context loaded once and the complete graph executed twice over canonical-short tokens `[124894, 124899]`, carrying all 38 states and advancing position/mask. Position-1 global argmax 25 matches physical, CPU, and x86 HTP references. This is not full prompt consumption, generated text, a benchmark campaign, or a registry entry.**
 
 This is a separate accelerator arm. It preserves `0029` CPU viability and `0033` CPU/OpenCL campaign evidence without modifying either experiment.
 
@@ -146,4 +146,8 @@ This establishes physical full-graph viability only. No further ADB, expanded pr
 
 As the smallest feasible host-side preparation for a proposed loaded multi-token gate, the direct runner then executed the first two canonical-short tokens through the same one context in x86 HTP emulation. It executed the graph twice without reloading, carried all 38 state tensors from position 0 to position 1, advanced `position_ids`, and updated the attention mask. The position-1 global argmax was 25, matching both existing CPU references. The 778.395-second host duration is emulator diagnostics only. See [`results/qnn-ordinary-monolithic-host-two-step-state-check/`](results/qnn-ordinary-monolithic-host-two-step-state-check/).
 
-That two-token prefix is not canonical prompt completion or text generation. The phone remains held until Pi and Moritz agree on expanded physical scope and explicitly authorize a gate.
+After independent review, the same exact two-token prefix was authorized on the phone. All 12 stage hashes and ELF preflight passed; direct QNN HTP backend `v2.49.40.260810104044` loaded one ordinary context and one graph once, then completed two sequential graph executions without reload. Position-1 output/global argmax was 25, equal across physical, CPU, and host x86 HTP.
+
+Physical setup took 4.19607 seconds and the combined two-step request took 2.06277 seconds. These remain bounded diagnostic timings, not throughput or campaign measurements. Peak sampled process VmHWM was 1,611,028 KiB and is not total DSP/system residency. Raw provider, stage hashes, exact prefix, output, memory, thermal/power, device identity, and cleanup are retained in [`results/qnn-ordinary-monolithic-phone-two-step-state-check/`](results/qnn-ordinary-monolithic-phone-two-step-state-check/). Cleanup verified the scoped root absent and released `phone.lock`.
+
+That two-token prefix is not canonical prompt completion or text generation. No further ADB is authorized until independent review and a separately agreed next gate.

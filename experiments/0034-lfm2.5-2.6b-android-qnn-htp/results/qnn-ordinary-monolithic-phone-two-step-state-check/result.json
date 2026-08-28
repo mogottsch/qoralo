@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "run_id": "viability-20260828T101616Z-2574976",
+  "classification": "physical_direct_qnn_htp_ordinary_monolithic_two_step_loaded_state_pass",
+  "device": {"serial":"R5CW81PR8SY","manufacturer":"samsung","model":"SM-S918B","soc":"SM8550","abi":"arm64-v8a","android_release":"16","api":36,"verified_boot":"green","flash_locked":true},
+  "stage": {"payload_files_verified_local":12,"payload_files_verified_remote":12,"elf_preflight":"passed","stage_metadata_sha256":"3260c006faf29fc8081f29f4c87069cafeee7919a9af54ac3ceb184e03bcc952","manifest_sha256":"5dc9815787046507b3b09a4aebbe0eb6fd97e6effda3247cfeddda6fb474169c","runner_sha256":"4515d7f58889121542b9ff3535d5e083a89095f008fb7bb23ae421f67c8cacfd"},
+  "provider": {"api":"direct QNN","backend":"HTP","backend_build_id":"v2.49.40.260810104044","target_htp_arch":73,"target_soc_model":43,"neural_cpu_fallback_available":false,"compiled_delegation":"1541/1541 optimized source nodes, 2698 QNN operations, zero unsupported nodes"},
+  "route": {
+    "context_format":"ordinary non-shared",
+    "context_binary_sha256":"76ba15e7fd95e5e13e92be0e88e8e6bbd3123f2b993b6986c9dac8800a9bf212",
+    "contexts_loaded":1,
+    "graphs_loaded":1,
+    "loaded_once":true,
+    "graph_executions":2,
+    "context_reloads":0,
+    "context_streaming":false,
+    "explicit_state_tensors_carried":38,
+    "state_update":"All 22 convolution states were replaced after position 0; each of 8 attention K/V state pairs received its 512-element position-0 slice before position 1.",
+    "position_and_mask_update":"position_ids advanced 0 to 1 and the attention mask opened the prior position while retaining the current slot."
+  },
+  "workload": {
+    "scope":"exact first two canonical-short tokens only",
+    "canonical_short_text_sha256":"81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae",
+    "canonical_short_token_file_sha256":"eae8e828110f634d5c9954df0372e869f67f67aed846f9f544781faa1d4d29bc",
+    "prefix_tokens":[124894,124899],
+    "prefix_binary_sha256":"6c80ab19fd1ba71bdf57ba31d5925ea2c3363c66c7139730176823ade26d675a",
+    "position_1_output_global_argmax":25,
+    "output_sha256":"0623ccb9b1619bd388284a438034d8cb6431964ba727d8b1c450303105735488",
+    "cpu_reference_argmax":25,
+    "host_x86_htp_reference_argmax":25,
+    "all_argmax_equal":true
+  },
+  "timing": {"setup_seconds":4.19607,"two_step_request_seconds":2.06277,"interpretation":"Single bounded two-step viability diagnostic only; not a canonical benchmark, token-throughput measurement, or campaign."},
+  "memory": {"sampled_process_vmhwm_peak_kib":1611028,"sampled_total_pss_peak_kib":1598512,"interpretation":"Android process measurements only; not total system or DSP residency."},
+  "thermal_and_power":"Raw dumpsys battery and thermalservice snapshots before and after are retained without deriving a benchmark claim.",
+  "cleanup": {"scoped_remote_root_verified_absent":true,"process_after":false,"phone_lock_held_for_full_lifecycle":true,"phone_lock_released":true},
+  "claim_boundary":"Positive physical direct-QNN HTP evidence for exactly two loaded-state graph executions over the first two canonical-short tokens and correct position-1 global argmax. Not full canonical prompt consumption, generated text, output quality, performance campaign, or registry evidence."
+}
