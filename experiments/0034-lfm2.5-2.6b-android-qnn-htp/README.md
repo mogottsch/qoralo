@@ -2,7 +2,7 @@
 
 ## Status
 
-**AR171 physical direct-QNN HTP prefill diagnostic passed. One ordinary graph consumed the exact 171-token canonical-short prompt in one HTP call and returned 38 finite state tensors plus 22 finite logit chunks; physical endpoint argmax 597 matches both CPU routes. Detailed profile reports 5.234 seconds accelerator execution and 6.308 seconds NetRun execution, excluding CPU embedding/input preparation. This is a bounded diagnostic—not end-to-end TTFT, a statistical campaign, or registry evidence.**
+**AR171 physical HTP prefill passed, and its retained state bridges into AR1 decode with the expected next greedy token. One ordinary graph consumed 171 tokens in 5.234 seconds accelerator time; a host CPU bridge padded the 38 physical outputs into the AR1 cache contract and produced next token 4695, matching CPU-AR171 and sequential-AR1 bridges. Physical state drift is large and explicit, so this is greedy compatibility—not numerical equivalence or a complete performance route.**
 
 This is a separate accelerator arm. It preserves `0029` CPU viability and `0033` CPU/OpenCL campaign evidence without modifying either experiment.
 
@@ -204,6 +204,14 @@ The detailed QNN profile reports:
 
 Inputs, including CPU-dequantized embeddings, were precomputed before qnn-net-run; CPU embedding/input preparation was not timed. Therefore these numbers are neither end-to-end TTFT nor directly comparable campaign measurements against the 185.986-second AR1 custom-runner TTFT. Peak sampled process VmHWM was 1,576,200 KiB and is not total DSP/system residency.
 
-Raw provider/profile, stage hashes, all outputs, output validation, memory, thermal/power, identity, and cleanup are retained in [`results/qnn-prefill-ar171-phone-runtime-diagnostic/`](results/qnn-prefill-ar171-phone-runtime-diagnostic/). Scoped process/root cleanup passed and `phone.lock` was released. No rerun or campaign is authorized pending review and selection of a reset-isolated prefill+decode route.
+Raw provider/profile, stage hashes, all outputs, output validation, memory, thermal/power, identity, and cleanup are retained in [`results/qnn-prefill-ar171-phone-runtime-diagnostic/`](results/qnn-prefill-ar171-phone-runtime-diagnostic/). Scoped process/root cleanup passed and `phone.lock` was released.
 
-FP16/uFxp16 state, registered/device-resident memory, reduced logit return, and coarse explicitly declared hybrid partitions remain later candidates.
+## AR171-to-AR1 state bridge
+
+The bounded host bridge in [`results/qnn-prefill-ar171-to-ar1-host-bridge/`](results/qnn-prefill-ar171-to-ar1-host-bridge/) consumes the retained physical outputs, not regenerated substitutes. Each 171-position physical K/V slice is copied into positions `0:171` of the accepted 4,095-position AR1 cache, the remaining positions are zeroed, all 22 convolution states are carried directly, token 597 is CPU-embedded, `position_ids=171`, and the AR1 mask exposes prior positions `0:171` plus the current final slot.
+
+Physical-AR171→AR1, CPU-AR171→AR1, and sequential-AR1→AR1 all produce next global argmax **4695**, which also matches the second token of the accepted physical AR1 continuation. Numeric fidelity is not close: physical prefill state versus CPU AR171 is only 3/38 tensors allclose at `rtol=0.02, atol=0.02`, with maximum absolute delta 10,586.69; after one AR1 continuation, physical-versus-CPU-AR171 state/logit maximum deltas are 3.61/7.07. The outlier-bearing physical outputs are finite, declared FP32, and every file size matches qnn-net-run's tensor metadata. The drift is retained as a serious fidelity warning.
+
+Concurrent AR171+AR1 residency was not attempted. Metadata totals 3,202,476,296 bytes of context binaries, roughly 3.19 GB of duplicated constants, 276 MB of IO tensors, and 568 MB of spill/fill buffers. Metadata alone cannot prove failure, but prior residency evidence makes simultaneous loading high risk. The selected candidate therefore has one explicit phase transition: load AR171 once, preserve state, free it, convert the cache contract on CPU, then load AR1 once for decode. This is not per-token context streaming and must be declared in all future results.
+
+No phone work occurred for the bridge. FP16/uFxp16 state, registered/device-resident memory, reduced logit return, and coarse explicitly declared hybrid partitions remain later candidates.

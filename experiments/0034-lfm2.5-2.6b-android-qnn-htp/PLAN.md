@@ -86,11 +86,15 @@
 74. Ran one reviewed physical AR171 diagnostic under `phone.lock`: exact stage/context/41 inputs verified locally and remotely; one context/graph loaded and one execution completed.
 75. Pulled all 38 state and 22 logit outputs before validation; all are finite and endpoint argmax 597 matches both CPU routes without claiming numeric equivalence.
 76. Preserved detailed QNN timing/profile data with CPU input-preparation exclusion, process-only memory, thermal/power, identity, and verified cleanup.
+77. Built a host CPU bridge from the retained physical 38-state outputs into the accepted AR1 cache contract, then executed token 597 at position 171 with the exact mask.
+78. Matched next argmax 4695 across physical-AR171, CPU-AR171, and sequential-AR1 sources; retained large physical state/logit drift without equivalence claims.
+79. Verified all 60 physical raw files match declared tensor dtype/dimensions and are finite, including real large finite state outliers.
+80. Assessed concurrent AR171+AR1 residency from metadata as high risk but unmeasured; selected one explicit prefill-to-decode context phase transition, not per-token streaming.
 
 ## In progress: performance engineering
 
-1. Commit and independently review the bounded physical AR171 runtime evidence; do not rerun.
-2. Build a reset-isolated prefill+AR1 decode route and measure all CPU preparation/phase-transition boundaries before any campaign.
+1. Commit and independently review the bounded AR171→AR1 host bridge and residency assessment.
+2. Build a reset-isolated prefill→free→AR1-load→decode runner and time CPU input prep plus phase transition host-side before phone profiling.
 3. Then evaluate lower-precision/device-resident state, reduced-logit routes, and coarse declared hybrid partitions.
 4. Do not campaign until the fastest sensible complete route is selected and reset-isolated.
 

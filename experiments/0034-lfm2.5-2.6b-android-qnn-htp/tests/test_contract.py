@@ -79,7 +79,7 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
     def test_active_export_does_not_claim_qnn_android_or_completion(self) -> None:
-        self.assertIn("performance_engineering_ar171_physical_runtime_diagnostic_passed", self.contract["status"])
+        self.assertIn("performance_engineering_ar171_to_ar1_physical_state_host_bridge_passed", self.contract["status"])
         route = self.result["route_assessment"]
         self.assertFalse(route["compiled_sm8550_context_available"])
         self.assertFalse(route["android_execution"])
@@ -88,7 +88,7 @@ class ContractTest(unittest.TestCase):
         self.assertIn("not_android_qnn_or_htp", milestone["classification"])
         self.assertEqual("passed", milestone["rewritten_onnx"]["onnx_checker"])
         self.assertEqual(16, milestone["bounded_output"]["max_new_tokens"])
-        self.assertIn("AR171 physical diagnostic cleaned absent", self.contract["phone_boundary"])
+        self.assertIn("No phone access occurred for AR171-to-AR1 host bridge", self.contract["phone_boundary"])
 
     def test_qnn_aot_is_complete_but_not_physical_execution(self) -> None:
         milestone = self.contract["qnn_aot_milestone"]
@@ -417,6 +417,23 @@ class ContractTest(unittest.TestCase):
         self.assertIn("CPU embedding/input preparation was not timed", result["profile"]["interpretation"])
         self.assertTrue(result["cleanup"]["scoped_remote_root_verified_absent"])
 
+    def test_ar171_physical_state_bridges_to_ar1_with_drift(self) -> None:
+        bridge = self.contract["ar171_physical_state_to_ar1_host_bridge"]
+        self.assertFalse(bridge["phone_access"])
+        self.assertEqual((597, 171, 4095), (bridge["bridge_token"], bridge["bridge_position"], bridge["ar1_cache_length"]))
+        self.assertEqual({"physical_ar171": 4695, "cpu_ar171": 4695, "sequential_ar1": 4695}, bridge["next_argmax"])
+        self.assertTrue(bridge["all_argmax_equal"])
+        self.assertFalse(bridge["numerical_equivalence"])
+        self.assertEqual((3, 38), (bridge["pre_bridge_physical_cpu_state_allclose_count"], bridge["state_tensor_count"]))
+        self.assertGreater(bridge["pre_bridge_state_max_abs"], 10000)
+        self.assertFalse(bridge["concurrent_residency"]["attempted"])
+        self.assertEqual(3202476296, bridge["concurrent_residency"]["combined_context_binary_bytes"])
+        self.assertFalse(bridge["per_token_context_streaming"])
+        result = json.loads((EXP / bridge["evidence"]).read_text())
+        self.assertTrue(result["raw_layout_validation"]["all_file_sizes_match_declared_dtype_and_dimensions"])
+        self.assertIn("large physical-vs-CPU drift", result["raw_layout_validation"]["present_2_key_outlier_observation"]["interpretation"])
+        self.assertIn("one explicit prefill-to-decode phase transition", result["concurrent_residency_assessment"]["selected_phase_semantics"])
+
     def test_final_pipeline_host_equivalence_is_bounded(self) -> None:
         result = json.loads((EXP / "results/htp-pipeline-host-equivalence/result.json").read_text())
         self.assertIn("host_only", result["classification"])
@@ -469,6 +486,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/qnn-prefill-ar32-ar128-host-probes",
             EXP / "results/qnn-prefill-ar57-ar171-host-probes",
             EXP / "results/qnn-prefill-ar171-phone-runtime-diagnostic",
+            EXP / "results/qnn-prefill-ar171-to-ar1-host-bridge",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

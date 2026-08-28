@@ -1,4 +1,42 @@
 {
+  "ar171_physical_state_to_ar1_host_bridge": {
+    "all_argmax_equal": true,
+    "all_physical_outputs_finite": true,
+    "ar1_cache_length": 4095,
+    "bridge_position": 171,
+    "bridge_token": 597,
+    "concurrent_residency": {
+      "attempted": false,
+      "combined_const_bytes": 3193053184,
+      "combined_context_binary_bytes": 3202476296,
+      "combined_io_tensor_bytes": 276135936,
+      "combined_spill_fill_buffer_bytes": 567541760,
+      "conclusion": "high risk, not proven impossible"
+    },
+    "conv_states_carried": 22,
+    "evidence": "results/qnn-prefill-ar171-to-ar1-host-bridge/result.json",
+    "kv_prefix_positions": [
+      0,
+      171
+    ],
+    "next_argmax": {
+      "cpu_ar171": 4695,
+      "physical_ar171": 4695,
+      "sequential_ar1": 4695
+    },
+    "numerical_equivalence": false,
+    "per_token_context_streaming": false,
+    "phone_access": false,
+    "physical_state_files": 38,
+    "physical_state_source_commit": "1f2d36055ed2b2cba4dbc62bc9069cb853120153",
+    "post_step_physical_cpu_logit_max_abs": 7.070076942443848,
+    "post_step_physical_cpu_state_max_abs": 3.6112756729125977,
+    "pre_bridge_physical_cpu_state_allclose_count": 3,
+    "pre_bridge_state_max_abs": 10586.6943359375,
+    "raw_layout_files_match_metadata": true,
+    "selected_phase_transition": "AR171 load once, preserve state, free; CPU cache conversion; AR1 load once for decode",
+    "state_tensor_count": 38
+  },
   "authorized_architecture_aware_route": {
     "aot_options_required": [
       "session.disable_cpu_ep_fallback=1",
@@ -665,7 +703,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "AR171 physical diagnostic cleaned absent and released phone.lock. No rerun or campaign pending review and a reset-isolated prefill+decode route.",
+  "phone_boundary": "No phone access occurred for AR171-to-AR1 host bridge. Await review before any reset-isolated complete-route diagnostic.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -764,7 +802,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "performance_engineering_ar171_physical_runtime_diagnostic_passed",
+  "status": "performance_engineering_ar171_to_ar1_physical_state_host_bridge_passed_with_large_drift",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",
