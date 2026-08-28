@@ -19,13 +19,13 @@ class ModelPackVerifierTest {
         val pack = pack(ModelRoute.GEMMA_4_E2B_LITERT_GPU)
         val verified = ModelPackVerifier().verify(pack.root, pack.requirement)
         assertEquals("gemma-4-e2b", verified.id)
-        assertEquals(setOf(ModelFileRole.GEMMA_MODEL), verified.files.map { it.role }.toSet())
+        assertEquals(setOf(ModelFileRole.GEMMA_MODEL, ModelFileRole.GEMMA_TOKENIZER), verified.files.map { it.role }.toSet())
     }
 
     @Test fun verifiesPinnedSupertonicInventory() {
         val pack = pack(ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP)
         val verified = ModelPackVerifier().verify(pack.root, pack.requirement)
-        assertEquals(9, verified.files.map { it.role }.toSet().size)
+        assertEquals(13, verified.files.map { it.role }.toSet().size)
         assertEquals("QNN_HTP", verified.declaredBackend)
     }
 
@@ -90,11 +90,19 @@ class ModelPackVerifierTest {
         assertThrows(ModelPackException.Invalid::class.java) { ModelPackVerifier().verify(pack.root, pack.requirement) }
     }
 
+    @Test fun rejectsDuplicateRoleWithDifferentFiles() {
+        val pack = pack(ModelRoute.GEMMA_4_E2B_LITERT_GPU) { manifest ->
+            val file = File(manifestRoot, "data/second-tokenizer.data").apply { writeText("duplicate role") }
+            manifest.getJSONArray("files").put(fileEntry(ModelFileRole.GEMMA_TOKENIZER, file, manifestRoot))
+        }
+        assertThrows(ModelPackException.Invalid::class.java) { ModelPackVerifier().verify(pack.root, pack.requirement) }
+    }
+
     @Test fun rejectsMissingRouteInventory() {
         val pack = pack(ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP) { manifest ->
             val input = manifest.getJSONArray("files")
             val output = JSONArray()
-            for (index in 0 until input.length()) if (input.getJSONObject(index).getString("role") != ModelFileRole.SUPERTONIC_VOCODER_CONTEXT.name) output.put(input.getJSONObject(index))
+            for (index in 0 until input.length()) if (input.getJSONObject(index).getString("role") != ModelFileRole.SUPERTONIC_VOCODER_BINARY.name) output.put(input.getJSONObject(index))
             manifest.put("files", output)
         }
         assertThrows(ModelPackException.Invalid::class.java) { ModelPackVerifier().verify(pack.root, pack.requirement) }
@@ -129,14 +137,18 @@ class ModelPackVerifierTest {
     private fun pack(route: ModelRoute, mutate: (JSONObject) -> Unit = {}): PackFixture {
         val root = temporaryFolder.newFolder().also { manifestRoot = it }
         val roles = if (route == ModelRoute.GEMMA_4_E2B_LITERT_GPU) {
-            listOf(ModelFileRole.GEMMA_MODEL)
+            listOf(ModelFileRole.GEMMA_MODEL, ModelFileRole.GEMMA_TOKENIZER)
         } else {
             listOf(
                 ModelFileRole.SUPERTONIC_CONFIG,
-                ModelFileRole.SUPERTONIC_DURATION_CONTEXT,
-                ModelFileRole.SUPERTONIC_TEXT_CONTEXT,
-                ModelFileRole.SUPERTONIC_VECTOR_CONTEXT,
-                ModelFileRole.SUPERTONIC_VOCODER_CONTEXT,
+                ModelFileRole.SUPERTONIC_DURATION_DESCRIPTOR,
+                ModelFileRole.SUPERTONIC_DURATION_BINARY,
+                ModelFileRole.SUPERTONIC_TEXT_DESCRIPTOR,
+                ModelFileRole.SUPERTONIC_TEXT_BINARY,
+                ModelFileRole.SUPERTONIC_VECTOR_DESCRIPTOR,
+                ModelFileRole.SUPERTONIC_VECTOR_BINARY,
+                ModelFileRole.SUPERTONIC_VOCODER_DESCRIPTOR,
+                ModelFileRole.SUPERTONIC_VOCODER_BINARY,
                 ModelFileRole.SUPERTONIC_TOKENIZER,
                 ModelFileRole.SUPERTONIC_UNICODE_INDEXER,
                 ModelFileRole.SUPERTONIC_VOICE,

@@ -21,6 +21,7 @@ data class RuntimeProvenance(
 interface LlmEngine : Closeable {
     val provenance: RuntimeProvenance?
     suspend fun load(pack: VerifiedModelPack)
+    suspend fun createSourceNotes(source: SourceMaterial, chunkIndex: Int, chunkCount: Int): SourceMaterial
     suspend fun createOutline(sources: List<SourceMaterial>, instructions: String): EpisodeOutline
     suspend fun createChapter(outline: EpisodeOutline, chapter: OutlineChapter, sources: List<SourceMaterial>, instructions: String): FrozenChapter
     suspend fun editScript(requestJson: String): String

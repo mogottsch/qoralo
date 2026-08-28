@@ -25,6 +25,7 @@ class GenerationService : Service() {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private lateinit var coordinator: GenerationCoordinator
     @Volatile private var activeJobId: String? = null
+    @Volatile private var activeEpisodeId: String? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -41,11 +42,13 @@ class GenerationService : Service() {
         val episodeId = intent?.getStringExtra(EXTRA_EPISODE_ID)
         val jobId = intent?.getStringExtra(EXTRA_JOB_ID)
         val action = intent?.action
-        if (episodeId == null || jobId == null || action !in SUPPORTED_ACTIONS || activeJobId != null) {
+        if (episodeId == null || jobId == null || action !in SUPPORTED_ACTIONS) {
             stopSelf(startId)
             return START_NOT_STICKY
         }
+        if (activeJobId != null) return START_NOT_STICKY
         activeJobId = jobId
+        activeEpisodeId = episodeId
         startAsForeground("Preparing on-device generation")
         scope.launch {
             var failureJob = jobId
@@ -68,6 +71,7 @@ class GenerationService : Service() {
             } catch (error: Throwable) {
                 runCatching {
                     (application as PodcastApplication).repository.failJob(
+                        episodeId,
                         failureJob,
                         error.message ?: error::class.java.simpleName,
                     )
@@ -75,6 +79,7 @@ class GenerationService : Service() {
                 updateNotification("Generation stopped: ${error.message ?: "runtime failure"}")
             } finally {
                 activeJobId = null
+                activeEpisodeId = null
                 stopForeground(STOP_FOREGROUND_REMOVE)
                 stopSelf(startId)
             }
@@ -84,9 +89,11 @@ class GenerationService : Service() {
 
     override fun onTimeout(startId: Int, fgsType: Int) {
         val jobId = activeJobId
-        if (jobId != null) {
+        val episodeId = activeEpisodeId
+        if (jobId != null && episodeId != null) {
             scope.launch {
-                runCatching { (application as PodcastApplication).repository.failJob(jobId, "Android ended the long-running generation service") }
+                runCatching { (application as PodcastApplication).repository.failJob(episodeId, jobId, "Android ended the long-running generation service", "android_fgs_timeout") }
+                scope.cancel()
                 stopForeground(STOP_FOREGROUND_REMOVE)
                 stopSelf(startId)
             }

@@ -15,10 +15,14 @@ enum class ModelFileRole {
     GEMMA_MODEL,
     GEMMA_TOKENIZER,
     SUPERTONIC_CONFIG,
-    SUPERTONIC_DURATION_CONTEXT,
-    SUPERTONIC_TEXT_CONTEXT,
-    SUPERTONIC_VECTOR_CONTEXT,
-    SUPERTONIC_VOCODER_CONTEXT,
+    SUPERTONIC_DURATION_DESCRIPTOR,
+    SUPERTONIC_DURATION_BINARY,
+    SUPERTONIC_TEXT_DESCRIPTOR,
+    SUPERTONIC_TEXT_BINARY,
+    SUPERTONIC_VECTOR_DESCRIPTOR,
+    SUPERTONIC_VECTOR_BINARY,
+    SUPERTONIC_VOCODER_DESCRIPTOR,
+    SUPERTONIC_VOCODER_BINARY,
     SUPERTONIC_TOKENIZER,
     SUPERTONIC_UNICODE_INDEXER,
     SUPERTONIC_VOICE,
@@ -159,20 +163,27 @@ class ModelPackVerifier {
     private fun validateInventory(route: ModelRoute, files: List<VerifiedModelFile>) {
         val actual = files.map { it.role }.toSet()
         val required = when (route) {
-            ModelRoute.GEMMA_4_E2B_LITERT_GPU -> setOf(ModelFileRole.GEMMA_MODEL)
+            ModelRoute.GEMMA_4_E2B_LITERT_GPU -> setOf(ModelFileRole.GEMMA_MODEL, ModelFileRole.GEMMA_TOKENIZER)
             ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP -> setOf(
                 ModelFileRole.SUPERTONIC_CONFIG,
-                ModelFileRole.SUPERTONIC_DURATION_CONTEXT,
-                ModelFileRole.SUPERTONIC_TEXT_CONTEXT,
-                ModelFileRole.SUPERTONIC_VECTOR_CONTEXT,
-                ModelFileRole.SUPERTONIC_VOCODER_CONTEXT,
+                ModelFileRole.SUPERTONIC_DURATION_DESCRIPTOR,
+                ModelFileRole.SUPERTONIC_DURATION_BINARY,
+                ModelFileRole.SUPERTONIC_TEXT_DESCRIPTOR,
+                ModelFileRole.SUPERTONIC_TEXT_BINARY,
+                ModelFileRole.SUPERTONIC_VECTOR_DESCRIPTOR,
+                ModelFileRole.SUPERTONIC_VECTOR_BINARY,
+                ModelFileRole.SUPERTONIC_VOCODER_DESCRIPTOR,
+                ModelFileRole.SUPERTONIC_VOCODER_BINARY,
                 ModelFileRole.SUPERTONIC_TOKENIZER,
                 ModelFileRole.SUPERTONIC_UNICODE_INDEXER,
                 ModelFileRole.SUPERTONIC_VOICE,
                 ModelFileRole.SUPERTONIC_STYLE,
             )
         }
-        if (!actual.containsAll(required)) throw ModelPackException.Invalid("Model pack is missing required ${route.name} assets: ${(required - actual).sortedBy { it.name }}")
+        val counts = files.groupingBy { it.role }.eachCount()
+        val duplicateRoles = counts.filterValues { it != 1 }.keys
+        if (duplicateRoles.isNotEmpty()) throw ModelPackException.Invalid("Model-pack roles must have exact cardinality one: ${duplicateRoles.sortedBy { it.name }}")
+        if (actual != required) throw ModelPackException.Invalid("Model pack must contain exactly the required ${route.name} assets: missing=${(required - actual).sortedBy { it.name }}, extra=${(actual - required).sortedBy { it.name }}")
         val wrongRouteRoles = actual.filter { role -> route == ModelRoute.GEMMA_4_E2B_LITERT_GPU && role.name.startsWith("SUPERTONIC") || route == ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP && role.name.startsWith("GEMMA") }
         if (wrongRouteRoles.isNotEmpty()) throw ModelPackException.Invalid("Pack contains assets for another inference route")
     }

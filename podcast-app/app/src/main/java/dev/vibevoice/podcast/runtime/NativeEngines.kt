@@ -32,8 +32,20 @@ class GemmaLiteRtGpuEngine : LlmEngine {
         }
     }
 
+    override suspend fun createSourceNotes(source: SourceMaterial, chunkIndex: Int, chunkCount: Int): SourceMaterial {
+        require(source.text.length <= SourcePreparer.MAX_REQUEST_CHARS) { "Source-notes request exceeds the Gemma context budget" }
+        val request = JSONObject().put("schemaVersion", 1).put("sourceId", source.id).put("title", source.title)
+            .put("chunkIndex", chunkIndex).put("chunkCount", chunkCount).put("text", source.text)
+        val json = JSONObject(generate("source_notes", request.toString()))
+        val notes = json.getString("notes").trim()
+        require(notes.isNotBlank() && notes.length <= SourcePreparer.MAX_NOTE_CHARS) { "Gemma returned invalid source notes" }
+        return SourceMaterial("${source.id}-notes-$chunkIndex", source.title, notes)
+    }
+
     override suspend fun createOutline(sources: List<SourceMaterial>, instructions: String): EpisodeOutline {
-        val json = JSONObject(generate("outline", requestJson(sources, instructions).toString()))
+        val request = requestJson(sources, instructions).toString()
+        require(request.length <= MAX_GENERATION_REQUEST_CHARS) { "Outline request exceeds the Gemma context budget" }
+        val json = JSONObject(generate("outline", request))
         val chapters = json.getJSONArray("chapters")
         return EpisodeOutline(
             title = json.getString("title"),
@@ -55,11 +67,16 @@ class GemmaLiteRtGpuEngine : LlmEngine {
                 JSONObject().put("id", it.id).put("title", it.title).put("brief", it.brief)
             })))
             .put("requestedChapterId", chapter.id)
-        val json = JSONObject(generate("chapter", request.toString()))
+        val serialized = request.toString()
+        require(serialized.length <= MAX_GENERATION_REQUEST_CHARS) { "Chapter request exceeds the Gemma context budget" }
+        val json = JSONObject(generate("chapter", serialized))
         return FrozenChapter(json.getString("id"), json.getString("title"), json.getString("text"))
     }
 
-    override suspend fun editScript(requestJson: String): String = generate("edit", requestJson)
+    override suspend fun editScript(requestJson: String): String {
+        require(requestJson.length <= MAX_GENERATION_REQUEST_CHARS) { "Agent edit request exceeds the Gemma context budget" }
+        return generate("edit", requestJson)
+    }
 
     private suspend fun generate(mode: String, request: String): String = withContext(Dispatchers.Default) {
         check(handle != 0L) { "Gemma engine is not loaded" }
@@ -80,6 +97,8 @@ class GemmaLiteRtGpuEngine : LlmEngine {
         .put("schemaVersion", 1)
         .put("instructions", instructions)
         .put("sources", JSONArray(sources.map { JSONObject().put("id", it.id).put("title", it.title).put("text", it.text) }))
+
+    private companion object { const val MAX_GENERATION_REQUEST_CHARS = 64_000 }
 }
 
 /** APK-supplied JNI/runtime executes QNN/HTP; the verified Supertonic pack contains data only. */

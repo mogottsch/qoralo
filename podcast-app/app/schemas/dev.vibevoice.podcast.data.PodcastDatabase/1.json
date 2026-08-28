@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "f5fc4f90c32fde56e1cd8d7bc0b41233",
+    "identityHash": "dad93b29ae9597772318b2d055505cb8",
     "entities": [
       {
         "tableName": "episodes",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT NOT NULL, `phase` TEXT NOT NULL, `instructions` TEXT NOT NULL, `reviewEnabled` INTEGER NOT NULL, `activeRevisionId` TEXT, `lockedRevisionId` TEXT, `lockedContentHash` TEXT, `lockedAtEpochMs` INTEGER, `finalAudioPath` TEXT, `durationMs` INTEGER, `currentChapterPosition` INTEGER, `failurePhase` TEXT, `failureMessage` TEXT, `createdAtEpochMs` INTEGER NOT NULL, `updatedAtEpochMs` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT NOT NULL, `phase` TEXT NOT NULL, `instructions` TEXT NOT NULL, `reviewEnabled` INTEGER NOT NULL, `activeRevisionId` TEXT, `lockedRevisionId` TEXT, `lockedContentHash` TEXT, `lockedAtEpochMs` INTEGER, `finalAudioPath` TEXT, `durationMs` INTEGER, `currentChapterPosition` INTEGER, `failurePhase` TEXT, `failureMessage` TEXT, `createdAtEpochMs` INTEGER NOT NULL, `updatedAtEpochMs` INTEGER NOT NULL, `finalAudioSha256` TEXT, `finalAudioByteCount` INTEGER, `timelinePath` TEXT, `timelineSha256` TEXT, `timelineByteCount` INTEGER, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -103,6 +103,36 @@
             "columnName": "updatedAtEpochMs",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "finalAudioSha256",
+            "columnName": "finalAudioSha256",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "finalAudioByteCount",
+            "columnName": "finalAudioByteCount",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "timelinePath",
+            "columnName": "timelinePath",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "timelineSha256",
+            "columnName": "timelineSha256",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "timelineByteCount",
+            "columnName": "timelineByteCount",
+            "affinity": "INTEGER",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -476,7 +506,7 @@
       },
       {
         "tableName": "generation_jobs",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `episodeId` TEXT NOT NULL, `kind` TEXT NOT NULL, `status` TEXT NOT NULL, `requestedRevisionId` TEXT, `currentChapter` INTEGER NOT NULL, `totalChapters` INTEGER NOT NULL, `statusText` TEXT NOT NULL, `errorMessage` TEXT, `createdAtEpochMs` INTEGER NOT NULL, `updatedAtEpochMs` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`episodeId`) REFERENCES `episodes`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `episodeId` TEXT NOT NULL, `kind` TEXT NOT NULL, `status` TEXT NOT NULL, `requestedRevisionId` TEXT, `currentChapter` INTEGER NOT NULL, `totalChapters` INTEGER NOT NULL, `statusText` TEXT NOT NULL, `errorMessage` TEXT, `createdAtEpochMs` INTEGER NOT NULL, `updatedAtEpochMs` INTEGER NOT NULL, `requestMessageId` TEXT, `failureStage` TEXT, `heartbeatAtEpochMs` INTEGER, `terminalAtEpochMs` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`episodeId`) REFERENCES `episodes`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -543,6 +573,30 @@
             "columnName": "updatedAtEpochMs",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "requestMessageId",
+            "columnName": "requestMessageId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "failureStage",
+            "columnName": "failureStage",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "heartbeatAtEpochMs",
+            "columnName": "heartbeatAtEpochMs",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "terminalAtEpochMs",
+            "columnName": "terminalAtEpochMs",
+            "affinity": "INTEGER",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -826,7 +880,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f5fc4f90c32fde56e1cd8d7bc0b41233')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dad93b29ae9597772318b2d055505cb8')"
     ]
   }
 }

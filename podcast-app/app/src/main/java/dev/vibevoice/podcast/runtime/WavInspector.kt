@@ -11,43 +11,56 @@ object WavInspector {
         var format = -1
         var channels = -1
         var sampleRate = -1
+        var byteRate = -1L
+        var blockAlign = -1
         var bits = -1
         var dataOffset = -1L
         var dataBytes = -1L
+        var fmtCount = 0
+        var dataCount = 0
         RandomAccessFile(file, "r").use { wav ->
             require(wav.readAscii(4) == "RIFF") { "Chapter output is not RIFF" }
-            wav.readU32()
+            val riffBytes = wav.readU32()
+            require(riffBytes + 8L == wav.length()) { "RIFF size does not match the file" }
             require(wav.readAscii(4) == "WAVE") { "Chapter output is not WAVE" }
             while (wav.filePointer + 8 <= wav.length()) {
                 val id = wav.readAscii(4)
                 val size = wav.readU32()
                 val content = wav.filePointer
-                require(size >= 0 && content + size <= wav.length()) { "Invalid WAV chunk" }
+                val next = content + size + (size and 1L)
+                require(content + size <= wav.length() && next <= wav.length()) { "Invalid WAV chunk" }
                 when (id) {
                     "fmt " -> {
-                        require(size >= 16) { "Invalid WAV format chunk" }
+                        fmtCount++
+                        require(fmtCount == 1 && size >= 16) { "Duplicate or invalid WAV format chunk" }
                         format = wav.readU16()
                         channels = wav.readU16()
                         sampleRate = wav.readU32().toInt()
-                        wav.readU32()
-                        wav.readU16()
+                        byteRate = wav.readU32()
+                        blockAlign = wav.readU16()
                         bits = wav.readU16()
                     }
                     "data" -> {
+                        dataCount++
+                        require(dataCount == 1) { "Duplicate WAV data chunk" }
                         dataOffset = content
                         dataBytes = size
                     }
                 }
-                wav.seek(content + size + (size and 1L))
+                wav.seek(next)
             }
+            require(wav.filePointer == wav.length()) { "Trailing or partial WAV chunk" }
+            require(fmtCount == 1 && dataCount == 1) { "WAV must have exactly one format and data chunk" }
             require(format == 1) { "Supertonic WAV must be linear PCM" }
             require(channels == 1) { "Supertonic WAV must be mono" }
             require(sampleRate == 44_100) { "Supertonic WAV must be 44.1 kHz" }
             require(bits == 16) { "Supertonic WAV must be PCM16" }
-            require(dataOffset >= 0 && dataBytes > 0 && dataBytes % 2L == 0L) { "Supertonic WAV has no valid samples" }
+            val expectedBlockAlign = channels * bits / 8
+            require(blockAlign == expectedBlockAlign && byteRate == sampleRate.toLong() * expectedBlockAlign) { "WAV rate/alignment fields are inconsistent" }
+            require(dataOffset >= 0 && dataBytes > 0 && dataBytes % blockAlign == 0L) { "Supertonic WAV has no valid samples" }
 
             wav.seek(dataOffset)
-            val frames = dataBytes / 2L
+            val frames = dataBytes / blockAlign
             var nonZero = 0L
             var clipped = 0L
             var index = 0L
@@ -60,7 +73,7 @@ object WavInspector {
             require(nonZero > frames / 100L) { "Supertonic WAV is silent" }
             require(clipped <= frames / 10L) { "Supertonic WAV is heavily clipped" }
         }
-        return AudioMetadata(sampleRate, channels, dataBytes / 2L, sha256(file))
+        return AudioMetadata(sampleRate, channels, dataBytes / blockAlign, sha256(file))
     }
 
     private fun sha256(file: File): String {

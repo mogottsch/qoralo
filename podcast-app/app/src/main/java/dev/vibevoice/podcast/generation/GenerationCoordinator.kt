@@ -11,6 +11,7 @@ import dev.vibevoice.podcast.model.ModelRoute
 import dev.vibevoice.podcast.runtime.FrozenChapter
 import dev.vibevoice.podcast.runtime.GemmaLiteRtGpuEngine
 import dev.vibevoice.podcast.runtime.LlmEngine
+import dev.vibevoice.podcast.runtime.SourcePreparer
 import dev.vibevoice.podcast.runtime.SupertonicQnnHtpEngine
 import dev.vibevoice.podcast.runtime.TtsEngine
 import dev.vibevoice.podcast.runtime.WavAssembler
@@ -23,13 +24,11 @@ class GenerationCoordinator(
     private val verifier: ModelPackVerifier = ModelPackVerifier(),
     private val llmFactory: () -> LlmEngine = ::GemmaLiteRtGpuEngine,
     private val ttsFactory: () -> TtsEngine = ::SupertonicQnnHtpEngine,
+    private val testPackProvider: ((ModelRoute) -> dev.vibevoice.podcast.model.VerifiedModelPack)? = null,
 ) {
     suspend fun generateScript(episodeId: String, jobId: String, progress: suspend (String) -> Unit): String? {
-        repository.beginJob(jobId, "Verifying Gemma 4 E2B")
-        val pack = verifier.verify(
-            artifacts.modelPackRoot("gemma-4-e2b"),
-            ModelPackRequirement(ModelRoute.GEMMA_4_E2B_LITERT_GPU, "gemma-4-e2b", BuildConfig.GEMMA_MANIFEST_SHA256),
-        )
+        repository.claimJob(episodeId, jobId, JobKind.SCRIPT, "Verifying Gemma 4 E2B")
+        val pack = loadPack(ModelRoute.GEMMA_4_E2B_LITERT_GPU)
         val episode = repository.episode(episodeId)
         val sources = repository.sourceMaterials(episodeId)
         val engine = llmFactory()
@@ -37,14 +36,15 @@ class GenerationCoordinator(
             progress("Loading Gemma 4 E2B on GPU")
             engine.load(pack)
             repository.recordVerifiedPack(pack, requireNotNull(engine.provenance))
+            val preparedSources = SourcePreparer().prepare(sources, engine, progress)
             progress("Creating the episode outline")
-            val outline = engine.createOutline(sources, episode.instructions)
+            val outline = engine.createOutline(preparedSources, episode.instructions)
             require(outline.title.isNotBlank() && outline.chapters.size in 1..20) { "Gemma returned an invalid outline" }
             require(outline.chapters.map { it.id }.toSet().size == outline.chapters.size) { "Gemma returned duplicate chapter IDs" }
             val chapters = outline.chapters.mapIndexed { index, planned ->
-                repository.updateJobProgress(jobId, index + 1, outline.chapters.size, "Writing ${planned.title}")
+                repository.updateJobProgress(episodeId, jobId, JobKind.SCRIPT, index + 1, outline.chapters.size, "Writing ${planned.title}")
                 progress("Writing chapter ${index + 1} of ${outline.chapters.size}")
-                val generated = engine.createChapter(outline, planned, sources, episode.instructions)
+                val generated = engine.createChapter(outline, planned, preparedSources, episode.instructions)
                 require(generated.id == planned.id) { "Gemma returned the wrong complete chapter" }
                 ChapterDraft(generated.id, generated.title, generated.text)
             }
@@ -57,13 +57,10 @@ class GenerationCoordinator(
     }
 
     suspend fun editDraft(episodeId: String, jobId: String, progress: suspend (String) -> Unit) {
-        repository.beginJob(jobId, "Verifying Gemma 4 E2B")
-        val pack = verifier.verify(
-            artifacts.modelPackRoot("gemma-4-e2b"),
-            ModelPackRequirement(ModelRoute.GEMMA_4_E2B_LITERT_GPU, "gemma-4-e2b", BuildConfig.GEMMA_MANIFEST_SHA256),
-        )
+        val claim = repository.claimJob(episodeId, jobId, JobKind.AGENT_EDIT, "Verifying Gemma 4 E2B")
+        val pack = loadPack(ModelRoute.GEMMA_4_E2B_LITERT_GPU)
         val (revision, chapters) = repository.activeRevision(episodeId)
-        val userRequest = repository.latestUserMessage(episodeId)
+        val userRequest = requireNotNull(claim.message) { "Agent request is missing" }
         require(userRequest.baseRevisionId == revision.id) { "Agent request is stale" }
         val engine = llmFactory()
         try {
@@ -88,11 +85,8 @@ class GenerationCoordinator(
 
     suspend fun generateAudio(episodeId: String, jobId: String, progress: suspend (String) -> Unit) {
         val (episode, chapters) = repository.lockedChapterData(episodeId)
-        repository.beginJob(jobId, "Verifying Supertonic", chapters.size)
-        val pack = verifier.verify(
-            artifacts.modelPackRoot("supertonic-3"),
-            ModelPackRequirement(ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP, "supertonic-3", BuildConfig.SUPERTONIC_MANIFEST_SHA256),
-        )
+        repository.claimJob(episodeId, jobId, JobKind.AUDIO, "Verifying Supertonic", chapters.size)
+        val pack = loadPack(ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP)
         repository.resetChapterAudio(episodeId)
         val engine = ttsFactory()
         val rendered = mutableListOf<WavAssembler.Input>()
@@ -103,7 +97,7 @@ class GenerationCoordinator(
             engine.load(pack, "M1/SID5")
             repository.recordVerifiedPack(pack, requireNotNull(engine.provenance))
             chapters.forEachIndexed { index, chapter ->
-                repository.updateJobProgress(jobId, index + 1, chapters.size, "Creating ${chapter.title}")
+                repository.updateJobProgress(episodeId, jobId, JobKind.AUDIO, index + 1, chapters.size, "Creating ${chapter.title}")
                 progress("Creating chapter ${index + 1} of ${chapters.size}")
                 val output = artifacts.chapterWav(episodeId, chapter.position)
                 val metadata = engine.renderChapter(FrozenChapter(chapter.stableChapterId, chapter.title, chapter.text), output)
@@ -115,8 +109,17 @@ class GenerationCoordinator(
             engine.close()
         }
         progress("Assembling ${episode.title}")
-        val final = WavAssembler(artifacts).assemble(episodeId, rendered)
-        repository.completeAudio(jobId, final.file, final.durationMs)
+        val final = WavAssembler(artifacts).assemble(episodeId, jobId, rendered)
+        repository.completeAudio(episodeId, jobId, final)
+    }
+
+    private fun loadPack(route: ModelRoute): dev.vibevoice.podcast.model.VerifiedModelPack {
+        testPackProvider?.let { return it(route) }
+        val (directory, id, hash) = when (route) {
+            ModelRoute.GEMMA_4_E2B_LITERT_GPU -> Triple("gemma-4-e2b", "gemma-4-e2b", BuildConfig.GEMMA_MANIFEST_SHA256)
+            ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP -> Triple("supertonic-3", "supertonic-3", BuildConfig.SUPERTONIC_MANIFEST_SHA256)
+        }
+        return verifier.verify(artifacts.modelPackRoot(directory), ModelPackRequirement(route, id, hash))
     }
 
     private fun parseAgentResult(raw: String): AgentResult {

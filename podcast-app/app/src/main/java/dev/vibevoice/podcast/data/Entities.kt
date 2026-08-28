@@ -38,6 +38,11 @@ data class EpisodeEntity(
     val failureMessage: String?,
     val createdAtEpochMs: Long,
     val updatedAtEpochMs: Long,
+    val finalAudioSha256: String? = null,
+    val finalAudioByteCount: Long? = null,
+    val timelinePath: String? = null,
+    val timelineSha256: String? = null,
+    val timelineByteCount: Long? = null,
 )
 
 @Entity(
@@ -120,6 +125,10 @@ data class GenerationJobEntity(
     val errorMessage: String?,
     val createdAtEpochMs: Long,
     val updatedAtEpochMs: Long,
+    val requestMessageId: String? = null,
+    val failureStage: String? = null,
+    val heartbeatAtEpochMs: Long? = null,
+    val terminalAtEpochMs: Long? = null,
 )
 
 @Entity(

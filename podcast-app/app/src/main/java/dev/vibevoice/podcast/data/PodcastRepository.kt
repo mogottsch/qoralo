@@ -4,6 +4,7 @@ import androidx.room.withTransaction
 import dev.vibevoice.podcast.model.VerifiedModelPack
 import dev.vibevoice.podcast.runtime.AudioMetadata
 import dev.vibevoice.podcast.runtime.RuntimeProvenance
+import dev.vibevoice.podcast.runtime.WavAssembler
 import dev.vibevoice.podcast.runtime.WavInspector
 import kotlinx.coroutines.flow.Flow
 import java.io.File
@@ -64,7 +65,10 @@ class PodcastRepository(
     suspend fun queueScriptGeneration(episodeId: String, instructions: String, reviewEnabled: Boolean): String = database.withTransaction {
         val episode = requireEpisode(episodeId)
         require(episode.phase == EpisodePhase.INSTRUCTIONS) { "Episode is not ready for instructions" }
-        require(dao.sources(episodeId).isNotEmpty()) { "Add at least one source" }
+        val acceptedSources = dao.sources(episodeId)
+        require(acceptedSources.isNotEmpty()) { "Add at least one source" }
+        require(acceptedSources.sumOf { it.byteCount } <= MAX_EPISODE_SOURCE_BYTES) { "Episode sources exceed the 5 MB generation limit" }
+        require(dao.activeJobCount() == 0) { "Another on-device generation job is active" }
         val job = newJob(episodeId, JobKind.SCRIPT, null, "Preparing sources")
         dao.insertJob(job)
         dao.updateEpisode(episode.copy(
@@ -90,7 +94,7 @@ class PodcastRepository(
                 val episode = requireEpisode(episodeId)
                 require(episode.phase == EpisodePhase.GENERATING_SCRIPT) { "Script result is stale" }
                 val job = requireJob(jobId)
-                require(job.kind == JobKind.SCRIPT && job.status != JobStatus.COMPLETE) { "Script job is stale" }
+                require(job.episodeId == episodeId && job.kind == JobKind.SCRIPT && job.status == JobStatus.RUNNING) { "Script job is stale or cross-wired" }
                 insertRevision(revisionId, episode, null, title, chapters, stored)
                 val now = clock()
                 if (episode.reviewEnabled) {
@@ -102,7 +106,7 @@ class PodcastRepository(
                     ))
                     dao.insertJob(newJob(episodeId, JobKind.AUDIO, revisionId, "Waiting to create audio"))
                 }
-                dao.updateJob(job.copy(status = JobStatus.COMPLETE, statusText = "Script complete", updatedAtEpochMs = now))
+                dao.updateJob(job.copy(status = JobStatus.COMPLETE, statusText = "Script complete", terminalAtEpochMs = now, heartbeatAtEpochMs = now, updatedAtEpochMs = now))
                 revisionId
             }
         } catch (error: Throwable) {
@@ -115,9 +119,11 @@ class PodcastRepository(
         val episode = requireEpisode(episodeId)
         require(episode.phase == EpisodePhase.SCRIPT_DRAFT && episode.activeRevisionId != null) { "Only an unlocked draft can be edited" }
         require(request.isNotBlank()) { "Describe the requested change" }
+        require(dao.activeJobCount() == 0) { "Another on-device generation job is active" }
         val now = clock()
-        dao.insertMessage(AgentMessageEntity(UUID.randomUUID().toString(), episodeId, AgentRole.USER, request.trim(), episode.activeRevisionId, null, now))
-        val job = newJob(episodeId, JobKind.AGENT_EDIT, episode.activeRevisionId, "Editing the draft")
+        val message = AgentMessageEntity(UUID.randomUUID().toString(), episodeId, AgentRole.USER, request.trim(), episode.activeRevisionId, null, now)
+        dao.insertMessage(message)
+        val job = newJob(episodeId, JobKind.AGENT_EDIT, episode.activeRevisionId, "Editing the draft").copy(requestMessageId = message.id)
         dao.insertJob(job)
         job.id
     }
@@ -146,12 +152,14 @@ class PodcastRepository(
                 require(episode.phase == EpisodePhase.SCRIPT_DRAFT) { "Draft was locked while the agent was working" }
                 require(episode.activeRevisionId == baseRevisionId) { "Agent result is stale" }
                 val job = requireJob(jobId)
-                require(job.kind == JobKind.AGENT_EDIT && job.requestedRevisionId == baseRevisionId) { "Agent job is stale" }
+                require(job.episodeId == episodeId && job.kind == JobKind.AGENT_EDIT && job.requestedRevisionId == baseRevisionId &&
+                    job.status == JobStatus.RUNNING && job.requestMessageId != null
+                ) { "Agent job is stale or cross-wired" }
                 insertRevision(revisionId, episode, baseRevisionId, title, chapters, stored)
                 val now = clock()
                 dao.insertMessage(AgentMessageEntity(UUID.randomUUID().toString(), episodeId, AgentRole.AGENT, summary.trim(), baseRevisionId, revisionId, now))
                 dao.updateEpisode(episode.copy(title = title, activeRevisionId = revisionId, updatedAtEpochMs = now))
-                dao.updateJob(job.copy(status = JobStatus.COMPLETE, statusText = "Changes ready", updatedAtEpochMs = now))
+                dao.updateJob(job.copy(status = JobStatus.COMPLETE, statusText = "Changes ready", terminalAtEpochMs = now, heartbeatAtEpochMs = now, updatedAtEpochMs = now))
                 revisionId
             }
         } catch (error: Throwable) {
@@ -163,6 +171,8 @@ class PodcastRepository(
     suspend fun lockAndQueueAudio(episodeId: String): String = database.withTransaction {
         val episode = requireEpisode(episodeId)
         require(episode.phase == EpisodePhase.SCRIPT_DRAFT && episode.activeRevisionId != null) { "Only the current draft can be locked" }
+        require(dao.activeJobCount(episodeId) == 0) { "Wait for the current agent edit to finish before locking" }
+        require(dao.activeJobCount() == 0) { "Another on-device generation job is active" }
         val revision = dao.revision(episode.activeRevisionId) ?: error("Missing draft revision")
         require(dao.chapters(revision.id).isNotEmpty()) { "Cannot lock an empty script" }
         val now = clock()
@@ -175,21 +185,35 @@ class PodcastRepository(
         job.id
     }
 
-    suspend fun beginJob(jobId: String, status: String, totalChapters: Int = 0) = database.withTransaction {
+    suspend fun claimJob(episodeId: String, jobId: String, expectedKind: String, status: String, totalChapters: Int = 0): JobClaim = database.withTransaction {
         val job = requireJob(jobId)
-        val episode = requireEpisode(job.episodeId)
+        val episode = requireEpisode(episodeId)
+        require(job.episodeId == episodeId && job.kind == expectedKind) { "Generation command is cross-wired" }
+        require(job.status == JobStatus.QUEUED) { "Generation job was already claimed" }
+        require(dao.runningJobCount() == 0) { "Another model-heavy job is running" }
+        when (expectedKind) {
+            JobKind.SCRIPT -> require(episode.phase == EpisodePhase.GENERATING_SCRIPT && job.requestedRevisionId == null) { "Script job does not match episode state" }
+            JobKind.AGENT_EDIT -> require(episode.phase == EpisodePhase.SCRIPT_DRAFT && episode.activeRevisionId == job.requestedRevisionId && job.requestMessageId != null) { "Agent job does not match the active draft" }
+            JobKind.AUDIO -> require(episode.phase == EpisodePhase.LOCKED && episode.lockedRevisionId == job.requestedRevisionId) { "Audio job does not match the locked revision" }
+            else -> error("Unknown job kind")
+        }
+        val message = job.requestMessageId?.let { id -> dao.message(id) ?: error("Agent job message is missing") }
+        if (message != null) require(message.episodeId == episodeId && message.baseRevisionId == job.requestedRevisionId) { "Agent job message is cross-wired" }
         val now = clock()
-        dao.updateJob(job.copy(status = JobStatus.RUNNING, statusText = status, totalChapters = totalChapters, updatedAtEpochMs = now))
-        val phase = if (job.kind == JobKind.AUDIO) EpisodePhase.GENERATING_AUDIO else episode.phase
+        val claimed = job.copy(status = JobStatus.RUNNING, statusText = status, totalChapters = totalChapters, heartbeatAtEpochMs = now, updatedAtEpochMs = now)
+        dao.updateJob(claimed)
+        val phase = if (expectedKind == JobKind.AUDIO) EpisodePhase.GENERATING_AUDIO else episode.phase
         dao.updateEpisode(episode.copy(phase = phase, updatedAtEpochMs = now))
+        JobClaim(claimed, episode, message)
     }
 
-    suspend fun updateJobProgress(jobId: String, current: Int, total: Int, status: String) = database.withTransaction {
+    suspend fun updateJobProgress(episodeId: String, jobId: String, expectedKind: String, current: Int, total: Int, status: String) = database.withTransaction {
         val job = requireJob(jobId)
-        val episode = requireEpisode(job.episodeId)
+        require(job.episodeId == episodeId && job.kind == expectedKind && job.status == JobStatus.RUNNING) { "Cannot update an unclaimed or cross-wired job" }
+        val episode = requireEpisode(episodeId)
         val now = clock()
-        dao.updateJob(job.copy(currentChapter = current, totalChapters = total, statusText = status, updatedAtEpochMs = now))
-        dao.updateEpisode(episode.copy(currentChapterPosition = current, updatedAtEpochMs = now))
+        dao.updateJob(job.copy(currentChapter = current, totalChapters = total, statusText = status, heartbeatAtEpochMs = now, updatedAtEpochMs = now))
+        dao.updateEpisode(episode.copy(currentChapterPosition = current.takeIf { it > 0 }, updatedAtEpochMs = now))
     }
 
     suspend fun lockedChapterData(episodeId: String): Pair<EpisodeEntity, List<ChapterEntity>> {
@@ -215,26 +239,63 @@ class PodcastRepository(
         ))
     }
 
-    suspend fun completeAudio(jobId: String, finalFile: File, durationMs: Long) = database.withTransaction {
+    suspend fun completeAudio(episodeId: String, jobId: String, result: WavAssembler.Result) = database.withTransaction {
         val job = requireJob(jobId)
-        require(job.kind == JobKind.AUDIO) { "Not an audio job" }
-        val episode = requireEpisode(job.episodeId)
-        require(episode.lockedRevisionId == job.requestedRevisionId) { "Audio job revision mismatch" }
+        val episode = requireEpisode(episodeId)
+        require(job.episodeId == episodeId && job.kind == JobKind.AUDIO && job.status == JobStatus.RUNNING) { "Audio completion is stale or cross-wired" }
+        require(episode.phase == EpisodePhase.GENERATING_AUDIO && episode.lockedRevisionId == job.requestedRevisionId) { "Audio job revision or phase mismatch" }
+        val locked = dao.chapters(requireNotNull(episode.lockedRevisionId))
+        val rendered = dao.chapterAudio(episodeId)
+        require(rendered.size == locked.size && rendered.map { it.position } == locked.map { it.position } &&
+            rendered.map { it.stableChapterId } == locked.map { it.stableChapterId } && rendered.all { it.lockedRevisionId == episode.lockedRevisionId }
+        ) { "Frozen episode does not have complete locked-chapter audio coverage" }
+        rendered.forEach {
+            val file = artifacts.resolveEpisodeFile(it.relativePath)
+            val inspected = WavInspector.inspectSupertonicOutput(file)
+            require(inspected.sha256 == it.sha256 && file.length() == it.byteCount) { "Chapter audio changed before final commit" }
+        }
+        val finalInspection = WavInspector.inspectSupertonicOutput(result.audioFile)
+        require(finalInspection.sha256 == result.audioSha256 && result.audioFile.length() == result.audioByteCount) { "Final WAV integrity mismatch" }
+        require(result.timelineFile.isFile && artifacts.sha256(result.timelineFile) == result.timelineSha256 && result.timelineFile.length() == result.timelineByteCount) { "Timeline integrity mismatch" }
         val now = clock()
         dao.updateEpisode(episode.copy(
-            phase = EpisodePhase.FROZEN_READY, finalAudioPath = artifacts.relativeToEpisodes(finalFile),
-            durationMs = durationMs, currentChapterPosition = null, failurePhase = null, failureMessage = null, updatedAtEpochMs = now,
+            phase = EpisodePhase.FROZEN_READY,
+            finalAudioPath = artifacts.relativeToEpisodes(result.audioFile),
+            finalAudioSha256 = result.audioSha256,
+            finalAudioByteCount = result.audioByteCount,
+            timelinePath = artifacts.relativeToEpisodes(result.timelineFile),
+            timelineSha256 = result.timelineSha256,
+            timelineByteCount = result.timelineByteCount,
+            durationMs = result.durationMs,
+            currentChapterPosition = null,
+            failurePhase = null,
+            failureMessage = null,
+            updatedAtEpochMs = now,
         ))
-        dao.updateJob(job.copy(status = JobStatus.COMPLETE, statusText = "Episode ready", currentChapter = job.totalChapters, updatedAtEpochMs = now))
+        dao.updateJob(job.copy(status = JobStatus.COMPLETE, statusText = "Episode ready", currentChapter = job.totalChapters,
+            terminalAtEpochMs = now, heartbeatAtEpochMs = now, updatedAtEpochMs = now))
     }
 
-    suspend fun failJob(jobId: String, message: String) = database.withTransaction {
+    suspend fun failJob(episodeId: String, jobId: String, message: String, stage: String? = null): Boolean = database.withTransaction {
         val job = requireJob(jobId)
-        val episode = requireEpisode(job.episodeId)
+        require(job.episodeId == episodeId) { "Failure command is cross-wired" }
+        if (job.status != JobStatus.RUNNING) return@withTransaction false
+        val episode = requireEpisode(episodeId)
         val now = clock()
-        dao.updateJob(job.copy(status = JobStatus.FAILED, errorMessage = message.take(1000), statusText = "Generation failed", updatedAtEpochMs = now))
-        dao.updateEpisode(episode.copy(phase = EpisodePhase.FAILED, failurePhase = job.kind, failureMessage = message.take(1000), updatedAtEpochMs = now))
+        val failureStage = stage ?: job.statusText
+        dao.updateJob(job.copy(status = JobStatus.FAILED, errorMessage = message.take(1000), failureStage = failureStage,
+            statusText = "Generation failed", terminalAtEpochMs = now, heartbeatAtEpochMs = now, updatedAtEpochMs = now))
+        val stillOwnsPhase = when (job.kind) {
+            JobKind.SCRIPT -> episode.phase == EpisodePhase.GENERATING_SCRIPT
+            JobKind.AGENT_EDIT -> episode.phase == EpisodePhase.SCRIPT_DRAFT && episode.activeRevisionId == job.requestedRevisionId
+            JobKind.AUDIO -> episode.phase == EpisodePhase.GENERATING_AUDIO && episode.lockedRevisionId == job.requestedRevisionId
+            else -> false
+        }
+        if (stillOwnsPhase) dao.updateEpisode(episode.copy(phase = EpisodePhase.FAILED, failurePhase = "$failureStage", failureMessage = message.take(1000), updatedAtEpochMs = now))
+        true
     }
+
+    suspend fun runningJobs(): List<GenerationJobEntity> = dao.runningJobs()
 
     suspend fun savePlayback(episodeId: String, positionMs: Long, speed: Float, transcript: Boolean) {
         val episode = requireEpisode(episodeId)
@@ -244,7 +305,6 @@ class PodcastRepository(
 
     suspend fun episode(id: String): EpisodeEntity = requireEpisode(id)
     suspend fun latestJob(episodeId: String): GenerationJobEntity? = dao.latestJob(episodeId)
-    suspend fun latestUserMessage(episodeId: String): AgentMessageEntity = dao.latestUserMessage(episodeId) ?: error("Agent request is missing")
     suspend fun chapters(revisionId: String): List<ChapterEntity> = dao.chapters(revisionId)
     suspend fun recordVerifiedPack(pack: VerifiedModelPack, provenance: RuntimeProvenance) {
         val json = org.json.JSONObject()
@@ -297,5 +357,14 @@ class PodcastRepository(
 
     private fun approximateSeconds(text: String): Int = (text.split(Regex("\\s+")).count { it.isNotBlank() } / 2.5).toInt().coerceAtLeast(1)
 
-    companion object { private val CHAPTER_ID = Regex("[A-Za-z0-9][A-Za-z0-9._-]{0,127}") }
+    companion object {
+        private val CHAPTER_ID = Regex("[A-Za-z0-9][A-Za-z0-9._-]{0,127}")
+        private const val MAX_EPISODE_SOURCE_BYTES = 5L * 1024L * 1024L
+    }
 }
+
+data class JobClaim(
+    val job: GenerationJobEntity,
+    val episode: EpisodeEntity,
+    val message: AgentMessageEntity?,
+)

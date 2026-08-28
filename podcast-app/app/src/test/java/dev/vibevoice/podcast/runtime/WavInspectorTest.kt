@@ -33,6 +33,27 @@ class WavInspectorTest {
         assertThrows(IllegalArgumentException::class.java) { WavInspector.inspectSupertonicOutput(wav) }
     }
 
+    @Test fun rejectsWrongRiffSize() {
+        val wav = wav("riff-size.wav", ShortArray(100) { 100 })
+        RandomAccessFile(wav, "rw").use { it.seek(4); it.u32(1) }
+        assertThrows(IllegalArgumentException::class.java) { WavInspector.inspectSupertonicOutput(wav) }
+    }
+
+    @Test fun rejectsInconsistentByteRate() {
+        val wav = wav("rate.wav", ShortArray(100) { 100 })
+        RandomAccessFile(wav, "rw").use { it.seek(28); it.u32(1) }
+        assertThrows(IllegalArgumentException::class.java) { WavInspector.inspectSupertonicOutput(wav) }
+    }
+
+    @Test fun rejectsDuplicateDataChunk() {
+        val wav = wav("duplicate-data.wav", ShortArray(100) { 100 })
+        RandomAccessFile(wav, "rw").use { out ->
+            out.seek(out.length()); out.writeBytes("data"); out.u32(2); out.u16(100)
+            val newSize = out.length() - 8; out.seek(4); out.u32(newSize)
+        }
+        assertThrows(IllegalArgumentException::class.java) { WavInspector.inspectSupertonicOutput(wav) }
+    }
+
     @Test fun rejectsSilentOutput() {
         val wav = wav("silent.wav", ShortArray(1_000))
         assertThrows(IllegalArgumentException::class.java) { WavInspector.inspectSupertonicOutput(wav) }

@@ -2,20 +2,36 @@ package dev.vibevoice.podcast.data
 
 import android.content.Context
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.InputStream
 import java.security.MessageDigest
 import java.text.Normalizer
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 
-class ArtifactStore(context: Context) {
-    val episodesRoot = File(context.filesDir, "episodes")
-    val modelPacksRoot = File(context.noBackupFilesDir, "model-packs")
+class ArtifactStore(
+    val episodesRoot: File,
+    val modelPacksRoot: File,
+) {
+    constructor(context: Context) : this(File(context.filesDir, "episodes"), File(context.noBackupFilesDir, "model-packs"))
 
     fun writeSource(episodeId: String, sourceId: String, input: InputStream): StoredText {
-        val raw = input.bufferedReader(Charsets.UTF_8).use { it.readText() }
+        val bytes = ByteArrayOutputStream().use { output ->
+            val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+            var total = 0
+            while (true) {
+                val count = input.read(buffer)
+                if (count < 0) break
+                total += count
+                require(total <= MAX_SOURCE_BYTES) { "Source exceeds the 5 MB MVP limit" }
+                output.write(buffer, 0, count)
+            }
+            output.toByteArray()
+        }
+        val raw = bytes.toString(Charsets.UTF_8)
         val normalized = normalizeSource(raw)
         require(normalized.isNotBlank()) { "Source is empty" }
-        require(normalized.toByteArray().size <= MAX_SOURCE_BYTES) { "Source exceeds the 5 MB MVP limit" }
         val relative = "$episodeId/sources/$sourceId.txt"
         val file = File(episodesRoot, relative)
         writeAtomically(file, normalized.toByteArray(Charsets.UTF_8))
@@ -35,8 +51,9 @@ class ArtifactStore(context: Context) {
     fun chapterWav(episodeId: String, position: Int): File =
         File(episodesRoot, "$episodeId/chapters/chapter-${position.toString().padStart(3, '0')}.wav")
 
-    fun finalWav(episodeId: String): File = File(episodesRoot, "$episodeId/final/episode.wav")
-    fun timeline(episodeId: String): File = File(episodesRoot, "$episodeId/final/chapter-timeline.json")
+    fun finalGenerationDir(episodeId: String, generationId: String): File = File(episodesRoot, "$episodeId/final/$generationId")
+    fun finalWav(episodeId: String, generationId: String): File = File(finalGenerationDir(episodeId, generationId), "episode.wav")
+    fun timeline(episodeId: String, generationId: String): File = File(finalGenerationDir(episodeId, generationId), "chapter-timeline.json")
 
     fun relativeToEpisodes(file: File): String = file.canonicalFile.relativeTo(episodesRoot.canonicalFile).invariantSeparatorsPath
 
@@ -53,8 +70,7 @@ class ArtifactStore(context: Context) {
         destination.parentFile?.mkdirs()
         val temp = File(destination.parentFile, ".${destination.name}.tmp")
         temp.outputStream().use { output -> output.write(bytes); output.fdSync() }
-        if (destination.exists() && !destination.delete()) error("Could not replace ${destination.name}")
-        if (!temp.renameTo(destination)) error("Could not commit ${destination.name}")
+        Files.move(temp.toPath(), destination.toPath(), StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING)
     }
 
     fun sha256(file: File): String {

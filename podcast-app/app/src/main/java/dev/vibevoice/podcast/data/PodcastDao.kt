@@ -30,13 +30,17 @@ interface PodcastDao {
 
     @Insert suspend fun insertMessage(value: AgentMessageEntity)
     @Query("SELECT * FROM agent_messages WHERE episodeId = :episodeId ORDER BY createdAtEpochMs") fun observeMessages(episodeId: String): Flow<List<AgentMessageEntity>>
-    @Query("SELECT * FROM agent_messages WHERE episodeId = :episodeId AND role = 'USER' ORDER BY createdAtEpochMs DESC, rowid DESC LIMIT 1") suspend fun latestUserMessage(episodeId: String): AgentMessageEntity?
+    @Query("SELECT * FROM agent_messages WHERE id = :id") suspend fun message(id: String): AgentMessageEntity?
 
     @Insert suspend fun insertJob(value: GenerationJobEntity)
     @Update suspend fun updateJob(value: GenerationJobEntity)
     @Query("SELECT * FROM generation_jobs WHERE id = :id") suspend fun job(id: String): GenerationJobEntity?
     @Query("SELECT * FROM generation_jobs WHERE episodeId = :episodeId ORDER BY createdAtEpochMs DESC, rowid DESC LIMIT 1") fun observeLatestJob(episodeId: String): Flow<GenerationJobEntity?>
     @Query("SELECT * FROM generation_jobs WHERE episodeId = :episodeId ORDER BY createdAtEpochMs DESC, rowid DESC LIMIT 1") suspend fun latestJob(episodeId: String): GenerationJobEntity?
+    @Query("SELECT COUNT(*) FROM generation_jobs WHERE status IN ('QUEUED', 'RUNNING')") suspend fun activeJobCount(): Int
+    @Query("SELECT COUNT(*) FROM generation_jobs WHERE status = 'RUNNING'") suspend fun runningJobCount(): Int
+    @Query("SELECT COUNT(*) FROM generation_jobs WHERE episodeId = :episodeId AND status IN ('QUEUED', 'RUNNING')") suspend fun activeJobCount(episodeId: String): Int
+    @Query("SELECT * FROM generation_jobs WHERE status = 'RUNNING'") suspend fun runningJobs(): List<GenerationJobEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun insertChapterAudio(value: ChapterAudioEntity)
     @Query("DELETE FROM chapter_audio WHERE episodeId = :episodeId") suspend fun clearChapterAudio(episodeId: String)
