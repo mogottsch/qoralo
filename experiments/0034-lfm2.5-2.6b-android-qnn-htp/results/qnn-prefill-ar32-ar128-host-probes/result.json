@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "classification": "host_cpu_semantic_and_fallback_disabled_qnn_compile_probes_for_chunked_prefill",
+  "shared_design": {
+    "model_revision":"ab00687315bc1298e9d54e9c4b611dde9867ccc2",
+    "capacity":4096,
+    "architecture":"One ordinary fixed-width prefill graph. CPU dequantizes selected Q4 embedding rows; HTP candidate covers all 30 layers, recurrent/attention updates, final norm, and final-position LM head. It returns N new K/V slices and 22 convolution/16 attention state outputs.",
+    "attention_semantics":"Each query attends to left-aligned valid prior cache positions and causal positions within its current chunk. Caller writes returned K/V slices into base:base+N.",
+    "head_semantics":"Only the chunk's final position enters the 22 symmetric Q4 logit chunks; CPU performs global greedy argmax.",
+    "shared_resource_format":false,
+    "context_streaming":false,
+    "fallback_disabled":true
+  },
+  "probes": {
+    "ar32": {
+      "sequence_length":32,
+      "past_cache_length":4064,
+      "cpu_vs_sequential_ar1": {
+        "positions_compared":32,
+        "state_tensors":38,
+        "state_allclose_rtol_0_02_atol_0_02":20,
+        "state_max_abs":0.30681276321411133,
+        "state_mean_abs_max":0.019412502646446228,
+        "logit_max_abs":0.5116338729858398,
+        "logit_mean_abs":0.11282429099082947,
+        "sequential_ar1_argmax":20,
+        "chunk_argmax":20,
+        "argmax_equal":true,
+        "cpu_timing_diagnostic_speedup":6.575138752171494
+      },
+      "two_chunk_gqa_reference": {
+        "positions_compared":64,
+        "argmax_equal_each_chunk":true,
+        "chunk_argmax":[20,342],
+        "reference_argmax":[20,342],
+        "state_max_abs":[0.31374335289001465,0.27516451478004456]
+      },
+      "qnn_compile": {
+        "success":true,
+        "optimized_source_nodes":1542,
+        "supported_nodes":1542,
+        "unsupported_nodes":0,
+        "qnn_operations":2699,
+        "subgraphs":1,
+        "context_bytes":1602820688,
+        "context_sha256":"e26edaa8d33d370dae4e9eceb22f7feb2701577cd9edff7fe82000be265d96b9",
+        "build_id":"v2.49.40.260810104044",
+        "graph_inputs":41,
+        "graph_outputs":60,
+        "spill_fill_buffer_bytes":61800448,
+        "io_tensor_bytes":136609792,
+        "const_bytes":1596407808,
+        "op_data_bytes":15206144,
+        "compiler_estimated_spill_bytes":6279757824,
+        "compiler_estimated_fill_bytes":6287949824,
+        "compiler_estimated_write_bytes":6355591424,
+        "compiler_estimated_read_bytes":8047001600
+      }
+    },
+    "ar128": {
+      "sequence_length":128,
+      "past_cache_length":3968,
+      "cpu_vs_sequential_ar1": {
+        "positions_compared":128,
+        "state_tensors":38,
+        "state_allclose_rtol_0_02_atol_0_02":19,
+        "state_max_abs":0.5517997145652771,
+        "state_mean_abs_max":0.020038727670907974,
+        "logit_max_abs":0.3827025890350342,
+        "logit_mean_abs":0.05419536307454109,
+        "sequential_ar1_argmax":116311,
+        "chunk_argmax":116311,
+        "argmax_equal":true,
+        "cpu_timing_diagnostic_speedup":17.182700262539285
+      },
+      "gqa_symmetric_head_reference": {
+        "positions_compared":128,
+        "argmax_equal":true,
+        "reference_argmax":116311,
+        "chunk_argmax":116311,
+        "state_max_abs":0.31374335289001465
+      },
+      "qnn_compile": {
+        "success":true,
+        "optimized_source_nodes":1542,
+        "supported_nodes":1542,
+        "unsupported_nodes":0,
+        "qnn_operations":2699,
+        "subgraphs":1,
+        "context_bytes":1605986896,
+        "context_sha256":"4016d15f6ff50c5b7798dd508612195e693d16e21d4df0f26a2084ab2a73f02d",
+        "build_id":"v2.49.40.260810104044",
+        "graph_inputs":41,
+        "graph_outputs":60,
+        "spill_fill_buffer_bytes":74121216,
+        "io_tensor_bytes":138969088,
+        "const_bytes":1596706816,
+        "op_data_bytes":22924288,
+        "compiler_estimated_spill_bytes":6915686400,
+        "compiler_estimated_fill_bytes":6953566208,
+        "compiler_estimated_write_bytes":7216439808,
+        "compiler_estimated_read_bytes":9016340480
+      }
+    }
+  },
+  "fidelity_interpretation":"Both chunks preserve the accepted symmetric-Q4 route's final greedy decision, including AR32 across two carried-state chunks. Numeric state/logit deltas are material and explicitly reported; only 20/38 AR32 and 19/38 AR128 state tensors meet rtol=0.02/atol=0.02. These probes do not establish exact numerical equivalence or output quality.",
+  "route_decision":"AR32 and AR128 both compile fully to one QNN subgraph. Neither alone exactly tiles the 171-token canonical short prompt. Next probe AR57 (three equal chunks) and AR171 (single prompt chunk) to avoid padding/tail-context complexity, then host-execute the most practical candidate before a phone request.",
+  "phone_boundary":"No phone access occurred and neither context is a phone candidate yet.",
+  "claim_boundary":"CPU semantic/fidelity diagnostics and host fallback-disabled QNN AOT metadata only. No HTP graph execution, physical performance, campaign, or registry result."
+}

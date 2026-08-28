@@ -76,13 +76,16 @@
 64. Preserved provider, hashes, timings, process memory, thermal/power, identity, and cleanup; remote root absent and lock released.
 65. Profiled the current AR1 route host-side: exact raw IO bytes, FP32 state/logit traffic, context constant/IO/spill/DDR/op-data sizes, compiler read/write/spill/fill estimates, QNN op mix, and single-run physical timing arithmetic.
 66. Identified chunked prefill as the highest-leverage candidate, followed by lower-precision/registered state, reduced logit return, and coarse explicitly declared hybrid partitions.
+67. Built AR32 and AR128 fixed-width prefill graphs with causal within-chunk attention, new-slice K/V outputs, final-position-only LM head, and explicit CPU embedding/global-argmax boundaries.
+68. Compared against accepted sequential AR1 and symmetric-head GQA CPU references. Greedy decisions match, including two carried AR32 chunks; material state/logit deltas are retained.
+69. Compiled both fallback-disabled as one SM8550/V73 QNN subgraph: 1,542/1,542 supported, 2,699 QNN ops, zero unsupported.
 
 ## In progress: performance engineering
 
-1. Commit and independently review the AR1 bottleneck inventory without another phone run.
-2. Build bounded AR32 and AR128 prompt-prefill semantic/compilation probes preserving sequential recurrent and attention KV behavior; pair the selected prefill graph with AR1 decode.
+1. Commit and independently review the AR32/AR128 CPU semantic and QNN compilation probes.
+2. Probe AR57 (exact three-way tiling of 171 tokens) and AR171 (single prompt call), then host-execute the best practical candidate before phone staging.
 3. Then evaluate lower-precision/device-resident state and reduced-logit routes, with exact CPU/GPU/HTP responsibility labels.
-4. Build/hash/host-validate each candidate before any bounded phone request. Do not campaign until the fastest sensible route is selected and reset-isolated.
+4. Build/hash/host-validate each candidate before bounded phone profiling. Do not campaign until the fastest sensible route is selected and reset-isolated.
 
 ## Phone and campaign sequence
 

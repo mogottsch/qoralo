@@ -103,6 +103,48 @@
     "raw_output_preserved_before_validation": true,
     "registry_result": false
   },
+  "chunked_prefill_ar32_ar128_host_probes": {
+    "context_streaming": false,
+    "cpu_boundary": "selected-row Q4 embedding dequantization and global argmax",
+    "evidence": "results/qnn-prefill-ar32-ar128-host-probes/result.json",
+    "exact_numerical_equivalence": false,
+    "htp_candidate_work": "all 30 transformer/recurrent/attention layers, final norm, final-position LM head",
+    "next_probes": [
+      "AR57",
+      "AR171"
+    ],
+    "phone_access": false,
+    "physical_execution": false,
+    "probes": {
+      "ar128": {
+        "argmax_equal": true,
+        "context_sha256": "4016d15f6ff50c5b7798dd508612195e693d16e21d4df0f26a2084ab2a73f02d",
+        "logit_max_abs": 0.3827025890350342,
+        "qnn_compile_success": true,
+        "qnn_operations": 2699,
+        "sequence_length": 128,
+        "state_allclose_count": 19,
+        "state_max_abs": 0.5517997145652771,
+        "state_tensor_count": 38,
+        "supported_nodes": 1542,
+        "unsupported_nodes": 0
+      },
+      "ar32": {
+        "argmax_equal": true,
+        "context_sha256": "e26edaa8d33d370dae4e9eceb22f7feb2701577cd9edff7fe82000be265d96b9",
+        "logit_max_abs": 0.5116338729858398,
+        "qnn_compile_success": true,
+        "qnn_operations": 2699,
+        "sequence_length": 32,
+        "state_allclose_count": 20,
+        "state_max_abs": 0.30681276321411133,
+        "state_tensor_count": 38,
+        "supported_nodes": 1542,
+        "two_chunks_compared": true,
+        "unsupported_nodes": 0
+      }
+    }
+  },
   "consolidated_direct_qnn_phone_attempt_1": {
     "cleanup_absent": true,
     "contexts_loaded": 19,
@@ -514,7 +556,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "No phone access occurred for AR1 profiling. Every performance candidate requires committed host validation and separate bounded priority; no current campaign.",
+  "phone_boundary": "No phone access occurred for AR32/AR128 probes. They are host compilation/CPU fidelity results, not phone candidates.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -613,7 +655,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "performance_engineering_ar1_profile_complete_chunked_prefill_host_probes_next",
+  "status": "performance_engineering_ar32_ar128_host_probes_pass_next_ar57_ar171",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",

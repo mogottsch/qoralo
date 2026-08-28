@@ -46,7 +46,7 @@ def external_tensor(
     return tensor
 
 
-def shard(source: Path, destination: Path, shard_data: Path) -> dict[str, object]:
+def shard(source: Path, destination: Path, shard_data: Path, sequence_length: int = 1) -> dict[str, object]:
     model = onnx.load(str(source), load_external_data=False)
     initializers = {item.name: item for item in model.graph.initializer}
     replaced_initializers: set[str] = set()
@@ -62,7 +62,7 @@ def shard(source: Path, destination: Path, shard_data: Path) -> dict[str, object
         [
             numpy_helper.from_array(np.asarray(PARTS, dtype=np.int64), split_sizes_name),
             numpy_helper.from_array(
-                np.zeros((1, 1, PARTS[0] - PARTS[1]), dtype=np.float32),
+                np.zeros((1, sequence_length, PARTS[0] - PARTS[1]), dtype=np.float32),
                 "__mlp_part1_input_padding",
             ),
         ]
@@ -266,6 +266,7 @@ def shard(source: Path, destination: Path, shard_data: Path) -> dict[str, object
         "wide_dimension": WIDE,
         "part_dimensions": list(PARTS),
         "block_size": BLOCK_SIZE,
+        "sequence_length": sequence_length,
         "shard_data_bytes": shard_offset,
         "onnx_checker": "passed",
         "equivalence": "output-channel concatenation for gate/up; block-aligned input split plus partial-output addition for down",
@@ -277,8 +278,9 @@ def main() -> None:
     parser.add_argument("source", type=Path)
     parser.add_argument("destination", type=Path)
     parser.add_argument("shard_data", type=Path)
+    parser.add_argument("--sequence-length", type=int, default=1)
     args = parser.parse_args()
-    print(json.dumps(shard(args.source, args.destination, args.shard_data), indent=2, sort_keys=True))
+    print(json.dumps(shard(args.source, args.destination, args.shard_data, args.sequence_length), indent=2, sort_keys=True))
 
 
 if __name__ == "__main__":

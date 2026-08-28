@@ -79,7 +79,7 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
     def test_active_export_does_not_claim_qnn_android_or_completion(self) -> None:
-        self.assertIn("performance_engineering_ar1_profile_complete", self.contract["status"])
+        self.assertIn("performance_engineering_ar32_ar128_host_probes_pass", self.contract["status"])
         route = self.result["route_assessment"]
         self.assertFalse(route["compiled_sm8550_context_available"])
         self.assertFalse(route["android_execution"])
@@ -88,7 +88,7 @@ class ContractTest(unittest.TestCase):
         self.assertIn("not_android_qnn_or_htp", milestone["classification"])
         self.assertEqual("passed", milestone["rewritten_onnx"]["onnx_checker"])
         self.assertEqual(16, milestone["bounded_output"]["max_new_tokens"])
-        self.assertIn("No phone access occurred for AR1 profiling", self.contract["phone_boundary"])
+        self.assertIn("No phone access occurred for AR32/AR128 probes", self.contract["phone_boundary"])
 
     def test_qnn_aot_is_complete_but_not_physical_execution(self) -> None:
         milestone = self.contract["qnn_aot_milestone"]
@@ -359,6 +359,22 @@ class ContractTest(unittest.TestCase):
         self.assertEqual(2698, sum(result["qnn_graph"]["operation_types"].values()))
         self.assertIn("metadata does not prove", result["bottleneck_assessment"][0])
 
+    def test_chunked_prefill_ar32_ar128_host_probes(self) -> None:
+        probes = self.contract["chunked_prefill_ar32_ar128_host_probes"]
+        self.assertFalse(probes["phone_access"])
+        self.assertFalse(probes["exact_numerical_equivalence"])
+        self.assertFalse(probes["physical_execution"])
+        for name, width in (("ar32", 32), ("ar128", 128)):
+            item = probes["probes"][name]
+            self.assertEqual(width, item["sequence_length"])
+            self.assertTrue(item["argmax_equal"])
+            self.assertTrue(item["qnn_compile_success"])
+            self.assertEqual((1542, 0, 2699), (item["supported_nodes"], item["unsupported_nodes"], item["qnn_operations"]))
+            self.assertLess(item["state_allclose_count"], item["state_tensor_count"])
+        result = json.loads((EXP / probes["evidence"]).read_text())
+        self.assertIn("material", result["fidelity_interpretation"])
+        self.assertEqual(["AR57", "AR171"], probes["next_probes"])
+
     def test_final_pipeline_host_equivalence_is_bounded(self) -> None:
         result = json.loads((EXP / "results/htp-pipeline-host-equivalence/result.json").read_text())
         self.assertIn("host_only", result["classification"])
@@ -408,6 +424,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/qnn-ordinary-monolithic-canonical-short-gate-plan",
             EXP / "results/qnn-ordinary-monolithic-phone-canonical-short-max16",
             EXP / "results/qnn-ordinary-monolithic-ar1-profile",
+            EXP / "results/qnn-prefill-ar32-ar128-host-probes",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

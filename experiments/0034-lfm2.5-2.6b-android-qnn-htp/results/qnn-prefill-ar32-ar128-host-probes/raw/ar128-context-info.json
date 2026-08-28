@@ -1,0 +1,2254 @@
+{
+    "header": {
+        "artifact_type": "CONTEXT_BINARY_INFO",
+        "version": {
+            "major": 3,
+            "minor": 0,
+            "patch": 0
+        },
+        "header_version": {
+            "major": 0,
+            "minor": 1,
+            "patch": 0
+        }
+    },
+    "version": "QNN_SYSTEM_CONTEXT_BINARY_INFO_VERSION_3",
+    "info": {
+        "backendId": 6,
+        "buildId": "v2.49.40.260810104044",
+        "coreApiVersion": "2.38.0",
+        "backendApiVersion": "5.49.0",
+        "socVersion": "",
+        "contextBlobVersion": "4.0.4",
+        "contextBlobSize": 1605970512,
+        "numContextTensors": 0,
+        "contextTensors": [],
+        "numGraphs": 1,
+        "graphs": [
+            {
+                "version": "QNN_SYSTEM_CONTEXT_GRAPH_INFO_VERSION_3",
+                "info": {
+                    "graphName": "QNNExecutionProvider_QNNExecutionProvider_9385442782074925994_1_0",
+                    "numGraphInputs": 41,
+                    "graphInputs": [
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 1,
+                                "name": "/model/embed_tokens/GatherBlockQuantized/output_0",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    128,
+                                    2048
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 2,
+                                "name": "position_ids",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_INT_64",
+                                "rank": 2,
+                                "dimensions": [
+                                    1,
+                                    128
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 3,
+                                "name": "past_conv.0",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 4,
+                                "name": "past_conv.1",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 5,
+                                "name": "past_key_values.2.key",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    64,
+                                    3968
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 6,
+                                "name": "past_key_values.2.value",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    3968,
+                                    64
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 7,
+                                "name": "past_conv.3",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 8,
+                                "name": "past_conv.4",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 9,
+                                "name": "past_key_values.5.key",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    64,
+                                    3968
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 10,
+                                "name": "past_key_values.5.value",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    3968,
+                                    64
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 11,
+                                "name": "past_conv.6",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 12,
+                                "name": "past_conv.7",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 13,
+                                "name": "past_conv.8",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 14,
+                                "name": "past_key_values.9.key",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    64,
+                                    3968
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 15,
+                                "name": "past_key_values.9.value",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    3968,
+                                    64
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 16,
+                                "name": "past_conv.10",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 17,
+                                "name": "past_conv.11",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 18,
+                                "name": "past_conv.12",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 19,
+                                "name": "past_key_values.13.key",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    64,
+                                    3968
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 20,
+                                "name": "past_key_values.13.value",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    3968,
+                                    64
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 21,
+                                "name": "past_conv.14",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 22,
+                                "name": "past_conv.15",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 23,
+                                "name": "past_conv.16",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 24,
+                                "name": "past_key_values.17.key",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    64,
+                                    3968
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 25,
+                                "name": "past_key_values.17.value",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    3968,
+                                    64
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 26,
+                                "name": "past_conv.18",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 27,
+                                "name": "past_conv.19",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 28,
+                                "name": "past_conv.20",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 29,
+                                "name": "past_key_values.21.key",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    64,
+                                    3968
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 30,
+                                "name": "past_key_values.21.value",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    3968,
+                                    64
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 31,
+                                "name": "past_conv.22",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 32,
+                                "name": "past_conv.23",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 33,
+                                "name": "past_key_values.24.key",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    64,
+                                    3968
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 34,
+                                "name": "past_key_values.24.value",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    3968,
+                                    64
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 35,
+                                "name": "past_conv.25",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 36,
+                                "name": "past_conv.26",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 37,
+                                "name": "past_key_values.27.key",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    64,
+                                    3968
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 38,
+                                "name": "past_key_values.27.value",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    3968,
+                                    64
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 39,
+                                "name": "past_conv.28",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 40,
+                                "name": "past_conv.29",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 41,
+                                "name": "attention_mask",
+                                "type": "QNN_TENSOR_TYPE_APP_WRITE",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    1,
+                                    128,
+                                    4096
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        }
+                    ],
+                    "numGraphOutputs": 60,
+                    "graphOutputs": [
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 42,
+                                "name": "present_conv.0",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 43,
+                                "name": "present_conv.1",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 44,
+                                "name": "present.2.key",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    64,
+                                    128
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 45,
+                                "name": "present.2.value",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    128,
+                                    64
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 46,
+                                "name": "present_conv.3",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 47,
+                                "name": "present_conv.4",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 48,
+                                "name": "present.5.key",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    64,
+                                    128
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 49,
+                                "name": "present.5.value",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    128,
+                                    64
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 50,
+                                "name": "present_conv.6",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 51,
+                                "name": "present_conv.7",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 52,
+                                "name": "present_conv.8",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 53,
+                                "name": "present.9.key",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    64,
+                                    128
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 54,
+                                "name": "present.9.value",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    128,
+                                    64
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 55,
+                                "name": "present_conv.10",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 56,
+                                "name": "present_conv.11",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 57,
+                                "name": "present_conv.12",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 58,
+                                "name": "present.13.key",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    64,
+                                    128
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 59,
+                                "name": "present.13.value",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    128,
+                                    64
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 60,
+                                "name": "present_conv.14",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 61,
+                                "name": "present_conv.15",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 62,
+                                "name": "present_conv.16",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 63,
+                                "name": "present.17.key",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    64,
+                                    128
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 64,
+                                "name": "present.17.value",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    128,
+                                    64
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 65,
+                                "name": "present_conv.18",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 66,
+                                "name": "present_conv.19",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 67,
+                                "name": "present_conv.20",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 68,
+                                "name": "present.21.key",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    64,
+                                    128
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 69,
+                                "name": "present.21.value",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    128,
+                                    64
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 70,
+                                "name": "present_conv.22",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 71,
+                                "name": "present_conv.23",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 72,
+                                "name": "present.24.key",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    64,
+                                    128
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 73,
+                                "name": "present.24.value",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    128,
+                                    64
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 74,
+                                "name": "present_conv.25",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 75,
+                                "name": "present_conv.26",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 76,
+                                "name": "present.27.key",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    64,
+                                    128
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 77,
+                                "name": "present.27.value",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 4,
+                                "dimensions": [
+                                    1,
+                                    8,
+                                    128,
+                                    64
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 78,
+                                "name": "present_conv.28",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 79,
+                                "name": "present_conv.29",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    2048,
+                                    3
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 80,
+                                "name": "logits_vocab_0_6144",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    1,
+                                    6144
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 81,
+                                "name": "logits_vocab_6144_12288",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    1,
+                                    6144
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 82,
+                                "name": "logits_vocab_12288_18432",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    1,
+                                    6144
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 83,
+                                "name": "logits_vocab_18432_24576",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    1,
+                                    6144
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 84,
+                                "name": "logits_vocab_24576_30720",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    1,
+                                    6144
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 85,
+                                "name": "logits_vocab_30720_36864",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    1,
+                                    6144
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 86,
+                                "name": "logits_vocab_36864_43008",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    1,
+                                    6144
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 87,
+                                "name": "logits_vocab_43008_49152",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    1,
+                                    6144
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 88,
+                                "name": "logits_vocab_49152_55296",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    1,
+                                    6144
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 89,
+                                "name": "logits_vocab_55296_61440",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    1,
+                                    6144
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 90,
+                                "name": "logits_vocab_61440_67584",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    1,
+                                    6144
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 91,
+                                "name": "logits_vocab_67584_73728",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    1,
+                                    6144
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 92,
+                                "name": "logits_vocab_73728_79872",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    1,
+                                    6144
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 93,
+                                "name": "logits_vocab_79872_86016",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    1,
+                                    6144
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 94,
+                                "name": "logits_vocab_86016_92160",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    1,
+                                    6144
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 95,
+                                "name": "logits_vocab_92160_98304",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    1,
+                                    6144
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 96,
+                                "name": "logits_vocab_98304_104448",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    1,
+                                    6144
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 97,
+                                "name": "logits_vocab_104448_110592",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    1,
+                                    6144
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 98,
+                                "name": "logits_vocab_110592_116736",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    1,
+                                    6144
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 99,
+                                "name": "logits_vocab_116736_122880",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    1,
+                                    6144
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 100,
+                                "name": "logits_vocab_122880_126976",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    1,
+                                    4096
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        },
+                        {
+                            "version": "QNN_TENSOR_VERSION_1",
+                            "info": {
+                                "id": 101,
+                                "name": "logits_vocab_126976_128000",
+                                "type": "QNN_TENSOR_TYPE_APP_READ",
+                                "dataFormat": "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER",
+                                "dataType": "QNN_DATATYPE_FLOAT_32",
+                                "rank": 3,
+                                "dimensions": [
+                                    1,
+                                    1,
+                                    1024
+                                ],
+                                "memType": "QNN_TENSORMEMTYPE_RAW",
+                                "quantizeParams": {
+                                    "definition": "QNN_DEFINITION_UNDEFINED",
+                                    "quantizationEncoding": "QNN_QUANTIZATION_ENCODING_UNDEFINED"
+                                }
+                            }
+                        }
+                    ],
+                    "numUpdateableTensors": 0,
+                    "updateableTensors": [],
+                    "graphBlobInfoSize": 112,
+                    "graphBlobInfo": {
+                        "version": "QNN_SYSTEM_CONTEXT_HTP_GRAPH_INFO_BLOB_VERSION_V1",
+                        "info": {
+                            "spillFillBufferSize": 74121216,
+                            "optimizationLevel": 1,
+                            "vtcmSize": 4,
+                            "htpDlbc": 0,
+                            "numHvxThreads": 0
+                        }
+                    },
+                    "graphBlobInfoV2": {
+                        "version": "QNN_SYSTEM_CONTEXT_HTP_GRAPH_INFO_BLOB_VERSION_V2",
+                        "nativeKChannelSize": 256,
+                        "nativeVChannelSize": 64,
+                        "isSafeShareIO": 0,
+                        "ioTensorSize": 138969088,
+                        "opDataSize": 22924288,
+                        "constSize": 1596706816,
+                        "ddrTensorSize": 14909952,
+                        "sharedWeightsSize": 0
+                    },
+                    "startOpIndex": 0,
+                    "endOpIndex": 0
+                }
+            }
+        ],
+        "platformInfo": {
+            "version": "QNN_DEVICE_PLATFORM_INFO_VERSION_1",
+            "info": {
+                "numHwDevices": 1,
+                "hwDevices": [
+                    {
+                        "version": "QNN_DEVICE_HARDWARE_DEVICE_INFO_VERSION_1",
+                        "info": {
+                            "deviceId": 0,
+                            "deviceType": 0,
+                            "numCores": 1,
+                            "cores": [
+                                {
+                                    "version": "QNN_DEVICE_CORE_INFO_VERSION_1",
+                                    "info": {
+                                        "coreId": 0,
+                                        "coreType": 0
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "contextMetadataSize": 8,
+        "contextMetadata": {
+            "version": "QNN_SYSTEM_CONTEXT_HTP_CONTEXT_INFO_BLOB_VERSION_V1",
+            "info": {
+                "dspArch": 73
+            }
+        },
+        "socModel": 43
+    }
+}
