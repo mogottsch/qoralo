@@ -2,7 +2,7 @@
 
 ## Status
 
-**AR171 physical HTP prefill passed, and its retained state bridges into AR1 decode with the expected next greedy token. One ordinary graph consumed 171 tokens in 5.234 seconds accelerator time; a host CPU bridge padded the 38 physical outputs into the AR1 cache contract and produced next token 4695, matching CPU-AR171 and sequential-AR1 bridges. Physical state drift is large and explicit, so this is greedy compatibility—not numerical equivalence or a complete performance route.**
+**The physical AR171→AR1 phase-switch route is operational. One HTP graph consumed all 171 prompt tokens, its 38 physical states were converted on CPU, the AR171 process/context exited, and a separately loaded AR1 HTP graph produced next argmax 4695 from token 597 at position 171. Prefill accelerator time was 4.967 seconds; AR1 accelerator time was 1.048 seconds. Severe state drift remains, and CPU input preparation is excluded, so this is a bounded operability diagnostic—not numerical equivalence, canonical TTFT, or a campaign.**
 
 This is a separate accelerator arm. It preserves `0029` CPU viability and `0033` CPU/OpenCL campaign evidence without modifying either experiment.
 
@@ -218,4 +218,15 @@ Additional bridge analysis compares physical AR171 endpoint logits before contin
 
 The exact phase-switch diagnostic is prepared but unexecuted in [`results/qnn-prefill-ar171-ar1-phase-switch-readiness/`](results/qnn-prefill-ar171-ar1-phase-switch-readiness/). A host-validated Android CPU bridge copies all physical convolution states byte-for-byte, expands each physical K/V prefix row into the AR1 4,095-position layout with zero padding, embeds token 597, writes position 171, and constructs the exact mask. Its ignored 51-file stage totals 3,362,360,562 bytes and binds both contexts, qnn-net-run, QAIRT runtime, prefill inputs, bridge utility, and embedding.
 
-The planned diagnostic measures AR171 context load/execute, CPU bridge conversion, and AR1 context load/one-token execute as separate boundaries. It expects endpoint 597 and next argmax 4695. The stage plan is not authorization; no phone work occurred. FP16/uFxp16 state, registered/device-resident memory, reduced logit return, and coarse explicitly declared hybrid partitions remain later candidates.
+The planned diagnostic was independently reviewed and executed exactly once. All 51 payload hashes passed locally and remotely. Phase 1 loaded AR171 once, executed one 171-token graph call, and pulled all 60 raw outputs before the AR171 qnn-net-run process exited. Physical endpoint argmax was 597. The Android CPU bridge completed in 0.341 seconds and produced 41 tensor inputs plus an input-list, all hashed. Phase 2 loaded AR1 once and executed token 597 at position 171; all 60 outputs were finite and metadata-size-valid, and argmax 4695 matched the bridge references.
+
+Detailed phase profiles report:
+
+- AR171: 2.029-second NetRun initialization, 0.546-second accelerator binary load, 5.915-second QNN execution, and 4.967-second accelerator execution;
+- AR1: 0.489-second NetRun initialization, 0.142-second accelerator binary load, 1.817-second QNN execution, and 1.048-second accelerator execution;
+- host-observed walls: 13.562 seconds for phase 1, 0.341 seconds for the CPU bridge, and 6.093 seconds for phase 2;
+- 21.309 seconds from phase-1 start through phase-2 stop, including the raw-output evidence pull and AR1-input hashing but excluding initial preparation of the 171 CPU embeddings and stage push/hash verification.
+
+Peak sampled process VmHWM was 1,577,640 KiB for prefill and 1,575,268 KiB for AR1. Both are process-only measurements. Raw phase outputs, QNN profiles, separate lifecycle timings, bridge-input hashes, memory, thermal/power, provider, and cleanup evidence are retained in [`results/qnn-prefill-ar171-ar1-phone-phase-switch-diagnostic/`](results/qnn-prefill-ar171-ar1-phone-phase-switch-diagnostic/). The scoped process/root were absent and the lock released.
+
+This is not a loaded dual-context route: contexts are mutually exclusive across one explicit phase transition. It proves one continuation token and greedy agreement only; severe localized state drift remains. No numerical-equivalence, text-generation, canonical-TTFT, statistical-performance, campaign, or registry claim is made. FP16/uFxp16 state, registered/device-resident memory, reduced logit return, and coarse declared hybrid partitions remain later candidates.

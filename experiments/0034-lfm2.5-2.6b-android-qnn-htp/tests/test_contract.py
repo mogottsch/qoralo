@@ -79,7 +79,7 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
     def test_active_export_does_not_claim_qnn_android_or_completion(self) -> None:
-        self.assertIn("performance_engineering_ar171_ar1_phase_switch_ready_not_authorized", self.contract["status"])
+        self.assertIn("performance_engineering_physical_ar171_ar1_phase_switch_diagnostic_passed", self.contract["status"])
         route = self.result["route_assessment"]
         self.assertFalse(route["compiled_sm8550_context_available"])
         self.assertFalse(route["android_execution"])
@@ -88,7 +88,7 @@ class ContractTest(unittest.TestCase):
         self.assertIn("not_android_qnn_or_htp", milestone["classification"])
         self.assertEqual("passed", milestone["rewritten_onnx"]["onnx_checker"])
         self.assertEqual(16, milestone["bounded_output"]["max_new_tokens"])
-        self.assertIn("No phone access occurred for expanded bridge analysis", self.contract["phone_boundary"])
+        self.assertIn("Physical AR171-to-AR1 phase diagnostic cleaned absent", self.contract["phone_boundary"])
 
     def test_qnn_aot_is_complete_but_not_physical_execution(self) -> None:
         milestone = self.contract["qnn_aot_milestone"]
@@ -438,10 +438,10 @@ class ContractTest(unittest.TestCase):
         self.assertIn("large physical-vs-CPU drift", result["raw_layout_validation"]["present_2_key_outlier_observation"]["interpretation"])
         self.assertIn("one explicit prefill-to-decode phase transition", result["concurrent_residency_assessment"]["selected_phase_semantics"])
 
-    def test_ar171_ar1_phase_switch_is_prepared_not_executed(self) -> None:
+    def test_ar171_ar1_phase_switch_readiness_is_bound(self) -> None:
         ready = self.contract["ar171_ar1_phase_switch_readiness"]
         self.assertFalse(ready["phone_access"])
-        self.assertFalse(ready["phone_authorized"])
+        self.assertTrue(ready["phone_authorized"])
         self.assertEqual((51, 3362360562), (ready["stage_payload_files"], ready["stage_payload_bytes"]))
         self.assertTrue(ready["bridge_host_validation"])
         self.assertEqual((41, 134750212), (ready["bridge_ar1_input_tensors"], ready["bridge_ar1_input_bytes"]))
@@ -450,11 +450,33 @@ class ContractTest(unittest.TestCase):
         self.assertFalse(ready["simultaneous_context_residency"])
         self.assertFalse(ready["per_token_context_streaming"])
         self.assertEqual((597, 4695), (ready["expected_prefill_argmax"], ready["expected_next_argmax"]))
-        self.assertFalse(ready["phase_execution_completed"])
+        self.assertTrue(ready["phase_execution_completed"])
+        self.assertEqual("passed_argmax_597_to_4695", ready["outcome"])
         result = json.loads((EXP / ready["evidence"]).read_text())
         self.assertEqual("not authorized for phone execution; pending independent review and explicit Pi priority", result["authorization_status"])
         self.assertEqual("layer2 head5 token position76", self.contract["ar171_physical_state_to_ar1_host_bridge"]["present_2_key_outliers"]["localization"])
         self.assertFalse(result["planned_execution"]["per_token_context_streaming"])
+
+    def test_physical_ar171_ar1_phase_switch_is_bounded(self) -> None:
+        gate = self.contract["ar171_ar1_phone_phase_switch_diagnostic"]
+        self.assertEqual((51, 51, 42), (gate["stage_payload_files_verified_local"], gate["stage_payload_files_verified_remote"], gate["bridge_hash_lines"]))
+        self.assertFalse(gate["simultaneous_context_residency"])
+        self.assertEqual(1, gate["phase_transition_count"])
+        self.assertFalse(gate["per_token_context_streaming"])
+        self.assertEqual((171, 597), (gate["prefill"]["tokens"], gate["prefill"]["argmax"]))
+        self.assertEqual((597, 171, 4695), (gate["ar1"]["token"], gate["ar1"]["position"], gate["ar1"]["argmax"]))
+        self.assertTrue(gate["prefill"]["all_finite"])
+        self.assertTrue(gate["ar1"]["all_finite"])
+        self.assertFalse(gate["initial_cpu_embedding_preparation_timed"])
+        self.assertFalse(gate["numerical_equivalence"])
+        self.assertFalse(gate["text_generation"])
+        self.assertFalse(gate["canonical_ttft"])
+        self.assertFalse(gate["statistical_performance"])
+        result = json.loads((EXP / gate["evidence"]).read_text())
+        self.assertTrue(result["prefill"]["raw_output_preserved_before_bridge"])
+        self.assertTrue(result["decode_step"]["raw_output_preserved_before_validation"])
+        self.assertIn("severe physical state/logit drift", result["fidelity_boundary"])
+        self.assertTrue(result["cleanup"]["scoped_remote_root_verified_absent"])
 
     def test_final_pipeline_host_equivalence_is_bounded(self) -> None:
         result = json.loads((EXP / "results/htp-pipeline-host-equivalence/result.json").read_text())
@@ -510,6 +532,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/qnn-prefill-ar171-phone-runtime-diagnostic",
             EXP / "results/qnn-prefill-ar171-to-ar1-host-bridge",
             EXP / "results/qnn-prefill-ar171-ar1-phase-switch-readiness",
+            EXP / "results/qnn-prefill-ar171-ar1-phone-phase-switch-diagnostic",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

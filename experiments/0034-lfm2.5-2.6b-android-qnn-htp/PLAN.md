@@ -93,12 +93,15 @@
 81. Added physical-vs-CPU endpoint-logit metrics and localized extreme `present.2.key` values to layer 2/head 5/token position 76; confirmed no retained physical sequential-AR1 raw state exists.
 82. Built and host-validated an Android CPU bridge utility: exact physical conv copies, row-wise 171→4,095 K/V padding, token-597 embedding, position 171, and AR1 mask.
 83. Prepared a hash/ELF-bound 51-file ignored stage and unexecuted runner plan measuring AR171 load/execute, CPU bridge, and AR1 load/execute separately.
+84. Ran one authorized phase-switch diagnostic: AR171 loaded/executed/preserved and exited, CPU bridge converted physical state, then AR1 loaded and executed one continuation token.
+85. Verified 60 finite/size-valid outputs in each phase and physical argmax transition 597→4695; retained severe pre-existing fidelity risk.
+86. Preserved separate QNN load/execute/accelerator profiles, host walls, bridge input hashes, process memory, thermal/provider, and cleanup/lock evidence.
 
 ## In progress: performance engineering
 
-1. Commit and independently review the expanded drift localization and phase-switch readiness milestone.
-2. After explicit priority, run at most one bounded phase-switch continuation diagnostic; do not campaign.
-3. Then evaluate lower-precision/device-resident state, reduced-logit routes, and coarse declared hybrid partitions.
+1. Commit and independently review the bounded physical explicit phase-switch evidence; do not rerun.
+2. Build a reset-isolated integrated route that times initial CPU embedding preparation and bounded multi-token AR1 decode before any campaign.
+3. Evaluate lower-precision/device-resident state and reduced-logit routes; keep CPU/GPU/HTP boundaries explicit.
 4. Do not campaign until the fastest sensible complete route is selected and reset-isolated.
 
 ## Phone and campaign sequence

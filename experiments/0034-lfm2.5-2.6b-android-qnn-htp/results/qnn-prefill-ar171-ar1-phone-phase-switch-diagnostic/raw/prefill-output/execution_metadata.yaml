@@ -1,0 +1,413 @@
+---
+timestamp: 1066345487412
+command: ./qnn-net-run --backend=/data/local/tmp/vibevoice-0034-phase-phase-20260828T130043Z-2714338/libQnnHtp.so --retrieve_context=/data/local/tmp/vibevoice-0034-phase-phase-20260828T130043Z-2714338/contexts/ar171.bin --input_list=/data/local/tmp/vibevoice-0034-phase-phase-20260828T130043Z-2714338/prefill-input-list.txt --output_dir=/data/local/tmp/vibevoice-0034-phase-phase-20260828T130043Z-2714338/prefill-output --profiling_level=detailed --perf_profile=burst --log_level=info
+execution_mode: synchronous
+inferences_completed: 1
+graphs:
+  - graph_name: QNNExecutionProvider_QNNExecutionProvider_8014251843852561610_1_0
+    input_tensors:
+    - tensor_name: /model/embed_tokens/GatherBlockQuantized/output_0
+      id: 1
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,171,2048]
+    - tensor_name: position_ids
+      id: 2
+      datatype: QNN_DATATYPE_INT_64
+      dimensions: [1,171]
+    - tensor_name: past_conv.0
+      id: 3
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: past_conv.1
+      id: 4
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: past_key_values.2.key
+      id: 5
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,64,3925]
+    - tensor_name: past_key_values.2.value
+      id: 6
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,3925,64]
+    - tensor_name: past_conv.3
+      id: 7
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: past_conv.4
+      id: 8
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: past_key_values.5.key
+      id: 9
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,64,3925]
+    - tensor_name: past_key_values.5.value
+      id: 10
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,3925,64]
+    - tensor_name: past_conv.6
+      id: 11
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: past_conv.7
+      id: 12
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: past_conv.8
+      id: 13
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: past_key_values.9.key
+      id: 14
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,64,3925]
+    - tensor_name: past_key_values.9.value
+      id: 15
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,3925,64]
+    - tensor_name: past_conv.10
+      id: 16
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: past_conv.11
+      id: 17
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: past_conv.12
+      id: 18
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: past_key_values.13.key
+      id: 19
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,64,3925]
+    - tensor_name: past_key_values.13.value
+      id: 20
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,3925,64]
+    - tensor_name: past_conv.14
+      id: 21
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: past_conv.15
+      id: 22
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: past_conv.16
+      id: 23
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: past_key_values.17.key
+      id: 24
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,64,3925]
+    - tensor_name: past_key_values.17.value
+      id: 25
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,3925,64]
+    - tensor_name: past_conv.18
+      id: 26
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: past_conv.19
+      id: 27
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: past_conv.20
+      id: 28
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: past_key_values.21.key
+      id: 29
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,64,3925]
+    - tensor_name: past_key_values.21.value
+      id: 30
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,3925,64]
+    - tensor_name: past_conv.22
+      id: 31
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: past_conv.23
+      id: 32
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: past_key_values.24.key
+      id: 33
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,64,3925]
+    - tensor_name: past_key_values.24.value
+      id: 34
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,3925,64]
+    - tensor_name: past_conv.25
+      id: 35
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: past_conv.26
+      id: 36
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: past_key_values.27.key
+      id: 37
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,64,3925]
+    - tensor_name: past_key_values.27.value
+      id: 38
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,3925,64]
+    - tensor_name: past_conv.28
+      id: 39
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: past_conv.29
+      id: 40
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: attention_mask
+      id: 41
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,1,171,4096]
+    output_tensors:
+    - tensor_name: present_conv.0
+      id: 42
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: present_conv.1
+      id: 43
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: present.2.key
+      id: 44
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,64,171]
+    - tensor_name: present.2.value
+      id: 45
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,171,64]
+    - tensor_name: present_conv.3
+      id: 46
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: present_conv.4
+      id: 47
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: present.5.key
+      id: 48
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,64,171]
+    - tensor_name: present.5.value
+      id: 49
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,171,64]
+    - tensor_name: present_conv.6
+      id: 50
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: present_conv.7
+      id: 51
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: present_conv.8
+      id: 52
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: present.9.key
+      id: 53
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,64,171]
+    - tensor_name: present.9.value
+      id: 54
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,171,64]
+    - tensor_name: present_conv.10
+      id: 55
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: present_conv.11
+      id: 56
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: present_conv.12
+      id: 57
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: present.13.key
+      id: 58
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,64,171]
+    - tensor_name: present.13.value
+      id: 59
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,171,64]
+    - tensor_name: present_conv.14
+      id: 60
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: present_conv.15
+      id: 61
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: present_conv.16
+      id: 62
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: present.17.key
+      id: 63
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,64,171]
+    - tensor_name: present.17.value
+      id: 64
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,171,64]
+    - tensor_name: present_conv.18
+      id: 65
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: present_conv.19
+      id: 66
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: present_conv.20
+      id: 67
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: present.21.key
+      id: 68
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,64,171]
+    - tensor_name: present.21.value
+      id: 69
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,171,64]
+    - tensor_name: present_conv.22
+      id: 70
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: present_conv.23
+      id: 71
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: present.24.key
+      id: 72
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,64,171]
+    - tensor_name: present.24.value
+      id: 73
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,171,64]
+    - tensor_name: present_conv.25
+      id: 74
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: present_conv.26
+      id: 75
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: present.27.key
+      id: 76
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,64,171]
+    - tensor_name: present.27.value
+      id: 77
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,8,171,64]
+    - tensor_name: present_conv.28
+      id: 78
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: present_conv.29
+      id: 79
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,2048,3]
+    - tensor_name: logits_vocab_0_6144
+      id: 80
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,1,6144]
+    - tensor_name: logits_vocab_6144_12288
+      id: 81
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,1,6144]
+    - tensor_name: logits_vocab_12288_18432
+      id: 82
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,1,6144]
+    - tensor_name: logits_vocab_18432_24576
+      id: 83
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,1,6144]
+    - tensor_name: logits_vocab_24576_30720
+      id: 84
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,1,6144]
+    - tensor_name: logits_vocab_30720_36864
+      id: 85
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,1,6144]
+    - tensor_name: logits_vocab_36864_43008
+      id: 86
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,1,6144]
+    - tensor_name: logits_vocab_43008_49152
+      id: 87
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,1,6144]
+    - tensor_name: logits_vocab_49152_55296
+      id: 88
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,1,6144]
+    - tensor_name: logits_vocab_55296_61440
+      id: 89
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,1,6144]
+    - tensor_name: logits_vocab_61440_67584
+      id: 90
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,1,6144]
+    - tensor_name: logits_vocab_67584_73728
+      id: 91
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,1,6144]
+    - tensor_name: logits_vocab_73728_79872
+      id: 92
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,1,6144]
+    - tensor_name: logits_vocab_79872_86016
+      id: 93
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,1,6144]
+    - tensor_name: logits_vocab_86016_92160
+      id: 94
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,1,6144]
+    - tensor_name: logits_vocab_92160_98304
+      id: 95
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,1,6144]
+    - tensor_name: logits_vocab_98304_104448
+      id: 96
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,1,6144]
+    - tensor_name: logits_vocab_104448_110592
+      id: 97
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,1,6144]
+    - tensor_name: logits_vocab_110592_116736
+      id: 98
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,1,6144]
+    - tensor_name: logits_vocab_116736_122880
+      id: 99
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,1,6144]
+    - tensor_name: logits_vocab_122880_126976
+      id: 100
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,1,4096]
+    - tensor_name: logits_vocab_126976_128000
+      id: 101
+      datatype: QNN_DATATYPE_FLOAT_32
+      dimensions: [1,1,1024]
