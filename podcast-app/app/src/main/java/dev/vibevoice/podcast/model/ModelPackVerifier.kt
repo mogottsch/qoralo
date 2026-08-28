@@ -146,16 +146,21 @@ class ModelPackVerifier {
     private fun validateContract(route: ModelRoute, contract: JSONObject) {
         when (route) {
             ModelRoute.GEMMA_4_E2B_LITERT_GPU -> {
-                requireExactKeys(contract, setOf("generationPlan", "completeChapterPerRequest"), "contract")
-                if (contract.requireString("generationPlan") != "OUTLINE_THEN_CHAPTERS" || !contract.requireBoolean("completeChapterPerRequest")) {
+                requireExactKeys(contract, setOf("generationPlan", "completeChapterPerRequest", "contextTokens", "runtimeVersion"), "contract")
+                if (contract.requireString("generationPlan") != "OUTLINE_THEN_CHAPTERS" || !contract.requireBoolean("completeChapterPerRequest") ||
+                    contract.requireInt("contextTokens") != 8_192 || contract.requireString("runtimeVersion") != "0.16.1"
+                ) {
                     throw ModelPackException.Invalid("Gemma pack does not declare the complete-chapter contract")
                 }
             }
             ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP -> {
-                requireExactKeys(contract, setOf("synthesisUnit", "externalContextCount", "sampleRateHz", "channelCount", "pcmBits"), "contract")
+                requireExactKeys(contract, setOf("synthesisUnit", "externalContextCount", "sampleRateHz", "channelCount", "pcmBits", "textLength", "latentLength", "latentChannels", "diffusionSteps"), "contract")
+                val textLength = contract.requireInt("textLength")
+                val latentLength = contract.requireInt("latentLength")
                 if (contract.requireString("synthesisUnit") != "COMPLETE_CHAPTER" || contract.requireInt("externalContextCount") != 4 ||
-                    contract.requireInt("sampleRateHz") != 44_100 || contract.requireInt("channelCount") != 1 || contract.requireInt("pcmBits") != 16
-                ) throw ModelPackException.Invalid("Supertonic pack does not match the chapter WAV contract")
+                    contract.requireInt("sampleRateHz") != 44_100 || contract.requireInt("channelCount") != 1 || contract.requireInt("pcmBits") != 16 ||
+                    textLength !in 10..16_384 || latentLength !in 1..10_000 || contract.requireInt("latentChannels") != 144 || contract.requireInt("diffusionSteps") != 5
+                ) throw ModelPackException.Invalid("Supertonic pack does not match the chapter WAV/shape contract")
             }
         }
     }
@@ -184,6 +189,10 @@ class ModelPackVerifier {
         val duplicateRoles = counts.filterValues { it != 1 }.keys
         if (duplicateRoles.isNotEmpty()) throw ModelPackException.Invalid("Model-pack roles must have exact cardinality one: ${duplicateRoles.sortedBy { it.name }}")
         if (actual != required) throw ModelPackException.Invalid("Model pack must contain exactly the required ${route.name} assets: missing=${(required - actual).sortedBy { it.name }}, extra=${(actual - required).sortedBy { it.name }}")
+        files.forEach { file ->
+            val expectedPath = REQUIRED_PATHS.getValue(file.role)
+            if (file.relativePath != expectedPath) throw ModelPackException.Invalid("${file.role} must use path $expectedPath")
+        }
         val wrongRouteRoles = actual.filter { role -> route == ModelRoute.GEMMA_4_E2B_LITERT_GPU && role.name.startsWith("SUPERTONIC") || route == ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP && role.name.startsWith("GEMMA") }
         if (wrongRouteRoles.isNotEmpty()) throw ModelPackException.Invalid("Pack contains assets for another inference route")
     }
@@ -255,5 +264,22 @@ class ModelPackVerifier {
         val IDENTIFIER = Regex("[A-Za-z0-9][A-Za-z0-9._-]{0,127}")
         val PINNED_SHA = Regex("[0-9a-f]{64}")
         val EXECUTABLE_EXTENSIONS = setOf(".so", ".dex", ".jar", ".apk")
+        val REQUIRED_PATHS = mapOf(
+            ModelFileRole.GEMMA_MODEL to "models/gemma-4-e2b.litertlm",
+            ModelFileRole.GEMMA_TOKENIZER to "models/tokenizer.model",
+            ModelFileRole.SUPERTONIC_CONFIG to "assets/config.json",
+            ModelFileRole.SUPERTONIC_DURATION_DESCRIPTOR to "contexts/duration-context.onnx",
+            ModelFileRole.SUPERTONIC_DURATION_BINARY to "contexts/duration-context_qnn.bin",
+            ModelFileRole.SUPERTONIC_TEXT_DESCRIPTOR to "contexts/text-context.onnx",
+            ModelFileRole.SUPERTONIC_TEXT_BINARY to "contexts/text-context_qnn.bin",
+            ModelFileRole.SUPERTONIC_VECTOR_DESCRIPTOR to "contexts/vector-context.onnx",
+            ModelFileRole.SUPERTONIC_VECTOR_BINARY to "contexts/vector-context_qnn.bin",
+            ModelFileRole.SUPERTONIC_VOCODER_DESCRIPTOR to "contexts/vocoder-context.onnx",
+            ModelFileRole.SUPERTONIC_VOCODER_BINARY to "contexts/vocoder-context_qnn.bin",
+            ModelFileRole.SUPERTONIC_TOKENIZER to "assets/tokenizer.json",
+            ModelFileRole.SUPERTONIC_UNICODE_INDEXER to "assets/unicode-indexer.i32",
+            ModelFileRole.SUPERTONIC_VOICE to "assets/voice.bin",
+            ModelFileRole.SUPERTONIC_STYLE to "assets/voice-style.json",
+        )
     }
 }

@@ -80,8 +80,9 @@ class PodcastViewModel(application: Application) : AndroidViewModel(application)
     fun addDocument(uri: Uri) = launchAction {
         val resolver = getApplication<Application>().contentResolver
         val title = uri.lastPathSegment?.substringAfterLast('/') ?: "Document"
-        resolver.openInputStream(uri).use { input ->
-            repository.addSource(requireNotNull(selectedEpisodeId.value), title, resolver.getType(uri) ?: "text/plain", requireNotNull(input))
+        val input = requireNotNull(resolver.openInputStream(uri)) { "Could not open the selected document" }
+        input.use {
+            repository.addSource(requireNotNull(selectedEpisodeId.value), title, resolver.getType(uri) ?: "text/plain", it)
         }
     }
 
@@ -120,9 +121,8 @@ class PodcastViewModel(application: Application) : AndroidViewModel(application)
     fun exportEpisode(destination: Uri) = launchAction {
         val current = requireNotNull(episode.value)
         val source = repository.resolveArtifact(requireNotNull(current.finalAudioPath))
-        getApplication<Application>().contentResolver.openOutputStream(destination, "w").use { output ->
-            source.inputStream().use { it.copyTo(requireNotNull(output)) }
-        }
+        val output = requireNotNull(getApplication<Application>().contentResolver.openOutputStream(destination, "w")) { "Could not open export destination" }
+        output.use { destinationStream -> source.inputStream().use { it.copyTo(destinationStream) } }
         transientMessage.value = "Episode exported"
     }
 

@@ -179,8 +179,9 @@ fun InstructionsScreen(
                 item {
                     OutlinedTextField(
                         value = instructions,
-                        onValueChange = { instructions = it },
+                        onValueChange = { if (it.length <= 2_000) instructions = it },
                         label = { Text("Initial instructions") },
+                        supportingText = { Text("${instructions.length} / 2,000") },
                         placeholder = { Text("Make it about 10 minutes. Focus on the questions that matter most.") },
                         minLines = 7,
                         maxLines = 11,

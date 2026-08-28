@@ -1,4 +1,5 @@
 import java.util.Properties
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id("com.android.application")
@@ -12,6 +13,7 @@ val localProperties = Properties().apply {
     if (file.isFile) file.inputStream().use(::load)
 }
 fun pinnedHash(name: String): String = localProperties.getProperty(name, "").replace("\\", "\\\\").replace("\"", "\\\"")
+val nativeRuntimeEnabled = localProperties.getProperty("native.runtime.enabled", "false").toBoolean()
 
 android {
     namespace = "dev.vibevoice.podcast"
@@ -28,6 +30,15 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        ndk { abiFilters += "arm64-v8a" }
+        if (nativeRuntimeEnabled) {
+            externalNativeBuild.cmake {
+                arguments += listOf(
+                    "-DONNXRUNTIME_INCLUDE_DIR=${localProperties.getProperty("onnxruntime.include.dir")}",
+                    "-DONNXRUNTIME_LIBRARY=${project.file("runtime-libs/arm64-v8a/libonnxruntime.so")}",
+                )
+            }
+        }
     }
 
     buildTypes {
@@ -45,10 +56,16 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions { jvmTarget = "17" }
     buildFeatures { compose = true; buildConfig = true }
     packaging.resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
+    packaging.jniLibs.useLegacyPackaging = true
     sourceSets["main"].jniLibs.srcDir("runtime-libs")
+    if (nativeRuntimeEnabled) {
+        externalNativeBuild.cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+            version = "3.22.1"
+        }
+    }
 
     testOptions {
         unitTests.isIncludeAndroidResources = true
@@ -57,8 +74,12 @@ android {
     lint {
         abortOnError = true
         warningsAsErrors = true
-        disable += setOf("GradleDependency", "AndroidGradlePluginVersion")
+        disable += setOf("GradleDependency", "AndroidGradlePluginVersion", "ChromeOsAbiSupport")
     }
+}
+
+kotlin {
+    compilerOptions { jvmTarget.set(JvmTarget.JVM_17) }
 }
 
 ksp { arg("room.schemaLocation", "$projectDir/schemas") }
@@ -78,18 +99,19 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.navigation:navigation-compose:2.8.5")
 
-    implementation("androidx.room:room-runtime:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
-    ksp("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-runtime:2.8.4")
+    implementation("androidx.room:room-ktx:2.8.4")
+    ksp("androidx.room:room-compiler:2.8.4")
 
     implementation("androidx.media3:media3-exoplayer:1.5.1")
     implementation("androidx.media3:media3-session:1.5.1")
     implementation("androidx.media3:media3-common:1.5.1")
+    implementation("com.google.ai.edge.litertlm:litertlm-android:0.16.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.test:core:1.6.1")
-    testImplementation("androidx.room:room-testing:2.6.1")
+    testImplementation("androidx.room:room-testing:2.8.4")
     testImplementation("org.robolectric:robolectric:4.14.1")
     testImplementation("org.json:json:20240303")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")

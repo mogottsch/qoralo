@@ -45,7 +45,7 @@ class ModelPackVerifierTest {
 
     @Test fun rejectsTamperedArtifact() {
         val pack = pack(ModelRoute.GEMMA_4_E2B_LITERT_GPU)
-        File(pack.root, "data/gemma_model.data").appendText("tampered")
+        File(pack.root, "models/gemma-4-e2b.litertlm").appendText("tampered")
         assertThrows(ModelPackException.Integrity::class.java) { ModelPackVerifier().verify(pack.root, pack.requirement) }
     }
 
@@ -63,7 +63,7 @@ class ModelPackVerifierTest {
 
     @Test fun rejectsExecutableArtifactEvenWhenPinned() {
         val pack = pack(ModelRoute.GEMMA_4_E2B_LITERT_GPU) { manifest ->
-            val file = File(manifestRoot, "data/injected.so").apply { writeText("code") }
+            val file = File(manifestRoot, "data/injected.so").apply { parentFile!!.mkdirs(); writeText("code") }
             manifest.getJSONArray("files").put(fileEntry(ModelFileRole.GEMMA_TOKENIZER, file, manifestRoot))
         }
         assertThrows(ModelPackException.Invalid::class.java) { ModelPackVerifier().verify(pack.root, pack.requirement) }
@@ -92,7 +92,7 @@ class ModelPackVerifierTest {
 
     @Test fun rejectsDuplicateRoleWithDifferentFiles() {
         val pack = pack(ModelRoute.GEMMA_4_E2B_LITERT_GPU) { manifest ->
-            val file = File(manifestRoot, "data/second-tokenizer.data").apply { writeText("duplicate role") }
+            val file = File(manifestRoot, "data/second-tokenizer.data").apply { parentFile!!.mkdirs(); writeText("duplicate role") }
             manifest.getJSONArray("files").put(fileEntry(ModelFileRole.GEMMA_TOKENIZER, file, manifestRoot))
         }
         assertThrows(ModelPackException.Invalid::class.java) { ModelPackVerifier().verify(pack.root, pack.requirement) }
@@ -125,7 +125,7 @@ class ModelPackVerifierTest {
 
     @Test fun rejectsSymlinkedArtifact() {
         val pack = pack(ModelRoute.GEMMA_4_E2B_LITERT_GPU)
-        val model = File(pack.root, "data/gemma_model.data")
+        val model = File(pack.root, "models/gemma-4-e2b.litertlm")
         val outside = temporaryFolder.newFile("outside-model").apply { writeText(model.readText()) }
         assertTrue(model.delete())
         Files.createSymbolicLink(model.toPath(), outside.toPath())
@@ -156,13 +156,15 @@ class ModelPackVerifierTest {
             )
         }
         val files = roles.map { role ->
-            File(root, "data/${role.name.lowercase()}.data").apply { parentFile!!.mkdirs(); writeText("fixture-${role.name}") }
+            File(root, pathFor(role)).apply { parentFile!!.mkdirs(); writeText("fixture-${role.name}") }
         }
         val contract = if (route == ModelRoute.GEMMA_4_E2B_LITERT_GPU) {
             JSONObject().put("generationPlan", "OUTLINE_THEN_CHAPTERS").put("completeChapterPerRequest", true)
+                .put("contextTokens", 8_192).put("runtimeVersion", "0.16.1")
         } else {
             JSONObject().put("synthesisUnit", "COMPLETE_CHAPTER").put("externalContextCount", 4)
                 .put("sampleRateHz", 44_100).put("channelCount", 1).put("pcmBits", 16)
+                .put("textLength", 239).put("latentLength", 238).put("latentChannels", 144).put("diffusionSteps", 5)
         }
         val manifest = JSONObject()
             .put("schemaVersion", 2)
@@ -178,6 +180,24 @@ class ModelPackVerifierTest {
         val pinned = sha256(manifestFile)
         val requirement = ModelPackRequirement(route, if (route == ModelRoute.GEMMA_4_E2B_LITERT_GPU) "gemma-4-e2b" else "supertonic-3", pinned)
         return PackFixture(root, requirement)
+    }
+
+    private fun pathFor(role: ModelFileRole): String = when (role) {
+        ModelFileRole.GEMMA_MODEL -> "models/gemma-4-e2b.litertlm"
+        ModelFileRole.GEMMA_TOKENIZER -> "models/tokenizer.model"
+        ModelFileRole.SUPERTONIC_CONFIG -> "assets/config.json"
+        ModelFileRole.SUPERTONIC_DURATION_DESCRIPTOR -> "contexts/duration-context.onnx"
+        ModelFileRole.SUPERTONIC_DURATION_BINARY -> "contexts/duration-context_qnn.bin"
+        ModelFileRole.SUPERTONIC_TEXT_DESCRIPTOR -> "contexts/text-context.onnx"
+        ModelFileRole.SUPERTONIC_TEXT_BINARY -> "contexts/text-context_qnn.bin"
+        ModelFileRole.SUPERTONIC_VECTOR_DESCRIPTOR -> "contexts/vector-context.onnx"
+        ModelFileRole.SUPERTONIC_VECTOR_BINARY -> "contexts/vector-context_qnn.bin"
+        ModelFileRole.SUPERTONIC_VOCODER_DESCRIPTOR -> "contexts/vocoder-context.onnx"
+        ModelFileRole.SUPERTONIC_VOCODER_BINARY -> "contexts/vocoder-context_qnn.bin"
+        ModelFileRole.SUPERTONIC_TOKENIZER -> "assets/tokenizer.json"
+        ModelFileRole.SUPERTONIC_UNICODE_INDEXER -> "assets/unicode-indexer.i32"
+        ModelFileRole.SUPERTONIC_VOICE -> "assets/voice.bin"
+        ModelFileRole.SUPERTONIC_STYLE -> "assets/voice-style.json"
     }
 
     private fun fileEntry(role: ModelFileRole, file: File, root: File) = JSONObject()

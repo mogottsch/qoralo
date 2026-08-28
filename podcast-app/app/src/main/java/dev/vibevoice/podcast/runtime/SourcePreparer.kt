@@ -68,9 +68,9 @@ class SourcePreparer {
     }
 
     companion object {
-        const val MAX_REQUEST_CHARS = 24_000
-        const val MAX_NOTE_CHARS = 4_000
-        const val MAX_PREPARED_CHARS = 48_000
+        const val MAX_REQUEST_CHARS = 12_000
+        const val MAX_NOTE_CHARS = 2_000
+        const val MAX_PREPARED_CHARS = 8_000
         const val MAX_REDUCTION_ROUNDS = 8
     }
 }

@@ -67,6 +67,7 @@ class PodcastRepository(
     suspend fun queueScriptGeneration(episodeId: String, instructions: String, reviewEnabled: Boolean): String = database.withTransaction {
         val episode = requireEpisode(episodeId)
         require(episode.phase == EpisodePhase.INSTRUCTIONS) { "Episode is not ready for instructions" }
+        require(instructions.isNotBlank() && instructions.length <= 2_000) { "Instructions must contain 1–2,000 characters" }
         val acceptedSources = dao.sources(episodeId)
         require(acceptedSources.isNotEmpty()) { "Add at least one source" }
         require(acceptedSources.sumOf { it.byteCount } <= MAX_EPISODE_SOURCE_BYTES) { "Episode sources exceed the 5 MB generation limit" }

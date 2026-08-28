@@ -175,7 +175,7 @@ private fun AgentEditorSheet(
             ) {
                 if (messages.isEmpty()) item { AgentBubble("What should I change?", false) }
                 items(messages, key = { it.id }) { message -> AgentBubble(message.text, message.role == AgentRole.USER) }
-                if (working) item { LinearProgressIndicator(Modifier.fillMaxWidth()); Text(job?.statusText.orEmpty(), style = MaterialTheme.typography.labelMedium) }
+                if (working) item { LinearProgressIndicator(Modifier.fillMaxWidth()); Text(job.statusText, style = MaterialTheme.typography.labelMedium) }
                 val changed = messages.lastOrNull { it.role == AgentRole.AGENT && it.resultRevisionId != null }
                 if (changed != null) item {
                     Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer), shape = RoundedCornerShape(16.dp)) {
