@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "classification": "host_reviewed_plan_only_for_canonical_short_bounded_generation_gate",
+  "authorization_status": "not authorized for ADB; await Moritz/Pi agreement and explicit phone priority",
+  "prerequisites": {
+    "position0_physical_commit":"33fa7dbb8c38684a42bc98b217b058678a420147",
+    "two_step_host_commit":"e3f838a46415743aa637c3e040e6a50945f5d1d0",
+    "two_step_physical_commit":"c0ec88a711a467f320fddf44892fe21f9f59fe57",
+    "loaded_state_and_position_mask_behavior_verified":true
+  },
+  "exact_stage": {
+    "path_outside_git":".local/qnn-monolithic-one-token/phone-stage",
+    "payload_files":12,
+    "payload_bytes":1798094075,
+    "stage_metadata_sha256":"3260c006faf29fc8081f29f4c87069cafeee7919a9af54ac3ceb184e03bcc952",
+    "manifest_sha256":"5dc9815787046507b3b09a4aebbe0eb6fd97e6effda3247cfeddda6fb474169c",
+    "runner_sha256":"4515d7f58889121542b9ff3535d5e083a89095f008fb7bb23ae421f67c8cacfd",
+    "context_sha256":"76ba15e7fd95e5e13e92be0e88e8e6bbd3123f2b993b6986c9dac8800a9bf212",
+    "qairt_backend_build_id":"v2.49.40.260810104044",
+    "local_hash_check":true,
+    "elf_dependency_preflight":true
+  },
+  "exact_workload": {
+    "canonical_workload":"protocols/android-llm-benchmark/workloads/inference-v1/short.txt",
+    "workload_text_sha256":"81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae",
+    "rendered_prompt_sha256":"9e6c713e83f0987f283264b789e102b9704d6067665fc7a0fee652938a3ae622",
+    "token_ids_int32le_sha256":"eae8e828110f634d5c9954df0372e869f67f67aed846f9f544781faa1d4d29bc",
+    "input_tokens":171,
+    "proposed_max_new_tokens":16,
+    "protocol_output_ceiling":2048,
+    "expected_graph_executions_min":171,
+    "expected_graph_executions_max":186,
+    "stop_conditions":["EOS token 124900","16 generated tokens"]
+  },
+  "model_and_tokenizer": {
+    "source":"LiquidAI/LFM2.5-2.6B",
+    "revision":"ab00687315bc1298e9d54e9c4b611dde9867ccc2",
+    "tokenizer_json_sha256":"695be7802a0e4b8a81048f0ff5ebb7fc811a0ba5a6be63dbb24deb5a81096f41",
+    "tokenizer_config_sha256":"11f1de897317b489dd09199284528382eeb17f566398b16e2039bb2266d26b09",
+    "chat_template_sha256":"ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef"
+  },
+  "execution_semantics": {
+    "direct_qnn_htp":true,
+    "neural_cpu_fallback_available":false,
+    "contexts_loaded_once":1,
+    "graphs_loaded_once":1,
+    "context_reloads":0,
+    "context_streaming":false,
+    "explicit_state_tensors":38,
+    "position_ids":"advance from 0 through prompt and generated-token positions",
+    "attention_mask":"open all prior populated positions and retain current final slot",
+    "cpu_boundary":"selected-row asymmetric Q4 embedding dequantization, request/token orchestration, and global greedy argmax"
+  },
+  "proposed_command_scope": {
+    "environment":["STAGE=.local/qnn-monolithic-one-token/phone-stage","MAX_NEW_TOKENS=16","PREFIX_TOKEN_COUNT=0","POSITION0_ONLY=0"],
+    "runner_arguments":"ROOT short.int32le 16 output.int32le",
+    "bounded_timeout_seconds":1800,
+    "phone_lock_full_lifecycle":true
+  },
+  "evidence_order": [
+    "Acquire phone.lock and verify exact device identity.",
+    "Capture battery/thermal/storage before state.",
+    "Verify all local stage hashes and ELF dependencies.",
+    "Push the exact stage and verify all remote hashes.",
+    "Run one process, loading one ordinary context once; capture backend/provider and memory samples.",
+    "Pull raw output.int32le before validation or interpretation.",
+    "Capture battery/thermal/process-after evidence.",
+    "Remove only the scoped remote root and verify it absent before releasing phone.lock.",
+    "Preserve raw evidence and report the exact outcome before any further activity.",
+    "Only after preservation, validate token count/range and decode with the bound tokenizer."
+  ],
+  "fail_closed_checks": {
+    "backend_build_id_must_equal":"v2.49.40.260810104044",
+    "loaded_contexts_must_equal":1,
+    "loaded_graphs_must_equal":1,
+    "output_token_count_range":[1,16],
+    "output_token_id_range":[0,127999],
+    "decode_is_post_evidence_validation":true,
+    "any_context_load_or_graph_execute_failure_stops_without_retry":true
+  },
+  "claim_boundary":"Plan and unchanged-stage review only. No ADB occurred. A future pass would establish bounded canonical-short prompt consumption and generated-token sanity, not a benchmark campaign, statistical performance result, registry row, or broad output-quality claim."
+}

@@ -69,12 +69,14 @@
 57. Ran one authorized physical two-step gate: loaded one ordinary context/graph once and completed two sequential direct-QNN HTP executions without reload.
 58. Verified position-1 global argmax 25 across physical, CPU, and x86 HTP; preserved diagnostic-only timing and process-memory limits.
 59. Preserved exact provider/stage/prefix/output/memory/thermal/identity/cleanup evidence; remote root absent and lock released.
+60. Prepared a host-reviewed plan only for a proposed canonical-short gate: exact 171-token prompt, at most 16 greedy tokens, same context loaded once, full evidence-before-validation and cleanup lifecycle.
+61. Bound the unchanged stage/runtime/context/runner, canonical workload/rendered/token hashes, tokenizer/template identity, fail-closed checks, and diagnostic claim boundary without phone access.
 
 ## In progress
 
-1. Commit and independently review the physical two-step loaded-state evidence.
-2. Stop all ADB and expanded workload activity until a separately agreed next gate receives explicit authorization.
-3. Context streaming remains prohibited. No full canonical completion, output-quality, campaign, performance, or registry claim.
+1. Commit and independently review the canonical-short bounded-generation gate plan.
+2. Stop all ADB until Pi and Moritz agree the plan and explicitly transfer priority.
+3. Context streaming remains prohibited. No full campaign, statistical performance, broad output-quality, or registry claim.
 
 ## Phone and campaign sequence
 

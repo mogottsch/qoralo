@@ -79,7 +79,7 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
     def test_active_export_does_not_claim_qnn_android_or_completion(self) -> None:
-        self.assertIn("physical_direct_qnn_htp_two_step_loaded_state_viability_passed", self.contract["status"])
+        self.assertIn("physical_two_step_passed_canonical_short_gate_plan_ready_not_authorized", self.contract["status"])
         route = self.result["route_assessment"]
         self.assertFalse(route["compiled_sm8550_context_available"])
         self.assertFalse(route["android_execution"])
@@ -88,7 +88,7 @@ class ContractTest(unittest.TestCase):
         self.assertIn("not_android_qnn_or_htp", milestone["classification"])
         self.assertEqual("passed", milestone["rewritten_onnx"]["onnx_checker"])
         self.assertEqual(16, milestone["bounded_output"]["max_new_tokens"])
-        self.assertIn("Physical two-step gate cleaned absent", self.contract["phone_boundary"])
+        self.assertIn("No phone access occurred for canonical-short plan preparation", self.contract["phone_boundary"])
 
     def test_qnn_aot_is_complete_but_not_physical_execution(self) -> None:
         milestone = self.contract["qnn_aot_milestone"]
@@ -311,6 +311,20 @@ class ContractTest(unittest.TestCase):
         self.assertIn("not a canonical benchmark", result["timing"]["interpretation"])
         self.assertTrue(result["cleanup"]["scoped_remote_root_verified_absent"])
 
+    def test_canonical_short_gate_is_plan_only(self) -> None:
+        plan = self.contract["canonical_short_bounded_generation_gate_plan"]
+        self.assertTrue(plan["plan_only"])
+        self.assertFalse(plan["phone_authorized"])
+        self.assertEqual((1, 1, 0), (plan["context_count"], plan["graph_count"], plan["context_reloads"]))
+        self.assertFalse(plan["context_streaming"])
+        self.assertEqual((171, 16, 2048), (plan["canonical_short_input_tokens"], plan["max_new_tokens"], plan["protocol_output_ceiling"]))
+        self.assertTrue(plan["raw_output_preserved_before_validation"])
+        self.assertTrue(plan["decode_after_cleanup"])
+        result = json.loads((EXP / plan["evidence"]).read_text())
+        self.assertEqual("not authorized for ADB; await Moritz/Pi agreement and explicit phone priority", result["authorization_status"])
+        self.assertEqual(171, result["exact_workload"]["input_tokens"])
+        self.assertIn("Plan and unchanged-stage review only", result["claim_boundary"])
+
     def test_final_pipeline_host_equivalence_is_bounded(self) -> None:
         result = json.loads((EXP / "results/htp-pipeline-host-equivalence/result.json").read_text())
         self.assertIn("host_only", result["classification"])
@@ -357,6 +371,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/qnn-ordinary-monolithic-phone-viability-position0",
             EXP / "results/qnn-ordinary-monolithic-host-two-step-state-check",
             EXP / "results/qnn-ordinary-monolithic-phone-two-step-state-check",
+            EXP / "results/qnn-ordinary-monolithic-canonical-short-gate-plan",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

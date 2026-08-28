@@ -7,6 +7,8 @@ SERIAL=${SERIAL:-R5CW81PR8SY}
 STAGE=${STAGE:-$EXP/.local/direct-qnn-phone-stage}
 POSITION0_ONLY=${POSITION0_ONLY:-0}
 PREFIX_TOKEN_COUNT=${PREFIX_TOKEN_COUNT:-0}
+MAX_NEW_TOKENS=${MAX_NEW_TOKENS:-16}
+[[ "$MAX_NEW_TOKENS" =~ ^[1-9][0-9]*$ ]] && (( MAX_NEW_TOKENS <= 2048 )) || { echo "invalid MAX_NEW_TOKENS" >&2; exit 2; }
 RUN_ID=${RUN_ID:-viability-$(date -u +%Y%m%dT%H%M%SZ)-$$}
 REMOTE="/data/local/tmp/vibevoice-0034-lfm2-direct-qnn-$RUN_ID"
 OUT="$EXP/.local/direct-qnn-phone-runs/$RUN_ID"
@@ -52,7 +54,7 @@ adb_cmd push "$STAGE/." "$REMOTE/" >"$OUT/push.txt" 2>&1
 adb_cmd shell "cd '$REMOTE' && sha256sum -c SHA256SUMS" >"$OUT/remote-hash-check.txt" 2>"$OUT/remote-hash-check.stderr"
 adb_cmd shell "chmod 700 '$REMOTE/direct_lfm2_qnn_runner'"
 prompt_rel=short.int32le
-max_new=16
+max_new=$MAX_NEW_TOKENS
 if [[ "$PREFIX_TOKEN_COUNT" =~ ^[1-9][0-9]*$ ]]; then
   prompt_rel="prefix-${PREFIX_TOKEN_COUNT}.int32le"
   max_new=1
