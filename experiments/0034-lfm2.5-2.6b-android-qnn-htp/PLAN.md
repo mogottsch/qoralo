@@ -56,12 +56,17 @@
 45. Ran one authorized matched-runtime physical gate. The backend build ID exactly matched the context, but context creation still failed before graph retrieval/readiness/execution.
 46. Preserved raw evidence and verified scoped cleanup absent plus lock release. Runtime mismatch is ruled out and option 1 will not be retried.
 
-## In progress: authorized option 2
+47. Merged the 37 fused regions into one ordinary monolithic one-token ONNX graph with 38 explicit state inputs, 38 state outputs, and 22 logit chunks; no shared-resource/weight-sharing format or streaming.
+48. Compiled one fallback-disabled SM8550/V73 QNN subgraph: 1,541/1,541 optimized source nodes supported, 2,698 QNN operations, zero unsupported nodes.
+49. Verified ordinary context metadata: one 1,600,097,976-byte context, one graph, 41 inputs, 60 outputs, build `v2.49.40.260810104044`.
+50. Loaded once and executed the complete graph through x86 HTP emulation; position-zero greedy token 124894 matched both prior CPU reference routes.
+51. Built the ignored exact-runtime Android stage and passed local hash plus ELF preflight without phone access.
 
-1. Build one ordinary monolithic one-token QNN graph/context with no shared-resource/weight-sharing format.
-2. Preserve exact model, explicit recurrent/attention state, graph order, loaded-once semantics, and existing CPU boundaries; do not stream contexts.
-3. Host-validate model identity, full HTP delegation with fallback disabled, context metadata, retrieval/execution behavior, and output/state equivalence.
-4. Commit the prepared route or exact blocker before any phone request. No campaign.
+## In progress
+
+1. Commit and independently review the ordinary monolithic host-prepared route before any phone request.
+2. If explicitly authorized, run only one bounded physical viability gate under full `phone.lock` and raw-evidence lifecycle.
+3. Context streaming remains prohibited. No campaign without successful viability and separate authorization.
 
 ## Phone and campaign sequence
 

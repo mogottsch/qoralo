@@ -256,6 +256,7 @@ class Runner {
   }
 
   int RunToken(int token, int position, bool sample) {
+    if (monolithic_) return RunTokenMonolithic(token, position, sample);
     if (consolidated_) return RunTokenConsolidated(token, position, sample);
     if (position < 0 || position >= kCacheLength) throw std::runtime_error("position out of range");
     std::vector<float> hidden = Embedding(token);
@@ -366,6 +367,69 @@ class Runner {
   size_t SessionCount() const { return contexts_.size(); }
 
  private:
+  int RunTokenMonolithic(int token, int position, bool sample) {
+    if (position < 0 || position >= kCacheLength) throw std::runtime_error("position out of range");
+    std::vector<float> hidden = Embedding(token);
+    std::vector<float> mask(kCapacity, -65504.0f);
+    std::fill(mask.begin(), mask.begin() + position, 0.0f);
+    mask.back() = 0.0f;
+    int64_t position_value = position;
+    std::vector<Input> inputs;
+    inputs.reserve(41);
+    inputs.push_back({"/model/embed_tokens/GatherBlockQuantized/output_0", Input::Type::Float, hidden.data(), hidden.size(), {1, 1, kHidden}});
+    inputs.push_back({"position_ids", Input::Type::Int64, &position_value, 1, {1, 1}});
+    inputs.push_back({"attention_mask", Input::Type::Float, mask.data(), mask.size(), {1, 1, 1, kCapacity}});
+    std::vector<std::string> outputs;
+    outputs.reserve(60);
+    for (int layer = 0; layer < kLayers; ++layer) {
+      if (IsAttention(layer)) {
+        inputs.push_back({"past_key_values." + std::to_string(layer) + ".key", Input::Type::Float, key_[layer].data(), key_[layer].size(), {1, 8, 64, kCacheLength}});
+        inputs.push_back({"past_key_values." + std::to_string(layer) + ".value", Input::Type::Float, value_[layer].data(), value_[layer].size(), {1, 8, kCacheLength, 64}});
+        outputs.push_back("present." + std::to_string(layer) + ".key");
+        outputs.push_back("present." + std::to_string(layer) + ".value");
+      } else {
+        inputs.push_back({"past_conv." + std::to_string(layer), Input::Type::Float, conv_[layer].data(), conv_[layer].size(), {1, kHidden, 3}});
+        outputs.push_back("present_conv." + std::to_string(layer));
+      }
+    }
+    const size_t state_outputs = outputs.size();
+    if (sample) {
+      int offset = 0;
+      while (offset < kVocab) {
+        int remaining = kVocab - offset;
+        int width = remaining == 5120 ? 4096 : std::min(6144, remaining);
+        outputs.push_back("logits_vocab_" + std::to_string(offset) + "_" + std::to_string(offset + width));
+        offset += width;
+      }
+    }
+    auto values = Run("monolith", inputs, outputs);
+    size_t index = 0;
+    for (int layer = 0; layer < kLayers; ++layer) {
+      if (IsAttention(layer)) {
+        const auto& new_key = values[index++];
+        const auto& new_value = values[index++];
+        for (int head = 0; head < 8; ++head) for (int dim = 0; dim < 64; ++dim) {
+          key_[layer][(head * 64 + dim) * kCacheLength + position] = new_key[head * 64 + dim];
+          value_[layer][(head * kCacheLength + position) * 64 + dim] = new_value[head * 64 + dim];
+        }
+      } else {
+        conv_[layer] = std::move(values[index++]);
+      }
+    }
+    if (!sample) return -1;
+    float best = -std::numeric_limits<float>::infinity();
+    int best_token = -1;
+    int offset = 0;
+    for (size_t chunk = state_outputs; chunk < values.size(); ++chunk) {
+      const auto& logits = values[chunk];
+      for (size_t i = 0; i < logits.size(); ++i) if (logits[i] > best) {
+        best = logits[i]; best_token = offset + static_cast<int>(i);
+      }
+      offset += static_cast<int>(logits.size());
+    }
+    return best_token;
+  }
+
   int RunTokenConsolidated(int token, int position, bool sample) {
     if (position < 0 || position >= kCacheLength) throw std::runtime_error("position out of range");
     std::vector<float> hidden = Embedding(token);
@@ -436,6 +500,7 @@ class Runner {
   void* model_library_ = nullptr;
   std::unique_ptr<QnnSampleApp> owner_;
   bool consolidated_ = false;
+  bool monolithic_ = false;
   std::vector<std::unique_ptr<DirectContext>> contexts_;
   std::unordered_map<std::string, DirectContext*> sessions_;
   std::unordered_map<int, std::vector<float>> conv_;
@@ -480,7 +545,10 @@ class Runner {
       names.push_back("head-" + std::string(value));
     }
     fs::path shared_manifest = root_ / "shared-contexts.tsv";
-    if (fs::exists(root_ / "consolidated-contexts.tsv")) {
+    if (fs::exists(root_ / "monolithic-contexts.tsv")) {
+      shared_manifest = root_ / "monolithic-contexts.tsv";
+      monolithic_ = true;
+    } else if (fs::exists(root_ / "consolidated-contexts.tsv")) {
       shared_manifest = root_ / "consolidated-contexts.tsv";
       consolidated_ = true;
     }
@@ -511,7 +579,7 @@ class Runner {
         loaded_graphs += aliases.size();
         contexts_.push_back(std::move(context));
       }
-      const size_t expected = consolidated_ ? 37 : names.size();
+      const size_t expected = monolithic_ ? 1 : (consolidated_ ? 37 : names.size());
       if (loaded_graphs != expected || sessions_.size() != expected) {
         throw std::runtime_error("context manifest does not cover exact pipeline");
       }

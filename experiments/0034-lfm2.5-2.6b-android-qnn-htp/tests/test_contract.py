@@ -79,7 +79,7 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
     def test_active_export_does_not_claim_qnn_android_or_completion(self) -> None:
-        self.assertIn("active_host_only_option_2_ordinary_monolithic", self.contract["status"])
+        self.assertIn("active_host_prepared_option_2_ordinary_monolithic", self.contract["status"])
         route = self.result["route_assessment"]
         self.assertFalse(route["compiled_sm8550_context_available"])
         self.assertFalse(route["android_execution"])
@@ -88,7 +88,7 @@ class ContractTest(unittest.TestCase):
         self.assertIn("not_android_qnn_or_htp", milestone["classification"])
         self.assertEqual("passed", milestone["rewritten_onnx"]["onnx_checker"])
         self.assertEqual(16, milestone["bounded_output"]["max_new_tokens"])
-        self.assertIn("option 2 is host-only", self.contract["phone_boundary"])
+        self.assertIn("No phone access occurred for option 2", self.contract["phone_boundary"])
 
     def test_qnn_aot_is_complete_but_not_physical_execution(self) -> None:
         milestone = self.contract["qnn_aot_milestone"]
@@ -245,6 +245,22 @@ class ContractTest(unittest.TestCase):
         self.assertFalse(option2["shared_resource_format"])
         self.assertFalse(option2["context_streaming"])
 
+    def test_ordinary_monolithic_option_2_is_host_prepared_only(self) -> None:
+        route = self.contract["authorized_option_2"]
+        self.assertEqual((1, 1), (route["context_count"], route["graph_count"]))
+        self.assertFalse(route["shared_resource_format"])
+        self.assertFalse(route["weight_sharing_format"])
+        self.assertFalse(route["context_streaming"])
+        self.assertTrue(route["fallback_disabled"])
+        self.assertEqual((1541, 1541, 0), (route["optimized_source_nodes"], route["supported_nodes"], route["unsupported_nodes"]))
+        self.assertTrue(route["host_htp_graph_execute_succeeded"])
+        self.assertEqual(route["reference_greedy_token"], route["host_greedy_token"])
+        self.assertFalse(route["physical_execution"])
+        result = json.loads((EXP / route["evidence"]).read_text())
+        self.assertEqual((41, 60), (result["context"]["graph_inputs"], result["context"]["graph_outputs"]))
+        self.assertTrue(result["host_htp_execution"]["greedy_decision_equal"])
+        self.assertIn("not physical performance", result["host_htp_execution"]["timing_interpretation"])
+
     def test_final_pipeline_host_equivalence_is_bounded(self) -> None:
         result = json.loads((EXP / "results/htp-pipeline-host-equivalence/result.json").read_text())
         self.assertIn("host_only", result["classification"])
@@ -287,6 +303,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/whole-route-shared-qnn-phone-attempt-1-load-failure",
             EXP / "results/qairt-24940-matched-android-preparation",
             EXP / "results/qairt-24940-matched-phone-attempt-1-context-create-failure",
+            EXP / "results/qnn-ordinary-monolithic-host-preparation",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

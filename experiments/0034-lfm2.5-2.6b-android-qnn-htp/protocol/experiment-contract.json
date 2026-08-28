@@ -25,13 +25,40 @@
   },
   "authorized_option_2": {
     "all_loaded_once": true,
+    "android_stage": {
+      "elf_preflight": true,
+      "hash_check": true,
+      "manifest_sha256": "5dc9815787046507b3b09a4aebbe0eb6fd97e6effda3247cfeddda6fb474169c",
+      "payload_bytes": 1798094075,
+      "payload_files": 12,
+      "runner_sha256": "4515d7f58889121542b9ff3535d5e083a89095f008fb7bb23ae421f67c8cacfd",
+      "stage_metadata_sha256": "3260c006faf29fc8081f29f4c87069cafeee7919a9af54ac3ceb184e03bcc952"
+    },
+    "context_build_id": "v2.49.40.260810104044",
+    "context_bytes": 1600097976,
+    "context_count": 1,
+    "context_sha256": "76ba15e7fd95e5e13e92be0e88e8e6bbd3123f2b993b6986c9dac8800a9bf212",
     "context_streaming": false,
-    "phase": "host_build_and_validation",
+    "evidence": "results/qnn-ordinary-monolithic-host-preparation/result.json",
+    "explicit_state_inputs": 38,
+    "explicit_state_outputs": 38,
+    "fallback_disabled": true,
+    "graph_count": 1,
+    "host_greedy_token": 124894,
+    "host_htp_graph_execute_succeeded": true,
+    "logit_chunks": 22,
+    "optimized_source_nodes": 1541,
+    "phase": "host_prepared_pending_independent_review",
     "phone_request_allowed_before_commit": false,
+    "physical_execution": false,
     "preserve_declared_cpu_boundaries": true,
     "preserve_exact_model_state_order": true,
+    "qnn_operations": 2698,
+    "reference_greedy_token": 124894,
     "route": "one ordinary monolithic one-token QNN graph/context",
     "shared_resource_format": false,
+    "supported_nodes": 1541,
+    "unsupported_nodes": 0,
     "weight_sharing_format": false
   },
   "canonical_protocol": {
@@ -171,9 +198,9 @@
     "android_execution": false,
     "compiled_context_created": false,
     "qnn_htp_execution": false,
-    "required_action": "Proceed host-only to authorized option 2 ordinary monolithic one-token graph/context; commit validation before any phone request.",
+    "required_action": "Independently review the committed ordinary monolithic route before considering one bounded phone gate.",
     "result_path": "results/support-assessment/result.json",
-    "summary": "Exact-matched QAIRT 2.49.40 backend rejected the single shared-resource context before graph retrieval, ruling out runtime mismatch. Option 1 is closed."
+    "summary": "Shared-resource option 1 is closed. Ordinary monolithic option 2 is fully host-prepared and awaits independent review; physical context load/execution remains unproven."
   },
   "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
   "host_export_milestone": {
@@ -327,7 +354,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "Matched-runtime attempt cleaned absent and released phone.lock. No retry; option 2 is host-only until committed.",
+  "phone_boundary": "No phone access occurred for option 2. Await independent host milestone review and explicit priority before any gate.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -426,7 +453,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "active_host_only_option_2_ordinary_monolithic_one_token_context",
+  "status": "active_host_prepared_option_2_ordinary_monolithic_one_token_context",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",

@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active host-only on authorized option 2. The exact-matched QAIRT 2.49.40 physical gate ruled out runtime mismatch: backend and context both identified as `v2.49.40.260810104044`, yet the single shared-resource context still failed in `QnnContext_createFromBinary` before graph retrieval. Work now proceeds to one ordinary monolithic one-token graph/context with no shared-resource format. No physical execution, output, or performance result exists.**
+**Active with authorized option 2 host-prepared. One ordinary monolithic one-token QNN context now contains one complete graph covering all 30 layers, final normalization, and LM head. It uses no shared-resource/weight-sharing format, loads once, keeps all recurrent/attention state explicit, and compiled fallback-disabled with 1,541/1,541 optimized nodes delegated. The graph loads and executes in x86 HTP emulation with the expected greedy token. No physical Android execution or performance result exists.**
 
 This is a separate accelerator arm. It preserves `0029` CPU viability and `0033` CPU/OpenCL campaign evidence without modifying either experiment.
 
@@ -124,4 +124,18 @@ All Android libraries retain the expected AArch64/DSP6 ABIs, SONAMEs, and declar
 
 The one authorized matched-runtime physical gate passed all 12 local/remote hashes and ELF preflight. The direct backend reported exact build `v2.49.40.260810104044`, equal to the context build, but rejected the 1.60 GB shared context in `QnnContext_createFromBinary`. No graph was retrieved or executed. Peak sampled process VmHWM was 1,613,264 KiB while materializing the blob and is not evidence of successful DSP allocation. Cleanup and lock release passed. See [`results/qairt-24940-matched-phone-attempt-1-context-create-failure/`](results/qairt-24940-matched-phone-attempt-1-context-create-failure/).
 
-Option 1 is rejected and will not be retried. Authorized option 2 is host-only: build one ordinary monolithic one-token QNN graph/context without the shared-resource/weight-sharing format, while preserving exact model identity, explicit state, execution order, loaded-once semantics, and the declared CPU boundary. No phone request is permitted until identity, delegation, fallback, host behavior, and context metadata are validated and committed. Context streaming remains prohibited; no campaign is authorized.
+Option 1 is rejected and will not be retried.
+
+## Ordinary monolithic one-token route
+
+Authorized option 2 merges the 37 previously verified fused regions into one ordinary ONNX graph in exact order: layers 0–29, final normalization, and all 22 logit chunks. Its external state boundary remains 38 inputs and 38 outputs (22 recurrent-convolution states plus K/V state for 8 attention layers). CPU still performs only selected-row asymmetric Q4 embedding dequantization, orchestration, and global greedy argmax.
+
+The ordinary ONNX model is SHA-256 `40e0e0bf4e0ba0076402b6bcd78496485c7b93117aeb2867968dd421cb2c3eb4`; its 1,779,169,280-byte external data is SHA-256 `f0d25ed9203c132259e9563a43736dc4bae35d7b46c064bebf3fa5464afe16ea`. ORT QNN compiled it fallback-disabled for SM8550/V73 as one subgraph: 1,541/1,541 optimized source nodes supported, 2,698 QNN operations, and zero unsupported nodes.
+
+The resulting **ordinary**, non-shared context is 1,600,097,976 bytes, SHA-256 `76ba15e7fd95e5e13e92be0e88e8e6bbd3123f2b993b6986c9dac8800a9bf212`. QNN metadata reports build `v2.49.40.260810104044`, one graph, 41 inputs, and 60 outputs. Its sole EPContext descriptor has `main_context=1`, `embed_mode=0`, and no shared-resource generation option.
+
+A direct-QNN host probe loaded the single context once and executed the complete graph through x86 HTP emulation. For token 124894 at position zero, global greedy argmax was 124894, matching both the split and consolidated CPU references. The 467.814-second host timing is emulator diagnostics, not physical performance evidence.
+
+The ignored QAIRT 2.49.40 Android stage contains 12 payload files totaling 1,798,094,075 bytes. Stage metadata SHA-256 is `3260c006faf29fc8081f29f4c87069cafeee7919a9af54ac3ceb184e03bcc952`; manifest SHA-256 is `5dc9815787046507b3b09a4aebbe0eb6fd97e6effda3247cfeddda6fb474169c`; the API-31 runner SHA-256 is `4515d7f58889121542b9ff3535d5e083a89095f008fb7bb23ae421f67c8cacfd`. Local hashes and ELF preflight pass. See [`results/qnn-ordinary-monolithic-host-preparation/`](results/qnn-ordinary-monolithic-host-preparation/).
+
+No phone access occurred for option 2. The host milestone must be committed and independently reviewed before any bounded phone request. Context streaming remains prohibited; no campaign is authorized.
