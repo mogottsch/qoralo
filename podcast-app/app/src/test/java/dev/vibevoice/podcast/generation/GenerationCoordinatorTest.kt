@@ -8,7 +8,9 @@ import dev.vibevoice.podcast.data.EpisodePhase
 import dev.vibevoice.podcast.data.JobKind
 import dev.vibevoice.podcast.data.PodcastDatabase
 import dev.vibevoice.podcast.data.PodcastRepository
+import dev.vibevoice.podcast.model.GemmaModelContract
 import dev.vibevoice.podcast.model.ModelRoute
+import dev.vibevoice.podcast.model.SupertonicModelContract
 import dev.vibevoice.podcast.model.VerifiedModelPack
 import dev.vibevoice.podcast.runtime.AudioMetadata
 import dev.vibevoice.podcast.runtime.EpisodeOutline
@@ -115,6 +117,8 @@ class GenerationCoordinatorTest {
         id = if (route == ModelRoute.GEMMA_4_E2B_LITERT_GPU) "gemma-4-e2b" else "supertonic-3",
         version = "test", route = route, androidAbi = "arm64-v8a", runtimeApiVersion = 1,
         declaredBackend = if (route == ModelRoute.GEMMA_4_E2B_LITERT_GPU) "LITERT_GPU" else "QNN_HTP",
+        contract = if (route == ModelRoute.GEMMA_4_E2B_LITERT_GPU) GemmaModelContract(8_192, "0.16.1")
+            else SupertonicModelContract(239, 238, 144, 5, 44_100, 1, 16, "ONNX Runtime 1.27.1 + QAIRT 2.49.0.260730"),
         manifestSha256 = "a".repeat(64), root = temporary.root, files = emptyList(),
     )
 

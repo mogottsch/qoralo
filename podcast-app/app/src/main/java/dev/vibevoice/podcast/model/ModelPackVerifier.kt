@@ -44,6 +44,21 @@ data class VerifiedModelFile(
     val sha256: String,
 )
 
+sealed interface VerifiedModelContract
+
+data class GemmaModelContract(val contextTokens: Int, val runtimeVersion: String) : VerifiedModelContract
+
+data class SupertonicModelContract(
+    val textLength: Int,
+    val latentLength: Int,
+    val latentChannels: Int,
+    val diffusionSteps: Int,
+    val sampleRateHz: Int,
+    val channelCount: Int,
+    val pcmBits: Int,
+    val runtimeBuildIdentity: String,
+) : VerifiedModelContract
+
 data class VerifiedModelPack(
     val id: String,
     val version: String,
@@ -51,6 +66,7 @@ data class VerifiedModelPack(
     val androidAbi: String,
     val runtimeApiVersion: Int,
     val declaredBackend: String,
+    val contract: VerifiedModelContract,
     val manifestSha256: String,
     val root: File,
     val files: List<VerifiedModelFile>,
@@ -98,14 +114,17 @@ class ModelPackVerifier {
         if (abi != REQUIRED_ABI) throw ModelPackException.Invalid("Model pack must target $REQUIRED_ABI")
 
         val runtime = json.requireObject("runtime")
-        requireExactKeys(runtime, setOf("apiVersion", "backend", "cpuFallbackAllowed"), "runtime")
+        requireExactKeys(runtime, setOf("apiVersion", "backend", "cpuFallbackAllowed", "buildIdentity"), "runtime")
         val runtimeApi = runtime.requireInt("apiVersion")
         if (runtimeApi != requirement.runtimeApiVersion) throw ModelPackException.Invalid("Runtime API mismatch")
         val backend = runtime.requireString("backend")
         val expectedBackend = if (route == ModelRoute.GEMMA_4_E2B_LITERT_GPU) "LITERT_GPU" else "QNN_HTP"
         if (backend != expectedBackend) throw ModelPackException.Invalid("Pack backend must be $expectedBackend")
         if (runtime.requireBoolean("cpuFallbackAllowed")) throw ModelPackException.Invalid("CPU fallback must be disabled")
-        validateContract(route, json.requireObject("contract"))
+        val buildIdentity = runtime.requireString("buildIdentity")
+        val expectedBuildIdentity = if (route == ModelRoute.GEMMA_4_E2B_LITERT_GPU) "LiteRT-LM 0.16.1" else "ONNX Runtime 1.27.1 + QAIRT 2.49.0.260730"
+        if (buildIdentity != expectedBuildIdentity) throw ModelPackException.Invalid("Runtime build identity mismatch")
+        val contract = validateContract(route, json.requireObject("contract"), buildIdentity)
 
         val fileArray = json.requireArray("files")
         if (fileArray.length() !in 1..MAX_FILES) throw ModelPackException.Invalid("Invalid model-pack file count")
@@ -140,27 +159,34 @@ class ModelPackVerifier {
         val unlisted = actual - listed
         if (unlisted.isNotEmpty()) throw ModelPackException.Invalid("Unlisted model-pack files: ${unlisted.sorted().joinToString()}")
 
-        return VerifiedModelPack(id, version, route, abi, runtimeApi, backend, manifestSha, root, files)
+        return VerifiedModelPack(id, version, route, abi, runtimeApi, backend, contract, manifestSha, root, files)
     }
 
-    private fun validateContract(route: ModelRoute, contract: JSONObject) {
-        when (route) {
+    private fun validateContract(route: ModelRoute, contract: JSONObject, buildIdentity: String): VerifiedModelContract {
+        return when (route) {
             ModelRoute.GEMMA_4_E2B_LITERT_GPU -> {
                 requireExactKeys(contract, setOf("generationPlan", "completeChapterPerRequest", "contextTokens", "runtimeVersion"), "contract")
+                val contextTokens = contract.requireInt("contextTokens")
+                val runtimeVersion = contract.requireString("runtimeVersion")
                 if (contract.requireString("generationPlan") != "OUTLINE_THEN_CHAPTERS" || !contract.requireBoolean("completeChapterPerRequest") ||
-                    contract.requireInt("contextTokens") != 8_192 || contract.requireString("runtimeVersion") != "0.16.1"
-                ) {
-                    throw ModelPackException.Invalid("Gemma pack does not declare the complete-chapter contract")
-                }
+                    contextTokens != 8_192 || runtimeVersion != "0.16.1"
+                ) throw ModelPackException.Invalid("Gemma pack does not declare the complete-chapter contract")
+                GemmaModelContract(contextTokens, runtimeVersion)
             }
             ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP -> {
                 requireExactKeys(contract, setOf("synthesisUnit", "externalContextCount", "sampleRateHz", "channelCount", "pcmBits", "textLength", "latentLength", "latentChannels", "diffusionSteps"), "contract")
                 val textLength = contract.requireInt("textLength")
                 val latentLength = contract.requireInt("latentLength")
+                val sampleRate = contract.requireInt("sampleRateHz")
+                val channels = contract.requireInt("channelCount")
+                val bits = contract.requireInt("pcmBits")
+                val latentChannels = contract.requireInt("latentChannels")
+                val steps = contract.requireInt("diffusionSteps")
                 if (contract.requireString("synthesisUnit") != "COMPLETE_CHAPTER" || contract.requireInt("externalContextCount") != 4 ||
-                    contract.requireInt("sampleRateHz") != 44_100 || contract.requireInt("channelCount") != 1 || contract.requireInt("pcmBits") != 16 ||
-                    textLength !in 10..16_384 || latentLength !in 1..10_000 || contract.requireInt("latentChannels") != 144 || contract.requireInt("diffusionSteps") != 5
+                    sampleRate != 44_100 || channels != 1 || bits != 16 || textLength !in 10..16_384 || latentLength !in 1..10_000 ||
+                    latentChannels != 144 || steps != 5
                 ) throw ModelPackException.Invalid("Supertonic pack does not match the chapter WAV/shape contract")
+                SupertonicModelContract(textLength, latentLength, latentChannels, steps, sampleRate, channels, bits, buildIdentity)
             }
         }
     }

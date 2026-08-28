@@ -7,8 +7,10 @@ import com.google.ai.edge.litertlm.Engine as LiteRtEngine
 import com.google.ai.edge.litertlm.EngineConfig
 import com.google.ai.edge.litertlm.SamplerConfig
 import com.google.ai.edge.litertlm.ThinkingConfig
+import dev.vibevoice.podcast.model.GemmaModelContract
 import dev.vibevoice.podcast.model.ModelFileRole
 import dev.vibevoice.podcast.model.ModelRoute
+import dev.vibevoice.podcast.model.SupertonicModelContract
 import dev.vibevoice.podcast.model.VerifiedModelPack
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -25,6 +27,8 @@ class GemmaLiteRtGpuEngine : LlmEngine {
     override suspend fun load(pack: VerifiedModelPack) = withContext(Dispatchers.IO) {
         requireRoute(pack, ModelRoute.GEMMA_4_E2B_LITERT_GPU)
         require(engine == null) { "Gemma engine is already loaded" }
+        val contract = pack.contract as? GemmaModelContract ?: throw InferenceRouteException("Gemma pack contract type mismatch")
+        require(contract.contextTokens == 8_192 && contract.runtimeVersion == "0.16.1") { "Gemma runtime contract mismatch" }
         val model = pack.files.single { it.role == ModelFileRole.GEMMA_MODEL }.file
         val cache = File(pack.root.parentFile?.parentFile, "runtime-cache/gemma-4-e2b-gpu").apply { mkdirs() }
         try {
@@ -157,12 +161,15 @@ class SupertonicQnnHtpEngine : TtsEngine {
             NativeAppRuntime.ensureLoaded()
             handle = SupertonicNative.create(pack.root.absolutePath, voiceId)
             if (handle == 0L) throw InferenceRouteException("Supertonic QNN initialization returned no engine")
-            provenance = validateProvenance(
+            val reported = validateProvenance(
                 SupertonicNative.provenance(handle),
                 expectedModel = "SUPERTONIC_3_EXTERNAL_CONTEXT",
                 expectedBackend = "QNN_HTP",
                 requiredComponents = setOf("duration_context", "text_context", "vector_context", "vocoder_context", "htp"),
             )
+            val contract = pack.contract as? SupertonicModelContract
+                ?: throw InferenceRouteException("Supertonic pack contract type mismatch")
+            provenance = requireMatchingSupertonicContract(contract, reported)
         } catch (error: Throwable) {
             close()
             throw InferenceRouteException("Supertonic external-context QNN/HTP failed to initialize", error)
@@ -175,7 +182,8 @@ class SupertonicQnnHtpEngine : TtsEngine {
         val temporary = File(output.parentFile, ".${output.name}.tmp")
         temporary.delete()
         try {
-            if (!SupertonicNative.renderCompleteChapter(handle, chapter.id, chapter.text, temporary.absolutePath)) {
+            val normalizedText = SupertonicTextNormalizer.normalize(chapter.text)
+            if (!SupertonicNative.renderCompleteChapter(handle, chapter.id, normalizedText, temporary.absolutePath)) {
                 throw InferenceRouteException("Supertonic rejected the complete chapter")
             }
             if (!temporary.isFile || temporary.length() == 0L) throw InferenceRouteException("Supertonic emitted no chapter WAV")
@@ -220,6 +228,27 @@ private fun validateProvenance(
     ) throw InferenceRouteException("Native runtime did not prove the required $expectedBackend route readiness")
     return value
 }
+
+internal fun requireMatchingSupertonicContract(
+    contract: SupertonicModelContract,
+    reported: RuntimeProvenance,
+): RuntimeProvenance {
+    require(reported.runtimeVersion == "ONNX Runtime 1.27.1 / QAIRT 2.49.0.260730" &&
+        reported.componentInt("text_length") == contract.textLength &&
+        reported.componentInt("latent_length") == contract.latentLength &&
+        reported.componentInt("latent_channels") == contract.latentChannels &&
+        reported.componentInt("diffusion_steps") == contract.diffusionSteps &&
+        reported.componentInt("sample_rate_hz") == contract.sampleRateHz &&
+        reported.componentInt("channel_count") == contract.channelCount &&
+        reported.componentInt("pcm_bits") == contract.pcmBits
+    ) { "Native Supertonic readiness does not match the authenticated pack contract" }
+    return reported
+}
+
+private fun RuntimeProvenance.componentInt(key: String): Int = readyComponents
+    .singleOrNull { it.startsWith("$key=") }
+    ?.substringAfter('=')?.toIntOrNull()
+    ?: throw InferenceRouteException("Native runtime provenance is missing $key")
 
 private object NativeAppRuntime {
     @Volatile private var loaded = false

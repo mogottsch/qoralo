@@ -21,6 +21,7 @@ fi
 [[ -f "$PACKS/gemma-4-e2b/current/manifest.json" ]] || { echo "missing prepared Gemma pack" >&2; exit 66; }
 [[ -f "$PACKS/supertonic-3/current/manifest.json" ]] || { echo "missing prepared Supertonic pack" >&2; exit 66; }
 mkdir -p "$EVIDENCE"
+"$PROJECT/tools/verify_apk_runtime.py" --apk "$APK" --output "$EVIDENCE/apk-runtime-provenance.json" | tee "$EVIDENCE/apk-preflight.txt"
 
 exec 9>"$LOCK"
 flock -n 9 || { echo "phone lock busy: $LOCK" >&2; exit 75; }

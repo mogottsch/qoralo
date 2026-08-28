@@ -22,6 +22,31 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def verify_file(path: Path, expected: dict[str, object], label: str) -> None:
+    if not path.is_file():
+        raise SystemExit(f"trusted {label} is missing: {path}")
+    if "bytes" in expected and path.stat().st_size != expected["bytes"]:
+        raise SystemExit(f"trusted {label} size mismatch")
+    actual = sha256(path)
+    if actual != expected["sha256"]:
+        raise SystemExit(f"trusted {label} SHA-256 mismatch: expected {expected['sha256']}, got {actual}")
+
+
+def verify_stage(stage: Path, authority: dict[str, object]) -> None:
+    manifest = stage / "stage-manifest.sha256"
+    verify_file(manifest, {"sha256": authority["acceptedStageManifestFileSha256"]}, "Supertonic stage manifest")
+    listed: set[str] = set()
+    for line in manifest.read_text(encoding="utf-8").splitlines():
+        digest, relative = line.split(maxsplit=1)
+        relative = relative.strip().lstrip("*")
+        listed.add(relative)
+        verify_file(stage / relative, {"sha256": digest}, f"Supertonic stage payload {relative}")
+    actual = {p.relative_to(stage).as_posix() for p in stage.rglob("*") if p.is_file()}
+    extras = actual - listed - {"stage-manifest.sha256"}
+    if extras:
+        raise SystemExit(f"Supertonic stage has files outside its trusted manifest: {sorted(extras)}")
+
+
 def link_or_copy(source: Path, destination: Path) -> None:
     if not source.is_file():
         raise SystemExit(f"required authorized artifact is missing: {source}")
@@ -59,13 +84,26 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     project = Path(__file__).resolve().parents[1]
     repo = project.parent
+    parser.add_argument("--authority", type=Path, default=project / "config/trusted-local-runtime.json", help="separately reviewed expected-hash authority")
     parser.add_argument("--gemma-model", type=Path, default=repo / "experiments/0025-gemma-4-e2b-it-android/.local/model/gemma-4-E2B-it.litertlm")
     parser.add_argument("--gemma-tokenizer", type=Path, default=repo / "experiments/0025-gemma-4-e2b-it-android/.local/model/gpu-embedded-tokenizer.model")
     parser.add_argument("--supertonic-stage", type=Path, default=repo / "experiments/0023-supertonic-qnn-precompiled-context-startup/.local/phone-stage")
     parser.add_argument("--onnxruntime-include", type=Path, default=repo / "experiments/0010-supertonic-qnn-htp-feasibility/.local/onnxruntime-v1.27.1-source/include/onnxruntime/core/session")
-    parser.add_argument("--text-length", type=int, default=239)
-    parser.add_argument("--latent-length", type=int, default=238)
+    default_aar = next((Path.home() / ".gradle/caches/modules-2/files-2.1/com.google.ai.edge.litertlm/litertlm-android/0.16.1").glob("*/*.aar"), Path("missing-litertlm-0.16.1.aar"))
+    parser.add_argument("--litert-aar", type=Path, default=default_aar)
     args = parser.parse_args()
+
+    if not args.authority.is_file():
+        raise SystemExit(f"trusted hash authority is missing: {args.authority}")
+    authority = json.loads(args.authority.read_text(encoding="utf-8"))
+    if authority.get("schemaVersion") != 1:
+        raise SystemExit("unsupported trusted hash authority")
+    gemma_authority = authority["gemma"]
+    super_authority = authority["supertonic"]
+    verify_file(args.gemma_model, gemma_authority["model"], "Gemma model")
+    verify_file(args.gemma_tokenizer, gemma_authority["tokenizer"], "Gemma tokenizer")
+    verify_file(args.litert_aar, gemma_authority["litertAar"], "LiteRT-LM AAR")
+    verify_stage(args.supertonic_stage, super_authority)
 
     local = project / ".local"
     packs = local / "model-packs"
@@ -88,11 +126,13 @@ def main() -> None:
         "version": "hf-6b78abd-litertlm-0.16.1",
         "route": "GEMMA_4_E2B_LITERT_GPU",
         "androidAbi": "arm64-v8a",
-        "runtime": {"apiVersion": 1, "backend": "LITERT_GPU", "cpuFallbackAllowed": False},
+        "runtime": {"apiVersion": 1, "backend": "LITERT_GPU", "cpuFallbackAllowed": False, "buildIdentity": "LiteRT-LM 0.16.1"},
         "contract": {"generationPlan": "OUTLINE_THEN_CHAPTERS", "completeChapterPerRequest": True, "contextTokens": 8192, "runtimeVersion": "0.16.1"},
         "files": [file_entry(gemma, role, relative) for role, relative in gemma_roles],
     }
     gemma_hash = write_manifest(gemma, gemma_manifest)
+    if gemma_hash != gemma_authority["generatedPackManifestSha256"]:
+        raise SystemExit(f"generated Gemma pack manifest is not authorized: {gemma_hash}")
 
     stage = args.supertonic_stage
     super_files = [
@@ -130,16 +170,18 @@ def main() -> None:
         "version": "qnn-2.49.0-sm8550-v73",
         "route": "SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP",
         "androidAbi": "arm64-v8a",
-        "runtime": {"apiVersion": 1, "backend": "QNN_HTP", "cpuFallbackAllowed": False},
+        "runtime": {"apiVersion": 1, "backend": "QNN_HTP", "cpuFallbackAllowed": False, "buildIdentity": "ONNX Runtime 1.27.1 + QAIRT 2.49.0.260730"},
         "contract": {
             "synthesisUnit": "COMPLETE_CHAPTER", "externalContextCount": 4,
             "sampleRateHz": 44100, "channelCount": 1, "pcmBits": 16,
-            "textLength": args.text_length, "latentLength": args.latent_length,
-            "latentChannels": 144, "diffusionSteps": 5,
+            "textLength": super_authority["contract"]["textLength"], "latentLength": super_authority["contract"]["latentLength"],
+            "latentChannels": super_authority["contract"]["latentChannels"], "diffusionSteps": super_authority["contract"]["diffusionSteps"],
         },
         "files": [file_entry(supertonic, role, relative) for role, relative in role_paths],
     }
     super_hash = write_manifest(supertonic, super_manifest)
+    if super_hash != super_authority["generatedPackManifestSha256"]:
+        raise SystemExit(f"generated Supertonic pack manifest is not authorized: {super_hash}")
 
     runtime_source = stage / "lib"
     runtime_dest = project / "app/runtime-libs/arm64-v8a"
@@ -148,9 +190,15 @@ def main() -> None:
         "libonnxruntime.so", "libQnnHtp.so", "libQnnHtpPrepare.so",
         "libQnnHtpV73Skel.so", "libQnnHtpV73Stub.so", "libQnnSystem.so",
     ]
+    if set(runtime_names) != set(super_authority["runtimeLibraries"]):
+        raise SystemExit("trusted runtime library inventory does not match the injection inventory")
     runtime_provenance = []
     for name in runtime_names:
         source = runtime_source / name
+        expected_runtime = super_authority["runtimeLibraries"].get(name)
+        if expected_runtime is None:
+            raise SystemExit(f"runtime library is not present in trusted authority: {name}")
+        verify_file(source, expected_runtime, f"runtime library {name}")
         destination = runtime_dest / name
         link_or_copy(source, destination)
         runtime_provenance.append({"name": name, "source": str(source), "bytes": source.stat().st_size, "sha256": sha256(source)})

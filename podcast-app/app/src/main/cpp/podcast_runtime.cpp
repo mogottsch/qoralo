@@ -15,6 +15,7 @@
 #include <vector>
 
 #include "onnxruntime_cxx_api.h"
+#include "tensor_validation.h"
 
 namespace {
 constexpr int32_t kSampleRate = 44100;
@@ -187,7 +188,9 @@ std::vector<float> RunFloat(Ort::Session &session, const std::vector<const char 
   if (values.size() != 1 || !values[0].IsTensor()) throw std::runtime_error("invalid QNN output");
   auto info = values[0].GetTensorTypeAndShapeInfo();
   const float *data = values[0].GetTensorData<float>();
-  return {data, data + info.GetElementCount()};
+  std::vector<float> result(data, data + info.GetElementCount());
+  RequireAllFinite(result, output_name);
+  return result;
 }
 
 struct Rng {
@@ -258,6 +261,7 @@ void WriteWav(const std::filesystem::path &path, const std::vector<float> &wave,
   output.write("RIFF", 4); Put32(output, 36 + data_bytes); output.write("WAVEfmt ", 8); Put32(output, 16);
   Put16(output, 1); Put16(output, 1); Put32(output, kSampleRate); Put32(output, kSampleRate * 2);
   Put16(output, 2); Put16(output, 16); output.write("data", 4); Put32(output, data_bytes);
+  RequireAllFinite(wave, "vocoder waveform");
   for (size_t index = 0; index < samples; ++index) {
     const float clamped = std::max(-1.0f, std::min(1.0f, wave[index]));
     const long quantized = std::lround(clamped * 32767.0f);
@@ -337,12 +341,12 @@ jstring NativeProvenance(JNIEnv *env, jclass, jlong handle) {
   if (engine == nullptr) { Throw(env, "Supertonic engine is closed"); return nullptr; }
   const std::string json =
       "{\"runtimeApiVersion\":1,\"model\":\"SUPERTONIC_3_EXTERNAL_CONTEXT\","
-      "\"backend\":\"QNN_HTP\",\"runtimeVersion\":\"ONNX Runtime 1.27.1 / QNN 2.49.0\","
+      "\"backend\":\"QNN_HTP\",\"runtimeVersion\":\"ONNX Runtime 1.27.1 / QAIRT 2.49.0.260730\","
       "\"cpuFallbackEnabled\":false,\"readyComponents\":[\"duration_context\",\"text_context\","
       "\"vector_context\",\"vocoder_context\",\"htp\",\"text_length=" +
       std::to_string(engine->text_length) + "\",\"latent_length=" +
       std::to_string(engine->latent_length) + "\",\"latent_channels=" +
-      std::to_string(engine->latent_channels) + "\"]}";
+      std::to_string(engine->latent_channels) + "\",\"diffusion_steps=5\",\"sample_rate_hz=44100\",\"channel_count=1\",\"pcm_bits=16\"]}";
   return env->NewStringUTF(json.c_str());
 }
 

@@ -27,6 +27,8 @@ class ModelPackVerifierTest {
         val verified = ModelPackVerifier().verify(pack.root, pack.requirement)
         assertEquals(13, verified.files.map { it.role }.toSet().size)
         assertEquals("QNN_HTP", verified.declaredBackend)
+        assertEquals(SupertonicModelContract(239, 238, 144, 5, 44_100, 1, 16,
+            "ONNX Runtime 1.27.1 + QAIRT 2.49.0.260730"), verified.contract)
     }
 
     @Test fun rejectsUnpinnedManifest() {
@@ -172,7 +174,8 @@ class ModelPackVerifierTest {
             .put("version", "test-1")
             .put("route", route.name)
             .put("androidAbi", "arm64-v8a")
-            .put("runtime", JSONObject().put("apiVersion", 1).put("backend", if (route == ModelRoute.GEMMA_4_E2B_LITERT_GPU) "LITERT_GPU" else "QNN_HTP").put("cpuFallbackAllowed", false))
+            .put("runtime", JSONObject().put("apiVersion", 1).put("backend", if (route == ModelRoute.GEMMA_4_E2B_LITERT_GPU) "LITERT_GPU" else "QNN_HTP")
+                .put("cpuFallbackAllowed", false).put("buildIdentity", if (route == ModelRoute.GEMMA_4_E2B_LITERT_GPU) "LiteRT-LM 0.16.1" else "ONNX Runtime 1.27.1 + QAIRT 2.49.0.260730"))
             .put("contract", contract)
             .put("files", JSONArray().apply { roles.zip(files).forEach { (role, file) -> put(fileEntry(role, file, root)) } })
         mutate(manifest)

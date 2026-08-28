@@ -59,6 +59,15 @@ android {
     buildFeatures { compose = true; buildConfig = true }
     packaging.resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
     packaging.jniLibs.useLegacyPackaging = true
+    packaging.jniLibs.keepDebugSymbols += setOf(
+        "**/liblitertlm_jni.so",
+        "**/libonnxruntime.so",
+        "**/libQnnHtp.so",
+        "**/libQnnHtpPrepare.so",
+        "**/libQnnHtpV73Skel.so",
+        "**/libQnnHtpV73Stub.so",
+        "**/libQnnSystem.so",
+    )
     sourceSets["main"].jniLibs.srcDir("runtime-libs")
     if (nativeRuntimeEnabled) {
         externalNativeBuild.cmake {
@@ -83,6 +92,13 @@ kotlin {
 }
 
 ksp { arg("room.schemaLocation", "$projectDir/schemas") }
+
+val testNativePolicies by tasks.registering(Exec::class) {
+    inputs.files("src/main/cpp/tensor_validation.h", "src/test/cpp/tensor_validation_test.cpp")
+    outputs.file(layout.buildDirectory.file("native-policy-test/tensor_validation_test"))
+    commandLine("bash", rootProject.file("tools/test_native_policies.sh"))
+}
+tasks.named("check").configure { dependsOn(testNativePolicies) }
 
 dependencies {
     val composeBom = platform("androidx.compose:compose-bom:2024.12.01")
