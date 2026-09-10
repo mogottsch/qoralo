@@ -13,6 +13,7 @@ import subprocess
 from prepare_wiring_gate import PROJECT, digest
 from prepare_duration_load_gate import CONTRACT_SHA
 from run_wiring_gate import APP, TEST_APP, Device, DeviceSettings, stop_child
+from duration_phone_guard import PhoneGuard, close_inherited_fds, host_identity
 
 
 def main():
@@ -21,6 +22,7 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--approved-candidate-sha256")
+    parser.add_argument("--approved-host-guard-sha256")
     parser.add_argument("--execute", action="store_true")
     parser.add_argument("--adb", default="adb")
     parser.add_argument("--serial", default="R5CW81PR8SY")
@@ -38,16 +40,22 @@ def main():
         path = Path(item["path"])
         if path.stat().st_size != item["bytes"] or digest(path) != item["sha256"]:
             raise ValueError("diagnostic APK changed since preflight")
+    host = host_identity()
     if not args.execute:
-        print(json.dumps({"mode": "plan_only", "kind": "duration-load-only", "adbUsed": False, "sessionRunCalls": 0, "gemmaRequests": 0, "hostTimeoutSeconds": 150}))
+        print(json.dumps({"mode": "plan_only", "kind": "duration-load-only", "adbUsed": False, "sessionRunCalls": 0, "gemmaRequests": 0, "hostTimeoutSeconds": 150, "hostGuard": host}))
         return
-    if os.environ.get("PODCAST_PHONE_PRIORITY") != "approved" or args.approved_candidate_sha256 != digest(args.candidate):
-        raise SystemExit("separate Pi phone slot and exact candidate approval required")
+    if (os.environ.get("PODCAST_PHONE_PRIORITY") != "approved" or args.approved_candidate_sha256 != digest(args.candidate)
+            or args.approved_host_guard_sha256 != host["sha256"]):
+        raise SystemExit("separate Pi phone slot, exact candidate AND reviewed host guard approval required")
+    os.umask(0o077)
     args.output.mkdir(parents=True, exist_ok=False)
     (args.output / "candidate.json").write_text(json.dumps(value, indent=2))
     lock = (PROJECT.parent / "artifacts/locks/phone.lock").open("a+")
     fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    os.set_inheritable(lock.fileno(), False)
+    (args.output / "host-guard-identity.json").write_text(json.dumps({**host, "lockInheritable": os.get_inheritable(lock.fileno())}, indent=2))
     device = Device(args.adb, args.serial, args.output)
+    guard = PhoneGuard(device, args.output, args.candidate, args.approved_candidate_sha256, args.approved_host_guard_sha256)
     settings = DeviceSettings(device.shell)
     identity_ok = False
     launched = False
@@ -57,8 +65,7 @@ def main():
         raise InterruptedError(f"signal {signum}; cleanup only, no retry")
     signal.signal(signal.SIGINT, interrupted); signal.signal(signal.SIGTERM, interrupted)
     try:
-        if args.serial != "R5CW81PR8SY" or device.shell("getprop ro.product.model").strip() != "SM-S918B" or device.shell("getprop ro.soc.model").strip() != "SM8550":
-            raise ValueError("unexpected device")
+        guard.identity()
         identity_ok = True
         (args.output / "settings-before.json").write_text(json.dumps(settings.capture(), indent=2))
         device.shell("dumpsys battery; dumpsys thermalservice", timeout=30)
@@ -66,7 +73,9 @@ def main():
         observed = device.shell(f"run-as {APP} sha256sum no_backup/model-packs/supertonic-3/current/manifest.json")
         if observed.split()[0] != pinned["manifestSha256"]:
             raise ValueError("installed Supertonic pack mismatch or absent")
+        guard.checkpoint("before-app-install")
         device.run(["install", "-r", "-t", value["app"]["path"]], timeout=180)
+        guard.checkpoint("before-test-install")
         device.run(["install", "-r", "-t", value["test"]["path"]], timeout=180)
         with (args.output / "logcat.txt").open("wb") as out, (args.output / "logcat.stderr").open("wb") as err:
             logs = subprocess.Popen(device.prefix + ["logcat", "-v", "threadtime", "-T", "1"], stdout=out, stderr=err, start_new_session=True, close_fds=True)
@@ -74,6 +83,7 @@ def main():
                    f" -e durationLoadApproved {CONTRACT_SHA} -e durationLoadRunId {args.run_id}"
                    f" -e appApkSha256 {value['app']['sha256']} -e testApkSha256 {value['test']['sha256']}"
                    f" {TEST_APP}/androidx.test.runner.AndroidJUnitRunner")
+        guard.checkpoint("before-instrument")
         launched = True
         output = device.shell(command, timeout=150)
         (args.output / "controller-result.json").write_text(json.dumps({"instrumentationCompleted": "OK (" in output and "FAILURES!!!" not in output,
@@ -111,7 +121,13 @@ def main():
                 device.shell("dumpsys battery; dumpsys thermalservice", check=False)
             except Exception as error:
                 cleanup["errors"].append({"phase": "conditions-after", "error": repr(error)})
-        cleanup["settingsErrors"] = settings.restore()  # no mutations in this gate
+        if identity_ok and not launched:
+            try:
+                guard.idle()
+                cleanup["appGenerationTestPidsAbsent"] = True
+            except Exception as error:
+                cleanup["errors"].append({"phase": "prelaunch-pid-absence", "error": repr(error)})
+        cleanup["settingsErrors"] = settings.restore() + guard.readback_settings()  # read-only guard; no repairs
         if logs is not None:
             try:
                 stop_child(logs)
@@ -124,4 +140,5 @@ def main():
 
 
 if __name__ == "__main__":
+    close_inherited_fds()
     main()
