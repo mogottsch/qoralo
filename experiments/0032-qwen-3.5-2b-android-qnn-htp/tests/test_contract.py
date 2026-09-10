@@ -4,6 +4,9 @@ import hashlib
 import importlib.util
 import json
 import subprocess
+import sys
+import tempfile
+import types
 import unittest
 from pathlib import Path
 
@@ -13,6 +16,18 @@ REPO = EXP.parents[1]
 
 def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def load_evidence_source(path: Path) -> types.ModuleType:
+    """Load a trusted saved analyzer without creating bytecode beside evidence.
+
+    Unlike SourceFileLoader.exec_module, compile/exec never writes a .pyc and
+    does not depend on the caller's PYTHONDONTWRITEBYTECODE setting.
+    """
+    module = types.ModuleType("saved_evidence_analysis")
+    module.__file__ = str(path)
+    exec(compile(path.read_bytes(), str(path), "exec"), module.__dict__)
+    return module
 
 
 def sha_zstd(path: Path) -> tuple[str, int]:
@@ -856,9 +871,7 @@ class ContractTest(unittest.TestCase):
         self.assertTrue(result["early_delegation"]["all_tensor_compute_delegated"])
         self.assertTrue(result["final_program"]["zero_kernel_calls_all_delegates_qnn"])
         self.assertEqual([], result["final_program"]["plans"][0]["called_kernels"])
-        spec = importlib.util.spec_from_file_location("saved_fullchain", directory / "analyze_saved.py")
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
+        module = load_evidence_source(directory / "analyze_saved.py")
         recomputed = module.analyze(directory)
         self.assertEqual(json.loads((directory / "analysis.json").read_text()), recomputed)
         output = recomputed["output"]
@@ -890,6 +903,29 @@ class ContractTest(unittest.TestCase):
         for phase in result["cleanup"]["phases"]:
             self.assertTrue(phase["scratch_empty"])
             self.assertTrue(phase["process_group_absent"])
+
+    def test_saved_analysis_loader_never_writes_evidence_bytecode(self) -> None:
+        directory = EXP / "results/conv-history-native-fullchain-20260910"
+        before = {str(p.relative_to(directory)): sha(p) for p in directory.rglob("*") if p.is_file()}
+        # A broken loader may create bytecode only in this disposable fixture,
+        # not in the original immutable evidence while testing the regression.
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source = root / "analyze_saved.py"
+            source.write_bytes((directory / source.name).read_bytes())
+            original = sys.dont_write_bytecode
+            try:
+                sys.dont_write_bytecode = False
+                first = load_evidence_source(source)
+                second = load_evidence_source(source)
+                self.assertIsNot(first, second)
+                self.assertEqual(first.analyze(directory), second.analyze(directory))
+                self.assertFalse(sys.dont_write_bytecode)  # Loader must not alter global policy.
+            finally:
+                sys.dont_write_bytecode = original
+            self.assertEqual([source], sorted(root.rglob("*")))
+        after = {str(p.relative_to(directory)): sha(p) for p in directory.rglob("*") if p.is_file()}
+        self.assertEqual(before, after)
 
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
