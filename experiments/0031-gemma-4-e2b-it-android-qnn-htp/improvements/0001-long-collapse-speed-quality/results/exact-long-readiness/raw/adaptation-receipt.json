@@ -1,0 +1,67 @@
+{
+  "scope": "one exact-long/max2048 request; preparation is not phone permission",
+  "base_reviewed_commit": "62b8a16",
+  "gate_a_commit": "81f4ede",
+  "gate_a_result_sha256": "1290cc51948e82fd974b175c46a1a67cd0ff0db382ad1db047993f9ad7849aff",
+  "long_stage_digest": "047dd808fe49656105934a9afed521fc3c4acdd0c6d278d0ed5685a98a0b846e",
+  "template_controller_sha256": "e0e91e1855239a5ab349555f81ea050b94ea2997ba01e59c9c705444cdc6e9d2",
+  "template_shell_sha256": "4ce478abf5b44ea0ae32cb9f490eb319f37fd54243fa91fb1433883c8be9b7bb",
+  "materialized_controller_sha256": "182dcfb90659913b55f929366ce4b18f4890bfad82155bf9866ca94b0aa3045f",
+  "materialized_shell_sha256": "890bd3479fb6a2a0406b4414ec80cbbc53b35169fffb0a9967c2dda70336cce2",
+  "adapter_sha256": "63377f368f83c9b2bfe5e09fec7a276ad2ddc2481acb1f97d1987e38d90235e0",
+  "source_changes": [
+    {
+      "old": "single engineering short/max16 process",
+      "new": "single engineering exact-long/max2048 process",
+      "count": 1
+    },
+    {
+      "old": "stage-freeze-20260910T105830Z-01",
+      "new": "stage-freeze-long-20260910T163842Z-01",
+      "count": 1
+    },
+    {
+      "old": "584841604ecf97a1a916c9a7f765e49ff9f7a2ee751a61fda9e9e6588f02fe25",
+      "new": "047dd808fe49656105934a9afed521fc3c4acdd0c6d278d0ed5685a98a0b846e",
+      "count": 1
+    },
+    {
+      "old": "one fresh-dialog first-short engineering/noncanonical max16 only",
+      "new": "one fresh-dialog exact-long engineering/max2048 only (not a campaign)",
+      "count": 1
+    },
+    {
+      "old": "first-short engineering max16 only",
+      "new": "exact-long engineering max2048 only (not a campaign)",
+      "count": 1
+    },
+    {
+      "old": "'.local/phone-return-runs'",
+      "new": "'.local/phone-return-long-runs'",
+      "count": 1
+    },
+    {
+      "old": "first-short.script",
+      "new": "exact-long.script",
+      "count": 1
+    },
+    {
+      "old": "'long_script': False",
+      "new": "'long_script': True",
+      "count": 2
+    },
+    {
+      "old": "'classification': 'collection_not_inference_validation', 'run_id': run_id,",
+      "new": "'classification': 'collection_not_inference_validation', 'run_id': run_id,\n                       'scope_adapter': _LONG_SCOPE_RECEIPT,",
+      "count": 1
+    },
+    {
+      "old": "        prefix = shlex.quote(self.remote)\n        command = (f'cd {prefix} && nohup /system/bin/sh {shlex.quote(self.remote + \"/launch.sh\")} '\n                   f'</dev/null >evidence/launcher.stdout 2>evidence/launcher.stderr &')",
+      "new": "        command = _LONG_DETACHED_LAUNCH(self.remote)",
+      "count": 1
+    }
+  ],
+  "launch_change": "direct nohup, no cd/AND-list, absolute stdin/stdout/stderr redirections",
+  "original_short_sources_modified": false,
+  "signal_guard_atomic": false
+}

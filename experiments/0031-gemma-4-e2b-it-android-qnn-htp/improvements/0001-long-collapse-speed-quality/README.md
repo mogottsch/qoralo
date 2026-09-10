@@ -40,6 +40,14 @@ The process finished before live-PID sampling; query/provider/profile/output evi
 
 See [`results/phone-return-short-attempt-01/result.json`](results/phone-return-short-attempt-01/result.json). No retry, long request, follow-on, stage/controller change or rebuild occurred. App work gets the next slot; a precise long comparison requires a separate review and authorization. The completed campaign and registry remain unchanged.
 
+## Gate B preparation — exact-long/max2048, not executed
+
+A separate [long-stage/lifecycle readiness package](EXACT-LONG-READINESS.md) is now prepared locally. Its manifest is `047dd808fe49656105934a9afed521fc3c4acdd0c6d278d0ed5685a98a0b846e`: 18 independent read-only payload copies, unchanged FP16 context/config/tokenizer/LUTs/libraries, exact 1,929-token long input and full 2,048-token ceiling. It contains one fresh-dialog `exact-long.script`, no preceding short request or repeat, and the same 1,800-second bounds.
+
+The fixed-scope adapter materializes the hash-pinned reviewed lifecycle in isolated modules with only enumerated long scope/path/digest/provenance substitutions plus direct-nohup absolute redirections. An inverse test recovers the exact short-controller source; short stage/history are untouched. A host-only FIFO dummy regression proves the direct launch pipe closes before the owned dummy finishes, then reaps dummy and waiting shell. Gate A file-mtime timing is only a clue to a possible AND-list pipe-retention issue, not a proved cause or benchmark. Android behavior remains untested.
+
+Original repetition metrics and raw-Genie-rate caveats are predeclared unchanged. See [`results/exact-long-readiness/result.json`](results/exact-long-readiness/result.json). No long/native/model/ADB execution or recompile occurred. Native execution still needs Pi's source/stage review and a new exact slot; app work has priority. Git pushes remain held under privacy coordination.
+
 ## Frozen stage and phone-return plan
 
 [`results/frozen-genie-stage-readiness/result.json`](results/frozen-genie-stage-readiness/result.json) binds independent private payload copies totaling 4,003,855,761 bytes. The frozen manifest SHA-256 is `584841604ecf97a1a916c9a7f765e49ff9f7a2ee751a61fda9e9e6588f02fe25`; `bin/genie-app` is read-only executable **0555**, other inputs read-only, and private directories 0700. Baseline files/inodes/config were not modified. Context, libraries, LUTs, tokenizer, BOS suppression and exact short/long input bytes are pinned; the config remains byte-identical to the accepted baseline.
