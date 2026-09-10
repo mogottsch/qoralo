@@ -1,0 +1,277 @@
+{
+  "status": "SOURCE_ONLY_PROFILE_OFF_PROPOSAL_AWAITING_REVIEW",
+  "sources": [
+    {
+      "path": "podcast-app/app/src/main/cpp/podcast_runtime.cpp",
+      "bytes": 24543,
+      "sha256": "a3de4cd62a83275977036516ff1e0c04a3beda454794e7c331aed7b936ad8b35",
+      "scope": "unchanged native-bridge source bound by candidate source proof; source reasoning, not tensor capture",
+      "passages": [
+        {
+          "start_line": 92,
+          "end_line": 118,
+          "text": "Ort::SessionOptions SessionOptions(const std::string &backend, const std::string &descriptor,\n                                  const std::string &profile) {\n  Ort::SessionOptions options;\n  options.SetIntraOpNumThreads(1);\n  options.SetInterOpNumThreads(1);\n  options.SetExecutionMode(ExecutionMode::ORT_SEQUENTIAL);\n  options.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL);\n  options.AddConfigEntry(\"session.disable_cpu_ep_fallback\", \"1\");\n  options.AddConfigEntry(\"ep.context_file_path\", descriptor.c_str());\n  std::unordered_map<std::string, std::string> provider = {\n      {\"backend_path\", backend},\n      {\"offload_graph_io_quantization\", \"0\"},\n      {\"htp_performance_mode\", \"burst\"},\n      {\"soc_model\", \"43\"},\n  };\n#ifdef PODCAST_WIRING_DIAGNOSTICS\n  if (!profile.empty()) {\n    options.EnableProfiling(profile.c_str());\n    provider[\"profiling_level\"] = \"detailed\";\n    provider[\"profiling_file_path\"] = profile + \".qnn.csv\";\n  }\n#else\n  if (!profile.empty()) throw std::runtime_error(\"profiling is debug-only\");\n#endif\n  options.AppendExecutionProvider(\"QNN\", provider);\n  return options;\n}"
+        },
+        {
+          "start_line": 150,
+          "end_line": 195,
+          "text": "  explicit Engine(const std::string &pack_root, const std::string &voice_id,\n                  const std::string &profile_directory)\n      : root(pack_root), env(ORT_LOGGING_LEVEL_WARNING, \"podcast-supertonic-qnn\"),\n        profile_dir(profile_directory) {\n    if (voice_id != \"M1/SID5\") throw std::runtime_error(\"unsupported voice; expected M1/SID5\");\n    const std::string native_dir = NativeLibraryDirectory();\n    setenv(\"ADSP_LIBRARY_PATH\", native_dir.c_str(), 1);\n    const std::string backend = native_dir + \"/libQnnHtp.so\";\n    if (!std::filesystem::is_regular_file(backend)) throw std::runtime_error(\"APK is missing libQnnHtp.so\");\n    indexer = ReadExact<int32_t>(root / \"assets/unicode-indexer.i32\", 65536);\n    voice = ReadVoice(root / \"assets/voice.bin\");\n    auto create = [&](const char *name) {\n      const std::string descriptor = (root / \"contexts\" / (std::string(name) + \"-context.onnx\")).string();\n      if (!std::filesystem::is_regular_file(descriptor)) throw std::runtime_error(\"missing context descriptor \" + descriptor);\n      auto options = SessionOptions(backend, descriptor,\n          profile_dir.empty() ? \"\" : (std::filesystem::path(profile_dir) / name).string());\n      return std::make_unique<Ort::Session>(env, descriptor.c_str(), options);\n    };\n    duration = create(\"duration\");\n    text = create(\"text\");\n    vector = create(\"vector\");\n    vocoder = create(\"vocoder\");\n\n    const auto duration_text = InputShape(*duration, 0);\n    const auto text_text = InputShape(*text, 0);\n    const auto vector_latent = InputShape(*vector, 0);\n    if (duration_text.size() != 2 || text_text.size() != 2 || duration_text != text_text ||\n        vector_latent.size() != 3 || duration_text[0] != 1 || vector_latent[0] != 1)\n      throw std::runtime_error(\"unsupported QNN context input shapes\");\n    text_length = duration_text[1];\n    latent_channels = vector_latent[1];\n    latent_length = vector_latent[2];\n    if (text_length <= 9 || latent_channels <= 0 || latent_length <= 0)\n      throw std::runtime_error(\"invalid QNN context capacities\");\n  }\n\n  ~Engine() {\n#ifdef PODCAST_WIRING_DIAGNOSTICS\n    if (!profile_dir.empty()) {\n      Ort::AllocatorWithDefaultOptions allocator;\n      for (auto *session : {duration.get(), text.get(), vector.get(), vocoder.get()}) {\n        if (session != nullptr) {\n          try { session->EndProfilingAllocated(allocator); }\n          catch (const std::exception &) { /* Missing evidence is classified by the harness, not fabricated. */ }\n        }\n      }"
+        },
+        {
+          "start_line": 208,
+          "end_line": 223,
+          "text": "  int64_t latent_length = 0;\n};\n\ntemplate <typename T>\nOrt::Value Tensor(std::vector<T> &data, const std::vector<int64_t> &shape, Ort::MemoryInfo &memory) {\n  return Ort::Value::CreateTensor<T>(memory, data.data(), data.size(), shape.data(), shape.size());\n}\n\nstd::vector<float> RunFloat(Ort::Session &session, const std::vector<const char *> &names,\n                            std::vector<Ort::Value> &inputs, const char *output_name) {\n  const char *outputs[] = {output_name};\n  auto values = session.Run(Ort::RunOptions{nullptr}, names.data(), inputs.data(), inputs.size(), outputs, 1);\n  if (values.size() != 1 || !values[0].IsTensor()) throw std::runtime_error(\"invalid QNN output\");\n  auto info = values[0].GetTensorTypeAndShapeInfo();\n  const float *data = values[0].GetTensorData<float>();\n  std::vector<float> result(data, data + info.GetElementCount());"
+        },
+        {
+          "start_line": 307,
+          "end_line": 351,
+          "text": "            const std::filesystem::path &output_path) {\n  PreparedText prepared = PrepareText(engine, chapter_text);\n  auto memory = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);\n\n  std::vector<Ort::Value> duration_inputs;\n  duration_inputs.push_back(Tensor(prepared.ids, {1, engine.text_length}, memory));\n  duration_inputs.push_back(Tensor(engine.voice.dp, {1, 8, 16}, memory));\n  duration_inputs.push_back(Tensor(prepared.mask, {1, 1, engine.text_length}, memory));\n  auto duration = RunFloat(*engine.duration, {\"text_ids\", \"style_dp\", \"text_mask\"}, duration_inputs, \"duration\");\n  if (duration.size() != 1 || !std::isfinite(duration[0]) || duration[0] <= 0)\n    throw std::runtime_error(\"invalid Supertonic duration\");\n  const int64_t wav_samples = static_cast<int64_t>(std::floor(duration[0] * kSampleRate));\n  const int64_t active_latent = (wav_samples + kLatentChunkSamples - 1) / kLatentChunkSamples;\n  if (active_latent <= 0 || active_latent > engine.latent_length)\n    throw std::runtime_error(\"complete chapter exceeds compiled QNN latent capacity; no splitting was attempted\");\n\n  std::vector<Ort::Value> text_inputs;\n  text_inputs.push_back(Tensor(prepared.ids, {1, engine.text_length}, memory));\n  text_inputs.push_back(Tensor(engine.voice.ttl, {1, 50, 256}, memory));\n  text_inputs.push_back(Tensor(prepared.mask, {1, 1, engine.text_length}, memory));\n  auto embedding = RunFloat(*engine.text, {\"text_ids\", \"style_ttl\", \"text_mask\"}, text_inputs, \"text_emb\");\n  if (embedding.size() != static_cast<size_t>(256 * engine.text_length))\n    throw std::runtime_error(\"Supertonic text embedding shape mismatch\");\n\n  std::vector<float> latent_mask(static_cast<size_t>(engine.latent_length), 0.0f);\n  std::fill(latent_mask.begin(), latent_mask.begin() + active_latent, 1.0f);\n  auto latent = Noise(engine.latent_channels, engine.latent_length, active_latent, StableSeed(chapter_id));\n  std::vector<float> total_step{static_cast<float>(kSteps)};\n  for (int step = 0; step < kSteps; ++step) {\n    std::vector<float> current_step{static_cast<float>(step)};\n    std::vector<Ort::Value> vector_inputs;\n    vector_inputs.push_back(Tensor(latent, {1, engine.latent_channels, engine.latent_length}, memory));\n    vector_inputs.push_back(Tensor(embedding, {1, 256, engine.text_length}, memory));\n    vector_inputs.push_back(Tensor(engine.voice.ttl, {1, 50, 256}, memory));\n    vector_inputs.push_back(Tensor(latent_mask, {1, 1, engine.latent_length}, memory));\n    vector_inputs.push_back(Tensor(prepared.mask, {1, 1, engine.text_length}, memory));\n    vector_inputs.push_back(Tensor(current_step, {1}, memory));\n    vector_inputs.push_back(Tensor(total_step, {1}, memory));\n    latent = RunFloat(*engine.vector,\n                      {\"noisy_latent\", \"text_emb\", \"style_ttl\", \"latent_mask\", \"text_mask\", \"current_step\", \"total_step\"},\n                      vector_inputs, \"denoised_latent\");\n    if (latent.size() != static_cast<size_t>(engine.latent_channels * engine.latent_length))\n      throw std::runtime_error(\"Supertonic vector output shape mismatch\");\n  }\n"
+        }
+      ],
+      "frozen_candidate_source_blob": "c8fba37271b5f034192acdc669835fc8623de2e9"
+    },
+    {
+      "path": "podcast-app/app/src/debug/java/dev/vibevoice/podcast/runtime/RuntimeDiagnostics.kt",
+      "bytes": 4386,
+      "sha256": "f409c0725826017fc382fd60926b0f8ee4877c08d4fa6c4a89cc60df1fb27ec8",
+      "scope": "existing debug capture hook",
+      "passages": [
+        {
+          "start_line": 15,
+          "end_line": 29,
+          "text": "internal object RuntimeDiagnostics {\n    private data class Capture(val contract: WiringContract, val evidence: WiringEvidence, val stop: (Throwable) -> Unit)\n    @Volatile private var active: Capture? = null\n    @Volatile private var ttsOnlyEvidence: WiringEvidence? = null\n    @Volatile private var mode = \"\"\n\n    fun enable(contract: WiringContract, evidence: WiringEvidence, stop: (Throwable) -> Unit) {\n        check(active == null && ttsOnlyEvidence == null)\n        active = Capture(contract, evidence, stop)\n    }\n    fun enableTtsOnly(evidence: WiringEvidence) {\n        check(active == null && ttsOnlyEvidence == null)\n        ttsOnlyEvidence = evidence\n    }\n    fun disable() { active = null; ttsOnlyEvidence = null }"
+        },
+        {
+          "start_line": 76,
+          "end_line": 80,
+          "text": "    }\n\n    fun qnnProfileDirectory(): String = (active?.evidence ?: ttsOnlyEvidence)?.let {\n        File(it.root, \"qnn-profiles\").apply { check(mkdir()) }.absolutePath\n    } ?: \"\""
+        }
+      ],
+      "frozen_candidate_source_blob": "50b83ff3976c66eed8f6430d75f09653a153c90e"
+    },
+    {
+      "path": "podcast-app/app/src/debug/java/dev/vibevoice/podcast/wiring/TtsOnlyService.kt",
+      "bytes": 11287,
+      "sha256": "f65aa6c73f825d981b438c53dcef41cc9596dc79478796ce0469eb843f9eee7f",
+      "scope": "failed candidate debug service enable/close lifecycle",
+      "passages": [
+        {
+          "start_line": 64,
+          "end_line": 68,
+          "text": "                deadlines.schedule({ abort(\"total_deadline\", IllegalStateException(\"TTS-only service deadline\")) }, contract.json.getLong(\"serviceSeconds\"), TimeUnit.SECONDS)\n                deadlines.scheduleWithFixedDelay({\n                    if (root.walkTopDown().filter(File::isFile).sumOf(File::length) > contract.json.getLong(\"maxEvidenceBytes\")) {\n                        abort(\"evidence_quota\", IllegalStateException(\"TTS-only evidence limit\"))\n                    }"
+        },
+        {
+          "start_line": 124,
+          "end_line": 136,
+          "text": "            } catch (error: Throwable) {\n                // Preserve any completed WAV and all partial raw files even when later evidence/close fails.\n                evidence.finish(\"tts_failed\", stage, error)\n            } finally {\n                if (!closed) {\n                    val closeGuard = deadlines.schedule({ abort(\"close\", IllegalStateException(\"Cleanup close deadline\")) }, 30, TimeUnit.SECONDS)\n                    try { tts.close() } finally { closeGuard.cancel(false) }\n                }\n                RuntimeDiagnostics.disable()\n                deadlines.shutdownNow()\n                stopForeground(STOP_FOREGROUND_REMOVE)\n                stopSelf()\n            }"
+        }
+      ],
+      "frozen_candidate_source_blob": "f26fda4e3c8e6b76ff3de4e5e82b93440146334a"
+    },
+    {
+      "path": "experiments/0010-supertonic-qnn-htp-feasibility/.local/onnxruntime-v1.27.1-source/onnxruntime/core/providers/qnn/qnn_execution_provider.cc",
+      "bytes": 77987,
+      "sha256": "6b598a97664a6e2717081dff1a99001e3ac31168538cf2f3dd0b0495012e2612",
+      "scope": "accepted pinned ORT source; not SDK disassembly",
+      "passages": [
+        {
+          "start_line": 307,
+          "end_line": 313,
+          "text": "  if (config_options) {\n    disable_cpu_ep_fallback_ = config_options->GetConfigOrDefault(\n                                   kOrtSessionOptionsDisableCPUEPFallback, \"0\") == \"1\";\n\n    context_cache_enabled_ = config_options->GetConfigOrDefault(\n                                 kOrtSessionOptionEpContextEnable, \"0\") == \"1\";\n    LOGS_DEFAULT(VERBOSE) << \"Context cache enable: \" << context_cache_enabled_;"
+        },
+        {
+          "start_line": 336,
+          "end_line": 338,
+          "text": "    share_ep_contexts_ =\n        config_options->GetConfigOrDefault(kOrtSessionOptionShareEpContexts, \"0\") == \"1\";\n    LOGS_DEFAULT(VERBOSE) << \"User specified option - share EP contexts across sessions: \" << share_ep_contexts_;"
+        },
+        {
+          "start_line": 381,
+          "end_line": 406,
+          "text": "\n  std::string profiling_file_path;\n  static const std::string PROFILING_LEVEL = \"profiling_level\";\n  qnn::ProfilingLevel profiling_level = qnn::ProfilingLevel::OFF;\n  // separate out the profiling level for ETW in case it gets disabled later when we extract the events\n  // set to invalid to indicate that ETW is no enabled when we setup QNN\n  qnn::ProfilingLevel profiling_level_etw = qnn::ProfilingLevel::INVALID;\n\n#ifdef _WIN32\n  auto& provider = qnn::QnnTelemetry::Instance();\n  if (provider.IsEnabled()) {\n    auto level = provider.Level();\n    auto keyword = provider.Keyword();\n    if ((keyword & static_cast<uint64_t>(onnxruntime::logging::ORTTraceLoggingKeyword::Profiling)) != 0) {\n      if (level != 0) {\n        profiling_level_etw = GetProfilingLevelFromETWLevel(level);\n      }\n    }\n  }\n#endif  // defined(_WIN32)\n\n  // In case ETW gets disabled later\n  auto profiling_level_pos = provider_options_map.find(PROFILING_LEVEL);\n  if (profiling_level_pos != provider_options_map.end()) {\n    ParseProfilingLevel(profiling_level_pos->second, profiling_level);\n  }"
+        },
+        {
+          "start_line": 630,
+          "end_line": 654,
+          "text": "  // For context binary generation with weight sharing enabled, use the QnnBackendManager from the shared context if it exits\n  // So that all graphs from later sessions will be compiled into the same QNN context\n  if (((context_cache_enabled_ && share_ep_contexts_) || enable_vtcm_backup_buffer_sharing_) && SharedContext::GetInstance().GetSharedQnnBackendManager()) {\n    qnn_backend_manager_ = SharedContext::GetInstance().GetSharedQnnBackendManager();\n    // Clear the QnnBackendManager from singleton to stop the resource share\n    if (stop_share_ep_contexts_) {\n      SharedContext::GetInstance().ResetSharedQnnBackendManager();\n    }\n  } else {\n    qnn_backend_manager_ = qnn::QnnBackendManager::Create(\n        qnn::QnnBackendManagerConfig{backend_path,\n                                     profiling_level_etw,\n                                     profiling_level,\n                                     profiling_file_path,\n                                     context_priority,\n                                     std::move(qnn_serializer_config),\n                                     device_id_,\n                                     htp_arch,\n                                     soc_model,\n                                     op_packages,\n                                     skip_qnn_version_check});\n    if (enable_vtcm_backup_buffer_sharing_) {\n      SharedContext::GetInstance().SetSharedQnnBackendManager(qnn_backend_manager_);\n    }\n  }"
+        }
+      ]
+    },
+    {
+      "path": "experiments/0010-supertonic-qnn-htp-feasibility/.local/onnxruntime-v1.27.1-source/onnxruntime/core/providers/qnn/builder/qnn_model.cc",
+      "bytes": 31577,
+      "sha256": "e98620187a2cdc81757e2e536b8756af540539ea434795fb10bdf8e16422e24c",
+      "scope": "graphExecute/profile extraction/status ordering",
+      "passages": [
+        {
+          "start_line": 519,
+          "end_line": 568,
+          "text": "    // Acquire mutex before calling QNN APIs to support calling session.Run() from multiple threads.\n    std::lock_guard<std::mutex> lock(graph_exec_mutex_);\n\n    LOGS(logger, VERBOSE) << \"Start execute QNN graph:\" << graph_info_->Name();\n\n    qnn::profile::ProfilingInfo profiling_info;\n#ifdef QNN_SYSTEM_PROFILE_API_ENABLED\n    if (qnn_backend_manager_->ProfilingEnabled()) {\n      profiling_info.start_time = qnn::utils::GetTimeStampInUs();\n    }\n#endif\n    auto profile_backend_handle = qnn_backend_manager_->GetQnnProfileHandle();\n\n    auto thread_id = std::this_thread::get_id();\n    ORT_RETURN_IF_ERROR(qnn_backend_manager_->SetPerThreadHtpPowerConfigs(thread_id, true));\n\n    execute_status = qnn_interface.graphExecute(graph_info_->Graph(),\n                                                qnn_inputs.data(),\n                                                static_cast<uint32_t>(qnn_inputs.size()),\n                                                qnn_outputs.data(),\n                                                static_cast<uint32_t>(qnn_outputs.size()),\n                                                profile_backend_handle,\n                                                nullptr);\n#ifdef QNN_SYSTEM_PROFILE_API_ENABLED\n    if (qnn_backend_manager_->ProfilingEnabled()) {\n      profiling_info.stop_time = qnn::utils::GetTimeStampInUs();\n      profiling_info.method_type = ProfilingMethodType::EXECUTE;\n      profiling_info.graph_name = graph_info_->Name();\n    }\n#endif\n\n    ORT_RETURN_IF_ERROR(qnn_backend_manager_->SetPerThreadHtpPowerConfigs(thread_id, false));\n\n    // NOTE: This function returns immediately when profiling is disabled.\n    // Extracting profiling data can be expensive, but it is typically only enabled for debugging purposes\n    // and not in production. We can improve synchronization for event profiling if it becomes an issue.\n    ORT_RETURN_IF_ERROR(qnn_backend_manager_->ExtractBackendProfilingInfo(profiling_info));\n  }\n\n  if (QNN_COMMON_ERROR_SYSTEM_COMMUNICATION == execute_status) {\n    auto error_message = \"NPU crashed. SSR detected. Caused QNN graph execute error. Error code: \";\n    LOGS(logger, ERROR) << error_message << execute_status;\n    return ORT_MAKE_STATUS(ONNXRUNTIME, ENGINE_ERROR, error_message, execute_status);\n  }\n\n  if (QNN_GRAPH_NO_ERROR != execute_status) {\n    return ORT_MAKE_STATUS(ONNXRUNTIME, FAIL, \"QNN graph execute error. Error code: \", execute_status);\n  }\n\n  return Status::OK();"
+        }
+      ]
+    },
+    {
+      "path": "experiments/0010-supertonic-qnn-htp-feasibility/.local/onnxruntime-v1.27.1-source/onnxruntime/core/providers/qnn/builder/qnn_backend_manager.cc",
+      "bytes": 104809,
+      "sha256": "64e8a7a95fec8dc479c5441d63ffb026cb9f717d3bfbb110f06b0bfc1b90bbc5",
+      "scope": "profile creation/release and context deleter source",
+      "passages": [
+        {
+          "start_line": 665,
+          "end_line": 706,
+          "text": "Status QnnBackendManager::InitializeProfiling() {\n  profiling_level_merge_ = profiling_level_;\n  // Only use ETW level if it provides higher fidelity\n  if (profiling_level_etw_ != ProfilingLevel::INVALID &&\n      profiling_level_etw_ > profiling_level_) {\n    profiling_level_merge_ = profiling_level_etw_;\n  }\n\n  if (ProfilingLevel::OFF == profiling_level_merge_ || ProfilingLevel::INVALID == profiling_level_merge_) {\n    LOGS_DEFAULT(INFO) << \"Profiling turned off.\";\n    return Status::OK();\n  }\n\n  bool enable_optrace = false;\n  QnnProfile_Level_t qnn_profile_level = QNN_PROFILE_LEVEL_BASIC;\n  if (ProfilingLevel::BASIC == profiling_level_merge_) {\n    qnn_profile_level = QNN_PROFILE_LEVEL_BASIC;\n    LOGS_DEFAULT(VERBOSE) << \"Profiling level set to basic.\";\n  } else if (ProfilingLevel::DETAILED == profiling_level_merge_) {\n    qnn_profile_level = QNN_PROFILE_LEVEL_DETAILED;\n    LOGS_DEFAULT(VERBOSE) << \"Profiling level set to detailed.\";\n  } else if (ProfilingLevel::OPTRACE == profiling_level_merge_) {\n    qnn_profile_level = QNN_PROFILE_LEVEL_DETAILED;\n    enable_optrace = true;\n    LOGS_DEFAULT(VERBOSE) << \"Profiling level set to optrace.\";\n  }\n\n  Qnn_ErrorHandle_t result = qnn_interface_.profileCreate(backend_handle_, qnn_profile_level, &profile_backend_handle_);\n  ORT_RETURN_IF(QNN_PROFILE_NO_ERROR != result, \"Failed to create QNN profile! Error: \", QnnErrorHandleToString(result));\n\n#ifdef QNN_SYSTEM_PROFILE_API_ENABLED\n  profiling_enabled_ = true;\n  ORT_RETURN_IF_ERROR(LoadQnnSystemLib());\n\n  if (enable_optrace) {\n    QnnProfile_Config_t optrace_config = QNN_PROFILE_CONFIG_INIT;\n    optrace_config.option = QNN_PROFILE_CONFIG_OPTION_ENABLE_OPTRACE;\n    optrace_config.enableOptrace = enable_optrace;\n\n    const QnnProfile_Config_t* profile_configs[] = {&optrace_config, nullptr};\n    result = qnn_interface_.profileSetConfig(profile_backend_handle_, profile_configs);\n"
+        },
+        {
+          "start_line": 719,
+          "end_line": 727,
+          "text": "Status QnnBackendManager::ReleaseProfilehandle() {\n  // Free Profiling object if it was created\n  if (nullptr != profile_backend_handle_) {\n    ORT_RETURN_IF(QNN_PROFILE_NO_ERROR != qnn_interface_.profileFree(profile_backend_handle_),\n                  \"Could not free backend profile handle!\");\n  }\n  profile_backend_handle_ = nullptr;\n\n  return Status::OK();"
+        },
+        {
+          "start_line": 1818,
+          "end_line": 1830,
+          "text": "void QnnBackendManager::ReleaseResources() {\n  auto result = ReleaseContext();\n  if (Status::OK() != result) {\n    LOGS_DEFAULT(ERROR) << \"Failed to ReleaseContext: \" << result.ErrorMessage();\n  }\n\n  result = ReleaseProfilehandle();\n  if (Status::OK() != result) {\n    LOGS_DEFAULT(ERROR) << \"Failed to ReleaseProfilehandle: \" << result.ErrorMessage();\n  }\n\n  result = ReleaseDevice();\n  if (Status::OK() != result) {"
+        },
+        {
+          "start_line": 1855,
+          "end_line": 1858,
+          "text": "Status QnnBackendManager::ExtractBackendProfilingInfo(qnn::profile::ProfilingInfo& profiling_info) {\n  if (ProfilingLevel::OFF == profiling_level_merge_ || ProfilingLevel::INVALID == profiling_level_merge_) {\n    return Status::OK();\n  }"
+        },
+        {
+          "start_line": 2248,
+          "end_line": 2257,
+          "text": "Status QnnBackendManager::AddQnnContextHandle(Qnn_ContextHandle_t raw_context_handle) {\n  ORT_RETURN_IF(logger_ == nullptr, \"logger_ should be set.\");\n\n  auto free_context_handle = [this, &logger = *logger_](Qnn_ContextHandle_t raw_context_handle) {\n    const auto free_result = qnn_interface_.contextFree(raw_context_handle, nullptr);\n    if (free_result != QNN_CONTEXT_NO_ERROR) {\n      LOGS(logger, ERROR) << \"qnn_interface.contextFree() failed: \"\n                          << utils::GetVerboseQnnErrorMessage(qnn_interface_, free_result);\n    }\n  };"
+        }
+      ]
+    },
+    {
+      "path": "experiments/0010-supertonic-qnn-htp-feasibility/.local/onnxruntime-v1.27.1-source/onnxruntime/core/providers/qnn/builder/qnn_backend_manager.h",
+      "bytes": 22938,
+      "sha256": "3f3e8af38e2be600c6bb6acfc3903380c42997a6a210f5f5e1501bf592657d94",
+      "scope": "handle getter/null initializer",
+      "passages": [
+        {
+          "start_line": 205,
+          "end_line": 205,
+          "text": "  const Qnn_ProfileHandle_t& GetQnnProfileHandle() { return profile_backend_handle_; }"
+        },
+        {
+          "start_line": 538,
+          "end_line": 538,
+          "text": "  Qnn_ProfileHandle_t profile_backend_handle_ = nullptr;"
+        }
+      ]
+    },
+    {
+      "path": "/home/moritz/opt/qairt/2.49.0.260730/include/QNN/QnnGraph.h",
+      "bytes": 47934,
+      "sha256": "82b74873514bfa937f3bf888529c457829791e8ba8600374b2ba160edf32c8dd",
+      "scope": "short pinned SDK interface excerpts only; private implementation not supplied",
+      "passages": [
+        {
+          "start_line": 60,
+          "end_line": 62,
+          "text": "  QNN_GRAPH_ERROR_INVALID_OP_CONFIG = QNN_MIN_ERROR_GRAPH + 5,\n  /// Failure to set profile\n  QNN_GRAPH_ERROR_SET_PROFILE = QNN_MIN_ERROR_GRAPH + 6,"
+        },
+        {
+          "start_line": 605,
+          "end_line": 609,
+          "text": " * @param[in] profileHandle The profile handle on which metrics is populated and can be queried.\n *                          Use NULL handle to disable profile collection. A handle being reused\n *                          would reset and is populated with values from the current call. This\n *                          handle must be NULL when a continuous profile handle has been configured\n *                          via the QNN_GRAPH_CONFIG_OPTION_PROFILE_HANDLE option"
+        },
+        {
+          "start_line": 684,
+          "end_line": 684,
+          "text": " *         - QNN_GRAPH_ERROR_SET_PROFILE: set profile failed"
+        }
+      ]
+    },
+    {
+      "path": "/home/moritz/opt/qairt/2.49.0.260730/include/QNN/QnnProfile.h",
+      "bytes": 21864,
+      "sha256": "0aff7acd395485a8190c8dc68727e05b2fbc6d0cce003911a5e71f7e6533dcb7",
+      "scope": "short generic event-limit semantics; no observed event-limit attribution",
+      "passages": [
+        {
+          "start_line": 388,
+          "end_line": 394,
+          "text": "  /// This config sets the maximum number of profiling events\n  /// that can be stored in the profile handle. Once the maximum\n  /// number of events is reached, no more events will be stored.\n  /// The absolute maximum number of events is subject to a maximum limit\n  /// determined by the backend and available system resources. The default\n  /// maximum number of events is backend-specific, refer to SDK documentation.\n  QNN_PROFILE_CONFIG_OPTION_MAX_EVENTS = 1,"
+        }
+      ]
+    }
+  ],
+  "saved_evidence": [
+    {
+      "path": "podcast-app/.local/tts-long-phone/tts-long-20260910t202609z/candidate.json",
+      "bytes": 5868,
+      "sha256": "76d9c7d79eb18470464d23ed934eee0b818fd5941fd817ccf04d966b864e159b",
+      "copied_here": false
+    },
+    {
+      "path": "podcast-app/.local/tts-long-phone/tts-long-20260910t202609z/extracted/service-result.json",
+      "bytes": 1647,
+      "sha256": "ebb027b217429b0b7cf1c104fa193bff99fd740e6180a95e5bc30266527fdc5b",
+      "copied_here": false
+    },
+    {
+      "path": "podcast-app/.local/tts-long-phone/tts-long-20260910t202609z/extracted/events.jsonl",
+      "bytes": 465,
+      "sha256": "a54dd7e75fa32c430e64bb3f61bded366114ec70eb60d495fc07b96850974a45",
+      "copied_here": false
+    },
+    {
+      "path": "podcast-app/.local/tts-long-phone/tts-long-20260910t202609z/extracted/runtime-reported.json",
+      "bytes": 523,
+      "sha256": "b0de186be52d72d70cac4cb5b1a3b056fe7af92cb7aece206e9cbd1162728f88",
+      "copied_here": false
+    },
+    {
+      "path": "podcast-app/.local/tts-long-phone/tts-long-20260910t202609z/extracted/qnn-profiles/vector_2026-09-10_21-26-40_534.json",
+      "bytes": 1074,
+      "sha256": "c47c6c569db71ffd51a4894eeb3f4deaca62cd092272a930f852729b60ac516f",
+      "copied_here": false
+    },
+    {
+      "path": "podcast-app/.local/tts-long-phone/tts-long-20260910t202609z/extracted/qnn-profiles/vector.qnn.csv",
+      "bytes": 393,
+      "sha256": "32b9ea61a4f76b4350521d80c4cea7748bb18bb88f56f432ee4f03000cdafd90",
+      "copied_here": false
+    },
+    {
+      "path": "podcast-app/.local/tts-long-phone/tts-long-20260910t202609z/qnn-fastrpc-logcat-extract.json",
+      "bytes": 16364,
+      "sha256": "34ffc2f6b37c0a0a5f6d5e952c7b6ec4781cc4330a2fc3c43e2d14c2e1f4f577",
+      "copied_here": false
+    },
+    {
+      "path": "podcast-app/.local/tts-long-phone/tts-long-20260910t202609z/extracted/tokenization-reconstruction.json",
+      "bytes": 33241,
+      "sha256": "9b1585aec281f82eab74733588c79bb740e5a26fdc17f6da4aa8487be1c0b820",
+      "copied_here": false
+    }
+  ],
+  "candidate_source_proof": {
+    "path": "podcast-app/.local/tts-long-ready/7557780/source-proof.json",
+    "sha256": "2d4caa5442fa4c5c2e869229764fd58b9d43c65fe3a89f3ed26bb8be8c664210"
+  },
+  "private_originals_copied": false,
+  "model_or_SDK_calls": 0,
+  "phone_or_ADB_calls": 0,
+  "app_graph_or_native_mutations": 0,
+  "new_candidate_built": false,
+  "observed_vector_input_logical_bytes": [
+    8192,
+    1179648,
+    4,
+    4,
+    8192,
+    2097152,
+    51200
+  ],
+  "observed_vector_total_logical_input_bytes": 3344392,
+  "unknown_actual_values": [
+    "duration",
+    "active_latent_length",
+    "text_embedding",
+    "initial_noise",
+    "all exact vector input buffers"
+  ],
+  "proposal": "new pinned debug-only collectProfiles=false; empty existing profile directory beforeload; allfourORT+QNNprofiling off; sameworkload/pack/native9/runtime/ABI/budgets; no claimedfix or executionproof"
+}
