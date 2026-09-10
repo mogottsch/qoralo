@@ -48,10 +48,12 @@ Active. QNN-x86 own-state positions 0–3 completed but exposed substantial drif
 
 27. Audited only the retained32.5MB graphJSON and existing source/logs. Exact scalar FP32 input-Q/DQ clipping to22.131834 then concat/output requantization yields observed22.131550; final output ceiling is23.721895. Existing compiler log shows inputQuantize construction, so the final QNN path remains unproved. No weights/constants/model load, compile or runtime call. Separate tiny synthetic probe proposed, not executed.
 
+28. Prepared three tiny weight-free CPU controls with raw inputs, outputs and full scalar-oracle tensors: three encoding domains, four fullchain Q/DQ pairs (history/projection/concat/output), one outputonly pair, four aligned pairs. All73,728 output values match independent scalar arithmetic. Implemented pre/post-pass, selected-encoding and pre-Compile wrapper getter hooks;21 CPU/mock tests pass. Retained a separate venv-launch setup failure. No QNN import/compile/runtime/full-model/phone work; native delegation/hooks remain unverified.
+
 ## Current work
 
 1. Preserve physical baseline/preflight hashes, diagnostic artifacts, and both LOCAL-ONLY positional tensor directories listed in the full-short result. Do not clean them; copy them on migration/handover.
-2. Review the source/metadata audit and proposed weight-free boundary probe, then separately approve any tiny compile/runtime gate with explicit pre/post-lowering encoding capture. No new compile/model/runtime call now.
+2. Review committed source/CPU boundary harness before any QNN import/compile/runtime release. Proposed limits remain120s compile/60s runtime/240s active per case, no retry/follow-on, external pressure/STOP/termination guard. No full-model or phone release.
 3. Do not use ADB or the phone without an explicit scheduled slot. Host teacher-forced completion is not QNN/physical fidelity or a campaign authorization.
 4. After agreed fidelity follow-up gates, validate chunked-prefill state semantics/delegation and loaded-route reset/isolation before the canonical campaign.
 

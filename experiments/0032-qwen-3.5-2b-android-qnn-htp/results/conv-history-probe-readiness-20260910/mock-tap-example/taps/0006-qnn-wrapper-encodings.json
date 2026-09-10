@@ -1,0 +1,54 @@
+{
+  "phase": "after _build_op_wrappers, before QnnManager.Compile",
+  "actual_native_getters_verified": false,
+  "verification_note": "source preparation tested mock bindings only; execution adapter must separately record actual native invocation provenance",
+  "finalized_or_fused_graph": false,
+  "operators": [
+    {
+      "name": "quantize",
+      "type": "Quantize",
+      "package": "qti.aisw",
+      "inputs": [
+        {
+          "name": "input_history@0",
+          "shape": [
+            1,
+            6144,
+            1,
+            4
+          ],
+          "qnn_dtype": "QNN_DATATYPE_FLOAT_32",
+          "encoding_kind": null,
+          "bitwidth": null,
+          "getter_limit": "binding exposes scale/offset/axis but not full quantization-kind/bitwidth",
+          "encodings": null,
+          "axis": null,
+          "encoding_reason": "not a fixed-point tensor; GetEncodings not called"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "input_history@0",
+          "shape": [
+            1,
+            6144,
+            1,
+            4
+          ],
+          "qnn_dtype": "QNN_DATATYPE_UFIXED_POINT_16",
+          "encoding_kind": null,
+          "bitwidth": null,
+          "getter_limit": "binding exposes scale/offset/axis but not full quantization-kind/bitwidth",
+          "encodings": [
+            {
+              "scale": 0.0007933978922665119,
+              "scale_float32_le_hex": "08fc4f3a",
+              "qnn_offset": -37640
+            }
+          ],
+          "axis": -1
+        }
+      ]
+    }
+  ]
+}

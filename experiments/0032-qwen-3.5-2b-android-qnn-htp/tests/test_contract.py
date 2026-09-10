@@ -790,6 +790,35 @@ class ContractTest(unittest.TestCase):
         for item in result["artifacts"].values():
             self.assertEqual(item["sha256"], sha(EXP / item["path"]))
 
+    def test_tiny_conv_probe_cpu_and_mock_scope(self) -> None:
+        import struct
+        directory = EXP / "results/conv-history-probe-readiness-20260910"
+        result = json.loads((directory / "result.json").read_text())
+        self.assertEqual("source_and_tiny_weight_free_cpu_reference_readiness", result["evidence_class"])
+        self.assertEqual({"fullchain": 4, "outputonly": 1, "aligned": 4}, result["qdq_pairs_by_case"])
+        self.assertEqual(3, result["encoding_domains"])
+        for field in ("actual_qnn_imports", "actual_qnn_compiles", "actual_qnn_forwards", "full_model_loads"):
+            self.assertEqual(0, result[field])
+        self.assertFalse(result["native_import_compile_runtime_release"])
+        self.assertFalse(result["hook_contract"]["actual_binding_invoked_or_verified"])
+        self.assertFalse(result["eligibility"]["registry"])
+        reference = json.loads((directory / "cpu-reference/result.json").read_text())
+        self.assertEqual(3, reference["cpu_reference_forwards"])
+        for name, item in reference["files"].items():
+            path = directory / "cpu-reference" / name
+            self.assertEqual(item["sha256"], sha(path))
+            self.assertEqual(item["bytes"], path.stat().st_size)
+        for case, value in (("fullchain", 22.131549835205078), ("outputonly", 23.721895217895508), ("aligned", 23.721895217895508)):
+            raw = (directory / f"cpu-reference/{case}/output.f32le").read_bytes()
+            self.assertEqual(98304, len(raw))
+            self.assertEqual(raw, (directory / f"scalar-oracles/{case}.f32le").read_bytes())
+            self.assertEqual(value, struct.unpack_from("<f", raw, (6053*4+2)*4)[0])
+        self.assertTrue(result["reference"]["guard"]["child_reaped"])
+        self.assertEqual(0, result["reference"]["guard"]["exit_code"])
+        for item in result["sources"]:
+            self.assertEqual(item["sha256"], sha(REPO / item["path"]))
+        self.assertEqual(reference["cpu_provenance"]["probe_source_sha256"], sha(EXP / "tools/conv_history_probe.py"))
+
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
             EXP / "protocol",
@@ -813,6 +842,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/controlled-position1-qdq-20260910",
             EXP / "results/controlled-position1-paired-qnn-20260910",
             EXP / "results/conv-history-encoding-audit-20260910",
+            EXP / "results/conv-history-probe-readiness-20260910",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

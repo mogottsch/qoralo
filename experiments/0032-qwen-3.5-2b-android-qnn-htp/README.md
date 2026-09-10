@@ -87,10 +87,14 @@ A lower-retention two-process host replay in [`results/host-w4a16-qdq-output-dia
 
 [`results/conv-history-encoding-audit-20260910/`](results/conv-history-encoding-audit-20260910/) explains the observed QDQ history value using one saved graph-JSON member and scalar arithmetic only. The common value 23.721895 first clips at the **input** ceiling 22.131834, then requantizes to 22.131550. The **final** output ceiling is 23.721895, not 22.131550. Existing logs construct an input Quantize node; the actual optimized QNN encoding path remains unproved. No whole-model load, weights/constants read, compile or runtime call occurred.
 
+## Tiny boundary probe preparation
+
+[`results/conv-history-probe-readiness-20260910/`](results/conv-history-probe-readiness-20260910/) retains three weight-free CPU references and all independent scalar-oracle tensors. There are **three encoding domains and four full-chain Q/DQ pairs** (history, projection, concat, output); output-only has one pair and aligned has four. All 73,728 output values match their scalar oracles exactly. Pre/post-pass and pre-Compile QNN-wrapper getter hooks have mock coverage only. No QNN import/compile/runtime or full-model load occurred; the proposed 120s compile/60s runtime/240s total per case is not a release.
+
 ## Current next gate
 
 1. Keep physical PTE `23ac8abd…d2c506` and phone preflight unchanged; the 73-output diagnostic PTE is not compatible with the current 49-output Android runner.
-2. Review the bounded encoding audit and separately proposed weight-free history/concat/slice lowering probe before any compile/runtime work. Capture actual pre/post-lowering encodings rather than assuming QNN omitted or fused a boundary.
+2. Review the source/CPU boundary harness before any QNN import, compile or runtime work. Native hooks, delegation (especially output-only floating concat/slice), and actual optimized encodings remain unverified. Require zero tensor fallback; do not silently change a control.
 3. No ADB or staging without a new explicit Pi phone slot. Full QNN/physical drift and one-token-only interpretation remain campaign-readiness boundaries.
 4. Only after agreed fidelity and state-isolation gates may chunked prefill and the fixed 1+5+5+5 campaign be promoted.
 

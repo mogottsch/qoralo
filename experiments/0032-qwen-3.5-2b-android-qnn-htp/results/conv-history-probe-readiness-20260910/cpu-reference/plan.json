@@ -1,0 +1,36 @@
+{
+  "status": "proposal_not_authorized_not_executed",
+  "cases": [
+    "fullchain",
+    "outputonly",
+    "aligned"
+  ],
+  "scope": "three separate weight-free host QNN-x86 boundary controls, not model or physical HTP evidence",
+  "per_case": {
+    "compile_invocations_max": 1,
+    "forward_calls_max": 1,
+    "compile_deadline_seconds": 120,
+    "runtime_deadline_seconds": 60,
+    "total_case_deadline_seconds": 240,
+    "termination_grace_seconds": 20,
+    "fresh_process": true,
+    "math_threads": 4,
+    "expected_tensor_payload_bytes": 221184
+  },
+  "aggregate_active_deadline_seconds": 720,
+  "stop_after_first_failure_interruption_or_missing_route_proof": true,
+  "automatic_retry_or_resume": false,
+  "automatic_follow_on_authorized": false,
+  "release": "Pi must review this harness and explicitly authorize case(s); no release inferred from preparation",
+  "resources": "nice15/ionice2:7, owned disk scratch, external qwen_host_guard STOP/PSI/deadline with TERM/grace/KILL/reap; app priority",
+  "route_gate": "zero nondelegated tensor compute, retain any compile artifacts/errors before checking; no fallback execution",
+  "interpretation_gate": "missing encoding taps remain null with reasons; retain outputs but do not attribute frontend/SDK behavior",
+  "metadata_taps": [
+    "pre/post capture and preprocess passes",
+    "per-consumer get_quant_encoding_conf",
+    "actual QNN op-wrapper tensor getters before Compile",
+    "optional manager-reported graph IO after Compile"
+  ],
+  "not_available": "QNN internal finalized/fused graph is not established by pre-Compile wrappers or manager IO",
+  "real_compile_runtime_adapter": "not implemented or invoked in this source/CPU preparation release"
+}

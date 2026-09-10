@@ -1,0 +1,142 @@
+{
+  "evidence_class": "tiny_weight_free_cpu_reference_preparation",
+  "status": "complete",
+  "qnn_compile_calls": 0,
+  "qnn_runtime_calls": 0,
+  "full_model_loads": 0,
+  "phone_access": false,
+  "cpu_reference_forwards": 3,
+  "cases": [
+    {
+      "case": "fullchain",
+      "shape": [
+        1,
+        6144,
+        1,
+        4
+      ],
+      "dtype": "torch.float32",
+      "finite": true,
+      "all_output_bytes_match_scalar_oracle": true,
+      "scalar_oracle_sha256": "19697b949f81d9bf2370a4e8364b5bc73d881fd8e4d08a549bb39d92d917e348",
+      "output_sha256": "19697b949f81d9bf2370a4e8364b5bc73d881fd8e4d08a549bb39d92d917e348",
+      "selected_index": [
+        0,
+        6053,
+        0,
+        2
+      ],
+      "selected_actual": 22.131549835205078,
+      "selected_expected": 22.131549835205078,
+      "inputs_unchanged": true
+    },
+    {
+      "case": "outputonly",
+      "shape": [
+        1,
+        6144,
+        1,
+        4
+      ],
+      "dtype": "torch.float32",
+      "finite": true,
+      "all_output_bytes_match_scalar_oracle": true,
+      "scalar_oracle_sha256": "896e3cb4a0f047b00a793c6e8b9706aa4fcc97fce06017c39de59e4b0b42fb84",
+      "output_sha256": "896e3cb4a0f047b00a793c6e8b9706aa4fcc97fce06017c39de59e4b0b42fb84",
+      "selected_index": [
+        0,
+        6053,
+        0,
+        2
+      ],
+      "selected_actual": 23.721895217895508,
+      "selected_expected": 23.721895217895508,
+      "inputs_unchanged": true
+    },
+    {
+      "case": "aligned",
+      "shape": [
+        1,
+        6144,
+        1,
+        4
+      ],
+      "dtype": "torch.float32",
+      "finite": true,
+      "all_output_bytes_match_scalar_oracle": true,
+      "scalar_oracle_sha256": "896e3cb4a0f047b00a793c6e8b9706aa4fcc97fce06017c39de59e4b0b42fb84",
+      "output_sha256": "896e3cb4a0f047b00a793c6e8b9706aa4fcc97fce06017c39de59e4b0b42fb84",
+      "selected_index": [
+        0,
+        6053,
+        0,
+        2
+      ],
+      "selected_actual": 23.721895217895508,
+      "selected_expected": 23.721895217895508,
+      "inputs_unchanged": true
+    }
+  ],
+  "cpu_provenance": {
+    "torch_version": "2.11.0+cpu",
+    "python_version": "3.11.13 (main, Jul 11 2025, 22:43:55) [Clang 20.1.4 ]",
+    "math_threads": 4,
+    "qdq_source_path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torch/ao/quantization/fx/_decomposed.py",
+    "qdq_source_sha256": "38275b786f0e885c28d1c53628473ec492868928bc75604f23762e766b9ac770",
+    "probe_source_sha256": "1379b850e4140da2240f8893769fc1d28744cacf28c35a32ed9cde0ec924b436"
+  },
+  "files": {
+    "plan.json": {
+      "bytes": 1717,
+      "sha256": "206fab78e749dd88f2bb21205fc6697ae2a93c0563d01bee5095c16c1f283cd0"
+    },
+    "started.json": {
+      "bytes": 240,
+      "sha256": "318c81eae253c5c5330d9be3ebe1a2270674ec7bb107dcf94cc35b990959f937"
+    },
+    "raw/history.f32le": {
+      "bytes": 98304,
+      "sha256": "0ee8d48a04c0b98924d17fd612aae9fd1f98427991425e4ec489e0af90c90cf3"
+    },
+    "raw/projection.f32le": {
+      "bytes": 24576,
+      "sha256": "de93fd0a97f9c8c0fb80b16932fb3f7341be8e8eb2ebae30c35107dd2492521d"
+    },
+    "fullchain/spec.json": {
+      "bytes": 1206,
+      "sha256": "986a78773c76a11b2b30fb6f5429cbebb7c33e7a42c16a142a329b2e4c6464b5"
+    },
+    "fullchain/output.f32le": {
+      "bytes": 98304,
+      "sha256": "19697b949f81d9bf2370a4e8364b5bc73d881fd8e4d08a549bb39d92d917e348"
+    },
+    "fullchain/comparison.json": {
+      "bytes": 495,
+      "sha256": "640b38ad9adf2a757eb6a724501ccf954673d507bf263307adad69af0cbb3c76"
+    },
+    "outputonly/spec.json": {
+      "bytes": 808,
+      "sha256": "1a9a408160ec1aa1993ee0459247ac5692d50cc525d6e951c990fc3170cce6e2"
+    },
+    "outputonly/output.f32le": {
+      "bytes": 98304,
+      "sha256": "896e3cb4a0f047b00a793c6e8b9706aa4fcc97fce06017c39de59e4b0b42fb84"
+    },
+    "outputonly/comparison.json": {
+      "bytes": 495,
+      "sha256": "4e70db8e46ced3ded09bf3bc479aa08c6e0a3973a68334f4bdeab7e42f97956d"
+    },
+    "aligned/spec.json": {
+      "bytes": 1204,
+      "sha256": "bb56f227482fe4db5f61521b0cfa4d63fb176ccc1373c2c5e8cdb716eaefd2b0"
+    },
+    "aligned/output.f32le": {
+      "bytes": 98304,
+      "sha256": "896e3cb4a0f047b00a793c6e8b9706aa4fcc97fce06017c39de59e4b0b42fb84"
+    },
+    "aligned/comparison.json": {
+      "bytes": 495,
+      "sha256": "4e70db8e46ced3ded09bf3bc479aa08c6e0a3973a68334f4bdeab7e42f97956d"
+    }
+  }
+}

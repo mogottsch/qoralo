@@ -183,7 +183,12 @@
     "conv_history_encoding_audit_result_path": "results/conv-history-encoding-audit-20260910/result.json",
     "conv_history_qdq_input_clip_and_requant_path_explained": true,
     "conv_history_actual_qnn_optimized_path_proven": false,
-    "next_gate": "Review bounded source audit and separately proposed tiny weight-free boundary lowering probe. No compile/model/runtime/phone release follows from metadata alone; preserve exact artifacts and physical baseline."
+    "conv_history_probe_readiness_path": "results/conv-history-probe-readiness-20260910/result.json",
+    "conv_history_probe_retained_cpu_references": 3,
+    "conv_history_probe_encoding_domains": 3,
+    "conv_history_probe_qdq_pairs": {"fullchain": 4, "outputonly": 1, "aligned": 4},
+    "conv_history_probe_actual_qnn_calls": 0,
+    "next_gate": "Review source/CPU tiny boundary harness and mock-tested hooks before any QNN import/compile/runtime release. 120s compile/60s runtime/240s active per case is planning only. No full-model/phone release; preserve protected artifacts and physical baseline."
   },
   "required_provider_proof_if_unblocked": {
     "compiled_context_identity": "Hash every deployed serialized context and bind SM8550/v73 compiler provenance.",

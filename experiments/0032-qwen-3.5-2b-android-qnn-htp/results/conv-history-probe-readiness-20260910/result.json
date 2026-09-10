@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
+  "evidence_class": "source_and_tiny_weight_free_cpu_reference_readiness",
+  "status": "ready_for_harness_review_no_qnn_release",
+  "source_audit_commit": "74d5323",
+  "encoding_domains": 3,
+  "qdq_pairs_by_case": {
+    "fullchain": 4,
+    "outputonly": 1,
+    "aligned": 4
+  },
+  "raw_tensor_format": "little-endian contiguous float32; shapes in each case spec",
+  "history_shape": [
+    1,
+    6144,
+    1,
+    4
+  ],
+  "projection_shape": [
+    1,
+    6144,
+    1,
+    1
+  ],
+  "reference": {
+    "path": "cpu-reference/result.json",
+    "retained_cpu_reference_forwards": 3,
+    "all_73728_output_values_match_scalar_oracles": true,
+    "selected_output_index": [
+      0,
+      6053,
+      0,
+      2
+    ],
+    "selected_by_case": {
+      "fullchain": 22.131549835205078,
+      "outputonly": 23.721895217895508,
+      "aligned": 23.721895217895508
+    },
+    "raw_outputs": [
+      "cpu-reference/fullchain/output.f32le",
+      "cpu-reference/outputonly/output.f32le",
+      "cpu-reference/aligned/output.f32le"
+    ],
+    "raw_scalar_oracles": [
+      "scalar-oracles/fullchain.f32le",
+      "scalar-oracles/outputonly.f32le",
+      "scalar-oracles/aligned.f32le"
+    ],
+    "guard": {
+      "exit_code": 0,
+      "reason": "process_exit",
+      "child_pid": 1769866,
+      "child_reaped": true,
+      "timeout_seconds": 60,
+      "termination_grace_seconds": 20.0,
+      "elapsed_seconds": 1.602644426999177,
+      "automatic_retry": false,
+      "error": null
+    }
+  },
+  "test_attempts": [
+    {
+      "path": "test-attempts/attempt-01",
+      "result": "venv symlink resolution selected base interpreter; Torch import failed before tests/reference calls; not numerical failure"
+    },
+    {
+      "path": "test-attempts/attempt-02",
+      "result": "21 synthetic CPU/mock tests passed"
+    }
+  ],
+  "sources": [
+    {
+      "path": "experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe.py",
+      "bytes": 13093,
+      "sha256": "1379b850e4140da2240f8893769fc1d28744cacf28c35a32ed9cde0ec924b436"
+    },
+    {
+      "path": "experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe_hooks.py",
+      "bytes": 10182,
+      "sha256": "2f330f856c67effb8db2b33ec586afd9ae161bb313a650add36db484168df86c"
+    },
+    {
+      "path": "experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/audit_conv_history_metadata.py",
+      "bytes": 7061,
+      "sha256": "15351d902c9b80f3f4180f5af4479f08884ceb7801376eb5d8c8176c5213ced8"
+    },
+    {
+      "path": "experiments/0032-qwen-3.5-2b-android-qnn-htp/tests/test_conv_history_probe.py",
+      "bytes": 13206,
+      "sha256": "d654724316693f6a27b3f806b6348bac49fe1a44047847d58e86d4bb99ed4fbd"
+    }
+  ],
+  "hook_contract": {
+    "entrypoint": "Hooks.install(pass_types, backend_class, tensor_view, visitor_class)",
+    "automatic_compile_or_runtime": false,
+    "pass_snapshots": "pre/post/failed __call__; graph args and metadata without tensor payloads",
+    "selection": "NodeVisitor.get_quant_encoding_conf before dtype mutation",
+    "actual_wrapper_API_hook": "_build_op_wrappers result -> GetOpWrapper -> input/output TensorWrapper -> PyQnnTensorWrapper getters",
+    "actual_binding_invoked_or_verified": false,
+    "pre_Compile_not_finalized_graph": true,
+    "optional_post_compile": "manager-reported IO getter capture only, no allocation/init/load",
+    "missing_encoding_behavior": "null/reason; retain raw outputs without attribution",
+    "mock_tap_example": "mock-tap-example/scope.json"
+  },
+  "runtime_plan_path": "cpu-reference/plan.json",
+  "native_import_compile_runtime_release": false,
+  "actual_qnn_imports": 0,
+  "actual_qnn_compiles": 0,
+  "actual_qnn_forwards": 0,
+  "full_model_loads": 0,
+  "phone_access": false,
+  "eligibility": {
+    "page_only_after_review": true,
+    "registry": false,
+    "physical_baseline_changed": false,
+    "full_model_fidelity_proven": false,
+    "qnn_path_proven": false
+  },
+  "limits": [
+    "Synthetic inputs and CPU operators only; not a saved full-model state replay.",
+    "4 fullchain Q/DQ pairs use 3 domains; projection uses output domain.",
+    "Hooks and orchestration have mock coverage; real native API behavior and delegation remain untested.",
+    "Output-only leaves floating concat/slice and may not delegate; do not change graph/precision or allow fallback silently.",
+    "Pre-Compile wrapper encodings/manager IO do not reveal internal finalized/fused QNN paths.",
+    "120s compile /60s runtime /240s active per case (720s aggregate plus bounded cleanup) is a proposal, not permission."
+  ],
+  "regression": {
+    "test_counts": [
+      34,
+      7,
+      24,
+      30,
+      23,
+      6,
+      7,
+      21
+    ],
+    "total_tests": 152,
+    "path": "regression/stderr.log",
+    "all_passed": true
+  },
+  "cleanup": [
+    {
+      "phase": "attempt-01",
+      "pid": 1769403,
+      "process_absent": true,
+      "scratch_empty": true,
+      "child_reaped": true
+    },
+    {
+      "phase": "attempt-02",
+      "pid": 1769676,
+      "process_absent": true,
+      "scratch_empty": true,
+      "child_reaped": true
+    },
+    {
+      "phase": "cpu-reference-01",
+      "pid": 1769866,
+      "process_absent": true,
+      "scratch_empty": true,
+      "child_reaped": true
+    },
+    {
+      "phase": "regression-01",
+      "pid": 1773061,
+      "process_absent": true,
+      "scratch_empty": true,
+      "child_reaped": true
+    }
+  ]
+}

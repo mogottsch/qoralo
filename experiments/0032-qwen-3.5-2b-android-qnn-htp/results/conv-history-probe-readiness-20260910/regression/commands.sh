@@ -1,0 +1,9 @@
+set -e
+/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/bin/python /home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tests/test_contract.py
+/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/bin/python /home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tests/test_precision_reports.py
+/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/bin/python /home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tests/test_replay_saved_qdq.py
+/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/bin/python /home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tests/test_qnn_trajectory.py
+/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/bin/python /home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tests/test_controlled_position1.py
+/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/bin/python /home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tests/test_position1_analysis.py
+/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/bin/python /home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tests/test_conv_history_metadata.py
+/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/bin/python /home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tests/test_conv_history_probe.py

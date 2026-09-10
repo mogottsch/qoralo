@@ -1,4 +1,6 @@
-# Proposed minimal lowering/control probe — not executed
+# Proposed minimal QNN lowering/control probe — not executed
+
+Later source/CPU preparation is retained in [`../conv-history-probe-readiness-20260910/`](../conv-history-probe-readiness-20260910/). That preparation is not QNN execution permission.
 
 ## Question
 
@@ -13,7 +15,7 @@ Use weight-free history and current-projection inputs, retaining the real bounda
 - history `[1, 6144, 1, 4]` (98,304 bytes in float32);
 - current projection `[1, 6144, 1, 1]` (24,576 bytes);
 - set one retained-history value at channel 6053/slot 3 to `23.721895217895508`; keep other inputs zero or bounded small controls;
-- apply the three fixed Q/DQ encodings from `qdq-metadata-trace.json`, concat and `slice[-4:]`;
+- use the three fixed encoding **domains** from `qdq-metadata-trace.json` across four full-chain Q/DQ **pairs**: history/input domain, projection/output domain, concat/concat domain, output/output domain; concatenate and retain `slice[-4:]`;
 - return the history result, with optional tiny intermediate taps.
 
 No model weights or private calibration are needed. This is a **synthetic boundary probe**, never an exact-model benchmark.

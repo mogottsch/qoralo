@@ -1,0 +1,64 @@
+{
+  "case": "fullchain",
+  "history_shape": [
+    1,
+    6144,
+    1,
+    4
+  ],
+  "projection_shape": [
+    1,
+    6144,
+    1,
+    1
+  ],
+  "stages": {
+    "history": {
+      "scale": 0.0007933978922665119,
+      "zero_point": 37640,
+      "quant_min": 0,
+      "quant_max": 65535,
+      "dtype": 4
+    },
+    "projection": {
+      "scale": 0.0008176580304279923,
+      "zero_point": 36523,
+      "quant_min": 0,
+      "quant_max": 65535,
+      "dtype": 4
+    },
+    "concat": {
+      "scale": 0.0009200899512507021,
+      "zero_point": 32457,
+      "quant_min": 0,
+      "quant_max": 65535,
+      "dtype": 4
+    },
+    "output": {
+      "scale": 0.0008176580304279923,
+      "zero_point": 36523,
+      "quant_min": 0,
+      "quant_max": 65535,
+      "dtype": 4
+    }
+  },
+  "qdq_pair_count": 4,
+  "concat_dim": -1,
+  "slice_dim": 3,
+  "slice_start": -4,
+  "selected_input": [
+    0,
+    6053,
+    0,
+    3
+  ],
+  "selected_output": [
+    0,
+    6053,
+    0,
+    2
+  ],
+  "selected_input_value": 23.721895217895508,
+  "source_member_sha256": "2d879235c4d4a47643378e3ec3739bd587d4b0a68b23097b8ba64092ce20ad86",
+  "source_trace_sha256": "615ac16a9f9f860c86422df09e6e0134b7a61de77e67eaea967b9baa5b2c92fc"
+}
