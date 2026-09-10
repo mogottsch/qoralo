@@ -1,0 +1,74 @@
+{
+  "auto_regression_numbers": [
+    1,
+    128
+  ],
+  "backend": "QnnHtp",
+  "bundle_root": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/runtime-bundle",
+  "context_length": 4096,
+  "dsp_arch": "v73",
+  "files": {
+    "bin/genie-app": {
+      "bytes": 1022168,
+      "sha256": "f3edc2bfa064cfb3fda0195590efaf2f9300b6a287a03925b09d5d6896eebbc9"
+    },
+    "embed_tokens_per_layer_int8_lut.bin": {
+      "bytes": 2348810240,
+      "sha256": "bc5f25db058421efa5ac9cd38f9cd74e250e286ab4f6fe094c134a997dc29fa4"
+    },
+    "embedding_int8_lut.bin": {
+      "bytes": 402653184,
+      "sha256": "3b55bb6bf947bf6a26056a25bc19a50564047c550b64c0d5f505a478cdb64239"
+    },
+    "gemma4-e2b-htp-cl4096-greedy.json": {
+      "bytes": 2771,
+      "sha256": "f8008e047443d70c0db32c7775dba8a1a958f7c838bd2683f33b4d7a8a457eba"
+    },
+    "htp_backend_ext_config.json": {
+      "bytes": 128,
+      "sha256": "9204e9591bc557bb8618fb7dd3e0696ade5f5fc33c8164588bd1e7885139bba4"
+    },
+    "lib/libGenie.so": {
+      "bytes": 11149832,
+      "sha256": "1398c4b0837dfbb4a0b156906f7d533bf9d0ee9bb1f3b6c3efa2973c102c660a"
+    },
+    "lib/libQnnHtp.so": {
+      "bytes": 3786400,
+      "sha256": "4f5b4d11b128d78433730a4f5e88841e51aec472c6bd28ffd858dba8ea1012fb"
+    },
+    "lib/libQnnHtpNetRunExtensions.so": {
+      "bytes": 1091656,
+      "sha256": "e25a816d008b3d342d1e52eaebef6748194f194aea3154049ab3692004f704ae"
+    },
+    "lib/libQnnHtpV73Skel.so": {
+      "bytes": 11859192,
+      "sha256": "e618168c82a0ec763b8543268b2783f5d28c9525fb6d0741afd667869ee493c8"
+    },
+    "lib/libQnnHtpV73Stub.so": {
+      "bytes": 771928,
+      "sha256": "7837f29bd84dbcf542faf1047d3904dc14f578e3d1a472c41eee792e7a1a8db0"
+    },
+    "lib/libQnnSystem.so": {
+      "bytes": 4072160,
+      "sha256": "536201ed918f4066f9ef35671198c072faf9ef04af24545f5fae0fc79aa05baa"
+    },
+    "lut-provenance.json": {
+      "bytes": 2520,
+      "sha256": "0dadd0d0923710ee3dcbccec7fc582f2010564365ccc4a5641937fd003492af3"
+    },
+    "models/weight_sharing_model_ar128_ar1_cl4096_scl512_1_of_1.serialized.bin": {
+      "bytes": 1186369536,
+      "sha256": "7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394"
+    },
+    "tokenizer.json": {
+      "bytes": 32169626,
+      "sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f"
+    }
+  },
+  "max_new_tokens": 2048,
+  "restricted_or_large_files_stored_outside_git": true,
+  "route": "gemma4-e2b-it-w4a16-qairt-2.49.40-sm8550-v73",
+  "sampling": "greedy",
+  "schema_version": 1,
+  "target": "SM8550"
+}
