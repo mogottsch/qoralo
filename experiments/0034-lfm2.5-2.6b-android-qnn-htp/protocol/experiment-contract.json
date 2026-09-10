@@ -822,6 +822,28 @@
       "stage_metadata_sha256": "bb2b3635134280cd2edeccbb610793eda3bb4524d6ee11a5e7af6cf6a3574721"
     }
   },
+  "integrated_corrected_profile_breakdown": {
+    "ar1_is_per_call_history": false,
+    "ar1_snapshot_accelerator_cycles": 774971671,
+    "ar1_snapshot_attention_percent": 16.704441187244377,
+    "ar1_snapshot_input_boundary_percent": 6.693953849056245,
+    "ar1_snapshot_kv_tile_percent": 8.842107855578632,
+    "ar1_snapshot_mlp_percent": 60.29315734819938,
+    "evidence": "results/qnn-integrated-profile-breakdown/result.json",
+    "fidelity_improvement_claim": false,
+    "hypothesis": "move AR171 0.125 scale from score tensor to query before MatMul",
+    "hypothesis_validated": false,
+    "new_execution": false,
+    "performance_improvement_claim": false,
+    "phone_access": false,
+    "prefill_accelerator_cycles": 3361098762,
+    "prefill_attention_percent": 37.71223590126686,
+    "prefill_mlp_percent": 47.123754437299695,
+    "prefill_q4_mlp_matmul_percent": 43.123675191785395,
+    "prefill_scaled_scores_cycles": 657591285,
+    "prefill_scaled_scores_percent": 19.564771271663098,
+    "score_query_element_ratio": 64
+  },
   "integrated_phone_attempt_1_transport_failure": {
     "cleanup_status": "unknown_unverified_transport_failure",
     "context_load_started": false,
@@ -1183,7 +1205,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "Corrected integrated total16 attempt completed and cleaned: runner PID/root absent, settings unchanged, phone.lock released. No follow-on or campaign authorized.",
+  "phone_boundary": "No phone or model runtime occurred for profile analysis. Integrated physical result remains one cold bounded diagnostic; no campaign.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -1331,7 +1353,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "corrected_native_int64_integrated_ar171_ar1_total16_physical_operability_passed",
+  "status": "corrected_integrated_operability_passed_profile_bottleneck_analyzed",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",

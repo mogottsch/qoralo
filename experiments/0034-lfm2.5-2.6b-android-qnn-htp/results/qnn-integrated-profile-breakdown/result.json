@@ -1,0 +1,530 @@
+{
+  "claim_boundary": "Offline analysis of retained corrected-route profile events only. No new runtime, optimization result, statistical performance, campaign, or registry evidence.",
+  "classification": "offline_breakdown_of_retained_corrected_integrated_qnn_profile",
+  "facts": [
+    "Prefill MLP accounts for 47.12% of accelerator cycles; Q4 MLP matmuls alone account for 43.12%.",
+    "Prefill attention accounts for 37.71%; the eight scaled_scores nodes alone account for 19.56%.",
+    "AR1 snapshot MLP accounts for 60.29%; input boundary and KV tiling account for 6.69% and 8.84%."
+  ],
+  "limitations": [
+    "The prefill phase has one execution and one detailed snapshot.",
+    "AR1 executed 15 calls, but extraction retained one top-level/per-node event set; it is a phase snapshot (likely latest backend event), not per-call history or a distribution.",
+    "QNN node cycles do not isolate host memcpy, RPC transfer bytes, DDR counters, CPU embedding, global argmax, profile dump, or context lifecycle time.",
+    "This analysis performs no model load, graph execution, compilation, or phone access."
+  ],
+  "profile_phases": {
+    "ar1_decode": {
+      "categories": {
+        "attention": {
+          "cycles": 129454687,
+          "percent": 16.704441187244377
+        },
+        "input_boundary": {
+          "cycles": 51876246,
+          "percent": 6.693953849056245
+        },
+        "lm_head": {
+          "cycles": 57183857,
+          "percent": 7.37883191603787
+        },
+        "mlp": {
+          "cycles": 467254889,
+          "percent": 60.29315734819938
+        },
+        "normalization": {
+          "cycles": 12229617,
+          "percent": 1.5780727809339499
+        },
+        "other": {
+          "cycles": 2745772,
+          "percent": 0.35430611243594734
+        },
+        "output_boundary": {
+          "cycles": 216599,
+          "percent": 0.027949279709864387
+        },
+        "recurrent_conv": {
+          "cycles": 54010004,
+          "percent": 6.9692875263823675
+        }
+      },
+      "node_events": 2700,
+      "nonzero_node_events": 1232,
+      "per_node_cycle_sum": 774971671,
+      "per_node_sum_equals_accelerator_cycles": true,
+      "subcategories": {
+        "attention_kv_tile": {
+          "cycles": 68523831,
+          "percent": 8.842107855578632
+        },
+        "attention_other": {
+          "cycles": 59649871,
+          "percent": 7.697038902471055
+        },
+        "attention_scaled_scores": {
+          "cycles": 1280985,
+          "percent": 0.16529442919468987
+        },
+        "input_boundary": {
+          "cycles": 51876246,
+          "percent": 6.693953849056245
+        },
+        "lm_head": {
+          "cycles": 57183857,
+          "percent": 7.37883191603787
+        },
+        "mlp_other": {
+          "cycles": 147143439,
+          "percent": 18.98694423373316
+        },
+        "mlp_q4_matmul": {
+          "cycles": 320111450,
+          "percent": 41.30621311446622
+        },
+        "normalization": {
+          "cycles": 12229617,
+          "percent": 1.5780727809339499
+        },
+        "other": {
+          "cycles": 2745772,
+          "percent": 0.35430611243594734
+        },
+        "output_boundary": {
+          "cycles": 216599,
+          "percent": 0.027949279709864387
+        },
+        "recurrent_conv": {
+          "cycles": 54010004,
+          "percent": 6.9692875263823675
+        }
+      },
+      "top_level": {
+        "accelerator_cycles": 774971671,
+        "accelerator_execute_us": 1049857,
+        "input_op_cycles": 51876246,
+        "output_op_cycles": 216599,
+        "qnn_execute_us": 1353149,
+        "rpc_execute_us": 1341701
+      },
+      "top_nodes": [
+        {
+          "cycles": 51876246,
+          "identifier": "Input OpId_2 (cycles)",
+          "percent": 6.693953849056245
+        },
+        {
+          "cycles": 4560594,
+          "identifier": "/model/layers.21/attn/GroupQueryAttention/htp_standard/key_tiled:OpId_4470 (cycles)",
+          "percent": 0.5884852531596604
+        },
+        {
+          "cycles": 4514833,
+          "identifier": "/model/layers.5/attn/GroupQueryAttention/htp_standard/key_tiled:OpId_1118 (cycles)",
+          "percent": 0.5825803921547476
+        },
+        {
+          "cycles": 4491132,
+          "identifier": "/model/layers.27/attn/GroupQueryAttention/htp_standard/key_tiled:OpId_5768 (cycles)",
+          "percent": 0.5795220868144482
+        },
+        {
+          "cycles": 4473901,
+          "identifier": "/model/layers.17/attn/GroupQueryAttention/htp_standard/key_tiled:OpId_3632 (cycles)",
+          "percent": 0.577298650701259
+        },
+        {
+          "cycles": 4462557,
+          "identifier": "/model/layers.9/attn/GroupQueryAttention/htp_standard/key_tiled:OpId_1956 (cycles)",
+          "percent": 0.5758348552588576
+        },
+        {
+          "cycles": 4450674,
+          "identifier": "/model/layers.13/attn/GroupQueryAttention/htp_standard/key_tiled:OpId_2794 (cycles)",
+          "percent": 0.5743015088870261
+        },
+        {
+          "cycles": 4422326,
+          "identifier": "/model/layers.24/attn/GroupQueryAttention/htp_standard/key_tiled:OpId_5119 (cycles)",
+          "percent": 0.5706435687247206
+        },
+        {
+          "cycles": 4226845,
+          "identifier": "/model/layers.2/attn/GroupQueryAttention/htp_standard/key_tiled:OpId_468 (cycles)",
+          "percent": 0.5454192918491856
+        },
+        {
+          "cycles": 4213635,
+          "identifier": "/model/layers.2/attn/GroupQueryAttention/htp_standard/value_tiled:OpId_543 (cycles)",
+          "percent": 0.5437147134117629
+        },
+        {
+          "cycles": 4181645,
+          "identifier": "/model/layers.21/attn/GroupQueryAttention/htp_standard/value_tiled:OpId_4544 (cycles)",
+          "percent": 0.5395868205871489
+        },
+        {
+          "cycles": 4173620,
+          "identifier": "/model/layers.24/attn/GroupQueryAttention/htp_standard/value_tiled:OpId_5193 (cycles)",
+          "percent": 0.5385512988641877
+        },
+        {
+          "cycles": 4148073,
+          "identifier": "/model/layers.17/attn/GroupQueryAttention/htp_standard/value_tiled:OpId_3706 (cycles)",
+          "percent": 0.5352547912683636
+        },
+        {
+          "cycles": 4143012,
+          "identifier": "/model/layers.5/attn/GroupQueryAttention/htp_standard/value_tiled:OpId_1192 (cycles)",
+          "percent": 0.5346017351387803
+        },
+        {
+          "cycles": 4138381,
+          "identifier": "/model/layers.9/attn/GroupQueryAttention/htp_standard/value_tiled:OpId_2030 (cycles)",
+          "percent": 0.5340041649083712
+        },
+        {
+          "cycles": 4135400,
+          "identifier": "/model/layers.27/attn/GroupQueryAttention/htp_standard/value_tiled:OpId_5842 (cycles)",
+          "percent": 0.5336195056864214
+        },
+        {
+          "cycles": 3787203,
+          "identifier": "/model/layers.13/attn/GroupQueryAttention/htp_standard/value_tiled:OpId_2868 (cycles)",
+          "percent": 0.4886892181636921
+        },
+        {
+          "cycles": 3053559,
+          "identifier": "/model/layers.6/mlp/down_proj/MatMul_Q4/htp_shard/matmul1:OpId_1463 (cycles)",
+          "percent": 0.3940220158060462
+        },
+        {
+          "cycles": 3044761,
+          "identifier": "/model/layers.3/mlp/up_proj/MatMul_Q4/htp_shard/matmul0:OpId_848 (cycles)",
+          "percent": 0.3928867485015462
+        },
+        {
+          "cycles": 3028686,
+          "identifier": "/model/layers.1/mlp/down_proj/MatMul_Q4/htp_shard/matmul1:OpId_336 (cycles)",
+          "percent": 0.3908124791312533
+        },
+        {
+          "cycles": 3026487,
+          "identifier": "/model/layers.23/mlp/up_proj/MatMul_Q4/htp_shard/matmul0:OpId_5038 (cycles)",
+          "percent": 0.3905287268236157
+        },
+        {
+          "cycles": 3025896,
+          "identifier": "/model/layers.10/mlp/up_proj/MatMul_Q4/htp_shard/matmul0:OpId_2335 (cycles)",
+          "percent": 0.39045246597149486
+        },
+        {
+          "cycles": 3021914,
+          "identifier": "/model/layers.4/mlp/down_proj/MatMul_Q4/htp_shard/matmul1:OpId_1003 (cycles)",
+          "percent": 0.3899386407377464
+        },
+        {
+          "cycles": 3020276,
+          "identifier": "/model/layers.13/mlp/up_proj/MatMul_Q4/htp_shard/matmul0:OpId_2984 (cycles)",
+          "percent": 0.38972727817298497
+        },
+        {
+          "cycles": 3018718,
+          "identifier": "/model/layers.6/mlp/up_proj/MatMul_Q4/htp_shard/matmul0:OpId_1497 (cycles)",
+          "percent": 0.3895262385662095
+        },
+        {
+          "cycles": 3018027,
+          "identifier": "/model/layers.3/mlp/down_proj/MatMul_Q4/htp_shard/matmul1:OpId_814 (cycles)",
+          "percent": 0.3894370740166062
+        },
+        {
+          "cycles": 3016359,
+          "identifier": "/model/layers.4/mlp/up_proj/MatMul_Q4/htp_shard/matmul0:OpId_1037 (cycles)",
+          "percent": 0.3892218403426001
+        },
+        {
+          "cycles": 3016022,
+          "identifier": "/model/layers.16/mlp/down_proj/MatMul_Q4/htp_shard/matmul1:OpId_3517 (cycles)",
+          "percent": 0.38917835488208447
+        },
+        {
+          "cycles": 3015846,
+          "identifier": "/model/layers.29/mlp/down_proj/MatMul_Q4/htp_shard/matmul1:OpId_6302 (cycles)",
+          "percent": 0.38915564437451544
+        },
+        {
+          "cycles": 3014257,
+          "identifier": "/model/layers.16/mlp/up_proj/MatMul_Q4/htp_shard/matmul0:OpId_3551 (cycles)",
+          "percent": 0.3889506046215204
+        }
+      ]
+    },
+    "prefill": {
+      "categories": {
+        "attention": {
+          "cycles": 1267545494,
+          "percent": 37.71223590126686
+        },
+        "input_boundary": {
+          "cycles": 48496440,
+          "percent": 1.4428745905443883
+        },
+        "lm_head": {
+          "cycles": 58386031,
+          "percent": 1.7371114368938618
+        },
+        "mlp": {
+          "cycles": 1583875927,
+          "percent": 47.123754437299695
+        },
+        "normalization": {
+          "cycles": 211513239,
+          "percent": 6.292978992207311
+        },
+        "other": {
+          "cycles": 44598052,
+          "percent": 1.3268890668794933
+        },
+        "output_boundary": {
+          "cycles": 697689,
+          "percent": 0.020757765522630603
+        },
+        "recurrent_conv": {
+          "cycles": 145985890,
+          "percent": 4.343397809385763
+        }
+      },
+      "node_events": 2701,
+      "nonzero_node_events": 1238,
+      "per_node_cycle_sum": 3361098762,
+      "per_node_sum_equals_accelerator_cycles": true,
+      "subcategories": {
+        "attention_other": {
+          "cycles": 609954209,
+          "percent": 18.147464629603764
+        },
+        "attention_scaled_scores": {
+          "cycles": 657591285,
+          "percent": 19.564771271663098
+        },
+        "input_boundary": {
+          "cycles": 48496440,
+          "percent": 1.4428745905443883
+        },
+        "lm_head": {
+          "cycles": 58386031,
+          "percent": 1.7371114368938618
+        },
+        "mlp_other": {
+          "cycles": 134446614,
+          "percent": 4.000079245514297
+        },
+        "mlp_q4_matmul": {
+          "cycles": 1449429313,
+          "percent": 43.123675191785395
+        },
+        "normalization": {
+          "cycles": 211513239,
+          "percent": 6.292978992207311
+        },
+        "other": {
+          "cycles": 44598052,
+          "percent": 1.3268890668794933
+        },
+        "output_boundary": {
+          "cycles": 697689,
+          "percent": 0.020757765522630603
+        },
+        "recurrent_conv": {
+          "cycles": 145985890,
+          "percent": 4.343397809385763
+        }
+      },
+      "top_level": {
+        "accelerator_cycles": 3361098762,
+        "accelerator_execute_us": 5444893,
+        "input_op_cycles": 48496440,
+        "output_op_cycles": 697689,
+        "qnn_execute_us": 6577719,
+        "rpc_execute_us": 6559893
+      },
+      "top_nodes": [
+        {
+          "cycles": 89128881,
+          "identifier": "/model/layers.5/attn/GroupQueryAttention/htp_chunk/scaled_scores:OpId_1199 (cycles)",
+          "percent": 2.6517781032701473
+        },
+        {
+          "cycles": 88950228,
+          "identifier": "/model/layers.9/attn/GroupQueryAttention/htp_chunk/scaled_scores:OpId_2065 (cycles)",
+          "percent": 2.6464627878732947
+        },
+        {
+          "cycles": 87541791,
+          "identifier": "/model/layers.2/attn/GroupQueryAttention/htp_chunk/scaled_scores:OpId_529 (cycles)",
+          "percent": 2.604558723169111
+        },
+        {
+          "cycles": 85007051,
+          "identifier": "/model/layers.17/attn/GroupQueryAttention/htp_chunk/scaled_scores:OpId_3797 (cycles)",
+          "percent": 2.5291446940231266
+        },
+        {
+          "cycles": 82585996,
+          "identifier": "/model/layers.21/attn/GroupQueryAttention/htp_chunk/scaled_scores:OpId_4663 (cycles)",
+          "percent": 2.457113040940747
+        },
+        {
+          "cycles": 81841824,
+          "identifier": "/model/layers.24/attn/GroupQueryAttention/htp_chunk/scaled_scores:OpId_5333 (cycles)",
+          "percent": 2.434972305047667
+        },
+        {
+          "cycles": 76516774,
+          "identifier": "/model/layers.27/attn/GroupQueryAttention/htp_chunk/scaled_scores:OpId_6003 (cycles)",
+          "percent": 2.2765404832814014
+        },
+        {
+          "cycles": 66018740,
+          "identifier": "/model/layers.13/attn/GroupQueryAttention/htp_chunk/scaled_scores:OpId_2931 (cycles)",
+          "percent": 1.9642011340576013
+        },
+        {
+          "cycles": 48496440,
+          "identifier": "Input OpId_2 (cycles)",
+          "percent": 1.4428745905443883
+        },
+        {
+          "cycles": 19621758,
+          "identifier": "/model/layers.2/mlp/gate_proj/MatMul_Q4/htp_shard/matmul0:OpId_617 (cycles)",
+          "percent": 0.5837899862342695
+        },
+        {
+          "cycles": 19611874,
+          "identifier": "/model/layers.5/mlp/gate_proj/MatMul_Q4/htp_shard/matmul0:OpId_1287 (cycles)",
+          "percent": 0.5834959157323327
+        },
+        {
+          "cycles": 19601846,
+          "identifier": "/model/layers.24/mlp/gate_proj/MatMul_Q4/htp_shard/matmul0:OpId_5421 (cycles)",
+          "percent": 0.5831975609171344
+        },
+        {
+          "cycles": 19559850,
+          "identifier": "/model/layers.23/mlp/gate_proj/MatMul_Q4/htp_shard/matmul0:OpId_5143 (cycles)",
+          "percent": 0.5819480885578333
+        },
+        {
+          "cycles": 19535765,
+          "identifier": "/model/layers.17/mlp/gate_proj/MatMul_Q4/htp_shard/matmul0:OpId_3885 (cycles)",
+          "percent": 0.5812315074126346
+        },
+        {
+          "cycles": 19504251,
+          "identifier": "/model/layers.20/mlp/gate_proj/MatMul_Q4/htp_shard/matmul0:OpId_4473 (cycles)",
+          "percent": 0.5802938973561765
+        },
+        {
+          "cycles": 19499181,
+          "identifier": "/model/layers.21/mlp/gate_proj/MatMul_Q4/htp_shard/matmul0:OpId_4751 (cycles)",
+          "percent": 0.5801430538267534
+        },
+        {
+          "cycles": 19489795,
+          "identifier": "/model/layers.4/mlp/gate_proj/MatMul_Q4/htp_shard/matmul0:OpId_1009 (cycles)",
+          "percent": 0.5798637999081802
+        },
+        {
+          "cycles": 19489112,
+          "identifier": "/model/layers.1/mlp/gate_proj/MatMul_Q4/htp_shard/matmul0:OpId_321 (cycles)",
+          "percent": 0.5798434791723623
+        },
+        {
+          "cycles": 19484002,
+          "identifier": "/model/layers.16/mlp/gate_proj/MatMul_Q4/htp_shard/matmul0:OpId_3607 (cycles)",
+          "percent": 0.579691445555922
+        },
+        {
+          "cycles": 19483964,
+          "identifier": "/model/layers.18/mlp/gate_proj/MatMul_Q4/htp_shard/matmul0:OpId_4081 (cycles)",
+          "percent": 0.5796903149732557
+        },
+        {
+          "cycles": 19459267,
+          "identifier": "/model/layers.7/mlp/gate_proj/MatMul_Q4/htp_shard/matmul0:OpId_1679 (cycles)",
+          "percent": 0.5789555254966947
+        },
+        {
+          "cycles": 19457144,
+          "identifier": "/model/layers.25/mlp/gate_proj/MatMul_Q4/htp_shard/matmul0:OpId_5617 (cycles)",
+          "percent": 0.5788923616282597
+        },
+        {
+          "cycles": 19442603,
+          "identifier": "/model/layers.19/mlp/gate_proj/MatMul_Q4/htp_shard/matmul0:OpId_4277 (cycles)",
+          "percent": 0.5784597352453519
+        },
+        {
+          "cycles": 19433519,
+          "identifier": "/model/layers.22/mlp/gate_proj/MatMul_Q4/htp_shard/matmul0:OpId_4947 (cycles)",
+          "percent": 0.5781894664837581
+        },
+        {
+          "cycles": 19411549,
+          "identifier": "/model/layers.8/mlp/gate_proj/MatMul_Q4/htp_shard/matmul0:OpId_1875 (cycles)",
+          "percent": 0.577535811189591
+        },
+        {
+          "cycles": 19394765,
+          "identifier": "/model/layers.26/mlp/gate_proj/MatMul_Q4/htp_shard/matmul0:OpId_5813 (cycles)",
+          "percent": 0.5770364506771968
+        },
+        {
+          "cycles": 19263598,
+          "identifier": "/model/layers.0/mlp/gate_proj/MatMul_Q4/htp_shard/matmul0:OpId_124 (cycles)",
+          "percent": 0.5731339470827487
+        },
+        {
+          "cycles": 19242299,
+          "identifier": "/model/layers.3/mlp/gate_proj/MatMul_Q4/htp_shard/matmul0:OpId_813 (cycles)",
+          "percent": 0.5725002554982941
+        },
+        {
+          "cycles": 19030907,
+          "identifier": "/model/layers.9/mlp/gate_proj/MatMul_Q4/htp_shard/matmul0:OpId_2153 (cycles)",
+          "percent": 0.5662108836300835
+        },
+        {
+          "cycles": 19021974,
+          "identifier": "/model/layers.6/mlp/gate_proj/MatMul_Q4/htp_shard/matmul0:OpId_1483 (cycles)",
+          "percent": 0.5659451074469796
+        }
+      ]
+    }
+  },
+  "raw_io_context": {
+    "ar171_direct_qnn_input_bytes": 133358936,
+    "ar171_output_bytes": 6656000,
+    "ar1_direct_qnn_input_bytes": 134750216,
+    "ar1_output_bytes": 1085440,
+    "interpretation": "Static raw tensor bytes copied through app/QNN buffers. QNN Input/Output node cycles are boundary-node facts, not measured host-bus byte counters."
+  },
+  "schema_version": 1,
+  "single_supported_hypothesis": {
+    "caveats": [
+      "64 times fewer scaled elements is not a 64 times speedup claim.",
+      "19.56 percent is the share of AR171 accelerator cycles only, not whole-request, context-load, CPU, RPC, or emitted-token latency."
+    ],
+    "profile_support": {
+      "element_ratio": 64,
+      "query_tensor_elements_per_layer": 350208,
+      "scaled_scores_cycles": 657591285,
+      "scaled_scores_nodes": 8,
+      "scaled_scores_percent": 19.564771271663098,
+      "score_tensor_elements_per_layer": 22413312
+    },
+    "proposal": "For AR171 only, multiply the much smaller query tensor by 0.125 before score MatMul and remove the post-MatMul scaled_scores multiply, preserving the algebraic scale while avoiding an elementwise pass over the [1,32,171,4096] score tensor.",
+    "required_validation": "Before any new AOT, host CPU comparison must check all state/logit deltas plus finite values, FP16 underflow, and overflow after reassociation. Full fallback-disabled AOT must then precede any physical diagnostic. No speed or fidelity improvement is claimed yet."
+  },
+  "source": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-integrated-phone-attempt-3-success/raw/runner.stderr"
+}

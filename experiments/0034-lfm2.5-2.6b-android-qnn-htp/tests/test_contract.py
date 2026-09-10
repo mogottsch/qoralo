@@ -81,7 +81,7 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
     def test_active_export_does_not_claim_qnn_android_or_completion(self) -> None:
-        self.assertIn("corrected_native_int64_integrated_ar171_ar1_total16_physical_operability_passed", self.contract["status"])
+        self.assertIn("corrected_integrated_operability_passed_profile_bottleneck_analyzed", self.contract["status"])
         route = self.result["route_assessment"]
         self.assertFalse(route["compiled_sm8550_context_available"])
         self.assertFalse(route["android_execution"])
@@ -90,7 +90,7 @@ class ContractTest(unittest.TestCase):
         self.assertIn("not_android_qnn_or_htp", milestone["classification"])
         self.assertEqual("passed", milestone["rewritten_onnx"]["onnx_checker"])
         self.assertEqual(16, milestone["bounded_output"]["max_new_tokens"])
-        self.assertIn("Corrected integrated total16 attempt completed and cleaned", self.contract["phone_boundary"])
+        self.assertIn("No phone or model runtime occurred for profile analysis", self.contract["phone_boundary"])
 
     def test_qnn_aot_is_complete_but_not_physical_execution(self) -> None:
         milestone = self.contract["qnn_aot_milestone"]
@@ -725,6 +725,25 @@ class ContractTest(unittest.TestCase):
         self.assertIn("statistical or warm-throughput benchmark", result["timing"]["interpretation"])
         self.assertTrue(result["cleanup"]["scoped_remote_root_verified_absent"])
 
+    def test_corrected_integrated_profile_breakdown_is_offline(self) -> None:
+        profile = self.contract["integrated_corrected_profile_breakdown"]
+        self.assertFalse(profile["phone_access"])
+        self.assertFalse(profile["new_execution"])
+        self.assertEqual(3361098762, profile["prefill_accelerator_cycles"])
+        self.assertAlmostEqual(47.123754437299695, profile["prefill_mlp_percent"])
+        self.assertAlmostEqual(19.564771271663098, profile["prefill_scaled_scores_percent"])
+        self.assertEqual(774971671, profile["ar1_snapshot_accelerator_cycles"])
+        self.assertFalse(profile["ar1_is_per_call_history"])
+        self.assertEqual(64, profile["score_query_element_ratio"])
+        self.assertFalse(profile["hypothesis_validated"])
+        self.assertFalse(profile["performance_improvement_claim"])
+        result = json.loads((EXP / profile["evidence"]).read_text())
+        self.assertTrue(result["profile_phases"]["prefill"]["per_node_sum_equals_accelerator_cycles"])
+        self.assertTrue(result["profile_phases"]["ar1_decode"]["per_node_sum_equals_accelerator_cycles"])
+        self.assertIn("not a 64 times speedup", result["single_supported_hypothesis"]["caveats"][0])
+        self.assertIn("not whole-request", result["single_supported_hypothesis"]["caveats"][1])
+        self.assertIn("per-call history", result["limitations"][1])
+
     def test_final_pipeline_host_equivalence_is_bounded(self) -> None:
         result = json.loads((EXP / "results/htp-pipeline-host-equivalence/result.json").read_text())
         self.assertIn("host_only", result["classification"])
@@ -788,6 +807,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/qnn-integrated-phone-attempt-2-ar1-dispatch-failure",
             EXP / "results/qnn-integrated-ar1-dispatch-fix-readiness",
             EXP / "results/qnn-integrated-phone-attempt-3-success",
+            EXP / "results/qnn-integrated-profile-breakdown",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

@@ -125,11 +125,13 @@
 113. Rebuilt/pinned host and Android runners plus a new 12-file stage; hashes and ELF preflight pass without phone access.
 114. Ran one reviewed post-fix physical integrated diagnostic: correct native INT64 AR171 prefill, 38-state in-memory bridge, AR171 free, AR1 load once, and 15 finite-scanned decode calls.
 115. Preserved 16 total token outputs incrementally, separate timing/profile boundaries, process memory/thermal/settings, and verified PID/root cleanup plus lock release.
+116. Analyzed retained corrected-route per-node profiles: prefill MLP 47.12%, attention 37.71%, score scaling 19.56%; AR1 snapshot MLP 60.29%, input boundary 6.69%, KV tiling 8.84%.
+117. Selected one profile-supported hypothesis only: move AR171 scale 0.125 from the 64× larger score tensor to query before MatMul, pending numeric/AOT validation.
 
 ## In progress: performance engineering
 
-1. Commit and independently review bounded corrected integrated operability; no retry or campaign.
-2. Compare later lower-precision/device-resident/reduced-logit candidates only after this route's evidence boundary is accepted.
+1. Commit and independently review bounded corrected integrated operability and offline profile breakdown; no retry or campaign.
+2. If authorized, host-test only the score-scaling rewrite with exact state/logit comparisons before AOT; do not speculate broader changes.
 2. If prioritized, run one bounded reset-isolated physical integrated short/max16 diagnostic with detailed profiles and all-output finite scans.
 3. Evaluate lower-precision/device-resident state and reduced-logit routes; keep CPU/GPU/HTP boundaries explicit.
 4. Do not campaign until the fastest sensible complete route is selected and reset-isolated.

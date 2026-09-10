@@ -333,4 +333,16 @@ The cold diagnostic reports backend setup 0.234 seconds; AR171 load 3.739 second
 
 Detailed prefill profiling reports 6.578 seconds QNN and 5.445 seconds accelerator execution. The extracted AR1 profile snapshot reports 1.353 seconds QNN and 1.050 seconds accelerator execution, but is not per-call profile history. Peak process VmHWM was 1,746,324 KiB, not total DSP/system memory.
 
-Raw tokens, provider/profile logs, timing, memory, thermal, hashes, settings boundary, and cleanup are retained in [`results/qnn-integrated-phone-attempt-3-success/`](results/qnn-integrated-phone-attempt-3-success/). The runner process and scoped root were verified absent and `phone.lock` released. This proves bounded corrected-route operability, not numerical/reference equivalence, complete-answer quality, statistical performance, a campaign, combined-context viability, or registry eligibility. FP16/uFxp16 state, registered/device-resident memory, reduced logit return, and coarse explicitly declared hybrid partitions remain later candidates.
+Raw tokens, provider/profile logs, timing, memory, thermal, hashes, settings boundary, and cleanup are retained in [`results/qnn-integrated-phone-attempt-3-success/`](results/qnn-integrated-phone-attempt-3-success/). The runner process and scoped root were verified absent and `phone.lock` released. This proves bounded corrected-route operability, not numerical/reference equivalence, complete-answer quality, statistical performance, a campaign, combined-context viability, or registry eligibility.
+
+## Corrected-route profile breakdown
+
+[`results/qnn-integrated-profile-breakdown/`](results/qnn-integrated-profile-breakdown/) analyzes only retained QNN events from the corrected integrated run. Per-node cycle sums equal the profile's accelerator-cycle totals exactly.
+
+For AR171's 3.361 billion accelerator cycles, MLP accounts for 47.12%, attention 37.71%, normalization 6.29%, recurrent convolution 4.34%, LM head 1.74%, and the input boundary node 1.44%. Q4 MLP matmuls alone account for 43.12%. Within attention, the eight `scaled_scores` elementwise multiplies consume 657.6 million cycles, or 19.56% of the full prefill accelerator total.
+
+The retained AR1 profile event set totals 775.0 million cycles: MLP 60.29%, attention 16.70%, LM head 7.38%, recurrent convolution 6.97%, and input boundary 6.69%. KV tiling alone contributes 8.84%. Although 15 AR1 calls completed, extraction retained one top-level/per-node event set; it is a phase snapshot, not per-call history or a distribution.
+
+One concrete hypothesis follows from the prefill profile: multiply the query by 0.125 before score MatMul and remove the post-MatMul scaling pass over `[1,32,171,4096]`. The query has 350,208 elements per layer while the score tensor has 22,413,312—64× more. That means 64× fewer scale elements, **not** 64× speedup. The measured 19.56% is a share of AR171 accelerator cycles only, not whole-request latency. FP16 reassociation can change states/logits; before any new AOT, CPU validation must compare every state/logit tensor and check finite values, underflow, and overflow. No speed or fidelity improvement is claimed.
+
+QNN node cycles do not isolate host memcpy, RPC byte transfer, DDR counters, CPU embedding/argmax, context load, or profile overhead. This is offline analysis, not a new runtime result. FP16/uFxp16 state, registered/device-resident memory, reduced logit return, and coarse explicitly declared hybrid partitions remain later candidates.
