@@ -722,18 +722,34 @@ class ContractTest(unittest.TestCase):
         text = (EXP / derived["text_path"]).read_bytes()
         self.assertEqual((95, derived["sha256"]), (len(text), hashlib.sha256(text).hexdigest()))
         self.assertEqual({"looks_sensible", "issue_notes"}, set(derived["output_sanity"]))
-        self.assertTrue(derived["output_sanity"]["looks_sensible"])
-        self.assertIn("grammatically flawed", derived["output_sanity"]["issue_notes"])
+        self.assertEqual({"looks_sensible": True, "issue_notes": None}, derived["output_sanity"])
+        self.assertIn("Missing verb", derived["quality_limitations"]["grammatical_flaw"])
+        self.assertEqual(16, derived["quality_limitations"]["truncated_at_total_token_cap"])
+        self.assertFalse(derived["quality_limitations"]["eos_present"])
         self.assertFalse(derived["phone_access"])
         summary = json.loads((EXP / derived["summary_path"]).read_text())
         self.assertEqual(derived["sha256"], summary["decoded_text_sha256"])
         self.assertEqual(derived["output_sanity"], summary["output_sanity"])
+        self.assertEqual(derived["quality_limitations"], summary["quality_limitations"])
         result = json.loads((EXP / gate["evidence"]).read_text())
         self.assertTrue(result["output"]["each_token_appended_and_fsynced"])
         self.assertEqual(15, result["finite_scan"]["ar1_finite_scan_log_count"])
         self.assertIn("grammatically flawed", result["output"]["sanity"])
         self.assertIn("statistical or warm-throughput benchmark", result["timing"]["interpretation"])
         self.assertTrue(result["cleanup"]["scoped_remote_root_verified_absent"])
+
+    def test_standard_output_sanity_combinations(self) -> None:
+        def valid(value: dict[str, object]) -> bool:
+            looks, notes = value.get("looks_sensible"), value.get("issue_notes")
+            return ((looks is True and notes is None) or
+                    (looks is False and isinstance(notes, str) and bool(notes)) or
+                    (looks is None and notes is None)) and set(value) == {"looks_sensible", "issue_notes"}
+        self.assertTrue(valid({"looks_sensible": True, "issue_notes": None}))
+        self.assertTrue(valid({"looks_sensible": False, "issue_notes": "Gibberish output."}))
+        self.assertTrue(valid({"looks_sensible": None, "issue_notes": None}))
+        self.assertFalse(valid({"looks_sensible": True, "issue_notes": "Grammar caveat."}))
+        self.assertFalse(valid({"looks_sensible": False, "issue_notes": None}))
+        self.assertFalse(valid({"looks_sensible": False, "issue_notes": ""}))
 
     def test_corrected_integrated_profile_breakdown_is_offline(self) -> None:
         profile = self.contract["integrated_corrected_profile_breakdown"]
