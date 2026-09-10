@@ -93,10 +93,13 @@ def main() -> None:
         "qnn_outputs_finite alias=", "ProfilingLevel::DETAILED", "profileGetEvents",
         "RunPrefill171", "runner.LoadOnly(root / \"contexts/ar171.bin\", \"prefill\")",
         "runner.FreeContexts(); const auto prefill_free_end",
-        "runner.ResetDetailedProfile(); const auto profile_reset_end",
+        "\"profile_reset\", [&] { runner.ResetDetailedProfile(); }, std::cerr)",
         "runner.LoadOnly(root / \"contexts/ar1.bin\", \"monolith\")",
-        "runner.RunToken(current, 171 + index, true)", "simultaneous_contexts",
+        "runner.RunToken(current, 171 + output_index - 1, true)", "simultaneous_contexts",
         "prefill_cpu_input_seconds", "prefill_state_bridge_seconds",
+        "ExclusiveTokenOutput", "AppendAndFlush", "CaptureOptionalTelemetry",
+        "request_to_first_emitted_token_seconds", "request_to_final_emitted_token_seconds",
+        "MAX_NEW is total emitted tokens including the AR171 endpoint",
     ]
     missing = [fragment for fragment in required_fragments if fragment not in source]
     if missing:
@@ -167,8 +170,10 @@ def main() -> None:
             "context_reloads_per_phase": 0,
             "per_token_context_streaming": False,
             "finite_scan": "all requested outputs before copying: 60 for AR171 and 60 for every AR1 decode call",
-            "profile": "detailed recursive QNN events phase-labeled; prefill profile freed/reset before AR1 load",
-            "timing": "backend setup separate; TTFT includes AR171 context load, CPU input construction, AR171 Run including copies/finite scan, and argmax; total request separately includes profile dump/reset, state bridge, AR1 load, max16 decode, and AR1 profile dump",
+            "profile": "detailed recursive QNN events phase-labeled; extraction is optional/fail-open and explicitly logged; prefill profile freed/reset before AR1 load",
+            "output_persistence": "exclusive output file opened before backend setup; endpoint and every decode token appended and fsync'd immediately, preserving partial output on later inference/finite-scan/profile failure",
+            "output_cap_semantics": "MAX_NEW is total emitted tokens including the AR171 endpoint; max16 performs at most 15 AR1 calls and stops early on EOS",
+            "timing": "backend setup separate; actual request-start to first emitted and final emitted timestamps include output fsync; compute phase sums are separately labeled; functional output timing excludes optional profile dumps, diagnostic total includes profile/free overhead",
         },
         "stage": {
             "path": str(args.stage), "payload_files": stage["payload_files"], "payload_bytes": stage["payload_bytes"],

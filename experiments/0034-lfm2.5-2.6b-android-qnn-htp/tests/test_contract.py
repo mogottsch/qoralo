@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -522,13 +524,33 @@ class ContractTest(unittest.TestCase):
         self.assertIn("excludes AR171 prefill", result["timing"]["scope"])
         self.assertTrue(result["cleanup"]["scoped_remote_root_verified_absent"])
 
+    def test_integrated_output_is_incremental_exclusive_and_profile_fail_open(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            binary = root / "integrated-output-test"
+            subprocess.run(
+                [
+                    "g++", "-std=c++17", "-O2",
+                    f"-I{EXP / 'phone'}",
+                    str(EXP / "tests/integrated_output_test.cpp"),
+                    "-o", str(binary),
+                ],
+                check=True,
+            )
+            completed = subprocess.run([str(binary), str(root / "output")], check=True, capture_output=True, text=True)
+            self.assertIn("failure-injection checks passed", completed.stdout)
+
     def test_integrated_ar171_ar1_runner_is_host_ready_only(self) -> None:
         ready = self.contract["integrated_ar171_ar1_runner_readiness"]
         self.assertFalse(ready["phone_access"])
         self.assertFalse(ready["phone_authorized"])
         self.assertEqual((1, 2, 1, 1, 0), (ready["process_backend_count"], ready["contexts_loaded_sequentially"], ready["simultaneous_contexts"], ready["explicit_phase_transitions"], ready["context_reloads_per_phase"]))
         self.assertFalse(ready["per_token_context_streaming"])
-        self.assertEqual((171, 16, 60, 60, 38), (ready["prompt_tokens"], ready["max_new_tokens"], ready["ar171_outputs_finite_scanned"], ready["ar1_outputs_finite_scanned_per_token"], ready["state_tensors_bridged_in_memory"]))
+        self.assertEqual((171, 16, 15, 60, 60, 38), (ready["prompt_tokens"], ready["max_new_tokens"], ready["ar1_max_graph_executions"], ready["ar171_outputs_finite_scanned"], ready["ar1_outputs_finite_scanned_per_token"], ready["state_tensors_bridged_in_memory"]))
+        self.assertIn("total emitted tokens", ready["output_cap_semantics"])
+        self.assertTrue(ready["exclusive_incremental_token_output"])
+        self.assertTrue(ready["optional_profile_failure_preserves_output"])
+        self.assertTrue(ready["actual_emission_timestamps"])
         self.assertEqual(("QNN_DATATYPE_INT_64", [1, 171], 1368), (ready["ar171_position_abi"]["data_type"], ready["ar171_position_abi"]["dimensions"], ready["ar171_position_abi"]["bytes"]))
         self.assertEqual(("QNN_DATATYPE_INT_64", [1, 1], 8), (ready["ar1_position_abi"]["data_type"], ready["ar1_position_abi"]["dimensions"], ready["ar1_position_abi"]["bytes"]))
         self.assertFalse(ready["prior_qnn_net_run_int32_boundary_generalized"])
@@ -541,6 +563,10 @@ class ContractTest(unittest.TestCase):
         self.assertEqual(0, result["contexts"]["ar171"]["shared_weights_bytes"])
         self.assertEqual(0, result["contexts"]["ar1"]["shared_weights_bytes"])
         self.assertFalse(result["shared_context_assessment"]["combined_context_viability_claim"])
+        self.assertEqual(3193053184, result["shared_context_assessment"]["combined_const_bytes"])
+        self.assertIn("total emitted tokens", result["integrated_semantics"]["output_cap_semantics"])
+        self.assertIn("fsync", result["integrated_semantics"]["output_persistence"])
+        self.assertIn("actual request-start", result["integrated_semantics"]["timing"])
         self.assertIn("not reused or generalized", result["api_type_boundary"]["non_generalization"])
         self.assertIn("No integrated inference ran", result["host_runtime_boundary"])
 

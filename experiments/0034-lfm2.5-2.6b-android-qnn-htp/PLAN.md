@@ -108,10 +108,14 @@
 96. Bound direct-QNN INT64 position ABIs separately from accepted qnn-net-run INT32 file-ingestion evidence; prompt embeddings and masks reproduce accepted prefill bytes.
 97. Built host and Android binaries and a 12-payload integrated stage; hashes and ELF preflight pass. No integrated inference ran because x86 AR171 exceeds the bounded emulator window.
 98. Rejected any present combined/shared-context claim: ordinary contexts duplicate constants and the only generated shared-weight format already failed; new Qualcomm-supported tooling/guidance would be required.
+99. Made integrated output fail-closed for evidence but fail-open for optional telemetry: exclusive output is opened before inference and every token is appended plus `fsync`ed immediately; profile errors are explicitly logged without deleting valid partial output.
+100. Defined `MAX_NEW` as the total output cap including the AR171 endpoint, so max16 performs at most 15 AR1 calls and stops early at EOS.
+101. Replaced derived delivery times with actual request-start/first-emitted/final-emitted timestamps and separated compute phase sums, functional output time, context lifecycle, and profile overhead.
+102. Added no-QNN host regression/failure-injection coverage for partial-token persistence, exclusive overwrite protection, normal max-token append, and optional-profile failure.
 
 ## In progress: performance engineering
 
-1. Commit and independently review integrated build/static/stage readiness; do not run phone before approval.
+1. Commit and independently review corrected integrated build/static/stage readiness; do not run phone before approval.
 2. If prioritized, run one bounded reset-isolated physical integrated short/max16 diagnostic with detailed profiles and all-output finite scans.
 3. Evaluate lower-precision/device-resident state and reduced-logit routes; keep CPU/GPU/HTP boundaries explicit.
 4. Do not campaign until the fastest sensible complete route is selected and reset-isolated.

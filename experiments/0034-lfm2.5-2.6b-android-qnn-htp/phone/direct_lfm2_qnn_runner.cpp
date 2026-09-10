@@ -21,6 +21,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include "integrated_output.hpp"
 #include "DynamicLoadUtil.hpp"
 #include "Logger.hpp"
 #include "PAL/DynamicLoading.hpp"
@@ -358,7 +359,8 @@ class Runner {
     }
   }
 
-  int RunPrefill171(const std::vector<int32_t>& tokens) {
+  int RunPrefill171(const std::vector<int32_t>& tokens,
+                    const std::function<void(int)>& emit_endpoint) {
     if (tokens.size() != 171) throw std::runtime_error("integrated prefill requires 171 tokens");
     constexpr int sequence = 171, past = kCapacity - sequence;
     const auto cpu_start = Clock::now();
@@ -421,7 +423,9 @@ class Runner {
       }
       offset += static_cast<int>(values[chunk].size());
     }
-    const auto argmax_end = Clock::now(); const auto bridge_start = Clock::now();
+    const auto argmax_end = Clock::now();
+    emit_endpoint(best_token);
+    const auto bridge_start = Clock::now();
     size_t index = 0;
     for (int layer = 0; layer < kLayers; ++layer) {
       if (IsAttention(layer)) {
@@ -825,55 +829,75 @@ int main(int argc, char** argv) {
     if (integrated) {
       const fs::path root = argv[1]; const auto prompt = ReadTokens(argv[3]);
       const int max_new = std::stoi(argv[4]);
-      if (prompt.size() != 171 || max_new < 1 || prompt.size() + static_cast<size_t>(max_new) + 1 > kCacheLength) {
-        throw std::runtime_error("integrated route requires 171 prompt tokens and bounded output");
+      if (prompt.size() != 171 || max_new < 1 || prompt.size() + static_cast<size_t>(max_new) > kCacheLength) {
+        throw std::runtime_error("integrated route requires 171 prompt tokens and bounded total output");
       }
+      // MAX_NEW is the total output cap, including the AR171 endpoint token.
+      // O_EXCL prevents a retry from overwriting evidence from an earlier attempt.
+      lfm2::ExclusiveTokenOutput token_output(argv[5]);
       const auto process_setup_start = Clock::now(); Runner runner(root, true);
       const auto process_setup_end = Clock::now(); const auto request_start = Clock::now();
+      auto first_token_emitted = request_start; auto final_token_emitted = request_start; bool emitted = false;
       const auto prefill_load_start = Clock::now(); runner.LoadOnly(root / "contexts/ar171.bin", "prefill");
-      const auto prefill_load_end = Clock::now(); const int endpoint = runner.RunPrefill171(prompt);
+      const auto prefill_load_end = Clock::now();
+      const int endpoint = runner.RunPrefill171(prompt, [&](int token) {
+        token_output.AppendAndFlush(token);
+        first_token_emitted = final_token_emitted = Clock::now(); emitted = true;
+      });
+      if (!emitted) throw std::runtime_error("prefill endpoint was not emitted");
       const auto bridge_complete = Clock::now();
-      const double request_to_first_token_seconds =
+      const double prefill_compute_phase_sum_seconds =
           std::chrono::duration<double>(prefill_load_end - prefill_load_start).count() +
           runner.LastPrefillCpuSeconds() + runner.LastPrefillExecuteSeconds() + runner.LastPrefillArgmaxSeconds();
-      const auto prefill_profile_start = Clock::now(); runner.DumpProfile("prefill");
+      const auto prefill_profile_start = Clock::now();
+      const bool prefill_profile_complete = lfm2::CaptureOptionalTelemetry(
+          "prefill", [&] { runner.DumpProfile("prefill"); }, std::cerr);
       const auto prefill_profile_end = Clock::now(); const auto prefill_free_start = Clock::now();
       runner.FreeContexts(); const auto prefill_free_end = Clock::now(); const auto profile_reset_start = Clock::now();
-      runner.ResetDetailedProfile(); const auto profile_reset_end = Clock::now();
+      const bool profile_reset_complete = lfm2::CaptureOptionalTelemetry(
+          "profile_reset", [&] { runner.ResetDetailedProfile(); }, std::cerr);
+      const auto profile_reset_end = Clock::now();
       const auto ar1_load_start = Clock::now(); runner.LoadOnly(root / "contexts/ar1.bin", "monolith");
       const auto ar1_load_end = Clock::now();
-      std::vector<int32_t> generated; generated.reserve(max_new + 1); generated.push_back(endpoint);
-      int current = endpoint; auto resume_first = ar1_load_end;
-      for (int index = 0; index < max_new && current != kEos; ++index) {
-        current = runner.RunToken(current, 171 + index, true); generated.push_back(current);
-        if (index == 0) resume_first = Clock::now();
+      std::vector<int32_t> generated; generated.reserve(max_new); generated.push_back(endpoint);
+      int current = endpoint; auto resume_first_emitted = ar1_load_end;
+      for (int output_index = 1; output_index < max_new && current != kEos; ++output_index) {
+        current = runner.RunToken(current, 171 + output_index - 1, true);
+        token_output.AppendAndFlush(current); final_token_emitted = Clock::now(); generated.push_back(current);
+        if (output_index == 1) resume_first_emitted = final_token_emitted;
       }
       const auto decode_end = Clock::now(); const auto ar1_profile_start = Clock::now();
-      runner.DumpProfile("ar1_decode"); const auto ar1_profile_end = Clock::now(); const auto ar1_free_start = Clock::now();
+      const bool ar1_profile_complete = lfm2::CaptureOptionalTelemetry(
+          "ar1_decode", [&] { runner.DumpProfile("ar1_decode"); }, std::cerr);
+      const auto ar1_profile_end = Clock::now(); const auto ar1_free_start = Clock::now();
       runner.FreeContexts(); const auto ar1_free_end = Clock::now(); const auto diagnostic_end = Clock::now();
-      std::ofstream output(argv[5], std::ios::binary);
-      if (!output) throw std::runtime_error("cannot open integrated output");
-      output.write(reinterpret_cast<const char*>(generated.data()), generated.size() * sizeof(int32_t)); output.close();
       const auto sec = [](auto d) { return std::chrono::duration<double>(d).count(); };
       std::cout << "{\n  \"result\": \"passed\",\n  \"route\": \"integrated_ar171_phase_switch_ar1\",\n"
                 << "  \"prompt_tokens\": " << prompt.size() << ",\n  \"prefill_endpoint_token\": " << endpoint << ",\n"
-                << "  \"resume_generated_tokens\": " << generated.size() - 1 << ",\n  \"contexts_loaded_sequentially\": 2,\n"
+                << "  \"output_cap_semantics\": \"MAX_NEW is total emitted tokens including the AR171 endpoint\",\n"
+                << "  \"max_new_tokens\": " << max_new << ",\n  \"emitted_tokens\": " << generated.size() << ",\n"
+                << "  \"resume_graph_executions\": " << generated.size() - 1 << ",\n  \"contexts_loaded_sequentially\": 2,\n"
                 << "  \"simultaneous_contexts\": 1,\n  \"context_reloads_per_phase\": 0,\n"
                 << "  \"process_backend_setup_seconds\": " << sec(process_setup_end - process_setup_start) << ",\n"
                 << "  \"prefill_context_load_seconds\": " << sec(prefill_load_end - prefill_load_start) << ",\n"
                 << "  \"prefill_cpu_input_seconds\": " << runner.LastPrefillCpuSeconds() << ",\n"
                 << "  \"prefill_graph_seconds\": " << runner.LastPrefillExecuteSeconds() << ",\n"
                 << "  \"prefill_argmax_seconds\": " << runner.LastPrefillArgmaxSeconds() << ",\n"
-                << "  \"request_to_first_token_seconds\": " << request_to_first_token_seconds << ",\n"
+                << "  \"prefill_compute_phase_sum_seconds\": " << prefill_compute_phase_sum_seconds << ",\n"
+                << "  \"request_to_first_emitted_token_seconds\": " << sec(first_token_emitted - request_start) << ",\n"
                 << "  \"prefill_phase_through_state_bridge_seconds\": " << sec(bridge_complete - request_start) << ",\n"
                 << "  \"prefill_state_bridge_seconds\": " << runner.LastPrefillBridgeSeconds() << ",\n"
+                << "  \"prefill_profile_complete\": " << (prefill_profile_complete ? "true" : "false") << ",\n"
                 << "  \"prefill_profile_dump_seconds\": " << sec(prefill_profile_end - prefill_profile_start) << ",\n"
                 << "  \"prefill_context_free_seconds\": " << sec(prefill_free_end - prefill_free_start) << ",\n"
+                << "  \"profile_reset_complete\": " << (profile_reset_complete ? "true" : "false") << ",\n"
                 << "  \"profile_reset_seconds\": " << sec(profile_reset_end - profile_reset_start) << ",\n"
                 << "  \"ar1_context_load_seconds\": " << sec(ar1_load_end - ar1_load_start) << ",\n"
-                << "  \"ar1_request_to_first_token_seconds\": " << sec(resume_first - ar1_load_end) << ",\n"
+                << "  \"ar1_request_to_first_emitted_token_seconds\": " << sec(resume_first_emitted - ar1_load_end) << ",\n"
                 << "  \"ar1_total_decode_seconds\": " << sec(decode_end - ar1_load_end) << ",\n"
-                << "  \"logical_request_to_output_seconds\": " << sec(decode_end - request_start) << ",\n"
+                << "  \"request_to_final_emitted_token_seconds\": " << sec(final_token_emitted - request_start) << ",\n"
+                << "  \"decode_compute_complete_seconds\": " << sec(decode_end - request_start) << ",\n"
+                << "  \"ar1_profile_complete\": " << (ar1_profile_complete ? "true" : "false") << ",\n"
                 << "  \"ar1_profile_dump_seconds\": " << sec(ar1_profile_end - ar1_profile_start) << ",\n"
                 << "  \"ar1_context_free_seconds\": " << sec(ar1_free_end - ar1_free_start) << ",\n"
                 << "  \"diagnostic_total_with_profile_and_free_seconds\": " << sec(diagnostic_end - request_start) << "\n}\n";
