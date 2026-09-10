@@ -48,6 +48,7 @@ internal object GalleryCapturePolicy {
         sleep: (Long) -> Unit,
         sample: () -> List<GalleryWindowObservation>,
         observe: (List<GalleryWindowObservation>) -> Unit = {},
+        previousWindowIds: Set<Int> = emptySet(),
     ): GalleryWindowReadiness {
         val deadline = now() + WINDOW_TIMEOUT_MS
         var stableSince = now()
@@ -58,7 +59,7 @@ internal object GalleryCapturePolicy {
             windows = sample(); polls++; observe(windows)
             val imeVisible = windows.any { it.ime && it.nonemptyBounds }
             val candidate = windows.filter {
-                it.application && it.verifiedOwnerToken == token && it.rootPackage == packageName &&
+                it.application && it.id !in previousWindowIds && it.verifiedOwnerToken == token && it.rootPackage == packageName &&
                     (it.focused || it.active || requireIme && imeVisible) && it.nonemptyBounds &&
                     it.rootAvailable && it.rootWindowId == it.id && it.rootHasContent && it.rootVisible
             }.maxWithOrNull(compareBy<GalleryWindowObservation> { it.focused }.thenBy { it.layer })

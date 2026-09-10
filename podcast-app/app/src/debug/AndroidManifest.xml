@@ -5,6 +5,8 @@
             android:name=".gallery.SyntheticGalleryActivity"
             android:exported="false"
             android:launchMode="singleTop"
+            android:taskAffinity="${applicationId}.ui_gallery"
+            android:excludeFromRecents="true"
             android:process=":ui_gallery"
             android:windowSoftInputMode="adjustResize" />
         <service

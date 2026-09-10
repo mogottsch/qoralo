@@ -60,6 +60,7 @@ fun LibraryScreen(
         ready.any { it.id == state.episodeId && state.positionMs > 0 && state.positionMs < (it.durationMs ?: Long.MAX_VALUE) }
     }
     val hero = ready.firstOrNull { it.id == resume?.episodeId } ?: ready.firstOrNull()
+    val recent = ready.filter { it.id != hero?.id }
     val unfinished = episodes.filter { it.phase != EpisodePhase.FROZEN_READY }
     val stackedAction = LocalDensity.current.fontScale >= 1.4f || LocalConfiguration.current.screenWidthDp < 360
     PhoneContent {
@@ -110,9 +111,9 @@ fun LibraryScreen(
                     item { Text("Continue creating", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp)) }
                     items(unfinished, key = { it.id }) { EpisodeStatusRow(it, onOpen) }
                 }
-                if (ready.isNotEmpty()) {
+                if (recent.isNotEmpty()) {
                     item { Text("Recent episodes", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp)) }
-                    items(ready.filter { it.id != hero?.id }, key = { it.id }) { EpisodeRow(it, chapterCounts[it.id], onOpen) }
+                    items(recent, key = { it.id }) { EpisodeRow(it, chapterCounts[it.id], onOpen) }
                 }
                 if (episodes.isEmpty()) item { EmptyLibrary(onNew) }
             }
@@ -124,25 +125,38 @@ fun LibraryScreen(
 private fun ContinueCard(episode: EpisodeEntity, playback: PlaybackStateEntity?, chapterCount: Int?, onOpen: (EpisodeEntity) -> Unit) {
     val position = playback?.positionMs?.coerceIn(0, episode.durationMs ?: Long.MAX_VALUE) ?: 0L
     val finished = episode.durationMs?.let { it > 0 && position >= it } ?: false
+    val stacked = LocalDensity.current.fontScale >= 1.4f || LocalConfiguration.current.screenWidthDp < 360
     Surface(
         color = MaterialTheme.colorScheme.primaryContainer,
         shape = RoundedCornerShape(28.dp),
         modifier = Modifier.fillMaxWidth().clickable(onClick = { onOpen(episode) }).semantics { role = Role.Button },
     ) {
-        Row(Modifier.padding(16.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            VibeArtwork(Modifier.size(width = 116.dp, height = 148.dp), compact = true)
-            Column(Modifier.weight(1f)) {
-                Text(if (finished) "FINISHED" else if (position > 0) "CONTINUE LISTENING" else "READY TO LISTEN", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
-                Text(episode.title, style = MaterialTheme.typography.titleLarge, maxLines = 3, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(top = 4.dp))
-                Text(listOfNotNull(chapterCount?.takeIf { it > 0 }?.let { "$it chapters" }, episode.durationMs?.let(::formatDuration)).joinToString(" · "), style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(top = 6.dp))
-                Spacer(Modifier.height(12.dp))
-                LinearProgressIndicator(progress = { (position.toFloat() / (episode.durationMs ?: 1L).coerceAtLeast(1)).coerceIn(0f, 1f) }, modifier = Modifier.fillMaxWidth())
-                Row(Modifier.fillMaxWidth().padding(top = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Text(if (finished) "Play again" else if (position > 0) "Resume at ${formatDuration(position)}" else "Start listening", style = MaterialTheme.typography.labelMedium, modifier = Modifier.weight(1f))
-                    Surface(shape = CircleShape, color = MaterialTheme.colorScheme.primary, modifier = Modifier.size(40.dp)) {
-                        Box(contentAlignment = Alignment.Center) { Icon(Icons.Default.PlayArrow, "Play ${episode.title}", tint = MaterialTheme.colorScheme.onPrimary) }
-                    }
-                }
+        if (stacked) {
+            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                VibeArtwork(Modifier.fillMaxWidth().height(72.dp), compact = true)
+                ContinueDetails(episode, position, finished, chapterCount)
+            }
+        } else {
+            Row(Modifier.padding(16.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                VibeArtwork(Modifier.size(width = 116.dp, height = 148.dp), compact = true)
+                ContinueDetails(episode, position, finished, chapterCount, Modifier.weight(1f))
+            }
+        }
+    }
+}
+
+@Composable
+private fun ContinueDetails(episode: EpisodeEntity, position: Long, finished: Boolean, chapterCount: Int?, modifier: Modifier = Modifier) {
+    Column(modifier) {
+        Text(if (finished) "FINISHED" else if (position > 0) "CONTINUE LISTENING" else "READY TO LISTEN", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+        Text(episode.title, style = MaterialTheme.typography.titleLarge, maxLines = 3, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(top = 4.dp))
+        Text(listOfNotNull(chapterCount?.takeIf { it > 0 }?.let { "$it chapters" }, episode.durationMs?.let(::formatDuration)).joinToString(" · "), style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(top = 6.dp))
+        Spacer(Modifier.height(12.dp))
+        LinearProgressIndicator(progress = { (position.toFloat() / (episode.durationMs ?: 1L).coerceAtLeast(1)).coerceIn(0f, 1f) }, modifier = Modifier.fillMaxWidth())
+        Row(Modifier.fillMaxWidth().padding(top = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+            Text(if (finished) "Play again" else if (position > 0) "Resume at ${formatDuration(position)}" else "Start listening", style = MaterialTheme.typography.labelMedium, modifier = Modifier.weight(1f))
+            Surface(shape = CircleShape, color = MaterialTheme.colorScheme.primary, modifier = Modifier.size(40.dp)) {
+                Box(contentAlignment = Alignment.Center) { Icon(Icons.Default.PlayArrow, "Play ${episode.title}", tint = MaterialTheme.colorScheme.onPrimary) }
             }
         }
     }

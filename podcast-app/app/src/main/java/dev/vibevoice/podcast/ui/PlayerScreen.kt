@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -47,6 +48,7 @@ fun PlayerScreen(
 ) {
     val context = LocalContext.current
     val largeText = LocalDensity.current.fontScale >= 1.4f
+    val separateSeekRow = largeText || LocalConfiguration.current.screenWidthDp < 360
     val player = remember(file.absolutePath) {
         ExoPlayer.Builder(context).build().apply {
             setAudioAttributes(AudioAttributes.Builder().setUsage(C.USAGE_MEDIA).setContentType(C.AUDIO_CONTENT_TYPE_SPEECH).build(), true)
@@ -122,7 +124,7 @@ fun PlayerScreen(
             },
             bottomBar = {
                 Surface(color = MaterialTheme.colorScheme.surface) {
-                    Column(Modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal = 20.dp, vertical = 8.dp)) {
+                    Column(Modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal = if (largeText) 12.dp else 20.dp, vertical = 8.dp)) {
                         Slider(value = position.toFloat().coerceIn(0f, duration.coerceAtLeast(1).toFloat()),
                             onValueChange = { restored = true; dragPosition = it.toLong() },
                             onValueChangeFinished = {
@@ -138,20 +140,41 @@ fun PlayerScreen(
                             Text(formatDuration(position), style = MaterialTheme.typography.labelSmall)
                             Text(formatDuration(duration), style = MaterialTheme.typography.labelSmall)
                         }
-                        Row(Modifier.fillMaxWidth().padding(vertical = 10.dp), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
-                            IconButton(onClick = { restored = true; player.seekTo((position - 15_000L).coerceAtLeast(0)) }) { Text("−15", style = MaterialTheme.typography.labelLarge, modifier = Modifier.semantics { contentDescription = "Back 15 seconds" }) }
-                            IconButton(onClick = { restored = true; seekAdjacentChapter(player, audio, currentAudio, -1) }) { Icon(Icons.Default.SkipPrevious, "Previous chapter") }
+                        FlowRow(Modifier.fillMaxWidth().padding(vertical = 10.dp), horizontalArrangement = Arrangement.SpaceEvenly,
+                            verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            if (!separateSeekRow) TextButton(onClick = { restored = true; player.seekTo((position - 15_000L).coerceAtLeast(0)) },
+                                modifier = Modifier.widthIn(min = 64.dp).heightIn(min = 48.dp).align(Alignment.CenterVertically)
+                                    .semantics { contentDescription = "Back 15 seconds" }, contentPadding = PaddingValues(horizontal = 8.dp, vertical = 12.dp)) {
+                                Text("−15", style = MaterialTheme.typography.labelLarge, maxLines = 1, softWrap = false)
+                            }
+                            IconButton(onClick = { restored = true; seekAdjacentChapter(player, audio, currentAudio, -1) }, modifier = Modifier.align(Alignment.CenterVertically)) { Icon(Icons.Default.SkipPrevious, "Previous chapter") }
                             FilledIconButton(onClick = {
                                 restored = true
                                 if (player.isPlaying) player.pause() else {
                                     if (player.playbackState == Player.STATE_ENDED) player.seekTo(0)
                                     player.play()
                                 }
-                            }, modifier = Modifier.size(64.dp)) {
+                            }, modifier = Modifier.size(64.dp).align(Alignment.CenterVertically)) {
                                 Icon(if (playing) Icons.Default.Pause else Icons.Default.PlayArrow, if (playing) "Pause" else "Play", modifier = Modifier.size(32.dp))
                             }
-                            IconButton(onClick = { restored = true; seekAdjacentChapter(player, audio, currentAudio, 1) }) { Icon(Icons.Default.SkipNext, "Next chapter") }
-                            IconButton(onClick = { restored = true; player.seekTo((position + 15_000L).coerceAtMost(duration)) }) { Text("+15", style = MaterialTheme.typography.labelLarge, modifier = Modifier.semantics { contentDescription = "Forward 15 seconds" }) }
+                            IconButton(onClick = { restored = true; seekAdjacentChapter(player, audio, currentAudio, 1) }, modifier = Modifier.align(Alignment.CenterVertically)) { Icon(Icons.Default.SkipNext, "Next chapter") }
+                            if (!separateSeekRow) TextButton(onClick = { restored = true; player.seekTo((position + 15_000L).coerceAtMost(duration)) },
+                                modifier = Modifier.widthIn(min = 64.dp).heightIn(min = 48.dp).align(Alignment.CenterVertically)
+                                    .semantics { contentDescription = "Forward 15 seconds" }, contentPadding = PaddingValues(horizontal = 8.dp, vertical = 12.dp)) {
+                                Text("+15", style = MaterialTheme.typography.labelLarge, maxLines = 1, softWrap = false)
+                            }
+                        }
+                        if (separateSeekRow) Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                            TextButton(onClick = { restored = true; player.seekTo((position - 15_000L).coerceAtLeast(0)) },
+                                modifier = Modifier.weight(1f).heightIn(min = 48.dp).semantics { contentDescription = "Back 15 seconds" },
+                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)) {
+                                Text("−15", style = MaterialTheme.typography.labelLarge, maxLines = 1, softWrap = false)
+                            }
+                            TextButton(onClick = { restored = true; player.seekTo((position + 15_000L).coerceAtMost(duration)) },
+                                modifier = Modifier.weight(1f).heightIn(min = 48.dp).semantics { contentDescription = "Forward 15 seconds" },
+                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)) {
+                                Text("+15", style = MaterialTheme.typography.labelLarge, maxLines = 1, softWrap = false)
+                            }
                         }
                         FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             AssistChip(onClick = {

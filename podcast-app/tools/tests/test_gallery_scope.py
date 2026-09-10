@@ -12,6 +12,8 @@ class GalleryScopeTests(unittest.TestCase):
         gallery = next(x for x in root.find('application').findall('activity') if x.get(ANDROID + 'name') == '.gallery.SyntheticGalleryActivity')
         self.assertEqual('false', gallery.get(ANDROID + 'exported'))
         self.assertEqual(':ui_gallery', gallery.get(ANDROID + 'process'))
+        self.assertEqual('${applicationId}.ui_gallery', gallery.get(ANDROID + 'taskAffinity'))
+        self.assertEqual('true', gallery.get(ANDROID + 'excludeFromRecents'))
         main = (PROJECT / 'app/src/main/AndroidManifest.xml').read_text()
         self.assertNotIn('SyntheticGalleryActivity', main)
         application = (PROJECT / 'app/src/main/java/dev/vibevoice/podcast/PodcastApplication.kt').read_text()
@@ -43,6 +45,11 @@ class GalleryScopeTests(unittest.TestCase):
         self.assertIn('GalleryCapturePolicy.ownsWindow', source)
         self.assertIn('lastOwnershipSnapshot', source)
         self.assertIn('it.windowId == expected.id', source)
+        self.assertIn('Intent.FLAG_ACTIVITY_CLEAR_TASK', source)
+        self.assertIn('galleryInfo.taskAffinity ==', source)
+        self.assertIn('automation.clearCache()', source)
+        self.assertIn('GalleryFrameContent.problems', source)
+        self.assertIn('frameContentVerified', source)
         self.assertNotIn('useUnmergedTree', source)
 
 

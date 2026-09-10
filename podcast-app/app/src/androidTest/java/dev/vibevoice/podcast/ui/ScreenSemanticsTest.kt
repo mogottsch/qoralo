@@ -16,6 +16,10 @@ import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasScrollToIndexAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.performScrollToNode
+import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performSemanticsAction
+import androidx.compose.ui.semantics.SemanticsActions
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -33,6 +37,8 @@ import dev.vibevoice.podcast.data.JobKind
 import dev.vibevoice.podcast.data.JobStatus
 import dev.vibevoice.podcast.ui.theme.VibeVoiceTheme
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -95,9 +101,22 @@ class ScreenSemanticsTest {
 
     @Test fun generationShowsChapterProgressAndFailClosedBoundary() {
         val job = GenerationJobEntity("job", "episode", JobKind.AUDIO, JobStatus.RUNNING, "revision", 1, 2, "Creating One", null, 1, 2)
-        setNarrow { GeneratingScreen(episode(EpisodePhase.GENERATING_AUDIO), job, {}) }
+        var current by mutableStateOf(episode(EpisodePhase.GENERATING_AUDIO))
+        setNarrow { GeneratingScreen(current, job, {}) }
+        assertReadableText("Creating episode")
         rule.onNodeWithText("CHAPTER 1 OF 2").assertIsDisplayed()
-        rule.onNodeWithText("The selected inference route must succeed; no fallback will be used.").assertIsDisplayed()
+        rule.onNodeWithText("The selected inference route must succeed; no fallback will be used.").performScrollTo().assertIsDisplayed()
+        rule.runOnIdle { current = current.copy(phase = EpisodePhase.FAILED, failureMessage = "Synthetic failure") }
+        assertReadableText("Episode stopped")
+    }
+
+    @Test fun readyHeroUsesReadableFullWidthMetadataAndNoEmptyRecentHeading() {
+        val current = episode(EpisodePhase.FROZEN_READY).copy(title = "Why cities remember rivers", durationMs = 30_000)
+        setNarrow { LibraryScreen(listOf(current), {}, {}, {},
+            listOf(dev.vibevoice.podcast.data.PlaybackStateEntity(current.id, 12_000, 1.5f, false, 1)), mapOf(current.id to 3)) }
+        assertReadableText("CONTINUE LISTENING")
+        rule.onNodeWithText(current.title).assertExists().assertHasClickAction()
+        rule.onNodeWithText("Recent episodes").assertDoesNotExist()
     }
 
     @Test fun playerExposesTransportExportAndLyricsLikeFrozenTranscript() {
@@ -108,12 +127,23 @@ class ScreenSemanticsTest {
         val audio = ChapterAudioEntity("audio", "episode", "revision", chapter.stableChapterId, 0, wav.path, "a".repeat(64), wav.length(), 44_100, 1, 44_100, 0, 44_100)
         setNarrow { PlayerScreen(episode, listOf(chapter), listOf(audio), null, wav, {}, {}, { _, _, _ -> }) }
         rule.onNodeWithText("Now playing").assertIsDisplayed()
+        assertReadableText("−15")
+        assertReadableText("+15")
         rule.onNodeWithContentDescription("Play").assertHasClickAction()
         rule.onNodeWithText("Transcript").performClick()
         rule.onNodeWithText("Chapter 1 · Before the street grid").assertIsDisplayed()
         rule.onNodeWithText("Frozen chapter transcript").assertIsDisplayed()
         rule.onNodeWithText("Follows playback").assertDoesNotExist()
         rule.onNodeWithText("Every city carries the shape of the water that made it.").assertIsDisplayed().assertHasNoClickAction()
+    }
+
+    private fun assertReadableText(text: String) {
+        val node = rule.onNodeWithText(text).assertIsDisplayed()
+        val layouts = mutableListOf<TextLayoutResult>()
+        node.performSemanticsAction(SemanticsActions.GetTextLayoutResult) { action -> action(layouts) }
+        assertTrue("No real text layout for $text", layouts.isNotEmpty())
+        assertFalse("Text layout clips $text", layouts.any { it.hasVisualOverflow })
+        assertTrue("Ancestor clips the text height for $text", node.fetchSemanticsNode().boundsInRoot.height + 1 >= layouts.maxOf { it.size.height })
     }
 
     private fun setNarrow(content: @androidx.compose.runtime.Composable () -> Unit) {

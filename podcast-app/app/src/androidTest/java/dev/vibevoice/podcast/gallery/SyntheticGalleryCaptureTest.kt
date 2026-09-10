@@ -3,6 +3,7 @@ package dev.vibevoice.podcast.gallery
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.app.UiAutomation
 import android.content.Intent
+import android.content.ComponentName
 import android.graphics.Bitmap
 import android.graphics.Rect
 import android.os.Build
@@ -17,6 +18,7 @@ import org.junit.Assume.assumeTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
+import java.security.MessageDigest
 
 /** Emulator-only, real merged accessibility trees; missing trees are evidence failures, not rendering verdicts. */
 @RunWith(AndroidJUnit4::class)
@@ -25,8 +27,13 @@ class SyntheticGalleryCaptureTest {
         val args = InstrumentationRegistry.getArguments()
         assumeTrue("Explicit synthetic gallery opt-in required", args.getString("galleryApproved") == "synthetic-only")
         require(Build.HARDWARE in setOf("ranchu", "goldfish")) { "Gallery capture is emulator-only; no physical phone" }
+        require(Build.VERSION.SDK_INT >= 34) { "Gallery cache refresh requires Android34+ (approved lane: Android35)" }
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val context = instrumentation.targetContext
+        val galleryInfo = context.packageManager.getActivityInfo(ComponentName(context, SyntheticGalleryActivity::class.java), 0)
+        require(galleryInfo.taskAffinity == "${context.packageName}.ui_gallery" && !galleryInfo.exported) {
+            "Fresh-window capture may clear only the private nonexported gallery task"
+        }
         val run = requireNotNull(args.getString("galleryRunId"))
         require(run.matches(Regex("ui-[a-z0-9-]{1,64}")))
         val requested = args.getString("galleryFrame") ?: "all"
@@ -44,6 +51,7 @@ class SyntheticGalleryCaptureTest {
         val originalFlags = serviceInfo.flags
         automation.serviceInfo = serviceInfo.apply { flags = flags or AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS }
         val results = JSONArray()
+        val previousWindowIds = mutableSetOf<Int>()
         var launched = false
         var failed = false
         try {
@@ -55,6 +63,7 @@ class SyntheticGalleryCaptureTest {
                     .put("evidenceType", "synthetic-emulator-ui-no-model-inference")
                     .put("appApkPath", context.applicationInfo.sourceDir).put("deviceFingerprint", Build.FINGERPRINT)
                     .put("screenshotStatus", "not-attempted").put("treeStatus", "not-attempted")
+                    .put("previousWindowIds", JSONArray(previousWindowIds.toList())).put("frameContentVerified", false)
                 File(output, "$frame-metadata.json").writeText(metadata.toString(2))
                 val problems = mutableListOf<String>()
                 var selected: GalleryWindowObservation? = null
@@ -74,7 +83,9 @@ class SyntheticGalleryCaptureTest {
                 }
                 val observations = ArrayDeque<JSONObject>()
                 try {
-                    context.startActivity(Intent(context, SyntheticGalleryActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    // CLEAR_TASK applies only to the private debug gallery affinity, never MainActivity.
+                    context.startActivity(Intent(context, SyntheticGalleryActivity::class.java)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         .putExtra("frame", frame).putExtra("token", token))
                     launched = true
                     val deadline = SystemClock.elapsedRealtime() + 10_000
@@ -94,12 +105,13 @@ class SyntheticGalleryCaptureTest {
                     fun waitForWindow(expectIme: Boolean): GalleryWindowObservation? {
                         val result = GalleryCapturePolicy.awaitWindow(context.packageName, token, expectIme,
                             SystemClock::elapsedRealtime, Thread::sleep, {
+                                clearAccessibilityCache(automation)
                                 sampleWindows(automation, frame, token, context.packageName, expectedPid, currentOwner())
                             }, { windows ->
                                 if (observations.size == 12) observations.removeFirst()
                                 observations.addLast(JSONObject().put("elapsedRealtimeMs", SystemClock.elapsedRealtime())
                                     .put("windows", JSONArray(windows.map(::windowJson))))
-                            })
+                            }, previousWindowIds = previousWindowIds)
                         metadata.put(if (expectIme) "imeWindowPolls" else "windowPolls", result.polls)
                             .put("imeWindowPresent", result.windows.any { it.ime && it.nonemptyBounds })
                         return result.selected
@@ -135,12 +147,7 @@ class SyntheticGalleryCaptureTest {
                         } finally { bitmap.recycle() }
                     },
                     tree = {
-                        val root = ownedRoot(requireNotNull(selected))
-                        val budget = TreeBudget(SystemClock.elapsedRealtime() + 5000)
-                        val tree = nodeJson(root, budget)
-                        File(output, "$frame-accessibility.json").writeText(tree.toString(2))
-                        metadata.put("treeStatus", if (budget.truncated) "partial" else "retained").put("treeWindowId", root.windowId)
-                        check(!budget.truncated) { "Tree changed or exceeded 512 nodes / 5-second extraction budget; partial tree retained" }
+                        retainCurrentFrameTree(automation, frame, output, metadata) { ownedRoot(requireNotNull(selected)) }
                     },
                     metadata = { errors ->
                         metadata.put("status", if (errors.isEmpty() && metadata.optString("treeStatus") == "retained") "complete" else "partial")
@@ -152,6 +159,8 @@ class SyntheticGalleryCaptureTest {
                     })
                 results.put(JSONObject().put("frame", frame).put("token", token).put("status", if (issues.isEmpty()) "complete" else "partial")
                     .put("problems", JSONArray(issues)))
+                currentOwner()?.takeIf { it.pid == expectedPid && GalleryCapturePolicy.acknowledges(frame, token, context.packageName, it) }
+                    ?.let { previousWindowIds.addAll(it.windowIds) }
                 failed = failed || issues.isNotEmpty()
                 File(output, "run-summary.json").writeText(JSONObject().put("runId", run).put("frames", results)
                     .put("complete", !failed && results.length() == frames.size).toString(2))
@@ -168,6 +177,51 @@ class SyntheticGalleryCaptureTest {
                 automation.serviceInfo = requireNotNull(automation.serviceInfo).apply { flags = originalFlags }
             }
         }
+    }
+
+    private fun clearAccessibilityCache(automation: UiAutomation) {
+        if (Build.VERSION.SDK_INT >= 34) check(automation.clearCache()) { "Public UiAutomation cache clear failed" }
+        else error("Android34+ required")
+    }
+
+    private fun retainCurrentFrameTree(automation: UiAutomation, frame: String, output: File, metadata: JSONObject, root: () -> AccessibilityNodeInfo) {
+        val deadline = SystemClock.elapsedRealtime() + 10_000
+        val checks = JSONArray()
+        val distinctTrees = File(output, "$frame-tree-snapshots").also { check(it.mkdirs()) }
+        metadata.put("contentChecks", checks)
+        while (SystemClock.elapsedRealtime() < deadline) {
+            try {
+                clearAccessibilityCache(automation)
+                val live = root()
+                check(live.refresh()) { "Root refresh failed" }
+                val budget = TreeBudget(minOf(deadline, SystemClock.elapsedRealtime() + 5000))
+                val tree = nodeJson(live, budget)
+                val bytes = tree.toString(2).toByteArray()
+                val digest = MessageDigest.getInstance("SHA-256").digest(bytes).joinToString("") { "%02x".format(it) }
+                val snapshot = File(distinctTrees, "$digest.json")
+                if (!snapshot.exists()) snapshot.writeBytes(bytes)
+                File(output, "$frame-accessibility.json").writeBytes(bytes)
+                val problems = GalleryFrameContent.problems(frame, semanticValues(tree)) + if (budget.truncated) listOf("Tree truncated/changed") else emptyList()
+                checks.put(JSONObject().put("elapsedRealtimeMs", SystemClock.elapsedRealtime()).put("sha256", digest).put("problems", JSONArray(problems)))
+                metadata.put("treeStatus", "partial").put("treeWindowId", live.windowId)
+                if (problems.isEmpty()) {
+                    metadata.put("frameContentVerified", true).put("treeStatus", "retained")
+                    return
+                }
+            } catch (error: Exception) {
+                checks.put(JSONObject().put("elapsedRealtimeMs", SystemClock.elapsedRealtime()).put("error", error.toString()))
+            }
+            Thread.sleep(minOf(200, (deadline - SystemClock.elapsedRealtime()).coerceAtLeast(0)))
+        }
+        error("Current-frame merged semantics unavailable within 10 seconds; PNG, distinct trees and failed content checks retained")
+    }
+
+    private fun semanticValues(node: JSONObject, ancestorEnabled: Boolean = true): List<GallerySemanticValue> = buildList {
+        val enabled = ancestorEnabled && node.optBoolean("enabled", true)
+        add(GallerySemanticValue(node.optString("text").takeUnless { it == "null" || it.isEmpty() },
+            node.optString("contentDescription").takeUnless { it == "null" || it.isEmpty() }, enabled))
+        val children = node.optJSONArray("children") ?: JSONArray()
+        for (index in 0 until children.length()) addAll(semanticValues(children.getJSONObject(index), enabled))
     }
 
     private fun acknowledgement(value: JSONObject, packageName: String): GalleryAcknowledgement {

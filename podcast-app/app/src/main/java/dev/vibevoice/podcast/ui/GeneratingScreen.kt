@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.layout.PaddingValues
@@ -48,10 +50,16 @@ fun GeneratingScreen(episode: EpisodeEntity?, job: GenerationJobEntity?, onClose
     val failed = episode?.phase == EpisodePhase.FAILED
     PhoneContent {
         Scaffold(topBar = {
-            TopAppBar(
-                title = { Text(if (failed) "Episode stopped" else "Creating episode") },
-                navigationIcon = { IconButton(onClick = onClose) { Icon(Icons.Default.Close, "Return to library") } },
-            )
+            // Let wrapped large-font titles determine height instead of clipping inside the
+            // fixed-height small TopAppBar. This bar alone owns the status-bar inset.
+            Surface(color = MaterialTheme.colorScheme.surface) {
+                Row(Modifier.fillMaxWidth().statusBarsPadding().heightIn(min = 64.dp)
+                    .padding(start = 4.dp, end = 16.dp, top = 8.dp, bottom = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+                    IconButton(onClick = onClose) { Icon(Icons.Default.Close, "Return to library") }
+                    Text(if (failed) "Episode stopped" else "Creating episode", style = MaterialTheme.typography.titleLarge,
+                        softWrap = true, modifier = Modifier.weight(1f))
+                }
+            }
         }) { padding ->
             LazyColumn(
                 Modifier.fillMaxSize().padding(padding),
