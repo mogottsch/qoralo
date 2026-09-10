@@ -1,0 +1,66 @@
+{
+  "pads": [
+    {
+      "node": "/decoder/convnext.1/dwconv/net/Conv",
+      "pad": "/decoder/convnext.1/dwconv/Pad",
+      "pad_values": [
+        0,
+        0,
+        12,
+        0,
+        0,
+        0
+      ],
+      "weight": "tts.ae.decoder.convnext.1.dwconv.net.weight",
+      "bias": "tts.ae.decoder.convnext.1.dwconv.net.bias"
+    },
+    {
+      "node": "/decoder/convnext.4/dwconv/net/Conv",
+      "pad": "/decoder/convnext.4/dwconv/Pad",
+      "pad_values": [
+        0,
+        0,
+        12,
+        0,
+        0,
+        0
+      ],
+      "weight": "tts.ae.decoder.convnext.4.dwconv.net.weight",
+      "bias": "tts.ae.decoder.convnext.4.dwconv.net.bias"
+    }
+  ],
+  "isolated_shape_proofs": [
+    {
+      "node": "/decoder/convnext.1/dwconv/net/Conv",
+      "input_shape": [
+        1,
+        512,
+        12300
+      ],
+      "output_shape": [
+        1,
+        512,
+        12288
+      ],
+      "new_tensor_shapes_independently_inferred": true,
+      "weights_evaluated": false
+    },
+    {
+      "node": "/decoder/convnext.4/dwconv/net/Conv",
+      "input_shape": [
+        1,
+        512,
+        12300
+      ],
+      "output_shape": [
+        1,
+        512,
+        12288
+      ],
+      "new_tensor_shapes_independently_inferred": true,
+      "weights_evaluated": false
+    }
+  ],
+  "full_model_checker": true,
+  "full_model_inference_claim": "Checker validation only; original stored symbolic intermediate annotations are preserved, not replaced with invented concrete shapes."
+}

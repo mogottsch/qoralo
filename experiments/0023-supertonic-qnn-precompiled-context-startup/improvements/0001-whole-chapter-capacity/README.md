@@ -68,6 +68,10 @@ The46-test source readiness remains in [`results/vocoder-diagnostic-readiness-20
 
 [`results/vocoder-two-op-proposal-20260910/PROPOSAL.md`](results/vocoder-two-op-proposal-20260910/PROPOSAL.md) proposes explicit batch1 even/odd feature branches at **only the two named dilation2/kernel7/group512 Conv sites**. Keep the existing causal edge Pad `(12,0)` before splitting, reuse each original weight/bias initializer, use nondilated kernel7 Conv in each parity branch, then interleave feature time exactly. Six synthetic algebra/edge/shape tests passed; no learned weights were evaluated, no real graph was changed and no compile was run. Batch2 packing, zero-expanded kernel13 and shifted-term alternatives have separately documented support/numerical/re-fusion risks. Await Nik's proposal verdict and a fresh implementation scope. Optional existing-file metadata extraction was cheap but left153/402 intermediate rows unresolved per graph; it is not a complete liveness/workspace bound or a prerequisite for the two-op proposal.
 
+## One parity source derivative materialized; constructor not released
+
+[`results/vocoder-parity-materialization-20260910-attempt-01/`](results/vocoder-parity-materialization-20260910-attempt-01/) retains the separately authorized one-shot source transformation:401→415 nodes,103 original initializers/causal Pads/untouched nodes/original ValueInfo/public I/O bytes preserved, seven shared integer controls and only the two eight-node parity replacements. The101,455,228B LOCAL-ONLY graph has SHA `5c135922…c8ad07`. Seven focused structural tests, isolated plumbing shape inference and full checker/exhaustive delta gates passed. Materialization0.963s/guard1.202s; cleanup complete. No SDK/model call occurred. The source-bound verbose/cgroup constructor request `8557ca10…aec001` is NOT APPROVED; no fourth context or QNN tiling/fidelity success is claimed.
+
 ## Fidelity and comparison boundaries
 
 - Masked padding is demonstrably non-neutral: experiment0022's T235→T239 changed duration15.8623657→15.6378775s and embedding max difference0.1110139. Positional-prefix preservation does not erase that result.
