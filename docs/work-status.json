@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-10T22:57:21+00:00",
+  "updated_at": "2026-09-10T23:03:06+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -26,9 +26,9 @@
       "title": "Short E2E review",
       "status": "reviewing",
       "owner": "Nik",
-      "now": "81 committed WAL frames + consistent SHM; physical tail salts mismatch.",
-      "next": "Retained-tail hypothesis only—not corruption or completed preservation proof.",
-      "reported_at": "2026-09-10T22:57:21+00:00",
+      "now": "Rows verified through corrected WAL view; host capture-order fix pending.",
+      "next": "Keep OS cleanup, rows and file timing separate; no data-loss/full-preservation claim.",
+      "reported_at": "2026-09-10T23:03:06+00:00",
       "reported_by": "Pi — authoritative current state",
       "stale_after_seconds": 600,
       "links": []
@@ -38,10 +38,10 @@
       "title": "Short product E2E",
       "status": "preparing",
       "owner": "Janek",
-      "now": "Agent raw kept old title with incorrect summary; prompt-priority fix planned.",
-      "next": "Not host-field loss. Preservation still unverified; host WAL fix/validation underway.",
-      "reported_at": "2026-09-10T22:57:21+00:00",
-      "reported_by": "Pi — saved agent/WAL refinement",
+      "now": "Saved-WAL row comparison PASS; original post-file inventory was never captured.",
+      "next": "One CURRENT read-only inventory authorized; not reconstructed past preservation.",
+      "reported_at": "2026-09-10T23:03:06+00:00",
+      "reported_by": "Pi — separate row/file preservation scope",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -143,11 +143,11 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "paused",
+      "status": "reserved",
       "owner": "Pi",
-      "now": "no fresh flow yet",
-      "next": "Host PID/settings/control handback passed; prior-row preservation still unproven.",
-      "reported_at": "2026-09-10T22:57:21+00:00",
+      "now": "one current read-only inventory",
+      "next": "Janek’s explicit inventory scope only; no model/UI retry or WAV.",
+      "reported_at": "2026-09-10T23:03:06+00:00",
       "reported_by": "Janek execution report + Pi release, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -157,9 +157,9 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Janek / Nik / Ben",
-      "now": "prompt / WAL parser correction",
-      "next": "Saved-only validation before any fresh flow; no model or UI retry yet.",
-      "reported_at": "2026-09-10T22:57:21+00:00",
+      "now": "capture-order fix / preservation review",
+      "next": "Original post-file evidence missing; current inventory cannot repair that historical gap.",
+      "reported_at": "2026-09-10T23:03:06+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -194,15 +194,15 @@
     },
     {
       "name": "Nik",
-      "task": "Review preservation / prompt",
-      "reported_at": "2026-09-10T22:57:21+00:00",
+      "task": "Review rows vs file boundaries",
+      "reported_at": "2026-09-10T23:03:06+00:00",
       "reported_by": "Pi — authoritative current state",
       "stale_after_seconds": 900
     },
     {
       "name": "Janek",
-      "task": "Prompt priority / WAL fix",
-      "reported_at": "2026-09-10T22:57:21+00:00",
+      "task": "Current inventory / capture fix",
+      "reported_at": "2026-09-10T23:03:06+00:00",
       "reported_by": "Pi — authoritative current state",
       "stale_after_seconds": 900
     },
