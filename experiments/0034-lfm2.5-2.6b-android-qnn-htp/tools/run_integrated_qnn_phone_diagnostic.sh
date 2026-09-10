@@ -6,6 +6,7 @@ REPO=$(cd "$EXP/../.." && pwd)
 ADB=${ADB:-adb}
 SERIAL=${SERIAL:-R5CW81PR8SY}
 STAGE=${STAGE:?set STAGE}
+source "$EXP/tools/phone_evidence_guard.sh"
 RUN_ID=${RUN_ID:-integrated-$(date -u +%Y%m%dT%H%M%SZ)-$$}
 REMOTE="/data/local/tmp/vibevoice-0034-$RUN_ID"
 OUT="$EXP/.local/integrated-qnn-phone-runs/$RUN_ID"
@@ -21,15 +22,7 @@ cleanup() {
     printf 'retained_after_pull_failure=%s\n' "$REMOTE" >"$OUT/cleanup-status.txt"
     return
   fi
-  if ! adb_cmd shell "rm -rf '$REMOTE'" >"$OUT/cleanup.stdout" 2>"$OUT/cleanup.stderr"; then
-    echo unverified_transport_failure >"$OUT/cleanup-status.txt"
-    return
-  fi
-  if adb_cmd shell "test ! -e '$REMOTE'"; then
-    echo absent >"$OUT/cleanup-status.txt"
-  else
-    echo present >"$OUT/cleanup-status.txt"
-  fi
+  phone_cleanup_remote "$ADB" "$SERIAL" "$REMOTE" "$OUT" || true
 }
 trap cleanup EXIT
 adb_cmd get-state | tr -d '\r' | tee "$OUT/adb-state.txt" | grep -Fx device
@@ -85,9 +78,9 @@ if ! adb_cmd pull "$REMOTE/output.int32le" "$OUT/output.int32le" >"$OUT/pull-out
 fi
 adb_cmd shell dumpsys battery >"$OUT/battery-after.txt" 2>"$OUT/battery-after.stderr" || true
 adb_cmd shell dumpsys thermalservice >"$OUT/thermal-after.txt" 2>"$OUT/thermal-after.stderr" || true
-adb_cmd shell "pidof direct_lfm2_qnn_runner || true" >"$OUT/process-after.txt"
-if [[ -s "$OUT/process-after.txt" ]]; then
-  echo "runner process remains after bounded run" >&2
+if ! phone_capture_process_after "$ADB" "$SERIAL" direct_lfm2_qnn_runner \
+    "$OUT/process-after.txt" "$OUT/process-after.stderr"; then
+  echo "runner PID absence is unknown or process remains" >&2
   retain_remote=1
   exit 6
 fi

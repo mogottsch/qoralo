@@ -635,6 +635,15 @@ class ContractTest(unittest.TestCase):
         self.assertIn("did not prove rotary positions", result["impact"]["invalidated_claims"][0])
         self.assertIn("physically", result["impact"]["still_valid"][0])
 
+    def test_phone_evidence_guard_handles_transport_unknown(self) -> None:
+        completed = subprocess.run(
+            ["bash", str(EXP / "tests/test_phone_evidence_guard.sh")],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertIn("fake-ADB checks passed", completed.stdout)
+
     def test_integrated_phone_attempt_is_transport_only(self) -> None:
         attempt = self.contract["integrated_phone_attempt_1_transport_failure"]
         self.assertTrue(attempt["device_identity_verified"])
@@ -645,6 +654,9 @@ class ContractTest(unittest.TestCase):
         self.assertEqual("unknown_unverified_transport_failure", attempt["cleanup_status"])
         self.assertFalse(attempt["raw_cleanup_present_is_correct"])
         self.assertTrue(attempt["phone_lock_released"])
+        self.assertTrue(attempt["future_guard"]["cleanup_absence_query_transport_is_unknown"])
+        self.assertTrue(attempt["future_guard"]["pid_query_transport_sets_remote_retention_before_exit"])
+        self.assertTrue(attempt["future_guard"]["fake_adb_regression"])
         result = json.loads((EXP / attempt["evidence"]).read_text())
         self.assertEqual("unknown_unverified", result["cleanup"]["remote_root_status"])
         self.assertFalse(result["transport_failure"]["remote_mkdir_dispatched"])

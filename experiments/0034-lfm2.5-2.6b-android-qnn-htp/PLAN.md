@@ -117,7 +117,8 @@
 105. Added fail-closed qnn-net-run position preflight for numeric FLOAT32 default mode or native INT64 with documented native flags; historical INT32 bit patterns, wrong sizes, and mode/flag mismatches are rejected.
 106. Updated future qnn-net-run input generators and launch scripts to validate correct numeric position values before any staging/execution while leaving historical evidence immutable.
 107. Attempted one corrected integrated phone gate under `phone.lock`; exact identity/local hashes passed, then transport disappeared before remote-root creation or staging.
-108. Preserved the transport-only failure, corrected raw cleanup `present` to unknown/unverified, and changed future cleanup tooling to distinguish unreachable transport from verified presence.
+108. Preserved the transport-only failure and corrected raw cleanup `present` to unknown/unverified.
+109. Hardened future cleanup/PID handling with fake-ADB regressions: absence-query transport loss remains unknown, confirmed presence stays distinct, and PID-query failure sets remote retention before exit.
 
 ## In progress: performance engineering
 
