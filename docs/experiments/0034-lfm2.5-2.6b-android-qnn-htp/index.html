@@ -74,7 +74,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <h1>Experiment 0034 — LFM2.5-2.6B Android QNN/HTP</h1>
 <p class="summary">Correction: earlier qnn-net-run AR171 and phase-switch calls used zero positions, invalidating their canonical-position claims and affecting derived bridge/max16 results. The native-INT64 integrated runner remains unexecuted.</p>
 <div class="header-links"><a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-09-10</span><span>evidence commit: c477e54e6e94e0f85145ca71f0c52183b5e6ba06</span><span>page source: docs/experiments/0034-lfm2.5-2.6b-android-qnn-htp/page.md</span><span>page source sha256: 4815d47a7bc2eb3bd5a7606efa8e6ad99ab270141e0209962625964f1fa01a2c</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-09-10</span><span>evidence commit: 03b8c4f1f6250704a94cd6d075c0f0b0d4e63cd0</span><span>page source: docs/experiments/0034-lfm2.5-2.6b-android-qnn-htp/page.md</span><span>page source sha256: 51c8e55b71c65f8b98ab435c3f464936897341a2bee58791657740681f47db95</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
@@ -183,7 +183,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <p>Critical evidence gaps remain: the resume runner kept state and logits only in process, retained no detailed per-call QNN profile, and did not explicitly finite-scan or serialize each output tensor. Initial state/mask and input type/size checks did not establish correct provenance of the inherited prefill positions. Its calls, partial text, phase-local timings, and cleanup are retained as affected-state diagnostics only. Correct decoder positions do not repair wrong-position prefill, and no canonical state continuity, numerical equivalence, comparable speed, complete answer, or campaign claim follows.</p>
 <h3 id="integrated-runner-readiness-2026-09-10">Integrated runner readiness — 2026-09-10<a class="anchor" href="#integrated-runner-readiness-2026-09-10" aria-label="Link to Integrated runner readiness — 2026-09-10">#</a></h3>
 <p>The reviewed host-only chain <code>6b37e37</code> → <code>45dbd3e</code> → <code>c90d052</code> → <code>8ef097a</code> prepares one logical request in a single process. It addresses input preparation and evidence handling in the proposed runner; it does not fill gaps in the earlier physical max-16 result retrospectively.</p>
-<p>The designed sequence creates one backend/device, loads AR171, prepares all 171 CPU embedding rows inside the request timing boundary, constructs positions/mask/zero state, and runs prefill. It finite-scans all 60 outputs before copying the 38 state tensors and reducing endpoint argmax. Prefill profiling is extracted, AR171 is freed, profiling is reset, the 38 states are bridged in memory on CPU, and AR1 is loaded once for in-process continuation. Every AR1 call has the same all-60-output finite-scan logic and a separate phase-labelled profile path. These are implemented/static-checked capabilities, not observed integrated inference.</p>
+<p>The designed sequence creates one backend/device, loads AR171, prepares all 171 CPU embedding rows inside the request timing boundary, constructs positions/mask/zero state, and runs prefill. It finite-scans all 60 outputs before copying the 38 state tensors and reducing endpoint argmax. The endpoint is appended and <code>fsync</code>ed, then the 38 states are bridged in memory on CPU <strong>before</strong> prefill profile extraction. AR171 is then freed, profiling is reset, and AR1 is loaded once for in-process continuation. Every AR1 call has the same all-60-output finite-scan logic and a separate phase-labelled profile path. These are implemented/static-checked capabilities, not observed integrated inference.</p>
 <p><code>45dbd3e</code> makes <code>MAX_NEW=16</code> the <strong>total emitted-token cap including the AR171 endpoint</strong>, so the integrated route allows at most 15 AR1 calls, with early EOS stopping. This differs from the earlier physical resume&#x27;s 16 continuation calls. An exclusive output file is opened before backend setup; the endpoint and every later token are appended and <code>fsync</code>ed immediately. A subsequent inference or finite-scan failure must leave emitted partial tokens intact. Optional profile-extraction failures are explicitly logged as missing telemetry rather than invalidating completed inference. A no-QNN synthetic host regression exercises partial-token preservation under injected late failure, overwrite rejection, and optional-profile failure; it is not a model execution test.</p>
 <p><code>c90d052</code> clarifies actual emitted-token timestamps rather than derived compute sums:</p>
 <ul>
@@ -196,6 +196,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <p>The unexecuted integrated runner&#x27;s direct-QNN position ABI uses correct native INT64 buffers: AR171 <code>[1,171]</code> / 1,368 bytes and AR1 <code>[1,1]</code> / 8 bytes. This does not validate earlier qnn-net-run INT32 files: the audit proves the recorded invocations parsed them as default FLOAT32, then cast their tiny reinterpreted values to INT64 zero. The prior description of that ingestion as merely a separate valid ABI boundary is superseded.</p>
 <p>Host and API-31 Android binaries were freshly rebuilt after the <code>8ef097a</code> source/header changes, not reused from the earlier readiness revision. The committed provenance binds runner source SHA-256 <code>2c446bcd…3a2e</code>, support header <code>48eb643e…9aa3</code>, host binary <code>ed122a00…e261</code>, and Android binary <code>94e76c33…fdb1</code>. The rebuilt private stage contains 12 payload files totaling 3,400,505,468 bytes, with metadata SHA-256 <code>dbb9d687…a60f</code>, manifest <code>8fa2c53c…9616</code>, and passing hashes/ELF checks. These identities supersede the earlier readiness builds; both model contexts remain unchanged.</p>
 <p>No integrated inference was attempted: the known AR171 x86-emulator cost already exceeds the 1,800-second bound. There was no new phone access.</p>
+<p>The <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/PHONE-RETURN-CHECKLIST.md">return-to-phone checklist</a>, introduced in <code>8e03d85</code> and corrected in <code>03b8c4f</code>, freezes this candidate and the proposed <strong>600-second</strong> diagnostic bound. It documents endpoint finite-scan/argmax/fsync → in-memory bridge → prefill profile/free/reset → AR1 load, not a bridge after context teardown. Reference-token equality is not a pass gate at any position, including the first; every mismatch must still be retained. The severe historical deltas came from wrong-position qnn-net-run inputs and are not a precision conclusion about this unexecuted native-INT64 route. The checklist is documentation only, not phone authorization or new execution evidence.</p>
 <p>The design retains one explicit sequential phase switch and at most one resident context, not per-token streaming or a combined/shared-constant context. Both ordinary contexts report zero shared weights and would duplicate roughly 3.19 GB of constants if combined; the previously rejected shared-resource format has not become viable. CPU preparation/bridge/sampling and HTP neural phases remain explicit, never HTP-only.</p>
 <p>The retained array deltas and token-5 divergence are unchanged, but their interpretation is corrected: they compare different effective prefill inputs and do not isolate HTP/quantization error. Integrated finite-scan logic, builds, and synthetic tests cannot repair the historical input error or supply the prior run&#x27;s missing state/logit/profile evidence. No integrated inference, profiling, finiteness, quality, performance-distribution, campaign, or registry claim exists.</p>
 <h3 id="position-ingestion-correction-2026-09-10">Position-ingestion correction — 2026-09-10<a class="anchor" href="#position-ingestion-correction-2026-09-10" aria-label="Link to Position-ingestion correction — 2026-09-10">#</a></h3>
@@ -702,7 +703,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 </tr>
 <tr>
 <td>Designed integrated phases</td>
-<td>One process/backend, AR171 → free/profile reset → in-memory 38-state CPU bridge → AR1 loaded once; no simultaneous contexts</td>
+<td>Endpoint finite-scan/argmax/fsync → in-memory 38-state CPU bridge → prefill profile/free/reset → AR1 load; no simultaneous contexts</td>
 </tr>
 <tr>
 <td>Finite-scan implementation</td>
@@ -747,6 +748,14 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <tr>
 <td>Combined-context boundary</td>
 <td>No viable combined/shared-constant context claimed; prior shared-resource rejection unchanged</td>
+</tr>
+<tr>
+<td>Return-to-phone checklist</td>
+<td><code>8e03d85</code> → <code>03b8c4f</code>; proposed 600 s bound; reference equality not required at any token, including first</td>
+</tr>
+<tr>
+<td>Corrected-route precision boundary</td>
+<td>Historical wrong-position deltas are not evidence of this native-INT64 route&#x27;s precision</td>
 </tr>
 <tr>
 <td>Remaining integrated evidence</td>

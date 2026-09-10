@@ -202,7 +202,7 @@ Critical evidence gaps remain: the resume runner kept state and logits only in p
 
 The reviewed host-only chain `6b37e37` → `45dbd3e` → `c90d052` → `8ef097a` prepares one logical request in a single process. It addresses input preparation and evidence handling in the proposed runner; it does not fill gaps in the earlier physical max-16 result retrospectively.
 
-The designed sequence creates one backend/device, loads AR171, prepares all 171 CPU embedding rows inside the request timing boundary, constructs positions/mask/zero state, and runs prefill. It finite-scans all 60 outputs before copying the 38 state tensors and reducing endpoint argmax. Prefill profiling is extracted, AR171 is freed, profiling is reset, the 38 states are bridged in memory on CPU, and AR1 is loaded once for in-process continuation. Every AR1 call has the same all-60-output finite-scan logic and a separate phase-labelled profile path. These are implemented/static-checked capabilities, not observed integrated inference.
+The designed sequence creates one backend/device, loads AR171, prepares all 171 CPU embedding rows inside the request timing boundary, constructs positions/mask/zero state, and runs prefill. It finite-scans all 60 outputs before copying the 38 state tensors and reducing endpoint argmax. The endpoint is appended and `fsync`ed, then the 38 states are bridged in memory on CPU **before** prefill profile extraction. AR171 is then freed, profiling is reset, and AR1 is loaded once for in-process continuation. Every AR1 call has the same all-60-output finite-scan logic and a separate phase-labelled profile path. These are implemented/static-checked capabilities, not observed integrated inference.
 
 `45dbd3e` makes `MAX_NEW=16` the **total emitted-token cap including the AR171 endpoint**, so the integrated route allows at most 15 AR1 calls, with early EOS stopping. This differs from the earlier physical resume's 16 continuation calls. An exclusive output file is opened before backend setup; the endpoint and every later token are appended and `fsync`ed immediately. A subsequent inference or finite-scan failure must leave emitted partial tokens intact. Optional profile-extraction failures are explicitly logged as missing telemetry rather than invalidating completed inference. A no-QNN synthetic host regression exercises partial-token preservation under injected late failure, overwrite rejection, and optional-profile failure; it is not a model execution test.
 
@@ -221,6 +221,8 @@ The unexecuted integrated runner's direct-QNN position ABI uses correct native I
 Host and API-31 Android binaries were freshly rebuilt after the `8ef097a` source/header changes, not reused from the earlier readiness revision. The committed provenance binds runner source SHA-256 `2c446bcd…3a2e`, support header `48eb643e…9aa3`, host binary `ed122a00…e261`, and Android binary `94e76c33…fdb1`. The rebuilt private stage contains 12 payload files totaling 3,400,505,468 bytes, with metadata SHA-256 `dbb9d687…a60f`, manifest `8fa2c53c…9616`, and passing hashes/ELF checks. These identities supersede the earlier readiness builds; both model contexts remain unchanged.
 
 No integrated inference was attempted: the known AR171 x86-emulator cost already exceeds the 1,800-second bound. There was no new phone access.
+
+The [return-to-phone checklist](../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/PHONE-RETURN-CHECKLIST.md), introduced in `8e03d85` and corrected in `03b8c4f`, freezes this candidate and the proposed **600-second** diagnostic bound. It documents endpoint finite-scan/argmax/fsync → in-memory bridge → prefill profile/free/reset → AR1 load, not a bridge after context teardown. Reference-token equality is not a pass gate at any position, including the first; every mismatch must still be retained. The severe historical deltas came from wrong-position qnn-net-run inputs and are not a precision conclusion about this unexecuted native-INT64 route. The checklist is documentation only, not phone authorization or new execution evidence.
 
 The design retains one explicit sequential phase switch and at most one resident context, not per-token streaming or a combined/shared-constant context. Both ordinary contexts report zero shared weights and would duplicate roughly 3.19 GB of constants if combined; the previously rejected shared-resource format has not become viable. CPU preparation/bridge/sampling and HTP neural phases remain explicit, never HTP-only.
 
@@ -366,7 +368,7 @@ Affected records are the physical AR171 diagnostic, both qnn-net-run phases of t
 | Critical evidence gap | No serialized per-call states/logits, explicit finite scan, or detailed QNN profile; inherited prefill input invalid |
 | Resume claim limit | Canonical state continuity/fidelity/speed interpretations withdrawn; correct decoder positions do not repair initial state |
 | Integrated readiness chain | `6b37e37` → `45dbd3e` → `c90d052` → `8ef097a`; corrected production helpers and rebuilt artifacts, no integrated inference |
-| Designed integrated phases | One process/backend, AR171 → free/profile reset → in-memory 38-state CPU bridge → AR1 loaded once; no simultaneous contexts |
+| Designed integrated phases | Endpoint finite-scan/argmax/fsync → in-memory 38-state CPU bridge → prefill profile/free/reset → AR1 load; no simultaneous contexts |
 | Finite-scan implementation | All 60 prefill outputs and every AR1 call's 60 outputs; static/build readiness, not a new physical finite-scan result |
 | Corrected output cap | Max16 total including endpoint; ≤15 AR1 calls; early EOS permitted |
 | Partial-output handling | Exclusive file before setup; immediate per-token append/fsync; optional-profile failure logged without discarding tokens |
@@ -378,6 +380,8 @@ Affected records are the physical AR171 diagnostic, both qnn-net-run phases of t
 | Integrated build/stage | Fresh host `ed122a00…e261` / Android `94e76c33…fdb1`; 12 files / 3,400,505,468 B; hashes/ELF pass |
 | Rebuilt stage provenance | Metadata `dbb9d687…a60f`, manifest `8fa2c53c…9616`; unchanged AR171/AR1 contexts |
 | Combined-context boundary | No viable combined/shared-constant context claimed; prior shared-resource rejection unchanged |
+| Return-to-phone checklist | `8e03d85` → `03b8c4f`; proposed 600 s bound; reference equality not required at any token, including first |
+| Corrected-route precision boundary | Historical wrong-position deltas are not evidence of this native-INT64 route's precision |
 | Remaining integrated evidence | No inference, phone result, TTFT, numerical fidelity, performance distribution, campaign, or registry row |
 | Hybrid disclosure rule | CPU bridge + HTP phases must remain explicit; never label this candidate HTP-only |
 | Declared CPU boundary | Current baseline: selected-row Q4 embedding, orchestration, and global argmax only |
