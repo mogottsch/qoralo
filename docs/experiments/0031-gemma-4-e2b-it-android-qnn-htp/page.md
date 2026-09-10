@@ -1,7 +1,7 @@
 ---
 experiment: 0031-gemma-4-e2b-it-android-qnn-htp
 status: completed
-summary: The accepted campaign remains complete; improvement attempt 06 converts AR128 with verified AR1 reuse and passes all 30 paired cache contracts. Context execution, fidelity, delegation, and speed improvements remain unproven.
+summary: The accepted campaign remains complete; the separate FP16 improvement now has a compiled SM8550/v73 context with all 30 cache contracts and 120 flat-buffer boundaries verified. Runtime, fidelity, and speed remain unmeasured.
 benchmark: android-llm
 registry: 0031-gemma-4-e2b-it-qnn-htp
 ---
@@ -212,7 +212,17 @@ Official CSVs now confirm the selected global value-cache inputs and outputs are
 
 AR128's operator count rises 6,830→6,842: Convert 30→36, plus three Casts and three Dequantize operations. Converter floating-precision warnings rise 15→21, comprising 15 RmsNorm operations plus three global Concats and three output Casts. Reused AR1 remains at Convert 31→31 and warnings 75→81. There is no demonstrated count-based speed gain; these warnings establish neither CPU-provider fallback nor full HTP delegation.
 
-Attempt 06 used owned disk-backed scratch. The SDK removed its temporary files, the empty scratch root was removed, and owned processes were reaped. No context compilation, inference/fidelity test, or phone run occurred in this milestone. Context size/compiler metadata, full delegation, runtime unsupported/fallback counts, fidelity, and speed improvement remain null/unmeasured. The original campaign and registry are unchanged.
+Attempt 06 used owned disk-backed scratch. The SDK removed its temporary files, the empty scratch root was removed, and owned processes were reaped. That conversion milestone performed no context compilation, inference/fidelity test, or phone run.
+
+**2026-09-10 — Host context compile (`f637a74`, Gemma slice only).** A separately authorized [context attempt 01](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/global-value-fp16-context-attempt-01/result.json) ran the unchanged hash-pinned accepted compiler recipe, substituting only the reviewed paired DLC paths/hashes and fresh output/cache/scratch paths. It produced one 1,186,430,976-byte SM8550/v73 weight-sharing context, SHA-256 `1d80d016…ca9f8`: 61,440 bytes larger than the baseline. This publication covers only the experiment-owned evidence in that mixed-scope commit; its separate app/gallery files are neither published nor approved by the Gemma review.
+
+Official metadata confirms QNN HTP backend 6 / SoC 43, build `v2.49.40.260810104044`, both original AR1/AR128 graph aliases, and 38 inputs / 31 outputs per graph. Only the selected global value-cache types/quantization differ; unselected names, shapes, positional/SWA bindings, and active quantization remain unchanged. All 30 four-way cache contracts match and all **120 cache tensor boundaries are `FLAT_BUFFER`**. Weight-sharing or HMX weight-kernel markers do not imply NativeKV cache layout.
+
+The [Genie FP16 source notes](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/GENIE-FP16-CACHE-SOURCE-NOTES.md) provide conditional rationale, not runtime proof: ordinary flat-buffer updates copy raw bytes, while key-derived clearing uses `0x8000`, interpreted as FP16 negative zero for the selected values. NativeKV accepts only quantized uint8 and is not selected or claimed. Quantization-dependent cache dump/spec/export paths were not exercised and must not be assumed valid for mixed quantized-key/FP16-value state. SDK example source does not establish every shipped-runtime path's behavior.
+
+The accepted warn-level compiler API can suppress native logs, so the exhaustive unsupported-operator count remains **null, not zero**. The retained builder architecture-default warning is not a CPU-provider observation; no extra compile was performed just to obtain optional logs. Compilation and metadata compatibility do not prove CPU-free neural placement, runtime loading, fidelity, long-output improvement, or speed. The increased DLC Convert counts and precision warnings remain disclosed.
+
+Owned compile scratch was empty/removed and processes were reaped. No runtime reset/inference, fidelity test, or phone run occurred; all such outcomes remain unmeasured. The original completed campaign, its registry card, and registry evidence are unchanged.
 
 The [request-routing recommendation](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/REQUEST-ROUTING.md) remains an unmeasured policy for the existing canonical tiers, not a built hybrid or a general prompt-length threshold. It selects HTP for short/medium and LiteRT GPU for long before each complete request, with no mid-request switch or retry on another provider. Co-resident setup, memory, and speed require measurement; separate accepted route measurements are not a hybrid benchmark.
 
@@ -321,7 +331,7 @@ Attempt chronology remains intact: the initial campaign setup failed before any 
 | Candidate 1 | Request-level hybrid: QNN HTP short/medium + LiteRT GPU long; explicit backend per complete request |
 | Long completion comparison | GPU 48.311 s vs HTP 118.256 s, 59.147% shorter; output counts/stops differ (756 EOS vs 2,048 max) |
 | Decode comparison | Null for ranking: Genie first-token inclusion unspecified; LiteRT explicitly excludes it |
-| Candidate 2 | Actual AR1 + AR128 selected FP16 interfaces and all 30 paired cache contracts pass; no compiled-context result |
+| Candidate 2 | Separate FP16 improvement context compiled; metadata passes all 30 cache contracts and 120 flat-buffer boundaries; runtime untested |
 | Retained attempts 01–03 | Two import/loader-path failures and one encoding-removal preflight failure; all before conversion |
 | Attempt 04 patch scope | AR1 removes 6 selected encoding entries, AR128 removes 3; other I/O/encodings/weights unchanged |
 | Attempt 04 interruption | App-priority `STOP` → TERM before DLC; owned group reaped; no automatic restart; not model/numerical failure |
@@ -337,7 +347,13 @@ Attempt chronology remains intact: the initial campaign setup failed before any 
 | AR128 operator observations | 6,830→6,842; Convert 30→36, +3 Cast/+3 Dequantize; no count-based speed benefit |
 | AR128 precision warnings | 15→21; not a CPU-provider fallback count or full-delegation proof |
 | Attempt 06 scratch/processes | Owned disk-backed `QAIRT_TMP_DIR` used; scratch empty/removed and processes reaped |
-| Unmeasured candidate results | No context compilation, inference/fidelity, or speed proof; delegation and runtime unsupported/fallback metrics null |
+| Context compile recipe | Unchanged hash-pinned accepted recipe; only paired DLC substitutions and fresh storage paths |
+| Improvement context | 1,186,430,976 B / SHA `1d80d016…ca9f8`; +61,440 B versus baseline; HTP backend 6 / SoC 43 / v73 |
+| Compiled cache metadata | Original 38-in/31-out AR1/AR128 aliases; all 30 four-way contracts match; all 120 boundaries `FLAT_BUFFER` |
+| Source/API limits | Byte-copy rationale only; key-derived FP16 negative-zero clear; NativeKV uint8-only and not selected; dump/export semantics untested |
+| Unsupported-op count | Null: native logs can be suppressed at accepted verbosity; not a zero-unsupported or CPU-free execution claim |
+| Unmeasured candidate results | Runtime load/reset/inference, physical placement, fidelity/long-output quality, and speed; no phone or campaign result |
+| Mixed-commit review scope | Gemma slice of `f637a74` only; no app/gallery publication or approval |
 | Routing-policy boundary | Unmeasured request-level recommendation; no built/measured hybrid or general length threshold |
 | Publication effect | Completed campaign and registry row unchanged; no phone, campaign rerun, or new registry evidence |
 

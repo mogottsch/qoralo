@@ -72,9 +72,9 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="status-header" data-status-header="true">
 <div class="kicker"><span>Experiment 0031</span><span class="status">Completed</span></div>
 <h1>Experiment 0031 — Gemma 4 E2B IT Android QNN/HTP</h1>
-<p class="summary">The accepted campaign remains complete; improvement attempt 06 converts AR128 with verified AR1 reuse and passes all 30 paired cache contracts. Context execution, fidelity, delegation, and speed improvements remain unproven.</p>
+<p class="summary">The accepted campaign remains complete; the separate FP16 improvement now has a compiled SM8550/v73 context with all 30 cache contracts and 120 flat-buffer boundaries verified. Runtime, fidelity, and speed remain unmeasured.</p>
 <div class="header-links"><a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-09-10</span><span>evidence commit: ce3b021c0033330554d4ffb186790c2c7f570440</span><span>page source: docs/experiments/0031-gemma-4-e2b-it-android-qnn-htp/page.md</span><span>page source sha256: 3585e3bbad3731db5573a4d3f1afb53b2f393cffc413242290742cad7cfa0ae8</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-09-10</span><span>evidence commit: f637a74845bbe805fd12d729f0f0467ef101446e</span><span>page source: docs/experiments/0031-gemma-4-e2b-it-android-qnn-htp/page.md</span><span>page source sha256: e414f5cc0aed118ff83a86634bf2a7a6e2ad195d3b4dcbd2e53868ed2be9e139</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
@@ -236,7 +236,12 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <p><strong>2026-09-10 — Paired DLC interfaces (<code>ce3b021</code>).</strong> After separate release, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/global-value-fp16-attempt-06/result.json">attempt 06</a> verified and reused AR1 SHA-256 <code>4e67d80e…a6cc</code> without rewriting or reconverting it. Only AR128 was newly converted, producing a 2,356,859,020-byte DLC at SHA-256 <code>48fc15f0…7b64</code>. The reused AR1 identity was checked again afterward; it is not counted as a new conversion.</p>
 <p>Official CSVs now confirm the selected global value-cache inputs and outputs are Float16 in both variants, all unselected public signatures and dimensions remain unchanged, and datatype/encoding agrees at all <strong>30 four-way AR1/AR128 cache contracts</strong>. This is actual DLC interface compatibility, not compiled-context or execution evidence.</p>
 <p>AR128&#x27;s operator count rises 6,830→6,842: Convert 30→36, plus three Casts and three Dequantize operations. Converter floating-precision warnings rise 15→21, comprising 15 RmsNorm operations plus three global Concats and three output Casts. Reused AR1 remains at Convert 31→31 and warnings 75→81. There is no demonstrated count-based speed gain; these warnings establish neither CPU-provider fallback nor full HTP delegation.</p>
-<p>Attempt 06 used owned disk-backed scratch. The SDK removed its temporary files, the empty scratch root was removed, and owned processes were reaped. No context compilation, inference/fidelity test, or phone run occurred in this milestone. Context size/compiler metadata, full delegation, runtime unsupported/fallback counts, fidelity, and speed improvement remain null/unmeasured. The original campaign and registry are unchanged.</p>
+<p>Attempt 06 used owned disk-backed scratch. The SDK removed its temporary files, the empty scratch root was removed, and owned processes were reaped. That conversion milestone performed no context compilation, inference/fidelity test, or phone run.</p>
+<p><strong>2026-09-10 — Host context compile (<code>f637a74</code>, Gemma slice only).</strong> A separately authorized <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/global-value-fp16-context-attempt-01/result.json">context attempt 01</a> ran the unchanged hash-pinned accepted compiler recipe, substituting only the reviewed paired DLC paths/hashes and fresh output/cache/scratch paths. It produced one 1,186,430,976-byte SM8550/v73 weight-sharing context, SHA-256 <code>1d80d016…ca9f8</code>: 61,440 bytes larger than the baseline. This publication covers only the experiment-owned evidence in that mixed-scope commit; its separate app/gallery files are neither published nor approved by the Gemma review.</p>
+<p>Official metadata confirms QNN HTP backend 6 / SoC 43, build <code>v2.49.40.260810104044</code>, both original AR1/AR128 graph aliases, and 38 inputs / 31 outputs per graph. Only the selected global value-cache types/quantization differ; unselected names, shapes, positional/SWA bindings, and active quantization remain unchanged. All 30 four-way cache contracts match and all <strong>120 cache tensor boundaries are <code>FLAT_BUFFER</code></strong>. Weight-sharing or HMX weight-kernel markers do not imply NativeKV cache layout.</p>
+<p>The <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/GENIE-FP16-CACHE-SOURCE-NOTES.md">Genie FP16 source notes</a> provide conditional rationale, not runtime proof: ordinary flat-buffer updates copy raw bytes, while key-derived clearing uses <code>0x8000</code>, interpreted as FP16 negative zero for the selected values. NativeKV accepts only quantized uint8 and is not selected or claimed. Quantization-dependent cache dump/spec/export paths were not exercised and must not be assumed valid for mixed quantized-key/FP16-value state. SDK example source does not establish every shipped-runtime path&#x27;s behavior.</p>
+<p>The accepted warn-level compiler API can suppress native logs, so the exhaustive unsupported-operator count remains <strong>null, not zero</strong>. The retained builder architecture-default warning is not a CPU-provider observation; no extra compile was performed just to obtain optional logs. Compilation and metadata compatibility do not prove CPU-free neural placement, runtime loading, fidelity, long-output improvement, or speed. The increased DLC Convert counts and precision warnings remain disclosed.</p>
+<p>Owned compile scratch was empty/removed and processes were reaped. No runtime reset/inference, fidelity test, or phone run occurred; all such outcomes remain unmeasured. The original completed campaign, its registry card, and registry evidence are unchanged.</p>
 <p>The <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/REQUEST-ROUTING.md">request-routing recommendation</a> remains an unmeasured policy for the existing canonical tiers, not a built hybrid or a general prompt-length threshold. It selects HTP for short/medium and LiteRT GPU for long before each complete request, with no mid-request switch or retry on another provider. Co-resident setup, memory, and speed require measurement; separate accepted route measurements are not a hybrid benchmark.</p>
 </section>
 <section class="primary-section" id="results" data-primary-section="results">
@@ -624,7 +629,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 </tr>
 <tr>
 <td>Candidate 2</td>
-<td>Actual AR1 + AR128 selected FP16 interfaces and all 30 paired cache contracts pass; no compiled-context result</td>
+<td>Separate FP16 improvement context compiled; metadata passes all 30 cache contracts and 120 flat-buffer boundaries; runtime untested</td>
 </tr>
 <tr>
 <td>Retained attempts 01–03</td>
@@ -687,8 +692,32 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>Owned disk-backed <code>QAIRT_TMP_DIR</code> used; scratch empty/removed and processes reaped</td>
 </tr>
 <tr>
+<td>Context compile recipe</td>
+<td>Unchanged hash-pinned accepted recipe; only paired DLC substitutions and fresh storage paths</td>
+</tr>
+<tr>
+<td>Improvement context</td>
+<td>1,186,430,976 B / SHA <code>1d80d016…ca9f8</code>; +61,440 B versus baseline; HTP backend 6 / SoC 43 / v73</td>
+</tr>
+<tr>
+<td>Compiled cache metadata</td>
+<td>Original 38-in/31-out AR1/AR128 aliases; all 30 four-way contracts match; all 120 boundaries <code>FLAT_BUFFER</code></td>
+</tr>
+<tr>
+<td>Source/API limits</td>
+<td>Byte-copy rationale only; key-derived FP16 negative-zero clear; NativeKV uint8-only and not selected; dump/export semantics untested</td>
+</tr>
+<tr>
+<td>Unsupported-op count</td>
+<td>Null: native logs can be suppressed at accepted verbosity; not a zero-unsupported or CPU-free execution claim</td>
+</tr>
+<tr>
 <td>Unmeasured candidate results</td>
-<td>No context compilation, inference/fidelity, or speed proof; delegation and runtime unsupported/fallback metrics null</td>
+<td>Runtime load/reset/inference, physical placement, fidelity/long-output quality, and speed; no phone or campaign result</td>
+</tr>
+<tr>
+<td>Mixed-commit review scope</td>
+<td>Gemma slice of <code>f637a74</code> only; no app/gallery publication or approval</td>
 </tr>
 <tr>
 <td>Routing-policy boundary</td>
