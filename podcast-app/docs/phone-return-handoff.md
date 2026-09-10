@@ -2,17 +2,17 @@
 
 **No phone work is authorized by this handoff.** Wait for Moritz's return and Pi's explicit physical-device slot. Do not start another build or change any frozen APK.
 
-## 1. Coherent UI candidate — emulator scope only
+## 1. Coherent UI candidate — FINAL host + synthetic UI approved
 
 Frozen pair: `.local/integration-ready/fb16b90-02/`; source `fb16b90`, effective `app/src` tree `314010f949ba5e33fe7845230c3c3b2b875d7c97`. It combines accepted05 layouts/gallery, owned form acknowledgements and the calibrated readability tests.
 
 - Host: **113 JVM +15 Python**, lint/release/debug/test assembly passed; exact source/input/native-payload preflight independently accepted.
-- Nik reports **56/56 combined Android tests**, **38/38 fresh final gallery pairs** and all **8 actual-keyboard cells** passed on this exact app. Final observation/geometry audit, cleanup and signed-off report are still pending; do not call final integrated acceptance yet.
+- Nik's **FINAL approval** covers **56/56 actual combined Android tests**, **38/38 fresh final gallery pairs**, all **8 actual-keyboard cells**, **10 matched-pair observations** and **2 PasteIME geometry records**. Exact identities and cleanup passed; emulator stopped, no owned process and canonical lock free. Host113/15 execution was corroborated from logs/XML, not a new Nik rebuild.
 - App SHA: `1cfe1419d974ac4e88d3039806a1a6bc849b602ec3036a474cd877f068ed8e7d`.
 - Test SHA: `b03d8fe7f87325d3db3bf1d6a349b87fad8955b7e41da905655167aae80af76d`.
 - Candidate SHA: `2b3c1ed1c8fe8683f3a87dc1f6491efbd989775218cc8786f4fd4f33457379e7`.
 
-Readiness/source/native proofs: [`../evidence/coherent-ui-integration/`](../evidence/coherent-ui-integration/). These are synthetic emulator results, not physical TalkBack/playback/export, native generation or product E2E approval. No05 image/test result is substituted for this candidate's new evidence.
+Final report/new-app evidence: [`../evidence/coherent-ui-integration-result/`](../evidence/coherent-ui-integration-result/). Frozen readiness/source/native proofs remain in [`../evidence/coherent-ui-integration/`](../evidence/coherent-ui-integration/). Approval is limited to host/source and synthetic emulator UI, not physical Galaxy/TalkBack/playback/export, native generation, model quality or product E2E. No05 image/test result is substituted for this candidate's new evidence.
 
 ## 2. Next native diagnostic — approved scope, never executed
 

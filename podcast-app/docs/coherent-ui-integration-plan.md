@@ -1,6 +1,6 @@
 # Coherent UI integration gate
 
-**Both scoped prerequisites are independently approved.** The released host build/freeze has completed: the coherent matched pair passed 113 JVM/15 Python plus lint/release/assembly and is frozen. See [`../evidence/coherent-ui-integration/readiness.json`](../evidence/coherent-ui-integration/readiness.json). Combined emulator execution still needs the separate exact-candidate assignment; this is not final integrated polish approval. Old APKs, readiness records and raw failures stay immutable.
+**FINAL approved for exact host/source + synthetic-emulator UI integration scope.** Nik accepted the frozen matched pair after source/input/native audits, corroborated113 JVM/15 Python host execution, actual56/56 combined Android tests,38/38 new-app final pairs/8 keyboards,10 observations/2 Paste geometry records and cleanup. See [`../evidence/coherent-ui-integration-result/`](../evidence/coherent-ui-integration-result/). Physical Galaxy/TalkBack/playback/export, QNN startup/capacity, model quality and product E2E are not approved. The workflow below records the executed plan; it does not authorize another build/run. Old APKs, readiness records and raw failures stay immutable.
 
 ## Inputs and approval gates
 

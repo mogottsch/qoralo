@@ -1,0 +1,126 @@
+{
+  "expected": {
+    "app.apk": "1cfe1419d974ac4e88d3039806a1a6bc849b602ec3036a474cd877f068ed8e7d",
+    "test.apk": "b03d8fe7f87325d3db3bf1d6a349b87fad8955b7e41da905655167aae80af76d"
+  },
+  "commands": [
+    {
+      "argv": [
+        "/home/moritz/Android/Sdk/platform-tools/adb",
+        "-s",
+        "emulator-5556",
+        "shell",
+        "getprop sys.boot_completed"
+      ],
+      "code": 0,
+      "stdout": "1\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/moritz/Android/Sdk/platform-tools/adb",
+        "-s",
+        "emulator-5556",
+        "shell",
+        "getprop ro.kernel.qemu; getprop ro.product.cpu.abilist; getprop ro.dalvik.vm.native.bridge; getprop ro.build.fingerprint"
+      ],
+      "code": 0,
+      "stdout": "1\nx86_64,arm64-v8a\nlibndk_translation.so\ngoogle/sdk_gphone64_x86_64/emu64xa:15/AE3A.240806.043/12960925:userdebug/dev-keys\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/moritz/Android/Sdk/platform-tools/adb",
+        "-s",
+        "emulator-5556",
+        "install",
+        "-r",
+        "-t",
+        "/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/integration-ready/fb16b90-02/app.apk"
+      ],
+      "code": 0,
+      "stdout": "Performing Streamed Install\nSuccess\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/moritz/Android/Sdk/platform-tools/adb",
+        "-s",
+        "emulator-5556",
+        "install",
+        "-r",
+        "-t",
+        "/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/integration-ready/fb16b90-02/test.apk"
+      ],
+      "code": 0,
+      "stdout": "Performing Streamed Install\nSuccess\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/moritz/Android/Sdk/platform-tools/adb",
+        "-s",
+        "emulator-5556",
+        "shell",
+        "pm",
+        "path",
+        "dev.vibevoice.podcast.internal"
+      ],
+      "code": 0,
+      "stdout": "package:/data/app/~~TwaTYAd2Ag_3O8iGvBZMDg==/dev.vibevoice.podcast.internal-q46VkWSusHgYy6C66-A90w==/base.apk\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/moritz/Android/Sdk/platform-tools/adb",
+        "-s",
+        "emulator-5556",
+        "shell",
+        "sha256sum",
+        "/data/app/~~TwaTYAd2Ag_3O8iGvBZMDg==/dev.vibevoice.podcast.internal-q46VkWSusHgYy6C66-A90w==/base.apk"
+      ],
+      "code": 0,
+      "stdout": "1cfe1419d974ac4e88d3039806a1a6bc849b602ec3036a474cd877f068ed8e7d  /data/app/~~TwaTYAd2Ag_3O8iGvBZMDg==/dev.vibevoice.podcast.internal-q46VkWSusHgYy6C66-A90w==/base.apk\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/moritz/Android/Sdk/platform-tools/adb",
+        "-s",
+        "emulator-5556",
+        "shell",
+        "pm",
+        "path",
+        "dev.vibevoice.podcast.internal.test"
+      ],
+      "code": 0,
+      "stdout": "package:/data/app/~~p1YjSbE8BYT0XIpPMzcQaQ==/dev.vibevoice.podcast.internal.test-nfV0-Ls46L_Xktjy_Rsudw==/base.apk\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/moritz/Android/Sdk/platform-tools/adb",
+        "-s",
+        "emulator-5556",
+        "shell",
+        "sha256sum",
+        "/data/app/~~p1YjSbE8BYT0XIpPMzcQaQ==/dev.vibevoice.podcast.internal.test-nfV0-Ls46L_Xktjy_Rsudw==/base.apk"
+      ],
+      "code": 0,
+      "stdout": "b03d8fe7f87325d3db3bf1d6a349b87fad8955b7e41da905655167aae80af76d  /data/app/~~p1YjSbE8BYT0XIpPMzcQaQ==/dev.vibevoice.podcast.internal.test-nfV0-Ls46L_Xktjy_Rsudw==/base.apk\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/moritz/Android/Sdk/platform-tools/adb",
+        "-s",
+        "emulator-5556",
+        "shell",
+        "settings put global window_animation_scale 0; settings put global transition_animation_scale 0; settings put global animator_duration_scale 0; run-as dev.vibevoice.podcast.internal sh -c \"test ! -e no_backup/model-packs && echo NO_MODEL_PACKS\""
+      ],
+      "code": 0,
+      "stdout": "NO_MODEL_PACKS\n",
+      "stderr": ""
+    }
+  ]
+}
