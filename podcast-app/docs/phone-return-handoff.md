@@ -1,6 +1,6 @@
 # Phone-return handoff
 
-**No further phone work is authorized by this handoff.** Explicit load-only and one canonical TTS slots completed; another device action needs Pi's new slot. Frozen candidates remain unchanged. Git push/external publication is held for coordinated historical privacy cleanup.
+**No further phone work is authorized by this handoff.** Explicit load-only, canonical TTS and one actual long-TTS slot completed; the long request failed at its first vector invocation. Another device action needs Pi's new slot. Frozen candidates remain unchanged. Git push/external publication is held for coordinated historical privacy cleanup.
 
 ## 1. Coherent UI candidate — FINAL host + synthetic UI approved
 
@@ -35,18 +35,28 @@ Historical scope: [`qnn-duration-load-only.md`](qnn-duration-load-only.md); the 
 
 The separately reviewed TTS-only harness then proceeded directly to one four-context canonical request (section3), without an intermediate four-load-only phone gate. It used no Gemma, splitting/stitching, retries or deliberate capacity probe. That completed slot authorizes no further execution.
 
-## 3. First canonical TTS WAV — produced, listening not reviewed
+## 3. First canonical TTS WAV — produced and accepted by Moritz
 
-Run `tts-only-20260910t171039z` used candidate `3cf46e271a515ed30125c09ac6f9891c808218e6871ef39adee7767b0e4c6fed` (app `024f5cd58761f5816163b907293e51867a5c0f3962b37c7aa6416c18ad47228d`, test `7066cbee3abdeff69dbaa5bd0f1ff6031614061f444237488b407aa44bc3263d`). The separately approved TTS controller is `a62d204c380a5b2d0c8f7c5bd94729b6f823e18200feed2ebe24fa73962bec3c`, with unchanged3ad guard. This debug-engineering app, not the coherent UI candidate, is currently the last app installed by Janek.
+Run `tts-only-20260910t171039z` used candidate `3cf46e271a515ed30125c09ac6f9891c808218e6871ef39adee7767b0e4c6fed` (app `024f5cd58761f5816163b907293e51867a5c0f3962b37c7aa6416c18ad47228d`, test `7066cbee3abdeff69dbaa5bd0f1ff6031614061f444237488b407aa44bc3263d`). The separately approved TTS controller is `a62d204c380a5b2d0c8f7c5bd94729b6f823e18200feed2ebe24fa73962bec3c`, with unchanged3ad guard. This debug-engineering app was subsequently replaced as the installed binary by the exact long candidate in section4; neither is the coherent UI binary.
 
 One complete226-byte request produced **15.640612s mono44.1kHz PCM16**: four-context load669.641ms, profiled render6441.160ms, first-request RTF0.411823. WAV SHA **`bcc277bce02cdb3042a853c91172abc6c99c325657cdce4829b2eabfc79c163a`**. [Safe retained result/WAV](../evidence/tts-only-result/tts-only-20260910t171039z/). **Nik FINAL PASS:** real QNN Node1/1/5/1 and matching RPC/cycle execution records, exact input/seed/native/APK bindings and full saved guard/privacy/cleanup audit all accepted. [Final report](../evidence/tts-only-result/tts-only-20260910t171039z/nik-review.md). Cleanup/settings/PID absence passed and the lock was released. No replay or maintenance kill was needed.
 
-**Listening remains not_reviewed; Moritz alone decides the exact sample.** This is one first profiled engineering request, not a warm campaign, long chapter or product E2E. Full DB/battery/thermal/logcat originals stay private; public conditions are explicitly labelled core extracts.
+**Moritz accepted this exact WAV: “sounds good.”** The [hash-bound additive listening sidecar](../evidence/tts-only-result/tts-only-20260910t171039z/listening-review-2026-09-10.json) supersedes only its original listening status; historical `not_reviewed` records remain unchanged. This is one first profiled engineering request, not a warm campaign, long chapter or product E2E. Full DB/battery/thermal/logcat originals stay private; public conditions are explicitly labelled core extracts.
 
-## 4. What remains unresolved
+## 4. First whole-long-text request — actual vector failure, no WAV
+
+Run **`tts-long-20260910t202609z`** installed long candidate `b86008708cc459c855149eee49c58a7468e079d24c9de4842eab56a5bcef325d` from `.local/tts-long-ready/7557780/`: app `e9cc95b76bfbd776a2861ab43dc5fa63805cb0854d1809dcf29175e8745a71be`, test `fc19bf43237949820e7f4cfb83c302287b8ae9585e317a874741447a3cd22c9b`. These are the last APKs installed by Janek, not normal Gradle outputs or the approved coherent UI pair.
+
+The separate T2048/L2048 pack `supertonic-3-t2048-l2048-parity/current`, manifest `116fda95a907f6dc35bfe7c2144fe2818ed438cc109c1faa3f95cafc2fc84066`, staged without replacing the old pack. One self-contained227-word narration,1324 normalized codepoints, targeted roughly90s naturally; no forced duration, chunks, fallback or retry.
+
+All four context initializations returned. Duration/text have actual QNN/RPC/cycle evidence; the first vector invocation failed with ORT/QNN6006, vocoder had zero Runs. **No WAV, RTF or listening result exists.** Host PID/settings/scratch cleanup passed and the lock was released, but native FastRPC/context-free teardown reported errors; do not call native shutdown clean. [Exact retained result](../evidence/tts-long-result/tts-long-20260910t202609z/).
+
+The earlier MAIN-presence and terminal-FAILED-history stops remain preserved separately. Routine exact app/test closure was authorized without data clear. Host-only correction `4e56375` admits nondispatching known terminal history while retaining active/unknown-state and schema/WAL/FK/coherence checks. It uses new guard `5ca6be91be151acd2937b5e65871a40361f9bae99ae444880eae0e29b6f2c425` through explicit override `60dd58885efdc8406049365d92c26838fdedf4db99f568638479a1f71e1b046d`; candidate/caller/APK/pack bytes were not rebuilt or rewritten. This consumed slot authorizes no further phone/model action. Failures get a status-board line, not a listening page.
+
+## 5. What remains unresolved
 
 - **Product/native workflow:** canonical four-context TTS execution now produced one WAV, but the complete production generation/job/lifecycle flow and its integration with the approved UI have not been accepted. No further Gemma or TTS run is implied.
-- **Whole-chapter capacity:** pinned T239/L238 contexts allow230 normalized text codepoints before tags and roughly16.58s, not the intended1–2minute chapters. These are known pack limits, not a completed physical whole-chapter experiment. No splitting/stitching, fallback, graph replacement or automatic recovery is approved.
+- **Whole-chapter capacity:** the production/default T239/L238 pack still has its short-text limits. The separate T2048/L2048 probe now has a genuine physical vector-execution failure, not a completed chapter or capacity success. Saved source/profile diagnosis is in progress; no splitting/stitching, fallback, graph replacement or automatic recovery is approved.
 - **Product/hardware:** physical accessibility/media/export, native lifecycle and complete generation remain separate gates. UI success does not close them.
 
 Pi must choose and approve the exact next physical candidate/scope explicitly; no unchanged retry is implied. The UI and diagnostic share the application ID; installing one does not preserve the other's installed binary identity. Never mix their app/test pairs. **Normal Gradle output APKs were deliberately restored to old c893 binaries; use only the nominated frozen paths above.**
