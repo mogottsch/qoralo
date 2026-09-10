@@ -1,7 +1,7 @@
 ---
 experiment: 0031-gemma-4-e2b-it-android-qnn-htp
 status: completed
-summary: The accepted campaign remains complete. Its separate FP16 improvement now passes one physical short/max16 compatibility query with the same bounded output as baseline; long repetition, broader fidelity and speed improvement remain unproven.
+summary: The accepted campaign remains complete. One FP16 short/max16 compatibility query passed; a separate exact-long/max2048 stage is host-ready only. Long repetition, broader fidelity and speed improvement remain unproven.
 benchmark: android-llm
 registry: 0031-gemma-4-e2b-it-qnn-htp
 ---
@@ -268,6 +268,12 @@ Public telemetry reports battery 69% / 31.9°C on USB, thermal status 0→0, AP 
 
 No retry, long query, rebuild or stage/controller change occurred in Gate A. Exact-long work remains separately gated; there is no long-output, reset/reuse, speed, campaign or new registry result. The accepted completed campaign and its five long-output failures remain unchanged.
 
+**Exact-long host readiness (`b43a57f`)—not a long result.** The [separate stage and lifecycle](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/exact-long-readiness/result.json) contains 18 independent read-only payload copies totaling 4,003,852,753 bytes, manifest `047dd808…b846e`. FP16 context `1d80d016…ca9f8`, configuration, tokenizer/BOS, LUTs and libraries are unchanged. One fresh dialog is configured for the exact **1,929-token long input and full 2,048-token ceiling**, fitting context 4096 without truncation. Token identity is inherited from verified bytes, not new tokenization. There is no preceding short query, retained KV reuse or repeat; host/remote bounds remain 1,800 seconds.
+
+The [fixed-scope adaptation](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/EXACT-LONG-READINESS.md) uses hash-pinned reviewed templates with enumerated substitutions and direct `nohup` plus absolute redirections. An inverse test recovers the original short-controller source. An owned FIFO-blocked host dummy verifies pipe closure before child completion and subsequent reaping—not Android detachment. Gate A file-mtime clues are not proof of a launch defect or a timing result. Lock/raw-first/retained-root gates and the non-atomic PID-race limitation remain.
+
+This is file/source/mock readiness only: **no long/native/ADB/model execution, tokenization replay or recompilation**. Short evidence and the completed campaign stay unchanged; repetition metrics and undefined-first-token raw-rate caveats remain predeclared. A fresh exact release is still required, with app priority and private-raw retention preserved.
+
 The [request-routing recommendation](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/REQUEST-ROUTING.md) remains an unmeasured policy for the existing canonical tiers, not a built hybrid or a general prompt-length threshold. It selects HTP for short/medium and LiteRT GPU for long before each complete request, with no mid-request switch or retry on another provider. Co-resident setup, memory, and speed require measurement; separate accepted route measurements are not a hybrid benchmark.
 
 ## Results
@@ -398,7 +404,7 @@ Attempt chronology remains intact: the initial campaign setup failed before any 
 | Unsupported-op count | Null: native logs can be suppressed at accepted verbosity; not a zero-unsupported or CPU-free execution claim |
 | Frozen stage | `212f0d4`: 21 payload files / 4,003,855,761 B; manifest `58484160…fe25`; independent copies, runner0555; baseline unchanged |
 | Frozen config/input boundary | Config `f8008e04…7eba`, libraries/LUTs/tokenizer/BOS and short/long bytes unchanged; no new tokenization |
-| Supported diagnostic | Frozen first-short/max16 engineering query now executed in Gate A; original stage has no long script; exact-long/max2048 separately gated |
+| Supported diagnostic | Gate A short/max16 executed; original short stage unchanged; separate exact-long/max2048 stage is host-ready only |
 | Controller readiness | `62b8a16`: plan-only default; actual fresh one-use Pi attestation, full phone.lock, exact device/build and local/remote hashes required |
 | Deadlines | Host process + remote watchdog 1,800 s; bounded phase waits, not guaranteed immediate termination; no automatic retry |
 | PID limitation | Starttime/exe/argv checks before numeric signal; no atomic/pidfd binding, residual check-to-signal race remains |
@@ -413,6 +419,8 @@ Attempt chronology remains intact: the initial campaign setup failed before any 
 | Decode normalization | Raw 17.6189728 tokens/s; first-token inclusion undefined, normalized decode null; no speed-win claim |
 | Missing memory | No process sample or live-native PID sample; PSS/VmHWM/HTP-private totals null |
 | Cleanup/privacy | Natural exit; recorded roles/root absent, raw first, no signal; full battery private, public labelled core extracts only |
+| Exact-long host readiness | `b43a57f`: 18 files / 4,003,852,753 B, manifest `047dd808…b846e`; same context/config, one fresh 1,929-input/max2048 query, 1,800 s bounds; unexecuted |
+| Long lifecycle boundary | Fixed hash-pinned adaptation, direct-nohup absolute redirections and host FIFO/reaping test; no Android detachment or timing proof |
 | Remaining candidate evidence | Long repetition/fidelity, reset/reuse and unused cache APIs, broader placement and speed; no long or campaign result |
 | Mixed-commit review scope | Gemma slice of `f637a74` only; no app/gallery publication or approval |
 | Routing-policy boundary | Unmeasured request-level recommendation; no built/measured hybrid or general length threshold |
