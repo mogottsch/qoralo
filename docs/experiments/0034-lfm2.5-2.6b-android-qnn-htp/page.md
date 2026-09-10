@@ -198,7 +198,7 @@ Critical evidence gaps remain: the runner kept state and logits only in process,
 
 ### Integrated runner readiness — 2026-09-10
 
-The reviewed host-only chain `6b37e37` → `45dbd3e` → `c90d052` prepares one logical request in a single process. It addresses input preparation and evidence handling in the proposed runner; it does not fill gaps in the earlier physical max-16 result retrospectively.
+The reviewed host-only chain `6b37e37` → `45dbd3e` → `c90d052` → `8ef097a` prepares one logical request in a single process. It addresses input preparation and evidence handling in the proposed runner; it does not fill gaps in the earlier physical max-16 result retrospectively.
 
 The designed sequence creates one backend/device, loads AR171, prepares all 171 CPU embedding rows inside the request timing boundary, constructs positions/mask/zero state, and runs prefill. It finite-scans all 60 outputs before copying the 38 state tensors and reducing endpoint argmax. Prefill profiling is extracted, AR171 is freed, profiling is reset, the 38 states are bridged in memory on CPU, and AR1 is loaded once for in-process continuation. Every AR1 call has the same all-60-output finite-scan logic and a separate phase-labelled profile path. These are implemented/static-checked capabilities, not observed integrated inference.
 
@@ -210,11 +210,15 @@ The designed sequence creates one backend/device, loads AR171, prepares all 171 
 - Request-start to **final emitted token** includes intervening prefill profile extraction, context free, profile reset, AR1 load, and token `fsync`s, but excludes trailing AR1 profile extraction/free.
 - Compute-only phase sums and the diagnostic total including all profile/free overhead are separate fields. Backend/device setup is also separate.
 
+`8ef097a` tests the same production emitter, bridge, position/mask, and timing helpers used by the runner, without loading QNN. Synthetic fixtures verify total-output-cap accounting including the endpoint, early EOS, exclusive-file overwrite rejection, already-flushed partials after an injected late failure, and logged optional-profile failure. They also check copied K/V prefix values and zero padding, INT64 position byte counts, and first/final emission intervals using a synthetic clock timeline. These are control-flow and data-placement regressions, not integrated execution, measured profiling, or new state/logit finiteness evidence.
+
 Token IDs remain precomputed: tokenization is excluded from every timing boundary even though CPU embedding preparation is now included in the designed request interval. No integrated timing or canonical TTFT has been measured.
 
 The direct-QNN position ABI is bound independently: AR171 `position_ids` is INT64 `[1,171]` / 1,368 bytes; AR1 is INT64 `[1,1]` / 8 bytes. Earlier qnn-net-run diagnostics supplied INT32 position files through that tool's file-population/conversion path. That historical file convention must not be reused as the direct-QNN buffer ABI.
 
-Host and API-31 Android builds pass. The reviewed Android runner SHA-256 is `3d46b61f…975b`, and its private stage contains 12 payload files totaling 3,400,505,660 bytes with hashes and ELF dependencies verified. No integrated inference was attempted: the known AR171 x86-emulator cost already exceeds the 1,800-second bound. There was no new phone access.
+Host and API-31 Android binaries were freshly rebuilt after the `8ef097a` source/header changes, not reused from the earlier readiness revision. The committed provenance binds runner source SHA-256 `2c446bcd…3a2e`, support header `48eb643e…9aa3`, host binary `ed122a00…e261`, and Android binary `94e76c33…fdb1`. The rebuilt private stage contains 12 payload files totaling 3,400,505,468 bytes, with metadata SHA-256 `dbb9d687…a60f`, manifest `8fa2c53c…9616`, and passing hashes/ELF checks. These identities supersede the earlier readiness builds; both model contexts remain unchanged.
+
+No integrated inference was attempted: the known AR171 x86-emulator cost already exceeds the 1,800-second bound. There was no new phone access.
 
 The design retains one explicit sequential phase switch and at most one resident context, not per-token streaming or a combined/shared-constant context. Both ordinary contexts report zero shared weights and would duplicate roughly 3.19 GB of constants if combined; the previously rejected shared-resource format has not become viable. CPU preparation/bridge/sampling and HTP neural phases remain explicit, never HTP-only.
 
@@ -347,17 +351,18 @@ Severe retained-state drift and token-5 reference divergence are unchanged. Fini
 | Resume memory | VmHWM1,611,744KiB process-only; HTP-private unavailable |
 | Critical evidence gap | No serialized per-call states/logits, explicit finite scan, or detailed QNN profile |
 | Resume claim limit | Operability only; no equivalence, complete answer, canonical E2E, statistical campaign, or registry |
-| Integrated readiness chain | `6b37e37` build/design → `45dbd3e` evidence handling → `c90d052` timing clarification; no integrated inference |
+| Integrated readiness chain | `6b37e37` → `45dbd3e` → `c90d052` → `8ef097a`; corrected production helpers and rebuilt artifacts, no integrated inference |
 | Designed integrated phases | One process/backend, AR171 → free/profile reset → in-memory 38-state CPU bridge → AR1 loaded once; no simultaneous contexts |
 | Finite-scan implementation | All 60 prefill outputs and every AR1 call's 60 outputs; static/build readiness, not a new physical finite-scan result |
 | Corrected output cap | Max16 total including endpoint; ≤15 AR1 calls; early EOS permitted |
 | Partial-output handling | Exclusive file before setup; immediate per-token append/fsync; optional-profile failure logged without discarding tokens |
-| Synthetic regression | No QNN: injected late failure preserves partials, overwrite rejected, optional telemetry failure retained |
+| Synthetic regression | Production helpers, no QNN: cap/EOS, exclusive/fsynced partials, optional-profile failure, K/V placement/padding, INT64 ABI, synthetic emission timings |
 | First-emitted interval | Actual request start through first token/fsync; excludes later profiles |
 | Final-emitted interval | Includes intervening prefill profile/free/reset and AR1 load; excludes trailing AR1 profile/free |
 | Timing exclusions | Tokenization precomputed/excluded; CPU embeddings included by design; compute sums/setup/diagnostic overhead separate |
 | Direct-QNN ABI | INT64 positions: AR171 1,368 B / AR1 8 B; prior qnn-net-run INT32 file ingestion is a separate boundary |
-| Integrated build/stage | Host + Android builds; 12 files / 3,400,505,660 B; hashes/ELF pass |
+| Integrated build/stage | Fresh host `ed122a00…e261` / Android `94e76c33…fdb1`; 12 files / 3,400,505,468 B; hashes/ELF pass |
+| Rebuilt stage provenance | Metadata `dbb9d687…a60f`, manifest `8fa2c53c…9616`; unchanged AR171/AR1 contexts |
 | Combined-context boundary | No viable combined/shared-constant context claimed; prior shared-resource rejection unchanged |
 | Remaining integrated evidence | No inference, phone result, TTFT, numerical fidelity, performance distribution, campaign, or registry row |
 | Hybrid disclosure rule | CPU bridge + HTP phases must remain explicit; never label this candidate HTP-only |
