@@ -36,10 +36,12 @@ Active. The exact HistogramObserver QDQ graph has completed the full 174-positio
 
 21. Completed the accepted 174-position HistogramObserver QDQ replay under a 7200-second host guard. All logits/state-update counts and positional tensor hashes/top values were checked. Bound final token 2523 (`You`) to the pinned tokenizer as interpretation only; retained the full journal/final tensor in Git and all intermediate bytes in mandatory local migration storage. Process reaped and disk-backed scratch empty.
 
+22. Prepared the source-only 73-output QNN-x86 trajectory helper with 48-state carry, exclusive raw/state checkpoints, explicit prefix-bound continuation, independent runtime/pressure limits, and 30 synthetic tests. No real PTE/PT2/QNN load occurred. A four-position/900-second example is review-only; full174 estimated cost exceeds a7200-second invocation.
+
 ## Current work
 
 1. Preserve physical baseline/preflight hashes, diagnostic artifacts, and both LOCAL-ONLY positional tensor directories listed in the full-short result. Do not clean them; copy them on migration/handover.
-2. Source-only readiness may prepare matching QNN trajectory verification with the same artifact/input and explicit state continuation; no new model run until reviewed/coordinated.
+2. Await review of trajectory-helper, explicit continuation and budget readiness before a separately scheduled bounded prefix. No real QNN/model run is authorized by source-only readiness.
 3. Do not use ADB or the phone without an explicit scheduled slot. Host teacher-forced completion is not QNN/physical fidelity or a campaign authorization.
 4. After agreed fidelity follow-up gates, validate chunked-prefill state semantics/delegation and loaded-route reset/isolation before the canonical campaign.
 

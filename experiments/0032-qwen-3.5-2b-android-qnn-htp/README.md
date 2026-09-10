@@ -63,10 +63,14 @@ A lower-retention two-process host replay in [`results/host-w4a16-qdq-output-dia
 
 [`results/host-histogram-full-short-20260910/`](results/host-histogram-full-short-20260910/) binds the completed 174-position teacher-forced replay, journal, final tensor, and independently checked positional tensor hashes/values. The 174 intermediate raw/compressed tensors are **LOCAL-ONLY**: their migration paths are mandatory retention inputs and Git hashes cannot reconstruct their bytes. Token `You` is not a generated response or accuracy evidence.
 
+## QNN trajectory source readiness
+
+[`results/qnn-trajectory-helper-readiness/`](results/qnn-trajectory-helper-readiness/) binds the source-only 73-output trajectory helper, durable own-state checkpoints, and independent deadline/resource supervisor. Thirty tiny synthetic tests cover actual positions/masks, 48-state carry, explicit continuation, reference/hash failures, raw/error retention, and termination/reaping. No real QNN/model load occurred. This measures accumulated own-state drift, not same-state operator error; a full 174-input x86 trajectory is estimated near 5.8 hours, beyond a 7200-second invocation.
+
 ## Current next gate
 
 1. Keep physical PTE `23ac8abd…d2c506` and phone preflight unchanged; the 73-output diagnostic PTE is not compatible with the current 49-output Android runner.
-2. Prepare source-only readiness for matching QNN trajectory verification using the same HistogramObserver artifact/input and explicit state semantics. No new model run until separately reviewed/coordinated.
+2. Await trajectory-helper/checkpoint/budget review before a separately scheduled bounded QNN-x86 prefix (the readiness document suggests four positions/900 seconds, not an authorization). No new model run automatically.
 3. No ADB or staging without a new explicit Pi phone slot. Full QNN/physical drift and one-token-only interpretation remain campaign-readiness boundaries.
 4. Only after agreed fidelity and state-isolation gates may chunked prefill and the fixed 1+5+5+5 campaign be promoted.
 

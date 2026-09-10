@@ -163,7 +163,9 @@
     "histogram_physical_execution": false,
     "saved_replay_helper_readiness_result_path": "results/saved-qdq-replay-helper-readiness/result.json",
     "saved_replay_helper_synthetic_tests_passed": 24,
-    "next_gate": "Source-only readiness for matching QNN trajectory verification; no new model run or phone until reviewed/coordinated. Preserve LOCAL-ONLY positional tensor bytes as required migration artifacts; keep the physical baseline/preflight unchanged."
+    "qnn_trajectory_helper_readiness_result_path": "results/qnn-trajectory-helper-readiness/result.json",
+    "qnn_trajectory_helper_synthetic_tests_passed": 30,
+    "next_gate": "Review source-only QNN trajectory/checkpoint/budget readiness before any scheduled bounded host prefix. No new QNN/model run or phone is authorized by readiness. Preserve LOCAL-ONLY positional tensors and the unchanged physical baseline."
   },
   "required_provider_proof_if_unblocked": {
     "compiled_context_identity": "Hash every deployed serialized context and bind SM8550/v73 compiler provenance.",

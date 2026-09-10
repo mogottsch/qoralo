@@ -582,6 +582,26 @@ class ContractTest(unittest.TestCase):
         self.assertEqual(173105118, sum(entry["raw_bytes"] for entry in positional))
         self.assertTrue(all("compressed_local_path" in entry and "compressed_path" not in entry for entry in positional))
 
+    def test_qnn_trajectory_readiness_does_not_claim_real_execution(self) -> None:
+        directory = EXP / "results/qnn-trajectory-helper-readiness"
+        result = json.loads((directory / "result.json").read_text())
+        self.assertEqual("source_only_qnn_own_state_trajectory_helper_readiness", result["evidence_class"])
+        self.assertEqual(30, result["validation"]["synthetic_tests_passed"])
+        self.assertEqual(0, result["validation"]["actual_qnn_graph_calls"])
+        self.assertEqual(0, result["validation"]["real_pte_or_model_archives_loaded"])
+        self.assertEqual(73, result["planned_binding"]["pte_outputs"])
+        self.assertEqual(48, result["planned_binding"]["state_outputs_carried"])
+        self.assertEqual(24, result["planned_binding"]["hidden_diagnostics_retained_not_carried"])
+        for key in ("real_qnn_trajectory_performed", "real_model_load_performed", "physical_execution_performed", "new_numerical_fidelity_claim", "campaign_ready", "registry_eligible"):
+            self.assertFalse(result[key])
+        budget = result["budget_plan"]
+        self.assertFalse(budget["example_is_authorization"])
+        self.assertGreater(budget["full174_estimated_seconds"], budget["maximum_timeout_seconds"])
+        self.assertFalse(result["checkpoint_policy"]["native_restart_equivalence_claimed"])
+        self.assertFalse(result["checkpoint_policy"]["loaded_route_campaign_reuse_claimed"])
+        for entry in result["artifacts"].values():
+            self.assertEqual(entry["sha256"], sha(EXP / entry["path"]))
+
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
             EXP / "protocol",
@@ -599,6 +619,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/host-histogram-precision-20260910",
             EXP / "results/saved-qdq-replay-helper-readiness",
             EXP / "results/host-histogram-full-short-20260910",
+            EXP / "results/qnn-trajectory-helper-readiness",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

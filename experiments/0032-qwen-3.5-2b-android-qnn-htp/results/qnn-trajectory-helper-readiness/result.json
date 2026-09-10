@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
+  "evidence_class": "source_only_qnn_own_state_trajectory_helper_readiness",
+  "status": "synthetic_readiness_passed_no_real_qnn_execution",
+  "artifacts": {
+    "trajectory_helper": {
+      "path": "tools/compare_qnn_trajectory.py",
+      "bytes": 19671,
+      "sha256": "8e543382766a5e4a303f3cba38429fca8246be73fa53bf8a0b2d3bf580979d63"
+    },
+    "supervisor": {
+      "path": "tools/qwen_host_guard.py",
+      "bytes": 4524,
+      "sha256": "33373e74e4e52b9dd209bb91fc58d87f4b07186112307c0e869d02dd4136705d"
+    },
+    "tests": {
+      "path": "tests/test_qnn_trajectory.py",
+      "bytes": 20669,
+      "sha256": "31272dec692cb469cfe6c4c1e653c5c5f77eeeaf27cfb730b0cd1e19b171d557"
+    },
+    "state_transport_helper": {
+      "path": "tools/replay_saved_qdq.py",
+      "bytes": 13849,
+      "sha256": "f2a3886651e31e02934280d8ec278247387cc06031541b411837a55c099ee58f"
+    }
+  },
+  "planned_binding": {
+    "pte_sha256": "7f30be3d57b601af0804cdd50dd8968e271d673b710ea249a754fcd2f4ff3fea",
+    "qdq_sha256": "30799090d14a42c92ea804a2763df55ff231ba232653d96484324ad40c492364",
+    "reference_commit": "cc6c49c",
+    "input_positions_in_full_reference": 174,
+    "context": 4096,
+    "pte_inputs": 51,
+    "pte_outputs": 73,
+    "standard_outputs": 49,
+    "state_outputs_carried": 48,
+    "hidden_diagnostics_retained_not_carried": 24
+  },
+  "comparison_semantics": "Initially equal zero state, same teacher-forced input sequence, then each backend carries its own evolved state. Accumulated trajectory drift, not same-state operator comparison.",
+  "validation": {
+    "synthetic_tests_passed": 30,
+    "py_compile_passed": true,
+    "test_process": {
+      "exit_code": 0,
+      "elapsed_seconds": 2.4731525480001437,
+      "ru_maxrss_kib": 230452,
+      "scope": "synthetic24-layer tiny tensors (official layer-type ordering) and tiny subprocess timeout tests; real QNN/PTE/PT2 loaders prohibited"
+    },
+    "real_runtime_loader_prohibited_in_tests": true,
+    "torch_export_load_prohibited_in_tests": true,
+    "real_pte_or_model_archives_loaded": 0,
+    "actual_qnn_graph_calls": 0,
+    "synthetic_layer_types_match_official_order": true,
+    "explicit_checkpoint_continuation_matches_uninterrupted_synthetic_run": true,
+    "independent_timeout_stop_term_ignoring_child_kill_and_reap_tested": true
+  },
+  "budget_plan": {
+    "max_positions_must_be_explicit": true,
+    "timeout_must_be_explicit": true,
+    "maximum_timeout_seconds": 7200,
+    "native_call_independent_supervisor": true,
+    "termination_grace_seconds": 20,
+    "example_prefix_positions": 4,
+    "example_prefix_timeout_seconds": 900,
+    "example_prefix_estimated_seconds": 540,
+    "full174_estimated_seconds": 20940,
+    "estimate_basis": "Approximately one hour per30 QNN-x86 input positions plus60s preparation allowance. Estimate, not a measured runtime promise.",
+    "example_is_authorization": false
+  },
+  "checkpoint_policy": {
+    "explicit_resume_only": true,
+    "fresh_output_directory_required": true,
+    "metadata_sha256_required": true,
+    "pte_params_reference_prefix_context_source_and_state_hashes_bound": true,
+    "native_restart_equivalence_claimed": false,
+    "loaded_route_campaign_reuse_claimed": false,
+    "automatic_retry": false
+  },
+  "scratch_policy": "CLI creates owned disk-backed scratch, rejects tmpfs/ramfs, sets low CPU/IO priority and4 math threads, and stops/reaps on deadline, STOP or sustained pressure. App/emulator has priority.",
+  "protected_qdq_reference_paths": [
+    ".local/diagnosis/full-short-20260910T092627Z/replay/final-logits.pt.steps",
+    ".local/diagnosis/full-short-20260910T092627Z/retained-compressed/positions"
+  ],
+  "real_qnn_trajectory_performed": false,
+  "real_model_load_performed": false,
+  "physical_execution_performed": false,
+  "new_numerical_fidelity_claim": false,
+  "campaign_ready": false,
+  "registry_eligible": false,
+  "next_gate": "Review source/checkpoint/budget readiness before a separately scheduled bounded host QNN prefix. No full174 QNN trajectory, model run or phone work authorized by this commit.",
+  "claim_limits": [
+    "Source-only readiness and tiny synthetic fixtures; no real PTE/PT2/QNN/model was loaded or executed.",
+    "The73-output graph has49 standard outputs but only48 state outputs; diagnostic hidden tensors are never state inputs.",
+    "Synthetic continuation equality is not real native-runtime restart equivalence and is not benchmark loaded-route reuse.",
+    "Existing full-QDQ evidence, physical baseline and required LOCAL-ONLY reference artifacts remain unchanged."
+  ]
+}
