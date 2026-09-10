@@ -1,18 +1,18 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-10T20:17:37+00:00",
+  "updated_at": "2026-09-10T20:19:14+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
     {
       "id": "tts-capacity",
       "title": "Long narration (~90 s)",
-      "status": "paused",
+      "status": "preparing",
       "owner": "Janek",
-      "now": "Stopped pre-install: 1 FAILED history row; 0 queued/running jobs.",
-      "next": "Decide terminal-history eligibility. Not a TTS failure; no data deletion/repair.",
-      "reported_at": "2026-09-10T20:17:37+00:00",
-      "reported_by": "Janek first-outcome report, captured by Kate",
+      "now": "Over-restrictive guard stopped test: 1 FAILED job, no queued/running work.",
+      "next": "Host-only guard correction; not user permission or a model-runtime failure.",
+      "reported_at": "2026-09-10T20:19:14+00:00",
+      "reported_by": "Pi — guard correction direction",
       "stale_after_seconds": 600,
       "links": [
         {
@@ -24,11 +24,11 @@
     {
       "id": "tts-review",
       "title": "Independent review",
-      "status": "standby",
+      "status": "reviewing",
       "owner": "Nik",
-      "now": "Exact candidate remains approved; no extra review round required.",
-      "next": "Review retained outcome after the one test.",
-      "reported_at": "2026-09-10T20:15:28+00:00",
+      "now": "Nik reviews the minimal guard correction in parallel with Janek’s patch.",
+      "next": "Conditional new attempt after review; same approved APK/pack.",
+      "reported_at": "2026-09-10T20:19:14+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -36,11 +36,11 @@
     {
       "id": "app",
       "title": "App / short TTS",
-      "status": "waiting",
+      "status": "preparing",
       "owner": "Janek",
-      "now": "Authorized app closure passed without data clear; existing data preserved.",
-      "next": "Await guard decision. No install, new pack, constructor, inference or WAV.",
-      "reported_at": "2026-09-10T20:17:37+00:00",
+      "now": "Janek patches the guard using actual startup predicates.",
+      "next": "No data deletion or APK rebuild. No new user decision required.",
+      "reported_at": "2026-09-10T20:19:14+00:00",
       "reported_by": "Janek first-outcome report, captured by Kate",
       "stale_after_seconds": 900,
       "links": [
@@ -141,9 +141,9 @@
       "title": "Phone",
       "status": "paused",
       "owner": "Pi",
-      "now": "stopped; cleanup done, lock released",
-      "next": "No install or inference occurred. Cleanup/settings errors empty; reported PIDs absent.",
-      "reported_at": "2026-09-10T20:17:37+00:00",
+      "now": "next attempt conditional on review",
+      "next": "No fresh attempt yet; no staging, neural execution or WAV from the stopped check.",
+      "reported_at": "2026-09-10T20:19:14+00:00",
       "reported_by": "Janek execution report + Pi release, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -151,11 +151,11 @@
     {
       "id": "host",
       "title": "On this computer",
-      "status": "waiting",
+      "status": "preparing",
       "owner": "Janek / Nik",
-      "now": "waiting on guard-boundary decision",
-      "next": "Terminal FAILED history is not queued/running work. Never delete/repair data just to pass.",
-      "reported_at": "2026-09-10T20:17:37+00:00",
+      "now": "guard patch and parallel review",
+      "next": "Minimal host-only correction; preserve app data and approved APK/pack.",
+      "reported_at": "2026-09-10T20:19:14+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -176,8 +176,8 @@
   "agents": [
     {
       "name": "Pi",
-      "task": "Terminal-history guard decision",
-      "reported_at": "2026-09-10T20:17:37+00:00",
+      "task": "Coordinate conditional attempt",
+      "reported_at": "2026-09-10T20:19:14+00:00",
       "reported_by": "Pi latest snapshot; Kate capture",
       "stale_after_seconds": 900
     },
@@ -190,15 +190,15 @@
     },
     {
       "name": "Nik",
-      "task": "Candidate approved; standby",
-      "reported_at": "2026-09-10T19:26:07+00:00",
+      "task": "Review guard correction",
+      "reported_at": "2026-09-10T20:19:14+00:00",
       "reported_by": "Pi latest snapshot; Kate capture",
       "stale_after_seconds": 900
     },
     {
       "name": "Janek",
-      "task": "Paused at pre-install guard",
-      "reported_at": "2026-09-10T20:17:37+00:00",
+      "task": "Patch terminal-history guard",
+      "reported_at": "2026-09-10T20:19:14+00:00",
       "reported_by": "Pi latest snapshot; Kate capture",
       "stale_after_seconds": 900
     },
