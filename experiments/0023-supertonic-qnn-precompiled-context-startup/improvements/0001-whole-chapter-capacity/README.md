@@ -1,6 +1,6 @@
-# Whole-chapter capacity — four source graphs ready, constructor gate pending
+# Whole-chapter capacity — four source graphs ready, duration context generated
 
-**T2048/L2048 derivatives were materialized once under Pi's explicit release. Structural checks passed; no ORT/QNN constructor, model forward, context compilation or phone call has occurred.** New graphs stay LOCAL-ONLY. Original0023 recipes, hashlocks, packs and app paths remain unchanged. Pushes remain held by Pi's separate privacy review.
+**T2048/L2048 derivatives were materialized once under Pi's explicit release. The separately released duration constructor generated its external context once, with exact I/O and zero Run calls. Text/vector/vocoder constructors are not yet released. No model forward or phone call has occurred.** New graphs stay LOCAL-ONLY. Original0023 recipes, hashlocks, packs and app paths remain unchanged. Pushes remain held by Pi's separate privacy review.
 
 ## Capacity and the actual positional change
 
@@ -31,11 +31,11 @@ The four serial workers completed in **9.446s total**, versus600s allowed; maxim
 
 [`results/materialization-20260910/`](results/materialization-20260910/) retains the release, commands, logs, exact deltas, hashes and cleanup. The four actual ONNX files live under `.local/materialization-20260910/attempt-01/`; **migrate their bytes, not just hashes**. Logical position storage grows8,000→16,384 bytes, but protobuf wire representation changed, so do not infer a file-size delta from that arithmetic.
 
-## Next gate: one duration EPContext constructor, not direct SDK conversion
+## Duration EPContext constructor result and frozen request
 
 `tools/compile_duration_context.py` prepares the **same accepted ORT EP-context constructor route**: ORT1.27.1, QAIRT2.49.0.260730, SoC43, burst, offload-IO-quantization0, CPU fallback disabled, external context generation. It never calls `Session.Run`. Actual session I/O/provider membership, a non-embedded single-EPContext descriptor and its external binary are mandatory gates. CPU may appear in the registered-provider list; that is not CPU execution evidence. Constructor success is not neural/physical execution proof.
 
-The request [`protocol/next-constructor-request-disk-scratch.json`](protocol/next-constructor-request-disk-scratch.json) is **NOT APPROVED**. Request SHA:
+The request [`protocol/next-constructor-request-disk-scratch.json`](protocol/next-constructor-request-disk-scratch.json) was separately released and its one attempt is **consumed**. The original request/template retain their historical NOT_APPROVED text; the actual release and outcome are in [`results/duration-context-constructor-20260910-attempt-01/`](results/duration-context-constructor-20260910-attempt-01/). Constructor9.083s, outer launcher11.324s, process peak607,488KiB; descriptor815B and binary6,638,456B remain LOCAL-ONLY. Worker/group/container are absent and scratch empty. Request SHA:
 
 ```text
 aeee2b8a2e4c1306de6cf3ed84b9364e954347ea077588808630bb0cc842fa19
@@ -52,7 +52,7 @@ python "$P/tools/run_duration_constructor.py" --request "$P/protocol/next-constr
 
 A future release must bind the exact request, worker and fresh output path. The launcher pins the existing Docker image by ID, uses read-only repository/SDK mounts plus one owned writable phase,4CPUs/thread limits,8GiB memory/no extra swap, no network,520s worker +20s grace, and bounded owned-container cleanup within the proposed600s envelope. No pull/build or automatic retry. App builds retain priority. Exact revised argv is retained in [`results/constructor-scratch-request-20260910/plan.json`](results/constructor-scratch-request-20260910/plan.json). Cleanup checks a unique container name and its ownership label before removal by name; this check/remove boundary is **not atomic** and retains a name-reuse race. Removal by inspected immutable container ID remains future hardening, not part of this environment-only revision.
 
-Only source preparation and fake-runtime tests have exercised this worker. **30 focused tests passed**:23 graph/constant/structural cases and7 constructor/transport mock cases. No mock result is native evidence. The earlier duration-only *source-derivative* request files are historical NOT_APPROVED templates superseded by the four-graph materialization release; do not execute them.
+This worker now has one real constructor-only result in addition to its fake-runtime tests. **30 focused tests passed**:23 graph/constant/structural cases and7 constructor/transport mock cases. No mock result is native evidence. The duration result is not a reload, model/phone execution, whole-chapter or quality proof. The earlier duration-only *source-derivative* request files are historical NOT_APPROVED templates superseded by the four-graph materialization release; do not execute them.
 
 ## Fidelity and comparison boundaries
 

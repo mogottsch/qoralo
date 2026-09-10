@@ -1,0 +1,63 @@
+{
+  "status": "started",
+  "evidence_class": "constructor_only_not_execution_or_model_quality",
+  "python_InferenceSession_calls": 1,
+  "Session_Run_calls": 0,
+  "mock": false,
+  "session_config": {
+    "session.disable_cpu_ep_fallback": "1",
+    "ep.context_enable": "1",
+    "ep.context_embed_mode": "0",
+    "ep.context_file_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-duration-t2048-attempt-01/data/duration-context.onnx"
+  },
+  "provider_options": {
+    "offload_graph_io_quantization": "0",
+    "htp_performance_mode": "burst",
+    "soc_model": "43",
+    "backend_path": "/home/moritz/opt/qairt/2.49.0.260730/lib/x86_64-linux-clang/libQnnHtp.so"
+  },
+  "intra_op_threads": 1,
+  "inter_op_threads": 1,
+  "constructor_seconds": 9.082848890000605,
+  "actual_inputs": [
+    {
+      "name": "text_ids",
+      "type": "tensor(int64)",
+      "shape": [
+        1,
+        2048
+      ]
+    },
+    {
+      "name": "style_dp",
+      "type": "tensor(float)",
+      "shape": [
+        1,
+        8,
+        16
+      ]
+    },
+    {
+      "name": "text_mask",
+      "type": "tensor(float)",
+      "shape": [
+        1,
+        1,
+        2048
+      ]
+    }
+  ],
+  "actual_outputs": [
+    {
+      "name": "duration",
+      "type": "tensor(float)",
+      "shape": [
+        1
+      ]
+    }
+  ],
+  "session_providers": [
+    "QNNExecutionProvider",
+    "CPUExecutionProvider"
+  ]
+}
