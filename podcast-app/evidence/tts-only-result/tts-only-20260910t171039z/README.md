@@ -1,6 +1,6 @@
 # First canonical TTS request — WAV produced
 
-**One profiled engineering request completed and produced a valid WAV.** Nik has verified real per-component QNN/HTP execution from the saved ORT/RPC/cycle records; his final input/native/privacy/cleanup audit is still pending. This is not a warm benchmark campaign,1–2minute chapter or product-E2E result. **Listening: `not_reviewed`**; only Moritz may judge the exact sample.
+**FINAL PASS — one profiled engineering request completed and produced a valid WAV.** [Nik's final saved-evidence review](nik-review.md) verifies actual per-component QNN/HTP execution and closes exact input/native/APK/guard/privacy/cleanup checks. This is not a warm benchmark campaign,1–2minute chapter or product-E2E result. **Listening: `not_reviewed`**; only Moritz may judge the exact sample.
 
 [Canonical WAV](device/canonical-short.wav)
 
@@ -42,4 +42,4 @@ All three guarded checkpoints passed. Cleanup records no errors/settings errors;
 
 `retained-manifest.json` binds306 safe public originals/extracted members (7,763,052 bytes). The archive contains only app-owned TTS records. Ten full DB/condition/logcat files remain **local-only**, hash-bound but not copied into Git. Public `conditions-core-*.json` are explicitly labelled derived numeric/bool core battery and numeric thermal extracts, never normalized data presented as raw. Full Samsung learned histories, sensor names and global logs are excluded. The duplicate convenience WAV at the original run root is omitted; its identical archive member is retained here.
 
-Source/raw/WAV bytes are immutable. No follow-on phone call, automatic replay, listening verdict or push occurred during retention. Git push/external publication remains held for the separately coordinated historical privacy cleanup.
+Source/raw/WAV bytes are immutable. `summary.json` retains its initial review-pending state; `nik-review.md` and its hash-bound retention record supersede that status, not the original observations. Nik reviewed the original saved result; Janek/Pi's committed-blob packaging checks are separate provenance, not a duplicate Nik packaging audit. No follow-on phone call, automatic replay, listening verdict or push occurred during retention. Git push/external publication remains held for the separately coordinated historical privacy cleanup.
