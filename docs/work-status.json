@@ -1,18 +1,18 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-10T20:26:54+00:00",
+  "updated_at": "2026-09-10T20:28:19+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
     {
       "id": "tts-capacity",
       "title": "Long narration (~90 s)",
-      "status": "active",
+      "status": "blocked",
       "owner": "Janek",
-      "now": "Host guard fix approved; Janek starts one fresh long request.",
-      "next": "Await actual outcome/cleanup and any real WAV. No success claimed yet.",
-      "reported_at": "2026-09-10T20:26:14+00:00",
-      "reported_by": "Janek — execution start after exact host-fix approval",
+      "now": "Long request failed at render: ORT/QNN execute error 6006. No WAV.",
+      "next": "Four loads returned; one whole request, no split/fallback/retry. Audit pending.",
+      "reported_at": "2026-09-10T20:28:19+00:00",
+      "reported_by": "Janek — first actual long-request outcome",
       "stale_after_seconds": 600,
       "links": [
         {
@@ -24,11 +24,11 @@
     {
       "id": "tts-review",
       "title": "Independent review",
-      "status": "standby",
+      "status": "reviewing",
       "owner": "Nik",
-      "now": "Exact 5ca/60dd host-fix review passed; conditional release satisfied.",
-      "next": "Review retained outcome; no further acknowledgment gate.",
-      "reported_at": "2026-09-10T20:26:14+00:00",
+      "now": "Nik audits retained error/profiles; component attribution is pending.",
+      "next": "Do not infer a vector/root cause from the summary alone.",
+      "reported_at": "2026-09-10T20:28:19+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -36,11 +36,11 @@
     {
       "id": "app",
       "title": "App / short TTS",
-      "status": "active",
+      "status": "waiting",
       "owner": "Janek",
-      "now": "Known FAILED/COMPLETE history allowed; active QUEUED/RUNNING still rejected.",
-      "next": "Data unchanged, same APK/pack. One fresh test with guard 5ca / override 60dd.",
-      "reported_at": "2026-09-10T20:26:54+00:00",
+      "now": "Terminal evidence collection succeeded in 13.863 s—not synthesis success.",
+      "next": "Packages/new pack retained. Prepare safe evidence; no further phone/model action.",
+      "reported_at": "2026-09-10T20:28:19+00:00",
       "reported_by": "Pi — independently approved guard boundary",
       "stale_after_seconds": 900,
       "links": [
@@ -106,10 +106,10 @@
       "title": "Docs / listening",
       "status": "standby",
       "owner": "Kate",
-      "now": "Listening pages are created only for actual hash-bound WAVs.",
-      "next": "No sample means no player/tab; failures stay on this board.",
-      "reported_at": "2026-09-10T19:28:45+00:00",
-      "reported_by": "Pi / Moritz corrected handoff rule",
+      "now": "Failure stays on this board; no WAV means no listening page or tab.",
+      "next": "Keep the accepted short player untouched; await a real sample handoff.",
+      "reported_at": "2026-09-10T20:28:19+00:00",
+      "reported_by": "Kate — WAV-only handoff rule",
       "stale_after_seconds": 600,
       "links": [
         {
@@ -139,11 +139,11 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "active",
+      "status": "paused",
       "owner": "Pi",
-      "now": "Janek: one fresh request starting",
-      "next": "Reported execution start only. Await outcome; no audio/page without an actual WAV.",
-      "reported_at": "2026-09-10T20:26:14+00:00",
+      "now": "test ended; cleanup done, lock released",
+      "next": "Reported cleanup/settings errors empty, three PIDs absent, transfer scratch removed. No retry.",
+      "reported_at": "2026-09-10T20:28:19+00:00",
       "reported_by": "Janek execution report + Pi release, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -151,11 +151,11 @@
     {
       "id": "host",
       "title": "On this computer",
-      "status": "active",
+      "status": "reviewing",
       "owner": "Janek / Nik",
-      "now": "long phone-test supervision",
-      "next": "Host-only guard correction accepted; original APKs/model pack unchanged.",
-      "reported_at": "2026-09-10T20:26:14+00:00",
+      "now": "safe evidence preparation / review",
+      "next": "No new model execution. Driver collection completion is not synthesis success.",
+      "reported_at": "2026-09-10T20:28:19+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -190,15 +190,15 @@
     },
     {
       "name": "Nik",
-      "task": "Fix approved; await outcome",
-      "reported_at": "2026-09-10T20:26:14+00:00",
+      "task": "Audit retained error / profiles",
+      "reported_at": "2026-09-10T20:28:19+00:00",
       "reported_by": "Pi latest snapshot; Kate capture",
       "stale_after_seconds": 900
     },
     {
       "name": "Janek",
-      "task": "Execute one fresh long request",
-      "reported_at": "2026-09-10T20:26:14+00:00",
+      "task": "Retain safe failure evidence",
+      "reported_at": "2026-09-10T20:28:19+00:00",
       "reported_by": "Pi latest snapshot; Kate capture",
       "stale_after_seconds": 900
     },
@@ -218,9 +218,9 @@
     },
     {
       "name": "Kate",
-      "task": "WAV-only player handoff",
-      "reported_at": "2026-09-10T19:28:45+00:00",
-      "reported_by": "Pi / Moritz corrected handoff rule",
+      "task": "Board only; no WAV / player",
+      "reported_at": "2026-09-10T20:28:19+00:00",
+      "reported_by": "Kate — current report",
       "stale_after_seconds": 900
     }
   ],
