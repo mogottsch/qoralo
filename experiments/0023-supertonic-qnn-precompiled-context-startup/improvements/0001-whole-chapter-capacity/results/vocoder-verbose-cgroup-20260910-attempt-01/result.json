@@ -1,0 +1,56 @@
+{
+  "status": "vocoder_blocked_by_named_backend_tiling_VTCM_failure",
+  "request_sha256": "e03e62ccb6b3406484fe0eb89f056771a736c4d77265da513da413648c5191a5",
+  "constructor_calls": 1,
+  "Session_Run_calls": 0,
+  "worker_elapsed_seconds": 2.15787977999571,
+  "launcher_seconds": 3.1002146329992684,
+  "constructor_seconds": null,
+  "constructor_seconds_reason": "Constructor threw before returning; worker body timing is not a completed-constructor timing.",
+  "process_ru_maxrss_kib": 492208,
+  "own_cgroup_memory_max_bytes": 8589934592,
+  "own_cgroup_before_current_bytes": 27926528,
+  "own_cgroup_after_current_bytes": 427311104,
+  "own_cgroup_peak_bytes": 427532288,
+  "own_cgroup_events_before": {
+    "low": 0,
+    "high": 0,
+    "max": 0,
+    "oom": 0,
+    "oom_kill": 0,
+    "oom_group_kill": 0
+  },
+  "own_cgroup_events_after": {
+    "low": 0,
+    "high": 0,
+    "max": 0,
+    "oom": 0,
+    "oom_kill": 0,
+    "oom_group_kill": 0
+  },
+  "compiler_reported_VTCM_bytes": 8388608,
+  "compiler_reported_minimum_tile_bytes": 12920320,
+  "compiler_reported_required_TCM_bytes_per_failing_generated_op": 12605440,
+  "generated_error_counts": {
+    "/decoder/convnext.1/dwconv/net/Conv_token_16_2": 16,
+    "/decoder/convnext.4/dwconv/net/Conv_token_49_2": 16
+  },
+  "not_a_standalone_tensor_or_summed_live_memory_measurement": true,
+  "actual_session_IO": null,
+  "actual_session_IO_reason": "Constructor threw; no actual-session receipt.",
+  "postconstructor_pin_verification": null,
+  "postconstructor_pin_verification_reason": "Exception path did not perform it; not retrofilled.",
+  "context_artifacts": [],
+  "cleanup": {
+    "child_pid": 1933002,
+    "child_reaped": true,
+    "pid_absent": true,
+    "group_absent": true,
+    "container_absent": true,
+    "scratch_empty": true,
+    "cleanup_name_label_atomic": false
+  },
+  "whole_long_speech_ready": false,
+  "independent_review": "Nik",
+  "runtime_followups_performed": false
+}

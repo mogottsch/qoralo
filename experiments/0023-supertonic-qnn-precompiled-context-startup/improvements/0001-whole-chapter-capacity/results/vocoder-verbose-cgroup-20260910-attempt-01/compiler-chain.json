@@ -1,0 +1,64 @@
+{
+  "source": "raw/guard/stderr.log",
+  "bytes": 3695160,
+  "sha256": "338ec3e2133a3b6cc299dbece3388517859126b6f1eecce4d8ca04925c2d14dc",
+  "passages": [
+    {
+      "line": 42141,
+      "raw_line": "2026-09-10 18:16:59.340831681 [V:onnxruntime:Default, qnn_backend_manager.cc:466 QnnLogging] vtcm_wrapper.cc:181:VTCM: total_sz=8388608, sz=8388608, off=0, req=0x55ecee315fa8, ctx=0 (0x7fc9791c6000-0x7fc9799c6000)"
+    },
+    {
+      "line": 42209,
+      "raw_line": "2026-09-10 18:16:59.374484878 [V:onnxruntime:Default, qnn_backend_manager.cc:466 QnnLogging] tiling.h:284:WARNING:Tried to assign requirement of chunk=0 to dim=2, but 20120000005f (q::DepthwiseConvLayerWithDilation) does not have a valid splitting rule. Defaulting to original dim size (12288)."
+    },
+    {
+      "line": 42211,
+      "raw_line": "2026-09-10 18:16:59.374510650 [V:onnxruntime:Default, qnn_backend_manager.cc:466 QnnLogging] simple_tiler.cc:602:WARNING:unable to tile 0x20120000005f q::DepthwiseConvLayerWithDilation sufficiently, min size = 12920320  [1,1,12288,32]"
+    },
+    {
+      "line": 42345,
+      "raw_line": "2026-09-10 18:16:59.376847108 [V:onnxruntime:Default, qnn_backend_manager.cc:466 QnnLogging] tiling.h:284:WARNING:Tried to assign requirement of chunk=0 to dim=2, but 2018000000dd (q::DepthwiseConvLayerWithDilation) does not have a valid splitting rule. Defaulting to original dim size (12288)."
+    },
+    {
+      "line": 42347,
+      "raw_line": "2026-09-10 18:16:59.376870085 [V:onnxruntime:Default, qnn_backend_manager.cc:466 QnnLogging] simple_tiler.cc:602:WARNING:unable to tile 0x2018000000dd q::DepthwiseConvLayerWithDilation sufficiently, min size = 12920320  [1,1,12288,32]"
+    },
+    {
+      "line": 42931,
+      "raw_line": "2026-09-10 18:17:00.689126880 [V:onnxruntime:Default, qnn_backend_manager.cc:466 QnnLogging] tcm_migration.cc:2402::ERROR:Operator named q::DilatedConvLayer_s1.fp16 (0x334370000005f) not sufficiently tiled to fit in TCM. Requires 12605440 bytes"
+    },
+    {
+      "line": 42995,
+      "raw_line": "2026-09-10 18:17:00.689996259 [V:onnxruntime:Default, qnn_backend_manager.cc:466 QnnLogging] tcm_migration.cc:1824::ERROR:Inside TCMMigration::run() function: scan_input_graph() call failed"
+    },
+    {
+      "line": 42997,
+      "raw_line": "2026-09-10 18:17:00.704086735 [V:onnxruntime:Default, qnn_backend_manager.cc:466 QnnLogging] graph_prepare.cc:2674::ERROR:Graph prepare TCM Migration action failed"
+    },
+    {
+      "line": 42999,
+      "raw_line": "2026-09-10 18:17:00.704105243 [V:onnxruntime:Default, qnn_backend_manager.cc:466 QnnLogging] graph_prepare.cc:2741::ERROR:Graph prepare failed during optimization with err: 17, Fatal Optimize"
+    },
+    {
+      "line": 43006,
+      "raw_line": "2026-09-10 18:17:00.708270625 [V:onnxruntime:Default, qnn_backend_manager.cc:466 QnnLogging]  <E> \"/decoder/convnext.1/dwconv/net/Conv_token_16_2\" generated: Operator named q::DilatedConvLayer_s1.fp16 (0x334370000005f) not sufficiently tiled to fit in TCM. Requires 12605440 bytes"
+    },
+    {
+      "line": 43038,
+      "raw_line": "2026-09-10 18:17:00.708345355 [V:onnxruntime:Default, qnn_backend_manager.cc:466 QnnLogging]  <E> \"/decoder/convnext.4/dwconv/net/Conv_token_49_2\" generated: Operator named q::DilatedConvLayer_s1.fp16 (0x33467000000dd) not sufficiently tiled to fit in TCM. Requires 12605440 bytes"
+    },
+    {
+      "line": 43074,
+      "raw_line": "2026-09-10 18:17:00.708422180 [V:onnxruntime:Default, qnn_backend_manager.cc:466 QnnLogging]  <E> Failed to finalize graph (id: 1) with err 1002"
+    },
+    {
+      "line": 43084,
+      "raw_line": "\u001b[1;31m2026-09-10 18:17:00.708450326 [E:onnxruntime:, qnn_model.cc:387 FinalizeGraphs] Failed to finalize QNN graph. Error code: 1002\u001b[m"
+    }
+  ],
+  "generated_source_counts": {
+    "/decoder/convnext.1/dwconv/net/Conv_token_16_2": 16,
+    "/decoder/convnext.4/dwconv/net/Conv_token_49_2": 16
+  },
+  "interpretation": "Backend depthwise-dilated-convolution tiling/VTCM failure at two named source sites; not own-cgroup8GiB OOM or dense attention. Other compiler/workspace/global memory attribution is not measured."
+}
