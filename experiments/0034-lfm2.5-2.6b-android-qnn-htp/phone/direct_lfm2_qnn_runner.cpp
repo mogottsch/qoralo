@@ -330,6 +330,8 @@ class Runner {
 
   void LoadOnly(const fs::path& binary, const std::string& alias) {
     sessions_.clear(); contexts_.clear();
+    consolidated_ = false;
+    monolithic_ = lfm2::UsesMonolithicDispatch(alias);
     std::cerr << "loading_phase_context=" << binary.string() << " alias=" << alias << "\n";
     auto context = std::make_unique<DirectContext>(
         pointers_, backend_library_, owner_->m_backendHandle, owner_->m_deviceHandle,

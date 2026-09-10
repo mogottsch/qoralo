@@ -15,6 +15,8 @@
 
 namespace lfm2 {
 
+inline bool UsesMonolithicDispatch(const std::string& alias) { return alias == "monolith"; }
+
 class ExclusiveTokenOutput {
  public:
   explicit ExclusiveTokenOutput(const std::string& path) {

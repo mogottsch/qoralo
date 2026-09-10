@@ -103,6 +103,7 @@ def main() -> None:
         "SummarizeTiming",
         "request_to_first_emitted_token_seconds", "request_to_final_emitted_token_seconds",
         "MAX_NEW is total emitted tokens including the AR171 endpoint",
+        "monolithic_ = lfm2::UsesMonolithicDispatch(alias)",
     ]
     missing = [fragment for fragment in required_fragments if fragment not in combined_source]
     if missing:

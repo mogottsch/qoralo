@@ -800,6 +800,27 @@
     ],
     "tokenization_precomputed_and_excluded_from_timing": true
   },
+  "integrated_ar1_dispatch_fix_readiness": {
+    "android_runner_sha256": "4387189b4ff211e55e2a0cc5b4517926aed52f4bc80a34770943c35a39add931",
+    "ar1_alias_monolithic_dispatch": true,
+    "evidence": "results/qnn-integrated-ar1-dispatch-fix-readiness/result.json",
+    "host_runner_sha256": "425e3dd7309358c634be2a23cc741ff5181d285904a2c84b0f679975fbc88d58",
+    "legacy_alias_monolithic_dispatch": false,
+    "max16_completed": false,
+    "phone_access": false,
+    "post_fix_physical_ar1_execution": false,
+    "prefill_alias_monolithic_dispatch": false,
+    "prior_ar1_graph_executions": 0,
+    "prior_failure": "missing context: layer-00-core-norm",
+    "stage": {
+      "elf_preflight": true,
+      "hash_check": true,
+      "manifest_sha256": "15d534e925cd90302e464fdda6ff714a27139670294e417d224a082e186207a4",
+      "payload_bytes": 3400505532,
+      "payload_files": 12,
+      "stage_metadata_sha256": "bb2b3635134280cd2edeccbb610793eda3bb4524d6ee11a5e7af6cf6a3574721"
+    }
+  },
   "integrated_phone_attempt_1_transport_failure": {
     "cleanup_status": "unknown_unverified_transport_failure",
     "context_load_started": false,
@@ -1098,7 +1119,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "Corrected integrated attempt cleaned absent and released phone.lock. No retry before a narrow host-tested dispatcher fix and fresh Pi slot.",
+  "phone_boundary": "No phone access occurred for the AR1 dispatcher fix. Await independent review and a fresh explicit slot.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -1246,7 +1267,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "corrected_int64_physical_ar171_prefill_passed_ar1_dispatch_failed_before_execute",
+  "status": "corrected_int64_prefill_passed_ar1_dispatch_fix_host_ready",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",

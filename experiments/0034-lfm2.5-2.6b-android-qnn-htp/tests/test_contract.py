@@ -81,7 +81,7 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
     def test_active_export_does_not_claim_qnn_android_or_completion(self) -> None:
-        self.assertIn("corrected_int64_physical_ar171_prefill_passed_ar1_dispatch_failed", self.contract["status"])
+        self.assertIn("corrected_int64_prefill_passed_ar1_dispatch_fix_host_ready", self.contract["status"])
         route = self.result["route_assessment"]
         self.assertFalse(route["compiled_sm8550_context_available"])
         self.assertFalse(route["android_execution"])
@@ -90,7 +90,7 @@ class ContractTest(unittest.TestCase):
         self.assertIn("not_android_qnn_or_htp", milestone["classification"])
         self.assertEqual("passed", milestone["rewritten_onnx"]["onnx_checker"])
         self.assertEqual(16, milestone["bounded_output"]["max_new_tokens"])
-        self.assertIn("No retry before a narrow host-tested dispatcher fix", self.contract["phone_boundary"])
+        self.assertIn("No phone access occurred for the AR1 dispatcher fix", self.contract["phone_boundary"])
 
     def test_qnn_aot_is_complete_but_not_physical_execution(self) -> None:
         milestone = self.contract["qnn_aot_milestone"]
@@ -683,6 +683,22 @@ class ContractTest(unittest.TestCase):
         self.assertEqual(0, result["ar1_failure"]["graph_executions"])
         self.assertIn("No AR1 graph execution", result["claim_boundary"])
 
+    def test_ar1_dispatch_fix_is_host_ready_only(self) -> None:
+        ready = self.contract["integrated_ar1_dispatch_fix_readiness"]
+        self.assertFalse(ready["phone_access"])
+        self.assertEqual("missing context: layer-00-core-norm", ready["prior_failure"])
+        self.assertEqual(0, ready["prior_ar1_graph_executions"])
+        self.assertFalse(ready["prefill_alias_monolithic_dispatch"])
+        self.assertTrue(ready["ar1_alias_monolithic_dispatch"])
+        self.assertFalse(ready["legacy_alias_monolithic_dispatch"])
+        self.assertEqual((12, 3400505532), (ready["stage"]["payload_files"], ready["stage"]["payload_bytes"]))
+        self.assertFalse(ready["post_fix_physical_ar1_execution"])
+        self.assertFalse(ready["max16_completed"])
+        result = json.loads((EXP / ready["evidence"]).read_text())
+        self.assertTrue(result["dispatch_fix"]["no_qnn_regression"])
+        self.assertTrue(result["dispatch_fix"]["ar1_uses_monolithic_dispatch"])
+        self.assertIn("No post-fix physical AR1 graph execution", result["claim_boundary"])
+
     def test_final_pipeline_host_equivalence_is_bounded(self) -> None:
         result = json.loads((EXP / "results/htp-pipeline-host-equivalence/result.json").read_text())
         self.assertIn("host_only", result["classification"])
@@ -744,6 +760,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/qnn-net-run-position-ingestion-audit",
             EXP / "results/qnn-integrated-phone-attempt-1-transport-before-staging",
             EXP / "results/qnn-integrated-phone-attempt-2-ar1-dispatch-failure",
+            EXP / "results/qnn-integrated-ar1-dispatch-fix-readiness",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

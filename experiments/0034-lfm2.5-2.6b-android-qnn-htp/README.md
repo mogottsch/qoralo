@@ -2,7 +2,7 @@
 
 ## Status
 
-**Correct native-INT64 physical AR171 prefill now passes, but integrated decode is blocked by a runner dispatcher bug. One direct-QNN HTP AR171 call consumed positions `0..170`, finite-scanned all 60 outputs, emitted token 597, bridged state in memory, and captured a detailed profile. AR1 loaded, then zero AR1 graph calls ran because `LoadOnly` had not selected monolithic dispatch. The 4-byte partial survived, cleanup passed, and no retry is authorized before a narrow host-tested fix.**
+**Correct native-INT64 physical AR171 prefill passes, and the AR1 dispatcher bug now has a narrow host-tested fix awaiting physical review. `LoadOnly` explicitly selects monolithic dispatch for alias `monolith` and clears it for prefill/legacy aliases. New host/Android binaries and a new hash-bound stage are ready, but no post-fix AR1 graph has executed physically.**
 
 ## Evidence correction: qnn-net-run position ingestion
 
@@ -311,4 +311,8 @@ A fresh reviewed slot then used the exact frozen stage successfully. Direct QNN 
 
 AR1 context and graph then loaded, but no AR1 graph executed. The runner failed with `fatal=missing context: layer-00-core-norm`: `LoadOnly(..., "monolith")` populated the alias but left `monolithic_` false, so `RunToken` selected the legacy split-route dispatcher. The exclusive raw file retained the 4-byte endpoint, SHA-256 `5e9fffea1b51a56dbb43d50fd07dafb60bb542f4e1f5e853684aef8f187f64b9`. The scoped root and runner process were verified absent, settings were unchanged, and the lock was released. See [`results/qnn-integrated-phone-attempt-2-ar1-dispatch-failure/`](results/qnn-integrated-phone-attempt-2-ar1-dispatch-failure/).
 
-This proves corrected-position physical AR171 prefill, finite outputs, endpoint emission, in-memory bridge, and detailed prefill profiling. It does not prove AR1 execution, max16 integrated output, full request timing, numerical/reference equivalence, a performance campaign, or registry eligibility. No retry is authorized until the dispatcher fix is host-tested and independently reviewed. FP16/uFxp16 state, registered/device-resident memory, reduced logit return, and coarse explicitly declared hybrid partitions remain later candidates.
+This proves corrected-position physical AR171 prefill, finite outputs, endpoint emission, in-memory bridge, and detailed prefill profiling. It does not prove AR1 execution, max16 integrated output, full request timing, numerical/reference equivalence, a performance campaign, or registry eligibility.
+
+The narrow dispatcher correction is retained separately in [`results/qnn-integrated-ar1-dispatch-fix-readiness/`](results/qnn-integrated-ar1-dispatch-fix-readiness/). `LoadOnly` now clears consolidated dispatch and derives monolithic dispatch from the exact alias: `prefill` remains false, `monolith` is true, and legacy layer aliases remain false. The no-QNN regression exercises these selections. Updated host and Android runners compile with SHA-256 `425e3dd7309358c634be2a23cc741ff5181d285904a2c84b0f679975fbc88d58` and `4387189b4ff211e55e2a0cc5b4517926aed52f4bc80a34770943c35a39add931`. The rebuilt 12-file stage totals 3,400,505,532 bytes; metadata SHA-256 is `bb2b3635134280cd2edeccbb610793eda3bb4524d6ee11a5e7af6cf6a3574721` and manifest SHA-256 is `15d534e925cd90302e464fdda6ff714a27139670294e417d224a082e186207a4`. Hashes and ELF preflight pass.
+
+No phone access occurred for the fix. It does not prove post-fix AR1 execution or max16 completion; a fresh slot requires independent review. FP16/uFxp16 state, registered/device-resident memory, reduced logit return, and coarse explicitly declared hybrid partitions remain later candidates.

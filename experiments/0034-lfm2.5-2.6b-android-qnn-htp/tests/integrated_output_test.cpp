@@ -26,6 +26,8 @@ static std::vector<int32_t> Read(const fs::path& path) {
 int main(int argc, char** argv) {
   if (argc != 2) return 2;
   const fs::path root = argv[1]; fs::create_directories(root);
+  if (!lfm2::UsesMonolithicDispatch("monolith") || lfm2::UsesMonolithicDispatch("prefill") ||
+      lfm2::UsesMonolithicDispatch("layer-00-core-norm")) return 16;
 
   // Late inference/profile failure must not erase tokens already append+fsync'd.
   const fs::path partial = root / "partial.int32le";

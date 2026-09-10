@@ -121,11 +121,13 @@
 109. Hardened future cleanup/PID handling with fake-ADB regressions: absence-query transport loss remains unknown, confirmed presence stays distinct, and PID-query failure sets remote retention before exit.
 110. Ran one fresh corrected integrated slot: direct-QNN AR171 positions `0..170` executed physically, all 60 outputs finite-scanned, endpoint 597 fsync-preserved, state bridged, and detailed prefill profile captured.
 111. AR1 loaded but executed zero graphs because `LoadOnly` did not select monolithic dispatch; preserved the exact error/partial output and verified cleanup/lock release.
+112. Fixed only dispatch selection: `LoadOnly` clears consolidated mode and enables monolithic mode exactly for alias `monolith`; no-QNN regression covers prefill/monolith/legacy aliases.
+113. Rebuilt/pinned host and Android runners plus a new 12-file stage; hashes and ELF preflight pass without phone access.
 
 ## In progress: performance engineering
 
-1. Commit the corrected-prefill/AR1-dispatch failure without max16 or end-to-end claims; do not retry.
-2. Make only the narrow host-tested monolithic dispatch-selection fix, rebuild/pin a new runner/stage, and request independent review.
+1. Commit and independently review the narrow dispatcher fix readiness; no post-fix physical claim.
+2. If a fresh slot is granted, run exactly one bounded corrected integrated attempt; no retry or campaign.
 2. If prioritized, run one bounded reset-isolated physical integrated short/max16 diagnostic with detailed profiles and all-output finite scans.
 3. Evaluate lower-precision/device-resident state and reduced-logit routes; keep CPU/GPU/HTP boundaries explicit.
 4. Do not campaign until the fastest sensible complete route is selected and reset-isolated.
