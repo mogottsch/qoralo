@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active. The bounded QNN-x86 own-state prefix completed positions 0–3, but drift remains: position-1 logit cosine falls to 0.679220 and argmax first diverges at position 2. This does not establish full fidelity or identify current-call versus feedback error. The QDQ position-1 validation now supplies a same-pack reference with logits equal to historical position 1; the paired QNN call has not run. Physical baseline unchanged.**
+**Active. The bounded QNN-x86 own-state prefix completed positions 0–3, but drift remains: position-1 logit cosine falls to 0.679220 and argmax first diverges at position 2. This does not establish full fidelity or identify current-call versus feedback error. The paired same-input QNN control completed: agreement improves to about 0.888, but residual current-call and prior-state effects both remain. Saved-output analysis exposes discrepancies from layer 0 onward without identifying an operator cause. Physical baseline unchanged.**
 
 This is a separate HTP feasibility arm. It does not change or relabel `0027` CPU evidence.
 
@@ -79,10 +79,14 @@ A lower-retention two-process host replay in [`results/host-w4a16-qdq-output-dia
 
 [`results/controlled-position1-qdq-20260910/`](results/controlled-position1-qdq-20260910/) retains the single QDQ position-1 call on the reviewed 51-input pack. All 73 outputs are finite, inputs were unchanged, and logits are bit-identical to historical position 1 (argmax 198, max/mean absolute error 0). The raw FP32 cosine slightly exceeds 1 from reduction rounding and is not treated as above-perfect agreement. This supplies a real same-pack QDQ reference for a later QNN control; no paired QNN call or full-state byte-identity claim follows yet.
 
+## Paired position-1 control and saved-data decomposition
+
+[`results/controlled-position1-paired-qnn-20260910/`](results/controlled-position1-paired-qnn-20260910/) retains the one QNN call paired with the accepted same-pack QDQ reference, all three 73-output bundles, and a vector—not scalar—decomposition. Runtime logit cosine is 0.887994 versus the original own-state 0.679220. Both current-call and prior-state-effect vectors are nonzero; the historical-reference shift is zero. Layer-0 saved outputs already differ, with later hidden discrepancies accumulating. A retained convolution-history value changes in QDQ while QNN near-preserves it; this is not proof of QNN corruption, causality, or FP32 superiority.
+
 ## Current next gate
 
 1. Keep physical PTE `23ac8abd…d2c506` and phone preflight unchanged; the 73-output diagnostic PTE is not compatible with the current 49-output Android runner.
-2. Review the completed QDQ position-1 result/hash before separately releasing one QNN call on that same pack. No automatic follow-on, resume or new replay; the missing historical state-byte caveat remains explicit.
+2. Source-only audit of layer-0 conv-history Q/DQ/clamp/cast metadata and selective small constants: determine whether 22.131550 is an encoding limit. Do not load/execute the whole model or start another runtime call until reviewed.
 3. No ADB or staging without a new explicit Pi phone slot. Full QNN/physical drift and one-token-only interpretation remain campaign-readiness boundaries.
 4. Only after agreed fidelity and state-isolation gates may chunked prefill and the fixed 1+5+5+5 campaign be promoted.
 

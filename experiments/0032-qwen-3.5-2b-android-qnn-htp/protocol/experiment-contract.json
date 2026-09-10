@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
-  "status": "active_four_position_qnn_own_state_drift_observed_same_state_control_pending",
+  "status": "active_paired_same_input_position1_current_call_and_state_effect_drift_remain",
   "question": "Can Qwen3.5-2B run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Qwen3.5-2B post-trained text generation only",
@@ -169,15 +169,18 @@
     "histogram_qnn_prefix_completed_positions": 4,
     "histogram_qnn_prefix_first_argmax_divergence_position": 2,
     "histogram_qnn_prefix_position1_logit_cosine": 0.6792200803756714,
-    "histogram_identical_state_control_executed": false,
+    "histogram_identical_state_control_executed": true,
     "controlled_position1_readiness_result_path": "results/controlled-position1-readiness/result.json",
     "controlled_position1_pack_sha256": "bfe14bca74090778550618c1c6eb485728e15e6e784e936b87606dcb298ebe0d",
     "controlled_position1_header_sha256": "ec38185783dbd2bc387dbf5387c3f89cd4a4fbb786f2504a82b2b48cd43cd392",
-    "controlled_position1_new_model_calls": 1,
+    "controlled_position1_new_model_calls": 2,
     "controlled_position1_qdq_result_path": "results/controlled-position1-qdq-20260910/result.json",
     "controlled_position1_qdq_raw_result_sha256": "7137d83a3c89a73121ad5bd2514c865b7cec97fe8b5c2d117be25fe165f43519",
-    "controlled_position1_paired_qnn_executed": false,
-    "next_gate": "Review the completed one-call QDQ reference before separately releasing a QNNposition1 call on the same pack/result hash. No automatic follow-on, full replay, own-state resume or phone run; no missing historical state-byte identity claim."
+    "controlled_position1_paired_qnn_executed": true,
+    "controlled_position1_paired_result_path": "results/controlled-position1-paired-qnn-20260910/result.json",
+    "controlled_position1_same_input_runtime_cosine": 0.8879938125610352,
+    "controlled_position1_individual_operator_cause_identified": false,
+    "next_gate": "Source-only layer0 conv-history encoding/source audit using metadata and selective small constants, not a whole-model load/execution. No new runtime/phone/full replay/resume; preserve original vectors and physical baseline."
   },
   "required_provider_proof_if_unblocked": {
     "compiled_context_identity": "Hash every deployed serialized context and bind SM8550/v73 compiler provenance.",

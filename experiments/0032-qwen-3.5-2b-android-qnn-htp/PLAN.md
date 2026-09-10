@@ -2,7 +2,7 @@
 
 ## Status
 
-Active. QNN-x86 own-state positions 0–3 completed but exposed substantial drift: position-1 cosine 0.679220 and first argmax divergence at position 2. Full fidelity and current-call versus feedback attribution remain unresolved. The QDQ position1 validation is complete on the reviewed pack; a paired QNN call remains unreleased. Physical baseline unchanged.
+Active. QNN-x86 own-state positions 0–3 completed but exposed substantial drift: position-1 cosine 0.679220 and first argmax divergence at position 2. Full fidelity and current-call versus feedback attribution remain unresolved. The paired identical-input QNN call completed and exposes both residual current-call discrepancy and prior-state effects. Saved data shows a QDQ conv-history value change where QNN near-preserves the input; no individual operator or FP32-correctness claim yet. Physical baseline unchanged.
 
 ## Completed
 
@@ -44,10 +44,12 @@ Active. QNN-x86 own-state positions 0–3 completed but exposed substantial drif
 
 25. Completed the separately authorized ONE QDQ position1 call on the exact pack in146.954s under600s. Inputs were unchanged, all73 outputs finite, and logits exactly equal historicalp1 (max/mean error0,argmax198). Raw FP32 cosine overshoot retained as rounding, not above-perfect agreement. Result/reference hash is ready for review; no paired QNN call ran.
 
+26. Completed ONE separately released QNNposition1 call paired to the accepted QDQ input/result. No mutation, same input digest,1 call/124.709s under300s. Cosine .887994 versus prior own-state .679220; all3×73 saved tensors finite. Saved-vector decomposition retains nonzero current/state terms, zero historical-reference shift and explicit rounding residual; no scalar cosine/norm addition. Layer0 discrepancies and neutral conv-history observations retained. No further runtime run.
+
 ## Current work
 
 1. Preserve physical baseline/preflight hashes, diagnostic artifacts, and both LOCAL-ONLY positional tensor directories listed in the full-short result. Do not clean them; copy them on migration/handover.
-2. Review the completed QDQ single-call result/hash before any separately released QNNposition1 control on the same pack. No automatic sequence or new replay; never relabel the pack as own-QNN resume.
+2. Source-only audit of layer0 conv-history quantize/dequantize/clamp/cast metadata and selected small constants, without loading/executing the whole model; check whether22.131550 is an encoding limit. No new runtime call until reviewed.
 3. Do not use ADB or the phone without an explicit scheduled slot. Host teacher-forced completion is not QNN/physical fidelity or a campaign authorization.
 4. After agreed fidelity follow-up gates, validate chunked-prefill state semantics/delegation and loaded-route reset/isolation before the canonical campaign.
 

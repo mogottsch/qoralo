@@ -1,0 +1,2719 @@
+{
+  "schema_version": 1,
+  "evidence_class": "saved_tensor_position1_same_pack_current_call_and_state_effect_analysis",
+  "analysis_model_or_pte_execution": false,
+  "same_pack_header_sha256": "ec38185783dbd2bc387dbf5387c3f89cd4a4fbb786f2504a82b2b48cd43cd392",
+  "same_input_values_sha256": "4251bbce8005e37cb9fc4c8da8f0af604e7c4a9884179e2ccd358ef4865c78e4",
+  "input_sources": {
+    "qnn_control_result": {
+      "path": "experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/controlled-p1-qnn-call-20260910T122428Z/run/control/result.json",
+      "bytes": 4148,
+      "sha256": "8c41cda7641f3acf383416bc3b93d65e55adc179cb44696bd59d511940b7c285"
+    },
+    "qdq_control_result": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/controlled-p1-qdq-call-20260910T120717Z/run/control/result.json",
+      "bytes": 3667,
+      "sha256": "7137d83a3c89a73121ad5bd2514c865b7cec97fe8b5c2d117be25fe165f43519"
+    },
+    "qnn_control_outputs": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/controlled-p1-qnn-call-20260910T122428Z/run/control/raw/position-001.outputs.pt",
+      "bytes": 21878472,
+      "sha256": "b771c49e1fc20e52293befa0d6dfe4b5b7b373a195bf8f781afce1f77dc51e00"
+    },
+    "qdq_control_outputs": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/controlled-p1-qdq-call-20260910T120717Z/run/control/raw/position-001.outputs.pt",
+      "bytes": 21878472,
+      "sha256": "b5aa794276833f2285935889b4723b57b1c50ce114e2c1b33c429c4632f54cfb"
+    },
+    "own_qnn_outputs": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/qnn-prefix-20260910T104805Z/run/trajectory/raw/position-001.pt",
+      "bytes": 21878472,
+      "sha256": "5582129f01d981ad30577698245bc6b5bbc6069fbf3db6be7195d024a4fd9742"
+    },
+    "historical_qdq_logits": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/controlled-p1-qdq-pack-20260910T114619Z/raw/historical-qdq-position1.pt",
+      "bytes": 994857,
+      "sha256": "13389f304f26cdea7ea713f9df9c2c13680b386c0962738519377aef072ecd0b"
+    }
+  },
+  "outputs": [
+    {
+      "output_index": 0,
+      "kind": "logits",
+      "layer": null,
+      "layer_type": null,
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.8879892745291829,
+        "cosine_null_reason": null,
+        "max_abs": 6.222186803817749,
+        "mean_abs": 0.8525880162284627,
+        "l2_difference": 539.3959090162598,
+        "reference_l2": 1164.9977719177537,
+        "actual_l2": 1097.1938191848326
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.7602622825656908,
+        "cosine_null_reason": null,
+        "max_abs": 6.327765464782715,
+        "mean_abs": 1.1703401568767553,
+        "l2_difference": 719.2745656394469,
+        "reference_l2": 1097.1938191848326,
+        "actual_l2": 930.7796966897347
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.6792151497240134,
+        "cosine_null_reason": null,
+        "max_abs": 7.649494647979736,
+        "mean_abs": 1.4161059820524744,
+        "l2_difference": 866.3418701579994,
+        "reference_l2": 1164.9977719177537,
+        "actual_l2": 930.7796966897347
+      }
+    },
+    {
+      "output_index": 1,
+      "kind": "state_a",
+      "layer": 0,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9999352037640322,
+        "cosine_null_reason": null,
+        "max_abs": 0.011954326182603836,
+        "mean_abs": 3.3034426126787864e-05,
+        "l2_difference": 0.07783874588241521,
+        "reference_l2": 6.828196171487593,
+        "actual_l2": 6.823641236541916
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.999933871898868,
+        "cosine_null_reason": null,
+        "max_abs": 0.01484650355996564,
+        "mean_abs": 3.328147203607301e-05,
+        "l2_difference": 0.07848767156205588,
+        "reference_l2": 6.823641236541916,
+        "actual_l2": 6.824737371387581
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9998027489606409,
+        "cosine_null_reason": null,
+        "max_abs": 0.026800829742569476,
+        "mean_abs": 6.0342000671287366e-05,
+        "l2_difference": 0.13563190950593754,
+        "reference_l2": 6.828196171487593,
+        "actual_l2": 6.824737371387581
+      }
+    },
+    {
+      "output_index": 2,
+      "kind": "state_a",
+      "layer": 1,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9964451962981522,
+        "cosine_null_reason": null,
+        "max_abs": 0.08704937994480133,
+        "mean_abs": 4.553030296935989e-05,
+        "l2_difference": 0.14636358527234053,
+        "reference_l2": 1.7371737136534184,
+        "actual_l2": 1.7287058537878734
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9859852012698621,
+        "cosine_null_reason": null,
+        "max_abs": 0.11006045341491699,
+        "mean_abs": 0.00011473682384631478,
+        "l2_difference": 0.29169833278672563,
+        "reference_l2": 1.7287058537878734,
+        "actual_l2": 1.7481884294997168
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9782113491038188,
+        "cosine_null_reason": null,
+        "max_abs": 0.19710983335971832,
+        "mean_abs": 0.00012611389320692223,
+        "l2_difference": 0.3639526565621511,
+        "reference_l2": 1.7371737136534184,
+        "actual_l2": 1.7481884294997168
+      }
+    },
+    {
+      "output_index": 3,
+      "kind": "state_a",
+      "layer": 2,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9988829906005138,
+        "cosine_null_reason": null,
+        "max_abs": 0.015459943562746048,
+        "mean_abs": 5.290158552362367e-05,
+        "l2_difference": 0.09999484646105714,
+        "reference_l2": 2.0903850882770483,
+        "actual_l2": 2.07248066503715
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9868758436748216,
+        "cosine_null_reason": null,
+        "max_abs": 0.06492537260055542,
+        "mean_abs": 0.0001812494007082388,
+        "l2_difference": 0.33962294939538373,
+        "reference_l2": 2.07248066503715,
+        "actual_l2": 2.103094930902413
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9870024183575482,
+        "cosine_null_reason": null,
+        "max_abs": 0.06862157583236694,
+        "mean_abs": 0.0001858586502846149,
+        "l2_difference": 0.3382950072182714,
+        "reference_l2": 2.0903850882770483,
+        "actual_l2": 2.103094930902413
+      }
+    },
+    {
+      "output_index": 4,
+      "kind": "state_a",
+      "layer": 3,
+      "layer_type": "full_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9979909164318007,
+        "cosine_null_reason": null,
+        "max_abs": 0.30253629572689533,
+        "mean_abs": 0.0693962848490628,
+        "l2_difference": 1.976340157469471,
+        "reference_l2": 31.146985327033143,
+        "actual_l2": 31.192449796825414
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9980348138667282,
+        "cosine_null_reason": null,
+        "max_abs": 0.3250102996826172,
+        "mean_abs": 0.06574895880930853,
+        "l2_difference": 1.9571710590875102,
+        "reference_l2": 31.192449796825414,
+        "actual_l2": 31.231878389497144
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9961659330954545,
+        "cosine_null_reason": null,
+        "max_abs": 0.3758363723754883,
+        "mean_abs": 0.09523611737768078,
+        "l2_difference": 2.732508971868676,
+        "reference_l2": 31.146985327033143,
+        "actual_l2": 31.231878389497144
+      }
+    },
+    {
+      "output_index": 5,
+      "kind": "state_a",
+      "layer": 4,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9959704905889264,
+        "cosine_null_reason": null,
+        "max_abs": 0.12501226365566254,
+        "mean_abs": 0.00018369473358803567,
+        "l2_difference": 0.5275040945474421,
+        "reference_l2": 5.78976660283012,
+        "actual_l2": 5.859470456999082
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9370919636316744,
+        "cosine_null_reason": null,
+        "max_abs": 0.9760444164276123,
+        "mean_abs": 0.0005616492044973054,
+        "l2_difference": 2.595702676027739,
+        "reference_l2": 5.859470456999082,
+        "actual_l2": 7.0889400452554545
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9318769518763973,
+        "cosine_null_reason": null,
+        "max_abs": 0.9804484844207764,
+        "mean_abs": 0.000620144420353963,
+        "l2_difference": 2.698118264578859,
+        "reference_l2": 5.78976660283012,
+        "actual_l2": 7.0889400452554545
+      }
+    },
+    {
+      "output_index": 6,
+      "kind": "state_a",
+      "layer": 5,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9994863262327469,
+        "cosine_null_reason": null,
+        "max_abs": 0.026250794529914856,
+        "mean_abs": 7.766259201003045e-05,
+        "l2_difference": 0.16488983236324606,
+        "reference_l2": 5.0415003322828,
+        "actual_l2": 5.07182801069536
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9879434529279778,
+        "cosine_null_reason": null,
+        "max_abs": 0.19707135669887066,
+        "mean_abs": 0.0004048959689427478,
+        "l2_difference": 0.7964134715641187,
+        "reference_l2": 5.07182801069536,
+        "actual_l2": 5.1438778886930265
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9875195505422996,
+        "cosine_null_reason": null,
+        "max_abs": 0.1945350468158722,
+        "mean_abs": 0.000415246323596713,
+        "l2_difference": 0.8110417456261229,
+        "reference_l2": 5.0415003322828,
+        "actual_l2": 5.1438778886930265
+      }
+    },
+    {
+      "output_index": 7,
+      "kind": "state_a",
+      "layer": 6,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.99909899732733,
+        "cosine_null_reason": null,
+        "max_abs": 0.01502420986071229,
+        "mean_abs": 6.111811496686825e-05,
+        "l2_difference": 0.1011949666261255,
+        "reference_l2": 2.3829999162968565,
+        "actual_l2": 2.3773881407322315
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9745897732009314,
+        "cosine_null_reason": null,
+        "max_abs": 0.08538868092000484,
+        "mean_abs": 0.00034341409377532106,
+        "l2_difference": 0.5519856145977557,
+        "reference_l2": 2.3773881407322315,
+        "actual_l2": 2.4622420051558755
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9740480135319207,
+        "cosine_null_reason": null,
+        "max_abs": 0.08807860873639584,
+        "mean_abs": 0.0003492783949512607,
+        "l2_difference": 0.5575186429907079,
+        "reference_l2": 2.3829999162968565,
+        "actual_l2": 2.4622420051558755
+      }
+    },
+    {
+      "output_index": 8,
+      "kind": "state_a",
+      "layer": 7,
+      "layer_type": "full_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9958640194967514,
+        "cosine_null_reason": null,
+        "max_abs": 0.5689470767974854,
+        "mean_abs": 0.10908825647129561,
+        "l2_difference": 3.117463050618308,
+        "reference_l2": 34.27917131264904,
+        "actual_l2": 34.27382371408507
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9930331400441236,
+        "cosine_null_reason": null,
+        "max_abs": 0.5951058864593506,
+        "mean_abs": 0.1338715790381002,
+        "l2_difference": 4.046548220598366,
+        "reference_l2": 34.27382371408507,
+        "actual_l2": 34.28742708255214
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.98897286796566,
+        "cosine_null_reason": null,
+        "max_abs": 0.7769073247909546,
+        "mean_abs": 0.17460201269125264,
+        "l2_difference": 5.091309070115638,
+        "reference_l2": 34.27917131264904,
+        "actual_l2": 34.28742708255214
+      }
+    },
+    {
+      "output_index": 9,
+      "kind": "state_a",
+      "layer": 8,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9956751773464028,
+        "cosine_null_reason": null,
+        "max_abs": 0.06622274219989777,
+        "mean_abs": 9.508099547833604e-05,
+        "l2_difference": 0.20849711966376147,
+        "reference_l2": 2.2442243320350013,
+        "actual_l2": 2.235489858323705
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9646004447412264,
+        "cosine_null_reason": null,
+        "max_abs": 0.19792833179235458,
+        "mean_abs": 0.0003114254161432628,
+        "l2_difference": 0.5918517881528603,
+        "reference_l2": 2.235489858323705,
+        "actual_l2": 2.2086843497757136
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9647058916738137,
+        "cosine_null_reason": null,
+        "max_abs": 0.13170558959245682,
+        "mean_abs": 0.00032452495603668696,
+        "l2_difference": 0.5925821241862878,
+        "reference_l2": 2.2442243320350013,
+        "actual_l2": 2.2086843497757136
+      }
+    },
+    {
+      "output_index": 10,
+      "kind": "state_a",
+      "layer": 9,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9979172937449738,
+        "cosine_null_reason": null,
+        "max_abs": 0.04167991876602173,
+        "mean_abs": 7.189808987057011e-05,
+        "l2_difference": 0.20832964012106642,
+        "reference_l2": 2.9652182835113896,
+        "actual_l2": 3.041595057067659
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9822050473635673,
+        "cosine_null_reason": null,
+        "max_abs": 0.10810524225234985,
+        "mean_abs": 0.0002753550128785226,
+        "l2_difference": 0.5753579497119111,
+        "reference_l2": 3.041595057067659,
+        "actual_l2": 2.918815941325438
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9775815712028476,
+        "cosine_null_reason": null,
+        "max_abs": 0.09898149967193604,
+        "mean_abs": 0.00028575309571300667,
+        "l2_difference": 0.6246702167082189,
+        "reference_l2": 2.9652182835113896,
+        "actual_l2": 2.918815941325438
+      }
+    },
+    {
+      "output_index": 11,
+      "kind": "state_a",
+      "layer": 10,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9937973687833898,
+        "cosine_null_reason": null,
+        "max_abs": 0.0197586826980114,
+        "mean_abs": 6.899049977099336e-05,
+        "l2_difference": 0.1456741391424036,
+        "reference_l2": 1.3099366381488649,
+        "actual_l2": 1.3012117697022276
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9217705295881857,
+        "cosine_null_reason": null,
+        "max_abs": 0.06821680534631014,
+        "mean_abs": 0.00028434859720757877,
+        "l2_difference": 0.5045783163137046,
+        "reference_l2": 1.3012117697022276,
+        "actual_l2": 1.1921843969491654
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9189925982452268,
+        "cosine_null_reason": null,
+        "max_abs": 0.0711777051910758,
+        "mean_abs": 0.00029325358347731534,
+        "l2_difference": 0.5166060821771303,
+        "reference_l2": 1.3099366381488649,
+        "actual_l2": 1.1921843969491654
+      }
+    },
+    {
+      "output_index": 12,
+      "kind": "state_a",
+      "layer": 11,
+      "layer_type": "full_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9906576991754067,
+        "cosine_null_reason": null,
+        "max_abs": 0.8121294602751732,
+        "mean_abs": 0.1647155148730235,
+        "l2_difference": 4.80963412772912,
+        "reference_l2": 35.250165365537654,
+        "actual_l2": 35.075855423374115
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9802367144468435,
+        "cosine_null_reason": null,
+        "max_abs": 1.1086337566375732,
+        "mean_abs": 0.2372476746609209,
+        "l2_difference": 6.986651384453335,
+        "reference_l2": 35.075855423374115,
+        "actual_l2": 35.1973099474454
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9735453623158244,
+        "cosine_null_reason": null,
+        "max_abs": 1.2231295108795166,
+        "mean_abs": 0.27489521859979504,
+        "l2_difference": 8.102339997729487,
+        "reference_l2": 35.250165365537654,
+        "actual_l2": 35.1973099474454
+      }
+    },
+    {
+      "output_index": 13,
+      "kind": "state_a",
+      "layer": 12,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9972287951075427,
+        "cosine_null_reason": null,
+        "max_abs": 0.023435205221176147,
+        "mean_abs": 8.061060748532078e-05,
+        "l2_difference": 0.15363357906806147,
+        "reference_l2": 2.062791595874541,
+        "actual_l2": 2.064313642075549
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9348301992223677,
+        "cosine_null_reason": null,
+        "max_abs": 0.12571376375854015,
+        "mean_abs": 0.0003692797191522934,
+        "l2_difference": 0.7435507900156022,
+        "reference_l2": 2.064313642075549,
+        "actual_l2": 2.0544357000959113
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9300890636986495,
+        "cosine_null_reason": null,
+        "max_abs": 0.1286758165806532,
+        "mean_abs": 0.00038178417187156866,
+        "l2_difference": 0.7698162879929948,
+        "reference_l2": 2.062791595874541,
+        "actual_l2": 2.0544357000959113
+      }
+    },
+    {
+      "output_index": 14,
+      "kind": "state_a",
+      "layer": 13,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9954001844343745,
+        "cosine_null_reason": null,
+        "max_abs": 0.019013769924640656,
+        "mean_abs": 5.053992951770114e-05,
+        "l2_difference": 0.09870413011444923,
+        "reference_l2": 1.029021026110879,
+        "actual_l2": 1.0194333622171456
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.910709087392734,
+        "cosine_null_reason": null,
+        "max_abs": 0.04777692351490259,
+        "mean_abs": 0.0002663740704619763,
+        "l2_difference": 0.4239285093236612,
+        "reference_l2": 1.0194333622171456,
+        "actual_l2": 0.9775089590312791
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9094045355635928,
+        "cosine_null_reason": null,
+        "max_abs": 0.05100440699607134,
+        "mean_abs": 0.0002720195588470156,
+        "l2_difference": 0.4300108490612428,
+        "reference_l2": 1.029021026110879,
+        "actual_l2": 0.9775089590312791
+      }
+    },
+    {
+      "output_index": 15,
+      "kind": "state_a",
+      "layer": 14,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9871715164820277,
+        "cosine_null_reason": null,
+        "max_abs": 0.02857281267642975,
+        "mean_abs": 0.0001070896801555199,
+        "l2_difference": 0.20596790360719971,
+        "reference_l2": 1.2867421072444967,
+        "actual_l2": 1.255576314356276
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9208195167077884,
+        "cosine_null_reason": null,
+        "max_abs": 0.05981077719479799,
+        "mean_abs": 0.0002882746028732841,
+        "l2_difference": 0.4898462672336719,
+        "reference_l2": 1.255576314356276,
+        "actual_l2": 1.1696321935542708
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9096167374750004,
+        "cosine_null_reason": null,
+        "max_abs": 0.0659777894616127,
+        "mean_abs": 0.00031167897336453754,
+        "l2_difference": 0.5345755909091018,
+        "reference_l2": 1.2867421072444967,
+        "actual_l2": 1.1696321935542708
+      }
+    },
+    {
+      "output_index": 16,
+      "kind": "state_a",
+      "layer": 15,
+      "layer_type": "full_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9818788959471724,
+        "cosine_null_reason": null,
+        "max_abs": 1.1375293731689453,
+        "mean_abs": 0.23414072747527825,
+        "l2_difference": 6.79082087932712,
+        "reference_l2": 35.418667674011324,
+        "actual_l2": 35.80737110039273
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9674329275188224,
+        "cosine_null_reason": null,
+        "max_abs": 1.445960521697998,
+        "mean_abs": 0.312492740235939,
+        "l2_difference": 9.137932311656282,
+        "reference_l2": 35.80737110039273,
+        "actual_l2": 35.80260289978189
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9502475361190069,
+        "cosine_null_reason": null,
+        "max_abs": 1.904099464416504,
+        "mean_abs": 0.3809966810295009,
+        "l2_difference": 11.239558007619939,
+        "reference_l2": 35.418667674011324,
+        "actual_l2": 35.80260289978189
+      }
+    },
+    {
+      "output_index": 17,
+      "kind": "state_a",
+      "layer": 16,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9871611808372259,
+        "cosine_null_reason": null,
+        "max_abs": 0.08946585655212402,
+        "mean_abs": 0.00047836214225191465,
+        "l2_difference": 0.7620333993077765,
+        "reference_l2": 4.726888611643842,
+        "actual_l2": 4.76940075180149
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9545172434221953,
+        "cosine_null_reason": null,
+        "max_abs": 0.18912791088223457,
+        "mean_abs": 0.00110378477683315,
+        "l2_difference": 1.4427819921943479,
+        "reference_l2": 4.76940075180149,
+        "actual_l2": 4.7963344881145025
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9414989685272455,
+        "cosine_null_reason": null,
+        "max_abs": 0.22868607472628355,
+        "mean_abs": 0.0012037210581214153,
+        "l2_difference": 1.6301726743041636,
+        "reference_l2": 4.726888611643842,
+        "actual_l2": 4.7963344881145025
+      }
+    },
+    {
+      "output_index": 18,
+      "kind": "state_a",
+      "layer": 17,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9830018459718495,
+        "cosine_null_reason": null,
+        "max_abs": 0.0878614503890276,
+        "mean_abs": 0.0007228548292453063,
+        "l2_difference": 0.9854538576686396,
+        "reference_l2": 5.259546746036179,
+        "actual_l2": 5.366811316798347
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9473657914810639,
+        "cosine_null_reason": null,
+        "max_abs": 0.17336665838956833,
+        "mean_abs": 0.001571435478153832,
+        "l2_difference": 1.7335283908017174,
+        "reference_l2": 5.366811316798347,
+        "actual_l2": 5.314341301193802
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9392912942156428,
+        "cosine_null_reason": null,
+        "max_abs": 0.14146648347377777,
+        "mean_abs": 0.0016388513209507627,
+        "l2_difference": 1.8430257001342825,
+        "reference_l2": 5.259546746036179,
+        "actual_l2": 5.314341301193802
+      }
+    },
+    {
+      "output_index": 19,
+      "kind": "state_a",
+      "layer": 18,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9850135803774741,
+        "cosine_null_reason": null,
+        "max_abs": 0.08151374571025372,
+        "mean_abs": 0.0010275928305900905,
+        "l2_difference": 1.1468356985061494,
+        "reference_l2": 6.552787116695628,
+        "actual_l2": 6.649190565849296
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.951645020863762,
+        "cosine_null_reason": null,
+        "max_abs": 0.1507430337369442,
+        "mean_abs": 0.0020032350121346465,
+        "l2_difference": 2.0517272478788584,
+        "reference_l2": 6.649190565849296,
+        "actual_l2": 6.520660523473022
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9472861591964138,
+        "cosine_null_reason": null,
+        "max_abs": 0.16681615635752678,
+        "mean_abs": 0.0020437137161810615,
+        "l2_difference": 2.1226867032292036,
+        "reference_l2": 6.552787116695628,
+        "actual_l2": 6.520660523473022
+      }
+    },
+    {
+      "output_index": 20,
+      "kind": "state_a",
+      "layer": 19,
+      "layer_type": "full_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9665065510551749,
+        "cosine_null_reason": null,
+        "max_abs": 1.3191455900669098,
+        "mean_abs": 0.290457232188146,
+        "l2_difference": 8.49386310279016,
+        "reference_l2": 32.83867208978163,
+        "actual_l2": 32.796253067414426
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9333528472717478,
+        "cosine_null_reason": null,
+        "max_abs": 1.5678640604019165,
+        "mean_abs": 0.41034275163065104,
+        "l2_difference": 11.898224305383845,
+        "reference_l2": 32.796253067414426,
+        "actual_l2": 32.335230755620046
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9251667035507014,
+        "cosine_null_reason": null,
+        "max_abs": 1.6417444348335266,
+        "mean_abs": 0.43280153449359204,
+        "l2_difference": 12.616510299063867,
+        "reference_l2": 32.83867208978163,
+        "actual_l2": 32.335230755620046
+      }
+    },
+    {
+      "output_index": 21,
+      "kind": "state_a",
+      "layer": 20,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9741924291169705,
+        "cosine_null_reason": null,
+        "max_abs": 0.20078332722187042,
+        "mean_abs": 0.0009944323420729984,
+        "l2_difference": 1.3125231291409793,
+        "reference_l2": 5.584818319484481,
+        "actual_l2": 5.806206837959846
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9472212099944208,
+        "cosine_null_reason": null,
+        "max_abs": 0.2116129770874977,
+        "mean_abs": 0.0015965909776085307,
+        "l2_difference": 1.8642915864411076,
+        "reference_l2": 5.806206837959846,
+        "actual_l2": 5.39521437099975
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9453028193366936,
+        "cosine_null_reason": null,
+        "max_abs": 0.2116919532418251,
+        "mean_abs": 0.0016197010417311475,
+        "l2_difference": 1.8254158725530107,
+        "reference_l2": 5.584818319484481,
+        "actual_l2": 5.39521437099975
+      }
+    },
+    {
+      "output_index": 22,
+      "kind": "state_a",
+      "layer": 21,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9344935736695217,
+        "cosine_null_reason": null,
+        "max_abs": 0.10779361939057708,
+        "mean_abs": 0.001439551911672457,
+        "l2_difference": 1.7398446721947833,
+        "reference_l2": 4.822437249665581,
+        "actual_l2": 4.789433697562663
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.8808664780591512,
+        "cosine_null_reason": null,
+        "max_abs": 0.21022895723581314,
+        "mean_abs": 0.0020600206058169757,
+        "l2_difference": 2.344657424842792,
+        "reference_l2": 4.789433697562663,
+        "actual_l2": 4.81672454016822
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.8742107137177796,
+        "cosine_null_reason": null,
+        "max_abs": 0.16795403882861137,
+        "mean_abs": 0.0021853911451719527,
+        "l2_difference": 2.417392859044758,
+        "reference_l2": 4.822437249665581,
+        "actual_l2": 4.81672454016822
+      }
+    },
+    {
+      "output_index": 23,
+      "kind": "state_a",
+      "layer": 22,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.940503620781619,
+        "cosine_null_reason": null,
+        "max_abs": 0.10535555705428123,
+        "mean_abs": 0.000780852124517839,
+        "l2_difference": 0.9567034308638067,
+        "reference_l2": 2.7845625960495712,
+        "actual_l2": 2.760608320188863
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.8955817296788359,
+        "cosine_null_reason": null,
+        "max_abs": 0.10826373286545277,
+        "mean_abs": 0.0010430722510329227,
+        "l2_difference": 1.2656976750660949,
+        "reference_l2": 2.760608320188863,
+        "actual_l2": 2.7782076626044616
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.8875052761616287,
+        "cosine_null_reason": null,
+        "max_abs": 0.07865314185619354,
+        "mean_abs": 0.0011550083198235694,
+        "l2_difference": 1.3193103153644996,
+        "reference_l2": 2.7845625960495712,
+        "actual_l2": 2.7782076626044616
+      }
+    },
+    {
+      "output_index": 24,
+      "kind": "state_a",
+      "layer": 23,
+      "layer_type": "full_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.8913784799129746,
+        "cosine_null_reason": null,
+        "max_abs": 2.4147587418556213,
+        "mean_abs": 0.4934354068191169,
+        "l2_difference": 14.541062781855164,
+        "reference_l2": 31.187815037388386,
+        "actual_l2": 31.20762160991381
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.8534601881109377,
+        "cosine_null_reason": null,
+        "max_abs": 2.65134759247303,
+        "mean_abs": 0.5708069182992404,
+        "l2_difference": 16.727698123613074,
+        "reference_l2": 31.20762160991381,
+        "actual_l2": 30.545323956537416
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.8162255108431418,
+        "cosine_null_reason": null,
+        "max_abs": 3.7430220246315002,
+        "mean_abs": 0.6184474353021869,
+        "l2_difference": 18.723123588493067,
+        "reference_l2": 31.187815037388386,
+        "actual_l2": 30.545323956537416
+      }
+    },
+    {
+      "output_index": 25,
+      "kind": "state_b",
+      "layer": 0,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.999948134458488,
+        "cosine_null_reason": null,
+        "max_abs": 1.5903472900390625,
+        "mean_abs": 0.0002388712441595923,
+        "l2_difference": 1.5917817950979443,
+        "reference_l2": 154.48560894450412,
+        "actual_l2": 154.71885950053235
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9999999413631371,
+        "cosine_null_reason": null,
+        "max_abs": 0.003270655870437622,
+        "mean_abs": 9.838142885125005e-05,
+        "l2_difference": 0.05318561357745849,
+        "reference_l2": 154.71885950053235,
+        "actual_l2": 154.71422223071386
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9999480564278552,
+        "cosine_null_reason": null,
+        "max_abs": 1.5903472900390625,
+        "mean_abs": 0.00028700221087755534,
+        "l2_difference": 1.5922572728845268,
+        "reference_l2": 154.48560894450412,
+        "actual_l2": 154.71422223071386
+      }
+    },
+    {
+      "output_index": 26,
+      "kind": "state_b",
+      "layer": 1,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9990575658756908,
+        "cosine_null_reason": null,
+        "max_abs": 0.41635704040527344,
+        "mean_abs": 0.011687100179386789,
+        "l2_difference": 4.821737882692812,
+        "reference_l2": 111.07778253551723,
+        "actual_l2": 111.03708627478338
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9973601470593226,
+        "cosine_null_reason": null,
+        "max_abs": 0.5541763305664062,
+        "mean_abs": 0.02546832280764022,
+        "l2_difference": 8.089108269837984,
+        "reference_l2": 111.03708627478338,
+        "actual_l2": 111.39577817339588
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9965797480359164,
+        "cosine_null_reason": null,
+        "max_abs": 0.5541768074035645,
+        "mean_abs": 0.03143503081048493,
+        "l2_difference": 9.205582731607183,
+        "reference_l2": 111.07778253551723,
+        "actual_l2": 111.39577817339588
+      }
+    },
+    {
+      "output_index": 27,
+      "kind": "state_b",
+      "layer": 2,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9990908812837125,
+        "cosine_null_reason": null,
+        "max_abs": 0.3868436813354492,
+        "mean_abs": 0.012682387525543959,
+        "l2_difference": 5.164261512934405,
+        "reference_l2": 120.0085696248622,
+        "actual_l2": 120.60313048966341
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9964749510149942,
+        "cosine_null_reason": null,
+        "max_abs": 0.7654888927936554,
+        "mean_abs": 0.032890764435061705,
+        "l2_difference": 10.119330015644392,
+        "reference_l2": 120.60313048966341,
+        "actual_l2": 120.37058828702763
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9957918195685107,
+        "cosine_null_reason": null,
+        "max_abs": 0.7654889523983002,
+        "mean_abs": 0.037900226652401635,
+        "l2_difference": 11.03220813093727,
+        "reference_l2": 120.0085696248622,
+        "actual_l2": 120.37058828702763
+      }
+    },
+    {
+      "output_index": 28,
+      "kind": "state_b",
+      "layer": 3,
+      "layer_type": "full_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9979788127154713,
+        "cosine_null_reason": null,
+        "max_abs": 0.19555425643920898,
+        "mean_abs": 0.04092496072235008,
+        "l2_difference": 1.1829128744771862,
+        "reference_l2": 18.61251613817568,
+        "actual_l2": 18.557136794155237
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9982217497743647,
+        "cosine_null_reason": null,
+        "max_abs": 0.1881561279296875,
+        "mean_abs": 0.038070733782205934,
+        "l2_difference": 1.1111114384278165,
+        "reference_l2": 18.557136794155237,
+        "actual_l2": 18.41966255176338
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9964848352995237,
+        "cosine_null_reason": null,
+        "max_abs": 0.2533969283103943,
+        "mean_abs": 0.052878465411595243,
+        "l2_difference": 1.5644310115538833,
+        "reference_l2": 18.61251613817568,
+        "actual_l2": 18.41966255176338
+      }
+    },
+    {
+      "output_index": 29,
+      "kind": "state_b",
+      "layer": 4,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9994281263169772,
+        "cosine_null_reason": null,
+        "max_abs": 0.8180208206176758,
+        "mean_abs": 0.01576305888311443,
+        "l2_difference": 6.603844051758378,
+        "reference_l2": 194.6281639832729,
+        "actual_l2": 193.97110073603372
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9952791418357917,
+        "cosine_null_reason": null,
+        "max_abs": 1.8651375770568848,
+        "mean_abs": 0.058771087612096075,
+        "l2_difference": 18.877825925389935,
+        "reference_l2": 193.97110073603372,
+        "actual_l2": 191.6524430312279
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9948412543963774,
+        "cosine_null_reason": null,
+        "max_abs": 1.8651375770568848,
+        "mean_abs": 0.0645151713601327,
+        "l2_difference": 19.84205821213853,
+        "reference_l2": 194.6281639832729,
+        "actual_l2": 191.6524430312279
+      }
+    },
+    {
+      "output_index": 30,
+      "kind": "state_b",
+      "layer": 5,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9992488399027653,
+        "cosine_null_reason": null,
+        "max_abs": 0.5056866407394409,
+        "mean_abs": 0.016877452191318792,
+        "l2_difference": 6.850672435154611,
+        "reference_l2": 176.36075536620024,
+        "actual_l2": 176.69989779794736
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9911192015003877,
+        "cosine_null_reason": null,
+        "max_abs": 1.9934697151184082,
+        "mean_abs": 0.0731499903084843,
+        "l2_difference": 23.53101096895282,
+        "reference_l2": 176.69989779794736,
+        "actual_l2": 173.86447378162856
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.99043319238067,
+        "cosine_null_reason": null,
+        "max_abs": 1.9934706687927246,
+        "mean_abs": 0.07861637009636031,
+        "l2_difference": 24.350009795779712,
+        "reference_l2": 176.36075536620024,
+        "actual_l2": 173.86447378162856
+      }
+    },
+    {
+      "output_index": 31,
+      "kind": "state_b",
+      "layer": 6,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9988789054510062,
+        "cosine_null_reason": null,
+        "max_abs": 0.4644927978515625,
+        "mean_abs": 0.017051909135777994,
+        "l2_difference": 6.943454029357997,
+        "reference_l2": 146.66798369329965,
+        "actual_l2": 146.42775524760938
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9909871641743035,
+        "cosine_null_reason": null,
+        "max_abs": 1.2559280395507812,
+        "mean_abs": 0.06604491716056297,
+        "l2_difference": 19.71129815546063,
+        "reference_l2": 146.42775524760938,
+        "actual_l2": 147.05403651504412
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9897173395182103,
+        "cosine_null_reason": null,
+        "max_abs": 1.255927562713623,
+        "mean_abs": 0.07221964917894279,
+        "l2_difference": 21.06429033235822,
+        "reference_l2": 146.66798369329965,
+        "actual_l2": 147.05403651504412
+      }
+    },
+    {
+      "output_index": 32,
+      "kind": "state_b",
+      "layer": 7,
+      "layer_type": "full_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9935874661778011,
+        "cosine_null_reason": null,
+        "max_abs": 0.25341254472732544,
+        "mean_abs": 0.05312969761189379,
+        "l2_difference": 1.5766711752956866,
+        "reference_l2": 13.942160166020475,
+        "actual_l2": 13.882745638201682
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.989337060049464,
+        "cosine_null_reason": null,
+        "max_abs": 0.6869364529848099,
+        "mean_abs": 0.06529474673106961,
+        "l2_difference": 2.0389446072682467,
+        "reference_l2": 13.882745638201682,
+        "actual_l2": 13.997503759483964
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9838568134761119,
+        "cosine_null_reason": null,
+        "max_abs": 0.5612773597240448,
+        "mean_abs": 0.0846453709900743,
+        "l2_difference": 2.5107616832637882,
+        "reference_l2": 13.942160166020475,
+        "actual_l2": 13.997503759483964
+      }
+    },
+    {
+      "output_index": 33,
+      "kind": "state_b",
+      "layer": 8,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9983853479692933,
+        "cosine_null_reason": null,
+        "max_abs": 0.623091459274292,
+        "mean_abs": 0.02232948035261965,
+        "l2_difference": 8.987456792809418,
+        "reference_l2": 158.14954182075834,
+        "actual_l2": 157.6285422169619
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9915971005345826,
+        "cosine_null_reason": null,
+        "max_abs": 1.49542236328125,
+        "mean_abs": 0.07001853628722425,
+        "l2_difference": 20.405638500540203,
+        "reference_l2": 157.6285422169619,
+        "actual_l2": 157.06220902696964
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9905616562727416,
+        "cosine_null_reason": null,
+        "max_abs": 1.49542236328125,
+        "mean_abs": 0.0754441082667346,
+        "l2_difference": 21.681012540377544,
+        "reference_l2": 158.14954182075834,
+        "actual_l2": 157.06220902696964
+      }
+    },
+    {
+      "output_index": 34,
+      "kind": "state_b",
+      "layer": 9,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9971707589603914,
+        "cosine_null_reason": null,
+        "max_abs": 1.026357650756836,
+        "mean_abs": 0.023835428348277787,
+        "l2_difference": 9.643898900743435,
+        "reference_l2": 128.0622719684187,
+        "actual_l2": 128.2806967404646
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9858209474215256,
+        "cosine_null_reason": null,
+        "max_abs": 1.698009729385376,
+        "mean_abs": 0.07300826823721707,
+        "l2_difference": 21.58118339150089,
+        "reference_l2": 128.2806967404646,
+        "actual_l2": 128.00991714131854
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9837831871476505,
+        "cosine_null_reason": null,
+        "max_abs": 2.1614131927490234,
+        "mean_abs": 0.07858015363018467,
+        "l2_difference": 23.058512050595454,
+        "reference_l2": 128.0622719684187,
+        "actual_l2": 128.00991714131854
+      }
+    },
+    {
+      "output_index": 35,
+      "kind": "state_b",
+      "layer": 10,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9956828153984688,
+        "cosine_null_reason": null,
+        "max_abs": 0.8899199962615967,
+        "mean_abs": 0.026097321756395786,
+        "l2_difference": 10.6470193040759,
+        "reference_l2": 114.70488200759833,
+        "actual_l2": 114.20361473588757
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9794206223303951,
+        "cosine_null_reason": null,
+        "max_abs": 2.0744060277938843,
+        "mean_abs": 0.0787393648188915,
+        "l2_difference": 23.18945685500516,
+        "reference_l2": 114.20361473588757,
+        "actual_l2": 114.39559544377364
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9761412510323872,
+        "cosine_null_reason": null,
+        "max_abs": 2.0744060277938843,
+        "mean_abs": 0.08602090819142916,
+        "l2_difference": 25.024626645710317,
+        "reference_l2": 114.70488200759833,
+        "actual_l2": 114.39559544377364
+      }
+    },
+    {
+      "output_index": 36,
+      "kind": "state_b",
+      "layer": 11,
+      "layer_type": "full_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9862572650656278,
+        "cosine_null_reason": null,
+        "max_abs": 0.3927993029356003,
+        "mean_abs": 0.0834287476350255,
+        "l2_difference": 2.36134570616348,
+        "reference_l2": 14.23562218880432,
+        "actual_l2": 14.25026154591121
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9714003985969044,
+        "cosine_null_reason": null,
+        "max_abs": 0.5751032754778862,
+        "mean_abs": 0.11569706121690615,
+        "l2_difference": 3.4154331654879826,
+        "reference_l2": 14.25026154591121,
+        "actual_l2": 14.30729847547698
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9612715125787475,
+        "cosine_null_reason": null,
+        "max_abs": 0.5863798707723618,
+        "mean_abs": 0.13701675945321767,
+        "l2_difference": 3.9725375802499694,
+        "reference_l2": 14.23562218880432,
+        "actual_l2": 14.30729847547698
+      }
+    },
+    {
+      "output_index": 37,
+      "kind": "state_b",
+      "layer": 12,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9954113243424072,
+        "cosine_null_reason": null,
+        "max_abs": 1.1307941675186157,
+        "mean_abs": 0.03197895791794755,
+        "l2_difference": 12.937446388632262,
+        "reference_l2": 135.17203489247058,
+        "actual_l2": 134.83188195359884
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9801826330048258,
+        "cosine_null_reason": null,
+        "max_abs": 1.5475656986236572,
+        "mean_abs": 0.09202083891384187,
+        "l2_difference": 26.723876757088515,
+        "reference_l2": 134.83188195359884,
+        "actual_l2": 133.03175747308495
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9766137904128991,
+        "cosine_null_reason": null,
+        "max_abs": 1.5475666522979736,
+        "mean_abs": 0.10024741119023635,
+        "l2_difference": 29.080071142058138,
+        "reference_l2": 135.17203489247058,
+        "actual_l2": 133.03175747308495
+      }
+    },
+    {
+      "output_index": 38,
+      "kind": "state_b",
+      "layer": 13,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9933917370006242,
+        "cosine_null_reason": null,
+        "max_abs": 0.8372230976819992,
+        "mean_abs": 0.03309624369896843,
+        "l2_difference": 13.37677785230098,
+        "reference_l2": 116.49195557801264,
+        "actual_l2": 116.14353535203672
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9718352583780813,
+        "cosine_null_reason": null,
+        "max_abs": 1.5772504806518555,
+        "mean_abs": 0.09421157048952011,
+        "l2_difference": 27.438354361984953,
+        "reference_l2": 116.14353535203672,
+        "actual_l2": 114.8004023047468
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9682759589354722,
+        "cosine_null_reason": null,
+        "max_abs": 2.13008451461792,
+        "mean_abs": 0.10072808123878,
+        "l2_difference": 29.17829795783896,
+        "reference_l2": 116.49195557801264,
+        "actual_l2": 114.8004023047468
+      }
+    },
+    {
+      "output_index": 39,
+      "kind": "state_b",
+      "layer": 14,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9903699902345124,
+        "cosine_null_reason": null,
+        "max_abs": 0.9865010976791382,
+        "mean_abs": 0.036714039495793806,
+        "l2_difference": 15.030570351912816,
+        "reference_l2": 108.30944903136437,
+        "actual_l2": 108.29980453577218
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9705817043271996,
+        "cosine_null_reason": null,
+        "max_abs": 1.3773683160543442,
+        "mean_abs": 0.09018598292272628,
+        "l2_difference": 26.157164792415102,
+        "reference_l2": 108.29980453577218,
+        "actual_l2": 107.17837214093234
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9626685414611893,
+        "cosine_null_reason": null,
+        "max_abs": 1.6833152770996094,
+        "mean_abs": 0.10002965088868147,
+        "l2_difference": 29.461816201252844,
+        "reference_l2": 108.30944903136437,
+        "actual_l2": 107.17837214093234
+      }
+    },
+    {
+      "output_index": 40,
+      "kind": "state_b",
+      "layer": 15,
+      "layer_type": "full_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9805261928091403,
+        "cosine_null_reason": null,
+        "max_abs": 0.5987317888066173,
+        "mean_abs": 0.14200126189666662,
+        "l2_difference": 4.066972121623925,
+        "reference_l2": 20.70278417652594,
+        "actual_l2": 20.397851354852204
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9626354517535853,
+        "cosine_null_reason": null,
+        "max_abs": 0.8148155957460403,
+        "mean_abs": 0.19688385353242666,
+        "l2_difference": 5.580709705238036,
+        "reference_l2": 20.397851354852204,
+        "actual_l2": 20.430989334007304
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9469726636061341,
+        "cosine_null_reason": null,
+        "max_abs": 1.2169713973999023,
+        "mean_abs": 0.2336979010669893,
+        "l2_difference": 6.703186129618777,
+        "reference_l2": 20.70278417652594,
+        "actual_l2": 20.430989334007304
+      }
+    },
+    {
+      "output_index": 41,
+      "kind": "state_b",
+      "layer": 16,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9925077608618087,
+        "cosine_null_reason": null,
+        "max_abs": 1.636293113231659,
+        "mean_abs": 0.04945151384405951,
+        "l2_difference": 20.021332529245505,
+        "reference_l2": 163.4859236733116,
+        "actual_l2": 163.62274812709654
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9755109184907644,
+        "cosine_null_reason": null,
+        "max_abs": 2.240875720977783,
+        "mean_abs": 0.1244265779983967,
+        "l2_difference": 36.12293774448457,
+        "reference_l2": 163.62274812709654,
+        "actual_l2": 162.72371768516834
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9701425911710417,
+        "cosine_null_reason": null,
+        "max_abs": 2.578587532043457,
+        "mean_abs": 0.13554010887362958,
+        "l2_difference": 39.86447640250694,
+        "reference_l2": 163.4859236733116,
+        "actual_l2": 162.72371768516834
+      }
+    },
+    {
+      "output_index": 42,
+      "kind": "state_b",
+      "layer": 17,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9894726419190697,
+        "cosine_null_reason": null,
+        "max_abs": 1.7793034315109253,
+        "mean_abs": 0.05982549090876196,
+        "l2_difference": 24.00558938617667,
+        "reference_l2": 165.46622887933435,
+        "actual_l2": 165.41072479439737
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9706534138859156,
+        "cosine_null_reason": null,
+        "max_abs": 2.501372814178467,
+        "mean_abs": 0.13822517014773203,
+        "l2_difference": 40.11357536291644,
+        "reference_l2": 165.41072479439737,
+        "actual_l2": 165.73102193446223
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9655767690640141,
+        "cosine_null_reason": null,
+        "max_abs": 2.5701045989990234,
+        "mean_abs": 0.14817693428600384,
+        "l2_difference": 43.45156929195648,
+        "reference_l2": 165.46622887933435,
+        "actual_l2": 165.73102193446223
+      }
+    },
+    {
+      "output_index": 43,
+      "kind": "state_b",
+      "layer": 18,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9911658359326834,
+        "cosine_null_reason": null,
+        "max_abs": 1.8644518852233887,
+        "mean_abs": 0.0685270562985636,
+        "l2_difference": 27.758450734837737,
+        "reference_l2": 209.28449447757194,
+        "actual_l2": 207.7132754815678
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9782543802244006,
+        "cosine_null_reason": null,
+        "max_abs": 2.4674582481384277,
+        "mean_abs": 0.14555044245051363,
+        "l2_difference": 43.11362184220221,
+        "reference_l2": 207.7132754815678,
+        "actual_l2": 204.8593455523991
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.976318768070956,
+        "cosine_null_reason": null,
+        "max_abs": 2.28493595123291,
+        "mean_abs": 0.15173931183981892,
+        "l2_difference": 45.27907631070883,
+        "reference_l2": 209.28449447757194,
+        "actual_l2": 204.8593455523991
+      }
+    },
+    {
+      "output_index": 44,
+      "kind": "state_b",
+      "layer": 19,
+      "layer_type": "full_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9686081860255271,
+        "cosine_null_reason": null,
+        "max_abs": 1.4698994159698486,
+        "mean_abs": 0.3009089974798371,
+        "l2_difference": 8.589364589704514,
+        "reference_l2": 34.52934610653302,
+        "actual_l2": 33.13442375163678
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9500577109416007,
+        "cosine_null_reason": null,
+        "max_abs": 1.940065585076809,
+        "mean_abs": 0.35211455514354384,
+        "l2_difference": 10.34233091413457,
+        "reference_l2": 33.13442375163678,
+        "actual_l2": 31.679410330843524
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9371361273362423,
+        "cosine_null_reason": null,
+        "max_abs": 2.3620383366942406,
+        "mean_abs": 0.42067675223279366,
+        "l2_difference": 12.068631143812894,
+        "reference_l2": 34.52934610653302,
+        "actual_l2": 31.679410330843524
+      }
+    },
+    {
+      "output_index": 45,
+      "kind": "state_b",
+      "layer": 20,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.980770712381192,
+        "cosine_null_reason": null,
+        "max_abs": 2.4446802139282227,
+        "mean_abs": 0.08879529981282985,
+        "l2_difference": 36.28055218144907,
+        "reference_l2": 181.3873179661146,
+        "actual_l2": 185.8432257464122
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9649549307475809,
+        "cosine_null_reason": null,
+        "max_abs": 3.716634511947632,
+        "mean_abs": 0.15710494831047583,
+        "l2_difference": 48.87344755562634,
+        "reference_l2": 185.8432257464122,
+        "actual_l2": 176.12423356205326
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9614395234496178,
+        "cosine_null_reason": null,
+        "max_abs": 3.0393123626708984,
+        "mean_abs": 0.1605079970418378,
+        "l2_difference": 49.9145288614614,
+        "reference_l2": 181.3873179661146,
+        "actual_l2": 176.12423356205326
+      }
+    },
+    {
+      "output_index": 46,
+      "kind": "state_b",
+      "layer": 21,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9671558362792758,
+        "cosine_null_reason": null,
+        "max_abs": 2.8798190653324127,
+        "mean_abs": 0.1022928893964045,
+        "l2_difference": 41.068205561716866,
+        "reference_l2": 159.90200671375686,
+        "actual_l2": 160.5338180689252
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9406614923923375,
+        "cosine_null_reason": null,
+        "max_abs": 3.403791666030884,
+        "mean_abs": 0.17347850672470835,
+        "l2_difference": 54.637379213840305,
+        "reference_l2": 160.5338180689252,
+        "actual_l2": 155.19686549466036
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9339823620404711,
+        "cosine_null_reason": null,
+        "max_abs": 3.690555691719055,
+        "mean_abs": 0.18205034197614842,
+        "l2_difference": 57.43486816795039,
+        "reference_l2": 159.90200671375686,
+        "actual_l2": 155.19686549466036
+      }
+    },
+    {
+      "output_index": 47,
+      "kind": "state_b",
+      "layer": 22,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9586116357358175,
+        "cosine_null_reason": null,
+        "max_abs": 3.103169471025467,
+        "mean_abs": 0.09619093768134235,
+        "l2_difference": 38.807199983284605,
+        "reference_l2": 135.32971480504523,
+        "actual_l2": 134.35323751850007
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9343491061472589,
+        "cosine_null_reason": null,
+        "max_abs": 2.5491064488887787,
+        "mean_abs": 0.15194755903915316,
+        "l2_difference": 48.437358134155645,
+        "reference_l2": 134.35323751850007,
+        "actual_l2": 132.87285341776305
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9248503587938889,
+        "cosine_null_reason": null,
+        "max_abs": 4.0372408628463745,
+        "mean_abs": 0.1610753868482675,
+        "l2_difference": 52.044832229802815,
+        "reference_l2": 135.32971480504523,
+        "actual_l2": 132.87285341776305
+      }
+    },
+    {
+      "output_index": 48,
+      "kind": "state_b",
+      "layer": 23,
+      "layer_type": "full_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9830260747823532,
+        "cosine_null_reason": null,
+        "max_abs": 1.9812898635864258,
+        "mean_abs": 0.4789847044949056,
+        "l2_difference": 13.55265942812847,
+        "reference_l2": 69.32883870670402,
+        "actual_l2": 63.4734385309209
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9797501285114731,
+        "cosine_null_reason": null,
+        "max_abs": 2.0318677723407745,
+        "mean_abs": 0.45048599208348605,
+        "l2_difference": 13.027931302550606,
+        "reference_l2": 63.4734385309209,
+        "actual_l2": 65.05351798415721
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9769504175689269,
+        "cosine_null_reason": null,
+        "max_abs": 2.323782444000244,
+        "mean_abs": 0.52505831155122,
+        "l2_difference": 15.039598152293586,
+        "reference_l2": 69.32883870670402,
+        "actual_l2": 65.05351798415721
+      }
+    },
+    {
+      "output_index": 49,
+      "kind": "hidden_after_layer",
+      "layer": 0,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9974088151397971,
+        "cosine_null_reason": null,
+        "max_abs": 0.01941545307636261,
+        "mean_abs": 0.0030987670163682424,
+        "l2_difference": 0.17859300706883435,
+        "reference_l2": 2.476828183488694,
+        "actual_l2": 2.4583901502366934
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9993059137685419,
+        "cosine_null_reason": null,
+        "max_abs": 0.008788041770458221,
+        "mean_abs": 0.0015943097078370272,
+        "l2_difference": 0.09276946536951551,
+        "reference_l2": 2.4583901502366934,
+        "actual_l2": 2.471496383613756
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9971795287148498,
+        "cosine_null_reason": null,
+        "max_abs": 0.02219492197036743,
+        "mean_abs": 0.0032044263894626113,
+        "l2_difference": 0.1859013166012435,
+        "reference_l2": 2.476828183488694,
+        "actual_l2": 2.471496383613756
+      }
+    },
+    {
+      "output_index": 50,
+      "kind": "hidden_after_layer",
+      "layer": 1,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9973113513880363,
+        "cosine_null_reason": null,
+        "max_abs": 0.04429793357849121,
+        "mean_abs": 0.004371753185946403,
+        "l2_difference": 0.25019099780171494,
+        "reference_l2": 3.411390298575831,
+        "actual_l2": 3.392172642071937
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9985900092432093,
+        "cosine_null_reason": null,
+        "max_abs": 0.024770207703113556,
+        "mean_abs": 0.0031591467649079163,
+        "l2_difference": 0.18016935172538268,
+        "reference_l2": 3.392172642071937,
+        "actual_l2": 3.393289633870641
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9963978564483056,
+        "cosine_null_reason": null,
+        "max_abs": 0.028570055961608887,
+        "mean_abs": 0.005052281401777492,
+        "l2_difference": 0.28934974562605076,
+        "reference_l2": 3.411390298575831,
+        "actual_l2": 3.393289633870641
+      }
+    },
+    {
+      "output_index": 51,
+      "kind": "hidden_after_layer",
+      "layer": 2,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9969737935857589,
+        "cosine_null_reason": null,
+        "max_abs": 0.030610889196395874,
+        "mean_abs": 0.006930594383213418,
+        "l2_difference": 0.3961350733059713,
+        "reference_l2": 4.942226581018521,
+        "actual_l2": 5.023773480159902
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9975009801720811,
+        "cosine_null_reason": null,
+        "max_abs": 0.029464363120496273,
+        "mean_abs": 0.006298801398571641,
+        "l2_difference": 0.35994087122731594,
+        "reference_l2": 5.023773480159902,
+        "actual_l2": 4.951444207185932
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9950242508642101,
+        "cosine_null_reason": null,
+        "max_abs": 0.040126584470272064,
+        "mean_abs": 0.008654809314375456,
+        "l2_difference": 0.4935682960519016,
+        "reference_l2": 4.942226581018521,
+        "actual_l2": 4.951444207185932
+      }
+    },
+    {
+      "output_index": 52,
+      "kind": "hidden_after_layer",
+      "layer": 3,
+      "layer_type": "full_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9968000538970687,
+        "cosine_null_reason": null,
+        "max_abs": 0.037342965602874756,
+        "mean_abs": 0.007633742471565341,
+        "l2_difference": 0.4292793447566646,
+        "reference_l2": 5.090553922752517,
+        "actual_l2": 5.211015899132381
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9964109727542833,
+        "cosine_null_reason": null,
+        "max_abs": 0.06974804401397705,
+        "mean_abs": 0.007703461654044119,
+        "l2_difference": 0.44551352316663284,
+        "reference_l2": 5.211015899132381,
+        "actual_l2": 5.129749364546412
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9935356679172932,
+        "cosine_null_reason": null,
+        "max_abs": 0.04464697604998946,
+        "mean_abs": 0.010190979722418447,
+        "l2_difference": 0.5823623664068096,
+        "reference_l2": 5.090553922752517,
+        "actual_l2": 5.129749364546412
+      }
+    },
+    {
+      "output_index": 53,
+      "kind": "hidden_after_layer",
+      "layer": 4,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9954708418408602,
+        "cosine_null_reason": null,
+        "max_abs": 0.06830516457557678,
+        "mean_abs": 0.007940979850909358,
+        "l2_difference": 0.4509189566224806,
+        "reference_l2": 4.516881447607472,
+        "actual_l2": 4.634034377672084
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9949977119521238,
+        "cosine_null_reason": null,
+        "max_abs": 0.050535619258880615,
+        "mean_abs": 0.008092598412840601,
+        "l2_difference": 0.46445178320357444,
+        "reference_l2": 4.634034377672084,
+        "actual_l2": 4.573279771983476
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9912132103554784,
+        "cosine_null_reason": null,
+        "max_abs": 0.0525728315114975,
+        "mean_abs": 0.01063633899605243,
+        "l2_difference": 0.605142578534196,
+        "reference_l2": 4.516881447607472,
+        "actual_l2": 4.573279771983476
+      }
+    },
+    {
+      "output_index": 54,
+      "kind": "hidden_after_layer",
+      "layer": 5,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9944807969828119,
+        "cosine_null_reason": null,
+        "max_abs": 0.09602347202599049,
+        "mean_abs": 0.007728361527355787,
+        "l2_difference": 0.44670889815358616,
+        "reference_l2": 4.1379544321224335,
+        "actual_l2": 4.220299272042445
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9915048906316773,
+        "cosine_null_reason": null,
+        "max_abs": 0.16810262203216553,
+        "mean_abs": 0.00931312437478482,
+        "l2_difference": 0.5522295980301849,
+        "reference_l2": 4.220299272042445,
+        "actual_l2": 4.124186599540293
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9873325838993646,
+        "cosine_null_reason": null,
+        "max_abs": 0.07207915000617504,
+        "mean_abs": 0.011452198603919328,
+        "l2_difference": 0.6576823726593309,
+        "reference_l2": 4.1379544321224335,
+        "actual_l2": 4.124186599540293
+      }
+    },
+    {
+      "output_index": 55,
+      "kind": "hidden_after_layer",
+      "layer": 6,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9930498017218693,
+        "cosine_null_reason": null,
+        "max_abs": 0.15397611260414124,
+        "mean_abs": 0.009085141099852478,
+        "l2_difference": 0.5333159010278131,
+        "reference_l2": 4.435689872955837,
+        "actual_l2": 4.513861773828505
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9904361168021153,
+        "cosine_null_reason": null,
+        "max_abs": 0.11076179146766663,
+        "mean_abs": 0.010795235397697667,
+        "l2_difference": 0.6233936110342533,
+        "reference_l2": 4.513861773828505,
+        "actual_l2": 4.498187169968953
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9847329676900937,
+        "cosine_null_reason": null,
+        "max_abs": 0.05886430339887738,
+        "mean_abs": 0.013705260919696372,
+        "l2_difference": 0.7830317800378559,
+        "reference_l2": 4.435689872955837,
+        "actual_l2": 4.498187169968953
+      }
+    },
+    {
+      "output_index": 56,
+      "kind": "hidden_after_layer",
+      "layer": 7,
+      "layer_type": "full_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9911693453992466,
+        "cosine_null_reason": null,
+        "max_abs": 0.15307556092739105,
+        "mean_abs": 0.010042475870466916,
+        "l2_difference": 0.5896629977613617,
+        "reference_l2": 4.37861894331846,
+        "actual_l2": 4.442858311898083
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9864405429233986,
+        "cosine_null_reason": null,
+        "max_abs": 0.12127114832401276,
+        "mean_abs": 0.01259230418477486,
+        "l2_difference": 0.7321584387854473,
+        "reference_l2": 4.442858311898083,
+        "actual_l2": 4.316394773478459
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9801768986730303,
+        "cosine_null_reason": null,
+        "max_abs": 0.06982551096007228,
+        "mean_abs": 0.015196638918531846,
+        "l2_difference": 0.8678588872370322,
+        "reference_l2": 4.37861894331846,
+        "actual_l2": 4.316394773478459
+      }
+    },
+    {
+      "output_index": 57,
+      "kind": "hidden_after_layer",
+      "layer": 8,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9892261606032523,
+        "cosine_null_reason": null,
+        "max_abs": 0.1495051383972168,
+        "mean_abs": 0.011181761771403842,
+        "l2_difference": 0.6475150234911131,
+        "reference_l2": 4.396815258489456,
+        "actual_l2": 4.41987398179919
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9839427168737168,
+        "cosine_null_reason": null,
+        "max_abs": 0.16135826706886292,
+        "mean_abs": 0.013580473538397086,
+        "l2_difference": 0.7888809745890355,
+        "reference_l2": 4.41987398179919,
+        "actual_l2": 4.347211142620921
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9768369148511141,
+        "cosine_null_reason": null,
+        "max_abs": 0.07181092351675034,
+        "mean_abs": 0.016579326148551843,
+        "l2_difference": 0.942302301117895,
+        "reference_l2": 4.396815258489456,
+        "actual_l2": 4.347211142620921
+      }
+    },
+    {
+      "output_index": 58,
+      "kind": "hidden_after_layer",
+      "layer": 9,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.986904438648459,
+        "cosine_null_reason": null,
+        "max_abs": 0.15582844614982605,
+        "mean_abs": 0.012400449160097082,
+        "l2_difference": 0.7178314603381922,
+        "reference_l2": 4.445730168197269,
+        "actual_l2": 4.419395209761321
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9812366171533815,
+        "cosine_null_reason": null,
+        "max_abs": 0.1848796308040619,
+        "mean_abs": 0.014570174497261945,
+        "l2_difference": 0.8522496189494692,
+        "reference_l2": 4.419395209761321,
+        "actual_l2": 4.352852775293627
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9724298018987295,
+        "cosine_null_reason": null,
+        "max_abs": 0.09097392857074738,
+        "mean_abs": 0.018349852246064557,
+        "l2_difference": 1.0371507084612865,
+        "reference_l2": 4.445730168197269,
+        "actual_l2": 4.352852775293627
+      }
+    },
+    {
+      "output_index": 59,
+      "kind": "hidden_after_layer",
+      "layer": 10,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9875317772876254,
+        "cosine_null_reason": null,
+        "max_abs": 0.08057615160942078,
+        "mean_abs": 0.012271709132598119,
+        "l2_difference": 0.6964467835186844,
+        "reference_l2": 4.413857448776366,
+        "actual_l2": 4.40627434073241
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9805177766903597,
+        "cosine_null_reason": null,
+        "max_abs": 0.07299712300300598,
+        "mean_abs": 0.015070523634328481,
+        "l2_difference": 0.8655975631605854,
+        "reference_l2": 4.40627434073241,
+        "actual_l2": 4.309307097959284
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9711174302400191,
+        "cosine_null_reason": null,
+        "max_abs": 0.08675891906023026,
+        "mean_abs": 0.01856885924270557,
+        "l2_difference": 1.0534050846448728,
+        "reference_l2": 4.413857448776366,
+        "actual_l2": 4.309307097959284
+      }
+    },
+    {
+      "output_index": 60,
+      "kind": "hidden_after_layer",
+      "layer": 11,
+      "layer_type": "full_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9847118793035389,
+        "cosine_null_reason": null,
+        "max_abs": 0.09142205864191055,
+        "mean_abs": 0.013987413929839931,
+        "l2_difference": 0.7930381324089596,
+        "reference_l2": 4.531982857273477,
+        "actual_l2": 4.538252338135007
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9763494768297424,
+        "cosine_null_reason": null,
+        "max_abs": 0.07189273834228516,
+        "mean_abs": 0.017280264008984858,
+        "l2_difference": 0.9815291586413999,
+        "reference_l2": 4.538252338135007,
+        "actual_l2": 4.404089815125462
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9647338067667467,
+        "cosine_null_reason": null,
+        "max_abs": 0.08628686517477036,
+        "mean_abs": 0.021013546188424215,
+        "l2_difference": 1.1933695311912083,
+        "reference_l2": 4.531982857273477,
+        "actual_l2": 4.404089815125462
+      }
+    },
+    {
+      "output_index": 61,
+      "kind": "hidden_after_layer",
+      "layer": 12,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9818100611374452,
+        "cosine_null_reason": null,
+        "max_abs": 0.14313329756259918,
+        "mean_abs": 0.0165605647339504,
+        "l2_difference": 0.9447685996071663,
+        "reference_l2": 4.9333548332797585,
+        "actual_l2": 4.9670168222098985
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9703893543322426,
+        "cosine_null_reason": null,
+        "max_abs": 0.0965437963604927,
+        "mean_abs": 0.020955797714012903,
+        "l2_difference": 1.1997672924487643,
+        "reference_l2": 4.9670168222098985,
+        "actual_l2": 4.823010940535826
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9586865338714561,
+        "cosine_null_reason": null,
+        "max_abs": 0.12768974155187607,
+        "mean_abs": 0.024574749597046974,
+        "l2_difference": 1.4064743014713894,
+        "reference_l2": 4.9333548332797585,
+        "actual_l2": 4.823010940535826
+      }
+    },
+    {
+      "output_index": 62,
+      "kind": "hidden_after_layer",
+      "layer": 13,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9773214379449916,
+        "cosine_null_reason": null,
+        "max_abs": 0.23466834425926208,
+        "mean_abs": 0.020319198400521543,
+        "l2_difference": 1.1655612789287075,
+        "reference_l2": 5.450721304245568,
+        "actual_l2": 5.489085284035158
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9632202253755326,
+        "cosine_null_reason": null,
+        "max_abs": 0.12980588525533676,
+        "mean_abs": 0.02579361161157223,
+        "l2_difference": 1.4749946768900415,
+        "reference_l2": 5.489085284035158,
+        "actual_l2": 5.290986913225503
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9482376317168256,
+        "cosine_null_reason": null,
+        "max_abs": 0.2716844975948334,
+        "mean_abs": 0.030264731501358,
+        "l2_difference": 1.735262779049701,
+        "reference_l2": 5.450721304245568,
+        "actual_l2": 5.290986913225503
+      }
+    },
+    {
+      "output_index": 63,
+      "kind": "hidden_after_layer",
+      "layer": 14,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9746895716943935,
+        "cosine_null_reason": null,
+        "max_abs": 0.15911468490958214,
+        "mean_abs": 0.024988250902211462,
+        "l2_difference": 1.4192067240813977,
+        "reference_l2": 6.322100221665007,
+        "actual_l2": 6.2904985454700615
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.959396151813308,
+        "cosine_null_reason": null,
+        "max_abs": 0.19481344521045685,
+        "mean_abs": 0.031347932852469285,
+        "l2_difference": 1.7752408176365853,
+        "reference_l2": 6.2904985454700615,
+        "actual_l2": 6.092523925880072
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9405330771220511,
+        "cosine_null_reason": null,
+        "max_abs": 0.20280325040221214,
+        "mean_abs": 0.03794525345766431,
+        "l2_difference": 2.152613586550876,
+        "reference_l2": 6.322100221665007,
+        "actual_l2": 6.092523925880072
+      }
+    },
+    {
+      "output_index": 64,
+      "kind": "hidden_after_layer",
+      "layer": 15,
+      "layer_type": "full_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9727605871844465,
+        "cosine_null_reason": null,
+        "max_abs": 0.1277955323457718,
+        "mean_abs": 0.03185652553773366,
+        "l2_difference": 1.8115809614641034,
+        "reference_l2": 7.796844146531843,
+        "actual_l2": 7.707431113552632
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9516843862794879,
+        "cosine_null_reason": null,
+        "max_abs": 0.19804080948233604,
+        "mean_abs": 0.04184489518024037,
+        "l2_difference": 2.367450374215327,
+        "reference_l2": 7.707431113552632,
+        "actual_l2": 7.391307577163048
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9340393998927983,
+        "cosine_null_reason": null,
+        "max_abs": 0.2124283481389284,
+        "mean_abs": 0.04936535096214101,
+        "l2_difference": 2.7869212459355257,
+        "reference_l2": 7.796844146531843,
+        "actual_l2": 7.391307577163048
+      }
+    },
+    {
+      "output_index": 65,
+      "kind": "hidden_after_layer",
+      "layer": 16,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9656940442754123,
+        "cosine_null_reason": null,
+        "max_abs": 0.22274884581565857,
+        "mean_abs": 0.042960873699293245,
+        "l2_difference": 2.445960720886094,
+        "reference_l2": 9.303491053007818,
+        "actual_l2": 9.36628135319767
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.939278248612874,
+        "cosine_null_reason": null,
+        "max_abs": 0.2581552788615227,
+        "mean_abs": 0.05648884970477752,
+        "l2_difference": 3.215894356315266,
+        "reference_l2": 9.36628135319767,
+        "actual_l2": 8.690135622211113
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.924420016597859,
+        "cosine_null_reason": null,
+        "max_abs": 0.2447319757193327,
+        "mean_abs": 0.06218115435826377,
+        "l2_difference": 3.549264209256994,
+        "reference_l2": 9.303491053007818,
+        "actual_l2": 8.690135622211113
+      }
+    },
+    {
+      "output_index": 66,
+      "kind": "hidden_after_layer",
+      "layer": 17,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9567637450105277,
+        "cosine_null_reason": null,
+        "max_abs": 0.2327686846256256,
+        "mean_abs": 0.056715866454354114,
+        "l2_difference": 3.202374613239954,
+        "reference_l2": 10.839391934276703,
+        "actual_l2": 10.931964589007354
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.9242657974917651,
+        "cosine_null_reason": null,
+        "max_abs": 0.4355248212814331,
+        "mean_abs": 0.07269916023816592,
+        "l2_difference": 4.176067376123163,
+        "reference_l2": 10.931964589007354,
+        "actual_l2": 9.951290001568834
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.9128381585421942,
+        "cosine_null_reason": null,
+        "max_abs": 0.5542000532150269,
+        "mean_abs": 0.07602014671368096,
+        "l2_difference": 4.426320330829834,
+        "reference_l2": 10.839391934276703,
+        "actual_l2": 9.951290001568834
+      }
+    },
+    {
+      "output_index": 67,
+      "kind": "hidden_after_layer",
+      "layer": 18,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9372285593746035,
+        "cosine_null_reason": null,
+        "max_abs": 0.42216236889362335,
+        "mean_abs": 0.07508715652105025,
+        "l2_difference": 4.285501484757346,
+        "reference_l2": 11.926056236464673,
+        "actual_l2": 12.211791449365684
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.8903429864177816,
+        "cosine_null_reason": null,
+        "max_abs": 0.604128897190094,
+        "mean_abs": 0.09684279341334445,
+        "l2_difference": 5.574179555382207,
+        "reference_l2": 12.211791449365684,
+        "actual_l2": 11.27125541233718
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.868465624314211,
+        "cosine_null_reason": null,
+        "max_abs": 0.7497020661830902,
+        "mean_abs": 0.10383743380330657,
+        "l2_difference": 5.982549072338764,
+        "reference_l2": 11.926056236464673,
+        "actual_l2": 11.27125541233718
+      }
+    },
+    {
+      "output_index": 68,
+      "kind": "hidden_after_layer",
+      "layer": 19,
+      "layer_type": "full_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.9202803242479705,
+        "cosine_null_reason": null,
+        "max_abs": 0.7592304944992065,
+        "mean_abs": 0.09184900592296685,
+        "l2_difference": 5.27961848827836,
+        "reference_l2": 13.040002042701657,
+        "actual_l2": 13.358284141811366
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.869103058576136,
+        "cosine_null_reason": null,
+        "max_abs": 0.4748961962759495,
+        "mean_abs": 0.1159609025841064,
+        "l2_difference": 6.63026067705949,
+        "reference_l2": 13.358284141811366,
+        "actual_l2": 12.159571088053092
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.8473452186039269,
+        "cosine_null_reason": null,
+        "max_abs": 0.9685465097427368,
+        "mean_abs": 0.1218536290039367,
+        "l2_difference": 7.013223004214146,
+        "reference_l2": 13.040002042701657,
+        "actual_l2": 12.159571088053092
+      }
+    },
+    {
+      "output_index": 69,
+      "kind": "hidden_after_layer",
+      "layer": 20,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.8955582857745161,
+        "cosine_null_reason": null,
+        "max_abs": 0.5997389405965805,
+        "mean_abs": 0.1242676173728654,
+        "l2_difference": 7.044613785119137,
+        "reference_l2": 15.188217765797082,
+        "actual_l2": 15.591215610200132
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.8255418938724333,
+        "cosine_null_reason": null,
+        "max_abs": 0.7204013019800186,
+        "mean_abs": 0.154497332691804,
+        "l2_difference": 8.842989930631985,
+        "reference_l2": 15.591215610200132,
+        "actual_l2": 13.754546979746126
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.8078605085586266,
+        "cosine_null_reason": null,
+        "max_abs": 0.7509636729955673,
+        "mean_abs": 0.16062799705707675,
+        "l2_difference": 9.073808597148508,
+        "reference_l2": 15.188217765797082,
+        "actual_l2": 13.754546979746126
+      }
+    },
+    {
+      "output_index": 70,
+      "kind": "hidden_after_layer",
+      "layer": 21,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.8671064430874194,
+        "cosine_null_reason": null,
+        "max_abs": 1.3116400837898254,
+        "mean_abs": 0.1625378884925226,
+        "l2_difference": 9.49709732158987,
+        "reference_l2": 18.24110757086406,
+        "actual_l2": 18.579909457515352
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.7973853969974755,
+        "cosine_null_reason": null,
+        "max_abs": 0.848657488822937,
+        "mean_abs": 0.1972908624866534,
+        "l2_difference": 11.32223466110742,
+        "reference_l2": 18.579909457515352,
+        "actual_l2": 16.388406909111634
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.7674310835803918,
+        "cosine_null_reason": null,
+        "max_abs": 1.3764230608940125,
+        "mean_abs": 0.2112057042050708,
+        "l2_difference": 11.9365847823947,
+        "reference_l2": 18.24110757086406,
+        "actual_l2": 16.388406909111634
+      }
+    },
+    {
+      "output_index": 71,
+      "kind": "hidden_after_layer",
+      "layer": 22,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.856768826772354,
+        "cosine_null_reason": null,
+        "max_abs": 0.9282866567373276,
+        "mean_abs": 0.20121645898528584,
+        "l2_difference": 11.553772816668195,
+        "reference_l2": 21.32666982557119,
+        "actual_l2": 21.811764633906268
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.7755715920755369,
+        "cosine_null_reason": null,
+        "max_abs": 1.1698608696460724,
+        "mean_abs": 0.24521761297970102,
+        "l2_difference": 14.04379489470903,
+        "reference_l2": 21.811764633906268,
+        "actual_l2": 19.68171566076028
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.7444605715481731,
+        "cosine_null_reason": null,
+        "max_abs": 1.1816861927509308,
+        "mean_abs": 0.261261491281644,
+        "l2_difference": 14.738687178522277,
+        "reference_l2": 21.32666982557119,
+        "actual_l2": 19.68171566076028
+      }
+    },
+    {
+      "output_index": 72,
+      "kind": "hidden_after_layer",
+      "layer": 23,
+      "layer_type": "full_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.8857741174252417,
+        "cosine_null_reason": null,
+        "max_abs": 1.9386348724365234,
+        "mean_abs": 0.2714557023977022,
+        "l2_difference": 15.770460081495164,
+        "reference_l2": 32.198961494848724,
+        "actual_l2": 33.55907309734321
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.8624451944846957,
+        "cosine_null_reason": null,
+        "max_abs": 1.4523288905620575,
+        "mean_abs": 0.3062300553218904,
+        "l2_difference": 17.34541828840068,
+        "reference_l2": 33.55907309734321,
+        "actual_l2": 32.45588994297226
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.8076921887291131,
+        "cosine_null_reason": null,
+        "max_abs": 2.464496672153473,
+        "mean_abs": 0.3489993703283574,
+        "l2_difference": 20.050112495566093,
+        "reference_l2": 32.198961494848724,
+        "actual_l2": 32.45588994297226
+      }
+    }
+  ],
+  "output_count": 73,
+  "all_three_bundles_finite": true,
+  "historical_reference_logits_equal_new_qdq": true,
+  "logit_vectors": {
+    "path": "experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/controlled-p1-qnn-call-20260910T122428Z/saved-data-analysis/raw/logit-difference-vectors.pt",
+    "bytes": 4968921,
+    "sha256": "af364fb142d599f3e6954eff57d6305d776ca017b6bce6d9e0f6f8c94dd736bb"
+  },
+  "logit_vector_terms": {
+    "current_call": {
+      "l2": 539.3959088699276,
+      "mean_abs": 0.8525880160777213,
+      "max_abs": 6.222187042236328
+    },
+    "qnn_state_effect": {
+      "l2": 719.2745656904472,
+      "mean_abs": 1.1703401569055694,
+      "max_abs": 6.327765464782715
+    },
+    "historical_reference_shift": {
+      "l2": 0.0,
+      "mean_abs": 0.0,
+      "max_abs": 0.0
+    },
+    "observed_own_trajectory_difference": {
+      "l2": 866.3418700274308,
+      "mean_abs": 1.4161059818712958,
+      "max_abs": 7.649494647979736
+    },
+    "rounding_residual": {
+      "l2": 2.977485334216692e-05,
+      "mean_abs": 2.0074468320859692e-08,
+      "max_abs": 4.76837158203125e-07
+    }
+  },
+  "double_identity_max_abs_residual": 0.0,
+  "argmax": {
+    "new_qdq": 198,
+    "controlled_qnn": 198,
+    "own_qnn": 198
+  },
+  "metrics_precision": "float64 saved-data comparisons; original runtime float32 metrics remain unchanged",
+  "claim_limits": [
+    "This analyzes existing saved tensors, not a new model run.",
+    "Current-call same-input error and prior-state effect are both measured; no individual operator root cause or full-trajectory fidelity follows.",
+    "Layer taps are endpoints within a call; earlier hidden errors propagate into later layers.",
+    "Other than logits, no historical full-replay QDQ output bundle exists at this position; own-QNN comparisons use the new controlled QDQ outputs.",
+    "Difference vectors add with recorded floating residual; scalar cosines and norms are not additive or attribution percentages.",
+    "Prior-state-effect interpretation assumes the fixed PTE/native runtime stack; physical/accuracy/campaign claims remain excluded."
+  ]
+}

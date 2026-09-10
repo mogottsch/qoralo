@@ -723,6 +723,46 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(e["raw_sha256"], recovered_sha)
             self.assertEqual(e["raw_bytes"], recovered_bytes)
 
+    def test_paired_position1_retains_current_call_and_state_effects(self) -> None:
+        directory = EXP / "results/controlled-position1-paired-qnn-20260910"
+        result = json.loads((directory / "result.json").read_text())
+        qnn = json.loads((directory / "raw/qnn-result.json").read_text())
+        qdq = json.loads((directory / "raw/qdq-result.json").read_text())
+        analysis = json.loads((directory / "analysis/all73-comparison.json").read_text())
+        self.assertEqual("completed_single_call", qnn["status"])
+        self.assertEqual(1, qnn["graph_calls_returned"])
+        self.assertEqual(1, qnn["target_position"])
+        self.assertTrue(qnn["exact_same_pack_qdq_reference_used"])
+        self.assertEqual(qnn["submitted_input_values_sha256"], qdq["submitted_input_values_sha256"])
+        self.assertFalse(qnn["input_mutation_observed"])
+        self.assertFalse(qdq["input_mutation_observed"])
+        self.assertGreater(qnn["same_pack_qdq_comparison"]["cosine"], 0.88)
+        self.assertLess(qnn["same_pack_qdq_comparison"]["cosine"], 0.90)
+        self.assertEqual(73, len(analysis["outputs"]))
+        self.assertTrue(analysis["all_three_bundles_finite"])
+        self.assertGreater(analysis["logit_vector_terms"]["current_call"]["l2"], 0)
+        self.assertGreater(analysis["logit_vector_terms"]["qnn_state_effect"]["l2"], 0)
+        self.assertEqual(0, analysis["logit_vector_terms"]["historical_reference_shift"]["l2"])
+        self.assertLess(analysis["logit_vector_terms"]["rounding_residual"]["max_abs"], 1e-6)
+        self.assertEqual(0, analysis["double_identity_max_abs_residual"])
+        self.assertFalse(result["saved_data_analysis"]["scalar_cosines_or_norms_added"])
+        self.assertFalse(result["individual_operator_root_cause_identified"])
+        self.assertFalse(result["full_trajectory_fidelity_established"])
+        self.assertFalse(result["physical_execution_performed"])
+        self.assertTrue(result["cleanup"]["owned_process_group_absent"])
+        slot = result["saved_data_analysis"]["conv_history_slot_observation"]["slots"][2]
+        self.assertEqual(6053, slot["channel_at_max"])
+        self.assertGreater(abs(slot["qdq_value"] - slot["common_input_value"]), 1.5)
+        self.assertLess(abs(slot["qnn_value"] - slot["common_input_value"]), 1e-5)
+        for e in json.loads((directory / "compression-manifest.json").read_text())["files"]:
+            path = directory / e["compressed_path"]
+            self.assertEqual(e["compressed_sha256"], sha(path))
+            raw_sha, size = sha_zstd(path)
+            self.assertEqual(e["raw_sha256"], raw_sha)
+            self.assertEqual(e["raw_bytes"], size)
+        source = result["binding"]["analyzer_source"]
+        self.assertEqual(source["sha256"], sha(EXP / source["path"]))
+
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
             EXP / "protocol",
@@ -744,6 +784,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/host-qnn-trajectory-prefix-000-003-20260910",
             EXP / "results/controlled-position1-readiness",
             EXP / "results/controlled-position1-qdq-20260910",
+            EXP / "results/controlled-position1-paired-qnn-20260910",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

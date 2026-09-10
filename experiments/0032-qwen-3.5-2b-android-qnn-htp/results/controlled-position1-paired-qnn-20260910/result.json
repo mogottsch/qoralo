@@ -1,0 +1,417 @@
+{
+  "schema_version": 1,
+  "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
+  "evidence_class": "host_position1_paired_same_pack_qnn_control_and_saved_vector_analysis",
+  "status": "controlled_call_completed_current_call_and_prior_state_discrepancies_both_remain",
+  "authorized_call": {
+    "backend": "qnn_x86",
+    "position": 1,
+    "token_id": 8678,
+    "forward_calls": 1,
+    "timeout_seconds": 300,
+    "resume": false,
+    "auto_follow_on": false,
+    "physical": false
+  },
+  "binding": {
+    "qnn_result": {
+      "path": "results/controlled-position1-paired-qnn-20260910/raw/qnn-result.json",
+      "bytes": 4148,
+      "sha256": "8c41cda7641f3acf383416bc3b93d65e55adc179cb44696bd59d511940b7c285"
+    },
+    "paired_qdq_result": {
+      "path": "results/controlled-position1-paired-qnn-20260910/raw/qdq-result.json",
+      "bytes": 3667,
+      "sha256": "7137d83a3c89a73121ad5bd2514c865b7cec97fe8b5c2d117be25fe165f43519"
+    },
+    "pack_header": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/controlled-p1-qdq-pack-20260910T114619Z/pack-header.json",
+      "bytes": 9607,
+      "sha256": "ec38185783dbd2bc387dbf5387c3f89cd4a4fbb786f2504a82b2b48cd43cd392"
+    },
+    "input_values_sha256": "4251bbce8005e37cb9fc4c8da8f0af604e7c4a9884179e2ccd358ef4865c78e4",
+    "input_mutation_qnn": false,
+    "input_mutation_qdq": false,
+    "qnn_pte": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/restart-20260910T083327Z/01-hidden-compile/diagnostic-w4a16-qnn.pte",
+      "bytes": 1995463416,
+      "sha256": "7f30be3d57b601af0804cdd50dd8968e271d673b710ea249a754fcd2f4ff3fea"
+    },
+    "qdq_model": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/restart-20260910T083327Z/01-hidden-compile/diagnostic-w4a16-qdq.pt2",
+      "bytes": 13645661902,
+      "sha256": "30799090d14a42c92ea804a2763df55ff231ba232653d96484324ad40c492364"
+    },
+    "analyzer_source": {
+      "path": "tools/analyze_position1_pair.py",
+      "bytes": 8871,
+      "sha256": "6a842310754e76af709a5b97da3a1bc82124085fa155865cba07189fcca22184"
+    }
+  },
+  "runtime_float32_observation": {
+    "same_pack_qdq_comparison": {
+      "cosine": 0.8879938125610352,
+      "max_abs": 6.222187042236328,
+      "mean_abs": 0.8525879979133606,
+      "reference_argmax": 198,
+      "actual_argmax": 198
+    },
+    "historical_qdq_comparison": {
+      "cosine": 0.8879938125610352,
+      "max_abs": 6.222187042236328,
+      "mean_abs": 0.8525879979133606,
+      "reference_argmax": 198,
+      "actual_argmax": 198
+    },
+    "original_own_state_p1_cosine": 0.6792200803756714,
+    "same_pack_reference_used": true
+  },
+  "saved_data_analysis": {
+    "source": "analysis/all73-comparison.json",
+    "model_or_pte_execution": false,
+    "output_count_per_bundle": 73,
+    "bundles": 3,
+    "all219_tensors_finite": true,
+    "metrics_precision": "float64, independently evaluated on saved tensors; original FP32 runtime values preserved separately",
+    "logits": {
+      "output_index": 0,
+      "kind": "logits",
+      "layer": null,
+      "layer_type": null,
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.8879892745291829,
+        "cosine_null_reason": null,
+        "max_abs": 6.222186803817749,
+        "mean_abs": 0.8525880162284627,
+        "l2_difference": 539.3959090162598,
+        "reference_l2": 1164.9977719177537,
+        "actual_l2": 1097.1938191848326
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.7602622825656908,
+        "cosine_null_reason": null,
+        "max_abs": 6.327765464782715,
+        "mean_abs": 1.1703401568767553,
+        "l2_difference": 719.2745656394469,
+        "reference_l2": 1097.1938191848326,
+        "actual_l2": 930.7796966897347
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.6792151497240134,
+        "cosine_null_reason": null,
+        "max_abs": 7.649494647979736,
+        "mean_abs": 1.4161059820524744,
+        "l2_difference": 866.3418701579994,
+        "reference_l2": 1164.9977719177537,
+        "actual_l2": 930.7796966897347
+      }
+    },
+    "logit_vector_terms": {
+      "current_call": {
+        "l2": 539.3959088699276,
+        "mean_abs": 0.8525880160777213,
+        "max_abs": 6.222187042236328
+      },
+      "qnn_state_effect": {
+        "l2": 719.2745656904472,
+        "mean_abs": 1.1703401569055694,
+        "max_abs": 6.327765464782715
+      },
+      "historical_reference_shift": {
+        "l2": 0.0,
+        "mean_abs": 0.0,
+        "max_abs": 0.0
+      },
+      "observed_own_trajectory_difference": {
+        "l2": 866.3418700274308,
+        "mean_abs": 1.4161059818712958,
+        "max_abs": 7.649494647979736
+      },
+      "rounding_residual": {
+        "l2": 2.977485334216692e-05,
+        "mean_abs": 2.0074468320859692e-08,
+        "max_abs": 4.76837158203125e-07
+      }
+    },
+    "double_vector_identity_max_abs": 0.0,
+    "historical_reference_shift_zero": true,
+    "original_vectors_modified": false,
+    "scalar_cosines_or_norms_added": false,
+    "earliest_saved_layer0_observations": {
+      "state_a": {
+        "output_index": 1,
+        "kind": "state_a",
+        "layer": 0,
+        "layer_type": "linear_attention",
+        "current_call_same_inputs": {
+          "finite": true,
+          "cosine": 0.9999352037640322,
+          "cosine_null_reason": null,
+          "max_abs": 0.011954326182603836,
+          "mean_abs": 3.3034426126787864e-05,
+          "l2_difference": 0.07783874588241521,
+          "reference_l2": 6.828196171487593,
+          "actual_l2": 6.823641236541916
+        },
+        "prior_state_effect_in_qnn": {
+          "finite": true,
+          "cosine": 0.999933871898868,
+          "cosine_null_reason": null,
+          "max_abs": 0.01484650355996564,
+          "mean_abs": 3.328147203607301e-05,
+          "l2_difference": 0.07848767156205588,
+          "reference_l2": 6.823641236541916,
+          "actual_l2": 6.824737371387581
+        },
+        "own_qnn_vs_control_qdq": {
+          "finite": true,
+          "cosine": 0.9998027489606409,
+          "cosine_null_reason": null,
+          "max_abs": 0.026800829742569476,
+          "mean_abs": 6.0342000671287366e-05,
+          "l2_difference": 0.13563190950593754,
+          "reference_l2": 6.828196171487593,
+          "actual_l2": 6.824737371387581
+        }
+      },
+      "state_b": {
+        "output_index": 25,
+        "kind": "state_b",
+        "layer": 0,
+        "layer_type": "linear_attention",
+        "current_call_same_inputs": {
+          "finite": true,
+          "cosine": 0.999948134458488,
+          "cosine_null_reason": null,
+          "max_abs": 1.5903472900390625,
+          "mean_abs": 0.0002388712441595923,
+          "l2_difference": 1.5917817950979443,
+          "reference_l2": 154.48560894450412,
+          "actual_l2": 154.71885950053235
+        },
+        "prior_state_effect_in_qnn": {
+          "finite": true,
+          "cosine": 0.9999999413631371,
+          "cosine_null_reason": null,
+          "max_abs": 0.003270655870437622,
+          "mean_abs": 9.838142885125005e-05,
+          "l2_difference": 0.05318561357745849,
+          "reference_l2": 154.71885950053235,
+          "actual_l2": 154.71422223071386
+        },
+        "own_qnn_vs_control_qdq": {
+          "finite": true,
+          "cosine": 0.9999480564278552,
+          "cosine_null_reason": null,
+          "max_abs": 1.5903472900390625,
+          "mean_abs": 0.00028700221087755534,
+          "l2_difference": 1.5922572728845268,
+          "reference_l2": 154.48560894450412,
+          "actual_l2": 154.71422223071386
+        }
+      },
+      "hidden_after_layer": {
+        "output_index": 49,
+        "kind": "hidden_after_layer",
+        "layer": 0,
+        "layer_type": "linear_attention",
+        "current_call_same_inputs": {
+          "finite": true,
+          "cosine": 0.9974088151397971,
+          "cosine_null_reason": null,
+          "max_abs": 0.01941545307636261,
+          "mean_abs": 0.0030987670163682424,
+          "l2_difference": 0.17859300706883435,
+          "reference_l2": 2.476828183488694,
+          "actual_l2": 2.4583901502366934
+        },
+        "prior_state_effect_in_qnn": {
+          "finite": true,
+          "cosine": 0.9993059137685419,
+          "cosine_null_reason": null,
+          "max_abs": 0.008788041770458221,
+          "mean_abs": 0.0015943097078370272,
+          "l2_difference": 0.09276946536951551,
+          "reference_l2": 2.4583901502366934,
+          "actual_l2": 2.471496383613756
+        },
+        "own_qnn_vs_control_qdq": {
+          "finite": true,
+          "cosine": 0.9971795287148498,
+          "cosine_null_reason": null,
+          "max_abs": 0.02219492197036743,
+          "mean_abs": 0.0032044263894626113,
+          "l2_difference": 0.1859013166012435,
+          "reference_l2": 2.476828183488694,
+          "actual_l2": 2.471496383613756
+        }
+      }
+    },
+    "hidden_layer22": {
+      "output_index": 71,
+      "kind": "hidden_after_layer",
+      "layer": 22,
+      "layer_type": "linear_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.856768826772354,
+        "cosine_null_reason": null,
+        "max_abs": 0.9282866567373276,
+        "mean_abs": 0.20121645898528584,
+        "l2_difference": 11.553772816668195,
+        "reference_l2": 21.32666982557119,
+        "actual_l2": 21.811764633906268
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.7755715920755369,
+        "cosine_null_reason": null,
+        "max_abs": 1.1698608696460724,
+        "mean_abs": 0.24521761297970102,
+        "l2_difference": 14.04379489470903,
+        "reference_l2": 21.811764633906268,
+        "actual_l2": 19.68171566076028
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.7444605715481731,
+        "cosine_null_reason": null,
+        "max_abs": 1.1816861927509308,
+        "mean_abs": 0.261261491281644,
+        "l2_difference": 14.738687178522277,
+        "reference_l2": 21.32666982557119,
+        "actual_l2": 19.68171566076028
+      }
+    },
+    "hidden_layer23": {
+      "output_index": 72,
+      "kind": "hidden_after_layer",
+      "layer": 23,
+      "layer_type": "full_attention",
+      "current_call_same_inputs": {
+        "finite": true,
+        "cosine": 0.8857741174252417,
+        "cosine_null_reason": null,
+        "max_abs": 1.9386348724365234,
+        "mean_abs": 0.2714557023977022,
+        "l2_difference": 15.770460081495164,
+        "reference_l2": 32.198961494848724,
+        "actual_l2": 33.55907309734321
+      },
+      "prior_state_effect_in_qnn": {
+        "finite": true,
+        "cosine": 0.8624451944846957,
+        "cosine_null_reason": null,
+        "max_abs": 1.4523288905620575,
+        "mean_abs": 0.3062300553218904,
+        "l2_difference": 17.34541828840068,
+        "reference_l2": 33.55907309734321,
+        "actual_l2": 32.45588994297226
+      },
+      "own_qnn_vs_control_qdq": {
+        "finite": true,
+        "cosine": 0.8076921887291131,
+        "cosine_null_reason": null,
+        "max_abs": 2.464496672153473,
+        "mean_abs": 0.3489993703283574,
+        "l2_difference": 20.050112495566093,
+        "reference_l2": 32.198961494848724,
+        "actual_l2": 32.45588994297226
+      }
+    },
+    "conv_history_slot_observation": {
+      "source": "saved tensors only",
+      "model_execution": false,
+      "layer": 0,
+      "output_index": 25,
+      "slots": [
+        {
+          "output_slot": 0,
+          "origin": "previous_conv_state_slot_1",
+          "max_abs": 0.0,
+          "channel_at_max": 0,
+          "qdq_value": 0.0,
+          "qnn_value": 0.0,
+          "common_input_value": 0.0
+        },
+        {
+          "output_slot": 1,
+          "origin": "previous_conv_state_slot_2",
+          "max_abs": 0.0,
+          "channel_at_max": 0,
+          "qdq_value": 0.0,
+          "qnn_value": 0.0,
+          "common_input_value": 0.0
+        },
+        {
+          "output_slot": 2,
+          "origin": "previous_conv_state_slot_3",
+          "max_abs": 1.5903472900390625,
+          "channel_at_max": 6053,
+          "qdq_value": 22.131549835205078,
+          "qnn_value": 23.72189712524414,
+          "common_input_value": 23.721895217895508
+        },
+        {
+          "output_slot": 3,
+          "origin": "current_token_projection",
+          "max_abs": 0.004088401794433594,
+          "channel_at_max": 5523,
+          "qdq_value": -3.759591579437256,
+          "qnn_value": -3.7636799812316895
+        }
+      ],
+      "interpretation_limit": "Output-slot observations, not an isolated operator or quantization-encoding root cause."
+    },
+    "conv_slot_causality_claimed": false,
+    "closer_to_fp32_claimed": false
+  },
+  "timing": {
+    "worker_seconds": 123.84368241699849,
+    "supervisor_seconds": 124.70852024100168,
+    "host_limit_seconds": 300,
+    "math_threads": 4,
+    "scope": "Host single-call diagnostic wall time, not Android latency or a matched performance comparison"
+  },
+  "retention": {
+    "complete_qnn_control_outputs": "raw/controlled-qnn.outputs.pt.zst",
+    "complete_qdq_control_outputs": "raw/paired-qdq.outputs.pt.zst",
+    "complete_own_qnn_outputs": "raw/own-qnn.outputs.pt.zst",
+    "historical_qdq_logits": "raw/historical-qdq-position1.pt.zst",
+    "difference_vectors": "raw/logit-difference-vectors.pt.zst",
+    "raw_recoveries_verified": 6,
+    "original_local_outputs_protected": true,
+    "protected174_reference_policy_unchanged": true
+  },
+  "cleanup": {
+    "worker_pid": 1735700,
+    "worker_reaped": true,
+    "owned_process_group_absent": true,
+    "scratch_regular_files_remaining": 0,
+    "scratch_filesystem": "ext4",
+    "no_follow_on": true,
+    "phone_access_performed": false,
+    "original_inputs_outputs_references_preserved": true
+  },
+  "paired_identical_input_call_completed": true,
+  "individual_operator_root_cause_identified": false,
+  "full_trajectory_fidelity_established": false,
+  "fp32_accuracy_established": false,
+  "autoregressive_generation_performed": false,
+  "physical_execution_performed": false,
+  "campaign_ready": false,
+  "registry_eligible": false,
+  "current_physical_pte_sha256": "23ac8abd7e39b596d62bdc6b098a3e61fe0688bf6d1f4d537959e13492d2c506",
+  "claim_limits": [
+    "One separately authorized QNNposition1 control on the same input pack as the accepted one-call QDQ reference; no follow-on/model rerun/phone.",
+    "Replacing prior own-QNN state with QDQ-derived state improves agreement, but residual current-call discrepancy remains at identical input values.",
+    "L2 norms and scalar cosines are not additive or percentages of attribution; only the preserved difference vectors form the decomposition.",
+    "Residual differences are visible at layer0 saved outputs and compound through later hidden endpoints; these taps do not identify an individual failing operator.",
+    "At layer0 conv-history channel6053, QDQ changes the retained value while QNN near-preserves it. This is not proof of QNN copy corruption, causality for hidden/logit drift, or which is closer to FP32.",
+    "Historical state-byte lineage caveats remain; the new pair itself is bound to identical submitted input values with no mutation."
+  ],
+  "next_gate": "Source-only metadata/encoding audit of layer0 conv-history quantize/dequantize/clamp/cast boundaries and whether22.131550 is a representable-range limit. No whole-model load/execution or new runtime call until reviewed."
+}
