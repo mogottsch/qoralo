@@ -327,7 +327,7 @@ The pinned tokenizer decodes:
 
 > The user wants me to a self-contained technical recommendation for an engineering team based on
 
-This is intelligible but grammatically flawed and truncated at the total cap. It matches the CPU comparator for five tokens, then diverges at index 5; equality was not a pass condition.
+This is intelligible but grammatically flawed and truncated at the total cap. It matches the CPU comparator for five tokens, then diverges at index 5; equality was not a pass condition. A post-cleanup derived UTF-8 artifact is retained as [`output.txt`](results/qnn-integrated-phone-attempt-3-success/output.txt), 95 bytes / SHA-256 `6ec71895a5ae1981efe2217ad64bb1d05f589121d1a7be3b1e056bcef6ca1f92`. Its standard two-field sanity record marks it sensible only in the narrow nonempty/intelligible sense and separately retains the grammatical/truncation issue.
 
 The cold diagnostic reports backend setup 0.234 seconds; AR171 load 3.739 seconds, in-boundary CPU input preparation 0.137 seconds, graph phase 6.625 seconds, and first emitted token at 10.501 seconds. In-memory bridge took 0.0038 seconds, prefill profile/free 0.454 seconds, AR1 load 2.818 seconds, first resumed token 1.910 seconds, and 15-call decode 21.047 seconds. Final token arrived at 34.834 seconds; total with trailing AR1 profile/free was 35.203 seconds. Tokenization was precomputed and excluded. This is one cold diagnostic, not a statistical or warm-throughput benchmark.
 
