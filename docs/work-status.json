@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-10T18:41:12+00:00",
+  "updated_at": "2026-09-10T18:49:31+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -9,9 +9,9 @@
       "title": "Larger TTS",
       "status": "blocked",
       "owner": "Ben",
-      "now": "3/4 contexts ready. Fix design approved; targeted graph preparation.",
-      "next": "Materialize one derivative. No SDK constructor, inference or phone yet.",
-      "reported_at": "2026-09-10T18:41:12+00:00",
+      "now": "3/4 compiled. One derivative ready; 103 learned initializers unchanged.",
+      "next": "Only two Conv ops + plumbing changed. No constructor or speech yet.",
+      "reported_at": "2026-09-10T18:49:31+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 600,
       "links": [
@@ -24,11 +24,11 @@
     {
       "id": "tts-review",
       "title": "Independent review",
-      "status": "waiting",
+      "status": "reviewing",
       "owner": "Nik",
-      "now": "Nik’s two-op design review is final and accepted.",
-      "next": "Review the implementation/derivative; no runtime approval yet.",
-      "reported_at": "2026-09-10T18:41:12+00:00",
+      "now": "Nik reviews the actual derivative and next request; structure checks passed.",
+      "next": "Host constructor is conditional on approval, not running; no fidelity proof.",
+      "reported_at": "2026-09-10T18:49:31+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -151,11 +151,11 @@
     {
       "id": "host",
       "title": "On this computer",
-      "status": "preparing",
+      "status": "reviewing",
       "owner": "Ben / Nik",
-      "now": "preparing model change; not running it",
-      "next": "Helper/tests and one derivative authorized. SDK constructor, Run and phone are not authorized.",
-      "reported_at": "2026-09-10T18:41:12+00:00",
+      "now": "artifact review; no execution",
+      "next": "One host constructor is conditional on Nik’s artifact/request approval. No execution yet.",
+      "reported_at": "2026-09-10T18:49:31+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -183,15 +183,15 @@
     },
     {
       "name": "Ben",
-      "task": "Implement / prepare derivative",
-      "reported_at": "2026-09-10T18:41:12+00:00",
+      "task": "Derivative ready; wait review",
+      "reported_at": "2026-09-10T18:49:31+00:00",
       "reported_by": "Pi latest snapshot; Kate capture",
       "stale_after_seconds": 900
     },
     {
       "name": "Nik",
-      "task": "Design passed; review build next",
-      "reported_at": "2026-09-10T18:41:12+00:00",
+      "task": "Review artifact / next request",
+      "reported_at": "2026-09-10T18:49:31+00:00",
       "reported_by": "Pi latest snapshot; Kate capture",
       "stale_after_seconds": 900
     },
