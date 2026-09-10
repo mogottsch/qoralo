@@ -1,7 +1,7 @@
 ---
 experiment: 0032-qwen-3.5-2b-android-qnn-htp
 status: active
-summary: A metadata/scalar audit reproduces the QDQ history endpoint through input clipping and requantization. The optimized QNN path and cause of hidden/logit drift remain unproven; the paired-control and physical results are unchanged.
+summary: The first weight-free host-QNN full-chain case completed with a selected-value mismatch; all other values agree with its oracle within one FP32 ULP. The whole output is not output-only behavior, and the internal QNN path remains unproven.
 benchmark: android-llm
 ---
 
@@ -243,11 +243,46 @@ Input 27, `states_24`, passes through input Q/DQ25/148, concat Q/DQ67/220, then 
 
 The complete scalar result, **22.131549835205078**, exactly reproduces the saved QDQ endpoint. It is input-range saturation followed by two requantizations. **The final output encoding ceiling is 23.721895, not 22.131550.**
 
-The retained compiler log explicitly constructs an input Quantize node from `states_24`; frontend omission must not be assumed. Final optimized tensor encodings/path were not retained in a readable form. Applying only the final encoding is within one FP32 ULP of QNN's observed value, but remains an **output-only hypothesis**, not the actual backend path, a QNN defect, a cause of hidden/logit drift, or FP32-accuracy proof. The separate [tiny weight-free probe proposal](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/conv-history-encoding-audit-20260910/SYNTHETIC_PROBE_PROPOSAL.md) has not been compiled or run.
+The retained compiler log explicitly constructs an input Quantize node from `states_24`; frontend omission must not be assumed. Final optimized tensor encodings/path were not retained in a readable form. Applying only the final encoding is within one FP32 ULP of QNN's observed value, but remains an **output-only hypothesis**, not the actual backend path, a QNN defect, a cause of hidden/logit drift, or FP32-accuracy proof. The separate [tiny weight-free probe proposal](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/conv-history-encoding-audit-20260910/SYNTHETIC_PROBE_PROPOSAL.md) was unexecuted at this audit milestone. Its later preparation and separately released first case follow below.
+
+### Tiny synthetic QNN probe — first full-chain case
+
+The probe tests the audited history/concat/slice boundaries without loading the 24-layer model. Its synthetic inputs and three fixed encoding domains are controls for one numerical question, not a model-fidelity or Android benchmark.
+
+**CPU references (`5584283`).** The [weight-free harness preparation](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/conv-history-probe-readiness-20260910/result.json) uses history `[1,6144,1,4]` and projection `[1,6144,1,1]`, concatenates them and retains the last four slots. Full-chain has **four Q/DQ pairs across three domains**: history, projection, concat and output; projection shares the output domain. Output-only has one pair, while aligned has four pairs all using the output domain. All **73,728 values across three CPU output tensors** bit-match independent standard-library scalar oracles. Their selected values are 22.131549835205078 for full-chain and 23.721895217895508 for output-only/aligned. Complete inputs, outputs and oracle tensors are retained. An initial venv-launch failure occurred before tests/reference forwards and remains separate from numerical results. No QNN import, compilation or execution occurred at that milestone.
+
+**Adapter readiness (`d687756`).** The [native adapter preparation](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/conv-history-native-adapter-readiness-20260910/result.json) checked binding/API imports and hook installation/restoration with manager construction denied. Actual tiny CPU exports/JSON roundtrips preserve 4/1/4 Q/DQ pairs, one Slice each and 13/7/13 graph nodes. An initial `OpOverload.name` serialization failure is retained; the fix affects only new hooks, not the accepted CPU helpers/evidence. No native manager/tensor wrapper, backend/context, Compile or Run was exercised by this readiness step. Datatype codes such as UFIXED16=1046 and FLOAT32=562 are not encoding-kind or bitwidth metadata.
+
+**One released full-chain case (`b95faa9`).** The [first native result](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/conv-history-native-fullchain-20260910/result.json) binds request `f9ef7075…548e` and performs exactly one high-level compile and one runtime load/forward on **QNN-x86 HTP simulation targeting SM8550/v73**, not a phone:
+
+| Phase | Guard wall time | Bound |
+|---|---:|---:|
+| One compile | 10.611 s | 120 s |
+| Runtime load + one forward | 4.205 s | 60 s |
+| Complete case | 14.819 s | 240 s active |
+
+These times include imports, metadata capture and evidence handling, not isolated inference performance. Early delegation has one subgraph with Concat/Slice delegated and only noncompute `getitem` plumbing outside. The final emitted plan has one QnnBackend delegate call and **zero KernelCalls**. This establishes no ExecuTorch tensor-compute fallback for this tiny route, not absence of CPU work inside the host simulator. The runtime graph completed with status `0x0`.
+
+**Complete collection, not numerical equivalence.** All **24,576 FP32 output values** are finite; the 98,304-byte output has SHA-256 `06465f73…9845`. Selected `[0,6053,0,2]` is **23.72189712524414**. Saved-only analysis reconstructs the full scalar oracle and compares every value against the already retained CPU controls; it does not execute output-only/aligned on QNN.
+
+| Saved CPU/oracle reference | Selected expected value | Selected absolute difference | Maximum difference elsewhere |
+|---|---:|---:|---:|
+| Full-chain | 22.131549835205078 | 1.5903472900 | 5.96046448e-8, at most 1 ULP |
+| Output-only / aligned | 23.721895217895508 | 1.90734863e-6, 1 ULP | 0.000817656517 |
+
+Every one of the **24,575 nonselected values** is within one FP32 ULP of full-chain. In contrast, all **6,144 slot-0 values** differ from output-only/aligned: QNN 0.4995890856 versus full-chain 0.4995890558 and output-only/aligned 0.5004067421. Thus the selected near-match does **not** establish global output-only behavior or globally bypassed quantizers. In this fixture, the substantial full-chain discrepancy is confined to the selected out-of-range history value; no numerical acceptance tolerance, SDK defect, full-model/logit cause or FP32-accuracy verdict follows.
+
+**Observed metadata stops at the Compile boundary.** All 64 taps are retained: **50 graph snapshots**, **12 per-consumer configuration taps**, actual native-wrapper encodings and manager IO. Four boundary declarations and all three exact scale/QNN-offset domains survive through pre-Compile capture. Five operator wrappers supply eleven tensor-getter rows; **both input Quantize wrappers are present**. Folding/reinserting Q/DQ changes representation, but no semantic scale/offset change is observed at these captured boundaries, so frontend omission is unsupported.
+
+Native fixed-point datatype is observed, but full encoding-kind/bitwidth fields and the SDK's finalized internal/fused graph remain unknown. Post-Compile manager IO arrays were empty; this is a nullable metadata limitation, not missing logical IO or proof of internal encodings. These captures do not reveal the actual optimized path responsible for the output.
+
+**Retention and stop boundary.** Inputs/output, all CPU/oracle references, all 64 taps and full logs are in Git. The [native-artifact manifest](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/conv-history-native-fullchain-20260910/local-native-artifacts.json) binds a **230,736-byte context** (`33ba1075…2cf1f`) and **232,144-byte PTE** (`0170b6a2…d69c3`), both **LOCAL-ONLY: do not clean; copy their bytes on migration**. They reside under `experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/conv-history-native-executions/fullchain-attempt-01/compile/data/`. Earlier tiny CPU export PT2s are also local-only, inventoried in the [readiness export manifest](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/conv-history-native-adapter-readiness-20260910/local-export-manifest.json). None replaces the protected full-174 reference archive.
+
+The controller and both phase groups were reaped/absent, disk scratch was empty, and the first-case release was consumed. No other native case, retry, full-model or physical run followed. The [history-range sweep](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/conv-history-native-fullchain-20260910/SWEEP_PROPOSAL.md) is source-only: no new sweep input pack or native execution is established here. Follow-up `9954879` makes saved-analyzer tests bytecode-safe without a probe rerun; it does not extend numerical evidence.
 
 ## Results
 
-**The experiment is active after a paired identical-input position-1 host control and its metadata-only follow-up.** Logit agreement improves over the own-state trajectory, but residual current-call discrepancy and prior-state effects both remain. The original position-1 drop and position-2/3 argmax mismatches are not erased. No QNN operator defect or cause of hidden/logit drift, missing historical state-byte identity, FP32 accuracy, full-174 QNN fidelity, new physical result, or campaign readiness is established.
+**The experiment is active after one weight-free host-QNN full-chain case.** Call/collection completed, but numerical equivalence is false: one selected history value differs substantially from full-chain, while every other value is within one FP32 ULP. The array does not follow the output-only/aligned controls globally. Earlier paired-call differences and position-2/3 argmax mismatches remain unchanged. No QNN operator defect or cause of hidden/logit drift, missing historical state-byte identity, FP32 accuracy, full-174 QNN fidelity, new physical result, or campaign readiness is established.
 
 | Evidence boundary | Current result |
 |---|---|
@@ -323,7 +358,17 @@ The retained compiler log explicitly constructs an input Quantize node from `sta
 | Controlled-chain retention | Complete input pack and paired output/difference vectors in Git; six paired-package recoveries; protected full-174 archive unchanged |
 | Metadata/scalar audit | `74d5323`: input code 67539 clips to 65535, then concat/output requantization exactly reproduces QDQ 22.131549835205078; final ceiling 23.721895 |
 | QNN path limitation | Compiler log constructs input Quantize; optimized encodings/path unobserved; output-only near-QNN calculation is a hypothesis, not backend-defect or drift-causality proof |
-| Next investigation | Tiny weight-free probe proposed only; no probe compile or runtime result |
+| Tiny CPU references | `5584283`: three variants, 4/1/4 Q/DQ pairs; all 73,728 CPU values bit-match full scalar oracles; no QNN at this milestone |
+| Adapter readiness | `d687756`: imports/hooks and tiny CPU exports only; initial serialization failure retained; no backend init/Compile/Run at this milestone |
+| First synthetic QNN case | `b95faa9`: one full-chain compile 10.611 s + one load/forward 4.205 s; total 14.819 s; host simulation only |
+| Tiny delegation/execution | One subgraph; early tensor fallback absent; final one QnnBackend call / zero KernelCalls; runtime status `0x0`, not CPU-free host simulation |
+| Output classification | 24,576 finite FP32 values; collection complete, numerical equivalence false |
+| Selected mismatch | QNN 23.7218971252 vs full-chain 22.1315498352; absolute difference 1.5903472900 |
+| Whole-array constraint | All 24,575 other values within 1 ULP of full-chain; all 6,144 slot-0 values differ from output-only/aligned by 0.000817656517 |
+| Actual metadata capture | 50 graph snapshots + 12 config taps + native wrappers/manager IO; four boundaries/three domains preserved before Compile; both input Quantize wrappers present |
+| Unknown native details | Full encoding-kind/bitwidth and finalized internal graph; empty manager IO arrays remain a null limitation, not missing logical IO |
+| Tiny artifact retention | Raw IO/taps/references/logs in Git; context 230,736 B and PTE 232,144 B LOCAL-ONLY, mandatory migration bytes |
+| Next investigation | Source-only history-range sweep proposal; no sweep pack or swept native cases, output-only/aligned still CPU references only |
 | Remaining candidate evidence | No QNN root cause for hidden/logit drift, full-174 QNN fidelity, FP32/physical equivalence, autoregressive text, or campaign |
 | Android LLM registry row | None; bounded host control/analysis evidence is not registry-eligible |
 
