@@ -35,20 +35,22 @@ The four serial workers completed in **9.446s total**, versus600s allowed; maxim
 
 `tools/compile_duration_context.py` prepares the **same accepted ORT EP-context constructor route**: ORT1.27.1, QAIRT2.49.0.260730, SoC43, burst, offload-IO-quantization0, CPU fallback disabled, external context generation. It never calls `Session.Run`. Actual session I/O/provider membership, a non-embedded single-EPContext descriptor and its external binary are mandatory gates. CPU may appear in the registered-provider list; that is not CPU execution evidence. Constructor success is not neural/physical execution proof.
 
-The request [`protocol/next-constructor-request.json`](protocol/next-constructor-request.json) is **NOT APPROVED**. Request SHA:
+The request [`protocol/next-constructor-request-disk-scratch.json`](protocol/next-constructor-request-disk-scratch.json) is **NOT APPROVED**. Request SHA:
 
 ```text
-588f3a714c971c568cd5312fbfde4899325ab01f8e36aa835e7346a93821eb38
+aeee2b8a2e4c1306de6cf3ed84b9364e954347ea077588808630bb0cc842fa19
 ```
+
+This environment-only revision adds `QAIRT_TMP_DIR`, `TMP` and `TEMP`, each equal to the existing owned disk-backed `TMPDIR`. All other request fields and worker/launcher hashes are unchanged. Original request `588f3a71…1eb38` and its NOT_APPROVED release remain intact.
 
 Reviewable plan, **no Docker/native call**:
 
 ```sh
 P=experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity
-python "$P/tools/run_duration_constructor.py" --request "$P/protocol/next-constructor-request.json"
+python "$P/tools/run_duration_constructor.py" --request "$P/protocol/next-constructor-request-disk-scratch.json"
 ```
 
-A future release must bind the exact request, worker and fresh output path. The launcher pins the existing Docker image by ID, uses read-only repository/SDK mounts plus one owned writable phase,4CPUs/thread limits,8GiB memory/no extra swap, no network,520s worker +20s grace, and bounded owned-container cleanup within the proposed600s envelope. No pull/build or automatic retry. App builds retain priority. Exact argv is retained in [`results/constructor-readiness-20260910/plan.json`](results/constructor-readiness-20260910/plan.json).
+A future release must bind the exact request, worker and fresh output path. The launcher pins the existing Docker image by ID, uses read-only repository/SDK mounts plus one owned writable phase,4CPUs/thread limits,8GiB memory/no extra swap, no network,520s worker +20s grace, and bounded owned-container cleanup within the proposed600s envelope. No pull/build or automatic retry. App builds retain priority. Exact revised argv is retained in [`results/constructor-scratch-request-20260910/plan.json`](results/constructor-scratch-request-20260910/plan.json). Cleanup checks a unique container name and its ownership label before removal by name; this check/remove boundary is **not atomic** and retains a name-reuse race. Removal by inspected immutable container ID remains future hardening, not part of this environment-only revision.
 
 Only source preparation and fake-runtime tests have exercised this worker. **30 focused tests passed**:23 graph/constant/structural cases and7 constructor/transport mock cases. No mock result is native evidence. The earlier duration-only *source-derivative* request files are historical NOT_APPROVED templates superseded by the four-graph materialization release; do not execute them.
 
