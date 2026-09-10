@@ -72,15 +72,16 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="status-header" data-status-header="true">
 <div class="kicker"><span>Experiment 0034</span><span class="status">Active</span></div>
 <h1>Experiment 0034 — LFM2.5-2.6B Android QNN/HTP</h1>
-<p class="summary">A one-process AR171→AR1 runner is host/Android-built with incremental output preservation, finite-scan logic, and explicit timing boundaries; no integrated inference has run, and severe drift remains.</p>
+<p class="summary">Correction: earlier qnn-net-run AR171 and phase-switch calls used zero positions, invalidating their canonical-position claims and affecting derived bridge/max16 results. The native-INT64 integrated runner remains unexecuted.</p>
 <div class="header-links"><a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-09-10</span><span>evidence commit: 8ef097a5c0fd0c28923c430a1138597c7b9bf6f3</span><span>page source: docs/experiments/0034-lfm2.5-2.6b-android-qnn-htp/page.md</span><span>page source sha256: 0e0b24baad238f4413a5dbcf775e0cec0e1a63d12f1cf50f9db85ff04c32d588</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-09-10</span><span>evidence commit: 9a2faeb694afefd201990d703cfbc7626b686802</span><span>page source: docs/experiments/0034-lfm2.5-2.6b-android-qnn-htp/page.md</span><span>page source sha256: 7cfc97d866ceefabb058f631c86cfa7778fbce9f0ba37d8a8a6d77d8cef86ab9</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
 <p>LFM2.5-2.6B has complete Android CPU and OpenCL benchmark routes, but its original QNN assessment found no high-level tool path for the model&#x27;s <code>lfm2</code> architecture. This experiment now tests an architecture-aware route: export the exact model to Q4 ONNX, split its stateful computation into memory-bounded parts, compile every claimed neural part for the Galaxy S23 Ultra&#x27;s SM8550/HTP v73 target with CPU provider fallback disabled, and then prove that the complete route can execute physically on the phone.</p>
+<p><strong>Published interpretation corrected:</strong> the qnn-net-run AR171 and one-token phase-switch tests did execute on HTP, but their position files were misread and converted to zeros. They did not establish the intended positions <code>0…170</code> or <code>171</code>. Host bridges and resumed max-16 decode inherit that wrong-position prefill state; correct decoder positions and matching argmax do not repair it. Their retained arrays and timings describe the actual wrong-position runs, not canonical prefill or comparable precision/speed. The earlier all-AR1 direct-runner baseline and accepted CPU/GPU routes are not implicated.</p>
 <p>LFM2 is not a renamed Llama-like transformer. Its 30 layers combine 22 recurrent short-convolution layers with 8 full-attention layers, so the route must preserve both convolution state and attention KV state, bind their reset behavior, and prove that claimed model computation runs through QNN HTP. The intentionally CPU-side tokenizer, selected-row Q4 embedding lookup, request orchestration, and one global greedy argmax remain explicit; they are not hidden provider fallback.</p>
-<p>The route binds <code>LiquidAI/LFM2.5-2.6B</code> revision <code>ab006873…</code>, the architecture-aware <code>Liquid4All/onnx-export</code> exporter at <code>9a23ddd…</code>, symmetric block-32 INT4 weights, and 263 contexts prepared for SoC model 43 / SM8550 / HTP v73. The failed phone route used ONNX Runtime QNN EP 2.5.0; the active continuation now bypasses its EPContext claim layer and calls the public QNN context/graph APIs directly. Moritz reviewed and authorized the named Qualcomm package license and this bounded direct-loader continuation. Packages, source weights, large ONNX data, compiled contexts, and phone stages stay outside Git. The owning <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-aot/result.json">QNN AOT result</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/htp-pipeline-host-equivalence/result.json">host pipeline comparison</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/phone-attempt-2-npu-context-claim-failure/result.json">NPU-selection retry</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/direct-qnn-host-preparation/result.json">direct-QNN host preparation</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/direct-qnn-phone-attempt-1-linker-failure/result.json">first direct phone attempt</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/direct-qnn-phone-attempt-2-context-limit/result.json">corrected direct phone attempt</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-consolidated-host-preparation/result.json">37-context host preparation</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/consolidated-qnn-phone-attempt-1-residency-limit/result.json">fused-route physical attempt</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-whole-route-shared-host-preparation/result.json">single-context host preparation</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/whole-route-shared-qnn-phone-attempt-1-load-failure/result.json">single-context physical attempt</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qairt-24940-matched-android-preparation/result.json">matched QAIRT 2.49.40 Android preparation</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qairt-24940-matched-phone-attempt-1-context-create-failure/result.json">matched-runtime physical attempt</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-ordinary-monolithic-host-preparation/result.json">ordinary monolithic host preparation</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-ordinary-monolithic-phone-viability-position0/result.json">ordinary monolithic physical viability</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-ordinary-monolithic-host-two-step-state-check/result.json">host two-step state check</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-ordinary-monolithic-phone-two-step-state-check/result.json">physical two-step state check</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-ordinary-monolithic-canonical-short-gate-plan/result.json">canonical-short gate plan</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-ordinary-monolithic-phone-canonical-short-max16/result.json">canonical-short bounded output</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-ordinary-monolithic-ar1-profile/result.json">AR1 bottleneck inventory</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-prefill-ar32-ar128-host-probes/result.json">AR32/AR128 chunked-prefill probes</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-prefill-ar57-ar171-host-probes/result.json">AR57/AR171 exact-tiling probes</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-prefill-ar171-phone-runtime-diagnostic/result.json">physical AR171 diagnostic</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-prefill-ar171-to-ar1-host-bridge/result.json">AR171-to-AR1 bridge validation</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-prefill-ar171-ar1-phase-switch-readiness/result.json">phase-switch readiness</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-prefill-ar171-ar1-phone-phase-switch-diagnostic/result.json">physical phase-switch diagnostic</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-prefill-ar171-ar1-max16-readiness/result.json">max-16 resume readiness</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-prefill-ar171-ar1-phone-max16-resume/result.json">physical max-16 resume</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-prefill-ar171-ar1-integrated-readiness/result.json">integrated runner readiness</a> are the evidence authority.</p>
+<p>The route binds <code>LiquidAI/LFM2.5-2.6B</code> revision <code>ab006873…</code>, the architecture-aware <code>Liquid4All/onnx-export</code> exporter at <code>9a23ddd…</code>, symmetric block-32 INT4 weights, and 263 contexts prepared for SoC model 43 / SM8550 / HTP v73. The failed phone route used ONNX Runtime QNN EP 2.5.0; the active continuation now bypasses its EPContext claim layer and calls the public QNN context/graph APIs directly. Moritz reviewed and authorized the named Qualcomm package license and this bounded direct-loader continuation. Packages, source weights, large ONNX data, compiled contexts, and phone stages stay outside Git. The owning <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/README.md">experiment README</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/protocol/experiment-contract.json">experiment contract</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-aot/result.json">QNN AOT result</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/htp-pipeline-host-equivalence/result.json">host pipeline comparison</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/phone-attempt-2-npu-context-claim-failure/result.json">NPU-selection retry</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/direct-qnn-host-preparation/result.json">direct-QNN host preparation</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/direct-qnn-phone-attempt-1-linker-failure/result.json">first direct phone attempt</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/direct-qnn-phone-attempt-2-context-limit/result.json">corrected direct phone attempt</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-consolidated-host-preparation/result.json">37-context host preparation</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/consolidated-qnn-phone-attempt-1-residency-limit/result.json">fused-route physical attempt</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-whole-route-shared-host-preparation/result.json">single-context host preparation</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/whole-route-shared-qnn-phone-attempt-1-load-failure/result.json">single-context physical attempt</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qairt-24940-matched-android-preparation/result.json">matched QAIRT 2.49.40 Android preparation</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qairt-24940-matched-phone-attempt-1-context-create-failure/result.json">matched-runtime physical attempt</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-ordinary-monolithic-host-preparation/result.json">ordinary monolithic host preparation</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-ordinary-monolithic-phone-viability-position0/result.json">ordinary monolithic physical viability</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-ordinary-monolithic-host-two-step-state-check/result.json">host two-step state check</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-ordinary-monolithic-phone-two-step-state-check/result.json">physical two-step state check</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-ordinary-monolithic-canonical-short-gate-plan/result.json">canonical-short gate plan</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-ordinary-monolithic-phone-canonical-short-max16/result.json">canonical-short bounded output</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-ordinary-monolithic-ar1-profile/result.json">AR1 bottleneck inventory</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-prefill-ar32-ar128-host-probes/result.json">AR32/AR128 chunked-prefill probes</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-prefill-ar57-ar171-host-probes/result.json">AR57/AR171 exact-tiling probes</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-prefill-ar171-phone-runtime-diagnostic/result.json">physical AR171 diagnostic</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-prefill-ar171-to-ar1-host-bridge/result.json">AR171-to-AR1 bridge validation</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-prefill-ar171-ar1-phase-switch-readiness/result.json">phase-switch readiness</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-prefill-ar171-ar1-phone-phase-switch-diagnostic/result.json">physical phase-switch diagnostic</a>, <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-prefill-ar171-ar1-max16-readiness/result.json">max-16 resume readiness</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-prefill-ar171-ar1-phone-max16-resume/result.json">physical max-16 resume</a>, and <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-prefill-ar171-ar1-integrated-readiness/result.json">integrated runner readiness</a>, and the superseding <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-net-run-position-ingestion-audit/result.json">position-ingestion audit</a> are the evidence authority.</p>
 </section>
 <section class="primary-section" id="progress" data-primary-section="progress">
 <h2>Progress<a class="anchor" href="#progress" aria-label="Link to Progress">#</a></h2>
@@ -160,26 +161,26 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <p>Neither width exactly tiles the 171-token canonical short prompt, so exact-tiling host probes tested AR57 and AR171. AR57 carries all 38 states across three chunks and preserves sequential-AR1 endpoint decisions <code>[8771, 437, 597]</code> at positions <code>[57, 114, 171]</code>; AR171 preserves final argmax 597 in one chunk. Material drift remains: AR57 state/logit maximum deltas reach 0.665/0.724, while AR171 reaches 0.514/0.771. This is not exact equivalence.</p>
 <p>Both exact-tiling variants compile fallback-disabled as one ordinary QNN graph with 1,542/1,542 supported nodes, 2,699 QNN operations, and zero unsupported nodes. AR57&#x27;s context is 1,600,858,704 bytes; AR171&#x27;s is 1,602,378,320 bytes at SHA-256 <code>d5ca624c…ba5a</code>. Compiler estimates favor one AR171 call over three AR57 calls for aggregate read/write traffic, but those estimates are not physical counters.</p>
 <p>A bounded AR171 x86 HTP probe loaded the context and retrieved its graph, then exceeded 1,800 seconds during execution with no output; the process was absent afterward. That establishes an impractical host emulator path, not a target-SM8550 failure.</p>
-<p>The subsequent physical diagnostic staged 48 exact payloads and 41 precomputed raw inputs totaling 133,358,252 bytes. On verified SM-S918B/SM8550, QAIRT <code>v2.49.40.260810104044</code> created the ordinary context, retrieved one graph, and completed one direct-QNN HTP execution across all 171 prompt tokens. All 60 raw outputs—38 state tensors and 22 logit chunks—were finite. Physical endpoint argmax 597 matches sequential AR1 and chunk CPU references; numeric state/logit equivalence is not claimed.</p>
-<p>Detailed profile observations are NetRun initialization 1.724910 seconds, NetRun execution 6.308347 seconds, QNN execution 6.308240 seconds, RPC execution 6.294107 seconds, and accelerator execution 5.234013 seconds (5.231422 excluding wait), with 3,260,126,464 cycles and four HVX threads. CPU embedding dequantization and raw-input preparation were precomputed and excluded. These numbers are not end-to-end TTFT, apples-to-apples AR1 comparison, statistical performance, or a campaign.</p>
+<p>The subsequent qnn-net-run physical diagnostic staged 48 hash-bound payloads and 41 precomputed raw inputs totaling 133,358,252 bytes. On verified SM-S918B/SM8550, QAIRT <code>v2.49.40.260810104044</code> created the ordinary context, retrieved one graph, and completed one HTP execution over 171 sequence rows. <strong>The position-ingestion audit supersedes the original exact-prefill interpretation: all 171 rotary positions were zero, not <code>0…170</code>.</strong> All 60 raw outputs—38 state tensors and 22 logit chunks—were finite, and the last-row argmax was 597. Its agreement with CPU references occurred despite different effective positions and cannot establish canonical input, correct state semantics, or fidelity.</p>
+<p>Detailed profile observations are NetRun initialization 1.724910 seconds, NetRun execution 6.308347 seconds, QNN execution 6.308240 seconds, RPC execution 6.294107 seconds, and accelerator execution 5.234013 seconds (5.231422 excluding wait), with 3,260,126,464 cycles and four HVX threads. CPU embedding dequantization and raw-input preparation were precomputed and excluded. These numbers describe the actual all-zero-position execution only. They are not valid canonical-prefill performance or a speed comparison with correctly positioned AR1, and remain neither end-to-end TTFT nor a statistical campaign.</p>
 <p>Peak sampled process PSS was 1,572,936 KiB and VmHWM 1,576,200 KiB; HTP-private and total system residency remain unavailable. AP temperature rose 37.8→47.3°C and skin 35.4→36.4°C. Raw provider/profile, hashes, inputs, all outputs, validation, memory, thermal, identity, and cleanup evidence are retained; scoped process/root cleanup passed and <code>phone.lock</code> was released.</p>
-<p>A host bridge then consumed those retained physical outputs rather than regenerated substitutes. Each physical 171-position K/V slice is copied into positions <code>0:171</code> of the AR1 cache, remaining positions are zeroed, all 22 convolution states are carried, token 597 is CPU-embedded at position 171, and the mask exposes prior positions plus the current slot. The resulting next argmax is 4695 for physical-AR171→AR1, CPU-AR171→AR1, and sequential-AR1→AR1; it also matches the second token from the earlier physical AR1 continuation.</p>
-<p>That greedy agreement is not numerical fidelity. Before the continuation, physical AR171 versus CPU AR171 has only 3/38 state tensors allclose at <code>rtol=0.02, atol=0.02</code>, with maximum absolute delta 10,586.69. After one AR1 step, physical-versus-CPU state and logit maximum deltas remain 3.61 and 7.07. Every retained physical file is finite FP32, metadata-size-valid, and layout-validated, so the drift is real evidence rather than hidden corruption or a parsing shortcut.</p>
+<p>A host bridge then consumed those retained physical outputs rather than regenerated substitutes. It places the 171 sequence-row K/V outputs into AR1 cache slots <code>0:171</code>, zeros the remainder, carries all 22 convolution states, and runs CPU AR1 with token 597 at position 171 and the intended mask. The copies are reproducible, but the source state was computed with zero prefill positions. Next argmax 4695 agrees across this affected-state bridge, CPU-AR171→AR1, and sequential-AR1→AR1; it also matches the second token of the earlier direct-AR1 continuation. <strong>This no longer supports a valid canonical prefill-to-decode bridge.</strong></p>
+<p>The observed arrays and differences remain retained: physical AR171 versus CPU AR171 had only 3/38 state tensors allclose at <code>rtol=0.02, atol=0.02</code>, with maximum absolute delta 10,586.69; after one CPU AR1 step, state/logit maxima were 3.61/7.07. Physical output files are finite FP32 with valid metadata sizes/layouts, but their inputs were not equivalent. These differences cannot be attributed to quantization, HTP arithmetic, or precision alone; output integrity did not validate position-file ingestion.</p>
 <p>Concurrent AR171+AR1 residency was not attempted. Metadata totals 3,202,476,296 bytes of context binaries, roughly 3.19 GB duplicated constants, 276 MB I/O tensors, and 568 MB spill/fill buffers. Metadata alone does not prove failure, but earlier residency failures make simultaneous loading high risk.</p>
-<p>The selected candidate therefore uses one explicit phase transition: load AR171 once for prefill, preserve its 38 outputs, free AR171, convert/place the cache contract on CPU, then load AR1 once for decode. Expanded analysis localizes the largest <code>present.2.key</code> outliers to attention layer 2, head 5, token position 76: 58 of 87,552 values have physical magnitude above 100, with physical range −5,024 to 10,592 versus CPU −9.69 to 10.25. Existing physical AR1 evidence retained tokens and logs but not raw state tensors, so physical-to-physical state comparison is unavailable.</p>
+<p>The candidate design therefore used one explicit phase transition: AR171 load, retained state, AR171 free, CPU cache placement, then AR1 load. Expanded analysis located the largest <code>present.2.key</code> outliers at attention layer 2, head 5, sequence row 76—not proven rotary position 76. In the affected output, 58 of 87,552 values have magnitude above 100, with physical range −5,024 to 10,592 versus CPU −9.69 to 10.25. Those observations compare mismatched effective inputs, not isolated precision behavior. Existing direct-AR1 baseline evidence retained tokens and logs but not raw states, so a matched physical-to-physical state comparison is unavailable.</p>
 <p>A host-validated bridge utility copies all 22 convolution states byte-for-byte, expands eight K/V prefix pairs from 171 to 4,095 positions with zero padding, embeds token 597, writes position 171, and constructs the exact mask. The prepared 51-file stage totals 3,362,360,562 bytes and binds both ordinary contexts, QAIRT runtime, qnn-net-run, bridge utility, and inputs.</p>
-<p>The authorized physical diagnostic passed all 51 local/remote hashes. Phase 1 loaded AR171, executed the exact 171-token prefill, preserved all 60 raw outputs, then exited and freed the context with argmax 597. The CPU bridge ran in 0.341241 seconds and produced 41 hashed AR1 inputs. Phase 2 separately loaded AR1 and executed token 597 at position 171; all 60 raw outputs were finite and metadata-size-valid, and argmax 4695 matched bridge references.</p>
-<p>Separate profiles report AR171 NetRun initialization 2.029445 seconds, QNN execution 5.915128 seconds, and accelerator execution 4.967332 seconds. AR1 initialization was 0.489237 seconds, QNN execution 1.816835 seconds, and accelerator execution 1.048229 seconds. Host-observed walls were 13.562105 seconds for prefill, 0.341241 for the CPU bridge, and 6.092594 for AR1. The 21.308720-second combined interval includes raw-output pulling and input hashing but excludes initial CPU embedding preparation and stage push/hash checks.</p>
+<p>The authorized physical phase-switch diagnostic passed all 51 local/remote hashes. Phase 1 loaded AR171, executed with all-zero rotary positions, preserved all 60 raw outputs, and exited/freed the context with argmax 597. The CPU bridge ran in 0.341241 seconds and produced 41 hashed AR1 input files, including an INT32 file nominally encoding 171. In phase 2, qnn-net-run also misread that position file: AR1 executed token 597 at <strong>effective position zero, not 171</strong>. Its 60 outputs were finite and metadata-size-valid with argmax 4695. Matching the reference token does not validate either phase&#x27;s intended position/state semantics.</p>
+<p>Separate profiles report AR171 NetRun initialization 2.029445 seconds, QNN execution 5.915128 seconds, and accelerator execution 4.967332 seconds. AR1 initialization was 0.489237 seconds, QNN execution 1.816835 seconds, and accelerator execution 1.048229 seconds. Host-observed walls were 13.562105 seconds for prefill, 0.341241 for the CPU bridge, and 6.092594 for AR1. The 21.308720-second combined interval includes raw-output pulling and input hashing but excludes initial CPU embedding preparation and stage push/hash checks. These timings remain factual for this wrong-position run; they do not support canonical phase-switch timing, speed, or equivalent-work comparisons.</p>
 <p>Peak sampled VmHWM was 1,577,640 KiB for prefill and 1,575,268 KiB for AR1, both process-only. Raw outputs, profiles, timings, bridge hashes, memory, thermal, provider, and cleanup are retained; the prefill process exited before AR1 loading, scoped root/process were absent, and <code>phone.lock</code> was released.</p>
-<p>This proves one physical phase transition and one continuation token, not simultaneous residency or per-token streaming. Severe state/logit drift remains.</p>
-<p>Host readiness extended CPU decode from the retained physical AR171 state for 16 AR1 steps. The first four continuation tokens <code>[4695, 10966, 622, 310]</code> match CPU-AR171 and sequential-AR1, then diverge at decode index 4 / position 175: physical state selects 5272 while both references select 1561. Index 5 briefly realigns at 267; later steps mostly diverge, with retained per-step logit maximum deltas reaching 36.50. Both physical-state and reference continuations remain coherent, but they are not equal.</p>
+<p>This records a physical load/free/CPU-conversion/load lifecycle and its actual output, not a correctly positioned prefill-to-decode transition. It remains neither simultaneous residency nor per-token streaming, and its semantic success interpretation is withdrawn.</p>
+<p>Host readiness extended CPU decode from the retained wrong-position AR171 state for 16 AR1 steps. The first four continuation tokens <code>[4695, 10966, 622, 310]</code> match CPU-AR171 and sequential-AR1, then diverge at decode index 4 / position 175: physical state selects 5272 while both references select 1561. Index 5 briefly realigns at 267; later steps mostly diverge, with retained per-step logit maximum deltas reaching 36.50. Both affected-state and reference continuations remain coherent, but their initial states arose from different effective positions. Their agreement/divergence is not a controlled numerical-fidelity comparison.</p>
 <p>The custom runner loads all 38 bridged state files, validates position 171 and the exact mask, loads one AR1 context once, then updates state in process. A max-1 x86 HTP probe returned 4695 but took 751 seconds, so max-16 emulation was skipped as impractical. The host-verified 53-file Android stage totals 1,932,854,438 bytes.</p>
-<p>The authorized physical resume passed all 53 local/remote hashes. One AR1 context and graph loaded once from the physical AR171 state; 16 HTP calls completed in process with zero reload. The raw 64-byte token file exactly matches the CPU physical-state sequence:</p>
+<p>The authorized physical resume passed all 53 local/remote hashes. Its direct-QNN decoder correctly supplied native INT64 position 171 and subsequent positions; unlike qnn-net-run, that decoder did not use the faulty file-conversion path. However, its initial 38 states came from the affected all-zero-position AR171 run. Sixteen HTP calls completed with one AR1 context and zero reload, and the raw 64-byte token file matches CPU continuation from the same affected state—not a canonical-reference trajectory:</p>
 <p><code>[4695, 10966, 622, 310, 5272, 267, 2014, 116311, 9516, 28817, 374, 278, 2909, 19260, 1703, 2165]</code></p>
-<p>With prefill endpoint 597, the bound partial decode is:</p>
+<p>With the affected prefill&#x27;s last-row argmax 597, the retained partial decode is:</p>
 <blockquote>The user wants me to write a self-contained technical recommendation for the team comparing three local</blockquote>
 <p>Setup was 3.80356 seconds, the first resumed token took 1.11786 seconds, max-16 took 17.4183 seconds, and the 15 post-first calls averaged 1.086696 seconds. This phase-local timing includes CPU row embedding/global argmax and HTP calls, but excludes AR171 prefill and the CPU bridge; it is one diagnostic, not canonical end-to-end or statistical performance. Peak sampled process VmHWM was 1,611,744 KiB.</p>
-<p>Critical evidence gaps remain: the runner kept state and logits only in process, retained no detailed per-call QNN profile, and did not explicitly finite-scan or serialize each output tensor. It did validate initial state/mask and every QNN input type/size, complete 16 stateful calls, and emit the expected token sequence. Cleanup passed. Severe original drift remains, and this is neither numerical equivalence, a complete answer, canonical end-to-end TTFT, a campaign, nor registry evidence.</p>
+<p>Critical evidence gaps remain: the resume runner kept state and logits only in process, retained no detailed per-call QNN profile, and did not explicitly finite-scan or serialize each output tensor. Initial state/mask and input type/size checks did not establish correct provenance of the inherited prefill positions. Its calls, partial text, phase-local timings, and cleanup are retained as affected-state diagnostics only. Correct decoder positions do not repair wrong-position prefill, and no canonical state continuity, numerical equivalence, comparable speed, complete answer, or campaign claim follows.</p>
 <h3 id="integrated-runner-readiness-2026-09-10">Integrated runner readiness — 2026-09-10<a class="anchor" href="#integrated-runner-readiness-2026-09-10" aria-label="Link to Integrated runner readiness — 2026-09-10">#</a></h3>
 <p>The reviewed host-only chain <code>6b37e37</code> → <code>45dbd3e</code> → <code>c90d052</code> → <code>8ef097a</code> prepares one logical request in a single process. It addresses input preparation and evidence handling in the proposed runner; it does not fill gaps in the earlier physical max-16 result retrospectively.</p>
 <p>The designed sequence creates one backend/device, loads AR171, prepares all 171 CPU embedding rows inside the request timing boundary, constructs positions/mask/zero state, and runs prefill. It finite-scans all 60 outputs before copying the 38 state tensors and reducing endpoint argmax. Prefill profiling is extracted, AR171 is freed, profiling is reset, the 38 states are bridged in memory on CPU, and AR1 is loaded once for in-process continuation. Every AR1 call has the same all-60-output finite-scan logic and a separate phase-labelled profile path. These are implemented/static-checked capabilities, not observed integrated inference.</p>
@@ -192,15 +193,20 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 </ul>
 <p><code>8ef097a</code> tests the same production emitter, bridge, position/mask, and timing helpers used by the runner, without loading QNN. Synthetic fixtures verify total-output-cap accounting including the endpoint, early EOS, exclusive-file overwrite rejection, already-flushed partials after an injected late failure, and logged optional-profile failure. They also check copied K/V prefix values and zero padding, INT64 position byte counts, and first/final emission intervals using a synthetic clock timeline. These are control-flow and data-placement regressions, not integrated execution, measured profiling, or new state/logit finiteness evidence.</p>
 <p>Token IDs remain precomputed: tokenization is excluded from every timing boundary even though CPU embedding preparation is now included in the designed request interval. No integrated timing or canonical TTFT has been measured.</p>
-<p>The direct-QNN position ABI is bound independently: AR171 <code>position_ids</code> is INT64 <code>[1,171]</code> / 1,368 bytes; AR1 is INT64 <code>[1,1]</code> / 8 bytes. Earlier qnn-net-run diagnostics supplied INT32 position files through that tool&#x27;s file-population/conversion path. That historical file convention must not be reused as the direct-QNN buffer ABI.</p>
+<p>The unexecuted integrated runner&#x27;s direct-QNN position ABI uses correct native INT64 buffers: AR171 <code>[1,171]</code> / 1,368 bytes and AR1 <code>[1,1]</code> / 8 bytes. This does not validate earlier qnn-net-run INT32 files: the audit proves the recorded invocations parsed them as default FLOAT32, then cast their tiny reinterpreted values to INT64 zero. The prior description of that ingestion as merely a separate valid ABI boundary is superseded.</p>
 <p>Host and API-31 Android binaries were freshly rebuilt after the <code>8ef097a</code> source/header changes, not reused from the earlier readiness revision. The committed provenance binds runner source SHA-256 <code>2c446bcd…3a2e</code>, support header <code>48eb643e…9aa3</code>, host binary <code>ed122a00…e261</code>, and Android binary <code>94e76c33…fdb1</code>. The rebuilt private stage contains 12 payload files totaling 3,400,505,468 bytes, with metadata SHA-256 <code>dbb9d687…a60f</code>, manifest <code>8fa2c53c…9616</code>, and passing hashes/ELF checks. These identities supersede the earlier readiness builds; both model contexts remain unchanged.</p>
 <p>No integrated inference was attempted: the known AR171 x86-emulator cost already exceeds the 1,800-second bound. There was no new phone access.</p>
 <p>The design retains one explicit sequential phase switch and at most one resident context, not per-token streaming or a combined/shared-constant context. Both ordinary contexts report zero shared weights and would duplicate roughly 3.19 GB of constants if combined; the previously rejected shared-resource format has not become viable. CPU preparation/bridge/sampling and HTP neural phases remain explicit, never HTP-only.</p>
-<p>Severe retained-state drift and token-5 reference divergence are unchanged. Finite-scan logic, builds, and synthetic evidence tests cannot establish numerical fidelity or integrated operability, and they do not repair the previous physical run&#x27;s missing serialized state/logits, finite scan, or detailed per-call profile. No new output-quality, performance-distribution, campaign, or registry claim exists.</p>
+<p>The retained array deltas and token-5 divergence are unchanged, but their interpretation is corrected: they compare different effective prefill inputs and do not isolate HTP/quantization error. Integrated finite-scan logic, builds, and synthetic tests cannot repair the historical input error or supply the prior run&#x27;s missing state/logit/profile evidence. No integrated inference, profiling, finiteness, quality, performance-distribution, campaign, or registry claim exists.</p>
+<h3 id="position-ingestion-correction-2026-09-10">Position-ingestion correction — 2026-09-10<a class="anchor" href="#position-ingestion-correction-2026-09-10" aria-label="Link to Position-ingestion correction — 2026-09-10">#</a></h3>
+<p>The initial audit <code>f38c5f3</code>, qualified by final reviewed correction <code>9a2faeb</code>, supersedes the earlier canonical-position interpretations without changing the original result files or raw evidence. Vendor documentation specifies default FLOAT input, and the recorded commands omit both <code>--use_native_input_files</code> and <code>--native_input_tensor_names</code>. A retained runtime log shows the exact qnn-net-run binary rejecting a 1,368-byte native INT64 position file and requiring 684 bytes instead. The hash-bound AR171 file ultimately supplied 684 bytes of INT32 values <code>0…170</code>; the phase-switch AR1 file supplied four bytes of INT32 value 171.</p>
+<p>The vendor-default mode, recorded commands, runtime width rejection, raw-byte reproduction, and supporting packaged SampleApp casting code form a high-confidence evidence chain: FLOAT32 parsing reinterprets those integer bit patterns as zero or subnormal floats (up to about <code>2.396e-43</code>), then casting to INT64 yields only zero. The distributed stripped binary is <strong>not cryptographically proven identical to the SampleApp source</strong>; that source is corroborating implementation evidence, not a bit-for-bit build attestation. Matching payload hashes, output sizes, and argmax did not establish correct effective inputs.</p>
+<p>For future qnn-net-run use, default FLOAT mode requires FLOAT32 files containing the numeric position values, or its documented native-file options (<code>--use_native_input_files</code> / targeted <code>--native_input_tensor_names</code>) require native INT64 position files of 1,368/8 bytes. Exact option syntax and effective values need validation before reuse. SampleApp&#x27;s <code>--input_data_type</code> spelling is not a verified option for the distributed tool. This is a proposed input correction, not a rerun or a phone authorization; the unexecuted integrated direct-QNN runner already uses descriptor-correct native INT64 buffers.</p>
+<p>Affected records are the physical AR171 diagnostic, both qnn-net-run phases of the one-token phase-switch run, and all host bridge/max16 work derived from their prefill state. Their provider execution, output bytes, finite checks where actually performed, timings, process-memory observations, and cleanup remain factual only for their actual wrong-position inputs. Intended positioning, canonical prefill/state continuity, comparable precision, and speed interpretations are withdrawn. The direct resumed decoder&#x27;s positions were correct but its starting state was affected. The earlier all-AR1 direct-runner baseline, CPU-only semantic comparisons, and accepted CPU/GPU routes are not implicated by this ingestion error.</p>
 </section>
 <section class="primary-section" id="results" data-primary-section="results">
 <h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
-<p><strong>The experiment is active with integrated-runner build/static readiness, not integrated execution.</strong> The one-process AR171→CPU bridge→AR1 path now defines total-max16 output preservation, finite scans, optional profiling, and precise emitted-token timing. Severe drift and the earlier physical evidence gaps remain; no integrated inference, canonical TTFT, or campaign has been demonstrated.</p>
+<p><strong>Correction supersedes the affected physical interpretation.</strong> The qnn-net-run AR171 call used all-zero positions, and the one-token phase-switch AR1 call used zero rather than 171. Derived bridges and max16 resume inherited wrong-position prefill state. Their recorded outputs/timings remain actual diagnostics, not canonical-prefill, matched-fidelity, or comparable-speed evidence. The correct native-INT64 integrated runner remains build/static readiness only and has not executed.</p>
 <div class="table-wrap"><table><thead><tr>
 <th>Evidence boundary</th>
 <th>Current result</th>
@@ -566,44 +572,44 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>AR171 load/retrieve passed, execution timed out at 1,800 s with no output; not SM8550 failure</td>
 </tr>
 <tr>
-<td>Physical AR171 route</td>
-<td>48 hashes passed; one 171-token HTP graph call; 41 inputs/133,358,252 B; 60 outputs finite</td>
+<td>Physical AR171 — corrected scope</td>
+<td>48 hashes passed; one HTP call over 171 rows, but all rotary positions were zero; 60 outputs finite</td>
 </tr>
 <tr>
-<td>Physical endpoint</td>
-<td>Argmax 597 matches sequential AR1 and chunk CPU; no numeric-equivalence claim</td>
+<td>Last-row output, not position proof</td>
+<td>Argmax 597 coincides with CPU references despite different inputs; canonical-position claim withdrawn</td>
 </tr>
 <tr>
-<td>Physical profile</td>
-<td>NetRun 6.308347 s; QNN 6.308240 s; accelerator 5.234013 s; CPU input prep excluded</td>
+<td>Wrong-position profile only</td>
+<td>NetRun 6.308347 s; QNN 6.308240 s; accelerator 5.234013 s; not valid canonical-prefill or comparable-speed evidence</td>
 </tr>
 <tr>
 <td>AR171 memory/thermal</td>
 <td>PSS 1,572,936 KiB / VmHWM 1,576,200 KiB process-only; AP 37.8→47.3°C, skin 35.4→36.4°C</td>
 </tr>
 <tr>
-<td>Diagnostic boundary</td>
-<td>No end-to-end TTFT, decode, generated text, statistical campaign, or registry claim</td>
+<td>Superseding interpretation</td>
+<td>Reviewed <code>9a2faeb</code>: INT32 files under default FLOAT mode became INT64 zero; affected canonical-position/fidelity/speed claims retracted</td>
 </tr>
 <tr>
-<td>Bridge construction</td>
-<td>Retained physical K/V → AR1 cache <code>0:171</code>; 22 conv states carried; token597/position171/mask bound</td>
+<td>Host bridge construction</td>
+<td>Affected zero-position prefill state copied into cache <code>0:171</code>; CPU AR1 uses intended position171, but inherited state is not canonical</td>
 </tr>
 <tr>
-<td>Bridge greedy result</td>
-<td>Next argmax4695 matches physical-state bridge, CPU-AR171 bridge, sequential AR1, and prior physical AR1 token2</td>
+<td>Bridge greedy observation</td>
+<td>Next argmax4695 agrees despite affected source state; not proof of correct prefill-to-decode semantics</td>
 </tr>
 <tr>
-<td>Severe pre-state drift</td>
-<td>Physical vs CPU AR171 only 3/38 allclose; max absolute delta 10,586.69</td>
+<td>Mismatched-input pre-state difference</td>
+<td>Only 3/38 allclose; max absolute delta 10,586.69; not isolatable to quantization or HTP</td>
 </tr>
 <tr>
-<td>Post-step drift</td>
-<td>Physical-state vs CPU-state AR1 continuation max state/logit delta 3.61/7.07</td>
+<td>Mismatched-input post-step difference</td>
+<td>State/logit max delta 3.61/7.07 retained; different prefill inputs prevent controlled fidelity attribution</td>
 </tr>
 <tr>
-<td>Output integrity</td>
-<td>Physical tensors are finite FP32 with metadata-valid sizes/layout; drift remains disclosed</td>
+<td>Output integrity limit</td>
+<td>Finite FP32 and valid output sizes/layout do not validate input-position ingestion</td>
 </tr>
 <tr>
 <td>Concurrent residency</td>
@@ -614,8 +620,8 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>AR171 load/prefill/free → CPU cache conversion → AR1 load/decode; one switch, no per-token streaming</td>
 </tr>
 <tr>
-<td>Outlier localization</td>
-<td><code>present.2.key</code>, layer2/head5/token76; 58/87,552 values abs&gt;100; physical range −5,024…10,592</td>
+<td>Affected-output outliers</td>
+<td><code>present.2.key</code>, layer2/head5/sequence-row76 (not rotary position76); 58/87,552 abs&gt;100, range −5,024…10,592</td>
 </tr>
 <tr>
 <td>Physical AR1 comparison gap</td>
@@ -626,56 +632,56 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>51 files / 3,362,360,562 B; both contexts/runtime/bridge/inputs hash-bound</td>
 </tr>
 <tr>
-<td>Physical phase order</td>
-<td>AR171 load/call/raw preserve/free → CPU bridge 0.341241 s → separate AR1 load/token597-pos171 call</td>
+<td>Physical phase order — corrected</td>
+<td>AR171 all-zero-position call/free → CPU bridge 0.341241 s → qnn-net-run AR1 token597 at effective position0, not171</td>
 </tr>
 <tr>
-<td>Physical greedy result</td>
-<td>Prefill argmax597 → continuation4695; both match references; both raw60 finite/size-valid</td>
+<td>Actual wrong-position outputs</td>
+<td>Argmax597→4695 and both raw60 finite/size-valid; agreement does not rescue semantic validity</td>
 </tr>
 <tr>
-<td>AR171 profile</td>
+<td>Wrong-position AR171 profile</td>
 <td>Init2.029445 s; QNN5.915128 s; accelerator4.967332 s; host wall13.562105 s</td>
 </tr>
 <tr>
-<td>AR1 profile</td>
+<td>Wrong-position AR1 profile</td>
 <td>Init0.489237 s; QNN1.816835 s; accelerator1.048229 s; host wall6.092594 s</td>
 </tr>
 <tr>
 <td>Combined timing boundary</td>
-<td>21.308720 s includes evidence pull/hash, excludes initial embeddings and stage push/hash; not production TTFT</td>
+<td>21.308720 s for affected inputs; includes pull/hash, excludes initial embeddings/staging; not canonical timing or a speed comparison</td>
 </tr>
 <tr>
 <td>Phase memory</td>
 <td>VmHWM1,577,640/1,575,268 KiB process-only; HTP-private unavailable</td>
 </tr>
 <tr>
-<td>Phase-switch claim</td>
-<td>One explicit physical phase transition and first continuation argmax agreement</td>
+<td>Phase-switch claim withdrawn</td>
+<td>Physical lifecycle/output retained, but neither qnn-net-run phase used intended positions; not a valid canonical bridge</td>
 </tr>
 <tr>
-<td>Host max-16 divergence</td>
-<td>First 4 tokens match refs; token5 5272 vs1561; later mostly diverge; logit max delta up to36.50</td>
+<td>Host max-16 observation</td>
+<td>Affected prefill state: first4 tokens agree, token5 5272 vs1561, logit delta up to36.50; not controlled precision evidence</td>
 </tr>
 <tr>
-<td>Resume runner</td>
-<td>Loads38 states + one AR1 context once; in-process state updates; no reload</td>
+<td>Direct resume distinction</td>
+<td>Correct native INT64 decoder positions from171 onward; initial38 states still inherit wrong-position prefill</td>
 </tr>
 <tr>
 <td>Emulator boundary</td>
-<td>Max1 returns4695 in751s; max16 skipped as impractical</td>
+<td>Affected-state max1 returns4695 in751s; max16 skipped as impractical</td>
 </tr>
 <tr>
 <td>Resume stage</td>
-<td>53 files / 1,932,854,438 B; hashes/ELF verified</td>
+<td>53 files / 1,932,854,438 B; hashes/ELF verified, not prefill semantic correctness</td>
 </tr>
 <tr>
-<td>Physical max-16 result</td>
-<td>16 HTP calls, exact CPU physical-state sequence, coherent partial text; raw64B retained</td>
+<td>Affected physical max-16 result</td>
+<td>16 direct HTP calls/no reload, exact CPU continuation from same affected state, coherent partial text; raw64B retained</td>
 </tr>
 <tr>
-<td>Resume timing</td>
-<td>Setup3.80356s; first1.11786s; max16 17.4183s; post-first mean1.086696s; excludes prefill/bridge</td>
+<td>Affected-state resume timing</td>
+<td>Setup3.80356s; first1.11786s; max16 17.4183s; mean1.086696s; actual phase-local observations, not comparable canonical speed</td>
 </tr>
 <tr>
 <td>Resume memory</td>
@@ -683,11 +689,11 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 </tr>
 <tr>
 <td>Critical evidence gap</td>
-<td>No serialized per-call states/logits, explicit finite scan, or detailed QNN profile</td>
+<td>No serialized per-call states/logits, explicit finite scan, or detailed QNN profile; inherited prefill input invalid</td>
 </tr>
 <tr>
 <td>Resume claim limit</td>
-<td>Operability only; no equivalence, complete answer, canonical E2E, statistical campaign, or registry</td>
+<td>Canonical state continuity/fidelity/speed interpretations withdrawn; correct decoder positions do not repair initial state</td>
 </tr>
 <tr>
 <td>Integrated readiness chain</td>
@@ -727,7 +733,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 </tr>
 <tr>
 <td>Direct-QNN ABI</td>
-<td>INT64 positions: AR171 1,368 B / AR1 8 B; prior qnn-net-run INT32 file ingestion is a separate boundary</td>
+<td>Integrated design uses native INT64: AR171 1,368 B / AR1 8 B; prior qnn-net-run INT32 ingestion was erroneous, not validated</td>
 </tr>
 <tr>
 <td>Integrated build/stage</td>
@@ -758,11 +764,23 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>Not run; no setup, TTFT, prefill, decode, memory, thermal, or power result</td>
 </tr>
 <tr>
+<td>Audit confidence/linkage</td>
+<td>Vendor FLOAT default + actual commands/raw bytes + retained 1,368→684-byte rejection + SampleApp cast behavior; high confidence, no cryptographic binary/source attestation</td>
+</tr>
+<tr>
+<td>Native-file correction boundary</td>
+<td>Actual tool documents <code>--use_native_input_files</code> / <code>--native_input_tensor_names</code>; not SampleApp-only <code>--input_data_type</code>; no corrected rerun</td>
+</tr>
+<tr>
+<td>Audit scope</td>
+<td>Original arrays/results/logs unchanged; earlier all-AR1 direct baseline and accepted CPU/GPU routes not implicated</td>
+</tr>
+<tr>
 <td>Android LLM registry row</td>
-<td>None; host AOT and wiring evidence are not registry-eligible</td>
+<td>None; correction adds no campaign evidence and the seven-row registry is unchanged</td>
 </tr>
 </tbody></table></div>
-<p>The ordinary AR1 route remains the end-to-end bounded baseline. Earlier separate-process phase-switch and max-16 resume tests establish only their recorded physical operability and coherent partial output, with divergent state and missing per-call evidence retained. The new integrated runner has build/static and synthetic evidence-handling validation only; none of its proposed measurements may be attributed to those earlier runs.</p>
+<p>The earlier all-AR1 direct-runner baseline is not implicated and remains its own bounded evidence. The qnn-net-run AR171, phase-switch, and derived bridge/max16 records must instead be read with the zero-position correction: their raw arrays and timings survive, but intended canonical-position, fidelity, and speed conclusions do not. The new integrated direct-QNN runner supplies correct INT64 buffers by design and remains unexecuted; it cannot retrospectively validate the earlier runs.</p>
 <p>No 0034 row belongs in the Android LLM registry. A fully disclosed selected route must complete a valid reset-isolated campaign before registry publication. Integrated inference, canonical end-to-end timing, numerical fidelity, detailed physical multi-token evidence, and statistical performance remain unproven.</p>
 </section></article>
 <footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
