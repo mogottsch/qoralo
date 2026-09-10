@@ -8,11 +8,15 @@ The accepted route remains the baseline. Any new conversion, host diagnostic, hy
 
 ## Current host status — 2026-09-10
 
-**Stopped for app priority; waiting for Pi release.** The first three retained launches diagnosed two missing loader-path prerequisites and an unexecuted patch assumption (AR1 has six explicit selected cache encodings; AR128 has only three input entries). Existing host libraries were reused without installation or SDK changes.
+**Attempt 05: AR1 DLC/interface gate passed; AR128 blocked by tmpfs exhaustion. No restart authorized.** The first three retained launches diagnosed two missing loader-path prerequisites and an unexecuted patch assumption (AR1 has six explicit selected cache encodings; AR128 has only three input entries). Existing host libraries were reused without installation or SDK changes.
 
-Attempt 04 prepared both FP16 global-value-cache ONNX variants. Independent checks prove exactly the selected encoding removals, unchanged other encodings and weight initializers, and FP16 ONNX I/O only for `{4,9,14}`. AR1 conversion reached QAIRT optimization/quantization, then Pi requested termination to release resources for app validation. STOP → TERM reaped the owned group; no automatic restart occurred. This is **an app-priority interruption, not a model or numerical failure**.
+Attempt 04 prepared both FP16 global-value-cache ONNX variants and passed independent scope checks. Pi then requested STOP → TERM to release app resources before a DLC was produced. It remains **an app-priority interruption, not a model or numerical failure** at [`results/global-value-fp16-attempt-04/`](results/global-value-fp16-attempt-04/result.json).
 
-No DLC was produced. AR128 conversion, compilation, actual QNN cache signatures, conversion-count comparison, full delegation, zero unsupported/fallback, and bounded fidelity remain **unmeasured**, not passed. See [`results/global-value-fp16-attempt-04/result.json`](results/global-value-fp16-attempt-04/result.json); attempts 01–03 remain beside it. Completed campaign and registry evidence are unchanged.
+After a separate release, attempt 05 used the unchanged recipe. AR1 converted to a 2,356,848,948-byte DLC (`4e67d80e…a6cc`). Official DLC CSV inspection proves Float_16 on all three selected global value-cache **inputs and outputs**, unchanged dimensions, and unchanged signatures on every other public interface. Operator count is 6,875; Convert count remains 31→31, so the hoped-for conversion-count reduction is not demonstrated. Converter float-precision fallback warnings rise from 75 to 81 (three global concatenations plus three output Casts); these are not evidence of CPU provider fallback or of full HTP delegation.
+
+Sequential AR128 conversion failed with **Errno 28** while dumping external data to the 16 GiB `/tmp` tmpfs. The owned partial scratch file was hashed and that directory alone removed. A first read-only inspector timed out after 90 seconds with empty logs; a separately retained guarded inspection completed. No conversion retry occurred. See [`results/global-value-fp16-attempt-05/result.json`](results/global-value-fp16-attempt-05/result.json), including losslessly compressed candidate/baseline CSVs.
+
+No AR128 DLC or matched two-graph cache contract exists. Compilation, full HTP delegation, runtime unsupported/fallback counts, fidelity and speed improvements remain **unmeasured**. [Disk-backed scratch readiness](DISK-SCRATCH-READINESS.md) proposes a host-environment-only fix for a new explicitly approved attempt. Completed campaign and registry evidence are unchanged.
 
 The separately documented [request-level routing recommendation](REQUEST-ROUTING.md) remains an unmeasured integration policy, not a new campaign.
 

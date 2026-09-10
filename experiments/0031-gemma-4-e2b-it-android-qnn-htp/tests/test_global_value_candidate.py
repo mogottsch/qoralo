@@ -103,6 +103,33 @@ class CandidateGateTest(unittest.TestCase):
             digest, name = line.split('  ', 1)
             self.assertEqual(digest, hashlib.sha256((folder / name).read_bytes()).hexdigest())
 
+    def test_attempt05_ar1_csv_gate_and_ar128_storage_failure_are_separate(self):
+        folder = TRACK / 'results/global-value-fp16-attempt-05'
+        result = json.loads((folder / 'result.json').read_text())
+        self.assertEqual('partial_ar1_fp16_dlc_success_ar128_tmpfs_exhaustion', result['classification'])
+        self.assertTrue(result['outcome']['ar1_conversion_completed'])
+        self.assertTrue(result['outcome']['ar128_conversion_started'])
+        self.assertFalse(result['outcome']['ar128_conversion_completed'])
+        self.assertFalse(result['failure']['numerical_or_model_failure'])
+        observed = inspection.compare(1, folder / 'raw/inspection-02/ar1.csv.gz',
+                                      folder / 'raw/baseline-ar1.csv.gz')
+        self.assertEqual(observed, result['ar1_interface_inspection'])
+        self.assertTrue(observed['datatype_scope_passed'])
+        self.assertEqual(0, observed['convert_count_delta'])
+        self.assertEqual(31, observed['candidate_operator_counts']['Convert'])
+        self.assertEqual(6875, observed['candidate_operator_count'])
+        self.assertEqual(38, len(observed['candidate_io']['input']))
+        self.assertEqual(31, len(observed['candidate_io']['output']))
+        self.assertEqual(81, result['float_precision_fallback_observation']['candidate_count'])
+        self.assertEqual(75, result['float_precision_fallback_observation']['baseline_count'])
+        self.assertIsNone(result['unmeasured']['full_htp_delegation'])
+        self.assertIsNone(result['unmeasured']['host_fidelity'])
+        self.assertTrue(result['scratch_cleanup']['verified_absent'])
+        self.assertFalse(result['publication']['registry_eligible'])
+        for line in (folder / 'SHA256SUMS').read_text().splitlines():
+            digest, name = line.split('  ', 1)
+            self.assertEqual(digest, hashlib.sha256((folder / name).read_bytes()).hexdigest())
+
     def test_new_attempt_cannot_overwrite_previous_artifacts(self):
         source = (TRACK / 'tools/convert_global_value_fp16.py').read_text()
         self.assertIn('refusing to overwrite an earlier attempt', source)

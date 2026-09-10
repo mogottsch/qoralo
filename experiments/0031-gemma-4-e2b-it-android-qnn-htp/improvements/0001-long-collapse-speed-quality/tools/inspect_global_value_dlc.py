@@ -7,6 +7,7 @@ nonzero status. Legacy runtime support letters in CSV are not HTP delegation pro
 import argparse
 from collections import Counter
 import csv
+import gzip
 import hashlib
 import json
 from pathlib import Path
@@ -15,11 +16,25 @@ EXP = Path(__file__).resolve().parents[3]
 BASE = EXP / '.local/qairt-2.49.40-cache-aligned-v6-run'
 
 
+def open_csv(path):
+    return gzip.open(path, 'rt', newline='') if path.suffix == '.gz' else path.open(newline='')
+
+
+def csv_digest(path):
+    # Bind original CSV bytes, independent of lossless evidence compression.
+    opener = gzip.open if path.suffix == '.gz' else open
+    digest = hashlib.sha256()
+    with opener(path, 'rb') as source:
+        for chunk in iter(lambda: source.read(1024 * 1024), b''):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def parse_csv(path):
     ios = {'input': {}, 'output': {}}
     operators = Counter()
     mode = None
-    with path.open(newline='') as stream:
+    with open_csv(path) as stream:
         for row in csv.reader(stream):
             if not row:
                 continue
@@ -36,8 +51,9 @@ def parse_csv(path):
     return {'io': ios, 'operators': dict(sorted(operators.items())), 'operator_count': sum(operators.values())}
 
 
-def compare(ar, path):
-    old = parse_csv(BASE / f'ar{ar}.csv')
+def compare(ar, path, baseline_csv=None):
+    baseline_csv = baseline_csv or BASE / f'ar{ar}.csv'
+    old = parse_csv(baseline_csv)
     new = parse_csv(path)
     selected = {f'past_value_{i}_h0_{suffix}' for i in (4, 9, 14) for suffix in ('in', 'out')}
     issues = []
@@ -55,8 +71,8 @@ def compare(ar, path):
                 changes.append({'name': name, 'role': role, 'before': before[name], 'after': after[name]})
             elif before[name] != after[name]:
                 issues.append(f'unselected interface changed: {name}')
-    return {'ar': ar, 'csv_sha256': hashlib.sha256(path.read_bytes()).hexdigest(),
-            'baseline_csv_sha256': hashlib.sha256((BASE / f'ar{ar}.csv').read_bytes()).hexdigest(),
+    return {'ar': ar, 'csv_sha256': csv_digest(path),
+            'baseline_csv_sha256': csv_digest(baseline_csv),
             'issues': issues, 'datatype_scope_passed': not issues,
             'selected_cache_interfaces': sorted(changes, key=lambda x: x['name']),
             'baseline_operator_counts': old['operators'], 'candidate_operator_counts': new['operators'],
@@ -70,8 +86,9 @@ if __name__ == '__main__':
     p.add_argument('--ar', type=int, choices=(1, 128), required=True)
     p.add_argument('--csv', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
+    p.add_argument('--baseline-csv', type=Path)
     args = p.parse_args()
-    result = compare(args.ar, args.csv)
+    result = compare(args.ar, args.csv, args.baseline_csv)
     args.output.write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps({'ar': args.ar, 'datatype_scope_passed': result['datatype_scope_passed'],
                       'issues': result['issues'], 'convert_count_delta': result['convert_count_delta']}))
