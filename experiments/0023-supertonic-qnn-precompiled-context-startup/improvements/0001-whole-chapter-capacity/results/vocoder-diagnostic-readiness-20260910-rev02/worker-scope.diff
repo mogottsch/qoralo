@@ -1,0 +1,106 @@
+--- compile_component_context.py
++++ diagnose_vocoder_context.py
+@@ -1,5 +1,5 @@
+ #!/usr/bin/env python3
+-"""One released text/vector/vocoder ORT EPContext constructor. No forward API.
++"""One separately released unchanged vocoder diagnostic constructor. No forward API.
+ 
+ Default plan validates metadata only. Execution needs a fresh, exact request/worker-
+ bound release. Tests inject a fake ORT object; real ORT is imported only after gate.
+@@ -7,7 +7,8 @@
+ import argparse
+ import hashlib
+ import json
+-from pathlib import Path
++import os
++from pathlib import Path, PurePosixPath
+ import resource
+ import sys
+ import time
+@@ -29,6 +30,53 @@
+     inputs,outputs=SPECS[component]
+     return hashlib.sha256(json.dumps({'inputs':inputs,'outputs':outputs},sort_keys=True,separators=(',',':')).encode()).hexdigest()
+ PROVIDER={'offload_graph_io_quantization':'0','htp_performance_mode':'burst','soc_model':'43'}
++DIAGNOSTICS={'global_log_severity':0,'global_log_verbosity':1,'session_log_severity':0,'session_log_verbosity':1,
++             'cgroup_scope':'own_process_unified_v2','capture':['before_constructor','after_exception_or_close']}
++
++
++def cgroup_snapshot(proc=Path('/proc')):
++    """Read only this process's cgroup v2 scope; never substitute host/root metrics."""
++    result={'pid':os.getpid(),'time_ns':time.time_ns(),'scope':'own_process_unified_v2',
++            'proc_self_cgroup':None,'mountinfo_line':None,'directory':None,'scope_error':None,
++            'files':{name:{'raw':None,'error':'scope unresolved'} for name in ['memory.current','memory.peak','memory.max','memory.events']}}
++    try:
++        result['proc_self_cgroup']=(proc/'self/cgroup').read_text()
++        groups=[line[3:] for line in result['proc_self_cgroup'].splitlines() if line.startswith('0::')]
++        if len(groups)!=1:raise ValueError('no unique unified cgroup v2 membership')
++        def safe_path(value):
++            parsed=PurePosixPath(value)
++            if not parsed.is_absolute() or '..' in parsed.parts or '\\' in value:
++                raise ValueError('unsafe/escaped cgroup path; no guessed scope')
++            return parsed
++        membership=safe_path(groups[0]);mounts=[]
++        for line in (proc/'self/mountinfo').read_text().splitlines():
++            fields=line.split();separator=fields.index('-')
++            if fields[separator+1]=='cgroup2':mounts.append((line,fields[3],fields[4]))
++        if len(mounts)!=1:raise ValueError('no unique cgroup2 mount')
++        line,root,mount=mounts[0]
++        safe_path(root);safe_path(mount)
++        result['mountinfo_line']=line
++        if membership==PurePosixPath('/'):
++            directory=Path(mount)  # own namespace root, not an assumed host hierarchy root
++        else:
++            directory=Path(mount)/membership.relative_to(PurePosixPath(root))
++        result['directory']=str(directory)
++        for name in result['files']:
++            try:result['files'][name]={'raw':(directory/name).read_text(),'error':None}
++            except (OSError,UnicodeError) as error:result['files'][name]={'raw':None,'error':type(error).__name__+': '+str(error)}
++    except (OSError,ValueError,IndexError,UnicodeError) as error:
++        result['scope_error']=type(error).__name__+': '+str(error)
++    return result
++
++
++def capture_cgroup(output,name):
++    """Optional diagnostics must not replace a primary constructor failure."""
++    captured={'snapshot':None,'capture_error':None,'write_error':None}
++    try:captured['snapshot']=cgroup_snapshot()
++    except Exception as error:captured['capture_error']={'type':type(error).__name__,'message':str(error)}
++    try:write(output/name,captured['snapshot'] if captured['snapshot'] is not None else {'snapshot':None,'capture_error':captured['capture_error']})
++    except Exception as error:captured['write_error']={'type':type(error).__name__,'message':str(error)}
++    return captured
+ 
+ 
+ def sha(path):
+@@ -51,8 +99,8 @@
+ def authorize(request_path,release_path):
+     request=json.loads(request_path.read_text());release=json.loads(release_path.read_text())
+     component=request['component']
+-    if component not in SPECS:raise ValueError('only text/vector/vocoder are eligible; no duration retry')
+-    expected={'approved':True,'permission':f'one_{component}_EPContext_constructor_no_Run',
++    if component!='vocoder' or request.get('diagnostics')!=DIAGNOSTICS:raise ValueError('only unchanged vocoder diagnostic scope is eligible')
++    expected={'approved':True,'permission':'one_vocoder_verbose_cgroup_constructor_no_Run',
+               'request_sha256':sha(request_path),'worker_sha256':sha(__file__),
+               'output_dir':request['output_dir']}
+     if release!=expected or request['worker_sha256']!=sha(__file__):raise ValueError('missing/mismatched constructor-only release')
+@@ -99,8 +147,13 @@
+             'python_InferenceSession_calls':0,'Session_Run_calls':0,'mock':bool(request.get('mock',False))}
+     session=None;start=time.monotonic()
+     try:
++        result['cgroup_before']=capture_cgroup(output,'cgroup-before.json')
+         if ort.__version__!=request['ort_version']:raise ValueError('actual ORT version differs')
++        ort.set_default_logger_severity(0)
++        ort.set_default_logger_verbosity(1)
+         options=ort.SessionOptions()
++        options.log_severity_level=0;options.log_verbosity_level=1
++        result['diagnostics']=DIAGNOSTICS
+         options.intra_op_num_threads=1;options.inter_op_num_threads=1
+         options.execution_mode=ort.ExecutionMode.ORT_SEQUENTIAL
+         options.graph_optimization_level=ort.GraphOptimizationLevel.ORT_ENABLE_ALL
+@@ -126,6 +179,7 @@
+         raise
+     finally:
+         session=None
++        result['cgroup_after']=capture_cgroup(output,'cgroup-after.json')
+         result['elapsed_seconds']=time.monotonic()-start
+         result['process_ru_maxrss_kib']=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+         result['retained_files']=[{'name':p.name,'bytes':p.stat().st_size} for p in sorted(output.iterdir()) if p.is_file()]

@@ -60,6 +60,10 @@ The frozen source/mock-test/request preparation remains in [`results/remaining-c
 
 Vocoder produced **no descriptor, binary or actual-session I/O receipt**; post-constructor pin verification did not run. Error1002 maps to QNN's memory-allocation error class, **not proof of8GiB/cgroup exhaustion or a specific operator/tensor**. Unknown observations stay null. All releases are consumed; the duration and successful text/vector artifacts remain protected. Pi has authorized only saved/source metadata diagnosis next—not a RAM change, constructor retry, shape change, materialization, inference or operator implementation.
 
+## Unchanged-vocoder diagnostic candidate: source-only, not released
+
+[`results/vocoder-diagnostic-readiness-20260910-rev02/`](results/vocoder-diagnostic-readiness-20260910-rev02/) prepares one unchanged-source/shape/8GiB vocoder candidate with real ORT global+session verbose logging and own-cgroup memory snapshots before/after normal exceptions. Optional metric errors cannot mask the constructor failure; missing data remain null.46 mock/synthetic tests pass. Nik is reviewing the minimal delta; only Pi can release a new constructor. No dense-attention cause or tiling proposal is justified by the saved vocoder graph, which contains no MatMul/Softmax. Its largest-tensor arithmetic is a separate metadata-only investigation, not runtime workspace proof.
+
 ## Fidelity and comparison boundaries
 
 - Masked padding is demonstrably non-neutral: experiment0022's T235→T239 changed duration15.8623657→15.6378775s and embedding max difference0.1110139. Positional-prefix preservation does not erase that result.
