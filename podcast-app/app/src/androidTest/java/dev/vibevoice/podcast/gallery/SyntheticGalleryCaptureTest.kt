@@ -37,8 +37,7 @@ class SyntheticGalleryCaptureTest {
         val run = requireNotNull(args.getString("galleryRunId"))
         require(run.matches(Regex("ui-[a-z0-9-]{1,64}")))
         val requested = args.getString("galleryFrame") ?: "all"
-        val frames = if (requested == "all") SyntheticGalleryActivity.FRAMES else listOf(requested)
-        require(frames.all { it in SyntheticGalleryActivity.FRAMES })
+        val frames = GalleryCapturePolicy.selectFrames(requested, SyntheticGalleryActivity.FRAMES)
         val ime = args.getString("galleryIme") == "true"
         require(!ime || frames.size == 1 && frames.single() in setOf("paste", "instructions", "agent", "agent-error"))
         val hold = args.getString("galleryHoldMs")?.toLong() ?: 0L
@@ -50,6 +49,7 @@ class SyntheticGalleryCaptureTest {
         val serviceInfo = requireNotNull(automation.serviceInfo)
         val originalFlags = serviceInfo.flags
         automation.serviceInfo = serviceInfo.apply { flags = flags or AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS }
+        val sourceApkSha256 = sha256(File(context.applicationInfo.sourceDir))
         val results = JSONArray()
         val previousWindowIds = mutableSetOf<Int>()
         var launched = false
@@ -61,9 +61,10 @@ class SyntheticGalleryCaptureTest {
                     .put("expectedPackage", context.packageName).put("ownershipMethod", "gallery decor AccessibilityNodeInfo.windowId → UiAutomation window.id")
                     .put("imeRequested", ime).put("imeClickSucceeded", false).put("acknowledged", false)
                     .put("evidenceType", "synthetic-emulator-ui-no-model-inference")
-                    .put("appApkPath", context.applicationInfo.sourceDir).put("deviceFingerprint", Build.FINGERPRINT)
+                    .put("appApkPath", context.applicationInfo.sourceDir).put("sourceApkSha256", sourceApkSha256).put("deviceFingerprint", Build.FINGERPRINT)
                     .put("screenshotStatus", "not-attempted").put("treeStatus", "not-attempted")
                     .put("previousWindowIds", JSONArray(previousWindowIds.toList())).put("frameContentVerified", false)
+                    .put("supervisorBudgetSeconds", if (frames.size == 1) 100 else frames.size * 40)
                 File(output, "$frame-metadata.json").writeText(metadata.toString(2))
                 val problems = mutableListOf<String>()
                 var selected: GalleryWindowObservation? = null
@@ -139,11 +140,14 @@ class SyntheticGalleryCaptureTest {
                     .put("screenshotWindowVerifiedAtReadiness", selected != null)
                 val issues = GalleryCapturePolicy.retainEvidence(selected != null, problems,
                     screenshot = {
-                        metadata.put("screenshotElapsedRealtimeMs", SystemClock.elapsedRealtime())
+                        metadata.put("initialScreenshotElapsedRealtimeMs", SystemClock.elapsedRealtime())
                         val bitmap = requireNotNull(automation.takeScreenshot()) { "UiAutomation returned no screenshot" }
                         try {
-                            File(output, "$frame.png").outputStream().use { check(bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)) }
-                            metadata.put("screenshotWidth", bitmap.width).put("screenshotHeight", bitmap.height).put("screenshotStatus", "retained")
+                            val initial = File(output, "$frame-initial.png")
+                            check(!initial.exists())
+                            initial.outputStream().use { check(bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)) }
+                            metadata.put("screenshotWidth", bitmap.width).put("screenshotHeight", bitmap.height).put("screenshotStatus", "initial-only")
+                                .put("initialScreenshotFile", initial.name).put("initialScreenshotSha256", sha256(initial))
                         } finally { bitmap.recycle() }
                     },
                     tree = {
@@ -154,7 +158,7 @@ class SyntheticGalleryCaptureTest {
                             .put("problems", JSONArray(errors))
                         if (selected == null) metadata.put("treeStatus", "unavailable")
                         else if (errors.any { it.startsWith("accessibility-tree:") } && metadata.optString("treeStatus") != "partial") metadata.put("treeStatus", "unavailable")
-                        if (errors.any { it.startsWith("screenshot:") }) metadata.put("screenshotStatus", "unavailable")
+                        if (errors.any { it.startsWith("screenshot:") }) metadata.put("initialScreenshotStatus", "unavailable")
                         File(output, "$frame-metadata.json").writeText(metadata.toString(2))
                     })
                 results.put(JSONObject().put("frame", frame).put("token", token).put("status", if (issues.isEmpty()) "complete" else "partial")
@@ -190,6 +194,7 @@ class SyntheticGalleryCaptureTest {
         val distinctTrees = File(output, "$frame-tree-snapshots").also { check(it.mkdirs()) }
         metadata.put("contentChecks", checks)
         while (SystemClock.elapsedRealtime() < deadline) {
+            var activePair: JSONObject? = null
             try {
                 clearAccessibilityCache(automation)
                 val live = root()
@@ -205,15 +210,55 @@ class SyntheticGalleryCaptureTest {
                 checks.put(JSONObject().put("elapsedRealtimeMs", SystemClock.elapsedRealtime()).put("sha256", digest).put("problems", JSONArray(problems)))
                 metadata.put("treeStatus", "partial").put("treeWindowId", live.windowId)
                 if (problems.isEmpty()) {
+                    val pair = JSONObject().put("phase", "content-validated-image-pending").put("treeSha256", digest)
+                        .put("frame", frame).put("token", metadata.getString("token")).put("sourceApkSha256", metadata.getString("sourceApkSha256"))
+                        .put("treeFile", "$frame-accessibility.json")
+                    activePair = pair
+                    val attempts = metadata.optJSONArray("pairAttempts") ?: JSONArray().also { metadata.put("pairAttempts", it) }
+                    attempts.put(pair)
+                    val candidate = File(output, "$frame-pair-attempt-${attempts.length()}.png")
+                    GalleryCapturePolicy.captureValidatedPair(true,
+                        verifyOwner = { phase ->
+                            val ownerRoot = root() // Rechecks exact frame/token/source-process PID + fresh actual window ownership.
+                            check(ownerRoot.windowId == live.windowId) { "Window changed around final screenshot" }
+                            pair.put("${phase}WindowId", ownerRoot.windowId)
+                                .put("${phase}Ownership", metadata.getJSONObject("lastOwnershipSnapshot"))
+                                .put("${phase}ElapsedRealtimeMs", SystemClock.elapsedRealtime())
+                        },
+                        captureImage = {
+                            val bitmap = requireNotNull(automation.takeScreenshot()) { "Final paired screenshot unavailable" }
+                            try {
+                                check(!candidate.exists())
+                                candidate.outputStream().use { check(bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)) }
+                                pair.put("candidateFile", candidate.name).put("candidateSha256", sha256(candidate))
+                            } finally { bitmap.recycle() }
+                        },
+                        publish = {
+                            val final = File(output, "$frame.png")
+                            check(!final.exists())
+                            candidate.copyTo(final)
+                            pair.put("phase", "validated-final-pair").put("finalScreenshotFile", final.name).put("finalScreenshotSha256", sha256(final))
+                            metadata.put("finalPair", pair).put("screenshotStatus", "validated-final-retained")
+                        })
                     metadata.put("frameContentVerified", true).put("treeStatus", "retained")
                     return
                 }
             } catch (error: Exception) {
+                activePair?.put("phase", "pair-failed")?.put("error", error.toString())
                 checks.put(JSONObject().put("elapsedRealtimeMs", SystemClock.elapsedRealtime()).put("error", error.toString()))
             }
             Thread.sleep(minOf(200, (deadline - SystemClock.elapsedRealtime()).coerceAtLeast(0)))
         }
         error("Current-frame merged semantics unavailable within 10 seconds; PNG, distinct trees and failed content checks retained")
+    }
+
+    private fun sha256(file: File): String {
+        val digest = MessageDigest.getInstance("SHA-256")
+        file.inputStream().use { stream ->
+            val buffer = ByteArray(64 * 1024)
+            while (true) { val count = stream.read(buffer); if (count < 0) break; digest.update(buffer, 0, count) }
+        }
+        return digest.digest().joinToString("") { "%02x".format(it) }
     }
 
     private fun semanticValues(node: JSONObject, ancestorEnabled: Boolean = true): List<GallerySemanticValue> = buildList {

@@ -50,6 +50,10 @@ class GalleryScopeTests(unittest.TestCase):
         self.assertIn('automation.clearCache()', source)
         self.assertIn('GalleryFrameContent.problems', source)
         self.assertIn('frameContentVerified', source)
+        self.assertIn('GalleryCapturePolicy.captureValidatedPair', source)
+        self.assertIn('$frame-initial.png', source)
+        self.assertIn('finalScreenshotSha256', source)
+        self.assertIn('treeSha256', source)
         self.assertNotIn('useUnmergedTree', source)
 
 

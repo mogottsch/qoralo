@@ -28,6 +28,23 @@ internal data class GalleryAcknowledgement(
 )
 
 internal object GalleryCapturePolicy {
+    fun selectFrames(requested: String, allowed: List<String>): List<String> {
+        val frames = if (requested == "all") allowed else requested.split(',').map { it.trim() }
+        require(frames.isNotEmpty() && frames.size <= 15 && frames.all { it in allowed && it != "all" } && frames.distinct().size == frames.size) {
+            "Frames must be a nonempty, unique, known selection"
+        }
+        return frames
+    }
+
+    fun captureValidatedPair(contentMatches: Boolean, verifyOwner: (String) -> Unit, captureImage: () -> Unit, publish: () -> Unit): Boolean {
+        if (!contentMatches) return false
+        verifyOwner("before")
+        captureImage()
+        verifyOwner("after")
+        publish()
+        return true
+    }
+
     fun acknowledges(frame: String, token: String, packageName: String, value: GalleryAcknowledgement) =
         value.frame == frame && value.token == token && value.process == "$packageName:ui_gallery" && value.pid > 0 && value.synthetic
 
