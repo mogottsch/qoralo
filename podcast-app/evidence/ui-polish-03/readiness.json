@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "status": "host-validated-awaiting-actual-window-ID-smoke",
+  "sourceCommit": "17a41c5874cb56929d3aee9200e87f44f3bd6f68",
+  "appSrcTree": "eb93a7788bd38d6e2855212a19c84cab21d5e27d",
+  "mainTreeMatchesAcceptedA603f52": true,
+  "polishApk": {
+    "path": "podcast-app/.local/ui-build/polish-03/app.apk",
+    "sha256": "2c188e747d8a13b62e93340aa50bcccbcbf8107e48514ff3b9920a82280ae7b3"
+  },
+  "polishTestApk": {
+    "path": "podcast-app/.local/ui-build/polish-03/test.apk",
+    "sha256": "4e8d52c33a8f794e071ccb5abcc67a55526fe9cc20616eaac8574d37b3b44f60"
+  },
+  "hostChecks": {
+    "jvmPassed": 90,
+    "galleryPolicyTests": 12,
+    "pythonPassed": 15,
+    "lintDebug": "passed",
+    "releaseKotlin": "passed",
+    "apkAssembly": "passed",
+    "actualWindowIdSmoke": "pending Nik"
+  },
+  "acceptedProductionEmulatorEvidence": "before/retained-manifest.json",
+  "productionUiRegressionsAccepted": {
+    "source": "a603f5259292bb8b33afa33253b87a0306861d0f",
+    "androidMethodsAtBothSizes": 22,
+    "owner": "Nik"
+  },
+  "ownershipCorrelation": "actual gallery-decor AccessibilityNodeInfo.windowId matched to UiAutomation window and root IDs; frame/run/process/PID +1500ms freshness +package/visibility/stability; title not authorization",
+  "formWipIsolation": {
+    "sourceProof": "source-isolation.json",
+    "beforeAfterHashProof": "wip-isolation.json",
+    "newHelperDexDescriptorsAbsent": true,
+    "included": false
+  },
+  "priorPolishApksCheckedUnchanged": {
+    "podcast-app/.local/ui-build/polish-01/app.apk": "ebdc55f903b6c0440269354610f1d7631556ad7ea6e671b1873a444cdf9fe5b0",
+    "podcast-app/.local/ui-build/polish-01/test.apk": "4f32a7b423a0cfd402241f9fc98ff857e3dd4cd6ec86407266db5ff717a663e6",
+    "podcast-app/.local/ui-build/polish-02/app.apk": "a732878a5c9f19721651f92a6c9bbdc62678ac57b2af4031f3d81d43e87565b7",
+    "podcast-app/.local/ui-build/polish-02/test.apk": "4a98ea74f831b6f49427ed52a3914052daf4fbc4ea466ad3c6e64ca7b6d682c6"
+  },
+  "emulatorOperator": "Nik",
+  "serial": "emulator-5556",
+  "supervisorLimitsSeconds": {
+    "all": 480,
+    "single": 90
+  },
+  "physicalPhoneUsed": false,
+  "modelsLoaded": false,
+  "nativeSourceChanged": false,
+  "contract": "podcast-app/docs/ui-polish-gallery.md",
+  "scope": "podcast-app/docs/ui-polish-03.md"
+}
