@@ -1,0 +1,68 @@
+{
+  "log": {
+    "path": "raw/guard/stderr.log",
+    "bytes": 4216216,
+    "sha256": "49be68ac1aca5de645e28c86381196ec7519577fb602f816ac2be65a0c951b0b"
+  },
+  "citations": {
+    "composition_branches": [
+      {
+        "line": 30371,
+        "text": "2026-09-10 18:51:40.755770018 [V:onnxruntime:, qnn_model_wrapper.cc:587 ComposeQnnGraph] Qnn_OpConfig node name: /decoder/convnext.1/dwconv/net/Conv/parity_odd_conv_token_17_2 package_name: qti.aisw QNN_op_type: DepthWiseConv2d num_of_inputs: 3 num_of_outputs: 1 num_of_params: 3"
+      },
+      {
+        "line": 30820,
+        "text": "2026-09-10 18:51:40.757176197 [V:onnxruntime:, qnn_model_wrapper.cc:587 ComposeQnnGraph] Qnn_OpConfig node name: /decoder/convnext.1/dwconv/net/Conv/parity_even_conv_token_22_2 package_name: qti.aisw QNN_op_type: DepthWiseConv2d num_of_inputs: 3 num_of_outputs: 1 num_of_params: 3"
+      },
+      {
+        "line": 35712,
+        "text": "2026-09-10 18:51:40.779933958 [V:onnxruntime:, qnn_model_wrapper.cc:587 ComposeQnnGraph] Qnn_OpConfig node name: /decoder/convnext.4/dwconv/net/Conv/parity_odd_conv_token_56_2 package_name: qti.aisw QNN_op_type: DepthWiseConv2d num_of_inputs: 3 num_of_outputs: 1 num_of_params: 3"
+      },
+      {
+        "line": 36161,
+        "text": "2026-09-10 18:51:40.781271273 [V:onnxruntime:, qnn_model_wrapper.cc:587 ComposeQnnGraph] Qnn_OpConfig node name: /decoder/convnext.4/dwconv/net/Conv/parity_even_conv_token_61_2 package_name: qti.aisw QNN_op_type: DepthWiseConv2d num_of_inputs: 3 num_of_outputs: 1 num_of_params: 3"
+      }
+    ],
+    "VTCM_capacity": [
+      {
+        "line": 47054,
+        "text": "2026-09-10 18:51:40.832576683 [V:onnxruntime:Default, qnn_backend_manager.cc:466 QnnLogging] vtcm_wrapper.cc:181:VTCM: total_sz=8388608, sz=8388608, off=0, req=0x55992e8fc618, ctx=0 (0x7f6d3c427000-0x7f6d3cc27000)"
+      }
+    ],
+    "nonfatal_StridedSlice_warnings": [
+      {
+        "line": 47124,
+        "text": "2026-09-10 18:51:40.867699793 [V:onnxruntime:Default, qnn_backend_manager.cc:466 QnnLogging] simple_tiler.cc:602:WARNING:unable to tile 0x137d0000005a q::StridedSlice sufficiently, min size = 75579392  [1,1,6150,256]"
+      },
+      {
+        "line": 47128,
+        "text": "2026-09-10 18:51:40.867733666 [V:onnxruntime:Default, qnn_backend_manager.cc:466 QnnLogging] simple_tiler.cc:602:WARNING:unable to tile 0x137e00000069 q::StridedSlice sufficiently, min size = 75579392  [1,1,6150,256]"
+      },
+      {
+        "line": 47266,
+        "text": "2026-09-10 18:51:40.870559922 [V:onnxruntime:Default, qnn_backend_manager.cc:466 QnnLogging] simple_tiler.cc:602:WARNING:unable to tile 0x137f000000f4 q::StridedSlice sufficiently, min size = 75579392  [1,1,6150,256]"
+      },
+      {
+        "line": 47270,
+        "text": "2026-09-10 18:51:40.870581293 [V:onnxruntime:Default, qnn_backend_manager.cc:466 QnnLogging] simple_tiler.cc:602:WARNING:unable to tile 0x138000000103 q::StridedSlice sufficiently, min size = 75579392  [1,1,6150,256]"
+      }
+    ],
+    "finalization_success": [
+      {
+        "line": 48482,
+        "text": "2026-09-10 18:52:19.446147105 [V:onnxruntime:Default, qnn_backend_manager.cc:466 QnnLogging]  <I> QnnGraph_finalize done. status 0x0"
+      }
+    ],
+    "context_buffer_success": [
+      {
+        "line": 48561,
+        "text": "2026-09-10 18:52:19.460888585 [V:onnxruntime:, qnn_backend_manager.cc:1287 GetContextBinaryBuffer] Get context binary buffer succeed."
+      }
+    ]
+  },
+  "prior_fatal_chain_occurrences": {
+    "not sufficiently tiled to fit in TCM": 0,
+    "Fatal Optimize": 0
+  },
+  "claims": "Finalized/exported with four nonfatal StridedSlice size warnings; not warning-free, not full finalized-op lineage/re-fusion proof, not execution or physical memory/performance."
+}

@@ -1,0 +1,74 @@
+{
+  "status": "PARITY_VOCODER_CONSTRUCTOR_EXPORT_PASS_NO_EXECUTION",
+  "request_sha256": "8557ca10877c15718f75fbb6a60b8bd98ba809aec22cf000823432f06daec001",
+  "release_consumed": true,
+  "source_sha256": "5c13592238dc5af15b29a923213a9c87d780296c3dca9026257de2870dc8ad07",
+  "constructor_calls": 1,
+  "Session_Run_calls": 0,
+  "constructor_seconds": 39.47487257300236,
+  "worker_seconds": 39.928378133998194,
+  "guard_seconds": 41.23818851100077,
+  "outer_launcher_seconds": 41.32847619056702,
+  "process_ru_maxrss_kib": 2006548,
+  "own_container_memory_peak_bytes": 1976119296,
+  "own_container_memory_limit_bytes": 8589934592,
+  "own_container_memory_events_delta": {
+    "low": 0,
+    "high": 0,
+    "max": 0,
+    "oom": 0,
+    "oom_kill": 0,
+    "oom_group_kill": 0
+  },
+  "metric_scope_or_capture_errors": null,
+  "postconstructor_pin_check": "all_pins_unchanged",
+  "actual_IO": {
+    "inputs": [
+      {
+        "name": "latent",
+        "type": "tensor(float)",
+        "shape": [
+          1,
+          144,
+          2048
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "wav_tts",
+        "type": "tensor(float)",
+        "shape": [
+          1,
+          6291456
+        ]
+      }
+    ]
+  },
+  "external_context": {
+    "node_domain": "com.microsoft",
+    "node_op": "EPContext",
+    "embed_mode": 0,
+    "external_binary": "vocoder-context_qnn.bin",
+    "descriptor": {
+      "bytes": 733,
+      "sha256": "67406e4a28119e33907a4c91ab806f9c411a7a413055052562a367e57c8442fc"
+    },
+    "binary": {
+      "bytes": 69664936,
+      "sha256": "13db6690e22bf4bb2075838f9f0876f6b75bbb9f7b7c11b489a3d7de4cb91482"
+    }
+  },
+  "postclose_artifact_hashes_match": true,
+  "compiler_nonfatal_StridedSlice_warning_count": 4,
+  "compiler_nonfatal_StridedSlice_min_size_bytes": 75579392,
+  "larger_component_context_exports_now_available": [
+    "duration",
+    "text",
+    "vector",
+    "vocoder_parity"
+  ],
+  "execution_reload_fidelity_or_whole_chapter_audio_proven": false,
+  "cleanup": "PID1949989 reaped/PID+group absent/container absent/scratch empty",
+  "next_runtime_permission": false
+}

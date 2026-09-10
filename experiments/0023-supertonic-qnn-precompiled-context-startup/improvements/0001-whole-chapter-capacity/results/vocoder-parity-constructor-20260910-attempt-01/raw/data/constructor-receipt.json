@@ -1,0 +1,91 @@
+{
+  "status": "started",
+  "component": "vocoder",
+  "io_sha256": "3e15a281cfdacd59201240f30a082566e0d81b584a64394ec9509d7742a34ed6",
+  "evidence_class": "constructor_only_not_execution_or_model_quality",
+  "python_InferenceSession_calls": 1,
+  "Session_Run_calls": 0,
+  "mock": false,
+  "cgroup_before": {
+    "snapshot": {
+      "pid": 7,
+      "time_ns": 1789066300026388582,
+      "scope": "own_process_unified_v2",
+      "proc_self_cgroup": "1:net_cls:/\n0::/\n",
+      "mountinfo_line": "1100 1099 0:28 / /sys/fs/cgroup ro,nosuid,nodev,noexec,relatime - cgroup2 cgroup rw,nsdelegate,memory_recursiveprot,memory_hugetlb_accounting",
+      "directory": "/sys/fs/cgroup",
+      "scope_error": null,
+      "files": {
+        "memory.current": {
+          "raw": "27934720\n",
+          "error": null
+        },
+        "memory.peak": {
+          "raw": "27934720\n",
+          "error": null
+        },
+        "memory.max": {
+          "raw": "8589934592\n",
+          "error": null
+        },
+        "memory.events": {
+          "raw": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+          "error": null
+        }
+      }
+    },
+    "capture_error": null,
+    "write_error": null
+  },
+  "diagnostics": {
+    "global_log_severity": 0,
+    "global_log_verbosity": 1,
+    "session_log_severity": 0,
+    "session_log_verbosity": 1,
+    "cgroup_scope": "own_process_unified_v2",
+    "capture": [
+      "before_constructor",
+      "after_exception_or_close"
+    ]
+  },
+  "session_config": {
+    "session.disable_cpu_ep_fallback": "1",
+    "ep.context_enable": "1",
+    "ep.context_embed_mode": "0",
+    "ep.context_file_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-vocoder-parity-t2048-l2048-attempt-01/data/vocoder-context.onnx"
+  },
+  "provider_options": {
+    "offload_graph_io_quantization": "0",
+    "htp_performance_mode": "burst",
+    "soc_model": "43",
+    "backend_path": "/home/moritz/opt/qairt/2.49.0.260730/lib/x86_64-linux-clang/libQnnHtp.so"
+  },
+  "intra_op_threads": 1,
+  "inter_op_threads": 1,
+  "constructor_seconds": 39.47487257300236,
+  "actual_inputs": [
+    {
+      "name": "latent",
+      "type": "tensor(float)",
+      "shape": [
+        1,
+        144,
+        2048
+      ]
+    }
+  ],
+  "actual_outputs": [
+    {
+      "name": "wav_tts",
+      "type": "tensor(float)",
+      "shape": [
+        1,
+        6291456
+      ]
+    }
+  ],
+  "session_providers": [
+    "QNNExecutionProvider",
+    "CPUExecutionProvider"
+  ]
+}
