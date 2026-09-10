@@ -1,0 +1,27 @@
+{
+  "status": "PLAN_ONLY_NO_RUNTIME_OR_SUBPROCESS",
+  "request_sha256": "78fc97c0da96b99adcd1e1c37c2b1b6dd65ef7f0ccf4ba46f2f644ac417f9031",
+  "argv": [
+    "nice",
+    "-n",
+    "15",
+    "ionice",
+    "-c",
+    "2",
+    "-n",
+    "7",
+    "prlimit",
+    "--as=4294967296",
+    "--",
+    "taskset",
+    "--cpu-list",
+    "0,1,2,3",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/.local/proof-venv/bin/python",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/tools/compare_duration_padding_cpu.py",
+    "--request",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/protocol/duration-padding-cpu.request.NOT_APPROVED.json",
+    "--release",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/approvals/duration-padding-cpu-pair.json",
+    "--execute"
+  ]
+}
