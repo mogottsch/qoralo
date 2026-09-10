@@ -1,0 +1,30 @@
+[
+  {
+    "condition": "default",
+    "run": "text-readable-nik-default-01",
+    "command": [
+      "/home/moritz/Android/Sdk/platform-tools/adb",
+      "-s",
+      "emulator-5556",
+      "shell",
+      "am instrument -w -r -e class dev.vibevoice.podcast.ui.ScreenSemanticsTest,dev.vibevoice.podcast.ui.TextReadabilityPolicyTest,dev.vibevoice.podcast.ui.TextReadabilityClippingTest -e textLayoutDiagnosticsRunId text-readable-nik-default-01 dev.vibevoice.podcast.internal.test/androidx.test.runner.AndroidJUnitRunner"
+    ],
+    "exit": 0,
+    "elapsedSeconds": 11.6148854009989,
+    "passed": true
+  },
+  {
+    "condition": "narrow",
+    "run": "text-readable-nik-narrow-01",
+    "command": [
+      "/home/moritz/Android/Sdk/platform-tools/adb",
+      "-s",
+      "emulator-5556",
+      "shell",
+      "am instrument -w -r -e class dev.vibevoice.podcast.ui.ScreenSemanticsTest,dev.vibevoice.podcast.ui.TextReadabilityPolicyTest,dev.vibevoice.podcast.ui.TextReadabilityClippingTest -e textLayoutDiagnosticsRunId text-readable-nik-narrow-01 dev.vibevoice.podcast.internal.test/androidx.test.runner.AndroidJUnitRunner"
+    ],
+    "exit": 0,
+    "elapsedSeconds": 11.514374693000718,
+    "passed": true
+  }
+]
