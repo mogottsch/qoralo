@@ -1,6 +1,40 @@
 {
   "claim_boundary": "This audit corrects interpretation of immutable prior physical evidence. It does not erase physical HTP execution, but it invalidates exact position-semantic and fidelity conclusions drawn from those qnn-net-run attempts.",
   "classification": "packaged_source_and_runtime_consistent_qnn_net_run_position_ingestion_error",
+  "current_guarded_scripts": {
+    "ar171": {
+      "invokes_qnn_net_run": true,
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/tools/run_prefill_qnn_phone_diagnostic.sh",
+      "sets_input_data_type": false,
+      "sets_native_input_tensor_names": false,
+      "sha256": "2539f31cdb7295ac3e84ab51aa44c920001884c9ca5dca33c675cda78380b1f3",
+      "uses_native_input_files": false
+    },
+    "phase_switch": {
+      "invokes_qnn_net_run": true,
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/tools/run_prefill_ar1_phase_phone_diagnostic.sh",
+      "sets_input_data_type": false,
+      "sets_native_input_tensor_names": false,
+      "sha256": "33764420599d1950d5f8edd0865d61fa1cdf38ae055207ead62dca7798c0f91a",
+      "uses_native_input_files": false
+    }
+  },
+  "future_preflight": {
+    "accepted_modes": [
+      "default-float32 numeric positions with no native flags",
+      "native-int64 positions with --use_native_input_files or --native_input_tensor_names"
+    ],
+    "integration": [
+      "tools/run_prefill_qnn_phone_diagnostic.sh validates local positions before staging",
+      "tools/run_prefill_ar1_phase_phone_diagnostic.sh validates prefill positions before staging and pulls/validates the generated AR1 position before execution"
+    ],
+    "rejected_cases": [
+      "historical INT32 bit patterns in default FLOAT mode",
+      "INT32-sized file in native INT64 mode",
+      "FLOAT32 file paired with native-input flags"
+    ],
+    "tool": "tools/verify_qnn_position_input.py"
+  },
   "graph_descriptors": {
     "ar171_position": {
       "data_type": "QNN_DATATYPE_INT_64",
@@ -205,24 +239,6 @@
         "sets_input_data_type": false,
         "sets_native_input_tensor_names": false,
         "sha256": "d0aab4762782d0fb9ce8d95e0501ac51fab4d0b11f3a162dffef19dba1979bd8",
-        "uses_native_input_files": false
-      }
-    },
-    "scripts": {
-      "ar171": {
-        "invokes_qnn_net_run": true,
-        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/tools/run_prefill_qnn_phone_diagnostic.sh",
-        "sets_input_data_type": false,
-        "sets_native_input_tensor_names": false,
-        "sha256": "850be47ee938d6df25e141e82d202b0ab1c23864092f722c782196ed57755be0",
-        "uses_native_input_files": false
-      },
-      "phase_switch": {
-        "invokes_qnn_net_run": true,
-        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/tools/run_prefill_ar1_phase_phone_diagnostic.sh",
-        "sets_input_data_type": false,
-        "sets_native_input_tensor_names": false,
-        "sha256": "1cc6f901b2a0cf7d25e9935eef06a3f9187df0c9953e5e1e5cb122bc8f6f84f5",
         "uses_native_input_files": false
       }
     }

@@ -12,7 +12,9 @@ ap=argparse.ArgumentParser();ap.add_argument('--ar171-context',type=Path,require
 if o.exists():shutil.rmtree(o)
 o.mkdir(parents=True);link(a.ar171_context,o/'contexts/ar171.bin');link(a.ar1_context,o/'contexts/ar1.bin');link(a.qairt_root/'bin/aarch64-android/qnn-net-run',o/'qnn-net-run');link(a.bridge,o/'prefill_ar1_state_bridge');link(a.embedding597,o/'embedding-597.raw')
 for src,name in ((a.qairt_root/'lib/aarch64-android/libQnnHtp.so','libQnnHtp.so'),(a.qairt_root/'lib/aarch64-android/libQnnSystem.so','libQnnSystem.so'),(a.qairt_root/'lib/aarch64-android/libQnnHtpV73Stub.so','libQnnHtpV73Stub.so'),(a.qairt_root/'lib/hexagon-v73/unsigned/libQnnHtpV73Skel.so','libQnnHtpV73Skel.so')):link(src,o/name)
-s=json.loads((a.prefill_inputs/'result.json').read_text());pairs=[]
+s=json.loads((a.prefill_inputs/'result.json').read_text())
+if s.get('position_file_mode')!='default-float32' or s.get('position_values')!={'start':0,'count':171}:raise SystemExit('prefill positions are not validated numeric FLOAT32 0..170')
+pairs=[]
 for x in s['inputs']:
  src=a.prefill_inputs/Path(x['path']).name;dst=o/'prefill-inputs'/src.name;link(src,dst);pairs.append((x['name'],dst.relative_to(o).as_posix()))
 (o/'prefill-input-list.txt').write_text(' '.join(f'{n}:={p}' for n,p in pairs)+'\n');files=sorted(x for x in o.rglob('*') if x.is_file());entries=[]

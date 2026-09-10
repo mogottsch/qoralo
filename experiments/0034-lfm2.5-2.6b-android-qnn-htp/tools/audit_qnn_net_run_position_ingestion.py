@@ -144,7 +144,8 @@ def main() -> None:
                 "For QNN_DATATYPE_INT_64, copyFromFloatToNative calls castFromFloat<int64_t>, whose implementation static_casts each float value.",
             ],
         },
-        "recorded_invocations": {"scripts": scripts, "physical_execution_metadata": commands},
+        "recorded_invocations": {"physical_execution_metadata": commands},
+        "current_guarded_scripts": scripts,
         "graph_descriptors": {"ar171_position": ar171_descriptor, "ar1_position": ar1_descriptor},
         "raw_position_files": {"ar171": ar171_raw, "ar1_phase_switch": ar1_raw},
         "runtime_binary_witness": {
@@ -172,6 +173,12 @@ def main() -> None:
                 "The direct-QNN AR1 max16 runner copied INT64 position 171 directly and is a separate API path, but its initial state came from the affected AR171 output.",
                 "The integrated direct-QNN runner is designed for correct INT64 buffers and remains physically unexecuted.",
             ],
+        },
+        "future_preflight": {
+            "tool": "tools/verify_qnn_position_input.py",
+            "accepted_modes": ["default-float32 numeric positions with no native flags", "native-int64 positions with --use_native_input_files or --native_input_tensor_names"],
+            "rejected_cases": ["historical INT32 bit patterns in default FLOAT mode", "INT32-sized file in native INT64 mode", "FLOAT32 file paired with native-input flags"],
+            "integration": ["tools/run_prefill_qnn_phone_diagnostic.sh validates local positions before staging", "tools/run_prefill_ar1_phase_phone_diagnostic.sh validates prefill positions before staging and pulls/validates the generated AR1 position before execution"],
         },
         "required_fix": {
             "qnn_net_run": "For the actual qnn-net-run binary, use FLOAT32 files containing numeric 0..170/171 under default mode, or use its documented --use_native_input_files / targeted --native_input_tensor_names option with native INT64 files of 1368/8 bytes. Verify exact flag syntax and values with a bounded diagnostic before reusing qnn-net-run for position-sensitive claims; do not rely on the SampleApp-only --input_data_type spelling.",

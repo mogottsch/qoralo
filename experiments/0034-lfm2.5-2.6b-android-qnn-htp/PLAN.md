@@ -114,10 +114,12 @@
 102. Added no-QNN host regression/failure-injection coverage for partial-token persistence, exclusive overwrite protection, normal max-token append, and optional-profile failure.
 103. Audited QAIRT qnn-net-run source and exact recorded commands: default FLOAT file ingestion read the prior INT32 position bytes as subnormal floats and cast every AR171/AR1 position to INT64 zero.
 104. Reclassified prior qnn-net-run physical AR171 and phase-switch results as real HTP executions with all-zero position inputs, not exact position/state semantics. The direct-QNN integrated runner retains correct INT64 buffers and remains unexecuted.
+105. Added fail-closed qnn-net-run position preflight for numeric FLOAT32 default mode or native INT64 with documented native flags; historical INT32 bit patterns, wrong sizes, and mode/flag mismatches are rejected.
+106. Updated future qnn-net-run input generators and launch scripts to validate correct numeric position values before any staging/execution while leaving historical evidence immutable.
 
 ## In progress: performance engineering
 
-1. Commit and independently review the position-ingestion audit before any physical integrated gate.
+1. Commit and independently review the final position-ingestion audit and prevention guard before any physical integrated gate.
 2. If prioritized, run one bounded reset-isolated physical integrated short/max16 diagnostic with detailed profiles and all-output finite scans.
 3. Evaluate lower-precision/device-resident state and reduced-logit routes; keep CPU/GPU/HTP boundaries explicit.
 4. Do not campaign until the fastest sensible complete route is selected and reset-isolated.

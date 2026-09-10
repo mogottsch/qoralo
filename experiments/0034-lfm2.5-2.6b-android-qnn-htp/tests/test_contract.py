@@ -572,6 +572,27 @@ class ContractTest(unittest.TestCase):
         self.assertIn("not reused or generalized", result["api_type_boundary"]["non_generalization"])
         self.assertIn("No integrated inference ran", result["host_runtime_boundary"])
 
+    def test_qnn_position_preflight_accepts_only_explicit_numeric_contracts(self) -> None:
+        tool = EXP / "tools/verify_qnn_position_input.py"
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            numeric_float = root / "positions.f32"
+            native_int64 = root / "positions.i64"
+            historical_int32 = root / "positions.i32"
+            import struct
+            numeric_float.write_bytes(struct.pack("<4f", 0.0, 1.0, 2.0, 3.0))
+            native_int64.write_bytes(struct.pack("<4q", 0, 1, 2, 3))
+            historical_int32.write_bytes(struct.pack("<4i", 0, 1, 2, 3))
+            subprocess.run(["python3", str(tool), "--file", str(numeric_float), "--mode", "default-float32", "--start", "0", "--count", "4", "--command", "qnn-net-run --input_list inputs.txt"], check=True, capture_output=True)
+            subprocess.run(["python3", str(tool), "--file", str(native_int64), "--mode", "native-int64", "--start", "0", "--count", "4", "--command", "qnn-net-run --use_native_input_files --input_list inputs.txt"], check=True, capture_output=True)
+            for command in (
+                ["python3", str(tool), "--file", str(historical_int32), "--mode", "default-float32", "--start", "0", "--count", "4", "--command", "qnn-net-run --input_list inputs.txt"],
+                ["python3", str(tool), "--file", str(historical_int32), "--mode", "native-int64", "--start", "0", "--count", "4", "--command", "qnn-net-run --use_native_input_files --input_list inputs.txt"],
+                ["python3", str(tool), "--file", str(numeric_float), "--mode", "default-float32", "--start", "0", "--count", "4", "--command", "qnn-net-run --use_native_input_files --input_list inputs.txt"],
+            ):
+                with self.assertRaises(subprocess.CalledProcessError):
+                    subprocess.run(command, check=True, capture_output=True)
+
     def test_qnn_net_run_position_ingestion_is_reclassified(self) -> None:
         audit = self.contract["qnn_net_run_position_ingestion_audit"]
         self.assertFalse(audit["source_verified"])
@@ -587,6 +608,10 @@ class ContractTest(unittest.TestCase):
         self.assertFalse(audit["exact_position_semantics_proven"])
         self.assertTrue(audit["physical_htp_execution_still_proven"])
         self.assertFalse(audit["phone_access"])
+        self.assertTrue(audit["future_preflight"]["rejects_historical_int32_bit_patterns"])
+        self.assertTrue(audit["future_preflight"]["rejects_wrong_native_size"])
+        self.assertTrue(audit["future_preflight"]["rejects_mode_flag_mismatch"])
+        self.assertTrue(audit["future_preflight"]["integrated_into_future_qnn_net_run_scripts"])
         result = json.loads((EXP / audit["evidence"]).read_text())
         self.assertTrue(result["interpretation"]["conversion_result_reproduced_from_packaged_source_and_raw_bytes"])
         self.assertFalse(result["interpretation"]["binary_source_linkage_cryptographically_proven"])
