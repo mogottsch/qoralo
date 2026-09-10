@@ -1,16 +1,13 @@
-"""Pure stdlib, temporary registries/HTTP server only; no real Messenger writes or agents."""
+"""Read-only collector + local file renderer tests. No HTTP, browser or agents."""
 import importlib.util
 import json
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import tempfile
-import threading
 import unittest
-from urllib.error import HTTPError
-from urllib.request import Request, urlopen
 
-MODULE = Path(__file__).resolve().parents[1] / 'work_status_server.py'
-spec = importlib.util.spec_from_file_location('work_status_server', MODULE)
+MODULE = Path(__file__).resolve().parents[1] / 'work_status_dashboard.py'
+spec = importlib.util.spec_from_file_location('work_status_dashboard', MODULE)
 m = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(m)
 
@@ -22,6 +19,7 @@ class StatusTests(unittest.TestCase):
         self.root = Path(self.tmp.name)
         self.repo = self.root / 'repo'
         (self.repo / 'docs').mkdir(parents=True)
+        (self.repo/'docs/work-status.html').write_text((MODULE.parents[1]/'docs/work-status.html').read_text())
         self.registry = self.root / 'registry'
         self.registry.mkdir()
         self.now = datetime(2026, 9, 10, 18, tzinfo=timezone.utc)
@@ -114,48 +112,52 @@ class StatusTests(unittest.TestCase):
         p.write_text('{"schema_version":1,"workstreams":[],"resources":[],"agents":[],"invalid":NaN}')
         self.assertIsNone(m.snapshot(self.repo,self.registry)['curated'])
 
-    def server(self):
-        (self.repo/'docs/work-status.html').write_text('<!doctype html><title>Test</title>')
-        (self.repo/'docs/work-status.md').write_text('Contract')
-        s=m.ThreadingHTTPServer(('127.0.0.1',0),m.handler_factory(self.repo,self.registry))
-        thread=threading.Thread(target=s.serve_forever,daemon=True);thread.start()
-        self.addCleanup(lambda: (s.shutdown(),s.server_close(),thread.join(timeout=2)))
-        return 'http://127.0.0.1:'+str(s.server_address[1])
+    def sample(self):
+        return {'schema_version':1,'workstreams':[{'id':'a','title':'A','status':'blocked',
+                'owner':'Ben','now':'<img src=x onerror=alert(1)> @@AGENTS@@','next':'Wait',
+                'reported_at':'2020-01-01T00:00:00Z','stale_after_seconds':60,
+                'links':[{'label':'bad','url':'javascript:alert(1)'}]}],
+                'resources':[],'agents':[]}
 
-    def test_http_allowlist_and_readonly_headers(self):
-        base=self.server()
-        with urlopen(base+'/docs/work-status.html') as r:
-            self.assertEqual(200,r.status);self.assertEqual('no-store',r.headers['Cache-Control'])
-            self.assertNotIn('Access-Control-Allow-Origin',r.headers)
-        for path in ('/.git/config','/docs/../private','/docs/%2e%2e/private','/docs/work-status.json','/raw/battery.txt','/registry/Ben.json'):
-            with self.assertRaises(HTTPError) as e:urlopen(base+path)
-            self.assertEqual(404,e.exception.code)
-            e.exception.close()
-        with self.assertRaises(HTTPError) as e:urlopen(Request(base+'/api/status',method='POST',data=b'change'))
-        self.assertEqual(501,e.exception.code)
-        e.exception.close()
+    def test_render_escapes_text_and_shows_stale_unknown(self):
+        data={'checked_at':self.now.isoformat(),'curated':self.sample(),'curated_error':None,
+              'presence':{'available':False,'errors':0,'agents':[]}}
+        text=m.render(data,self.repo)
+        self.assertIn('&lt;img',text)
+        self.assertNotIn('<img',text)
+        self.assertIn('@@AGENTS@@',text)  # Inserted text is never interpreted as a template.
+        self.assertNotIn('javascript:',text)
+        self.assertIn('Stale',text)
+        self.assertIn('Agent presence is unavailable',text)
+        self.assertIn('http-equiv="refresh" content="12"',text)
+        self.assertNotIn('fetch(',text)
+        self.assertIn('refresher-warning',text)
 
-    def test_http_rejects_foreign_host_and_origin(self):
-        base=self.server()
-        for header in ({'Host':'attacker.invalid'},{'Origin':'http://attacker.invalid'}):
-            with self.assertRaises(HTTPError) as e:urlopen(Request(base+'/api/status',headers=header))
-            self.assertEqual(403,e.exception.code)
-            e.exception.close()
+    def test_links_open_local_files_not_a_dashboard_server(self):
+        self.assertTrue(m.safe_link('/docs/work-status.md',self.repo).startswith('file:///'))
+        self.assertIsNone(m.safe_link('/docs/../../private.html',self.repo))
+        self.assertIsNone(m.safe_link('/docs/raw/battery.txt',self.repo))
+        self.assertIsNone(m.safe_link('https://remote.invalid/',self.repo))
+        self.assertEqual('http://127.0.0.1:40187/',m.safe_link('http://127.0.0.1:40187/',self.repo))
 
-    def test_static_symlink_not_served(self):
-        base=self.server();p=self.repo/'docs/work-status.html';p.unlink()
-        secret=self.root/'secret';secret.write_text('PRIVATE');p.symlink_to(secret)
-        with self.assertRaises(HTTPError) as e:urlopen(base+'/docs/work-status.html')
-        self.assertEqual(404,e.exception.code)
-        e.exception.close()
+    def test_file_refresh_only_updates_generated_cache(self):
+        self.registration()
+        p=self.repo/'docs/work-status.json';p.write_text(json.dumps(self.sample()))
+        registry_before={p.name:p.read_bytes() for p in self.registry.iterdir()}
+        curated_before=p.read_bytes()
+        output=self.root/'cache/index.html'
+        m.write_snapshot(output,self.repo,self.registry)
+        self.assertTrue(output.exists())
+        self.assertNotIn('@@STREAMS@@',output.read_text())
+        m.write_snapshot(output,self.repo,self.registry)
+        self.assertEqual(curated_before,p.read_bytes())
+        self.assertEqual(registry_before,{p.name:p.read_bytes() for p in self.registry.iterdir()})
+        self.assertEqual(['index.html'],[p.name for p in output.parent.iterdir()])
 
-    def test_owned_page_uses_text_nodes_and_no_external_script(self):
-        text=(MODULE.parents[1]/'docs/work-status.html').read_text()
-        self.assertIn('textContent',text)
-        self.assertNotIn('innerHTML',text)
-        self.assertNotIn('<script src=',text)
-        self.assertIn('setInterval(refresh,12000)',text)
-        self.assertIn("cache:'no-store'",text)
+    def test_missing_curated_file_produces_explicit_unknown_view(self):
+        data=m.snapshot(self.repo,self.registry)
+        self.assertIn('unavailable',m.render(data,self.repo))
+        self.assertIn('No current work reports',m.render(data,self.repo))
 
 
 if __name__=='__main__':unittest.main()
