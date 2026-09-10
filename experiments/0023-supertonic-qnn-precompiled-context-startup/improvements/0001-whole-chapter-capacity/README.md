@@ -76,6 +76,10 @@ The46-test source readiness remains in [`results/vocoder-diagnostic-readiness-20
 
 [`results/vocoder-parity-constructor-20260910-attempt-01/`](results/vocoder-parity-constructor-20260910-attempt-01/) closes the missing-export gate: one constructor39.475s/outer41.328s, exact actual ABI, single external EPContext733B (`67406e4a…8442fc`) plus69,664,936B binary (`13db6690…b91482`), source/13pins and post-close hashes verified. Own-cgroup peak1,976,119,296B/no limit or OOM events; process peak2,006,548KiB. PID/group/container absent, scratch empty. The old fatal TCM/Optimize17 chain is absent, but **four nonfatal StridedSlice tiler warnings** remain (75,579,392B minimum, `[1,1,6150,256]`); no warning-free lowering or measured VTCM-peak claim. Nik independently accepted this exact constructor/export result. Four reviewed exports now exist, not a loaded/executed or fidelity-approved route. Release consumed; all actual context bytes remain LOCAL-ONLY.
 
+## Data-only handoff for the separate long-debug pack
+
+[`results/four-context-export-handoff-20260910/`](results/four-context-export-handoff-20260910/) exports eight exact protected file locations and portable `contexts/` paths:298,579,984B total, no descriptor rebinding or executable payload. Manifest `1c6d9e34…acbad` binds actual ABI/source/host-compile provenance and the positional/parity changes. Ben owns this reference-layout handoff; Janek owns the single new `supertonic-3-t2048-l2048-parity` app pack, five unchanged companion assets, debug trust and long-probe preparation. No current-pack/native9 change, duplicate pack build, deployment or execution is authorized by the handoff.
+
 ## Fidelity and comparison boundaries
 
 - Masked padding is demonstrably non-neutral: experiment0022's T235→T239 changed duration15.8623657→15.6378775s and embedding max difference0.1110139. Positional-prefix preservation does not erase that result.

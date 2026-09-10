@@ -1,0 +1,514 @@
+{
+  "schema": "supertonic-context-reference-layout-v1",
+  "namespace": "supertonic-3-t2048-l2048-parity",
+  "owner_scope": "Ben: eight context-file byte identities, relative layout and source/ABI/compile provenance ONLY. Janek: final app-pack/schema2 manifest/debug trust and five reused companion asset bindings.",
+  "export_kind": "reference_layout_no_duplicate_pack_build",
+  "layout_only_not_app_pack_or_trust_authority": true,
+  "context_file_count": 8,
+  "total_context_file_bytes": 298579984,
+  "descriptor_bytes_changed": false,
+  "new_context_or_model_calls": 0,
+  "components": {
+    "duration": {
+      "actual_inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            2048
+          ]
+        },
+        {
+          "name": "style_dp",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            8,
+            16
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            2048
+          ]
+        }
+      ],
+      "actual_outputs": [
+        {
+          "name": "duration",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "source_graph": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/materialization-20260910/attempt-01/duration/data/duration.onnx",
+        "bytes": 3787044,
+        "sha256": "394ea3e7be9b857da9fe20764e0772960e6a429938d06a5e827a3a139c8cbad9"
+      },
+      "constructor_request_sha256": "aeee2b8a2e4c1306de6cf3ed84b9364e954347ea077588808630bb0cc842fa19",
+      "evidence_directory": "results/duration-context-constructor-20260910-attempt-01",
+      "evidence_commit": "5c2e413",
+      "descriptor_external_binary_basename": "duration-context_qnn.bin",
+      "descriptor_rebinding_required": false,
+      "files": [
+        {
+          "component": "duration",
+          "role": "descriptor",
+          "source_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-duration-t2048-attempt-01/data/duration-context.onnx",
+          "layout_path": "contexts/duration-context.onnx",
+          "bytes": 815,
+          "sha256": "150e364906f1a9b536795df0cdc12275c38d765fc53eb31353e8fab46d2e99de",
+          "LOCAL_ONLY": true,
+          "preserve_bytes_exactly": true
+        },
+        {
+          "component": "duration",
+          "role": "companion_binary",
+          "source_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-duration-t2048-attempt-01/data/duration-context_qnn.bin",
+          "layout_path": "contexts/duration-context_qnn.bin",
+          "bytes": 6638456,
+          "sha256": "b4c20151ae62fd6c909bb0ff4f0ce0aa60aad22442a70f6a100c63cbaaf5b8e7",
+          "LOCAL_ONLY": true,
+          "preserve_bytes_exactly": true
+        }
+      ]
+    },
+    "text": {
+      "actual_inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            2048
+          ]
+        },
+        {
+          "name": "style_ttl",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            50,
+            256
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            2048
+          ]
+        }
+      ],
+      "actual_outputs": [
+        {
+          "name": "text_emb",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            2048
+          ]
+        }
+      ],
+      "source_graph": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/materialization-20260910/attempt-01/text/data/text.onnx",
+        "bytes": 36566260,
+        "sha256": "6bdf11f5e02ab4de3b588cf6eeb25cbd38085fd13ff6892865115c256e14568b"
+      },
+      "constructor_request_sha256": "f21682b0965b48373470d77e2ebe4717e3dcae51cbd3ccba1813ba9e71b2c6f5",
+      "evidence_directory": "results/remaining-context-constructors-20260910-attempt-01/text",
+      "evidence_commit": "b652a2c",
+      "descriptor_external_binary_basename": "text-context_qnn.bin",
+      "descriptor_rebinding_required": false,
+      "files": [
+        {
+          "component": "text",
+          "role": "descriptor",
+          "source_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-text-t2048-l2048-attempt-01/data/text-context.onnx",
+          "layout_path": "contexts/text-context.onnx",
+          "bytes": 821,
+          "sha256": "389f5754e60bb3bbf3bd8b7f833d9112f6ea17d78cbe67de013dc56b0ba8cca8",
+          "LOCAL_ONLY": true,
+          "preserve_bytes_exactly": true
+        },
+        {
+          "component": "text",
+          "role": "companion_binary",
+          "source_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-text-t2048-l2048-attempt-01/data/text-context_qnn.bin",
+          "layout_path": "contexts/text-context_qnn.bin",
+          "bytes": 37119616,
+          "sha256": "45c9a1672ec4521947bc273565331a0cd54aa99050b1969e2ee15fa175de3bc5",
+          "LOCAL_ONLY": true,
+          "preserve_bytes_exactly": true
+        }
+      ]
+    },
+    "vector": {
+      "actual_inputs": [
+        {
+          "name": "noisy_latent",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            144,
+            2048
+          ]
+        },
+        {
+          "name": "text_emb",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            2048
+          ]
+        },
+        {
+          "name": "style_ttl",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            50,
+            256
+          ]
+        },
+        {
+          "name": "latent_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            2048
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            2048
+          ]
+        },
+        {
+          "name": "current_step",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        },
+        {
+          "name": "total_step",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "actual_outputs": [
+        {
+          "name": "denoised_latent",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            144,
+            2048
+          ]
+        }
+      ],
+      "source_graph": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/materialization-20260910/attempt-01/vector/data/vector.onnx",
+        "bytes": 256526661,
+        "sha256": "9b6b2a5e8081e246e5aa0388ba05a5d6c0312f7779de04c0acf221107ae70663"
+      },
+      "constructor_request_sha256": "1f71474cfec8800c2e8ccbc71293e5e1fbf8d064af06e7f40e9c3fbd52ec62c8",
+      "evidence_directory": "results/remaining-context-constructors-20260910-attempt-01/vector",
+      "evidence_commit": "b652a2c",
+      "descriptor_external_binary_basename": "vector-context_qnn.bin",
+      "descriptor_rebinding_required": false,
+      "files": [
+        {
+          "component": "vector",
+          "role": "descriptor",
+          "source_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-vector-t2048-l2048-attempt-01/data/vector-context.onnx",
+          "layout_path": "contexts/vector-context.onnx",
+          "bytes": 1023,
+          "sha256": "b2938bfe41a8b111ef0a01d74ef737ea930040bf0b51cc8a2dbb2760206f9b1a",
+          "LOCAL_ONLY": true,
+          "preserve_bytes_exactly": true
+        },
+        {
+          "component": "vector",
+          "role": "companion_binary",
+          "source_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-vector-t2048-l2048-attempt-01/data/vector-context_qnn.bin",
+          "layout_path": "contexts/vector-context_qnn.bin",
+          "bytes": 185153584,
+          "sha256": "d40e5bf8ad96bad04e96f5a4ec27e979b410320b9d000cf2b109f5d92ad6c00f",
+          "LOCAL_ONLY": true,
+          "preserve_bytes_exactly": true
+        }
+      ]
+    },
+    "vocoder": {
+      "actual_inputs": [
+        {
+          "name": "latent",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            144,
+            2048
+          ]
+        }
+      ],
+      "actual_outputs": [
+        {
+          "name": "wav_tts",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            6291456
+          ]
+        }
+      ],
+      "source_graph": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/vocoder-parity-materialization-20260910/attempt-01/data/vocoder-parity.onnx",
+        "bytes": 101455228,
+        "sha256": "5c13592238dc5af15b29a923213a9c87d780296c3dca9026257de2870dc8ad07"
+      },
+      "constructor_request_sha256": "8557ca10877c15718f75fbb6a60b8bd98ba809aec22cf000823432f06daec001",
+      "evidence_directory": "results/vocoder-parity-constructor-20260910-attempt-01",
+      "evidence_commit": "5d9cf99",
+      "descriptor_external_binary_basename": "vocoder-context_qnn.bin",
+      "descriptor_rebinding_required": false,
+      "files": [
+        {
+          "component": "vocoder",
+          "role": "descriptor",
+          "source_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-vocoder-parity-t2048-l2048-attempt-01/data/vocoder-context.onnx",
+          "layout_path": "contexts/vocoder-context.onnx",
+          "bytes": 733,
+          "sha256": "67406e4a28119e33907a4c91ab806f9c411a7a413055052562a367e57c8442fc",
+          "LOCAL_ONLY": true,
+          "preserve_bytes_exactly": true
+        },
+        {
+          "component": "vocoder",
+          "role": "companion_binary",
+          "source_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-vocoder-parity-t2048-l2048-attempt-01/data/vocoder-context_qnn.bin",
+          "layout_path": "contexts/vocoder-context_qnn.bin",
+          "bytes": 69664936,
+          "sha256": "13db6690e22bf4bb2075838f9f0876f6b75bbb9f7b7c11b489a3d7de4cb91482",
+          "LOCAL_ONLY": true,
+          "preserve_bytes_exactly": true
+        }
+      ]
+    }
+  },
+  "files": [
+    {
+      "component": "duration",
+      "role": "descriptor",
+      "source_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-duration-t2048-attempt-01/data/duration-context.onnx",
+      "layout_path": "contexts/duration-context.onnx",
+      "bytes": 815,
+      "sha256": "150e364906f1a9b536795df0cdc12275c38d765fc53eb31353e8fab46d2e99de",
+      "LOCAL_ONLY": true,
+      "preserve_bytes_exactly": true
+    },
+    {
+      "component": "duration",
+      "role": "companion_binary",
+      "source_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-duration-t2048-attempt-01/data/duration-context_qnn.bin",
+      "layout_path": "contexts/duration-context_qnn.bin",
+      "bytes": 6638456,
+      "sha256": "b4c20151ae62fd6c909bb0ff4f0ce0aa60aad22442a70f6a100c63cbaaf5b8e7",
+      "LOCAL_ONLY": true,
+      "preserve_bytes_exactly": true
+    },
+    {
+      "component": "text",
+      "role": "descriptor",
+      "source_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-text-t2048-l2048-attempt-01/data/text-context.onnx",
+      "layout_path": "contexts/text-context.onnx",
+      "bytes": 821,
+      "sha256": "389f5754e60bb3bbf3bd8b7f833d9112f6ea17d78cbe67de013dc56b0ba8cca8",
+      "LOCAL_ONLY": true,
+      "preserve_bytes_exactly": true
+    },
+    {
+      "component": "text",
+      "role": "companion_binary",
+      "source_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-text-t2048-l2048-attempt-01/data/text-context_qnn.bin",
+      "layout_path": "contexts/text-context_qnn.bin",
+      "bytes": 37119616,
+      "sha256": "45c9a1672ec4521947bc273565331a0cd54aa99050b1969e2ee15fa175de3bc5",
+      "LOCAL_ONLY": true,
+      "preserve_bytes_exactly": true
+    },
+    {
+      "component": "vector",
+      "role": "descriptor",
+      "source_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-vector-t2048-l2048-attempt-01/data/vector-context.onnx",
+      "layout_path": "contexts/vector-context.onnx",
+      "bytes": 1023,
+      "sha256": "b2938bfe41a8b111ef0a01d74ef737ea930040bf0b51cc8a2dbb2760206f9b1a",
+      "LOCAL_ONLY": true,
+      "preserve_bytes_exactly": true
+    },
+    {
+      "component": "vector",
+      "role": "companion_binary",
+      "source_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-vector-t2048-l2048-attempt-01/data/vector-context_qnn.bin",
+      "layout_path": "contexts/vector-context_qnn.bin",
+      "bytes": 185153584,
+      "sha256": "d40e5bf8ad96bad04e96f5a4ec27e979b410320b9d000cf2b109f5d92ad6c00f",
+      "LOCAL_ONLY": true,
+      "preserve_bytes_exactly": true
+    },
+    {
+      "component": "vocoder",
+      "role": "descriptor",
+      "source_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-vocoder-parity-t2048-l2048-attempt-01/data/vocoder-context.onnx",
+      "layout_path": "contexts/vocoder-context.onnx",
+      "bytes": 733,
+      "sha256": "67406e4a28119e33907a4c91ab806f9c411a7a413055052562a367e57c8442fc",
+      "LOCAL_ONLY": true,
+      "preserve_bytes_exactly": true
+    },
+    {
+      "component": "vocoder",
+      "role": "companion_binary",
+      "source_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-vocoder-parity-t2048-l2048-attempt-01/data/vocoder-context_qnn.bin",
+      "layout_path": "contexts/vocoder-context_qnn.bin",
+      "bytes": 69664936,
+      "sha256": "13db6690e22bf4bb2075838f9f0876f6b75bbb9f7b7c11b489a3d7de4cb91482",
+      "LOCAL_ONLY": true,
+      "preserve_bytes_exactly": true
+    }
+  ],
+  "required_host_compile_runtime": {
+    "ORT": "1.27.1",
+    "QAIRT": "2.49.0.260730",
+    "SDK_build": "v2.49.0.260730134355",
+    "soc_model": "43",
+    "target": "SM8550/HTPv73",
+    "provider_options": {
+      "offload_graph_io_quantization": "0",
+      "htp_performance_mode": "burst",
+      "soc_model": "43"
+    },
+    "session_disable_cpu_ep_fallback": "1",
+    "ep_context_embed_mode": "0",
+    "selected_host_runtime_pins": [
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/Release/onnxruntime/__init__.py",
+        "bytes": 17698,
+        "sha256": "f3b17e238ee6b36120002c191c1e4be4ad393a27816d78c1e7ef75938773975f"
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/Release/onnxruntime/capi/onnxruntime_pybind11_state.so",
+        "bytes": 32965816,
+        "sha256": "e988d884e537d1471563290bf0ebd411012c482e3260875a7226ce55355dc637"
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/Release/onnxruntime/capi/libonnxruntime.so.1.27.1",
+        "bytes": 30384960,
+        "sha256": "8027077db2f1880260f639c27455a4e5ec5683076c1f2e8ef848c1fb1983be88"
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/Release/onnxruntime/capi/libonnxruntime_providers_qnn.so",
+        "bytes": 2832440,
+        "sha256": "961e2489cb4c87b29ceefb17760cade68254702a988faf238066b41022b098b4"
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/Release/onnxruntime/capi/libonnxruntime_providers_shared.so",
+        "bytes": 15408,
+        "sha256": "98cc35d20a8701b425d3b51ebbbd9186744c9abcec5d2270879f6c165a735228"
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/Release/onnxruntime/capi/libQnnHtp.so",
+        "bytes": 97556152,
+        "sha256": "e557ca522713ea7ee7efd252083b927009cd54c158899c086b23d92b63bf1f33"
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/Release/onnxruntime/capi/libHtpPrepare.so",
+        "bytes": 97556152,
+        "sha256": "65850413121185944b5d6d800215c15efabfbd84d976c137859d3700cfc8e534"
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/Release/onnxruntime/capi/libQnnHtpQemu.so",
+        "bytes": 7437144,
+        "sha256": "2482e2b5cf95cb05284f930332c989cc595d127be6a7cd3ccee59644e8a8a4a4"
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/Release/onnxruntime/capi/libQnnSystem.so",
+        "bytes": 5300584,
+        "sha256": "e78e3f880670400519a05f3268544b40226012c58cbc9a20c8ad980e54087be8"
+      },
+      {
+        "path": "/home/moritz/opt/qairt/2.49.0.260730/lib/x86_64-linux-clang/libQnnHtp.so",
+        "bytes": 97556152,
+        "sha256": "e557ca522713ea7ee7efd252083b927009cd54c158899c086b23d92b63bf1f33"
+      },
+      {
+        "path": "/home/moritz/opt/qairt/2.49.0.260730/lib/x86_64-linux-clang/libHtpPrepare.so",
+        "bytes": 97556152,
+        "sha256": "65850413121185944b5d6d800215c15efabfbd84d976c137859d3700cfc8e534"
+      },
+      {
+        "path": "/home/moritz/opt/qairt/2.49.0.260730/lib/x86_64-linux-clang/libQnnHtpQemu.so",
+        "bytes": 7437144,
+        "sha256": "2482e2b5cf95cb05284f930332c989cc595d127be6a7cd3ccee59644e8a8a4a4"
+      },
+      {
+        "path": "/home/moritz/opt/qairt/2.49.0.260730/lib/x86_64-linux-clang/libQnnSystem.so",
+        "bytes": 5300584,
+        "sha256": "e78e3f880670400519a05f3268544b40226012c58cbc9a20c8ad980e54087be8"
+      }
+    ],
+    "scope_note": "These are host compile provenance pins, not Android library files to add to the pack. Keep accepted native9/executables unchanged."
+  },
+  "model_provenance": {
+    "official_revision": "724fb5abbf5502583fb520898d45929e62f02c0b",
+    "license": "OpenRAIL-M",
+    "public_shapes": "T2048/L2048;144latent channels; waveform cap6291456samples@44100Hz",
+    "original_materialization": "results/materialization-20260910/",
+    "vector_positional_change": "Exactly INT64 arange1000->2048, original1000prefix/theta/all learned bytes preserved; same seven-node stable Softplus identity. Padding/position extension are not quality-neutral.",
+    "vocoder_change": "Onlyconvnext.1/.4 dilation2/kernel7/group512 replaced bytwo batch1 d1/k7 branches after original causalEDGE Pad(12,0), originalsharedW/bias, exactfeature-timeinterleave;103originalinitializer bytes unchanged +7nonlearnedINT64controls.",
+    "vocoder_source_materialization": "results/vocoder-parity-materialization-20260910-attempt-01/",
+    "vocoder_source_commit": "83eb55e",
+    "synthetic_design_commit": "49281cb"
+  },
+  "preserved_app_contract": {
+    "voice": "M1",
+    "SID": 5,
+    "steps": 5,
+    "speed": 1.0,
+    "normalization": "existing app English tags/NFKD",
+    "randomness": "chapter StableSeed +xorshift64*/Box-Muller; retain prepared arrays/masks/noise for comparisons",
+    "logical_render": "duration1/text1/vector5/vocoder1 ->one naturally trimmed complete WAV; no text/audio chunks, stitching or fallback",
+    "canonical_239_238_pack": "unchanged"
+  },
+  "companion_assets_not_in_eight_file_export": [
+    "config",
+    "tokenizer",
+    "unicode-indexer.i32",
+    "voice.bin",
+    "voice-style.json"
+  ],
+  "companion_policy": "Janek reuses exact five accepted companion bytes and pins them in the final new pack/trust contract; no modification of accepted/current packs.",
+  "evidence_boundary": "Four reviewed constructor/export pairs; no reload, model forward, phone or long-speech/fidelity/listening acceptance. Preserve four nonfatal StridedSlice tiler warnings; they do not block preparation or justify changing/recompiling these artifacts.",
+  "deployment_or_execution_authorized": false,
+  "push_held": true
+}
