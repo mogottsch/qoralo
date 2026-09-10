@@ -1,7 +1,7 @@
 ---
 experiment: 0032-qwen-3.5-2b-android-qnn-htp
 status: active
-summary: The repaired exact route now executes physically through QNN HTP v73 and produces lexical token `To` instead of `!`; host-QDQ mismatch and the one-token ceiling still block fidelity and campaign claims.
+summary: HistogramObserver calibration improves position-zero QDQ/QNN-x86 agreement across all 24 hidden layers, but some state/error metrics worsen; full-prompt and physical candidate validation remain pending.
 benchmark: android-llm
 ---
 
@@ -13,7 +13,7 @@ Qwen3.5-2B already has a measured Android CPU route, but the first QNN assessmen
 
 The explicit-state design makes full-attention KV cache plus Gated DeltaNet recurrent and causal-convolution state graph inputs and outputs. This avoids hidden mutable-buffer fallback and gives a future loaded route an auditable reset boundary. Softplus remains an explicit edge operation mapped to QNN's HTP-supported `ElementWiseNeuron(SOFTPLUS)` operation.
 
-The end-to-end target remains stricter than one physical request: the exact pinned 24-layer text checkpoint must produce credible bounded output through physical QNN/HTP, demonstrate complete loaded-route request-state isolation, and only then run the canonical one-first-plus-five-short/five-medium/five-long campaign. The owning [experiment README](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/README.md), [experiment contract](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/protocol/experiment-contract.json), [host compile result](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-exact-host-compile/compile-result.json), [eager comparison](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-exact-host-compile/eager-equivalence.json), [Android runner host build](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-explicit-state-runner-host-build/result.json), [first physical attempt](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-qnn-physical-viability-20260827-attempt-01/result.json), [boundary-kernel host fix](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-runner-boundary-fix-host-build/result.json), [physical execution result](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-qnn-physical-viability-20260827-attempt-02/result.json), [host W4A16 QDQ diagnosis](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/host-w4a16-qdq-output-diagnosis/result.json), and [host broadcast-divergence localization](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/host-qnn-broadcast-divergence-localization/result.json), [exact repaired-PTE validation](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/exact-qnn-explicit-broadcast-host-validation/result.json), and [repaired-route physical result](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-qnn-physical-viability-20260828-attempt-03/result.json) are the evidence authority.
+The end-to-end target remains stricter than one physical request: the exact pinned 24-layer text checkpoint must produce credible bounded output through physical QNN/HTP, demonstrate complete loaded-route request-state isolation, and only then run the canonical one-first-plus-five-short/five-medium/five-long campaign. The owning [experiment README](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/README.md), [experiment contract](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/protocol/experiment-contract.json), [host compile result](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-exact-host-compile/compile-result.json), [eager comparison](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/executorch-qnn-exact-host-compile/eager-equivalence.json), [Android runner host build](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-explicit-state-runner-host-build/result.json), [first physical attempt](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-qnn-physical-viability-20260827-attempt-01/result.json), [boundary-kernel host fix](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-runner-boundary-fix-host-build/result.json), [physical execution result](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-qnn-physical-viability-20260827-attempt-02/result.json), [host W4A16 QDQ diagnosis](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/host-w4a16-qdq-output-diagnosis/result.json), and [host broadcast-divergence localization](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/host-qnn-broadcast-divergence-localization/result.json), [exact repaired-PTE validation](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/exact-qnn-explicit-broadcast-host-validation/result.json), and [repaired-route physical result](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/android-qnn-physical-viability-20260828-attempt-03/result.json), and [HistogramObserver host precision result](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/host-histogram-precision-20260910/result.json) are the evidence authority.
 
 ## Progress
 
@@ -115,9 +115,39 @@ This is one viability observation, not a loaded-route distribution. Setup was 3.
 
 The 107,315,601-byte raw provider log at SHA-256 `cdf175…d39c` and 56,603,888-byte raw ETDump at SHA-256 `b805d0…8f1a` have committed lossless zstd copies with recovery verified. Cleanup and an independent locked check found the runner process and scoped remote root absent; `phone.lock` was released. No retry or campaign is authorized.
 
+### HistogramObserver host precision — 2026-09-10
+
+Commit `e528f41` tests whether activation-range calibration can reduce the remaining QNN drift without introducing float recurrence or CPU tensor fallback. The exact pinned 24-layer checkpoint retains W4 per-channel Linear/Conv weights, 16-bit activations, quantized recurrence, and context 4,096; HistogramObserver replaces MinMaxObserver for activation calibration.
+
+The comparison uses input token 248045 at position zero, all recurrent/convolution/KV state zero, and an attention mask exposing only the current-token slot. **Each route is compared against its own QDQ reference.** Histogram calibration changes the quantized reference as well as QNN encodings; the result is improved internal agreement, not equivalence to MinMax or the original float model.
+
+| Same-position observation | MinMax QDQ vs QNN-x86 | Histogram QDQ vs QNN-x86 |
+|---|---:|---:|
+| Layer-23 hidden cosine | 0.491839 | 0.971446 |
+| Final-logit cosine | 0.433603 | 0.947168 |
+| Final-logit mean absolute error | 1.706004 | 0.483211 |
+| Final-logit maximum absolute error | 10.639919 | 2.895951 |
+| QDQ / QNN-x86 argmax | 62 / 198 | 198 / 198 |
+
+All 24 hidden-layer cosines improve and all 73 outputs are finite. Not every state or error metric improves: layer-0 recurrent-state cosine decreases from 0.999829 to 0.999788, and layer-0 hidden maximum error increases slightly. The [complete comparison](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/host-histogram-precision-20260910/precision-comparison.json) retains those exceptions. Earlier layer-0 component taps are separately compiled evidence under `prior-components/`, not new internal measurements from this 73-output graph.
+
+The local-only diagnostic PTE is 1,995,463,416 bytes with SHA-256 `7f30be3d…ff3fea`. Four SM8550/v73 QNN subgraphs retain all 4,210 delegated tensor-compute nodes, zero tensor-compute fallback, and four successful `0x0` finalizations. Its 73-output ABI adds 24 hidden tensors to the usual 49 outputs; it must not be staged with the existing 49-output Android runner. The physical PTE `23ac8abd…c506` and phone preflight remain unchanged.
+
+Rejected and interrupted branches remain visible in the [retained host evidence](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/host-histogram-precision-20260910/README.md):
+
+- Unquantized float recurrence left **268** tensor-compute operations outside QNN. The earlier informal total of 214 was incorrect; the retained operator map fixes the count.
+- The FP16 recurrence variant left 143 nondelegated layout/cast operations and was rejected, not treated as harmless plumbing.
+- MatMul recurrence reductions compiled fully delegated but worsened gated-core agreement; they were not selected.
+- Symmetric activations failed QNN preprocessing; no PTE or inference result exists for that branch.
+- The August shutdown partial replay and September app-priority compile interruption remain distinct incomplete attempts, not numerical failures.
+
+The successful compile, QDQ evaluation, QNN-x86 evaluation, and report generation ran sequentially and all phase processes were reaped. Eight logs/resource records are losslessly compressed with verified raw-hash recovery. Host durations reflect preparation/evaluation under different load, not a speed comparison.
+
+No full 174-token HistogramObserver QDQ/QNN replay result, candidate phone run, or generated-text sanity result exists. Position-zero argmax 198 must not be compared directly with the earlier post-position-173 tokens 760 (`The`, MinMax QDQ) or 1206 (`To`, physical baseline). The next gate awaits Pi release for a serial full-short QDQ replay; this milestone does not authorize another heavy phase, phone slot, or campaign.
+
 ## Results
 
-**The experiment is active after physical execution of the repaired exact route through QNN HTP v73.** The repaired PTE removes the prior obvious token-0/punctuation symptom and yields lexical token `To`, but it still disagrees with host W4A16 QDQ. One token cannot prove sentence quality, fidelity, or campaign readiness.
+**The experiment is active with improved host position-zero precision agreement.** HistogramObserver improves all 24 hidden cosines and final-logit agreement against its own QDQ reference, with state/error exceptions explicitly retained. The physical baseline remains unchanged; full-prompt fidelity, candidate Android behavior, text quality, and campaign readiness are unproven.
 
 | Evidence boundary | Current result |
 |---|---|
@@ -153,9 +183,18 @@ The 107,315,601-byte raw provider log at SHA-256 `cdf175…d39c` and 56,603,888-
 | Output sanity | `looks_sensible: true`, `issue_notes: null` only for one ordinary lexical token; no sentence-level quality claim |
 | Repaired viability timing | Setup 3.777 s; TTFT/total 332.784 s; prefill execute 332.367 s / 0.524 tok/s; single observation only |
 | Retained provider evidence | Raw provider log 107,315,601 B and ETDump 56,603,888 B; lossless zstd recovery verified |
-| Cleanup | Process and scoped root verified absent; lock released and independently rechecked |
-| Android LLM registry row | None; host AOT evidence is not registry-eligible |
+| Cleanup | Physical baseline process/root absent; lock released and independently rechecked |
+| Histogram comparison scope | Position 0 / token 248045 / zero state; each observer route against its own QDQ reference |
+| Hidden/logit agreement | All 24 hidden cosines improve; layer23 0.491839→0.971446; logits 0.433603→0.947168 |
+| Logit errors/argmax | Mean abs 1.706004→0.483211; max abs 10.639919→2.895951; QDQ/QNN 62/198→198/198 |
+| Exceptions | Layer0 recurrent cosine slightly worse; not all state/error metrics improve; separate prior component taps |
+| Histogram host AOT | 4 subgraphs / 4,210 delegated compute / 0 tensor fallback / 4 finalizations `0x0` |
+| Diagnostic artifact boundary | 1,995,463,416 B / SHA `7f30be3d…ff3fea`; 73 outputs, incompatible with current 49-output phone runner |
+| Rejected branches | Float fallback 268 (not informal 214); FP16 layout/cast fallback 143; MatMul regression; symmetric preprocessing failure |
+| Interruption boundary | Shutdown/app-priority partial attempts retained, not numerical failures; successful comparison phases reaped |
+| Remaining candidate evidence | No completed full-174-token replay, candidate phone/text result, performance distribution, or campaign |
+| Android LLM registry row | None; host comparison/AOT evidence is not registry-eligible |
 
-Attempt 03 proves bounded physical execution of the repaired route through QNN HTP v73, including accelerator/RPC/cycle/HVX observations. It removes the prior obvious token-0 corruption symptom, but physical token `To` still differs from QDQ token `The`; neither one token nor QNN-x86 establishes end-to-end fidelity. Physical and host timings remain respectively one max-new-tokens-1 viability observation and diagnostic work, not loaded-route campaign performance; the single-request runner remains campaign-ineligible.
+Attempt 03 remains the bounded physical baseline: token `To` differs from QDQ token `The` after the complete short prompt, despite positive HTP provider observations. The HistogramObserver result is a separate same-position host comparison, not a replacement physical result or proof that the final prompt output now agrees. Neither matching argmax at position zero nor improved cosines establish end-to-end fidelity. Physical and host timings remain viability and diagnostic observations, not loaded-route campaign performance.
 
 A CPU-only response, GenieX NPU metric, direct-Hexagon output without QNN proof, or the dimension-incompatible shipped 4B example cannot satisfy this experiment. Neither can one lexical but mismatching token justify output fidelity, usefulness, sentence quality, or a campaign. No 0032 row belongs in the Android LLM registry until a complete valid physical Android canonical campaign establishes exact route identity, provider/no-fallback proof, state isolation, retained outputs, and a loaded-route performance distribution.
