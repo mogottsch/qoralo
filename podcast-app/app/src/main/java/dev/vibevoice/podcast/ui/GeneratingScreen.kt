@@ -13,6 +13,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -50,12 +53,17 @@ fun GeneratingScreen(episode: EpisodeEntity?, job: GenerationJobEntity?, onClose
                 navigationIcon = { IconButton(onClick = onClose) { Icon(Icons.Default.Close, "Return to library") } },
             )
         }) { padding ->
-            Column(
-                Modifier.fillMaxSize().padding(padding).padding(horizontal = 24.dp),
+            LazyColumn(
+                Modifier.fillMaxSize().padding(padding),
+                contentPadding = PaddingValues(horizontal = 24.dp, vertical = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
             ) {
-                if (failed) FailurePanel(episode, onClose) else GenerationPanel(episode, job)
+                item {
+                    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                        if (failed) FailurePanel(episode, onClose) else GenerationPanel(episode, job)
+                    }
+                }
             }
         }
     }
@@ -68,7 +76,7 @@ private fun GenerationPanel(episode: EpisodeEntity?, job: GenerationJobEntity?) 
     Surface(
         color = MaterialTheme.colorScheme.primaryContainer,
         shape = RoundedCornerShape(64.dp),
-        modifier = Modifier.size(230.dp).scale(pulse),
+        modifier = Modifier.size(if (LocalDensity.current.fontScale >= 1.4f) 140.dp else 218.dp).scale(pulse),
     ) { VibeArtwork(Modifier.fillMaxSize(), compact = true) }
     val total = job?.totalChapters ?: 0
     val current = job?.currentChapter ?: 0
@@ -84,8 +92,6 @@ private fun GenerationPanel(episode: EpisodeEntity?, job: GenerationJobEntity?) 
         job?.statusText ?: "Preparing your episode",
         style = MaterialTheme.typography.headlineMedium,
         textAlign = TextAlign.Center,
-        maxLines = 3,
-        overflow = TextOverflow.Ellipsis,
         modifier = Modifier.padding(top = 8.dp),
     )
     Text(
@@ -102,6 +108,8 @@ private fun GenerationPanel(episode: EpisodeEntity?, job: GenerationJobEntity?) 
             Text("${(total - completed).coerceAtLeast(0)} remaining", style = MaterialTheme.typography.labelMedium)
         }
     } else LinearProgressIndicator(Modifier.fillMaxWidth().padding(top = 28.dp))
+    if (episode?.lockedRevisionId != null) Text("Script locked", style = MaterialTheme.typography.labelLarge,
+        color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(top = 16.dp))
     Text("The selected inference route must succeed; no fallback will be used.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 24.dp))
 }
 
@@ -124,7 +132,7 @@ private fun FailurePanel(episode: EpisodeEntity, onClose: () -> Unit) {
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 12.dp),
             )
-            Button(onClick = onClose, modifier = Modifier.padding(top = 22.dp)) { Text("Return to library") }
+            PrimaryAction("Return to library", onClose, modifier = Modifier.padding(top = 22.dp))
         }
     }
 }

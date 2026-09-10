@@ -3,6 +3,9 @@ package dev.vibevoice.podcast.ui
 import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.SavedStateHandle
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import androidx.lifecycle.viewModelScope
 import dev.vibevoice.podcast.PodcastApplication
 import dev.vibevoice.podcast.data.AgentMessageEntity
@@ -20,12 +23,18 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 @Suppress("OPT_IN_USAGE")
-class PodcastViewModel(application: Application) : AndroidViewModel(application) {
-    private val app = application as PodcastApplication
-    private val repository = app.repository
+class PodcastViewModel internal constructor(
+    application: Application,
+    private val savedState: SavedStateHandle,
+    private val repository: dev.vibevoice.podcast.data.PodcastRepository,
+) : AndroidViewModel(application) {
+    constructor(application: Application, savedState: SavedStateHandle) : this(application, savedState, (application as PodcastApplication).repository)
+    private val instructionWrites = Mutex()
     private val selectedEpisodeId = MutableStateFlow<String?>(null)
     private val explicitScreen = MutableStateFlow<AppScreen?>(null)
     val agentSheetOpen = MutableStateFlow(false)
@@ -33,6 +42,9 @@ class PodcastViewModel(application: Application) : AndroidViewModel(application)
     val transientMessage = MutableStateFlow<String?>(null)
 
     val episodes = repository.observeEpisodes().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+    val libraryPlayback = repository.observeLibraryPlayback().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+    val libraryChapterCounts = repository.observeLibraryChapterCounts().map { rows -> rows.associate { it.episodeId to it.chapterCount } }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
     val episode = selectedEpisodeId.flatMapLatest { it?.let(repository::observeEpisode) ?: flowOf(null) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
     val sources = selectedEpisodeId.flatMapLatest { it?.let(repository::observeSources) ?: flowOf(emptyList()) }
@@ -114,12 +126,32 @@ class PodcastViewModel(application: Application) : AndroidViewModel(application)
         explicitScreen.value = null
     }
 
-    fun savePlayback(positionMs: Long, speed: Float, transcriptVisible: Boolean) = launchAction(showFailure = false) {
-        repository.savePlayback(requireNotNull(selectedEpisodeId.value), positionMs, speed, transcriptVisible)
+    fun instructionDraft(current: EpisodeEntity): EpisodeEntity =
+        if (current.phase == EpisodePhase.SOURCES || current.phase == EpisodePhase.INSTRUCTIONS) current.copy(
+            instructions = savedState["instructions.${current.id}"] ?: current.instructions,
+            reviewEnabled = savedState["review.${current.id}"] ?: current.reviewEnabled,
+        ) else current
+
+    fun saveInstructionDraft(episodeId: String, instructions: String, review: Boolean): kotlinx.coroutines.Job {
+        require(instructions.length <= InstructionDraftPolicy.MAX_CHARACTERS)
+        savedState["instructions.$episodeId"] = instructions
+        savedState["review.$episodeId"] = review
+        return viewModelScope.launch {
+            try { instructionWrites.withLock { repository.saveInstructionDraft(episodeId, instructions, review) } }
+            catch (cancelled: CancellationException) { throw cancelled }
+            catch (error: Exception) { transientMessage.value = error.message ?: "Could not save instructions" }
+        }
     }
 
-    fun exportEpisode(destination: Uri) = launchAction {
-        val current = requireNotNull(episode.value)
+    // Bind writes to the episode being disposed/exported, not a selection that navigation can clear.
+    fun savePlayback(episodeId: String, positionMs: Long, speed: Float, transcriptVisible: Boolean) = viewModelScope.launch {
+        try { repository.savePlayback(episodeId, positionMs, speed, transcriptVisible) }
+        catch (cancelled: CancellationException) { throw cancelled }
+        catch (error: Exception) { transientMessage.value = error.message ?: "Could not save playback position" }
+    }
+
+    fun exportEpisode(episodeId: String, destination: Uri) = launchAction {
+        val current = repository.episode(episodeId)
         val source = repository.resolveArtifact(requireNotNull(current.finalAudioPath))
         val output = requireNotNull(getApplication<Application>().contentResolver.openOutputStream(destination, "w")) { "Could not open export destination" }
         output.use { destinationStream -> source.inputStream().use { it.copyTo(destinationStream) } }

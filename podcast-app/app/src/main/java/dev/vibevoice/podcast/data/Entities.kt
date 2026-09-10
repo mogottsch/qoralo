@@ -5,6 +5,8 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
+data class EpisodeChapterCount(val episodeId: String, val chapterCount: Int)
+
 object EpisodePhase {
     const val SOURCES = "SOURCES"
     const val INSTRUCTIONS = "INSTRUCTIONS"

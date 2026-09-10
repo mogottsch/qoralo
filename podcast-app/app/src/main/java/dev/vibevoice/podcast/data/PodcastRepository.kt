@@ -26,6 +26,8 @@ class PodcastRepository(
     fun observeJob(id: String): Flow<GenerationJobEntity?> = dao.observeLatestJob(id)
     fun observeAudio(id: String): Flow<List<ChapterAudioEntity>> = dao.observeChapterAudio(id)
     fun observePlayback(id: String): Flow<PlaybackStateEntity?> = dao.observePlayback(id)
+    fun observeLibraryPlayback(): Flow<List<PlaybackStateEntity>> = dao.observeLibraryPlayback()
+    fun observeLibraryChapterCounts(): Flow<List<EpisodeChapterCount>> = dao.observeLibraryChapterCounts()
 
     suspend fun createEpisode(): String {
         val id = UUID.randomUUID().toString()
@@ -61,6 +63,15 @@ class PodcastRepository(
         require(dao.sources(episodeId).isNotEmpty()) { "Add at least one source" }
         if (episode.phase != EpisodePhase.INSTRUCTIONS) {
             dao.updateEpisode(episode.copy(phase = EpisodePhase.INSTRUCTIONS, updatedAtEpochMs = clock()))
+        }
+    }
+
+    suspend fun saveInstructionDraft(episodeId: String, instructions: String, reviewEnabled: Boolean) = database.withTransaction {
+        require(instructions.length <= 2_000) { "Instructions exceed the 2,000-character limit" }
+        val episode = requireEpisode(episodeId)
+        // A delayed UI save must never regress generation or mutate a locked episode.
+        if (episode.phase == EpisodePhase.SOURCES || episode.phase == EpisodePhase.INSTRUCTIONS) {
+            dao.updateEpisode(episode.copy(instructions = instructions, reviewEnabled = reviewEnabled, updatedAtEpochMs = clock()))
         }
     }
 

@@ -1,10 +1,14 @@
 package dev.vibevoice.podcast.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -26,6 +30,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -38,6 +43,8 @@ import dev.vibevoice.podcast.PodcastApplication
 fun PodcastApp(viewModel: PodcastViewModel = viewModel()) {
     val screen by viewModel.screen.collectAsStateWithLifecycle()
     val episodes by viewModel.episodes.collectAsStateWithLifecycle()
+    val libraryPlayback by viewModel.libraryPlayback.collectAsStateWithLifecycle()
+    val libraryChapterCounts by viewModel.libraryChapterCounts.collectAsStateWithLifecycle()
     val episode by viewModel.episode.collectAsStateWithLifecycle()
     val sources by viewModel.sources.collectAsStateWithLifecycle()
     val chapters by viewModel.chapters.collectAsStateWithLifecycle()
@@ -52,14 +59,25 @@ fun PodcastApp(viewModel: PodcastViewModel = viewModel()) {
     val context = LocalContext.current
     val repository = (context.applicationContext as PodcastApplication).repository
 
+    BackHandler(enabled = screen != AppScreen.Library) {
+        when {
+            lockOpen -> viewModel.dismissLock()
+            agentOpen -> viewModel.closeAgent()
+            screen == AppScreen.Instructions -> viewModel.showSources()
+            else -> viewModel.showLibrary()
+        }
+    }
+
     LaunchedEffect(message) {
         message?.let { snackbar.showSnackbar(it); viewModel.consumeMessage() }
     }
 
-    Scaffold(snackbarHost = { SnackbarHost(snackbar) }) { outerPadding ->
+    // Each screen owns system/IME insets; the snackbar host must not add them again.
+    Scaffold(contentWindowInsets = WindowInsets(0, 0, 0, 0), snackbarHost = { SnackbarHost(snackbar, Modifier.navigationBarsPadding().imePadding()) }) { outerPadding ->
         androidx.compose.foundation.layout.Box(Modifier.fillMaxSize().padding(outerPadding)) {
             when (screen) {
-                AppScreen.Library -> LibraryScreen(episodes, viewModel::newEpisode, viewModel::selectEpisode, viewModel::showSettings)
+                AppScreen.Library -> LibraryScreen(episodes, viewModel::newEpisode, viewModel::selectEpisode, viewModel::showSettings,
+                    playbackStates = libraryPlayback, chapterCounts = libraryChapterCounts)
                 AppScreen.Sources -> SourcesScreen(
                     sources = sources,
                     onBack = viewModel::showLibrary,
@@ -69,7 +87,8 @@ fun PodcastApp(viewModel: PodcastViewModel = viewModel()) {
                     onContinue = viewModel::continueToInstructions,
                 )
                 AppScreen.Instructions -> episode?.let {
-                    InstructionsScreen(it, viewModel::showSources, viewModel::createScript)
+                    InstructionsScreen(viewModel.instructionDraft(it), viewModel::showSources, viewModel::createScript,
+                        onDraftChanged = { text, review -> viewModel.saveInstructionDraft(it.id, text, review) })
                 }
                 AppScreen.Review -> ReviewScreen(
                     chapters, messages, job, agentOpen, lockOpen,
@@ -79,10 +98,14 @@ fun PodcastApp(viewModel: PodcastViewModel = viewModel()) {
                 AppScreen.Generating -> GeneratingScreen(episode, job, viewModel::showLibrary)
                 AppScreen.Player -> episode?.let { current ->
                     val path = current.finalAudioPath
-                    if (path != null) PlayerScreen(
-                        current, chapters, audio, playback, repository.resolveArtifact(path),
-                        viewModel::showLibrary, viewModel::exportEpisode, viewModel::savePlayback,
-                    )
+                    if (path != null) key(current.id) {
+                        PlayerScreen(
+                            current, chapters, audio, playback?.takeIf { it.episodeId == current.id }, repository.resolveArtifact(path),
+                            viewModel::showLibrary,
+                            onExport = { destination -> viewModel.exportEpisode(current.id, destination) },
+                            onPersist = { position, speed, transcript -> viewModel.savePlayback(current.id, position, speed, transcript) },
+                        )
+                    }
                 }
                 AppScreen.Settings -> SettingsScreen(viewModel::showLibrary)
             }

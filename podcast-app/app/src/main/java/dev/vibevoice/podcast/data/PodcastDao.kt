@@ -50,6 +50,9 @@ interface PodcastDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun upsertPlayback(value: PlaybackStateEntity)
     @Query("SELECT * FROM playback_state WHERE episodeId = :episodeId") fun observePlayback(episodeId: String): Flow<PlaybackStateEntity?>
+    @Query("SELECT * FROM playback_state ORDER BY updatedAtEpochMs DESC") fun observeLibraryPlayback(): Flow<List<PlaybackStateEntity>>
+    @Query("SELECT e.id AS episodeId, COUNT(c.rowId) AS chapterCount FROM episodes e LEFT JOIN chapters c ON c.revisionId = e.activeRevisionId GROUP BY e.id")
+    fun observeLibraryChapterCounts(): Flow<List<EpisodeChapterCount>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun upsertInstalledModel(value: InstalledModelEntity)
     @Query("SELECT * FROM installed_models ORDER BY route") fun observeInstalledModels(): Flow<List<InstalledModelEntity>>

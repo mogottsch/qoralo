@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application>
+        <activity
+            android:name=".gallery.SyntheticGalleryActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:process=":ui_gallery"
+            android:windowSoftInputMode="adjustResize" />
         <service
             android:name=".wiring.DurationLoadService"
             android:exported="false"

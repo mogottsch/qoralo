@@ -11,6 +11,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -37,6 +43,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -45,9 +52,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -64,17 +78,15 @@ fun SourcesScreen(
     onRemove: (EpisodeSourceEntity) -> Unit,
     onContinue: () -> Unit,
 ) {
-    var pasteDialog by remember { mutableStateOf(false) }
+    var pasteDialog by rememberSaveable { mutableStateOf(false) }
     val document = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let(onDocument) }
     PhoneContent {
         Scaffold(
+            modifier = Modifier.imePadding(),
             topBar = { TopAppBar(title = { Text("New episode") }, navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back to library") } }) },
             bottomBar = {
-                Button(
-                    onClick = onContinue,
-                    enabled = sources.isNotEmpty(),
-                    modifier = Modifier.fillMaxWidth().navigationBarsPadding().padding(20.dp).height(52.dp),
-                ) { Text("Continue") }
+                PrimaryAction("Continue", onContinue, enabled = sources.isNotEmpty(),
+                    modifier = Modifier.navigationBarsPadding().padding(horizontal = 20.dp, vertical = 12.dp))
             },
         ) { padding ->
             LazyColumn(
@@ -129,21 +141,31 @@ private fun SourceChoice(icon: androidx.compose.ui.graphics.vector.ImageVector, 
 }
 
 @Composable
-private fun PasteSourceDialog(onDismiss: () -> Unit, onAdd: (String, String) -> Unit) {
-    var title by remember { mutableStateOf("") }
-    var text by remember { mutableStateOf("") }
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Paste text") },
-        text = {
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                OutlinedTextField(title, { title = it }, label = { Text("Source name") }, singleLine = true)
-                OutlinedTextField(text, { text = it }, label = { Text("Source text") }, minLines = 8, maxLines = 14)
+internal fun PasteSourceDialog(onDismiss: () -> Unit, onAdd: (String, String) -> Unit) {
+    var title by rememberSaveable { mutableStateOf("") }
+    var text by rememberSaveable { mutableStateOf("") }
+    Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)) {
+        BoxWithConstraints(
+            Modifier.fillMaxSize().safeDrawingPadding().imePadding().padding(16.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            Surface(shape = RoundedCornerShape(28.dp), color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                modifier = Modifier.fillMaxWidth().heightIn(max = maxHeight)) {
+                Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text("Paste text", style = MaterialTheme.typography.headlineSmall)
+                    Column(Modifier.weight(1f, fill = false).verticalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        OutlinedTextField(title, { title = it }, label = { Text("Source name") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                        OutlinedTextField(text, { text = it }, label = { Text("Source text") }, minLines = 3, maxLines = 8, modifier = Modifier.fillMaxWidth())
+                    }
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+                        TextButton(onClick = onDismiss, modifier = Modifier.heightIn(min = 52.dp)) { Text("Cancel") }
+                        PrimaryAction("Add source", { onAdd(title, text) }, enabled = text.isNotBlank(), modifier = Modifier.weight(1f))
+                    }
+                }
             }
-        },
-        confirmButton = { TextButton(onClick = { onAdd(title, text) }, enabled = text.isNotBlank()) { Text("Add source") } },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
-    )
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
@@ -152,9 +174,11 @@ fun InstructionsScreen(
     episode: EpisodeEntity,
     onBack: () -> Unit,
     onCreate: (String, Boolean) -> Unit,
+    onDraftChanged: (String, Boolean) -> Unit = { _, _ -> },
 ) {
-    var instructions by remember(episode.id) { mutableStateOf(episode.instructions) }
-    var review by remember(episode.id) { mutableStateOf(episode.reviewEnabled) }
+    var instructions by rememberSaveable(episode.id) { mutableStateOf(episode.instructions) }
+    var review by rememberSaveable(episode.id) { mutableStateOf(episode.reviewEnabled) }
+    val largeText = LocalDensity.current.fontScale >= 1.5f
     val hints = listOf(
         "Length" to "Keep it under five minutes.",
         "Focus" to "Focus on the practical consequences.",
@@ -164,13 +188,11 @@ fun InstructionsScreen(
     )
     PhoneContent {
         Scaffold(
+            modifier = Modifier.imePadding(),
             topBar = { TopAppBar(title = { Text("New episode") }, navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back to sources") } }) },
             bottomBar = {
-                Button(
-                    onClick = { onCreate(instructions, review) },
-                    enabled = instructions.isNotBlank(),
-                    modifier = Modifier.fillMaxWidth().navigationBarsPadding().padding(20.dp).height(52.dp),
-                ) { Text("Create") }
+                PrimaryAction("Create", { onCreate(instructions, review) }, enabled = instructions.isNotBlank(),
+                    modifier = Modifier.navigationBarsPadding().padding(horizontal = 20.dp, vertical = 12.dp))
             },
         ) { padding ->
             LazyColumn(Modifier.fillMaxSize().padding(padding), contentPadding = PaddingValues(horizontal = 20.dp, vertical = 8.dp)) {
@@ -179,21 +201,32 @@ fun InstructionsScreen(
                 item {
                     OutlinedTextField(
                         value = instructions,
-                        onValueChange = { if (it.length <= 2_000) instructions = it },
+                        onValueChange = { text ->
+                            if (text.length <= InstructionDraftPolicy.MAX_CHARACTERS) {
+                                instructions = text
+                                onDraftChanged(instructions, review)
+                            }
+                        },
                         label = { Text("Initial instructions") },
                         supportingText = { Text("${instructions.length} / 2,000") },
                         placeholder = { Text("Make it about 10 minutes. Focus on the questions that matter most.") },
-                        minLines = 7,
-                        maxLines = 11,
+                        minLines = if (largeText) 3 else 5,
+                        maxLines = 8,
                         modifier = Modifier.fillMaxWidth().padding(top = 18.dp),
                     )
                 }
                 item { Text("Things you could mention", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 16.dp, bottom = 4.dp)) }
                 item {
                     androidx.compose.foundation.layout.FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        hints.forEach { (label, value) -> AssistChip(onClick = {
-                            instructions = listOf(instructions.trim(), value).filter(String::isNotBlank).joinToString("\n")
-                        }, label = { Text(label) }) }
+                        hints.forEach { (label, value) ->
+                            val appended = InstructionDraftPolicy.appendedHint(instructions, value)
+                            AssistChip(enabled = appended != null, onClick = {
+                                if (appended != null) {
+                                    instructions = appended
+                                    onDraftChanged(instructions, review)
+                                }
+                            }, label = { Text(label) })
+                        }
                     }
                 }
                 item {
@@ -207,7 +240,10 @@ fun InstructionsScreen(
                                 Text("Review script first", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
                                 Text("See the chapters before audio.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
-                            Switch(checked = review, onCheckedChange = { review = it })
+                            Switch(checked = review, onCheckedChange = {
+                                review = it
+                                onDraftChanged(instructions, review)
+                            }, modifier = Modifier.semantics { contentDescription = "Review script first" })
                         }
                     }
                 }

@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -30,6 +32,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -46,6 +50,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -78,19 +83,14 @@ fun ReviewScreen(
     PhoneContent {
         Scaffold(
             topBar = { TopAppBar(title = { Text("Review script") }, navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back to library") } }) },
-            floatingActionButton = {
-                ExtendedFloatingActionButton(
-                    onClick = onOpenAgent,
-                    icon = { Icon(Icons.Default.AutoAwesome, null) },
-                    text = { Text("Edit with agent") },
-                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                    modifier = Modifier.navigationBarsPadding().padding(bottom = 64.dp),
-                )
-            },
             bottomBar = {
                 Surface(color = MaterialTheme.colorScheme.surfaceContainer, tonalElevation = 3.dp) {
-                    Button(onClick = onShowLock, modifier = Modifier.fillMaxWidth().navigationBarsPadding().padding(16.dp).height(52.dp)) {
-                        Icon(Icons.Default.Lock, null); Text("Lock script & create audio", Modifier.padding(start = 8.dp))
+                    Column(Modifier.fillMaxWidth().navigationBarsPadding().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        FilledTonalButton(onClick = onOpenAgent, modifier = Modifier.align(Alignment.End).heightIn(min = 48.dp)) {
+                            Icon(Icons.Default.AutoAwesome, null)
+                            Text("Edit with agent", Modifier.padding(start = 8.dp), softWrap = true)
+                        }
+                        PrimaryAction("Lock script & create audio", onShowLock, icon = Icons.Default.Lock)
                     }
                 }
             },
@@ -160,10 +160,10 @@ private fun AgentEditorSheet(
     onClose: () -> Unit,
     onRequest: (String) -> Unit,
 ) {
-    var request by remember { mutableStateOf("") }
+    var request by rememberSaveable { mutableStateOf("") }
     val working = job?.kind == JobKind.AGENT_EDIT && job.status in setOf(JobStatus.QUEUED, JobStatus.RUNNING)
-    ModalBottomSheet(onDismissRequest = onClose, modifier = Modifier.fillMaxSize()) {
-        Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp).navigationBarsPadding()) {
+    ModalBottomSheet(onDismissRequest = onClose, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true), modifier = Modifier.fillMaxSize()) {
+        Column(Modifier.fillMaxSize().padding(horizontal = 16.dp).navigationBarsPadding().imePadding()) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Text("Edit the script", style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
                 IconButton(onClick = onClose) { Icon(Icons.Default.Close, "Close agent editor") }
@@ -173,11 +173,20 @@ private fun AgentEditorSheet(
                 modifier = Modifier.fillMaxWidth().weight(1f).padding(top = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
+                if (job?.kind == JobKind.AGENT_EDIT && job.status == JobStatus.FAILED) item {
+                    Surface(color = MaterialTheme.colorScheme.errorContainer, shape = RoundedCornerShape(16.dp)) {
+                        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Text("Change wasn’t applied", style = MaterialTheme.typography.titleSmall)
+                            Text(job.errorMessage ?: "The editing request could not finish.", style = MaterialTheme.typography.bodyMedium)
+                            Text("Your draft is unchanged.", style = MaterialTheme.typography.bodySmall)
+                        }
+                    }
+                }
                 if (messages.isEmpty()) item { AgentBubble("What should I change?", false) }
                 items(messages, key = { it.id }) { message -> AgentBubble(message.text, message.role == AgentRole.USER) }
                 if (working) item { LinearProgressIndicator(Modifier.fillMaxWidth()); Text(job.statusText, style = MaterialTheme.typography.labelMedium) }
                 val changed = messages.lastOrNull { it.role == AgentRole.AGENT && it.resultRevisionId != null }
-                if (changed != null) item {
+                if (changed != null && job?.status != JobStatus.FAILED) item {
                     Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer), shape = RoundedCornerShape(16.dp)) {
                         Column(Modifier.padding(14.dp)) {
                             Text("Changes ready", fontWeight = FontWeight.Bold)
@@ -191,6 +200,8 @@ private fun AgentEditorSheet(
                 value = request,
                 onValueChange = { request = it },
                 enabled = !working,
+                minLines = 1,
+                maxLines = 4,
                 placeholder = { Text("Ask for a change…") },
                 trailingIcon = {
                     IconButton(onClick = { onRequest(request); request = "" }, enabled = request.isNotBlank() && !working) {

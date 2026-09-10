@@ -34,6 +34,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
@@ -42,6 +44,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.vibevoice.podcast.data.EpisodeEntity
 import dev.vibevoice.podcast.data.EpisodePhase
+import dev.vibevoice.podcast.data.PlaybackStateEntity
 
 @Composable
 fun LibraryScreen(
@@ -49,34 +52,43 @@ fun LibraryScreen(
     onNew: () -> Unit,
     onOpen: (EpisodeEntity) -> Unit,
     onSettings: () -> Unit,
+    playbackStates: List<PlaybackStateEntity> = emptyList(),
+    chapterCounts: Map<String, Int> = emptyMap(),
 ) {
     val ready = episodes.filter { it.phase == EpisodePhase.FROZEN_READY }
-    val hero = ready.firstOrNull()
+    val resume = playbackStates.sortedByDescending { it.updatedAtEpochMs }.firstOrNull { state ->
+        ready.any { it.id == state.episodeId && state.positionMs > 0 && state.positionMs < (it.durationMs ?: Long.MAX_VALUE) }
+    }
+    val hero = ready.firstOrNull { it.id == resume?.episodeId } ?: ready.firstOrNull()
     val unfinished = episodes.filter { it.phase != EpisodePhase.FROZEN_READY }
+    val stackedAction = LocalDensity.current.fontScale >= 1.4f || LocalConfiguration.current.screenWidthDp < 360
     PhoneContent {
         Scaffold(
             bottomBar = {
-                NavigationBar {
-                    NavigationBarItem(
-                        selected = true,
-                        onClick = {},
-                        icon = { Icon(Icons.AutoMirrored.Filled.LibraryBooks, contentDescription = "Library") },
-                        label = { Text("Library", maxLines = 1) },
-                    )
-                    Box(Modifier.weight(1.25f), contentAlignment = Alignment.Center) {
-                        ExtendedFloatingActionButton(
-                            text = { Text("New episode", maxLines = 1) },
-                            icon = { Icon(Icons.Default.Add, contentDescription = null) },
-                            onClick = onNew,
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        )
+                Surface(color = MaterialTheme.colorScheme.surfaceContainer) {
+                    Column {
+                        if (stackedAction) PrimaryAction("New episode", onNew, icon = Icons.Default.Add,
+                            modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp))
+                        NavigationBar {
+                            NavigationBarItem(
+                                selected = true, onClick = {},
+                                icon = { Icon(Icons.AutoMirrored.Filled.LibraryBooks, contentDescription = null) },
+                                label = { Text("Library") },
+                            )
+                            // Measure the full label intrinsically; do not force a weighted narrow box.
+                            if (!stackedAction) ExtendedFloatingActionButton(
+                                text = { Text("New episode") },
+                                icon = { Icon(Icons.Default.Add, contentDescription = null) },
+                                onClick = onNew,
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            )
+                            NavigationBarItem(
+                                selected = false, onClick = onSettings,
+                                icon = { Icon(Icons.Default.Settings, contentDescription = null) },
+                                label = { Text("Settings") },
+                            )
+                        }
                     }
-                    NavigationBarItem(
-                        selected = false,
-                        onClick = onSettings,
-                        icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
-                        label = { Text("Settings", maxLines = 1) },
-                    )
                 }
             },
         ) { padding ->
@@ -93,14 +105,14 @@ fun LibraryScreen(
                         }
                     }
                 }
-                if (hero != null) item { ContinueCard(hero, onOpen) }
+                if (hero != null) item { ContinueCard(hero, playbackStates.firstOrNull { it.episodeId == hero.id }, chapterCounts[hero.id], onOpen) }
                 if (unfinished.isNotEmpty()) {
                     item { Text("Continue creating", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp)) }
                     items(unfinished, key = { it.id }) { EpisodeStatusRow(it, onOpen) }
                 }
                 if (ready.isNotEmpty()) {
                     item { Text("Recent episodes", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp)) }
-                    items(ready.drop(1), key = { it.id }) { EpisodeRow(it, onOpen) }
+                    items(ready.filter { it.id != hero?.id }, key = { it.id }) { EpisodeRow(it, chapterCounts[it.id], onOpen) }
                 }
                 if (episodes.isEmpty()) item { EmptyLibrary(onNew) }
             }
@@ -109,7 +121,9 @@ fun LibraryScreen(
 }
 
 @Composable
-private fun ContinueCard(episode: EpisodeEntity, onOpen: (EpisodeEntity) -> Unit) {
+private fun ContinueCard(episode: EpisodeEntity, playback: PlaybackStateEntity?, chapterCount: Int?, onOpen: (EpisodeEntity) -> Unit) {
+    val position = playback?.positionMs?.coerceIn(0, episode.durationMs ?: Long.MAX_VALUE) ?: 0L
+    val finished = episode.durationMs?.let { it > 0 && position >= it } ?: false
     Surface(
         color = MaterialTheme.colorScheme.primaryContainer,
         shape = RoundedCornerShape(28.dp),
@@ -118,13 +132,13 @@ private fun ContinueCard(episode: EpisodeEntity, onOpen: (EpisodeEntity) -> Unit
         Row(Modifier.padding(16.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             VibeArtwork(Modifier.size(width = 116.dp, height = 148.dp), compact = true)
             Column(Modifier.weight(1f)) {
-                Text("CONTINUE LISTENING", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+                Text(if (finished) "FINISHED" else if (position > 0) "CONTINUE LISTENING" else "READY TO LISTEN", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
                 Text(episode.title, style = MaterialTheme.typography.titleLarge, maxLines = 3, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(top = 4.dp))
-                Text("${episode.durationMs?.let(::formatDuration) ?: "Ready"}", style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(top = 6.dp))
-                Spacer(Modifier.weight(1f))
-                LinearProgressIndicator(progress = { 0f }, modifier = Modifier.fillMaxWidth())
+                Text(listOfNotNull(chapterCount?.takeIf { it > 0 }?.let { "$it chapters" }, episode.durationMs?.let(::formatDuration)).joinToString(" · "), style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(top = 6.dp))
+                Spacer(Modifier.height(12.dp))
+                LinearProgressIndicator(progress = { (position.toFloat() / (episode.durationMs ?: 1L).coerceAtLeast(1)).coerceIn(0f, 1f) }, modifier = Modifier.fillMaxWidth())
                 Row(Modifier.fillMaxWidth().padding(top = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Text("Start listening", style = MaterialTheme.typography.labelMedium, modifier = Modifier.weight(1f))
+                    Text(if (finished) "Play again" else if (position > 0) "Resume at ${formatDuration(position)}" else "Start listening", style = MaterialTheme.typography.labelMedium, modifier = Modifier.weight(1f))
                     Surface(shape = CircleShape, color = MaterialTheme.colorScheme.primary, modifier = Modifier.size(40.dp)) {
                         Box(contentAlignment = Alignment.Center) { Icon(Icons.Default.PlayArrow, "Play ${episode.title}", tint = MaterialTheme.colorScheme.onPrimary) }
                     }
@@ -135,7 +149,7 @@ private fun ContinueCard(episode: EpisodeEntity, onOpen: (EpisodeEntity) -> Unit
 }
 
 @Composable
-private fun EpisodeRow(episode: EpisodeEntity, onOpen: (EpisodeEntity) -> Unit) {
+private fun EpisodeRow(episode: EpisodeEntity, chapterCount: Int?, onOpen: (EpisodeEntity) -> Unit) {
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainerLow,
         shape = RoundedCornerShape(20.dp),
@@ -145,7 +159,7 @@ private fun EpisodeRow(episode: EpisodeEntity, onOpen: (EpisodeEntity) -> Unit) 
             VibeArtwork(Modifier.size(60.dp), compact = true)
             Column(Modifier.weight(1f)) {
                 Text(episode.title, style = MaterialTheme.typography.titleSmall, maxLines = 2, overflow = TextOverflow.Ellipsis)
-                Text(episode.durationMs?.let(::formatDuration) ?: "Ready", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(listOfNotNull(chapterCount?.takeIf { it > 0 }?.let { "$it chapters" }, episode.durationMs?.let(::formatDuration)).joinToString(" · "), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             IconButton(onClick = { onOpen(episode) }) { Icon(Icons.Default.PlayArrow, "Play") }
         }
@@ -182,12 +196,13 @@ private fun EpisodeStatusRow(episode: EpisodeEntity, onOpen: (EpisodeEntity) -> 
 
 @Composable
 private fun EmptyLibrary(onNew: () -> Unit) {
+    val largeText = LocalDensity.current.fontScale >= 1.4f
     Surface(color = MaterialTheme.colorScheme.primaryContainer, shape = RoundedCornerShape(28.dp), modifier = Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(28.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            VibeArtwork(Modifier.fillMaxWidth().height(210.dp), compact = true)
-            Text("Turn your sources into an episode", style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(top = 24.dp))
+        Column(Modifier.padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            VibeArtwork(Modifier.fillMaxWidth().height(if (largeText) 96.dp else 180.dp), compact = true)
+            Text("Your first episode", style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(top = 20.dp))
             Text("Everything stays on this device.", color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 8.dp))
-            ExtendedFloatingActionButton(onClick = onNew, icon = { Icon(Icons.Default.Add, null) }, text = { Text("Create an episode") }, modifier = Modifier.padding(top = 24.dp))
+            PrimaryAction("Create an episode", onNew, modifier = Modifier.padding(top = 20.dp))
         }
     }
 }
