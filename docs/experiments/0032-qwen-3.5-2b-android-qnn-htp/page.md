@@ -1,7 +1,7 @@
 ---
 experiment: 0032-qwen-3.5-2b-android-qnn-htp
 status: active
-summary: The first weight-free host-QNN full-chain case completed with a selected-value mismatch; all other values agree with its oracle within one FP32 ULP. The whole output is not output-only behavior, and the internal QNN path remains unproven.
+summary: An input-only sweep on the same frozen PTE exposes in-range, half-step and upper-range discrepancies. The first fixture's single-outlier pattern does not generalize; no universal output-only path, SDK cause or model precision fix is established.
 benchmark: android-llm
 ---
 
@@ -278,11 +278,43 @@ Native fixed-point datatype is observed, but full encoding-kind/bitwidth fields 
 
 **Retention and stop boundary.** Inputs/output, all CPU/oracle references, all 64 taps and full logs are in Git. The [native-artifact manifest](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/conv-history-native-fullchain-20260910/local-native-artifacts.json) binds a **230,736-byte context** (`33ba1075…2cf1f`) and **232,144-byte PTE** (`0170b6a2…d69c3`), both **LOCAL-ONLY: do not clean; copy their bytes on migration**. They reside under `experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/conv-history-native-executions/fullchain-attempt-01/compile/data/`. Earlier tiny CPU export PT2s are also local-only, inventoried in the [readiness export manifest](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/conv-history-native-adapter-readiness-20260910/local-export-manifest.json). None replaces the protected full-174 reference archive.
 
-The controller and both phase groups were reaped/absent, disk scratch was empty, and the first-case release was consumed. No other native case, retry, full-model or physical run followed. The [history-range sweep](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/conv-history-native-fullchain-20260910/SWEEP_PROPOSAL.md) is source-only: no new sweep input pack or native execution is established here. Follow-up `9954879` makes saved-analyzer tests bytecode-safe without a probe rerun; it does not extend numerical evidence.
+The controller and both phase groups were reaped/absent, disk scratch was empty, and the first-case release was consumed. No automatic follow-on, retry, full-model or physical run occurred. The [history-range sweep](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/conv-history-native-fullchain-20260910/SWEEP_PROPOSAL.md) was source-only at this milestone; its later input preparation and separately released runtime call follow below. Follow-up `9954879` makes saved-analyzer tests bytecode-safe without a probe rerun; it does not extend numerical evidence.
+
+### Frozen-PTE input-range sweep — host synthetic only
+
+**The single-outlier finding above applies to the first fixture, not a general saturation-only rule.** The broader sweep retains that fixture and its anchor unchanged, but also exposes discrepancies at in-range values and ordinary rounding boundaries. It changes inputs, not model precision, topology, encodings or the compiled artifact.
+
+**Preparation (`5397017`).** The [source/CPU/mock readiness](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/conv-history-sweep-readiness-20260910/result.json) places 39 labelled values on 78 paired channels, with the original channel-6053 anchor retained. Including that anchor gives **40 rows but only 35 distinct FP32 bit patterns**; overlapping boundary labels are not independent unique samples. One tiny CPU full-chain forward bit-matches all 24,576 scalar-oracle values. Output-only/aligned arrays for these new inputs are analytical predictions, not additional CPU or native executions. The new runtime-only adapter has no Compile/export branch; its initial request was unapproved and could not inherit the consumed first-case release.
+
+**One separately released runtime call (`a0786ea`).** The [sweep outcome](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/conv-history-native-sweep-20260910/result.json) binds request `dd7e107a…f1cc1`, pack manifest `42272684…e4225`, the same 232,144-byte PTE `0170b6a2…d69c3` and 230,736-byte context `33ba1075…2cf1f`. Logical counts are **0 compiles / 1 load / 1 forward**. Runtime guard time is 5.207 seconds within 60 seconds; controller time is 5.808 seconds within 90 seconds. These include verification, imports and evidence work, not isolated inference performance. The native log separately records one graph completion with status `0x0`; no compiler directory or graph-finalization observation exists for this call.
+
+All **24,576 output values** are finite, and before/after inputs match the released bytes. Output SHA-256 is `3b895987…89b432` for 98,304 bytes. Collection is complete but numerical equivalence remains false. All **39 paired rows** have bit-identical outputs; repeated input-bit patterns agree across positions. Positive- and negative-zero input bytes remain separately retained, while both produce positive-zero output. These are within-call position-consistency observations, not repeated-run reproducibility or loaded-route isolation.
+
+The [complete labelled results](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/conv-history-native-sweep-20260910/LABELLED_RESULTS.md) retain all samples, signed bits and scalar clipping flags. Representative saved-output comparisons are:
+
+| Sample/region | QNN output | Full-chain scalar | Direct-output scalar |
+|---|---:|---:|---:|
+| In-range input 20.0 | 20.0007343292 | 19.9999160767 | 19.9999160767 |
+| Positive ordinary half-step, at | 0.0801304951 | 0.0793128312 | 0.0801304877 |
+| Upper decoded-endpoint triplet | 22.1323680878 | 22.1315498352 | 22.1315498352 |
+| Upper code-clipping-onset triplet | 22.1323680878 | 22.1315498352 | 22.1323680878 |
+| Upper endpoint + one history step | 22.1331882477 | 22.1315498352 | 22.1323680878 |
+| Upper gap midpoint | 22.9271335602 | 22.1315498352 | 22.9271316528 |
+| Retained original anchor | 23.7218971252 | 22.1315498352 | 23.7218952179 |
+
+In-range 20.0 and ordinary half-step samples differ from full-chain by about one final output code. The upper decoded endpoint, **22.131834030151367**, is distinct from the scalar code-clipping onset, **22.132230758666992**; its inward neighbor 22.13222885131836 still maps to unclamped code 65535. **No native-output transition appears across the sampled onset triplet**, even though the scalar clipping flag changes. Higher inputs rise above the full-chain plateau. This describes these samples, not an observed internal SDK clipping stage or a continuous-range proof. There is no universal output-only match: input 20.0, the decoded-endpoint triplet and endpoint-plus-step values disagree with that prediction.
+
+All **13 lower-side labelled rows** return -29.863319396972656, three FP32 ULPs above scalar -29.863325119018555. Their interpretation is confounded by the final output range. At the scalar lower history-clipping onset -29.8638973236084, history code -1 clips to zero; subsequent full-chain concat/output reach code zero **without another clipping event**, while direct-output quantization clips separately. Being below a decoded endpoint alone does not prove integer-code clipping. Scalar stages are not native intermediate observations, and no lower-path attribution follows.
+
+**Whole-array and preservation checks.** All **24,498 untouched output positions**, including the old anchor, are bit-identical to first-case QNN output; only 78 new sweep cells are excluded. Excluding all 79 labelled cells leaves **24,497 values** within one ULP of full-chain. Across the complete array, **65 values exceed one ULP against full-chain**, versus **6,184 against each output-only/aligned prediction**; all 6,144 slot-0 values still distinguish those predictions. These counts are descriptive, not a chosen fidelity tolerance or FP32-accuracy ranking. The first fixture's raw records and its one-outlier result are preserved rather than rewritten.
+
+**Artifact and inference limits.** Raw IO before/after, first-case comparison bytes, complete oracles/scalar stages, requests, logs and analysis are in Git. The frozen PTE/context and earlier CPU exports remain LOCAL-ONLY with the mandatory migration requirements above. Zero ExecuTorch tensor fallback is inherited from accepted receipts bound to this same PTE, not a new compile or CPU-free host-simulation claim. Additional runtime-library pins are prospective: they do not retroactively establish every historical binary's identity or enumerate all dynamic dependencies.
+
+No native intermediates were captured. The earlier pre-Compile encoding observations remain valid at their boundary, while complete encoding-kind/bitwidth and the finalized/internal QNN graph remain unknown. Standard-library saved-data analysis ran after cleanup; no backend call was used for that analysis. Runtime/controller groups were reaped, owned scratch was empty, and the release is consumed. No retry, follow-on, full-model or phone run is authorized. State input/output range alignment is only an untested future hypothesis, not a precision fix or explanation of model/logit drift.
 
 ## Results
 
-**The experiment is active after one weight-free host-QNN full-chain case.** Call/collection completed, but numerical equivalence is false: one selected history value differs substantially from full-chain, while every other value is within one FP32 ULP. The array does not follow the output-only/aligned controls globally. Earlier paired-call differences and position-2/3 argmax mismatches remain unchanged. No QNN operator defect or cause of hidden/logit drift, missing historical state-byte identity, FP32 accuracy, full-174 QNN fidelity, new physical result, or campaign readiness is established.
+**The experiment is active after one runtime-only input sweep on the frozen tiny PTE.** Outputs are finite but numerically mismatched. In-range/half-step discrepancies and sampled upper behavior narrow the earlier single-outlier interpretation to its first fixture; neither a universal output-only path nor a hidden SDK cause is established. Earlier paired-call differences and position-2/3 argmax mismatches remain unchanged. No QNN operator defect or cause of hidden/logit drift, missing historical state-byte identity, FP32 accuracy, full-174 QNN fidelity, new physical result, or campaign readiness is established.
 
 | Evidence boundary | Current result |
 |---|---|
@@ -364,11 +396,19 @@ The controller and both phase groups were reaped/absent, disk scratch was empty,
 | Tiny delegation/execution | One subgraph; early tensor fallback absent; final one QnnBackend call / zero KernelCalls; runtime status `0x0`, not CPU-free host simulation |
 | Output classification | 24,576 finite FP32 values; collection complete, numerical equivalence false |
 | Selected mismatch | QNN 23.7218971252 vs full-chain 22.1315498352; absolute difference 1.5903472900 |
-| Whole-array constraint | All 24,575 other values within 1 ULP of full-chain; all 6,144 slot-0 values differ from output-only/aligned by 0.000817656517 |
+| First-fixture array constraint | All 24,575 other values within 1 ULP of full-chain; all 6,144 slot-0 values differ from output-only/aligned by 0.000817656517; not a general saturation-only rule |
 | Actual metadata capture | 50 graph snapshots + 12 config taps + native wrappers/manager IO; four boundaries/three domains preserved before Compile; both input Quantize wrappers present |
 | Unknown native details | Full encoding-kind/bitwidth and finalized internal graph; empty manager IO arrays remain a null limitation, not missing logical IO |
 | Tiny artifact retention | Raw IO/taps/references/logs in Git; context 230,736 B and PTE 232,144 B LOCAL-ONLY, mandatory migration bytes |
-| Next investigation | Source-only history-range sweep proposal; no sweep pack or swept native cases, output-only/aligned still CPU references only |
+| Sweep preparation | `5397017`: 39 labels on 78 paired channels + original anchor; 40 rows / 35 distinct FP32 patterns; one CPU full-chain output matches all scalar values |
+| Frozen-PTE sweep | `a0786ea`: 0 compile / 1 load / 1 forward; runtime 5.207 s <60 s, controller 5.808 s <90 s; finite mismatch, not performance evidence |
+| Input/position checks | Before/after bytes unchanged; all 39 paired rows bit-identical; distinct signed-zero inputs both yield +0; within-call only |
+| First-case preservation | All 24,498 untouched outputs including anchor bit-identical to first-case native output; original evidence unchanged |
+| Empirical regions | In-range 20.0 / ordinary half-steps differ around one output code; no sampled upper-onset transition, higher values rise above full-chain plateau |
+| Complete-array comparisons | Full-chain 65 values >1 ULP; output-only/aligned 6,184 each; no universal output-only match or chosen acceptance tolerance |
+| Lower-range limitation | 13 rows at approximately 3 ULP from final scalar endpoint; final-range/direct-output clipping confounds, no native-stage inference |
+| Runtime/artifact boundary | Same local-only PTE/context and inherited fallback receipts; prospective runtime pins do not prove complete historical binary identity |
+| Remaining investigation | Encoding alignment is an untested hypothesis; finalized path unknown, no model precision fix or further native release |
 | Remaining candidate evidence | No QNN root cause for hidden/logit drift, full-174 QNN fidelity, FP32/physical equivalence, autoregressive text, or campaign |
 | Android LLM registry row | None; bounded host control/analysis evidence is not registry-eligible |
 
