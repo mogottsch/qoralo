@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
+  "evidence_class": "host_controlled_qdq_position1_same_pack_reference_validation",
+  "status": "single_qdq_reference_call_completed_no_paired_qnn_call",
+  "authorization": {
+    "released_by": "Pi",
+    "backend": "qdq",
+    "position": 1,
+    "input_token": 8678,
+    "maximum_forward_calls": 1,
+    "timeout_seconds": 600,
+    "qnn_follow_on": false
+  },
+  "input_binding": {
+    "pack_header": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/controlled-p1-qdq-pack-20260910T114619Z/pack-header.json",
+      "bytes": 9607,
+      "sha256": "ec38185783dbd2bc387dbf5387c3f89cd4a4fbb786f2504a82b2b48cd43cd392"
+    },
+    "input_pack": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/controlled-p1-qdq-pack-20260910T114619Z/raw/input-pack.pt",
+      "bytes": 121313354,
+      "sha256": "bfe14bca74090778550618c1c6eb485728e15e6e784e936b87606dcb298ebe0d"
+    },
+    "submitted_input_values_sha256": "4251bbce8005e37cb9fc4c8da8f0af604e7c4a9884179e2ccd358ef4865c78e4",
+    "model_artifact": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/restart-20260910T083327Z/01-hidden-compile/diagnostic-w4a16-qdq.pt2",
+      "bytes": 13645661902,
+      "sha256": "30799090d14a42c92ea804a2763df55ff231ba232653d96484324ad40c492364"
+    },
+    "state_origin": "qdq_after_position0_not_qnn_resume",
+    "lineage": {
+      "source_position": 0,
+      "source_token": 248045,
+      "initial_state": "all zero",
+      "source_mask": "only current-token final slot visible",
+      "position0_logits_bit_identical_to_full_replay": true,
+      "full_replay_state_bytes_retained": false,
+      "assumption": "Same artifact/input/reset lineage and deterministic source are assumed; matching logits do not prove missing full-replay state bytes equal."
+    }
+  },
+  "observed": {
+    "graph_calls_returned": 1,
+    "outputs_retained": 73,
+    "all73_outputs_finite": true,
+    "input_mutation_observed": false,
+    "historical_position1_logits_bit_identical": true,
+    "historical_comparison": {
+      "cosine": 1.000003695487976,
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "reference_argmax": 198,
+      "actual_argmax": 198
+    },
+    "actual_argmax": 198,
+    "raw_outputs": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/controlled-p1-qdq-call-20260910T120717Z/run/control/raw/position-001.outputs.pt",
+      "bytes": 21878472,
+      "sha256": "b5aa794276833f2285935889b4723b57b1c50ce114e2c1b33c429c4632f54cfb"
+    },
+    "authoritative_same_pack_qdq_reference_available": true
+  },
+  "floating_point_metric_note": "Raw FP32 cosine1.000003695487976 overshoots1 on bit-identical nonzero vectors due to reduction rounding. Raw metric preserved; maxabs0/meanabs0 and byte-value equality are the reliable observations, not above-perfect similarity.",
+  "paired_reference_handoff": {
+    "raw_result_local_path": ".local/diagnosis/controlled-p1-qdq-call-20260910T120717Z/run/control/result.json",
+    "raw_result_sha256": "7137d83a3c89a73121ad5bd2514c865b7cec97fe8b5c2d117be25fe165f43519",
+    "pack_header_sha256": "ec38185783dbd2bc387dbf5387c3f89cd4a4fbb786f2504a82b2b48cd43cd392",
+    "raw_output_sha256": "b5aa794276833f2285935889b4723b57b1c50ce114e2c1b33c429c4632f54cfb",
+    "consumed_by_qnn": false
+  },
+  "timing": {
+    "worker_elapsed_seconds": 143.39193447300204,
+    "supervisor_elapsed_seconds": 146.95372903799944,
+    "host_timeout_seconds": 600,
+    "math_threads": 4,
+    "scope": "Host one-call diagnostic wall time including hashes/load/persistence, not Android or a benchmark rate."
+  },
+  "retention": {
+    "all73_outputs_committed_losslessly": true,
+    "historical_p1_logits_committed_losslessly": true,
+    "raw_recovery_count_verified": 3,
+    "compression_manifest": "compression-manifest.json",
+    "local_originals_protected": true
+  },
+  "cleanup": {
+    "worker_pid": 1724347,
+    "worker_reaped": true,
+    "owned_process_group_absent": true,
+    "scratch_regular_files_remaining": 0,
+    "scratch_filesystem": "ext4",
+    "outputs_and_input_pack_preserved": true,
+    "qnn_follow_on_started": false,
+    "phone_access_performed": false
+  },
+  "new_qdq_calls": 1,
+  "new_qnn_calls": 0,
+  "paired_same_state_attribution_completed": false,
+  "historical_full_replay_state_byte_identity_proved": false,
+  "autoregressive_generation_performed": false,
+  "physical_execution_performed": false,
+  "full174_replay_performed": false,
+  "resume_performed": false,
+  "campaign_ready": false,
+  "registry_eligible": false,
+  "current_physical_pte_sha256": "23ac8abd7e39b596d62bdc6b098a3e61fe0688bf6d1f4d537959e13492d2c506",
+  "claim_limits": [
+    "One QDQposition1 validation on the reviewed input pack only; it supplies a real reference for a later separately released QNN control.",
+    "Its output equals the historical position1 logits, but this does not directly prove missing historical state bytes identical.",
+    "No QNN follow-on, same-state causal attribution, full174 replay, autoregressive text, physical or campaign claim.",
+    "Original vectors, pack and physical baseline remain unchanged; no scalar cosines are added."
+  ],
+  "next_gate": "Review this exact QDQ result/hash before separately releasing a QNNposition1 call on the same pack; no automatic follow-on."
+}

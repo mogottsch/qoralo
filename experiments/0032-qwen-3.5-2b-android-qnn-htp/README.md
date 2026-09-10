@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active. The bounded QNN-x86 own-state prefix completed positions 0–3, but drift remains: position-1 logit cosine falls to 0.679220 and argmax first diverges at position 2. This does not establish full fidelity or identify current-call versus feedback error. The physical baseline remains unchanged; a source-only position-1 identical-QDQ-state control is planned for review.**
+**Active. The bounded QNN-x86 own-state prefix completed positions 0–3, but drift remains: position-1 logit cosine falls to 0.679220 and argmax first diverges at position 2. This does not establish full fidelity or identify current-call versus feedback error. The QDQ position-1 validation now supplies a same-pack reference with logits equal to historical position 1; the paired QNN call has not run. Physical baseline unchanged.**
 
 This is a separate HTP feasibility arm. It does not change or relabel `0027` CPU evidence.
 
@@ -75,10 +75,14 @@ A lower-retention two-process host replay in [`results/host-w4a16-qdq-output-dia
 
 [`results/controlled-position1-readiness/`](results/controlled-position1-readiness/) retains a materialized **QDQ-origin** 51-input position-1 pack, lossless hashes, independent data checks, and 23 synthetic tests for the dedicated single-call driver. No new model call occurred. The missing full-replay state-byte assumption remains explicit. Exact same-pack attribution would use an optional ONE QDQ position-1 validation call, then a separately reviewed QNN call on the same pack; neither is a 174-token replay or own-state resume.
 
+## One-call QDQ position-1 validation
+
+[`results/controlled-position1-qdq-20260910/`](results/controlled-position1-qdq-20260910/) retains the single QDQ position-1 call on the reviewed 51-input pack. All 73 outputs are finite, inputs were unchanged, and logits are bit-identical to historical position 1 (argmax 198, max/mean absolute error 0). The raw FP32 cosine slightly exceeds 1 from reduction rounding and is not treated as above-perfect agreement. This supplies a real same-pack QDQ reference for a later QNN control; no paired QNN call or full-state byte-identity claim follows yet.
+
 ## Current next gate
 
 1. Keep physical PTE `23ac8abd…d2c506` and phone preflight unchanged; the 73-output diagnostic PTE is not compatible with the current 49-output Android runner.
-2. Review the materialized pack/header and dedicated driver. The exact-attribution path needs two separately budgeted/released single calls (proposed QDQ600s, then QNN300s); historical-only QNN comparison retains the lineage assumption. No automatic backend sequence or model run.
+2. Review the completed QDQ position-1 result/hash before separately releasing one QNN call on that same pack. No automatic follow-on, resume or new replay; the missing historical state-byte caveat remains explicit.
 3. No ADB or staging without a new explicit Pi phone slot. Full QNN/physical drift and one-token-only interpretation remain campaign-readiness boundaries.
 4. Only after agreed fidelity and state-isolation gates may chunked prefill and the fixed 1+5+5+5 campaign be promoted.
 

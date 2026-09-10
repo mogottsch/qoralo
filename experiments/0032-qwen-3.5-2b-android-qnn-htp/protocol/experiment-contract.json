@@ -173,8 +173,11 @@
     "controlled_position1_readiness_result_path": "results/controlled-position1-readiness/result.json",
     "controlled_position1_pack_sha256": "bfe14bca74090778550618c1c6eb485728e15e6e784e936b87606dcb298ebe0d",
     "controlled_position1_header_sha256": "ec38185783dbd2bc387dbf5387c3f89cd4a4fbb786f2504a82b2b48cd43cd392",
-    "controlled_position1_new_model_calls": 0,
-    "next_gate": "Review source/data readiness. Exact same-pack attribution uses optionalONE QDQposition1 validation then separately released QNNposition1 (proposed600s/300s); no automatic backend sequence, full replay, resume or phone run. Historical-only comparison retains the lineage assumption."
+    "controlled_position1_new_model_calls": 1,
+    "controlled_position1_qdq_result_path": "results/controlled-position1-qdq-20260910/result.json",
+    "controlled_position1_qdq_raw_result_sha256": "7137d83a3c89a73121ad5bd2514c865b7cec97fe8b5c2d117be25fe165f43519",
+    "controlled_position1_paired_qnn_executed": false,
+    "next_gate": "Review the completed one-call QDQ reference before separately releasing a QNNposition1 call on the same pack/result hash. No automatic follow-on, full replay, own-state resume or phone run; no missing historical state-byte identity claim."
   },
   "required_provider_proof_if_unblocked": {
     "compiled_context_identity": "Hash every deployed serialized context and bind SM8550/v73 compiler provenance.",

@@ -2,7 +2,7 @@
 
 ## Status
 
-Active. QNN-x86 own-state positions 0–3 completed but exposed substantial drift: position-1 cosine 0.679220 and first argmax divergence at position 2. Full fidelity and current-call versus feedback attribution remain unresolved. Physical baseline unchanged; a source-only identical-QDQ-state position-1 control awaits review.
+Active. QNN-x86 own-state positions 0–3 completed but exposed substantial drift: position-1 cosine 0.679220 and first argmax divergence at position 2. Full fidelity and current-call versus feedback attribution remain unresolved. The QDQ position1 validation is complete on the reviewed pack; a paired QNN call remains unreleased. Physical baseline unchanged.
 
 ## Completed
 
@@ -42,10 +42,12 @@ Active. QNN-x86 own-state positions 0–3 completed but exposed substantial drif
 
 24. Materialized/hash-bound the51-input QDQ-origin position1 pack from saved position0 outputs, independently checked48 state mappings, and added a dedicated prepare/verify/single-call driver with23 synthetic tests. No new model call occurred. Exact same-pack attribution requires a separately budgeted optionalONE QDQp1 validation before paired QNNp1; historical-only comparison retains the source-lineage assumption and vector reference-shift term.
 
+25. Completed the separately authorized ONE QDQ position1 call on the exact pack in146.954s under600s. Inputs were unchanged, all73 outputs finite, and logits exactly equal historicalp1 (max/mean error0,argmax198). Raw FP32 cosine overshoot retained as rounding, not above-perfect agreement. Result/reference hash is ready for review; no paired QNN call ran.
+
 ## Current work
 
 1. Preserve physical baseline/preflight hashes, diagnostic artifacts, and both LOCAL-ONLY positional tensor directories listed in the full-short result. Do not clean them; copy them on migration/handover.
-2. Review the materialized QDQ-origin input pack/header, dedicated driver and separate single-call budgets (proposed QDQ600s then QNN300s for exact pairing). No model/QNN execution or automatic sequence until release; never relabel the pack as own-QNN resume.
+2. Review the completed QDQ single-call result/hash before any separately released QNNposition1 control on the same pack. No automatic sequence or new replay; never relabel the pack as own-QNN resume.
 3. Do not use ADB or the phone without an explicit scheduled slot. Host teacher-forced completion is not QNN/physical fidelity or a campaign authorization.
 4. After agreed fidelity follow-up gates, validate chunked-prefill state semantics/delegation and loaded-route reset/isolation before the canonical campaign.
 

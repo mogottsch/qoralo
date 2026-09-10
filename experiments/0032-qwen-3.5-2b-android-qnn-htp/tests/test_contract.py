@@ -692,6 +692,37 @@ class ContractTest(unittest.TestCase):
         old_plan = (EXP / "results/host-qnn-trajectory-prefix-000-003-20260910/SAME_STATE_PLAN.md").read_text()
         self.assertNotIn("identically matching the source used", old_plan)
 
+    def test_one_qdq_position1_call_is_a_reference_not_paired_qnn(self) -> None:
+        directory = EXP / "results/controlled-position1-qdq-20260910"
+        result = json.loads((directory / "result.json").read_text())
+        raw = json.loads((directory / "raw/result.json").read_text())
+        self.assertEqual("completed_single_call", raw["status"])
+        self.assertEqual("qdq", raw["backend"])
+        self.assertEqual(1, raw["graph_calls_returned"])
+        self.assertEqual(1, raw["target_position"])
+        self.assertFalse(raw["input_mutation_observed"])
+        self.assertEqual("4251bbce8005e37cb9fc4c8da8f0af604e7c4a9884179e2ccd358ef4865c78e4", raw["submitted_input_values_sha256"])
+        self.assertTrue(raw["historical_qdq_logits_bit_identical"])
+        self.assertEqual(0, raw["historical_qdq_comparison"]["max_abs"])
+        self.assertEqual(0, raw["historical_qdq_comparison"]["mean_abs"])
+        self.assertEqual(198, raw["logits"]["argmax"])
+        self.assertGreater(raw["historical_qdq_comparison"]["cosine"], 1)  # Preserve rounding overshoot, don't invent above-perfect similarity.
+        self.assertTrue(result["observed"]["authoritative_same_pack_qdq_reference_available"])
+        self.assertEqual(1, result["new_qdq_calls"])
+        self.assertEqual(0, result["new_qnn_calls"])
+        self.assertFalse(result["paired_same_state_attribution_completed"])
+        self.assertFalse(result["historical_full_replay_state_byte_identity_proved"])
+        self.assertLess(result["timing"]["supervisor_elapsed_seconds"], 600)
+        self.assertTrue(result["cleanup"]["owned_process_group_absent"])
+        self.assertEqual(0, result["cleanup"]["scratch_regular_files_remaining"])
+        self.assertEqual(result["paired_reference_handoff"]["raw_result_sha256"], sha(directory / "raw/result.json"))
+        for e in json.loads((directory / "compression-manifest.json").read_text())["files"]:
+            path = directory / e["compressed_path"]
+            self.assertEqual(e["compressed_sha256"], sha(path))
+            recovered_sha, recovered_bytes = sha_zstd(path)
+            self.assertEqual(e["raw_sha256"], recovered_sha)
+            self.assertEqual(e["raw_bytes"], recovered_bytes)
+
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
             EXP / "protocol",
@@ -712,6 +743,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/qnn-trajectory-helper-readiness",
             EXP / "results/host-qnn-trajectory-prefix-000-003-20260910",
             EXP / "results/controlled-position1-readiness",
+            EXP / "results/controlled-position1-qdq-20260910",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():
