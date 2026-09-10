@@ -72,9 +72,9 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="status-header" data-status-header="true">
 <div class="kicker"><span>Experiment 0034</span><span class="status">Active</span></div>
 <h1>Experiment 0034 — LFM2.5-2.6B Android QNN/HTP</h1>
-<p class="summary">Correct native-INT64 physical prefill completed, but AR1 loaded without executing because of a dispatch bug. A narrow host-tested fix and new stage are ready, not phone-validated. Historical wrong-position evidence remains retracted for fidelity and speed.</p>
+<p class="summary">The corrected native-INT64 route now completes one physical short/max16 run with one AR171 and fifteen AR1 calls. All outputs were finite-scanned, but the intelligible text is grammatically flawed and diverges from the reference after five tokens; no quality or campaign claim follows.</p>
 <div class="header-links"><a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-09-10</span><span>evidence commit: 89fa34f3e2ffce20f9ab54e2d6caf6b75c4954c4</span><span>page source: docs/experiments/0034-lfm2.5-2.6b-android-qnn-htp/page.md</span><span>page source sha256: 81ba74141586b279b951954ffbb13008934ed5163e32b91da061c50e2fb418ec</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-09-10</span><span>evidence commit: ecc94cb651534e04662d2fc75845ab2dd54e261a</span><span>page source: docs/experiments/0034-lfm2.5-2.6b-android-qnn-htp/page.md</span><span>page source sha256: 00fc203b5643762c5fe24969648b1e52dccd3804cd560f84985881bbc886afec</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
@@ -239,12 +239,47 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <p>AR1 failed <strong>before input copy or graph execution</strong> with <code>fatal=missing context: layer-00-core-norm</code>. <code>LoadOnly(..., &quot;monolith&quot;)</code> had loaded the correct alias but left <code>monolithic_</code> false; <code>RunToken</code> therefore selected the old split-route dispatcher. This is a dispatch/control-flow failure after AR1 load, not a demonstrated AR1 numerical or provider failure.</p>
 <p>Only detailed prefill QNN timing is published. The runner aborted before final JSON, so request-to-emission and CPU-preparation phase timings were not serialized; no canonical TTFT, full-request timing or speed comparison follows. Sampled process VmHWM peaked at 1,744,568 KiB, excluding unreported DSP/system residency. CPU embedding, in-memory bridge and global argmax remain explicit alongside HTP neural execution—never HTP-only. Raw output/logs and before/after telemetry were retained; the runner and scoped root were verified absent, settings unchanged, and the full-lifecycle lock released. This attempt&#x27;s verified cleanup does not revise the first attempt&#x27;s unknown status.</p>
 <p><strong>Narrow host-only dispatch fix (<code>8d2eb9d</code>, wording qualified by <code>89fa34f</code>).</strong> The <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-integrated-ar1-dispatch-fix-readiness/result.json">separate readiness result</a> changes <code>LoadOnly</code> to clear consolidated mode and select monolithic mode only for alias <code>monolith</code>; <code>prefill</code> and legacy layer aliases remain false. A no-QNN regression exercises those selections. It changes dispatch, not weights, precision, prompt, state ABI or either compiled context.</p>
-<p>New host runner SHA-256 is <code>425e3dd7…88d58</code>; Android is <code>4387189b…dd931</code>. The rebuilt <strong>12-payload / 3,400,505,532-byte</strong> stage has metadata <code>bb2b3635…74721</code> and manifest <code>15d534e9…207a4</code>; local hashes and ELF preflight pass. These are new runner/stage identities, not the binaries exercised in the retained partial attempt. No post-fix native inference or phone run occurred.</p>
-<p><code>89fa34f</code> keeps the large historical state/logit deltas and token-5 divergence attached to <strong>all-zero-position, wrong-input qnn-net-run evidence</strong>, not the corrected INT64 route&#x27;s precision. Corrected prefill operability and finiteness do not establish reference fidelity, a complete answer, AR1 continuation or max16 completion. A post-fix attempt still requires its own reviewed slot; no campaign or registry evidence is added.</p>
+<p>New host runner SHA-256 is <code>425e3dd7…88d58</code>; Android is <code>4387189b…dd931</code>. The rebuilt <strong>12-payload / 3,400,505,532-byte</strong> stage has metadata <code>bb2b3635…74721</code> and manifest <code>15d534e9…207a4</code>; local hashes and ELF preflight pass. These are new runner/stage identities, not the binaries exercised in the retained partial attempt. No post-fix native inference or phone run occurred during that readiness milestone.</p>
+<p><code>89fa34f</code> keeps the large historical state/logit deltas and token-5 divergence attached to <strong>all-zero-position, wrong-input qnn-net-run evidence</strong>, not the corrected INT64 route&#x27;s precision. That partial prefill result alone did not establish reference fidelity, a complete answer, AR1 continuation or max16 completion. The post-fix attempt below received its own review and slot; no campaign or registry evidence is added.</p>
+<h3 id="corrected-integrated-short-max16-one-cold-physical-run">Corrected integrated short/max16 — one cold physical run<a class="anchor" href="#corrected-integrated-short-max16-one-cold-physical-run" aria-label="Link to Corrected integrated short/max16 — one cold physical run">#</a></h3>
+<p><strong>Physical outcome <code>1e5f33c</code>; offline profile note <code>851177b</code>.</strong> The <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-integrated-phone-attempt-3-success/result.json">third integrated attempt</a> used the dispatch-fixed runner <code>4387189b…dd931</code> and unchanged contexts/stage identities above. Exact device/build, ELF and all 13 local/remote manifest entries passed. One process and one backend/device loaded <strong>two contexts sequentially</strong>, with only one resident at a time, no per-phase reload and no per-token streaming.</p>
+<p>Direct descriptor-matched INT64 buffers supplied AR171 positions <strong>0…170</strong> and AR1 positions <strong>171…185</strong>, bypassing qnn-net-run file conversion. One AR171 execution and <strong>15 AR1 executions</strong> completed. Every call requested and finite-scanned <strong>all 60 outputs</strong> before copying: 38 state tensors and 22 logit chunks. The scans are in-process evidence; raw state/logit tensors were not serialized for numerical comparison. The route explicitly retains CPU embedding dequantization, mask/position/state orchestration, the 38-state bridge, global argmax and per-token output handling alongside HTP neural graph work. It is not HTP-only.</p>
+<p>The exclusive output file was opened before backend setup, and every emitted token was appended and <code>fsync</code>ed. There are <strong>16 total tokens, including the AR171 endpoint</strong>, not 16 additional decode calls. The 64-byte INT32 token file has SHA-256 <code>7c1a06de…f4e9c</code>; all IDs are in vocabulary, EOS 124900 is absent, and the stop is the total-16 cap. Only after raw preservation and verified cleanup did the bound tokenizer produce this <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-integrated-phone-attempt-3-success/decoded-output.json">exact partial text</a>:</p>
+<blockquote>The user wants me to a self-contained technical recommendation for an engineering team based on</blockquote>
+<p>The output is <strong>intelligible but grammatically flawed</strong>, not a complete answer or quality acceptance. It matches the reference for five tokens; the sixth token, zero-based output index 5, is <strong>267 versus reference 1561</strong>. This is <strong>new corrected-route divergence</strong>, not the historical wrong-position token-5 result. Correct positions and finite scans do not establish numerical/reference equivalence, and the old large wrong-input state/logit deltas cannot explain this new result by attribution alone.</p>
+<div class="table-wrap"><table><thead><tr>
+<th>Cold diagnostic interval</th>
+<th>Seconds</th>
+<th>Boundary</th>
+</tr></thead><tbody>
+<tr>
+<td>Backend/device setup</td>
+<td>0.23367</td>
+<td>Reported separately from the request-emission intervals</td>
+</tr>
+<tr>
+<td>Request → first emitted/fsynced token</td>
+<td>10.5014</td>
+<td>Includes AR171 context load, CPU input preparation, prefill and endpoint handling; excludes later profile work</td>
+</tr>
+<tr>
+<td>Request → final emitted/fsynced token</td>
+<td>34.8339</td>
+<td>Includes intervening bridge, prefill profile/free/reset, AR1 load and continuation</td>
+</tr>
+<tr>
+<td>Diagnostic through trailing profile/free</td>
+<td>35.2029</td>
+<td>Also includes final AR1 profile extraction and context free</td>
+</tr>
+</tbody></table></div>
+<p>Tokenization was precomputed and excluded from every interval. This is <strong>one cold bounded engineering run</strong>, not canonical request-to-first-token timing, a warm-throughput result, a statistical speed comparison or a campaign. The final-emission interval excludes trailing AR1 profile/free work; those costs belong to the diagnostic total, not an invented decode rate.</p>
+<p>Detailed prefill profiling reports <strong>6.577719 seconds QNN execution / 5.444893 seconds accelerator execution</strong>. The AR1 extraction reports <strong>1.353149 / 1.049857 seconds</strong>, but it is <strong>one event set collected after 15 calls</strong>, not a 15-call history, total, mean or throughput distribution. These nested profile durations are not additive. The separately reviewed <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-integrated-profile-breakdown/result.json">offline profile breakdown</a> (<code>851177b</code>) assigns <strong>19.56% of AR171 accelerator cycles</strong> to score-scaling operations, not 19.56% of whole-request time. Moving the scale to the smaller query tensor (<code>×0.125</code>) is an <strong>unimplemented hypothesis</strong>: 64× fewer scaled elements is not 64× speedup, and reassociation still needs numerical/finite-value and underflow/overflow validation. AR1 MLP accounts for 60.29% of its single retained event set, not a 15-call history. No new execution or optimization result follows from that analysis.</p>
+<p>Peak sampled process VmHWM was <strong>1,746,324 KiB</strong>, not total system/DSP residency. Raw output was pulled before decoding; the runner and scoped remote root were verified absent, settings remained unchanged, and the full-lifecycle <code>phone.lock</code> was released. Raw battery histories are not reproduced here. This run demonstrates bounded corrected-route operability, not complete-answer quality, numerical fidelity, combined-context viability, loaded-route campaign isolation or registry eligibility. Earlier failed attempts and their raw evidence remain intact.</p>
 </section>
 <section class="primary-section" id="results" data-primary-section="results">
 <h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
-<p><strong>Corrected native-INT64 physical prefill passed; the integrated request remains partial.</strong> One AR171 execution finite-scanned all 60 outputs and durably emitted endpoint 597, then AR1 loaded but executed zero graphs because of the dispatch bug. The narrow fix is host/build/stage readiness only, with no post-fix phone evidence. Historical wrong-position qnn-net-run records remain invalid for canonical-position, matched-fidelity and comparable-speed conclusions.</p>
+<p><strong>One corrected native-INT64 integrated short/max16 run completed.</strong> AR171 plus 15 AR1 calls finite-scanned all outputs and emitted 16 total tokens. The text is intelligible but grammatically flawed, with a new corrected-route mismatch after a five-token reference prefix. This is bounded operability, not quality, numerical equivalence, warm/statistical performance or a campaign. Historical wrong-position records retain their separate retractions.</p>
 <div class="table-wrap"><table><thead><tr>
 <th>Evidence boundary</th>
 <th>Current result</th>
@@ -743,7 +778,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 </tr>
 <tr>
 <td>Finite-scan implementation</td>
-<td>Source checks all 60 outputs per phase; later partial physical run scanned prefill only, with no AR1 call</td>
+<td>All 60 outputs per call; attempt2 scanned prefill only, attempt3 scanned prefill plus all 15 AR1 calls; no raw state/logit dumps</td>
 </tr>
 <tr>
 <td>Corrected output cap</td>
@@ -846,8 +881,48 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td><code>89fa34f</code>: historical large deltas/token-5 divergence belong to wrong-position inputs, not corrected-route precision</td>
 </tr>
 <tr>
+<td>Corrected post-fix completion</td>
+<td><code>1e5f33c</code>: one process/backend, two sequential contexts; 1 AR171 + 15 AR1 calls, no reload/streaming</td>
+</tr>
+<tr>
+<td>Actual corrected positions</td>
+<td>Native INT64 AR171 0…170 / AR1 171…185; no qnn-net-run file conversion</td>
+</tr>
+<tr>
+<td>Complete bounded token output</td>
+<td>16 total including endpoint, every token fsynced; raw 64 B / <code>7c1a06de…f4e9c</code>; cap stop, no EOS</td>
+</tr>
+<tr>
+<td>New reference divergence</td>
+<td>Five-token prefix matches, sixth token 267 vs 1561; corrected-route observation, not old wrong-position drift</td>
+</tr>
+<tr>
+<td>Text boundary</td>
+<td>Intelligible but grammatically flawed partial text; no quality, complete-answer or numerical-equivalence acceptance</td>
+</tr>
+<tr>
+<td>Cold delivery intervals</td>
+<td>First 10.5014 s / final 34.8339 s / diagnostic 35.2029 s; backend setup separate, tokenization excluded</td>
+</tr>
+<tr>
+<td>Corrected prefill profile</td>
+<td>QNN 6.577719 s / accelerator 5.444893 s; one phase&#x27;s nested observations</td>
+</tr>
+<tr>
+<td>Corrected AR1 profile limit</td>
+<td>QNN 1.353149 s / accelerator 1.049857 s; one event set after 15 calls, not per-call history/total/mean/distribution</td>
+</tr>
+<tr>
+<td>Offline profile hypothesis</td>
+<td><code>851177b</code>: score scaling is 19.56% of prefill accelerator cycles; query ×0.125 unimplemented, 64× fewer elements ≠64× speedup</td>
+</tr>
+<tr>
+<td>Corrected process memory/cleanup</td>
+<td>VmHWM 1,746,324 KiB process-only; token pull, runner/root absence and lock release verified; settings unchanged</td>
+</tr>
+<tr>
 <td>Remaining integrated evidence</td>
-<td>No post-fix native AR1/max16 completion, canonical end-to-end timing, numerical/reference fidelity, performance campaign or registry row</td>
+<td>Complete-answer quality, numerical/reference fidelity, canonical end-to-end timing, warm/statistical distribution, campaign and registry eligibility unproven</td>
 </tr>
 <tr>
 <td>Hybrid disclosure rule</td>
@@ -890,8 +965,8 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>None; correction adds no campaign evidence and the seven-row registry is unchanged</td>
 </tr>
 </tbody></table></div>
-<p>The earlier all-AR1 direct-runner baseline is not implicated and remains its own bounded evidence. The qnn-net-run AR171, phase-switch, and derived bridge/max16 records must instead be read with the zero-position correction: their raw arrays and timings survive, but intended canonical-position, fidelity, and speed conclusions do not. The corrected integrated route has now executed native-INT64 prefill, but the retained request stopped before AR1 execution. Neither that partial result nor the unexecuted dispatch fix retrospectively validates the earlier runs.</p>
-<p>No 0034 row belongs in the Android LLM registry. A fully disclosed selected route must complete a valid reset-isolated campaign before registry publication. Complete post-fix integrated max16 execution, canonical end-to-end timing, numerical/reference fidelity, detailed corrected-route AR1 continuation evidence, and statistical performance remain unproven.</p>
+<p>The earlier all-AR1 direct-runner baseline is not implicated and remains its own bounded evidence. The qnn-net-run AR171, phase-switch, and derived bridge/max16 records must instead be read with the zero-position correction: their raw arrays and timings survive, but intended canonical-position, fidelity, and speed conclusions do not. The second integrated attempt stopped before AR1 execution; the separately reviewed third attempt completed native-INT64 prefill and 15 AR1 calls with the dispatch fix. Its new reference divergence is distinct from the historical wrong-input evidence, and it does not retrospectively validate those earlier runs.</p>
+<p>No 0034 row belongs in the Android LLM registry. A fully disclosed selected route must complete a valid reset-isolated campaign before registry publication. Bounded corrected max16 operability is now established, but complete-answer quality, canonical end-to-end timing, numerical/reference fidelity, per-call AR1 profile history, warm/statistical performance and a reset-isolated campaign remain unproven.</p>
 </section></article>
 <footer>Generated deterministically from <code>page.md</code> by <code>scripts/generate_experiment_pages.py</code>. The linked experiment files remain the measurement authority.</footer>
 </main>
