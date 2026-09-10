@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "kind": "tts-only",
+  "status": "host-validated-awaiting-focused-review-and-phone-slot",
+  "sourceCommit": "7ecde86ee5d53f6374a22021e53932e972e62269",
+  "sourceDirty": false,
+  "baseSourceCommit": "3fd75c06481bcc709d45da5c4933347f348e9079",
+  "effectiveAppSrcTree": "3fa978f25570d47450733609777dddb443f27616",
+  "contractSha256": "5844320c0ce2442e16d2d837fc1239bf8e9da05ede672d1249f125d91fdf57ca",
+  "contract": {
+    "schemaVersion": 1,
+    "id": "app-supertonic-canonical-tts-once-v1",
+    "purpose": "four unchanged sessions, one complete canonical first TTS request and WAV; no Gemma/capacity/retry",
+    "route": "SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP",
+    "supertonicManifestSha256": "dc4ac737924d7d62e57ff5e166707198095c49e51d77cfed04a44d9e9435952d",
+    "canonical": {
+      "file": "canonical.txt",
+      "bytes": 226,
+      "sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67"
+    },
+    "voice": "M1/SID5",
+    "chapterId": "canonical-short",
+    "steps": 5,
+    "speed": 1.0,
+    "seedXor": 20260813,
+    "rng": "existing native chapter-ID FNV-style hash xor seed; xorshift64star Box-Muller; fresh per-request buffers",
+    "namespacePolicy": "optional public libcdsprpc.so declaration as proven manifest-only variant; no explicit dlopen/ADSP/LD change",
+    "socModel": "43",
+    "cpuFallbackEnabled": false,
+    "textLength": 239,
+    "latentLength": 238,
+    "latentChannels": 144,
+    "deadlineSeconds": {
+      "verify": 60,
+      "load": 120,
+      "render": 90,
+      "close": 30
+    },
+    "serviceSeconds": 330,
+    "driverSeconds": 345,
+    "hostSeconds": 360,
+    "maxEvidenceBytes": 67108864,
+    "sessionConstructors": 4,
+    "ttsRequests": 1,
+    "expectedSessionRunCounts": {
+      "duration": 1,
+      "text": 1,
+      "vector": 5,
+      "vocoder": 1
+    },
+    "gemmaRequests": 0,
+    "capacityProbes": 0,
+    "retries": 0,
+    "benchmarkScope": "one first profiled engineering request; no warm median/full campaign/full chapter/E2E claim"
+  },
+  "hostGuardSha256": "3ad4c644a7733d1f1feeb7bbbe83532cc0be0f727f32f59dda00c951dd6e202d",
+  "ttsControllerSha256": "a62d204c380a5b2d0c8f7c5bd94729b6f823e18200feed2ebe24fa73962bec3c",
+  "phoneAuthorized": false,
+  "sourceMode": "frozen diagnostic source + debug TTS-only overlay; exact existing native payload reuse; not polished UI build",
+  "app": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/tts-only-ready/7ecde86/app.apk",
+    "bytes": 130644473,
+    "sha256": "024f5cd58761f5816163b907293e51867a5c0f3962b37c7aa6416c18ad47228d"
+  },
+  "test": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/tts-only-ready/7ecde86/test.apk",
+    "bytes": 2166324,
+    "sha256": "7066cbee3abdeff69dbaa5bd0f1ff6031614061f444237488b407aa44bc3263d"
+  },
+  "evidenceBindings": {
+    "app-manifest.txt": {
+      "bytes": 11295,
+      "sha256": "7174c2061c279a2e5768cc7a6de6da92080f78238b084b9e73552f0e26d75084"
+    },
+    "app-signature.txt": {
+      "bytes": 955,
+      "sha256": "4434238f6cde4588f2926c79eaf8131abbbfa61bda40df1a3db3800ec7e2b9b7"
+    },
+    "host-build.log": {
+      "bytes": 4028,
+      "sha256": "43883de892d606525d7ee31cce4078fc2c35c8a2bc268315ef0a91290398231d"
+    },
+    "host-checks.json": {
+      "bytes": 365,
+      "sha256": "996c88d2e9fa969cd10a41e7348d397208df58e3eb0e3d937b6eaa9e717c1b10"
+    },
+    "junit/TEST-dev.vibevoice.podcast.wiring.TtsOnlyContractTest.xml": {
+      "bytes": 871,
+      "sha256": "97f902f990dbfcb9190485ab2ba750a94a59c8603425f5adda7244484b47c9f3"
+    },
+    "native-byte-proof.json": {
+      "bytes": 2018,
+      "sha256": "23f67aadcc1f3bb74ee3407de8652354cc4c74f814419f1e2c6381801e825a8a"
+    },
+    "source-proof.json": {
+      "bytes": 11289,
+      "sha256": "9babf4289e04bb918507e8fbccb18480f39938ea56a48b4230a395a502a10d60"
+    },
+    "test-manifest.txt": {
+      "bytes": 4737,
+      "sha256": "d4981cab0c5a7311d3e46fb954f906ae4e255f718747069adfa65b0705ae125a"
+    },
+    "test-signature.txt": {
+      "bytes": 955,
+      "sha256": "4434238f6cde4588f2926c79eaf8131abbbfa61bda40df1a3db3800ec7e2b9b7"
+    },
+    "trusted-runtime.json": {
+      "bytes": 2621,
+      "sha256": "a38f2621f138d3b60ef4b2af7830ee2c423ee5c5b3b617b04a690863a38dac0e"
+    },
+    "trusted-runtime.log": {
+      "bytes": 249,
+      "sha256": "a8808db11fd3b5f4966f4aee24b030190157235112e51c7576ea4c4f891af943"
+    }
+  }
+}

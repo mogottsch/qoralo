@@ -1,6 +1,6 @@
 # Phone-return handoff
 
-**No further phone work is authorized by this handoff.** Moritz returned and one explicitly released duration-load attempt completed; another device action needs Pi's new slot. Frozen UI and baseline diagnostic APKs remain unchanged.
+**No further phone work is authorized by this handoff.** Explicit load-only and one canonical TTS slots completed; another device action needs Pi's new slot. Frozen candidates remain unchanged. Git push/external publication is held for coordinated historical privacy cleanup.
 
 ## 1. Coherent UI candidate — FINAL host + synthetic UI approved
 
@@ -33,11 +33,19 @@ Bounds: verification60s, load/close45s, service120s, driver135s, instrumentation
 
 Historical scope: [`qnn-duration-load-only.md`](qnn-duration-load-only.md); the separately reviewed host guard is described in [`duration-phone-guard.md`](duration-phone-guard.md), source `9e2c41d`, closure `3ad4c644a7733d1f1feeb7bbbe83532cc0be0f727f32f59dda00c951dd6e202d`. The controller remains plan-only without `--execute` and requires both candidate and host-guard approval. Any new physical action needs Pi's slot, exact identity, continuous lock and eligible durable state. Private DB snapshots remain local-only.
 
-Next authorization is **source/build-only**: the smallest TTS-only engineering harness loading four unchanged contexts and submitting one entire canonical226-byte request/WAV through the existing render path. No Gemma, splitting/stitching, retries or deliberate capacity probe; no intermediate four-load-only phone gate. Physical execution still requires exact candidate review and Pi's new slot.
+The separately reviewed TTS-only harness then proceeded directly to one four-context canonical request (section3), without an intermediate four-load-only phone gate. It used no Gemma, splitting/stitching, retries or deliberate capacity probe. That completed slot authorizes no further execution.
 
-## 3. What remains unresolved
+## 3. First canonical TTS WAV — produced, listening not reviewed
 
-- **QNN execution/TTS:** duration device/session load and close now succeed with the sole public-library declaration. Four-context readiness, neural execution, speech/WAV and capacity remain untested. Successful Gemma requests must not be repeated to establish TTS.
+Run `tts-only-20260910t171039z` used candidate `3cf46e271a515ed30125c09ac6f9891c808218e6871ef39adee7767b0e4c6fed` (app `024f5cd58761f5816163b907293e51867a5c0f3962b37c7aa6416c18ad47228d`, test `7066cbee3abdeff69dbaa5bd0f1ff6031614061f444237488b407aa44bc3263d`). The separately approved TTS controller is `a62d204c380a5b2d0c8f7c5bd94729b6f823e18200feed2ebe24fa73962bec3c`, with unchanged3ad guard. This debug-engineering app, not the coherent UI candidate, is currently the last app installed by Janek.
+
+One complete226-byte request produced **15.640612s mono44.1kHz PCM16**: four-context load669.641ms, profiled render6441.160ms, first-request RTF0.411823. WAV SHA **`bcc277bce02cdb3042a853c91172abc6c99c325657cdce4829b2eabfc79c163a`**. [Safe retained result/WAV](../evidence/tts-only-result/tts-only-20260910t171039z/). Nik verified real QNN Node1/1/5/1 and matching RPC/cycle execution records; final full saved-evidence audit is pending. Cleanup/settings/PID absence passed and the lock was released. No replay or maintenance kill was needed.
+
+**Listening remains not_reviewed; Moritz alone decides the exact sample.** This is one first profiled engineering request, not a warm campaign, long chapter or product E2E. Full DB/battery/thermal/logcat originals stay private; public conditions are explicitly labelled core extracts.
+
+## 4. What remains unresolved
+
+- **Product/native workflow:** canonical four-context TTS execution now produced one WAV, but the complete production generation/job/lifecycle flow and its integration with the approved UI have not been accepted. No further Gemma or TTS run is implied.
 - **Whole-chapter capacity:** pinned T239/L238 contexts allow230 normalized text codepoints before tags and roughly16.58s, not the intended1–2minute chapters. These are known pack limits, not a completed physical whole-chapter experiment. No splitting/stitching, fallback, graph replacement or automatic recovery is approved.
 - **Product/hardware:** physical accessibility/media/export, native lifecycle and complete generation remain separate gates. UI success does not close them.
 

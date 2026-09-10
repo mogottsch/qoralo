@@ -1,0 +1,134 @@
+{
+  "status": "one-canonical-first-TTS-request-produced-WAV",
+  "runId": "tts-only-20260910t171039z",
+  "candidateSha256": "3cf46e271a515ed30125c09ac6f9891c808218e6871ef39adee7767b0e4c6fed",
+  "archiveSha256": "aac3e3ae19cd7e3121381ffe53e5ad40c27620da744b24d0c9a615042b110a6a",
+  "hostGuardSha256": "3ad4c644a7733d1f1feeb7bbbe83532cc0be0f727f32f59dda00c951dd6e202d",
+  "ttsControllerSha256": "a62d204c380a5b2d0c8f7c5bd94729b6f823e18200feed2ebe24fa73962bec3c",
+  "driverIdentity": {
+    "appApkSha256": "024f5cd58761f5816163b907293e51867a5c0f3962b37c7aa6416c18ad47228d",
+    "testApkSha256": "7066cbee3abdeff69dbaa5bd0f1ff6031614061f444237488b407aa44bc3263d",
+    "pid": 3410,
+    "contractSha256": "5844320c0ce2442e16d2d837fc1239bf8e9da05ede672d1249f125d91fdf57ca",
+    "deviceFingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+    "canonicalSha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67",
+    "canonicalUtf8Bytes": 226
+  },
+  "metrics": {
+    "file": "canonical-short.wav",
+    "sha256": "bcc277bce02cdb3042a853c91172abc6c99c325657cdce4829b2eabfc79c163a",
+    "bytes": 1379546,
+    "frames": 689751,
+    "sampleRateHz": 44100,
+    "channels": 1,
+    "pcmBits": 16,
+    "audioSeconds": 15.640612244897959,
+    "setupLoadMs": 669.641354,
+    "renderMs": 6441.159529,
+    "firstRequestRtf": 0.4118227233145004,
+    "timingBoundary": "load covers four-context adapter load; render includes normalization, native duration/text/5vector/vocoder and WAV validation/publication; excludes verify/load/close",
+    "warmMedianRtf": null,
+    "warmMedianUnavailable": "only one first request authorized",
+    "logicalTtsRequests": 1,
+    "expectedInternalRuns": {
+      "duration": 1,
+      "text": 1,
+      "vector": 5,
+      "vocoder": 1
+    },
+    "listeningVerdict": "not_reviewed",
+    "claim": "one profiled engineering request; not full chapter, campaign or product E2E"
+  },
+  "measuredPeakVmHwmKiB": 345848,
+  "vmHwmRecords": {
+    "after-render-proc-status.txt": 345848,
+    "after-load-proc-status.txt": 345848,
+    "after-close-proc-status.txt": 345848,
+    "before-load-proc-status.txt": 172948
+  },
+  "memoryBoundary": "generation-process lifetime VmHWM from retained /proc/self/status snapshots, not total DSP/system memory or isolated tensor allocation",
+  "nodeRecordsForReview": {
+    "text_2026-09-10_18-11-00_588.json": [
+      {
+        "name": "QNNExecutionProvider_QNN_4457901878603941866_1_0_kernel_time",
+        "cat": "Node",
+        "ph": "X",
+        "dur": 26306,
+        "provider": "QNNExecutionProvider"
+      }
+    ],
+    "vocoder_2026-09-10_18-11-00_817.json": [
+      {
+        "name": "QNNExecutionProvider_QNN_15642850869514141506_1_0_kernel_time",
+        "cat": "Node",
+        "ph": "X",
+        "dur": 246339,
+        "provider": "QNNExecutionProvider"
+      }
+    ],
+    "duration_2026-09-10_18-11-00_343.json": [
+      {
+        "name": "QNNExecutionProvider_QNN_1517278430868430346_1_0_kernel_time",
+        "cat": "Node",
+        "ph": "X",
+        "dur": 8406,
+        "provider": "QNNExecutionProvider"
+      }
+    ],
+    "vector_2026-09-10_18-11-00_615.json": [
+      {
+        "name": "QNNExecutionProvider_QNN_4705784656693969605_1_0_kernel_time",
+        "cat": "Node",
+        "ph": "X",
+        "dur": 752509,
+        "provider": "QNNExecutionProvider"
+      },
+      {
+        "name": "QNNExecutionProvider_QNN_4705784656693969605_1_0_kernel_time",
+        "cat": "Node",
+        "ph": "X",
+        "dur": 545321,
+        "provider": "QNNExecutionProvider"
+      },
+      {
+        "name": "QNNExecutionProvider_QNN_4705784656693969605_1_0_kernel_time",
+        "cat": "Node",
+        "ph": "X",
+        "dur": 545455,
+        "provider": "QNNExecutionProvider"
+      },
+      {
+        "name": "QNNExecutionProvider_QNN_4705784656693969605_1_0_kernel_time",
+        "cat": "Node",
+        "ph": "X",
+        "dur": 544561,
+        "provider": "QNNExecutionProvider"
+      },
+      {
+        "name": "QNNExecutionProvider_QNN_4705784656693969605_1_0_kernel_time",
+        "cat": "Node",
+        "ph": "X",
+        "dur": 530110,
+        "provider": "QNNExecutionProvider"
+      }
+    ]
+  },
+  "providerReview": "pending independent saved-evidence review; no claim from runtime declaration alone",
+  "listeningVerdict": "not_reviewed",
+  "requests": 1,
+  "gemmaRequests": 0,
+  "capacityProbes": 0,
+  "retries": 0,
+  "cleanup": {
+    "errors": [],
+    "settingsErrors": [],
+    "scratchCreated": false,
+    "packagesRetained": true,
+    "pidStdout": "",
+    "appGenerationTestPidsAbsent": true
+  },
+  "settingsReadbackUnchanged": true,
+  "phoneLock": "released after controller cleanup; no follow-on",
+  "campaignOrFullChapterOrProductE2e": false,
+  "privacy": "full DB/conditions/global logcat local-only; public conditions are explicitly labelled derived whitelist extracts"
+}

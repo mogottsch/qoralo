@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "id": "app-supertonic-canonical-tts-once-v1",
+  "purpose": "four unchanged sessions, one complete canonical first TTS request and WAV; no Gemma/capacity/retry",
+  "route": "SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP",
+  "supertonicManifestSha256": "dc4ac737924d7d62e57ff5e166707198095c49e51d77cfed04a44d9e9435952d",
+  "canonical": {
+    "file": "canonical.txt",
+    "bytes": 226,
+    "sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67"
+  },
+  "voice": "M1/SID5",
+  "chapterId": "canonical-short",
+  "steps": 5,
+  "speed": 1.0,
+  "seedXor": 20260813,
+  "rng": "existing native chapter-ID FNV-style hash xor seed; xorshift64star Box-Muller; fresh per-request buffers",
+  "namespacePolicy": "optional public libcdsprpc.so declaration as proven manifest-only variant; no explicit dlopen/ADSP/LD change",
+  "socModel": "43",
+  "cpuFallbackEnabled": false,
+  "textLength": 239,
+  "latentLength": 238,
+  "latentChannels": 144,
+  "deadlineSeconds": {
+    "verify": 60,
+    "load": 120,
+    "render": 90,
+    "close": 30
+  },
+  "serviceSeconds": 330,
+  "driverSeconds": 345,
+  "hostSeconds": 360,
+  "maxEvidenceBytes": 67108864,
+  "sessionConstructors": 4,
+  "ttsRequests": 1,
+  "expectedSessionRunCounts": {
+    "duration": 1,
+    "text": 1,
+    "vector": 5,
+    "vocoder": 1
+  },
+  "gemmaRequests": 0,
+  "capacityProbes": 0,
+  "retries": 0,
+  "benchmarkScope": "one first profiled engineering request; no warm median/full campaign/full chapter/E2E claim"
+}
