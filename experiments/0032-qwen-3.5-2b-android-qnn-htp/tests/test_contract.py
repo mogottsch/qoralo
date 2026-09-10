@@ -845,6 +845,52 @@ class ContractTest(unittest.TestCase):
         self.assertFalse(list(directory.rglob("*.pt2")))
         self.assertFalse(result["retained_failure"]["qnn_numerical_failure"])
 
+    def test_first_fullchain_native_case_and_saved_analysis(self) -> None:
+        directory = EXP / "results/conv-history-native-fullchain-20260910"
+        result = json.loads((directory / "result.json").read_text())
+        self.assertTrue(result["call_collection_complete"])
+        self.assertFalse(result["numerical_equivalence"])
+        self.assertFalse(result["authorization"]["followon_approved"])
+        self.assertEqual(1, result["counts"]["high_level_compiles"])
+        self.assertEqual(1, result["counts"]["forwards"])
+        self.assertTrue(result["early_delegation"]["all_tensor_compute_delegated"])
+        self.assertTrue(result["final_program"]["zero_kernel_calls_all_delegates_qnn"])
+        self.assertEqual([], result["final_program"]["plans"][0]["called_kernels"])
+        spec = importlib.util.spec_from_file_location("saved_fullchain", directory / "analyze_saved.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        recomputed = module.analyze(directory)
+        self.assertEqual(json.loads((directory / "analysis.json").read_text()), recomputed)
+        output = recomputed["output"]
+        self.assertEqual(24576, output["finite_count"])
+        self.assertEqual("finite_mismatch", output["numerical_status"])
+        self.assertTrue(output["independent_fullchain_scalar_reconstruction_matches_retained_oracle"])
+        comparisons = output["comparisons_to_existing_saved_cpu_oracles"]
+        self.assertEqual(1, comparisons["fullchain"]["excluding_selected_max_ulp"])
+        self.assertGreater(comparisons["fullchain"]["selected_abs_error"], 1.5)
+        for case in ("outputonly", "aligned"):
+            self.assertEqual(6144, comparisons[case]["excluding_selected_values_above_one_ulp"])
+            self.assertEqual(6144, comparisons[case]["per_output_slot"][0]["values_above_one_ulp"])
+        metadata = recomputed["metadata"]
+        self.assertEqual(64, metadata["tap_files"])
+        self.assertEqual(50, len(metadata["graph_snapshots"]))
+        self.assertTrue(metadata["all_four_boundaries_preserved_in_every_captured_graph"])
+        self.assertTrue(metadata["all_native_scale_offsets_preserved"])
+        self.assertTrue(metadata["input_quantize_wrappers_present"])
+        self.assertIsNone(metadata["first_observed_semantic_scale_change"])
+        self.assertFalse(metadata["internal_finalized_graph_known"])
+        self.assertFalse(result["other_native_cases_executed"])
+        self.assertFalse(result["full_model_loaded"])
+        self.assertFalse(result["physical_access"])
+        self.assertFalse(result["next_control_proposal"]["approved"])
+        self.assertFalse(list(directory.rglob("*.pte")))
+        for phase in result["guard"]["phases"]:
+            self.assertTrue(phase["child_reaped"])
+            self.assertLess(phase["elapsed_seconds"], phase["timeout_seconds"])
+        for phase in result["cleanup"]["phases"]:
+            self.assertTrue(phase["scratch_empty"])
+            self.assertTrue(phase["process_group_absent"])
+
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
             EXP / "protocol",
@@ -870,6 +916,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/conv-history-encoding-audit-20260910",
             EXP / "results/conv-history-probe-readiness-20260910",
             EXP / "results/conv-history-native-adapter-readiness-20260910",
+            EXP / "results/conv-history-native-fullchain-20260910",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

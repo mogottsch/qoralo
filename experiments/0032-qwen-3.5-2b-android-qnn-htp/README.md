@@ -93,12 +93,16 @@ A lower-retention two-process host replay in [`results/host-w4a16-qdq-output-dia
 
 ## Real tiny-QNN adapter readiness
 
-[`results/conv-history-native-adapter-readiness-20260910/`](results/conv-history-native-adapter-readiness-20260910/) adds the real lazy adapter and external one-case guard, with explicit release binding, emitted-kernel/fallback checks and raw-first output retention. Native binding/API introspection and actual tiny CPU exports passed; no manager construction, backend initialization, QNN compile/forward or full-model load occurred. New native-aware hooks handle actual datatype codes and OpOverload metadata; the initial CPU metadata-serialization failure is retained. Native tensor getter/compiled behavior remains untested. First-case `fullchain` execution still needs separate approval.
+[`results/conv-history-native-adapter-readiness-20260910/`](results/conv-history-native-adapter-readiness-20260910/) adds the real lazy adapter and external one-case guard, with explicit release binding, emitted-kernel/fallback checks and raw-first output retention. Native binding/API introspection and actual tiny CPU exports passed; no manager construction, backend initialization, QNN compile/forward or full-model load occurred. New native-aware hooks handle actual datatype codes and OpOverload metadata; the initial CPU metadata-serialization failure is retained. Native tensor getter/compiled behavior was untested at this readiness milestone; it did not authorize execution.
+
+## First native full-chain observation
+
+[`results/conv-history-native-fullchain-20260910/`](results/conv-history-native-fullchain-20260910/) retains the separately approved one-compile/one-forward host-QNN case and all64 metadata taps. Both early and emitted-plan checks show no ExecuTorch tensor fallback. All24,576 output values are finite; the selected value is23.721897 versus full-chain oracle22.131550. All other values agree with full-chain within1ULP, whereas output-only/aligned differ at all6,144 slot0 values. Both input Quantize wrappers and allthree exact scale/offset domains remain present beforeCompile, so neither global output-only behavior nor frontend omission is supported. Finalized SDK behavior and full-model/physical causality remain unknown. Backend work stopped after this case.
 
 ## Current next gate
 
 1. Keep physical PTE `23ac8abd…d2c506` and phone preflight unchanged; the 73-output diagnostic PTE is not compatible with the current 49-output Android runner.
-2. Review the real adapter/native-interface/CPU-export readiness and separately release at most the proposed first `fullchain` case (120s compile/60s runtime/240s active). No backend init/Compile/Run is currently approved; no implicit alternate-case follow-on. Native delegation/getters and optimized encodings remain unverified.
+2. Review the bounded firstcase and saved metadata/output analysis. The next proposal is a history-range input sweep with fixed encodings, in-range/upper/lower controls and a new reviewed input pack/request. No new native case, retry or optimized-path claim is authorized.
 3. No ADB or staging without a new explicit Pi phone slot. Full QNN/physical drift and one-token-only interpretation remain campaign-readiness boundaries.
 4. Only after agreed fidelity and state-isolation gates may chunked prefill and the fixed 1+5+5+5 campaign be promoted.
 

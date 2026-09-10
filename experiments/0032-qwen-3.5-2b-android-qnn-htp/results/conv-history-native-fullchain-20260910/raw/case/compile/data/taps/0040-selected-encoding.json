@@ -1,0 +1,36 @@
+{
+  "capture_provenance": {
+    "kind": "native_binding",
+    "binding": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/python/PyQnnManagerAdaptor.cpython-311-x86_64-linux-gnu.so",
+      "bytes": 903784,
+      "sha256": "5a6c2eefd72a97d28869b4f219ee93d623c126fecf47214ffbad005083f8562f"
+    }
+  },
+  "node": "projection",
+  "consumer": "aten_cat_default",
+  "encoding_config_before_get_data_type": [
+    {
+      "type": "Qnn_QuantizationEncoding_t",
+      "text": "Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_SCALE_OFFSET"
+    },
+    {
+      "scale": 0.0008176580304279923,
+      "zero_point": 36523,
+      "quant_min": 0,
+      "quant_max": 65535,
+      "dtype": {
+        "type": "dtype",
+        "text": "torch.int32"
+      },
+      "encoding": {
+        "node": {
+          "type": "method",
+          "text": "<bound method OpOverload.name of <OpOverload(op='quantized_decomposed.quantize_per_tensor', overload='default')>>"
+        }
+      },
+      "offset": -36523
+    }
+  ],
+  "finalized_qnn_encoding": false
+}

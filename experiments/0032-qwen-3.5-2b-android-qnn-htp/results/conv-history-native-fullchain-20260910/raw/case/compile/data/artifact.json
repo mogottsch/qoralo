@@ -1,0 +1,57 @@
+{
+  "pte": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/conv-history-native-executions/fullchain-attempt-01/compile/data/probe.pte",
+    "bytes": 232144,
+    "sha256": "0170b6a2ae96759b36722f05daf8d0925f14b4da57968806b6602008c05d69c3"
+  },
+  "delegation": {
+    "operators": {
+      "aten_cat_default": {
+        "delegated": 1,
+        "non_delegated": 0
+      },
+      "aten_slice_copy_tensor": {
+        "delegated": 1,
+        "non_delegated": 0
+      },
+      "getitem": {
+        "delegated": 0,
+        "non_delegated": 1
+      }
+    },
+    "delegated_subgraphs": 1,
+    "delegated_nodes": 2,
+    "nondelegated_tensor_compute": {},
+    "all_tensor_compute_delegated": true
+  },
+  "final_program": {
+    "plans": [
+      {
+        "name": "forward",
+        "called_kernels": [],
+        "delegate_calls": [
+          "QnnBackend"
+        ]
+      }
+    ],
+    "zero_kernel_calls_all_delegates_qnn": true,
+    "rule": "No approved tensor-free KernelCall exemptions in these fixed probes; Move/Free/Jump are VM plumbing."
+  },
+  "capture": {
+    "wrapper_batches": 1,
+    "tensor_getter_rows": 11,
+    "missing_tensor_rows": [],
+    "tap_errors": [],
+    "wrapper_scale_offset_capture_complete": true,
+    "full_encoding_kind_known": false,
+    "internal_finalized_graph_known": false,
+    "provenance": {
+      "kind": "native_binding",
+      "binding": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/python/PyQnnManagerAdaptor.cpython-311-x86_64-linux-gnu.so",
+        "bytes": 903784,
+        "sha256": "5a6c2eefd72a97d28869b4f219ee93d623c126fecf47214ffbad005083f8562f"
+      }
+    }
+  }
+}

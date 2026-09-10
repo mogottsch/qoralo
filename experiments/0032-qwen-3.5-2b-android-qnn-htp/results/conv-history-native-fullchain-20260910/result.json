@@ -1,0 +1,461 @@
+{
+  "schema_version": 1,
+  "evidence_class": "one_weight_free_fullchain_host_qnn_x86_observation",
+  "status": "firstcase_complete_finite_mismatch_stopped",
+  "call_collection_complete": true,
+  "numerical_equivalence": false,
+  "authorization": {
+    "reviewed_adapter_commit": "d687756",
+    "case": "fullchain",
+    "request_sha256": "f9ef7075427df9a4cf8c4e565f9c261c4065380384ec35a7a1dbba9865b8548e",
+    "release": "raw/control/release.json",
+    "consumed": true,
+    "followon_approved": false
+  },
+  "route": {
+    "target": "SM8550/v73",
+    "runtime": "ExecuTorch1.2.0 QNN HTP host x86 simulation",
+    "weight_free": true,
+    "encoding_domains": 3,
+    "qdq_pairs": 4,
+    "compile_options": {
+      "use_fp16": false,
+      "use_multi_contexts": false,
+      "TagQuantIO": false,
+      "saver": false,
+      "debug": true
+    },
+    "source_pins": [
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_qnn_adapter.py",
+        "bytes": 24181,
+        "sha256": "0fe125f8c62d8a3df8ebab62a78899cc96cef864aa22bef4adde388980e890fc"
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_native_hooks.py",
+        "bytes": 10277,
+        "sha256": "4e8cb8415ea98b18549cb4a2a4762da07f2e2ade075a12ef8232d021118eb96a"
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe.py",
+        "bytes": 13093,
+        "sha256": "1379b850e4140da2240f8893769fc1d28744cacf28c35a32ed9cde0ec924b436"
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe_hooks.py",
+        "bytes": 10182,
+        "sha256": "2f330f856c67effb8db2b33ec586afd9ae161bb313a650add36db484168df86c"
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/audit_conv_history_metadata.py",
+        "bytes": 7061,
+        "sha256": "15351d902c9b80f3f4180f5af4479f08884ceb7801376eb5d8c8176c5213ced8"
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/qwen_host_guard.py",
+        "bytes": 4524,
+        "sha256": "33373e74e4e52b9dd209bb91fc58d87f4b07186112307c0e869d02dd4136705d"
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/qnn_preprocess.py",
+        "bytes": 9210,
+        "sha256": "e2ac8e4ab501b73b82bb422494a463ad95aaa814cd1ec8b8c314dccf2091b98d"
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/builders/node_visitor.py",
+        "bytes": 20620,
+        "sha256": "121f62e0ed598d63f5e4919593759a017df872547e1b2004f6281290b31f5459"
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/utils/utils.py",
+        "bytes": 52339,
+        "sha256": "6ecbfa2ed47f169e1b00941d9014340e7c618b2dea58e9f06f89e694e149b467"
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/utils/qnn_manager_lifecycle.py",
+        "bytes": 3906,
+        "sha256": "65ab16c12d054ad85c6d69fa2be8bb5cbc4ab04d97f56b895637bdf8fe4bdac7"
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/_passes/qnn_pass_manager.py",
+        "bytes": 10023,
+        "sha256": "10828a8683c2dc1da573e9d635d36c832977a4ded9688a2153c27a65fd1321c4"
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/_passes/annotate_quant_attrs.py",
+        "bytes": 5773,
+        "sha256": "44dccc4e4a391b5a683aa58e9091a02b8d5bcd5a5a92e85863e45ded057d30a3"
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/_passes/fold_qdq.py",
+        "bytes": 3308,
+        "sha256": "0eb10565d5fcdc2260a554ed980af40b415c595dcf494902463075f2daf9d3fc"
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/_passes/insert_io_qdq.py",
+        "bytes": 5912,
+        "sha256": "df8fb812950e7d588aed156acfec759dfab15cafec041f0dacf4e2b750022be4"
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/_passes/insert_requantize.py",
+        "bytes": 4116,
+        "sha256": "e4e7dd2fce0385da68c7247768f9f40e2f83f2fb17cbab8efebc19bf5c29d489"
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/_passes/layout_transform.py",
+        "bytes": 15196,
+        "sha256": "cc7b7c4adbf365de163852a901eadaeba487793fce19b4e9a7b7372d13ccdcb1"
+      }
+    ],
+    "physical_baseline_sha256": "23ac8abd7e39b596d62bdc6b098a3e61fe0688bf6d1f4d537959e13492d2c506"
+  },
+  "counts": {
+    "high_level_compiles": 1,
+    "portable_runtime_loads": 1,
+    "forwards": 1,
+    "observed_python_compiler_manager_constructors": 1,
+    "observed_python_Compile_callbacks": 1,
+    "wrapper_batches": 1,
+    "wrapper_operators": 5,
+    "native_tensor_getter_rows": 11,
+    "logged_backend_create_starts_compile": 1,
+    "logged_backend_create_starts_runtime": 1,
+    "logged_graph_finalize_compile": 1,
+    "logged_graph_execute_runtime": 1,
+    "runtime_execute_statuses": [
+      "0x0"
+    ]
+  },
+  "early_delegation": {
+    "operators": {
+      "aten_cat_default": {
+        "delegated": 1,
+        "non_delegated": 0
+      },
+      "aten_slice_copy_tensor": {
+        "delegated": 1,
+        "non_delegated": 0
+      },
+      "getitem": {
+        "delegated": 0,
+        "non_delegated": 1
+      }
+    },
+    "delegated_subgraphs": 1,
+    "delegated_nodes": 2,
+    "nondelegated_tensor_compute": {},
+    "all_tensor_compute_delegated": true
+  },
+  "final_program": {
+    "plans": [
+      {
+        "name": "forward",
+        "called_kernels": [],
+        "delegate_calls": [
+          "QnnBackend"
+        ]
+      }
+    ],
+    "zero_kernel_calls_all_delegates_qnn": true,
+    "rule": "No approved tensor-free KernelCall exemptions in these fixed probes; Move/Free/Jump are VM plumbing."
+  },
+  "guard": {
+    "case": "fullchain",
+    "status": "complete",
+    "phases": [
+      {
+        "phase": "compile",
+        "exit_code": 0,
+        "reason": "process_exit",
+        "child_pid": 1796300,
+        "child_reaped": true,
+        "timeout_seconds": 120,
+        "termination_grace_seconds": 20,
+        "elapsed_seconds": 10.611417650998192,
+        "automatic_retry": false,
+        "error": null
+      },
+      {
+        "phase": "runtime",
+        "exit_code": 0,
+        "reason": "process_exit",
+        "child_pid": 1796366,
+        "child_reaped": true,
+        "timeout_seconds": 60,
+        "termination_grace_seconds": 20,
+        "elapsed_seconds": 4.205354986002931,
+        "automatic_retry": false,
+        "error": null
+      }
+    ],
+    "limits": {
+      "compile_seconds": 120,
+      "runtime_seconds": 60,
+      "total_active_seconds": 240,
+      "termination_grace_seconds": 20,
+      "threads": 4
+    },
+    "automatic_followon": false,
+    "elapsed_seconds": 14.819369392000226
+  },
+  "output": {
+    "output_bytes": 98304,
+    "output_sha256": "06465f73b3ecf72d1d27d5908a679ee7f3d68666007a769997e998fb389a9845",
+    "value_count": 24576,
+    "finite_count": 24576,
+    "all_finite": true,
+    "numerical_status": "finite_mismatch",
+    "independent_fullchain_scalar_reconstruction_matches_retained_oracle": true,
+    "comparisons_to_existing_saved_cpu_oracles": {
+      "fullchain": {
+        "oracle_sha256": "19697b949f81d9bf2370a4e8364b5bc73d881fd8e4d08a549bb39d92d917e348",
+        "cpu_bytes_equal_oracle": true,
+        "all_bytes_equal": false,
+        "bit_mismatch_values": 18431,
+        "selected_actual": 23.72189712524414,
+        "selected_expected": 22.131549835205078,
+        "selected_abs_error": 1.5903472900390625,
+        "max_abs_error": 1.5903472900390625,
+        "mean_abs_error_fp64": 6.473747149963553e-05,
+        "excluding_selected_max_abs": 5.960464477539063e-08,
+        "max_ulp_if_finite_same_sign": 833800,
+        "excluding_selected_max_ulp": 1,
+        "excluding_selected_values_above_one_ulp": 0,
+        "per_output_slot": [
+          {
+            "slot": 0,
+            "values": 6144,
+            "first_channel_actual": 0.49958908557891846,
+            "first_channel_expected": 0.49958905577659607,
+            "max_abs": 2.9802322387695312e-08,
+            "values_above_one_ulp": 0
+          },
+          {
+            "slot": 1,
+            "values": 6144,
+            "first_channel_actual": -0.7497923970222473,
+            "first_channel_expected": -0.7497923970222473,
+            "max_abs": 0.0,
+            "values_above_one_ulp": 0
+          },
+          {
+            "slot": 2,
+            "values": 6144,
+            "first_channel_actual": 0.9999958276748657,
+            "first_channel_expected": 0.999995768070221,
+            "max_abs": 1.5903472900390625,
+            "values_above_one_ulp": 1
+          },
+          {
+            "slot": 3,
+            "values": 6144,
+            "first_channel_actual": -0.12510167062282562,
+            "first_channel_expected": -0.12510168552398682,
+            "max_abs": 2.9802322387695312e-08,
+            "values_above_one_ulp": 0
+          }
+        ]
+      },
+      "outputonly": {
+        "oracle_sha256": "896e3cb4a0f047b00a793c6e8b9706aa4fcc97fce06017c39de59e4b0b42fb84",
+        "cpu_bytes_equal_oracle": true,
+        "all_bytes_equal": false,
+        "bit_mismatch_values": 18431,
+        "selected_actual": 23.72189712524414,
+        "selected_expected": 23.721895217895508,
+        "selected_abs_error": 1.9073486328125e-06,
+        "max_abs_error": 0.0008176565170288086,
+        "mean_abs_error_fp64": 0.0002044328308935898,
+        "excluding_selected_max_abs": 0.0008176565170288086,
+        "max_ulp_if_finite_same_sign": 20612,
+        "excluding_selected_max_ulp": 20612,
+        "excluding_selected_values_above_one_ulp": 6144,
+        "per_output_slot": [
+          {
+            "slot": 0,
+            "values": 6144,
+            "first_channel_actual": 0.49958908557891846,
+            "first_channel_expected": 0.5004067420959473,
+            "max_abs": 0.0008176565170288086,
+            "values_above_one_ulp": 6144
+          },
+          {
+            "slot": 1,
+            "values": 6144,
+            "first_channel_actual": -0.7497923970222473,
+            "first_channel_expected": -0.7497923970222473,
+            "max_abs": 0.0,
+            "values_above_one_ulp": 0
+          },
+          {
+            "slot": 2,
+            "values": 6144,
+            "first_channel_actual": 0.9999958276748657,
+            "first_channel_expected": 0.999995768070221,
+            "max_abs": 1.9073486328125e-06,
+            "values_above_one_ulp": 0
+          },
+          {
+            "slot": 3,
+            "values": 6144,
+            "first_channel_actual": -0.12510167062282562,
+            "first_channel_expected": -0.12510168552398682,
+            "max_abs": 2.9802322387695312e-08,
+            "values_above_one_ulp": 0
+          }
+        ]
+      },
+      "aligned": {
+        "oracle_sha256": "896e3cb4a0f047b00a793c6e8b9706aa4fcc97fce06017c39de59e4b0b42fb84",
+        "cpu_bytes_equal_oracle": true,
+        "all_bytes_equal": false,
+        "bit_mismatch_values": 18431,
+        "selected_actual": 23.72189712524414,
+        "selected_expected": 23.721895217895508,
+        "selected_abs_error": 1.9073486328125e-06,
+        "max_abs_error": 0.0008176565170288086,
+        "mean_abs_error_fp64": 0.0002044328308935898,
+        "excluding_selected_max_abs": 0.0008176565170288086,
+        "max_ulp_if_finite_same_sign": 20612,
+        "excluding_selected_max_ulp": 20612,
+        "excluding_selected_values_above_one_ulp": 6144,
+        "per_output_slot": [
+          {
+            "slot": 0,
+            "values": 6144,
+            "first_channel_actual": 0.49958908557891846,
+            "first_channel_expected": 0.5004067420959473,
+            "max_abs": 0.0008176565170288086,
+            "values_above_one_ulp": 6144
+          },
+          {
+            "slot": 1,
+            "values": 6144,
+            "first_channel_actual": -0.7497923970222473,
+            "first_channel_expected": -0.7497923970222473,
+            "max_abs": 0.0,
+            "values_above_one_ulp": 0
+          },
+          {
+            "slot": 2,
+            "values": 6144,
+            "first_channel_actual": 0.9999958276748657,
+            "first_channel_expected": 0.999995768070221,
+            "max_abs": 1.9073486328125e-06,
+            "values_above_one_ulp": 0
+          },
+          {
+            "slot": 3,
+            "values": 6144,
+            "first_channel_actual": -0.12510167062282562,
+            "first_channel_expected": -0.12510168552398682,
+            "max_abs": 2.9802322387695312e-08,
+            "values_above_one_ulp": 0
+          }
+        ]
+      }
+    },
+    "other_native_cases_executed": false,
+    "calculation": "stdlib FP32 decode and FP64 subtraction/aggregation; no backend calls"
+  },
+  "saved_metadata": {
+    "analysis": "analysis.json",
+    "tap_files": 64,
+    "graph_snapshots": 50,
+    "selected_configuration_taps": 12,
+    "scale_offset_domains_preserved_through_precompile": true,
+    "first_observed_semantic_domain_change": null,
+    "input_quantize_wrappers_present": true,
+    "native_tensor_getters_actually_observed": true,
+    "encoding_kind_bitwidth_known": false,
+    "internal_finalized_graph_known": false,
+    "postcompile_io_encoding_metadata": null,
+    "postcompile_io_reason": "Manager getter arrays were empty at this tap; do not infer missing graph IO or finalized encodings."
+  },
+  "cleanup": {
+    "controller": {
+      "exit_code": 0,
+      "pid": 1796298,
+      "reaped": true,
+      "automatic_retry": false
+    },
+    "phases": [
+      {
+        "phase": "compile",
+        "pid": 1796300,
+        "process_group_absent": true,
+        "reaped": true,
+        "scratch_empty": true,
+        "removed_empty_cache_directory": true
+      },
+      {
+        "phase": "runtime",
+        "pid": 1796366,
+        "process_group_absent": true,
+        "reaped": true,
+        "scratch_empty": true,
+        "removed_empty_cache_directory": true
+      }
+    ],
+    "physical_access": false,
+    "protected_origins_changed": false
+  },
+  "retention": {
+    "complete_raw_output_and_inputs_in_git": true,
+    "all64_taps_and_full_logs_in_git": true,
+    "context_and_pte_local_only": "local-native-artifacts.json",
+    "native_artifacts": [
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/conv-history-native-executions/fullchain-attempt-01/compile/data/native-context-1.bin",
+        "bytes": 230736,
+        "sha256": "33ba1075e4b4a31db22d47f6cf9b7d7d645975d8bab11907e0ada01244a2cf1f",
+        "retention": "LOCAL-ONLY; do not clean; copy these bytes during migration"
+      },
+      {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/conv-history-native-executions/fullchain-attempt-01/compile/data/probe.pte",
+        "bytes": 232144,
+        "sha256": "0170b6a2ae96759b36722f05daf8d0925f14b4da57968806b6602008c05d69c3",
+        "retention": "LOCAL-ONLY; do not clean; copy these bytes during migration"
+      }
+    ]
+  },
+  "next_control_proposal": {
+    "kind": "fullchain_input_range_sweep",
+    "scope": "proposal/source only; not a release",
+    "approved": false,
+    "new_input_pack_materialized": false,
+    "new_request_required": true,
+    "document": "SWEEP_PROPOSAL.md",
+    "reason": "Nonoutlier values follow fullchain within1ULP; upper-history clipping boundary sweep separates saturation-specific behavior from generic requantization.",
+    "controls": [
+      "in-range anchors and ordinary rounding boundaries",
+      "history upper endpoint float32 neighbors",
+      "upper half-step rounding/clipping onset",
+      "above history maximum but inside final range",
+      "lower-limit controls with explicit final-output clipping confound"
+    ],
+    "topology_and_encodings_unchanged": true,
+    "native_calls_permitted_now": 0,
+    "automatic_retry_followon": false
+  },
+  "limitations": [
+    "Fullchain reproduces the selected convolution-history endpoint mismatch, not full-model/logit causality.",
+    "Nonoutlier values follow the fullchain oracle within1ULP; selected output-only/aligned consistency does not extend to the whole array.",
+    "Both input Quantize wrappers and allthree exact scale/offset domains are present beforeCompile; frontend omission unsupported.",
+    "No finalized/internal SDK graph or complete native encoding-kind/bitwidth proof; empty manager IO arrays are not missing logical ABI.",
+    "Call/collection success is not numerical equivalence; no chosen numeric acceptance tolerance.",
+    "No other native case, full model, physical phone, FP32-accuracy or campaign/performance conclusion."
+  ],
+  "other_native_cases_executed": false,
+  "full_model_loaded": false,
+  "physical_access": false,
+  "campaign_ready": false,
+  "registry_eligible": false,
+  "validation": {
+    "saved_data_contract_tests": 36,
+    "all_passed": true,
+    "prior_adapter_regression_tests": 177,
+    "prior_adapter_suite_rerun_for_this_evidence_only_change": false,
+    "no_new_backend_calls": true
+  }
+}

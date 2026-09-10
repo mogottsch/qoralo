@@ -187,12 +187,17 @@
     "conv_history_probe_retained_cpu_references": 3,
     "conv_history_probe_encoding_domains": 3,
     "conv_history_probe_qdq_pairs": {"fullchain": 4, "outputonly": 1, "aligned": 4},
-    "conv_history_probe_actual_qnn_calls": 0,
+    "conv_history_probe_actual_qnn_calls": 1,
     "conv_history_native_adapter_readiness_path": "results/conv-history-native-adapter-readiness-20260910/result.json",
     "conv_history_native_binding_interface_inspected": true,
-    "conv_history_native_manager_init_compile_run_calls": 0,
+    "conv_history_firstcase_result_path": "results/conv-history-native-fullchain-20260910/result.json",
+    "conv_history_firstcase_counts": {"high_level_compile": 1, "compiler_manager_constructor": 1, "native_Compile_callback": 1, "runtime_load": 1, "forward": 1, "logged_runtime_graph_execute": 1},
+    "conv_history_firstcase_output_finite": true,
+    "conv_history_firstcase_numerical_equivalence": false,
+    "conv_history_firstcase_nonselected_fullchain_max_ulp": 1,
+    "conv_history_firstcase_release_consumed": true,
     "conv_history_native_execution_approved": false,
-    "next_gate": "Review real tiny adapter/native-interface/CPU-export readiness before separate first fullchain execution approval. One case only:120s compile/60s runtime/240s active, no retry/resume/follow-on. No native manager init/Compile/Run, full-model or phone release yet; protected baseline unchanged."
+    "next_gate": "Review firstcase finite mismatch and saved encoding trace. Source-only input-range sweep proposal: unchanged fullchain encodings, in-range/upper/lower controls, new reviewed input pack/request required. No native follow-on/retry/full-model/phone release; protected baseline unchanged."
   },
   "required_provider_proof_if_unblocked": {
     "compiled_context_identity": "Hash every deployed serialized context and bind SM8550/v73 compiler provenance.",

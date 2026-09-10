@@ -1,0 +1,888 @@
+{
+  "capture_provenance": {
+    "kind": "native_binding",
+    "binding": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/python/PyQnnManagerAdaptor.cpython-311-x86_64-linux-gnu.so",
+      "bytes": 903784,
+      "sha256": "5a6c2eefd72a97d28869b4f219ee93d623c126fecf47214ffbad005083f8562f"
+    }
+  },
+  "pass_type": "executorch.backends.qualcomm._passes.remove_0d_tensor.Remove0DTensor",
+  "nodes": [
+    {
+      "name": "history",
+      "op": "placeholder",
+      "target": "history",
+      "args": [],
+      "kwargs": {},
+      "value_metadata": {
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "dtype": "torch.float32"
+      },
+      "metadata": {
+        "tensor_meta": null,
+        "desc": {
+          "type": "PlainAOTInput",
+          "text": "PlainAOTInput(idx=0)"
+        }
+      }
+    },
+    {
+      "name": "projection",
+      "op": "placeholder",
+      "target": "projection",
+      "args": [],
+      "kwargs": {},
+      "value_metadata": {
+        "shape": [
+          1,
+          6144,
+          1,
+          1
+        ],
+        "dtype": "torch.float32"
+      },
+      "metadata": {
+        "tensor_meta": null,
+        "desc": {
+          "type": "PlainAOTInput",
+          "text": "PlainAOTInput(idx=1)"
+        }
+      }
+    },
+    {
+      "name": "quantized_decomposed_quantize_per_tensor_default",
+      "op": "call_function",
+      "target": "<EdgeOpOverload: quantized_decomposed.quantize_per_tensor.default>: schema = quantized_decomposed::quantize_per_tensor(Tensor input, float scale, int zero_point, int quant_min, int quant_max, ScalarType dtype) -> Tensor",
+      "args": [
+        {
+          "node": "history"
+        },
+        0.0007933978922665119,
+        37640,
+        0,
+        65535,
+        {
+          "type": "dtype",
+          "text": "torch.int32"
+        }
+      ],
+      "kwargs": {},
+      "value_metadata": {
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "dtype": "torch.int32"
+      },
+      "metadata": {
+        "stack_trace": "  File \"/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torch/_dynamo/functional_export.py\", line 221, in forward\n    res = self._export_root(*args, **kwargs)\n  File \"/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe.py\", line 102, in forward\n    h = qdq(history, spec['stages']['history'])\n  File \"/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe.py\", line 97, in qdq\n    q = torch.ops.quantized_decomposed.quantize_per_tensor.default(x, *args)\n",
+        "nn_module_stack": {
+          "L__self__": [
+            "",
+            "conv_history_probe.make_module.<locals>.Boundary"
+          ]
+        },
+        "torch_fn": [
+          "quantize_per_tensor.default_1",
+          "OpOverload.quantize_per_tensor.default"
+        ],
+        "source_fn_stack": [
+          [
+            "quantize_per_tensor_default",
+            {
+              "type": "OpOverload",
+              "text": "quantized_decomposed.quantize_per_tensor.default"
+            }
+          ]
+        ],
+        "original_aten": {
+          "type": "OpOverload",
+          "text": "quantized_decomposed.quantize_per_tensor.default"
+        },
+        "from_node": [
+          {
+            "type": "NodeSource",
+            "text": "(name=quantize_per_tensor, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701007741584)\n    (name=quantize_per_tensor, pass_name=ExportedProgram.module(), action=create, graph_id=140700984088208)\n        (name=quantize_per_tensor, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701007787280)\n            (name=quantize_per_tensor, pass_name=ExportedProgram.module(), action=create, graph_id=140700996883600)\n                (name=quantize_per_tensor, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701008574288)\n                    (name=quantize_per_tensor, pass_name=ExportedProgram.module(), action=create, graph_id=140701007755280)\n                        (name=q, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701070793104)\n                            (name=q, pass_name=Interpreter_DynamoGraphTransformer, action=create, graph_id=140701010079824)\n"
+          }
+        ],
+        "seq_nr": -1,
+        "eager_input_vals": [
+          [
+            {
+              "shape": [
+                1,
+                6144,
+                1,
+                4
+              ],
+              "dtype": "torch.float32",
+              "values": null,
+              "reason": "metadata only; no payload read"
+            },
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          {}
+        ],
+        "tensor_meta": null,
+        "debug_handle": 1
+      }
+    },
+    {
+      "name": "quantized_decomposed_dequantize_per_tensor_default",
+      "op": "call_function",
+      "target": "<EdgeOpOverload: quantized_decomposed.dequantize_per_tensor.default>: schema = quantized_decomposed::dequantize_per_tensor(Tensor input, float scale, int zero_point, int quant_min, int quant_max, ScalarType dtype, *, ScalarType? out_dtype=None) -> Tensor",
+      "args": [
+        {
+          "node": "quantized_decomposed_quantize_per_tensor_default"
+        },
+        0.0007933978922665119,
+        37640,
+        0,
+        65535,
+        {
+          "type": "dtype",
+          "text": "torch.int32"
+        }
+      ],
+      "kwargs": {},
+      "value_metadata": {
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "dtype": "torch.float32"
+      },
+      "metadata": {
+        "stack_trace": "  File \"/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torch/_dynamo/functional_export.py\", line 221, in forward\n    res = self._export_root(*args, **kwargs)\n  File \"/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe.py\", line 102, in forward\n    h = qdq(history, spec['stages']['history'])\n  File \"/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe.py\", line 98, in qdq\n    return torch.ops.quantized_decomposed.dequantize_per_tensor.default(q, *args)\n",
+        "nn_module_stack": {
+          "L__self__": [
+            "",
+            "conv_history_probe.make_module.<locals>.Boundary"
+          ]
+        },
+        "torch_fn": [
+          "dequantize_per_tensor.default_1",
+          "OpOverload.dequantize_per_tensor.default"
+        ],
+        "source_fn_stack": [
+          [
+            "dequantize_per_tensor_default",
+            {
+              "type": "OpOverload",
+              "text": "quantized_decomposed.dequantize_per_tensor.default"
+            }
+          ]
+        ],
+        "original_aten": {
+          "type": "OpOverload",
+          "text": "quantized_decomposed.dequantize_per_tensor.default"
+        },
+        "from_node": [
+          {
+            "type": "NodeSource",
+            "text": "(name=dequantize_per_tensor, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701007741584)\n    (name=dequantize_per_tensor, pass_name=ExportedProgram.module(), action=create, graph_id=140700984088208)\n        (name=dequantize_per_tensor, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701007787280)\n            (name=dequantize_per_tensor, pass_name=ExportedProgram.module(), action=create, graph_id=140700996883600)\n                (name=dequantize_per_tensor, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701008574288)\n                    (name=dequantize_per_tensor, pass_name=ExportedProgram.module(), action=create, graph_id=140701007755280)\n                        (name=h, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701070793104)\n                            (name=h, pass_name=Interpreter_DynamoGraphTransformer, action=create, graph_id=140701010079824)\n"
+          }
+        ],
+        "seq_nr": -1,
+        "eager_input_vals": [
+          [
+            {
+              "shape": [
+                1,
+                6144,
+                1,
+                4
+              ],
+              "dtype": "torch.int32",
+              "values": null,
+              "reason": "metadata only; no payload read"
+            },
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          {}
+        ],
+        "tensor_meta": null,
+        "debug_handle": 2
+      }
+    },
+    {
+      "name": "quantized_decomposed_quantize_per_tensor_default_1",
+      "op": "call_function",
+      "target": "<EdgeOpOverload: quantized_decomposed.quantize_per_tensor.default>: schema = quantized_decomposed::quantize_per_tensor(Tensor input, float scale, int zero_point, int quant_min, int quant_max, ScalarType dtype) -> Tensor",
+      "args": [
+        {
+          "node": "projection"
+        },
+        0.0008176580304279923,
+        36523,
+        0,
+        65535,
+        {
+          "type": "dtype",
+          "text": "torch.int32"
+        }
+      ],
+      "kwargs": {},
+      "value_metadata": {
+        "shape": [
+          1,
+          6144,
+          1,
+          1
+        ],
+        "dtype": "torch.int32"
+      },
+      "metadata": {
+        "stack_trace": "  File \"/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torch/_dynamo/functional_export.py\", line 221, in forward\n    res = self._export_root(*args, **kwargs)\n  File \"/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe.py\", line 103, in forward\n    p = qdq(projection, spec['stages']['projection'])\n  File \"/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe.py\", line 97, in qdq\n    q = torch.ops.quantized_decomposed.quantize_per_tensor.default(x, *args)\n",
+        "nn_module_stack": {
+          "L__self__": [
+            "",
+            "conv_history_probe.make_module.<locals>.Boundary"
+          ]
+        },
+        "torch_fn": [
+          "quantize_per_tensor.default_2",
+          "OpOverload.quantize_per_tensor.default"
+        ],
+        "source_fn_stack": [
+          [
+            "quantize_per_tensor_default_1",
+            {
+              "type": "OpOverload",
+              "text": "quantized_decomposed.quantize_per_tensor.default"
+            }
+          ]
+        ],
+        "original_aten": {
+          "type": "OpOverload",
+          "text": "quantized_decomposed.quantize_per_tensor.default"
+        },
+        "from_node": [
+          {
+            "type": "NodeSource",
+            "text": "(name=quantize_per_tensor_1, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701007741584)\n    (name=quantize_per_tensor_1, pass_name=ExportedProgram.module(), action=create, graph_id=140700984088208)\n        (name=quantize_per_tensor_1, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701007787280)\n            (name=quantize_per_tensor_1, pass_name=ExportedProgram.module(), action=create, graph_id=140700996883600)\n                (name=quantize_per_tensor_1, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701008574288)\n                    (name=quantize_per_tensor_1, pass_name=ExportedProgram.module(), action=create, graph_id=140701007755280)\n                        (name=q_1, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701070793104)\n                            (name=q_1, pass_name=Interpreter_DynamoGraphTransformer, action=create, graph_id=140701010079824)\n"
+          }
+        ],
+        "seq_nr": -1,
+        "eager_input_vals": [
+          [
+            {
+              "shape": [
+                1,
+                6144,
+                1,
+                1
+              ],
+              "dtype": "torch.float32",
+              "values": null,
+              "reason": "metadata only; no payload read"
+            },
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          {}
+        ],
+        "tensor_meta": null,
+        "debug_handle": 3
+      }
+    },
+    {
+      "name": "quantized_decomposed_dequantize_per_tensor_default_1",
+      "op": "call_function",
+      "target": "<EdgeOpOverload: quantized_decomposed.dequantize_per_tensor.default>: schema = quantized_decomposed::dequantize_per_tensor(Tensor input, float scale, int zero_point, int quant_min, int quant_max, ScalarType dtype, *, ScalarType? out_dtype=None) -> Tensor",
+      "args": [
+        {
+          "node": "quantized_decomposed_quantize_per_tensor_default_1"
+        },
+        0.0008176580304279923,
+        36523,
+        0,
+        65535,
+        {
+          "type": "dtype",
+          "text": "torch.int32"
+        }
+      ],
+      "kwargs": {},
+      "value_metadata": {
+        "shape": [
+          1,
+          6144,
+          1,
+          1
+        ],
+        "dtype": "torch.float32"
+      },
+      "metadata": {
+        "stack_trace": "  File \"/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torch/_dynamo/functional_export.py\", line 221, in forward\n    res = self._export_root(*args, **kwargs)\n  File \"/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe.py\", line 103, in forward\n    p = qdq(projection, spec['stages']['projection'])\n  File \"/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe.py\", line 98, in qdq\n    return torch.ops.quantized_decomposed.dequantize_per_tensor.default(q, *args)\n",
+        "nn_module_stack": {
+          "L__self__": [
+            "",
+            "conv_history_probe.make_module.<locals>.Boundary"
+          ]
+        },
+        "torch_fn": [
+          "dequantize_per_tensor.default_2",
+          "OpOverload.dequantize_per_tensor.default"
+        ],
+        "source_fn_stack": [
+          [
+            "dequantize_per_tensor_default_1",
+            {
+              "type": "OpOverload",
+              "text": "quantized_decomposed.dequantize_per_tensor.default"
+            }
+          ]
+        ],
+        "original_aten": {
+          "type": "OpOverload",
+          "text": "quantized_decomposed.dequantize_per_tensor.default"
+        },
+        "from_node": [
+          {
+            "type": "NodeSource",
+            "text": "(name=dequantize_per_tensor_1, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701007741584)\n    (name=dequantize_per_tensor_1, pass_name=ExportedProgram.module(), action=create, graph_id=140700984088208)\n        (name=dequantize_per_tensor_1, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701007787280)\n            (name=dequantize_per_tensor_1, pass_name=ExportedProgram.module(), action=create, graph_id=140700996883600)\n                (name=dequantize_per_tensor_1, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701008574288)\n                    (name=dequantize_per_tensor_1, pass_name=ExportedProgram.module(), action=create, graph_id=140701007755280)\n                        (name=p, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701070793104)\n                            (name=p, pass_name=Interpreter_DynamoGraphTransformer, action=create, graph_id=140701010079824)\n"
+          }
+        ],
+        "seq_nr": -1,
+        "eager_input_vals": [
+          [
+            {
+              "shape": [
+                1,
+                6144,
+                1,
+                1
+              ],
+              "dtype": "torch.int32",
+              "values": null,
+              "reason": "metadata only; no payload read"
+            },
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          {}
+        ],
+        "tensor_meta": null,
+        "debug_handle": 4
+      }
+    },
+    {
+      "name": "aten_cat_default",
+      "op": "call_function",
+      "target": "<EdgeOpOverload: aten.cat.default>: schema = aten::cat(Tensor[] tensors, int dim=0) -> Tensor",
+      "args": [
+        [
+          {
+            "node": "quantized_decomposed_dequantize_per_tensor_default"
+          },
+          {
+            "node": "quantized_decomposed_dequantize_per_tensor_default_1"
+          }
+        ],
+        -1
+      ],
+      "kwargs": {},
+      "value_metadata": {
+        "shape": [
+          1,
+          6144,
+          1,
+          5
+        ],
+        "dtype": "torch.float32"
+      },
+      "metadata": {
+        "stack_trace": "  File \"/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torch/_dynamo/functional_export.py\", line 221, in forward\n    res = self._export_root(*args, **kwargs)\n  File \"/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe.py\", line 104, in forward\n    joined = qdq(torch.cat((h, p), dim=-1), spec['stages']['concat'])\n",
+        "nn_module_stack": {
+          "L__self__": [
+            "",
+            "conv_history_probe.make_module.<locals>.Boundary"
+          ]
+        },
+        "torch_fn": [
+          "cat_1",
+          "builtin_function_or_method.cat"
+        ],
+        "source_fn_stack": [
+          [
+            "cat",
+            {
+              "type": "builtin_function_or_method",
+              "text": "<built-in method cat of type object at 0x7ff7ae441c80>"
+            }
+          ]
+        ],
+        "original_aten": {
+          "type": "OpOverload",
+          "text": "aten.cat.default"
+        },
+        "from_node": [
+          {
+            "type": "NodeSource",
+            "text": "(name=cat, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701007741584)\n    (name=cat, pass_name=ExportedProgram.module(), action=create, graph_id=140700984088208)\n        (name=cat, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701007787280)\n            (name=cat, pass_name=ExportedProgram.module(), action=create, graph_id=140700996883600)\n                (name=cat, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701008574288)\n                    (name=cat, pass_name=ExportedProgram.module(), action=create, graph_id=140701007755280)\n                        (name=cat, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701070793104)\n                            (name=cat, pass_name=Interpreter_DynamoGraphTransformer, action=create, graph_id=140701010079824)\n"
+          }
+        ],
+        "seq_nr": -1,
+        "tensor_meta": null,
+        "debug_handle": 5
+      }
+    },
+    {
+      "name": "quantized_decomposed_quantize_per_tensor_default_2",
+      "op": "call_function",
+      "target": "<EdgeOpOverload: quantized_decomposed.quantize_per_tensor.default>: schema = quantized_decomposed::quantize_per_tensor(Tensor input, float scale, int zero_point, int quant_min, int quant_max, ScalarType dtype) -> Tensor",
+      "args": [
+        {
+          "node": "aten_cat_default"
+        },
+        0.0009200899512507021,
+        32457,
+        0,
+        65535,
+        {
+          "type": "dtype",
+          "text": "torch.int32"
+        }
+      ],
+      "kwargs": {},
+      "value_metadata": {
+        "shape": [
+          1,
+          6144,
+          1,
+          5
+        ],
+        "dtype": "torch.int32"
+      },
+      "metadata": {
+        "stack_trace": "  File \"/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torch/_dynamo/functional_export.py\", line 221, in forward\n    res = self._export_root(*args, **kwargs)\n  File \"/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe.py\", line 104, in forward\n    joined = qdq(torch.cat((h, p), dim=-1), spec['stages']['concat'])\n  File \"/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe.py\", line 97, in qdq\n    q = torch.ops.quantized_decomposed.quantize_per_tensor.default(x, *args)\n",
+        "nn_module_stack": {
+          "L__self__": [
+            "",
+            "conv_history_probe.make_module.<locals>.Boundary"
+          ]
+        },
+        "torch_fn": [
+          "quantize_per_tensor.default_3",
+          "OpOverload.quantize_per_tensor.default"
+        ],
+        "source_fn_stack": [
+          [
+            "quantize_per_tensor_default_2",
+            {
+              "type": "OpOverload",
+              "text": "quantized_decomposed.quantize_per_tensor.default"
+            }
+          ]
+        ],
+        "original_aten": {
+          "type": "OpOverload",
+          "text": "quantized_decomposed.quantize_per_tensor.default"
+        },
+        "from_node": [
+          {
+            "type": "NodeSource",
+            "text": "(name=quantize_per_tensor_2, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701007741584)\n    (name=quantize_per_tensor_2, pass_name=ExportedProgram.module(), action=create, graph_id=140700984088208)\n        (name=quantize_per_tensor_2, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701007787280)\n            (name=quantize_per_tensor_2, pass_name=ExportedProgram.module(), action=create, graph_id=140700996883600)\n                (name=quantize_per_tensor_2, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701008574288)\n                    (name=quantize_per_tensor_2, pass_name=ExportedProgram.module(), action=create, graph_id=140701007755280)\n                        (name=q_2, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701070793104)\n                            (name=q_2, pass_name=Interpreter_DynamoGraphTransformer, action=create, graph_id=140701010079824)\n"
+          }
+        ],
+        "seq_nr": -1,
+        "eager_input_vals": [
+          [
+            {
+              "shape": [
+                1,
+                6144,
+                1,
+                5
+              ],
+              "dtype": "torch.float32",
+              "values": null,
+              "reason": "metadata only; no payload read"
+            },
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          {}
+        ],
+        "tensor_meta": null,
+        "debug_handle": 6
+      }
+    },
+    {
+      "name": "quantized_decomposed_dequantize_per_tensor_default_2",
+      "op": "call_function",
+      "target": "<EdgeOpOverload: quantized_decomposed.dequantize_per_tensor.default>: schema = quantized_decomposed::dequantize_per_tensor(Tensor input, float scale, int zero_point, int quant_min, int quant_max, ScalarType dtype, *, ScalarType? out_dtype=None) -> Tensor",
+      "args": [
+        {
+          "node": "quantized_decomposed_quantize_per_tensor_default_2"
+        },
+        0.0009200899512507021,
+        32457,
+        0,
+        65535,
+        {
+          "type": "dtype",
+          "text": "torch.int32"
+        }
+      ],
+      "kwargs": {},
+      "value_metadata": {
+        "shape": [
+          1,
+          6144,
+          1,
+          5
+        ],
+        "dtype": "torch.float32"
+      },
+      "metadata": {
+        "stack_trace": "  File \"/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torch/_dynamo/functional_export.py\", line 221, in forward\n    res = self._export_root(*args, **kwargs)\n  File \"/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe.py\", line 104, in forward\n    joined = qdq(torch.cat((h, p), dim=-1), spec['stages']['concat'])\n  File \"/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe.py\", line 98, in qdq\n    return torch.ops.quantized_decomposed.dequantize_per_tensor.default(q, *args)\n",
+        "nn_module_stack": {
+          "L__self__": [
+            "",
+            "conv_history_probe.make_module.<locals>.Boundary"
+          ]
+        },
+        "torch_fn": [
+          "dequantize_per_tensor.default_3",
+          "OpOverload.dequantize_per_tensor.default"
+        ],
+        "source_fn_stack": [
+          [
+            "dequantize_per_tensor_default_2",
+            {
+              "type": "OpOverload",
+              "text": "quantized_decomposed.dequantize_per_tensor.default"
+            }
+          ]
+        ],
+        "original_aten": {
+          "type": "OpOverload",
+          "text": "quantized_decomposed.dequantize_per_tensor.default"
+        },
+        "from_node": [
+          {
+            "type": "NodeSource",
+            "text": "(name=dequantize_per_tensor_2, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701007741584)\n    (name=dequantize_per_tensor_2, pass_name=ExportedProgram.module(), action=create, graph_id=140700984088208)\n        (name=dequantize_per_tensor_2, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701007787280)\n            (name=dequantize_per_tensor_2, pass_name=ExportedProgram.module(), action=create, graph_id=140700996883600)\n                (name=dequantize_per_tensor_2, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701008574288)\n                    (name=dequantize_per_tensor_2, pass_name=ExportedProgram.module(), action=create, graph_id=140701007755280)\n                        (name=joined, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701070793104)\n                            (name=joined, pass_name=Interpreter_DynamoGraphTransformer, action=create, graph_id=140701010079824)\n"
+          }
+        ],
+        "seq_nr": -1,
+        "eager_input_vals": [
+          [
+            {
+              "shape": [
+                1,
+                6144,
+                1,
+                5
+              ],
+              "dtype": "torch.int32",
+              "values": null,
+              "reason": "metadata only; no payload read"
+            },
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          {}
+        ],
+        "tensor_meta": null,
+        "debug_handle": 7
+      }
+    },
+    {
+      "name": "aten_slice_copy_tensor",
+      "op": "call_function",
+      "target": "<EdgeOpOverload: aten.slice_copy.Tensor>: schema = aten::slice_copy.Tensor(Tensor self, int dim=0, SymInt? start=None, SymInt? end=None, SymInt step=1) -> Tensor",
+      "args": [
+        {
+          "node": "quantized_decomposed_dequantize_per_tensor_default_2"
+        },
+        3,
+        -4,
+        9223372036854775807
+      ],
+      "kwargs": {},
+      "value_metadata": {
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "dtype": "torch.float32"
+      },
+      "metadata": {
+        "stack_trace": "  File \"/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torch/_dynamo/functional_export.py\", line 221, in forward\n    res = self._export_root(*args, **kwargs)\n  File \"/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe.py\", line 105, in forward\n    return qdq(joined[:, :, :, -4:], spec['stages']['output'])\n",
+        "nn_module_stack": {
+          "L__self__": [
+            "",
+            "conv_history_probe.make_module.<locals>.Boundary"
+          ]
+        },
+        "torch_fn": [
+          "__getitem___1",
+          "wrapper_descriptor.__getitem__"
+        ],
+        "source_fn_stack": [
+          [
+            "getitem",
+            {
+              "type": "builtin_function_or_method",
+              "text": "<built-in function getitem>"
+            }
+          ]
+        ],
+        "original_aten": {
+          "type": "OpOverload",
+          "text": "aten.slice.Tensor"
+        },
+        "from_node": [
+          {
+            "type": "NodeSource",
+            "text": "(name=slice_1, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701007741584)\n    (name=slice_1, pass_name=ExportedProgram.module(), action=create, graph_id=140700984088208)\n        (name=slice_1, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701007787280)\n            (name=slice_1, pass_name=ExportedProgram.module(), action=create, graph_id=140700996883600)\n                (name=slice_1, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701008574288)\n                    (name=slice_1, pass_name=ExportedProgram.module(), action=create, graph_id=140701007755280)\n                        (name=getitem, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701070793104)\n                            (name=getitem, pass_name=Interpreter_DynamoGraphTransformer, action=create, graph_id=140701010079824)\n"
+          }
+        ],
+        "seq_nr": -1,
+        "tensor_meta": null,
+        "debug_handle": 8
+      }
+    },
+    {
+      "name": "quantized_decomposed_quantize_per_tensor_default_3",
+      "op": "call_function",
+      "target": "<EdgeOpOverload: quantized_decomposed.quantize_per_tensor.default>: schema = quantized_decomposed::quantize_per_tensor(Tensor input, float scale, int zero_point, int quant_min, int quant_max, ScalarType dtype) -> Tensor",
+      "args": [
+        {
+          "node": "aten_slice_copy_tensor"
+        },
+        0.0008176580304279923,
+        36523,
+        0,
+        65535,
+        {
+          "type": "dtype",
+          "text": "torch.int32"
+        }
+      ],
+      "kwargs": {},
+      "value_metadata": {
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "dtype": "torch.int32"
+      },
+      "metadata": {
+        "stack_trace": "  File \"/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torch/_dynamo/functional_export.py\", line 221, in forward\n    res = self._export_root(*args, **kwargs)\n  File \"/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe.py\", line 105, in forward\n    return qdq(joined[:, :, :, -4:], spec['stages']['output'])\n  File \"/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe.py\", line 97, in qdq\n    q = torch.ops.quantized_decomposed.quantize_per_tensor.default(x, *args)\n",
+        "nn_module_stack": {
+          "L__self__": [
+            "",
+            "conv_history_probe.make_module.<locals>.Boundary"
+          ]
+        },
+        "torch_fn": [
+          "quantize_per_tensor.default_4",
+          "OpOverload.quantize_per_tensor.default"
+        ],
+        "source_fn_stack": [
+          [
+            "quantize_per_tensor_default_3",
+            {
+              "type": "OpOverload",
+              "text": "quantized_decomposed.quantize_per_tensor.default"
+            }
+          ]
+        ],
+        "original_aten": {
+          "type": "OpOverload",
+          "text": "quantized_decomposed.quantize_per_tensor.default"
+        },
+        "from_node": [
+          {
+            "type": "NodeSource",
+            "text": "(name=quantize_per_tensor_3, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701007741584)\n    (name=quantize_per_tensor_3, pass_name=ExportedProgram.module(), action=create, graph_id=140700984088208)\n        (name=quantize_per_tensor_3, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701007787280)\n            (name=quantize_per_tensor_3, pass_name=ExportedProgram.module(), action=create, graph_id=140700996883600)\n                (name=quantize_per_tensor_3, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701008574288)\n                    (name=quantize_per_tensor_3, pass_name=ExportedProgram.module(), action=create, graph_id=140701007755280)\n                        (name=q_3, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701070793104)\n                            (name=q_3, pass_name=Interpreter_DynamoGraphTransformer, action=create, graph_id=140701010079824)\n"
+          }
+        ],
+        "seq_nr": -1,
+        "eager_input_vals": [
+          [
+            {
+              "shape": [
+                1,
+                6144,
+                1,
+                4
+              ],
+              "dtype": "torch.float32",
+              "values": null,
+              "reason": "metadata only; no payload read"
+            },
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          {}
+        ],
+        "tensor_meta": null,
+        "debug_handle": 9
+      }
+    },
+    {
+      "name": "quantized_decomposed_dequantize_per_tensor_default_3",
+      "op": "call_function",
+      "target": "<EdgeOpOverload: quantized_decomposed.dequantize_per_tensor.default>: schema = quantized_decomposed::dequantize_per_tensor(Tensor input, float scale, int zero_point, int quant_min, int quant_max, ScalarType dtype, *, ScalarType? out_dtype=None) -> Tensor",
+      "args": [
+        {
+          "node": "quantized_decomposed_quantize_per_tensor_default_3"
+        },
+        0.0008176580304279923,
+        36523,
+        0,
+        65535,
+        {
+          "type": "dtype",
+          "text": "torch.int32"
+        }
+      ],
+      "kwargs": {},
+      "value_metadata": {
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "dtype": "torch.float32"
+      },
+      "metadata": {
+        "stack_trace": "  File \"/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torch/_dynamo/functional_export.py\", line 221, in forward\n    res = self._export_root(*args, **kwargs)\n  File \"/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe.py\", line 105, in forward\n    return qdq(joined[:, :, :, -4:], spec['stages']['output'])\n  File \"/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe.py\", line 98, in qdq\n    return torch.ops.quantized_decomposed.dequantize_per_tensor.default(q, *args)\n",
+        "nn_module_stack": {
+          "L__self__": [
+            "",
+            "conv_history_probe.make_module.<locals>.Boundary"
+          ]
+        },
+        "torch_fn": [
+          "dequantize_per_tensor.default_4",
+          "OpOverload.dequantize_per_tensor.default"
+        ],
+        "source_fn_stack": [
+          [
+            "dequantize_per_tensor_default_3",
+            {
+              "type": "OpOverload",
+              "text": "quantized_decomposed.dequantize_per_tensor.default"
+            }
+          ]
+        ],
+        "original_aten": {
+          "type": "OpOverload",
+          "text": "quantized_decomposed.dequantize_per_tensor.default"
+        },
+        "from_node": [
+          {
+            "type": "NodeSource",
+            "text": "(name=dequantize_per_tensor_3, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701007741584)\n    (name=dequantize_per_tensor_3, pass_name=ExportedProgram.module(), action=create, graph_id=140700984088208)\n        (name=dequantize_per_tensor_3, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701007787280)\n            (name=dequantize_per_tensor_3, pass_name=ExportedProgram.module(), action=create, graph_id=140700996883600)\n                (name=dequantize_per_tensor_3, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701008574288)\n                    (name=dequantize_per_tensor_3, pass_name=ExportedProgram.module(), action=create, graph_id=140701007755280)\n                        (name=res, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140701070793104)\n                            (name=res, pass_name=Interpreter_DynamoGraphTransformer, action=create, graph_id=140701010079824)\n"
+          }
+        ],
+        "seq_nr": -1,
+        "eager_input_vals": [
+          [
+            {
+              "shape": [
+                1,
+                6144,
+                1,
+                4
+              ],
+              "dtype": "torch.int32",
+              "values": null,
+              "reason": "metadata only; no payload read"
+            },
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          {}
+        ],
+        "tensor_meta": null,
+        "debug_handle": 10
+      }
+    },
+    {
+      "name": "output",
+      "op": "output",
+      "target": "output",
+      "args": [
+        [
+          {
+            "node": "quantized_decomposed_dequantize_per_tensor_default_3"
+          }
+        ]
+      ],
+      "kwargs": {},
+      "value_metadata": [
+        {
+          "shape": [
+            1,
+            6144,
+            1,
+            4
+          ],
+          "dtype": "torch.float32"
+        }
+      ],
+      "metadata": {
+        "from_node": [
+          {
+            "type": "NodeSource",
+            "text": "(name=output, pass_name=ExportedProgram.module().unlift(), action=create+replace, graph_id=140701007741584)\n    (name=output, pass_name=ExportedProgram.module(), action=create, graph_id=140700984088208)\n        (name=output, pass_name=ExportedProgram.module().unlift(), action=create+replace, graph_id=140701007787280)\n            (name=output, pass_name=ExportedProgram.module(), action=create, graph_id=140700996883600)\n                (name=output, pass_name=ExportedProgram.module().unlift(), action=create+replace, graph_id=140701008574288)\n                    (name=output, pass_name=ExportedProgram.module(), action=create, graph_id=140701007755280)\n"
+          }
+        ],
+        "seq_nr": -1,
+        "tensor_meta": [
+          null
+        ]
+      }
+    }
+  ],
+  "node_count": 13,
+  "tensor_payloads_read": false
+}
