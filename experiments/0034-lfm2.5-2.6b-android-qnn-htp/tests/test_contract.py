@@ -81,7 +81,7 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
     def test_active_export_does_not_claim_qnn_android_or_completion(self) -> None:
-        self.assertIn("performance_engineering_integrated_ar171_ar1_host_readiness_complete", self.contract["status"])
+        self.assertIn("blocked_prior_qnn_net_run_positions_all_zero", self.contract["status"])
         route = self.result["route_assessment"]
         self.assertFalse(route["compiled_sm8550_context_available"])
         self.assertFalse(route["android_execution"])
@@ -90,7 +90,7 @@ class ContractTest(unittest.TestCase):
         self.assertIn("not_android_qnn_or_htp", milestone["classification"])
         self.assertEqual("passed", milestone["rewritten_onnx"]["onnx_checker"])
         self.assertEqual(16, milestone["bounded_output"]["max_new_tokens"])
-        self.assertIn("No phone access occurred for integrated AR171-to-AR1 readiness", self.contract["phone_boundary"])
+        self.assertIn("No phone access occurred for the position-ingestion source audit", self.contract["phone_boundary"])
 
     def test_qnn_aot_is_complete_but_not_physical_execution(self) -> None:
         milestone = self.contract["qnn_aot_milestone"]
@@ -572,6 +572,25 @@ class ContractTest(unittest.TestCase):
         self.assertIn("not reused or generalized", result["api_type_boundary"]["non_generalization"])
         self.assertIn("No integrated inference ran", result["host_runtime_boundary"])
 
+    def test_qnn_net_run_position_ingestion_is_reclassified(self) -> None:
+        audit = self.contract["qnn_net_run_position_ingestion_audit"]
+        self.assertTrue(audit["source_verified"])
+        self.assertFalse(audit["recorded_commands_set_input_data_type"])
+        self.assertFalse(audit["recorded_commands_use_native_input_files"])
+        self.assertEqual("QNN_DATATYPE_INT_64", audit["graph_position_data_type"])
+        self.assertEqual([0], audit["ar171_position_file"]["converted_unique"])
+        self.assertEqual([0], audit["ar1_phase_position_file"]["converted_unique"])
+        self.assertFalse(audit["exact_position_semantics_proven"])
+        self.assertTrue(audit["physical_htp_execution_still_proven"])
+        self.assertFalse(audit["phone_access"])
+        result = json.loads((EXP / audit["evidence"]).read_text())
+        self.assertTrue(result["proved_interpretation"]["not_ambiguous"])
+        self.assertTrue(result["raw_position_files"]["ar171"]["all_converted_to_zero"])
+        self.assertTrue(result["raw_position_files"]["ar1_phase_switch"]["all_converted_to_zero"])
+        self.assertFalse(result["recorded_invocations"]["physical_execution_metadata"]["ar171"]["sets_input_data_type"])
+        self.assertIn("did not prove rotary positions", result["impact"]["invalidated_claims"][0])
+        self.assertIn("physically", result["impact"]["still_valid"][0])
+
     def test_final_pipeline_host_equivalence_is_bounded(self) -> None:
         result = json.loads((EXP / "results/htp-pipeline-host-equivalence/result.json").read_text())
         self.assertIn("host_only", result["classification"])
@@ -630,6 +649,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/qnn-prefill-ar171-ar1-max16-readiness",
             EXP / "results/qnn-prefill-ar171-ar1-phone-max16-resume",
             EXP / "results/qnn-prefill-ar171-ar1-integrated-readiness",
+            EXP / "results/qnn-net-run-position-ingestion-audit",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

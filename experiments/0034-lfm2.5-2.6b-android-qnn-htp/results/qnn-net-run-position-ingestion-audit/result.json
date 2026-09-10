@@ -1,0 +1,219 @@
+{
+  "claim_boundary": "This audit corrects interpretation of immutable prior physical evidence. It does not erase physical HTP execution, but it invalidates exact position-semantic and fidelity conclusions drawn from those qnn-net-run attempts.",
+  "classification": "source_verified_qnn_net_run_position_ingestion_error",
+  "graph_descriptors": {
+    "ar171_position": {
+      "data_type": "QNN_DATATYPE_INT_64",
+      "dimensions": [
+        1,
+        171
+      ]
+    },
+    "ar1_position": {
+      "data_type": "QNN_DATATYPE_INT_64",
+      "dimensions": [
+        1,
+        1
+      ]
+    }
+  },
+  "impact": {
+    "invalidated_claims": [
+      "The qnn-net-run physical AR171 call did not prove rotary positions 0..170.",
+      "The qnn-net-run physical phase-switch AR1 call did not prove position 171; it executed with position zero.",
+      "Their endpoint argmax agreement cannot establish exact position/state semantics."
+    ],
+    "still_valid": [
+      "Both calls loaded and executed their QNN HTP graphs physically and produced the retained raw outputs.",
+      "Provider, context/runtime identity, finite-output, timing, memory, and cleanup evidence remain factual when scoped to the actual all-zero position inputs.",
+      "The direct-QNN AR1 max16 runner copied INT64 position 171 directly and is a separate API path, but its initial state came from the affected AR171 output.",
+      "The integrated direct-QNN runner is designed for correct INT64 buffers and remains physically unexecuted."
+    ]
+  },
+  "phone_boundary": "Source audit only; no model load, inference, compilation, or phone access occurred.",
+  "proved_interpretation": {
+    "ar171": "The 684-byte int32[171] file had the required byte length for default FLOAT32 file input. Its integer bit patterns 0..170 were read as float32 values 0..2.382e-43 and static_cast to INT64; all 171 became zero.",
+    "ar1_phase_switch": "The 4-byte int32 value 171 was read as float32 2.396e-43 and static_cast to INT64 zero.",
+    "not_ambiguous": true
+  },
+  "qairt": {
+    "qnn_net_run_sha256": "7b0b806033bb2bd074c233632eb0f06f34c5f5f10040c5a363e8720dd60fd8e9",
+    "source_behavior": [
+      "qnn-net-run defaults InputDataType to FLOAT unless an input-data-type option is supplied.",
+      "For a non-FLOAT32 graph tensor, IOTensor reads one FLOAT32 value per tensor element, then calls copyFromFloatToNative.",
+      "For QNN_DATATYPE_INT_64, copyFromFloatToNative calls castFromFloat<int64_t>, whose implementation static_casts each float value."
+    ],
+    "source_files": {
+      "DataUtil.cpp": {
+        "matched_lines": {
+          "out[i] = static_cast<T_QuantType>(in[i]);": [
+            390
+          ]
+        },
+        "sha256": "93533e3ac0215304cd83872f77df8d91c519f3a80ac9fcbf816d709350a4ac2b"
+      },
+      "IOTensor.cpp": {
+        "matched_lines": {
+          "QNN_DATATYPE_FLOAT_32,": [
+            226,
+            762
+          ],
+          "QNN_TENSOR_GET_DATA_TYPE(input) != QNN_DATATYPE_FLOAT_32": [
+            219
+          ],
+          "case QNN_DATATYPE_INT_64:": [
+            169,
+            546,
+            701
+          ],
+          "copyFromFloatToNative(reinterpret_cast<float*>(fileToBuffer), input)": [
+            230
+          ],
+          "datautil::castFromFloat<int64_t>": [
+            171
+          ],
+          "inputDataType == InputDataType::FLOAT": [
+            218
+          ]
+        },
+        "sha256": "a32d8de1e01e2e95e34a7a66613f7bea56e582b923c159bd28d9a6b43e692fb5"
+      },
+      "main.cpp": {
+        "matched_lines": {
+          "case OPT_INPUT_DATA_TYPE:": [
+            263
+          ],
+          "parsedInputDataType     = iotensor::InputDataType::FLOAT": [
+            210
+          ],
+          "parsedInputDataType,": [
+            424
+          ]
+        },
+        "sha256": "bb4469ca680025a2b76b1872ff6c3f788531edef956d64b890085eff86f4d611"
+      },
+      "tools.html": {
+        "matched_lines": {
+          "--use_native_input_files": [
+            1386,
+            1728,
+            1734,
+            2799,
+            2801,
+            2807,
+            5862,
+            6589,
+            6766,
+            7804,
+            7992
+          ],
+          "If not specified, input files will": [
+            2800
+          ],
+          "be parsed in floating point": [
+            2801
+          ]
+        },
+        "sha256": "9a23887eca26a775682eb443bbb83b1b0283fd9ef2a195f97b36deb1af556548"
+      }
+    },
+    "version": "2.49.40.260810"
+  },
+  "raw_position_files": {
+    "ar171": {
+      "all_converted_to_zero": true,
+      "bytes": 684,
+      "float32_reinterpret_first": [
+        0.0,
+        1.401298464324817e-45,
+        2.802596928649634e-45,
+        4.203895392974451e-45
+      ],
+      "float32_reinterpret_last": [
+        2.3401684354224445e-43,
+        2.3541814200656927e-43,
+        2.368194404708941e-43,
+        2.382207389352189e-43
+      ],
+      "float32_to_int64_unique": [
+        0
+      ],
+      "int32_count": 171,
+      "int32_first": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "int32_last": [
+        167,
+        168,
+        169,
+        170
+      ],
+      "path_outside_git": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/qnn-prefill/ar171/host-htp/inputs/01.raw",
+      "sha256": "53bf303e5b0ffdef6b50890e25ca570e373db61b0a950a569f431a918f95938a"
+    },
+    "ar1_phase_switch": {
+      "all_converted_to_zero": true,
+      "bytes": 4,
+      "float32_reinterpret_first": [
+        2.396220373995437e-43
+      ],
+      "float32_reinterpret_last": [
+        2.396220373995437e-43
+      ],
+      "float32_to_int64_unique": [
+        0
+      ],
+      "int32_count": 1,
+      "int32_first": [
+        171
+      ],
+      "int32_last": [
+        171
+      ],
+      "path_outside_git": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/qnn-prefill/phase-switch/host-bridge-output/01-position.raw",
+      "sha256": "56f4b974ba239e38eb2669007fbd528499b53274297937bd7beecceb326a27f6"
+    }
+  },
+  "recorded_invocations": {
+    "physical_execution_metadata": {
+      "ar171": {
+        "command": "./qnn-net-run --backend=/data/local/tmp/vibevoice-0034-prefill-ar171-20260828T123223Z-2690318/libQnnHtp.so --retrieve_context=/data/local/tmp/vibevoice-0034-prefill-ar171-20260828T123223Z-2690318/context_qnn.bin --input_list=/data/local/tmp/vibevoice-0034-prefill-ar171-20260828T123223Z-2690318/input-list.txt --output_dir=/data/local/tmp/vibevoice-0034-prefill-ar171-20260828T123223Z-2690318/output --profiling_level=detailed --perf_profile=burst --log_level=info",
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-prefill-ar171-phone-runtime-diagnostic/raw/output/execution_metadata.yaml",
+        "sets_input_data_type": false,
+        "sha256": "6d895ee31d71fd90019948b37225fcc0768cfb4890c97ba464006da91411c560",
+        "uses_native_input_files": false
+      },
+      "ar1_phase": {
+        "command": "./qnn-net-run --backend=/data/local/tmp/vibevoice-0034-phase-phase-20260828T130043Z-2714338/libQnnHtp.so --retrieve_context=/data/local/tmp/vibevoice-0034-phase-phase-20260828T130043Z-2714338/contexts/ar1.bin --input_list=/data/local/tmp/vibevoice-0034-phase-phase-20260828T130043Z-2714338/ar1-inputs/input-list.txt --output_dir=/data/local/tmp/vibevoice-0034-phase-phase-20260828T130043Z-2714338/ar1-output --profiling_level=detailed --perf_profile=burst --log_level=info",
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-prefill-ar171-ar1-phone-phase-switch-diagnostic/raw/ar1-output/execution_metadata.yaml",
+        "sets_input_data_type": false,
+        "sha256": "d0aab4762782d0fb9ce8d95e0501ac51fab4d0b11f3a162dffef19dba1979bd8",
+        "uses_native_input_files": false
+      }
+    },
+    "scripts": {
+      "ar171": {
+        "invokes_qnn_net_run": true,
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/tools/run_prefill_qnn_phone_diagnostic.sh",
+        "sets_input_data_type": false,
+        "sha256": "850be47ee938d6df25e141e82d202b0ab1c23864092f722c782196ed57755be0",
+        "uses_native_input_files": false
+      },
+      "phase_switch": {
+        "invokes_qnn_net_run": true,
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/tools/run_prefill_ar1_phase_phone_diagnostic.sh",
+        "sets_input_data_type": false,
+        "sha256": "1cc6f901b2a0cf7d25e9935eef06a3f9187df0c9953e5e1e5cb122bc8f6f84f5",
+        "uses_native_input_files": false
+      }
+    }
+  },
+  "required_fix": {
+    "direct_qnn": "Continue using graph descriptor INT64 buffers (1368 bytes AR171; 8 bytes AR1) with no qnn-net-run file conversion.",
+    "qnn_net_run": "Use FLOAT32 files containing numeric 0..170/171 with default input mode, or pass --input_data_type native and provide native INT64 files of 1368/8 bytes. Verify the chosen mode with a bounded diagnostic before reusing qnn-net-run for position-sensitive claims."
+  },
+  "schema_version": 1
+}

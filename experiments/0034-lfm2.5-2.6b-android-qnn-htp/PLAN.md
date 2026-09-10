@@ -105,17 +105,19 @@
 93. Preserved raw tokens before decode, provider/basic-profile logs, timing, process memory, thermal, hashes, and cleanup; documented missing raw state/logit and detailed-profile evidence.
 94. Implemented a single-process integrated runner with in-boundary 171-row CPU embedding, exact AR171 inputs, finite scanning of all requested outputs, in-memory 38-state bridge, and one AR1 context retained for max16.
 95. Added phase-separated recursive detailed QNN profile extraction/reset plus explicit setup, context load/free, CPU input, graph, argmax, bridge, first-token, decode, functional-request, and profile-overhead timings.
-96. Bound direct-QNN INT64 position ABIs separately from accepted qnn-net-run INT32 file-ingestion evidence; prompt embeddings and masks reproduce accepted prefill bytes.
+96. Bound direct-QNN INT64 position ABIs separately from earlier qnn-net-run INT32 files; prompt embeddings and masks reproduce the prior prefill bytes.
 97. Built host and Android binaries and a 12-payload integrated stage; hashes and ELF preflight pass. No integrated inference ran because x86 AR171 exceeds the bounded emulator window.
 98. Rejected any present combined/shared-context claim: ordinary contexts duplicate constants and the only generated shared-weight format already failed; new Qualcomm-supported tooling/guidance would be required.
 99. Made integrated output fail-closed for evidence but fail-open for optional telemetry: exclusive output is opened before inference and every token is appended plus `fsync`ed immediately; profile errors are explicitly logged without deleting valid partial output.
 100. Defined `MAX_NEW` as the total output cap including the AR171 endpoint, so max16 performs at most 15 AR1 calls and stops early at EOS.
 101. Replaced derived delivery times with actual request-start/first-emitted/final-emitted timestamps and separated compute phase sums, functional output time, context lifecycle, and profile overhead.
 102. Added no-QNN host regression/failure-injection coverage for partial-token persistence, exclusive overwrite protection, normal max-token append, and optional-profile failure.
+103. Audited QAIRT qnn-net-run source and exact recorded commands: default FLOAT file ingestion read the prior INT32 position bytes as subnormal floats and cast every AR171/AR1 position to INT64 zero.
+104. Reclassified prior qnn-net-run physical AR171 and phase-switch results as real HTP executions with all-zero position inputs, not exact position/state semantics. The direct-QNN integrated runner retains correct INT64 buffers and remains unexecuted.
 
 ## In progress: performance engineering
 
-1. Commit and independently review corrected integrated build/static/stage readiness; do not run phone before approval.
+1. Commit and independently review the position-ingestion audit before any physical integrated gate.
 2. If prioritized, run one bounded reset-isolated physical integrated short/max16 diagnostic with detailed profiles and all-output finite scans.
 3. Evaluate lower-precision/device-resident state and reduced-logit routes; keep CPU/GPU/HTP boundaries explicit.
 4. Do not campaign until the fastest sensible complete route is selected and reset-isolated.

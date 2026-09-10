@@ -48,11 +48,13 @@
       "wall_seconds": 0.341241096
     },
     "evidence": "results/qnn-prefill-ar171-ar1-phone-phase-switch-diagnostic/result.json",
+    "exact_position_semantics": false,
     "initial_cpu_embedding_preparation_timed": false,
     "numerical_equivalence": false,
     "per_token_context_streaming": false,
     "phase_transition_count": 1,
     "phone_lock_released": true,
+    "position_semantics": "AR171 positions all zero; phase AR1 position zero due qnn-net-run default FLOAT ingestion",
     "prefill": {
       "accelerator_execute_us": 4967332,
       "all_finite": true,
@@ -219,6 +221,7 @@
     "first_token_seconds_diagnostic": 1.11786,
     "graph_count": 1,
     "graph_executions": 16,
+    "initial_state_semantics": "derived from physical AR171 all-zero-position execution; direct AR1 continuation positions171+ were native INT64",
     "numerical_equivalence": false,
     "phone_lock_released": true,
     "post_first_mean_seconds_diagnostic": 1.086696,
@@ -404,6 +407,7 @@
     "cpu_global_argmax": 597,
     "cpu_input_preparation_timed": false,
     "evidence": "results/qnn-prefill-ar171-phone-runtime-diagnostic/result.json",
+    "exact_position_semantics": false,
     "execution_succeeded": true,
     "graph_count": 1,
     "graph_executions": 1,
@@ -416,6 +420,7 @@
     "output_files": 60,
     "phone_lock_released": true,
     "physical_global_argmax": 597,
+    "position_semantics": "invalidated_all_positions_converted_to_zero_by_qnn_net_run",
     "qnn_execute_us": 6308240,
     "registry_result": false,
     "sampled_process_vmhwm_kib": 1576200,
@@ -735,6 +740,7 @@
     "combined_shared_context_viability_claim": false,
     "context_reloads_per_phase": 0,
     "contexts_loaded_sequentially": 2,
+    "corrected_position_semantics_design": true,
     "detailed_profile_phases": [
       "prefill",
       "ar1_decode"
@@ -1037,7 +1043,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "No phone access occurred for integrated AR171-to-AR1 readiness. Await independent review and explicit Pi priority before any integrated diagnostic.",
+  "phone_boundary": "No phone access occurred for the position-ingestion source audit. Prior qnn-net-run position-semantic claims are invalidated; integrated direct-QNN fix remains physically unexecuted.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -1112,6 +1118,33 @@
     },
     "unsupported_source_nodes": 0
   },
+  "qnn_net_run_position_ingestion_audit": {
+    "ar171_position_file": {
+      "bytes": 684,
+      "converted_unique": [
+        0
+      ],
+      "default_interpretation": "float32[171] then cast to int64",
+      "encoded_as": "int32[171] 0..170"
+    },
+    "ar1_phase_position_file": {
+      "bytes": 4,
+      "converted_unique": [
+        0
+      ],
+      "default_interpretation": "float32[1] then cast to int64",
+      "encoded_as": "int32[1] value171"
+    },
+    "evidence": "results/qnn-net-run-position-ingestion-audit/result.json",
+    "exact_position_semantics_proven": false,
+    "graph_position_data_type": "QNN_DATATYPE_INT_64",
+    "phone_access": false,
+    "physical_htp_execution_still_proven": true,
+    "qairt_version": "2.49.40.260810",
+    "recorded_commands_set_input_data_type": false,
+    "recorded_commands_use_native_input_files": false,
+    "source_verified": true
+  },
   "question": "Can LFM2.5-2.6B run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "required_provider_proof_if_unblocked": {
     "compiled_context_identity": "Hash every serialized context and bind SM8550/v73 compiler provenance.",
@@ -1136,7 +1169,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "performance_engineering_integrated_ar171_ar1_host_readiness_complete_not_phone_executed",
+  "status": "blocked_prior_qnn_net_run_positions_all_zero_integrated_direct_qnn_fix_unexecuted",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",

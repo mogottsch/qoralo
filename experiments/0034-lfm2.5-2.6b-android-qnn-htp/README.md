@@ -2,7 +2,25 @@
 
 ## Status
 
-**A single-process integrated AR171→AR1 runner is host-built and Android-staged for review. It measures CPU preparation of all 171 embeddings, loads and executes AR171 with all 60 outputs finite-scanned, frees that context, bridges all 38 states in memory, resets detailed profiling, loads AR1 once, and finite-scans every state/logit output during max16 decode. No integrated inference or phone run has occurred; severe physical state drift and token-5 reference divergence remain.**
+**A single-process direct-QNN AR171→AR1 runner is host-built and Android-staged for review with correct native INT64 position buffers. A source audit found that the earlier qnn-net-run AR171 and phase-switch diagnostics instead read their INT32 position files as default FLOAT32 input and cast every value to INT64 zero. Those runs remain physical HTP execution evidence for their actual inputs, but no longer prove exact position/state semantics. No corrected integrated phone run has occurred.**
+
+## Evidence correction: qnn-net-run position ingestion
+
+[`results/qnn-net-run-position-ingestion-audit/`](results/qnn-net-run-position-ingestion-audit/) binds the exact QAIRT 2.49.40 source, documentation, commands, graph descriptors, and raw position files used by the prior qnn-net-run diagnostics.
+
+Both recorded commands omitted `--input_data_type native` / `--use_native_input_files`. QAIRT's qnn-net-run defaults to FLOAT input files. For a non-FLOAT32 graph input, `IOTensor::populateInputTensor` reads one FLOAT32 value per tensor element and then `copyFromFloatToNative` dispatches `castFromFloat<int64_t>`, whose implementation applies `static_cast<int64_t>` element by element.
+
+The AR171 graph declares `position_ids` as INT64 `[1,171]`, but its 684-byte file contained INT32 bit patterns `0..170`. Read as FLOAT32, those bytes represent zero and tiny subnormal values up to `2.382e-43`; all cast to INT64 zero. The phase-switch AR1 graph declares INT64 `[1,1]`, but its 4-byte INT32 value 171 becomes FLOAT32 `2.396e-43` and then INT64 zero. The conversion is source-verified rather than inferred from output behavior.
+
+Consequences:
+
+- the prior physical qnn-net-run AR171 call did **not** prove rotary positions `0..170`;
+- the qnn-net-run AR1 phase-switch call did **not** prove position 171;
+- their matching endpoint argmax values cannot establish exact state/position semantics;
+- their graph load/execution, provider, actual-output, timing, process-memory, thermal, and cleanup evidence remains factual when scoped to the all-zero position inputs;
+- the physical custom direct-QNN max16 continuation used correct INT64 positions, but its starting state came from the affected AR171 call.
+
+The integrated direct-QNN runner bypasses qnn-net-run file conversion and copies descriptor-matched INT64 buffers—1,368 bytes for AR171 and 8 bytes for AR1—but remains physically unexecuted. A future qnn-net-run diagnostic would need numeric FLOAT32 position files under the default mode or native INT64 files with native-input mode; neither correction is retroactively claimed.
 
 This is a separate accelerator arm. It preserves `0029` CPU viability and `0033` CPU/OpenCL campaign evidence without modifying either experiment.
 
@@ -188,9 +206,9 @@ Both compile fallback-disabled as one ordinary QNN graph with 1,542/1,542 optimi
 
 A bounded AR171 x86 HTP-emulator probe loaded its context and retrieved its graph, then exceeded 1,800 seconds during graph execution and produced no graph output. The process was absent afterward. This establishes only that the emulator is impractical for the candidate; it is not a target-SM8550 failure or physical timing result. No phone access occurred. A bounded physical AR171 diagnostic requires independent review and explicit Pi priority.
 
-After review, one bounded physical AR171 runtime diagnostic used exact context SHA-256 `d5ca624cc71a173c7de969fac777e2ce136db3b502e04c2991651b510dabba5a` and 41 precomputed raw inputs totaling 133,358,252 bytes. All 48 staged payload hashes passed locally and remotely. Physical QAIRT `v2.49.40.260810104044` created the context, retrieved one graph, and completed one execution.
+After review, one bounded physical AR171 runtime diagnostic used context SHA-256 `d5ca624cc71a173c7de969fac777e2ce136db3b502e04c2991651b510dabba5a` and 41 precomputed raw inputs totaling 133,358,252 bytes. All 48 staged payload hashes passed locally and remotely. Physical QAIRT `v2.49.40.260810104044` created the context, retrieved one graph, and completed one execution. The later ingestion audit proves its position tensor became all zeros; this was not exact AR171 position semantics.
 
-All 60 raw outputs were pulled before validation: 38 state tensors and 22 logit chunks were finite. Physical final-position argmax was 597, matching sequential AR1 and chunk CPU references. Numerical state/logit equivalence is not claimed.
+All 60 raw outputs were pulled before validation: 38 state tensors and 22 logit chunks were finite. Physical last-sequence-row argmax was 597, matching sequential AR1 and chunk CPU references despite the position error. That coincidence does not establish position/state or numerical equivalence.
 
 The detailed QNN profile reports:
 
@@ -218,7 +236,7 @@ Additional bridge analysis compares physical AR171 endpoint logits before contin
 
 The exact phase-switch diagnostic is prepared but unexecuted in [`results/qnn-prefill-ar171-ar1-phase-switch-readiness/`](results/qnn-prefill-ar171-ar1-phase-switch-readiness/). A host-validated Android CPU bridge copies all physical convolution states byte-for-byte, expands each physical K/V prefix row into the AR1 4,095-position layout with zero padding, embeds token 597, writes position 171, and constructs the exact mask. Its ignored 51-file stage totals 3,362,360,562 bytes and binds both contexts, qnn-net-run, QAIRT runtime, prefill inputs, bridge utility, and embedding.
 
-The planned diagnostic was independently reviewed and executed exactly once. All 51 payload hashes passed locally and remotely. Phase 1 loaded AR171 once, executed one 171-token graph call, and pulled all 60 raw outputs before the AR171 qnn-net-run process exited. Physical endpoint argmax was 597. The Android CPU bridge completed in 0.341 seconds and produced 41 tensor inputs plus an input-list, all hashed. Phase 2 loaded AR1 once and executed token 597 at position 171; all 60 outputs were finite and metadata-size-valid, and argmax 4695 matched the bridge references.
+The planned diagnostic was independently reviewed and executed exactly once. All 51 payload hashes passed locally and remotely. Phase 1 loaded AR171 once, executed one 171-token graph call, and pulled all 60 raw outputs before the AR171 qnn-net-run process exited. Physical endpoint argmax was 597. The Android CPU bridge completed in 0.341 seconds and produced 41 tensor inputs plus an input-list, all hashed. Phase 2 loaded AR1 once and executed token 597 with a position file nominally encoding 171; the ingestion audit proves qnn-net-run converted that value to zero. All 60 outputs were finite and metadata-size-valid, and argmax 4695 matched the references despite the position error.
 
 Detailed phase profiles report:
 
@@ -247,7 +265,7 @@ Both are coherent partial continuations, but they are not equal. The divergence 
 
 The custom direct-QNN runner can now load all 38 bridged states from raw files, validate position 171 and the exact mask, load one AR1 context once, and greedily update state in process for up to 16 tokens. A bounded x86 HTP max1 probe loaded the context/graph and produced 4695; its 751-second runtime makes max16 emulation impractical. The ignored Android stage contains 53 payloads totaling 1,932,854,438 bytes, with context SHA-256 `76ba15e7fd95e5e13e92be0e88e8e6bbd3123f2b993b6986c9dac8800a9bf212`, runner SHA-256 `659fa97a84d789d0630051d5ff0031d494820de6517e34cccfcb6d116edf9758`, and passing hashes/ELF preflight.
 
-One reviewed physical max16 resume diagnostic used that exact stage. All 53 hashes passed locally and remotely. The custom direct-QNN runner loaded the accepted AR1 context and all bridged states, validated position 171 and the mask, then completed 16 HTP graph executions while keeping one context and all 38 states in process. It produced exactly the CPU physical-state reference sequence:
+One reviewed physical max16 resume diagnostic used that exact stage. All 53 hashes passed locally and remotely. The custom direct-QNN runner loaded the accepted AR1 context and the bridged states originating from the affected all-zero-position AR171 call, validated native INT64 position 171 and the mask, then completed 16 HTP graph executions while keeping one context and all 38 states in process. It produced exactly the CPU continuation from that same affected physical state:
 
 `[4695, 10966, 622, 310, 5272, 267, 2014, 116311, 9516, 28817, 374, 278, 2909, 19260, 1703, 2165]`
 
