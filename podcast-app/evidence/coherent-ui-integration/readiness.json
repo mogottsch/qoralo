@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "status": "host-validated-awaiting-independent-coherent-gate",
+  "sourceCommit": "fb16b90e493c24e2d0b5f289c393b4cd5b5abd4f",
+  "appSrcTree": "314010f949ba5e33fe7845230c3c3b2b875d7c97",
+  "appApk": {
+    "path": "podcast-app/.local/integration-ready/fb16b90-02/app.apk",
+    "sha256": "1cfe1419d974ac4e88d3039806a1a6bc849b602ec3036a474cd877f068ed8e7d"
+  },
+  "testApk": {
+    "path": "podcast-app/.local/integration-ready/fb16b90-02/test.apk",
+    "sha256": "b03d8fe7f87325d3db3bf1d6a349b87fad8955b7e41da905655167aae80af76d"
+  },
+  "effectiveComposition": {
+    "base": "1aa5acdb30899b56afacd4a540f3b284502fff04",
+    "form": "31ab0b7046732b70d0929963b1ce17646db5256e",
+    "readability": "c2ce81bf6d97b3838808104190a651b0fba62b9a",
+    "replacementPaths": 16
+  },
+  "proposedAndroidGate": {
+    "requiresSeparatePiAssignment": true,
+    "operator": "Nik",
+    "serial": "emulator-5556",
+    "classes": [
+      "ScreenSemanticsTest",
+      "UiInteractionRegressionTest",
+      "PasteImeRegressionTest",
+      "TextReadabilityPolicyTest",
+      "TextReadabilityClippingTest",
+      "FormSubmissionInteractionTest"
+    ],
+    "methodsPerCondition": 28,
+    "conditions": [
+      "default OS",
+      "actual320dp/OSfont2"
+    ],
+    "maximumInvocations": 2,
+    "perInvocationSeconds": 180,
+    "capture": {
+      "librarySourcesSmokeSeconds": 80,
+      "pasteActualImeSmokeSeconds": 100,
+      "full15FramesPerConditionSeconds": 600,
+      "remainingImeInvocations": 7,
+      "perImeSeconds": 100,
+      "reuseSuccessfulDefaultPasteIme": true
+    },
+    "noRetries": true
+  },
+  "noEmulatorPhysicalModelExecution": true,
+  "candidate": {
+    "path": "podcast-app/.local/integration-ready/fb16b90-02/candidate.json",
+    "sha256": "2b3c1ed1c8fe8683f3a87dc1f6491efbd989775218cc8786f4fd4f33457379e7"
+  },
+  "hostChecks": {
+    "jvm": {
+      "tests": 113,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "jvmTaskUpToDate": false,
+    "pythonPassed": 15,
+    "lintDebug": "passed",
+    "releaseKotlin": "passed",
+    "appAndTestAssembly": "passed",
+    "nativePayloadMatches05": true,
+    "trustedRuntimeVerifier": "passed",
+    "formAndReadabilityClassesPresent": true,
+    "fixtureSha256": "858e2401ed467f89fd8d1d196f99acaa2ec153dcae239f7fe78b0fd293c778cd",
+    "androidExecution": "not run; separate Nik gate required",
+    "modelsLoaded": false,
+    "finishedAt": "2026-09-10T13:19:47.982688+00:00"
+  },
+  "sourceProof": "attempt-02/source-union.json",
+  "nativeProof": "attempt-02/native-payload-comparison.json",
+  "inputProof": "attempt-02/build-inputs.json",
+  "dependencyProof": "attempt-02/resolved-artifacts-hashes.json",
+  "priorArtifactProof": "attempt-02/restoration.json",
+  "emulatorGate": "pending separate Pi assignment and Nik review; no actual combined Android executions yet",
+  "retainedHostFailure": "host-inventory-attempt-01: inventory task failed before test/assembly; distinct corrected attempt02 passed"
+}

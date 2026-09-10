@@ -1,6 +1,6 @@
 # Coherent UI integration gate
 
-**Both scoped prerequisites are independently approved.** Pi has released the host-only coherent build/freeze below. The combined APK is not yet validated; emulator execution still needs the separate exact-candidate assignment. Old APKs, readiness records and raw failures stay immutable.
+**Both scoped prerequisites are independently approved.** The released host build/freeze has completed: the coherent matched pair passed 113 JVM/15 Python plus lint/release/assembly and is frozen. See [`../evidence/coherent-ui-integration/readiness.json`](../evidence/coherent-ui-integration/readiness.json). Combined emulator execution still needs the separate exact-candidate assignment; this is not final integrated polish approval. Old APKs, readiness records and raw failures stay immutable.
 
 ## Inputs and approval gates
 

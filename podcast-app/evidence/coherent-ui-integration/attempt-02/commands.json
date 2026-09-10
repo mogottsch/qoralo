@@ -1,0 +1,26 @@
+{
+  "host": [
+    "./gradlew",
+    "--offline",
+    "--no-configuration-cache",
+    "--max-workers=2",
+    "--init-script",
+    "/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/integration-ready/fb16b90-02/artifact-inputs.init.gradle",
+    ":app:coherentArtifactInputs",
+    ":app:testDebugUnitTest",
+    ":app:lintDebug",
+    ":app:compileReleaseKotlin",
+    ":app:assembleDebug",
+    ":app:assembleDebugAndroidTest"
+  ],
+  "python": [
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tools/tests",
+    "-v"
+  ],
+  "startedAt": "2026-09-10T13:19:02.194419+00:00"
+}

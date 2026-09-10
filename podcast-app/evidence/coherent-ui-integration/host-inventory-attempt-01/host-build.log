@@ -1,0 +1,91 @@
+Calculating task graph as no cached configuration is available for tasks: :app:coherentArtifactInputs :app:testDebugUnitTest :app:lintDebug :app:compileReleaseKotlin :app:assembleDebug :app:assembleDebugAndroidTest
+> Task :app:coherentArtifactInputs FAILED
+
+FAILURE: Build completed with 2 failures.
+
+1: Task failed with an exception.
+-----------
+* Where:
+Initialization script '/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/integration-ready/fb16b90/artifact-inputs.init.gradle' line: 8
+
+* What went wrong:
+Execution failed for task ':app:coherentArtifactInputs'.
+> Could not resolve all artifacts for configuration ':app:debugAndroidTestCompileClasspath'.
+   > The consumer was configured to find a library for use during compile-time, preferably optimized for Android, as well as attribute 'com.android.build.api.attributes.AgpVersionAttr' with value '8.7.3', attribute 'com.android.build.api.attributes.BuildTypeAttr' with value 'debug', attribute 'org.jetbrains.kotlin.platform.type' with value 'androidJvm'. However we cannot choose between the following variants of project :app:
+       - Configuration ':app:debugApiElements' variant android-app-symbol-for-data-binding declares a library for use during compile-time, preferably optimized for Android, as well as attribute 'com.android.build.api.attributes.AgpVersionAttr' with value '8.7.3', attribute 'com.android.build.api.attributes.BuildTypeAttr' with value 'debug', attribute 'org.jetbrains.kotlin.platform.type' with value 'androidJvm':
+           - Unmatched attributes:
+               - Provides attribute 'artifactType' with value 'android-app-symbol-for-data-binding' but the consumer didn't ask for it
+               - Provides attribute 'com.android.build.gradle.internal.attributes.VariantAttr' with value 'debug' but the consumer didn't ask for it
+       - Configuration ':app:debugApiElements' variant android-base-module-metadata declares a library for use during compile-time, preferably optimized for Android, as well as attribute 'com.android.build.api.attributes.AgpVersionAttr' with value '8.7.3', attribute 'com.android.build.api.attributes.BuildTypeAttr' with value 'debug', attribute 'org.jetbrains.kotlin.platform.type' with value 'androidJvm':
+           - Unmatched attributes:
+               - Provides attribute 'artifactType' with value 'android-base-module-metadata' but the consumer didn't ask for it
+               - Provides attribute 'com.android.build.gradle.internal.attributes.VariantAttr' with value 'debug' but the consumer didn't ask for it
+       - Configuration ':app:debugApiElements' variant android-classes-jar declares a library for use during compile-time, preferably optimized for Android, as well as attribute 'com.android.build.api.attributes.AgpVersionAttr' with value '8.7.3', attribute 'com.android.build.api.attributes.BuildTypeAttr' with value 'debug', attribute 'org.jetbrains.kotlin.platform.type' with value 'androidJvm':
+           - Unmatched attributes:
+               - Provides attribute 'artifactType' with value 'android-classes-jar' but the consumer didn't ask for it
+               - Provides attribute 'com.android.build.gradle.internal.attributes.VariantAttr' with value 'debug' but the consumer didn't ask for it
+               - Provides its elements packaged as a jar but the consumer didn't ask for it
+       - Configuration ':app:debugApiElements' variant android-feature-all-metadata declares a library for use during compile-time, preferably optimized for Android, as well as attribute 'com.android.build.api.attributes.AgpVersionAttr' with value '8.7.3', attribute 'com.android.build.api.attributes.BuildTypeAttr' with value 'debug', attribute 'org.jetbrains.kotlin.platform.type' with value 'androidJvm':
+           - Unmatched attributes:
+               - Provides attribute 'artifactType' with value 'android-feature-all-metadata' but the consumer didn't ask for it
+               - Provides attribute 'com.android.build.gradle.internal.attributes.VariantAttr' with value 'debug' but the consumer didn't ask for it
+       - Configuration ':app:debugApiElements' variant android-feature-res-ap_ declares a library for use during compile-time, preferably optimized for Android, as well as attribute 'com.android.build.api.attributes.AgpVersionAttr' with value '8.7.3', attribute 'com.android.build.api.attributes.BuildTypeAttr' with value 'debug', attribute 'org.jetbrains.kotlin.platform.type' with value 'androidJvm':
+           - Unmatched attributes:
+               - Provides attribute 'artifactType' with value 'android-feature-res-ap_' but the consumer didn't ask for it
+               - Provides attribute 'com.android.build.gradle.internal.attributes.VariantAttr' with value 'debug' but the consumer didn't ask for it
+       - Configuration ':app:debugApiElements' variant android-feature-signing-config-data declares a library for use during compile-time, preferably optimized for Android, as well as attribute 'com.android.build.api.attributes.AgpVersionAttr' with value '8.7.3', attribute 'com.android.build.api.attributes.BuildTypeAttr' with value 'debug', attribute 'org.jetbrains.kotlin.platform.type' with value 'androidJvm':
+           - Unmatched attributes:
+               - Provides attribute 'artifactType' with value 'android-feature-signing-config-data' but the consumer didn't ask for it
+               - Provides attribute 'com.android.build.gradle.internal.attributes.VariantAttr' with value 'debug' but the consumer didn't ask for it
+       - Configuration ':app:debugApiElements' variant android-feature-signing-config-versions declares a library for use during compile-time, preferably optimized for Android, as well as attribute 'com.android.build.api.attributes.AgpVersionAttr' with value '8.7.3', attribute 'com.android.build.api.attributes.BuildTypeAttr' with value 'debug', attribute 'org.jetbrains.kotlin.platform.type' with value 'androidJvm':
+           - Unmatched attributes:
+               - Provides attribute 'artifactType' with value 'android-feature-signing-config-versions' but the consumer didn't ask for it
+               - Provides attribute 'com.android.build.gradle.internal.attributes.VariantAttr' with value 'debug' but the consumer didn't ask for it
+       - Configuration ':app:debugApiElements' variant android-java-res declares a library for use during compile-time, preferably optimized for Android, as well as attribute 'com.android.build.api.attributes.AgpVersionAttr' with value '8.7.3', attribute 'com.android.build.api.attributes.BuildTypeAttr' with value 'debug', attribute 'org.jetbrains.kotlin.platform.type' with value 'androidJvm':
+           - Unmatched attributes:
+               - Provides attribute 'artifactType' with value 'android-java-res' but the consumer didn't ask for it
+               - Provides attribute 'com.android.build.gradle.internal.attributes.VariantAttr' with value 'debug' but the consumer didn't ask for it
+       - Configuration ':app:debugApiElements' variant android-manifest-metadata declares a library for use during compile-time, preferably optimized for Android, as well as attribute 'com.android.build.api.attributes.AgpVersionAttr' with value '8.7.3', attribute 'com.android.build.api.attributes.BuildTypeAttr' with value 'debug', attribute 'org.jetbrains.kotlin.platform.type' with value 'androidJvm':
+           - Unmatched attributes:
+               - Provides attribute 'artifactType' with value 'android-manifest-metadata' but the consumer didn't ask for it
+               - Provides attribute 'com.android.build.gradle.internal.attributes.VariantAttr' with value 'debug' but the consumer didn't ask for it
+       - Configuration ':app:debugApiElements' variant jar declares a library for use during compile-time, preferably optimized for Android, as well as attribute 'com.android.build.api.attributes.AgpVersionAttr' with value '8.7.3', attribute 'com.android.build.api.attributes.BuildTypeAttr' with value 'debug', attribute 'org.jetbrains.kotlin.platform.type' with value 'androidJvm':
+           - Unmatched attributes:
+               - Provides attribute 'artifactType' with value 'jar' but the consumer didn't ask for it
+               - Provides attribute 'com.android.build.gradle.internal.attributes.VariantAttr' with value 'debug' but the consumer didn't ask for it
+               - Provides its elements packaged as a jar but the consumer didn't ask for it
+       - Configuration ':app:debugApiElements' variant merged-test-only-native-libs declares a library for use during compile-time, preferably optimized for Android, as well as attribute 'com.android.build.api.attributes.AgpVersionAttr' with value '8.7.3', attribute 'com.android.build.api.attributes.BuildTypeAttr' with value 'debug', attribute 'org.jetbrains.kotlin.platform.type' with value 'androidJvm':
+           - Unmatched attributes:
+               - Provides attribute 'artifactType' with value 'merged-test-only-native-libs' but the consumer didn't ask for it
+               - Provides attribute 'com.android.build.gradle.internal.attributes.VariantAttr' with value 'debug' but the consumer didn't ask for it
+
+* Try:
+> Ambiguity errors are explained in more detail at https://docs.gradle.org/8.9/userguide/variant_model.html#sub:variant-ambiguity.
+> Review the variant matching algorithm at https://docs.gradle.org/8.9/userguide/variant_attributes.html#sec:abm_algorithm.
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+==============================================================================
+
+2: Task failed with an exception.
+-----------
+* What went wrong:
+Configuration cache problems found in this build.
+
+1 problem was found storing the configuration cache.
+- Task `:app:coherentArtifactInputs` of type `org.gradle.api.DefaultTask`: cannot serialize object of type 'org.gradle.api.internal.project.DefaultProject', a subtype of 'org.gradle.api.Project', as these are not supported with the configuration cache.
+  See https://docs.gradle.org/8.9/userguide/configuration_cache.html#config_cache:requirements:disallowed_types
+
+See the complete report at file:///home/moritz/dev/vibevoice-android-spike/podcast-app/build/reports/configuration-cache/6kl5s6iuoza0yu8xhrh5b9n0n/aoobsm5r15oaqgo1ueelm5ihj/configuration-cache-report.html
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+==============================================================================
+
+BUILD FAILED in 6s
+1 actionable task: 1 executed
+Configuration cache entry discarded with 1 problem.
