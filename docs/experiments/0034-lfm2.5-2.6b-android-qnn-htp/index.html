@@ -74,7 +74,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <h1>Experiment 0034 — LFM2.5-2.6B Android QNN/HTP</h1>
 <p class="summary">Correction: earlier qnn-net-run AR171 and phase-switch calls used zero positions, invalidating their canonical-position claims and affecting derived bridge/max16 results. The native-INT64 integrated runner remains unexecuted.</p>
 <div class="header-links"><a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-09-10</span><span>evidence commit: 9a2faeb694afefd201990d703cfbc7626b686802</span><span>page source: docs/experiments/0034-lfm2.5-2.6b-android-qnn-htp/page.md</span><span>page source sha256: 7cfc97d866ceefabb058f631c86cfa7778fbce9f0ba37d8a8a6d77d8cef86ab9</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-09-10</span><span>evidence commit: c477e54e6e94e0f85145ca71f0c52183b5e6ba06</span><span>page source: docs/experiments/0034-lfm2.5-2.6b-android-qnn-htp/page.md</span><span>page source sha256: 4815d47a7bc2eb3bd5a7606efa8e6ad99ab270141e0209962625964f1fa01a2c</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
@@ -201,7 +201,8 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <h3 id="position-ingestion-correction-2026-09-10">Position-ingestion correction — 2026-09-10<a class="anchor" href="#position-ingestion-correction-2026-09-10" aria-label="Link to Position-ingestion correction — 2026-09-10">#</a></h3>
 <p>The initial audit <code>f38c5f3</code>, qualified by final reviewed correction <code>9a2faeb</code>, supersedes the earlier canonical-position interpretations without changing the original result files or raw evidence. Vendor documentation specifies default FLOAT input, and the recorded commands omit both <code>--use_native_input_files</code> and <code>--native_input_tensor_names</code>. A retained runtime log shows the exact qnn-net-run binary rejecting a 1,368-byte native INT64 position file and requiring 684 bytes instead. The hash-bound AR171 file ultimately supplied 684 bytes of INT32 values <code>0…170</code>; the phase-switch AR1 file supplied four bytes of INT32 value 171.</p>
 <p>The vendor-default mode, recorded commands, runtime width rejection, raw-byte reproduction, and supporting packaged SampleApp casting code form a high-confidence evidence chain: FLOAT32 parsing reinterprets those integer bit patterns as zero or subnormal floats (up to about <code>2.396e-43</code>), then casting to INT64 yields only zero. The distributed stripped binary is <strong>not cryptographically proven identical to the SampleApp source</strong>; that source is corroborating implementation evidence, not a bit-for-bit build attestation. Matching payload hashes, output sizes, and argmax did not establish correct effective inputs.</p>
-<p>For future qnn-net-run use, default FLOAT mode requires FLOAT32 files containing the numeric position values, or its documented native-file options (<code>--use_native_input_files</code> / targeted <code>--native_input_tensor_names</code>) require native INT64 position files of 1,368/8 bytes. Exact option syntax and effective values need validation before reuse. SampleApp&#x27;s <code>--input_data_type</code> spelling is not a verified option for the distributed tool. This is a proposed input correction, not a rerun or a phone authorization; the unexecuted integrated direct-QNN runner already uses descriptor-correct native INT64 buffers.</p>
+<p><strong>Host prevention — <code>3127db3</code> → <code>c477e54</code>.</strong> Future generators now write numeric FLOAT32 positions for qnn-net-run&#x27;s default input mode. The <a href="../../../experiments/0034-lfm2.5-2.6b-android-qnn-htp/tools/verify_qnn_position_input.py">value-aware preflight</a> accepts only two contracts: numeric FLOAT32 with no native-input flag, or native INT64 with the global, valueless <code>--use_native_input_files</code> flag. It checks actual values, byte counts, and command/mode agreement rather than trusting file hashes alone.</p>
+<p>Every targeted <code>--native_input_tensor_names</code> form is intentionally rejected, including correct-looking and unrelated targets, until the exact binary&#x27;s graph/tensor selector grammar is validated. Regressions reject historical INT32 bit patterns, wrong native sizes, FLOAT32/native-flag mismatches, malformed <code>=</code> syntax, missing/conflicting selectors, and SampleApp-only <code>--input_data_type</code>. Future launch scripts preflight the prefill file before staging and the bridge-produced AR1 position file before its execution. This is tested host-side prevention, not a corrected physical run or retrospective repair; original evidence and retractions remain unchanged. The integrated direct-QNN runner still uses descriptor-correct native INT64 buffers and remains unexecuted.</p>
 <p>Affected records are the physical AR171 diagnostic, both qnn-net-run phases of the one-token phase-switch run, and all host bridge/max16 work derived from their prefill state. Their provider execution, output bytes, finite checks where actually performed, timings, process-memory observations, and cleanup remain factual only for their actual wrong-position inputs. Intended positioning, canonical prefill/state continuity, comparable precision, and speed interpretations are withdrawn. The direct resumed decoder&#x27;s positions were correct but its starting state was affected. The earlier all-AR1 direct-runner baseline, CPU-only semantic comparisons, and accepted CPU/GPU routes are not implicated by this ingestion error.</p>
 </section>
 <section class="primary-section" id="results" data-primary-section="results">
@@ -768,8 +769,20 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>Vendor FLOAT default + actual commands/raw bytes + retained 1,368→684-byte rejection + SampleApp cast behavior; high confidence, no cryptographic binary/source attestation</td>
 </tr>
 <tr>
-<td>Native-file correction boundary</td>
-<td>Actual tool documents <code>--use_native_input_files</code> / <code>--native_input_tensor_names</code>; not SampleApp-only <code>--input_data_type</code>; no corrected rerun</td>
+<td>Host prevention chain</td>
+<td><code>3127db3</code> → <code>c477e54</code>: numeric-FLOAT32 generators and value/mode/flag/size preflight; no new execution</td>
+</tr>
+<tr>
+<td>Supported input contracts</td>
+<td>Default numeric FLOAT32/no native flag, or native INT64/global valueless <code>--use_native_input_files</code> only</td>
+</tr>
+<tr>
+<td>Targeted native mode</td>
+<td>All <code>--native_input_tensor_names</code> forms rejected pending grammar validation; not an accepted alternative</td>
+</tr>
+<tr>
+<td>Guard-test boundary</td>
+<td>Historical INT32 and selector/mode/size/value mismatches rejected; no repaired historical evidence or corrected phone run</td>
 </tr>
 <tr>
 <td>Audit scope</td>
