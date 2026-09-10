@@ -51,6 +51,7 @@ fun PlayerScreen(
     val separateSeekRow = largeText || LocalConfiguration.current.screenWidthDp < 360
     val player = remember(file.absolutePath) {
         ExoPlayer.Builder(context).build().apply {
+            dev.vibevoice.podcast.runtime.RuntimeDiagnostics.configurePlayer(episode.id, this)
             setAudioAttributes(AudioAttributes.Builder().setUsage(C.USAGE_MEDIA).setContentType(C.AUDIO_CONTENT_TYPE_SPEECH).build(), true)
             setHandleAudioBecomingNoisy(true)
             setMediaItem(MediaItem.fromUri(file.toUri()))

@@ -1,0 +1,77 @@
+import copy
+import hashlib
+import importlib.util
+import json
+from pathlib import Path
+import subprocess
+import sys
+import unittest
+
+PROJECT=Path(__file__).resolve().parents[2]
+sys.path.insert(0,str(PROJECT/'tools'))
+from duration_phone_guard import GuardError
+from short_product_preservation import TABLES, compare, compare_files, parse_inventory
+from run_short_product_gate import CONTRACT_SHA, PACKS
+
+class ShortProductScopeTests(unittest.TestCase):
+    def state(self):
+        value={t:[] for t in TABLES}
+        value['episodes']=[{'id':'old','title':'private old title'}]
+        value['generation_jobs']=[{'id':'old-job','episodeId':'old','status':'FAILED'}]
+        return value
+    def test_only_new_owned_rows_and_existing_failed_history_are_allowed(self):
+        old=self.state();new=copy.deepcopy(old)
+        new['episodes'].append({'id':'owned','title':'new'})
+        new['script_revisions'].append({'id':'r1','episodeId':'owned'})
+        new['chapters'].append({'rowId':'c1','revisionId':'r1'})
+        result=compare(old,new,'owned')
+        self.assertTrue(result['existingUserRowsUnchanged'])
+        self.assertEqual(1,result['tables']['chapters']['ownedAdded'])
+    def test_old_mutation_deletion_and_unowned_additions_rejected(self):
+        for change in ['mutate','delete','unowned']:
+            old=self.state();new=copy.deepcopy(old)
+            if change=='mutate':new['episodes'][0]['title']='changed'
+            if change=='delete':new['generation_jobs']=[]
+            if change=='unowned':new['episodes'].append({'id':'alien','title':'x'})
+            with self.assertRaises(GuardError):compare(old,new,'owned')
+    def test_file_bytes_and_owner_prefix_are_preserved(self):
+        old=parse_inventory(('a'*64+'  files/episodes/old/source.txt\n').encode())
+        new=dict(old,**{'files/episodes/owned/chapter.wav':'b'*64})
+        self.assertEqual(1,compare_files(old,new,'owned')['ownedAddedFiles'])
+        with self.assertRaises(GuardError):compare_files(old,{**new,'files/episodes/old/source.txt':'c'*64},'owned')
+        with self.assertRaises(GuardError):compare_files(old,{**new,'files/episodes/other/x':'d'*64},'owned')
+    def test_route_catalog_update_is_narrow_and_hash_pinned(self):
+        old=self.state();new=copy.deepcopy(old)
+        new['installed_models']=[{'id':'supertonic-3','route':'SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP','manifestSha256':PACKS['supertonic-3']}]
+        compare(old,new,'owned')
+        new['installed_models'][0]['manifestSha256']='0'*64
+        with self.assertRaises(GuardError):compare(old,new,'owned')
+    def test_contract_short_selector_and_long_source_pin_unchanged(self):
+        raw=(PROJECT/'app/src/debug/assets/short-product-e2e/contract.json').read_bytes()
+        self.assertEqual(CONTRACT_SHA,hashlib.sha256(raw).hexdigest())
+        value=json.loads(raw);self.assertEqual(2,value['logicalTtsRequests']);self.assertEqual(190,value['maxNormalizedCodepoints'])
+        self.assertEqual(['source_notes','outline','chapter','chapter'],value['scriptRequests'])
+        self.assertEqual(['edit'],value['editRequests']);self.assertFalse(value['collectProfiles'])
+        baseline=subprocess.check_output(['git','show','70a6ac6:podcast-app/config/normal-supertonic-pack.properties'],cwd=PROJECT.parent)
+        self.assertEqual(baseline,(PROJECT/'config/normal-supertonic-pack.properties').read_bytes())
+        gradle=(PROJECT/'app/build.gradle.kts').read_text();self.assertIn('podcast.shortProductE2e',gradle)
+        self.assertIn('if (shortProductE2e) "config/short-product-e2e.properties" else "config/normal-supertonic-pack.properties"',gradle)
+    def test_observer_seams_do_not_override_normal_limits_or_profiles(self):
+        source=(PROJECT/'app/src/debug/java/dev/vibevoice/podcast/e2e/ShortProductDiagnostics.kt').read_text()
+        self.assertIn('conversation.sendMessage(request).toString()',source)
+        self.assertNotIn('sendMessageAsync',source)
+        self.assertNotIn('enableTtsOnly',source);self.assertNotIn('qnnProfileDirectory',source)
+        self.assertIn('value.volume = 0f',source);self.assertNotIn('AudioManager',source)
+        player=(PROJECT/'app/src/main/java/dev/vibevoice/podcast/ui/PlayerScreen.kt').read_text()
+        self.assertLess(player.index('RuntimeDiagnostics.configurePlayer'),player.index('prepare()'))
+        driver=(PROJECT/'app/src/androidTest/java/dev/vibevoice/podcast/e2e/ShortProductE2eTest.kt').read_text()
+        for forbidden in ['generateScript(', 'generateAudio(', 'commitGeneratedScript(', 'setContent {', 'testPackProvider', 'MediaStore', 'FLAG_ACTIVITY_CLEAR_TASK']:
+            self.assertNotIn(forbidden,driver)
+        controller=(PROJECT/'tools/run_short_product_gate.py').read_text()
+        self.assertNotIn("['push'",controller);self.assertNotIn('pm clear',controller)
+        self.assertIn("guard.checkpoint('before-app-install')",controller)
+        self.assertIn("guard.checkpoint('before-test-install')",controller)
+        self.assertIn("guard.checkpoint('before-instrument')",controller)
+        subprocess.run([sys.executable,'-m','py_compile',str(PROJECT/'tools/run_short_product_gate.py')],check=True)
+
+if __name__=='__main__':unittest.main()

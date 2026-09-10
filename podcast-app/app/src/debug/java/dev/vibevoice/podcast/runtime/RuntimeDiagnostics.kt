@@ -13,6 +13,15 @@ import java.util.concurrent.atomic.AtomicReference
 
 /** Available only in debug builds; enabled solely by the private wiring service. */
 internal object RuntimeDiagnostics {
+    suspend fun beginJob(context: android.content.Context, episodeId: String, jobId: String) =
+        dev.vibevoice.podcast.e2e.ShortProductDiagnostics.beginJob(context, episodeId, jobId)
+    fun endJob() = dev.vibevoice.podcast.e2e.ShortProductDiagnostics.endJob()
+    fun configurePlayer(episodeId: String, player: androidx.media3.exoplayer.ExoPlayer) =
+        dev.vibevoice.podcast.e2e.ShortProductDiagnostics.configurePlayer(episodeId, player)
+    fun beforeExport(context: android.content.Context, episodeId: String, uri: android.net.Uri) =
+        dev.vibevoice.podcast.e2e.ShortProductDiagnostics.beforeExport(context, episodeId, uri)
+    fun exportFinished(episodeId: String, uri: android.net.Uri) =
+        dev.vibevoice.podcast.e2e.ShortProductDiagnostics.exportFinished(episodeId, uri)
     private data class Capture(val contract: WiringContract, val evidence: WiringEvidence, val stop: (Throwable) -> Unit)
     @Volatile private var active: Capture? = null
     @Volatile private var ttsOnlyEvidence: WiringEvidence? = null
@@ -31,6 +40,7 @@ internal object RuntimeDiagnostics {
     fun outputLimit(mode: String, productionLimit: Int): Int = active?.contract?.outputTokens(mode) ?: productionLimit
 
     fun beforeRequest(mode: String, request: String, systemInstruction: String, outputLimit: Int) {
+        dev.vibevoice.podcast.e2e.ShortProductDiagnostics.beforeRequest(mode, request, systemInstruction, outputLimit)
         val capture = active ?: return
         this.mode = mode
         capture.evidence.write("gemma-$mode-request.json", request)
@@ -46,7 +56,7 @@ internal object RuntimeDiagnostics {
     }
 
     fun send(conversation: Conversation, request: String): String {
-        val capture = active ?: return conversation.sendMessage(request).toString()
+        val capture = active ?: return dev.vibevoice.podcast.e2e.ShortProductDiagnostics.send(conversation, request)
         val requestMode = mode
         val output = File(capture.evidence.root, "gemma-$requestMode-raw.txt")
         check(output.createNewFile()) { "Wiring request cannot be repeated" }

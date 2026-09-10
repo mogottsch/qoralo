@@ -1,0 +1,109 @@
+#!/usr/bin/env python3
+"""Freeze the normal/coherent app with explicit short plumbing property, native9 reuse; no ADB/model calls."""
+import argparse
+import hashlib
+import io
+import json
+import os
+from pathlib import Path
+import shutil
+import subprocess
+import tarfile
+import xml.etree.ElementTree as ET
+import zipfile
+from prepare_wiring_gate import PROJECT, digest
+from duration_phone_guard import host_identity
+from run_short_product_gate import CONTRACT_SHA, PACKS, PRIOR
+
+BASE_APK_SHA='78488901d63032b87d2d575c6bec5b7f578b3a7ee38c92e3c633ed943dcb96ab'
+CONTROLLERS=['tools/run_short_product_gate.py','tools/short_product_preservation.py']
+
+
+def main():
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--source-commit',required=True);parser.add_argument('--output',type=Path,required=True)
+    args=parser.parse_args();out=args.output.resolve();out.mkdir(parents=True,exist_ok=False)
+    def git(*argv):return subprocess.check_output(['git',*argv],cwd=PROJECT.parent)
+    source=git('rev-parse',args.source_commit).decode().strip()
+    def save(name,value):(out/name).write_text(json.dumps(value,indent=2)+'\n')
+    def command(name,argv,cwd=PROJECT,env=None):
+        with (out/name).open('w') as log:subprocess.run(argv,cwd=cwd,env=env,stdout=log,stderr=subprocess.STDOUT,timeout=900,close_fds=True,check=True)
+    try:
+        names=git('ls-tree','-r','--name-only',source,'--','podcast-app').decode().splitlines()
+        build_paths=[p for p in names if not p.startswith(('podcast-app/evidence/','podcast-app/docs/','podcast-app/tools/'))]
+        for path in build_paths:
+            require_path=PROJECT.parent/path
+            assert require_path.read_bytes()==git('show',source+':'+path),path
+        for path in CONTROLLERS+['tools/prepare_short_product_gate.py','tools/short_product_artifacts.init.gradle','tools/tests/test_short_product_scope.py']:
+            assert (PROJECT/path).read_bytes()==git('show',source+':podcast-app/'+path),path
+        build_root=out/'build-source';build_root.mkdir()
+        with tarfile.open(fileobj=io.BytesIO(git('archive',source,'--',*build_paths))) as tar:tar.extractall(build_root,filter='data')
+        project=build_root/'podcast-app'
+        baseline=PROJECT/'.local/duration-native-library-ready/cc473f8/app.apk';assert digest(baseline)==BASE_APK_SHA
+        native={}
+        with zipfile.ZipFile(baseline) as archive:
+            for name in archive.namelist():
+                if name.startswith('lib/arm64-v8a/') and name.endswith('.so'):
+                    data=archive.read(name);native[name]=hashlib.sha256(data).hexdigest()
+                    if Path(name).name not in ['liblitertlm_jni.so','libandroidx.graphics.path.so']:
+                        p=project/'app/runtime-libs/arm64-v8a'/Path(name).name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(data)
+        assert len(native)==9
+        properties=(PROJECT/'local.properties').read_text();assert 'native.runtime.enabled=true' in properties
+        (project/'local.properties').write_text(properties.replace('native.runtime.enabled=true','native.runtime.enabled=false'))
+        for route in ('gemma-4-e2b','supertonic-3'):
+            assert digest(PROJECT/'.local/model-packs'/route/'current/manifest.json')==PACKS[route]
+        assert digest(project/'app/src/debug/assets/short-product-e2e/contract.json')==CONTRACT_SHA
+        assert digest(project/'app/src/main/cpp/podcast_runtime.cpp')=='a3de4cd62a83275977036516ff1e0c04a3beda454794e7c331aed7b936ad8b35'
+        source_blobs={line.split('\t')[1].removeprefix('podcast-app/'):line.split('\t')[0].split()[2]
+                      for line in git('ls-tree','-r',source,'--','podcast-app/app/src').decode().splitlines()}
+        save('source-proof.json',{'sourceCommit':source,'effectiveAppSrcTree':git('rev-parse',source+':podcast-app/app/src').decode().strip(),
+             'allSourceBlobs':source_blobs,'buildInputs':{p.removeprefix('podcast-app/'):digest(PROJECT.parent/p) for p in build_paths},
+             'explicitProperty':'-Ppodcast.shortProductE2e=true','longDefaultPropertiesUnchanged':True,
+             'localPropertiesSha256':digest(project/'local.properties'),'sharedSourceOrGradleOutputsReplaced':False,'nativeCompilation':False,
+             'nativeBaselineApkSha256':BASE_APK_SHA,'mode':'real normal coordinator/dispatcher/UI with owned observation/bounds-only debug seams; short plumbing, not long readiness'})
+        init=PROJECT/'tools/short_product_artifacts.init.gradle'
+        env=dict(os.environ,COHERENT_ARTIFACT_OUTPUT=str(out/'resolved-artifacts.json'))
+        command('host-build.log',['./gradlew','--offline','--max-workers=2','--no-configuration-cache','-Ppodcast.shortProductE2e=true','-I',str(init),
+            ':app:coherentArtifactInputs',':app:assembleDebug',':app:assembleDebugAndroidTest',':app:testDebugUnitTest',
+            '--tests','dev.vibevoice.podcast.e2e.ShortProductPolicyTest','--tests','dev.vibevoice.podcast.generation.GenerationCoordinatorTest'],project,env)
+        artifacts=json.loads((out/'resolved-artifacts.json').read_text())
+        save('resolved-artifact-hashes.json',{r['file']:{'sha256':digest(Path(r['file'])),'bytes':Path(r['file']).stat().st_size} for r in artifacts})
+        for name,path in [('app','app/build/outputs/apk/debug/app-debug.apk'),('test','app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk')]:shutil.copy2(project/path,out/(name+'.apk'))
+        generated=(project/'app/build/generated/source/buildConfig/debug/dev/vibevoice/podcast/BuildConfig.java').read_text()
+        assert 'SHORT_PRODUCT_E2E = true' in generated and '"supertonic-3"' in generated and PACKS['supertonic-3'] in generated
+        (out/'generated-BuildConfig.java').write_text(generated)
+        suites=list((project/'app/build/test-results/testDebugUnitTest').glob('TEST-*.xml'))
+        counts={key:sum(int(ET.parse(p).getroot().attrib.get(key,0)) for p in suites) for key in ('tests','failures','errors','skipped')}
+        assert counts['tests']>=6 and counts['failures']==counts['errors']==counts['skipped']==0,counts
+        (out/'junit').mkdir()
+        for p in suites:shutil.copy2(p,out/'junit'/p.name)
+        with zipfile.ZipFile(out/'app.apk') as archive:
+            actual={n:hashlib.sha256(archive.read(n)).hexdigest() for n in archive.namelist() if n.startswith('lib/') and n.endswith('.so')}
+            assert actual==native,'native byte drift; stop, no rebuild/replacement authorized'
+            assert hashlib.sha256(archive.read('assets/short-product-e2e/contract.json')).hexdigest()==CONTRACT_SHA
+        save('native-byte-proof.json',{'baseline':native,'candidate':actual,'allNineExact':True,'noCmakeOrModelCompilation':True})
+        command('trusted-runtime.log',['python3',str(PROJECT/'tools/verify_apk_runtime.py'),'--apk',str(out/'app.apk'),'--output',str(out/'trusted-runtime.json')])
+        sdk=Path('/home/moritz/Android/Sdk/build-tools/35.0.0')
+        for kind in ('app','test'):
+            command(kind+'-manifest.txt',[str(sdk/'aapt2'),'dump','xmltree','--file','AndroidManifest.xml',str(out/(kind+'.apk'))])
+            command(kind+'-signature.txt',[str(sdk/'apksigner'),'verify','--verbose','--print-certs',str(out/(kind+'.apk'))])
+        command('focused-python.log',['python3','-m','unittest','discover','-s',str(PROJECT/'tools/tests'),'-p','test_short_product_scope.py','-v'])
+        save('host-checks.json',{'focusedJvm':counts,'focusedPython':6,'appAndTestAssembly':'passed','native9':'byte-exact reuse',
+             'dependencyInventory':len(artifacts),'physicalExecution':False,'fullBaselineOrUiMatrixRerun':False,'longReadiness':False})
+        candidate={'schemaVersion':1,'kind':'short-production-plumbing','sourceCommit':source,'sourceDirty':False,'phoneAuthorized':False,
+            'contractSha256':CONTRACT_SHA,'contract':json.loads((project/'app/src/debug/assets/short-product-e2e/contract.json').read_text()),
+            'hostGuardSha256':host_identity()['sha256'],'controllerSources':{p:digest(PROJECT/p) for p in CONTROLLERS},
+            'privacyControllerSha256':digest(PROJECT/'tools/run_tts_only_gate.py'),'expectedPriorInstalledApks':PRIOR,
+            'buildProperty':'-Ppodcast.shortProductE2e=true','modelPacks':{r:{'root':str(PROJECT/'.local/model-packs'/r/'current'),'manifestSha256':PACKS[r]} for r in ('gemma-4-e2b','supertonic-3')},
+            'scope':'ONE owned short genuine production workflow; NOT a long input retry/full chapter readiness','status':'awaiting exact independent review and separate Pi phone release'}
+        for kind in ('app','test'):
+            p=out/(kind+'.apk');candidate[kind]={'path':str(p),'bytes':p.stat().st_size,'sha256':digest(p)}
+        candidate['evidenceBindings']={p.relative_to(out).as_posix():{'bytes':p.stat().st_size,'sha256':digest(p)} for p in out.rglob('*')
+            if p.is_file() and 'build-source' not in p.relative_to(out).parts and p.suffix!='.apk'}
+        save('candidate.json',candidate)
+        print(json.dumps({'output':str(out),'candidateSha256':digest(out/'candidate.json'),'appSha256':candidate['app']['sha256'],
+            'testSha256':candidate['test']['sha256'],'hostGuardSha256':candidate['hostGuardSha256'],'sourceCommit':source},indent=2))
+    except BaseException as error:
+        save('build-failure.json',{'error':repr(error),'adbUsed':False,'modelCalls':0});raise
+
+
+if __name__=='__main__':main()

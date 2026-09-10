@@ -160,8 +160,10 @@ class PodcastViewModel internal constructor(
     fun exportEpisode(episodeId: String, destination: Uri) = launchAction {
         val current = repository.episode(episodeId)
         val source = repository.resolveArtifact(requireNotNull(current.finalAudioPath))
+        dev.vibevoice.podcast.runtime.RuntimeDiagnostics.beforeExport(getApplication(), episodeId, destination)
         val output = requireNotNull(getApplication<Application>().contentResolver.openOutputStream(destination, "w")) { "Could not open export destination" }
         output.use { destinationStream -> source.inputStream().use { it.copyTo(destinationStream) } }
+        dev.vibevoice.podcast.runtime.RuntimeDiagnostics.exportFinished(episodeId, destination)
         transientMessage.value = "Episode exported"
     }
 

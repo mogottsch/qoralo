@@ -56,6 +56,7 @@ class GenerationService : Service() {
         scope.launch {
             var failureJob = jobId
             try {
+                dev.vibevoice.podcast.runtime.RuntimeDiagnostics.beginJob(this@GenerationService, episodeId, jobId)
                 val progress: suspend (String) -> Unit = { updateNotification(it) }
                 when (action) {
                     ACTION_SCRIPT -> {
@@ -81,6 +82,7 @@ class GenerationService : Service() {
                 }
                 updateNotification("Generation stopped: ${error.message ?: "runtime failure"}")
             } finally {
+                dev.vibevoice.podcast.runtime.RuntimeDiagnostics.endJob()
                 activeJobId = null
                 activeEpisodeId = null
                 commandGate.release()

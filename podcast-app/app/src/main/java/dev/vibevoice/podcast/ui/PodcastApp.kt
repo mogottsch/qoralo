@@ -132,7 +132,8 @@ private fun SettingsScreen(onBack: () -> Unit) {
                 Text("On-device models", style = MaterialTheme.typography.headlineSmall)
                 Text("Model data stays outside the APK and must match the manifest hashes pinned into this internal build.", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 RuntimeCard("Gemma 4 E2B", "LiteRT GPU · outline + one request per chapter", gemmaPresent)
-                RuntimeCard("Supertonic 3 · experimental", "QNN/HTP · speech coverage unverified", supertonicPresent)
+                RuntimeCard(if (BuildConfig.SHORT_PRODUCT_E2E) "Supertonic 3 · short plumbing" else "Supertonic 3 · experimental",
+                    if (BuildConfig.SHORT_PRODUCT_E2E) "QNN/HTP · brief chapters only" else "QNN/HTP · speech coverage unverified", supertonicPresent)
                 Text("There are no fallback inference routes.", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(top = 8.dp))
             }
         }
