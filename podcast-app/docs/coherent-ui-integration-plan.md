@@ -1,6 +1,6 @@
 # Coherent UI integration gate
 
-**Plan only — not a new candidate or authorization to run it.** Readability is now independently approved; freeze/execution still waits for separate form-candidate approval. Old APKs, readiness records and raw failures stay immutable.
+**Both scoped prerequisites are independently approved.** Pi has released the host-only coherent build/freeze below. The combined APK is not yet validated; emulator execution still needs the separate exact-candidate assignment. Old APKs, readiness records and raw failures stay immutable.
 
 ## Inputs and approval gates
 
@@ -8,9 +8,11 @@
 |---|---|---|
 | Production layout, accessible gallery and paired capture | `1aa5acdb30899b56afacd4a540f3b284502fff04` | Nik accepted 38 final pairs and observed visual fixes; raw original 20/24 results retained in `evidence/ui-polish-05-result/` |
 | Readable-content test policy and regression controls | `c2ce81bf6d97b3838808104190a651b0fba62b9a` | Final independent approval: 34/34 bounded Android methods, identities/10 normal-label observations and cleanup verified; retained in `evidence/text-readability-policy-result/` |
-| Owned asynchronous Paste/Agent acknowledgements | `31ab0b7046732b70d0929963b1ce17646db5256e` | Separate independent review and seven Android interactions at both sizes pending |
+| Owned asynchronous Paste/Agent acknowledgements | `31ab0b7046732b70d0929963b1ce17646db5256e` | Final independent approval: 113 JVM/15 Python and 14 Android methods, identities/source scope/cleanup verified; retained in `evidence/form-submission-ack-result/` |
 
 Do not transfer any of these passes to another candidate. If review requires changes to a slice, approve its replacement separately and recompute this plan's source identity/counts before freezing the integration candidate.
+
+Provenance correction: the form candidate's Player, Generating and Library source blobs already match05 exactly, as Nik independently checked. Earlier messages calling it an "older layout baseline" were inaccurate for those files. It still lacked the later readability test overlay and was not a tested integrated app/test pair.
 
 ## 1. Prove the combined source, not just ancestry
 
