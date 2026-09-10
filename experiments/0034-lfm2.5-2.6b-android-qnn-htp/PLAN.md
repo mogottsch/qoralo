@@ -123,11 +123,13 @@
 111. AR1 loaded but executed zero graphs because `LoadOnly` did not select monolithic dispatch; preserved the exact error/partial output and verified cleanup/lock release.
 112. Fixed only dispatch selection: `LoadOnly` clears consolidated mode and enables monolithic mode exactly for alias `monolith`; no-QNN regression covers prefill/monolith/legacy aliases.
 113. Rebuilt/pinned host and Android runners plus a new 12-file stage; hashes and ELF preflight pass without phone access.
+114. Ran one reviewed post-fix physical integrated diagnostic: correct native INT64 AR171 prefill, 38-state in-memory bridge, AR171 free, AR1 load once, and 15 finite-scanned decode calls.
+115. Preserved 16 total token outputs incrementally, separate timing/profile boundaries, process memory/thermal/settings, and verified PID/root cleanup plus lock release.
 
 ## In progress: performance engineering
 
-1. Commit and independently review the narrow dispatcher fix readiness; no post-fix physical claim.
-2. If a fresh slot is granted, run exactly one bounded corrected integrated attempt; no retry or campaign.
+1. Commit and independently review bounded corrected integrated operability; no retry or campaign.
+2. Compare later lower-precision/device-resident/reduced-logit candidates only after this route's evidence boundary is accepted.
 2. If prioritized, run one bounded reset-isolated physical integrated short/max16 diagnostic with detailed profiles and all-output finite scans.
 3. Evaluate lower-precision/device-resident state and reduced-logit routes; keep CPU/GPU/HTP boundaries explicit.
 4. Do not campaign until the fastest sensible complete route is selected and reset-isolated.

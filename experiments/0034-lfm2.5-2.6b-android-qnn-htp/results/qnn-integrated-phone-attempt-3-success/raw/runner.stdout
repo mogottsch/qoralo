@@ -1,0 +1,46 @@
+     0.7ms [  INFO ] Model wasn't loaded from a shared library.
+     2.3ms [  INFO ] Initialize Backend Returned Status = 0
+   182.0ms [  INFO ] Profiling turned on; level = 2
+   182.0ms [  INFO ] Detailed profiling requested. Creating Qnn Profile object.
+  3972.6ms [WARNING] Device property is not supported
+ 10848.8ms [  INFO ] cleaning up resources for input tensors
+ 10857.4ms [  INFO ] cleaning up resources for output tensors
+ 14020.3ms [WARNING] Device property is not supported
+ 35150.8ms [  INFO ] cleaning up resources for input tensors
+ 35158.1ms [  INFO ] cleaning up resources for output tensors
+{
+  "result": "passed",
+  "route": "integrated_ar171_phase_switch_ar1",
+  "prompt_tokens": 171,
+  "prefill_endpoint_token": 597,
+  "output_cap_semantics": "MAX_NEW is total emitted tokens including the AR171 endpoint",
+  "max_new_tokens": 16,
+  "emitted_tokens": 16,
+  "resume_graph_executions": 15,
+  "contexts_loaded_sequentially": 2,
+  "simultaneous_contexts": 1,
+  "context_reloads_per_phase": 0,
+  "process_backend_setup_seconds": 0.23367,
+  "prefill_context_load_seconds": 3.73934,
+  "prefill_cpu_input_seconds": 0.136508,
+  "prefill_graph_seconds": 6.62474,
+  "prefill_argmax_seconds": 0.000201718,
+  "prefill_compute_phase_sum_seconds": 10.5008,
+  "request_to_first_emitted_token_seconds": 10.5014,
+  "prefill_phase_through_state_bridge_seconds": 10.5156,
+  "prefill_state_bridge_seconds": 0.00381615,
+  "prefill_profile_complete": true,
+  "prefill_profile_dump_seconds": 0.0995456,
+  "prefill_context_free_seconds": 0.354114,
+  "profile_reset_complete": true,
+  "profile_reset_seconds": 1.3594e-05,
+  "ar1_context_load_seconds": 2.81767,
+  "ar1_request_to_first_emitted_token_seconds": 1.9103,
+  "ar1_total_decode_seconds": 21.047,
+  "request_to_final_emitted_token_seconds": 34.8339,
+  "decode_compute_complete_seconds": 34.8339,
+  "ar1_profile_complete": true,
+  "ar1_profile_dump_seconds": 0.0832486,
+  "ar1_context_free_seconds": 0.285744,
+  "diagnostic_total_with_profile_and_free_seconds": 35.2029
+}

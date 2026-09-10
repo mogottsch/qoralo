@@ -2,7 +2,7 @@
 
 ## Status
 
-**Correct native-INT64 physical AR171 prefill passes, and the AR1 dispatcher bug now has a narrow host-tested fix awaiting physical review. `LoadOnly` explicitly selects monolithic dispatch for alias `monolith` and clears it for prefill/legacy aliases. New host/Android binaries and a new hash-bound stage are ready, but no post-fix AR1 graph has executed physically.**
+**The corrected native-INT64 integrated route now completes physically. One direct-QNN process loaded AR171, consumed all 171 canonical-short tokens, finite-scanned 60 outputs, bridged 38 states in memory, freed AR171, loaded AR1 once, and completed 15 finite-scanned decode calls for 16 total emitted tokens. First output arrived in 10.501 seconds and final output in 34.834 seconds in one cold diagnostic.**
 
 ## Evidence correction: qnn-net-run position ingestion
 
@@ -315,4 +315,22 @@ This proves corrected-position physical AR171 prefill, finite outputs, endpoint 
 
 The narrow dispatcher correction is retained separately in [`results/qnn-integrated-ar1-dispatch-fix-readiness/`](results/qnn-integrated-ar1-dispatch-fix-readiness/). `LoadOnly` now clears consolidated dispatch and derives monolithic dispatch from the exact alias: `prefill` remains false, `monolith` is true, and legacy layer aliases remain false. The no-QNN regression exercises these selections. Updated host and Android runners compile with SHA-256 `425e3dd7309358c634be2a23cc741ff5181d285904a2c84b0f679975fbc88d58` and `4387189b4ff211e55e2a0cc5b4517926aed52f4bc80a34770943c35a39add931`. The rebuilt 12-file stage totals 3,400,505,532 bytes; metadata SHA-256 is `bb2b3635134280cd2edeccbb610793eda3bb4524d6ee11a5e7af6cf6a3574721` and manifest SHA-256 is `15d534e925cd90302e464fdda6ff714a27139670294e417d224a082e186207a4`. Hashes and ELF preflight pass.
 
-No phone access occurred for the fix. It does not prove post-fix AR1 execution or max16 completion; a fresh slot requires independent review. FP16/uFxp16 state, registered/device-resident memory, reduced logit return, and coarse explicitly declared hybrid partitions remain later candidates.
+No phone access occurred while preparing the fix.
+
+After independent review, one fresh physical attempt used runner SHA-256 `4387189b4ff211e55e2a0cc5b4517926aed52f4bc80a34770943c35a39add931` and the new stage. All local/remote hashes passed. In one backend process, AR171 received native INT64 positions `0..170`, executed once, finite-scanned all 60 outputs, and emitted endpoint token 597. The runner bridged all 38 states in memory before profile extraction/free, loaded AR1 alias `monolith`, and completed 15 AR1 graph calls at positions `171..185`; every call finite-scanned all 60 outputs. No context was loaded more than once per phase.
+
+The raw 64-byte output was appended and `fsync`ed token-by-token before decoding, SHA-256 `7c1a06dee38d5ecb4417b4313cd468d55d4d00a077b9515e16a82304999f4e9c`. Its 16 tokens are:
+
+`[597, 4695, 10966, 622, 310, 267, 2014, 116311, 9516, 28817, 374, 401, 9527, 2909, 2447, 383]`
+
+The pinned tokenizer decodes:
+
+> The user wants me to a self-contained technical recommendation for an engineering team based on
+
+This is intelligible but grammatically flawed and truncated at the total cap. It matches the CPU comparator for five tokens, then diverges at index 5; equality was not a pass condition.
+
+The cold diagnostic reports backend setup 0.234 seconds; AR171 load 3.739 seconds, in-boundary CPU input preparation 0.137 seconds, graph phase 6.625 seconds, and first emitted token at 10.501 seconds. In-memory bridge took 0.0038 seconds, prefill profile/free 0.454 seconds, AR1 load 2.818 seconds, first resumed token 1.910 seconds, and 15-call decode 21.047 seconds. Final token arrived at 34.834 seconds; total with trailing AR1 profile/free was 35.203 seconds. Tokenization was precomputed and excluded. This is one cold diagnostic, not a statistical or warm-throughput benchmark.
+
+Detailed prefill profiling reports 6.578 seconds QNN and 5.445 seconds accelerator execution. The extracted AR1 profile snapshot reports 1.353 seconds QNN and 1.050 seconds accelerator execution, but is not per-call profile history. Peak process VmHWM was 1,746,324 KiB, not total DSP/system memory.
+
+Raw tokens, provider/profile logs, timing, memory, thermal, hashes, settings boundary, and cleanup are retained in [`results/qnn-integrated-phone-attempt-3-success/`](results/qnn-integrated-phone-attempt-3-success/). The runner process and scoped root were verified absent and `phone.lock` released. This proves bounded corrected-route operability, not numerical/reference equivalence, complete-answer quality, statistical performance, a campaign, combined-context viability, or registry eligibility. FP16/uFxp16 state, registered/device-resident memory, reduced logit return, and coarse explicitly declared hybrid partitions remain later candidates.

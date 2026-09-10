@@ -806,9 +806,10 @@
     "evidence": "results/qnn-integrated-ar1-dispatch-fix-readiness/result.json",
     "host_runner_sha256": "425e3dd7309358c634be2a23cc741ff5181d285904a2c84b0f679975fbc88d58",
     "legacy_alias_monolithic_dispatch": false,
-    "max16_completed": false,
+    "max16_completed": true,
+    "outcome": "corrected_integrated_total16_operability_pass",
     "phone_access": false,
-    "post_fix_physical_ar1_execution": false,
+    "post_fix_physical_ar1_execution": true,
     "prefill_alias_monolithic_dispatch": false,
     "prior_ar1_graph_executions": 0,
     "prior_failure": "missing context: layer-00-core-norm",
@@ -874,6 +875,69 @@
     "remote_manifest_entries_verified": 13,
     "source_proven_cause": "LoadOnly did not set monolithic dispatch mode",
     "state_bridge_completed": true
+  },
+  "integrated_phone_attempt_3_success": {
+    "ar171_graph_executions": 1,
+    "ar171_outputs_finite_scanned": 60,
+    "ar1_graph_executions": 15,
+    "ar1_outputs_finite_scanned_per_call": 60,
+    "ar1_profile_complete": true,
+    "backend": "direct QNN HTP v2.49.40.260810104044",
+    "campaign": false,
+    "cleanup_absent": true,
+    "context_reloads_per_phase": 0,
+    "contexts_loaded_sequentially": 2,
+    "decoded_text": "The user wants me to a self-contained technical recommendation for an engineering team based on",
+    "evidence": "results/qnn-integrated-phone-attempt-3-success/result.json",
+    "local_manifest_entries_verified": 13,
+    "matching_reference_prefix_tokens": 5,
+    "native_int64_ar171_positions": [
+      0,
+      170
+    ],
+    "native_int64_ar1_positions": [
+      171,
+      185
+    ],
+    "numerical_equivalence": false,
+    "phone_lock_released": true,
+    "prefill_profile_complete": true,
+    "processes": 1,
+    "raw_output_sha256": "7c1a06dee38d5ecb4417b4313cd468d55d4d00a077b9515e16a82304999f4e9c",
+    "reference_equality": false,
+    "reference_equality_required": false,
+    "registry_result": false,
+    "remote_manifest_entries_verified": 13,
+    "sampled_process_vmhwm_kib": 1746324,
+    "settings_modified": false,
+    "simultaneous_contexts": 1,
+    "statistical_performance": false,
+    "timing": {
+      "backend_setup_seconds": 0.23367,
+      "diagnostic_total_seconds": 35.2029,
+      "request_to_final_emitted_seconds": 34.8339,
+      "request_to_first_emitted_seconds": 10.5014,
+      "tokenization_precomputed_excluded": true
+    },
+    "tokens": [
+      597,
+      4695,
+      10966,
+      622,
+      310,
+      267,
+      2014,
+      116311,
+      9516,
+      28817,
+      374,
+      401,
+      9527,
+      2909,
+      2447,
+      383
+    ],
+    "total_emitted_tokens": 16
   },
   "matched_qairt_24940_android_phone_attempt_1": {
     "build_ids_exactly_equal": true,
@@ -1119,7 +1183,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "No phone access occurred for the AR1 dispatcher fix. Await independent review and a fresh explicit slot.",
+  "phone_boundary": "Corrected integrated total16 attempt completed and cleaned: runner PID/root absent, settings unchanged, phone.lock released. No follow-on or campaign authorized.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -1267,7 +1331,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "corrected_int64_prefill_passed_ar1_dispatch_fix_host_ready",
+  "status": "corrected_native_int64_integrated_ar171_ar1_total16_physical_operability_passed",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",
