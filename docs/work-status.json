@@ -1,0 +1,232 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-09-10T18:22:14+00:00",
+  "updated_by": "Kate",
+  "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
+  "workstreams": [
+    {
+      "id": "tts-capacity",
+      "title": "Larger TTS contexts",
+      "status": "blocked",
+      "owner": "Ben",
+      "now": "Vocoder blocked: two dilated depthwise Conv ops need ~12 MiB VTCM; the backend cannot tile them into 8 MiB. 3/4 contexts ready.",
+      "next": "Ben maps the two ops and proposes semantics-preserving lowering. Nothing implemented or compiled; no new runtime.",
+      "reported_at": "2026-09-10T18:22:14+00:00",
+      "reported_by": "Pi — latest relayed milestone, captured by Kate",
+      "stale_after_seconds": 600,
+      "links": [
+        {
+          "label": "Experiment 0023",
+          "url": "/docs/experiments/0023-supertonic-qnn-precompiled-context-startup/index.html"
+        }
+      ]
+    },
+    {
+      "id": "tts-review",
+      "title": "Independent TTS review",
+      "status": "waiting",
+      "owner": "Nik",
+      "now": "Nik independently identified missing VTCM splitting support → Optimize17 / finalize1002. Not host OOM or dense attention.",
+      "next": "Review the lowering proposal when ready. No whole-chapter speech or fidelity result.",
+      "reported_at": "2026-09-10T18:22:14+00:00",
+      "reported_by": "Pi — latest relayed milestone, captured by Kate",
+      "stale_after_seconds": 600,
+      "links": []
+    },
+    {
+      "id": "app",
+      "title": "App / short TTS",
+      "status": "waiting",
+      "owner": "Janek",
+      "now": "Exact 15.64 s WAV accepted. Four QNN components proven; normal-manifest fix 117a4e0 done.",
+      "next": "Wait for larger contexts. No whole-chapter capacity claim.",
+      "reported_at": "2026-09-10T18:03:43+00:00",
+      "reported_by": "Pi — latest relayed milestone, captured by Kate",
+      "stale_after_seconds": 900,
+      "links": [
+        {
+          "label": "Listen · accepted exact WAV",
+          "url": "http://127.0.0.1:40187/"
+        }
+      ]
+    },
+    {
+      "id": "gemma",
+      "title": "Gemma · FP16 candidate",
+      "status": "standby",
+      "owner": "Jere",
+      "now": "Exact-long output matched all five repetitive baselines.",
+      "next": "Standby. No text benefit for this candidate/request; broader causes remain open.",
+      "reported_at": "2026-09-10T18:03:43+00:00",
+      "reported_by": "Pi — latest relayed milestone, captured by Kate",
+      "stale_after_seconds": 900,
+      "links": [
+        {
+          "label": "Experiment 0031",
+          "url": "/docs/experiments/0031-gemma-4-e2b-it-android-qnn-htp/index.html"
+        }
+      ]
+    },
+    {
+      "id": "lfm",
+      "title": "LFM · integrated route",
+      "status": "standby",
+      "owner": "Jens",
+      "now": "Corrected 16-token run complete: first 10.5 s / final 34.8 s. Text is grammatically flawed.",
+      "next": "Standby. Profile optimization remains an unimplemented hypothesis.",
+      "reported_at": "2026-09-10T18:03:43+00:00",
+      "reported_by": "Pi — latest relayed milestone, captured by Kate",
+      "stale_after_seconds": 900,
+      "links": [
+        {
+          "label": "Experiment 0034",
+          "url": "/docs/experiments/0034-lfm2.5-2.6b-android-qnn-htp/index.html"
+        }
+      ]
+    },
+    {
+      "id": "qwen",
+      "title": "Qwen · range audit",
+      "status": "paused",
+      "owner": "Ben",
+      "now": "Offline state-range audit done. Ben is supporting TTS.",
+      "next": "Paused pending a new assignment; no native-clipping cause proven.",
+      "reported_at": "2026-09-10T18:03:43+00:00",
+      "reported_by": "Pi — latest relayed milestone, captured by Kate",
+      "stale_after_seconds": 900,
+      "links": [
+        {
+          "label": "Experiment 0032",
+          "url": "/docs/experiments/0032-qwen-3.5-2b-android-qnn-htp/index.html"
+        }
+      ]
+    },
+    {
+      "id": "publication",
+      "title": "Docs / listening pages",
+      "status": "active",
+      "owner": "Kate",
+      "now": "Local status board open; experiment docs updated. LLM registry: 7 rows.",
+      "next": "Maintain milestone reports and verified local players. No push.",
+      "reported_at": "2026-09-10T18:10:21+00:00",
+      "reported_by": "Kate — current implementation report",
+      "stale_after_seconds": 600,
+      "links": [
+        {
+          "label": "LLM registry",
+          "url": "/docs/android-llm-benchmarks/index.html"
+        },
+        {
+          "label": "TTS registry",
+          "url": "/docs/android-benchmarks/index.html"
+        }
+      ]
+    },
+    {
+      "id": "privacy",
+      "title": "Privacy / push hold",
+      "status": "blocked",
+      "owner": "Pi",
+      "now": "105 flagged text dumps: 101 pushed + 4 pending at the inventory snapshot.",
+      "next": "Await Moritz’s history-scrub decision. No independent rewrite or push.",
+      "reported_at": "2026-09-10T18:03:43+00:00",
+      "reported_by": "Pi — latest relayed milestone, captured by Kate",
+      "stale_after_seconds": 900,
+      "links": []
+    }
+  ],
+  "resources": [
+    {
+      "id": "phone",
+      "title": "Phone assignment",
+      "status": "unassigned",
+      "owner": "Pi",
+      "now": "Unassigned after cleaned runs, as reported.",
+      "next": "Not a live ADB, connection or lock check.",
+      "reported_at": "2026-09-10T18:16:29+00:00",
+      "reported_by": "Pi — latest relayed milestone, captured by Kate",
+      "stale_after_seconds": 600,
+      "links": []
+    },
+    {
+      "id": "host",
+      "title": "Host work",
+      "status": "preparing",
+      "owner": "Ben / Nik",
+      "now": "Source/metadata operator mapping only; no implementation, compilation or native run.",
+      "next": "VTCM tiling limit identified. Prior own-cgroup peak ~408 MiB / 8 GiB had no limit/OOM events.",
+      "reported_at": "2026-09-10T18:22:14+00:00",
+      "reported_by": "Pi — latest relayed milestone, captured by Kate",
+      "stale_after_seconds": 600,
+      "links": []
+    },
+    {
+      "id": "push",
+      "title": "Git / publication",
+      "status": "hold",
+      "owner": "Pi / Moritz",
+      "now": "External pushes held. Safe local work continues.",
+      "next": "No history rewrite or deletion of private originals without approval.",
+      "reported_at": "2026-09-10T18:16:29+00:00",
+      "reported_by": "Pi — latest relayed milestone, captured by Kate",
+      "stale_after_seconds": 900,
+      "links": []
+    }
+  ],
+  "agents": [
+    {
+      "name": "Pi",
+      "task": "Coordinate reviews, resources and privacy decision.",
+      "reported_at": "2026-09-10T18:03:43+00:00",
+      "reported_by": "Pi latest snapshot; Kate capture",
+      "stale_after_seconds": 900
+    },
+    {
+      "name": "Ben",
+      "task": "Map two depthwise Conv ops; propose semantics-preserving lowering.",
+      "reported_at": "2026-09-10T18:22:14+00:00",
+      "reported_by": "Pi latest snapshot; Kate capture",
+      "stale_after_seconds": 900
+    },
+    {
+      "name": "Nik",
+      "task": "VTCM failure independently diagnosed; review lowering proposal next.",
+      "reported_at": "2026-09-10T18:22:14+00:00",
+      "reported_by": "Pi latest snapshot; Kate capture",
+      "stale_after_seconds": 900
+    },
+    {
+      "name": "Janek",
+      "task": "Short app WAV accepted; waiting for larger contexts.",
+      "reported_at": "2026-09-10T18:03:43+00:00",
+      "reported_by": "Pi latest snapshot; Kate capture",
+      "stale_after_seconds": 900
+    },
+    {
+      "name": "Jere",
+      "task": "Negative Gemma result retained; standby.",
+      "reported_at": "2026-09-10T18:03:43+00:00",
+      "reported_by": "Pi latest snapshot; Kate capture",
+      "stale_after_seconds": 900
+    },
+    {
+      "name": "Jens",
+      "task": "Corrected LFM result retained; standby.",
+      "reported_at": "2026-09-10T18:03:43+00:00",
+      "reported_by": "Pi latest snapshot; Kate capture",
+      "stale_after_seconds": 900
+    },
+    {
+      "name": "Kate",
+      "task": "Maintain dashboard and verified local listening pages.",
+      "reported_at": "2026-09-10T18:10:21+00:00",
+      "reported_by": "Kate — implementation report",
+      "stale_after_seconds": 900
+    }
+  ],
+  "listening": {
+    "url": "http://127.0.0.1:40187/",
+    "verdict": "accepted — Moritz: “sounds good”",
+    "wav_sha256": "bcc277bce02cdb3042a853c91172abc6c99c325657cdce4829b2eabfc79c163a"
+  }
+}
