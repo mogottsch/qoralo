@@ -116,10 +116,12 @@
 104. Reclassified prior qnn-net-run physical AR171 and phase-switch results as real HTP executions with all-zero position inputs, not exact position/state semantics. The direct-QNN integrated runner retains correct INT64 buffers and remains unexecuted.
 105. Added fail-closed qnn-net-run position preflight for numeric FLOAT32 default mode or native INT64 with documented native flags; historical INT32 bit patterns, wrong sizes, and mode/flag mismatches are rejected.
 106. Updated future qnn-net-run input generators and launch scripts to validate correct numeric position values before any staging/execution while leaving historical evidence immutable.
+107. Attempted one corrected integrated phone gate under `phone.lock`; exact identity/local hashes passed, then transport disappeared before remote-root creation or staging.
+108. Preserved the transport-only failure, corrected raw cleanup `present` to unknown/unverified, and changed future cleanup tooling to distinguish unreachable transport from verified presence.
 
 ## In progress: performance engineering
 
-1. Commit and independently review the final position-ingestion audit and prevention guard before any physical integrated gate.
+1. Commit the transport-preflight failure without model/provider/performance claims; do not retry.
 2. If prioritized, run one bounded reset-isolated physical integrated short/max16 diagnostic with detailed profiles and all-output finite scans.
 3. Evaluate lower-precision/device-resident state and reduced-logit routes; keep CPU/GPU/HTP boundaries explicit.
 4. Do not campaign until the fastest sensible complete route is selected and reset-isolated.

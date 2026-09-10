@@ -81,7 +81,7 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
     def test_active_export_does_not_claim_qnn_android_or_completion(self) -> None:
-        self.assertIn("blocked_prior_qnn_net_run_positions_all_zero", self.contract["status"])
+        self.assertIn("blocked_phone_transport_before_integrated_staging", self.contract["status"])
         route = self.result["route_assessment"]
         self.assertFalse(route["compiled_sm8550_context_available"])
         self.assertFalse(route["android_execution"])
@@ -90,7 +90,7 @@ class ContractTest(unittest.TestCase):
         self.assertIn("not_android_qnn_or_htp", milestone["classification"])
         self.assertEqual("passed", milestone["rewritten_onnx"]["onnx_checker"])
         self.assertEqual(16, milestone["bounded_output"]["max_new_tokens"])
-        self.assertIn("No phone access occurred for the position-ingestion source audit", self.contract["phone_boundary"])
+        self.assertIn("lost transport before remote-root creation/staging", self.contract["phone_boundary"])
 
     def test_qnn_aot_is_complete_but_not_physical_execution(self) -> None:
         milestone = self.contract["qnn_aot_milestone"]
@@ -543,7 +543,7 @@ class ContractTest(unittest.TestCase):
     def test_integrated_ar171_ar1_runner_is_host_ready_only(self) -> None:
         ready = self.contract["integrated_ar171_ar1_runner_readiness"]
         self.assertFalse(ready["phone_access"])
-        self.assertFalse(ready["phone_authorized"])
+        self.assertTrue(ready["phone_authorized"])
         self.assertEqual((1, 2, 1, 1, 0), (ready["process_backend_count"], ready["contexts_loaded_sequentially"], ready["simultaneous_contexts"], ready["explicit_phase_transitions"], ready["context_reloads_per_phase"]))
         self.assertFalse(ready["per_token_context_streaming"])
         self.assertEqual((171, 16, 15, 60, 60, 38), (ready["prompt_tokens"], ready["max_new_tokens"], ready["ar1_max_graph_executions"], ready["ar171_outputs_finite_scanned"], ready["ar1_outputs_finite_scanned_per_token"], ready["state_tensors_bridged_in_memory"]))
@@ -560,6 +560,8 @@ class ContractTest(unittest.TestCase):
         self.assertTrue(ready["prompt_mask_byte_equal_to_accepted_input"])
         self.assertFalse(ready["combined_shared_context_viability_claim"])
         self.assertFalse(ready["integrated_inference_completed"])
+        self.assertFalse(ready["physical_execution"])
+        self.assertEqual("transport_lost_before_staging", ready["physical_attempt_outcome"])
         result = json.loads((EXP / ready["evidence"]).read_text())
         self.assertTrue(result["source"]["required_fragments_present"])
         self.assertEqual(0, result["contexts"]["ar171"]["shared_weights_bytes"])
@@ -633,6 +635,21 @@ class ContractTest(unittest.TestCase):
         self.assertIn("did not prove rotary positions", result["impact"]["invalidated_claims"][0])
         self.assertIn("physically", result["impact"]["still_valid"][0])
 
+    def test_integrated_phone_attempt_is_transport_only(self) -> None:
+        attempt = self.contract["integrated_phone_attempt_1_transport_failure"]
+        self.assertTrue(attempt["device_identity_verified"])
+        self.assertTrue(attempt["local_elf_preflight"])
+        self.assertEqual(13, attempt["local_manifest_entries_verified"])
+        for key in ("remote_root_command_dispatched", "stage_push_started", "remote_hash_check_started", "runner_launched", "context_load_started", "graph_execution_started", "output_created", "model_runtime_evidence", "performance_evidence"):
+            self.assertFalse(attempt[key])
+        self.assertEqual("unknown_unverified_transport_failure", attempt["cleanup_status"])
+        self.assertFalse(attempt["raw_cleanup_present_is_correct"])
+        self.assertTrue(attempt["phone_lock_released"])
+        result = json.loads((EXP / attempt["evidence"]).read_text())
+        self.assertEqual("unknown_unverified", result["cleanup"]["remote_root_status"])
+        self.assertFalse(result["transport_failure"]["remote_mkdir_dispatched"])
+        self.assertIn("Transport-preflight failure only", result["claim_boundary"])
+
     def test_final_pipeline_host_equivalence_is_bounded(self) -> None:
         result = json.loads((EXP / "results/htp-pipeline-host-equivalence/result.json").read_text())
         self.assertIn("host_only", result["classification"])
@@ -692,6 +709,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/qnn-prefill-ar171-ar1-phone-max16-resume",
             EXP / "results/qnn-prefill-ar171-ar1-integrated-readiness",
             EXP / "results/qnn-net-run-position-ingestion-audit",
+            EXP / "results/qnn-integrated-phone-attempt-1-transport-before-staging",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

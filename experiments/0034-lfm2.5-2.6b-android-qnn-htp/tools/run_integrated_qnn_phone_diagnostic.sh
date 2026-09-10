@@ -14,10 +14,22 @@ python3 "$EXP/tools/verify_android_stage_elf.py" "$STAGE" >"$OUT/local-elf-prefl
 exec 9>"$REPO/artifacts/locks/phone.lock"
 flock -n 9 || { echo "phone lock busy" >&2; exit 75; }
 adb_cmd() { "$ADB" -s "$SERIAL" "$@" 9>&-; }
+retain_remote=0
 cleanup() {
   set +e
-  adb_cmd shell "rm -rf '$REMOTE'" >"$OUT/cleanup.stdout" 2>"$OUT/cleanup.stderr"
-  adb_cmd shell "test ! -e '$REMOTE'" && echo absent >"$OUT/cleanup-status.txt" || echo present >"$OUT/cleanup-status.txt"
+  if [[ "$retain_remote" == 1 ]]; then
+    printf 'retained_after_pull_failure=%s\n' "$REMOTE" >"$OUT/cleanup-status.txt"
+    return
+  fi
+  if ! adb_cmd shell "rm -rf '$REMOTE'" >"$OUT/cleanup.stdout" 2>"$OUT/cleanup.stderr"; then
+    echo unverified_transport_failure >"$OUT/cleanup-status.txt"
+    return
+  fi
+  if adb_cmd shell "test ! -e '$REMOTE'"; then
+    echo absent >"$OUT/cleanup-status.txt"
+  else
+    echo present >"$OUT/cleanup-status.txt"
+  fi
 }
 trap cleanup EXIT
 adb_cmd get-state | tr -d '\r' | tee "$OUT/adb-state.txt" | grep -Fx device
@@ -26,12 +38,12 @@ adb_cmd get-state | tr -d '\r' | tee "$OUT/adb-state.txt" | grep -Fx device
   for item in \
     'manufacturer ro.product.manufacturer' 'model ro.product.model' 'device ro.product.device' \
     'soc ro.soc.model' 'abi ro.product.cpu.abi' 'release ro.build.version.release' \
-    'sdk ro.build.version.sdk' 'boot sys.boot_completed' \
+    'sdk ro.build.version.sdk' 'fingerprint ro.build.fingerprint' 'boot sys.boot_completed' \
     'verified_boot ro.boot.verifiedbootstate' 'flash_locked ro.boot.flash.locked'; do
     set -- $item; echo "$1=$(adb_cmd shell getprop "$2" | tr -d '\r')"
   done
 } | tee "$OUT/identity.txt"
-for value in serial=$SERIAL manufacturer=samsung model=SM-S918B device=dm3q soc=SM8550 abi=arm64-v8a boot=1 verified_boot=green flash_locked=1; do
+for value in serial=$SERIAL manufacturer=samsung model=SM-S918B device=dm3q soc=SM8550 abi=arm64-v8a release=16 sdk=36 fingerprint=samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys boot=1 verified_boot=green flash_locked=1; do
   grep -Fx "$value" "$OUT/identity.txt" >/dev/null || exit 3
 done
 adb_cmd shell dumpsys battery >"$OUT/battery-before.txt" 2>"$OUT/battery-before.stderr" || true
@@ -67,9 +79,19 @@ wait "$runner_pid"; runner_code=$?
 wait "$sampler_pid" || true
 set -e
 printf '%s\n' "$runner_code" >"$OUT/exit-code.txt"
-adb_cmd pull "$REMOTE/output.int32le" "$OUT/output.int32le" >"$OUT/pull-output.txt" 2>&1 || true
+if ! adb_cmd pull "$REMOTE/output.int32le" "$OUT/output.int32le" >"$OUT/pull-output.txt" 2>&1; then
+  retain_remote=1
+  printf '%s\n' "$REMOTE" >"$OUT/retained-remote-root.txt"
+fi
 adb_cmd shell dumpsys battery >"$OUT/battery-after.txt" 2>"$OUT/battery-after.stderr" || true
 adb_cmd shell dumpsys thermalservice >"$OUT/thermal-after.txt" 2>"$OUT/thermal-after.stderr" || true
 adb_cmd shell "pidof direct_lfm2_qnn_runner || true" >"$OUT/process-after.txt"
+if [[ -s "$OUT/process-after.txt" ]]; then
+  echo "runner process remains after bounded run" >&2
+  retain_remote=1
+  exit 6
+fi
+printf 'android_settings_modified=false\n' >"$OUT/settings-boundary.txt"
+[[ "$retain_remote" == 0 ]] || exit 7
 [[ "$runner_code" == 0 ]] || exit "$runner_code"
 echo "$RUN_ID"

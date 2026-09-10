@@ -758,7 +758,8 @@
     "partial_output_failure_regression": true,
     "per_token_context_streaming": false,
     "phone_access": false,
-    "phone_authorized": false,
+    "phone_authorized": true,
+    "physical_attempt_outcome": "transport_lost_before_staging",
     "physical_execution": false,
     "prior_qnn_net_run_int32_boundary_generalized": false,
     "process_backend_count": 1,
@@ -798,6 +799,25 @@
       "diagnostic_total"
     ],
     "tokenization_precomputed_and_excluded_from_timing": true
+  },
+  "integrated_phone_attempt_1_transport_failure": {
+    "cleanup_status": "unknown_unverified_transport_failure",
+    "context_load_started": false,
+    "device_identity_verified": true,
+    "evidence": "results/qnn-integrated-phone-attempt-1-transport-before-staging/result.json",
+    "exact_error": "adb: device 'R5CW81PR8SY' not found",
+    "graph_execution_started": false,
+    "local_elf_preflight": true,
+    "local_manifest_entries_verified": 13,
+    "model_runtime_evidence": false,
+    "output_created": false,
+    "performance_evidence": false,
+    "phone_lock_released": true,
+    "raw_cleanup_present_is_correct": false,
+    "remote_hash_check_started": false,
+    "remote_root_command_dispatched": false,
+    "runner_launched": false,
+    "stage_push_started": false
   },
   "matched_qairt_24940_android_phone_attempt_1": {
     "build_ids_exactly_equal": true,
@@ -1043,7 +1063,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "No phone access occurred for the position-ingestion source audit. Prior qnn-net-run position-semantic claims are invalidated; integrated direct-QNN fix remains physically unexecuted.",
+  "phone_boundary": "Corrected integrated attempt lost transport before remote-root creation/staging. Cleanup is unknown/unverified, phone.lock released, and no retry is authorized without restored transport plus a fresh Pi slot.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -1191,7 +1211,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "blocked_prior_qnn_net_run_positions_all_zero_integrated_direct_qnn_fix_unexecuted",
+  "status": "blocked_phone_transport_before_integrated_staging_cleanup_unverified",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",

@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "experiment": "0034-lfm2.5-2.6b-android-qnn-htp",
+  "run_id": "integrated-20260910T154350Z-1836477",
+  "classification": "phone_transport_lost_after_identity_before_remote_root_or_staging",
+  "device_identity_before_loss": {
+    "serial": "R5CW81PR8SY",
+    "manufacturer": "samsung",
+    "model": "SM-S918B",
+    "device": "dm3q",
+    "soc": "SM8550",
+    "abi": "arm64-v8a",
+    "android_release": "16",
+    "api": 36,
+    "fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+    "verified_boot": "green",
+    "flash_locked": true
+  },
+  "local_preflight": {
+    "elf_preflight": true,
+    "manifest_entries_verified": 13,
+    "payload_files": 12,
+    "stage_metadata_sha256": "dbb9d687b34d4476086f59e746907dfb8bef32c5fcf36a0b83331d9b0b02a60f",
+    "manifest_sha256": "8fa2c53c79c1ad994ea269266da14fb70c9cf03913d36753220d1379b6e79616",
+    "runner_sha256": "94e76c339107cc3bfae2fb9b296cbcdb76f1970f7aeb8a734bb564029fd6fdb1",
+    "storage_available_kib": 237503908,
+    "battery_and_thermal_before_captured": true
+  },
+  "transport_failure": {
+    "last_successful_remote_operation": "df -k /data/local/tmp",
+    "first_failed_operation": "adb shell mkdir -p /data/local/tmp/vibevoice-0034-integrated-20260910T154350Z-1836477",
+    "exact_error": "adb: device 'R5CW81PR8SY' not found",
+    "intended_remote_root": "/data/local/tmp/vibevoice-0034-integrated-20260910T154350Z-1836477",
+    "remote_mkdir_dispatched": false,
+    "stage_push_started": false,
+    "remote_hash_check_started": false,
+    "runner_launched": false,
+    "context_load_started": false,
+    "graph_execution_started": false,
+    "output_created": false
+  },
+  "cleanup": {
+    "cleanup_command_attempted": true,
+    "cleanup_command_succeeded": false,
+    "cleanup_exact_error": "adb: device 'R5CW81PR8SY' not found",
+    "raw_cleanup_status_text": "present",
+    "raw_cleanup_status_correction": "unknown_unverified_transport_failure; the script's historical boolean fallback mislabeled any failed absence check as present",
+    "remote_root_status": "unknown_unverified",
+    "remote_root_creation_by_this_attempt": "not dispatched because adb rejected the device before shell command transport",
+    "phone_lock_held_for_entire_attempt": true,
+    "phone_lock_released": true
+  },
+  "follow_up_tooling": "The supervisor cleanup now records unverified_transport_failure when adb removal cannot be transported and retains the scoped root when output pull or PID verification fails.",
+  "required_action": "No retry. Wait for Moritz to restore transport and Pi to grant a fresh explicit slot.",
+  "claim_boundary": "Transport-preflight failure only. No staged payload, remote hash, runner, context, provider, inference, output, performance, model failure, or corrected-position execution evidence exists. Cleanup is unknown, not present and not verified absent."
+}
