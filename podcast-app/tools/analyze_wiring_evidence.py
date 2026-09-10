@@ -6,23 +6,34 @@ import csv
 import hashlib
 import io
 import json
+import math
 from pathlib import Path
 import tarfile
 from prepare_wiring_gate import CONTRACT_SHA
 
 
+def positive_finite(value):
+    try:
+        return math.isfinite(float(value)) and float(value) > 0
+    except (ValueError, TypeError):
+        return False
+
+
 def profile_observations(ort_events, qnn_rows):
-    providers = sorted({e.get("args", {}).get("provider") for e in ort_events if e.get("args", {}).get("provider")})
-    positive = set()
-    for row in qnn_rows:
-        try:
-            if float(row.get("Time", "0")) > 0:
-                positive.add(row.get("Event Identifier", ""))
-        except ValueError:
-            pass
-    return {"ortProviders": providers, "rpcExecuteObserved": "RPC (execute) time" in positive,
-            "acceleratorCyclesObserved": "Accelerator (execute) time (cycles)" in positive,
-            "htpProofEstablished": providers == ["QNNExecutionProvider"] and "RPC (execute) time" in positive and "Accelerator (execute) time (cycles)" in positive}
+    # Session metadata, provider declarations and Node fence events are not executed kernels.
+    nodes = [e for e in ort_events if e.get("cat") == "Node" and e.get("ph") == "X"
+             and str(e.get("name", "")).endswith("_kernel_time") and positive_finite(e.get("dur"))]
+    providers = sorted({e.get("args", {}).get("provider") for e in nodes if e.get("args", {}).get("provider")})
+    all_nodes_qnn = bool(nodes) and all(e.get("args", {}).get("provider") == "QNNExecutionProvider" for e in nodes)
+    def has_backend_event(identifier, unit):
+        return any(row.get("Event Identifier") == identifier and row.get("Unit of Measurement") == unit
+                   and row.get("Timing Source") == "BACKEND" and row.get("Event Level") == "ROOT"
+                   and positive_finite(row.get("Time")) for row in qnn_rows)
+    rpc = has_backend_event("RPC (execute) time", "US")
+    cycles = has_backend_event("Accelerator (execute) time (cycles)", "CYCLES")
+    return {"ortProviders": providers, "ortExecutionNodeCount": len(nodes), "rpcExecuteObserved": rpc,
+            "acceleratorCyclesObserved": cycles, "htpProofEstablished": all_nodes_qnn and rpc and cycles,
+            "scope": "per-component recorded Node/RPC/cycle evidence predicate; not blanket route or product acceptance"}
 
 
 def analyze(archive_path: Path, candidate: dict, run_id: str):

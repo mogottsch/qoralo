@@ -13,6 +13,10 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#ifdef PODCAST_WIRING_DIAGNOSTICS
+#include <cstdio>
+#include <unistd.h>
+#endif
 
 #include "onnxruntime_cxx_api.h"
 #include "tensor_validation.h"
@@ -394,6 +398,68 @@ jboolean NativeRender(JNIEnv *env, jclass, jlong handle, jstring chapter_id, jst
 
 void NativeDestroy(JNIEnv *, jclass, jlong handle) { delete reinterpret_cast<Engine *>(handle); }
 
+#ifdef PODCAST_WIRING_DIAGNOSTICS
+void DurationDiagnosticLog(void *, OrtLoggingLevel severity, const char *category,
+                           const char *logid, const char *location, const char *message) {
+  std::fprintf(stderr, "[duration-load ort severity=%d category=%s id=%s location=%s] %s\n",
+               static_cast<int>(severity), category, logid, location, message);
+  std::fflush(stderr);
+}
+
+// Deliberately isolated from Engine/Render: one constructor, zero Session::Run calls.
+jstring NativeDurationLoadOnly(JNIEnv *env, jclass, jstring pack_root, jstring evidence_dir) {
+  try {
+    const auto root = std::filesystem::path(JString(env, pack_root));
+    const auto output = std::filesystem::path(JString(env, evidence_dir));
+    const std::string native_dir = NativeLibraryDirectory();
+    const std::string descriptor = (root / "contexts/duration-context.onnx").string();
+    const std::string backend = native_dir + "/libQnnHtp.so";
+    const char *old_adsp = std::getenv("ADSP_LIBRARY_PATH");
+    const char *ld_path = std::getenv("LD_LIBRARY_PATH");
+    std::fprintf(stderr, "[duration-load] pid=%d uid=%d gid=%d; ORT runtime=%s; ADSP before=%s; LD_LIBRARY_PATH=%s\n",
+                 getpid(), getuid(), getgid(), OrtGetApiBase()->GetVersionString(),
+                 old_adsp ? old_adsp : "<unset>", ld_path ? ld_path : "<unset>");
+    Dl_info ort_info{};
+    if (dladdr(reinterpret_cast<void *>(&OrtGetApiBase), &ort_info)) {
+      std::fprintf(stderr, "[duration-load] loaded ORT library=%s\n", ort_info.dli_fname);
+    }
+    // Baseline exactly matches the failed app. Do NOT append vendor search paths here.
+    setenv("ADSP_LIBRARY_PATH", native_dir.c_str(), 1);
+    std::fprintf(stderr, "[duration-load] ADSP effective=%s; descriptor=%s; backend=%s\n",
+                 std::getenv("ADSP_LIBRARY_PATH"), descriptor.c_str(), backend.c_str());
+    std::fprintf(stderr, "[duration-load] provider options: soc_model=43 htp_performance_mode=burst offload_graph_io_quantization=0; session.disable_cpu_ep_fallback=1\n");
+    std::fprintf(stderr, "[duration-load] device config expectation from pinned ORT source: SOC=43; ARCH not requested; not a direct deviceCreate-struct capture\n");
+    for (const char *path : {"/vendor/lib64/libcdsprpc.so", "/vendor/lib/libcdsprpc.so",
+                             "/vendor/lib/rfsa/adsp", "/vendor/dsp/cdsp", "/system/lib/rfsa/adsp", "/vendor/dsp"}) {
+      std::fprintf(stderr, "[duration-load] filesystem R_OK=%d path=%s (not linker namespace proof)\n", access(path, R_OK), path);
+    }
+    std::fflush(stderr);
+    Ort::Env ort_env(ORT_LOGGING_LEVEL_VERBOSE, "podcast-duration-load-only", DurationDiagnosticLog, nullptr);
+    auto options = SessionOptions(backend, descriptor, (output / "duration-profile").string());
+    options.SetLogSeverityLevel(0);
+    Ort::ThrowOnError(Ort::GetApi().SetSessionLogVerbosityLevel(options, 1));
+    options.SetLogId("duration-load-only");
+    std::fprintf(stderr, "[duration-load] constructor BEGIN; no other session or neural execution is permitted\n");
+    std::fflush(stderr);
+    {
+      Ort::Session duration_session(ort_env, descriptor.c_str(), options);
+      std::fprintf(stderr, "[duration-load] constructor RETURNED; inputCount=%zu outputCount=%zu; Session::Run never called\n",
+                   duration_session.GetInputCount(), duration_session.GetOutputCount());
+      Ort::AllocatorWithDefaultOptions allocator;
+      auto profile = duration_session.EndProfilingAllocated(allocator);
+      std::fprintf(stderr, "[duration-load] profile=%s\n", profile.get());
+    }
+    std::fflush(stderr);
+    return env->NewStringUTF("duration_session_created_and_closed_without_run");
+  } catch (const Ort::Exception &error) {
+    std::fprintf(stderr, "[duration-load] ORT error code=%d: %s\n", error.GetOrtErrorCode(), error.what());
+    std::fflush(stderr);
+    Throw(env, std::string("duration-load-only ORT error: ") + error.what());
+  } catch (const std::exception &error) { Throw(env, error.what()); }
+  return nullptr;
+}
+#endif
+
 static JNINativeMethod kMethods[] = {
     {const_cast<char *>("create"), const_cast<char *>("(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)J"), reinterpret_cast<void *>(NativeCreate)},
     {const_cast<char *>("provenance"), const_cast<char *>("(J)Ljava/lang/String;"), reinterpret_cast<void *>(NativeProvenance)},
@@ -408,5 +474,14 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *) {
   jclass type = env->FindClass("dev/vibevoice/podcast/runtime/SupertonicNative");
   if (type == nullptr) return JNI_ERR;
   if (env->RegisterNatives(type, kMethods, sizeof(kMethods) / sizeof(kMethods[0])) != JNI_OK) return JNI_ERR;
+#ifdef PODCAST_WIRING_DIAGNOSTICS
+  jclass diagnostic_type = env->FindClass("dev/vibevoice/podcast/wiring/DurationLoadNative");
+  if (diagnostic_type == nullptr) return JNI_ERR;
+  JNINativeMethod diagnostic_methods[] = {
+      {const_cast<char *>("probe"), const_cast<char *>("(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"),
+       reinterpret_cast<void *>(NativeDurationLoadOnly)},
+  };
+  if (env->RegisterNatives(diagnostic_type, diagnostic_methods, 1) != JNI_OK) return JNI_ERR;
+#endif
   return JNI_VERSION_1_6;
 }

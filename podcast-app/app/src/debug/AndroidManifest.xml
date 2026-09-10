@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application>
         <service
+            android:name=".wiring.DurationLoadService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync"
+            android:process=":generation" />
+        <service
             android:name=".wiring.RuntimeWiringService"
             android:exported="false"
             android:foregroundServiceType="dataSync"

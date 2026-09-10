@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "status": "host-validated-awaiting-independent-review",
+  "kind": "duration-session-load-only-baseline",
+  "contractSha256": "51edc271c52b43e14f901169315136f29298c29f7e8954eb6b99d6fe21954f02",
+  "appApkSha256": "08cc825128533cab6d1103680b98025171ef7fd014495b0afc04655bcc417290",
+  "testApkSha256": "120420d6925283ccf44478b58aef29a12e4575bbf6f1027df9a3d98e83cf2c8c",
+  "hostValidation": {
+    "jvmTestsPassed": 74,
+    "pythonTestsPassed": 12,
+    "lintDebug": "passed",
+    "debugAndTestApkAssembly": "passed",
+    "releaseKotlinAndNativeCompilation": "passed",
+    "nativeTensorPolicy": "passed"
+  },
+  "unchanged": ["soc_model=43", "APK-only ADSP search path", "inherited LD_LIBRARY_PATH", "vendor namespace declarations", "ORT/QNN versions", "model/context bytes", "T239/L238 capacity", "CPU fallback disabled"],
+  "diagnosticChanges": ["verbose ORT and QNN logging", "native library/build/environment observations", "one duration session constructor only"],
+  "gemmaRequests": 0,
+  "sessionRunCalls": 0,
+  "phoneAuthorized": false,
+  "diagnosticExecutedOnDevice": false,
+  "oldWiringCandidateAndArtifactsPreserved": true,
+  "rawCollectionReinterpreted": false,
+  "comparisonAndProposal": "qnn-duration-load-only.md"
+}
