@@ -1,0 +1,86 @@
+{
+  "expected": {
+    "app.apk": "4bbf162acbd93f6bff38c0aa042f044af9fd289a5f15f0b2e49ba6763daf1fcd",
+    "test.apk": "b207bf14a6c2bcd01018c1cc8e24e6e016477f38c3167d121dd18b90bcd2220c",
+    "candidate.json": "8a7426abb38cf1234489ef811ff44965080ee70cd2f85118963da65212db3fd1"
+  },
+  "wipHelperNamesAbsentFromBothDexSets": true,
+  "commands": [
+    {
+      "argv": [
+        "/home/moritz/Android/Sdk/platform-tools/adb",
+        "-s",
+        "emulator-5556",
+        "shell",
+        "getprop sys.boot_completed"
+      ],
+      "code": 0,
+      "stdout": "\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/moritz/Android/Sdk/platform-tools/adb",
+        "-s",
+        "emulator-5556",
+        "shell",
+        "getprop sys.boot_completed"
+      ],
+      "code": 0,
+      "stdout": "1\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/moritz/Android/Sdk/platform-tools/adb",
+        "-s",
+        "emulator-5556",
+        "shell",
+        "getprop ro.kernel.qemu; getprop ro.product.cpu.abilist; getprop ro.dalvik.vm.native.bridge; getprop ro.build.fingerprint"
+      ],
+      "code": 0,
+      "stdout": "1\nx86_64,arm64-v8a\nlibndk_translation.so\ngoogle/sdk_gphone64_x86_64/emu64xa:15/AE3A.240806.043/12960925:userdebug/dev-keys\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/moritz/Android/Sdk/platform-tools/adb",
+        "-s",
+        "emulator-5556",
+        "install",
+        "-r",
+        "-t",
+        "/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/ui-build/polish-05/app.apk"
+      ],
+      "code": 0,
+      "stdout": "Performing Streamed Install\nSuccess\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/moritz/Android/Sdk/platform-tools/adb",
+        "-s",
+        "emulator-5556",
+        "install",
+        "-r",
+        "-t",
+        "/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/ui-build/polish-05/test.apk"
+      ],
+      "code": 0,
+      "stdout": "Performing Streamed Install\nSuccess\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/moritz/Android/Sdk/platform-tools/adb",
+        "-s",
+        "emulator-5556",
+        "shell",
+        "settings put global window_animation_scale 0; settings put global transition_animation_scale 0; settings put global animator_duration_scale 0; settings put system font_scale 1.0; wm size reset; wm density reset; run-as dev.vibevoice.podcast.internal sh -c \"test ! -e no_backup/model-packs && echo NO_MODEL_PACKS\""
+      ],
+      "code": 0,
+      "stdout": "NO_MODEL_PACKS\n",
+      "stderr": ""
+    }
+  ]
+}

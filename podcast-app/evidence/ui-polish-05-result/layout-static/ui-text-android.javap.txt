@@ -1,0 +1,515 @@
+Compiled from "TextLayoutResult.kt"
+public final class androidx.compose.ui.text.TextLayoutResult {
+  private final androidx.compose.ui.text.TextLayoutInput layoutInput;
+
+  private final androidx.compose.ui.text.MultiParagraph multiParagraph;
+
+  private final long size;
+
+  private final float firstBaseline;
+
+  private final float lastBaseline;
+
+  private final java.util.List<androidx.compose.ui.geometry.Rect> placeholderRects;
+
+  public static final int $stable;
+
+  private androidx.compose.ui.text.TextLayoutResult(androidx.compose.ui.text.TextLayoutInput, androidx.compose.ui.text.MultiParagraph, long);
+    Code:
+       0: aload_0
+       1: invokespecial #9                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #13                 // Field layoutInput:Landroidx/compose/ui/text/TextLayoutInput;
+       9: aload_0
+      10: aload_2
+      11: putfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+      14: aload_0
+      15: lload_3
+      16: putfield      #21                 // Field size:J
+      19: aload_0
+      20: aload_0
+      21: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+      24: invokevirtual #27                 // Method androidx/compose/ui/text/MultiParagraph.getFirstBaseline:()F
+      27: putfield      #31                 // Field firstBaseline:F
+      30: aload_0
+      31: aload_0
+      32: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+      35: invokevirtual #34                 // Method androidx/compose/ui/text/MultiParagraph.getLastBaseline:()F
+      38: putfield      #37                 // Field lastBaseline:F
+      41: aload_0
+      42: aload_0
+      43: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+      46: invokevirtual #41                 // Method androidx/compose/ui/text/MultiParagraph.getPlaceholderRects:()Ljava/util/List;
+      49: putfield      #45                 // Field placeholderRects:Ljava/util/List;
+      52: return
+
+  public final androidx.compose.ui.text.TextLayoutInput getLayoutInput();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field layoutInput:Landroidx/compose/ui/text/TextLayoutInput;
+       4: areturn
+
+  public final androidx.compose.ui.text.MultiParagraph getMultiParagraph();
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+       4: areturn
+
+  public final long getSize-YbymL2g();
+    Code:
+       0: aload_0
+       1: getfield      #21                 // Field size:J
+       4: lreturn
+
+  public final float getFirstBaseline();
+    Code:
+       0: aload_0
+       1: getfield      #31                 // Field firstBaseline:F
+       4: freturn
+
+  public final float getLastBaseline();
+    Code:
+       0: aload_0
+       1: getfield      #37                 // Field lastBaseline:F
+       4: freturn
+
+  public final boolean getDidOverflowHeight();
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+       4: invokevirtual #59                 // Method androidx/compose/ui/text/MultiParagraph.getDidExceedMaxLines:()Z
+       7: ifne          29
+      10: aload_0
+      11: getfield      #21                 // Field size:J
+      14: invokestatic  #65                 // Method androidx/compose/ui/unit/IntSize."getHeight-impl":(J)I
+      17: i2f
+      18: aload_0
+      19: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+      22: invokevirtual #68                 // Method androidx/compose/ui/text/MultiParagraph.getHeight:()F
+      25: fcmpg
+      26: ifge          33
+      29: iconst_1
+      30: goto          34
+      33: iconst_0
+      34: ireturn
+
+  public final boolean getDidOverflowWidth();
+    Code:
+       0: aload_0
+       1: getfield      #21                 // Field size:J
+       4: invokestatic  #72                 // Method androidx/compose/ui/unit/IntSize."getWidth-impl":(J)I
+       7: i2f
+       8: aload_0
+       9: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+      12: invokevirtual #75                 // Method androidx/compose/ui/text/MultiParagraph.getWidth:()F
+      15: fcmpg
+      16: ifge          23
+      19: iconst_1
+      20: goto          24
+      23: iconst_0
+      24: ireturn
+
+  public final boolean getHasVisualOverflow();
+    Code:
+       0: aload_0
+       1: invokevirtual #78                 // Method getDidOverflowWidth:()Z
+       4: ifne          14
+       7: aload_0
+       8: invokevirtual #80                 // Method getDidOverflowHeight:()Z
+      11: ifeq          18
+      14: iconst_1
+      15: goto          19
+      18: iconst_0
+      19: ireturn
+
+  public final java.util.List<androidx.compose.ui.geometry.Rect> getPlaceholderRects();
+    Code:
+       0: aload_0
+       1: getfield      #45                 // Field placeholderRects:Ljava/util/List;
+       4: areturn
+
+  public final int getLineCount();
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+       4: invokevirtual #85                 // Method androidx/compose/ui/text/MultiParagraph.getLineCount:()I
+       7: ireturn
+
+  public final int getLineStart(int);
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+       4: iload_1
+       5: invokevirtual #89                 // Method androidx/compose/ui/text/MultiParagraph.getLineStart:(I)I
+       8: ireturn
+
+  public final int getLineEnd(int, boolean);
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+       4: iload_1
+       5: iload_2
+       6: invokevirtual #95                 // Method androidx/compose/ui/text/MultiParagraph.getLineEnd:(IZ)I
+       9: ireturn
+
+  public static int getLineEnd$default(androidx.compose.ui.text.TextLayoutResult, int, boolean, int, java.lang.Object);
+    Code:
+       0: iload_3
+       1: iconst_2
+       2: iand
+       3: ifeq          8
+       6: iconst_0
+       7: istore_2
+       8: aload_0
+       9: iload_1
+      10: iload_2
+      11: invokevirtual #100                // Method getLineEnd:(IZ)I
+      14: ireturn
+
+  public final boolean isLineEllipsized(int);
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+       4: iload_1
+       5: invokevirtual #104                // Method androidx/compose/ui/text/MultiParagraph.isLineEllipsized:(I)Z
+       8: ireturn
+
+  public final float getLineTop(int);
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+       4: iload_1
+       5: invokevirtual #108                // Method androidx/compose/ui/text/MultiParagraph.getLineTop:(I)F
+       8: freturn
+
+  public final float getLineBaseline(int);
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+       4: iload_1
+       5: invokevirtual #111                // Method androidx/compose/ui/text/MultiParagraph.getLineBaseline:(I)F
+       8: freturn
+
+  public final float getLineBottom(int);
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+       4: iload_1
+       5: invokevirtual #114                // Method androidx/compose/ui/text/MultiParagraph.getLineBottom:(I)F
+       8: freturn
+
+  public final float getLineLeft(int);
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+       4: iload_1
+       5: invokevirtual #117                // Method androidx/compose/ui/text/MultiParagraph.getLineLeft:(I)F
+       8: freturn
+
+  public final float getLineRight(int);
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+       4: iload_1
+       5: invokevirtual #120                // Method androidx/compose/ui/text/MultiParagraph.getLineRight:(I)F
+       8: freturn
+
+  public final int getLineForOffset(int);
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+       4: iload_1
+       5: invokevirtual #123                // Method androidx/compose/ui/text/MultiParagraph.getLineForOffset:(I)I
+       8: ireturn
+
+  public final int getLineForVerticalPosition(float);
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+       4: fload_1
+       5: invokevirtual #128                // Method androidx/compose/ui/text/MultiParagraph.getLineForVerticalPosition:(F)I
+       8: ireturn
+
+  public final float getHorizontalPosition(int, boolean);
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+       4: iload_1
+       5: iload_2
+       6: invokevirtual #133                // Method androidx/compose/ui/text/MultiParagraph.getHorizontalPosition:(IZ)F
+       9: freturn
+
+  public final androidx.compose.ui.text.style.ResolvedTextDirection getParagraphDirection(int);
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+       4: iload_1
+       5: invokevirtual #138                // Method androidx/compose/ui/text/MultiParagraph.getParagraphDirection:(I)Landroidx/compose/ui/text/style/ResolvedTextDirection;
+       8: areturn
+
+  public final androidx.compose.ui.text.style.ResolvedTextDirection getBidiRunDirection(int);
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+       4: iload_1
+       5: invokevirtual #141                // Method androidx/compose/ui/text/MultiParagraph.getBidiRunDirection:(I)Landroidx/compose/ui/text/style/ResolvedTextDirection;
+       8: areturn
+
+  public final int getOffsetForPosition-k-4lQ0M(long);
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+       4: lload_1
+       5: invokevirtual #144                // Method androidx/compose/ui/text/MultiParagraph."getOffsetForPosition-k-4lQ0M":(J)I
+       8: ireturn
+
+  public final androidx.compose.ui.geometry.Rect getBoundingBox(int);
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+       4: iload_1
+       5: invokevirtual #149                // Method androidx/compose/ui/text/MultiParagraph.getBoundingBox:(I)Landroidx/compose/ui/geometry/Rect;
+       8: areturn
+
+  public final long getWordBoundary--jx7JFs(int);
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+       4: iload_1
+       5: invokevirtual #153                // Method androidx/compose/ui/text/MultiParagraph."getWordBoundary--jx7JFs":(I)J
+       8: lreturn
+
+  public final androidx.compose.ui.geometry.Rect getCursorRect(int);
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+       4: iload_1
+       5: invokevirtual #156                // Method androidx/compose/ui/text/MultiParagraph.getCursorRect:(I)Landroidx/compose/ui/geometry/Rect;
+       8: areturn
+
+  public final androidx.compose.ui.graphics.Path getPathForRange(int, int);
+    Code:
+       0: aload_0
+       1: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+       4: iload_1
+       5: iload_2
+       6: invokevirtual #160                // Method androidx/compose/ui/text/MultiParagraph.getPathForRange:(II)Landroidx/compose/ui/graphics/Path;
+       9: areturn
+
+  public final androidx.compose.ui.text.TextLayoutResult copy-O0kMr_c(androidx.compose.ui.text.TextLayoutInput, long);
+    Code:
+       0: new           #2                  // class androidx/compose/ui/text/TextLayoutResult
+       3: dup
+       4: aload_1
+       5: aload_0
+       6: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+       9: lload_2
+      10: aconst_null
+      11: invokespecial #167                // Method "<init>":(Landroidx/compose/ui/text/TextLayoutInput;Landroidx/compose/ui/text/MultiParagraph;JLkotlin/jvm/internal/DefaultConstructorMarker;)V
+      14: areturn
+
+  public static androidx.compose.ui.text.TextLayoutResult copy-O0kMr_c$default(androidx.compose.ui.text.TextLayoutResult, androidx.compose.ui.text.TextLayoutInput, long, int, java.lang.Object);
+    Code:
+       0: iload         4
+       2: iconst_1
+       3: iand
+       4: ifeq          12
+       7: aload_0
+       8: getfield      #13                 // Field layoutInput:Landroidx/compose/ui/text/TextLayoutInput;
+      11: astore_1
+      12: iload         4
+      14: iconst_2
+      15: iand
+      16: ifeq          24
+      19: aload_0
+      20: getfield      #21                 // Field size:J
+      23: lstore_2
+      24: aload_0
+      25: aload_1
+      26: lload_2
+      27: invokevirtual #171                // Method "copy-O0kMr_c":(Landroidx/compose/ui/text/TextLayoutInput;J)Landroidx/compose/ui/text/TextLayoutResult;
+      30: areturn
+
+  public boolean equals(java.lang.Object);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: if_acmpne     7
+       5: iconst_1
+       6: ireturn
+       7: aload_1
+       8: instanceof    #2                  // class androidx/compose/ui/text/TextLayoutResult
+      11: ifne          16
+      14: iconst_0
+      15: ireturn
+      16: aload_0
+      17: getfield      #13                 // Field layoutInput:Landroidx/compose/ui/text/TextLayoutInput;
+      20: aload_1
+      21: checkcast     #2                  // class androidx/compose/ui/text/TextLayoutResult
+      24: getfield      #13                 // Field layoutInput:Landroidx/compose/ui/text/TextLayoutInput;
+      27: invokestatic  #180                // Method kotlin/jvm/internal/Intrinsics.areEqual:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      30: ifne          35
+      33: iconst_0
+      34: ireturn
+      35: aload_0
+      36: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+      39: aload_1
+      40: checkcast     #2                  // class androidx/compose/ui/text/TextLayoutResult
+      43: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+      46: invokestatic  #180                // Method kotlin/jvm/internal/Intrinsics.areEqual:(Ljava/lang/Object;Ljava/lang/Object;)Z
+      49: ifne          54
+      52: iconst_0
+      53: ireturn
+      54: aload_0
+      55: getfield      #21                 // Field size:J
+      58: aload_1
+      59: checkcast     #2                  // class androidx/compose/ui/text/TextLayoutResult
+      62: getfield      #21                 // Field size:J
+      65: invokestatic  #184                // Method androidx/compose/ui/unit/IntSize."equals-impl0":(JJ)Z
+      68: ifne          73
+      71: iconst_0
+      72: ireturn
+      73: aload_0
+      74: getfield      #31                 // Field firstBaseline:F
+      77: aload_1
+      78: checkcast     #2                  // class androidx/compose/ui/text/TextLayoutResult
+      81: getfield      #31                 // Field firstBaseline:F
+      84: fcmpg
+      85: ifne          92
+      88: iconst_1
+      89: goto          93
+      92: iconst_0
+      93: ifne          98
+      96: iconst_0
+      97: ireturn
+      98: aload_0
+      99: getfield      #37                 // Field lastBaseline:F
+     102: aload_1
+     103: checkcast     #2                  // class androidx/compose/ui/text/TextLayoutResult
+     106: getfield      #37                 // Field lastBaseline:F
+     109: fcmpg
+     110: ifne          117
+     113: iconst_1
+     114: goto          118
+     117: iconst_0
+     118: ifne          123
+     121: iconst_0
+     122: ireturn
+     123: aload_0
+     124: getfield      #45                 // Field placeholderRects:Ljava/util/List;
+     127: aload_1
+     128: checkcast     #2                  // class androidx/compose/ui/text/TextLayoutResult
+     131: getfield      #45                 // Field placeholderRects:Ljava/util/List;
+     134: invokestatic  #180                // Method kotlin/jvm/internal/Intrinsics.areEqual:(Ljava/lang/Object;Ljava/lang/Object;)Z
+     137: ifne          142
+     140: iconst_0
+     141: ireturn
+     142: iconst_1
+     143: ireturn
+
+  public int hashCode();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field layoutInput:Landroidx/compose/ui/text/TextLayoutInput;
+       4: invokevirtual #191                // Method androidx/compose/ui/text/TextLayoutInput.hashCode:()I
+       7: istore_1
+       8: bipush        31
+      10: iload_1
+      11: imul
+      12: aload_0
+      13: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+      16: invokevirtual #192                // Method androidx/compose/ui/text/MultiParagraph.hashCode:()I
+      19: iadd
+      20: istore_1
+      21: bipush        31
+      23: iload_1
+      24: imul
+      25: aload_0
+      26: getfield      #21                 // Field size:J
+      29: invokestatic  #195                // Method androidx/compose/ui/unit/IntSize."hashCode-impl":(J)I
+      32: iadd
+      33: istore_1
+      34: bipush        31
+      36: iload_1
+      37: imul
+      38: aload_0
+      39: getfield      #31                 // Field firstBaseline:F
+      42: invokestatic  #199                // Method java/lang/Float.hashCode:(F)I
+      45: iadd
+      46: istore_1
+      47: bipush        31
+      49: iload_1
+      50: imul
+      51: aload_0
+      52: getfield      #37                 // Field lastBaseline:F
+      55: invokestatic  #199                // Method java/lang/Float.hashCode:(F)I
+      58: iadd
+      59: istore_1
+      60: bipush        31
+      62: iload_1
+      63: imul
+      64: aload_0
+      65: getfield      #45                 // Field placeholderRects:Ljava/util/List;
+      68: invokevirtual #200                // Method java/lang/Object.hashCode:()I
+      71: iadd
+      72: istore_1
+      73: iload_1
+      74: ireturn
+
+  public java.lang.String toString();
+    Code:
+       0: new           #205                // class java/lang/StringBuilder
+       3: dup
+       4: invokespecial #206                // Method java/lang/StringBuilder."<init>":()V
+       7: ldc           #208                // String TextLayoutResult(layoutInput=
+       9: invokevirtual #212                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      12: aload_0
+      13: getfield      #13                 // Field layoutInput:Landroidx/compose/ui/text/TextLayoutInput;
+      16: invokevirtual #215                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      19: ldc           #217                // String , multiParagraph=
+      21: invokevirtual #212                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      24: aload_0
+      25: getfield      #17                 // Field multiParagraph:Landroidx/compose/ui/text/MultiParagraph;
+      28: invokevirtual #215                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      31: ldc           #219                // String , size=
+      33: invokevirtual #212                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      36: aload_0
+      37: getfield      #21                 // Field size:J
+      40: invokestatic  #223                // Method androidx/compose/ui/unit/IntSize."toString-impl":(J)Ljava/lang/String;
+      43: invokevirtual #215                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      46: ldc           #225                // String , firstBaseline=
+      48: invokevirtual #212                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      51: aload_0
+      52: getfield      #31                 // Field firstBaseline:F
+      55: invokevirtual #228                // Method java/lang/StringBuilder.append:(F)Ljava/lang/StringBuilder;
+      58: ldc           #230                // String , lastBaseline=
+      60: invokevirtual #212                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      63: aload_0
+      64: getfield      #37                 // Field lastBaseline:F
+      67: invokevirtual #228                // Method java/lang/StringBuilder.append:(F)Ljava/lang/StringBuilder;
+      70: ldc           #232                // String , placeholderRects=
+      72: invokevirtual #212                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      75: aload_0
+      76: getfield      #45                 // Field placeholderRects:Ljava/util/List;
+      79: invokevirtual #215                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+      82: bipush        41
+      84: invokevirtual #235                // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      87: invokevirtual #237                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      90: areturn
+
+  public androidx.compose.ui.text.TextLayoutResult(androidx.compose.ui.text.TextLayoutInput, androidx.compose.ui.text.MultiParagraph, long, kotlin.jvm.internal.DefaultConstructorMarker);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: lload_3
+       4: invokespecial #239                // Method "<init>":(Landroidx/compose/ui/text/TextLayoutInput;Landroidx/compose/ui/text/MultiParagraph;J)V
+       7: return
+
+  static {};
+    Code:
+       0: bipush        8
+       2: putstatic     #245                // Field $stable:I
+       5: return
+}

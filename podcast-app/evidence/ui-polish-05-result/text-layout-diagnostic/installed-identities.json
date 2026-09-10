@@ -1,0 +1,39 @@
+[
+  {
+    "argv": [
+      "/home/moritz/Android/Sdk/platform-tools/adb",
+      "-s",
+      "emulator-5556",
+      "install",
+      "-r",
+      "-t",
+      "/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/text-layout-ready/a552ecb/test.apk"
+    ],
+    "code": 0,
+    "stdout": "Performing Streamed Install\nSuccess\n"
+  },
+  {
+    "argv": [
+      "/home/moritz/Android/Sdk/platform-tools/adb",
+      "-s",
+      "emulator-5556",
+      "shell",
+      "sha256sum",
+      "/data/app/~~5dkyIGIcOvFMwTROCIcXgA==/dev.vibevoice.podcast.internal-Tul3M_3aiInq6ge6RokqfA==/base.apk"
+    ],
+    "code": 0,
+    "stdout": "4bbf162acbd93f6bff38c0aa042f044af9fd289a5f15f0b2e49ba6763daf1fcd  /data/app/~~5dkyIGIcOvFMwTROCIcXgA==/dev.vibevoice.podcast.internal-Tul3M_3aiInq6ge6RokqfA==/base.apk\n"
+  },
+  {
+    "argv": [
+      "/home/moritz/Android/Sdk/platform-tools/adb",
+      "-s",
+      "emulator-5556",
+      "shell",
+      "sha256sum",
+      "/data/app/~~5caiPE-wTAPxlizsCX0tqw==/dev.vibevoice.podcast.internal.test-xwsDQErK9--n3Yc8aTgxFA==/base.apk"
+    ],
+    "code": 0,
+    "stdout": "f7f5b40f141fa9d6fabff846cfb26a92bde57336990f365d7ec4743f0fde1f98  /data/app/~~5caiPE-wTAPxlizsCX0tqw==/dev.vibevoice.podcast.internal.test-xwsDQErK9--n3Yc8aTgxFA==/base.apk\n"
+  }
+]
