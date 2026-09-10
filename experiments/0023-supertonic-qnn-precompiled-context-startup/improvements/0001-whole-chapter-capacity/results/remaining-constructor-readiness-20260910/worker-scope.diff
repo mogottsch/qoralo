@@ -1,0 +1,98 @@
+--- compile_duration_context.py
++++ compile_component_context.py
+@@ -1,5 +1,5 @@
+ #!/usr/bin/env python3
+-"""Duration-only ORT EPContext constructor worker. No Session.Run or inference API.
++"""One released text/vector/vocoder ORT EPContext constructor. No forward API.
+ 
+ Default plan validates metadata only. Execution needs a fresh, exact request/worker-
+ bound release. Tests inject a fake ORT object; real ORT is imported only after gate.
+@@ -12,10 +12,22 @@
+ import sys
+ import time
+ 
+-INPUTS=[{'name':'text_ids','type':'tensor(int64)','shape':[1,2048]},
+-        {'name':'style_dp','type':'tensor(float)','shape':[1,8,16]},
+-        {'name':'text_mask','type':'tensor(float)','shape':[1,1,2048]}]
+-OUTPUTS=[{'name':'duration','type':'tensor(float)','shape':[1]}]
++def tensor(name,shape):
++    return {'name':name,'type':'tensor(int64)' if name=='text_ids' else 'tensor(float)','shape':shape}
++
++SPECS={
++    'text':([tensor('text_ids',[1,2048]),tensor('style_ttl',[1,50,256]),tensor('text_mask',[1,1,2048])],
++            [tensor('text_emb',[1,256,2048])]),
++    'vector':([tensor('noisy_latent',[1,144,2048]),tensor('text_emb',[1,256,2048]),tensor('style_ttl',[1,50,256]),
++               tensor('latent_mask',[1,1,2048]),tensor('text_mask',[1,1,2048]),tensor('current_step',[1]),tensor('total_step',[1])],
++              [tensor('denoised_latent',[1,144,2048])]),
++    'vocoder':([tensor('latent',[1,144,2048])],[tensor('wav_tts',[1,6291456])]),
++}
++
++
++def io_sha256(component):
++    inputs,outputs=SPECS[component]
++    return hashlib.sha256(json.dumps({'inputs':inputs,'outputs':outputs},sort_keys=True,separators=(',',':')).encode()).hexdigest()
+ PROVIDER={'offload_graph_io_quantization':'0','htp_performance_mode':'burst','soc_model':'43'}
+ 
+ 
+@@ -38,19 +50,22 @@
+ 
+ def authorize(request_path,release_path):
+     request=json.loads(request_path.read_text());release=json.loads(release_path.read_text())
+-    expected={'approved':True,'permission':'one_duration_EPContext_constructor_no_Run',
++    component=request['component']
++    if component not in SPECS:raise ValueError('only text/vector/vocoder are eligible; no duration retry')
++    expected={'approved':True,'permission':f'one_{component}_EPContext_constructor_no_Run',
+               'request_sha256':sha(request_path),'worker_sha256':sha(__file__),
+               'output_dir':request['output_dir']}
+     if release!=expected or request['worker_sha256']!=sha(__file__):raise ValueError('missing/mismatched constructor-only release')
+-    if request['component']!='duration' or request['expected_inputs']!=INPUTS or request['expected_outputs']!=OUTPUTS:
+-        raise ValueError('only exact T2048 duration ABI is released')
++    inputs,outputs=SPECS[component]
++    if request['expected_inputs']!=inputs or request['expected_outputs']!=outputs or request['io_sha256']!=io_sha256(component):
++        raise ValueError('only exact T2048/L2048 component ABI is released')
+     if request['ort_version']!='1.27.1' or request['qairt_version']!='2.49.0.260730' or request['provider_options']!=PROVIDER:
+         raise ValueError('runtime/provider options differ')
+     if request['session_run_calls_allowed']!=0 or request['constructor_calls_allowed']!=1:raise ValueError('invalid call budget')
+     return request
+ 
+ 
+-def descriptor_contract(descriptor,binary):
++def descriptor_contract(descriptor,binary,component):
+     if not descriptor.is_file() or not 0<descriptor.stat().st_size<=1048576 or not binary.is_file() or binary.stat().st_size<=0:
+         raise ValueError('missing/invalid external descriptor or context binary')
+     import onnx
+@@ -62,7 +77,8 @@
+     def io(values):
+         types={onnx.TensorProto.INT64:'tensor(int64)',onnx.TensorProto.FLOAT:'tensor(float)'}
+         return [{'name':v.name,'type':types.get(v.type.tensor_type.elem_type),'shape':[d.dim_value if d.HasField('dim_value') else d.dim_param for d in v.type.tensor_type.shape.dim]} for v in values]
+-    if io(model.graph.input)!=INPUTS or io(model.graph.output)!=OUTPUTS:raise ValueError('descriptor ABI differs from actual required I/O')
++    inputs,outputs=SPECS[component]
++    if io(model.graph.input)!=inputs or io(model.graph.output)!=outputs:raise ValueError('descriptor ABI differs from actual required I/O')
+     attrs={a.name:onnx.helper.get_attribute_value(a) for a in node.attribute}
+     if attrs.get('embed_mode')!=0:raise ValueError('embedded context is forbidden')
+     cache=attrs.get('ep_cache_context')
+@@ -76,9 +92,10 @@
+ 
+ def construct_only(request,ort,output):
+     """ORT dependency is injected; no forward method is referenced or invoked."""
++    component=request['component'];inputs,outputs=SPECS[component]
+     output.mkdir(parents=True,exist_ok=False)
+-    descriptor=output/'duration-context.onnx';binary=output/'duration-context_qnn.bin'
+-    result={'status':'started','evidence_class':'constructor_only_not_execution_or_model_quality',
++    descriptor=output/f'{component}-context.onnx';binary=output/f'{component}-context_qnn.bin'
++    result={'status':'started','component':component,'io_sha256':io_sha256(component),'evidence_class':'constructor_only_not_execution_or_model_quality',
+             'python_InferenceSession_calls':0,'Session_Run_calls':0,'mock':bool(request.get('mock',False))}
+     session=None;start=time.monotonic()
+     try:
+@@ -100,9 +117,9 @@
+         result['session_providers']=list(session.get_providers())
+         # Raw receipt precedes classification; provider availability != execution.
+         write(output/'constructor-receipt.json',result)
+-        if result['actual_inputs']!=INPUTS or result['actual_outputs']!=OUTPUTS:raise ValueError('actual constructor I/O differs')
++        if result['actual_inputs']!=inputs or result['actual_outputs']!=outputs:raise ValueError('actual constructor I/O differs')
+         if 'QNNExecutionProvider' not in result['session_providers']:raise ValueError('QNN provider absent')
+-        result['external_context']=descriptor_contract(descriptor,binary)
++        result['external_context']=descriptor_contract(descriptor,binary,component)
+         result['status']='constructor_and_artifact_gates_passed_no_execution'
+     except BaseException as error:
+         result.update(status='error',error={'type':type(error).__name__,'message':str(error)})

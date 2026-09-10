@@ -1,0 +1,31 @@
+--- run_duration_constructor.py
++++ run_component_constructor.py
+@@ -1,5 +1,9 @@
+ #!/usr/bin/env python3
+-"""Plan-only by default; exact released duration constructor + owned Docker cleanup."""
++"""One exact released text/vector/vocoder constructor; duration-reviewed lifecycle.
++
++Plan-only by default. No batch loop: execute separately and serially only under
++component-specific releases. Name/label cleanup remains non-atomic.
++"""
+ import argparse
+ import json
+ import os
+@@ -7,7 +11,7 @@
+ import subprocess
+ import time
+ import types
+-import compile_duration_context as worker
++import compile_component_context as worker
+ 
+ ROOT=Path(__file__).resolve().parents[1]
+ REPO=ROOT.parents[3]
+@@ -22,7 +26,7 @@
+     for source,readonly in ((REPO,True),(Path(request['sdk_root']),True),(root,False)):
+         argv+=['--mount',f'type=bind,src={source},dst={source}'+(',readonly' if readonly else '')]
+     for key,value in env.items():argv+=['--env',key+'='+value]
+-    argv+=['--workdir',str(root),request['docker_image_id'],'python3',str(ROOT/'tools/compile_duration_context.py'),
++    argv+=['--workdir',str(root),request['docker_image_id'],'python3',str(ROOT/'tools/compile_component_context.py'),
+            '--request',str(request_path.resolve()),'--release',str(release_path.resolve()),'--execute']
+     return argv
+ 

@@ -54,6 +54,10 @@ A future release must bind the exact request, worker and fresh output path. The 
 
 This worker now has one real constructor-only result in addition to its fake-runtime tests. **30 focused tests passed**:23 graph/constant/structural cases and7 constructor/transport mock cases. No mock result is native evidence. The duration result is not a reload, model/phone execution, whole-chapter or quality proof. The earlier duration-only *source-derivative* request files are historical NOT_APPROVED templates superseded by the four-graph materialization release; do not execute them.
 
+## Remaining text/vector/vocoder constructors: ready for batch review, not released
+
+One focused source/mock-test/request update is retained in [`results/remaining-constructor-readiness-20260910/`](results/remaining-constructor-readiness-20260910/). Three separate graph/I/O-hash-bound requests share the unchanged pinned runtime/image/options and reviewed launcher lifecycle: serial, one constructor each, zero Run, separate fresh outputs/releases,520s+20s grace/≤600s per component,8GiB/4CPU and owned disk scratch. All **39 tests passed**, including9 new mock-test methods. No remaining-component constructor or native runtime was executed. The duration request/artifacts/evidence remain immutable. Await Pi's batch review/release; do not execute NOT_APPROVED templates.
+
 ## Fidelity and comparison boundaries
 
 - Masked padding is demonstrably non-neutral: experiment0022's T235→T239 changed duration15.8623657→15.6378775s and embedding max difference0.1110139. Positional-prefix preservation does not erase that result.
