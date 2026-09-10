@@ -72,9 +72,9 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="status-header" data-status-header="true">
 <div class="kicker"><span>Experiment 0031</span><span class="status">Completed</span></div>
 <h1>Experiment 0031 — Gemma 4 E2B IT Android QNN/HTP</h1>
-<p class="summary">The accepted campaign remains complete. The separate compiled FP16 candidate now has a frozen stage and a mock-tested, plan-only-default controller; Android behavior, fidelity, and speed remain unmeasured.</p>
+<p class="summary">The accepted campaign remains complete. Its separate FP16 improvement now passes one physical short/max16 compatibility query with the same bounded output as baseline; long repetition, broader fidelity and speed improvement remain unproven.</p>
 <div class="header-links"><a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-09-10</span><span>evidence commit: 62b8a1671a850d7bbc0b048f9f7dca74839411bd</span><span>page source: docs/experiments/0031-gemma-4-e2b-it-android-qnn-htp/page.md</span><span>page source sha256: 9185fe0bd5759de9a4e632c171fa5d8651adeeb39d1ccb01697c5597d25a0d17</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-09-10</span><span>evidence commit: 81f4ede286478f471fc79ffe5692f8640105802f</span><span>page source: docs/experiments/0031-gemma-4-e2b-it-android-qnn-htp/page.md</span><span>page source sha256: 6e6b47ec69b72db9c9974782699ff54b7dc5089ee7c5289c99aa228d4fd394ac</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
@@ -196,7 +196,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <p>All greedy outputs are byte-identical within each tier. Short and medium outputs pass the narrow exact-output sanity check. All five long outputs fail it with the exact issue: <code>Severe repetition collapse in the exact max-token output.</code> The failure is retained rather than discarded; this is valid execution/performance evidence, not correctness, usefulness, or quality acceptance.</p>
 <p>Peak sampled process PSS was 344,201 kB and VmHWM was 460,200 kB. These exclude unreported HTP-private memory, and sparse sampling can miss peaks. Thermal status rose from 0 to 4; skin rose from 35.9°C to 49.0°C and AP from 37.8°C to 57.1°C. Battery moved from 58% at 35.7°C to 52% at 44.0°C while USB-powered. No calibrated external power measurement exists.</p>
 <p>The original 399,795,157-byte provider log is hash-bound and retained losslessly as deterministic gzip alongside every output and profile. Cleanup verified the scoped root and process absent and released <code>phone.lock</code>.</p>
-<h3 id="long-collapse-improvement-track-host-only">Long-collapse improvement track (host-only)<a class="anchor" href="#long-collapse-improvement-track-host-only" aria-label="Link to Long-collapse improvement track (host-only)">#</a></h3>
+<h3 id="long-collapse-improvement-track-separate-from-completed-campaign">Long-collapse improvement track (separate from completed campaign)<a class="anchor" href="#long-collapse-improvement-track-separate-from-completed-campaign" aria-label="Link to Long-collapse improvement track (separate from completed campaign)">#</a></h3>
 <p>After completion, improvement 0001 analyzed the immutable <code>37a2953</code> campaign and <code>e91b3f5</code> publication; it does not replace, relabel, or rerun them. Commit <code>f24fd21</code> established the baseline localization, and corrective commit <code>1c5b7b6</code> tightened cross-route decode comparability and the completion-time calculation.</p>
 <p>All five QNN long outputs are byte-identical and retokenize to the profiled 2,048 tokens. The first 128-token window whose four-gram unique ratio is at most 0.25 begins at generated token 84, absolute context position 2,012. An exact nine-token periodic suffix starts at generated token 479, absolute position 2,407, and covers the final 1,570 tokens: 174 complete cycles plus four trailing tokens. The dominant phrase pattern appears 215 times. Generation ends at absolute position 3,977, so crossing the 4,096 context boundary is excluded as the trigger.</p>
 <p>Accepted LiteRT GPU and CPU outputs use the same rendered long-prompt bytes, remain coherent, and EOS-stop at 756 tokens without a periodic suffix. They are not numerical controls: QNN and LiteRT use different deployment artifacts, quantization schemes, and route-native tokenizers (1,929 versus 1,930 input tokens), and their text diverges at the first output word. Even LiteRT GPU and CPU emitted-token trajectories diverge at token 6. Text therefore cannot identify a first-logit or internal-state cause.</p>
@@ -241,15 +241,50 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <p>Official metadata confirms QNN HTP backend 6 / SoC 43, build <code>v2.49.40.260810104044</code>, both original AR1/AR128 graph aliases, and 38 inputs / 31 outputs per graph. Only the selected global value-cache types/quantization differ; unselected names, shapes, positional/SWA bindings, and active quantization remain unchanged. All 30 four-way cache contracts match and all <strong>120 cache tensor boundaries are <code>FLAT_BUFFER</code></strong>. Weight-sharing or HMX weight-kernel markers do not imply NativeKV cache layout.</p>
 <p>The <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/GENIE-FP16-CACHE-SOURCE-NOTES.md">Genie FP16 source notes</a> provide conditional rationale, not runtime proof: ordinary flat-buffer updates copy raw bytes, while key-derived clearing uses <code>0x8000</code>, interpreted as FP16 negative zero for the selected values. NativeKV accepts only quantized uint8 and is not selected or claimed. Quantization-dependent cache dump/spec/export paths were not exercised and must not be assumed valid for mixed quantized-key/FP16-value state. SDK example source does not establish every shipped-runtime path&#x27;s behavior.</p>
 <p>The accepted warn-level compiler API can suppress native logs, so the exhaustive unsupported-operator count remains <strong>null, not zero</strong>. The retained builder architecture-default warning is not a CPU-provider observation; no extra compile was performed just to obtain optional logs. Compilation and metadata compatibility do not prove CPU-free neural placement, runtime loading, fidelity, long-output improvement, or speed. The increased DLC Convert counts and precision warnings remain disclosed.</p>
-<p>Owned compile scratch was empty/removed and processes were reaped. No runtime reset/inference, fidelity test, or phone run occurred; all such outcomes remain unmeasured. The original completed campaign, its registry card, and registry evidence are unchanged.</p>
+<p>Owned compile scratch was empty/removed and processes were reaped. At this compile-only milestone, no runtime reset/inference, fidelity test or phone run had occurred; those outcomes were unmeasured. The later short-query evidence below does not alter the original completed campaign, its registry card or registry evidence.</p>
 <p><strong>2026-09-10 — Frozen stage and diagnostic plan (<code>212f0d4</code>).</strong> The <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/frozen-genie-stage-readiness/result.json">file-preparation result</a> binds a separate private stage of <strong>21 payload files / 4,003,855,761 bytes</strong>, manifest SHA-256 <code>58484160…fe25</code>. Large payloads are independent copies, not links into the accepted baseline. The runner is read-only executable <code>0555</code>, other inputs read-only, and directories private <code>0700</code>. This is a hash freeze, not hardware-enforced immutability; future use must reverify the external digest and every payload.</p>
 <p>The stage uses compiled context <code>1d80d016…ca9f8</code> under the unchanged alias, with the accepted runtime libraries, LUTs, tokenizer, BOS suppression and configuration bytes unchanged. Config SHA-256 <code>f8008e04…7eba</code> retains context 4096, greedy sampling and base ceiling 2048. Exact short/long prompt and token-ID bytes are pinned; expected input counts are inherited evidence, not a fresh tokenization observation.</p>
-<p>Its only execution script describes <strong>one fresh-dialog first-short query capped at 16 tokens</strong>, explicitly engineering/noncanonical. It was not executed. Long inputs are frozen but <strong>no long script exists</strong>; the later exact-long/max2048 comparison requires separate preparation, evidence review and permission. The <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/PHONE-RETURN-DIAGNOSTIC-PLAN.md">diagnostic plan</a> still distinguishes short viability from long-collapse fidelity. Stage preparation copied/hashed files and checked source/configuration only: no runtime/model load, tokenization replay, compilation, phone lock or ADB.</p>
+<p>Its only execution script describes <strong>one fresh-dialog first-short query capped at 16 tokens</strong>, explicitly engineering/noncanonical. It was not executed during stage preparation. Long inputs were frozen but <strong>that stage contains no long script</strong>; an exact-long/max2048 comparison requires separate preparation, evidence review and permission. The <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/PHONE-RETURN-DIAGNOSTIC-PLAN.md">diagnostic plan</a> still distinguishes short viability from long-collapse fidelity. Stage preparation copied/hashed files and checked source/configuration only: no runtime/model load, tokenization replay, compilation, phone lock or ADB.</p>
 <p><strong>2026-09-10 — Candidate controller, source/mock readiness (<code>62b8a16</code>).</strong> The separate <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/phone-return-controller-readiness/result.json">controller result</a> and <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/PHONE-RETURN-CONTROLLER-READINESS.md">reviewed lifecycle notes</a> add orchestration without modifying the frozen stage or old baseline runner. The default prints a plan; execution requires an explicit execute flag, exact reviewed stage digest, fresh run directory and a one-use slot attestation from an actual new Pi grant. The slot string is a manual attestation, not cryptographic permission, and readiness itself grants no slot.</p>
 <p>The source requires one full <code>phone.lock</code> lease before all ADB actions, including identity, push, polling, signals, raw pull and cleanup. It pins the device and exact reviewed Android build, verifies every local/remote payload hash and runner mode, and consumes the slot before the first ADB action. There is no automatic retry/reconnection or long/prompt/model/backend override. Only the single max16 engineering query is supported, with a 1,800-second host process deadline and independent remote watchdog; bounded transfer/pull/cleanup budgets are not a guarantee of immediate kernel termination.</p>
 <p>For the model entry, wrapper and watchdog, recorded PID/starttime, exact executable and NUL-delimited argv are rechecked before signalling. Unknown identity means <strong>no signal to the unverified PID and no destructive root cleanup</strong>. These are sequential <code>/proc</code> checks followed by numeric-PID signals, <strong>not atomic or pidfd-bound identity operations</strong>: the final check-to-signal race remains. Fake tests demonstrate refusals on observed mismatches, not elimination of the real race or validation of Android <code>/proc</code>/shell behavior.</p>
 <p>Raw stdout/stderr, command metadata, partial outputs and errors are retained before optional metrics. An incomplete raw pull preserves local partials <strong>and the remote root</strong>, even if processes are absent; unknown process state also leaves cleanup explicitly incomplete. Root removal requires both complete raw collection and confirmed process absence, followed by a separate absence check. Optional profile failure yields null/reason rather than deleting evidence. Even exit 0 does not establish native query success, EOS, provider placement or fidelity; the default metric hook leaves those unmeasured.</p>
-<p>The controller adds <strong>40 fake-device/tiny-stage cases</strong>, bringing the owner suite to 104 tests after the 64-test stage milestone. Temporary host locks, mocked ADB-client spawning and host shell syntax checks used <strong>no real ADB, repository phone lock, runtime/model load or phone</strong>. All live Android process/watchdog behavior and FP16 runtime/fidelity results remain pending, along with the existing mixed-cache API risks and null unsupported-op count. Neither readiness milestone changes the completed campaign, registry or app evidence.</p>
+<p>The controller adds <strong>40 fake-device/tiny-stage cases</strong>, bringing the owner suite to 104 tests after the 64-test stage milestone. Temporary host locks, mocked ADB-client spawning and host shell syntax checks used <strong>no real ADB, repository phone lock, runtime/model load or phone</strong>. At that source/mock milestone, live Android process/watchdog behavior and FP16 runtime/fidelity results were still pending. The existing mixed-cache API risks and null unsupported-op count remain explicit. Neither readiness milestone changes the completed campaign, registry or app evidence.</p>
+<p><strong>2026-09-10 — Physical Gate A, first-short/max16 only (<code>81f4ede</code>).</strong> The separately released <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/phone-return-short-attempt-01/result.json">short compatibility result</a> used unchanged reviewed controller <code>62b8a16</code>, frozen stage <code>58484160…fe25</code> and FP16-cache context <code>1d80d016…ca9f8</code>. Exact SM-S918B/SM8550 identity/build, payload hashes and runner mode passed under the full <code>phone.lock</code> lifecycle. This is one engineering query, not a replacement campaign.</p>
+<p>One context deserialized and one dialog/query completed. Physical QnnDsp logs record <strong>17 starts and 17 status-0 completions: two AR128 and fifteen AR1 calls</strong>, with SMART_MASK selected. No CPU-backend, runtime-fallback or cache-quantization-error marker was observed; the known <code>usesCrossAttention</code> capability message is retained. These are bounded short-route observations, not universal CPU-free neural placement, uniform-integer execution or NativeKV proof. The compiled flat-buffer metadata and source/API limitations remain distinct.</p>
+<p>The runtime echoed the exact rendered short-prompt bytes and profiled <strong>170 input tokens / 16 generated tokens</strong>. Both token logs match all <strong>157 complete logged prefix IDs</strong>, including one BOS, then truncate mid-number; they are not a complete 170-ID runtime trace. The configured 16-token ceiling was applied and reached, and the query returned normally. The independent <strong>EOS-versus-limit stop enum is null</strong>, because no such event/enum was exposed; no EOS or independent stop-cause event is invented.</p>
+<p>The <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/phone-return-short-attempt-01/raw/controller/raw/device/short-output.txt">89-byte UTF-8 output</a>, SHA-256 <code>70711436…d6357</code>, is byte-identical to the accepted BOS-corrected max16 baseline:</p>
+<blockquote>The choice between the Cedar, Juniper, and Rowan inference engines hinges entirely on the</blockquote>
+<p>Narrow sanity is <code>looks_sensible: true</code>, <code>issue_notes: null</code>. This coherent prefix is not a complete answer, numerical state/logit equivalence, general quality acceptance or evidence that long-output repetition is fixed.</p>
+<div class="table-wrap"><table><thead><tr>
+<th>Raw Genie observation</th>
+<th>Value / interpretation</th>
+</tr></thead><tbody>
+<tr>
+<td>Dialog creation event</td>
+<td>2,178,751 µs</td>
+</tr>
+<tr>
+<td>Query event</td>
+<td>1,478,281 µs</td>
+</tr>
+<tr>
+<td>Reported TTFT</td>
+<td>486,106 µs</td>
+</tr>
+<tr>
+<td>Generation-rate observation</td>
+<td>17.6189728 tokens/s; first-token inclusion unspecified</td>
+</tr>
+<tr>
+<td>Normalized decode</td>
+<td><strong>Null</strong>; undefined first-token semantics, not a normalized comparison</td>
+</tr>
+</tbody></table></div>
+<p>These are runtime-defined boundaries from one max16 diagnostic, not a canonical first/warm distribution or a speed win. Process PSS, VmHWM and HTP-private memory remain <strong>null</strong>: this controller collected no memory sample, and an allocation message is not a total-memory measurement.</p>
+<p>The process finished before the first status poll, so there was no live-native PID sample. Execution is established by query/provider/profile/output evidence, not exit 0 alone. Both checks found all recorded model/wrapper/watchdog roles absent; no signal was issued. Raw pull preceded optional processing and scoped-root deletion; root absence and lock release were verified. This exercises natural completion, not every timeout/signal path or elimination of the controller&#x27;s residual PID race.</p>
+<p>Public telemetry reports battery 69% / 31.9°C on USB, thermal status 0→0, AP 40.3→43.9°C and skin 33.5→34.0°C. <strong>Complete battery dumps remain private and hash-bound</strong> because they contain unrelated learned charging/sleep history; public battery JSON is explicitly labelled core-field extraction, not rewritten raw data. Query/provider/output/profile/cleanup bytes, including raw log whitespace, remain unchanged. The <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/phone-return-short-attempt-01/README.md">retention notes</a> distinguish the public manifest from the original private collection inventory.</p>
+<p>No retry, long query, rebuild or stage/controller change occurred in Gate A. Exact-long work remains separately gated; there is no long-output, reset/reuse, speed, campaign or new registry result. The accepted completed campaign and its five long-output failures remain unchanged.</p>
 <p>The <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/REQUEST-ROUTING.md">request-routing recommendation</a> remains an unmeasured policy for the existing canonical tiers, not a built hybrid or a general prompt-length threshold. It selects HTP for short/medium and LiteRT GPU for long before each complete request, with no mid-request switch or retry on another provider. Co-resident setup, memory, and speed require measurement; separate accepted route measurements are not a hybrid benchmark.</p>
 </section>
 <section class="primary-section" id="results" data-primary-section="results">
@@ -637,7 +672,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 </tr>
 <tr>
 <td>Candidate 2</td>
-<td>Separate FP16 improvement context compiled; metadata passes all 30 cache contracts and 120 flat-buffer boundaries; runtime untested</td>
+<td>Separate FP16 context: 30 cache contracts / 120 flat boundaries verified; one physical short-query compatibility result, no long-fidelity result</td>
 </tr>
 <tr>
 <td>Retained attempts 01–03</td>
@@ -729,7 +764,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 </tr>
 <tr>
 <td>Supported diagnostic</td>
-<td>One fresh-dialog first-short/max16 engineering query; unexecuted; no long script/path; exact-long/max2048 separately gated</td>
+<td>Frozen first-short/max16 engineering query now executed in Gate A; original stage has no long script; exact-long/max2048 separately gated</td>
 </tr>
 <tr>
 <td>Controller readiness</td>
@@ -752,8 +787,44 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>40 fake controller cases / 104 owner tests; no real ADB, actual repository lock, runtime/model load or phone</td>
 </tr>
 <tr>
-<td>Unmeasured candidate results</td>
-<td>Live Android controller behavior, runtime load/reset/inference, physical placement, fidelity/long-output quality, and speed; no phone or campaign result</td>
+<td>Physical Gate A</td>
+<td><code>81f4ede</code>: one context/dialog/query; 2 AR128 + 15 AR1 QnnDsp completions status 0; SMART_MASK</td>
+</tr>
+<tr>
+<td>Bounded provider observations</td>
+<td>No CPU-backend/runtime-fallback/cache-quantization-error markers; not universal CPU-free placement or uniform-integer proof</td>
+</tr>
+<tr>
+<td>Input evidence</td>
+<td>Exact prompt echo, profile 170; 157 complete logged prefix IDs/single BOS verified, logger then truncated</td>
+</tr>
+<tr>
+<td>Short output/sanity</td>
+<td>16 tokens / 89 B / <code>70711436…d6357</code>, identical bounded baseline; true/null sanity only</td>
+</tr>
+<tr>
+<td>Stop-cause boundary</td>
+<td>Configured 16-token ceiling reached, normal query return; independent EOS-versus-limit enum null</td>
+</tr>
+<tr>
+<td>Raw timing boundary</td>
+<td>Creation 2,178,751 µs / query 1,478,281 µs / reported TTFT 486,106 µs; one engineering observation</td>
+</tr>
+<tr>
+<td>Decode normalization</td>
+<td>Raw 17.6189728 tokens/s; first-token inclusion undefined, normalized decode null; no speed-win claim</td>
+</tr>
+<tr>
+<td>Missing memory</td>
+<td>No process sample or live-native PID sample; PSS/VmHWM/HTP-private totals null</td>
+</tr>
+<tr>
+<td>Cleanup/privacy</td>
+<td>Natural exit; recorded roles/root absent, raw first, no signal; full battery private, public labelled core extracts only</td>
+</tr>
+<tr>
+<td>Remaining candidate evidence</td>
+<td>Long repetition/fidelity, reset/reuse and unused cache APIs, broader placement and speed; no long or campaign result</td>
 </tr>
 <tr>
 <td>Mixed-commit review scope</td>
@@ -765,7 +836,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 </tr>
 <tr>
 <td>Publication effect</td>
-<td>Completed campaign and registry row unchanged; no phone, campaign rerun, or new registry evidence</td>
+<td>Completed campaign/card/registry unchanged; new short compatibility is page-only, not a campaign rerun or new registry evidence</td>
 </tr>
 </tbody></table></div>
 <p>No paid Workbench job ran. Output sanity is a narrow corruption/repetition screen, not model quality. The Android LLM registry remains the immutable complete physical campaign row with the five long failures, thermal escalation, process-memory scope, unavailable HTP-private memory, and undefined decode first-token semantics preserved.</p>
