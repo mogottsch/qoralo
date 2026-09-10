@@ -1,7 +1,7 @@
 ---
 experiment: 0032-qwen-3.5-2b-android-qnn-htp
 status: active
-summary: A four-position QNN-x86 own-state trajectory completed, but logit agreement drops at position 1 and argmax first diverges at position 2. This is bounded host drift evidence, not same-state causality or full fidelity.
+summary: A same-pack position-1 QDQ/QNN pair improves logit agreement over the own-state trajectory, but current-call and prior-state differences both remain. No individual operator cause, full fidelity, or new physical result is established.
 benchmark: android-llm
 ---
 
@@ -189,11 +189,49 @@ Packaging follow-up `2bf929d` is required for the complete evidence state: it ad
 
 That does **not** change the protected full-174 QDQ archive's LOCAL-ONLY policy or migration paths above. The four paired reference copies are not a replacement for all 174 intermediates. Prefix originals/backups are also protected under `experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/qnn-prefix-20260910T104805Z/`; none were cleaned.
 
-A position-1 identical-QDQ-state control is only a source/inventory plan, not an executed test. Existing saved QDQ position-zero logits match the full replay, but logit identity alone does not prove missing state-byte equality; the full replay retained logit tensors, not QDQ state checkpoints. A dedicated controlled call requires separate lineage review and release and must not masquerade as own-QNN-state resume. No full-fidelity, physical, performance-campaign, or registry claim follows.
+At that prefix milestone, a position-1 identical-QDQ-state control remained a source/inventory plan. It was subsequently prepared and executed through the separate reviews below, not by resuming or rewriting the own-state trajectory. The historical state-byte lineage limitation remains.
+
+### Controlled position-1 pair — 2026-09-10
+
+The follow-up asks how much difference remains when the two backends receive identical submitted inputs, rather than their independently evolved states. It is a single-position control, not a replacement for the four-position trajectory or the complete QDQ replay.
+
+**Preparation (`43ca1eb`).** The [source/data readiness result](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/controlled-position1-readiness/result.json) materialized a 51-tensor input pack for position **1**, token **8678**, context 4096. Its 48 state tensors come from saved QDQ position-zero outputs; recurrent/convolution copies, KV insertion at slot zero, future-zero regions and the position/mask were independently checked. This is explicitly **QDQ-origin state, not own-QNN resume**. The raw pack is 121,313,354 bytes, SHA-256 `bfe14bca…98ebe0d`; its logical values/dtypes/shapes digest is `4251bbce…c78e4`, and its reviewed header is `ec381857…43cd392`. The dedicated prepare/verify/single-call driver passed 23 tiny synthetic tests with real model loaders prohibited. Preparation itself made no model call.
+
+The source is a separate saved position-zero call on the accepted PT2/input/reset configuration. The full 174-position replay saved logits, **not state checkpoints**. Matching saved logits does not prove that its missing historical state bytes were identical. The new pair establishes its own identical-input comparison without making that historical claim; it also does not establish FP32 ground truth.
+
+**One QDQ reference call (`0dfd3a6`).** After separate release, the [QDQ validation](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/controlled-position1-qdq-20260910/result.json) ran the accepted `30799090…c492364` PT2 exactly once on that pack. Inputs were unchanged, all 73 outputs were finite, and the new logits were **bit-identical to historical position 1**: max/mean absolute difference zero, argmax 198. The raw FP32 cosine `1.000003695487976` is retained as reduction-rounding overshoot, not above-perfect similarity. Raw result `7137d83a…43519` supplies the actual same-pack reference; this first milestone did not automatically launch QNN.
+
+**One paired QNN call (`6a5dc5b`).** After another review/release, the [paired QNN result and saved-data analysis](../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/controlled-position1-paired-qnn-20260910/result.json) ran exact diagnostic PTE `7f30be3d…ff3fea` once at position 1 against that bound QDQ result. Both calls have the same input-values digest and no detected input mutation. New QNN result SHA-256 is `8c41cda7…7c285`, with all 73 outputs retained. Original FP32 logit cosine is **0.887993813**, versus **0.679220080** for the earlier own-state position 1. Max absolute difference remains 6.222187 and mean absolute difference 0.852588; both argmax IDs are 198. Better agreement is not equality or accuracy.
+
+| Separately released host call | Worker wall time | Supervisor wall time | Limit |
+|---|---:|---:|---:|
+| QDQ position 1 | 143.392 s | 146.954 s | 600 s |
+| QNN-x86 position 1 | 123.844 s | 124.709 s | 300 s |
+
+These diagnostic wall times include checks, model/runtime loading and persistence; they are neither Android latency nor a matched speed comparison. Each worker/group was reaped and its disk-backed scratch was empty. No automatic sequence, retry, own-state resume, full-174 replay, autoregressive generation or phone operation followed.
+
+**Saved-vector analysis, not attribution percentages.** Without another model call, analysis compared all 73 outputs in each of three bundles: the new QDQ control, new QNN control, and original own-state QNN position 1. All **219 tensors** were finite. For non-logit outputs, the QDQ reference is the new control: no historical full-replay 73-output bundle exists at this position.
+
+Let `Q_own`, `Q_control`, `D_control`, and `D_historical` denote the retained logit vectors. The saved FP32 difference vectors have these FP64-evaluated L2 magnitudes:
+
+| Logit-vector term | Definition | L2 magnitude |
+|---|---|---:|
+| Current-call discrepancy | `Q_control - D_control` | 539.396 |
+| Prior-state effect through QNN | `Q_own - Q_control` | 719.275 |
+| Historical reference shift | `D_control - D_historical` | **0** |
+| Original observed difference | `Q_own - D_historical` | 866.342 |
+
+The first three **vectors**, not their norms, sum to the fourth with a retained FP32 rounding residual of at most `4.76837e-7`; independent FP64 recomputation has zero residual. **Norms and cosines are not additive and are not percentages of causal attribution.** Original vectors remain unchanged. Interpreting the second term as a prior-state effect assumes the fixed reviewed PTE/native-runtime stack. The zero reference shift is a logit observation, not proof about missing historical state bytes.
+
+Separate FP64 saved-data comparisons give same-input logit cosine 0.887989275 and own-QNN versus new QDQ cosine 0.679215150. Their small differences from the raw FP32 metrics reflect reporting precision, not new model outputs. Both current-call and prior-state terms remain nonzero.
+
+**Saved layer endpoints and a neutral history observation.** Same-input hidden cosine is 0.997409 after layer 0, 0.856769 after layer 22, and 0.885774 after layer 23. Differences already appear at the first saved layer and remain at later endpoints, but these are not an operator-by-operator trace. At layer-0 convolution-history output slot 2, channel 6053, the common input from prior slot 3 is **23.721895**, QDQ returns **22.131550**, and QNN returns **23.721897**. QDQ changes that retained-history value while QNN nearly preserves it. This observation **does not show that QNN copied incorrectly, that this slot caused the hidden/logit drift, or which route is closer to FP32**. A source/encoding audit is the next proposed step; no findings from that audit are published here.
+
+**Complete retained bytes.** The input pack and historical reference are losslessly stored in Git, with two raw recoveries verified at preparation. The first QDQ result retains its full output bundle/reference/telemetry with three recoveries verified. The paired package retains all three complete 73-output bundles, the historical logit vector, full difference vectors, all-73 metrics, bindings and logs; six raw recoveries were verified. These are recoverable payloads, not hash-only promises. Original pack/output/prefix files remain protected, and the full-174 LOCAL-ONLY migration requirement above is unchanged. No physical, full-fidelity, accuracy, campaign or registry claim follows.
 
 ## Results
 
-**The experiment is active after a bounded four-position host QNN-x86 trajectory.** The position-1 cosine drop and position-2/3 argmax mismatches remain explicit. Each backend carries its own state, so this is accumulated drift rather than same-state causal localization. Full-174 QNN fidelity, candidate physical behavior, autoregressive text quality, and campaign readiness remain unproven.
+**The experiment is active after a paired identical-input position-1 host control.** Logit agreement improves over the own-state trajectory, but residual current-call discrepancy and prior-state effects both remain. The original position-1 drop and position-2/3 argmax mismatches are not erased. No individual operator cause, missing historical state-byte identity, FP32 accuracy, full-174 QNN fidelity, new physical result, or campaign readiness is established.
 
 | Evidence boundary | Current result |
 |---|---|
@@ -254,10 +292,23 @@ A position-1 identical-QDQ-state control is only a source/inventory plan, not an
 | Checkpoint boundary | Last next_position4; four materialized 48-state checkpoints verified; no native resume executed |
 | Complete prefix packaging | `2bf929d`: four full 73-output bundles + four state checkpoints + four paired QDQ logits in Git; 13 recoveries verified |
 | Prior archive retention | Full-174 QDQ intermediates remain protected LOCAL-ONLY migration data; prefix Git copies do not replace them |
-| Next same-state control | Source/inventory plan only; no controlled execution yet, no state equality inferred from logits alone |
-| Remaining candidate evidence | No full-174 QNN trajectory, same-state causality, FP32/physical equivalence, autoregressive text, or campaign |
-| Android LLM registry row | None; bounded host trajectory evidence is not registry-eligible |
+| Controlled-input preparation | `43ca1eb`: QDQ-origin position 1 / token 8678, 51 tensors including 48 state inputs; pack/header/value hashes verified; not resume |
+| Historical lineage | Full replay saved logits, not state checkpoints; the new pair does not prove missing historical state-byte identity |
+| QDQ reference validation | `0dfd3a6`: one call, 73 finite outputs, no input mutation; logits bit-identical to historical p1, argmax 198 / max abs 0 |
+| FP32 cosine overshoot | QDQ 1.000003695487976 retained as reduction rounding, not above-perfect similarity |
+| Paired QNN control | `6a5dc5b`: one call on the identical pack, bound QDQ result `7137d83a…43519`, no mutation; raw cosine 0.887993813 vs own-state 0.679220080 |
+| Remaining same-input difference | Max abs 6.222187 / mean abs 0.852588; argmax 198/198 is not numerical equality or accuracy |
+| Diagnostic budgets | QDQ supervisor 146.954 s <600 s; QNN 124.709 s <300 s; not matched speed/Android timing |
+| Saved-data scope | Three complete 73-output bundles, all 219 tensors finite; all 73 compared against the new QDQ control, not missing historical state outputs |
+| Logit-vector magnitudes | Current 539.396 / prior-state 719.275 / original 866.342; reference shift 0; norms/cosines not additive or attribution percentages |
+| Vector-identity residual | FP32 max 4.76837e-7 retained; independent FP64 residual 0; original vectors unchanged |
+| Layer endpoints | Same-input hidden cosines: layer 0, 0.997409; layer 22, 0.856769; layer 23, 0.885774; no isolated operator diagnosis |
+| Conv-history observation | Input 23.721895 → QDQ 22.131550 / QNN 23.721897; not QNN-corruption, drift-causality, or FP32-closeness proof |
+| Controlled-chain retention | Complete input pack and paired output/difference vectors in Git; six paired-package recoveries; protected full-174 archive unchanged |
+| Next investigation | Source/encoding audit proposed; no audit findings or further runtime outcome in this publication |
+| Remaining candidate evidence | No individual operator root cause, full-174 QNN fidelity, FP32/physical equivalence, autoregressive text, or campaign |
+| Android LLM registry row | None; bounded host control/analysis evidence is not registry-eligible |
 
-Attempt 03 remains the unchanged bounded physical baseline. The HistogramObserver position-zero comparison, full teacher-forced QDQ replay, and four-position own-state QNN-x86 segment are distinct host evidence. Improved position-zero agreement did not persist unchanged across the prefix; the new drift cannot isolate current-call error from prior-state feedback. Neither argmax coincidences nor the QDQ token interpretation `You` establish full QNN/FP32 fidelity or answer accuracy. No loaded-route performance campaign exists.
+Attempt 03 remains the unchanged bounded physical baseline. The new pair tests identical submitted inputs and separates nonzero current-call and prior-state logit-vector terms at one position; it does not retroactively turn the four-position own-state trajectory into a same-state test. Neither the neutral convolution-history observation, matching argmax IDs nor the QDQ token interpretation `You` establishes an individual operator cause, full QNN/FP32 fidelity or answer accuracy. No loaded-route performance campaign exists.
 
 A CPU-only response, GenieX NPU metric, direct-Hexagon output without QNN proof, or the dimension-incompatible shipped 4B example cannot satisfy this experiment. Neither can one lexical but mismatching token justify output fidelity, usefulness, sentence quality, or a campaign. No 0032 row belongs in the Android LLM registry until a complete valid physical Android canonical campaign establishes exact route identity, provider/no-fallback proof, state isolation, retained outputs, and a loaded-route performance distribution.
