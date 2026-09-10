@@ -1,18 +1,18 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-10T21:27:37+00:00",
+  "updated_at": "2026-09-10T21:33:57+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
     {
       "id": "tts-capacity",
       "title": "Long narration (~90 s)",
-      "status": "reviewing",
+      "status": "paused",
       "owner": "Janek",
-      "now": "29.80 s/~90 s target miss; automated transcript raises coverage/intelligibility concerns.",
-      "next": "Human review pending. ASR is not a quality score or audible-recall measure.",
-      "reported_at": "2026-09-10T21:27:37+00:00",
-      "reported_by": "Pi — final qualified ASR proxy summary",
+      "now": "29.80 s/~90 s target miss; official CPU model also predicts ~30 s.",
+      "next": "Padding adds only9.77 ms here; no hard cap, full speech or quality claim.",
+      "reported_at": "2026-09-10T21:33:57+00:00",
+      "reported_by": "Completed b7cf079 result + Janek relayed Nik FINAL audit",
       "stale_after_seconds": 600,
       "links": [
         {
@@ -24,11 +24,11 @@
     {
       "id": "tts-review",
       "title": "Independent review",
-      "status": "active",
+      "status": "standby",
       "owner": "Ben / Nik",
-      "now": "Ben/Nik CPU duration comparison active; Jere’s ASR pass is complete.",
-      "next": "No new audio or phone outcome; technical WAV audit remains closed.",
-      "reported_at": "2026-09-10T21:27:37+00:00",
+      "now": "CPU-pair audit closed: one session/two calls, exact FP32 outputs verified.",
+      "next": "Cross-runtime vs phone/frame duration; native scalar uncaptured. No repeat.",
+      "reported_at": "2026-09-10T21:33:57+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -36,11 +36,11 @@
     {
       "id": "app",
       "title": "App / short TTS",
-      "status": "preparing",
+      "status": "paused",
       "owner": "Janek",
-      "now": "Normal-source checkpoint70a6ac6 aligns pack/pin + two prompts; four static tests pass.",
-      "next": "No build/APK/install/model/E2E. Full product test held for duration/coverage.",
-      "reported_at": "2026-09-10T21:26:04+00:00",
+      "now": "Normal source70a6ac6 remains experimental/unbuilt; diagnostic APK still installed.",
+      "next": "Product E2E held for next scoped direction; duration/coverage unresolved.",
+      "reported_at": "2026-09-10T21:33:57+00:00",
       "reported_by": "Janek — source-only integration checkpoint",
       "stale_after_seconds": 900,
       "links": [
@@ -155,11 +155,11 @@
     {
       "id": "host",
       "title": "On this computer",
-      "status": "active",
+      "status": "waiting",
       "owner": "Janek / Nik / Ben",
-      "now": "CPU duration comparison / source prep",
-      "next": "Ben/Nik comparison active; normal app source remains unbuilt. No new audio/phone result.",
-      "reported_at": "2026-09-10T21:27:37+00:00",
+      "now": "diagnostics complete; awaiting next scope",
+      "next": "CPU comparison is complete, not starting. No new model/phone/WAV action.",
+      "reported_at": "2026-09-10T21:33:57+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -187,22 +187,22 @@
     },
     {
       "name": "Ben",
-      "task": "CPU duration comparison active",
-      "reported_at": "2026-09-10T21:27:37+00:00",
+      "task": "CPU pair complete; standby",
+      "reported_at": "2026-09-10T21:33:57+00:00",
       "reported_by": "Pi latest snapshot; Kate capture",
       "stale_after_seconds": 900
     },
     {
       "name": "Nik",
-      "task": "CPU comparison / review",
-      "reported_at": "2026-09-10T21:27:37+00:00",
+      "task": "CPU audit closed; standby",
+      "reported_at": "2026-09-10T21:33:57+00:00",
       "reported_by": "Pi latest snapshot; Kate capture",
       "stale_after_seconds": 900
     },
     {
       "name": "Janek",
-      "task": "Normal source ready; E2E held",
-      "reported_at": "2026-09-10T21:26:04+00:00",
+      "task": "Source prepared; E2E held",
+      "reported_at": "2026-09-10T21:33:57+00:00",
       "reported_by": "Pi latest snapshot; Kate capture",
       "stale_after_seconds": 900
     },
