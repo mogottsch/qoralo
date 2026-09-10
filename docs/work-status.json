@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-10T20:35:45+00:00",
+  "updated_at": "2026-09-10T20:41:22+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -9,10 +9,10 @@
       "title": "Long narration (~90 s)",
       "status": "blocked",
       "owner": "Janek",
-      "now": "Vector attempt failed6006: SET_PROFILE. Later cDSP TLBMISS; no WAV.",
-      "next": "Duration/text have RPC/cycles; vector failed, vocoder0. No proven model OOM.",
-      "reported_at": "2026-09-10T20:35:45+00:00",
-      "reported_by": "Pi — SDK error and crash-order refinement",
+      "now": "Long speech still failed/no sample;6006 maps to the profiling path.",
+      "next": "Proposed control disables optional ORT + QNN profiling; not a proven fix.",
+      "reported_at": "2026-09-10T20:41:22+00:00",
+      "reported_by": "Pi — profiling-path controlled diagnostic proposal",
       "stale_after_seconds": 600,
       "links": [
         {
@@ -26,9 +26,9 @@
       "title": "Independent review",
       "status": "reviewing",
       "owner": "Nik / Ben",
-      "now": "Source-only profiling-lifecycle / single-variable diagnostic proposal.",
-      "next": "TLBMISS fault origin/relation may involve cleanup; not proven. No rerun approved.",
-      "reported_at": "2026-09-10T20:35:45+00:00",
+      "now": "Nik checks mapping to the existing empty-string no-profile path.",
+      "next": "Detailed execution metrics will be unavailable by design; no success inferred.",
+      "reported_at": "2026-09-10T20:41:22+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -36,11 +36,11 @@
     {
       "id": "app",
       "title": "App / short TTS",
-      "status": "waiting",
+      "status": "preparing",
       "owner": "Janek",
-      "now": "OS process/settings/scratch cleanup passed; native context-free errors retained.",
-      "next": "Keep SET_PROFILE failure, later crash and teardown errors distinct.",
-      "reported_at": "2026-09-10T20:35:45+00:00",
+      "now": "Janek has source/build-prep scope after mapping check; same model/text/pack/native9.",
+      "next": "Only optional profiling changes. Stage/WAV/error evidence stays; no phone rerun yet.",
+      "reported_at": "2026-09-10T20:41:22+00:00",
       "reported_by": "Pi — independently approved guard boundary",
       "stale_after_seconds": 900,
       "links": [
@@ -141,9 +141,9 @@
       "title": "Phone",
       "status": "unassigned",
       "owner": "Pi",
-      "now": "free; OS cleanup passed",
-      "next": "Native context-free/FastRPC errors retained; later cDSP crash origin remains unproven.",
-      "reported_at": "2026-09-10T20:35:45+00:00",
+      "now": "no rerun released",
+      "next": "Long speech has no WAV. Prior OS cleanup passed; native errors remain retained.",
+      "reported_at": "2026-09-10T20:41:22+00:00",
       "reported_by": "Janek execution report + Pi release, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -153,9 +153,9 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Janek / Nik / Ben",
-      "now": "source-only diagnostic proposal",
-      "next": "Profiling lifecycle under review; no runtime rerun or model-OOM conclusion.",
-      "reported_at": "2026-09-10T20:35:45+00:00",
+      "now": "source/build diagnostic preparation",
+      "next": "Disable optional ORT+QNN profiling together after mapping review; not a fix or rerun.",
+      "reported_at": "2026-09-10T20:41:22+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -190,15 +190,15 @@
     },
     {
       "name": "Nik",
-      "task": "Review source / crash boundary",
-      "reported_at": "2026-09-10T20:35:45+00:00",
+      "task": "Check no-profile path mapping",
+      "reported_at": "2026-09-10T20:41:22+00:00",
       "reported_by": "Pi latest snapshot; Kate capture",
       "stale_after_seconds": 900
     },
     {
       "name": "Janek",
-      "task": "Retain safe failure evidence",
-      "reported_at": "2026-09-10T20:28:19+00:00",
+      "task": "Prepare no-profile candidate",
+      "reported_at": "2026-09-10T20:41:22+00:00",
       "reported_by": "Pi latest snapshot; Kate capture",
       "stale_after_seconds": 900
     },
