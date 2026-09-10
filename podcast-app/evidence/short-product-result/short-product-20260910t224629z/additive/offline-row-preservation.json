@@ -1,0 +1,80 @@
+{
+  "existingUserRowsUnchanged": true,
+  "tables": {
+    "episodes": {
+      "existingUnchanged": 3,
+      "ownedAdded": 1
+    },
+    "episode_sources": {
+      "existingUnchanged": 2,
+      "ownedAdded": 1
+    },
+    "script_revisions": {
+      "existingUnchanged": 0,
+      "ownedAdded": 2
+    },
+    "chapters": {
+      "existingUnchanged": 0,
+      "ownedAdded": 4
+    },
+    "agent_messages": {
+      "existingUnchanged": 0,
+      "ownedAdded": 2
+    },
+    "generation_jobs": {
+      "existingUnchanged": 2,
+      "ownedAdded": 2
+    },
+    "chapter_audio": {
+      "existingUnchanged": 0,
+      "ownedAdded": 0
+    },
+    "playback_state": {
+      "existingUnchanged": 0,
+      "ownedAdded": 0
+    }
+  },
+  "allowedGlobalChanges": "only normal verified catalog upserts for the two exact exercised IDs; existing IDs retained",
+  "scope": "ADDITIVE SAVED-ONLY row comparison through checksummed WAL-index-correlated current prefix; no original modification",
+  "guardIdentity": {
+    "files": {
+      "tools/run_duration_load_gate.py": "dfc76732e626e4608b2792b3c3a07af4c4a75c60624dd9b9f609ec8b25fb7b95",
+      "tools/duration_phone_guard.py": "854a67aeead10731983e11e7d9ad896bbd86abad19b28ae8c3095e0f018a5896",
+      "tools/run_wiring_gate.py": "d5f467e9273ea58509b8f0314360f0678f039ee03079db15961a992f6400bb6d",
+      "tools/prepare_duration_load_gate.py": "f1fe1d089cceb8bdec7baf2bac3788154fcacba1e30f7a288e10e14837ad580a",
+      "tools/prepare_wiring_gate.py": "45681df442600ef8fede72217f3bedabd24ae172700386b7605c7e658a343e42",
+      "app/schemas/dev.vibevoice.podcast.data.PodcastDatabase/1.json": "aa0440c6e4636618a3eb9ec50131aef8a66c280e568262e88daae9edd21a8a84"
+    },
+    "sha256": "3e807ad5e91c1d2e206f1672873a81f46b726f985ea72780db22cb4587eb3116"
+  },
+  "snapshotHashes": {
+    "podcast-app/.local/short-product-phone/short-product-20260910t224629z/.private-db/preservation-before-1.tar": "c0b3e8643e29afa39d60c60d0145daae75e39be0aca510bb885c3d9956613ec7",
+    "podcast-app/.local/short-product-phone/short-product-20260910t224629z/.private-db/preservation-after-1.tar": "6205df555fff5b8fce9853f389d77f36a98e1471831e263f61b1c3b3241970ff",
+    "podcast-app/.local/short-product-phone/short-product-20260910t224629z/.private-db/preservation-after-2.tar": "6205df555fff5b8fce9853f389d77f36a98e1471831e263f61b1c3b3241970ff"
+  },
+  "snapshotState": {
+    "database": "known-schema-no-startup-work",
+    "episodeCount": 4,
+    "generationHistoryRows": 12,
+    "historyRowCounts": {
+      "generation_jobs": 4,
+      "script_revisions": 2,
+      "chapters": 4,
+      "agent_messages": 2,
+      "chapter_audio": 0,
+      "playback_state": 0
+    },
+    "jobStatusCounts": {
+      "COMPLETE": 2,
+      "FAILED": 2
+    },
+    "queuedOrRunningJobs": 0
+  },
+  "privateRowContentsIncluded": false,
+  "filePreservation": {
+    "verified": false,
+    "reason": "Original controller aborted DB validation before capturing the after-file inventory; no after inventory available in saved run"
+  },
+  "originalCleanupRecordUnchanged": true,
+  "newDeviceOrModelCalls": 0
+}

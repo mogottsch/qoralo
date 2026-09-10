@@ -1,0 +1,88 @@
+{
+  "kind": "SAVED_ONLY_ROW_PRESERVATION_PASS_FILE_PRESERVATION_UNAVAILABLE",
+  "guardFileSha256": "854a67aeead10731983e11e7d9ad896bbd86abad19b28ae8c3095e0f018a5896",
+  "guardClosureSha256": "3e807ad5e91c1d2e206f1672873a81f46b726f985ea72780db22cb4587eb3116",
+  "inputs": {
+    "/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/short-product-phone/short-product-20260910t224629z/.private-db/preservation-before-1.tar": "c0b3e8643e29afa39d60c60d0145daae75e39be0aca510bb885c3d9956613ec7",
+    "/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/short-product-phone/short-product-20260910t224629z/.private-db/preservation-after-1.tar": "6205df555fff5b8fce9853f389d77f36a98e1471831e263f61b1c3b3241970ff",
+    "/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/short-product-phone/short-product-20260910t224629z/.private-db/preservation-after-2.tar": "6205df555fff5b8fce9853f389d77f36a98e1471831e263f61b1c3b3241970ff"
+  },
+  "beforeState": {
+    "database": "known-schema-no-startup-work",
+    "episodeCount": 3,
+    "generationHistoryRows": 2,
+    "historyRowCounts": {
+      "generation_jobs": 2,
+      "script_revisions": 0,
+      "chapters": 0,
+      "agent_messages": 0,
+      "chapter_audio": 0,
+      "playback_state": 0
+    },
+    "jobStatusCounts": {
+      "FAILED": 2
+    },
+    "queuedOrRunningJobs": 0
+  },
+  "afterState": {
+    "database": "known-schema-no-startup-work",
+    "episodeCount": 4,
+    "generationHistoryRows": 12,
+    "historyRowCounts": {
+      "generation_jobs": 4,
+      "script_revisions": 2,
+      "chapters": 4,
+      "agent_messages": 2,
+      "chapter_audio": 0,
+      "playback_state": 0
+    },
+    "jobStatusCounts": {
+      "COMPLETE": 2,
+      "FAILED": 2
+    },
+    "queuedOrRunningJobs": 0
+  },
+  "rowPreservation": {
+    "existingUserRowsUnchanged": true,
+    "tables": {
+      "episodes": {
+        "existingUnchanged": 3,
+        "ownedAdded": 1
+      },
+      "episode_sources": {
+        "existingUnchanged": 2,
+        "ownedAdded": 1
+      },
+      "script_revisions": {
+        "existingUnchanged": 0,
+        "ownedAdded": 2
+      },
+      "chapters": {
+        "existingUnchanged": 0,
+        "ownedAdded": 4
+      },
+      "agent_messages": {
+        "existingUnchanged": 0,
+        "ownedAdded": 2
+      },
+      "generation_jobs": {
+        "existingUnchanged": 2,
+        "ownedAdded": 2
+      },
+      "chapter_audio": {
+        "existingUnchanged": 0,
+        "ownedAdded": 0
+      },
+      "playback_state": {
+        "existingUnchanged": 0,
+        "ownedAdded": 0
+      }
+    },
+    "allowedGlobalChanges": "only normal verified catalog upserts for the two exact exercised IDs; existing IDs retained"
+  },
+  "filePreservation": null,
+  "filePreservationUnavailableReason": "Original WAL parser exception occurred before post-file inventory; .private-user-files/after.stdout does not exist. No current-device substitute collected.",
+  "originalFilesUnchangedByOfflineCheck": true,
+  "dataProcessing": "Private rows compared programmatically in local read-only reconstructed views; only aggregate counts emitted, no row contents exposed",
+  "newDeviceOrModelCalls": 0
+}

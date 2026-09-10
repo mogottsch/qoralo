@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 1,
+  "kind": "short-production-plumbing",
+  "sourceCommit": "ddb24e32ceac98608a1f1c9243b0d71e5ca9199c",
+  "sourceDirty": false,
+  "phoneAuthorized": false,
+  "contractSha256": "a39106380003a3a4c7b83c2f45066399e204d8aefade77ec88866f9062eccfc4",
+  "contract": {
+    "schemaVersion": 1,
+    "id": "short-production-plumbing-v1",
+    "scope": "NONCANONICAL short production plumbing; not long-request replay or full chapter readiness",
+    "packId": "supertonic-3",
+    "supertonicManifestSha256": "dc4ac737924d7d62e57ff5e166707198095c49e51d77cfed04a44d9e9435952d",
+    "gemmaManifestSha256": "9fb627ef9a4eb0ed49056c32bc16f2846e6edf68dc8d854b02af90e24e4e96cd",
+    "files": {
+      "source.txt": "aa9c803fd495219b7e2d524de7448ae26ce7b1bbc107db04e65d0af235c9b962",
+      "instructions.txt": "96e0fe530134169f5bcf5ae1fa57c814adfd246f280031a56578ca8add7e9d25",
+      "agent.txt": "d4b440f260fcebe428ececd34e84fefbe65bd4b55b15133b27cb558ff0fa7ea8"
+    },
+    "chapterIds": [
+      "chapter-1",
+      "chapter-2"
+    ],
+    "wordsPerChapter": [
+      20,
+      25
+    ],
+    "maxNormalizedCodepoints": 190,
+    "reviewEnabled": true,
+    "scriptRequests": [
+      "source_notes",
+      "outline",
+      "chapter",
+      "chapter"
+    ],
+    "editRequests": [
+      "edit"
+    ],
+    "logicalTtsRequests": 2,
+    "interChapterPauseMs": 700,
+    "jobSeconds": {
+      "SCRIPT": 420,
+      "AGENT_EDIT": 180,
+      "AUDIO": 150
+    },
+    "driverSeconds": 900,
+    "hostInstrumentationSeconds": 930,
+    "silentAppPlayer": true,
+    "collectProfiles": false,
+    "profileEvidence": "UNAVAILABLE_BY_DESIGN",
+    "requestMetrics": "logical counts and raw outputs only; no token/TTFT/throughput claim",
+    "partialOutputOnNativeFailure": "unavailable from normal synchronous sendMessage; complete raw return is saved before parsing",
+    "automaticRetries": 0,
+    "allowedSafAuthorities": [
+      "com.android.providers.downloads.documents",
+      "com.android.externalstorage.documents"
+    ]
+  },
+  "hostGuardSha256": "5ca6be91be151acd2937b5e65871a40361f9bae99ae444880eae0e29b6f2c425",
+  "controllerSources": {
+    "tools/run_short_product_gate.py": "d6a145078e7df81bd5ceb059db886ce943f75d10d70285fd9584d7185409a368",
+    "tools/short_product_preservation.py": "aac977a473feb6301020a8a10216f3b368d060d83877583e948fad690d3a1526"
+  },
+  "privacyControllerSha256": "a62d204c380a5b2d0c8f7c5bd94729b6f823e18200feed2ebe24fa73962bec3c",
+  "expectedPriorInstalledApks": {
+    "dev.vibevoice.podcast.internal": "4e438b62fc4442e5dfefbed2a26c88f6872fb34989144e04727613e78aaaf8c8",
+    "dev.vibevoice.podcast.internal.test": "56be356f5a68d0c415e2980bebca9346ece4972f4a0657f0700064ab683f8739"
+  },
+  "buildProperty": "-Ppodcast.shortProductE2e=true",
+  "modelPacks": {
+    "gemma-4-e2b": {
+      "root": "/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/model-packs/gemma-4-e2b/current",
+      "manifestSha256": "9fb627ef9a4eb0ed49056c32bc16f2846e6edf68dc8d854b02af90e24e4e96cd"
+    },
+    "supertonic-3": {
+      "root": "/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/model-packs/supertonic-3/current",
+      "manifestSha256": "dc4ac737924d7d62e57ff5e166707198095c49e51d77cfed04a44d9e9435952d"
+    }
+  },
+  "scope": "ONE owned short genuine production workflow; NOT a long input retry/full chapter readiness",
+  "status": "awaiting exact independent review and separate Pi phone release",
+  "app": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/short-product-ready/attempt-04/app.apk",
+    "bytes": 130896468,
+    "sha256": "eb22ac1715b958979d4064d164585d588f180312ad1a6bb7090841059b649a62"
+  },
+  "test": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/short-product-ready/attempt-04/test.apk",
+    "bytes": 2454259,
+    "sha256": "56be356f5a68d0c415e2980bebca9346ece4972f4a0657f0700064ab683f8739"
+  },
+  "evidenceBindings": {
+    "host-checks.json": {
+      "bytes": 311,
+      "sha256": "8a59282575878a089f13140122c110dbae87e7821c4ec3ed56fbccff4b9f5dde"
+    },
+    "test-manifest.txt": {
+      "bytes": 4737,
+      "sha256": "d4981cab0c5a7311d3e46fb954f906ae4e255f718747069adfa65b0705ae125a"
+    },
+    "trusted-runtime.log": {
+      "bytes": 257,
+      "sha256": "554f5be87ca5f41e7f90b5277df603c4f0885f6e0790010652bf7bdc0e241eed"
+    },
+    "test-signature.txt": {
+      "bytes": 955,
+      "sha256": "4434238f6cde4588f2926c79eaf8131abbbfa61bda40df1a3db3800ec7e2b9b7"
+    },
+    "resolved-artifact-hashes.json": {
+      "bytes": 76580,
+      "sha256": "a8714e292d0cacb16c887a7f8aa6e28353fe19b0423a316a5e729c2e283333d5"
+    },
+    "source-proof.json": {
+      "bytes": 31860,
+      "sha256": "2654eea758f8fb01f928986a522dff5ce7d2fac4b66b57816562a6c3a993fa68"
+    },
+    "app-manifest.txt": {
+      "bytes": 11695,
+      "sha256": "b963add7a02604ac457374988df06a439181ac50b83b2e11469dbf85304aa68a"
+    },
+    "generated-BuildConfig.java": {
+      "bytes": 930,
+      "sha256": "9d421db262420e2a43ca8355a08c26bd494b40ddc5bc51f1e6bd091a175c1ffc"
+    },
+    "resolved-artifacts.json": {
+      "bytes": 262152,
+      "sha256": "39c18f8553a5f960b4f4fceb3fe12be41132ad543b3da8346b112813293dcdb2"
+    },
+    "focused-python.log": {
+      "bytes": 1693,
+      "sha256": "812807e6377adddcff440f601f3b0bed29b886969929c0229ca8464f7179b7eb"
+    },
+    "host-build.log": {
+      "bytes": 4041,
+      "sha256": "61a50ae368647e111e7d84f66eef90a70a3fe922d2ea6dc5f0456dfa1269fb33"
+    },
+    "trusted-runtime.json": {
+      "bytes": 2629,
+      "sha256": "870eba8e0799c58ebd1a8e8dc73d443947222a048e6c890420e2cbb400e6a4db"
+    },
+    "native-byte-proof.json": {
+      "bytes": 2061,
+      "sha256": "4bf73203587d876422dcef5a4287267942c747d1e16698d30da71daf43f5ab74"
+    },
+    "app-signature.txt": {
+      "bytes": 955,
+      "sha256": "4434238f6cde4588f2926c79eaf8131abbbfa61bda40df1a3db3800ec7e2b9b7"
+    },
+    "junit/TEST-dev.vibevoice.podcast.e2e.ShortProductPolicyTest.xml": {
+      "bytes": 1155,
+      "sha256": "5f1e724f63471454de0f5a007944e35a77390a0a25ac61b041246c61e4e87704"
+    },
+    "junit/TEST-dev.vibevoice.podcast.runtime.GemmaChapterPromptTest.xml": {
+      "bytes": 803,
+      "sha256": "ce524579cac8321f6ad86f01cccb0a2a4b0d5cc20408909c120a9d2985ca5c7f"
+    },
+    "junit/TEST-dev.vibevoice.podcast.generation.GenerationCoordinatorTest.xml": {
+      "bytes": 1136,
+      "sha256": "a3ad4224ea932fc90ce63635b44769f06e813597b178606685baea230fb44146"
+    }
+  }
+}
