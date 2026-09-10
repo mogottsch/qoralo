@@ -43,7 +43,8 @@ class TtsOnlyScopeTests(unittest.TestCase):
         self.assertIn('check_controller(args); guard.checkpoint("before-instrument")',source)
         self.assertIn('device.shell(command, timeout=360)',source)
         self.assertNotIn('["push"',source)
-        self.assertEqual('3ad4c644a7733d1f1feeb7bbbe83532cc0be0f727f32f59dda00c951dd6e202d',host_identity()['sha256'])
+        # Current host-only eligibility correction; frozen canonical receipts keep their original guard pin.
+        self.assertEqual('5ca6be91be151acd2937b5e65871a40361f9bae99ae444880eae0e29b6f2c425',host_identity()['sha256'])
 
     def test_private_battery_histories_never_enter_labelled_core_extract(self):
         raw='''Current Battery Service state:

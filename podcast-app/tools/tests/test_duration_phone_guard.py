@@ -96,20 +96,63 @@ class SnapshotTests(unittest.TestCase):
                     elif sql.startswith('UPDATE'):db.execute('UPDATE room_master_table SET identity_hash=?',(json.loads(g.SCHEMA.read_text())['database']['identityHash'],))
                     db.commit()
 
-    def test_unknown_locked_or_recovery_phase_rejected_without_jobs(self):
+    def test_known_phases_and_metadata_alone_do_not_dispatch_but_unknown_phase_rejects(self):
         with contextlib.closing(database(self.root)) as db:
-            for phase in ['GENERATING_SCRIPT','GENERATING_AUDIO','LOCKED','FAILED','SCRIPT_DRAFT','FROZEN_READY','unknown']:
+            for phase in ['SOURCES','INSTRUCTIONS','GENERATING_SCRIPT','GENERATING_AUDIO','LOCKED','FAILED','SCRIPT_DRAFT','FROZEN_READY']:
                 with self.subTest(phase=phase):
-                    db.execute('DELETE FROM episodes');row(db,'episodes',id='ep',phase=phase)
-                    with self.assertRaisesRegex(g.GuardError,'episode state'):g.validate_snapshot(snapshot(self.root))
+                    db.execute('DELETE FROM episodes')
+                    row(db,'episodes',id='ep',phase=phase,activeRevisionId='private-revision',failureMessage='private-content',finalAudioPath='private-path')
+                    before=snapshot(self.root); summary=g.validate_snapshot(before)
+                    self.assertEqual(1,summary['episodeCount']); self.assertEqual(before,snapshot(self.root))
+                    self.assertNotIn('private-',json.dumps(summary))
+            db.execute('DELETE FROM episodes');row(db,'episodes',id='ep',phase='unknown')
+            with self.assertRaisesRegex(g.GuardError,'unsupported episode state'):g.validate_snapshot(snapshot(self.root))
 
-    def test_terminal_history_is_ineligible_not_mislabelled_pending(self):
+    def test_known_terminal_history_in_wal_is_eligible_and_unchanged(self):
+        with contextlib.closing(database(self.root,wal=True)) as db:
+            row(db,'episodes',id='ep',phase='FAILED')
+            db.execute('PRAGMA wal_checkpoint(TRUNCATE)')
+            for status in ['COMPLETE','FAILED']:
+                row(db,'generation_jobs',id=status,episodeId='ep',kind='SCRIPT',status=status)
+            before=snapshot(self.root);summary=g.validate_snapshot(before)
+            self.assertEqual({'COMPLETE':1,'FAILED':1},summary['jobStatusCounts'])
+            self.assertEqual(2,summary['generationHistoryRows']);self.assertEqual(0,summary['queuedOrRunningJobs'])
+            self.assertEqual(before,snapshot(self.root))
+            self.assertEqual(0,g.validate_snapshot({'databases/podcast.db':before['databases/podcast.db']})['generationHistoryRows'])
+
+    def test_unknown_job_status_cannot_hide_behind_known_terminal_history(self):
         with contextlib.closing(database(self.root)) as db:
-            row(db,'episodes',id='ep',phase='SOURCES')
-            for status in ['COMPLETE','FAILED','unknown']:
+            row(db,'episodes',id='ep',phase='FAILED')
+            row(db,'generation_jobs',id='known',episodeId='ep',kind='SCRIPT',status='FAILED')
+            for status in ['unknown','CANCELLED','complete','WAITING']:
                 with self.subTest(status=status):
-                    db.execute('DELETE FROM generation_jobs');row(db,'generation_jobs',id='j',episodeId='ep',kind='SCRIPT',status=status)
-                    with self.assertRaisesRegex(g.GuardError,'cannot establish safe state'):g.validate_snapshot(snapshot(self.root))
+                    row(db,'generation_jobs',id='other',episodeId='ep',kind='SCRIPT',status=status)
+                    with self.assertRaisesRegex(g.GuardError,'unsupported job status'):g.validate_snapshot(snapshot(self.root))
+                    db.execute("DELETE FROM generation_jobs WHERE id='other'");db.commit()
+
+    def test_other_history_tables_do_not_trigger_startup_work(self):
+        with contextlib.closing(database(self.root)) as db:
+            row(db,'episodes',id='ep',phase='FROZEN_READY',lockedRevisionId='rev',finalAudioPath='private-audio')
+            row(db,'generation_jobs',id='j',episodeId='ep',kind='AUDIO',status='COMPLETE')
+            row(db,'script_revisions',id='rev',episodeId='ep')
+            row(db,'chapters',rowId='chapter',revisionId='rev')
+            row(db,'agent_messages',id='message',episodeId='ep')
+            row(db,'chapter_audio',id='audio',episodeId='ep',lockedRevisionId='rev')
+            row(db,'playback_state',episodeId='ep')
+            before=snapshot(self.root);summary=g.validate_snapshot(before)
+            self.assertEqual({table:1 for table in g.GENERATION_TABLES},summary['historyRowCounts'])
+            self.assertEqual(6,summary['generationHistoryRows']);self.assertEqual(before,snapshot(self.root))
+            self.assertNotIn('private-',json.dumps(summary))
+
+    def test_active_job_cannot_hide_behind_terminal_history(self):
+        with contextlib.closing(database(self.root)) as db:
+            row(db,'episodes',id='ep',phase='FAILED')
+            row(db,'generation_jobs',id='terminal',episodeId='ep',kind='SCRIPT',status='FAILED')
+            for status in ['QUEUED','RUNNING']:
+                with self.subTest(status=status):
+                    row(db,'generation_jobs',id='active',episodeId='ep',kind='SCRIPT',status=status)
+                    with self.assertRaisesRegex(g.GuardError,'pending/reconcilable'):g.validate_snapshot(snapshot(self.root))
+                    db.execute("DELETE FROM generation_jobs WHERE id='active'");db.commit()
 
     def test_running_job_and_foreign_key_corruption_rejected(self):
         with contextlib.closing(database(self.root)) as db:

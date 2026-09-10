@@ -155,12 +155,19 @@ def validate_snapshot(files):
             counts = {table: db.execute(f'SELECT count(*) FROM {table}').fetchone()[0] for table in GENERATION_TABLES}
             active = db.execute("SELECT count(*) FROM generation_jobs WHERE status IN ('QUEUED','RUNNING')").fetchone()[0]
             require(active == 0, 'pending/reconcilable work found')
-            require(not any(counts.values()), 'guard cannot establish safe state: conservative no-generation-history eligibility rule')
-            # Deliberately conservative: even terminal/recoverable history is a STOP, never a cleanup request.
-            episodes = db.execute('SELECT phase,activeRevisionId,lockedRevisionId,lockedContentHash,lockedAtEpochMs,finalAudioPath,durationMs,currentChapterPosition,failurePhase,failureMessage,finalAudioSha256,finalAudioByteCount,timelinePath,timelineSha256,timelineByteCount FROM episodes').fetchall()
-            require(all(row[0] in ('SOURCES', 'INSTRUCTIONS') and all(value is None for value in row[1:]) for row in episodes), 'guard cannot establish safe state: unsupported episode state or metadata')
-            require(db.execute("SELECT count(*) FROM episodes e WHERE phase='INSTRUCTIONS' AND NOT EXISTS (SELECT 1 FROM episode_sources s WHERE s.episodeId=e.id)").fetchone()[0] == 0, 'instructions episode has no source')
-            return {'database': 'known-schema-pristine-generation-state', 'episodeCount': len(episodes), 'generationHistoryRows': 0}
+            # Frozen3fd startup dispatches QUEUED jobs and reconciles RUNNING jobs only.
+            # COMPLETE/FAILED rows and known episode phases do not independently start work.
+            # This is startup eligibility, not a claim of product-state/content correctness.
+            statuses = dict(db.execute('SELECT status,count(*) FROM generation_jobs GROUP BY status'))
+            require(set(statuses) <= {'COMPLETE', 'FAILED'}, 'guard cannot establish safe state: unsupported job status')
+            phases = ('SOURCES', 'INSTRUCTIONS', 'GENERATING_SCRIPT', 'SCRIPT_DRAFT', 'LOCKED',
+                      'GENERATING_AUDIO', 'FROZEN_READY', 'FAILED')
+            unknown = db.execute('SELECT count(*) FROM episodes WHERE phase NOT IN (' + ','.join('?' for _ in phases) + ')', phases).fetchone()[0]
+            require(unknown == 0, 'guard cannot establish safe state: unsupported episode state')
+            return {'database': 'known-schema-no-startup-work',
+                    'episodeCount': db.execute('SELECT count(*) FROM episodes').fetchone()[0],
+                    'generationHistoryRows': sum(counts.values()), 'historyRowCounts': counts,
+                    'jobStatusCounts': statuses, 'queuedOrRunningJobs': active}
 
 
 class PhoneGuard:

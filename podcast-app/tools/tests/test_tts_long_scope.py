@@ -47,7 +47,12 @@ class TtsLongScopeTests(unittest.TestCase):
     def test_reviewed_guard_privacy_and_three_prelaunch_checkpoints_remain(self):
         self.assertIs(controller.capture_conditions, canonical.capture_conditions)
         self.assertEqual(controller.PRIVACY_SOURCE_SHA, controller.digest(PROJECT / 'tools/run_tts_only_gate.py'))
-        self.assertEqual('3ad4c644a7733d1f1feeb7bbbe83532cc0be0f727f32f59dda00c951dd6e202d', host_identity()['sha256'])
+        self.assertEqual('5ca6be91be151acd2937b5e65871a40361f9bae99ae444880eae0e29b6f2c425', host_identity()['sha256'])
+        override = json.loads((PROJECT / 'config/diagnostics/tts-long-terminal-history-override.json').read_text())
+        self.assertEqual(host_identity()['sha256'], override['newHostGuardSha256'])
+        self.assertEqual('3ad4c644a7733d1f1feeb7bbbe83532cc0be0f727f32f59dda00c951dd6e202d', override['frozenCandidateHostGuardSha256'])
+        self.assertEqual(controller.digest(PROJECT / 'tools/run_tts_long_gate.py'), override['unchangedControllerSha256'])
+        self.assertEqual('b86008708cc459c855149eee49c58a7468e079d24c9de4842eab56a5bcef325d', override['candidateSha256'])
         source = (PROJECT / 'tools/run_tts_long_gate.py').read_text()
         for phase in ('before-app-install', 'before-test-install', 'before-instrument'):
             self.assertIn("check_controller(args); guard.checkpoint('" + phase + "')", source)

@@ -17,15 +17,22 @@ Frozen startup inspection found QUEUED dispatch and RUNNING-job reconciliation, 
 5. Only then allow the unchanged one-constructor diagnostic. Existing45s load/close,120s service,135s driver,150s instrumentation,180s installs and120s evidence pull bounds remain. Zero Run/Gemma/other-context/TTS/capacity calls.
 6. Preserve raw diagnostic outcome and cleanup failures. After a launched attempt, the existing controller stops its app/test, pulls evidence and proves PID absence. Read back settings without repairing unrelated changes, reap logcat, write cleanup **before the one lock release**. Failed pulls do not delete remote evidence. A prelaunch failure does not force-stop someone else's newly observed app process.
 
-## Deliberately narrow eligibility
+## Current startup eligibility — host-only correction,2026-09-10
 
-Actual QUEUED/RUNNING rows are reported as **pending/reconcilable work found**. For this diagnostic, the fast guard additionally supports only:
+The original blanket no-history policy was over-restrictive. It stopped long run `tts-long-20260910t201548z` before installation on one FAILED job despite zero QUEUED/RUNNING jobs. That stopped record remains unchanged in `evidence/tts-long-startup-stop/`.
 
-- no database directory, or the pinned known Room v1 schema/identity;
-- no generation-job/revision/chapter/agent-message/audio/playback history;
-- only SOURCES/INSTRUCTIONS episodes with no active/locked/output/failure metadata; Instructions must have a source.
+The corrected guard retains the pinned schema/identity, integrity/FK, WAL, snapshot coherence, PID, lock and hash checks. **QUEUED/RUNNING still means pending/reconcilable work and always stops.** Other job statuses must be the known terminal values COMPLETE/FAILED; unknown statuses stop. Episodes must use one of the eight known phases; unknown phases stop.
 
-Completed/failed history is **not automatically pending work**. It causes the distinct result **“guard cannot establish safe state: conservative no-generation-history eligibility rule.”** Draft/frozen/failed or otherwise unsupported episode states are also ineligible, not proof that startup would retry them. Any real-device limitation is reported for Pi's decision; nothing is cleared, reset or changed to satisfy the guard.
+Known terminal jobs, populated revisions/chapters/messages/audio/playback tables, and known episode phases/metadata do not independently dispatch work in the frozen source. `PodcastApplication` starts only the dispatcher/watchdog; DAO predicates select QUEUED/RUNNING respectively, repository methods forward those queries, and the ViewModel starts with no selected episode/Library. New work is queued only by explicit user actions. Consequently the no-history, nonnull-metadata and Instructions-source eligibility vetoes are removed. This is **no automatic startup work**, not a claim that arbitrary product content/state is correct. Nothing is deleted or repaired to pass.
+
+The exact long candidate `b86008708cc459c855149eee49c58a7468e079d24c9de4842eab56a5bcef325d` remains frozen with its historical guard reference. `config/diagnostics/tts-long-terminal-history-override.json` explicitly replaces only that host guard reference, via the existing CLI flag:
+
+- Old guard: `3ad4c644a7733d1f1feeb7bbbe83532cc0be0f727f32f59dda00c951dd6e202d`.
+- New guard: `5ca6be91be151acd2937b5e65871a40361f9bae99ae444880eae0e29b6f2c425`.
+- Override SHA: `60dd58885efdc8406049365d92c26838fdedf4db99f568638479a1f71e1b046d`.
+- Unchanged long caller: `a87b3f358f9efff213beeed3261f651620e5763c0f3b022718190860740815a4`; unchanged privacy dependency `a62d204c380a5b2d0c8f7c5bd94729b6f823e18200feed2ebe24fa73962bec3c`.
+
+The override binds the same APKs/contract/pack and seven exact frozen startup sources. No APK/controller/native/pack rebuild. The long staging/render bounds stay those of its existing contract, not the duration-only bounds described in the historical action sequence above. Routine exact app/test closure is authorized within the separately released test setup; no data clear/job deletion/model-pack removal. The override alone grants no phone access.
 
 ## Snapshot and privacy boundary
 
@@ -39,6 +46,6 @@ Original and even failed/partial DB pulls are retained only in owner-only `.priv
 
 The host lock excludes coordinated agents, **not Android/user activity**. These checks are not atomic with later process creation: Moritz or an uncoordinated/system actor could launch/write after the final check. The same-frozen-APK guard narrows and records this interval; it does not claim to eliminate it. No other phone interaction is permitted during the released slot. Eliminating that race in-process would require a separately reviewed APK change, which is outside this patch.
 
-Focused tests: `tools/tests/test_duration_phone_guard.py`. They exercise real host SQLite WAL fixtures, corrupt/recovery/unknown states, conservative terminal-history classification, snapshot changes, private failed pulls, identity/PID failures, guarded action/cleanup order, one lock and real host-child FD non-inheritance. Controller tests mock all device calls and use temporary lock paths. Existing Python scope tests remain applicable; no JVM rebuild, UI matrix or physical probe is needed for this host review.
+Focused tests: `tools/tests/test_duration_phone_guard.py`. They exercise real host SQLite WAL fixtures, corrupt/recovery/unknown states, accepted terminal history with mixed-active and unknown-status negatives, snapshot changes, private failed pulls, identity/PID failures, guarded action/cleanup order, one lock and real host-child FD non-inheritance. Controller tests mock all device calls and use temporary lock paths. Existing Python scope tests remain applicable; no JVM rebuild, UI matrix or physical probe is needed for this host review.
 
 The required host closure digest is emitted by the plan-only command and binds the controller, guard, existing imported helpers and pinned schema. Pi must explicitly approve this digest as well as the unchanged candidate hash and release a new physical slot before execution.
