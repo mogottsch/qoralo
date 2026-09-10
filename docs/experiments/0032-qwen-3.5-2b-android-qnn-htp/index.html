@@ -72,9 +72,9 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="status-header" data-status-header="true">
 <div class="kicker"><span>Experiment 0032</span><span class="status">Active</span></div>
 <h1>Experiment 0032 — Qwen3.5-2B Android QNN/HTP</h1>
-<p class="summary">An input-only sweep on the same frozen PTE exposes in-range, half-step and upper-range discrepancies. The first fixture&#x27;s single-outlier pattern does not generalize; no universal output-only path, SDK cause or model precision fix is established.</p>
+<p class="summary">An offline audit maps all 48 persistent-state interfaces: 29 decoded-range overhangs, but 27 code-grid would-clip states. Saved-value counts are next-input scalar predictions, not observed SDK clipping, logit causality or an implemented fix.</p>
 <div class="header-links"><a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-09-10</span><span>evidence commit: a0786eac12f6ec2ecfa5f54377c43b950c9a85ef</span><span>page source: docs/experiments/0032-qwen-3.5-2b-android-qnn-htp/page.md</span><span>page source sha256: 958c459ef14e904779e25037616c88b8accadb7997d1eafaa76fbf7284ef6c2a</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-09-10</span><span>evidence commit: f8733551036be207984f2217477ae3429dbfdd51</span><span>page source: docs/experiments/0032-qwen-3.5-2b-android-qnn-htp/page.md</span><span>page source sha256: 0abc8ff175a2a07592a3f2742e065995936e84e2889c60a64519071b6f2e08a6</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
@@ -449,10 +449,76 @@ experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/full-short-2026091
 <p><strong>Whole-array and preservation checks.</strong> All <strong>24,498 untouched output positions</strong>, including the old anchor, are bit-identical to first-case QNN output; only 78 new sweep cells are excluded. Excluding all 79 labelled cells leaves <strong>24,497 values</strong> within one ULP of full-chain. Across the complete array, <strong>65 values exceed one ULP against full-chain</strong>, versus <strong>6,184 against each output-only/aligned prediction</strong>; all 6,144 slot-0 values still distinguish those predictions. These counts are descriptive, not a chosen fidelity tolerance or FP32-accuracy ranking. The first fixture&#x27;s raw records and its one-outlier result are preserved rather than rewritten.</p>
 <p><strong>Artifact and inference limits.</strong> Raw IO before/after, first-case comparison bytes, complete oracles/scalar stages, requests, logs and analysis are in Git. The frozen PTE/context and earlier CPU exports remain LOCAL-ONLY with the mandatory migration requirements above. Zero ExecuTorch tensor fallback is inherited from accepted receipts bound to this same PTE, not a new compile or CPU-free host-simulation claim. Additional runtime-library pins are prospective: they do not retroactively establish every historical binary&#x27;s identity or enumerate all dynamic dependencies.</p>
 <p>No native intermediates were captured. The earlier pre-Compile encoding observations remain valid at their boundary, while complete encoding-kind/bitwidth and the finalized/internal QNN graph remain unknown. Standard-library saved-data analysis ran after cleanup; no backend call was used for that analysis. Runtime/controller groups were reaped, owned scratch was empty, and the release is consumed. No retry, follow-on, full-model or phone run is authorized. State input/output range alignment is only an untested future hypothesis, not a precision fix or explanation of model/logit drift.</p>
+<h3 id="all-48-persistent-state-interfaces-offline-audit">All 48 persistent-state interfaces — offline audit<a class="anchor" href="#all-48-persistent-state-interfaces-offline-audit" aria-label="Link to All 48 persistent-state interfaces — offline audit">#</a></h3>
+<p>After the convolution-specific controls, <code>f873355</code> checks whether output-to-next-input range incompatibility also appears in other persistent states. The <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/persistent-state-range-audit-20260910/result.json">offline audit</a> uses the already retained HistogramObserver graph JSON and five saved p0/p1 output bundles. These are the Histogram diagnostic route&#x27;s QDQ domains, <strong>not the physical MinMax baseline&#x27;s encodings</strong>. No model archive, weights or full cache was loaded; no model/native forward, compile or phone operation occurred. Five saved-output tensor deserializations are data inspection, not model loads.</p>
+<p>All 48 state inputs at logical indices 3–50 map to outputs 1–48 with resolved input domains and paired output Q/DQ boundaries. The 18 extra <code>expand_as.other</code> references provide <strong>shape only</strong>, not additional numerical state consumers. Logical FLOAT32 metadata and INT32 carriers for codes 0–65535 remain distinct from native QNN dtype/encoding metadata.</p>
+<div class="table-wrap"><table><thead><tr>
+<th>State kind</th>
+<th>Count</th>
+<th>Actual returned-state transport</th>
+</tr></thead><tbody>
+<tr>
+<td>Recurrent</td>
+<td>18</td>
+<td>Clone-replace <code>[1,16,128,128]</code></td>
+</tr>
+<tr>
+<td>Convolution history</td>
+<td>18</td>
+<td>Clone-replace <code>[1,6144,1,4]</code></td>
+</tr>
+<tr>
+<td>Key update</td>
+<td>6</td>
+<td>Insert <code>[1,2,256,1]</code> into <code>[1,2,256,4095]</code> at the source position, axis 3</td>
+</tr>
+<tr>
+<td>Value update</td>
+<td>6</td>
+<td>Insert <code>[1,2,1,256]</code> into <code>[1,2,4095,256]</code> at the source position, axis 2</td>
+</tr>
+</tbody></table></div>
+<p>Thus there are <strong>36 clone-replacements and 12 new-token K/V insertions</strong>, with zero-based axes shown above—not full-cache replacement or rolling-cache shifts. Only newly returned values were inspected; older and zero-filled cache slots were neither loaded nor counted. p0 returns map toward p1 inputs; p1 returns are evaluated for a <strong>hypothetical next call</strong>, not replayed through p1.</p>
+<p><strong>Range geometry is not code clipping.</strong> The <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/persistent-state-range-audit-20260910/STATE_RANGES.md">complete interface table</a> has 15 identical input/output domains. Nineteen output decoded intervals are contained in their next-input intervals, including those 15; the other <strong>29 have an endpoint overhang</strong>. Exhaustive enumeration of all <strong>65,536 output codes per interface</strong> predicts next-input code clipping for only <strong>27 states</strong>: eight recurrent, seven convolution, six K and six V. State 5 (recurrent layer 5) and state 45 (convolution layer 21) overhang a decoded endpoint but have <strong>no would-clip output-grid codes</strong>. These grids are theoretical compatibility checks, not observed distributions or clipping probabilities.</p>
+<p><strong>Saved values, then offline next-input quantization.</strong> All returned state values in the five bundles are finite. After the transport mapping, FP32 scalar-compatible arithmetic predicts:</p>
+<div class="table-wrap"><table><thead><tr>
+<th>Saved return set</th>
+<th>Would-clip values</th>
+<th>Affected interfaces</th>
+</tr></thead><tbody>
+<tr>
+<td>QDQ p0</td>
+<td>11</td>
+<td>8: three K, two V, three convolution</td>
+</tr>
+<tr>
+<td>QNN p0</td>
+<td>11</td>
+<td>Same eight interfaces</td>
+</tr>
+<tr>
+<td>Controlled QDQ p1, QDQ-p0-origin inputs</td>
+<td>1</td>
+<td>Convolution state 26</td>
+</tr>
+<tr>
+<td>Controlled QNN p1, same QDQ-origin pack</td>
+<td>3</td>
+<td>Convolution states 24, 26, 34</td>
+</tr>
+<tr>
+<td>Own-state QNN p1, QNN-p0-origin inputs</td>
+<td>3</td>
+<td>Convolution states 24, 26, 34</td>
+</tr>
+</tbody></table></div>
+<p>The <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/persistent-state-range-audit-20260910/OBSERVED_VALUES.md">per-state saved-value report</a> retains every predicted clipped example and source/destination coordinates. <strong>No sampled recurrent return value predicts code clipping</strong>, despite theoretical exposure in eight recurrent grids; this neither rules out rounding differences nor proves later-sequence safety. These are <strong>offline next-input predictions, not observed clipping inside QNN or attribution of logit drift</strong>. The controlled and own-state origins remain separate, and no missing historical full-replay state-byte identity is inferred. QNN&#x27;s 3/2/3 values outside its serialized output decoded intervals at p0/controlled-p1/own-p1 are recorded separately; they are not the next-input clipping counts.</p>
+<p>The audit additionally retains the complete QDQ p0 output bundle losslessly in Git: <strong>4,244,370 compressed bytes</strong>, recovering <strong>21,879,364 bytes</strong>, SHA-256 <code>a471368c…c8bf2</code>. The four other bundles were already durable. Original local copies, native artifacts and the full-174 LOCAL-ONLY archive remain protected; no full-cache tensor was substituted or reconstructed. This separate saved p0 bundle does not establish the absent full-replay state bytes.</p>
+<p>The <a href="../../../experiments/0032-qwen-3.5-2b-android-qnn-htp/results/persistent-state-range-audit-20260910/ALIGNMENT_HYPOTHESES.md">alignment proposals</a> remain hypotheses: shared interface domains or input-coverage expansion can also change rounding/resolution or lose coverage elsewhere. <strong>No alignment was implemented, calibrated, compiled or natively tested.</strong> Finalized native encodings remain unknown, earlier sweep and paired observations are unchanged, and this audit supplies no SDK cause, model fix, physical result or registry evidence.</p>
 </section>
 <section class="primary-section" id="results" data-primary-section="results">
 <h2>Results<a class="anchor" href="#results" aria-label="Link to Results">#</a></h2>
-<p><strong>The experiment is active after one runtime-only input sweep on the frozen tiny PTE.</strong> Outputs are finite but numerically mismatched. In-range/half-step discrepancies and sampled upper behavior narrow the earlier single-outlier interpretation to its first fixture; neither a universal output-only path nor a hidden SDK cause is established. Earlier paired-call differences and position-2/3 argmax mismatches remain unchanged. No QNN operator defect or cause of hidden/logit drift, missing historical state-byte identity, FP32 accuracy, full-174 QNN fidelity, new physical result, or campaign readiness is established.</p>
+<p><strong>The experiment is active after an offline audit of all 48 persistent-state interfaces.</strong> Decoded-range overlap, theoretical code-grid compatibility and saved-value next-input predictions are distinct findings—not observed SDK clipping or a precision fix. The preceding frozen-PTE sweep and paired-call discrepancies remain unchanged; no universal output-only path or cause of model/logit drift is established. No QNN operator defect or cause of hidden/logit drift, missing historical state-byte identity, FP32 accuracy, full-174 QNN fidelity, new physical result, or campaign readiness is established.</p>
 <div class="table-wrap"><table><thead><tr>
 <th>Evidence boundary</th>
 <th>Current result</th>
@@ -818,8 +884,36 @@ experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/full-short-2026091
 <td>Same local-only PTE/context and inherited fallback receipts; prospective runtime pins do not prove complete historical binary identity</td>
 </tr>
 <tr>
+<td>Offline state audit</td>
+<td><code>f873355</code>: all 48 Histogram interfaces; 18 recurrent + 18 convolution + 6 K + 6 V; 18 shape-only uses excluded from numerical consumers</td>
+</tr>
+<tr>
+<td>Transport boundary</td>
+<td>36 clone-replacements; 12 new-token K/V insertions on axes 3/2; no full-cache loads or replacement</td>
+</tr>
+<tr>
+<td>Theoretical compatibility</td>
+<td>15 identical domains; 19 contained intervals; 29 decoded overhangs but 27 would-clip code grids; states 5/45 overhang without grid clipping</td>
+</tr>
+<tr>
+<td>Saved p0 predictions</td>
+<td>QDQ and QNN each 11 would-clip values across 8 interfaces: 3 K / 2 V / 3 convolution; not observed SDK clipping</td>
+</tr>
+<tr>
+<td>Saved p1 predictions</td>
+<td>Controlled QDQ: 1 convolution value; controlled and own-state QNN: 3 convolution values each; hypothetical next-call quantization only</td>
+</tr>
+<tr>
+<td>Recurrent sample boundary</td>
+<td>No observed p0/p1 return predicts clipping; not proof against rounding differences or later clipping</td>
+</tr>
+<tr>
+<td>Additional retained bundle</td>
+<td>Full QDQ p0 outputs: 21,879,364 raw bytes / <code>a471368c…c8bf2</code>, lossless Git copy; protected originals and full-174 archive unchanged</td>
+</tr>
+<tr>
 <td>Remaining investigation</td>
-<td>Encoding alignment is an untested hypothesis; finalized path unknown, no model precision fix or further native release</td>
+<td>Alignment proposals unimplemented; finalized native encodings unknown; no calibration/build, model fix, logit-cause or physical result</td>
 </tr>
 <tr>
 <td>Remaining candidate evidence</td>
