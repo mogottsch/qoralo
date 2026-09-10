@@ -5,7 +5,7 @@
     "prior_bridge_position_native_int32": [
       171
     ],
-    "prior_qnn_net_run": "The accepted qnn-net-run input-file route separately used INT32 raw position files through qnn-net-run's file population/conversion boundary, while execution metadata reported QNN INT64 tensors."
+    "prior_qnn_net_run": "The historical qnn-net-run input-file route used INT32 raw position files that were later proven to enter default FLOAT ingestion and become all-zero INT64 positions. It remains wrong-position execution evidence, not an accepted position-semantic route."
   },
   "binaries": {
     "android_elf_preflight": true,
@@ -77,7 +77,7 @@
     "prefill_alias": "prefill",
     "prefill_uses_monolithic_dispatch": false
   },
-  "fidelity_boundary": "Severe retained physical AR171 state drift and token-5 reference divergence remain; integrated operability cannot establish numerical or output fidelity.",
+  "fidelity_boundary": "Large state/logit deltas and token-5 divergence came from the historical qnn-net-run route whose positions became all zero. They are wrong-input evidence, not a precision conclusion for this corrected direct-QNN INT64 route; corrected operability still cannot imply numerical fidelity.",
   "host_runtime_boundary": "Host and Android binaries compile. No integrated inference ran: x86 AR171 execution already exceeds 1800 seconds, so repeating it is intentionally excluded.",
   "input_semantics": {
     "canonical_short_tokens": 171,

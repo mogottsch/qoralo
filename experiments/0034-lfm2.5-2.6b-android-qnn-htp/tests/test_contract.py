@@ -698,6 +698,9 @@ class ContractTest(unittest.TestCase):
         self.assertTrue(result["dispatch_fix"]["no_qnn_regression"])
         self.assertTrue(result["dispatch_fix"]["ar1_uses_monolithic_dispatch"])
         self.assertIn("No post-fix physical AR1 graph execution", result["claim_boundary"])
+        self.assertIn("all-zero INT64 positions", result["api_type_boundary"]["prior_qnn_net_run"])
+        self.assertIn("wrong-input evidence", result["fidelity_boundary"])
+        self.assertIn("not a precision conclusion", result["fidelity_boundary"])
 
     def test_final_pipeline_host_equivalence_is_bounded(self) -> None:
         result = json.loads((EXP / "results/htp-pipeline-host-equivalence/result.json").read_text())

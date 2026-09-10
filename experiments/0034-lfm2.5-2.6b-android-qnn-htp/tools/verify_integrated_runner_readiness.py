@@ -112,7 +112,7 @@ def main() -> None:
     stage = json.loads((args.stage / "stage.json").read_text())
     bridge = json.loads(args.prior_bridge_validation.read_text())
     if bridge["position_native_int32"] != [171] or not bridge["all_state_checks_pass"]:
-        raise SystemExit("accepted qnn-net-run bridge evidence is not intact")
+        raise SystemExit("historical qnn-net-run bridge evidence is not intact")
     result = {
         "schema_version": 1,
         "classification": "host_static_and_build_validation_of_integrated_ar171_ar1_runner",
@@ -163,7 +163,7 @@ def main() -> None:
         },
         "api_type_boundary": {
             "integrated_direct_qnn": "Reads QNN graph tensor descriptors and memcpy-copies INT64 position buffers: 1368 bytes for AR171 and 8 bytes for AR1.",
-            "prior_qnn_net_run": "The accepted qnn-net-run input-file route separately used INT32 raw position files through qnn-net-run's file population/conversion boundary, while execution metadata reported QNN INT64 tensors.",
+            "prior_qnn_net_run": "The historical qnn-net-run input-file route used INT32 raw position files that were later proven to enter default FLOAT ingestion and become all-zero INT64 positions. It remains wrong-position execution evidence, not an accepted position-semantic route.",
             "non_generalization": "The qnn-net-run raw-file convention is not reused or generalized to the direct-QNN runner ABI.",
             "prior_bridge_position_native_int32": bridge["position_native_int32"],
         },
@@ -196,7 +196,7 @@ def main() -> None:
             "combined_context_viability_claim": False,
         },
         "host_runtime_boundary": "Host and Android binaries compile. No integrated inference ran: x86 AR171 execution already exceeds 1800 seconds, so repeating it is intentionally excluded.",
-        "fidelity_boundary": "Severe retained physical AR171 state drift and token-5 reference divergence remain; integrated operability cannot establish numerical or output fidelity.",
+        "fidelity_boundary": "Large state/logit deltas and token-5 divergence came from the historical qnn-net-run route whose positions became all zero. They are wrong-input evidence, not a precision conclusion for this corrected direct-QNN INT64 route; corrected operability still cannot imply numerical fidelity.",
         "proposed_phone_gate": {
             "script": str(args.phone_script),
             "script_sha256": sha256(args.phone_script),

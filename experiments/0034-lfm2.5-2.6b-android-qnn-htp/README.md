@@ -247,7 +247,7 @@ Detailed phase profiles report:
 
 Peak sampled process VmHWM was 1,577,640 KiB for prefill and 1,575,268 KiB for AR1. Both are process-only measurements. Raw phase outputs, QNN profiles, separate lifecycle timings, bridge-input hashes, memory, thermal/power, provider, and cleanup evidence are retained in [`results/qnn-prefill-ar171-ar1-phone-phase-switch-diagnostic/`](results/qnn-prefill-ar171-ar1-phone-phase-switch-diagnostic/). The scoped process/root were absent and the lock released.
 
-This is not a loaded dual-context route: contexts are mutually exclusive across one explicit phase transition. It proves one continuation token and greedy agreement only; severe localized state drift remains. No numerical-equivalence, text-generation, canonical-TTFT, statistical-performance, campaign, or registry claim is made.
+This is not a loaded dual-context route: contexts are mutually exclusive across one explicit phase transition. It proves one continuation token and greedy agreement only under the historical all-zero-position qnn-net-run inputs. The localized state drift belongs to that wrong-input route and is not a precision conclusion for corrected INT64 execution. No numerical-equivalence, text-generation, canonical-TTFT, statistical-performance, campaign, or registry claim is made.
 
 ## In-process AR1 max16 continuation readiness
 
@@ -297,7 +297,7 @@ Timing fields separate backend/device setup, each context load/free, CPU prompt 
 
 Both host and API-31 Android binaries compile. The Android runner SHA-256 is `94e76c339107cc3bfae2fb9b296cbcdb76f1970f7aeb8a734bb564029fd6fdb1`; the host binary SHA-256 is `ed122a00e0982317805137c2ea08cdbe5aeb297c6cf1527c3c68872129cde261`. The ignored integrated stage has 12 payload files totaling 3,400,505,468 bytes; stage metadata SHA-256 is `dbb9d687b34d4476086f59e746907dfb8bef32c5fcf36a0b83331d9b0b02a60f` and manifest SHA-256 is `8fa2c53c79c1ad994ea269266da14fb70c9cf03913d36753220d1379b6e79616`. All hashes and ELF preflight pass.
 
-The direct-QNN ABI is bound separately from earlier qnn-net-run file ingestion. Both context descriptors expose `position_ids` as `QNN_DATATYPE_INT_64`: `[1,171]` / 1,368 bytes for AR171 and `[1,1]` / 8 bytes for AR1. The integrated runner copies those exact INT64 byte counts. Earlier accepted qnn-net-run stages used INT32 raw position files through qnn-net-run's own file-population/conversion boundary; that observation is not generalized to direct QNN.
+The direct-QNN ABI is bound separately from earlier qnn-net-run file ingestion. Both context descriptors expose `position_ids` as `QNN_DATATYPE_INT_64`: `[1,171]` / 1,368 bytes for AR171 and `[1,1]` / 8 bytes for AR1. The integrated runner copies those exact INT64 byte counts. Historical qnn-net-run stages used INT32 raw position files that were later proven to become all-zero INT64 positions under default FLOAT ingestion; they are not accepted position-semantic routes and are not generalized to direct QNN.
 
 A combined/shared-constant two-graph context is not claimed. The ordinary contexts each report `sharedWeightsSize=0` and together expose roughly 3.19 GB of constants. ORT's multi-graph sharing route uses the already rejected shared-weight resource format, while a single static graph cannot select AR171 versus AR1 shapes without duplicated execution or unsupported control flow. A genuinely shared Qualcomm multi-graph context would require new supported tooling or maintainer guidance and fresh evidence.
 
