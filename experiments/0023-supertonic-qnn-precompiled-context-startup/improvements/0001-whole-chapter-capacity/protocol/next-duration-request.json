@@ -1,0 +1,42 @@
+{
+  "status": "NOT_APPROVED_NOT_EXECUTED",
+  "command": [
+    "python",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/tools/run_guarded.py",
+    "--directory",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/derivation-duration-t2048-attempt-01",
+    "--seconds",
+    "120",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/.local/proof-venv/bin/python",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/tools/onnx_capacity.py",
+    "derive",
+    "--component",
+    "duration",
+    "--source",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0007-mobile-podcast-preview-bakeoff/artifacts/supertonic-3/snapshot/onnx/duration_predictor.onnx",
+    "--output-dir",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/derivation-duration-t2048-attempt-01/data",
+    "--release",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/approvals/duration-t2048.json"
+  ],
+  "approval_file_expected": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/approvals/duration-t2048.json",
+  "release_template": "next-duration-release.NOT_APPROVED.json",
+  "source_derivative_count_limit": 1,
+  "component": "duration",
+  "target_t": 2048,
+  "model_forwards_allowed": 0,
+  "runtime_loads_allowed": 0,
+  "qnn_compile_calls_allowed": 0,
+  "context_generation_allowed": 0,
+  "phone_access_allowed": false,
+  "timeout_seconds": 120,
+  "termination_grace_seconds": 20,
+  "address_space_limit_bytes": 8589934592,
+  "math_threads": 4,
+  "controller_source": {
+    "path": "experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/tools/run_guarded.py",
+    "bytes": 2294,
+    "sha256": "82d5ec0ae72f5b5bbc2ff011bc9f93c5de3a4f1c7f37b1597f07b7f0b5a1b9dc"
+  },
+  "not_a_complete_target_proof": "Vector>1000 requires a separately reviewed positional extension, which this request cannot perform."
+}

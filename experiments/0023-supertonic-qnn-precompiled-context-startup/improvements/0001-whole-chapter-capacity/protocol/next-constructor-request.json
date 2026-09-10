@@ -1,0 +1,169 @@
+{
+  "status": "NOT_APPROVED_NO_CONSTRUCTOR_EXECUTED",
+  "component": "duration",
+  "source": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/materialization-20260910/attempt-01/duration/data/duration.onnx",
+    "bytes": 3787044,
+    "sha256": "394ea3e7be9b857da9fe20764e0772960e6a429938d06a5e827a3a139c8cbad9"
+  },
+  "expected_inputs": [
+    {
+      "name": "text_ids",
+      "type": "tensor(int64)",
+      "shape": [
+        1,
+        2048
+      ]
+    },
+    {
+      "name": "style_dp",
+      "type": "tensor(float)",
+      "shape": [
+        1,
+        8,
+        16
+      ]
+    },
+    {
+      "name": "text_mask",
+      "type": "tensor(float)",
+      "shape": [
+        1,
+        1,
+        2048
+      ]
+    }
+  ],
+  "expected_outputs": [
+    {
+      "name": "duration",
+      "type": "tensor(float)",
+      "shape": [
+        1
+      ]
+    }
+  ],
+  "ort_version": "1.27.1",
+  "qairt_version": "2.49.0.260730",
+  "provider_options": {
+    "offload_graph_io_quantization": "0",
+    "htp_performance_mode": "burst",
+    "soc_model": "43"
+  },
+  "backend_path": "/home/moritz/opt/qairt/2.49.0.260730/lib/x86_64-linux-clang/libQnnHtp.so",
+  "sdk_root": "/home/moritz/opt/qairt/2.49.0.260730",
+  "ort_package_file": "/home/moritz/dev/vibevoice-android-spike/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/Release/onnxruntime/__init__.py",
+  "runtime_pins": [
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/Release/onnxruntime/__init__.py",
+      "bytes": 17698,
+      "sha256": "f3b17e238ee6b36120002c191c1e4be4ad393a27816d78c1e7ef75938773975f"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/Release/onnxruntime/capi/onnxruntime_pybind11_state.so",
+      "bytes": 32965816,
+      "sha256": "e988d884e537d1471563290bf0ebd411012c482e3260875a7226ce55355dc637"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/Release/onnxruntime/capi/libonnxruntime.so.1.27.1",
+      "bytes": 30384960,
+      "sha256": "8027077db2f1880260f639c27455a4e5ec5683076c1f2e8ef848c1fb1983be88"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/Release/onnxruntime/capi/libonnxruntime_providers_qnn.so",
+      "bytes": 2832440,
+      "sha256": "961e2489cb4c87b29ceefb17760cade68254702a988faf238066b41022b098b4"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/Release/onnxruntime/capi/libonnxruntime_providers_shared.so",
+      "bytes": 15408,
+      "sha256": "98cc35d20a8701b425d3b51ebbbd9186744c9abcec5d2270879f6c165a735228"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/Release/onnxruntime/capi/libQnnHtp.so",
+      "bytes": 97556152,
+      "sha256": "e557ca522713ea7ee7efd252083b927009cd54c158899c086b23d92b63bf1f33"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/Release/onnxruntime/capi/libHtpPrepare.so",
+      "bytes": 97556152,
+      "sha256": "65850413121185944b5d6d800215c15efabfbd84d976c137859d3700cfc8e534"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/Release/onnxruntime/capi/libQnnHtpQemu.so",
+      "bytes": 7437144,
+      "sha256": "2482e2b5cf95cb05284f930332c989cc595d127be6a7cd3ccee59644e8a8a4a4"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/Release/onnxruntime/capi/libQnnSystem.so",
+      "bytes": 5300584,
+      "sha256": "e78e3f880670400519a05f3268544b40226012c58cbc9a20c8ad980e54087be8"
+    },
+    {
+      "path": "/home/moritz/opt/qairt/2.49.0.260730/lib/x86_64-linux-clang/libQnnHtp.so",
+      "bytes": 97556152,
+      "sha256": "e557ca522713ea7ee7efd252083b927009cd54c158899c086b23d92b63bf1f33"
+    },
+    {
+      "path": "/home/moritz/opt/qairt/2.49.0.260730/lib/x86_64-linux-clang/libHtpPrepare.so",
+      "bytes": 97556152,
+      "sha256": "65850413121185944b5d6d800215c15efabfbd84d976c137859d3700cfc8e534"
+    },
+    {
+      "path": "/home/moritz/opt/qairt/2.49.0.260730/lib/x86_64-linux-clang/libQnnHtpQemu.so",
+      "bytes": 7437144,
+      "sha256": "2482e2b5cf95cb05284f930332c989cc595d127be6a7cd3ccee59644e8a8a4a4"
+    },
+    {
+      "path": "/home/moritz/opt/qairt/2.49.0.260730/lib/x86_64-linux-clang/libQnnSystem.so",
+      "bytes": 5300584,
+      "sha256": "e78e3f880670400519a05f3268544b40226012c58cbc9a20c8ad980e54087be8"
+    }
+  ],
+  "pin_scope": "Prospective selected runtime/import/search-path files, not a complete dynamic dependency inventory or retroactive binary proof.",
+  "session_run_calls_allowed": 0,
+  "constructor_calls_allowed": 1,
+  "mock": false,
+  "phase_dir": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-duration-t2048-attempt-01",
+  "output_dir": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-duration-t2048-attempt-01/data",
+  "approval_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/approvals/duration-context.json",
+  "container_name": "supertonic-chapter-duration-context-attempt-01",
+  "docker_image_id": "sha256:b170f55a61548cc3a78eb667837934e0f2f8659bf7cd0db7a71ec40e90d2f321",
+  "docker_image_observation": "Existing image ID from read-only docker image inspect; no container started during readiness.",
+  "worker_sha256": "51dd7440a9244ede1361f5ea058e87acabae397791e19affdc54f893845d6fcc",
+  "launcher_sha256": "4f1c39a451fd41e4174d059d634ddf4ff35e0fb482be37150ae8ea308688c410",
+  "guard_sha256": "33373e74e4e52b9dd209bb91fc58d87f4b07186112307c0e869d02dd4136705d",
+  "environment": {
+    "HOME": "/tmp",
+    "TMPDIR": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-duration-t2048-attempt-01/scratch",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONPATH": "/home/moritz/dev/vibevoice-android-spike/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/Release",
+    "LD_LIBRARY_PATH": "/home/moritz/dev/vibevoice-android-spike/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/Release:/home/moritz/dev/vibevoice-android-spike/experiments/0010-supertonic-qnn-htp-feasibility/.local/ort-v1.27.1-qnn-2.49.0-host-patched-a08e17/Release/onnxruntime/capi:/home/moritz/opt/qairt/2.49.0.260730/lib/x86_64-linux-clang",
+    "OMP_NUM_THREADS": "4",
+    "MKL_NUM_THREADS": "4",
+    "OPENBLAS_NUM_THREADS": "4",
+    "NUMEXPR_NUM_THREADS": "4"
+  },
+  "bounds": {
+    "worker_seconds": 520,
+    "TERM_grace_seconds": 20,
+    "total_expected_bound_seconds": 600,
+    "Docker_memory_bytes": 8589934592,
+    "Docker_swap_extra_bytes": 0,
+    "cpus": 4,
+    "network": false,
+    "retries": 0
+  },
+  "profiling": "disabled; constructor/actualI/O/external-artifact gates only, not neural execution evidence",
+  "borrowed_option_source": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/tools/qnn_context_component.py",
+    "bytes": 9054,
+    "sha256": "32f62a5db443123d8ef69a3d63e2970bcbd2e73fdd2d4e01a05a60b9b9f29b94"
+  },
+  "not_inherited": [
+    "historical239/238 SPECS",
+    "forced Session.run",
+    "inference profiling/pass claims"
+  ],
+  "phone_or_pack_replacement_allowed": false
+}

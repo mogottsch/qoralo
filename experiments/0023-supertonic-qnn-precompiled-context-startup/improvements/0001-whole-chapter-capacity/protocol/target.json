@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "target_id": "whole-chapter-t2048-l2048-v1",
+  "text_length": 2048,
+  "latent_length": 2048,
+  "latent_channels": 144,
+  "embedding_channels": 256,
+  "samples_per_latent": 3072,
+  "sample_rate_hz": 44100,
+  "diffusion_steps": 5,
+  "voice": "M1/SID5",
+  "speed": 1.0,
+  "frontend": "app SupertonicTextNormalizer, then native English tags and Unicode indexing",
+  "rng": "app StableSeed(chapter_id): FNV-like hash XOR20260813; xorshift64* and Box-Muller, masked active latent positions",
+  "comparison_boundary": "Identical prepared input/mask/initial-noise arrays; equal text or textual seed alone is insufficient",
+  "profile_callback_counts_are_fatal_gate": false,
+  "original_vector_position_table": {"name": "vector_estimator.tts.ttl.vector_field.main_blocks.3.attn.increments", "dtype": "INT64", "shape": [1, 1000, 1]},
+  "unmodified_graph_target_blocked_by_position_table": true,
+  "position_table_modification_implemented": true,
+  "position_extension": {"old_extent": 1000, "new_extent": 2048, "method": "exact_INT64_arange_preserve_prefix"},
+  "materialization_release": "One fresh derivative per component,180seconds/component,600seconds total; no retries/runtime/SDK conversion/context/phone",
+  "synthesis_unit": "one_complete_chapter_per_logical_render_and_WAV",
+  "neural_calls_per_render": {"duration": 1, "text": 1, "vector": 5, "vocoder": 1},
+  "runtime": {"onnxruntime": "1.27.1", "qairt": "2.49.0.260730", "soc_model": "43", "htp_arch": "v73", "cpu_fallback_allowed": false},
+  "source_revision": "724fb5abbf5502583fb520898d45929e62f02c0b",
+  "sources": {
+    "duration": {"filename": "duration_predictor.onnx", "bytes": 3700147, "sha256": "c3eb91414d5ff8a7a239b7fe9e34e7e2bf8a8140d8375ffb14718b1c639325db"},
+    "text": {"filename": "text_encoder.onnx", "bytes": 36416150, "sha256": "c7befd5ea8c3119769e8a6c1486c4edc6a3bc8365c67621c881bbb774b9902ff"},
+    "vector": {"filename": "vector_estimator.onnx", "bytes": 256534781, "sha256": "883ac868ea0275ef0e991524dc64f16b3c0376efd7c320af6b53f5b780d7c61c"},
+    "vocoder": {"filename": "vocoder.onnx", "bytes": 101424195, "sha256": "085de76dd8e8d5836d6ca66826601f615939218f90e519f70ee8a36ed2a4c4ba"}
+  },
+  "claim_limits": [
+    "Capacity arithmetic and source feasibility, not proven larger-shape ONNX/QNN support or model quality.",
+    "Padding is not neutral: retained T235-to-T239 evidence changes duration and embeddings.",
+    "No splitting, stitching, automatic fallback, speed workaround or descriptor-only shape patch.",
+    "Separate explicit release permits four source derivative materializations only; no runtime/model forward, SDK conversion, QNN compilation or phone execution."
+  ]
+}

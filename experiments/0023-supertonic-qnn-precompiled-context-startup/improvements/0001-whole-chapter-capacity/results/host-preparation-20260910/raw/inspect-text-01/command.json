@@ -1,0 +1,29 @@
+{
+  "argv": [
+    "nice",
+    "-n",
+    "15",
+    "ionice",
+    "-c",
+    "2",
+    "-n",
+    "7",
+    "prlimit",
+    "--as=8589934592",
+    "--",
+    "experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/.local/proof-venv/bin/python",
+    "experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/tools/onnx_capacity.py",
+    "inspect",
+    "--component",
+    "text",
+    "--source",
+    "experiments/0007-mobile-podcast-preview-bakeoff/artifacts/supertonic-3/snapshot/onnx/text_encoder.onnx",
+    "--output-dir",
+    "experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/host-preparation-20260910/inspect-text-01/data"
+  ],
+  "guard_source": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/qwen_host_guard.py",
+  "guard_source_sha256": "33373e74e4e52b9dd209bb91fc58d87f4b07186112307c0e869d02dd4136705d",
+  "math_threads": 4,
+  "tmpdir": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/host-preparation-20260910/inspect-text-01/scratch",
+  "address_space_limit_bytes": 8589934592
+}

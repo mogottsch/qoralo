@@ -1,0 +1,29 @@
+{
+  "argv": [
+    "nice",
+    "-n",
+    "15",
+    "ionice",
+    "-c",
+    "2",
+    "-n",
+    "7",
+    "prlimit",
+    "--as=8589934592",
+    "--",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/.local/proof-venv/bin/python",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/tools/onnx_capacity.py",
+    "derive",
+    "--component",
+    "vocoder",
+    "--source",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0007-mobile-podcast-preview-bakeoff/artifacts/supertonic-3/snapshot/onnx/vocoder.onnx",
+    "--output-dir",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/materialization-20260910/attempt-01/vocoder/data",
+    "--release",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/materialization-20260910/attempt-01/vocoder/release.json"
+  ],
+  "TMPDIR": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/materialization-20260910/attempt-01/vocoder/scratch",
+  "math_threads": 4,
+  "address_space_limit_bytes": 8589934592
+}
