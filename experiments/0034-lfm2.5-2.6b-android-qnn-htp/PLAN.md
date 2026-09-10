@@ -119,10 +119,13 @@
 107. Attempted one corrected integrated phone gate under `phone.lock`; exact identity/local hashes passed, then transport disappeared before remote-root creation or staging.
 108. Preserved the transport-only failure and corrected raw cleanup `present` to unknown/unverified.
 109. Hardened future cleanup/PID handling with fake-ADB regressions: absence-query transport loss remains unknown, confirmed presence stays distinct, and PID-query failure sets remote retention before exit.
+110. Ran one fresh corrected integrated slot: direct-QNN AR171 positions `0..170` executed physically, all 60 outputs finite-scanned, endpoint 597 fsync-preserved, state bridged, and detailed prefill profile captured.
+111. AR1 loaded but executed zero graphs because `LoadOnly` did not select monolithic dispatch; preserved the exact error/partial output and verified cleanup/lock release.
 
 ## In progress: performance engineering
 
-1. Commit the transport-preflight failure without model/provider/performance claims; do not retry.
+1. Commit the corrected-prefill/AR1-dispatch failure without max16 or end-to-end claims; do not retry.
+2. Make only the narrow host-tested monolithic dispatch-selection fix, rebuild/pin a new runner/stage, and request independent review.
 2. If prioritized, run one bounded reset-isolated physical integrated short/max16 diagnostic with detailed profiles and all-output finite scans.
 3. Evaluate lower-precision/device-resident state and reduced-logit routes; keep CPU/GPU/HTP boundaries explicit.
 4. Do not campaign until the fastest sensible complete route is selected and reset-isolated.

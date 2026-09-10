@@ -759,7 +759,7 @@
     "per_token_context_streaming": false,
     "phone_access": false,
     "phone_authorized": true,
-    "physical_attempt_outcome": "transport_lost_before_staging",
+    "physical_attempt_outcome": "corrected_ar171_pass_ar1_dispatch_failure_before_execute",
     "physical_execution": false,
     "prior_qnn_net_run_int32_boundary_generalized": false,
     "process_backend_count": 1,
@@ -825,6 +825,34 @@
     "remote_root_command_dispatched": false,
     "runner_launched": false,
     "stage_push_started": false
+  },
+  "integrated_phone_attempt_2_ar1_dispatch_failure": {
+    "ar171_context_freed": true,
+    "ar171_context_loaded": true,
+    "ar171_graph_executions": 1,
+    "ar171_outputs_finite_scanned": 60,
+    "ar1_context_loaded": true,
+    "ar1_graph_executions": 0,
+    "ar1_graph_loaded": true,
+    "campaign": false,
+    "canonical_end_to_end_ttft": false,
+    "cleanup_absent": true,
+    "correct_int64_positions_0_170": true,
+    "endpoint_partial_sha256": "5e9fffea1b51a56dbb43d50fd07dafb60bb542f4e1f5e853684aef8f187f64b9",
+    "evidence": "results/qnn-integrated-phone-attempt-2-ar1-dispatch-failure/result.json",
+    "failure": "missing context: layer-00-core-norm",
+    "local_manifest_entries_verified": 13,
+    "max16_completed": false,
+    "phone_lock_released": true,
+    "prefill_accelerator_execute_us": 4916894,
+    "prefill_endpoint_token": 597,
+    "prefill_profile_extracted": true,
+    "prefill_qnn_execute_us": 5800702,
+    "raw_output_pull_succeeded": true,
+    "registry_result": false,
+    "remote_manifest_entries_verified": 13,
+    "source_proven_cause": "LoadOnly did not set monolithic dispatch mode",
+    "state_bridge_completed": true
   },
   "matched_qairt_24940_android_phone_attempt_1": {
     "build_ids_exactly_equal": true,
@@ -1070,7 +1098,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "Corrected integrated attempt lost transport before remote-root creation/staging. Cleanup is unknown/unverified, phone.lock released, and no retry is authorized without restored transport plus a fresh Pi slot.",
+  "phone_boundary": "Corrected integrated attempt cleaned absent and released phone.lock. No retry before a narrow host-tested dispatcher fix and fresh Pi slot.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -1218,7 +1246,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "blocked_phone_transport_before_integrated_staging_cleanup_unverified",
+  "status": "corrected_int64_physical_ar171_prefill_passed_ar1_dispatch_failed_before_execute",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",

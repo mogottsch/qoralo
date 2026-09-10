@@ -81,7 +81,7 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(token_hash, sha(EXP / f"protocol/token-ids/{tier}.int32le"))
 
     def test_active_export_does_not_claim_qnn_android_or_completion(self) -> None:
-        self.assertIn("blocked_phone_transport_before_integrated_staging", self.contract["status"])
+        self.assertIn("corrected_int64_physical_ar171_prefill_passed_ar1_dispatch_failed", self.contract["status"])
         route = self.result["route_assessment"]
         self.assertFalse(route["compiled_sm8550_context_available"])
         self.assertFalse(route["android_execution"])
@@ -90,7 +90,7 @@ class ContractTest(unittest.TestCase):
         self.assertIn("not_android_qnn_or_htp", milestone["classification"])
         self.assertEqual("passed", milestone["rewritten_onnx"]["onnx_checker"])
         self.assertEqual(16, milestone["bounded_output"]["max_new_tokens"])
-        self.assertIn("lost transport before remote-root creation/staging", self.contract["phone_boundary"])
+        self.assertIn("No retry before a narrow host-tested dispatcher fix", self.contract["phone_boundary"])
 
     def test_qnn_aot_is_complete_but_not_physical_execution(self) -> None:
         milestone = self.contract["qnn_aot_milestone"]
@@ -561,7 +561,7 @@ class ContractTest(unittest.TestCase):
         self.assertFalse(ready["combined_shared_context_viability_claim"])
         self.assertFalse(ready["integrated_inference_completed"])
         self.assertFalse(ready["physical_execution"])
-        self.assertEqual("transport_lost_before_staging", ready["physical_attempt_outcome"])
+        self.assertEqual("corrected_ar171_pass_ar1_dispatch_failure_before_execute", ready["physical_attempt_outcome"])
         result = json.loads((EXP / ready["evidence"]).read_text())
         self.assertTrue(result["source"]["required_fragments_present"])
         self.assertEqual(0, result["contexts"]["ar171"]["shared_weights_bytes"])
@@ -662,6 +662,27 @@ class ContractTest(unittest.TestCase):
         self.assertFalse(result["transport_failure"]["remote_mkdir_dispatched"])
         self.assertIn("Transport-preflight failure only", result["claim_boundary"])
 
+    def test_corrected_integrated_prefill_passes_before_ar1_dispatch_failure(self) -> None:
+        attempt = self.contract["integrated_phone_attempt_2_ar1_dispatch_failure"]
+        self.assertEqual((13, 13), (attempt["local_manifest_entries_verified"], attempt["remote_manifest_entries_verified"]))
+        self.assertTrue(attempt["correct_int64_positions_0_170"])
+        self.assertTrue(attempt["ar171_context_loaded"])
+        self.assertEqual((1, 60, 597), (attempt["ar171_graph_executions"], attempt["ar171_outputs_finite_scanned"], attempt["prefill_endpoint_token"]))
+        self.assertTrue(attempt["state_bridge_completed"])
+        self.assertTrue(attempt["prefill_profile_extracted"])
+        self.assertTrue(attempt["ar171_context_freed"])
+        self.assertTrue(attempt["ar1_context_loaded"])
+        self.assertEqual(0, attempt["ar1_graph_executions"])
+        self.assertEqual("missing context: layer-00-core-norm", attempt["failure"])
+        self.assertIn("monolithic dispatch", attempt["source_proven_cause"])
+        self.assertFalse(attempt["max16_completed"])
+        self.assertFalse(attempt["canonical_end_to_end_ttft"])
+        self.assertTrue(attempt["cleanup_absent"])
+        result = json.loads((EXP / attempt["evidence"]).read_text())
+        self.assertEqual(4, result["corrected_prefill"]["raw_partial_bytes"])
+        self.assertEqual(0, result["ar1_failure"]["graph_executions"])
+        self.assertIn("No AR1 graph execution", result["claim_boundary"])
+
     def test_final_pipeline_host_equivalence_is_bounded(self) -> None:
         result = json.loads((EXP / "results/htp-pipeline-host-equivalence/result.json").read_text())
         self.assertIn("host_only", result["classification"])
@@ -722,6 +743,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/qnn-prefill-ar171-ar1-integrated-readiness",
             EXP / "results/qnn-net-run-position-ingestion-audit",
             EXP / "results/qnn-integrated-phone-attempt-1-transport-before-staging",
+            EXP / "results/qnn-integrated-phone-attempt-2-ar1-dispatch-failure",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():
