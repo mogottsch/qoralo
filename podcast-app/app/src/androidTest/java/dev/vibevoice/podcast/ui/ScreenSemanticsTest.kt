@@ -38,7 +38,6 @@ import dev.vibevoice.podcast.data.JobKind
 import dev.vibevoice.podcast.data.JobStatus
 import dev.vibevoice.podcast.ui.theme.VibeVoiceTheme
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -146,7 +145,10 @@ class ScreenSemanticsTest {
         node.performSemanticsAction(SemanticsActions.GetTextLayoutResult) { action -> action(layouts) }
         TextLayoutDiagnostics.retain(text, node, layouts, platformDensity, wrapperDensity)
         assertTrue("No real text layout for $text", layouts.isNotEmpty())
-        assertFalse("Text layout clips $text", layouts.any { it.hasVisualOverflow })
+        val ancestors = generateSequence(node.fetchSemanticsNode()) { it.parent }.take(64).toList()
+        assertTrue("Semantic ancestor chain too deep for $text", ancestors.last().parent == null)
+        val problems = TextReadabilityAssertions.problems(text, layouts.map(TextReadabilityAssertions::snapshot), ancestors.map { it.boundsInRoot })
+        assertTrue("Unreadable $text: ${problems.joinToString()}", problems.isEmpty())
         assertTrue("Ancestor clips the text height for $text", node.fetchSemanticsNode().boundsInRoot.height + 1 >= layouts.maxOf { it.size.height })
     }
 
