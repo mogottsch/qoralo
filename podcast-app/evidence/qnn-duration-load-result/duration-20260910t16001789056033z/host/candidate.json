@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "kind": "duration-load-only",
+  "contractSha256": "51edc271c52b43e14f901169315136f29298c29f7e8954eb6b99d6fe21954f02",
+  "contract": {
+    "schemaVersion": 1,
+    "id": "qnn-duration-load-baseline-v1",
+    "purpose": "single duration Ort::Session construction with diagnostic logging only; no Gemma, tensor submission, neural graph execution, TTS, or capacity test",
+    "route": "SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP",
+    "manifestSha256": "dc4ac737924d7d62e57ff5e166707198095c49e51d77cfed04a44d9e9435952d",
+    "descriptor": "contexts/duration-context.onnx",
+    "descriptorSha256": "868610ca16753b474122c3547b4cc30fa478bd53d3ef74bc7d9c6906f1b6a6ab",
+    "sessionConstructorCalls": 1,
+    "sessionRunCalls": 0,
+    "retryCount": 0,
+    "socModel": "43",
+    "htpPerformanceMode": "burst",
+    "offloadGraphIoQuantization": "0",
+    "disableCpuEpFallback": "1",
+    "adspLibraryPathPolicy": "unchanged-baseline-apk-native-library-directory-only",
+    "ldLibraryPathPolicy": "inherit-unchanged",
+    "namespacePolicy": "unchanged-no-new-uses-native-library-no-explicit-fastrpc-dlopen",
+    "ortLogSeverity": "VERBOSE",
+    "profiling": "detailed-as-original-wiring",
+    "verifyDeadlineSeconds": 60,
+    "loadDeadlineSeconds": 45,
+    "serviceDeadlineSeconds": 120,
+    "driverDeadlineSeconds": 135,
+    "hostInstrumentationDeadlineSeconds": 150,
+    "maxEvidenceBytes": 67108864
+  },
+  "app": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/duration-ready/3fd75c0/app.apk",
+    "bytes": 131749056,
+    "sha256": "08cc825128533cab6d1103680b98025171ef7fd014495b0afc04655bcc417290"
+  },
+  "test": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/duration-ready/3fd75c0/test.apk",
+    "bytes": 2173673,
+    "sha256": "120420d6925283ccf44478b58aef29a12e4575bbf6f1027df9a3d98e83cf2c8c"
+  },
+  "sourceCommit": "3fd75c06481bcc709d45da5c4933347f348e9079",
+  "sourceDirty": false,
+  "phoneAuthorized": false,
+  "gemmaRequests": 0,
+  "sessionRunCalls": 0,
+  "collectionPrerequisite": "unchanged pinned Supertonic pack already installed; no model staging in diagnostic controller"
+}

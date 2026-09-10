@@ -1,0 +1,235 @@
+[duration-load] pid=13006 uid=10755 gid=10755; ORT runtime=1.27.1; ADSP before=<unset>; LD_LIBRARY_PATH=<unset>
+[duration-load] loaded ORT library=/data/app/~~_pKV9bY8AKlhvUzwMLIB8w==/dev.vibevoice.podcast.internal-Bi2dypYn10GvT98Dp0RQWg==/lib/arm64/libonnxruntime.so
+[duration-load] ADSP effective=/data/app/~~_pKV9bY8AKlhvUzwMLIB8w==/dev.vibevoice.podcast.internal-Bi2dypYn10GvT98Dp0RQWg==/lib/arm64; descriptor=/data/user/0/dev.vibevoice.podcast.internal/no_backup/model-packs/supertonic-3/current/contexts/duration-context.onnx; backend=/data/app/~~_pKV9bY8AKlhvUzwMLIB8w==/dev.vibevoice.podcast.internal-Bi2dypYn10GvT98Dp0RQWg==/lib/arm64/libQnnHtp.so
+[duration-load] provider options: soc_model=43 htp_performance_mode=burst offload_graph_io_quantization=0; session.disable_cpu_ep_fallback=1
+[duration-load] device config expectation from pinned ORT source: SOC=43; ARCH not requested; not a direct deviceCreate-struct capture
+[duration-load] filesystem R_OK=0 path=/vendor/lib64/libcdsprpc.so (not linker namespace proof)
+[duration-load] filesystem R_OK=0 path=/vendor/lib/libcdsprpc.so (not linker namespace proof)
+[duration-load] filesystem R_OK=0 path=/vendor/lib/rfsa/adsp (not linker namespace proof)
+[duration-load] filesystem R_OK=-1 path=/vendor/dsp/cdsp (not linker namespace proof)
+[duration-load] filesystem R_OK=-1 path=/system/lib/rfsa/adsp (not linker namespace proof)
+[duration-load] filesystem R_OK=-1 path=/vendor/dsp (not linker namespace proof)
+[duration-load ort severity=1 category=onnxruntime id=podcast-duration-load-only location=device_discovery_common.cc:34 operator()] Discovered OrtHardwareDevice {vendor_id:0x13b5, device_id:0x0, vendor:ARM, type:0, metadata: []}
+[duration-load] constructor BEGIN; no other session or neural execution is permitted
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=inference_session.cc:738 TraceSessionOptions] Session Options {  execution_mode:0 execution_order:DEFAULT enable_profiling:1 optimized_model_filepath:"" enable_mem_pattern:1 enable_mem_reuse:1 enable_cpu_mem_arena:1 profile_file_prefix:/data/user/0/dev.vibevoice.podcast.internal/files/duration-load/duration-20260910t16001789056033z/profiles/duration-profile session_logid:duration-load-only session_log_severity_level:0 session_log_verbosity_level:1 max_num_graph_transformation_steps:10 graph_optimization_level:4 intra_op_param:OrtThreadPoolParams { thread_pool_size: 1 auto_set_affinity: 0 allow_spinning: 1 spin_duration_us: -1 spin_backoff_max: 1 dynamic_block_base_: 0 stack_size: 0 affinity_str:  set_denormal_as_zero: 0 } inter_op_param:OrtThreadPoolParams { thread_pool_size: 1 auto_set_affinity: 0 allow_spinning: 1 spin_duration_us: -1 spin_backoff_max: 1 dynamic_block_base_: 0 stack_size: 0 affinity_str:  set_denormal_as_zero: 0 } use_per_session_threads:1 thread_pool_allow_spinning:1 use_deterministic_compute:0 ep_selection_policy:0 config_options: {   session.disable_cpu_ep_fallback: 1  ep.context_file_path: /data/user/0/dev.vibevoice.podcast.internal/no_backup/model-packs/supertonic-3/current/contexts/duration-context.onnx  ep.qnnexecutionprovider.soc_model: 43  ep.qnnexecutionprovider.profiling_level: detailed  ep.qnnexecutionprovider.backend_path: /data/app/~~_pKV9bY8AKlhvUzwMLIB8w==/dev.vibevoice.podcast.internal-Bi2dypYn10GvT98Dp0RQWg==/lib/arm64/libQnnHtp.so  ep.qnnexecutionprovider.offload_graph_io_quantization: 0  ep.qnnexecutionprovider.htp_performance_mode: burst  ep.qnnexecutionprovider.profiling_file_path: /data/user/0/dev.vibevoice.podcast.internal/files/duration-load/duration-20260910t16001789056033z/profiles/duration-profile.qnn.csv } }
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=inference_session.cc:505 operator()] Flush-to-zero and denormal-as-zero are off
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=inference_session.cc:513 ConstructorCommon] Creating and using per session threadpools since use_per_session_threads_ is true
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=inference_session.cc:558 ConstructorCommon] Dynamic block base set to 0
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_execution_provider.cc:313 QNNExecutionProvider] Context cache enable: 0
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_execution_provider.cc:324 QNNExecutionProvider] User specified context cache embed mode: 0
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_execution_provider.cc:327 QNNExecutionProvider] User specified context cache path: /data/user/0/dev.vibevoice.podcast.internal/no_backup/model-packs/supertonic-3/current/contexts/duration-context.onnx
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_execution_provider.cc:334 QNNExecutionProvider] User specified QNN context node name prefix: 
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_execution_provider.cc:338 QNNExecutionProvider] User specified option - share EP contexts across sessions: 0
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_execution_provider.cc:342 QNNExecutionProvider] User specified option - stop share EP contexts across sessions: 0
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_execution_provider.cc:377 QNNExecutionProvider] Using backend path: /data/app/~~_pKV9bY8AKlhvUzwMLIB8w==/dev.vibevoice.podcast.internal-Bi2dypYn10GvT98Dp0RQWg==/lib/arm64/libQnnHtp.so
+[duration-load ort severity=1 category=onnxruntime id=podcast-duration-load-only location=qnn_execution_provider.cc:90 ParseProfilingLevel] profiling_level: detailed
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_execution_provider.cc:413 QNNExecutionProvider] Profiling file path: /data/user/0/dev.vibevoice.podcast.internal/files/duration-load/duration-20260910t16001789056033z/profiles/duration-profile.qnn.csv
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_execution_provider.cc:107 ParseHtpPerformanceMode] Htp performance mode: burst
+[duration-load ort severity=2 category=onnxruntime id=podcast-duration-load-only location=qnn_execution_provider.cc:489 QNNExecutionProvider] File mapped weights feature is only available on Windows arm64 devices for QNN API versions >= 2.32. Feature will be disabled by default
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_execution_provider.cc:237 ParseBoolOption] Using offload_graph_io_quantization: 0
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=inference_session.cc:2319 Initialize] Initializing session.
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=inference_session.cc:2357 Initialize] Adding default CPU execution provider.
+[duration-load ort severity=1 category=onnxruntime id=podcast-duration-load-only location=bfc_arena.cc:27 BFCArena] Creating BFCArena for Cpu with following configs: initial_chunk_size_bytes: 1048576 max_dead_bytes_per_chunk: 134217728 initial_growth_chunk_size_bytes: 2097152 max_power_of_two_extend_bytes: 1073741824 memory limit: 18446744073709551615 arena_extend_strategy: 0
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=bfc_arena.cc:64 BFCArena] Creating 21 bins of max chunk size 256 to 268435456
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_partitioner.cc:1392 InlineFunctionsAOT] This model does not have any local functions defined. AOT Inlining is not performed
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer EnsureUniqueDQForNodeUnit modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer Level1_RuleBasedTransformer modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer DoubleQDQPairsRemover modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer ConstantSharing modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer CommonSubexpressionElimination modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer ConstantFolding modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer MatMulAddFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer ReshapeFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer FreeDimensionOverrideTransformer modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer SliceConcatToSpaceToDepthFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer GeluFusionL1 modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer LayerNormFusionL1 modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer QDQPropagationTransformer modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer WeightBiasQuantization modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer EnsureUniqueDQForNodeUnit modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer WhereDummyDq modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer TransposeOptimizer modified: 0 with status: OK
+[duration-load ort severity=2 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:308 operator()] Using existing ADSP_LIBRARY_PATH setting of /data/app/~~_pKV9bY8AKlhvUzwMLIB8w==/dev.vibevoice.podcast.internal-Bi2dypYn10GvT98Dp0RQWg==/lib/arm64, which may cause the HTP backend to fail.
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:253 GetQnnInterfaceProvider] /data/app/~~_pKV9bY8AKlhvUzwMLIB8w==/dev.vibevoice.podcast.internal-Bi2dypYn10GvT98Dp0RQWg==/lib/arm64/libQnnHtp.so interface version: 2.38.0
+[duration-load ort severity=1 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:334 LoadBackend] Found valid interface, version: 2.38.0 backend provider name: HTP_QTI_AISW backend id: 6
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_backend_manager.cc:1612 SetupBackend] LoadBackend succeed.
+[duration-load ort severity=1 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:419 LoadQnnSystemLib] Loading QnnSystem lib
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:253 GetQnnInterfaceProvider] /data/app/~~_pKV9bY8AKlhvUzwMLIB8w==/dev.vibevoice.podcast.internal-Bi2dypYn10GvT98Dp0RQWg==/lib/arm64/libQnnSystem.so interface version: 1.13.0
+[duration-load ort severity=1 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:435 LoadQnnSystemLib] Found valid system interface, version: 1.13 backend provider name: SYSTEM_QTI_AISW
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_backend_manager.cc:1621 SetupBackend] Backend build version: v2.49.0.260730134355
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_backend_manager.cc:475 InitializeQnnLog] Set Qnn log level: 4
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> QnnLog_create started.
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Registered a new graph environment 0 with priority: 100, num hvx threads: 1001, num hmx threads: 1001
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> Initializing HtpProvider
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Creating default router
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> RouterFastRPC create
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: Initializing the router
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Detected Snapdragon SOC SM8550 with 4 SOCs
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Allocating PlatformInfo struct size 120
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Async property not supported or not activated. Skipping setup async threads
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Detected Snapdragon SOC SM8550 with 4 SOCs
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Allocating PlatformInfo struct size 120
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: Initializing the graph registry
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: Initializing the context registry
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: Initializing the device registry
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: Initializing the tensor counter
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: setting isExitCalled to false
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: setting ssrInProgress to false
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: FinalCleanupFn fnPtr is nullptr
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: initializing mem registry
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: initializing mmap registry
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: Initializing the logger lifecycle manager
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: constructing bundle
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Set default graph environment 0 remoteHandle 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Opened default graph env, envRemoteHandle 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> exit with 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> exit with 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: initialization completed successfully
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> QnnLog_create exit.
+
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_backend_manager.cc:1629 SetupBackend] SetLogger succeed.
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] Creating backend with QnnGraphTransformerAdapter
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> QnnBackend_create started. backend = 0xa0d9f580
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Oem key validation infra not found, limiting oemMaxPriority to HIGHEST
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Backend handle created: 1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Set default graph environment 0 remoteHandle 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Opened default graph env, envRemoteHandle 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> QnnBackend_create done successfully. backend = 0xa0d9f580
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Deactivated logger with handle 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnGraphTransformer createBackend done, status = 0x0
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_backend_manager.cc:1636 SetupBackend] InitializeBackend succeed.
+[duration-load ort severity=1 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:636 CreateDevice] Create device.
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> QnnDevice_create started
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Create device with id 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Validating device config 0xb400007aa0ea3190
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Setting device config 0xb400007aa0ea3190 via router
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> Specified config SOC, ignoring on real target
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Config not passed. Loading default platform info!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Setting default value for unsigned PD usage
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Attempting to open dynamically linked so: /data/app/~~_pKV9bY8AKlhvUzwMLIB8w==/dev.vibevoice.podcast.internal-Bi2dypYn10GvT98Dp0RQWg==/lib/arm64/libQnnHtpV73Stub.so using absolute filename
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Attempting to open dynamically linked so: libQnnHtpV73Stub.so using base filename
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> Failed in loading stub: dlopen failed: library "libcdsprpc.so" not found: needed by /data/app/~~_pKV9bY8AKlhvUzwMLIB8w==/dev.vibevoice.podcast.internal-Bi2dypYn10GvT98Dp0RQWg==/lib/arm64/libQnnHtpV73Stub.so in namespace clns-9
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <E> loadRemoteSymbols failed with err 4000
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> Failed to create transport instance: 4000
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <E> Failed to create transport for device, error: 4000
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <E> Failed to load skel, error: 4000
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> exits device initialization with  14001
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <E> Transport layer setup failed: 14001
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> SSR not encountered
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <E> Failed to parse default platform info: 14001
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <E> Failed to load default platform info: 14001
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <E> Failed to parse platform config: 14001
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> QnnDevice_create done. status 0x36b1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Deactivated logger with handle 0x1
+
+[duration-load ort severity=2 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:1680 SetupBackend] Failed to setup so cleaning up
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> QnnBackend_free started. backend = 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Terminated backend 0x1 successfully in backendLifecycleManager
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Unset default graph environment 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Destroyed default graph env
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> RouterFastRPC tryUnLoadPrepare
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> RouterFastRPC clearing all OpPackage Maps
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Function not called, PrepareLib isn't loaded!
+
+[duration-load ort severity=3 category=onnxruntime id=duration-load-only location=qnn_execution_provider.cc:1046 GetCapability] QNN SetupBackend failed Failed to create device. Error: QNN_DEVICE_ERROR_INVALID_CONFIG: Invalid config values
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=inference_session.cc:1696 TransformGraph] Running graph optimizations in loop 1 time/s (Graph Optimizations Loop Level : 1)
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer Level2_RuleBasedTransformer modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer TransposeOptimizer_CPUExecutionProvider modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer QDQSelectorActionTransformer modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer GemmActivationFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer MatMulIntegerToFloatFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer DynamicQuantizeMatMulFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer ConvActivationFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer GeluFusionL2 modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer LayerNormFusionL2 modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer SimplifiedLayerNormFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer AttentionFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer EmbedLayerNormFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer GatherSliceToSplitFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer GatherToSliceFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer MatmulTransposeFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer BiasGeluFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer GroupQueryAttentionFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer MatMulAddFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer SkipLayerNormFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer BiasSkipLayerNormFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer FastGeluFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer QuickGeluFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer BiasSoftmaxFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer BiasDropoutFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer MatMulScaleFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer MatMulActivationFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer MatMulNBitsFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer MatMulNBitsMlpFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer MatMulNBitsQkvFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer QDQFinalCleanupTransformer modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer NhwcTransformer modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer ConvAddActivationFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer RemoveDuplicateCastTransformer modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer CastFloat16Transformer modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer FuseFp16InitializerToFp32NodeTransformer modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer MemcpyTransformer modified: 0 with status: OK
+[duration-load ort severity=3 category=onnxruntime id=duration-load-only location=inference_session.cc:2678 Initialize] This session contains graph nodes that are assigned to the default CPU EP, but fallback to CPU EP has been explicitly disabled by the user.
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=profiler.cc:123 EndProfiling] Writing profiler data to file /data/user/0/dev.vibevoice.podcast.internal/files/duration-load/duration-20260910t16001789056033z/profiles/duration-profile_2026-09-10_17-00-55_160.json
+[duration-load] ORT error code=1: This session contains graph nodes that are assigned to the default CPU EP, but fallback to CPU EP has been explicitly disabled by the user.
