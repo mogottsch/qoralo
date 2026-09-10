@@ -72,9 +72,9 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="status-header" data-status-header="true">
 <div class="kicker"><span>Experiment 0031</span><span class="status">Completed</span></div>
 <h1>Experiment 0031 — Gemma 4 E2B IT Android QNN/HTP</h1>
-<p class="summary">The accepted campaign remains complete; improvement attempt 05 passes the AR1 DLC&#x27;s selected FP16 interface check, but AR128 runs out of tmpfs space. Matched-pair, fidelity, and speed claims remain unproven.</p>
+<p class="summary">The accepted campaign remains complete; improvement attempt 06 converts AR128 with verified AR1 reuse and passes all 30 paired cache contracts. Context execution, fidelity, delegation, and speed improvements remain unproven.</p>
 <div class="header-links"><a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-09-10</span><span>evidence commit: d5e6b944ad6cd545d92d8092d863634ceaab3fbd</span><span>page source: docs/experiments/0031-gemma-4-e2b-it-android-qnn-htp/page.md</span><span>page source sha256: 45608406b2e0906780ae1df97edd54350fcc2367d52f37f26711dac724079fcb</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-09-10</span><span>evidence commit: ce3b021c0033330554d4ffb186790c2c7f570440</span><span>page source: docs/experiments/0031-gemma-4-e2b-it-android-qnn-htp/page.md</span><span>page source sha256: 3585e3bbad3731db5573a4d3f1afb53b2f393cffc413242290742cad7cfa0ae8</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
@@ -231,7 +231,12 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <p>The AR1 operator count remains 6,875 and <code>Convert</code> remains 31→31, so the hoped-for conversion-count reduction is not demonstrated. Converter float-precision warnings rise from 75 to 81, adding three global concatenations and three output Casts. These are precision observations, not CPU-provider fallback counts or full HTP-delegation proof.</p>
 <p>Sequential AR128 conversion failed with <code>OSError: [Errno 28] No space left on device</code> while dumping external data into the roughly 16 GiB <code>/tmp</code> tmpfs. This is a host-storage failure, not numerical or model failure. The traceback-bound, UID-owned scratch directory was removed only after retaining ownership evidence and the partial file&#x27;s exact size/hash: 8,263,168,000 bytes / SHA-256 <code>5d0b944e…760ae</code>. The completed AR1 DLC, candidate/source ONNX, and other temporary directories were left untouched; owned converter processes were absent.</p>
 <p>Both read-only inspection attempts are also retained: the first timed out after 90 seconds with empty logs, while a separate guarded inspection completed. Neither was a conversion or inference retry. Candidate and baseline CSVs are losslessly compressed and hash-bound.</p>
-<p>No AR128 DLC or matched AR1/AR128 cache pair exists. Context compilation, full HTP delegation, runtime unsupported/fallback counts, fidelity, and speed improvement remain null/unmeasured. <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/DISK-SCRATCH-READINESS.md">Disk-backed scratch readiness</a> proposes only an environment change: <code>QAIRT_TMP_DIR</code> under a fresh disk-backed attempt directory, with free-space and ownership checks. It is not a model correction or an authorized restart. Any new attempt requires explicit release; no phone, campaign, or registry evidence was added.</p>
+<p>Attempt 05 ended without an AR128 DLC or matched pair. The proposed storage fix was an environment change, not a model correction: <code>QAIRT_TMP_DIR</code> under a fresh disk-backed owned directory.</p>
+<p><strong>Source-only efficiency step (<code>bbd1eec</code>).</strong> The <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/DISK-SCRATCH-READINESS.md">disk-scratch and AR1-reuse helper</a> adds AR128-only conversion with read-only reuse of attempt 05&#x27;s passed AR1 artifact. It pins the result, DLC size/hash, and actual interface provenance before QAIRT import; mismatch cases are rejected. Reused and newly converted artifacts have separate receipts, and the unchanged precision patch cannot bypass the mandatory actual two-AR cache-pair gate before compilation. This source/synthetic step itself ran no conversion or inference.</p>
+<p><strong>2026-09-10 — Paired DLC interfaces (<code>ce3b021</code>).</strong> After separate release, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/global-value-fp16-attempt-06/result.json">attempt 06</a> verified and reused AR1 SHA-256 <code>4e67d80e…a6cc</code> without rewriting or reconverting it. Only AR128 was newly converted, producing a 2,356,859,020-byte DLC at SHA-256 <code>48fc15f0…7b64</code>. The reused AR1 identity was checked again afterward; it is not counted as a new conversion.</p>
+<p>Official CSVs now confirm the selected global value-cache inputs and outputs are Float16 in both variants, all unselected public signatures and dimensions remain unchanged, and datatype/encoding agrees at all <strong>30 four-way AR1/AR128 cache contracts</strong>. This is actual DLC interface compatibility, not compiled-context or execution evidence.</p>
+<p>AR128&#x27;s operator count rises 6,830→6,842: Convert 30→36, plus three Casts and three Dequantize operations. Converter floating-precision warnings rise 15→21, comprising 15 RmsNorm operations plus three global Concats and three output Casts. Reused AR1 remains at Convert 31→31 and warnings 75→81. There is no demonstrated count-based speed gain; these warnings establish neither CPU-provider fallback nor full HTP delegation.</p>
+<p>Attempt 06 used owned disk-backed scratch. The SDK removed its temporary files, the empty scratch root was removed, and owned processes were reaped. No context compilation, inference/fidelity test, or phone run occurred in this milestone. Context size/compiler metadata, full delegation, runtime unsupported/fallback counts, fidelity, and speed improvement remain null/unmeasured. The original campaign and registry are unchanged.</p>
 <p>The <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/REQUEST-ROUTING.md">request-routing recommendation</a> remains an unmeasured policy for the existing canonical tiers, not a built hybrid or a general prompt-length threshold. It selects HTP for short/medium and LiteRT GPU for long before each complete request, with no mid-request switch or retry on another provider. Co-resident setup, memory, and speed require measurement; separate accepted route measurements are not a hybrid benchmark.</p>
 </section>
 <section class="primary-section" id="results" data-primary-section="results">
@@ -619,7 +624,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 </tr>
 <tr>
 <td>Candidate 2</td>
-<td>AR1 FP16 global value-cache DLC interface gate passed; AR128 blocked by tmpfs exhaustion</td>
+<td>Actual AR1 + AR128 selected FP16 interfaces and all 30 paired cache contracts pass; no compiled-context result</td>
 </tr>
 <tr>
 <td>Retained attempts 01–03</td>
@@ -658,16 +663,36 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>First read-only inspection timed out; second completed; no conversion/inference retry</td>
 </tr>
 <tr>
+<td>Source-only reuse helper</td>
+<td><code>bbd1eec</code>: pinned read-only AR1 reuse, separate reused/new receipts, mismatch refusal, mandatory actual pair gate</td>
+</tr>
+<tr>
+<td>Attempt 06 artifacts</td>
+<td>AR1 <code>4e67d80e…a6cc</code> reused unchanged; only new AR128 2,356,859,020 B / SHA <code>48fc15f0…7b64</code></td>
+</tr>
+<tr>
+<td>Actual paired-cache gate</td>
+<td>Selected global inputs/outputs Float16; other signatures/dimensions unchanged; all 30 four-way datatype/encoding contracts match</td>
+</tr>
+<tr>
+<td>AR128 operator observations</td>
+<td>6,830→6,842; Convert 30→36, +3 Cast/+3 Dequantize; no count-based speed benefit</td>
+</tr>
+<tr>
+<td>AR128 precision warnings</td>
+<td>15→21; not a CPU-provider fallback count or full-delegation proof</td>
+</tr>
+<tr>
+<td>Attempt 06 scratch/processes</td>
+<td>Owned disk-backed <code>QAIRT_TMP_DIR</code> used; scratch empty/removed and processes reaped</td>
+</tr>
+<tr>
 <td>Unmeasured candidate results</td>
-<td>No matched pair/context/fidelity/speed proof; delegation and runtime unsupported/fallback metrics null</td>
+<td>No context compilation, inference/fidelity, or speed proof; delegation and runtime unsupported/fallback metrics null</td>
 </tr>
 <tr>
 <td>Routing-policy boundary</td>
 <td>Unmeasured request-level recommendation; no built/measured hybrid or general length threshold</td>
-</tr>
-<tr>
-<td>Next-attempt readiness</td>
-<td>Disk-backed <code>QAIRT_TMP_DIR</code> proposal only; fresh approved attempt required, no restart authorized</td>
 </tr>
 <tr>
 <td>Publication effect</td>
