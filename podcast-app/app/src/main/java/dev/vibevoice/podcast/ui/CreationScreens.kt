@@ -49,16 +49,21 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import android.view.WindowManager
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
@@ -76,7 +81,7 @@ import dev.vibevoice.podcast.data.EpisodeSourceEntity
 fun SourcesScreen(
     sources: List<EpisodeSourceEntity>,
     onBack: () -> Unit,
-    onPaste: (String, String) -> Unit,
+    onPaste: suspend (String, String) -> Unit,
     onDocument: (android.net.Uri) -> Unit,
     onRemove: (EpisodeSourceEntity) -> Unit,
     onContinue: () -> Unit,
@@ -128,7 +133,7 @@ fun SourcesScreen(
             }
         }
     }
-    if (pasteDialog) PasteSourceDialog(onDismiss = { pasteDialog = false }) { title, body -> onPaste(title, body); pasteDialog = false }
+    if (pasteDialog) PasteSourceDialog(onDismiss = { pasteDialog = false }, onAdd = onPaste, onAdded = { pasteDialog = false })
 }
 
 @Composable
@@ -144,13 +149,24 @@ private fun SourceChoice(icon: androidx.compose.ui.graphics.vector.ImageVector, 
 }
 
 @Composable
-internal fun PasteSourceDialog(onDismiss: () -> Unit, onAdd: (String, String) -> Unit) {
+internal fun PasteSourceDialog(onDismiss: () -> Unit, onAdd: suspend (String, String) -> Unit) =
+    PasteSourceDialog(onDismiss, onAdd, onAdded = onDismiss)
+
+@Composable
+internal fun PasteSourceDialog(onDismiss: () -> Unit, onAdd: suspend (String, String) -> Unit, onAdded: () -> Unit) {
     var title by rememberSaveable { mutableStateOf("") }
     var text by rememberSaveable { mutableStateOf("") }
+    val submission = rememberFormSubmission()
+    val scope = rememberCoroutineScope()
+    val bodyScroll = rememberScrollState()
+    LaunchedEffect(submission.feedback) { if (submission.feedback != null) bodyScroll.scrollTo(0) }
+    val dismiss = { submission.dispose(); onDismiss() }
     // Compose 1.7's custom-width DialogLayout measures against configuration height instead
     // of the incoming window constraint. Let the platform own IME resizing here; do not also
     // subtract IME/system padding in the content. Header/action are measured before the body.
-    Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = true, decorFitsSystemWindows = true)) {
+    Dialog(onDismissRequest = dismiss, properties = DialogProperties(usePlatformDefaultWidth = true, decorFitsSystemWindows = true)) {
+        val focus = LocalFocusManager.current
+        val keyboard = LocalSoftwareKeyboardController.current
         val window = (LocalView.current.parent as? DialogWindowProvider)?.window
         DisposableEffect(window) {
             val previous = window?.attributes?.softInputMode
@@ -165,15 +181,33 @@ internal fun PasteSourceDialog(onDismiss: () -> Unit, onAdd: (String, String) ->
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                         Text("Paste text", style = MaterialTheme.typography.headlineSmall, modifier = Modifier.weight(1f))
-                        IconButton(onClick = onDismiss) { Icon(Icons.Default.Close, "Cancel paste") }
+                        IconButton(onClick = dismiss) { Icon(Icons.Default.Close, if (submission.submitting) "Close paste" else "Cancel paste") }
                     }
-                    Column(Modifier.weight(1f, fill = false).verticalScroll(rememberScrollState()),
+                    Column(Modifier.weight(1f, fill = false).verticalScroll(bodyScroll),
                         verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        OutlinedTextField(title, { title = it }, label = { Text("Source name") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-                        OutlinedTextField(text, { text = it }, label = { Text("Source text") }, minLines = 3,
+                        submission.feedback?.let { feedback ->
+                            FormSubmissionFeedback(feedback, "Source wasn’t added", "Your text is still here.", "Previous source added. Newer text hasn’t been added.")
+                        }
+                        OutlinedTextField(title, { title = it; submission.edited() }, label = { Text("Source name") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                        OutlinedTextField(text, { text = it; submission.edited() }, label = { Text("Source text") }, minLines = 3,
                             maxLines = if (largeText) 3 else 8, modifier = Modifier.fillMaxWidth())
                     }
-                    PrimaryAction("Add source", { onAdd(title, text) }, enabled = text.isNotBlank())
+                    PrimaryAction(if (submission.submitting) "Adding source…" else "Add source", {
+                        val ticket = submission.begin()
+                        if (ticket != null) {
+                            val submittedTitle = title
+                            val submittedText = text
+                            val submit = onAdd
+                            val accepted = onAdded
+                            scope.launch {
+                                when (submission.await(ticket) { submit(submittedTitle, submittedText) }) {
+                                    SubmissionCompletion.ACCEPTED_CURRENT -> { submission.dispose(); accepted() }
+                                    SubmissionCompletion.REJECTED -> if (submission.feedback?.newerInput == false) { focus.clearFocus(); keyboard?.hide() }
+                                    else -> Unit
+                                }
+                            }
+                        }
+                    }, enabled = text.isNotBlank() && !submission.submitting)
                 }
             }
         }

@@ -46,7 +46,15 @@ class PodcastRepository(
             stored.relativePath, stored.text.split(Regex("\\s+")).count { it.isNotBlank() },
             stored.byteCount, stored.sha256, clock(),
         )
-        try { dao.insertSource(source) } catch (error: Throwable) { artifacts.resolveEpisodeFile(stored.relativePath).delete(); throw error }
+        try {
+            database.withTransaction {
+                // The stream/file write can outlive the form. Recheck the captured episode at
+                // commit so a queued generation cannot acquire a late, unfrozen source.
+                val current = requireEpisode(episodeId)
+                require(current.phase == EpisodePhase.SOURCES || current.phase == EpisodePhase.INSTRUCTIONS) { "Sources are frozen" }
+                dao.insertSource(source)
+            }
+        } catch (error: Throwable) { artifacts.resolveEpisodeFile(stored.relativePath).delete(); throw error }
         return source
     }
 

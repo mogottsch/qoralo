@@ -78,23 +78,29 @@ fun PodcastApp(viewModel: PodcastViewModel = viewModel()) {
             when (screen) {
                 AppScreen.Library -> LibraryScreen(episodes, viewModel::newEpisode, viewModel::selectEpisode, viewModel::showSettings,
                     playbackStates = libraryPlayback, chapterCounts = libraryChapterCounts)
-                AppScreen.Sources -> SourcesScreen(
-                    sources = sources,
-                    onBack = viewModel::showLibrary,
-                    onPaste = viewModel::addPastedSource,
-                    onDocument = viewModel::addDocument,
-                    onRemove = viewModel::removeSource,
-                    onContinue = viewModel::continueToInstructions,
-                )
+                AppScreen.Sources -> episode?.let { current -> key(current.id) {
+                    SourcesScreen(
+                        sources = sources.filter { it.episodeId == current.id },
+                        onBack = viewModel::showLibrary,
+                        onPaste = { title, text -> viewModel.addPastedSource(current.id, title, text).await() },
+                        onDocument = viewModel::addDocument,
+                        onRemove = viewModel::removeSource,
+                        onContinue = viewModel::continueToInstructions,
+                    )
+                } }
                 AppScreen.Instructions -> episode?.let {
                     InstructionsScreen(viewModel.instructionDraft(it), viewModel::showSources, viewModel::createScript,
                         onDraftChanged = { text, review -> viewModel.saveInstructionDraft(it.id, text, review) })
                 }
-                AppScreen.Review -> ReviewScreen(
-                    chapters, messages, job, agentOpen, lockOpen,
-                    viewModel::showLibrary, viewModel::openAgent, viewModel::closeAgent,
-                    viewModel::requestAgentEdit, viewModel::showLock, viewModel::dismissLock, viewModel::lockAndCreate,
-                )
+                AppScreen.Review -> episode?.let { current -> key(current.id) {
+                    ReviewScreen(
+                        chapters.filter { it.revisionId == current.activeRevisionId }, messages.filter { it.episodeId == current.id },
+                        job?.takeIf { it.episodeId == current.id }, agentOpen, lockOpen,
+                        viewModel::showLibrary, viewModel::openAgent, viewModel::closeAgent,
+                        { request -> viewModel.requestAgentEdit(current.id, request).await() },
+                        viewModel::showLock, viewModel::dismissLock, viewModel::lockAndCreate,
+                    )
+                } }
                 AppScreen.Generating -> GeneratingScreen(episode, job, viewModel::showLibrary)
                 AppScreen.Player -> episode?.let { current ->
                     val path = current.finalAudioPath

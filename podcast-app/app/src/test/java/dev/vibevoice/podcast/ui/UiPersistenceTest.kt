@@ -7,6 +7,8 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import dev.vibevoice.podcast.data.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -22,6 +24,10 @@ import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import java.io.ByteArrayInputStream
+import java.io.File
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
@@ -29,6 +35,7 @@ class UiPersistenceTest {
     @get:Rule val temporary = TemporaryFolder()
     private lateinit var database: PodcastDatabase
     private lateinit var repository: PodcastRepository
+    private lateinit var artifacts: ArtifactStore
     private lateinit var application: Application
     private val models = mutableListOf<PodcastViewModel>()
 
@@ -36,7 +43,8 @@ class UiPersistenceTest {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         application = ApplicationProvider.getApplicationContext()
         database = Room.inMemoryDatabaseBuilder(application, PodcastDatabase::class.java).allowMainThreadQueries().build()
-        repository = PodcastRepository(database, ArtifactStore(temporary.newFolder(), temporary.newFolder()))
+        artifacts = ArtifactStore(temporary.newFolder(), temporary.newFolder())
+        repository = PodcastRepository(database, artifacts)
     }
     @After fun close() { models.forEach { it.viewModelScope.cancel() }; database.close(); Dispatchers.resetMain() }
     private fun model(handle: SavedStateHandle = SavedStateHandle()) = PodcastViewModel(application, handle, repository).also(models::add)
@@ -99,6 +107,83 @@ class UiPersistenceTest {
         assertNull(InstructionDraftPolicy.appendedHint(current, "Keep it under five minutes."))
         assertEquals("Edited draft\nKeep it under five minutes.", InstructionDraftPolicy.appendedHint("Edited draft", "Keep it under five minutes."))
         assertEquals(2000, InstructionDraftPolicy.appendedHint("a".repeat(1998), "b")!!.length)
+    }
+
+    @Test fun agentQueueRejectionIsAcknowledgedWithoutInsertingUserMessage() = runTest {
+        val a = draftEpisode()
+        val b = instructionsEpisode()
+        val busy = repository.queueScriptGeneration(b.id, "Other episode", true)
+        val vm = model()
+        vm.selectEpisode(a)
+        try { vm.requestAgentEdit(a.id, "Keep my unsent request").await(); fail("Expected queue rejection") }
+        catch (error: IllegalArgumentException) { assertEquals("Another on-device generation job is active", error.message) }
+        assertTrue(repository.observeMessages(a.id).first().isEmpty())
+        assertEquals(listOf(busy), repository.queuedJobs().map { it.id })
+        assertNull(vm.transientMessage.value) // owning form receives the rejection, not an obscured global snackbar
+    }
+
+    @Test fun sourceStorageFailureIsAcknowledgedWithoutInsertingSourceOrJobs() = runTest {
+        val id = repository.createEpisode()
+        File(artifacts.episodesRoot, id).mkdirs()
+        File(artifacts.episodesRoot, "$id/sources").writeText("Deliberately not a directory")
+        val vm = model()
+        try { vm.addPastedSource(id, "Source title", "Keep this complete body").await(); fail("Expected storage rejection") }
+        catch (_: java.io.IOException) { }
+        assertTrue(repository.observeSources(id).first().isEmpty())
+        assertTrue(repository.queuedJobs().isEmpty()); assertNull(vm.transientMessage.value)
+    }
+
+    @Test fun sourceValidationFailureDoesNotAcknowledgeSuccess() = runTest {
+        val id = repository.createEpisode()
+        try { model().addPastedSource(id, "Empty", " \n ").await(); fail("Expected validation rejection") }
+        catch (error: IllegalArgumentException) { assertEquals("Source is empty", error.message) }
+        assertTrue(repository.observeSources(id).first().isEmpty())
+    }
+
+    @Test fun delayedSourceAndAgentCallbacksUseCapturedEpisodeNotCurrentSelection() = runTest {
+        val a = repository.createEpisode()
+        val b = repository.createEpisode()
+        val vm = model()
+        vm.selectEpisode(repository.episode(b))
+        vm.addPastedSource(a, "A source", "Complete source for A only").await()
+        assertEquals("A source", repository.observeSources(a).first().single().title)
+        assertTrue(repository.observeSources(b).first().isEmpty())
+        val draftA = draftEpisode()
+        val draftB = draftEpisode()
+        vm.selectEpisode(draftB)
+        vm.requestAgentEdit(draftA.id, "A request only").await()
+        assertEquals("A request only", repository.observeMessages(draftA.id).first().single().text)
+        assertTrue(repository.observeMessages(draftB.id).first().isEmpty())
+        assertEquals(draftA.id, repository.queuedJobs().single().episodeId)
+    }
+
+    @Test fun sourceWriteThatFinishesAfterQueueCannotChangeFrozenInputs() = runTest {
+        val episode = instructionsEpisode()
+        val entered = CompletableDeferred<Unit>()
+        val release = CountDownLatch(1)
+        val stream = object : ByteArrayInputStream("Late source body".toByteArray()) {
+            var first = true
+            override fun read(buffer: ByteArray, offset: Int, length: Int): Int {
+                if (first) { first = false; entered.complete(Unit); check(release.await(5, TimeUnit.SECONDS)) }
+                return super.read(buffer, offset, length)
+            }
+        }
+        val write = async(Dispatchers.IO) { runCatching { stream.use { repository.addSource(episode.id, "Late", "text/plain", it) } } }
+        try {
+            entered.await()
+            repository.queueScriptGeneration(episode.id, "Immutable accepted inputs", true)
+        } finally { release.countDown() }
+        assertEquals("Sources are frozen", write.await().exceptionOrNull()?.message)
+        assertEquals(1, repository.observeSources(episode.id).first().size)
+        assertEquals(1, File(artifacts.episodesRoot, "${episode.id}/sources").listFiles()!!.size)
+    }
+
+    private suspend fun draftEpisode(): EpisodeEntity {
+        val episode = instructionsEpisode()
+        val job = repository.queueScriptGeneration(episode.id, "Synthetic test instructions", true)
+        repository.claimJob(episode.id, job, JobKind.SCRIPT, "Test fixture")
+        repository.commitGeneratedScript(episode.id, job, "Fixture", listOf(ChapterDraft("one", "One", "Whole test chapter.")))
+        return repository.episode(episode.id)
     }
 
     private suspend fun readyEpisode(): EpisodeEntity {

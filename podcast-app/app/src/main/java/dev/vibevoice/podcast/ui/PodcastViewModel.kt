@@ -25,6 +25,9 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 @Suppress("OPT_IN_USAGE")
@@ -70,6 +73,8 @@ class PodcastViewModel internal constructor(
     }
 
     fun selectEpisode(value: EpisodeEntity) {
+        agentSheetOpen.value = false
+        lockDialogOpen.value = false
         selectedEpisodeId.value = value.id
         explicitScreen.value = null
     }
@@ -84,9 +89,11 @@ class PodcastViewModel internal constructor(
     fun dismissLock() { lockDialogOpen.value = false }
     fun consumeMessage() { transientMessage.value = null }
 
-    fun addPastedSource(title: String, text: String) = launchAction {
-        val id = requireNotNull(selectedEpisodeId.value)
-        repository.addSource(id, title, "text/plain", text.byteInputStream())
+    // Completion means persisted/queued, not merely that a coroutine was launched. Callers await
+    // this acknowledgement and render failures inside the originating form, never a replacement.
+    fun addPastedSource(episodeId: String, title: String, text: String): Deferred<Unit> = viewModelScope.async(Dispatchers.IO) {
+        text.byteInputStream().use { repository.addSource(episodeId, title, "text/plain", it) }
+        Unit
     }
 
     fun addDocument(uri: Uri) = launchAction {
@@ -99,7 +106,7 @@ class PodcastViewModel internal constructor(
     }
 
     fun removeSource(source: EpisodeSourceEntity) = launchAction {
-        repository.removeSource(requireNotNull(selectedEpisodeId.value), source.id)
+        repository.removeSource(source.episodeId, source.id)
     }
 
     fun continueToInstructions() = launchAction {
@@ -113,9 +120,9 @@ class PodcastViewModel internal constructor(
         explicitScreen.value = null
     }
 
-    fun requestAgentEdit(request: String) = launchAction {
-        val id = requireNotNull(selectedEpisodeId.value)
-        repository.queueAgentEdit(id, request)
+    fun requestAgentEdit(episodeId: String, request: String): Deferred<Unit> = viewModelScope.async {
+        repository.queueAgentEdit(episodeId, request)
+        Unit
     }
 
     fun lockAndCreate() = launchAction {
