@@ -953,6 +953,78 @@ class ContractTest(unittest.TestCase):
         self.assertFalse(list(directory.rglob('*.pte')))
         self.assertFalse(list(directory.rglob('*.bin')))
 
+    def test_native_sweep_saved_fullarray_and_stage_recomputation(self) -> None:
+        directory = EXP / 'results/conv-history-native-sweep-20260910'
+        report = json.loads((directory / 'result.json').read_text())
+        analysis = load_evidence_source(directory / 'analyze_saved.py').analyze(directory)
+        self.assertEqual(json.loads((directory / 'analysis.json').read_text()), analysis)
+        self.assertEqual({'compiles': 0, 'loads': 1, 'forwards': 1}, analysis['logical_counts'])
+        self.assertEqual('finite_mismatch', analysis['numerical_status'])
+        self.assertEqual(24576, analysis['finite_values'])
+        self.assertEqual(39, analysis['paired_rows_bit_equal'])
+        self.assertTrue(analysis['all_repeated_input_bits_produce_identical_output_bits'])
+        self.assertEqual(35, analysis['unique_input_bitpatterns'])
+        self.assertEqual(24498, analysis['unchanged_outputs_vs_original_native_case']['values'])
+        self.assertEqual(0, analysis['unchanged_outputs_vs_original_native_case']['bit_mismatches'])
+        self.assertEqual(1, analysis['unlabelled_outputs_vs_fullchain']['max_ulp_distance'])
+        self.assertEqual(65, analysis['comparisons']['fullchain']['values_above_one_ulp'])
+        self.assertEqual(6184, analysis['comparisons']['outputonly']['values_above_one_ulp'])
+        self.assertEqual(['0x0'], analysis['native_log_observations']['execute_completion_statuses'])
+        self.assertTrue(report['release_consumed'])
+        self.assertFalse(report['native_execution_approved'])
+        self.assertFalse(report['numerical_equivalence'])
+        self.assertEqual(0, report['full_model_calls'])
+        self.assertFalse(report['phone_access'])
+        original = EXP / 'results/conv-history-native-fullchain-20260910/raw/case/runtime/data'
+        for name in ('history.f32le', 'projection.f32le', 'output-0.raw'):
+            self.assertEqual((original / name).read_bytes(), (directory / 'raw/baseline' / name).read_bytes())
+        self.assertFalse(list(directory.rglob('*.pte')))
+        self.assertFalse(list(directory.rglob('*.bin')))
+        self.assertFalse(list(directory.rglob('__pycache__')))
+
+    def test_native_sweep_empirical_regions_and_lower_confounds(self) -> None:
+        directory = EXP / 'results/conv-history-native-sweep-20260910'
+        rows = {r['label']: r for r in json.loads((directory / 'analysis.json').read_text())['labelled_results']}
+        self.assertEqual(20.000734329223633, rows['interior_upper']['native_output_values'][0])
+        self.assertGreater(rows['interior_upper']['comparisons']['fullchain'][0]['error_in_final_scale_steps'], .99)
+        triplet = [rows['upper_actual_clipping_onset_' + name] for name in ('below', 'at', 'above')]
+        self.assertEqual([False, True, True], [r['fullchain_stages'][0]['clipped'] for r in triplet])
+        self.assertEqual(1, len({r['native_output_f32le_hex'][0] for r in triplet}))
+        self.assertNotEqual(rows['history_upper_endpoint_at']['value'], triplet[1]['value'])
+        self.assertEqual(rows['history_upper_endpoint_at']['native_output_values'][0], triplet[1]['native_output_values'][0])
+        self.assertGreater(rows['upper_plus_one_step']['comparisons']['outputonly'][0]['error_in_final_scale_steps'], .99)
+        self.assertGreater(rows['upper_gap_midpoint']['native_output_values'][0], triplet[1]['native_output_values'][0])
+        lower = rows['lower_actual_clipping_onset_at']
+        self.assertEqual([True, False, False], [s['clipped'] for s in lower['fullchain_stages']])
+        self.assertTrue(lower['direct_output_only']['clipped'])
+        self.assertEqual(3, lower['comparisons']['fullchain'][0]['ordered_float32_ulp_distance'])
+        self.assertEqual(23.72189712524414, rows['retained_original_outlier']['native_output_values'][0])
+
+    def test_native_sweep_signed_zero_bits_and_analysis_loader_hygiene(self) -> None:
+        directory = EXP / 'results/conv-history-native-sweep-20260910'
+        rows = {r['label']: r for r in json.loads((directory / 'analysis.json').read_text())['signed_zero_rows']}
+        self.assertEqual('00000000', rows['zero']['f32le_hex'])
+        self.assertEqual('00000080', rows['negative_zero']['f32le_hex'])
+        for r in rows.values(): self.assertEqual(['00000000', '00000000'], r['native_output_f32le_hex'])
+        before = {str(p): sha(p) for p in directory.rglob('*') if p.is_file()}
+        previous = sys.dont_write_bytecode
+        try:
+            sys.dont_write_bytecode = False
+            with tempfile.TemporaryDirectory() as temporary:
+                source = Path(temporary) / 'analyze_saved.py'
+                source.write_bytes((directory / 'analyze_saved.py').read_bytes())
+                first = load_evidence_source(source)
+                second = load_evidence_source(source)
+                self.assertIsNot(first, second)
+                self.assertEqual(1, first.distance(-0.0, 0.0)['ordered_float32_ulp_distance'])
+                self.assertFalse(first.distance(-0.0, 0.0)['bit_equal'])
+                self.assertEqual(0, first.distance(-0.0, 0.0)['abs_error_fp64'])
+                self.assertIsNone(first.distance(float('nan'), 0.0)['actual'])
+                self.assertEqual([source], list(Path(temporary).rglob('*')))
+        finally:
+            sys.dont_write_bytecode = previous
+        self.assertEqual(before, {str(p): sha(p) for p in directory.rglob('*') if p.is_file()})
+
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
             EXP / "protocol",
@@ -980,6 +1052,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/conv-history-native-adapter-readiness-20260910",
             EXP / "results/conv-history-native-fullchain-20260910",
             EXP / "results/conv-history-sweep-readiness-20260910",
+            EXP / "results/conv-history-native-sweep-20260910",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

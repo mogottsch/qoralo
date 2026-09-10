@@ -56,10 +56,12 @@ Active. QNN-x86 own-state positions 0–3 completed but exposed substantial drif
 
 31. Prepared an immutable range sweep:39 labelled values on78 duplicated channels plus originaloutlier,40rows/35distinctFP32bitpatterns. One tinyCPUforward equals all24,576 scalar outputs; upper decodedendpoint and actual clippingonset differ. Lower stage/direct-output confounds retained. New runtime-only adapter/request reuses exact232,144BPTE/230,736Bcontext and reviewed zero-fallback/source receipts. Source/CPU/mock only; no export/Compile/native calls or execution release.
 
+32. Executed the separately released frozen-PTE sweep:0compile/1load/1forward,5.808s controller/5.207s worker. All24,576 outputs finite and inputs unchanged;39paired rows bit-identical and24,498 untouched outputs exactly match firstcase. In-range/half-step differences (~one output step), no sampled scalar-onset transition, rising upper outputs and no universal output-only match narrow the old single-outlier interpretation to its first fixture. Lower confounds retained; independent stdlib per-stage/full-array analysis only after cleanup. Release consumed; no SDKpath/model/physical cause or follow-on claimed.
+
 ## Current work
 
 1. Preserve physical baseline/preflight hashes, diagnostic artifacts, and both LOCAL-ONLY positional tensor directories listed in the full-short result. Do not clean them; copy them on migration/handover.
-2. Review the source/CPU/mock frozen-PTE sweep readiness, immutablepack and runtime-only request. Proposed one load/forward under60s runtime/90s total, no Compile; separate execution release required. No native follow-on, retry, full-model or phone release.
+2. Review the committed native sweep and independent saved-data empirical-region report. Runtime-only release consumed; no native follow-on/retry/full-model/phone permission. Persistent-state encoding alignment remains an untested future hypothesis; do not modify model/encodings from this observation.
 3. Do not use ADB or the phone without an explicit scheduled slot. Host teacher-forced completion is not QNN/physical fidelity or a campaign authorization.
 4. After agreed fidelity follow-up gates, validate chunked-prefill state semantics/delegation and loaded-route reset/isolation before the canonical campaign.
 

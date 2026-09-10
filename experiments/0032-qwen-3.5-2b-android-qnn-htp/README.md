@@ -101,12 +101,16 @@ A lower-retention two-process host replay in [`results/host-w4a16-qdq-output-dia
 
 ## Frozen-PTE input sweep readiness
 
-[`results/conv-history-sweep-readiness-20260910/`](results/conv-history-sweep-readiness-20260910/) retains39 labelled input values across78 duplicated channels plus the original outlier, full scalar-stage traces and one CPU forward. All24,576 CPU outputs match the fullchain oracle exactly. Decoded endpoints and actual code-clipping onset are bracketed separately; lower-side direct-output/final-range confounds remain explicit. A runtime-only adapter binds a new pack/request to the unchanged firstcase PTE/context and zero-fallback/source receipts. No export, recompile or native call occurred; the request is unapproved.
+[`results/conv-history-sweep-readiness-20260910/`](results/conv-history-sweep-readiness-20260910/) retains39 labelled input values across78 duplicated channels plus the original outlier, full scalar-stage traces and one CPU forward. All24,576 CPU outputs match the fullchain oracle exactly. Decoded endpoints and actual code-clipping onset are bracketed separately; lower-side direct-output/final-range confounds remain explicit. A runtime-only adapter binds a new pack/request to the unchanged firstcase PTE/context and zero-fallback/source receipts. That preparation milestone performed no export, recompile or native call; its historical NOT_APPROVED template is unchanged. A separate runtime-only release produced the outcome below.
+
+## Frozen-PTE native sweep outcome
+
+[`results/conv-history-native-sweep-20260910/`](results/conv-history-native-sweep-20260910/) retains the separately released0-compile/1-load/1-forward host sweep. All24,576 outputs are finite and inputs unchanged, but fullchain numerical equivalence is false. All39 paired rows are bit-identical; all24,498 untouched output positions, including the original anchor, exactly match firstcase. The single-outlier result was specific to the first fixture: the sweep also shows in-range/half-step discrepancies around one output step, no observed transition across the sampled scalar history-clipping onset, rising upper outputs rather than the scalar saturation plateau, and no universal output-only match. Lower-side final-range/clipping confounds remain explicit. Full scalar-stage/array analysis is saved-data-only. Both runtime/controller groups were reaped; no further native/model/phone call is released.
 
 ## Current next gate
 
 1. Keep physical PTE `23ac8abd…d2c506` and phone preflight unchanged; the 73-output diagnostic PTE is not compatible with the current 49-output Android runner.
-2. Review the frozen-PTE sweep pack, stagewise oracle and runtime-only adapter/mock tests. Any native load/forward needs a new explicit request/output-bound release (proposed60s runtime/90s total, no Compile). No native case, retry or optimized-path claim is currently authorized.
+2. Review the committed frozen-PTE sweep's empirical regions and full saved-data analysis. Its one runtime-only release is consumed. State input/output range alignment is only a future hypothesis; no encoding/model change, native retry/follow-on, internal SDK cause or physical claim is authorized.
 3. No ADB or staging without a new explicit Pi phone slot. Full QNN/physical drift and one-token-only interpretation remain campaign-readiness boundaries.
 4. Only after agreed fidelity and state-isolation gates may chunked prefill and the fixed 1+5+5+5 campaign be promoted.
 
