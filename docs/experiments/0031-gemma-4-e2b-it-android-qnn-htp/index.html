@@ -72,9 +72,9 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="status-header" data-status-header="true">
 <div class="kicker"><span>Experiment 0031</span><span class="status">Completed</span></div>
 <h1>Experiment 0031 — Gemma 4 E2B IT Android QNN/HTP</h1>
-<p class="summary">The accepted campaign remains complete. One FP16 short/max16 compatibility query passed; a separate exact-long/max2048 stage is host-ready only. Long repetition, broader fidelity and speed improvement remain unproven.</p>
+<p class="summary">The accepted campaign remains complete. The separate global-value FP16 candidate executed the exact long request, but its full output is identical to all five baseline repetitions. This candidate showed no text/repetition benefit; no normalized speed or broader fidelity benefit is established.</p>
 <div class="header-links"><a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-09-10</span><span>evidence commit: b43a57f9604b256440ba3c53ba04190401a5c23c</span><span>page source: docs/experiments/0031-gemma-4-e2b-it-android-qnn-htp/page.md</span><span>page source sha256: 4dc3c0b7c749fa4bb7cafde89a7ae39083a91d985a13e703c29ae4b547fe9600</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-09-10</span><span>evidence commit: e585e79ad6488e8c02672af92185a73cd1c595b2</span><span>page source: docs/experiments/0031-gemma-4-e2b-it-android-qnn-htp/page.md</span><span>page source sha256: 7df4a3c6b2922d5e88e2c9d7a37a287a7713cbecde48a17f340b23e10c34a5e4</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
@@ -198,7 +198,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <p>The original 399,795,157-byte provider log is hash-bound and retained losslessly as deterministic gzip alongside every output and profile. Cleanup verified the scoped root and process absent and released <code>phone.lock</code>.</p>
 <h3 id="long-collapse-improvement-track-separate-from-completed-campaign">Long-collapse improvement track (separate from completed campaign)<a class="anchor" href="#long-collapse-improvement-track-separate-from-completed-campaign" aria-label="Link to Long-collapse improvement track (separate from completed campaign)">#</a></h3>
 <p>After completion, improvement 0001 analyzed the immutable <code>37a2953</code> campaign and <code>e91b3f5</code> publication; it does not replace, relabel, or rerun them. Commit <code>f24fd21</code> established the baseline localization, and corrective commit <code>1c5b7b6</code> tightened cross-route decode comparability and the completion-time calculation.</p>
-<p>All five QNN long outputs are byte-identical and retokenize to the profiled 2,048 tokens. The first 128-token window whose four-gram unique ratio is at most 0.25 begins at generated token 84, absolute context position 2,012. An exact nine-token periodic suffix starts at generated token 479, absolute position 2,407, and covers the final 1,570 tokens: 174 complete cycles plus four trailing tokens. The dominant phrase pattern appears 215 times. Generation ends at absolute position 3,977, so crossing the 4,096 context boundary is excluded as the trigger.</p>
+<p>All five QNN long outputs are byte-identical and retokenize to the profiled 2,048 tokens. The first 128-token window whose four-gram unique ratio is at most 0.25 begins at generated token 84, absolute context position 2,012. This is the window&#x27;s start, not an exact causal onset. An exact nine-token periodic suffix starts at generated token 479, absolute position 2,407, and covers the final 1,570 tokens: 174 complete cycles plus four trailing tokens. The dominant phrase pattern appears 215 times. Generation ends at absolute position 3,977, so crossing the 4,096 context boundary is excluded as the trigger.</p>
 <p>Accepted LiteRT GPU and CPU outputs use the same rendered long-prompt bytes, remain coherent, and EOS-stop at 756 tokens without a periodic suffix. They are not numerical controls: QNN and LiteRT use different deployment artifacts, quantization schemes, and route-native tokenizers (1,929 versus 1,930 input tokens), and their text diverges at the first output word. Even LiteRT GPU and CPU emitted-token trajectories diverge at token 6. Text therefore cannot identify a first-logit or internal-state cause.</p>
 <p>The leading candidate is an explicit request-level hybrid: accepted QNN HTP for complete short and medium requests, accepted LiteRT GPU for complete long requests. Backend selection occurs before each logical request; this is not hidden tensor/provider fallback. The accepted long completion is 48.311 seconds on GPU versus 118.256 seconds on HTP, a 59.147% reduction, but the difference includes coherent EOS at 756 tokens versus repetitive max-token termination at 2,048. It is a total-completion comparison, not equal-output work.</p>
 <p>No normalized decode delta or decode-based ranking is made. QNN&#x27;s 17.828 tok/s value is a raw Genie observation with unspecified first-token inclusion; LiteRT&#x27;s 16.302 tok/s explicitly excludes the first token. Prefill/TTFT comparisons also retain the route-native tokenizer-count difference. Dual-route setup and memory are separate costs, and process measurements do not expose additive HTP/GPU-private memory.</p>
@@ -284,10 +284,35 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <p>These are runtime-defined boundaries from one max16 diagnostic, not a canonical first/warm distribution or a speed win. Process PSS, VmHWM and HTP-private memory remain <strong>null</strong>: this controller collected no memory sample, and an allocation message is not a total-memory measurement.</p>
 <p>The process finished before the first status poll, so there was no live-native PID sample. Execution is established by query/provider/profile/output evidence, not exit 0 alone. Both checks found all recorded model/wrapper/watchdog roles absent; no signal was issued. Raw pull preceded optional processing and scoped-root deletion; root absence and lock release were verified. This exercises natural completion, not every timeout/signal path or elimination of the controller&#x27;s residual PID race.</p>
 <p>Public telemetry reports battery 69% / 31.9°C on USB, thermal status 0→0, AP 40.3→43.9°C and skin 33.5→34.0°C. <strong>Complete battery dumps remain private and hash-bound</strong> because they contain unrelated learned charging/sleep history; public battery JSON is explicitly labelled core-field extraction, not rewritten raw data. Query/provider/output/profile/cleanup bytes, including raw log whitespace, remain unchanged. The <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/phone-return-short-attempt-01/README.md">retention notes</a> distinguish the public manifest from the original private collection inventory.</p>
-<p>No retry, long query, rebuild or stage/controller change occurred in Gate A. Exact-long work remains separately gated; there is no long-output, reset/reuse, speed, campaign or new registry result. The accepted completed campaign and its five long-output failures remain unchanged.</p>
+<p>No retry, long query, rebuild or stage/controller change occurred in Gate A. At Gate A, no long-output, reset/reuse, speed, campaign or new registry result had been established; exact-long work required separate review. The accepted completed campaign and its five long-output failures remain unchanged.</p>
 <p><strong>Exact-long host readiness (<code>b43a57f</code>)—not a long result.</strong> The <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/exact-long-readiness/result.json">separate stage and lifecycle</a> contains 18 independent read-only payload copies totaling 4,003,852,753 bytes, manifest <code>047dd808…b846e</code>. FP16 context <code>1d80d016…ca9f8</code>, configuration, tokenizer/BOS, LUTs and libraries are unchanged. One fresh dialog is configured for the exact <strong>1,929-token long input and full 2,048-token ceiling</strong>, fitting context 4096 without truncation. Token identity is inherited from verified bytes, not new tokenization. There is no preceding short query, retained KV reuse or repeat; host/remote bounds remain 1,800 seconds.</p>
 <p>The <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/EXACT-LONG-READINESS.md">fixed-scope adaptation</a> uses hash-pinned reviewed templates with enumerated substitutions and direct <code>nohup</code> plus absolute redirections. An inverse test recovers the original short-controller source. An owned FIFO-blocked host dummy verifies pipe closure before child completion and subsequent reaping—not Android detachment. Gate A file-mtime clues are not proof of a launch defect or a timing result. Lock/raw-first/retained-root gates and the non-atomic PID-race limitation remain.</p>
-<p>This is file/source/mock readiness only: <strong>no long/native/ADB/model execution, tokenization replay or recompilation</strong>. Short evidence and the completed campaign stay unchanged; repetition metrics and undefined-first-token raw-rate caveats remain predeclared. A fresh exact release is still required, with app priority and private-raw retention preserved.</p>
+<p>That preparation was file/source/mock readiness only: <strong>no long/native/ADB/model execution, tokenization replay or recompilation</strong> occurred in the readiness milestone. Its repetition metrics and undefined-first-token raw-rate caveats were predeclared unchanged. The later physical call below received a fresh exact release; short evidence, app priority and private-raw retention remain unchanged.</p>
+<p><strong>Physical Gate B (<code>e585e79</code>)—execution passed, repetition unchanged.</strong> The separately reviewed <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/phone-return-long-attempt-01/result.json">exact-long outcome</a> used one fresh process/dialog/query, adapter <code>b43a57f</code>, stage <code>047dd808…b846e</code> and unchanged FP16-global-value context <code>1d80d016…ca9f8</code>. Profile counts are <strong>1,929 input / 2,048 generated tokens</strong>. The exact prompt was echoed; both truncated token logs match their 158 complete prefix IDs with one BOS, not a complete runtime input-ID trace.</p>
+<p>Provider evidence records <strong>16 AR128 + 2,047 AR1 = 2,063 QnnDsp executions</strong>, all status 0, one context deserialization and SMART_MASK. No CPU-backend, runtime-fallback or cache-quantization-error marker was observed. These are bounded physical observations, not universal CPU-free or uniform-integer proof. The configured 2,048 ceiling was reached and the query returned normally; the independent <strong>EOS-versus-limit stop enum remains null</strong>.</p>
+<p>The decisive negative result is the <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/phone-return-long-attempt-01/raw/controller/raw/device/long-output.txt">complete 10,027-byte output</a>, SHA-256 <code>f0e9d284…97b2d</code>: <strong>byte-identical to all five retained baseline long outputs</strong>. No baseline request was rerun. Narrow sanity is false, with the exact issue <code>Severe repetition collapse with occasional &lt;unk&gt; leakage in the exact max-token output.</code></p>
+<p>The frozen repetition implementation and pinned text tokenizer reproduce every baseline metric without changed thresholds:</p>
+<div class="table-wrap"><table><thead><tr>
+<th>Repetition observation</th>
+<th>Unchanged result</th>
+</tr></thead><tbody>
+<tr>
+<td>First qualifying 128-token/four-gram window</td>
+<td><strong>Start index 83, zero-based</strong> (84th generated token); unique ratio 0.248</td>
+</tr>
+<tr>
+<td>Exact periodic suffix</td>
+<td><strong>Start index 478, zero-based</strong>; period 9; 1,570 tokens = 174 complete cycles + 4 trailing tokens</td>
+</tr>
+<tr>
+<td>Other declared metrics</td>
+<td>All 4/8/16-gram statistics unchanged; dominant word six-gram count 215</td>
+</tr>
+</tbody></table></div>
+<p>The window start is <strong>not causal onset or the first internal state/logit divergence</strong>. These indices come from re-encoding the retained output text, not a complete logged emitted-ID stream. Selected global-value FP16 interfaces alone did not change this exact request&#x27;s text or repetition. Internal quantization may remain; the result does <strong>not disprove every cache-precision hypothesis</strong>, establish numerical state equivalence, or justify a broader model-quality conclusion.</p>
+<p>Raw Genie reports query <strong>109.901620 s</strong>, reported TTFT <strong>2.469576 s</strong> and generation rate <strong>19.1982803 tokens/s</strong>. They are single runtime-defined observations under different run/thermal conditions, not a normalized speed win or distribution. First-token inclusion remains unspecified, so normalized decode is null. Thermal status changed 0→1; process PSS, VmHWM and HTP-private totals remain unmeasured. Live PID validation does not supply those memory metrics.</p>
+<p>The <strong>54,108,333-byte provider log</strong> is retained losslessly as gzip with original SHA-256 <code>33ab01bb…2d440</code>; full query/output/profile/transport/cleanup evidence remains exact. The live native PID was validated, the process exited naturally, all recorded roles and the scoped root were verified absent, raw pull preceded cleanup, and the lock was released. No signal, retry, warmup, short request or follow-on was used. Full battery originals remain private/hash-bound; public battery data contains only labelled core extracts.</p>
+<p>This is a negative text/repetition result for this candidate/request, not a campaign replacement. The completed campaign/card/registry and the short compatibility result remain unchanged. No further runtime or optimization result is established here.</p>
 <p>The <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/REQUEST-ROUTING.md">request-routing recommendation</a> remains an unmeasured policy for the existing canonical tiers, not a built hybrid or a general prompt-length threshold. It selects HTP for short/medium and LiteRT GPU for long before each complete request, with no mid-request switch or retry on another provider. Co-resident setup, memory, and speed require measurement; separate accepted route measurements are not a hybrid benchmark.</p>
 </section>
 <section class="primary-section" id="results" data-primary-section="results">
@@ -642,8 +667,8 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <th>Current result</th>
 </tr></thead><tbody>
 <tr>
-<td>Collapse onset</td>
-<td>Generated token 84 / absolute position 2,012; first 128-token window at four-gram unique ratio ≤0.25</td>
+<td>First qualifying diversity window</td>
+<td>Start index 83 zero-based / generated token 84 / absolute position 2,012; ratio 0.248; window start, not causal onset</td>
 </tr>
 <tr>
 <td>Stable loop</td>
@@ -675,7 +700,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 </tr>
 <tr>
 <td>Candidate 2</td>
-<td>Separate FP16 context: 30 cache contracts / 120 flat boundaries verified; one physical short-query compatibility result, no long-fidelity result</td>
+<td>Selected global-value FP16: short compatibility passed, but exact-long output/repetition unchanged; no text benefit on this request</td>
 </tr>
 <tr>
 <td>Retained attempts 01–03</td>
@@ -766,8 +791,8 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>Config <code>f8008e04…7eba</code>, libraries/LUTs/tokenizer/BOS and short/long bytes unchanged; no new tokenization</td>
 </tr>
 <tr>
-<td>Supported diagnostic</td>
-<td>Gate A short/max16 executed; original short stage unchanged; separate exact-long/max2048 stage is host-ready only</td>
+<td>Diagnostic chronology</td>
+<td>Gate A short/max16 and separately released Gate B exact-long/max2048 each executed once; original stages/evidence retained</td>
 </tr>
 <tr>
 <td>Controller readiness</td>
@@ -827,15 +852,39 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 </tr>
 <tr>
 <td>Exact-long host readiness</td>
-<td><code>b43a57f</code>: 18 files / 4,003,852,753 B, manifest <code>047dd808…b846e</code>; same context/config, one fresh 1,929-input/max2048 query, 1,800 s bounds; unexecuted</td>
+<td><code>b43a57f</code>: 18 files / 4,003,852,753 B, manifest <code>047dd808…b846e</code>; same context/config, one fresh 1,929-input/max2048 query, 1,800 s bounds; later executed separately</td>
 </tr>
 <tr>
 <td>Long lifecycle boundary</td>
 <td>Fixed hash-pinned adaptation, direct-nohup absolute redirections and host FIFO/reaping test; no Android detachment or timing proof</td>
 </tr>
 <tr>
+<td>Physical Gate B</td>
+<td><code>e585e79</code>: 1,929 input / 2,048 generated; 16 AR128 + 2,047 AR1 status-0 executions; one process/dialog/query, SMART_MASK</td>
+</tr>
+<tr>
+<td>Long-output verdict</td>
+<td>Full 10,027 B / <code>f0e9d284…97b2d</code> identical to all five baseline outputs; severe repetition/<code>&lt;unk&gt;</code> remains, sanity false</td>
+</tr>
+<tr>
+<td>Frozen repetition result</td>
+<td>Window starts at index 83 / ratio 0.248, not causal onset; period-9 suffix starts at index 478 and spans 1,570 tokens; all declared metrics unchanged</td>
+</tr>
+<tr>
+<td>Long stop/rate limits</td>
+<td>Cap 2048 reached, independent stop enum null; raw query 109.901620 s / rate 19.1982803 tokens/s, normalized decode null; no speed win</td>
+</tr>
+<tr>
+<td>Long retention/cleanup</td>
+<td>54,108,333 B log losslessly gzip-retained; live PID validated, natural exit, roles/root absent, no signals; full battery private/core extracts public</td>
+</tr>
+<tr>
+<td>Remaining hypotheses</td>
+<td>Negative for this selected global-value FP16 candidate/request; internal quantization may remain, other cache-precision causes not disproven</td>
+</tr>
+<tr>
 <td>Remaining candidate evidence</td>
-<td>Long repetition/fidelity, reset/reuse and unused cache APIs, broader placement and speed; no long or campaign result</td>
+<td>Numerical fidelity, reset/reuse and unused cache APIs, broader placement and normalized performance remain unproven; no new campaign</td>
 </tr>
 <tr>
 <td>Mixed-commit review scope</td>

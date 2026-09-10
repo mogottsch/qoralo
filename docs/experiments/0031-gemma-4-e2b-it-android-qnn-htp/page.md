@@ -1,7 +1,7 @@
 ---
 experiment: 0031-gemma-4-e2b-it-android-qnn-htp
 status: completed
-summary: The accepted campaign remains complete. One FP16 short/max16 compatibility query passed; a separate exact-long/max2048 stage is host-ready only. Long repetition, broader fidelity and speed improvement remain unproven.
+summary: The accepted campaign remains complete. The separate global-value FP16 candidate executed the exact long request, but its full output is identical to all five baseline repetitions. This candidate showed no text/repetition benefit; no normalized speed or broader fidelity benefit is established.
 benchmark: android-llm
 registry: 0031-gemma-4-e2b-it-qnn-htp
 ---
@@ -171,7 +171,7 @@ The original 399,795,157-byte provider log is hash-bound and retained losslessly
 
 After completion, improvement 0001 analyzed the immutable `37a2953` campaign and `e91b3f5` publication; it does not replace, relabel, or rerun them. Commit `f24fd21` established the baseline localization, and corrective commit `1c5b7b6` tightened cross-route decode comparability and the completion-time calculation.
 
-All five QNN long outputs are byte-identical and retokenize to the profiled 2,048 tokens. The first 128-token window whose four-gram unique ratio is at most 0.25 begins at generated token 84, absolute context position 2,012. An exact nine-token periodic suffix starts at generated token 479, absolute position 2,407, and covers the final 1,570 tokens: 174 complete cycles plus four trailing tokens. The dominant phrase pattern appears 215 times. Generation ends at absolute position 3,977, so crossing the 4,096 context boundary is excluded as the trigger.
+All five QNN long outputs are byte-identical and retokenize to the profiled 2,048 tokens. The first 128-token window whose four-gram unique ratio is at most 0.25 begins at generated token 84, absolute context position 2,012. This is the window's start, not an exact causal onset. An exact nine-token periodic suffix starts at generated token 479, absolute position 2,407, and covers the final 1,570 tokens: 174 complete cycles plus four trailing tokens. The dominant phrase pattern appears 215 times. Generation ends at absolute position 3,977, so crossing the 4,096 context boundary is excluded as the trigger.
 
 Accepted LiteRT GPU and CPU outputs use the same rendered long-prompt bytes, remain coherent, and EOS-stop at 756 tokens without a periodic suffix. They are not numerical controls: QNN and LiteRT use different deployment artifacts, quantization schemes, and route-native tokenizers (1,929 versus 1,930 input tokens), and their text diverges at the first output word. Even LiteRT GPU and CPU emitted-token trajectories diverge at token 6. Text therefore cannot identify a first-logit or internal-state cause.
 
@@ -266,13 +266,35 @@ The process finished before the first status poll, so there was no live-native P
 
 Public telemetry reports battery 69% / 31.9°C on USB, thermal status 0→0, AP 40.3→43.9°C and skin 33.5→34.0°C. **Complete battery dumps remain private and hash-bound** because they contain unrelated learned charging/sleep history; public battery JSON is explicitly labelled core-field extraction, not rewritten raw data. Query/provider/output/profile/cleanup bytes, including raw log whitespace, remain unchanged. The [retention notes](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/phone-return-short-attempt-01/README.md) distinguish the public manifest from the original private collection inventory.
 
-No retry, long query, rebuild or stage/controller change occurred in Gate A. Exact-long work remains separately gated; there is no long-output, reset/reuse, speed, campaign or new registry result. The accepted completed campaign and its five long-output failures remain unchanged.
+No retry, long query, rebuild or stage/controller change occurred in Gate A. At Gate A, no long-output, reset/reuse, speed, campaign or new registry result had been established; exact-long work required separate review. The accepted completed campaign and its five long-output failures remain unchanged.
 
 **Exact-long host readiness (`b43a57f`)—not a long result.** The [separate stage and lifecycle](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/exact-long-readiness/result.json) contains 18 independent read-only payload copies totaling 4,003,852,753 bytes, manifest `047dd808…b846e`. FP16 context `1d80d016…ca9f8`, configuration, tokenizer/BOS, LUTs and libraries are unchanged. One fresh dialog is configured for the exact **1,929-token long input and full 2,048-token ceiling**, fitting context 4096 without truncation. Token identity is inherited from verified bytes, not new tokenization. There is no preceding short query, retained KV reuse or repeat; host/remote bounds remain 1,800 seconds.
 
 The [fixed-scope adaptation](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/EXACT-LONG-READINESS.md) uses hash-pinned reviewed templates with enumerated substitutions and direct `nohup` plus absolute redirections. An inverse test recovers the original short-controller source. An owned FIFO-blocked host dummy verifies pipe closure before child completion and subsequent reaping—not Android detachment. Gate A file-mtime clues are not proof of a launch defect or a timing result. Lock/raw-first/retained-root gates and the non-atomic PID-race limitation remain.
 
-This is file/source/mock readiness only: **no long/native/ADB/model execution, tokenization replay or recompilation**. Short evidence and the completed campaign stay unchanged; repetition metrics and undefined-first-token raw-rate caveats remain predeclared. A fresh exact release is still required, with app priority and private-raw retention preserved.
+That preparation was file/source/mock readiness only: **no long/native/ADB/model execution, tokenization replay or recompilation** occurred in the readiness milestone. Its repetition metrics and undefined-first-token raw-rate caveats were predeclared unchanged. The later physical call below received a fresh exact release; short evidence, app priority and private-raw retention remain unchanged.
+
+**Physical Gate B (`e585e79`)—execution passed, repetition unchanged.** The separately reviewed [exact-long outcome](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/phone-return-long-attempt-01/result.json) used one fresh process/dialog/query, adapter `b43a57f`, stage `047dd808…b846e` and unchanged FP16-global-value context `1d80d016…ca9f8`. Profile counts are **1,929 input / 2,048 generated tokens**. The exact prompt was echoed; both truncated token logs match their 158 complete prefix IDs with one BOS, not a complete runtime input-ID trace.
+
+Provider evidence records **16 AR128 + 2,047 AR1 = 2,063 QnnDsp executions**, all status 0, one context deserialization and SMART_MASK. No CPU-backend, runtime-fallback or cache-quantization-error marker was observed. These are bounded physical observations, not universal CPU-free or uniform-integer proof. The configured 2,048 ceiling was reached and the query returned normally; the independent **EOS-versus-limit stop enum remains null**.
+
+The decisive negative result is the [complete 10,027-byte output](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/phone-return-long-attempt-01/raw/controller/raw/device/long-output.txt), SHA-256 `f0e9d284…97b2d`: **byte-identical to all five retained baseline long outputs**. No baseline request was rerun. Narrow sanity is false, with the exact issue `Severe repetition collapse with occasional <unk> leakage in the exact max-token output.`
+
+The frozen repetition implementation and pinned text tokenizer reproduce every baseline metric without changed thresholds:
+
+| Repetition observation | Unchanged result |
+|---|---|
+| First qualifying 128-token/four-gram window | **Start index 83, zero-based** (84th generated token); unique ratio 0.248 |
+| Exact periodic suffix | **Start index 478, zero-based**; period 9; 1,570 tokens = 174 complete cycles + 4 trailing tokens |
+| Other declared metrics | All 4/8/16-gram statistics unchanged; dominant word six-gram count 215 |
+
+The window start is **not causal onset or the first internal state/logit divergence**. These indices come from re-encoding the retained output text, not a complete logged emitted-ID stream. Selected global-value FP16 interfaces alone did not change this exact request's text or repetition. Internal quantization may remain; the result does **not disprove every cache-precision hypothesis**, establish numerical state equivalence, or justify a broader model-quality conclusion.
+
+Raw Genie reports query **109.901620 s**, reported TTFT **2.469576 s** and generation rate **19.1982803 tokens/s**. They are single runtime-defined observations under different run/thermal conditions, not a normalized speed win or distribution. First-token inclusion remains unspecified, so normalized decode is null. Thermal status changed 0→1; process PSS, VmHWM and HTP-private totals remain unmeasured. Live PID validation does not supply those memory metrics.
+
+The **54,108,333-byte provider log** is retained losslessly as gzip with original SHA-256 `33ab01bb…2d440`; full query/output/profile/transport/cleanup evidence remains exact. The live native PID was validated, the process exited naturally, all recorded roles and the scoped root were verified absent, raw pull preceded cleanup, and the lock was released. No signal, retry, warmup, short request or follow-on was used. Full battery originals remain private/hash-bound; public battery data contains only labelled core extracts.
+
+This is a negative text/repetition result for this candidate/request, not a campaign replacement. The completed campaign/card/registry and the short compatibility result remain unchanged. No further runtime or optimization result is established here.
 
 The [request-routing recommendation](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/REQUEST-ROUTING.md) remains an unmeasured policy for the existing canonical tiers, not a built hybrid or a general prompt-length threshold. It selects HTP for short/medium and LiteRT GPU for long before each complete request, with no mid-request switch or retry on another provider. Co-resident setup, memory, and speed require measurement; separate accepted route measurements are not a hybrid benchmark.
 
@@ -373,7 +395,7 @@ Attempt chronology remains intact: the initial campaign setup failed before any 
 
 | Improvement evidence | Current result |
 |---|---|
-| Collapse onset | Generated token 84 / absolute position 2,012; first 128-token window at four-gram unique ratio ≤0.25 |
+| First qualifying diversity window | Start index 83 zero-based / generated token 84 / absolute position 2,012; ratio 0.248; window start, not causal onset |
 | Stable loop | Period 9 from token 479 / absolute 2,407; final 1,570 tokens; dominant pattern 215× |
 | Capacity hypothesis | Excluded: generation ends at absolute 3,977, below context capacity 4,096 |
 | LiteRT references | GPU/CPU coherent and EOS at 756; no periodic suffix; same rendered bytes but different artifact/tokenizer |
@@ -381,7 +403,7 @@ Attempt chronology remains intact: the initial campaign setup failed before any 
 | Candidate 1 | Request-level hybrid: QNN HTP short/medium + LiteRT GPU long; explicit backend per complete request |
 | Long completion comparison | GPU 48.311 s vs HTP 118.256 s, 59.147% shorter; output counts/stops differ (756 EOS vs 2,048 max) |
 | Decode comparison | Null for ranking: Genie first-token inclusion unspecified; LiteRT explicitly excludes it |
-| Candidate 2 | Separate FP16 context: 30 cache contracts / 120 flat boundaries verified; one physical short-query compatibility result, no long-fidelity result |
+| Candidate 2 | Selected global-value FP16: short compatibility passed, but exact-long output/repetition unchanged; no text benefit on this request |
 | Retained attempts 01–03 | Two import/loader-path failures and one encoding-removal preflight failure; all before conversion |
 | Attempt 04 patch scope | AR1 removes 6 selected encoding entries, AR128 removes 3; other I/O/encodings/weights unchanged |
 | Attempt 04 interruption | App-priority `STOP` → TERM before DLC; owned group reaped; no automatic restart; not model/numerical failure |
@@ -404,7 +426,7 @@ Attempt chronology remains intact: the initial campaign setup failed before any 
 | Unsupported-op count | Null: native logs can be suppressed at accepted verbosity; not a zero-unsupported or CPU-free execution claim |
 | Frozen stage | `212f0d4`: 21 payload files / 4,003,855,761 B; manifest `58484160…fe25`; independent copies, runner0555; baseline unchanged |
 | Frozen config/input boundary | Config `f8008e04…7eba`, libraries/LUTs/tokenizer/BOS and short/long bytes unchanged; no new tokenization |
-| Supported diagnostic | Gate A short/max16 executed; original short stage unchanged; separate exact-long/max2048 stage is host-ready only |
+| Diagnostic chronology | Gate A short/max16 and separately released Gate B exact-long/max2048 each executed once; original stages/evidence retained |
 | Controller readiness | `62b8a16`: plan-only default; actual fresh one-use Pi attestation, full phone.lock, exact device/build and local/remote hashes required |
 | Deadlines | Host process + remote watchdog 1,800 s; bounded phase waits, not guaranteed immediate termination; no automatic retry |
 | PID limitation | Starttime/exe/argv checks before numeric signal; no atomic/pidfd binding, residual check-to-signal race remains |
@@ -419,9 +441,15 @@ Attempt chronology remains intact: the initial campaign setup failed before any 
 | Decode normalization | Raw 17.6189728 tokens/s; first-token inclusion undefined, normalized decode null; no speed-win claim |
 | Missing memory | No process sample or live-native PID sample; PSS/VmHWM/HTP-private totals null |
 | Cleanup/privacy | Natural exit; recorded roles/root absent, raw first, no signal; full battery private, public labelled core extracts only |
-| Exact-long host readiness | `b43a57f`: 18 files / 4,003,852,753 B, manifest `047dd808…b846e`; same context/config, one fresh 1,929-input/max2048 query, 1,800 s bounds; unexecuted |
+| Exact-long host readiness | `b43a57f`: 18 files / 4,003,852,753 B, manifest `047dd808…b846e`; same context/config, one fresh 1,929-input/max2048 query, 1,800 s bounds; later executed separately |
 | Long lifecycle boundary | Fixed hash-pinned adaptation, direct-nohup absolute redirections and host FIFO/reaping test; no Android detachment or timing proof |
-| Remaining candidate evidence | Long repetition/fidelity, reset/reuse and unused cache APIs, broader placement and speed; no long or campaign result |
+| Physical Gate B | `e585e79`: 1,929 input / 2,048 generated; 16 AR128 + 2,047 AR1 status-0 executions; one process/dialog/query, SMART_MASK |
+| Long-output verdict | Full 10,027 B / `f0e9d284…97b2d` identical to all five baseline outputs; severe repetition/`<unk>` remains, sanity false |
+| Frozen repetition result | Window starts at index 83 / ratio 0.248, not causal onset; period-9 suffix starts at index 478 and spans 1,570 tokens; all declared metrics unchanged |
+| Long stop/rate limits | Cap 2048 reached, independent stop enum null; raw query 109.901620 s / rate 19.1982803 tokens/s, normalized decode null; no speed win |
+| Long retention/cleanup | 54,108,333 B log losslessly gzip-retained; live PID validated, natural exit, roles/root absent, no signals; full battery private/core extracts public |
+| Remaining hypotheses | Negative for this selected global-value FP16 candidate/request; internal quantization may remain, other cache-precision causes not disproven |
+| Remaining candidate evidence | Numerical fidelity, reset/reuse and unused cache APIs, broader placement and normalized performance remain unproven; no new campaign |
 | Mixed-commit review scope | Gemma slice of `f637a74` only; no app/gallery publication or approval |
 | Routing-policy boundary | Unmeasured request-level recommendation; no built/measured hybrid or general length threshold |
 | Publication effect | Completed campaign/card/registry unchanged; new short compatibility is page-only, not a campaign rerun or new registry evidence |
