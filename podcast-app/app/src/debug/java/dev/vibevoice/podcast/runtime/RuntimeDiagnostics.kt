@@ -15,13 +15,18 @@ import java.util.concurrent.atomic.AtomicReference
 internal object RuntimeDiagnostics {
     private data class Capture(val contract: WiringContract, val evidence: WiringEvidence, val stop: (Throwable) -> Unit)
     @Volatile private var active: Capture? = null
+    @Volatile private var ttsOnlyEvidence: WiringEvidence? = null
     @Volatile private var mode = ""
 
     fun enable(contract: WiringContract, evidence: WiringEvidence, stop: (Throwable) -> Unit) {
-        check(active == null)
+        check(active == null && ttsOnlyEvidence == null)
         active = Capture(contract, evidence, stop)
     }
-    fun disable() { active = null }
+    fun enableTtsOnly(evidence: WiringEvidence) {
+        check(active == null && ttsOnlyEvidence == null)
+        ttsOnlyEvidence = evidence
+    }
+    fun disable() { active = null; ttsOnlyEvidence = null }
 
     fun outputLimit(mode: String, productionLimit: Int): Int = active?.contract?.outputTokens(mode) ?: productionLimit
 
@@ -70,7 +75,7 @@ internal object RuntimeDiagnostics {
         return output.readText(Charsets.UTF_8)
     }
 
-    fun qnnProfileDirectory(): String = active?.evidence?.let {
+    fun qnnProfileDirectory(): String = (active?.evidence ?: ttsOnlyEvidence)?.let {
         File(it.root, "qnn-profiles").apply { check(mkdir()) }.absolutePath
     } ?: ""
 }
