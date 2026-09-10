@@ -1,0 +1,141 @@
+{
+  "classification": "conditional_source_compatibility_rationale_not_runtime_proof",
+  "sdk": "2.49.40.260810",
+  "sources": [
+    {
+      "path": "examples/Genie/Genie/src/qualla/engines/qnn-api/qnn-utils.cpp",
+      "sha256": "35b222f5742f8071ef036322fec47043c7104380d1157142cddad8533b2c2eb8",
+      "primary_line_range": [
+        119,
+        158
+      ]
+    },
+    {
+      "path": "examples/Genie/Genie/src/qualla/engines/qnn-htp/nsp-model.cpp",
+      "sha256": "59f71750b92f13dfa797bfad009ebe7b633ae450a7b8eec0ff011ef1e2287f65",
+      "primary_line_range": [
+        1017,
+        1068
+      ]
+    },
+    {
+      "path": "examples/Genie/Genie/src/qualla/engines/qnn-htp/KVCache/kvmanager.cpp",
+      "sha256": "3bc586486902dadcc0e3bee3ee55bc163e7204364727f3564ed7cb8d2cba9485",
+      "primary_line_range": [
+        39,
+        98
+      ]
+    },
+    {
+      "path": "examples/Genie/Genie/src/qualla/engines/qnn-htp/KVCache/smart-mask.cpp",
+      "sha256": "209216f8c2758785c40ff39ff29b9c6984e8fa96faf1781dca3b169f6d1fa6f3",
+      "primary_line_range": [
+        19,
+        152
+      ]
+    },
+    {
+      "path": "examples/Genie/Genie/src/qualla/engines/qnn-htp/KVCache/native-kv.cpp",
+      "sha256": "0444bf65295848fde5155f8ee12880f08fcb6848f12cfc4967eea1c88f30caae",
+      "primary_line_range": [
+        18,
+        25
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "topic": "nonquantized tensor parameters",
+      "observation": "QnnUtils Tensor inserts (scale,offset)=(0,0) for nonquantized datatypes, so float cache tensors have a quantParam[0] placeholder. Genie validation compares those placeholders across matching input/output aliases."
+    },
+    {
+      "topic": "flat-buffer byte transport",
+      "observation": "CacheGroup selects SmartMask for flat buffers. SmartMask update/move copies raw bytes with group.n_bytes and supports 16-bit storage. No value_quant scaling occurs on this inspected ordinary update/move path."
+    },
+    {
+      "topic": "key-derived group properties",
+      "observation": "n_bytes and m_quantized derive from the key tensor. With existing uFxp16 keys, clear value is0x8000 for both buffers. That is quantized key zero and IEEE FP16 negative zero for the selected float values; this is a bit-interpretation observation, not fidelity evidence."
+    },
+    {
+      "topic": "NativeKV restriction",
+      "observation": "NativeKV completeInit rejects anything other than quantized8-bit. Candidate context cache tensors must remain FLAT_BUFFER; HMX native-cache layout is not an accepted path."
+    },
+    {
+      "topic": "quant-parameter-dependent value operations",
+      "observation": "KVTensor stores value_quant; SmartMask dumpHead empty-head filling uses its offset (lines407-427), and KV dump/spec/export writes scales/offsets with key-derived UINT8/UINT16 dtype (kvmanager lines1320-1430 and1886-1954). These APIs are not enabled or relied upon. Do not generalize byte-transport rationale to cache serialization/export."
+    }
+  ],
+  "fp16_clear_interpretation": {
+    "bits_hex": "8000",
+    "numeric_zero": true,
+    "sign_negative": true
+  },
+  "runtime_config_unchanged": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/runtime-bundle/gemma4-e2b-htp-cl4096-greedy.json",
+    "sha256": "f8008e047443d70c0db32c7775dba8a1a958f7c838bd2683f33b4d7a8a457eba",
+    "cache_groups": [
+      {
+        "version": 1,
+        "prefix": "past_",
+        "kv-dim": 512,
+        "attention-mask-tensor-name": "attention_mask"
+      },
+      {
+        "version": 1,
+        "prefix": "swa_",
+        "kv-dim": 256,
+        "attention-mask-tensor-name": "swa_attention_mask",
+        "longcontext": {
+          "version": 1,
+          "type": "sliding-window",
+          "sliding-window": {
+            "version": 1,
+            "window-size": 512
+          }
+        }
+      }
+    ],
+    "positional_encoding": [
+      {
+        "type": "rope",
+        "rope-dim": 256,
+        "rope-theta": 1000000.0,
+        "rope-scaling": {
+          "rope-type": "proportional",
+          "partial-rotary-factor": 0.25
+        }
+      },
+      {
+        "prefix": "swa_",
+        "type": "rope",
+        "rope-dim": 128,
+        "rope-theta": 10000.0
+      }
+    ],
+    "backend": {
+      "version": 1,
+      "type": "QnnHtp",
+      "QnnHtp": {
+        "version": 1,
+        "use-mmap": true,
+        "spill-fill-bufsize": 0,
+        "mmap-budget": 40,
+        "poll": true,
+        "cpu-mask": "0xe0",
+        "kv-dim": 256,
+        "allow-async-init": true,
+        "enable-graph-switching": true
+      },
+      "extensions": "./htp_backend_ext_config.json"
+    }
+  },
+  "required_compiled_metadata_gate": "All30 cache inputs/outputs in both graphs FLAT_BUFFER; only global-value types/quant params differ from baseline. Preserve global/SWA names/shapes/options.",
+  "uncertainties": [
+    "Inspected SDK example source is not physical execution proof for shipped Genie binaries.",
+    "Mixed uFxp16 key/FP16 value semantics through all runtime paths remain untested.",
+    "No NativeKV/cache export/spec fidelity claim; no reset/inference/speed/quality test occurred."
+  ],
+  "phone_access": false,
+  "runtime_validation_performed": false,
+  "value_quant_dependent_dump_caveat": "SmartMask dumpHead out-of-range-head filling uses -value_quant.offset; FP16 placeholder offset0 gives positive-zero bits, whereas group clear uses key-derived0x8000 negative zero. Both are numeric zero but not bit-identical. Export/spec scale0 and key-derived UINT16 labels must not be assumed semantically valid for FP16 values. These APIs were not invoked."
+}

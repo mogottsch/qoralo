@@ -8,7 +8,7 @@ The accepted route remains the baseline. Any new conversion, host diagnostic, hy
 
 ## Current host status — 2026-09-10
 
-**Attempt 06: AR128 conversion completed with verified AR1 reuse; the actual 30-cache paired interface gate passes. Context compilation/fidelity remain gated.** The first three retained launches diagnosed two missing loader-path prerequisites and an unexecuted patch assumption (AR1 has six explicit selected cache encodings; AR128 has only three input entries). Existing host libraries were reused without installation or SDK changes.
+**The paired DLCs now compile into one SM8550/v73 weight-sharing context. Official metadata verifies all 30 cache contracts and 120 flat-buffer cache boundaries. Runtime placement and fidelity remain unvalidated.** The first three retained launches diagnosed two missing loader-path prerequisites and an unexecuted patch assumption (AR1 has six explicit selected cache encodings; AR128 has only three input entries). Existing host libraries were reused without installation or SDK changes.
 
 Attempt 04 prepared both FP16 global-value-cache ONNX variants and passed independent scope checks. Pi then requested STOP → TERM to release app resources before a DLC was produced. It remains **an app-priority interruption, not a model or numerical failure** at [`results/global-value-fp16-attempt-04/`](results/global-value-fp16-attempt-04/result.json).
 
@@ -20,7 +20,11 @@ After separate review/release, attempt 06 used disk-backed owned `QAIRT_TMP_DIR`
 
 AR128 operator count increases **6,830→6,842**, including **Convert 30→36**, three added Casts and three Dequantize ops. Its converter float-precision warnings increase **15→21** (15 RmsNorm plus three global Concats and three output Casts); reused AR1 remains 75→81 with Convert 31→31. These observations show no count-based speed win and do not imply CPU fallback or full HTP delegation. See [`results/global-value-fp16-attempt-06/result.json`](results/global-value-fp16-attempt-06/result.json).
 
-The SDK removed all scratch files; the empty owned scratch root was removed and all owned processes exited. Compilation, full HTP delegation, runtime unsupported/fallback counts, fidelity and speed improvements remain **unmeasured**. [Disk-backed scratch/reuse notes](DISK-SCRATCH-READINESS.md) record the environment change; a separate review is required before any context compilation. Completed campaign and registry evidence are unchanged.
+The SDK removed all scratch files; the empty owned scratch root was removed and all owned processes exited. [Disk-backed scratch/reuse notes](DISK-SCRATCH-READINESS.md) record that conversion-stage environment change.
+
+A separately authorized context-compile attempt then executed the exact hash-pinned accepted compiler recipe, substituting only the paired DLC paths/hashes and fresh storage paths. The context is **1,186,430,976 bytes**, SHA-256 `1d80d01637f032ab0c5ec3135e9458c648b4c18e034574a56d42dbfbdbdca9f8`, 61,440 bytes larger than baseline. Metadata confirms backend 6 / soc43 / v73 target markers, original graph aliases and 38-input/31-output interfaces, all 30 matching active cache signatures, and all **120 cache tensor boundaries FLAT_BUFFER**. Only the selected global value-cache types/quantization differ. See [`results/global-value-fp16-context-attempt-01/result.json`](results/global-value-fp16-context-attempt-01/result.json).
+
+[Genie source notes and compatibility risks](GENIE-FP16-CACHE-SOURCE-NOTES.md) explain byte-copy support, key-derived clear mode (FP16 negative zero), NativeKV's uint8-only restriction and quant-dependent cache-export paths that were not used. These are source rationale, not runtime semantic proof. The exhaustive unsupported-operator count is null because native compiler logging can be suppressed at the accepted verbosity; no extra compile was run for logs. Full physical HTP/neural CPU-free placement, runtime loading, fidelity and speed improvements remain **unmeasured**. The owned compile scratch and processes are cleaned up. Stop for separate review before runtime/fidelity or phone work. Completed campaign and registry evidence are unchanged.
 
 The separately documented [request-level routing recommendation](REQUEST-ROUTING.md) remains an unmeasured integration policy, not a new campaign.
 

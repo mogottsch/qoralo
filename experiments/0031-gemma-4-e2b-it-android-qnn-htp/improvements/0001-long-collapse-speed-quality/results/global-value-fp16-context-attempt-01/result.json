@@ -1,0 +1,502 @@
+{
+  "baseline_context": {
+    "bytes": 1186369536,
+    "sha256": "7739ce5278dbe77117c879602f15e1e62460c88a9adf2dbcf10abb47dd61d394"
+  },
+  "claim_boundary": "One host HTP weight-sharing context compilation completed using the unchanged hash-pinned accepted recipe and only the reviewed paired DLC substitutions/fresh storage paths. Official metadata confirms backend6/SM8550, both original graph aliases, selected global-value FP16 interfaces, unchanged unselected interfaces/shapes/quantization, all30 active four-way cache contracts and all120 cache tensor boundaries FLAT_BUFFER. Compilation and metadata compatibility do not establish physical HTP execution, neural CPU-free placement, speed improvement or fidelity. Genie mixed key/value handling has source-backed rationale and remaining semantic/API risks; no runtime test was performed.",
+  "classification": "positive_host_htp_context_compile_with_fp16_global_value_cache_compatibility",
+  "compiler_config": {
+    "backend": "HTP",
+    "backend_binary_path": null,
+    "compiler_custom_configs": null,
+    "context_custom_configs": [
+      {
+        "extended_udma": false,
+        "file_read_memory_budget_in_mb": 0,
+        "group_id": 0,
+        "init_acceleration": false,
+        "io_memory_estimation": false,
+        "lora_weight_sharing": false,
+        "lora_weight_sharing_ram_preload": false,
+        "max_spill_fill_buffer_for_group": 0,
+        "weight_sharing_enabled": true
+      }
+    ],
+    "data_format_config": null,
+    "debug": false,
+    "device_custom_configs": [
+      {
+        "core_ids": null,
+        "core_type": 0,
+        "cores": [
+          {
+            "adaptive_polling_time": 0,
+            "hmx_timeout_us": 300000,
+            "id": 0,
+            "perf_profile": "burst",
+            "rpc_control_latency": 100,
+            "rpc_polling_time": 9999
+          }
+        ],
+        "dsp_arch": "v73",
+        "id": 0,
+        "pd_session": "unsigned",
+        "profiling_level": "linting",
+        "soc_id": 0,
+        "soc_model": 43
+      }
+    ],
+    "enable_intermediate_outputs": null,
+    "graph_custom_configs": [
+      {
+        "advanced_activation_fusion": true,
+        "dlbc": 0,
+        "dlbc_weights": 0,
+        "finalize_config": null,
+        "fold_relu_activation_into_conv_off": false,
+        "fp16_relaxed_precision": 0,
+        "hvx_threads": 0,
+        "monolithic_lstm": false,
+        "name": "ar1_cl4096_1_of_1",
+        "num_cores": null,
+        "optimization_type": 3,
+        "short_depth_conv_on_hmx_off": false,
+        "use_high_precision_fp16_sigmoid": false,
+        "vtcm_size": 0,
+        "vtcm_size_in_mb": 0,
+        "weights_packing": false
+      },
+      {
+        "advanced_activation_fusion": true,
+        "dlbc": 0,
+        "dlbc_weights": 0,
+        "finalize_config": null,
+        "fold_relu_activation_into_conv_off": false,
+        "fp16_relaxed_precision": 0,
+        "hvx_threads": 0,
+        "monolithic_lstm": false,
+        "name": "ar128_cl4096_1_of_1",
+        "num_cores": null,
+        "optimization_type": 3,
+        "short_depth_conv_on_hmx_off": false,
+        "use_high_precision_fp16_sigmoid": false,
+        "vtcm_size": 0,
+        "vtcm_size_in_mb": 0,
+        "weights_packing": false
+      }
+    ],
+    "group_context_config": null,
+    "io_tensor_mem_type": "memhandle",
+    "log_level": "warn",
+    "memory_custom_config": {
+      "mem_type": "shared_buffer"
+    },
+    "op_packages": null,
+    "set_output_tensors": null,
+    "soc_details": "chipset:SM8550"
+  },
+  "compiler_file_provenance": {
+    "boundary": "SDK and host-library file identities, not a physical execution/mapped-library proof.",
+    "file_identities": [
+      {
+        "bytes": 976,
+        "path": "/home/moritz/opt/qairt/2.49.40.260810/sdk.yaml",
+        "resolved_path": "/home/moritz/opt/qairt/2.49.40.260810/sdk.yaml",
+        "sha256": "08d752936482cdf83ca772f3cf284769eb6fea06634bba631904dcbacd89527c"
+      },
+      {
+        "bytes": 97564344,
+        "path": "/home/moritz/opt/qairt/2.49.40.260810/lib/x86_64-linux-clang/libQnnHtp.so",
+        "resolved_path": "/home/moritz/opt/qairt/2.49.40.260810/lib/x86_64-linux-clang/libQnnHtp.so",
+        "sha256": "e74c8121610370b6af91d8c3f5a1d5909cca2ebdfa19b75bd92dfb5d1fb2af20"
+      },
+      {
+        "bytes": 5300584,
+        "path": "/home/moritz/opt/qairt/2.49.40.260810/lib/x86_64-linux-clang/libQnnSystem.so",
+        "resolved_path": "/home/moritz/opt/qairt/2.49.40.260810/lib/x86_64-linux-clang/libQnnSystem.so",
+        "sha256": "53378bec6b9787c6e2b6b5a2a7f9fd138b8e2edfbde61b781a53c0aaf816d06c"
+      },
+      {
+        "bytes": 54309,
+        "path": "/home/moritz/opt/qairt/2.49.40.260810/lib/python/qairt/gen_ai_api/builders/htp_mixin.py",
+        "resolved_path": "/home/moritz/opt/qairt/2.49.40.260810/lib/python/qairt/gen_ai_api/builders/htp_mixin.py",
+        "sha256": "c11c0fde641e665ea351702a1a4927333e28ff0a5e1ce324a87859432a17218e"
+      },
+      {
+        "bytes": 12826,
+        "path": "/home/moritz/opt/qairt/2.49.40.260810/lib/python/qairt/api/compiler/_compile.py",
+        "resolved_path": "/home/moritz/opt/qairt/2.49.40.260810/lib/python/qairt/api/compiler/_compile.py",
+        "sha256": "58b74a501cb208007e4bec51085ad0397258841bb7e116b574c5ad439d2d65c4"
+      },
+      {
+        "bytes": 23721696,
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/host-libs/libpython3.10.so.1.0",
+        "resolved_path": "/home/moritz/.local/share/uv/python/cpython-3.10.18-linux-x86_64-gnu/lib/libpython3.10.so.1.0",
+        "sha256": "43ae032b743846bab654b453be242122372859b5006797fbf8c55f587e268cea"
+      },
+      {
+        "bytes": 67480,
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/host-libs/libunwind.so.1",
+        "resolved_path": "/usr/lib/libunwind.so.8.2.0",
+        "sha256": "7b6dc90a7732b5633d622ce0b78e1ebee75e3c1dd7b7ce1f56d60c3fc60a22e7"
+      }
+    ]
+  },
+  "context": {
+    "bytes": 1186430976,
+    "compile_invocations": 1,
+    "name": "ar1_cl4096_1_of_1",
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/runs/global-value-fp16-context-20260910T102456Z-attempt-01/context-cache/56ae48765d7181517570b59df83baf32d7dfe5676e30be327e336ca486152090/ar1_cl4096_1_of_1.bin",
+    "physical_execution_proven": false,
+    "sha256": "1d80d01637f032ab0c5ec3135e9458c648b4c18e034574a56d42dbfbdbdca9f8"
+  },
+  "context_size_delta_bytes": 61440,
+  "embedded_target_markers": {
+    "context_sha256": "1d80d01637f032ab0c5ec3135e9458c648b4c18e034574a56d42dbfbdbdca9f8",
+    "markers": {
+      "ar128_cl4096_1_of_1": true,
+      "ar1_cl4096_1_of_1": true,
+      "arch=73": true,
+      "soc_type=SM8550": true
+    },
+    "physical_execution": false
+  },
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "genie_fp16_source_check": {
+    "classification": "conditional_source_compatibility_rationale_not_runtime_proof",
+    "findings": [
+      {
+        "observation": "QnnUtils Tensor inserts (scale,offset)=(0,0) for nonquantized datatypes, so float cache tensors have a quantParam[0] placeholder. Genie validation compares those placeholders across matching input/output aliases.",
+        "topic": "nonquantized tensor parameters"
+      },
+      {
+        "observation": "CacheGroup selects SmartMask for flat buffers. SmartMask update/move copies raw bytes with group.n_bytes and supports 16-bit storage. No value_quant scaling occurs on this inspected ordinary update/move path.",
+        "topic": "flat-buffer byte transport"
+      },
+      {
+        "observation": "n_bytes and m_quantized derive from the key tensor. With existing uFxp16 keys, clear value is0x8000 for both buffers. That is quantized key zero and IEEE FP16 negative zero for the selected float values; this is a bit-interpretation observation, not fidelity evidence.",
+        "topic": "key-derived group properties"
+      },
+      {
+        "observation": "NativeKV completeInit rejects anything other than quantized8-bit. Candidate context cache tensors must remain FLAT_BUFFER; HMX native-cache layout is not an accepted path.",
+        "topic": "NativeKV restriction"
+      },
+      {
+        "observation": "KVTensor stores value_quant; SmartMask dumpHead empty-head filling uses its offset (lines407-427), and KV dump/spec/export writes scales/offsets with key-derived UINT8/UINT16 dtype (kvmanager lines1320-1430 and1886-1954). These APIs are not enabled or relied upon. Do not generalize byte-transport rationale to cache serialization/export.",
+        "topic": "quant-parameter-dependent value operations"
+      }
+    ],
+    "fp16_clear_interpretation": {
+      "bits_hex": "8000",
+      "numeric_zero": true,
+      "sign_negative": true
+    },
+    "phone_access": false,
+    "required_compiled_metadata_gate": "All30 cache inputs/outputs in both graphs FLAT_BUFFER; only global-value types/quant params differ from baseline. Preserve global/SWA names/shapes/options.",
+    "runtime_config_unchanged": {
+      "backend": {
+        "QnnHtp": {
+          "allow-async-init": true,
+          "cpu-mask": "0xe0",
+          "enable-graph-switching": true,
+          "kv-dim": 256,
+          "mmap-budget": 40,
+          "poll": true,
+          "spill-fill-bufsize": 0,
+          "use-mmap": true,
+          "version": 1
+        },
+        "extensions": "./htp_backend_ext_config.json",
+        "type": "QnnHtp",
+        "version": 1
+      },
+      "cache_groups": [
+        {
+          "attention-mask-tensor-name": "attention_mask",
+          "kv-dim": 512,
+          "prefix": "past_",
+          "version": 1
+        },
+        {
+          "attention-mask-tensor-name": "swa_attention_mask",
+          "kv-dim": 256,
+          "longcontext": {
+            "sliding-window": {
+              "version": 1,
+              "window-size": 512
+            },
+            "type": "sliding-window",
+            "version": 1
+          },
+          "prefix": "swa_",
+          "version": 1
+        }
+      ],
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/runtime-bundle/gemma4-e2b-htp-cl4096-greedy.json",
+      "positional_encoding": [
+        {
+          "rope-dim": 256,
+          "rope-scaling": {
+            "partial-rotary-factor": 0.25,
+            "rope-type": "proportional"
+          },
+          "rope-theta": 1000000.0,
+          "type": "rope"
+        },
+        {
+          "prefix": "swa_",
+          "rope-dim": 128,
+          "rope-theta": 10000.0,
+          "type": "rope"
+        }
+      ],
+      "sha256": "f8008e047443d70c0db32c7775dba8a1a958f7c838bd2683f33b4d7a8a457eba"
+    },
+    "runtime_validation_performed": false,
+    "sdk": "2.49.40.260810",
+    "sources": [
+      {
+        "path": "examples/Genie/Genie/src/qualla/engines/qnn-api/qnn-utils.cpp",
+        "primary_line_range": [
+          119,
+          158
+        ],
+        "sha256": "35b222f5742f8071ef036322fec47043c7104380d1157142cddad8533b2c2eb8"
+      },
+      {
+        "path": "examples/Genie/Genie/src/qualla/engines/qnn-htp/nsp-model.cpp",
+        "primary_line_range": [
+          1017,
+          1068
+        ],
+        "sha256": "59f71750b92f13dfa797bfad009ebe7b633ae450a7b8eec0ff011ef1e2287f65"
+      },
+      {
+        "path": "examples/Genie/Genie/src/qualla/engines/qnn-htp/KVCache/kvmanager.cpp",
+        "primary_line_range": [
+          39,
+          98
+        ],
+        "sha256": "3bc586486902dadcc0e3bee3ee55bc163e7204364727f3564ed7cb8d2cba9485"
+      },
+      {
+        "path": "examples/Genie/Genie/src/qualla/engines/qnn-htp/KVCache/smart-mask.cpp",
+        "primary_line_range": [
+          19,
+          152
+        ],
+        "sha256": "209216f8c2758785c40ff39ff29b9c6984e8fa96faf1781dca3b169f6d1fa6f3"
+      },
+      {
+        "path": "examples/Genie/Genie/src/qualla/engines/qnn-htp/KVCache/native-kv.cpp",
+        "primary_line_range": [
+          18,
+          25
+        ],
+        "sha256": "0444bf65295848fde5155f8ee12880f08fcb6848f12cfc4967eea1c88f30caae"
+      }
+    ],
+    "uncertainties": [
+      "Inspected SDK example source is not physical execution proof for shipped Genie binaries.",
+      "Mixed uFxp16 key/FP16 value semantics through all runtime paths remain untested.",
+      "No NativeKV/cache export/spec fidelity claim; no reset/inference/speed/quality test occurred."
+    ],
+    "value_quant_dependent_dump_caveat": "SmartMask dumpHead out-of-range-head filling uses -value_quant.offset; FP16 placeholder offset0 gives positive-zero bits, whereas group clear uses key-derived0x8000 negative zero. Both are numeric zero but not bit-identical. Export/spec scale0 and key-derived UINT16 labels must not be assumed semantically valid for FP16 values. These APIs were not invoked."
+  },
+  "improvement_track": "0001-long-collapse-speed-quality",
+  "inputs_and_recipe": {
+    "compile_options_overridden": false,
+    "inference": false,
+    "legacy_recipe_commit": "bda9216",
+    "legacy_recipe_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/tools/compile_qairt_cache_aligned.py",
+    "legacy_recipe_sha256": "cf997a64ec255d53b51f4b26e42ff426e8a06acce1c8626077be79698272a67b",
+    "models": [
+      {
+        "ar": 1,
+        "bytes": 2356848948,
+        "converted_in_this_attempt": false,
+        "name": "ar1_cl4096_1_of_1",
+        "origin": "reused_verified_attempt05",
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/runs/global-value-fp16-20260910T090755Z-attempt-05/dlc/cd6e32f1a967f521ba44ef9f3f460ced034e8c0986c20242d4daf57362cbbb4f/ar1_cl4096_1_of_1.dlc",
+        "provenance": {
+          "commit": "d5e6b94",
+          "cross_ar_contract_proven": false,
+          "interface_gate": "passed_actual_ar1_dlc_input_and_output_signatures",
+          "original_dlc_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/runs/global-value-fp16-20260910T090755Z-attempt-05/dlc/cd6e32f1a967f521ba44ef9f3f460ced034e8c0986c20242d4daf57362cbbb4f/ar1_cl4096_1_of_1.dlc",
+          "result_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/global-value-fp16-attempt-05/result.json",
+          "result_sha256": "b298cab9c895955069b8b671835d4ac29d66b58aaac37ec8398bdc9f6621dcac",
+          "run_id": "global-value-fp16-20260910T090755Z-attempt-05"
+        },
+        "sha256": "4e67d80ea342088f5235a9238dc209739d8961083b08895fa066d6857687a6cc"
+      },
+      {
+        "ar": 128,
+        "bytes": 2356859020,
+        "converted_in_this_attempt": true,
+        "name": "ar128_cl4096_1_of_1",
+        "origin": "converted_in_this_attempt",
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/runs/global-value-fp16-20260910T095945Z-attempt-06/dlc/b9b886d49ec5e87b214da9d73cacb41ab87dea8ddf950137aaa9eca9caec4643/ar128_cl4096_1_of_1.dlc",
+        "sha256": "48fc15f0cbec88963f7b4d0f9007b82ca5a1e1d812ca320ceec776e00a917b64"
+      }
+    ],
+    "paired_evidence_commit": "ce3b021",
+    "paired_result_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/global-value-fp16-attempt-06/result.json",
+    "paired_result_sha256": "e44860de456dc7718233813f28a1529dcb1add2f21a4a859ab402f990bf22a03",
+    "phone_access": false,
+    "recomputed_pair_gate": {
+      "actual_ar1_ar128_cache_contract_passed": true,
+      "ar128_csv_sha256": "04dea8e9aafa1d8a87f367efae844b536802d4ab1debbc537fff751cc27342d4",
+      "ar1_csv_sha256": "17dc1267a9062ace7cfb4db398dff302de16497defd0c9465fcdcec0f3273932",
+      "cache_count": 30,
+      "fidelity_proven": false,
+      "full_htp_delegation_proven": false
+    },
+    "substitutions": [
+      "DLC paths and their expected hashes",
+      "fresh output/cache/scratch directories"
+    ]
+  },
+  "lifecycle": {
+    "automatic_retry": false,
+    "compile_supervisor": {
+      "automatic_retry": false,
+      "child_ru_maxrss_kB": 18720368,
+      "elapsed_seconds": 450.0381475129998,
+      "exit_code": 0,
+      "phone_access": false,
+      "stop_reason": null
+    },
+    "metadata_supervisor": {
+      "automatic_retry": false,
+      "child_ru_maxrss_kB": 1162452,
+      "elapsed_seconds": 10.001495198999692,
+      "exit_code": 0,
+      "phone_access": false,
+      "stop_reason": null
+    },
+    "owned_processes_absent": true,
+    "phone_access": false,
+    "scratch_cleanup": {
+      "owned_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/runs/global-value-fp16-context-20260910T102456Z-attempt-01/qairt-tmp",
+      "preflight_bound": true,
+      "remaining_entries": [],
+      "sdk_removed_all_files": true,
+      "source_dlcs_context_cache_untouched": true,
+      "verified_absent": true
+    },
+    "scratch_preflight": {
+      "filesystem": "ext4",
+      "free_bytes": 683227652096,
+      "minimum_free_bytes": 34359738368,
+      "mode": "0700",
+      "new_owned_directory": true,
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/runs/global-value-fp16-context-20260910T102456Z-attempt-01/qairt-tmp",
+      "resolved_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/runs/global-value-fp16-context-20260910T102456Z-attempt-01/qairt-tmp",
+      "uid": 1000,
+      "writable_probe_passed": true
+    }
+  },
+  "metadata_validation": {
+    "backend_id": 6,
+    "baseline_sha256": "b43be15553726707a3c1362dec333493856d472b4aaddd52b1c9972eb9fcd73e",
+    "build_id": "v2.49.40.260810104044",
+    "cache_count": 30,
+    "cache_data_format_counts": {
+      "QNN_TENSOR_DATA_FORMAT_FLAT_BUFFER": 120
+    },
+    "fidelity_proven": false,
+    "flat_buffer_required": true,
+    "float_quantization_semantics": "Genie QnnUtils nonquantized placeholder (0,0); inactive union ignored",
+    "full_cpu_free_execution_proven": false,
+    "graphs": {
+      "ar128_cl4096_1_of_1": {
+        "graphInputs": {
+          "count": 38,
+          "datatypes": {
+            "QNN_DATATYPE_FLOAT_16": 3,
+            "QNN_DATATYPE_UFIXED_POINT_16": 35
+          }
+        },
+        "graphOutputs": {
+          "count": 31,
+          "datatypes": {
+            "QNN_DATATYPE_FLOAT_16": 3,
+            "QNN_DATATYPE_UFIXED_POINT_16": 28
+          }
+        }
+      },
+      "ar1_cl4096_1_of_1": {
+        "graphInputs": {
+          "count": 38,
+          "datatypes": {
+            "QNN_DATATYPE_FLOAT_16": 3,
+            "QNN_DATATYPE_UFIXED_POINT_16": 35
+          }
+        },
+        "graphOutputs": {
+          "count": 31,
+          "datatypes": {
+            "QNN_DATATYPE_FLOAT_16": 3,
+            "QNN_DATATYPE_UFIXED_POINT_16": 28
+          }
+        }
+      }
+    },
+    "issues": [],
+    "metadata_gate_passed": true,
+    "metadata_sha256": "db5c3877d0cde055852b796aec92da43b0a79ac74e604a59552a2baa7b1a4e95",
+    "native_kv_supported_claim": false,
+    "physical_execution_proven": false,
+    "positional_inputs": {
+      "ar128_cl4096_1_of_1": [
+        "position_ids_cos",
+        "position_ids_sin",
+        "swa_position_ids_cos",
+        "swa_position_ids_sin"
+      ],
+      "ar1_cl4096_1_of_1": [
+        "position_ids_cos",
+        "position_ids_sin",
+        "swa_position_ids_cos",
+        "swa_position_ids_sin"
+      ]
+    },
+    "soc_model": 43
+  },
+  "next_gate": "Separate review of compiled context and source-compatibility risks before any fidelity/runtime or phone step. No new execution is authorized by this result.",
+  "precision_and_performance_boundary": {
+    "ar128_convert_baseline": 30,
+    "ar128_convert_candidate": 36,
+    "ar128_float_precision_warnings_baseline": 15,
+    "ar128_float_precision_warnings_candidate": 21,
+    "input_dlc_counts_reference": "results/global-value-fp16-attempt-06/result.json",
+    "speed_improvement_measured": false,
+    "uniform_integer_claim": false
+  },
+  "publication": {
+    "completed_campaign_modified": false,
+    "registry_eligible": false,
+    "scope": "host AOT compilation and metadata compatibility only"
+  },
+  "run_id": "global-value-fp16-context-20260910T102456Z-attempt-01",
+  "schema_version": 1,
+  "status": "host_context_compiled_metadata_passed_runtime_and_fidelity_unvalidated",
+  "unmeasured": {
+    "host_fidelity": null,
+    "long_output_quality": null,
+    "neural_cpu_free_execution": null,
+    "physical_htp_execution": null,
+    "reason": "Compilation-only scope; runtime/fidelity/phone steps require separate review and were not run.",
+    "runtime_load": null,
+    "speed_improvement": null
+  },
+  "unsupported_status": {
+    "aot_result": "requested HTP compilation accepted both graphs and produced the validated context",
+    "builder_default_architecture_warning_observed": true,
+    "default_architecture_warning_boundary": "Same builder bootstrap warning as accepted recipe; not a CPU-provider execution or unsupported-operator result.",
+    "exhaustive_unsupported_operator_count": null,
+    "missing_reason": "The accepted warn-level compiler API uses maybe_suppress_stdout around native generation; logs are not an exhaustive unsupported-op inventory. No expensive repeat was made for optional logs.",
+    "runtime_count_reason": "No runtime inference was performed.",
+    "runtime_cpu_fallback_count": null
+  }
+}

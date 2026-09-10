@@ -1,0 +1,90 @@
+{
+  "backend": "HTP",
+  "context_custom_configs": [
+    {
+      "weight_sharing_enabled": true,
+      "file_read_memory_budget_in_mb": 0,
+      "io_memory_estimation": false,
+      "max_spill_fill_buffer_for_group": 0,
+      "group_id": 0,
+      "extended_udma": false,
+      "init_acceleration": false,
+      "lora_weight_sharing": false,
+      "lora_weight_sharing_ram_preload": false
+    }
+  ],
+  "debug": false,
+  "device_custom_configs": [
+    {
+      "id": 0,
+      "soc_id": 0,
+      "soc_model": 43,
+      "dsp_arch": "v73",
+      "pd_session": "unsigned",
+      "profiling_level": "linting",
+      "core_ids": null,
+      "core_type": 0,
+      "cores": [
+        {
+          "id": 0,
+          "perf_profile": "burst",
+          "rpc_control_latency": 100,
+          "rpc_polling_time": 9999,
+          "hmx_timeout_us": 300000,
+          "adaptive_polling_time": 0
+        }
+      ]
+    }
+  ],
+  "graph_custom_configs": [
+    {
+      "name": "ar1_cl4096_1_of_1",
+      "vtcm_size_in_mb": 0,
+      "vtcm_size": 0,
+      "fp16_relaxed_precision": 0,
+      "hvx_threads": 0,
+      "optimization_type": 3,
+      "finalize_config": null,
+      "dlbc": 0,
+      "dlbc_weights": 0,
+      "weights_packing": false,
+      "num_cores": null,
+      "short_depth_conv_on_hmx_off": false,
+      "fold_relu_activation_into_conv_off": false,
+      "advanced_activation_fusion": true,
+      "use_high_precision_fp16_sigmoid": false,
+      "monolithic_lstm": false
+    },
+    {
+      "name": "ar128_cl4096_1_of_1",
+      "vtcm_size_in_mb": 0,
+      "vtcm_size": 0,
+      "fp16_relaxed_precision": 0,
+      "hvx_threads": 0,
+      "optimization_type": 3,
+      "finalize_config": null,
+      "dlbc": 0,
+      "dlbc_weights": 0,
+      "weights_packing": false,
+      "num_cores": null,
+      "short_depth_conv_on_hmx_off": false,
+      "fold_relu_activation_into_conv_off": false,
+      "advanced_activation_fusion": true,
+      "use_high_precision_fp16_sigmoid": false,
+      "monolithic_lstm": false
+    }
+  ],
+  "log_level": "warn",
+  "op_packages": null,
+  "compiler_custom_configs": null,
+  "enable_intermediate_outputs": null,
+  "set_output_tensors": null,
+  "soc_details": "chipset:SM8550",
+  "io_tensor_mem_type": "memhandle",
+  "memory_custom_config": {
+    "mem_type": "shared_buffer"
+  },
+  "data_format_config": null,
+  "group_context_config": null,
+  "backend_binary_path": null
+}

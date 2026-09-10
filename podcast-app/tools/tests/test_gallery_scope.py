@@ -31,8 +31,12 @@ class GalleryScopeTests(unittest.TestCase):
     def test_capture_is_emulator_guarded_and_uses_actual_accessibility_tree(self):
         source = (PROJECT / 'app/src/androidTest/java/dev/vibevoice/podcast/gallery/SyntheticGalleryCaptureTest.kt').read_text()
         self.assertIn('Build.HARDWARE in setOf("ranchu", "goldfish")', source)
-        self.assertIn('uiAutomation.rootInActiveWindow', source)
-        self.assertIn('uiAutomation.takeScreenshot()', source)
+        self.assertIn('automation.windows', source)
+        self.assertIn('FLAG_RETRIEVE_INTERACTIVE_WINDOWS', source)
+        self.assertIn('automation.takeScreenshot()', source)
+        self.assertIn('GalleryCapturePolicy.retainEvidence', source)
+        self.assertIn('windowObservations', source)
+        self.assertIn('run-summary.json', source)
         self.assertNotIn('useUnmergedTree', source)
 
 

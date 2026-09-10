@@ -3,6 +3,10 @@ package dev.vibevoice.podcast.gallery
 import android.content.Intent
 import android.os.Bundle
 import android.os.Process
+import android.view.WindowManager
+import android.view.inspector.WindowInspector
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -81,9 +85,27 @@ class SyntheticGalleryActivity : ComponentActivity() {
                     }
                 }
                 LaunchedEffect(frame, token) {
-                    File(filesDir, "ui-gallery-ready.json").writeText(JSONObject().put("frame", frame).put("token", token)
-                        .put("pid", Process.myPid()).put("process", android.app.Application.getProcessName()).put("fontScale", largeText)
-                        .put("syntheticUiOnly", true).put("media", "30-second test tone; not model audio").toString())
+                    // Label platform windows owned by this debug process, including Compose dialogs.
+                    // Do not add marker nodes to (or unmerge) the production accessibility tree.
+                    withFrameNanos { }; withFrameNanos { }
+                    var acknowledged = false
+                    while (isActive) {
+                        val title = galleryWindowTitle(token)
+                        WindowInspector.getGlobalWindowViews().filter { it.isAttachedToWindow }.forEach { view ->
+                            val params = view.layoutParams as? WindowManager.LayoutParams
+                            if (params != null && params.title != title) {
+                                params.title = title
+                                getSystemService(WindowManager::class.java).updateViewLayout(view, params)
+                            }
+                        }
+                        if (!acknowledged) {
+                            File(filesDir, "ui-gallery-ready.json").writeText(JSONObject().put("frame", frame).put("token", token)
+                                .put("pid", Process.myPid()).put("process", android.app.Application.getProcessName()).put("fontScale", largeText)
+                                .put("windowTitle", title).put("syntheticUiOnly", true).put("media", "30-second test tone; not model audio").toString())
+                            acknowledged = true
+                        }
+                        delay(GalleryCapturePolicy.POLL_MS)
+                    }
                 }
             }
         }
