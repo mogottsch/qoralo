@@ -28,7 +28,7 @@ import java.io.File
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-/** Private debug first-request engineering probe. No LLM, product job or capacity probe. */
+/** Private debug whole-request probe: canonical, or separately pinned noncanonical long capacity input. */
 class TtsOnlyService : Service() {
     private val worker = Executors.newSingleThreadExecutor()
     private val deadlines = Executors.newScheduledThreadPool(2)
@@ -42,23 +42,25 @@ class TtsOnlyService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (log != null) return START_NOT_STICKY
         val run = intent?.getStringExtra("runId").orEmpty()
-        if (!TtsOnlyContract.validRunId(run) || intent?.getStringExtra("contractSha256") != TtsOnlyContract.SHA256) {
+        val approval = intent?.getStringExtra("contractSha256").orEmpty()
+        if (!TtsOnlyContract.approvedHash(approval) || !TtsOnlyContract.validRunId(run, approval)) {
             stopSelf(); return START_NOT_STICKY
         }
+        val isLong = approval == TtsOnlyContract.LONG_SHA256
         check(Application.getProcessName() == "$packageName:generation")
-        val root = File(filesDir, "tts-only/$run")
+        val root = File(filesDir, "${if (isLong) "tts-long" else "tts-only"}/$run")
         check(root.isDirectory && !File(root, "service-started.json").exists())
         val evidence = WiringEvidence(root).also { log = it }
         evidence.json("service-started.json", JSONObject().put("pid", Process.myPid()).put("uid", Process.myUid())
-            .put("process", Application.getProcessName()).put("contractSha256", TtsOnlyContract.SHA256))
+            .put("process", Application.getProcessName()).put("contractSha256", approval))
         getSystemService(NotificationManager::class.java).createNotificationChannel(NotificationChannel("tts-only", "Debug one TTS request", NotificationManager.IMPORTANCE_LOW))
         startForeground(4201, NotificationCompat.Builder(this, "tts-only").setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle("Debug canonical TTS once").setContentText("No Gemma or automatic retry").setOngoing(true).build(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+            .setContentTitle("Debug whole-text TTS once").setContentText("No Gemma or automatic retry").setOngoing(true).build(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
         worker.execute {
             val tts = SupertonicQnnHtpEngine()
             var closed = false
             try {
-                val contract = TtsOnlyContract.load(this)
+                val contract = TtsOnlyContract.load(this, approval)
                 deadlines.schedule({ abort("total_deadline", IllegalStateException("TTS-only service deadline")) }, contract.json.getLong("serviceSeconds"), TimeUnit.SECONDS)
                 deadlines.scheduleWithFixedDelay({
                     if (root.walkTopDown().filter(File::isFile).sumOf(File::length) > contract.json.getLong("maxEvidenceBytes")) {
@@ -71,9 +73,10 @@ class TtsOnlyService : Service() {
                         val app = application as PodcastApplication
                         val pack = step(contract, "verify") {
                             check(app.repository.runningJobs().isEmpty() && app.repository.queuedJobs().isEmpty())
-                            require(BuildConfig.SUPERTONIC_MANIFEST_SHA256 == contract.manifestSha)
-                            ModelPackVerifier().verify(app.artifacts.modelPackRoot("supertonic-3"), ModelPackRequirement(
-                                ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP, "supertonic-3", contract.manifestSha))
+                            // The long debug contract has its own immutable pin; production/default pack stays unchanged.
+                            require(contract.isLongProbe || BuildConfig.SUPERTONIC_MANIFEST_SHA256 == contract.manifestSha)
+                            ModelPackVerifier().verify(app.artifacts.modelPackRoot(contract.packId), ModelPackRequirement(
+                                ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP, contract.packId, contract.manifestSha))
                         }
                         evidence.json("verified-pack.json", JSONObject().put("manifestSha256", pack.manifestSha256).put("contract", pack.contract.toString()))
                         evidence.write("actual-request.txt", contract.text)
@@ -90,10 +93,10 @@ class TtsOnlyService : Service() {
                                 .put("claim", "runtime declaration; profiles/RPC evidence must establish actual execution separately"))
                             evidence.snapshot("after-load")
                         }
-                        val output = File(root, "canonical-short.wav")
+                        val output = File(root, contract.outputName)
                         val renderStart = SystemClock.elapsedRealtimeNanos()
                         val audio = step(contract, "render") {
-                            tts.renderChapter(FrozenChapter(contract.chapterId, "Canonical first TTS request", contract.text), output)
+                            tts.renderChapter(FrozenChapter(contract.chapterId, "Whole-text first TTS request", contract.text), output)
                         }
                         val renderMs = (SystemClock.elapsedRealtimeNanos() - renderStart) / 1e6
                         require(audio == WavInspector.inspectSupertonicOutput(output))
@@ -107,7 +110,8 @@ class TtsOnlyService : Service() {
                                 .put("timingBoundary", "load covers four-context adapter load; render includes normalization, native duration/text/5vector/vocoder and WAV validation/publication; excludes verify/load/close")
                                 .put("warmMedianRtf", JSONObject.NULL).put("warmMedianUnavailable", "only one first request authorized")
                                 .put("logicalTtsRequests", 1).put("expectedInternalRuns", contract.json.getJSONObject("expectedSessionRunCounts"))
-                                .put("listeningVerdict", "not_reviewed").put("claim", "one profiled engineering request; not full chapter, campaign or product E2E"))
+                                .put("listeningVerdict", "not_reviewed").put("capacityProbe", contract.isLongProbe)
+                                .put("claim", if (contract.isLongProbe) "one noncanonical profiled capacity request; bounded operability only, not fidelity/warm campaign/product E2E" else "one profiled engineering request; not full chapter, campaign or product E2E"))
                             evidence.snapshot("after-render")
                         }
                         step(contract, "close") { tts.close() }; closed = true
