@@ -186,7 +186,7 @@ class PhoneGuard:
         counter = self.device.counter + 1
         destination = private/f'{phase}-{number}.tar'
         try:
-            self.device.run(['exec-out', 'sh', '-c', SNAPSHOT], timeout=30, binary=True)
+            self.device.run(['exec-out', SNAPSHOT], timeout=30, binary=True)
         finally:
             raw = self.output/f'{counter:03d}-command.stdout'
             if raw.exists():

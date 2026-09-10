@@ -233,6 +233,7 @@ class GuardOrderingTests(unittest.TestCase):
             class Fake:
                 counter=0
                 def run(self,*args,**kwargs):
+                    assert args[0] == ['exec-out', g.SNAPSHOT]  # already-quoted remote command; no extra sh -c
                     self.counter+=1;(root/f'{self.counter:03d}-command.stdout').write_bytes(b'private partial')
                     raise RuntimeError('transport lost')
             guard=g.PhoneGuard(Fake(),root,pin,g.digest(pin),g.host_identity()['sha256'])
