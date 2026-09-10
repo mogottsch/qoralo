@@ -99,10 +99,14 @@ A lower-retention two-process host replay in [`results/host-w4a16-qdq-output-dia
 
 [`results/conv-history-native-fullchain-20260910/`](results/conv-history-native-fullchain-20260910/) retains the separately approved one-compile/one-forward host-QNN case and all64 metadata taps. Both early and emitted-plan checks show no ExecuTorch tensor fallback. All24,576 output values are finite; the selected value is23.721897 versus full-chain oracle22.131550. All other values agree with full-chain within1ULP, whereas output-only/aligned differ at all6,144 slot0 values. Both input Quantize wrappers and allthree exact scale/offset domains remain present beforeCompile, so neither global output-only behavior nor frontend omission is supported. Finalized SDK behavior and full-model/physical causality remain unknown. Backend work stopped after this case.
 
+## Frozen-PTE input sweep readiness
+
+[`results/conv-history-sweep-readiness-20260910/`](results/conv-history-sweep-readiness-20260910/) retains39 labelled input values across78 duplicated channels plus the original outlier, full scalar-stage traces and one CPU forward. All24,576 CPU outputs match the fullchain oracle exactly. Decoded endpoints and actual code-clipping onset are bracketed separately; lower-side direct-output/final-range confounds remain explicit. A runtime-only adapter binds a new pack/request to the unchanged firstcase PTE/context and zero-fallback/source receipts. No export, recompile or native call occurred; the request is unapproved.
+
 ## Current next gate
 
 1. Keep physical PTE `23ac8abd…d2c506` and phone preflight unchanged; the 73-output diagnostic PTE is not compatible with the current 49-output Android runner.
-2. Review the bounded firstcase and saved metadata/output analysis. The next proposal is a history-range input sweep with fixed encodings, in-range/upper/lower controls and a new reviewed input pack/request. No new native case, retry or optimized-path claim is authorized.
+2. Review the frozen-PTE sweep pack, stagewise oracle and runtime-only adapter/mock tests. Any native load/forward needs a new explicit request/output-bound release (proposed60s runtime/90s total, no Compile). No native case, retry or optimized-path claim is currently authorized.
 3. No ADB or staging without a new explicit Pi phone slot. Full QNN/physical drift and one-token-only interpretation remain campaign-readiness boundaries.
 4. Only after agreed fidelity and state-isolation gates may chunked prefill and the fixed 1+5+5+5 campaign be promoted.
 

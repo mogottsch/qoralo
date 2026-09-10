@@ -927,6 +927,32 @@ class ContractTest(unittest.TestCase):
         after = {str(p.relative_to(directory)): sha(p) for p in directory.rglob("*") if p.is_file()}
         self.assertEqual(before, after)
 
+    def test_frozen_pte_sweep_readiness_is_cpu_and_mock_only(self) -> None:
+        directory = EXP / 'results/conv-history-sweep-readiness-20260910'
+        result = json.loads((directory / 'result.json').read_text())
+        self.assertEqual('source_cpu_and_mock_runtime_only_readiness', result['evidence_class'])
+        self.assertFalse(result['execution_authorized'])
+        self.assertEqual(0, result['native_compiles'])
+        self.assertEqual(0, result['native_loads'])
+        self.assertEqual(0, result['native_forwards'])
+        pack = json.loads((directory / 'pack/result.json').read_text())
+        self.assertEqual(1, pack['cpu_forwards'])
+        self.assertEqual(39, pack['sweep_values'])
+        self.assertEqual(78, pack['sweep_channels'])
+        self.assertEqual(40, pack['sample_rows'])
+        self.assertEqual(35, pack['unique_value_bits'])
+        self.assertEqual((directory / 'pack/cpu-output.f32le').read_bytes(), (directory / 'pack/fullchain-oracle.f32le').read_bytes())
+        request = json.loads((directory / 'request/request.json').read_text())
+        self.assertEqual('0170b6a2ae96759b36722f05daf8d0925f14b4da57968806b6602008c05d69c3', request['frozen_route']['pte']['sha256'])
+        self.assertEqual(0, request['limits']['maximum_compiles'])
+        self.assertFalse(request['compile_allowed'])
+        self.assertEqual(result['request_sha256'], sha(directory / 'request/request.json'))
+        self.assertEqual('NOT_APPROVED', json.loads((directory / 'request/release-template.json').read_text())['status'])
+        for source in request['adapter_sources'] + [pack['preparation_source']]:
+            self.assertEqual(source['sha256'], sha(Path(source['path'])))
+        self.assertFalse(list(directory.rglob('*.pte')))
+        self.assertFalse(list(directory.rglob('*.bin')))
+
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
             EXP / "protocol",
@@ -953,6 +979,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/conv-history-probe-readiness-20260910",
             EXP / "results/conv-history-native-adapter-readiness-20260910",
             EXP / "results/conv-history-native-fullchain-20260910",
+            EXP / "results/conv-history-sweep-readiness-20260910",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

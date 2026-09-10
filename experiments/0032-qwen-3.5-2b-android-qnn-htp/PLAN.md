@@ -54,10 +54,12 @@ Active. QNN-x86 own-state positions 0–3 completed but exposed substantial drif
 
 30. Completed the separately released first fullchain host-QNN case:1 compile/1 forward,14.819s active, zero emitted KernelCalls. All24,576 values finite; selected mismatch1.590347, but every other value matches fullchain within1ULP. Outputonly/aligned references disagree at all6,144 slot0 values. All50 graph snapshots and actual pre-Compile wrappers preserve the exact domains; both input Quantize wrappers present. Retained64 taps, native counts, raw IO/context/PTE and full logs. No global output-only/SDKdefect/fullmodel/physical verdict. Stopped native work; range-sweep proposal is source-only.
 
+31. Prepared an immutable range sweep:39 labelled values on78 duplicated channels plus originaloutlier,40rows/35distinctFP32bitpatterns. One tinyCPUforward equals all24,576 scalar outputs; upper decodedendpoint and actual clippingonset differ. Lower stage/direct-output confounds retained. New runtime-only adapter/request reuses exact232,144BPTE/230,736Bcontext and reviewed zero-fallback/source receipts. Source/CPU/mock only; no export/Compile/native calls or execution release.
+
 ## Current work
 
 1. Preserve physical baseline/preflight hashes, diagnostic artifacts, and both LOCAL-ONLY positional tensor directories listed in the full-short result. Do not clean them; copy them on migration/handover.
-2. Review the firstcase and saved-only analysis. Prepare a new input-sweep proposal around the history clipping/rounding boundary, with in-range/lower controls and unchanged encodings; any new pack/request needs review. No native follow-on, retry, full-model or phone release.
+2. Review the source/CPU/mock frozen-PTE sweep readiness, immutablepack and runtime-only request. Proposed one load/forward under60s runtime/90s total, no Compile; separate execution release required. No native follow-on, retry, full-model or phone release.
 3. Do not use ADB or the phone without an explicit scheduled slot. Host teacher-forced completion is not QNN/physical fidelity or a campaign authorization.
 4. After agreed fidelity follow-up gates, validate chunked-prefill state semantics/delegation and loaded-route reset/isolation before the canonical campaign.
 
