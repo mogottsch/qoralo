@@ -18,7 +18,23 @@ For a new separately approved attempt, set only:
 QAIRT_TMP_DIR=<fresh attempt directory under this track/.local>/qairt-tmp
 ```
 
-Keep the accepted SDK, `.local/host-libs`, model bytes, patch, quantization settings, and sequential AR1→AR128 recipe unchanged. This is not a model or precision correction.
+Keep the accepted SDK, `.local/host-libs`, model bytes, patch and quantization settings unchanged. This is not a model or precision correction. Following Pi's source-only efficiency direction, the next distinct attempt may convert **AR128 only**, reusing the verified attempt-05 AR1 DLC byte-for-byte instead of repeating its successful conversion.
+
+## Verified AR1 reuse (source-only preparation)
+
+`convert_global_value_fp16.py --run-dir <fresh-run> --reuse-ar1-dlc <retained-ar1.dlc>` now verifies, before importing QAIRT:
+
+- accepted provenance commit `d5e6b94`, run `global-value-fp16-20260910T090755Z-attempt-05`;
+- committed result SHA-256 `b298cab9c895955069b8b671835d4ac29d66b58aaac37ec8398bdc9f6621dcac` and its passed actual AR1 interface gate;
+- AR1 DLC size **2,356,848,948 bytes** and SHA-256 `4e67d80ea342088f5235a9238dc209739d8961083b08895fa066d6857687a6cc`.
+
+A missing file, wrong size, same-size wrong hash, or changed provenance is rejected. The successful file is referenced in place, never rewritten or relabeled as a new conversion. The new run writes `ar1-reuse.json` and records only newly converted AR128 in `converted-models.json`; `candidate-models.json` explicitly distinguishes reused and new origins. Reuse-only receipts also prevent an in-place restart after an early failure.
+
+The precision patch is unchanged; a regression test compares its AST to the successful attempt-05 snapshot. Tests use tiny files or synthetic metadata, not real model execution. `validate_global_value_patch.py` accepts an AR128-only patch receipt only with explicit AR1 reuse provenance.
+
+Before compilation, inspect actual AR128 interfaces against its baseline and feed both actual CSV comparisons through `inspect_global_value_dlc.require_cache_pair`. Missing/failed AR128 evidence or any four-way datatype/encoding mismatch is rejected. Even a passed pair gate does not prove HTP delegation or fidelity. No compilation is invoked by the conversion tool.
+
+This support has not launched a new conversion and is not evidence that AR128 succeeded. The heavy-slot hold remains active.
 
 ## Readiness checks and future launch gate
 

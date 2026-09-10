@@ -29,6 +29,11 @@ EXPECTED = {
 }
 EXPECTED_DATA = "b9b73b984c2258099bc77ce6d1e2aa92d12bb67abe456e5ef509136d7494a65d"
 GLOBAL_LAYERS = (4, 9, 14)
+REUSE_RESULT = TRACK / "results/global-value-fp16-attempt-05/result.json"
+REUSE_RESULT_SHA256 = "b298cab9c895955069b8b671835d4ac29d66b58aaac37ec8398bdc9f6621dcac"
+REUSE_AR1_SHA256 = "4e67d80ea342088f5235a9238dc209739d8961083b08895fa066d6857687a6cc"
+REUSE_AR1_BYTES = 2_356_848_948
+REUSE_RUN_ID = "global-value-fp16-20260910T090755Z-attempt-05"
 
 
 def sha256(path: Path) -> str:
@@ -37,6 +42,44 @@ def sha256(path: Path) -> str:
         for chunk in iter(lambda: src.read(8 * 1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def verify_file_identity(path: Path, expected_bytes: int, expected_sha256: str) -> None:
+    if not path.is_file() or path.stat().st_size != expected_bytes:
+        raise RuntimeError("reused AR1 DLC missing or byte-size mismatch")
+    if sha256(path) != expected_sha256:
+        raise RuntimeError("reused AR1 DLC SHA-256 mismatch")
+
+
+def verify_ar1_reuse(dlc_path: Path) -> dict[str, object]:
+    # Verify before importing QAIRT or modifying any artifact. Never infer reuse
+    # eligibility from a filename, converter exit code, or proposed FP16 IO.
+    if sha256(REUSE_RESULT) != REUSE_RESULT_SHA256:
+        raise RuntimeError("attempt05 provenance result SHA-256 mismatch")
+    evidence = json.loads(REUSE_RESULT.read_text())
+    model = evidence["ar1_dlc"]
+    if (evidence["run_id"] != REUSE_RUN_ID or model["ar"] != 1
+            or model["bytes"] != REUSE_AR1_BYTES or model["sha256"] != REUSE_AR1_SHA256
+            or not evidence["outcome"]["ar1_conversion_completed"]
+            or not evidence["ar1_interface_inspection"]["datatype_scope_passed"]):
+        raise RuntimeError("attempt05 AR1 provenance/interface gate mismatch")
+    path = dlc_path.resolve()
+    verify_file_identity(path, REUSE_AR1_BYTES, REUSE_AR1_SHA256)
+    return {
+        **model, "path": str(path), "origin": "reused_verified_attempt05",
+        "converted_in_this_attempt": False,
+        "provenance": {
+            "commit": "d5e6b94", "run_id": REUSE_RUN_ID,
+            "result_path": str(REUSE_RESULT), "result_sha256": REUSE_RESULT_SHA256,
+            "original_dlc_path": model["path"],
+            "interface_gate": "passed_actual_ar1_dlc_input_and_output_signatures",
+            "cross_ar_contract_proven": False,
+        },
+    }
+
+
+def conversion_ars(reused_ar1: dict[str, object] | None) -> tuple[int, ...]:
+    return (128,) if reused_ar1 is not None else (1, 128)
 
 
 def hardlink(source: Path, destination: Path) -> None:
@@ -178,12 +221,23 @@ def patch_variant(ar: int, patched_root: Path) -> tuple[object, dict[str, object
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--run-dir", type=Path, required=True)
+    parser.add_argument("--reuse-ar1-dlc", type=Path,
+                        help="Verify/reuse the accepted attempt05 AR1 DLC; convert only AR128")
     args = parser.parse_args()
     run = args.run_dir.resolve()
     patched_root = run / "onnx"
     convert_cache = run / "dlc"
-    if patched_root.exists() or convert_cache.exists():
+    if (patched_root.exists() or convert_cache.exists()
+            or any((run / name).exists() for name in
+                   ("ar1-reuse.json", "candidate-models.json", "converted-models.json", "patch-receipt.json"))):
         raise RuntimeError("refusing to overwrite an earlier attempt; use a fresh run directory")
+    reused_ar1 = verify_ar1_reuse(args.reuse_ar1_dlc) if args.reuse_ar1_dlc is not None else None
+    ars = conversion_ars(reused_ar1)
+    reused_models = [reused_ar1] if reused_ar1 is not None else []
+    if reused_ar1 is not None:
+        (run / "ar1-reuse.json").write_text(json.dumps(reused_ar1, indent=2) + "\n")
+        print(json.dumps({"event": "ar1_reuse_verified", "model": reused_ar1}, sort_keys=True), flush=True)
+    (run / "candidate-models.json").write_text(json.dumps(reused_models, indent=2) + "\n")
     from qairt.gen_ai_api.builders.gen_ai_utils import get_input_layout
     from qairt.gen_ai_api.gen_ai_builder_factory import GenAIBuilderFactory
 
@@ -193,10 +247,11 @@ def main() -> None:
         tokenizer_path=str(CKPT / "tokenizer.json"), config_path=str(CKPT / "config.json"),
     )
     builder.set_targets(["chipset:SM8550"])
-    candidates = [patch_variant(ar, patched_root) for ar in (1, 128)]
+    candidates = [patch_variant(ar, patched_root) for ar in ars]
     (run / "patch-receipt.json").write_text(json.dumps({
         "variants": [evidence for _, evidence in candidates],
         "script_sha256": sha256(HERE),
+        "conversion_ars": list(ars), "reused_models": reused_models,
         "conversion_config": builder._conversion_config.model_dump(mode="json"),
     }, indent=2) + "\n")
     convert_cache.mkdir(parents=True, exist_ok=True)
@@ -207,11 +262,12 @@ def main() -> None:
         "checkpoint_modified": False, "external_data_modified": False,
         "transformer_backend": "HTP", "cpu_conversion_boundary": False,
         "variants": [evidence for _, evidence in candidates],
+        "conversion_ars": list(ars), "reused_models": reused_models,
         "phone_access": False, "inference": False,
     }, sort_keys=True), flush=True)
     outputs = []
     try:
-        for ar, (exported, _) in zip((1, 128), candidates, strict=True):
+        for ar, (exported, _) in zip(ars, candidates, strict=True):
             builder._conversion_config.input_tensor_config = get_input_layout(exported.onnx_path)
             builder._conversion_config.output_tensor_config = []
             converted = builder.convert(exported, builder._conversion_config, builder._calibration_config)
@@ -219,17 +275,23 @@ def main() -> None:
             outputs.append({
                 "ar": ar, "name": converted.name, "path": str(path),
                 "bytes": path.stat().st_size, "sha256": sha256(path),
+                "origin": "converted_in_this_attempt", "converted_in_this_attempt": True,
             })
             (run / "converted-models.json").write_text(json.dumps(outputs, indent=2) + "\n")
+            (run / "candidate-models.json").write_text(json.dumps(reused_models + outputs, indent=2) + "\n")
     except Exception as error:
         print(json.dumps({
             "event": "global_value_fp16_conversion_failed",
             "exception_type": type(error).__name__, "exception_message": str(error),
-            "completed_models": outputs, "phone_access": False, "inference": False,
+            "completed_models": outputs, "reused_models": reused_models,
+            "phone_access": False, "inference": False,
         }, sort_keys=True), flush=True)
         raise
     print(json.dumps({
         "event": "global_value_fp16_conversion_complete", "converted_models": outputs,
+        "reused_models": reused_models,
+        "cross_ar_contract_proven": False,
+        "next_gate": "Inspect actual AR128 DLC interfaces and compare both AR cache contracts before compilation.",
         "phone_access": False, "inference": False,
     }, sort_keys=True), flush=True)
 

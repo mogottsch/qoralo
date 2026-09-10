@@ -1,4 +1,6 @@
 """Host candidate gate regressions; no SDK, model execution, or phone required."""
+import ast
+import copy
 import csv
 import hashlib
 import importlib.util
@@ -13,6 +15,9 @@ TRACK = EXP / 'improvements/0001-long-collapse-speed-quality'
 spec = importlib.util.spec_from_file_location('inspect_global_value', TRACK / 'tools/inspect_global_value_dlc.py')
 inspection = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(inspection)
+converter_spec = importlib.util.spec_from_file_location('convert_global_value', TRACK / 'tools/convert_global_value_fp16.py')
+converter = importlib.util.module_from_spec(converter_spec)
+converter_spec.loader.exec_module(converter)
 
 
 def fixture(path, *, changed=True, wrong_output=False, unrelated=False):
@@ -129,6 +134,92 @@ class CandidateGateTest(unittest.TestCase):
         for line in (folder / 'SHA256SUMS').read_text().splitlines():
             digest, name = line.split('  ', 1)
             self.assertEqual(digest, hashlib.sha256((folder / name).read_bytes()).hexdigest())
+
+    def test_pair_gate_rejects_missing_failed_or_mismatched_ar128(self):
+        folder = TRACK / 'results/global-value-fp16-attempt-05'
+        ar1 = json.loads((folder / 'raw/ar1-interface-validation.json').read_text())
+        with self.assertRaisesRegex(RuntimeError, 'both actual AR1 and AR128'):
+            inspection.require_cache_pair(ar1, None)
+        # Synthetic AR128 metadata exercises the gate, not an actual AR128 result.
+        ar128 = copy.deepcopy(ar1)
+        ar128['ar'] = 128
+        ar128['csv_sha256'] = 'synthetic-test-fixture'
+        passed = inspection.require_cache_pair(ar1, ar128)
+        self.assertEqual(30, passed['cache_count'])
+        self.assertFalse(passed['full_htp_delegation_proven'])
+        self.assertFalse(passed['fidelity_proven'])
+        ar128['candidate_io']['output']['past_value_4_h0_out']['datatype'] = 'uFxp_16'
+        with self.assertRaisesRegex(RuntimeError, 'four-way cache signature mismatch'):
+            inspection.require_cache_pair(ar1, ar128)
+        ar128['datatype_scope_passed'] = False
+        with self.assertRaisesRegex(RuntimeError, 'both actual AR1 and AR128'):
+            inspection.require_cache_pair(ar1, ar128)
+
+    def test_reuse_identity_checks_real_small_files_without_model_loading(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'tiny.dlc'
+            path.write_bytes(b'abc')
+            digest = hashlib.sha256(b'abc').hexdigest()
+            converter.verify_file_identity(path, 3, digest)
+            with self.assertRaisesRegex(RuntimeError, 'byte-size mismatch'):
+                converter.verify_file_identity(path, 4, digest)
+            path.write_bytes(b'xyz')  # Same size, wrong content must still fail.
+            with self.assertRaisesRegex(RuntimeError, 'SHA-256 mismatch'):
+                converter.verify_file_identity(path, 3, digest)
+            path.unlink()
+            with self.assertRaisesRegex(RuntimeError, 'missing'):
+                converter.verify_file_identity(path, 3, digest)
+
+    def test_reuse_receipt_pins_attempt05_and_is_not_new_conversion(self):
+        with patch.object(converter, 'verify_file_identity') as verify:
+            reused = converter.verify_ar1_reuse(Path('/unused/test-only.dlc'))
+        verify.assert_called_once_with(Path('/unused/test-only.dlc'), 2356848948,
+                                       '4e67d80ea342088f5235a9238dc209739d8961083b08895fa066d6857687a6cc')
+        self.assertEqual('reused_verified_attempt05', reused['origin'])
+        self.assertFalse(reused['converted_in_this_attempt'])
+        self.assertEqual('d5e6b94', reused['provenance']['commit'])
+        self.assertEqual('global-value-fp16-20260910T090755Z-attempt-05', reused['provenance']['run_id'])
+        self.assertEqual('b298cab9c895955069b8b671835d4ac29d66b58aaac37ec8398bdc9f6621dcac',
+                         reused['provenance']['result_sha256'])
+        self.assertFalse(reused['provenance']['cross_ar_contract_proven'])
+        self.assertEqual((128,), converter.conversion_ars(reused))
+        self.assertEqual((1, 128), converter.conversion_ars(None))
+
+    def test_modified_reuse_provenance_is_rejected_before_dlc_read(self):
+        with tempfile.TemporaryDirectory() as directory:
+            fake = Path(directory) / 'result.json'
+            fake.write_text(converter.REUSE_RESULT.read_text() + ' ')
+            with patch.object(converter, 'REUSE_RESULT', fake), patch.object(converter, 'verify_file_identity') as verify:
+                with self.assertRaisesRegex(RuntimeError, 'provenance result SHA-256 mismatch'):
+                    converter.verify_ar1_reuse(Path(directory) / 'unused.dlc')
+                verify.assert_not_called()
+
+    def test_missing_reuse_dlc_fails_before_qairt_or_new_artifacts(self):
+        with tempfile.TemporaryDirectory() as directory:
+            run = Path(directory)
+            argv = ['converter', '--run-dir', str(run), '--reuse-ar1-dlc', str(run / 'missing.dlc')]
+            with patch('sys.argv', argv):
+                with self.assertRaisesRegex(RuntimeError, 'reused AR1 DLC missing'):
+                    converter.main()
+            self.assertEqual([], list(run.iterdir()))
+
+    def test_reuse_only_receipt_also_blocks_in_place_restart(self):
+        with tempfile.TemporaryDirectory() as directory:
+            run = Path(directory)
+            receipt = run / 'ar1-reuse.json'
+            receipt.write_text('{}')
+            with patch('sys.argv', ['converter', '--run-dir', str(run)]):
+                with self.assertRaisesRegex(RuntimeError, 'refusing to overwrite'):
+                    converter.main()
+            self.assertEqual('{}', receipt.read_text())
+
+    def test_precision_patch_unchanged_from_successful_ar1_attempt05(self):
+        def patch_ast(path):
+            tree = ast.parse(path.read_text())
+            return ast.dump(next(node for node in tree.body if isinstance(node, ast.FunctionDef)
+                                 and node.name == 'patch_variant'), include_attributes=False)
+        self.assertEqual(patch_ast(TRACK / 'tools/convert_global_value_fp16.py'),
+                         patch_ast(TRACK / 'results/global-value-fp16-attempt-05/raw/converter-snapshot.py'))
 
     def test_new_attempt_cannot_overwrite_previous_artifacts(self):
         source = (TRACK / 'tools/convert_global_value_fp16.py').read_text()

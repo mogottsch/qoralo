@@ -81,6 +81,32 @@ def compare(ar, path, baseline_csv=None):
             'candidate_io': new['io'], 'full_htp_delegation_proven': False}
 
 
+def require_cache_pair(ar1, ar128):
+    """Gate a future compilation handoff using two actual CSV comparisons.
+
+    Shape differences across ARs are expected and checked against each AR's
+    baseline by compare(); datatype/encoding must agree at all four boundaries.
+    """
+    if (ar1 is None or ar128 is None or ar1.get('ar') != 1 or ar128.get('ar') != 128
+            or not ar1.get('datatype_scope_passed') or not ar128.get('datatype_scope_passed')):
+        raise RuntimeError('both actual AR1 and AR128 DLC interface gates are required')
+    one, many = ar1['candidate_io'], ar128['candidate_io']
+    cache_names = {name for name in one['output'] if '_key_' in name or '_value_' in name}
+    other_names = {name for name in many['output'] if '_key_' in name or '_value_' in name}
+    if len(cache_names) != 30 or cache_names != other_names:
+        raise RuntimeError('expected the same 30 cache outputs in both actual DLCs')
+    for output_name in sorted(cache_names):
+        input_name = output_name.removesuffix('_out') + '_in'
+        entries = [one['input'][input_name], one['output'][output_name],
+                   many['input'][input_name], many['output'][output_name]]
+        signatures = [(item['datatype'], item['encoding']) for item in entries]
+        if any(sig != signatures[0] for sig in signatures):
+            raise RuntimeError(f'four-way cache signature mismatch: {output_name}')
+    return {'actual_ar1_ar128_cache_contract_passed': True, 'cache_count': 30,
+            'ar1_csv_sha256': ar1['csv_sha256'], 'ar128_csv_sha256': ar128['csv_sha256'],
+            'full_htp_delegation_proven': False, 'fidelity_proven': False}
+
+
 if __name__ == '__main__':
     p = argparse.ArgumentParser()
     p.add_argument('--ar', type=int, choices=(1, 128), required=True)

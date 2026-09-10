@@ -22,7 +22,16 @@ def digest(path):
 def check(run):
     receipt = json.loads((run / 'patch-receipt.json').read_text())
     results = []
-    for ar, identity in zip((1, 128), receipt['variants'], strict=True):
+    ars = tuple(receipt.get('conversion_ars', (1, 128)))
+    if ars not in ((1, 128), (128,)):
+        raise RuntimeError('unexpected conversion AR plan')
+    if ars == (128,):
+        reused = receipt.get('reused_models', [])
+        if len(reused) != 1 or reused[0]['ar'] != 1 or reused[0]['origin'] != 'reused_verified_attempt05':
+            raise RuntimeError('AR128-only patch requires an explicit verified AR1 reuse receipt')
+    for ar, identity in zip(ars, receipt['variants'], strict=True):
+        if identity['ar'] != ar:
+            raise RuntimeError('patch receipt AR ordering mismatch')
         stem = f'ar{ar}_cl4096_1_of_1'
         old_dir, new_dir = SOURCE / stem, run / 'onnx' / stem
         for suffix, key in (('onnx', 'onnx'), ('encodings', 'encodings')):
