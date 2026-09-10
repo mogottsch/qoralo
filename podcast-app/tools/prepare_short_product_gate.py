@@ -6,6 +6,7 @@ import io
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import tarfile
@@ -102,7 +103,8 @@ def main():
             command(kind+'-manifest.txt',[str(sdk/'aapt2'),'dump','xmltree','--file','AndroidManifest.xml',str(out/(kind+'.apk'))])
             command(kind+'-signature.txt',[str(sdk/'apksigner'),'verify','--verbose','--print-certs',str(out/(kind+'.apk'))])
         command('focused-python.log',['python3','-m','unittest','discover','-s',str(PROJECT/'tools/tests'),'-p','test_short_product_scope.py','-v'])
-        save('host-checks.json',{'focusedJvm':counts,'focusedPython':8,'appAndTestAssembly':'app byte-exact reuse; test assembly passed' if previous else 'passed','native9':'byte-exact reuse',
+        python_count=int(re.search(r'Ran (\d+) tests', (out/'focused-python.log').read_text()).group(1))
+        save('host-checks.json',{'focusedJvm':counts,'focusedPython':python_count,'appAndTestAssembly':'app byte-exact reuse; test assembly passed' if previous else 'passed','native9':'byte-exact reuse',
              'dependencyInventory':len(artifacts),'physicalExecution':False,'fullBaselineOrUiMatrixRerun':False,'longReadiness':False})
         candidate={'schemaVersion':1,'kind':'short-production-plumbing','sourceCommit':source,'sourceDirty':False,'phoneAuthorized':False,
             'contractSha256':CONTRACT_SHA,'contract':json.loads((project/'app/src/debug/assets/short-product-e2e/contract.json').read_text()),

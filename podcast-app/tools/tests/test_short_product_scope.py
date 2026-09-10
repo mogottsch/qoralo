@@ -85,6 +85,15 @@ class ShortProductScopeTests(unittest.TestCase):
         self.assertEqual(baseline,(PROJECT/'config/normal-supertonic-pack.properties').read_bytes())
         gradle=(PROJECT/'app/build.gradle.kts').read_text();self.assertIn('podcast.shortProductE2e',gradle)
         self.assertIn('if (shortProductE2e) "config/short-product-e2e.properties" else "config/normal-supertonic-pack.properties"',gradle)
+    def test_library_fix_only_names_the_real_action_and_selector_uses_it(self):
+        path='app/src/main/java/dev/vibevoice/podcast/ui/LibraryScreen.kt'
+        original=subprocess.check_output(['git','show','3957b8d:podcast-app/'+path],cwd=PROJECT.parent).decode()
+        expected=original.replace('icon = { Icon(Icons.Default.Add, contentDescription = null) },',
+            '// Material3 clears the animated text\'s semantics; the icon must name the action.\n                                icon = { Icon(Icons.Default.Add, contentDescription = "New episode") },')
+        self.assertEqual(expected,(PROJECT/path).read_text())
+        driver=(PROJECT/'app/src/androidTest/java/dev/vibevoice/podcast/e2e/ShortProductE2eTest.kt').read_text()
+        self.assertIn('hasClickAction() and (hasContentDescription("New episode") or hasText("New episode"))',driver)
+        self.assertNotIn('useUnmergedTree',driver)
     def test_observer_seams_do_not_override_normal_limits_or_profiles(self):
         source=(PROJECT/'app/src/debug/java/dev/vibevoice/podcast/e2e/ShortProductDiagnostics.kt').read_text()
         self.assertIn('conversation.sendMessage(request).toString()',source)

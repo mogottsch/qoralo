@@ -110,8 +110,9 @@ class ShortProductE2eTest {
             require(appHash == args.getString("appApkSha256") && testHash == args.getString("testApkSha256"))
             val before = db { app.repository.observeEpisodes().first() }.map { it.id }.toSet()
             scenario = ActivityScenario.launch(MainActivity::class.java)
-            rule.waitUntil(15_000) { rule.onAllNodesWithText("New episode").fetchSemanticsNodes().isNotEmpty() }
-            click("New episode")
+            val createAction = hasClickAction() and (hasContentDescription("New episode") or hasText("New episode"))
+            rule.waitUntil(15_000) { rule.onAllNodes(createAction).fetchSemanticsNodes().isNotEmpty() }
+            rule.onNode(createAction).assertIsDisplayed().performClick()
             waitUntil("one newly created episode") { db { app.repository.observeEpisodes().first() }.map { it.id }.toSet().minus(before).size == 1 }
             episodeId = db { app.repository.observeEpisodes().first() }.map { it.id }.toSet().minus(before).single()
             json("ownership.json", JSONObject().put("runId", run).put("episodeId", episodeId).put("createdThroughMainUi", true))

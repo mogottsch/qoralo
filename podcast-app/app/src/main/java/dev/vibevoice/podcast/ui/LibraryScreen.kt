@@ -79,7 +79,8 @@ fun LibraryScreen(
                             // Measure the full label intrinsically; do not force a weighted narrow box.
                             if (!stackedAction) ExtendedFloatingActionButton(
                                 text = { Text("New episode") },
-                                icon = { Icon(Icons.Default.Add, contentDescription = null) },
+                                // Material3 clears the animated text's semantics; the icon must name the action.
+                                icon = { Icon(Icons.Default.Add, contentDescription = "New episode") },
                                 onClick = onNew,
                                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                             )
