@@ -551,6 +551,8 @@ class ContractTest(unittest.TestCase):
         self.assertTrue(ready["exclusive_incremental_token_output"])
         self.assertTrue(ready["optional_profile_failure_preserves_output"])
         self.assertTrue(ready["actual_emission_timestamps"])
+        self.assertTrue(ready["tokenization_precomputed_and_excluded_from_timing"])
+        self.assertIn("Final-emitted includes intervening prefill profile", ready["emission_timing_boundary"])
         self.assertEqual(("QNN_DATATYPE_INT_64", [1, 171], 1368), (ready["ar171_position_abi"]["data_type"], ready["ar171_position_abi"]["dimensions"], ready["ar171_position_abi"]["bytes"]))
         self.assertEqual(("QNN_DATATYPE_INT_64", [1, 1], 8), (ready["ar1_position_abi"]["data_type"], ready["ar1_position_abi"]["dimensions"], ready["ar1_position_abi"]["bytes"]))
         self.assertFalse(ready["prior_qnn_net_run_int32_boundary_generalized"])
@@ -566,7 +568,7 @@ class ContractTest(unittest.TestCase):
         self.assertEqual(3193053184, result["shared_context_assessment"]["combined_const_bytes"])
         self.assertIn("total emitted tokens", result["integrated_semantics"]["output_cap_semantics"])
         self.assertIn("fsync", result["integrated_semantics"]["output_persistence"])
-        self.assertIn("actual request-start", result["integrated_semantics"]["timing"])
+        self.assertIn("Actual request-start", result["integrated_semantics"]["timing"])
         self.assertIn("not reused or generalized", result["api_type_boundary"]["non_generalization"])
         self.assertIn("No integrated inference ran", result["host_runtime_boundary"])
 

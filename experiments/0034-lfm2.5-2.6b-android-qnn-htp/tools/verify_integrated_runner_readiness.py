@@ -147,6 +147,7 @@ def main() -> None:
         "input_semantics": {
             "canonical_short_tokens": 171,
             "token_file_sha256": sha256(args.token_file),
+            "tokenization_precomputed_and_excluded_from_timing": True,
             "cpu_embedding_bytes": embeddings.nbytes,
             "cpu_embedding_sha256": hashlib.sha256(embeddings.tobytes()).hexdigest(),
             "embedding_byte_equal_to_accepted_prefill_input": embedding_equal,
@@ -173,7 +174,7 @@ def main() -> None:
             "profile": "detailed recursive QNN events phase-labeled; extraction is optional/fail-open and explicitly logged; prefill profile freed/reset before AR1 load",
             "output_persistence": "exclusive output file opened before backend setup; endpoint and every decode token appended and fsync'd immediately, preserving partial output on later inference/finite-scan/profile failure",
             "output_cap_semantics": "MAX_NEW is total emitted tokens including the AR171 endpoint; max16 performs at most 15 AR1 calls and stops early on EOS",
-            "timing": "backend setup separate; actual request-start to first emitted and final emitted timestamps include output fsync; compute phase sums are separately labeled; functional output timing excludes optional profile dumps, diagnostic total includes profile/free overhead",
+            "timing": "backend setup is separate. Actual request-start to first emitted token includes its fsync and excludes later profile work. Actual request-start to final emitted token includes the intervening prefill profile dump, context free, profile reset, AR1 context load, and token fsyncs, but excludes the trailing AR1 profile dump/free. Compute-only phase sums and diagnostic total including all profile/free overhead are separately labeled.",
         },
         "stage": {
             "path": str(args.stage), "payload_files": stage["payload_files"], "payload_bytes": stage["payload_bytes"],

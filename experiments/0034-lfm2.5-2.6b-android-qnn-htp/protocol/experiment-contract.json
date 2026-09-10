@@ -739,6 +739,7 @@
       "prefill",
       "ar1_decode"
     ],
+    "emission_timing_boundary": "First-emitted includes endpoint fsync and excludes later profiles. Final-emitted includes intervening prefill profile/free/reset and AR1 load plus token fsyncs, but excludes trailing AR1 profile/free. Compute-only sums are separate.",
     "evidence": "results/qnn-prefill-ar171-ar1-integrated-readiness/result.json",
     "exclusive_incremental_token_output": true,
     "explicit_phase_transitions": 1,
@@ -786,7 +787,8 @@
       "ar1_profile_dump",
       "ar1_context_free",
       "diagnostic_total"
-    ]
+    ],
+    "tokenization_precomputed_and_excluded_from_timing": true
   },
   "matched_qairt_24940_android_phone_attempt_1": {
     "build_ids_exactly_equal": true,

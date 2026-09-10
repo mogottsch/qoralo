@@ -80,6 +80,7 @@
     "mask_sha256": "c96a2d766fadfa77ad687286b727de2e1c554f63a81a704c8a03d6af44465892",
     "position_int64_sha256": "7d153684f7fc38b9646d4c353406bfdf500b497364b4d310316841fc3db86697",
     "token_file_sha256": "eae8e828110f634d5c9954df0372e869f67f67aed846f9f544781faa1d4d29bc",
+    "tokenization_precomputed_and_excluded_from_timing": true,
     "zero_prefill_state_inputs": 38
   },
   "integrated_semantics": {
@@ -93,7 +94,7 @@
     "per_token_context_streaming": false,
     "profile": "detailed recursive QNN events phase-labeled; extraction is optional/fail-open and explicitly logged; prefill profile freed/reset before AR1 load",
     "simultaneous_contexts": 1,
-    "timing": "backend setup separate; actual request-start to first emitted and final emitted timestamps include output fsync; compute phase sums are separately labeled; functional output timing excludes optional profile dumps, diagnostic total includes profile/free overhead"
+    "timing": "backend setup is separate. Actual request-start to first emitted token includes its fsync and excludes later profile work. Actual request-start to final emitted token includes the intervening prefill profile dump, context free, profile reset, AR1 context load, and token fsyncs, but excludes the trailing AR1 profile dump/free. Compute-only phase sums and diagnostic total including all profile/free overhead are separately labeled."
   },
   "phone_boundary": "No ADB or phone access occurred. Stage and runner script are readiness evidence only.",
   "proposed_phone_gate": {
