@@ -1,6 +1,6 @@
 # Phone-return handoff
 
-**No further phone work is authorized by this handoff.** Explicit load-only, canonical TTS and one actual long-TTS slot completed; the long request failed at its first vector invocation. Another device action needs Pi's new slot. Frozen candidates remain unchanged. Git push/external publication is held for coordinated historical privacy cleanup.
+**No further phone work is authorized by this handoff.** Explicit load-only, canonical TTS, failed profiled-long and completed profile-OFF slots are retained. The profile-OFF whole request returned29.80s audio, not its roughly90s target; speech coverage/listening remain unreviewed. Another device action needs Pi's new slot. Frozen candidates remain unchanged. Git push/external publication is held for coordinated historical privacy cleanup.
 
 ## 1. Coherent UI candidate — FINAL host + synthetic UI approved
 
@@ -45,7 +45,7 @@ One complete226-byte request produced **15.640612s mono44.1kHz PCM16**: four-con
 
 ## 4. First whole-long-text request — actual vector failure, no WAV
 
-Run **`tts-long-20260910t202609z`** installed long candidate `b86008708cc459c855149eee49c58a7468e079d24c9de4842eab56a5bcef325d` from `.local/tts-long-ready/7557780/`: app `e9cc95b76bfbd776a2861ab43dc5fa63805cb0854d1809dcf29175e8745a71be`, test `fc19bf43237949820e7f4cfb83c302287b8ae9585e317a874741447a3cd22c9b`. These are the last APKs installed by Janek, not normal Gradle outputs or the approved coherent UI pair.
+Run **`tts-long-20260910t202609z`** installed long candidate `b86008708cc459c855149eee49c58a7468e079d24c9de4842eab56a5bcef325d` from `.local/tts-long-ready/7557780/`: app `e9cc95b76bfbd776a2861ab43dc5fa63805cb0854d1809dcf29175e8745a71be`, test `fc19bf43237949820e7f4cfb83c302287b8ae9585e317a874741447a3cd22c9b`. These were installed for the profiled failure and then superseded by the profile-OFF APKs in section5. They are not normal Gradle outputs or the approved coherent UI pair.
 
 The separate T2048/L2048 pack `supertonic-3-t2048-l2048-parity/current`, manifest `116fda95a907f6dc35bfe7c2144fe2818ed438cc109c1faa3f95cafc2fc84066`, staged without replacing the old pack. One self-contained227-word narration,1324 normalized codepoints, targeted roughly90s naturally; no forced duration, chunks, fallback or retry.
 
@@ -53,10 +53,18 @@ All four context initializations returned. Duration/text have actual QNN/RPC/cyc
 
 The earlier MAIN-presence and terminal-FAILED-history stops remain preserved separately. Routine exact app/test closure was authorized without data clear. Host-only correction `4e56375` admits nondispatching known terminal history while retaining active/unknown-state and schema/WAL/FK/coherence checks. It uses new guard `5ca6be91be151acd2937b5e65871a40361f9bae99ae444880eae0e29b6f2c425` through explicit override `60dd58885efdc8406049365d92c26838fdedf4db99f568638479a1f71e1b046d`; candidate/caller/APK/pack bytes were not rebuilt or rewritten. This consumed slot authorizes no further phone/model action. Failures get a status-board line, not a listening page.
 
-## 5. What remains unresolved
+## 5. Profile-OFF whole request — valid29.80s WAV, not a90s speech pass
+
+**`tts-long-profile-off-20260910t205719z`** completed one whole227-word request with all-four profiling disabled through the existing native empty-directory path. Candidate `efdb831a8f987d4a32ef21d121f065ea26f40c9dfdd8f7f6f946b6ec3b484c7b`, app `59e33847e9ff94f1ea8fdbd07d7881543bb90a80031a585cb6178be2c5e1842e`, test `6d97d38d7c3acb3d65234f289fe53114e4aaa98fc32afd6356bb96eddc8aa49b` were actually installed and observed. Frozen paths: `.local/tts-profile-off-ready/cc7e772/{app,test}.apk`. These diagnostic APKs are currently the last installed by Janek, not a normal product-E2E build.
+
+[WAV/result](../evidence/tts-profile-off-result/tts-long-profile-off-20260910t205719z/): SHA `bb61a552d5a631d05aee7aaa79695946f8a53aa01ebd4d82a9060bab95714d98`,2,628,128 bytes,1,314,042frames at44.1kHz monoPCM16 = **29.7968707483s**. **Not the roughly90s target; complete spoken coverage/quality are not established, listening not_reviewed.** Load3832.259686ms/render23697.614053ms/first-request RTF0.79530546 uses the real audio duration; no warm median. No audible autoplay overnight.
+
+All ORT Node/Session and QNN RPC/cycle/HVX/profile observations are **unavailable by design**. Planned1/1/5/1 is not measured/direct HTP proof. Same text/chapter seed/pack/native9/shapes/neural options; no chunks, stretching or retry. Existing pack116f was authenticated/reused without copying or replacement. Host cleanup/settings/actual3PID absence passed, no scratch created, lock released; no independent global DSP-health claim.
+
+## 6. What remains unresolved
 
 - **Product/native workflow:** canonical four-context TTS execution now produced one WAV, but the complete production generation/job/lifecycle flow and its integration with the approved UI have not been accepted. No further Gemma or TTS run is implied.
-- **Whole-chapter capacity:** the production/default T239/L238 pack still has its short-text limits. The separate T2048/L2048 probe now has a genuine physical vector-execution failure, not a completed chapter or capacity success. Saved source/profile diagnosis is in progress; no splitting/stitching, fallback, graph replacement or automatic recovery is approved.
+- **Whole-chapter capacity:** the production/default T239/L238 pack still has its short-text limits. The separate T2048/L2048 route has a retained profiled vector failure and a profile-OFF whole-request WAV return, but not its90s target or established complete/intelligible spoken coverage. Saved source/profile diagnosis is in progress; no splitting/stitching, fallback, graph replacement or automatic recovery is approved.
 - **Product/hardware:** physical accessibility/media/export, native lifecycle and complete generation remain separate gates. UI success does not close them.
 
 Pi must choose and approve the exact next physical candidate/scope explicitly; no unchanged retry is implied. The UI and diagnostic share the application ID; installing one does not preserve the other's installed binary identity. Never mix their app/test pairs. **Normal Gradle output APKs were deliberately restored to old c893 binaries; use only the nominated frozen paths above.**

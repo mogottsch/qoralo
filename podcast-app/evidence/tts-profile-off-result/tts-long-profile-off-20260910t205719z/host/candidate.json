@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "kind": "tts-long-profile-off",
+  "collectProfiles": false,
+  "profileEvidence": "UNAVAILABLE_BY_DESIGN",
+  "profiledBaselineCandidateSha256": "b86008708cc459c855149eee49c58a7468e079d24c9de4842eab56a5bcef325d",
+  "status": "host-validated-awaiting-exact-candidate-review-and-phone-slot",
+  "sourceCommit": "cc7e772ca825f6f5e939071b4737ba8a7976504a",
+  "sourceDirty": false,
+  "baseSourceCommit": "3fd75c06481bcc709d45da5c4933347f348e9079",
+  "effectiveAppSrcTree": "8e83f6bb158b6b2f45323b7898a6591c7a619c42",
+  "contractSha256": "8d6b93557a2ac9d191b731735015bad6ce9d95c9b605861dc3c930cf9c82cd35",
+  "contract": {
+    "schemaVersion": 1,
+    "id": "app-supertonic-t2048-l2048-parity-long-profile-off-once-v1",
+    "purpose": "one noncanonical complete long narration through four new data contexts; bounded capacity/operability probe, no Gemma/chunks/retry",
+    "route": "SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP",
+    "supertonicManifestSha256": "116fda95a907f6dc35bfe7c2144fe2818ed438cc109c1faa3f95cafc2fc84066",
+    "voice": "M1/SID5",
+    "chapterId": "long-library-01",
+    "steps": 5,
+    "speed": 1.0,
+    "seedXor": 20260813,
+    "rng": "existing native chapter-ID FNV-style hash xor seed; xorshift64star Box-Muller; fresh per-request buffers",
+    "namespacePolicy": "optional public libcdsprpc.so declaration as proven manifest-only variant; no explicit dlopen/ADSP/LD change",
+    "socModel": "43",
+    "cpuFallbackEnabled": false,
+    "textLength": 2048,
+    "latentLength": 2048,
+    "latentChannels": 144,
+    "deadlineSeconds": {
+      "verify": 60,
+      "load": 120,
+      "render": 180,
+      "close": 30
+    },
+    "serviceSeconds": 420,
+    "driverSeconds": 435,
+    "hostSeconds": 450,
+    "maxEvidenceBytes": 67108864,
+    "sessionConstructors": 4,
+    "ttsRequests": 1,
+    "expectedSessionRunCounts": {
+      "duration": 1,
+      "text": 1,
+      "vector": 5,
+      "vocoder": 1
+    },
+    "gemmaRequests": 0,
+    "capacityProbes": 1,
+    "retries": 0,
+    "benchmarkScope": "one noncanonical first long request with ORT and QNN profiling disabled; bounded operability/listening only, no direct per-graph execution or RPC/cycle proof, not fidelity/warm campaign/product E2E",
+    "packId": "supertonic-3-t2048-l2048-parity",
+    "devicePackRoot": "no_backup/model-packs/supertonic-3-t2048-l2048-parity/current",
+    "input": {
+      "file": "narration.txt",
+      "bytes": 1327,
+      "sha256": "f25655b54ad4e8d5e782dedf069867d6c201f1ea48327724527356d0f35aea37",
+      "canonical": false,
+      "normalizedCodepoints": 1324,
+      "normalizedSha256": "7add3140f7c8d871d0291e30ac1ca79546ad5fec9792ef78428e7eda9484c8b9",
+      "wordCount": 227,
+      "targetAudioSeconds": 90,
+      "durationForced": false,
+      "targetNote": "~90s is a prose-length target, not a measured or forced duration; predicted length above L2048 fails without trim-to-capacity/stretch/split"
+    },
+    "collectProfiles": false,
+    "profilingEvidence": "UNAVAILABLE_BY_DESIGN: ORT Session/Node counts/timings and QNN load/execute RPC/cycles/HVX/op profiles; expectedSessionRunCounts are planned, not measured"
+  },
+  "hostGuardSha256": "5ca6be91be151acd2937b5e65871a40361f9bae99ae444880eae0e29b6f2c425",
+  "ttsControllerSha256": "2a43becadc897a47c6c50424479e68fa996a05c0f70787be802ff6b2bf8b742d",
+  "privacyControllerSha256": "a62d204c380a5b2d0c8f7c5bd94729b6f823e18200feed2ebe24fa73962bec3c",
+  "modelPack": {
+    "id": "supertonic-3-t2048-l2048-parity",
+    "root": "/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/model-packs/supertonic-3-t2048-l2048-parity/current",
+    "manifestSha256": "116fda95a907f6dc35bfe7c2144fe2818ed438cc109c1faa3f95cafc2fc84066",
+    "authoritySha256": "777c1016e905e153af663579832357d8764dfa3a7560b34ee16e4bb5890f43d0"
+  },
+  "phoneAuthorized": false,
+  "sourceMode": "same profiled long diagnostic with only observability switch and pinned debug selector/evidence plumbing; existing native9 and same data pack; not polished UI build",
+  "app": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/tts-profile-off-ready/cc7e772/app.apk",
+    "bytes": 130653437,
+    "sha256": "59e33847e9ff94f1ea8fdbd07d7881543bb90a80031a585cb6178be2c5e1842e"
+  },
+  "test": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/tts-profile-off-ready/cc7e772/test.apk",
+    "bytes": 2166940,
+    "sha256": "6d97d38d7c3acb3d65234f289fe53114e4aaa98fc32afd6356bb96eddc8aa49b"
+  },
+  "evidenceBindings": {
+    "app-manifest.txt": {
+      "bytes": 11295,
+      "sha256": "7174c2061c279a2e5768cc7a6de6da92080f78238b084b9e73552f0e26d75084"
+    },
+    "app-signature.txt": {
+      "bytes": 955,
+      "sha256": "4434238f6cde4588f2926c79eaf8131abbbfa61bda40df1a3db3800ec7e2b9b7"
+    },
+    "host-build.log": {
+      "bytes": 4028,
+      "sha256": "238c59312025d01104c18a993b48e2f754a4e0db285fc4cb9e0591eb752a1bd8"
+    },
+    "host-checks.json": {
+      "bytes": 450,
+      "sha256": "f17146cc3f31fdd086d3d918924b7069feb1a7c48a6fecb0c62ec8964e437ef9"
+    },
+    "junit/TEST-dev.vibevoice.podcast.wiring.TtsOnlyContractTest.xml": {
+      "bytes": 869,
+      "sha256": "974b7c29e56bdf2e5a2c69d9aa816188c5d3ca0b8e7e057c9521c61df5fc22c5"
+    },
+    "junit/TEST-dev.vibevoice.podcast.wiring.TtsProfileOffContractTest.xml": {
+      "bytes": 824,
+      "sha256": "18259b1e6e9056da855136493efa96d128faeaeccb9bb39b2a23585e293b5f28"
+    },
+    "native-byte-proof.json": {
+      "bytes": 2018,
+      "sha256": "23f67aadcc1f3bb74ee3407de8652354cc4c74f814419f1e2c6381801e825a8a"
+    },
+    "source-inputs.json": {
+      "bytes": 763,
+      "sha256": "676bd9937af5fb02aac9b9a8fe0c3b1d5e2926673e14d8d8fdfff86febd62e9c"
+    },
+    "source-proof.json": {
+      "bytes": 13884,
+      "sha256": "b7aca638011ad4ed985e2f6514d968b99be3175b1f044e20a2508ae86a4bdafb"
+    },
+    "test-manifest.txt": {
+      "bytes": 4737,
+      "sha256": "d4981cab0c5a7311d3e46fb954f906ae4e255f718747069adfa65b0705ae125a"
+    },
+    "test-signature.txt": {
+      "bytes": 955,
+      "sha256": "4434238f6cde4588f2926c79eaf8131abbbfa61bda40df1a3db3800ec7e2b9b7"
+    },
+    "trusted-runtime.json": {
+      "bytes": 2628,
+      "sha256": "83bbfb8b1d8038f2f4d9b86288e35f97513dd838f50cf969bafffedd4b9017c5"
+    },
+    "trusted-runtime.log": {
+      "bytes": 256,
+      "sha256": "ae75483167bae38d6d8e311e50f20491f1b7bf50f285eac2e49c57513aecafc7"
+    }
+  }
+}
