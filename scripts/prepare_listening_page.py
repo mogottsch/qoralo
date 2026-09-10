@@ -88,6 +88,14 @@ def prepare(run_id, wav_path, expected_sha, title='Listening sample', note='', r
             folder.rmdir()  # Only this call's empty scratch folder; never an original/sample.
 
 
+def open_page(page):
+    # xdg-open can remain attached to a newly started browser. Never wait for that
+    # browser or let a shell timeout kill it. Opening does not start audio playback.
+    return subprocess.Popen(['xdg-open', str(page)], stdin=subprocess.DEVNULL,
+                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                            start_new_session=True, close_fds=True).pid
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--run-id', required=True)
@@ -101,7 +109,7 @@ def main():
     print(json.dumps({'page':str(page), 'url':page.as_uri(), 'wav':receipt['wav'],
                       'listening_verdict':receipt['listening_verdict']}, indent=2))
     if args.open:
-        subprocess.run(['xdg-open', str(page)], check=True)
+        print(json.dumps({'opener_pid': open_page(page)}), flush=True)
 
 
 if __name__ == '__main__':

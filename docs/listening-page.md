@@ -16,7 +16,7 @@ python3 scripts/prepare_listening_page.py \
   --open
 ```
 
-The helper verifies the copied bytes against the expected SHA and checks nonempty PCM format, frame count and payload completeness. It creates a **new** private-cache directory at `~/.cache/vibevoice-listening/<run-id>/` containing `sample.wav`, `index.html` and `listening-page.json`. It never overwrites an existing sample/page or changes the source WAV. No synthesis, ADB, server, forced duration, autoplay or auto-refresh occurs. `--open` uses `xdg-open` only after successful preparation.
+The helper verifies the copied bytes against the expected SHA and checks nonempty PCM format, frame count and payload completeness. It creates a **new** private-cache directory at `~/.cache/vibevoice-listening/<run-id>/` containing `sample.wav`, `index.html` and `listening-page.json`. It never overwrites an existing sample/page or changes the source WAV. No synthesis, ADB, server, forced duration, autoplay or auto-refresh occurs. `--open` launches `xdg-open` only after successful preparation, with detached stdio/session so a newly started browser cannot hold the tool open. It never waits for the browser lifetime. Launching an opener is not itself proof of page/media loading: verify the actual file/header and metadata load silently, report the real open state, and do not reopen tabs or kill personal Chrome because an opener waited.
 
 Verify the actual page and audio metadata load, report the file URL promptly, and keep the original accepted short player untouched. The planned ~90 seconds is a natural-duration target, not a padding/truncation or acceptance gate. Structural WAV validation is not run success, speech quality, capacity, fidelity or campaign proof.
 

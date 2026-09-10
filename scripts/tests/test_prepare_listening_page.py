@@ -4,6 +4,7 @@ import importlib.util
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import Mock, patch
 import wave
 
 spec=importlib.util.spec_from_file_location('listening',Path(__file__).resolve().parents[1]/'prepare_listening_page.py')
@@ -55,6 +56,19 @@ class ListeningPageTests(unittest.TestCase):
         foreign=self.cache/'accepted-short';foreign.mkdir();(foreign/'index.html').write_text('accepted')
         with self.assertRaises(FileExistsError):m.prepare('accepted-short',self.wav,self.sha,root=self.cache)
         self.assertEqual('accepted',(foreign/'index.html').read_text())
+
+    def test_opener_detaches_without_waiting_or_audio_playback(self):
+        page,_=m.prepare('viewer',self.wav,self.sha,root=self.cache)
+        process=Mock(pid=321)
+        with patch.object(m.subprocess,'Popen',return_value=process) as spawn:
+            self.assertEqual(321,m.open_page(page))
+        args,kwargs=spawn.call_args
+        self.assertEqual(['xdg-open',str(page)],args[0])
+        self.assertTrue(kwargs['start_new_session']);self.assertTrue(kwargs['close_fds'])
+        self.assertEqual(m.subprocess.DEVNULL,kwargs['stdin'])
+        self.assertEqual(m.subprocess.DEVNULL,kwargs['stdout'])
+        self.assertEqual(m.subprocess.DEVNULL,kwargs['stderr'])
+        process.wait.assert_not_called()
 
     def test_safe_run_id_and_no_forced_duration_gate(self):
         with self.assertRaises(ValueError):m.prepare('../escape',self.wav,self.sha,root=self.cache)
