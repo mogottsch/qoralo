@@ -1,8 +1,5 @@
 package dev.vibevoice.podcast.gallery
 
-/** Platform-window identity only; does not insert or unmerge accessibility nodes. */
-internal fun galleryWindowTitle(token: String) = "Synthetic UI gallery · $token"
-
 internal data class GalleryWindowObservation(
     val id: Int,
     val application: Boolean,
@@ -17,18 +14,27 @@ internal data class GalleryWindowObservation(
     val rootAvailable: Boolean,
     val rootHasContent: Boolean,
     val rootVisible: Boolean,
+    val verifiedOwnerToken: String?,
+    val rootWindowId: Int?,
 )
 
 internal data class GalleryWindowReadiness(
     val selected: GalleryWindowObservation?, val windows: List<GalleryWindowObservation>, val polls: Int,
 )
 
-internal data class GalleryAcknowledgement(val frame: String?, val token: String?, val process: String?, val pid: Int, val synthetic: Boolean, val windowTitle: String?)
+internal data class GalleryAcknowledgement(
+    val frame: String?, val token: String?, val process: String?, val pid: Int, val synthetic: Boolean,
+    val windowIds: Set<Int>, val sampledAtElapsedMs: Long,
+)
 
 internal object GalleryCapturePolicy {
     fun acknowledges(frame: String, token: String, packageName: String, value: GalleryAcknowledgement) =
-        value.frame == frame && value.token == token && value.process == "$packageName:ui_gallery" &&
-            value.pid > 0 && value.synthetic && value.windowTitle == galleryWindowTitle(token)
+        value.frame == frame && value.token == token && value.process == "$packageName:ui_gallery" && value.pid > 0 && value.synthetic
+
+    /** IDs come from public View.createAccessibilityNodeInfo() in the acknowledged gallery process. */
+    fun ownsWindow(frame: String, token: String, packageName: String, expectedPid: Int, value: GalleryAcknowledgement, windowId: Int, now: Long) =
+        acknowledges(frame, token, packageName, value) && value.pid == expectedPid && windowId >= 0 && windowId in value.windowIds &&
+            now - value.sampledAtElapsedMs in 0..1500L
 
     const val WINDOW_TIMEOUT_MS = 10_000L
     const val STABLE_MS = 400L
@@ -52,9 +58,9 @@ internal object GalleryCapturePolicy {
             windows = sample(); polls++; observe(windows)
             val imeVisible = windows.any { it.ime && it.nonemptyBounds }
             val candidate = windows.filter {
-                it.application && it.title == galleryWindowTitle(token) && it.rootPackage == packageName &&
+                it.application && it.verifiedOwnerToken == token && it.rootPackage == packageName &&
                     (it.focused || it.active || requireIme && imeVisible) && it.nonemptyBounds &&
-                    it.rootAvailable && it.rootHasContent && it.rootVisible
+                    it.rootAvailable && it.rootWindowId == it.id && it.rootHasContent && it.rootVisible
             }.maxWithOrNull(compareBy<GalleryWindowObservation> { it.focused }.thenBy { it.layer })
             val imeReady = !requireIme || imeVisible
             if (candidate != previous || !imeReady) stableSince = now()

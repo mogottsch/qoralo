@@ -27,6 +27,9 @@ class GalleryScopeTests(unittest.TestCase):
         self.assertIn('SourcesScreen', source)
         self.assertIn('ReviewScreen', source)
         self.assertIn('PlayerScreen', source)
+        self.assertIn('view.createAccessibilityNodeInfo()', source)
+        self.assertIn('node?.windowId', source)
+        self.assertNotIn('params.title =', source)
 
     def test_capture_is_emulator_guarded_and_uses_actual_accessibility_tree(self):
         source = (PROJECT / 'app/src/androidTest/java/dev/vibevoice/podcast/gallery/SyntheticGalleryCaptureTest.kt').read_text()
@@ -37,6 +40,9 @@ class GalleryScopeTests(unittest.TestCase):
         self.assertIn('GalleryCapturePolicy.retainEvidence', source)
         self.assertIn('windowObservations', source)
         self.assertIn('run-summary.json', source)
+        self.assertIn('GalleryCapturePolicy.ownsWindow', source)
+        self.assertIn('lastOwnershipSnapshot', source)
+        self.assertIn('it.windowId == expected.id', source)
         self.assertNotIn('useUnmergedTree', source)
 
 

@@ -3,7 +3,7 @@ package dev.vibevoice.podcast.gallery
 import android.content.Intent
 import android.os.Bundle
 import android.os.Process
-import android.view.WindowManager
+import android.os.SystemClock
 import android.view.inspector.WindowInspector
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -18,6 +18,7 @@ import dev.vibevoice.podcast.data.*
 import dev.vibevoice.podcast.ui.*
 import dev.vibevoice.podcast.ui.theme.VibeVoiceTheme
 import org.json.JSONObject
+import org.json.JSONArray
 import java.io.File
 import java.io.RandomAccessFile
 
@@ -85,25 +86,25 @@ class SyntheticGalleryActivity : ComponentActivity() {
                     }
                 }
                 LaunchedEffect(frame, token) {
-                    // Label platform windows owned by this debug process, including Compose dialogs.
-                    // Do not add marker nodes to (or unmerge) the production accessibility tree.
+                    // Read actual platform accessibility IDs from this process's attached decor
+                    // views (including dialogs). Never infer identity from a requested window title,
+                    // insert marker nodes, or change production Compose accessibility semantics.
                     withFrameNanos { }; withFrameNanos { }
-                    var acknowledged = false
                     while (isActive) {
-                        val title = galleryWindowTitle(token)
-                        WindowInspector.getGlobalWindowViews().filter { it.isAttachedToWindow }.forEach { view ->
-                            val params = view.layoutParams as? WindowManager.LayoutParams
-                            if (params != null && params.title != title) {
-                                params.title = title
-                                getSystemService(WindowManager::class.java).updateViewLayout(view, params)
-                            }
+                        val windows = JSONArray()
+                        WindowInspector.getGlobalWindowViews().filter { it.isAttachedToWindow && it.isShown }.forEach { view ->
+                            val node = view.createAccessibilityNodeInfo()
+                            val id = node?.windowId ?: -1
+                            if (id >= 0) windows.put(JSONObject().put("windowId", id).put("rootPackage", node?.packageName?.toString())
+                                .put("focused", view.hasWindowFocus()).put("rootClass", view.javaClass.name))
                         }
-                        if (!acknowledged) {
-                            File(filesDir, "ui-gallery-ready.json").writeText(JSONObject().put("frame", frame).put("token", token)
-                                .put("pid", Process.myPid()).put("process", android.app.Application.getProcessName()).put("fontScale", largeText)
-                                .put("windowTitle", title).put("syntheticUiOnly", true).put("media", "30-second test tone; not model audio").toString())
-                            acknowledged = true
-                        }
+                        val snapshot = JSONObject().put("frame", frame).put("token", token)
+                            .put("pid", Process.myPid()).put("process", android.app.Application.getProcessName()).put("fontScale", largeText)
+                            .put("observedWindows", windows).put("sampledAtElapsedMs", SystemClock.elapsedRealtime())
+                            .put("syntheticUiOnly", true).put("media", "30-second test tone; not model audio")
+                        val temporary = File(filesDir, "ui-gallery-ready.tmp")
+                        temporary.writeText(snapshot.toString())
+                        check(temporary.renameTo(File(filesDir, "ui-gallery-ready.json")))
                         delay(GalleryCapturePolicy.POLL_MS)
                     }
                 }

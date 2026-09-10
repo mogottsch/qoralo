@@ -50,7 +50,7 @@ class SyntheticGalleryCaptureTest {
             for (frame in frames) {
                 val token = "$run-$frame"
                 val metadata = JSONObject().put("frame", frame).put("token", token).put("runId", run)
-                    .put("expectedPackage", context.packageName).put("expectedWindowTitle", galleryWindowTitle(token))
+                    .put("expectedPackage", context.packageName).put("ownershipMethod", "gallery decor AccessibilityNodeInfo.windowId → UiAutomation window.id")
                     .put("imeRequested", ime).put("imeClickSucceeded", false).put("acknowledged", false)
                     .put("evidenceType", "synthetic-emulator-ui-no-model-inference")
                     .put("appApkPath", context.applicationInfo.sourceDir).put("deviceFingerprint", Build.FINGERPRINT)
@@ -58,30 +58,44 @@ class SyntheticGalleryCaptureTest {
                 File(output, "$frame-metadata.json").writeText(metadata.toString(2))
                 val problems = mutableListOf<String>()
                 var selected: GalleryWindowObservation? = null
+                var expectedPid = -1
+                val ready = File(context.filesDir, "ui-gallery-ready.json")
+                fun currentOwner(): GalleryAcknowledgement? {
+                    val owner = runCatching { JSONObject(ready.readText()) }.getOrNull()
+                    metadata.put("lastOwnershipSnapshot", owner ?: JSONObject.NULL)
+                    return owner?.let { acknowledgement(it, context.packageName) }
+                }
+                fun ownedRoot(window: GalleryWindowObservation): AccessibilityNodeInfo {
+                    val owner = requireNotNull(currentOwner()) { "Gallery ownership snapshot missing" }
+                    check(GalleryCapturePolicy.ownsWindow(frame, token, context.packageName, expectedPid, owner, window.id, SystemClock.elapsedRealtime())) {
+                        "Gallery window ownership changed or expired after readiness"
+                    }
+                    return liveRoot(automation, window)
+                }
                 val observations = ArrayDeque<JSONObject>()
                 try {
                     context.startActivity(Intent(context, SyntheticGalleryActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         .putExtra("frame", frame).putExtra("token", token))
                     launched = true
-                    val ready = File(context.filesDir, "ui-gallery-ready.json")
                     val deadline = SystemClock.elapsedRealtime() + 10_000
                     var state: JSONObject? = null
                     var acknowledged = false
                     while (SystemClock.elapsedRealtime() < deadline) {
                         state = runCatching { JSONObject(ready.readText()) }.getOrNull()
                         acknowledged = state?.let {
-                            GalleryCapturePolicy.acknowledges(frame, token, context.packageName, GalleryAcknowledgement(
-                                it.optString("frame"), it.optString("token"), it.optString("process"), it.optInt("pid"),
-                                it.optBoolean("syntheticUiOnly"), it.optString("windowTitle")))
+                            GalleryCapturePolicy.acknowledges(frame, token, context.packageName, acknowledgement(it, context.packageName))
                         } == true
                         if (acknowledged) break
                         Thread.sleep(100)
                     }
                     metadata.put("acknowledged", acknowledged).put("acknowledgement", state ?: JSONObject.NULL)
                     check(acknowledged) { "Gallery acknowledgement identity/deadline failure" }
+                    expectedPid = requireNotNull(state).getInt("pid")
                     fun waitForWindow(expectIme: Boolean): GalleryWindowObservation? {
                         val result = GalleryCapturePolicy.awaitWindow(context.packageName, token, expectIme,
-                            SystemClock::elapsedRealtime, Thread::sleep, { sampleWindows(automation) }, { windows ->
+                            SystemClock::elapsedRealtime, Thread::sleep, {
+                                sampleWindows(automation, frame, token, context.packageName, expectedPid, currentOwner())
+                            }, { windows ->
                                 if (observations.size == 12) observations.removeFirst()
                                 observations.addLast(JSONObject().put("elapsedRealtimeMs", SystemClock.elapsedRealtime())
                                     .put("windows", JSONArray(windows.map(::windowJson))))
@@ -93,7 +107,7 @@ class SyntheticGalleryCaptureTest {
                     selected = waitForWindow(false)
                     check(selected != null) { "Correct live gallery window/root did not stabilize within 10 seconds" }
                     if (ime) {
-                        val root = liveRoot(automation, selected)
+                        val root = ownedRoot(selected)
                         val editors = editableNodes(root).filter { it.isVisibleToUser }
                         val editor = if (frame == "paste") editors.firstOrNull() else editors.lastOrNull()
                         val clicked = editor?.performAction(AccessibilityNodeInfo.ACTION_CLICK) ?: false
@@ -121,7 +135,7 @@ class SyntheticGalleryCaptureTest {
                         } finally { bitmap.recycle() }
                     },
                     tree = {
-                        val root = liveRoot(automation, requireNotNull(selected))
+                        val root = ownedRoot(requireNotNull(selected))
                         val budget = TreeBudget(SystemClock.elapsedRealtime() + 5000)
                         val tree = nodeJson(root, budget)
                         File(output, "$frame-accessibility.json").writeText(tree.toString(2))
@@ -156,24 +170,36 @@ class SyntheticGalleryCaptureTest {
         }
     }
 
-    private fun sampleWindows(automation: UiAutomation): List<GalleryWindowObservation> = automation.windows.map { window ->
+    private fun acknowledgement(value: JSONObject, packageName: String): GalleryAcknowledgement {
+        val windows = value.optJSONArray("observedWindows") ?: JSONArray()
+        val ids = (0 until windows.length()).mapNotNull { index ->
+            val window = windows.optJSONObject(index)
+            window?.optInt("windowId", -1)?.takeIf { it >= 0 && window.optString("rootPackage") == packageName }
+        }.toSet()
+        return GalleryAcknowledgement(value.optString("frame"), value.optString("token"), value.optString("process"),
+            value.optInt("pid"), value.optBoolean("syntheticUiOnly"), ids, value.optLong("sampledAtElapsedMs", -1))
+    }
+
+    private fun sampleWindows(automation: UiAutomation, frame: String, token: String, packageName: String, expectedPid: Int, owner: GalleryAcknowledgement?): List<GalleryWindowObservation> = automation.windows.map { window ->
         val bounds = Rect().also(window::getBoundsInScreen)
         val root = window.root
         GalleryWindowObservation(window.id, window.type == AccessibilityWindowInfo.TYPE_APPLICATION, window.type == AccessibilityWindowInfo.TYPE_INPUT_METHOD,
             window.title?.toString(), root?.packageName?.toString(), window.isActive, window.isFocused, window.layer, bounds.toShortString(), !bounds.isEmpty,
-            root != null, root != null && (root.childCount > 0 || !root.text.isNullOrBlank() || !root.contentDescription.isNullOrBlank()), root?.isVisibleToUser == true)
+            root != null, root != null && (root.childCount > 0 || !root.text.isNullOrBlank() || !root.contentDescription.isNullOrBlank()), root?.isVisibleToUser == true,
+            token.takeIf { owner != null && GalleryCapturePolicy.ownsWindow(frame, token, packageName, expectedPid, owner, window.id, SystemClock.elapsedRealtime()) }, root?.windowId)
     }
 
     private fun liveRoot(automation: UiAutomation, expected: GalleryWindowObservation): AccessibilityNodeInfo {
         val window = automation.windows.single { it.id == expected.id && it.title?.toString() == expected.title }
         return requireNotNull(window.root).also {
-            check(it.packageName?.toString() == expected.rootPackage && it.isVisibleToUser) { "Window/root changed after readiness" }
+            check(it.windowId == expected.id && it.packageName?.toString() == expected.rootPackage && it.isVisibleToUser) { "Window/root changed after readiness" }
         }
     }
 
     private fun windowJson(w: GalleryWindowObservation) = JSONObject().put("id", w.id).put("application", w.application).put("ime", w.ime)
         .put("title", w.title ?: JSONObject.NULL).put("rootPackage", w.rootPackage ?: JSONObject.NULL).put("active", w.active).put("focused", w.focused)
         .put("layer", w.layer).put("bounds", w.bounds).put("rootAvailable", w.rootAvailable).put("rootHasContent", w.rootHasContent).put("rootVisible", w.rootVisible)
+        .put("verifiedOwnerToken", w.verifiedOwnerToken ?: JSONObject.NULL).put("rootWindowId", w.rootWindowId ?: JSONObject.NULL)
 
     private fun editableNodes(node: AccessibilityNodeInfo, remainingDepth: Int = 30): List<AccessibilityNodeInfo> = buildList {
         if (node.isEditable) add(node)
