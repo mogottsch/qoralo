@@ -1,7 +1,7 @@
 ---
 experiment: 0031-gemma-4-e2b-it-android-qnn-htp
 status: completed
-summary: The accepted campaign remains complete with disclosed long-output collapse; a post-completion host-only track localizes its periodic loop and ranks an explicit request-level hybrid first.
+summary: The accepted campaign remains complete; its separate FP16 improvement probe passed ONNX patch-scope checks but was stopped for app priority before any DLC, not for a model or numerical failure.
 benchmark: android-llm
 registry: 0031-gemma-4-e2b-it-qnn-htp
 ---
@@ -179,7 +179,22 @@ The leading candidate is an explicit request-level hybrid: accepted QNN HTP for 
 
 No normalized decode delta or decode-based ranking is made. QNN's 17.828 tok/s value is a raw Genie observation with unspecified first-token inclusion; LiteRT's 16.302 tok/s explicitly excludes the first token. Prefill/TTFT comparisons also retain the route-native tokenizer-count difference. Dual-route setup and memory are separate costs, and process measurements do not expose additive HTP/GPU-private memory.
 
-The second candidate is a host-only HTP precision probe: change only global-attention value-cache I/O (`past_value_{4,9,14}`) to identical FP16 across AR1/AR128 while keeping transformer compute on HTP. This remains a hypothesis; no conversion, phone run, new campaign, or registry update occurred.
+The second candidate targets FP16 global-attention value-cache I/O (`past_value_{4,9,14}`) in AR1/AR128, with transformer compute intended to remain on HTP. The original ranking involved no conversion or phone run; the later host attempts below are distinct evidence and do not change the accepted campaign.
+
+**2026-09-10 — FP16 host attempts (`d0bfa74`).** Four attempts are retained separately, including their failures:
+
+| Improvement attempt | Observed boundary |
+|---|---|
+| [01](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/global-value-fp16-attempt-01/result.json) | QAIRT import could not resolve `libpython3.10.so.1.0`; neither patching nor conversion started. |
+| [02](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/global-value-fp16-attempt-02/result.json) | Import then could not resolve `libunwind.so.1`; still before patching or conversion. Existing experiment-local host libraries resolved the prerequisites without installation or SDK changes. |
+| [03](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/global-value-fp16-attempt-03/result.json) | Patch preflight rejected the assumption that both variants contain six selected encoding records. AR1 has six explicit input/output entries; AR128 has only three input entries. Conversion did not start. |
+| [04](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/global-value-fp16-attempt-04/result.json) | Both ONNX patches passed scope checks. AR1 conversion entered optimization/quantization, then was stopped for app priority before producing a DLC. |
+
+Attempt 04 verifies only the ONNX boundary: FP16 inputs/outputs for the three selected global value caches, exactly six AR1 and three AR128 encoding removals, and unchanged other I/O, encodings, and weight initializers. It does not prove the datatypes or execution behavior of a converted QNN model.
+
+The supervisor honored a `STOP` request, sent TERM, and reaped its owned process group without automatic restart. The retained classification is `app_priority_interruption_not_model_failure`. No DLC or compiled context was produced; AR128 conversion, compilation, and inference never started. Actual DLC cache signatures, Convert-count change, full HTP delegation, unsupported/fallback count, context size, and fidelity remain null/unmeasured—not passed or zero. No phone access occurred. Work is held for app priority; after Pi releases it, any restart must use a new retained attempt and inspect both DLC interfaces before compilation.
+
+The [request-routing recommendation](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/REQUEST-ROUTING.md) remains an unmeasured policy for the existing canonical tiers, not a built hybrid or a general prompt-length threshold. It selects HTP for short/medium and LiteRT GPU for long before each complete request, with no mid-request switch or retry on another provider. Co-resident setup, memory, and speed require measurement; separate accepted route measurements are not a hybrid benchmark.
 
 ## Results
 
@@ -286,7 +301,13 @@ Attempt chronology remains intact: the initial campaign setup failed before any 
 | Candidate 1 | Request-level hybrid: QNN HTP short/medium + LiteRT GPU long; explicit backend per complete request |
 | Long completion comparison | GPU 48.311 s vs HTP 118.256 s, 59.147% shorter; output counts/stops differ (756 EOS vs 2,048 max) |
 | Decode comparison | Null for ranking: Genie first-token inclusion unspecified; LiteRT explicitly excludes it |
-| Candidate 2 | Host-only HTP FP16 global value-cache I/O probe; unconverted and unmeasured |
+| Candidate 2 | FP16 global value-cache probe: ONNX scope checked; AR1 conversion interrupted before DLC |
+| Retained attempts 01–03 | Two import/loader-path failures and one encoding-removal preflight failure; all before conversion |
+| Attempt 04 patch scope | AR1 removes 6 selected encoding entries, AR128 removes 3; other I/O/encodings/weights unchanged |
+| Interruption classification | App-priority `STOP` → TERM; owned process group reaped; no automatic restart; not model/numerical failure |
+| Unmeasured candidate results | No DLC/context, AR128 conversion, compilation, or inference; actual cache/delegation/unsupported/fidelity metrics remain null |
+| Routing-policy boundary | Unmeasured request-level recommendation; no built/measured hybrid or general length threshold |
+| Current improvement state | Held for Pi resource release; any restart is a new retained host attempt, not an overwrite |
 | Publication effect | Completed campaign and registry row unchanged; no phone, campaign rerun, or new registry evidence |
 
 No paid Workbench job ran. Output sanity is a narrow corruption/repetition screen, not model quality. The Android LLM registry remains the immutable complete physical campaign row with the five long failures, thermal escalation, process-memory scope, unavailable HTP-private memory, and undefined decode first-token semantics preserved.
