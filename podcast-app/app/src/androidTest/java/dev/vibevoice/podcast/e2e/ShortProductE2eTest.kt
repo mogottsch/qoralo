@@ -52,6 +52,11 @@ class ShortProductE2eTest {
         }
         error("Deadline: $label; no retry")
     }
+    private fun readJson(file: File): JSONObject {
+        var parsed: JSONObject? = null
+        waitUntil("complete evidence ${file.name}", 2_000) { parsed = runCatching { JSONObject(file.readText()) }.getOrNull(); parsed != null }
+        return requireNotNull(parsed)
+    }
     private fun shown(matcher: SemanticsMatcher) {
         rule.waitUntil(15_000) { rule.onAllNodes(matcher).fetchSemanticsNodes().isNotEmpty() }
     }
@@ -133,7 +138,7 @@ class ShortProductE2eTest {
             review.assertIsOn(); click("Create")
             waitUntil("production generation started", 30_000) { File(root, "jobs").listFiles().orEmpty().any { File(it, "started.json").isFile } }
             val started = File(root, "jobs").listFiles().orEmpty().single().resolve("started.json")
-            val generationPid = JSONObject(started.readText()).getInt("pid")
+            val generationPid = readJson(started).getInt("pid")
             assertNotEquals(Process.myPid(), generationPid)
             // Real Home/reopen, without force-stop, data/task clear, or a second Create action.
             shell("input keyevent KEYCODE_HOME")
@@ -162,6 +167,8 @@ class ShortProductE2eTest {
             }
             val (final, chapters) = revision()
             assertEquals(first.id, final.baseRevisionId); assertEquals(first.revisionNumber + 1, final.revisionNumber)
+            assertEquals("$title checked", final.title) // verify the planned model edit, not merely queue/new-row acceptance
+            assertNotEquals(first.contentHash, final.contentHash)
             assertArrayEquals(firstBytes, app.repository.resolveArtifact(first.relativePath).readBytes())
             text("final-revision.json", app.repository.resolveArtifact(final.relativePath).readText())
             ShortProductPolicy.validateFinal(chapters.map { it.stableChapterId to it.text })

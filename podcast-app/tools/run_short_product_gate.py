@@ -14,7 +14,7 @@ from prepare_wiring_gate import PROJECT, digest
 from run_wiring_gate import APP, TEST_APP, Device, DeviceSettings, stop_child
 from duration_phone_guard import PhoneGuard, close_inherited_fds, host_identity, validate_snapshot, require
 from run_tts_only_gate import capture_conditions
-from short_product_preservation import rows, compare, parse_inventory, compare_files
+from short_product_preservation import rows, compare, parse_inventory, compare_files, validate_owned_control
 
 CONTRACT_SHA='a39106380003a3a4c7b83c2f45066399e204d8aefade77ec88866f9062eccfc4'
 PRIVACY_SHA='a62d204c380a5b2d0c8f7c5bd94729b6f823e18200feed2ebe24fa73962bec3c'
@@ -64,6 +64,25 @@ def private_inventory(device,out,label):
     return parse_inventory((directory/(label+'.stdout')).read_bytes())
 
 
+def disarm_owned_control(device,out,run,owned,original):
+    marker='files/short-product-e2e/active.json'
+    private=out/'.private-control';private.mkdir(mode=0o700,exist_ok=True)
+    counter=device.counter+1
+    script=f'if test -L {marker}; then printf "UNSAFE\\n"; elif test -f {marker}; then cat {marker}; elif test ! -e {marker}; then printf "ABSENT\\n"; else printf "UNSAFE\\n"; fi'
+    try:device.run(['exec-out',f'run-as {APP} sh -c '+shlex.quote(script)],timeout=30,binary=True)
+    finally:
+        p=out/f'{counter:03d}-command.stdout'
+        if p.exists():p.rename(private/'before.stdout')
+    current=(private/'before.stdout').read_bytes()
+    if current==b'ABSENT\n':return {'controlAbsent':True,'hostRemovalPerformed':False}
+    sha=validate_owned_control(current,original,run,owned,CONTRACT_SHA)
+    # App/test/generation already stopped. Recheck current bytes immediately before removing ONLY this file.
+    script=f'set -e; test ! -L {marker}; test "$(sha256sum {marker} | cut -d " " -f 1)" = {sha}; rm {marker}; test ! -e {marker}; test ! -L {marker}; printf "ABSENT\\n"'
+    observed=device.shell(f'run-as {APP} sh -c '+shlex.quote(script))
+    require(observed.strip()=='ABSENT','owned control disarm absence unproven')
+    return {'controlAbsent':True,'hostRemovalPerformed':True,'matchedOriginalSha256':sha,'runId':run,'episodeId':owned}
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     for key in ('candidate','output'):parser.add_argument('--'+key,type=Path,required=True)
@@ -85,7 +104,7 @@ def main():
     os.umask(0o077);args.output.mkdir(parents=True,exist_ok=False);out=args.output
     lock=(PROJECT.parent/'artifacts/locks/phone.lock').open('a+');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB);os.set_inheritable(lock.fileno(),False)
     device=Device(args.adb,args.serial,out);guard=PhoneGuard(device,out,args.candidate,args.approved_candidate_sha256,args.approved_host_guard_sha256)
-    settings=DeviceSettings(device.shell);logs=None;identity=False;closure_allowed=False;launched=False;before=None;files_before=None;owned=None
+    settings=DeviceSettings(device.shell);logs=None;identity=False;closure_allowed=False;launched=False;before=None;files_before=None;owned=None;original_control=None
     cleanup={'errors':[],'settingsErrors':[],'packagesAndDataRetained':True,'scratchCreated':False}
     (out/'candidate.json').write_text(json.dumps(value,indent=2));(out/'host-identity.json').write_text(json.dumps(host_identity(),indent=2))
     def interrupt(signum,frame):raise InterruptedError('signal; first attempt stops, cleanup only')
@@ -122,11 +141,19 @@ def main():
                 with tarfile.open(archive) as tar:
                     name=f'files/short-product-e2e/{args.run_id}/ownership.json'
                     if name in tar.getnames():owned=json.load(tar.extractfile(name))['episodeId']
+                    control=f'files/short-product-e2e/{args.run_id}/control-original.json'
+                    if control in tar.getnames():original_control=tar.extractfile(control).read()
                 if owned:
                     require(re.fullmatch(r'[a-zA-Z0-9-]+',owned),'unsafe owned episode ID')
                     p=device.run(['exec-out','run-as',APP,'tar','-cf','-',f'files/episodes/{owned}'],timeout=120,binary=True)
                     p.rename(out/'owned-episode-artifacts.tar')
             except Exception as error:cleanup['errors'].append({'phase':'pull','error':repr(error)})
+        if launched:
+            try:
+                require(cleanup.get('allActualPidsAbsent'),'cannot disarm while process absence is unproven')
+                receipt=disarm_owned_control(device,out,args.run_id,owned,original_control)
+                cleanup['controlAbsent']=receipt['controlAbsent'];(out/'control-disarm.json').write_text(json.dumps(receipt,indent=2))
+            except Exception as error:cleanup['errors'].append({'phase':'owned-control-disarm','error':repr(error)})
         if identity and before is not None:
             try:
                 after=guard.snapshot('preservation-after',1);second=guard.snapshot('preservation-after',2)

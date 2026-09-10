@@ -21,7 +21,9 @@ CONTROLLERS=['tools/run_short_product_gate.py','tools/short_product_preservation
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--source-commit',required=True);parser.add_argument('--output',type=Path,required=True)
+    parser.add_argument('--reuse-app-candidate',type=Path)
     args=parser.parse_args();out=args.output.resolve();out.mkdir(parents=True,exist_ok=False)
+    previous=json.loads(args.reuse_app_candidate.read_text()) if args.reuse_app_candidate else None
     def git(*argv):return subprocess.check_output(['git',*argv],cwd=PROJECT.parent)
     source=git('rev-parse',args.source_commit).decode().strip()
     def save(name,value):(out/name).write_text(json.dumps(value,indent=2)+'\n')
@@ -53,6 +55,14 @@ def main():
             assert digest(PROJECT/'.local/model-packs'/route/'current/manifest.json')==PACKS[route]
         assert digest(project/'app/src/debug/assets/short-product-e2e/contract.json')==CONTRACT_SHA
         assert digest(project/'app/src/main/cpp/podcast_runtime.cpp')=='a3de4cd62a83275977036516ff1e0c04a3beda454794e7c331aed7b936ad8b35'
+        if previous:
+            assert previous['kind']=='short-production-plumbing' and previous['contractSha256']==CONTRACT_SHA
+            assert digest(Path(previous['app']['path']))==previous['app']['sha256']
+            for path in build_paths:
+                if '/src/androidTest/' not in path and '/src/test/' not in path and '/src/testDebug/' not in path:
+                    assert git('show',source+':'+path)==git('show',previous['sourceCommit']+':'+path),path
+            save('app-reuse.json',{'previousCandidateSha256':digest(args.reuse_app_candidate),'appSha256':previous['app']['sha256'],
+                 'compiledAppSourceAndBuildInputsUnchanged':True,'sourceAppCommit':previous['sourceCommit'],'noAppRepackOrRebuild':True})
         source_blobs={line.split('\t')[1].removeprefix('podcast-app/'):line.split('\t')[0].split()[2]
                       for line in git('ls-tree','-r',source,'--','podcast-app/app/src').decode().splitlines()}
         save('source-proof.json',{'sourceCommit':source,'effectiveAppSrcTree':git('rev-parse',source+':podcast-app/app/src').decode().strip(),
@@ -62,12 +72,17 @@ def main():
              'nativeBaselineApkSha256':BASE_APK_SHA,'mode':'real normal coordinator/dispatcher/UI with owned observation/bounds-only debug seams; short plumbing, not long readiness'})
         init=PROJECT/'tools/short_product_artifacts.init.gradle'
         env=dict(os.environ,COHERENT_ARTIFACT_OUTPUT=str(out/'resolved-artifacts.json'))
+        app_tasks=[] if previous else [':app:assembleDebug']
         command('host-build.log',['./gradlew','--offline','--max-workers=2','--no-configuration-cache','-Ppodcast.shortProductE2e=true','-I',str(init),
-            ':app:coherentArtifactInputs',':app:assembleDebug',':app:assembleDebugAndroidTest',':app:testDebugUnitTest',
+            ':app:coherentArtifactInputs',*app_tasks,':app:assembleDebugAndroidTest',':app:testDebugUnitTest',
             '--tests','dev.vibevoice.podcast.e2e.ShortProductPolicyTest','--tests','dev.vibevoice.podcast.generation.GenerationCoordinatorTest'],project,env)
         artifacts=json.loads((out/'resolved-artifacts.json').read_text())
         save('resolved-artifact-hashes.json',{r['file']:{'sha256':digest(Path(r['file'])),'bytes':Path(r['file']).stat().st_size} for r in artifacts})
-        for name,path in [('app','app/build/outputs/apk/debug/app-debug.apk'),('test','app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk')]:shutil.copy2(project/path,out/(name+'.apk'))
+        if previous:
+            assert json.loads((out/'resolved-artifact-hashes.json').read_text())==json.loads((args.reuse_app_candidate.parent/'resolved-artifact-hashes.json').read_text())
+            shutil.copy2(previous['app']['path'],out/'app.apk')
+        else:shutil.copy2(project/'app/build/outputs/apk/debug/app-debug.apk',out/'app.apk')
+        shutil.copy2(project/'app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk',out/'test.apk')
         generated=(project/'app/build/generated/source/buildConfig/debug/dev/vibevoice/podcast/BuildConfig.java').read_text()
         assert 'SHORT_PRODUCT_E2E = true' in generated and '"supertonic-3"' in generated and PACKS['supertonic-3'] in generated
         (out/'generated-BuildConfig.java').write_text(generated)
@@ -87,7 +102,7 @@ def main():
             command(kind+'-manifest.txt',[str(sdk/'aapt2'),'dump','xmltree','--file','AndroidManifest.xml',str(out/(kind+'.apk'))])
             command(kind+'-signature.txt',[str(sdk/'apksigner'),'verify','--verbose','--print-certs',str(out/(kind+'.apk'))])
         command('focused-python.log',['python3','-m','unittest','discover','-s',str(PROJECT/'tools/tests'),'-p','test_short_product_scope.py','-v'])
-        save('host-checks.json',{'focusedJvm':counts,'focusedPython':6,'appAndTestAssembly':'passed','native9':'byte-exact reuse',
+        save('host-checks.json',{'focusedJvm':counts,'focusedPython':8,'appAndTestAssembly':'app byte-exact reuse; test assembly passed' if previous else 'passed','native9':'byte-exact reuse',
              'dependencyInventory':len(artifacts),'physicalExecution':False,'fullBaselineOrUiMatrixRerun':False,'longReadiness':False})
         candidate={'schemaVersion':1,'kind':'short-production-plumbing','sourceCommit':source,'sourceDirty':False,'phoneAuthorized':False,
             'contractSha256':CONTRACT_SHA,'contract':json.loads((project/'app/src/debug/assets/short-product-e2e/contract.json').read_text()),

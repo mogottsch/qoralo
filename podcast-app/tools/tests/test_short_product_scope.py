@@ -5,13 +5,14 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 import unittest
 
 PROJECT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(PROJECT/'tools'))
 from duration_phone_guard import GuardError
 from short_product_preservation import TABLES, compare, compare_files, parse_inventory
-from run_short_product_gate import CONTRACT_SHA, PACKS
+from run_short_product_gate import CONTRACT_SHA, PACKS, disarm_owned_control
 
 class ShortProductScopeTests(unittest.TestCase):
     def state(self):
@@ -46,6 +47,34 @@ class ShortProductScopeTests(unittest.TestCase):
         compare(old,new,'owned')
         new['installed_models'][0]['manifestSha256']='0'*64
         with self.assertRaises(GuardError):compare(old,new,'owned')
+    def test_catalog_exact_ids_preserve_long_rows_and_reject_deletions(self):
+        old=self.state()
+        old['installed_models']=[{'id':'long-other','route':'SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP','manifestSha256':'legacy'},
+                                 {'id':'gemma-4-e2b','route':'GEMMA_4_E2B_LITERT_GPU','manifestSha256':PACKS['gemma-4-e2b']}]
+        compare(old,copy.deepcopy(old),'owned')
+        for removed in (0,1):
+            new=copy.deepcopy(old);new['installed_models'].pop(removed)
+            with self.assertRaises(GuardError):compare(old,new,'owned')
+        new=copy.deepcopy(old);new['installed_models'][1]['route']='wrong'
+        with self.assertRaises(GuardError):compare(old,new,'owned')
+    def test_control_cleanup_proves_absence_or_removes_only_exact_owned_bytes(self):
+        raw=json.dumps({'runId':'short-product-test','episodeId':'owned','contractSha256':CONTRACT_SHA}).encode()
+        class Fake:
+            counter=0
+            def __init__(self,out,current):self.out=out;self.current=current;self.removals=[]
+            def run(self,*args,**kwargs):
+                self.counter+=1;(self.out/f'{self.counter:03d}-command.stdout').write_bytes(self.current)
+            def shell(self,script):self.removals.append(script);return 'ABSENT\n'
+        with tempfile.TemporaryDirectory() as temp:
+            for i,current in enumerate((b'ABSENT\n',raw,b'{"foreign":true}')):
+                out=Path(temp)/str(i);out.mkdir();device=Fake(out,current)
+                if i==2:
+                    with self.assertRaises(GuardError):disarm_owned_control(device,out,'short-product-test','owned',raw)
+                    self.assertEqual([],device.removals)
+                else:
+                    receipt=disarm_owned_control(device,out,'short-product-test','owned',raw)
+                    self.assertTrue(receipt['controlAbsent']);self.assertEqual(i,len(device.removals))
+                    if i: self.assertIn('rm files/short-product-e2e/active.json',device.removals[0])
     def test_contract_short_selector_and_long_source_pin_unchanged(self):
         raw=(PROJECT/'app/src/debug/assets/short-product-e2e/contract.json').read_bytes()
         self.assertEqual(CONTRACT_SHA,hashlib.sha256(raw).hexdigest())
@@ -62,6 +91,9 @@ class ShortProductScopeTests(unittest.TestCase):
         self.assertNotIn('sendMessageAsync',source)
         self.assertNotIn('enableTtsOnly',source);self.assertNotIn('qnnProfileDirectory',source)
         self.assertIn('value.volume = 0f',source);self.assertNotIn('AudioManager',source)
+        self.assertIn('require(app.repository.episode(episode).reviewEnabled)',source)
+        vm=(PROJECT/'app/src/main/java/dev/vibevoice/podcast/ui/PodcastViewModel.kt').read_text()
+        self.assertLess(vm.index('RuntimeDiagnostics.beforeExport'),vm.index('openOutputStream'))
         player=(PROJECT/'app/src/main/java/dev/vibevoice/podcast/ui/PlayerScreen.kt').read_text()
         self.assertLess(player.index('RuntimeDiagnostics.configurePlayer'),player.index('prepare()'))
         driver=(PROJECT/'app/src/androidTest/java/dev/vibevoice/podcast/e2e/ShortProductE2eTest.kt').read_text()

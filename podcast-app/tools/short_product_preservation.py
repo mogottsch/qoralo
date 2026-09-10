@@ -8,7 +8,6 @@ import tempfile
 from duration_phone_guard import logical_database, require
 
 TABLES = ('episodes','episode_sources','script_revisions','chapters','agent_messages','generation_jobs','chapter_audio','playback_state','installed_models')
-ROUTES = {'GEMMA_4_E2B_LITERT_GPU','SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP'}
 
 
 def rows(files):
@@ -30,16 +29,16 @@ def compare(before, after, owned):
     counts={}
     for table in TABLES:
         if table=='installed_models':
-            # Normal recordVerifiedPack legitimately upserts the two exercised route catalog rows.
-            # Other route catalog rows remain byte-for-byte equivalent.
-            previous=[r for r in before[table] if r['route'] not in ROUTES]
-            current=[r for r in after[table] if r['route'] not in ROUTES]
-            require(sorted(previous,key=lambda r:r['id'])==sorted(current,key=lambda r:r['id']), 'unrelated route catalog changed')
-            for row in after[table]:
-                if row['route'] in ROUTES:
-                    expected={'GEMMA_4_E2B_LITERT_GPU':('gemma-4-e2b','9fb627ef9a4eb0ed49056c32bc16f2846e6edf68dc8d854b02af90e24e4e96cd'),
-                              'SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP':('supertonic-3','dc4ac737924d7d62e57ff5e166707198095c49e51d77cfed04a44d9e9435952d')}[row['route']]
-                    require((row['id'],row['manifestSha256'])==expected,'unexpected verified route catalog pin')
+            # Only these exact catalog IDs may be upserted by normal recordVerifiedPack.
+            expected={'gemma-4-e2b':('GEMMA_4_E2B_LITERT_GPU','9fb627ef9a4eb0ed49056c32bc16f2846e6edf68dc8d854b02af90e24e4e96cd'),
+                      'supertonic-3':('SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP','dc4ac737924d7d62e57ff5e166707198095c49e51d77cfed04a44d9e9435952d')}
+            previous={r['id']:r for r in before[table]};current={r['id']:r for r in after[table]}
+            require({k:v for k,v in previous.items() if k not in expected}=={k:v for k,v in current.items() if k not in expected},
+                    'unrelated catalog row changed, even if its route matches')
+            require(set(previous)&set(expected)<=set(current),'existing exercised catalog row removed')
+            for key,row in current.items():
+                if key in expected and previous.get(key)!=row:
+                    require((row['route'],row['manifestSha256'])==expected[key],'unexpected verified catalog upsert route/id/manifest')
             continue
         key='rowId' if table=='chapters' else ('episodeId' if table=='playback_state' else 'id')
         old={r[key]:r for r in before[table]}; new={r[key]:r for r in after[table]}
@@ -51,7 +50,7 @@ def compare(before, after, owned):
             return r['episodeId']==owned
         require(all(is_owned(r) for r in additions),'unowned row addition: '+table)
         counts[table]={'existingUnchanged':len(old),'ownedAdded':len(additions)}
-    return {'existingUserRowsUnchanged':True,'tables':counts,'allowedGlobalChanges':'only normal verified catalog upserts for the two exercised pinned routes'}
+    return {'existingUserRowsUnchanged':True,'tables':counts,'allowedGlobalChanges':'only normal verified catalog upserts for the two exact exercised IDs; existing IDs retained'}
 
 
 def parse_inventory(raw):
@@ -70,3 +69,11 @@ def compare_files(before, after, owned):
     extra=set(after)-set(before)
     require(all(owned and p.startswith('files/episodes/'+owned+'/') for p in extra),'unowned artifact addition')
     return {'existingFilesUnchanged':len(before),'ownedAddedFiles':len(extra)}
+
+
+def validate_owned_control(current, original, run, owned, contract):
+    require(original is not None and current==original,'foreign/mismatched control; preserve without deletion')
+    value=json.loads(current)
+    require(value=={'runId':run,'episodeId':owned,'contractSha256':contract} and owned is not None,
+            'control run/episode/contract ownership unproven')
+    return hashlib.sha256(current).hexdigest()
