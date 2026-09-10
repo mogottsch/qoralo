@@ -21,7 +21,7 @@ PRIVACY_SHA='a62d204c380a5b2d0c8f7c5bd94729b6f823e18200feed2ebe24fa73962bec3c'
 PACKS={'gemma-4-e2b':'9fb627ef9a4eb0ed49056c32bc16f2846e6edf68dc8d854b02af90e24e4e96cd',
        'supertonic-3':'dc4ac737924d7d62e57ff5e166707198095c49e51d77cfed04a44d9e9435952d',
        'supertonic-3-t2048-l2048-parity':'116fda95a907f6dc35bfe7c2144fe2818ed438cc109c1faa3f95cafc2fc84066'}
-PRIOR={APP:'4e438b62fc4442e5dfefbed2a26c88f6872fb34989144e04727613e78aaaf8c8',
+PRIOR={APP:'eb22ac1715b958979d4064d164585d588f180312ad1a6bb7090841059b649a62',
        TEST_APP:'56be356f5a68d0c415e2980bebca9346ece4972f4a0657f0700064ab683f8739'}
 
 
@@ -81,6 +81,17 @@ def disarm_owned_control(device,out,run,owned,original):
     observed=device.shell(f'run-as {APP} sh -c '+shlex.quote(script))
     require(observed.strip()=='ABSENT','owned control disarm absence unproven')
     return {'controlAbsent':True,'hostRemovalPerformed':True,'matchedOriginalSha256':sha,'runId':run,'episodeId':owned}
+
+
+def capture_and_validate_after(device,guard,out,cleanup):
+    # Independent file capture must survive any later DB/WAL interpretation failure.
+    files_after=None
+    try:files_after=private_inventory(device,out,'after')
+    except Exception as error:cleanup['errors'].append({'phase':'post-file-inventory','error':repr(error)})
+    after=guard.snapshot('preservation-after',1);second=guard.snapshot('preservation-after',2)
+    require(after==second,'post-run DB snapshots unstable')
+    validate_snapshot(after)
+    return after,files_after
 
 
 def main():
@@ -156,11 +167,10 @@ def main():
             except Exception as error:cleanup['errors'].append({'phase':'owned-control-disarm','error':repr(error)})
         if identity and before is not None:
             try:
-                after=guard.snapshot('preservation-after',1);second=guard.snapshot('preservation-after',2)
-                require(after==second,'post-run DB snapshots unstable')
-                validate_snapshot(after)
+                after,files_after=capture_and_validate_after(device,guard,out,cleanup)
                 report=compare(rows(before),rows(after),owned)
-                report['artifacts']=compare_files(files_before,private_inventory(device,out,'after'),owned)
+                require(files_after is not None,'post-file inventory unavailable; row result alone is not full preservation')
+                report['artifacts']=compare_files(files_before,files_after,owned)
                 report['ownedEpisodeId']=owned;report['privateSnapshots']='.private-db and .private-user-files; never publish full raw'
                 (out/'preservation.json').write_text(json.dumps(report,indent=2))
             except Exception as error:cleanup['errors'].append({'phase':'preservation','error':repr(error)})

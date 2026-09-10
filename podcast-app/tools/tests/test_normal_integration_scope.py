@@ -45,6 +45,7 @@ class NormalIntegrationScopeTests(unittest.TestCase):
             '        val instruction = specificInstruction ?: systemInstruction(mode)\n        RuntimeDiagnostics.beforeRequest(mode, request, instruction, maxOutput)')
         expected = expected.replace('Contents.of(systemInstruction(mode))', 'Contents.of(instruction)')
         expected = re.sub(r'^        "chapter" -> .*$', '        "chapter" -> error("A chapter request requires its concrete single-chapter instruction")', expected, flags=re.MULTILINE)
+        expected = re.sub(r'^        "edit" -> .*$', '        "edit" -> SCRIPT_EDIT_INSTRUCTION', expected, flags=re.MULTILINE)
         self.assertEqual(expected, (PROJECT / path).read_text())
 
     def test_native_and_legacy_runtime_pack_authorities_stay_unchanged(self):

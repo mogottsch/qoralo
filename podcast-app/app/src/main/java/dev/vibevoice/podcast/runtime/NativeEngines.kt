@@ -138,7 +138,7 @@ class GemmaLiteRtGpuEngine : LlmEngine {
         "source_notes" -> "Summarize the supplied source chunk faithfully for later podcast writing. Return only JSON: {\"notes\":\"...\"}."
         "outline" -> "Design a coherent spoken podcast outline from the supplied notes and instructions. Follow the requested chapter count and IDs. Each brief is a short content plan, not a miniature transcript. Return only JSON: {\"title\":\"...\",\"chapters\":[{\"id\":\"chapter-1\",\"title\":\"...\",\"brief\":\"...\"}]}."
         "chapter" -> error("A chapter request requires its concrete single-chapter instruction")
-        "edit" -> "Apply the requested edits to the complete immutable-base script. Return the complete revised script only as JSON: {\"schemaVersion\":1,\"title\":\"...\",\"chapters\":[{\"id\":\"...\",\"title\":\"...\",\"text\":\"...\"}],\"summary\":\"...\"}."
+        "edit" -> SCRIPT_EDIT_INSTRUCTION
         else -> error("Unsupported Gemma request mode")
     }
 

@@ -84,10 +84,41 @@ def checksum(data, order, state=(0, 0)):
     return a, b
 
 
-def logical_database(files):
-    """Validate every WAL frame, then materialize a LOCAL read-only inspection view.
+def wal_index_boundary(files, wal, page, order):
+    """Fence a live WAL prefix with the quiescent ARM64 little-endian WAL-index.
 
-    Never let SQLite silently ignore a torn/uncommitted WAL tail or inspect stale base pages.
+    SQLite may retain allocated frames from a previous WAL epoch after reset.
+    No current-epoch tail is ignored; missing SHM keeps the original full-WAL path.
+    https://www.sqlite.org/walformat.html#walindex_header_details
+    """
+    shm = files.get('databases/podcast.db-shm', b'')
+    if not shm:
+        return None
+    require(len(shm) >= 32768 and len(shm) % 32768 == 0, 'invalid WAL-index size')
+    header = shm[:48]
+    require(header == shm[48:96], 'WAL-index headers disagree')
+    require(struct.unpack('<I', header[:4])[0] == 3007000 and header[4:8] == b'\0'*4 and header[12] == 1,
+            'unknown/uninitialized WAL-index header')
+    require(checksum(header[:40], '<') == struct.unpack('<II', header[40:48]), 'WAL-index header checksum mismatch')
+    encoded_page = struct.unpack('<H', header[14:16])[0]
+    require((65536 if encoded_page == 1 else encoded_page) == page and header[13] == (order == '>'), 'WAL-index page/checksum-order mismatch')
+    require(header[32:40] == wal[16:24], 'stale/mismatched WAL-index salts')
+    physical = (len(wal)-32)//(24+page)
+    live, pages = struct.unpack('<II', header[16:24])
+    require(0 < live <= physical and 0 < pages <= MAX_BYTES//page, 'WAL-index frame/page bound')
+    require(struct.unpack('<I', shm[96:100])[0] <= live and struct.unpack('<I', shm[128:132])[0] <= live, 'WAL-index backfill exceeds commit boundary')
+    end = 32 + live*(24+page)
+    for offset in range(end, len(wal), 24+page):
+        require(wal[offset+8:offset+16] != wal[16:24], 'current-epoch/uncommitted WAL tail; no recovery permitted')
+    return {'end': end, 'liveFrames': live, 'physicalFrames': physical, 'pages': pages,
+            'frameChecksum': struct.unpack('<II', header[24:32])}
+
+
+def logical_database(files):
+    """Validate live WAL frames, then materialize a LOCAL read-only inspection view.
+
+    A recycled tail is accepted only with matching duplicated/checksummed SHM, a
+    fully validated committed prefix and exclusively noncurrent salts beyond it.
     Original device files and private raw archives are never changed/checkpointed.
     """
     base = files['databases/podcast.db']
@@ -103,8 +134,10 @@ def logical_database(files):
     order = '<' if magic == 0x377f0682 else '>'
     state = checksum(wal[:24], order)
     require(state == struct.unpack('>II', wal[24:32]), 'WAL header checksum mismatch')
+    boundary = wal_index_boundary(files, wal, page, order) if len(wal) > 32 else None
+    end = boundary['end'] if boundary else len(wal)
     result = bytearray(base); final_size = 0
-    for offset in range(32, len(wal), 24 + page):
+    for offset in range(32, end, 24 + page):
         header = wal[offset:offset+24]; payload = wal[offset+24:offset+24+page]
         number, committed = struct.unpack('>II', header[:8])
         require(0 < number <= MAX_BYTES // page and committed <= MAX_BYTES // page, 'WAL page bound')
@@ -116,6 +149,8 @@ def logical_database(files):
             result.extend(b'\x00' * (end-len(result)))
         result[end-page:end] = payload
         final_size = committed
+    if boundary:
+        require(final_size == boundary['pages'] and state == boundary['frameChecksum'], 'WAL-index final commit/checksum mismatch')
     if len(wal) > 32:
         require(final_size > 0, 'uncommitted/recovery WAL tail; no repair allowed')
         result = result[:final_size*page]

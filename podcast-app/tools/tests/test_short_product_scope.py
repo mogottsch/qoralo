@@ -7,11 +7,13 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 PROJECT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(PROJECT/'tools'))
 from duration_phone_guard import GuardError
 from short_product_preservation import TABLES, compare, compare_files, parse_inventory
+import run_short_product_gate as short_controller
 from run_short_product_gate import CONTRACT_SHA, PACKS, disarm_owned_control
 
 class ShortProductScopeTests(unittest.TestCase):
@@ -85,6 +87,24 @@ class ShortProductScopeTests(unittest.TestCase):
         self.assertEqual(baseline,(PROJECT/'config/normal-supertonic-pack.properties').read_bytes())
         gradle=(PROJECT/'app/build.gradle.kts').read_text();self.assertIn('podcast.shortProductE2e',gradle)
         self.assertIn('if (shortProductE2e) "config/short-product-e2e.properties" else "config/normal-supertonic-pack.properties"',gradle)
+    def test_wal_parser_failure_does_not_suppress_the_actual_file_capture(self):
+        with tempfile.TemporaryDirectory() as temp:
+            out=Path(temp);events=[]
+            def inventory(device,output,label):
+                events.append('files');(output/'.private-user-files').mkdir()
+                (output/'.private-user-files/after.stdout').write_text('retained current inventory')
+                return {}
+            guard=type('Guard',(),{'snapshot':lambda self,*args: events.append('snapshot') or {}})()
+            with patch.object(short_controller,'private_inventory',side_effect=inventory),patch.object(short_controller,'validate_snapshot',side_effect=GuardError('injected WAL parse failure')):
+                with self.assertRaisesRegex(GuardError,'injected WAL'):
+                    short_controller.capture_and_validate_after(object(),guard,out,{'errors':[]})
+            self.assertEqual(['files','snapshot','snapshot'],events)
+            self.assertTrue((out/'.private-user-files/after.stdout').is_file())
+    def test_post_file_capture_is_independent_and_precedes_row_validation(self):
+        controller=(PROJECT/'tools/run_short_product_gate.py').read_text()
+        self.assertLess(controller.index("files_after=private_inventory(device,out,'after')"), controller.index('validate_snapshot(after)'))
+        self.assertIn("except Exception as error:cleanup['errors'].append({'phase':'post-file-inventory'",controller)
+        self.assertIn("require(files_after is not None,'post-file inventory unavailable",controller)
     def test_library_fix_only_names_the_real_action_and_selector_uses_it(self):
         path='app/src/main/java/dev/vibevoice/podcast/ui/LibraryScreen.kt'
         original=subprocess.check_output(['git','show','3957b8d:podcast-app/'+path],cwd=PROJECT.parent).decode()
