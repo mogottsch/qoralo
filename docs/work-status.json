@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-10T20:28:19+00:00",
+  "updated_at": "2026-09-10T20:31:27+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -9,10 +9,10 @@
       "title": "Long narration (~90 s)",
       "status": "blocked",
       "owner": "Janek",
-      "now": "Long request failed at render: ORT/QNN execute error 6006. No WAV.",
-      "next": "Four loads returned; one whole request, no split/fallback/retry. Audit pending.",
-      "reported_at": "2026-09-10T20:28:19+00:00",
-      "reported_by": "Janek — first actual long-request outcome",
+      "now": "Actual render failed: duration/text ran, then vector graphExecute6006. No WAV.",
+      "next": "New pack staged and four contexts loaded; root cause pending audit. No retry.",
+      "reported_at": "2026-09-10T20:31:27+00:00",
+      "reported_by": "Pi — actual runtime sequence report",
       "stale_after_seconds": 600,
       "links": [
         {
@@ -25,10 +25,10 @@
       "id": "tts-review",
       "title": "Independent review",
       "status": "reviewing",
-      "owner": "Nik",
-      "now": "Nik audits retained error/profiles; component attribution is pending.",
-      "next": "Do not infer a vector/root cause from the summary alone.",
-      "reported_at": "2026-09-10T20:28:19+00:00",
+      "owner": "Nik / Ben",
+      "now": "Nik + Ben diagnose retained profiles and source; root cause unknown.",
+      "next": "No new graph change or execution until the evidence is reviewed.",
+      "reported_at": "2026-09-10T20:31:27+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -89,9 +89,9 @@
       "title": "Qwen range audit",
       "status": "paused",
       "owner": "Ben",
-      "now": "Offline range audit done; Ben’s TTS graph handoff is now complete.",
-      "next": "Paused pending a new assignment; Ben is on standby.",
-      "reported_at": "2026-09-10T19:06:17+00:00",
+      "now": "Offline range audit done; Ben now helps diagnose the TTS runtime failure.",
+      "next": "Qwen remains paused pending a separate assignment.",
+      "reported_at": "2026-09-10T20:31:27+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 900,
       "links": [
@@ -139,11 +139,11 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "paused",
+      "status": "unassigned",
       "owner": "Pi",
-      "now": "test ended; cleanup done, lock released",
-      "next": "Reported cleanup/settings errors empty, three PIDs absent, transfer scratch removed. No retry.",
-      "reported_at": "2026-09-10T20:28:19+00:00",
+      "now": "free after verified cleanup",
+      "next": "Reported cleanup/assignment only, not a live connection check.",
+      "reported_at": "2026-09-10T20:31:27+00:00",
       "reported_by": "Janek execution report + Pi release, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -152,10 +152,10 @@
       "id": "host",
       "title": "On this computer",
       "status": "reviewing",
-      "owner": "Janek / Nik",
-      "now": "safe evidence preparation / review",
-      "next": "No new model execution. Driver collection completion is not synthesis success.",
-      "reported_at": "2026-09-10T20:28:19+00:00",
+      "owner": "Janek / Nik / Ben",
+      "now": "retention and saved/source diagnosis",
+      "next": "Janek retains evidence; Nik/Ben diagnose. No retry or new graph change.",
+      "reported_at": "2026-09-10T20:31:27+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -183,15 +183,15 @@
     },
     {
       "name": "Ben",
-      "task": "Graph handoff done; standby",
-      "reported_at": "2026-09-10T19:06:17+00:00",
+      "task": "Diagnose saved TTS failure",
+      "reported_at": "2026-09-10T20:31:27+00:00",
       "reported_by": "Pi latest snapshot; Kate capture",
       "stale_after_seconds": 900
     },
     {
       "name": "Nik",
-      "task": "Audit retained error / profiles",
-      "reported_at": "2026-09-10T20:28:19+00:00",
+      "task": "Audit TTS failure / source",
+      "reported_at": "2026-09-10T20:31:27+00:00",
       "reported_by": "Pi latest snapshot; Kate capture",
       "stale_after_seconds": 900
     },
