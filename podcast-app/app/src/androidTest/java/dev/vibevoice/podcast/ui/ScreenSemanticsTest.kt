@@ -3,6 +3,7 @@ package dev.vibevoice.podcast.ui
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -48,6 +49,8 @@ import java.io.RandomAccessFile
 @RunWith(AndroidJUnit4::class)
 class ScreenSemanticsTest {
     @get:Rule val rule = createComposeRule()
+    private lateinit var platformDensity: Density
+    private lateinit var wrapperDensity: Density
 
     @Test fun libraryExposesFunctionalPrimaryActionAt320dpAnd2xFont() {
         setNarrow { LibraryScreen(emptyList(), {}, {}, {}) }
@@ -141,6 +144,7 @@ class ScreenSemanticsTest {
         val node = rule.onNodeWithText(text).assertIsDisplayed()
         val layouts = mutableListOf<TextLayoutResult>()
         node.performSemanticsAction(SemanticsActions.GetTextLayoutResult) { action -> action(layouts) }
+        TextLayoutDiagnostics.retain(text, node, layouts, platformDensity, wrapperDensity)
         assertTrue("No real text layout for $text", layouts.isNotEmpty())
         assertFalse("Text layout clips $text", layouts.any { it.hasVisualOverflow })
         assertTrue("Ancestor clips the text height for $text", node.fetchSemanticsNode().boundsInRoot.height + 1 >= layouts.maxOf { it.size.height })
@@ -149,7 +153,9 @@ class ScreenSemanticsTest {
     private fun setNarrow(content: @androidx.compose.runtime.Composable () -> Unit) {
         rule.setContent {
             val density = LocalDensity.current
-            CompositionLocalProvider(LocalDensity provides Density(density.density, 2f)) {
+            val wrapper = Density(density.density, 2f)
+            SideEffect { platformDensity = density; wrapperDensity = wrapper }
+            CompositionLocalProvider(LocalDensity provides wrapper) {
                 Box(Modifier.requiredWidth(320.dp)) { VibeVoiceTheme { content() } }
             }
         }
