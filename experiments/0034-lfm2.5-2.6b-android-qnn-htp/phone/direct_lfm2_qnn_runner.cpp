@@ -369,13 +369,8 @@ class Runner {
       auto value = Embedding(tokens[row]);
       std::copy(value.begin(), value.end(), hidden.begin() + row * kHidden);
     }
-    std::vector<int64_t> positions(sequence);
-    for (int index = 0; index < sequence; ++index) positions[index] = index;
-    std::vector<float> mask(static_cast<size_t>(sequence) * kCapacity, -65504.0f);
-    for (int row = 0; row < sequence; ++row) {
-      std::fill(mask.begin() + static_cast<size_t>(row) * kCapacity + past,
-                mask.begin() + static_cast<size_t>(row) * kCapacity + past + row + 1, 0.0f);
-    }
+    std::vector<int64_t> positions = lfm2::MakePositionIds(0, sequence);
+    std::vector<float> mask = lfm2::MakePrefillMask(sequence, kCapacity);
     std::vector<Input> inputs;
     inputs.reserve(41);
     inputs.push_back({"/model/embed_tokens/GatherBlockQuantized/output_0", Input::Type::Float,
@@ -430,16 +425,8 @@ class Runner {
     for (int layer = 0; layer < kLayers; ++layer) {
       if (IsAttention(layer)) {
         auto& new_key = values[index++]; auto& new_value = values[index++];
-        std::fill(key_[layer].begin(), key_[layer].end(), 0.0f);
-        std::fill(value_[layer].begin(), value_[layer].end(), 0.0f);
-        for (int row = 0; row < 8 * 64; ++row) {
-          std::copy_n(new_key.begin() + row * sequence, sequence,
-                      key_[layer].begin() + row * kCacheLength);
-        }
-        for (int head = 0; head < 8; ++head) {
-          std::copy_n(new_value.begin() + head * sequence * 64, sequence * 64,
-                      value_[layer].begin() + head * kCacheLength * 64);
-        }
+        lfm2::BridgeKeyPrefix(new_key, key_[layer], sequence, kCacheLength);
+        lfm2::BridgeValuePrefix(new_value, value_[layer], sequence, kCacheLength);
       } else conv_[layer] = std::move(values[index++]);
     }
     const auto bridge_end = Clock::now();
@@ -568,9 +555,7 @@ class Runner {
   int RunTokenMonolithic(int token, int position, bool sample) {
     if (position < 0 || position >= kCacheLength) throw std::runtime_error("position out of range");
     std::vector<float> hidden = Embedding(token);
-    std::vector<float> mask(kCapacity, -65504.0f);
-    std::fill(mask.begin(), mask.begin() + position, 0.0f);
-    mask.back() = 0.0f;
+    std::vector<float> mask = lfm2::MakeAr1Mask(position, kCapacity);
     int64_t position_value = position;
     std::vector<Input> inputs;
     inputs.reserve(41);
@@ -835,13 +820,14 @@ int main(int argc, char** argv) {
       // MAX_NEW is the total output cap, including the AR171 endpoint token.
       // O_EXCL prevents a retry from overwriting evidence from an earlier attempt.
       lfm2::ExclusiveTokenOutput token_output(argv[5]);
+      lfm2::BoundedTokenEmitter emitter(token_output, static_cast<size_t>(max_new), kEos);
       const auto process_setup_start = Clock::now(); Runner runner(root, true);
       const auto process_setup_end = Clock::now(); const auto request_start = Clock::now();
       auto first_token_emitted = request_start; auto final_token_emitted = request_start; bool emitted = false;
       const auto prefill_load_start = Clock::now(); runner.LoadOnly(root / "contexts/ar171.bin", "prefill");
       const auto prefill_load_end = Clock::now();
       const int endpoint = runner.RunPrefill171(prompt, [&](int token) {
-        token_output.AppendAndFlush(token);
+        emitter.Emit(token);
         first_token_emitted = final_token_emitted = Clock::now(); emitted = true;
       });
       if (!emitted) throw std::runtime_error("prefill endpoint was not emitted");
@@ -859,19 +845,22 @@ int main(int argc, char** argv) {
       const auto profile_reset_end = Clock::now();
       const auto ar1_load_start = Clock::now(); runner.LoadOnly(root / "contexts/ar1.bin", "monolith");
       const auto ar1_load_end = Clock::now();
-      std::vector<int32_t> generated; generated.reserve(max_new); generated.push_back(endpoint);
-      int current = endpoint; auto resume_first_emitted = ar1_load_end;
-      for (int output_index = 1; output_index < max_new && current != kEos; ++output_index) {
-        current = runner.RunToken(current, 171 + output_index - 1, true);
-        token_output.AppendAndFlush(current); final_token_emitted = Clock::now(); generated.push_back(current);
+      auto resume_first_emitted = ar1_load_end;
+      while (emitter.CanDecode()) {
+        const size_t output_index = emitter.Tokens().size();
+        const int current = runner.RunToken(emitter.Tokens().back(), 171 + static_cast<int>(output_index) - 1, true);
+        emitter.Emit(current); final_token_emitted = Clock::now();
         if (output_index == 1) resume_first_emitted = final_token_emitted;
       }
+      const auto& generated = emitter.Tokens();
       const auto decode_end = Clock::now(); const auto ar1_profile_start = Clock::now();
       const bool ar1_profile_complete = lfm2::CaptureOptionalTelemetry(
           "ar1_decode", [&] { runner.DumpProfile("ar1_decode"); }, std::cerr);
       const auto ar1_profile_end = Clock::now(); const auto ar1_free_start = Clock::now();
       runner.FreeContexts(); const auto ar1_free_end = Clock::now(); const auto diagnostic_end = Clock::now();
       const auto sec = [](auto d) { return std::chrono::duration<double>(d).count(); };
+      const auto timing = lfm2::SummarizeTiming({request_start, first_token_emitted, final_token_emitted,
+          prefill_profile_start, prefill_profile_end, ar1_profile_start, ar1_profile_end, diagnostic_end});
       std::cout << "{\n  \"result\": \"passed\",\n  \"route\": \"integrated_ar171_phase_switch_ar1\",\n"
                 << "  \"prompt_tokens\": " << prompt.size() << ",\n  \"prefill_endpoint_token\": " << endpoint << ",\n"
                 << "  \"output_cap_semantics\": \"MAX_NEW is total emitted tokens including the AR171 endpoint\",\n"
@@ -884,23 +873,23 @@ int main(int argc, char** argv) {
                 << "  \"prefill_graph_seconds\": " << runner.LastPrefillExecuteSeconds() << ",\n"
                 << "  \"prefill_argmax_seconds\": " << runner.LastPrefillArgmaxSeconds() << ",\n"
                 << "  \"prefill_compute_phase_sum_seconds\": " << prefill_compute_phase_sum_seconds << ",\n"
-                << "  \"request_to_first_emitted_token_seconds\": " << sec(first_token_emitted - request_start) << ",\n"
+                << "  \"request_to_first_emitted_token_seconds\": " << timing.request_to_first_emitted_seconds << ",\n"
                 << "  \"prefill_phase_through_state_bridge_seconds\": " << sec(bridge_complete - request_start) << ",\n"
                 << "  \"prefill_state_bridge_seconds\": " << runner.LastPrefillBridgeSeconds() << ",\n"
                 << "  \"prefill_profile_complete\": " << (prefill_profile_complete ? "true" : "false") << ",\n"
-                << "  \"prefill_profile_dump_seconds\": " << sec(prefill_profile_end - prefill_profile_start) << ",\n"
+                << "  \"prefill_profile_dump_seconds\": " << timing.prefill_profile_seconds << ",\n"
                 << "  \"prefill_context_free_seconds\": " << sec(prefill_free_end - prefill_free_start) << ",\n"
                 << "  \"profile_reset_complete\": " << (profile_reset_complete ? "true" : "false") << ",\n"
                 << "  \"profile_reset_seconds\": " << sec(profile_reset_end - profile_reset_start) << ",\n"
                 << "  \"ar1_context_load_seconds\": " << sec(ar1_load_end - ar1_load_start) << ",\n"
                 << "  \"ar1_request_to_first_emitted_token_seconds\": " << sec(resume_first_emitted - ar1_load_end) << ",\n"
                 << "  \"ar1_total_decode_seconds\": " << sec(decode_end - ar1_load_end) << ",\n"
-                << "  \"request_to_final_emitted_token_seconds\": " << sec(final_token_emitted - request_start) << ",\n"
+                << "  \"request_to_final_emitted_token_seconds\": " << timing.request_to_final_emitted_seconds << ",\n"
                 << "  \"decode_compute_complete_seconds\": " << sec(decode_end - request_start) << ",\n"
                 << "  \"ar1_profile_complete\": " << (ar1_profile_complete ? "true" : "false") << ",\n"
-                << "  \"ar1_profile_dump_seconds\": " << sec(ar1_profile_end - ar1_profile_start) << ",\n"
+                << "  \"ar1_profile_dump_seconds\": " << timing.ar1_profile_seconds << ",\n"
                 << "  \"ar1_context_free_seconds\": " << sec(ar1_free_end - ar1_free_start) << ",\n"
-                << "  \"diagnostic_total_with_profile_and_free_seconds\": " << sec(diagnostic_end - request_start) << "\n}\n";
+                << "  \"diagnostic_total_with_profile_and_free_seconds\": " << timing.diagnostic_total_seconds << "\n}\n";
       return 0;
     }
     const bool resume = argc == 7;

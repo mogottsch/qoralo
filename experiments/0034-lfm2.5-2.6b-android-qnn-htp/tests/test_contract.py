@@ -538,7 +538,7 @@ class ContractTest(unittest.TestCase):
                 check=True,
             )
             completed = subprocess.run([str(binary), str(root / "output")], check=True, capture_output=True, text=True)
-            self.assertIn("failure-injection checks passed", completed.stdout)
+            self.assertIn("integrated no-QNN control-flow checks passed", completed.stdout)
 
     def test_integrated_ar171_ar1_runner_is_host_ready_only(self) -> None:
         ready = self.contract["integrated_ar171_ar1_runner_readiness"]

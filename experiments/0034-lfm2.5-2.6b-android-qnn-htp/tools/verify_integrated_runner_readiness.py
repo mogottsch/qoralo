@@ -89,19 +89,22 @@ def main() -> None:
     mask_equal = mask.tobytes() == prior_by_name["attention_mask"].read_bytes()
 
     source = args.source.read_text()
+    support_header = args.source.parent / "integrated_output.hpp"
+    combined_source = source + "\n" + support_header.read_text()
     required_fragments = [
         "qnn_outputs_finite alias=", "ProfilingLevel::DETAILED", "profileGetEvents",
         "RunPrefill171", "runner.LoadOnly(root / \"contexts/ar171.bin\", \"prefill\")",
         "runner.FreeContexts(); const auto prefill_free_end",
         "\"profile_reset\", [&] { runner.ResetDetailedProfile(); }, std::cerr)",
         "runner.LoadOnly(root / \"contexts/ar1.bin\", \"monolith\")",
-        "runner.RunToken(current, 171 + output_index - 1, true)", "simultaneous_contexts",
+        "runner.RunToken(emitter.Tokens().back(), 171 + static_cast<int>(output_index) - 1, true)", "simultaneous_contexts",
         "prefill_cpu_input_seconds", "prefill_state_bridge_seconds",
-        "ExclusiveTokenOutput", "AppendAndFlush", "CaptureOptionalTelemetry",
+        "ExclusiveTokenOutput", "BoundedTokenEmitter", "AppendAndFlush", "CaptureOptionalTelemetry",
+        "SummarizeTiming",
         "request_to_first_emitted_token_seconds", "request_to_final_emitted_token_seconds",
         "MAX_NEW is total emitted tokens including the AR171 endpoint",
     ]
-    missing = [fragment for fragment in required_fragments if fragment not in source]
+    missing = [fragment for fragment in required_fragments if fragment not in combined_source]
     if missing:
         raise SystemExit(f"missing integrated source fragments: {missing}")
 
@@ -112,7 +115,7 @@ def main() -> None:
     result = {
         "schema_version": 1,
         "classification": "host_static_and_build_validation_of_integrated_ar171_ar1_runner",
-        "source": {"path": str(args.source), "sha256": sha256(args.source), "required_fragments_present": True},
+        "source": {"path": str(args.source), "sha256": sha256(args.source), "support_header": str(support_header), "support_header_sha256": sha256(support_header), "required_fragments_present": True},
         "binaries": {
             "host_sha256": sha256(args.host_runner),
             "android_sha256": stage["runner_sha256"],
