@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "evidence_class": "offline_48_state_metadata_and_saved_tensor_range_audit",
+  "status": "complete",
+  "state_count": 48,
+  "saved_output_bundle_deserializations": 5,
+  "model_loads": 0,
+  "model_forwards": 0,
+  "native_loads": 0,
+  "native_forwards": 0,
+  "compile_calls": 0,
+  "phone_access": false,
+  "weights_or_full_cache_loaded": false,
+  "all_input_boundaries_unique": true,
+  "all_output_boundaries_explicit_paired": true,
+  "shape_only_references": 18,
+  "same_input_output_domains": 15,
+  "decoded_output_intervals_contained": 19,
+  "decoded_endpoint_overhang_states": 29,
+  "theoretical_code_grid_would_clip_states": 27,
+  "overhang_without_code_clipping_state_indices": [
+    5,
+    45
+  ],
+  "states": [
+    {
+      "kind": "recurrent",
+      "count": 18,
+      "same_domain": 6,
+      "interval_contained": 9,
+      "code_grid_would_clip": 8
+    },
+    {
+      "kind": "convolution",
+      "count": 18,
+      "same_domain": 9,
+      "interval_contained": 10,
+      "code_grid_would_clip": 7
+    },
+    {
+      "kind": "key_cache_update",
+      "count": 6,
+      "same_domain": 0,
+      "interval_contained": 0,
+      "code_grid_would_clip": 6
+    },
+    {
+      "kind": "value_cache_update",
+      "count": 6,
+      "same_domain": 0,
+      "interval_contained": 0,
+      "code_grid_would_clip": 6
+    }
+  ],
+  "observed_bundles": {
+    "qdq_p0": {
+      "returned_values": 5167104,
+      "all_finite": true,
+      "would_clip_state_indices": [
+        3,
+        7,
+        11,
+        24,
+        26,
+        27,
+        31,
+        34
+      ],
+      "would_clip_values": 11,
+      "outside_own_output_decoded_interval_values": 0,
+      "scope": "Saved returned values mapped to next-input coordinates, then offline FP32 QDQ simulation; not observed native clipping."
+    },
+    "qnn_p0": {
+      "returned_values": 5167104,
+      "all_finite": true,
+      "would_clip_state_indices": [
+        3,
+        7,
+        11,
+        24,
+        26,
+        27,
+        31,
+        34
+      ],
+      "would_clip_values": 11,
+      "outside_own_output_decoded_interval_values": 3,
+      "scope": "Saved returned values mapped to next-input coordinates, then offline FP32 QDQ simulation; not observed native clipping."
+    },
+    "qdq_p1_same_inputs": {
+      "returned_values": 5167104,
+      "all_finite": true,
+      "would_clip_state_indices": [
+        26
+      ],
+      "would_clip_values": 1,
+      "outside_own_output_decoded_interval_values": 0,
+      "scope": "Saved returned values mapped to next-input coordinates, then offline FP32 QDQ simulation; not observed native clipping."
+    },
+    "qnn_p1_same_inputs": {
+      "returned_values": 5167104,
+      "all_finite": true,
+      "would_clip_state_indices": [
+        24,
+        26,
+        34
+      ],
+      "would_clip_values": 3,
+      "outside_own_output_decoded_interval_values": 2,
+      "scope": "Saved returned values mapped to next-input coordinates, then offline FP32 QDQ simulation; not observed native clipping."
+    },
+    "qnn_p1_own_state": {
+      "returned_values": 5167104,
+      "all_finite": true,
+      "would_clip_state_indices": [
+        24,
+        26,
+        34
+      ],
+      "would_clip_values": 3,
+      "outside_own_output_decoded_interval_values": 3,
+      "scope": "Saved returned values mapped to next-input coordinates, then offline FP32 QDQ simulation; not observed native clipping."
+    }
+  },
+  "candidate_alignment_changes_implemented": false,
+  "causal_or_model_accuracy_verdict": false,
+  "native_finalized_encodings": null,
+  "native_finalized_encodings_reason": "Only serialized QDQ metadata was inspected.",
+  "validation": {
+    "status": "passed",
+    "source_numpy_tests": 11,
+    "default_saved_data_contract_tests": 44,
+    "saved_contract_test_seconds": 2.478,
+    "saved_contract_guard_elapsed_seconds": 2.603302822000842,
+    "PYTHONDONTWRITEBYTECODE_set_for_contract": false,
+    "four_guarded_workers_reaped_absent": true,
+    "owned_scratch_empty": true,
+    "additional_saved_tensor_deserializations_after_initial_five": 0,
+    "prior_full209_suite_rerun": false,
+    "prior_full_suite_reason": "No old execution/preparation helpers changed; this offline lane ran source/NumPy and saved-data tests only."
+  }
+}

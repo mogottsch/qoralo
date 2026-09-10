@@ -1,0 +1,85 @@
+def forward(
+        self,
+        hidden: torch.Tensor,
+        cos: torch.Tensor,
+        sin: torch.Tensor,
+        attention_mask: torch.Tensor,
+        key_cache: torch.Tensor,
+        value_cache: torch.Tensor,
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        batch, seq, _ = hidden.shape
+        q_and_gate = self.wq(hidden).view(batch, seq, self.n_heads, 2 * self.head_dim)
+        query, gate = torch.chunk(q_and_gate, 2, dim=-1)
+        key = self.wk(hidden).view(batch, seq, self.n_kv_heads, self.head_dim)
+        value = self.wv(hidden).view(batch, seq, self.n_kv_heads, self.head_dim)
+        query = self.q_norm_fn(query).transpose(1, 2)
+        key = self.k_norm_fn(key).transpose(1, 2)
+        value = value.transpose(1, 2)
+        query = _apply_rope(query, cos, sin, self.rotary_dim)
+        key = _apply_rope(key, cos, sin, self.rotary_dim)
+        key_t = key.transpose(2, 3)
+        all_key = torch.cat((key_cache, key_t), dim=-1)
+        all_value = torch.cat((value_cache, value), dim=2)
+        repeated_key = _repeat_kv(all_key, self.n_heads // self.n_kv_heads)
+        repeated_value = _repeat_kv(all_value, self.n_heads // self.n_kv_heads)
+        scores = torch.matmul(query, repeated_key) / math.sqrt(self.head_dim)
+        scores = scores + attention_mask
+        probs = F.softmax(scores.float(), dim=-1).to(query.dtype)
+        output = torch.matmul(probs, repeated_value)
+        output = output.transpose(1, 2).reshape(batch, seq, -1)
+        output = output * torch.sigmoid(gate.reshape(batch, seq, -1))
+        output = self.wo(output)
+        if self.output_new_cache_only:
+            return output, key_t, value
+        return output, all_key, all_value
+
+def forward(
+        self,
+        tokens: torch.Tensor,
+        attention_mask: torch.Tensor,
+        input_pos: torch.Tensor,
+        *states: torch.Tensor,
+    ):
+        state_a = states[: self.n_layers]
+        state_b = states[self.n_layers :]
+        cos = self.freqs_cos[input_pos][0]
+        sin = self.freqs_sin[input_pos][0]
+        hidden = self.tok_embeddings(tokens)
+        out_a: List[torch.Tensor] = []
+        out_b: List[torch.Tensor] = []
+        for index, layer in enumerate(self.layers):
+            hidden, next_a, next_b = layer(
+                hidden, cos, sin, attention_mask, state_a[index], state_b[index]
+            )
+            out_a.append(next_a)
+            out_b.append(next_b)
+        return (self.output(self.norm(hidden)), *out_a, *out_b)
+
+def get_example_inputs(self):
+        tokens = torch.ones((1, 1), dtype=torch.int32)
+        mask = torch.full((1, 1, 1, self.context_len), -65504.0)
+        mask[..., -1:] = 0.0
+        pos = torch.zeros((1, 1), dtype=torch.int32)
+        state_a: List[torch.Tensor] = []
+        state_b: List[torch.Tensor] = []
+        for layer_type in self.layer_types:
+            if layer_type == "linear_attention":
+                state_a.append(
+                    torch.zeros(
+                        1,
+                        self.config.linear_num_value_heads,
+                        self.config.linear_key_head_dim,
+                        self.config.linear_value_head_dim,
+                    )
+                )
+                state_b.append(
+                    torch.zeros(1, 2 * self.config.linear_num_key_heads * self.config.linear_key_head_dim + self.config.linear_num_value_heads * self.config.linear_value_head_dim, 1, self.config.linear_conv_kernel_dim)
+                )
+            else:
+                state_a.append(
+                    torch.zeros(1, self.n_kv_heads, self.head_dim, self.context_len - 1)
+                )
+                state_b.append(
+                    torch.zeros(1, self.n_kv_heads, self.context_len - 1, self.head_dim)
+                )
+        return (tokens, mask, pos, *state_a, *state_b)

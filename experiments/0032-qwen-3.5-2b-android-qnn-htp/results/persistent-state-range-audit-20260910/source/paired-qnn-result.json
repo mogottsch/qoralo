@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "evidence_class": "host_controlled_qdq_origin_position1_single_call",
+  "status": "completed_single_call",
+  "phase": "compare",
+  "backend": "qnn",
+  "target_position": 1,
+  "graph_calls_returned": 1,
+  "maximum_forward_calls": 1,
+  "state_origin": "qdq_after_position0_not_qnn_resume",
+  "resume": false,
+  "automatic_follow_on": false,
+  "physical_execution": false,
+  "exact_same_pack_qdq_reference_used": true,
+  "input_mutation_observed": false,
+  "timeout_seconds": 300.0,
+  "pack_header": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/controlled-p1-qdq-pack-20260910T114619Z/pack-header.json",
+    "bytes": 9607,
+    "sha256": "ec38185783dbd2bc387dbf5387c3f89cd4a4fbb786f2504a82b2b48cd43cd392"
+  },
+  "input_pack": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/controlled-p1-qdq-pack-20260910T114619Z/raw/input-pack.pt",
+    "bytes": 121313354,
+    "sha256": "bfe14bca74090778550618c1c6eb485728e15e6e784e936b87606dcb298ebe0d"
+  },
+  "submitted_input_values_sha256": "4251bbce8005e37cb9fc4c8da8f0af604e7c4a9884179e2ccd358ef4865c78e4",
+  "lineage": {
+    "source_position": 0,
+    "source_token": 248045,
+    "initial_state": "all zero",
+    "source_mask": "only current-token final slot visible",
+    "position0_logits_bit_identical_to_full_replay": true,
+    "full_replay_state_bytes_retained": false,
+    "assumption": "Same artifact/input/reset lineage and deterministic source are assumed; matching logits do not prove missing full-replay state bytes equal."
+  },
+  "paired_qdq_control": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/controlled-p1-qdq-call-20260910T120717Z/run/control/result.json",
+    "bytes": 3667,
+    "sha256": "7137d83a3c89a73121ad5bd2514c865b7cec97fe8b5c2d117be25fe165f43519"
+  },
+  "model_artifact": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/restart-20260910T083327Z/01-hidden-compile/diagnostic-w4a16-qnn.pte",
+    "bytes": 1995463416,
+    "sha256": "7f30be3d57b601af0804cdd50dd8968e271d673b710ea249a754fcd2f4ff3fea"
+  },
+  "raw_outputs": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/controlled-p1-qnn-call-20260910T122428Z/run/control/raw/position-001.outputs.pt",
+    "bytes": 21878472,
+    "sha256": "b771c49e1fc20e52293befa0d6dfe4b5b7b373a195bf8f781afce1f77dc51e00"
+  },
+  "logits": {
+    "shape": [
+      1,
+      1,
+      248320
+    ],
+    "numel": 248320,
+    "finite": true,
+    "nan_count": 0,
+    "inf_count": 0,
+    "argmax": 198,
+    "top_ids": [
+      198,
+      271,
+      680,
+      318,
+      1358,
+      310,
+      424,
+      695,
+      25952,
+      488
+    ],
+    "top_logits": [
+      16.102285385131836,
+      12.12564468383789,
+      11.61866569519043,
+      11.065372467041016,
+      10.706802368164062,
+      10.691364288330078,
+      10.422934532165527,
+      10.247135162353516,
+      10.240163803100586,
+      10.21376895904541
+    ],
+    "min": -10.182891845703125,
+    "max": 16.102285385131836,
+    "max_count": 1
+  },
+  "historical_qdq_comparison": {
+    "cosine": 0.8879938125610352,
+    "max_abs": 6.222187042236328,
+    "mean_abs": 0.8525879979133606,
+    "reference_argmax": 198,
+    "actual_argmax": 198
+  },
+  "historical_qdq_logits_bit_identical": false,
+  "same_pack_qdq_comparison": {
+    "cosine": 0.8879938125610352,
+    "max_abs": 6.222187042236328,
+    "mean_abs": 0.8525879979133606,
+    "reference_argmax": 198,
+    "actual_argmax": 198
+  },
+  "interpretation": "Same input-values digest for separately evaluated QDQ and QNN calls.",
+  "elapsed_seconds": 123.84368241699849,
+  "claim_limits": [
+    "ExactlyONE position1 host call on explicit QDQ-origin inputs; not resume or generation.",
+    "No full-trajectory/accuracy/physical/campaign claim. Difference-vector interpretation is conditional on fixed artifact/runtime identities; scalar cosines are not additive."
+  ]
+}

@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
+  "evidence_class": "source_metadata_scalar_conv_history_encoding_audit",
+  "status": "qdq_endpoint_explained_input_clipping_plus_requantization_qnn_path_unproven",
+  "archive_identity": {
+    "expected_pt2_sha256_from_accepted_manifest": "30799090d14a42c92ea804a2763df55ff231ba232653d96484324ad40c492364",
+    "identity_source": "results/host-histogram-precision-20260910/artifact-manifest.json",
+    "archive_hash_recomputed_in_this_audit": false,
+    "archive_path": "experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/restart-20260910T083327Z/01-hidden-compile/diagnostic-w4a16-qdq.pt2",
+    "archive_bytes": 13645661902,
+    "member": "diagnostic-w4a16-qdq/models/model.json",
+    "member_bytes": 32499235,
+    "member_sha256": "2d879235c4d4a47643378e3ec3739bd587d4b0a68b23097b8ba64092ce20ad86",
+    "member_crc32": 2607125553,
+    "torch_version": "2.11.0+cpu",
+    "archive_sha256_recomputed": false,
+    "members_read": [
+      "diagnostic-w4a16-qdq/models/model.json"
+    ],
+    "weight_constant_or_sample_input_members_read": 0
+  },
+  "artifacts": {
+    "auditor": {
+      "path": "tools/audit_conv_history_metadata.py",
+      "bytes": 7061,
+      "sha256": "15351d902c9b80f3f4180f5af4479f08884ceb7801376eb5d8c8176c5213ced8"
+    },
+    "scalar_tests": {
+      "path": "tests/test_conv_history_metadata.py",
+      "bytes": 4767,
+      "sha256": "898a415689edcc0821f9eb72e91dbe40126e718e8811990ca0d6eb76ab444921"
+    }
+  },
+  "observed_endpoint": {
+    "source_commit": "6a5dc5b",
+    "source_file": "results/controlled-position1-paired-qnn-20260910/analysis/layer0-conv-slots.json",
+    "output_index": 25,
+    "layer": 0,
+    "history_output_slot": 2,
+    "channel": 6053,
+    "common_input": 23.721895217895508,
+    "observed_qdq": 22.131549835205078,
+    "observed_qnn": 23.72189712524414
+  },
+  "proven_qdq_path": {
+    "input_index": 27,
+    "input_node": "states_24",
+    "output_index": 25,
+    "output_node": "dequantize_per_tensor_221",
+    "encoding_stages": [
+      {
+        "stage": "state_input",
+        "quantize_node": "quantize_per_tensor_25",
+        "dequantize_node": "dequantize_per_tensor_148",
+        "scale": 0.0007933978922665119,
+        "zero_point": 37640,
+        "quant_min": 0,
+        "quant_max": 65535,
+        "dtype": 4
+      },
+      {
+        "stage": "concat",
+        "quantize_node": "quantize_per_tensor_67",
+        "dequantize_node": "dequantize_per_tensor_220",
+        "scale": 0.0009200899512507021,
+        "zero_point": 32457,
+        "quant_min": 0,
+        "quant_max": 65535,
+        "dtype": 4
+      },
+      {
+        "stage": "slice_output",
+        "quantize_node": "quantize_per_tensor_68",
+        "dequantize_node": "dequantize_per_tensor_221",
+        "scale": 0.0008176580304279923,
+        "zero_point": 36523,
+        "quant_min": 0,
+        "quant_max": 65535,
+        "dtype": 4
+      }
+    ],
+    "scalar_fp32_trace": [
+      {
+        "stage": "state_input",
+        "input_fp32": 23.721895217895508,
+        "scaled_fp32": 29899.115234375,
+        "unclamped_code": 67539,
+        "clamped_code": 65535,
+        "clipped": true,
+        "output_fp32": 22.131834030151367,
+        "representable_min_fp32": -29.863496780395508,
+        "representable_max_fp32": 22.131834030151367
+      },
+      {
+        "stage": "concat",
+        "input_fp32": 22.131834030151367,
+        "scaled_fp32": 24053.98828125,
+        "unclamped_code": 56511,
+        "clamped_code": 56511,
+        "clipped": false,
+        "output_fp32": 22.13184356689453,
+        "representable_min_fp32": -29.863359451293945,
+        "representable_max_fp32": 30.434736251831055
+      },
+      {
+        "stage": "slice_output",
+        "input_fp32": 22.13184356689453,
+        "scaled_fp32": 27067.357421875,
+        "unclamped_code": 63590,
+        "clamped_code": 63590,
+        "clipped": false,
+        "output_fp32": 22.131549835205078,
+        "representable_min_fp32": -29.863325119018555,
+        "representable_max_fp32": 23.721895217895508
+      }
+    ],
+    "scalar_matches_observed_qdq_exactly": true,
+    "input_upper_bound": 22.131834030151367,
+    "final_output_upper_bound": 23.721895217895508,
+    "observed_qdq_is_final_output_ceiling": false,
+    "final_output_code": 63590,
+    "final_output_quant_max": 65535,
+    "integer_container": "INT32 metadata tag4 carrying16-bit0..65535 activation codes"
+  },
+  "qnn_boundary": {
+    "output_only_scalar_hypothesis": {
+      "input_fp32": 23.721895217895508,
+      "scaled_fp32": 29012.0,
+      "unclamped_code": 65535,
+      "clamped_code": 65535,
+      "clipped": false,
+      "output_fp32": 23.721895217895508,
+      "representable_min_fp32": -29.863325119018555,
+      "representable_max_fp32": 23.721895217895508
+    },
+    "hypothesis_vs_observed_abs": 1.9073486328125e-06,
+    "actual_lowered_path_proven": false,
+    "existing_compiler_log_has_input_states24_quantize_node": true,
+    "final_tensor_encoding_metadata_available": false,
+    "source_notes": "Annotation/folding/IO requantization code and original compile log inspected; Quantize is explicitly constructed from states_24 in the log. Final encoded tensor scales/optimized path were not retained as a separate readable artifact."
+  },
+  "read_scope": {
+    "graph_json_members_read": 1,
+    "graph_json_bytes": 32499235,
+    "weight_members_read": 0,
+    "constant_members_read": 0,
+    "sample_inputs_read": 0,
+    "small_scalar_constants": "inline JSON literals only",
+    "torch_imported_by_auditor": false,
+    "model_or_pte_loaded": false,
+    "model_or_qnn_execution": false,
+    "new_compile": false,
+    "phone_access": false
+  },
+  "tests": {
+    "pure_stdlib_scalar_metadata_tests": 7
+  },
+  "claim_limits": [
+    "The input clipping and subsequent requantization numerically reproduce this one QDQ conv-history endpoint exactly.",
+    "The observed22.131550 value is not the final output encoding ceiling; final ceiling is23.721895.",
+    "Output-only arithmetic is within one float32 ULP of QNN, but that does not establish the actual lowered/optimized path or a compiler/backend defect.",
+    "Existing compile logs show an input Quantize node, so direct frontend omission must not be asserted.",
+    "No claim about which output is closer to FP32, cause of hidden/logit drift, full-model fidelity, performance, physical execution or campaign readiness."
+  ],
+  "next_gate": "Review this audit, then separately approve a tiny weight-free QNN lowering/control probe with the exact three encodings and captured pre/post-lowering metadata. No compile or runtime probe has run."
+}

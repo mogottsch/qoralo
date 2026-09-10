@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "evidence_class": "host_qnn_x86_own_state_teacher_forced_trajectory",
+  "status": "bounded_segment_completed",
+  "phase": "trajectory",
+  "budget": {
+    "max_positions_this_segment": 4,
+    "timeout_seconds": 900.0,
+    "estimated_seconds": 540,
+    "estimate_exceeds_budget": false,
+    "estimate_basis": "Roughly one hour per30 QNN-x86 inputs previously observed, plus60s preparation allowance; estimate only, not a validity gate."
+  },
+  "graph_calls_returned": 4,
+  "state_updates_completed": 4,
+  "comparisons_completed": 4,
+  "latest_checkpoint": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/qnn-prefix-20260910T104805Z/run/trajectory/checkpoints/position-003.json",
+    "bytes": 1260,
+    "sha256": "029e2c3735442e6604bf3efd94e88669bff1ded328f654da77d4620baf74b07b"
+  },
+  "latest_raw_outputs": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/qnn-prefix-20260910T104805Z/run/trajectory/raw/position-003.pt",
+    "bytes": 21878472,
+    "sha256": "86b908ad329e1ddc50c138ca07102df9a036bdb487c36e6c0009130691a482b3"
+  },
+  "physical_execution": false,
+  "full174_in_this_process": false,
+  "loaded_route_benchmark_reuse_claimed": false,
+  "automatic_retry": false,
+  "comparison_boundary": "Same input prefix and initially zero state; each backend carries its OWN evolved state. Accumulated trajectory drift, NOT same-state operator comparison.",
+  "claim_limits": [
+    "Host simulation only; no physical QNN/HTP or generated-text/campaign claim.",
+    "Explicit checkpoint continuation reloads the runtime in a new diagnostic segment, not a loaded-route benchmark.",
+    "Worker checks time cooperatively; the CLI supervisor enforces an independent wall deadline through TERM/bounded grace/KILL/reap."
+  ],
+  "artifact_manifest": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/results/host-histogram-precision-20260910/artifact-manifest.json",
+    "bytes": 2515,
+    "sha256": "071c9eb470e82da962c69aac21d5f7b6eeabb359c32bf6123c5dbf4ca925e515"
+  },
+  "input_artifacts": {
+    "pte": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/restart-20260910T083327Z/01-hidden-compile/diagnostic-w4a16-qnn.pte",
+      "bytes": 1995463416,
+      "sha256": "7f30be3d57b601af0804cdd50dd8968e271d673b710ea249a754fcd2f4ff3fea"
+    },
+    "params": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch/examples/models/qwen3_5/config/2b_config.json",
+      "bytes": 1180,
+      "sha256": "63597e7233e5310974603b72cb32b14b09ccd5461e1d1540d4049327d6d5b642"
+    },
+    "token_ids": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/protocol/token-ids/short.int32le",
+      "bytes": 696,
+      "sha256": "dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4"
+    }
+  },
+  "binding": {
+    "pte_sha256": "7f30be3d57b601af0804cdd50dd8968e271d673b710ea249a754fcd2f4ff3fea",
+    "params_sha256": "63597e7233e5310974603b72cb32b14b09ccd5461e1d1540d4049327d6d5b642",
+    "token_ids_sha256": "dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4",
+    "reference_manifest_sha256": "4762613af14b25fe777ebc2ec11986f0671563e400861d51f6c149e3fcbfcac4",
+    "qdq_sha256": "30799090d14a42c92ea804a2763df55ff231ba232653d96484324ad40c492364",
+    "context": 4096,
+    "state_abi": 1,
+    "driver_sha256": "8e543382766a5e4a303f3cba38429fca8246be73fa53bf8a0b2d3bf580979d63",
+    "state_transport_sha256": "f2a3886651e31e02934280d8ec278247387cc06031541b411837a55c099ee58f"
+  },
+  "start_position": 0,
+  "end_position_exclusive": 4,
+  "state_origin": "zero_initialization",
+  "resumed_from": null,
+  "current_position": 3,
+  "elapsed_seconds": 525.9994430499992,
+  "progress_artifact": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/qnn-prefix-20260910T104805Z/run/trajectory/progress.jsonl",
+    "bytes": 9644,
+    "sha256": "2466ea7b8ede3f9d55e9f175acc9f096b6926be38ded71f6592e3b9d3697c822"
+  }
+}

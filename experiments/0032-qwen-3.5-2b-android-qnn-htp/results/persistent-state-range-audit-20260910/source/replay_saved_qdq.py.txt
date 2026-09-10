@@ -1,0 +1,20 @@
+def advance_state(config, states, outputs, position: int) -> None:
+    n = config.n_layers
+    if len(outputs) < 1 + 2 * n:
+        raise ValueError("Missing required state outputs")
+    for layer, kind in enumerate(config.layer_types):
+        a, b = states[layer], states[n + layer]
+        next_a, next_b = outputs[1 + layer], outputs[1 + n + layer]
+        if kind == "linear_attention":
+            if next_a.shape != a.shape or next_b.shape != b.shape:
+                raise ValueError(f"Recurrent/convolution state geometry mismatch: layer {layer}")
+            # Clone even if outputs alias inputs or reusable runtime buffers.
+            states[layer] = next_a.detach().clone()
+            states[n + layer] = next_b.detach().clone()
+        elif kind == "full_attention":
+            if next_a.shape != a[..., :1].shape or next_b.shape != b[:, :, :1, :].shape:
+                raise ValueError(f"KV update geometry mismatch: layer {layer}")
+            a[..., position].copy_(next_a[..., 0])
+            b[:, :, position, :].copy_(next_b[:, :, 0, :])
+        else:
+            raise ValueError(f"Unknown layer type: {kind}")

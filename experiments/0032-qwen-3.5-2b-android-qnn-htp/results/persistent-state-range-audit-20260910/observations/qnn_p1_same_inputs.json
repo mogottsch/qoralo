@@ -1,0 +1,2521 @@
+{
+  "source": {
+    "id": "qnn_p1_same_inputs",
+    "position": 1,
+    "route": "QNN",
+    "state_origin": "QDQ_p0_origin",
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/results/controlled-position1-paired-qnn-20260910/raw/controlled-qnn.outputs.pt.zst",
+    "raw_bytes": 21878472,
+    "raw_sha256": "b771c49e1fc20e52293befa0d6dfe4b5b7b373a195bf8f781afce1f77dc51e00",
+    "compressed": true,
+    "compressed_bytes": 8079914,
+    "compressed_sha256": "6fa620db79d8575b3d89a58fb4ceb8150db30f3f52395916e2581be019855913"
+  },
+  "states": [
+    {
+      "state_index": 0,
+      "kind": "recurrent",
+      "layer": 0,
+      "shape": [
+        1,
+        16,
+        128,
+        128
+      ],
+      "values": 262144,
+      "finite_values": 262144,
+      "tensor_f32le_sha256": "01e131f64bc39f8e6b6648cfc28b3211323105e2d6096b650d4c8cf65edbbe33",
+      "min_fp32": -2.253004789352417,
+      "max_fp32": 0.9141204953193665,
+      "positive_zero_count": 73169,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 262144,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 152659,
+        "max_abs_roundtrip_change_fp64": 4.76837158203125e-07,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_1",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 262144,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 188975,
+            "max_abs_roundtrip_change_fp64": 9.3899667263031e-05,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 1,
+      "kind": "recurrent",
+      "layer": 1,
+      "shape": [
+        1,
+        16,
+        128,
+        128
+      ],
+      "values": 262144,
+      "finite_values": 262144,
+      "tensor_f32le_sha256": "9c57c57bb365138167e9ad3df315e6c96968d9e09673691d8f1b23d32c4fc8cc",
+      "min_fp32": -0.1705475002527237,
+      "max_fp32": 0.570917010307312,
+      "positive_zero_count": 31838,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 262144,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 153115,
+        "max_abs_roundtrip_change_fp64": 5.960464477539063e-08,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_2",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 262144,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 153115,
+            "max_abs_roundtrip_change_fp64": 5.960464477539063e-08,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 2,
+      "kind": "recurrent",
+      "layer": 2,
+      "shape": [
+        1,
+        16,
+        128,
+        128
+      ],
+      "values": 262144,
+      "finite_values": 262144,
+      "tensor_f32le_sha256": "039320164d346d207798025085b29dee95e36512556d1f8b3c8f9e5a44a4f2f3",
+      "min_fp32": -0.18227311968803406,
+      "max_fp32": 0.33880117535591125,
+      "positive_zero_count": 22888,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 262144,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 187154,
+        "max_abs_roundtrip_change_fp64": 8.940696716308594e-08,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_3",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 262144,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 239256,
+            "max_abs_roundtrip_change_fp64": 1.6048550605773926e-05,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 3,
+      "kind": "key_cache_update",
+      "layer": 3,
+      "shape": [
+        1,
+        2,
+        256,
+        1
+      ],
+      "values": 512,
+      "finite_values": 512,
+      "tensor_f32le_sha256": "17ff5fceb099e097f828bffddc0b5a8a8fc6cd3b9d6278899d01950dde03ae2b",
+      "min_fp32": -7.103896617889404,
+      "max_fp32": 4.330590724945068,
+      "positive_zero_count": 0,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 512,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 406,
+        "max_abs_roundtrip_change_fp64": 9.5367431640625e-07,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_4",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 512,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 512,
+            "max_abs_roundtrip_change_fp64": 0.00014531612396240234,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "write_new_token_at_position_axis_3",
+      "insert_position": 1,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 4,
+      "kind": "recurrent",
+      "layer": 4,
+      "shape": [
+        1,
+        16,
+        128,
+        128
+      ],
+      "values": 262144,
+      "finite_values": 262144,
+      "tensor_f32le_sha256": "d18a9a19096591c3417253a5adbf2e1e54f2d7a321872e1969c02db3d3633e7d",
+      "min_fp32": -1.8579061031341553,
+      "max_fp32": 0.7012885808944702,
+      "positive_zero_count": 81398,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 262144,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 92273,
+        "max_abs_roundtrip_change_fp64": 1.7881393432617188e-07,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_5",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 262144,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 92273,
+            "max_abs_roundtrip_change_fp64": 1.7881393432617188e-07,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 5,
+      "kind": "recurrent",
+      "layer": 5,
+      "shape": [
+        1,
+        16,
+        128,
+        128
+      ],
+      "values": 262144,
+      "finite_values": 262144,
+      "tensor_f32le_sha256": "9401aa265f7c44308a2961975b1e6a969276c42601366e3f4a81e8faf67228c3",
+      "min_fp32": -0.7167612910270691,
+      "max_fp32": 0.42312005162239075,
+      "positive_zero_count": 40494,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 262144,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 212090,
+        "max_abs_roundtrip_change_fp64": 1.1920928955078125e-07,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_6",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 262144,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 221650,
+            "max_abs_roundtrip_change_fp64": 3.172457218170166e-05,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 6,
+      "kind": "recurrent",
+      "layer": 6,
+      "shape": [
+        1,
+        16,
+        128,
+        128
+      ],
+      "values": 262144,
+      "finite_values": 262144,
+      "tensor_f32le_sha256": "67247e54cb2f90eafcba3dea6dce89fde1c83f697e5f7c7f07caab91d984fb05",
+      "min_fp32": -0.67326819896698,
+      "max_fp32": 0.27378180623054504,
+      "positive_zero_count": 18852,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 262144,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 228733,
+        "max_abs_roundtrip_change_fp64": 5.960464477539063e-08,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_7",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 262144,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 228733,
+            "max_abs_roundtrip_change_fp64": 5.960464477539063e-08,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 7,
+      "kind": "key_cache_update",
+      "layer": 7,
+      "shape": [
+        1,
+        2,
+        256,
+        1
+      ],
+      "values": 512,
+      "finite_values": 512,
+      "tensor_f32le_sha256": "4fb9a27656622ea1c84e5bdcf11336c9a0801141613976a07be5b9cdbb2ba829",
+      "min_fp32": -6.4703049659729,
+      "max_fp32": 8.78925609588623,
+      "positive_zero_count": 2,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 512,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 363,
+        "max_abs_roundtrip_change_fp64": 9.5367431640625e-07,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_8",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 512,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 510,
+            "max_abs_roundtrip_change_fp64": 0.0001557767391204834,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "write_new_token_at_position_axis_3",
+      "insert_position": 1,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 8,
+      "kind": "recurrent",
+      "layer": 8,
+      "shape": [
+        1,
+        16,
+        128,
+        128
+      ],
+      "values": 262144,
+      "finite_values": 262144,
+      "tensor_f32le_sha256": "4ae073351f02ff76a9caf38456cf240f7e9f5466567a3236f25907520be8c8ef",
+      "min_fp32": -0.19663342833518982,
+      "max_fp32": 0.3870701193809509,
+      "positive_zero_count": 43385,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 262144,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 125470,
+        "max_abs_roundtrip_change_fp64": 2.9802322387695312e-08,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_9",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 262144,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 125470,
+            "max_abs_roundtrip_change_fp64": 2.9802322387695312e-08,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 9,
+      "kind": "recurrent",
+      "layer": 9,
+      "shape": [
+        1,
+        16,
+        128,
+        128
+      ],
+      "values": 262144,
+      "finite_values": 262144,
+      "tensor_f32le_sha256": "a3f51d353dafb6b3ad209b9054f6e0956df9d182970083732275e4360cac3a72",
+      "min_fp32": -0.7151914834976196,
+      "max_fp32": 0.3164713680744171,
+      "positive_zero_count": 51447,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 262144,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 204061,
+        "max_abs_roundtrip_change_fp64": 5.960464477539063e-08,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_10",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 262144,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 210697,
+            "max_abs_roundtrip_change_fp64": 1.6789883375167847e-05,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 10,
+      "kind": "recurrent",
+      "layer": 10,
+      "shape": [
+        1,
+        16,
+        128,
+        128
+      ],
+      "values": 262144,
+      "finite_values": 262144,
+      "tensor_f32le_sha256": "006a9a2422d0f9090487d1ff1f9bc0249726539de7cd018027479b6acdb65354",
+      "min_fp32": -0.21537156403064728,
+      "max_fp32": 0.23067925870418549,
+      "positive_zero_count": 36104,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 262144,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 209757,
+        "max_abs_roundtrip_change_fp64": 2.9802322387695312e-08,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_11",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 262144,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 226039,
+            "max_abs_roundtrip_change_fp64": 9.684357792139053e-06,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 11,
+      "kind": "key_cache_update",
+      "layer": 11,
+      "shape": [
+        1,
+        2,
+        256,
+        1
+      ],
+      "values": 512,
+      "finite_values": 512,
+      "tensor_f32le_sha256": "42aada7fe8c25b08dd9648185f68750c8abcdd5a72fc4c1e507660a8598ac639",
+      "min_fp32": -7.665286064147949,
+      "max_fp32": 5.647400379180908,
+      "positive_zero_count": 0,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 512,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 398,
+        "max_abs_roundtrip_change_fp64": 9.5367431640625e-07,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_12",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 512,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 512,
+            "max_abs_roundtrip_change_fp64": 0.0001666545867919922,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "write_new_token_at_position_axis_3",
+      "insert_position": 1,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 12,
+      "kind": "recurrent",
+      "layer": 12,
+      "shape": [
+        1,
+        16,
+        128,
+        128
+      ],
+      "values": 262144,
+      "finite_values": 262144,
+      "tensor_f32le_sha256": "5dffa4b87eff9e9c3c77bef9e025a81e4ce3672465bd152f85eb09e43bc56380",
+      "min_fp32": -0.2668476700782776,
+      "max_fp32": 0.19950416684150696,
+      "positive_zero_count": 89686,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 262144,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 105198,
+        "max_abs_roundtrip_change_fp64": 2.9802322387695312e-08,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_13",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 262144,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 105198,
+            "max_abs_roundtrip_change_fp64": 2.9802322387695312e-08,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 13,
+      "kind": "recurrent",
+      "layer": 13,
+      "shape": [
+        1,
+        16,
+        128,
+        128
+      ],
+      "values": 262144,
+      "finite_values": 262144,
+      "tensor_f32le_sha256": "21775e3ad0f82dbed35a477bee2f867c6b2be83746a9661bf8b1de975c54ab78",
+      "min_fp32": -0.1378623992204666,
+      "max_fp32": 0.1325947493314743,
+      "positive_zero_count": 23791,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 262144,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 224309,
+        "max_abs_roundtrip_change_fp64": 1.4901161193847656e-08,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_14",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 262144,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 238353,
+            "max_abs_roundtrip_change_fp64": 8.366070687770844e-06,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 14,
+      "kind": "recurrent",
+      "layer": 14,
+      "shape": [
+        1,
+        16,
+        128,
+        128
+      ],
+      "values": 262144,
+      "finite_values": 262144,
+      "tensor_f32le_sha256": "9b368874f449dd17ff1696cd8023334dfd6e9ae8d83875f83dec7a242554578a",
+      "min_fp32": -0.17106500267982483,
+      "max_fp32": 0.15947476029396057,
+      "positive_zero_count": 48609,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 262144,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 194224,
+        "max_abs_roundtrip_change_fp64": 1.4901161193847656e-08,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_15",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 262144,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 213535,
+            "max_abs_roundtrip_change_fp64": 1.5467405319213867e-05,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 15,
+      "kind": "key_cache_update",
+      "layer": 15,
+      "shape": [
+        1,
+        2,
+        256,
+        1
+      ],
+      "values": 512,
+      "finite_values": 512,
+      "tensor_f32le_sha256": "957574488d9c75612d29f980d57d5293a8c0b72020a577a8948c306997cbf56d",
+      "min_fp32": -7.07077693939209,
+      "max_fp32": 5.306765556335449,
+      "positive_zero_count": 1,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 512,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 359,
+        "max_abs_roundtrip_change_fp64": 1.430511474609375e-06,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_16",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 512,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 511,
+            "max_abs_roundtrip_change_fp64": 0.00013696402311325073,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "write_new_token_at_position_axis_3",
+      "insert_position": 1,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 16,
+      "kind": "recurrent",
+      "layer": 16,
+      "shape": [
+        1,
+        16,
+        128,
+        128
+      ],
+      "values": 262144,
+      "finite_values": 262144,
+      "tensor_f32le_sha256": "c0e580b4aa28c398e6eab88022afeec749a9edf5fb3c66cb6dff0758c5ba5070",
+      "min_fp32": -0.177551731467247,
+      "max_fp32": 0.2547515332698822,
+      "positive_zero_count": 20904,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 262144,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 216242,
+        "max_abs_roundtrip_change_fp64": 2.9802322387695312e-08,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_17",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 262144,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 241240,
+            "max_abs_roundtrip_change_fp64": 3.828108310699463e-05,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 17,
+      "kind": "recurrent",
+      "layer": 17,
+      "shape": [
+        1,
+        16,
+        128,
+        128
+      ],
+      "values": 262144,
+      "finite_values": 262144,
+      "tensor_f32le_sha256": "280b6abdefaf5cfe91581a0326d0d934f61e5146e9b3c47e98aa90eddb6c6d04",
+      "min_fp32": -0.16371501982212067,
+      "max_fp32": 0.48597943782806396,
+      "positive_zero_count": 14159,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 262144,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 171327,
+        "max_abs_roundtrip_change_fp64": 8.940696716308594e-08,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_18",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 262144,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 247985,
+            "max_abs_roundtrip_change_fp64": 2.2642314434051514e-05,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 18,
+      "kind": "recurrent",
+      "layer": 18,
+      "shape": [
+        1,
+        16,
+        128,
+        128
+      ],
+      "values": 262144,
+      "finite_values": 262144,
+      "tensor_f32le_sha256": "d6b87fed97d8c5afee3bddee33d02dc49a1648ea6d0289ad487aa2a668a72786",
+      "min_fp32": -0.24913354218006134,
+      "max_fp32": 0.5116997361183167,
+      "positive_zero_count": 14303,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 262144,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 230295,
+        "max_abs_roundtrip_change_fp64": 8.940696716308594e-08,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_19",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 262144,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 247841,
+            "max_abs_roundtrip_change_fp64": 5.723536014556885e-05,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 19,
+      "kind": "key_cache_update",
+      "layer": 19,
+      "shape": [
+        1,
+        2,
+        256,
+        1
+      ],
+      "values": 512,
+      "finite_values": 512,
+      "tensor_f32le_sha256": "bd1016b415d9247392e5799e1e7ce1cb51fe8abe43926e8ab329078c65bc135b",
+      "min_fp32": -5.386566638946533,
+      "max_fp32": 4.487636089324951,
+      "positive_zero_count": 0,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 512,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 409,
+        "max_abs_roundtrip_change_fp64": 9.5367431640625e-07,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_20",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 512,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 512,
+            "max_abs_roundtrip_change_fp64": 0.0001214742660522461,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "write_new_token_at_position_axis_3",
+      "insert_position": 1,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 20,
+      "kind": "recurrent",
+      "layer": 20,
+      "shape": [
+        1,
+        16,
+        128,
+        128
+      ],
+      "values": 262144,
+      "finite_values": 262144,
+      "tensor_f32le_sha256": "c4854c3c629af0dd46c7c40a28d9ce193c348f7d0bb1ba24bdd41627c66b2455",
+      "min_fp32": -0.22726453840732574,
+      "max_fp32": 0.4620387852191925,
+      "positive_zero_count": 17046,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 262144,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 196488,
+        "max_abs_roundtrip_change_fp64": 8.940696716308594e-08,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_21",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 262144,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 196488,
+            "max_abs_roundtrip_change_fp64": 8.940696716308594e-08,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 21,
+      "kind": "recurrent",
+      "layer": 21,
+      "shape": [
+        1,
+        16,
+        128,
+        128
+      ],
+      "values": 262144,
+      "finite_values": 262144,
+      "tensor_f32le_sha256": "e99f1cd948a2fdf01109666142847a23ab566f37c1fd9724837d8c1d5f9542ed",
+      "min_fp32": -0.15749616920948029,
+      "max_fp32": 0.3300325274467468,
+      "positive_zero_count": 13017,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 262144,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 190232,
+        "max_abs_roundtrip_change_fp64": 5.960464477539063e-08,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_22",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 262144,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 249127,
+            "max_abs_roundtrip_change_fp64": 1.8516555428504944e-05,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 22,
+      "kind": "recurrent",
+      "layer": 22,
+      "shape": [
+        1,
+        16,
+        128,
+        128
+      ],
+      "values": 262144,
+      "finite_values": 262144,
+      "tensor_f32le_sha256": "0724339b2e439cdf2e1ee03d47d775d232c929ad5b8ded883ec8409166d110ad",
+      "min_fp32": -0.2222776859998703,
+      "max_fp32": 0.2739310562610626,
+      "positive_zero_count": 12419,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 262144,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 219178,
+        "max_abs_roundtrip_change_fp64": 5.960464477539063e-08,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_23",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 262144,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 249725,
+            "max_abs_roundtrip_change_fp64": 1.6499310731887817e-05,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 23,
+      "kind": "key_cache_update",
+      "layer": 23,
+      "shape": [
+        1,
+        2,
+        256,
+        1
+      ],
+      "values": 512,
+      "finite_values": 512,
+      "tensor_f32le_sha256": "e06ad13409ae55d1ca9a87010907a4a1940912afd1e9d01fe81a224709732f8f",
+      "min_fp32": -5.015940189361572,
+      "max_fp32": 5.737683296203613,
+      "positive_zero_count": 1,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 512,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 362,
+        "max_abs_roundtrip_change_fp64": 1.430511474609375e-06,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_24",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 512,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 511,
+            "max_abs_roundtrip_change_fp64": 0.00012624263763427734,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "write_new_token_at_position_axis_3",
+      "insert_position": 1,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 24,
+      "kind": "convolution",
+      "layer": 0,
+      "shape": [
+        1,
+        6144,
+        1,
+        4
+      ],
+      "values": 24576,
+      "finite_values": 24576,
+      "tensor_f32le_sha256": "10a3a2a1d59cef7fec35ed5eecf421eca94ba3aaf8fbf9c019a676e7063858df",
+      "min_fp32": -16.07515525817871,
+      "max_fp32": 23.72189712524414,
+      "positive_zero_count": 12321,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 24576,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 1,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 9737,
+        "max_abs_roundtrip_change_fp64": 1.9073486328125e-06,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_25",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 24576,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 1,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 1,
+            "code_clipped_total": 1,
+            "decoded_bit_changes": 12250,
+            "max_abs_roundtrip_change_fp64": 1.5900630950927734,
+            "first_clipped_examples": [
+              {
+                "flat_index": 24214,
+                "input_fp32": 23.72189712524414,
+                "unclamped_code": 67539.0,
+                "scalar_decoded_fp32": 22.131834030151367,
+                "output_coordinate": [
+                  0,
+                  6053,
+                  0,
+                  2
+                ],
+                "next_input_coordinate": [
+                  0,
+                  6053,
+                  0,
+                  2
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 25,
+      "kind": "convolution",
+      "layer": 1,
+      "shape": [
+        1,
+        6144,
+        1,
+        4
+      ],
+      "values": 24576,
+      "finite_values": 24576,
+      "tensor_f32le_sha256": "5ceb03c1007d59d73bb493a329288155389840c75099c9c498851af31bbf5478",
+      "min_fp32": -11.148821830749512,
+      "max_fp32": 12.957877159118652,
+      "positive_zero_count": 12295,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 24576,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 9280,
+        "max_abs_roundtrip_change_fp64": 1.9073486328125e-06,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_26",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 24576,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 9280,
+            "max_abs_roundtrip_change_fp64": 1.9073486328125e-06,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 26,
+      "kind": "convolution",
+      "layer": 2,
+      "shape": [
+        1,
+        6144,
+        1,
+        4
+      ],
+      "values": 24576,
+      "finite_values": 24576,
+      "tensor_f32le_sha256": "e81c7a043d0dd066ef6c02494589c7fc5d98183f86e7787ab96b51c5b261a1e7",
+      "min_fp32": -10.074837684631348,
+      "max_fp32": 14.299508094787598,
+      "positive_zero_count": 12291,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 24576,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 8617,
+        "max_abs_roundtrip_change_fp64": 3.814697265625e-06,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_27",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 24576,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 1,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 1,
+            "code_clipped_total": 1,
+            "decoded_bit_changes": 12279,
+            "max_abs_roundtrip_change_fp64": 0.25594043731689453,
+            "first_clipped_examples": [
+              {
+                "flat_index": 22354,
+                "input_fp32": 14.299508094787598,
+                "unclamped_code": 66009.0,
+                "scalar_decoded_fp32": 14.043567657470703,
+                "output_coordinate": [
+                  0,
+                  5588,
+                  0,
+                  2
+                ],
+                "next_input_coordinate": [
+                  0,
+                  5588,
+                  0,
+                  2
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 27,
+      "kind": "value_cache_update",
+      "layer": 3,
+      "shape": [
+        1,
+        2,
+        1,
+        256
+      ],
+      "values": 512,
+      "finite_values": 512,
+      "tensor_f32le_sha256": "9374ee4afccf511c49b1984e5cbd7862455d1b3ceddab9f974a23bf9f32d7254",
+      "min_fp32": -2.5504462718963623,
+      "max_fp32": 2.4095399379730225,
+      "positive_zero_count": 0,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 512,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 386,
+        "max_abs_roundtrip_change_fp64": 2.384185791015625e-07,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_28",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 512,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 512,
+            "max_abs_roundtrip_change_fp64": 6.371736526489258e-05,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "write_new_token_at_position_axis_2",
+      "insert_position": 1,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 28,
+      "kind": "convolution",
+      "layer": 4,
+      "shape": [
+        1,
+        6144,
+        1,
+        4
+      ],
+      "values": 24576,
+      "finite_values": 24576,
+      "tensor_f32le_sha256": "1094fea1c08f0f8fb0494e0ce63c79c60aa1962ddac883f3a456b77b7bfb63ff",
+      "min_fp32": -16.346731185913086,
+      "max_fp32": 27.320924758911133,
+      "positive_zero_count": 12298,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 24576,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 1,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 10053,
+        "max_abs_roundtrip_change_fp64": 3.814697265625e-06,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_29",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 24576,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 1,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 10053,
+            "max_abs_roundtrip_change_fp64": 3.814697265625e-06,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 29,
+      "kind": "convolution",
+      "layer": 5,
+      "shape": [
+        1,
+        6144,
+        1,
+        4
+      ],
+      "values": 24576,
+      "finite_values": 24576,
+      "tensor_f32le_sha256": "e0abde34cee0e08ae7d431f4e079298b4038b95188df651f0c1d8ed0facafc42",
+      "min_fp32": -11.402570724487305,
+      "max_fp32": 11.407232284545898,
+      "positive_zero_count": 12293,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 24576,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 9252,
+        "max_abs_roundtrip_change_fp64": 2.86102294921875e-06,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_30",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 24576,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 9252,
+            "max_abs_roundtrip_change_fp64": 2.86102294921875e-06,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 30,
+      "kind": "convolution",
+      "layer": 6,
+      "shape": [
+        1,
+        6144,
+        1,
+        4
+      ],
+      "values": 24576,
+      "finite_values": 24576,
+      "tensor_f32le_sha256": "d8f4beff0f1a62516e000f8035b520b83fb49302e5fac982e0ff6f98d1e5730a",
+      "min_fp32": -13.506235122680664,
+      "max_fp32": 16.3298282623291,
+      "positive_zero_count": 12296,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 24576,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 9612,
+        "max_abs_roundtrip_change_fp64": 1.9073486328125e-06,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_31",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 24576,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 9612,
+            "max_abs_roundtrip_change_fp64": 1.9073486328125e-06,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 31,
+      "kind": "value_cache_update",
+      "layer": 7,
+      "shape": [
+        1,
+        2,
+        1,
+        256
+      ],
+      "values": 512,
+      "finite_values": 512,
+      "tensor_f32le_sha256": "bf5bb0b42c2cbee686b10713a724e06e398b560941d88c1a9e68104034295c1d",
+      "min_fp32": -2.8768951892852783,
+      "max_fp32": 2.0147345066070557,
+      "positive_zero_count": 0,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 512,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 366,
+        "max_abs_roundtrip_change_fp64": 3.5762786865234375e-07,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_32",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 512,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 512,
+            "max_abs_roundtrip_change_fp64": 0.0001742243766784668,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "write_new_token_at_position_axis_2",
+      "insert_position": 1,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 32,
+      "kind": "convolution",
+      "layer": 8,
+      "shape": [
+        1,
+        6144,
+        1,
+        4
+      ],
+      "values": 24576,
+      "finite_values": 24576,
+      "tensor_f32le_sha256": "8e19c506fb90332aae0726ccfe55b8838a263f5e9883729499e48bdd8d2f1f4d",
+      "min_fp32": -20.45831871032715,
+      "max_fp32": 12.342667579650879,
+      "positive_zero_count": 12296,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 24576,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 9087,
+        "max_abs_roundtrip_change_fp64": 1.9073486328125e-06,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_33",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 24576,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 9087,
+            "max_abs_roundtrip_change_fp64": 1.9073486328125e-06,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 33,
+      "kind": "convolution",
+      "layer": 9,
+      "shape": [
+        1,
+        6144,
+        1,
+        4
+      ],
+      "values": 24576,
+      "finite_values": 24576,
+      "tensor_f32le_sha256": "89675aed90b268c41a85399102a083047e9ffffa157ef5931fe2374c0a9da40c",
+      "min_fp32": -13.106943130493164,
+      "max_fp32": 12.280252456665039,
+      "positive_zero_count": 12291,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 24576,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 9218,
+        "max_abs_roundtrip_change_fp64": 2.86102294921875e-06,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_34",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 24576,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 9218,
+            "max_abs_roundtrip_change_fp64": 2.86102294921875e-06,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 34,
+      "kind": "convolution",
+      "layer": 10,
+      "shape": [
+        1,
+        6144,
+        1,
+        4
+      ],
+      "values": 24576,
+      "finite_values": 24576,
+      "tensor_f32le_sha256": "8e03e74416127331abcee1a52c4e65b25b0abbeaeb291f73c627cbb05444f59a",
+      "min_fp32": -14.156079292297363,
+      "max_fp32": 9.621621131896973,
+      "positive_zero_count": 12296,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 24576,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 9369,
+        "max_abs_roundtrip_change_fp64": 1.9073486328125e-06,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_35",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 24576,
+            "below_decoded_minimum": 1,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 1,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 1,
+            "decoded_bit_changes": 12277,
+            "max_abs_roundtrip_change_fp64": 0.36020946502685547,
+            "first_clipped_examples": [
+              {
+                "flat_index": 9146,
+                "input_fp32": -14.156079292297363,
+                "unclamped_code": -821.0,
+                "scalar_decoded_fp32": -13.795869827270508,
+                "output_coordinate": [
+                  0,
+                  2286,
+                  0,
+                  2
+                ],
+                "next_input_coordinate": [
+                  0,
+                  2286,
+                  0,
+                  2
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 35,
+      "kind": "value_cache_update",
+      "layer": 11,
+      "shape": [
+        1,
+        2,
+        1,
+        256
+      ],
+      "values": 512,
+      "finite_values": 512,
+      "tensor_f32le_sha256": "0ef0b1872407709d4513fb78988c4d53c99e9da34277cf0c12e44c65d0b6423c",
+      "min_fp32": -2.614902973175049,
+      "max_fp32": 2.824146032333374,
+      "positive_zero_count": 1,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 512,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 361,
+        "max_abs_roundtrip_change_fp64": 4.76837158203125e-07,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_36",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 512,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 511,
+            "max_abs_roundtrip_change_fp64": 0.00015652179718017578,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "write_new_token_at_position_axis_2",
+      "insert_position": 1,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 36,
+      "kind": "convolution",
+      "layer": 12,
+      "shape": [
+        1,
+        6144,
+        1,
+        4
+      ],
+      "values": 24576,
+      "finite_values": 24576,
+      "tensor_f32le_sha256": "725f983e6e89e55fa6d86ce1fd04b93a57bc754d367117579d8c8f52311ec134",
+      "min_fp32": -13.738722801208496,
+      "max_fp32": 13.086792945861816,
+      "positive_zero_count": 12295,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 24576,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 9656,
+        "max_abs_roundtrip_change_fp64": 1.9073486328125e-06,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_37",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 24576,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 9656,
+            "max_abs_roundtrip_change_fp64": 1.9073486328125e-06,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 37,
+      "kind": "convolution",
+      "layer": 13,
+      "shape": [
+        1,
+        6144,
+        1,
+        4
+      ],
+      "values": 24576,
+      "finite_values": 24576,
+      "tensor_f32le_sha256": "915aef4d82bc672f651a3fe9500d8e621fb54133a81415a36be2669826af1b62",
+      "min_fp32": -8.902437210083008,
+      "max_fp32": 9.639379501342773,
+      "positive_zero_count": 12297,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 24576,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 9203,
+        "max_abs_roundtrip_change_fp64": 1.9073486328125e-06,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_38",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 24576,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 12278,
+            "max_abs_roundtrip_change_fp64": 0.0002726614475250244,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 38,
+      "kind": "convolution",
+      "layer": 14,
+      "shape": [
+        1,
+        6144,
+        1,
+        4
+      ],
+      "values": 24576,
+      "finite_values": 24576,
+      "tensor_f32le_sha256": "bd88bf7b799bc42545d56804179e36c361020a1cbe3fea8915e205e5089e8bf7",
+      "min_fp32": -9.75058650970459,
+      "max_fp32": 16.04360008239746,
+      "positive_zero_count": 12300,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 24576,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 8587,
+        "max_abs_roundtrip_change_fp64": 2.86102294921875e-06,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_39",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 24576,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 12276,
+            "max_abs_roundtrip_change_fp64": 0.0002961158752441406,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 39,
+      "kind": "value_cache_update",
+      "layer": 15,
+      "shape": [
+        1,
+        2,
+        1,
+        256
+      ],
+      "values": 512,
+      "finite_values": 512,
+      "tensor_f32le_sha256": "722076ddc7cbbc6282a0585fc01fbcd68c7eb09df63334b9d91178066075d45c",
+      "min_fp32": -3.9675357341766357,
+      "max_fp32": 3.7424495220184326,
+      "positive_zero_count": 1,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 512,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 390,
+        "max_abs_roundtrip_change_fp64": 7.152557373046875e-07,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_40",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 512,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 511,
+            "max_abs_roundtrip_change_fp64": 0.00039577484130859375,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "write_new_token_at_position_axis_2",
+      "insert_position": 1,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 40,
+      "kind": "convolution",
+      "layer": 16,
+      "shape": [
+        1,
+        6144,
+        1,
+        4
+      ],
+      "values": 24576,
+      "finite_values": 24576,
+      "tensor_f32le_sha256": "1851210a34cfa4362a0992500fa53e863addc439182073aef0c90e396cf3325a",
+      "min_fp32": -9.866591453552246,
+      "max_fp32": 13.698366165161133,
+      "positive_zero_count": 12296,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 24576,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 9818,
+        "max_abs_roundtrip_change_fp64": 1.9073486328125e-06,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_41",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 24576,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 12278,
+            "max_abs_roundtrip_change_fp64": 0.0003407001495361328,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 41,
+      "kind": "convolution",
+      "layer": 17,
+      "shape": [
+        1,
+        6144,
+        1,
+        4
+      ],
+      "values": 24576,
+      "finite_values": 24576,
+      "tensor_f32le_sha256": "338af6277b144fa2b054f2d3e7788d8df24d7a5e9238acc579e6631c3a4da054",
+      "min_fp32": -17.82701301574707,
+      "max_fp32": 10.347609519958496,
+      "positive_zero_count": 12291,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 24576,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 9214,
+        "max_abs_roundtrip_change_fp64": 2.86102294921875e-06,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_42",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 24576,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 12285,
+            "max_abs_roundtrip_change_fp64": 0.0003854036331176758,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 42,
+      "kind": "convolution",
+      "layer": 18,
+      "shape": [
+        1,
+        6144,
+        1,
+        4
+      ],
+      "values": 24576,
+      "finite_values": 24576,
+      "tensor_f32le_sha256": "cde705612e8511a9e426f665cbcee808057932bab8b38c9f223d73c17cb628ae",
+      "min_fp32": -13.6857328414917,
+      "max_fp32": 12.886561393737793,
+      "positive_zero_count": 12293,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 24576,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 9519,
+        "max_abs_roundtrip_change_fp64": 2.86102294921875e-06,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_43",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 24576,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 9519,
+            "max_abs_roundtrip_change_fp64": 2.86102294921875e-06,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 43,
+      "kind": "value_cache_update",
+      "layer": 19,
+      "shape": [
+        1,
+        2,
+        1,
+        256
+      ],
+      "values": 512,
+      "finite_values": 512,
+      "tensor_f32le_sha256": "655d15bc03ed062c917af09ad80461be5c2498ee0cad523ae413a04a171b631a",
+      "min_fp32": -9.260422706604004,
+      "max_fp32": 4.070103168487549,
+      "positive_zero_count": 1,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 512,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 354,
+        "max_abs_roundtrip_change_fp64": 7.152557373046875e-07,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_44",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 512,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 511,
+            "max_abs_roundtrip_change_fp64": 0.00023451447486877441,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "write_new_token_at_position_axis_2",
+      "insert_position": 1,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 44,
+      "kind": "convolution",
+      "layer": 20,
+      "shape": [
+        1,
+        6144,
+        1,
+        4
+      ],
+      "values": 24576,
+      "finite_values": 24576,
+      "tensor_f32le_sha256": "194c063f1578ee1b0bcc20acacfacf1717efe669495eee36fbbc6b0866c34c47",
+      "min_fp32": -14.47262191772461,
+      "max_fp32": 12.597017288208008,
+      "positive_zero_count": 12292,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 24576,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 9590,
+        "max_abs_roundtrip_change_fp64": 1.9073486328125e-06,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_45",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 24576,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 9590,
+            "max_abs_roundtrip_change_fp64": 1.9073486328125e-06,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 45,
+      "kind": "convolution",
+      "layer": 21,
+      "shape": [
+        1,
+        6144,
+        1,
+        4
+      ],
+      "values": 24576,
+      "finite_values": 24576,
+      "tensor_f32le_sha256": "5a4d836faffc909062da6cddd9c6270caeaf86d708317085caa10729169e2411",
+      "min_fp32": -15.659878730773926,
+      "max_fp32": 9.578547477722168,
+      "positive_zero_count": 12296,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 24576,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 9281,
+        "max_abs_roundtrip_change_fp64": 1.9073486328125e-06,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_46",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 24576,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 12278,
+            "max_abs_roundtrip_change_fp64": 0.0004254579544067383,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 46,
+      "kind": "convolution",
+      "layer": 22,
+      "shape": [
+        1,
+        6144,
+        1,
+        4
+      ],
+      "values": 24576,
+      "finite_values": 24576,
+      "tensor_f32le_sha256": "69aa4f5ee1466b6706f1656030cdff7aa85756e68c2318afb99d8e36b28c501c",
+      "min_fp32": -11.405099868774414,
+      "max_fp32": 9.315749168395996,
+      "positive_zero_count": 12291,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 24576,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 9215,
+        "max_abs_roundtrip_change_fp64": 1.430511474609375e-06,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_47",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 24576,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 12283,
+            "max_abs_roundtrip_change_fp64": 0.0003769397735595703,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "clone_replace",
+      "insert_position": null,
+      "hypothetical_next_call_position": 2
+    },
+    {
+      "state_index": 47,
+      "kind": "value_cache_update",
+      "layer": 23,
+      "shape": [
+        1,
+        2,
+        1,
+        256
+      ],
+      "values": 512,
+      "finite_values": 512,
+      "tensor_f32le_sha256": "70261e8483ec38f97451837e5010f9b64f64be5c0ba5f77ed152da09ff545641",
+      "min_fp32": -8.426531791687012,
+      "max_fp32": 8.257760047912598,
+      "positive_zero_count": 0,
+      "negative_zero_count": 0,
+      "own_output_domain": {
+        "status": "simulated_fp32_qdq_on_saved_values",
+        "finite_values": 512,
+        "below_decoded_minimum": 0,
+        "above_decoded_maximum": 0,
+        "lower_code_clipped": 0,
+        "upper_code_clipped": 0,
+        "code_clipped_total": 0,
+        "decoded_bit_changes": 368,
+        "max_abs_roundtrip_change_fp64": 1.430511474609375e-06,
+        "first_clipped_examples": []
+      },
+      "next_input_quantizers": [
+        {
+          "q_node": "quantize_per_tensor_48",
+          "coverage": {
+            "status": "simulated_fp32_qdq_on_saved_values",
+            "finite_values": 512,
+            "below_decoded_minimum": 0,
+            "above_decoded_maximum": 0,
+            "lower_code_clipped": 0,
+            "upper_code_clipped": 0,
+            "code_clipped_total": 0,
+            "decoded_bit_changes": 512,
+            "max_abs_roundtrip_change_fp64": 0.00022339820861816406,
+            "first_clipped_examples": []
+          }
+        }
+      ],
+      "scope": "Returned state/update values. Attention rows are new-token slices, not the entire4095-position cache; next-call QDQ is a simulation, not observed SDK clipping.",
+      "carry_transport": "write_new_token_at_position_axis_2",
+      "insert_position": 1,
+      "hypothetical_next_call_position": 2
+    }
+  ]
+}

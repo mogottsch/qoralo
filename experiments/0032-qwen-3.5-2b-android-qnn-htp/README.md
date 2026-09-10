@@ -107,10 +107,14 @@ A lower-retention two-process host replay in [`results/host-w4a16-qdq-output-dia
 
 [`results/conv-history-native-sweep-20260910/`](results/conv-history-native-sweep-20260910/) retains the separately released0-compile/1-load/1-forward host sweep. All24,576 outputs are finite and inputs unchanged, but fullchain numerical equivalence is false. All39 paired rows are bit-identical; all24,498 untouched output positions, including the original anchor, exactly match firstcase. The single-outlier result was specific to the first fixture: the sweep also shows in-range/half-step discrepancies around one output step, no observed transition across the sampled scalar history-clipping onset, rising upper outputs rather than the scalar saturation plateau, and no universal output-only match. Lower-side final-range/clipping confounds remain explicit. Full scalar-stage/array analysis is saved-data-only. Both runtime/controller groups were reaped; no further native/model/phone call is released.
 
+## Offline persistent-state range audit
+
+[`results/persistent-state-range-audit-20260910/`](results/persistent-state-range-audit-20260910/) maps all48 Histogram QDQ state interfaces and five saved p0/p1 output bundles, with no model/weight/native calls. It distinguishes18 recurrence/18conv replacements from6K/6V new-token insertions, and18 shape-only references from numerical consumers. Fifteen domains are identical;29 decoded intervals overhang the next-input range, but only27 output-code grids would clip. Each p0 bundle has11 would-clip transported values across8conv/K/V states; controlled QDQp1 has1 and each QNNp1 set has3. No sampled recurrent value predicts code clipping. These are offline scalar compatibility calculations, not observed SDK clipping or logit causality. Alignment candidates are hypotheses only.
+
 ## Current next gate
 
 1. Keep physical PTE `23ac8abd…d2c506` and phone preflight unchanged; the 73-output diagnostic PTE is not compatible with the current 49-output Android runner.
-2. Review the committed frozen-PTE sweep's empirical regions and full saved-data analysis. Its one runtime-only release is consumed. State input/output range alignment is only a future hypothesis; no encoding/model change, native retry/follow-on, internal SDK cause or physical claim is authorized.
+2. Review the offline48-state interface table, five saved-value comparisons and alignment hypotheses. No model/encoding changes, calibration, compile, native retry/follow-on or physical work is authorized. The frozen-PTE sweep release remains consumed; APP has first physical priority.
 3. No ADB or staging without a new explicit Pi phone slot. Full QNN/physical drift and one-token-only interpretation remain campaign-readiness boundaries.
 4. Only after agreed fidelity and state-isolation gates may chunked prefill and the fixed 1+5+5+5 campaign be promoted.
 

@@ -1025,6 +1025,72 @@ class ContractTest(unittest.TestCase):
             sys.dont_write_bytecode = previous
         self.assertEqual(before, {str(p): sha(p) for p in directory.rglob('*') if p.is_file()})
 
+    def test_persistent_state_range_metadata_and_transport(self) -> None:
+        directory = EXP / 'results/persistent-state-range-audit-20260910'
+        meta = json.loads((directory / 'metadata/metadata.json').read_text())
+        result = json.loads((directory / 'result.json').read_text())
+        self.assertEqual(48, len(meta['states']))
+        self.assertEqual(18, sum(len(s['input']['shape_only_uses']) for s in meta['states']))
+        for i, state in enumerate(meta['states']):
+            self.assertEqual(i + 3, state['input_index']); self.assertEqual(i + 1, state['output_index'])
+            self.assertEqual('unique', state['input']['status']); self.assertEqual('explicit_paired', state['output']['status'])
+            self.assertEqual(7, state['input_tensor_metadata']['dtype'])
+            self.assertEqual(4, state['input']['unique_domain']['dtype'])
+            self.assertIsNone(state['native_finalized_encodings'])
+            if state['kind'] == 'key_cache_update':
+                self.assertEqual([1,2,256,4095], state['input_shape']); self.assertEqual([1,2,256,1], state['output_shape'])
+                self.assertEqual('write_new_token_at_position_axis_3', state['carry_transport'])
+            elif state['kind'] == 'value_cache_update':
+                self.assertEqual([1,2,4095,256], state['input_shape']); self.assertEqual([1,2,1,256], state['output_shape'])
+                self.assertEqual('write_new_token_at_position_axis_2', state['carry_transport'])
+            else:
+                self.assertEqual(state['input_shape'], state['output_shape']); self.assertEqual('clone_replace', state['carry_transport'])
+        self.assertEqual(5, result['saved_output_bundle_deserializations'])
+        for key in ('model_loads','model_forwards','native_loads','native_forwards','compile_calls'): self.assertEqual(0, result[key])
+        self.assertFalse(result['phone_access']); self.assertFalse(result['candidate_alignment_changes_implemented'])
+        self.assertTrue(json.loads((directory / 'observations/result.json').read_text())['no_executorch_imports'])
+        self.assertTrue(json.loads((directory / 'provenance.json').read_text())['params_and_original_state_transport_sha_match'])
+
+    def test_persistent_state_range_grids_and_observed_values(self) -> None:
+        directory = EXP / 'results/persistent-state-range-audit-20260910'
+        states = json.loads((directory / 'metadata/metadata.json').read_text())['states']
+        grids = json.loads((directory / 'observations/theory-grid.json').read_text())
+        self.assertEqual(15, sum(s['theoretical_compatibility_per_quantizer'][0]['same_encoding'] for s in states))
+        self.assertEqual(19, sum(s['theoretical_compatibility_per_quantizer'][0]['decoded_output_interval_contained_in_input'] for s in states))
+        self.assertEqual(27, sum(g['next_input_quantizers'][0]['coverage']['code_clipped_total'] > 0 for g in grids))
+        for i in (5,45):
+            self.assertFalse(states[i]['theoretical_compatibility_per_quantizer'][0]['decoded_output_interval_contained_in_input'])
+            self.assertEqual(0, grids[i]['next_input_quantizers'][0]['coverage']['code_clipped_total'])
+        for name, indices, count in [('qdq_p0',[3,7,11,24,26,27,31,34],11),('qnn_p0',[3,7,11,24,26,27,31,34],11),
+                ('qdq_p1_same_inputs',[26],1),('qnn_p1_same_inputs',[24,26,34],3),('qnn_p1_own_state',[24,26,34],3)]:
+            rows = json.loads((directory / 'observations' / (name+'.json')).read_text())['states']
+            self.assertEqual(48, len(rows))
+            self.assertTrue(all(s['finite_values'] == s['values'] for s in rows))
+            bad = [s for s in rows if s['next_input_quantizers'][0]['coverage']['code_clipped_total']]
+            self.assertEqual(indices, [s['state_index'] for s in bad])
+            self.assertEqual(count, sum(s['next_input_quantizers'][0]['coverage']['code_clipped_total'] for s in bad))
+            self.assertTrue(all(s['kind'] != 'recurrent' for s in bad))
+        p0 = json.loads((directory / 'observations/qdq_p0.json').read_text())['states']
+        p1 = json.loads((directory / 'observations/qdq_p1_same_inputs.json').read_text())['states']
+        example = p0[24]['next_input_quantizers'][0]['coverage']['first_clipped_examples'][0]
+        self.assertEqual([0,6053,0,3], example['next_input_coordinate']); self.assertEqual(67539, example['unclamped_code'])
+        self.assertEqual([0,5588,0,2], p1[26]['next_input_quantizers'][0]['coverage']['first_clipped_examples'][0]['next_input_coordinate'])
+
+    def test_persistent_state_range_retained_p0_and_pinned_sources(self) -> None:
+        directory = EXP / 'results/persistent-state-range-audit-20260910'
+        record = json.loads((directory / 'observations/qdq-p0-compression.json').read_text())
+        data = directory / 'observations/qdq-p0.outputs.pt.zst'
+        self.assertEqual(record['compressed_sha256'], sha(data))
+        digest, size = sha_zstd(data)
+        self.assertEqual((record['raw_sha256'], record['raw_bytes']), (digest, size))
+        self.assertEqual('a471368c8b319013c6b0827afb172fd69aabbc11f12bf7de90556af79a7c8bf2', digest)
+        metadata = json.loads((directory / 'metadata/metadata.json').read_text())
+        self.assertEqual('2d879235c4d4a47643378e3ec3739bd587d4b0a68b23097b8ba64092ce20ad86', metadata['graph_member_sha256'])
+        helper = json.loads((directory / 'observations/result.json').read_text())['audit_source']
+        self.assertEqual(helper['sha256'], sha(Path(helper['path'])))
+        self.assertFalse(list(directory.rglob('*.pte'))); self.assertFalse(list(directory.rglob('*.pt2')))
+        self.assertFalse(list(directory.rglob('__pycache__')))
+
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
             EXP / "protocol",
@@ -1053,6 +1119,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/conv-history-native-fullchain-20260910",
             EXP / "results/conv-history-sweep-readiness-20260910",
             EXP / "results/conv-history-native-sweep-20260910",
+            EXP / "results/persistent-state-range-audit-20260910",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():
