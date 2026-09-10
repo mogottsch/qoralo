@@ -443,6 +443,78 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(entry["raw_bytes"], recovered_bytes)
             self.assertTrue(entry["decompression_verified"])
 
+    def test_histogram_position_zero_improvement_remains_host_only(self) -> None:
+        directory = EXP / "results/host-histogram-precision-20260910"
+        result = json.loads((directory / "result.json").read_text())
+        report = json.loads((directory / "precision-comparison.json").read_text())
+        candidate = json.loads((directory / "histogram-hidden-comparison.json").read_text())
+        compile_result = json.loads((directory / "histogram-compile-result.json").read_text())
+        self.assertEqual("HistogramObserver", compile_result["activation_observer"])
+        self.assertEqual(4210, compile_result["delegated_nodes"])
+        self.assertEqual(4, compile_result["delegated_subgraphs"])
+        self.assertEqual({}, compile_result["non_delegated_tensor_compute"])
+        self.assertEqual(73, compile_result["forward_outputs"])
+        for flag in ("float_recurrence", "fp16_recurrence_island", "matmul_recurrence_reductions", "symmetric_activations"):
+            self.assertFalse(compile_result[flag])
+        self.assertEqual(0, candidate["token_position"])
+        self.assertEqual(248045, candidate["token_id"])
+        self.assertEqual(198, candidate["qdq_logits"]["argmax"])
+        self.assertEqual(198, candidate["qnn_x86_logits"]["argmax"])
+        self.assertEqual(24, report["hidden_layers_with_higher_cosine"])
+        self.assertTrue(report["all_outputs_finite"])
+        self.assertGreater(report["outputs"][0]["candidate_cosine"], 0.94)
+        self.assertLess(report["outputs"][0]["candidate_mean_abs"], 0.49)
+        self.assertGreater(report["outputs"][-1]["candidate_cosine"], 0.97)
+        self.assertLess(report["outputs"][1]["cosine_delta"], 0)  # Retain this regression.
+        self.assertFalse(result["full_174_token_histogram_replay_completed"])
+        self.assertFalse(result["physical_histogram_execution"])
+        self.assertFalse(result["campaign_ready"])
+        self.assertFalse(result["registry_eligible"])
+        self.assertTrue(result["current_physical_baseline"]["unchanged"])
+        self.assertEqual(
+            self.repaired_physical["deployed_artifacts"]["pte"]["sha256"],
+            result["current_physical_baseline"]["pte_sha256"],
+        )
+        manifest = json.loads((directory / "artifact-manifest.json").read_text())["files"]
+        self.assertEqual(result["compile"]["pte"]["sha256"], manifest["histogram_pte"]["sha256"])
+        for name in ("adapter_source", "compiler_source", "comparison_runner_source", "comparison_report_source", "input_ids"):
+            entry = manifest[name]
+            self.assertEqual(entry["sha256"], sha(EXP / entry["path"]))
+        self.assertEqual(
+            report["input_report_sha256"]["baseline"], sha(directory / "baseline/hidden-comparison.json")
+        )
+        self.assertEqual(
+            report["input_report_sha256"]["candidate"], sha(directory / "histogram-hidden-comparison.json")
+        )
+
+    def test_histogram_rejected_and_interrupted_routes_are_not_successes(self) -> None:
+        directory = EXP / "results/host-histogram-precision-20260910"
+        rejected = json.loads((directory / "rejected/result.json").read_text())
+        self.assertEqual(268, rejected["float"]["non_delegated_tensor_compute_count"])
+        self.assertEqual(143, rejected["fp16"]["non_delegated_tensor_compute_count"])
+        self.assertEqual("preprocess_failed", rejected["symmetric"]["status"])
+        interruption = json.loads((directory / "interrupted/app-priority.json").read_text())
+        self.assertEqual("app_priority_interruption_not_numerical_failure", interruption["reason"])
+        self.assertTrue(interruption["child_absent"])
+        self.assertFalse(interruption["automatic_restart"])
+        self.assertEqual(-15, interruption["supervisor_exit"]["exit_code"])
+        for phase in ("01-hidden-compile", "02-qdq", "02-qnn", "02-compare"):
+            outcome = json.loads((directory / "current" / phase / "exit.json").read_text())
+            self.assertEqual(0, outcome["exit_code"])
+            self.assertTrue(outcome["child_reaped"])
+
+    def test_histogram_compressed_evidence_recovers_exact_hashes(self) -> None:
+        directory = EXP / "results/host-histogram-precision-20260910"
+        manifest = json.loads((directory / "compression-manifest.json").read_text())
+        self.assertTrue(manifest["lossless"])
+        for entry in manifest["files"]:
+            compressed = directory / entry["compressed_path"]
+            self.assertEqual(entry["compressed_sha256"], sha(compressed))
+            recovered_sha, recovered_bytes = sha_zstd(compressed)
+            self.assertEqual(entry["raw_sha256"], recovered_sha)
+            self.assertEqual(entry["raw_bytes"], recovered_bytes)
+            self.assertTrue(entry["decompression_verified"])
+
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
             EXP / "protocol",
@@ -457,6 +529,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/host-qnn-broadcast-divergence-localization",
             EXP / "results/exact-qnn-explicit-broadcast-host-validation",
             EXP / "results/android-qnn-physical-viability-20260828-attempt-03",
+            EXP / "results/host-histogram-precision-20260910",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

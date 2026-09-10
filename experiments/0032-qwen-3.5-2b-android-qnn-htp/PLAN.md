@@ -2,7 +2,7 @@
 
 ## Status
 
-Active. The repaired exact route physically executes through QNN/HTP and now produces token 1206 (`To`) instead of token 0 (`!`). The obvious corruption symptom is removed, but physical output still differs from host W4A16 QDQ token 760 (`The`) and campaign readiness remains unproven.
+Active. The exact HistogramObserver/W4A16 host candidate improves all 24 hidden-layer cosines and final-logit agreement at position zero. Full-short replay and physical validation remain pending. The accepted physical baseline remains token 1206 (`To`) with its numerical-fidelity limitations unchanged.
 
 ## Completed
 
@@ -30,11 +30,13 @@ Active. The repaired exact route physically executes through QNN/HTP and now pro
 17. Recompiled the exact 24-layer W4A16 route with 120 delegated explicit expands and zero tensor-compute fallback. Revised-PTE QNN-x86 validation restores layer-0 recurrent cosine to 0.999829 and removes the 39,209-way logit saturation. A full simulator prompt is impractically slow and stopped after 30 tokens at one hour.
 18. Ran exactly one separately authorized repaired-PTE physical check. All 696 HTP graph calls completed and token 1206 (`To`) replaced the unrepaired token 0 (`!`), but it does not match host QDQ token 760 (`The`). Cleanup was independently verified before priority transferred away.
 
+19. Completed a fresh guarded HistogramObserver hidden-diagnostic compile after retaining the app-priority interruption. Four QNN subgraphs have zero tensor-compute fallback. Sequential position-zero QDQ/QNN-x86 comparison improves all 24 hidden cosines, final-logit cosine 0.433603→0.947168, and agrees on argmax 198. Rejected MatMul/float/FP16/symmetric branches remain documented.
+
 ## Current work
 
-1. Preserve the repaired PTE and strict phone preflight hashes.
-2. Do not use ADB or `phone.lock`; no retry or campaign is authorized.
-3. Keep residual QDQ-versus-physical drift and the one-token output ceiling explicit.
-4. Only after a separately agreed fidelity/output gate, prepare loaded-route multi-request reset/reuse and request a campaign handoff.
+1. Preserve physical baseline/preflight hashes and the new local-only diagnostic artifacts.
+2. Await Pi release for the full 174-token HistogramObserver QDQ replay, running serially with resource guards. Do not start it automatically.
+3. Do not use ADB or the phone without an explicit scheduled slot. This milestone does not establish full-prompt/physical fidelity or authorize a campaign.
+4. After the bounded precision decision and agreed follow-up gates, validate chunked-prefill state semantics/delegation and loaded-route reset/isolation before the canonical campaign.
 
 Do not use CPU fallback, borrow the 4B config, relabel direct Hexagon/GenieX evidence as QNN, or publish before the complete route satisfies the benchmark contract.

@@ -1,0 +1,219 @@
+{
+  "schema_version": 1,
+  "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
+  "evidence_class": "host_exact_histogram_w4a16_same_position_precision_validation",
+  "status": "positive_position_zero_precision_candidate_full_prompt_and_physical_pending",
+  "model": {
+    "source": "Qwen/Qwen3.5-2B",
+    "revision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "checkpoint": {
+      "path": ".local/qwen35-2b-meta.pt",
+      "bytes": 3763756713,
+      "sha256": "a2640184f26ce851c3bf305fd77f4dac6af3381025a4ace1d431e7d685c70e86"
+    },
+    "runtime": "ExecuTorch 1.2.0 Qualcomm QNN delegate",
+    "executorch_git": "0b0e2c5cdd67c8b4396a46ea1d1aa72ffb0128d7",
+    "qairt": "2.49.0.260730"
+  },
+  "precision_change": {
+    "baseline_activation_observer": "MinMaxObserver",
+    "candidate_activation_observer": "HistogramObserver",
+    "weight_recipe": "W4 per-channel Linear/Conv weights, unchanged source checkpoint and quantization configuration",
+    "activation_bit_width": 16,
+    "recurrence_quantized": true,
+    "experimental_float_flags_enabled": false,
+    "reference_boundary": "Each route is compared to its own QDQ graph; changing calibration changes the QDQ reference as well as QNN encodings.",
+    "decision": "Retain HistogramObserver as the next host-validation candidate; do not promote the physical baseline yet."
+  },
+  "comparison_input": {
+    "position": 0,
+    "token_id": 248045,
+    "full_prompt_tokens": 174,
+    "sequence_length": 1,
+    "context": 4096,
+    "all_state_inputs": "zero",
+    "attention_mask": "-65504.0 everywhere except final current-token slot at 0.0",
+    "token_ids_sha256": "dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4",
+    "canonical_short_sha256": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae",
+    "params_sha256": "63597e7233e5310974603b72cb32b14b09ccd5461e1d1540d4049327d6d5b642"
+  },
+  "compile": {
+    "target": "SM8550/HTP v73",
+    "delegated_subgraphs": 4,
+    "delegated_nodes": 4210,
+    "non_delegated_tensor_compute": {},
+    "forward_outputs": 73,
+    "finalize_status_0x0": 4,
+    "pte": {
+      "path": ".local/diagnosis/restart-20260910T083327Z/01-hidden-compile/diagnostic-w4a16-qnn.pte",
+      "bytes": 1995463416,
+      "sha256": "7f30be3d57b601af0804cdd50dd8968e271d673b710ea249a754fcd2f4ff3fea"
+    },
+    "qdq": {
+      "path": ".local/diagnosis/restart-20260910T083327Z/01-hidden-compile/diagnostic-w4a16-qdq.pt2",
+      "bytes": 13645661902,
+      "sha256": "30799090d14a42c92ea804a2763df55ff231ba232653d96484324ad40c492364"
+    },
+    "minmax_diagnostic_pte": {
+      "path": ".local/diagnosis/layer-hidden/diagnostic-w4a16-qnn.pte",
+      "bytes": 1994761992,
+      "sha256": "08d7aca20f0b3422c0ed03da7c8344e407a7cc64e7d96ccfffc28371c858d44e"
+    },
+    "pte_size_difference_bytes": 701424,
+    "calibration": {
+      "last_argmax": 21365,
+      "last_logits_finite": true,
+      "seconds": 658.8963086209997,
+      "tokens": 174
+    },
+    "qnn_compile_seconds": 417.945945358,
+    "minmax_qnn_compile_seconds": 482.568202261,
+    "timing_boundary": "Observed host preparation durations under different host load; not a speedup benchmark."
+  },
+  "same_position_result": {
+    "logits": {
+      "output_index": 0,
+      "kind": "logits",
+      "layer": null,
+      "layer_type": null,
+      "baseline_cosine": 0.4336029887199402,
+      "candidate_cosine": 0.9471681118011475,
+      "cosine_delta": 0.5135651230812073,
+      "baseline_max_abs": 10.63991928100586,
+      "candidate_max_abs": 2.895951271057129,
+      "baseline_mean_abs": 1.70600426197052,
+      "candidate_mean_abs": 0.4832112491130829,
+      "all_finite": true
+    },
+    "argmax_before": {
+      "qdq_logits": 62,
+      "qnn_x86_logits": 198
+    },
+    "argmax_after": {
+      "qdq_logits": 198,
+      "qnn_x86_logits": 198
+    },
+    "hidden_layers_compared": 24,
+    "hidden_layers_with_higher_cosine": 24,
+    "layer0_hidden": {
+      "output_index": 49,
+      "kind": "hidden_after_layer",
+      "layer": 0,
+      "layer_type": "linear_attention",
+      "baseline_cosine": 0.987449049949646,
+      "candidate_cosine": 0.9927767515182495,
+      "cosine_delta": 0.005327701568603516,
+      "baseline_max_abs": 0.02616538107395172,
+      "candidate_max_abs": 0.028612196445465088,
+      "baseline_mean_abs": 0.005307269282639027,
+      "candidate_mean_abs": 0.0039069391787052155,
+      "all_finite": true
+    },
+    "layer23_hidden": {
+      "output_index": 72,
+      "kind": "hidden_after_layer",
+      "layer": 23,
+      "layer_type": "full_attention",
+      "baseline_cosine": 0.4918389320373535,
+      "candidate_cosine": 0.9714460968971252,
+      "cosine_delta": 0.47960716485977173,
+      "baseline_max_abs": 4.271693229675293,
+      "candidate_max_abs": 3.150599479675293,
+      "baseline_mean_abs": 0.6726134419441223,
+      "candidate_mean_abs": 0.12377997487783432,
+      "all_finite": true
+    },
+    "all_73_outputs_finite": true,
+    "state_a_cosines_improved": 22,
+    "state_b_cosines_improved": 23,
+    "not_every_state_or_error_metric_improved": true,
+    "layer0_recurrent_state": {
+      "output_index": 1,
+      "kind": "state_a",
+      "layer": 0,
+      "layer_type": "linear_attention",
+      "baseline_cosine": 0.9998289346694946,
+      "candidate_cosine": 0.9997884631156921,
+      "cosine_delta": -4.0471553802490234e-05,
+      "baseline_max_abs": 0.013593435287475586,
+      "candidate_max_abs": 0.014846500009298325,
+      "baseline_mean_abs": 3.811338683590293e-05,
+      "candidate_mean_abs": 3.862285666400567e-05,
+      "all_finite": true
+    }
+  },
+  "prior_separate_component_diagnostics": {
+    "scope": "2026-08-28 layer0-attention diagnostic PTE, not new internal taps in the 73-output PTE",
+    "minmax_report": "prior-components/minmax-attention.json",
+    "histogram_report": "prior-components/histogram-attention.json",
+    "recurrence_core_cosine_before": 0.9993327260017395,
+    "recurrence_core_cosine_after": 0.9995265603065491,
+    "gated_norm_cosine_before": 0.9936006665229797,
+    "gated_norm_cosine_after": 0.9967184662818909
+  },
+  "execution_lifecycle": {
+    "phases": {
+      "01-hidden-compile": {
+        "exit_code": 0,
+        "termination_reason": "process_exit",
+        "elapsed_seconds": 1332.7852892359997,
+        "child_pid": 280264,
+        "child_reaped": true
+      },
+      "02-qdq": {
+        "exit_code": 0,
+        "termination_reason": "process_exit",
+        "elapsed_seconds": 60.00784751500032,
+        "child_pid": 293308,
+        "child_reaped": true
+      },
+      "02-qnn": {
+        "exit_code": 0,
+        "termination_reason": "process_exit",
+        "elapsed_seconds": 140.00907456000004,
+        "child_pid": 293992,
+        "child_reaped": true
+      },
+      "02-compare": {
+        "exit_code": 0,
+        "termination_reason": "process_exit",
+        "elapsed_seconds": 10.001082293999389,
+        "child_pid": 295637,
+        "child_reaped": true
+      }
+    },
+    "no_phase_overlap": true,
+    "owned_process_groups_absent": true,
+    "thread_environment": {
+      "OMP_NUM_THREADS": 4,
+      "MKL_NUM_THREADS": 4,
+      "OPENBLAS_NUM_THREADS": 4
+    },
+    "priority": {
+      "nice": 15,
+      "ionice_class": 2,
+      "ionice_level": 7
+    },
+    "resource_guard": "reproduction/guard.py",
+    "app_priority_interruption_preserved": "interrupted/app-priority.json",
+    "interruption_is_numerical_failure": false
+  },
+  "rejected_variants": "rejected/result.json",
+  "current_physical_baseline": {
+    "pte_sha256": "23ac8abd7e39b596d62bdc6b098a3e61fe0688bf6d1f4d537959e13492d2c506",
+    "unchanged": true,
+    "last_physical_result": "results/android-qnn-physical-viability-20260828-attempt-03/result.json"
+  },
+  "full_174_token_histogram_replay_completed": false,
+  "physical_histogram_execution": false,
+  "campaign_ready": false,
+  "registry_eligible": false,
+  "claim_limits": [
+    "This is an exact-checkpoint host compile and same-position QDQ/QNN-x86 comparison, not physical HTP execution.",
+    "All 24 hidden cosines and final-logit agreement improve, but each route uses its own quantized reference; this is not equivalence to the MinMax graph or original FP32 model.",
+    "Not every state/error metric improves; the layer0 recurrent-state cosine is slightly lower.",
+    "The saved MinMax token760 and physical token1206 are after input position173 and are not directly comparable to these position0 argmax values.",
+    "No full HistogramObserver prompt replay, generated-text sanity, Android performance, chunked-prefill, loaded-route isolation, or campaign claim."
+  ],
+  "next_gate": "Await Pi release for one serial full174-token HistogramObserver QDQ replay. No full replay or phone work is currently authorized."
+}

@@ -1,0 +1,39 @@
+{
+  "float": {
+    "status": "rejected_fallback",
+    "delegated_subgraphs": 129,
+    "non_delegated_tensor_compute": {
+      "aten_add_tensor": 35,
+      "aten_mul_tensor": 161,
+      "aten_select_copy_int": 18,
+      "aten_sigmoid_default": 36,
+      "aten_unsqueeze_copy_default": 18
+    },
+    "non_delegated_tensor_compute_count": 268,
+    "result_path": "rejected/float-compile-result.json",
+    "count_correction": "The earlier informal 214 total was incorrect; the retained operator-count map sums to 268."
+  },
+  "fp16": {
+    "status": "rejected_fallback",
+    "delegated_subgraphs": 40,
+    "non_delegated_tensor_compute": {
+      "dim_order_ops__to_dim_order_copy_default": 143
+    },
+    "non_delegated_tensor_compute_count": 143,
+    "result_path": "rejected/fp16-compile-result.json"
+  },
+  "matmul": {
+    "status": "compiled",
+    "delegated_subgraphs": 4,
+    "non_delegated_tensor_compute": {},
+    "non_delegated_tensor_compute_count": 0,
+    "result_path": "rejected/matmul-compile-result.json",
+    "decision": "Not selected: gated-core cosine worsened from 0.993601 to 0.985771; quantized-reference argmax changed from 62 to 96179; see matmul-comparison.json."
+  },
+  "symmetric": {
+    "status": "preprocess_failed",
+    "terminal_error": "InsertIOQDQ KeyError for quantized_decomposed.dequantize_per_channel.default",
+    "pte_written": false,
+    "raw_log": "rejected/symmetric-compile.stderr.log.zst"
+  }
+}

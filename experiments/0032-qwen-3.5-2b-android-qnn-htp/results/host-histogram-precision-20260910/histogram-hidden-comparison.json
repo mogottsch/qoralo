@@ -1,0 +1,3740 @@
+{
+  "claim_limits": [
+    "QNN x86 backend simulation is host localization evidence, not physical HTP evidence.",
+    "Position zero uses zero state, so this comparison does not test cross-token state transport."
+  ],
+  "evidence_class": "host_qnn_x86_first_token_divergence_localization",
+  "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
+  "outputs": [
+    {
+      "comparison": {
+        "actual_l2": 890.3385009765625,
+        "cosine": 0.9471681118011475,
+        "max_abs": 2.895951271057129,
+        "mean_abs": 0.4832112491130829,
+        "reference_l2": 927.190185546875
+      },
+      "kind": "logits",
+      "layer": null,
+      "layer_type": null,
+      "output_index": 0,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 14.42995548248291,
+        "max_count": 1,
+        "mean": -0.1966336965560913,
+        "min": -7.868620872497559,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 248320,
+        "shape": [
+          1,
+          1,
+          248320
+        ],
+        "std": 1.8502357006072998,
+        "zero_count": 29
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 13.513111114501953,
+        "max_count": 1,
+        "mean": 0.12236654758453369,
+        "min": -7.48514986038208,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 248320,
+        "shape": [
+          1,
+          1,
+          248320
+        ],
+        "std": 1.7825067043304443,
+        "zero_count": 227
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 4.158112049102783,
+        "cosine": 0.9997884631156921,
+        "max_abs": 0.014846500009298325,
+        "mean_abs": 3.862285666400567e-05,
+        "reference_l2": 4.158241271972656
+      },
+      "kind": "state_a",
+      "layer": 0,
+      "layer_type": "linear_attention",
+      "output_index": 1,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.6281806230545044,
+        "max_count": 2,
+        "mean": 0.00010821386968018487,
+        "min": -1.2889463901519775,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.008120919577777386,
+        "zero_count": 149815
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.6281806826591492,
+        "max_count": 2,
+        "mean": 0.0001097887143259868,
+        "min": -1.2858613729476929,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.008120641112327576,
+        "zero_count": 144544
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 0.8326504230499268,
+        "cosine": 0.9761248826980591,
+        "max_abs": 0.10939639061689377,
+        "mean_abs": 3.62964128726162e-05,
+        "reference_l2": 0.8766903281211853
+      },
+      "kind": "state_a",
+      "layer": 1,
+      "layer_type": "linear_attention",
+      "output_index": 2,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.24477767944335938,
+        "max_count": 1,
+        "mean": -1.8658523686099215e-06,
+        "min": -0.2853429913520813,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.0017123045399785042,
+        "zero_count": 187069
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.24801138043403625,
+        "max_count": 1,
+        "mean": -4.9055515773943625e-06,
+        "min": -0.27884671092033386,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.0016262887511402369,
+        "zero_count": 164690
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 0.6105237603187561,
+        "cosine": 0.9812208414077759,
+        "max_abs": 0.04740837588906288,
+        "mean_abs": 4.1368599340785295e-05,
+        "reference_l2": 0.6019814014434814
+      },
+      "kind": "state_a",
+      "layer": 2,
+      "layer_type": "linear_attention",
+      "output_index": 3,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.12001548707485199,
+        "max_count": 1,
+        "mean": 6.909031071700156e-07,
+        "min": -0.1511603742837906,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.0011757675092667341,
+        "zero_count": 153445
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.12933649122714996,
+        "max_count": 1,
+        "mean": 4.422161509864964e-06,
+        "min": -0.16041706502437592,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.0011924568098038435,
+        "zero_count": 127717
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 32.29598617553711,
+        "cosine": 0.9932178854942322,
+        "max_abs": 0.6721492409706116,
+        "mean_abs": 0.1254580169916153,
+        "reference_l2": 32.18428421020508
+      },
+      "kind": "state_a",
+      "layer": 3,
+      "layer_type": "full_attention",
+      "output_index": 4,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 10.028990745544434,
+        "max_count": 1,
+        "mean": -0.04277849942445755,
+        "min": -10.368523597717285,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 512,
+        "shape": [
+          1,
+          2,
+          256,
+          1
+        ],
+        "std": 1.4231047630310059,
+        "zero_count": 0
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 10.194262504577637,
+        "max_count": 1,
+        "mean": -0.04802282899618149,
+        "min": -10.255806922912598,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 512,
+        "shape": [
+          1,
+          2,
+          256,
+          1
+        ],
+        "std": 1.4278814792633057,
+        "zero_count": 1
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 5.0637431144714355,
+        "cosine": 0.9030794501304626,
+        "max_abs": 1.0048410892486572,
+        "mean_abs": 0.0003042119205929339,
+        "reference_l2": 3.5357699394226074
+      },
+      "kind": "state_a",
+      "layer": 4,
+      "layer_type": "linear_attention",
+      "output_index": 5,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.35064423084259033,
+        "max_count": 8,
+        "mean": 2.8941305572516285e-05,
+        "min": -2.0544025897979736,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.0069058542139828205,
+        "zero_count": 204309
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.3506442904472351,
+        "max_count": 9,
+        "mean": 7.842745253583416e-05,
+        "min": -3.059243679046631,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.00988981407135725,
+        "zero_count": 185315
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 2.276210308074951,
+        "cosine": 0.9844731092453003,
+        "max_abs": 0.07983037829399109,
+        "mean_abs": 0.00015390383487101644,
+        "reference_l2": 2.329160451889038
+      },
+      "kind": "state_a",
+      "layer": 5,
+      "layer_type": "linear_attention",
+      "output_index": 6,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.21228919923305511,
+        "max_count": 6,
+        "mean": 2.2962289222050458e-05,
+        "min": -0.3346027731895447,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.004549121484160423,
+        "zero_count": 161642
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.2122892290353775,
+        "max_count": 5,
+        "mean": 2.8951330023119226e-05,
+        "min": -0.32052621245384216,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.00444567296653986,
+        "zero_count": 150032
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 1.0192482471466064,
+        "cosine": 0.9727146029472351,
+        "max_abs": 0.06829781830310822,
+        "mean_abs": 6.64272956782952e-05,
+        "reference_l2": 1.013013243675232
+      },
+      "kind": "state_a",
+      "layer": 6,
+      "layer_type": "linear_attention",
+      "output_index": 7,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.18088097870349884,
+        "max_count": 1,
+        "mean": -7.035198450466851e-07,
+        "min": -0.40450549125671387,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.0019785743206739426,
+        "zero_count": 188442
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.1784534901380539,
+        "max_count": 1,
+        "mean": 1.0588394161459291e-07,
+        "min": -0.4486923813819885,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.0019907669629901648,
+        "zero_count": 152583
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 34.37522506713867,
+        "cosine": 0.9960812330245972,
+        "max_abs": 0.45908164978027344,
+        "mean_abs": 0.10606283694505692,
+        "reference_l2": 34.3465461730957
+      },
+      "kind": "state_a",
+      "layer": 7,
+      "layer_type": "full_attention",
+      "output_index": 8,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 8.659771919250488,
+        "max_count": 1,
+        "mean": -0.059092484414577484,
+        "min": -15.016722679138184,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 512,
+        "shape": [
+          1,
+          2,
+          256,
+          1
+        ],
+        "std": 1.5182501077651978,
+        "zero_count": 0
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 8.831982612609863,
+        "max_count": 1,
+        "mean": -0.06521481275558472,
+        "min": -15.064679145812988,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 512,
+        "shape": [
+          1,
+          2,
+          256,
+          1
+        ],
+        "std": 1.5192686319351196,
+        "zero_count": 0
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 1.2241311073303223,
+        "cosine": 0.9652857184410095,
+        "max_abs": 0.0622456818819046,
+        "mean_abs": 0.00013508698611985892,
+        "reference_l2": 1.2380534410476685
+      },
+      "kind": "state_a",
+      "layer": 8,
+      "layer_type": "linear_attention",
+      "output_index": 9,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.1838698536157608,
+        "max_count": 1,
+        "mean": -1.4152699804981239e-05,
+        "min": -0.11283763498067856,
+        "min_count": 9,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.0024180624168366194,
+        "zero_count": 159259
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.1520533412694931,
+        "max_count": 1,
+        "mean": 2.7774356112786336e-06,
+        "min": -0.11283762753009796,
+        "min_count": 6,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.0023909113369882107,
+        "zero_count": 147974
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 0.9521611928939819,
+        "cosine": 0.9708908796310425,
+        "max_abs": 0.05191478133201599,
+        "mean_abs": 6.835071690147743e-05,
+        "reference_l2": 1.0776768922805786
+      },
+      "kind": "state_a",
+      "layer": 9,
+      "layer_type": "linear_attention",
+      "output_index": 10,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.1458798199892044,
+        "max_count": 1,
+        "mean": -1.3640546967508271e-06,
+        "min": -0.24607329070568085,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.002104844432324171,
+        "zero_count": 199358
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.14372512698173523,
+        "max_count": 1,
+        "mean": 2.298785830134875e-06,
+        "min": -0.21816320717334747,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.0018596951849758625,
+        "zero_count": 184260
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 0.6840968728065491,
+        "cosine": 0.9439404010772705,
+        "max_abs": 0.04712282121181488,
+        "mean_abs": 6.40055222902447e-05,
+        "reference_l2": 0.7265334725379944
+      },
+      "kind": "state_a",
+      "layer": 10,
+      "layer_type": "linear_attention",
+      "output_index": 11,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.12358368933200836,
+        "max_count": 3,
+        "mean": 5.308692379912827e-06,
+        "min": -0.14038147032260895,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.0014190227957442403,
+        "zero_count": 174105
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.12358369678258896,
+        "max_count": 4,
+        "mean": 7.539787929999875e-06,
+        "min": -0.11232065409421921,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.0013361256569623947,
+        "zero_count": 155459
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 33.77073287963867,
+        "cosine": 0.9764191508293152,
+        "max_abs": 1.1990458965301514,
+        "mean_abs": 0.25184109807014465,
+        "reference_l2": 34.22697448730469
+      },
+      "kind": "state_a",
+      "layer": 11,
+      "layer_type": "full_attention",
+      "output_index": 12,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 6.95817756652832,
+        "max_count": 1,
+        "mean": 0.04997541010379791,
+        "min": -10.25920581817627,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 512,
+        "shape": [
+          1,
+          2,
+          256,
+          1
+        ],
+        "std": 1.513285517692566,
+        "zero_count": 2
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 7.3916826248168945,
+        "max_count": 1,
+        "mean": 0.04244475066661835,
+        "min": -9.995076179504395,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 512,
+        "shape": [
+          1,
+          2,
+          256,
+          1
+        ],
+        "std": 1.493325114250183,
+        "zero_count": 2
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 1.0009047985076904,
+        "cosine": 0.9193384647369385,
+        "max_abs": 0.06342314183712006,
+        "mean_abs": 0.00011694247950799763,
+        "reference_l2": 1.0248528718948364
+      },
+      "kind": "state_a",
+      "layer": 12,
+      "layer_type": "linear_attention",
+      "output_index": 13,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.16779255867004395,
+        "max_count": 1,
+        "mean": 3.6116878618486226e-05,
+        "min": -0.2593553960323334,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.002001365413889289,
+        "zero_count": 214851
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.16779257357120514,
+        "max_count": 1,
+        "mean": 5.028800296713598e-05,
+        "min": -0.2648439109325409,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.0019542761147022247,
+        "zero_count": 209057
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 0.41447606682777405,
+        "cosine": 0.9534913897514343,
+        "max_abs": 0.032575931400060654,
+        "mean_abs": 3.463020038907416e-05,
+        "reference_l2": 0.42348623275756836
+      },
+      "kind": "state_a",
+      "layer": 13,
+      "layer_type": "linear_attention",
+      "output_index": 14,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.1363908052444458,
+        "max_count": 1,
+        "mean": 4.337554855737835e-06,
+        "min": -0.09026944637298584,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.0008271230035461485,
+        "zero_count": 168243
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.136390820145607,
+        "max_count": 1,
+        "mean": 8.50338619784452e-06,
+        "min": -0.0798678770661354,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.0008094885270111263,
+        "zero_count": 155015
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 0.4092372953891754,
+        "cosine": 0.9095773696899414,
+        "max_abs": 0.04041100665926933,
+        "mean_abs": 7.076163456076756e-05,
+        "reference_l2": 0.39947569370269775
+      },
+      "kind": "state_a",
+      "layer": 14,
+      "layer_type": "linear_attention",
+      "output_index": 15,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.06842600554227829,
+        "max_count": 1,
+        "mean": -5.556159976549679e-09,
+        "min": -0.06383948028087616,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.000780204136390239,
+        "zero_count": 164366
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.08221658319234848,
+        "max_count": 1,
+        "mean": 4.093178631592309e-06,
+        "min": -0.0904599204659462,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.0007992761675268412,
+        "zero_count": 151661
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 21.853723526000977,
+        "cosine": 0.9453399777412415,
+        "max_abs": 1.3311254978179932,
+        "mean_abs": 0.2550886869430542,
+        "reference_l2": 23.203577041625977
+      },
+      "kind": "state_a",
+      "layer": 15,
+      "layer_type": "full_attention",
+      "output_index": 16,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 4.012916564941406,
+        "max_count": 1,
+        "mean": -0.01837746426463127,
+        "min": -3.6173062324523926,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 512,
+        "shape": [
+          1,
+          2,
+          256,
+          1
+        ],
+        "std": 1.0263010263442993,
+        "zero_count": 0
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 3.55117130279541,
+        "max_count": 1,
+        "mean": -0.027939572930336,
+        "min": -3.429722309112549,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 512,
+        "shape": [
+          1,
+          2,
+          256,
+          1
+        ],
+        "std": 0.9663472771644592,
+        "zero_count": 1
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 2.018159866333008,
+        "cosine": 0.9524860382080078,
+        "max_abs": 0.044387929141521454,
+        "mean_abs": 0.0004307009221520275,
+        "reference_l2": 2.2251861095428467
+      },
+      "kind": "state_a",
+      "layer": 16,
+      "layer_type": "linear_attention",
+      "output_index": 17,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.10571841895580292,
+        "max_count": 1,
+        "mean": 0.00025003007613122463,
+        "min": -0.15439949929714203,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.0043389336206018925,
+        "zero_count": 127436
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.09820545464754105,
+        "max_count": 1,
+        "mean": 0.0002136554103344679,
+        "min": -0.12848736345767975,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.003935958258807659,
+        "zero_count": 108985
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 2.828824520111084,
+        "cosine": 0.9480540156364441,
+        "max_abs": 0.11541160941123962,
+        "mean_abs": 0.0006243694224394858,
+        "reference_l2": 3.031137466430664
+      },
+      "kind": "state_a",
+      "layer": 17,
+      "layer_type": "linear_attention",
+      "output_index": 18,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.29888299107551575,
+        "max_count": 1,
+        "mean": 0.0005116199026815593,
+        "min": -0.16847285628318787,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.00589807890355587,
+        "zero_count": 119345
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.29833927750587463,
+        "max_count": 1,
+        "mean": 0.00048290303675457835,
+        "min": -0.18555577099323273,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.005503946449607611,
+        "zero_count": 98655
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 3.8497934341430664,
+        "cosine": 0.9706226587295532,
+        "max_abs": 0.0929945558309555,
+        "mean_abs": 0.0008208964136429131,
+        "reference_l2": 4.148355960845947
+      },
+      "kind": "state_a",
+      "layer": 18,
+      "layer_type": "linear_attention",
+      "output_index": 19,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.4312191903591156,
+        "max_count": 1,
+        "mean": 0.0012534830020740628,
+        "min": -0.2005697339773178,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.008004821836948395,
+        "zero_count": 98598
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.3858700692653656,
+        "max_count": 1,
+        "mean": 0.0011895037023350596,
+        "min": -0.19586260616779327,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.007424596231430769,
+        "zero_count": 79628
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 23.61367416381836,
+        "cosine": 0.9711096882820129,
+        "max_abs": 0.9808344841003418,
+        "mean_abs": 0.20836715400218964,
+        "reference_l2": 25.197484970092773
+      },
+      "kind": "state_a",
+      "layer": 19,
+      "layer_type": "full_attention",
+      "output_index": 20,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 4.710613250732422,
+        "max_count": 1,
+        "mean": -0.02025515027344227,
+        "min": -6.392807960510254,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 512,
+        "shape": [
+          1,
+          2,
+          256,
+          1
+        ],
+        "std": 1.1144866943359375,
+        "zero_count": 0
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 4.2616496086120605,
+        "max_count": 1,
+        "mean": -0.012663492932915688,
+        "min": -5.841213703155518,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 512,
+        "shape": [
+          1,
+          2,
+          256,
+          1
+        ],
+        "std": 1.0445306301116943,
+        "zero_count": 1
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 3.453742027282715,
+        "cosine": 0.9709497690200806,
+        "max_abs": 0.0822104960680008,
+        "mean_abs": 0.0006759269745089114,
+        "reference_l2": 3.59761643409729
+      },
+      "kind": "state_a",
+      "layer": 20,
+      "layer_type": "linear_attention",
+      "output_index": 21,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.3606194257736206,
+        "max_count": 1,
+        "mean": 0.0008208519429899752,
+        "min": -0.17327438294887543,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.00697864918038249,
+        "zero_count": 74209
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.3697100579738617,
+        "max_count": 1,
+        "mean": 0.0007693092338740826,
+        "min": -0.1607847362756729,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.006701734848320484,
+        "zero_count": 67737
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 2.4732115268707275,
+        "cosine": 0.9602923393249512,
+        "max_abs": 0.08259124308824539,
+        "mean_abs": 0.000538546999450773,
+        "reference_l2": 2.485517978668213
+      },
+      "kind": "state_a",
+      "layer": 21,
+      "layer_type": "linear_attention",
+      "output_index": 22,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.24466969072818756,
+        "max_count": 1,
+        "mean": 0.00030306988628581166,
+        "min": -0.16558901965618134,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.004845140967518091,
+        "zero_count": 66273
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.21924565732479095,
+        "max_count": 1,
+        "mean": 0.00033516043913550675,
+        "min": -0.13573051989078522,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.004818941466510296,
+        "zero_count": 49465
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 1.6376619338989258,
+        "cosine": 0.9607480764389038,
+        "max_abs": 0.05214900150895119,
+        "mean_abs": 0.0002693661954253912,
+        "reference_l2": 1.5606086254119873
+      },
+      "kind": "state_a",
+      "layer": 22,
+      "layer_type": "linear_attention",
+      "output_index": 23,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.25737419724464417,
+        "max_count": 1,
+        "mean": 1.7735139408614486e-05,
+        "min": -0.1832485795021057,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.0030480411369353533,
+        "zero_count": 77158
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.2510291039943695,
+        "max_count": 1,
+        "mean": 2.246495569124818e-05,
+        "min": -0.20955440402030945,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 262144,
+        "shape": [
+          1,
+          16,
+          128,
+          128
+        ],
+        "std": 0.0031985160894691944,
+        "zero_count": 59450
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 25.456947326660156,
+        "cosine": 0.9729828238487244,
+        "max_abs": 0.8579983711242676,
+        "mean_abs": 0.20247015357017517,
+        "reference_l2": 25.22179412841797
+      },
+      "kind": "state_a",
+      "layer": 23,
+      "layer_type": "full_attention",
+      "output_index": 24,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 5.504977226257324,
+        "max_count": 1,
+        "mean": 0.0055608488619327545,
+        "min": -6.577232360839844,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 512,
+        "shape": [
+          1,
+          2,
+          256,
+          1
+        ],
+        "std": 1.1157325506210327,
+        "zero_count": 2
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 4.989401817321777,
+        "max_count": 1,
+        "mean": 0.021407170221209526,
+        "min": -6.870782852172852,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 512,
+        "shape": [
+          1,
+          2,
+          256,
+          1
+        ],
+        "std": 1.1259450912475586,
+        "zero_count": 4
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 113.41484069824219,
+        "cosine": 0.9999998211860657,
+        "max_abs": 0.0032706111669540405,
+        "mean_abs": 0.00010151440073968843,
+        "reference_l2": 113.42107391357422
+      },
+      "kind": "state_b",
+      "layer": 0,
+      "layer_type": "linear_attention",
+      "output_index": 25,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 23.721895217895508,
+        "max_count": 1,
+        "mean": -0.003483962267637253,
+        "min": -13.68187141418457,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.7235057950019836,
+        "zero_count": 18447
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 23.72189712524414,
+        "max_count": 1,
+        "mean": -0.0035460572689771652,
+        "min": -13.681051254272461,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.7234655022621155,
+        "zero_count": 18447
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 80.01887512207031,
+        "cosine": 0.9954560995101929,
+        "max_abs": 0.5541768074035645,
+        "mean_abs": 0.01901012659072876,
+        "reference_l2": 80.01010131835938
+      },
+      "kind": "state_b",
+      "layer": 1,
+      "layer_type": "linear_attention",
+      "output_index": 26,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 12.95787525177002,
+        "max_count": 1,
+        "mean": -0.0031794814858585596,
+        "min": -11.148820877075195,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.5103753805160522,
+        "zero_count": 18435
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 13.281389236450195,
+        "max_count": 1,
+        "mean": -0.00323023390956223,
+        "min": -11.329436302185059,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.5104316473007202,
+        "zero_count": 18443
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 82.26129150390625,
+        "cosine": 0.9936233162879944,
+        "max_abs": 0.7654889822006226,
+        "mean_abs": 0.023228557780385017,
+        "reference_l2": 82.39698791503906
+      },
+      "kind": "state_b",
+      "layer": 2,
+      "layer_type": "linear_attention",
+      "output_index": 27,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 14.299504280090332,
+        "max_count": 1,
+        "mean": -0.003808126552030444,
+        "min": -10.074837684631348,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.5255976319313049,
+        "zero_count": 18433
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 14.431733131408691,
+        "max_count": 1,
+        "mean": -0.004072833806276321,
+        "min": -9.971024513244629,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.52472984790802,
+        "zero_count": 18440
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 16.07269287109375,
+        "cosine": 0.9883638620376587,
+        "max_abs": 0.3702585995197296,
+        "mean_abs": 0.08671171963214874,
+        "reference_l2": 16.32548713684082
+      },
+      "kind": "state_b",
+      "layer": 3,
+      "layer_type": "full_attention",
+      "output_index": 28,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 2.0865302085876465,
+        "max_count": 1,
+        "mean": -0.013949595391750336,
+        "min": -4.5450005531311035,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 512,
+        "shape": [
+          1,
+          2,
+          1,
+          256
+        ],
+        "std": 0.7220620512962341,
+        "zero_count": 0
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 2.0458390712738037,
+        "max_count": 1,
+        "mean": -0.014719340950250626,
+        "min": -4.434864521026611,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 512,
+        "shape": [
+          1,
+          2,
+          1,
+          256
+        ],
+        "std": 0.7108613848686218,
+        "zero_count": 2
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 145.61752319335938,
+        "cosine": 0.9931046962738037,
+        "max_abs": 1.8651375770568848,
+        "mean_abs": 0.04231889173388481,
+        "reference_l2": 148.89268493652344
+      },
+      "kind": "state_b",
+      "layer": 4,
+      "layer_type": "linear_attention",
+      "output_index": 29,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 27.320920944213867,
+        "max_count": 1,
+        "mean": 0.01000091340392828,
+        "min": -16.34673309326172,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.9497356414794922,
+        "zero_count": 18437
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 27.320924758911133,
+        "max_count": 1,
+        "mean": 0.010278620757162571,
+        "min": -15.915932655334473,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.9288390874862671,
+        "zero_count": 18438
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 125.87307739257812,
+        "cosine": 0.9866806864738464,
+        "max_abs": 1.9928059577941895,
+        "mean_abs": 0.05214990675449371,
+        "reference_l2": 131.54925537109375
+      },
+      "kind": "state_b",
+      "layer": 5,
+      "layer_type": "linear_attention",
+      "output_index": 30,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 11.182333946228027,
+        "max_count": 1,
+        "mean": 0.005987992510199547,
+        "min": -11.402573585510254,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.8391324281692505,
+        "zero_count": 18433
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 10.133034706115723,
+        "max_count": 1,
+        "mean": 0.004777874797582626,
+        "min": -11.045263290405273,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.8029312491416931,
+        "zero_count": 18440
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 116.29911804199219,
+        "cosine": 0.9892216920852661,
+        "max_abs": 1.255927562713623,
+        "mean_abs": 0.042336925864219666,
+        "reference_l2": 115.21379089355469
+      },
+      "kind": "state_b",
+      "layer": 6,
+      "layer_type": "linear_attention",
+      "output_index": 31,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 16.3298282623291,
+        "max_count": 1,
+        "mean": -0.0008143422310240567,
+        "min": -13.50623607635498,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.7349490523338318,
+        "zero_count": 18434
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 16.497793197631836,
+        "max_count": 1,
+        "mean": -0.0026663809549063444,
+        "min": -13.506235122680664,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.7418678998947144,
+        "zero_count": 18436
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 23.497655868530273,
+        "cosine": 0.9933536052703857,
+        "max_abs": 0.36929816007614136,
+        "mean_abs": 0.0938652753829956,
+        "reference_l2": 23.36542320251465
+      },
+      "kind": "state_b",
+      "layer": 7,
+      "layer_type": "full_attention",
+      "output_index": 32,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 15.535654067993164,
+        "max_count": 1,
+        "mean": -0.0029587731696665287,
+        "min": -5.670018196105957,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 512,
+        "shape": [
+          1,
+          2,
+          1,
+          256
+        ],
+        "std": 1.0336211919784546,
+        "zero_count": 0
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 15.453978538513184,
+        "max_count": 1,
+        "mean": -0.004368580412119627,
+        "min": -5.818016529083252,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 512,
+        "shape": [
+          1,
+          2,
+          1,
+          256
+        ],
+        "std": 1.0394659042358398,
+        "zero_count": 1
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 111.34025573730469,
+        "cosine": 0.9889976978302002,
+        "max_abs": 1.49542236328125,
+        "mean_abs": 0.04055218771100044,
+        "reference_l2": 111.8598861694336
+      },
+      "kind": "state_b",
+      "layer": 8,
+      "layer_type": "linear_attention",
+      "output_index": 33,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 12.341757774353027,
+        "max_count": 1,
+        "mean": -0.003153734840452671,
+        "min": -20.45831871032715,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.7135483622550964,
+        "zero_count": 18434
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 11.9688138961792,
+        "max_count": 1,
+        "mean": -0.0034921232145279646,
+        "min": -18.9628963470459,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.7102317214012146,
+        "zero_count": 18436
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 87.74068450927734,
+        "cosine": 0.9802093505859375,
+        "max_abs": 1.6980102062225342,
+        "mean_abs": 0.04199136421084404,
+        "reference_l2": 87.77470397949219
+      },
+      "kind": "state_b",
+      "layer": 9,
+      "layer_type": "linear_attention",
+      "output_index": 34,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 11.332842826843262,
+        "max_count": 1,
+        "mean": -0.0025619978550821543,
+        "min": -13.106943130493164,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.5599097013473511,
+        "zero_count": 18433
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 11.251033782958984,
+        "max_count": 1,
+        "mean": -0.0029939254745841026,
+        "min": -13.272851943969727,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.5596908926963806,
+        "zero_count": 18444
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 77.42716979980469,
+        "cosine": 0.9699054956436157,
+        "max_abs": 2.074406147003174,
+        "mean_abs": 0.04573169723153114,
+        "reference_l2": 76.2528076171875
+      },
+      "kind": "state_b",
+      "layer": 10,
+      "layer_type": "linear_attention",
+      "output_index": 35,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 9.621620178222656,
+        "max_count": 1,
+        "mean": -0.004899467341601849,
+        "min": -14.15608024597168,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.4863927960395813,
+        "zero_count": 18436
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 8.7410306930542,
+        "max_count": 1,
+        "mean": -0.006086458917707205,
+        "min": -14.156079292297363,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.4938714802265167,
+        "zero_count": 18440
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 10.762826919555664,
+        "cosine": 0.942209005355835,
+        "max_abs": 0.8225605487823486,
+        "mean_abs": 0.12940728664398193,
+        "reference_l2": 11.370678901672363
+      },
+      "kind": "state_b",
+      "layer": 11,
+      "layer_type": "full_attention",
+      "output_index": 36,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 1.5123085975646973,
+        "max_count": 1,
+        "mean": -0.007545835338532925,
+        "min": -4.444207668304443,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 512,
+        "shape": [
+          1,
+          2,
+          1,
+          256
+        ],
+        "std": 0.502952516078949,
+        "zero_count": 0
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 1.4465291500091553,
+        "max_count": 1,
+        "mean": -0.00976171251386404,
+        "min": -3.720629930496216,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 512,
+        "shape": [
+          1,
+          2,
+          1,
+          256
+        ],
+        "std": 0.4760191738605499,
+        "zero_count": 0
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 80.66728210449219,
+        "cosine": 0.9688849449157715,
+        "max_abs": 1.5475666522979736,
+        "mean_abs": 0.04943753778934479,
+        "reference_l2": 81.9105453491211
+      },
+      "kind": "state_b",
+      "layer": 12,
+      "layer_type": "linear_attention",
+      "output_index": 37,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 9.11154842376709,
+        "max_count": 1,
+        "mean": 0.0003356329689268023,
+        "min": -8.669940948486328,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.5225079655647278,
+        "zero_count": 18434
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 9.851183891296387,
+        "max_count": 1,
+        "mean": 0.0013195873470976949,
+        "min": -8.371136665344238,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.5145753026008606,
+        "zero_count": 18435
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 69.69200134277344,
+        "cosine": 0.9586389064788818,
+        "max_abs": 1.5772500038146973,
+        "mean_abs": 0.048981983214616776,
+        "reference_l2": 70.91860961914062
+      },
+      "kind": "state_b",
+      "layer": 13,
+      "layer_type": "linear_attention",
+      "output_index": 38,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 9.289679527282715,
+        "max_count": 1,
+        "mean": 0.0008445318671874702,
+        "min": -8.902438163757324,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.45239001512527466,
+        "zero_count": 18436
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 8.92403793334961,
+        "max_count": 1,
+        "mean": 0.0003294212801847607,
+        "min": -8.684389114379883,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.44456619024276733,
+        "zero_count": 18443
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 59.43646240234375,
+        "cosine": 0.9591413736343384,
+        "max_abs": 1.3773683309555054,
+        "mean_abs": 0.041633978486061096,
+        "reference_l2": 60.2819709777832
+      },
+      "kind": "state_b",
+      "layer": 14,
+      "layer_type": "linear_attention",
+      "output_index": 39,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 14.086254119873047,
+        "max_count": 1,
+        "mean": 0.00033489917404949665,
+        "min": -7.424658298492432,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.3845394253730774,
+        "zero_count": 18436
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 13.068437576293945,
+        "max_count": 1,
+        "mean": -0.00016778164717834443,
+        "min": -7.227719783782959,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.3791457414627075,
+        "zero_count": 18444
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 12.792137145996094,
+        "cosine": 0.9410262703895569,
+        "max_abs": 0.8763392567634583,
+        "mean_abs": 0.15129783749580383,
+        "reference_l2": 12.963908195495605
+      },
+      "kind": "state_b",
+      "layer": 15,
+      "layer_type": "full_attention",
+      "output_index": 40,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 3.1797308921813965,
+        "max_count": 1,
+        "mean": 0.00625437218695879,
+        "min": -1.9612592458724976,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 512,
+        "shape": [
+          1,
+          2,
+          1,
+          256
+        ],
+        "std": 0.5734553933143616,
+        "zero_count": 0
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 3.169227361679077,
+        "max_count": 1,
+        "mean": 0.0016735373064875603,
+        "min": -1.923744797706604,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 512,
+        "shape": [
+          1,
+          2,
+          1,
+          256
+        ],
+        "std": 0.5658883452415466,
+        "zero_count": 0
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 103.3749008178711,
+        "cosine": 0.9759875535964966,
+        "max_abs": 2.240874767303467,
+        "mean_abs": 0.05536729097366333,
+        "reference_l2": 105.03428649902344
+      },
+      "kind": "state_b",
+      "layer": 16,
+      "layer_type": "linear_attention",
+      "output_index": 41,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 13.698365211486816,
+        "max_count": 1,
+        "mean": 8.214140689233318e-05,
+        "min": -9.625859260559082,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.6700147390365601,
+        "zero_count": 18435
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 12.454123497009277,
+        "max_count": 1,
+        "mean": 0.0018255802569910884,
+        "min": -9.583903312683105,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.659427285194397,
+        "zero_count": 18435
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 104.61250305175781,
+        "cosine": 0.9763742685317993,
+        "max_abs": 2.1940126419067383,
+        "mean_abs": 0.057912517338991165,
+        "reference_l2": 109.2033462524414
+      },
+      "kind": "state_b",
+      "layer": 17,
+      "layer_type": "linear_attention",
+      "output_index": 42,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 10.347606658935547,
+        "max_count": 1,
+        "mean": -0.0009593330323696136,
+        "min": -17.827014923095703,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.6966087818145752,
+        "zero_count": 18433
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 9.100398063659668,
+        "max_count": 1,
+        "mean": -0.0009482819586992264,
+        "min": -15.633002281188965,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.6673237681388855,
+        "zero_count": 18435
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 121.81908416748047,
+        "cosine": 0.986090898513794,
+        "max_abs": 1.5139076709747314,
+        "mean_abs": 0.054954033344984055,
+        "reference_l2": 129.75221252441406
+      },
+      "kind": "state_b",
+      "layer": 18,
+      "layer_type": "linear_attention",
+      "output_index": 43,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 10.821673393249512,
+        "max_count": 1,
+        "mean": 0.0038081964012235403,
+        "min": -10.825937271118164,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.8276814818382263,
+        "zero_count": 18436
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 10.35939884185791,
+        "max_count": 1,
+        "mean": 0.002891076961532235,
+        "min": -10.394366264343262,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.7770795226097107,
+        "zero_count": 18440
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 23.206783294677734,
+        "cosine": 0.9666091203689575,
+        "max_abs": 1.0182265043258667,
+        "mean_abs": 0.204428032040596,
+        "reference_l2": 23.074127197265625
+      },
+      "kind": "state_b",
+      "layer": 19,
+      "layer_type": "full_attention",
+      "output_index": 44,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 4.5587615966796875,
+        "max_count": 1,
+        "mean": 0.029533131048083305,
+        "min": -7.564126014709473,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 512,
+        "shape": [
+          1,
+          2,
+          1,
+          256
+        ],
+        "std": 1.0203111171722412,
+        "zero_count": 0
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 4.282491207122803,
+        "max_count": 1,
+        "mean": 0.03189953789114952,
+        "min": -7.2228498458862305,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 512,
+        "shape": [
+          1,
+          2,
+          1,
+          256
+        ],
+        "std": 1.0261108875274658,
+        "zero_count": 3
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 106.90787506103516,
+        "cosine": 0.9847905039787292,
+        "max_abs": 1.0644750595092773,
+        "mean_abs": 0.04577838256955147,
+        "reference_l2": 106.51762390136719
+      },
+      "kind": "state_b",
+      "layer": 20,
+      "layer_type": "linear_attention",
+      "output_index": 45,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 8.369193077087402,
+        "max_count": 1,
+        "mean": 0.0005761680076830089,
+        "min": -9.783980369567871,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.6794768571853638,
+        "zero_count": 18432
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 8.352655410766602,
+        "max_count": 1,
+        "mean": 0.000591878779232502,
+        "min": -10.213227272033691,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.6819659471511841,
+        "zero_count": 18439
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 96.67054748535156,
+        "cosine": 0.9804487228393555,
+        "max_abs": 1.725454330444336,
+        "mean_abs": 0.04665227606892586,
+        "reference_l2": 95.96599578857422
+      },
+      "kind": "state_b",
+      "layer": 21,
+      "layer_type": "linear_attention",
+      "output_index": 46,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 7.509463787078857,
+        "max_count": 1,
+        "mean": -0.0008354338933713734,
+        "min": -13.59079647064209,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.612167477607727,
+        "zero_count": 18435
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 7.340493202209473,
+        "max_count": 1,
+        "mean": -0.0006982699851505458,
+        "min": -13.76220417022705,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.616661787033081,
+        "zero_count": 18438
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 84.24043273925781,
+        "cosine": 0.9829617738723755,
+        "max_abs": 1.0977239608764648,
+        "mean_abs": 0.03809836879372597,
+        "reference_l2": 83.60237884521484
+      },
+      "kind": "state_b",
+      "layer": 22,
+      "layer_type": "linear_attention",
+      "output_index": 47,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 9.315749168395996,
+        "max_count": 1,
+        "mean": -0.00019082667131442577,
+        "min": -9.684661865234375,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.5333003401756287,
+        "zero_count": 18433
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 8.617449760437012,
+        "max_count": 1,
+        "mean": -0.0006989329122006893,
+        "min": -9.126437187194824,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 24576,
+        "shape": [
+          1,
+          6144,
+          1,
+          4
+        ],
+        "std": 0.5373699069023132,
+        "zero_count": 18435
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 49.93893814086914,
+        "cosine": 0.9957044124603271,
+        "max_abs": 0.7284154891967773,
+        "mean_abs": 0.17290523648262024,
+        "reference_l2": 51.43497085571289
+      },
+      "kind": "state_b",
+      "layer": 23,
+      "layer_type": "full_attention",
+      "output_index": 48,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 5.8976922035217285,
+        "max_count": 1,
+        "mean": -0.07900369167327881,
+        "min": -7.543636798858643,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 512,
+        "shape": [
+          1,
+          2,
+          1,
+          256
+        ],
+        "std": 2.273974657058716,
+        "zero_count": 0
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 5.730020046234131,
+        "max_count": 1,
+        "mean": -0.07948349416255951,
+        "min": -7.010382175445557,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 512,
+        "shape": [
+          1,
+          2,
+          1,
+          256
+        ],
+        "std": 2.207735538482666,
+        "zero_count": 1
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 1.8502458333969116,
+        "cosine": 0.9927767515182495,
+        "max_abs": 0.028612196445465088,
+        "mean_abs": 0.0039069391787052155,
+        "reference_l2": 1.8759121894836426
+      },
+      "kind": "hidden_after_layer",
+      "layer": 0,
+      "layer_type": "linear_attention",
+      "output_index": 49,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.1812380701303482,
+        "max_count": 1,
+        "mean": -0.0014493726193904877,
+        "min": -0.9869585633277893,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.041436970233917236,
+        "zero_count": 1
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.17048805952072144,
+        "max_count": 1,
+        "mean": -0.0014257596340030432,
+        "min": -1.0155707597732544,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.04087015241384506,
+        "zero_count": 1
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 2.0508220195770264,
+        "cosine": 0.9905940294265747,
+        "max_abs": 0.02467402257025242,
+        "mean_abs": 0.0050889416597783566,
+        "reference_l2": 2.102816343307495
+      },
+      "kind": "hidden_after_layer",
+      "layer": 1,
+      "layer_type": "linear_attention",
+      "output_index": 50,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.2507804036140442,
+        "max_count": 1,
+        "mean": -0.0019212462939321995,
+        "min": -0.8616668581962585,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.04643772169947624,
+        "zero_count": 2
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.23596638441085815,
+        "max_count": 1,
+        "mean": -0.0018982283072546124,
+        "min": -0.8567607402801514,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.04528847709298134,
+        "zero_count": 1
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 2.600446939468384,
+        "cosine": 0.9864486455917358,
+        "max_abs": 0.03313307464122772,
+        "mean_abs": 0.008010001853108406,
+        "reference_l2": 2.7210240364074707
+      },
+      "kind": "hidden_after_layer",
+      "layer": 2,
+      "layer_type": "linear_attention",
+      "output_index": 51,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.34164902567863464,
+        "max_count": 1,
+        "mean": -0.0014362265355885029,
+        "min": -0.7369529604911804,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.0601242296397686,
+        "zero_count": 2
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.3281780183315277,
+        "max_count": 1,
+        "mean": -0.0016982940724119544,
+        "min": -0.737583577632904,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.05745122954249382,
+        "zero_count": 1
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 2.7931578159332275,
+        "cosine": 0.9779934287071228,
+        "max_abs": 0.05498573184013367,
+        "mean_abs": 0.01058109849691391,
+        "reference_l2": 2.8835158348083496
+      },
+      "kind": "hidden_after_layer",
+      "layer": 3,
+      "layer_type": "full_attention",
+      "output_index": 52,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.37821340560913086,
+        "max_count": 1,
+        "mean": -0.0018010350177064538,
+        "min": -0.26268675923347473,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.0637073963880539,
+        "zero_count": 0
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.36931493878364563,
+        "max_count": 1,
+        "mean": -0.0019405977800488472,
+        "min": -0.270350843667984,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.06170520931482315,
+        "zero_count": 1
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 2.814406633377075,
+        "cosine": 0.9681748747825623,
+        "max_abs": 0.06326854228973389,
+        "mean_abs": 0.012521079741418362,
+        "reference_l2": 2.8094966411590576
+      },
+      "kind": "hidden_after_layer",
+      "layer": 4,
+      "layer_type": "linear_attention",
+      "output_index": 53,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.5740007162094116,
+        "max_count": 1,
+        "mean": 0.00023827276891097426,
+        "min": -0.3232467770576477,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.06209639459848404,
+        "zero_count": 0
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.5227294564247131,
+        "max_count": 1,
+        "mean": -5.437637446448207e-05,
+        "min": -0.3207567632198334,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.062205348163843155,
+        "zero_count": 1
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 2.8603923320770264,
+        "cosine": 0.9651507139205933,
+        "max_abs": 0.06136886775493622,
+        "mean_abs": 0.013172632083296776,
+        "reference_l2": 2.8425633907318115
+      },
+      "kind": "hidden_after_layer",
+      "layer": 5,
+      "layer_type": "linear_attention",
+      "output_index": 54,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.45340314507484436,
+        "max_count": 1,
+        "mean": -0.0013672513887286186,
+        "min": -0.3451305329799652,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.06281282752752304,
+        "zero_count": 1
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.4751315712928772,
+        "max_count": 1,
+        "mean": -0.001985547598451376,
+        "min": -0.3332507014274597,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.06319057196378708,
+        "zero_count": 1
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 3.2901859283447266,
+        "cosine": 0.9744765758514404,
+        "max_abs": 0.06663881987333298,
+        "mean_abs": 0.012986012734472752,
+        "reference_l2": 3.2508955001831055
+      },
+      "kind": "hidden_after_layer",
+      "layer": 6,
+      "layer_type": "linear_attention",
+      "output_index": 55,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.5220041275024414,
+        "max_count": 1,
+        "mean": -0.002127031097188592,
+        "min": -0.6311504244804382,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.07182136178016663,
+        "zero_count": 0
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.5716803669929504,
+        "max_count": 1,
+        "mean": -0.0024207602255046368,
+        "min": -0.6893078684806824,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.07268095761537552,
+        "zero_count": 1
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 3.0001091957092285,
+        "cosine": 0.9654886722564697,
+        "max_abs": 0.17794236540794373,
+        "mean_abs": 0.013403665274381638,
+        "reference_l2": 2.9483642578125
+      },
+      "kind": "hidden_after_layer",
+      "layer": 7,
+      "layer_type": "full_attention",
+      "output_index": 56,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.4833727180957794,
+        "max_count": 1,
+        "mean": -0.0030692077707499266,
+        "min": -0.4615691602230072,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.06509381532669067,
+        "zero_count": 1
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.5076990723609924,
+        "max_count": 1,
+        "mean": -0.0036903833970427513,
+        "min": -0.6395115256309509,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.06620704382658005,
+        "zero_count": 2
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 2.9850752353668213,
+        "cosine": 0.9607204794883728,
+        "max_abs": 0.2186340093612671,
+        "mean_abs": 0.01411044504493475,
+        "reference_l2": 2.9003422260284424
+      },
+      "kind": "hidden_after_layer",
+      "layer": 8,
+      "layer_type": "linear_attention",
+      "output_index": 57,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.46114733815193176,
+        "max_count": 1,
+        "mean": -0.003192211501300335,
+        "min": -0.6341857314109802,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.06402519345283508,
+        "zero_count": 1
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.49091002345085144,
+        "max_count": 1,
+        "mean": -0.0038146988954395056,
+        "min": -0.8528197407722473,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.06586714833974838,
+        "zero_count": 1
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 3.075578212738037,
+        "cosine": 0.9544696807861328,
+        "max_abs": 0.2661696672439575,
+        "mean_abs": 0.01545004639774561,
+        "reference_l2": 2.956202507019043
+      },
+      "kind": "hidden_after_layer",
+      "layer": 9,
+      "layer_type": "linear_attention",
+      "output_index": 58,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.4880964756011963,
+        "max_count": 1,
+        "mean": -0.003087163669988513,
+        "min": -0.7284134030342102,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.06526641547679901,
+        "zero_count": 3
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.5126168131828308,
+        "max_count": 1,
+        "mean": -0.00355817680247128,
+        "min": -0.9945830702781677,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.06788468360900879,
+        "zero_count": 1
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 2.6970534324645996,
+        "cosine": 0.9497438669204712,
+        "max_abs": 0.0871577262878418,
+        "mean_abs": 0.014735662378370762,
+        "reference_l2": 2.6854028701782227
+      },
+      "kind": "hidden_after_layer",
+      "layer": 10,
+      "layer_type": "linear_attention",
+      "output_index": 59,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.4506477117538452,
+        "max_count": 1,
+        "mean": -0.0020588296465575695,
+        "min": -0.5329191088676453,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.059318337589502335,
+        "zero_count": 1
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.44127383828163147,
+        "max_count": 1,
+        "mean": -0.0024394579231739044,
+        "min": -0.6200768351554871,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.05956161767244339,
+        "zero_count": 1
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 2.8074395656585693,
+        "cosine": 0.9387641549110413,
+        "max_abs": 0.14954304695129395,
+        "mean_abs": 0.016901036724448204,
+        "reference_l2": 2.7331702709198
+      },
+      "kind": "hidden_after_layer",
+      "layer": 11,
+      "layer_type": "full_attention",
+      "output_index": 60,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.49920329451560974,
+        "max_count": 1,
+        "mean": -0.002375552663579583,
+        "min": -0.6159901022911072,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.060363102704286575,
+        "zero_count": 1
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.4701038897037506,
+        "max_count": 1,
+        "mean": -0.002581574721261859,
+        "min": -0.7655331492424011,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.061997637152671814,
+        "zero_count": 3
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 2.9434986114501953,
+        "cosine": 0.9364801645278931,
+        "max_abs": 0.15357273817062378,
+        "mean_abs": 0.018072137609124184,
+        "reference_l2": 2.847318410873413
+      },
+      "kind": "hidden_after_layer",
+      "layer": 12,
+      "layer_type": "linear_attention",
+      "output_index": 61,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.49764490127563477,
+        "max_count": 1,
+        "mean": -0.002402987563982606,
+        "min": -0.7032426595687866,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.06288688629865646,
+        "zero_count": 2
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.4603733420372009,
+        "max_count": 1,
+        "mean": -0.0023350741248577833,
+        "min": -0.8568153977394104,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.06501667946577072,
+        "zero_count": 1
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 3.0667243003845215,
+        "cosine": 0.9358015656471252,
+        "max_abs": 0.14916199445724487,
+        "mean_abs": 0.01883028633892536,
+        "reference_l2": 2.9769399166107178
+      },
+      "kind": "hidden_after_layer",
+      "layer": 13,
+      "layer_type": "linear_attention",
+      "output_index": 62,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.48290589451789856,
+        "max_count": 1,
+        "mean": -0.0030303900130093098,
+        "min": -0.8414934873580933,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.06572791188955307,
+        "zero_count": 0
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.43371739983558655,
+        "max_count": 1,
+        "mean": -0.0030066119506955147,
+        "min": -0.9906554818153381,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.06771548092365265,
+        "zero_count": 1
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 3.4138448238372803,
+        "cosine": 0.9422932267189026,
+        "max_abs": 0.11746609210968018,
+        "mean_abs": 0.020068293437361717,
+        "reference_l2": 3.376967430114746
+      },
+      "kind": "hidden_after_layer",
+      "layer": 14,
+      "layer_type": "linear_attention",
+      "output_index": 63,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.5142328143119812,
+        "max_count": 1,
+        "mean": -0.002127917017787695,
+        "min": -0.8271923065185547,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.07460901141166687,
+        "zero_count": 0
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.45983466506004333,
+        "max_count": 1,
+        "mean": -0.0022525861859321594,
+        "min": -0.9446583986282349,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.0754208043217659,
+        "zero_count": 0
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 5.056835174560547,
+        "cosine": 0.9389627575874329,
+        "max_abs": 0.13047559559345245,
+        "mean_abs": 0.03052353672683239,
+        "reference_l2": 4.9085307121276855
+      },
+      "kind": "hidden_after_layer",
+      "layer": 15,
+      "layer_type": "full_attention",
+      "output_index": 64,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.5945454835891724,
+        "max_count": 1,
+        "mean": -0.0011913191992789507,
+        "min": -0.698502779006958,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.1084841713309288,
+        "zero_count": 2
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.5155549645423889,
+        "max_count": 1,
+        "mean": -0.0002914690412580967,
+        "min": -0.6952585577964783,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.11176823079586029,
+        "zero_count": 2
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 5.622121810913086,
+        "cosine": 0.9341481328010559,
+        "max_abs": 0.14415454864501953,
+        "mean_abs": 0.035418249666690826,
+        "reference_l2": 5.447032451629639
+      },
+      "kind": "hidden_after_layer",
+      "layer": 16,
+      "layer_type": "linear_attention",
+      "output_index": 65,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.5845942497253418,
+        "max_count": 1,
+        "mean": -0.0011555592063814402,
+        "min": -1.3934937715530396,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.12038739770650864,
+        "zero_count": 2
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.5221467614173889,
+        "max_count": 1,
+        "mean": -0.0010910526616498828,
+        "min": -1.4674190282821655,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.12425806373357773,
+        "zero_count": 3
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 5.938004970550537,
+        "cosine": 0.9332116842269897,
+        "max_abs": 0.15716469287872314,
+        "mean_abs": 0.03780524432659149,
+        "reference_l2": 5.738061428070068
+      },
+      "kind": "hidden_after_layer",
+      "layer": 17,
+      "layer_type": "linear_attention",
+      "output_index": 66,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.6314079761505127,
+        "max_count": 1,
+        "mean": -0.001984627218917012,
+        "min": -1.4289156198501587,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.12680986523628235,
+        "zero_count": 1
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.5603861212730408,
+        "max_count": 1,
+        "mean": -0.0023017609491944313,
+        "min": -1.4703832864761353,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.13122446835041046,
+        "zero_count": 4
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 6.991355895996094,
+        "cosine": 0.9495376348495483,
+        "max_abs": 0.17943482100963593,
+        "mean_abs": 0.03885146230459213,
+        "reference_l2": 6.848299980163574
+      },
+      "kind": "hidden_after_layer",
+      "layer": 18,
+      "layer_type": "linear_attention",
+      "output_index": 67,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.7044478058815002,
+        "max_count": 1,
+        "mean": -0.0021679610945284367,
+        "min": -3.7070536613464355,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.15134890377521515,
+        "zero_count": 4
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.6218509078025818,
+        "max_count": 1,
+        "mean": -0.003772212192416191,
+        "min": -3.57287335395813,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.1544802486896515,
+        "zero_count": 3
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 8.159019470214844,
+        "cosine": 0.9407432675361633,
+        "max_abs": 0.2056320309638977,
+        "mean_abs": 0.04881903529167175,
+        "reference_l2": 7.498224258422852
+      },
+      "kind": "hidden_after_layer",
+      "layer": 19,
+      "layer_type": "full_attention",
+      "output_index": 68,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.5934526920318604,
+        "max_count": 1,
+        "mean": -0.0003257477073930204,
+        "min": -2.4933719635009766,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.16572906076908112,
+        "zero_count": 3
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.6497169137001038,
+        "max_count": 1,
+        "mean": -0.002023485489189625,
+        "min": -2.361084222793579,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.18032324314117432,
+        "zero_count": 2
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 8.922443389892578,
+        "cosine": 0.9416885375976562,
+        "max_abs": 0.24251508712768555,
+        "mean_abs": 0.05302365496754646,
+        "reference_l2": 8.061765670776367
+      },
+      "kind": "hidden_after_layer",
+      "layer": 20,
+      "layer_type": "linear_attention",
+      "output_index": 69,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.6064864993095398,
+        "max_count": 1,
+        "mean": -0.0004228854086250067,
+        "min": -2.8677127361297607,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.17818453907966614,
+        "zero_count": 2
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.7462007403373718,
+        "max_count": 1,
+        "mean": -0.003272019326686859,
+        "min": -3.1102278232574463,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.19718098640441895,
+        "zero_count": 3
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 10.521919250488281,
+        "cosine": 0.9460775256156921,
+        "max_abs": 0.6068005561828613,
+        "mean_abs": 0.059987347573041916,
+        "reference_l2": 9.453654289245605
+      },
+      "kind": "hidden_after_layer",
+      "layer": 21,
+      "layer_type": "linear_attention",
+      "output_index": 70,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.7126131653785706,
+        "max_count": 1,
+        "mean": -0.001425985130481422,
+        "min": -3.857180595397949,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.2089443802833557,
+        "zero_count": 3
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.8352691531181335,
+        "max_count": 1,
+        "mean": -0.004746312275528908,
+        "min": -4.4639811515808105,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.23251207172870636,
+        "zero_count": 3
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 11.870710372924805,
+        "cosine": 0.9445165991783142,
+        "max_abs": 0.3830549716949463,
+        "mean_abs": 0.06935366988182068,
+        "reference_l2": 10.833327293395996
+      },
+      "kind": "hidden_after_layer",
+      "layer": 22,
+      "layer_type": "linear_attention",
+      "output_index": 71,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.8674708008766174,
+        "max_count": 1,
+        "mean": -0.004586266819387674,
+        "min": -3.6172773838043213,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.2393995225429535,
+        "zero_count": 5
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 0.900412917137146,
+        "max_count": 1,
+        "mean": -0.009395642206072807,
+        "min": -4.000332355499268,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.2622038424015045,
+        "zero_count": 1
+      }
+    },
+    {
+      "comparison": {
+        "actual_l2": 32.614662170410156,
+        "cosine": 0.9714460968971252,
+        "max_abs": 3.150599479675293,
+        "mean_abs": 0.12377997487783432,
+        "reference_l2": 29.360193252563477
+      },
+      "kind": "hidden_after_layer",
+      "layer": 23,
+      "layer_type": "full_attention",
+      "output_index": 72,
+      "qdq": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 6.445724010467529,
+        "max_count": 1,
+        "mean": 0.0027080709114670753,
+        "min": -12.777350425720215,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.6489275097846985,
+        "zero_count": 3
+      },
+      "qnn_x86": {
+        "finite": true,
+        "inf_count": 0,
+        "max": 6.102419376373291,
+        "max_count": 1,
+        "mean": -0.01211311761289835,
+        "min": -15.927949905395508,
+        "min_count": 1,
+        "nan_count": 0,
+        "numel": 2048,
+        "shape": [
+          1,
+          1,
+          2048
+        ],
+        "std": 0.7207632064819336,
+        "zero_count": 4
+      }
+    }
+  ],
+  "qdq_logits": {
+    "argmax": 198,
+    "top_ids": [
+      198,
+      40,
+      1596,
+      760,
+      271,
+      248044,
+      45,
+      248045,
+      695,
+      50
+    ],
+    "top_values": [
+      14.42995548248291,
+      13.037508010864258,
+      12.948363304138184,
+      12.777046203613281,
+      12.703838348388672,
+      12.576347351074219,
+      12.354232788085938,
+      12.300945281982422,
+      12.290487289428711,
+      11.984208106994629
+    ]
+  },
+  "qnn_x86_logits": {
+    "argmax": 198,
+    "top_ids": [
+      198,
+      695,
+      40,
+      271,
+      77,
+      1596,
+      248045,
+      1076,
+      79,
+      45
+    ],
+    "top_values": [
+      13.513111114501953,
+      11.980224609375,
+      11.962295532226562,
+      11.589781761169434,
+      11.305912971496582,
+      11.079317092895508,
+      11.069356918334961,
+      10.91596794128418,
+      10.913477897644043,
+      10.855709075927734
+    ]
+  },
+  "schema_version": 1,
+  "token_id": 248045,
+  "token_position": 0
+}

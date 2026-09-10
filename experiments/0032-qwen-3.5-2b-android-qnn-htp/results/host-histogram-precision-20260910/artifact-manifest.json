@@ -1,0 +1,65 @@
+{
+  "external_artifacts_local_only": true,
+  "files": {
+    "checkpoint": {
+      "path": ".local/qwen35-2b-meta.pt",
+      "bytes": 3763756713,
+      "sha256": "a2640184f26ce851c3bf305fd77f4dac6af3381025a4ace1d431e7d685c70e86"
+    },
+    "histogram_pte": {
+      "path": ".local/diagnosis/restart-20260910T083327Z/01-hidden-compile/diagnostic-w4a16-qnn.pte",
+      "bytes": 1995463416,
+      "sha256": "7f30be3d57b601af0804cdd50dd8968e271d673b710ea249a754fcd2f4ff3fea"
+    },
+    "histogram_qdq": {
+      "path": ".local/diagnosis/restart-20260910T083327Z/01-hidden-compile/diagnostic-w4a16-qdq.pt2",
+      "bytes": 13645661902,
+      "sha256": "30799090d14a42c92ea804a2763df55ff231ba232653d96484324ad40c492364"
+    },
+    "histogram_qdq_outputs": {
+      "path": ".local/diagnosis/restart-20260910T083327Z/qdq-outputs.pt",
+      "bytes": 21879364,
+      "sha256": "a471368c8b319013c6b0827afb172fd69aabbc11f12bf7de90556af79a7c8bf2"
+    },
+    "histogram_qnn_outputs": {
+      "path": ".local/diagnosis/restart-20260910T083327Z/qnn-outputs.pt",
+      "bytes": 21879364,
+      "sha256": "0058326220ae816b0da502cd2637b188a33d8f814803ffe10f84545e6903fe41"
+    },
+    "minmax_pte": {
+      "path": ".local/diagnosis/layer-hidden/diagnostic-w4a16-qnn.pte",
+      "bytes": 1994761992,
+      "sha256": "08d7aca20f0b3422c0ed03da7c8344e407a7cc64e7d96ccfffc28371c858d44e"
+    },
+    "params": {
+      "path": ".local/executorch/examples/models/qwen3_5/config/2b_config.json",
+      "bytes": 1180,
+      "sha256": "63597e7233e5310974603b72cb32b14b09ccd5461e1d1540d4049327d6d5b642"
+    },
+    "input_ids": {
+      "path": "protocol/token-ids/short.int32le",
+      "bytes": 696,
+      "sha256": "dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4"
+    },
+    "adapter_source": {
+      "path": "tools/qwen35_qnn_model.py",
+      "bytes": 17886,
+      "sha256": "67ac80610b5028e8fbde62f46ed89f3a278163627792edee1f077be50894a4ed"
+    },
+    "compiler_source": {
+      "path": "tools/compile_exact_qnn.py",
+      "bytes": 28062,
+      "sha256": "469113e43c3077a894f7e54318fe6faf2e0257054dd076d870a4d44c750fba90"
+    },
+    "comparison_runner_source": {
+      "path": "tools/localize_qnn_first_token.py",
+      "bytes": 13825,
+      "sha256": "5d36018f59dfbe3765aff1fa671835debddc54243ac4224613ce0a7c7cc02203"
+    },
+    "comparison_report_source": {
+      "path": "tools/compare_precision_reports.py",
+      "bytes": 3450,
+      "sha256": "0153e7efff5241a6cfd4c69a5aa077b839d5f3cb70ae126eaf87ad4b7e832f9f"
+    }
+  }
+}

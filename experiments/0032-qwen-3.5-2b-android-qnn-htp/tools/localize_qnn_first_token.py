@@ -86,6 +86,9 @@ def main() -> None:
     parser.add_argument("--result", type=Path, required=True)
     parser.add_argument("--prompt-result", type=Path)
     parser.add_argument("--context", type=int, default=4096)
+    parser.add_argument("--diagnostic-hidden-states", action="store_true")
+    parser.add_argument("--diagnostic-layer0-components", action="store_true")
+    parser.add_argument("--diagnostic-layer0-attention-components", action="store_true")
     args = parser.parse_args()
 
     experiment = Path(__file__).resolve().parents[1]
@@ -143,13 +146,27 @@ def main() -> None:
             inputs[0][0, 0] = token
             inputs[2][0, 0] = 0
             outputs = module.forward(inputs)
-            if len(outputs) != 49:
-                raise RuntimeError(f"expected 49 PTE outputs, got {len(outputs)}")
+            expected_outputs = (
+                49
+                + (config.n_layers if args.diagnostic_hidden_states else 0)
+                + (11 if args.diagnostic_layer0_components else 0)
+                + (11 if args.diagnostic_layer0_attention_components else 0)
+            )
+            if len(outputs) != expected_outputs:
+                raise RuntimeError(
+                    f"expected {expected_outputs} PTE outputs, got {len(outputs)}"
+                )
             args.qnn_outputs.parent.mkdir(parents=True, exist_ok=True)
             torch.save([output.detach().cpu().clone() for output in outputs], args.qnn_outputs)
             print(args.qnn_outputs)
             return
 
+        if (
+            args.diagnostic_hidden_states
+            or args.diagnostic_layer0_components
+            or args.diagnostic_layer0_attention_components
+        ):
+            raise ValueError("qnn-prompt does not accept diagnostic outputs")
         if args.prompt_result is None:
             raise ValueError("--prompt-result is required for qnn-prompt phase")
         token_ids = np.fromfile(args.token_ids, dtype="<i4").astype(np.int64).tolist()
@@ -213,8 +230,53 @@ def main() -> None:
 
     qdq_outputs = torch.load(args.qdq_outputs, map_location="cpu", weights_only=True)
     qnn_outputs = torch.load(args.qnn_outputs, map_location="cpu", weights_only=True)
-    if len(qdq_outputs) != len(qnn_outputs) or len(qdq_outputs) != 49:
-        raise RuntimeError("output count mismatch")
+    expected_outputs = (
+        49
+        + (config.n_layers if args.diagnostic_hidden_states else 0)
+        + (11 if args.diagnostic_layer0_components else 0)
+        + (11 if args.diagnostic_layer0_attention_components else 0)
+    )
+    if len(qdq_outputs) != len(qnn_outputs) or len(qdq_outputs) != expected_outputs:
+        raise RuntimeError(
+            f"output count mismatch: expected {expected_outputs}, "
+            f"QDQ={len(qdq_outputs)}, QNN={len(qnn_outputs)}"
+        )
+    component_names = []
+    if args.diagnostic_layer0_components:
+        component_names.extend(
+            [
+                "embedded_hidden",
+                "attention_normalized",
+                "attention_output",
+                "post_attention_hidden",
+                "ffn_normalized",
+                "ffn_w1",
+                "ffn_silu_w1",
+                "ffn_w3",
+                "ffn_product",
+                "ffn_output",
+                "hidden_after_layer0",
+            ]
+        )
+    if args.diagnostic_layer0_attention_components:
+        component_names.extend(
+            [
+                "attention_qkv_projection",
+                "attention_conv_pre_silu",
+                "attention_conv_activated",
+                "attention_query",
+                "attention_key",
+                "attention_value",
+                "attention_a_projection",
+                "attention_b_projection",
+                "attention_recurrent_core",
+                "attention_z_projection",
+                "attention_gated_norm_core",
+            ]
+        )
+    hidden_end = 1 + 2 * config.n_layers + (
+        config.n_layers if args.diagnostic_hidden_states else 0
+    )
     records = []
     for index, (reference, actual) in enumerate(zip(qdq_outputs, qnn_outputs)):
         if index == 0:
@@ -223,9 +285,15 @@ def main() -> None:
         elif index <= config.n_layers:
             kind = "state_a"
             layer = index - 1
-        else:
+        elif index <= 2 * config.n_layers:
             kind = "state_b"
             layer = index - 1 - config.n_layers
+        elif index < hidden_end:
+            kind = "hidden_after_layer"
+            layer = index - 1 - 2 * config.n_layers
+        else:
+            kind = component_names[index - hidden_end]
+            layer = 0
         records.append(
             {
                 "output_index": index,

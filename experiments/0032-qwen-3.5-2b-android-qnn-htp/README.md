@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active. The repaired exact 24-layer route has now executed physically through QNN/HTP and produced token 1206 (`To`) rather than the unrepaired token 0 (`!`). This removes the obvious token-0 corruption symptom, but it still differs from host W4A16 QDQ token 760 (`The`); campaign readiness is not established.**
+**Active. Host-only HistogramObserver calibration improves same-position QDQ/QNN-x86 agreement across all 24 hidden layers and raises final-logit cosine from 0.433603 to 0.947168, with matching argmax 198. The physical baseline remains unchanged; full-prompt HistogramObserver fidelity and campaign readiness are not established.**
 
 This is a separate HTP feasibility arm. It does not change or relabel `0027` CPU evidence.
 
@@ -51,11 +51,15 @@ A lower-retention two-process host replay in [`results/host-w4a16-qdq-output-dia
 
 [`results/android-qnn-physical-viability-20260828-attempt-03/`](results/android-qnn-physical-viability-20260828-attempt-03/) binds the one authorized physical check. All 696 expected QNN graph calls completed on HTP-v73 and the runner exited 0. The single generated token was ID 1206 (`To`). This is no longer the obvious token-0 corruption, but it does not match the QDQ token and is not a sentence-level useful-output or campaign claim.
 
+## HistogramObserver host precision milestone
+
+[`results/host-histogram-precision-20260910/`](results/host-histogram-precision-20260910/) retains the exact W4A16 candidate compile and sequential same-position QDQ/QNN-x86 comparison. Four QNN subgraphs retain all 4,210 delegated nodes with zero tensor-compute fallback. All 24 hidden cosines improve; layer-23 hidden cosine reaches 0.971446 and final-logit cosine reaches 0.947168. Each route uses its own QDQ reference, so this is improved internal agreement, not equivalence to the original float model. Rejected precision variants and resource-interrupted attempts are retained, not discarded.
+
 ## Current next gate
 
-1. Keep the repaired PTE and phone preflight hash fixed.
-2. Do not reacquire `phone.lock`, invoke ADB, or stage anything without a new explicit Pi handoff.
-3. Treat residual QDQ-versus-physical drift and one-token-only output as unresolved campaign-readiness boundaries.
-4. Only after a separately agreed fidelity/output gate may the loaded-route multi-request runner and fixed 1+5+5+5 campaign be considered.
+1. Keep physical PTE `23ac8abd…d2c506` and phone preflight unchanged; the new 73-output diagnostic PTE is not compatible with the current 49-output Android runner.
+2. Await Pi release for one serial full 174-token HistogramObserver QDQ replay; do not automatically start another heavy phase.
+3. No ADB or staging without a new explicit Pi phone slot. Residual physical drift and one-token-only output remain campaign-readiness boundaries.
+4. Only after agreed fidelity and state-isolation gates may chunked prefill and the fixed 1+5+5+5 campaign be promoted.
 
 GenieX llama.cpp NPU metrics, the shipped 4B HTP example, direct-Hexagon output without QNN, and CPU-only text output are not substitutes for physical QNN/HTP provider proof.

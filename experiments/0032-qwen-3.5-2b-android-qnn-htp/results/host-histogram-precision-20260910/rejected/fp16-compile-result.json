@@ -1,0 +1,176 @@
+{
+  "calibration": {
+    "last_argmax": 21365,
+    "last_logits_finite": true,
+    "seconds": 284.0169806719932,
+    "tokens": 174
+  },
+  "context_tokens": 4096,
+  "delegated_nodes": 4157,
+  "delegated_subgraphs": 40,
+  "delegation_by_operator": {
+    "aten__softmax_default": {
+      "delegated": 6,
+      "non_delegated": 0
+    },
+    "aten__to_copy_default": {
+      "delegated": 205,
+      "non_delegated": 0
+    },
+    "aten_add_tensor": {
+      "delegated": 278,
+      "non_delegated": 0
+    },
+    "aten_cat_default": {
+      "delegated": 54,
+      "non_delegated": 0
+    },
+    "aten_convolution_default": {
+      "delegated": 205,
+      "non_delegated": 0
+    },
+    "aten_div_tensor": {
+      "delegated": 6,
+      "non_delegated": 0
+    },
+    "aten_embedding_default": {
+      "delegated": 1,
+      "non_delegated": 0
+    },
+    "aten_exp_default": {
+      "delegated": 36,
+      "non_delegated": 0
+    },
+    "aten_expand_copy_default": {
+      "delegated": 120,
+      "non_delegated": 0
+    },
+    "aten_index_tensor": {
+      "delegated": 2,
+      "non_delegated": 0
+    },
+    "aten_matmul_default": {
+      "delegated": 12,
+      "non_delegated": 0
+    },
+    "aten_mean_dim": {
+      "delegated": 79,
+      "non_delegated": 0
+    },
+    "aten_mul_tensor": {
+      "delegated": 567,
+      "non_delegated": 0
+    },
+    "aten_neg_default": {
+      "delegated": 30,
+      "non_delegated": 0
+    },
+    "aten_permute_copy_default": {
+      "delegated": 440,
+      "non_delegated": 0
+    },
+    "aten_rsqrt_default": {
+      "delegated": 115,
+      "non_delegated": 0
+    },
+    "aten_select_copy_int": {
+      "delegated": 92,
+      "non_delegated": 0
+    },
+    "aten_sigmoid_default": {
+      "delegated": 84,
+      "non_delegated": 0
+    },
+    "aten_slice_copy_tensor": {
+      "delegated": 84,
+      "non_delegated": 0
+    },
+    "aten_split_with_sizes_copy_default": {
+      "delegated": 24,
+      "non_delegated": 0
+    },
+    "aten_squeeze_copy_dims": {
+      "delegated": 18,
+      "non_delegated": 0
+    },
+    "aten_sub_tensor": {
+      "delegated": 18,
+      "non_delegated": 0
+    },
+    "aten_sum_dim_int_list": {
+      "delegated": 72,
+      "non_delegated": 0
+    },
+    "aten_unsqueeze_copy_default": {
+      "delegated": 174,
+      "non_delegated": 0
+    },
+    "aten_view_copy_default": {
+      "delegated": 881,
+      "non_delegated": 0
+    },
+    "dim_order_ops__to_dim_order_copy_default": {
+      "delegated": 73,
+      "non_delegated": 143
+    },
+    "getitem": {
+      "delegated": 66,
+      "non_delegated": 219
+    },
+    "llama_fallback_default": {
+      "delegated": 0,
+      "non_delegated": 3
+    },
+    "quantized_decomposed_dequantize_per_channel_default": {
+      "delegated": 205,
+      "non_delegated": 0
+    },
+    "quantized_decomposed_dequantize_per_tensor_default": {
+      "delegated": 192,
+      "non_delegated": 0
+    },
+    "qwen35_softplus_default": {
+      "delegated": 18,
+      "non_delegated": 0
+    }
+  },
+  "diagnostic_component_names": [
+    "attention_qkv_projection",
+    "attention_conv_pre_silu",
+    "attention_conv_activated",
+    "attention_query",
+    "attention_key",
+    "attention_value",
+    "attention_a_projection",
+    "attention_b_projection",
+    "attention_recurrent_core",
+    "attention_z_projection",
+    "attention_gated_norm_core"
+  ],
+  "diagnostic_hidden_states": false,
+  "diagnostic_layer0_attention_components": true,
+  "diagnostic_layer0_components": false,
+  "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
+  "float_recurrence": false,
+  "float_recurrence_annotation_nodes": 1224,
+  "forward_outputs": 60,
+  "fp16_recurrence_island": true,
+  "matmul_recurrence_reductions": false,
+  "model": "Qwen/Qwen3.5-2B",
+  "non_delegated_nodes": 365,
+  "non_delegated_tensor_compute": {
+    "dim_order_ops__to_dim_order_copy_default": 143
+  },
+  "phase_timestamps": {
+    "calibration_end_unix_ns": 1787918832071265693,
+    "convert_end_unix_ns": 1787918851430792113,
+    "export_end_unix_ns": 1787918534876806979,
+    "export_start_unix_ns": 1787918513520375088,
+    "qnn_compile_end_unix_ns": 1787919391414843739,
+    "qnn_compile_start_unix_ns": 1787918962954808755
+  },
+  "quantization": "W4A16 PTQ with per-channel Linear/Conv weights and 16-bit activations, including Gated DeltaNet recurrence",
+  "schema_version": 1,
+  "shards": 4,
+  "status": "rejected_fallback"
+}
