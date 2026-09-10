@@ -1,0 +1,100 @@
+{
+  "status": "started",
+  "component": "vector",
+  "io_sha256": "c60b65497a0d5cd00f5642f1cda9cde0f51021f7238e723369777b52edde97b0",
+  "evidence_class": "constructor_only_not_execution_or_model_quality",
+  "python_InferenceSession_calls": 1,
+  "Session_Run_calls": 0,
+  "mock": false,
+  "session_config": {
+    "session.disable_cpu_ep_fallback": "1",
+    "ep.context_enable": "1",
+    "ep.context_embed_mode": "0",
+    "ep.context_file_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-vector-t2048-l2048-attempt-01/data/vector-context.onnx"
+  },
+  "provider_options": {
+    "offload_graph_io_quantization": "0",
+    "htp_performance_mode": "burst",
+    "soc_model": "43",
+    "backend_path": "/home/moritz/opt/qairt/2.49.0.260730/lib/x86_64-linux-clang/libQnnHtp.so"
+  },
+  "intra_op_threads": 1,
+  "inter_op_threads": 1,
+  "constructor_seconds": 178.70086910700047,
+  "actual_inputs": [
+    {
+      "name": "noisy_latent",
+      "type": "tensor(float)",
+      "shape": [
+        1,
+        144,
+        2048
+      ]
+    },
+    {
+      "name": "text_emb",
+      "type": "tensor(float)",
+      "shape": [
+        1,
+        256,
+        2048
+      ]
+    },
+    {
+      "name": "style_ttl",
+      "type": "tensor(float)",
+      "shape": [
+        1,
+        50,
+        256
+      ]
+    },
+    {
+      "name": "latent_mask",
+      "type": "tensor(float)",
+      "shape": [
+        1,
+        1,
+        2048
+      ]
+    },
+    {
+      "name": "text_mask",
+      "type": "tensor(float)",
+      "shape": [
+        1,
+        1,
+        2048
+      ]
+    },
+    {
+      "name": "current_step",
+      "type": "tensor(float)",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "name": "total_step",
+      "type": "tensor(float)",
+      "shape": [
+        1
+      ]
+    }
+  ],
+  "actual_outputs": [
+    {
+      "name": "denoised_latent",
+      "type": "tensor(float)",
+      "shape": [
+        1,
+        144,
+        2048
+      ]
+    }
+  ],
+  "session_providers": [
+    "QNNExecutionProvider",
+    "CPUExecutionProvider"
+  ]
+}

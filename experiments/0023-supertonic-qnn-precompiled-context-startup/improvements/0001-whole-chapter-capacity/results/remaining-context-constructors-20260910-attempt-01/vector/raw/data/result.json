@@ -1,0 +1,130 @@
+{
+  "status": "constructor_and_artifact_gates_passed_no_execution",
+  "component": "vector",
+  "io_sha256": "c60b65497a0d5cd00f5642f1cda9cde0f51021f7238e723369777b52edde97b0",
+  "evidence_class": "constructor_only_not_execution_or_model_quality",
+  "python_InferenceSession_calls": 1,
+  "Session_Run_calls": 0,
+  "mock": false,
+  "session_config": {
+    "session.disable_cpu_ep_fallback": "1",
+    "ep.context_enable": "1",
+    "ep.context_embed_mode": "0",
+    "ep.context_file_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-vector-t2048-l2048-attempt-01/data/vector-context.onnx"
+  },
+  "provider_options": {
+    "offload_graph_io_quantization": "0",
+    "htp_performance_mode": "burst",
+    "soc_model": "43",
+    "backend_path": "/home/moritz/opt/qairt/2.49.0.260730/lib/x86_64-linux-clang/libQnnHtp.so"
+  },
+  "intra_op_threads": 1,
+  "inter_op_threads": 1,
+  "constructor_seconds": 178.70086910700047,
+  "actual_inputs": [
+    {
+      "name": "noisy_latent",
+      "type": "tensor(float)",
+      "shape": [
+        1,
+        144,
+        2048
+      ]
+    },
+    {
+      "name": "text_emb",
+      "type": "tensor(float)",
+      "shape": [
+        1,
+        256,
+        2048
+      ]
+    },
+    {
+      "name": "style_ttl",
+      "type": "tensor(float)",
+      "shape": [
+        1,
+        50,
+        256
+      ]
+    },
+    {
+      "name": "latent_mask",
+      "type": "tensor(float)",
+      "shape": [
+        1,
+        1,
+        2048
+      ]
+    },
+    {
+      "name": "text_mask",
+      "type": "tensor(float)",
+      "shape": [
+        1,
+        1,
+        2048
+      ]
+    },
+    {
+      "name": "current_step",
+      "type": "tensor(float)",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "name": "total_step",
+      "type": "tensor(float)",
+      "shape": [
+        1
+      ]
+    }
+  ],
+  "actual_outputs": [
+    {
+      "name": "denoised_latent",
+      "type": "tensor(float)",
+      "shape": [
+        1,
+        144,
+        2048
+      ]
+    }
+  ],
+  "session_providers": [
+    "QNNExecutionProvider",
+    "CPUExecutionProvider"
+  ],
+  "external_context": {
+    "node_domain": "com.microsoft",
+    "node_op": "EPContext",
+    "embed_mode": 0,
+    "external_binary": "vector-context_qnn.bin",
+    "descriptor": {
+      "bytes": 1023,
+      "sha256": "b2938bfe41a8b111ef0a01d74ef737ea930040bf0b51cc8a2dbb2760206f9b1a"
+    },
+    "binary": {
+      "bytes": 185153584,
+      "sha256": "d40e5bf8ad96bad04e96f5a4ec27e979b410320b9d000cf2b109f5d92ad6c00f"
+    }
+  },
+  "elapsed_seconds": 180.64029698900413,
+  "process_ru_maxrss_kib": 5698004,
+  "retained_files": [
+    {
+      "name": "constructor-receipt.json",
+      "bytes": 2142
+    },
+    {
+      "name": "vector-context.onnx",
+      "bytes": 1023
+    },
+    {
+      "name": "vector-context_qnn.bin",
+      "bytes": 185153584
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "status": "error",
+  "component": "vocoder",
+  "io_sha256": "3e15a281cfdacd59201240f30a082566e0d81b584a64394ec9509d7742a34ed6",
+  "evidence_class": "constructor_only_not_execution_or_model_quality",
+  "python_InferenceSession_calls": 1,
+  "Session_Run_calls": 0,
+  "mock": false,
+  "session_config": {
+    "session.disable_cpu_ep_fallback": "1",
+    "ep.context_enable": "1",
+    "ep.context_embed_mode": "0",
+    "ep.context_file_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-vocoder-t2048-l2048-attempt-01/data/vocoder-context.onnx"
+  },
+  "provider_options": {
+    "offload_graph_io_quantization": "0",
+    "htp_performance_mode": "burst",
+    "soc_model": "43",
+    "backend_path": "/home/moritz/opt/qairt/2.49.0.260730/lib/x86_64-linux-clang/libQnnHtp.so"
+  },
+  "intra_op_threads": 1,
+  "inter_op_threads": 1,
+  "error": {
+    "type": "Fail",
+    "message": "[ONNXRuntimeError] : 1 : FAIL : Failed to finalize QNN graph."
+  },
+  "elapsed_seconds": 2.096722818001581,
+  "process_ru_maxrss_kib": 491056,
+  "retained_files": []
+}

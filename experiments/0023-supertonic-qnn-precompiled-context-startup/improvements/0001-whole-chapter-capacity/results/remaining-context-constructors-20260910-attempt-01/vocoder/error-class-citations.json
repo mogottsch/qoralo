@@ -1,0 +1,46 @@
+{
+  "status": "saved_log_plus_header_error_class_only",
+  "primary_independent_review": "Nik",
+  "runtime_or_model_calls": 0,
+  "reported_error": {
+    "code": 1002,
+    "path": "vocoder/raw/guard/stderr.log",
+    "line": 2,
+    "raw_line": "\u001b[1;31m2026-09-10 17:56:10.256339802 [E:onnxruntime:, qnn_model.cc:387 FinalizeGraphs] Failed to finalize QNN graph. Error code: 1002\u001b[m"
+  },
+  "header_sources": [
+    {
+      "path": "/home/moritz/opt/qairt/2.49.0.260730/include/QNN/QnnCommon.h",
+      "bytes": 7976,
+      "sha256": "1edba00ea13e509a3a2a28c1864afe13675898175147056df13aa782e8ba8ecf",
+      "passages": [
+        {
+          "line_start": 71,
+          "line_end": 71,
+          "text": "#define QNN_MIN_ERROR_COMMON              1000"
+        },
+        {
+          "line_start": 195,
+          "line_end": 196,
+          "text": "  /// Memory allocation related error.\n  QNN_COMMON_ERROR_MEM_ALLOC = QNN_MIN_ERROR_COMMON + 2,"
+        }
+      ]
+    },
+    {
+      "path": "/home/moritz/opt/qairt/2.49.0.260730/include/QNN/QnnGraph.h",
+      "bytes": 47934,
+      "sha256": "82b74873514bfa937f3bf888529c457829791e8ba8600374b2ba160edf32c8dd",
+      "passages": [
+        {
+          "line_start": 44,
+          "line_end": 45,
+          "text": "  /// General error relating to memory allocation in processing graph API\n  QNN_GRAPH_ERROR_MEM_ALLOC = QNN_COMMON_ERROR_MEM_ALLOC,"
+        }
+      ]
+    }
+  ],
+  "mapping": "QNN_MIN_ERROR_COMMON1000 +2 => QNN_COMMON_ERROR_MEM_ALLOC; QNN_GRAPH_ERROR_MEM_ALLOC aliases it.",
+  "interpretation": "QNN reported a memory/resource-allocation error class during graph finalization. This does NOT establish exhausted host RAM, an 8GiB cgroup limit hit, a particular tensor/operator, allocation size or internal allocator root cause.",
+  "header_identity_scope": "Post-run read-only header identities, not execution-time runtime pin verification.",
+  "sdk_header_redistribution": "Only these short symbol/comment passages and file identities retained; full proprietary headers remain local."
+}

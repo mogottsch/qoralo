@@ -1,0 +1,131 @@
+{
+  "component": "text",
+  "all_gates_passed": true,
+  "launcher": {
+    "exit_code": 0,
+    "elapsed_seconds": 63.95283985000424,
+    "attempts": 1,
+    "automatic_retry": false
+  },
+  "guard": {
+    "exit_code": 0,
+    "reason": "process_exit",
+    "child_pid": 1919623,
+    "child_reaped": true,
+    "timeout_seconds": 520,
+    "termination_grace_seconds": 20,
+    "elapsed_seconds": 63.85630640399904,
+    "automatic_retry": false,
+    "error": null
+  },
+  "result": {
+    "status": "constructor_and_artifact_gates_passed_no_execution",
+    "component": "text",
+    "io_sha256": "6cca7457391b48284d952191cf79f787e9487a0c694b1aeaaabff8b3c1b49332",
+    "evidence_class": "constructor_only_not_execution_or_model_quality",
+    "python_InferenceSession_calls": 1,
+    "Session_Run_calls": 0,
+    "mock": false,
+    "session_config": {
+      "session.disable_cpu_ep_fallback": "1",
+      "ep.context_enable": "1",
+      "ep.context_embed_mode": "0",
+      "ep.context_file_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/constructor-text-t2048-l2048-attempt-01/data/text-context.onnx"
+    },
+    "provider_options": {
+      "offload_graph_io_quantization": "0",
+      "htp_performance_mode": "burst",
+      "soc_model": "43",
+      "backend_path": "/home/moritz/opt/qairt/2.49.0.260730/lib/x86_64-linux-clang/libQnnHtp.so"
+    },
+    "intra_op_threads": 1,
+    "inter_op_threads": 1,
+    "constructor_seconds": 61.41834225400089,
+    "actual_inputs": [
+      {
+        "name": "text_ids",
+        "type": "tensor(int64)",
+        "shape": [
+          1,
+          2048
+        ]
+      },
+      {
+        "name": "style_ttl",
+        "type": "tensor(float)",
+        "shape": [
+          1,
+          50,
+          256
+        ]
+      },
+      {
+        "name": "text_mask",
+        "type": "tensor(float)",
+        "shape": [
+          1,
+          1,
+          2048
+        ]
+      }
+    ],
+    "actual_outputs": [
+      {
+        "name": "text_emb",
+        "type": "tensor(float)",
+        "shape": [
+          1,
+          256,
+          2048
+        ]
+      }
+    ],
+    "session_providers": [
+      "QNNExecutionProvider",
+      "CPUExecutionProvider"
+    ],
+    "external_context": {
+      "node_domain": "com.microsoft",
+      "node_op": "EPContext",
+      "embed_mode": 0,
+      "external_binary": "text-context_qnn.bin",
+      "descriptor": {
+        "bytes": 821,
+        "sha256": "389f5754e60bb3bbf3bd8b7f833d9112f6ea17d78cbe67de013dc56b0ba8cca8"
+      },
+      "binary": {
+        "bytes": 37119616,
+        "sha256": "45c9a1672ec4521947bc273565331a0cd54aa99050b1969e2ee15fa175de3bc5"
+      }
+    },
+    "elapsed_seconds": 62.25035506099812,
+    "process_ru_maxrss_kib": 1609424,
+    "retained_files": [
+      {
+        "name": "constructor-receipt.json",
+        "bytes": 1630
+      },
+      {
+        "name": "text-context.onnx",
+        "bytes": 821
+      },
+      {
+        "name": "text-context_qnn.bin",
+        "bytes": 37119616
+      }
+    ]
+  },
+  "final_verification": {
+    "status": "all_pins_unchanged"
+  },
+  "cleanup": {
+    "child_pid": 1919623,
+    "child_reaped": true,
+    "pid_absent": true,
+    "process_group_absent": true,
+    "container_absent": true,
+    "scratch_empty": true,
+    "name_label_cleanup_atomic": false
+  },
+  "postclose_artifact_hashes_match": true
+}

@@ -1,0 +1,261 @@
+{
+  "status": "STOPPED_ON_VOCODER_FINALIZE_ERROR",
+  "released_order": [
+    "text",
+    "vector",
+    "vocoder"
+  ],
+  "attempted_order": [
+    "text",
+    "vector",
+    "vocoder"
+  ],
+  "one_constructor_each": true,
+  "Session_Run_calls": 0,
+  "retries": 0,
+  "successful_new_contexts": [
+    "text",
+    "vector"
+  ],
+  "failed_component": "vocoder",
+  "reported_QNN_error_code": 1002,
+  "sum_component_launcher_seconds": 250.33174834300007,
+  "sum_is_not_continuous_batch_wall_time": true,
+  "components": [
+    {
+      "component": "text",
+      "status": "constructor_and_artifact_gates_passed_no_execution",
+      "python_InferenceSession_calls": 1,
+      "Session_Run_calls": 0,
+      "constructor_seconds": 61.41834225400089,
+      "constructor_seconds_reason": null,
+      "worker_elapsed_seconds": 62.25035506099812,
+      "launcher_seconds": 63.95283985000424,
+      "process_ru_maxrss_kib": 1609424,
+      "actual_inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            2048
+          ]
+        },
+        {
+          "name": "style_ttl",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            50,
+            256
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            2048
+          ]
+        }
+      ],
+      "actual_outputs": [
+        {
+          "name": "text_emb",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            2048
+          ]
+        }
+      ],
+      "actual_IO_reason": null,
+      "external_context": {
+        "node_domain": "com.microsoft",
+        "node_op": "EPContext",
+        "embed_mode": 0,
+        "external_binary": "text-context_qnn.bin",
+        "descriptor": {
+          "bytes": 821,
+          "sha256": "389f5754e60bb3bbf3bd8b7f833d9112f6ea17d78cbe67de013dc56b0ba8cca8"
+        },
+        "binary": {
+          "bytes": 37119616,
+          "sha256": "45c9a1672ec4521947bc273565331a0cd54aa99050b1969e2ee15fa175de3bc5"
+        }
+      },
+      "external_context_reason": null,
+      "postconstructor_pin_verification": {
+        "status": "all_pins_unchanged"
+      },
+      "postconstructor_pin_verification_reason": null,
+      "postclose_artifact_hashes_match": true,
+      "postclose_artifact_hashes_reason": null,
+      "cleanup": {
+        "child_pid": 1919623,
+        "child_reaped": true,
+        "pid_absent": true,
+        "process_group_absent": true,
+        "container_absent": true,
+        "scratch_empty": true,
+        "name_label_cleanup_atomic": false
+      }
+    },
+    {
+      "component": "vector",
+      "status": "constructor_and_artifact_gates_passed_no_execution",
+      "python_InferenceSession_calls": 1,
+      "Session_Run_calls": 0,
+      "constructor_seconds": 178.70086910700047,
+      "constructor_seconds_reason": null,
+      "worker_elapsed_seconds": 180.64029698900413,
+      "launcher_seconds": 182.87652007699944,
+      "process_ru_maxrss_kib": 5698004,
+      "actual_inputs": [
+        {
+          "name": "noisy_latent",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            144,
+            2048
+          ]
+        },
+        {
+          "name": "text_emb",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            2048
+          ]
+        },
+        {
+          "name": "style_ttl",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            50,
+            256
+          ]
+        },
+        {
+          "name": "latent_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            2048
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            2048
+          ]
+        },
+        {
+          "name": "current_step",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        },
+        {
+          "name": "total_step",
+          "type": "tensor(float)",
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "actual_outputs": [
+        {
+          "name": "denoised_latent",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            144,
+            2048
+          ]
+        }
+      ],
+      "actual_IO_reason": null,
+      "external_context": {
+        "node_domain": "com.microsoft",
+        "node_op": "EPContext",
+        "embed_mode": 0,
+        "external_binary": "vector-context_qnn.bin",
+        "descriptor": {
+          "bytes": 1023,
+          "sha256": "b2938bfe41a8b111ef0a01d74ef737ea930040bf0b51cc8a2dbb2760206f9b1a"
+        },
+        "binary": {
+          "bytes": 185153584,
+          "sha256": "d40e5bf8ad96bad04e96f5a4ec27e979b410320b9d000cf2b109f5d92ad6c00f"
+        }
+      },
+      "external_context_reason": null,
+      "postconstructor_pin_verification": {
+        "status": "all_pins_unchanged"
+      },
+      "postconstructor_pin_verification_reason": null,
+      "postclose_artifact_hashes_match": true,
+      "postclose_artifact_hashes_reason": null,
+      "cleanup": {
+        "child_pid": 1920253,
+        "child_reaped": true,
+        "pid_absent": true,
+        "process_group_absent": true,
+        "container_absent": true,
+        "scratch_empty": true,
+        "name_label_cleanup_atomic": false
+      }
+    },
+    {
+      "component": "vocoder",
+      "status": "error",
+      "python_InferenceSession_calls": 1,
+      "Session_Run_calls": 0,
+      "constructor_seconds": null,
+      "constructor_seconds_reason": "Constructor threw before returning; no completed-constructor timing recorded.",
+      "worker_elapsed_seconds": 2.096722818001581,
+      "launcher_seconds": 3.5023884159963927,
+      "process_ru_maxrss_kib": 491056,
+      "actual_inputs": null,
+      "actual_outputs": null,
+      "actual_IO_reason": "Constructor threw before any actual-session I/O receipt.",
+      "external_context": null,
+      "external_context_reason": "No descriptor or context binary was produced.",
+      "postconstructor_pin_verification": null,
+      "postconstructor_pin_verification_reason": "The worker exception path did not perform post-constructor pin verification; not retrofilled.",
+      "postclose_artifact_hashes_match": null,
+      "postclose_artifact_hashes_reason": "No artifacts exist to compare; raw helper false flag is not an observed hash mismatch.",
+      "cleanup": {
+        "child_pid": 1922416,
+        "child_reaped": true,
+        "pid_absent": true,
+        "process_group_absent": true,
+        "container_absent": true,
+        "scratch_empty": true,
+        "name_label_cleanup_atomic": false
+      }
+    }
+  ],
+  "duration_context_unchanged": true,
+  "larger_context_set_complete": false,
+  "larger_contexts_existing": [
+    "duration",
+    "text",
+    "vector"
+  ],
+  "whole_long_speech_gate_ready": false,
+  "phone_or_pack_work": false,
+  "pushes_held": true,
+  "all_releases_consumed": true
+}

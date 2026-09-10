@@ -1,6 +1,6 @@
-# Whole-chapter capacity — four source graphs ready, duration context generated
+# Whole-chapter capacity — three contexts ready, vocoder finalization blocked
 
-**T2048/L2048 derivatives were materialized once under Pi's explicit release. The separately released duration constructor generated its external context once, with exact I/O and zero Run calls. Text/vector/vocoder constructors are not yet released. No model forward or phone call has occurred.** New graphs stay LOCAL-ONLY. Original0023 recipes, hashlocks, packs and app paths remain unchanged. Pushes remain held by Pi's separate privacy review.
+**T2048/L2048 derivatives were materialized once under Pi's explicit release. Duration, text and vector constructors generated external contexts with exact I/O and zero Run calls. Vocoder failed QNN graph finalization (error1002); the released batch stopped with clean teardown. Only3/4 larger contexts exist. No model forward or phone call has occurred.** New graphs stay LOCAL-ONLY. Original0023 recipes, hashlocks, packs and app paths remain unchanged. Pushes remain held by Pi's separate privacy review.
 
 ## Capacity and the actual positional change
 
@@ -54,9 +54,11 @@ A future release must bind the exact request, worker and fresh output path. The 
 
 This worker now has one real constructor-only result in addition to its fake-runtime tests. **30 focused tests passed**:23 graph/constant/structural cases and7 constructor/transport mock cases. No mock result is native evidence. The duration result is not a reload, model/phone execution, whole-chapter or quality proof. The earlier duration-only *source-derivative* request files are historical NOT_APPROVED templates superseded by the four-graph materialization release; do not execute them.
 
-## Remaining text/vector/vocoder constructors: ready for batch review, not released
+## Text/vector/vocoder batch consumed: two passes, one failure
 
-One focused source/mock-test/request update is retained in [`results/remaining-constructor-readiness-20260910/`](results/remaining-constructor-readiness-20260910/). Three separate graph/I/O-hash-bound requests share the unchanged pinned runtime/image/options and reviewed launcher lifecycle: serial, one constructor each, zero Run, separate fresh outputs/releases,520s+20s grace/≤600s per component,8GiB/4CPU and owned disk scratch. All **39 tests passed**, including9 new mock-test methods. No remaining-component constructor or native runtime was executed. The duration request/artifacts/evidence remain immutable. Await Pi's batch review/release; do not execute NOT_APPROVED templates.
+The frozen source/mock-test/request preparation remains in [`results/remaining-constructor-readiness-20260910/`](results/remaining-constructor-readiness-20260910/), with39 tests passed. Actual batch evidence is in [`results/remaining-context-constructors-20260910-attempt-01/`](results/remaining-context-constructors-20260910-attempt-01/): serial text61.418s and vector178.701s constructors passed; vocoder threw during graph finalization. Every component attempted one constructor, zero Run, with unchanged runtime/image/options and520s+20s grace/≤600s,8GiB/4CPU bounds. All groups/containers absent and scratch empty.
+
+Vocoder produced **no descriptor, binary or actual-session I/O receipt**; post-constructor pin verification did not run. Error1002 maps to QNN's memory-allocation error class, **not proof of8GiB/cgroup exhaustion or a specific operator/tensor**. Unknown observations stay null. All releases are consumed; the duration and successful text/vector artifacts remain protected. Pi has authorized only saved/source metadata diagnosis next—not a RAM change, constructor retry, shape change, materialization, inference or operator implementation.
 
 ## Fidelity and comparison boundaries
 
