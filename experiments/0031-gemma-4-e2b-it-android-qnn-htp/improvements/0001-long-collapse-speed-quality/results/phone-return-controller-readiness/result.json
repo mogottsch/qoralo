@@ -1,0 +1,150 @@
+{
+  "baseline_preservation": {
+    "baseline_runner_modified": false,
+    "baseline_runner_path": "tools/run_phone_viability.sh",
+    "baseline_runner_sha256": "36cf2ec01e1d96fcc56513afdfd5e1291faa87d30532c02928e183ee7eee2c99",
+    "frozen_manifest_sha256": "584841604ecf97a1a916c9a7f765e49ff9f7a2ee751a61fda9e9e6588f02fe25",
+    "retained_frozen_manifest_sha256": "584841604ecf97a1a916c9a7f765e49ff9f7a2ee751a61fda9e9e6588f02fe25",
+    "stage_modified": false
+  },
+  "claim_boundary": "Only source implementation, fake-device/tiny-stage tests, temporary host flock checks, mocked client spawning, host shell syntax parsing, and a plan-only CLI invocation occurred. No real ADB, repository phone lock, real stage/model payload hash/load, Genie/provider runtime, fidelity, compile or phone operation occurred. Frozen stage and baseline runner remain unchanged. Readiness does not authorize a slot or establish Android behavior, PID-race elimination, query success, provider placement or fidelity.",
+  "classification": "source_only_candidate_controller_and_mocked_preflight_readiness",
+  "deadlines": {
+    "host_process_deadline_seconds": 1800,
+    "limits": "Wait budgets/phase deadlines, not guaranteed instant kernel termination. Unresolved identity/reaping/absence is recorded as incomplete, not clean.",
+    "local_client_termination_reap_grace_seconds": 5,
+    "ordinary_adb_wait_seconds": 15,
+    "pid_poll_call_seconds": 10,
+    "process_cleanup_budget_seconds": 120,
+    "raw_pull_wait_seconds": 180,
+    "remote_monotonic_watchdog_seconds": 1800,
+    "remote_payload_hash_seconds": 180,
+    "remote_term_grace_seconds": 5,
+    "root_cleanup_budget_seconds": 60,
+    "stage_push_seconds": 600,
+    "startup_record_seconds": 60
+  },
+  "default_plan": {
+    "adb_calls": 0,
+    "auto_retry": false,
+    "device_serial": "R5CW81PR8SY",
+    "long_script": false,
+    "mode": "plan_only",
+    "phone_permission_granted_by_plan": false,
+    "process_deadline_seconds": 1800,
+    "raw_before_optional_metrics": true,
+    "remote_watchdog": true,
+    "requires": [
+      "--execute",
+      "--reviewed-stage-digest",
+      "--pi-slot",
+      "--run-id",
+      "full phone.lock before every ADB action",
+      "fresh one-use slot record"
+    ],
+    "reviewed_fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+    "reviewed_stage_digest": "584841604ecf97a1a916c9a7f765e49ff9f7a2ee751a61fda9e9e6588f02fe25",
+    "runtime_loaded": false,
+    "scope": "one fresh-dialog first-short engineering/noncanonical max16 only",
+    "signal_guard_atomic": false,
+    "signal_race_boundary": "Sequential /proc identity checks then numeric-PID kill; no pidfd/kernel identity binding.",
+    "stage": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/frozen-stages/stage-freeze-20260910T105830Z-01"
+  },
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "gates": {
+    "actual_pi_slot_manual_attestation_required": true,
+    "default_plan_only": true,
+    "execute_flag_required": true,
+    "first_short_engineering_cap": 16,
+    "fresh_output_directory_and_single_use_controller": true,
+    "full_phone_lock_before_all_adb": true,
+    "local_and_remote_full_hashes_and_runner_0555": true,
+    "lock_noninheritable_and_close_fds": true,
+    "long_override_or_script": false,
+    "one_use_slot_marker_before_first_adb": true,
+    "pi_slot_is_cryptographic_authorization": false,
+    "reviewed_stage_digest_required": true,
+    "strict_serial_hardware_and_reviewed_build": true
+  },
+  "improvement_track": "0001-long-collapse-speed-quality",
+  "next_gate": "Pi source review and any requested corrections; only a later explicit fresh phone slot can authorize one first-short collection. Exact-long/max2048 remains separate.",
+  "pid_safeguards": {
+    "atomic_identity_bound_signal": false,
+    "checks": [
+      "PID>1",
+      "unchanged recorded Linux starttime",
+      "exact executable path",
+      "exact NUL-delimited argv",
+      "fresh shell-side recheck before signal",
+      "NUL count/byte length guard against trailing empty-argument/newline spoofing"
+    ],
+    "kernel_pidfd_used": false,
+    "race_boundary": "Sequential /proc checks followed by numeric-PID kill retain a final check-to-signal race. Tests cannot eliminate or prove absence of this real race.",
+    "roles": [
+      "model-entry/Genie",
+      "wrapper",
+      "watchdog"
+    ],
+    "unknown_identity_policy": "No signal to the unverified PID and no destructive root cleanup; preserve raw/owned-path status."
+  },
+  "publication": {
+    "completed_baseline_modified": false,
+    "fidelity": null,
+    "physical_execution_evidence": false,
+    "provider_placement": null,
+    "registry_eligible": false,
+    "runtime_success": null
+  },
+  "raw_and_cleanup": {
+    "absence_check_after_root_removal": true,
+    "default_metrics_are_null": true,
+    "incomplete_raw_pull_keeps_local_partials_and_remote_root": true,
+    "no_auto_retry_or_reconnect": true,
+    "no_broad_process_name_kill": true,
+    "profile_errors_do_not_erase_zero_exit_collection": true,
+    "raw_pull_attempted_on_execution_errors": true,
+    "raw_status_persisted_before_optional_metrics": true,
+    "retained_owned_path_field": "retained_remote_root",
+    "retained_root_status": "processes_absent_raw_incomplete_remote_root_retained",
+    "unknown_process_state_refuses_root_removal": true
+  },
+  "schema_version": 1,
+  "source_identities": [
+    {
+      "bytes": 29227,
+      "path": "improvements/0001-long-collapse-speed-quality/tools/phone_return_controller.py",
+      "sha256": "e0e91e1855239a5ab349555f81ea050b94ea2997ba01e59c9c705444cdc6e9d2"
+    },
+    {
+      "bytes": 4676,
+      "path": "improvements/0001-long-collapse-speed-quality/tools/phone_return_shell.py",
+      "sha256": "4ce478abf5b44ea0ae32cb9f490eb319f37fd54243fa91fb1433883c8be9b7bb"
+    },
+    {
+      "bytes": 26678,
+      "path": "tests/test_phone_return_controller.py",
+      "sha256": "dd74de0d1dda38492a943a46e9444967db530c2a601a83ecab17f2bc0abe28d1"
+    },
+    {
+      "bytes": 8664,
+      "path": "improvements/0001-long-collapse-speed-quality/PHONE-RETURN-CONTROLLER-READINESS.md",
+      "sha256": "53c064bb9ba49d16d9900df675c5f9bbba60d00309590647a2a444f960845544"
+    }
+  ],
+  "status": "controller_ready_for_source_review_no_phone_slot_granted",
+  "tests": {
+    "actual_repository_phone_lock_used": false,
+    "adb_client_spawns_mocked": true,
+    "controller_mock_cases": 40,
+    "generated_shell_checked_with_host_bash_n_only": true,
+    "logs": [
+      "raw/mock-tests.stderr",
+      "raw/all-tests.stderr"
+    ],
+    "real_device_calls": 0,
+    "real_model_or_runtime_loads": 0,
+    "temporary_host_locks_used_for_tests": true,
+    "test_limit": "Fake transport responses and host syntax checks do not validate live Android proc/argv/watchdog behavior or physical inference.",
+    "total_owner_tests": 104
+  }
+}
