@@ -628,6 +628,14 @@ class ContractTest(unittest.TestCase):
         self.assertEqual(13, check["raw_recoveries_verified"])
         self.assertEqual(4, check["checkpoint_headers_verified"])
         self.assertFalse(check["model_or_pte_loaded_or_executed"])
+        # Root checkpoints/ ignores must not silently drop reviewed evidence at staging.
+        for position in range(4):
+            for suffix in ("json", "states.pt.zst"):
+                path = directory / f"raw/checkpoints/position-{position:03d}.{suffix}"
+                ignored = subprocess.run(["git", "check-ignore", "--no-index", "-q", str(path)], cwd=REPO)
+                self.assertEqual(1, ignored.returncode, str(path))
+        raw_state = directory / "raw/checkpoints/position-000.states.pt"
+        self.assertEqual(0, subprocess.run(["git", "check-ignore", "--no-index", "-q", str(raw_state)], cwd=REPO).returncode)
         for key in ("runtime_source", "supervisor_source", "verifier_source"):
             entry = result["route"][key]
             self.assertEqual(entry["sha256"], sha(EXP / entry["path"]))

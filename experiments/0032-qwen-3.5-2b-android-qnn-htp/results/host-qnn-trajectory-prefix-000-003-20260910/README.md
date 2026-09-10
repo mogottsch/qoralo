@@ -29,7 +29,7 @@ Every checkpoint binds the exact PTE, QDQ/reference manifest, parameters, input 
 
 ## Complete retention and verification
 
-Git contains lossless copies of all **four complete 73-output bundles**, all **four complete 48-state checkpoints**, the four paired QDQ logit tensors, checkpoint headers, journal, logs, telemetry and exact command/source bindings. Thirteen raw recoveries were checked. Compressed payloads total about 65 MB; each file is below 11 MB. `compression-manifest.json` contains every raw/compressed path, size and SHA-256.
+Git contains lossless copies of all **four complete 73-output bundles**, all **four complete 48-state checkpoints**, the four paired QDQ logit tensors, checkpoint headers, journal, logs, telemetry and exact command/source bindings. A result-local `.gitignore` exception admits only the four reviewed checkpoint headers/compressed state outputs; the repository-wide model-checkpoint exclusion is unchanged. Thirteen raw recoveries were checked. Compressed payloads total about 65 MB; each file is below 11 MB. `compression-manifest.json` contains every raw/compressed path, size and SHA-256.
 
 Raw originals and local compressed backups remain protected at:
 
