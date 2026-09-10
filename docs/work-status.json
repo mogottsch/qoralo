@@ -1,18 +1,18 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-10T20:15:28+00:00",
+  "updated_at": "2026-09-10T20:17:37+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
     {
       "id": "tts-capacity",
       "title": "Long narration (~90 s)",
-      "status": "active",
+      "status": "paused",
       "owner": "Janek",
-      "now": "One already-approved long phone test is starting/preparing.",
-      "next": "Await actual outcome; only a stable hash-bound WAV gets a player.",
-      "reported_at": "2026-09-10T20:15:28+00:00",
-      "reported_by": "Pi — latest relayed milestone, captured by Kate",
+      "now": "Stopped pre-install: 1 FAILED history row; 0 queued/running jobs.",
+      "next": "Decide terminal-history eligibility. Not a TTS failure; no data deletion/repair.",
+      "reported_at": "2026-09-10T20:17:37+00:00",
+      "reported_by": "Janek first-outcome report, captured by Kate",
       "stale_after_seconds": 600,
       "links": [
         {
@@ -36,12 +36,12 @@
     {
       "id": "app",
       "title": "App / short TTS",
-      "status": "active",
+      "status": "waiting",
       "owner": "Janek",
-      "now": "Pi authorized routine force-stop of exact debug app/test; NO data clear.",
-      "next": "Janek proceeds with one approved long test; no user-close permission wait.",
-      "reported_at": "2026-09-10T20:15:28+00:00",
-      "reported_by": "Janek execution report + Pi release, captured by Kate",
+      "now": "Authorized app closure passed without data clear; existing data preserved.",
+      "next": "Await guard decision. No install, new pack, constructor, inference or WAV.",
+      "reported_at": "2026-09-10T20:17:37+00:00",
+      "reported_by": "Janek first-outcome report, captured by Kate",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -139,11 +139,11 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "active",
+      "status": "paused",
       "owner": "Pi",
-      "now": "Janek: one test starting",
-      "next": "Actual outcome pending. No WAV/player claimed yet; no data clear.",
-      "reported_at": "2026-09-10T20:15:28+00:00",
+      "now": "stopped; cleanup done, lock released",
+      "next": "No install or inference occurred. Cleanup/settings errors empty; reported PIDs absent.",
+      "reported_at": "2026-09-10T20:17:37+00:00",
       "reported_by": "Janek execution report + Pi release, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -151,11 +151,11 @@
     {
       "id": "host",
       "title": "On this computer",
-      "status": "active",
+      "status": "waiting",
       "owner": "Janek / Nik",
-      "now": "phone-test preparation / supervision",
-      "next": "Routine exact debug-app/test stop authorized, without clearing data. No success inferred.",
-      "reported_at": "2026-09-10T20:15:28+00:00",
+      "now": "waiting on guard-boundary decision",
+      "next": "Terminal FAILED history is not queued/running work. Never delete/repair data just to pass.",
+      "reported_at": "2026-09-10T20:17:37+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -176,8 +176,8 @@
   "agents": [
     {
       "name": "Pi",
-      "task": "Coordinate approved phone test",
-      "reported_at": "2026-09-10T20:15:28+00:00",
+      "task": "Terminal-history guard decision",
+      "reported_at": "2026-09-10T20:17:37+00:00",
       "reported_by": "Pi latest snapshot; Kate capture",
       "stale_after_seconds": 900
     },
@@ -197,8 +197,8 @@
     },
     {
       "name": "Janek",
-      "task": "Prepare / execute one long test",
-      "reported_at": "2026-09-10T20:15:28+00:00",
+      "task": "Paused at pre-install guard",
+      "reported_at": "2026-09-10T20:17:37+00:00",
       "reported_by": "Pi latest snapshot; Kate capture",
       "stale_after_seconds": 900
     },
