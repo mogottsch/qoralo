@@ -2,7 +2,7 @@
 
 ## Status
 
-Active. The exact HistogramObserver/W4A16 host candidate improves all 24 hidden-layer cosines and final-logit agreement at position zero. Full-short replay and physical validation remain pending. The accepted physical baseline remains token 1206 (`To`) with its numerical-fidelity limitations unchanged.
+Active. The exact HistogramObserver QDQ graph has completed the full 174-position short-input replay with all positional logits finite and all state updates complete. QNN trajectory/physical fidelity remain pending. Final predicted token 2523 (`You`) is an interpretation only; the physical baseline remains unchanged.
 
 ## Completed
 
@@ -34,11 +34,13 @@ Active. The exact HistogramObserver/W4A16 host candidate improves all 24 hidden-
 
 20. Finished the saved-QDQ helper with 24 synthetic-only tests for exact inputs/masks/state transport, computed logits/argmax, raw partial/error retention, signals, and no overwrite. No model archive was loaded; helper review and heavy-slot rotation are still required before real replay.
 
+21. Completed the accepted 174-position HistogramObserver QDQ replay under a 7200-second host guard. All logits/state-update counts and positional tensor hashes/top values were checked. Bound final token 2523 (`You`) to the pinned tokenizer as interpretation only; retained the full journal/final tensor in Git and all intermediate bytes in mandatory local migration storage. Process reaped and disk-backed scratch empty.
+
 ## Current work
 
-1. Preserve physical baseline/preflight hashes and the new local-only diagnostic artifacts.
-2. Await Pi review of helper readiness and release for the full 174-token HistogramObserver QDQ replay, running serially with resource guards. Do not start it automatically.
-3. Do not use ADB or the phone without an explicit scheduled slot. This milestone does not establish full-prompt/physical fidelity or authorize a campaign.
-4. After the bounded precision decision and agreed follow-up gates, validate chunked-prefill state semantics/delegation and loaded-route reset/isolation before the canonical campaign.
+1. Preserve physical baseline/preflight hashes, diagnostic artifacts, and both LOCAL-ONLY positional tensor directories listed in the full-short result. Do not clean them; copy them on migration/handover.
+2. Source-only readiness may prepare matching QNN trajectory verification with the same artifact/input and explicit state continuation; no new model run until reviewed/coordinated.
+3. Do not use ADB or the phone without an explicit scheduled slot. Host teacher-forced completion is not QNN/physical fidelity or a campaign authorization.
+4. After agreed fidelity follow-up gates, validate chunked-prefill state semantics/delegation and loaded-route reset/isolation before the canonical campaign.
 
 Do not use CPU fallback, borrow the 4B config, relabel direct Hexagon/GenieX evidence as QNN, or publish before the complete route satisfies the benchmark contract.

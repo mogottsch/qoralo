@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "evidence_class": "host_saved_histogram_w4a16_qdq_full_short_replay",
+  "status": "completed",
+  "phase": "finished",
+  "prompt_tokens": 174,
+  "context_tokens": 4096,
+  "evaluated_tokens": 174,
+  "state_updates_completed": 174,
+  "last_input_position": 173,
+  "last_logits": {
+    "shape": [
+      1,
+      1,
+      248320
+    ],
+    "numel": 248320,
+    "finite": true,
+    "nan_count": 0,
+    "inf_count": 0,
+    "argmax": 2523,
+    "top_ids": [
+      2523,
+      40,
+      760,
+      332,
+      12189,
+      1206,
+      27775,
+      2053,
+      15771,
+      8160
+    ],
+    "top_logits": [
+      18.541059494018555,
+      17.42799949645996,
+      17.353796005249023,
+      17.187458038330078,
+      16.601295471191406,
+      16.590837478637695,
+      16.496713638305664,
+      16.460357666015625,
+      16.45537757873535,
+      16.180973052978516
+    ],
+    "min": -9.516051292419434,
+    "max": 18.541059494018555,
+    "max_count": 1
+  },
+  "logits_artifact": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/full-short-20260910T092627Z/replay/final-logits.pt.steps/position-173.pt",
+    "bytes": 994857,
+    "sha256": "38dc3e1fa499e3b1d96418735fb71cf3db8d7a8403bfa90deb4ec3f9c503ccad"
+  },
+  "final_logits": {
+    "shape": [
+      1,
+      1,
+      248320
+    ],
+    "numel": 248320,
+    "finite": true,
+    "nan_count": 0,
+    "inf_count": 0,
+    "argmax": 2523,
+    "top_ids": [
+      2523,
+      40,
+      760,
+      332,
+      12189,
+      1206,
+      27775,
+      2053,
+      15771,
+      8160
+    ],
+    "top_logits": [
+      18.541059494018555,
+      17.42799949645996,
+      17.353796005249023,
+      17.187458038330078,
+      16.601295471191406,
+      16.590837478637695,
+      16.496713638305664,
+      16.460357666015625,
+      16.45537757873535,
+      16.180973052978516
+    ],
+    "min": -9.516051292419434,
+    "max": 18.541059494018555,
+    "max_count": 1
+  },
+  "final_logits_artifact": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/full-short-20260910T092627Z/replay/final-logits.pt",
+    "bytes": 994857,
+    "sha256": "38dc3e1fa499e3b1d96418735fb71cf3db8d7a8403bfa90deb4ec3f9c503ccad"
+  },
+  "physical_execution": false,
+  "progress_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/full-short-20260910T092627Z/replay/progress.jsonl",
+  "automatic_retry": false,
+  "claim_limits": [
+    "Host PT2E QDQ replay only; no QNN or Android execution in this phase.",
+    "Teacher-forced input replay with computed next-token logits, not an autoregressive text sample or campaign.",
+    "Per-position raw logits and the journal are checkpoints, not a resumable KV-state snapshot.",
+    "A forced SIGKILL/power loss may leave started_not_complete with the last durable checkpoint; never infer completion."
+  ],
+  "artifact_manifest": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/results/host-histogram-precision-20260910/artifact-manifest.json",
+    "bytes": 2515,
+    "sha256": "071c9eb470e82da962c69aac21d5f7b6eeabb359c32bf6123c5dbf4ca925e515"
+  },
+  "input_artifacts": {
+    "params": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch/examples/models/qwen3_5/config/2b_config.json",
+      "bytes": 1180,
+      "sha256": "63597e7233e5310974603b72cb32b14b09ccd5461e1d1540d4049327d6d5b642"
+    },
+    "token_ids": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/protocol/token-ids/short.int32le",
+      "bytes": 696,
+      "sha256": "dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4"
+    },
+    "qdq_file": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/restart-20260910T083327Z/01-hidden-compile/diagnostic-w4a16-qdq.pt2",
+      "bytes": 13645661902,
+      "sha256": "30799090d14a42c92ea804a2763df55ff231ba232653d96484324ad40c492364"
+    }
+  },
+  "threads": 4,
+  "current_input_position": 173,
+  "elapsed_seconds": 1802.9233231459993,
+  "progress_artifact": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/full-short-20260910T092627Z/replay/progress.jsonl",
+    "bytes": 139751,
+    "sha256": "ea42feb0172dbeabdbf41e047be0e5ecb657b16cbe61a8d54c8665cf898d00df"
+  }
+}

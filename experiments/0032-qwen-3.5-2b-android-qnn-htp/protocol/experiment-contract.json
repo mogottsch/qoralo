@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
-  "status": "active_histogram_host_position_zero_precision_improved_full_prompt_and_physical_pending",
+  "status": "active_histogram_full_short_qdq_completed_qnn_trajectory_and_physical_pending",
   "question": "Can Qwen3.5-2B run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Qwen3.5-2B post-trained text generation only",
@@ -155,11 +155,15 @@
     "histogram_diagnostic_outputs": 73,
     "histogram_position_zero_logits_cosine": 0.9471681118011475,
     "histogram_hidden_layers_improved": 24,
-    "histogram_full_short_replay_completed": false,
+    "histogram_full_short_replay_completed": true,
+    "histogram_full_short_result_path": "results/host-histogram-full-short-20260910/result.json",
+    "histogram_full_short_qdq_argmax": 2523,
+    "histogram_full_short_evaluated_positions": 174,
+    "histogram_full_short_qnn_trajectory_verified": false,
     "histogram_physical_execution": false,
     "saved_replay_helper_readiness_result_path": "results/saved-qdq-replay-helper-readiness/result.json",
     "saved_replay_helper_synthetic_tests_passed": 24,
-    "next_gate": "Await Pi helper review and heavy-slot release for a serial full174-token HistogramObserver QDQ replay. Keep the physical baseline/preflight unchanged; no heavy replay or phone work is authorized by source-only readiness."
+    "next_gate": "Source-only readiness for matching QNN trajectory verification; no new model run or phone until reviewed/coordinated. Preserve LOCAL-ONLY positional tensor bytes as required migration artifacts; keep the physical baseline/preflight unchanged."
   },
   "required_provider_proof_if_unblocked": {
     "compiled_context_identity": "Hash every deployed serialized context and bind SM8550/v73 compiler provenance.",

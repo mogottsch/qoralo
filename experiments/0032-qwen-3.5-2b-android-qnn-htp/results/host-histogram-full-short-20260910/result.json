@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
+  "evidence_class": "host_exact_histogram_w4a16_full_short_teacher_forced_qdq_replay",
+  "status": "completed_174_positions_not_qnn_or_autoregressive_generation",
+  "model": {
+    "source": "Qwen/Qwen3.5-2B",
+    "revision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "checkpoint_sha256": "a2640184f26ce851c3bf305fd77f4dac6af3381025a4ace1d431e7d685c70e86",
+    "quantization": "W4A16 per-channel Linear/Conv weights with HistogramObserver16-bit activation calibration; quantized recurrence",
+    "compile_evidence_commit": "e528f41",
+    "helper_readiness_commit": "6dd1e1a"
+  },
+  "input_binding": {
+    "qdq_file": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/restart-20260910T083327Z/01-hidden-compile/diagnostic-w4a16-qdq.pt2",
+      "bytes": 13645661902,
+      "sha256": "30799090d14a42c92ea804a2763df55ff231ba232653d96484324ad40c492364"
+    },
+    "params": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch/examples/models/qwen3_5/config/2b_config.json",
+      "bytes": 1180,
+      "sha256": "63597e7233e5310974603b72cb32b14b09ccd5461e1d1540d4049327d6d5b642"
+    },
+    "token_ids": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/protocol/token-ids/short.int32le",
+      "bytes": 696,
+      "sha256": "dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4"
+    },
+    "artifact_manifest": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/results/host-histogram-precision-20260910/artifact-manifest.json",
+      "bytes": 2515,
+      "sha256": "071c9eb470e82da962c69aac21d5f7b6eeabb359c32bf6123c5dbf4ca925e515"
+    },
+    "canonical_short_sha256": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae",
+    "context": 4096,
+    "initial_state": "all zero; recurrent/convolution/KV",
+    "input_positions": "0 through173, teacher-forced canonical input tokens",
+    "helper_source": {
+      "path": "tools/replay_saved_qdq.py",
+      "bytes": 13849,
+      "sha256": "f2a3886651e31e02934280d8ec278247387cc06031541b411837a55c099ee58f"
+    },
+    "verifier_source": {
+      "path": "tools/verify_saved_replay_evidence.py",
+      "bytes": 6103,
+      "sha256": "f4e83fbacf5e6055e5a782ac9bfddc5c6d8d2d411444fb6cf20f6e9c295da041"
+    }
+  },
+  "observed": {
+    "evaluated_tokens": 174,
+    "state_updates_completed": 174,
+    "last_input_position": 173,
+    "all174_positional_logits_finite": true,
+    "all174_argmax_and_top_logits_independently_verified": true,
+    "final_logits": {
+      "shape": [
+        1,
+        1,
+        248320
+      ],
+      "numel": 248320,
+      "finite": true,
+      "nan_count": 0,
+      "inf_count": 0,
+      "argmax": 2523,
+      "top_ids": [
+        2523,
+        40,
+        760,
+        332,
+        12189,
+        1206,
+        27775,
+        2053,
+        15771,
+        8160
+      ],
+      "top_logits": [
+        18.541059494018555,
+        17.42799949645996,
+        17.353796005249023,
+        17.187458038330078,
+        16.601295471191406,
+        16.590837478637695,
+        16.496713638305664,
+        16.460357666015625,
+        16.45537757873535,
+        16.180973052978516
+      ],
+      "min": -9.516051292419434,
+      "max": 18.541059494018555,
+      "max_count": 1
+    },
+    "final_logits_raw_bytes": 994857,
+    "final_logits_raw_sha256": "38dc3e1fa499e3b1d96418735fb71cf3db8d7a8403bfa90deb4ec3f9c503ccad",
+    "journal_bytes": 139751,
+    "journal_sha256": "ea42feb0172dbeabdbf41e047be0e5ecb657b16cbe61a8d54c8665cf898d00df"
+  },
+  "token_interpretation": {
+    "token_id": 2523,
+    "utf8": "You",
+    "file": "predicted-token.txt",
+    "bytes": 3,
+    "sha256": "08b041935798fbf6fd6ff51099ffedb140a475889986d14f5559ff8e7fc571dd",
+    "tokenizer_source": "Qwen/Qwen3.5-2B",
+    "tokenizer_revision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "tokenizer_json_sha256": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+    "method": "tokenizers.Tokenizer.from_file(...).decode([2523], skip_special_tokens=False)",
+    "interpretation_only_not_generated_response": true
+  },
+  "timing": {
+    "host_helper_total_seconds": 1802.9233231459993,
+    "host_guard_total_seconds": 1810.322024815,
+    "host_timeout_seconds": 7200,
+    "math_threads": 4,
+    "model_execute_seconds": null,
+    "model_execute_null_reason": "No separate execution-only timer; helper total includes input hashing, graph load,174 forward/state steps, tensor/journal persistence and metadata checkpoints.",
+    "boundary": "Host diagnostic wall time only; not Android prefill/TTFT/decode or canonical campaign timing."
+  },
+  "retention": {
+    "journal": "raw/progress.jsonl",
+    "final_tensor": "raw/final-logits.pt.zst",
+    "telemetry": "raw/resources.jsonl.zst",
+    "manifest": "compression-manifest.json",
+    "positional_tensors": 174,
+    "positional_raw_bytes": 173105118,
+    "positional_compressed_bytes": 148995000,
+    "positional_bytes_in_git": false,
+    "positional_bytes_recoverable_from_git_hashes_alone": false,
+    "required_migration_paths": [
+      ".local/diagnosis/full-short-20260910T092627Z/replay/final-logits.pt.steps",
+      ".local/diagnosis/full-short-20260910T092627Z/retained-compressed/positions"
+    ],
+    "policy": "LOCAL-ONLY intermediate tensor bytes must not be cleaned. Copy these directories on migration/handover; Git contains retrieval paths, sizes and hashes but cannot reconstruct missing intermediate bytes.",
+    "all176_raw_compressed_recoveries_verified": true
+  },
+  "cleanup": {
+    "child_pid": 972604,
+    "child_reaped": true,
+    "owned_process_group_absent": true,
+    "scratch_path": ".local/diagnosis/full-short-20260910T092627Z/scratch",
+    "scratch_regular_files_remaining": 0,
+    "scratch_filesystem": "ext4",
+    "raw_positional_artifacts_preserved": true,
+    "compressed_positional_artifacts_preserved": true,
+    "phone_access_performed": false
+  },
+  "current_physical_baseline_pte_sha256": "23ac8abd7e39b596d62bdc6b098a3e61fe0688bf6d1f4d537959e13492d2c506",
+  "qnn_execution_performed": false,
+  "physical_execution_performed": false,
+  "autoregressive_generation_performed": false,
+  "generated_text_sanity_checked": false,
+  "campaign_ready": false,
+  "registry_eligible": false,
+  "automatic_retry": false,
+  "claim_limits": [
+    "Completed exact174-position host QDQ teacher-forced replay only.",
+    "Token2523 (You) is a single predicted next-token interpretation, not a generated response or text-quality evidence.",
+    "No QNN-x86, QNN/HTP phone, FP32 equivalence, cross-reference argmax accuracy, chunk-prefill, request reset/reuse or campaign claim.",
+    "Prior MinMax and physical tokens arise from different reference routes; their differing argmax does not establish accuracy.",
+    "All intermediate tensor bytes are LOCAL-ONLY with explicit migration requirements; hashes in Git cannot recreate them."
+  ],
+  "next_gate": "Source-only plan/readiness for a same-artifact same-input QNN trajectory comparison, then a separately coordinated bounded host run; no additional model run or phone work authorized here."
+}

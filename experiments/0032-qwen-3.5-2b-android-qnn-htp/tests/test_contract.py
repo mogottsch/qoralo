@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import json
 import subprocess
 import unittest
@@ -531,6 +532,56 @@ class ContractTest(unittest.TestCase):
         for entry in result["artifacts"].values():
             self.assertEqual(entry["sha256"], sha(EXP / entry["path"]))
 
+    def test_full_histogram_replay_is_teacher_forced_host_only(self) -> None:
+        directory = EXP / "results/host-histogram-full-short-20260910"
+        result = json.loads((directory / "result.json").read_text())
+        raw = json.loads((directory / "raw/result.json").read_text())
+        self.assertEqual("completed", raw["status"])
+        self.assertEqual(174, raw["evaluated_tokens"])
+        self.assertEqual(174, raw["state_updates_completed"])
+        self.assertEqual(173, raw["last_input_position"])
+        self.assertEqual(2523, raw["final_logits"]["argmax"])
+        self.assertEqual(1, raw["final_logits"]["max_count"])
+        self.assertTrue(result["observed"]["all174_positional_logits_finite"])
+        self.assertEqual(raw["final_logits"], result["observed"]["final_logits"])
+        self.assertEqual(7200, result["timing"]["host_timeout_seconds"])
+        for key in ("qnn_execution_performed", "physical_execution_performed", "autoregressive_generation_performed", "generated_text_sanity_checked", "campaign_ready", "registry_eligible", "automatic_retry"):
+            self.assertFalse(result[key])
+        self.assertEqual(b"You", (directory / "predicted-token.txt").read_bytes())
+        self.assertEqual(sha(directory / "predicted-token.txt"), result["token_interpretation"]["sha256"])
+        self.assertEqual(self.contract["tokenizer_and_template"]["tokenizer_json_sha256"], result["token_interpretation"]["tokenizer_json_sha256"])
+        self.assertTrue(result["token_interpretation"]["interpretation_only_not_generated_response"])
+        self.assertEqual(self.contract["executorch_qnn_route"]["revised_pte_sha256"], result["current_physical_baseline_pte_sha256"])
+        self.assertEqual(0, result["cleanup"]["scratch_regular_files_remaining"])
+        self.assertTrue(result["cleanup"]["owned_process_group_absent"])
+        for name in ("helper_source", "verifier_source"):
+            item = result["input_binding"][name]
+            self.assertEqual(item["sha256"], sha(EXP / item["path"]))
+
+    def test_full_replay_verification_exposes_local_only_retention_boundary(self) -> None:
+        directory = EXP / "results/host-histogram-full-short-20260910"
+        spec = importlib.util.spec_from_file_location("verify_saved_replay", EXP / "tools/verify_saved_replay_evidence.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        git_only = module.verify(directory)
+        self.assertEqual(174, git_only["journal_positions_verified"])
+        self.assertEqual(2, git_only["raw_recoveries_verified"])
+        self.assertEqual(0, git_only["positional_tensors_numerically_checked"])
+        self.assertFalse(git_only["local_positional_bytes_checked"])
+        self.assertIn("LOCAL-ONLY", git_only["limitation"])
+        full = json.loads((directory / "verification-with-local.json").read_text())
+        self.assertEqual(176, full["raw_recoveries_verified"])
+        self.assertEqual(174, full["positional_tensors_numerically_checked"])
+        result = json.loads((directory / "result.json").read_text())
+        self.assertFalse(result["retention"]["positional_bytes_in_git"])
+        self.assertFalse(result["retention"]["positional_bytes_recoverable_from_git_hashes_alone"])
+        self.assertEqual(2, len(result["retention"]["required_migration_paths"]))
+        manifest = json.loads((directory / "compression-manifest.json").read_text())
+        positional = [entry for entry in manifest["files"] if "position" in entry]
+        self.assertEqual(174, len(positional))
+        self.assertEqual(173105118, sum(entry["raw_bytes"] for entry in positional))
+        self.assertTrue(all("compressed_local_path" in entry and "compressed_path" not in entry for entry in positional))
+
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
             EXP / "protocol",
@@ -547,6 +598,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/android-qnn-physical-viability-20260828-attempt-03",
             EXP / "results/host-histogram-precision-20260910",
             EXP / "results/saved-qdq-replay-helper-readiness",
+            EXP / "results/host-histogram-full-short-20260910",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

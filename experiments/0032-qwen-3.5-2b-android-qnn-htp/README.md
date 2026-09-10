@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active. Host-only HistogramObserver calibration improves same-position QDQ/QNN-x86 agreement across all 24 hidden layers and raises final-logit cosine from 0.433603 to 0.947168, with matching argmax 198. The physical baseline remains unchanged; full-prompt HistogramObserver fidelity and campaign readiness are not established.**
+**Active. The exact HistogramObserver QDQ graph completed all 174 teacher-forced short-input positions on the host with finite logits and 174 state updates. Final argmax 2523 decodes to `You` only as a next-token interpretation. Matching full-prompt QNN/physical fidelity, generated-text sanity, and campaign readiness remain unproven; the physical baseline is unchanged.**
 
 This is a separate HTP feasibility arm. It does not change or relabel `0027` CPU evidence.
 
@@ -59,11 +59,15 @@ A lower-retention two-process host replay in [`results/host-w4a16-qdq-output-dia
 
 [`results/saved-qdq-replay-helper-readiness/`](results/saved-qdq-replay-helper-readiness/) binds the source-only replay helper and 24 tiny synthetic tests. It enforces the exact 174-input hash/sequence and state semantics, derives output IDs from actual logits, retains per-position raw tensors and an error/interruption journal, and refuses overwrite/resume. No model archive was loaded during these tests and no real HistogramObserver full-prompt replay has run.
 
+## Full-short host QDQ milestone
+
+[`results/host-histogram-full-short-20260910/`](results/host-histogram-full-short-20260910/) binds the completed 174-position teacher-forced replay, journal, final tensor, and independently checked positional tensor hashes/values. The 174 intermediate raw/compressed tensors are **LOCAL-ONLY**: their migration paths are mandatory retention inputs and Git hashes cannot reconstruct their bytes. Token `You` is not a generated response or accuracy evidence.
+
 ## Current next gate
 
-1. Keep physical PTE `23ac8abd…d2c506` and phone preflight unchanged; the new 73-output diagnostic PTE is not compatible with the current 49-output Android runner.
-2. Await Pi's helper review and heavy-slot release for one serial full 174-token HistogramObserver QDQ replay; do not automatically start another heavy phase.
-3. No ADB or staging without a new explicit Pi phone slot. Residual physical drift and one-token-only output remain campaign-readiness boundaries.
+1. Keep physical PTE `23ac8abd…d2c506` and phone preflight unchanged; the 73-output diagnostic PTE is not compatible with the current 49-output Android runner.
+2. Prepare source-only readiness for matching QNN trajectory verification using the same HistogramObserver artifact/input and explicit state semantics. No new model run until separately reviewed/coordinated.
+3. No ADB or staging without a new explicit Pi phone slot. Full QNN/physical drift and one-token-only interpretation remain campaign-readiness boundaries.
 4. Only after agreed fidelity and state-isolation gates may chunked prefill and the fixed 1+5+5+5 campaign be promoted.
 
 GenieX llama.cpp NPU metrics, the shipped 4B HTP example, direct-Hexagon output without QNN, and CPU-only text output are not substitutes for physical QNN/HTP provider proof.
