@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
+  "evidence_class": "host_qnn_x86_histogram_4_position_own_state_trajectory",
+  "status": "bounded_segment_completed_with_own_state_drift",
+  "authorization": {
+    "released_by": "Pi",
+    "input_positions": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "max_positions": 4,
+    "timeout_seconds": 900,
+    "resume": false,
+    "automatic_follow_on": false,
+    "phone": false
+  },
+  "route": {
+    "model": "Qwen/Qwen3.5-2B",
+    "revision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "precision": "HistogramObserver W4A16 diagnostic route",
+    "binding": {
+      "pte_sha256": "7f30be3d57b601af0804cdd50dd8968e271d673b710ea249a754fcd2f4ff3fea",
+      "params_sha256": "63597e7233e5310974603b72cb32b14b09ccd5461e1d1540d4049327d6d5b642",
+      "token_ids_sha256": "dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4",
+      "reference_manifest_sha256": "4762613af14b25fe777ebc2ec11986f0671563e400861d51f6c149e3fcbfcac4",
+      "qdq_sha256": "30799090d14a42c92ea804a2763df55ff231ba232653d96484324ad40c492364",
+      "context": 4096,
+      "state_abi": 1,
+      "driver_sha256": "8e543382766a5e4a303f3cba38429fca8246be73fa53bf8a0b2d3bf580979d63",
+      "state_transport_sha256": "f2a3886651e31e02934280d8ec278247387cc06031541b411837a55c099ee58f"
+    },
+    "actual_input_artifacts": {
+      "pte": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/restart-20260910T083327Z/01-hidden-compile/diagnostic-w4a16-qnn.pte",
+        "bytes": 1995463416,
+        "sha256": "7f30be3d57b601af0804cdd50dd8968e271d673b710ea249a754fcd2f4ff3fea"
+      },
+      "params": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/executorch/examples/models/qwen3_5/config/2b_config.json",
+        "bytes": 1180,
+        "sha256": "63597e7233e5310974603b72cb32b14b09ccd5461e1d1540d4049327d6d5b642"
+      },
+      "token_ids": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/protocol/token-ids/short.int32le",
+        "bytes": 696,
+        "sha256": "dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4"
+      }
+    },
+    "artifact_manifest": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/results/host-histogram-precision-20260910/artifact-manifest.json",
+      "bytes": 2515,
+      "sha256": "071c9eb470e82da962c69aac21d5f7b6eeabb359c32bf6123c5dbf4ca925e515"
+    },
+    "runtime_source": {
+      "path": "tools/compare_qnn_trajectory.py",
+      "bytes": 19671,
+      "sha256": "8e543382766a5e4a303f3cba38429fca8246be73fa53bf8a0b2d3bf580979d63"
+    },
+    "supervisor_source": {
+      "path": "tools/qwen_host_guard.py",
+      "bytes": 4524,
+      "sha256": "33373e74e4e52b9dd209bb91fc58d87f4b07186112307c0e869d02dd4136705d"
+    },
+    "verifier_source": {
+      "path": "tools/verify_qnn_prefix_evidence.py",
+      "bytes": 7519,
+      "sha256": "b27f4548fc9ae060e1fdf9f2f1cacebf5ee2d85311ae9edee7c00a7e8ffbd7b4"
+    },
+    "canonical_short_sha256": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae"
+  },
+  "execution": {
+    "state_origin": "zero_initialization",
+    "backend_state_carry": "qnn_x86_own_propagated_state",
+    "forward_inputs": 51,
+    "forward_outputs": 73,
+    "state_outputs_carried": 48,
+    "hidden_outputs_retained_not_carried": 24,
+    "graph_calls_returned": 4,
+    "state_updates_completed": 4,
+    "comparisons_completed": 4,
+    "host_qnn_provider_observations": {
+      "htp_backend_type_markers": 4,
+      "contexts_loaded": 4,
+      "graphs_retrieved": 4,
+      "graph_execute_starts": 16,
+      "graph_execute_status_0x0": 16,
+      "scope": "QNN-x86 host backend/simulator logs only; not physical HTP proof."
+    },
+    "all73_output_tensors_finite_at_all4_positions": true,
+    "all4_state_checkpoints_match_explicit_output_materialization": true,
+    "supervisor_exit_code": 0
+  },
+  "comparisons": [
+    {
+      "position": 0,
+      "input_token": 248045,
+      "cosine": 0.9471681118011475,
+      "max_abs": 2.895951271057129,
+      "mean_abs": 0.4832112491130829,
+      "qdq_argmax": 198,
+      "qnn_argmax": 198
+    },
+    {
+      "position": 1,
+      "input_token": 8678,
+      "cosine": 0.6792200803756714,
+      "max_abs": 7.649494647979736,
+      "mean_abs": 1.4161059856414795,
+      "qdq_argmax": 198,
+      "qnn_argmax": 198
+    },
+    {
+      "position": 2,
+      "input_token": 198,
+      "cosine": 0.7843607664108276,
+      "max_abs": 7.64849853515625,
+      "mean_abs": 1.292108416557312,
+      "qdq_argmax": 248045,
+      "qnn_argmax": 71093
+    },
+    {
+      "position": 3,
+      "input_token": 2523,
+      "cosine": 0.8903306722640991,
+      "max_abs": 6.707252502441406,
+      "mean_abs": 1.1018133163452148,
+      "qdq_argmax": 2224,
+      "qnn_argmax": 513
+    }
+  ],
+  "first_argmax_divergence_position": 2,
+  "comparison_boundary": "Initially equal zero state and identical teacher-forced input prefix; each backend then carries its own evolved state. Accumulated trajectory drift, NOT same-state operator localization.",
+  "checkpoint": {
+    "latest_metadata": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/qnn-prefix-20260910T104805Z/run/trajectory/checkpoints/position-003.json",
+      "bytes": 1260,
+      "sha256": "029e2c3735442e6604bf3efd94e88669bff1ded328f654da77d4620baf74b07b"
+    },
+    "latest_state": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/qnn-prefix-20260910T104805Z/run/trajectory/checkpoints/position-003.states.pt",
+      "bytes": 121296019,
+      "sha256": "f2591ab3810126ef996f3cf5f3c9e751ebebaf33f0fc10f2eb02a9f450aefe3c"
+    },
+    "next_position": 4,
+    "resume_executed": false
+  },
+  "timing": {
+    "worker_elapsed_seconds": 525.9994430499992,
+    "supervisor_elapsed_seconds": 526.8311961619984,
+    "host_timeout_seconds": 900,
+    "math_threads": 4,
+    "scope": "Host diagnostic wall time including preflight, QNN loading, output/checkpoint persistence and comparison; not Android latency or a campaign rate."
+  },
+  "retention": {
+    "complete73_output_bundles": 4,
+    "complete48_state_checkpoints": 4,
+    "paired_qdq_logit_tensors": 4,
+    "compressed_raw_recoveries_verified": 13,
+    "compressed_total_bytes": 65357246,
+    "all_prefix_payload_bytes_recoverable_from_git": true,
+    "manifest": "compression-manifest.json",
+    "local_original_root": ".local/diagnosis/qnn-prefix-20260910T104805Z",
+    "local_originals_protected": true,
+    "prior174_qdq_local_only_policy_unchanged": true
+  },
+  "same_state_next_plan": {
+    "source_only": true,
+    "inventory": "same-state-inventory.json",
+    "plan": "SAME_STATE_PLAN.md",
+    "target_input_position": 1,
+    "target_input_token": 8678,
+    "shared_state_source": "QDQ position0 outputs from exact30799090 PT2 andzero initial state, to be materialized without a model call",
+    "qdq_position0_logits_match_full_replay_exactly": true,
+    "new_qdq_replay_performed": false,
+    "new_controlled_qnn_call_performed": false,
+    "limitation": "Full replay did not retain QDQ state checkpoints; matching saved position0 logits does not alone prove state equality. Source/input/reset lineage and deterministic-source assumption need review."
+  },
+  "cleanup": {
+    "worker_pid": 1683122,
+    "worker_reaped": true,
+    "owned_process_group_absent": true,
+    "scratch_regular_files_remaining": 0,
+    "scratch_filesystem": "ext4",
+    "no_reference_or_output_cleanup_performed": true,
+    "phone_access_performed": false
+  },
+  "full174_qnn_trajectory_verified": false,
+  "same_state_causal_localization_claimed": false,
+  "physical_execution_performed": false,
+  "autoregressive_generation_performed": false,
+  "campaign_ready": false,
+  "registry_eligible": false,
+  "current_physical_pte_sha256": "23ac8abd7e39b596d62bdc6b098a3e61fe0688bf6d1f4d537959e13492d2c506",
+  "claim_limits": [
+    "Only the authorized four-position host segment ran; no resume/follow-on/full174 or phone run.",
+    "Position1 cosine drops to0.679220 and the first argmax divergence is at position2. Neither is evidence of full numerical fidelity.",
+    "This is accumulated own-state trajectory comparison; it does not identify current-call error versus feedback drift without a controlled identical-state experiment.",
+    "No generated-text, accuracy, physical HTP, Android performance, benchmark reset/reuse or campaign claim.",
+    "The same-state inventory/plan inspected existing saved tensors only; it did not replay or load any model."
+  ],
+  "next_gate": "Review the position1 identical-QDQ-state input plan and lineage before a dedicated controlled single-call helper/test and any separate host execution release; no further model run now."
+}

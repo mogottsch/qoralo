@@ -1,0 +1,87 @@
+{
+  "source_only_inventory": true,
+  "model_or_pte_loaded_or_executed": false,
+  "saved_tensor_payloads_inspected_only": true,
+  "qdq_position0_outputs": {
+    "path": ".local/diagnosis/restart-20260910T083327Z/qdq-outputs.pt",
+    "bytes": 21879364,
+    "sha256": "a471368c8b319013c6b0827afb172fd69aabbc11f12bf7de90556af79a7c8bf2"
+  },
+  "qdq_archive": {
+    "path": ".local/diagnosis/restart-20260910T083327Z/01-hidden-compile/diagnostic-w4a16-qdq.pt2",
+    "bytes": 13645661902,
+    "sha256": "30799090d14a42c92ea804a2763df55ff231ba232653d96484324ad40c492364"
+  },
+  "params": {
+    "path": ".local/executorch/examples/models/qwen3_5/config/2b_config.json",
+    "bytes": 1180,
+    "sha256": "63597e7233e5310974603b72cb32b14b09ccd5461e1d1540d4049327d6d5b642"
+  },
+  "input_ids": {
+    "path": "protocol/token-ids/short.int32le",
+    "bytes": 696,
+    "sha256": "dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4"
+  },
+  "origin_command_path": "results/host-histogram-precision-20260910/current/02-qdq/command.json",
+  "origin_driver": {
+    "path": "tools/localize_qnn_first_token.py",
+    "bytes": 13825,
+    "sha256": "5d36018f59dfbe3765aff1fa671835debddc54243ac4224613ce0a7c7cc02203"
+  },
+  "source_input_position": 0,
+  "source_token_id": 248045,
+  "source_state": "all zero",
+  "source_mask": "-65504 everywhere except current-token final slot0.0",
+  "position0_logits_bit_identical_to_full_qdq_replay": true,
+  "position0_logits_max_abs": 0.0,
+  "qdq_state_outputs_after_position0_retained": 48,
+  "qdq_state_before_position1": "Can be materialized without any model call: zero state templates followed by advance_state at position0 with these48 saved QDQ state outputs.",
+  "qnn_state_before_position1": {
+    "schema_version": 1,
+    "binding": {
+      "pte_sha256": "7f30be3d57b601af0804cdd50dd8968e271d673b710ea249a754fcd2f4ff3fea",
+      "params_sha256": "63597e7233e5310974603b72cb32b14b09ccd5461e1d1540d4049327d6d5b642",
+      "token_ids_sha256": "dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4",
+      "reference_manifest_sha256": "4762613af14b25fe777ebc2ec11986f0671563e400861d51f6c149e3fcbfcac4",
+      "qdq_sha256": "30799090d14a42c92ea804a2763df55ff231ba232653d96484324ad40c492364",
+      "context": 4096,
+      "state_abi": 1,
+      "driver_sha256": "8e543382766a5e4a303f3cba38429fca8246be73fa53bf8a0b2d3bf580979d63",
+      "state_transport_sha256": "f2a3886651e31e02934280d8ec278247387cc06031541b411837a55c099ee58f"
+    },
+    "backend_state": "qnn_x86_own_propagated_state",
+    "next_position": 1,
+    "consumed_prefix_sha256": "f9ec16cdf22e0d09b737c0b00f7ad357eb62cd6ece5796706f0871f0e3759b4b",
+    "state_artifact": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/qnn-prefix-20260910T104805Z/run/trajectory/checkpoints/position-000.states.pt",
+      "bytes": 121296019,
+      "sha256": "741b39dc8d043795997e842fed12a5dc0fb0507ed586b7a486bb1cdf13e9660a"
+    },
+    "prior_segment_checkpoint": null
+  },
+  "qnn_state_before_position2": {
+    "schema_version": 1,
+    "binding": {
+      "pte_sha256": "7f30be3d57b601af0804cdd50dd8968e271d673b710ea249a754fcd2f4ff3fea",
+      "params_sha256": "63597e7233e5310974603b72cb32b14b09ccd5461e1d1540d4049327d6d5b642",
+      "token_ids_sha256": "dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4",
+      "reference_manifest_sha256": "4762613af14b25fe777ebc2ec11986f0671563e400861d51f6c149e3fcbfcac4",
+      "qdq_sha256": "30799090d14a42c92ea804a2763df55ff231ba232653d96484324ad40c492364",
+      "context": 4096,
+      "state_abi": 1,
+      "driver_sha256": "8e543382766a5e4a303f3cba38429fca8246be73fa53bf8a0b2d3bf580979d63",
+      "state_transport_sha256": "f2a3886651e31e02934280d8ec278247387cc06031541b411837a55c099ee58f"
+    },
+    "backend_state": "qnn_x86_own_propagated_state",
+    "next_position": 2,
+    "consumed_prefix_sha256": "c90c5e64dea9cc4ea91d10ed54dd21fd46bd268f675db654b3254e739264c5b7",
+    "state_artifact": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/diagnosis/qnn-prefix-20260910T104805Z/run/trajectory/checkpoints/position-001.states.pt",
+      "bytes": 121296019,
+      "sha256": "566bbcc5fe343aef709b189acf3c2adc0e0e4f92de2653d36b7b8b16ed88cc5d"
+    },
+    "prior_segment_checkpoint": null
+  },
+  "qdq_state_before_position2_retained": false,
+  "claim_limit": "No new QDQ replay or QNN execution; source binding plus identical saved position0 logits supports preparing a controlled state input pack, not a new fidelity conclusion."
+}

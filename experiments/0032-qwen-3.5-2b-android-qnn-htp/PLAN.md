@@ -2,7 +2,7 @@
 
 ## Status
 
-Active. The exact HistogramObserver QDQ graph has completed the full 174-position short-input replay with all positional logits finite and all state updates complete. QNN trajectory/physical fidelity remain pending. Final predicted token 2523 (`You`) is an interpretation only; the physical baseline remains unchanged.
+Active. QNN-x86 own-state positions 0–3 completed but exposed substantial drift: position-1 cosine 0.679220 and first argmax divergence at position 2. Full fidelity and current-call versus feedback attribution remain unresolved. Physical baseline unchanged; a source-only identical-QDQ-state position-1 control awaits review.
 
 ## Completed
 
@@ -38,10 +38,12 @@ Active. The exact HistogramObserver QDQ graph has completed the full 174-positio
 
 22. Prepared the source-only 73-output QNN-x86 trajectory helper with 48-state carry, exclusive raw/state checkpoints, explicit prefix-bound continuation, independent runtime/pressure limits, and 30 synthetic tests. No real PTE/PT2/QNN load occurred. A four-position/900-second example is review-only; full174 estimated cost exceeds a7200-second invocation.
 
+23. Completed exactly one released four-position QNN-x86 segment from zero state in526.831s; all four outputs/state checkpoints/comparisons retained and verified. All73 tensors were finite, but argmax diverges at position2. Last checkpoint is next_position4 and was not resumed. Source-only inventory located exact saved QDQposition0 outputs for a possible position1 control; no new QDQ replay or controlled QNN call ran.
+
 ## Current work
 
 1. Preserve physical baseline/preflight hashes, diagnostic artifacts, and both LOCAL-ONLY positional tensor directories listed in the full-short result. Do not clean them; copy them on migration/handover.
-2. Await review of trajectory-helper, explicit continuation and budget readiness before a separately scheduled bounded prefix. No real QNN/model run is authorized by source-only readiness.
+2. Review the position1 identical-QDQ-state plan and deterministic-source lineage. Materialization can use saved QDQposition0 outputs without another QDQ replay; any dedicated controlled QNN call needs separate review/release and must not masquerade as own-state resume.
 3. Do not use ADB or the phone without an explicit scheduled slot. Host teacher-forced completion is not QNN/physical fidelity or a campaign authorization.
 4. After agreed fidelity follow-up gates, validate chunked-prefill state semantics/delegation and loaded-route reset/isolation before the canonical campaign.
 

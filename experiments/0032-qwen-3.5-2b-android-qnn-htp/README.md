@@ -2,7 +2,7 @@
 
 ## Status
 
-**Active. The exact HistogramObserver QDQ graph completed all 174 teacher-forced short-input positions on the host with finite logits and 174 state updates. Final argmax 2523 decodes to `You` only as a next-token interpretation. Matching full-prompt QNN/physical fidelity, generated-text sanity, and campaign readiness remain unproven; the physical baseline is unchanged.**
+**Active. The bounded QNN-x86 own-state prefix completed positions 0–3, but drift remains: position-1 logit cosine falls to 0.679220 and argmax first diverges at position 2. This does not establish full fidelity or identify current-call versus feedback error. The physical baseline remains unchanged; a source-only position-1 identical-QDQ-state control is planned for review.**
 
 This is a separate HTP feasibility arm. It does not change or relabel `0027` CPU evidence.
 
@@ -67,10 +67,14 @@ A lower-retention two-process host replay in [`results/host-w4a16-qdq-output-dia
 
 [`results/qnn-trajectory-helper-readiness/`](results/qnn-trajectory-helper-readiness/) binds the source-only 73-output trajectory helper, durable own-state checkpoints, and independent deadline/resource supervisor. Thirty tiny synthetic tests cover actual positions/masks, 48-state carry, explicit continuation, reference/hash failures, raw/error retention, and termination/reaping. No real QNN/model load occurred. This measures accumulated own-state drift, not same-state operator error; a full 174-input x86 trajectory is estimated near 5.8 hours, beyond a 7200-second invocation.
 
+## Four-position QNN-x86 trajectory
+
+[`results/host-qnn-trajectory-prefix-000-003-20260910/`](results/host-qnn-trajectory-prefix-000-003-20260910/) retains all four complete 73-output bundles and 48-state checkpoints losslessly, paired QDQ logits, comparisons and cleanup. The segment completed under its 900-second budget with no resume/follow-on. Prefix cosines are 0.947168, 0.679220, 0.784361 and 0.890331; the first argmax divergence is at position 2. This is accumulated **own-state** drift, not same-state causal localization. The same-state inventory binds existing QDQ position-0 outputs to the exact accepted PT2/input/reset configuration and confirms their logits match the full replay's position 0 exactly.
+
 ## Current next gate
 
 1. Keep physical PTE `23ac8abd…d2c506` and phone preflight unchanged; the 73-output diagnostic PTE is not compatible with the current 49-output Android runner.
-2. Await trajectory-helper/checkpoint/budget review before a separately scheduled bounded QNN-x86 prefix (the readiness document suggests four positions/900 seconds, not an authorization). No new model run automatically.
+2. Review the source-only position-1 identical-QDQ-state control plan. Use existing saved QDQ outputs to prepare the intended state input; do not mislabel it as own-QNN resume or run a new QDQ/QNN model call without release.
 3. No ADB or staging without a new explicit Pi phone slot. Full QNN/physical drift and one-token-only interpretation remain campaign-readiness boundaries.
 4. Only after agreed fidelity and state-isolation gates may chunked prefill and the fixed 1+5+5+5 campaign be promoted.
 

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
-  "status": "active_histogram_full_short_qdq_completed_qnn_trajectory_and_physical_pending",
+  "status": "active_four_position_qnn_own_state_drift_observed_same_state_control_pending",
   "question": "Can Qwen3.5-2B run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "scope": {
     "model": "Qwen3.5-2B post-trained text generation only",
@@ -165,7 +165,12 @@
     "saved_replay_helper_synthetic_tests_passed": 24,
     "qnn_trajectory_helper_readiness_result_path": "results/qnn-trajectory-helper-readiness/result.json",
     "qnn_trajectory_helper_synthetic_tests_passed": 30,
-    "next_gate": "Review source-only QNN trajectory/checkpoint/budget readiness before any scheduled bounded host prefix. No new QNN/model run or phone is authorized by readiness. Preserve LOCAL-ONLY positional tensors and the unchanged physical baseline."
+    "histogram_qnn_prefix_result_path": "results/host-qnn-trajectory-prefix-000-003-20260910/result.json",
+    "histogram_qnn_prefix_completed_positions": 4,
+    "histogram_qnn_prefix_first_argmax_divergence_position": 2,
+    "histogram_qnn_prefix_position1_logit_cosine": 0.6792200803756714,
+    "histogram_identical_state_control_executed": false,
+    "next_gate": "Review source-only position1 identical-QDQ-state control and saved-output lineage; no auto-resume or additional model/QNN/phone run. Preserve protected QDQ references, all prefix checkpoints, and the unchanged physical baseline."
   },
   "required_provider_proof_if_unblocked": {
     "compiled_context_identity": "Hash every deployed serialized context and bind SM8550/v73 compiler provenance.",

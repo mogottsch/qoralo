@@ -602,6 +602,55 @@ class ContractTest(unittest.TestCase):
         for entry in result["artifacts"].values():
             self.assertEqual(entry["sha256"], sha(EXP / entry["path"]))
 
+    def test_four_position_qnn_prefix_retains_drift_and_bounds(self) -> None:
+        directory = EXP / "results/host-qnn-trajectory-prefix-000-003-20260910"
+        result = json.loads((directory / "result.json").read_text())
+        self.assertEqual("host_qnn_x86_histogram_4_position_own_state_trajectory", result["evidence_class"])
+        self.assertEqual([0, 1, 2, 3], result["authorization"]["input_positions"])
+        for key in ("graph_calls_returned", "state_updates_completed", "comparisons_completed"):
+            self.assertEqual(4, result["execution"][key])
+        self.assertEqual(73, result["execution"]["forward_outputs"])
+        self.assertEqual(48, result["execution"]["state_outputs_carried"])
+        self.assertEqual(2, result["first_argmax_divergence_position"])
+        self.assertLess(result["comparisons"][1]["cosine"], 0.7)
+        self.assertEqual((248045, 71093), (result["comparisons"][2]["qdq_argmax"], result["comparisons"][2]["qnn_argmax"]))
+        self.assertEqual(4, result["checkpoint"]["next_position"])
+        self.assertFalse(result["checkpoint"]["resume_executed"])
+        self.assertLess(result["timing"]["supervisor_elapsed_seconds"], 900)
+        for key in ("full174_qnn_trajectory_verified", "same_state_causal_localization_claimed", "physical_execution_performed", "autoregressive_generation_performed", "campaign_ready", "registry_eligible"):
+            self.assertFalse(result[key])
+        self.assertTrue(result["cleanup"]["owned_process_group_absent"])
+        self.assertEqual(0, result["cleanup"]["scratch_regular_files_remaining"])
+        spec = importlib.util.spec_from_file_location("prefix_verifier", EXP / "tools/verify_qnn_prefix_evidence.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        check = module.verify(directory)
+        self.assertEqual(13, check["raw_recoveries_verified"])
+        self.assertEqual(4, check["checkpoint_headers_verified"])
+        self.assertFalse(check["model_or_pte_loaded_or_executed"])
+        for key in ("runtime_source", "supervisor_source", "verifier_source"):
+            entry = result["route"][key]
+            self.assertEqual(entry["sha256"], sha(EXP / entry["path"]))
+
+    def test_same_state_position1_inventory_is_not_an_executed_control(self) -> None:
+        directory = EXP / "results/host-qnn-trajectory-prefix-000-003-20260910"
+        inventory = json.loads((directory / "same-state-inventory.json").read_text())
+        result = json.loads((directory / "result.json").read_text())
+        self.assertTrue(inventory["source_only_inventory"])
+        self.assertFalse(inventory["model_or_pte_loaded_or_executed"])
+        self.assertEqual(0, inventory["source_input_position"])
+        self.assertEqual(248045, inventory["source_token_id"])
+        self.assertTrue(inventory["position0_logits_bit_identical_to_full_qdq_replay"])
+        self.assertEqual(0, inventory["position0_logits_max_abs"])
+        self.assertEqual(48, inventory["qdq_state_outputs_after_position0_retained"])
+        self.assertEqual("30799090d14a42c92ea804a2763df55ff231ba232653d96484324ad40c492364", inventory["qdq_archive"]["sha256"])
+        self.assertEqual(1, inventory["qnn_state_before_position1"]["next_position"])
+        self.assertEqual(2, inventory["qnn_state_before_position2"]["next_position"])
+        plan = result["same_state_next_plan"]
+        self.assertEqual(1, plan["target_input_position"])
+        self.assertFalse(plan["new_qdq_replay_performed"])
+        self.assertFalse(plan["new_controlled_qnn_call_performed"])
+
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
             EXP / "protocol",
@@ -620,6 +669,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/saved-qdq-replay-helper-readiness",
             EXP / "results/host-histogram-full-short-20260910",
             EXP / "results/qnn-trajectory-helper-readiness",
+            EXP / "results/host-qnn-trajectory-prefix-000-003-20260910",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():
