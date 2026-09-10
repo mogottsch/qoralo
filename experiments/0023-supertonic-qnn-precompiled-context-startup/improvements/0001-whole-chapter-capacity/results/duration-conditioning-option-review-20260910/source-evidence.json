@@ -1,0 +1,70 @@
+{
+  "scope": "SOURCE_ONLY_CONTROL_REVIEW_AND_SAVED_SCALAR_ARITHMETIC",
+  "new_model_calls": 0,
+  "native_or_graph_changes": 0,
+  "hypothetical_budget_executed": false,
+  "source_passages": [
+    {
+      "path": "experiments/0007-mobile-podcast-preview-bakeoff/artifacts/supertonic-3/venv/lib/python3.11/site-packages/supertonic/config.py",
+      "bytes": 8064,
+      "sha256": "9684abef9023d305b87d8b511a5c955624f5b7a92c76b57aa8b3e06f8e18ce2e",
+      "passages": [
+        {
+          "start_line": 201,
+          "end_line": 211,
+          "text": "DEFAULT_TOTAL_STEPS = 8\nDEFAULT_SPEED = 1.05\nDEFAULT_MAX_CHUNK_LENGTH = 300\nDEFAULT_MAX_CHUNK_LENGTH_KO = 120  # Korean requires shorter chunks\nDEFAULT_SILENCE_DURATION = 0.3  # seconds\n\n# TTS parameters - constraints\nMIN_SPEED = 0.7\nMAX_SPEED = 2.0\nMIN_TOTAL_STEPS = 1\nMAX_TOTAL_STEPS = 100"
+        }
+      ]
+    },
+    {
+      "path": "experiments/0007-mobile-podcast-preview-bakeoff/artifacts/supertonic-3/venv/lib/python3.11/site-packages/supertonic/core.py",
+      "bytes": 20003,
+      "sha256": "26664d490509edc1cc1feca2fc0f72b1ae067fd5c5b11d39c1daeba9c3e81ff4",
+      "passages": [
+        {
+          "start_line": 451,
+          "end_line": 473,
+          "text": "    def sample_noisy_latent(self, duration: np.ndarray) -> tuple[np.ndarray, np.ndarray]:\n        bsz = len(duration)\n        wav_len_max = duration.max() * self.sample_rate\n        wav_lengths = (duration * self.sample_rate).astype(np.int64)\n        chunk_size = self.base_chunk_size * self.chunk_compress_factor\n        latent_len = ((wav_len_max + chunk_size - 1) / chunk_size).astype(np.int32)\n        latent_dim = self.ldim * self.chunk_compress_factor\n        noisy_latent = np.random.randn(bsz, latent_dim, latent_len).astype(np.float32)\n        latent_mask = get_latent_mask(wav_lengths, self.base_chunk_size, self.chunk_compress_factor)\n        noisy_latent = noisy_latent * latent_mask\n        return noisy_latent, latent_mask\n\n    def __call__(\n        self,\n        text_list: list[str],\n        style: Style,\n        total_step: int = 5,\n        speed: float = 1.05,\n        lang: Optional[str] = None,\n    ) -> tuple[np.ndarray, np.ndarray]:\n        \"\"\"Synthesize speech from text using the specified style.\n\n        Args:"
+        },
+        {
+          "start_line": 498,
+          "end_line": 517,
+          "text": "                f\"Speed must be between {MIN_SPEED} and {MAX_SPEED}, got {speed:.6f}. \"\n                f\"Use values closer to 1.05 for more natural speech.\"\n            )\n\n        bsz = len(text_list)\n        text_ids, text_mask = self.text_processor(text_list, lang)\n        dur_onnx, *_ = self.dp_ort.run(\n            None, {\"text_ids\": text_ids, \"style_dp\": style.dp, \"text_mask\": text_mask}\n        )\n        dur_onnx = dur_onnx / speed\n        text_emb_onnx, *_ = self.text_enc_ort.run(\n            None,\n            {\"text_ids\": text_ids, \"style_ttl\": style.ttl, \"text_mask\": text_mask},\n        )\n        xt, latent_mask = self.sample_noisy_latent(dur_onnx)\n        total_step_np = np.array([total_step] * bsz, dtype=np.float32)\n        for step in range(total_step):\n            current_step = np.array([step] * bsz, dtype=np.float32)\n            xt, *_ = self.vector_est_ort.run(\n                None,"
+        }
+      ]
+    },
+    {
+      "path": "experiments/0007-mobile-podcast-preview-bakeoff/artifacts/supertonic-3/venv/lib/python3.11/site-packages/supertonic/pipeline.py",
+      "bytes": 16733,
+      "sha256": "13b16fb8556632b5985f8ba1e961096ca1ad921d01aed171972dd106df51a7cd",
+      "passages": [
+        {
+          "start_line": 158,
+          "end_line": 167,
+          "text": "    def synthesize(\n        self,\n        text: str,\n        voice_style: Style,\n        total_steps: int = DEFAULT_TOTAL_STEPS,\n        speed: float = DEFAULT_SPEED,\n        max_chunk_length: Optional[int] = None,\n        silence_duration: float = DEFAULT_SILENCE_DURATION,\n        lang: Optional[str] = None,\n        verbose: bool = False,"
+        }
+      ]
+    }
+  ],
+  "saved_CPU_result": {
+    "path": "experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/results/duration-padding-cpu-20260910-attempt-01/raw/data/result.json",
+    "sha256": "2bdf1eaaf0fbe61fc2e327b5f1934a4538f814dd93d86a699c64e1f9401369cd"
+  },
+  "arithmetic_only": [
+    {
+      "case": "active1333",
+      "saved_CPU_DP_seconds": 29.809314727783203,
+      "hypothetical_budget_seconds": 90,
+      "conditioning_equivalent_speed": 0.33121460808648,
+      "duration_at_documented_min_speed_0_7": 42.58473532540458
+    },
+    {
+      "case": "padded2048",
+      "saved_CPU_DP_seconds": 29.819082260131836,
+      "hypothetical_budget_seconds": 90,
+      "conditioning_equivalent_speed": 0.3313231362236871,
+      "duration_at_documented_min_speed_0_7": 42.59868894304548
+    }
+  ],
+  "review": "Nik FINAL duration-source-trace accepted as negative cap/crop finding; explicit DP/D effective-speed qualification required; no implementation or execution release."
+}
