@@ -1,7 +1,7 @@
 ---
 experiment: 0031-gemma-4-e2b-it-android-qnn-htp
 status: completed
-summary: The accepted campaign remains complete; the separate FP16 improvement now has a compiled SM8550/v73 context with all 30 cache contracts and 120 flat-buffer boundaries verified. Runtime, fidelity, and speed remain unmeasured.
+summary: The accepted campaign remains complete. The separate compiled FP16 candidate now has a frozen stage and a mock-tested, plan-only-default controller; Android behavior, fidelity, and speed remain unmeasured.
 benchmark: android-llm
 registry: 0031-gemma-4-e2b-it-qnn-htp
 ---
@@ -224,6 +224,22 @@ The accepted warn-level compiler API can suppress native logs, so the exhaustive
 
 Owned compile scratch was empty/removed and processes were reaped. No runtime reset/inference, fidelity test, or phone run occurred; all such outcomes remain unmeasured. The original completed campaign, its registry card, and registry evidence are unchanged.
 
+**2026-09-10 — Frozen stage and diagnostic plan (`212f0d4`).** The [file-preparation result](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/frozen-genie-stage-readiness/result.json) binds a separate private stage of **21 payload files / 4,003,855,761 bytes**, manifest SHA-256 `58484160…fe25`. Large payloads are independent copies, not links into the accepted baseline. The runner is read-only executable `0555`, other inputs read-only, and directories private `0700`. This is a hash freeze, not hardware-enforced immutability; future use must reverify the external digest and every payload.
+
+The stage uses compiled context `1d80d016…ca9f8` under the unchanged alias, with the accepted runtime libraries, LUTs, tokenizer, BOS suppression and configuration bytes unchanged. Config SHA-256 `f8008e04…7eba` retains context 4096, greedy sampling and base ceiling 2048. Exact short/long prompt and token-ID bytes are pinned; expected input counts are inherited evidence, not a fresh tokenization observation.
+
+Its only execution script describes **one fresh-dialog first-short query capped at 16 tokens**, explicitly engineering/noncanonical. It was not executed. Long inputs are frozen but **no long script exists**; the later exact-long/max2048 comparison requires separate preparation, evidence review and permission. The [diagnostic plan](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/PHONE-RETURN-DIAGNOSTIC-PLAN.md) still distinguishes short viability from long-collapse fidelity. Stage preparation copied/hashed files and checked source/configuration only: no runtime/model load, tokenization replay, compilation, phone lock or ADB.
+
+**2026-09-10 — Candidate controller, source/mock readiness (`62b8a16`).** The separate [controller result](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/phone-return-controller-readiness/result.json) and [reviewed lifecycle notes](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/PHONE-RETURN-CONTROLLER-READINESS.md) add orchestration without modifying the frozen stage or old baseline runner. The default prints a plan; execution requires an explicit execute flag, exact reviewed stage digest, fresh run directory and a one-use slot attestation from an actual new Pi grant. The slot string is a manual attestation, not cryptographic permission, and readiness itself grants no slot.
+
+The source requires one full `phone.lock` lease before all ADB actions, including identity, push, polling, signals, raw pull and cleanup. It pins the device and exact reviewed Android build, verifies every local/remote payload hash and runner mode, and consumes the slot before the first ADB action. There is no automatic retry/reconnection or long/prompt/model/backend override. Only the single max16 engineering query is supported, with a 1,800-second host process deadline and independent remote watchdog; bounded transfer/pull/cleanup budgets are not a guarantee of immediate kernel termination.
+
+For the model entry, wrapper and watchdog, recorded PID/starttime, exact executable and NUL-delimited argv are rechecked before signalling. Unknown identity means **no signal to the unverified PID and no destructive root cleanup**. These are sequential `/proc` checks followed by numeric-PID signals, **not atomic or pidfd-bound identity operations**: the final check-to-signal race remains. Fake tests demonstrate refusals on observed mismatches, not elimination of the real race or validation of Android `/proc`/shell behavior.
+
+Raw stdout/stderr, command metadata, partial outputs and errors are retained before optional metrics. An incomplete raw pull preserves local partials **and the remote root**, even if processes are absent; unknown process state also leaves cleanup explicitly incomplete. Root removal requires both complete raw collection and confirmed process absence, followed by a separate absence check. Optional profile failure yields null/reason rather than deleting evidence. Even exit 0 does not establish native query success, EOS, provider placement or fidelity; the default metric hook leaves those unmeasured.
+
+The controller adds **40 fake-device/tiny-stage cases**, bringing the owner suite to 104 tests after the 64-test stage milestone. Temporary host locks, mocked ADB-client spawning and host shell syntax checks used **no real ADB, repository phone lock, runtime/model load or phone**. All live Android process/watchdog behavior and FP16 runtime/fidelity results remain pending, along with the existing mixed-cache API risks and null unsupported-op count. Neither readiness milestone changes the completed campaign, registry or app evidence.
+
 The [request-routing recommendation](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/REQUEST-ROUTING.md) remains an unmeasured policy for the existing canonical tiers, not a built hybrid or a general prompt-length threshold. It selects HTP for short/medium and LiteRT GPU for long before each complete request, with no mid-request switch or retry on another provider. Co-resident setup, memory, and speed require measurement; separate accepted route measurements are not a hybrid benchmark.
 
 ## Results
@@ -352,7 +368,15 @@ Attempt chronology remains intact: the initial campaign setup failed before any 
 | Compiled cache metadata | Original 38-in/31-out AR1/AR128 aliases; all 30 four-way contracts match; all 120 boundaries `FLAT_BUFFER` |
 | Source/API limits | Byte-copy rationale only; key-derived FP16 negative-zero clear; NativeKV uint8-only and not selected; dump/export semantics untested |
 | Unsupported-op count | Null: native logs can be suppressed at accepted verbosity; not a zero-unsupported or CPU-free execution claim |
-| Unmeasured candidate results | Runtime load/reset/inference, physical placement, fidelity/long-output quality, and speed; no phone or campaign result |
+| Frozen stage | `212f0d4`: 21 payload files / 4,003,855,761 B; manifest `58484160…fe25`; independent copies, runner0555; baseline unchanged |
+| Frozen config/input boundary | Config `f8008e04…7eba`, libraries/LUTs/tokenizer/BOS and short/long bytes unchanged; no new tokenization |
+| Supported diagnostic | One fresh-dialog first-short/max16 engineering query; unexecuted; no long script/path; exact-long/max2048 separately gated |
+| Controller readiness | `62b8a16`: plan-only default; actual fresh one-use Pi attestation, full phone.lock, exact device/build and local/remote hashes required |
+| Deadlines | Host process + remote watchdog 1,800 s; bounded phase waits, not guaranteed immediate termination; no automatic retry |
+| PID limitation | Starttime/exe/argv checks before numeric signal; no atomic/pidfd binding, residual check-to-signal race remains |
+| Retention/cleanup | Raw before optional metrics; unknown PID is not signalled; unknown process state or incomplete pull retains root/cleanup-incomplete status |
+| Offline test boundary | 40 fake controller cases / 104 owner tests; no real ADB, actual repository lock, runtime/model load or phone |
+| Unmeasured candidate results | Live Android controller behavior, runtime load/reset/inference, physical placement, fidelity/long-output quality, and speed; no phone or campaign result |
 | Mixed-commit review scope | Gemma slice of `f637a74` only; no app/gallery publication or approval |
 | Routing-policy boundary | Unmeasured request-level recommendation; no built/measured hybrid or general length threshold |
 | Publication effect | Completed campaign and registry row unchanged; no phone, campaign rerun, or new registry evidence |
