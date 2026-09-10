@@ -1,5 +1,6 @@
 import hashlib
 from pathlib import Path
+import re
 import subprocess
 import unittest
 
@@ -33,13 +34,17 @@ class NormalIntegrationScopeTests(unittest.TestCase):
                                         'Triple(BuildConfig.SUPERTONIC_PACK_ID, BuildConfig.SUPERTONIC_PACK_ID, BuildConfig.SUPERTONIC_MANIFEST_SHA256)')
         self.assertEqual(expected, (PROJECT / path).read_text())
 
-    def test_only_two_prompt_strings_change_no_limits_parser_sampler_or_global_minimum(self):
+    def test_target_prompt_binding_only_no_limits_parser_sampler_or_global_minimum(self):
         path = 'app/src/main/java/dev/vibevoice/podcast/runtime/NativeEngines.kt'
-        expected = frozen(path).replace(
-            'Design a coherent spoken podcast outline from the supplied notes and instructions. Return only JSON:',
-            'Design a coherent spoken podcast outline from the supplied notes and instructions. Follow the requested chapter count and IDs. Each brief is a short content plan, not a miniature transcript. Return only JSON:').replace(
-            'Write the requested complete spoken podcast chapter in one response. Use the outline, notes, and instructions; do not emit stage directions or analysis. Return only JSON:',
-            'Write the requested complete spoken podcast chapter in one response. Develop the outline brief into a full source-grounded narration with an opening, explanation and closing; do not merely repeat or summarize the brief. Follow the instructions, including any requested spoken-word length. Do not emit stage directions or analysis. Return only JSON:')
+        expected = subprocess.check_output(['git','show','7980d11:podcast-app/'+path],cwd=ROOT).decode()
+        expected = expected.replace('.put("requestedChapterId", chapter.id)',
+            '.put("requestedChapterId", chapter.id)\n            .put("requestedChapter", JSONObject().put("id", chapter.id).put("title", chapter.title).put("brief", chapter.brief))')
+        expected = expected.replace('generate("chapter", serialized)', 'generate("chapter", serialized, singleChapterInstruction(chapter))')
+        expected = expected.replace('generate(mode: String, request: String): String', 'generate(mode: String, request: String, specificInstruction: String? = null): String')
+        expected = expected.replace('        RuntimeDiagnostics.beforeRequest(mode, request, systemInstruction(mode), maxOutput)',
+            '        val instruction = specificInstruction ?: systemInstruction(mode)\n        RuntimeDiagnostics.beforeRequest(mode, request, instruction, maxOutput)')
+        expected = expected.replace('Contents.of(systemInstruction(mode))', 'Contents.of(instruction)')
+        expected = re.sub(r'^        "chapter" -> .*$', '        "chapter" -> error("A chapter request requires its concrete single-chapter instruction")', expected, flags=re.MULTILINE)
         self.assertEqual(expected, (PROJECT / path).read_text())
 
     def test_native_and_legacy_runtime_pack_authorities_stay_unchanged(self):

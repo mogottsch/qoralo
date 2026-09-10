@@ -25,6 +25,8 @@ import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
+import org.json.JSONObject
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Before
@@ -57,6 +59,23 @@ class GenerationCoordinatorTest {
         assertEquals(EpisodePhase.SCRIPT_DRAFT, repository.episode(episode).phase)
         assertEquals(listOf("chapter-1", "chapter-2"), llm.chapterRequests)
         assertEquals(2, repository.activeRevision(episode).second.size)
+    }
+
+    @Test fun savedWrongWholeEpisodeReturnStaysRejectedBeforeSecondChapterOrCommit() = runTest {
+        val (episode, job) = queuedScript(review = true)
+        val raw = javaClass.classLoader!!.getResourceAsStream("gemma-wrong-whole-episode-response.txt")!!.bufferedReader().use { it.readText() }
+        val json = JSONObject(raw.substring(raw.indexOf('{'), raw.lastIndexOf('}') + 1))
+        val llm = FakeLlm(FrozenChapter(json.getString("id"), json.getString("title"), json.getString("text")))
+        val failure = try {
+            coordinator(llm = llm).generateScript(episode, job) {}
+            fail("The wrong episode-scoped response must not be repaired or accepted")
+            error("unreachable")
+        } catch (expected: IllegalArgumentException) { expected }
+        assertTrue(failure.message!!.contains("wrong complete chapter"))
+        assertEquals(listOf("chapter-1"), llm.chapterRequests)
+        assertNull(repository.episode(episode).activeRevisionId)
+        assertNull(repository.episode(episode).lockedRevisionId)
+        assertTrue(repository.audio(episode).isEmpty())
     }
 
     @Test fun reviewOffReturnsLockedAudioJobWithoutLoadingTts() = runTest {
@@ -122,7 +141,7 @@ class GenerationCoordinatorTest {
         manifestSha256 = "a".repeat(64), root = temporary.root, files = emptyList(),
     )
 
-    private class FakeLlm : LlmEngine {
+    private class FakeLlm(private val chapterOverride: FrozenChapter? = null) : LlmEngine {
         override val provenance = RuntimeProvenance(1, "GEMMA_4_E2B", "LITERT_GPU", "fake", false, setOf("model", "tokenizer", "gpu_delegate"))
         val chapterRequests = mutableListOf<String>()
         override suspend fun load(pack: VerifiedModelPack) = Unit
@@ -132,7 +151,7 @@ class GenerationCoordinatorTest {
         ))
         override suspend fun createChapter(outline: EpisodeOutline, chapter: OutlineChapter, sources: List<SourceMaterial>, instructions: String): FrozenChapter {
             chapterRequests += chapter.id
-            return FrozenChapter(chapter.id, chapter.title, "Complete ${chapter.title} chapter transcript.")
+            return chapterOverride ?: FrozenChapter(chapter.id, chapter.title, "Complete ${chapter.title} chapter transcript.")
         }
         override suspend fun editScript(requestJson: String) = error("unused")
         override fun close() = Unit

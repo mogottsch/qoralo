@@ -88,9 +88,10 @@ class GemmaLiteRtGpuEngine : LlmEngine {
                 JSONObject().put("id", it.id).put("title", it.title).put("brief", it.brief)
             })))
             .put("requestedChapterId", chapter.id)
+            .put("requestedChapter", JSONObject().put("id", chapter.id).put("title", chapter.title).put("brief", chapter.brief))
         val serialized = request.toString()
         require(serialized.length <= MAX_GENERATION_REQUEST_CHARS) { "Chapter request exceeds the Gemma context budget" }
-        val json = JSONObject(generate("chapter", serialized))
+        val json = JSONObject(generate("chapter", serialized, singleChapterInstruction(chapter)))
         return FrozenChapter(json.getString("id"), json.getString("title"), json.getString("text"))
     }
 
@@ -99,17 +100,18 @@ class GemmaLiteRtGpuEngine : LlmEngine {
         return generate("edit", requestJson)
     }
 
-    private suspend fun generate(mode: String, request: String): String = withContext(Dispatchers.Default) {
+    private suspend fun generate(mode: String, request: String, specificInstruction: String? = null): String = withContext(Dispatchers.Default) {
         val loaded = engine ?: error("Gemma engine is not loaded")
         val maxOutput = RuntimeDiagnostics.outputLimit(mode, when (mode) {
             "source_notes", "outline" -> 1_200
             "chapter", "edit" -> 4_096
             else -> error("Unsupported Gemma request mode")
         })
-        RuntimeDiagnostics.beforeRequest(mode, request, systemInstruction(mode), maxOutput)
+        val instruction = specificInstruction ?: systemInstruction(mode)
+        RuntimeDiagnostics.beforeRequest(mode, request, instruction, maxOutput)
         try {
             val config = ConversationConfig(
-                systemInstruction = Contents.of(systemInstruction(mode)),
+                systemInstruction = Contents.of(instruction),
                 samplerConfig = SamplerConfig(topK = 1, topP = 1.0, temperature = 1.0),
                 channels = emptyList(),
                 maxOutputToken = maxOutput,
@@ -135,7 +137,7 @@ class GemmaLiteRtGpuEngine : LlmEngine {
     private fun systemInstruction(mode: String): String = when (mode) {
         "source_notes" -> "Summarize the supplied source chunk faithfully for later podcast writing. Return only JSON: {\"notes\":\"...\"}."
         "outline" -> "Design a coherent spoken podcast outline from the supplied notes and instructions. Follow the requested chapter count and IDs. Each brief is a short content plan, not a miniature transcript. Return only JSON: {\"title\":\"...\",\"chapters\":[{\"id\":\"chapter-1\",\"title\":\"...\",\"brief\":\"...\"}]}."
-        "chapter" -> "Write the requested complete spoken podcast chapter in one response. Develop the outline brief into a full source-grounded narration with an opening, explanation and closing; do not merely repeat or summarize the brief. Follow the instructions, including any requested spoken-word length. Do not emit stage directions or analysis. Return only JSON: {\"id\":\"requested id\",\"title\":\"...\",\"text\":\"complete narration\"}."
+        "chapter" -> error("A chapter request requires its concrete single-chapter instruction")
         "edit" -> "Apply the requested edits to the complete immutable-base script. Return the complete revised script only as JSON: {\"schemaVersion\":1,\"title\":\"...\",\"chapters\":[{\"id\":\"...\",\"title\":\"...\",\"text\":\"...\"}],\"summary\":\"...\"}."
         else -> error("Unsupported Gemma request mode")
     }

@@ -76,7 +76,8 @@ def main():
         app_tasks=[] if previous else [':app:assembleDebug']
         command('host-build.log',['./gradlew','--offline','--max-workers=2','--no-configuration-cache','-Ppodcast.shortProductE2e=true','-I',str(init),
             ':app:coherentArtifactInputs',*app_tasks,':app:assembleDebugAndroidTest',':app:testDebugUnitTest',
-            '--tests','dev.vibevoice.podcast.e2e.ShortProductPolicyTest','--tests','dev.vibevoice.podcast.generation.GenerationCoordinatorTest'],project,env)
+            '--tests','dev.vibevoice.podcast.e2e.ShortProductPolicyTest','--tests','dev.vibevoice.podcast.generation.GenerationCoordinatorTest',
+            '--tests','dev.vibevoice.podcast.runtime.GemmaChapterPromptTest'],project,env)
         artifacts=json.loads((out/'resolved-artifacts.json').read_text())
         save('resolved-artifact-hashes.json',{r['file']:{'sha256':digest(Path(r['file'])),'bytes':Path(r['file']).stat().st_size} for r in artifacts})
         if previous:

@@ -21,8 +21,8 @@ PRIVACY_SHA='a62d204c380a5b2d0c8f7c5bd94729b6f823e18200feed2ebe24fa73962bec3c'
 PACKS={'gemma-4-e2b':'9fb627ef9a4eb0ed49056c32bc16f2846e6edf68dc8d854b02af90e24e4e96cd',
        'supertonic-3':'dc4ac737924d7d62e57ff5e166707198095c49e51d77cfed04a44d9e9435952d',
        'supertonic-3-t2048-l2048-parity':'116fda95a907f6dc35bfe7c2144fe2818ed438cc109c1faa3f95cafc2fc84066'}
-PRIOR={APP:'8ffae4587d2dfaa7dece9c2c29e55b51cce1dbd56566da02086742385783d851',
-       TEST_APP:'911897a3f41cca3ca4651ff3ef6d91865cfa4ce4ccc8f38ac2fd1018aa369400'}
+PRIOR={APP:'4e438b62fc4442e5dfefbed2a26c88f6872fb34989144e04727613e78aaaf8c8',
+       TEST_APP:'56be356f5a68d0c415e2980bebca9346ece4972f4a0657f0700064ab683f8739'}
 
 
 def check_sources(candidate):
