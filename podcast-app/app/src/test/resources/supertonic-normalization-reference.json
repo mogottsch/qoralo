@@ -1,0 +1,19 @@
+{
+  "reference": "experiments/0010-supertonic-qnn-htp-feasibility/tools/capture_supertonic_fixtures.py",
+  "referenceSha256": "a675698797d8ace55406451254426c1ac071cf30f9419fd40d5985199bb3dc0c",
+  "derivation": "preprocess_text(input, en), then per-codepoint NFKD and BMP filter from text_tensors; strip language wrapper only",
+  "cases": [
+    {"name": "unicode-line-separator", "input": "Hello\u2028world", "expected": "Hello world."},
+    {"name": "unicode-paragraph-separator", "input": "Hello\u2029world", "expected": "Hello world."},
+    {"name": "next-line-control", "input": "Hello\u0085world", "expected": "Hello world."},
+    {"name": "mixed-repeated-spaces", "input": "\u0085\u00a0Hello\u2028\u2029\u0085\t \u2007world\u3000\u202f", "expected": "Hello world."},
+    {"name": "all-python-whitespace", "input": "Hello\t\n\u000b\f\r\u001c\u001d\u001e\u001f \u0085\u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u2028\u2029\u202f\u205f\u3000world", "expected": "Hello world."},
+    {"name": "punctuation-before-space-collapse", "input": "Hello\u0085,\u2028world", "expected": "Hello , world."},
+    {"name": "original-combining-mark-order", "input": "e\u0301\u0323", "expected": "e\u0301\u0323."},
+    {"name": "precomposed-accent-then-mark", "input": "\u00e9\u0323", "expected": "e\u0301\u0323."},
+    {"name": "compatibility-decomposition-then-mark", "input": "\ufb01\u0301\u0323", "expected": "fi\u0301\u0323."},
+    {"name": "paragraph-prose", "input": "  \u201cCaf\u00e9\u201d\u2014today\n\nwe\u2019re #1 \ud83d\ude00  ", "expected": "\"Cafe\u0301\"-today we're 1."},
+    {"name": "symbols-abbreviations", "input": "Use e.g., [A] @ B i.e., not C/D", "expected": "Use for example, A at B that is, not C D."},
+    {"name": "supplementary-removal", "input": "Words \ud83e\udde0 \ud83d\ude80 remain", "expected": "Words remain."}
+  ]
+}

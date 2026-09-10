@@ -40,9 +40,12 @@ import java.io.RandomAccessFile
 class ScreenSemanticsTest {
     @get:Rule val rule = createComposeRule()
 
-    @Test fun libraryAndSourcesExposeFunctionalPrimaryActionsAt320dpAnd2xFont() {
+    @Test fun libraryExposesFunctionalPrimaryActionAt320dpAnd2xFont() {
         setNarrow { LibraryScreen(emptyList(), {}, {}, {}) }
         rule.onNodeWithText("Create an episode").assertIsDisplayed().assertHasClickAction()
+    }
+
+    @Test fun sourcesExposeFunctionalPrimaryActionsAt320dpAnd2xFont() {
         setNarrow { SourcesScreen(emptyList(), {}, { _, _ -> }, {}, {}, {}) }
         rule.onNodeWithText("Paste text").assertIsDisplayed().assertHasClickAction()
         rule.onNodeWithText("Choose a file").assertIsDisplayed().assertHasClickAction()
