@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "id": "short-production-plumbing-v1",
+  "scope": "NONCANONICAL short production plumbing; not long-request replay or full chapter readiness",
+  "packId": "supertonic-3",
+  "supertonicManifestSha256": "dc4ac737924d7d62e57ff5e166707198095c49e51d77cfed04a44d9e9435952d",
+  "gemmaManifestSha256": "9fb627ef9a4eb0ed49056c32bc16f2846e6edf68dc8d854b02af90e24e4e96cd",
+  "files": {
+    "source.txt": "aa9c803fd495219b7e2d524de7448ae26ce7b1bbc107db04e65d0af235c9b962",
+    "instructions.txt": "96e0fe530134169f5bcf5ae1fa57c814adfd246f280031a56578ca8add7e9d25",
+    "agent.txt": "d4b440f260fcebe428ececd34e84fefbe65bd4b55b15133b27cb558ff0fa7ea8"
+  },
+  "chapterIds": [
+    "chapter-1",
+    "chapter-2"
+  ],
+  "wordsPerChapter": [
+    20,
+    25
+  ],
+  "maxNormalizedCodepoints": 190,
+  "reviewEnabled": true,
+  "scriptRequests": [
+    "source_notes",
+    "outline",
+    "chapter",
+    "chapter"
+  ],
+  "editRequests": [
+    "edit"
+  ],
+  "logicalTtsRequests": 2,
+  "interChapterPauseMs": 700,
+  "jobSeconds": {
+    "SCRIPT": 420,
+    "AGENT_EDIT": 180,
+    "AUDIO": 150
+  },
+  "driverSeconds": 900,
+  "hostInstrumentationSeconds": 930,
+  "silentAppPlayer": true,
+  "collectProfiles": false,
+  "profileEvidence": "UNAVAILABLE_BY_DESIGN",
+  "requestMetrics": "logical counts and raw outputs only; no token\/TTFT\/throughput claim",
+  "partialOutputOnNativeFailure": "unavailable from normal synchronous sendMessage; complete raw return is saved before parsing",
+  "automaticRetries": 0,
+  "allowedSafAuthorities": [
+    "com.android.providers.downloads.documents",
+    "com.android.externalstorage.documents"
+  ]
+}
