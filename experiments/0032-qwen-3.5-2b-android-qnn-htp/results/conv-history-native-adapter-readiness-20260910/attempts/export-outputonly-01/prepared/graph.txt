@@ -1,0 +1,8 @@
+graph():
+    %history : [num_users=1] = placeholder[target=history]
+    %projection : [num_users=1] = placeholder[target=projection]
+    %cat : [num_users=1] = call_function[target=torch.ops.aten.cat.default](args = ([%history, %projection], -1), kwargs = {})
+    %slice_1 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%cat, 3, -4, 9223372036854775807), kwargs = {})
+    %quantize_per_tensor : [num_users=1] = call_function[target=torch.ops.quantized_decomposed.quantize_per_tensor.default](args = (%slice_1, 0.0008176580304279923, 36523, 0, 65535, torch.int32), kwargs = {})
+    %dequantize_per_tensor : [num_users=1] = call_function[target=torch.ops.quantized_decomposed.dequantize_per_tensor.default](args = (%quantize_per_tensor, 0.0008176580304279923, 36523, 0, 65535, torch.int32), kwargs = {})
+    return (dequantize_per_tensor,)

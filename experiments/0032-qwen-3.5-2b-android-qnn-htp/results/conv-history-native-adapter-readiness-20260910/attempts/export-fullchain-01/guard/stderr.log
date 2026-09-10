@@ -1,0 +1,42 @@
+Traceback (most recent call last):
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_qnn_adapter.py", line 396, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_qnn_adapter.py", line 387, in main
+    prepare_request(args.case,args.output_dir,args.binding_report)
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_qnn_adapter.py", line 111, in prepare_request
+    state = export_case(case,directory)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_qnn_adapter.py", line 88, in export_case
+    store.json('graph.json',snapshot)
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe.py", line 46, in json
+    return self.raw(name, (json.dumps(value, indent=2, allow_nan=False) + '\n').encode())
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/json/__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ^^^^^^^^^^^
+  File "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/json/encoder.py", line 202, in encode
+    chunks = list(chunks)
+             ^^^^^^^^^^^^
+  File "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/json/encoder.py", line 432, in _iterencode
+    yield from _iterencode_dict(o, _current_indent_level)
+  File "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/json/encoder.py", line 326, in _iterencode_list
+    yield from chunks
+  File "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/json/encoder.py", line 326, in _iterencode_list
+    yield from chunks
+  File "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/json/encoder.py", line 326, in _iterencode_list
+    yield from chunks
+  File "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/json/encoder.py", line 439, in _iterencode
+    o = _default(o)
+        ^^^^^^^^^^^
+  File "/home/moritz/.local/share/uv/python/cpython-3.11-linux-x86_64-gnu/lib/python3.11/json/encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type method is not JSON serializable

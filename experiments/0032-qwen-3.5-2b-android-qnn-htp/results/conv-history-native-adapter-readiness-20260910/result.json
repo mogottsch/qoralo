@@ -1,0 +1,411 @@
+{
+  "schema_version": 1,
+  "evidence_class": "real_adapter_source_native_interface_inspection_and_tiny_cpu_export_readiness",
+  "status": "awaiting_separate_firstcase_execution_approval",
+  "previous_cpu_reference_commit": "5584283",
+  "native_binding": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/python/PyQnnManagerAdaptor.cpython-311-x86_64-linux-gnu.so",
+    "bytes": 903784,
+    "sha256": "5a6c2eefd72a97d28869b4f219ee93d623c126fecf47214ffbad005083f8562f"
+  },
+  "native_enum_codes": {
+    "QNN_DATATYPE_UFIXED_POINT_16": 1046,
+    "QNN_DATATYPE_FLOAT_32": 562
+  },
+  "scope_counts": {
+    "native_manager_constructions": 0,
+    "native_backend_initializations": 0,
+    "native_context_initializations": 0,
+    "native_Compile_calls": 0,
+    "native_Run_or_forward_calls": 0,
+    "native_tensor_wrapper_constructions": 0,
+    "native_tensor_getter_calls": 0,
+    "full_model_loads": 0,
+    "phone_access": false
+  },
+  "binding_introspection": {
+    "manager_constructor_attempts": 0,
+    "actual_tensor_getters_invoked": false
+  },
+  "api_import_and_hook_install": {
+    "evidence_class": "real_python_compile_api_import_and_hook_install_only",
+    "binding": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/python/PyQnnManagerAdaptor.cpython-311-x86_64-linux-gnu.so",
+      "bytes": 903784,
+      "sha256": "5a6c2eefd72a97d28869b4f219ee93d623c126fecf47214ffbad005083f8562f"
+    },
+    "manager_constructor_attempts": 0,
+    "passes_installed": [
+      "AnnotateAdaptiveAvgPool1D",
+      "AnnotateQuantAttrs",
+      "AnnotateStack",
+      "AnnotateUnbind",
+      "ConvertBmmToMatmul",
+      "DecomposeAny",
+      "DecomposeColIm",
+      "DecomposeMaxPool3d",
+      "DecomposeMinMaxDim",
+      "ExpandBroadcastTensorShape",
+      "FixedLinearKeepDim",
+      "FoldQDQ",
+      "I64toI32",
+      "LayoutTransform",
+      "RecomposePadMaxPool2d",
+      "RecomposePixelUnshuffle",
+      "RecomposeRmsNorm",
+      "Remove0DTensor",
+      "RemoveRedundancy",
+      "TagQuantIO",
+      "InsertRequantize",
+      "InsertIOQDQ",
+      "FuseConsecutiveCast",
+      "FuseConsecutiveTranspose"
+    ],
+    "pass_invocations": 0,
+    "wrapper_builds": 0,
+    "tensor_getters_invoked": 0,
+    "backend_init_compile_run": false,
+    "hooks_restored": true,
+    "lower_signature": "(module: Union[torch.nn.modules.module.Module, torch.fx.graph_module.GraphModule, Dict[str, torch.nn.modules.module.Module], Dict[str, torch.fx.graph_module.GraphModule]], inputs: Union[Tuple[torch.Tensor], Dict[str, Tuple[torch.Tensor]]], compiler_specs: Union[List[Any], Dict[str, List[Any]]], constant_methods: Optional[Dict[str, Any]] = None, dynamic_shapes: Optional[Dict] = None, dep_table: Optional[Dict] = None, passes_job: Union[collections.OrderedDict, Dict[str, collections.OrderedDict], NoneType] = None, skip_node_id_set: Optional[set] = None, skip_node_op_set: Optional[set] = None, skip_mutable_buffer: Optional[bool] = False, generate_etrecord: Optional[bool] = False, convert_linear_to_conv2d: Optional[bool] = False) -> executorch.exir.program._program.EdgeProgramManager",
+    "htp_spec_signature": "(use_fp16: bool, use_dlbc: bool = False, use_multi_contexts: bool = False, use_weight_sharing: bool = False, use_slc_allocator: bool = False) -> executorch.backends.qualcomm.serialization.qc_schema.QnnExecuTorchBackendOptions"
+  },
+  "cases": {
+    "fullchain": {
+      "quantize_nodes": 4,
+      "dequantize_nodes": 4,
+      "graph_nodes": 13,
+      "slice_nodes": 1,
+      "export": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/conv-history-native-readiness-20260910/final-fullchain/prepared/tiny.pt2",
+        "bytes": 150570,
+        "sha256": "0adb4a90e47b2c5aef08bb618e26d8912796bdf37c2e332617b5d767b815691f"
+      },
+      "graph_sha256": "c7994e82c6d59508b926159806fa76b73d0a8654ce5afe2f2df439aef8e856bf",
+      "backend_init_compile_run": false,
+      "request": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/conv-history-native-readiness-20260910/final-fullchain/prepared/request.json",
+        "sha256": "f9ef7075427df9a4cf8c4e565f9c261c4065380384ec35a7a1dbba9865b8548e",
+        "limits": {
+          "compile_seconds": 120,
+          "runtime_seconds": 60,
+          "total_active_seconds": 240,
+          "termination_grace_seconds": 20,
+          "threads": 4
+        }
+      }
+    },
+    "outputonly": {
+      "quantize_nodes": 1,
+      "dequantize_nodes": 1,
+      "graph_nodes": 7,
+      "slice_nodes": 1,
+      "export": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/conv-history-native-readiness-20260910/final-outputonly/prepared/tiny.pt2",
+        "bytes": 136618,
+        "sha256": "2ab2bbb7b702e8146bdff8e9d2b98377a1f0489579343228fe8649761de8bcdc"
+      },
+      "graph_sha256": "45d5d113be42d5ab073c6d325cd50ace1d12830826c622e4abc6bedbc664d3d5",
+      "backend_init_compile_run": false,
+      "request": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/conv-history-native-readiness-20260910/final-outputonly/prepared/request.json",
+        "sha256": "568f6df736221e8672b2833796f69d0482f0e65e1d928da6e7addd5b99f18b12",
+        "limits": {
+          "compile_seconds": 120,
+          "runtime_seconds": 60,
+          "total_active_seconds": 240,
+          "termination_grace_seconds": 20,
+          "threads": 4
+        }
+      }
+    },
+    "aligned": {
+      "quantize_nodes": 4,
+      "dequantize_nodes": 4,
+      "graph_nodes": 13,
+      "slice_nodes": 1,
+      "export": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/conv-history-native-readiness-20260910/final-aligned/prepared/tiny.pt2",
+        "bytes": 150570,
+        "sha256": "e3df333da82a3182780229a9263ceaaf43effe5cdadb6652d1b7559589615e42"
+      },
+      "graph_sha256": "1bc79454147ef573a9f15d3cd35552e6f3cd90154592de52788373dcf8927bf4",
+      "backend_init_compile_run": false,
+      "request": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/conv-history-native-readiness-20260910/final-aligned/prepared/request.json",
+        "sha256": "87bd664d270c702eef62d29f4b4c9f7962b066667d87b8adf10636f56553ea9d",
+        "limits": {
+          "compile_seconds": 120,
+          "runtime_seconds": 60,
+          "total_active_seconds": 240,
+          "termination_grace_seconds": 20,
+          "threads": 4
+        }
+      }
+    }
+  },
+  "encoding_domains": 3,
+  "qdq_pairs": {
+    "fullchain": 4,
+    "outputonly": 1,
+    "aligned": 4
+  },
+  "capture": {
+    "provenance": "native versus mock marked per tap",
+    "actual_tensor_getters_still_unverified": true,
+    "unknown_dtype_is_unresolved": true,
+    "quantization_kind_and_bitwidth_available": false,
+    "internal_finalized_graph_known": false,
+    "missing_optional_taps_do_not_discard_outputs": true,
+    "old_mock_helpers_unchanged": true
+  },
+  "adapter": {
+    "path": "tools/conv_history_qnn_adapter.py",
+    "lazy_real_compile_runtime_implemented": true,
+    "native_workers_require_explicit_release": true,
+    "single_case_only": true,
+    "early_delegation_and_emitted_kernel_audits": true,
+    "output_raw_before_validation": true
+  },
+  "source_pins": [
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_qnn_adapter.py",
+      "bytes": 24181,
+      "sha256": "0fe125f8c62d8a3df8ebab62a78899cc96cef864aa22bef4adde388980e890fc"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_native_hooks.py",
+      "bytes": 10277,
+      "sha256": "4e8cb8415ea98b18549cb4a2a4762da07f2e2ade075a12ef8232d021118eb96a"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe.py",
+      "bytes": 13093,
+      "sha256": "1379b850e4140da2240f8893769fc1d28744cacf28c35a32ed9cde0ec924b436"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/conv_history_probe_hooks.py",
+      "bytes": 10182,
+      "sha256": "2f330f856c67effb8db2b33ec586afd9ae161bb313a650add36db484168df86c"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/audit_conv_history_metadata.py",
+      "bytes": 7061,
+      "sha256": "15351d902c9b80f3f4180f5af4479f08884ceb7801376eb5d8c8176c5213ced8"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/qwen_host_guard.py",
+      "bytes": 4524,
+      "sha256": "33373e74e4e52b9dd209bb91fc58d87f4b07186112307c0e869d02dd4136705d"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/qnn_preprocess.py",
+      "bytes": 9210,
+      "sha256": "e2ac8e4ab501b73b82bb422494a463ad95aaa814cd1ec8b8c314dccf2091b98d"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/builders/node_visitor.py",
+      "bytes": 20620,
+      "sha256": "121f62e0ed598d63f5e4919593759a017df872547e1b2004f6281290b31f5459"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/utils/utils.py",
+      "bytes": 52339,
+      "sha256": "6ecbfa2ed47f169e1b00941d9014340e7c618b2dea58e9f06f89e694e149b467"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/utils/qnn_manager_lifecycle.py",
+      "bytes": 3906,
+      "sha256": "65ab16c12d054ad85c6d69fa2be8bb5cbc4ab04d97f56b895637bdf8fe4bdac7"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/_passes/qnn_pass_manager.py",
+      "bytes": 10023,
+      "sha256": "10828a8683c2dc1da573e9d635d36c832977a4ded9688a2153c27a65fd1321c4"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/_passes/annotate_quant_attrs.py",
+      "bytes": 5773,
+      "sha256": "44dccc4e4a391b5a683aa58e9091a02b8d5bcd5a5a92e85863e45ded057d30a3"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/_passes/fold_qdq.py",
+      "bytes": 3308,
+      "sha256": "0eb10565d5fcdc2260a554ed980af40b415c595dcf494902463075f2daf9d3fc"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/_passes/insert_io_qdq.py",
+      "bytes": 5912,
+      "sha256": "df8fb812950e7d588aed156acfec759dfab15cafec041f0dacf4e2b750022be4"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/_passes/insert_requantize.py",
+      "bytes": 4116,
+      "sha256": "e4e7dd2fce0385da68c7247768f9f40e2f83f2fb17cbab8efebc19bf5c29d489"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/_passes/layout_transform.py",
+      "bytes": 15196,
+      "sha256": "cc7b7c4adbf365de163852a901eadaeba487793fce19b4e9a7b7372d13ccdcb1"
+    }
+  ],
+  "tests_source": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tests/test_conv_history_qnn_adapter.py",
+    "bytes": 17955,
+    "sha256": "e8f49003f0922019d0fd30813e228d2becaf7bce359479d4713f75f6d86d5942"
+  },
+  "firstcase_proposal": {
+    "case": "fullchain",
+    "limits": {
+      "compile_seconds": 120,
+      "runtime_seconds": 60,
+      "total_active_seconds": 240,
+      "termination_grace_seconds": 20,
+      "threads": 4
+    },
+    "request_sha256": "f9ef7075427df9a4cf8c4e565f9c261c4065380384ec35a7a1dbba9865b8548e",
+    "release_template": "release-template.fullchain.json",
+    "approved": false,
+    "automatic_retry_resume_followon": false
+  },
+  "retained_failure": {
+    "path": "attempts/export-fullchain-01",
+    "kind": "CPU export metadata JSON serialization failure after graph trace",
+    "reason": "Old mock serializer confused callable OpOverload.name with an FXNode string name",
+    "fix": "new native-aware metadata serializer only; actual CPU export/JSON roundtrip regression",
+    "qnn_numerical_failure": false
+  },
+  "limits": [
+    "Interface imports/hook installation are not QNN backend initialization, compilation or execution.",
+    "Native getter behavior remains untested; dtype enum table/docstrings alone do not prove tensor encodings.",
+    "Three encoding domains correspond to four fullchain Q/DQ pairs including the projection branch.",
+    "Floating outputonly concat/slice may fail delegation; no precision change or fallback workaround authorized.",
+    "Existing model/physical baseline/protected originals unchanged; no fidelity/backend-defect/FP32/Android/campaign claim."
+  ],
+  "regression": {
+    "counts": [
+      35,
+      7,
+      24,
+      30,
+      23,
+      6,
+      7,
+      21,
+      24
+    ],
+    "total": 177,
+    "all_passed": true,
+    "new_adapter_tests": 24,
+    "actual_cpu_export_json_roundtrip_covered": true
+  },
+  "cleanup": [
+    {
+      "attempt": "api-introspection-01",
+      "pid": 1786424,
+      "process_absent": true,
+      "scratch_empty": true,
+      "removed_empty_torchinductor_directory": true,
+      "child_reaped": true,
+      "exit_code": 0
+    },
+    {
+      "attempt": "export-aligned-01",
+      "pid": 1785279,
+      "process_absent": true,
+      "scratch_empty": true,
+      "removed_empty_torchinductor_directory": true,
+      "child_reaped": true,
+      "exit_code": 0
+    },
+    {
+      "attempt": "export-fullchain-01",
+      "pid": 1784363,
+      "process_absent": true,
+      "scratch_empty": true,
+      "removed_empty_torchinductor_directory": true,
+      "child_reaped": true,
+      "exit_code": 1
+    },
+    {
+      "attempt": "export-fullchain-02",
+      "pid": 1785242,
+      "process_absent": true,
+      "scratch_empty": true,
+      "removed_empty_torchinductor_directory": true,
+      "child_reaped": true,
+      "exit_code": 0
+    },
+    {
+      "attempt": "export-outputonly-01",
+      "pid": 1785266,
+      "process_absent": true,
+      "scratch_empty": true,
+      "removed_empty_torchinductor_directory": true,
+      "child_reaped": true,
+      "exit_code": 0
+    },
+    {
+      "attempt": "final-aligned",
+      "pid": 1786744,
+      "process_absent": true,
+      "scratch_empty": true,
+      "removed_empty_torchinductor_directory": true,
+      "child_reaped": true,
+      "exit_code": 0
+    },
+    {
+      "attempt": "final-fullchain",
+      "pid": 1786722,
+      "process_absent": true,
+      "scratch_empty": true,
+      "removed_empty_torchinductor_directory": true,
+      "child_reaped": true,
+      "exit_code": 0
+    },
+    {
+      "attempt": "final-outputonly",
+      "pid": 1786733,
+      "process_absent": true,
+      "scratch_empty": true,
+      "removed_empty_torchinductor_directory": true,
+      "child_reaped": true,
+      "exit_code": 0
+    },
+    {
+      "attempt": "introspection-01",
+      "pid": 1781313,
+      "process_absent": true,
+      "scratch_empty": true,
+      "removed_empty_torchinductor_directory": false,
+      "child_reaped": true,
+      "exit_code": 0
+    },
+    {
+      "attempt": "regression-01",
+      "pid": 1789198,
+      "process_absent": true,
+      "scratch_empty": true,
+      "removed_empty_torchinductor_directory": true,
+      "child_reaped": true,
+      "exit_code": 0
+    },
+    {
+      "attempt": "tests-01",
+      "pid": 1783979,
+      "process_absent": true,
+      "scratch_empty": true,
+      "removed_empty_torchinductor_directory": false,
+      "child_reaped": true,
+      "exit_code": 0
+    },
+    {
+      "attempt": "tests-02",
+      "pid": 1785185,
+      "process_absent": true,
+      "scratch_empty": true,
+      "removed_empty_torchinductor_directory": true,
+      "child_reaped": true,
+      "exit_code": 0
+    }
+  ]
+}

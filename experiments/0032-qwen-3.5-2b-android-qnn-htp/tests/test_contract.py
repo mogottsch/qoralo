@@ -819,6 +819,32 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(item["sha256"], sha(REPO / item["path"]))
         self.assertEqual(reference["cpu_provenance"]["probe_source_sha256"], sha(EXP / "tools/conv_history_probe.py"))
 
+    def test_native_adapter_readiness_is_not_backend_execution(self) -> None:
+        directory = EXP / "results/conv-history-native-adapter-readiness-20260910"
+        result = json.loads((directory / "result.json").read_text())
+        self.assertEqual("real_adapter_source_native_interface_inspection_and_tiny_cpu_export_readiness", result["evidence_class"])
+        self.assertTrue(all(value == 0 for value in result["scope_counts"].values()))
+        self.assertFalse(result["firstcase_proposal"]["approved"])
+        self.assertFalse(result["capture"]["internal_finalized_graph_known"])
+        self.assertTrue(result["capture"]["actual_tensor_getters_still_unverified"])
+        self.assertEqual({"fullchain":4,"outputonly":1,"aligned":4}, result["qdq_pairs"])
+        for case, count in result["qdq_pairs"].items():
+            record = result["cases"][case]
+            self.assertEqual(count, record["quantize_nodes"])
+            self.assertEqual(count, record["dequantize_nodes"])
+            self.assertEqual(1, record["slice_nodes"])
+            graph = directory / f"attempts/final-{case}/prepared/graph.json"
+            self.assertEqual(record["graph_sha256"], sha(graph))
+            request = directory / f"attempts/final-{case}/prepared/request.json"
+            self.assertEqual(record["request"]["sha256"], sha(request))
+        for source in result["source_pins"] + [result["tests_source"]]:
+            self.assertEqual(source["sha256"], sha(Path(source["path"])))
+        release = json.loads((directory / "release-template.fullchain.json").read_text())
+        self.assertEqual("NOT_APPROVED", release["status"])
+        self.assertIsNone(release["approval_reference"])
+        self.assertFalse(list(directory.rglob("*.pt2")))
+        self.assertFalse(result["retained_failure"]["qnn_numerical_failure"])
+
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
             EXP / "protocol",
@@ -843,6 +869,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/controlled-position1-paired-qnn-20260910",
             EXP / "results/conv-history-encoding-audit-20260910",
             EXP / "results/conv-history-probe-readiness-20260910",
+            EXP / "results/conv-history-native-adapter-readiness-20260910",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

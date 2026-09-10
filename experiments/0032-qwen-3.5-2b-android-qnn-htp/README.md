@@ -91,10 +91,14 @@ A lower-retention two-process host replay in [`results/host-w4a16-qdq-output-dia
 
 [`results/conv-history-probe-readiness-20260910/`](results/conv-history-probe-readiness-20260910/) retains three weight-free CPU references and all independent scalar-oracle tensors. There are **three encoding domains and four full-chain Q/DQ pairs** (history, projection, concat, output); output-only has one pair and aligned has four. All 73,728 output values match their scalar oracles exactly. Pre/post-pass and pre-Compile QNN-wrapper getter hooks have mock coverage only. No QNN import/compile/runtime or full-model load occurred; the proposed 120s compile/60s runtime/240s total per case is not a release.
 
+## Real tiny-QNN adapter readiness
+
+[`results/conv-history-native-adapter-readiness-20260910/`](results/conv-history-native-adapter-readiness-20260910/) adds the real lazy adapter and external one-case guard, with explicit release binding, emitted-kernel/fallback checks and raw-first output retention. Native binding/API introspection and actual tiny CPU exports passed; no manager construction, backend initialization, QNN compile/forward or full-model load occurred. New native-aware hooks handle actual datatype codes and OpOverload metadata; the initial CPU metadata-serialization failure is retained. Native tensor getter/compiled behavior remains untested. First-case `fullchain` execution still needs separate approval.
+
 ## Current next gate
 
 1. Keep physical PTE `23ac8abd…d2c506` and phone preflight unchanged; the 73-output diagnostic PTE is not compatible with the current 49-output Android runner.
-2. Review the source/CPU boundary harness before any QNN import, compile or runtime work. Native hooks, delegation (especially output-only floating concat/slice), and actual optimized encodings remain unverified. Require zero tensor fallback; do not silently change a control.
+2. Review the real adapter/native-interface/CPU-export readiness and separately release at most the proposed first `fullchain` case (120s compile/60s runtime/240s active). No backend init/Compile/Run is currently approved; no implicit alternate-case follow-on. Native delegation/getters and optimized encodings remain unverified.
 3. No ADB or staging without a new explicit Pi phone slot. Full QNN/physical drift and one-token-only interpretation remain campaign-readiness boundaries.
 4. Only after agreed fidelity and state-isolation gates may chunked prefill and the fixed 1+5+5+5 campaign be promoted.
 

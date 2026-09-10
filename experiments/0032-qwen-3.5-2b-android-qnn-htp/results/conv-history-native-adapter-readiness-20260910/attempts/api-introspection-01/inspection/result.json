@@ -1,0 +1,42 @@
+{
+  "evidence_class": "real_python_compile_api_import_and_hook_install_only",
+  "binding": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/python/PyQnnManagerAdaptor.cpython-311-x86_64-linux-gnu.so",
+    "bytes": 903784,
+    "sha256": "5a6c2eefd72a97d28869b4f219ee93d623c126fecf47214ffbad005083f8562f"
+  },
+  "manager_constructor_attempts": 0,
+  "passes_installed": [
+    "AnnotateAdaptiveAvgPool1D",
+    "AnnotateQuantAttrs",
+    "AnnotateStack",
+    "AnnotateUnbind",
+    "ConvertBmmToMatmul",
+    "DecomposeAny",
+    "DecomposeColIm",
+    "DecomposeMaxPool3d",
+    "DecomposeMinMaxDim",
+    "ExpandBroadcastTensorShape",
+    "FixedLinearKeepDim",
+    "FoldQDQ",
+    "I64toI32",
+    "LayoutTransform",
+    "RecomposePadMaxPool2d",
+    "RecomposePixelUnshuffle",
+    "RecomposeRmsNorm",
+    "Remove0DTensor",
+    "RemoveRedundancy",
+    "TagQuantIO",
+    "InsertRequantize",
+    "InsertIOQDQ",
+    "FuseConsecutiveCast",
+    "FuseConsecutiveTranspose"
+  ],
+  "pass_invocations": 0,
+  "wrapper_builds": 0,
+  "tensor_getters_invoked": 0,
+  "backend_init_compile_run": false,
+  "hooks_restored": true,
+  "lower_signature": "(module: Union[torch.nn.modules.module.Module, torch.fx.graph_module.GraphModule, Dict[str, torch.nn.modules.module.Module], Dict[str, torch.fx.graph_module.GraphModule]], inputs: Union[Tuple[torch.Tensor], Dict[str, Tuple[torch.Tensor]]], compiler_specs: Union[List[Any], Dict[str, List[Any]]], constant_methods: Optional[Dict[str, Any]] = None, dynamic_shapes: Optional[Dict] = None, dep_table: Optional[Dict] = None, passes_job: Union[collections.OrderedDict, Dict[str, collections.OrderedDict], NoneType] = None, skip_node_id_set: Optional[set] = None, skip_node_op_set: Optional[set] = None, skip_mutable_buffer: Optional[bool] = False, generate_etrecord: Optional[bool] = False, convert_linear_to_conv2d: Optional[bool] = False) -> executorch.exir.program._program.EdgeProgramManager",
+  "htp_spec_signature": "(use_fp16: bool, use_dlbc: bool = False, use_multi_contexts: bool = False, use_weight_sharing: bool = False, use_slc_allocator: bool = False) -> executorch.backends.qualcomm.serialization.qc_schema.QnnExecuTorchBackendOptions"
+}

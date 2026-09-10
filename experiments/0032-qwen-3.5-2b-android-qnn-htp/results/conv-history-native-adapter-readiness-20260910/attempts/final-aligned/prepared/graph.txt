@@ -1,0 +1,14 @@
+graph():
+    %history : [num_users=1] = placeholder[target=history]
+    %projection : [num_users=1] = placeholder[target=projection]
+    %quantize_per_tensor : [num_users=1] = call_function[target=torch.ops.quantized_decomposed.quantize_per_tensor.default](args = (%history, 0.0008176580304279923, 36523, 0, 65535, torch.int32), kwargs = {})
+    %dequantize_per_tensor : [num_users=1] = call_function[target=torch.ops.quantized_decomposed.dequantize_per_tensor.default](args = (%quantize_per_tensor, 0.0008176580304279923, 36523, 0, 65535, torch.int32), kwargs = {})
+    %quantize_per_tensor_1 : [num_users=1] = call_function[target=torch.ops.quantized_decomposed.quantize_per_tensor.default](args = (%projection, 0.0008176580304279923, 36523, 0, 65535, torch.int32), kwargs = {})
+    %dequantize_per_tensor_1 : [num_users=1] = call_function[target=torch.ops.quantized_decomposed.dequantize_per_tensor.default](args = (%quantize_per_tensor_1, 0.0008176580304279923, 36523, 0, 65535, torch.int32), kwargs = {})
+    %cat : [num_users=1] = call_function[target=torch.ops.aten.cat.default](args = ([%dequantize_per_tensor, %dequantize_per_tensor_1], -1), kwargs = {})
+    %quantize_per_tensor_2 : [num_users=1] = call_function[target=torch.ops.quantized_decomposed.quantize_per_tensor.default](args = (%cat, 0.0008176580304279923, 36523, 0, 65535, torch.int32), kwargs = {})
+    %dequantize_per_tensor_2 : [num_users=1] = call_function[target=torch.ops.quantized_decomposed.dequantize_per_tensor.default](args = (%quantize_per_tensor_2, 0.0008176580304279923, 36523, 0, 65535, torch.int32), kwargs = {})
+    %slice_1 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%dequantize_per_tensor_2, 3, -4, 9223372036854775807), kwargs = {})
+    %quantize_per_tensor_3 : [num_users=1] = call_function[target=torch.ops.quantized_decomposed.quantize_per_tensor.default](args = (%slice_1, 0.0008176580304279923, 36523, 0, 65535, torch.int32), kwargs = {})
+    %dequantize_per_tensor_3 : [num_users=1] = call_function[target=torch.ops.quantized_decomposed.dequantize_per_tensor.default](args = (%quantize_per_tensor_3, 0.0008176580304279923, 36523, 0, 65535, torch.int32), kwargs = {})
+    return (dequantize_per_tensor_3,)
