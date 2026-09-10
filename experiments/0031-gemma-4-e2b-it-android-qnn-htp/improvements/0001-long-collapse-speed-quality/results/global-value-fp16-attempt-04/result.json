@@ -1,0 +1,339 @@
+{
+  "claim_boundary": "Both ONNX patches passed structural/cache-boundary scope checks. AR1 QAIRT conversion entered optimization/quantization but was terminated at Pi request to release resources for app validation. No DLC or compiled context exists. This is neither a numerical/model failure nor evidence of actual QNN FP16 cache contracts, full delegation, zero unsupported/fallback, fidelity, or speed improvement. Completed campaign 37a2953 and publication e91b3f5 are unchanged.",
+  "classification": "app_priority_interruption_not_model_failure",
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "host_libraries": [
+    {
+      "bytes": 23721696,
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/host-libs/libpython3.10.so.1.0",
+      "resolved_target": "/home/moritz/.local/share/uv/python/cpython-3.10.18-linux-x86_64-gnu/lib/libpython3.10.so.1.0",
+      "sha256": "43ae032b743846bab654b453be242122372859b5006797fbf8c55f587e268cea"
+    },
+    {
+      "bytes": 67480,
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/host-libs/libunwind.so.1",
+      "resolved_target": "/usr/lib/libunwind.so.8.2.0",
+      "sha256": "7b6dc90a7732b5633d622ce0b78e1ebee75e3c1dd7b7ce1f56d60c3fc60a22e7"
+    }
+  ],
+  "improvement_track": "0001-long-collapse-speed-quality",
+  "library_boundary": "Existing accepted host-libs reused unchanged. ldd resolves dependencies and QAIRT reached actual conversion; this does not establish universal ABI compatibility.",
+  "next_gate": "Wait for Pi release. If approved, start a new retained attempt using unchanged host-libs and candidate recipe; do not retry attempt-04 in place. Inspect both DLC input/output contracts before compilation. No phone.",
+  "outcome": {
+    "ar128_conversion_started": false,
+    "ar1_conversion_completed": false,
+    "ar1_conversion_started": true,
+    "automatic_restart": false,
+    "compile_started": false,
+    "context_count": 0,
+    "dlc_count": 0,
+    "host_inference_started": false,
+    "owned_process_group_empty_after_stop": true,
+    "patch_validation_passed": true,
+    "phone_access": false,
+    "supervisor_exit": {
+      "automatic_retry": false,
+      "child_ru_maxrss_kB": 18039268,
+      "elapsed_seconds": 781.6449873070001,
+      "exit_code": -15,
+      "phone_access": false,
+      "stop_reason": "operator_STOP"
+    }
+  },
+  "patch": {
+    "independent_scope_validation": {
+      "classification": "host_patch_scope_only",
+      "dlc_datatypes_proven": false,
+      "inference": false,
+      "phone_access": false,
+      "variants": [
+        {
+          "ar": 1,
+          "changed_io": [
+            {
+              "datatype": "FLOAT16",
+              "dimensions": [
+                1,
+                1,
+                4095,
+                512
+              ],
+              "name": "past_value_4_h0_in",
+              "role": "input"
+            },
+            {
+              "datatype": "FLOAT16",
+              "dimensions": [
+                1,
+                1,
+                4095,
+                512
+              ],
+              "name": "past_value_9_h0_in",
+              "role": "input"
+            },
+            {
+              "datatype": "FLOAT16",
+              "dimensions": [
+                1,
+                1,
+                4095,
+                512
+              ],
+              "name": "past_value_14_h0_in",
+              "role": "input"
+            },
+            {
+              "datatype": "FLOAT16",
+              "dimensions": [
+                1,
+                1,
+                1,
+                512
+              ],
+              "name": "past_value_4_h0_out",
+              "role": "output"
+            },
+            {
+              "datatype": "FLOAT16",
+              "dimensions": [
+                1,
+                1,
+                1,
+                512
+              ],
+              "name": "past_value_9_h0_out",
+              "role": "output"
+            },
+            {
+              "datatype": "FLOAT16",
+              "dimensions": [
+                1,
+                1,
+                1,
+                512
+              ],
+              "name": "past_value_14_h0_out",
+              "role": "output"
+            }
+          ],
+          "exact_removed_encodings": [
+            "past_value_14_h0_in",
+            "past_value_14_h0_out",
+            "past_value_4_h0_in",
+            "past_value_4_h0_out",
+            "past_value_9_h0_in",
+            "past_value_9_h0_out"
+          ],
+          "other_encodings_unchanged": true,
+          "other_io_unchanged": true,
+          "removed_boundary_initializers": [
+            "past_value_14_h0_out__scale",
+            "past_value_14_h0_out__zero_point",
+            "past_value_4_h0_out__scale",
+            "past_value_4_h0_out__zero_point",
+            "past_value_9_h0_out__scale",
+            "past_value_9_h0_out__zero_point"
+          ],
+          "weight_initializers_unchanged": true
+        },
+        {
+          "ar": 128,
+          "changed_io": [
+            {
+              "datatype": "FLOAT16",
+              "dimensions": [
+                1,
+                1,
+                3968,
+                512
+              ],
+              "name": "past_value_4_h0_in",
+              "role": "input"
+            },
+            {
+              "datatype": "FLOAT16",
+              "dimensions": [
+                1,
+                1,
+                3968,
+                512
+              ],
+              "name": "past_value_9_h0_in",
+              "role": "input"
+            },
+            {
+              "datatype": "FLOAT16",
+              "dimensions": [
+                1,
+                1,
+                3968,
+                512
+              ],
+              "name": "past_value_14_h0_in",
+              "role": "input"
+            },
+            {
+              "datatype": "FLOAT16",
+              "dimensions": [
+                1,
+                1,
+                128,
+                512
+              ],
+              "name": "past_value_4_h0_out",
+              "role": "output"
+            },
+            {
+              "datatype": "FLOAT16",
+              "dimensions": [
+                1,
+                1,
+                128,
+                512
+              ],
+              "name": "past_value_9_h0_out",
+              "role": "output"
+            },
+            {
+              "datatype": "FLOAT16",
+              "dimensions": [
+                1,
+                1,
+                128,
+                512
+              ],
+              "name": "past_value_14_h0_out",
+              "role": "output"
+            }
+          ],
+          "exact_removed_encodings": [
+            "past_value_14_h0_in",
+            "past_value_4_h0_in",
+            "past_value_9_h0_in"
+          ],
+          "other_encodings_unchanged": true,
+          "other_io_unchanged": true,
+          "removed_boundary_initializers": [],
+          "weight_initializers_unchanged": true
+        }
+      ]
+    },
+    "private_artifacts": [
+      {
+        "bytes": 18016378,
+        "path": "onnx/ar1_cl4096_1_of_1/ar1_cl4096_1_of_1.onnx",
+        "sha256": "077b5ce33f694e4a04210e2b37af9e5c9dd4b80d63dc741dfbedbdbea1e73c63"
+      },
+      {
+        "bytes": 55328542,
+        "path": "onnx/ar1_cl4096_1_of_1/ar1_cl4096_1_of_1.encodings",
+        "sha256": "f67d8ae994cd28625ad50f18f7652680e675be7cd0603bd04319d3b3a3a1dac3"
+      },
+      {
+        "bytes": 9119006720,
+        "hash_evidence": "full source hash checked by converter before hardlink; weights not modified",
+        "path": "onnx/ar1_cl4096_1_of_1/ar1_cl4096_1_of_1.data",
+        "sha256": "b9b73b984c2258099bc77ce6d1e2aa92d12bb67abe456e5ef509136d7494a65d"
+      },
+      {
+        "bytes": 18054394,
+        "path": "onnx/ar128_cl4096_1_of_1/ar128_cl4096_1_of_1.onnx",
+        "sha256": "0b36dc55b669a54469b669a86364d112cc82f3811b11c2f8662cc7dbd49527c0"
+      },
+      {
+        "bytes": 55329353,
+        "path": "onnx/ar128_cl4096_1_of_1/ar128_cl4096_1_of_1.encodings",
+        "sha256": "1813412b395adde9033e9a8eb0a076f5fd62bc14217af7670a93750968ba165c"
+      },
+      {
+        "bytes": 9119006720,
+        "hash_evidence": "full source hash checked by converter before hardlink; weights not modified",
+        "path": "onnx/ar128_cl4096_1_of_1/ar128_cl4096_1_of_1.data",
+        "sha256": "b9b73b984c2258099bc77ce6d1e2aa92d12bb67abe456e5ef509136d7494a65d"
+      }
+    ],
+    "variants": [
+      {
+        "ar": 1,
+        "candidate_encodings_sha256": "f67d8ae994cd28625ad50f18f7652680e675be7cd0603bd04319d3b3a3a1dac3",
+        "candidate_onnx_sha256": "077b5ce33f694e4a04210e2b37af9e5c9dd4b80d63dc741dfbedbdbea1e73c63",
+        "external_data_sha256": "b9b73b984c2258099bc77ce6d1e2aa92d12bb67abe456e5ef509136d7494a65d",
+        "global_fp16_inputs": [
+          "past_value_4_h0_in",
+          "past_value_9_h0_in",
+          "past_value_14_h0_in"
+        ],
+        "global_fp16_outputs": [
+          "past_value_4_h0_out",
+          "past_value_9_h0_out",
+          "past_value_14_h0_out"
+        ],
+        "onnx_checker_passed": true,
+        "removed_activation_encodings": [
+          "past_value_14_h0_in",
+          "past_value_14_h0_out",
+          "past_value_4_h0_in",
+          "past_value_4_h0_out",
+          "past_value_9_h0_in",
+          "past_value_9_h0_out"
+        ],
+        "source_encodings_sha256": "a09c73d919cda428e53d3b0f3bc16ed079847ba696cca6026f47e59bfa5dce75",
+        "source_onnx_sha256": "eb530a0bf7aedeabe7d7a706d69aa72168d415c6afdc948e6c642c54c550c478"
+      },
+      {
+        "ar": 128,
+        "candidate_encodings_sha256": "1813412b395adde9033e9a8eb0a076f5fd62bc14217af7670a93750968ba165c",
+        "candidate_onnx_sha256": "0b36dc55b669a54469b669a86364d112cc82f3811b11c2f8662cc7dbd49527c0",
+        "external_data_sha256": "b9b73b984c2258099bc77ce6d1e2aa92d12bb67abe456e5ef509136d7494a65d",
+        "global_fp16_inputs": [
+          "past_value_4_h0_in",
+          "past_value_9_h0_in",
+          "past_value_14_h0_in"
+        ],
+        "global_fp16_outputs": [
+          "past_value_4_h0_out",
+          "past_value_9_h0_out",
+          "past_value_14_h0_out"
+        ],
+        "onnx_checker_passed": true,
+        "removed_activation_encodings": [
+          "past_value_14_h0_in",
+          "past_value_4_h0_in",
+          "past_value_9_h0_in"
+        ],
+        "source_encodings_sha256": "9ed0d5deb5bff959c738dc3bca7994b1f7796f257377479c82959c5bb693e12f",
+        "source_onnx_sha256": "819a8af4d6244dc7cea57b5f930778d324b8b81c8012e981780fd4adcdf9fb89"
+      }
+    ]
+  },
+  "publication": {
+    "completed_campaign_modified": false,
+    "evidence_class": "host_patch_and_app_priority_interruption_only",
+    "registry_eligible": false
+  },
+  "recommendation": "REQUEST-ROUTING.md documents HTP short/medium + LiteRT GPU long as unmeasured request-level integration, not a new campaign.",
+  "resources": {
+    "after_stop": "About 27 GiB available RAM and 22 GiB free swap; exact free output retained.",
+    "max_io_full_avg10_percent": 34.34,
+    "max_memory_full_avg10_percent": 14.87,
+    "min_available_kB": 1590044,
+    "min_swap_free_kB": 6402096,
+    "sample_count": 79,
+    "sample_interval_seconds": 10,
+    "scope": "Global host pressure includes Qwen/app and other jobs; no attribution of all memory to Gemma. Child ru_maxrss is separate and may omit swapped residency."
+  },
+  "run_id": "global-value-fp16-20260910T075959Z-attempt-04",
+  "schema_version": 1,
+  "status": "blocked_waiting_pi_resource_release",
+  "unmeasured": {
+    "actual_convert_count_delta": null,
+    "actual_dlc_cache_signatures": null,
+    "compiler_metadata": null,
+    "context_bytes": null,
+    "full_htp_delegation": null,
+    "host_trajectory_or_fidelity": null,
+    "reason": "Conversion interrupted before a DLC was produced; downstream gates were not run.",
+    "unsupported_or_fallback_count": null
+  }
+}

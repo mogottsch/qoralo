@@ -1,0 +1,10 @@
+{
+  "classification": "host_import_failure_before_patch_or_conversion",
+  "run_id": "global-value-fp16-20260910T075830Z-attempt-01",
+  "error": "ImportError: libpython3.10.so.1.0: cannot open shared object file: No such file or directory",
+  "cause": "QAIRT native pybind import needs managed Python lib directory on LD_LIBRARY_PATH; SDK envsetup alone does not add it.",
+  "patch_started": false,
+  "conversion_started": false,
+  "phone_access": false,
+  "next_fix": "Add /home/moritz/.local/share/uv/python/cpython-3.10-linux-x86_64-gnu/lib to LD_LIBRARY_PATH for a new attempt."
+}

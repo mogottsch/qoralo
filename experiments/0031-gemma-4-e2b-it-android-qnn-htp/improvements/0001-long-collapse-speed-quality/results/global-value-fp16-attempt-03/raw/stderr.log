@@ -1,0 +1,13 @@
+Architecture is unknown or unsupported; Returning default. This builder may work but will probably require additional configuration.
+2026-09-10 08:57:45,405 - qairt.gen_ai_api.builders.gen_ai_utils - WARNING - Attention mask not found in expected location of input layers. Searching by name. 
+qairt.optimizer.onnx: 2026-09-10T08:57:45Z | WARNING | get_input_ids | utils.py:1125 - Unable to find 'input_ids' graph input. Using the first graph input: inputs_embeds
+Traceback (most recent call last):
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/convert_global_value_fp16.py", line 234, in <module>
+    main()
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/convert_global_value_fp16.py", line 192, in main
+    candidates = [patch_variant(ar, patched_root) for ar in (1, 128)]
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/convert_global_value_fp16.py", line 192, in <listcomp>
+    candidates = [patch_variant(ar, patched_root) for ar in (1, 128)]
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/convert_global_value_fp16.py", line 138, in patch_variant
+    raise RuntimeError(f"AR{ar} encoding removal mismatch: {found}")
+RuntimeError: AR128 encoding removal mismatch: {'past_value_9_h0_in', 'past_value_4_h0_in', 'past_value_14_h0_in'}

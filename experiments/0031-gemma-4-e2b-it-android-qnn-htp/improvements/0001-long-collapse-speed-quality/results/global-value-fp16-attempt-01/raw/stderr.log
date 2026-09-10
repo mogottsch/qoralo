@@ -1,0 +1,39 @@
+Traceback (most recent call last):
+  File "/home/moritz/opt/qairt/2.49.40.260810/lib/python/qti/aisw/core/model_level_api/utils/__init__.py", line 72, in <module>
+    from . import libPyNetRun310 as py_net_run
+ImportError: cannot import name 'libPyNetRun310' from partially initialized module 'qti.aisw.core.model_level_api.utils' (most likely due to a circular import) (/home/moritz/opt/qairt/2.49.40.260810/lib/python/qti/aisw/core/model_level_api/utils/__init__.py)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/convert_global_value_fp16.py", line 234, in <module>
+    main()
+  File "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/tools/convert_global_value_fp16.py", line 183, in main
+    from qairt.gen_ai_api.builders.gen_ai_utils import get_input_layout
+  File "/home/moritz/opt/qairt/2.49.40.260810/lib/python/qairt/__init__.py", line 155, in <module>
+    from qairt.api._loader import load
+  File "/home/moritz/opt/qairt/2.49.40.260810/lib/python/qairt/api/_loader.py", line 10, in <module>
+    from qairt.api.compiled_model import CompiledModel
+  File "/home/moritz/opt/qairt/2.49.40.260810/lib/python/qairt/api/compiled_model.py", line 19, in <module>
+    from qairt.api.compiler import CompileConfig
+  File "/home/moritz/opt/qairt/2.49.40.260810/lib/python/qairt/api/compiler/__init__.py", line 9, in <module>
+    from qairt.api.compiler.config import CompileConfig
+  File "/home/moritz/opt/qairt/2.49.40.260810/lib/python/qairt/api/compiler/config.py", line 21, in <module>
+    from qairt.api.common.backends.aic import AicCompilerConfig
+  File "/home/moritz/opt/qairt/2.49.40.260810/lib/python/qairt/api/common/backends/aic/__init__.py", line 9, in <module>
+    from .config import (
+  File "/home/moritz/opt/qairt/2.49.40.260810/lib/python/qairt/api/common/backends/aic/config.py", line 13, in <module>
+    from qti.aisw.tools.core.modules.api.backend.aic_backend import AicBackend
+  File "/home/moritz/opt/qairt/2.49.40.260810/lib/python/qti/aisw/tools/core/modules/api/backend/aic_backend.py", line 12, in <module>
+    from qti.aisw.core.model_level_api.target.x86_linux import X86LinuxTarget
+  File "/home/moritz/opt/qairt/2.49.40.260810/lib/python/qti/aisw/core/model_level_api/__init__.py", line 9, in <module>
+    from .executor.android_subprocess_executor import AndroidSubprocessExecutor
+  File "/home/moritz/opt/qairt/2.49.40.260810/lib/python/qti/aisw/core/model_level_api/executor/android_subprocess_executor.py", line 23, in <module>
+    from qti.aisw.core.model_level_api.executor.device_subprocess_executor import (
+  File "/home/moritz/opt/qairt/2.49.40.260810/lib/python/qti/aisw/core/model_level_api/executor/device_subprocess_executor.py", line 23, in <module>
+    from qti.aisw.core.model_level_api.utils.exceptions import (
+  File "/home/moritz/opt/qairt/2.49.40.260810/lib/python/qti/aisw/core/model_level_api/utils/__init__.py", line 81, in <module>
+    raise e
+  File "/home/moritz/opt/qairt/2.49.40.260810/lib/python/qti/aisw/core/model_level_api/utils/__init__.py", line 59, in <module>
+    import libPyNetRun310 as py_net_run
+ImportError: libpython3.10.so.1.0: cannot open shared object file: No such file or directory

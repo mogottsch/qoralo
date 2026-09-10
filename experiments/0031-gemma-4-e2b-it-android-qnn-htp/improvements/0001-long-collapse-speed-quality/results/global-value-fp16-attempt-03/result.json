@@ -1,0 +1,22 @@
+{
+  "classification": "host_patch_preflight_failure_before_conversion",
+  "run_id": "global-value-fp16-20260910T075737Z-attempt-03",
+  "error": "AR128 encoding removal mismatch: only three selected input encodings exist, not output encodings.",
+  "cause": "Unexecuted WIP assumed AR1/AR128 both explicitly encode outputs; AR128 instead obtains output quantization through producer propagation.",
+  "patch_started": true,
+  "conversion_started": false,
+  "phone_access": false,
+  "private_partial_artifacts": [
+    {
+      "path": "onnx/ar1_cl4096_1_of_1/ar1_cl4096_1_of_1.encodings",
+      "bytes": 55328542,
+      "sha256": "f67d8ae994cd28625ad50f18f7652680e675be7cd0603bd04319d3b3a3a1dac3"
+    },
+    {
+      "path": "onnx/ar1_cl4096_1_of_1/ar1_cl4096_1_of_1.onnx",
+      "bytes": 18016378,
+      "sha256": "077b5ce33f694e4a04210e2b37af9e5c9dd4b80d63dc741dfbedbdbea1e73c63"
+    }
+  ],
+  "next_fix": "Require exactly six explicit selected cache encodings for AR1 and exactly three input encodings for AR128, preserving all other entries."
+}

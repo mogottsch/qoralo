@@ -6,6 +6,16 @@ This is a new improvement track. It does not modify, replace, or relabel the com
 
 The accepted route remains the baseline. Any new conversion, host diagnostic, hybrid, or phone run must use a distinct artifact identity and run ID. A hybrid must select and label its backend before a complete logical request; hidden tensor- or provider-level fallback is forbidden.
 
+## Current host status — 2026-09-10
+
+**Stopped for app priority; waiting for Pi release.** The first three retained launches diagnosed two missing loader-path prerequisites and an unexecuted patch assumption (AR1 has six explicit selected cache encodings; AR128 has only three input entries). Existing host libraries were reused without installation or SDK changes.
+
+Attempt 04 prepared both FP16 global-value-cache ONNX variants. Independent checks prove exactly the selected encoding removals, unchanged other encodings and weight initializers, and FP16 ONNX I/O only for `{4,9,14}`. AR1 conversion reached QAIRT optimization/quantization, then Pi requested termination to release resources for app validation. STOP → TERM reaped the owned group; no automatic restart occurred. This is **an app-priority interruption, not a model or numerical failure**.
+
+No DLC was produced. AR128 conversion, compilation, actual QNN cache signatures, conversion-count comparison, full delegation, zero unsupported/fallback, and bounded fidelity remain **unmeasured**, not passed. See [`results/global-value-fp16-attempt-04/result.json`](results/global-value-fp16-attempt-04/result.json); attempts 01–03 remain beside it. Completed campaign and registry evidence are unchanged.
+
+The separately documented [request-level routing recommendation](REQUEST-ROUTING.md) remains an unmeasured integration policy, not a new campaign.
+
 ## Goal
 
 Improve both practical completion speed and long-output fidelity while preserving exact workload identity and honest provider boundaries.
@@ -37,4 +47,12 @@ Improve both practical completion speed and long-output fidelity while preservin
 3. **HTP-only all-value FP16:** broaden to all 15 value caches if necessary.
 4. **Normalization/fusion variant:** investigate the expanded float normalization components and value conversion path if cache precision alone does not fix the trajectory.
 
-No phone access or model conversion occurred in the first milestone.
+No phone access or model conversion occurred in the first milestone. The later interrupted conversion above is a separate attempt, not a revision of that observation.
+
+## Safe restart after release
+
+Do not run until Pi releases the app-priority hold. Use a fresh run ID/directory, never overwrite a retained attempt. `tools/convert_global_value_fp16.py` requires `--run-dir`; `tools/run_host_guarded.py` creates that directory exclusively and retains command, stdout/stderr, 10-second pressure samples, and exit status. Its `STOP` file terminates/reaps its own process group and never automatically retries.
+
+The environment needs both QAIRT `2.49.40.260810/bin/envsetup.sh` and the already-established experiment `.local/host-libs` prepended to `LD_LIBRARY_PATH`. That directory resolves managed Python `3.10.18` and `/usr/lib/libunwind.so.8`; exact paths/hashes and pybind `ldd` output are retained in attempt 04. SDK envsetup alone was insufficient.
+
+Run sequentially at low CPU/I/O priority with swap allowed and app work prioritized. After conversion, use official `qairt-dlc-info --save` CSVs and `tools/inspect_global_value_dlc.py` to reject inherited quantized outputs or changes to unselected interfaces. Its legacy runtime letters are not full HTP delegation proof. Do not compile or make fidelity claims before the actual DLC gate passes. No phone access is authorized.
