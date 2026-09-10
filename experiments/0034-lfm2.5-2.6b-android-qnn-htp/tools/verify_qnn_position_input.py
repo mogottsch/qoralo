@@ -12,18 +12,34 @@ def verify(path: Path, mode: str, start: int, count: int, command: str) -> dict[
     if start < 0 or count < 1:
         raise ValueError("start must be nonnegative and count positive")
     arguments = shlex.split(command)
+    malformed_global = any(value.startswith("--use_native_input_files=") for value in arguments)
+    if malformed_global:
+        raise ValueError("--use_native_input_files is a valueless selector")
     use_native = "--use_native_input_files" in arguments
-    targeted = "--native_input_tensor_names" in arguments
+    targeted_indices = [index for index, value in enumerate(arguments)
+                        if value == "--native_input_tensor_names" or value.startswith("--native_input_tensor_names=")]
+    targeted = bool(targeted_indices)
+    sample_only_mode = any(value == "--input_data_type" or value.startswith("--input_data_type=") for value in arguments)
+    if sample_only_mode:
+        raise ValueError("SampleApp-only --input_data_type is not accepted for qnn-net-run preflight")
+    if use_native and targeted:
+        raise ValueError("conflicting global and targeted native-input selectors")
+    if targeted:
+        # qnn-net-run's targeted selector grammar may encode graph and tensor
+        # names in multiple arguments. Until that grammar is validated against
+        # this exact binary, reject every targeted selector rather than merely
+        # checking that the option token exists.
+        raise ValueError("targeted --native_input_tensor_names mode is not yet supported by this preflight")
     if mode == "default-float32":
-        if use_native or targeted:
+        if use_native:
             raise ValueError("default-float32 file paired with native-input flag")
         dtype = np.dtype("<f4")
         required_flag = "none"
     elif mode == "native-int64":
-        if not (use_native or targeted):
-            raise ValueError("native-int64 file requires --use_native_input_files or --native_input_tensor_names")
+        if not use_native:
+            raise ValueError("native-int64 file requires --use_native_input_files")
         dtype = np.dtype("<i8")
-        required_flag = "--use_native_input_files or --native_input_tensor_names"
+        required_flag = "--use_native_input_files (targeted mode intentionally unsupported)"
     else:
         raise ValueError(f"unsupported mode: {mode}")
     expected_bytes = count * dtype.itemsize

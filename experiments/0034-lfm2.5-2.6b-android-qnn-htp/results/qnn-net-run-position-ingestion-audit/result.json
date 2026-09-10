@@ -22,7 +22,7 @@
   "future_preflight": {
     "accepted_modes": [
       "default-float32 numeric positions with no native flags",
-      "native-int64 positions with --use_native_input_files or --native_input_tensor_names"
+      "native-int64 positions with global --use_native_input_files"
     ],
     "integration": [
       "tools/run_prefill_qnn_phone_diagnostic.sh validates local positions before staging",
@@ -31,8 +31,11 @@
     "rejected_cases": [
       "historical INT32 bit patterns in default FLOAT mode",
       "INT32-sized file in native INT64 mode",
-      "FLOAT32 file paired with native-input flags"
+      "FLOAT32 file paired with native-input flags",
+      "any --native_input_tensor_names form, including correct-looking and unrelated targets",
+      "missing/conflicting/malformed native selectors"
     ],
+    "targeted_native_mode": "intentionally rejected until exact qnn-net-run graph/tensor selector grammar is validated",
     "tool": "tools/verify_qnn_position_input.py"
   },
   "graph_descriptors": {
@@ -245,7 +248,7 @@
   },
   "required_fix": {
     "direct_qnn": "Continue using graph descriptor INT64 buffers (1368 bytes AR171; 8 bytes AR1) with no qnn-net-run file conversion.",
-    "qnn_net_run": "For the actual qnn-net-run binary, use FLOAT32 files containing numeric 0..170/171 under default mode, or use its documented --use_native_input_files / targeted --native_input_tensor_names option with native INT64 files of 1368/8 bytes. Verify exact flag syntax and values with a bounded diagnostic before reusing qnn-net-run for position-sensitive claims; do not rely on the SampleApp-only --input_data_type spelling."
+    "qnn_net_run": "For the actual qnn-net-run binary, use FLOAT32 files containing numeric 0..170/171 under default mode, or use documented global --use_native_input_files with native INT64 files of 1368/8 bytes. This preflight intentionally rejects every targeted --native_input_tensor_names form until exact graph/tensor selector grammar is validated. Do not rely on the SampleApp-only --input_data_type spelling."
   },
   "runtime_binary_witness": {
     "exact_error": "3296.2ms [ ERROR ] Given input file /home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/qnn-prefill/ar171/host-htp/inputs/01.raw with file size in bytes 1368. If the model expects a batch size of one, the file size should match the tensor extent: 684 bytes. If the model expects a batch size > 1, the file size should evenly divide the tensor extent: 684 bytes.",

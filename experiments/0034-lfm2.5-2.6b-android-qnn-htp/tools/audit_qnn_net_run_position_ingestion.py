@@ -176,12 +176,13 @@ def main() -> None:
         },
         "future_preflight": {
             "tool": "tools/verify_qnn_position_input.py",
-            "accepted_modes": ["default-float32 numeric positions with no native flags", "native-int64 positions with --use_native_input_files or --native_input_tensor_names"],
-            "rejected_cases": ["historical INT32 bit patterns in default FLOAT mode", "INT32-sized file in native INT64 mode", "FLOAT32 file paired with native-input flags"],
+            "accepted_modes": ["default-float32 numeric positions with no native flags", "native-int64 positions with global --use_native_input_files"],
+            "targeted_native_mode": "intentionally rejected until exact qnn-net-run graph/tensor selector grammar is validated",
+            "rejected_cases": ["historical INT32 bit patterns in default FLOAT mode", "INT32-sized file in native INT64 mode", "FLOAT32 file paired with native-input flags", "any --native_input_tensor_names form, including correct-looking and unrelated targets", "missing/conflicting/malformed native selectors"],
             "integration": ["tools/run_prefill_qnn_phone_diagnostic.sh validates local positions before staging", "tools/run_prefill_ar1_phase_phone_diagnostic.sh validates prefill positions before staging and pulls/validates the generated AR1 position before execution"],
         },
         "required_fix": {
-            "qnn_net_run": "For the actual qnn-net-run binary, use FLOAT32 files containing numeric 0..170/171 under default mode, or use its documented --use_native_input_files / targeted --native_input_tensor_names option with native INT64 files of 1368/8 bytes. Verify exact flag syntax and values with a bounded diagnostic before reusing qnn-net-run for position-sensitive claims; do not rely on the SampleApp-only --input_data_type spelling.",
+            "qnn_net_run": "For the actual qnn-net-run binary, use FLOAT32 files containing numeric 0..170/171 under default mode, or use documented global --use_native_input_files with native INT64 files of 1368/8 bytes. This preflight intentionally rejects every targeted --native_input_tensor_names form until exact graph/tensor selector grammar is validated. Do not rely on the SampleApp-only --input_data_type spelling.",
             "direct_qnn": "Continue using graph descriptor INT64 buffers (1368 bytes AR171; 8 bytes AR1) with no qnn-net-run file conversion.",
         },
         "phone_boundary": "Source audit only; no model load, inference, compilation, or phone access occurred.",

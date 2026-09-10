@@ -1144,11 +1144,15 @@
     "exact_position_semantics_proven": false,
     "future_preflight": {
       "accepted_default_mode": "numeric FLOAT32 values with no native flags",
-      "accepted_native_mode": "native INT64 values with --use_native_input_files or --native_input_tensor_names",
+      "accepted_native_mode": "native INT64 values with global --use_native_input_files",
       "integrated_into_future_qnn_net_run_scripts": true,
+      "rejects_equals_syntax": true,
       "rejects_historical_int32_bit_patterns": true,
+      "rejects_missing_or_conflicting_selectors": true,
       "rejects_mode_flag_mismatch": true,
       "rejects_wrong_native_size": true,
+      "targeted_native_input_mode_policy": "reject all forms until exact graph/tensor selector grammar is validated",
+      "targeted_native_input_mode_supported": false,
       "tool": "tools/verify_qnn_position_input.py"
     },
     "graph_position_data_type": "QNN_DATATYPE_INT_64",

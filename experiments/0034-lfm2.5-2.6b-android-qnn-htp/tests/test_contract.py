@@ -589,6 +589,12 @@ class ContractTest(unittest.TestCase):
                 ["python3", str(tool), "--file", str(historical_int32), "--mode", "default-float32", "--start", "0", "--count", "4", "--command", "qnn-net-run --input_list inputs.txt"],
                 ["python3", str(tool), "--file", str(historical_int32), "--mode", "native-int64", "--start", "0", "--count", "4", "--command", "qnn-net-run --use_native_input_files --input_list inputs.txt"],
                 ["python3", str(tool), "--file", str(numeric_float), "--mode", "default-float32", "--start", "0", "--count", "4", "--command", "qnn-net-run --use_native_input_files --input_list inputs.txt"],
+                ["python3", str(tool), "--file", str(native_int64), "--mode", "native-int64", "--start", "0", "--count", "4", "--command", "qnn-net-run --native_input_tensor_names unrelated_graph unrelated_tensor --input_list inputs.txt"],
+                ["python3", str(tool), "--file", str(native_int64), "--mode", "native-int64", "--start", "0", "--count", "4", "--command", "qnn-net-run --native_input_tensor_names graph position_ids --input_list inputs.txt"],
+                ["python3", str(tool), "--file", str(native_int64), "--mode", "native-int64", "--start", "0", "--count", "4", "--command", "qnn-net-run --native_input_tensor_names=graph:position_ids --input_list inputs.txt"],
+                ["python3", str(tool), "--file", str(native_int64), "--mode", "native-int64", "--start", "0", "--count", "4", "--command", "qnn-net-run --native_input_tensor_names --input_list inputs.txt"],
+                ["python3", str(tool), "--file", str(native_int64), "--mode", "native-int64", "--start", "0", "--count", "4", "--command", "qnn-net-run --use_native_input_files --native_input_tensor_names graph position_ids --input_list inputs.txt"],
+                ["python3", str(tool), "--file", str(native_int64), "--mode", "native-int64", "--start", "0", "--count", "4", "--command", "qnn-net-run --use_native_input_files=true --input_list inputs.txt"],
             ):
                 with self.assertRaises(subprocess.CalledProcessError):
                     subprocess.run(command, check=True, capture_output=True)
@@ -612,6 +618,9 @@ class ContractTest(unittest.TestCase):
         self.assertTrue(audit["future_preflight"]["rejects_wrong_native_size"])
         self.assertTrue(audit["future_preflight"]["rejects_mode_flag_mismatch"])
         self.assertTrue(audit["future_preflight"]["integrated_into_future_qnn_net_run_scripts"])
+        self.assertFalse(audit["future_preflight"]["targeted_native_input_mode_supported"])
+        self.assertTrue(audit["future_preflight"]["rejects_equals_syntax"])
+        self.assertTrue(audit["future_preflight"]["rejects_missing_or_conflicting_selectors"])
         result = json.loads((EXP / audit["evidence"]).read_text())
         self.assertTrue(result["interpretation"]["conversion_result_reproduced_from_packaged_source_and_raw_bytes"])
         self.assertFalse(result["interpretation"]["binary_source_linkage_cryptographically_proven"])
