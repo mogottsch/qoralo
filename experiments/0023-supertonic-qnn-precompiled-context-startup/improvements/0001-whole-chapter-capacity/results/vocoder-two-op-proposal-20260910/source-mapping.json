@@ -1,0 +1,884 @@
+{
+  "source_metadata": {
+    "path": "experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/results/host-preparation-20260910/raw/inspect-vocoder-01/data/metadata.json",
+    "sha256": "5c3dbfcd875327db40a7b9b4bbd92e8493178ce04bf577bf482c89d62ba85a51"
+  },
+  "source_delta": {
+    "path": "experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/results/materialization-20260910/raw/vocoder/data/structural-delta.json",
+    "sha256": "afa004251bd5325902b4d30947953d3a4801c46817d250b7af01315012723f44"
+  },
+  "two_convs": [
+    {
+      "name": "/decoder/convnext.1/dwconv/net/Conv",
+      "op": "Conv",
+      "domain": "",
+      "inputs": [
+        "/decoder/convnext.1/dwconv/Pad_output_0",
+        "tts.ae.decoder.convnext.1.dwconv.net.weight",
+        "tts.ae.decoder.convnext.1.dwconv.net.bias"
+      ],
+      "outputs": [
+        "/decoder/convnext.1/dwconv/net/Conv_output_0"
+      ],
+      "attributes": {
+        "dilations": [
+          2
+        ],
+        "group": 512,
+        "kernel_shape": [
+          7
+        ],
+        "pads": [
+          0,
+          0
+        ],
+        "strides": [
+          1
+        ]
+      }
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/net/Conv",
+      "op": "Conv",
+      "domain": "",
+      "inputs": [
+        "/decoder/convnext.4/dwconv/Pad_output_0",
+        "tts.ae.decoder.convnext.4.dwconv.net.weight",
+        "tts.ae.decoder.convnext.4.dwconv.net.bias"
+      ],
+      "outputs": [
+        "/decoder/convnext.4/dwconv/net/Conv_output_0"
+      ],
+      "attributes": {
+        "dilations": [
+          2
+        ],
+        "group": 512,
+        "kernel_shape": [
+          7
+        ],
+        "pads": [
+          0,
+          0
+        ],
+        "strides": [
+          1
+        ]
+      }
+    }
+  ],
+  "existing_pad_builders": [
+    {
+      "name": "/decoder/convnext.1/dwconv/Constant",
+      "op": "Constant",
+      "domain": "",
+      "inputs": [],
+      "outputs": [
+        "/decoder/convnext.1/dwconv/Constant_output_0"
+      ],
+      "attributes": {
+        "value": {
+          "name": "",
+          "dtype": 7,
+          "shape": [
+            1
+          ],
+          "elements": 1,
+          "external": false,
+          "small_values": [
+            4
+          ],
+          "values_reason": "bounded constant decoding, at most32 elements"
+        }
+      }
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Constant_1",
+      "op": "Constant",
+      "domain": "",
+      "inputs": [],
+      "outputs": [
+        "/decoder/convnext.1/dwconv/Constant_1_output_0"
+      ],
+      "attributes": {
+        "value": {
+          "name": "",
+          "dtype": 7,
+          "shape": [
+            2
+          ],
+          "elements": 2,
+          "external": false,
+          "small_values": [
+            12,
+            0
+          ],
+          "values_reason": "bounded constant decoding, at most32 elements"
+        }
+      }
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/ConstantOfShape",
+      "op": "ConstantOfShape",
+      "domain": "",
+      "inputs": [
+        "/decoder/convnext.1/dwconv/Constant_output_0"
+      ],
+      "outputs": [
+        "/decoder/convnext.1/dwconv/ConstantOfShape_output_0"
+      ],
+      "attributes": {
+        "value": {
+          "name": "",
+          "dtype": 7,
+          "shape": [
+            1
+          ],
+          "elements": 1,
+          "external": false,
+          "small_values": [
+            0
+          ],
+          "values_reason": "bounded constant decoding, at most32 elements"
+        }
+      }
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Concat",
+      "op": "Concat",
+      "domain": "",
+      "inputs": [
+        "/decoder/convnext.1/dwconv/Constant_1_output_0",
+        "/decoder/convnext.1/dwconv/ConstantOfShape_output_0"
+      ],
+      "outputs": [
+        "/decoder/convnext.1/dwconv/Concat_output_0"
+      ],
+      "attributes": {
+        "axis": 0
+      }
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Constant_2",
+      "op": "Constant",
+      "domain": "",
+      "inputs": [],
+      "outputs": [
+        "/decoder/convnext.1/dwconv/Constant_2_output_0"
+      ],
+      "attributes": {
+        "value": {
+          "name": "",
+          "dtype": 7,
+          "shape": [
+            2
+          ],
+          "elements": 2,
+          "external": false,
+          "small_values": [
+            -1,
+            2
+          ],
+          "values_reason": "bounded constant decoding, at most32 elements"
+        }
+      }
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Reshape",
+      "op": "Reshape",
+      "domain": "",
+      "inputs": [
+        "/decoder/convnext.1/dwconv/Concat_output_0",
+        "/decoder/convnext.1/dwconv/Constant_2_output_0"
+      ],
+      "outputs": [
+        "/decoder/convnext.1/dwconv/Reshape_output_0"
+      ],
+      "attributes": {
+        "allowzero": 0
+      }
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Constant_3",
+      "op": "Constant",
+      "domain": "",
+      "inputs": [],
+      "outputs": [
+        "/decoder/convnext.1/dwconv/Constant_3_output_0"
+      ],
+      "attributes": {
+        "value": {
+          "name": "",
+          "dtype": 7,
+          "shape": [
+            1
+          ],
+          "elements": 1,
+          "external": false,
+          "small_values": [
+            0
+          ],
+          "values_reason": "bounded constant decoding, at most32 elements"
+        }
+      }
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Constant_4",
+      "op": "Constant",
+      "domain": "",
+      "inputs": [],
+      "outputs": [
+        "/decoder/convnext.1/dwconv/Constant_4_output_0"
+      ],
+      "attributes": {
+        "value": {
+          "name": "",
+          "dtype": 7,
+          "shape": [
+            1
+          ],
+          "elements": 1,
+          "external": false,
+          "small_values": [
+            -1
+          ],
+          "values_reason": "bounded constant decoding, at most32 elements"
+        }
+      }
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Constant_5",
+      "op": "Constant",
+      "domain": "",
+      "inputs": [],
+      "outputs": [
+        "/decoder/convnext.1/dwconv/Constant_5_output_0"
+      ],
+      "attributes": {
+        "value": {
+          "name": "",
+          "dtype": 7,
+          "shape": [
+            1
+          ],
+          "elements": 1,
+          "external": false,
+          "small_values": [
+            -9223372036854775807
+          ],
+          "values_reason": "bounded constant decoding, at most32 elements"
+        }
+      }
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Constant_6",
+      "op": "Constant",
+      "domain": "",
+      "inputs": [],
+      "outputs": [
+        "/decoder/convnext.1/dwconv/Constant_6_output_0"
+      ],
+      "attributes": {
+        "value": {
+          "name": "",
+          "dtype": 7,
+          "shape": [
+            1
+          ],
+          "elements": 1,
+          "external": false,
+          "small_values": [
+            -1
+          ],
+          "values_reason": "bounded constant decoding, at most32 elements"
+        }
+      }
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Slice",
+      "op": "Slice",
+      "domain": "",
+      "inputs": [
+        "/decoder/convnext.1/dwconv/Reshape_output_0",
+        "/decoder/convnext.1/dwconv/Constant_4_output_0",
+        "/decoder/convnext.1/dwconv/Constant_5_output_0",
+        "/decoder/convnext.1/dwconv/Constant_3_output_0",
+        "/decoder/convnext.1/dwconv/Constant_6_output_0"
+      ],
+      "outputs": [
+        "/decoder/convnext.1/dwconv/Slice_output_0"
+      ],
+      "attributes": {}
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Transpose",
+      "op": "Transpose",
+      "domain": "",
+      "inputs": [
+        "/decoder/convnext.1/dwconv/Slice_output_0"
+      ],
+      "outputs": [
+        "/decoder/convnext.1/dwconv/Transpose_output_0"
+      ],
+      "attributes": {
+        "perm": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Constant_7",
+      "op": "Constant",
+      "domain": "",
+      "inputs": [],
+      "outputs": [
+        "/decoder/convnext.1/dwconv/Constant_7_output_0"
+      ],
+      "attributes": {
+        "value": {
+          "name": "",
+          "dtype": 7,
+          "shape": [
+            1
+          ],
+          "elements": 1,
+          "external": false,
+          "small_values": [
+            -1
+          ],
+          "values_reason": "bounded constant decoding, at most32 elements"
+        }
+      }
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Reshape_1",
+      "op": "Reshape",
+      "domain": "",
+      "inputs": [
+        "/decoder/convnext.1/dwconv/Transpose_output_0",
+        "/decoder/convnext.1/dwconv/Constant_7_output_0"
+      ],
+      "outputs": [
+        "/decoder/convnext.1/dwconv/Reshape_1_output_0"
+      ],
+      "attributes": {
+        "allowzero": 0
+      }
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Cast",
+      "op": "Cast",
+      "domain": "",
+      "inputs": [
+        "/decoder/convnext.1/dwconv/Reshape_1_output_0"
+      ],
+      "outputs": [
+        "/decoder/convnext.1/dwconv/Cast_output_0"
+      ],
+      "attributes": {
+        "to": 7
+      }
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Pad",
+      "op": "Pad",
+      "domain": "",
+      "inputs": [
+        "/decoder/convnext.0/Add_output_0",
+        "/decoder/convnext.1/dwconv/Cast_output_0"
+      ],
+      "outputs": [
+        "/decoder/convnext.1/dwconv/Pad_output_0"
+      ],
+      "attributes": {
+        "mode": "edge"
+      }
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/net/Conv",
+      "op": "Conv",
+      "domain": "",
+      "inputs": [
+        "/decoder/convnext.1/dwconv/Pad_output_0",
+        "tts.ae.decoder.convnext.1.dwconv.net.weight",
+        "tts.ae.decoder.convnext.1.dwconv.net.bias"
+      ],
+      "outputs": [
+        "/decoder/convnext.1/dwconv/net/Conv_output_0"
+      ],
+      "attributes": {
+        "dilations": [
+          2
+        ],
+        "group": 512,
+        "kernel_shape": [
+          7
+        ],
+        "pads": [
+          0,
+          0
+        ],
+        "strides": [
+          1
+        ]
+      }
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Constant",
+      "op": "Constant",
+      "domain": "",
+      "inputs": [],
+      "outputs": [
+        "/decoder/convnext.4/dwconv/Constant_output_0"
+      ],
+      "attributes": {
+        "value": {
+          "name": "",
+          "dtype": 7,
+          "shape": [
+            1
+          ],
+          "elements": 1,
+          "external": false,
+          "small_values": [
+            4
+          ],
+          "values_reason": "bounded constant decoding, at most32 elements"
+        }
+      }
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Constant_1",
+      "op": "Constant",
+      "domain": "",
+      "inputs": [],
+      "outputs": [
+        "/decoder/convnext.4/dwconv/Constant_1_output_0"
+      ],
+      "attributes": {
+        "value": {
+          "name": "",
+          "dtype": 7,
+          "shape": [
+            2
+          ],
+          "elements": 2,
+          "external": false,
+          "small_values": [
+            12,
+            0
+          ],
+          "values_reason": "bounded constant decoding, at most32 elements"
+        }
+      }
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/ConstantOfShape",
+      "op": "ConstantOfShape",
+      "domain": "",
+      "inputs": [
+        "/decoder/convnext.4/dwconv/Constant_output_0"
+      ],
+      "outputs": [
+        "/decoder/convnext.4/dwconv/ConstantOfShape_output_0"
+      ],
+      "attributes": {
+        "value": {
+          "name": "",
+          "dtype": 7,
+          "shape": [
+            1
+          ],
+          "elements": 1,
+          "external": false,
+          "small_values": [
+            0
+          ],
+          "values_reason": "bounded constant decoding, at most32 elements"
+        }
+      }
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Concat",
+      "op": "Concat",
+      "domain": "",
+      "inputs": [
+        "/decoder/convnext.4/dwconv/Constant_1_output_0",
+        "/decoder/convnext.4/dwconv/ConstantOfShape_output_0"
+      ],
+      "outputs": [
+        "/decoder/convnext.4/dwconv/Concat_output_0"
+      ],
+      "attributes": {
+        "axis": 0
+      }
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Constant_2",
+      "op": "Constant",
+      "domain": "",
+      "inputs": [],
+      "outputs": [
+        "/decoder/convnext.4/dwconv/Constant_2_output_0"
+      ],
+      "attributes": {
+        "value": {
+          "name": "",
+          "dtype": 7,
+          "shape": [
+            2
+          ],
+          "elements": 2,
+          "external": false,
+          "small_values": [
+            -1,
+            2
+          ],
+          "values_reason": "bounded constant decoding, at most32 elements"
+        }
+      }
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Reshape",
+      "op": "Reshape",
+      "domain": "",
+      "inputs": [
+        "/decoder/convnext.4/dwconv/Concat_output_0",
+        "/decoder/convnext.4/dwconv/Constant_2_output_0"
+      ],
+      "outputs": [
+        "/decoder/convnext.4/dwconv/Reshape_output_0"
+      ],
+      "attributes": {
+        "allowzero": 0
+      }
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Constant_3",
+      "op": "Constant",
+      "domain": "",
+      "inputs": [],
+      "outputs": [
+        "/decoder/convnext.4/dwconv/Constant_3_output_0"
+      ],
+      "attributes": {
+        "value": {
+          "name": "",
+          "dtype": 7,
+          "shape": [
+            1
+          ],
+          "elements": 1,
+          "external": false,
+          "small_values": [
+            0
+          ],
+          "values_reason": "bounded constant decoding, at most32 elements"
+        }
+      }
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Constant_4",
+      "op": "Constant",
+      "domain": "",
+      "inputs": [],
+      "outputs": [
+        "/decoder/convnext.4/dwconv/Constant_4_output_0"
+      ],
+      "attributes": {
+        "value": {
+          "name": "",
+          "dtype": 7,
+          "shape": [
+            1
+          ],
+          "elements": 1,
+          "external": false,
+          "small_values": [
+            -1
+          ],
+          "values_reason": "bounded constant decoding, at most32 elements"
+        }
+      }
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Constant_5",
+      "op": "Constant",
+      "domain": "",
+      "inputs": [],
+      "outputs": [
+        "/decoder/convnext.4/dwconv/Constant_5_output_0"
+      ],
+      "attributes": {
+        "value": {
+          "name": "",
+          "dtype": 7,
+          "shape": [
+            1
+          ],
+          "elements": 1,
+          "external": false,
+          "small_values": [
+            -9223372036854775807
+          ],
+          "values_reason": "bounded constant decoding, at most32 elements"
+        }
+      }
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Constant_6",
+      "op": "Constant",
+      "domain": "",
+      "inputs": [],
+      "outputs": [
+        "/decoder/convnext.4/dwconv/Constant_6_output_0"
+      ],
+      "attributes": {
+        "value": {
+          "name": "",
+          "dtype": 7,
+          "shape": [
+            1
+          ],
+          "elements": 1,
+          "external": false,
+          "small_values": [
+            -1
+          ],
+          "values_reason": "bounded constant decoding, at most32 elements"
+        }
+      }
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Slice",
+      "op": "Slice",
+      "domain": "",
+      "inputs": [
+        "/decoder/convnext.4/dwconv/Reshape_output_0",
+        "/decoder/convnext.4/dwconv/Constant_4_output_0",
+        "/decoder/convnext.4/dwconv/Constant_5_output_0",
+        "/decoder/convnext.4/dwconv/Constant_3_output_0",
+        "/decoder/convnext.4/dwconv/Constant_6_output_0"
+      ],
+      "outputs": [
+        "/decoder/convnext.4/dwconv/Slice_output_0"
+      ],
+      "attributes": {}
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Transpose",
+      "op": "Transpose",
+      "domain": "",
+      "inputs": [
+        "/decoder/convnext.4/dwconv/Slice_output_0"
+      ],
+      "outputs": [
+        "/decoder/convnext.4/dwconv/Transpose_output_0"
+      ],
+      "attributes": {
+        "perm": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Constant_7",
+      "op": "Constant",
+      "domain": "",
+      "inputs": [],
+      "outputs": [
+        "/decoder/convnext.4/dwconv/Constant_7_output_0"
+      ],
+      "attributes": {
+        "value": {
+          "name": "",
+          "dtype": 7,
+          "shape": [
+            1
+          ],
+          "elements": 1,
+          "external": false,
+          "small_values": [
+            -1
+          ],
+          "values_reason": "bounded constant decoding, at most32 elements"
+        }
+      }
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Reshape_1",
+      "op": "Reshape",
+      "domain": "",
+      "inputs": [
+        "/decoder/convnext.4/dwconv/Transpose_output_0",
+        "/decoder/convnext.4/dwconv/Constant_7_output_0"
+      ],
+      "outputs": [
+        "/decoder/convnext.4/dwconv/Reshape_1_output_0"
+      ],
+      "attributes": {
+        "allowzero": 0
+      }
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Cast",
+      "op": "Cast",
+      "domain": "",
+      "inputs": [
+        "/decoder/convnext.4/dwconv/Reshape_1_output_0"
+      ],
+      "outputs": [
+        "/decoder/convnext.4/dwconv/Cast_output_0"
+      ],
+      "attributes": {
+        "to": 7
+      }
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Pad",
+      "op": "Pad",
+      "domain": "",
+      "inputs": [
+        "/decoder/convnext.3/Add_output_0",
+        "/decoder/convnext.4/dwconv/Cast_output_0"
+      ],
+      "outputs": [
+        "/decoder/convnext.4/dwconv/Pad_output_0"
+      ],
+      "attributes": {
+        "mode": "edge"
+      }
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/net/Conv",
+      "op": "Conv",
+      "domain": "",
+      "inputs": [
+        "/decoder/convnext.4/dwconv/Pad_output_0",
+        "tts.ae.decoder.convnext.4.dwconv.net.weight",
+        "tts.ae.decoder.convnext.4.dwconv.net.bias"
+      ],
+      "outputs": [
+        "/decoder/convnext.4/dwconv/net/Conv_output_0"
+      ],
+      "attributes": {
+        "dilations": [
+          2
+        ],
+        "group": 512,
+        "kernel_shape": [
+          7
+        ],
+        "pads": [
+          0,
+          0
+        ],
+        "strides": [
+          1
+        ]
+      }
+    }
+  ],
+  "unchanged_weight_bias_identities": [
+    {
+      "name": "tts.ae.decoder.convnext.1.dwconv.net.weight",
+      "before_sha256": "5eb2bb5498d6f6cc2ef7e1c2e78d7fb4ff86f04a416197fd838411cabe91884c",
+      "after_sha256": "5eb2bb5498d6f6cc2ef7e1c2e78d7fb4ff86f04a416197fd838411cabe91884c",
+      "before_shape": [
+        512,
+        1,
+        7
+      ],
+      "after_shape": [
+        512,
+        1,
+        7
+      ],
+      "dtype": 1,
+      "allowed_position_extension": false
+    },
+    {
+      "name": "tts.ae.decoder.convnext.1.dwconv.net.bias",
+      "before_sha256": "c4e8daef9d00b4e897ab0cbe4555920502f2567cb6d0e6a018121ad72544bb7b",
+      "after_sha256": "c4e8daef9d00b4e897ab0cbe4555920502f2567cb6d0e6a018121ad72544bb7b",
+      "before_shape": [
+        512
+      ],
+      "after_shape": [
+        512
+      ],
+      "dtype": 1,
+      "allowed_position_extension": false
+    },
+    {
+      "name": "tts.ae.decoder.convnext.4.dwconv.net.weight",
+      "before_sha256": "76d95a9819397b93880e53f83d4f424ad49806de4c501a560d96b0fa4043d704",
+      "after_sha256": "76d95a9819397b93880e53f83d4f424ad49806de4c501a560d96b0fa4043d704",
+      "before_shape": [
+        512,
+        1,
+        7
+      ],
+      "after_shape": [
+        512,
+        1,
+        7
+      ],
+      "dtype": 1,
+      "allowed_position_extension": false
+    },
+    {
+      "name": "tts.ae.decoder.convnext.4.dwconv.net.bias",
+      "before_sha256": "9fce35a71b71df666cc6f38f40fe22d541a2ad47490b51fe4fa1e6444ed2f6cf",
+      "after_sha256": "9fce35a71b71df666cc6f38f40fe22d541a2ad47490b51fe4fa1e6444ed2f6cf",
+      "before_shape": [
+        512
+      ],
+      "after_shape": [
+        512
+      ],
+      "dtype": 1,
+      "allowed_position_extension": false
+    }
+  ],
+  "existing_external_padding": {
+    "mode": "edge",
+    "left": 12,
+    "right": 0,
+    "expanded_ONNX_pads": [
+      0,
+      0,
+      12,
+      0,
+      0,
+      0
+    ]
+  },
+  "new_shape": {
+    "source_padded": [
+      1,
+      512,
+      12300
+    ],
+    "source_output": [
+      1,
+      512,
+      12288
+    ],
+    "batch1_parity_inputs": [
+      1,
+      512,
+      6150
+    ],
+    "batch1_parity_outputs": [
+      1,
+      512,
+      6144
+    ]
+  },
+  "shape_evidence": "Saved source metadata plus exact QNN composed interfaces; not a returned session or model forward.",
+  "graph_mutations": 0,
+  "learned_weight_values_decoded": false
+}

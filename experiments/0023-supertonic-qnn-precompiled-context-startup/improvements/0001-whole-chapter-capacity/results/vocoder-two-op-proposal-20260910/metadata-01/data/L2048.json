@@ -1,0 +1,5223 @@
+{
+  "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/materialization-20260910/attempt-01/vocoder/data/vocoder.onnx",
+  "bytes": 101449891,
+  "sha256": "539f8ef7850292b3b5add1b9b29012e6bff86c13caebad06ef802cec261df792",
+  "metadata_payload_bytes_decoded": 25013,
+  "graph_field_counts": {
+    "1": 401,
+    "2": 1,
+    "5": 103,
+    "11": 1,
+    "12": 1,
+    "13": 400
+  },
+  "ModelProto_or_GraphProto_loads": 0,
+  "initializer_or_Constant_payloads_decoded": 0,
+  "model_or_QNN_runtime_calls": 0,
+  "rows": [
+    {
+      "name": "latent",
+      "kind": "input",
+      "dtype": 1,
+      "shape": [
+        1,
+        144,
+        2048
+      ],
+      "elements": 294912,
+      "logical_bytes": 1179648,
+      "bytes_reason": null
+    },
+    {
+      "name": "wav_tts",
+      "kind": "output",
+      "dtype": 1,
+      "shape": [
+        1,
+        6291456
+      ],
+      "elements": 6291456,
+      "logical_bytes": 25165824,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Div_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        1,
+        144,
+        2048
+      ],
+      "elements": 294912,
+      "logical_bytes": 1179648,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Shape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3
+      ],
+      "elements": 3,
+      "logical_bytes": 24,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Constant_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Gather_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Shape_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3
+      ],
+      "elements": 3,
+      "logical_bytes": 24,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Constant_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Constant_2_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Constant_3_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Slice_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Constant_4_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Squeeze_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "onnx::Unsqueeze_967",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Unsqueeze_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Constant_5_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Constant_6_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "onnx::Unsqueeze_973",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Unsqueeze_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Concat_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        4
+      ],
+      "elements": 4,
+      "logical_bytes": 32,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Reshape_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__0",
+        "unk__1",
+        "unk__2",
+        "unk__3"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__0",
+        "unk__1",
+        "unk__3",
+        "unk__2"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/Shape_2_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        4
+      ],
+      "elements": 4,
+      "logical_bytes": 32,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Constant_7_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Gather_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Shape_3_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        4
+      ],
+      "elements": 4,
+      "logical_bytes": 32,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Constant_8_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Gather_2_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "onnx::Unsqueeze_984",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Unsqueeze_2_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "onnx::Unsqueeze_986",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Unsqueeze_3_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Constant_9_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Concat_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3
+      ],
+      "elements": 3,
+      "logical_bytes": 24,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Reshape_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__4",
+        "unk__5",
+        "unk__6"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/Mul_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__4",
+        24,
+        "unk__6"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/Add_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__4",
+        24,
+        "unk__6"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/embed/Constant_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/embed/Constant_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/embed/ConstantOfShape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        4
+      ],
+      "elements": 4,
+      "logical_bytes": 32,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/embed/Concat_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/embed/Constant_2_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/embed/Reshape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/embed/Constant_3_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/embed/Constant_4_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/embed/Constant_5_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/embed/Constant_6_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/embed/Slice_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/embed/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2,
+        3
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/embed/Constant_7_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/embed/Reshape_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/embed/Cast_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/embed/Pad_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__7",
+        "unk__8",
+        "unk__9"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/embed/net/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__7",
+        512,
+        "unk__10"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.0/dwconv/Constant_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.0/dwconv/Constant_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.0/dwconv/ConstantOfShape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        4
+      ],
+      "elements": 4,
+      "logical_bytes": 32,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.0/dwconv/Concat_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.0/dwconv/Constant_2_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.0/dwconv/Reshape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.0/dwconv/Constant_3_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.0/dwconv/Constant_4_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.0/dwconv/Constant_5_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.0/dwconv/Constant_6_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.0/dwconv/Slice_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.0/dwconv/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2,
+        3
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.0/dwconv/Constant_7_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.0/dwconv/Reshape_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.0/dwconv/Cast_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.0/dwconv/Pad_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__11",
+        "unk__12",
+        "unk__13"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.0/dwconv/net/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__11",
+        512,
+        "unk__14"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.0/norm/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__11",
+        "unk__14",
+        512
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.0/norm/norm/LayerNormalization_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__11",
+        "unk__14",
+        512
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.0/norm/Transpose_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__11",
+        512,
+        "unk__14"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.0/pwconv1/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__11",
+        2048,
+        "unk__15"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.0/act/Constant_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.0/act/Div_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__11",
+        2048,
+        "unk__15"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.0/act/Erf_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__11",
+        2048,
+        "unk__15"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.0/act/Constant_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.0/act/Add_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__11",
+        2048,
+        "unk__15"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.0/act/Mul_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__11",
+        2048,
+        "unk__15"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.0/act/Constant_2_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.0/act/Mul_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__11",
+        2048,
+        "unk__15"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.0/pwconv2/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__11",
+        512,
+        "unk__16"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.0/Mul_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__11",
+        512,
+        "unk__16"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.0/Add_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__17",
+        512,
+        "unk__18"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Constant_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Constant_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/ConstantOfShape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        4
+      ],
+      "elements": 4,
+      "logical_bytes": 32,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Concat_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Constant_2_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Reshape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Constant_3_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Constant_4_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Constant_5_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Constant_6_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Slice_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2,
+        3
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Constant_7_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Reshape_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Cast_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Pad_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__19",
+        "unk__20",
+        "unk__21"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/net/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__19",
+        512,
+        "unk__22"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.1/norm/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__19",
+        "unk__22",
+        512
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.1/norm/norm/LayerNormalization_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__19",
+        "unk__22",
+        512
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.1/norm/Transpose_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__19",
+        512,
+        "unk__22"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.1/pwconv1/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__19",
+        2048,
+        "unk__23"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.1/act/Constant_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.1/act/Div_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__19",
+        2048,
+        "unk__23"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.1/act/Erf_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__19",
+        2048,
+        "unk__23"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.1/act/Constant_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.1/act/Add_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__19",
+        2048,
+        "unk__23"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.1/act/Mul_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__19",
+        2048,
+        "unk__23"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.1/act/Constant_2_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.1/act/Mul_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__19",
+        2048,
+        "unk__23"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.1/pwconv2/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__19",
+        512,
+        "unk__24"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.1/Mul_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__19",
+        512,
+        "unk__24"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.1/Add_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__25",
+        512,
+        "unk__26"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.2/dwconv/Constant_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.2/dwconv/Constant_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.2/dwconv/ConstantOfShape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        4
+      ],
+      "elements": 4,
+      "logical_bytes": 32,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.2/dwconv/Concat_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.2/dwconv/Constant_2_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.2/dwconv/Reshape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.2/dwconv/Constant_3_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.2/dwconv/Constant_4_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.2/dwconv/Constant_5_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.2/dwconv/Constant_6_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.2/dwconv/Slice_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.2/dwconv/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2,
+        3
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.2/dwconv/Constant_7_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.2/dwconv/Reshape_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.2/dwconv/Cast_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.2/dwconv/Pad_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__27",
+        "unk__28",
+        "unk__29"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.2/dwconv/net/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__27",
+        512,
+        "unk__30"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.2/norm/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__27",
+        "unk__30",
+        512
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.2/norm/norm/LayerNormalization_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__27",
+        "unk__30",
+        512
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.2/norm/Transpose_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__27",
+        512,
+        "unk__30"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.2/pwconv1/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__27",
+        2048,
+        "unk__31"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.2/act/Constant_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.2/act/Div_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__27",
+        2048,
+        "unk__31"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.2/act/Erf_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__27",
+        2048,
+        "unk__31"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.2/act/Constant_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.2/act/Add_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__27",
+        2048,
+        "unk__31"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.2/act/Mul_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__27",
+        2048,
+        "unk__31"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.2/act/Constant_2_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.2/act/Mul_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__27",
+        2048,
+        "unk__31"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.2/pwconv2/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__27",
+        512,
+        "unk__32"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.2/Mul_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__27",
+        512,
+        "unk__32"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.2/Add_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__33",
+        512,
+        "unk__34"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.3/dwconv/Constant_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.3/dwconv/Constant_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.3/dwconv/ConstantOfShape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        4
+      ],
+      "elements": 4,
+      "logical_bytes": 32,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.3/dwconv/Concat_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.3/dwconv/Constant_2_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.3/dwconv/Reshape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.3/dwconv/Constant_3_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.3/dwconv/Constant_4_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.3/dwconv/Constant_5_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.3/dwconv/Constant_6_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.3/dwconv/Slice_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.3/dwconv/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2,
+        3
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.3/dwconv/Constant_7_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.3/dwconv/Reshape_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.3/dwconv/Cast_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.3/dwconv/Pad_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__35",
+        "unk__36",
+        "unk__37"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.3/dwconv/net/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__35",
+        512,
+        "unk__38"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.3/norm/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__35",
+        "unk__38",
+        512
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.3/norm/norm/LayerNormalization_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__35",
+        "unk__38",
+        512
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.3/norm/Transpose_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__35",
+        512,
+        "unk__38"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.3/pwconv1/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__35",
+        2048,
+        "unk__39"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.3/act/Constant_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.3/act/Div_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__35",
+        2048,
+        "unk__39"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.3/act/Erf_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__35",
+        2048,
+        "unk__39"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.3/act/Constant_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.3/act/Add_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__35",
+        2048,
+        "unk__39"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.3/act/Mul_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__35",
+        2048,
+        "unk__39"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.3/act/Constant_2_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.3/act/Mul_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__35",
+        2048,
+        "unk__39"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.3/pwconv2/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__35",
+        512,
+        "unk__40"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.3/Mul_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__35",
+        512,
+        "unk__40"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.3/Add_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__41",
+        512,
+        "unk__42"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Constant_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Constant_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/ConstantOfShape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        4
+      ],
+      "elements": 4,
+      "logical_bytes": 32,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Concat_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Constant_2_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Reshape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Constant_3_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Constant_4_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Constant_5_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Constant_6_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Slice_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2,
+        3
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Constant_7_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Reshape_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Cast_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/Pad_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__43",
+        "unk__44",
+        "unk__45"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.4/dwconv/net/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__43",
+        512,
+        "unk__46"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.4/norm/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__43",
+        "unk__46",
+        512
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.4/norm/norm/LayerNormalization_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__43",
+        "unk__46",
+        512
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.4/norm/Transpose_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__43",
+        512,
+        "unk__46"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.4/pwconv1/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__43",
+        2048,
+        "unk__47"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.4/act/Constant_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.4/act/Div_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__43",
+        2048,
+        "unk__47"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.4/act/Erf_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__43",
+        2048,
+        "unk__47"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.4/act/Constant_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.4/act/Add_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__43",
+        2048,
+        "unk__47"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.4/act/Mul_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__43",
+        2048,
+        "unk__47"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.4/act/Constant_2_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.4/act/Mul_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__43",
+        2048,
+        "unk__47"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.4/pwconv2/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__43",
+        512,
+        "unk__48"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.4/Mul_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__43",
+        512,
+        "unk__48"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.4/Add_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__49",
+        512,
+        "unk__50"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.5/dwconv/Constant_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.5/dwconv/Constant_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.5/dwconv/ConstantOfShape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        4
+      ],
+      "elements": 4,
+      "logical_bytes": 32,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.5/dwconv/Concat_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.5/dwconv/Constant_2_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.5/dwconv/Reshape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.5/dwconv/Constant_3_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.5/dwconv/Constant_4_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.5/dwconv/Constant_5_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.5/dwconv/Constant_6_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.5/dwconv/Slice_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.5/dwconv/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2,
+        3
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.5/dwconv/Constant_7_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.5/dwconv/Reshape_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.5/dwconv/Cast_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.5/dwconv/Pad_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__51",
+        "unk__52",
+        "unk__53"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.5/dwconv/net/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__51",
+        512,
+        "unk__54"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.5/norm/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__51",
+        "unk__54",
+        512
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.5/norm/norm/LayerNormalization_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__51",
+        "unk__54",
+        512
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.5/norm/Transpose_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__51",
+        512,
+        "unk__54"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.5/pwconv1/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__51",
+        2048,
+        "unk__55"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.5/act/Constant_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.5/act/Div_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__51",
+        2048,
+        "unk__55"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.5/act/Erf_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__51",
+        2048,
+        "unk__55"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.5/act/Constant_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.5/act/Add_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__51",
+        2048,
+        "unk__55"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.5/act/Mul_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__51",
+        2048,
+        "unk__55"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.5/act/Constant_2_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.5/act/Mul_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__51",
+        2048,
+        "unk__55"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.5/pwconv2/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__51",
+        512,
+        "unk__56"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.5/Mul_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__51",
+        512,
+        "unk__56"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.5/Add_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__57",
+        512,
+        "unk__58"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.6/dwconv/Constant_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.6/dwconv/Constant_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.6/dwconv/ConstantOfShape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        4
+      ],
+      "elements": 4,
+      "logical_bytes": 32,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.6/dwconv/Concat_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.6/dwconv/Constant_2_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.6/dwconv/Reshape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.6/dwconv/Constant_3_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.6/dwconv/Constant_4_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.6/dwconv/Constant_5_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.6/dwconv/Constant_6_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.6/dwconv/Slice_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.6/dwconv/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2,
+        3
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.6/dwconv/Constant_7_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.6/dwconv/Reshape_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.6/dwconv/Cast_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.6/dwconv/Pad_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__59",
+        "unk__60",
+        "unk__61"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.6/dwconv/net/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__59",
+        512,
+        "unk__62"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.6/norm/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__59",
+        "unk__62",
+        512
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.6/norm/norm/LayerNormalization_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__59",
+        "unk__62",
+        512
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.6/norm/Transpose_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__59",
+        512,
+        "unk__62"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.6/pwconv1/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__59",
+        2048,
+        "unk__63"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.6/act/Constant_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.6/act/Div_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__59",
+        2048,
+        "unk__63"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.6/act/Erf_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__59",
+        2048,
+        "unk__63"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.6/act/Constant_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.6/act/Add_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__59",
+        2048,
+        "unk__63"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.6/act/Mul_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__59",
+        2048,
+        "unk__63"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.6/act/Constant_2_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.6/act/Mul_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__59",
+        2048,
+        "unk__63"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.6/pwconv2/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__59",
+        512,
+        "unk__64"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.6/Mul_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__59",
+        512,
+        "unk__64"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.6/Add_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__65",
+        512,
+        "unk__66"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.7/dwconv/Constant_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.7/dwconv/Constant_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.7/dwconv/ConstantOfShape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        4
+      ],
+      "elements": 4,
+      "logical_bytes": 32,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.7/dwconv/Concat_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.7/dwconv/Constant_2_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.7/dwconv/Reshape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.7/dwconv/Constant_3_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.7/dwconv/Constant_4_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.7/dwconv/Constant_5_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.7/dwconv/Constant_6_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.7/dwconv/Slice_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.7/dwconv/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2,
+        3
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.7/dwconv/Constant_7_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.7/dwconv/Reshape_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.7/dwconv/Cast_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.7/dwconv/Pad_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__67",
+        "unk__68",
+        "unk__69"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.7/dwconv/net/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__67",
+        512,
+        "unk__70"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.7/norm/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__67",
+        "unk__70",
+        512
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.7/norm/norm/LayerNormalization_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__67",
+        "unk__70",
+        512
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.7/norm/Transpose_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__67",
+        512,
+        "unk__70"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.7/pwconv1/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__67",
+        2048,
+        "unk__71"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.7/act/Constant_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.7/act/Div_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__67",
+        2048,
+        "unk__71"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.7/act/Erf_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__67",
+        2048,
+        "unk__71"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.7/act/Constant_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.7/act/Add_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__67",
+        2048,
+        "unk__71"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.7/act/Mul_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__67",
+        2048,
+        "unk__71"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.7/act/Constant_2_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.7/act/Mul_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__67",
+        2048,
+        "unk__71"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.7/pwconv2/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__67",
+        512,
+        "unk__72"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.7/Mul_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__67",
+        512,
+        "unk__72"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.7/Add_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__73",
+        512,
+        "unk__74"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.8/dwconv/Constant_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.8/dwconv/Constant_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.8/dwconv/ConstantOfShape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        4
+      ],
+      "elements": 4,
+      "logical_bytes": 32,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.8/dwconv/Concat_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.8/dwconv/Constant_2_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.8/dwconv/Reshape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.8/dwconv/Constant_3_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.8/dwconv/Constant_4_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.8/dwconv/Constant_5_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.8/dwconv/Constant_6_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.8/dwconv/Slice_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.8/dwconv/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2,
+        3
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.8/dwconv/Constant_7_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.8/dwconv/Reshape_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.8/dwconv/Cast_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.8/dwconv/Pad_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__75",
+        "unk__76",
+        "unk__77"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.8/dwconv/net/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__75",
+        512,
+        "unk__78"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.8/norm/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__75",
+        "unk__78",
+        512
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.8/norm/norm/LayerNormalization_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__75",
+        "unk__78",
+        512
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.8/norm/Transpose_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__75",
+        512,
+        "unk__78"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.8/pwconv1/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__75",
+        2048,
+        "unk__79"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.8/act/Constant_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.8/act/Div_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__75",
+        2048,
+        "unk__79"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.8/act/Erf_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__75",
+        2048,
+        "unk__79"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.8/act/Constant_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.8/act/Add_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__75",
+        2048,
+        "unk__79"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.8/act/Mul_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__75",
+        2048,
+        "unk__79"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.8/act/Constant_2_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.8/act/Mul_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__75",
+        2048,
+        "unk__79"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.8/pwconv2/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__75",
+        512,
+        "unk__80"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.8/Mul_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__75",
+        512,
+        "unk__80"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.8/Add_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__81",
+        512,
+        "unk__82"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.9/dwconv/Constant_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.9/dwconv/Constant_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.9/dwconv/ConstantOfShape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        4
+      ],
+      "elements": 4,
+      "logical_bytes": 32,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.9/dwconv/Concat_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.9/dwconv/Constant_2_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.9/dwconv/Reshape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.9/dwconv/Constant_3_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.9/dwconv/Constant_4_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.9/dwconv/Constant_5_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.9/dwconv/Constant_6_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.9/dwconv/Slice_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.9/dwconv/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2,
+        3
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.9/dwconv/Constant_7_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.9/dwconv/Reshape_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.9/dwconv/Cast_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.9/dwconv/Pad_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__83",
+        "unk__84",
+        "unk__85"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.9/dwconv/net/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__83",
+        512,
+        "unk__86"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.9/norm/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__83",
+        "unk__86",
+        512
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.9/norm/norm/LayerNormalization_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__83",
+        "unk__86",
+        512
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.9/norm/Transpose_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__83",
+        512,
+        "unk__86"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.9/pwconv1/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__83",
+        2048,
+        "unk__87"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.9/act/Constant_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.9/act/Div_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__83",
+        2048,
+        "unk__87"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.9/act/Erf_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__83",
+        2048,
+        "unk__87"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.9/act/Constant_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.9/act/Add_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__83",
+        2048,
+        "unk__87"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.9/act/Mul_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__83",
+        2048,
+        "unk__87"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.9/act/Constant_2_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 4,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.9/act/Mul_1_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__83",
+        2048,
+        "unk__87"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.9/pwconv2/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__83",
+        512,
+        "unk__88"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.9/Mul_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__83",
+        512,
+        "unk__88"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/convnext.9/Add_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__89",
+        512,
+        "unk__90"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/final_norm/BatchNormalization_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__89",
+        512,
+        "unk__90"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/head/layer1/Constant_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/head/layer1/Constant_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/head/layer1/ConstantOfShape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        4
+      ],
+      "elements": 4,
+      "logical_bytes": 32,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/head/layer1/Concat_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/head/layer1/Constant_2_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/head/layer1/Reshape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/head/layer1/Constant_3_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/head/layer1/Constant_4_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/head/layer1/Constant_5_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/head/layer1/Constant_6_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/head/layer1/Slice_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/head/layer1/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2,
+        3
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/head/layer1/Constant_7_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/head/layer1/Reshape_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/head/layer1/Cast_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/head/layer1/Pad_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__91",
+        "unk__92",
+        "unk__93"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/head/layer1/net/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__91",
+        2048,
+        "unk__94"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/head/act/PRelu_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__91",
+        2048,
+        "unk__94"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/head/layer2/Conv_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__91",
+        512,
+        "unk__95"
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/head/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        "unk__91",
+        "unk__95",
+        512
+      ],
+      "elements": null,
+      "logical_bytes": null,
+      "bytes_reason": "Unresolved shape or unsupported element width."
+    },
+    {
+      "name": "/decoder/head/Shape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3
+      ],
+      "elements": 3,
+      "logical_bytes": 24,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/head/Constant_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/head/Gather_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "onnx::Unsqueeze_1434",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/head/Unsqueeze_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/head/Constant_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "logical_bytes": 8,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/head/Concat_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2
+      ],
+      "elements": 2,
+      "logical_bytes": 16,
+      "bytes_reason": null
+    }
+  ],
+  "logical_liveness_hint": {
+    "logical_schedule_peak_bytes": 25165840,
+    "peak_node": "/decoder/head/Reshape",
+    "unknown_output_names": [
+      "/Add_output_0",
+      "/Mul_output_0",
+      "/Reshape_1_output_0",
+      "/Reshape_output_0",
+      "/Transpose_output_0",
+      "/decoder/convnext.0/Add_output_0",
+      "/decoder/convnext.0/Mul_output_0",
+      "/decoder/convnext.0/act/Add_output_0",
+      "/decoder/convnext.0/act/Div_output_0",
+      "/decoder/convnext.0/act/Erf_output_0",
+      "/decoder/convnext.0/act/Mul_1_output_0",
+      "/decoder/convnext.0/act/Mul_output_0",
+      "/decoder/convnext.0/dwconv/Pad_output_0",
+      "/decoder/convnext.0/dwconv/net/Conv_output_0",
+      "/decoder/convnext.0/norm/Transpose_1_output_0",
+      "/decoder/convnext.0/norm/Transpose_output_0",
+      "/decoder/convnext.0/norm/norm/LayerNormalization_output_0",
+      "/decoder/convnext.0/pwconv1/Conv_output_0",
+      "/decoder/convnext.0/pwconv2/Conv_output_0",
+      "/decoder/convnext.1/Add_output_0",
+      "/decoder/convnext.1/Mul_output_0",
+      "/decoder/convnext.1/act/Add_output_0",
+      "/decoder/convnext.1/act/Div_output_0",
+      "/decoder/convnext.1/act/Erf_output_0",
+      "/decoder/convnext.1/act/Mul_1_output_0",
+      "/decoder/convnext.1/act/Mul_output_0",
+      "/decoder/convnext.1/dwconv/Pad_output_0",
+      "/decoder/convnext.1/dwconv/net/Conv_output_0",
+      "/decoder/convnext.1/norm/Transpose_1_output_0",
+      "/decoder/convnext.1/norm/Transpose_output_0",
+      "/decoder/convnext.1/norm/norm/LayerNormalization_output_0",
+      "/decoder/convnext.1/pwconv1/Conv_output_0",
+      "/decoder/convnext.1/pwconv2/Conv_output_0",
+      "/decoder/convnext.2/Add_output_0",
+      "/decoder/convnext.2/Mul_output_0",
+      "/decoder/convnext.2/act/Add_output_0",
+      "/decoder/convnext.2/act/Div_output_0",
+      "/decoder/convnext.2/act/Erf_output_0",
+      "/decoder/convnext.2/act/Mul_1_output_0",
+      "/decoder/convnext.2/act/Mul_output_0",
+      "/decoder/convnext.2/dwconv/Pad_output_0",
+      "/decoder/convnext.2/dwconv/net/Conv_output_0",
+      "/decoder/convnext.2/norm/Transpose_1_output_0",
+      "/decoder/convnext.2/norm/Transpose_output_0",
+      "/decoder/convnext.2/norm/norm/LayerNormalization_output_0",
+      "/decoder/convnext.2/pwconv1/Conv_output_0",
+      "/decoder/convnext.2/pwconv2/Conv_output_0",
+      "/decoder/convnext.3/Add_output_0",
+      "/decoder/convnext.3/Mul_output_0",
+      "/decoder/convnext.3/act/Add_output_0",
+      "/decoder/convnext.3/act/Div_output_0",
+      "/decoder/convnext.3/act/Erf_output_0",
+      "/decoder/convnext.3/act/Mul_1_output_0",
+      "/decoder/convnext.3/act/Mul_output_0",
+      "/decoder/convnext.3/dwconv/Pad_output_0",
+      "/decoder/convnext.3/dwconv/net/Conv_output_0",
+      "/decoder/convnext.3/norm/Transpose_1_output_0",
+      "/decoder/convnext.3/norm/Transpose_output_0",
+      "/decoder/convnext.3/norm/norm/LayerNormalization_output_0",
+      "/decoder/convnext.3/pwconv1/Conv_output_0",
+      "/decoder/convnext.3/pwconv2/Conv_output_0",
+      "/decoder/convnext.4/Add_output_0",
+      "/decoder/convnext.4/Mul_output_0",
+      "/decoder/convnext.4/act/Add_output_0",
+      "/decoder/convnext.4/act/Div_output_0",
+      "/decoder/convnext.4/act/Erf_output_0",
+      "/decoder/convnext.4/act/Mul_1_output_0",
+      "/decoder/convnext.4/act/Mul_output_0",
+      "/decoder/convnext.4/dwconv/Pad_output_0",
+      "/decoder/convnext.4/dwconv/net/Conv_output_0",
+      "/decoder/convnext.4/norm/Transpose_1_output_0",
+      "/decoder/convnext.4/norm/Transpose_output_0",
+      "/decoder/convnext.4/norm/norm/LayerNormalization_output_0",
+      "/decoder/convnext.4/pwconv1/Conv_output_0",
+      "/decoder/convnext.4/pwconv2/Conv_output_0",
+      "/decoder/convnext.5/Add_output_0",
+      "/decoder/convnext.5/Mul_output_0",
+      "/decoder/convnext.5/act/Add_output_0",
+      "/decoder/convnext.5/act/Div_output_0",
+      "/decoder/convnext.5/act/Erf_output_0",
+      "/decoder/convnext.5/act/Mul_1_output_0",
+      "/decoder/convnext.5/act/Mul_output_0",
+      "/decoder/convnext.5/dwconv/Pad_output_0",
+      "/decoder/convnext.5/dwconv/net/Conv_output_0",
+      "/decoder/convnext.5/norm/Transpose_1_output_0",
+      "/decoder/convnext.5/norm/Transpose_output_0",
+      "/decoder/convnext.5/norm/norm/LayerNormalization_output_0",
+      "/decoder/convnext.5/pwconv1/Conv_output_0",
+      "/decoder/convnext.5/pwconv2/Conv_output_0",
+      "/decoder/convnext.6/Add_output_0",
+      "/decoder/convnext.6/Mul_output_0",
+      "/decoder/convnext.6/act/Add_output_0",
+      "/decoder/convnext.6/act/Div_output_0",
+      "/decoder/convnext.6/act/Erf_output_0",
+      "/decoder/convnext.6/act/Mul_1_output_0",
+      "/decoder/convnext.6/act/Mul_output_0",
+      "/decoder/convnext.6/dwconv/Pad_output_0",
+      "/decoder/convnext.6/dwconv/net/Conv_output_0",
+      "/decoder/convnext.6/norm/Transpose_1_output_0",
+      "/decoder/convnext.6/norm/Transpose_output_0",
+      "/decoder/convnext.6/norm/norm/LayerNormalization_output_0",
+      "/decoder/convnext.6/pwconv1/Conv_output_0",
+      "/decoder/convnext.6/pwconv2/Conv_output_0",
+      "/decoder/convnext.7/Add_output_0",
+      "/decoder/convnext.7/Mul_output_0",
+      "/decoder/convnext.7/act/Add_output_0",
+      "/decoder/convnext.7/act/Div_output_0",
+      "/decoder/convnext.7/act/Erf_output_0",
+      "/decoder/convnext.7/act/Mul_1_output_0",
+      "/decoder/convnext.7/act/Mul_output_0",
+      "/decoder/convnext.7/dwconv/Pad_output_0",
+      "/decoder/convnext.7/dwconv/net/Conv_output_0",
+      "/decoder/convnext.7/norm/Transpose_1_output_0",
+      "/decoder/convnext.7/norm/Transpose_output_0",
+      "/decoder/convnext.7/norm/norm/LayerNormalization_output_0",
+      "/decoder/convnext.7/pwconv1/Conv_output_0",
+      "/decoder/convnext.7/pwconv2/Conv_output_0",
+      "/decoder/convnext.8/Add_output_0",
+      "/decoder/convnext.8/Mul_output_0",
+      "/decoder/convnext.8/act/Add_output_0",
+      "/decoder/convnext.8/act/Div_output_0",
+      "/decoder/convnext.8/act/Erf_output_0",
+      "/decoder/convnext.8/act/Mul_1_output_0",
+      "/decoder/convnext.8/act/Mul_output_0",
+      "/decoder/convnext.8/dwconv/Pad_output_0",
+      "/decoder/convnext.8/dwconv/net/Conv_output_0",
+      "/decoder/convnext.8/norm/Transpose_1_output_0",
+      "/decoder/convnext.8/norm/Transpose_output_0",
+      "/decoder/convnext.8/norm/norm/LayerNormalization_output_0",
+      "/decoder/convnext.8/pwconv1/Conv_output_0",
+      "/decoder/convnext.8/pwconv2/Conv_output_0",
+      "/decoder/convnext.9/Add_output_0",
+      "/decoder/convnext.9/Mul_output_0",
+      "/decoder/convnext.9/act/Add_output_0",
+      "/decoder/convnext.9/act/Div_output_0",
+      "/decoder/convnext.9/act/Erf_output_0",
+      "/decoder/convnext.9/act/Mul_1_output_0",
+      "/decoder/convnext.9/act/Mul_output_0",
+      "/decoder/convnext.9/dwconv/Pad_output_0",
+      "/decoder/convnext.9/dwconv/net/Conv_output_0",
+      "/decoder/convnext.9/norm/Transpose_1_output_0",
+      "/decoder/convnext.9/norm/Transpose_output_0",
+      "/decoder/convnext.9/norm/norm/LayerNormalization_output_0",
+      "/decoder/convnext.9/pwconv1/Conv_output_0",
+      "/decoder/convnext.9/pwconv2/Conv_output_0",
+      "/decoder/embed/Pad_output_0",
+      "/decoder/embed/net/Conv_output_0",
+      "/decoder/final_norm/BatchNormalization_output_0",
+      "/decoder/head/Transpose_output_0",
+      "/decoder/head/act/PRelu_output_0",
+      "/decoder/head/layer1/Pad_output_0",
+      "/decoder/head/layer1/net/Conv_output_0",
+      "/decoder/head/layer2/Conv_output_0"
+    ],
+    "assumptions": "Source node order; materialize each named output before retiring last-used inputs; no alias/in-place/fusion; initializer weights excluded. Not actual compiler liveness, scratch workspace, target VTCM or host peak."
+  },
+  "largest_tensors": [
+    {
+      "name": "wav_tts",
+      "kind": "output",
+      "dtype": 1,
+      "shape": [
+        1,
+        6291456
+      ],
+      "elements": 6291456,
+      "logical_bytes": 25165824,
+      "bytes_reason": null
+    },
+    {
+      "name": "latent",
+      "kind": "input",
+      "dtype": 1,
+      "shape": [
+        1,
+        144,
+        2048
+      ],
+      "elements": 294912,
+      "logical_bytes": 1179648,
+      "bytes_reason": null
+    },
+    {
+      "name": "/Div_output_0",
+      "kind": "value_info",
+      "dtype": 1,
+      "shape": [
+        1,
+        144,
+        2048
+      ],
+      "elements": 294912,
+      "logical_bytes": 1179648,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/embed/Concat_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/embed/Reshape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/embed/Slice_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/embed/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2,
+        3
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/embed/Reshape_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/embed/Cast_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.0/dwconv/Concat_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.0/dwconv/Reshape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.0/dwconv/Slice_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.0/dwconv/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2,
+        3
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.0/dwconv/Reshape_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.0/dwconv/Cast_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Concat_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Reshape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Slice_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2,
+        3
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Reshape_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.1/dwconv/Cast_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.2/dwconv/Concat_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.2/dwconv/Reshape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.2/dwconv/Slice_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.2/dwconv/Transpose_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        2,
+        3
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.2/dwconv/Reshape_1_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.2/dwconv/Cast_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.3/dwconv/Concat_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        6
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.3/dwconv/Reshape_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    },
+    {
+      "name": "/decoder/convnext.3/dwconv/Slice_output_0",
+      "kind": "value_info",
+      "dtype": 7,
+      "shape": [
+        3,
+        2
+      ],
+      "elements": 6,
+      "logical_bytes": 48,
+      "bytes_reason": null
+    }
+  ]
+}
