@@ -2,7 +2,7 @@
 
 ## Status
 
-**The accelerated physical route now completes AR171 prefill plus bounded AR1 decode. From retained physical prefill state, one AR1 context loaded once and executed 16 stateful HTP calls without reload, producing the exact host physical-state reference sequence and a coherent partial continuation. Setup was 3.804 seconds, first resumed token 1.118 seconds, and max16 17.418 seconds. Per-call raw states/logits and detailed profiles were not serialized, and severe prefill drift remains, so this is bounded operability—not equivalence or a campaign.**
+**A single-process integrated AR171→AR1 runner is host-built and Android-staged for review. It measures CPU preparation of all 171 embeddings, loads and executes AR171 with all 60 outputs finite-scanned, frees that context, bridges all 38 states in memory, resets detailed profiling, loads AR1 once, and finite-scans every state/logit output during max16 decode. No integrated inference or phone run has occurred; severe physical state drift and token-5 reference divergence remain.**
 
 This is a separate accelerator arm. It preserves `0029` CPU viability and `0033` CPU/OpenCL campaign evidence without modifying either experiment.
 
@@ -259,4 +259,26 @@ The runner reported 3.80356 seconds setup, 1.11786 seconds to the first resumed 
 
 Evidence limitations are explicit: the custom runner retained states/logits only in process, did not serialize a detailed QNN profile, and did not explicitly finite-scan each output tensor. It did validate initial state/mask and each QNN input type/size, complete all 16 stateful calls, and emit the exact expected token sequence. Raw token/provider/timing/memory/thermal/cleanup evidence is retained in [`results/qnn-prefill-ar171-ar1-phone-max16-resume/`](results/qnn-prefill-ar171-ar1-phone-max16-resume/). Cleanup passed.
 
-This is not per-call state/logit finiteness evidence, numerical equivalence, a complete answer, canonical end-to-end TTFT, or a statistical campaign. FP16/uFxp16 state, registered/device-resident memory, reduced logit return, and coarse declared hybrid partitions remain later candidates.
+This is not per-call state/logit finiteness evidence, numerical equivalence, a complete answer, canonical end-to-end TTFT, or a statistical campaign.
+
+## Integrated single-logical-request readiness
+
+The host readiness artifact in [`results/qnn-prefill-ar171-ar1-integrated-readiness/`](results/qnn-prefill-ar171-ar1-integrated-readiness/) closes the evidence gaps in the proposed runner rather than claiming a new result. One process creates the QAIRT backend/device, then:
+
+1. loads AR171 once;
+2. dequantizes the exact 171 prompt embedding rows on CPU inside the request boundary;
+3. constructs exact positions/mask/zero state, executes AR171, finite-scans and copies all 38 state plus 22 logit outputs, and reduces endpoint argmax;
+4. emits phase-labelled recursive detailed QNN events, frees AR171, and resets the detailed profile;
+5. bridges all 38 states in memory;
+6. loads AR1 once, then performs max16 with each call requesting and finite-scanning all 60 outputs while carrying state in process;
+7. emits a separate AR1 detailed profile and frees the context.
+
+Timing fields separate backend/device setup, each context load/free, CPU prompt input construction, AR171 graph execution, endpoint argmax, state bridge, profile dumps/reset, AR1 first resumed token, AR1 decode, functional request-to-output time, and total diagnostic time including profile overhead. TTFT is defined as AR171 context load plus CPU prompt preparation plus AR171 `Run` (including raw-buffer copies, graph execution, output finite scanning/copy) plus endpoint argmax. It excludes backend setup, which is reported separately.
+
+Both host and API-31 Android binaries compile. The Android runner SHA-256 is `5214221f679121ee06670c5dd3499098c2bf2daa464c55a798522ca8a7150d72`; the host binary SHA-256 is `89257a7847205b57856ee58093f0d43ba7d42202c1897978a8c9983237d82ff4`. The ignored integrated stage has 12 payload files totaling 3,400,500,764 bytes; stage metadata SHA-256 is `bb02eaf0263bd8e2a1dc7c3de49c4f41cd3e6da9056ccf701043321bd72440cf` and manifest SHA-256 is `3337db712305338b94b28513a4ced3ca365fb923daca94dc470b97193bc5ddcb`. All hashes and ELF preflight pass.
+
+The direct-QNN ABI is bound separately from earlier qnn-net-run file ingestion. Both context descriptors expose `position_ids` as `QNN_DATATYPE_INT_64`: `[1,171]` / 1,368 bytes for AR171 and `[1,1]` / 8 bytes for AR1. The integrated runner copies those exact INT64 byte counts. Earlier accepted qnn-net-run stages used INT32 raw position files through qnn-net-run's own file-population/conversion boundary; that observation is not generalized to direct QNN.
+
+A combined/shared-constant two-graph context is not claimed. The ordinary contexts each report `sharedWeightsSize=0` and together expose roughly 3.19 GB of constants. ORT's multi-graph sharing route uses the already rejected shared-weight resource format, while a single static graph cannot select AR171 versus AR1 shapes without duplicated execution or unsupported control flow. A genuinely shared Qualcomm multi-graph context would require new supported tooling or maintainer guidance and fresh evidence.
+
+No integrated inference was run because AR171 x86 HTP already exceeds 1,800 seconds. No ADB or phone access occurred. This is build/static/stage readiness only—not integrated operability, TTFT, numerical fidelity, a performance distribution, campaign, or registry result. FP16/uFxp16 state, registered/device-resident memory, reduced logit return, and coarse declared hybrid partitions remain later candidates.

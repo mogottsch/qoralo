@@ -103,11 +103,16 @@
 91. Ran one authorized physical max16 resume diagnostic: one AR1 context/graph loaded once and 16 HTP calls carried all 38 states in process without reload.
 92. Matched the exact CPU physical-state reference token sequence and decoded a coherent partial continuation; retained divergence from sequential-AR1 fidelity reference.
 93. Preserved raw tokens before decode, provider/basic-profile logs, timing, process memory, thermal, hashes, and cleanup; documented missing raw state/logit and detailed-profile evidence.
+94. Implemented a single-process integrated runner with in-boundary 171-row CPU embedding, exact AR171 inputs, finite scanning of all requested outputs, in-memory 38-state bridge, and one AR1 context retained for max16.
+95. Added phase-separated recursive detailed QNN profile extraction/reset plus explicit setup, context load/free, CPU input, graph, argmax, bridge, first-token, decode, functional-request, and profile-overhead timings.
+96. Bound direct-QNN INT64 position ABIs separately from accepted qnn-net-run INT32 file-ingestion evidence; prompt embeddings and masks reproduce accepted prefill bytes.
+97. Built host and Android binaries and a 12-payload integrated stage; hashes and ELF preflight pass. No integrated inference ran because x86 AR171 exceeds the bounded emulator window.
+98. Rejected any present combined/shared-context claim: ordinary contexts duplicate constants and the only generated shared-weight format already failed; new Qualcomm-supported tooling/guidance would be required.
 
 ## In progress: performance engineering
 
-1. Commit and independently review the physical max16 bounded operability evidence; do not rerun.
-2. Decide whether to add explicit per-call finite checks/profile serialization before a reset-isolated end-to-end candidate.
+1. Commit and independently review integrated build/static/stage readiness; do not run phone before approval.
+2. If prioritized, run one bounded reset-isolated physical integrated short/max16 diagnostic with detailed profiles and all-output finite scans.
 3. Evaluate lower-precision/device-resident state and reduced-logit routes; keep CPU/GPU/HTP boundaries explicit.
 4. Do not campaign until the fastest sensible complete route is selected and reset-isolated.
 

@@ -6,6 +6,7 @@
 #include <cstring>
 #include <filesystem>
 #include <fstream>
+#include <functional>
 #include <iostream>
 #include <limits>
 #include <memory>
@@ -168,13 +169,37 @@ class DirectContext {
         }
         const size_t count = QNN_TENSOR_GET_CLIENT_BUF(tensor).dataSize / sizeof(float);
         const float* data = static_cast<const float*>(QNN_TENSOR_GET_CLIENT_BUF(tensor).data);
+        for (size_t element = 0; element < count; ++element) {
+          if (!std::isfinite(data[element])) throw std::runtime_error("non-finite QNN output: " + name);
+        }
         copied.emplace_back(data, data + count);
         matched = true;
         break;
       }
       if (!matched) throw std::runtime_error("missing QNN output: " + requested);
     }
+    std::cerr << "qnn_outputs_finite alias=" << alias << " requested=" << requested_outputs.size() << "\n";
     return copied;
+  }
+
+  void DumpProfile(const std::string& phase) const {
+    const auto& qnn = app_->m_qnnFunctionPointers.qnnInterface;
+    const Qnn_ProfileHandle_t profile = app_->m_profileBackendHandle;
+    const QnnProfile_EventId_t* events = nullptr; uint32_t count = 0;
+    if (!profile || qnn.profileGetEvents(profile, &events, &count) != QNN_PROFILE_NO_ERROR) {
+      throw std::runtime_error("profileGetEvents failed: " + phase);
+    }
+    std::function<void(QnnProfile_EventId_t, int)> emit = [&](QnnProfile_EventId_t id, int depth) {
+      QnnProfile_EventData_t data{};
+      if (qnn.profileGetEventData(id, &data) != QNN_PROFILE_NO_ERROR) throw std::runtime_error("profileGetEventData failed");
+      std::cerr << "qnn_profile phase=" << phase << " depth=" << depth << " type=" << data.type
+                << " value=" << data.value << " unit=" << data.unit << " identifier="
+                << (data.identifier ? data.identifier : "") << "\n";
+      const QnnProfile_EventId_t* children = nullptr; uint32_t children_count = 0;
+      if (qnn.profileGetSubEvents(id, &children, &children_count) != QNN_PROFILE_NO_ERROR) throw std::runtime_error("profileGetSubEvents failed");
+      for (uint32_t index = 0; index < children_count; ++index) emit(children[index], depth + 1);
+    };
+    for (uint32_t index = 0; index < count; ++index) emit(events[index], 0);
   }
 
  private:
@@ -195,7 +220,7 @@ static std::string Layer(int layer, const std::string& suffix) {
 
 class Runner {
  public:
-  explicit Runner(fs::path root)
+  explicit Runner(fs::path root, bool defer_context_load = false)
       : root_(std::move(root)),
         quant_(root_ / "embedding-quant.u8"),
         scales_(root_ / "embedding-scales.f32le"),
@@ -220,12 +245,12 @@ class Runner {
         pointers_, "", "", backend_library_, "", false,
         qnn::tools::iotensor::OutputDataType::FLOAT_ONLY,
         qnn::tools::iotensor::InputDataType::FLOAT,
-        qnn::tools::sample_app::ProfilingLevel::BASIC, false, "", "", 1, false, "");
+        qnn::tools::sample_app::ProfilingLevel::DETAILED, false, "", "", 1, false, "");
     Require(owner_->initializeBackend(), "QNN backend initialization");
     Require(owner_->createDevice(), "QNN HTP device creation");
     Require(owner_->initializeProfiling(), "QNN profiling initialization");
     std::cerr << "qnn_backend_build_id=" << owner_->getBackendBuildId() << "\n";
-    LoadSessions();
+    if (!defer_context_load) LoadSessions();
     Reset();
   }
 
@@ -301,6 +326,128 @@ class Runner {
       if (mask[index] != expected) throw std::runtime_error("resume mask mismatch");
     }
   }
+
+  void LoadOnly(const fs::path& binary, const std::string& alias) {
+    sessions_.clear(); contexts_.clear();
+    std::cerr << "loading_phase_context=" << binary.string() << " alias=" << alias << "\n";
+    auto context = std::make_unique<DirectContext>(
+        pointers_, backend_library_, owner_->m_backendHandle, owner_->m_deviceHandle,
+        owner_->m_profileBackendHandle, binary, std::vector<std::string>{alias});
+    sessions_[alias] = context.get(); contexts_.push_back(std::move(context));
+    std::cerr << "loaded_contexts=1 loaded_graphs=1\n";
+  }
+
+  void FreeContexts() { sessions_.clear(); contexts_.clear(); }
+
+  void DumpProfile(const std::string& phase) const {
+    if (contexts_.size() != 1) throw std::runtime_error("profile requires one context");
+    contexts_[0]->DumpProfile(phase);
+  }
+
+  void ResetDetailedProfile() {
+    if (!contexts_.empty()) throw std::runtime_error("free contexts before profile reset");
+    if (owner_->m_profileBackendHandle) {
+      if (pointers_.qnnInterface.profileFree(owner_->m_profileBackendHandle) != QNN_PROFILE_NO_ERROR) {
+        throw std::runtime_error("profileFree failed");
+      }
+      owner_->m_profileBackendHandle = nullptr;
+    }
+    if (pointers_.qnnInterface.profileCreate(owner_->m_backendHandle, QNN_PROFILE_LEVEL_DETAILED,
+                                             &owner_->m_profileBackendHandle) != QNN_PROFILE_NO_ERROR) {
+      throw std::runtime_error("detailed profileCreate failed");
+    }
+  }
+
+  int RunPrefill171(const std::vector<int32_t>& tokens) {
+    if (tokens.size() != 171) throw std::runtime_error("integrated prefill requires 171 tokens");
+    constexpr int sequence = 171, past = kCapacity - sequence;
+    const auto cpu_start = Clock::now();
+    std::vector<float> hidden(sequence * kHidden);
+    for (int row = 0; row < sequence; ++row) {
+      auto value = Embedding(tokens[row]);
+      std::copy(value.begin(), value.end(), hidden.begin() + row * kHidden);
+    }
+    std::vector<int64_t> positions(sequence);
+    for (int index = 0; index < sequence; ++index) positions[index] = index;
+    std::vector<float> mask(static_cast<size_t>(sequence) * kCapacity, -65504.0f);
+    for (int row = 0; row < sequence; ++row) {
+      std::fill(mask.begin() + static_cast<size_t>(row) * kCapacity + past,
+                mask.begin() + static_cast<size_t>(row) * kCapacity + past + row + 1, 0.0f);
+    }
+    std::vector<Input> inputs;
+    inputs.reserve(41);
+    inputs.push_back({"/model/embed_tokens/GatherBlockQuantized/output_0", Input::Type::Float,
+                      hidden.data(), hidden.size(), {1, sequence, kHidden}});
+    inputs.push_back({"position_ids", Input::Type::Int64, positions.data(), positions.size(), {1, sequence}});
+    inputs.push_back({"attention_mask", Input::Type::Float, mask.data(), mask.size(), {1, 1, sequence, kCapacity}});
+    std::unordered_map<int, std::vector<float>> prefill_key, prefill_value;
+    for (int layer = 0; layer < kLayers; ++layer) {
+      if (IsAttention(layer)) {
+        prefill_key[layer] = std::vector<float>(8 * 64 * past, 0.0f);
+        prefill_value[layer] = std::vector<float>(8 * past * 64, 0.0f);
+        inputs.push_back({"past_key_values." + std::to_string(layer) + ".key", Input::Type::Float,
+                          prefill_key[layer].data(), prefill_key[layer].size(), {1, 8, 64, past}});
+        inputs.push_back({"past_key_values." + std::to_string(layer) + ".value", Input::Type::Float,
+                          prefill_value[layer].data(), prefill_value[layer].size(), {1, 8, past, 64}});
+      } else {
+        inputs.push_back({"past_conv." + std::to_string(layer), Input::Type::Float,
+                          conv_[layer].data(), conv_[layer].size(), {1, kHidden, 3}});
+      }
+    }
+    std::vector<std::string> outputs;
+    for (int layer = 0; layer < kLayers; ++layer) {
+      if (IsAttention(layer)) {
+        outputs.push_back("present." + std::to_string(layer) + ".key");
+        outputs.push_back("present." + std::to_string(layer) + ".value");
+      } else outputs.push_back("present_conv." + std::to_string(layer));
+    }
+    int offset = 0;
+    while (offset < kVocab) {
+      int remaining = kVocab - offset;
+      int width = remaining == 5120 ? 4096 : std::min(6144, remaining);
+      outputs.push_back("logits_vocab_" + std::to_string(offset) + "_" + std::to_string(offset + width));
+      offset += width;
+    }
+    const auto cpu_end = Clock::now(); const auto execute_start = Clock::now();
+    auto values = Run("prefill", inputs, outputs);
+    const auto execute_end = Clock::now();
+    last_prefill_cpu_seconds_ = std::chrono::duration<double>(cpu_end - cpu_start).count();
+    last_prefill_execute_seconds_ = std::chrono::duration<double>(execute_end - execute_start).count();
+    const auto argmax_start = Clock::now();
+    float best = -std::numeric_limits<float>::infinity(); int best_token = -1; offset = 0;
+    for (size_t chunk = 38; chunk < values.size(); ++chunk) {
+      for (size_t element = 0; element < values[chunk].size(); ++element) if (values[chunk][element] > best) {
+        best = values[chunk][element]; best_token = offset + static_cast<int>(element);
+      }
+      offset += static_cast<int>(values[chunk].size());
+    }
+    const auto argmax_end = Clock::now(); const auto bridge_start = Clock::now();
+    size_t index = 0;
+    for (int layer = 0; layer < kLayers; ++layer) {
+      if (IsAttention(layer)) {
+        auto& new_key = values[index++]; auto& new_value = values[index++];
+        std::fill(key_[layer].begin(), key_[layer].end(), 0.0f);
+        std::fill(value_[layer].begin(), value_[layer].end(), 0.0f);
+        for (int row = 0; row < 8 * 64; ++row) {
+          std::copy_n(new_key.begin() + row * sequence, sequence,
+                      key_[layer].begin() + row * kCacheLength);
+        }
+        for (int head = 0; head < 8; ++head) {
+          std::copy_n(new_value.begin() + head * sequence * 64, sequence * 64,
+                      value_[layer].begin() + head * kCacheLength * 64);
+        }
+      } else conv_[layer] = std::move(values[index++]);
+    }
+    const auto bridge_end = Clock::now();
+    last_prefill_argmax_seconds_ = std::chrono::duration<double>(argmax_end - argmax_start).count();
+    last_prefill_bridge_seconds_ = std::chrono::duration<double>(bridge_end - bridge_start).count();
+    return best_token;
+  }
+
+  double LastPrefillCpuSeconds() const { return last_prefill_cpu_seconds_; }
+  double LastPrefillExecuteSeconds() const { return last_prefill_execute_seconds_; }
+  double LastPrefillArgmaxSeconds() const { return last_prefill_argmax_seconds_; }
+  double LastPrefillBridgeSeconds() const { return last_prefill_bridge_seconds_; }
 
   int RunToken(int token, int position, bool sample) {
     if (monolithic_) return RunTokenMonolithic(token, position, sample);
@@ -553,6 +700,10 @@ class Runner {
   std::unordered_map<int, std::vector<float>> conv_;
   std::unordered_map<int, std::vector<float>> key_;
   std::unordered_map<int, std::vector<float>> value_;
+  double last_prefill_cpu_seconds_ = 0.0;
+  double last_prefill_execute_seconds_ = 0.0;
+  double last_prefill_argmax_seconds_ = 0.0;
+  double last_prefill_bridge_seconds_ = 0.0;
 
   std::vector<float> Embedding(int token) const {
     if (token < 0 || token >= kVocab) throw std::runtime_error("token out of range");
@@ -670,10 +821,69 @@ static std::vector<int32_t> ReadTokens(const fs::path& path) {
 
 int main(int argc, char** argv) {
   try {
+    const bool integrated = argc == 6 && std::string(argv[2]) == "--integrated";
+    if (integrated) {
+      const fs::path root = argv[1]; const auto prompt = ReadTokens(argv[3]);
+      const int max_new = std::stoi(argv[4]);
+      if (prompt.size() != 171 || max_new < 1 || prompt.size() + static_cast<size_t>(max_new) + 1 > kCacheLength) {
+        throw std::runtime_error("integrated route requires 171 prompt tokens and bounded output");
+      }
+      const auto process_setup_start = Clock::now(); Runner runner(root, true);
+      const auto process_setup_end = Clock::now(); const auto request_start = Clock::now();
+      const auto prefill_load_start = Clock::now(); runner.LoadOnly(root / "contexts/ar171.bin", "prefill");
+      const auto prefill_load_end = Clock::now(); const int endpoint = runner.RunPrefill171(prompt);
+      const auto bridge_complete = Clock::now();
+      const double request_to_first_token_seconds =
+          std::chrono::duration<double>(prefill_load_end - prefill_load_start).count() +
+          runner.LastPrefillCpuSeconds() + runner.LastPrefillExecuteSeconds() + runner.LastPrefillArgmaxSeconds();
+      const auto prefill_profile_start = Clock::now(); runner.DumpProfile("prefill");
+      const auto prefill_profile_end = Clock::now(); const auto prefill_free_start = Clock::now();
+      runner.FreeContexts(); const auto prefill_free_end = Clock::now(); const auto profile_reset_start = Clock::now();
+      runner.ResetDetailedProfile(); const auto profile_reset_end = Clock::now();
+      const auto ar1_load_start = Clock::now(); runner.LoadOnly(root / "contexts/ar1.bin", "monolith");
+      const auto ar1_load_end = Clock::now();
+      std::vector<int32_t> generated; generated.reserve(max_new + 1); generated.push_back(endpoint);
+      int current = endpoint; auto resume_first = ar1_load_end;
+      for (int index = 0; index < max_new && current != kEos; ++index) {
+        current = runner.RunToken(current, 171 + index, true); generated.push_back(current);
+        if (index == 0) resume_first = Clock::now();
+      }
+      const auto decode_end = Clock::now(); const auto ar1_profile_start = Clock::now();
+      runner.DumpProfile("ar1_decode"); const auto ar1_profile_end = Clock::now(); const auto ar1_free_start = Clock::now();
+      runner.FreeContexts(); const auto ar1_free_end = Clock::now(); const auto diagnostic_end = Clock::now();
+      std::ofstream output(argv[5], std::ios::binary);
+      if (!output) throw std::runtime_error("cannot open integrated output");
+      output.write(reinterpret_cast<const char*>(generated.data()), generated.size() * sizeof(int32_t)); output.close();
+      const auto sec = [](auto d) { return std::chrono::duration<double>(d).count(); };
+      std::cout << "{\n  \"result\": \"passed\",\n  \"route\": \"integrated_ar171_phase_switch_ar1\",\n"
+                << "  \"prompt_tokens\": " << prompt.size() << ",\n  \"prefill_endpoint_token\": " << endpoint << ",\n"
+                << "  \"resume_generated_tokens\": " << generated.size() - 1 << ",\n  \"contexts_loaded_sequentially\": 2,\n"
+                << "  \"simultaneous_contexts\": 1,\n  \"context_reloads_per_phase\": 0,\n"
+                << "  \"process_backend_setup_seconds\": " << sec(process_setup_end - process_setup_start) << ",\n"
+                << "  \"prefill_context_load_seconds\": " << sec(prefill_load_end - prefill_load_start) << ",\n"
+                << "  \"prefill_cpu_input_seconds\": " << runner.LastPrefillCpuSeconds() << ",\n"
+                << "  \"prefill_graph_seconds\": " << runner.LastPrefillExecuteSeconds() << ",\n"
+                << "  \"prefill_argmax_seconds\": " << runner.LastPrefillArgmaxSeconds() << ",\n"
+                << "  \"request_to_first_token_seconds\": " << request_to_first_token_seconds << ",\n"
+                << "  \"prefill_phase_through_state_bridge_seconds\": " << sec(bridge_complete - request_start) << ",\n"
+                << "  \"prefill_state_bridge_seconds\": " << runner.LastPrefillBridgeSeconds() << ",\n"
+                << "  \"prefill_profile_dump_seconds\": " << sec(prefill_profile_end - prefill_profile_start) << ",\n"
+                << "  \"prefill_context_free_seconds\": " << sec(prefill_free_end - prefill_free_start) << ",\n"
+                << "  \"profile_reset_seconds\": " << sec(profile_reset_end - profile_reset_start) << ",\n"
+                << "  \"ar1_context_load_seconds\": " << sec(ar1_load_end - ar1_load_start) << ",\n"
+                << "  \"ar1_request_to_first_token_seconds\": " << sec(resume_first - ar1_load_end) << ",\n"
+                << "  \"ar1_total_decode_seconds\": " << sec(decode_end - ar1_load_end) << ",\n"
+                << "  \"logical_request_to_output_seconds\": " << sec(decode_end - request_start) << ",\n"
+                << "  \"ar1_profile_dump_seconds\": " << sec(ar1_profile_end - ar1_profile_start) << ",\n"
+                << "  \"ar1_context_free_seconds\": " << sec(ar1_free_end - ar1_free_start) << ",\n"
+                << "  \"diagnostic_total_with_profile_and_free_seconds\": " << sec(diagnostic_end - request_start) << "\n}\n";
+      return 0;
+    }
     const bool resume = argc == 7;
     if (argc != 5 && !resume) {
       std::cerr << "usage: lfm2_qnn_runner ROOT PROMPT.int32le MAX_NEW OUTPUT.int32le\n"
-                   "   or: lfm2_qnn_runner ROOT RESUME_INPUT_LIST START_TOKEN START_POSITION MAX_NEW OUTPUT.int32le\n";
+                   "   or: lfm2_qnn_runner ROOT RESUME_INPUT_LIST START_TOKEN START_POSITION MAX_NEW OUTPUT.int32le\n"
+                   "   or: lfm2_qnn_runner ROOT --integrated PROMPT.int32le MAX_NEW OUTPUT.int32le\n";
       return 2;
     }
     const fs::path root = argv[1];

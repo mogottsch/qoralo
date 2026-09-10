@@ -708,6 +708,81 @@
     "sm8550_compile_target_supported_generically": true,
     "version": "2.49.0.260730"
   },
+  "integrated_ar171_ar1_runner_readiness": {
+    "android_runner_sha256": "5214221f679121ee06670c5dd3499098c2bf2daa464c55a798522ca8a7150d72",
+    "ar171_outputs_finite_scanned": 60,
+    "ar171_position_abi": {
+      "bytes": 1368,
+      "data_type": "QNN_DATATYPE_INT_64",
+      "dimensions": [
+        1,
+        171
+      ]
+    },
+    "ar1_outputs_finite_scanned_per_token": 60,
+    "ar1_position_abi": {
+      "bytes": 8,
+      "data_type": "QNN_DATATYPE_INT_64",
+      "dimensions": [
+        1,
+        1
+      ]
+    },
+    "campaign": false,
+    "canonical_ttft": false,
+    "combined_shared_context_viability_claim": false,
+    "context_reloads_per_phase": 0,
+    "contexts_loaded_sequentially": 2,
+    "detailed_profile_phases": [
+      "prefill",
+      "ar1_decode"
+    ],
+    "evidence": "results/qnn-prefill-ar171-ar1-integrated-readiness/result.json",
+    "explicit_phase_transitions": 1,
+    "host_runner_sha256": "89257a7847205b57856ee58093f0d43ba7d42202c1897978a8c9983237d82ff4",
+    "integrated_inference_completed": false,
+    "max_new_tokens": 16,
+    "per_token_context_streaming": false,
+    "phone_access": false,
+    "phone_authorized": false,
+    "physical_execution": false,
+    "prior_qnn_net_run_int32_boundary_generalized": false,
+    "process_backend_count": 1,
+    "prompt_embedding_byte_equal_to_accepted_input": true,
+    "prompt_mask_byte_equal_to_accepted_input": true,
+    "prompt_tokens": 171,
+    "registry_result": false,
+    "simultaneous_contexts": 1,
+    "stage": {
+      "elf_preflight": true,
+      "hash_check": true,
+      "manifest_sha256": "3337db712305338b94b28513a4ced3ca365fb923daca94dc470b97193bc5ddcb",
+      "payload_bytes": 3400500764,
+      "payload_files": 12,
+      "stage_metadata_sha256": "bb02eaf0263bd8e2a1dc7c3de49c4f41cd3e6da9056ccf701043321bd72440cf"
+    },
+    "state_tensors_bridged_in_memory": 38,
+    "statistical_performance": false,
+    "timing_boundaries": [
+      "backend_setup",
+      "prefill_context_load",
+      "prefill_cpu_input",
+      "prefill_graph",
+      "prefill_argmax",
+      "request_to_first_token",
+      "prefill_state_bridge",
+      "prefill_profile_dump",
+      "prefill_context_free",
+      "profile_reset",
+      "ar1_context_load",
+      "ar1_first_token",
+      "ar1_decode",
+      "logical_request_to_output",
+      "ar1_profile_dump",
+      "ar1_context_free",
+      "diagnostic_total"
+    ]
+  },
   "matched_qairt_24940_android_phone_attempt_1": {
     "build_ids_exactly_equal": true,
     "cleanup_absent": true,
@@ -952,7 +1027,7 @@
     "sessions_loaded": 0,
     "stage_hashes_verified_local_and_remote": true
   },
-  "phone_boundary": "Physical AR1 max16 resume diagnostic cleaned absent and released phone.lock. No rerun or campaign pending review.",
+  "phone_boundary": "No phone access occurred for integrated AR171-to-AR1 readiness. Await independent review and explicit Pi priority before any integrated diagnostic.",
   "phone_preparation": {
     "adb_contact_by_owner": true,
     "android_execution": false,
@@ -1051,7 +1126,7 @@
     "model": "LiquidAI LFM2.5-2.6B text generation only",
     "owns": "experiments/0034-lfm2.5-2.6b-android-qnn-htp/**"
   },
-  "status": "performance_engineering_physical_ar1_max16_resume_operability_passed_with_evidence_gaps",
+  "status": "performance_engineering_integrated_ar171_ar1_host_readiness_complete_not_phone_executed",
   "tokenizer_and_template": {
     "chat_template_sha256": "ea663864491de7ade391839479860ca95541f892f72665c73251fbd4643b1bef",
     "native_reasoning_continuation": "Generation prompt ends with <think>.",

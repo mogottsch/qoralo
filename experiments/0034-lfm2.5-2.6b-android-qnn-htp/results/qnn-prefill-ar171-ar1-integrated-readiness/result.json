@@ -1,0 +1,129 @@
+{
+  "api_type_boundary": {
+    "integrated_direct_qnn": "Reads QNN graph tensor descriptors and memcpy-copies INT64 position buffers: 1368 bytes for AR171 and 8 bytes for AR1.",
+    "non_generalization": "The qnn-net-run raw-file convention is not reused or generalized to the direct-QNN runner ABI.",
+    "prior_bridge_position_native_int32": [
+      171
+    ],
+    "prior_qnn_net_run": "The accepted qnn-net-run input-file route separately used INT32 raw position files through qnn-net-run's file population/conversion boundary, while execution metadata reported QNN INT64 tensors."
+  },
+  "binaries": {
+    "android_elf_preflight": true,
+    "android_sha256": "5214221f679121ee06670c5dd3499098c2bf2daa464c55a798522ca8a7150d72",
+    "host_sha256": "89257a7847205b57856ee58093f0d43ba7d42202c1897978a8c9983237d82ff4"
+  },
+  "claim_boundary": "Host static/build/stage readiness only; no integrated physical execution, TTFT, performance distribution, campaign, or registry result.",
+  "classification": "host_static_and_build_validation_of_integrated_ar171_ar1_runner",
+  "contexts": {
+    "ar1": {
+      "attention_mask_dimensions": [
+        1,
+        1,
+        1,
+        4096
+      ],
+      "build_id": "v2.49.40.260810104044",
+      "const_bytes": 1596407808,
+      "inputs": 41,
+      "io_tensor_bytes": 135979008,
+      "logit_outputs": 22,
+      "outputs": 60,
+      "position": {
+        "data_type": "QNN_DATATYPE_INT_64",
+        "dimensions": [
+          1,
+          1
+        ],
+        "direct_copy_bytes": 8
+      },
+      "sha256": "76ba15e7fd95e5e13e92be0e88e8e6bbd3123f2b993b6986c9dac8800a9bf212",
+      "shared_weights_bytes": 0,
+      "spill_fill_buffer_bytes": 103874560,
+      "state_outputs": 38
+    },
+    "ar171": {
+      "attention_mask_dimensions": [
+        1,
+        1,
+        171,
+        4096
+      ],
+      "build_id": "v2.49.40.260810104044",
+      "const_bytes": 1596645376,
+      "inputs": 41,
+      "io_tensor_bytes": 140156928,
+      "logit_outputs": 22,
+      "outputs": 60,
+      "position": {
+        "data_type": "QNN_DATATYPE_INT_64",
+        "dimensions": [
+          1,
+          171
+        ],
+        "direct_copy_bytes": 1368
+      },
+      "sha256": "d5ca624cc71a173c7de969fac777e2ce136db3b502e04c2991651b510dabba5a",
+      "shared_weights_bytes": 0,
+      "spill_fill_buffer_bytes": 463667200,
+      "state_outputs": 38
+    }
+  },
+  "fidelity_boundary": "Severe retained physical AR171 state drift and token-5 reference divergence remain; integrated operability cannot establish numerical or output fidelity.",
+  "host_runtime_boundary": "Host and Android binaries compile. No integrated inference ran: x86 AR171 execution already exceeds 1800 seconds, so repeating it is intentionally excluded.",
+  "input_semantics": {
+    "canonical_short_tokens": 171,
+    "cpu_embedding_bytes": 1400832,
+    "cpu_embedding_sha256": "ac9fda5637e751b764d4c06f22ab58b1f9e48f9b94541a80cd33a68c4e3df7ed",
+    "embedding_byte_equal_to_accepted_prefill_input": true,
+    "mask_byte_equal_to_accepted_prefill_input": true,
+    "mask_bytes": 2801664,
+    "mask_sha256": "c96a2d766fadfa77ad687286b727de2e1c554f63a81a704c8a03d6af44465892",
+    "position_int64_sha256": "7d153684f7fc38b9646d4c353406bfdf500b497364b4d310316841fc3db86697",
+    "token_file_sha256": "eae8e828110f634d5c9954df0372e869f67f67aed846f9f544781faa1d4d29bc",
+    "zero_prefill_state_inputs": 38
+  },
+  "integrated_semantics": {
+    "backend_device_processes": 1,
+    "context_reloads_per_phase": 0,
+    "contexts_loaded_sequentially": 2,
+    "explicit_phase_transitions": 1,
+    "finite_scan": "all requested outputs before copying: 60 for AR171 and 60 for every AR1 decode call",
+    "per_token_context_streaming": false,
+    "profile": "detailed recursive QNN events phase-labeled; prefill profile freed/reset before AR1 load",
+    "simultaneous_contexts": 1,
+    "timing": "backend setup separate; TTFT includes AR171 context load, CPU input construction, AR171 Run including copies/finite scan, and argmax; total request separately includes profile dump/reset, state bridge, AR1 load, max16 decode, and AR1 profile dump"
+  },
+  "phone_boundary": "No ADB or phone access occurred. Stage and runner script are readiness evidence only.",
+  "proposed_phone_gate": {
+    "requires_fresh_pi_priority": true,
+    "scope": "one exact canonical-short/max16 integrated process; preserve raw tokens and phase-labeled detailed profile logs before validation",
+    "script": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/tools/run_integrated_qnn_phone_diagnostic.sh",
+    "script_sha256": "d529dfb7af18992a77f7ea9d9c286ccf68431b2a458e9a44e3ab61f1ccbba44f",
+    "success_boundary": "finite-scanned completion and coherent bounded tokens; reference or numerical equality is not required",
+    "timeout_seconds": 600
+  },
+  "schema_version": 1,
+  "shared_context_assessment": {
+    "combined_const_bytes": 3193053184,
+    "combined_context_viability_claim": false,
+    "combined_io_tensor_bytes": 276135936,
+    "combined_spill_fill_buffer_bytes": 567541760,
+    "ordinary_two_graph_context": "No verified ORT/QAIRT path here aliases constants across two ordinary static-shape graphs; current ordinary contexts each report sharedWeightsSize=0 and would duplicate about 3.19 GB constants.",
+    "possible_future_work": "A custom Qualcomm-supported multi-graph context with proven cross-graph constant aliasing would require new SDK documentation or maintainer guidance and fresh host/physical evidence.",
+    "shared_weight_format": "ORT shared multi-graph generation uses the previously rejected shared-weight resource format. x86 rejected its shared weights and physical matched-runtime context creation failed. It is not revived as a candidate.",
+    "single_graph_selector": "A single ordinary static graph cannot select AR171 versus AR1 shape/semantics without executing duplicate branches or relying on unsupported dynamic control flow."
+  },
+  "source": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/phone/direct_lfm2_qnn_runner.cpp",
+    "required_fragments_present": true,
+    "sha256": "a7a689f3cd3b221c43b5553103d610454670be358b328f492fe7a999beb6d5e9"
+  },
+  "stage": {
+    "all_local_hashes_verified": true,
+    "manifest_sha256": "3337db712305338b94b28513a4ced3ca365fb923daca94dc470b97193bc5ddcb",
+    "metadata_sha256": "bb02eaf0263bd8e2a1dc7c3de49c4f41cd3e6da9056ccf701043321bd72440cf",
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/qnn-prefill/integrated-phone-stage",
+    "payload_bytes": 3400500764,
+    "payload_files": 12
+  }
+}
