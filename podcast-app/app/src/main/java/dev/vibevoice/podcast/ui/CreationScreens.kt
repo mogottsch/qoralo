@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -49,6 +48,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import android.view.WindowManager
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -57,8 +58,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.window.DialogWindowProvider
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.contentDescription
@@ -144,24 +147,33 @@ private fun SourceChoice(icon: androidx.compose.ui.graphics.vector.ImageVector, 
 internal fun PasteSourceDialog(onDismiss: () -> Unit, onAdd: (String, String) -> Unit) {
     var title by rememberSaveable { mutableStateOf("") }
     var text by rememberSaveable { mutableStateOf("") }
-    Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)) {
-        BoxWithConstraints(
-            Modifier.fillMaxSize().safeDrawingPadding().imePadding().padding(16.dp),
-            contentAlignment = Alignment.Center,
-        ) {
+    // Compose 1.7's custom-width DialogLayout measures against configuration height instead
+    // of the incoming window constraint. Let the platform own IME resizing here; do not also
+    // subtract IME/system padding in the content. Header/action are measured before the body.
+    Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = true, decorFitsSystemWindows = true)) {
+        val window = (LocalView.current.parent as? DialogWindowProvider)?.window
+        DisposableEffect(window) {
+            val previous = window?.attributes?.softInputMode
+            if (window != null && previous != null) window.setSoftInputMode(
+                (previous and WindowManager.LayoutParams.SOFT_INPUT_MASK_ADJUST.inv()) or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+            onDispose { if (window != null && previous != null) window.setSoftInputMode(previous) }
+        }
+        val largeText = LocalDensity.current.fontScale >= 1.5f
+        BoxWithConstraints(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
             Surface(shape = RoundedCornerShape(28.dp), color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 modifier = Modifier.fillMaxWidth().heightIn(max = maxHeight)) {
-                Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text("Paste text", style = MaterialTheme.typography.headlineSmall)
+                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                        Text("Paste text", style = MaterialTheme.typography.headlineSmall, modifier = Modifier.weight(1f))
+                        IconButton(onClick = onDismiss) { Icon(Icons.Default.Close, "Cancel paste") }
+                    }
                     Column(Modifier.weight(1f, fill = false).verticalScroll(rememberScrollState()),
                         verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         OutlinedTextField(title, { title = it }, label = { Text("Source name") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-                        OutlinedTextField(text, { text = it }, label = { Text("Source text") }, minLines = 3, maxLines = 8, modifier = Modifier.fillMaxWidth())
+                        OutlinedTextField(text, { text = it }, label = { Text("Source text") }, minLines = 3,
+                            maxLines = if (largeText) 3 else 8, modifier = Modifier.fillMaxWidth())
                     }
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
-                        TextButton(onClick = onDismiss, modifier = Modifier.heightIn(min = 52.dp)) { Text("Cancel") }
-                        PrimaryAction("Add source", { onAdd(title, text) }, enabled = text.isNotBlank(), modifier = Modifier.weight(1f))
-                    }
+                    PrimaryAction("Add source", { onAdd(title, text) }, enabled = text.isNotBlank())
                 }
             }
         }
@@ -211,7 +223,7 @@ fun InstructionsScreen(
                         supportingText = { Text("${instructions.length} / 2,000") },
                         placeholder = { Text("Make it about 10 minutes. Focus on the questions that matter most.") },
                         minLines = if (largeText) 3 else 5,
-                        maxLines = 8,
+                        maxLines = if (largeText) 4 else 8,
                         modifier = Modifier.fillMaxWidth().padding(top = 18.dp),
                     )
                 }

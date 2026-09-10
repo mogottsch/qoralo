@@ -13,6 +13,9 @@ import androidx.compose.ui.test.assertHasNoClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.hasSetTextAction
+import androidx.compose.ui.test.hasScrollToIndexAction
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -64,10 +67,14 @@ class ScreenSemanticsTest {
         val episode = episode(EpisodePhase.INSTRUCTIONS)
         setNarrow { InstructionsScreen(episode, {}, { _, _ -> }) }
         assertEquals(1, rule.onAllNodes(hasSetTextAction()).fetchSemanticsNodes().size)
-        rule.onNodeWithText("Length").performClick()
         rule.onNodeWithText("Initial instructions", useUnmergedTree = true).assertExists()
-        rule.onNodeWithText("Create").assertIsEnabled()
+        rule.onNodeWithText("Create").assertIsDisplayed()
+        rule.onNode(hasScrollToIndexAction()).performScrollToNode(hasText("Length"))
+        rule.onNodeWithText("Length").assertIsDisplayed().performClick()
+        rule.onNodeWithText("Create").assertIsDisplayed().assertIsEnabled()
+        rule.onNode(hasScrollToIndexAction()).performScrollToNode(hasText("Review script first"))
         rule.onNodeWithText("Review script first").assertIsDisplayed()
+        rule.onNodeWithContentDescription("Review script first").assertIsDisplayed().assertHasClickAction()
     }
 
     @Test fun reviewAgentAndLockKeepTranscriptReadOnlyAndConsequencesExplicit() {

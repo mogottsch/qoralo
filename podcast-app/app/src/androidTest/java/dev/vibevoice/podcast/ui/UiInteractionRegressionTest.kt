@@ -28,10 +28,13 @@ class UiInteractionRegressionTest {
         val observed = AtomicReference("")
         rule.setContent { VibeVoiceTheme { InstructionsScreen(episode(EpisodePhase.INSTRUCTIONS).copy(instructions = "a".repeat(1990)), {}, { _, _ -> },
             onDraftChanged = { text, _ -> observed.set(text) }) } }
-        rule.onNodeWithText("Length").performScrollTo().assertIsNotEnabled()
-        rule.onNode(hasSetTextAction()).performScrollTo().performTextReplacement("Edited draft")
+        rule.onNode(hasScrollToIndexAction()).performScrollToNode(hasText("Length"))
+        rule.onNodeWithText("Length").assertIsDisplayed().assertIsNotEnabled()
+        rule.onNode(hasScrollToIndexAction()).performScrollToNode(hasSetTextAction())
+        rule.onNode(hasSetTextAction()).assertIsDisplayed().performTextReplacement("Edited draft")
         Espresso.closeSoftKeyboard()
-        rule.onNodeWithText("Length").performScrollTo().assertIsEnabled().performClick()
+        rule.onNode(hasScrollToIndexAction()).performScrollToNode(hasText("Length"))
+        rule.onNodeWithText("Length").assertIsDisplayed().assertIsEnabled().performClick()
         rule.runOnIdle { assertEquals("Edited draft\nKeep it under five minutes.", observed.get()) }
         rule.onNodeWithText("Create").assertIsDisplayed().assertIsEnabled()
     }
