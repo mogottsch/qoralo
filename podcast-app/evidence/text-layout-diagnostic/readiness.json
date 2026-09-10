@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "status": "host-validated-awaiting-two-bounded-diagnostic-invocations",
+  "baseSource": "1aa5acdb30899b56afacd4a540f3b284502fff04",
+  "diagnosticPatchSource": "a552ecb92412de37e41f7a7dd162a761f38bea3e",
+  "appSrcTree": "083cedbbc70b1372f28e52c39f2b0c7f718e3b6e",
+  "mainTree": "d89b881aee0502deca28287c38baa3c3779c373c",
+  "patchPaths": [
+    "podcast-app/app/src/androidTest/java/dev/vibevoice/podcast/ui/ScreenSemanticsTest.kt",
+    "podcast-app/app/src/androidTest/java/dev/vibevoice/podcast/ui/TextLayoutDiagnostics.kt"
+  ],
+  "appApk": {
+    "path": "podcast-app/.local/ui-build/polish-05/app.apk",
+    "sha256": "4bbf162acbd93f6bff38c0aa042f044af9fd289a5f15f0b2e49ba6763daf1fcd",
+    "reusedFrozenBytes": true
+  },
+  "testApk": {
+    "path": "podcast-app/.local/text-layout-ready/a552ecb/test.apk",
+    "sha256": "f7f5b40f141fa9d6fabff846cfb26a92bde57336990f365d7ec4743f0fde1f98"
+  },
+  "hostChecks": {
+    "jvmPassed": 99,
+    "pythonPassed": 15,
+    "lintDebug": "passed",
+    "releaseKotlin": "passed",
+    "testApkAssembly": "passed"
+  },
+  "selectedTests": [
+    "dev.vibevoice.podcast.ui.ScreenSemanticsTest#readyHeroUsesReadableFullWidthMetadataAndNoEmptyRecentHeading",
+    "dev.vibevoice.podcast.ui.ScreenSemanticsTest#playerExposesTransportExportAndLyricsLikeFrozenTranscript"
+  ],
+  "configurations": [
+    "default OS settings",
+    "actual 320dp / OS font2"
+  ],
+  "supervisorSecondsPerInvocation": 100,
+  "maximumInvocations": 2,
+  "argument": "textLayoutDiagnosticsRunId=text-[a-z0-9-]{1,64}",
+  "output": "files/ui-text-layout/<run-id>/<fresh-uuid>/",
+  "assertionsChanged": false,
+  "androidExecution": "not run; only Nik after independent identity/source review",
+  "formFilesExcludedAndRestored": 10,
+  "frozenCandidatesCheckedUnchanged": true,
+  "noFullGalleryRerun": true,
+  "noPhysicalOrModelWork": true,
+  "noRetryOrRecovery": true,
+  "diagnosis": "pending runtime observations; original failures remain failures",
+  "documentation": "podcast-app/docs/text-layout-diagnostic.md"
+}
