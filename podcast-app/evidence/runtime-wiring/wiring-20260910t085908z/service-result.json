@@ -1,0 +1,8 @@
+{
+  "status": "failed",
+  "stage": "qnn-load",
+  "pid": 14857,
+  "elapsedRealtimeMs": 941537967,
+  "error": "dev.vibevoice.podcast.runtime.InferenceRouteException: Supertonic external-context QNN\/HTP failed to initialize\n\tat dev.vibevoice.podcast.runtime.SupertonicQnnHtpEngine$load$2.invokeSuspend(NativeEngines.kt:176)\n\tat kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)\n\tat kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:101)\n\tat kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)\n\tat kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)\n\tat kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:589)\n\tat kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:823)\n\tat kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:720)\n\tat kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:707)\nCaused by: java.lang.RuntimeException: ORT\/QNN initialization failed: This session contains graph nodes that are assigned to the default CPU EP, but fallback to CPU EP has been explicitly disabled by the user.\n\tat dev.vibevoice.podcast.runtime.SupertonicNative.create(Native Method)\n\tat dev.vibevoice.podcast.runtime.SupertonicQnnHtpEngine$load$2.invokeSuspend(NativeEngines.kt:163)\n\t... 8 more\n",
+  "claim": "wiring observations only; provider evidence requires separate verification; not product E2E"
+}

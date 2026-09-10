@@ -1,0 +1,214 @@
+{
+  "schemaVersion": 1,
+  "runId": "wiring-20260910t085908z",
+  "status": "blocked_at_qnn_load",
+  "scope": "one bounded wiring collection; not canonical benchmark, UI/lifecycle acceptance, provider acceptance, or product E2E",
+  "appSourceCommit": "c893963cae681bfdada35f9bb695b177055306c2",
+  "candidateSha256": "f99cf5189e031cf7e1138ee383a44e150731df4a1819e0cd0f0b84e7728a7f35",
+  "reviewedCandidateSha256": "2797337eaeef41db47d03fbb1354d6330cc6677b282272eb03fee2477b9110f6",
+  "candidateNote": "Controller pretty-prints its copy; reviewed exact source candidate remains unchanged under .local/wiring-ready/c893963.",
+  "deviceAndInstalledIdentity": {
+    "appApkSha256": "f61aba1664ece228ea3b0e517e574d715a55cc92d75f11b92269d44e1b0da379",
+    "testApkSha256": "4cd7c1ab251e59b452db92e23a6829834c7eb7fed556f158e3979b0f04d95168",
+    "driverPid": 14789,
+    "contractSha256": "301408dab967315bf8d5f7bb0dcc83face54438dc139d221e7699ce5dc6b0393",
+    "device": "SM-S918B",
+    "fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+    "expectedAppHash": "f61aba1664ece228ea3b0e517e574d715a55cc92d75f11b92269d44e1b0da379",
+    "expectedTestHash": "4cd7c1ab251e59b452db92e23a6829834c7eb7fed556f158e3979b0f04d95168"
+  },
+  "logicalRequests": {
+    "gemmaOutline": {
+      "submitted": 1,
+      "completed": 1
+    },
+    "gemmaWholeChapter": {
+      "submitted": 1,
+      "completed": 1,
+      "textWordCount": 82,
+      "requestedWordRange": [
+        120,
+        160
+      ],
+      "qualityAccepted": false
+    },
+    "qnnCanonicalShort": {
+      "submitted": 0,
+      "completed": 0
+    },
+    "qnnRealisticCapacityProbe": {
+      "submitted": 0,
+      "completed": 0
+    }
+  },
+  "rawOutputs": {
+    "gemma-outline-raw.txt": {
+      "bytes": 766,
+      "sha256": "16ec0b03af553ac98a98f3e7a25abcc330d2e147f94dc6e5c81d0b0bb1e358aa",
+      "output_sanity": {
+        "looks_sensible": true,
+        "issue_notes": null
+      }
+    },
+    "gemma-chapter-raw.txt": {
+      "bytes": 630,
+      "sha256": "4701fc86eb2a0618a8aa64db9b3f2ab36790aeb8979a2b69b6900bce5341de3e",
+      "output_sanity": {
+        "looks_sensible": true,
+        "issue_notes": null
+      }
+    }
+  },
+  "actualTokenCounts": null,
+  "tokenCountReason": "No token-ID telemetry collected; callback fragments are not tokens.",
+  "firstFailure": {
+    "phase": "qnn-load",
+    "component": "first duration-context Ort::Session constructor / QNN backend device creation",
+    "rootError": "QNN SetupBackend failed Failed to create device. Error: QNN_DEVICE_ERROR_INVALID_CONFIG: Invalid config values",
+    "downstreamError": "This session contains graph nodes that are assigned to the default CPU EP, but fallback to CPU EP has been explicitly disabled by the user."
+  },
+  "providerObservations": {
+    "gemma": "Core decode/prefill GPU delegation and logical completion accepted by independent raw review. CPU embedding/XNNPACK execution is explicit. Missing dynamic OpenCL sampler -> static C API is not proof of CPU sampling; exact sampler remains unknown. No all-GPU pipeline claim.",
+    "qnn": "Backend device creation failed. Four-session readiness and execution-node/RPC/cycle evidence not established.",
+    "classifierUsedForAcceptance": false
+  },
+  "tts": {
+    "wavCreated": false,
+    "capacityRejectionObserved": false,
+    "partialOutputFromCapacityProbe": null,
+    "reason": "TTS render and capacity stages were not reached."
+  },
+  "stageEvents": [
+    {
+      "kind": "stage_begin",
+      "detail": "verify-packs deadlineMs=120000",
+      "elapsedRealtimeMs": 941505504,
+      "pid": 14857
+    },
+    {
+      "kind": "stage_complete",
+      "detail": "verify-packs",
+      "elapsedRealtimeMs": 941511160,
+      "pid": 14857
+    },
+    {
+      "kind": "stage_begin",
+      "detail": "gemma-load deadlineMs=180000",
+      "elapsedRealtimeMs": 941511161,
+      "pid": 14857
+    },
+    {
+      "kind": "stage_complete",
+      "detail": "gemma-load",
+      "elapsedRealtimeMs": 941523387,
+      "pid": 14857
+    },
+    {
+      "kind": "stage_begin",
+      "detail": "gemma-outline deadlineMs=180000",
+      "elapsedRealtimeMs": 941523388,
+      "pid": 14857
+    },
+    {
+      "kind": "callback_done",
+      "detail": "outline",
+      "elapsedRealtimeMs": 941531170,
+      "pid": 14857
+    },
+    {
+      "kind": "stage_complete",
+      "detail": "gemma-outline",
+      "elapsedRealtimeMs": 941531173,
+      "pid": 14857
+    },
+    {
+      "kind": "stage_begin",
+      "detail": "gemma-chapter deadlineMs=300000",
+      "elapsedRealtimeMs": 941531174,
+      "pid": 14857
+    },
+    {
+      "kind": "callback_done",
+      "detail": "chapter",
+      "elapsedRealtimeMs": 941537155,
+      "pid": 14857
+    },
+    {
+      "kind": "stage_complete",
+      "detail": "gemma-chapter",
+      "elapsedRealtimeMs": 941537188,
+      "pid": 14857
+    },
+    {
+      "kind": "stage_begin",
+      "detail": "gemma-close deadlineMs=60000",
+      "elapsedRealtimeMs": 941537188,
+      "pid": 14857
+    },
+    {
+      "kind": "stage_complete",
+      "detail": "gemma-close",
+      "elapsedRealtimeMs": 941537673,
+      "pid": 14857
+    },
+    {
+      "kind": "stage_begin",
+      "detail": "qnn-load deadlineMs=120000",
+      "elapsedRealtimeMs": 941537676,
+      "pid": 14857
+    },
+    {
+      "kind": "stage_error",
+      "detail": "qnn-load: dev.vibevoice.podcast.runtime.InferenceRouteException: Supertonic external-context QNN/HTP failed to initialize\n\tat dev.vibevoice.podcast.runtime.SupertonicQnnHtpEngine$load$2.invokeSuspend(NativeEngines.kt:176)\n\tat kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)\n\tat kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:101)\n\tat kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:113)\n\tat kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:89)\n\tat kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:589)\n\tat kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:823)\n\tat kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:720)\n\tat kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:707)\nCaused by: java.lang.RuntimeException: ORT/QNN initialization failed: This session contains graph nodes that are assigned to the default CPU EP, but fallback to CPU EP has been explicitly disabled by the user.\n\tat dev.vibevoice.podcast.runtime.SupertonicNative.create(Native Method)\n\tat dev.vibevoice.podcast.runtime.SupertonicQnnHtpEngine$load$2.invokeSuspend(NativeEngines.kt:163)\n\t... 8 more\n",
+      "elapsedRealtimeMs": 941537957,
+      "pid": 14857
+    },
+    {
+      "kind": "stage_begin",
+      "detail": "qnn-close deadlineMs=30000",
+      "elapsedRealtimeMs": 941537964,
+      "pid": 14857
+    },
+    {
+      "kind": "stage_complete",
+      "detail": "qnn-close",
+      "elapsedRealtimeMs": 941537965,
+      "pid": 14857
+    }
+  ],
+  "cleanup": {
+    "controllerExitCode": 1,
+    "settingsChanged": false,
+    "forceStopAppAndTestExit": 0,
+    "scratchAbsenceTestExit": 0,
+    "privateEvidencePullExit": 0,
+    "separateCleanupOnlyIdentityAndPidCheck": "post-cleanup-verification/result.json",
+    "exactAppGenerationAndTestPidsAbsent": true,
+    "localControllerAndAdbChildrenAbsent": true,
+    "phoneLockReleased": true,
+    "packagesAndPrivateEvidenceRetained": true
+  },
+  "preservation": {
+    "originalArchive": {
+      "path": "podcast-app/.local/wiring-phone/wiring-20260910t085908z/private-evidence.tar",
+      "bytes": 1252864,
+      "sha256": "ee6cfb7e7dde003c17d7be4bf98d8c443588127ac850ba2347a1736cf5227a22",
+      "committedLosslessCopy": "private-evidence.tar.gz"
+    },
+    "fullLogcat": {
+      "path": "podcast-app/.local/wiring-phone/wiring-20260910t085908z/logcat.txt",
+      "bytes": 2007371,
+      "sha256": "c980779e0230e450e76a93389a5be59397f40d9720cc785fe5909b6f054d6479",
+      "committedSelection": "app-owned-logcat.txt",
+      "selectionRule": "byte-preserving lines where threadtime PID field is 14857 (generation) or 14789 (driver); other phone apps excluded from Git"
+    }
+  },
+  "nextAction": "Host-only raw review and narrow diagnosis only when assigned; no automatic retry, runtime edits, or artifact rebuild authorized by this result.",
+  "independentReview": {
+    "reviewer": "Nik",
+    "status": "accepted_valid_partial_collection_not_full_wiring",
+    "gemmaAcceptedScope": "completed logical requests plus core decode/prefill LITERT_CL delegation; CPU embedding operations present; exact sampler/EOS/token counts unproven",
+    "qnnAcceptedScope": "fail-closed first duration-session deviceCreate INVALID_CONFIG; no graph execution or TTS artifacts",
+    "qualityAcceptance": false
+  }
+}
