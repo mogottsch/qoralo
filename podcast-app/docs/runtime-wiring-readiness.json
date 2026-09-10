@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "status": "host-validated-awaiting-independent-harness-review",
+  "baseApprovedCommit": "616212b2f76b0ddc980c14f2325b41f523a2668c",
+  "wiringContractSha256": "301408dab967315bf8d5f7bb0dcc83face54438dc139d221e7699ce5dc6b0393",
+  "candidateArtifacts": {
+    "debugApkSha256": "f61aba1664ece228ea3b0e517e574d715a55cc92d75f11b92269d44e1b0da379",
+    "testApkSha256": "4cd7c1ab251e59b452db92e23a6829834c7eb7fed556f158e3979b0f04d95168"
+  },
+  "hostValidation": {
+    "jvmTests": {"passed": 72, "failed": 0},
+    "hostToolTests": {"passed": 6, "failed": 0},
+    "lintDebug": "passed",
+    "debugApkAndInstrumentationApkAssembly": "passed",
+    "releaseKotlinCompilation": "passed",
+    "releaseNativeCompilation": "passed",
+    "nativeTensorPolicyTest": "passed",
+    "trustedInputsReprepared": false
+  },
+  "phoneAuthorized": false,
+  "adbUsed": false,
+  "physicalRuntimeExecuted": false,
+  "androidTestsExecuted": false,
+  "physicalProviderProof": "not yet available",
+  "productE2e": false,
+  "limitsAndEvidencePlan": "runtime-wiring-gate.md",
+  "remainingProductBlocker": "T239/L238 cannot synthesize the realistic complete chapter; wiring expects specific native rejection, not hidden chunking or fallback",
+  "notCoveredByHarness": [
+    "production GenerationService duplicate intent/timeout/kill lifecycle validation",
+    "per-frame Galaxy visual and TalkBack acceptance",
+    "sudden-power-loss durability",
+    "canonical inference benchmark campaign or model quality acceptance"
+  ]
+}

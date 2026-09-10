@@ -101,11 +101,12 @@ class GemmaLiteRtGpuEngine : LlmEngine {
 
     private suspend fun generate(mode: String, request: String): String = withContext(Dispatchers.Default) {
         val loaded = engine ?: error("Gemma engine is not loaded")
-        val maxOutput = when (mode) {
+        val maxOutput = RuntimeDiagnostics.outputLimit(mode, when (mode) {
             "source_notes", "outline" -> 1_200
             "chapter", "edit" -> 4_096
             else -> error("Unsupported Gemma request mode")
-        }
+        })
+        RuntimeDiagnostics.beforeRequest(mode, request, systemInstruction(mode), maxOutput)
         try {
             val config = ConversationConfig(
                 systemInstruction = Contents.of(systemInstruction(mode)),
@@ -114,7 +115,7 @@ class GemmaLiteRtGpuEngine : LlmEngine {
                 maxOutputToken = maxOutput,
                 thinkingConfig = ThinkingConfig(enableThinking = false),
             )
-            val raw = loaded.createConversation(config).use { it.sendMessage(request).toString() }
+            val raw = loaded.createConversation(config).use { RuntimeDiagnostics.send(it, request) }
             extractJson(raw)
         } catch (error: Throwable) {
             throw InferenceRouteException("Gemma LiteRT GPU $mode request failed", error)
@@ -159,7 +160,7 @@ class SupertonicQnnHtpEngine : TtsEngine {
         requireRoute(pack, ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP)
         try {
             NativeAppRuntime.ensureLoaded()
-            handle = SupertonicNative.create(pack.root.absolutePath, voiceId)
+            handle = SupertonicNative.create(pack.root.absolutePath, voiceId, RuntimeDiagnostics.qnnProfileDirectory())
             if (handle == 0L) throw InferenceRouteException("Supertonic QNN initialization returned no engine")
             val reported = validateProvenance(
                 SupertonicNative.provenance(handle),
@@ -267,7 +268,7 @@ private fun requireRoute(pack: VerifiedModelPack, expected: ModelRoute) {
 }
 
 private object SupertonicNative {
-    @JvmStatic external fun create(packRoot: String, voiceId: String): Long
+    @JvmStatic external fun create(packRoot: String, voiceId: String, debugProfileDirectory: String): Long
     @JvmStatic external fun provenance(handle: Long): String?
     @JvmStatic external fun renderCompleteChapter(handle: Long, chapterId: String, text: String, outputWav: String): Boolean
     @JvmStatic external fun destroy(handle: Long)

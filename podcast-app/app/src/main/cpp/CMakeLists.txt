@@ -13,6 +13,7 @@ set_target_properties(onnxruntime PROPERTIES IMPORTED_LOCATION "${ONNXRUNTIME_LI
 
 add_library(podcast_runtime SHARED podcast_runtime.cpp)
 target_compile_features(podcast_runtime PRIVATE cxx_std_17)
+target_compile_definitions(podcast_runtime PRIVATE $<$<CONFIG:Debug>:PODCAST_WIRING_DIAGNOSTICS=1>)
 target_compile_options(podcast_runtime PRIVATE -Wall -Wextra -Werror -fexceptions -frtti)
 target_include_directories(podcast_runtime PRIVATE "${ONNXRUNTIME_INCLUDE_DIR}")
 target_link_libraries(podcast_runtime PRIVATE onnxruntime android log dl)

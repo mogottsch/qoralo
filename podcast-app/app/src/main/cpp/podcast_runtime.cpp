@@ -85,7 +85,8 @@ std::string NativeLibraryDirectory() {
   return std::filesystem::path(info.dli_fname).parent_path().string();
 }
 
-Ort::SessionOptions SessionOptions(const std::string &backend, const std::string &descriptor) {
+Ort::SessionOptions SessionOptions(const std::string &backend, const std::string &descriptor,
+                                  const std::string &profile) {
   Ort::SessionOptions options;
   options.SetIntraOpNumThreads(1);
   options.SetInterOpNumThreads(1);
@@ -99,6 +100,15 @@ Ort::SessionOptions SessionOptions(const std::string &backend, const std::string
       {"htp_performance_mode", "burst"},
       {"soc_model", "43"},
   };
+#ifdef PODCAST_WIRING_DIAGNOSTICS
+  if (!profile.empty()) {
+    options.EnableProfiling(profile.c_str());
+    provider["profiling_level"] = "detailed";
+    provider["profiling_file_path"] = profile + ".qnn.csv";
+  }
+#else
+  if (!profile.empty()) throw std::runtime_error("profiling is debug-only");
+#endif
   options.AppendExecutionProvider("QNN", provider);
   return options;
 }
@@ -133,8 +143,10 @@ Voice ReadVoice(const std::filesystem::path &path) {
 }
 
 struct Engine {
-  explicit Engine(const std::string &pack_root, const std::string &voice_id)
-      : root(pack_root), env(ORT_LOGGING_LEVEL_WARNING, "podcast-supertonic-qnn") {
+  explicit Engine(const std::string &pack_root, const std::string &voice_id,
+                  const std::string &profile_directory)
+      : root(pack_root), env(ORT_LOGGING_LEVEL_WARNING, "podcast-supertonic-qnn"),
+        profile_dir(profile_directory) {
     if (voice_id != "M1/SID5") throw std::runtime_error("unsupported voice; expected M1/SID5");
     const std::string native_dir = NativeLibraryDirectory();
     setenv("ADSP_LIBRARY_PATH", native_dir.c_str(), 1);
@@ -145,7 +157,8 @@ struct Engine {
     auto create = [&](const char *name) {
       const std::string descriptor = (root / "contexts" / (std::string(name) + "-context.onnx")).string();
       if (!std::filesystem::is_regular_file(descriptor)) throw std::runtime_error("missing context descriptor " + descriptor);
-      auto options = SessionOptions(backend, descriptor);
+      auto options = SessionOptions(backend, descriptor,
+          profile_dir.empty() ? "" : (std::filesystem::path(profile_dir) / name).string());
       return std::make_unique<Ort::Session>(env, descriptor.c_str(), options);
     };
     duration = create("duration");
@@ -166,8 +179,23 @@ struct Engine {
       throw std::runtime_error("invalid QNN context capacities");
   }
 
+  ~Engine() {
+#ifdef PODCAST_WIRING_DIAGNOSTICS
+    if (!profile_dir.empty()) {
+      Ort::AllocatorWithDefaultOptions allocator;
+      for (auto *session : {duration.get(), text.get(), vector.get(), vocoder.get()}) {
+        if (session != nullptr) {
+          try { session->EndProfilingAllocated(allocator); }
+          catch (const std::exception &) { /* Missing evidence is classified by the harness, not fabricated. */ }
+        }
+      }
+    }
+#endif
+  }
+
   std::filesystem::path root;
   Ort::Env env;
+  std::string profile_dir;
   std::unique_ptr<Ort::Session> duration, text, vector, vocoder;
   std::vector<int32_t> indexer;
   Voice voice;
@@ -325,9 +353,9 @@ void Render(Engine &engine, const std::string &chapter_id, const std::string &ch
   WriteWav(output_path, wave, static_cast<size_t>(wav_samples));
 }
 
-jlong NativeCreate(JNIEnv *env, jclass, jstring pack_root, jstring voice_id) {
+jlong NativeCreate(JNIEnv *env, jclass, jstring pack_root, jstring voice_id, jstring profiles) {
   try {
-    return reinterpret_cast<jlong>(new Engine(JString(env, pack_root), JString(env, voice_id)));
+    return reinterpret_cast<jlong>(new Engine(JString(env, pack_root), JString(env, voice_id), JString(env, profiles)));
   } catch (const Ort::Exception &error) {
     Throw(env, std::string("ORT/QNN initialization failed: ") + error.what());
   } catch (const std::exception &error) {
@@ -367,7 +395,7 @@ jboolean NativeRender(JNIEnv *env, jclass, jlong handle, jstring chapter_id, jst
 void NativeDestroy(JNIEnv *, jclass, jlong handle) { delete reinterpret_cast<Engine *>(handle); }
 
 static JNINativeMethod kMethods[] = {
-    {const_cast<char *>("create"), const_cast<char *>("(Ljava/lang/String;Ljava/lang/String;)J"), reinterpret_cast<void *>(NativeCreate)},
+    {const_cast<char *>("create"), const_cast<char *>("(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)J"), reinterpret_cast<void *>(NativeCreate)},
     {const_cast<char *>("provenance"), const_cast<char *>("(J)Ljava/lang/String;"), reinterpret_cast<void *>(NativeProvenance)},
     {const_cast<char *>("renderCompleteChapter"), const_cast<char *>("(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z"), reinterpret_cast<void *>(NativeRender)},
     {const_cast<char *>("destroy"), const_cast<char *>("(J)V"), reinterpret_cast<void *>(NativeDestroy)},

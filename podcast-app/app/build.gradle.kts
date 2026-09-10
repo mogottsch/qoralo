@@ -69,6 +69,7 @@ android {
         "**/libQnnSystem.so",
     )
     sourceSets["main"].jniLibs.srcDir("runtime-libs")
+    sourceSets["testDebug"].resources.srcDir("src/debug/assets")
     if (nativeRuntimeEnabled) {
         externalNativeBuild.cmake {
             path = file("src/main/cpp/CMakeLists.txt")

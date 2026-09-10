@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "podcast-runtime-wiring-v1",
+  "claim": "bounded physical wiring and expected capacity rejection; not product E2E or a canonical benchmark campaign",
+  "process": ":generation",
+  "noAutomaticInferenceRetries": true,
+  "requests": {"gemmaOutline": 1, "gemmaCompleteChapter": 1, "qnnCanonicalShort": 1, "qnnRealisticCapacityProbe": 1},
+  "gemma": {"contextTokens": 8192, "outlineMaxOutputTokens": 256, "chapterMaxOutputTokens": 768, "maxRequestUtf8Bytes": 4096, "maxRawResponseBytes": 65536},
+  "supertonic": {"textLength": 239, "latentLength": 238, "latentChannels": 144, "diffusionSteps": 5, "sampleRateHz": 44100},
+  "deadlineSeconds": {"verify-packs": 120, "gemma-load": 180, "gemma-outline": 180, "gemma-chapter": 300, "gemma-close": 60, "qnn-load": 120, "qnn-short": 90, "qnn-capacity": 30, "qnn-close": 30},
+  "serviceTimeoutSeconds": 1200,
+  "instrumentationTimeoutSeconds": 1230,
+  "hostTimeoutSeconds": 1260,
+  "maxEvidenceBytes": 268435456,
+  "inputs": {
+    "source.txt": {"bytes": 418, "sha256": "b27d056aad211df7daac157fed4765fcbc27fb2365559c149fe7a3c13de2ef46"},
+    "instructions.txt": {"bytes": 400, "sha256": "7504c264b63ba42423d7e22c77cba694af5b29d2fc80fe8f85f66237a8a634f4"},
+    "canonical-short.txt": {"bytes": 226, "sha256": "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67"},
+    "realistic-chapter.txt": {"bytes": 1051, "sha256": "b33efb448ac0ab49cd43077d79fd9d84d055405d47190816940f8e443a3863f5"}
+  }
+}
