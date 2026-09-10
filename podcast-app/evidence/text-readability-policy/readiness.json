@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "status": "host-validated-awaiting-independent-readability-regressions",
+  "baseSource": "1aa5acdb30899b56afacd4a540f3b284502fff04",
+  "testPatchSource": "c2ce81bf6d97b3838808104190a651b0fba62b9a",
+  "appSrcTree": "2de06d9902657d43fbd668fbd6718e72d7c6f6ae",
+  "mainTree": "d89b881aee0502deca28287c38baa3c3779c373c",
+  "patchPaths": [
+    "podcast-app/app/src/androidTest/java/dev/vibevoice/podcast/ui/ScreenSemanticsTest.kt",
+    "podcast-app/app/src/androidTest/java/dev/vibevoice/podcast/ui/TextLayoutDiagnostics.kt",
+    "podcast-app/app/src/androidTest/java/dev/vibevoice/podcast/ui/TextReadabilityAssertions.kt",
+    "podcast-app/app/src/androidTest/java/dev/vibevoice/podcast/ui/TextReadabilityPolicyTest.kt",
+    "podcast-app/app/src/androidTest/java/dev/vibevoice/podcast/ui/TextReadabilityClippingTest.kt",
+    "podcast-app/app/src/androidTest/assets/text-layout/measured-labels.json"
+  ],
+  "appApk": {
+    "path": "podcast-app/.local/ui-build/polish-05/app.apk",
+    "sha256": "4bbf162acbd93f6bff38c0aa042f044af9fd289a5f15f0b2e49ba6763daf1fcd",
+    "reusedFrozenBytes": true
+  },
+  "testApk": {
+    "path": "podcast-app/.local/text-readability-ready/c2ce81b/test.apk",
+    "sha256": "d85b57a07b921928982f842998c0e5408249960d0b02ccd5fe8f9c6a3656bb22"
+  },
+  "hostChecks": {
+    "existingJvmPassed": 99,
+    "jvmTask": "UP-TO-DATE; unchanged JVM inputs from prior isolated diagnostic build",
+    "pythonPassed": 15,
+    "lintDebug": "passed",
+    "releaseKotlin": "passed",
+    "testApkAssembly": "passed"
+  },
+  "androidMethods": {
+    "ScreenSemanticsTest": 8,
+    "TextReadabilityPolicyTest": 7,
+    "TextReadabilityClippingTest": 2
+  },
+  "selectedClasses": [
+    "dev.vibevoice.podcast.ui.ScreenSemanticsTest",
+    "dev.vibevoice.podcast.ui.TextReadabilityPolicyTest",
+    "dev.vibevoice.podcast.ui.TextReadabilityClippingTest"
+  ],
+  "configurations": [
+    "default OS settings",
+    "actual 320dp / OS font2"
+  ],
+  "maximumInvocations": 2,
+  "supervisorSecondsPerInvocation": 100,
+  "methodsPerInvocation": 17,
+  "argument": "textLayoutDiagnosticsRunId=text-[a-z0-9-]{1,64}",
+  "androidExecution": "not run; only Nik after independent review",
+  "newPolicy": "exact requested text and complete fitting content; preserve height/max-lines/ellipsis/visibility/node-ancestor checks; reconstructed paragraph width alone is not clipping",
+  "densityCorrection": "strictly-linear wrapper hypothesis withdrawn; recorded OSfont2 platform/wrapper/layout sampled conversions identical",
+  "retainedOriginalFailures": "podcast-app/evidence/text-layout-diagnostic-result/retained-manifest.json",
+  "measuredFixtureSha256": "858e2401ed467f89fd8d1d196f99acaa2ec153dcae239f7fe78b0fd293c778cd",
+  "formFilesExcludedAndRestored": 10,
+  "priorApksCheckedUnchanged": true,
+  "noFullMatrixOrFormSwitch": true,
+  "noPhysicalOrModelWork": true,
+  "noRetriesOrRecovery": true,
+  "documentation": "podcast-app/docs/text-readability-policy.md"
+}
