@@ -574,9 +574,13 @@ class ContractTest(unittest.TestCase):
 
     def test_qnn_net_run_position_ingestion_is_reclassified(self) -> None:
         audit = self.contract["qnn_net_run_position_ingestion_audit"]
-        self.assertTrue(audit["source_verified"])
+        self.assertFalse(audit["source_verified"])
+        self.assertTrue(audit["packaged_source_and_runtime_behavior_consistent"])
+        self.assertFalse(audit["binary_source_linkage_cryptographically_proven"])
         self.assertFalse(audit["recorded_commands_set_input_data_type"])
         self.assertFalse(audit["recorded_commands_use_native_input_files"])
+        self.assertFalse(audit["recorded_commands_set_native_input_tensor_names"])
+        self.assertFalse(audit["sample_app_input_data_type_flag_is_binary_contract"])
         self.assertEqual("QNN_DATATYPE_INT_64", audit["graph_position_data_type"])
         self.assertEqual([0], audit["ar171_position_file"]["converted_unique"])
         self.assertEqual([0], audit["ar1_phase_position_file"]["converted_unique"])
@@ -584,10 +588,14 @@ class ContractTest(unittest.TestCase):
         self.assertTrue(audit["physical_htp_execution_still_proven"])
         self.assertFalse(audit["phone_access"])
         result = json.loads((EXP / audit["evidence"]).read_text())
-        self.assertTrue(result["proved_interpretation"]["not_ambiguous"])
+        self.assertTrue(result["interpretation"]["conversion_result_reproduced_from_packaged_source_and_raw_bytes"])
+        self.assertFalse(result["interpretation"]["binary_source_linkage_cryptographically_proven"])
+        self.assertIn("1368", result["runtime_binary_witness"]["exact_error"])
+        self.assertIn("684", result["runtime_binary_witness"]["exact_error"])
         self.assertTrue(result["raw_position_files"]["ar171"]["all_converted_to_zero"])
         self.assertTrue(result["raw_position_files"]["ar1_phase_switch"]["all_converted_to_zero"])
         self.assertFalse(result["recorded_invocations"]["physical_execution_metadata"]["ar171"]["sets_input_data_type"])
+        self.assertFalse(result["recorded_invocations"]["physical_execution_metadata"]["ar171"]["sets_native_input_tensor_names"])
         self.assertIn("did not prove rotary positions", result["impact"]["invalidated_claims"][0])
         self.assertIn("physically", result["impact"]["still_valid"][0])
 

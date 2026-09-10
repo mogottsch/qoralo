@@ -8,9 +8,9 @@
 
 [`results/qnn-net-run-position-ingestion-audit/`](results/qnn-net-run-position-ingestion-audit/) binds the exact QAIRT 2.49.40 source, documentation, commands, graph descriptors, and raw position files used by the prior qnn-net-run diagnostics.
 
-Both recorded commands omitted `--input_data_type native` / `--use_native_input_files`. QAIRT's qnn-net-run defaults to FLOAT input files. For a non-FLOAT32 graph input, `IOTensor::populateInputTensor` reads one FLOAT32 value per tensor element and then `copyFromFloatToNative` dispatches `castFromFloat<int64_t>`, whose implementation applies `static_cast<int64_t>` element by element.
+Both recorded commands omitted qnn-net-run's documented `--use_native_input_files` and targeted `--native_input_tensor_names` options. The vendor qnn-net-run documentation says unspecified input files are parsed in floating point. The installed SampleApp source provides supporting implementation detail: it defaults to FLOAT input, reads one FLOAT32 value per element for non-FLOAT32 graph inputs, and dispatches `castFromFloat<int64_t>`, whose implementation applies `static_cast<int64_t>` element by element. The SampleApp's separate `--input_data_type` spelling is not claimed as an accepted flag for the shipped qnn-net-run binary.
 
-The AR171 graph declares `position_ids` as INT64 `[1,171]`, but its 684-byte file contained INT32 bit patterns `0..170`. Read as FLOAT32, those bytes represent zero and tiny subnormal values up to `2.382e-43`; all cast to INT64 zero. The phase-switch AR1 graph declares INT64 `[1,1]`, but its 4-byte INT32 value 171 becomes FLOAT32 `2.396e-43` and then INT64 zero. The conversion is source-verified rather than inferred from output behavior.
+The AR171 graph declares `position_ids` as INT64 `[1,171]`, but its 684-byte file contained INT32 bit patterns `0..170`. Read as FLOAT32, those bytes represent zero and tiny subnormal values up to `2.382e-43`; all cast to INT64 zero. The phase-switch AR1 graph declares INT64 `[1,1]`, but its 4-byte INT32 value 171 becomes FLOAT32 `2.396e-43` and then INT64 zero. This is high-confidence source-plus-runtime evidence rather than an output inference: the exact packaged binary rejected the earlier 1,368-byte native INT64 file and demanded 684 bytes, matching the packaged source's FLOAT32 file path. The stripped binary is not reproducibly linked bit-for-bit to the sample source, so that provenance limitation remains explicit.
 
 Consequences:
 
@@ -20,7 +20,7 @@ Consequences:
 - their graph load/execution, provider, actual-output, timing, process-memory, thermal, and cleanup evidence remains factual when scoped to the all-zero position inputs;
 - the physical custom direct-QNN max16 continuation used correct INT64 positions, but its starting state came from the affected AR171 call.
 
-The integrated direct-QNN runner bypasses qnn-net-run file conversion and copies descriptor-matched INT64 buffers—1,368 bytes for AR171 and 8 bytes for AR1—but remains physically unexecuted. A future qnn-net-run diagnostic would need numeric FLOAT32 position files under the default mode or native INT64 files with native-input mode; neither correction is retroactively claimed.
+The integrated direct-QNN runner bypasses qnn-net-run file conversion and copies descriptor-matched INT64 buffers—1,368 bytes for AR171 and 8 bytes for AR1—but remains physically unexecuted. A future qnn-net-run diagnostic would need numeric FLOAT32 position files under the default mode or native INT64 files using the binary's documented `--use_native_input_files` / targeted `--native_input_tensor_names` option; exact flag syntax and values must be checked in a bounded run. Neither correction is retroactively claimed.
 
 This is a separate accelerator arm. It preserves `0029` CPU viability and `0033` CPU/OpenCL campaign evidence without modifying either experiment.
 

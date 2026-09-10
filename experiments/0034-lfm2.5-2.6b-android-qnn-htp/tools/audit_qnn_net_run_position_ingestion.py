@@ -50,6 +50,7 @@ def main() -> None:
     parser.add_argument("--ar171-execution-metadata", type=Path, required=True)
     parser.add_argument("--ar1-execution-metadata", type=Path, required=True)
     parser.add_argument("--ar171-script", type=Path, required=True)
+    parser.add_argument("--ar171-int64-rejection-log", type=Path, required=True)
     parser.add_argument("--phase-script", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
@@ -77,6 +78,7 @@ def main() -> None:
         ]),
         "docs": lines_containing(docs, [
             "--use_native_input_files",
+            "--native_input_tensor_names",
             "If not specified, input files will",
             "be parsed in floating point",
         ]),
@@ -91,8 +93,10 @@ def main() -> None:
             "invokes_qnn_net_run": "qnn-net-run" in text,
             "sets_input_data_type": "--input_data_type" in text,
             "uses_native_input_files": "--use_native_input_files" in text,
+            "sets_native_input_tensor_names": "--native_input_tensor_names" in text,
         }
-        if not scripts[label]["invokes_qnn_net_run"] or scripts[label]["sets_input_data_type"] or scripts[label]["uses_native_input_files"]:
+        if (not scripts[label]["invokes_qnn_net_run"] or scripts[label]["sets_input_data_type"] or
+                scripts[label]["uses_native_input_files"] or scripts[label]["sets_native_input_tensor_names"]):
             raise SystemExit(f"unexpected qnn-net-run flags in {label}")
     commands = {}
     for label, path in (("ar171", args.ar171_execution_metadata), ("ar1_phase", args.ar1_execution_metadata)):
@@ -101,8 +105,10 @@ def main() -> None:
             "path": str(path), "sha256": sha256(path), "command": command,
             "sets_input_data_type": "--input_data_type" in command,
             "uses_native_input_files": "--use_native_input_files" in command,
+            "sets_native_input_tensor_names": "--native_input_tensor_names" in command,
         }
-        if commands[label]["sets_input_data_type"] or commands[label]["uses_native_input_files"]:
+        if (commands[label]["sets_input_data_type"] or commands[label]["uses_native_input_files"] or
+                commands[label]["sets_native_input_tensor_names"]):
             raise SystemExit(f"unexpected recorded input flags in {label}")
     ar171_raw = raw_audit(args.ar171_position)
     ar1_raw = raw_audit(args.ar1_position)
@@ -114,9 +120,14 @@ def main() -> None:
         raise SystemExit("AR1 position descriptor mismatch")
     if not ar171_raw["all_converted_to_zero"] or not ar1_raw["all_converted_to_zero"]:
         raise SystemExit("expected zero conversion was not reproduced")
+    rejection_log = args.ar171_int64_rejection_log.read_text(errors="replace")
+    expected_rejection = "file size in bytes 1368" in rejection_log and "tensor extent: 684 bytes" in rejection_log
+    if not expected_rejection:
+        raise SystemExit("missing exact runtime FLOAT32-size rejection witness")
+    rejection_line = next(line.strip() for line in rejection_log.splitlines() if "file size in bytes 1368" in line)
     result = {
         "schema_version": 1,
-        "classification": "source_verified_qnn_net_run_position_ingestion_error",
+        "classification": "packaged_source_and_runtime_consistent_qnn_net_run_position_ingestion_error",
         "qairt": {
             "version": "2.49.40.260810",
             "qnn_net_run_sha256": sha256(args.qairt_root / "bin/aarch64-android/qnn-net-run"),
@@ -126,8 +137,9 @@ def main() -> None:
                 "DataUtil.cpp": {"sha256": sha256(data_cpp), "matched_lines": source_checks["data"]},
                 "tools.html": {"sha256": sha256(docs), "matched_lines": source_checks["docs"]},
             },
+            "source_role": "The installed SampleApp source is supporting implementation evidence, not a bit-for-bit source attestation for the stripped qnn-net-run binary.",
             "source_behavior": [
-                "qnn-net-run defaults InputDataType to FLOAT unless an input-data-type option is supplied.",
+                "The packaged SampleApp defaults InputDataType to FLOAT unless an input-data-type option is supplied.",
                 "For a non-FLOAT32 graph tensor, IOTensor reads one FLOAT32 value per tensor element, then calls copyFromFloatToNative.",
                 "For QNN_DATATYPE_INT_64, copyFromFloatToNative calls castFromFloat<int64_t>, whose implementation static_casts each float value.",
             ],
@@ -135,10 +147,18 @@ def main() -> None:
         "recorded_invocations": {"scripts": scripts, "physical_execution_metadata": commands},
         "graph_descriptors": {"ar171_position": ar171_descriptor, "ar1_position": ar1_descriptor},
         "raw_position_files": {"ar171": ar171_raw, "ar1_phase_switch": ar1_raw},
-        "proved_interpretation": {
+        "runtime_binary_witness": {
+            "log_path_outside_git": str(args.ar171_int64_rejection_log),
+            "log_sha256": sha256(args.ar171_int64_rejection_log),
+            "exact_error": rejection_line,
+            "interpretation": "The exact v2.49.40 qnn-net-run binary rejected the 1368-byte native INT64[171] file and demanded 684 bytes, directly confirming a four-byte-per-element file boundary for this invocation. It accepted the subsequent 684-byte file.",
+        },
+        "interpretation": {
             "ar171": "The 684-byte int32[171] file had the required byte length for default FLOAT32 file input. Its integer bit patterns 0..170 were read as float32 values 0..2.382e-43 and static_cast to INT64; all 171 became zero.",
             "ar1_phase_switch": "The 4-byte int32 value 171 was read as float32 2.396e-43 and static_cast to INT64 zero.",
-            "not_ambiguous": True,
+            "conversion_result_reproduced_from_packaged_source_and_raw_bytes": True,
+            "binary_source_linkage_cryptographically_proven": False,
+            "confidence": "High: exact packaged source/docs and runtime 1368→684 size rejection agree, but the distributed stripped binary is not reproducibly linked bit-for-bit to the sample source.",
         },
         "impact": {
             "invalidated_claims": [
@@ -154,7 +174,7 @@ def main() -> None:
             ],
         },
         "required_fix": {
-            "qnn_net_run": "Use FLOAT32 files containing numeric 0..170/171 with default input mode, or pass --input_data_type native and provide native INT64 files of 1368/8 bytes. Verify the chosen mode with a bounded diagnostic before reusing qnn-net-run for position-sensitive claims.",
+            "qnn_net_run": "For the actual qnn-net-run binary, use FLOAT32 files containing numeric 0..170/171 under default mode, or use its documented --use_native_input_files / targeted --native_input_tensor_names option with native INT64 files of 1368/8 bytes. Verify exact flag syntax and values with a bounded diagnostic before reusing qnn-net-run for position-sensitive claims; do not rely on the SampleApp-only --input_data_type spelling.",
             "direct_qnn": "Continue using graph descriptor INT64 buffers (1368 bytes AR171; 8 bytes AR1) with no qnn-net-run file conversion.",
         },
         "phone_boundary": "Source audit only; no model load, inference, compilation, or phone access occurred.",

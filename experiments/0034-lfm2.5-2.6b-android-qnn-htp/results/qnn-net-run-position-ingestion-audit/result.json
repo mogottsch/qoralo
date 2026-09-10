@@ -1,6 +1,6 @@
 {
   "claim_boundary": "This audit corrects interpretation of immutable prior physical evidence. It does not erase physical HTP execution, but it invalidates exact position-semantic and fidelity conclusions drawn from those qnn-net-run attempts.",
-  "classification": "source_verified_qnn_net_run_position_ingestion_error",
+  "classification": "packaged_source_and_runtime_consistent_qnn_net_run_position_ingestion_error",
   "graph_descriptors": {
     "ar171_position": {
       "data_type": "QNN_DATATYPE_INT_64",
@@ -30,16 +30,18 @@
       "The integrated direct-QNN runner is designed for correct INT64 buffers and remains physically unexecuted."
     ]
   },
-  "phone_boundary": "Source audit only; no model load, inference, compilation, or phone access occurred.",
-  "proved_interpretation": {
+  "interpretation": {
     "ar171": "The 684-byte int32[171] file had the required byte length for default FLOAT32 file input. Its integer bit patterns 0..170 were read as float32 values 0..2.382e-43 and static_cast to INT64; all 171 became zero.",
     "ar1_phase_switch": "The 4-byte int32 value 171 was read as float32 2.396e-43 and static_cast to INT64 zero.",
-    "not_ambiguous": true
+    "binary_source_linkage_cryptographically_proven": false,
+    "confidence": "High: exact packaged source/docs and runtime 1368\u2192684 size rejection agree, but the distributed stripped binary is not reproducibly linked bit-for-bit to the sample source.",
+    "conversion_result_reproduced_from_packaged_source_and_raw_bytes": true
   },
+  "phone_boundary": "Source audit only; no model load, inference, compilation, or phone access occurred.",
   "qairt": {
     "qnn_net_run_sha256": "7b0b806033bb2bd074c233632eb0f06f34c5f5f10040c5a363e8720dd60fd8e9",
     "source_behavior": [
-      "qnn-net-run defaults InputDataType to FLOAT unless an input-data-type option is supplied.",
+      "The packaged SampleApp defaults InputDataType to FLOAT unless an input-data-type option is supplied.",
       "For a non-FLOAT32 graph tensor, IOTensor reads one FLOAT32 value per tensor element, then calls copyFromFloatToNative.",
       "For QNN_DATATYPE_INT_64, copyFromFloatToNative calls castFromFloat<int64_t>, whose implementation static_casts each float value."
     ],
@@ -94,6 +96,15 @@
       },
       "tools.html": {
         "matched_lines": {
+          "--native_input_tensor_names": [
+            2802,
+            2805,
+            2808,
+            6597,
+            6811,
+            7811,
+            8025
+          ],
           "--use_native_input_files": [
             1386,
             1728,
@@ -117,6 +128,7 @@
         "sha256": "9a23887eca26a775682eb443bbb83b1b0283fd9ef2a195f97b36deb1af556548"
       }
     },
+    "source_role": "The installed SampleApp source is supporting implementation evidence, not a bit-for-bit source attestation for the stripped qnn-net-run binary.",
     "version": "2.49.40.260810"
   },
   "raw_position_files": {
@@ -183,6 +195,7 @@
         "command": "./qnn-net-run --backend=/data/local/tmp/vibevoice-0034-prefill-ar171-20260828T123223Z-2690318/libQnnHtp.so --retrieve_context=/data/local/tmp/vibevoice-0034-prefill-ar171-20260828T123223Z-2690318/context_qnn.bin --input_list=/data/local/tmp/vibevoice-0034-prefill-ar171-20260828T123223Z-2690318/input-list.txt --output_dir=/data/local/tmp/vibevoice-0034-prefill-ar171-20260828T123223Z-2690318/output --profiling_level=detailed --perf_profile=burst --log_level=info",
         "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-prefill-ar171-phone-runtime-diagnostic/raw/output/execution_metadata.yaml",
         "sets_input_data_type": false,
+        "sets_native_input_tensor_names": false,
         "sha256": "6d895ee31d71fd90019948b37225fcc0768cfb4890c97ba464006da91411c560",
         "uses_native_input_files": false
       },
@@ -190,6 +203,7 @@
         "command": "./qnn-net-run --backend=/data/local/tmp/vibevoice-0034-phase-phase-20260828T130043Z-2714338/libQnnHtp.so --retrieve_context=/data/local/tmp/vibevoice-0034-phase-phase-20260828T130043Z-2714338/contexts/ar1.bin --input_list=/data/local/tmp/vibevoice-0034-phase-phase-20260828T130043Z-2714338/ar1-inputs/input-list.txt --output_dir=/data/local/tmp/vibevoice-0034-phase-phase-20260828T130043Z-2714338/ar1-output --profiling_level=detailed --perf_profile=burst --log_level=info",
         "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/results/qnn-prefill-ar171-ar1-phone-phase-switch-diagnostic/raw/ar1-output/execution_metadata.yaml",
         "sets_input_data_type": false,
+        "sets_native_input_tensor_names": false,
         "sha256": "d0aab4762782d0fb9ce8d95e0501ac51fab4d0b11f3a162dffef19dba1979bd8",
         "uses_native_input_files": false
       }
@@ -199,6 +213,7 @@
         "invokes_qnn_net_run": true,
         "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/tools/run_prefill_qnn_phone_diagnostic.sh",
         "sets_input_data_type": false,
+        "sets_native_input_tensor_names": false,
         "sha256": "850be47ee938d6df25e141e82d202b0ab1c23864092f722c782196ed57755be0",
         "uses_native_input_files": false
       },
@@ -206,6 +221,7 @@
         "invokes_qnn_net_run": true,
         "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/tools/run_prefill_ar1_phase_phone_diagnostic.sh",
         "sets_input_data_type": false,
+        "sets_native_input_tensor_names": false,
         "sha256": "1cc6f901b2a0cf7d25e9935eef06a3f9187df0c9953e5e1e5cb122bc8f6f84f5",
         "uses_native_input_files": false
       }
@@ -213,7 +229,13 @@
   },
   "required_fix": {
     "direct_qnn": "Continue using graph descriptor INT64 buffers (1368 bytes AR171; 8 bytes AR1) with no qnn-net-run file conversion.",
-    "qnn_net_run": "Use FLOAT32 files containing numeric 0..170/171 with default input mode, or pass --input_data_type native and provide native INT64 files of 1368/8 bytes. Verify the chosen mode with a bounded diagnostic before reusing qnn-net-run for position-sensitive claims."
+    "qnn_net_run": "For the actual qnn-net-run binary, use FLOAT32 files containing numeric 0..170/171 under default mode, or use its documented --use_native_input_files / targeted --native_input_tensor_names option with native INT64 files of 1368/8 bytes. Verify exact flag syntax and values with a bounded diagnostic before reusing qnn-net-run for position-sensitive claims; do not rely on the SampleApp-only --input_data_type spelling."
+  },
+  "runtime_binary_witness": {
+    "exact_error": "3296.2ms [ ERROR ] Given input file /home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/qnn-prefill/ar171/host-htp/inputs/01.raw with file size in bytes 1368. If the model expects a batch size of one, the file size should match the tensor extent: 684 bytes. If the model expects a batch size > 1, the file size should evenly divide the tensor extent: 684 bytes.",
+    "interpretation": "The exact v2.49.40 qnn-net-run binary rejected the 1368-byte native INT64[171] file and demanded 684 bytes, directly confirming a four-byte-per-element file boundary for this invocation. It accepted the subsequent 684-byte file.",
+    "log_path_outside_git": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/qnn-prefill/ar171/host-htp/stdout.log",
+    "log_sha256": "7fd31f30e315e5f167cec3cbdad7283bff25d25bd7c0689ab8bc4a5f8018ff66"
   },
   "schema_version": 1
 }

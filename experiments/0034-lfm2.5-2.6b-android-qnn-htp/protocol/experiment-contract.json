@@ -1119,6 +1119,10 @@
     "unsupported_source_nodes": 0
   },
   "qnn_net_run_position_ingestion_audit": {
+    "actual_binary_documented_native_flags": [
+      "--use_native_input_files",
+      "--native_input_tensor_names"
+    ],
     "ar171_position_file": {
       "bytes": 684,
       "converted_unique": [
@@ -1135,15 +1139,20 @@
       "default_interpretation": "float32[1] then cast to int64",
       "encoded_as": "int32[1] value171"
     },
+    "binary_source_linkage_cryptographically_proven": false,
     "evidence": "results/qnn-net-run-position-ingestion-audit/result.json",
     "exact_position_semantics_proven": false,
     "graph_position_data_type": "QNN_DATATYPE_INT_64",
+    "packaged_source_and_runtime_behavior_consistent": true,
     "phone_access": false,
     "physical_htp_execution_still_proven": true,
     "qairt_version": "2.49.40.260810",
     "recorded_commands_set_input_data_type": false,
+    "recorded_commands_set_native_input_tensor_names": false,
     "recorded_commands_use_native_input_files": false,
-    "source_verified": true
+    "runtime_int64_file_rejection": "1368-byte INT64[171] file rejected; binary required 684-byte four-byte-per-element file",
+    "sample_app_input_data_type_flag_is_binary_contract": false,
+    "source_verified": false
   },
   "question": "Can LFM2.5-2.6B run a protocol-v2 canonical Android campaign through a physically proven QNN HTP route on the authorized SM8550 phone?",
   "required_provider_proof_if_unblocked": {
