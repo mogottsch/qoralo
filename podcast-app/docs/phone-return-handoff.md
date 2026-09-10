@@ -14,11 +14,13 @@ Frozen pair: `.local/integration-ready/fb16b90-02/`; source `fb16b90`, effective
 
 Final report/new-app evidence: [`../evidence/coherent-ui-integration-result/`](../evidence/coherent-ui-integration-result/). Frozen readiness/source/native proofs remain in [`../evidence/coherent-ui-integration/`](../evidence/coherent-ui-integration/). Approval is limited to host/source and synthetic emulator UI, not physical Galaxy/TalkBack/playback/export, native generation, model quality or product E2E. No05 image/test result is substituted for this candidate's new evidence.
 
-## 2. Baseline duration diagnostic — executed once, failed
+## 2. Duration load/close — manifest variant succeeded, zero inference
 
-The separate frozen **duration-load-only** pair `.local/duration-ready/3fd75c0/` was installed and executed, not the UI APK or test-only text-layout diagnostic. The current installed app is therefore not the approved coherent UI binary.
+The tested manifest-only derivative is `.local/duration-native-library-ready/cc473f8/`, candidate `ac4d325f7f5b66ca5ff144590b991775d616c18bfb9ac56065f3c66c6af89fb2`, app `78488901d63032b87d2d575c6bec5b7f578b3a7ee38c92e3c633ed943dcb96ab`, with the unchanged baseline test below. It is **not** the approved coherent UI binary.
 
-Run `duration-20260910t16001789056033z` collected one failed constructor and zero inference calls. Saved verbose logs establish `libcdsprpc.so` unavailable to the V73 stub in app namespace `clns-9`, followed by transport failure, the original INVALID_CONFIG error and downstream CPU-assignment rejection. Cleanup/settings/PID proof passed and the lock was released. See [`../evidence/qnn-duration-load-result/duration-20260910t16001789056033z/`](../evidence/qnn-duration-load-result/duration-20260910t16001789056033z/).
+Baseline run `duration-20260910t16001789056033z` failed on V73 stub resolution of public `libcdsprpc.so` in the app namespace. A manifest-only declaration was separately reviewed. Its first slot stopped before install on an existing test-package PID; Pi's separate scoped maintenance and a fresh explicit slot followed. New run **`duration-fastrpc-20260910t162500z` created and closed one duration session successfully, with zero Run/Gemma/other-context/TTS/capacity calls**. QNN device creation/status0 and session initialization were logged; cleanup/settings/actual-name PID absence passed and the lock was released. See [`../evidence/qnn-duration-load-result/duration-fastrpc-20260910t162500z/`](../evidence/qnn-duration-load-result/duration-fastrpc-20260910t162500z/).
+
+The embedded baseline contract remains intact, but its no-new-library namespace description is explicitly overridden by the reviewed optional public `libcdsprpc.so` declaration. All other code/native/context/options remain unchanged. The **baseline** identities below are retained for comparison, not as the installed manifest variant:
 
 - Source: `3fd75c06481bcc709d45da5c4933347f348e9079`.
 - Candidate SHA: `806c9b6db0766eb3a7455cc2bd23a68c61153d257f4b0f0b7bb98ced6972238d`.
@@ -31,11 +33,11 @@ Bounds: verification60s, load/close45s, service120s, driver135s, instrumentation
 
 Historical scope: [`qnn-duration-load-only.md`](qnn-duration-load-only.md); the separately reviewed host guard is described in [`duration-phone-guard.md`](duration-phone-guard.md), source `9e2c41d`, closure `3ad4c644a7733d1f1feeb7bbbe83532cc0be0f727f32f59dda00c951dd6e202d`. The controller remains plan-only without `--execute` and requires both candidate and host-guard approval. Any new physical action needs Pi's slot, exact identity, continuous lock and eligible durable state. Private DB snapshots remain local-only.
 
-Next authorization is **source/build-only**: a minimal platform-supported declaration of the advertised public `libcdsprpc.so`, preserving the baseline code/native payload/options. No follow-on phone call is authorized; do not change ADSP, LD, SoC, context/version or CPU-fallback policy.
+Next authorization is **source/build-only**: the smallest TTS-only engineering harness loading four unchanged contexts and submitting one entire canonical226-byte request/WAV through the existing render path. No Gemma, splitting/stitching, retries or deliberate capacity probe; no intermediate four-load-only phone gate. Physical execution still requires exact candidate review and Pi's new slot.
 
 ## 3. What remains unresolved
 
-- **QNN startup:** still fails during device creation. The load-only trace now locates a preceding V73 stub dependency/namespace failure for `libcdsprpc.so`; it does not establish a fix. No TTS graph, WAV or capacity call was reached. Successful Gemma requests must not be repeated merely to diagnose this failure.
+- **QNN execution/TTS:** duration device/session load and close now succeed with the sole public-library declaration. Four-context readiness, neural execution, speech/WAV and capacity remain untested. Successful Gemma requests must not be repeated to establish TTS.
 - **Whole-chapter capacity:** pinned T239/L238 contexts allow230 normalized text codepoints before tags and roughly16.58s, not the intended1–2minute chapters. These are known pack limits, not a completed physical whole-chapter experiment. No splitting/stitching, fallback, graph replacement or automatic recovery is approved.
 - **Product/hardware:** physical accessibility/media/export, native lifecycle and complete generation remain separate gates. UI success does not close them.
 

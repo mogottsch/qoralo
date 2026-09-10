@@ -1,0 +1,1053 @@
+[duration-load] pid=21510 uid=10755 gid=10755; ORT runtime=1.27.1; ADSP before=<unset>; LD_LIBRARY_PATH=<unset>
+[duration-load] loaded ORT library=/data/app/~~g7OCOHLgopsjCdDQkKFouw==/dev.vibevoice.podcast.internal-WUlI0U8bFEQpF_KQtGYl2g==/lib/arm64/libonnxruntime.so
+[duration-load] ADSP effective=/data/app/~~g7OCOHLgopsjCdDQkKFouw==/dev.vibevoice.podcast.internal-WUlI0U8bFEQpF_KQtGYl2g==/lib/arm64; descriptor=/data/user/0/dev.vibevoice.podcast.internal/no_backup/model-packs/supertonic-3/current/contexts/duration-context.onnx; backend=/data/app/~~g7OCOHLgopsjCdDQkKFouw==/dev.vibevoice.podcast.internal-WUlI0U8bFEQpF_KQtGYl2g==/lib/arm64/libQnnHtp.so
+[duration-load] provider options: soc_model=43 htp_performance_mode=burst offload_graph_io_quantization=0; session.disable_cpu_ep_fallback=1
+[duration-load] device config expectation from pinned ORT source: SOC=43; ARCH not requested; not a direct deviceCreate-struct capture
+[duration-load] filesystem R_OK=0 path=/vendor/lib64/libcdsprpc.so (not linker namespace proof)
+[duration-load] filesystem R_OK=0 path=/vendor/lib/libcdsprpc.so (not linker namespace proof)
+[duration-load] filesystem R_OK=0 path=/vendor/lib/rfsa/adsp (not linker namespace proof)
+[duration-load] filesystem R_OK=-1 path=/vendor/dsp/cdsp (not linker namespace proof)
+[duration-load] filesystem R_OK=-1 path=/system/lib/rfsa/adsp (not linker namespace proof)
+[duration-load] filesystem R_OK=-1 path=/vendor/dsp (not linker namespace proof)
+[duration-load ort severity=1 category=onnxruntime id=podcast-duration-load-only location=device_discovery_common.cc:34 operator()] Discovered OrtHardwareDevice {vendor_id:0x13b5, device_id:0x0, vendor:ARM, type:0, metadata: []}
+[duration-load] constructor BEGIN; no other session or neural execution is permitted
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=inference_session.cc:738 TraceSessionOptions] Session Options {  execution_mode:0 execution_order:DEFAULT enable_profiling:1 optimized_model_filepath:"" enable_mem_pattern:1 enable_mem_reuse:1 enable_cpu_mem_arena:1 profile_file_prefix:/data/user/0/dev.vibevoice.podcast.internal/files/duration-load/duration-fastrpc-20260910t162500z/profiles/duration-profile session_logid:duration-load-only session_log_severity_level:0 session_log_verbosity_level:1 max_num_graph_transformation_steps:10 graph_optimization_level:4 intra_op_param:OrtThreadPoolParams { thread_pool_size: 1 auto_set_affinity: 0 allow_spinning: 1 spin_duration_us: -1 spin_backoff_max: 1 dynamic_block_base_: 0 stack_size: 0 affinity_str:  set_denormal_as_zero: 0 } inter_op_param:OrtThreadPoolParams { thread_pool_size: 1 auto_set_affinity: 0 allow_spinning: 1 spin_duration_us: -1 spin_backoff_max: 1 dynamic_block_base_: 0 stack_size: 0 affinity_str:  set_denormal_as_zero: 0 } use_per_session_threads:1 thread_pool_allow_spinning:1 use_deterministic_compute:0 ep_selection_policy:0 config_options: {   session.disable_cpu_ep_fallback: 1  ep.context_file_path: /data/user/0/dev.vibevoice.podcast.internal/no_backup/model-packs/supertonic-3/current/contexts/duration-context.onnx  ep.qnnexecutionprovider.soc_model: 43  ep.qnnexecutionprovider.profiling_level: detailed  ep.qnnexecutionprovider.backend_path: /data/app/~~g7OCOHLgopsjCdDQkKFouw==/dev.vibevoice.podcast.internal-WUlI0U8bFEQpF_KQtGYl2g==/lib/arm64/libQnnHtp.so  ep.qnnexecutionprovider.offload_graph_io_quantization: 0  ep.qnnexecutionprovider.htp_performance_mode: burst  ep.qnnexecutionprovider.profiling_file_path: /data/user/0/dev.vibevoice.podcast.internal/files/duration-load/duration-fastrpc-20260910t162500z/profiles/duration-profile.qnn.csv } }
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=inference_session.cc:505 operator()] Flush-to-zero and denormal-as-zero are off
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=inference_session.cc:513 ConstructorCommon] Creating and using per session threadpools since use_per_session_threads_ is true
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=inference_session.cc:558 ConstructorCommon] Dynamic block base set to 0
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_execution_provider.cc:313 QNNExecutionProvider] Context cache enable: 0
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_execution_provider.cc:324 QNNExecutionProvider] User specified context cache embed mode: 0
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_execution_provider.cc:327 QNNExecutionProvider] User specified context cache path: /data/user/0/dev.vibevoice.podcast.internal/no_backup/model-packs/supertonic-3/current/contexts/duration-context.onnx
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_execution_provider.cc:334 QNNExecutionProvider] User specified QNN context node name prefix: 
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_execution_provider.cc:338 QNNExecutionProvider] User specified option - share EP contexts across sessions: 0
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_execution_provider.cc:342 QNNExecutionProvider] User specified option - stop share EP contexts across sessions: 0
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_execution_provider.cc:377 QNNExecutionProvider] Using backend path: /data/app/~~g7OCOHLgopsjCdDQkKFouw==/dev.vibevoice.podcast.internal-WUlI0U8bFEQpF_KQtGYl2g==/lib/arm64/libQnnHtp.so
+[duration-load ort severity=1 category=onnxruntime id=podcast-duration-load-only location=qnn_execution_provider.cc:90 ParseProfilingLevel] profiling_level: detailed
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_execution_provider.cc:413 QNNExecutionProvider] Profiling file path: /data/user/0/dev.vibevoice.podcast.internal/files/duration-load/duration-fastrpc-20260910t162500z/profiles/duration-profile.qnn.csv
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_execution_provider.cc:107 ParseHtpPerformanceMode] Htp performance mode: burst
+[duration-load ort severity=2 category=onnxruntime id=podcast-duration-load-only location=qnn_execution_provider.cc:489 QNNExecutionProvider] File mapped weights feature is only available on Windows arm64 devices for QNN API versions >= 2.32. Feature will be disabled by default
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_execution_provider.cc:237 ParseBoolOption] Using offload_graph_io_quantization: 0
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=inference_session.cc:2319 Initialize] Initializing session.
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=inference_session.cc:2357 Initialize] Adding default CPU execution provider.
+[duration-load ort severity=1 category=onnxruntime id=podcast-duration-load-only location=bfc_arena.cc:27 BFCArena] Creating BFCArena for Cpu with following configs: initial_chunk_size_bytes: 1048576 max_dead_bytes_per_chunk: 134217728 initial_growth_chunk_size_bytes: 2097152 max_power_of_two_extend_bytes: 1073741824 memory limit: 18446744073709551615 arena_extend_strategy: 0
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=bfc_arena.cc:64 BFCArena] Creating 21 bins of max chunk size 256 to 268435456
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_partitioner.cc:1392 InlineFunctionsAOT] This model does not have any local functions defined. AOT Inlining is not performed
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer EnsureUniqueDQForNodeUnit modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer Level1_RuleBasedTransformer modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer DoubleQDQPairsRemover modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer ConstantSharing modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer CommonSubexpressionElimination modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer ConstantFolding modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer MatMulAddFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer ReshapeFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer FreeDimensionOverrideTransformer modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer SliceConcatToSpaceToDepthFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer GeluFusionL1 modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer LayerNormFusionL1 modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer QDQPropagationTransformer modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer WeightBiasQuantization modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer EnsureUniqueDQForNodeUnit modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer WhereDummyDq modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer TransposeOptimizer modified: 0 with status: OK
+[duration-load ort severity=2 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:308 operator()] Using existing ADSP_LIBRARY_PATH setting of /data/app/~~g7OCOHLgopsjCdDQkKFouw==/dev.vibevoice.podcast.internal-WUlI0U8bFEQpF_KQtGYl2g==/lib/arm64, which may cause the HTP backend to fail.
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:253 GetQnnInterfaceProvider] /data/app/~~g7OCOHLgopsjCdDQkKFouw==/dev.vibevoice.podcast.internal-WUlI0U8bFEQpF_KQtGYl2g==/lib/arm64/libQnnHtp.so interface version: 2.38.0
+[duration-load ort severity=1 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:334 LoadBackend] Found valid interface, version: 2.38.0 backend provider name: HTP_QTI_AISW backend id: 6
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_backend_manager.cc:1612 SetupBackend] LoadBackend succeed.
+[duration-load ort severity=1 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:419 LoadQnnSystemLib] Loading QnnSystem lib
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:253 GetQnnInterfaceProvider] /data/app/~~g7OCOHLgopsjCdDQkKFouw==/dev.vibevoice.podcast.internal-WUlI0U8bFEQpF_KQtGYl2g==/lib/arm64/libQnnSystem.so interface version: 1.13.0
+[duration-load ort severity=1 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:435 LoadQnnSystemLib] Found valid system interface, version: 1.13 backend provider name: SYSTEM_QTI_AISW
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_backend_manager.cc:1621 SetupBackend] Backend build version: v2.49.0.260730134355
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_backend_manager.cc:475 InitializeQnnLog] Set Qnn log level: 4
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> QnnLog_create started.
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Registered a new graph environment 0 with priority: 100, num hvx threads: 1001, num hmx threads: 1001
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> Initializing HtpProvider
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Creating default router
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> RouterFastRPC create
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: Initializing the router
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Detected Snapdragon SOC SM8550 with 4 SOCs
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Allocating PlatformInfo struct size 120
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Async property not supported or not activated. Skipping setup async threads
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Detected Snapdragon SOC SM8550 with 4 SOCs
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Allocating PlatformInfo struct size 120
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: Initializing the graph registry
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: Initializing the context registry
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: Initializing the device registry
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: Initializing the tensor counter
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: setting isExitCalled to false
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: setting ssrInProgress to false
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: FinalCleanupFn fnPtr is nullptr
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: initializing mem registry
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: initializing mmap registry
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: Initializing the logger lifecycle manager
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: constructing bundle
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Set default graph environment 0 remoteHandle 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Opened default graph env, envRemoteHandle 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> exit with 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> exit with 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HTP: initialization completed successfully
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> QnnLog_create exit.
+
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_backend_manager.cc:1629 SetupBackend] SetLogger succeed.
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] Creating backend with QnnGraphTransformerAdapter
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> QnnBackend_create started. backend = 0x493f1d80
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Oem key validation infra not found, limiting oemMaxPriority to HIGHEST
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Backend handle created: 1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Set default graph environment 0 remoteHandle 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Opened default graph env, envRemoteHandle 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> QnnBackend_create done successfully. backend = 0x493f1d80
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Deactivated logger with handle 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnGraphTransformer createBackend done, status = 0x0
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_backend_manager.cc:1636 SetupBackend] InitializeBackend succeed.
+[duration-load ort severity=1 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:636 CreateDevice] Create device.
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> QnnDevice_create started
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Create device with id 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Validating device config 0xb400007aa16ba400
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Setting device config 0xb400007aa16ba400 via router
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> Specified config SOC, ignoring on real target
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Config not passed. Loading default platform info!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Setting default value for unsigned PD usage
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Attempting to open dynamically linked so: /data/app/~~g7OCOHLgopsjCdDQkKFouw==/dev.vibevoice.podcast.internal-WUlI0U8bFEQpF_KQtGYl2g==/lib/arm64/libQnnHtpV73Stub.so using absolute filename
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> First connection to QNN stub established!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Loading remote funcs
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Successfully loaded off-chip memory allocation functions
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Kailua PD 0 uses default Domain ID
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> No ADAS pltform detected, BCS disabled
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Transport config  BCS_enable:0  [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> isPollingAvailable 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Polling not supported in queueMapping
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> exits with 2, successfully initialized rpc memory
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Successful rpcMemInit
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> 8 isInit true
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> This META does not have Alloc2 Support
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> 136 isInit true
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> This META does not have Alloc2 Support
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport run [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> 8 isInit true
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> This META does not have Alloc2 Support
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> 8 isInit true
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> This META does not have Alloc2 Support
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport run [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Created transport wrapper for device {0 0 0} and devType 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> 56 isInit true
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> This META does not have Alloc2 Support
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> First entry for fd 123 on domain 3, adding to refCount
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> fastrpc memory map for fd: 123 with length: 56 succeeded
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport shared buffer [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> sharedBufferMapping op 2 fd 123 with offset 0 size 56, va 0x000000fdffc000, devConfig {0, 0, 0}, err 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> SharedMemoryMod 2 create/register fd 123 with len 56, offset(dspPa) = 0, va 0x000000fdffc000
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> sharedMemoryMod Latency 603
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport execute faster ipc start polling [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> createDevicePollingContext for priority 100
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Async property not supported. Skipping setup Async context
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> exits device initialization with  0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Function not called, PrepareLib isn't loaded!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport run [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> setSkelLogLevel return 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> QnnDevice_create done. device = 0x1. status 0x0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Deactivated logger with handle 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_backend_manager.cc:1643 SetupBackend] CreateDevice succeed.
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:685 InitializeProfiling] Profiling level set to detailed.
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> QnnProfile_create 0xb400007aa16f2510
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Deactivated logger with handle 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_backend_manager.cc:1650 SetupBackend] InitializeProfiling succeed.
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_backend_manager.cc:1655 SetupBackend] LoadOpPackage succeed.
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_backend_manager.cc:1677 SetupBackend] QNN SetupBackend succeed
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> htpPerfInfrastructureCreatePowerConfigId started for deviceId: 0, coreId: 0
+
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Device with device id 0 core id 0 found with core type 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Created power config id 2667459744 for device id 0 core id 0 processDomain id 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> htpPerfInfrastructureCreatePowerConfigId done. status 0x0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Deactivated logger with handle 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_htp_power_config_manager.cc:36 AddRpcPollingTime] Updating rpc polling time to: 9999us.
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_htp_power_config_manager.cc:50 AddRpcControlLatency] Requested rpc control latency is the same as last set (0). Ignoring request
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_htp_power_config_manager.cc:98 AddHtpPerformanceMode] Updating htp performance mode to: burst.
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> htpPerfInfrastructureSetPowerConfig started for powerConfigId: -1627507552
+
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Get HTP power device instance for device id 0 core id 0 processDomain id 0 coreType 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Get HTP power device instance for device id 0 core id 0 processDomain id 0 coreType 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> set power settings rpc polling time 9999
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Setting poll QoS to 9999
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> setPollQos for priority 100
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Dspqueue Polling not supported in setSessionProperty
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> set power settings rpc polling time 9999
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> set remote rpc control return 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> set power settings DCVS V3 for context id -1627507552:
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> setDcvsEnable 1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> dcvsEnable 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> powerMode 16
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> setSleepLatency 1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> sleepLatency 40
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> setSleepDisable 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> sleepDisable 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> setBusParams 1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> busVoltageCornerMin 160
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> busVoltageCornerTarget 160
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> busVoltageCornerMax 160
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> setCoreParams 1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> coreVoltageCornerMin 160
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> coreVoltageCornerTarget 160
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> coreVoltageCornerMax 160
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Resetting polling rpc graph stats
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Graph Stats ptr not added for device 0 core 0 processDomain 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport run [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Set perf settings success
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> htpPerfInfrastructureSetPowerConfig done. status 0x0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Deactivated logger with handle 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_execution_provider.cc:905 PartitionCtxModel] Node supported: [1] index: [0] name: [QNNExecutionProvider_QNN_11423001191144103069_1_0] Operator type: [EPContext] index: [0]
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=qnn_execution_provider.cc:930 PartitionCtxModel] Number of partitions supported by QNN EP: 1, number of nodes in the graph: 1, number of nodes supported by QNN: 1
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_backend_manager.cc:1561 SetupBackend] Backend setup already!
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_execution_provider.cc:905 PartitionCtxModel] Node supported: [1] index: [0] name: [QNNExecutionProvider_QNN_11423001191144103069_1_0] Operator type: [EPContext] index: [0]
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=qnn_execution_provider.cc:930 PartitionCtxModel] Number of partitions supported by QNN EP: 1, number of nodes in the graph: 1, number of nodes supported by QNN: 1
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_backend_manager.cc:1405 LoadCachedQnnContextFromBuffer] Graph count from QNN context: 1
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_backend_manager.cc:1440 LoadCachedQnnContextFromBuffer] Max spill fill buffer size:0
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> QnnContext_createFromBinary started. backend = 0x1, device = 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> qnnProfileReset 0xb400007aa16f2510
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Creating deserializer for version 4.0.4
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Multicore support is unavailable
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> 8 isInit true
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> This META does not have Alloc2 Support
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> 16 isInit true
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> This META does not have Alloc2 Support
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport run [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Context create from binary with context 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Context Binary contains 1 graphs
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Graph memory usage summary, context id 1, shared graph weights size 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Number of HVX threads to be used not explicitly specified. Max available (4) will be used.
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Added 1 to registered graph env 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Successfully opened graph env handle, envId 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Registered to graph env, envId 0 
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> DLBC is set to 0 for graph 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> DLBC_WEIGHTS is set to 0 for graph 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> SPARSE_WEIGHTS_COMPRESSION is set to 0 for graph 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> NUM_CORES is set to 1 for graph 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> SLC_ALLOCATOR is set to 0 for graph 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> DSP ARCH graph is set to 73 for graph 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> BF16 is set to 0 for graph 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Context Binary Graph 0 'QNNExecutionProvider_QNN_11423001191144103069_1_0' added for the processing
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Get graph estimates from single core barrel
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Context 1 graph QNNExecutionProvider_QNN_11423001191144103069_1_0 estimated PD size ~13.05MB, including nonSharedWeight 2097152 B I/O 32768 B runlist 3163648 B spillfill 0 B 
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Graph memory usage summary, context id 1, graph name:QNNExecutionProvider_QNN_11423001191144103069_1_0, hexagon graph id 256 in graph info: nonShared Wts/constSize 2097152, graphIOTensorSize 32768 vtcm 8388608 spillFillBufferSizes 0, OpDataSize 222464
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Setting context 1 adapter buffer size estimate to 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Setting context 1 shared weight near size estimate to 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Setting context 1 reserved space to 13682176
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Context 0x1 priority = QNN_PRIORITY_NORMAL
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Setting new priority of QNN_PRIORITY_NORMAL for graph QNNExecutionProvider_QNN_11423001191144103069_1_0 on context 1 - old priority was QNN_PRIORITY_NORMAL
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> m_CFBCallbackInfoObj is not initialized, return emptyList
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> m_CFBCallbackInfoObj is not initialized, return emptyList
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Allocation is not required because no updatable component in serialize bin
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Preemption type is queried as 2147483647
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> 8 isInit true
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> This META does not have Alloc2 Support
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> 8 isInit true
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> This META does not have Alloc2 Support
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport run [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Successfully retrieve preemption type as 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Preemption type is set as 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> The preemption type for this device is 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> The preemption type for devConfig {0,0,0} is 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Context 1 estimated PD size requirement is ~13.05MB, including largest Graph estimate 13682176 B
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Getting transport session for device 0, core 0, pd 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> PD 0 chosen for context 1, estimated future space on pd ~13.05 MB device priority is -1, graph priority is 100
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Trying to deserialize contextId 1 on pdId 0 with deviceId 0 coreId 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Mapping is not required because no updatable component in serialize bin, group id: 0, context id: 1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Function not called, PrepareLib isn't loaded!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Graph rpc memory manager::alloc deviceId 0, coreId 0, pdId 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Graph rpc memory manager::alloc numCores 1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Device type is queried as 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Device type is queried as 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> 3960 isInit true
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> This META does not have Alloc2 Support
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> RpcMemory Allocated for Persistent buffer with Host adddress 0x7c271f1000, fd 130, size 3960
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Device type is queried as 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> 136 isInit true
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> This META does not have Alloc2 Support
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> RpcMemory Allocated for Persistent buffer with Host adddress 0x7c271f0000, fd 131, size 136
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Device type is queried as 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> 5880 isInit true
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> This META does not have Alloc2 Support
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> RpcMemory Allocated for Persistent buffer with Host adddress 0x7c26c6d000, fd 132, size 5880
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> First entry for fd 130 on domain 3, adding to refCount
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> fastrpc memory map for fd: 130 with length: 3960 succeeded
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Successfully mapped buffer on host side with Device 0, Core 0, Pd 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport shared buffer [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> sharedBufferMapping op 2 fd 130 with offset 0 size 3960, va 0x000000201f5000, devConfig {0, 0, 0}, err 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> With fd: 130 Device Id 0, Core Id 0, and Pd Id 0, RefCount of NSP side map call is: 1, NSP VA is: 0x000000201f5000
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> First entry for fd 131 on domain 3, adding to refCount
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> fastrpc memory map for fd: 131 with length: 136 succeeded
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Successfully mapped buffer on host side with Device 0, Core 0, Pd 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport shared buffer [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> sharedBufferMapping op 2 fd 131 with offset 0 size 136, va 0x000000201f6000, devConfig {0, 0, 0}, err 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> With fd: 131 Device Id 0, Core Id 0, and Pd Id 0, RefCount of NSP side map call is: 1, NSP VA is: 0x000000201f6000
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> First entry for fd 132 on domain 3, adding to refCount
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> fastrpc memory map for fd: 132 with length: 5880 succeeded
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Successfully mapped buffer on host side with Device 0, Core 0, Pd 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport shared buffer [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> sharedBufferMapping op 2 fd 132 with offset 0 size 5880, va 0x000000201f7000, devConfig {0, 0, 0}, err 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> With fd: 132 Device Id 0, Core Id 0, and Pd Id 0, RefCount of NSP side map call is: 1, NSP VA is: 0x000000201f7000
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Device type is queried as 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> 72 isInit true
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> This META does not have Alloc2 Support
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> RpcMemory Allocated for Persistent buffer with Host adddress 0x7c26c6c000, fd 133, size 72
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> First entry for fd 133 on domain 3, adding to refCount
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> fastrpc memory map for fd: 133 with length: 72 succeeded
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Successfully mapped buffer on host side with Device 0, Core 0, Pd 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport shared buffer [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> sharedBufferMapping op 2 fd 133 with offset 0 size 72, va 0x000000201f9000, devConfig {0, 0, 0}, err 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> With fd: 133 Device Id 0, Core Id 0, and Pd Id 0, RefCount of NSP side map call is: 1, NSP VA is: 0x000000201f9000
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> RPC Memory allocated for graph QNNExecutionProvider_QNN_11423001191144103069_1_0 with In 0x7c271f1000 [f78 B], Far In 0x0 [0 B], Inouts 0x7c26c6d000 [16f8 B], Outs 0x7c271f0000 [88 B], Far Outs 0x0 [0 B]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Graph rpc memory allocate or mapping for copyless weights buffer deviceId 0, coreId 0, pd 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Device type is queried as 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> 2097152 isInit true
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> This META does not have Alloc2 Support
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> RpcMemory Allocated for Persistent buffer with Host adddress 0x7a94ca8000, fd 134, size 2097152
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> IHtpMemory allocated for Weights 0x7a94ca8000 [2097152 B] @ OS 1c000
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> First entry for fd 134 on domain 3, adding to refCount
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> fastrpc memory map for fd: 134 with length: 2097152 succeeded
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Successfully mapped buffer on host side with Device 0, Core 0, Pd 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport shared buffer [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> sharedBufferMapping op 7 fd 134 with offset 0 size 2097152, va 0x00000021200000, devConfig {0, 0, 0}, err 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> With fd: 134 Device Id 0, Core Id 0, and Pd Id 0, RefCount of NSP side map call is: 1, NSP VA is: 0x00000021200000
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> RPC Memory mapped for Weights 0x7a94ca8000 [2097152 B] @ VA 21200000
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> [SetBufName][NSW] fd=134 size=2097152 graphName=QNNExecutionProvider_QNN_11423001191144103069_1_0 graphShortName=QNN...910 graphId=256 groupId=-1 contextId=1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Successfully copied 1994752 bytes of weights! Actual bytes to transfer: 1994752
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> HtpTransport::graphPrepareDsp done. graph.m_hexNNGraphHandle = 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> 104 isInit true
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> This META does not have Alloc2 Support
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport run [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> setInferenceBufferForHtpExtensionSkel: not supported for DeviceId 0 coreId 0 pdId 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> setInferenceBufferForHtpExtensionSkel not supported on this platform
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Context binary being sent to skel for processing. Number of graphs = 1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Creating deserializer for version 4.0.4
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> No groupId found for this context:0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Graph does not have mc metadata
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Device type is queried as 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> 122184 isInit true
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> This META does not have Alloc2 Support
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Device type is queried as 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> 40 isInit true
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> This META does not have Alloc2 Support
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> No groupId found for this context:0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Graph does not have mc metadata
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport run [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> event added and value set for event type 1002
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> event added and value set for event type 1003
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> event added and value set for event type 1004
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Context 1 deserialized on pd 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Context 0x1 priority = QNN_PRIORITY_NORMAL
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Setting new priority of QNN_PRIORITY_NORMAL for graph QNNExecutionProvider_QNN_11423001191144103069_1_0 on context 1 - old priority was QNN_PRIORITY_NORMAL
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> graph QNNExecutionProvider_QNN_11423001191144103069_1_0 is loaded 1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> 48 isInit true
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> This META does not have Alloc2 Support
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport run [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> event added and value set for event type 100
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> Number of existing contexts: 1, graphs: 1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> QnnContext_createFromBinary done successfully. context = 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Deactivated logger with handle 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_backend_manager.cc:1889 ExtractBackendProfilingInfo] Extracting profiling events for graph QNNExecutionProvider_QNN_11423001191144103069_1_0
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Deactivated logger with handle 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_backend_manager.cc:1903 ExtractBackendProfilingInfo] profile_events: 0xb400007aa171e0c0 num_events: 4
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_backend_manager.cc:1910 ExtractBackendProfilingInfo] The QNN backend supports extended event data.
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Deactivated logger with handle 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Deactivated logger with handle 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Deactivated logger with handle 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Deactivated logger with handle 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Deactivated logger with handle 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Deactivated logger with handle 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Deactivated logger with handle 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Deactivated logger with handle 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_backend_manager.cc:1941 ExtractBackendProfilingInfo] Wrote QNN profiling events (4) to file (/data/user/0/dev.vibevoice.podcast.internal/files/duration-load/duration-fastrpc-20260910t162500z/profiles/duration-profile.qnn.csv)
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> QnnGraph_retrieve started. context = 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> Number of existing contexts: 1, graphs: 1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> QnnGraph_retrieve done. status 0x0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Deactivated logger with handle 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_backend_manager.cc:1542 LoadCachedQnnContextFromBuffer] Load from cached QNN Context completed.
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_model.cc:64 ParseGraphInputOrOutput] input 0 style_dp
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_model.cc:64 ParseGraphInputOrOutput] input 1 text_mask
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_model.cc:64 ParseGraphInputOrOutput] input 2 text_ids
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_model.cc:64 ParseGraphInputOrOutput] output 0 duration
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_model.cc:401 SetupQnnInputOutput] Setting up QNN input/output for graph: QNNExecutionProvider_QNN_11423001191144103069_1_0
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=inference_session.cc:1696 TransformGraph] Running graph optimizations in loop 1 time/s (Graph Optimizations Loop Level : 1)
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer Level2_RuleBasedTransformer modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer TransposeOptimizer_CPUExecutionProvider modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer QDQSelectorActionTransformer modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer GemmActivationFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer MatMulIntegerToFloatFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer DynamicQuantizeMatMulFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer ConvActivationFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer GeluFusionL2 modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer LayerNormFusionL2 modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer SimplifiedLayerNormFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer AttentionFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer EmbedLayerNormFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer GatherSliceToSplitFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer GatherToSliceFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer MatmulTransposeFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer BiasGeluFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer GroupQueryAttentionFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer MatMulAddFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer SkipLayerNormFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer BiasSkipLayerNormFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer FastGeluFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer QuickGeluFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer BiasSoftmaxFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer BiasDropoutFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer MatMulScaleFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer MatMulActivationFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer MatMulNBitsFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer MatMulNBitsMlpFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer MatMulNBitsQkvFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer QDQFinalCleanupTransformer modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer NhwcTransformer modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer ConvAddActivationFusion modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer RemoveDuplicateCastTransformer modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer CastFloat16Transformer modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer FuseFp16InitializerToFp32NodeTransformer modified: 0 with status: OK
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=graph_transformer.cc:15 Apply] GraphTransformer MemcpyTransformer modified: 0 with status: OK
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=session_state.cc:1347 VerifyEachNodeIsAssignedToAnEp] Node placements
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=session_state.cc:1350 VerifyEachNodeIsAssignedToAnEp]  All nodes placed on [QNNExecutionProvider]. Number of nodes: 1
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=session_state.cc:183 CreateGraphInfo] SaveMLValueNameIndexMapping
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=session_state.cc:229 CreateGraphInfo] Done saving OrtValue mappings.
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=allocation_planner.cc:2653 CreateGraphPartitioner] Use DeviceBasedPartition as default
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=session_state_utils.cc:249 SaveInitializedTensors] Saving initialized tensors.
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=session_state_utils.cc:445 SaveInitializedTensors] Done saving initialized tensors
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=qnn_execution_provider.cc:1186 operator()] compute_info.create_state_func context->node_name: QNNExecutionProvider_QNN_1517278430868430346_1_0
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=inference_session.cc:2799 Initialize] Session successfully initialized.
+[duration-load] constructor RETURNED; inputCount=3 outputCount=1; Session::Run never called
+[duration-load ort severity=1 category=onnxruntime id=duration-load-only location=profiler.cc:123 EndProfiling] Writing profiler data to file /data/user/0/dev.vibevoice.podcast.internal/files/duration-load/duration-fastrpc-20260910t162500z/profiles/duration-profile_2026-09-10_17-25-21_136.json
+[duration-load] profile=/data/user/0/dev.vibevoice.podcast.internal/files/duration-load/duration-fastrpc-20260910t162500z/profiles/duration-profile_2026-09-10_17-25-21_136.json
+[duration-load ort severity=0 category=onnxruntime id=duration-load-only location=inference_session.cc:3945 EndProfiling] Profiler is disabled.
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> htpPerfInfrastructureDestroyPowerConfigId started for powerConfigId: -1627507552
+
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Get HTP power device instance for device id 0 core id 0 processDomain id 0 coreType 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport run [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Destroy perf context success
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Destroyed power config id 2667459744 for device id 0 core id 0 processDomain id 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> htpPerfInfrastructureDestroyPowerConfigId done. status 0x0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Deactivated logger with handle 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] Free context with QnnGraphTransformerAdapter
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnGraphTransformer context freed successfully
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> QnnContext_free started. context = 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> pauseDevicePolling for priority 100 currPriority 100
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> 48 isInit true
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> This META does not have Alloc2 Support
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> 40 isInit true
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> This META does not have Alloc2 Support
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport run [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> m_CFBCallbackInfoObj is not initialized, return emptyList
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport clean dmahandles [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> sharedBufferRelease op 3 fd 130 with offset 0 size 3960, va 0x000000201f5000, devConfig {0, 0, 0}, err 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Last entry for fd 130 on domain 3, calling unmap
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> fastrpc memory unmap for fd: 130 with length: 3960 succeeded
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Freed memory allocated by Memory Object
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport clean dmahandles [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> sharedBufferRelease op 3 fd 131 with offset 0 size 136, va 0x000000201f6000, devConfig {0, 0, 0}, err 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Last entry for fd 131 on domain 3, calling unmap
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> fastrpc memory unmap for fd: 131 with length: 136 succeeded
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Freed memory allocated by Memory Object
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport clean dmahandles [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> sharedBufferRelease op 3 fd 132 with offset 0 size 5880, va 0x000000201f7000, devConfig {0, 0, 0}, err 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Last entry for fd 132 on domain 3, calling unmap
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> fastrpc memory unmap for fd: 132 with length: 5880 succeeded
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Freed memory allocated by Memory Object
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport clean dmahandles [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> sharedBufferRelease op 3 fd 134 with offset 0 size 2097152, va 0x00000021200000, devConfig {0, 0, 0}, err 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Last entry for fd 134 on domain 3, calling unmap
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> fastrpc memory unmap for fd: 134 with length: 2097152 succeeded
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Freed memory allocated by Memory Object
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport clean dmahandles [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> sharedBufferRelease op 3 fd 133 with offset 0 size 72, va 0x000000201f9000, devConfig {0, 0, 0}, err 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Last entry for fd 133 on domain 3, calling unmap
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> fastrpc memory unmap for fd: 133 with length: 72 succeeded
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Freed memory allocated by Memory Object
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> Graph Rpc memory was not initialized for graph 1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Freeing shared spill-fill buffer
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> No groupId found for this context:0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> ContextFree remove DSP size reserve from PdManager for context 1 on pd 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Preemption type is queried as 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> The preemption type for this device is 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> The preemption type for devConfig {0,0,0} is 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Unmapping is not required because no updatable component in serialize bin
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Async property not supported. Skipping deregister Async context
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Decrementing ref counter for default graph env. 1 remaining in group. 1 in registry
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Wake up free backend (id: 1)'s thread(s)
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> Number of existing contexts: 0, graphs: 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> QnnContext_free done successfully.
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Deactivated logger with handle 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> QnnProfile_free 0xb400007aa16f2510
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Deactivated logger with handle 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> QnnDevice_free started. device = 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> 8 isInit true
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> This META does not have Alloc2 Support
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport run [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Async property not supported. Skipping terminate Async Threads
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> terminateDeviceWorkerThread for priority 100 
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> Exiting thread
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> exits with 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> 16 isInit true
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <W> This META does not have Alloc2 Support
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport run [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> clearDevicePollingContext for priority 100 
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> SharedMemoryMod 5 destroy/deregister fd 123 with len 56, va 0x000000fdffc000
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Found transport session 0xb400007aa16e7418 for deviceId 0x0 coreId 0x0 pdId 0x0!
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport clean dmahandles [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> sharedBufferRelease op 5 fd 123 with offset 0 size 56, va 0x000000fdffc000, devConfig {0, 0, 0}, err 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Last entry for fd 123 on domain 3, calling unmap
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> fastrpc memory unmap for fd: 123 with length: 56 succeeded
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> sharedMemoryMod Latency 1671
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> transport teardown [status = 0]
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> exits with 4, successfully deinitialized rpc memory
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> QnnDevice_free done. status 0x0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Deactivated logger with handle 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <I> QnnBackend_free started. backend = 0x1
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Terminated backend 0x1 successfully in backendLifecycleManager
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Unset default graph environment 0
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Destroyed default graph env
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> RouterFastRPC tryUnLoadPrepare
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> RouterFastRPC clearing all OpPackage Maps
+
+[duration-load ort severity=0 category=onnxruntime id=podcast-duration-load-only location=qnn_backend_manager.cc:466 QnnLogging] QnnDsp <V> Function not called, PrepareLib isn't loaded!
+
