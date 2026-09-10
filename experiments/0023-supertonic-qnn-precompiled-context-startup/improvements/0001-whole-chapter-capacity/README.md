@@ -1,6 +1,6 @@
-# Whole-chapter capacity — four context exports ready, execution unproven
+# Whole-chapter capacity — four exports, long-speech coverage unresolved
 
-**Four T2048/L2048 constructor/export pairs are now available and independently reviewed: duration, text, vector and the separately materialized two-site parity vocoder. The parity constructor finalized/exported successfully after the original vocoder's two retained failures. Six constructor attempts total, zero Run/model-forward/phone calls.** New graphs stay LOCAL-ONLY. Original0023 recipes, hashlocks, packs and app paths remain unchanged. Pushes remain held by Pi's separate privacy review.
+**Four T2048/L2048 constructor/export pairs are now available and independently reviewed: duration, text, vector and the separately materialized two-site parity vocoder. The parity constructor finalized/exported successfully after the original vocoder's two retained failures. The six host constructor attempts used zero Run calls. Janek's later physical probes and the two-call CPU duration diagnostic below are separate evidence.** New graphs stay LOCAL-ONLY. Original0023 recipes, hashlocks, packs and app paths remain unchanged. Pushes remain held by Pi's separate privacy review.
 
 ## Capacity and the actual positional change
 
@@ -79,6 +79,12 @@ The46-test source readiness remains in [`results/vocoder-diagnostic-readiness-20
 ## Data-only handoff for the separate long-debug pack
 
 [`results/four-context-export-handoff-20260910/`](results/four-context-export-handoff-20260910/) exports eight exact protected file locations and portable `contexts/` paths:298,579,984B total, no descriptor rebinding or executable payload. Manifest `1c6d9e34…acbad` binds actual ABI/source/host-compile provenance and the positional/parity changes. Ben owns this reference-layout handoff; Janek owns the single new `supertonic-3-t2048-l2048-parity` app pack, five unchanged companion assets, debug trust and long-probe preparation. No current-pack/native9 change, duplicate pack build, deployment or execution is authorized by the handoff.
+
+## Short long-input WAV: CPU duration discriminator completed
+
+Janek's separate profile-OFF long probe produced a29.7968707483s WAV for the227-word/1333-active-ID request, not the unforced~90s target. Direct per-component/RPC/cycle profiling was disabled by design; speech completeness and listening acceptance remain unresolved. The earlier profiled attempt's first-vector6006/cDSP failure remains preserved, not relabeled a proven profiling fix.
+
+The exact [`results/duration-padding-cpu-20260910-attempt-01/`](results/duration-padding-cpu-20260910-attempt-01/) comparator used one official dynamic FP32 CPU session/two calls: active1333→29.8093147278s; padded2048→29.8190822601s. Added padding changed prediction by only+0.00976753235s. Approximately30s is already predicted without extra padding in the official CPU model, so this pair does not support padding or QNN-only numerical error as the major target-gap explanation. Phone DP scalar was not captured; CPU1.23.2 versus phone1.27.1/QNN comparisons are qualified. No intrinsic30s cap, duration override, full speech coverage or quality approval follows. Release consumed; no additional cases or whole-TTS retry.
 
 ## Fidelity and comparison boundaries
 

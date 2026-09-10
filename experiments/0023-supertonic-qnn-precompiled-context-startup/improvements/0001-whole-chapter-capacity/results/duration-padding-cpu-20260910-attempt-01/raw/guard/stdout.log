@@ -1,0 +1,141 @@
+{
+  "status": "two_CPU_duration_outputs_retained",
+  "python_InferenceSession_calls": 1,
+  "Run_calls_attempted": 2,
+  "cases": [
+    {
+      "label": "active1333",
+      "length": 1333,
+      "input_raw_sha256": {
+        "text_ids": "4eb4a9048cb17a4243a9cf3878665d1c690b412d2f9467106790430b9789cfc5",
+        "text_mask": "6dcdbfe5d8a2fddae1c30e10dbd9bdb65a90300c80caf2f01c32153e8329ad5d",
+        "style_dp": "2eb6d16f4ede0ea14c9e84ba1f8b8d62bdfd28cce4bfd18fef963a9f4097ea62"
+      },
+      "Run_calls_attempted": 1,
+      "Run_seconds": 0.07971676799934357,
+      "outputs": [
+        {
+          "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/duration-padding-cpu-20260910/attempt-01/data/active1333-output-0.npy",
+          "shape": [
+            1
+          ],
+          "dtype": "float32",
+          "bytes": 132,
+          "sha256": "d04defde22401b67402e44c07be43b987c44b9e9594e11f61eaaf7c3ef23b436"
+        }
+      ],
+      "finite_positive": true,
+      "duration_seconds": 29.809314727783203,
+      "source_formula_FP32_wave_frames": 1314590
+    },
+    {
+      "label": "padded2048",
+      "length": 2048,
+      "input_raw_sha256": {
+        "text_ids": "3a2f90a7e3f91ce3496b87399cfd19b3dac389b715b8905ed32ef99a64586bac",
+        "text_mask": "3a519c6b3ba734b24be8ff6bbaa3d7141d1bfacff7eae75baa867ec4d71b0bf3",
+        "style_dp": "2eb6d16f4ede0ea14c9e84ba1f8b8d62bdfd28cce4bfd18fef963a9f4097ea62"
+      },
+      "Run_calls_attempted": 1,
+      "Run_seconds": 0.2305794740022975,
+      "outputs": [
+        {
+          "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/duration-padding-cpu-20260910/attempt-01/data/padded2048-output-0.npy",
+          "shape": [
+            1
+          ],
+          "dtype": "float32",
+          "bytes": 132,
+          "sha256": "1d2805e448a7b4e6bd0f7479d8c4776e7abc59d8cd09f158f120ae987b0c2d05"
+        }
+      ],
+      "finite_positive": true,
+      "duration_seconds": 29.819082260131836,
+      "source_formula_FP32_wave_frames": 1315021
+    }
+  ],
+  "QNN_calls": 0,
+  "phone_calls": 0,
+  "graph_mutations": 0,
+  "request_sha256": "78fc97c0da96b99adcd1e1c37c2b1b6dd65ef7f0ccf4ba46f2f644ac417f9031",
+  "runtime": {
+    "ORT": "1.23.2",
+    "NumPy": "1.26.4",
+    "Python": "3.10.13 | packaged by conda-forge | (main, Oct 26 2023, 18:07:37) [GCC 12.3.0]",
+    "ort_package": "/home/moritz/dev/vibevoice-android-spike/experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/.local/proof-venv/lib/python3.10/site-packages/onnxruntime/__init__.py",
+    "cpu_affinity": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "RLIMIT_AS": [
+      4294967296,
+      4294967296
+    ],
+    "threads": {
+      "intra": 4,
+      "inter": 1
+    }
+  },
+  "session_setup_seconds": 0.050468923000153154,
+  "actual_providers": [
+    "CPUExecutionProvider"
+  ],
+  "actual_inputs": [
+    {
+      "name": "text_ids",
+      "type": "tensor(int64)",
+      "shape": [
+        "batch_size",
+        "text_length"
+      ]
+    },
+    {
+      "name": "style_dp",
+      "type": "tensor(float)",
+      "shape": [
+        "batch_size",
+        8,
+        16
+      ]
+    },
+    {
+      "name": "text_mask",
+      "type": "tensor(float)",
+      "shape": [
+        "batch_size",
+        1,
+        "text_length"
+      ]
+    }
+  ],
+  "actual_outputs": [
+    {
+      "name": "duration",
+      "type": "tensor(float)",
+      "shape": [
+        "Squeezeduration_dim_0"
+      ]
+    }
+  ],
+  "comparison": {
+    "padded_minus_active_seconds": 0.009767532348632812,
+    "padded_over_active": 1.0003276671214294,
+    "observed_WAV_seconds": 29.79687074829932,
+    "CPU_minus_frame_quotient_seconds": {
+      "active1333": 0.012443979483883538,
+      "padded2048": 0.02221151183251635
+    },
+    "native_DP_scalar": null,
+    "native_DP_scalar_reason": "Not captured. WAV quotient/ideal real-arithmetic interval is approximate; native FP32 multiply+floor rounds.",
+    "ideal_real_arithmetic_interval_only": [
+      29.79687074829932,
+      29.79689342403628
+    ]
+  },
+  "QNN_library_mappings": [],
+  "postpins": "unchanged",
+  "elapsed_seconds": 0.6146555020022788,
+  "process_ru_maxrss_kib": 376796
+}

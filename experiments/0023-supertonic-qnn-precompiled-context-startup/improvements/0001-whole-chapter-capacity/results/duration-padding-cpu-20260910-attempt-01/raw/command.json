@@ -1,0 +1,51 @@
+{
+  "argv": [
+    "nice",
+    "-n",
+    "15",
+    "ionice",
+    "-c",
+    "2",
+    "-n",
+    "7",
+    "prlimit",
+    "--as=4294967296",
+    "--",
+    "taskset",
+    "--cpu-list",
+    "0,1,2,3",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0022-supertonic-canonical-v2-precompiled-qnn-context/.local/proof-venv/bin/python",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/tools/compare_duration_padding_cpu.py",
+    "--request",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/protocol/duration-padding-cpu.request.NOT_APPROVED.json",
+    "--release",
+    "experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/approvals/duration-padding-cpu-pair.json",
+    "--execute"
+  ],
+  "request_sha256": "78fc97c0da96b99adcd1e1c37c2b1b6dd65ef7f0ccf4ba46f2f644ac417f9031",
+  "release_sha256": "d37a3dc6fccb35dc91a607ad0b33bf231b4be7f9fefd44f3ad95eec37bc954fc",
+  "guard_sha256": "33373e74e4e52b9dd209bb91fc58d87f4b07186112307c0e869d02dd4136705d",
+  "effective_environment": {
+    "PYTHONPATH": null,
+    "LD_LIBRARY_PATH": null,
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "OMP_NUM_THREADS": "4",
+    "MKL_NUM_THREADS": "4",
+    "OPENBLAS_NUM_THREADS": "4",
+    "NUMEXPR_NUM_THREADS": "4",
+    "TMPDIR": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/duration-padding-cpu-20260910/attempt-01/scratch",
+    "TMP": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/duration-padding-cpu-20260910/attempt-01/scratch",
+    "TEMP": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/duration-padding-cpu-20260910/attempt-01/scratch",
+    "QAIRT_TMP_DIR": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/.local/duration-padding-cpu-20260910/attempt-01/scratch"
+  },
+  "bounds": {
+    "worker_seconds": 100,
+    "grace_seconds": 20,
+    "total_seconds": 120,
+    "address_space_bytes": 4294967296,
+    "cpus": 4,
+    "intra_threads": 4,
+    "inter_threads": 1,
+    "retries": 0
+  }
+}
