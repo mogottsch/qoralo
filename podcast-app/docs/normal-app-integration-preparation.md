@@ -2,7 +2,11 @@
 
 **Not built, deployed or product-tested. Full-chapter E2E is held while duration/spoken coverage are investigated.** The current installed59e338… APK is the profile-OFF diagnostic, not a coherent normal production candidate.
 
-The profile-OFF call returned a real29.7969s WAV for a complete227-word input. Nik accepted bounded input→WAV operability only. This misses the roughly90s target; speech coverage/listening are not accepted. Jere's one local ASR pass finds discontinuous lexical matches across all four paragraphs, not evidence of complete speech. Ben/Nik's separately scoped CPU duration/padding comparison is pending. No extra TTS/phone action is implied.
+The profile-OFF call returned a real29.7969s WAV for a complete227-word input. Nik accepted bounded input→WAV operability only. This misses the roughly90s target; speech coverage/listening are not accepted. Jere's one completed local ASR pass finds discontinuous lexical matches across all four paragraphs, not evidence of complete speech. Its93/227 ordered exact-word matches are intended-text versus ASR disagreement, not measured speech WER or definitive omissions.
+
+**Current blocker: model duration behavior under investigation, not a deadline, memory or profiling-proof gate.** Ben's CPU comparison is complete and Nik's saved audit is FINAL: the same official dynamic FP32 duration model predicts29.8093147278s at1333 active positions and29.8190822601s at2048 padded positions. The controlled padding effect is only+9.77ms (~0.033%), not the roughly60s prose-target gap. Phone WAV duration differs by12.44/22.21ms; this cross-runtime comparison remains qualified because the native duration scalar was not captured. This input does not support padding or QNN-only numerics as the major gap explanation; it does not prove a hard30s model cap or a fix.
+
+Exact closed scope: one CPU session/two calls, no QNN/phone/TTS rerender. Evidence commit `b7cf079`, [raw result](../../experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/results/duration-padding-cpu-20260910-attempt-01/raw/data/result.json), SHA `2bdf1eaaf0fbe61fc2e327b5f1934a4538f814dd93d86a699c64e1f9401369cd`. Ben/Nik are tracing duration-model length/pooling/cropping behavior and upstream constraints. No stretching, forced duration, hidden chunks or extra model/phone attempt is implied.
 
 ## Prepared source delta
 
