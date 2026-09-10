@@ -72,9 +72,9 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <header class="status-header" data-status-header="true">
 <div class="kicker"><span>Experiment 0031</span><span class="status">Completed</span></div>
 <h1>Experiment 0031 — Gemma 4 E2B IT Android QNN/HTP</h1>
-<p class="summary">The accepted campaign remains complete; its separate FP16 improvement probe passed ONNX patch-scope checks but was stopped for app priority before any DLC, not for a model or numerical failure.</p>
+<p class="summary">The accepted campaign remains complete; improvement attempt 05 passes the AR1 DLC&#x27;s selected FP16 interface check, but AR128 runs out of tmpfs space. Matched-pair, fidelity, and speed claims remain unproven.</p>
 <div class="header-links"><a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/">Owning experiment files</a><a href="../../android-llm-benchmarks/index.html">Benchmark overview</a></div>
-<div class="provenance"><span>last committed evidence update: 2026-09-10</span><span>evidence commit: d0bfa74a9866778e7f5fa70ad50e5ee8e5c8d8a7</span><span>page source: docs/experiments/0031-gemma-4-e2b-it-android-qnn-htp/page.md</span><span>page source sha256: 27947271e846382542aef70ba1684c32ffdc7c9607fc5583cb5d6a44d30ec354</span></div>
+<div class="provenance"><span>last committed evidence update: 2026-09-10</span><span>evidence commit: d5e6b944ad6cd545d92d8092d863634ceaab3fbd</span><span>page source: docs/experiments/0031-gemma-4-e2b-it-android-qnn-htp/page.md</span><span>page source sha256: 45608406b2e0906780ae1df97edd54350fcc2367d52f37f26711dac724079fcb</span></div>
 </header>
 <article><section class="primary-section" id="experiment-description" data-primary-section="experiment-description">
 <h2>Experiment description<a class="anchor" href="#experiment-description" aria-label="Link to Experiment description">#</a></h2>
@@ -226,7 +226,12 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 </tr>
 </tbody></table></div>
 <p>Attempt 04 verifies only the ONNX boundary: FP16 inputs/outputs for the three selected global value caches, exactly six AR1 and three AR128 encoding removals, and unchanged other I/O, encodings, and weight initializers. It does not prove the datatypes or execution behavior of a converted QNN model.</p>
-<p>The supervisor honored a <code>STOP</code> request, sent TERM, and reaped its owned process group without automatic restart. The retained classification is <code>app_priority_interruption_not_model_failure</code>. No DLC or compiled context was produced; AR128 conversion, compilation, and inference never started. Actual DLC cache signatures, Convert-count change, full HTP delegation, unsupported/fallback count, context size, and fidelity remain null/unmeasured—not passed or zero. No phone access occurred. Work is held for app priority; after Pi releases it, any restart must use a new retained attempt and inspect both DLC interfaces before compilation.</p>
+<p>The supervisor honored a <code>STOP</code> request, sent TERM, and reaped its owned process group without automatic restart. Attempt 04 retains classification <code>app_priority_interruption_not_model_failure</code>: no DLC or compiled context was produced, and AR128 conversion, compilation, and inference never started. Its actual DLC cache signatures, Convert-count change, full HTP delegation, unsupported/fallback count, context size, and fidelity remain null/unmeasured—not passed or zero. No phone access occurred; work was held for app priority.</p>
+<p><strong>2026-09-10 — Partial conversion and storage failure (<code>d5e6b94</code>).</strong> After a separate release, <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/global-value-fp16-attempt-05/result.json">attempt 05</a> used the unchanged recipe and produced an AR1 DLC of 2,356,848,948 bytes, SHA-256 <code>4e67d80e…a6cc</code>. Official DLC CSV inspection confirms <code>Float_16</code> on all six selected global value-cache interfaces: inputs and outputs for layers 4, 9, and 14. Their dimensions and every unselected public interface signature remain unchanged. This advances beyond attempt 04&#x27;s ONNX-only scope check.</p>
+<p>The AR1 operator count remains 6,875 and <code>Convert</code> remains 31→31, so the hoped-for conversion-count reduction is not demonstrated. Converter float-precision warnings rise from 75 to 81, adding three global concatenations and three output Casts. These are precision observations, not CPU-provider fallback counts or full HTP-delegation proof.</p>
+<p>Sequential AR128 conversion failed with <code>OSError: [Errno 28] No space left on device</code> while dumping external data into the roughly 16 GiB <code>/tmp</code> tmpfs. This is a host-storage failure, not numerical or model failure. The traceback-bound, UID-owned scratch directory was removed only after retaining ownership evidence and the partial file&#x27;s exact size/hash: 8,263,168,000 bytes / SHA-256 <code>5d0b944e…760ae</code>. The completed AR1 DLC, candidate/source ONNX, and other temporary directories were left untouched; owned converter processes were absent.</p>
+<p>Both read-only inspection attempts are also retained: the first timed out after 90 seconds with empty logs, while a separate guarded inspection completed. Neither was a conversion or inference retry. Candidate and baseline CSVs are losslessly compressed and hash-bound.</p>
+<p>No AR128 DLC or matched AR1/AR128 cache pair exists. Context compilation, full HTP delegation, runtime unsupported/fallback counts, fidelity, and speed improvement remain null/unmeasured. <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/DISK-SCRATCH-READINESS.md">Disk-backed scratch readiness</a> proposes only an environment change: <code>QAIRT_TMP_DIR</code> under a fresh disk-backed attempt directory, with free-space and ownership checks. It is not a model correction or an authorized restart. Any new attempt requires explicit release; no phone, campaign, or registry evidence was added.</p>
 <p>The <a href="../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/REQUEST-ROUTING.md">request-routing recommendation</a> remains an unmeasured policy for the existing canonical tiers, not a built hybrid or a general prompt-length threshold. It selects HTP for short/medium and LiteRT GPU for long before each complete request, with no mid-request switch or retry on another provider. Co-resident setup, memory, and speed require measurement; separate accepted route measurements are not a hybrid benchmark.</p>
 </section>
 <section class="primary-section" id="results" data-primary-section="results">
@@ -614,7 +619,7 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 </tr>
 <tr>
 <td>Candidate 2</td>
-<td>FP16 global value-cache probe: ONNX scope checked; AR1 conversion interrupted before DLC</td>
+<td>AR1 FP16 global value-cache DLC interface gate passed; AR128 blocked by tmpfs exhaustion</td>
 </tr>
 <tr>
 <td>Retained attempts 01–03</td>
@@ -625,20 +630,44 @@ footer { max-width:880px; margin:24px auto 0; color:var(--muted); font-size:12px
 <td>AR1 removes 6 selected encoding entries, AR128 removes 3; other I/O/encodings/weights unchanged</td>
 </tr>
 <tr>
-<td>Interruption classification</td>
-<td>App-priority <code>STOP</code> → TERM; owned process group reaped; no automatic restart; not model/numerical failure</td>
+<td>Attempt 04 interruption</td>
+<td>App-priority <code>STOP</code> → TERM before DLC; owned group reaped; no automatic restart; not model/numerical failure</td>
+</tr>
+<tr>
+<td>Attempt 05 AR1 gate</td>
+<td>DLC 2,356,848,948 B / SHA <code>4e67d80e…a6cc</code>; 6 selected input/output interfaces Float16; other shapes/signatures unchanged</td>
+</tr>
+<tr>
+<td>Conversion-count result</td>
+<td>6,875 operators; Convert 31→31; no demonstrated count reduction or speed benefit</td>
+</tr>
+<tr>
+<td>Precision warnings</td>
+<td>75→81 (3 Concat + 3 Cast); not CPU-provider fallback or full-delegation proof</td>
+</tr>
+<tr>
+<td>Attempt 05 AR128 failure</td>
+<td>Errno 28 dumping external data to <code>/tmp</code> tmpfs; host storage failure, no AR128 DLC</td>
+</tr>
+<tr>
+<td>Scratch cleanup</td>
+<td>Exact owned 8,263,168,000-byte partial file hash retained; only traceback-bound scratch removed</td>
+</tr>
+<tr>
+<td>Inspection chronology</td>
+<td>First read-only inspection timed out; second completed; no conversion/inference retry</td>
 </tr>
 <tr>
 <td>Unmeasured candidate results</td>
-<td>No DLC/context, AR128 conversion, compilation, or inference; actual cache/delegation/unsupported/fidelity metrics remain null</td>
+<td>No matched pair/context/fidelity/speed proof; delegation and runtime unsupported/fallback metrics null</td>
 </tr>
 <tr>
 <td>Routing-policy boundary</td>
 <td>Unmeasured request-level recommendation; no built/measured hybrid or general length threshold</td>
 </tr>
 <tr>
-<td>Current improvement state</td>
-<td>Held for Pi resource release; any restart is a new retained host attempt, not an overwrite</td>
+<td>Next-attempt readiness</td>
+<td>Disk-backed <code>QAIRT_TMP_DIR</code> proposal only; fresh approved attempt required, no restart authorized</td>
 </tr>
 <tr>
 <td>Publication effect</td>

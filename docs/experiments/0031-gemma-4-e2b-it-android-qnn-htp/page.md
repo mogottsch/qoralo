@@ -1,7 +1,7 @@
 ---
 experiment: 0031-gemma-4-e2b-it-android-qnn-htp
 status: completed
-summary: The accepted campaign remains complete; its separate FP16 improvement probe passed ONNX patch-scope checks but was stopped for app priority before any DLC, not for a model or numerical failure.
+summary: The accepted campaign remains complete; improvement attempt 05 passes the AR1 DLC's selected FP16 interface check, but AR128 runs out of tmpfs space. Matched-pair, fidelity, and speed claims remain unproven.
 benchmark: android-llm
 registry: 0031-gemma-4-e2b-it-qnn-htp
 ---
@@ -192,7 +192,17 @@ The second candidate targets FP16 global-attention value-cache I/O (`past_value_
 
 Attempt 04 verifies only the ONNX boundary: FP16 inputs/outputs for the three selected global value caches, exactly six AR1 and three AR128 encoding removals, and unchanged other I/O, encodings, and weight initializers. It does not prove the datatypes or execution behavior of a converted QNN model.
 
-The supervisor honored a `STOP` request, sent TERM, and reaped its owned process group without automatic restart. The retained classification is `app_priority_interruption_not_model_failure`. No DLC or compiled context was produced; AR128 conversion, compilation, and inference never started. Actual DLC cache signatures, Convert-count change, full HTP delegation, unsupported/fallback count, context size, and fidelity remain null/unmeasured—not passed or zero. No phone access occurred. Work is held for app priority; after Pi releases it, any restart must use a new retained attempt and inspect both DLC interfaces before compilation.
+The supervisor honored a `STOP` request, sent TERM, and reaped its owned process group without automatic restart. Attempt 04 retains classification `app_priority_interruption_not_model_failure`: no DLC or compiled context was produced, and AR128 conversion, compilation, and inference never started. Its actual DLC cache signatures, Convert-count change, full HTP delegation, unsupported/fallback count, context size, and fidelity remain null/unmeasured—not passed or zero. No phone access occurred; work was held for app priority.
+
+**2026-09-10 — Partial conversion and storage failure (`d5e6b94`).** After a separate release, [attempt 05](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/global-value-fp16-attempt-05/result.json) used the unchanged recipe and produced an AR1 DLC of 2,356,848,948 bytes, SHA-256 `4e67d80e…a6cc`. Official DLC CSV inspection confirms `Float_16` on all six selected global value-cache interfaces: inputs and outputs for layers 4, 9, and 14. Their dimensions and every unselected public interface signature remain unchanged. This advances beyond attempt 04's ONNX-only scope check.
+
+The AR1 operator count remains 6,875 and `Convert` remains 31→31, so the hoped-for conversion-count reduction is not demonstrated. Converter float-precision warnings rise from 75 to 81, adding three global concatenations and three output Casts. These are precision observations, not CPU-provider fallback counts or full HTP-delegation proof.
+
+Sequential AR128 conversion failed with `OSError: [Errno 28] No space left on device` while dumping external data into the roughly 16 GiB `/tmp` tmpfs. This is a host-storage failure, not numerical or model failure. The traceback-bound, UID-owned scratch directory was removed only after retaining ownership evidence and the partial file's exact size/hash: 8,263,168,000 bytes / SHA-256 `5d0b944e…760ae`. The completed AR1 DLC, candidate/source ONNX, and other temporary directories were left untouched; owned converter processes were absent.
+
+Both read-only inspection attempts are also retained: the first timed out after 90 seconds with empty logs, while a separate guarded inspection completed. Neither was a conversion or inference retry. Candidate and baseline CSVs are losslessly compressed and hash-bound.
+
+No AR128 DLC or matched AR1/AR128 cache pair exists. Context compilation, full HTP delegation, runtime unsupported/fallback counts, fidelity, and speed improvement remain null/unmeasured. [Disk-backed scratch readiness](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/DISK-SCRATCH-READINESS.md) proposes only an environment change: `QAIRT_TMP_DIR` under a fresh disk-backed attempt directory, with free-space and ownership checks. It is not a model correction or an authorized restart. Any new attempt requires explicit release; no phone, campaign, or registry evidence was added.
 
 The [request-routing recommendation](../../../experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/REQUEST-ROUTING.md) remains an unmeasured policy for the existing canonical tiers, not a built hybrid or a general prompt-length threshold. It selects HTP for short/medium and LiteRT GPU for long before each complete request, with no mid-request switch or retry on another provider. Co-resident setup, memory, and speed require measurement; separate accepted route measurements are not a hybrid benchmark.
 
@@ -301,13 +311,19 @@ Attempt chronology remains intact: the initial campaign setup failed before any 
 | Candidate 1 | Request-level hybrid: QNN HTP short/medium + LiteRT GPU long; explicit backend per complete request |
 | Long completion comparison | GPU 48.311 s vs HTP 118.256 s, 59.147% shorter; output counts/stops differ (756 EOS vs 2,048 max) |
 | Decode comparison | Null for ranking: Genie first-token inclusion unspecified; LiteRT explicitly excludes it |
-| Candidate 2 | FP16 global value-cache probe: ONNX scope checked; AR1 conversion interrupted before DLC |
+| Candidate 2 | AR1 FP16 global value-cache DLC interface gate passed; AR128 blocked by tmpfs exhaustion |
 | Retained attempts 01–03 | Two import/loader-path failures and one encoding-removal preflight failure; all before conversion |
 | Attempt 04 patch scope | AR1 removes 6 selected encoding entries, AR128 removes 3; other I/O/encodings/weights unchanged |
-| Interruption classification | App-priority `STOP` → TERM; owned process group reaped; no automatic restart; not model/numerical failure |
-| Unmeasured candidate results | No DLC/context, AR128 conversion, compilation, or inference; actual cache/delegation/unsupported/fidelity metrics remain null |
+| Attempt 04 interruption | App-priority `STOP` → TERM before DLC; owned group reaped; no automatic restart; not model/numerical failure |
+| Attempt 05 AR1 gate | DLC 2,356,848,948 B / SHA `4e67d80e…a6cc`; 6 selected input/output interfaces Float16; other shapes/signatures unchanged |
+| Conversion-count result | 6,875 operators; Convert 31→31; no demonstrated count reduction or speed benefit |
+| Precision warnings | 75→81 (3 Concat + 3 Cast); not CPU-provider fallback or full-delegation proof |
+| Attempt 05 AR128 failure | Errno 28 dumping external data to `/tmp` tmpfs; host storage failure, no AR128 DLC |
+| Scratch cleanup | Exact owned 8,263,168,000-byte partial file hash retained; only traceback-bound scratch removed |
+| Inspection chronology | First read-only inspection timed out; second completed; no conversion/inference retry |
+| Unmeasured candidate results | No matched pair/context/fidelity/speed proof; delegation and runtime unsupported/fallback metrics null |
 | Routing-policy boundary | Unmeasured request-level recommendation; no built/measured hybrid or general length threshold |
-| Current improvement state | Held for Pi resource release; any restart is a new retained host attempt, not an overwrite |
+| Next-attempt readiness | Disk-backed `QAIRT_TMP_DIR` proposal only; fresh approved attempt required, no restart authorized |
 | Publication effect | Completed campaign and registry row unchanged; no phone, campaign rerun, or new registry evidence |
 
 No paid Workbench job ran. Output sanity is a narrow corruption/repetition screen, not model quality. The Android LLM registry remains the immutable complete physical campaign row with the five long failures, thermal escalation, process-memory scope, unavailable HTP-private memory, and undefined decode first-token semantics preserved.
