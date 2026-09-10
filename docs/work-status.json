@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-10T23:03:06+00:00",
+  "updated_at": "2026-09-10T23:05:33+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -26,9 +26,9 @@
       "title": "Short E2E review",
       "status": "reviewing",
       "owner": "Nik",
-      "now": "Rows verified through corrected WAL view; host capture-order fix pending.",
-      "next": "Keep OS cleanup, rows and file timing separate; no data-loss/full-preservation claim.",
-      "reported_at": "2026-09-10T23:03:06+00:00",
+      "now": "Current file check completed23:03:34–37 UTC; row proof is separate.",
+      "next": "Review capture-order/prompt fixes; do not retrofill missing historical evidence.",
+      "reported_at": "2026-09-10T23:05:33+00:00",
       "reported_by": "Pi — authoritative current state",
       "stale_after_seconds": 600,
       "links": []
@@ -38,10 +38,10 @@
       "title": "Short product E2E",
       "status": "preparing",
       "owner": "Janek",
-      "now": "Saved-WAL row comparison PASS; original post-file inventory was never captured.",
-      "next": "One CURRENT read-only inventory authorized; not reconstructed past preservation.",
-      "reported_at": "2026-09-10T23:03:06+00:00",
-      "reported_by": "Pi — separate row/file preservation scope",
+      "now": "Rows PASS; CURRENT inventory: two old files match, plus three owned artifacts.",
+      "next": "Not original post-run proof; missing old inventory/error stay retained. No retry.",
+      "reported_at": "2026-09-10T23:05:33+00:00",
+      "reported_by": "Janek — completed current-only inventory",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -143,11 +143,11 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "reserved",
+      "status": "unassigned",
       "owner": "Pi",
-      "now": "one current read-only inventory",
-      "next": "Janek’s explicit inventory scope only; no model/UI retry or WAV.",
-      "reported_at": "2026-09-10T23:03:06+00:00",
+      "now": "inventory done; lock released",
+      "next": "Read-only observation only; no launch/install/force-stop/write/repair/model call.",
+      "reported_at": "2026-09-10T23:05:33+00:00",
       "reported_by": "Janek execution report + Pi release, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -157,9 +157,9 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Janek / Nik / Ben",
-      "now": "capture-order fix / preservation review",
-      "next": "Original post-file evidence missing; current inventory cannot repair that historical gap.",
-      "reported_at": "2026-09-10T23:03:06+00:00",
+      "now": "capture-order / prompt fix review",
+      "next": "Current inventory complete; original post-run file evidence remains absent.",
+      "reported_at": "2026-09-10T23:05:33+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -194,15 +194,15 @@
     },
     {
       "name": "Nik",
-      "task": "Review rows vs file boundaries",
-      "reported_at": "2026-09-10T23:03:06+00:00",
+      "task": "Review distinct row/file proof",
+      "reported_at": "2026-09-10T23:05:33+00:00",
       "reported_by": "Pi — authoritative current state",
       "stale_after_seconds": 900
     },
     {
       "name": "Janek",
-      "task": "Current inventory / capture fix",
-      "reported_at": "2026-09-10T23:03:06+00:00",
+      "task": "Inventory done; source fixes",
+      "reported_at": "2026-09-10T23:05:33+00:00",
       "reported_by": "Pi — authoritative current state",
       "stale_after_seconds": 900
     },
