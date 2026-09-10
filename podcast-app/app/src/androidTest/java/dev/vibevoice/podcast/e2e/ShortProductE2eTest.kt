@@ -248,6 +248,109 @@ class ShortProductE2eTest {
         }
     }
 
+    @Test fun continueOwnedReviewToAudioAndExport() {
+        val args = InstrumentationRegistry.getArguments()
+        assumeTrue("Exact continuation release required", args.getString("shortProductApproved") == ShortContinuationPolicy.CONTRACT_SHA)
+        val run = requireNotNull(args.getString("shortProductRunId")); require(ShortProductPolicy.validRun(run))
+        require(Application.getProcessName() == context.packageName)
+        val contract = ShortContinuationPolicy.load(context)
+        root = File(context.filesDir, "${ShortProductPolicy.DIRECTORY}/$run"); check(!root.exists() && root.mkdirs())
+        episodeId = ShortContinuationPolicy.EPISODE_ID
+        deadline = SystemClock.elapsedRealtime() + ShortContinuationPolicy.DRIVER_MS
+        val timer = Timer("short-continuation-driver-bound", true)
+        timer.schedule(object : TimerTask() { override fun run() {
+            runCatching { json("driver-timeout.json", JSONObject().put("limitMs", ShortContinuationPolicy.DRIVER_MS)) }
+            Process.killProcess(Process.myPid())
+        } }, ShortContinuationPolicy.DRIVER_MS)
+        var scenario: ActivityScenario<MainActivity>? = null
+        val marker = File(root.parentFile, "active.json"); var controlBytes: ByteArray? = null
+        try {
+            check(!marker.exists()) { "Existing control is not ours" }
+            json("contract.json", contract)
+            val appHash = ShortProductPolicy.hash(File(context.applicationInfo.sourceDir).readBytes())
+            val testHash = ShortProductPolicy.hash(File(instrumentation.context.applicationInfo.sourceDir).readBytes())
+            json("identity.json", JSONObject().put("appApkSha256", appHash).put("testApkSha256", testHash)
+                .put("pid", Process.myPid()).put("process", Application.getProcessName()).put("fingerprint", android.os.Build.FINGERPRINT))
+            require(appHash == args.getString("appApkSha256") && testHash == args.getString("testApkSha256"))
+            val (final, chapters) = db { ShortContinuationPolicy.validateStored(context, locked = false) }
+            require(db { app.repository.observeAudio(requireNotNull(episodeId)).first() }.isEmpty())
+            json("ownership.json", JSONObject().put("runId", run).put("episodeId", episodeId).put("revisionId", final.id)
+                .put("contentHash", final.contentHash).put("priorRunId", contract.getString("priorRunId"))
+                .put("multiStageRealWorkflow", true).put("newGemmaRequestsAuthorized", 0).put("seededOrImported", false))
+            json("word-target-report.json", JSONObject().put("chapters", ShortContinuationPolicy.wordReport(chapters))
+                .put("capacityAndExactContentVerified", true).put("wordTargetIsValidityGate", false))
+            controlBytes = JSONObject().put("runId", run).put("episodeId", episodeId).put("contractSha256", ShortContinuationPolicy.CONTRACT_SHA).toString().toByteArray()
+            ShortProductDiagnostics.write(File(root, "control-original.json"), controlBytes)
+            ShortProductDiagnostics.write(marker, controlBytes)
+            rule.runOnIdle { ShortProductDiagnostics.enableUi(root, requireNotNull(episodeId)) }
+            scenario = ActivityScenario.launch(MainActivity::class.java)
+            click(final.title); shown(hasText("Review script")); capture("real-existing-review")
+            click("Lock script & create audio"); click("Cancel")
+            assertNull(episode().lockedRevisionId)
+            assertEquals(final.contentHash, revision().first.contentHash)
+            click("Lock script & create audio"); click("Lock & create")
+            waitPhase(EpisodePhase.FROZEN_READY, 165_000)
+            val ready = episode()
+            assertEquals(final.id, ready.lockedRevisionId); assertEquals(final.contentHash, ready.lockedContentHash)
+            val audio = db { app.repository.observeAudio(requireNotNull(episodeId)).first() }
+            verifyAssembly(ready, chapters, audio)
+            waitUntil("silent paused continuation player") { var ok = false; rule.runOnIdle { ok = ShortProductDiagnostics.player?.let { it.volume == 0f && !it.playWhenReady } == true }; ok }
+            icon("Play")
+            waitUntil("real silent continuation playback", 10_000) { var ok = false; rule.runOnIdle { ok = ShortProductDiagnostics.player?.let { it.isPlaying && it.currentPosition > 200 && it.volume == 0f } == true }; ok }
+            icon("Pause"); icon("Next chapter")
+            val boundary = audio[1].startFrame * 1000 / 44100
+            waitUntil("continuation chapter boundary") { var ok = false; rule.runOnIdle { ok = ShortProductDiagnostics.player?.currentPosition?.let { kotlin.math.abs(it - boundary) < 100 } == true }; ok }
+            click("1.0× Speed"); click("Transcript")
+            shown(hasText("Chapter 2 · ${chapters[1].title}"))
+            chapters[1].text.split(Regex("(?<=[.!?])\\s+(?=[A-Z])")).filter(String::isNotBlank).groupingBy { it }.eachCount().forEach { (paragraph, count) -> rule.onAllNodesWithText(paragraph).assertCountEquals(count) }
+            capture("continued-chapter-two-transcript")
+            val previousPlayer = rule.runOnIdle { requireNotNull(ShortProductDiagnostics.player) }
+            scenario.recreate()
+            waitUntil("continuation persisted playback after disposal") { db { app.repository.observePlayback(requireNotNull(episodeId)).first() }?.let { it.speed == 1.25f && it.transcriptVisible } == true }
+            waitUntil("continuation new player") { var ok = false; rule.runOnIdle { ok = ShortProductDiagnostics.player?.let { it !== previousPlayer && it.volume == 0f && !it.playWhenReady } == true }; ok }
+            val recreatedPlayer = rule.runOnIdle { requireNotNull(ShortProductDiagnostics.player) }
+            scenario.close(); scenario = ActivityScenario.launch(MainActivity::class.java)
+            click(final.title)
+            waitUntil("continuation restored from Library") { var ok = false; rule.runOnIdle { ok = ShortProductDiagnostics.player?.let { it !== previousPlayer && it !== recreatedPlayer && !it.playWhenReady && it.volume == 0f && it.playbackParameters.speed == 1.25f && kotlin.math.abs(it.currentPosition - boundary) < 500 } == true }; ok }
+            shown(hasText("Chapter 2 · ${chapters[1].title}"))
+            json("player-proof.json", JSONObject().put("episodeId", episodeId).put("volume", 0).put("actualSilentPlayback", true)
+                .put("boundaryMs", boundary).put("restoredSpeed", 1.25).put("restoredTranscript", true).put("restoredPaused", true)
+                .put("freshPlayerIdentityChecked", true).put("freshViewModelFromLibrary", true).put("systemVolumeChanged", false))
+            icon("Close transcript"); icon("Export episode")
+            saveThroughLocalDocumentsUi("podcast-$run.wav")
+            waitUntil("continuation real export callback", 30_000) { ShortProductDiagnostics.exportedUri != null }
+            val uri = requireNotNull(ShortProductDiagnostics.exportedUri)
+            val bytes = context.contentResolver.openInputStream(uri)!!.use { it.readBytes() }
+            assertEquals(ready.finalAudioSha256, ShortProductPolicy.hash(bytes)); assertEquals(ready.finalAudioByteCount, bytes.size.toLong())
+            json("export-proof.json", JSONObject().put("uri", uri.toString()).put("sha256", ShortProductPolicy.hash(bytes))
+                .put("bytes", bytes.size).put("realCreateDocument", true).put("newOwnedFilename", "podcast-$run.wav"))
+            waitUntil("one AUDIO finally", 15_000) { File(root, "jobs").listFiles().orEmpty().count { File(it, "finished.json").isFile } == 1 }
+            val jobRoot = File(root, "jobs").listFiles().orEmpty().single()
+            assertEquals("AUDIO", readJson(File(jobRoot, "started.json")).getString("kind"))
+            assertEquals(0, readJson(File(jobRoot, "finished.json")).getInt("logicalSendCalls"))
+            assertEquals(0, jobRoot.walkTopDown().count { it.name.endsWith("-send-start.json") })
+            json("driver-result.json", JSONObject().put("status", "short_product_continuation_complete").put("episodeId", episodeId)
+                .put("newGemmaSends", 0).put("newWholeTtsChapters", 2).put("priorRunId", contract.getString("priorRunId"))
+                .put("multiStageRealWorkflow", true).put("singleFreshSourceToAudioPass", false).put("longReadiness", false)
+                .put("wordTargetReport", ShortContinuationPolicy.wordReport(chapters)).put("listening", "not_reviewed")
+                .put("profileEvidence", "UNAVAILABLE_BY_DESIGN").put("elapsedMs", ShortContinuationPolicy.DRIVER_MS - (deadline - SystemClock.elapsedRealtime())))
+        } catch (error: Throwable) {
+            runCatching { json("driver-failure.json", JSONObject().put("error", error.stackTraceToString()).put("episodeId", episodeId)); capture("failure") }
+            runCatching { db { app.repository.latestJob(requireNotNull(episodeId))?.takeIf { it.kind == JobKind.AUDIO }?.let {
+                app.repository.failQueuedJob(requireNotNull(episodeId), it.id, "Continuation stopped; no retry", "continuation_driver")
+                app.repository.failJob(requireNotNull(episodeId), it.id, "Continuation stopped; no retry", "continuation_driver")
+            } } }
+            throw error
+        } finally {
+            runCatching { rule.runOnIdle { ShortProductDiagnostics.player?.pause() } }; runCatching { scenario?.close() }
+            runCatching { rule.runOnIdle { ShortProductDiagnostics.disableUi() } }
+            if (controlBytes != null && marker.isFile && marker.readBytes().contentEquals(controlBytes)) {
+                val removed = marker.delete(); runCatching { json("control-disarmed.json", JSONObject().put("removedOwnedControlOnly", removed).put("sha256", ShortProductPolicy.hash(controlBytes))) }
+            }
+            timer.cancel()
+        }
+    }
+
     private fun verifyAssembly(ready: EpisodeEntity, chapters: List<ChapterEntity>, audio: List<ChapterAudioEntity>) {
         assertEquals(2, audio.size); assertEquals(chapters.map { it.stableChapterId }, audio.map { it.stableChapterId })
         val parts = audio.map { item ->

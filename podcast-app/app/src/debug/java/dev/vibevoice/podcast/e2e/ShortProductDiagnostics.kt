@@ -72,8 +72,14 @@ internal object ShortProductDiagnostics {
         if (!marker.isFile) return
         val control = JSONObject(marker.readText())
         if (control.getString("episodeId") != episode) return
-        ShortProductPolicy.load(context)
-        check(control.getString("contractSha256") == ShortProductPolicy.CONTRACT_SHA)
+        val continuation = control.getString("contractSha256") == ShortContinuationPolicy.CONTRACT_SHA
+        if (continuation) {
+            ShortContinuationPolicy.load(context)
+            require(episode == ShortContinuationPolicy.EPISODE_ID)
+        } else {
+            ShortProductPolicy.load(context)
+            check(control.getString("contractSha256") == ShortProductPolicy.CONTRACT_SHA)
+        }
         val run = control.getString("runId"); require(ShortProductPolicy.validRun(run))
         require(id.matches(Regex("[a-zA-Z0-9-]+")))
         check(Application.getProcessName() == "${context.packageName}:generation" && job == null)
@@ -81,11 +87,12 @@ internal object ShortProductDiagnostics {
         val entity = requireNotNull(app.database.podcastDao().job(id))
         check(entity.episodeId == episode && entity.status in setOf("QUEUED", "RUNNING"))
         require(app.repository.episode(episode).reviewEnabled) { "Owned scenario requires persisted review ON before any model work" }
+        if (continuation) require(entity.kind == "AUDIO") { "Continuation authorizes ZERO new LLM/script/edit jobs" }
         val parent = File(context.filesDir, "${ShortProductPolicy.DIRECTORY}/$run/jobs")
         val previous = parent.listFiles().orEmpty().filter { it.isDirectory }.map {
             JSONObject(File(it, "started.json").readText()).getString("kind")
         }
-        val order = listOf("SCRIPT", "AGENT_EDIT", "AUDIO")
+        val order = if (continuation) listOf("AUDIO") else listOf("SCRIPT", "AGENT_EDIT", "AUDIO")
         require(previous.size < order.size && previous.toSet() == order.take(previous.size).toSet() && entity.kind == order[previous.size]) {
             "Outside scoped one-script/one-edit/one-audio job sequence; no extra inference"
         }
@@ -98,11 +105,13 @@ internal object ShortProductDiagnostics {
         write(File(root, "proc-status-before.txt"), File("/proc/self/status").readBytes())
         if (entity.kind == "AUDIO") {
             val (_, chapters) = app.repository.lockedChapterData(episode)
-            ShortProductPolicy.validateFinal(chapters.map { it.stableChapterId to it.text })
+            if (continuation) ShortContinuationPolicy.validateStored(context, locked = true)
+            else ShortProductPolicy.validateFinal(chapters.map { it.stableChapterId to it.text })
             json(File(root, "locked-inputs.json"), JSONObject().put("chapters", JSONArray(chapters.map {
                 val normalized = SupertonicTextNormalizer.normalize(it.text)
                 JSONObject().put("id", it.stableChapterId).put("text", it.text).put("normalized", normalized)
                     .put("normalizedCodepoints", normalized.codePointCount(0, normalized.length))
+                    .put("words", it.text.trim().split(Regex("\\s+")).size).put("continuation", continuation)
                     .put("inputEvidence", "source normalization, not captured native buffers")
             })))
         }

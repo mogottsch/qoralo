@@ -49,10 +49,11 @@ internal object ShortProductPolicy {
             require(json.getString("requestedChapterId") == chapterIds[index - 2])
         }
     }
-    fun validateFinal(chapters: List<Pair<String, String>>) {
+    fun validateFinal(chapters: List<Pair<String, String>>, enforceWordTarget: Boolean = true) {
         require(chapters.map { it.first } == chapterIds) { "Final scoped chapter IDs/order differ" }
         chapters.forEach { (_, text) ->
-            require(text.trim().split(Regex("\\s+")).size in 20..25) { "Final draft misses scoped20–25word target; preserve it without lock/retry" }
+            require(text.isNotBlank()) { "Empty chapter is not valid narration" }
+            if (enforceWordTarget) require(text.trim().split(Regex("\\s+")).size in 20..25) { "Final draft misses scoped20–25word target; preserve it without lock/retry" }
             val normalized = SupertonicTextNormalizer.normalize(text)
             require(normalized.codePointCount(0, normalized.length) <= 190) { "Final chapter exceeds scoped short input capacity" }
         }

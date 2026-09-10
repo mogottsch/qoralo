@@ -17,16 +17,21 @@ from run_tts_only_gate import capture_conditions
 from short_product_preservation import rows, compare, parse_inventory, compare_files, validate_owned_control
 
 CONTRACT_SHA='a39106380003a3a4c7b83c2f45066399e204d8aefade77ec88866f9062eccfc4'
+CONTINUATION_SHA='2f22bd6e500eca3f45e51c401aded0cd570bc576e8f805063f95d6dd02d23721'
 PRIVACY_SHA='a62d204c380a5b2d0c8f7c5bd94729b6f823e18200feed2ebe24fa73962bec3c'
 PACKS={'gemma-4-e2b':'9fb627ef9a4eb0ed49056c32bc16f2846e6edf68dc8d854b02af90e24e4e96cd',
        'supertonic-3':'dc4ac737924d7d62e57ff5e166707198095c49e51d77cfed04a44d9e9435952d',
        'supertonic-3-t2048-l2048-parity':'116fda95a907f6dc35bfe7c2144fe2818ed438cc109c1faa3f95cafc2fc84066'}
-PRIOR={APP:'eb22ac1715b958979d4064d164585d588f180312ad1a6bb7090841059b649a62',
+PRIOR={APP:'ef2894491525fc0facf81a89e1b4c4cf52bbd0ad92407dc0ef9f9a3896f36e87',
        TEST_APP:'56be356f5a68d0c415e2980bebca9346ece4972f4a0657f0700064ab683f8739'}
 
 
 def check_sources(candidate):
-    require(digest(PROJECT/'app/src/debug/assets/short-product-e2e/contract.json')==CONTRACT_SHA,'contract changed')
+    continuation=candidate['kind']=='short-production-continuation'
+    name='short-product-continuation' if continuation else 'short-product-e2e'
+    sha=CONTINUATION_SHA if continuation else CONTRACT_SHA
+    path=PROJECT/f'app/src/debug/assets/{name}/contract.json'
+    require(digest(path)==sha and candidate['contractSha256']==sha and candidate['contract']==json.loads(path.read_text()),'contract changed')
     require(digest(PROJECT/'tools/run_tts_only_gate.py')==PRIVACY_SHA,'privacy dependency changed')
     for name,sha in candidate['controllerSources'].items():require(digest(PROJECT/name)==sha,'controller dependency changed: '+name)
 
@@ -64,7 +69,7 @@ def private_inventory(device,out,label):
     return parse_inventory((directory/(label+'.stdout')).read_bytes())
 
 
-def disarm_owned_control(device,out,run,owned,original):
+def disarm_owned_control(device,out,run,owned,original,contract_sha=CONTRACT_SHA):
     marker='files/short-product-e2e/active.json'
     private=out/'.private-control';private.mkdir(mode=0o700,exist_ok=True)
     counter=device.counter+1
@@ -75,7 +80,7 @@ def disarm_owned_control(device,out,run,owned,original):
         if p.exists():p.rename(private/'before.stdout')
     current=(private/'before.stdout').read_bytes()
     if current==b'ABSENT\n':return {'controlAbsent':True,'hostRemovalPerformed':False}
-    sha=validate_owned_control(current,original,run,owned,CONTRACT_SHA)
+    sha=validate_owned_control(current,original,run,owned,contract_sha)
     # App/test/generation already stopped. Recheck current bytes immediately before removing ONLY this file.
     script=f'set -e; test ! -L {marker}; test "$(sha256sum {marker} | cut -d " " -f 1)" = {sha}; rm {marker}; test ! -e {marker}; test ! -L {marker}; printf "ABSENT\\n"'
     observed=device.shell(f'run-as {APP} sh -c '+shlex.quote(script))
@@ -102,12 +107,15 @@ def main():
     parser.add_argument('--adb',default='/home/moritz/Android/Sdk/platform-tools/adb');parser.add_argument('--serial',default='R5CW81PR8SY')
     args=parser.parse_args();value=json.loads(args.candidate.read_text())
     require(re.fullmatch(r'short-product-[a-z0-9-]{1,64}',args.run_id),'unsafe run ID')
-    require(value['kind']=='short-production-plumbing' and not value['sourceDirty'] and value['contractSha256']==CONTRACT_SHA,'wrong candidate')
+    require(value['kind'] in ('short-production-plumbing','short-production-continuation') and not value['sourceDirty'],'wrong candidate')
+    continuation=value['kind']=='short-production-continuation'
+    contract_sha=CONTINUATION_SHA if continuation else CONTRACT_SHA
+    host_seconds=390 if continuation else 930
     check_sources(value)
     for key in ('app','test'):
         p=Path(value[key]['path']);require(p.stat().st_size==value[key]['bytes'] and digest(p)==value[key]['sha256'],'APK changed')
     if not args.execute:
-        print(json.dumps({'mode':'plan_only','adbUsed':False,'logicalGemmaRequests':5,'wholeBriefChapters':2,'hostInstrumentationSeconds':930,
+        print(json.dumps({'mode':'plan_only','adbUsed':False,'logicalGemmaRequests':0 if continuation else 5,'wholeBriefChapters':2,'hostInstrumentationSeconds':host_seconds,'multiStageContinuation':continuation,
                           'packStaging':False,'dataClear':False,'longReadiness':False,'candidateSha256':digest(args.candidate)}));return
     require(os.environ.get('PODCAST_PHONE_PRIORITY')=='approved' and args.approved_candidate_sha256==digest(args.candidate)
             and args.approved_host_guard_sha256==host_identity()['sha256'] and args.approved_controller_sha256==digest(Path(__file__)),
@@ -115,7 +123,7 @@ def main():
     os.umask(0o077);args.output.mkdir(parents=True,exist_ok=False);out=args.output
     lock=(PROJECT.parent/'artifacts/locks/phone.lock').open('a+');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB);os.set_inheritable(lock.fileno(),False)
     device=Device(args.adb,args.serial,out);guard=PhoneGuard(device,out,args.candidate,args.approved_candidate_sha256,args.approved_host_guard_sha256)
-    settings=DeviceSettings(device.shell);logs=None;identity=False;closure_allowed=False;launched=False;before=None;files_before=None;owned=None;original_control=None
+    settings=DeviceSettings(device.shell);logs=None;identity=False;closure_allowed=False;launched=False;before=None;files_before=None;owned=value['contract']['episodeId'] if continuation else None;original_control=None
     cleanup={'errors':[],'settingsErrors':[],'packagesAndDataRetained':True,'scratchCreated':False}
     (out/'candidate.json').write_text(json.dumps(value,indent=2));(out/'host-identity.json').write_text(json.dumps(host_identity(),indent=2))
     def interrupt(signum,frame):raise InterruptedError('signal; first attempt stops, cleanup only')
@@ -127,14 +135,21 @@ def main():
         settings.capture();capture_conditions(device,out,'before');verify_pack_manifests(device)
         check_sources(value);guard.checkpoint('before-app-install')
         before=guard.snapshot('preservation-before',1);files_before=private_inventory(device,out,'before')
+        if continuation:
+            scope=value['contract'];compare(rows(before),rows(before),owned,scope)
+            expected={f"files/episodes/{r['relativePath']}":r['sha256'] for r in scope['sources']}
+            expected[f"files/episodes/{owned}/script/{scope['revisionId']}.json"]=scope['contentHash']
+            expected[f"files/episodes/{owned}/script/{scope['baseRevisionId']}.json"]=scope['baseContentHash']
+            require(all(files_before.get(path)==sha for path,sha in expected.items()),'reviewed original source/revision file bytes changed')
         device.run(['install','-r','-t',value['app']['path']],timeout=180)
         check_sources(value);guard.checkpoint('before-test-install');device.run(['install','-r','-t',value['test']['path']],timeout=180)
         with (out/'logcat.txt').open('wb') as stdout,(out/'logcat.stderr').open('wb') as stderr:
             logs=subprocess.Popen(device.prefix+['logcat','-v','threadtime','-T','1'],stdout=stdout,stderr=stderr,start_new_session=True,close_fds=True)
         check_sources(value);guard.checkpoint('before-instrument')
-        command=f'am instrument -w -r -e class dev.vibevoice.podcast.e2e.ShortProductE2eTest -e shortProductApproved {CONTRACT_SHA} -e shortProductRunId {args.run_id}'
+        method='continueOwnedReviewToAudioAndExport' if continuation else 'oneOwnedShortEpisodeThroughRealProductionWorkflow'
+        command=f'am instrument -w -r -e class dev.vibevoice.podcast.e2e.ShortProductE2eTest#{method} -e shortProductApproved {contract_sha} -e shortProductRunId {args.run_id}'
         command+=f" -e appApkSha256 {value['app']['sha256']} -e testApkSha256 {value['test']['sha256']} {TEST_APP}/androidx.test.runner.AndroidJUnitRunner"
-        launched=True;result=device.shell(command,timeout=930)
+        launched=True;result=device.shell(command,timeout=host_seconds)
         (out/'instrumentation-summary.json').write_text(json.dumps({'ok':'OK (' in result and 'FAILURES!!!' not in result,'longReadiness':False}))
         require('OK (' in result and 'FAILURES!!!' not in result,'short product instrumentation failed; no retry')
     except BaseException as error:
@@ -151,7 +166,10 @@ def main():
                 archive=out/'private-run-evidence.tar';p.rename(archive)
                 with tarfile.open(archive) as tar:
                     name=f'files/short-product-e2e/{args.run_id}/ownership.json'
-                    if name in tar.getnames():owned=json.load(tar.extractfile(name))['episodeId']
+                    if name in tar.getnames():
+                        reported=json.load(tar.extractfile(name))['episodeId']
+                        require(not continuation or reported==owned,'continuation ownership receipt changed')
+                        owned=reported
                     control=f'files/short-product-e2e/{args.run_id}/control-original.json'
                     if control in tar.getnames():original_control=tar.extractfile(control).read()
                 if owned:
@@ -162,13 +180,13 @@ def main():
         if launched:
             try:
                 require(cleanup.get('allActualPidsAbsent'),'cannot disarm while process absence is unproven')
-                receipt=disarm_owned_control(device,out,args.run_id,owned,original_control)
+                receipt=disarm_owned_control(device,out,args.run_id,owned,original_control,contract_sha)
                 cleanup['controlAbsent']=receipt['controlAbsent'];(out/'control-disarm.json').write_text(json.dumps(receipt,indent=2))
             except Exception as error:cleanup['errors'].append({'phase':'owned-control-disarm','error':repr(error)})
         if identity and before is not None:
             try:
                 after,files_after=capture_and_validate_after(device,guard,out,cleanup)
-                report=compare(rows(before),rows(after),owned)
+                report=compare(rows(before),rows(after),owned,value['contract'] if continuation else None)
                 require(files_after is not None,'post-file inventory unavailable; row result alone is not full preservation')
                 report['artifacts']=compare_files(files_before,files_after,owned)
                 report['ownedEpisodeId']=owned;report['privateSnapshots']='.private-db and .private-user-files; never publish full raw'
