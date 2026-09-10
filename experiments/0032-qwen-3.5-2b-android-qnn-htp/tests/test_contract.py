@@ -659,6 +659,39 @@ class ContractTest(unittest.TestCase):
         self.assertFalse(plan["new_qdq_replay_performed"])
         self.assertFalse(plan["new_controlled_qnn_call_performed"])
 
+    def test_controlled_position1_is_data_readiness_not_model_execution(self) -> None:
+        directory = EXP / "results/controlled-position1-readiness"
+        result = json.loads((directory / "result.json").read_text())
+        self.assertEqual("source_data_only_controlled_position1_readiness", result["evidence_class"])
+        self.assertEqual(23, result["synthetic_validation"]["tests_passed"])
+        pack = result["materialized"]
+        self.assertEqual(51, pack["input_tensors"])
+        self.assertEqual(48, pack["state_tensors"])
+        self.assertEqual((1, 8678), (pack["target_position"], pack["target_token"]))
+        self.assertEqual("qdq_after_position0_not_qnn_resume", pack["origin"])
+        self.assertEqual("bfe14bca74090778550618c1c6eb485728e15e6e784e936b87606dcb298ebe0d", pack["input_pack"]["sha256"])
+        self.assertFalse(result["full_replay_state_byte_equality_proved"])
+        self.assertFalse(result["exact_same_state_attribution_established"])
+        self.assertFalse(result["new_qdq_execution_performed"])
+        self.assertFalse(result["new_qnn_execution_performed"])
+        self.assertFalse(result["physical_execution_performed"])
+        self.assertFalse(result["vector_analysis"]["scalar_cosines_added"])
+        calls = result["required_future_calls"]
+        self.assertEqual(0, calls["current_model_calls_executed"])
+        self.assertEqual(2, calls["exact_same_pack_attribution_path"]["total_calls"])
+        self.assertFalse(calls["budgets_are_authorization"])
+        self.assertFalse(calls["historical_only_path"]["exact_same_state_attribution"])
+        for item in result["artifacts"].values():
+            self.assertEqual(item["sha256"], sha(EXP / item["path"]))
+        for item in json.loads((directory / "compression-manifest.json").read_text())["files"]:
+            compressed = directory / item["compressed_path"]
+            self.assertEqual(item["compressed_sha256"], sha(compressed))
+            recovered_sha, recovered_bytes = sha_zstd(compressed)
+            self.assertEqual(item["raw_sha256"], recovered_sha)
+            self.assertEqual(item["raw_bytes"], recovered_bytes)
+        old_plan = (EXP / "results/host-qnn-trajectory-prefix-000-003-20260910/SAME_STATE_PLAN.md").read_text()
+        self.assertNotIn("identically matching the source used", old_plan)
+
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
             EXP / "protocol",
@@ -678,6 +711,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/host-histogram-full-short-20260910",
             EXP / "results/qnn-trajectory-helper-readiness",
             EXP / "results/host-qnn-trajectory-prefix-000-003-20260910",
+            EXP / "results/controlled-position1-readiness",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

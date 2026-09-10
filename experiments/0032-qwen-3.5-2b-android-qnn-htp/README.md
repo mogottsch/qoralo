@@ -71,10 +71,14 @@ A lower-retention two-process host replay in [`results/host-w4a16-qdq-output-dia
 
 [`results/host-qnn-trajectory-prefix-000-003-20260910/`](results/host-qnn-trajectory-prefix-000-003-20260910/) retains all four complete 73-output bundles and 48-state checkpoints losslessly, paired QDQ logits, comparisons and cleanup. The segment completed under its 900-second budget with no resume/follow-on. Prefix cosines are 0.947168, 0.679220, 0.784361 and 0.890331; the first argmax divergence is at position 2. This is accumulated **own-state** drift, not same-state causal localization. The same-state inventory binds existing QDQ position-0 outputs to the exact accepted PT2/input/reset configuration and confirms their logits match the full replay's position 0 exactly.
 
+## Position-1 control input/readiness
+
+[`results/controlled-position1-readiness/`](results/controlled-position1-readiness/) retains a materialized **QDQ-origin** 51-input position-1 pack, lossless hashes, independent data checks, and 23 synthetic tests for the dedicated single-call driver. No new model call occurred. The missing full-replay state-byte assumption remains explicit. Exact same-pack attribution would use an optional ONE QDQ position-1 validation call, then a separately reviewed QNN call on the same pack; neither is a 174-token replay or own-state resume.
+
 ## Current next gate
 
 1. Keep physical PTE `23ac8abd…d2c506` and phone preflight unchanged; the 73-output diagnostic PTE is not compatible with the current 49-output Android runner.
-2. Review the source-only position-1 identical-QDQ-state control plan. Use existing saved QDQ outputs to prepare the intended state input; do not mislabel it as own-QNN resume or run a new QDQ/QNN model call without release.
+2. Review the materialized pack/header and dedicated driver. The exact-attribution path needs two separately budgeted/released single calls (proposed QDQ600s, then QNN300s); historical-only QNN comparison retains the lineage assumption. No automatic backend sequence or model run.
 3. No ADB or staging without a new explicit Pi phone slot. Full QNN/physical drift and one-token-only interpretation remain campaign-readiness boundaries.
 4. Only after agreed fidelity and state-isolation gates may chunked prefill and the fixed 1+5+5+5 campaign be promoted.
 

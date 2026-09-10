@@ -56,7 +56,7 @@ OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
 
 ## Source-only next control
 
-[`SAME_STATE_PLAN.md`](SAME_STATE_PLAN.md) proposes one **position-1** call using reconstructed saved QDQ-after-position-0 state, with existing QDQ position-1 logits as the reference. Inventory confirms the saved QDQ position-0 outputs come from the exact accepted PT2/input/reset configuration and their logits are bit-identical to the full replay's position 0. The full replay did not save state checkpoints: logit identity alone does not prove missing state-byte identity, so the deterministic-source lineage still needs review.
+[`SAME_STATE_PLAN.md`](SAME_STATE_PLAN.md) proposes a **position-1** QNN call using reconstructed saved QDQ-after-position-0 state. Comparing only with historical QDQ logits retains a lineage assumption; exact same-pack attribution instead requires an optional separately budgeted ONE QDQ position-1 validation call on that pack before the paired QNN call. Inventory confirms the saved QDQ position-0 outputs come from the exact accepted PT2/input/reset configuration and their logits are bit-identical to the full replay's position 0. The full replay did not save state checkpoints: logit identity alone does not prove missing state-byte identity, so the deterministic-source lineage still needs review.
 
 The proposed controlled call could distinguish current-call numerical difference from prior-state feedback effects. It has **not run**. Do not misuse the own-state resume path by relabeling QDQ-origin state as QNN-owned. No additional QDQ replay is needed merely to inventory/materialize the saved position-0 outputs, and none occurred here.
 

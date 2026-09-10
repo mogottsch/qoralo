@@ -23,7 +23,7 @@ Use the same exact 73-output PTE. Execute **one input position only**:
 
 - position: **1**;
 - input token: **8678**, from the canonical IDs;
-- state: the reconstructed **QDQ-after-position-0** state, identically matching the source used to obtain the already-retained QDQ position-1 reference;
+- state: the reconstructed **QDQ-after-position-0** state as a source-lineage candidate; it is **not byte-verified against missing full-replay state**. For exact same-state attribution, first validate one QDQ position-1 call on this exact input pack and use that output as the paired reference;
 - mask: `-65504` except occupied prior KV slot 0 and the final current-token slot, both zero;
 - save all raw outputs, input-pack/checkpoint hashes, command, phase/error records and cleanup;
 - use a fresh, separately reviewed bounded host run and independent resource/deadline supervisor. A 300-second single-position budget is a planning example, not authorization or a runtime promise.
@@ -32,11 +32,12 @@ Do not call the own-state trajectory driver's normal resume path with a fabricat
 
 ## What the comparison could distinguish
 
-Let `S_D` be QDQ's state before position 1 and `S_Q` QNN's state before position 1. Existing outputs are `D(S_D)` and `Q(S_Q)`. The one proposed call supplies the missing `Q(S_D)`:
+Let `S_D` be QDQ's state before position 1 and `S_Q` QNN's state before position 1. Existing outputs are historical `D(S_D_old)` and `Q(S_Q)`. If a separately approved one-call QDQ validation supplies `D(S_D)` on the materialized pack, a later paired QNN call supplies `Q(S_D)`. Without that validation, identifying `S_D` with the unretained `S_D_old` remains an assumption:
 
 - current-call route difference at identical state: `Q(S_D) - D(S_D)`;
 - previous-state effect through QNN: `Q(S_Q) - Q(S_D)`;
-- their vector sum equals the observed own-state difference `Q(S_Q) - D(S_D)`.
+- their vector sum equals `Q(S_Q) - D(S_D)`;
+- to relate it to the original historical difference, preserve a third vector `D(S_D) - D(S_D_old)`. The three vectors sum to `Q(S_Q) - D(S_D_old)` without assuming the historical reference used byte-identical state.
 
 Cosines and error norms are not additive; preserve raw vectors rather than pretending scalar metrics form an additive decomposition. Any attribution is conditional on the controlled artifact/input/state bindings and the explicit-state model. It would localize a numerical difference, not establish full trajectory fidelity, identify a specific bad operator by itself, prove useful text, or authorize a campaign.
 
