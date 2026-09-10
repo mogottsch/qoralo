@@ -46,10 +46,12 @@ Active. QNN-x86 own-state positions 0–3 completed but exposed substantial drif
 
 26. Completed ONE separately released QNNposition1 call paired to the accepted QDQ input/result. No mutation, same input digest,1 call/124.709s under300s. Cosine .887994 versus prior own-state .679220; all3×73 saved tensors finite. Saved-vector decomposition retains nonzero current/state terms, zero historical-reference shift and explicit rounding residual; no scalar cosine/norm addition. Layer0 discrepancies and neutral conv-history observations retained. No further runtime run.
 
+27. Audited only the retained32.5MB graphJSON and existing source/logs. Exact scalar FP32 input-Q/DQ clipping to22.131834 then concat/output requantization yields observed22.131550; final output ceiling is23.721895. Existing compiler log shows inputQuantize construction, so the final QNN path remains unproved. No weights/constants/model load, compile or runtime call. Separate tiny synthetic probe proposed, not executed.
+
 ## Current work
 
 1. Preserve physical baseline/preflight hashes, diagnostic artifacts, and both LOCAL-ONLY positional tensor directories listed in the full-short result. Do not clean them; copy them on migration/handover.
-2. Source-only audit of layer0 conv-history quantize/dequantize/clamp/cast metadata and selected small constants, without loading/executing the whole model; check whether22.131550 is an encoding limit. No new runtime call until reviewed.
+2. Review the source/metadata audit and proposed weight-free boundary probe, then separately approve any tiny compile/runtime gate with explicit pre/post-lowering encoding capture. No new compile/model/runtime call now.
 3. Do not use ADB or the phone without an explicit scheduled slot. Host teacher-forced completion is not QNN/physical fidelity or a campaign authorization.
 4. After agreed fidelity follow-up gates, validate chunked-prefill state semantics/delegation and loaded-route reset/isolation before the canonical campaign.
 

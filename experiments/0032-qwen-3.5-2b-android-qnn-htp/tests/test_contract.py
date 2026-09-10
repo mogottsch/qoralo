@@ -763,6 +763,33 @@ class ContractTest(unittest.TestCase):
         source = result["binding"]["analyzer_source"]
         self.assertEqual(source["sha256"], sha(EXP / source["path"]))
 
+    def test_conv_history_audit_explains_qdq_not_unobserved_qnn_path(self) -> None:
+        directory = EXP / "results/conv-history-encoding-audit-20260910"
+        result = json.loads((directory / "result.json").read_text())
+        self.assertEqual("source_metadata_scalar_conv_history_encoding_audit", result["evidence_class"])
+        path = result["proven_qdq_path"]
+        self.assertTrue(path["scalar_matches_observed_qdq_exactly"])
+        self.assertEqual(22.131549835205078, path["scalar_fp32_trace"][-1]["output_fp32"])
+        self.assertTrue(path["scalar_fp32_trace"][0]["clipped"])
+        self.assertFalse(path["observed_qdq_is_final_output_ceiling"])
+        self.assertEqual(22.131834030151367, path["input_upper_bound"])
+        self.assertEqual(23.721895217895508, path["final_output_upper_bound"])
+        self.assertFalse(result["qnn_boundary"]["actual_lowered_path_proven"])
+        self.assertTrue(result["qnn_boundary"]["existing_compiler_log_has_input_states24_quantize_node"])
+        for key in ("model_or_pte_loaded", "model_or_qnn_execution", "new_compile", "phone_access"):
+            self.assertFalse(result["read_scope"][key])
+        self.assertEqual(0, result["read_scope"]["weight_members_read"])
+        self.assertEqual(0, result["read_scope"]["constant_members_read"])
+        self.assertEqual(32499235, result["read_scope"]["graph_json_bytes"])
+        comp = json.loads((directory / "compression-manifest.json").read_text())
+        p = directory / comp["compressed_path"]
+        self.assertEqual(comp["compressed_sha256"], sha(p))
+        recovered_sha, recovered_bytes = sha_zstd(p)
+        self.assertEqual(comp["raw_metadata_sha256"], recovered_sha)
+        self.assertEqual(comp["raw_metadata_bytes"], recovered_bytes)
+        for item in result["artifacts"].values():
+            self.assertEqual(item["sha256"], sha(EXP / item["path"]))
+
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
             EXP / "protocol",
@@ -785,6 +812,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/controlled-position1-readiness",
             EXP / "results/controlled-position1-qdq-20260910",
             EXP / "results/controlled-position1-paired-qnn-20260910",
+            EXP / "results/conv-history-encoding-audit-20260910",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

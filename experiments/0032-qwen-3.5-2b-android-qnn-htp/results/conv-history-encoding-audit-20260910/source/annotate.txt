@@ -1,0 +1,91 @@
+28: class AnnotateQuantAttrs(ExportPass):
+29:     """
+30:     Add "quant_attrs" to graph nodes' meta from the QDQ information
+31:     generated after quantization process.
+32:     """
+33: 
+34:     def __init__(
+35:         self,
+36:         edge_program: torch.export.ExportedProgram,
+37:         skip_advanced_requant: bool = False,
+38:     ):
+39:         super(AnnotateQuantAttrs, self).__init__()
+40:         self.edge_program = edge_program
+41:         self.skip_advanced_requant = skip_advanced_requant
+42:         self.skip_requant_allowlist = {
+43:             exir_ops.edge.aten.sigmoid.default,
+44:         }
+45: 
+46:     def _annotate_source_nodes(
+47:         self, quant_node: torch.fx.Node, quant_attrs: Dict[str, Any]
+48:     ):
+49: 
+50:         if quant_node.args[0].target == operator.getitem:
+51:             getitem_node = quant_node.args[0]
+52:             getitem_node.meta[QCOM_QUANT_ATTRS] = quant_attrs
+53:             source_n = getitem_node.args[0]
+54:         else:
+55:             source_n = quant_node.args[0]
+56:         source_n.meta[QCOM_QUANT_ATTRS] = quant_attrs
+57: 
+58:     def _expand(self, tensor, dim, axis) -> torch.Tensor:
+83:         # Record requant attributes:
+84:         # node1 -> q_ui8 (n) -> dq_ui8 -> q_int32 -> dq_int32 -> node2 -> ....
+85:         # We store {node2: quant_attr in dq_int32} in node1.meta
+86:         if n.target in q_ops and n.args[0].target not in dq_ops:
+87:             # for some fixed scale op, there is no need to requantize it
+88:             if n.args[0].target in self.skip_requant_allowlist:
+89:                 return
+90: 
+91:             dq_nodes = self._find_last_dq_nodes(n)
+92:             q_attrs = get_quant_attrs(self.edge_program, n)
+93:             for dq_node in dq_nodes:
+94:                 dq_attrs = get_quant_attrs(self.edge_program, dq_node)
+95:                 # TODO: Store multiple pairs of requantize attributes when we have an op builder
+96:                 # that has multiple outputs that requires quant attributes.
+97: 
+98:                 # Determine if requantization is needed based on configuration and attribute mismatch.
+99:                 is_requant_needed = False
+100:                 if self.skip_advanced_requant:
+101:                     # In skip_advanced_requant mode, only consider requant if dtypes differ.
+102:                     if q_attrs[QCOM_DTYPE] != dq_attrs[QCOM_DTYPE]:
+103:                         is_requant_needed = True
+104:                 else:
+105:                     # In full requant mode, consider requant if any key attribute differs.
+106:                     # This aims to improve accuracy by adjusting scale, zero_point, etc.
+107:                     # Users can disable this if it causes regressions.
+108:                     if any(
+109:                         q_attrs[attr] != dq_attrs[attr]
+110:                         for attr in [
+111:                             QCOM_SCALE,
+112:                             QCOM_ZERO_POINT,
+113:                             QCOM_QUANT_MIN,
+114:                             QCOM_QUANT_MAX,
+115:                             QCOM_DTYPE,
+116:                         ]
+117:                     ):
+118:                         is_requant_needed = True
+119: 
+120:                 if is_requant_needed:
+121:                     dq_attrs[QCOM_ENCODING] = q_attrs[QCOM_ENCODING]
+122:                     user_node = list(dq_node.users)[0]
+123:                     n.args[0].meta.setdefault(QCOM_REQUANTIZE, {})
+124:                     n.args[0].meta[QCOM_REQUANTIZE][user_node.name] = dq_attrs
+125: 
+126:     def _annotate_quant_attrs(
+127:         self, graph_module: torch.fx.GraphModule
+128:     ) -> torch.fx.GraphModule:
+129:         for n in graph_module.graph.nodes:
+130:             self._annotate_requant(n)
+131:             # With fold_quant enabled, check if the input of dq op is quantized param.
+132:             param = None
+133:             if n.target in dq_ops:
+134:                 param = get_parameter(n.args[0], self.edge_program)
+135:             if n.target not in q_ops and param is None:
+136:                 continue
+137:             quant_attrs = get_quant_attrs(self.edge_program, n)
+138:             self._annotate_source_nodes(n, quant_attrs)
+139: 
+140:         return graph_module
+141: 
+142:     def call(self, graph_module: torch.fx.GraphModule):

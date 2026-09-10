@@ -1,0 +1,50 @@
+269:     def get_quant_encoding_conf(
+270:         self, node: torch.fx.Node, target_node: torch.fx.Node
+271:     ) -> Tuple[Any, Dict]:
+272:         if not node.meta.get(QCOM_QUANT_ATTRS, None):
+273:             return (
+274:                 PyQnnManager.Qnn_QuantizationEncoding_t.QNN_QUANTIZATION_ENCODING_UNDEFINED,
+275:                 {},
+276:             )
+277:         is_input_tensor = node != target_node
+278:         quant_attrs = (
+279:             node.meta[QCOM_REQUANTIZE][target_node.name]
+280:             if QCOM_REQUANTIZE in node.meta
+281:             and is_input_tensor
+282:             and target_node.name in node.meta[QCOM_REQUANTIZE]
+283:             else node.meta[QCOM_QUANT_ATTRS]
+284:         )
+285:         # TODO: refactor this when target could be correctly detected
+286:         per_block_encoding = {
+287:             exir_ops.edge.torchao.quantize_affine.default,
+288:             exir_ops.edge.torchao.dequantize_affine.default,
+289:         }
+290:         if quant_attrs[QCOM_ENCODING] in per_block_encoding:
+291:             return self.make_qnn_per_block_config(node, quant_attrs)
+292: 
+293:         if quant_attrs[QCOM_ENCODING] in PER_CHANNEL_ENCODING:
+294:             return self.make_qnn_per_channel_config(node, quant_attrs)
+295: 
+296:         return self.make_qnn_per_tensor_config(quant_attrs)
+297: 
+298:     def get_quant_tensor_value(
+299:         self, tensor: torch.Tensor, quant_attrs: Dict, quant_configs: Dict
+300:     ) -> torch.Tensor:
+301:         # params should have been quantized by framework
+302:         # here we're handling constant operators like arange, full, etc.
+303:         if tensor.dtype == torch.float32:
+304:             assert quant_attrs[QCOM_ENCODING] in PER_TENSOR_ENCODING, (
+305:                 f"unrecongnized quantization attribute detected {quant_attrs[QCOM_ENCODING]}",
+306:             )
+307:             scale = quant_attrs[QCOM_SCALE]
+308:             zero_point = quant_attrs[QCOM_ZERO_POINT]
+309:             tensor = (
+310:                 tensor.div(scale).add(zero_point).round().to(quant_configs[QCOM_DTYPE])
+311:             )
+312:         # Since we're using torch.int32 to store 16bit data
+313:         # need to make it compact here for QNN to correctly retrieve data
+314:         if quant_configs.get(QCOM_DTYPE) == torch.uint16:
+315:             tensor = tensor.to(torch.uint16)
+316:         # Make the backends access data correctly
+317:         if quant_configs.get(QCOM_BITWIDTH) == 4:
+318:             mask = torch.full(tensor.size(), 0x0F, dtype=torch.int8)

@@ -1,0 +1,88 @@
+1: # Copyright (c) Qualcomm Innovation Center, Inc.
+2: # All rights reserved
+3: #
+4: # This source code is licensed under the BSD-style license found in the
+5: # LICENSE file in the root directory of this source tree.
+6: import warnings
+7: from typing import cast, Dict, List
+8: 
+9: import executorch.backends.qualcomm.python.PyQnnManagerAdaptor as PyQnnManager
+10: 
+11: import numpy as np
+12: import torch
+13: from executorch.backends.qualcomm.utils.constants import QCOM_AXIS_ORDER, QCOM_DATA
+14: 
+15: from .node_visitor import NodeVisitor
+16: from .node_visitor_manager import register_node_visitor
+17: from .qnn_constants import OpConcat, QNN_OP_PACKAGE_NAME_QTI_AISW
+18: 
+19: 
+20: @register_node_visitor
+21: class Cat(NodeVisitor):
+22:     target = ["aten.cat.default"]
+23: 
+24:     def __init__(self, *args) -> None:
+25:         super().__init__(*args)
+26: 
+27:     def define_node(
+28:         self,
+29:         node: torch.fx.Node,
+30:         nodes_to_wrappers: Dict[torch.fx.Node, PyQnnManager.TensorWrapper],
+31:     ) -> PyQnnManager.PyQnnOpWrapper:
+32:         input_nodes = cast(List[torch.fx.Node], node.args[0])
+33:         input_tensor_wrappers = []
+34: 
+35:         for input_node in input_nodes:
+36:             source_input_node = self.get_node(input_node)
+37:             input_tensor = self.get_tensor(source_input_node, node)
+38:             input_tensor_wrappers.append(
+39:                 self.define_tensor(
+40:                     source_input_node,
+41:                     node,
+42:                     input_tensor,
+43:                     PyQnnManager.Qnn_TensorType_t.QNN_TENSOR_TYPE_NATIVE,
+44:                     nodes_to_wrappers,
+45:                 )
+46:             )
+47: 
+48:         if len(input_nodes) != len(input_tensor_wrappers):
+49:             warnings.warn(
+50:                 "[QNN Delegate Op Builder]: The number or input tensors is not equal to the number of input tensor wrappers.",
+51:                 stacklevel=1,
+52:             )
+53:             return
+54: 
+55:         output_tensor = self.get_tensor(node, node)
+56:         output_tensor_wrapper = self.define_tensor(
+57:             node,
+58:             node,
+59:             output_tensor,
+60:             PyQnnManager.Qnn_TensorType_t.QNN_TENSOR_TYPE_NATIVE,
+61:             nodes_to_wrappers,
+62:         )
+63: 
+64:         # node args[1] might not exist
+65:         axis = 0
+66:         if len(node.args) == 2:
+67:             axis = cast(int, node.args[1])
+68: 
+69:         if axis < 0:
+70:             axis += node.meta["val"].dim()
+71: 
+72:         if QCOM_AXIS_ORDER in node.meta:
+73:             axis = node.meta[QCOM_AXIS_ORDER].index(axis)
+74: 
+75:         concat_op = PyQnnManager.PyQnnOpWrapper(
+76:             node.name,
+77:             QNN_OP_PACKAGE_NAME_QTI_AISW,
+78:             OpConcat.op_name,
+79:         )
+80:         concat_op.AddInputTensors(input_tensor_wrappers)
+81:         concat_op.AddOutputTensors([output_tensor_wrapper])
+82: 
+83:         concat_op.AddScalarParam(
+84:             OpConcat.param_axis,
+85:             PyQnnManager.Qnn_DataType_t.QNN_DATATYPE_UINT_32,
+86:             {QCOM_DATA: np.uint32(axis)},
+87:         )
+88: 

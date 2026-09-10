@@ -1,0 +1,60 @@
+22: class InsertRequantize(ExportPass):
+23:     """
+24:     This pass inserts convert op for operators which have
+25:     different quantization specs in input and activation.
+26:     Convert OP is a specific op which helps to requantize in Qnn backend
+27:     """
+28: 
+55:         self,
+56:         graph_module: torch.fx.GraphModule,
+57:         node: torch.fx.node,
+58:         quant_attr: Dict,
+59:         user_nodes: List[str],
+60:     ):
+61:         with graph_module.graph.inserting_after(node):
+62:             users = list(node.users.keys())
+63:             inserted_n = graph_module.graph.create_node(
+64:                 "call_function",
+65:                 exir_ops.edge.aten._to_copy.default,
+66:                 (node,),
+67:             )
+68:             inserted_n.meta["val"] = node.meta["val"]
+69:             inserted_n.meta[QCOM_QUANT_ATTRS] = quant_attr
+70: 
+71:             # create node and replace input
+72:             if node.meta.get(QCOM_QUANTIZED_IO):
+73:                 inserted_n.meta[QCOM_QUANTIZED_IO] = node.meta[QCOM_QUANTIZED_IO]
+74: 
+75:             for user in filter(lambda u: u.name in user_nodes, users):
+76:                 user.replace_input_with(node, inserted_n)
+77: 
+78:     # TODO: Implement this function when we have an op with
+79:     # multiple outputs that requires quant attributes.
+80:     def _multi_output_annotation(self) -> None:
+81:         raise NotImplementedError("requant is not implemented for multi output yet")
+82: 
+83:     def _single_output_annotation(
+84:         self, gm: torch.fx.GraphModule, n: torch.fx.node
+85:     ) -> None:
+86:         # {user_node_name: quant_attr}
+87:         requantize_dict = n.meta.pop(QCOM_REQUANTIZE)
+88:         # {quant_attr: user_node_name_list}
+89:         group_quant_attr_dict = self._invert_dict(requantize_dict)
+94: 
+95:     def _insert(self, graph_module: torch.fx.GraphModule) -> torch.fx.GraphModule:
+96:         for n in graph_module.graph.nodes:
+97:             if QCOM_REQUANTIZE in n.meta:
+98:                 (
+99:                     self._single_output_annotation(graph_module, n)
+100:                     if isinstance(
+101:                         n.meta["val"], torch._subclasses.fake_tensor.FakeTensor
+102:                     )
+103:                     or n.target in self.multi_output_op_ignore_set
+104:                     else self._multi_output_annotation()
+105:                 )
+106: 
+107:     def call(self, graph_module: torch.fx.GraphModule):
+108:         self._insert(graph_module)
+109:         graph_module.graph.eliminate_dead_code()
+110:         graph_module.recompile()
+111:         return PassResult(graph_module, True)

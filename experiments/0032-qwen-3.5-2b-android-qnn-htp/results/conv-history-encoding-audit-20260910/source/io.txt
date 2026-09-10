@@ -1,0 +1,78 @@
+1: # Copyright (c) Qualcomm Innovation Center, Inc.
+2: # All rights reserved
+3: #
+4: # This source code is licensed under the BSD-style license found in the
+5: # LICENSE file in the root directory of this source tree.
+6: from typing import Dict
+7: 
+8: import torch
+9: 
+10: from executorch.backends.qualcomm.builders.node_visitor import q_ops
+11: 
+12: from executorch.backends.qualcomm.builders.utils import (
+13:     is_mutable_buffer_input,
+14:     is_parameter,
+15: )
+16: from executorch.backends.qualcomm.utils.constants import (
+17:     QCOM_ENCODING,
+18:     QCOM_QUANT_ATTRS,
+19:     QCOM_QUANTIZED_IO,
+20: )
+21: from executorch.exir.dialects._ops import ops as exir_ops
+22: from executorch.exir.pass_base import ExportPass, PassResult
+23: 
+24: 
+25: class InsertIOQDQ(ExportPass):
+26:     """
+27:     For delegated QNN subgraph, no more QDQ operators will appear after
+28:     'fold_qdq pass'.
+29:     This pass will insert quantize nodes right after inputs, dequantize nodes
+30:     right before outputs according to stored quantization encodings.
+31:     """
+32: 
+33:     q_dq_map = {
+34:         # per tensor
+35:         exir_ops.edge.quantized_decomposed.quantize_per_tensor.default: exir_ops.edge.quantized_decomposed.dequantize_per_tensor.tensor,
+36:         exir_ops.edge.quantized_decomposed.quantize_per_tensor.tensor: exir_ops.edge.quantized_decomposed.dequantize_per_tensor.tensor,
+37:         # per channel
+38:         exir_ops.edge.quantized_decomposed.quantize_per_channel.default: exir_ops.edge.quantized_decomposed.dequantize_per_channel.default,
+39:     }
+40: 
+41:     def __init__(self, edge_program: torch.export.ExportedProgram):
+42:         super(InsertIOQDQ, self).__init__()
+43:         self.edge_program = edge_program
+117:                 if user.op == "output":
+118:                     user.replace_input_with(node, inserted_node)
+119: 
+120:     def _insert(self, graph_module: torch.fx.GraphModule) -> torch.fx.GraphModule:
+121:         for n in graph_module.graph.nodes:
+122:             # do nothing when a node is expected to output a quant tensor
+123:             if n.meta.get(QCOM_QUANTIZED_IO):
+124:                 continue
+125: 
+126:             # insert q after input or fold mix_quantization dq if applicable
+127:             if (
+128:                 n.op == "placeholder"
+129:                 and n.meta.get(QCOM_QUANT_ATTRS)
+130:                 and (
+131:                     not is_parameter(n, self.edge_program)
+132:                     or is_mutable_buffer_input(n, self.edge_program)
+133:                 )
+134:             ):
+135:                 self._insert_quant_node(
+136:                     graph_module, n, n.meta[QCOM_QUANT_ATTRS][QCOM_ENCODING]
+137:                 )
+138: 
+139:             # insert dq before output or fold mix_quantization q if applicable
+140:             users = list(n.users.keys())
+141:             if n.meta.get(QCOM_QUANT_ATTRS) and any(
+142:                 user.op == "output" for user in users
+143:             ):
+144:                 self._insert_dequant_node(
+145:                     graph_module,
+146:                     n,
+147:                     self.q_dq_map[n.meta[QCOM_QUANT_ATTRS][QCOM_ENCODING]],
+148:                 )
+149: 
+150:     def call(self, graph_module: torch.fx.GraphModule):
+151:         self._insert(graph_module)
