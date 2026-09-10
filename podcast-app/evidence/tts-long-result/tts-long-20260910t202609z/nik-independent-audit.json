@@ -1,0 +1,112 @@
+{
+  "verdict": "VALID_COLLECTION_FAILED_LONG_RENDER_NO_WAV",
+  "archiveSha256": "4490efa68acb8b9c447748e5c8fb39a2a4cef30711498822fa09ee9acfd8a921",
+  "archiveBytes": 793088,
+  "candidateSha256": "b86008708cc459c855149eee49c58a7468e079d24c9de4842eab56a5bcef325d",
+  "hostGuardSha256": "5ca6be91be151acd2937b5e65871a40361f9bae99ae444880eae0e29b6f2c425",
+  "overrideSha256": "60dd58885efdc8406049365d92c26838fdedf4db99f568638479a1f71e1b046d",
+  "driverPid": 7928,
+  "generationPid": 8003,
+  "allFourContextLoadsReturned": true,
+  "attribution": {
+    "duration": {
+      "nodeAttempts": 1,
+      "nodeDurUs": [
+        545738
+      ],
+      "successfulExecutionEstablished": true,
+      "rpcExecuteUs": [
+        535779
+      ],
+      "acceleratorCycles": [
+        836379701
+      ]
+    },
+    "text": {
+      "nodeAttempts": 1,
+      "nodeDurUs": [
+        5153533
+      ],
+      "successfulExecutionEstablished": true,
+      "rpcExecuteUs": [
+        5148862
+      ],
+      "acceleratorCycles": [
+        5974079122
+      ]
+    },
+    "vector": {
+      "nodeAttempts": 1,
+      "nodeDurUs": [
+        2897105
+      ],
+      "successfulExecutionEstablished": false,
+      "rpcExecuteUs": [],
+      "acceleratorCycles": []
+    },
+    "vocoder": {
+      "nodeAttempts": 0,
+      "nodeDurUs": [],
+      "successfulExecutionEstablished": false,
+      "rpcExecuteUs": [],
+      "acceleratorCycles": []
+    }
+  },
+  "vectorStatus": 6006,
+  "nativeContextFreeStatus": 1003,
+  "headers": [
+    {
+      "path": "/home/moritz/opt/qairt/2.49.0.260730/include/QNN/QnnCommon.h",
+      "sha256": "1edba00ea13e509a3a2a28c1864afe13675898175147056df13aa782e8ba8ecf",
+      "passages": [
+        {
+          "line": 83,
+          "text": "#define QNN_MIN_ERROR_GRAPH               6000"
+        },
+        {
+          "line": 197,
+          "text": "  /// System level error, such as related to platform / OS services"
+        },
+        {
+          "line": 198,
+          "text": "  QNN_COMMON_ERROR_SYSTEM = QNN_MIN_ERROR_COMMON + 3,"
+        }
+      ]
+    },
+    {
+      "path": "/home/moritz/opt/qairt/2.49.0.260730/include/QNN/QnnGraph.h",
+      "sha256": "82b74873514bfa937f3bf888529c457829791e8ba8600374b2ba160edf32c8dd",
+      "passages": [
+        {
+          "line": 61,
+          "text": "  /// Failure to set profile"
+        },
+        {
+          "line": 62,
+          "text": "  QNN_GRAPH_ERROR_SET_PROFILE = QNN_MIN_ERROR_GRAPH + 6,"
+        },
+        {
+          "line": 684,
+          "text": " *         - QNN_GRAPH_ERROR_SET_PROFILE: set profile failed"
+        }
+      ]
+    }
+  ],
+  "crashExcerptSha256": "db93a1299b8270201f65437ebb6947a4b4077f2db1f2cae52327059e0e98e4bb",
+  "loadStageBracketMs": 3585,
+  "driverElapsedMs": 13863,
+  "wavPresent": false,
+  "hostCleanup": {
+    "errors": [],
+    "settingsErrors": [],
+    "scratchCreated": true,
+    "packagesRetained": true,
+    "scratchCreationAttempted": true,
+    "pidStdout": "",
+    "appGenerationTestPidsAbsent": true,
+    "scratchRemoved": true
+  },
+  "nativeTeardownClean": false,
+  "privateDBAndFullConditionsContentsNotInspected": true,
+  "modelOrAdbCallsByReviewer": 0
+}

@@ -1,0 +1,138 @@
+{
+  "evidenceKind": "derived narrow app-QNN/cDSP crash excerpt; not raw global logcat",
+  "sourceSha256": "966936004a6dbf01461c0a9d862f0ab91e5d5d5da4264e3da0fc9deb3efe1f2d",
+  "lines": [
+    {
+      "line": 4052,
+      "text": "09-10 21:26:51.703  8003  8030 E onnxruntime:  [E:onnxruntime:, sequential_executor.cc:620 ExecuteKernel] Non-zero status code returned while running QNN_10407250622357638584_1 node. Name:'QNNExecutionProvider_QNN_10407250622357638584_1_0' Status Message: QNN graph execute error. Error code: 6006"
+    },
+    {
+      "line": 4053,
+      "text": "09-10 21:26:51.765  8003  8036 I dev.vibevoice.podcast.internal:generation: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:1915: get_remote_notif_response: received status notification 3 for domain 3, session 0"
+    },
+    {
+      "line": 4054,
+      "text": "09-10 21:26:51.767  2368  2378 V adsprpc : 24b65:01: CDSP0: ############################### Process on cDSP0 CRASHED!!!!!!! ########################################"
+    },
+    {
+      "line": 4055,
+      "text": "09-10 21:26:51.767  2368  2378 V adsprpc : 24b65:01: CDSP0: --------------------- Crash Details are furnished below ------------------------------------"
+    },
+    {
+      "line": 4056,
+      "text": "09-10 21:26:51.767  2368  2378 V adsprpc : 24b65:01: CDSP0: Process \"/frpc/f0406bb0 DefaultDispatch\" crashed in thread \"fr/7/8025\" due to TLBMISS RW occurrence"
+    },
+    {
+      "line": 4057,
+      "text": "09-10 21:26:51.767  2368  2378 V adsprpc : 24b65:01: CDSP0: Crashed Shared Object \"./libQnnHtpV73Skel.so\" load address : 0x20200000 "
+    },
+    {
+      "line": 4058,
+      "text": "09-10 21:26:51.767  2368  2378 V adsprpc : 24b65:01: CDSP0: fastrpc_shell_unsigned_3 load address : D00000  and size : 130CE4 "
+    },
+    {
+      "line": 4059,
+      "text": "09-10 21:26:51.767  2368  2378 V adsprpc : 24b65:01: CDSP0: Fault PC   :    0x2048F600 "
+    },
+    {
+      "line": 4060,
+      "text": "09-10 21:26:51.767  2368  2378 V adsprpc : 24b65:01: CDSP0: LR         :    0x2048589C "
+    },
+    {
+      "line": 4061,
+      "text": "09-10 21:26:51.767  2368  2378 V adsprpc : 24b65:01: CDSP0: SP         :    0xF41880 "
+    },
+    {
+      "line": 4062,
+      "text": "09-10 21:26:51.767  2368  2378 V adsprpc : 24b65:01: CDSP0: Bad VA     :    0x40 "
+    },
+    {
+      "line": 4063,
+      "text": "09-10 21:26:51.767  2368  2378 V adsprpc : 24b65:01: CDSP0: FP         :    0xF41890 "
+    },
+    {
+      "line": 4064,
+      "text": "09-10 21:26:51.767  2368  2378 V adsprpc : 24b65:01: CDSP0: SSR        :    0x1E70470 "
+    },
+    {
+      "line": 4065,
+      "text": "09-10 21:26:51.767  2368  2378 V adsprpc : 24b65:01: CDSP0: Error code :    0x7003 "
+    },
+    {
+      "line": 4066,
+      "text": "09-10 21:26:51.767  2368  2378 V adsprpc : 24b65:01: CDSP0: Call trace : "
+    },
+    {
+      "line": 4067,
+      "text": "09-10 21:26:51.767  2368  2378 V adsprpc : 24b65:01: CDSP0: [<2048F600>] _ZN5Graph22set_init_aborted_stateEv+0x1E40:     (./libQnnHtpV73Skel.so) "
+    },
+    {
+      "line": 4068,
+      "text": "09-10 21:26:51.768  2368  2378 V adsprpc : 24b65:01: CDSP0: [<2048589C>] _ZN5GraphD2Ev+0x1FC:     (./libQnnHtpV73Skel.so) "
+    },
+    {
+      "line": 4069,
+      "text": "09-10 21:26:51.768  2368  2378 V adsprpc : 24b65:01: CDSP0: [<2048589C>] _ZN5GraphD2Ev+0x1FC:     (./libQnnHtpV73Skel.so) "
+    },
+    {
+      "line": 4070,
+      "text": "09-10 21:26:51.768  2368  2378 V adsprpc : 24b65:01: CDSP0: [<20485B6C>] _ZN5GraphD0Ev+0xC:     (./libQnnHtpV73Skel.so) "
+    },
+    {
+      "line": 4071,
+      "text": "09-10 21:26:51.768  2368  2378 V adsprpc : 24b65:01: CDSP0: [<20498D80>] _ZN5Graph17apply_graph_patchER12HexagonNNEnvPKhj+0x2F80:     (./libQnnHtpV73Skel.so) "
+    },
+    {
+      "line": 4072,
+      "text": "09-10 21:26:51.768  2368  2378 V adsprpc : 24b65:01: CDSP0: [<20497640>] _ZN5Graph17apply_graph_patchER12HexagonNNEnvPKhj+0x1840:     (./libQnnHtpV73Skel.so) "
+    },
+    {
+      "line": 4073,
+      "text": "09-10 21:26:51.768  2368  2378 V adsprpc : 24b65:01: CDSP0: [<203CC5DC>] __dso_handle+0xB034:     (./libQnnHtpV73Skel.so) "
+    },
+    {
+      "line": 4074,
+      "text": "09-10 21:26:51.768  2368  2378 V adsprpc : 24b65:01: CDSP0: [<203CE5C8>] __dso_handle+0xD020:     (./libQnnHtpV73Skel.so) "
+    },
+    {
+      "line": 4075,
+      "text": "09-10 21:26:51.768  2368  2378 V adsprpc : 24b65:01: CDSP0: [<205478E4>] qnn_2_49_0_transport_run+0x130:     (./libQnnHtpV73Skel.so) "
+    },
+    {
+      "line": 4076,
+      "text": "09-10 21:26:51.768  2368  2378 V adsprpc : 24b65:01: CDSP0: [<20548358>] qnn_2_49_0_skel_handle_invoke+0x4F4:     (./libQnnHtpV73Skel.so) "
+    },
+    {
+      "line": 4077,
+      "text": "09-10 21:26:51.768  2368  2378 V adsprpc : 24b65:01: CDSP0: [<00D632F4>] remote_handle_close+0x3674:     (fastrpc_shell_unsigned_3) "
+    },
+    {
+      "line": 4078,
+      "text": "09-10 21:26:51.768  2368  2378 V adsprpc : 24b65:01: CDSP0: [<00D50760>] err_Fatal_internal0+0x91CC:     (fastrpc_shell_unsigned_3) "
+    },
+    {
+      "line": 4079,
+      "text": "09-10 21:26:51.768  2368  2378 V adsprpc : 24b65:01: CDSP0: [<00D58C28>] err_Fatal_internal0+0x11694:     (fastrpc_shell_unsigned_3) "
+    },
+    {
+      "line": 4080,
+      "text": "09-10 21:26:51.768  2368  2378 V adsprpc : 24b65:01: CDSP0: ----------------------------- End of Crash Report --------------------------------------------------"
+    },
+    {
+      "line": 4081,
+      "text": "09-10 21:26:51.768  2368  2378 V adsprpc : 24b65:01: CDSP0: Please refer to Hexagon SDK documentation \"<HEXAGON_SDK_ROOT>/docs/tools/debug.html\" for debugging the user PD exceptions."
+    },
+    {
+      "line": 4088,
+      "text": "09-10 21:26:51.809  8003  8025 E dev.vibevoice.podcast.internal:generation: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:1382: Error 0x8000040d: remote_handle64_invoke failed for handle 0xb400007aafce1cd0, method 4 on domain 3 (sc 0x4040300) (errno Success)"
+    },
+    {
+      "line": 4116,
+      "text": "09-10 21:26:51.823  8003  8025 E dev.vibevoice.podcast.internal:generation: vendor/qcom/proprietary/adsprpc/src/fastrpc_apps_user.c:1382: Error 0x8000040d: remote_handle64_invoke failed for handle 0xb400007aafce1cd0, method 6 on domain 3 (sc 0x6010100) (errno Success)"
+    },
+    {
+      "line": 4425,
+      "text": "09-10 21:26:51.909  8003  8025 E onnxruntime:  [E:onnxruntime:, qnn_backend_manager.cc:2254 operator()] qnn_interface.contextFree() failed: Unknown error. QNN error handle: 1003"
+    }
+  ]
+}
