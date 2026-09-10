@@ -135,6 +135,35 @@ class CandidateGateTest(unittest.TestCase):
             digest, name = line.split('  ', 1)
             self.assertEqual(digest, hashlib.sha256((folder / name).read_bytes()).hexdigest())
 
+    def test_attempt06_actual_pair_passes_without_delegation_or_fidelity_claim(self):
+        folder = TRACK / 'results/global-value-fp16-attempt-06'
+        prior = TRACK / 'results/global-value-fp16-attempt-05'
+        result = json.loads((folder / 'result.json').read_text())
+        ar1 = inspection.compare(1, prior / 'raw/inspection-02/ar1.csv.gz', prior / 'raw/baseline-ar1.csv.gz')
+        ar128 = inspection.compare(128, folder / 'raw/inspection-01/ar128.csv.gz', folder / 'raw/baseline-ar128.csv.gz')
+        self.assertEqual(ar1, result['ar1_interface_inspection'])
+        self.assertEqual(ar128, result['ar128_interface_inspection'])
+        self.assertEqual(inspection.require_cache_pair(ar1, ar128), result['paired_cache_gate'])
+        self.assertEqual([128], result['outcome']['conversion_ars'])
+        self.assertEqual([1], result['outcome']['reused_ars'])
+        self.assertFalse(result['outcome']['ar1_reconverted'])
+        self.assertEqual('4e67d80ea342088f5235a9238dc209739d8961083b08895fa066d6857687a6cc',
+                         result['candidate_models'][0]['sha256'])
+        self.assertEqual('48fc15f0cbec88963f7b4d0f9007b82ca5a1e1d812ca320ceec776e00a917b64',
+                         result['candidate_models'][1]['sha256'])
+        self.assertEqual(36, ar128['candidate_operator_counts']['Convert'])
+        self.assertEqual(6842, ar128['candidate_operator_count'])
+        self.assertEqual(3, ar128['candidate_operator_counts']['Dequantize'])
+        self.assertEqual(21, result['float_precision_fallback_observations']['ar128_this_attempt']['candidate_count'])
+        self.assertEqual('ext4', result['scratch_preflight']['filesystem'])
+        self.assertTrue(result['scratch_cleanup']['verified_absent'])
+        self.assertIsNone(result['unmeasured']['full_htp_delegation'])
+        self.assertIsNone(result['unmeasured']['host_fidelity'])
+        self.assertFalse(result['publication']['registry_eligible'])
+        for line in (folder / 'SHA256SUMS').read_text().splitlines():
+            digest, name = line.split('  ', 1)
+            self.assertEqual(digest, hashlib.sha256((folder / name).read_bytes()).hexdigest())
+
     def test_pair_gate_rejects_missing_failed_or_mismatched_ar128(self):
         folder = TRACK / 'results/global-value-fp16-attempt-05'
         ar1 = json.loads((folder / 'raw/ar1-interface-validation.json').read_text())

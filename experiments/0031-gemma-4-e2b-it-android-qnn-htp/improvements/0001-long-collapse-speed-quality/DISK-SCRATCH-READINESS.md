@@ -1,4 +1,4 @@
-# Disk-backed scratch readiness — no restart authorized
+# Disk-backed scratch and AR1 reuse — exercised in attempt 06
 
 ## Diagnosed attempt-05 failure
 
@@ -20,7 +20,7 @@ QAIRT_TMP_DIR=<fresh attempt directory under this track/.local>/qairt-tmp
 
 Keep the accepted SDK, `.local/host-libs`, model bytes, patch and quantization settings unchanged. This is not a model or precision correction. Following Pi's source-only efficiency direction, the next distinct attempt may convert **AR128 only**, reusing the verified attempt-05 AR1 DLC byte-for-byte instead of repeating its successful conversion.
 
-## Verified AR1 reuse (source-only preparation)
+## Verified AR1 reuse
 
 `convert_global_value_fp16.py --run-dir <fresh-run> --reuse-ar1-dlc <retained-ar1.dlc>` now verifies, before importing QAIRT:
 
@@ -34,7 +34,7 @@ The precision patch is unchanged; a regression test compares its AST to the succ
 
 Before compilation, inspect actual AR128 interfaces against its baseline and feed both actual CSV comparisons through `inspect_global_value_dlc.require_cache_pair`. Missing/failed AR128 evidence or any four-way datatype/encoding mismatch is rejected. Even a passed pair gate does not prove HTP delegation or fidelity. No compilation is invoked by the conversion tool.
 
-This support has not launched a new conversion and is not evidence that AR128 succeeded. The heavy-slot hold remains active.
+The source-only preparation was accepted in `bbd1eec`. It was subsequently exercised after a separate release in `global-value-fp16-20260910T095945Z-attempt-06`: real AR1 reuse verification passed, only AR128 was converted, and both actual CSVs passed the paired-cache gate. This does not authorize or establish context compilation or fidelity.
 
 ## Readiness checks and future launch gate
 
@@ -49,4 +49,4 @@ Before any future launch:
 5. Record `QAIRT_TMP_DIR`, filesystem/free-space observations, SDK and host-library identities, and the command in the new attempt. Keep the low-priority pressure guard and swap policy.
 6. Retain failure evidence and ownership-bound scratch inventory. Clean only that attempt's scratch, never shared `/tmp`, worktrees, completed DLCs, or model sources.
 
-No directory has been staged for a new conversion and no next attempt has been launched. The proposal does not grant compilation, fidelity execution, or phone access. Actual AR128 input/output FP16 signatures and the four-way AR1/AR128 cache contract must pass before any separately approved compilation step.
+Attempt 06 verified an owned `0700` ext4 scratch directory with 686,253,473,792 bytes free, successfully completed AR128 conversion, and removed its empty scratch root after the SDK had cleaned all temporary files. Exact preflight, reuse, process and cleanup receipts are in `results/global-value-fp16-attempt-06/`. Actual AR128 input/output FP16 signatures and all 30 four-way AR1/AR128 cache contracts passed. Context compilation, fidelity execution and phone access still require separate approval; none occurred in attempt 06.

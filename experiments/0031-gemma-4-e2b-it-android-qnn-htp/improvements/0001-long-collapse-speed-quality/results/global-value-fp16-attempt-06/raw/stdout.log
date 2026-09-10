@@ -1,0 +1,153 @@
+[INFO] QAIRT_SDK_ROOT=/home/moritz/opt/qairt/2.49.40.260810
+[WARN] QNN_SDK_ROOT/SNPE_ROOT set to QAIRT_SDK_ROOT for backwards compatibility and will be deprecated in a future release.
+[INFO] QAIRT SDK environment setup complete
+{"event": "ar1_reuse_verified", "model": {"ar": 1, "bytes": 2356848948, "converted_in_this_attempt": false, "name": "ar1_cl4096_1_of_1", "origin": "reused_verified_attempt05", "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/runs/global-value-fp16-20260910T090755Z-attempt-05/dlc/cd6e32f1a967f521ba44ef9f3f460ced034e8c0986c20242d4daf57362cbbb4f/ar1_cl4096_1_of_1.dlc", "provenance": {"commit": "d5e6b94", "cross_ar_contract_proven": false, "interface_gate": "passed_actual_ar1_dlc_input_and_output_signatures", "original_dlc_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/runs/global-value-fp16-20260910T090755Z-attempt-05/dlc/cd6e32f1a967f521ba44ef9f3f460ced034e8c0986c20242d4daf57362cbbb4f/ar1_cl4096_1_of_1.dlc", "result_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/global-value-fp16-attempt-05/result.json", "result_sha256": "b298cab9c895955069b8b671835d4ac29d66b58aaac37ec8398bdc9f6621dcac", "run_id": "global-value-fp16-20260910T090755Z-attempt-05"}, "sha256": "4e67d80ea342088f5235a9238dc209739d8961083b08895fa066d6857687a6cc"}}
+WARNING: Unable to import GGUF Builder
+{"candidate": "global_value_cache_fp16_layers_4_9_14", "checkpoint_modified": false, "conversion_ars": [128], "cpu_conversion_boundary": false, "event": "global_value_fp16_conversion_start", "external_data_modified": false, "inference": false, "phone_access": false, "qairt_version": "2.49.40.260810", "reused_models": [{"ar": 1, "bytes": 2356848948, "converted_in_this_attempt": false, "name": "ar1_cl4096_1_of_1", "origin": "reused_verified_attempt05", "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/runs/global-value-fp16-20260910T090755Z-attempt-05/dlc/cd6e32f1a967f521ba44ef9f3f460ced034e8c0986c20242d4daf57362cbbb4f/ar1_cl4096_1_of_1.dlc", "provenance": {"commit": "d5e6b94", "cross_ar_contract_proven": false, "interface_gate": "passed_actual_ar1_dlc_input_and_output_signatures", "original_dlc_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/runs/global-value-fp16-20260910T090755Z-attempt-05/dlc/cd6e32f1a967f521ba44ef9f3f460ced034e8c0986c20242d4daf57362cbbb4f/ar1_cl4096_1_of_1.dlc", "result_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/global-value-fp16-attempt-05/result.json", "result_sha256": "b298cab9c895955069b8b671835d4ac29d66b58aaac37ec8398bdc9f6621dcac", "run_id": "global-value-fp16-20260910T090755Z-attempt-05"}, "sha256": "4e67d80ea342088f5235a9238dc209739d8961083b08895fa066d6857687a6cc"}], "target": "chipset:SM8550", "transformer_backend": "HTP", "variants": [{"ar": 128, "candidate_encodings_sha256": "1813412b395adde9033e9a8eb0a076f5fd62bc14217af7670a93750968ba165c", "candidate_onnx_sha256": "0b36dc55b669a54469b669a86364d112cc82f3811b11c2f8662cc7dbd49527c0", "external_data_sha256": "b9b73b984c2258099bc77ce6d1e2aa92d12bb67abe456e5ef509136d7494a65d", "global_fp16_inputs": ["past_value_4_h0_in", "past_value_9_h0_in", "past_value_14_h0_in"], "global_fp16_outputs": ["past_value_4_h0_out", "past_value_9_h0_out", "past_value_14_h0_out"], "onnx_checker_passed": true, "removed_activation_encodings": ["past_value_14_h0_in", "past_value_4_h0_in", "past_value_9_h0_in"], "source_encodings_sha256": "9ed0d5deb5bff959c738dc3bca7994b1f7796f257377479c82959c5bb693e12f", "source_onnx_sha256": "819a8af4d6244dc7cea57b5f930778d324b8b81c8012e981780fd4adcdf9fb89"}]}
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+rewriteCallback: MatchGeluApproxPass: Matched pattern 2
+replaceWithGelu: MatchGeluApproxPass: Successfully replaced approximate GELU pattern with GELU op
+reEvalMacsParams: Re-evaluated graph statistics after IrOptimizer optimization passes:
+reEvalMacsParams: Total MACs: 329894974208
+reEvalMacsParams: Total Params Count: 2280676608
+IrQuantizer: Param Quantizer should be set to symmetric for 32 bit biases. Will ignore param quantizer option: tf for biases
+[ WARNING ] Following OPs fallback to float:
+rms_norm_node___120887, rms_norm_node___411334, node_cat_118, rms_norm_node___502728, rms_norm_node___898478, rms_norm_node___732480, rms_norm_node___506706, node_cat_58, rms_norm_node___184317, rms_norm_node___373794, rms_norm_node___426790, rms_norm_node___489619, rms_norm_node___253133, rms_norm_node___565853, node_cat_178, rms_norm_node___804473, rms_norm_node___118224, rms_norm_node___673463, past_value_4_h0_out__float_to_fp16, past_value_9_h0_out__float_to_fp16, past_value_14_h0_out__float_to_fp16.
+{"converted_models": [{"ar": 128, "bytes": 2356859020, "converted_in_this_attempt": true, "name": "ar128_cl4096_1_of_1", "origin": "converted_in_this_attempt", "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/runs/global-value-fp16-20260910T095945Z-attempt-06/dlc/b9b886d49ec5e87b214da9d73cacb41ab87dea8ddf950137aaa9eca9caec4643/ar128_cl4096_1_of_1.dlc", "sha256": "48fc15f0cbec88963f7b4d0f9007b82ca5a1e1d812ca320ceec776e00a917b64"}], "cross_ar_contract_proven": false, "event": "global_value_fp16_conversion_complete", "inference": false, "next_gate": "Inspect actual AR128 DLC interfaces and compare both AR cache contracts before compilation.", "phone_access": false, "reused_models": [{"ar": 1, "bytes": 2356848948, "converted_in_this_attempt": false, "name": "ar1_cl4096_1_of_1", "origin": "reused_verified_attempt05", "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/runs/global-value-fp16-20260910T090755Z-attempt-05/dlc/cd6e32f1a967f521ba44ef9f3f460ced034e8c0986c20242d4daf57362cbbb4f/ar1_cl4096_1_of_1.dlc", "provenance": {"commit": "d5e6b94", "cross_ar_contract_proven": false, "interface_gate": "passed_actual_ar1_dlc_input_and_output_signatures", "original_dlc_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/runs/global-value-fp16-20260910T090755Z-attempt-05/dlc/cd6e32f1a967f521ba44ef9f3f460ced034e8c0986c20242d4daf57362cbbb4f/ar1_cl4096_1_of_1.dlc", "result_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/results/global-value-fp16-attempt-05/result.json", "result_sha256": "b298cab9c895955069b8b671835d4ac29d66b58aaac37ec8398bdc9f6621dcac", "run_id": "global-value-fp16-20260910T090755Z-attempt-05"}, "sha256": "4e67d80ea342088f5235a9238dc209739d8961083b08895fa066d6857687a6cc"}]}

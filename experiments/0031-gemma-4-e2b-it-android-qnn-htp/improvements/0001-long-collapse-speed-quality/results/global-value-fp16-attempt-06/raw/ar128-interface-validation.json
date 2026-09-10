@@ -1,0 +1,482 @@
+{
+  "ar": 128,
+  "csv_sha256": "04dea8e9aafa1d8a87f367efae844b536802d4ab1debbc537fff751cc27342d4",
+  "baseline_csv_sha256": "abaee90b9abd7d393aed0382b1617edfc3b592f57cded01a230b3592f22eb3a1",
+  "issues": [],
+  "datatype_scope_passed": true,
+  "selected_cache_interfaces": [
+    {
+      "name": "past_value_14_h0_in",
+      "role": "input",
+      "before": {
+        "dimensions": "1,1,3968,512",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -18.441452026367, max 18.440889358521, scale 0.000562788453, offset -32768.000000000000"
+      },
+      "after": {
+        "dimensions": "1,1,3968,512",
+        "datatype": "Float_16",
+        "encoding": "No encoding info for this tensor"
+      }
+    },
+    {
+      "name": "past_value_14_h0_out",
+      "role": "output",
+      "before": {
+        "dimensions": "1,1,128,512",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -18.441452026367, max 18.440889358521, scale 0.000562788453, offset -32768.000000000000"
+      },
+      "after": {
+        "dimensions": "1,1,128,512",
+        "datatype": "Float_16",
+        "encoding": "No encoding info for this tensor"
+      }
+    },
+    {
+      "name": "past_value_4_h0_in",
+      "role": "input",
+      "before": {
+        "dimensions": "1,1,3968,512",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -20.358182907104, max 20.357561111450, scale 0.000621282437, offset -32768.000000000000"
+      },
+      "after": {
+        "dimensions": "1,1,3968,512",
+        "datatype": "Float_16",
+        "encoding": "No encoding info for this tensor"
+      }
+    },
+    {
+      "name": "past_value_4_h0_out",
+      "role": "output",
+      "before": {
+        "dimensions": "1,1,128,512",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -20.358182907104, max 20.357561111450, scale 0.000621282437, offset -32768.000000000000"
+      },
+      "after": {
+        "dimensions": "1,1,128,512",
+        "datatype": "Float_16",
+        "encoding": "No encoding info for this tensor"
+      }
+    },
+    {
+      "name": "past_value_9_h0_in",
+      "role": "input",
+      "before": {
+        "dimensions": "1,1,3968,512",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -19.605875015259, max 19.605276107788, scale 0.000598323822, offset -32768.000000000000"
+      },
+      "after": {
+        "dimensions": "1,1,3968,512",
+        "datatype": "Float_16",
+        "encoding": "No encoding info for this tensor"
+      }
+    },
+    {
+      "name": "past_value_9_h0_out",
+      "role": "output",
+      "before": {
+        "dimensions": "1,1,128,512",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -19.605875015259, max 19.605276107788, scale 0.000598323822, offset -32768.000000000000"
+      },
+      "after": {
+        "dimensions": "1,1,128,512",
+        "datatype": "Float_16",
+        "encoding": "No encoding info for this tensor"
+      }
+    }
+  ],
+  "baseline_operator_counts": {
+    "Concat": 360,
+    "Conv2d": 521,
+    "Convert": 30,
+    "ElementWiseNeuron": 71,
+    "Eltwise_Binary": 3150,
+    "FullyConnected": 1,
+    "Gather": 35,
+    "MatMul": 560,
+    "Reduce": 177,
+    "Reshape": 700,
+    "RmsNorm": 310,
+    "Softmax": 280,
+    "StridedSlice": 590,
+    "Transpose": 45
+  },
+  "candidate_operator_counts": {
+    "Cast": 3,
+    "Concat": 360,
+    "Conv2d": 521,
+    "Convert": 36,
+    "Dequantize": 3,
+    "ElementWiseNeuron": 71,
+    "Eltwise_Binary": 3150,
+    "FullyConnected": 1,
+    "Gather": 35,
+    "MatMul": 560,
+    "Reduce": 177,
+    "Reshape": 700,
+    "RmsNorm": 310,
+    "Softmax": 280,
+    "StridedSlice": 590,
+    "Transpose": 45
+  },
+  "convert_count_delta": 6,
+  "baseline_operator_count": 6830,
+  "candidate_operator_count": 6842,
+  "candidate_io": {
+    "input": {
+      "inputs_embeds": {
+        "dimensions": "1,128,1536",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -18.907075881958, max 21.892240524292, scale 0.000622557651, offset -30370.000000000000"
+      },
+      "per_layer_inputs": {
+        "dimensions": "1,128,35,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -17.999908447266, max 16.500091552734, scale 0.000526436255, offset -34192.000000000000"
+      },
+      "attention_mask": {
+        "dimensions": "1,1,128,4096",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -50.000000000000, max 0.000000000000, scale 0.000762951095, offset -65535.000000000000"
+      },
+      "swa_attention_mask": {
+        "dimensions": "1,1,128,640",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -50.000000000000, max 0.000000000000, scale 0.000762951095, offset -65535.000000000000"
+      },
+      "swa_position_ids_cos": {
+        "dimensions": "1,1,128,128",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -1.000015258789, max 0.999984741211, scale 0.000030518044, offset -32768.000000000000"
+      },
+      "swa_position_ids_sin": {
+        "dimensions": "1,1,128,128",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.999984741211, max 1.000015258789, scale 0.000030518044, offset -32767.000000000000"
+      },
+      "position_ids_cos": {
+        "dimensions": "1,1,128,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -1.000015258789, max 0.999984741211, scale 0.000030518044, offset -32768.000000000000"
+      },
+      "position_ids_sin": {
+        "dimensions": "1,1,128,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -1.000015258789, max 0.999984741211, scale 0.000030518044, offset -32768.000000000000"
+      },
+      "swa_key_0_h0_in": {
+        "dimensions": "1,1,256,512",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.915962696075, max 0.915934741497, scale 0.000027952963, offset -32768.000000000000"
+      },
+      "swa_value_0_h0_in": {
+        "dimensions": "1,1,512,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -11.542569160461, max 11.542217254639, scale 0.000352251256, offset -32768.000000000000"
+      },
+      "swa_key_1_h0_in": {
+        "dimensions": "1,1,256,512",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.584411084652, max 0.584393262863, scale 0.000017834811, offset -32768.000000000000"
+      },
+      "swa_value_1_h0_in": {
+        "dimensions": "1,1,512,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -13.660408973694, max 13.659992218018, scale 0.000416882598, offset -32768.000000000000"
+      },
+      "swa_key_2_h0_in": {
+        "dimensions": "1,1,256,512",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.801633417606, max 0.801608979702, scale 0.000024463910, offset -32768.000000000000"
+      },
+      "swa_value_2_h0_in": {
+        "dimensions": "1,1,512,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -14.692908287048, max 14.692460060120, scale 0.000448391977, offset -32768.000000000000"
+      },
+      "swa_key_3_h0_in": {
+        "dimensions": "1,1,256,512",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.709320425987, max 0.709298789501, scale 0.000021646742, offset -32768.000000000000"
+      },
+      "swa_value_3_h0_in": {
+        "dimensions": "1,1,512,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -11.450654029846, max 11.450304985046, scale 0.000349446229, offset -32768.000000000000"
+      },
+      "past_key_4_h0_in": {
+        "dimensions": "1,1,512,3968",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.643496334553, max 0.643476724625, scale 0.000019637950, offset -32768.000000000000"
+      },
+      "past_value_4_h0_in": {
+        "dimensions": "1,1,3968,512",
+        "datatype": "Float_16",
+        "encoding": "No encoding info for this tensor"
+      },
+      "swa_key_5_h0_in": {
+        "dimensions": "1,1,256,512",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.718923211098, max 0.718901276588, scale 0.000021939795, offset -32768.000000000000"
+      },
+      "swa_value_5_h0_in": {
+        "dimensions": "1,1,512,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -14.576876640320, max 14.576432228088, scale 0.000444850972, offset -32768.000000000000"
+      },
+      "swa_key_6_h0_in": {
+        "dimensions": "1,1,256,512",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.613442540169, max 0.613423824310, scale 0.000018720781, offset -32768.000000000000"
+      },
+      "swa_value_6_h0_in": {
+        "dimensions": "1,1,512,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -11.578447341919, max 11.578093528748, scale 0.000353346171, offset -32768.000000000000"
+      },
+      "swa_key_7_h0_in": {
+        "dimensions": "1,1,256,512",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.763356864452, max 0.763333559036, scale 0.000023295803, offset -32768.000000000000"
+      },
+      "swa_value_7_h0_in": {
+        "dimensions": "1,1,512,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -14.547019958496, max 14.546575546265, scale 0.000443939818, offset -32768.000000000000"
+      },
+      "swa_key_8_h0_in": {
+        "dimensions": "1,1,256,512",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.890620350838, max 0.890593171120, scale 0.000027179576, offset -32768.000000000000"
+      },
+      "swa_value_8_h0_in": {
+        "dimensions": "1,1,512,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -15.125967979431, max 15.125506401062, scale 0.000461607910, offset -32768.000000000000"
+      },
+      "past_key_9_h0_in": {
+        "dimensions": "1,1,512,3968",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.543363988400, max 0.543347418308, scale 0.000016582153, offset -32768.000000000000"
+      },
+      "past_value_9_h0_in": {
+        "dimensions": "1,1,3968,512",
+        "datatype": "Float_16",
+        "encoding": "No encoding info for this tensor"
+      },
+      "swa_key_10_h0_in": {
+        "dimensions": "1,1,256,512",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -1.085104346275, max 1.085071206093, scale 0.000033114757, offset -32768.000000000000"
+      },
+      "swa_value_10_h0_in": {
+        "dimensions": "1,1,512,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -11.171680450439, max 11.171339988708, scale 0.000340932631, offset -32768.000000000000"
+      },
+      "swa_key_11_h0_in": {
+        "dimensions": "1,1,256,512",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.868748366833, max 0.868721842766, scale 0.000026512096, offset -32768.000000000000"
+      },
+      "swa_value_11_h0_in": {
+        "dimensions": "1,1,512,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -8.505684852600, max 8.505425453186, scale 0.000259572902, offset -32768.000000000000"
+      },
+      "swa_key_12_h0_in": {
+        "dimensions": "1,1,256,512",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.771119952202, max 0.771096408367, scale 0.000023532713, offset -32768.000000000000"
+      },
+      "swa_value_12_h0_in": {
+        "dimensions": "1,1,512,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -13.426556587219, max 13.426146507263, scale 0.000409745990, offset -32768.000000000000"
+      },
+      "swa_key_13_h0_in": {
+        "dimensions": "1,1,256,512",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -1.083994984627, max 1.083961844444, scale 0.000033080902, offset -32768.000000000000"
+      },
+      "swa_value_13_h0_in": {
+        "dimensions": "1,1,512,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -15.472543716431, max 15.472071647644, scale 0.000472184562, offset -32768.000000000000"
+      },
+      "past_key_14_h0_in": {
+        "dimensions": "1,1,512,3968",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.588524341583, max 0.588506400585, scale 0.000017960338, offset -32768.000000000000"
+      },
+      "past_value_14_h0_in": {
+        "dimensions": "1,1,3968,512",
+        "datatype": "Float_16",
+        "encoding": "No encoding info for this tensor"
+      }
+    },
+    "output": {
+      "swa_value_0_h0_out": {
+        "dimensions": "1,1,128,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -11.542569160461, max 11.542217254639, scale 0.000352251256, offset -32768.000000000000"
+      },
+      "swa_key_0_h0_out": {
+        "dimensions": "1,1,256,128",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.915962696075, max 0.915934741497, scale 0.000027952963, offset -32768.000000000000"
+      },
+      "swa_value_1_h0_out": {
+        "dimensions": "1,1,128,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -13.660408973694, max 13.659992218018, scale 0.000416882598, offset -32768.000000000000"
+      },
+      "swa_key_1_h0_out": {
+        "dimensions": "1,1,256,128",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.584411084652, max 0.584393262863, scale 0.000017834811, offset -32768.000000000000"
+      },
+      "swa_value_2_h0_out": {
+        "dimensions": "1,1,128,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -14.692908287048, max 14.692460060120, scale 0.000448391977, offset -32768.000000000000"
+      },
+      "swa_key_2_h0_out": {
+        "dimensions": "1,1,256,128",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.801633417606, max 0.801608979702, scale 0.000024463910, offset -32768.000000000000"
+      },
+      "swa_value_3_h0_out": {
+        "dimensions": "1,1,128,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -11.450654029846, max 11.450304985046, scale 0.000349446229, offset -32768.000000000000"
+      },
+      "swa_key_3_h0_out": {
+        "dimensions": "1,1,256,128",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.709320425987, max 0.709298789501, scale 0.000021646742, offset -32768.000000000000"
+      },
+      "past_key_4_h0_out": {
+        "dimensions": "1,1,512,128",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.643496334553, max 0.643476724625, scale 0.000019637950, offset -32768.000000000000"
+      },
+      "swa_value_5_h0_out": {
+        "dimensions": "1,1,128,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -14.576876640320, max 14.576432228088, scale 0.000444850972, offset -32768.000000000000"
+      },
+      "swa_key_5_h0_out": {
+        "dimensions": "1,1,256,128",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.718923211098, max 0.718901276588, scale 0.000021939795, offset -32768.000000000000"
+      },
+      "swa_value_6_h0_out": {
+        "dimensions": "1,1,128,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -11.578447341919, max 11.578093528748, scale 0.000353346171, offset -32768.000000000000"
+      },
+      "swa_key_6_h0_out": {
+        "dimensions": "1,1,256,128",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.613442540169, max 0.613423824310, scale 0.000018720781, offset -32768.000000000000"
+      },
+      "swa_value_7_h0_out": {
+        "dimensions": "1,1,128,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -14.547019958496, max 14.546575546265, scale 0.000443939818, offset -32768.000000000000"
+      },
+      "swa_key_7_h0_out": {
+        "dimensions": "1,1,256,128",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.763356864452, max 0.763333559036, scale 0.000023295803, offset -32768.000000000000"
+      },
+      "swa_value_8_h0_out": {
+        "dimensions": "1,1,128,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -15.125967979431, max 15.125506401062, scale 0.000461607910, offset -32768.000000000000"
+      },
+      "swa_key_8_h0_out": {
+        "dimensions": "1,1,256,128",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.890620350838, max 0.890593171120, scale 0.000027179576, offset -32768.000000000000"
+      },
+      "past_key_9_h0_out": {
+        "dimensions": "1,1,512,128",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.543363988400, max 0.543347418308, scale 0.000016582153, offset -32768.000000000000"
+      },
+      "swa_value_10_h0_out": {
+        "dimensions": "1,1,128,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -11.171680450439, max 11.171339988708, scale 0.000340932631, offset -32768.000000000000"
+      },
+      "swa_key_10_h0_out": {
+        "dimensions": "1,1,256,128",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -1.085104346275, max 1.085071206093, scale 0.000033114757, offset -32768.000000000000"
+      },
+      "swa_value_11_h0_out": {
+        "dimensions": "1,1,128,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -8.505684852600, max 8.505425453186, scale 0.000259572902, offset -32768.000000000000"
+      },
+      "swa_key_11_h0_out": {
+        "dimensions": "1,1,256,128",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.868748366833, max 0.868721842766, scale 0.000026512096, offset -32768.000000000000"
+      },
+      "swa_value_12_h0_out": {
+        "dimensions": "1,1,128,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -13.426556587219, max 13.426146507263, scale 0.000409745990, offset -32768.000000000000"
+      },
+      "swa_key_12_h0_out": {
+        "dimensions": "1,1,256,128",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.771119952202, max 0.771096408367, scale 0.000023532713, offset -32768.000000000000"
+      },
+      "swa_value_13_h0_out": {
+        "dimensions": "1,1,128,256",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -15.472543716431, max 15.472071647644, scale 0.000472184562, offset -32768.000000000000"
+      },
+      "swa_key_13_h0_out": {
+        "dimensions": "1,1,256,128",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -1.083994984627, max 1.083961844444, scale 0.000033080902, offset -32768.000000000000"
+      },
+      "past_key_14_h0_out": {
+        "dimensions": "1,1,512,128",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -0.588524341583, max 0.588506400585, scale 0.000017960338, offset -32768.000000000000"
+      },
+      "logits": {
+        "dimensions": "1,128,262144",
+        "datatype": "uFxp_16",
+        "encoding": "bitwidth 16, min -28.334943771362, max 29.932668685913, scale 0.000889106770, offset -31869.000000000000"
+      },
+      "past_value_4_h0_out": {
+        "dimensions": "1,1,128,512",
+        "datatype": "Float_16",
+        "encoding": "No encoding info for this tensor"
+      },
+      "past_value_9_h0_out": {
+        "dimensions": "1,1,128,512",
+        "datatype": "Float_16",
+        "encoding": "No encoding info for this tensor"
+      },
+      "past_value_14_h0_out": {
+        "dimensions": "1,1,128,512",
+        "datatype": "Float_16",
+        "encoding": "No encoding info for this tensor"
+      }
+    }
+  },
+  "full_htp_delegation_proven": false
+}

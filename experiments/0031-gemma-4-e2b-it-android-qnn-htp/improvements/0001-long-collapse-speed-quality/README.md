@@ -8,7 +8,7 @@ The accepted route remains the baseline. Any new conversion, host diagnostic, hy
 
 ## Current host status — 2026-09-10
 
-**Attempt 05: AR1 DLC/interface gate passed; AR128 blocked by tmpfs exhaustion. No restart authorized.** The first three retained launches diagnosed two missing loader-path prerequisites and an unexecuted patch assumption (AR1 has six explicit selected cache encodings; AR128 has only three input entries). Existing host libraries were reused without installation or SDK changes.
+**Attempt 06: AR128 conversion completed with verified AR1 reuse; the actual 30-cache paired interface gate passes. Context compilation/fidelity remain gated.** The first three retained launches diagnosed two missing loader-path prerequisites and an unexecuted patch assumption (AR1 has six explicit selected cache encodings; AR128 has only three input entries). Existing host libraries were reused without installation or SDK changes.
 
 Attempt 04 prepared both FP16 global-value-cache ONNX variants and passed independent scope checks. Pi then requested STOP → TERM to release app resources before a DLC was produced. It remains **an app-priority interruption, not a model or numerical failure** at [`results/global-value-fp16-attempt-04/`](results/global-value-fp16-attempt-04/result.json).
 
@@ -16,7 +16,11 @@ After a separate release, attempt 05 used the unchanged recipe. AR1 converted to
 
 Sequential AR128 conversion failed with **Errno 28** while dumping external data to the 16 GiB `/tmp` tmpfs. The owned partial scratch file was hashed and that directory alone removed. A first read-only inspector timed out after 90 seconds with empty logs; a separately retained guarded inspection completed. No conversion retry occurred. See [`results/global-value-fp16-attempt-05/result.json`](results/global-value-fp16-attempt-05/result.json), including losslessly compressed candidate/baseline CSVs.
 
-No AR128 DLC or matched two-graph cache contract exists. Compilation, full HTP delegation, runtime unsupported/fallback counts, fidelity and speed improvements remain **unmeasured**. [Disk-backed scratch readiness](DISK-SCRATCH-READINESS.md) proposes a host-environment-only fix for a new explicitly approved attempt. Completed campaign and registry evidence are unchanged.
+After separate review/release, attempt 06 used disk-backed owned `QAIRT_TMP_DIR` and converted **only AR128**, reusing the exact hash-verified attempt-05 AR1 file without rewriting or reconverting it. The new AR128 DLC is 2,356,859,020 bytes, SHA-256 `48fc15f0cbec88963f7b4d0f9007b82ca5a1e1d812ca320ceec776e00a917b64`. Official CSV inspection confirms selected Float_16 inputs/outputs, unchanged unselected public signatures and dimensions, and matching datatype/encoding on **all 30 four-way AR1/AR128 cache contracts**.
+
+AR128 operator count increases **6,830→6,842**, including **Convert 30→36**, three added Casts and three Dequantize ops. Its converter float-precision warnings increase **15→21** (15 RmsNorm plus three global Concats and three output Casts); reused AR1 remains 75→81 with Convert 31→31. These observations show no count-based speed win and do not imply CPU fallback or full HTP delegation. See [`results/global-value-fp16-attempt-06/result.json`](results/global-value-fp16-attempt-06/result.json).
+
+The SDK removed all scratch files; the empty owned scratch root was removed and all owned processes exited. Compilation, full HTP delegation, runtime unsupported/fallback counts, fidelity and speed improvements remain **unmeasured**. [Disk-backed scratch/reuse notes](DISK-SCRATCH-READINESS.md) record the environment change; a separate review is required before any context compilation. Completed campaign and registry evidence are unchanged.
 
 The separately documented [request-level routing recommendation](REQUEST-ROUTING.md) remains an unmeasured integration policy, not a new campaign.
 
@@ -59,6 +63,6 @@ Do not run until Pi releases the app-priority hold. Use a fresh run ID/directory
 
 The environment needs both QAIRT `2.49.40.260810/bin/envsetup.sh` and the already-established experiment `.local/host-libs` prepended to `LD_LIBRARY_PATH`. That directory resolves managed Python `3.10.18` and `/usr/lib/libunwind.so.8`; exact paths/hashes and pybind `ldd` output are retained in attempt 04. SDK envsetup alone was insufficient.
 
-Source-only preparation now permits `--reuse-ar1-dlc <attempt05-ar1.dlc>` to verify the accepted result/size/hash before QAIRT import and convert only AR128 in a fresh attempt. Reused AR1 provenance stays separate from newly converted artifacts; it is never overwritten or counted as a new conversion. This support has not been run against the model.
+`--reuse-ar1-dlc <attempt05-ar1.dlc>` verifies the accepted result/size/hash before QAIRT import and converts only AR128 in a fresh attempt. Reused AR1 provenance stays separate from newly converted artifacts; it is never overwritten or counted as a new conversion. This support was exercised in attempt 06 after explicit release.
 
 Run only after release, at low CPU/I/O priority with swap allowed and app work prioritized. After conversion, use official `qairt-dlc-info --save` CSVs and `tools/inspect_global_value_dlc.py` to reject inherited quantized outputs or changes to unselected interfaces. `require_cache_pair` requires passed actual AR1 and AR128 comparisons plus matching four-way signatures on all 30 caches before a compilation handoff. Its legacy runtime letters are not full HTP delegation proof. No compilation, fidelity run or phone access is authorized by this preparation.
