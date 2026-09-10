@@ -8,13 +8,14 @@ import java.io.File
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
-internal class TtsOnlyContract private constructor(val json: JSONObject, val text: String, val isLongProbe: Boolean) {
+internal class TtsOnlyContract private constructor(val json: JSONObject, val text: String, val isLongProbe: Boolean, val sha256: String) {
     fun deadlineMs(stage: String) = json.getJSONObject("deadlineSeconds").getLong(stage) * 1000L
     val voice get() = json.getString("voice")
     val chapterId get() = json.getString("chapterId")
     val manifestSha get() = json.getString("supertonicManifestSha256")
-    val sha256 get() = if (isLongProbe) LONG_SHA256 else SHA256
-    val assetDirectory get() = if (isLongProbe) "tts-long" else "tts-only"
+    val assetDirectory get() = directory(sha256)
+    val evidenceDirectory get() = if (isLongProbe) "tts-long" else "tts-only"
+    val collectProfiles get() = json.optBoolean("collectProfiles", true)
     val packId get() = if (isLongProbe) json.getString("packId") else "supertonic-3"
     val outputName get() = "$chapterId.wav"
     val driverMs get() = json.getLong("driverSeconds") * 1000L
@@ -53,21 +54,29 @@ internal class TtsOnlyContract private constructor(val json: JSONObject, val tex
         const val TEXT_SHA = "424b38073a00cf48e4c3ebaa246aec0b6549b3ed56a1bf7cfa26d037fb29db67"
         const val DRIVER_MS = 345_000L
         const val LONG_SHA256 = "66f8dcd5e753acabd4f69040496ef476b709c2317ebc41a5d5d926b13c353a87"
-        fun approvedHash(value: String?) = value == SHA256 || value == LONG_SHA256
+        const val PROFILE_OFF_SHA256 = "8d6b93557a2ac9d191b731735015bad6ce9d95c9b605861dc3c930cf9c82cd35"
+        fun isLongHash(value: String?) = value == LONG_SHA256 || value == PROFILE_OFF_SHA256
+        fun approvedHash(value: String?) = value == SHA256 || isLongHash(value)
+        private fun directory(sha: String) = when (sha) {
+            SHA256 -> "tts-only"
+            LONG_SHA256 -> "tts-long"
+            PROFILE_OFF_SHA256 -> "tts-long-profile-off"
+            else -> error("Unapproved TTS contract")
+        }
         fun validRunId(value: String, approvedSha: String = SHA256): Boolean = when (approvedSha) {
             SHA256 -> value.matches(Regex("tts-only-[a-z0-9-]{1,64}"))
-            LONG_SHA256 -> value.matches(Regex("tts-long-[a-z0-9-]{1,64}"))
+            LONG_SHA256, PROFILE_OFF_SHA256 -> value.matches(Regex("tts-long-[a-z0-9-]{1,64}"))
             else -> false
         }
         fun load(context: Context, approvedSha: String = SHA256): TtsOnlyContract {
             require(approvedHash(approvedSha))
-            val directory = if (approvedSha == LONG_SHA256) "tts-long" else "tts-only"
+            val directory = directory(approvedSha)
             return parseVariant(approvedSha) { context.assets.open("$directory/$it").use { input -> input.readBytes() } }
         }
         internal fun parse(read: (String) -> ByteArray) = parseVariant(SHA256, read)
         internal fun parseVariant(approvedSha: String, read: (String) -> ByteArray): TtsOnlyContract {
             require(approvedHash(approvedSha))
-            val isLong = approvedSha == LONG_SHA256
+            val isLong = isLongHash(approvedSha)
             val bytes = read("contract.json"); require(WiringContract.hash(bytes) == approvedSha)
             val json = JSONObject(bytes.toString(Charsets.UTF_8))
             val input = json.getJSONObject(if (isLong) "input" else "canonical")
@@ -82,7 +91,7 @@ internal class TtsOnlyContract private constructor(val json: JSONObject, val tex
             } else {
                 require(text.size == 226 && input.getString("sha256") == TEXT_SHA)
             }
-            return TtsOnlyContract(json, text.toString(Charsets.UTF_8), isLong)
+            return TtsOnlyContract(json, text.toString(Charsets.UTF_8), isLong, approvedSha)
         }
     }
 }

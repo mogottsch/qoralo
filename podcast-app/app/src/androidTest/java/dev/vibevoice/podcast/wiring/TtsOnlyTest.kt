@@ -29,7 +29,7 @@ class TtsOnlyTest {
         val context = instrumentation.targetContext
         require(Application.getProcessName() == context.packageName)
         val contract = TtsOnlyContract.load(context, approvedSha)
-        val root = File(context.filesDir, "${contract.assetDirectory}/$run"); require(!root.exists() && root.mkdirs())
+        val root = File(context.filesDir, "${contract.evidenceDirectory}/$run"); require(!root.exists() && root.mkdirs())
         val log = WiringEvidence(root)
         val start = SystemClock.elapsedRealtime()
         try {

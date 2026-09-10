@@ -1,6 +1,6 @@
 # One profile-OFF long diagnostic — source-only proposal
 
-**Status:** source/saved-evidence mapping only. No new candidate has been built or run by this document. Pi conditionally permits source/build preparation after Nik confirms the mapping; an exact new candidate review and fresh Pi phone release are still required.
+**Status:** Nik confirmed the mapping and Pi authorized the minimal source/build preparation. The debug source is prepared; no profile-OFF candidate has been run. An exact new candidate review and fresh Pi phone release are still required.
 
 ## Question, not a claimed fix
 
@@ -31,6 +31,8 @@ This source mapping is not a capture of native profile-handle pointer values or 
 ## Smallest controlled implementation
 
 Use one pinned debug contract choice, for example `collectProfiles:false`, with defaulttrue for existing contracts. Gate only the existing `RuntimeDiagnostics.enableTtsOnly(evidence)` call before `tts.load`; leave RuntimeDiagnostics disabled for the new variant. All other `WiringEvidence` writes/snapshots and `NativeStdioCapture` are independent of this hook and remain enabled.
+
+Prepared contract: `app/src/debug/assets/tts-long-profile-off/contract.json`, SHA `8d6b93557a2ac9d191b731735015bad6ce9d95c9b605861dc3c930cf9c82cd35`. The narration is byte-identical to the retained original. The separate caller `tools/run_tts_profile_off_gate.py`, SHA `2a43becadc897a47c6c50424479e68fa996a05c0f70787be802ff6b2bf8b742d`, is AST-equivalent to the original a87 caller apart from variant pins/labels and explicit unavailable telemetry fields. `prepare_tts_profile_off_gate.py` asserts exactly six app/src paths differ from b860's effective tree and reuses native9. Seven focused JVM methods (four canonical contract regressions +three profile-OFF mode/hook tests) are selected; no repeated full data-pack verifier method or broad suite. Four new host scope tests pass.
 
 Give this mode its own immutable contract/candidate and fresh run/output. Retain the original profiled contract/assets/APKs/controller/evidence. Minimal selector plumbing may add a profile-off long contract asset and hash; this is not a new runtime abstraction. Do not change chapter ID to label the variant: it participates in the RNG seed. Use the run ID/contract for the label instead.
 

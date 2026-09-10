@@ -46,7 +46,7 @@ class TtsOnlyService : Service() {
         if (!TtsOnlyContract.approvedHash(approval) || !TtsOnlyContract.validRunId(run, approval)) {
             stopSelf(); return START_NOT_STICKY
         }
-        val isLong = approval == TtsOnlyContract.LONG_SHA256
+        val isLong = TtsOnlyContract.isLongHash(approval)
         check(Application.getProcessName() == "$packageName:generation")
         val root = File(filesDir, "${if (isLong) "tts-long" else "tts-only"}/$run")
         check(root.isDirectory && !File(root, "service-started.json").exists())
@@ -68,7 +68,12 @@ class TtsOnlyService : Service() {
                     }
                 }, 1, 1, TimeUnit.SECONDS)
                 NativeStdioCapture(root).use {
-                    RuntimeDiagnostics.enableTtsOnly(evidence)
+                    evidence.json("profiling-policy.json", JSONObject().put("collectProfiles", contract.collectProfiles)
+                        .put("ortProfilingEnabled", contract.collectProfiles).put("qnnProfilingEnabled", contract.collectProfiles)
+                        .put("profileEvidence", if (contract.collectProfiles) "requires saved-profile audit" else "UNAVAILABLE_BY_DESIGN: ORT Node/Session and QNN RPC/cycle/HVX profiles")
+                        .put("observedPerComponentRuns", JSONObject.NULL)
+                        .put("expectedSessionRunCounts", contract.json.getJSONObject("expectedSessionRunCounts")))
+                    if (contract.collectProfiles) RuntimeDiagnostics.enableTtsOnly(evidence)
                     runBlocking {
                         val app = application as PodcastApplication
                         val pack = step(contract, "verify") {
@@ -110,8 +115,10 @@ class TtsOnlyService : Service() {
                                 .put("timingBoundary", "load covers four-context adapter load; render includes normalization, native duration/text/5vector/vocoder and WAV validation/publication; excludes verify/load/close")
                                 .put("warmMedianRtf", JSONObject.NULL).put("warmMedianUnavailable", "only one first request authorized")
                                 .put("logicalTtsRequests", 1).put("expectedInternalRuns", contract.json.getJSONObject("expectedSessionRunCounts"))
+                                .put("collectProfiles", contract.collectProfiles).put("observedPerComponentRuns", JSONObject.NULL)
+                                .put("profileEvidence", if (contract.collectProfiles) "requires saved-profile audit" else "UNAVAILABLE_BY_DESIGN; no direct per-graph HTP/RPC/cycle claim")
                                 .put("listeningVerdict", "not_reviewed").put("capacityProbe", contract.isLongProbe)
-                                .put("claim", if (contract.isLongProbe) "one noncanonical profiled capacity request; bounded operability only, not fidelity/warm campaign/product E2E" else "one profiled engineering request; not full chapter, campaign or product E2E"))
+                                .put("claim", if (!contract.collectProfiles) "one noncanonical unprofiled request; bounded operability/listening, not direct per-graph execution proof/fidelity/campaign/product E2E" else if (contract.isLongProbe) "one noncanonical profiled capacity request; bounded operability only, not fidelity/warm campaign/product E2E" else "one profiled engineering request; not full chapter, campaign or product E2E"))
                             evidence.snapshot("after-render")
                         }
                         step(contract, "close") { tts.close() }; closed = true
