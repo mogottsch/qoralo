@@ -1,0 +1,442 @@
+{
+  "adapter_commit": "b43a57f",
+  "analysis_issues": [],
+  "claim_boundary": "One real exact-long/max2048 query completed through QnnDsp/HTP on the frozen FP16-global-value context. The complete output is byte-identical to all five retained baseline long outputs and has unchanged declared repetition metrics. Global-value FP16 alone produced no observable text/repetition improvement on this request. This is not numerical-state equivalence, broad quality or speed acceptance, a baseline rerun, or a canonical campaign replacement.",
+  "classification": "physical_exact_long_htp_execution_repetition_unchanged",
+  "cleanup": {
+    "adb_calls": 281,
+    "all_calls_lock_guarded": true,
+    "live_native_pid_observed": true,
+    "lock_released": true,
+    "raw_pull_before_cleanup": true,
+    "recorded_roles_absent": true,
+    "remote_root_absent": true,
+    "signal_commands": 0
+  },
+  "collection": {
+    "adb_command_count": 281,
+    "automatic_retry": false,
+    "classification": "collection_not_inference_validation",
+    "cleanup": "verified_absent",
+    "controller_script_hashes": {
+      "control.sh": "b74bee6abb37b068c0aedeb2f0a695d8c9efa2b98f9200022c562730067b3f74",
+      "launch.sh": "abe1e12d0b6c0f4cd4f4a3d0e2b7c229faaf0987c57ee17242a2f5ddc1700da0",
+      "model-entry.sh": "25db5d6e2dd120309b3c96c5225fe76f176d3a0007698c99e45819f958c244c3",
+      "watchdog.sh": "d872ca3f4ad126286ccc9b6a495cbe3321661924f11d532f441f5ba466349d64"
+    },
+    "controller_sources": {
+      "phone_return_controller.py": "e0e91e1855239a5ab349555f81ea050b94ea2997ba01e59c9c705444cdc6e9d2",
+      "phone_return_shell.py": "4ce478abf5b44ea0ae32cb9f490eb319f37fd54243fa91fb1433883c8be9b7bb",
+      "prepare_frozen_genie_stage.py": "34c56e7a2ec92c68a7a781ca7c7230a3ad8ce60d249dbd93e6c4cd359b403ccf"
+    },
+    "fidelity": null,
+    "identity": {
+      "ro.boot.flash.locked": "1",
+      "ro.boot.verifiedbootstate": "green",
+      "ro.build.fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+      "ro.build.version.release": "16",
+      "ro.build.version.sdk": "36",
+      "ro.product.cpu.abi": "arm64-v8a",
+      "ro.product.device": "dm3q",
+      "ro.product.manufacturer": "samsung",
+      "ro.product.model": "SM-S918B",
+      "ro.soc.model": "SM8550",
+      "serial": "R5CW81PR8SY",
+      "sys.boot_completed": "1"
+    },
+    "identity_verified": true,
+    "input_hashes_verified": true,
+    "launch_command_attempted": true,
+    "long_script": true,
+    "native_process_observed": true,
+    "optional_metrics": {
+      "reason": "Offline profile/provider/query review is separate; controller does not infer metrics.",
+      "values": null
+    },
+    "phone_lock_released": true,
+    "pi_slot": "pi-gemma-fp16-long-20260910-a",
+    "process_cleanup": {
+      "all_absent": true,
+      "basis": "fresh scoped PID/starttime probes; no name-wide kill"
+    },
+    "process_exit_code": 0,
+    "provider_placement": null,
+    "raw_capture_attempted": true,
+    "raw_pull_completed": true,
+    "remote_creation_confirmed": true,
+    "remote_root": "/data/local/tmp/vibevoice-0031-fp16-fp16-long-20260910T171555Z-01",
+    "reviewed_stage_digest": "047dd808fe49656105934a9afed521fc3c4acdd0c6d278d0ed5685a98a0b846e",
+    "run_id": "fp16-long-20260910T171555Z-01",
+    "runtime_success": null,
+    "scope": "exact-long engineering max2048 only (not a campaign)",
+    "scope_adapter": {
+      "adapter_sha256": "63377f368f83c9b2bfe5e09fec7a276ad2ddc2481acb1f97d1987e38d90235e0",
+      "base_reviewed_commit": "62b8a16",
+      "gate_a_commit": "81f4ede",
+      "gate_a_result_sha256": "1290cc51948e82fd974b175c46a1a67cd0ff0db382ad1db047993f9ad7849aff",
+      "launch_change": "direct nohup, no cd/AND-list, absolute stdin/stdout/stderr redirections",
+      "long_stage_digest": "047dd808fe49656105934a9afed521fc3c4acdd0c6d278d0ed5685a98a0b846e",
+      "materialized_controller_sha256": "182dcfb90659913b55f929366ce4b18f4890bfad82155bf9866ca94b0aa3045f",
+      "materialized_shell_sha256": "890bd3479fb6a2a0406b4414ec80cbbc53b35169fffb0a9967c2dda70336cce2",
+      "original_short_sources_modified": false,
+      "scope": "one exact-long/max2048 request; preparation is not phone permission",
+      "signal_guard_atomic": false,
+      "source_changes": [
+        {
+          "count": 1,
+          "new": "single engineering exact-long/max2048 process",
+          "old": "single engineering short/max16 process"
+        },
+        {
+          "count": 1,
+          "new": "stage-freeze-long-20260910T163842Z-01",
+          "old": "stage-freeze-20260910T105830Z-01"
+        },
+        {
+          "count": 1,
+          "new": "047dd808fe49656105934a9afed521fc3c4acdd0c6d278d0ed5685a98a0b846e",
+          "old": "584841604ecf97a1a916c9a7f765e49ff9f7a2ee751a61fda9e9e6588f02fe25"
+        },
+        {
+          "count": 1,
+          "new": "one fresh-dialog exact-long engineering/max2048 only (not a campaign)",
+          "old": "one fresh-dialog first-short engineering/noncanonical max16 only"
+        },
+        {
+          "count": 1,
+          "new": "exact-long engineering max2048 only (not a campaign)",
+          "old": "first-short engineering max16 only"
+        },
+        {
+          "count": 1,
+          "new": "'.local/phone-return-long-runs'",
+          "old": "'.local/phone-return-runs'"
+        },
+        {
+          "count": 1,
+          "new": "exact-long.script",
+          "old": "first-short.script"
+        },
+        {
+          "count": 2,
+          "new": "'long_script': True",
+          "old": "'long_script': False"
+        },
+        {
+          "count": 1,
+          "new": "'classification': 'collection_not_inference_validation', 'run_id': run_id,\n                       'scope_adapter': _LONG_SCOPE_RECEIPT,",
+          "old": "'classification': 'collection_not_inference_validation', 'run_id': run_id,"
+        },
+        {
+          "count": 1,
+          "new": "        command = _LONG_DETACHED_LAUNCH(self.remote)",
+          "old": "        prefix = shlex.quote(self.remote)\n        command = (f'cd {prefix} && nohup /system/bin/sh {shlex.quote(self.remote + \"/launch.sh\")} '\n                   f'</dev/null >evidence/launcher.stdout 2>evidence/launcher.stderr &')"
+        }
+      ],
+      "template_controller_sha256": "e0e91e1855239a5ab349555f81ea050b94ea2997ba01e59c9c705444cdc6e9d2",
+      "template_shell_sha256": "4ce478abf5b44ea0ae32cb9f490eb319f37fd54243fa91fb1433883c8be9b7bb"
+    },
+    "signal_guard_atomic": false,
+    "signal_race_boundary": "Sequential /proc starttime/executable/argv checks then numeric-PID kill; no kernel pidfd binding."
+  },
+  "comparison": {
+    "all_declared_metrics_equal": true,
+    "baseline_commit": "37a2953",
+    "baseline_metrics": {
+      "dominant_word_6gram": {
+        "count": 215,
+        "first_word_index_zero_based": 83,
+        "text": ". the most important takeaway is"
+      },
+      "exact_periodic_suffix": {
+        "complete_cycles": 174,
+        "period_tokens": 9,
+        "start_token_index_zero_based": 478,
+        "suffix_tokens": 1570,
+        "trailing_partial_cycle_tokens": 4
+      },
+      "ngram_metrics": {
+        "16": {
+          "most_common_count": 208,
+          "most_common_first_token_index_zero_based": 117,
+          "total": 2033,
+          "unique": 169,
+          "unique_ratio": 0.08312838170191834
+        },
+        "4": {
+          "most_common_count": 216,
+          "most_common_first_token_index_zero_based": 84,
+          "total": 2045,
+          "unique": 121,
+          "unique_ratio": 0.05916870415647922
+        },
+        "8": {
+          "most_common_count": 215,
+          "most_common_first_token_index_zero_based": 84,
+          "total": 2041,
+          "unique": 142,
+          "unique_ratio": 0.06957373836354729
+        }
+      },
+      "rolling_collapse_onset": {
+        "criterion": "first 128-token window whose 4-gram unique ratio is <= 0.25",
+        "observed_unique_ratio": 0.248,
+        "start_token_index_zero_based": 83,
+        "start_token_ordinal_one_based": 84
+      },
+      "token_count": 2048,
+      "word_token_count": 1829
+    },
+    "baseline_output_count": 5,
+    "baseline_output_hashes": [
+      "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d",
+      "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d",
+      "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d",
+      "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d",
+      "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d"
+    ],
+    "candidate_byte_identical_to_all_baselines": true,
+    "candidate_metrics": {
+      "dominant_word_6gram": {
+        "count": 215,
+        "first_word_index_zero_based": 83,
+        "text": ". the most important takeaway is"
+      },
+      "exact_periodic_suffix": {
+        "complete_cycles": 174,
+        "period_tokens": 9,
+        "start_token_index_zero_based": 478,
+        "suffix_tokens": 1570,
+        "trailing_partial_cycle_tokens": 4
+      },
+      "ngram_metrics": {
+        "16": {
+          "most_common_count": 208,
+          "most_common_first_token_index_zero_based": 117,
+          "total": 2033,
+          "unique": 169,
+          "unique_ratio": 0.08312838170191834
+        },
+        "4": {
+          "most_common_count": 216,
+          "most_common_first_token_index_zero_based": 84,
+          "total": 2045,
+          "unique": 121,
+          "unique_ratio": 0.05916870415647922
+        },
+        "8": {
+          "most_common_count": 215,
+          "most_common_first_token_index_zero_based": 84,
+          "total": 2041,
+          "unique": 142,
+          "unique_ratio": 0.06957373836354729
+        }
+      },
+      "rolling_collapse_onset": {
+        "criterion": "first 128-token window whose 4-gram unique ratio is <= 0.25",
+        "observed_unique_ratio": 0.248,
+        "start_token_index_zero_based": 83,
+        "start_token_ordinal_one_based": 84
+      },
+      "token_count": 2048,
+      "word_token_count": 1829
+    },
+    "cause_boundary": "Negative result for this exact candidate/request only. Selected FP16 interfaces may retain internal quantization; this does not disprove all cache-precision causes.",
+    "metric_source_sha256": "6084bb73d60f7e68ac3f516fad6df3463fdc8adb6213ea9a9a36190099b4fb70",
+    "onset_boundary": "Index83 is the START of the first qualifying128-token diversity window, not an exact causal onset or internal logit/state divergence.",
+    "token_basis": "Re-encoded output text using the same pinned tokenizer; not directly logged emitted IDs.",
+    "tokenizer_sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f"
+  },
+  "context_sha256": "1d80d01637f032ab0c5ec3135e9458c648b4c18e034574a56d42dbfbdbdca9f8",
+  "experiment": "0031-gemma-4-e2b-it-android-qnn-htp",
+  "improvement_track": "0001-long-collapse-speed-quality",
+  "memory": {
+    "htp_private_memory": null,
+    "process_pss": null,
+    "process_vmhwm": null,
+    "reason": "Controller collects PID identity but not these memory metrics; do not relabel stderr buffer allocation or /proc stat fields."
+  },
+  "next_gate": "Pi findings review only. No further optimization, recompile, runtime, phone or push authorized.",
+  "operating_context": {
+    "battery_after": {
+      "level_percent": 75,
+      "scope": "Derived core fields only; vendor learned charging/sleep history omitted.",
+      "temperature_c": 35.7,
+      "usb_powered": true,
+      "voltage_mv": 3996
+    },
+    "battery_before": {
+      "level_percent": 76,
+      "scope": "Derived core fields only; vendor learned charging/sleep history omitted.",
+      "temperature_c": 33.0,
+      "usb_powered": true,
+      "voltage_mv": 4018
+    },
+    "thermal": {
+      "after": {
+        "status": 1,
+        "temperatures_c": {
+          "AP": 50.8,
+          "BAT": 35.7,
+          "MAINBATRAW": 35.8,
+          "PA": 48.9,
+          "SKIN": 40.8,
+          "SUBBAT": 0.0,
+          "USB": 32.2
+        }
+      },
+      "before": {
+        "status": 0,
+        "temperatures_c": {
+          "AP": 44.2,
+          "BAT": 33.0,
+          "MAINBATRAW": 33.0,
+          "PA": 37.9,
+          "SKIN": 35.3,
+          "SUBBAT": 0.0,
+          "USB": 32.1
+        }
+      }
+    }
+  },
+  "output": {
+    "bytes": 10027,
+    "path": "raw/controller/raw/device/long-output.txt",
+    "profile_generated_tokens": 2048,
+    "retokenized_tokens": 2048,
+    "sha256": "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d"
+  },
+  "output_sanity": {
+    "issue_notes": "Severe repetition collapse with occasional <unk> leakage in the exact max-token output.",
+    "looks_sensible": false
+  },
+  "pi_slot": "pi-gemma-fp16-long-20260910-a",
+  "privacy_retention": {
+    "private_battery_originals": [
+      {
+        "bytes": 15764,
+        "private_original_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/phone-return-long-runs/fp16-long-20260910T171555Z-01/raw/commands/0024-telemetry.before.battery.stdout",
+        "reason": "Unrelated learned battery/sleep history retained privately, not rewritten.",
+        "sha256": "6ced210cb84b7f8c753c68dbd32434b79709ede007f3d10082ca5bbf20bb323b"
+      },
+      {
+        "bytes": 15770,
+        "private_original_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/phone-return-long-runs/fp16-long-20260910T171555Z-01/raw/commands/0278-telemetry.after.battery.stdout",
+        "reason": "Unrelated learned battery/sleep history retained privately, not rewritten.",
+        "sha256": "d42d1e0689cf832976f78bc275207d5201b148c35e3c4526e38ab23f9ef29219"
+      }
+    ],
+    "public_battery": "Explicit core-field extracts only."
+  },
+  "prompt": {
+    "bytes_exact": true,
+    "expected_tokens": 1929,
+    "logged_prefixes": [
+      {
+        "complete_count": 158,
+        "matches_bound_prefix": true,
+        "single_bos_prefix": true,
+        "truncated": true
+      },
+      {
+        "complete_count": 158,
+        "matches_bound_prefix": true,
+        "single_bos_prefix": true,
+        "truncated": true
+      }
+    ],
+    "profile_tokens": 1929,
+    "rendered_sha256": "450b519d417e29c4239e39aef856db1813d2580cd62e9db9adaae3d94ba8f260",
+    "token_ids_sha256": "3b5c04febbc9d55c529ee7ece510607203dbdc8256a6abc05ba0498cf4e52b64"
+  },
+  "provider_log": {
+    "compressed_path": "raw/controller/raw/device/genie-verbose.log.gz",
+    "compressed_sha256": "e31f84fb4e7128b99a89635f096e44d308043a67d0e52be625d79f5580f89cda",
+    "lossless": true,
+    "original_bytes": 54108333,
+    "original_sha256": "33ab01bb4a3bbd630533ba0e52e5aac067bbd27f446dadb9929084fdc6a2d440"
+  },
+  "provider_observations": {
+    "ar128_status0": 16,
+    "ar1_status0": 2047,
+    "cache_quantization_errors": 0,
+    "context_deserialized": 1,
+    "cpu_backend_markers": 0,
+    "dialog_create_enter": 1,
+    "dialog_free_return": 1,
+    "graph_nonzero_status": 0,
+    "graphs_started": 2063,
+    "graphs_status0": 2063,
+    "htp_initialized": 1,
+    "known_cross_attention_warning": 1,
+    "physical_soc_detected": 2,
+    "query_enter": 1,
+    "query_return": 1,
+    "runtime_fallback_markers": 0,
+    "smart_mask": 1,
+    "stub_connection": 1,
+    "two_graphs_initialized": 1,
+    "weight_sharing": 1
+  },
+  "publication": {
+    "completed_campaign_modified": false,
+    "long_repetition_improved": false,
+    "registry_eligible": false,
+    "speed_acceptance": false,
+    "uniform_integer_or_universal_cpu_free_claim": false
+  },
+  "raw_genie_profile": {
+    "create_event": {
+      "duration": 2141938,
+      "init-time": {
+        "unit": "us",
+        "value": 2139961
+      },
+      "start": 728223975850,
+      "stop": 728226117788,
+      "type": "GenieDialog_create"
+    },
+    "normalized_decode_tokens_per_second": null,
+    "profile_error": null,
+    "query_event": {
+      "duration": 109901620,
+      "num-generated-tokens": {
+        "unit": "",
+        "value": 2048
+      },
+      "num-prompt-tokens": {
+        "unit": "",
+        "value": 1929
+      },
+      "prompt-processing-rate": {
+        "unit": "toks/sec",
+        "value": 781.25
+      },
+      "start": 728226118112,
+      "stop": 728336019732,
+      "time-to-first-token": {
+        "unit": "us",
+        "value": 2469576
+      },
+      "token-generation-rate": {
+        "unit": "toks/sec",
+        "value": 19.198280334472656
+      },
+      "token-generation-time": {
+        "unit": "us",
+        "value": 106624615
+      },
+      "type": "GenieDialog_query"
+    },
+    "reason": "Genie rate first-token inclusion is unspecified. One observation with different thermal/run context is not a normalized speed win."
+  },
+  "run_id": "fp16-long-20260910T171555Z-01",
+  "schema_version": 1,
+  "stage_digest": "047dd808fe49656105934a9afed521fc3c4acdd0c6d278d0ed5685a98a0b846e",
+  "stop": {
+    "ceiling_reached": true,
+    "configured_ceiling_observed": 2048,
+    "explicit_runtime_stop_reason": null,
+    "missing_reason": "Configured2048 ceiling was reached and query returned; no independent EOS-versus-limit stop enum/event is exposed."
+  }
+}

@@ -8,7 +8,7 @@ The accepted route remains the baseline. Any new conversion, host diagnostic, hy
 
 ## Current host status — 2026-09-10
 
-**Gate A now has one real SM8550/QNN HTP short-query compatibility result: exact 170-token input, 16 generated tokens, 17 status-0 graph executions and a coherent prefix identical to the prior bounded baseline. This is engineering/max16 evidence only. Long-output repetition, broader fidelity and speed acceptance remain untested.** The first three retained launches diagnosed two missing loader-path prerequisites and an unexecuted patch assumption (AR1 has six explicit selected cache encodings; AR128 has only three input entries). Existing host libraries were reused without installation or SDK changes.
+**Gate B completed one exact-long/max2048 phone query, but the entire output is byte-identical to the repetitive baseline: this FP16-global-value candidate produced no observable text/repetition improvement on this request. All 2,063 QnnDsp calls returned status0. No speed benefit, broad fidelity conclusion or further optimization/run is accepted. Gate A short compatibility remains valid.** The first three retained launches diagnosed two missing loader-path prerequisites and an unexecuted patch assumption (AR1 has six explicit selected cache encodings; AR128 has only three input entries). Existing host libraries were reused without installation or SDK changes.
 
 Attempt 04 prepared both FP16 global-value-cache ONNX variants and passed independent scope checks. Pi then requested STOP → TERM to release app resources before a DLC was produced. It remains **an app-priority interruption, not a model or numerical failure** at [`results/global-value-fp16-attempt-04/`](results/global-value-fp16-attempt-04/result.json).
 
@@ -40,13 +40,23 @@ The process finished before live-PID sampling; query/provider/profile/output evi
 
 See [`results/phone-return-short-attempt-01/result.json`](results/phone-return-short-attempt-01/result.json). No retry, long request, follow-on, stage/controller change or rebuild occurred. App work gets the next slot; a precise long comparison requires a separate review and authorization. The completed campaign and registry remain unchanged.
 
-## Gate B preparation — exact-long/max2048, not executed
+## Gate B physical outcome — unchanged repetition
+
+Run `fp16-long-20260910T171555Z-01` used the exact reviewed adapter/stage and one fresh process/dialog/query: profile **1,929 input / 2,048 generated tokens**, one context deserialization, SMART_MASK and **16 AR128 + 2,047 AR1 = 2,063 status-0 QnnDsp executions**. No CPU-backend/runtime-fallback/cache-quantization-error marker was observed. This does not establish universal CPU-free or uniform-integer execution.
+
+The full 10,027-byte output SHA-256 is **`f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d`**, identical to all five retained baseline long outputs. Severe repetition and occasional `<unk>` leakage remain; narrow sanity is false. Frozen metrics are identical: the first qualifying128-token diversity window starts at index83 (not causal onset), and a period9 suffix starts at index478 and covers1,570 tokens. Global-value FP16 interfaces alone did not improve this exact output; internal quantization may remain, so other cache-precision causes are not disproven.
+
+The full ceiling was reached; the independent EOS-versus-limit stop enum remains null. Raw Genie query109.902s/TTFT2.470s/generation19.198tok/s are single runtime-defined observations, not normalized speed acceptance. Thermal status0→1 and different operating conditions remain explicit. Full battery dumps stay private/hash-bound; public fields are minimal extracts. The 54,108,333-byte provider log is losslessly compressed and hash-bound.
+
+Live native PID validation, natural exit, complete raw pull, all recorded PID/root absence and lock release passed; no signal or retry was needed. See [`results/phone-return-long-attempt-01/result.json`](results/phone-return-long-attempt-01/result.json). No additional runtime, phone call, compilation, optimization or push is authorized before findings review. Baseline campaign/registry remain unchanged.
+
+## Gate B preparation — historical exact-long readiness
 
 A separate [long-stage/lifecycle readiness package](EXACT-LONG-READINESS.md) is now prepared locally. Its manifest is `047dd808fe49656105934a9afed521fc3c4acdd0c6d278d0ed5685a98a0b846e`: 18 independent read-only payload copies, unchanged FP16 context/config/tokenizer/LUTs/libraries, exact 1,929-token long input and full 2,048-token ceiling. It contains one fresh-dialog `exact-long.script`, no preceding short request or repeat, and the same 1,800-second bounds.
 
 The fixed-scope adapter materializes the hash-pinned reviewed lifecycle in isolated modules with only enumerated long scope/path/digest/provenance substitutions plus direct-nohup absolute redirections. An inverse test recovers the exact short-controller source; short stage/history are untouched. A host-only FIFO dummy regression proves the direct launch pipe closes before the owned dummy finishes, then reaps dummy and waiting shell. Gate A file-mtime timing is only a clue to a possible AND-list pipe-retention issue, not a proved cause or benchmark. Android behavior remains untested.
 
-Original repetition metrics and raw-Genie-rate caveats are predeclared unchanged. See [`results/exact-long-readiness/result.json`](results/exact-long-readiness/result.json). No long/native/model/ADB execution or recompile occurred. Native execution still needs Pi's source/stage review and a new exact slot; app work has priority. Git pushes remain held under privacy coordination.
+Original repetition metrics and raw-Genie-rate caveats are predeclared unchanged. See [`results/exact-long-readiness/result.json`](results/exact-long-readiness/result.json). No long/native/model/ADB execution or recompile occurred during that preparation. The subsequent separately authorized physical result is recorded above; further work requires new review/permission, with app priority. Git pushes remain held under privacy coordination.
 
 ## Frozen stage and phone-return plan
 

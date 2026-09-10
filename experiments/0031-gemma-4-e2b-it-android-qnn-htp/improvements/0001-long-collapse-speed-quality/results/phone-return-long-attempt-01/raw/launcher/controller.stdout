@@ -1,0 +1,126 @@
+{
+  "adb_command_count": 281,
+  "automatic_retry": false,
+  "classification": "collection_not_inference_validation",
+  "cleanup": "verified_absent",
+  "controller_script_hashes": {
+    "control.sh": "b74bee6abb37b068c0aedeb2f0a695d8c9efa2b98f9200022c562730067b3f74",
+    "launch.sh": "abe1e12d0b6c0f4cd4f4a3d0e2b7c229faaf0987c57ee17242a2f5ddc1700da0",
+    "model-entry.sh": "25db5d6e2dd120309b3c96c5225fe76f176d3a0007698c99e45819f958c244c3",
+    "watchdog.sh": "d872ca3f4ad126286ccc9b6a495cbe3321661924f11d532f441f5ba466349d64"
+  },
+  "controller_sources": {
+    "phone_return_controller.py": "e0e91e1855239a5ab349555f81ea050b94ea2997ba01e59c9c705444cdc6e9d2",
+    "phone_return_shell.py": "4ce478abf5b44ea0ae32cb9f490eb319f37fd54243fa91fb1433883c8be9b7bb",
+    "prepare_frozen_genie_stage.py": "34c56e7a2ec92c68a7a781ca7c7230a3ad8ce60d249dbd93e6c4cd359b403ccf"
+  },
+  "fidelity": null,
+  "identity": {
+    "ro.boot.flash.locked": "1",
+    "ro.boot.verifiedbootstate": "green",
+    "ro.build.fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+    "ro.build.version.release": "16",
+    "ro.build.version.sdk": "36",
+    "ro.product.cpu.abi": "arm64-v8a",
+    "ro.product.device": "dm3q",
+    "ro.product.manufacturer": "samsung",
+    "ro.product.model": "SM-S918B",
+    "ro.soc.model": "SM8550",
+    "serial": "R5CW81PR8SY",
+    "sys.boot_completed": "1"
+  },
+  "identity_verified": true,
+  "input_hashes_verified": true,
+  "launch_command_attempted": true,
+  "long_script": true,
+  "native_process_observed": true,
+  "optional_metrics": {
+    "reason": "Offline profile/provider/query review is separate; controller does not infer metrics.",
+    "values": null
+  },
+  "phone_lock_released": true,
+  "pi_slot": "pi-gemma-fp16-long-20260910-a",
+  "process_cleanup": {
+    "all_absent": true,
+    "basis": "fresh scoped PID/starttime probes; no name-wide kill"
+  },
+  "process_exit_code": 0,
+  "provider_placement": null,
+  "raw_capture_attempted": true,
+  "raw_pull_completed": true,
+  "remote_creation_confirmed": true,
+  "remote_root": "/data/local/tmp/vibevoice-0031-fp16-fp16-long-20260910T171555Z-01",
+  "reviewed_stage_digest": "047dd808fe49656105934a9afed521fc3c4acdd0c6d278d0ed5685a98a0b846e",
+  "run_id": "fp16-long-20260910T171555Z-01",
+  "runtime_success": null,
+  "scope": "exact-long engineering max2048 only (not a campaign)",
+  "scope_adapter": {
+    "adapter_sha256": "63377f368f83c9b2bfe5e09fec7a276ad2ddc2481acb1f97d1987e38d90235e0",
+    "base_reviewed_commit": "62b8a16",
+    "gate_a_commit": "81f4ede",
+    "gate_a_result_sha256": "1290cc51948e82fd974b175c46a1a67cd0ff0db382ad1db047993f9ad7849aff",
+    "launch_change": "direct nohup, no cd/AND-list, absolute stdin/stdout/stderr redirections",
+    "long_stage_digest": "047dd808fe49656105934a9afed521fc3c4acdd0c6d278d0ed5685a98a0b846e",
+    "materialized_controller_sha256": "182dcfb90659913b55f929366ce4b18f4890bfad82155bf9866ca94b0aa3045f",
+    "materialized_shell_sha256": "890bd3479fb6a2a0406b4414ec80cbbc53b35169fffb0a9967c2dda70336cce2",
+    "original_short_sources_modified": false,
+    "scope": "one exact-long/max2048 request; preparation is not phone permission",
+    "signal_guard_atomic": false,
+    "source_changes": [
+      {
+        "count": 1,
+        "new": "single engineering exact-long/max2048 process",
+        "old": "single engineering short/max16 process"
+      },
+      {
+        "count": 1,
+        "new": "stage-freeze-long-20260910T163842Z-01",
+        "old": "stage-freeze-20260910T105830Z-01"
+      },
+      {
+        "count": 1,
+        "new": "047dd808fe49656105934a9afed521fc3c4acdd0c6d278d0ed5685a98a0b846e",
+        "old": "584841604ecf97a1a916c9a7f765e49ff9f7a2ee751a61fda9e9e6588f02fe25"
+      },
+      {
+        "count": 1,
+        "new": "one fresh-dialog exact-long engineering/max2048 only (not a campaign)",
+        "old": "one fresh-dialog first-short engineering/noncanonical max16 only"
+      },
+      {
+        "count": 1,
+        "new": "exact-long engineering max2048 only (not a campaign)",
+        "old": "first-short engineering max16 only"
+      },
+      {
+        "count": 1,
+        "new": "'.local/phone-return-long-runs'",
+        "old": "'.local/phone-return-runs'"
+      },
+      {
+        "count": 1,
+        "new": "exact-long.script",
+        "old": "first-short.script"
+      },
+      {
+        "count": 2,
+        "new": "'long_script': True",
+        "old": "'long_script': False"
+      },
+      {
+        "count": 1,
+        "new": "'classification': 'collection_not_inference_validation', 'run_id': run_id,\n                       'scope_adapter': _LONG_SCOPE_RECEIPT,",
+        "old": "'classification': 'collection_not_inference_validation', 'run_id': run_id,"
+      },
+      {
+        "count": 1,
+        "new": "        command = _LONG_DETACHED_LAUNCH(self.remote)",
+        "old": "        prefix = shlex.quote(self.remote)\n        command = (f'cd {prefix} && nohup /system/bin/sh {shlex.quote(self.remote + \"/launch.sh\")} '\n                   f'</dev/null >evidence/launcher.stdout 2>evidence/launcher.stderr &')"
+      }
+    ],
+    "template_controller_sha256": "e0e91e1855239a5ab349555f81ea050b94ea2997ba01e59c9c705444cdc6e9d2",
+    "template_shell_sha256": "4ce478abf5b44ea0ae32cb9f490eb319f37fd54243fa91fb1433883c8be9b7bb"
+  },
+  "signal_guard_atomic": false,
+  "signal_race_boundary": "Sequential /proc starttime/executable/argv checks then numeric-PID kill; no kernel pidfd binding."
+}
