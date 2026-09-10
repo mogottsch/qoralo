@@ -1,0 +1,3485 @@
+{
+  "status": "SOURCE_ONLY_TRACE_NO_INFERENCE",
+  "source": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0007-mobile-podcast-preview-bakeoff/artifacts/supertonic-3/snapshot/onnx/duration_predictor.onnx",
+    "bytes": 3700147,
+    "sha256": "c3eb91414d5ff8a7a239b7fe9e34e7e2bf8a8140d8375ffb14718b1c639325db"
+  },
+  "saved_metadata": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0023-supertonic-qnn-precompiled-context-startup/improvements/0001-whole-chapter-capacity/results/host-preparation-20260910/raw/inspect-duration-01/data/metadata.json",
+    "bytes": 582964,
+    "sha256": "2c477d8546a3e0817807faf86fd91b768528b326bf49858bc8d817dde21a9dde"
+  },
+  "source_node_interfaces_match": 1086,
+  "initializers_metadata_count": 98,
+  "new_model_sessions": 0,
+  "new_model_forwards": 0,
+  "graph_mutations": 0,
+  "parser": "onnx1.17.0",
+  "nonlearned_scalar_constants": [
+    {
+      "node": "/sentence_encoder/ConstantOfShape_1",
+      "dtype": "FLOAT",
+      "shape": [
+        1
+      ],
+      "value": 1.0,
+      "tensor_proto_sha256": "83817f048d5d2fd670eca44d6bcda1eeaadcda286b68fce894432b6922373eae"
+    },
+    {
+      "node": "/sentence_encoder/attn_encoder/attn_layers.0/Constant_88",
+      "dtype": "FLOAT",
+      "shape": [],
+      "value": -10000.0,
+      "tensor_proto_sha256": "a2b551e91cc3ff8b1953b6530522bb79b0392097f1691dc00db527f69b1c74f5"
+    },
+    {
+      "node": "/sentence_encoder/attn_encoder/attn_layers.1/Constant_87",
+      "dtype": "FLOAT",
+      "shape": [],
+      "value": -10000.0,
+      "tensor_proto_sha256": "a2b551e91cc3ff8b1953b6530522bb79b0392097f1691dc00db527f69b1c74f5"
+    }
+  ],
+  "slices": [
+    {
+      "index": 25,
+      "name": "/sentence_encoder/Slice",
+      "data": "text_mask",
+      "controls_start_end_axis_step": [
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          1
+        ]
+      ],
+      "role": "shape-only mask prefix seed for prepended sentence-token mask1; full text_mask still concatenated"
+    },
+    {
+      "index": 40,
+      "name": "/sentence_encoder/convnext/convnext.0/dwconv/Slice",
+      "data": "/sentence_encoder/convnext/convnext.0/dwconv/Reshape_output_0",
+      "controls_start_end_axis_step": [
+        [
+          -1
+        ],
+        [
+          -9223372036854775807
+        ],
+        [
+          0
+        ],
+        [
+          -1
+        ]
+      ],
+      "role": "reverse padding-pair control rows; NOT a text slice"
+    },
+    {
+      "index": 75,
+      "name": "/sentence_encoder/convnext/convnext.1/dwconv/Slice",
+      "data": "/sentence_encoder/convnext/convnext.1/dwconv/Reshape_output_0",
+      "controls_start_end_axis_step": [
+        [
+          -1
+        ],
+        [
+          -9223372036854775807
+        ],
+        [
+          0
+        ],
+        [
+          -1
+        ]
+      ],
+      "role": "reverse padding-pair control rows; NOT a text slice"
+    },
+    {
+      "index": 110,
+      "name": "/sentence_encoder/convnext/convnext.2/dwconv/Slice",
+      "data": "/sentence_encoder/convnext/convnext.2/dwconv/Reshape_output_0",
+      "controls_start_end_axis_step": [
+        [
+          -1
+        ],
+        [
+          -9223372036854775807
+        ],
+        [
+          0
+        ],
+        [
+          -1
+        ]
+      ],
+      "role": "reverse padding-pair control rows; NOT a text slice"
+    },
+    {
+      "index": 145,
+      "name": "/sentence_encoder/convnext/convnext.3/dwconv/Slice",
+      "data": "/sentence_encoder/convnext/convnext.3/dwconv/Reshape_output_0",
+      "controls_start_end_axis_step": [
+        [
+          -1
+        ],
+        [
+          -9223372036854775807
+        ],
+        [
+          0
+        ],
+        [
+          -1
+        ]
+      ],
+      "role": "reverse padding-pair control rows; NOT a text slice"
+    },
+    {
+      "index": 180,
+      "name": "/sentence_encoder/convnext/convnext.4/dwconv/Slice",
+      "data": "/sentence_encoder/convnext/convnext.4/dwconv/Reshape_output_0",
+      "controls_start_end_axis_step": [
+        [
+          -1
+        ],
+        [
+          -9223372036854775807
+        ],
+        [
+          0
+        ],
+        [
+          -1
+        ]
+      ],
+      "role": "reverse padding-pair control rows; NOT a text slice"
+    },
+    {
+      "index": 215,
+      "name": "/sentence_encoder/convnext/convnext.5/dwconv/Slice",
+      "data": "/sentence_encoder/convnext/convnext.5/dwconv/Reshape_output_0",
+      "controls_start_end_axis_step": [
+        [
+          -1
+        ],
+        [
+          -9223372036854775807
+        ],
+        [
+          0
+        ],
+        [
+          -1
+        ]
+      ],
+      "role": "reverse padding-pair control rows; NOT a text slice"
+    },
+    {
+      "index": 352,
+      "name": "/sentence_encoder/attn_encoder/attn_layers.0/Slice",
+      "data": "/sentence_encoder/attn_encoder/attn_layers.0/Reshape_3_output_0",
+      "controls_start_end_axis_step": [
+        [
+          -1
+        ],
+        [
+          -9223372036854775807
+        ],
+        [
+          0
+        ],
+        [
+          -1
+        ]
+      ],
+      "role": "reverse padding-pair control rows; NOT a text slice"
+    },
+    {
+      "index": 364,
+      "name": "/sentence_encoder/attn_encoder/attn_layers.0/Slice_1",
+      "data": "/sentence_encoder/attn_encoder/attn_layers.0/Pad_output_0",
+      "controls_start_end_axis_step": [
+        {
+          "Clip": [
+            {
+              "Sub": [
+                [
+                  5
+                ],
+                {
+                  "Gather": [
+                    {
+                      "Shape": "/sentence_encoder/attn_encoder/attn_layers.0/conv_k/Conv_output_0"
+                    },
+                    [
+                      2
+                    ]
+                  ]
+                }
+              ]
+            },
+            [
+              0
+            ],
+            null
+          ]
+        },
+        {
+          "Sub": [
+            {
+              "Add": [
+                {
+                  "Clip": [
+                    {
+                      "Sub": [
+                        [
+                          5
+                        ],
+                        {
+                          "Gather": [
+                            {
+                              "Shape": "/sentence_encoder/attn_encoder/attn_layers.0/conv_k/Conv_output_0"
+                            },
+                            [
+                              2
+                            ]
+                          ]
+                        }
+                      ]
+                    },
+                    [
+                      0
+                    ],
+                    null
+                  ]
+                },
+                {
+                  "Mul": [
+                    {
+                      "Gather": [
+                        {
+                          "Shape": "/sentence_encoder/attn_encoder/attn_layers.0/conv_k/Conv_output_0"
+                        },
+                        [
+                          2
+                        ]
+                      ]
+                    },
+                    [
+                      2
+                    ]
+                  ]
+                }
+              ]
+            },
+            [
+              1
+            ]
+          ]
+        },
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ],
+      "role": "relative K/V table pad/crop: axis1 [max(5-S,0):max(5-S,0)+2*S-1], S=T+1"
+    },
+    {
+      "index": 388,
+      "name": "/sentence_encoder/attn_encoder/attn_layers.0/Slice_2",
+      "data": "/sentence_encoder/attn_encoder/attn_layers.0/Reshape_5_output_0",
+      "controls_start_end_axis_step": [
+        [
+          -1
+        ],
+        [
+          -9223372036854775807
+        ],
+        [
+          0
+        ],
+        [
+          -1
+        ]
+      ],
+      "role": "reverse padding-pair control rows; NOT a text slice"
+    },
+    {
+      "index": 437,
+      "name": "/sentence_encoder/attn_encoder/attn_layers.0/Slice_3",
+      "data": "/sentence_encoder/attn_encoder/attn_layers.0/Reshape_8_output_0",
+      "controls_start_end_axis_step": [
+        [
+          -1
+        ],
+        [
+          -9223372036854775807
+        ],
+        [
+          0
+        ],
+        [
+          -1
+        ]
+      ],
+      "role": "reverse padding-pair control rows; NOT a text slice"
+    },
+    {
+      "index": 462,
+      "name": "/sentence_encoder/attn_encoder/attn_layers.0/Slice_4",
+      "data": "/sentence_encoder/attn_encoder/attn_layers.0/Reshape_10_output_0",
+      "controls_start_end_axis_step": [
+        [
+          0
+        ],
+        {
+          "Gather": [
+            {
+              "Shape": "/sentence_encoder/attn_encoder/attn_layers.0/MatMul_1_output_0"
+            },
+            [
+              2
+            ]
+          ]
+        },
+        [
+          2
+        ],
+        [
+          1
+        ]
+      ],
+      "role": "relative-to-absolute scores: axis2 [0:S] in rearranged [B,2,S+1,2*S-1]"
+    },
+    {
+      "index": 468,
+      "name": "/sentence_encoder/attn_encoder/attn_layers.0/Slice_5",
+      "data": "/sentence_encoder/attn_encoder/attn_layers.0/Slice_4_output_0",
+      "controls_start_end_axis_step": [
+        {
+          "Sub": [
+            {
+              "Gather": [
+                {
+                  "Shape": "/sentence_encoder/attn_encoder/attn_layers.0/MatMul_1_output_0"
+                },
+                [
+                  2
+                ]
+              ]
+            },
+            [
+              1
+            ]
+          ]
+        },
+        [
+          9223372036854775807
+        ],
+        [
+          3
+        ],
+        [
+          1
+        ]
+      ],
+      "role": "relative-to-absolute scores: axis3 [S-1:] yields full [B,2,S,S]"
+    },
+    {
+      "index": 522,
+      "name": "/sentence_encoder/attn_encoder/attn_layers.0/Slice_6",
+      "data": "/sentence_encoder/attn_encoder/attn_layers.0/Reshape_11_output_0",
+      "controls_start_end_axis_step": [
+        [
+          -1
+        ],
+        [
+          -9223372036854775807
+        ],
+        [
+          0
+        ],
+        [
+          -1
+        ]
+      ],
+      "role": "reverse padding-pair control rows; NOT a text slice"
+    },
+    {
+      "index": 570,
+      "name": "/sentence_encoder/attn_encoder/attn_layers.0/Slice_7",
+      "data": "/sentence_encoder/attn_encoder/attn_layers.0/Reshape_14_output_0",
+      "controls_start_end_axis_step": [
+        [
+          -1
+        ],
+        [
+          -9223372036854775807
+        ],
+        [
+          0
+        ],
+        [
+          -1
+        ]
+      ],
+      "role": "reverse padding-pair control rows; NOT a text slice"
+    },
+    {
+      "index": 592,
+      "name": "/sentence_encoder/attn_encoder/attn_layers.0/Slice_8",
+      "data": "/sentence_encoder/attn_encoder/attn_layers.0/Reshape_16_output_0",
+      "controls_start_end_axis_step": [
+        [
+          1
+        ],
+        [
+          9223372036854775807
+        ],
+        [
+          3
+        ],
+        [
+          1
+        ]
+      ],
+      "role": "absolute-to-relative weights: axis3 [1:] in rearranged [B,2,S,2*S], yields [B,2,S,2*S-1]"
+    },
+    {
+      "index": 607,
+      "name": "/sentence_encoder/attn_encoder/attn_layers.0/Slice_9",
+      "data": "/sentence_encoder/attn_encoder/attn_layers.0/Reshape_17_output_0",
+      "controls_start_end_axis_step": [
+        [
+          -1
+        ],
+        [
+          -9223372036854775807
+        ],
+        [
+          0
+        ],
+        [
+          -1
+        ]
+      ],
+      "role": "reverse padding-pair control rows; NOT a text slice"
+    },
+    {
+      "index": 619,
+      "name": "/sentence_encoder/attn_encoder/attn_layers.0/Slice_10",
+      "data": "/sentence_encoder/attn_encoder/attn_layers.0/Pad_5_output_0",
+      "controls_start_end_axis_step": [
+        {
+          "Clip": [
+            {
+              "Sub": [
+                [
+                  5
+                ],
+                {
+                  "Gather": [
+                    {
+                      "Shape": "/sentence_encoder/attn_encoder/attn_layers.0/conv_k/Conv_output_0"
+                    },
+                    [
+                      2
+                    ]
+                  ]
+                }
+              ]
+            },
+            [
+              0
+            ],
+            null
+          ]
+        },
+        {
+          "Sub": [
+            {
+              "Add": [
+                {
+                  "Clip": [
+                    {
+                      "Sub": [
+                        [
+                          5
+                        ],
+                        {
+                          "Gather": [
+                            {
+                              "Shape": "/sentence_encoder/attn_encoder/attn_layers.0/conv_k/Conv_output_0"
+                            },
+                            [
+                              2
+                            ]
+                          ]
+                        }
+                      ]
+                    },
+                    [
+                      0
+                    ],
+                    null
+                  ]
+                },
+                {
+                  "Mul": [
+                    {
+                      "Gather": [
+                        {
+                          "Shape": "/sentence_encoder/attn_encoder/attn_layers.0/conv_k/Conv_output_0"
+                        },
+                        [
+                          2
+                        ]
+                      ]
+                    },
+                    [
+                      2
+                    ]
+                  ]
+                }
+              ]
+            },
+            [
+              1
+            ]
+          ]
+        },
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ],
+      "role": "relative K/V table pad/crop: axis1 [max(5-S,0):max(5-S,0)+2*S-1], S=T+1"
+    },
+    {
+      "index": 755,
+      "name": "/sentence_encoder/attn_encoder/attn_layers.1/Slice",
+      "data": "/sentence_encoder/attn_encoder/attn_layers.1/Reshape_3_output_0",
+      "controls_start_end_axis_step": [
+        [
+          -1
+        ],
+        [
+          -9223372036854775807
+        ],
+        [
+          0
+        ],
+        [
+          -1
+        ]
+      ],
+      "role": "reverse padding-pair control rows; NOT a text slice"
+    },
+    {
+      "index": 767,
+      "name": "/sentence_encoder/attn_encoder/attn_layers.1/Slice_1",
+      "data": "/sentence_encoder/attn_encoder/attn_layers.1/Pad_output_0",
+      "controls_start_end_axis_step": [
+        {
+          "Clip": [
+            {
+              "Sub": [
+                [
+                  5
+                ],
+                {
+                  "Gather": [
+                    {
+                      "Shape": "/sentence_encoder/attn_encoder/attn_layers.1/conv_k/Conv_output_0"
+                    },
+                    [
+                      2
+                    ]
+                  ]
+                }
+              ]
+            },
+            [
+              0
+            ],
+            null
+          ]
+        },
+        {
+          "Sub": [
+            {
+              "Add": [
+                {
+                  "Clip": [
+                    {
+                      "Sub": [
+                        [
+                          5
+                        ],
+                        {
+                          "Gather": [
+                            {
+                              "Shape": "/sentence_encoder/attn_encoder/attn_layers.1/conv_k/Conv_output_0"
+                            },
+                            [
+                              2
+                            ]
+                          ]
+                        }
+                      ]
+                    },
+                    [
+                      0
+                    ],
+                    null
+                  ]
+                },
+                {
+                  "Mul": [
+                    {
+                      "Gather": [
+                        {
+                          "Shape": "/sentence_encoder/attn_encoder/attn_layers.1/conv_k/Conv_output_0"
+                        },
+                        [
+                          2
+                        ]
+                      ]
+                    },
+                    [
+                      2
+                    ]
+                  ]
+                }
+              ]
+            },
+            [
+              1
+            ]
+          ]
+        },
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ],
+      "role": "relative K/V table pad/crop: axis1 [max(5-S,0):max(5-S,0)+2*S-1], S=T+1"
+    },
+    {
+      "index": 791,
+      "name": "/sentence_encoder/attn_encoder/attn_layers.1/Slice_2",
+      "data": "/sentence_encoder/attn_encoder/attn_layers.1/Reshape_5_output_0",
+      "controls_start_end_axis_step": [
+        [
+          -1
+        ],
+        [
+          -9223372036854775807
+        ],
+        [
+          0
+        ],
+        [
+          -1
+        ]
+      ],
+      "role": "reverse padding-pair control rows; NOT a text slice"
+    },
+    {
+      "index": 840,
+      "name": "/sentence_encoder/attn_encoder/attn_layers.1/Slice_3",
+      "data": "/sentence_encoder/attn_encoder/attn_layers.1/Reshape_8_output_0",
+      "controls_start_end_axis_step": [
+        [
+          -1
+        ],
+        [
+          -9223372036854775807
+        ],
+        [
+          0
+        ],
+        [
+          -1
+        ]
+      ],
+      "role": "reverse padding-pair control rows; NOT a text slice"
+    },
+    {
+      "index": 865,
+      "name": "/sentence_encoder/attn_encoder/attn_layers.1/Slice_4",
+      "data": "/sentence_encoder/attn_encoder/attn_layers.1/Reshape_10_output_0",
+      "controls_start_end_axis_step": [
+        [
+          0
+        ],
+        {
+          "Gather": [
+            {
+              "Shape": "/sentence_encoder/attn_encoder/attn_layers.1/MatMul_1_output_0"
+            },
+            [
+              2
+            ]
+          ]
+        },
+        [
+          2
+        ],
+        [
+          1
+        ]
+      ],
+      "role": "relative-to-absolute scores: axis2 [0:S] in rearranged [B,2,S+1,2*S-1]"
+    },
+    {
+      "index": 871,
+      "name": "/sentence_encoder/attn_encoder/attn_layers.1/Slice_5",
+      "data": "/sentence_encoder/attn_encoder/attn_layers.1/Slice_4_output_0",
+      "controls_start_end_axis_step": [
+        {
+          "Sub": [
+            {
+              "Gather": [
+                {
+                  "Shape": "/sentence_encoder/attn_encoder/attn_layers.1/MatMul_1_output_0"
+                },
+                [
+                  2
+                ]
+              ]
+            },
+            [
+              1
+            ]
+          ]
+        },
+        [
+          9223372036854775807
+        ],
+        [
+          3
+        ],
+        [
+          1
+        ]
+      ],
+      "role": "relative-to-absolute scores: axis3 [S-1:] yields full [B,2,S,S]"
+    },
+    {
+      "index": 923,
+      "name": "/sentence_encoder/attn_encoder/attn_layers.1/Slice_6",
+      "data": "/sentence_encoder/attn_encoder/attn_layers.1/Reshape_11_output_0",
+      "controls_start_end_axis_step": [
+        [
+          -1
+        ],
+        [
+          -9223372036854775807
+        ],
+        [
+          0
+        ],
+        [
+          -1
+        ]
+      ],
+      "role": "reverse padding-pair control rows; NOT a text slice"
+    },
+    {
+      "index": 971,
+      "name": "/sentence_encoder/attn_encoder/attn_layers.1/Slice_7",
+      "data": "/sentence_encoder/attn_encoder/attn_layers.1/Reshape_14_output_0",
+      "controls_start_end_axis_step": [
+        [
+          -1
+        ],
+        [
+          -9223372036854775807
+        ],
+        [
+          0
+        ],
+        [
+          -1
+        ]
+      ],
+      "role": "reverse padding-pair control rows; NOT a text slice"
+    },
+    {
+      "index": 993,
+      "name": "/sentence_encoder/attn_encoder/attn_layers.1/Slice_8",
+      "data": "/sentence_encoder/attn_encoder/attn_layers.1/Reshape_16_output_0",
+      "controls_start_end_axis_step": [
+        [
+          1
+        ],
+        [
+          9223372036854775807
+        ],
+        [
+          3
+        ],
+        [
+          1
+        ]
+      ],
+      "role": "absolute-to-relative weights: axis3 [1:] in rearranged [B,2,S,2*S], yields [B,2,S,2*S-1]"
+    },
+    {
+      "index": 1008,
+      "name": "/sentence_encoder/attn_encoder/attn_layers.1/Slice_9",
+      "data": "/sentence_encoder/attn_encoder/attn_layers.1/Reshape_17_output_0",
+      "controls_start_end_axis_step": [
+        [
+          -1
+        ],
+        [
+          -9223372036854775807
+        ],
+        [
+          0
+        ],
+        [
+          -1
+        ]
+      ],
+      "role": "reverse padding-pair control rows; NOT a text slice"
+    },
+    {
+      "index": 1020,
+      "name": "/sentence_encoder/attn_encoder/attn_layers.1/Slice_10",
+      "data": "/sentence_encoder/attn_encoder/attn_layers.1/Pad_5_output_0",
+      "controls_start_end_axis_step": [
+        {
+          "Clip": [
+            {
+              "Sub": [
+                [
+                  5
+                ],
+                {
+                  "Gather": [
+                    {
+                      "Shape": "/sentence_encoder/attn_encoder/attn_layers.1/conv_k/Conv_output_0"
+                    },
+                    [
+                      2
+                    ]
+                  ]
+                }
+              ]
+            },
+            [
+              0
+            ],
+            null
+          ]
+        },
+        {
+          "Sub": [
+            {
+              "Add": [
+                {
+                  "Clip": [
+                    {
+                      "Sub": [
+                        [
+                          5
+                        ],
+                        {
+                          "Gather": [
+                            {
+                              "Shape": "/sentence_encoder/attn_encoder/attn_layers.1/conv_k/Conv_output_0"
+                            },
+                            [
+                              2
+                            ]
+                          ]
+                        }
+                      ]
+                    },
+                    [
+                      0
+                    ],
+                    null
+                  ]
+                },
+                {
+                  "Mul": [
+                    {
+                      "Gather": [
+                        {
+                          "Shape": "/sentence_encoder/attn_encoder/attn_layers.1/conv_k/Conv_output_0"
+                        },
+                        [
+                          2
+                        ]
+                      ]
+                    },
+                    [
+                      2
+                    ]
+                  ]
+                }
+              ]
+            },
+            [
+              1
+            ]
+          ]
+        },
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ],
+      "role": "relative K/V table pad/crop: axis1 [max(5-S,0):max(5-S,0)+2*S-1], S=T+1"
+    },
+    {
+      "index": 1055,
+      "name": "/sentence_encoder/Slice_1",
+      "data": "/sentence_encoder/Add_output_0",
+      "controls_start_end_axis_step": [
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          1
+        ]
+      ],
+      "role": "read position0 sentence token/mask AFTER full encoder; NOT input-prefix clipping"
+    },
+    {
+      "index": 1060,
+      "name": "/sentence_encoder/Slice_2",
+      "data": "/sentence_encoder/Concat_2_output_0",
+      "controls_start_end_axis_step": [
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          1
+        ]
+      ],
+      "role": "read position0 sentence token/mask AFTER full encoder; NOT input-prefix clipping"
+    }
+  ],
+  "clips": [
+    {
+      "index": 292,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.0/Clip",
+        "op": "Clip",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/Sub_output_0",
+          "/sentence_encoder/attn_encoder/attn_layers.0/Constant_12_output_0",
+          ""
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/Clip_output_0"
+        ],
+        "attributes": {}
+      },
+      "control_expression": {
+        "Clip": [
+          {
+            "Sub": [
+              {
+                "Gather": [
+                  {
+                    "Shape": "/sentence_encoder/attn_encoder/attn_layers.0/conv_k/Conv_output_0"
+                  },
+                  [
+                    2
+                  ]
+                ]
+              },
+              [
+                5
+              ]
+            ]
+          },
+          [
+            0
+          ],
+          null
+        ]
+      },
+      "role": "max(S-5,0) or max(5-S,0): relative-table padding/cropping, no maximum clamp"
+    },
+    {
+      "index": 296,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.0/Clip_1",
+        "op": "Clip",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/Sub_1_output_0",
+          "/sentence_encoder/attn_encoder/attn_layers.0/Constant_14_output_0",
+          ""
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/Clip_1_output_0"
+        ],
+        "attributes": {}
+      },
+      "control_expression": {
+        "Clip": [
+          {
+            "Sub": [
+              [
+                5
+              ],
+              {
+                "Gather": [
+                  {
+                    "Shape": "/sentence_encoder/attn_encoder/attn_layers.0/conv_k/Conv_output_0"
+                  },
+                  [
+                    2
+                  ]
+                ]
+              }
+            ]
+          },
+          [
+            0
+          ],
+          null
+        ]
+      },
+      "role": "max(S-5,0) or max(5-S,0): relative-table padding/cropping, no maximum clamp"
+    },
+    {
+      "index": 695,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.1/Clip",
+        "op": "Clip",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/Sub_output_0",
+          "/sentence_encoder/attn_encoder/attn_layers.1/Constant_12_output_0",
+          ""
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/Clip_output_0"
+        ],
+        "attributes": {}
+      },
+      "control_expression": {
+        "Clip": [
+          {
+            "Sub": [
+              {
+                "Gather": [
+                  {
+                    "Shape": "/sentence_encoder/attn_encoder/attn_layers.1/conv_k/Conv_output_0"
+                  },
+                  [
+                    2
+                  ]
+                ]
+              },
+              [
+                5
+              ]
+            ]
+          },
+          [
+            0
+          ],
+          null
+        ]
+      },
+      "role": "max(S-5,0) or max(5-S,0): relative-table padding/cropping, no maximum clamp"
+    },
+    {
+      "index": 699,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.1/Clip_1",
+        "op": "Clip",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/Sub_1_output_0",
+          "/sentence_encoder/attn_encoder/attn_layers.1/Constant_14_output_0",
+          ""
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/Clip_1_output_0"
+        ],
+        "attributes": {}
+      },
+      "control_expression": {
+        "Clip": [
+          {
+            "Sub": [
+              [
+                5
+              ],
+              {
+                "Gather": [
+                  {
+                    "Shape": "/sentence_encoder/attn_encoder/attn_layers.1/conv_k/Conv_output_0"
+                  },
+                  [
+                    2
+                  ]
+                ]
+              }
+            ]
+          },
+          [
+            0
+          ],
+          null
+        ]
+      },
+      "role": "max(S-5,0) or max(5-S,0): relative-table padding/cropping, no maximum clamp"
+    }
+  ],
+  "depthwise": [
+    {
+      "index": 46,
+      "node": {
+        "name": "/sentence_encoder/convnext/convnext.0/dwconv/Conv",
+        "op": "Conv",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/convnext/convnext.0/dwconv/Pad_output_0",
+          "tts.dp.sentence_encoder.convnext.convnext.0.dwconv.weight",
+          "tts.dp.sentence_encoder.convnext.convnext.0.dwconv.bias"
+        ],
+        "outputs": [
+          "/sentence_encoder/convnext/convnext.0/dwconv/Conv_output_0"
+        ],
+        "attributes": {
+          "dilations": [
+            1
+          ],
+          "group": 64,
+          "kernel_shape": [
+            5
+          ],
+          "pads": [
+            0,
+            0
+          ],
+          "strides": [
+            1
+          ]
+        }
+      }
+    },
+    {
+      "index": 81,
+      "node": {
+        "name": "/sentence_encoder/convnext/convnext.1/dwconv/Conv",
+        "op": "Conv",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/convnext/convnext.1/dwconv/Pad_output_0",
+          "tts.dp.sentence_encoder.convnext.convnext.1.dwconv.weight",
+          "tts.dp.sentence_encoder.convnext.convnext.1.dwconv.bias"
+        ],
+        "outputs": [
+          "/sentence_encoder/convnext/convnext.1/dwconv/Conv_output_0"
+        ],
+        "attributes": {
+          "dilations": [
+            1
+          ],
+          "group": 64,
+          "kernel_shape": [
+            5
+          ],
+          "pads": [
+            0,
+            0
+          ],
+          "strides": [
+            1
+          ]
+        }
+      }
+    },
+    {
+      "index": 116,
+      "node": {
+        "name": "/sentence_encoder/convnext/convnext.2/dwconv/Conv",
+        "op": "Conv",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/convnext/convnext.2/dwconv/Pad_output_0",
+          "tts.dp.sentence_encoder.convnext.convnext.2.dwconv.weight",
+          "tts.dp.sentence_encoder.convnext.convnext.2.dwconv.bias"
+        ],
+        "outputs": [
+          "/sentence_encoder/convnext/convnext.2/dwconv/Conv_output_0"
+        ],
+        "attributes": {
+          "dilations": [
+            1
+          ],
+          "group": 64,
+          "kernel_shape": [
+            5
+          ],
+          "pads": [
+            0,
+            0
+          ],
+          "strides": [
+            1
+          ]
+        }
+      }
+    },
+    {
+      "index": 151,
+      "node": {
+        "name": "/sentence_encoder/convnext/convnext.3/dwconv/Conv",
+        "op": "Conv",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/convnext/convnext.3/dwconv/Pad_output_0",
+          "tts.dp.sentence_encoder.convnext.convnext.3.dwconv.weight",
+          "tts.dp.sentence_encoder.convnext.convnext.3.dwconv.bias"
+        ],
+        "outputs": [
+          "/sentence_encoder/convnext/convnext.3/dwconv/Conv_output_0"
+        ],
+        "attributes": {
+          "dilations": [
+            1
+          ],
+          "group": 64,
+          "kernel_shape": [
+            5
+          ],
+          "pads": [
+            0,
+            0
+          ],
+          "strides": [
+            1
+          ]
+        }
+      }
+    },
+    {
+      "index": 186,
+      "node": {
+        "name": "/sentence_encoder/convnext/convnext.4/dwconv/Conv",
+        "op": "Conv",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/convnext/convnext.4/dwconv/Pad_output_0",
+          "tts.dp.sentence_encoder.convnext.convnext.4.dwconv.weight",
+          "tts.dp.sentence_encoder.convnext.convnext.4.dwconv.bias"
+        ],
+        "outputs": [
+          "/sentence_encoder/convnext/convnext.4/dwconv/Conv_output_0"
+        ],
+        "attributes": {
+          "dilations": [
+            1
+          ],
+          "group": 64,
+          "kernel_shape": [
+            5
+          ],
+          "pads": [
+            0,
+            0
+          ],
+          "strides": [
+            1
+          ]
+        }
+      }
+    },
+    {
+      "index": 221,
+      "node": {
+        "name": "/sentence_encoder/convnext/convnext.5/dwconv/Conv",
+        "op": "Conv",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/convnext/convnext.5/dwconv/Pad_output_0",
+          "tts.dp.sentence_encoder.convnext.convnext.5.dwconv.weight",
+          "tts.dp.sentence_encoder.convnext.convnext.5.dwconv.bias"
+        ],
+        "outputs": [
+          "/sentence_encoder/convnext/convnext.5/dwconv/Conv_output_0"
+        ],
+        "attributes": {
+          "dilations": [
+            1
+          ],
+          "group": 64,
+          "kernel_shape": [
+            5
+          ],
+          "pads": [
+            0,
+            0
+          ],
+          "strides": [
+            1
+          ]
+        }
+      }
+    }
+  ],
+  "pads": [
+    {
+      "index": 45,
+      "node": {
+        "name": "/sentence_encoder/convnext/convnext.0/dwconv/Pad",
+        "op": "Pad",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/convnext/convnext.0/Mul_output_0",
+          "/sentence_encoder/convnext/convnext.0/dwconv/Cast_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/convnext/convnext.0/dwconv/Pad_output_0"
+        ],
+        "attributes": {
+          "mode": "edge"
+        }
+      }
+    },
+    {
+      "index": 80,
+      "node": {
+        "name": "/sentence_encoder/convnext/convnext.1/dwconv/Pad",
+        "op": "Pad",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/convnext/convnext.1/Mul_output_0",
+          "/sentence_encoder/convnext/convnext.1/dwconv/Cast_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/convnext/convnext.1/dwconv/Pad_output_0"
+        ],
+        "attributes": {
+          "mode": "edge"
+        }
+      }
+    },
+    {
+      "index": 115,
+      "node": {
+        "name": "/sentence_encoder/convnext/convnext.2/dwconv/Pad",
+        "op": "Pad",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/convnext/convnext.2/Mul_output_0",
+          "/sentence_encoder/convnext/convnext.2/dwconv/Cast_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/convnext/convnext.2/dwconv/Pad_output_0"
+        ],
+        "attributes": {
+          "mode": "edge"
+        }
+      }
+    },
+    {
+      "index": 150,
+      "node": {
+        "name": "/sentence_encoder/convnext/convnext.3/dwconv/Pad",
+        "op": "Pad",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/convnext/convnext.3/Mul_output_0",
+          "/sentence_encoder/convnext/convnext.3/dwconv/Cast_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/convnext/convnext.3/dwconv/Pad_output_0"
+        ],
+        "attributes": {
+          "mode": "edge"
+        }
+      }
+    },
+    {
+      "index": 185,
+      "node": {
+        "name": "/sentence_encoder/convnext/convnext.4/dwconv/Pad",
+        "op": "Pad",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/convnext/convnext.4/Mul_output_0",
+          "/sentence_encoder/convnext/convnext.4/dwconv/Cast_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/convnext/convnext.4/dwconv/Pad_output_0"
+        ],
+        "attributes": {
+          "mode": "edge"
+        }
+      }
+    },
+    {
+      "index": 220,
+      "node": {
+        "name": "/sentence_encoder/convnext/convnext.5/dwconv/Pad",
+        "op": "Pad",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/convnext/convnext.5/Mul_output_0",
+          "/sentence_encoder/convnext/convnext.5/dwconv/Cast_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/convnext/convnext.5/dwconv/Pad_output_0"
+        ],
+        "attributes": {
+          "mode": "edge"
+        }
+      }
+    },
+    {
+      "index": 357,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.0/Pad",
+        "op": "Pad",
+        "domain": "",
+        "inputs": [
+          "tts.dp.sentence_encoder.attn_encoder.attn_layers.0.emb_rel_k",
+          "/sentence_encoder/attn_encoder/attn_layers.0/Cast_1_output_0",
+          ""
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/Pad_output_0"
+        ],
+        "attributes": {
+          "mode": "constant"
+        }
+      }
+    },
+    {
+      "index": 393,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.0/Pad_1",
+        "op": "Pad",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/MatMul_1_output_0",
+          "/sentence_encoder/attn_encoder/attn_layers.0/Cast_2_output_0",
+          ""
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/Pad_1_output_0"
+        ],
+        "attributes": {
+          "mode": "constant"
+        }
+      }
+    },
+    {
+      "index": 442,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.0/Pad_2",
+        "op": "Pad",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/Reshape_7_output_0",
+          "/sentence_encoder/attn_encoder/attn_layers.0/Cast_4_output_0",
+          ""
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/Pad_2_output_0"
+        ],
+        "attributes": {
+          "mode": "constant"
+        }
+      }
+    },
+    {
+      "index": 527,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.0/Pad_3",
+        "op": "Pad",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/Softmax_output_0",
+          "/sentence_encoder/attn_encoder/attn_layers.0/Cast_7_output_0",
+          ""
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/Pad_3_output_0"
+        ],
+        "attributes": {
+          "mode": "constant"
+        }
+      }
+    },
+    {
+      "index": 575,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.0/Pad_4",
+        "op": "Pad",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/Reshape_13_output_0",
+          "/sentence_encoder/attn_encoder/attn_layers.0/Cast_9_output_0",
+          ""
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/Pad_4_output_0"
+        ],
+        "attributes": {
+          "mode": "constant"
+        }
+      }
+    },
+    {
+      "index": 612,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.0/Pad_5",
+        "op": "Pad",
+        "domain": "",
+        "inputs": [
+          "tts.dp.sentence_encoder.attn_encoder.attn_layers.0.emb_rel_v",
+          "/sentence_encoder/attn_encoder/attn_layers.0/Cast_11_output_0",
+          ""
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/Pad_5_output_0"
+        ],
+        "attributes": {
+          "mode": "constant"
+        }
+      }
+    },
+    {
+      "index": 760,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.1/Pad",
+        "op": "Pad",
+        "domain": "",
+        "inputs": [
+          "tts.dp.sentence_encoder.attn_encoder.attn_layers.1.emb_rel_k",
+          "/sentence_encoder/attn_encoder/attn_layers.1/Cast_1_output_0",
+          ""
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/Pad_output_0"
+        ],
+        "attributes": {
+          "mode": "constant"
+        }
+      }
+    },
+    {
+      "index": 796,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.1/Pad_1",
+        "op": "Pad",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/MatMul_1_output_0",
+          "/sentence_encoder/attn_encoder/attn_layers.1/Cast_2_output_0",
+          ""
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/Pad_1_output_0"
+        ],
+        "attributes": {
+          "mode": "constant"
+        }
+      }
+    },
+    {
+      "index": 845,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.1/Pad_2",
+        "op": "Pad",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/Reshape_7_output_0",
+          "/sentence_encoder/attn_encoder/attn_layers.1/Cast_4_output_0",
+          ""
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/Pad_2_output_0"
+        ],
+        "attributes": {
+          "mode": "constant"
+        }
+      }
+    },
+    {
+      "index": 928,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.1/Pad_3",
+        "op": "Pad",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/Softmax_output_0",
+          "/sentence_encoder/attn_encoder/attn_layers.1/Cast_7_output_0",
+          ""
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/Pad_3_output_0"
+        ],
+        "attributes": {
+          "mode": "constant"
+        }
+      }
+    },
+    {
+      "index": 976,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.1/Pad_4",
+        "op": "Pad",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/Reshape_13_output_0",
+          "/sentence_encoder/attn_encoder/attn_layers.1/Cast_9_output_0",
+          ""
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/Pad_4_output_0"
+        ],
+        "attributes": {
+          "mode": "constant"
+        }
+      }
+    },
+    {
+      "index": 1013,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.1/Pad_5",
+        "op": "Pad",
+        "domain": "",
+        "inputs": [
+          "tts.dp.sentence_encoder.attn_encoder.attn_layers.1.emb_rel_v",
+          "/sentence_encoder/attn_encoder/attn_layers.1/Cast_11_output_0",
+          ""
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/Pad_5_output_0"
+        ],
+        "attributes": {
+          "mode": "constant"
+        }
+      }
+    }
+  ],
+  "selected_path_nodes": [
+    {
+      "index": 0,
+      "node": {
+        "name": "/sentence_encoder/text_embedder/char_embedder/Gather",
+        "op": "Gather",
+        "domain": "",
+        "inputs": [
+          "tts.dp.sentence_encoder.text_embedder.char_embedder.weight",
+          "text_ids"
+        ],
+        "outputs": [
+          "/sentence_encoder/text_embedder/char_embedder/Gather_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 1,
+      "node": {
+        "name": "/sentence_encoder/text_embedder/Transpose",
+        "op": "Transpose",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/text_embedder/char_embedder/Gather_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/text_embedder/Transpose_output_0"
+        ],
+        "attributes": {
+          "perm": [
+            0,
+            2,
+            1
+          ]
+        }
+      }
+    },
+    {
+      "index": 2,
+      "node": {
+        "name": "/sentence_encoder/text_embedder/Mul",
+        "op": "Mul",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/text_embedder/Transpose_output_0",
+          "text_mask"
+        ],
+        "outputs": [
+          "/sentence_encoder/text_embedder/Mul_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 3,
+      "node": {
+        "name": "/sentence_encoder/Shape",
+        "op": "Shape",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/text_embedder/Mul_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/Shape_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 4,
+      "node": {
+        "name": "/sentence_encoder/Constant",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "/sentence_encoder/Constant_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              0
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 5,
+      "node": {
+        "name": "/sentence_encoder/Gather",
+        "op": "Gather",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/Shape_output_0",
+          "/sentence_encoder/Constant_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/Gather_output_0"
+        ],
+        "attributes": {
+          "axis": 0
+        }
+      }
+    },
+    {
+      "index": 6,
+      "node": {
+        "name": "/sentence_encoder/Constant_1",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "/sentence_encoder/Constant_1_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [
+              1
+            ],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              0
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 7,
+      "node": {
+        "name": "/sentence_encoder/Unsqueeze",
+        "op": "Unsqueeze",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/Gather_output_0",
+          "/sentence_encoder/Constant_1_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/Unsqueeze_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 8,
+      "node": {
+        "name": "/sentence_encoder/Constant_2",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "/sentence_encoder/Constant_2_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [
+              1
+            ],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              -1
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 9,
+      "node": {
+        "name": "/sentence_encoder/Constant_3",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "/sentence_encoder/Constant_3_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [
+              1
+            ],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              -1
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 10,
+      "node": {
+        "name": "/sentence_encoder/Concat",
+        "op": "Concat",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/Unsqueeze_output_0",
+          "/sentence_encoder/Constant_2_output_0",
+          "/sentence_encoder/Constant_3_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/Concat_output_0"
+        ],
+        "attributes": {
+          "axis": 0
+        }
+      }
+    },
+    {
+      "index": 11,
+      "node": {
+        "name": "/sentence_encoder/Constant_4",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "/sentence_encoder/Constant_4_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [
+              1
+            ],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              -1
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 12,
+      "node": {
+        "name": "/sentence_encoder/Reshape",
+        "op": "Reshape",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/Concat_output_0",
+          "/sentence_encoder/Constant_4_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/Reshape_output_0"
+        ],
+        "attributes": {
+          "allowzero": 0
+        }
+      }
+    },
+    {
+      "index": 13,
+      "node": {
+        "name": "/sentence_encoder/Shape_1",
+        "op": "Shape",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/Reshape_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/Shape_1_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 14,
+      "node": {
+        "name": "/sentence_encoder/ConstantOfShape",
+        "op": "ConstantOfShape",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/Shape_1_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/ConstantOfShape_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [
+              1
+            ],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              1
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 15,
+      "node": {
+        "name": "/sentence_encoder/Constant_5",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "/sentence_encoder/Constant_5_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              -1
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 16,
+      "node": {
+        "name": "/sentence_encoder/Mul",
+        "op": "Mul",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/ConstantOfShape_output_0",
+          "/sentence_encoder/Constant_5_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/Mul_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 17,
+      "node": {
+        "name": "/sentence_encoder/Equal",
+        "op": "Equal",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/Reshape_output_0",
+          "/sentence_encoder/Mul_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/Equal_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 18,
+      "node": {
+        "name": "/sentence_encoder/Where",
+        "op": "Where",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/Equal_output_0",
+          "/sentence_encoder/ConstantOfShape_output_0",
+          "/sentence_encoder/Reshape_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/Where_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 19,
+      "node": {
+        "name": "/sentence_encoder/Expand",
+        "op": "Expand",
+        "domain": "",
+        "inputs": [
+          "tts.dp.sentence_encoder.sentence_token",
+          "/sentence_encoder/Where_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/Expand_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 20,
+      "node": {
+        "name": "/sentence_encoder/Concat_1",
+        "op": "Concat",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/Expand_output_0",
+          "/sentence_encoder/text_embedder/Mul_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/Concat_1_output_0"
+        ],
+        "attributes": {
+          "axis": -1
+        }
+      }
+    },
+    {
+      "index": 21,
+      "node": {
+        "name": "/sentence_encoder/Constant_6",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "/sentence_encoder/Constant_6_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [
+              1
+            ],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              2
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 22,
+      "node": {
+        "name": "/sentence_encoder/Constant_7",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "/sentence_encoder/Constant_7_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [
+              1
+            ],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              0
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 23,
+      "node": {
+        "name": "/sentence_encoder/Constant_8",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "/sentence_encoder/Constant_8_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [
+              1
+            ],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              1
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 24,
+      "node": {
+        "name": "/sentence_encoder/Constant_9",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "/sentence_encoder/Constant_9_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [
+              1
+            ],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              1
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 25,
+      "node": {
+        "name": "/sentence_encoder/Slice",
+        "op": "Slice",
+        "domain": "",
+        "inputs": [
+          "text_mask",
+          "/sentence_encoder/Constant_7_output_0",
+          "/sentence_encoder/Constant_8_output_0",
+          "/sentence_encoder/Constant_6_output_0",
+          "/sentence_encoder/Constant_9_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/Slice_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 26,
+      "node": {
+        "name": "/sentence_encoder/Shape_2",
+        "op": "Shape",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/Slice_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/Shape_2_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 27,
+      "node": {
+        "name": "/sentence_encoder/ConstantOfShape_1",
+        "op": "ConstantOfShape",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/Shape_2_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/ConstantOfShape_1_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 1,
+            "shape": [
+              1
+            ],
+            "elements": 1,
+            "external": false,
+            "small_values": null,
+            "values_reason": "more than32 values or unsupported dtype; metadata only"
+          }
+        }
+      }
+    },
+    {
+      "index": 28,
+      "node": {
+        "name": "/sentence_encoder/Concat_2",
+        "op": "Concat",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/ConstantOfShape_1_output_0",
+          "text_mask"
+        ],
+        "outputs": [
+          "/sentence_encoder/Concat_2_output_0"
+        ],
+        "attributes": {
+          "axis": -1
+        }
+      }
+    },
+    {
+      "index": 29,
+      "node": {
+        "name": "/sentence_encoder/convnext/convnext.0/Mul",
+        "op": "Mul",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/Concat_1_output_0",
+          "/sentence_encoder/Concat_2_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/convnext/convnext.0/Mul_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 240,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/Unsqueeze",
+        "op": "Unsqueeze",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/Concat_2_output_0",
+          "/sentence_encoder/attn_encoder/Constant_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/Unsqueeze_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 242,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/Unsqueeze_1",
+        "op": "Unsqueeze",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/Concat_2_output_0",
+          "/sentence_encoder/attn_encoder/Constant_1_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/Unsqueeze_1_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 243,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/Mul",
+        "op": "Mul",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/Unsqueeze_output_0",
+          "/sentence_encoder/attn_encoder/Unsqueeze_1_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/Mul_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 288,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.0/MatMul",
+        "op": "MatMul",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/Div_output_0",
+          "/sentence_encoder/attn_encoder/attn_layers.0/Reshape_1_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/MatMul_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 368,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.0/MatMul_1",
+        "op": "MatMul",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/Div_output_0",
+          "/sentence_encoder/attn_encoder/attn_layers.0/Transpose_3_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/MatMul_1_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 474,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.0/Where",
+        "op": "Where",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/Cast_5_output_0",
+          "/sentence_encoder/attn_encoder/attn_layers.0/Constant_88_output_0",
+          "/sentence_encoder/attn_encoder/attn_layers.0/Add_2_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/Where_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 475,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.0/Softmax",
+        "op": "Softmax",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/Where_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/Softmax_output_0"
+        ],
+        "attributes": {
+          "axis": -1
+        }
+      }
+    },
+    {
+      "index": 476,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.0/MatMul_2",
+        "op": "MatMul",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/Softmax_output_0",
+          "/sentence_encoder/attn_encoder/attn_layers.0/Transpose_1_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/MatMul_2_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 622,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.0/MatMul_3",
+        "op": "MatMul",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/Slice_8_output_0",
+          "/sentence_encoder/attn_encoder/attn_layers.0/Unsqueeze_41_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.0/MatMul_3_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 691,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.1/MatMul",
+        "op": "MatMul",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/Div_output_0",
+          "/sentence_encoder/attn_encoder/attn_layers.1/Reshape_1_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/MatMul_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 771,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.1/MatMul_1",
+        "op": "MatMul",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/Div_output_0",
+          "/sentence_encoder/attn_encoder/attn_layers.1/Transpose_3_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/MatMul_1_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 875,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.1/Where",
+        "op": "Where",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/Cast_5_output_0",
+          "/sentence_encoder/attn_encoder/attn_layers.1/Constant_87_output_0",
+          "/sentence_encoder/attn_encoder/attn_layers.1/Add_2_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/Where_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 876,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.1/Softmax",
+        "op": "Softmax",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/Where_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/Softmax_output_0"
+        ],
+        "attributes": {
+          "axis": -1
+        }
+      }
+    },
+    {
+      "index": 877,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.1/MatMul_2",
+        "op": "MatMul",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/Softmax_output_0",
+          "/sentence_encoder/attn_encoder/attn_layers.1/Transpose_1_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/MatMul_2_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 1023,
+      "node": {
+        "name": "/sentence_encoder/attn_encoder/attn_layers.1/MatMul_3",
+        "op": "MatMul",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/Slice_8_output_0",
+          "/sentence_encoder/attn_encoder/attn_layers.1/Unsqueeze_41_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/attn_encoder/attn_layers.1/MatMul_3_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 1050,
+      "node": {
+        "name": "/sentence_encoder/Add",
+        "op": "Add",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/attn_encoder/Mul_2_output_0",
+          "/sentence_encoder/convnext/convnext.5/Mul_3_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/Add_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 1051,
+      "node": {
+        "name": "/sentence_encoder/Constant_10",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "/sentence_encoder/Constant_10_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [
+              1
+            ],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              2
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 1052,
+      "node": {
+        "name": "/sentence_encoder/Constant_11",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "/sentence_encoder/Constant_11_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [
+              1
+            ],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              0
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 1053,
+      "node": {
+        "name": "/sentence_encoder/Constant_12",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "/sentence_encoder/Constant_12_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [
+              1
+            ],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              1
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 1054,
+      "node": {
+        "name": "/sentence_encoder/Constant_13",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "/sentence_encoder/Constant_13_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [
+              1
+            ],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              1
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 1055,
+      "node": {
+        "name": "/sentence_encoder/Slice_1",
+        "op": "Slice",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/Add_output_0",
+          "/sentence_encoder/Constant_11_output_0",
+          "/sentence_encoder/Constant_12_output_0",
+          "/sentence_encoder/Constant_10_output_0",
+          "/sentence_encoder/Constant_13_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/Slice_1_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 1056,
+      "node": {
+        "name": "/sentence_encoder/Constant_14",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "/sentence_encoder/Constant_14_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [
+              1
+            ],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              2
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 1057,
+      "node": {
+        "name": "/sentence_encoder/Constant_15",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "/sentence_encoder/Constant_15_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [
+              1
+            ],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              0
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 1058,
+      "node": {
+        "name": "/sentence_encoder/Constant_16",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "/sentence_encoder/Constant_16_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [
+              1
+            ],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              1
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 1059,
+      "node": {
+        "name": "/sentence_encoder/Constant_17",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "/sentence_encoder/Constant_17_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [
+              1
+            ],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              1
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 1060,
+      "node": {
+        "name": "/sentence_encoder/Slice_2",
+        "op": "Slice",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/Concat_2_output_0",
+          "/sentence_encoder/Constant_15_output_0",
+          "/sentence_encoder/Constant_16_output_0",
+          "/sentence_encoder/Constant_14_output_0",
+          "/sentence_encoder/Constant_17_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/Slice_2_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 1061,
+      "node": {
+        "name": "/sentence_encoder/proj_out/net/Conv",
+        "op": "Conv",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/Slice_1_output_0",
+          "tts.dp.sentence_encoder.proj_out.net.weight"
+        ],
+        "outputs": [
+          "/sentence_encoder/proj_out/net/Conv_output_0"
+        ],
+        "attributes": {
+          "dilations": [
+            1
+          ],
+          "group": 1,
+          "kernel_shape": [
+            1
+          ],
+          "pads": [
+            0,
+            0
+          ],
+          "strides": [
+            1
+          ]
+        }
+      }
+    },
+    {
+      "index": 1062,
+      "node": {
+        "name": "/sentence_encoder/proj_out/Mul",
+        "op": "Mul",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/proj_out/net/Conv_output_0",
+          "/sentence_encoder/Slice_2_output_0"
+        ],
+        "outputs": [
+          "/sentence_encoder/proj_out/Mul_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 1063,
+      "node": {
+        "name": "/predictor/Shape",
+        "op": "Shape",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/proj_out/Mul_output_0"
+        ],
+        "outputs": [
+          "/predictor/Shape_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 1064,
+      "node": {
+        "name": "/predictor/Constant",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "/predictor/Constant_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              0
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 1065,
+      "node": {
+        "name": "/predictor/Gather",
+        "op": "Gather",
+        "domain": "",
+        "inputs": [
+          "/predictor/Shape_output_0",
+          "/predictor/Constant_output_0"
+        ],
+        "outputs": [
+          "/predictor/Gather_output_0"
+        ],
+        "attributes": {
+          "axis": 0
+        }
+      }
+    },
+    {
+      "index": 1066,
+      "node": {
+        "name": "Constant_1536",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "onnx::Unsqueeze_2261"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [
+              1
+            ],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              0
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 1067,
+      "node": {
+        "name": "/predictor/Unsqueeze",
+        "op": "Unsqueeze",
+        "domain": "",
+        "inputs": [
+          "/predictor/Gather_output_0",
+          "onnx::Unsqueeze_2261"
+        ],
+        "outputs": [
+          "/predictor/Unsqueeze_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 1068,
+      "node": {
+        "name": "/predictor/Constant_1",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "/predictor/Constant_1_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [
+              1
+            ],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              -1
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 1069,
+      "node": {
+        "name": "/predictor/Concat",
+        "op": "Concat",
+        "domain": "",
+        "inputs": [
+          "/predictor/Unsqueeze_output_0",
+          "/predictor/Constant_1_output_0"
+        ],
+        "outputs": [
+          "/predictor/Concat_output_0"
+        ],
+        "attributes": {
+          "axis": 0
+        }
+      }
+    },
+    {
+      "index": 1070,
+      "node": {
+        "name": "/predictor/Reshape",
+        "op": "Reshape",
+        "domain": "",
+        "inputs": [
+          "/sentence_encoder/proj_out/Mul_output_0",
+          "/predictor/Concat_output_0"
+        ],
+        "outputs": [
+          "/predictor/Reshape_output_0"
+        ],
+        "attributes": {
+          "allowzero": 0
+        }
+      }
+    },
+    {
+      "index": 1071,
+      "node": {
+        "name": "/predictor/Shape_1",
+        "op": "Shape",
+        "domain": "",
+        "inputs": [
+          "style_dp"
+        ],
+        "outputs": [
+          "/predictor/Shape_1_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 1072,
+      "node": {
+        "name": "/predictor/Constant_2",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "/predictor/Constant_2_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              0
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 1073,
+      "node": {
+        "name": "/predictor/Gather_1",
+        "op": "Gather",
+        "domain": "",
+        "inputs": [
+          "/predictor/Shape_1_output_0",
+          "/predictor/Constant_2_output_0"
+        ],
+        "outputs": [
+          "/predictor/Gather_1_output_0"
+        ],
+        "attributes": {
+          "axis": 0
+        }
+      }
+    },
+    {
+      "index": 1074,
+      "node": {
+        "name": "Constant_1544",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "onnx::Unsqueeze_2270"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [
+              1
+            ],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              0
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 1075,
+      "node": {
+        "name": "/predictor/Unsqueeze_1",
+        "op": "Unsqueeze",
+        "domain": "",
+        "inputs": [
+          "/predictor/Gather_1_output_0",
+          "onnx::Unsqueeze_2270"
+        ],
+        "outputs": [
+          "/predictor/Unsqueeze_1_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 1076,
+      "node": {
+        "name": "/predictor/Constant_3",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "/predictor/Constant_3_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [
+              1
+            ],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              -1
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 1077,
+      "node": {
+        "name": "/predictor/Concat_1",
+        "op": "Concat",
+        "domain": "",
+        "inputs": [
+          "/predictor/Unsqueeze_1_output_0",
+          "/predictor/Constant_3_output_0"
+        ],
+        "outputs": [
+          "/predictor/Concat_1_output_0"
+        ],
+        "attributes": {
+          "axis": 0
+        }
+      }
+    },
+    {
+      "index": 1078,
+      "node": {
+        "name": "/predictor/Reshape_1",
+        "op": "Reshape",
+        "domain": "",
+        "inputs": [
+          "style_dp",
+          "/predictor/Concat_1_output_0"
+        ],
+        "outputs": [
+          "/predictor/Reshape_1_output_0"
+        ],
+        "attributes": {
+          "allowzero": 0
+        }
+      }
+    },
+    {
+      "index": 1079,
+      "node": {
+        "name": "/predictor/Concat_2",
+        "op": "Concat",
+        "domain": "",
+        "inputs": [
+          "/predictor/Reshape_output_0",
+          "/predictor/Reshape_1_output_0"
+        ],
+        "outputs": [
+          "/predictor/Concat_2_output_0"
+        ],
+        "attributes": {
+          "axis": 1
+        }
+      }
+    },
+    {
+      "index": 1080,
+      "node": {
+        "name": "/predictor/layers.0/Gemm",
+        "op": "Gemm",
+        "domain": "",
+        "inputs": [
+          "/predictor/Concat_2_output_0",
+          "tts.dp.predictor.layers.0.weight",
+          "tts.dp.predictor.layers.0.bias"
+        ],
+        "outputs": [
+          "/predictor/layers.0/Gemm_output_0"
+        ],
+        "attributes": {
+          "alpha": 1.0,
+          "beta": 1.0,
+          "transB": 1
+        }
+      }
+    },
+    {
+      "index": 1081,
+      "node": {
+        "name": "/predictor/activation/PRelu",
+        "op": "PRelu",
+        "domain": "",
+        "inputs": [
+          "/predictor/layers.0/Gemm_output_0",
+          "tts.dp.predictor.activation.weight"
+        ],
+        "outputs": [
+          "/predictor/activation/PRelu_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 1082,
+      "node": {
+        "name": "/predictor/layers.1/Gemm",
+        "op": "Gemm",
+        "domain": "",
+        "inputs": [
+          "/predictor/activation/PRelu_output_0",
+          "tts.dp.predictor.layers.1.weight",
+          "tts.dp.predictor.layers.1.bias"
+        ],
+        "outputs": [
+          "/predictor/layers.1/Gemm_output_0"
+        ],
+        "attributes": {
+          "alpha": 1.0,
+          "beta": 1.0,
+          "transB": 1
+        }
+      }
+    },
+    {
+      "index": 1083,
+      "node": {
+        "name": "/predictor/Exp",
+        "op": "Exp",
+        "domain": "",
+        "inputs": [
+          "/predictor/layers.1/Gemm_output_0"
+        ],
+        "outputs": [
+          "/predictor/Exp_output_0"
+        ],
+        "attributes": {}
+      }
+    },
+    {
+      "index": 1084,
+      "node": {
+        "name": "/predictor/Constant_4",
+        "op": "Constant",
+        "domain": "",
+        "inputs": [],
+        "outputs": [
+          "/predictor/Constant_4_output_0"
+        ],
+        "attributes": {
+          "value": {
+            "name": "",
+            "dtype": 7,
+            "shape": [
+              1
+            ],
+            "elements": 1,
+            "external": false,
+            "small_values": [
+              1
+            ],
+            "values_reason": "bounded constant decoding, at most32 elements"
+          }
+        }
+      }
+    },
+    {
+      "index": 1085,
+      "node": {
+        "name": "/predictor/Squeeze",
+        "op": "Squeeze",
+        "domain": "",
+        "inputs": [
+          "/predictor/Exp_output_0",
+          "/predictor/Constant_4_output_0"
+        ],
+        "outputs": [
+          "duration"
+        ],
+        "attributes": {}
+      }
+    }
+  ],
+  "relevant_initializer_metadata": [
+    {
+      "name": "tts.dp.sentence_encoder.sentence_token",
+      "dtype": 1,
+      "shape": [
+        1,
+        64,
+        1
+      ],
+      "elements": 64,
+      "external": false,
+      "small_values": null,
+      "values_reason": "more than32 values or unsupported dtype; metadata only"
+    },
+    {
+      "name": "tts.dp.sentence_encoder.attn_encoder.attn_layers.0.emb_rel_k",
+      "dtype": 1,
+      "shape": [
+        1,
+        9,
+        32
+      ],
+      "elements": 288,
+      "external": false,
+      "small_values": null,
+      "values_reason": "more than32 values or unsupported dtype; metadata only"
+    },
+    {
+      "name": "tts.dp.sentence_encoder.attn_encoder.attn_layers.0.emb_rel_v",
+      "dtype": 1,
+      "shape": [
+        1,
+        9,
+        32
+      ],
+      "elements": 288,
+      "external": false,
+      "small_values": null,
+      "values_reason": "more than32 values or unsupported dtype; metadata only"
+    },
+    {
+      "name": "tts.dp.sentence_encoder.attn_encoder.attn_layers.1.emb_rel_k",
+      "dtype": 1,
+      "shape": [
+        1,
+        9,
+        32
+      ],
+      "elements": 288,
+      "external": false,
+      "small_values": null,
+      "values_reason": "more than32 values or unsupported dtype; metadata only"
+    },
+    {
+      "name": "tts.dp.sentence_encoder.attn_encoder.attn_layers.1.emb_rel_v",
+      "dtype": 1,
+      "shape": [
+        1,
+        9,
+        32
+      ],
+      "elements": 288,
+      "external": false,
+      "small_values": null,
+      "values_reason": "more than32 values or unsupported dtype; metadata only"
+    },
+    {
+      "name": "tts.dp.sentence_encoder.proj_out.net.weight",
+      "dtype": 1,
+      "shape": [
+        64,
+        64,
+        1
+      ],
+      "elements": 4096,
+      "external": false,
+      "small_values": null,
+      "values_reason": "more than32 values or unsupported dtype; metadata only"
+    },
+    {
+      "name": "tts.dp.predictor.layers.0.weight",
+      "dtype": 1,
+      "shape": [
+        128,
+        192
+      ],
+      "elements": 24576,
+      "external": false,
+      "small_values": null,
+      "values_reason": "more than32 values or unsupported dtype; metadata only"
+    },
+    {
+      "name": "tts.dp.predictor.layers.0.bias",
+      "dtype": 1,
+      "shape": [
+        128
+      ],
+      "elements": 128,
+      "external": false,
+      "small_values": null,
+      "values_reason": "more than32 values or unsupported dtype; metadata only"
+    },
+    {
+      "name": "tts.dp.predictor.layers.1.weight",
+      "dtype": 1,
+      "shape": [
+        1,
+        128
+      ],
+      "elements": 128,
+      "external": false,
+      "small_values": null,
+      "values_reason": "more than32 values or unsupported dtype; metadata only"
+    },
+    {
+      "name": "tts.dp.predictor.layers.1.bias",
+      "dtype": 1,
+      "shape": [
+        1
+      ],
+      "elements": 1,
+      "external": false,
+      "small_values": null,
+      "values_reason": "more than32 values or unsupported dtype; metadata only"
+    }
+  ],
+  "no_sequence_reduction_pool_ops": true,
+  "no_strided_conv_downsampling": true,
+  "S_definition": "T+1: full text plus one prepended learned sentence token",
+  "static_conclusion": "No fixed input-prefix/time cap in this exported DP graph. Global masked two-head/two-layer attention feeds a64-dimensional sentence-token readout; concatenate128style values,192->128->1 MLP/Exp. No explicit linear length-count/sum path into the head.",
+  "limits": "Structural full-sequence reachability does not prove nonzero learned attention/coverage or trained long-context quality; no values/attention activations evaluated; no intrinsic30s cap established."
+}

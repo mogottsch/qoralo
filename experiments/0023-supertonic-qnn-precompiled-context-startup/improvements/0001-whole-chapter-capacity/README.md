@@ -86,6 +86,8 @@ Janek's separate profile-OFF long probe produced a29.7968707483s WAV for the227-
 
 The exact [`results/duration-padding-cpu-20260910-attempt-01/`](results/duration-padding-cpu-20260910-attempt-01/) comparator used one official dynamic FP32 CPU session/two calls: active1333→29.8093147278s; padded2048→29.8190822601s. Added padding changed prediction by only+0.00976753235s. Approximately30s is already predicted without extra padding in the official CPU model, so this pair does not support padding or QNN-only numerical error as the major target-gap explanation. Phone DP scalar was not captured; CPU1.23.2 versus phone1.27.1/QNN comparisons are qualified. No intrinsic30s cap, duration override, full speech coverage or quality approval follows. Release consumed; no additional cases or whole-TTS retry.
 
+The subsequent [source-only DP trace](results/duration-source-trace-20260910/REPORT.md) accounts for all31Slices/4Clips: full masked text feeds two global-attention layers and a learned sentence-token readout; no fixed input-prefix/time cap was found. Upstream300-character chunk guidance is not a training-horizon proof or an allowed whole-chapter workaround. No graph fix or proven duration-conditioning remedy follows from this trace.
+
 ## Fidelity and comparison boundaries
 
 - Masked padding is demonstrably non-neutral: experiment0022's T235→T239 changed duration15.8623657→15.6378775s and embedding max difference0.1110139. Positional-prefix preservation does not erase that result.

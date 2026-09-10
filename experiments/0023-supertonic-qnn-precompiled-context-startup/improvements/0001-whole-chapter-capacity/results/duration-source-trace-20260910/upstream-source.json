@@ -1,0 +1,166 @@
+{
+  "package_metadata": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0007-mobile-podcast-preview-bakeoff/artifacts/supertonic-3/venv/lib/python3.11/site-packages/supertonic-1.3.1.dist-info/METADATA",
+    "bytes": 27274,
+    "sha256": "2799c8c45add79d7f671885b5811bc6a628267de476cb03a2c44fe32799f574c"
+  },
+  "package_version": "1.3.1",
+  "repository": "https://github.com/supertone-inc/supertonic-py",
+  "passages": [
+    {
+      "file": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0007-mobile-podcast-preview-bakeoff/artifacts/supertonic-3/venv/lib/python3.11/site-packages/supertonic/config.py",
+        "bytes": 8064,
+        "sha256": "9684abef9023d305b87d8b511a5c955624f5b7a92c76b57aa8b3e06f8e18ce2e"
+      },
+      "passages": [
+        {
+          "start_line": 198,
+          "end_line": 212,
+          "text": "DEFAULT_LANGUAGE = \"en\"\n\n# TTS parameters - defaults\nDEFAULT_TOTAL_STEPS = 8\nDEFAULT_SPEED = 1.05\nDEFAULT_MAX_CHUNK_LENGTH = 300\nDEFAULT_MAX_CHUNK_LENGTH_KO = 120  # Korean requires shorter chunks\nDEFAULT_SILENCE_DURATION = 0.3  # seconds\n\n# TTS parameters - constraints\nMIN_SPEED = 0.7\nMAX_SPEED = 2.0\nMIN_TOTAL_STEPS = 1\nMAX_TOTAL_STEPS = 100\n"
+        },
+        {
+          "start_line": 241,
+          "end_line": 244,
+          "text": "\n# Text processing\nMAX_TEXT_LENGTH = 100_000  # Maximum characters per single synthesis call\n"
+        }
+      ]
+    },
+    {
+      "file": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0007-mobile-podcast-preview-bakeoff/artifacts/supertonic-3/venv/lib/python3.11/site-packages/supertonic/pipeline.py",
+        "bytes": 16733,
+        "sha256": "13b16fb8556632b5985f8ba1e961096ca1ad921d01aed171972dd106df51a7cd"
+      },
+      "passages": [
+        {
+          "start_line": 158,
+          "end_line": 184,
+          "text": "    def synthesize(\n        self,\n        text: str,\n        voice_style: Style,\n        total_steps: int = DEFAULT_TOTAL_STEPS,\n        speed: float = DEFAULT_SPEED,\n        max_chunk_length: Optional[int] = None,\n        silence_duration: float = DEFAULT_SILENCE_DURATION,\n        lang: Optional[str] = None,\n        verbose: bool = False,\n    ) -> tuple[np.ndarray, np.ndarray]:\n        \"\"\"Synthesize speech from text.\n\n        This method automatically chunks long text into smaller segments\n        and concatenates them with silence in between.\n\n        Args:\n            text: Text to synthesize\n            voice_style: Voice style object\n            total_steps: Number of synthesis steps (default: 8)\n            speed: Speech speed multiplier (default: 1.05)\n            max_chunk_length: Max characters per chunk. If None, automatically\n                determined based on language (300 for most, 120 for Korean)\n            silence_duration: Silence between chunks in seconds (default: 0.3)\n            lang: Language code for synthesis. If ``None`` (default), the\n                code is resolved from the loaded model: ``\"na\"`` for\n                multilingual models (supertonic-2/3) so unknown text \"just"
+        },
+        {
+          "start_line": 261,
+          "end_line": 269,
+          "text": "        # Determine max_chunk_length based on language if not specified\n        if max_chunk_length is None:\n            max_chunk_length = (\n                DEFAULT_MAX_CHUNK_LENGTH_KO if effective_lang == \"ko\" else DEFAULT_MAX_CHUNK_LENGTH\n            )\n\n        # Chunk text for processing\n        text_chunks = chunk_text(text, max_chunk_length)\n"
+        },
+        {
+          "start_line": 281,
+          "end_line": 321,
+          "text": "        # Collect all waveforms and durations in lists to avoid repeated concatenation\n        wav_list = []\n        dur_list = []\n        for i, text_chunk in enumerate(text_chunks):\n            if verbose:\n                print(f\"   [{i+1}/{len(text_chunks)}] Processing chunk... \", end=\"\", flush=True)\n\n            logger.debug(f\"Processing chunk {i+1}/{len(text_chunks)}\")\n            wav, dur_onnx = self.model(\n                [text_chunk], voice_style, total_steps, speed, effective_lang\n            )\n\n            if verbose:\n                print(f\"\u2713 ({dur_onnx[0]:.2f}s)\")\n\n            # Validate waveform shape\n            if wav.shape[0] != 1:\n                raise RuntimeError(f\"Expected wav shape (1, samples), got {wav.shape}\")\n\n            wav_list.append(wav)\n            dur_list.append(dur_onnx)\n\n        # Type guard: lists should never be empty after processing\n        assert len(wav_list) > 0 and len(dur_list) > 0, \"No audio generated\"\n\n        # Build list of arrays to concatenate: [wav1, silence, wav2, silence, wav3, ...]\n        silence = np.zeros((1, int(silence_duration * self.sample_rate)), dtype=np.float32)\n        arrays_to_concat = []\n        for i, wav in enumerate(wav_list):\n            arrays_to_concat.append(wav)\n            if i < len(wav_list) - 1:  # Don't add silence after last chunk\n                arrays_to_concat.append(silence)\n\n        # Single concatenation operation\n        wav_cat = np.concatenate(arrays_to_concat, axis=1)\n\n        # Calculate total duration\n        total_audio_dur = sum(dur_list)\n        total_silence_dur = silence_duration * (len(wav_list) - 1)\n        dur_cat = total_audio_dur + total_silence_dur\n"
+        }
+      ]
+    },
+    {
+      "file": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0007-mobile-podcast-preview-bakeoff/artifacts/supertonic-3/venv/lib/python3.11/site-packages/supertonic/utils.py",
+        "bytes": 5727,
+        "sha256": "8bf2e0a14783de9266edba1135597e6b77b143907e445b08dcc45f694ff51ed3"
+      },
+      "passages": [
+        {
+          "start_line": 154,
+          "end_line": 220,
+          "text": "def chunk_text(text: str, max_len: int = 300) -> list[str]:\n    \"\"\"\n    Split text into chunks by paragraphs and sentences.\n\n    This function intelligently splits long text into smaller chunks suitable\n    for TTS processing, respecting paragraph and sentence boundaries.\n\n    Args:\n        text: Input text to chunk\n        max_len: Maximum length of each chunk in characters (default: 300)\n\n    Returns:\n        List of text chunks\n\n    Example:\n        ```python\n        text = \"This is a long paragraph. It has multiple sentences. \" * 10\n        chunks = chunk_text(text, max_len=100)\n        for chunk in chunks:\n            print(f\"Chunk ({len(chunk)} chars): {chunk[:50]}...\")\n        ```\n    \"\"\"\n    # Validate minimum chunk length\n    if max_len < 10:\n        raise ValueError(\n            f\"max_len must be at least 10, got {max_len}. \"\n            f\"Very small chunks may produce poor quality speech.\"\n        )\n\n    # Split by paragraph (two or more newlines)\n    paragraphs = [p.strip() for p in re.split(r\"\\n\\s*\\n+\", text.strip()) if p.strip()]\n\n    chunks = []\n\n    for paragraph in paragraphs:\n        paragraph = paragraph.strip()\n        if not paragraph:\n            continue\n\n        # Split by sentence boundaries (period, question mark, exclamation mark followed by space)\n        # But exclude common abbreviations like Mr., Mrs., Dr., etc. and single capital letters\n        sentences = re.split(_COMMON_ABBREVIATIONS_PATTERN, paragraph)\n\n        current_chunk = \"\"\n\n        for sentence in sentences:\n            # Skip empty sentences to prevent empty chunks\n            # Strip once and reuse the result\n            sentence_stripped = sentence.strip()\n            if not sentence_stripped:\n                continue\n\n            if len(current_chunk) + len(sentence_stripped) + 1 <= max_len:\n                current_chunk += (\" \" if current_chunk else \"\") + sentence_stripped\n            else:\n                if current_chunk:\n                    chunks.append(current_chunk.strip())\n                current_chunk = sentence_stripped\n\n        # Add final chunk if not empty\n        if current_chunk and current_chunk.strip():\n            chunks.append(current_chunk.strip())\n\n    return chunks"
+        }
+      ]
+    },
+    {
+      "file": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0007-mobile-podcast-preview-bakeoff/artifacts/supertonic-3/venv/lib/python3.11/site-packages/supertonic/core.py",
+        "bytes": 20003,
+        "sha256": "26664d490509edc1cc1feca2fc0f72b1ae067fd5c5b11d39c1daeba9c3e81ff4"
+      },
+      "passages": [
+        {
+          "start_line": 451,
+          "end_line": 461,
+          "text": "    def sample_noisy_latent(self, duration: np.ndarray) -> tuple[np.ndarray, np.ndarray]:\n        bsz = len(duration)\n        wav_len_max = duration.max() * self.sample_rate\n        wav_lengths = (duration * self.sample_rate).astype(np.int64)\n        chunk_size = self.base_chunk_size * self.chunk_compress_factor\n        latent_len = ((wav_len_max + chunk_size - 1) / chunk_size).astype(np.int32)\n        latent_dim = self.ldim * self.chunk_compress_factor\n        noisy_latent = np.random.randn(bsz, latent_dim, latent_len).astype(np.float32)\n        latent_mask = get_latent_mask(wav_lengths, self.base_chunk_size, self.chunk_compress_factor)\n        noisy_latent = noisy_latent * latent_mask\n        return noisy_latent, latent_mask"
+        },
+        {
+          "start_line": 506,
+          "end_line": 539,
+          "text": "        )\n        dur_onnx = dur_onnx / speed\n        text_emb_onnx, *_ = self.text_enc_ort.run(\n            None,\n            {\"text_ids\": text_ids, \"style_ttl\": style.ttl, \"text_mask\": text_mask},\n        )\n        xt, latent_mask = self.sample_noisy_latent(dur_onnx)\n        total_step_np = np.array([total_step] * bsz, dtype=np.float32)\n        for step in range(total_step):\n            current_step = np.array([step] * bsz, dtype=np.float32)\n            xt, *_ = self.vector_est_ort.run(\n                None,\n                {\n                    \"noisy_latent\": xt,\n                    \"text_emb\": text_emb_onnx,\n                    \"style_ttl\": style.ttl,\n                    \"text_mask\": text_mask,\n                    \"latent_mask\": latent_mask,\n                    \"current_step\": current_step,\n                    \"total_step\": total_step_np,\n                },\n            )\n        wav, *_ = self.vocoder_ort.run(None, {\"latent\": xt})\n        return wav, dur_onnx"
+        }
+      ]
+    }
+  ],
+  "model_config": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0007-mobile-podcast-preview-bakeoff/artifacts/supertonic-3/snapshot/onnx/tts.json",
+    "bytes": 8253,
+    "sha256": "42078d3aef1cd43ab43021f3c54f47d2d75ceb4e75f627f118890128b06a0d09"
+  },
+  "DP_config": {
+    "latent_dim": 24,
+    "chunk_compress_factor": 6,
+    "normalizer": {
+      "scale": 1.0
+    },
+    "sentence_encoder": {
+      "char_emb_dim": 64,
+      "text_embedder": {
+        "char_emb_dim": 64
+      },
+      "convnext": {
+        "idim": 64,
+        "ksz": 5,
+        "intermediate_dim": 256,
+        "num_layers": 6,
+        "dilation_lst": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "attn_encoder": {
+        "hidden_channels": 64,
+        "filter_channels": 256,
+        "n_heads": 2,
+        "n_layers": 2,
+        "p_dropout": 0.0
+      },
+      "proj_out": {
+        "idim": 64,
+        "odim": 64
+      }
+    },
+    "style_encoder": {
+      "proj_in": {
+        "ldim": 24,
+        "chunk_compress_factor": 6,
+        "odim": 64
+      },
+      "convnext": {
+        "idim": 64,
+        "ksz": 5,
+        "intermediate_dim": 256,
+        "num_layers": 4,
+        "dilation_lst": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "style_token_layer": {
+        "input_dim": 64,
+        "n_style": 8,
+        "style_key_dim": 0,
+        "style_value_dim": 16,
+        "prototype_dim": 64,
+        "n_units": 64,
+        "n_heads": 2
+      }
+    },
+    "predictor": {
+      "sentence_dim": 64,
+      "n_style": 8,
+      "style_dim": 16,
+      "hdim": 128,
+      "n_layer": 2
+    }
+  },
+  "conclusion": "Official packaged frontend documents300characters general/120Korean per chunk, then per-chunk model calls+silence+concatenation. Helper groups whole sentences so a single overlong sentence can exceed max_len.100000 is frontend request guard, not model horizon. None of these docs establishes a300character training limit or permits chunks for this whole-chapter task."
+}
