@@ -43,16 +43,17 @@ After staging under a unique scoped remote root and verifying all remote hashes 
 ./direct_lfm2_qnn_runner "$REMOTE" --integrated "$REMOTE/short.int32le" 16 "$REMOTE/output.int32le"
 ```
 
-`MAX_NEW=16` means **16 total emitted tokens including the AR171 endpoint**, so at most 15 AR1 graph calls occur. Stop early on EOS `124900`.
+`MAX_NEW=16` means **16 total emitted tokens including the AR171 endpoint**, so at most 15 AR1 graph calls occur. Stop early on EOS `124900`. The entire diagnostic has an explicit **600-second timeout**.
 
 ## Required lifecycle and evidence
 
 - [ ] Open the raw output exclusively before backend setup.
 - [ ] Load AR171 once; construct all 171 embeddings inside the measured request boundary.
-- [ ] Request and finite-scan all 38 state and 22 logit outputs before copying.
+- [ ] Request and finite-scan all 38 state and 22 logit outputs before copying, then reduce the endpoint argmax.
 - [ ] Append and `fsync` the endpoint token immediately.
-- [ ] Attempt phase-labelled detailed-profile extraction. If unavailable, retain `optional_telemetry_missing`; do not discard valid output.
-- [ ] Free AR171, reset the profile, bridge all 38 states in memory, and load AR1 once.
+- [ ] Bridge all 38 states in memory **before** prefill profile extraction and AR171 free/reset; this is the runner's actual order.
+- [ ] Attempt phase-labelled prefill profile extraction. If unavailable, retain `optional_telemetry_missing`; do not discard valid output.
+- [ ] Free AR171, reset the profile, and load AR1 once.
 - [ ] On every AR1 call request and finite-scan all 60 outputs, carry all 38 states in process, append and `fsync` each token immediately, and never reload the context per token.
 - [ ] Preserve stdout/stderr, raw token file (including partial output on failure), provider/build ID, hash checks, memory samples, battery/thermal snapshots, and process status before validation or decoding.
 - [ ] Remove only the scoped remote root, verify it absent, verify no runner remains, then release `phone.lock`.
@@ -76,6 +77,8 @@ Expected CPU reference for the corrected-position route, total cap 16:
  9527, 8771, 836, 1703, 2165, 39246, 17354, 342]
 ```
 
-Compare and retain every mismatch. A pass requires physical direct-QNN HTP execution, bounded finite-scanned output, valid token IDs, coherent partial text, one explicit phase transition, and cleanup. It does **not** require reference equality after the first token and cannot erase the known severe state drift.
+Compare and retain every mismatch. A pass requires physical direct-QNN HTP execution, bounded finite-scanned output, valid token IDs, coherent partial text, one explicit phase transition, and cleanup. It does **not** require reference equality at any token, including the first; the expected sequence is a comparator, not a pass condition.
+
+The severe state/logit deltas cited elsewhere came from historical qnn-net-run executions whose position inputs were later proven to be all zero. They remain important wrong-input evidence, but they are **not** a precision conclusion about this corrected direct-QNN INT64 route. A corrected integrated run must report its own outputs without assuming either equality or the same drift.
 
 Do not claim numerical equivalence, combined/shared-context viability, simultaneous residency, HTP-only execution (CPU embedding/orchestration/argmax/bridge are explicit), complete-answer quality, canonical statistical performance, a campaign, or a registry result.
