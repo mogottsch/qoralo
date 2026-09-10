@@ -515,6 +515,22 @@ class ContractTest(unittest.TestCase):
             self.assertEqual(entry["raw_bytes"], recovered_bytes)
             self.assertTrue(entry["decompression_verified"])
 
+    def test_saved_replay_readiness_is_synthetic_not_real_model_evidence(self) -> None:
+        directory = EXP / "results/saved-qdq-replay-helper-readiness"
+        result = json.loads((directory / "result.json").read_text())
+        self.assertEqual(
+            "source_only_saved_qdq_replay_helper_synthetic_readiness", result["evidence_class"]
+        )
+        self.assertEqual(24, result["validation"]["synthetic_tests_passed"])
+        self.assertEqual(0, result["validation"]["model_archives_loaded"])
+        self.assertTrue(result["validation"]["torch_export_load_mocked_to_forbid_real_archive_loads"])
+        self.assertFalse(result["full_histogram_model_replay_completed"])
+        self.assertFalse(result["physical_execution_performed"])
+        self.assertFalse(result["qnn_x86_execution_performed"])
+        self.assertFalse(result["campaign_ready"])
+        for entry in result["artifacts"].values():
+            self.assertEqual(entry["sha256"], sha(EXP / entry["path"]))
+
     def test_manifests_bind_retained_evidence(self) -> None:
         for directory in (
             EXP / "protocol",
@@ -530,6 +546,7 @@ class ContractTest(unittest.TestCase):
             EXP / "results/exact-qnn-explicit-broadcast-host-validation",
             EXP / "results/android-qnn-physical-viability-20260828-attempt-03",
             EXP / "results/host-histogram-precision-20260910",
+            EXP / "results/saved-qdq-replay-helper-readiness",
         ):
             entries = {}
             for line in (directory / "SHA256SUMS").read_text().splitlines():

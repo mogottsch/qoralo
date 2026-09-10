@@ -55,10 +55,14 @@ A lower-retention two-process host replay in [`results/host-w4a16-qdq-output-dia
 
 [`results/host-histogram-precision-20260910/`](results/host-histogram-precision-20260910/) retains the exact W4A16 candidate compile and sequential same-position QDQ/QNN-x86 comparison. Four QNN subgraphs retain all 4,210 delegated nodes with zero tensor-compute fallback. All 24 hidden cosines improve; layer-23 hidden cosine reaches 0.971446 and final-logit cosine reaches 0.947168. Each route uses its own QDQ reference, so this is improved internal agreement, not equivalence to the original float model. Rejected precision variants and resource-interrupted attempts are retained, not discarded.
 
+## Saved-QDQ replay helper readiness
+
+[`results/saved-qdq-replay-helper-readiness/`](results/saved-qdq-replay-helper-readiness/) binds the source-only replay helper and 24 tiny synthetic tests. It enforces the exact 174-input hash/sequence and state semantics, derives output IDs from actual logits, retains per-position raw tensors and an error/interruption journal, and refuses overwrite/resume. No model archive was loaded during these tests and no real HistogramObserver full-prompt replay has run.
+
 ## Current next gate
 
 1. Keep physical PTE `23ac8abd…d2c506` and phone preflight unchanged; the new 73-output diagnostic PTE is not compatible with the current 49-output Android runner.
-2. Await Pi release for one serial full 174-token HistogramObserver QDQ replay; do not automatically start another heavy phase.
+2. Await Pi's helper review and heavy-slot release for one serial full 174-token HistogramObserver QDQ replay; do not automatically start another heavy phase.
 3. No ADB or staging without a new explicit Pi phone slot. Residual physical drift and one-token-only output remain campaign-readiness boundaries.
 4. Only after agreed fidelity and state-isolation gates may chunked prefill and the fixed 1+5+5+5 campaign be promoted.
 

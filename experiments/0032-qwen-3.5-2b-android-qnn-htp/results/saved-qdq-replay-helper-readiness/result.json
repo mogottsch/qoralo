@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "experiment": "0032-qwen-3.5-2b-android-qnn-htp",
+  "evidence_class": "source_only_saved_qdq_replay_helper_synthetic_readiness",
+  "status": "synthetic_tests_passed_real_model_replay_not_run",
+  "artifacts": {
+    "helper": {
+      "path": "tools/replay_saved_qdq.py",
+      "bytes": 13849,
+      "sha256": "f2a3886651e31e02934280d8ec278247387cc06031541b411837a55c099ee58f"
+    },
+    "synthetic_tests": {
+      "path": "tests/test_replay_saved_qdq.py",
+      "bytes": 17325,
+      "sha256": "caca9d1e93683a49b948ba9e4a2e12d42c0cf7fdcb37f06e9d51773ce7a2efda"
+    },
+    "state_template_source": {
+      "path": "tools/diagnose_quantized_output.py",
+      "bytes": 11716,
+      "sha256": "bd889b85a2a1a2d0c24bf30f1e7ccd8ac3525e9a0d01bcb8134834c1545b8033"
+    }
+  },
+  "validation": {
+    "synthetic_tests_passed": 24,
+    "py_compile_passed": true,
+    "torch_export_load_mocked_to_forbid_real_archive_loads": true,
+    "synthetic_graph_layers": [
+      "linear_attention",
+      "full_attention"
+    ],
+    "canonical_input_tokens": 174,
+    "input_token_ids_sha256": "dcfd3c24cb3f8a370f91b38c9720d7e3dd5c623d491fed70ded3726ec49048f4",
+    "model_archives_loaded": 0,
+    "test_process": {
+      "exit_code": 0,
+      "elapsed_seconds": 2.08632854499956,
+      "process_ru_maxrss_kib": 237112,
+      "scope": "synthetic tensors only; torch.export.load mocked to reject any model archive load"
+    },
+    "protected_boundaries": [
+      "no_hardcoded_output_ids_or_physical_placeholders",
+      "exact_input_hash_count_endianness_and_context",
+      "zero_initial_state_and_actual_position_masks",
+      "sequential_recurrent_convolution_and_KV_transport",
+      "actual_final_logits_argmax_and_tie_handling",
+      "partial_raw_tensor_and_journal_retention",
+      "load_graph_state_nonfinite_empty_and_save_errors",
+      "TERM_interruption_and_signal_handler_restoration",
+      "exclusive_output_reservation_and_no_input_alias_or_overwrite",
+      "atomic_checkpoint_write_preserves_prior_evidence"
+    ]
+  },
+  "full_histogram_model_replay_completed": false,
+  "qnn_x86_execution_performed": false,
+  "physical_execution_performed": false,
+  "real_generated_text_sanity_checked": false,
+  "campaign_ready": false,
+  "registry_eligible": false,
+  "current_physical_pte_sha256": "23ac8abd7e39b596d62bdc6b098a3e61fe0688bf6d1f4d537959e13492d2c506",
+  "next_gate": "Pi source review and explicit heavy-slot rotation before any real174-token QDQ replay; no model archive load or phone authorized by this readiness commit.",
+  "claim_limits": [
+    "Readiness source and tiny synthetic tensors only; there is no new LLM numerical, output, or performance evidence.",
+    "All24 tests trap actual torch.export.load calls; replay cases inject a synthetic graph loader.",
+    "Per-position checkpoints are durable evidence, not resumable state; failures never auto-retry or become completed requests.",
+    "Physical baseline, host HistogramObserver evidence, workload, and registry remain unchanged."
+  ]
+}

@@ -32,10 +32,12 @@ Active. The exact HistogramObserver/W4A16 host candidate improves all 24 hidden-
 
 19. Completed a fresh guarded HistogramObserver hidden-diagnostic compile after retaining the app-priority interruption. Four QNN subgraphs have zero tensor-compute fallback. Sequential position-zero QDQ/QNN-x86 comparison improves all 24 hidden cosines, final-logit cosine 0.433603→0.947168, and agrees on argmax 198. Rejected MatMul/float/FP16/symmetric branches remain documented.
 
+20. Finished the saved-QDQ helper with 24 synthetic-only tests for exact inputs/masks/state transport, computed logits/argmax, raw partial/error retention, signals, and no overwrite. No model archive was loaded; helper review and heavy-slot rotation are still required before real replay.
+
 ## Current work
 
 1. Preserve physical baseline/preflight hashes and the new local-only diagnostic artifacts.
-2. Await Pi release for the full 174-token HistogramObserver QDQ replay, running serially with resource guards. Do not start it automatically.
+2. Await Pi review of helper readiness and release for the full 174-token HistogramObserver QDQ replay, running serially with resource guards. Do not start it automatically.
 3. Do not use ADB or the phone without an explicit scheduled slot. This milestone does not establish full-prompt/physical fidelity or authorize a campaign.
 4. After the bounded precision decision and agreed follow-up gates, validate chunked-prefill state semantics/delegation and loaded-route reset/isolation before the canonical campaign.
 
