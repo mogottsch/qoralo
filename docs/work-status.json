@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-10T20:31:27+00:00",
+  "updated_at": "2026-09-10T20:33:03+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -9,10 +9,10 @@
       "title": "Long narration (~90 s)",
       "status": "blocked",
       "owner": "Janek",
-      "now": "Actual render failed: duration/text ran, then vector graphExecute6006. No WAV.",
-      "next": "New pack staged and four contexts loaded; root cause pending audit. No retry.",
-      "reported_at": "2026-09-10T20:31:27+00:00",
-      "reported_by": "Pi — actual runtime sequence report",
+      "now": "Vector ORT node attempt failed6006; no vector RPC/cycles. Vocoder never ran.",
+      "next": "No successful vector QNN execution or WAV. Saved diagnosis only; no retry.",
+      "reported_at": "2026-09-10T20:33:03+00:00",
+      "reported_by": "Pi — failed-attempt/provider-proof refinement",
       "stale_after_seconds": 600,
       "links": [
         {
@@ -26,9 +26,9 @@
       "title": "Independent review",
       "status": "reviewing",
       "owner": "Nik / Ben",
-      "now": "Nik + Ben diagnose retained profiles and source; root cause unknown.",
-      "next": "No new graph change or execution until the evidence is reviewed.",
-      "reported_at": "2026-09-10T20:31:27+00:00",
+      "now": "Nik + Ben review failure evidence; native contextFree1003/FastRPC errors retained.",
+      "next": "Separate attempted ORT work from successful QNN execution and host cleanup.",
+      "reported_at": "2026-09-10T20:33:03+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -38,9 +38,9 @@
       "title": "App / short TTS",
       "status": "waiting",
       "owner": "Janek",
-      "now": "Terminal evidence collection succeeded in 13.863 s—not synthesis success.",
-      "next": "Packages/new pack retained. Prepare safe evidence; no further phone/model action.",
-      "reported_at": "2026-09-10T20:28:19+00:00",
+      "now": "Host process/settings/scratch cleanup passed; native teardown had errors.",
+      "next": "contextFree1003/FastRPC errors remain evidence—not an all-clean native shutdown.",
+      "reported_at": "2026-09-10T20:33:03+00:00",
       "reported_by": "Pi — independently approved guard boundary",
       "stale_after_seconds": 900,
       "links": [
@@ -141,9 +141,9 @@
       "title": "Phone",
       "status": "unassigned",
       "owner": "Pi",
-      "now": "free after verified cleanup",
-      "next": "Reported cleanup/assignment only, not a live connection check.",
-      "reported_at": "2026-09-10T20:31:27+00:00",
+      "now": "free; host cleanup passed",
+      "next": "Native contextFree1003/FastRPC errors were recorded. Not an unqualified all-clean shutdown or live connection check.",
+      "reported_at": "2026-09-10T20:33:03+00:00",
       "reported_by": "Janek execution report + Pi release, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -183,15 +183,15 @@
     },
     {
       "name": "Ben",
-      "task": "Diagnose saved TTS failure",
-      "reported_at": "2026-09-10T20:31:27+00:00",
+      "task": "Diagnose failed vector attempt",
+      "reported_at": "2026-09-10T20:33:03+00:00",
       "reported_by": "Pi latest snapshot; Kate capture",
       "stale_after_seconds": 900
     },
     {
       "name": "Nik",
-      "task": "Audit TTS failure / source",
-      "reported_at": "2026-09-10T20:31:27+00:00",
+      "task": "Audit provider / teardown limits",
+      "reported_at": "2026-09-10T20:33:03+00:00",
       "reported_by": "Pi latest snapshot; Kate capture",
       "stale_after_seconds": 900
     },
