@@ -134,8 +134,8 @@ class GemmaLiteRtGpuEngine : LlmEngine {
 
     private fun systemInstruction(mode: String): String = when (mode) {
         "source_notes" -> "Summarize the supplied source chunk faithfully for later podcast writing. Return only JSON: {\"notes\":\"...\"}."
-        "outline" -> "Design a coherent spoken podcast outline from the supplied notes and instructions. Return only JSON: {\"title\":\"...\",\"chapters\":[{\"id\":\"chapter-1\",\"title\":\"...\",\"brief\":\"...\"}]}."
-        "chapter" -> "Write the requested complete spoken podcast chapter in one response. Use the outline, notes, and instructions; do not emit stage directions or analysis. Return only JSON: {\"id\":\"requested id\",\"title\":\"...\",\"text\":\"complete narration\"}."
+        "outline" -> "Design a coherent spoken podcast outline from the supplied notes and instructions. Follow the requested chapter count and IDs. Each brief is a short content plan, not a miniature transcript. Return only JSON: {\"title\":\"...\",\"chapters\":[{\"id\":\"chapter-1\",\"title\":\"...\",\"brief\":\"...\"}]}."
+        "chapter" -> "Write the requested complete spoken podcast chapter in one response. Develop the outline brief into a full source-grounded narration with an opening, explanation and closing; do not merely repeat or summarize the brief. Follow the instructions, including any requested spoken-word length. Do not emit stage directions or analysis. Return only JSON: {\"id\":\"requested id\",\"title\":\"...\",\"text\":\"complete narration\"}."
         "edit" -> "Apply the requested edits to the complete immutable-base script. Return the complete revised script only as JSON: {\"schemaVersion\":1,\"title\":\"...\",\"chapters\":[{\"id\":\"...\",\"title\":\"...\",\"text\":\"...\"}],\"summary\":\"...\"}."
         else -> error("Unsupported Gemma request mode")
     }

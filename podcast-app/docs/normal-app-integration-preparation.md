@@ -1,0 +1,25 @@
+# Normal app integration — source preparation only
+
+**Not built, deployed or product-tested. Full-chapter E2E is held while duration/spoken coverage are investigated.** The current installed59e338… APK is the profile-OFF diagnostic, not a coherent normal production candidate.
+
+The profile-OFF call returned a real29.7969s WAV for a complete227-word input. Nik accepted bounded input→WAV operability only. This misses the roughly90s target; speech coverage/listening are not accepted. Jere's one local ASR pass finds discontinuous lexical matches across all four paragraphs, not evidence of complete speech. Ben/Nik's separately scoped CPU duration/padding comparison is pending. No extra TTS/phone action is implied.
+
+## Prepared source delta
+
+- `config/normal-supertonic-pack.properties` binds the already reviewed separate data namespace `supertonic-3-t2048-l2048-parity` and manifest `116fda95a907f6dc35bfe7c2144fe2818ed438cc109c1faa3f95cafc2fc84066` for a future normal build. It does not mutate an existing pack or certify speech coverage.
+- `app/build.gradle.kts` supplies matching BuildConfig pack ID/hash. The normal coordinator and Settings use the same ID. Settings explicitly says experimental/speech coverage unverified; presence remains distinct from verification.
+- Only two Gemma system-prompt strings change: outline briefs are short plans rather than miniature transcripts, and complete chapter generation should develop the plan and honor requested word length. Output limits, parser, GPU route, sampler, context, fresh conversations and request logic are unchanged.
+- No global word minimum, duration UI, rate adjustment, text/audio splitting, automatic expansion or retry is introduced. Review ON can retain a structurally valid underlength draft for the planned explicit agent revision.
+- C++/native9, original runtime authority and legacy short-pack preparer are untouched. Frozen efdb/b860/short APKs, contracts, outputs and existing user data remain immutable. The legacy preparer still prepares the canonical short pack; the normal source's new route is an explicit separate pin, not a relabelled old pack.
+
+Four focused Python source regressions check the exact route/pin, coordinator-only selection delta, two-string-only prompt delta, experimental labels and unchanged native/legacy authorities. This is static source validation, **not Kotlin/Gradle compilation, installation or real generation**.
+
+## Next bounded genuine workflow, only when released
+
+Pi accepted planning for one clearly owned episode with two modest chapters, review ON and one agent revision. Existing free-text instructions request chapter-1/chapter-2, each200–260 spoken English words. That range is a soft target, not a blanket draft-commit rejection or measured audio duration. Before scoped lock/TTS, inspect final IDs/order/content and normalized text below2039 codepoints; report word-target attainment honestly. Preserve raw underlength/rejected output; do not silently prune, expand, retry or alter the parser.
+
+For one source within12000chars and notes≤8000, the initial normal job makes **four** logical Gemma requests: source_notes, outline, chapter1, chapter2. The planned agent revision adds one request in a separate engine load. Record actual N+R+1+C requests if chunking/reduction/outline differs; no old two-call wiring shortcut is product proof.
+
+Future scope must bind a coherent normal app/test/pack pair, private before/after user-record/artifact preservation and the known-terminal-history guard; drive Main→sources/instructions→production dispatcher/:generation→disk Room→review/agent→cancel-lock once/confirm→two whole chapter WAVs→master/timeline with one700ms gap. One background/reopen must not kill native work or redispatch. Player starts paused; actual play/seek/persistence testing needs explicitly silent app-level output, never a system-volume change or audible autoplay. Export one new owned local WAV via real ACTION_CREATE_DOCUMENT and verify its bytes/hash. No imported WAV, seeded draft or direct coordinator/fake-engine shortcut may be called source-to-audio E2E.
+
+The production E2E driver/controller, exact normal APK and actual workflow evidence are **not prepared or executed by this source patch**. Do not repeat broad host/UI matrices or already proved load gates. Do not sacrifice a success to retest death/recovery branches already covered by host tests. Existing two episodes/one FAILED history and unrelated artifacts stay untouched. Pushes remain held.

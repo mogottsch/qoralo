@@ -125,14 +125,14 @@ private fun SettingsScreen(onBack: () -> Unit) {
     val context = LocalContext.current
     val app = context.applicationContext as PodcastApplication
     val gemmaPresent = app.artifacts.modelPackRoot("gemma-4-e2b").isDirectory && BuildConfig.GEMMA_MANIFEST_SHA256.isNotBlank()
-    val supertonicPresent = app.artifacts.modelPackRoot("supertonic-3").isDirectory && BuildConfig.SUPERTONIC_MANIFEST_SHA256.isNotBlank()
+    val supertonicPresent = app.artifacts.modelPackRoot(BuildConfig.SUPERTONIC_PACK_ID).isDirectory && BuildConfig.SUPERTONIC_MANIFEST_SHA256.isNotBlank()
     PhoneContent {
         Scaffold(topBar = { TopAppBar(title = { Text("Settings") }, navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back to library") } }) }) { padding ->
             Column(Modifier.fillMaxSize().padding(padding).padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text("On-device models", style = MaterialTheme.typography.headlineSmall)
                 Text("Model data stays outside the APK and must match the manifest hashes pinned into this internal build.", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 RuntimeCard("Gemma 4 E2B", "LiteRT GPU · outline + one request per chapter", gemmaPresent)
-                RuntimeCard("Supertonic 3", "QNN/HTP · one complete chapter per WAV", supertonicPresent)
+                RuntimeCard("Supertonic 3 · experimental", "QNN/HTP · speech coverage unverified", supertonicPresent)
                 Text("There are no fallback inference routes.", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(top = 8.dp))
             }
         }

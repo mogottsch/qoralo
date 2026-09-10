@@ -14,6 +14,16 @@ val localProperties = Properties().apply {
 }
 fun pinnedHash(name: String): String = localProperties.getProperty(name, "").replace("\\", "\\\\").replace("\"", "\\\"")
 val nativeRuntimeEnabled = localProperties.getProperty("native.runtime.enabled", "false").toBoolean()
+// Reviewed data-only route for the normal app; independent of legacy short-pack preparation.
+val normalSupertonic = Properties().apply {
+    rootProject.file("config/normal-supertonic-pack.properties").inputStream().use(::load)
+}
+val supertonicPackId = normalSupertonic.getProperty("supertonic.pack.id").also {
+    require(it.matches(Regex("[a-z0-9-]+"))) { "Invalid normal Supertonic pack ID" }
+}
+val supertonicManifest = normalSupertonic.getProperty("supertonic.manifest.sha256").also {
+    require(it.matches(Regex("[a-f0-9]{64}"))) { "Invalid normal Supertonic manifest pin" }
+}
 
 android {
     namespace = "dev.vibevoice.podcast"
@@ -26,7 +36,8 @@ android {
         versionCode = 1
         versionName = "0.1.0-internal"
         buildConfigField("String", "GEMMA_MANIFEST_SHA256", "\"${pinnedHash("gemma.manifest.sha256")}\"")
-        buildConfigField("String", "SUPERTONIC_MANIFEST_SHA256", "\"${pinnedHash("supertonic.manifest.sha256")}\"")
+        buildConfigField("String", "SUPERTONIC_PACK_ID", "\"$supertonicPackId\"")
+        buildConfigField("String", "SUPERTONIC_MANIFEST_SHA256", "\"$supertonicManifest\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true

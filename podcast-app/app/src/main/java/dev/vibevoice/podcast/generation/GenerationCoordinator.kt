@@ -118,7 +118,7 @@ class GenerationCoordinator(
         testPackProvider?.let { return it(route) }
         val (directory, id, hash) = when (route) {
             ModelRoute.GEMMA_4_E2B_LITERT_GPU -> Triple("gemma-4-e2b", "gemma-4-e2b", BuildConfig.GEMMA_MANIFEST_SHA256)
-            ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP -> Triple("supertonic-3", "supertonic-3", BuildConfig.SUPERTONIC_MANIFEST_SHA256)
+            ModelRoute.SUPERTONIC_EXTERNAL_CONTEXT_QNN_HTP -> Triple(BuildConfig.SUPERTONIC_PACK_ID, BuildConfig.SUPERTONIC_PACK_ID, BuildConfig.SUPERTONIC_MANIFEST_SHA256)
         }
         return verifier.verify(artifacts.modelPackRoot(directory), ModelPackRequirement(route, id, hash))
     }
