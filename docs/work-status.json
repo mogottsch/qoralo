@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-10T18:51:57+00:00",
+  "updated_at": "2026-09-10T18:57:05+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
     {
       "id": "tts-capacity",
       "title": "Larger TTS",
-      "status": "blocked",
+      "status": "preparing",
       "owner": "Ben",
-      "now": "Targeted vocoder constructor test starting; three contexts validated so far.",
-      "next": "One host compile authorized. Success and full-chapter speech remain unproven.",
-      "reported_at": "2026-09-10T18:51:57+00:00",
+      "now": "Parity vocoder constructor passed: 4/4 larger contexts exported, 0 Run.",
+      "next": "Prepare a new namespaced pack and one long-narration probe. No speech proof yet.",
+      "reported_at": "2026-09-10T18:57:05+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 600,
       "links": [
@@ -24,11 +24,11 @@
     {
       "id": "tts-review",
       "title": "Independent review",
-      "status": "waiting",
+      "status": "reviewing",
       "owner": "Nik",
-      "now": "Nik’s final parity-graph and request review passed.",
-      "next": "Review the constructor outcome when retained; no inference or phone approval.",
-      "reported_at": "2026-09-10T18:51:57+00:00",
+      "now": "Compile blocker overcome; Nik reviews the exported evidence.",
+      "next": "Validate new pack/probe preparation. No phone release or long-speech acceptance.",
+      "reported_at": "2026-09-10T18:57:05+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -36,11 +36,11 @@
     {
       "id": "app",
       "title": "App / short TTS",
-      "status": "waiting",
+      "status": "preparing",
       "owner": "Janek",
-      "now": "15.64 s WAV accepted; normal app manifest fixed.",
-      "next": "Waiting for the larger vocoder context.",
-      "reported_at": "2026-09-10T18:03:43+00:00",
+      "now": "Ben + Janek prepare the new pack/probe; old short pack and accepted WAV unchanged.",
+      "next": "Source/build preparation only. Phone release still required.",
+      "reported_at": "2026-09-10T18:57:05+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 900,
       "links": [
@@ -141,9 +141,9 @@
       "title": "Phone",
       "status": "unassigned",
       "owner": "Pi",
-      "now": "unassigned",
-      "next": "Last reported assignment only, not a live connection or lock check.",
-      "reported_at": "2026-09-10T18:16:29+00:00",
+      "now": "no long-probe release",
+      "next": "No phone release for the new pack/probe; not a live connection or lock check.",
+      "reported_at": "2026-09-10T18:57:05+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -151,11 +151,11 @@
     {
       "id": "host",
       "title": "On this computer",
-      "status": "starting",
+      "status": "preparing",
       "owner": "Ben / Nik",
-      "now": "one constructor test starting",
-      "next": "Ben cleared for one parity-vocoder host compile; not yet successful. No inference or phone run.",
-      "reported_at": "2026-09-10T18:51:57+00:00",
+      "now": "packaging / validation preparation",
+      "next": "Four constructors passed, but no Run or long speech. New pack/probe source/build work only.",
+      "reported_at": "2026-09-10T18:57:05+00:00",
       "reported_by": "Pi — latest relayed milestone, captured by Kate",
       "stale_after_seconds": 600,
       "links": []
@@ -183,22 +183,22 @@
     },
     {
       "name": "Ben",
-      "task": "Start one constructor test",
-      "reported_at": "2026-09-10T18:51:57+00:00",
+      "task": "Prepare larger pack / probe",
+      "reported_at": "2026-09-10T18:57:05+00:00",
       "reported_by": "Pi latest snapshot; Kate capture",
       "stale_after_seconds": 900
     },
     {
       "name": "Nik",
-      "task": "Graph passed; await outcome",
-      "reported_at": "2026-09-10T18:51:57+00:00",
+      "task": "Review 4/4 export evidence",
+      "reported_at": "2026-09-10T18:57:05+00:00",
       "reported_by": "Pi latest snapshot; Kate capture",
       "stale_after_seconds": 900
     },
     {
       "name": "Janek",
-      "task": "App ready; waiting",
-      "reported_at": "2026-09-10T18:03:43+00:00",
+      "task": "Build namespaced pack / probe",
+      "reported_at": "2026-09-10T18:57:05+00:00",
       "reported_by": "Pi latest snapshot; Kate capture",
       "stale_after_seconds": 900
     },
