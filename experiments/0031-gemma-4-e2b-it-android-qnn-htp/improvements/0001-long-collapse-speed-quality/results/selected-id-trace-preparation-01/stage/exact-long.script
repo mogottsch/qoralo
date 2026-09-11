@@ -1,0 +1,17 @@
+log create log1 verbose evidence/genie-verbose.log
+profile create profile1
+dialog config create config1 gemma4-e2b-htp-cl4096-greedy.json
+dialog config bind profile config1 profile1
+dialog config bind log config1 log1
+dialog create dialog1 config1
+profile save profile1 evidence/setup-profile.json
+dialog setMaxNumTokens dialog1 2048
+dialog query dialog1 prompts/long.txt evidence/long-output.txt
+profile save profile1 evidence/long-profile.json
+dialog getTokenizer dialog1 tokenizer1
+tokenizer encodeFromFile tokenizer1 prompts/long.txt evidence/input-token-ids.txt
+dialog free dialog1
+dialog config free config1
+profile free profile1
+log free log1
+exit

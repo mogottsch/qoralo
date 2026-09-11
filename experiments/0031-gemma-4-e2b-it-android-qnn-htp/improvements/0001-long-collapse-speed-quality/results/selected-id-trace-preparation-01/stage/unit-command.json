@@ -1,0 +1,19 @@
+[
+  "systemd-run",
+  "--user",
+  "--wait",
+  "--unit=gemma-selected-id-stage-20260911t143756z-01",
+  "--service-type=exec",
+  "--property=MemoryMax=1073741824",
+  "--property=MemorySwapMax=0",
+  "--property=CPUQuota=100%",
+  "--property=Nice=15",
+  "--property=RuntimeMaxSec=240",
+  "--property=KillMode=control-group",
+  "--property=StandardOutput=append:/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/stage-preparation-runs/selected-id-stage-20260911T143756Z-01/stdout",
+  "--property=StandardError=append:/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/stage-preparation-runs/selected-id-stage-20260911T143756Z-01/stderr",
+  "python3",
+  "-B",
+  "-c",
+  "import subprocess,json; from pathlib import Path; r=Path('/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/stage-preparation-runs/selected-id-stage-20260911T143756Z-01'); p=subprocess.run(json.loads((r/\"child-command.json\").read_text())); (r/\"child-exit.json\").write_text(json.dumps({\"actual_child_exit_code\":p.returncode})+\"\\n\"); raise SystemExit(p.returncode)"
+]

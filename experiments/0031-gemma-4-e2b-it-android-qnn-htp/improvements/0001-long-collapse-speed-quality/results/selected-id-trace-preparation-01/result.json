@@ -1,0 +1,134 @@
+{
+  "classification": "host_selected_id_trace_ready_no_physical_observations",
+  "purpose": "Observe actual sampler-return IDs under unchanged candidate/input/policy, not repair output or run another precision variant.",
+  "android_runtime_build": {
+    "actual_child_exit_code": 0,
+    "elapsed_seconds": 266.6843571540012,
+    "success": true,
+    "binary": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/selected-id-trace-runs/trace-build-20260911T142946Z-04/sdk-source/examples/Genie/Genie/libs/arm64-v8a/libGenie.so",
+    "runtime_or_model_executed": false,
+    "phone_access": false,
+    "no_global_toolchain_change": true,
+    "binary_sha256": "43b9bf47d82aaf375582c0b5631f8b032f65aeeebc5a7758cb8ea7cae5af022a",
+    "binary_bytes": 11622384
+  },
+  "attempts": [
+    {
+      "run_id": "trace-build-20260911T140243Z-01",
+      "actual_build_result": {
+        "phases": [
+          {
+            "phase": "rust",
+            "actual_child_exit_code": 101,
+            "elapsed_total_seconds": 5.050673046000156
+          }
+        ],
+        "success": false,
+        "binary": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/selected-id-trace-runs/trace-build-20260911T140243Z-01/sdk-source/examples/Genie/Genie/libs/arm64-v8a/libGenie.so",
+        "runtime_or_model_executed": false,
+        "phone_access": false,
+        "no_global_toolchain_change": true
+      }
+    },
+    {
+      "run_id": "trace-build-20260911T141225Z-02",
+      "actual_build_result": {
+        "phases": [
+          {
+            "phase": "rust",
+            "actual_child_exit_code": 0,
+            "elapsed_total_seconds": 232.0885416830024
+          },
+          {
+            "phase": "genie",
+            "actual_child_exit_code": 2,
+            "elapsed_total_seconds": 361.54618817600203
+          }
+        ],
+        "success": false,
+        "binary": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/selected-id-trace-runs/trace-build-20260911T141225Z-02/sdk-source/examples/Genie/Genie/libs/arm64-v8a/libGenie.so",
+        "runtime_or_model_executed": false,
+        "phone_access": false,
+        "no_global_toolchain_change": true
+      }
+    },
+    {
+      "run_id": "trace-build-20260911T142143Z-03",
+      "actual_build_result": {
+        "actual_child_exit_code": 2,
+        "elapsed_seconds": 265.8005657220019,
+        "success": false,
+        "binary": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/selected-id-trace-runs/trace-build-20260911T142143Z-03/sdk-source/examples/Genie/Genie/libs/arm64-v8a/libGenie.so",
+        "runtime_or_model_executed": false,
+        "phone_access": false,
+        "no_global_toolchain_change": true
+      }
+    },
+    {
+      "run_id": "trace-build-20260911T142946Z-04",
+      "actual_build_result": {
+        "actual_child_exit_code": 0,
+        "elapsed_seconds": 266.6843571540012,
+        "success": true,
+        "binary": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/selected-id-trace-runs/trace-build-20260911T142946Z-04/sdk-source/examples/Genie/Genie/libs/arm64-v8a/libGenie.so",
+        "runtime_or_model_executed": false,
+        "phone_access": false,
+        "no_global_toolchain_change": true,
+        "binary_sha256": "43b9bf47d82aaf375582c0b5631f8b032f65aeeebc5a7758cb8ea7cae5af022a",
+        "binary_bytes": 11622384
+      }
+    }
+  ],
+  "unchanged": {
+    "context_sha256": "27e19e32ef479dfb39b53e6530cd25105c3c8e9ccf9fa4b9e9af4b5d770fabdd",
+    "eos_ids": [
+      1,
+      106
+    ],
+    "effective_input_expected_tokens": 1929,
+    "input_int32le_sha256": "3b5c04febbc9d55c529ee7ece510607203dbdc8256a6abc05ba0498cf4e52b64",
+    "bos_config": -1,
+    "max_output_tokens": 2048,
+    "sampler": "original greedy source/config",
+    "query": "same one text query with both ordinary and per-layer LUT path"
+  },
+  "runtime_caveat": "Source-built Genie plus matching NDK libc++ are new artifacts. Completing the shipped Android file list and resolving252 missing dependency versions does not establish equivalence to the supplied commercial binary. All existing locked versions/sources/checksums were retained.",
+  "observer": {
+    "actual_selected_id_boundary": "immediately after each of three non-batch sampler.process returns, before EOS/text filtering",
+    "configured_eos_membership": true,
+    "internal_stop_decision_exposed": false,
+    "internal_stop_decision": null,
+    "later_sampling": "requires a subsequent actual selected-ID record; missing record is not an invented stop reason",
+    "id50_absence": "requires contiguous0-based observations matching actual generated count; never decoded/re-tokenized output",
+    "bounded_output": "one fixed max2048 query, one short stderr line per sampled ID; existing1800s request watchdog"
+  },
+  "input_parity_check": "After query/profile, existing runner asks dialog tokenizer to encode the unchanged input into a full-ID file. Same-runtime tokenizer evidence, not direct prefill-tensor capture; never changes the preceding request.",
+  "stage": {
+    "stage": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/frozen-stages/selected-id-long-20260911T143756Z-01",
+    "manifest_sha256": "07e5b1b5f1e75c20022e6f9356262fe969eadbead6f91b8017f01429c20fc2f2",
+    "payload_bytes": 4013512626,
+    "payload_files": 19,
+    "verified": true,
+    "model_or_runtime_executed": false,
+    "phone_access": false
+  },
+  "tests": {
+    "actual_exit_code": 0,
+    "count": 219,
+    "includes_nine_trace_specific_tests": true
+  },
+  "execution": {
+    "phone_access": false,
+    "model_inference": false,
+    "selected_ids_collected": false,
+    "actual_id50_observed": null,
+    "new_phone_slot_granted": false,
+    "ready_for_coordinated_one_use_slot": true
+  },
+  "safety": "Fresh stage/namespace/one-use Pi slot, full phone.lock from first identity through raw pull and scoped PID/root cleanup. Same guarded lifecycle and read-only RPC preflight. Check-to-signal remains non-atomic. No APK/app-data changes, hidden fallback, replay or stop/BOS edits.",
+  "preserved_results": {
+    "results/value-precision-path-phone-long-attempt-01/result.json": "35be64d08024f6029deec15e97b8b1d71cf9c94e1e425d8a53c90424e6671207",
+    "results/termination-template-sampler-audit-01/result.json": "b057bc0899f1491fce81ca2819a6aa4019b2681a9ef0626d41be1908edf4a92f"
+  },
+  "publication": "Local metadata/code only; restricted binaries/SDK source remain private. Existing external publication/history-rewrite hold unchanged."
+}

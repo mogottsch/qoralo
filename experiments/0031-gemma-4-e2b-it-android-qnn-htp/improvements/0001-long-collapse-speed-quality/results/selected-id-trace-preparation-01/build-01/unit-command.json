@@ -1,0 +1,21 @@
+[
+  "systemd-run",
+  "--user",
+  "--unit=gemma-selected-id-build-20260911t140243z-01",
+  "--service-type=exec",
+  "--property=MemoryHigh=3221225472",
+  "--property=MemoryMax=4294967296",
+  "--property=MemorySwapMax=1073741824",
+  "--property=CPUQuota=200%",
+  "--property=Nice=15",
+  "--property=IOSchedulingClass=idle",
+  "--property=RuntimeMaxSec=1800",
+  "--property=TimeoutStopSec=30",
+  "--property=KillMode=control-group",
+  "--property=OOMPolicy=stop",
+  "--property=StandardOutput=append:/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/selected-id-trace-runs/trace-build-20260911T140243Z-01/unit.stdout",
+  "--property=StandardError=append:/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/selected-id-trace-runs/trace-build-20260911T140243Z-01/unit.stderr",
+  "python3",
+  "-B",
+  "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/selected-id-trace-runs/trace-build-20260911T140243Z-01/build.py"
+]
