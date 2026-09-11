@@ -841,6 +841,24 @@ def format_rtf(entry):
     return display, sort_value, " ".join(detail_parts)
 
 
+def provider_badge(provider):
+    """Return a visual category without concealing the recorded provider text."""
+    if not provider:
+        return "unavailable", "Unavailable"
+    normalized = provider.lower()
+    if "qnn" in normalized and ("fallback" in normalized or "cpu fallback" in normalized):
+        return "hybrid", "QNN + CPU"
+    if "qnn" in normalized and ("not executed" in normalized or "host gate" in normalized):
+        return "qnn-gate", "QNN gate"
+    if "qnn" in normalized:
+        return "qnn", "QNN / HTP"
+    if "xnnpack" in normalized:
+        return "xnnpack", "XNNPACK"
+    if "cpu" in normalized:
+        return "cpu", "CPU"
+    return "other", "Other"
+
+
 def build_html(registry):
     entries = [e for e in registry["entries"] if e["scope"] == "full_e2e" and e.get("presentation", {}).get("dashboard_visible", True)]
     trs = []
@@ -869,7 +887,11 @@ def build_html(registry):
         cls = e["attempt_status"].replace("_", "-")
         audio_sort = "1" if display_wav else "0"
         memory, sort_memory = format_memory(m)
-        provider = html.escape(e["provider"] or "—")
+        provider_text = e["provider"] or "Unavailable"
+        provider_kind, provider_label = provider_badge(e["provider"])
+        provider = (f'<span class="provider-badge provider-{provider_kind}" '
+                    f'title="{html.escape(provider_text, quote=True)}">{html.escape(provider_label)}</span>'
+                    f'<br><small class="provider-detail">{html.escape(provider_text)}</small>')
         if e["threads"] is not None:
             suffix = "thread" if e["threads"] == 1 else "threads"
             provider += f'<br><small>{e["threads"]} {suffix}</small>'
@@ -969,6 +991,15 @@ th[aria-sort="descending"] .sort-button::after{{content:' ↓';color:var(--accen
 #timeline th{{background:var(--panel-strong);color:#bae6fd;white-space:nowrap}}
 #routes td[data-metric="load_seconds"]{{min-width:145px;white-space:nowrap}}
 .status{{border-radius:99px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap}}
+.provider-badge{{display:inline-block;border-radius:99px;padding:3px 8px;font-size:11px;font-weight:750;letter-spacing:.02em;white-space:nowrap}}
+.provider-detail{{display:inline-block;margin-top:4px;line-height:1.3}}
+.provider-cpu{{background:#1e3a5f;color:#bfdbfe}}
+.provider-qnn{{background:#064e3b;color:#a7f3d0}}
+.provider-hybrid{{background:#713f12;color:#fde68a}}
+.provider-qnn-gate{{background:#4c1d95;color:#ddd6fe}}
+.provider-xnnpack{{background:#164e63;color:#a5f3fc}}
+.provider-other{{background:#334155;color:#e2e8f0}}
+.provider-unavailable{{background:#3f3f46;color:#d4d4d8}}
 .listening-link{{display:inline-block;text-decoration:none}}
 .listening-link:hover .status{{text-decoration:underline}}
 .listening-link:focus-visible{{border-radius:99px}}
