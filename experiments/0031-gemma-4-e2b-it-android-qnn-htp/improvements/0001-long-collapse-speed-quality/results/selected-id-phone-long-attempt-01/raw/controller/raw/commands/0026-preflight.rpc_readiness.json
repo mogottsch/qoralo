@@ -1,0 +1,17 @@
+{
+  "operation": "preflight.rpc_readiness",
+  "argv": [
+    "adb",
+    "-s",
+    "R5CW81PR8SY",
+    "shell",
+    "\nfor key in init.svc.vendor.cdsprpcd init.svc.vendor.adsprpcd; do\n  value=$(getprop \"$key\")\n  printf 'SERVICE\\t%s\\t%s\\n' \"$key\" \"$value\"\ndone\nfound=0\nfor dir in /sys/bus/msm_subsys/devices/*; do\n  [ -r \"$dir/name\" ] || continue\n  name=$(cat \"$dir/name\") || continue\n  case \"$name\" in cdsp|CDSP)\n    found=1\n    state=$(cat \"$dir/state\" 2>/dev/null) || state=UNREADABLE\n    printf 'SUBSYSTEM\\t%s\\t%s\\n' \"$name\" \"$state\"\n  esac\ndone\n[ \"$found\" = 1 ] || printf 'SUBSYSTEM\\tcdsp\\tUNEXPOSED\\n'\n"
+  ],
+  "timeout_seconds": 10,
+  "lock_held": true,
+  "lock_fd_inheritable": false,
+  "stdout": "raw/commands/0026-preflight.rpc_readiness.stdout",
+  "stderr": "raw/commands/0026-preflight.rpc_readiness.stderr",
+  "code": 0,
+  "timed_out": false
+}

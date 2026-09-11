@@ -1,0 +1,17 @@
+{
+  "operation": "signal.watchdog.TERM",
+  "argv": [
+    "adb",
+    "-s",
+    "R5CW81PR8SY",
+    "shell",
+    "REMOTE=/data/local/tmp/vibevoice-0031-trace-trace-long-20260911T150027Z-01\n\nproc_start() {\n  [ -r \"/proc/$1/stat\" ] || return 1\n  st=$(cat \"/proc/$1/stat\") || return 1\n  tail=${st##*) }\n  printf '%s\\n' \"$tail\" | awk '{print $20}'\n}\nrecord_self() {\n  printf '%s\\n' \"$$\" > \"$REMOTE/evidence/$1.pid\"\n  proc_start \"$$\" > \"$REMOTE/evidence/$1.start\"\n}\nrole_matches() {\n  role=$1; pid=$2; expected_start=$3\n  case \"$pid:$expected_start\" in *[!0-9:]*|:*|*:) return 1;; esac\n  [ \"$pid\" -gt 1 ] || return 1\n  [ \"$(proc_start \"$pid\")\" = \"$expected_start\" ] || return 1\n  exe=$(readlink \"/proc/$pid/exe\") || return 1\n  exe_bytes=$(readlink \"/proc/$pid/exe\" | wc -c) || return 1\n  [ \"$exe_bytes\" -eq $((${#exe} + 1)) ] || return 1\n  argv=$(tr '\\000' '\\n' < \"/proc/$pid/cmdline\") || return 1\n  case \"$role\" in\n    model)\n      if [ \"$exe\" = \"$REMOTE/bin/genie-app\" ]; then\n        expected=$(printf '%s\\n-s\\nexact-long.script' \"$REMOTE/bin/genie-app\")\n        expected_fields=3\n      else\n        case \"$exe\" in /system/bin/sh|/system/bin/mksh) ;; *) return 1;; esac\n        expected=$(printf '/system/bin/sh\\n%s/model-entry.sh' \"$REMOTE\")\n        expected_fields=2\n      fi;;\n    wrapper|watchdog)\n      case \"$exe\" in /system/bin/sh|/system/bin/mksh) ;; *) return 1;; esac\n      if [ \"$role\" = wrapper ]; then script=launch.sh; else script=watchdog.sh; fi\n      expected=$(printf '/system/bin/sh\\n%s/%s' \"$REMOTE\" \"$script\")\n      expected_fields=2;;\n    *) return 1;;\n  esac\n  [ \"$argv\" = \"$expected\" ] || return 1\n  # Command substitution strips trailing newlines: also bind NUL field count\n  # and byte length so extra empty arguments/literal-newline spoofing fail.\n  fields=$(tr -cd '\\000' < \"/proc/$pid/cmdline\" | wc -c) || return 1\n  bytes=$(wc -c < \"/proc/$pid/cmdline\") || return 1\n  [ \"$fields\" -eq \"$expected_fields\" ] && [ \"$bytes\" -eq $((${#expected} + 1)) ] || return 1\n  [ \"$(proc_start \"$pid\")\" = \"$expected_start\" ]\n}\nsignal_owned() {\n  role=$1; pid=$2; start=$3; sig=$4\n  case \"$sig\" in TERM|KILL) ;; *) return 64;; esac\n  case \"$pid:$start\" in *[!0-9:]*|:*|*:) return 64;; esac\n  [ \"$pid\" -gt 1 ] || return 64\n  if [ ! -d \"/proc/$pid\" ]; then printf 'ABSENT\\n'; return 0; fi\n  role_matches \"$role\" \"$pid\" \"$start\" || {\n    [ ! -d \"/proc/$pid\" ] && { printf 'ABSENT\\n'; return 0; }\n    printf 'REFUSED\\n'; return 64\n  }\n  # No signal is issued before all scope/starttime/executable/argv checks above.\n  # Residual TOCTOU remains between those checks and numeric-PID kill (no pidfd).\n  kill -\"$sig\" \"$pid\" || { [ ! -d \"/proc/$pid\" ] && return 0; return 65; }\n  printf 'SIGNALLED\\n'\n}\n\nsignal_owned watchdog 12351 104964801 TERM\n"
+  ],
+  "timeout_seconds": 10,
+  "lock_held": true,
+  "lock_fd_inheritable": false,
+  "stdout": "raw/commands/0264-signal.watchdog.TERM.stdout",
+  "stderr": "raw/commands/0264-signal.watchdog.TERM.stderr",
+  "code": 0,
+  "timed_out": false
+}
