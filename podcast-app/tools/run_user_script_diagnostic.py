@@ -185,7 +185,12 @@ def main():
             device.shell(f'run-as {APP} sh -c '+shlex.quote(no_old),timeout=10)
             # First actual mutation: close only idle app/test, after stable no-active-work proof.
             stop_idle_or_owned(before_rows,None);setup=True
-            for kind in ('app','test'):device.run(['install','-r','-t',candidate[kind]['path']],timeout=180)
+            installations={}
+            for kind,package in (('app',APP),('test',TEST_APP)):
+                changed=candidate['priorInstalled'][package]!=candidate[kind]['sha256']
+                if changed:device.run(['install','-r','-t',candidate[kind]['path']],timeout=180)
+                installations[package]={'installed':changed,'reusedExactInstalledBytes':not changed}
+            save('install-operations.json',installations)
             save('installed-candidate.json',installed({APP:candidate['app']['sha256'],TEST_APP:candidate['test']['sha256']}))
             prelaunch=stable('before-instrument');require(prelaunch==before,'DB changed during installation');validate_snapshot(prelaunch);guard.idle()
             save('private-original-bindings.json',{'episodeId':args.original_episode,'jobId':args.original_job,'sourceSha256':sources[0]['sha256'],'instructionsSha256':hashlib.sha256(original['instructions'].encode()).hexdigest()})
