@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T09:35:50+00:00",
+  "updated_at": "2026-09-11T09:36:32+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -70,12 +70,12 @@
     {
       "id": "lfm",
       "title": "LFM integrated",
-      "status": "blocked",
+      "status": "preparing",
       "owner": "Jens",
-      "now": "First bounded host run stopped: baseline CPU completed/all60 outputs retained; ORT1.26 rejected derivative init due to external-data symlink outside derivative directory.",
-      "next": "No derivative/comparison/equivalence/speed result or retry. Decision needed: isolated byte-identical in-directory copies (~2.33GiB) vs baseline-directory placement.",
-      "reported_at": "2026-09-11T09:35:50+00:00",
-      "reported_by": "Jens — first outcome, stopped without retry",
+      "now": "ONE isolated in-directory byte-identical external-data-copy host continuation authorized; not yet running.",
+      "next": "Same graph/criteria/inputs/runtime bounds; reuse retained baseline60 only with full identity bindings. ≤6GiB total; no retry beyond this continuation.",
+      "reported_at": "2026-09-11T09:36:32+00:00",
+      "reported_by": "Pi — one fresh isolated-copy continuation authorization",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -155,12 +155,12 @@
     {
       "id": "host",
       "title": "On this computer",
-      "status": "waiting",
+      "status": "preparing",
       "owner": "Jens",
-      "now": "LFM derivative init blocked after baseline-only CPU execution; processes ended.",
-      "next": "18.193s service,4.8GiB cgroup peak,Swap0,CPU200%,~138MiB disk. Await decision; no source fix/runtime retry.",
-      "reported_at": "2026-09-11T09:35:50+00:00",
-      "reported_by": "Jens — first bounded host outcome",
+      "now": "ONE host-only isolated-copy continuation authorized; actual child start not reported.",
+      "next": "Baseline dir/failed run untouched; same bounds incl≤6GiB total. No AOT/QNN/phone/app/push.",
+      "reported_at": "2026-09-11T09:36:32+00:00",
+      "reported_by": "Pi — continuation authorization, not execution start",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -215,9 +215,9 @@
     },
     {
       "name": "Jens",
-      "task": "Package failed LFM attempt evidence; await retry decision",
-      "reported_at": "2026-09-11T09:35:50+00:00",
-      "reported_by": "Jens — stopped without retry",
+      "task": "Prepare one authorized isolated-copy host continuation",
+      "reported_at": "2026-09-11T09:36:32+00:00",
+      "reported_by": "Pi — not yet running",
       "stale_after_seconds": 900
     },
     {
