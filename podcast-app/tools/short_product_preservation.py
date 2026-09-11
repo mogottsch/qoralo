@@ -104,7 +104,7 @@ def compare(before, after, owned, continuation=None):
 
 
 def compare_export(before, after, scope):
-    """Export-only: all durable data fixed except the owned playback save timestamp."""
+    """Export-only: all data fixed except explicitly bounded owned paused-player persistence."""
     owned=scope['episode']['id']
     ep=next((r for r in before['episodes'] if r['id']==owned),None)
     require(ep is not None and {k:ep[k] for k in scope['episode']}==scope['episode'],'export-only Ready artifact preconditions changed')
@@ -114,7 +114,8 @@ def compare_export(before, after, scope):
     require(job is not None and job['kind']=='AUDIO' and job['status']=='COMPLETE' and job['episodeId']==owned,'export-only completed audio job changed')
     playback=next((r for r in before['playback_state'] if r['episodeId']==owned),None)
     require(playback is not None and {k:playback[k] for k in scope['playback']}==scope['playback'],'export-only playback preconditions changed')
-    counts={}
+    require(scope['ownedPlaybackPersistence']['positionMaxDriftMs']==100,'unexpected export playback allowance')
+    counts={};playback_observation={}
     for table in TABLES:
         key='rowId' if table=='chapters' else ('episodeId' if table=='playback_state' else 'id')
         previous={r[key]:r for r in before[table]};current={r[key]:r for r in after[table]}
@@ -122,10 +123,13 @@ def compare_export(before, after, scope):
         for identity,row in previous.items():
             observed=current[identity]
             if table=='playback_state' and identity==owned:
-                require({k:v for k,v in row.items() if k!='updatedAtEpochMs'}=={k:v for k,v in observed.items() if k!='updatedAtEpochMs'},'export-only changed playback values')
+                require({k:v for k,v in row.items() if k not in ('updatedAtEpochMs','positionMs')}=={k:v for k,v in observed.items() if k not in ('updatedAtEpochMs','positionMs')},'export-only changed playback values')
+                delta=observed['positionMs']-row['positionMs']
+                require(abs(delta)<=100,'export-only exceeded authorized owned paused-position drift')
+                playback_observation={'before':row,'after':observed,'positionDeltaMs':delta,'authorizedMaxDriftMs':100,'playOrSeekRequested':False}
             else:require(row==observed,'export-only modified durable row: '+table)
         counts[table]=len(previous)
-    return {'allDurableRowsUnchangedExceptOwnedPlaybackTimestamp':True,'rowCounts':counts,'newModelJobs':0,'catalogUnchanged':True}
+    return {'allDurableRowsUnchangedExceptAuthorizedOwnedPlaybackPersistence':True,'ownedPlayback':playback_observation,'rowCounts':counts,'newModelJobs':0,'catalogUnchanged':True}
 
 
 def parse_inventory(raw):

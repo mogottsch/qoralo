@@ -18,7 +18,7 @@ from short_product_preservation import rows, compare, compare_export, parse_inve
 
 CONTRACT_SHA='a39106380003a3a4c7b83c2f45066399e204d8aefade77ec88866f9062eccfc4'
 CONTINUATION_SHA='2f22bd6e500eca3f45e51c401aded0cd570bc576e8f805063f95d6dd02d23721'
-EXPORT_SHA='e9acf906dd75e51791bb386450c100de2b321b7a59dba75ba1fe6c9495b08c06'
+EXPORT_SHA='0b8bab27fa64473b66950ccea04081577cc3f48c2361548a4cef9bdb3a5fc738'
 PRIVACY_SHA='a62d204c380a5b2d0c8f7c5bd94729b6f823e18200feed2ebe24fa73962bec3c'
 PACKS={'gemma-4-e2b':'9fb627ef9a4eb0ed49056c32bc16f2846e6edf68dc8d854b02af90e24e4e96cd',
        'supertonic-3':'dc4ac737924d7d62e57ff5e166707198095c49e51d77cfed04a44d9e9435952d',

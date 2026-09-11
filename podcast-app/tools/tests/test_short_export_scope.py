@@ -21,9 +21,16 @@ class ExportOnlyScopeTests(unittest.TestCase):
         before['chapter_audio']=copy.deepcopy(scope['chapters'])
         before['installed_models']=[{'id':'supertonic-3','manifestSha256':'unchanged'}]
         return before,scope
-    def test_only_owned_playback_timestamp_may_change(self):
+    def test_explicit_owned_paused_position_boundary_and_timestamp(self):
         before,scope=self.fixture();after=copy.deepcopy(before);after['playback_state'][0]['updatedAtEpochMs']=2
-        self.assertTrue(compare_export(before,after,scope)['allDurableRowsUnchangedExceptOwnedPlaybackTimestamp'])
+        for delta in [-100,0,100]:
+            after['playback_state'][0]['positionMs']=before['playback_state'][0]['positionMs']+delta
+            result=compare_export(before,after,scope)
+            self.assertTrue(result['allDurableRowsUnchangedExceptAuthorizedOwnedPlaybackPersistence'])
+            self.assertEqual(delta,result['ownedPlayback']['positionDeltaMs'])
+        for delta in [-101,101]:
+            after['playback_state'][0]['positionMs']=before['playback_state'][0]['positionMs']+delta
+            with self.assertRaises(GuardError):compare_export(before,after,scope)
         compare_export(before,before,scope)
     def test_any_job_model_catalog_episode_or_playback_value_change_rejected(self):
         before,scope=self.fixture()

@@ -352,7 +352,7 @@ class ShortProductE2eTest {
     }
 
     @Test fun exportExistingReadyEpisode() {
-        val approved = "e9acf906dd75e51791bb386450c100de2b321b7a59dba75ba1fe6c9495b08c06"
+        val approved = "0b8bab27fa64473b66950ccea04081577cc3f48c2361548a4cef9bdb3a5fc738"
         val args = InstrumentationRegistry.getArguments()
         assumeTrue("Exact export-only release required", args.getString("shortProductApproved") == approved)
         val raw = instrumentation.context.assets.open("short-product-export/contract.json").use { it.readBytes() }
@@ -409,7 +409,8 @@ class ShortProductE2eTest {
             json("driver-result.json", JSONObject().put("status", "existing_ready_local_export_complete").put("episodeId", episodeId)
                 .put("newGemmaSends", 0).put("newTtsRequests", 0).put("newAudioJobs", 0).put("playRequested", false)
                 .put("multiStageRealWorkflow", true).put("priorAudioRunId", contract.getString("priorAudioRunId"))
-                .put("masterSha256", ready.finalAudioSha256).put("longReadiness", false).put("listening", "not_reviewed"))
+                .put("masterSha256", ready.finalAudioSha256).put("ownedPlaybackPersistencePolicy", contract.getJSONObject("ownedPlaybackPersistence"))
+                .put("longReadiness", false).put("listening", "not_reviewed"))
         } catch (error: Throwable) {
             runCatching { json("driver-failure.json", JSONObject().put("error", error.stackTraceToString()).put("episodeId", episodeId)); capture("failure") }
             throw error
