@@ -1,0 +1,602 @@
+{
+  "actual_missed_token50_observed": null,
+  "actual_qnn_sampled_id_stream_retained": false,
+  "classification": "saved_source_termination_template_sampler_audit",
+  "missing_token_semantics": "50 is <|tool_response>, not the ordinary <turn|> end marker106, which QNN already recognizes.",
+  "model_metadata": {
+    "accepted_model_sha256": "181938105e0eefd105961417e8da75903eacda102c4fce9ce90f50b97139a63c",
+    "bytes": 12192,
+    "offset": 16384,
+    "section_sha256": "00603838ac80fadd374ff3d7b6108cfa765bf1a76adfb9df95b3387d0d7e386f",
+    "start_ids": [
+      [
+        2
+      ]
+    ],
+    "stop_sequences": [
+      [
+        1
+      ],
+      [
+        50
+      ],
+      [
+        106
+      ]
+    ]
+  },
+  "model_or_runtime_executed": false,
+  "negative_candidate_unchanged": true,
+  "next_discriminator": "Capture actual selected IDs and applied EOS membership before stop/text filtering, with unchanged candidate/input/termination/sampler. This can test whether50 is actually missed. Do not add a stop or a BOS as a purported fix from decoded-text evidence. Address the independently proven extra-BOS reference confound explicitly before matched-route causal comparisons.",
+  "phone_access": false,
+  "qat_generation_eos_ids": [
+    1,
+    106,
+    50
+  ],
+  "qnn_actual_runtime_config_lines": {
+    "context": {
+      "json": {
+        "bos-token": -1,
+        "embedding-datatype": "QNN_DATATYPE_UFIXED_POINT_8",
+        "eos-token": [
+          1,
+          106
+        ],
+        "n-embd": 1536,
+        "n-per-layer-embd": 8960,
+        "n-vocab": 262144,
+        "pad-token": 0,
+        "quant-param": {
+          "offset": -170,
+          "scale": 0.050521295210894414
+        },
+        "size": 4096
+      },
+      "line": 3,
+      "text": "     2.8ms [VERBOSE]: ctx-new: dialog0 config {\"bos-token\":-1,\"embedding-datatype\":\"QNN_DATATYPE_UFIXED_POINT_8\",\"eos-token\":[1,106],\"n-embd\":1536,\"n-per-layer-embd\":8960,\"n-vocab\":262144,\"pad-token\":0,\"quant-param\":{\"offset\":-170,\"scale\":0.050521295210894414},\"size\":4096}"
+    },
+    "sampler": {
+      "json": {
+        "greedy": true,
+        "role": "primary",
+        "seed": 42,
+        "temp": 0.0,
+        "top-k": 1,
+        "top-p": 1.0,
+        "type": "basic"
+      },
+      "line": 4,
+      "text": "     3.0ms [VERBOSE]: sampler-new: basic ctx dialog0 config {\"greedy\":true,\"role\":\"primary\",\"seed\":42,\"temp\":0.0,\"top-k\":1,\"top-p\":1.0,\"type\":\"basic\"}"
+    }
+  },
+  "qnn_context": {
+    "bos-token": -1,
+    "eos-token": [
+      1,
+      106
+    ],
+    "n-vocab": 262144,
+    "pad-token": 0,
+    "size": 4096,
+    "version": 1
+  },
+  "qnn_evidence_limit": "Retained decoded output, counts, input-ID prefix and partial logits do not expose the selected-token stream. No absence/occurrence assertion is inferred by output retokenization.",
+  "qnn_sampler": {
+    "greedy": true,
+    "seed": 42,
+    "temp": 0.0,
+    "top-k": 1,
+    "top-p": 1.0,
+    "version": 1
+  },
+  "reference_routes": {
+    "android-cpu-campaign": {
+      "input_comparison": {
+        "long": {
+          "entire_reference_equals_extra_BOS_then_QNN": true,
+          "qnn_count": 1929,
+          "qnn_prefix": [
+            2,
+            105,
+            9731,
+            107
+          ],
+          "reference_count": 1930,
+          "reference_prefix": [
+            2,
+            2,
+            105,
+            9731
+          ],
+          "rendered_sha256": "450b519d417e29c4239e39aef856db1813d2580cd62e9db9adaae3d94ba8f260",
+          "same_rendered_bytes": true
+        },
+        "medium": {
+          "entire_reference_equals_extra_BOS_then_QNN": true,
+          "qnn_count": 594,
+          "qnn_prefix": [
+            2,
+            105,
+            9731,
+            107
+          ],
+          "reference_count": 595,
+          "reference_prefix": [
+            2,
+            2,
+            105,
+            9731
+          ],
+          "rendered_sha256": "8e3c03cb0d1ddce8455306b8b84585ce2ae07c083c4fdbdec1e946e3be56771d",
+          "same_rendered_bytes": true
+        },
+        "short": {
+          "entire_reference_equals_extra_BOS_then_QNN": true,
+          "qnn_count": 170,
+          "qnn_prefix": [
+            2,
+            105,
+            9731,
+            107
+          ],
+          "reference_count": 171,
+          "reference_prefix": [
+            2,
+            2,
+            105,
+            9731
+          ],
+          "rendered_sha256": "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a",
+          "same_rendered_bytes": true
+        }
+      },
+      "long_actual_callback_evidence": [
+        {
+          "callback_stop_id_counts": {
+            "1": 0,
+            "106": 0,
+            "50": 0
+          },
+          "filtered_callback_count": 756,
+          "id": "loaded-route-long-01",
+          "limitation": "These are filtered callback IDs. Matching stop tokens are withheld by runtime stop detection; the absent terminating ID is not established by decoded text or this callback list.",
+          "runtime_generated_tokens": 757,
+          "stop_reason_classification": "eos",
+          "task_state": "done",
+          "terminating_sampled_id": null
+        },
+        {
+          "callback_stop_id_counts": {
+            "1": 0,
+            "106": 0,
+            "50": 0
+          },
+          "filtered_callback_count": 756,
+          "id": "loaded-route-long-02",
+          "limitation": "These are filtered callback IDs. Matching stop tokens are withheld by runtime stop detection; the absent terminating ID is not established by decoded text or this callback list.",
+          "runtime_generated_tokens": 757,
+          "stop_reason_classification": "eos",
+          "task_state": "done",
+          "terminating_sampled_id": null
+        },
+        {
+          "callback_stop_id_counts": {
+            "1": 0,
+            "106": 0,
+            "50": 0
+          },
+          "filtered_callback_count": 756,
+          "id": "loaded-route-long-03",
+          "limitation": "These are filtered callback IDs. Matching stop tokens are withheld by runtime stop detection; the absent terminating ID is not established by decoded text or this callback list.",
+          "runtime_generated_tokens": 757,
+          "stop_reason_classification": "eos",
+          "task_state": "done",
+          "terminating_sampled_id": null
+        },
+        {
+          "callback_stop_id_counts": {
+            "1": 0,
+            "106": 0,
+            "50": 0
+          },
+          "filtered_callback_count": 756,
+          "id": "loaded-route-long-04",
+          "limitation": "These are filtered callback IDs. Matching stop tokens are withheld by runtime stop detection; the absent terminating ID is not established by decoded text or this callback list.",
+          "runtime_generated_tokens": 757,
+          "stop_reason_classification": "eos",
+          "task_state": "done",
+          "terminating_sampled_id": null
+        },
+        {
+          "callback_stop_id_counts": {
+            "1": 0,
+            "106": 0,
+            "50": 0
+          },
+          "filtered_callback_count": 756,
+          "id": "loaded-route-long-05",
+          "limitation": "These are filtered callback IDs. Matching stop tokens are withheld by runtime stop detection; the absent terminating ID is not established by decoded text or this callback list.",
+          "runtime_generated_tokens": 757,
+          "stop_reason_classification": "eos",
+          "task_state": "done",
+          "terminating_sampled_id": null
+        }
+      ],
+      "model_sha256": "181938105e0eefd105961417e8da75903eacda102c4fce9ce90f50b97139a63c",
+      "route": {
+        "accelerator_recompilation_between_requests": false,
+        "cache_dir": "/data/local/tmp/vibevoice-0025-gemma-4-e2b-it-android/cache-cpu-canonical-v2-rerun",
+        "loaded_engine_reused": true,
+        "max_num_tokens": 8192,
+        "max_output_tokens": 2048,
+        "model_path": ".local/model/gemma-4-E2B-it.litertlm",
+        "model_remap_or_reload_between_requests": false,
+        "num_cpu_threads": 4,
+        "prompt_template_applied_in_session": false,
+        "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+        "reset_mode": "fresh_session",
+        "reset_probe_only": false,
+        "retained_prompt_or_kv_reuse_between_requests": false,
+        "sampler": "CPU TOP_P(k=1,p=1) exact argmax implementation for both CPU and GPU neural backends",
+        "smoke_only": false,
+        "thinking_enabled": false
+      },
+      "runtime": {
+        "name": "LiteRT-LM",
+        "revision": "924e79c91542761242244e4f1651851f822e4cbb",
+        "version": "v0.16.1"
+      }
+    },
+    "android-gpu-campaign": {
+      "input_comparison": {
+        "long": {
+          "entire_reference_equals_extra_BOS_then_QNN": true,
+          "qnn_count": 1929,
+          "qnn_prefix": [
+            2,
+            105,
+            9731,
+            107
+          ],
+          "reference_count": 1930,
+          "reference_prefix": [
+            2,
+            2,
+            105,
+            9731
+          ],
+          "rendered_sha256": "450b519d417e29c4239e39aef856db1813d2580cd62e9db9adaae3d94ba8f260",
+          "same_rendered_bytes": true
+        },
+        "medium": {
+          "entire_reference_equals_extra_BOS_then_QNN": true,
+          "qnn_count": 594,
+          "qnn_prefix": [
+            2,
+            105,
+            9731,
+            107
+          ],
+          "reference_count": 595,
+          "reference_prefix": [
+            2,
+            2,
+            105,
+            9731
+          ],
+          "rendered_sha256": "8e3c03cb0d1ddce8455306b8b84585ce2ae07c083c4fdbdec1e946e3be56771d",
+          "same_rendered_bytes": true
+        },
+        "short": {
+          "entire_reference_equals_extra_BOS_then_QNN": true,
+          "qnn_count": 170,
+          "qnn_prefix": [
+            2,
+            105,
+            9731,
+            107
+          ],
+          "reference_count": 171,
+          "reference_prefix": [
+            2,
+            2,
+            105,
+            9731
+          ],
+          "rendered_sha256": "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a",
+          "same_rendered_bytes": true
+        }
+      },
+      "long_actual_callback_evidence": [
+        {
+          "callback_stop_id_counts": {
+            "1": 0,
+            "106": 0,
+            "50": 0
+          },
+          "filtered_callback_count": 756,
+          "id": "loaded-route-long-01",
+          "limitation": "These are filtered callback IDs. Matching stop tokens are withheld by runtime stop detection; the absent terminating ID is not established by decoded text or this callback list.",
+          "runtime_generated_tokens": 757,
+          "stop_reason_classification": "eos",
+          "task_state": "done",
+          "terminating_sampled_id": null
+        },
+        {
+          "callback_stop_id_counts": {
+            "1": 0,
+            "106": 0,
+            "50": 0
+          },
+          "filtered_callback_count": 756,
+          "id": "loaded-route-long-02",
+          "limitation": "These are filtered callback IDs. Matching stop tokens are withheld by runtime stop detection; the absent terminating ID is not established by decoded text or this callback list.",
+          "runtime_generated_tokens": 757,
+          "stop_reason_classification": "eos",
+          "task_state": "done",
+          "terminating_sampled_id": null
+        },
+        {
+          "callback_stop_id_counts": {
+            "1": 0,
+            "106": 0,
+            "50": 0
+          },
+          "filtered_callback_count": 756,
+          "id": "loaded-route-long-03",
+          "limitation": "These are filtered callback IDs. Matching stop tokens are withheld by runtime stop detection; the absent terminating ID is not established by decoded text or this callback list.",
+          "runtime_generated_tokens": 757,
+          "stop_reason_classification": "eos",
+          "task_state": "done",
+          "terminating_sampled_id": null
+        },
+        {
+          "callback_stop_id_counts": {
+            "1": 0,
+            "106": 0,
+            "50": 0
+          },
+          "filtered_callback_count": 756,
+          "id": "loaded-route-long-04",
+          "limitation": "These are filtered callback IDs. Matching stop tokens are withheld by runtime stop detection; the absent terminating ID is not established by decoded text or this callback list.",
+          "runtime_generated_tokens": 757,
+          "stop_reason_classification": "eos",
+          "task_state": "done",
+          "terminating_sampled_id": null
+        },
+        {
+          "callback_stop_id_counts": {
+            "1": 0,
+            "106": 0,
+            "50": 0
+          },
+          "filtered_callback_count": 756,
+          "id": "loaded-route-long-05",
+          "limitation": "These are filtered callback IDs. Matching stop tokens are withheld by runtime stop detection; the absent terminating ID is not established by decoded text or this callback list.",
+          "runtime_generated_tokens": 757,
+          "stop_reason_classification": "eos",
+          "task_state": "done",
+          "terminating_sampled_id": null
+        }
+      ],
+      "model_sha256": "181938105e0eefd105961417e8da75903eacda102c4fce9ce90f50b97139a63c",
+      "route": {
+        "accelerator_recompilation_between_requests": false,
+        "cache_dir": "/data/local/tmp/vibevoice-0025-gemma-4-e2b-it-android/cache-generic-gpu-canonical-v2",
+        "loaded_engine_reused": true,
+        "max_num_tokens": 8192,
+        "max_output_tokens": 2048,
+        "model_path": ".local/model/gemma-4-E2B-it.litertlm",
+        "model_remap_or_reload_between_requests": false,
+        "num_cpu_threads": 4,
+        "prompt_template_applied_in_session": false,
+        "render_policy": "gemma4-no-tools-no-thinking-system-user-v1",
+        "reset_mode": "fresh_session",
+        "reset_probe_only": false,
+        "retained_prompt_or_kv_reuse_between_requests": false,
+        "sampler": "CPU TOP_P(k=1,p=1) exact argmax implementation for both CPU and GPU neural backends",
+        "smoke_only": false,
+        "thinking_enabled": false
+      },
+      "runtime": {
+        "name": "LiteRT-LM",
+        "revision": "924e79c91542761242244e4f1651851f822e4cbb",
+        "version": "v0.16.1"
+      }
+    }
+  },
+  "sampler_assessment": "QNN greedy fast path uses direct argmax; LiteRT uses CPU TOP_P(k=1,p=1,temp=1), an argmax-equivalent singleton candidate. Temperature/seed configuration differs but does not establish stochastic sampling on these routes.",
+  "source_refs": {
+    "DebugConfig.hpp": {
+      "lines": [
+        15,
+        62
+      ],
+      "path": "/home/moritz/opt/qairt/2.49.40.260810/examples/Genie/Genie/src/DebugConfig.hpp",
+      "sha256": "f1e9f3d822503179fdd64cdc71dec798f243008f33d177d9cdf03ccbccf3f252"
+    },
+    "qualla/context.cpp": {
+      "lines": [
+        30,
+        50
+      ],
+      "path": "/home/moritz/opt/qairt/2.49.40.260810/examples/Genie/Genie/src/qualla/context.cpp",
+      "sha256": "2e46999f7e519b321120ffc2f614c57805958a823fc15f1efa8acbc997a2c62b"
+    },
+    "qualla/dialogs/basic.cpp": {
+      "lines": [
+        740,
+        795
+      ],
+      "path": "/home/moritz/opt/qairt/2.49.40.260810/examples/Genie/Genie/src/qualla/dialogs/basic.cpp",
+      "sha256": "a9a91951e2ad13101291899589d328f61e15e71bde8a6c7cd3314727d9c0e71b"
+    },
+    "qualla/engines/qnn-htp/nsp-graph.cpp": {
+      "lines": [
+        431,
+        507
+      ],
+      "path": "/home/moritz/opt/qairt/2.49.40.260810/examples/Genie/Genie/src/qualla/engines/qnn-htp/nsp-graph.cpp",
+      "sha256": "550a90d628aed2d525dcf2f0127d761885a49f1ef3a86e4e99d359b0b38d47ed"
+    },
+    "qualla/engines/qnn-htp/nsp-graph.hpp": {
+      "lines": [
+        207,
+        226
+      ],
+      "path": "/home/moritz/opt/qairt/2.49.40.260810/examples/Genie/Genie/src/qualla/engines/qnn-htp/nsp-graph.hpp",
+      "sha256": "8a7d501db8f68b0853cb18f774754eed935a72d0cdb4791f4dbe9acdf5324d46"
+    },
+    "qualla/engines/qnn-htp/nsp-model.cpp": {
+      "lines": [
+        4352,
+        4381
+      ],
+      "path": "/home/moritz/opt/qairt/2.49.40.260810/examples/Genie/Genie/src/qualla/engines/qnn-htp/nsp-model.cpp",
+      "sha256": "59f71750b92f13dfa797bfad009ebe7b633ae450a7b8eec0ff011ef1e2287f65"
+    },
+    "qualla/include/qualla/context.hpp": {
+      "lines": [
+        35,
+        42
+      ],
+      "path": "/home/moritz/opt/qairt/2.49.40.260810/examples/Genie/Genie/src/qualla/include/qualla/context.hpp",
+      "sha256": "a60ecfcbf894517c736f50641d824be62997a4568f0580ee3ccb30f95f1dd69e"
+    },
+    "qualla/sampler.cpp": {
+      "lines": [
+        174,
+        213
+      ],
+      "path": "/home/moritz/opt/qairt/2.49.40.260810/examples/Genie/Genie/src/qualla/sampler.cpp",
+      "sha256": "2996f597a5034be64a7ec51d01073130718c5dbbf7f83a9f67eed3b1d1c933ba"
+    }
+  },
+  "sources": [
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/.local/LiteRT-LM/runtime/core/tasks.cc",
+      "sha256": "1c784001a41a36989a204c8213048631ee5b54a44e74c7ca6042113cdfd435bb"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/.local/LiteRT-LM/runtime/engine/engine_settings.cc",
+      "sha256": "1b3d77f185285b59e54a86b7465ddf678862f9247cdf3332eb789ee376b63393"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/.local/LiteRT-LM/runtime/proto/llm_metadata.proto",
+      "sha256": "3356bc464ca18b9d4203bab8c09dc95747e95d628f6832c1da0ef1d1a6bb06a3"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/.local/LiteRT-LM/runtime/proto/token.proto",
+      "sha256": "575e1875771cff0f404907947d480cdec795b61ac0ffcf84bb683abbee330e5d"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/.local/model/gemma-4-E2B-it.litertlm",
+      "sha256": "181938105e0eefd105961417e8da75903eacda102c4fce9ce90f50b97139a63c"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/.local/upstream/base/generation_config.json",
+      "sha256": "d4226bbe3117d2d253ba4609720ba82c6c4ce4627a9a6ae05387c78983ac03de"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/raw/runner-stdout.jsonl",
+      "sha256": "60900350ef9e0b4424c6df9732c714b381a49cafd300244707b9f5807c56415f"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/rendered/long.txt",
+      "sha256": "450b519d417e29c4239e39aef856db1813d2580cd62e9db9adaae3d94ba8f260"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/rendered/medium.txt",
+      "sha256": "8e3c03cb0d1ddce8455306b8b84585ce2ae07c083c4fdbdec1e946e3be56771d"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/rendered/short.txt",
+      "sha256": "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/results/android-cpu-campaign/result.json",
+      "sha256": "ba32ebf42e3976d2da135f915ca82500438ffb8cc0595c4f3c17ad418dd61987"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/raw/runner-stdout.jsonl",
+      "sha256": "a2ba317b41f35eeef1ab1f84d07de555a3a875f7142ba37ee7576c98cc6cd5f5"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/rendered/long.txt",
+      "sha256": "450b519d417e29c4239e39aef856db1813d2580cd62e9db9adaae3d94ba8f260"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/rendered/medium.txt",
+      "sha256": "8e3c03cb0d1ddce8455306b8b84585ce2ae07c083c4fdbdec1e946e3be56771d"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/rendered/short.txt",
+      "sha256": "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/results/android-gpu-campaign/result.json",
+      "sha256": "a462797457bc2264fd0d3813ed80ad39fbd86db83763c15fd09221a5f85d2726"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0025-gemma-4-e2b-it-android/tools/litert_lm_canonical_runner.cc",
+      "sha256": "5148aec25a39178224e6765e63ff448d27211375d83d394739c7182afc74ba59"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/checkpoint/extracted/gemma_4_e2b_it_w4a16/generation_config.json",
+      "sha256": "d4226bbe3117d2d253ba4609720ba82c6c4ce4627a9a6ae05387c78983ac03de"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/frozen-stages/value-path-long-20260911T125353Z-01/gemma4-e2b-htp-cl4096-greedy.json",
+      "sha256": "f8008e047443d70c0db32c7775dba8a1a958f7c838bd2683f33b4d7a8a457eba"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/frozen-stages/value-path-long-20260911T125353Z-01/tokenizer.json",
+      "sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/protocol/rendered/long.txt",
+      "sha256": "450b519d417e29c4239e39aef856db1813d2580cd62e9db9adaae3d94ba8f260"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/protocol/rendered/medium.txt",
+      "sha256": "8e3c03cb0d1ddce8455306b8b84585ce2ae07c083c4fdbdec1e946e3be56771d"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/protocol/rendered/short.txt",
+      "sha256": "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/protocol/token-ids/long.int32le",
+      "sha256": "3b5c04febbc9d55c529ee7ece510607203dbdc8256a6abc05ba0498cf4e52b64"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/protocol/token-ids/medium.int32le",
+      "sha256": "a0175c3e00e0a4863171ef8c2ab8f789e033529dd0449f6bd74028dd233ab0aa"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/protocol/token-ids/short.int32le",
+      "sha256": "31a85f9c813266bbbb3505a04a226a9b184882b636cc2f6f67193a6b1eb2ad78"
+    },
+    {
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/tools/prepare_runtime_bundle.py",
+      "sha256": "673c933e2fb276c19f4c33b357e35fc1a3301a8579e49f03c8cc4ac7a69b0403"
+    }
+  ],
+  "special_token_names": {
+    "1": "<eos>",
+    "2": "<bos>",
+    "50": "<|tool_response>",
+    "105": "<|turn>",
+    "106": "<turn|>"
+  },
+  "stop_ids_missing_from_qnn": [
+    50
+  ],
+  "termination_or_input_changed": false,
+  "upstream_generation_eos_ids": [
+    1,
+    106,
+    50
+  ]
+}
