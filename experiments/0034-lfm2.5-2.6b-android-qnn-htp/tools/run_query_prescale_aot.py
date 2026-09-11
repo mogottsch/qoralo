@@ -18,8 +18,10 @@ import onnxruntime_qnn as qnn
 
 EXP = Path(__file__).resolve().parents[1]
 MODEL_SHA = 'b93c65c9c419f915bad81046f34c91c632ce6dd1bed4137751f36204d64492a0'
+MEMORY_LIMIT_GIB = 12
 PRIOR = [EXP / '.local/query-prescale-20260911T093452Z-73227', EXP / '.local/query-prescale-20260911T094138Z-78096',
-         EXP / 'results/query-prescale-cpu-attempt-1-external-path-failure', EXP / 'results/query-prescale-cpu-attempt-2-numerical-check']
+         EXP / 'results/query-prescale-cpu-attempt-1-external-path-failure', EXP / 'results/query-prescale-cpu-attempt-2-numerical-check',
+         EXP / '.local/query-prescale-aot-20260911T101011Z-109277', EXP / 'results/query-prescale-aot-attempt-1-memory-limit']
 
 
 def sha(path):
@@ -52,7 +54,7 @@ def bounds(root):
     group = next(x.split(':', 2)[2] for x in Path('/proc/self/cgroup').read_text().splitlines() if x.startswith('0::'))
     path = Path('/sys/fs/cgroup') / group.lstrip('/')
     limits = {x: (path / x).read_text().strip() for x in ('memory.max', 'memory.swap.max', 'cpu.max')}
-    if limits != {'memory.max': str(12 << 30), 'memory.swap.max': '0', 'cpu.max': '200000 100000'}:
+    if limits != {'memory.max': str(MEMORY_LIMIT_GIB << 30), 'memory.swap.max': '0', 'cpu.max': '200000 100000'}:
         raise RuntimeError(f'Unexpected cgroup bounds: {limits}')
     if os.getpriority(os.PRIO_PROCESS, 0) < 10:
         raise RuntimeError('Expected nice10 or lower priority')
@@ -137,11 +139,14 @@ def inspect(root, baseline_info):
 
 
 def main():
+    global MEMORY_LIMIT_GIB
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--model', type=Path, required=True)
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--qairt', type=Path, required=True)
+    parser.add_argument('--memory-gib', type=int, choices=(12, 16), default=12)
     args = parser.parse_args()
+    MEMORY_LIMIT_GIB = args.memory_gib
     root, model = args.root.resolve(), args.model.resolve(strict=True)
     root.mkdir(exist_ok=False); (root / 'tmp').mkdir()
     # Each generated file is additionally capped at2GiB; context is expected near1.60GB.
@@ -149,7 +154,8 @@ def main():
     try:
         before_bounds = bounds(root)
         mem = {line.split(':')[0]: int(line.split()[1]) for line in Path('/proc/meminfo').read_text().splitlines()}
-        if mem['MemAvailable'] < 16 * 1024 * 1024 or shutil.disk_usage(root).free < 12 << 30:
+        minimum_available_gib = 22 if MEMORY_LIMIT_GIB == 16 else 16
+        if mem['MemAvailable'] < minimum_available_gib * 1024 * 1024 or shutil.disk_usage(root).free < 12 << 30:
             raise RuntimeError('Unsafe host preflight memory/disk headroom')
         if os.environ.get('TMPDIR') != str(root / 'tmp'):
             raise RuntimeError('TMPDIR must be fresh disk-backed run directory')
@@ -179,12 +185,15 @@ def main():
         sources = [model, *data, Path(__file__).resolve(), EXP / 'tools/compile_qnn_part.py', baseline_info,
                    EXP / 'protocol/query-prescale-aot-check.json',
                    EXP / 'results/query-prescale-cpu-attempt-2-numerical-check/result.json', utility]
+        if MEMORY_LIMIT_GIB == 16:
+            sources.append(EXP / 'protocol/query-prescale-aot-memory-amendment.json')
         libraries = sorted(Path(qnn.get_library_path()).parent.glob('*.so'))
         libraries += sorted((args.qairt.resolve() / 'lib/x86_64-linux-clang').glob('libQnnSystem.so'))
         libraries += sorted((Path(ort.__file__).parent / 'capi').glob('*.so*'))
         before = [artifact(p) for p in sources + libraries]
         save(root / 'preflight.json', {'argv': sys.argv, 'artifacts_before': before, 'bounds': before_bounds,
                                       'filesystem': fs, 'memory_available_kib': mem['MemAvailable'],
+                                      'memory_limit_gib': MEMORY_LIMIT_GIB, 'minimum_available_gib': minimum_available_gib,
                                       'onnxruntime': ort.__version__, 'qnn_ep': qnn.__version__,
                                       'input_model_sha256': MODEL_SHA, 'source_nodes': len(protobuf.graph.node)})
         execute(root, 'compile', [sys.executable, str(EXP / 'tools/compile_qnn_part.py'), '--model', str(model),

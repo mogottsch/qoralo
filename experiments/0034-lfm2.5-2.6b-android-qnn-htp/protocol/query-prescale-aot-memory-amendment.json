@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "classification": "reasoned_memory_only_aot_iteration_after_retained_cgroup_oom",
+  "prior_evidence": "results/query-prescale-aot-attempt-1-memory-limit/result.json",
+  "prior_source_commit": "70ca07f6183fad702ef48388ad3d06eddf623de1",
+  "reason": "First prepare-only build reached graph preparation Completion but hit the12GiB cgroup OOM limit before any serialized context/metadata. Exact failing allocation is unknown; repeating the same limit is not useful.",
+  "changed": {"memory_max_bytes": 17179869184, "minimum_preflight_memavailable_bytes": 23622320128, "retention_accounting": "Include the first AOT attempt and its public evidence in the aggregate ledger."},
+  "unchanged": {"model_sha256": "b93c65c9c419f915bad81046f34c91c632ce6dd1bed4137751f36204d64492a0", "swap_max_bytes": 0, "cpu_quota_percent": 200, "nice": 10, "ort_intra_threads": 2, "ort_inter_threads": 1, "openmp_blas_threads": 2, "tasks_max": 64, "unit_timeout_seconds": 900, "compiler_timeout_seconds": 840, "metadata_timeout_seconds": 30, "additional_job_disk_max_bytes": 4294967296, "aggregate_retained_max_bytes": 8589934592, "per_file_max_bytes": 2147483648, "prepare_only": true, "graph_execution_requested": false, "provider_and_target": "Same ORT1.26/QNN2.5/QAIRT2.49.40,SM8550/V73,FP16/blockQ4/finalization-mode1,fallback disabled", "independent_regular_data_copies_read_only": true},
+  "scheduling": "Wait for Janek host build capacity release and>=22GiB MemAvailable. Coordinate with Jere: tiny<=2GiB/1CPU fixtures may continue, large Gemma builds do not overlap. No unrelated JVM termination, host-swap changes or phone access. Launch directly in the safe window; no routine approval loop.",
+  "iteration_limit": "One fresh memory-only attempt; retain its first outcome, do not loop an identical failure.",
+  "claim_boundary": "Prepare-only context/trace/metadata evidence if produced. No inference, finalized hardware cost/speedup, HTP numerical safety or quality-equivalence conclusion from compilation."
+}

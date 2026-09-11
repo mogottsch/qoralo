@@ -31,6 +31,19 @@ def fixture():
 
 
 class QueryPrescaleTest(unittest.TestCase):
+    def test_memory_iteration_changes_only_resource_boundary(self):
+        exp = Path(__file__).resolve().parents[1]
+        amendment = json.loads((exp / 'protocol/query-prescale-aot-memory-amendment.json').read_text())
+        self.assertEqual(amendment['changed']['memory_max_bytes'], 16 << 30)
+        self.assertEqual(amendment['changed']['minimum_preflight_memavailable_bytes'], 22 << 30)
+        self.assertEqual(amendment['unchanged']['cpu_quota_percent'], 200)
+        self.assertEqual(amendment['unchanged']['swap_max_bytes'], 0)
+        self.assertEqual(amendment['unchanged']['unit_timeout_seconds'], 900)
+        self.assertTrue(amendment['unchanged']['prepare_only'])
+        self.assertFalse(amendment['unchanged']['graph_execution_requested'])
+        original = json.loads((exp / 'protocol/query-prescale-aot-check.json').read_text())
+        self.assertEqual(amendment['unchanged']['model_sha256'], original['model_sha256'])
+
     def test_aot_oom_trace_is_not_a_serialized_context_or_abi_pass(self):
         exp = Path(__file__).resolve().parents[1]
         path = exp / 'results/query-prescale-aot-attempt-1-memory-limit'
