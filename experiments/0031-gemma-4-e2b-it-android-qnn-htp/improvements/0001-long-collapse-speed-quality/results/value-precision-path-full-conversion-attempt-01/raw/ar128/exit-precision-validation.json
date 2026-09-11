@@ -1,0 +1,1117 @@
+{
+  "passed": true,
+  "issues": [],
+  "head_group_count": 7,
+  "groups": [
+    {
+      "head_concat": {
+        "id": 1006,
+        "name": "node_cat_59",
+        "type": "Concat",
+        "first_line": 5348,
+        "last_line": 5355,
+        "inputs": [
+          {
+            "name": "opt/matmul_72/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_73/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_74/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_75/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_76/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_77/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_78/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_79/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "opt/cat_59/axis_unprotect_0231",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "opt/cat_59/axis_unprotect_0231 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000411172980, offset -18165.000000000000",
+          "axis: 3",
+          "packageName: qti.aisw"
+        ]
+      },
+      "exit_convert": {
+        "id": 1007,
+        "name": "opt/cat_59/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+        "type": "Convert",
+        "first_line": 5356,
+        "last_line": 5358,
+        "inputs": [
+          {
+            "name": "opt/cat_59/axis_unprotect_0231",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "opt/cat_59/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "opt/cat_59/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16 encoding : bitwidth 16, min -7.468956947327, max 19.477264404297, scale 0.000411172980, offset -18165.000000000000",
+          "dynamic_input_data: False",
+          "dynamic_output_data: False"
+        ]
+      },
+      "unchanged_projection": {
+        "id": 1008,
+        "name": "node_Conv_4392",
+        "type": "Conv2d",
+        "first_line": 5359,
+        "last_line": 5373,
+        "inputs": [
+          {
+            "name": "opt/cat_59/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "model.model.layers.4.self_attn.o_proj_conv.weight",
+            "datatype": "sFxp_8",
+            "dimensions": "1,1,4096,1536",
+            "tensor_type": "STATIC"
+          },
+          {
+            "name": "node_Conv_4392_bias",
+            "datatype": "sFxp_32",
+            "dimensions": "1536",
+            "tensor_type": "STATIC"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "opt/conv2d_74/axis_unprotect",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,1536",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "model.model.layers.4.self_attn.o_proj_conv.weight encoding for channel_0: bitwidth 4, min -0.053944416344, max 0.047201365232, scale 0.006743052043, offset 0.000000000000",
+          "axis-quant: axis: 3, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+          "node_Conv_4392_bias encoding for channel_0: bitwidth 32, min -5954.028808593750, max 5954.028808593750, scale 0.000002772561, offset 0.000000000000",
+          "axis-quant: axis: 0, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+          "opt/conv2d_74/axis_unprotect encoding : bitwidth 16, min -49.488903045654, max 47.492595672607, scale 0.001479842816, offset -33442.000000000000",
+          "bias_op_name: ",
+          "dilation: [1, 1]",
+          "group: 1",
+          "packageName: qti.aisw",
+          "pad_amount: [[0, 0], [0, 0]]",
+          "padding_size_strategy: 5",
+          "reuse_sparse_indices: False",
+          "stride: [1, 1]",
+          "param count: 6M (0.276%)",
+          "MACs per inference: 1236950M (0.00821%)"
+        ]
+      },
+      "before_input_encoding": [
+        "bitwidth 16, min -7.468956947327, max 19.477264404297, scale 0.000411172980, offset -18165.000000000000"
+      ],
+      "after_input_encoding": [
+        "bitwidth 16, min -7.468956947327, max 19.477264404297, scale 0.000411172980, offset -18165.000000000000"
+      ]
+    },
+    {
+      "head_concat": {
+        "id": 2049,
+        "name": "node_cat_119",
+        "type": "Concat",
+        "first_line": 10894,
+        "last_line": 10901,
+        "inputs": [
+          {
+            "name": "opt/matmul_152/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_153/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_154/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_155/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_156/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_157/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_158/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_159/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "opt/cat_119/axis_unprotect_0231",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "opt/cat_119/axis_unprotect_0231 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000481137744, offset -40756.000000000000",
+          "axis: 3",
+          "packageName: qti.aisw"
+        ]
+      },
+      "exit_convert": {
+        "id": 2050,
+        "name": "opt/cat_119/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+        "type": "Convert",
+        "first_line": 10902,
+        "last_line": 10904,
+        "inputs": [
+          {
+            "name": "opt/cat_119/axis_unprotect_0231",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "opt/cat_119/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "opt/cat_119/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16 encoding : bitwidth 16, min -19.609249114990, max 11.922112464905, scale 0.000481137744, offset -40756.000000000000",
+          "dynamic_input_data: False",
+          "dynamic_output_data: False"
+        ]
+      },
+      "unchanged_projection": {
+        "id": 2051,
+        "name": "node_Conv_4472",
+        "type": "Conv2d",
+        "first_line": 10905,
+        "last_line": 10919,
+        "inputs": [
+          {
+            "name": "opt/cat_119/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "model.model.layers.9.self_attn.o_proj_conv.weight",
+            "datatype": "sFxp_8",
+            "dimensions": "1,1,4096,1536",
+            "tensor_type": "STATIC"
+          },
+          {
+            "name": "node_Conv_4472_bias",
+            "datatype": "sFxp_32",
+            "dimensions": "1536",
+            "tensor_type": "STATIC"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "opt/conv2d_154/axis_unprotect",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,1536",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "model.model.layers.9.self_attn.o_proj_conv.weight encoding for channel_0: bitwidth 4, min -0.054782219231, max 0.047934442759, scale 0.006847777404, offset 0.000000000000",
+          "axis-quant: axis: 3, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+          "node_Conv_4472_bias encoding for channel_0: bitwidth 32, min -7075.366210937500, max 7075.366210937500, scale 0.000003294724, offset 0.000000000000",
+          "axis-quant: axis: 0, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+          "opt/conv2d_154/axis_unprotect encoding : bitwidth 16, min -30.907617568970, max 19.816881179810, scale 0.000774006243, offset -39932.000000000000",
+          "bias_op_name: ",
+          "dilation: [1, 1]",
+          "group: 1",
+          "packageName: qti.aisw",
+          "pad_amount: [[0, 0], [0, 0]]",
+          "padding_size_strategy: 5",
+          "reuse_sparse_indices: False",
+          "stride: [1, 1]",
+          "param count: 6M (0.276%)",
+          "MACs per inference: 1236950M (0.00821%)"
+        ]
+      },
+      "before_input_encoding": [
+        "bitwidth 16, min -19.609249114990, max 11.922112464905, scale 0.000481137744, offset -40756.000000000000"
+      ],
+      "after_input_encoding": [
+        "bitwidth 16, min -19.609249114990, max 11.922112464905, scale 0.000481137744, offset -40756.000000000000"
+      ]
+    },
+    {
+      "head_concat": {
+        "id": 3092,
+        "name": "node_cat_179",
+        "type": "Concat",
+        "first_line": 16440,
+        "last_line": 16447,
+        "inputs": [
+          {
+            "name": "opt/matmul_232/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_233/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_234/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_235/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_236/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_237/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_238/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_239/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "opt/cat_179/axis_unprotect_0231",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "opt/cat_179/axis_unprotect_0231 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000474042812, offset -35330.000000000000",
+          "axis: 3",
+          "packageName: qti.aisw"
+        ]
+      },
+      "exit_convert": {
+        "id": 3093,
+        "name": "opt/cat_179/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+        "type": "Convert",
+        "first_line": 16448,
+        "last_line": 16450,
+        "inputs": [
+          {
+            "name": "opt/cat_179/axis_unprotect_0231",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "opt/cat_179/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "opt/cat_179/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16 encoding : bitwidth 16, min -16.747932434082, max 14.318463325500, scale 0.000474042812, offset -35330.000000000000",
+          "dynamic_input_data: False",
+          "dynamic_output_data: False"
+        ]
+      },
+      "unchanged_projection": {
+        "id": 3094,
+        "name": "node_Conv_4552",
+        "type": "Conv2d",
+        "first_line": 16451,
+        "last_line": 16465,
+        "inputs": [
+          {
+            "name": "opt/cat_179/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "model.model.layers.14.self_attn.o_proj_conv.weight",
+            "datatype": "sFxp_8",
+            "dimensions": "1,1,4096,1536",
+            "tensor_type": "STATIC"
+          },
+          {
+            "name": "node_Conv_4552_bias",
+            "datatype": "sFxp_32",
+            "dimensions": "1536",
+            "tensor_type": "STATIC"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "opt/conv2d_234/axis_unprotect",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,1536",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "model.model.layers.14.self_attn.o_proj_conv.weight encoding for channel_0: bitwidth 4, min -0.044230811298, max 0.038701958954, scale 0.005528851412, offset 0.000000000000",
+          "axis-quant: axis: 3, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+          "node_Conv_4552_bias encoding for channel_0: bitwidth 32, min -5628.366210937500, max 5628.366210937500, scale 0.000002620912, offset 0.000000000000",
+          "axis-quant: axis: 0, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+          "opt/conv2d_234/axis_unprotect encoding : bitwidth 16, min -7.141839504242, max 17.631380081177, scale 0.000378015102, offset -18893.000000000000",
+          "bias_op_name: ",
+          "dilation: [1, 1]",
+          "group: 1",
+          "packageName: qti.aisw",
+          "pad_amount: [[0, 0], [0, 0]]",
+          "padding_size_strategy: 5",
+          "reuse_sparse_indices: False",
+          "stride: [1, 1]",
+          "param count: 6M (0.276%)",
+          "MACs per inference: 1236950M (0.00821%)"
+        ]
+      },
+      "before_input_encoding": [
+        "bitwidth 16, min -16.747932434082, max 14.318463325500, scale 0.000474042812, offset -35330.000000000000"
+      ],
+      "after_input_encoding": [
+        "bitwidth 16, min -16.747932434082, max 14.318463325500, scale 0.000474042812, offset -35330.000000000000"
+      ]
+    },
+    {
+      "head_concat": {
+        "id": 4026,
+        "name": "node_cat_224",
+        "type": "Concat",
+        "first_line": 21434,
+        "last_line": 21441,
+        "inputs": [
+          {
+            "name": "opt/matmul_312/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_313/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_314/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_315/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_316/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_317/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_318/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_319/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "opt/cat_224/axis_unprotect_0231",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "opt/cat_224/axis_unprotect_0231 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000527936558, offset -31682.000000000000",
+          "axis: 3",
+          "packageName: qti.aisw"
+        ]
+      },
+      "exit_convert": {
+        "id": 4027,
+        "name": "opt/cat_224/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+        "type": "Convert",
+        "first_line": 21442,
+        "last_line": 21444,
+        "inputs": [
+          {
+            "name": "opt/cat_224/axis_unprotect_0231",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "opt/cat_224/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "opt/cat_224/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16 encoding : bitwidth 16, min -16.726085662842, max 17.872236251831, scale 0.000527936558, offset -31682.000000000000",
+          "dynamic_input_data: False",
+          "dynamic_output_data: False"
+        ]
+      },
+      "unchanged_projection": {
+        "id": 4028,
+        "name": "node_Conv_4622",
+        "type": "Conv2d",
+        "first_line": 21445,
+        "last_line": 21459,
+        "inputs": [
+          {
+            "name": "opt/cat_224/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "model.model.layers.19.self_attn.o_proj_conv.weight",
+            "datatype": "sFxp_8",
+            "dimensions": "1,1,4096,1536",
+            "tensor_type": "STATIC"
+          },
+          {
+            "name": "node_Conv_4622_bias",
+            "datatype": "sFxp_32",
+            "dimensions": "1536",
+            "tensor_type": "STATIC"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "opt/conv2d_304/axis_unprotect",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,1536",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "model.model.layers.19.self_attn.o_proj_conv.weight encoding for channel_0: bitwidth 4, min -0.043715409935, max 0.038250982761, scale 0.005464426242, offset 0.000000000000",
+          "axis-quant: axis: 3, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+          "node_Conv_4622_bias encoding for channel_0: bitwidth 32, min -6195.211914062500, max 6195.211914062500, scale 0.000002884870, offset 0.000000000000",
+          "axis-quant: axis: 0, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+          "opt/conv2d_304/axis_unprotect encoding : bitwidth 16, min -7.814083576202, max 18.091217041016, scale 0.000395289535, offset -19768.000000000000",
+          "bias_op_name: ",
+          "dilation: [1, 1]",
+          "group: 1",
+          "packageName: qti.aisw",
+          "pad_amount: [[0, 0], [0, 0]]",
+          "padding_size_strategy: 5",
+          "reuse_sparse_indices: False",
+          "stride: [1, 1]",
+          "param count: 6M (0.276%)",
+          "MACs per inference: 1236950M (0.00821%)"
+        ]
+      },
+      "before_input_encoding": [
+        "bitwidth 16, min -16.726085662842, max 17.872236251831, scale 0.000527936558, offset -31682.000000000000"
+      ],
+      "after_input_encoding": [
+        "bitwidth 16, min -16.726085662842, max 17.872236251831, scale 0.000527936558, offset -31682.000000000000"
+      ]
+    },
+    {
+      "head_concat": {
+        "id": 4960,
+        "name": "node_cat_269",
+        "type": "Concat",
+        "first_line": 26428,
+        "last_line": 26435,
+        "inputs": [
+          {
+            "name": "opt/matmul_392/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_393/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_394/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_395/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_396/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_397/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_398/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_399/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "opt/cat_269/axis_unprotect_0231",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "opt/cat_269/axis_unprotect_0231 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000543290575, offset -32025.000000000000",
+          "axis: 3",
+          "packageName: qti.aisw"
+        ]
+      },
+      "exit_convert": {
+        "id": 4961,
+        "name": "opt/cat_269/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+        "type": "Convert",
+        "first_line": 26436,
+        "last_line": 26438,
+        "inputs": [
+          {
+            "name": "opt/cat_269/axis_unprotect_0231",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "opt/cat_269/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "opt/cat_269/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16 encoding : bitwidth 16, min -17.398880004883, max 18.205667495728, scale 0.000543290575, offset -32025.000000000000",
+          "dynamic_input_data: False",
+          "dynamic_output_data: False"
+        ]
+      },
+      "unchanged_projection": {
+        "id": 4962,
+        "name": "node_Conv_4692",
+        "type": "Conv2d",
+        "first_line": 26439,
+        "last_line": 26453,
+        "inputs": [
+          {
+            "name": "opt/cat_269/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "model.model.layers.24.self_attn.o_proj_conv.weight",
+            "datatype": "sFxp_8",
+            "dimensions": "1,1,4096,1536",
+            "tensor_type": "STATIC"
+          },
+          {
+            "name": "node_Conv_4692_bias",
+            "datatype": "sFxp_32",
+            "dimensions": "1536",
+            "tensor_type": "STATIC"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "opt/conv2d_374/axis_unprotect",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,1536",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "model.model.layers.24.self_attn.o_proj_conv.weight encoding for channel_0: bitwidth 4, min -0.040679521859, max 0.035594582558, scale 0.005084940232, offset 0.000000000000",
+          "axis-quant: axis: 3, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+          "node_Conv_4692_bias encoding for channel_0: bitwidth 32, min -5932.638671875000, max 5932.638671875000, scale 0.000002762600, offset 0.000000000000",
+          "axis-quant: axis: 0, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+          "opt/conv2d_374/axis_unprotect encoding : bitwidth 16, min -21.887882232666, max 7.937508583069, scale 0.000455106288, offset -48094.000000000000",
+          "bias_op_name: ",
+          "dilation: [1, 1]",
+          "group: 1",
+          "packageName: qti.aisw",
+          "pad_amount: [[0, 0], [0, 0]]",
+          "padding_size_strategy: 5",
+          "reuse_sparse_indices: False",
+          "stride: [1, 1]",
+          "param count: 6M (0.276%)",
+          "MACs per inference: 1236950M (0.00821%)"
+        ]
+      },
+      "before_input_encoding": [
+        "bitwidth 16, min -17.398880004883, max 18.205667495728, scale 0.000543290575, offset -32025.000000000000"
+      ],
+      "after_input_encoding": [
+        "bitwidth 16, min -17.398880004883, max 18.205667495728, scale 0.000543290575, offset -32025.000000000000"
+      ]
+    },
+    {
+      "head_concat": {
+        "id": 5894,
+        "name": "node_cat_314",
+        "type": "Concat",
+        "first_line": 31422,
+        "last_line": 31429,
+        "inputs": [
+          {
+            "name": "opt/matmul_472/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_473/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_474/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_475/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_476/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_477/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_478/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_479/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "opt/cat_314/axis_unprotect_0231",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "opt/cat_314/axis_unprotect_0231 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000417497125, offset -39209.000000000000",
+          "axis: 3",
+          "packageName: qti.aisw"
+        ]
+      },
+      "exit_convert": {
+        "id": 5895,
+        "name": "opt/cat_314/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+        "type": "Convert",
+        "first_line": 31430,
+        "last_line": 31432,
+        "inputs": [
+          {
+            "name": "opt/cat_314/axis_unprotect_0231",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "opt/cat_314/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "opt/cat_314/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16 encoding : bitwidth 16, min -16.369644165039, max 10.991029739380, scale 0.000417497125, offset -39209.000000000000",
+          "dynamic_input_data: False",
+          "dynamic_output_data: False"
+        ]
+      },
+      "unchanged_projection": {
+        "id": 5896,
+        "name": "node_Conv_4762",
+        "type": "Conv2d",
+        "first_line": 31433,
+        "last_line": 31447,
+        "inputs": [
+          {
+            "name": "opt/cat_314/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "model.model.layers.29.self_attn.o_proj_conv.weight",
+            "datatype": "sFxp_8",
+            "dimensions": "1,1,4096,1536",
+            "tensor_type": "STATIC"
+          },
+          {
+            "name": "node_Conv_4762_bias",
+            "datatype": "sFxp_32",
+            "dimensions": "1536",
+            "tensor_type": "STATIC"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "opt/conv2d_444/axis_unprotect",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,1536",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "model.model.layers.29.self_attn.o_proj_conv.weight encoding for channel_0: bitwidth 4, min -0.042888052762, max 0.037527047098, scale 0.005361006595, offset 0.000000000000",
+          "axis-quant: axis: 3, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+          "node_Conv_4762_bias encoding for channel_0: bitwidth 32, min -4806.508300781250, max 4806.508300781250, scale 0.000002238205, offset 0.000000000000",
+          "axis-quant: axis: 0, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+          "opt/conv2d_444/axis_unprotect encoding : bitwidth 16, min -17.925649642944, max 31.208881378174, scale 0.000749744882, offset -23909.000000000000",
+          "bias_op_name: ",
+          "dilation: [1, 1]",
+          "group: 1",
+          "packageName: qti.aisw",
+          "pad_amount: [[0, 0], [0, 0]]",
+          "padding_size_strategy: 5",
+          "reuse_sparse_indices: False",
+          "stride: [1, 1]",
+          "param count: 6M (0.276%)",
+          "MACs per inference: 1236950M (0.00821%)"
+        ]
+      },
+      "before_input_encoding": [
+        "bitwidth 16, min -16.369644165039, max 10.991029739380, scale 0.000417497125, offset -39209.000000000000"
+      ],
+      "after_input_encoding": [
+        "bitwidth 16, min -16.369644165039, max 10.991029739380, scale 0.000417497125, offset -39209.000000000000"
+      ]
+    },
+    {
+      "head_concat": {
+        "id": 6828,
+        "name": "node_cat_359",
+        "type": "Concat",
+        "first_line": 36416,
+        "last_line": 36423,
+        "inputs": [
+          {
+            "name": "opt/matmul_552/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_553/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_554/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_555/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_556/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_557/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_558/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "opt/matmul_559/head0.2",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,512",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "opt/cat_359/axis_unprotect_0231",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "opt/cat_359/axis_unprotect_0231 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000500516733, offset -31392.000000000000",
+          "axis: 3",
+          "packageName: qti.aisw"
+        ]
+      },
+      "exit_convert": {
+        "id": 6829,
+        "name": "opt/cat_359/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+        "type": "Convert",
+        "first_line": 36424,
+        "last_line": 36426,
+        "inputs": [
+          {
+            "name": "opt/cat_359/axis_unprotect_0231",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "opt/cat_359/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "opt/cat_359/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16 encoding : bitwidth 16, min -15.712221145630, max 17.089143753052, scale 0.000500516733, offset -31392.000000000000",
+          "dynamic_input_data: False",
+          "dynamic_output_data: False"
+        ]
+      },
+      "unchanged_projection": {
+        "id": 6830,
+        "name": "node_Conv_4832",
+        "type": "Conv2d",
+        "first_line": 36427,
+        "last_line": 36441,
+        "inputs": [
+          {
+            "name": "opt/cat_359/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,4096",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "model.model.layers.34.self_attn.o_proj_conv.weight",
+            "datatype": "sFxp_8",
+            "dimensions": "1,1,4096,1536",
+            "tensor_type": "STATIC"
+          },
+          {
+            "name": "node_Conv_4832_bias",
+            "datatype": "sFxp_32",
+            "dimensions": "1536",
+            "tensor_type": "STATIC"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "opt/conv2d_514/axis_unprotect",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,1536",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "model.model.layers.34.self_attn.o_proj_conv.weight encoding for channel_0: bitwidth 4, min -0.045655913651, max 0.039948925376, scale 0.005706989206, offset 0.000000000000",
+          "axis-quant: axis: 3, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+          "node_Conv_4832_bias encoding for channel_0: bitwidth 32, min -6134.166015625000, max 6134.166015625000, scale 0.000002856444, offset 0.000000000000",
+          "axis-quant: axis: 0, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+          "opt/conv2d_514/axis_unprotect encoding : bitwidth 16, min -10.415105819702, max 7.075962543488, scale 0.000266896590, offset -39023.000000000000",
+          "bias_op_name: ",
+          "dilation: [1, 1]",
+          "group: 1",
+          "packageName: qti.aisw",
+          "pad_amount: [[0, 0], [0, 0]]",
+          "padding_size_strategy: 5",
+          "reuse_sparse_indices: False",
+          "stride: [1, 1]",
+          "param count: 6M (0.276%)",
+          "MACs per inference: 1236950M (0.00821%)"
+        ]
+      },
+      "before_input_encoding": [
+        "bitwidth 16, min -15.712221145630, max 17.089143753052, scale 0.000500516733, offset -31392.000000000000"
+      ],
+      "after_input_encoding": [
+        "bitwidth 16, min -15.712221145630, max 17.089143753052, scale 0.000500516733, offset -31392.000000000000"
+      ]
+    }
+  ],
+  "scope": "FP16 head Concat is a required coupled consumer; original fixed-point grid resumes before unchanged output-projection signatures",
+  "numerical_equivalence_proven": false,
+  "physical_execution": false,
+  "source_sha256": "d2e3e56700043bb55f985e533f02bc2362f6684c3ce709cc7d6a19e717887bf7"
+}

@@ -1,0 +1,477 @@
+{
+  "classification": "full_dlc_converted_internal_precision_gate_pending",
+  "ar": 1,
+  "inference": false,
+  "phone_access": false,
+  "original_fp16_candidate_onnx_unchanged": true,
+  "preparation_sha256": "e266716e89988e83b1fcd5984d19a5e936cb52be657b01cec8d63ffdc9ffee9e",
+  "script_sha256": "07e20a9b2a99841ded92a4abf275c1f82aa0f4e2c12493e500abd67dfc7a94c1",
+  "helper_sha256": "1474d4eda4c7633d5fc125c124249c14e846d99ff65eecb8c6de20acb64376e0",
+  "elapsed_seconds": 636.591147314999,
+  "ru_maxrss_kib": 15776092,
+  "inputs": {
+    "onnx_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/runs/global-value-fp16-20260910T090755Z-attempt-05/onnx/ar1_cl4096_1_of_1/ar1_cl4096_1_of_1.onnx",
+    "onnx_sha256": "077b5ce33f694e4a04210e2b37af9e5c9dd4b80d63dc741dfbedbdbea1e73c63",
+    "original_encodings_sha256": "f67d8ae994cd28625ad50f18f7652680e675be7cd0603bd04319d3b3a3a1dac3",
+    "new_encodings_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-probes/20260911T101059Z/source-ar1-01/full-candidate.encodings",
+    "new_encodings_sha256": "cd77e4c07e6e6f87694c5dd0edd53921ec7866747690ea4b1857195cd087b831",
+    "data_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/runs/global-value-fp16-20260910T090755Z-attempt-05/onnx/ar1_cl4096_1_of_1/ar1_cl4096_1_of_1.data",
+    "data_sha256": "b9b73b984c2258099bc77ce6d1e2aa92d12bb67abe456e5ef509136d7494a65d"
+  },
+  "precision_scope": [
+    {
+      "layer": 4,
+      "cache_input": "past_value_4_h0_in",
+      "cache_output": "past_value_4_h0_out",
+      "concat": "cat_58",
+      "normalization_output": "past_value_4_h0_out__float_before_q",
+      "v_projection_boundary": "opt/conv2d_73/axis_unprotect",
+      "consumer_nodes": [
+        "opt/node_matmul_72/head_0",
+        "opt/node_matmul_73/head_0",
+        "opt/node_matmul_74/head_0",
+        "opt/node_matmul_75/head_0",
+        "opt/node_matmul_76/head_0",
+        "opt/node_matmul_77/head_0",
+        "opt/node_matmul_78/head_0",
+        "opt/node_matmul_79/head_0"
+      ],
+      "consumer_output_names": [
+        "opt/matmul_72/head0.2",
+        "opt/matmul_73/head0.2",
+        "opt/matmul_74/head0.2",
+        "opt/matmul_75/head0.2",
+        "opt/matmul_76/head0.2",
+        "opt/matmul_77/head0.2",
+        "opt/matmul_78/head0.2",
+        "opt/matmul_79/head0.2"
+      ],
+      "float16_override_names": [
+        "cat_58",
+        "opt/matmul_72/head0.2",
+        "opt/matmul_73/head0.2",
+        "opt/matmul_74/head0.2",
+        "opt/matmul_75/head0.2",
+        "opt/matmul_76/head0.2",
+        "opt/matmul_77/head0.2",
+        "opt/matmul_78/head0.2",
+        "opt/matmul_79/head0.2",
+        "past_value_4_h0_in",
+        "past_value_4_h0_in__float_internal",
+        "past_value_4_h0_out",
+        "past_value_4_h0_out__float_before_q"
+      ]
+    },
+    {
+      "layer": 9,
+      "cache_input": "past_value_9_h0_in",
+      "cache_output": "past_value_9_h0_out",
+      "concat": "cat_118",
+      "normalization_output": "past_value_9_h0_out__float_before_q",
+      "v_projection_boundary": "opt/conv2d_153/axis_unprotect",
+      "consumer_nodes": [
+        "opt/node_matmul_152/head_0",
+        "opt/node_matmul_153/head_0",
+        "opt/node_matmul_154/head_0",
+        "opt/node_matmul_155/head_0",
+        "opt/node_matmul_156/head_0",
+        "opt/node_matmul_157/head_0",
+        "opt/node_matmul_158/head_0",
+        "opt/node_matmul_159/head_0"
+      ],
+      "consumer_output_names": [
+        "opt/matmul_152/head0.2",
+        "opt/matmul_153/head0.2",
+        "opt/matmul_154/head0.2",
+        "opt/matmul_155/head0.2",
+        "opt/matmul_156/head0.2",
+        "opt/matmul_157/head0.2",
+        "opt/matmul_158/head0.2",
+        "opt/matmul_159/head0.2"
+      ],
+      "float16_override_names": [
+        "cat_118",
+        "opt/matmul_152/head0.2",
+        "opt/matmul_153/head0.2",
+        "opt/matmul_154/head0.2",
+        "opt/matmul_155/head0.2",
+        "opt/matmul_156/head0.2",
+        "opt/matmul_157/head0.2",
+        "opt/matmul_158/head0.2",
+        "opt/matmul_159/head0.2",
+        "past_value_9_h0_in",
+        "past_value_9_h0_in__float_internal",
+        "past_value_9_h0_out",
+        "past_value_9_h0_out__float_before_q"
+      ]
+    },
+    {
+      "layer": 14,
+      "cache_input": "past_value_14_h0_in",
+      "cache_output": "past_value_14_h0_out",
+      "concat": "cat_178",
+      "normalization_output": "past_value_14_h0_out__float_before_q",
+      "v_projection_boundary": "opt/conv2d_233/axis_unprotect",
+      "consumer_nodes": [
+        "opt/node_matmul_232/head_0",
+        "opt/node_matmul_233/head_0",
+        "opt/node_matmul_234/head_0",
+        "opt/node_matmul_235/head_0",
+        "opt/node_matmul_236/head_0",
+        "opt/node_matmul_237/head_0",
+        "opt/node_matmul_238/head_0",
+        "opt/node_matmul_239/head_0",
+        "opt/node_matmul_312/head_0",
+        "opt/node_matmul_313/head_0",
+        "opt/node_matmul_314/head_0",
+        "opt/node_matmul_315/head_0",
+        "opt/node_matmul_316/head_0",
+        "opt/node_matmul_317/head_0",
+        "opt/node_matmul_318/head_0",
+        "opt/node_matmul_319/head_0",
+        "opt/node_matmul_392/head_0",
+        "opt/node_matmul_393/head_0",
+        "opt/node_matmul_394/head_0",
+        "opt/node_matmul_395/head_0",
+        "opt/node_matmul_396/head_0",
+        "opt/node_matmul_397/head_0",
+        "opt/node_matmul_398/head_0",
+        "opt/node_matmul_399/head_0",
+        "opt/node_matmul_472/head_0",
+        "opt/node_matmul_473/head_0",
+        "opt/node_matmul_474/head_0",
+        "opt/node_matmul_475/head_0",
+        "opt/node_matmul_476/head_0",
+        "opt/node_matmul_477/head_0",
+        "opt/node_matmul_478/head_0",
+        "opt/node_matmul_479/head_0",
+        "opt/node_matmul_552/head_0",
+        "opt/node_matmul_553/head_0",
+        "opt/node_matmul_554/head_0",
+        "opt/node_matmul_555/head_0",
+        "opt/node_matmul_556/head_0",
+        "opt/node_matmul_557/head_0",
+        "opt/node_matmul_558/head_0",
+        "opt/node_matmul_559/head_0"
+      ],
+      "consumer_output_names": [
+        "opt/matmul_232/head0.2",
+        "opt/matmul_233/head0.2",
+        "opt/matmul_234/head0.2",
+        "opt/matmul_235/head0.2",
+        "opt/matmul_236/head0.2",
+        "opt/matmul_237/head0.2",
+        "opt/matmul_238/head0.2",
+        "opt/matmul_239/head0.2",
+        "opt/matmul_312/head0.2",
+        "opt/matmul_313/head0.2",
+        "opt/matmul_314/head0.2",
+        "opt/matmul_315/head0.2",
+        "opt/matmul_316/head0.2",
+        "opt/matmul_317/head0.2",
+        "opt/matmul_318/head0.2",
+        "opt/matmul_319/head0.2",
+        "opt/matmul_392/head0.2",
+        "opt/matmul_393/head0.2",
+        "opt/matmul_394/head0.2",
+        "opt/matmul_395/head0.2",
+        "opt/matmul_396/head0.2",
+        "opt/matmul_397/head0.2",
+        "opt/matmul_398/head0.2",
+        "opt/matmul_399/head0.2",
+        "opt/matmul_472/head0.2",
+        "opt/matmul_473/head0.2",
+        "opt/matmul_474/head0.2",
+        "opt/matmul_475/head0.2",
+        "opt/matmul_476/head0.2",
+        "opt/matmul_477/head0.2",
+        "opt/matmul_478/head0.2",
+        "opt/matmul_479/head0.2",
+        "opt/matmul_552/head0.2",
+        "opt/matmul_553/head0.2",
+        "opt/matmul_554/head0.2",
+        "opt/matmul_555/head0.2",
+        "opt/matmul_556/head0.2",
+        "opt/matmul_557/head0.2",
+        "opt/matmul_558/head0.2",
+        "opt/matmul_559/head0.2"
+      ],
+      "float16_override_names": [
+        "cat_178",
+        "opt/matmul_232/head0.2",
+        "opt/matmul_233/head0.2",
+        "opt/matmul_234/head0.2",
+        "opt/matmul_235/head0.2",
+        "opt/matmul_236/head0.2",
+        "opt/matmul_237/head0.2",
+        "opt/matmul_238/head0.2",
+        "opt/matmul_239/head0.2",
+        "opt/matmul_312/head0.2",
+        "opt/matmul_313/head0.2",
+        "opt/matmul_314/head0.2",
+        "opt/matmul_315/head0.2",
+        "opt/matmul_316/head0.2",
+        "opt/matmul_317/head0.2",
+        "opt/matmul_318/head0.2",
+        "opt/matmul_319/head0.2",
+        "opt/matmul_392/head0.2",
+        "opt/matmul_393/head0.2",
+        "opt/matmul_394/head0.2",
+        "opt/matmul_395/head0.2",
+        "opt/matmul_396/head0.2",
+        "opt/matmul_397/head0.2",
+        "opt/matmul_398/head0.2",
+        "opt/matmul_399/head0.2",
+        "opt/matmul_472/head0.2",
+        "opt/matmul_473/head0.2",
+        "opt/matmul_474/head0.2",
+        "opt/matmul_475/head0.2",
+        "opt/matmul_476/head0.2",
+        "opt/matmul_477/head0.2",
+        "opt/matmul_478/head0.2",
+        "opt/matmul_479/head0.2",
+        "opt/matmul_552/head0.2",
+        "opt/matmul_553/head0.2",
+        "opt/matmul_554/head0.2",
+        "opt/matmul_555/head0.2",
+        "opt/matmul_556/head0.2",
+        "opt/matmul_557/head0.2",
+        "opt/matmul_558/head0.2",
+        "opt/matmul_559/head0.2",
+        "past_value_14_h0_in",
+        "past_value_14_h0_in__float_internal",
+        "past_value_14_h0_out",
+        "past_value_14_h0_out__float_before_q"
+      ]
+    }
+  ],
+  "encoding_change_count": 71,
+  "conversion_config": {
+    "input_tensor_config": [
+      {
+        "name": "inputs_embeds",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "per_layer_inputs",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "attention_mask",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_attention_mask",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_position_ids_cos",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_position_ids_sin",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "position_ids_cos",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "position_ids_sin",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_key_0_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_value_0_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_key_1_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_value_1_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_key_2_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_value_2_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_key_3_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_value_3_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "past_key_4_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "past_value_4_h0_in",
+        "datatype": "float16",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_key_5_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_value_5_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_key_6_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_value_6_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_key_7_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_value_7_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_key_8_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_value_8_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "past_key_9_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "past_value_9_h0_in",
+        "datatype": "float16",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_key_10_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_value_10_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_key_11_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_value_11_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_key_12_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_value_12_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_key_13_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "swa_value_13_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "past_key_14_h0_in",
+        "datatype": "float",
+        "layout": "NONTRIVIAL"
+      },
+      {
+        "name": "past_value_14_h0_in",
+        "datatype": "float16",
+        "layout": "NONTRIVIAL"
+      }
+    ],
+    "output_tensor_config": [],
+    "float_precision": 32,
+    "float_bias_precision": 32,
+    "preserve_io_datatype": null,
+    "onnx_simplification": true,
+    "batch": null,
+    "define_symbol": null,
+    "defer_loading": false,
+    "enable_framework_trace": false,
+    "op_package_config": null,
+    "op_package_lib": null,
+    "io_config": null,
+    "export_format": "DLC_DEFAULT",
+    "create_custom_io": false
+  },
+  "calibration_config": {
+    "dataset": null,
+    "batch_size": 1,
+    "num_of_samples": 512,
+    "act_precision": 16,
+    "bias_precision": 32,
+    "weights_precision": 8,
+    "param_calibration_method": "min-max",
+    "act_calibration_method": "min-max",
+    "per_channel_quantization": true,
+    "per_row_quantization": false,
+    "per_row_quantization_bias": false,
+    "keep_weights_quantized": false
+  },
+  "dlc": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-full-runs/full-ar1-20260911T105448Z-01/work/dlc-cache/cd6e32f1a967f521ba44ef9f3f460ced034e8c0986c20242d4daf57362cbbb4f/ar1_cl4096_1_of_1.dlc",
+    "bytes": 2356873908,
+    "sha256": "34402f2990053a879cd67781ba327076ab80a4f64620aca019a029cc3beb858b"
+  },
+  "internal_precision_validated": false
+}

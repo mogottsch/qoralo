@@ -1,0 +1,4052 @@
+{
+  "classification": "full_dlc_precision_island_validated",
+  "passed": true,
+  "ar": 1,
+  "dlc": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-full-runs/full-ar1-20260911T105448Z-01/work/dlc-cache/cd6e32f1a967f521ba44ef9f3f460ced034e8c0986c20242d4daf57362cbbb4f/ar1_cl4096_1_of_1.dlc",
+    "bytes": 2356873908,
+    "sha256": "34402f2990053a879cd67781ba327076ab80a4f64620aca019a029cc3beb858b"
+  },
+  "converted_result_sha256": "6bf99f6492cf3b2c9c05fc3ad1e3d554362147d1e7e1be4763d6692918f30589",
+  "guard_result_sha256": "e46bc54a31469b8983145c02f2c416828e828c7a0f6ff4ff974685af3eb9897b",
+  "csv_sha256": "06b71c024094638c9297f76131508799bbf1d83c79eddcd9a63a5dc9a4603ad0",
+  "previous_csv_gzip_sha256": "6ac99a82979e05c33c61bd5eeb94f9997e76260cb9f7732882fdfe27eeabb9b6",
+  "preparation_sha256": "e266716e89988e83b1fcd5984d19a5e936cb52be657b01cec8d63ffdc9ffee9e",
+  "core_gate": {
+    "passed": true,
+    "issues": [],
+    "layers": [
+      {
+        "layer": 4,
+        "issues": [],
+        "concat": {
+          "id": 975,
+          "name": "node_cat_58",
+          "type": "Concat",
+          "first_line": 5184,
+          "last_line": 5187,
+          "inputs": [
+            {
+              "name": "past_value_4_h0_in",
+              "datatype": "Float_16",
+              "dimensions": "1,1,4095,512",
+              "tensor_type": "APP_WRITE"
+            },
+            {
+              "name": "past_value_4_h0_out__float_before_q",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "cat_58",
+              "datatype": "Float_16",
+              "dimensions": "1,1,4096,512",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "parameters": [
+            "past_value_4_h0_in encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+            "cat_58 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+            "axis: 2",
+            "packageName: qti.aisw"
+          ]
+        },
+        "matmuls": [
+          {
+            "id": 1008,
+            "name": "opt/node_matmul_72/head_0",
+            "type": "MatMul",
+            "first_line": 5316,
+            "last_line": 5320,
+            "inputs": [
+              {
+                "name": "val_2019_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_58",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_72/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_72/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 1009,
+            "name": "opt/node_matmul_73/head_0",
+            "type": "MatMul",
+            "first_line": 5321,
+            "last_line": 5325,
+            "inputs": [
+              {
+                "name": "val_2020_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_58",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_73/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_73/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 1010,
+            "name": "opt/node_matmul_74/head_0",
+            "type": "MatMul",
+            "first_line": 5326,
+            "last_line": 5330,
+            "inputs": [
+              {
+                "name": "val_2021_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_58",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_74/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_74/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 1011,
+            "name": "opt/node_matmul_75/head_0",
+            "type": "MatMul",
+            "first_line": 5331,
+            "last_line": 5335,
+            "inputs": [
+              {
+                "name": "val_2022_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_58",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_75/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_75/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 1012,
+            "name": "opt/node_matmul_76/head_0",
+            "type": "MatMul",
+            "first_line": 5336,
+            "last_line": 5340,
+            "inputs": [
+              {
+                "name": "val_2023_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_58",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_76/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_76/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 1013,
+            "name": "opt/node_matmul_77/head_0",
+            "type": "MatMul",
+            "first_line": 5341,
+            "last_line": 5345,
+            "inputs": [
+              {
+                "name": "val_2024_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_58",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_77/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_77/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 1014,
+            "name": "opt/node_matmul_78/head_0",
+            "type": "MatMul",
+            "first_line": 5346,
+            "last_line": 5350,
+            "inputs": [
+              {
+                "name": "val_2025_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_58",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_78/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_78/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 1015,
+            "name": "opt/node_matmul_79/head_0",
+            "type": "MatMul",
+            "first_line": 5351,
+            "last_line": 5355,
+            "inputs": [
+              {
+                "name": "val_2026_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_58",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_79/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_79/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          }
+        ],
+        "export_path": [
+          {
+            "id": 6921,
+            "name": "past_value_4_h0_out__cache_output_fork",
+            "type": "Cast",
+            "first_line": 36670,
+            "last_line": 36671,
+            "inputs": [
+              {
+                "name": "past_value_4_h0_out__float_before_q",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "past_value_4_h0_out",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "APP_READ"
+              }
+            ],
+            "parameters": [
+              "past_value_4_h0_out encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw"
+            ]
+          },
+          {
+            "id": 891,
+            "name": "node_rsqrt_49",
+            "type": "Eltwise_Binary",
+            "first_line": 4786,
+            "last_line": 4789,
+            "inputs": [
+              {
+                "name": "opt/conv2d_73/axis_unprotect_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "val_1783",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,1",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "past_value_4_h0_out__float_before_q",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "past_value_4_h0_out__float_before_q encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "operation: 2",
+              "packageName: qti.aisw",
+              "MACs per inference: 512 (4.35e-10%)"
+            ]
+          },
+          {
+            "id": 890,
+            "name": "node_Sqrt_1783",
+            "type": "Eltwise_Unary",
+            "first_line": 4784,
+            "last_line": 4785,
+            "inputs": [
+              {
+                "name": "add_3982",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,1",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "val_1783",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,1",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "operation: 15",
+              "packageName: qti.aisw"
+            ]
+          },
+          {
+            "id": 889,
+            "name": "node_add_3982",
+            "type": "Eltwise_Binary",
+            "first_line": 4781,
+            "last_line": 4783,
+            "inputs": [
+              {
+                "name": "mean_71",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,1",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "val_54",
+                "datatype": "Float_16",
+                "dimensions": "1",
+                "tensor_type": "STATIC"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "add_3982",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,1",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "operation: 0",
+              "packageName: qti.aisw",
+              "MACs per inference: 1 (8.5e-13%)"
+            ]
+          },
+          {
+            "id": 888,
+            "name": "node_mean_71",
+            "type": "Reduce",
+            "first_line": 4777,
+            "last_line": 4780,
+            "inputs": [
+              {
+                "name": "pow_94",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "mean_71",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,1",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "axes: [3]",
+              "keep_dims: True",
+              "packageName: qti.aisw",
+              "reduce_type: ReduceMean"
+            ]
+          },
+          {
+            "id": 887,
+            "name": "node_pow_94",
+            "type": "Eltwise_Binary",
+            "first_line": 4774,
+            "last_line": 4776,
+            "inputs": [
+              {
+                "name": "opt/conv2d_73/axis_unprotect_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "opt/conv2d_73/axis_unprotect_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "pow_94",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "operation: 13",
+              "packageName: qti.aisw",
+              "MACs per inference: 512 (4.35e-10%)"
+            ]
+          },
+          {
+            "id": 886,
+            "name": "opt/conv2d_73/axis_unprotect_converted_QNN_DATATYPE_FLOAT_16",
+            "type": "Convert",
+            "first_line": 4772,
+            "last_line": 4773,
+            "inputs": [
+              {
+                "name": "opt/conv2d_73/axis_unprotect",
+                "datatype": "uFxp_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/conv2d_73/axis_unprotect_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "dynamic_input_data: False",
+              "dynamic_output_data: False"
+            ]
+          }
+        ],
+        "reached_projection_boundary": true,
+        "projection_before": {
+          "tensor": {
+            "name": "opt/conv2d_73/axis_unprotect",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,1,512",
+            "tensor_type": "NATIVE"
+          },
+          "encoding_annotations": [
+            "opt/conv2d_73/axis_unprotect encoding : bitwidth 16, min -4.423627376556, max 35.305358886719, scale 0.000606225454, offset -7297.000000000000"
+          ]
+        },
+        "projection_after": {
+          "tensor": {
+            "name": "opt/conv2d_73/axis_unprotect",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,1,512",
+            "tensor_type": "NATIVE"
+          },
+          "encoding_annotations": [
+            "opt/conv2d_73/axis_unprotect encoding : bitwidth 16, min -4.423627376556, max 35.305358886719, scale 0.000606225454, offset -7297.000000000000"
+          ]
+        }
+      },
+      {
+        "layer": 9,
+        "issues": [],
+        "concat": {
+          "id": 2028,
+          "name": "node_cat_118",
+          "type": "Concat",
+          "first_line": 10735,
+          "last_line": 10738,
+          "inputs": [
+            {
+              "name": "past_value_9_h0_in",
+              "datatype": "Float_16",
+              "dimensions": "1,1,4095,512",
+              "tensor_type": "APP_WRITE"
+            },
+            {
+              "name": "past_value_9_h0_out__float_before_q",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "cat_118",
+              "datatype": "Float_16",
+              "dimensions": "1,1,4096,512",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "parameters": [
+            "past_value_9_h0_in encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+            "cat_118 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+            "axis: 2",
+            "packageName: qti.aisw"
+          ]
+        },
+        "matmuls": [
+          {
+            "id": 2061,
+            "name": "opt/node_matmul_152/head_0",
+            "type": "MatMul",
+            "first_line": 10867,
+            "last_line": 10871,
+            "inputs": [
+              {
+                "name": "val_4054_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_118",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_152/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_152/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 2062,
+            "name": "opt/node_matmul_153/head_0",
+            "type": "MatMul",
+            "first_line": 10872,
+            "last_line": 10876,
+            "inputs": [
+              {
+                "name": "val_4055_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_118",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_153/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_153/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 2063,
+            "name": "opt/node_matmul_154/head_0",
+            "type": "MatMul",
+            "first_line": 10877,
+            "last_line": 10881,
+            "inputs": [
+              {
+                "name": "val_4056_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_118",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_154/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_154/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 2064,
+            "name": "opt/node_matmul_155/head_0",
+            "type": "MatMul",
+            "first_line": 10882,
+            "last_line": 10886,
+            "inputs": [
+              {
+                "name": "val_4057_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_118",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_155/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_155/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 2065,
+            "name": "opt/node_matmul_156/head_0",
+            "type": "MatMul",
+            "first_line": 10887,
+            "last_line": 10891,
+            "inputs": [
+              {
+                "name": "val_4058_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_118",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_156/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_156/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 2066,
+            "name": "opt/node_matmul_157/head_0",
+            "type": "MatMul",
+            "first_line": 10892,
+            "last_line": 10896,
+            "inputs": [
+              {
+                "name": "val_4059_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_118",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_157/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_157/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 2067,
+            "name": "opt/node_matmul_158/head_0",
+            "type": "MatMul",
+            "first_line": 10897,
+            "last_line": 10901,
+            "inputs": [
+              {
+                "name": "val_4060_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_118",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_158/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_158/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 2068,
+            "name": "opt/node_matmul_159/head_0",
+            "type": "MatMul",
+            "first_line": 10902,
+            "last_line": 10906,
+            "inputs": [
+              {
+                "name": "val_4061_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_118",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_159/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_159/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          }
+        ],
+        "export_path": [
+          {
+            "id": 6922,
+            "name": "past_value_9_h0_out__cache_output_fork",
+            "type": "Cast",
+            "first_line": 36672,
+            "last_line": 36673,
+            "inputs": [
+              {
+                "name": "past_value_9_h0_out__float_before_q",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "past_value_9_h0_out",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "APP_READ"
+              }
+            ],
+            "parameters": [
+              "past_value_9_h0_out encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw"
+            ]
+          },
+          {
+            "id": 1944,
+            "name": "node_rsqrt_99",
+            "type": "Eltwise_Binary",
+            "first_line": 10337,
+            "last_line": 10340,
+            "inputs": [
+              {
+                "name": "opt/conv2d_153/axis_unprotect_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "val_3819",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,1",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "past_value_9_h0_out__float_before_q",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "past_value_9_h0_out__float_before_q encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "operation: 2",
+              "packageName: qti.aisw",
+              "MACs per inference: 512 (4.35e-10%)"
+            ]
+          },
+          {
+            "id": 1943,
+            "name": "node_Sqrt_3819",
+            "type": "Eltwise_Unary",
+            "first_line": 10335,
+            "last_line": 10336,
+            "inputs": [
+              {
+                "name": "add_8527",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,1",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "val_3819",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,1",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "operation: 15",
+              "packageName: qti.aisw"
+            ]
+          },
+          {
+            "id": 1942,
+            "name": "node_add_8527",
+            "type": "Eltwise_Binary",
+            "first_line": 10332,
+            "last_line": 10334,
+            "inputs": [
+              {
+                "name": "mean_146",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,1",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "val_54",
+                "datatype": "Float_16",
+                "dimensions": "1",
+                "tensor_type": "STATIC"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "add_8527",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,1",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "operation: 0",
+              "packageName: qti.aisw",
+              "MACs per inference: 1 (8.5e-13%)"
+            ]
+          },
+          {
+            "id": 1941,
+            "name": "node_mean_146",
+            "type": "Reduce",
+            "first_line": 10328,
+            "last_line": 10331,
+            "inputs": [
+              {
+                "name": "pow_194",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "mean_146",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,1",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "axes: [3]",
+              "keep_dims: True",
+              "packageName: qti.aisw",
+              "reduce_type: ReduceMean"
+            ]
+          },
+          {
+            "id": 1940,
+            "name": "node_pow_194",
+            "type": "Eltwise_Binary",
+            "first_line": 10325,
+            "last_line": 10327,
+            "inputs": [
+              {
+                "name": "opt/conv2d_153/axis_unprotect_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "opt/conv2d_153/axis_unprotect_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "pow_194",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "operation: 13",
+              "packageName: qti.aisw",
+              "MACs per inference: 512 (4.35e-10%)"
+            ]
+          },
+          {
+            "id": 1939,
+            "name": "opt/conv2d_153/axis_unprotect_converted_QNN_DATATYPE_FLOAT_16",
+            "type": "Convert",
+            "first_line": 10323,
+            "last_line": 10324,
+            "inputs": [
+              {
+                "name": "opt/conv2d_153/axis_unprotect",
+                "datatype": "uFxp_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/conv2d_153/axis_unprotect_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "dynamic_input_data: False",
+              "dynamic_output_data: False"
+            ]
+          }
+        ],
+        "reached_projection_boundary": true,
+        "projection_before": {
+          "tensor": {
+            "name": "opt/conv2d_153/axis_unprotect",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,1,512",
+            "tensor_type": "NATIVE"
+          },
+          "encoding_annotations": [
+            "opt/conv2d_153/axis_unprotect encoding : bitwidth 16, min -17.370294570923, max 4.363715648651, scale 0.000331639749, offset -52377.000000000000"
+          ]
+        },
+        "projection_after": {
+          "tensor": {
+            "name": "opt/conv2d_153/axis_unprotect",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,1,512",
+            "tensor_type": "NATIVE"
+          },
+          "encoding_annotations": [
+            "opt/conv2d_153/axis_unprotect encoding : bitwidth 16, min -17.370294570923, max 4.363715648651, scale 0.000331639749, offset -52377.000000000000"
+          ]
+        }
+      },
+      {
+        "layer": 14,
+        "issues": [],
+        "concat": {
+          "id": 3081,
+          "name": "node_cat_178",
+          "type": "Concat",
+          "first_line": 16286,
+          "last_line": 16289,
+          "inputs": [
+            {
+              "name": "past_value_14_h0_in",
+              "datatype": "Float_16",
+              "dimensions": "1,1,4095,512",
+              "tensor_type": "APP_WRITE"
+            },
+            {
+              "name": "past_value_14_h0_out__float_before_q",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "cat_178",
+              "datatype": "Float_16",
+              "dimensions": "1,1,4096,512",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "parameters": [
+            "past_value_14_h0_in encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+            "cat_178 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+            "axis: 2",
+            "packageName: qti.aisw"
+          ]
+        },
+        "matmuls": [
+          {
+            "id": 3114,
+            "name": "opt/node_matmul_232/head_0",
+            "type": "MatMul",
+            "first_line": 16418,
+            "last_line": 16422,
+            "inputs": [
+              {
+                "name": "val_6089_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_232/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_232/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 3115,
+            "name": "opt/node_matmul_233/head_0",
+            "type": "MatMul",
+            "first_line": 16423,
+            "last_line": 16427,
+            "inputs": [
+              {
+                "name": "val_6090_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_233/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_233/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 3116,
+            "name": "opt/node_matmul_234/head_0",
+            "type": "MatMul",
+            "first_line": 16428,
+            "last_line": 16432,
+            "inputs": [
+              {
+                "name": "val_6091_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_234/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_234/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 3117,
+            "name": "opt/node_matmul_235/head_0",
+            "type": "MatMul",
+            "first_line": 16433,
+            "last_line": 16437,
+            "inputs": [
+              {
+                "name": "val_6092_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_235/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_235/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 3118,
+            "name": "opt/node_matmul_236/head_0",
+            "type": "MatMul",
+            "first_line": 16438,
+            "last_line": 16442,
+            "inputs": [
+              {
+                "name": "val_6093_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_236/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_236/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 3119,
+            "name": "opt/node_matmul_237/head_0",
+            "type": "MatMul",
+            "first_line": 16443,
+            "last_line": 16447,
+            "inputs": [
+              {
+                "name": "val_6094_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_237/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_237/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 3120,
+            "name": "opt/node_matmul_238/head_0",
+            "type": "MatMul",
+            "first_line": 16448,
+            "last_line": 16452,
+            "inputs": [
+              {
+                "name": "val_6095_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_238/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_238/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 3121,
+            "name": "opt/node_matmul_239/head_0",
+            "type": "MatMul",
+            "first_line": 16453,
+            "last_line": 16457,
+            "inputs": [
+              {
+                "name": "val_6096_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_239/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_239/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 4048,
+            "name": "opt/node_matmul_312/head_0",
+            "type": "MatMul",
+            "first_line": 21387,
+            "last_line": 21391,
+            "inputs": [
+              {
+                "name": "val_7904_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_312/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_312/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 4049,
+            "name": "opt/node_matmul_313/head_0",
+            "type": "MatMul",
+            "first_line": 21392,
+            "last_line": 21396,
+            "inputs": [
+              {
+                "name": "val_7905_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_313/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_313/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 4050,
+            "name": "opt/node_matmul_314/head_0",
+            "type": "MatMul",
+            "first_line": 21397,
+            "last_line": 21401,
+            "inputs": [
+              {
+                "name": "val_7906_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_314/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_314/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 4051,
+            "name": "opt/node_matmul_315/head_0",
+            "type": "MatMul",
+            "first_line": 21402,
+            "last_line": 21406,
+            "inputs": [
+              {
+                "name": "val_7907_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_315/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_315/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 4052,
+            "name": "opt/node_matmul_316/head_0",
+            "type": "MatMul",
+            "first_line": 21407,
+            "last_line": 21411,
+            "inputs": [
+              {
+                "name": "val_7908_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_316/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_316/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 4053,
+            "name": "opt/node_matmul_317/head_0",
+            "type": "MatMul",
+            "first_line": 21412,
+            "last_line": 21416,
+            "inputs": [
+              {
+                "name": "val_7909_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_317/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_317/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 4054,
+            "name": "opt/node_matmul_318/head_0",
+            "type": "MatMul",
+            "first_line": 21417,
+            "last_line": 21421,
+            "inputs": [
+              {
+                "name": "val_7910_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_318/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_318/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 4055,
+            "name": "opt/node_matmul_319/head_0",
+            "type": "MatMul",
+            "first_line": 21422,
+            "last_line": 21426,
+            "inputs": [
+              {
+                "name": "val_7911_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_319/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_319/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 4982,
+            "name": "opt/node_matmul_392/head_0",
+            "type": "MatMul",
+            "first_line": 26356,
+            "last_line": 26360,
+            "inputs": [
+              {
+                "name": "val_9719_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_392/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_392/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 4983,
+            "name": "opt/node_matmul_393/head_0",
+            "type": "MatMul",
+            "first_line": 26361,
+            "last_line": 26365,
+            "inputs": [
+              {
+                "name": "val_9720_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_393/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_393/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 4984,
+            "name": "opt/node_matmul_394/head_0",
+            "type": "MatMul",
+            "first_line": 26366,
+            "last_line": 26370,
+            "inputs": [
+              {
+                "name": "val_9721_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_394/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_394/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 4985,
+            "name": "opt/node_matmul_395/head_0",
+            "type": "MatMul",
+            "first_line": 26371,
+            "last_line": 26375,
+            "inputs": [
+              {
+                "name": "val_9722_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_395/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_395/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 4986,
+            "name": "opt/node_matmul_396/head_0",
+            "type": "MatMul",
+            "first_line": 26376,
+            "last_line": 26380,
+            "inputs": [
+              {
+                "name": "val_9723_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_396/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_396/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 4987,
+            "name": "opt/node_matmul_397/head_0",
+            "type": "MatMul",
+            "first_line": 26381,
+            "last_line": 26385,
+            "inputs": [
+              {
+                "name": "val_9724_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_397/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_397/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 4988,
+            "name": "opt/node_matmul_398/head_0",
+            "type": "MatMul",
+            "first_line": 26386,
+            "last_line": 26390,
+            "inputs": [
+              {
+                "name": "val_9725_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_398/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_398/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 4989,
+            "name": "opt/node_matmul_399/head_0",
+            "type": "MatMul",
+            "first_line": 26391,
+            "last_line": 26395,
+            "inputs": [
+              {
+                "name": "val_9726_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_399/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_399/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 5916,
+            "name": "opt/node_matmul_472/head_0",
+            "type": "MatMul",
+            "first_line": 31325,
+            "last_line": 31329,
+            "inputs": [
+              {
+                "name": "val_11534_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_472/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_472/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 5917,
+            "name": "opt/node_matmul_473/head_0",
+            "type": "MatMul",
+            "first_line": 31330,
+            "last_line": 31334,
+            "inputs": [
+              {
+                "name": "val_11535_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_473/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_473/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 5918,
+            "name": "opt/node_matmul_474/head_0",
+            "type": "MatMul",
+            "first_line": 31335,
+            "last_line": 31339,
+            "inputs": [
+              {
+                "name": "val_11536_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_474/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_474/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 5919,
+            "name": "opt/node_matmul_475/head_0",
+            "type": "MatMul",
+            "first_line": 31340,
+            "last_line": 31344,
+            "inputs": [
+              {
+                "name": "val_11537_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_475/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_475/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 5920,
+            "name": "opt/node_matmul_476/head_0",
+            "type": "MatMul",
+            "first_line": 31345,
+            "last_line": 31349,
+            "inputs": [
+              {
+                "name": "val_11538_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_476/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_476/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 5921,
+            "name": "opt/node_matmul_477/head_0",
+            "type": "MatMul",
+            "first_line": 31350,
+            "last_line": 31354,
+            "inputs": [
+              {
+                "name": "val_11539_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_477/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_477/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 5922,
+            "name": "opt/node_matmul_478/head_0",
+            "type": "MatMul",
+            "first_line": 31355,
+            "last_line": 31359,
+            "inputs": [
+              {
+                "name": "val_11540_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_478/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_478/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 5923,
+            "name": "opt/node_matmul_479/head_0",
+            "type": "MatMul",
+            "first_line": 31360,
+            "last_line": 31364,
+            "inputs": [
+              {
+                "name": "val_11541_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_479/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_479/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 6850,
+            "name": "opt/node_matmul_552/head_0",
+            "type": "MatMul",
+            "first_line": 36294,
+            "last_line": 36298,
+            "inputs": [
+              {
+                "name": "val_13349_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_552/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_552/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 6851,
+            "name": "opt/node_matmul_553/head_0",
+            "type": "MatMul",
+            "first_line": 36299,
+            "last_line": 36303,
+            "inputs": [
+              {
+                "name": "val_13350_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_553/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_553/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 6852,
+            "name": "opt/node_matmul_554/head_0",
+            "type": "MatMul",
+            "first_line": 36304,
+            "last_line": 36308,
+            "inputs": [
+              {
+                "name": "val_13351_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_554/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_554/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 6853,
+            "name": "opt/node_matmul_555/head_0",
+            "type": "MatMul",
+            "first_line": 36309,
+            "last_line": 36313,
+            "inputs": [
+              {
+                "name": "val_13352_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_555/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_555/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 6854,
+            "name": "opt/node_matmul_556/head_0",
+            "type": "MatMul",
+            "first_line": 36314,
+            "last_line": 36318,
+            "inputs": [
+              {
+                "name": "val_13353_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_556/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_556/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 6855,
+            "name": "opt/node_matmul_557/head_0",
+            "type": "MatMul",
+            "first_line": 36319,
+            "last_line": 36323,
+            "inputs": [
+              {
+                "name": "val_13354_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_557/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_557/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 6856,
+            "name": "opt/node_matmul_558/head_0",
+            "type": "MatMul",
+            "first_line": 36324,
+            "last_line": 36328,
+            "inputs": [
+              {
+                "name": "val_13355_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_558/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_558/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          },
+          {
+            "id": 6857,
+            "name": "opt/node_matmul_559/head_0",
+            "type": "MatMul",
+            "first_line": 36329,
+            "last_line": 36333,
+            "inputs": [
+              {
+                "name": "val_13356_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,4096",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "cat_178",
+                "datatype": "Float_16",
+                "dimensions": "1,1,4096,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/matmul_559/head0.2",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "opt/matmul_559/head0.2 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw",
+              "transpose_in0: False",
+              "transpose_in1: False",
+              "MACs per inference: 2M (1.78e-06%)"
+            ]
+          }
+        ],
+        "export_path": [
+          {
+            "id": 6920,
+            "name": "past_value_14_h0_out__cache_output_fork",
+            "type": "Cast",
+            "first_line": 36668,
+            "last_line": 36669,
+            "inputs": [
+              {
+                "name": "past_value_14_h0_out__float_before_q",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "past_value_14_h0_out",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "APP_READ"
+              }
+            ],
+            "parameters": [
+              "past_value_14_h0_out encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "packageName: qti.aisw"
+            ]
+          },
+          {
+            "id": 2997,
+            "name": "node_rsqrt_149",
+            "type": "Eltwise_Binary",
+            "first_line": 15888,
+            "last_line": 15891,
+            "inputs": [
+              {
+                "name": "opt/conv2d_233/axis_unprotect_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "val_5854",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,1",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "past_value_14_h0_out__float_before_q",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "past_value_14_h0_out__float_before_q encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+              "operation: 2",
+              "packageName: qti.aisw",
+              "MACs per inference: 512 (4.35e-10%)"
+            ]
+          },
+          {
+            "id": 2996,
+            "name": "node_Sqrt_5854",
+            "type": "Eltwise_Unary",
+            "first_line": 15886,
+            "last_line": 15887,
+            "inputs": [
+              {
+                "name": "add_13072",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,1",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "val_5854",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,1",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "operation: 15",
+              "packageName: qti.aisw"
+            ]
+          },
+          {
+            "id": 2995,
+            "name": "node_add_13072",
+            "type": "Eltwise_Binary",
+            "first_line": 15883,
+            "last_line": 15885,
+            "inputs": [
+              {
+                "name": "mean_221",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,1",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "val_54",
+                "datatype": "Float_16",
+                "dimensions": "1",
+                "tensor_type": "STATIC"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "add_13072",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,1",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "operation: 0",
+              "packageName: qti.aisw",
+              "MACs per inference: 1 (8.5e-13%)"
+            ]
+          },
+          {
+            "id": 2994,
+            "name": "node_mean_221",
+            "type": "Reduce",
+            "first_line": 15879,
+            "last_line": 15882,
+            "inputs": [
+              {
+                "name": "pow_294",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "mean_221",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,1",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "axes: [3]",
+              "keep_dims: True",
+              "packageName: qti.aisw",
+              "reduce_type: ReduceMean"
+            ]
+          },
+          {
+            "id": 2993,
+            "name": "node_pow_294",
+            "type": "Eltwise_Binary",
+            "first_line": 15876,
+            "last_line": 15878,
+            "inputs": [
+              {
+                "name": "opt/conv2d_233/axis_unprotect_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              },
+              {
+                "name": "opt/conv2d_233/axis_unprotect_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "pow_294",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "operation: 13",
+              "packageName: qti.aisw",
+              "MACs per inference: 512 (4.35e-10%)"
+            ]
+          },
+          {
+            "id": 2992,
+            "name": "opt/conv2d_233/axis_unprotect_converted_QNN_DATATYPE_FLOAT_16",
+            "type": "Convert",
+            "first_line": 15874,
+            "last_line": 15875,
+            "inputs": [
+              {
+                "name": "opt/conv2d_233/axis_unprotect",
+                "datatype": "uFxp_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "outputs": [
+              {
+                "name": "opt/conv2d_233/axis_unprotect_converted_QNN_DATATYPE_FLOAT_16",
+                "datatype": "Float_16",
+                "dimensions": "1,1,1,512",
+                "tensor_type": "NATIVE"
+              }
+            ],
+            "parameters": [
+              "dynamic_input_data: False",
+              "dynamic_output_data: False"
+            ]
+          }
+        ],
+        "reached_projection_boundary": true,
+        "projection_before": {
+          "tensor": {
+            "name": "opt/conv2d_233/axis_unprotect",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,1,512",
+            "tensor_type": "NATIVE"
+          },
+          "encoding_annotations": [
+            "opt/conv2d_233/axis_unprotect encoding : bitwidth 16, min -107.020919799805, max 135.782363891602, scale 0.003704940667, offset -28886.000000000000"
+          ]
+        },
+        "projection_after": {
+          "tensor": {
+            "name": "opt/conv2d_233/axis_unprotect",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,1,512",
+            "tensor_type": "NATIVE"
+          },
+          "encoding_annotations": [
+            "opt/conv2d_233/axis_unprotect encoding : bitwidth 16, min -107.020919799805, max 135.782363891602, scale 0.003704940667, offset -28886.000000000000"
+          ]
+        }
+      }
+    ],
+    "selected_float_encoding_annotation_changes": [
+      {
+        "role": "input",
+        "name": "past_value_9_h0_in",
+        "before": "No encoding info for this tensor",
+        "after": "bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+        "reason": "selected Float16 tensor, inactive quantization annotation"
+      },
+      {
+        "role": "input",
+        "name": "past_value_4_h0_in",
+        "before": "No encoding info for this tensor",
+        "after": "bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+        "reason": "selected Float16 tensor, inactive quantization annotation"
+      },
+      {
+        "role": "input",
+        "name": "past_value_14_h0_in",
+        "before": "No encoding info for this tensor",
+        "after": "bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+        "reason": "selected Float16 tensor, inactive quantization annotation"
+      },
+      {
+        "role": "output",
+        "name": "past_value_4_h0_out",
+        "before": "No encoding info for this tensor",
+        "after": "bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+        "reason": "selected Float16 tensor, inactive quantization annotation"
+      },
+      {
+        "role": "output",
+        "name": "past_value_9_h0_out",
+        "before": "No encoding info for this tensor",
+        "after": "bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+        "reason": "selected Float16 tensor, inactive quantization annotation"
+      },
+      {
+        "role": "output",
+        "name": "past_value_14_h0_out",
+        "before": "No encoding info for this tensor",
+        "after": "bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000000000000, offset 0.000000000000",
+        "reason": "selected Float16 tensor, inactive quantization annotation"
+      }
+    ],
+    "boundary": "post-V-projection normalization/cache/attention-read DLC island only; not compiled kernels or whole model FP16",
+    "physical_execution": false,
+    "numerical_equivalence_proven": false
+  },
+  "coupled_exit_gate": {
+    "passed": true,
+    "issues": [],
+    "head_group_count": 7,
+    "groups": [
+      {
+        "head_concat": {
+          "id": 1016,
+          "name": "node_cat_59",
+          "type": "Concat",
+          "first_line": 5356,
+          "last_line": 5363,
+          "inputs": [
+            {
+              "name": "opt/matmul_72/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_73/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_74/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_75/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_76/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_77/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_78/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_79/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "opt/cat_59/axis_unprotect_0231",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "parameters": [
+            "opt/cat_59/axis_unprotect_0231 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000411172980, offset -18165.000000000000",
+            "axis: 3",
+            "packageName: qti.aisw"
+          ]
+        },
+        "exit_convert": {
+          "id": 1017,
+          "name": "opt/cat_59/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+          "type": "Convert",
+          "first_line": 5364,
+          "last_line": 5366,
+          "inputs": [
+            {
+              "name": "opt/cat_59/axis_unprotect_0231",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "opt/cat_59/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+              "datatype": "uFxp_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "parameters": [
+            "opt/cat_59/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16 encoding : bitwidth 16, min -7.468956947327, max 19.477264404297, scale 0.000411172980, offset -18165.000000000000",
+            "dynamic_input_data: False",
+            "dynamic_output_data: False"
+          ]
+        },
+        "unchanged_projection": {
+          "id": 1018,
+          "name": "node_Conv_4392",
+          "type": "Conv2d",
+          "first_line": 5367,
+          "last_line": 5381,
+          "inputs": [
+            {
+              "name": "opt/cat_59/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+              "datatype": "uFxp_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "model.model.layers.4.self_attn.o_proj_conv.weight",
+              "datatype": "sFxp_8",
+              "dimensions": "1,1,4096,1536",
+              "tensor_type": "STATIC"
+            },
+            {
+              "name": "node_Conv_4392_bias",
+              "datatype": "sFxp_32",
+              "dimensions": "1536",
+              "tensor_type": "STATIC"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "opt/conv2d_74/axis_unprotect",
+              "datatype": "uFxp_16",
+              "dimensions": "1,1,1,1536",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "parameters": [
+            "model.model.layers.4.self_attn.o_proj_conv.weight encoding for channel_0: bitwidth 4, min -0.053944416344, max 0.047201365232, scale 0.006743052043, offset 0.000000000000",
+            "axis-quant: axis: 3, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+            "node_Conv_4392_bias encoding for channel_0: bitwidth 32, min -5954.028808593750, max 5954.028808593750, scale 0.000002772561, offset 0.000000000000",
+            "axis-quant: axis: 0, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+            "opt/conv2d_74/axis_unprotect encoding : bitwidth 16, min -49.488903045654, max 47.492595672607, scale 0.001479842816, offset -33442.000000000000",
+            "bias_op_name: ",
+            "dilation: [1, 1]",
+            "group: 1",
+            "packageName: qti.aisw",
+            "pad_amount: [[0, 0], [0, 0]]",
+            "padding_size_strategy: 5",
+            "reuse_sparse_indices: False",
+            "stride: [1, 1]",
+            "param count: 6M (0.276%)",
+            "MACs per inference: 9663M (0.00821%)"
+          ]
+        },
+        "before_input_encoding": [
+          "bitwidth 16, min -7.468956947327, max 19.477264404297, scale 0.000411172980, offset -18165.000000000000"
+        ],
+        "after_input_encoding": [
+          "bitwidth 16, min -7.468956947327, max 19.477264404297, scale 0.000411172980, offset -18165.000000000000"
+        ]
+      },
+      {
+        "head_concat": {
+          "id": 2069,
+          "name": "node_cat_119",
+          "type": "Concat",
+          "first_line": 10907,
+          "last_line": 10914,
+          "inputs": [
+            {
+              "name": "opt/matmul_152/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_153/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_154/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_155/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_156/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_157/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_158/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_159/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "opt/cat_119/axis_unprotect_0231",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "parameters": [
+            "opt/cat_119/axis_unprotect_0231 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000481137744, offset -40756.000000000000",
+            "axis: 3",
+            "packageName: qti.aisw"
+          ]
+        },
+        "exit_convert": {
+          "id": 2070,
+          "name": "opt/cat_119/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+          "type": "Convert",
+          "first_line": 10915,
+          "last_line": 10917,
+          "inputs": [
+            {
+              "name": "opt/cat_119/axis_unprotect_0231",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "opt/cat_119/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+              "datatype": "uFxp_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "parameters": [
+            "opt/cat_119/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16 encoding : bitwidth 16, min -19.609249114990, max 11.922112464905, scale 0.000481137744, offset -40756.000000000000",
+            "dynamic_input_data: False",
+            "dynamic_output_data: False"
+          ]
+        },
+        "unchanged_projection": {
+          "id": 2071,
+          "name": "node_Conv_4472",
+          "type": "Conv2d",
+          "first_line": 10918,
+          "last_line": 10932,
+          "inputs": [
+            {
+              "name": "opt/cat_119/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+              "datatype": "uFxp_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "model.model.layers.9.self_attn.o_proj_conv.weight",
+              "datatype": "sFxp_8",
+              "dimensions": "1,1,4096,1536",
+              "tensor_type": "STATIC"
+            },
+            {
+              "name": "node_Conv_4472_bias",
+              "datatype": "sFxp_32",
+              "dimensions": "1536",
+              "tensor_type": "STATIC"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "opt/conv2d_154/axis_unprotect",
+              "datatype": "uFxp_16",
+              "dimensions": "1,1,1,1536",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "parameters": [
+            "model.model.layers.9.self_attn.o_proj_conv.weight encoding for channel_0: bitwidth 4, min -0.054782219231, max 0.047934442759, scale 0.006847777404, offset 0.000000000000",
+            "axis-quant: axis: 3, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+            "node_Conv_4472_bias encoding for channel_0: bitwidth 32, min -7075.366210937500, max 7075.366210937500, scale 0.000003294724, offset 0.000000000000",
+            "axis-quant: axis: 0, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+            "opt/conv2d_154/axis_unprotect encoding : bitwidth 16, min -30.907617568970, max 19.816881179810, scale 0.000774006243, offset -39932.000000000000",
+            "bias_op_name: ",
+            "dilation: [1, 1]",
+            "group: 1",
+            "packageName: qti.aisw",
+            "pad_amount: [[0, 0], [0, 0]]",
+            "padding_size_strategy: 5",
+            "reuse_sparse_indices: False",
+            "stride: [1, 1]",
+            "param count: 6M (0.276%)",
+            "MACs per inference: 9663M (0.00821%)"
+          ]
+        },
+        "before_input_encoding": [
+          "bitwidth 16, min -19.609249114990, max 11.922112464905, scale 0.000481137744, offset -40756.000000000000"
+        ],
+        "after_input_encoding": [
+          "bitwidth 16, min -19.609249114990, max 11.922112464905, scale 0.000481137744, offset -40756.000000000000"
+        ]
+      },
+      {
+        "head_concat": {
+          "id": 3122,
+          "name": "node_cat_179",
+          "type": "Concat",
+          "first_line": 16458,
+          "last_line": 16465,
+          "inputs": [
+            {
+              "name": "opt/matmul_232/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_233/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_234/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_235/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_236/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_237/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_238/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_239/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "opt/cat_179/axis_unprotect_0231",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "parameters": [
+            "opt/cat_179/axis_unprotect_0231 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000474042812, offset -35330.000000000000",
+            "axis: 3",
+            "packageName: qti.aisw"
+          ]
+        },
+        "exit_convert": {
+          "id": 3123,
+          "name": "opt/cat_179/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+          "type": "Convert",
+          "first_line": 16466,
+          "last_line": 16468,
+          "inputs": [
+            {
+              "name": "opt/cat_179/axis_unprotect_0231",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "opt/cat_179/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+              "datatype": "uFxp_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "parameters": [
+            "opt/cat_179/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16 encoding : bitwidth 16, min -16.747932434082, max 14.318463325500, scale 0.000474042812, offset -35330.000000000000",
+            "dynamic_input_data: False",
+            "dynamic_output_data: False"
+          ]
+        },
+        "unchanged_projection": {
+          "id": 3124,
+          "name": "node_Conv_4552",
+          "type": "Conv2d",
+          "first_line": 16469,
+          "last_line": 16483,
+          "inputs": [
+            {
+              "name": "opt/cat_179/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+              "datatype": "uFxp_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "model.model.layers.14.self_attn.o_proj_conv.weight",
+              "datatype": "sFxp_8",
+              "dimensions": "1,1,4096,1536",
+              "tensor_type": "STATIC"
+            },
+            {
+              "name": "node_Conv_4552_bias",
+              "datatype": "sFxp_32",
+              "dimensions": "1536",
+              "tensor_type": "STATIC"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "opt/conv2d_234/axis_unprotect",
+              "datatype": "uFxp_16",
+              "dimensions": "1,1,1,1536",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "parameters": [
+            "model.model.layers.14.self_attn.o_proj_conv.weight encoding for channel_0: bitwidth 4, min -0.044230811298, max 0.038701958954, scale 0.005528851412, offset 0.000000000000",
+            "axis-quant: axis: 3, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+            "node_Conv_4552_bias encoding for channel_0: bitwidth 32, min -5628.366210937500, max 5628.366210937500, scale 0.000002620912, offset 0.000000000000",
+            "axis-quant: axis: 0, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+            "opt/conv2d_234/axis_unprotect encoding : bitwidth 16, min -7.141839504242, max 17.631380081177, scale 0.000378015102, offset -18893.000000000000",
+            "bias_op_name: ",
+            "dilation: [1, 1]",
+            "group: 1",
+            "packageName: qti.aisw",
+            "pad_amount: [[0, 0], [0, 0]]",
+            "padding_size_strategy: 5",
+            "reuse_sparse_indices: False",
+            "stride: [1, 1]",
+            "param count: 6M (0.276%)",
+            "MACs per inference: 9663M (0.00821%)"
+          ]
+        },
+        "before_input_encoding": [
+          "bitwidth 16, min -16.747932434082, max 14.318463325500, scale 0.000474042812, offset -35330.000000000000"
+        ],
+        "after_input_encoding": [
+          "bitwidth 16, min -16.747932434082, max 14.318463325500, scale 0.000474042812, offset -35330.000000000000"
+        ]
+      },
+      {
+        "head_concat": {
+          "id": 4056,
+          "name": "node_cat_224",
+          "type": "Concat",
+          "first_line": 21427,
+          "last_line": 21434,
+          "inputs": [
+            {
+              "name": "opt/matmul_312/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_313/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_314/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_315/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_316/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_317/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_318/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_319/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "opt/cat_224/axis_unprotect_0231",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "parameters": [
+            "opt/cat_224/axis_unprotect_0231 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000527936558, offset -31682.000000000000",
+            "axis: 3",
+            "packageName: qti.aisw"
+          ]
+        },
+        "exit_convert": {
+          "id": 4057,
+          "name": "opt/cat_224/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+          "type": "Convert",
+          "first_line": 21435,
+          "last_line": 21437,
+          "inputs": [
+            {
+              "name": "opt/cat_224/axis_unprotect_0231",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "opt/cat_224/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+              "datatype": "uFxp_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "parameters": [
+            "opt/cat_224/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16 encoding : bitwidth 16, min -16.726085662842, max 17.872236251831, scale 0.000527936558, offset -31682.000000000000",
+            "dynamic_input_data: False",
+            "dynamic_output_data: False"
+          ]
+        },
+        "unchanged_projection": {
+          "id": 4058,
+          "name": "node_Conv_4622",
+          "type": "Conv2d",
+          "first_line": 21438,
+          "last_line": 21452,
+          "inputs": [
+            {
+              "name": "opt/cat_224/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+              "datatype": "uFxp_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "model.model.layers.19.self_attn.o_proj_conv.weight",
+              "datatype": "sFxp_8",
+              "dimensions": "1,1,4096,1536",
+              "tensor_type": "STATIC"
+            },
+            {
+              "name": "node_Conv_4622_bias",
+              "datatype": "sFxp_32",
+              "dimensions": "1536",
+              "tensor_type": "STATIC"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "opt/conv2d_304/axis_unprotect",
+              "datatype": "uFxp_16",
+              "dimensions": "1,1,1,1536",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "parameters": [
+            "model.model.layers.19.self_attn.o_proj_conv.weight encoding for channel_0: bitwidth 4, min -0.043715409935, max 0.038250982761, scale 0.005464426242, offset 0.000000000000",
+            "axis-quant: axis: 3, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+            "node_Conv_4622_bias encoding for channel_0: bitwidth 32, min -6195.211914062500, max 6195.211914062500, scale 0.000002884870, offset 0.000000000000",
+            "axis-quant: axis: 0, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+            "opt/conv2d_304/axis_unprotect encoding : bitwidth 16, min -7.814083576202, max 18.091217041016, scale 0.000395289535, offset -19768.000000000000",
+            "bias_op_name: ",
+            "dilation: [1, 1]",
+            "group: 1",
+            "packageName: qti.aisw",
+            "pad_amount: [[0, 0], [0, 0]]",
+            "padding_size_strategy: 5",
+            "reuse_sparse_indices: False",
+            "stride: [1, 1]",
+            "param count: 6M (0.276%)",
+            "MACs per inference: 9663M (0.00821%)"
+          ]
+        },
+        "before_input_encoding": [
+          "bitwidth 16, min -16.726085662842, max 17.872236251831, scale 0.000527936558, offset -31682.000000000000"
+        ],
+        "after_input_encoding": [
+          "bitwidth 16, min -16.726085662842, max 17.872236251831, scale 0.000527936558, offset -31682.000000000000"
+        ]
+      },
+      {
+        "head_concat": {
+          "id": 4990,
+          "name": "node_cat_269",
+          "type": "Concat",
+          "first_line": 26396,
+          "last_line": 26403,
+          "inputs": [
+            {
+              "name": "opt/matmul_392/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_393/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_394/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_395/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_396/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_397/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_398/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_399/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "opt/cat_269/axis_unprotect_0231",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "parameters": [
+            "opt/cat_269/axis_unprotect_0231 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000543290575, offset -32025.000000000000",
+            "axis: 3",
+            "packageName: qti.aisw"
+          ]
+        },
+        "exit_convert": {
+          "id": 4991,
+          "name": "opt/cat_269/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+          "type": "Convert",
+          "first_line": 26404,
+          "last_line": 26406,
+          "inputs": [
+            {
+              "name": "opt/cat_269/axis_unprotect_0231",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "opt/cat_269/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+              "datatype": "uFxp_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "parameters": [
+            "opt/cat_269/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16 encoding : bitwidth 16, min -17.398880004883, max 18.205667495728, scale 0.000543290575, offset -32025.000000000000",
+            "dynamic_input_data: False",
+            "dynamic_output_data: False"
+          ]
+        },
+        "unchanged_projection": {
+          "id": 4992,
+          "name": "node_Conv_4692",
+          "type": "Conv2d",
+          "first_line": 26407,
+          "last_line": 26421,
+          "inputs": [
+            {
+              "name": "opt/cat_269/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+              "datatype": "uFxp_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "model.model.layers.24.self_attn.o_proj_conv.weight",
+              "datatype": "sFxp_8",
+              "dimensions": "1,1,4096,1536",
+              "tensor_type": "STATIC"
+            },
+            {
+              "name": "node_Conv_4692_bias",
+              "datatype": "sFxp_32",
+              "dimensions": "1536",
+              "tensor_type": "STATIC"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "opt/conv2d_374/axis_unprotect",
+              "datatype": "uFxp_16",
+              "dimensions": "1,1,1,1536",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "parameters": [
+            "model.model.layers.24.self_attn.o_proj_conv.weight encoding for channel_0: bitwidth 4, min -0.040679521859, max 0.035594582558, scale 0.005084940232, offset 0.000000000000",
+            "axis-quant: axis: 3, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+            "node_Conv_4692_bias encoding for channel_0: bitwidth 32, min -5932.638671875000, max 5932.638671875000, scale 0.000002762600, offset 0.000000000000",
+            "axis-quant: axis: 0, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+            "opt/conv2d_374/axis_unprotect encoding : bitwidth 16, min -21.887882232666, max 7.937508583069, scale 0.000455106288, offset -48094.000000000000",
+            "bias_op_name: ",
+            "dilation: [1, 1]",
+            "group: 1",
+            "packageName: qti.aisw",
+            "pad_amount: [[0, 0], [0, 0]]",
+            "padding_size_strategy: 5",
+            "reuse_sparse_indices: False",
+            "stride: [1, 1]",
+            "param count: 6M (0.276%)",
+            "MACs per inference: 9663M (0.00821%)"
+          ]
+        },
+        "before_input_encoding": [
+          "bitwidth 16, min -17.398880004883, max 18.205667495728, scale 0.000543290575, offset -32025.000000000000"
+        ],
+        "after_input_encoding": [
+          "bitwidth 16, min -17.398880004883, max 18.205667495728, scale 0.000543290575, offset -32025.000000000000"
+        ]
+      },
+      {
+        "head_concat": {
+          "id": 5924,
+          "name": "node_cat_314",
+          "type": "Concat",
+          "first_line": 31365,
+          "last_line": 31372,
+          "inputs": [
+            {
+              "name": "opt/matmul_472/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_473/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_474/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_475/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_476/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_477/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_478/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_479/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "opt/cat_314/axis_unprotect_0231",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "parameters": [
+            "opt/cat_314/axis_unprotect_0231 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000417497125, offset -39209.000000000000",
+            "axis: 3",
+            "packageName: qti.aisw"
+          ]
+        },
+        "exit_convert": {
+          "id": 5925,
+          "name": "opt/cat_314/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+          "type": "Convert",
+          "first_line": 31373,
+          "last_line": 31375,
+          "inputs": [
+            {
+              "name": "opt/cat_314/axis_unprotect_0231",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "opt/cat_314/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+              "datatype": "uFxp_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "parameters": [
+            "opt/cat_314/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16 encoding : bitwidth 16, min -16.369644165039, max 10.991029739380, scale 0.000417497125, offset -39209.000000000000",
+            "dynamic_input_data: False",
+            "dynamic_output_data: False"
+          ]
+        },
+        "unchanged_projection": {
+          "id": 5926,
+          "name": "node_Conv_4762",
+          "type": "Conv2d",
+          "first_line": 31376,
+          "last_line": 31390,
+          "inputs": [
+            {
+              "name": "opt/cat_314/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+              "datatype": "uFxp_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "model.model.layers.29.self_attn.o_proj_conv.weight",
+              "datatype": "sFxp_8",
+              "dimensions": "1,1,4096,1536",
+              "tensor_type": "STATIC"
+            },
+            {
+              "name": "node_Conv_4762_bias",
+              "datatype": "sFxp_32",
+              "dimensions": "1536",
+              "tensor_type": "STATIC"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "opt/conv2d_444/axis_unprotect",
+              "datatype": "uFxp_16",
+              "dimensions": "1,1,1,1536",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "parameters": [
+            "model.model.layers.29.self_attn.o_proj_conv.weight encoding for channel_0: bitwidth 4, min -0.042888052762, max 0.037527047098, scale 0.005361006595, offset 0.000000000000",
+            "axis-quant: axis: 3, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+            "node_Conv_4762_bias encoding for channel_0: bitwidth 32, min -4806.508300781250, max 4806.508300781250, scale 0.000002238205, offset 0.000000000000",
+            "axis-quant: axis: 0, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+            "opt/conv2d_444/axis_unprotect encoding : bitwidth 16, min -17.925649642944, max 31.208881378174, scale 0.000749744882, offset -23909.000000000000",
+            "bias_op_name: ",
+            "dilation: [1, 1]",
+            "group: 1",
+            "packageName: qti.aisw",
+            "pad_amount: [[0, 0], [0, 0]]",
+            "padding_size_strategy: 5",
+            "reuse_sparse_indices: False",
+            "stride: [1, 1]",
+            "param count: 6M (0.276%)",
+            "MACs per inference: 9663M (0.00821%)"
+          ]
+        },
+        "before_input_encoding": [
+          "bitwidth 16, min -16.369644165039, max 10.991029739380, scale 0.000417497125, offset -39209.000000000000"
+        ],
+        "after_input_encoding": [
+          "bitwidth 16, min -16.369644165039, max 10.991029739380, scale 0.000417497125, offset -39209.000000000000"
+        ]
+      },
+      {
+        "head_concat": {
+          "id": 6858,
+          "name": "node_cat_359",
+          "type": "Concat",
+          "first_line": 36334,
+          "last_line": 36341,
+          "inputs": [
+            {
+              "name": "opt/matmul_552/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_553/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_554/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_555/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_556/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_557/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_558/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "opt/matmul_559/head0.2",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,512",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "opt/cat_359/axis_unprotect_0231",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "parameters": [
+            "opt/cat_359/axis_unprotect_0231 encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000500516733, offset -31392.000000000000",
+            "axis: 3",
+            "packageName: qti.aisw"
+          ]
+        },
+        "exit_convert": {
+          "id": 6859,
+          "name": "opt/cat_359/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+          "type": "Convert",
+          "first_line": 36342,
+          "last_line": 36344,
+          "inputs": [
+            {
+              "name": "opt/cat_359/axis_unprotect_0231",
+              "datatype": "Float_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "opt/cat_359/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+              "datatype": "uFxp_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "parameters": [
+            "opt/cat_359/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16 encoding : bitwidth 16, min -15.712221145630, max 17.089143753052, scale 0.000500516733, offset -31392.000000000000",
+            "dynamic_input_data: False",
+            "dynamic_output_data: False"
+          ]
+        },
+        "unchanged_projection": {
+          "id": 6860,
+          "name": "node_Conv_4832",
+          "type": "Conv2d",
+          "first_line": 36345,
+          "last_line": 36359,
+          "inputs": [
+            {
+              "name": "opt/cat_359/axis_unprotect_0231_converted_QNN_DATATYPE_UFIXED_POINT_16",
+              "datatype": "uFxp_16",
+              "dimensions": "1,1,1,4096",
+              "tensor_type": "NATIVE"
+            },
+            {
+              "name": "model.model.layers.34.self_attn.o_proj_conv.weight",
+              "datatype": "sFxp_8",
+              "dimensions": "1,1,4096,1536",
+              "tensor_type": "STATIC"
+            },
+            {
+              "name": "node_Conv_4832_bias",
+              "datatype": "sFxp_32",
+              "dimensions": "1536",
+              "tensor_type": "STATIC"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "opt/conv2d_514/axis_unprotect",
+              "datatype": "uFxp_16",
+              "dimensions": "1,1,1,1536",
+              "tensor_type": "NATIVE"
+            }
+          ],
+          "parameters": [
+            "model.model.layers.34.self_attn.o_proj_conv.weight encoding for channel_0: bitwidth 4, min -0.045655913651, max 0.039948925376, scale 0.005706989206, offset 0.000000000000",
+            "axis-quant: axis: 3, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+            "node_Conv_4832_bias encoding for channel_0: bitwidth 32, min -6134.166015625000, max 6134.166015625000, scale 0.000002856444, offset 0.000000000000",
+            "axis-quant: axis: 0, num_elements: 1536 (above encoding is only for the first (channel_0) of 1536 channels)",
+            "opt/conv2d_514/axis_unprotect encoding : bitwidth 16, min -10.415105819702, max 7.075962543488, scale 0.000266896590, offset -39023.000000000000",
+            "bias_op_name: ",
+            "dilation: [1, 1]",
+            "group: 1",
+            "packageName: qti.aisw",
+            "pad_amount: [[0, 0], [0, 0]]",
+            "padding_size_strategy: 5",
+            "reuse_sparse_indices: False",
+            "stride: [1, 1]",
+            "param count: 6M (0.276%)",
+            "MACs per inference: 9663M (0.00821%)"
+          ]
+        },
+        "before_input_encoding": [
+          "bitwidth 16, min -15.712221145630, max 17.089143753052, scale 0.000500516733, offset -31392.000000000000"
+        ],
+        "after_input_encoding": [
+          "bitwidth 16, min -15.712221145630, max 17.089143753052, scale 0.000500516733, offset -31392.000000000000"
+        ]
+      }
+    ],
+    "scope": "FP16 head Concat is a required coupled consumer; original fixed-point grid resumes before unchanged output-projection signatures",
+    "numerical_equivalence_proven": false,
+    "physical_execution": false
+  },
+  "operator_count": 6935,
+  "previous_operator_count": 6875,
+  "source_identities": {
+    "validate_value_precision_full.py": "8cd51f7786be8966293cd4722f7494a9841bec46fc3cd1c47c698cea8e2b3414",
+    "value_precision_path.py": "1474d4eda4c7633d5fc125c124249c14e846d99ff65eecb8c6de20acb64376e0",
+    "value_precision_exits.py": "25bea07f9925e6afe977b087025aedb7a68d6b845b9d84be491739fb2eaa097d"
+  },
+  "inspection_exit_status": 0,
+  "inspection_exit_status_limitation": null,
+  "scope": "post-quantized-V-projection normalization/cache/FP16 value MatMul, with required FP16 head concatenation and return to original quantized output-projection input grids",
+  "whole_model_fp16": false,
+  "compiled_full_context_proven": false,
+  "numerical_equivalence_proven": false,
+  "inference": false,
+  "phone_access": false
+}

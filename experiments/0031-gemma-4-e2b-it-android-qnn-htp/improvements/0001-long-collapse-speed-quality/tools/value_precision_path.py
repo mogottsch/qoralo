@@ -139,10 +139,35 @@ def full_dlc_gate(graph: dict, previous: dict, plan: list[dict]) -> dict:
     ops = graph['operators']
     producers = {t['name']: op for op in ops for t in op['outputs']}
     old_ops = {op['name']: op for op in previous['operators']}
+    old_producers = {t['name']: op for op in previous['operators'] for t in op['outputs']}
     by_name = {op['name']: op for op in ops}
-    issues, observations = [], []
-    if graph['io'] != previous['io']:
-        issues.append('full input/output signature changed from prior FP16-IO candidate')
+
+    def boundary_signature(table, name):
+        producer = table.get(name)
+        if producer is None:
+            return None
+        tensor = next(t for t in producer['outputs'] if t['name'] == name)
+        encodings = [p for p in producer.get('parameters', []) if p.startswith(name + ' encoding : ')]
+        return {'tensor': tensor, 'encoding_annotations': encodings}
+    issues, observations, float_annotations = [], [], []
+    selected = {layer[k] for layer in plan for k in ('cache_input', 'cache_output') if k in layer}
+    for role in ('input', 'output'):
+        before, after = previous['io'].get(role, {}), graph['io'].get(role, {})
+        if set(before) != set(after):
+            issues.append(role + ' interface names changed')
+        for name in before.keys() & after.keys():
+            a, b = before[name], after[name]
+            if name in selected and a['datatype'] == b['datatype'] == 'Float_16':
+                # Explicit FLOAT encodings print zero placeholders where the old
+                # FP16 IO had no annotation. These are not active integer grids.
+                if a.get('encoding') != b.get('encoding'):
+                    float_annotations.append({'role': role, 'name': name,
+                                              'before': a.get('encoding'), 'after': b.get('encoding'),
+                                              'reason': 'selected Float16 tensor, inactive quantization annotation'})
+                a = {k: v for k, v in a.items() if k != 'encoding'}
+                b = {k: v for k, v in b.items() if k != 'encoding'}
+            if a != b:
+                issues.append(role + ' active interface signature changed: ' + name)
     for layer in plan:
         number = layer['layer']
         local = []
@@ -167,12 +192,20 @@ def full_dlc_gate(graph: dict, previous: dict, plan: list[dict]) -> dict:
             if [t['dimensions'] for t in op['inputs'] + op['outputs']] != [t['dimensions'] for t in old['inputs'] + old['outputs']]:
                 local.append('MatMul dimensions changed: ' + name)
             old_probability = old['inputs'][0]
+            probability_before = boundary_signature(old_producers, old_probability['name'])
+            probability_after = boundary_signature(producers, old_probability['name'])
+            if probability_before is None or probability_after != probability_before:
+                local.append('upstream probability tensor signature changed or unresolved: ' + name)
             p_producer = producers.get(op['inputs'][0]['name'])
             if (p_producer is None or p_producer['type'] != 'Convert'
                     or len(p_producer['inputs']) != 1
                     or p_producer['inputs'][0]['name'] != old_probability['name']
                     or p_producer['inputs'][0]['datatype'] != old_probability['datatype']):
                 local.append('probability boundary not preserved as source quantized tensor plus Convert: ' + name)
+        projection_before = boundary_signature(old_producers, layer['v_projection_boundary'])
+        projection_after = boundary_signature(producers, layer['v_projection_boundary'])
+        if projection_before is None or projection_after != projection_before:
+            local.append('V-projection boundary signature changed or unresolved')
         pending, seen, export_path = [layer['cache_output']], set(), []
         reached_boundary = False
         while pending:
@@ -194,8 +227,10 @@ def full_dlc_gate(graph: dict, previous: dict, plan: list[dict]) -> dict:
         if not reached_boundary:
             local.append('export path did not reach declared V-projection boundary')
         observations.append({'layer': number, 'issues': local, 'concat': cat, 'matmuls': matmuls,
-                             'export_path': export_path, 'reached_projection_boundary': reached_boundary})
+                             'export_path': export_path, 'reached_projection_boundary': reached_boundary,
+                             'projection_before': projection_before, 'projection_after': projection_after})
         issues.extend(f'layer{number}: {problem}' for problem in local)
     return {'passed': not issues, 'issues': issues, 'layers': observations,
+            'selected_float_encoding_annotation_changes': float_annotations,
             'boundary': 'post-V-projection normalization/cache/attention-read DLC island only; not compiled kernels or whole model FP16',
             'physical_execution': False, 'numerical_equivalence_proven': False}

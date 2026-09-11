@@ -1,0 +1,6 @@
+{
+  "issue": "systemctl show on a garbage-collected transient unit yields not-found/inactive/default Result=success and ExecMainStatus=0",
+  "correction": "Do not treat those defaults as independent process exit evidence. Keep raw queries, successful script/native results, hashes and metadata gates unchanged; OS result nullable.",
+  "model_or_sdk_operations_repeated": false,
+  "raw_evidence_changed": false
+}

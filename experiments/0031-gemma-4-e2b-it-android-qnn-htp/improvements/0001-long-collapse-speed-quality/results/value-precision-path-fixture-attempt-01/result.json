@@ -21,9 +21,11 @@
       "swap_limit_bytes": 1073741824,
       "cpu_quota": "100%",
       "max_elapsed_seconds": 240,
-      "unit_result": "success",
+      "unit_result": null,
       "main_pid_after": 0,
-      "memory_limitation": "First authored fixture runner did not instrument RSS; transient unit peak unavailable after completion."
+      "memory_limitation": "First authored fixture runner did not instrument RSS; transient unit peak unavailable after completion.",
+      "unit_result_limitation": "Post-GC systemd Result/ExecMainStatus defaults are not authoritative exit evidence; retained script/native conversion, inspection and compilation results independently establish their completed operations.",
+      "main_pid_after_limitation": "Observed unit-query MainPID=0; does not replace the independently retained script/native operation evidence."
     },
     {
       "name": "ar128-candidate-01",
@@ -44,9 +46,11 @@
       "swap_limit_bytes": 1073741824,
       "cpu_quota": "100%",
       "max_elapsed_seconds": 240,
-      "unit_result": "success",
+      "unit_result": null,
       "main_pid_after": 0,
-      "memory_limitation": "First authored fixture runner did not instrument RSS; transient unit peak unavailable after completion."
+      "memory_limitation": "First authored fixture runner did not instrument RSS; transient unit peak unavailable after completion.",
+      "unit_result_limitation": "Post-GC systemd Result/ExecMainStatus defaults are not authoritative exit evidence; retained script/native conversion, inspection and compilation results independently establish their completed operations.",
+      "main_pid_after_limitation": "Observed unit-query MainPID=0; does not replace the independently retained script/native operation evidence."
     },
     {
       "name": "ar1-candidate-01",
@@ -67,9 +71,11 @@
       "swap_limit_bytes": 1073741824,
       "cpu_quota": "100%",
       "max_elapsed_seconds": 240,
-      "unit_result": "success",
+      "unit_result": null,
       "main_pid_after": 0,
-      "memory_limitation": "First authored fixture runner did not instrument RSS; transient unit peak unavailable after completion."
+      "memory_limitation": "First authored fixture runner did not instrument RSS; transient unit peak unavailable after completion.",
+      "unit_result_limitation": "Post-GC systemd Result/ExecMainStatus defaults are not authoritative exit evidence; retained script/native conversion, inspection and compilation results independently establish their completed operations.",
+      "main_pid_after_limitation": "Observed unit-query MainPID=0; does not replace the independently retained script/native operation evidence."
     },
     {
       "name": "derivative-ar128-control-01",
@@ -90,9 +96,11 @@
       "swap_limit_bytes": 1073741824,
       "cpu_quota": "100%",
       "max_elapsed_seconds": 240,
-      "unit_result": "success",
+      "unit_result": null,
       "main_pid_after": 0,
-      "memory_limitation": null
+      "memory_limitation": null,
+      "unit_result_limitation": "Post-GC systemd Result/ExecMainStatus defaults are not authoritative exit evidence; retained script/native conversion, inspection and compilation results independently establish their completed operations.",
+      "main_pid_after_limitation": "Observed unit-query MainPID=0; does not replace the independently retained script/native operation evidence."
     },
     {
       "name": "derivative-ar128-candidate-01",
@@ -113,9 +121,11 @@
       "swap_limit_bytes": 1073741824,
       "cpu_quota": "100%",
       "max_elapsed_seconds": 240,
-      "unit_result": "success",
+      "unit_result": null,
       "main_pid_after": 0,
-      "memory_limitation": null
+      "memory_limitation": null,
+      "unit_result_limitation": "Post-GC systemd Result/ExecMainStatus defaults are not authoritative exit evidence; retained script/native conversion, inspection and compilation results independently establish their completed operations.",
+      "main_pid_after_limitation": "Observed unit-query MainPID=0; does not replace the independently retained script/native operation evidence."
     },
     {
       "name": "derivative-ar1-candidate-01",
@@ -136,9 +146,11 @@
       "swap_limit_bytes": 1073741824,
       "cpu_quota": "100%",
       "max_elapsed_seconds": 240,
-      "unit_result": "success",
+      "unit_result": null,
       "main_pid_after": 0,
-      "memory_limitation": null
+      "memory_limitation": null,
+      "unit_result_limitation": "Post-GC systemd Result/ExecMainStatus defaults are not authoritative exit evidence; retained script/native conversion, inspection and compilation results independently establish their completed operations.",
+      "main_pid_after_limitation": "Observed unit-query MainPID=0; does not replace the independently retained script/native operation evidence."
     },
     {
       "name": "compile-ar128-candidate-01",
@@ -163,9 +175,11 @@
       "swap_limit_bytes": 1073741824,
       "cpu_quota": "100%",
       "max_elapsed_seconds": 240,
-      "unit_result": "success",
+      "unit_result": null,
       "main_pid_after": 0,
-      "memory_limitation": null
+      "memory_limitation": null,
+      "unit_result_limitation": "Post-GC systemd Result/ExecMainStatus defaults are not authoritative exit evidence; retained script/native conversion, inspection and compilation results independently establish their completed operations.",
+      "main_pid_after_limitation": "Observed unit-query MainPID=0; does not replace the independently retained script/native operation evidence."
     }
   ],
   "source_basis": [
@@ -795,5 +809,6 @@
   "full_model_conversion": "separate run in progress; not included in this milestone",
   "inference": false,
   "phone_access": false,
-  "registry_update": false
+  "registry_update": false,
+  "status_provenance_correction": "Initial package labelled the post-completion unit Result as success. Transient-unit garbage collection makes those default fields non-authoritative; corrected to null without rerunning or invalidating successful native operations."
 }

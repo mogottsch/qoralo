@@ -41,7 +41,7 @@ Key artifacts:
 - AR1 source-candidate DLC: **12,616 bytes**, SHA-256 `a262d084e7b677adba88487b5778e815f800b04cf21f9922e3f40e8e9e2d6e12`.
 - AR128 source-island context: **58,728 bytes**, SHA-256 `08f34ae61078363068e9c7404896618ea5132486707a14309d1f7a5b71659a8e`.
 
-Binary artifacts stay private. `result.json` and `raw/` retain hashes, commands, raw stdout/stderr, compressed exact CSVs, encoding changes and the actual graph-edge gate observations.
+Binary artifacts stay private. `result.json` and `raw/` retain hashes, commands, raw stdout/stderr, compressed exact CSVs, encoding changes and the actual graph-edge gate observations. A later unit-status provenance correction does not change the original raw queries or native results, and required no repeated SDK/model operation.
 
 ## Supported dtype boundary
 
@@ -58,7 +58,7 @@ Each small conversion/compile ran sequentially with:
 - 2 GiB `MemoryMax`, 1 GiB existing-swap cap;
 - one CPU and one requested numerical-library thread, nice 15;
 - 240-second systemd deadline, owned disk-backed scratch;
-- complete owned cgroup cleanup; all seven units ended successfully with PID 0.
+- systemd-owned cgroups with scoped cleanup. The seven retained script/native result records establish successful operations. Post-completion unit queries showed PID 0, but transient-unit garbage collection makes their default `Result=success`/`ExecMainStatus=0` fields non-authoritative; OS exit status is therefore nullable rather than inferred from those defaults.
 
 Exact-source conversions took about 4.5–6.8 seconds, with roughly 540 MiB parent peak RSS. The source-island compile took 2.93 seconds with 549,088 KiB peak RSS. These are **host preparation observations**, not inference performance. The initial authored-fixture runner did not instrument RSS; that value is null rather than reconstructed from an unavailable post-exit transient-unit peak.
 
