@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T09:50:13+00:00",
+  "updated_at": "2026-09-11T09:51:05+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -38,10 +38,10 @@
       "title": "Short product E2E",
       "status": "active",
       "owner": "Janek",
-      "now": "Moritz reports real user generation repeatedly ends “generation couldn’t finish”; bounded read-only app-phone diagnosis assigned.",
-      "next": "Full lock/preserve data; locate deepest failed phase/exception +request construction. No generation/install/active-job force-stop; prompt regression only if LLM-caused.",
-      "reported_at": "2026-09-11T09:50:13+00:00",
-      "reported_by": "Pi — direct Moritz issue and Janek diagnosis assignment",
+      "now": "Janek reports ONE bounded read-only phone diagnostic STARTED under artifacts/locks/phone.lock.",
+      "next": "Preserve user state; private DB/WAL/current identity/app-only failure evidence. Distinguish LLM vs AUDIO/T239 before any proposal.",
+      "reported_at": "2026-09-11T09:51:05+00:00",
+      "reported_by": "Janek — actual bounded diagnostic start",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -145,10 +145,10 @@
       "title": "Phone",
       "status": "investigating",
       "owner": "Janek",
-      "now": "Reported Janek bounded READ-ONLY app-phone generation-failure diagnosis.",
-      "next": "Full lock/data preservation; no new generation/install/active-job force-stop. Phone state is reported assignment, not live connection.",
-      "reported_at": "2026-09-11T09:50:13+00:00",
-      "reported_by": "Pi — direct Moritz issue and assignment",
+      "now": "Reported bounded read-only diagnostic started under phone.lock; user state preserved.",
+      "next": "No reinstall/generation/retry/active-job force-stop. Private inputs/DB/WAL stay local; assignment is not live connection.",
+      "reported_at": "2026-09-11T09:51:05+00:00",
+      "reported_by": "Janek — actual diagnostic start",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -201,9 +201,9 @@
     },
     {
       "name": "Janek",
-      "task": "Read-only diagnosis of user generation failure",
-      "reported_at": "2026-09-11T09:50:13+00:00",
-      "reported_by": "Pi — current direct-owner scope",
+      "task": "Run one bounded read-only generation-failure diagnosis",
+      "reported_at": "2026-09-11T09:51:05+00:00",
+      "reported_by": "Janek — reported start",
       "stale_after_seconds": 900
     },
     {
