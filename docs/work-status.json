@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T10:28:02+00:00",
+  "updated_at": "2026-09-11T10:28:49+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -89,10 +89,10 @@
       "title": "Qwen range audit",
       "status": "preparing",
       "owner": "Ben",
-      "now": "Offline93MB ARM64 runner/backend binding COMPLETE: same PTE/input hashes, exact one-line4-input list,warmup0/iteration1,profile0.",
-      "next": "Controller attempts Janek idle-gap full phone.lock +independent app/CLI conflict preflight; conflict yields without stopping. At most one standalone60s forward, not started.",
-      "reported_at": "2026-09-11T10:27:36+00:00",
-      "reported_by": "Ben — offline binding complete; safe phone-slot preflight beginning",
+      "now": "Qwen phone lock acquired then RELEASED:0 staging/launch/forward,no app change. Conservative guard tripped on idle Room MultiInstanceInvalidationService.",
+      "next": "Correct guard to distinguish idle binder from active/unknown services; foreground visibility alone is not a running job. Preserve preflight01; fresh slot coordination required.",
+      "reported_at": "2026-09-11T10:28:49+00:00",
+      "reported_by": "Ben — actual lock/preflight release and guard finding",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -131,12 +131,12 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "preparing",
-      "owner": "Ben → Janek",
-      "now": "Ben Qwen preflight/lock attempt occupies announced idle gap; Janek frozen diagnostic reproduction waits for Ben lock-release receipt.",
-      "next": "No lock/staging/execution receipt yet. Then Janek may deploy/reproduce one normal input; no cause/fix conclusion before receipt.",
-      "reported_at": "2026-09-11T10:28:02+00:00",
-      "reported_by": "Janek — candidate readiness + Ben device-slot ordering",
+      "status": "unassigned",
+      "owner": "Pi",
+      "now": "Ben Qwen lock released: conservative app-process guard stopped preflight on idle Room binder; no staging/forward/app change.",
+      "next": "No lock held. Guard correction/preflight preparation only; fresh coordinated slot needed for Ben or Janek. Phone assignment is not live state.",
+      "reported_at": "2026-09-11T10:28:49+00:00",
+      "reported_by": "Ben — actual phone-lock release",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -175,9 +175,9 @@
     },
     {
       "name": "Ben",
-      "task": "Acquire/preflight Qwen full phone lock; at most one forward",
-      "reported_at": "2026-09-11T10:27:36+00:00",
-      "reported_by": "Ben — no actual lock/start receipt yet",
+      "task": "Correct Qwen idle-binder preflight guard; await coordinated slot",
+      "reported_at": "2026-09-11T10:28:49+00:00",
+      "reported_by": "Ben — lock released/no forward",
       "stale_after_seconds": 900
     },
     {
@@ -189,9 +189,9 @@
     },
     {
       "name": "Janek",
-      "task": "Await Ben lock release; deploy/reproduce one diagnostic input",
-      "reported_at": "2026-09-11T10:28:02+00:00",
-      "reported_by": "Janek — candidate frozen/readiness only",
+      "task": "Coordinate fresh diagnostic phone preflight after Ben release",
+      "reported_at": "2026-09-11T10:28:49+00:00",
+      "reported_by": "Ben report relayed to Janek; no slot scheduled",
       "stale_after_seconds": 900
     },
     {
