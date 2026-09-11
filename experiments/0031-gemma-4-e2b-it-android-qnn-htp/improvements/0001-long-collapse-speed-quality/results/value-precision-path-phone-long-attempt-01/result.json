@@ -1,0 +1,823 @@
+{
+  "analysis_issues": [],
+  "canonical_campaign_unchanged": true,
+  "claim_boundary": "One exact-long/max2048 request on this candidate. Comparison is of retained output bytes and frozen descriptive metrics, not hidden states, finalized arithmetic, root cause, universal CPU-free placement, broad quality or speed.",
+  "classification": "physical_precision_path_exact_long_execution_only",
+  "collection": {
+    "adb_command_count": 269,
+    "automatic_retry": false,
+    "classification": "collection_not_inference_validation",
+    "cleanup": "verified_absent",
+    "controller_script_hashes": {
+      "control.sh": "0c09d96ce7ca6f1b6c5dc474c3dfbe94503359ddd726a9523b0f39c76a49d925",
+      "launch.sh": "17373d62640776d49c21511c8fee366fa5c32e4fa1849cd306b674780f1261c3",
+      "model-entry.sh": "6031273858cbf1359c88cfd45493aa9eeeb117476d486b31dc46b47debb8eb00",
+      "watchdog.sh": "4d890baf8f6d91e0606cafd898d6d2b3979751814ede218952e7d2127b61bc6d"
+    },
+    "controller_sources": {
+      "phone_return_controller.py": "e0e91e1855239a5ab349555f81ea050b94ea2997ba01e59c9c705444cdc6e9d2",
+      "phone_return_shell.py": "4ce478abf5b44ea0ae32cb9f490eb319f37fd54243fa91fb1433883c8be9b7bb",
+      "prepare_frozen_genie_stage.py": "34c56e7a2ec92c68a7a781ca7c7230a3ad8ce60d249dbd93e6c4cd359b403ccf"
+    },
+    "fidelity": null,
+    "identity": {
+      "ro.boot.flash.locked": "1",
+      "ro.boot.verifiedbootstate": "green",
+      "ro.build.fingerprint": "samsung/dm3qxeea/dm3q:16/BP4A.251205.006/S918BXXSAFZG1:user/release-keys",
+      "ro.build.version.release": "16",
+      "ro.build.version.sdk": "36",
+      "ro.product.cpu.abi": "arm64-v8a",
+      "ro.product.device": "dm3q",
+      "ro.product.manufacturer": "samsung",
+      "ro.product.model": "SM-S918B",
+      "ro.soc.model": "SM8550",
+      "serial": "R5CW81PR8SY",
+      "sys.boot_completed": "1"
+    },
+    "identity_verified": true,
+    "input_hashes_verified": true,
+    "launch_command_attempted": true,
+    "long_script": true,
+    "native_process_observed": true,
+    "optional_metrics": {
+      "reason": "Offline profile/provider/query review is separate; controller does not infer metrics.",
+      "values": null
+    },
+    "phone_lock_released": true,
+    "pi_slot": "pi-gemma-value-long-20260911-a",
+    "process_cleanup": {
+      "all_absent": true,
+      "basis": "fresh scoped PID/starttime probes; no name-wide kill"
+    },
+    "process_exit_code": 0,
+    "provider_placement": null,
+    "raw_capture_attempted": true,
+    "raw_pull_completed": true,
+    "remote_creation_confirmed": true,
+    "remote_root": "/data/local/tmp/vibevoice-0031-value-value-long-20260911T130755Z-01",
+    "reviewed_stage_digest": "373ca1b67b3ce65920127eede27df84b2832a783aee14d934d328835bc9f0996",
+    "rpc_health_adapter": {
+      "base_adapter_sha256": "ba3a1e324d16e7f73075f4ca3e816efd3e130679beb5cd0bfdb9b7a3de626abd",
+      "probe_sha256": "a978b326c62172b433a7fb4a3d1096adc99128ef0d71d3ed637ed7ba02030281",
+      "sha256": "c0443517f18c30436a5b4bacea1b16492ffff4fb07c9b10109f676abb4acb9e6"
+    },
+    "rpc_preflight": {
+      "explicit_resource_blockers": [],
+      "functional_rpc_health_proven": false,
+      "limitation": "Read-only service/sysfs snapshot only; missing/unexposed fields remain unknown. Functional readiness is established only by this run's actual backend initialization/execution.",
+      "observations": [
+        {
+          "kind": "SERVICE",
+          "name": "init.svc.vendor.cdsprpcd",
+          "state": null
+        },
+        {
+          "kind": "SERVICE",
+          "name": "init.svc.vendor.adsprpcd",
+          "state": null
+        },
+        {
+          "kind": "SUBSYSTEM",
+          "name": "cdsp",
+          "state": "UNEXPOSED"
+        }
+      ]
+    },
+    "run_id": "value-long-20260911T130755Z-01",
+    "runtime_success": null,
+    "scope": "precision-path exact-long engineering max2048 only",
+    "scope_adapter": {
+      "adapter_sha256": "ba3a1e324d16e7f73075f4ca3e816efd3e130679beb5cd0bfdb9b7a3de626abd",
+      "context_sha256": "27e19e32ef479dfb39b53e6530cd25105c3c8e9ccf9fa4b9e9af4b5d770fabdd",
+      "materialized_controller_sha256": "8f1bef0485ea5938b33ed9dab3f89337577f379ab422e5dc4aa1a7e9aa3cf7e5",
+      "materialized_shell_sha256": "890bd3479fb6a2a0406b4414ec80cbbc53b35169fffb0a9967c2dda70336cce2",
+      "original_sources_or_stages_modified": false,
+      "scope": "one precision-path exact-long/max2048 diagnostic; not phone permission",
+      "short_adapter_sha256": "4b864c442b56b2730aedc89808a8a96337027889a6c54a6243dc2cd383ce3e20",
+      "short_result_commit": "df07102",
+      "short_result_sha256": "6bd6114f2fcaddf10db666727bc36712ea9aa1b6dae46ab640eba8bfd24d0f3f",
+      "short_scope_receipt": {
+        "adapter_sha256": "4b864c442b56b2730aedc89808a8a96337027889a6c54a6243dc2cd383ce3e20",
+        "context_commit": "ef0bbb0",
+        "context_result_sha256": "ca2d724d2d16c54459db8de4351e2d7681221083c7e53a8128d72ecc796e7228",
+        "context_sha256": "27e19e32ef479dfb39b53e6530cd25105c3c8e9ccf9fa4b9e9af4b5d770fabdd",
+        "copy_helper_sha256": "34c56e7a2ec92c68a7a781ca7c7230a3ad8ce60d249dbd93e6c4cd359b403ccf",
+        "launch_helper_sha256": "63377f368f83c9b2bfe5e09fec7a276ad2ddc2481acb1f97d1987e38d90235e0",
+        "materialized_controller_sha256": "a6b0bf7557f3e4d1be570cd0f7611c671498767b1f5d4fdbf31b2d9e120d49ac",
+        "materialized_shell_sha256": "4ce478abf5b44ea0ae32cb9f490eb319f37fd54243fa91fb1433883c8be9b7bb",
+        "original_sources_or_stages_modified": false,
+        "scope": "precision-path short/max16; not permission, inference proof or canonical campaign",
+        "signal_guard_atomic": false,
+        "source_changes": [
+          {
+            "count": 1,
+            "new": "value-path-short-20260911T115043Z-01",
+            "old": "stage-freeze-20260910T105830Z-01"
+          },
+          {
+            "count": 1,
+            "new": "206ca960a69f915f81cb5c61dde5684259f8fbee8a37e14ef8b8bbf9fcafc78b",
+            "old": "584841604ecf97a1a916c9a7f765e49ff9f7a2ee751a61fda9e9e6588f02fe25"
+          },
+          {
+            "count": 1,
+            "new": "'.local/value-precision-phone-short-runs'",
+            "old": "'.local/phone-return-runs'"
+          },
+          {
+            "count": 1,
+            "new": "'/data/local/tmp/vibevoice-0031-value-'",
+            "old": "'/data/local/tmp/vibevoice-0031-fp16-'"
+          },
+          {
+            "count": 1,
+            "new": "precision-path candidate: one fresh-dialog first-short engineering/noncanonical max16 only",
+            "old": "one fresh-dialog first-short engineering/noncanonical max16 only"
+          },
+          {
+            "count": 1,
+            "new": "'scope': 'precision-path first-short engineering max16 only'",
+            "old": "'scope': 'first-short engineering max16 only'"
+          },
+          {
+            "count": 1,
+            "new": "'classification': 'collection_not_inference_validation', 'run_id': run_id,\n                       'scope_adapter': _VALUE_SCOPE_RECEIPT,",
+            "old": "'classification': 'collection_not_inference_validation', 'run_id': run_id,"
+          },
+          {
+            "count": 1,
+            "new": "        command = _VALUE_DETACHED_LAUNCH(self.remote)",
+            "old": "        prefix = shlex.quote(self.remote)\n        command = (f'cd {prefix} && nohup /system/bin/sh {shlex.quote(self.remote + \"/launch.sh\")} '\n                   f'</dev/null >evidence/launcher.stdout 2>evidence/launcher.stderr &')"
+          }
+        ],
+        "stage_digest": "206ca960a69f915f81cb5c61dde5684259f8fbee8a37e14ef8b8bbf9fcafc78b",
+        "template_controller_sha256": "e0e91e1855239a5ab349555f81ea050b94ea2997ba01e59c9c705444cdc6e9d2",
+        "template_shell_sha256": "4ce478abf5b44ea0ae32cb9f490eb319f37fd54243fa91fb1433883c8be9b7bb"
+      },
+      "signal_guard_atomic": false,
+      "source_changes": [
+        {
+          "count": 1,
+          "new": "value-path-long-20260911T125353Z-01",
+          "old": "value-path-short-20260911T115043Z-01"
+        },
+        {
+          "count": 1,
+          "new": "373ca1b67b3ce65920127eede27df84b2832a783aee14d934d328835bc9f0996",
+          "old": "206ca960a69f915f81cb5c61dde5684259f8fbee8a37e14ef8b8bbf9fcafc78b"
+        },
+        {
+          "count": 1,
+          "new": "'.local/value-precision-phone-long-runs'",
+          "old": "'.local/value-precision-phone-short-runs'"
+        },
+        {
+          "count": 1,
+          "new": "single engineering exact-long/max2048 process",
+          "old": "single engineering short/max16 process"
+        },
+        {
+          "count": 1,
+          "new": "precision-path candidate: one fresh-dialog exact-long/max2048 diagnostic only",
+          "old": "precision-path candidate: one fresh-dialog first-short engineering/noncanonical max16 only"
+        },
+        {
+          "count": 1,
+          "new": "precision-path exact-long engineering max2048 only",
+          "old": "precision-path first-short engineering max16 only"
+        },
+        {
+          "count": 1,
+          "new": "exact-long.script",
+          "old": "first-short.script"
+        },
+        {
+          "count": 2,
+          "new": "'long_script': True",
+          "old": "'long_script': False"
+        }
+      ],
+      "stage_digest": "373ca1b67b3ce65920127eede27df84b2832a783aee14d934d328835bc9f0996"
+    },
+    "signal_guard_atomic": false,
+    "signal_race_boundary": "Sequential /proc starttime/executable/argv checks then numeric-PID kill; no kernel pidfd binding."
+  },
+  "comparison": {
+    "all_declared_metrics_equal": false,
+    "baseline_commit": "37a2953",
+    "baseline_metrics": {
+      "dominant_word_6gram": {
+        "count": 215,
+        "first_word_index_zero_based": 83,
+        "text": ". the most important takeaway is"
+      },
+      "exact_periodic_suffix": {
+        "complete_cycles": 174,
+        "period_tokens": 9,
+        "start_token_index_zero_based": 478,
+        "suffix_tokens": 1570,
+        "trailing_partial_cycle_tokens": 4
+      },
+      "ngram_metrics": {
+        "16": {
+          "most_common_count": 208,
+          "most_common_first_token_index_zero_based": 117,
+          "total": 2033,
+          "unique": 169,
+          "unique_ratio": 0.08312838170191834
+        },
+        "4": {
+          "most_common_count": 216,
+          "most_common_first_token_index_zero_based": 84,
+          "total": 2045,
+          "unique": 121,
+          "unique_ratio": 0.05916870415647922
+        },
+        "8": {
+          "most_common_count": 215,
+          "most_common_first_token_index_zero_based": 84,
+          "total": 2041,
+          "unique": 142,
+          "unique_ratio": 0.06957373836354729
+        }
+      },
+      "rolling_collapse_onset": {
+        "criterion": "first 128-token window whose 4-gram unique ratio is <= 0.25",
+        "observed_unique_ratio": 0.248,
+        "start_token_index_zero_based": 83,
+        "start_token_ordinal_one_based": 84
+      },
+      "token_count": 2048,
+      "word_token_count": 1829
+    },
+    "baseline_output_hashes": [
+      "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d",
+      "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d",
+      "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d",
+      "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d",
+      "f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d"
+    ],
+    "candidate_byte_identical_to_all_baselines": false,
+    "candidate_metrics": {
+      "dominant_word_6gram": {
+        "count": 41,
+        "first_word_index_zero_based": 205,
+        "text": ". the most important trade -"
+      },
+      "exact_periodic_suffix": {
+        "complete_cycles": 33,
+        "period_tokens": 44,
+        "start_token_index_zero_based": 560,
+        "suffix_tokens": 1488,
+        "trailing_partial_cycle_tokens": 36
+      },
+      "ngram_metrics": {
+        "16": {
+          "most_common_count": 39,
+          "most_common_first_token_index_zero_based": 310,
+          "total": 2033,
+          "unique": 544,
+          "unique_ratio": 0.2675848499754058
+        },
+        "4": {
+          "most_common_count": 43,
+          "most_common_first_token_index_zero_based": 162,
+          "total": 2045,
+          "unique": 393,
+          "unique_ratio": 0.1921760391198044
+        },
+        "8": {
+          "most_common_count": 41,
+          "most_common_first_token_index_zero_based": 206,
+          "total": 2041,
+          "unique": 470,
+          "unique_ratio": 0.23027927486526212
+        }
+      },
+      "rolling_collapse_onset": null,
+      "token_count": 2048,
+      "word_token_count": 2087
+    },
+    "causal_boundary": "Descriptive repetition windows/suffix locations, not causal onset or hidden-state equality.",
+    "metric_source_sha256": "6084bb73d60f7e68ac3f516fad6df3463fdc8adb6213ea9a9a36190099b4fb70",
+    "retokenized_output_tokens": 2048,
+    "token_basis": "Retokenized exact output text, not directly observed emitted IDs.",
+    "tokenizer_sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f"
+  },
+  "comparison_missing_reason": null,
+  "context_sha256": "27e19e32ef479dfb39b53e6530cd25105c3c8e9ccf9fa4b9e9af4b5d770fabdd",
+  "helper_sources": {
+    "analyze_phone_return_long.py": "449ac2d0a0faabb4857b2f696208fe7385311639aca28d0ed018b06e8029cac6",
+    "analyze_phone_return_short.py": "8cd98fe6cc5e28b72e1c2116c7658bd05c287779bf6669827eac2cca9c9c533f",
+    "analyze_value_precision_short.py": "4f5857966a86fe3204622ba5fbf3e3334f466edc987638887b27c05dca96c5bb"
+  },
+  "memory": {
+    "htp_private_memory": null,
+    "process_pss": null,
+    "process_vmhwm": null,
+    "reason": "Not collected by the scoped controller; allocation logs are not total memory."
+  },
+  "observations": {
+    "actual_generated_tokens": 2048,
+    "execution_markers": {
+      "ar128_completed_status0": 16,
+      "ar1_completed_status0": 2047,
+      "cache_quantization_error": 0,
+      "context_deserialized": 1,
+      "cpu_backend_markers": 0,
+      "dialog_create_enter": 1,
+      "dialog_create_return": 1,
+      "dialog_free_return": 1,
+      "graph_execute_nonzero_status": 0,
+      "graph_execute_started": 2063,
+      "graph_execute_status0": 2063,
+      "htp_initialized": 1,
+      "known_cross_attention_warning": 1,
+      "physical_soc_detected": 2,
+      "query_enter": 1,
+      "query_return": 1,
+      "runtime_fallback_markers": 0,
+      "smart_mask_selected": 1,
+      "stub_connection": 1,
+      "two_graphs_initialized": 1,
+      "weight_sharing": 1
+    },
+    "output": {
+      "bytes": 9933,
+      "path": "raw/controller/raw/device/long-output.txt",
+      "sha256": "5e3c8bff8006912eabc16b86783d59f387d9239042d55a3f3f312914610cc5c0"
+    },
+    "prompt": {
+      "bos_config": -1,
+      "expected_tokens": 1929,
+      "profile_prompt_tokens": 1929,
+      "rendered_bytes_exact_in_runtime_stdout": true,
+      "rendered_sha256": "450b519d417e29c4239e39aef856db1813d2580cd62e9db9adaae3d94ba8f260",
+      "runtime_prefix_observations": [
+        {
+          "complete_prefix": [
+            2,
+            105,
+            9731,
+            107,
+            3048,
+            659,
+            496,
+            2263,
+            5192,
+            2028,
+            1208,
+            496,
+            3736,
+            1594,
+            236761,
+            58025,
+            528,
+            40137,
+            5422,
+            57243,
+            236761,
+            3574,
+            711,
+            4928,
+            506,
+            30998,
+            236764,
+            11497,
+            11808,
+            236764,
+            8369,
+            18558,
+            236764,
+            653,
+            506,
+            1707,
+            600,
+            611,
+            659,
+            1646,
+            10418,
+            236761,
+            106,
+            107,
+            105,
+            2364,
+            107,
+            6190,
+            506,
+            2269,
+            57728,
+            10630,
+            8652,
+            236761,
+            108,
+            236770,
+            236761,
+            669,
+            2434,
+            563,
+            22020,
+            1806,
+            2263,
+            34711,
+            18362,
+            580,
+            506,
+            1638,
+            10055,
+            236772,
+            36359,
+            4744,
+            236761,
+            7850,
+            64026,
+            19015,
+            496,
+            11236,
+            2028,
+            6077,
+            840,
+            1521,
+            4182,
+            13198,
+            236764,
+            3958,
+            150548,
+            49060,
+            4890,
+            17373,
+            1061,
+            2028,
+            840,
+            815,
+            29227,
+            1099,
+            8299,
+            236764,
+            532,
+            3958,
+            127649,
+            6178,
+            919,
+            6571,
+            528,
+            8770,
+            573,
+            11442,
+            11172,
+            8487,
+            236761,
+            2343,
+            10802,
+            1921,
+            23227,
+            10884,
+            236764,
+            11172,
+            8487,
+            236764,
+            532,
+            8369,
+            8299,
+            236761,
+            108,
+            236778,
+            236761,
+            669,
+            3739,
+            14102,
+            7474,
+            1932,
+            573,
+            12571,
+            531,
+            28959,
+            4310,
+            236764,
+            6151,
+            1070,
+            5089,
+            3107,
+            625,
+            6842,
+            1308,
+            886,
+            2864,
+            236761,
+            562,
+            9116,
+            607,
+            11162,
+            10884,
+            740,
+            5233,
+            577,
+            10559,
+            1186
+          ],
+          "complete_token_count": 158,
+          "last_numeric_fragment": null,
+          "logger_truncated": true,
+          "matches_bound_prefix": true
+        },
+        {
+          "complete_prefix": [
+            2,
+            105,
+            9731,
+            107,
+            3048,
+            659,
+            496,
+            2263,
+            5192,
+            2028,
+            1208,
+            496,
+            3736,
+            1594,
+            236761,
+            58025,
+            528,
+            40137,
+            5422,
+            57243,
+            236761,
+            3574,
+            711,
+            4928,
+            506,
+            30998,
+            236764,
+            11497,
+            11808,
+            236764,
+            8369,
+            18558,
+            236764,
+            653,
+            506,
+            1707,
+            600,
+            611,
+            659,
+            1646,
+            10418,
+            236761,
+            106,
+            107,
+            105,
+            2364,
+            107,
+            6190,
+            506,
+            2269,
+            57728,
+            10630,
+            8652,
+            236761,
+            108,
+            236770,
+            236761,
+            669,
+            2434,
+            563,
+            22020,
+            1806,
+            2263,
+            34711,
+            18362,
+            580,
+            506,
+            1638,
+            10055,
+            236772,
+            36359,
+            4744,
+            236761,
+            7850,
+            64026,
+            19015,
+            496,
+            11236,
+            2028,
+            6077,
+            840,
+            1521,
+            4182,
+            13198,
+            236764,
+            3958,
+            150548,
+            49060,
+            4890,
+            17373,
+            1061,
+            2028,
+            840,
+            815,
+            29227,
+            1099,
+            8299,
+            236764,
+            532,
+            3958,
+            127649,
+            6178,
+            919,
+            6571,
+            528,
+            8770,
+            573,
+            11442,
+            11172,
+            8487,
+            236761,
+            2343,
+            10802,
+            1921,
+            23227,
+            10884,
+            236764,
+            11172,
+            8487,
+            236764,
+            532,
+            8369,
+            8299,
+            236761,
+            108,
+            236778,
+            236761,
+            669,
+            3739,
+            14102,
+            7474,
+            1932,
+            573,
+            12571,
+            531,
+            28959,
+            4310,
+            236764,
+            6151,
+            1070,
+            5089,
+            3107,
+            625,
+            6842,
+            1308,
+            886,
+            2864,
+            236761,
+            562,
+            9116,
+            607,
+            11162,
+            10884,
+            740,
+            5233,
+            577,
+            10559,
+            1186
+          ],
+          "complete_token_count": 158,
+          "last_numeric_fragment": null,
+          "logger_truncated": true,
+          "matches_bound_prefix": true
+        }
+      ],
+      "single_bos_prefix_observed": true,
+      "token_ids_sha256": "3b5c04febbc9d55c529ee7ece510607203dbdc8256a6abc05ba0498cf4e52b64"
+    },
+    "query_completion_observed_beyond_exit_code": true,
+    "raw_genie_profile": {
+      "create_event": {
+        "duration": 2053547,
+        "init-time": {
+          "unit": "us",
+          "value": 2050841
+        },
+        "start": 798788876417,
+        "stop": 798790929964,
+        "type": "GenieDialog_create"
+      },
+      "normalized_decode_missing_reason": "Genie does not define first-token inclusion for its rate; raw rate is not a normalized comparison metric.",
+      "normalized_decode_tokens_per_second": null,
+      "profile_error": null,
+      "query_event": {
+        "duration": 100899526,
+        "num-generated-tokens": {
+          "unit": "",
+          "value": 2048
+        },
+        "num-prompt-tokens": {
+          "unit": "",
+          "value": 1929
+        },
+        "prompt-processing-rate": {
+          "unit": "toks/sec",
+          "value": 815.6607055664062
+        },
+        "start": 798790931210,
+        "stop": 798891830736,
+        "time-to-first-token": {
+          "unit": "us",
+          "value": 2366228
+        },
+        "token-generation-rate": {
+          "unit": "toks/sec",
+          "value": 20.913938522338867
+        },
+        "token-generation-time": {
+          "unit": "us",
+          "value": 97879001
+        },
+        "type": "GenieDialog_query"
+      },
+      "scope": "One max2048 engineering observation; runtime-defined timing boundaries, no speed acceptance or campaign distribution."
+    },
+    "stop": {
+      "ceiling_reached": true,
+      "configured_ceiling_observed": 2048,
+      "explicit_runtime_stop_reason": null,
+      "missing_reason": "Genie exposes no independent EOS-versus-limit enum; normal query return is recorded separately.",
+      "query_returned_normally": true
+    }
+  },
+  "operating_context": {
+    "battery_extracts": {
+      "after": {
+        "level_percent": 80,
+        "scope": "Derived core fields only; vendor learned charging/sleep history omitted.",
+        "temperature_c": 31.0,
+        "usb_powered": true,
+        "voltage_mv": 4031
+      },
+      "before": {
+        "level_percent": 81,
+        "scope": "Derived core fields only; vendor learned charging/sleep history omitted.",
+        "temperature_c": 28.0,
+        "usb_powered": true,
+        "voltage_mv": 4078
+      }
+    },
+    "thermal": {
+      "after": {
+        "status": 0,
+        "temperatures_c": {
+          "AP": 54.5,
+          "BAT": 31.0,
+          "MAINBATRAW": 31.0,
+          "PA": 47.1,
+          "SKIN": 37.7,
+          "SUBBAT": 0.0,
+          "USB": 27.7
+        }
+      },
+      "before": {
+        "status": 0,
+        "temperatures_c": {
+          "AP": 33.1,
+          "BAT": 28.0,
+          "MAINBATRAW": 28.0,
+          "PA": 30.7,
+          "SKIN": 30.2,
+          "SUBBAT": 0.0,
+          "USB": 27.3
+        }
+      }
+    }
+  },
+  "output_sanity": {
+    "issue_notes": "Severe repetition collapse: the same speed-versus-thoroughness paragraph repeats through the capped output.",
+    "looks_sensible": false
+  },
+  "prior_exact_long_negative_unchanged": true,
+  "private_battery_originals": [
+    {
+      "bytes": 15829,
+      "private_original_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-phone-long-runs/value-long-20260911T130755Z-01/raw/commands/0025-telemetry.before.battery.stdout",
+      "reason": "Unrelated learned battery/sleep history retained privately, not rewritten.",
+      "sha256": "85a0806a7315b26a294e77ccc64edc1b6fabad329e3b400a81012149136ea84e"
+    },
+    {
+      "bytes": 15834,
+      "private_original_path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-phone-long-runs/value-long-20260911T130755Z-01/raw/commands/0266-telemetry.after.battery.stdout",
+      "reason": "Unrelated learned battery/sleep history retained privately, not rewritten.",
+      "sha256": "aa6cc120d2f074851bbe442db6ce1acb705a09593d7ac0a9e27120e21d1281bd"
+    }
+  ],
+  "provider_log": {
+    "compressed_path": "raw/controller/raw/device/genie-verbose.log.gz",
+    "compressed_sha256": "3388e2338ca192d7a02821f5cedd623e6c6f665f985dc28afb5485da35d967b4",
+    "lossless": true,
+    "original_bytes": 54110245,
+    "original_sha256": "45e73f2c596153e801bccd386bc7a1f89a266d636713f46b735c6b9caca6ec91"
+  },
+  "readiness_commit": "713a2fb",
+  "registry_eligible": false,
+  "run_id": "value-long-20260911T130755Z-01",
+  "source_sha256": "5d50d33496bb61f4ab3901e311fde07d4b3110b792a9254976d0d3bc3cf8f1a6",
+  "stage_digest": "373ca1b67b3ce65920127eede27df84b2832a783aee14d934d328835bc9f0996"
+}

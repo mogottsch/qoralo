@@ -6,7 +6,17 @@ This is a new improvement track. It does not modify, replace, or relabel the com
 
 The accepted route remains the baseline. Any new conversion, host diagnostic, hybrid, or phone run must use a distinct artifact identity and run ID. A hybrid must select and label its backend before a complete logical request; hidden tensor- or provider-level fallback is forbidden.
 
-## Current host status — 2026-09-10
+## Latest: true precision-path candidate validated — 2026-09-11
+
+**The bounded implementation/validation is complete, but long-output repetition is not fixed.** A new build changes the selected post-V-projection normalization, cache/read and coupled attention/head-reassembly precision, rather than merely requesting FP16 cache interfaces. Both full DLC gates and the paired context/interface gate passed; original quantized projection/probability boundaries and parameter encodings remain bound. See [fixtures](results/value-precision-path-fixture-attempt-01/README.md), [full DLC pair](results/value-precision-path-full-conversion-attempt-01/README.md) and [paired context](results/value-precision-path-context-attempt-01/README.md).
+
+The [new short test](results/value-precision-path-phone-short-attempt-01/README.md) passed exact170→16 compatibility on HTP. The [new exact-long test](results/value-precision-path-phone-long-attempt-01/README.md) completed1929→2048 with2063 status0 executions. Its9,933-byte output changed (`5e3c8bff…cc5c0`), but a44-token paragraph loop occupies the final1488 tokens. Sanity remains false. The frozen narrow128-token diversity-window detector returns null for this longer-period loop; **null does not mean no collapse**, and greater n-gram diversity is not a quality pass.
+
+One raw Genie generation observation is20.9139tok/s; normalized decode and speed acceptance remain unavailable. Changed text does not prove internal numerical state, finalized arithmetic, root cause or which coupled precision component mattered. Both phone runs fully retained raw evidence and verified PID/root absence/lock release; no repeat or further device work is queued. No current RPC/SSR failure was observed in the long run. Full battery originals and restricted binaries remain private; push/history-rewrite hold remains.
+
+The accepted campaign, previous exact-long negative and separate app/LiteRT GPU work remain unchanged. The sections below preserve earlier chronology/planning and phase-specific permissions; they do not authorize an automatic new run or blanket FP16 expansion.
+
+## Historical FP16-cache-interface candidate — 2026-09-10
 
 **Gate B completed one exact-long/max2048 phone query, but the entire output is byte-identical to the repetitive baseline: this FP16-global-value candidate produced no observable text/repetition improvement on this request. All 2,063 QnnDsp calls returned status0. No speed benefit, broad fidelity conclusion or further optimization/run is accepted. Gate A short compatibility remains valid.** The first three retained launches diagnosed two missing loader-path prerequisites and an unexecuted patch assumption (AR1 has six explicit selected cache encodings; AR128 has only three input entries). Existing host libraries were reused without installation or SDK changes.
 
