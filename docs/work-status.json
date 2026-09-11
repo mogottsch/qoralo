@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T10:56:56+00:00",
+  "updated_at": "2026-09-11T10:58:43+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -75,12 +75,12 @@
     {
       "id": "qwen",
       "title": "Qwen range audit",
-      "status": "active",
+      "status": "preparing",
       "owner": "Ben",
-      "now": "Ben resumes source/tests/pack binding for distinct same-input full-model FP32 comparison against retained paired QDQ/QNNp1.",
-      "next": "No large model load while Jere conversion PID806553 reported~9.2GiB RSS/host13GiB available. Coordinate bounded FP32 worker after heavy window; no phone access.",
-      "reported_at": "2026-09-11T10:56:56+00:00",
-      "reported_by": "Ben — objective continues; source/binding work resumed",
+      "now": "Qwen light source/tests continue; Ben takes next heavy host slot after Jere AR1 release, then Jens paired compile may follow.",
+      "next": "Planned ONE FP32 worker:18GiB RLIMIT_AS,4CPU low priority,600s+20s TERM,pressure/STOP guard; existing3.764GB checkpoint+121MB p1,49 outputs+24 taps. Not started.",
+      "reported_at": "2026-09-11T10:58:43+00:00",
+      "reported_by": "Ben — agreed shared-host order and bounded worker plan",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -108,10 +108,10 @@
       "title": "On this computer",
       "status": "active",
       "owner": "Jens",
-      "now": "Jere sequential full AR1 conversion active (reported PID806553~9.2GiB RSS); Ben Qwen source/pack binding active but defers large model load; Janek app priority.",
-      "next": "Schedule Qwen bounded FP32 worker after Jere/Jens heavy window reports. No Qwen phone access or large-load start.",
-      "reported_at": "2026-09-11T10:56:56+00:00",
-      "reported_by": "Ben — resumed source work and shared-host non-overlap",
+      "now": "Jere AR1 conversion holds current heavy slot; Ben Qwen light source/tests only, then one FP32 worker after Jere release; Jens follows Ben.",
+      "next": "Qwen plan has no second model, QNN/compile/phone call. Await Ben actual start/release; no comparison result yet.",
+      "reported_at": "2026-09-11T10:58:43+00:00",
+      "reported_by": "Ben — agreed host sequencing and bounded plan",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -138,9 +138,9 @@
     },
     {
       "name": "Ben",
-      "task": "Bind Qwen full-model FP32 reference; wait heavy-host window",
-      "reported_at": "2026-09-11T10:56:56+00:00",
-      "reported_by": "Ben — source work active/no large load",
+      "task": "Qwen light source/tests; next heavy FP32 worker after Jere release",
+      "reported_at": "2026-09-11T10:58:43+00:00",
+      "reported_by": "Ben — planned/not started",
       "stale_after_seconds": 900
     },
     {
