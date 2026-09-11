@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T09:55:14+00:00",
+  "updated_at": "2026-09-11T09:56:56+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -53,12 +53,12 @@
     {
       "id": "gemma",
       "title": "Gemma FP16",
-      "status": "active",
+      "status": "waiting",
       "owner": "Jere",
-      "now": "Jere previously reported read-only internal-cache metadata/converter trace STARTED for global value layers4/9/14.",
-      "next": "No SDK/model/phone/heavy/app work; accepted exact-long negative remains unchanged.",
-      "reported_at": "2026-09-11T09:50:13+00:00",
-      "reported_by": "Jere — earlier direct actual-start report retained",
+      "now": "Read-only saved-DLC finding COMPLETE: AR1/AR128 value Concat is followed by explicit FP16→uFxp16 Convert before value MatMuls.",
+      "next": "AR128 export is quantized; AR1 moves quantization after full-cache concat. Await decision: close/refine vs true precision-path design; no conversion/numerical/phone work.",
+      "reported_at": "2026-09-11T09:56:56+00:00",
+      "reported_by": "Jere — completed saved-DLC/source metadata investigation",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -157,10 +157,10 @@
       "title": "On this computer",
       "status": "waiting",
       "owner": "Jens",
-      "now": "LFM proposed prepare-only AOT is awaiting Moritz agreement; nothing started.",
-      "next": "If approved:1 compiler,CPU200%/12GiB/Swap0,900s,no retry,≤4GiB job/≤8GiB retained total; fail/retain on bounds/preflight conflict.",
-      "reported_at": "2026-09-11T09:55:14+00:00",
-      "reported_by": "Jens — proposal only, no compilation",
+      "now": "Jere Gemma metadata investigation complete; Ben Qwen trace and Janek source inspection active; Jens proposal awaits agreement.",
+      "next": "Gemma report is saved-metadata only: no hidden-state/kernel precision/root-cause claim. No SDK/model/heavy execution unless separately authorized.",
+      "reported_at": "2026-09-11T09:56:56+00:00",
+      "reported_by": "Jere — completed read-only saved-DLC finding",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -208,9 +208,9 @@
     },
     {
       "name": "Jere",
-      "task": "Trace Gemma internal-cache precision metadata",
-      "reported_at": "2026-09-11T09:50:13+00:00",
-      "reported_by": "Pi — current direct-owner scope",
+      "task": "Await Gemma interpretation/design decision",
+      "reported_at": "2026-09-11T09:56:56+00:00",
+      "reported_by": "Jere — report complete; no execution started",
       "stale_after_seconds": 900
     },
     {
