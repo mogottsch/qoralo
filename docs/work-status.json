@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T11:13:58+00:00",
+  "updated_at": "2026-09-11T11:16:31+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -41,12 +41,12 @@
     {
       "id": "gemma",
       "title": "Gemma FP16",
-      "status": "preparing",
+      "status": "active",
       "owner": "Jere",
-      "now": "Ben reports prior AR1 unit inactive/dead Result=success/ExecMainStatus0/PID806553 absent; Jere next heavy compile follows Ben release.",
-      "next": "No direct Jere AR1 outcome report captured here; retain sequential/metadata-only scope until owner report. No overlap with Ben FP32 worker.",
-      "reported_at": "2026-09-11T11:06:59+00:00",
-      "reported_by": "Ben — shared-host preflight observation; awaiting direct Jere result",
+      "now": "Full AR1 internal+coupled-exit gates PASS:56 Float16 value MatMuls,3 floating cache paths,7 unchanged-grid projection exits; both AR four-way30-cache contracts pass.",
+      "next": "Paired SM8550/v73 context compile STARTED context…111531Z-02/native_context_compile with corrected30-name set. Pre-inference/phone; original exact-long negative unchanged.",
+      "reported_at": "2026-09-11T11:16:31+00:00",
+      "reported_by": "Jere — AR1 gate milestone and actual paired context-compile start",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -108,10 +108,10 @@
       "title": "On this computer",
       "status": "active",
       "owner": "Jens",
-      "now": "LFM offline verification; Janek app capacity candidate/guard UI may use phone; Ben Qwen two-case CPU discriminator active; Jere AR1 work bounded.",
-      "next": "Qwen LPBQ is source-derived expansion hypothesis only, not final SDK encoding. No worker outcome/correction claim.",
-      "reported_at": "2026-09-11T11:13:58+00:00",
-      "reported_by": "Ben — active source/discriminator scope",
+      "now": "Jere paired Gemma SM8550/v73 context compile active after Ben slot release; Janek app guard/UI and Ben CPU discriminator/LFM offline verification remain bounded.",
+      "next": "Gemma fresh23.39GiB RAM/~29.92GiB swap,15/17/16GiB caps,2CPU/nice15/1800s/64GiB disk/STOP path. No inference/phone result.",
+      "reported_at": "2026-09-11T11:16:31+00:00",
+      "reported_by": "Jere — actual paired context-compile start",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -159,9 +159,9 @@
     },
     {
       "name": "Jere",
-      "task": "Metadata-only work; next heavy compile after Ben release",
-      "reported_at": "2026-09-11T11:06:59+00:00",
-      "reported_by": "Ben — shared-host order",
+      "task": "Run paired Gemma SM8550/v73 context compile",
+      "reported_at": "2026-09-11T11:16:31+00:00",
+      "reported_by": "Jere — actual start",
       "stale_after_seconds": 900
     },
     {
