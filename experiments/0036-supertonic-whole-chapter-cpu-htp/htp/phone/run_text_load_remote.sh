@@ -8,7 +8,8 @@ mkdir evidence || exit 92
 export LD_LIBRARY_PATH="$ROOT/lib"
 export ADSP_LIBRARY_PATH="$ROOT/lib;/vendor/lib/rfsa/adsp;/vendor/dsp/cdsp;/system/lib/rfsa/adsp;/vendor/dsp"
 [ ! -e contexts/duration-context.onnx ] || exit 93
-./runner "$ROOT/contexts/text-context.onnx" "$ROOT/lib/libQnnHtp.so" >evidence/result.json 2>evidence/stderr.log &
+[ "${1:-5}" = "$(cat expected-as-gib.txt)" ] || exit 94
+./runner "$ROOT/contexts/text-context.onnx" "$ROOT/lib/libQnnHtp.so" "${1:-5}" >evidence/result.json 2>evidence/stderr.log &
 pid=$!
 echo "$pid" >evidence/runner.pid
 trap 'kill -TERM "$pid" 2>/dev/null; sleep 2; kill -KILL "$pid" 2>/dev/null' HUP INT TERM
@@ -39,5 +40,8 @@ while kill -0 "$pid" 2>/dev/null; do
 done
 wait "$pid"
 rc=$?
+# Android's default ORT log sink may be logcat. Read only this owned PID after
+# constructor/close; no global clearing or unrelated application-log capture.
+timeout 5 logcat -d --pid "$pid" -v threadtime >evidence/native-pid-logcat.txt 2>evidence/native-pid-logcat.stderr
 printf 'runner_exit_code=%s\npeak_observed_vmhwm_kib=%s\npeak_sampled_pss_kib=%s\nguard_reason=%s\n' "$rc" "$peak" "$pss_peak" "$reason" >evidence/memory.txt
 exit "$rc"

@@ -1,0 +1,136 @@
+{
+  "source_nodes": 1934,
+  "source_initializers": 146,
+  "all_original_nodes_covered": true,
+  "all_original_node_bytes_unchanged": true,
+  "all_original_initializer_bytes_unchanged": true,
+  "all_original_initializers_covered": true,
+  "shared_nonlearned_nodes": [
+    {
+      "name": "/text_encoder/attn_encoder/Constant",
+      "op": "Constant"
+    },
+    {
+      "name": "/text_encoder/attn_encoder/Unsqueeze",
+      "op": "Unsqueeze"
+    },
+    {
+      "name": "/text_encoder/attn_encoder/Constant_1",
+      "op": "Constant"
+    },
+    {
+      "name": "/text_encoder/attn_encoder/Unsqueeze_1",
+      "op": "Unsqueeze"
+    },
+    {
+      "name": "/text_encoder/attn_encoder/Mul",
+      "op": "Mul"
+    },
+    {
+      "name": "/text_encoder/attn_encoder/attn_layers.0/Constant_87",
+      "op": "Constant"
+    },
+    {
+      "name": "/text_encoder/attn_encoder/attn_layers.0/Equal",
+      "op": "Equal"
+    }
+  ],
+  "boundaries": [
+    {
+      "name": "/text_encoder/attn_encoder/norm_layers_2.1/Transpose_1_output_0",
+      "shape": [
+        1,
+        256,
+        3200
+      ],
+      "bytes_float32": 3276800
+    },
+    {
+      "name": "/text_encoder/convnext/convnext.5/Mul_3_output_0",
+      "shape": [
+        1,
+        256,
+        3200
+      ],
+      "bytes_float32": 3276800
+    }
+  ],
+  "sequence_extent_unchanged": 3200,
+  "operator_algebra_changed": false,
+  "model_forwards": 0,
+  "parts": {
+    "text_a": {
+      "nodes": 1023,
+      "initializers": 91,
+      "inputs": {
+        "text_ids": [
+          1,
+          3200
+        ],
+        "text_mask": [
+          1,
+          1,
+          3200
+        ]
+      },
+      "outputs": {
+        "/text_encoder/attn_encoder/norm_layers_2.1/Transpose_1_output_0": [
+          1,
+          256,
+          3200
+        ],
+        "/text_encoder/convnext/convnext.5/Mul_3_output_0": [
+          1,
+          256,
+          3200
+        ]
+      },
+      "derivative": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0036-supertonic-whole-chapter-cpu-htp/htp/.local/text-depth-split-02/text_a/text_a.onnx",
+        "bytes": 27816339,
+        "sha256": "49b135045ea0de261c97ba758ecf8c9c89ffb3946782bc0e1fe5015908d8aec2"
+      }
+    },
+    "text_b": {
+      "nodes": 918,
+      "initializers": 55,
+      "inputs": {
+        "/text_encoder/attn_encoder/norm_layers_2.1/Transpose_1_output_0": [
+          1,
+          256,
+          3200
+        ],
+        "/text_encoder/convnext/convnext.5/Mul_3_output_0": [
+          1,
+          256,
+          3200
+        ],
+        "style_ttl": [
+          1,
+          50,
+          256
+        ],
+        "text_mask": [
+          1,
+          1,
+          3200
+        ]
+      },
+      "outputs": {
+        "text_emb": [
+          1,
+          256,
+          3200
+        ]
+      },
+      "derivative": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0036-supertonic-whole-chapter-cpu-htp/htp/.local/text-depth-split-02/text_b/text_b.onnx",
+        "bytes": 8752137,
+        "sha256": "790e5b0641598666ddcd5160be7330492d623383bb013e8e72af839441a28997"
+      }
+    }
+  },
+  "source_sha256": "a392eab0764baa31ce60229afc5c6ed007beaffadfc4b63e4f0a39359a6117f7",
+  "elapsed_seconds": 2.0324464549994445,
+  "maxrss_kib": 318052
+}

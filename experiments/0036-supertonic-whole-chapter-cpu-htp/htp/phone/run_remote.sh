@@ -37,5 +37,7 @@ while kill -0 "$pid" 2>/dev/null; do
 done
 wait "$pid"
 rc=$?
+# Post-run, owned-PID-only logs; never clear global logs or change profiling.
+timeout 5 logcat -d --pid "$pid" -v threadtime >evidence/native-pid-logcat.txt 2>evidence/native-pid-logcat.stderr
 printf 'runner_exit_code=%s\npeak_observed_vmhwm_kib=%s\npeak_sampled_pss_kib=%s\nguard_reason=%s\n' "$rc" "$peak" "$pss_peak" "$reason" >evidence/memory.txt
 exit "$rc"

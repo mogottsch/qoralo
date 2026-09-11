@@ -1,0 +1,70 @@
+{
+  "status": "passed",
+  "test_type": "CPU source-equivalence only, never HTP inputs",
+  "reference_sha256": "cbfd5bbef581f0e793b86a568f8d4aa87fe857f413e5c2ea4780b558fc71600b",
+  "runtime": "1.23.2",
+  "providers": [
+    "CPUExecutionProvider"
+  ],
+  "threads": 4,
+  "original_graph_sha256": "a392eab0764baa31ce60229afc5c6ed007beaffadfc4b63e4f0a39359a6117f7",
+  "calls": [
+    {
+      "graph_sha256": "af71c188e20639c4d7981c1b59fde0143a71b381b6736aa3481295c4587f7bb0",
+      "setup_seconds": 0.04930749400045897,
+      "Run_seconds": 1.0295403889995214,
+      "Run_calls": 1,
+      "outputs": {
+        "/text_encoder/attn_encoder/norm_layers_2.0/Transpose_1_output_0": [
+          1,
+          256,
+          3200
+        ],
+        "/text_encoder/convnext/convnext.5/Mul_3_output_0": [
+          1,
+          256,
+          3200
+        ]
+      }
+    },
+    {
+      "graph_sha256": "06007efc248587ff605a227b0892d76452326495297a1aba1812c8253f7ec242",
+      "setup_seconds": 0.023013916999843786,
+      "Run_seconds": 1.596917922001012,
+      "Run_calls": 1,
+      "outputs": {
+        "/text_encoder/attn_encoder/norm_layers_2.2/Transpose_1_output_0": [
+          1,
+          256,
+          3200
+        ]
+      }
+    },
+    {
+      "graph_sha256": "b80291814741656b5ea6e42a7fd81c0595ebfa3ecf80d0f85e425807d1b64f0c",
+      "setup_seconds": 0.018853213001420954,
+      "Run_seconds": 0.8622179779995349,
+      "Run_calls": 1,
+      "outputs": {
+        "text_emb": [
+          1,
+          256,
+          3200
+        ]
+      }
+    }
+  ],
+  "total_Run_calls": 3,
+  "original_baseline_reused": true,
+  "max_absolute_error": 0.0,
+  "rmse": 0.0,
+  "bitwise_equal": true,
+  "tolerance": {
+    "atol": 1e-05,
+    "rtol": 1e-05
+  },
+  "original_output_sha256": "2db33b81ee3a569df6db893929d220803558f275af1b2897454cd2218e74b202",
+  "composed_output_sha256": "2db33b81ee3a569df6db893929d220803558f275af1b2897454cd2218e74b202",
+  "all_outputs_private_not_used_for_HTP": true,
+  "maxrss_kib": 1916076
+}

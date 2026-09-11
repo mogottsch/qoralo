@@ -1,6 +1,6 @@
 # Full unchanged product-reference chapter — HTP arm
 
-**Blocked on physical text-context load; no HTP WAV.** The first neural attempt
+**Original text context blocked; lower-memory candidate ready, no HTP WAV yet.** The first neural attempt
 completed its own HTP duration stage, then text EPContext loading failed with QNN
 error1002 before text/vector/vocoder execution. Host exports alone were insufficient.
 The phone lock is released, the unique remote stage removed, and the installed app
@@ -114,5 +114,49 @@ current numeric battery temperature is extracted, not raw battery/charging histo
 - The487-word chapter's approximately29.57s CPU natural prediction and qualified
   negative CPU ASR coverage result are serious content concerns, not a duration
   to override or repair. No HTP coverage comparison can be claimed without a WAV.
+
+## Signed-size diagnosis and lower-memory candidate
+
+Both fresh TEXT-only constructor/close controls failed under5GiB and8GiB Linux
+`RLIMIT_AS`, with zero Run calls and no DP context/input tensors present. The8GiB
+control's owned-PID Android logcat gives the concrete chain: `rpcmem_alloc_internal`
+fails its `size >= 0` predicate for2,666,528,768B (`0x9ef00000`) and2,245,001,216B
+(`0x85d00000`) requests, both above `INT32_MAX`; `apps_mem_request_mmap64` returns
+0x68 before context deserialization5005/top-level1002. This is an evidenced RPC
+signed-size rejection path, not merely an RSS or Linux virtual-limit inference.
+Later native failover/teardown connection-reset/SSR-dead warnings remain private.
+The unique remote directories were removed and locks released; no further limit
+bumps or fallback are used. See `results/text-load-controls.json`.
+
+The candidate partitions **network depth**, never input positions: prefix+encoder
+block0 → blocks1–2 → block3+style conditioning. Each attention block keeps the
+entireT3200 sequence and full key/value context. Two existing full
+`[1,256,3200]` feature edges and the original residual skip carry state between
+parts; no word, phoneme, latent/audio time segment is synthesized separately.
+All1934 original nodes and146 initializers remain byte-identical; only the seven
+nonlearned mask/control nodes are repeated across graph boundaries. CPU original
+versus the composed pipeline is **bitwise identical** on the exact reference
+inputs (ORT1.23.2, not a new Android CPU benchmark). Validation features stay
+private and are never staged as HTP inputs.
+
+A two-way split was exported/proved first but not phone-tested: its first part's
+~2.03GB declared storage left inadequate margin. The three-way candidate uses
+six physical contexts for four logical TTS stages: duration1, text3_a1, text3_b1,
+text3_c1, vector5 and vocoder1. Each loads/runs/closes sequentially; interleaved
+setup and host-buffer costs must be disclosed separately from stage-only timing.
+The original CPU evidence and all failed HTP attempts remain untouched.
+
+All three new exports passed. After adding128MiB planning allowance and rounding
+up to64MiB, text-part estimates are1,744,830,464B /1,879,048,192B /1,342,177,280B;
+the smallest signed-size margin is268,435,455B. DP/vector/vocoder also pass. This
+is conservative static planning, **not** a proven proprietary allocation formula,
+actual memory peak or phone-load guarantee. See
+`results/text-depth-three-allocation-plan.json`, the structural/CPU proofs and
+`results/text-depth-constructors.json`.
+
+The complete private candidate stage is298,264,197B, includes no source ONNX,
+original failing text context or CPU validation outputs, and keeps the frozen
+common tensors/noise. Fifteen tests pass; the Android candidate builds with
+`-Werror`. Its one full physical candidate render awaits the scheduled slot.
 
 Only Moritz can accept/reject an exact WAV. Listening verdict is `not_reviewed`.

@@ -1,0 +1,173 @@
+{
+  "source_nodes": 1934,
+  "source_initializers": 146,
+  "all_original_nodes_covered": true,
+  "all_original_node_bytes_unchanged": true,
+  "all_original_initializer_bytes_unchanged": true,
+  "all_original_initializers_covered": true,
+  "shared_nonlearned_nodes": [
+    {
+      "name": "/text_encoder/attn_encoder/Constant",
+      "op": "Constant"
+    },
+    {
+      "name": "/text_encoder/attn_encoder/Unsqueeze",
+      "op": "Unsqueeze"
+    },
+    {
+      "name": "/text_encoder/attn_encoder/Constant_1",
+      "op": "Constant"
+    },
+    {
+      "name": "/text_encoder/attn_encoder/Unsqueeze_1",
+      "op": "Unsqueeze"
+    },
+    {
+      "name": "/text_encoder/attn_encoder/Mul",
+      "op": "Mul"
+    },
+    {
+      "name": "/text_encoder/attn_encoder/attn_layers.0/Constant_87",
+      "op": "Constant"
+    },
+    {
+      "name": "/text_encoder/attn_encoder/attn_layers.0/Equal",
+      "op": "Equal"
+    }
+  ],
+  "boundaries": [
+    {
+      "name": "/text_encoder/attn_encoder/norm_layers_2.0/Transpose_1_output_0",
+      "shape": [
+        1,
+        256,
+        3200
+      ],
+      "bytes_float32": 3276800
+    },
+    {
+      "name": "/text_encoder/attn_encoder/norm_layers_2.2/Transpose_1_output_0",
+      "shape": [
+        1,
+        256,
+        3200
+      ],
+      "bytes_float32": 3276800
+    },
+    {
+      "name": "/text_encoder/convnext/convnext.5/Mul_3_output_0",
+      "shape": [
+        1,
+        256,
+        3200
+      ],
+      "bytes_float32": 3276800
+    }
+  ],
+  "sequence_extent_unchanged": 3200,
+  "operator_algebra_changed": false,
+  "model_forwards": 0,
+  "parts": {
+    "text3_a": {
+      "nodes": 622,
+      "initializers": 73,
+      "inputs": {
+        "text_ids": [
+          1,
+          3200
+        ],
+        "text_mask": [
+          1,
+          1,
+          3200
+        ]
+      },
+      "outputs": {
+        "/text_encoder/attn_encoder/norm_layers_2.0/Transpose_1_output_0": [
+          1,
+          256,
+          3200
+        ],
+        "/text_encoder/convnext/convnext.5/Mul_3_output_0": [
+          1,
+          256,
+          3200
+        ]
+      },
+      "derivative": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0036-supertonic-whole-chapter-cpu-htp/htp/.local/text-depth-three-01/text3_a/text3_a.onnx",
+        "bytes": 24537652,
+        "sha256": "af71c188e20639c4d7981c1b59fde0143a71b381b6736aa3481295c4587f7bb0"
+      }
+    },
+    "text3_b": {
+      "nodes": 809,
+      "initializers": 36,
+      "inputs": {
+        "/text_encoder/attn_encoder/norm_layers_2.0/Transpose_1_output_0": [
+          1,
+          256,
+          3200
+        ],
+        "text_mask": [
+          1,
+          1,
+          3200
+        ]
+      },
+      "outputs": {
+        "/text_encoder/attn_encoder/norm_layers_2.2/Transpose_1_output_0": [
+          1,
+          256,
+          3200
+        ]
+      },
+      "derivative": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0036-supertonic-whole-chapter-cpu-htp/htp/.local/text-depth-three-01/text3_b/text3_b.onnx",
+        "bytes": 6559348,
+        "sha256": "06007efc248587ff605a227b0892d76452326495297a1aba1812c8253f7ec242"
+      }
+    },
+    "text3_c": {
+      "nodes": 517,
+      "initializers": 37,
+      "inputs": {
+        "/text_encoder/attn_encoder/norm_layers_2.2/Transpose_1_output_0": [
+          1,
+          256,
+          3200
+        ],
+        "/text_encoder/convnext/convnext.5/Mul_3_output_0": [
+          1,
+          256,
+          3200
+        ],
+        "style_ttl": [
+          1,
+          50,
+          256
+        ],
+        "text_mask": [
+          1,
+          1,
+          3200
+        ]
+      },
+      "outputs": {
+        "text_emb": [
+          1,
+          256,
+          3200
+        ]
+      },
+      "derivative": {
+        "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0036-supertonic-whole-chapter-cpu-htp/htp/.local/text-depth-three-01/text3_c/text3_c.onnx",
+        "bytes": 5473450,
+        "sha256": "b80291814741656b5ea6e42a7fd81c0595ebfa3ecf80d0f85e425807d1b64f0c"
+      }
+    }
+  },
+  "source_sha256": "a392eab0764baa31ce60229afc5c6ed007beaffadfc4b63e4f0a39359a6117f7",
+  "elapsed_seconds": 2.309657215999323,
+  "maxrss_kib": 309844
+}

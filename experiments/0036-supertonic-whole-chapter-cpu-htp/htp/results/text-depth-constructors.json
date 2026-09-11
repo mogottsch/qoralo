@@ -1,0 +1,309 @@
+{
+  "all_constructor_only_zero_Run": true,
+  "two_way_candidate": "not_phone_tested; insufficient conservative signed-allocation margin",
+  "three_way_candidate": "conservative footprint gate passed; not yet phone executed",
+  "components": [
+    {
+      "component": "text_a",
+      "status": "constructor_export_passed_not_execution_proof",
+      "constructor_seconds": 14.01355944199895,
+      "session_Run_calls": 0,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            3200
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            3200
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "/text_encoder/attn_encoder/norm_layers_2.1/Transpose_1_output_0",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            3200
+          ]
+        },
+        {
+          "name": "/text_encoder/convnext/convnext.5/Mul_3_output_0",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            3200
+          ]
+        }
+      ],
+      "artifacts": {
+        "text_a-context.onnx": {
+          "bytes": 1032,
+          "sha256": "4f7de15cd34b501a42a8014ffbd0678bd1a20687ae39b65f72862008e954fa3b"
+        },
+        "text_a-context_qnn.bin": {
+          "bytes": 23332112,
+          "sha256": "9a84d5b5f4ca1a2069c77025120501d8b86bc576cd3784d128a357cfc1c52830"
+        }
+      },
+      "process_ru_maxrss_kib": 1231324,
+      "memory.peak": "1587855360\n",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+    },
+    {
+      "component": "text_b",
+      "status": "constructor_export_passed_not_execution_proof",
+      "constructor_seconds": 14.085564637000061,
+      "session_Run_calls": 0,
+      "inputs": [
+        {
+          "name": "/text_encoder/attn_encoder/norm_layers_2.1/Transpose_1_output_0",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            3200
+          ]
+        },
+        {
+          "name": "/text_encoder/convnext/convnext.5/Mul_3_output_0",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            3200
+          ]
+        },
+        {
+          "name": "style_ttl",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            50,
+            256
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            3200
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text_emb",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            3200
+          ]
+        }
+      ],
+      "artifacts": {
+        "text_b-context.onnx": {
+          "bytes": 1082,
+          "sha256": "7f1d247597156858b6c531827d6a5a91397665538f361eb985095a500703c6a3"
+        },
+        "text_b-context_qnn.bin": {
+          "bytes": 13002408,
+          "sha256": "3c212626dfcf0593c447be28234e71f954ae243613806df178bb4f688f8dc940"
+        }
+      },
+      "process_ru_maxrss_kib": 1186668,
+      "memory.peak": "1133027328\n",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+    },
+    {
+      "component": "text3_a",
+      "status": "constructor_export_passed_not_execution_proof",
+      "constructor_seconds": 6.984974760001933,
+      "session_Run_calls": 0,
+      "inputs": [
+        {
+          "name": "text_ids",
+          "type": "tensor(int64)",
+          "shape": [
+            1,
+            3200
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            3200
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "/text_encoder/attn_encoder/norm_layers_2.0/Transpose_1_output_0",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            3200
+          ]
+        },
+        {
+          "name": "/text_encoder/convnext/convnext.5/Mul_3_output_0",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            3200
+          ]
+        }
+      ],
+      "artifacts": {
+        "text3_a-context.onnx": {
+          "bytes": 1033,
+          "sha256": "87eb2d687a83079ece976d541ce3c795eecd3dd88f36293aa6eee56494c7698f"
+        },
+        "text3_a-context_qnn.bin": {
+          "bytes": 17818768,
+          "sha256": "c64da39d6a6f3ed50be8d953c80c0d61e71dde3b7ad1f503e14fb10a4e5b55f3"
+        }
+      },
+      "process_ru_maxrss_kib": 749016,
+      "memory.peak": "1068183552\n",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+    },
+    {
+      "component": "text3_b",
+      "status": "constructor_export_passed_not_execution_proof",
+      "constructor_seconds": 12.991824938999343,
+      "session_Run_calls": 0,
+      "inputs": [
+        {
+          "name": "/text_encoder/attn_encoder/norm_layers_2.0/Transpose_1_output_0",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            3200
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            3200
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "/text_encoder/attn_encoder/norm_layers_2.2/Transpose_1_output_0",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            3200
+          ]
+        }
+      ],
+      "artifacts": {
+        "text3_b-context.onnx": {
+          "bytes": 1021,
+          "sha256": "6bdcc50fd62b611b9adf139236ee502568828458d6419295da4ab985c46a7908"
+        },
+        "text3_b-context_qnn.bin": {
+          "bytes": 11765040,
+          "sha256": "4d24a976ae299a8e0e97e761383dbf30c33befe259c984240216695e994a52cd"
+        }
+      },
+      "process_ru_maxrss_kib": 1158120,
+      "memory.peak": "1109446656\n",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+    },
+    {
+      "component": "text3_c",
+      "status": "constructor_export_passed_not_execution_proof",
+      "constructor_seconds": 7.929584972000157,
+      "session_Run_calls": 0,
+      "inputs": [
+        {
+          "name": "/text_encoder/attn_encoder/norm_layers_2.2/Transpose_1_output_0",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            3200
+          ]
+        },
+        {
+          "name": "/text_encoder/convnext/convnext.5/Mul_3_output_0",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            3200
+          ]
+        },
+        {
+          "name": "style_ttl",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            50,
+            256
+          ]
+        },
+        {
+          "name": "text_mask",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            1,
+            3200
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text_emb",
+          "type": "tensor(float)",
+          "shape": [
+            1,
+            256,
+            3200
+          ]
+        }
+      ],
+      "artifacts": {
+        "text3_c-context.onnx": {
+          "bytes": 1083,
+          "sha256": "db4b3055e7beb0a27f8db3ace7c00634a47ef529f8a07c72c2a73cb716abca65"
+        },
+        "text3_c-context_qnn.bin": {
+          "bytes": 7583272,
+          "sha256": "c836b80da29b3fbeb2e6031ef5aa3f5870e4d39cae4eb8df328cad5053332b7e"
+        }
+      },
+      "process_ru_maxrss_kib": 699140,
+      "memory.peak": "632950784\n",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+    }
+  ]
+}

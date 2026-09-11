@@ -7,7 +7,9 @@ STAGE=${1:?private stage required}
 L=${2:?common latent extent required}
 OUT=${3:?fresh private output required}
 WAIT_SECONDS=${NATIVE_WAIT_SECONDS:-1840}
+MIN_AVAILABLE_KIB=${MEMORY_PREFLIGHT_KIB:-3145728}
 [[ $WAIT_SECONDS =~ ^[0-9]+$ && $WAIT_SECONDS -ge 180 && $WAIT_SECONDS -le 1840 ]] || exit 2
+[[ $MIN_AVAILABLE_KIB =~ ^[0-9]+$ && $MIN_AVAILABLE_KIB -ge 3145728 ]] || exit 2
 [[ $STAGE == "$E/.local/"* && $OUT == "$E/.local/"* && ! -e $OUT && $L =~ ^[0-9]+$ ]] || exit 2
 [[ ${PHONE_SLOT_SCHEDULED:-no} == yes ]] || { echo 'Pi must schedule the shared-phone slot'; exit 3; }
 SERIAL=R5CW81PR8SY
@@ -48,7 +50,7 @@ memory_available=$(adb shell "awk '/^MemAvailable:/{print \$2}' /proc/meminfo" |
 # Capture only current numeric temperature, not raw battery state/history.
 battery_temperature=$(adb shell "dumpsys battery | awk '/^[[:space:]]*temperature:/{print \$2; exit}'" | tr -d '\r')
 printf 'MemAvailable_kib=%s\nbattery_temperature_tenths_C=%s\n' "$memory_available" "$battery_temperature" >"$OUT/preflight-bounds.txt"
-[[ $memory_available =~ ^[0-9]+$ && $memory_available -ge 3145728 && $battery_temperature =~ ^[0-9]+$ && $battery_temperature -lt 420 ]] || { echo 'memory/thermal preflight bound failed'; exit 6; }
+[[ $memory_available =~ ^[0-9]+$ && $memory_available -ge $MIN_AVAILABLE_KIB && $battery_temperature =~ ^[0-9]+$ && $battery_temperature -lt 420 ]] || { echo 'memory/thermal preflight bound failed'; exit 6; }
 available=$(adb shell df -Pk /data/local/tmp | awk 'END{print $4}' | tr -d '\r')
 needed=$(( $(du -sb "$STAGE" | awk '{print $1}') / 1024 + 524288 ))
 [[ $available =~ ^[0-9]+$ && $available -ge $needed ]]

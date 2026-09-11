@@ -19,9 +19,15 @@ void memory(const char* label) {
   std::cerr<<std::flush;
 }
 int main(int argc,char**argv) {
-  if(argc!=3)return 90;
-  rlimit limit{5ULL*1024*1024*1024,5ULL*1024*1024*1024};
+  if(argc!=3&&argc!=4)return 90;
+  const std::string as_arg=argc==4?argv[3]:"5";
+  if(as_arg!="5"&&as_arg!="8")return 93;
+  const rlim_t as_bytes=(as_arg=="8"?8ULL:5ULL)*1024*1024*1024;
+  rlimit limit{as_bytes,as_bytes};
   if(setrlimit(RLIMIT_AS,&limit))return 91;
+  rlimit actual{};
+  if(getrlimit(RLIMIT_AS,&actual)||actual.rlim_cur!=as_bytes||actual.rlim_max!=as_bytes)return 94;
+  std::cerr<<"DIAGNOSTIC_RLIMIT_AS soft="<<actual.rlim_cur<<" hard="<<actual.rlim_max<<std::endl;
   alarm(180);
   const fs::path descriptor=argv[1],backend=argv[2];
   if(descriptor.filename()!="text-context.onnx"||fs::exists(descriptor.parent_path()/"duration-context.onnx"))return 92;
@@ -50,13 +56,13 @@ int main(int argc,char**argv) {
     const auto shape=session->GetOutputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape();
     if(shape!=std::vector<int64_t>{1,256,3200})throw std::runtime_error("wrong text output ABI");
     session.reset();memory("after_text_close");
-    std::cout<<"{\"status\":\"text_context_loaded_and_closed\",\"constructor_seconds\":"<<seconds
+    std::cout<<"{\"status\":\"text_context_loaded_and_closed\",\"RLIMIT_AS_bytes\":"<<as_bytes<<",\"constructor_seconds\":"<<seconds
       <<",\"constructor_calls\":1,\"Run_calls\":0,\"profiling\":false,\"fallback_disabled\":true,\"DP_context_present\":false}"<<std::endl;
     return 0;
   } catch(const std::exception& error) {
     memory("constructor_error");
     std::cerr<<"DIAGNOSTIC_ERROR "<<error.what()<<std::endl;
-    std::cout<<"{\"status\":\"text_context_load_failed\",\"constructor_completed\":"<<(constructed?"true":"false")
+    std::cout<<"{\"status\":\"text_context_load_failed\",\"RLIMIT_AS_bytes\":"<<as_bytes<<",\"constructor_completed\":"<<(constructed?"true":"false")
       <<",\"elapsed_seconds\":"<<std::chrono::duration<double>(Clock::now()-before).count()
       <<",\"constructor_calls\":1,\"Run_calls\":0,\"profiling\":false,\"fallback_disabled\":true,\"DP_context_present\":false}"<<std::endl;
     return 2;

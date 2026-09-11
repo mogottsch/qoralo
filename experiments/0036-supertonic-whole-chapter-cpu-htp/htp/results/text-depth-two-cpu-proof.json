@@ -1,0 +1,69 @@
+{
+  "status": "passed",
+  "test_type": "CPU source-equivalence only, never HTP inputs",
+  "reference_sha256": "cbfd5bbef581f0e793b86a568f8d4aa87fe857f413e5c2ea4780b558fc71600b",
+  "runtime": "1.23.2",
+  "providers": [
+    "CPUExecutionProvider"
+  ],
+  "threads": 4,
+  "original_graph_sha256": "a392eab0764baa31ce60229afc5c6ed007beaffadfc4b63e4f0a39359a6117f7",
+  "calls": [
+    {
+      "graph_sha256": "a392eab0764baa31ce60229afc5c6ed007beaffadfc4b63e4f0a39359a6117f7",
+      "setup_seconds": 0.16494767500080343,
+      "Run_seconds": 2.6967285009995976,
+      "Run_calls": 1,
+      "outputs": {
+        "text_emb": [
+          1,
+          256,
+          3200
+        ]
+      }
+    },
+    {
+      "graph_sha256": "49b135045ea0de261c97ba758ecf8c9c89ffb3946782bc0e1fe5015908d8aec2",
+      "setup_seconds": 0.03811820699957025,
+      "Run_seconds": 1.7293811429990456,
+      "Run_calls": 1,
+      "outputs": {
+        "/text_encoder/attn_encoder/norm_layers_2.1/Transpose_1_output_0": [
+          1,
+          256,
+          3200
+        ],
+        "/text_encoder/convnext/convnext.5/Mul_3_output_0": [
+          1,
+          256,
+          3200
+        ]
+      }
+    },
+    {
+      "graph_sha256": "790e5b0641598666ddcd5160be7330492d623383bb013e8e72af839441a28997",
+      "setup_seconds": 0.031636338999305735,
+      "Run_seconds": 1.6427321450009913,
+      "Run_calls": 1,
+      "outputs": {
+        "text_emb": [
+          1,
+          256,
+          3200
+        ]
+      }
+    }
+  ],
+  "total_Run_calls": 3,
+  "max_absolute_error": 0.0,
+  "rmse": 0.0,
+  "bitwise_equal": true,
+  "tolerance": {
+    "atol": 1e-05,
+    "rtol": 1e-05
+  },
+  "original_output_sha256": "2db33b81ee3a569df6db893929d220803558f275af1b2897454cd2218e74b202",
+  "composed_output_sha256": "2db33b81ee3a569df6db893929d220803558f275af1b2897454cd2218e74b202",
+  "all_outputs_private_not_used_for_HTP": true,
+  "maxrss_kib": 2168904
+}

@@ -1,0 +1,80 @@
+{
+  "status": "same_text_context_load_failed_at5_and8GiB_AS",
+  "cases": [
+    {
+      "private_evidence_dir": "/home/moritz/dev/vibevoice-android-spike/experiments/0036-supertonic-whole-chapter-cpu-htp/htp/.local/phone-text-load-attempt-01",
+      "result": {
+        "status": "text_context_load_failed",
+        "constructor_completed": false,
+        "elapsed_seconds": 2.04596,
+        "constructor_calls": 1,
+        "Run_calls": 0,
+        "profiling": false,
+        "fallback_disabled": true,
+        "DP_context_present": false
+      },
+      "declared_RLIMIT_AS_bytes": 5368709120,
+      "observed_VmPeak_kib": 2994252,
+      "peak_observed_VmHWM_kib": 65120,
+      "peak_sampled_PSS_kib": 61650,
+      "minimum_sampled_MemAvailable_kib": 3937288,
+      "guard_reason": "none",
+      "preflight": [
+        "MemAvailable_kib=4030944",
+        "battery_temperature_tenths_C=281"
+      ],
+      "native_exit": 2,
+      "remote_cleanup_verified": true
+    },
+    {
+      "private_evidence_dir": "/home/moritz/dev/vibevoice-android-spike/experiments/0036-supertonic-whole-chapter-cpu-htp/htp/.local/phone-text-load-attempt-02-as8",
+      "result": {
+        "status": "text_context_load_failed",
+        "RLIMIT_AS_bytes": 8589934592,
+        "constructor_completed": false,
+        "elapsed_seconds": 1.99469,
+        "constructor_calls": 1,
+        "Run_calls": 0,
+        "profiling": false,
+        "fallback_disabled": true,
+        "DP_context_present": false
+      },
+      "declared_RLIMIT_AS_bytes": 8589934592,
+      "observed_VmPeak_kib": 2998352,
+      "peak_observed_VmHWM_kib": 65268,
+      "peak_sampled_PSS_kib": 61757,
+      "minimum_sampled_MemAvailable_kib": 3915824,
+      "guard_reason": "none",
+      "preflight": [
+        "MemAvailable_kib=3941928",
+        "battery_temperature_tenths_C=280"
+      ],
+      "native_exit": 2,
+      "remote_cleanup_verified": true
+    }
+  ],
+  "identical_context_and_runtime": true,
+  "DP_context_and_model_inputs_absent": true,
+  "model_Run_calls_total": 0,
+  "profiling": false,
+  "no_more_limit_bumps": true,
+  "allocator_evidence": {
+    "private_log_sha256": "a6b71ac6b75a1d6c39fbaea1a8d4a430fc91080f6bfefacb476c542efbfbc89a",
+    "observed_function": "rpcmem_alloc_internal",
+    "observed_rejected_predicate": "size >= 0",
+    "requests_bytes": [
+      2666528768,
+      2245001216
+    ],
+    "requests_hex": [
+      "0x9ef00000",
+      "0x85d00000"
+    ],
+    "signed_INT32_MAX": 2147483647,
+    "followup": "apps_mem_request_mmap64 error0x68; context deserialization5005; top-level1002",
+    "interpretation": "The device RPC allocator signed-size rejection path is directly evidenced for requests above INT32_MAX, despite8GiB Linux AS. This is not proof of general physical RAM shortage or all allocator limits.",
+    "later_native_teardown": "Connection-reset/SSR-dead messages retained; directory cleanup is not a claim of warning-free DSP teardown."
+  },
+  "phone_lock_released": true,
+  "app_or_data_modified": false
+}

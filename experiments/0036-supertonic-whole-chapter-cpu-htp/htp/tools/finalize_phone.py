@@ -5,6 +5,7 @@ import array
 import hashlib
 import json
 import math
+import re
 from pathlib import Path
 import sys
 import wave
@@ -55,6 +56,15 @@ def main():
             i=c*512+pos
             if actual[i]!=(noise[i] if pos<active else 0.):raise ValueError('own masked common noise differs')
     metrics={k:d[k] for k in ('runtime','provider','profiling_enabled','threads','text_extent','active_text_positions','latent_extent','natural_active_latent','predicted_duration_seconds','natural_wave_frames','emitted_frames','vocoder_output_frames','setup_seconds','render_stage_seconds','pipeline_wall_seconds','maxrss_kib','stage_setup_seconds','stage_run_seconds')}
+    metrics['stage_names']=d.get('stage_names',['duration','text','vector','vocoder'])
+    native_stderr=(evidence/'stderr.log').read_text()
+    if re.findall(r'^session_ready (\w+)',native_stderr,re.M)!=metrics['stage_names']:raise ValueError('session readiness sequence differs')
+    if re.findall(r'^vector_step_complete (\d+)',native_stderr,re.M)!=['0','1','2','3','4']:raise ValueError('vector step receipt differs')
+    pid_log=evidence/'native-pid-logcat.txt'
+    pid_log_text=pid_log.read_text() if pid_log.exists() else ''
+    if len(metrics['stage_names'])!=len(d['stage_run_seconds']):raise ValueError('stage timing layout differs')
+    stage_seconds=dict(zip(metrics['stage_names'],d['stage_run_seconds']))
+    metrics['logical_stage_run_seconds']={name:(sum(value for key,value in stage_seconds.items() if key.startswith('text')) if name=='text' else stage_seconds[name]) for name in ('duration','text','vector','vocoder')}
     metrics.update(audio_seconds=audio_seconds,rtf_stage_sum=d['render_stage_seconds']/audio_seconds,
                    setup_excluded_pipeline_seconds=d['pipeline_wall_seconds']-d['setup_seconds'],
                    rtf_setup_excluded_pipeline=(d['pipeline_wall_seconds']-d['setup_seconds'])/audio_seconds,
@@ -64,7 +74,8 @@ def main():
             'reference_sha256':manifest['reference_sha256'],'reference_bytes':manifest['reference_bytes'],
             'voice':'M1/SID5','speed':1.0,'steps':5,'device_serial':'R5CW81PR8SY',
             'model':'SM-S918B/SM8550/v73','cpu_fallback_disabled':True,
-            'neural_calls':{'duration':1,'text':1,'vector':5,'vocoder':1},'metrics':metrics,
+            'neural_calls':stage.get('actual_neural_Run_calls',{'duration':1,'text':1,'vector':5,'vocoder':1}),
+            'text_depth_parts':stage.get('text_depth_parts',1),'logical_neural_stages':4,'metrics':metrics,
             'input_tensor_hashes':{k:v['sha256'] for k,v in manifest['tensors'].items()},
             'own_latent_mask_sha256':sha(latmask),'own_initial_latent_sha256':sha(initial),
             'saved_noise_and_own_natural_mask_verified':True,
@@ -76,6 +87,7 @@ def main():
             'timing_method':'steady_clock per constructor and stage; sequential load/run/release, no warm campaigns. Pipeline includes constructor/destructor/host IO; setup-excluded difference is explicitly derived.',
             'profile_metrics':{'rpc_microseconds':None,'accelerator_cycles':None,'hvx_cycles':None,
                                'reason':'profiling intentionally off; earlier large profile-enabled path failed SET_PROFILE6006; no fabricated counters'},
+            'physical_backend_evidence':{'owned_pid_logcat_sha256':sha(pid_log) if pid_log.exists() else None,'QnnHtpV73Skel_observed':'libQnnHtpV73Skel.so' in pid_log_text,'cdsp_domain_observed':'_dom=cdsp' in pid_log_text,'boundary':'Process-scoped native backend/RPC evidence, not per-stage profiler counters.'},
             'thermal_evidence':'private thermal-before.txt and thermal-after.txt retained',
             'private_evidence_dir':str(a.run.resolve()),'private_wav_path':str(pcm_path.resolve()),
             'listening_verdict':'not_reviewed','entire_chapter_intelligible':None,
