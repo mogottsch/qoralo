@@ -1,0 +1,186 @@
+{
+  "schemaVersion": 1,
+  "kind": "short-production-continuation",
+  "sourceCommit": "ca248e61df4cc21ec1f23d370b39aa609bff3888",
+  "sourceDirty": false,
+  "phoneAuthorized": false,
+  "contractSha256": "2f22bd6e500eca3f45e51c401aded0cd570bc576e8f805063f95d6dd02d23721",
+  "contract": {
+    "schemaVersion": 1,
+    "id": "short-product-real-review-continuation-v1",
+    "scope": "MULTI-STAGE continuation of a genuinely generated/revised owned draft; no seeded content/imported WAV or new LLM requests",
+    "priorRunId": "short-product-20260910t231153z",
+    "priorCandidateSha256": "71a192c905ac9daf0230edef46ce3756915eb218aa64d385e5078e7ea5b3b8a4",
+    "priorLogicalGemmaRequests": 5,
+    "episodeId": "ba099f63-74da-43c5-96a1-27eb84251da4",
+    "revisionId": "f48e7ea3-62cf-4afc-9b17-2cc6659c6e5a",
+    "baseRevisionId": "1607bedf-dae7-4daa-baee-faed356a0e78",
+    "contentHash": "c1c9d30a1d1264e5c212b53d53d5b014b1900c56b87945174fbd24f4aeb2c2b5",
+    "title": "Short plumbing ba099f63 checked",
+    "priorJobs": {
+      "SCRIPT": "8ac625a1-d20b-404f-8ae8-cc0fd9df361e",
+      "AGENT_EDIT": "4819b767-19e6-435a-a4e7-931eac4c8294"
+    },
+    "chapters": [
+      {
+        "id": "chapter-1",
+        "title": "Checking Before Borrowing",
+        "textSha256": "ac69e75a3ed7ab6d0831a1aeb6c8443cb2ac37e4da2e013109bc4f0820de8abc",
+        "observedWords": 26,
+        "normalizedCodepoints": 146
+      },
+      {
+        "id": "chapter-2",
+        "title": "Returning Your Book",
+        "textSha256": "2f905b14c2abf2039457c47a834c55c5e6094da3dcc07a0c25687703d312e641",
+        "observedWords": 29,
+        "normalizedCodepoints": 159
+      }
+    ],
+    "wordTarget": [
+      20,
+      25
+    ],
+    "wordTargetIsValidityGate": false,
+    "maxNormalizedCodepoints": 190,
+    "reviewEnabled": true,
+    "newLogicalGemmaRequests": 0,
+    "newAudioJobs": 1,
+    "logicalTtsRequests": 2,
+    "interChapterPauseMs": 700,
+    "audioJobSeconds": 150,
+    "driverSeconds": 360,
+    "hostInstrumentationSeconds": 390,
+    "collectProfiles": false,
+    "profileEvidence": "UNAVAILABLE_BY_DESIGN",
+    "silentAppPlayer": true,
+    "packId": "supertonic-3",
+    "supertonicManifestSha256": "dc4ac737924d7d62e57ff5e166707198095c49e51d77cfed04a44d9e9435952d",
+    "gemmaManifestSha256": "9fb627ef9a4eb0ed49056c32bc16f2846e6edf68dc8d854b02af90e24e4e96cd",
+    "instructionsSha256": "a7e45dbf1ebfd6dde597acda941f2d18627d1f580947343e24e59a286b2271c5",
+    "sources": [
+      {
+        "id": "af1f3baf-27d9-4c5b-af40-217b40b6b38c",
+        "relativePath": "ba099f63-74da-43c5-96a1-27eb84251da4/sources/af1f3baf-27d9-4c5b-af40-217b40b6b38c.txt",
+        "sha256": "aa9c803fd495219b7e2d524de7448ae26ce7b1bbc107db04e65d0af235c9b962",
+        "byteCount": 428
+      }
+    ],
+    "baseContentHash": "f70768cf30bb12f9139a2af95c564800a22debd82c2a8933ccbdf77278775b39"
+  },
+  "hostGuardSha256": "3e807ad5e91c1d2e206f1672873a81f46b726f985ea72780db22cb4587eb3116",
+  "controllerSources": {
+    "tools/run_short_product_gate.py": "327cc39287d5e74cd778a38e38737a429bf3603ed463d47c517fd0a23b08512d",
+    "tools/short_product_preservation.py": "e0da297dec02f71e27c6d71932b41c0bfdf7a1fd3c2d69640abfeb3f8ef82aeb"
+  },
+  "privacyControllerSha256": "a62d204c380a5b2d0c8f7c5bd94729b6f823e18200feed2ebe24fa73962bec3c",
+  "expectedPriorInstalledApks": {
+    "dev.vibevoice.podcast.internal": "ef2894491525fc0facf81a89e1b4c4cf52bbd0ad92407dc0ef9f9a3896f36e87",
+    "dev.vibevoice.podcast.internal.test": "56be356f5a68d0c415e2980bebca9346ece4972f4a0657f0700064ab683f8739"
+  },
+  "buildProperty": "-Ppodcast.shortProductE2e=true",
+  "modelPacks": {
+    "gemma-4-e2b": {
+      "root": "/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/model-packs/gemma-4-e2b/current",
+      "manifestSha256": "9fb627ef9a4eb0ed49056c32bc16f2846e6edf68dc8d854b02af90e24e4e96cd"
+    },
+    "supertonic-3": {
+      "root": "/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/model-packs/supertonic-3/current",
+      "manifestSha256": "dc4ac737924d7d62e57ff5e166707198095c49e51d77cfed04a44d9e9435952d"
+    }
+  },
+  "scope": "MULTI-STAGE real owned review continuation; ZERO new LLM, ONE AUDIO job",
+  "status": "awaiting exact independent review and separate Pi phone release",
+  "app": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/short-product-ready/continuation-01/app.apk",
+    "bytes": 130910925,
+    "sha256": "95103b2cc00676e96fe4a2335d489863fcc609f48d5096d20bee2c69529fe969"
+  },
+  "test": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/podcast-app/.local/short-product-ready/continuation-01/test.apk",
+    "bytes": 2484563,
+    "sha256": "35faf3a6da5464746028a0433e7dc413cce97de1e8dc7f6be52e48e9e92a3625"
+  },
+  "evidenceBindings": {
+    "host-checks.json": {
+      "bytes": 312,
+      "sha256": "cc51821a7e478a2647efea9c868579a14c4ea86464076168b6968a1576483ff3"
+    },
+    "test-manifest.txt": {
+      "bytes": 4737,
+      "sha256": "d4981cab0c5a7311d3e46fb954f906ae4e255f718747069adfa65b0705ae125a"
+    },
+    "focused-continuation-python.log": {
+      "bytes": 1104,
+      "sha256": "4a8b676cef3edf6f77cc2905cb45f31fbe7eca483c84449a462ab130c0397a1e"
+    },
+    "trusted-runtime.log": {
+      "bytes": 262,
+      "sha256": "364d3c493c6603055ffe04caa89053f5e6f5452c122bc0e18d57f782f8aac970"
+    },
+    "test-signature.txt": {
+      "bytes": 955,
+      "sha256": "4434238f6cde4588f2926c79eaf8131abbbfa61bda40df1a3db3800ec7e2b9b7"
+    },
+    "resolved-artifact-hashes.json": {
+      "bytes": 76580,
+      "sha256": "a8714e292d0cacb16c887a7f8aa6e28353fe19b0423a316a5e729c2e283333d5"
+    },
+    "source-proof.json": {
+      "bytes": 33726,
+      "sha256": "aa2b694872a34d5b4f8780a2e64e6fc43506afadebf234833c17151f2a201c80"
+    },
+    "app-manifest.txt": {
+      "bytes": 11695,
+      "sha256": "b963add7a02604ac457374988df06a439181ac50b83b2e11469dbf85304aa68a"
+    },
+    "generated-BuildConfig.java": {
+      "bytes": 930,
+      "sha256": "9d421db262420e2a43ca8355a08c26bd494b40ddc5bc51f1e6bd091a175c1ffc"
+    },
+    "resolved-artifacts.json": {
+      "bytes": 262152,
+      "sha256": "39c18f8553a5f960b4f4fceb3fe12be41132ad543b3da8346b112813293dcdb2"
+    },
+    "focused-python.log": {
+      "bytes": 2072,
+      "sha256": "c4f9bf39b17eafbaddaae003f366430129b93c2641b7e45ecdf9b6e77d86b685"
+    },
+    "host-build.log": {
+      "bytes": 4046,
+      "sha256": "d5d76590f3fe576aa5a35e010c76ea715584461e9305dd7e141d5890ba7db641"
+    },
+    "trusted-runtime.json": {
+      "bytes": 2634,
+      "sha256": "b16b975f1457a2f730ba6246e240d9a5938fc4b46af1cd60f96b11db1b3ba34c"
+    },
+    "native-byte-proof.json": {
+      "bytes": 2061,
+      "sha256": "4bf73203587d876422dcef5a4287267942c747d1e16698d30da71daf43f5ab74"
+    },
+    "app-signature.txt": {
+      "bytes": 955,
+      "sha256": "4434238f6cde4588f2926c79eaf8131abbbfa61bda40df1a3db3800ec7e2b9b7"
+    },
+    "junit/TEST-dev.vibevoice.podcast.e2e.ShortProductPolicyTest.xml": {
+      "bytes": 1157,
+      "sha256": "3e9b22e3e4b6be02398ddd9b51ecf6d35542c0d65d51594c5ce2e04e7354abd9"
+    },
+    "junit/TEST-dev.vibevoice.podcast.runtime.GemmaEditPromptTest.xml": {
+      "bytes": 790,
+      "sha256": "ca5ec8df81c73a87aef3e436d7d58bf25f63bdf90aeb606d995ac7eef08d0e91"
+    },
+    "junit/TEST-dev.vibevoice.podcast.runtime.GemmaChapterPromptTest.xml": {
+      "bytes": 803,
+      "sha256": "b2e2bd873e50dac74c2bce1f2952e24d159946963401122f44db47e2138a7218"
+    },
+    "junit/TEST-dev.vibevoice.podcast.generation.GenerationCoordinatorTest.xml": {
+      "bytes": 1136,
+      "sha256": "84400cc74172e8eee539ce6cb8939d3b39e615f099ecd01031e54d1c2259f024"
+    },
+    "junit/TEST-dev.vibevoice.podcast.e2e.ShortContinuationPolicyTest.xml": {
+      "bytes": 804,
+      "sha256": "737667dec5ca199414139fb077983de66c1a6617360fa46f764004faab934638"
+    }
+  }
+}
