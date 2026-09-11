@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T11:09:58+00:00",
+  "updated_at": "2026-09-11T11:11:14+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -75,12 +75,12 @@
     {
       "id": "qwen",
       "title": "Qwen range audit",
-      "status": "active",
+      "status": "preparing",
       "owner": "Ben",
-      "now": "Ben reports bound FP32 request267335…3e438 STARTED in agreed post-AR1 heavy slot: one model call,18GiB AS/4CPU/600s.",
-      "next": "Reported preflight: AR1 unit inactive/dead Result=success/ExecMainStatus0,PID806553 absent,MemAvailable24GiB. Await Ben output/release; no FP32/QDQ comparison/performance result.",
-      "reported_at": "2026-09-11T11:06:59+00:00",
-      "reported_by": "Ben — actual bounded FP32 worker start",
+      "now": "Qwen FP32 reference worker completed/released: both W4A16 refs far from FP32 (logit cosine QDQ.50597/QNN.49293; argmax198); own-QDQ agreement.888 is not FP32 fidelity.",
+      "next": "Current Linear/Conv W4 already per-channel. Prepare CPU weight-only per-channel vs group32/LPBQ W4 ablations with FP32 activations—diagnostic, not deployed fix; worker after Jere heavy slot.",
+      "reported_at": "2026-09-11T11:11:14+00:00",
+      "reported_by": "Ben — completed FP32 reference +next discriminating source preparation",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -108,10 +108,10 @@
       "title": "On this computer",
       "status": "active",
       "owner": "Jens",
-      "now": "LFM paired PREFILL phone workflow active; Qwen FP32 worker/ Gemma sequential AR1 outcomes await owners; Janek capacity guard/UI continues.",
-      "next": "No LFM result/release inferred. User data/evidence preserved; no app/settings/audio change from LFM pair.",
-      "reported_at": "2026-09-11T11:09:58+00:00",
-      "reported_by": "Jens — actual phone start",
+      "now": "Ben Qwen FP32 worker released; prepares source/parity tests for two CPU weight-only W4 ablations. Jere heavy AR1/next compile has priority; Janek guard/UI continues.",
+      "next": "One future~18GiB/4CPU/≤180s two-call worker after Jere slot, no overlap. No upstream W8 exception copying, no QNN/phone/deployed fix.",
+      "reported_at": "2026-09-11T11:11:14+00:00",
+      "reported_by": "Ben — FP32 worker release and next diagnostic plan",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -138,9 +138,9 @@
     },
     {
       "name": "Ben",
-      "task": "Run one bounded Qwen FP32 model call",
-      "reported_at": "2026-09-11T11:06:59+00:00",
-      "reported_by": "Ben — actual start",
+      "task": "Prepare Qwen CPU W4 per-channel vs group32/LPBQ ablations",
+      "reported_at": "2026-09-11T11:11:14+00:00",
+      "reported_by": "Ben — FP32 reference done; no ablation worker start",
       "stale_after_seconds": 900
     },
     {
