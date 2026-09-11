@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T13:30:21+00:00",
+  "updated_at": "2026-09-11T13:43:54+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -9,10 +9,10 @@
       "title": "0036 CPU result",
       "status": "reviewing",
       "owner": "Recorded result",
-      "now": "Valid full CPU WAV exists, but qualified coverage check is negative; human listening remains not reviewed.",
-      "next": "Retained result only: 29.57s natural duration is not full coverage. HTP path remains separate and has no WAV.",
-      "reported_at": "2026-09-11T13:05:52+00:00",
-      "reported_by": "Kate — compact live-board cleanup; source report unchanged",
+      "now": "CPU exact WAV rejected by Moritz as unusable; qualified ASR coverage failed separately. CPU execution remains valid but is not accepted listening output.",
+      "next": "CPU replay not requested. Remaining human review is exact HTP WAV only; no coverage/fidelity/campaign conclusion transfers.",
+      "reported_at": "2026-09-11T13:43:54+00:00",
+      "reported_by": "Pi — canonical additive CPU listening rejection",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -31,12 +31,12 @@
     {
       "id": "0036-whole-chapter-htp",
       "title": "0036 whole-chapter HTP pipeline",
-      "status": "preparing",
+      "status": "reviewing",
       "owner": "Ben",
-      "now": "Ben has next full3-part 0036 HTP TTS phone slot after app diagnostic release.",
-      "next": "Actual lock/start/result unreported. No HTP WAV/player until a real stable hash-bound WAV; no duration forcing/fallback.",
-      "reported_at": "2026-09-11T13:30:21+00:00",
-      "reported_by": "Pi — next full HTP TTS slot",
+      "now": "HTP real WAV now available: SHA3ae276…a69c,29.578118s/1,304,395 frames/44.1k mono PCM16; qualified ASR coverage also failed.",
+      "next": "Moritz human review required for this exact HTP WAV. No inherited CPU verdict, forced-duration, coverage/fidelity or campaign claim.",
+      "reported_at": "2026-09-11T13:43:54+00:00",
+      "reported_by": "Pi — actual HTP WAV listening handoff",
       "stale_after_seconds": 900,
       "links": []
     },
@@ -143,10 +143,15 @@
       "wav_sha256": "3b631cc55da41f4e87ae3f251204c8d162c377bdf38092b41da0017e8baa0a44"
     },
     "whole_chapter_cpu_pending_review": {
-      "run_id": "0036-whole-chapter-paired-20260911t123235z",
       "wav_sha256": "9b1c8587308fb2a98ef1d600549e8f06beec86c3419684789279a143b17c46d2",
+      "state": "rejected",
+      "review_commit": "9da801069a86a514791b90f8e0b6c18a305504e5",
+      "scope": "Exact CPU WAV only"
+    },
+    "whole_chapter_htp_pending_review": {
+      "wav_sha256": "3ae276f2d61eae37b05df23c334704e69434700dbd9360f74768c075ad40a69c",
       "state": "not_reviewed",
-      "scope": "CPU-only private handoff; HTP absent until actual hash-bound WAV"
+      "scope": "Exact HTP WAV only"
     }
   }
 }
