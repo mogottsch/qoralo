@@ -1,0 +1,37 @@
+{
+  "command": [
+    "nice",
+    "-n",
+    "15",
+    "ionice",
+    "-c",
+    "2",
+    "-n",
+    "7",
+    "prlimit",
+    "--as=4294967296",
+    "--",
+    "taskset",
+    "--cpu-list",
+    "0,1,2,3",
+    "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/bin/python",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/k_cache_boundary_probe.py",
+    "compile",
+    "--root",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/k-cache-boundary-probe-20260911/attempt-01",
+    "--request-sha",
+    "1507d2acddc2f98c2ccdde0e5305af7a126af508aa43b39d05257af0536b29b8"
+  ],
+  "scratch": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/k-cache-boundary-probe-20260911/attempt-01/scratch/compile",
+  "limits": {
+    "AS_bytes": 4294967296,
+    "CPUs": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "seconds": 120,
+    "grace_seconds": 20
+  }
+}

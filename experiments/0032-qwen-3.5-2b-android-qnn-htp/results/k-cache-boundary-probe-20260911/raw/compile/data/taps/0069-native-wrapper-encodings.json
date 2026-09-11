@@ -1,0 +1,560 @@
+{
+  "capture_provenance": {
+    "kind": "actual_host_QNN_binding",
+    "binding": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/python/PyQnnManagerAdaptor.cpython-311-x86_64-linux-gnu.so",
+      "bytes": 903784,
+      "sha256": "5a6c2eefd72a97d28869b4f219ee93d623c126fecf47214ffbad005083f8562f"
+    }
+  },
+  "phase": "returned from _build_op_wrappers, before Compile",
+  "operators": [
+    {
+      "name": "quantized_decomposed_quantize_per_tensor_default",
+      "type": "Quantize",
+      "package": "qti.aisw",
+      "inputs": [
+        {
+          "name": "input_0_cache3@0",
+          "shape": [
+            1,
+            2,
+            256,
+            4095
+          ],
+          "dtype": {
+            "raw_str": "Qnn_DataType_t.QNN_DATATYPE_FLOAT_32",
+            "raw_type": "Qnn_DataType_t",
+            "code": 562,
+            "name": "QNN_DATATYPE_FLOAT_32",
+            "resolved": true,
+            "fixed_point": false
+          },
+          "encoding_kind": null,
+          "bitwidth": null,
+          "axis": null,
+          "encodings": null,
+          "getter_limit": "scale/offset/axis exposed; complete encoding-kind/bitwidth is not exposed",
+          "encoding_reason": "known non-fixed-point dtype; no quantization encoding requested"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "quantized_decomposed_quantize_per_tensor_default@0",
+          "shape": [
+            1,
+            2,
+            256,
+            4095
+          ],
+          "dtype": {
+            "raw_str": "Qnn_DataType_t.QNN_DATATYPE_UFIXED_POINT_16",
+            "raw_type": "Qnn_DataType_t",
+            "code": 1046,
+            "name": "QNN_DATATYPE_UFIXED_POINT_16",
+            "resolved": true,
+            "fixed_point": true
+          },
+          "encoding_kind": null,
+          "bitwidth": null,
+          "axis": -1,
+          "encodings": [
+            {
+              "scale": 0.00029122494743205607,
+              "scale_float32_le_hex": "8daf9839",
+              "qnn_offset": -42000
+            }
+          ],
+          "getter_limit": "scale/offset/axis exposed; complete encoding-kind/bitwidth is not exposed"
+        }
+      ]
+    },
+    {
+      "name": "quantized_decomposed_quantize_per_tensor_default_1",
+      "type": "Quantize",
+      "package": "qti.aisw",
+      "inputs": [
+        {
+          "name": "input_1_key3@0",
+          "shape": [
+            1,
+            2,
+            256,
+            1
+          ],
+          "dtype": {
+            "raw_str": "Qnn_DataType_t.QNN_DATATYPE_FLOAT_32",
+            "raw_type": "Qnn_DataType_t",
+            "code": 562,
+            "name": "QNN_DATATYPE_FLOAT_32",
+            "resolved": true,
+            "fixed_point": false
+          },
+          "encoding_kind": null,
+          "bitwidth": null,
+          "axis": null,
+          "encodings": null,
+          "getter_limit": "scale/offset/axis exposed; complete encoding-kind/bitwidth is not exposed",
+          "encoding_reason": "known non-fixed-point dtype; no quantization encoding requested"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "quantized_decomposed_quantize_per_tensor_default_1@0",
+          "shape": [
+            1,
+            2,
+            256,
+            1
+          ],
+          "dtype": {
+            "raw_str": "Qnn_DataType_t.QNN_DATATYPE_UFIXED_POINT_16",
+            "raw_type": "Qnn_DataType_t",
+            "code": 1046,
+            "name": "QNN_DATATYPE_UFIXED_POINT_16",
+            "resolved": true,
+            "fixed_point": true
+          },
+          "encoding_kind": null,
+          "bitwidth": null,
+          "axis": -1,
+          "encodings": [
+            {
+              "scale": 0.00034575574682094157,
+              "scale_float32_le_hex": "8d46b539",
+              "qnn_offset": -35376
+            }
+          ],
+          "getter_limit": "scale/offset/axis exposed; complete encoding-kind/bitwidth is not exposed"
+        }
+      ]
+    },
+    {
+      "name": "quantized_decomposed_quantize_per_tensor_default_2",
+      "type": "Quantize",
+      "package": "qti.aisw",
+      "inputs": [
+        {
+          "name": "input_2_cache15@0",
+          "shape": [
+            1,
+            2,
+            256,
+            4095
+          ],
+          "dtype": {
+            "raw_str": "Qnn_DataType_t.QNN_DATATYPE_FLOAT_32",
+            "raw_type": "Qnn_DataType_t",
+            "code": 562,
+            "name": "QNN_DATATYPE_FLOAT_32",
+            "resolved": true,
+            "fixed_point": false
+          },
+          "encoding_kind": null,
+          "bitwidth": null,
+          "axis": null,
+          "encodings": null,
+          "getter_limit": "scale/offset/axis exposed; complete encoding-kind/bitwidth is not exposed",
+          "encoding_reason": "known non-fixed-point dtype; no quantization encoding requested"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "quantized_decomposed_quantize_per_tensor_default_2@0",
+          "shape": [
+            1,
+            2,
+            256,
+            4095
+          ],
+          "dtype": {
+            "raw_str": "Qnn_DataType_t.QNN_DATATYPE_UFIXED_POINT_16",
+            "raw_type": "Qnn_DataType_t",
+            "code": 1046,
+            "name": "QNN_DATATYPE_UFIXED_POINT_16",
+            "resolved": true,
+            "fixed_point": true
+          },
+          "encoding_kind": null,
+          "bitwidth": null,
+          "axis": -1,
+          "encodings": [
+            {
+              "scale": 0.00027434100047685206,
+              "scale_float32_le_hex": "6dd58f39",
+              "qnn_offset": -32369
+            }
+          ],
+          "getter_limit": "scale/offset/axis exposed; complete encoding-kind/bitwidth is not exposed"
+        }
+      ]
+    },
+    {
+      "name": "quantized_decomposed_quantize_per_tensor_default_3",
+      "type": "Quantize",
+      "package": "qti.aisw",
+      "inputs": [
+        {
+          "name": "input_3_key15@0",
+          "shape": [
+            1,
+            2,
+            256,
+            1
+          ],
+          "dtype": {
+            "raw_str": "Qnn_DataType_t.QNN_DATATYPE_FLOAT_32",
+            "raw_type": "Qnn_DataType_t",
+            "code": 562,
+            "name": "QNN_DATATYPE_FLOAT_32",
+            "resolved": true,
+            "fixed_point": false
+          },
+          "encoding_kind": null,
+          "bitwidth": null,
+          "axis": null,
+          "encodings": null,
+          "getter_limit": "scale/offset/axis exposed; complete encoding-kind/bitwidth is not exposed",
+          "encoding_reason": "known non-fixed-point dtype; no quantization encoding requested"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "quantized_decomposed_quantize_per_tensor_default_3@0",
+          "shape": [
+            1,
+            2,
+            256,
+            1
+          ],
+          "dtype": {
+            "raw_str": "Qnn_DataType_t.QNN_DATATYPE_UFIXED_POINT_16",
+            "raw_type": "Qnn_DataType_t",
+            "code": 1046,
+            "name": "QNN_DATATYPE_UFIXED_POINT_16",
+            "resolved": true,
+            "fixed_point": true
+          },
+          "encoding_kind": null,
+          "bitwidth": null,
+          "axis": -1,
+          "encodings": [
+            {
+              "scale": 0.0003006155020557344,
+              "scale_float32_le_hex": "ee9b9d39",
+              "qnn_offset": -35268
+            }
+          ],
+          "getter_limit": "scale/offset/axis exposed; complete encoding-kind/bitwidth is not exposed"
+        }
+      ]
+    },
+    {
+      "name": "aten_cat_default",
+      "type": "Concat",
+      "package": "qti.aisw",
+      "inputs": [
+        {
+          "name": "quantized_decomposed_quantize_per_tensor_default@0",
+          "shape": [
+            1,
+            2,
+            256,
+            4095
+          ],
+          "dtype": {
+            "raw_str": "Qnn_DataType_t.QNN_DATATYPE_UFIXED_POINT_16",
+            "raw_type": "Qnn_DataType_t",
+            "code": 1046,
+            "name": "QNN_DATATYPE_UFIXED_POINT_16",
+            "resolved": true,
+            "fixed_point": true
+          },
+          "encoding_kind": null,
+          "bitwidth": null,
+          "axis": -1,
+          "encodings": [
+            {
+              "scale": 0.00029122494743205607,
+              "scale_float32_le_hex": "8daf9839",
+              "qnn_offset": -42000
+            }
+          ],
+          "getter_limit": "scale/offset/axis exposed; complete encoding-kind/bitwidth is not exposed"
+        },
+        {
+          "name": "quantized_decomposed_quantize_per_tensor_default_1@0",
+          "shape": [
+            1,
+            2,
+            256,
+            1
+          ],
+          "dtype": {
+            "raw_str": "Qnn_DataType_t.QNN_DATATYPE_UFIXED_POINT_16",
+            "raw_type": "Qnn_DataType_t",
+            "code": 1046,
+            "name": "QNN_DATATYPE_UFIXED_POINT_16",
+            "resolved": true,
+            "fixed_point": true
+          },
+          "encoding_kind": null,
+          "bitwidth": null,
+          "axis": -1,
+          "encodings": [
+            {
+              "scale": 0.00034575574682094157,
+              "scale_float32_le_hex": "8d46b539",
+              "qnn_offset": -35376
+            }
+          ],
+          "getter_limit": "scale/offset/axis exposed; complete encoding-kind/bitwidth is not exposed"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "aten_cat_default@0",
+          "shape": [
+            1,
+            2,
+            256,
+            4096
+          ],
+          "dtype": {
+            "raw_str": "Qnn_DataType_t.QNN_DATATYPE_UFIXED_POINT_16",
+            "raw_type": "Qnn_DataType_t",
+            "code": 1046,
+            "name": "QNN_DATATYPE_UFIXED_POINT_16",
+            "resolved": true,
+            "fixed_point": true
+          },
+          "encoding_kind": null,
+          "bitwidth": null,
+          "axis": -1,
+          "encodings": [
+            {
+              "scale": 0.00034575574682094157,
+              "scale_float32_le_hex": "8d46b539",
+              "qnn_offset": -35376
+            }
+          ],
+          "getter_limit": "scale/offset/axis exposed; complete encoding-kind/bitwidth is not exposed"
+        }
+      ]
+    },
+    {
+      "name": "quantized_decomposed_dequantize_per_tensor_tensor",
+      "type": "Dequantize",
+      "package": "qti.aisw",
+      "inputs": [
+        {
+          "name": "aten_cat_default@0",
+          "shape": [
+            1,
+            2,
+            256,
+            4096
+          ],
+          "dtype": {
+            "raw_str": "Qnn_DataType_t.QNN_DATATYPE_UFIXED_POINT_16",
+            "raw_type": "Qnn_DataType_t",
+            "code": 1046,
+            "name": "QNN_DATATYPE_UFIXED_POINT_16",
+            "resolved": true,
+            "fixed_point": true
+          },
+          "encoding_kind": null,
+          "bitwidth": null,
+          "axis": -1,
+          "encodings": [
+            {
+              "scale": 0.00034575574682094157,
+              "scale_float32_le_hex": "8d46b539",
+              "qnn_offset": -35376
+            }
+          ],
+          "getter_limit": "scale/offset/axis exposed; complete encoding-kind/bitwidth is not exposed"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output_quantized_decomposed_dequantize_per_tensor_tensor@0",
+          "shape": [
+            1,
+            2,
+            256,
+            4096
+          ],
+          "dtype": {
+            "raw_str": "Qnn_DataType_t.QNN_DATATYPE_FLOAT_32",
+            "raw_type": "Qnn_DataType_t",
+            "code": 562,
+            "name": "QNN_DATATYPE_FLOAT_32",
+            "resolved": true,
+            "fixed_point": false
+          },
+          "encoding_kind": null,
+          "bitwidth": null,
+          "axis": null,
+          "encodings": null,
+          "getter_limit": "scale/offset/axis exposed; complete encoding-kind/bitwidth is not exposed",
+          "encoding_reason": "known non-fixed-point dtype; no quantization encoding requested"
+        }
+      ]
+    },
+    {
+      "name": "aten_cat_default_1",
+      "type": "Concat",
+      "package": "qti.aisw",
+      "inputs": [
+        {
+          "name": "quantized_decomposed_quantize_per_tensor_default_2@0",
+          "shape": [
+            1,
+            2,
+            256,
+            4095
+          ],
+          "dtype": {
+            "raw_str": "Qnn_DataType_t.QNN_DATATYPE_UFIXED_POINT_16",
+            "raw_type": "Qnn_DataType_t",
+            "code": 1046,
+            "name": "QNN_DATATYPE_UFIXED_POINT_16",
+            "resolved": true,
+            "fixed_point": true
+          },
+          "encoding_kind": null,
+          "bitwidth": null,
+          "axis": -1,
+          "encodings": [
+            {
+              "scale": 0.00027434100047685206,
+              "scale_float32_le_hex": "6dd58f39",
+              "qnn_offset": -32369
+            }
+          ],
+          "getter_limit": "scale/offset/axis exposed; complete encoding-kind/bitwidth is not exposed"
+        },
+        {
+          "name": "quantized_decomposed_quantize_per_tensor_default_3@0",
+          "shape": [
+            1,
+            2,
+            256,
+            1
+          ],
+          "dtype": {
+            "raw_str": "Qnn_DataType_t.QNN_DATATYPE_UFIXED_POINT_16",
+            "raw_type": "Qnn_DataType_t",
+            "code": 1046,
+            "name": "QNN_DATATYPE_UFIXED_POINT_16",
+            "resolved": true,
+            "fixed_point": true
+          },
+          "encoding_kind": null,
+          "bitwidth": null,
+          "axis": -1,
+          "encodings": [
+            {
+              "scale": 0.0003006155020557344,
+              "scale_float32_le_hex": "ee9b9d39",
+              "qnn_offset": -35268
+            }
+          ],
+          "getter_limit": "scale/offset/axis exposed; complete encoding-kind/bitwidth is not exposed"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "aten_cat_default_1@0",
+          "shape": [
+            1,
+            2,
+            256,
+            4096
+          ],
+          "dtype": {
+            "raw_str": "Qnn_DataType_t.QNN_DATATYPE_UFIXED_POINT_16",
+            "raw_type": "Qnn_DataType_t",
+            "code": 1046,
+            "name": "QNN_DATATYPE_UFIXED_POINT_16",
+            "resolved": true,
+            "fixed_point": true
+          },
+          "encoding_kind": null,
+          "bitwidth": null,
+          "axis": -1,
+          "encodings": [
+            {
+              "scale": 0.0003006155020557344,
+              "scale_float32_le_hex": "ee9b9d39",
+              "qnn_offset": -35268
+            }
+          ],
+          "getter_limit": "scale/offset/axis exposed; complete encoding-kind/bitwidth is not exposed"
+        }
+      ]
+    },
+    {
+      "name": "quantized_decomposed_dequantize_per_tensor_tensor_1",
+      "type": "Dequantize",
+      "package": "qti.aisw",
+      "inputs": [
+        {
+          "name": "aten_cat_default_1@0",
+          "shape": [
+            1,
+            2,
+            256,
+            4096
+          ],
+          "dtype": {
+            "raw_str": "Qnn_DataType_t.QNN_DATATYPE_UFIXED_POINT_16",
+            "raw_type": "Qnn_DataType_t",
+            "code": 1046,
+            "name": "QNN_DATATYPE_UFIXED_POINT_16",
+            "resolved": true,
+            "fixed_point": true
+          },
+          "encoding_kind": null,
+          "bitwidth": null,
+          "axis": -1,
+          "encodings": [
+            {
+              "scale": 0.0003006155020557344,
+              "scale_float32_le_hex": "ee9b9d39",
+              "qnn_offset": -35268
+            }
+          ],
+          "getter_limit": "scale/offset/axis exposed; complete encoding-kind/bitwidth is not exposed"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output_quantized_decomposed_dequantize_per_tensor_tensor_1@0",
+          "shape": [
+            1,
+            2,
+            256,
+            4096
+          ],
+          "dtype": {
+            "raw_str": "Qnn_DataType_t.QNN_DATATYPE_FLOAT_32",
+            "raw_type": "Qnn_DataType_t",
+            "code": 562,
+            "name": "QNN_DATATYPE_FLOAT_32",
+            "resolved": true,
+            "fixed_point": false
+          },
+          "encoding_kind": null,
+          "bitwidth": null,
+          "axis": null,
+          "encodings": null,
+          "getter_limit": "scale/offset/axis exposed; complete encoding-kind/bitwidth is not exposed",
+          "encoding_reason": "known non-fixed-point dtype; no quantization encoding requested"
+        }
+      ]
+    }
+  ],
+  "finalized_or_fused_graph": false
+}

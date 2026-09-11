@@ -115,10 +115,14 @@ A lower-retention two-process host replay in [`results/host-w4a16-qdq-output-dia
 
 [`results/persistent-boundary-source-design-20260911/`](results/persistent-boundary-source-design-20260911/) traces affected K state3 and same-layout control state15 without model/SDK calls. Their incoming cache domains differ from the wider returned-key/Cat domains. Float host insertion/buffer binding is separate from submitted graph Quantize/Dequantize/Convert declarations. Crucially, `UpdateQnnTensorMeta` copies only an id and post-Compile getters do not expose internal finalized encodings; restored context metadata describes public I/O. Actual selected-state native conversions remain unobserved. A single paired, weight-free K-cache consumer probe is designed but not prepared or released; it is not a repeat of the Conv sweep or a full-model causal test.
 
-## Current next gate
+## Paired K-cache consumer host result
+
+[`results/k-cache-boundary-probe-20260911/`](results/k-cache-boundary-probe-20260911/) retains the first completed weight-free paired consumer: one compile/one load-factory call/one forward, a97,904-byte PTE and oneQnnBackend delegate/zeroET KernelCalls. K3 returns10.02899265 versus fullchain6.85391617; unequal-domain K15 returns1.00014794 versus fullchain0.99984717. All4,194,304 outputs are finite, but only three are nonzero; near-Cat-only agreement is limited to this sparse fixture. Pre-Compile cache Quantize wrappers remain present. Actual execution is **x86-host HtpProvider/RouterX86/libnative**, with the log selecting **v79 despite requestedv73**—not physical Android HTP. No internal-node deletion or full-model/logit-cause claim follows. The factory-load timer is not backend-ready setup. First outcomes, all raw arrays and cleanup are retained; no host retry.
+
+## Current next step
 
 1. Keep physical PTE `23ac8abd…d2c506` and phone preflight unchanged; the 73-output diagnostic PTE is not compatible with the current 49-output Android runner.
-2. The offline48-state audit and new source investigation are complete. Pi decides whether to prepare the bounded paired K-cache probe; exact preparation and execution bindings remain absent. No model/encoding change, calibration, compile, native retry/follow-on or physical work is authorized. The frozen-PTE sweep release remains consumed.
+2. The audit, source investigation and first paired host probe are complete. Prepare the genuinely discriminating unchanged-PTE/input target-v73 comparison with a separate four-input/two-output command-line fixture runner. Do not rerun the same host case merely for nicer agreement or infer a model-encoding fix. Routine phase approval waits are removed; shared host/device scheduling and evidence safety remain required.
 3. No ADB or staging without a new explicit Pi phone slot. Full QNN/physical drift and one-token-only interpretation remain campaign-readiness boundaries.
 4. Only after agreed fidelity and state-isolation gates may chunked prefill and the fixed 1+5+5+5 campaign be promoted.
 

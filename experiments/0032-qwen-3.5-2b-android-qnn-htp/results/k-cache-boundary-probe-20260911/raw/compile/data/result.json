@@ -1,0 +1,41 @@
+{
+  "status": "complete",
+  "high_level_compile_calls": 1,
+  "lowering_seconds": 2.9237807819999944,
+  "artifact": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/.local/k-cache-boundary-probe-20260911/attempt-01/compile/data/probe.pte",
+    "bytes": 97904,
+    "sha256": "d88182196544514ee3dc888b05a68a3eab11d7be90f4f5befd4a8580a01faf0d"
+  },
+  "postpins": "unchanged",
+  "delegation": {
+    "operators": {
+      "aten_cat_default": {
+        "delegated": 2,
+        "non_delegated": 0
+      },
+      "getitem": {
+        "delegated": 0,
+        "non_delegated": 2
+      }
+    },
+    "delegated_subgraphs": 1,
+    "delegated_nodes": 2,
+    "nondelegated_tensor_compute": {},
+    "all_tensor_compute_delegated": true
+  },
+  "final_program": {
+    "plans": [
+      {
+        "name": "forward",
+        "called_kernels": [],
+        "delegate_calls": [
+          "QnnBackend"
+        ]
+      }
+    ],
+    "zero_kernel_calls_all_delegates_qnn": true,
+    "rule": "No approved tensor-free KernelCall exemptions in these fixed probes; Move/Free/Jump are VM plumbing."
+  },
+  "peak_rss_kib": 734600
+}

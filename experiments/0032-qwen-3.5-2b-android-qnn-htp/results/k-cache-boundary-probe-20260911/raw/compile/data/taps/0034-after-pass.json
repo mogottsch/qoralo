@@ -1,0 +1,362 @@
+{
+  "capture_provenance": {
+    "kind": "actual_host_QNN_binding",
+    "binding": {
+      "path": "/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/executorch/backends/qualcomm/python/PyQnnManagerAdaptor.cpython-311-x86_64-linux-gnu.so",
+      "bytes": 903784,
+      "sha256": "5a6c2eefd72a97d28869b4f219ee93d623c126fecf47214ffbad005083f8562f"
+    }
+  },
+  "pass_type": "executorch.backends.qualcomm._passes.recompose_pad_maxpool2d.RecomposePadMaxPool2d",
+  "nodes": [
+    {
+      "name": "cache3",
+      "op": "placeholder",
+      "target": "cache3",
+      "args": [],
+      "kwargs": {},
+      "value_metadata": {
+        "shape": [
+          1,
+          2,
+          256,
+          4095
+        ],
+        "dtype": "torch.float32"
+      },
+      "metadata": {
+        "tensor_meta": null,
+        "desc": {
+          "type": "PlainAOTInput",
+          "text": "PlainAOTInput(idx=0)"
+        },
+        "quant_attrs": {
+          "scale": 0.00029122494743205607,
+          "zero_point": 42000,
+          "quant_min": 0,
+          "quant_max": 65535,
+          "dtype": {
+            "type": "dtype",
+            "text": "torch.int32"
+          },
+          "encoding": {
+            "type": "EdgeOpOverload",
+            "text": "<EdgeOpOverload: quantized_decomposed.quantize_per_tensor.default>: schema = quantized_decomposed::quantize_per_tensor(Tensor input, float scale, int zero_point, int quant_min, int quant_max, ScalarType dtype) -> Tensor"
+          }
+        }
+      }
+    },
+    {
+      "name": "key3",
+      "op": "placeholder",
+      "target": "key3",
+      "args": [],
+      "kwargs": {},
+      "value_metadata": {
+        "shape": [
+          1,
+          2,
+          256,
+          1
+        ],
+        "dtype": "torch.float32"
+      },
+      "metadata": {
+        "tensor_meta": null,
+        "desc": {
+          "type": "PlainAOTInput",
+          "text": "PlainAOTInput(idx=1)"
+        },
+        "quant_attrs": {
+          "scale": 0.00034575574682094157,
+          "zero_point": 35376,
+          "quant_min": 0,
+          "quant_max": 65535,
+          "dtype": {
+            "type": "dtype",
+            "text": "torch.int32"
+          },
+          "encoding": {
+            "type": "EdgeOpOverload",
+            "text": "<EdgeOpOverload: quantized_decomposed.quantize_per_tensor.default>: schema = quantized_decomposed::quantize_per_tensor(Tensor input, float scale, int zero_point, int quant_min, int quant_max, ScalarType dtype) -> Tensor"
+          }
+        }
+      }
+    },
+    {
+      "name": "cache15",
+      "op": "placeholder",
+      "target": "cache15",
+      "args": [],
+      "kwargs": {},
+      "value_metadata": {
+        "shape": [
+          1,
+          2,
+          256,
+          4095
+        ],
+        "dtype": "torch.float32"
+      },
+      "metadata": {
+        "tensor_meta": null,
+        "desc": {
+          "type": "PlainAOTInput",
+          "text": "PlainAOTInput(idx=2)"
+        },
+        "quant_attrs": {
+          "scale": 0.00027434100047685206,
+          "zero_point": 32369,
+          "quant_min": 0,
+          "quant_max": 65535,
+          "dtype": {
+            "type": "dtype",
+            "text": "torch.int32"
+          },
+          "encoding": {
+            "type": "EdgeOpOverload",
+            "text": "<EdgeOpOverload: quantized_decomposed.quantize_per_tensor.default>: schema = quantized_decomposed::quantize_per_tensor(Tensor input, float scale, int zero_point, int quant_min, int quant_max, ScalarType dtype) -> Tensor"
+          }
+        }
+      }
+    },
+    {
+      "name": "key15",
+      "op": "placeholder",
+      "target": "key15",
+      "args": [],
+      "kwargs": {},
+      "value_metadata": {
+        "shape": [
+          1,
+          2,
+          256,
+          1
+        ],
+        "dtype": "torch.float32"
+      },
+      "metadata": {
+        "tensor_meta": null,
+        "desc": {
+          "type": "PlainAOTInput",
+          "text": "PlainAOTInput(idx=3)"
+        },
+        "quant_attrs": {
+          "scale": 0.0003006155020557344,
+          "zero_point": 35268,
+          "quant_min": 0,
+          "quant_max": 65535,
+          "dtype": {
+            "type": "dtype",
+            "text": "torch.int32"
+          },
+          "encoding": {
+            "type": "EdgeOpOverload",
+            "text": "<EdgeOpOverload: quantized_decomposed.quantize_per_tensor.default>: schema = quantized_decomposed::quantize_per_tensor(Tensor input, float scale, int zero_point, int quant_min, int quant_max, ScalarType dtype) -> Tensor"
+          }
+        }
+      }
+    },
+    {
+      "name": "aten_cat_default",
+      "op": "call_function",
+      "target": "<EdgeOpOverload: aten.cat.default>: schema = aten::cat(Tensor[] tensors, int dim=0) -> Tensor",
+      "args": [
+        [
+          {
+            "node": "cache3"
+          },
+          {
+            "node": "key3"
+          }
+        ],
+        -1
+      ],
+      "kwargs": {},
+      "value_metadata": {
+        "shape": [
+          1,
+          2,
+          256,
+          4096
+        ],
+        "dtype": "torch.float32"
+      },
+      "metadata": {
+        "stack_trace": "  File \"/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torch/_dynamo/functional_export.py\", line 221, in forward\n    res = self._export_root(*args, **kwargs)\n  File \"/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/k_cache_boundary_probe.py\", line 84, in forward\n    a=torch.cat((apply(cache3,enc[0]['input']),apply(key3,enc[0]['output'])),dim=-1)\n",
+        "nn_module_stack": {
+          "L__self__": [
+            "",
+            "__main__.module.<locals>.PairedK"
+          ]
+        },
+        "torch_fn": [
+          "cat_1",
+          "builtin_function_or_method.cat"
+        ],
+        "source_fn_stack": [
+          [
+            "cat",
+            {
+              "type": "builtin_function_or_method",
+              "text": "<built-in method cat of type object at 0x7fa407e41c80>"
+            }
+          ]
+        ],
+        "original_aten": {
+          "type": "OpOverload",
+          "text": "aten.cat.default"
+        },
+        "from_node": [
+          {
+            "type": "NodeSource",
+            "text": "(name=cat, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140341497008720)\n    (name=cat, pass_name=ExportedProgram.module(), action=create, graph_id=140341497230544)\n        (name=cat, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140341520052816)\n            (name=cat, pass_name=ExportedProgram.module(), action=create, graph_id=140341499076624)\n                (name=cat, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140341499013776)\n                    (name=cat, pass_name=ExportedProgram.module(), action=create, graph_id=140341490841680)\n                        (name=a, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140341537246288)\n                            (name=a, pass_name=Interpreter_DynamoGraphTransformer, action=create, graph_id=140341519941200)\n"
+          }
+        ],
+        "seq_nr": -1,
+        "tensor_meta": null,
+        "debug_handle": 5,
+        "quant_attrs": {
+          "scale": 0.00034575574682094157,
+          "zero_point": 35376,
+          "quant_min": 0,
+          "quant_max": 65535,
+          "dtype": {
+            "type": "dtype",
+            "text": "torch.int32"
+          },
+          "encoding": {
+            "type": "EdgeOpOverload",
+            "text": "<EdgeOpOverload: quantized_decomposed.quantize_per_tensor.default>: schema = quantized_decomposed::quantize_per_tensor(Tensor input, float scale, int zero_point, int quant_min, int quant_max, ScalarType dtype) -> Tensor"
+          }
+        }
+      }
+    },
+    {
+      "name": "aten_cat_default_1",
+      "op": "call_function",
+      "target": "<EdgeOpOverload: aten.cat.default>: schema = aten::cat(Tensor[] tensors, int dim=0) -> Tensor",
+      "args": [
+        [
+          {
+            "node": "cache15"
+          },
+          {
+            "node": "key15"
+          }
+        ],
+        -1
+      ],
+      "kwargs": {},
+      "value_metadata": {
+        "shape": [
+          1,
+          2,
+          256,
+          4096
+        ],
+        "dtype": "torch.float32"
+      },
+      "metadata": {
+        "stack_trace": "  File \"/home/moritz/dev/vibevoice-android-spike/artifacts/venv-executorch-1.2/lib/python3.11/site-packages/torch/_dynamo/functional_export.py\", line 221, in forward\n    res = self._export_root(*args, **kwargs)\n  File \"/home/moritz/dev/vibevoice-android-spike/experiments/0032-qwen-3.5-2b-android-qnn-htp/tools/k_cache_boundary_probe.py\", line 85, in forward\n    b=torch.cat((apply(cache15,enc[1]['input']),apply(key15,enc[1]['output'])),dim=-1)\n",
+        "nn_module_stack": {
+          "L__self__": [
+            "",
+            "__main__.module.<locals>.PairedK"
+          ]
+        },
+        "torch_fn": [
+          "cat_2",
+          "builtin_function_or_method.cat"
+        ],
+        "source_fn_stack": [
+          [
+            "cat_1",
+            {
+              "type": "builtin_function_or_method",
+              "text": "<built-in method cat of type object at 0x7fa407e41c80>"
+            }
+          ]
+        ],
+        "original_aten": {
+          "type": "OpOverload",
+          "text": "aten.cat.default"
+        },
+        "from_node": [
+          {
+            "type": "NodeSource",
+            "text": "(name=cat_1, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140341497008720)\n    (name=cat_1, pass_name=ExportedProgram.module(), action=create, graph_id=140341497230544)\n        (name=cat_1, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140341520052816)\n            (name=cat_1, pass_name=ExportedProgram.module(), action=create, graph_id=140341499076624)\n                (name=cat_1, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140341499013776)\n                    (name=cat_1, pass_name=ExportedProgram.module(), action=create, graph_id=140341490841680)\n                        (name=b, pass_name=Interpreter_PropagateUnbackedSymInts, action=create, graph_id=140341537246288)\n                            (name=b, pass_name=Interpreter_DynamoGraphTransformer, action=create, graph_id=140341519941200)\n"
+          }
+        ],
+        "seq_nr": -1,
+        "tensor_meta": null,
+        "debug_handle": 10,
+        "quant_attrs": {
+          "scale": 0.0003006155020557344,
+          "zero_point": 35268,
+          "quant_min": 0,
+          "quant_max": 65535,
+          "dtype": {
+            "type": "dtype",
+            "text": "torch.int32"
+          },
+          "encoding": {
+            "type": "EdgeOpOverload",
+            "text": "<EdgeOpOverload: quantized_decomposed.quantize_per_tensor.default>: schema = quantized_decomposed::quantize_per_tensor(Tensor input, float scale, int zero_point, int quant_min, int quant_max, ScalarType dtype) -> Tensor"
+          }
+        }
+      }
+    },
+    {
+      "name": "output",
+      "op": "output",
+      "target": "output",
+      "args": [
+        [
+          {
+            "node": "aten_cat_default"
+          },
+          {
+            "node": "aten_cat_default_1"
+          }
+        ]
+      ],
+      "kwargs": {},
+      "value_metadata": [
+        {
+          "shape": [
+            1,
+            2,
+            256,
+            4096
+          ],
+          "dtype": "torch.float32"
+        },
+        {
+          "shape": [
+            1,
+            2,
+            256,
+            4096
+          ],
+          "dtype": "torch.float32"
+        }
+      ],
+      "metadata": {
+        "from_node": [
+          {
+            "type": "NodeSource",
+            "text": "(name=output, pass_name=ExportedProgram.module().unlift(), action=create+replace, graph_id=140341497008720)\n    (name=output, pass_name=ExportedProgram.module(), action=create, graph_id=140341497230544)\n        (name=output, pass_name=ExportedProgram.module().unlift(), action=create+replace, graph_id=140341520052816)\n            (name=output, pass_name=ExportedProgram.module(), action=create, graph_id=140341499076624)\n                (name=output, pass_name=ExportedProgram.module().unlift(), action=create+replace, graph_id=140341499013776)\n                    (name=output, pass_name=ExportedProgram.module(), action=create, graph_id=140341490841680)\n"
+          }
+        ],
+        "seq_nr": -1,
+        "tensor_meta": [
+          null,
+          null
+        ]
+      }
+    }
+  ],
+  "node_count": 7,
+  "tensor_payloads_read": false
+}
