@@ -1,0 +1,133 @@
+{
+  "experiment": "0036",
+  "route": "Android QNN/HTP",
+  "status": "blocked_at_text_context_load_after_own_duration",
+  "canonical": false,
+  "full_neural_attempts": 1,
+  "preflight_only_attempts": 1,
+  "wav": null,
+  "wav_reason": "Text EPContext load failed before text/vector/vocoder Run; no partial audio or replacement generated.",
+  "reference_sha256": "cbfd5bbef581f0e793b86a568f8d4aa87fe857f413e5c2ea4780b558fc71600b",
+  "reference_bytes": 3190,
+  "text_extent": 3200,
+  "active_text_positions": 3167,
+  "latent_extent": 512,
+  "voice": "M1/SID5",
+  "speed": 1.0,
+  "steps": 5,
+  "device": [
+    "ro.product.model=SM-S918B",
+    "ro.soc.model=SM8550",
+    "ro.product.cpu.abi=arm64-v8a",
+    "ro.build.version.release=16",
+    "ro.build.version.sdk=36"
+  ],
+  "device_serial": "R5CW81PR8SY",
+  "profiling_enabled": false,
+  "cpu_fallback_disabled": true,
+  "native_exit_code": 2,
+  "failure": {
+    "stage": "text session constructor/context reload",
+    "qnn_error_code": 1002,
+    "message": "Failed to load from EpContext model. qnn_backend_manager.cc:1518 LoadCachedQnnContextFromBuffer Failed to create context from binary. Error code: 1002",
+    "cause": null,
+    "cause_boundary": "QNN allocation error class only; not proof of RSS/AS/cgroup/DDR/VTCM exhaustion or profiling failure. No detailed profile enabled."
+  },
+  "completed_neural_Run_calls": {
+    "duration": 1,
+    "text": 0,
+    "vector": 0,
+    "vocoder": 0
+  },
+  "own_duration": {
+    "predicted_seconds": 29.578126907348633,
+    "natural_frames": 1304395,
+    "natural_active_latent": 425,
+    "raw_scalar_sha256": "73b5614d6167a179082c17029976d515a0b300576341cd5c00a9dcee345ae2fc",
+    "session_create_seconds_from_log": 0.447391,
+    "Run_seconds_from_log": 0.763268
+  },
+  "emitted_frames": 0,
+  "render_seconds": null,
+  "rtf": null,
+  "peak_observed_vmhwm_kib": 66136,
+  "peak_sampled_pss_kib": 62863,
+  "minimum_sampled_device_MemAvailable_kib": 2443788,
+  "guard_reason": "none",
+  "memory_boundary": "0.5s own-PID Linux RSS/PSS and device MemAvailable samples; no DSP/VTCM/AS allocation trace. Runner5GiB AS bound,3GiB sampled RSS guard and600MiB emergency MemAvailable floor; no sampled guard fired.",
+  "preflight_only_failure": "Initial temperature parser matched extra timestamp rows and refused before staging/model calls. Anchored current-temperature extraction fixed; declared resource limits unchanged. Private evidence retained.",
+  "phone_transport": {
+    "adb_exit": 2,
+    "adb_wall_seconds": 3.978386163711548
+  },
+  "phone_lock_released": true,
+  "remote_cleanup_verified": true,
+  "installed_app_or_data_touched": false,
+  "retries_after_neural_failure": 0,
+  "private_evidence_dir": "/home/moritz/dev/vibevoice-android-spike/experiments/0036-supertonic-whole-chapter-cpu-htp/htp/.local/phone-full-attempt-02",
+  "context_and_runtime_hashes": {
+    "contexts/duration-context.onnx": {
+      "bytes": 812,
+      "sha256": "1cb7deeee50a60a8f14be9e0501d18ee7df90f6e0c1bf603d3615af5ed0b05f5"
+    },
+    "contexts/duration-context_qnn.bin": {
+      "bytes": 12938104,
+      "sha256": "e9df9226f7265abae8f3e10cd4132f1233398e5d8633038ddf07434740610ddf"
+    },
+    "contexts/text-context.onnx": {
+      "bytes": 821,
+      "sha256": "d7db9e607c1c58fc4a5622bae3a0d18b15975b459c0ebc6e4dd91cdae720bd2e"
+    },
+    "contexts/text-context_qnn.bin": {
+      "bytes": 34424448,
+      "sha256": "e140471e3557bc5c7317a58c2b1b9394780b7bb4c931156fb6a5ed4b2ed489e0"
+    },
+    "contexts/vector-context.onnx": {
+      "bytes": 1023,
+      "sha256": "9ef99d9409b50bea4e451e1d57a1aebc937c164ff4d0a689124760a0d2e938a4"
+    },
+    "contexts/vector-context_qnn.bin": {
+      "bytes": 148629552,
+      "sha256": "9edba913957e1f65ffb67d281b40f4ef547602423461d263644d3e2ff7ed4ab8"
+    },
+    "contexts/vocoder-context.onnx": {
+      "bytes": 729,
+      "sha256": "d4f08236b4ea22ac1369aa83d2627cca2d45b12d896e911abff7240261f7b4cc"
+    },
+    "contexts/vocoder-context_qnn.bin": {
+      "bytes": 54282656,
+      "sha256": "f71c7b25ca4a501d4269f4b88d70c1a37bfab351d156e95d483e0121046cf306"
+    },
+    "lib/libQnnHtp.so": {
+      "bytes": 3786064,
+      "sha256": "a09b3af28342331b3ec9e57ecbe42bfe54a5fff37c4323ce5685c395ae3ee604"
+    },
+    "lib/libQnnHtpV73Skel.so": {
+      "bytes": 11859192,
+      "sha256": "bd54463547f0234d06045699b1f747b7d9d3e3b581874840af50c295b3124f25"
+    },
+    "lib/libQnnHtpV73Stub.so": {
+      "bytes": 771928,
+      "sha256": "2912cc4f29cc5163c36c6c58f931bd08b798ccf8545a670a9498549f95b9036f"
+    },
+    "lib/libQnnSystem.so": {
+      "bytes": 4072160,
+      "sha256": "536201ed918f4066f9ef35671198c072faf9ef04af24545f5fae0fc79aa05baa"
+    },
+    "lib/libc++_shared.so": {
+      "bytes": 1822720,
+      "sha256": "8dfbd800f0d4b8ff2b664b0e5012a4a5f08794668dccfaa29b8b1c2cdcdc18b3"
+    },
+    "lib/libonnxruntime.so": {
+      "bytes": 22399512,
+      "sha256": "643c6f6fd3d2b375ca8f2407a1695acaf55320b8e947adc4284665640fdc3ae9"
+    },
+    "runner": {
+      "bytes": 133992,
+      "sha256": "95f76bfd1c6cbd27dbec06f35515752bf7a94d5de1b07560f71ea468e82c7b39"
+    }
+  },
+  "listening_verdict": "not_reviewed",
+  "entire_chapter_intelligible": null,
+  "next_decision": "Whether to perform a bounded profile-off text-load diagnostic / shape-preserving implementation change; no further phone/model work started."
+}

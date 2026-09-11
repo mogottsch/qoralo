@@ -1,5 +1,11 @@
 # Full unchanged product-reference chapter — HTP arm
 
+**Blocked on physical text-context load; no HTP WAV.** The first neural attempt
+completed its own HTP duration stage, then text EPContext loading failed with QNN
+error1002 before text/vector/vocoder execution. Host exports alone were insufficient.
+The phone lock is released, the unique remote stage removed, and the installed app
+and its data untouched. No neural retry or CPU fallback was used.
+
 Noncanonical experiment0036. This is **not** the226-byte campaign and does not
 produce warm-median or registry claims. All private text, token arrays, intermediate
 features, audio, transcripts and execution logs stay in `.local/`.
@@ -68,8 +74,8 @@ current numeric battery temperature is extracted, not raw battery/charging histo
   absence classifier returned a false negative after successful removal. A separate
   `docker container inspect` proved that exact CID absent. The launcher was fixed;
   duration was not compiled again. Text's normal cleanup check passed.
-- Seven source/structural tests pass and the Android runner builds with
-  `-Wall -Wextra -Werror`. This is not a synthesis/listening result.
+- Nine source/structural/preflight tests pass and the Android runner builds with
+  `-Wall -Wextra -Werror`. Synthetic/parser tests are not native execution proof.
 - NEW T3200/L512 vector and L512 vocoder constructors also passed:167.617s /
   5,978,578,944B cgroup peak and2.501s /602,632,192B respectively; no OOM, containers
   absent, zero Run. All four contexts are ready in a295,512,880B private standalone
@@ -80,8 +86,23 @@ current numeric battery temperature is extracted, not raw battery/charging histo
   values exactly equal. See `results/common-source-equivalence.json`.
 - Shared immutable noise is `[1,144,512]`, SHA `aa7653d857cfcd894800d172d0f4ef80801871493f17e7faca2b0412dafa6c40`.
   All staged tensor hashes were checked against the frozen common manifest.
-- Awaiting the scheduled sequential phone slot for the first physical full render.
-  The487-word chapter's approximately29.57s CPU natural prediction is a serious
-  speech-coverage concern, not a duration to override or repair.
+- First scheduled preflight refused before staging or model calls because an
+  overly broad current-temperature parser also matched timestamp rows. It was
+  corrected to an anchored field plus immediate exit; resource limits were not
+  relaxed. That private failed preflight remains preserved.
+- The first neural attempt then ran own HTP duration successfully:
+  **29.578126907348633s**,1,304,395 natural frames,425 active latents. Its text-session
+  constructor failed with `LoadCachedQnnContextFromBuffer` / QNN1002. No text,
+  vector or vocoder Run followed; no WAV exists. Own-PID observed VmHWM66,136KiB,
+  sampled PSS62,863KiB, minimum sampled device MemAvailable2,443,788KiB; no live
+  safety guard fired. These measurements do not identify the failing allocation
+  or rule out DSP/VTCM/address-space limits. Error1002 alone is not a root cause.
+- See `results/phone-first-attempt-blocked.json`; all content-bearing logs and
+  exact scalar remain private under `.local/phone-full-attempt-02/`. Cleanup0 and
+  phone-lock release are verified. Awaiting a decision on a bounded profile-off
+  text-load diagnosis, not silently retrying the failed neural route.
+- The487-word chapter's approximately29.57s CPU natural prediction and qualified
+  negative CPU ASR coverage result are serious content concerns, not a duration
+  to override or repair. No HTP coverage comparison can be claimed without a WAV.
 
 Only Moritz can accept/reject an exact WAV. Listening verdict is `not_reviewed`.

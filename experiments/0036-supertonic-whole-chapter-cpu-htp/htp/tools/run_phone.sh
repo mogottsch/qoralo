@@ -44,7 +44,7 @@ adb shell 'ps -A -o ARGS' >"$OUT/processes-before.txt"
 if grep -Eq '/data/local/tmp/[^ ]*/runner|llama-bench|qnn-net-run' "$OUT/processes-before.txt"; then echo 'another benchmark process is live'; exit 5; fi
 memory_available=$(adb shell "awk '/^MemAvailable:/{print \$2}' /proc/meminfo" | tr -d '\r')
 # Capture only current numeric temperature, not raw battery state/history.
-battery_temperature=$(adb shell "dumpsys battery | awk '/temperature:/{print \$2}'" | tr -d '\r')
+battery_temperature=$(adb shell "dumpsys battery | awk '/^[[:space:]]*temperature:/{print \$2; exit}'" | tr -d '\r')
 printf 'MemAvailable_kib=%s\nbattery_temperature_tenths_C=%s\n' "$memory_available" "$battery_temperature" >"$OUT/preflight-bounds.txt"
 [[ $memory_available =~ ^[0-9]+$ && $memory_available -ge 3145728 && $battery_temperature =~ ^[0-9]+$ && $battery_temperature -lt 420 ]] || { echo 'memory/thermal preflight bound failed'; exit 6; }
 available=$(adb shell df -Pk /data/local/tmp | awk 'END{print $4}' | tr -d '\r')
