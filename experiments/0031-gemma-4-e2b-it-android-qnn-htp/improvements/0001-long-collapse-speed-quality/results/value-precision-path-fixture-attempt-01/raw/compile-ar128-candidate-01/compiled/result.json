@@ -1,0 +1,96 @@
+{
+  "scope": "one source-island fixture, not the full Gemma model",
+  "classification": "source_island_sm8550_v73_host_compile_passed",
+  "inference": false,
+  "phone_access": false,
+  "dlc": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-probes/20260911T101059Z/derivative-ar128-candidate-01/converted/derivative.dlc",
+    "bytes": 13952,
+    "sha256": "75e8165099c58d5790613c3d241bc0f81ea8eabecde93bbe72ba628655e74a09"
+  },
+  "converted_result_sha256": "0c5a561a74aa942f256c9ab0822c5040c957d0605f95412a9b8b5688eeeb4a4f",
+  "compiler_config_template_sha256": "36c3f95dae0cfa8f2b9da510b24cfd9a2b4278a777ba602a9ed351bc4d63225e",
+  "script_sha256": "e2c8f5f4d10075bba786335a9f76a852085bd101692e3c3cf0b506c61aef52d3",
+  "elapsed_seconds": 2.9304073200000857,
+  "ru_maxrss_kib": 549088,
+  "compiler_config": {
+    "backend": "HTP",
+    "context_custom_configs": [
+      {
+        "weight_sharing_enabled": true,
+        "file_read_memory_budget_in_mb": 0,
+        "io_memory_estimation": false,
+        "max_spill_fill_buffer_for_group": 0,
+        "group_id": 0,
+        "extended_udma": false,
+        "init_acceleration": false,
+        "lora_weight_sharing": false,
+        "lora_weight_sharing_ram_preload": false
+      }
+    ],
+    "debug": false,
+    "device_custom_configs": [
+      {
+        "id": 0,
+        "soc_id": 0,
+        "soc_model": 43,
+        "dsp_arch": "v73",
+        "pd_session": "unsigned",
+        "profiling_level": "linting",
+        "core_ids": null,
+        "core_type": 0,
+        "cores": [
+          {
+            "id": 0,
+            "perf_profile": "burst",
+            "rpc_control_latency": 100,
+            "rpc_polling_time": 9999,
+            "hmx_timeout_us": 300000,
+            "adaptive_polling_time": 0
+          }
+        ]
+      }
+    ],
+    "graph_custom_configs": [
+      {
+        "name": "derivative",
+        "vtcm_size_in_mb": 0,
+        "vtcm_size": 0,
+        "fp16_relaxed_precision": 0,
+        "hvx_threads": 0,
+        "optimization_type": 3,
+        "finalize_config": null,
+        "dlbc": 0,
+        "dlbc_weights": 0,
+        "weights_packing": false,
+        "num_cores": null,
+        "short_depth_conv_on_hmx_off": false,
+        "fold_relu_activation_into_conv_off": false,
+        "advanced_activation_fusion": true,
+        "use_high_precision_fp16_sigmoid": false,
+        "monolithic_lstm": false
+      }
+    ],
+    "log_level": "warn",
+    "op_packages": null,
+    "compiler_custom_configs": null,
+    "enable_intermediate_outputs": null,
+    "set_output_tensors": null,
+    "soc_details": "chipset:SM8550",
+    "io_tensor_mem_type": "memhandle",
+    "memory_custom_config": {
+      "mem_type": "shared_buffer"
+    },
+    "data_format_config": null,
+    "group_context_config": null,
+    "backend_binary_path": null
+  },
+  "graph_alias": "derivative",
+  "context": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-probes/20260911T101059Z/compile-ar128-candidate-01/scratch/temp_working_dir_hkhxc6ty/derivative.bin",
+    "bytes": 58728,
+    "sha256": "08f34ae61078363068e9c7404896618ea5132486707a14309d1f7a5b71659a8e"
+  },
+  "internal_compiled_kernel_precision_proven": false,
+  "physical_execution_proven": false
+}

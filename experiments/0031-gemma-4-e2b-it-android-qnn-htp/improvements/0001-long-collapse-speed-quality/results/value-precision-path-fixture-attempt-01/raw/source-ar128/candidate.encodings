@@ -1,0 +1,82 @@
+{
+  "quantizer_args": {
+    "activation_bitwidth": 16,
+    "dtype": "int",
+    "is_symmetric": true,
+    "param_bitwidth": 4,
+    "per_channel_quantization": true,
+    "quant_scheme": "min_max"
+  },
+  "activation_encodings": [
+    {
+      "name": "opt/conv2d_73/simplify//Transpose_out.merged",
+      "enc_type": "PER_TENSOR",
+      "bw": 16,
+      "dtype": "INT",
+      "is_sym": false,
+      "offset": [
+        -7297.0
+      ],
+      "scale": [
+        0.0006062254349445236
+      ]
+    },
+    {
+      "name": "mul_4709",
+      "enc_type": "PER_TENSOR",
+      "dtype": "FLOAT",
+      "bw": 16
+    },
+    {
+      "name": "cat_58",
+      "enc_type": "PER_TENSOR",
+      "dtype": "FLOAT",
+      "bw": 16
+    },
+    {
+      "name": "val_2019",
+      "enc_type": "PER_TENSOR",
+      "bw": 16,
+      "dtype": "INT",
+      "is_sym": false,
+      "offset": [
+        0.0
+      ],
+      "scale": [
+        1.5259021896696422e-05
+      ]
+    },
+    {
+      "name": "opt/matmul_72/head0.2",
+      "enc_type": "PER_TENSOR",
+      "dtype": "FLOAT",
+      "bw": 16
+    },
+    {
+      "name": "past_value_4_h0_in",
+      "enc_type": "PER_TENSOR",
+      "dtype": "FLOAT",
+      "bw": 16
+    },
+    {
+      "name": "past_value_4_h0_in__float_internal",
+      "enc_type": "PER_TENSOR",
+      "dtype": "FLOAT",
+      "bw": 16
+    },
+    {
+      "name": "past_value_4_h0_out",
+      "enc_type": "PER_TENSOR",
+      "dtype": "FLOAT",
+      "bw": 16
+    },
+    {
+      "name": "past_value_4_h0_out__float_before_fp16",
+      "enc_type": "PER_TENSOR",
+      "dtype": "FLOAT",
+      "bw": 16
+    }
+  ],
+  "param_encodings": [],
+  "version": "1.0.0"
+}

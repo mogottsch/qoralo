@@ -1,0 +1,317 @@
+{
+  "classification": "fixture_dlc_precision_gate_passed",
+  "ar": 128,
+  "candidate": false,
+  "sdk": "/home/moritz/opt/qairt/2.49.40.260810",
+  "script_sha256": "ff13b4c328bfbaa58c55e62c287625ce70bedca5abf2ea8923ac7ddfb6e4e0f3",
+  "helper_sha256": "fa2c50e1facce5b1f680a23c73290ff44aa0ff61e2afc0ac3f031738062e5546",
+  "inference": false,
+  "phone_access": false,
+  "elapsed_seconds": 3.4918901139999434,
+  "fixture": {
+    "ar": 128,
+    "width": 32,
+    "context": 256,
+    "checkpoint_weights": false,
+    "normalization_epsilon": 1e-06,
+    "changes": [],
+    "onnx_sha256": "0a82cb5bb15e7e7f1b2f2a468a9831c2aecb3238aff6fc2dfd10e8679ddd04da",
+    "encodings_sha256": "fb9fdb50af662e7f519acac0dfdfafa2fff5b98050bb7a77699ee9db56cd851f"
+  },
+  "conversion_config": {
+    "float_precision": 32,
+    "float_bias_precision": 32,
+    "input_tensor_config": [
+      {
+        "name": "v_projected",
+        "source_model_input_layout": "NONTRIVIAL",
+        "desired_model_input_layout": null
+      },
+      {
+        "name": "cache_in",
+        "source_model_input_layout": "NONTRIVIAL",
+        "desired_model_input_layout": null
+      },
+      {
+        "name": "scores",
+        "source_model_input_layout": "NONTRIVIAL",
+        "desired_model_input_layout": null
+      }
+    ],
+    "output_tensor_config": [],
+    "use_quantize_v2": false
+  },
+  "dlc": {
+    "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-probes/20260911T101059Z/ar128-control-01/fixture/fixture.dlc",
+    "bytes": 13496,
+    "sha256": "dba1e627a2fb1d7160351f929ad2d13ca602c8f20b30f8c97aa4a927c8290fdc"
+  },
+  "inspection_command": [
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/.local/qairt-2.49.40-venv/bin/python",
+    "/home/moritz/opt/qairt/2.49.40.260810/bin/x86_64-linux-clang/qairt-dlc-info",
+    "-i",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-probes/20260911T101059Z/ar128-control-01/fixture/fixture.dlc",
+    "--save",
+    "/home/moritz/dev/vibevoice-android-spike/experiments/0031-gemma-4-e2b-it-android-qnn-htp/improvements/0001-long-collapse-speed-quality/.local/value-precision-probes/20260911T101059Z/ar128-control-01/fixture/fixture.csv"
+  ],
+  "inspection_exit": 0,
+  "csv_sha256": "afbd48c2e8e9150a7e339edcbc8f3e7386e7ba634deb9ed083f63fd36fe791d2",
+  "gate": {
+    "passed": true,
+    "issues": [],
+    "expected_fp16_island": false,
+    "export_path": [
+      {
+        "id": 6,
+        "name": "cache_export",
+        "type": "Cast",
+        "first_line": 30,
+        "last_line": 30,
+        "inputs": [
+          {
+            "name": "v_transposed_dequantized_FLOAT_32",
+            "datatype": "Float_32",
+            "dimensions": "1,1,128,32",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "cache_out",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,32",
+            "tensor_type": "APP_READ"
+          }
+        ],
+        "parameters": [
+          "packageName: qti.aisw"
+        ]
+      },
+      {
+        "id": 5,
+        "name": "v_transposed_dequantized_FLOAT_32",
+        "type": "Dequantize",
+        "first_line": 29,
+        "last_line": 29,
+        "inputs": [
+          {
+            "name": "v_transposed",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,32",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "v_transposed_dequantized_FLOAT_32",
+            "datatype": "Float_32",
+            "dimensions": "1,1,128,32",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": []
+      },
+      {
+        "id": 3,
+        "name": "v_transpose",
+        "type": "Transpose",
+        "first_line": 24,
+        "last_line": 26,
+        "inputs": [
+          {
+            "name": "v_normalized_converted_QNN_DATATYPE_UFIXED_POINT_16",
+            "datatype": "uFxp_16",
+            "dimensions": "1,128,1,32",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "v_transposed",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,32",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "v_transposed encoding : bitwidth 16, min -20.479999542236, max 20.479373931885, scale 0.000624999986, offset -32768.000000000000",
+          "packageName: qti.aisw",
+          "perm: [0, 2, 1, 3]"
+        ]
+      },
+      {
+        "id": 2,
+        "name": "v_normalized_converted_QNN_DATATYPE_UFIXED_POINT_16",
+        "type": "Convert",
+        "first_line": 21,
+        "last_line": 23,
+        "inputs": [
+          {
+            "name": "v_normalized",
+            "datatype": "Float_16",
+            "dimensions": "1,128,1,32",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "v_normalized_converted_QNN_DATATYPE_UFIXED_POINT_16",
+            "datatype": "uFxp_16",
+            "dimensions": "1,128,1,32",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "v_normalized_converted_QNN_DATATYPE_UFIXED_POINT_16 encoding : bitwidth 16, min -20.479999542236, max 20.479373931885, scale 0.000624999986, offset -32768.000000000000",
+          "dynamic_input_data: False",
+          "dynamic_output_data: False"
+        ]
+      },
+      {
+        "id": 1,
+        "name": "rms_norm_v_",
+        "type": "RmsNorm",
+        "first_line": 17,
+        "last_line": 20,
+        "inputs": [
+          {
+            "name": "v_projected_converted_QNN_DATATYPE_FLOAT_16",
+            "datatype": "Float_16",
+            "dimensions": "1,128,1,32",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "v_normalize_weight",
+            "datatype": "Float_16",
+            "dimensions": "32",
+            "tensor_type": "STATIC"
+          },
+          {
+            "name": "v_normalize_weight_bias",
+            "datatype": "Float_16",
+            "dimensions": "32",
+            "tensor_type": "STATIC"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "v_normalized",
+            "datatype": "Float_16",
+            "dimensions": "1,128,1,32",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "v_normalized encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000624999986, offset -32768.000000000000",
+          "axes: [3]",
+          "epsilon: 1e-06",
+          "packageName: qti.aisw"
+        ]
+      },
+      {
+        "id": 0,
+        "name": "v_projected_converted_QNN_DATATYPE_FLOAT_16",
+        "type": "Convert",
+        "first_line": 14,
+        "last_line": 16,
+        "inputs": [
+          {
+            "name": "v_projected",
+            "datatype": "uFxp_16",
+            "dimensions": "1,128,1,32",
+            "tensor_type": "APP_WRITE"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "v_projected_converted_QNN_DATATYPE_FLOAT_16",
+            "datatype": "Float_16",
+            "dimensions": "1,128,1,32",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "v_projected encoding : bitwidth 16, min -20.479999542236, max 20.479373931885, scale 0.000624999986, offset -32768.000000000000",
+          "dynamic_input_data: False",
+          "dynamic_output_data: False"
+        ]
+      }
+    ],
+    "concat": [
+      {
+        "id": 7,
+        "name": "cache_concat",
+        "type": "Concat",
+        "first_line": 31,
+        "last_line": 33,
+        "inputs": [
+          {
+            "name": "cache_in",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,32",
+            "tensor_type": "APP_WRITE"
+          },
+          {
+            "name": "v_transposed_converted_QNN_DATATYPE_FLOAT_16",
+            "datatype": "Float_16",
+            "dimensions": "1,1,128,32",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "v_joined",
+            "datatype": "Float_16",
+            "dimensions": "1,1,256,32",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "parameters": [
+          "v_joined encoding : bitwidth 16, min 0.000000000000, max 0.000000000000, scale 0.000624999986, offset -32768.000000000000",
+          "axis: 2",
+          "packageName: qti.aisw"
+        ]
+      }
+    ],
+    "value_matmul": [
+      {
+        "id": 10,
+        "name": "value_attention",
+        "type": "MatMul",
+        "first_line": 42,
+        "last_line": 46,
+        "inputs": [
+          {
+            "name": "probabilities",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,256",
+            "tensor_type": "NATIVE"
+          },
+          {
+            "name": "v_joined_converted_QNN_DATATYPE_UFIXED_POINT_16",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,256,32",
+            "tensor_type": "NATIVE"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "attention_read",
+            "datatype": "uFxp_16",
+            "dimensions": "1,1,128,32",
+            "tensor_type": "APP_READ"
+          }
+        ],
+        "parameters": [
+          "attention_read encoding : bitwidth 16, min -20.479999542236, max 20.479373931885, scale 0.000624999986, offset -32768.000000000000",
+          "packageName: qti.aisw",
+          "transpose_in0: False",
+          "transpose_in1: False",
+          "MACs per inference: 1M (100%)"
+        ]
+      }
+    ],
+    "physical_execution": false,
+    "full_model_precision_proven": false
+  }
+}
