@@ -31,6 +31,12 @@ def main():
         path=Path(supertonic.__file__).parent/record['file']
         if sha(path.read_bytes())!=record['sha256']:raise ValueError('official source drift')
     if config.MODEL_CONFIGS['supertonic-3']['revision']!=HF_REV:raise ValueError('weight-revision mismatch')
+    inventory=json.loads((ROOT/'experiments/0011-supertonic-official-fp32-phone-comparison/results/source-inventory.json').read_text())
+    for record in inventory['assets']:
+        if record['path'] in ['onnx/tts.json','onnx/unicode_indexer.json','voice_styles/M1.json'] and sha((ASSETS/record['path']).read_bytes())!=record['sha256']:
+            raise ValueError('official config/indexer/voice bytes changed')
+    model_config=json.loads((ASSETS/'onnx/tts.json').read_text())
+    if (model_config['ae']['sample_rate'],model_config['ae']['base_chunk_size'],model_config['ttl']['chunk_compress_factor'],model_config['ttl']['latent_dim'])!=(44100,512,6,24):raise ValueError('model constants mismatch')
     raw=REFERENCE.read_bytes()
     if sha(raw)!=REF_SHA or len(raw)!=3190:raise ValueError('reference changed')
     text=raw.decode('utf-8')

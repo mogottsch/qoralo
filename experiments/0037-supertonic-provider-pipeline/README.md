@@ -1,6 +1,6 @@
 # Supertonic provider-prescribed segmented pipeline
 
-**Status: official recipe and 15-segment input frozen; native Android CPU baseline built, awaiting coordinated phone slot.** This is a new, noncanonical product-reference experiment. It does not replace or reinterpret experiment 0036: that earlier test prohibited text/audio segmentation and its CPU WAV was rejected.
+**Status: one complete native Android CPU provider-pipeline WAV produced. Qualified unprompted ASR strongly supports whole-chapter coverage (2.42% word error); human listening not yet reviewed. HTP adaptation remains Ben's parallel track.** This is a new, noncanonical product-reference experiment. It does not replace or reinterpret experiment 0036: that earlier test prohibited text/audio segmentation and its CPU WAV was rejected.
 
 ## Question
 
@@ -59,13 +59,50 @@ Phone `R5CW81PR8SY` is scheduled by Pi **behind Janek's app work**. `artifacts/l
 
 Raw chapter/chunks, tensors, WAVs, profiles, ASR transcripts and content-bearing logs remain in ignored `.local/`. Public files contain source and non-sensitive metadata/hashes only. The existing offline Whisper-small control (0% word error on the canonical CPU sample) supports a single unprompted coverage check on each exact new full WAV. Only Moritz can accept or reject audio; initial status is `not_reviewed`.
 
+## First Android CPU result
+
+The single scheduled run completed all **165 own CPU neural calls**: 15 duration, 15 text, 120 vector (eight per chunk), and 15 vocoder. All four ORT profiles contain only `CPUExecutionProvider` events, and the four sessions were kept resident and reused. No separate duration calibration, host neural substitution or second chapter render was performed.
+
+| Measurement | First CPU provider-pipeline chapter |
+| --- | ---: |
+| Completed provider segments | 15 |
+| Emitted native speech | 205.844898 s |
+| Prescribed gaps | 14 × 0.3 s = 4.2 s |
+| Final actual audio | **210.044898 s** |
+| Four-session setup | 0.813180 s |
+| First complete chunk playable on device, from process entry | **10.041025 s** |
+| First complete chunk playable, from sessions ready | 9.197313 s |
+| First completed chunk observed on host, from command launch | **10.855411 s** |
+| Whole generation through final WAV close | **112.709261 s** |
+| RTF including prescribed gaps | **0.536596** |
+| Peak process RSS | **780,264 KiB** (about 762 MiB) |
+| Battery temperature before → after | 27.7 → 30.6°C |
+
+All 15 completed chunk files were pulled while the controller was active, and their hashes match the chunks used in the final output. Each emitted segment is its full native `L * 3072` extent. The final PCM payload was verified byte-for-byte as those exact chunk payloads plus the fourteen prescribed zero gaps. The native vocoder-grid rounding contributes about 0.358 seconds beyond the sum of predicted speech durations; no duration-based crop was applied.
+
+The exact final PCM16 mono 44.1 kHz WAV is private:
+
+```text
+.local/cpu/20260911T140048Z-full/phone/output/chapter.wav
+SHA-256 6848fcd649f11ca0b5d2ecdeb237fb3337690ead18ceb2939ba54c9e72e9a0be
+```
+
+One unprompted offline Whisper-small decode recovered **493 words against 495 normalized reference words**: 10 substitutions, two deletions, no insertions, **2.4242% WER**, and 483 exact aligned matches. Every reference decile has 46–50 exact matches; 29 of the final 30 words matched. This strongly supports full-chapter coverage, but does not prove every word was spoken correctly or grant human listening acceptance. **Moritz's verdict remains `not_reviewed`.** Raw transcripts stay private.
+
+The same chapter's 0036 single-pass CPU output was only 29.57 seconds with 89.09% WER and was rejected by Moritz. The new result follows the complete prescribed recipe: segmentation, normalization order, eight steps, speed 1.05 and native-wave assembly all changed together. This is not a single-factor causal experiment proving segmentation alone fixed the old failure.
+
+Phone lock and host ASR lock were released. The uniquely named phone directory was removed; app/data were untouched. First-run/profile/transport qualifications above remain applicable; no warm median or accepted-quality throughput claim is made.
+
 ## Source and checks
 
 - `common/prepare_inputs.py`: executes pinned official segmentation/frontend, preserves source-order evidence, prepares shared stochastic stream.
 - `protocol/inputs.json`, `protocol/freeze.json`: exact shared recipe, chunk identities and immutable bindings.
 - `cpu/runner.cc`: complete dynamic Android CPU pipeline and promptly available chunk WAVs.
 - `cpu/build.sh`, `cpu/run_phone.py`: pinned original models, native build, phone safety/transport/controller.
-- `cpu/test_protocol.py`: nine synthetic/metadata tests, including chunk ordering, overlong sentences, continuous Gaussian correspondence, latent arithmetic and PCM16 conversion. No neural inference in these tests.
+- `cpu/test_protocol.py`: synthetic/protocol and retained-result checks, including chunk ordering, overlong sentences, continuous Gaussian correspondence, latent arithmetic and PCM16 conversion. No neural inference in these tests.
+- `cpu/summarize.py`, `cpu/results/first-chapter-01.json`: phase/timing/provider/memory/thermal/stochastic/WAV evidence, exact assembly checks and all 15 chunk results.
+- `cpu/results/asr-first-chapter-01.json`: unprompted automatic coverage evidence; no transcript text.
+- `protocol/assets.json`: verified official config/indexer/voice source identities and runtime constants; frozen inputs are unchanged.
 
 Build: `bash experiments/0037-supertonic-provider-pipeline/cpu/build.sh`. Tests use the already-installed experiment 0007 Supertonic 1.3.1 environment:
 

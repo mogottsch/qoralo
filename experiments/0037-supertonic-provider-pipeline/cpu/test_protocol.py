@@ -61,4 +61,27 @@ class RecipeTests(unittest.TestCase):
         self.assertNotIn('.AppendExecutionProvider',text)
         self.assertLess(text.index('std::make_unique<Ort::Session>'),text.index('for(int index=0;index<count;++index)'))
 
+class ResultTests(unittest.TestCase):
+    def test_single_complete_provider_pipeline(self):
+        x=json.loads((ROOT/'cpu/results/first-chapter-01.json').read_text())
+        self.assertEqual(x['chunk_count'],15);self.assertEqual(x['session_count'],4)
+        self.assertEqual({k:v['model_run_calls'] for k,v in x['provider_evidence'].items()},{'duration':15,'text':15,'vector':120,'vocoder':15})
+        self.assertEqual(x['total_gap_frames'],14*13230)
+        self.assertEqual(x['emitted_frames'],x['speech_vocoder_frames']+x['total_gap_frames'])
+        self.assertTrue(x['assembly_verified_exact_pcm'])
+        self.assertEqual(len(x['host_chunk_availability']),15)
+        self.assertLess(x['first_chunk_playable_from_entry_seconds'],x['entry_to_complete_seconds'])
+        self.assertEqual(x['wav']['sha256'],'6848fcd649f11ca0b5d2ecdeb237fb3337690ead18ceb2939ba54c9e72e9a0be')
+        for chunk in x['chunks']:
+            self.assertEqual(chunk['emitted_frames'],chunk['native_latent']*3072)
+            self.assertTrue(chunk['exact_saved_rng_correspondence'])
+    def test_automatic_support_is_not_human_acceptance(self):
+        x=json.loads((ROOT/'cpu/results/first-chapter-01.json').read_text())
+        self.assertEqual(x['coverage_status'],'strong_automatic_support_not_human_acceptance')
+        self.assertEqual(x['asr_summary']['reference_words'],495)
+        self.assertEqual(x['asr_summary']['hypothesis_words'],493)
+        self.assertLess(x['asr_summary']['word_error_rate'],0.03)
+        self.assertEqual(x['listening_acceptance'],'not_reviewed')
+        self.assertIsNone(x['warm_median_rtf'])
+
 if __name__=='__main__':unittest.main()
