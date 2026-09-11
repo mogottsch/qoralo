@@ -1,6 +1,6 @@
 # Whole-chapter Supertonic: Android CPU vs Android HTP
 
-Status: **Android CPU duration calibration complete; full CPU and HTP renders pending.** This is a **noncanonical product-reference comparison**, not the canonical 226-byte TTS campaign. No warm-median or registry claim is intended. This experiment preserves earlier Supertonic experiments and does not change the installed podcast app or its limits.
+Status: **One full Android CPU WAV produced; automatic whole-chapter coverage check failed. HTP render pending.** This is a **noncanonical product-reference comparison**, not the canonical 226-byte TTS campaign. No warm-median or registry claim is intended. This experiment preserves earlier Supertonic experiments and does not change the installed podcast app or its limits.
 
 ## Question and fixed input
 
@@ -30,6 +30,34 @@ Enforced CPU limits: 5 GiB process address-space bound; 180-second duration-cali
 
 All reference text, normalized text, tensor bundles, waveforms, ASR transcripts, profiles, and potentially content-bearing logs remain under ignored `.local/`. Public artifacts contain source and non-sensitive metadata/hashes only. Exact WAV validity and local ASR can support coverage evaluation; **only Moritz grants listening acceptance**, initially `not_reviewed`. No autoplay or empty listening page is created.
 
+## CPU first full result
+
+The complete Android CPU route ran once, with its own duration predictor, text encoder, five vector calls, and one whole vocoder call. All four ORT profiles contain only CPU execution events: 186 duration, 311 text, 3,970 vector (five × 794), and 115 vocoder.
+
+| Measurement | First full CPU run |
+| --- | ---: |
+| Natural predicted duration | 29.56986237 s |
+| Emitted WAV | 1,304,030 frames / 29.56984127 s |
+| Setup, summed sequential stage constructors | 0.796162 s |
+| Duration / text / five vector / vocoder execution | 0.7581 / 2.6585 / 13.7956 / 1.3101 s |
+| Generation wall time excluding session setup | 18.597834 s |
+| RTF, that wall time / emitted audio duration | 0.628946 |
+| Peak process RSS, Android `getrusage` | 2,102,392 KiB (about 2.01 GiB) |
+| Battery temperature before → after | 27.8 → 28.3°C |
+
+This is a **single profiled run**, not a warm median. Sequential constructors, profile finalization, and private evidence writes are disclosed in the timing metadata. The phone lock was held throughout staging/execution/pull/cleanup and released afterwards; the unique remote directory was removed, with no app/data change.
+
+The real PCM16 mono 44.1 kHz WAV is retained privately at:
+
+```text
+.local/cpu/20260911T123235Z-full/phone/output/cpu.wav
+SHA-256 9b1c8587308fb2a98ef1d600549e8f06beec86c3419684789279a143b17c46d2
+```
+
+It is finite, nonempty and unclipped, but that does not establish intelligibility or coverage. The qualified unprompted local ASR produced **103 words against 495 regex-normalized reference words**, with **89.09% word error**, 392 deletions and 49 substitutions. Only three of the final 30 reference words matched. The original raw chapter's 487 whitespace-word count uses a different tokenizer; nothing was removed from the model input.
+
+**Full chapter coverage is not demonstrated and the automatic check fails strongly.** No output repair, duration forcing, second render or ASR retry was performed. Moritz's listening verdict remains **`not_reviewed`**. Raw transcripts stay private.
+
 ## Files
 
 - `common/prepare_inputs.py`: private frontend, voice, schedule, and shared noise bundle.
@@ -42,3 +70,5 @@ All reference text, normalized text, tensor bundles, waveforms, ASR transcripts,
 - `cpu/results/duration-calibration-01.json`: separate Android CPU calibration evidence; 186 CPU-only profile kernel events.
 - `common/asr_coverage.py`: offline unprompted Whisper-small analysis, CPU-only and bounded. The existing canonical CPU control WAV produced 0% word error over 36 normalized words; this qualifies the local analysis setup, not chapter coverage or listening acceptance.
 - `cpu/results/asr-control-01.json`: control metadata; raw ASR output stays private.
+- `cpu/results/full-render-01.json`: complete first CPU execution, WAV identity, phase/provider/memory/thermal evidence and failed automatic coverage status.
+- `cpu/results/asr-full-render-01.json`: qualified automatic coverage metrics for that exact WAV; no transcript text.

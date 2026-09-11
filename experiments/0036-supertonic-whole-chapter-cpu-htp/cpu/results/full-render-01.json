@@ -1,0 +1,169 @@
+{
+  "result": "passed",
+  "action": "full",
+  "runtime": "1.27.1",
+  "provider": "CPUExecutionProvider",
+  "profiling_enabled": true,
+  "threads": 4,
+  "text_extent": 3200,
+  "active_text_positions": 3167,
+  "latent_extent": 512,
+  "natural_active_latent": 425,
+  "predicted_duration_seconds": 29.56986237,
+  "natural_wave_frames": 1304030,
+  "emitted_frames": 1304030,
+  "vocoder_output_frames": 1572864,
+  "setup_seconds": 0.796161926,
+  "render_stage_seconds": 18.52230791,
+  "pipeline_wall_seconds": 19.39399604,
+  "audio_seconds": 29.56984127,
+  "rtf_stage_sum": 0.6263918612,
+  "maxrss_kib": 2102392,
+  "stage_setup_seconds": [
+    0.053972083,
+    0.127321823,
+    0.438581197,
+    0.176286823
+  ],
+  "stage_run_seconds": [
+    0.758074479,
+    2.65851604,
+    13.79557822,
+    1.310139166
+  ],
+  "profiles": [
+    "output/duration_2026-09-11_13-32-47_377.json",
+    "output/text_2026-09-11_13-32-48_193.json",
+    "output/vector_2026-09-11_13-32-50_992.json",
+    "output/vocoder_2026-09-11_13-33-05_259.json"
+  ],
+  "canonical": false,
+  "reference_sha256": "cbfd5bbef581f0e793b86a568f8d4aa87fe857f413e5c2ea4780b558fc71600b",
+  "attempt": {
+    "action": "full",
+    "returncode": 0,
+    "abort_reason": null,
+    "phone_command_wall_seconds": 21.636160955000378,
+    "remote": "/data/local/tmp/exp0036-cpu-20260911T123235Z-full",
+    "host_output": "/home/moritz/dev/vibevoice-android-spike/experiments/0036-supertonic-whole-chapter-cpu-htp/.local/cpu/20260911T123235Z-full"
+  },
+  "cleanup": {
+    "removed": "/data/local/tmp/exp0036-cpu-20260911T123235Z-full",
+    "app_touched": false
+  },
+  "device": {
+    "model": "SM-S918B",
+    "soc": "SM8550",
+    "abi": "arm64-v8a"
+  },
+  "private_evidence_path": "experiments/0036-supertonic-whole-chapter-cpu-htp/.local/cpu/20260911T123235Z-full",
+  "provider_evidence": {
+    "duration": {
+      "profile_sha256": "709044c1d2d48203c4dce4e4d148f1b84fe739fb422edd5c6c74c263f7a17e6b",
+      "kernel_events_by_provider": {
+        "CPUExecutionProvider": 186
+      },
+      "distinct_profile_kernel_names": 186
+    },
+    "text": {
+      "profile_sha256": "d010595d7a4f402b2860c09b6c045f2dda7bd636d951da1b9a13a4ba87b12adc",
+      "kernel_events_by_provider": {
+        "CPUExecutionProvider": 311
+      },
+      "distinct_profile_kernel_names": 311
+    },
+    "vector": {
+      "profile_sha256": "471a32051f6b60ed1eb698616c2e33de449bcb364c0f51ed8cfd830cfe176e8f",
+      "kernel_events_by_provider": {
+        "CPUExecutionProvider": 3970
+      },
+      "distinct_profile_kernel_names": 794
+    },
+    "vocoder": {
+      "profile_sha256": "0a4e5ef45bc1f4d9e7ec628338f19c2bb4ff32ea814c8ed52f5728a292969ff6",
+      "kernel_events_by_provider": {
+        "CPUExecutionProvider": 115
+      },
+      "distinct_profile_kernel_names": 115
+    }
+  },
+  "input_and_binary_sha256": {
+    "runner": "fc29f54e90a0eaba7bf9985ff585bccfed10c74cd37d27e77df9bbddb2f3add0",
+    "bundle/total_step.f32": "fca31f1667a6aa1bba12fca4e4ea1becd503379d80da3213af07f6cc5702828d",
+    "bundle/noise.f32": "aa7653d857cfcd894800d172d0f4ef80801871493f17e7faca2b0412dafa6c40",
+    "bundle/style_ttl.f32": "83d2429acffbc2456a42bcee08a56ff04e775d6ea5c5bbef1529a988628367e7",
+    "bundle/style_dp.f32": "2eb6d16f4ede0ea14c9e84ba1f8b8d62bdfd28cce4bfd18fef963a9f4097ea62",
+    "bundle/text_mask.f32": "02b376bfe8d96b470e6fbfede1b5ab71da2fa107bd4d18a403856b5da4afe4b7",
+    "bundle/current_step.f32": "8deb90668ea3a6845d5c04454798ccb63829a88ff827892f2dc11c808baac7af",
+    "bundle/text_ids.i64": "da2db62a0bfcedccec10b91a01bafac87165624f7d6b52133b22ff99f3b5ba22",
+    "bundle/manifest.json": "8717ac44573d98e7dfbf32353e625acfe96a1032abd052e12cef2adda5ddd294",
+    "models/text.onnx": "a392eab0764baa31ce60229afc5c6ed007beaffadfc4b63e4f0a39359a6117f7",
+    "models/duration.onnx": "ebeb4ad28fb819157b7fa4dcbd346534581e7d75abbf1758cd92446d3379907a",
+    "models/vector.onnx": "140104d32cff234c0de7b0b02222a0b6af0b023bba2df2b1991a9ef30b717a82",
+    "models/vocoder.onnx": "c1b3a067426dffd74ca94536c0e2926dfeca6c8a4cb70078883543117a87d6bc",
+    "lib/libc++_shared.so": "77a34d3f03b17709f3f6473f37cb7795314e51fa3e5e652b5c37d53cfd05c754",
+    "lib/libonnxruntime.so": "643c6f6fd3d2b375ca8f2407a1695acaf55320b8e947adc4284665640fdc3ae9"
+  },
+  "predicted_duration_scalar_sha256": "d1d333f46dd8027f74d005b7b8ae7281a934ac35205d13e56c1f6500a6c078b8",
+  "thermal_context": {
+    "before": {
+      "mem_available_kib": 3604864,
+      "battery_temperature_tenths_c": 278
+    },
+    "after": {
+      "mem_available_kib": 3821564,
+      "battery_temperature_tenths_c": 283
+    }
+  },
+  "sampled_rss_peak_kib": 1902452,
+  "memory_method": "Android runner getrusage(RUSAGE_SELF).ru_maxrss KiB; host samples /proc/PID/status every2s where process remains alive. Unsampled short run peak is null, never zero.",
+  "session_lifetime": "Sequential per-stage create/run/destroy; not four resident sessions",
+  "listening_acceptance": "not_reviewed",
+  "entire_chapter_spoken": null,
+  "coverage_status": "failed_qualified_local_asr",
+  "warm_median_rtf": null,
+  "warm_median_reason": "one noncanonical first full generation, no warm campaign",
+  "wav": {
+    "frames": 1304030,
+    "sample_rate": 44100,
+    "channels": 1,
+    "sample_width": 2,
+    "bytes": 2608104,
+    "sha256": "9b1c8587308fb2a98ef1d600549e8f06beec86c3419684789279a143b17c46d2",
+    "private_path": "experiments/0036-supertonic-whole-chapter-cpu-htp/.local/cpu/20260911T123235Z-full/phone/output/cpu.wav",
+    "duration_seconds": 29.56984126984127,
+    "pcm_peak_abs": 14035,
+    "pcm_rms": 1299.6058375655737,
+    "pcm_clipped_samples": 0
+  },
+  "generation_wall_excluding_session_setup_seconds": 18.597834114,
+  "rtf_generation_wall_excluding_session_setup": 0.6289460245756616,
+  "rtf_pipeline_including_session_setup": 0.6558708199688658,
+  "result_scope": "Four-stage Android CPU execution passed; full chapter coverage failed automatic check; Moritz listening not reviewed",
+  "stochastic_input_evidence": {
+    "common_noise_sha256": "aa7653d857cfcd894800d172d0f4ef80801871493f17e7faca2b0412dafa6c40",
+    "initial_masked_latent_sha256": "1d72761eeca4bfe541c6435a982bdac92b200f5b864011e289a9559f243e0341",
+    "latent_mask_sha256": "46f7b834232958695b57a1e74923d4807f8a85955ca59287b90627a96e881a5c",
+    "active_columns_exactly_equal_common_saved_noise": true,
+    "inactive_columns_exactly_zero": true,
+    "final_latent_sha256": "f82e030b4ea5dbb9e689b9fa85aa3e2239eef908d93033096ed03524bdd5cac0",
+    "predictions_or_features_given_to_HTP": false
+  },
+  "entire_chapter_coverage_demonstrated": false,
+  "entire_chapter_spoken_reason": "No listening verdict. Natural29.57s plus qualified unprompted ASR89.09%WER/392deletions strongly argue against full coverage; automatic check failed.",
+  "asr_summary": {
+    "model": "openai-whisper-small",
+    "model_sha256": "9ecf779972d90ba49c06d968637d720dd632c55bbf19d441fb42bf17a411e794",
+    "transcript_sha256": "ac6ca1ae1cb51d95ff6ae5b8ed708e0ff82106281f57aebed2917e00cc11d4a5",
+    "reference_words": 495,
+    "hypothesis_words": 103,
+    "word_error_rate": 0.8909090909090909,
+    "deletions": 392,
+    "substitutions": 49,
+    "insertions": 0,
+    "exactly_matched_reference_words": 54,
+    "last_30_reference_words_matched": 3,
+    "automatic_coverage_pass": false,
+    "word_count_note": "487 whitespace words in raw chapter;495 regex words after product normalization; ASR comparison uses the latter."
+  }
+}

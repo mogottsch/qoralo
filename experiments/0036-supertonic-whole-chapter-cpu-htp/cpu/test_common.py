@@ -2,6 +2,7 @@ import importlib.util
 from pathlib import Path
 import struct
 import unittest
+import json
 
 ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('inputs',ROOT/'common/prepare_inputs.py');inputs=importlib.util.module_from_spec(spec);spec.loader.exec_module(inputs)
@@ -47,5 +48,31 @@ class CoverageTests(unittest.TestCase):
         result=asr.alignment('Hello, friend!','hello friend')
         self.assertEqual(result['word_error_rate'],0)
         self.assertEqual(result['last_30_reference_words_matched'],2)
+
+class EvidenceTests(unittest.TestCase):
+    def test_full_cpu_own_stage_evidence(self):
+        x=json.loads((ROOT/'cpu/results/full-render-01.json').read_text())
+        self.assertEqual(x['emitted_frames'],1304030)
+        self.assertEqual(x['natural_active_latent'],425)
+        self.assertEqual(x['latent_extent'],512)
+        self.assertEqual(x['wav']['sha256'],'9b1c8587308fb2a98ef1d600549e8f06beec86c3419684789279a143b17c46d2')
+        self.assertEqual(set(x['provider_evidence']),{'duration','text','vector','vocoder'})
+        for value in x['provider_evidence'].values():self.assertEqual(set(value['kernel_events_by_provider']),{'CPUExecutionProvider'})
+        self.assertEqual(x['provider_evidence']['vector']['kernel_events_by_provider']['CPUExecutionProvider'],5*x['provider_evidence']['vector']['distinct_profile_kernel_names'])
+    def test_coverage_failure_is_not_hidden_by_valid_wav(self):
+        x=json.loads((ROOT/'cpu/results/full-render-01.json').read_text())
+        self.assertEqual(x['coverage_status'],'failed_qualified_local_asr')
+        self.assertFalse(x['entire_chapter_coverage_demonstrated'])
+        self.assertGreater(x['asr_summary']['word_error_rate'],0.8)
+        self.assertEqual(x['listening_acceptance'],'not_reviewed')
+        self.assertIsNone(x['warm_median_rtf'])
+    def test_frozen_stochastic_contract(self):
+        c=json.loads((ROOT/'protocol/contract.json').read_text())
+        x=json.loads((ROOT/'cpu/results/full-render-01.json').read_text())
+        self.assertEqual(c['tensors']['noise.f32']['shape'],[1,144,512])
+        self.assertEqual(c['tensors']['noise.f32']['sha256'],x['stochastic_input_evidence']['common_noise_sha256'])
+        self.assertEqual(c['tensors']['current_step.f32']['shape'],[5])
+        self.assertTrue(x['stochastic_input_evidence']['active_columns_exactly_equal_common_saved_noise'])
+        self.assertTrue(x['stochastic_input_evidence']['inactive_columns_exactly_zero'])
 
 if __name__=='__main__':unittest.main()
