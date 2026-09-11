@@ -39,7 +39,7 @@ def adapted_functions():
         source = source.replace(before, after)
     globals_ = dict(old_short.observations.__globals__, FROZEN=STAGE)
     exec(compile(source, '<frozen-long-observation-scope>', 'exec'), globals_)
-    validation = inspect.getsource(short_analysis.validation_issues).replace('170', '1929').replace('16', '2048')
+    validation = inspect.getsource(short_analysis.validation_issues).replace('170', '1929').replace('16', '2048').replace('short ceiling', 'long ceiling')
     validation_globals = dict(short_analysis.validation_issues.__globals__, scope=scope)
     exec(compile(validation, '<long-validation-scope>', 'exec'), validation_globals)
     return globals_['observations'], validation_globals['validation_issues'], source, validation
@@ -60,6 +60,8 @@ def compare(output):
     candidate = metrics.trajectory_metrics(ids, text)
     baseline = metrics.trajectory_metrics(tokenizer.encode(baseline_text, add_special_tokens=False).ids, baseline_text)
     hashes = [sha(path) for path in baselines]
+    if any(h != 'f0e9d284f679e2ae426264573bd2be16e7c1e4b190235a3511c5a92ecc097b2d' for h in hashes):
+        raise RuntimeError('accepted baseline output identity changed; comparison withheld')
     return {'baseline_commit': '37a2953', 'baseline_output_hashes': hashes,
             'candidate_byte_identical_to_all_baselines': all(h == sha(output) for h in hashes),
             'retokenized_output_tokens': len(ids), 'candidate_metrics': candidate, 'baseline_metrics': baseline,
