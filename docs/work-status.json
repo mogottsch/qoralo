@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T11:11:32+00:00",
+  "updated_at": "2026-09-11T11:12:03+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -58,12 +58,12 @@
     {
       "id": "lfm",
       "title": "LFM integrated",
-      "status": "active",
+      "status": "preparing",
       "owner": "Jens",
-      "now": "Jens reports corrected LFM paired PREFILL phone workflow STARTED: fresh prefill-pair-20260911T110729Z-1476558 acquired full phone.lock/verified device.",
-      "next": "One baseline+candidate AR171 call only; corrected timeout-help handling active, runner/stage unchanged. No app/settings/audio change; await raw outcome/release.",
-      "reported_at": "2026-09-11T11:09:58+00:00",
-      "reported_by": "Jens — actual corrected paired phone start",
+      "now": "LFM paired PREFILL COMPLETE/released: exit0,raw pulled,one successful171-token call/phase with all60 finite outputs+41 before-call inputs; endpoint597 both.",
+      "next": "Descriptive one ordered pair only: API6.451538331s baseline vs5.581822238s candidate; context loads3.853762655s vs2.600975155s. Offline byte/input/output/profile verification, no new execution.",
+      "reported_at": "2026-09-11T11:12:03+00:00",
+      "reported_by": "Jens — actual paired phone outcome/release",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -94,12 +94,12 @@
     {
       "id": "phone",
       "title": "Phone",
-      "status": "active",
-      "owner": "Jens",
-      "now": "Jens reported LFM paired PREFILL workflow active; Janek capacity candidate/guard UI check waits its release, not a permission gate.",
-      "next": "Then existing persisted draft guard/UI validation90/120s,0 LLM/TTS/jobs with outer rollback. No app audio/model job; await Jens actual release.",
-      "reported_at": "2026-09-11T11:11:32+00:00",
-      "reported_by": "Janek — capacity result and phone ordering",
+      "status": "preparing",
+      "owner": "Janek",
+      "now": "LFM pair complete/released: native processes/owned remote root absent; no app/data/settings/audio change. Janek can take app slot.",
+      "next": "Janek capacity-only candidate then persisted-draft guard/UI validation; LFM no further phone call queued, offline verification only.",
+      "reported_at": "2026-09-11T11:12:03+00:00",
+      "reported_by": "Jens — actual LFM release and app-slot handoff",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -108,10 +108,10 @@
       "title": "On this computer",
       "status": "active",
       "owner": "Jens",
-      "now": "Janek capacity build/tests PASS and candidate freeze prep; Jens paired phone workflow active; Jere heavy slot/Ben ablation prep ordered.",
-      "next": "Capacity uses normalized text, not words/bytes; all measured values over selected/experimental limits. No new model invocation/adherence claim.",
-      "reported_at": "2026-09-11T11:11:32+00:00",
-      "reported_by": "Janek — capacity validation and resource order",
+      "now": "LFM pair complete/raw verification; Janek app capacity candidate/guard UI may take released phone slot; Qwen/Jere work remains bounded.",
+      "next": "LFM one ordered pair is not warm/statistical speedup or attributable full-request gain. No new LFM model execution.",
+      "reported_at": "2026-09-11T11:12:03+00:00",
+      "reported_by": "Jens — completed pair and offline-verification next",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -166,9 +166,9 @@
     },
     {
       "name": "Jens",
-      "task": "Run one corrected LFM baseline/candidate PREFILL pair",
-      "reported_at": "2026-09-11T11:09:58+00:00",
-      "reported_by": "Jens — actual start",
+      "task": "Verify LFM raw bytes/inputs/outputs/profile offline",
+      "reported_at": "2026-09-11T11:12:03+00:00",
+      "reported_by": "Jens — phone pair complete/no further execution",
       "stale_after_seconds": 900
     },
     {
