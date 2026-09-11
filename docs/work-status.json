@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T10:45:47+00:00",
+  "updated_at": "2026-09-11T10:49:42+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -55,10 +55,10 @@
       "title": "Gemma FP16",
       "status": "preparing",
       "owner": "Jere",
-      "now": "Full AR128 conversion COMPLETE: guard exit0/no stop/no OOM;645.22s wall (converter638.73s); DLC2,356,879,332B SHAd9eec658…33052.",
-      "next": "Heavy reservation released; bounded4GiB DLC-info inspection is next gate. No full internal-edge acceptance/inference/phone/app result; AR1 sequential after inspection.",
-      "reported_at": "2026-09-11T10:44:17+00:00",
-      "reported_by": "Jere — completed full AR128 conversion",
+      "now": "Full AR128 internal DLC gate PASSED/issues[]: all56 selected value MatMuls Float16 operands/output;3 cache Concats Float16/direct consumers/no value-read requantization;3 exports floating.",
+      "next": "Projected-V/probability/active IO signatures preserved. Six inactive Float16 “no encoding” annotations became zero placeholders, disclosed/not grids. Sequential full AR1 prepares with fresh headroom checks; no paired-context/physical result.",
+      "reported_at": "2026-09-11T10:49:42+00:00",
+      "reported_by": "Jere — passed full AR128 internal DLC validation",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -145,10 +145,10 @@
       "title": "On this computer",
       "status": "active",
       "owner": "Jens",
-      "now": "Gemma AR128 DLC-info inspection next; Qwen physical contrast package complete and retained full-model reference/pack binding begins; Jens runner prep bounded.",
-      "next": "Any Qwen large host phase schedules around competing LFM peak; no completed fixture repeat/full-model execution. Phone/app unaffected.",
-      "reported_at": "2026-09-11T10:45:47+00:00",
-      "reported_by": "Ben — completed contrast; source-binding next",
+      "now": "Gemma full AR128 internal DLC gate passed; Jere prepares sequential full AR1 with fresh headroom checks. Qwen binds full-model reference; Jens runner prep bounded.",
+      "next": "Gemma6893 vs6842 op count is not performance. No full paired context/physical result; preserve Float16 placeholder annotation caveat.",
+      "reported_at": "2026-09-11T10:49:42+00:00",
+      "reported_by": "Jere — full AR128 validation and sequential AR1 preparation",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -196,9 +196,9 @@
     },
     {
       "name": "Jere",
-      "task": "Run bounded4GiB AR128 DLC-info inspection",
-      "reported_at": "2026-09-11T10:44:17+00:00",
-      "reported_by": "Jere — conversion complete/heavy slot released",
+      "task": "Prepare sequential full AR1 after headroom checks",
+      "reported_at": "2026-09-11T10:49:42+00:00",
+      "reported_by": "Jere — AR128 internal gate passed",
       "stale_after_seconds": 900
     },
     {
