@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T10:55:41+00:00",
+  "updated_at": "2026-09-11T10:56:12+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -58,12 +58,12 @@
     {
       "id": "lfm",
       "title": "LFM integrated",
-      "status": "preparing",
+      "status": "waiting",
       "owner": "Jens",
-      "now": "Jens accepts Janek confirmed idle window; final native-runner build/local checks in progress before phone lock.",
-      "next": "Then one baseline+candidate171-token PREFILL pair; save all native inputs before graphExecute/outputs after. No app change. Full lock/start/release not yet reported.",
-      "reported_at": "2026-09-11T10:50:20+00:00",
-      "reported_by": "Jens — pre-phone bounded pair preparation",
+      "now": "LFM pair NOT started: monitoring-tool request rejected at parameter validation before any process/ADB/lock/phone stage/graph call.",
+      "next": "Prepared local58b11ff (67 tests; runner b0028439/stage94d56455). Janek gets next app reproduction slot; await actual release/handoff, no race/interruption.",
+      "reported_at": "2026-09-11T10:56:12+00:00",
+      "reported_by": "Jens — rejected monitoring-tool call, no execution",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -95,11 +95,11 @@
       "id": "phone",
       "title": "Phone",
       "status": "preparing",
-      "owner": "Jens",
-      "now": "Jens final native-runner build/local checks for bounded LFM pair during reported Janek idle window; no phone lock acquired yet.",
-      "next": "One baseline+candidate171 PREFILL pair only after full lock. Inputs before graphExecute/outputs after; no app change. Await actual start/release receipt.",
-      "reported_at": "2026-09-11T10:50:20+00:00",
-      "reported_by": "Jens — pre-phone runner preparation only",
+      "owner": "Janek",
+      "now": "LFM monitoring-tool request rejected before lock/ADB/process; Janek has next app reproduction priority. No LFM phone stage occurred.",
+      "next": "LFM prepared only and waits actual app release/handoff; no race/interruption. Phone state is a reported assignment, not live lock/connection.",
+      "reported_at": "2026-09-11T10:56:12+00:00",
+      "reported_by": "Jens — no LFM execution; Pi/Janek priority retained",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -108,10 +108,10 @@
       "title": "On this computer",
       "status": "active",
       "owner": "Jens",
-      "now": "Jere sequential full AR1 host run active; Janek capacity guard/UI work active; Qwen reference binding/LFM runner work remain bounded.",
-      "next": "Gemma same15GiB high/17GiB max/16GiB swap,2CPU/nice15/1800s/64GiB disk; no AR128 overlap. STOP fresh root/yield if app priority needs.",
-      "reported_at": "2026-09-11T10:55:41+00:00",
-      "reported_by": "Jere — actual AR1 host run start",
+      "now": "Jere sequential full AR1 run active; Janek capacity guard/UI work active; LFM pair prepared but monitoring call rejected pre-execution; Qwen reference binding bounded.",
+      "next": "No LFM process/ADB/lock/graph call occurred. Janek next app slot priority; wait actual release/handoff.",
+      "reported_at": "2026-09-11T10:56:12+00:00",
+      "reported_by": "Jens — pre-execution parameter rejection",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -166,9 +166,9 @@
     },
     {
       "name": "Jens",
-      "task": "Finish LFM native-runner checks; then bounded phone pair",
-      "reported_at": "2026-09-11T10:50:20+00:00",
-      "reported_by": "Jens — no lock/start yet",
+      "task": "LFM pair prepared; await Janek release/handoff",
+      "reported_at": "2026-09-11T10:56:12+00:00",
+      "reported_by": "Jens — no execution started",
       "stale_after_seconds": 900
     },
     {
