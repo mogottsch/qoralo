@@ -1,47 +1,30 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T12:55:12+00:00",
+  "updated_at": "2026-09-11T13:05:52+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
     {
       "id": "tts-capacity",
-      "title": "0036 whole-chapter CPU pipeline",
+      "title": "0036 CPU result",
       "status": "reviewing",
-      "owner": "Jens",
-      "now": "0036 CPU execution/WAV complete, but qualified local unprompted Whisper-small coverage check is negative:103 recognized vs495 regex-reference words;54 exact/392 deletions/49 substitutions;3/last30 matched.",
-      "next": "Strong evidence AGAINST complete/intelligible chapter coverage, not human-confirmed exact omissions. CPU WAV valid; Moritz listening not_reviewed. Ben continues unchanged HTP comparison/no duration forcing.",
-      "reported_at": "2026-09-11T12:39:57+00:00",
-      "reported_by": "Pi — qualified negative CPU content assessment",
+      "owner": "Recorded result",
+      "now": "Valid full CPU WAV exists, but qualified coverage check is negative; human listening remains not reviewed.",
+      "next": "Retained result only: 29.57s natural duration is not full coverage. HTP path remains separate and has no WAV.",
+      "reported_at": "2026-09-11T13:05:52+00:00",
+      "reported_by": "Kate — compact live-board cleanup; source report unchanged",
       "stale_after_seconds": 600,
-      "links": [
-        {
-          "label": "Experiment 0023",
-          "url": "/docs/experiments/0023-supertonic-qnn-precompiled-context-startup/index.html"
-        }
-      ]
+      "links": []
     },
     {
       "id": "0036-whole-chapter-htp",
       "title": "0036 whole-chapter HTP pipeline",
-      "status": "preparing",
+      "status": "active",
       "owner": "Ben",
-      "now": "Ben text-only HTP load diagnostic has next phone slot: same text context,DP/input absent,0 Run/profile OFF; QNN1002 mapped MEM_ALLOC.",
-      "next": "Static text tensor-storage2,210,381,312B+415,039,488B spill/fill is a lead only; DP reset already, no simple co-residency root claim. No HTP WAV.",
-      "reported_at": "2026-09-11T12:55:12+00:00",
-      "reported_by": "Pi — next targeted HTP diagnostic schedule",
-      "stale_after_seconds": 900,
-      "links": []
-    },
-    {
-      "id": "app",
-      "title": "Short product E2E",
-      "status": "standby",
-      "owner": "Janek / Nik",
-      "now": "App repair handoff COMPLETE local78ee1ce: installed/frozen app50a367…7a47/test8ed6c5…9e04; Nik accepted genuine-draft capacity prevention/preservation.",
-      "next": "All8 episodes/17 files/catalog preserved; two real SCRIPT copies succeeded but old causes unreproduced. Full-length TTS unsupported/unverified; no more app phone/model work for scope.",
-      "reported_at": "2026-09-11T11:25:14+00:00",
-      "reported_by": "Janek — completed repair handoff/no further scope work",
+      "now": "HTP diagnosis: isolated8GiB-AS control also failed QNN1002 before Run; log shows signed-size allocator rejection for2,666,528,768B/2,245,001,216B requests (>INT32_MAX), then mmap64 failure.",
+      "next": "Ben reduces internal allocation footprint without changing whole T3200/weights/semantics; no limit bumps or HTP WAV.",
+      "reported_at": "2026-09-11T13:05:52+00:00",
+      "reported_by": "Pi — significant HTP allocator-path diagnosis",
       "stale_after_seconds": 900,
       "links": []
     },
@@ -50,49 +33,15 @@
       "title": "Gemma FP16",
       "status": "preparing",
       "owner": "Jere",
-      "now": "Gemma compatibility-short succeeded/released:170 input→16 output,coherent89B,17 HTP completions; no fallback/cache markers.",
-      "next": "Bounded short compatibility only. Ben text-only HTP load diagnostic has next phone slot; no Gemma full inference/quality/speed conclusion.",
-      "reported_at": "2026-09-11T12:55:12+00:00",
-      "reported_by": "Pi — Gemma compatibility-short result/release",
+      "now": "Jere has next exact-long phone slot after HTP failure teardown, with fresh RPC-health caution.",
+      "next": "Prepare only; no start/result. HTP failure-teardown SSR markers are a caution, not a Gemma result.",
+      "reported_at": "2026-09-11T13:05:52+00:00",
+      "reported_by": "Pi — next phone-slot scheduling and RPC-health caution",
       "stale_after_seconds": 900,
       "links": [
         {
           "label": "Experiment 0031",
           "url": "/docs/experiments/0031-gemma-4-e2b-it-android-qnn-htp/index.html"
-        }
-      ]
-    },
-    {
-      "id": "lfm",
-      "title": "LFM integrated",
-      "status": "paused",
-      "owner": "Jens",
-      "now": "PAUSED BY MORITZ: Jens closure committed local6cc7dc2; restart handoff PAUSED-HANDOFF.md; processes/remote root absent,phone lock/0034 reservation released.",
-      "next": "Completed paired PREFILL and shared CPU/HTP drift retained. No next LFM work started.",
-      "reported_at": "2026-09-11T11:33:27+00:00",
-      "reported_by": "Pi — Jens completed pause closure",
-      "stale_after_seconds": 900,
-      "links": [
-        {
-          "label": "Experiment 0034",
-          "url": "/docs/experiments/0034-lfm2.5-2.6b-android-qnn-htp/index.html"
-        }
-      ]
-    },
-    {
-      "id": "qwen",
-      "title": "Qwen range audit",
-      "status": "paused",
-      "owner": "Ben",
-      "now": "PAUSED BY MORITZ: Ben closeout verified; scoped tree clean/localbd59343; restart handoff PAUSED-20260911.md; no new work.",
-      "next": "Completed FP32/physical evidence and unexecuted weight-ablation source retained. No Qwen work until Moritz resumes.",
-      "reported_at": "2026-09-11T12:01:57+00:00",
-      "reported_by": "Pi — verified Ben pause closeout",
-      "stale_after_seconds": 900,
-      "links": [
-        {
-          "label": "Experiment 0032",
-          "url": "/docs/experiments/0032-qwen-3.5-2b-android-qnn-htp/index.html"
         }
       ]
     }
@@ -102,23 +51,23 @@
       "id": "phone",
       "title": "Phone",
       "status": "preparing",
-      "owner": "Ben",
-      "now": "Gemma compatibility-short released; Ben has next text-only HTP load diagnostic slot, actual start unreported.",
-      "next": "Same text context/DP input absent/0 Run/profile OFF. No HTP WAV; allocation lead not established co-residency cause.",
-      "reported_at": "2026-09-11T12:55:12+00:00",
-      "reported_by": "Pi — released Gemma slot and Ben next diagnostic",
+      "owner": "Jere",
+      "now": "Ben HTP diagnostic slot released; Jere has next exact-long slot with fresh RPC-health caution, actual start unreported.",
+      "next": "No HTP WAV. Failure-teardown SSR markers require caution; phone assignment is not live lock/connection.",
+      "reported_at": "2026-09-11T13:05:52+00:00",
+      "reported_by": "Pi — HTP diagnostic release and next Jere slot",
       "stale_after_seconds": 600,
       "links": []
     },
     {
       "id": "host",
       "title": "On this computer",
-      "status": "preparing",
-      "owner": "Jens",
-      "now": "Gemma compatibility-short complete/released; Ben targeted HTP text-only load diagnostic prepares next phone slot. CPU WAV/negative ASR retained.",
-      "next": "Text storage/spill figures are a static lead only; no simple co-residency root claim, HTP WAV or fallback.",
-      "reported_at": "2026-09-11T12:55:12+00:00",
-      "reported_by": "Pi — current TTS resource sequence",
+      "status": "active",
+      "owner": "Ben / Jere",
+      "now": "Ben reduces 0036 HTP internal allocation footprint; Jere prepares exact-long slot. CPU result retained; old app/Qwen/LFM cards removed from live board.",
+      "next": "No whole-T3200/weight/semantic change or HTP WAV. No paused/closed work is shown as active.",
+      "reported_at": "2026-09-11T13:05:52+00:00",
+      "reported_by": "Pi — current live work only",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -138,51 +87,30 @@
   "agents": [
     {
       "name": "Pi",
-      "task": "Coordination / push hold",
-      "reported_at": "2026-09-11T09:57:11+00:00",
-      "reported_by": "Pi — privacy cleanup card removed by Moritz request",
+      "task": "Coordinate current CPU/HTP and Gemma work",
+      "reported_at": "2026-09-11T13:05:52+00:00",
+      "reported_by": "Kate — compact live-board cleanup",
       "stale_after_seconds": 900
     },
     {
       "name": "Ben",
-      "task": "Run text-only HTP load diagnostic in next phone slot",
-      "reported_at": "2026-09-11T12:55:12+00:00",
-      "reported_by": "Pi — current slot/result state",
-      "stale_after_seconds": 900
-    },
-    {
-      "name": "Nik",
-      "task": "Janek capacity prevention accepted; standby",
-      "reported_at": "2026-09-11T11:25:14+00:00",
-      "reported_by": "Janek — Janek-only review acceptance",
-      "stale_after_seconds": 900
-    },
-    {
-      "name": "Janek",
-      "task": "App repair handoff complete; standby",
-      "reported_at": "2026-09-11T11:25:14+00:00",
-      "reported_by": "Janek — local closure/no further scope work",
+      "task": "Reduce 0036 HTP allocation footprint",
+      "reported_at": "2026-09-11T13:05:52+00:00",
+      "reported_by": "Pi — current HTP diagnosis",
       "stale_after_seconds": 900
     },
     {
       "name": "Jere",
-      "task": "Gemma compatibility-short complete; prepare next metadata stage",
-      "reported_at": "2026-09-11T12:55:12+00:00",
-      "reported_by": "Pi — current slot/result state",
-      "stale_after_seconds": 900
-    },
-    {
-      "name": "Jens",
-      "task": "0036 full CPU render ready; actual start unreported",
-      "reported_at": "2026-09-11T12:33:01+00:00",
-      "reported_by": "Pi — current 0036 state",
+      "task": "Prepare exact-long slot with RPC-health caution",
+      "reported_at": "2026-09-11T13:05:52+00:00",
+      "reported_by": "Pi — next current slot",
       "stale_after_seconds": 900
     },
     {
       "name": "Kate",
-      "task": "Maintain local dashboard / handoff",
-      "reported_at": "2026-09-11T10:05:30+00:00",
-      "reported_by": "Pi — standing direction, actual start still separately reported",
+      "task": "Maintain compact live dashboard",
+      "reported_at": "2026-09-11T13:05:52+00:00",
+      "reported_by": "Kate — current responsibility",
       "stale_after_seconds": 900
     }
   ],

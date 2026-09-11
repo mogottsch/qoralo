@@ -239,16 +239,16 @@ def render(data, repo=REPO):
     live = {a['name']: a for a in presence['agents']}
     tasks = {a['name']: a for a in c['agents']}
     agents = []
-    for name in dict.fromkeys([*tasks, *live]):
+    # The board is a compact curated work view, not a roster. Presence enriches
+    # current assigned agents only; retired/unassigned registry names stay out.
+    for name, r in tasks.items():
         a = live.get(name)
-        r = tasks.get(name)
         activity = (f'{a["last_tool_kind"] or "activity"} · {ago(age_seconds(a["last_activity_at"], now))}'
                     if a else 'Presence unknown')
-        task = r['task'] if r else 'Task unknown'
         agents.append(f'<article class="agent"><div class="agent-head"><strong>{esc(name)}</strong>'
                       f'<span data-presence>{badge(a["presence"] if a else "unknown")}</span></div>'
-                      f'<div class="task" title="{esc(task)}">{esc(task)}</div>'
-                      f'<div class="activity">{esc(activity)}</div>{report(r or {}, now)}</article>')
+                      f'<div class="task" title="{esc(r["task"])}">{esc(r["task"])}</div>'
+                      f'<div class="activity">{esc(activity)}</div>{report(r, now)}</article>')
     fields = {
         'CHECKED': esc(now.astimezone().strftime('%H:%M:%S')),
         'CHECKED_ISO': esc(data['checked_at']),

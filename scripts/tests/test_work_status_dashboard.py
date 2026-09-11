@@ -133,6 +133,15 @@ class StatusTests(unittest.TestCase):
         self.assertNotIn('fetch(',text)
         self.assertIn('refresher-warning',text)
 
+    def test_render_shows_only_curated_agent_cards(self):
+        data = {'checked_at': self.now.isoformat(), 'curated': self.sample(),
+                'curated_error': None, 'presence': {'available': True, 'errors': 0,
+                'agents': [{'name': 'Retired', 'presence': 'active',
+                            'last_tool_kind': 'bash', 'last_activity_at': self.now.isoformat()}]}}
+        text = m.render(data, self.repo)
+        self.assertNotIn('Retired', text)
+        self.assertNotIn('Task unknown', text)
+
     def test_links_open_local_files_not_a_dashboard_server(self):
         self.assertTrue(m.safe_link('/docs/work-status.md',self.repo).startswith('file:///'))
         self.assertIsNone(m.safe_link('/docs/../../private.html',self.repo))
