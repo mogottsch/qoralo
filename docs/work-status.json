@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T14:42:55+00:00",
+  "updated_at": "2026-09-11T14:59:08+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -31,12 +31,12 @@
     {
       "id": "0037-provider-pipeline-htp",
       "title": "0037 provider pipeline HTP",
-      "status": "preparing",
+      "status": "reviewing",
       "owner": "Ben",
-      "now": "HTP provider pipeline remains preparation; no HTP WAV/player.",
-      "next": "No inherited 0036 verdict. Any HTP listening page requires a real stable hash-bound WAV.",
-      "reported_at": "2026-09-11T14:07:14+00:00",
-      "reported_by": "Pi — CPU result does not imply HTP result",
+      "now": "Real 0037 HTP WAV captured: SHA0ddfc170…7209,210.184218s/9,269,124 frames;15 chunks/full native extents/14 gaps,165 QNN Runs/fallback disabled.",
+      "next": "Both CPU+HTP exact WAVs await human review; HTP ASR pending. HTP87.7787s includes interleaved setup; CPU112.709s excludes setup—not comparable/warm median.",
+      "reported_at": "2026-09-11T14:59:08+00:00",
+      "reported_by": "Pi — actual 0037 HTP WAV milestone",
       "stale_after_seconds": 900,
       "links": []
     },
@@ -88,10 +88,10 @@
       "title": "Phone",
       "status": "unassigned",
       "owner": "Pi",
-      "now": "App repair scope documented/releases complete; no further app run queued.0037 TTS work remains separate.",
-      "next": "No lock held. Current app is user-testable; phone status is not a live state claim.",
-      "reported_at": "2026-09-11T14:42:55+00:00",
-      "reported_by": "Pi — app scope documented/closed",
+      "now": "0037 HTP render complete/cleanup free; CPU+HTP paired local listening page ready, both not reviewed.",
+      "next": "No lock held. HTP ASR pending; no timing comparison across mismatched setup boundaries.",
+      "reported_at": "2026-09-11T14:59:08+00:00",
+      "reported_by": "Pi — HTP completed/released",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -181,6 +181,11 @@
       "wav_sha256": "6848fcd649f11ca0b5d2ecdeb237fb3337690ead18ceb2939ba54c9e72e9a0be",
       "state": "not_reviewed",
       "scope": "Exact 0037 CPU provider-pipeline WAV only; HTP absent"
+    },
+    "provider_htp_pending_review": {
+      "wav_sha256": "0ddfc170d5fca1a11018d68fea6a403175d422ca5b454f1cc9a6bbcddc287209",
+      "state": "not_reviewed",
+      "scope": "Exact 0037 HTP provider-pipeline WAV only; ASR pending"
     }
   }
 }
