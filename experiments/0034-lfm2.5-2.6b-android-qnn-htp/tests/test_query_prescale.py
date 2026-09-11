@@ -31,6 +31,16 @@ def fixture():
 
 
 class QueryPrescaleTest(unittest.TestCase):
+    def test_phone_script_requires_explicit_resource_handoff_before_adb(self):
+        import os
+        import subprocess
+        exp = Path(__file__).resolve().parents[1]
+        env = {**os.environ, 'PHONE_SLOT_CONFIRMED': '0', 'STAGE': 'unused', 'ADB': '/usr/bin/false'}
+        result = subprocess.run(['bash', str(exp / 'tools/run_prefill_pair_phone.sh')], env=env,
+                                capture_output=True, text=True, timeout=5)
+        self.assertEqual(result.returncode, 75)
+        self.assertIn('resource handoff', result.stderr)
+
     def test_core_telemetry_excludes_history_and_requires_current_header(self):
         from extract_core_phone_telemetry import extract
         battery = 'Current Battery Service state:\n  USB powered: true\n  level: 71\n  temperature: 330\n\nlearned history:\n  level: 2\n  user sleep: private\n'

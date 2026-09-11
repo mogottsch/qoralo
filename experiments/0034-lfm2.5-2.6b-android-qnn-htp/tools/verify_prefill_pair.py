@@ -77,8 +77,17 @@ def main():
         if set(inputs) != set(reference_inputs) or len(inputs) != 41 or len(outputs) != 60:
             raise ValueError('Expected all41 exact inputs and60 outputs')
         runner = stdout_json(base / 'runner.stdout')
+        endpoint_file = base / 'native/endpoint.int32le'
+        endpoint_bytes = endpoint_file.read_bytes()
+        endpoint = int(np.frombuffer(endpoint_bytes, dtype='<i4')[0]) if len(endpoint_bytes) == 4 else None
+        log_names = sorted((name for name in outputs if name.startswith('logits_vocab_')), key=lambda name: int(name.split('_')[2]))
+        flat_logits = np.concatenate([outputs[name].reshape(-1) for name in log_names])
+        output_argmax = int(np.argmax(flat_logits)) if flat_logits.size == 128000 and np.isfinite(flat_logits).all() else None
+        endpoint_binding = {'bytes': len(endpoint_bytes), 'sha256': sha(endpoint_file), 'token': endpoint,
+                            'output_argmax': output_argmax,
+                            'valid': bool(runner.get('endpoint_emitted') and endpoint is not None and endpoint == runner.get('endpoint_token') == output_argmax)}
         saved[phase] = {'inputs': inputs, 'outputs': outputs, 'input_manifest': input_records,
-                        'output_manifest': output_records, 'runner': runner,
+                        'output_manifest': output_records, 'runner': runner, 'endpoint_binding': endpoint_binding,
                         'profile': profile(base / 'runner.stderr'),
                         'inputs_vs_host': [{'name': name, **compare(reference_inputs[name], inputs[name])} for name in reference_inputs]}
     a, b = saved['baseline'], saved['candidate']
@@ -88,7 +97,7 @@ def main():
     deltas = [{'name': name, **compare(a['outputs'][name], b['outputs'][name])} for name in a['outputs']]
     same_expected_inputs = all(x['bitwise_equal'] for x in input_deltas) and all(x['bitwise_equal'] for phase in saved.values() for x in phase['inputs_vs_host'])
     all_finite = all(x['reference']['finite'] == x['element_count'] and x['candidate']['finite'] == x['element_count'] for x in deltas)
-    valid_calls = all(x['runner']['graph_success'] and x['runner']['prefill_completed'] and x['runner']['snapshot_complete'] for x in saved.values())
+    valid_calls = all(x['runner']['graph_success'] and x['runner']['prefill_completed'] and x['runner']['snapshot_complete'] and x['endpoint_binding']['valid'] for x in saved.values())
     valid = same_expected_inputs and all_finite and valid_calls
     times = [x['runner'].get('qnn_graph_api_seconds') for x in (a, b)]
     ratio = times[0] / times[1] if valid and all(isinstance(x, (int, float)) and x > 0 for x in times) else None
