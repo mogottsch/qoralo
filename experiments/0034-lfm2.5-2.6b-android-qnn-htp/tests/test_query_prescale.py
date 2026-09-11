@@ -31,6 +31,57 @@ def fixture():
 
 
 class QueryPrescaleTest(unittest.TestCase):
+    def test_core_telemetry_excludes_history_and_requires_current_header(self):
+        from extract_core_phone_telemetry import extract
+        battery = 'Current Battery Service state:\n  USB powered: true\n  level: 71\n  temperature: 330\n\nlearned history:\n  level: 2\n  user sleep: private\n'
+        result = extract(battery, 'Thermal Status: 1\n')
+        self.assertEqual(result['battery_core'], {'USB powered': True, 'level': 71, 'temperature': 330})
+        self.assertEqual(result['thermal_status'], 1)
+        self.assertEqual(extract('history only\n  level: 2\n', '')['battery_core'], {})
+
+    def test_native_snapshot_reader_checks_size_paths_and_signed_bytes(self):
+        from verify_prefill_pair import snapshot
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            values = np.asarray([0x80000000, 0x7fc12345], dtype='<u4')
+            values.tofile(root / '0.raw')
+            row = {'name': 'x', 'file': '0.raw', 'dtype': 'float32', 'byte_order': 'little', 'bytes': 8, 'shape': [2]}
+            (root / 'tensors.jsonl').write_text(json.dumps(row) + '\n')
+            arrays, records = snapshot(root)
+            self.assertEqual(arrays['x'].view(np.uint32).tolist(), values.tolist())
+            self.assertEqual(records[0]['statistics']['nan'], 1)
+            row['file'] = '../0.raw'
+            (root / 'tensors.jsonl').write_text(json.dumps(row) + '\n')
+            with self.assertRaises(ValueError): snapshot(root)
+            row['file'], row['bytes'] = '0.raw', 4
+            (root / 'tensors.jsonl').write_text(json.dumps(row) + '\n')
+            with self.assertRaises(ValueError): snapshot(root)
+
+    def test_native_snapshot_preserves_nonfinite_bits_and_native_int64(self):
+        import subprocess
+        exp = Path(__file__).resolve().parents[1]
+        with tempfile.TemporaryDirectory(dir=exp / '.local') as directory:
+            root = Path(directory)
+            binary = root / 'snapshot-test'
+            subprocess.run(['g++', '-std=c++17', '-O0', str(exp / 'tests/tensor_snapshot_test.cpp'), '-o', str(binary)], check=True, timeout=30)
+            subprocess.run([str(binary), str(root)], check=True, timeout=5)
+            meta = json.loads((root / 'outputs/tensors.jsonl').read_text())
+            self.assertEqual(meta['name'], 'signed-zero/"nan"\n')
+            self.assertEqual(meta['dtype'], 'float32')
+            self.assertEqual(meta['bytes'], 12)
+            self.assertEqual(np.fromfile(root / 'outputs/0.raw', dtype='<u4').tolist(), [0x80000000, 0x7fc12345, 0x7f800000])
+            positions = json.loads((root / 'inputs/tensors.jsonl').read_text())
+            self.assertEqual(positions['dtype'], 'int64')
+            self.assertEqual(positions['bytes'], 24)
+            self.assertEqual(np.fromfile(root / 'inputs/0.raw', dtype='<i8').tolist(), [0, 1, 170])
+        source = (exp / 'phone/direct_lfm2_qnn_runner.cpp').read_text()
+        self.assertLess(source.index('last_execution_succeeded_ = true;'), source.index('non-finite QNN output:'))
+        self.assertLess(source.index('CaptureNativeTensors(inputs,'), source.index('const auto graph_api_start'))
+        self.assertIn('CaptureNativeTensors(slot.outputs, slot.graph->numOutputTensors, directory / "outputs")', source)
+        self.assertIn('runner.EnablePrefillSnapshots(output);', source)
+        self.assertIn('--prefill-diagnostic', source)
+        self.assertIn('if (graph_succeeded) { runner.SnapshotLastPrefill(output);', source)
+
     def test_completed_aot_has_context_ordered_abi_and_no_execution_claim(self):
         from prescale_ar171_queries import sha
         exp = Path(__file__).resolve().parents[1]

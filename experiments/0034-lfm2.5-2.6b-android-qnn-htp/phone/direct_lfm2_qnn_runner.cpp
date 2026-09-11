@@ -8,6 +8,7 @@
 #include <fstream>
 #include <functional>
 #include <iostream>
+#include <iomanip>
 #include <limits>
 #include <memory>
 #include <stdexcept>
@@ -22,6 +23,7 @@
 #include <unistd.h>
 
 #include "integrated_output.hpp"
+#include "tensor_snapshot.hpp"
 #include "DynamicLoadUtil.hpp"
 #include "Logger.hpp"
 #include "PAL/DynamicLoading.hpp"
@@ -127,6 +129,10 @@ class DirectContext {
   std::vector<std::vector<float>> Run(const std::string& alias,
                                       const std::vector<Input>& values,
                                       const std::vector<std::string>& requested_outputs) {
+    last_execution_succeeded_ = false;
+    last_api_attempted_ = false;
+    last_graph_api_seconds_ = 0.0;
+    last_input_snapshot_seconds_ = 0.0;
     const auto found_slot = aliases_.find(alias);
     if (found_slot == aliases_.end()) throw std::runtime_error("missing graph alias: " + alias);
     auto& slot = slots_[found_slot->second];
@@ -151,12 +157,23 @@ class DirectContext {
       }
       std::memcpy(QNN_TENSOR_GET_CLIENT_BUF(tensor).data, found->data, bytes);
     }
+    if (!snapshot_directory_.empty()) {
+      const auto snapshot_start = Clock::now();
+      CaptureNativeTensors(inputs, graph->numInputTensors, snapshot_directory_ / "inputs");
+      last_input_snapshot_seconds_ = std::chrono::duration<double>(Clock::now() - snapshot_start).count();
+    }
+    last_api_attempted_ = true;
+    const auto graph_api_start = Clock::now();
     const Qnn_ErrorHandle_t status = app_->m_qnnFunctionPointers.qnnInterface.graphExecute(
         graph->graph, inputs, graph->numInputTensors, outputs, graph->numOutputTensors,
         app_->m_profileBackendHandle, nullptr);
+    last_graph_api_seconds_ = std::chrono::duration<double>(Clock::now() - graph_api_start).count();
     if (status != QNN_GRAPH_NO_ERROR) {
       throw std::runtime_error("QnnGraph_execute failed: " + std::to_string(status));
     }
+    // Native buffers remain snapshot-readable even if the following finite scan fails.
+    last_execution_succeeded_ = true;
+    last_alias_ = alias;
     std::vector<std::vector<float>> copied;
     copied.reserve(requested_outputs.size());
     for (const auto& requested : requested_outputs) {
@@ -183,6 +200,38 @@ class DirectContext {
     return copied;
   }
 
+  bool LastExecutionSucceeded() const { return last_execution_succeeded_; }
+  bool LastApiAttempted() const { return last_api_attempted_; }
+  double LastGraphApiSeconds() const { return last_graph_api_seconds_; }
+  double LastInputSnapshotSeconds() const { return last_input_snapshot_seconds_; }
+  void EnableNativeSnapshots(const fs::path& directory) { snapshot_directory_ = directory; }
+
+  void CaptureNativeTensors(Qnn_Tensor_t* tensors, uint32_t count, const fs::path& directory) const {
+    lfm2::TensorSnapshot snapshot(directory);
+    for (uint32_t index = 0; index < count; ++index) {
+      const auto& tensor = tensors[index];
+      const auto datatype = QNN_TENSOR_GET_DATA_TYPE(tensor);
+      const std::string dtype = datatype == QNN_DATATYPE_FLOAT_32 ? "float32" :
+                                datatype == QNN_DATATYPE_INT_64 ? "int64" : "unsupported";
+      const auto rank = QNN_TENSOR_GET_RANK(tensor);
+      const auto* dims = QNN_TENSOR_GET_DIMENSIONS(tensor);
+      std::vector<uint32_t> shape;
+      if (rank) shape.assign(dims, dims + rank);
+      const auto buffer = QNN_TENSOR_GET_CLIENT_BUF(tensor);
+      const char* name = QNN_TENSOR_GET_NAME(tensor);
+      snapshot.Add(name ? name : "", dtype, shape, buffer.data, buffer.dataSize);
+    }
+  }
+
+  void SnapshotLastPrefill(const fs::path& directory) const {
+    if (!last_execution_succeeded_ || last_alias_ != "prefill") throw std::runtime_error("no successful prefill graph buffers to snapshot");
+    const auto& slot = slots_.at(aliases_.at(last_alias_));
+    if (slot.graph->numInputTensors != 41 || slot.graph->numOutputTensors != 60) throw std::runtime_error("snapshot requires AR17141/60ABI");
+    // Inputs were persisted before dispatch. Preserve computed outputs before profile/free,
+    // including all buffers when a post-execution finite scan rejected one tensor.
+    CaptureNativeTensors(slot.outputs, slot.graph->numOutputTensors, directory / "outputs");
+  }
+
   void DumpProfile(const std::string& phase) const {
     const auto& qnn = app_->m_qnnFunctionPointers.qnnInterface;
     const Qnn_ProfileHandle_t profile = app_->m_profileBackendHandle;
@@ -207,6 +256,12 @@ class DirectContext {
   std::unique_ptr<QnnSampleApp> app_;
   std::vector<GraphSlot> slots_;
   std::unordered_map<std::string, size_t> aliases_;
+  bool last_execution_succeeded_ = false;
+  bool last_api_attempted_ = false;
+  double last_graph_api_seconds_ = 0.0;
+  double last_input_snapshot_seconds_ = 0.0;
+  fs::path snapshot_directory_;
+  std::string last_alias_;
 };
 
 static bool IsAttention(int layer) {
@@ -341,6 +396,14 @@ class Runner {
   }
 
   void FreeContexts() { sessions_.clear(); contexts_.clear(); }
+
+  std::string BackendBuildId() { return owner_->getBackendBuildId(); }
+  bool PrefillGraphSucceeded() const { return contexts_.size() == 1 && contexts_[0]->LastExecutionSucceeded(); }
+  bool PrefillApiAttempted() const { return contexts_.size() == 1 && contexts_[0]->LastApiAttempted(); }
+  double LastGraphApiSeconds() const { return contexts_.at(0)->LastGraphApiSeconds(); }
+  double LastInputSnapshotSeconds() const { return contexts_.at(0)->LastInputSnapshotSeconds(); }
+  void EnablePrefillSnapshots(const fs::path& directory) { contexts_.at(0)->EnableNativeSnapshots(directory); }
+  void SnapshotLastPrefill(const fs::path& directory) const { contexts_.at(0)->SnapshotLastPrefill(directory); }
 
   void DumpProfile(const std::string& phase) const {
     if (contexts_.size() != 1) throw std::runtime_error("profile requires one context");
@@ -812,6 +875,70 @@ static std::vector<int32_t> ReadTokens(const fs::path& path) {
 
 int main(int argc, char** argv) {
   try {
+    if (argc == 6 && std::string(argv[2]) == "--prefill-diagnostic") {
+      const fs::path root = argv[1], context = argv[3], output = argv[5];
+      const auto prompt = ReadTokens(argv[4]);
+      if (prompt.size() != 171) throw std::runtime_error("prefill diagnostic requires171 tokens");
+      lfm2::CreateExclusiveSnapshotDirectory(output);
+      lfm2::ExclusiveTokenOutput token_output((output / "endpoint.int32le").string());
+      const auto setup_start = Clock::now(); Runner runner(root, true);
+      if (runner.BackendBuildId() != "v2.49.40.260810104044") throw std::runtime_error("prefill diagnostic backend build mismatch");
+      const auto setup_end = Clock::now();
+      const auto load_start = Clock::now(); runner.LoadOnly(context, "prefill");
+      const auto load_end = Clock::now();
+      runner.EnablePrefillSnapshots(output);
+      int endpoint = -1; bool emitted = false; auto emitted_at = load_end;
+      std::string inference_error;
+      try {
+        runner.RunPrefill171(prompt, [&](int token) {
+          token_output.AppendAndFlush(token); endpoint = token; emitted = true; emitted_at = Clock::now();
+        });
+      } catch (const std::exception& error) {
+        inference_error = error.what();
+        std::cerr << "prefill_inference_error=" << inference_error << "\n";
+      }
+      const auto compute_end = Clock::now();
+      const bool graph_succeeded = runner.PrefillGraphSucceeded();
+      const bool graph_api_attempted = runner.PrefillApiAttempted();
+      const double graph_api_seconds = runner.LastGraphApiSeconds();
+      const double input_snapshot_seconds = runner.LastInputSnapshotSeconds();
+      bool snapshot_complete = false;
+      const auto snapshot_start = Clock::now();
+      if (graph_succeeded) { runner.SnapshotLastPrefill(output); snapshot_complete = true; }
+      const auto snapshot_end = Clock::now();
+      const auto profile_start = Clock::now();
+      const bool profile_complete = lfm2::CaptureOptionalTelemetry("prefill", [&] { runner.DumpProfile("prefill"); }, std::cerr);
+      const auto profile_end = Clock::now();
+      runner.FreeContexts(); const auto end = Clock::now();
+      const auto sec = [](auto interval) { return std::chrono::duration<double>(interval).count(); };
+      const auto number_or_null = [](bool available, double value) {
+        if (!available) return std::string("null");
+        std::ostringstream text; text << std::setprecision(17) << value; return text.str();
+      };
+      std::cout << std::setprecision(17) << std::boolalpha
+                << "{\n  \"route\":\"single_ar171_prefill_native_snapshot\",\n"
+                << "  \"prompt_tokens\":171,\n  \"contexts_loaded\":1,\n  \"graph_success\":" << graph_succeeded
+                << ",\n  \"prefill_completed\":" << inference_error.empty()
+                << ",\n  \"snapshot_complete\":" << snapshot_complete
+                << ",\n  \"snapshot_input_count\":" << (snapshot_complete ? 41 : 0)
+                << ",\n  \"snapshot_output_count\":" << (snapshot_complete ? 60 : 0)
+                << ",\n  \"endpoint_emitted\":" << emitted << ",\n  \"endpoint_token\":" << endpoint
+                << ",\n  \"inference_error\":" << (inference_error.empty() ? "null" : lfm2::SnapshotJsonString(inference_error))
+                << ",\n  \"backend_setup_seconds\":" << sec(setup_end - setup_start)
+                << ",\n  \"context_load_seconds\":" << sec(load_end - load_start)
+                << ",\n  \"qnn_graph_api_attempted\":" << graph_api_attempted
+                << ",\n  \"qnn_graph_api_seconds\":" << number_or_null(graph_api_attempted, graph_api_seconds)
+                << ",\n  \"native_input_snapshot_seconds\":" << number_or_null(graph_api_attempted, input_snapshot_seconds)
+                << ",\n  \"prefill_phase_including_input_snapshot_copy_scan_argmax_emission_bridge_seconds\":" << sec(compute_end - load_end)
+                << ",\n  \"request_to_endpoint_seconds\":" << number_or_null(emitted, sec(emitted_at - load_start))
+                << ",\n  \"native_output_snapshot_seconds\":" << sec(snapshot_end - snapshot_start)
+                << ",\n  \"profile_complete\":" << profile_complete
+                << ",\n  \"profile_seconds\":" << sec(profile_end - profile_start)
+                << ",\n  \"context_free_seconds\":" << sec(end - profile_end)
+                << ",\n  \"diagnostic_lifecycle_seconds\":" << sec(end - setup_start)
+                << ",\n  \"ar1_executions\":0,\n  \"tokenization_precomputed_excluded\":true\n}\n";
+      return inference_error.empty() ? 0 : 1;
+    }
     const bool integrated = argc == 6 && std::string(argv[2]) == "--integrated";
     if (integrated) {
       const fs::path root = argv[1]; const auto prompt = ReadTokens(argv[3]);
@@ -898,7 +1025,8 @@ int main(int argc, char** argv) {
     if (argc != 5 && !resume) {
       std::cerr << "usage: lfm2_qnn_runner ROOT PROMPT.int32le MAX_NEW OUTPUT.int32le\n"
                    "   or: lfm2_qnn_runner ROOT RESUME_INPUT_LIST START_TOKEN START_POSITION MAX_NEW OUTPUT.int32le\n"
-                   "   or: lfm2_qnn_runner ROOT --integrated PROMPT.int32le MAX_NEW OUTPUT.int32le\n";
+                   "   or: lfm2_qnn_runner ROOT --integrated PROMPT.int32le MAX_NEW OUTPUT.int32le\n"
+                   "   or: lfm2_qnn_runner ROOT --prefill-diagnostic CONTEXT.bin PROMPT.int32le OUTPUT_DIRECTORY\n";
       return 2;
     }
     const fs::path root = argv[1];

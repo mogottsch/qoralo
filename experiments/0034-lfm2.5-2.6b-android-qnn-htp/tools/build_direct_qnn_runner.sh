@@ -4,7 +4,7 @@ EXP=$(cd "$(dirname "$0")/.." && pwd)
 QAIRT=${QAIRT_ROOT:-$HOME/opt/qairt/2.49.0.260730}
 NDK=${ANDROID_NDK_ROOT:-$HOME/Android/Sdk/ndk/28.1.13356709}
 SRC="$QAIRT/examples/QNN/SampleApp/SampleApp/src"
-OUT="$EXP/.local/direct-qnn-android"
+OUT=${OUT:-$EXP/.local/direct-qnn-android}
 GEN="$OUT/include"
 mkdir -p "$GEN"
 python3 - "$SRC/QnnSampleApp.hpp" "$GEN/QnnSampleApp.hpp" <<'PY'

@@ -3,7 +3,7 @@ set -euo pipefail
 EXP=$(cd "$(dirname "$0")/.." && pwd)
 QAIRT=${QAIRT_ROOT:-$HOME/opt/qairt/2.49.0.260730}
 SRC="$QAIRT/examples/QNN/SampleApp/SampleApp/src"
-OUT="$EXP/.local/direct-qnn-host"
+OUT=${OUT:-$EXP/.local/direct-qnn-host}
 GEN="$OUT/include"
 mkdir -p "$GEN"
 python3 - "$SRC/QnnSampleApp.hpp" "$GEN/QnnSampleApp.hpp" <<'PY'
