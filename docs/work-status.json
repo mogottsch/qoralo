@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T10:30:20+00:00",
+  "updated_at": "2026-09-11T10:30:29+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -87,12 +87,12 @@
     {
       "id": "qwen",
       "title": "Qwen range audit",
-      "status": "preparing",
+      "status": "waiting",
       "owner": "Ben",
-      "now": "Qwen corrected preflight02 bound/ready;6 source-only checks allow only observed idle Room binder and yield on foreground/ongoing/unknown/other CLI.",
-      "next": "Preflight01 preserved; same PTE/arrays,warmup0/iteration1. No lock held; Ben continues offline guard correction, forward waits next idle window after Janek.",
-      "reported_at": "2026-09-11T10:30:20+00:00",
-      "reported_by": "Ben — corrected preflight ready; ordered behind app slot",
+      "now": "Qwen guard correction COMPLETE: preflight02 bound/6 checks passed; observed idle Room binder allowed, other foreground/ongoing/unknown/CLI activity yields.",
+      "next": "Same PTE/inputs,warmup0/iteration1. Ben will not lock/use ADB during Janek reproduction; one forward awaits next safely released window, no host rerun.",
+      "reported_at": "2026-09-11T10:30:29+00:00",
+      "reported_by": "Ben — guard correction complete; no device activity during Janek slot",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -175,9 +175,9 @@
     },
     {
       "name": "Ben",
-      "task": "Continue Qwen guard correction; await next idle window",
-      "reported_at": "2026-09-11T10:30:20+00:00",
-      "reported_by": "Direct owner report",
+      "task": "Qwen preflight ready; await next safely released phone window",
+      "reported_at": "2026-09-11T10:30:29+00:00",
+      "reported_by": "Ben — no lock/ADB during Janek reproduction",
       "stale_after_seconds": 900
     },
     {
