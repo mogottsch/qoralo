@@ -6,14 +6,14 @@
 @media(max-width:550px){.agents{grid-template-columns:repeat(2,minmax(0,1fr))}header,footer{display:block}header a{display:inline-block;margin-top:8px}.resources{display:block}.resource{margin:4px 0}}
 @media print{body{background:white;color:#172233}main{padding:0}.resources,.agent{background:white}.table-wrap{overflow:visible}table{min-width:0}.agents{grid-template-columns:repeat(7,1fr)}a{color:#205787}header small,th,.next,.report,.activity,footer{color:#47596a}}
 </style></head><body data-checked-at="@@CHECKED_ISO@@"><main>
-<header><div><h1>Work status</h1><small>Local file · refreshes every 12 seconds · @@CHECKED@@</small></div><a href="http://127.0.0.1:40187/" target="_blank" rel="noopener noreferrer">Listen to accepted sample ↗</a></header>
+<header><div><h1>Work status</h1><small>Local file · refreshes every 12 seconds · @@CHECKED@@</small></div>@@LISTENING_LINK@@</header>
 @@WARNINGS@@
 <div id="refresher-warning" class="error" hidden>Local refresher is stale or stopped. Presence is unknown; the last reports remain below.</div>
 <div class="resources">@@RESOURCES@@</div>
 <div class="table-wrap"><table><thead><tr><th>Workstream</th><th>Owner</th><th>Status</th><th>Now / next step</th><th>Last report</th></tr></thead><tbody>@@STREAMS@@</tbody></table></div>
 <div class="agents-heading"><h2>Agents</h2><small>Presence is tool activity, not task progress. Hover for details.</small></div>
 <div class="agents">@@AGENTS@@</div>
-<footer><p>Report times are when an update was received, not execution times. <span class="legend" title="Reports turn stale after their configured deadline. Refresh never renews a report timestamp. Away can include a long-running task; PID existence is not identity attestation.">Stale / unknown are explicit.</span></p><a href="@@CONTRACT@@" target="_blank" rel="noopener">Update instructions</a></footer>
+<footer><p>Report times are when an update was received, not execution times. <span class="legend" title="Live reports turn stale after their configured deadline; completed or retained results may remain recorded without a freshness deadline. Refresh never renews a report timestamp. Away can include a long-running task; PID existence is not identity attestation.">Stale / unknown are explicit.</span></p><a href="@@CONTRACT@@" target="_blank" rel="noopener">Update instructions</a></footer>
 </main><script>
 // Local clock only: no fetch, HTTP, file reads or report timestamp changes.
 function ageLabel(s){return s<60?Math.floor(s)+'s ago':s<3600?Math.floor(s/60)+'m ago':(s/3600).toFixed(1)+'h ago'}

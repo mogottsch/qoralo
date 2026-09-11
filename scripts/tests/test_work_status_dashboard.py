@@ -142,12 +142,22 @@ class StatusTests(unittest.TestCase):
         self.assertNotIn('Retired', text)
         self.assertNotIn('Task unknown', text)
 
+    def test_persistent_results_show_recorded_age_not_stale(self):
+        curated = self.sample()
+        curated['workstreams'][0]['stale_after_seconds'] = 'persistent'
+        text = m.render({'checked_at': self.now.isoformat(), 'curated': curated,
+                         'curated_error': None, 'presence': {'available': True, 'errors': 0, 'agents': []}}, self.repo)
+        self.assertIn('Recorded ·', text)
+        self.assertNotIn('report-age stale', text)
+        self.assertIn('data-ttl="Infinity"', text)
+
     def test_links_open_local_files_not_a_dashboard_server(self):
         self.assertTrue(m.safe_link('/docs/work-status.md',self.repo).startswith('file:///'))
         self.assertIsNone(m.safe_link('/docs/../../private.html',self.repo))
         self.assertIsNone(m.safe_link('/docs/raw/battery.txt',self.repo))
         self.assertIsNone(m.safe_link('https://remote.invalid/',self.repo))
         self.assertEqual('http://127.0.0.1:40187/',m.safe_link('http://127.0.0.1:40187/',self.repo))
+        self.assertIsNone(m.safe_listening_link('https://remote.invalid/'))
 
     def test_file_refresh_only_updates_generated_cache(self):
         self.registration()

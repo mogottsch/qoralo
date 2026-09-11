@@ -13,7 +13,7 @@ from pathlib import Path
 import re
 import tempfile
 import time
-from urllib.parse import urlsplit
+from urllib.parse import unquote, urlsplit
 
 REPO = Path(__file__).resolve().parents[1]
 REGISTRY = Path.home() / '.pi/agent/messenger/registry'
@@ -183,13 +183,16 @@ def ago(seconds):
 def report(row, now):
     value = timestamp(row.get('reported_at'))
     age = age_seconds(value, now)
-    ttl = row.get('stale_after_seconds', 900)
+    configured_ttl = row.get('stale_after_seconds', 900)
+    persistent = configured_ttl == 'persistent'
+    ttl = float('inf') if persistent else configured_ttl
     ttl = ttl if type(ttl) in (int, float) and ttl > 0 else 900
     state = 'unknown' if age is None else 'stale' if age > ttl else ''
-    label = ('Stale · ' if state == 'stale' else '') + ago(age)
+    label = ('Recorded · ' if persistent and age is not None else 'Stale · ' if state == 'stale' else '') + ago(age)
     date = datetime.fromisoformat(value).astimezone().strftime('%d %b %H:%M') if value else 'Unknown'
     title = f"Reported {value or 'unknown'} · {row.get('reported_by', 'unknown reporter')}"
-    return (f'<div class="report" data-at="{esc(value or "")}" data-ttl="{ttl}" title="{esc(title)}">'
+    ttl_attribute = 'Infinity' if persistent else ttl
+    return (f'<div class="report" data-at="{esc(value or "")}" data-ttl="{ttl_attribute}" title="{esc(title)}">'
             f'<time>{esc(date)}</time><span class="report-age {state}">{esc(label)}</span></div>')
 
 
@@ -204,6 +207,23 @@ def safe_link(url, repo):
     parsed = urlsplit(url)
     if parsed.scheme == 'http' and parsed.hostname in ('127.0.0.1', 'localhost'):
         return url
+    return None
+
+
+def safe_listening_link(url):
+    """Allow only the local exact-WAV handoff cache in the dashboard header."""
+    if not isinstance(url, str):
+        return None
+    parsed = urlsplit(url)
+    if parsed.scheme != 'file':
+        return None
+    try:
+        target = Path(unquote(parsed.path)).resolve()
+        root = (Path.home() / '.cache' / 'vibevoice-listening').resolve()
+        if target.is_relative_to(root) and target.name == 'index.html':
+            return target.as_uri()
+    except (OSError, ValueError):
+        pass
     return None
 
 
@@ -222,9 +242,11 @@ def render(data, repo=REPO):
     labels = {'phone': 'Phone', 'host': 'On this computer', 'push': 'Sharing changes'}
     for r in c['resources']:
         old = age_seconds(r.get('reported_at'), now)
-        stale = old is None or old > r.get('stale_after_seconds', 900)
+        configured_ttl = r.get('stale_after_seconds', 900)
+        stale = old is None or (configured_ttl != 'persistent' and old > configured_ttl)
+        state_label = 'recorded' if configured_ttl == 'persistent' else 'stale report' if stale else 'reported'
         resources.append(f'<div class="resource" title="{esc(r["next"])}"><strong>{esc(labels.get(r["id"], r["title"]))}:</strong> '
-                         f'{esc(r["now"])} <small class="{"warn" if stale else ""}">{"stale report" if stale else "reported"}</small></div>')
+                         f'{esc(r["now"])} <small class="{"warn" if stale else ""}">{state_label}</small></div>')
     streams = []
     for r in c['workstreams']:
         title = esc(r['title'])
@@ -249,6 +271,9 @@ def render(data, repo=REPO):
                       f'<span data-presence>{badge(a["presence"] if a else "unknown")}</span></div>'
                       f'<div class="task" title="{esc(r["task"])}">{esc(r["task"])}</div>'
                       f'<div class="activity">{esc(activity)}</div>{report(r, now)}</article>')
+    listening_url = safe_listening_link(c.get('listening', {}).get('url'))
+    listening_link = (f'<a href="{esc(listening_url)}" target="_blank" rel="noopener noreferrer">'
+                      'Open current paired listening page ↗</a>' if listening_url else '')
     fields = {
         'CHECKED': esc(now.astimezone().strftime('%H:%M:%S')),
         'CHECKED_ISO': esc(data['checked_at']),
@@ -257,6 +282,7 @@ def render(data, repo=REPO):
         'STREAMS': ''.join(streams) or '<tr><td colspan="5">No current work reports.</td></tr>',
         'AGENTS': ''.join(agents),
         'CONTRACT': esc((repo / 'docs/work-status.md').resolve().as_uri()),
+        'LISTENING_LINK': listening_link,
     }
     page = (repo / 'docs/work-status.html').read_text()
     return re.sub(r'@@([A-Z_]+)@@', lambda match: fields.get(match[1], match[0]), page)
