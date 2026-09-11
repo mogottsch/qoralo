@@ -1,0 +1,144 @@
+{
+  "adb_used": false,
+  "automatic_bos_suppressed": true,
+  "base_output_ceiling": 2048,
+  "bos_token_config": -1,
+  "classification": "frozen_host_stage_preparation_only",
+  "context_length": 4096,
+  "context_provenance_commit": "ef0bbb0",
+  "context_result_sha256": "ca2d724d2d16c54459db8de4351e2d7681221083c7e53a8128d72ecc796e7228",
+  "context_sha256": "27e19e32ef479dfb39b53e6530cd25105c3c8e9ccf9fa4b9e9af4b5d770fabdd",
+  "copy_policy": "Independent regular-file copies; inputs read-only, genie-app owner read/execute. Baseline never chmodded or linked.",
+  "files": {
+    "bin/genie-app": {
+      "bytes": 1022168,
+      "sha256": "f3edc2bfa064cfb3fda0195590efaf2f9300b6a287a03925b09d5d6896eebbc9"
+    },
+    "embed_tokens_per_layer_int8_lut.bin": {
+      "bytes": 2348810240,
+      "sha256": "bc5f25db058421efa5ac9cd38f9cd74e250e286ab4f6fe094c134a997dc29fa4"
+    },
+    "embedding_int8_lut.bin": {
+      "bytes": 402653184,
+      "sha256": "3b55bb6bf947bf6a26056a25bc19a50564047c550b64c0d5f505a478cdb64239"
+    },
+    "first-short.script": {
+      "bytes": 535,
+      "sha256": "00488028955e76bf977d81fb4c47ea70f99fc0cdf5f9ad793f59b97dc988720e"
+    },
+    "gemma4-e2b-htp-cl4096-greedy.json": {
+      "bytes": 2771,
+      "sha256": "f8008e047443d70c0db32c7775dba8a1a958f7c838bd2683f33b4d7a8a457eba"
+    },
+    "htp_backend_ext_config.json": {
+      "bytes": 128,
+      "sha256": "9204e9591bc557bb8618fb7dd3e0696ade5f5fc33c8164588bd1e7885139bba4"
+    },
+    "lib/libGenie.so": {
+      "bytes": 11149832,
+      "sha256": "1398c4b0837dfbb4a0b156906f7d533bf9d0ee9bb1f3b6c3efa2973c102c660a"
+    },
+    "lib/libQnnHtp.so": {
+      "bytes": 3786400,
+      "sha256": "4f5b4d11b128d78433730a4f5e88841e51aec472c6bd28ffd858dba8ea1012fb"
+    },
+    "lib/libQnnHtpNetRunExtensions.so": {
+      "bytes": 1091656,
+      "sha256": "e25a816d008b3d342d1e52eaebef6748194f194aea3154049ab3692004f704ae"
+    },
+    "lib/libQnnHtpV73Skel.so": {
+      "bytes": 11859192,
+      "sha256": "e618168c82a0ec763b8543268b2783f5d28c9525fb6d0741afd667869ee493c8"
+    },
+    "lib/libQnnHtpV73Stub.so": {
+      "bytes": 771928,
+      "sha256": "7837f29bd84dbcf542faf1047d3904dc14f578e3d1a472c41eee792e7a1a8db0"
+    },
+    "lib/libQnnSystem.so": {
+      "bytes": 4072160,
+      "sha256": "536201ed918f4066f9ef35671198c072faf9ef04af24545f5fae0fc79aa05baa"
+    },
+    "lut-provenance.json": {
+      "bytes": 2520,
+      "sha256": "0dadd0d0923710ee3dcbccec7fc582f2010564365ccc4a5641937fd003492af3"
+    },
+    "models/weight_sharing_model_ar128_ar1_cl4096_scl512_1_of_1.serialized.bin": {
+      "bytes": 1186381824,
+      "sha256": "27e19e32ef479dfb39b53e6530cd25105c3c8e9ccf9fa4b9e9af4b5d770fabdd"
+    },
+    "prompts/long.txt": {
+      "bytes": 10589,
+      "sha256": "450b519d417e29c4239e39aef856db1813d2580cd62e9db9adaae3d94ba8f260"
+    },
+    "prompts/short.txt": {
+      "bytes": 920,
+      "sha256": "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a"
+    },
+    "token-ids/long.int32le": {
+      "bytes": 7716,
+      "sha256": "3b5c04febbc9d55c529ee7ece510607203dbdc8256a6abc05ba0498cf4e52b64"
+    },
+    "token-ids/short.int32le": {
+      "bytes": 680,
+      "sha256": "31a85f9c813266bbbb3505a04a226a9b184882b636cc2f6f67193a6b1eb2ad78"
+    },
+    "tokenizer.json": {
+      "bytes": 32169626,
+      "sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f"
+    },
+    "workloads/long.json": {
+      "bytes": 11133,
+      "sha256": "092840fbe879259110fa4d0b15bc383012f16b7b42a38d224b2ead231e86aad8"
+    },
+    "workloads/short.json": {
+      "bytes": 1407,
+      "sha256": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae"
+    }
+  },
+  "first_diagnostic": {
+    "canonical_campaign": false,
+    "fresh_dialog": true,
+    "model_instances": 1,
+    "output_ceiling": 16,
+    "queries": 1,
+    "request_timeout_seconds": 1800,
+    "script": "first-short.script",
+    "tier": "short"
+  },
+  "forbidden_paths": [
+    "NativeKV/HMX cache layout",
+    "cache export/import/spec operations",
+    "hidden fallback"
+  ],
+  "input_identities": {
+    "long": {
+      "rendered_sha256": "450b519d417e29c4239e39aef856db1813d2580cd62e9db9adaae3d94ba8f260",
+      "token_sha256": "3b5c04febbc9d55c529ee7ece510607203dbdc8256a6abc05ba0498cf4e52b64",
+      "tokens": 1929,
+      "workload_sha256": "092840fbe879259110fa4d0b15bc383012f16b7b42a38d224b2ead231e86aad8"
+    },
+    "short": {
+      "rendered_sha256": "b286f8dda746e8056836a2e71049df866527bee51e368363dd80cfbe27e60e7a",
+      "token_sha256": "31a85f9c813266bbbb3505a04a226a9b184882b636cc2f6f67193a6b1eb2ad78",
+      "tokens": 170,
+      "workload_sha256": "81d23ec04cb821625d3717ab50db7df3d9821a8d2987f1eb107fc90df9d1f2ae"
+    }
+  },
+  "later_long": {
+    "authorized": false,
+    "input_bytes_frozen": true,
+    "output_ceiling_if_separately_reviewed": 2048,
+    "script_present": false
+  },
+  "manifest_freeze_boundary": "Hash-frozen inputs, not hardware-enforced immutability; reverify exact external manifest hash and all payloads before future use.",
+  "model_loaded": false,
+  "payload_bytes": 4003806609,
+  "phone_authorized": false,
+  "physical_execution": false,
+  "registry_eligible": false,
+  "runtime_loaded": false,
+  "schema_version": 1,
+  "source_runtime_manifest_sha256": "e74f21a3478146b9afe332a42b3e39ec4b9c3dc38280bfab8ff94cce01172096",
+  "stage_id": "value-path-short-20260911T115043Z-01",
+  "token_identity_basis": "Existing accepted tokenizer/token-ID/BOS proof; tokenizer not executed in this preparation."
+}
