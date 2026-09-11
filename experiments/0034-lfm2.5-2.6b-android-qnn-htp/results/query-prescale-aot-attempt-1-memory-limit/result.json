@@ -1,0 +1,49 @@
+{
+  "abi_missing_reason": "No serialized context or context metadata retained before OOM. Source ONNX interface unchanged is not a substitute for compiled ABI inspection.",
+  "attempt_id": "query-prescale-aot-20260911T101011Z-109277",
+  "classification": "post_oom_derived_prepare_only_aot_failure",
+  "compiler_last_logged_stage": "Completed stage: Completion",
+  "complete_compiled_context": false,
+  "context_binary_present": false,
+  "context_metadata_present": false,
+  "context_model_present": false,
+  "cpu_seconds": 67.136339,
+  "exact_oom_operation": null,
+  "exact_oom_operation_missing_reason": "Compiler stdout reached graph preparation Completion; no serialized artifacts. Exact allocation/stack at OOM was not captured.",
+  "framework_post_score_multiply_mappings": 0,
+  "framework_query_multiply_mappings": 8,
+  "framework_trace_summary": {
+    "fusion_count": {
+      "OrtNodeUnit": 2699
+    },
+    "qnn_subgraphs": 1,
+    "supported_nodes": 1542,
+    "total_onnx_nodes": 1542,
+    "total_qnn_ops": 2699,
+    "unsupported_nodes": 0
+  },
+  "graph_execution_requested": false,
+  "htp_numerical_safety_claim": false,
+  "immutable_artifacts_after_verified": true,
+  "limitations": [
+    "Framework trace reports1542/1542 optimized nodes,2699QNN operations,zero unsupported; it is retained partial preparation evidence, not successful serialized compilation.",
+    "No compiled ABI, HTP execution, physical performance or numerical-safety conclusion.",
+    "CPU/FP16 proxy and baseline-quality caveats remain unchanged."
+  ],
+  "memory_peak_bytes": 12884901888,
+  "memory_swap_peak_bytes": 0,
+  "model_sha256": "b93c65c9c419f915bad81046f34c91c632ce6dd1bed4137751f36204d64492a0",
+  "next_resource_iteration": "Same derivative/prepare options with16GiB hard memory cap only, stillSwap0/2CPU/900s/disk caps. Wait for\u226522GiB MemAvailable and Pi shared-host scheduling so Janek work is not pressured; do not repeat the12GiB failure unchanged.",
+  "no_automatic_retry": true,
+  "ordered_abi_comparison": null,
+  "outcome": "cgroup_12gib_oom_no_context_retained",
+  "phone_access": false,
+  "process_after_absent": true,
+  "raw_trace_retained_outside_git": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/query-prescale-aot-20260911T101011Z-109277/compiled/trace/qnn_op_trace.json",
+  "schema_version": 1,
+  "service_runtime_seconds": 113.127,
+  "source_nodes": 1752,
+  "speedup_claim": false,
+  "stage_completion_is_not_compile_success": true,
+  "unit_result": "oom-kill"
+}

@@ -1,0 +1,242 @@
+{
+  "backend_type": "htp",
+  "claim_boundary": "Framework mapping shows eight query-side ElementWiseMultiply nodes and score MatMul mappings, no post-score multiply mapping. It does not prove a serialized context, final kernel dimensions/schedule, hardware execution or speed.",
+  "classification": "labelled_extract_from_retained_framework_trace_not_successful_context",
+  "scale_sites": [
+    {
+      "layer": 2,
+      "mappings": [
+        {
+          "dst_name": "/model/layers.2/attn/GroupQueryAttention/htp_chunk/scaled_query",
+          "dst_qnn_op_type": "ElementWiseMultiply",
+          "node_group_type": "OrtNodeUnit",
+          "sources": [
+            {
+              "name": "/model/layers.2/attn/GroupQueryAttention/htp_chunk/scaled_query",
+              "type": "OP"
+            }
+          ]
+        },
+        {
+          "dst_name": "/model/layers.2/attn/GroupQueryAttention/htp_chunk/scores",
+          "dst_qnn_op_type": "MatMul",
+          "node_group_type": "OrtNodeUnit",
+          "sources": [
+            {
+              "name": "/model/layers.2/attn/GroupQueryAttention/htp_chunk/scores",
+              "type": "OP"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 5,
+      "mappings": [
+        {
+          "dst_name": "/model/layers.5/attn/GroupQueryAttention/htp_chunk/scaled_query",
+          "dst_qnn_op_type": "ElementWiseMultiply",
+          "node_group_type": "OrtNodeUnit",
+          "sources": [
+            {
+              "name": "/model/layers.5/attn/GroupQueryAttention/htp_chunk/scaled_query",
+              "type": "OP"
+            }
+          ]
+        },
+        {
+          "dst_name": "/model/layers.5/attn/GroupQueryAttention/htp_chunk/scores",
+          "dst_qnn_op_type": "MatMul",
+          "node_group_type": "OrtNodeUnit",
+          "sources": [
+            {
+              "name": "/model/layers.5/attn/GroupQueryAttention/htp_chunk/scores",
+              "type": "OP"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 9,
+      "mappings": [
+        {
+          "dst_name": "/model/layers.9/attn/GroupQueryAttention/htp_chunk/scaled_query",
+          "dst_qnn_op_type": "ElementWiseMultiply",
+          "node_group_type": "OrtNodeUnit",
+          "sources": [
+            {
+              "name": "/model/layers.9/attn/GroupQueryAttention/htp_chunk/scaled_query",
+              "type": "OP"
+            }
+          ]
+        },
+        {
+          "dst_name": "/model/layers.9/attn/GroupQueryAttention/htp_chunk/scores",
+          "dst_qnn_op_type": "MatMul",
+          "node_group_type": "OrtNodeUnit",
+          "sources": [
+            {
+              "name": "/model/layers.9/attn/GroupQueryAttention/htp_chunk/scores",
+              "type": "OP"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 13,
+      "mappings": [
+        {
+          "dst_name": "/model/layers.13/attn/GroupQueryAttention/htp_chunk/scaled_query",
+          "dst_qnn_op_type": "ElementWiseMultiply",
+          "node_group_type": "OrtNodeUnit",
+          "sources": [
+            {
+              "name": "/model/layers.13/attn/GroupQueryAttention/htp_chunk/scaled_query",
+              "type": "OP"
+            }
+          ]
+        },
+        {
+          "dst_name": "/model/layers.13/attn/GroupQueryAttention/htp_chunk/scores",
+          "dst_qnn_op_type": "MatMul",
+          "node_group_type": "OrtNodeUnit",
+          "sources": [
+            {
+              "name": "/model/layers.13/attn/GroupQueryAttention/htp_chunk/scores",
+              "type": "OP"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 17,
+      "mappings": [
+        {
+          "dst_name": "/model/layers.17/attn/GroupQueryAttention/htp_chunk/scaled_query",
+          "dst_qnn_op_type": "ElementWiseMultiply",
+          "node_group_type": "OrtNodeUnit",
+          "sources": [
+            {
+              "name": "/model/layers.17/attn/GroupQueryAttention/htp_chunk/scaled_query",
+              "type": "OP"
+            }
+          ]
+        },
+        {
+          "dst_name": "/model/layers.17/attn/GroupQueryAttention/htp_chunk/scores",
+          "dst_qnn_op_type": "MatMul",
+          "node_group_type": "OrtNodeUnit",
+          "sources": [
+            {
+              "name": "/model/layers.17/attn/GroupQueryAttention/htp_chunk/scores",
+              "type": "OP"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 21,
+      "mappings": [
+        {
+          "dst_name": "/model/layers.21/attn/GroupQueryAttention/htp_chunk/scaled_query",
+          "dst_qnn_op_type": "ElementWiseMultiply",
+          "node_group_type": "OrtNodeUnit",
+          "sources": [
+            {
+              "name": "/model/layers.21/attn/GroupQueryAttention/htp_chunk/scaled_query",
+              "type": "OP"
+            }
+          ]
+        },
+        {
+          "dst_name": "/model/layers.21/attn/GroupQueryAttention/htp_chunk/scores",
+          "dst_qnn_op_type": "MatMul",
+          "node_group_type": "OrtNodeUnit",
+          "sources": [
+            {
+              "name": "/model/layers.21/attn/GroupQueryAttention/htp_chunk/scores",
+              "type": "OP"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 24,
+      "mappings": [
+        {
+          "dst_name": "/model/layers.24/attn/GroupQueryAttention/htp_chunk/scaled_query",
+          "dst_qnn_op_type": "ElementWiseMultiply",
+          "node_group_type": "OrtNodeUnit",
+          "sources": [
+            {
+              "name": "/model/layers.24/attn/GroupQueryAttention/htp_chunk/scaled_query",
+              "type": "OP"
+            }
+          ]
+        },
+        {
+          "dst_name": "/model/layers.24/attn/GroupQueryAttention/htp_chunk/scores",
+          "dst_qnn_op_type": "MatMul",
+          "node_group_type": "OrtNodeUnit",
+          "sources": [
+            {
+              "name": "/model/layers.24/attn/GroupQueryAttention/htp_chunk/scores",
+              "type": "OP"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "layer": 27,
+      "mappings": [
+        {
+          "dst_name": "/model/layers.27/attn/GroupQueryAttention/htp_chunk/scaled_query",
+          "dst_qnn_op_type": "ElementWiseMultiply",
+          "node_group_type": "OrtNodeUnit",
+          "sources": [
+            {
+              "name": "/model/layers.27/attn/GroupQueryAttention/htp_chunk/scaled_query",
+              "type": "OP"
+            }
+          ]
+        },
+        {
+          "dst_name": "/model/layers.27/attn/GroupQueryAttention/htp_chunk/scores",
+          "dst_qnn_op_type": "MatMul",
+          "node_group_type": "OrtNodeUnit",
+          "sources": [
+            {
+              "name": "/model/layers.27/attn/GroupQueryAttention/htp_chunk/scores",
+              "type": "OP"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "source": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/query-prescale-aot-20260911T101011Z-109277/compiled/trace/qnn_op_trace.json",
+  "source_bytes": 1711404,
+  "source_sha256": "d9bbea303220b7dc8fb6b82824cd412c9660d3505979dbb0f3aed551440a14bd",
+  "summary": {
+    "fusion_count": {
+      "OrtNodeUnit": 2699
+    },
+    "qnn_subgraphs": 1,
+    "supported_nodes": 1542,
+    "total_onnx_nodes": 1542,
+    "total_qnn_ops": 2699,
+    "unsupported_nodes": 0
+  },
+  "target": {
+    "device_id": 0,
+    "htp_arch": "V73",
+    "soc_model": 43
+  },
+  "unsupported_nodes": []
+}

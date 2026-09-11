@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "classification": "bounded_ar171_query_prescale_prepare_only_aot",
+  "model_sha256": "b93c65c9c419f915bad81046f34c91c632ce6dd1bed4137751f36204d64492a0",
+  "numerical_evidence": "results/query-prescale-cpu-attempt-2-numerical-check/result.json",
+  "numerical_evidence_sha256": "dcb851892064154930d4de48472b15811353e341f8602deebc80a450b4fa192f",
+  "runtime": {"ort": "1.26.0", "qnn_ep": "2.5.0", "expected_context_build": "v2.49.40.260810104044"},
+  "provider_options": {"soc_model": "43", "htp_arch": "73", "enable_htp_prepare_only": "1", "enable_block_quant_weight_optimization": "1", "enable_htp_fp16_precision": "1", "htp_graph_finalization_optimization_mode": "1", "enable_framework_op_trace": "1"},
+  "session_disable_cpu_ep_fallback": true,
+  "input_policy": "Reuse exact numerically checked derivative and independent in-directory regular data copies read-only; verify saved data hashes before and after. No new graph transformation/weight/quantization change or AR1 build.",
+  "acceptance": ["one ordinary AR171 context", "complete optimized-source QNN HTP delegation for SM8550/V73, zero unsupported nodes", "same ordered41input/60output name/type/shape ABI", "retain exact compile result/context/trace/metadata hashes", "report all eight scale-site mappings, including fusion or obscurity instead of inventing final schedule or cost"],
+  "resources": {"ort_intra_threads": 2, "ort_inter_threads": 1, "openmp_blas_threads": 2, "nice": 10, "cpu_quota_percent": 200, "memory_max_bytes": 12884901888, "swap_max_bytes": 0, "tasks_max": 64, "unit_timeout_seconds": 900, "compiler_timeout_seconds": 840, "metadata_timeout_seconds": 30, "additional_job_disk_max_bytes": 4294967296, "poll_stop_job_bytes": 3758096384, "per_file_max_bytes": 2147483648, "aggregate_retained_max_bytes": 8589934592, "aggregate_metadata_reserve_bytes": 268435456, "automatic_retries": 0},
+  "resource_mechanism": "Systemd cgroup bounds and outer900s lifetime; disk-backed TMPDIR,2GiB per-file RLIMIT_FSIZE plus0.5s disk guard polling with0.5GiB job headroom. Capture in-run cgroup memory.peak before transient unit can unload. Preserve partials on first failure.",
+  "claim_boundary": "Host compilation and QNNSystem metadata inspection only: no graph execution, emulator inference, physical phone execution, measured speedup or HTP numerical-safety/quality claim. FP16-boundary proxy caveats and baseline output-quality limitations remain. Necessary subsequent bounded validation follows the standing assigned objective with shared-resource scheduling, not routine approval waits."
+}

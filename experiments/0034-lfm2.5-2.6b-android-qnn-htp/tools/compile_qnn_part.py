@@ -25,6 +25,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--threads", type=int, choices=(1, 2), default=2)
     args = parser.parse_args()
     args.output_dir.mkdir(parents=True, exist_ok=True)
     trace_dir = args.output_dir / "trace"
@@ -40,6 +41,10 @@ def main() -> None:
         "onnxruntime_qnn": qnn.__version__,
         "target": {"soc_model": "43", "chipset": "SM8550", "htp_arch": "73"},
         "started_ns": time.time_ns(),
+        "ort_intra_op_threads": args.threads,
+        "ort_inter_op_threads": 1,
+        "prepare_only": True,
+        "graph_execution_requested": False,
     }
     exit_code = 0
     try:
@@ -48,6 +53,9 @@ def main() -> None:
         if not devices:
             raise RuntimeError("QNN EP device not found")
         options = ort.SessionOptions()
+        options.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL
+        options.intra_op_num_threads = args.threads
+        options.inter_op_num_threads = 1
         options.log_severity_level = 2
         options.add_session_config_entry("session.disable_cpu_ep_fallback", "1")
         options.add_session_config_entry("ep.context_enable", "1")
@@ -63,6 +71,7 @@ def main() -> None:
             "enable_htp_fp16_precision": "1",
             "htp_graph_finalization_optimization_mode": "1",
         }
+        result["provider_options"] = provider_options
         options.add_provider_for_devices(devices, provider_options)
         started = time.perf_counter_ns()
         session = ort.InferenceSession(str(args.model), sess_options=options)

@@ -1,8 +1,12 @@
 # Plan: LFM2.5-2.6B QNN/HTP
 
-## Current host numerical check
+## Current host build: memory-bound iteration
 
-The AR171-only query-prescale CPU check is complete and awaiting saved numerical review. First attempt `query-prescale-20260911T093452Z-73227` retained 60 finite baseline outputs, then stopped at external-data containment validation; it remains immutable with no comparison claim. One separately authorized storage-only continuation `query-prescale-20260911T094138Z-78096` used independent hash-identical copies and reused the exactly bound baseline outputs. All 60 derivative outputs and debug-baseline outputs agree bit-for-bit; all vocabulary ranks are unchanged. FP16-boundary/FP32-accumulation proxies differ in eight full-score/five causal elements, with two additional query-scale zeros and no overflow. This is only the canonical171/zero-state CPU case; no HTP/AR1/full-model FP16/speed/quality claim. No further runtime, AOT or phone work follows without review and separate authorization.
+The first prepare-only query-prescale AOT attempt reached graph preparation but was killed at the 12 GiB cgroup limit before any serialized context/metadata. The saved trace maps all 1,542 optimized nodes and eight query-side multiplies; that is not a successful context or finalized schedule. Evidence is immutable and processes are absent. Continue with a memory-only 16 GiB iteration when Pi's shared-host scheduling and at least 22 GiB available memory allow it; do not pressure Janek's app work. Other bounds/settings remain unchanged. This is a real resource blocker, not a routine approval wait.
+
+## Completed host numerical check
+
+The AR171-only query-prescale CPU check is complete and Pi accepted its saved source/one-case numerical assessment. First attempt `query-prescale-20260911T093452Z-73227` retained 60 finite baseline outputs, then stopped at external-data containment validation; it remains immutable with no comparison claim. One separately authorized storage-only continuation `query-prescale-20260911T094138Z-78096` used independent hash-identical copies and reused the exactly bound baseline outputs. All 60 derivative outputs and debug-baseline outputs agree bit-for-bit; all vocabulary ranks are unchanged. FP16-boundary/FP32-accumulation proxies differ in eight full-score/five causal elements, with two additional query-scale zeros and no overflow. This is only the canonical171/zero-state CPU case; no HTP/AR1/full-model FP16/speed/quality claim. Continue the assigned optimization through bounded builds and justified validation under Moritz's standing direction; coordinate shared resources and retain every scope limitation.
 
 ## Completed
 
@@ -135,8 +139,8 @@ The AR171-only query-prescale CPU check is complete and awaiting saved numerical
 ## In progress: performance engineering
 
 1. Corrected integrated operability and offline profile review are complete; preserve their single-diagnostic boundaries.
-2. Independently review only the saved query-prescale source/numerical package. Do not rerun the baseline, derivative or proxies for packaging.
-3. AOT, physical follow-on, lower-precision/device-resident state, reduced-logit or hybrid work are not authorized by the CPU result; seek a specific next decision after numerical review.
+2. Pi's saved query-prescale assessment is complete. Do not rerun the baseline, derivative or proxies for packaging.
+3. Continue the query-prescale AOT resource iteration, then justified bounded numerical/performance validation with Pi's phone scheduling/full lock after Janek. This is not a mandate for unrelated lower-precision/device-state/logit/hybrid experiments.
 4. Do not campaign until the selected complete route and reset-isolation contract have separate approval.
 
 ## Phone and campaign sequence

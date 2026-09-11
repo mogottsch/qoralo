@@ -31,6 +31,44 @@ def fixture():
 
 
 class QueryPrescaleTest(unittest.TestCase):
+    def test_aot_oom_trace_is_not_a_serialized_context_or_abi_pass(self):
+        exp = Path(__file__).resolve().parents[1]
+        path = exp / 'results/query-prescale-aot-attempt-1-memory-limit'
+        result = json.loads((path / 'result.json').read_text())
+        self.assertEqual(result['unit_result'], 'oom-kill')
+        self.assertEqual(result['memory_peak_bytes'], 12 << 30)
+        self.assertEqual(result['memory_swap_peak_bytes'], 0)
+        for field in ('complete_compiled_context', 'context_binary_present', 'context_model_present',
+                      'context_metadata_present', 'graph_execution_requested', 'phone_access', 'speedup_claim'):
+            self.assertFalse(result[field])
+        self.assertIsNone(result['ordered_abi_comparison'])
+        self.assertIsNone(result['exact_oom_operation'])
+        self.assertEqual(result['framework_trace_summary']['supported_nodes'], 1542)
+        self.assertEqual(result['framework_trace_summary']['unsupported_nodes'], 0)
+        self.assertEqual(result['framework_query_multiply_mappings'], 8)
+        self.assertEqual(result['framework_post_score_multiply_mappings'], 0)
+        self.assertTrue(result['immutable_artifacts_after_verified'])
+        self.assertTrue(result['process_after_absent'])
+
+    def test_aot_settings_remain_prepare_only_and_resource_bounded(self):
+        import ast
+        exp = Path(__file__).resolve().parents[1]
+        config = json.loads((exp / 'protocol/query-prescale-aot-check.json').read_text())
+        self.assertEqual(config['provider_options']['enable_htp_prepare_only'], '1')
+        self.assertTrue(config['session_disable_cpu_ep_fallback'])
+        self.assertEqual(config['resources']['unit_timeout_seconds'], 900)
+        self.assertEqual(config['resources']['memory_max_bytes'], 12 << 30)
+        self.assertEqual(config['resources']['swap_max_bytes'], 0)
+        text = (exp / 'tools/compile_qnn_part.py').read_text()
+        tree = ast.parse(text)
+        self.assertFalse(any(isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+                             and isinstance(node.func.value, ast.Name) and node.func.value.id == 'session'
+                             and node.func.attr in ('run', 'run_with_iobinding', 'run_async') for node in ast.walk(tree)))
+        self.assertIn('options.intra_op_num_threads = args.threads', text)
+        self.assertIn('options.inter_op_num_threads = 1', text)
+        self.assertIn('"enable_htp_prepare_only": "1"', text)
+        self.assertIn('"session.disable_cpu_ep_fallback", "1"', text)
+
     def test_first_attempt_retains_baseline_without_comparison_claim(self):
         exp = Path(__file__).resolve().parents[1]
         path = exp / 'results/query-prescale-cpu-attempt-1-external-path-failure'
