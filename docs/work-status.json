@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T13:50:51+00:00",
+  "updated_at": "2026-09-11T13:56:44+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -33,10 +33,10 @@
       "title": "0037 provider pipeline HTP",
       "status": "preparing",
       "owner": "Ben",
-      "now": "Prepare HTP side of provider-intended segmentation→per-segment synthesis→official assembly/streaming behavior.",
-      "next": "No app integration, execution, WAV, coverage or listening result. No new empty listening player.",
-      "reported_at": "2026-09-11T13:50:51+00:00",
-      "reported_by": "Pi — explicit Moritz 0037 HTP assignment",
+      "now": "Ben validates HTP static adaptations against pinned 0037 provider pipeline.",
+      "next": "No execution/WAV. 0036 differed in segmentation,steps,speed/frame selection; future 0037 result supports pipeline only—not chunking/DP sole cause.",
+      "reported_at": "2026-09-11T13:56:44+00:00",
+      "reported_by": "Pi — 0037 HTP static adaptation preparation",
       "stale_after_seconds": 900,
       "links": []
     },
@@ -45,10 +45,10 @@
       "title": "0037 provider pipeline CPU",
       "status": "preparing",
       "owner": "Jens",
-      "now": "Prepare provider-intended segmentation→per-segment synthesis→official assembly/streaming behavior on same private487-word input.",
-      "next": "CPU/common +upstream recipe verification only; no execution, WAV, coverage or listening result.",
-      "reported_at": "2026-09-11T13:50:51+00:00",
-      "reported_by": "Pi — explicit Moritz 0037 CPU assignment",
+      "now": "0037 upstream recipe pinned: supertonic-py1.3.1 commit908a564 matches installed6 files/same weights. CPU follows raw sentence segmentation,then normalization/tags.",
+      "next": "Defaults8 steps/1.05 speed/.3s interchunk gaps; full nativeL×3072 per segment/no final gap. Target300 chars is not hardbound. Preparation only/no WAV.",
+      "reported_at": "2026-09-11T13:56:44+00:00",
+      "reported_by": "Pi — verified upstream CPU recipe pin",
       "stale_after_seconds": 900,
       "links": []
     },
@@ -100,10 +100,10 @@
       "title": "On this computer",
       "status": "preparing",
       "owner": "Jens / Ben / Jere / Janek",
-      "now": "Jens/Ben prepare new0037 provider pipeline; Jere metadata work and Janek EDIT repair continue. 0036 is retained failed at-once evidence.",
-      "next": "No 0037 execution/acceptance. Raw text/audio/ASR private; no push. Use actual owner reports for stages.",
-      "reported_at": "2026-09-11T13:50:51+00:00",
-      "reported_by": "Pi — new active 0037 work",
+      "now": "0037 upstream CPU recipe pinned; Ben validates HTP static adaptations; Jere metadata and Janek EDIT repair remain current.",
+      "next": "No new WAV. 0037 configuration differs from0036 beyond segmentation, so no sole-cause inference; raw text/audio/ASR private.",
+      "reported_at": "2026-09-11T13:56:44+00:00",
+      "reported_by": "Pi — 0037 preparation and interpretation boundary",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -137,16 +137,16 @@
     },
     {
       "name": "Jens",
-      "task": "Verify 0037 CPU/common and upstream recipe",
-      "reported_at": "2026-09-11T13:50:51+00:00",
-      "reported_by": "Pi — current active scope",
+      "task": "Prepare pinned 0037 native CPU provider pipeline",
+      "reported_at": "2026-09-11T13:56:44+00:00",
+      "reported_by": "Pi — recipe verification complete/preparation continues",
       "stale_after_seconds": 900
     },
     {
       "name": "Ben",
-      "task": "Prepare 0037 HTP provider pipeline; record 0036 HTP review",
-      "reported_at": "2026-09-11T13:50:51+00:00",
-      "reported_by": "Pi — current active scope",
+      "task": "Validate 0037 HTP static provider adaptations",
+      "reported_at": "2026-09-11T13:56:44+00:00",
+      "reported_by": "Pi — preparation only",
       "stale_after_seconds": 900
     },
     {
