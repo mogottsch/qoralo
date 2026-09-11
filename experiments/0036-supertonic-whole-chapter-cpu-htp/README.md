@@ -1,6 +1,6 @@
 # Whole-chapter Supertonic: Android CPU vs Android HTP
 
-Status: **Real full Android CPU and HTP WAVs produced; both automatic whole-chapter coverage checks failed. Neither WAV has a human listening verdict.** This is a **noncanonical product-reference comparison**, not the canonical 226-byte TTS campaign. No warm-median or registry claim is intended. This experiment preserves earlier Supertonic experiments and does not change the installed podcast app or its limits.
+Status: **Real full Android CPU and HTP WAVs produced; both automatic whole-chapter coverage checks failed. Moritz rejected the exact CPU WAV as unusable audio. The HTP WAV has not been human-reviewed.** This is a **noncanonical product-reference comparison**, not the canonical 226-byte TTS campaign. No warm-median or registry claim is intended. This experiment preserves earlier Supertonic experiments and does not change the installed podcast app or its limits.
 
 ## Question and fixed input
 
@@ -56,7 +56,7 @@ SHA-256 9b1c8587308fb2a98ef1d600549e8f06beec86c3419684789279a143b17c46d2
 
 It is finite, nonempty and unclipped, but that does not establish intelligibility or coverage. The qualified unprompted local ASR produced **103 words against 495 regex-normalized reference words**, with **89.09% word error**, 392 deletions and 49 substitutions. Only three of the final 30 reference words matched. The original raw chapter's 487 whitespace-word count uses a different tokenizer; nothing was removed from the model input.
 
-**Full chapter coverage is not demonstrated and the automatic check fails strongly.** No output repair, duration forcing, second render or ASR retry was performed. Moritz's listening verdict remains **`not_reviewed`**. Raw transcripts stay private.
+**Full chapter coverage is not demonstrated and the automatic check fails strongly.** No output repair, duration forcing, second render or ASR retry was performed. Moritz subsequently listened to the exact CPU WAV and **rejected it as unusable audio**. The additive review in `cpu/results/listening-review-20260911.json` records his exact words and WAV hash; original execution/ASR snapshots remain unchanged as historical pre-review evidence. Raw transcripts stay private.
 
 ## HTP completed result and matched comparison
 
@@ -94,7 +94,7 @@ Both routes independently selected 425 active latent positions. Their saved mask
 
 The same qualified offline unprompted Whisper-small protocol was run **once** on the exact HTP WAV. It produced 122 words, with 373 deletions, 66 substitutions and no insertions against the same 495-word normalized reference used for CPU. The first post-decoding alignment used raw punctuation and counted 506 reference words; that private result is retained. The **unchanged saved hypothesis** was then aligned to CPU's frozen normalized reference. This was alignment-only arithmetic, not an ASR retry, decoding prompt, transcript repair or input change.
 
-**Conclusion:** both complete execution paths produced valid speech files, but neither demonstrates speaking the entire unchanged chapter intelligibly. Qualified ASR strongly argues against whole-chapter coverage on both routes. The roughly 29.57-second natural predictions are retained rather than forced to fit the chapter. Moritz's exact-WAV listening verdict remains **`not_reviewed`** for both. No accepted-quality throughput or registry claim follows.
+**Conclusion:** both complete execution paths produced valid WAV files, but neither demonstrates speaking the entire unchanged chapter intelligibly. Qualified ASR strongly argues against whole-chapter coverage on both routes. The roughly 29.57-second natural predictions are retained rather than forced to fit the chapter. Moritz's exact-WAV listening verdict is **`rejected` for CPU**, with **HTP still `not_reviewed`**. Valid PCM is not successful speech generation. No accepted-quality throughput or registry claim follows.
 
 ## Files
 
@@ -114,3 +114,4 @@ The same qualified offline unprompted Whisper-small protocol was run **once** on
 - `cpu/results/asr-control-01.json`: control metadata; raw ASR output stays private.
 - `cpu/results/full-render-01.json`: complete first CPU execution, WAV identity, phase/provider/memory/thermal evidence and failed automatic coverage status.
 - `cpu/results/asr-full-render-01.json`: qualified automatic coverage metrics for that exact WAV; no transcript text.
+- `cpu/results/listening-review-20260911.json`: later exact-hash human rejection of the CPU WAV; original pre-review evidence preserved.
