@@ -6,6 +6,7 @@ import com.google.ai.edge.litertlm.ConversationConfig
 import com.google.ai.edge.litertlm.Engine as LiteRtEngine
 import com.google.ai.edge.litertlm.EngineConfig
 import com.google.ai.edge.litertlm.SamplerConfig
+import com.google.ai.edge.litertlm.ResponseFormat
 import com.google.ai.edge.litertlm.ThinkingConfig
 import dev.vibevoice.podcast.model.GemmaModelContract
 import dev.vibevoice.podcast.model.ModelFileRole
@@ -108,8 +109,10 @@ class GemmaLiteRtGpuEngine(private val observer: GemmaRequestObserver? = null) :
             else -> error("Unsupported Gemma request mode")
         })
         val instruction = specificInstruction ?: systemInstruction(mode)
-        RuntimeDiagnostics.beforeRequest(mode, request, instruction, maxOutput)
-        runCatching { observer?.beforeRequest(mode, request, instruction, maxOutput) }
+        val responseSchema = responseSchemaForMode(mode)
+        val responseFormat = responseSchema?.let(ResponseFormat::json)
+        RuntimeDiagnostics.beforeRequest(mode, request, instruction, maxOutput, responseSchema)
+        runCatching { observer?.beforeRequest(mode, request, instruction, maxOutput, responseSchema) }
         executeGemmaRequest(
             mode = mode,
             create = {
@@ -119,10 +122,11 @@ class GemmaLiteRtGpuEngine(private val observer: GemmaRequestObserver? = null) :
                     channels = emptyList(),
                     maxOutputToken = maxOutput,
                     thinkingConfig = ThinkingConfig(enableThinking = false),
+                    enableResponseFormat = responseFormat != null,
                 ))
             },
             send = { conversation ->
-                val raw = RuntimeDiagnostics.send(conversation, request)
+                val raw = RuntimeDiagnostics.send(conversation, request, responseFormat)
                 runCatching { observer?.responseReturned(raw) }
                 runCatching { observer?.conversationReturned(conversation) }
                 raw

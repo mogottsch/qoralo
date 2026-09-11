@@ -234,6 +234,10 @@ def main():
                     '-e','originalEpisodeId',args.original_episode,'-e','originalJobId',args.original_job,
                     '-e','revisionId',args.revision_id,'-e','revisionSha256',args.revision_sha256,
                     '-e','editInstructionSha256',args.edit_instruction_sha256,TEST_APP+'/androidx.test.runner.AndroidJUnitRunner']
+                structured=candidate.get('structuredEditResponse')
+                if structured:
+                    command[-1:-1]=['-e','referenceRequestSha256',structured['referenceRequestSha256'],
+                        '-e','responseSchemaSha256',structured['schemaSha256']]
             launched=True
             device.run(command,timeout=instrument_seconds)
             if not no_new_episode:minimal_ownership()

@@ -84,12 +84,24 @@ class UserScriptDiagnosticTests(unittest.TestCase):
     def test_optional_observer_preserves_raw_before_optional_counters_and_does_not_change_decode(self):
         src=(Path(__file__).resolve().parents[2]/'app/src/main/java/dev/vibevoice/podcast/runtime/NativeEngines.kt').read_text()
         self.assertIn('observer: GemmaRequestObserver? = null',src)
-        self.assertIn('val raw = RuntimeDiagnostics.send(conversation, request)',src)
+        self.assertIn('val raw = RuntimeDiagnostics.send(conversation, request, responseFormat)',src)
         self.assertLess(src.index('observer?.responseReturned(raw)'),src.index('observer?.conversationReturned(conversation)'))
         self.assertIn('runCatching { observer?.conversationReturned(conversation) }',src)
         self.assertIn('maxNumTokens = 8_192',src);self.assertIn('"chapter", "edit" -> 4_096',src)
         self.assertIn('topK = 1, topP = 1.0, temperature = 1.0',src)
-        self.assertNotIn('enableResponseFormat',src)
+        self.assertIn('val responseSchema = responseSchemaForMode(mode)',src)
+        self.assertIn('enableResponseFormat = responseFormat != null',src)
+        self.assertIn('ResponseFormat::json',src)
+    def test_response_format_reaches_debug_release_and_private_receipts(self):
+        root=Path(__file__).resolve().parents[2]/'app/src'
+        for variant in ('debug','release'):
+            src=(root/variant/'java/dev/vibevoice/podcast/runtime/RuntimeDiagnostics.kt').read_text()
+            self.assertIn('responseFormat: com.google.ai.edge.litertlm.ResponseFormat? = null',src)
+            self.assertIn('responseFormat = responseFormat',src)
+        short=(root/'debug/java/dev/vibevoice/podcast/e2e/ShortProductDiagnostics.kt').read_text()
+        self.assertEqual(2,short.count('conversation.sendMessage(request, responseFormat = responseFormat)'))
+        receipt=(root/'debug/java/dev/vibevoice/podcast/diagnostics/PrivateFailureReceipt.kt').read_text()
+        self.assertIn('response-schema.json',receipt);self.assertIn('constrainedDecoding',receipt)
     def test_existing_edit_plan_only_never_uses_device_or_lock(self):
         import run_user_script_diagnostic as controller
         with tempfile.TemporaryDirectory() as temporary:

@@ -14,7 +14,8 @@ internal object RuntimeDiagnostics {
     fun beforeExport(context: android.content.Context, episodeId: String, uri: android.net.Uri) = Unit
     fun exportFinished(episodeId: String, uri: android.net.Uri) = Unit
     fun outputLimit(mode: String, productionLimit: Int): Int = productionLimit
-    fun beforeRequest(mode: String, request: String, systemInstruction: String, outputLimit: Int) = Unit
-    fun send(conversation: Conversation, request: String): String = conversation.sendMessage(request).toString()
+    fun beforeRequest(mode: String, request: String, systemInstruction: String, outputLimit: Int, responseSchema: String? = null) = Unit
+    fun send(conversation: Conversation, request: String, responseFormat: com.google.ai.edge.litertlm.ResponseFormat? = null): String =
+        conversation.sendMessage(request, responseFormat = responseFormat).toString()
     fun qnnProfileDirectory(): String = ""
 }

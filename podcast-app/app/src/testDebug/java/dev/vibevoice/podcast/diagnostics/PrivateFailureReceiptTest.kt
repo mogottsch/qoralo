@@ -43,6 +43,21 @@ class PrivateFailureReceiptTest {
         assertTrue(saved.getBoolean("sdkReturnedOutput")); assertFalse(saved.isNull("rawResponse"))
         assertTrue(saved.isNull("rawResponseUnavailableReason"))
     }
+    @Test fun declaredEditConstraintIsHashBoundWithoutChangingStoredRequestOrResponse() {
+        val root = root(); val store = PrivateFailureReceipt(root, identity)
+        store.beforeRequest("edit", secret, "unchanged instruction", 4096, EDIT_REVISION_JSON_SCHEMA)
+        store.responseReturned("{\"raw\":\"unchanged\"}")
+        val config = JSONObject(File(root, "request-001/config.json").readText())
+        assertEquals("json_schema", config.getString("responseFormat")); assertTrue(config.getBoolean("constrainedDecoding"))
+        assertEquals(EDIT_REVISION_JSON_SCHEMA, File(root, "request-001/response-schema.json").readText())
+        assertEquals(PrivateFailureReceipt.sha256(EDIT_REVISION_JSON_SCHEMA.toByteArray()), config.getJSONObject("responseSchema").getString("sha256"))
+        assertEquals(secret, File(root, "request-001/request.json").readText())
+        assertEquals("{\"raw\":\"unchanged\"}", File(root, "request-001/response.txt").readText())
+        store.beforeRequest("chapter", "{}", "sys", 4096)
+        val plain = JSONObject(File(root, "request-002/config.json").readText())
+        assertEquals("none", plain.getString("responseFormat")); assertFalse(plain.getBoolean("constrainedDecoding"))
+        assertTrue(plain.isNull("responseSchema")); assertFalse(File(root, "request-002/response-schema.json").exists())
+    }
     @Test fun sdkFailureHasExplicitNoReturnedOutputAndUsefulUnderlyingDetail() {
         val root = root(); val store = PrivateFailureReceipt(root, identity); store.beforeRequest("chapter", "{}", "sys", 4096)
         val original = IOException(secret); val result = fail(store, { throw original })

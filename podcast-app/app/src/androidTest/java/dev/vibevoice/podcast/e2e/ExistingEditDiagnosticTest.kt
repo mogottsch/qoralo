@@ -13,6 +13,7 @@ import dev.vibevoice.podcast.PodcastApplication
 import dev.vibevoice.podcast.data.*
 import dev.vibevoice.podcast.diagnostics.PrivateFailureReceipt
 import dev.vibevoice.podcast.generation.agentEditRequest
+import dev.vibevoice.podcast.generation.parseAgentRevision
 import dev.vibevoice.podcast.model.ModelPackRequirement
 import dev.vibevoice.podcast.model.ModelPackVerifier
 import dev.vibevoice.podcast.model.ModelRoute
@@ -67,19 +68,23 @@ class ExistingEditDiagnosticTest {
             val fileHash = app.artifacts.sha256(artifact); require(fileHash == revision.first.contentHash)
             val request = agentEditRequest(revision.first, revision.second, message)
             val requestHash = PrivateFailureReceipt.sha256(request.toByteArray(Charsets.UTF_8))
+            require(requestHash == args.getString("referenceRequestSha256"))
+            val schemaHash = PrivateFailureReceipt.sha256(EDIT_REVISION_JSON_SCHEMA.toByteArray(Charsets.UTF_8))
+            require(schemaHash == args.getString("responseSchemaSha256"))
             val identity = JSONObject().put("schemaVersion", 1).put("runId", run)
                 .put("appApkSha256", appHash).put("testApkSha256", testHash)
                 .put("originalEpisodeId", id).put("originalJobId", job.id)
                 .put("revisionId", revision.first.id).put("revisionSha256", fileHash)
                 .put("instructionSha256", instructionHash).put("requestSha256", requestHash)
+                .put("responseFormatVersion", EDIT_RESPONSE_FORMAT_VERSION).put("responseSchemaSha256", schemaHash)
                 .put("requestReconstructedFromSavedRows", true).put("originalRequestWasNotCaptured", true)
                 .put("pid", android.os.Process.myPid()).put("privateContent", true).put("noDatabaseWrites", true)
             json("identity.json", identity)
             val currentReceipt = PrivateFailureReceipt(File(parent, run), identity)
             receipt = currentReceipt
             val observer = object : GemmaRequestObserver {
-                override fun beforeRequest(mode: String, request: String, systemInstruction: String, outputLimit: Int) =
-                    currentReceipt.beforeRequest(mode, request, systemInstruction, outputLimit)
+                override fun beforeRequest(mode: String, request: String, systemInstruction: String, outputLimit: Int, responseSchema: String?) =
+                    currentReceipt.beforeRequest(mode, request, systemInstruction, outputLimit, responseSchema)
                 override fun responseReturned(raw: String) = currentReceipt.responseReturned(raw)
                 override fun requestFailed(error: GemmaRequestException) = currentReceipt.failed(error)
                 @OptIn(com.google.ai.edge.litertlm.ExperimentalApi::class)
@@ -101,26 +106,46 @@ class ExistingEditDiagnosticTest {
                 ModelPackRequirement(ModelRoute.GEMMA_4_E2B_LITERT_GPU, "gemma-4-e2b", BuildConfig.GEMMA_MANIFEST_SHA256))
             currentReceipt.modelBinding(JSONObject().put("manifestSha256", pack.manifestSha256).put("packId", pack.id)
                 .put("packVersion", pack.version).put("runtime", "LiteRT-LM 0.16.1").put("backend", "GPU")
-                .put("samplerAndSystemInstructionUnchanged", true).put("cpuFallback", false))
+                .put("samplingScalarsAndSystemInstructionUnchanged", true).put("constrainedDecoding", true)
+                .put("responseFormatVersion", EDIT_RESPONSE_FORMAT_VERSION).put("responseSchemaSha256", schemaHash).put("cpuFallback", false))
             val concrete = GemmaLiteRtGpuEngine(observer); engine = concrete
             val started = System.nanoTime()
             db { concrete.load(pack) }
             val ready = System.nanoTime()
             var syntaxAccepted = false
+            var applicationAccepted = false
+            var returnedChapterCount: Int? = null
+            var changedChapterTexts: Int? = null
+            var originalIdsRetained: Boolean? = null
+            var validationFailure: Throwable? = null
             var parseFailure: GemmaRequestException? = null
             try {
                 val parsed = db { concrete.editScript(request) } // Exactly one call; never retries or commits the response.
                 syntaxAccepted = true
-                ShortProductDiagnostics.json(File(root, "private-parsed-response.json"), JSONObject(parsed))
+                val result = parseAgentRevision(parsed)
+                validateCompleteScript(result.title, result.chapters)
+                require(result.summary.isNotBlank()) { "Agent change summary is missing" }
+                applicationAccepted = true
+                returnedChapterCount = result.chapters.size
+                originalIdsRetained = result.chapters.map { it.stableId }.toSet() == revision.second.map { it.stableChapterId }.toSet()
+                changedChapterTexts = revision.second.count { old -> result.chapters.any { it.stableId == old.stableChapterId && it.text != old.text } }
             } catch (error: GemmaRequestException) {
                 parseFailure = error
+            } catch (error: Throwable) {
+                validationFailure = error
+                currentReceipt.jobFailed(error)
             } finally {
                 concrete.close(); engine = null
                 currentReceipt.finished(); receipt = null
             }
             val completed = System.nanoTime()
-            json("model-result.json", JSONObject().put("status", if (syntaxAccepted) "json_syntax_accepted" else "request_failed")
-                .put("safeFailure", parseFailure?.message ?: JSONObject.NULL)
+            json("model-result.json", JSONObject().put("status", if (applicationAccepted) "complete_revision_response_validated_without_commit" else "request_or_validation_failed")
+                .put("jsonSyntaxAccepted", syntaxAccepted).put("applicationResponseAccepted", applicationAccepted)
+                .put("responseFormatVersion", EDIT_RESPONSE_FORMAT_VERSION).put("responseSchemaSha256", schemaHash)
+                .put("returnedChapterCount", returnedChapterCount ?: JSONObject.NULL)
+                .put("originalChapterIdsRetained", originalIdsRetained ?: JSONObject.NULL)
+                .put("changedExistingChapterTexts", changedChapterTexts ?: JSONObject.NULL)
+                .put("safeFailure", parseFailure?.message ?: validationFailure?.let(::generationFailureMessage) ?: JSONObject.NULL)
                 .put("failurePhase", parseFailure?.failurePhase?.name ?: JSONObject.NULL)
                 .put("requestSha256", requestHash).put("modelCallsRequested", 1)
                 .put("loadWallMs", (ready-started)/1_000_000.0).put("requestAndCloseWallMs", (completed-ready)/1_000_000.0)
@@ -148,7 +173,9 @@ class ExistingEditDiagnosticTest {
             json("driver-result.json", JSONObject().put("status", "one_existing_edit_observed_and_recovery_ui_verified")
                 .put("appApkSha256", appHash).put("testApkSha256", testHash).put("episodeId", id)
                 .put("revisionId", revision.first.id).put("revisionSha256", fileHash).put("requestSha256", requestHash)
-                .put("jsonSyntaxAccepted", syntaxAccepted).put("failurePhase", parseFailure?.failurePhase?.name ?: JSONObject.NULL)
+                .put("jsonSyntaxAccepted", syntaxAccepted).put("applicationResponseAccepted", applicationAccepted)
+                .put("responseFormatVersion", EDIT_RESPONSE_FORMAT_VERSION).put("responseSchemaSha256", schemaHash)
+                .put("failurePhase", parseFailure?.failurePhase?.name ?: JSONObject.NULL)
                 .put("recoveryButtonAvailable", true).put("recoveryButtonClicked", false)
                 .put("recoveryTransactionAlwaysRolledBack", true).put("originalDraftAndJobUnchanged", true)
                 .put("modelCallsRequested", 1).put("newJobs", 0).put("newRevisions", 0).put("ttsPlayExport", false))

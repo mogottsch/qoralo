@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Freeze an already-tested isolated build against committed source; no rebuild, ADB or model calls."""
-import argparse, hashlib, json, shutil, subprocess, xml.etree.ElementTree as ET, zipfile
+import argparse, hashlib, json, re, shutil, subprocess, textwrap, xml.etree.ElementTree as ET, zipfile
 from pathlib import Path
 from prepare_wiring_gate import PROJECT, digest
 from duration_phone_guard import host_identity
@@ -12,7 +12,11 @@ def main():
     mode=p.add_mutually_exclusive_group()
     mode.add_argument('--capacity-only',action='store_true')
     mode.add_argument('--existing-edit-probe',action='store_true')
-    a=p.parse_args();out=a.output.resolve();out.mkdir(parents=True,exist_ok=False)
+    p.add_argument('--structured-edit',action='store_true');p.add_argument('--reference-request-sha256')
+    a=p.parse_args()
+    if a.existing_edit_probe:assert a.structured_edit,'Current EDIT source enables JSON schema; declare the changed setting explicitly'
+    if a.structured_edit:assert a.existing_edit_probe and re.fullmatch(r'[0-9a-f]{64}',a.reference_request_sha256 or ''),'Missing prior actual request binding'
+    out=a.output.resolve();out.mkdir(parents=True,exist_ok=False)
     source=subprocess.check_output(['git','rev-parse',a.source_commit],cwd=PROJECT.parent,text=True).strip()
     build=a.work.resolve()/'build-source/podcast-app'
     names=subprocess.check_output(['git','ls-tree','-r','--name-only',source,'--','podcast-app/app/src','podcast-app/app/schemas','podcast-app/config','podcast-app/gradle','podcast-app/app/build.gradle.kts','podcast-app/build.gradle.kts','podcast-app/settings.gradle.kts','podcast-app/gradle.properties'],cwd=PROJECT.parent,text=True).splitlines()
@@ -27,6 +31,14 @@ def main():
     def save(name,data):(out/name).write_text(json.dumps(data,indent=2)+'\n')
     save('compiled-source-bindings.json',{'sourceCommit':source,'files':pins,'builtFromExactBytesBeforeCommitNomination':True,'nativeCompilation':False,'explicitProperty':'-Ppodcast.shortProductE2e=true'})
     (out/'generated-BuildConfig.java').write_text(config)
+    structured=None
+    if a.structured_edit:
+        source_text=(build/'app/src/main/java/dev/vibevoice/podcast/runtime/GemmaEditResponseFormat.kt').read_text()
+        schema=textwrap.dedent(re.search(r'EDIT_REVISION_JSON_SCHEMA = """\n(.*?)\n"""\.trimIndent\(\)',source_text,re.S).group(1))
+        json.loads(schema);(out/'edit-response-schema.json').write_text(schema)
+        structured={'version':re.search(r'EDIT_RESPONSE_FORMAT_VERSION = "([^"]+)"',source_text).group(1),
+            'schemaSha256':hashlib.sha256(schema.encode()).hexdigest(),'referenceRequestSha256':a.reference_request_sha256,
+            'decoderConstraintChanged':True,'samplingScalarsUnchanged':True,'parserRepair':False}
     prior=json.loads(a.prior_candidate.read_text())
     with zipfile.ZipFile(prior['app']['path']) as apk:
         previous={n:hashlib.sha256(apk.read(n)).hexdigest() for n in apk.namelist() if n.startswith('lib/') and n.endswith('.so')}
@@ -64,7 +76,8 @@ def main():
         'driverDeadlineReason':'No in-app process killer; host bounds instrumentation and performs fresh safe closure' if a.existing_edit_probe else None,
         'scriptPollingSeconds':None if a.capacity_only or a.existing_edit_probe else 480,
         'hostInstrumentationSeconds':300 if a.existing_edit_probe else (120 if a.capacity_only else 600),
-        'focusedJvm':counts,'neuralSettingsUnchanged':True,'sourceNotesGuidanceAligned':a.capacity_only or a.existing_edit_probe,'neuralCauseFixed':False,
+        'focusedJvm':counts,'neuralSettingsUnchanged':not a.structured_edit,'structuredEditResponse':structured,
+        'sourceNotesGuidanceAligned':a.capacity_only or a.existing_edit_probe,'neuralCauseFixed':False,
         'buildProperty':'-Ppodcast.shortProductE2e=true','modelPacks':prior['modelPacks']}
     for kind in ('app','test'):
         f=out/(kind+'.apk');value[kind]={'path':str(f),'sha256':digest(f),'bytes':f.stat().st_size}

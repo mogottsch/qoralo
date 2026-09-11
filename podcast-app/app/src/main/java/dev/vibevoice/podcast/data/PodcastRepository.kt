@@ -429,16 +429,7 @@ class PodcastRepository(
         })
     }
 
-    private fun validateScript(title: String, chapters: List<ChapterDraft>) {
-        require(title.isNotBlank() && title.length <= 200) { "Invalid episode title" }
-        require(chapters.size in 1..20) { "A script must contain 1–20 complete chapters" }
-        require(chapters.map { it.stableId }.toSet().size == chapters.size) { "Chapter IDs must be unique" }
-        chapters.forEach {
-            require(CHAPTER_ID.matches(it.stableId)) { "Invalid chapter ID" }
-            require(it.title.isNotBlank() && it.title.length <= 200) { "Invalid chapter title" }
-            require(it.text.isNotBlank() && it.text.length <= 100_000) { "Invalid complete chapter transcript" }
-        }
-    }
+    private fun validateScript(title: String, chapters: List<ChapterDraft>) = validateCompleteScript(title, chapters)
 
     private suspend fun requireEpisode(id: String) = dao.episode(id) ?: error("Episode not found")
     private suspend fun requireJob(id: String) = dao.job(id) ?: error("Generation job not found")
@@ -450,7 +441,6 @@ class PodcastRepository(
     private fun approximateSeconds(text: String): Int = (text.split(Regex("\\s+")).count { it.isNotBlank() } / 2.5).toInt().coerceAtLeast(1)
 
     companion object {
-        private val CHAPTER_ID = Regex("[A-Za-z0-9][A-Za-z0-9._-]{0,127}")
         private const val MAX_EPISODE_SOURCE_BYTES = 5L * 1024L * 1024L
     }
 }

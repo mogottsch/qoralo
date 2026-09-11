@@ -26,7 +26,7 @@ internal class PrivateFailureReceipt(private val root: File, identity: JSONObjec
 
     fun modelBinding(value: JSONObject) = observe { putJson(File(root, "model-runtime.json"), value) }
 
-    fun beforeRequest(mode: String, request: String, instruction: String, outputLimit: Int) {
+    fun beforeRequest(mode: String, request: String, instruction: String, outputLimit: Int, responseSchema: String? = null) {
         pending = null; returned = false; raw = null; rawReason = "SDK send has not returned output"
         observe {
             check(++sequence <= 64) { "Private request count bound" }
@@ -35,7 +35,11 @@ internal class PrivateFailureReceipt(private val root: File, identity: JSONObjec
             pending = directory
             val requestRef = put(File(directory, "request.json"), request.toByteArray(Charsets.UTF_8))
             val instructionRef = put(File(directory, "system.txt"), instruction.toByteArray(Charsets.UTF_8))
+            val schemaRef = responseSchema?.let { put(File(directory, "response-schema.json"), it.toByteArray(Charsets.UTF_8)) }
             putJson(File(directory, "config.json"), JSONObject().put("mode", mode)
+                .put("responseFormat", if (schemaRef != null) "json_schema" else "none")
+                .put("responseSchema", schemaRef ?: JSONObject.NULL)
+                .put("constrainedDecoding", schemaRef != null)
                 .put("request", requestRef).put("systemInstruction", instructionRef)
                 .put("backend", "GPU").put("runtime", "LiteRT-LM 0.16.1").put("contextTokens", 8192)
                 .put("maxOutputTokens", outputLimit).put("topK", 1).put("topP", 1.0).put("temperature", 1.0)

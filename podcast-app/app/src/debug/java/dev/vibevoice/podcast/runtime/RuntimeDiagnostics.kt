@@ -49,16 +49,17 @@ internal object RuntimeDiagnostics {
 
     fun outputLimit(mode: String, productionLimit: Int): Int = active?.contract?.outputTokens(mode) ?: productionLimit
 
-    fun beforeRequest(mode: String, request: String, systemInstruction: String, outputLimit: Int) {
-        dev.vibevoice.podcast.diagnostics.UserFailureDiagnostics.beforeRequest(mode, request, systemInstruction, outputLimit)
-        dev.vibevoice.podcast.e2e.ShortProductDiagnostics.beforeRequest(mode, request, systemInstruction, outputLimit)
+    fun beforeRequest(mode: String, request: String, systemInstruction: String, outputLimit: Int, responseSchema: String? = null) {
+        dev.vibevoice.podcast.diagnostics.UserFailureDiagnostics.beforeRequest(mode, request, systemInstruction, outputLimit, responseSchema)
+        dev.vibevoice.podcast.e2e.ShortProductDiagnostics.beforeRequest(mode, request, systemInstruction, outputLimit, responseSchema)
         val capture = active ?: return
         this.mode = mode
         capture.evidence.write("gemma-$mode-request.json", request)
         capture.evidence.write("gemma-$mode-system.txt", systemInstruction)
+        responseSchema?.let { capture.evidence.write("gemma-$mode-response-schema.json", it) }
         capture.evidence.json("gemma-$mode-options.json", JSONObject().put("backend", "GPU")
             .put("contextTokens", 8192).put("maxOutputTokens", outputLimit).put("topK", 1)
-            .put("thinking", false).put("freshConversation", true)
+            .put("thinking", false).put("freshConversation", true).put("constrainedDecoding", responseSchema != null)
             .put("actualOutputTokens", JSONObject.NULL)
             .put("metricLimitation", "Callback chunks are not token IDs; this is not a throughput benchmark"))
         require(request.toByteArray(Charsets.UTF_8).size + systemInstruction.toByteArray(Charsets.UTF_8).size <= capture.contract.maxRequestUtf8Bytes) {
@@ -66,8 +67,8 @@ internal object RuntimeDiagnostics {
         }
     }
 
-    fun send(conversation: Conversation, request: String): String {
-        val capture = active ?: return dev.vibevoice.podcast.e2e.ShortProductDiagnostics.send(conversation, request)
+    fun send(conversation: Conversation, request: String, responseFormat: com.google.ai.edge.litertlm.ResponseFormat? = null): String {
+        val capture = active ?: return dev.vibevoice.podcast.e2e.ShortProductDiagnostics.send(conversation, request, responseFormat)
         val requestMode = mode
         val output = File(capture.evidence.root, "gemma-$requestMode-raw.txt")
         check(output.createNewFile()) { "Wiring request cannot be repeated" }
@@ -88,7 +89,7 @@ internal object RuntimeDiagnostics {
             }
             override fun onDone() { capture.evidence.event("callback_done", requestMode); done.countDown() }
             override fun onError(throwable: Throwable) { failure.set(throwable); capture.evidence.event("callback_error", throwable.stackTraceToString()); done.countDown() }
-        })
+        }, responseFormat = responseFormat)
         // Blocking native work is bounded by the service's independent kill deadline,
         // not a coroutine timeout that could wait forever for JNI cancellation.
         done.await()

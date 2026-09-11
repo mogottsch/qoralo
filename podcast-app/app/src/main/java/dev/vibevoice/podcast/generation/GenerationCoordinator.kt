@@ -68,7 +68,7 @@ class GenerationCoordinator(
             engine.load(pack)
             repository.recordVerifiedPack(pack, requireNotNull(engine.provenance))
             val request = agentEditRequest(revision, chapters, userRequest)
-            val result = parseAgentResult(engine.editScript(request))
+            val result = parseAgentRevision(engine.editScript(request))
             repository.applyAgentRevision(episodeId, jobId, revision.id, result.title, result.chapters, result.summary)
         } finally {
             engine.close()
@@ -115,19 +115,4 @@ class GenerationCoordinator(
         return verifier.verify(artifacts.modelPackRoot(directory), ModelPackRequirement(route, id, hash))
     }
 
-    private fun parseAgentResult(raw: String): AgentResult {
-        val json = JSONObject(raw)
-        val keys = json.keys().asSequence().toSet()
-        require(keys == setOf("schemaVersion", "title", "chapters", "summary")) { "Agent response schema is invalid" }
-        require(json.getInt("schemaVersion") == 1) { "Agent response version is unsupported" }
-        val array = json.getJSONArray("chapters")
-        val chapters = List(array.length()) { index ->
-            val chapter = array.getJSONObject(index)
-            require(chapter.keys().asSequence().toSet() == setOf("id", "title", "text")) { "Agent chapter schema is invalid" }
-            ChapterDraft(chapter.getString("id"), chapter.getString("title"), chapter.getString("text"))
-        }
-        return AgentResult(json.getString("title"), chapters, json.getString("summary"))
-    }
-
-    private data class AgentResult(val title: String, val chapters: List<ChapterDraft>, val summary: String)
 }

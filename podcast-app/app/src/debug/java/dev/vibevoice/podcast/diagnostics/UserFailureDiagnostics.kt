@@ -57,8 +57,8 @@ internal object UserFailureDiagnostics {
             .put("files", JSONArray(pack.files.map { f -> JSONObject().put("path", f.relativePath)
                 .put("role", f.role.name).put("bytes", f.byteCount).put("sha256", f.sha256) }))) }
     }
-    fun beforeRequest(mode: String, request: String, instruction: String, limit: Int) {
-        receipt?.beforeRequest(mode, request, instruction, limit)
+    fun beforeRequest(mode: String, request: String, instruction: String, limit: Int, responseSchema: String? = null) {
+        receipt?.beforeRequest(mode, request, instruction, limit, responseSchema)
     }
     fun responseReturned(raw: String) { receipt?.responseReturned(raw) }
     fun failed(error: GemmaRequestException) { receipt?.failed(error) }

@@ -125,26 +125,29 @@ internal object ShortProductDiagnostics {
             }
         }, ShortProductPolicy.jobMs(entity.kind))
     }
-    fun beforeRequest(mode: String, request: String, system: String, limit: Int) {
+    fun beforeRequest(mode: String, request: String, system: String, limit: Int, responseSchema: String? = null) {
         val current = job ?: return
         val prefix = File(current.root, "request-${current.requests + 1}")
         write(File(prefix.path + ".json"), request.toByteArray())
         write(File(prefix.path + "-system.txt"), system.toByteArray())
+        responseSchema?.let { write(File(prefix.path + "-response-schema.json"), it.toByteArray(Charsets.UTF_8)) }
         json(File(prefix.path + "-options.json"), JSONObject().put("mode", mode).put("contextTokens", 8192)
             .put("maxOutputTokens", limit).put("freshConversation", true).put("topK", 1).put("thinking", false)
+            .put("constrainedDecoding", responseSchema != null)
+            .put("responseSchemaSha256", responseSchema?.let { ShortProductPolicy.hash(it.toByteArray(Charsets.UTF_8)) } ?: JSONObject.NULL)
             .put("actualOutputTokens", JSONObject.NULL).put("stopReason", JSONObject.NULL)
             .put("metricLimitation", "normal synchronous API; no token/TTFT metrics or partial output on native failure"))
         ShortProductPolicy.validateRequest(current.kind, current.requests, mode, request, limit)
         current.pending = prefix
     }
-    fun send(conversation: Conversation, request: String): String {
-        val current = job ?: return conversation.sendMessage(request).toString()
+    fun send(conversation: Conversation, request: String, responseFormat: com.google.ai.edge.litertlm.ResponseFormat? = null): String {
+        val current = job ?: return conversation.sendMessage(request, responseFormat = responseFormat).toString()
         val prefix = requireNotNull(current.pending)
         current.pending = null; current.requests++
         val start = SystemClock.elapsedRealtime()
         json(File(prefix.path + "-send-start.json"), JSONObject().put("elapsedRealtimeMs", start))
         try {
-            val raw = conversation.sendMessage(request).toString() // same normal API, before production parsing
+            val raw = conversation.sendMessage(request, responseFormat = responseFormat).toString() // same normal API, before production parsing
             write(File(prefix.path + "-raw.txt"), raw.toByteArray())
             json(File(prefix.path + "-returned.json"), JSONObject().put("elapsedMs", SystemClock.elapsedRealtime() - start)
                 .put("rawSha256", ShortProductPolicy.hash(raw.toByteArray())))
