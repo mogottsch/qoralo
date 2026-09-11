@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T13:05:52+00:00",
+  "updated_at": "2026-09-11T13:15:41+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -17,26 +17,38 @@
       "links": []
     },
     {
+      "id": "app",
+      "title": "App chapter-edit diagnosis",
+      "status": "preparing",
+      "owner": "Janek",
+      "now": "Moritz reported failed chapter editing via chat; Janek has next brief READ-ONLY phone diagnostic for installed identity/latest EDIT job/chat/revision/error.",
+      "next": "No install/retry/data change yet; cause unknown. Earlier fixes retained but app repair is not permanently closed.",
+      "reported_at": "2026-09-11T13:15:41+00:00",
+      "reported_by": "Pi — direct Moritz issue and Janek assignment",
+      "stale_after_seconds": 900,
+      "links": []
+    },
+    {
       "id": "0036-whole-chapter-htp",
       "title": "0036 whole-chapter HTP pipeline",
       "status": "active",
       "owner": "Ben",
-      "now": "HTP diagnosis: isolated8GiB-AS control also failed QNN1002 before Run; log shows signed-size allocator rejection for2,666,528,768B/2,245,001,216B requests (>INT32_MAX), then mmap64 failure.",
-      "next": "Ben reduces internal allocation footprint without changing whole T3200/weights/semantics; no limit bumps or HTP WAV.",
-      "reported_at": "2026-09-11T13:05:52+00:00",
-      "reported_by": "Pi — significant HTP allocator-path diagnosis",
+      "now": "Ben continues 0036 HTP depth-split host builds without changing whole T3200/weights/semantics.",
+      "next": "No HTP WAV/phone result. Retain signed-size allocator boundary; no duration forcing or fallback.",
+      "reported_at": "2026-09-11T13:15:41+00:00",
+      "reported_by": "Pi — current Ben HTP work",
       "stale_after_seconds": 900,
       "links": []
     },
     {
       "id": "gemma",
       "title": "Gemma FP16",
-      "status": "preparing",
+      "status": "reviewing",
       "owner": "Jere",
-      "now": "Jere has next exact-long phone slot after HTP failure teardown, with fresh RPC-health caution.",
-      "next": "Prepare only; no start/result. HTP failure-teardown SSR markers are a caution, not a Gemma result.",
-      "reported_at": "2026-09-11T13:05:52+00:00",
-      "reported_by": "Pi — next phone-slot scheduling and RPC-health caution",
+      "now": "Jere reports exact-long activity finished/released; full result awaited before any quality claim.",
+      "next": "No new phone work reported. Preserve RPC-health caution and make no exact-long quality/conclusion until owner result.",
+      "reported_at": "2026-09-11T13:15:41+00:00",
+      "reported_by": "Pi — Jere activity/release, result pending",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -51,11 +63,11 @@
       "id": "phone",
       "title": "Phone",
       "status": "preparing",
-      "owner": "Jere",
-      "now": "Ben HTP diagnostic slot released; Jere has next exact-long slot with fresh RPC-health caution, actual start unreported.",
-      "next": "No HTP WAV. Failure-teardown SSR markers require caution; phone assignment is not live lock/connection.",
-      "reported_at": "2026-09-11T13:05:52+00:00",
-      "reported_by": "Pi — HTP diagnostic release and next Jere slot",
+      "owner": "Janek",
+      "now": "Janek has next brief READ-ONLY app chapter-edit diagnostic; actual lock/start unreported.",
+      "next": "Inspect installed identity/latest EDIT job/chat/revision/error only. No install/retry/data change; cause unknown.",
+      "reported_at": "2026-09-11T13:15:41+00:00",
+      "reported_by": "Pi — new app phone assignment",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -63,11 +75,11 @@
       "id": "host",
       "title": "On this computer",
       "status": "active",
-      "owner": "Ben / Jere",
-      "now": "Ben reduces 0036 HTP internal allocation footprint; Jere prepares exact-long slot. CPU result retained; old app/Qwen/LFM cards removed from live board.",
-      "next": "No whole-T3200/weight/semantic change or HTP WAV. No paused/closed work is shown as active.",
-      "reported_at": "2026-09-11T13:05:52+00:00",
-      "reported_by": "Pi — current live work only",
+      "owner": "Ben / Jere / Janek",
+      "now": "Ben HTP depth-split host builds active; Jere exact-long result pending; Janek app read-only diagnosis assigned.",
+      "next": "No HTP WAV/phone result or Gemma quality claim. App diagnostic starts only on Janek actual report.",
+      "reported_at": "2026-09-11T13:15:41+00:00",
+      "reported_by": "Pi — current live work",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -93,17 +105,24 @@
       "stale_after_seconds": 900
     },
     {
+      "name": "Janek",
+      "task": "Prepare brief read-only chapter-edit phone diagnosis",
+      "reported_at": "2026-09-11T13:15:41+00:00",
+      "reported_by": "Pi — new active app assignment",
+      "stale_after_seconds": 900
+    },
+    {
       "name": "Ben",
-      "task": "Reduce 0036 HTP allocation footprint",
-      "reported_at": "2026-09-11T13:05:52+00:00",
-      "reported_by": "Pi — current HTP diagnosis",
+      "task": "Build 0036 HTP depth-split host path",
+      "reported_at": "2026-09-11T13:15:41+00:00",
+      "reported_by": "Pi — active current work",
       "stale_after_seconds": 900
     },
     {
       "name": "Jere",
-      "task": "Prepare exact-long slot with RPC-health caution",
-      "reported_at": "2026-09-11T13:05:52+00:00",
-      "reported_by": "Pi — next current slot",
+      "task": "Exact-long released; await full result",
+      "reported_at": "2026-09-11T13:15:41+00:00",
+      "reported_by": "Pi — no quality claim pending result",
       "stale_after_seconds": 900
     },
     {
