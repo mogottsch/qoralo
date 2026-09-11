@@ -13,9 +13,19 @@ import java.util.concurrent.atomic.AtomicReference
 
 /** Available only in debug builds; enabled solely by the private wiring service. */
 internal object RuntimeDiagnostics {
-    suspend fun beginJob(context: android.content.Context, episodeId: String, jobId: String) =
+    suspend fun beginJob(context: android.content.Context, episodeId: String, jobId: String) {
         dev.vibevoice.podcast.e2e.ShortProductDiagnostics.beginJob(context, episodeId, jobId)
-    fun endJob() = dev.vibevoice.podcast.e2e.ShortProductDiagnostics.endJob()
+        dev.vibevoice.podcast.diagnostics.UserFailureDiagnostics.beginJob(context, episodeId, jobId)
+    }
+    fun endJob() {
+        dev.vibevoice.podcast.diagnostics.UserFailureDiagnostics.endJob()
+        dev.vibevoice.podcast.e2e.ShortProductDiagnostics.endJob()
+    }
+    fun verifiedGemma(pack: dev.vibevoice.podcast.model.VerifiedModelPack) =
+        dev.vibevoice.podcast.diagnostics.UserFailureDiagnostics.verifiedGemma(pack)
+    fun responseReturned(raw: String) = dev.vibevoice.podcast.diagnostics.UserFailureDiagnostics.responseReturned(raw)
+    fun requestFailed(error: GemmaRequestException) = dev.vibevoice.podcast.diagnostics.UserFailureDiagnostics.failed(error)
+    fun jobFailed(error: Throwable) = dev.vibevoice.podcast.diagnostics.UserFailureDiagnostics.jobFailed(error)
     fun configurePlayer(episodeId: String, player: androidx.media3.exoplayer.ExoPlayer) =
         dev.vibevoice.podcast.e2e.ShortProductDiagnostics.configurePlayer(episodeId, player)
     fun beforeExport(context: android.content.Context, episodeId: String, uri: android.net.Uri) =
@@ -40,6 +50,7 @@ internal object RuntimeDiagnostics {
     fun outputLimit(mode: String, productionLimit: Int): Int = active?.contract?.outputTokens(mode) ?: productionLimit
 
     fun beforeRequest(mode: String, request: String, systemInstruction: String, outputLimit: Int) {
+        dev.vibevoice.podcast.diagnostics.UserFailureDiagnostics.beforeRequest(mode, request, systemInstruction, outputLimit)
         dev.vibevoice.podcast.e2e.ShortProductDiagnostics.beforeRequest(mode, request, systemInstruction, outputLimit)
         val capture = active ?: return
         this.mode = mode

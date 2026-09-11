@@ -34,6 +34,22 @@ class PodcastRepositoryTest {
 
     @After fun close() = database.close()
 
+    @Test fun safeFailureSummarySurvivesExistingJobAndEpisodePersistenceWithoutPrivateText() = runTest {
+        val episodeId = episodeAtInstructions()
+        val jobId = repository.queueScriptGeneration(episodeId, "Use the normal full chapter request", true)
+        repository.claimJob(episodeId, jobId, JobKind.SCRIPT, "Writing chapter 5")
+        val original = org.json.JSONException("PRIVATE_RESPONSE_SENTINEL")
+        val failure = dev.vibevoice.podcast.runtime.GemmaRequestException("chapter",
+            dev.vibevoice.podcast.runtime.GemmaFailurePhase.JSON_PARSE,
+            dev.vibevoice.podcast.runtime.FailureTypeGraph.capture(original), original)
+        val summary = dev.vibevoice.podcast.runtime.generationFailureMessage(RuntimeException("PRIVATE_WRAPPER", failure))
+        assertTrue(repository.failJob(episodeId, jobId, summary))
+        assertEquals(summary, repository.latestJob(episodeId)?.errorMessage)
+        assertEquals(summary, repository.episode(episodeId).failureMessage)
+        assertTrue(summary.contains("JSON_PARSE")); assertTrue(summary.contains("JSONException"))
+        assertFalse(summary.contains("PRIVATE_")); assertEquals(EpisodePhase.FAILED, repository.episode(episodeId).phase)
+    }
+
     @Test fun reviewOnStopsAtImmutableDraftThenUserLocks() = runTest {
         val episodeId = episodeAtInstructions()
         val jobId = repository.queueScriptGeneration(episodeId, "Explain it clearly", true)

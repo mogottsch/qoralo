@@ -33,4 +33,4 @@ interface TtsEngine : Closeable {
     suspend fun renderChapter(chapter: FrozenChapter, output: File): AudioMetadata
 }
 
-class InferenceRouteException(message: String, cause: Throwable? = null) : Exception(message, cause)
+open class InferenceRouteException(message: String, cause: Throwable? = null) : Exception(message, cause)

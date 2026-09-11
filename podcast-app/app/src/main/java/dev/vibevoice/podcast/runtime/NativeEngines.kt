@@ -50,6 +50,7 @@ class GemmaLiteRtGpuEngine : LlmEngine {
                 cpuFallbackEnabled = false,
                 readyComponents = setOf("model", "tokenizer", "gpu_delegate"),
             )
+            RuntimeDiagnostics.verifiedGemma(pack)
         } catch (error: Throwable) {
             close()
             throw InferenceRouteException("Gemma 4 E2B LiteRT GPU failed to initialize", error)
@@ -109,19 +110,21 @@ class GemmaLiteRtGpuEngine : LlmEngine {
         })
         val instruction = specificInstruction ?: systemInstruction(mode)
         RuntimeDiagnostics.beforeRequest(mode, request, instruction, maxOutput)
-        try {
-            val config = ConversationConfig(
-                systemInstruction = Contents.of(instruction),
-                samplerConfig = SamplerConfig(topK = 1, topP = 1.0, temperature = 1.0),
-                channels = emptyList(),
-                maxOutputToken = maxOutput,
-                thinkingConfig = ThinkingConfig(enableThinking = false),
-            )
-            val raw = loaded.createConversation(config).use { RuntimeDiagnostics.send(it, request) }
-            extractJson(raw)
-        } catch (error: Throwable) {
-            throw InferenceRouteException("Gemma LiteRT GPU $mode request failed", error)
-        }
+        executeGemmaRequest(
+            mode = mode,
+            create = {
+                loaded.createConversation(ConversationConfig(
+                    systemInstruction = Contents.of(instruction),
+                    samplerConfig = SamplerConfig(topK = 1, topP = 1.0, temperature = 1.0),
+                    channels = emptyList(),
+                    maxOutputToken = maxOutput,
+                    thinkingConfig = ThinkingConfig(enableThinking = false),
+                ))
+            },
+            send = { RuntimeDiagnostics.send(it, request) },
+            returned = { RuntimeDiagnostics.responseReturned(it) },
+            failed = { RuntimeDiagnostics.requestFailed(it) },
+        )
     }
 
     override fun close() {
@@ -140,13 +143,6 @@ class GemmaLiteRtGpuEngine : LlmEngine {
         "chapter" -> error("A chapter request requires its concrete single-chapter instruction")
         "edit" -> SCRIPT_EDIT_INSTRUCTION
         else -> error("Unsupported Gemma request mode")
-    }
-
-    private fun extractJson(raw: String): String {
-        val start = raw.indexOf('{')
-        val end = raw.lastIndexOf('}')
-        require(start >= 0 && end > start) { "Gemma response did not contain a JSON object" }
-        return raw.substring(start, end + 1).also { JSONObject(it) }
     }
 
     private companion object { const val MAX_GENERATION_REQUEST_CHARS = 20_000 }

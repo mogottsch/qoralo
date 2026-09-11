@@ -16,6 +16,7 @@ import dev.vibevoice.podcast.PodcastApplication
 import dev.vibevoice.podcast.R
 import dev.vibevoice.podcast.data.GenerationJobEntity
 import dev.vibevoice.podcast.data.JobKind
+import dev.vibevoice.podcast.runtime.generationFailureMessage
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -73,14 +74,16 @@ class GenerationService : Service() {
             } catch (cancelled: CancellationException) {
                 throw cancelled
             } catch (error: Throwable) {
+                val safeMessage = generationFailureMessage(error)
+                runCatching { dev.vibevoice.podcast.runtime.RuntimeDiagnostics.jobFailed(error) }
                 runCatching {
                     (application as PodcastApplication).repository.failJob(
                         episodeId,
                         failureJob,
-                        error.message ?: error::class.java.simpleName,
+                        safeMessage,
                     )
                 }
-                updateNotification("Generation stopped: ${error.message ?: "runtime failure"}")
+                updateNotification("Generation stopped: $safeMessage")
             } finally {
                 dev.vibevoice.podcast.runtime.RuntimeDiagnostics.endJob()
                 activeJobId = null
