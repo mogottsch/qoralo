@@ -1,6 +1,6 @@
 # Phone-return handoff
 
-**Current final usable app and completed SHORT path:** see [final-short-app-handoff.md](final-short-app-handoff.md). App95103…fe969/test07a3177…b56e3 are the final observed pair; real multi-stage source/script/edit→lock/audio→silent Player→local SAF export completed. No further phone/model work is authorized. The historical gates below remain evidence, not the current installation nomination.
+**Current installed app:** see [app-repair-handoff-2026-09-11.md](app-repair-handoff-2026-09-11.md). App50a367…7a47/test8ed6c5…9e04 have tested early input-capacity protection, retaining full drafts before unsupported audio locking. Two real-input SCRIPT copies succeeded; historical SCRIPT causes remain unreproduced. The earlier multi-stage SHORT audio/Player/SAF chain and accepted master remain preserved in [final-short-app-handoff.md](final-short-app-handoff.md). The gates below are historical evidence, not the current installation nomination.
 
 **No further phone work is authorized by this handoff.** Explicit load-only, canonical TTS, failed profiled-long and completed profile-OFF slots are retained. The profile-OFF whole request returned29.80s audio, not its roughly90s target; speech coverage/listening remain unreviewed. Another device action needs Pi's new slot. Frozen candidates remain unchanged. Git push/external publication is held for coordinated historical privacy cleanup.
 

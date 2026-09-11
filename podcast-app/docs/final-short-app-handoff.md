@@ -1,5 +1,7 @@
 # Final usable SHORT app handoff
 
+**Historical short-flow/audio handoff.** The current installed build is now `50a367…`, with tested full-draft capacity protection and error-provenance fixes: see [the current app repair handoff](app-repair-handoff-2026-09-11.md). The `95103…` artifact and all results below remain preserved unchanged as the earlier technical-chain nomination.
+
 **Phone/model work is stopped. The real multi-stage short workflow reaches local SAF export, with Nik's final saved audit accepted. Moritz has accepted the exact21.067s short master.** Long1–2minute chapter support remains unresolved; this feedback does not approve the long sample or other hashes.
 
 ## What to open

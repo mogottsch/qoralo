@@ -174,6 +174,7 @@ def main():
         if capacity_only:
             require(rows(before)['installed_models']==rows(after_state['database'])['installed_models'],'capacity-only changed model catalog')
             preservation['allRowsCatalogAndEpisodeFilesUnchanged']=True
+            preservation['allowedGlobalChanges']='none (capacity-only)'
             preservation['newModelCalls']=0
         save('preservation.json',preservation)
     with (PROJECT.parent/'artifacts/locks/phone.lock').open('a+') as lock:

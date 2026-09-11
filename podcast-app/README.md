@@ -2,6 +2,10 @@
 
 Greenfield Android implementation of the binding UX in `../docs/app-ux-mvp.html` and architecture in `../docs/podcast-generation-app-architecture-proposal.md`.
 
+## Current tested internal build
+
+See [the 2026-09-11 app repair handoff](docs/app-repair-handoff-2026-09-11.md) for the installed `50a367…` APK, real-input SCRIPT results and tested early audio-capacity handling. Full drafts are preserved; full-length chapter narration remains unsupported/unverified by the selected voice. The frozen APK in that handoff is the tested nomination, not an arbitrary build output.
+
 ## Identity
 
 The reversible internal application ID is `dev.vibevoice.podcast.internal`; the launcher name is **VibeVoice**. This is deliberately not a production Play identity.

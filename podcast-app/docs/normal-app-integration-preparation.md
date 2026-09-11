@@ -1,6 +1,6 @@
 # Normal app integration — source preparation only
 
-**This LONG integration remains held for duration/spoken-coverage limitations.** A separately property-pinned SHORT normal app has since completed a real multi-stage workflow through local SAF export. See [final-short-app-handoff.md](final-short-app-handoff.md) for the final installed95103… app, exact bindings and limitations; do not confuse it with the unqualified long default build.
+**This LONG integration remains held for duration/spoken-coverage limitations.** A separately property-pinned SHORT normal app has since completed a real multi-stage workflow through local SAF export. See [app-repair-handoff-2026-09-11.md](app-repair-handoff-2026-09-11.md) for the current installed50a367… app, capacity safeguards and exact bindings; the earlier95103… short-flow artifact is preserved. Do not confuse either with the unqualified experimental long default build.
 
 The profile-OFF call returned a real29.7969s WAV for a complete227-word input. Nik accepted bounded input→WAV operability only. This misses the roughly90s target; speech coverage/listening are not accepted. Jere's one completed local ASR pass finds discontinuous lexical matches across all four paragraphs, not evidence of complete speech. Its93/227 ordered exact-word matches are intended-text versus ASR disagreement, not measured speech WER or definitive omissions.
 
