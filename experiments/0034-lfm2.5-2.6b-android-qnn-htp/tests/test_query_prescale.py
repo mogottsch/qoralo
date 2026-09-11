@@ -46,6 +46,59 @@ class QueryPrescaleTest(unittest.TestCase):
         self.assertEqual(len(json.loads((path / 'raw/inputs-manifest.json').read_text())), 41)
         self.assertTrue(all(x['unchanged'] for x in json.loads((path / 'immutable-after.json').read_text())))
 
+    def test_retained_continuation_binds_all60_bytes_rankings_and_copy_identity(self):
+        from prescale_ar171_queries import sha
+        exp = Path(__file__).resolve().parents[1]
+        path = exp / 'results/query-prescale-cpu-attempt-2-numerical-check'
+        result = json.loads((path / 'result.json').read_text())
+        summary = json.loads((path / 'summary.json').read_text())
+        self.assertEqual(sha(path / 'result.json'), summary['result_sha256'])
+        self.assertTrue(result['baseline_reused_without_execution'])
+        self.assertTrue(result['prepared']['baseline_reuse']['exact_graph_data_input_runtime_options_output_binding_passed'])
+        self.assertEqual(len(result['all60']), 60)
+        for tensor in result['all60']:
+            self.assertTrue(tensor['bitwise_equal'])
+            self.assertEqual(tensor['reference']['finite'], tensor['element_count'])
+            self.assertEqual(tensor['candidate']['finite'], tensor['element_count'])
+            self.assertEqual(tensor['finite_pair_max_abs_delta'], 0)
+            self.assertEqual(tensor['finite_pair_mean_abs_delta'], 0)
+        manifests = [{x['name']: x for x in json.loads((path / f'raw/{v}-manifest.json').read_text())}
+                     for v in ('baseline', 'derivative', 'debug')]
+        for name, tensor in manifests[0].items():
+            for other in manifests[1:]:
+                self.assertEqual(tensor['sha256'], other[name]['sha256'])
+        self.assertTrue(result['debug_all60_bitwise_equal'])
+        self.assertEqual(result['logit_rankings']['entire_vocab_rank_changed_count'], 0)
+        self.assertEqual(result['logit_rankings']['reference_argmax'], 597)
+        self.assertEqual(result['logit_rankings']['candidate_argmax'], 597)
+        copies = result['prepared']['rewrite']['external_copies']
+        self.assertEqual(sum(c['bytes'] for c in copies), 2327207936)
+        for c in copies:
+            self.assertEqual(c['copy_link_count'], 1)
+            self.assertEqual(c['source_before_sha256'], c['copy_sha256'])
+            self.assertEqual(c['source_before_sha256'], c['source_after_sha256'])
+        self.assertTrue(all(x['unchanged'] for x in result['immutable_after']))
+        for field in ('phone_access', 'accelerator_aot', 'qnn_runtime', 'speedup_claim', 'quality_equivalence_claim', 'aot_authorized_by_result'):
+            self.assertFalse(result[field])
+
+    def test_retained_fp16_proxy_deltas_do_not_become_htp_or_quality_claims(self):
+        exp = Path(__file__).resolve().parents[1]
+        path = exp / 'results/query-prescale-cpu-attempt-2-numerical-check'
+        result = json.loads((path / 'result.json').read_text())
+        probes = result['fp16_same_operand_proxies']
+        self.assertEqual(len(probes), 8)
+        self.assertEqual(sum(p['scores']['unequal_elements'] for p in probes), 8)
+        self.assertEqual(sum(p['causal_unmasked_scores']['unequal_elements'] for p in probes), 5)
+        self.assertEqual(max(p['scores']['finite_pair_max_abs_delta'] for p in probes), 0.001953125)
+        self.assertEqual(sum(p['casts']['pre_query_scale']['finite_nonzero_rounded_to_zero'] for p in probes), 2)
+        self.assertEqual(probes[0]['casts']['query_ingress']['finite_nonzero_rounded_to_zero'], 21888)
+        self.assertEqual(probes[0]['casts']['key_ingress']['finite_nonzero_rounded_to_zero'], 21888)
+        self.assertEqual(sum(c['finite_rounded_to_infinity'] for p in probes for c in p['casts'].values()), 0)
+        summary = json.loads((path / 'summary.json').read_text())
+        self.assertIsNone(summary['resource_observations']['cgroup_memory_peak_bytes'])
+        self.assertIn('unloaded', summary['resource_observations']['cgroup_memory_peak_missing_reason'])
+        self.assertIn('not HTP execution', ' '.join(result['limitations']))
+
     def test_only_eight_score_pairs_change_and_original_is_immutable(self):
         baseline = fixture()
         before = baseline.SerializeToString()
@@ -85,6 +138,41 @@ class QueryPrescaleTest(unittest.TestCase):
             self.assertTrue(record['initializers_and_interfaces_unchanged'])
             with self.assertRaises(FileExistsError):
                 stage(source, path / 'derived/model.onnx')
+
+    def test_external_data_is_independent_byte_identical_regular_copy(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            source = path / 'source.onnx'
+            model = fixture()
+            model.graph.initializer.append(numpy_helper.from_array(np.arange(256, dtype=np.float32), 'extra_weight'))
+            onnx.save_model(model, source, save_as_external_data=True, all_tensors_to_one_file=True,
+                            location='weights.bin', size_threshold=512)
+            record = stage(source, path / 'isolated/derived.onnx')
+            self.assertEqual(len(record['external_copies']), 1)
+            data = record['external_copies'][0]
+            target, original = Path(data['copy']), Path(data['source'])
+            self.assertFalse(target.is_symlink())
+            self.assertFalse(target.samefile(original))
+            self.assertEqual(target.stat().st_nlink, 1)
+            self.assertEqual(target.read_bytes(), original.read_bytes())
+            self.assertEqual(data['source_before_sha256'], data['copy_sha256'])
+            self.assertEqual(data['source_before_sha256'], data['source_after_sha256'])
+            with self.assertRaises(RuntimeError):
+                stage(source, path / 'overbudget/derived.onnx', copy_budget_bytes=0)
+            with self.assertRaises(ValueError):
+                stage(source, path / 'beside-baseline.onnx')
+
+    def test_storage_amendment_pins_prior_outputs_and_unmodified_criteria(self):
+        from prescale_ar171_queries import sha
+        exp = Path(__file__).resolve().parents[1]
+        amendment = json.loads((exp / 'protocol/query-prescale-storage-amendment.json').read_text())
+        self.assertEqual(sha(exp / 'protocol/query-prescale-numerical-check.json'), amendment['original_criteria_sha256'])
+        raw = exp / 'results/query-prescale-cpu-attempt-1-external-path-failure/raw'
+        for filename, field in [('baseline-manifest.json', 'prior_baseline_output_manifest_sha256'),
+                                ('inputs-manifest.json', 'prior_input_manifest_sha256'),
+                                ('baseline-runtime.json', 'prior_baseline_runtime_sha256')]:
+            self.assertEqual(sha(raw / filename), amendment[field])
+        self.assertLessEqual(amendment['resources']['continuation_runtime_max_seconds'] + amendment['resources']['prior_service_runtime_seconds'], 1200)
 
     def test_rounding_distinguishes_subnormal_zero_underflow_and_overflow(self):
         source = np.asarray([0, 2.0 ** -24, 2.0 ** -27, 1, 70000, np.nan, np.inf], np.float32)

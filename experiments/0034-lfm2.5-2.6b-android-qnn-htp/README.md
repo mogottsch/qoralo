@@ -4,13 +4,36 @@
 
 **The corrected native-INT64 integrated route now completes physically. One direct-QNN process loaded AR171, consumed all 171 canonical-short tokens, finite-scanned 60 outputs, bridged 38 states in memory, freed AR171, loaded AR1 once, and completed 15 finite-scanned decode calls for 16 total emitted tokens. First output arrived in 10.501 seconds and final output in 34.834 seconds in one cold diagnostic.**
 
-## AR171 query-prescale numerical check: first attempt blocked
+## AR171 query-prescale numerical check (CPU only)
 
 The approved source-only derivative moves the eight exact `0.125` score multiplications onto each query before score MatMul. [`protocol/query-prescale-numerical-check.json`](protocol/query-prescale-numerical-check.json) freezes the same-input, all-60-output, ranking and FP16-boundary metrics before execution. Synthetic fixtures pass; they do not establish LFM numerical safety.
 
 [`results/query-prescale-cpu-attempt-1-external-path-failure/`](results/query-prescale-cpu-attempt-1-external-path-failure/) preserves the first bounded CPU attempt. The unchanged baseline executed on the canonical 171-token/zero-state input: all 38 state tensors and 22 logit chunks are finite, endpoint argmax 597. ONNX Runtime 1.26 rejected the derivative during session initialization because the external-data symlink resolved outside its model directory. There was **no derivative execution, debug-copy execution, FP16 probe, or numerical comparison**. The original 60 outputs and 41 input arrays remain hash-bound outside Git; original model/data/input/tool hashes were verified unchanged after the failure. No automatic retry occurred.
 
-The failed service used 5,256,253,440 bytes peak cgroup memory, no swap, and 143,376,832 bytes of retained local files. These are resource observations, not model speed measurements. A separately authorized isolated regular-file copy amendment is needed to continue without weakening ORT path validation. No accelerator AOT, QNN runtime, phone, app, speedup or quality-equivalence claim follows.
+The failed service used 5,256,253,440 bytes peak cgroup memory, no swap, and 143,376,832 bytes of retained local files. These are resource observations, not model speed measurements. It remains immutable and still has no comparison result.
+
+One separately authorized [storage-only amendment](protocol/query-prescale-storage-amendment.json) then copied 2,327,207,936 bytes of external data into a fresh isolated directory as independent regular files, with matching original-before/copy/original-after hashes. It did not weaken ORT path validation or alter the derivative graph, inputs, runtime options or numerical criteria. The original baseline's 60 outputs were reused only after exact model/data/input/runtime/options/output-hash binding, not rerun.
+
+The [completed CPU numerical check](results/query-prescale-cpu-attempt-2-numerical-check/) reports:
+
+- **All 60 derivative outputs (38 states, 22 logit chunks; 1,664,000 values) are finite and bit-for-bit identical** to the unchanged baseline. Every maximum/mean absolute delta is zero; all 128,000 vocabulary ranks are unchanged, with endpoint argmax 597.
+- The separately instrumented baseline also reproduced every original output bit-for-bit before its query/key operands were used. Byte comparisons distinguish signed zero, rather than treating numerical equality as bitwise identity.
+- FP16-boundary proxies using **FP32 accumulation** are not identical: 8 differing full-score elements across five attention sites, of which 5 are causal/unmasked; maximum absolute difference is 0.001953125. Query prescaling rounds one additional nonzero value to zero at each of layers 9 and 17. No finite-to-infinity overflow occurred in these probes. Layer 2's 21,888 query and 21,888 tiled-key ingress roundings to zero are shared by both proxies, not caused by moving the scale.
+
+| Attention layer | Differing full / causal scores | Maximum absolute score delta | Additional query-scale zeros |
+| --- | ---: | ---: | ---: |
+| 2 | 3 / 2 | 0.001953125 | 0 |
+| 5 | 0 / 0 | 0 | 0 |
+| 9 | 1 / 0 | 5.960464477539063e-8 | 1 |
+| 13 | 0 / 0 | 0 | 0 |
+| 17 | 1 / 1 | 5.960464477539063e-8 | 1 |
+| 21 | 0 / 0 | 0 | 0 |
+| 24 | 1 / 1 | 1.1920928955078125e-7 | 0 |
+| 27 | 2 / 1 | 3.0517578125e-5 | 0 |
+
+The full-score domain includes many masked cache/future entries; separate causal metrics avoid hiding relevant deltas in that denominator. Raw arrays remain outside Git with public manifests. The service finished in 63.044 seconds under the approved CPU/memory bounds; aggregate campaign storage was about 3.63 GB. The console reported a rounded `5G` cgroup peak, but the exact post-exit peak is unavailable because the successful transient unit was unloaded. In-process cgroup checks retain the actual 12 GiB/zero-swap/200% limits; post-exit default `infinity` properties do not describe the run.
+
+This is **one canonical-171, zero-initial-state CPU Q4/FP32 case**, not general numerical equivalence, HTP arithmetic, an all-layer FP16 rollout, AR1/nonzero-state coverage, speedup or quality acceptance. The proxies do not measure hardware fusion, accumulators or flush-to-zero. No accelerator AOT, QNN runtime, phone or app work occurred. Saved numerical review and a separate authorization are required before any further execution.
 
 ## Evidence correction: qnn-net-run position ingestion
 
@@ -351,6 +374,6 @@ For AR171's 3.361 billion accelerator cycles, MLP accounts for 47.12%, attention
 
 The retained AR1 profile event set totals 775.0 million cycles: MLP 60.29%, attention 16.70%, LM head 7.38%, recurrent convolution 6.97%, and input boundary 6.69%. KV tiling alone contributes 8.84%. Although 15 AR1 calls completed, extraction retained one top-level/per-node event set; it is a phase snapshot, not per-call history or a distribution.
 
-One concrete hypothesis follows from the prefill profile: multiply the query by 0.125 before score MatMul and remove the post-MatMul scaling pass over `[1,32,171,4096]`. The query has 350,208 elements per layer while the score tensor has 22,413,312—64× more. That means 64× fewer scale elements, **not** 64× speedup. The measured 19.56% is a share of AR171 accelerator cycles only, not whole-request latency. FP16 reassociation can change states/logits; before any new AOT, CPU validation must compare every state/logit tensor and check finite values, underflow, and overflow. No speed or fidelity improvement is claimed.
+One concrete hypothesis follows from the prefill profile: multiply the query by 0.125 before score MatMul and remove the post-MatMul scaling pass over `[1,32,171,4096]`. The query has 350,208 elements per layer while the score tensor has 22,413,312—64× more. That means 64× fewer scale elements, **not** 64× speedup. The measured 19.56% is a share of AR171 accelerator cycles only, not whole-request latency. FP16 reassociation can change states/logits. The later CPU check above now retains all state/logit and rounding observations, including proxy differences and underflow; it does not establish actual HTP numerical safety. Saved numerical review must precede any separately authorized AOT. No speed or fidelity improvement is claimed.
 
 QNN node cycles do not isolate host memcpy, RPC byte transfer, DDR counters, CPU embedding/argmax, context load, or profile overhead. This is offline analysis, not a new runtime result. FP16/uFxp16 state, registered/device-resident memory, reduced logit return, and coarse explicitly declared hybrid partitions remain later candidates.

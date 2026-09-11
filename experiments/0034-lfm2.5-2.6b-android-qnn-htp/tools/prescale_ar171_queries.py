@@ -5,6 +5,7 @@ import copy
 import hashlib
 import json
 from pathlib import Path
+import shutil
 
 import numpy as np
 import onnx
@@ -87,19 +88,32 @@ def external_paths(model, source):
     return {location: (Path(source).parent / location).resolve(strict=True) for location in locations}
 
 
-def stage(source, destination):
+def stage(source, destination, copy_budget_bytes=6 << 30):
+    if destination.parent.resolve() == source.parent.resolve():
+        raise ValueError('Never stage into the immutable baseline directory')
     if destination.exists() or destination.is_symlink():
         raise FileExistsError(destination)
     baseline = onnx.load(source, load_external_data=False)
     derivative, changes = rewrite(baseline)
+    paths = external_paths(baseline, source)
+    if sum(p.stat().st_size for p in paths.values()) > copy_budget_bytes:
+        raise RuntimeError('External copies exceed the remaining campaign disk budget')
     destination.parent.mkdir(parents=True, exist_ok=True)
-    for location, original in external_paths(baseline, source).items():
-        link = destination.parent / location
-        if link.exists():
-            if link.resolve() != original:
-                raise ValueError(f'Conflicting external reference {link}')
-        else:
-            link.symlink_to(original)
+    copies = []
+    for location, original in paths.items():
+        target = destination.parent / location
+        if target.exists() or target.is_symlink():
+            raise FileExistsError(target)
+        before = sha(original)
+        shutil.copyfile(original, target)
+        copied, after = sha(target), sha(original)
+        if target.is_symlink() or target.stat().st_nlink != 1 or target.samefile(original):
+            raise ValueError('External data copy must be an independent regular file')
+        if not (before == copied == after):
+            raise ValueError('External data before/copy/original-after SHA mismatch')
+        copies.append({'source': str(original), 'copy': str(target), 'bytes': target.stat().st_size,
+                       'source_before_sha256': before, 'copy_sha256': copied,
+                       'source_after_sha256': after, 'copy_link_count': target.stat().st_nlink})
     # Saving with unloaded external data only writes the small protobuf, never weights.
     onnx.save(derivative, destination)
     onnx.checker.check_model(str(destination), full_check=False)
@@ -107,7 +121,7 @@ def stage(source, destination):
     for field in ('input', 'output'):
         assert [x.SerializeToString() for x in getattr(baseline.graph, field)] == [x.SerializeToString() for x in getattr(derivative.graph, field)]
     return {'source_sha256': sha(source), 'derivative_sha256': sha(destination),
-            'site_count': len(changes), 'changes': changes,
+            'site_count': len(changes), 'changes': changes, 'external_copies': copies,
             'initializers_and_interfaces_unchanged': True, 'aot_or_accelerator_work': False}
 
 

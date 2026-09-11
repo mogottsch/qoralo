@@ -1,0 +1,143 @@
+{
+  "all60_finite": true,
+  "all60_fp32_bitwise_equal": true,
+  "argmax_both": 597,
+  "attempt_id": "query-prescale-20260911T094138Z-78096",
+  "baseline_reused_not_rerun": true,
+  "classification": "post_execution_summary_of_retained_cpu_only_numerics",
+  "debug_all60_bitwise_equal": true,
+  "fp16_proxy_additional_query_scale_nonzero_to_zero": 2,
+  "fp16_proxy_causal_elements": 3764736,
+  "fp16_proxy_differing_causal_scores": 5,
+  "fp16_proxy_differing_full_scores": 8,
+  "fp16_proxy_full_score_elements": 179306496,
+  "fp16_proxy_overflow_count": 0,
+  "fp16_proxy_rows": [
+    {
+      "causal_max_abs_delta": 0.001953125,
+      "causal_score_unequal_elements": 2,
+      "finite_to_infinity_count_all_casts": 0,
+      "full_score_unequal_elements": 3,
+      "key_ingress_nonzero_to_zero": 21888,
+      "layer": 2,
+      "max_abs_delta": 0.001953125,
+      "pre_query_scale_nonzero_to_zero": 0,
+      "pre_query_scale_subnormal_count": 167,
+      "query_ingress_nonzero_to_zero": 21888
+    },
+    {
+      "causal_max_abs_delta": 0.0,
+      "causal_score_unequal_elements": 0,
+      "finite_to_infinity_count_all_casts": 0,
+      "full_score_unequal_elements": 0,
+      "key_ingress_nonzero_to_zero": 0,
+      "layer": 5,
+      "max_abs_delta": 0.0,
+      "pre_query_scale_nonzero_to_zero": 0,
+      "pre_query_scale_subnormal_count": 118,
+      "query_ingress_nonzero_to_zero": 0
+    },
+    {
+      "causal_max_abs_delta": 0.0,
+      "causal_score_unequal_elements": 0,
+      "finite_to_infinity_count_all_casts": 0,
+      "full_score_unequal_elements": 1,
+      "key_ingress_nonzero_to_zero": 0,
+      "layer": 9,
+      "max_abs_delta": 5.960464477539063e-08,
+      "pre_query_scale_nonzero_to_zero": 1,
+      "pre_query_scale_subnormal_count": 129,
+      "query_ingress_nonzero_to_zero": 0
+    },
+    {
+      "causal_max_abs_delta": 0.0,
+      "causal_score_unequal_elements": 0,
+      "finite_to_infinity_count_all_casts": 0,
+      "full_score_unequal_elements": 0,
+      "key_ingress_nonzero_to_zero": 0,
+      "layer": 13,
+      "max_abs_delta": 0.0,
+      "pre_query_scale_nonzero_to_zero": 0,
+      "pre_query_scale_subnormal_count": 118,
+      "query_ingress_nonzero_to_zero": 0
+    },
+    {
+      "causal_max_abs_delta": 5.960464477539063e-08,
+      "causal_score_unequal_elements": 1,
+      "finite_to_infinity_count_all_casts": 0,
+      "full_score_unequal_elements": 1,
+      "key_ingress_nonzero_to_zero": 0,
+      "layer": 17,
+      "max_abs_delta": 5.960464477539063e-08,
+      "pre_query_scale_nonzero_to_zero": 1,
+      "pre_query_scale_subnormal_count": 136,
+      "query_ingress_nonzero_to_zero": 0
+    },
+    {
+      "causal_max_abs_delta": 0.0,
+      "causal_score_unequal_elements": 0,
+      "finite_to_infinity_count_all_casts": 0,
+      "full_score_unequal_elements": 0,
+      "key_ingress_nonzero_to_zero": 0,
+      "layer": 21,
+      "max_abs_delta": 0.0,
+      "pre_query_scale_nonzero_to_zero": 0,
+      "pre_query_scale_subnormal_count": 193,
+      "query_ingress_nonzero_to_zero": 0
+    },
+    {
+      "causal_max_abs_delta": 1.1920928955078125e-07,
+      "causal_score_unequal_elements": 1,
+      "finite_to_infinity_count_all_casts": 0,
+      "full_score_unequal_elements": 1,
+      "key_ingress_nonzero_to_zero": 0,
+      "layer": 24,
+      "max_abs_delta": 1.1920928955078125e-07,
+      "pre_query_scale_nonzero_to_zero": 0,
+      "pre_query_scale_subnormal_count": 266,
+      "query_ingress_nonzero_to_zero": 0
+    },
+    {
+      "causal_max_abs_delta": 3.0517578125e-05,
+      "causal_score_unequal_elements": 1,
+      "finite_to_infinity_count_all_casts": 0,
+      "full_score_unequal_elements": 2,
+      "key_ingress_nonzero_to_zero": 0,
+      "layer": 27,
+      "max_abs_delta": 3.0517578125e-05,
+      "pre_query_scale_nonzero_to_zero": 0,
+      "pre_query_scale_subnormal_count": 223,
+      "query_ingress_nonzero_to_zero": 0
+    }
+  ],
+  "interpretation": [
+    "One canonical171/zero-state CPU Q4+FP32 graph case agrees bit-for-bit. This is not general numerical equivalence, quality or HTP evidence.",
+    "FP16-boundary proxies differ, with new query-scale underflow and existing shared-ingress underflow separately reported. No HTP rounding/FTZ/full-model FP16 rollout was run.",
+    "Full score means include many masked cache/future entries; causal-unmasked metrics are retained separately.",
+    "Every data copy has original-before/copy/original-after matching SHA and independent regular-file semantics; first blocked attempt unchanged.",
+    "All further AOT/runtime/phone work waits for numerical review and separate authorization."
+  ],
+  "maximum_output_abs_delta": 0.0,
+  "new_calls": [
+    "derivative",
+    "debug_baseline"
+  ],
+  "new_full_model_cpu_calls": 2,
+  "output_element_count": 1664000,
+  "resource_observations": {
+    "aggregate_disk_bytes_before_public_copy": 3624949477,
+    "baseline_reused_process_ru_maxrss_kib": 2950848,
+    "cgroup_memory_peak_bytes": null,
+    "cgroup_memory_peak_display": "5G",
+    "cgroup_memory_peak_missing_reason": "Successful transient unit was unloaded before post-exit systemctl show; retained CLI console provides only rounded5G. Do not treat post-exit infinity/[not set] properties as in-run limits. In-process cgroup guards bind memory.max12GiB/swap0/cpu.max200000 100000.",
+    "debug_process_ru_maxrss_kib": 3223500,
+    "derivative_process_ru_maxrss_kib": 2953112,
+    "observed_swap_display": "0B",
+    "resource_values_are_not_inference_speed_comparison": true,
+    "service_runtime_seconds": 63.044,
+    "whole_service_cpu_seconds": 67.648
+  },
+  "result_sha256": "dcb851892064154930d4de48472b15811353e341f8602deebc80a450b4fa192f",
+  "schema_version": 1,
+  "whole_vocab_rank_changes": 0
+}

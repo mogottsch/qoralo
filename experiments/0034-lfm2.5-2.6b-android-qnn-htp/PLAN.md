@@ -2,7 +2,7 @@
 
 ## Current host numerical check
 
-The AR171-only query-prescale derivative and frozen CPU validation criteria are prepared. First bounded attempt `query-prescale-20260911T093452Z-73227` retained 60 finite unchanged-baseline outputs (argmax 597), then stopped at ORT external-data containment validation before derivative execution. No comparison or FP16-proxy result exists for that attempt; originals are preserved. Continuing requires the separately authorized storage-only amendment: independent, hash-identical in-directory data copies, unchanged runtime/input/graph/numeric criteria, and the same aggregate disk/resource bounds. No AOT or phone work follows without numerical review.
+The AR171-only query-prescale CPU check is complete and awaiting saved numerical review. First attempt `query-prescale-20260911T093452Z-73227` retained 60 finite baseline outputs, then stopped at external-data containment validation; it remains immutable with no comparison claim. One separately authorized storage-only continuation `query-prescale-20260911T094138Z-78096` used independent hash-identical copies and reused the exactly bound baseline outputs. All 60 derivative outputs and debug-baseline outputs agree bit-for-bit; all vocabulary ranks are unchanged. FP16-boundary/FP32-accumulation proxies differ in eight full-score/five causal elements, with two additional query-scale zeros and no overflow. This is only the canonical171/zero-state CPU case; no HTP/AR1/full-model FP16/speed/quality claim. No further runtime, AOT or phone work follows without review and separate authorization.
 
 ## Completed
 
@@ -134,11 +134,10 @@ The AR171-only query-prescale derivative and frozen CPU validation criteria are 
 
 ## In progress: performance engineering
 
-1. Commit and independently review bounded corrected integrated operability and offline profile breakdown; no retry or campaign.
-2. If authorized, host-test only the score-scaling rewrite with exact state/logit comparisons before AOT; do not speculate broader changes.
-2. If prioritized, run one bounded reset-isolated physical integrated short/max16 diagnostic with detailed profiles and all-output finite scans.
-3. Evaluate lower-precision/device-resident state and reduced-logit routes; keep CPU/GPU/HTP boundaries explicit.
-4. Do not campaign until the fastest sensible complete route is selected and reset-isolated.
+1. Corrected integrated operability and offline profile review are complete; preserve their single-diagnostic boundaries.
+2. Independently review only the saved query-prescale source/numerical package. Do not rerun the baseline, derivative or proxies for packaging.
+3. AOT, physical follow-on, lower-precision/device-resident state, reduced-logit or hybrid work are not authorized by the CPU result; seek a specific next decision after numerical review.
+4. Do not campaign until the selected complete route and reset-isolation contract have separate approval.
 
 ## Phone and campaign sequence
 

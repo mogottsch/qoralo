@@ -124,9 +124,22 @@ def probe(query, key):
                        'scores': compare(post, pre)}
 
 
+def campaign_bytes(root):
+    directories = [root]
+    prior = os.environ.get('LFM_PRIOR_RUN')
+    if prior:
+        directories += [Path(prior), EXP / 'results/query-prescale-cpu-attempt-1-external-path-failure']
+    used = sum(p.stat().st_size for directory in directories for p in directory.rglob('*')
+               if p.is_file() and not p.is_symlink())
+    # Launcher sidecars are outside the exclusive run directories.
+    for directory in ([root, Path(prior)] if prior else [root]):
+        used += sum(p.stat().st_size for p in directory.parent.glob(directory.name + '.*') if p.is_file())
+    return used
+
+
 def dump_arrays(directory, arrays):
     root = directory.parent
-    used = sum(p.stat().st_size for p in root.rglob('*') if p.is_file() and not p.is_symlink())
+    used = campaign_bytes(root)
     predicted = sum(v.nbytes + 512 for v in arrays.values())
     if used + predicted + (64 << 20) > MAX_DISK:
         raise RuntimeError('Array write would exceed6GiB scratch budget including metadata reserve')
@@ -158,7 +171,7 @@ def load_arrays(directory):
 def guard(root):
     if shutil.disk_usage(root).free < 8 << 30:
         raise RuntimeError('Less than8GiB disk headroom')
-    used = sum(p.stat().st_size for p in root.rglob('*') if p.is_file() and not p.is_symlink())
+    used = campaign_bytes(root)
     if used > MAX_DISK:
         raise RuntimeError('Exceeded6GiB scratch bound')
     group = next(line.split(':', 2)[2] for line in Path('/proc/self/cgroup').read_text().splitlines() if line.startswith('0::'))
@@ -178,13 +191,13 @@ def guard(root):
             'nice': os.getpriority(os.PRIO_PROCESS, 0)}
 
 
-def prepare(root, baseline, embedding_dir, token_file, criteria):
+def prepare(root, baseline, embedding_dir, token_file, criteria, reuse_baseline):
     original = onnx.load(baseline, load_external_data=False)
     frozen = json.loads(criteria.read_text())
     if sha(baseline) != frozen['baseline_onnx_sha256'] or sha(token_file) != frozen['token_ids_sha256']:
         raise ValueError('Baseline or canonical token identity mismatch')
     derivative = root / 'models' / 'query-prescale.onnx'
-    rewrite_result = stage(baseline, derivative)
+    rewrite_result = stage(baseline, derivative, copy_budget_bytes=MAX_DISK - campaign_bytes(root) - (512 << 20))
     debug = copy.deepcopy(original)
     for site in rewrite_result['changes']:
         debug.graph.output.extend([
@@ -229,13 +242,70 @@ def prepare(root, baseline, embedding_dir, token_file, criteria):
     immutable = [baseline, token_file, criteria, *external_paths(original, baseline).values()]
     immutable += [embedding_dir / name for name in ('embedding-quant.u8', 'embedding-scales.f32le', 'embedding-zp.u8')]
     immutable += [Path(__file__).resolve(), Path(__file__).with_name('prescale_ar171_queries.py').resolve()]
+    amendment = EXP / 'protocol/query-prescale-storage-amendment.json'
+    immutable += [amendment, *(Path(x['copy']) for x in rewrite_result['external_copies'])]
+    reuse = bind_reused_baseline(root, baseline, reuse_baseline, rewrite_result)
     prepared = {'baseline': str(baseline), 'derivative': str(derivative), 'debug': str(debug_path),
                 'original_outputs': [v.name for v in original.graph.output], 'rewrite': rewrite_result,
                 'immutable_artifacts': [file_record(p) for p in immutable],
                 'debug_artifact': file_record(debug_path), 'frozen_criteria': frozen,
                 'inputs': json.loads((root / 'inputs' / 'manifest.json').read_text()),
-                'resource_guard': guard(root)}
+                'resource_guard': guard(root), 'baseline_reuse': reuse,
+                'storage_amendment': json.loads(amendment.read_text())}
     write_json(root / 'prepared.json', prepared)
+
+
+def bind_reused_baseline(root, baseline, prior, rewrite_result):
+    """Reuse only exact original graph/data/inputs/runtime/options/output bindings."""
+    import onnxruntime as ort
+    previous = json.loads((prior / 'prepared.json').read_text())
+    amendment = json.loads((EXP / 'protocol/query-prescale-storage-amendment.json').read_text())
+    for file, field in (('baseline/manifest.json', 'prior_baseline_output_manifest_sha256'),
+                        ('inputs/manifest.json', 'prior_input_manifest_sha256'),
+                        ('baseline-runtime.json', 'prior_baseline_runtime_sha256')):
+        if sha(prior / file) != amendment[field]:
+            raise ValueError(f'Frozen prior-artifact binding mismatch: {file}')
+    if sha(EXP / 'protocol/query-prescale-numerical-check.json') != amendment['original_criteria_sha256']:
+        raise ValueError('Original numerical criteria changed')
+    if sha(root / 'models/baseline-debug.onnx') != previous['debug_artifact']['sha256']:
+        raise ValueError('Storage-only amendment changed debug protobuf bytes')
+    if sha(baseline) != previous['rewrite']['source_sha256'] or rewrite_result['derivative_sha256'] != previous['rewrite']['derivative_sha256']:
+        raise ValueError('Storage amendment changed baseline/derivative protobuf bytes')
+    if json.loads((root / 'inputs/manifest.json').read_text()) != previous['inputs']:
+        raise ValueError('Freshly serialized inputs do not exactly match baseline inputs')
+    load_arrays(prior / 'inputs')
+    outputs = load_arrays(prior / 'baseline')
+    if set(outputs) != set(previous['original_outputs']) or len(outputs) != 60:
+        raise ValueError('Missing exact baseline60 output coverage')
+    bindings = []
+    for original in previous['immutable_artifacts']:
+        if original['path'].endswith(('prescale_ar171_queries.py', 'verify_query_prescale_cpu.py')):
+            continue  # The separately frozen storage-only source amendment.
+        current = file_record(Path(original['path']))
+        if current != original:
+            raise ValueError(f'Original baseline input/data/criteria binding changed: {original["path"]}')
+        bindings.append(current)
+    runtime = json.loads((prior / 'baseline-runtime.json').read_text())
+    expected = {'onnxruntime_version': ort.__version__, 'numpy_version': np.__version__, 'onnx_version': onnx.__version__,
+                'python': sys.version, 'platform': platform.platform(), 'providers': ['CPUExecutionProvider'],
+                'optimization': 'ORT_DISABLE_ALL', 'execution_mode': 'ORT_SEQUENTIAL', 'intra_op_threads': 2,
+                'inter_op_threads': 1, 'cpu_arena': False, 'memory_pattern': False,
+                'runtime_libraries': [file_record(p) for p in sorted((Path(ort.__file__).parent / 'capi').glob('*.so*'))]}
+    for name, value in expected.items():
+        if runtime[name] != value:
+            raise ValueError(f'Reused baseline runtime/options mismatch: {name}')
+    for name in ('OMP_NUM_THREADS', 'OPENBLAS_NUM_THREADS', 'MKL_NUM_THREADS'):
+        if runtime['environment'][name] != os.environ[name]:
+            raise ValueError(f'Reused baseline thread mismatch: {name}')
+    shutil.copytree(prior / 'baseline', root / 'baseline', copy_function=shutil.copyfile)
+    shutil.copyfile(prior / 'baseline-runtime.json', root / 'baseline-runtime.json')
+    load_arrays(root / 'baseline')
+    for name in ('prepared.json', 'baseline-runtime.json', 'baseline/manifest.json', 'inputs/manifest.json'):
+        bindings.append(file_record(prior / name))
+    return {'prior_run': str(prior), 'new_baseline_execution': False,
+            'exact_graph_data_input_runtime_options_output_binding_passed': True,
+            'bindings': bindings, 'expected_runtime_options': expected,
+            'source_amendment_only': 'External-data independent copies, aggregate disk accounting, exact retained baseline reuse; worker runtime settings and numerical criteria unchanged.'}
 
 
 def worker(root, variant):
@@ -321,7 +391,7 @@ def analyze(root):
         write_json(root / f'fp16-proxy-{index:02d}.json', metrics)
         del post, pre, valid_post, valid_pre
     unchanged = []
-    for before in prepared['immutable_artifacts']:
+    for before in prepared['immutable_artifacts'] + prepared['baseline_reuse']['bindings']:
         after = file_record(Path(before['path']))
         unchanged.append({'path': before['path'], 'before_sha256': before['sha256'], 'after_sha256': after['sha256'],
                           'unchanged': before == after})
@@ -331,6 +401,7 @@ def analyze(root):
     result = {'schema_version': 1, 'classification': 'ar171_query_prescale_bounded_cpu_numerical_observation',
               'phone_access': False, 'accelerator_aot': False, 'qnn_runtime': False,
               'speedup_claim': False, 'quality_equivalence_claim': False, 'aot_authorized_by_result': False,
+              'baseline_reused_without_execution': True,
               'prepared': prepared, 'commands': json.loads((root / 'commands.json').read_text()),
               'runtime': {v: json.loads((root / f'{v}-runtime.json').read_text()) for v in ('baseline', 'derivative', 'debug')},
               'tensor_count': len(details), 'state_count': sum(x['name'].startswith('present') for x in details),
@@ -354,6 +425,7 @@ def main():
     parser.add_argument('--root', required=True, type=Path)
     parser.add_argument('--worker', choices=['baseline', 'derivative', 'debug', 'analyze'])
     parser.add_argument('--baseline', type=Path)
+    parser.add_argument('--reuse-baseline', type=Path)
     parser.add_argument('--embedding-dir', type=Path)
     parser.add_argument('--token-file', type=Path)
     args = parser.parse_args()
@@ -362,20 +434,26 @@ def main():
         guard(root)
         analyze(root) if args.worker == 'analyze' else worker(root, args.worker)
         return
+    if args.reuse_baseline is None:
+        raise ValueError('Storage-only continuation requires exact retained baseline reuse, no rerun')
+    prior = args.reuse_baseline.resolve(strict=True)
+    if prior == root or not prior.is_relative_to(EXP / '.local'):
+        raise ValueError('Expected distinct retained experiment-local prior run')
+    os.environ['LFM_PRIOR_RUN'] = str(prior)
     root.mkdir(exist_ok=False)
     (root / 'tmp').mkdir()
     criteria = EXP / 'protocol/query-prescale-numerical-check.json'
     write_json(root / 'launch.json', {'argv': sys.argv, 'unit': os.environ.get('LFM_SYSTEMD_UNIT'), 'start_unix': time.time(), 'resource_guard': guard(root)})
     commands = []
     try:
-        prepare(root, args.baseline.resolve(), args.embedding_dir.resolve(), args.token_file.resolve(), criteria)
+        prepare(root, args.baseline.resolve(), args.embedding_dir.resolve(), args.token_file.resolve(), criteria, prior)
         # Each child has its own300s timeout. The surrounding cgroup also has1200s total.
-        for variant in ('baseline', 'derivative', 'debug', 'analyze'):
+        for variant in ('derivative', 'debug', 'analyze'):
             command = ['timeout', '--signal=TERM', '--kill-after=5s', '300s', sys.executable,
                        str(Path(__file__).resolve()), '--root', str(root), '--worker', variant]
             commands.append(command)
         write_json(root / 'commands.json', commands)
-        for variant, command in zip(('baseline', 'derivative', 'debug', 'analyze'), commands):
+        for variant, command in zip(('derivative', 'debug', 'analyze'), commands):
             guard(root)
             with (root / f'{variant}.stdout').open('xb') as out, (root / f'{variant}.stderr').open('xb') as err:
                 completed = subprocess.run(command, stdout=out, stderr=err, check=False)

@@ -1,0 +1,50 @@
+{
+  "cpu_arena": false,
+  "environment": {
+    "MKL_NUM_THREADS": "2",
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2",
+    "TMPDIR": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/query-prescale-20260911T094138Z-78096/tmp"
+  },
+  "execution_mode": "ORT_SEQUENTIAL",
+  "inter_op_threads": 1,
+  "intra_op_threads": 2,
+  "memory_pattern": false,
+  "numpy_version": "2.3.5",
+  "onnx_version": "1.20.1",
+  "onnxruntime_version": "1.26.0",
+  "optimization": "ORT_DISABLE_ALL",
+  "platform": "Linux-6.12.108-1-MANJARO-x86_64-with-glibc2.44",
+  "providers": [
+    "CPUExecutionProvider"
+  ],
+  "python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+  "resource_guard": {
+    "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/lfm-prescale-20260911t094138z-78096.service",
+    "limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "12884901888",
+      "memory.swap.max": "0"
+    },
+    "new_disk_bytes": 2907104002,
+    "nice": 10
+  },
+  "ru_maxrss_kib": 3223500,
+  "runtime_libraries": [
+    {
+      "bytes": 23031768,
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/venv/lib/python3.14/site-packages/onnxruntime/capi/libonnxruntime.so.1.26.0",
+      "sha256": "50775d390eb55e7abd9f6d734da103a04f0e5342ef0a76b1c6ec795544439295"
+    },
+    {
+      "bytes": 14632,
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/venv/lib/python3.14/site-packages/onnxruntime/capi/libonnxruntime_providers_shared.so",
+      "sha256": "086ec1d5388f64153d9c63470d126693db9a182c8ce236d3a1119068471b8a0d"
+    },
+    {
+      "bytes": 24626008,
+      "path": "/home/moritz/dev/vibevoice-android-spike/experiments/0034-lfm2.5-2.6b-android-qnn-htp/.local/venv/lib/python3.14/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-314-x86_64-linux-gnu.so",
+      "sha256": "16e3e179182ba6a6b3eeaa1dc51f3b05079014a4469472e79394a5647e02ec6a"
+    }
+  ]
+}
