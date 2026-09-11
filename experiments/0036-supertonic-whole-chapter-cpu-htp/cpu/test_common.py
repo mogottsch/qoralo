@@ -34,4 +34,18 @@ class CommonTests(unittest.TestCase):
         self.assertIn('step<5',text)
         self.assertNotIn('kTrimmedSamples',text)
 
+class CoverageTests(unittest.TestCase):
+    def test_known_alignment(self):
+        spec=importlib.util.spec_from_file_location('asr',ROOT/'common/asr_coverage.py');asr=importlib.util.module_from_spec(spec);spec.loader.exec_module(asr)
+        result=asr.alignment('one two three four','one three five')
+        self.assertEqual(result['word_error_rate'],0.5)
+        self.assertEqual(result['deletions'],1)
+        self.assertEqual(result['substitutions'],1)
+        self.assertEqual(result['exactly_matched_reference_words'],2)
+    def test_complete_alignment(self):
+        spec=importlib.util.spec_from_file_location('asr',ROOT/'common/asr_coverage.py');asr=importlib.util.module_from_spec(spec);spec.loader.exec_module(asr)
+        result=asr.alignment('Hello, friend!','hello friend')
+        self.assertEqual(result['word_error_rate'],0)
+        self.assertEqual(result['last_30_reference_words_matched'],2)
+
 if __name__=='__main__':unittest.main()
