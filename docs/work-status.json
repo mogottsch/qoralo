@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-11T10:21:53+00:00",
+  "updated_at": "2026-09-11T10:23:51+00:00",
   "updated_by": "Kate",
   "timestamp_note": "Reported timestamps mean capture of a relayed report, not execution or playback time.",
   "workstreams": [
@@ -55,10 +55,10 @@
       "title": "Gemma FP16",
       "status": "active",
       "owner": "Jere",
-      "now": "Tiny AR128 control +FLOAT16-path candidate converted/inspected (~3.5s each; no inference). Candidate removes producer requantization; cache concat/probability input/MatMul operands+output Float16.",
-      "next": "Fixture candidate DLC12,048B SHA447322…0f5451 supports v1 FLOAT16 activation overrides only. Continue AR1/source-island checks; large-model phase behind Jens AOT.",
-      "reported_at": "2026-09-11T10:13:23+00:00",
-      "reported_by": "Jere — tiny converted/inspected fixture milestone",
+      "now": "Exact saved-ONNX AR1/AR128 source derivatives pass precision gates: trueCL4096/width512 value-head shapes, Float16 norm/export+Concat+coupled MatMul; probability UF16→FP16 boundary.",
+      "next": "56 selected value MatMuls;71 AR1/74 AR128 FLOAT16 encoding targets. Continue bounded implementation/fixture compile checks; full conversion resource-queued behind Jens/app.",
+      "reported_at": "2026-09-11T10:23:51+00:00",
+      "reported_by": "Jere — exact source-derived AR1/AR128 precision-gate milestone",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -70,12 +70,12 @@
     {
       "id": "lfm",
       "title": "LFM integrated",
-      "status": "waiting",
+      "status": "active",
       "owner": "Jens",
-      "now": "Memory-only16GiB continuation preparation COMPLETE locald586ede;63/63 tests; no new compiler execution.",
-      "next": "Genuine shared-host capacity wait: current18GiB<22GiB preflight while Janek finishes one final small incremental app/test assembly. Launch only on safe release window.",
-      "reported_at": "2026-09-11T10:19:50+00:00",
-      "reported_by": "Jens — prepared continuation and resource schedule",
+      "now": "Jens reports prepared ONE memory-only16GiB/Swap0/2CPU/900s AOT iteration STARTED after Janek released two verified owned idle JVMs;23,388MiB reported available.",
+      "next": "Fresh in-unit≥22GiB preflight; same derivative/provider/disk caps, first12GiB OOM preserved. Prepare-only metadata: no graph/phone execution or context-success claim.",
+      "reported_at": "2026-09-11T10:23:51+00:00",
+      "reported_by": "Jens — actual one-shot memory-only AOT start",
       "stale_after_seconds": 900,
       "links": [
         {
@@ -143,12 +143,12 @@
     {
       "id": "host",
       "title": "On this computer",
-      "status": "waiting",
+      "status": "active",
       "owner": "Jens",
-      "now": "Janek small assembly/diagnostic has priority; LFM capacity waits; Qwen boundary package complete and offline fixture prep continues.",
-      "next": "Qwen is x86 HtpProvider/RouterX86/libnative-v79 simulation, not Android HTP. No host rerun; device path waits for Janek/full phone.lock.",
-      "reported_at": "2026-09-11T10:20:33+00:00",
-      "reported_by": "Ben — package completion and resource queue",
+      "now": "Jens reports LFM16GiB prepare-only AOT active after Janek idle-JVM release; Jere exact source derivatives/fixture checks active.",
+      "next": "Jere full conversion queued; no large overlap. LFM no graph/phone execution; later device work queues after Janek and Ben.",
+      "reported_at": "2026-09-11T10:23:51+00:00",
+      "reported_by": "Jens/Jere — actual start and source milestone",
       "stale_after_seconds": 600,
       "links": []
     },
@@ -196,16 +196,16 @@
     },
     {
       "name": "Jere",
-      "task": "Continue AR1/source-island fixture checks",
-      "reported_at": "2026-09-11T10:13:23+00:00",
-      "reported_by": "Direct owner milestone/outcome",
+      "task": "Continue exact Gemma derivative fixture compile checks",
+      "reported_at": "2026-09-11T10:23:51+00:00",
+      "reported_by": "Direct owner milestone/start",
       "stale_after_seconds": 900
     },
     {
       "name": "Jens",
-      "task": "Await safe release window, then launch one LFM16GiB iteration",
-      "reported_at": "2026-09-11T10:19:50+00:00",
-      "reported_by": "Jens — prepared/no compiler execution",
+      "task": "Run one memory-only16GiB prepare-only AOT iteration",
+      "reported_at": "2026-09-11T10:23:51+00:00",
+      "reported_by": "Direct owner milestone/start",
       "stale_after_seconds": 900
     },
     {
